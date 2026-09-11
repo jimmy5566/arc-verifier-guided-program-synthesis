@@ -7,7 +7,7 @@ This public release was reviewed for private/restricted solution leakage, task-I
 - **Raw ARC/competition data and solutions:** excluded. `data/`, checkpoints, submission material, and local artifacts are ignored and not staged. The published V2 aggregate contains task identifiers and aggregate metrics only; it contains no prediction grids, raw completions, train/test solution arrays, or checkpoint traces.
 - **Inference-before-solutions:** preserved. V2 declares its 50 development task IDs before inference. The finalizer requires both symbolic and direct checkpoints to be complete, frozen, have the declared IDs, and match the original frozen-config SHA before it opens any solution file for exact scoring.
 - **Task hardcoding:** static source review found no task-ID-specific solver branch or answer patch. Task identifiers occur in data models, deterministic split/protocol metadata, tests, and published aggregate experiment identifiers.
-- **Credentials and local paths:** `.env`, Kaggle credentials, model caches, runtime metadata, and notebook state are excluded. The environment-bound V2 model locator is not published; `configs/v2_pilot_public_protocol.json` replaces it with a portable locator description while retaining the original configuration hash as provenance.
+- **Credentials and local paths:** `.env`, Kaggle credentials, model caches, runtime metadata, and notebook state are excluded. The environment-bound V2 model locator is not published; `configs/v2_pilot_public_protocol.json` replaces it with a portable locator description while retaining the original configuration hash as provenance. During the final publication audit, the one remaining Windows checkpoint locator in a V1 aggregate was replaced with `[local checkpoint excluded from public release]`; its counts and protocol fields were left unchanged.
 - **Models and runtime artifacts:** model weights, safetensors, GGUF files, local virtual environments, raw logs, and generated checkpoints are excluded.
 
 ## Historical scoring controls
@@ -18,7 +18,7 @@ The Qwen3-8B V2 Pilot 50 completed both frozen conditions after the staggered fr
 
 ## Outcome
 
-No restricted data, credentials, raw model artifacts, raw checkpoint traces, or absolute personal/Kaggle mount paths are intended to be present in the committed public tree. This conclusion applies to the release snapshot, not to ignored local research artifacts.
+No restricted data, credentials, raw model artifacts, raw checkpoint traces, or absolute personal/Kaggle mount paths are present in the committed public tree. This conclusion applies to the release snapshot, not to ignored local research artifacts.
 
 ## V2 failure-forensics follow-up
 
