@@ -26,6 +26,7 @@ INCLUDED_FILES = (
     "configs/MACRO_API_COMPILER_AWARE_ABLATION_V1_FROZEN_CONFIG.json",
     "configs/PROGRAM_SELECTION_REPAIR_V1_FROZEN_CONFIG.json",
     "configs/PARAMETER_GROUNDING_REPAIR_V1_FROZEN_CONFIG.json",
+    "configs/PARAMETER_SEMANTIC_RETRIEVAL_V1_FROZEN_CONFIG.json",
     "scripts/run_qwen3_8b_transformers_preflight.py",
     "scripts/run_qwen3_8b_one_task_smoke.py",
     "scripts/run_qwen3_8b_four_gpu_preflight.py",
@@ -35,6 +36,7 @@ INCLUDED_FILES = (
     "scripts/run_macro_api_compiler_aware_ablation.py",
     "scripts/run_program_selection_repair.py",
     "scripts/run_parameter_grounding_repair.py",
+    "scripts/run_parameter_semantic_retrieval.py",
 )
 
 

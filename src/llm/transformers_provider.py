@@ -114,6 +114,48 @@ class TransformersProvider:
         completion_tokens = int(generated.shape[-1])
         return TextGeneration(self._tokenizer.decode(generated, skip_special_tokens=True), elapsed, prompt_tokens, completion_tokens)
 
+    def score_continuations(self, prompt: str, continuations: tuple[str, ...]) -> tuple[float, ...]:
+        """Return length-normalized teacher-forced log likelihoods.
+
+        This is intentionally separate from ``generate_text``: it performs no
+        decoding, exposes no response syntax, and uses only local model files.
+        Each continuation is scored in a padded batch so candidate comparison
+        remains deterministic and inexpensive on the pinned GPU.
+        """
+        self.load()
+        if not continuations or any(not isinstance(item, str) or not item for item in continuations):
+            raise ValueError("continuations must be non-empty strings")
+        import torch
+        import torch.nn.functional as F
+
+        assert self._model is not None and self._tokenizer is not None
+        prefix = self._tokenizer.apply_chat_template(
+            [{"role": "user", "content": prompt}], add_generation_prompt=True,
+            enable_thinking=False, tokenize=True, return_tensors="pt",
+        )[0].to(self.device)
+        continuation_ids = [self._tokenizer(item, add_special_tokens=False).input_ids for item in continuations]
+        if any(not item for item in continuation_ids):
+            raise ValueError("continuation tokenization produced no tokens")
+        sequences = [torch.cat((prefix, torch.tensor(item, dtype=prefix.dtype, device=self.device))) for item in continuation_ids]
+        max_length = max(int(item.numel()) for item in sequences)
+        pad = self._tokenizer.pad_token_id
+        if pad is None:
+            pad = self._tokenizer.eos_token_id
+        input_ids = torch.full((len(sequences), max_length), int(pad), dtype=prefix.dtype, device=self.device)
+        attention_mask = torch.zeros((len(sequences), max_length), dtype=torch.long, device=self.device)
+        for index, sequence in enumerate(sequences):
+            input_ids[index, : sequence.numel()] = sequence
+            attention_mask[index, : sequence.numel()] = 1
+        with torch.inference_mode():
+            logits = self._model(input_ids=input_ids, attention_mask=attention_mask).logits
+            log_probs = F.log_softmax(logits.float(), dim=-1)
+        prefix_length = int(prefix.numel())
+        scores: list[float] = []
+        for index, ids in enumerate(continuation_ids):
+            token_scores = [log_probs[index, prefix_length + offset - 1, int(token)].item() for offset, token in enumerate(ids)]
+            scores.append(float(sum(token_scores) / len(token_scores)))
+        return tuple(scores)
+
     def generate_hypotheses(self, task_context: dict[str, Any], capability_schema: dict[str, Any], config: GenerationConfig) -> GenerationResponse:
         """Implement the established generic LLMProvider protocol for V1 callers."""
         prompt = json.dumps({"task": task_context, "capability_catalog": capability_schema["prompt_catalog"], "structured_output_schema": capability_schema["structured_output_schema"], "instruction": "Return only JSON that satisfies the supplied schema. Use only canonical primitive IDs."}, separators=(",", ":"))
