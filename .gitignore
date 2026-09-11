@@ -48,6 +48,7 @@ dataset-metadata.json
 # Generated execution state and large runtime diagnostics
 experiments/checkpoints/
 experiments/artifacts/
+experiments/diagnostics/
 *.log
 *.tmp
 *.temp
@@ -67,6 +68,7 @@ experiments/results/*
 !experiments/results/LLM_HYPOTHESIS_GENERATOR_V1_REAL.json
 !experiments/results/LLM_PROGRAM_SYNTHESIS_V2.json
 !experiments/results/LLM_PROGRAM_SYNTHESIS_V2_PILOT_50.json
+!experiments/results/LLM_PROGRAM_SYNTHESIS_V2_FAILURE_FORENSICS.json
 !experiments/results/SOLVER_LIB_V0.json
 !experiments/results/SOLVER_LIB_V1_OBJECT.json
 !experiments/results/SOLVER_LIB_V2_RELATION_COMPOSITION.json
@@ -78,4 +80,5 @@ reports/*
 !reports/llm_failure_diagnostic_v1.md
 !reports/llm_program_synthesis_v2.md
 !reports/llm_program_synthesis_v2_failures.md
+!reports/llm_program_synthesis_v2_failure_forensics.md
 !reports/macro_capability_registry_v1.md

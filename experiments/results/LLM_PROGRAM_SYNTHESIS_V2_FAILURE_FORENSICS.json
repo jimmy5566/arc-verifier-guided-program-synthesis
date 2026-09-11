@@ -1,0 +1,1625 @@
+{
+  "conditions": {
+    "direct_parameter_ablation": {
+      "candidate_count": 141,
+      "completion_tokens_by_primary_failure": {
+        "JSON_PARSE_FAILURE/MALFORMED_JSON": {
+          "count": 3,
+          "mean": 0.0
+        },
+        "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": {
+          "count": 105,
+          "mean": 598.7619047619048
+        },
+        "PROVIDER_FAILURE/CONTEXT_WINDOW_EXCEEDED": {
+          "count": 1,
+          "mean": 0.0
+        },
+        "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": {
+          "count": 32,
+          "mean": 591.21875
+        }
+      },
+      "composition_analysis_note": "No candidate reached type validity, so composition/dataflow and compiler eligibility were not reached by the frozen execution pipeline.",
+      "composition_chain_mistakes": [],
+      "failure_stage_distribution": {
+        "json_parse": 3,
+        "parameter": 105,
+        "provider": 1,
+        "type": 32
+      },
+      "funnel": {
+        "compile_eligible": 0,
+        "composition_valid": 0,
+        "json_parseable": 137,
+        "macro_api_valid": 32,
+        "parameter_valid": 0,
+        "responses": 137,
+        "schema_valid": 32,
+        "type_valid": 0
+      },
+      "near_miss_count": 32,
+      "nearest_to_type_valid": [
+        {
+          "candidate_index": 2,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FILL_ENCLOSED_REGION expects Grid, received Region",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h3",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "3eda0437"
+        },
+        {
+          "candidate_index": 0,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FIND_PATTERN expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h1",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "4cd1b7b2"
+        },
+        {
+          "candidate_index": 0,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FIND_ENCLOSED_REGION expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h1",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "4e45f183"
+        },
+        {
+          "candidate_index": 1,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "COMPLETE_SYMMETRY expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h2",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "5adee1b2"
+        },
+        {
+          "candidate_index": 2,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FILL_ENCLOSED_REGION expects Grid, received Region",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h3",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "5d2a5c43"
+        },
+        {
+          "candidate_index": 1,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "SPLIT_BY_SEPARATOR expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h2",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "6165ea8f"
+        },
+        {
+          "candidate_index": 0,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FIND_ENCLOSED_REGION expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h1",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "6855a6e4"
+        },
+        {
+          "candidate_index": 1,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FIND_ENCLOSED_REGION expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h2",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "6855a6e4"
+        },
+        {
+          "candidate_index": 1,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "COMPLETE_SYMMETRY expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h2",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "845d6e51"
+        },
+        {
+          "candidate_index": 0,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "COMPLETE_SYMMETRY expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h1",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "846bdb03"
+        }
+      ],
+      "per_task_failure_density": [
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 1,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1
+          },
+          "task_id": "396d80d7"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "3ac3eb23"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 1,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "JSON_PARSE_FAILURE/MALFORMED_JSON": 1
+          },
+          "task_id": "3de23699"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 5,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 4,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "3eda0437"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 5,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 5
+          },
+          "task_id": "46f33fce"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3
+          },
+          "task_id": "4c4377d9"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "4cd1b7b2"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 3,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "4e45f183"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "5adee1b2"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 5,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 4,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "5d2a5c43"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "6165ea8f"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3
+          },
+          "task_id": "673ef223"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "681b3aeb"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "6855a6e4"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3
+          },
+          "task_id": "6cbe9eb8"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "73182012"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 1,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "JSON_PARSE_FAILURE/MALFORMED_JSON": 1
+          },
+          "task_id": "825aa9e9"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "83eb0a57"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 3,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "845d6e51"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "846bdb03"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "8b28cd80"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "8cb8642d"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 5,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 5
+          },
+          "task_id": "8e5a5113"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 3
+          },
+          "task_id": "93b581b8"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "93c31fbe"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "9b4c17c4"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 3,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "9f8de559"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 5,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 5
+          },
+          "task_id": "a416b8f3"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 3,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "a5313dff"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "a65b410d"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "a68b268e"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 5,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "a87f7484"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "b25e450b"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 1,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PROVIDER_FAILURE/CONTEXT_WINDOW_EXCEEDED": 1
+          },
+          "task_id": "b9630600"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 3
+          },
+          "task_id": "c1d99e64"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "c62e2108"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "c7d4e6ad"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "ce22a75a"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 3,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "d5c634a2"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "d631b094"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3
+          },
+          "task_id": "d94c3b52"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 5,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "e681b708"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 5,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 5
+          },
+          "task_id": "e729b7be"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "e7639916"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 5,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 4,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "e99362f0"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3
+          },
+          "task_id": "f1bcbc2c"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 5,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 5
+          },
+          "task_id": "f25ffba3"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 1,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "JSON_PARSE_FAILURE/MALFORMED_JSON": 1
+          },
+          "task_id": "f2829549"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 3,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "f35d900a"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 5,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 5
+          },
+          "task_id": "f3e14006"
+        }
+      ],
+      "primary_failure_counts": {
+        "JSON_PARSE_FAILURE/MALFORMED_JSON": 3,
+        "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 105,
+        "PROVIDER_FAILURE/CONTEXT_WINDOW_EXCEEDED": 1,
+        "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 32
+      },
+      "primary_failure_rates": {
+        "JSON_PARSE_FAILURE/MALFORMED_JSON": 0.02127659574468085,
+        "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 0.7446808510638298,
+        "PROVIDER_FAILURE/CONTEXT_WINDOW_EXCEEDED": 0.0070921985815602835,
+        "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 0.22695035460992907
+      },
+      "token_length_relationship": {
+        "confirmed_max_token_cutoff_count": 0,
+        "response_mean_completion_tokens": 597.0,
+        "schema_invalid_response_mean_completion_tokens": 598.7619047619048,
+        "schema_valid_mean_completion_tokens": 591.21875,
+        "type_chain_failure_mean_completion_tokens": 591.21875,
+        "unresolved_json_parse_failures_without_raw_body": 3
+      },
+      "top_api_errors": [],
+      "top_invalid_argument_names": [
+        [
+          "axis",
+          42
+        ],
+        [
+          "orientation",
+          24
+        ],
+        [
+          "selector",
+          19
+        ],
+        [
+          "alignment",
+          18
+        ],
+        [
+          "count_kind",
+          1
+        ],
+        [
+          "color_source",
+          1
+        ]
+      ],
+      "top_invalid_field_names": [
+        [
+          "axis",
+          42
+        ],
+        [
+          "orientation",
+          24
+        ],
+        [
+          "selector",
+          19
+        ],
+        [
+          "alignment",
+          18
+        ],
+        [
+          "count_kind",
+          1
+        ],
+        [
+          "color_source",
+          1
+        ]
+      ],
+      "top_symbolic_parameter_mistakes": [
+        [
+          "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER",
+          105
+        ]
+      ],
+      "top_type_errors": [
+        [
+          "Objects -> Grid",
+          25
+        ],
+        [
+          "Region -> Grid",
+          5
+        ],
+        [
+          "Objects -> SelectedObject",
+          1
+        ],
+        [
+          "Grid -> Sequence",
+          1
+        ]
+      ],
+      "top_type_mismatch_pairs": [
+        [
+          "Objects -> Grid",
+          25
+        ],
+        [
+          "Region -> Grid",
+          5
+        ],
+        [
+          "Objects -> SelectedObject",
+          1
+        ],
+        [
+          "Grid -> Sequence",
+          1
+        ]
+      ],
+      "top_unknown_macro_ids": []
+    },
+    "symbolic_parameter_solver": {
+      "candidate_count": 134,
+      "completion_tokens_by_primary_failure": {
+        "JSON_PARSE_FAILURE/MALFORMED_JSON": {
+          "count": 1,
+          "mean": 0.0
+        },
+        "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": {
+          "count": 79,
+          "mean": 540.4430379746835
+        },
+        "PROVIDER_FAILURE/CONTEXT_WINDOW_EXCEEDED": {
+          "count": 1,
+          "mean": 0.0
+        },
+        "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": {
+          "count": 53,
+          "mean": 505.5660377358491
+        }
+      },
+      "composition_analysis_note": "No candidate reached type validity, so composition/dataflow and compiler eligibility were not reached by the frozen execution pipeline.",
+      "composition_chain_mistakes": [],
+      "failure_stage_distribution": {
+        "json_parse": 1,
+        "parameter": 79,
+        "provider": 1,
+        "type": 53
+      },
+      "funnel": {
+        "compile_eligible": 0,
+        "composition_valid": 0,
+        "json_parseable": 132,
+        "macro_api_valid": 53,
+        "parameter_valid": 0,
+        "responses": 132,
+        "schema_valid": 53,
+        "type_valid": 0
+      },
+      "near_miss_count": 53,
+      "nearest_to_type_valid": [
+        {
+          "candidate_index": 0,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FIND_PATTERN expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h1",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "3ac3eb23"
+        },
+        {
+          "candidate_index": 1,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FIND_PATTERN expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h2",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "3ac3eb23"
+        },
+        {
+          "candidate_index": 0,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FIND_PATTERN expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h1",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "4cd1b7b2"
+        },
+        {
+          "candidate_index": 1,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "EXTRACT_SEQUENCE expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h2",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "4cd1b7b2"
+        },
+        {
+          "candidate_index": 1,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "COMPLETE_SYMMETRY expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h2",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "4e45f183"
+        },
+        {
+          "candidate_index": 2,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FIND_ENCLOSED_REGION expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h3",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "4e45f183"
+        },
+        {
+          "candidate_index": 1,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FIND_PATTERN expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h2",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "5adee1b2"
+        },
+        {
+          "candidate_index": 2,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FILL_ENCLOSED_REGION expects Grid, received Region",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h3",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "5d2a5c43"
+        },
+        {
+          "candidate_index": 1,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "SPLIT_BY_SEPARATOR expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h2",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "6165ea8f"
+        },
+        {
+          "candidate_index": 0,
+          "distance_to_type_valid": 5,
+          "first_error_message_sanitized": "FIND_ENCLOSED_REGION expects Grid, received Objects",
+          "first_error_path": "steps[1].macro_id",
+          "hypothesis_id": "h1",
+          "minimal_change_to_pass_stage": "Change the preceding macro chain or this macro so the produced concept matches this macro's declared input concept.",
+          "primary_failure_stage": "type",
+          "primary_failure_subtype": "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          "task_id": "6855a6e4"
+        }
+      ],
+      "per_task_failure_density": [
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "396d80d7"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "3ac3eb23"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 1,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "JSON_PARSE_FAILURE/MALFORMED_JSON": 1
+          },
+          "task_id": "3de23699"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 5,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 5
+          },
+          "task_id": "3eda0437"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 5,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 5
+          },
+          "task_id": "46f33fce"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "4c4377d9"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "4cd1b7b2"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 3,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "4e45f183"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "5adee1b2"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 4,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "5d2a5c43"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "6165ea8f"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3
+          },
+          "task_id": "673ef223"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 1,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1
+          },
+          "task_id": "681b3aeb"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "6855a6e4"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "6cbe9eb8"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "73182012"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 3
+          },
+          "task_id": "825aa9e9"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "83eb0a57"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "845d6e51"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 5,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 4,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "846bdb03"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "8b28cd80"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "8cb8642d"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 5,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 5
+          },
+          "task_id": "8e5a5113"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 4,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 3
+          },
+          "task_id": "93b581b8"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 3
+          },
+          "task_id": "93c31fbe"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "9b4c17c4"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "9f8de559"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 5,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 4
+          },
+          "task_id": "a416b8f3"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 3,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "a5313dff"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "a65b410d"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "a68b268e"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3
+          },
+          "task_id": "a87f7484"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "b25e450b"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 1,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PROVIDER_FAILURE/CONTEXT_WINDOW_EXCEEDED": 1
+          },
+          "task_id": "b9630600"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 3
+          },
+          "task_id": "c1d99e64"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "c62e2108"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "c7d4e6ad"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "ce22a75a"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 3,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "d5c634a2"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 1,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1
+          },
+          "task_id": "d631b094"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 3,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "d94c3b52"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 5,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 5
+          },
+          "task_id": "e681b708"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3
+          },
+          "task_id": "e729b7be"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 2,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 2
+          },
+          "task_id": "e7639916"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 2,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 1
+          },
+          "task_id": "e99362f0"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3
+          },
+          "task_id": "f1bcbc2c"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 4,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 4
+          },
+          "task_id": "f25ffba3"
+        },
+        {
+          "all_candidates_fail_identically": false,
+          "candidate_count": 5,
+          "distinct_primary_failures": 2,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 3,
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 2
+          },
+          "task_id": "f2829549"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 3,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 3
+          },
+          "task_id": "f35d900a"
+        },
+        {
+          "all_candidates_fail_identically": true,
+          "candidate_count": 1,
+          "distinct_primary_failures": 1,
+          "primary_failure_counts": {
+            "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 1
+          },
+          "task_id": "f3e14006"
+        }
+      ],
+      "primary_failure_counts": {
+        "JSON_PARSE_FAILURE/MALFORMED_JSON": 1,
+        "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 79,
+        "PROVIDER_FAILURE/CONTEXT_WINDOW_EXCEEDED": 1,
+        "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 53
+      },
+      "primary_failure_rates": {
+        "JSON_PARSE_FAILURE/MALFORMED_JSON": 0.007462686567164179,
+        "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER": 0.5895522388059702,
+        "PROVIDER_FAILURE/CONTEXT_WINDOW_EXCEEDED": 0.007462686567164179,
+        "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH": 0.39552238805970147
+      },
+      "token_length_relationship": {
+        "confirmed_max_token_cutoff_count": 0,
+        "response_mean_completion_tokens": 526.439393939394,
+        "schema_invalid_response_mean_completion_tokens": 540.4430379746835,
+        "schema_valid_mean_completion_tokens": 505.5660377358491,
+        "type_chain_failure_mean_completion_tokens": 505.5660377358491,
+        "unresolved_json_parse_failures_without_raw_body": 1
+      },
+      "top_api_errors": [],
+      "top_invalid_argument_names": [
+        [
+          "axis",
+          31
+        ],
+        [
+          "selector",
+          18
+        ],
+        [
+          "orientation",
+          15
+        ],
+        [
+          "alignment",
+          12
+        ],
+        [
+          "direction",
+          1
+        ],
+        [
+          "color_source",
+          1
+        ],
+        [
+          "translation",
+          1
+        ]
+      ],
+      "top_invalid_field_names": [
+        [
+          "axis",
+          31
+        ],
+        [
+          "selector",
+          18
+        ],
+        [
+          "orientation",
+          15
+        ],
+        [
+          "alignment",
+          12
+        ],
+        [
+          "direction",
+          1
+        ],
+        [
+          "color_source",
+          1
+        ],
+        [
+          "translation",
+          1
+        ]
+      ],
+      "top_symbolic_parameter_mistakes": [
+        [
+          "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER",
+          79
+        ]
+      ],
+      "top_type_errors": [
+        [
+          "Objects -> Grid",
+          38
+        ],
+        [
+          "Region -> Grid",
+          4
+        ],
+        [
+          "Grid -> Sequence",
+          4
+        ],
+        [
+          "Objects -> Sequence",
+          3
+        ],
+        [
+          "Grid -> SelectedObject",
+          1
+        ],
+        [
+          "Grid -> Pattern",
+          1
+        ],
+        [
+          "Grid -> Objects",
+          1
+        ],
+        [
+          "Objects -> SelectedObject",
+          1
+        ]
+      ],
+      "top_type_mismatch_pairs": [
+        [
+          "Objects -> Grid",
+          38
+        ],
+        [
+          "Region -> Grid",
+          4
+        ],
+        [
+          "Grid -> Sequence",
+          4
+        ],
+        [
+          "Objects -> Sequence",
+          3
+        ],
+        [
+          "Grid -> SelectedObject",
+          1
+        ],
+        [
+          "Grid -> Pattern",
+          1
+        ],
+        [
+          "Grid -> Objects",
+          1
+        ],
+        [
+          "Objects -> SelectedObject",
+          1
+        ]
+      ],
+      "top_unknown_macro_ids": []
+    }
+  },
+  "experiment_id": "LLM_PROGRAM_SYNTHESIS_V2_FAILURE_FORENSICS",
+  "frozen_data_reconciliation": {
+    "direct_parameter_ablation": {
+      "all_record_task_ids_match_keys": true,
+      "candidate_count": 141,
+      "candidate_count_matches": true,
+      "complete": true,
+      "config_sha256": "da9360e4a010a66104e89a7e2f76477b6f013bfabf3cf41a80cdf03b8cf8d67e",
+      "declared_ids_match": true,
+      "duplicate_task_count": 0,
+      "prediction_frozen": true,
+      "status_counts": {
+        "MACRO_SCHEMA_INVALID": 105,
+        "MACRO_TYPE_INVALID": 32,
+        "PROVIDER_FAILED": 4
+      },
+      "status_counts_match": true,
+      "task_count": 50
+    },
+    "symbolic_parameter_solver": {
+      "all_record_task_ids_match_keys": true,
+      "candidate_count": 134,
+      "candidate_count_matches": true,
+      "complete": true,
+      "config_sha256": "da9360e4a010a66104e89a7e2f76477b6f013bfabf3cf41a80cdf03b8cf8d67e",
+      "declared_ids_match": true,
+      "duplicate_task_count": 0,
+      "prediction_frozen": true,
+      "status_counts": {
+        "MACRO_SCHEMA_INVALID": 79,
+        "MACRO_TYPE_INVALID": 53,
+        "PROVIDER_FAILED": 2
+      },
+      "status_counts_match": true,
+      "task_count": 50
+    }
+  },
+  "gpu_used": false,
+  "hypotheses": {
+    "H1_macro_api_learnability": {
+      "evidence": [
+        "Every response candidate failed before type validity.",
+        "The dominant errors are bare parameter values where the frozen interface requires a one-key wrapper."
+      ],
+      "status": "SUPPORTED"
+    },
+    "H2_reasoning_plus_api_overload": {
+      "evidence": [
+        "Responses contain rationales, but no deterministic semantic oracle was applied to judge their ARC reasoning quality."
+      ],
+      "status": "INCONCLUSIVE"
+    },
+    "H3_symbolic_parameter_design": {
+      "evidence": [
+        "No candidate reached ParameterSolver; failures occurred in Macro parameter-contract validation before symbolic resolution."
+      ],
+      "status": "NOT_SUPPORTED"
+    },
+    "H4_compiler_executor_limitation": {
+      "evidence": [
+        "No frozen candidate was type-valid or compiler-eligible."
+      ],
+      "status": "NOT_SUPPORTED"
+    },
+    "H5_before_arc_reasoning_evaluation": {
+      "evidence": [
+        "Both conditions have zero type-valid, parameter-valid, composition-valid, and compile-eligible candidates."
+      ],
+      "status": "SUPPORTED"
+    }
+  },
+  "new_inference": false,
+  "primary_bottleneck": "The frozen V2 Pilot failed primarily at the LLM-to-Macro-DSL parameter-wrapper and concept-chain interface before the ParameterSolver, compiler, executor, or HardVerifier could be meaningfully evaluated.",
+  "publication_safety": "Aggregate-only output; no raw response, prompt, ARC grid, solution, or checkpoint content is written.",
+  "recommended_next_experiment": "MACRO_API_COMPREHENSION_BENCHMARK",
+  "secondary_bottlenecks": [
+    "Macro concept-chain mismatches",
+    "Provider-side JSON parsing and context-window failures"
+  ],
+  "source_experiment": "LLM_PROGRAM_SYNTHESIS_V2_PILOT_50",
+  "symbolic_vs_direct": {
+    "interpretation": "Symbolic parameterization had higher initial frozen macro-schema throughput (53/132 versus 32/137), but neither condition produced a type-valid program. It shifted some failures to concept-chain mismatches; it did not demonstrate ParameterSolver benefit because no candidate reached that stage.",
+    "near_miss_count": {
+      "direct": 32,
+      "symbolic": 53
+    },
+    "schema_valid_rate": {
+      "direct": 0.23357664233576642,
+      "symbolic": 0.4015151515151515
+    },
+    "type_valid_rate": {
+      "direct": 0.0,
+      "symbolic": 0.0
+    }
+  },
+  "task_count_per_condition": 50,
+  "validator_audit": {
+    "confirmed_correct_rejections": 26,
+    "method": "Replayed candidates against the frozen Macro registry and validate_macro_hypothesis; provider parse/context errors were checked against their retained error metadata.",
+    "possible_validator_bugs": [],
+    "sample_count": 26,
+    "schema_invalid_sample_count": 10,
+    "type_invalid_sample_count": 10,
+    "unusual_failure_count": 6
+  }
+}

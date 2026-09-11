@@ -85,7 +85,7 @@ pip install -e ".[dev]"
 python -m pytest -q
 ```
 
-The release verification suite reports **78 passed**. Obtain any ARC dataset yourself under its original terms and place it outside version control (for example, `data/raw/`). GPU/model-dependent runs require a separately acquired Qwen3-8B-compatible model and a CUDA-capable environment; see [reproducibility notes](docs/REPRODUCIBILITY.md). Do not use restricted competition solutions for development or scoring outside their permitted environment.
+The v0.1.0 V2 Pilot release verified **78 passed**; the current failure-forensics snapshot verifies **91 passed**. Obtain any ARC dataset yourself under its original terms and place it outside version control (for example, `data/raw/`). GPU/model-dependent runs require a separately acquired Qwen3-8B-compatible model and a CUDA-capable environment; see [reproducibility notes](docs/REPRODUCIBILITY.md). Do not use restricted competition solutions for development or scoring outside their permitted environment.
 
 ## Current status and roadmap
 

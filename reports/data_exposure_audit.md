@@ -19,3 +19,7 @@ The Qwen3-8B V2 Pilot 50 completed both frozen conditions after the staggered fr
 ## Outcome
 
 No restricted data, credentials, raw model artifacts, raw checkpoint traces, or absolute personal/Kaggle mount paths are intended to be present in the committed public tree. This conclusion applies to the release snapshot, not to ignored local research artifacts.
+
+## V2 failure-forensics follow-up
+
+`LLM_PROGRAM_SYNTHESIS_V2_FAILURE_FORENSICS` is a deterministic, post-hoc read of the already frozen V2 aggregate checkpoints. It performs no inference, uses no GPU, and does not load ARC grids or solutions. The local candidate-level CSV remains ignored because it is derived from raw checkpoint responses. The published JSON and Markdown report contain only aggregate counts, safe task identifiers already present in the pilot protocol, sanitized validator messages, and the documented diagnostic conclusion.
