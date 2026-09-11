@@ -1,0 +1,222 @@
+{
+  "arc_data_used": false,
+  "arc_solutions_used": false,
+  "benchmark_hash": "90aba782703a8b1d2a4e97c8cde81a5e9e04aa0ca673ec882c70e42e0245ff00",
+  "candidate_budget": 1,
+  "canonical_macro_sequence_matches": 0,
+  "case_count": 60,
+  "category_metrics": {
+    "PARAMETER_CONTRACT": {
+      "case_count": 15,
+      "compile_valid": 0,
+      "instruction_constraints_valid": 0,
+      "schema_valid": 3,
+      "type_valid": 3
+    },
+    "SINGLE_MACRO": {
+      "case_count": 15,
+      "compile_valid": 0,
+      "instruction_constraints_valid": 0,
+      "schema_valid": 9,
+      "type_valid": 0
+    },
+    "THREE_STEP_COMPOSITION": {
+      "case_count": 15,
+      "compile_valid": 0,
+      "instruction_constraints_valid": 0,
+      "schema_valid": 0,
+      "type_valid": 0
+    },
+    "TWO_STEP_TYPED_CHAIN": {
+      "case_count": 15,
+      "compile_valid": 0,
+      "instruction_constraints_valid": 0,
+      "schema_valid": 0,
+      "type_valid": 0
+    }
+  },
+  "completed_at_utc": "2026-09-11T14:26:53.805886+00:00",
+  "experiment_id": "MACRO_API_COMPREHENSION_BENCHMARK_V1",
+  "frozen_config_sha256": "a8cd630eb786f5da14d1fab9079279949817860cfea2f4d7510a2cb02e541d79",
+  "funnel": {
+    "argument_contract_valid": 12,
+    "compile_valid": 0,
+    "composition_valid": 3,
+    "json_parseable": 60,
+    "macro_ids_valid": 60,
+    "parameter_valid": 3,
+    "response_received": 60,
+    "schema_valid": 12,
+    "type_valid": 3
+  },
+  "go_decision": "NO_GO_API",
+  "gpu_used": true,
+  "hardware": {
+    "cuda_available": true,
+    "cuda_runtime": null,
+    "gpu_count": 4,
+    "gpus": [
+      {
+        "driver_version": "580.159.04",
+        "index": 0,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      },
+      {
+        "driver_version": "580.159.04",
+        "index": 1,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      },
+      {
+        "driver_version": "580.159.04",
+        "index": 2,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      },
+      {
+        "driver_version": "580.159.04",
+        "index": 3,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      }
+    ],
+    "reason": "",
+    "status": "SUCCESS"
+  },
+  "instruction_constraints_valid": 0,
+  "max_new_tokens": 256,
+  "model": {
+    "architecture": "Qwen3ForCausalLM",
+    "backend": "transformers_local",
+    "dtype": "bfloat16",
+    "internet": false,
+    "local_files_only": true,
+    "model_source": "qwen-lm/qwen-3/Transformers/8b/1"
+  },
+  "model_warmup": {
+    "bytes_read": 16381516776,
+    "event": "MODEL_FILES_WARMED",
+    "seconds": 76.10724366300019,
+    "shard_count": 5
+  },
+  "new_arc_inference": false,
+  "prompt_version": "macro_api_comprehension_prompt.v1_frozen_v2_contract",
+  "rates": {
+    "argument_contract_valid": 0.2,
+    "compile_valid": 0.0,
+    "composition_valid": 0.05,
+    "json_parseable": 1.0,
+    "macro_ids_valid": 1.0,
+    "parameter_valid": 0.05,
+    "response_received": 1.0,
+    "schema_valid": 0.2,
+    "type_valid": 0.05
+  },
+  "raw_response_policy": "Raw responses and parsed programs are retained only in ignored local/Kaggle checkpoint artifacts; this aggregate has no raw completion content.",
+  "recommended_next_experiment": "API_REPRESENTATION_ABLATION",
+  "registry_hash": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+  "run_wall_seconds": 291.562287146,
+  "sampling": {
+    "seed": 0,
+    "temperature": 0,
+    "thinking": false,
+    "top_p": 1
+  },
+  "schema_hash": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa",
+  "status": "COMPLETE_FROZEN_ONE_RUN",
+  "top_failure_types": [
+    [
+      "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER",
+      46
+    ],
+    [
+      "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+      9
+    ],
+    [
+      "COMPILER_FAILURE/INELIGIBLE",
+      3
+    ],
+    [
+      "MACRO_API_FAILURE/INVALID_ARGUMENT_NAME",
+      2
+    ]
+  ],
+  "worker_reports": [
+    {
+      "event": "MODEL_READY",
+      "gpu_after": {
+        "gpu_utilization_percent": 36,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_before": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 0
+      },
+      "gpu_id": 0,
+      "load_elapsed_seconds": 31.40001490099985,
+      "model_load_seconds": 6.962729543000023,
+      "worker_id": 0
+    },
+    {
+      "event": "MODEL_READY",
+      "gpu_after": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_before": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_id": 1,
+      "load_elapsed_seconds": 13.480694401000619,
+      "model_load_seconds": 5.76587317800022,
+      "worker_id": 1
+    },
+    {
+      "event": "MODEL_READY",
+      "gpu_after": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_before": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_id": 2,
+      "load_elapsed_seconds": 13.470913347000533,
+      "model_load_seconds": 5.807362504000594,
+      "worker_id": 2
+    },
+    {
+      "event": "MODEL_READY",
+      "gpu_after": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_before": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_id": 3,
+      "load_elapsed_seconds": 13.424096778000603,
+      "model_load_seconds": 5.757320650999645,
+      "worker_id": 3
+    }
+  ],
+  "worker_to_gpu_mapping": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3
+  }
+}
