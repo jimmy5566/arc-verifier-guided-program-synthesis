@@ -1,0 +1,588 @@
+{
+  "arc_data_used": false,
+  "arc_solutions_used": false,
+  "benchmark_hash": "90aba782703a8b1d2a4e97c8cde81a5e9e04aa0ca673ec882c70e42e0245ff00",
+  "best_parameter_source": "Q1_DETERMINISTIC_ONTOLOGY_REPAIR",
+  "candidate_inventory_sha256": "e6328d62cee8960e1127e3070a93678da288cca994f3cd71c4d123eeeae85682",
+  "case_count": 60,
+  "completed_at_utc": "2026-09-11T18:40:25.658269+00:00",
+  "conditions": {
+    "Q1_DETERMINISTIC_ONTOLOGY_REPAIR": {
+      "abstain_count": 5,
+      "baseline_success_regression_rate": 0.0,
+      "case_count": 60,
+      "compile_valid": 60,
+      "compile_valid_rate": 1.0,
+      "correct_patches": 12,
+      "incorrect_patches": 21,
+      "latency_seconds": 0.021383234999689194,
+      "parameter_failures_repaired": 5,
+      "patch_count": 33,
+      "patch_precision": 0.36363636363636365,
+      "patched_failure_cases": 12,
+      "per_parameter_field": {
+        "color_source": {
+          "correct_patches": 3,
+          "patches": 3,
+          "remaining_errors": 1,
+          "repair_rate": 1.0,
+          "s2_errors": 3
+        },
+        "count_kind": {
+          "correct_patches": 1,
+          "patches": 1,
+          "remaining_errors": 1,
+          "repair_rate": 1.0,
+          "s2_errors": 1
+        },
+        "direction": {
+          "correct_patches": 3,
+          "patches": 3,
+          "remaining_errors": 5,
+          "repair_rate": 0.375,
+          "s2_errors": 8
+        },
+        "operation": {
+          "correct_patches": 2,
+          "patches": 2,
+          "remaining_errors": 0,
+          "repair_rate": 1.0,
+          "s2_errors": 2
+        },
+        "orientation": {
+          "correct_patches": 3,
+          "patches": 3,
+          "remaining_errors": 12,
+          "repair_rate": 0.2,
+          "s2_errors": 15
+        },
+        "shape_source": {
+          "correct_patches": 0,
+          "patches": 0,
+          "remaining_errors": 7,
+          "repair_rate": 0.0,
+          "s2_errors": 7
+        }
+      },
+      "pure_parameter_repair_rate": 0.29411764705882354,
+      "repair_coverage": 0.7058823529411765,
+      "s2_success_regressed": 0,
+      "s2_success_retained": 31,
+      "scoring_calls": 0,
+      "semantic_outcomes": {
+        "SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_EXACT_CANONICAL": 33,
+        "SEMANTIC_OVER_TRANSFORMED": 3,
+        "SEMANTIC_PARTIAL": 6,
+        "SEMANTIC_WRONG_OPERATION": 3,
+        "SEMANTIC_WRONG_PARAMETER": 12
+      },
+      "semantic_success": 36,
+      "semantic_success_rate": 0.6,
+      "transition_matrix": {
+        "SEMANTIC_EQUIVALENT_ALTERNATE_TO_SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_EXACT_CANONICAL": 28,
+        "SEMANTIC_OVER_TRANSFORMED_TO_SEMANTIC_OVER_TRANSFORMED": 3,
+        "SEMANTIC_PARTIAL_TO_SEMANTIC_PARTIAL": 6,
+        "SEMANTIC_WRONG_OPERATION_TO_SEMANTIC_WRONG_OPERATION": 3,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_EXACT_CANONICAL": 5,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_WRONG_PARAMETER": 12
+      },
+      "wrong_parameter": 12
+    },
+    "Q2_LIKELIHOOD_PARAMETER_REPAIR": {
+      "abstain_count": 0,
+      "baseline_success_regression_rate": 0.5161290322580645,
+      "case_count": 60,
+      "compile_valid": 50,
+      "compile_valid_rate": 0.8333333333333334,
+      "correct_patches": 14,
+      "incorrect_patches": 45,
+      "latency_seconds": 313.5463118770002,
+      "parameter_failures_repaired": 0,
+      "patch_count": 59,
+      "patch_precision": 0.23728813559322035,
+      "patched_failure_cases": 17,
+      "per_parameter_field": {
+        "color_source": {
+          "correct_patches": 3,
+          "patches": 3,
+          "remaining_errors": 1,
+          "repair_rate": 1.0,
+          "s2_errors": 3
+        },
+        "count_kind": {
+          "correct_patches": 1,
+          "patches": 1,
+          "remaining_errors": 1,
+          "repair_rate": 1.0,
+          "s2_errors": 1
+        },
+        "direction": {
+          "correct_patches": 8,
+          "patches": 8,
+          "remaining_errors": 5,
+          "repair_rate": 1.0,
+          "s2_errors": 8
+        },
+        "operation": {
+          "correct_patches": 2,
+          "patches": 2,
+          "remaining_errors": 0,
+          "repair_rate": 1.0,
+          "s2_errors": 2
+        },
+        "orientation": {
+          "correct_patches": 0,
+          "patches": 3,
+          "remaining_errors": 12,
+          "repair_rate": 0.0,
+          "s2_errors": 15
+        },
+        "shape_source": {
+          "correct_patches": 0,
+          "patches": 0,
+          "remaining_errors": 7,
+          "repair_rate": 0.0,
+          "s2_errors": 7
+        }
+      },
+      "pure_parameter_repair_rate": 0.0,
+      "repair_coverage": 1.0,
+      "s2_success_regressed": 16,
+      "s2_success_retained": 15,
+      "scoring_calls": 215,
+      "semantic_outcomes": {
+        "SEMANTIC_AMBIGUOUS": 10,
+        "SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_EXACT_CANONICAL": 12,
+        "SEMANTIC_OVER_TRANSFORMED": 3,
+        "SEMANTIC_PARTIAL": 6,
+        "SEMANTIC_WRONG_OPERATION": 2,
+        "SEMANTIC_WRONG_PARAMETER": 24
+      },
+      "semantic_success": 15,
+      "semantic_success_rate": 0.25,
+      "transition_matrix": {
+        "SEMANTIC_EQUIVALENT_ALTERNATE_TO_SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_AMBIGUOUS": 4,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_EXACT_CANONICAL": 12,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_WRONG_PARAMETER": 12,
+        "SEMANTIC_OVER_TRANSFORMED_TO_SEMANTIC_OVER_TRANSFORMED": 3,
+        "SEMANTIC_PARTIAL_TO_SEMANTIC_PARTIAL": 6,
+        "SEMANTIC_WRONG_OPERATION_TO_SEMANTIC_AMBIGUOUS": 1,
+        "SEMANTIC_WRONG_OPERATION_TO_SEMANTIC_WRONG_OPERATION": 2,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_AMBIGUOUS": 5,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_WRONG_PARAMETER": 12
+      },
+      "wrong_parameter": 24
+    },
+    "Q3_CONSENSUS_PARAMETER_REPAIR": {
+      "abstain_count": 3,
+      "baseline_success_regression_rate": 0.1935483870967742,
+      "case_count": 60,
+      "compile_valid": 53,
+      "compile_valid_rate": 0.8833333333333333,
+      "correct_patches": 10,
+      "incorrect_patches": 30,
+      "latency_seconds": 588.6379851990009,
+      "parameter_failures_repaired": 0,
+      "patch_count": 40,
+      "patch_precision": 0.25,
+      "patched_failure_cases": 14,
+      "per_parameter_field": {
+        "color_source": {
+          "correct_patches": 2,
+          "patches": 2,
+          "remaining_errors": 1,
+          "repair_rate": 0.6666666666666666,
+          "s2_errors": 3
+        },
+        "count_kind": {
+          "correct_patches": 1,
+          "patches": 1,
+          "remaining_errors": 1,
+          "repair_rate": 1.0,
+          "s2_errors": 1
+        },
+        "direction": {
+          "correct_patches": 5,
+          "patches": 5,
+          "remaining_errors": 6,
+          "repair_rate": 0.625,
+          "s2_errors": 8
+        },
+        "operation": {
+          "correct_patches": 2,
+          "patches": 2,
+          "remaining_errors": 0,
+          "repair_rate": 1.0,
+          "s2_errors": 2
+        },
+        "orientation": {
+          "correct_patches": 0,
+          "patches": 2,
+          "remaining_errors": 13,
+          "repair_rate": 0.0,
+          "s2_errors": 15
+        },
+        "shape_source": {
+          "correct_patches": 0,
+          "patches": 0,
+          "remaining_errors": 7,
+          "repair_rate": 0.0,
+          "s2_errors": 7
+        }
+      },
+      "pure_parameter_repair_rate": 0.0,
+      "repair_coverage": 0.8235294117647058,
+      "s2_success_regressed": 6,
+      "s2_success_retained": 25,
+      "scoring_calls": 1670,
+      "semantic_outcomes": {
+        "SEMANTIC_AMBIGUOUS": 7,
+        "SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_EXACT_CANONICAL": 22,
+        "SEMANTIC_OVER_TRANSFORMED": 3,
+        "SEMANTIC_PARTIAL": 6,
+        "SEMANTIC_WRONG_OPERATION": 3,
+        "SEMANTIC_WRONG_PARAMETER": 16
+      },
+      "semantic_success": 25,
+      "semantic_success_rate": 0.4166666666666667,
+      "transition_matrix": {
+        "SEMANTIC_EQUIVALENT_ALTERNATE_TO_SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_AMBIGUOUS": 3,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_EXACT_CANONICAL": 22,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_WRONG_PARAMETER": 3,
+        "SEMANTIC_OVER_TRANSFORMED_TO_SEMANTIC_OVER_TRANSFORMED": 3,
+        "SEMANTIC_PARTIAL_TO_SEMANTIC_PARTIAL": 6,
+        "SEMANTIC_WRONG_OPERATION_TO_SEMANTIC_WRONG_OPERATION": 3,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_AMBIGUOUS": 4,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_WRONG_PARAMETER": 13
+      },
+      "wrong_parameter": 16
+    },
+    "Q4_CONSERVATIVE_HYBRID_REPAIR": {
+      "abstain_count": 0,
+      "baseline_success_regression_rate": 0.1935483870967742,
+      "case_count": 60,
+      "compile_valid": 53,
+      "compile_valid_rate": 0.8833333333333333,
+      "correct_patches": 17,
+      "incorrect_patches": 33,
+      "latency_seconds": 582.1666095830008,
+      "parameter_failures_repaired": 3,
+      "patch_count": 50,
+      "patch_precision": 0.34,
+      "patched_failure_cases": 17,
+      "per_parameter_field": {
+        "color_source": {
+          "correct_patches": 3,
+          "patches": 3,
+          "remaining_errors": 1,
+          "repair_rate": 1.0,
+          "s2_errors": 3
+        },
+        "count_kind": {
+          "correct_patches": 1,
+          "patches": 1,
+          "remaining_errors": 1,
+          "repair_rate": 1.0,
+          "s2_errors": 1
+        },
+        "direction": {
+          "correct_patches": 8,
+          "patches": 8,
+          "remaining_errors": 3,
+          "repair_rate": 1.0,
+          "s2_errors": 8
+        },
+        "operation": {
+          "correct_patches": 2,
+          "patches": 2,
+          "remaining_errors": 0,
+          "repair_rate": 1.0,
+          "s2_errors": 2
+        },
+        "orientation": {
+          "correct_patches": 3,
+          "patches": 5,
+          "remaining_errors": 10,
+          "repair_rate": 0.2,
+          "s2_errors": 15
+        },
+        "shape_source": {
+          "correct_patches": 0,
+          "patches": 0,
+          "remaining_errors": 7,
+          "repair_rate": 0.0,
+          "s2_errors": 7
+        }
+      },
+      "pure_parameter_repair_rate": 0.17647058823529413,
+      "repair_coverage": 1.0,
+      "s2_success_regressed": 6,
+      "s2_success_retained": 25,
+      "scoring_calls": 1670,
+      "semantic_outcomes": {
+        "SEMANTIC_AMBIGUOUS": 7,
+        "SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_EXACT_CANONICAL": 25,
+        "SEMANTIC_OVER_TRANSFORMED": 3,
+        "SEMANTIC_PARTIAL": 6,
+        "SEMANTIC_WRONG_OPERATION": 3,
+        "SEMANTIC_WRONG_PARAMETER": 13
+      },
+      "semantic_success": 28,
+      "semantic_success_rate": 0.4666666666666667,
+      "transition_matrix": {
+        "SEMANTIC_EQUIVALENT_ALTERNATE_TO_SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_AMBIGUOUS": 3,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_EXACT_CANONICAL": 22,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_WRONG_PARAMETER": 3,
+        "SEMANTIC_OVER_TRANSFORMED_TO_SEMANTIC_OVER_TRANSFORMED": 3,
+        "SEMANTIC_PARTIAL_TO_SEMANTIC_PARTIAL": 6,
+        "SEMANTIC_WRONG_OPERATION_TO_SEMANTIC_WRONG_OPERATION": 3,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_AMBIGUOUS": 4,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_EXACT_CANONICAL": 3,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_WRONG_PARAMETER": 10
+      },
+      "wrong_parameter": 13
+    }
+  },
+  "experiment_id": "PARAMETER_SEMANTIC_RETRIEVAL_V1",
+  "frozen_config_sha256": "002bd08825b127e7500cfbd154f91fbb5d55ea29137c2ba9577f3ee375a00853",
+  "hardware": {
+    "cuda_available": true,
+    "cuda_runtime": null,
+    "gpu_count": 4,
+    "gpus": [
+      {
+        "driver_version": "580.159.04",
+        "index": 0,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      },
+      {
+        "driver_version": "580.159.04",
+        "index": 1,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      },
+      {
+        "driver_version": "580.159.04",
+        "index": 2,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      },
+      {
+        "driver_version": "580.159.04",
+        "index": 3,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      }
+    ],
+    "reason": "",
+    "status": "SUCCESS"
+  },
+  "model": {
+    "architecture": "Qwen3ForCausalLM",
+    "backend": "transformers_local",
+    "dtype": "bfloat16",
+    "internet": false,
+    "local_files_only": true,
+    "model_source": "qwen-lm/qwen-3/Transformers/8b/1"
+  },
+  "model_warmup": {
+    "bytes_read": 16381516776,
+    "event": "MODEL_FILES_WARMED",
+    "seconds": 140.144531153,
+    "shard_count": 5
+  },
+  "new_arc_inference": false,
+  "ontology": {
+    "alias_map_sha256": "5e95012811d72417c5dd3fa146911ddc6c8aebbebdcedc9c1c9c1d00b1994e59",
+    "sha256": "6a4bdfaf812e0eff9d9667e7cc54dcafab158d0d416e97cbcea6acafe4f4e09a"
+  },
+  "parameter_layer_status": "PARAMETER_LAYER_STILL_BLOCKED",
+  "parameter_only_theoretical_ceiling": {
+    "rate": 0.8,
+    "semantic_success": 48
+  },
+  "q0_s2_baseline": {
+    "case_outcomes": {
+      "parameter_count_01": "SEMANTIC_WRONG_OPERATION",
+      "parameter_count_02": "SEMANTIC_WRONG_OPERATION",
+      "parameter_count_03": "SEMANTIC_WRONG_OPERATION",
+      "parameter_count_04": "SEMANTIC_OVER_TRANSFORMED",
+      "parameter_object_01": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_object_02": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_object_03": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_object_04": "SEMANTIC_WRONG_PARAMETER",
+      "parameter_object_05": "SEMANTIC_WRONG_PARAMETER",
+      "parameter_path_01": "SEMANTIC_WRONG_PARAMETER",
+      "parameter_path_02": "SEMANTIC_WRONG_PARAMETER",
+      "parameter_path_03": "SEMANTIC_WRONG_PARAMETER",
+      "parameter_sequence_01": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_sequence_02": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_sequence_03": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_01": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_02": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_03": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_04": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_05": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_06": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_07": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_08": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_09": "SEMANTIC_EXACT_CANONICAL",
+      "single_symmetry_01": "SEMANTIC_EXACT_CANONICAL",
+      "single_symmetry_02": "SEMANTIC_EQUIVALENT_ALTERNATE",
+      "single_symmetry_03": "SEMANTIC_EXACT_CANONICAL",
+      "single_symmetry_04": "SEMANTIC_EQUIVALENT_ALTERNATE",
+      "single_symmetry_05": "SEMANTIC_EXACT_CANONICAL",
+      "single_symmetry_06": "SEMANTIC_EQUIVALENT_ALTERNATE",
+      "three_step_object_01": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_object_02": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_object_03": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_object_04": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_object_05": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_path_01": "SEMANTIC_WRONG_PARAMETER",
+      "three_step_path_02": "SEMANTIC_WRONG_PARAMETER",
+      "three_step_path_03": "SEMANTIC_WRONG_PARAMETER",
+      "three_step_path_04": "SEMANTIC_WRONG_PARAMETER",
+      "three_step_path_05": "SEMANTIC_WRONG_PARAMETER",
+      "three_step_sequence_01": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_sequence_02": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_sequence_03": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_sequence_04": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_sequence_05": "SEMANTIC_EXACT_CANONICAL",
+      "two_step_count_generate_01": "SEMANTIC_WRONG_PARAMETER",
+      "two_step_count_generate_02": "SEMANTIC_PARTIAL",
+      "two_step_count_generate_03": "SEMANTIC_PARTIAL",
+      "two_step_count_generate_04": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_05": "SEMANTIC_WRONG_PARAMETER",
+      "two_step_count_generate_06": "SEMANTIC_WRONG_PARAMETER",
+      "two_step_count_generate_07": "SEMANTIC_PARTIAL",
+      "two_step_count_generate_08": "SEMANTIC_PARTIAL",
+      "two_step_count_generate_09": "SEMANTIC_WRONG_PARAMETER",
+      "two_step_count_generate_10": "SEMANTIC_WRONG_PARAMETER",
+      "two_step_count_generate_11": "SEMANTIC_WRONG_PARAMETER",
+      "two_step_count_generate_12": "SEMANTIC_PARTIAL",
+      "two_step_count_generate_13": "SEMANTIC_PARTIAL",
+      "two_step_count_generate_14": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_15": "SEMANTIC_WRONG_PARAMETER"
+    },
+    "compile_valid": 60,
+    "result_sha256": "090735b1f487aff27141dbb39d516f8a5a64eb50631091e9cc32b121057ab187",
+    "semantic_success": 31,
+    "semantic_success_rate": 0.5166666666666667,
+    "source": "PROGRAM_SELECTION_REPAIR_V1/S2_FAMILY_FIRST_SELECTION",
+    "wrong_operation": 3,
+    "wrong_parameter": 17
+  },
+  "raw_response_policy": "No text generation occurred. Per-candidate scores and patched programs exist only in ignored checkpoints; aggregate contains only metrics.",
+  "recommended_next_experiment": "PARAMETER_SEMANTIC_RETRIEVAL_ANALYSIS_V2",
+  "registry_hash": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+  "run_wall_seconds": 823.258756003,
+  "schema_hash": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa",
+  "scoring": {
+    "method": "teacher-forced forward likelihood only",
+    "minimum_margin": 0.05,
+    "normalization": "mean log probability per continuation token",
+    "source_b_config_sha256": "634d4125e13f17717bd94d130031419e12de33d834bc2a38c344bf03087bc3f4",
+    "source_c_config_sha256": "634d4125e13f17717bd94d130031419e12de33d834bc2a38c344bf03087bc3f4",
+    "source_d_config_sha256": "798d392498883c7f667e54d3bed39580d5c11d8655e54781b0ac684078de19f6",
+    "source_d_rule": "Q3 requires B/C agreement and no conflict with a unique A; Q4 prioritizes unique A else B/C agreement"
+  },
+  "selective_parameter_repair_v2_enabled": false,
+  "status": "COMPLETE_FROZEN_ONE_RUN_PER_CONDITION",
+  "worker_reports": [
+    {
+      "event": "MODEL_READY",
+      "gpu_id": 0,
+      "model_load_completed": "2026-09-11T18:29:51.462290+00:00",
+      "model_load_seconds": 7.175649744999987,
+      "model_load_started": "2026-09-11T18:29:03.066601+00:00",
+      "peak_vram_mb": 15964,
+      "worker_id": 0
+    },
+    {
+      "event": "MODEL_READY",
+      "gpu_id": 1,
+      "model_load_completed": "2026-09-11T18:30:05.421673+00:00",
+      "model_load_seconds": 5.79598131299997,
+      "model_load_started": "2026-09-11T18:29:51.943246+00:00",
+      "peak_vram_mb": 15964,
+      "worker_id": 1
+    },
+    {
+      "event": "MODEL_READY",
+      "gpu_id": 2,
+      "model_load_completed": "2026-09-11T18:30:19.231030+00:00",
+      "model_load_seconds": 5.782597237999994,
+      "model_load_started": "2026-09-11T18:30:05.854963+00:00",
+      "peak_vram_mb": 15964,
+      "worker_id": 2
+    },
+    {
+      "event": "MODEL_READY",
+      "gpu_id": 3,
+      "model_load_completed": "2026-09-11T18:30:32.998426+00:00",
+      "model_load_seconds": 5.7935677630000555,
+      "model_load_started": "2026-09-11T18:30:19.665205+00:00",
+      "peak_vram_mb": 15964,
+      "worker_id": 3
+    }
+  ],
+  "worker_to_gpu_mapping": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3
+  },
+  "q4_post_freeze_slot_audit": {
+    "color_source": {
+      "s2_errors": 3,
+      "patches": 3,
+      "correct_patches": 3,
+      "remaining_errors": 0,
+      "repair_rate": 1.0
+    },
+    "count_kind": {
+      "s2_errors": 1,
+      "patches": 1,
+      "correct_patches": 1,
+      "remaining_errors": 0,
+      "repair_rate": 1.0
+    },
+    "direction": {
+      "s2_errors": 8,
+      "patches": 8,
+      "correct_patches": 8,
+      "remaining_errors": 0,
+      "repair_rate": 1.0
+    },
+    "operation": {
+      "s2_errors": 2,
+      "patches": 2,
+      "correct_patches": 2,
+      "remaining_errors": 0,
+      "repair_rate": 1.0
+    },
+    "orientation": {
+      "s2_errors": 15,
+      "patches": 5,
+      "correct_patches": 3,
+      "remaining_errors": 12,
+      "repair_rate": 0.2
+    },
+    "shape_source": {
+      "s2_errors": 7,
+      "patches": 0,
+      "correct_patches": 0,
+      "remaining_errors": 7,
+      "repair_rate": 0.0
+    }
+  }
+}
