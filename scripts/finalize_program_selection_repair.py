@@ -28,6 +28,14 @@ def pct(value: float) -> str:
     return f"{value * 100:.1f}%"
 
 
+def contains_forbidden_key(value: object, forbidden: set[str]) -> bool:
+    if isinstance(value, dict):
+        return any(key in forbidden or contains_forbidden_key(item, forbidden) for key, item in value.items())
+    if isinstance(value, list):
+        return any(contains_forbidden_key(item, forbidden) for item in value)
+    return False
+
+
 def validate(result: dict[str, Any], frozen: dict[str, Any], benchmark: dict[str, Any]) -> None:
     if result.get("experiment_id") != "PROGRAM_SELECTION_REPAIR_V1":
         raise ValueError("unexpected experiment identifier")
@@ -45,8 +53,7 @@ def validate(result: dict[str, Any], frozen: dict[str, Any], benchmark: dict[str
     if tuple(result.get("conditions", {}).keys()) != required:
         raise ValueError("all and only frozen S1--S4 conditions are required")
     forbidden_public_keys = {"raw_response", "materialized_program", "canonical_program", "expected_macro_ids", "literal_values"}
-    serialized = json.dumps(result, sort_keys=True)
-    if any(key in serialized for key in forbidden_public_keys):
+    if contains_forbidden_key(result, forbidden_public_keys):
         raise ValueError("aggregate result contains raw/canonical program material")
     for name in required:
         item = result["conditions"][name]
