@@ -107,14 +107,16 @@ def _run_p2(*, worker_id: int, provider: Any, config: GenerationConfig, cases: l
 def _run_p3(*, worker_id: int, provider: Any, config: GenerationConfig, cases: list[Mapping[str, Any]], worker_config: Mapping[str, Any], root: str, results: Queue) -> None:
     for case in cases:
         skeleton, _, _ = _baseline(worker_config, str(case["case_id"]))
-        choices: dict[str, Any] = {}; raw_responses: dict[str, str | None] = {}; stats: list[Mapping[str, Any]] = []; reason = ""
+        choices: dict[str, Any] = {}; raw_responses: dict[str, str | None] = {}; stats: list[Mapping[str, Any]] = []; reasons: list[str] = []
         for slot in parameter_slots(skeleton):
             raw, stat = _generate(provider, slotwise_choice_prompt(case, skeleton, slot), config)
             selected, slot_reason = parse_slotwise_choice(raw, slot)
             raw_responses[slot.key] = raw; stats.append(stat)
             if selected is None:
-                reason = f"{slot.key}: {slot_reason}"; break
-            choices[slot.key] = selected
+                reasons.append(f"{slot.key}: {slot_reason}")
+            else:
+                choices[slot.key] = selected
+        reason = "; ".join(reasons)
         program = None if reason else program_from_choices(skeleton, choices)
         record = _worker_record(case_id=str(case["case_id"]), worker_id=worker_id, condition=CONDITIONS[2], program=program, choices=None if reason else choices, stats=stats, adapter_status="SUCCESS" if not reason else reason)
         _checkpoint(root, CONDITIONS[2], str(case["case_id"]), record | {"raw_responses": raw_responses})

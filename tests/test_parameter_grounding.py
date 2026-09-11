@@ -80,3 +80,16 @@ def test_parameter_transition_summary_counts_repair_and_regression() -> None:
     assert summary["parameter_failures_repaired"] == 1
     assert summary["s2_success_regressed"] == 1
     assert summary["transition_matrix"]["SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_EXACT_CANONICAL"] == 1
+
+
+def test_frozen_parameter_config_preserves_s2_and_keeps_labels_out_of_prompts() -> None:
+    root = Path(__file__).resolve().parents[1]
+    frozen = json.loads((root / "configs" / "PARAMETER_GROUNDING_REPAIR_V1_FROZEN_CONFIG.json").read_text(encoding="utf-8"))
+    assert frozen["p0_s2_baseline"]["semantic_success"] == 31
+    assert frozen["p0_s2_baseline"]["wrong_parameter"] == 17
+    assert frozen["forensics"]["pure_parameter_failure_count"] == 17
+    case = _case("parameter_path_01"); skeleton = skeleton_by_id("CV027")
+    assert skeleton is not None
+    prompt = constrained_choice_prompt(case, skeleton, baseline={})
+    assert "SEMANTIC_WRONG_PARAMETER" not in prompt
+    assert "case_outcomes" not in prompt
