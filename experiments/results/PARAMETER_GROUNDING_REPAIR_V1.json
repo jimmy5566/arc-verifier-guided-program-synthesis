@@ -1,0 +1,721 @@
+{
+  "arc_data_used": false,
+  "arc_oracle_ladder_ready": false,
+  "arc_solutions_used": false,
+  "benchmark_hash": "90aba782703a8b1d2a4e97c8cde81a5e9e04aa0ca673ec882c70e42e0245ff00",
+  "best_parameter_pipeline": "P4_SELECTIVE_PARAMETER_REPAIR",
+  "case_count": 60,
+  "completed_at_utc": "2026-09-11T17:40:23.600357+00:00",
+  "conditions": {
+    "P1_NORMALIZED_SLOT_EXTRACTION": {
+      "adapter_failures": 47,
+      "canonical_exact": 0,
+      "case_count": 60,
+      "category_metrics": {
+        "PARAMETER_CONTRACT": {
+          "case_count": 15,
+          "compile_valid": 0,
+          "semantic_outcomes": {
+            "SEMANTIC_AMBIGUOUS": 15
+          },
+          "semantic_success": 0
+        },
+        "SINGLE_MACRO": {
+          "case_count": 15,
+          "compile_valid": 3,
+          "semantic_outcomes": {
+            "SEMANTIC_AMBIGUOUS": 12,
+            "SEMANTIC_EQUIVALENT_ALTERNATE": 3
+          },
+          "semantic_success": 3
+        },
+        "THREE_STEP_COMPOSITION": {
+          "case_count": 15,
+          "compile_valid": 0,
+          "semantic_outcomes": {
+            "SEMANTIC_AMBIGUOUS": 15
+          },
+          "semantic_success": 0
+        },
+        "TWO_STEP_TYPED_CHAIN": {
+          "case_count": 15,
+          "compile_valid": 10,
+          "semantic_outcomes": {
+            "SEMANTIC_AMBIGUOUS": 5,
+            "SEMANTIC_PARTIAL": 3,
+            "SEMANTIC_WRONG_PARAMETER": 7
+          },
+          "semantic_success": 0
+        }
+      },
+      "compile_valid_rate": 0.21666666666666667,
+      "completion_tokens": 2660,
+      "equivalent_alternate": 3,
+      "funnel": {
+        "argument_contract_valid": 13,
+        "compile_valid": 13,
+        "composition_valid": 13,
+        "json_parseable": 13,
+        "macro_ids_valid": 13,
+        "parameter_valid": 13,
+        "response_received": 13,
+        "schema_valid": 13,
+        "type_valid": 13
+      },
+      "generation_calls": 60,
+      "latency_seconds": 187.8939282880001,
+      "over_transformed": 0,
+      "parameter_failure_repair_rate": 0.0,
+      "parameter_failures_repaired": 0,
+      "per_parameter_field": {
+        "color_source": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 3
+        },
+        "count_kind": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 1
+        },
+        "direction": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 8
+        },
+        "operation": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 2
+        },
+        "orientation": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 15
+        },
+        "shape_source": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 7
+        }
+      },
+      "prompt_tokens": 32700,
+      "s2_success_regressed": 28,
+      "s2_success_retained": 3,
+      "selective_changed_slots": 0,
+      "semantic_outcomes": {
+        "SEMANTIC_AMBIGUOUS": 47,
+        "SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_PARTIAL": 3,
+        "SEMANTIC_WRONG_PARAMETER": 7
+      },
+      "semantic_success": 3,
+      "semantic_success_rate": 0.05,
+      "success_regression_rate": 0.9032258064516129,
+      "transition_matrix": {
+        "SEMANTIC_EQUIVALENT_ALTERNATE_TO_SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_AMBIGUOUS": 28,
+        "SEMANTIC_OVER_TRANSFORMED_TO_SEMANTIC_AMBIGUOUS": 3,
+        "SEMANTIC_PARTIAL_TO_SEMANTIC_AMBIGUOUS": 3,
+        "SEMANTIC_PARTIAL_TO_SEMANTIC_PARTIAL": 3,
+        "SEMANTIC_WRONG_OPERATION_TO_SEMANTIC_AMBIGUOUS": 3,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_AMBIGUOUS": 10,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_WRONG_PARAMETER": 7
+      },
+      "wrong_operation": 0,
+      "wrong_parameter": 7
+    },
+    "P2_CONSTRAINED_PARAMETER_CHOICE": {
+      "adapter_failures": 60,
+      "canonical_exact": 0,
+      "case_count": 60,
+      "category_metrics": {
+        "PARAMETER_CONTRACT": {
+          "case_count": 15,
+          "compile_valid": 0,
+          "semantic_outcomes": {
+            "SEMANTIC_AMBIGUOUS": 15
+          },
+          "semantic_success": 0
+        },
+        "SINGLE_MACRO": {
+          "case_count": 15,
+          "compile_valid": 0,
+          "semantic_outcomes": {
+            "SEMANTIC_AMBIGUOUS": 15
+          },
+          "semantic_success": 0
+        },
+        "THREE_STEP_COMPOSITION": {
+          "case_count": 15,
+          "compile_valid": 0,
+          "semantic_outcomes": {
+            "SEMANTIC_AMBIGUOUS": 15
+          },
+          "semantic_success": 0
+        },
+        "TWO_STEP_TYPED_CHAIN": {
+          "case_count": 15,
+          "compile_valid": 0,
+          "semantic_outcomes": {
+            "SEMANTIC_AMBIGUOUS": 15
+          },
+          "semantic_success": 0
+        }
+      },
+      "compile_valid_rate": 0.0,
+      "completion_tokens": 2731,
+      "equivalent_alternate": 0,
+      "funnel": {
+        "argument_contract_valid": 0,
+        "compile_valid": 0,
+        "composition_valid": 0,
+        "json_parseable": 0,
+        "macro_ids_valid": 0,
+        "parameter_valid": 0,
+        "response_received": 0,
+        "schema_valid": 0,
+        "type_valid": 0
+      },
+      "generation_calls": 60,
+      "latency_seconds": 210.71893521299933,
+      "over_transformed": 0,
+      "parameter_failure_repair_rate": 0.0,
+      "parameter_failures_repaired": 0,
+      "per_parameter_field": {
+        "color_source": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 3
+        },
+        "count_kind": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 1
+        },
+        "direction": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 8
+        },
+        "operation": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 2
+        },
+        "orientation": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 15
+        },
+        "shape_source": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 7
+        }
+      },
+      "prompt_tokens": 86332,
+      "s2_success_regressed": 31,
+      "s2_success_retained": 0,
+      "selective_changed_slots": 0,
+      "semantic_outcomes": {
+        "SEMANTIC_AMBIGUOUS": 60
+      },
+      "semantic_success": 0,
+      "semantic_success_rate": 0.0,
+      "success_regression_rate": 1.0,
+      "transition_matrix": {
+        "SEMANTIC_EQUIVALENT_ALTERNATE_TO_SEMANTIC_AMBIGUOUS": 3,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_AMBIGUOUS": 28,
+        "SEMANTIC_OVER_TRANSFORMED_TO_SEMANTIC_AMBIGUOUS": 3,
+        "SEMANTIC_PARTIAL_TO_SEMANTIC_AMBIGUOUS": 6,
+        "SEMANTIC_WRONG_OPERATION_TO_SEMANTIC_AMBIGUOUS": 3,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_AMBIGUOUS": 17
+      },
+      "wrong_operation": 0,
+      "wrong_parameter": 0
+    },
+    "P3_SLOTWISE_PARAMETER_SELECTION": {
+      "adapter_failures": 60,
+      "canonical_exact": 0,
+      "case_count": 60,
+      "category_metrics": {
+        "PARAMETER_CONTRACT": {
+          "case_count": 15,
+          "compile_valid": 0,
+          "semantic_outcomes": {
+            "SEMANTIC_AMBIGUOUS": 15
+          },
+          "semantic_success": 0
+        },
+        "SINGLE_MACRO": {
+          "case_count": 15,
+          "compile_valid": 0,
+          "semantic_outcomes": {
+            "SEMANTIC_AMBIGUOUS": 15
+          },
+          "semantic_success": 0
+        },
+        "THREE_STEP_COMPOSITION": {
+          "case_count": 15,
+          "compile_valid": 0,
+          "semantic_outcomes": {
+            "SEMANTIC_AMBIGUOUS": 15
+          },
+          "semantic_success": 0
+        },
+        "TWO_STEP_TYPED_CHAIN": {
+          "case_count": 15,
+          "compile_valid": 0,
+          "semantic_outcomes": {
+            "SEMANTIC_AMBIGUOUS": 15
+          },
+          "semantic_success": 0
+        }
+      },
+      "compile_valid_rate": 0.0,
+      "completion_tokens": 2991,
+      "equivalent_alternate": 0,
+      "funnel": {
+        "argument_contract_valid": 0,
+        "compile_valid": 0,
+        "composition_valid": 0,
+        "json_parseable": 0,
+        "macro_ids_valid": 0,
+        "parameter_valid": 0,
+        "response_received": 0,
+        "schema_valid": 0,
+        "type_valid": 0
+      },
+      "generation_calls": 215,
+      "latency_seconds": 253.3921376619994,
+      "over_transformed": 0,
+      "parameter_failure_repair_rate": 0.0,
+      "parameter_failures_repaired": 0,
+      "per_parameter_field": {
+        "color_source": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 3
+        },
+        "count_kind": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 1
+        },
+        "direction": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 8
+        },
+        "operation": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 2
+        },
+        "orientation": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 15
+        },
+        "shape_source": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 7
+        }
+      },
+      "prompt_tokens": 190835,
+      "s2_success_regressed": 31,
+      "s2_success_retained": 0,
+      "selective_changed_slots": 0,
+      "semantic_outcomes": {
+        "SEMANTIC_AMBIGUOUS": 60
+      },
+      "semantic_success": 0,
+      "semantic_success_rate": 0.0,
+      "success_regression_rate": 1.0,
+      "transition_matrix": {
+        "SEMANTIC_EQUIVALENT_ALTERNATE_TO_SEMANTIC_AMBIGUOUS": 3,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_AMBIGUOUS": 28,
+        "SEMANTIC_OVER_TRANSFORMED_TO_SEMANTIC_AMBIGUOUS": 3,
+        "SEMANTIC_PARTIAL_TO_SEMANTIC_AMBIGUOUS": 6,
+        "SEMANTIC_WRONG_OPERATION_TO_SEMANTIC_AMBIGUOUS": 3,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_AMBIGUOUS": 17
+      },
+      "wrong_operation": 0,
+      "wrong_parameter": 0
+    },
+    "P4_SELECTIVE_PARAMETER_REPAIR": {
+      "adapter_failures": 60,
+      "canonical_exact": 28,
+      "case_count": 60,
+      "category_metrics": {
+        "PARAMETER_CONTRACT": {
+          "case_count": 15,
+          "compile_valid": 15,
+          "semantic_outcomes": {
+            "SEMANTIC_EXACT_CANONICAL": 6,
+            "SEMANTIC_OVER_TRANSFORMED": 1,
+            "SEMANTIC_WRONG_OPERATION": 3,
+            "SEMANTIC_WRONG_PARAMETER": 5
+          },
+          "semantic_success": 6
+        },
+        "SINGLE_MACRO": {
+          "case_count": 15,
+          "compile_valid": 15,
+          "semantic_outcomes": {
+            "SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+            "SEMANTIC_EXACT_CANONICAL": 12
+          },
+          "semantic_success": 15
+        },
+        "THREE_STEP_COMPOSITION": {
+          "case_count": 15,
+          "compile_valid": 15,
+          "semantic_outcomes": {
+            "SEMANTIC_EXACT_CANONICAL": 10,
+            "SEMANTIC_WRONG_PARAMETER": 5
+          },
+          "semantic_success": 10
+        },
+        "TWO_STEP_TYPED_CHAIN": {
+          "case_count": 15,
+          "compile_valid": 15,
+          "semantic_outcomes": {
+            "SEMANTIC_OVER_TRANSFORMED": 2,
+            "SEMANTIC_PARTIAL": 6,
+            "SEMANTIC_WRONG_PARAMETER": 7
+          },
+          "semantic_success": 0
+        }
+      },
+      "compile_valid_rate": 1.0,
+      "completion_tokens": 3188,
+      "equivalent_alternate": 3,
+      "funnel": {
+        "argument_contract_valid": 60,
+        "compile_valid": 60,
+        "composition_valid": 60,
+        "json_parseable": 60,
+        "macro_ids_valid": 60,
+        "parameter_valid": 60,
+        "response_received": 60,
+        "schema_valid": 60,
+        "type_valid": 60
+      },
+      "generation_calls": 60,
+      "latency_seconds": 245.81111306000014,
+      "over_transformed": 3,
+      "parameter_failure_repair_rate": 0.0,
+      "parameter_failures_repaired": 0,
+      "per_parameter_field": {
+        "color_source": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 3
+        },
+        "count_kind": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 1
+        },
+        "direction": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 8
+        },
+        "operation": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 2
+        },
+        "orientation": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 15
+        },
+        "shape_source": {
+          "repair_rate": 0.0,
+          "repaired": 0,
+          "s2_errors": 7
+        }
+      },
+      "prompt_tokens": 91024,
+      "s2_success_regressed": 0,
+      "s2_success_retained": 31,
+      "selective_changed_slots": 0,
+      "semantic_outcomes": {
+        "SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_EXACT_CANONICAL": 28,
+        "SEMANTIC_OVER_TRANSFORMED": 3,
+        "SEMANTIC_PARTIAL": 6,
+        "SEMANTIC_WRONG_OPERATION": 3,
+        "SEMANTIC_WRONG_PARAMETER": 17
+      },
+      "semantic_success": 31,
+      "semantic_success_rate": 0.5166666666666667,
+      "success_regression_rate": 0.0,
+      "transition_matrix": {
+        "SEMANTIC_EQUIVALENT_ALTERNATE_TO_SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_EXACT_CANONICAL": 28,
+        "SEMANTIC_OVER_TRANSFORMED_TO_SEMANTIC_OVER_TRANSFORMED": 3,
+        "SEMANTIC_PARTIAL_TO_SEMANTIC_PARTIAL": 6,
+        "SEMANTIC_WRONG_OPERATION_TO_SEMANTIC_WRONG_OPERATION": 3,
+        "SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_WRONG_PARAMETER": 17
+      },
+      "wrong_operation": 3,
+      "wrong_parameter": 17
+    }
+  },
+  "experiment_id": "PARAMETER_GROUNDING_REPAIR_V1",
+  "feature_flag": "parameter_grounding_mode",
+  "forensics": {
+    "c3_static_slot_interface_confounds": 17,
+    "non_parameter_structural_failure_count": 0,
+    "pure_parameter_failure_count": 17,
+    "s2_wrong_parameter_cases": 17,
+    "top_error_subtypes": {
+      "MISSING_SEMANTIC_SLOT": 3,
+      "WRONG_COUNT_SEMANTICS": 1,
+      "WRONG_ENUM_VALUE": 2,
+      "WRONG_SYMBOLIC_SOURCE": 30
+    },
+    "top_parameter_fields": {
+      "color_source": 3,
+      "count_kind": 1,
+      "direction": 8,
+      "operation": 2,
+      "orientation": 15,
+      "shape_source": 7
+    }
+  },
+  "frozen_config_sha256": "20b2384db892d04d8fe71e5b405778efd6336960cab8fe24f67bf7a12907af25",
+  "generation": {
+    "candidate_budget": 1,
+    "context_window": 12288,
+    "max_new_tokens": 256
+  },
+  "hardware": {
+    "cuda_available": true,
+    "cuda_runtime": null,
+    "gpu_count": 4,
+    "gpus": [
+      {
+        "driver_version": "580.159.04",
+        "index": 0,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      },
+      {
+        "driver_version": "580.159.04",
+        "index": 1,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      },
+      {
+        "driver_version": "580.159.04",
+        "index": 2,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      },
+      {
+        "driver_version": "580.159.04",
+        "index": 3,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      }
+    ],
+    "reason": "",
+    "status": "SUCCESS"
+  },
+  "model": {
+    "architecture": "Qwen3ForCausalLM",
+    "backend": "transformers_local",
+    "dtype": "bfloat16",
+    "internet": false,
+    "local_files_only": true,
+    "model_source": "qwen-lm/qwen-3/Transformers/8b/1"
+  },
+  "model_warmup": {
+    "bytes_read": 16381516776,
+    "event": "MODEL_FILES_WARMED",
+    "seconds": 86.51215143400003,
+    "shard_count": 5
+  },
+  "new_arc_inference": false,
+  "p0_s2_baseline": {
+    "case_outcomes": {
+      "parameter_count_01": "SEMANTIC_WRONG_OPERATION",
+      "parameter_count_02": "SEMANTIC_WRONG_OPERATION",
+      "parameter_count_03": "SEMANTIC_WRONG_OPERATION",
+      "parameter_count_04": "SEMANTIC_OVER_TRANSFORMED",
+      "parameter_object_01": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_object_02": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_object_03": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_object_04": "SEMANTIC_WRONG_PARAMETER",
+      "parameter_object_05": "SEMANTIC_WRONG_PARAMETER",
+      "parameter_path_01": "SEMANTIC_WRONG_PARAMETER",
+      "parameter_path_02": "SEMANTIC_WRONG_PARAMETER",
+      "parameter_path_03": "SEMANTIC_WRONG_PARAMETER",
+      "parameter_sequence_01": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_sequence_02": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_sequence_03": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_01": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_02": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_03": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_04": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_05": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_06": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_07": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_08": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_09": "SEMANTIC_EXACT_CANONICAL",
+      "single_symmetry_01": "SEMANTIC_EXACT_CANONICAL",
+      "single_symmetry_02": "SEMANTIC_EQUIVALENT_ALTERNATE",
+      "single_symmetry_03": "SEMANTIC_EXACT_CANONICAL",
+      "single_symmetry_04": "SEMANTIC_EQUIVALENT_ALTERNATE",
+      "single_symmetry_05": "SEMANTIC_EXACT_CANONICAL",
+      "single_symmetry_06": "SEMANTIC_EQUIVALENT_ALTERNATE",
+      "three_step_object_01": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_object_02": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_object_03": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_object_04": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_object_05": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_path_01": "SEMANTIC_WRONG_PARAMETER",
+      "three_step_path_02": "SEMANTIC_WRONG_PARAMETER",
+      "three_step_path_03": "SEMANTIC_WRONG_PARAMETER",
+      "three_step_path_04": "SEMANTIC_WRONG_PARAMETER",
+      "three_step_path_05": "SEMANTIC_WRONG_PARAMETER",
+      "three_step_sequence_01": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_sequence_02": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_sequence_03": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_sequence_04": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_sequence_05": "SEMANTIC_EXACT_CANONICAL",
+      "two_step_count_generate_01": "SEMANTIC_WRONG_PARAMETER",
+      "two_step_count_generate_02": "SEMANTIC_PARTIAL",
+      "two_step_count_generate_03": "SEMANTIC_PARTIAL",
+      "two_step_count_generate_04": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_05": "SEMANTIC_WRONG_PARAMETER",
+      "two_step_count_generate_06": "SEMANTIC_WRONG_PARAMETER",
+      "two_step_count_generate_07": "SEMANTIC_PARTIAL",
+      "two_step_count_generate_08": "SEMANTIC_PARTIAL",
+      "two_step_count_generate_09": "SEMANTIC_WRONG_PARAMETER",
+      "two_step_count_generate_10": "SEMANTIC_WRONG_PARAMETER",
+      "two_step_count_generate_11": "SEMANTIC_WRONG_PARAMETER",
+      "two_step_count_generate_12": "SEMANTIC_PARTIAL",
+      "two_step_count_generate_13": "SEMANTIC_PARTIAL",
+      "two_step_count_generate_14": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_15": "SEMANTIC_WRONG_PARAMETER"
+    },
+    "compile_valid": 60,
+    "result_sha256": "090735b1f487aff27141dbb39d516f8a5a64eb50631091e9cc32b121057ab187",
+    "semantic_success": 31,
+    "semantic_success_rate": 0.5166666666666667,
+    "source": "PROGRAM_SELECTION_REPAIR_V1/S2_FAMILY_FIRST_SELECTION",
+    "wrong_operation": 3,
+    "wrong_parameter": 17
+  },
+  "parameter_layer_status": "PARAMETER_LAYER_STILL_BLOCKED",
+  "prompt_hashes": {
+    "P1_NORMALIZED_SLOT_EXTRACTION": "ac9848f88355b2a91b8c0e57f9cfbb0af6ee5c491c7609e4c56a4a1243d031d5",
+    "P2_CONSTRAINED_PARAMETER_CHOICE": "b9976e087241ccb8f65a8fac12745a26a73fad9edbbf54b54c804b0b04c6bc07",
+    "P3_SLOTWISE_PARAMETER_SELECTION": "d40f1a9d945e8fd4fcc7ef64d70835f884ef605f9dca207d59099db17726762b",
+    "P4_SELECTIVE_PARAMETER_REPAIR": "7e06b12c8b8b4ca97fb86965d44349995e68717330182e545e3ce5ab1195267b",
+    "PARAMETER_CONTRACT": "e4e4fa820aa302f86104dc0d81f989dda7bf7ddb47db6ca0ff131895a73ceb1b"
+  },
+  "prompt_versions": {
+    "P1_NORMALIZED_SLOT_EXTRACTION": "parameter_grounding_v1.normalized",
+    "P2_CONSTRAINED_PARAMETER_CHOICE": "parameter_grounding_v1.constrained",
+    "P3_SLOTWISE_PARAMETER_SELECTION": "parameter_grounding_v1.slotwise",
+    "P4_SELECTIVE_PARAMETER_REPAIR": "parameter_grounding_v1.selective"
+  },
+  "raw_response_policy": "Raw responses, normalized choices, and materialized programs exist only in ignored checkpoints. This aggregate contains metrics only.",
+  "recommended_next_experiment": "PARAMETER_SEMANTIC_RETRIEVAL",
+  "registry_hash": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+  "run_wall_seconds": 416.2724805060001,
+  "sampling": {
+    "seed": 0,
+    "temperature": 0,
+    "thinking": false,
+    "top_p": 1
+  },
+  "schema_hash": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa",
+  "selective_parameter_repair_v1_enabled": false,
+  "status": "COMPLETE_FROZEN_ONE_RUN_PER_CONDITION",
+  "worker_reports": [
+    {
+      "event": "MODEL_READY",
+      "gpu_after": {
+        "gpu_utilization_percent": 35,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_before": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 0
+      },
+      "gpu_id": 0,
+      "load_elapsed_seconds": 31.50331450899995,
+      "model_load_seconds": 6.838553339000043,
+      "worker_id": 0
+    },
+    {
+      "event": "MODEL_READY",
+      "gpu_after": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_before": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_id": 1,
+      "load_elapsed_seconds": 13.514681960000019,
+      "model_load_seconds": 5.825200655999993,
+      "worker_id": 1
+    },
+    {
+      "event": "MODEL_READY",
+      "gpu_after": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_before": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_id": 2,
+      "load_elapsed_seconds": 13.484427900000014,
+      "model_load_seconds": 5.832641612000032,
+      "worker_id": 2
+    },
+    {
+      "event": "MODEL_READY",
+      "gpu_after": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_before": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_id": 3,
+      "load_elapsed_seconds": 13.337621936999994,
+      "model_load_seconds": 5.806305190000046,
+      "worker_id": 3
+    }
+  ],
+  "worker_to_gpu_mapping": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3
+  }
+}
