@@ -1,0 +1,923 @@
+{
+  "api_status": "API_STILL_BROKEN",
+  "arc_data_used": false,
+  "arc_solutions_used": false,
+  "benchmark_hash": "90aba782703a8b1d2a4e97c8cde81a5e9e04aa0ca673ec882c70e42e0245ff00",
+  "best_api_pipeline": "R2_TYPED_EXAMPLES",
+  "case_count": 60,
+  "completed_at_utc": "2026-09-11T15:12:50.029540+00:00",
+  "conditions": {
+    "R1_TYPED_COMPACT": {
+      "case_count": 60,
+      "category_metrics": {
+        "PARAMETER_CONTRACT": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 6,
+            "compile_valid": 3,
+            "composition_valid": 6,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 6,
+            "response_received": 15,
+            "schema_valid": 6,
+            "type_valid": 6
+          },
+          "rates": {
+            "argument_contract_valid": 0.4,
+            "compile_valid": 0.2,
+            "composition_valid": 0.4,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 0.4,
+            "response_received": 1.0,
+            "schema_valid": 0.4,
+            "type_valid": 0.4
+          }
+        },
+        "SINGLE_MACRO": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 9,
+            "compile_valid": 0,
+            "composition_valid": 0,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 0,
+            "response_received": 15,
+            "schema_valid": 9,
+            "type_valid": 0
+          },
+          "rates": {
+            "argument_contract_valid": 0.6,
+            "compile_valid": 0.0,
+            "composition_valid": 0.0,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 0.0,
+            "response_received": 1.0,
+            "schema_valid": 0.6,
+            "type_valid": 0.0
+          }
+        },
+        "THREE_STEP_COMPOSITION": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 0,
+            "compile_valid": 0,
+            "composition_valid": 0,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 0,
+            "response_received": 15,
+            "schema_valid": 0,
+            "type_valid": 0
+          },
+          "rates": {
+            "argument_contract_valid": 0.0,
+            "compile_valid": 0.0,
+            "composition_valid": 0.0,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 0.0,
+            "response_received": 1.0,
+            "schema_valid": 0.0,
+            "type_valid": 0.0
+          }
+        },
+        "TWO_STEP_TYPED_CHAIN": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 1,
+            "compile_valid": 0,
+            "composition_valid": 1,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 1,
+            "response_received": 15,
+            "schema_valid": 1,
+            "type_valid": 1
+          },
+          "rates": {
+            "argument_contract_valid": 0.06666666666666667,
+            "compile_valid": 0.0,
+            "composition_valid": 0.06666666666666667,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 0.06666666666666667,
+            "response_received": 1.0,
+            "schema_valid": 0.06666666666666667,
+            "type_valid": 0.06666666666666667
+          }
+        }
+      },
+      "completion_tokens": 7614,
+      "failure_types": [
+        [
+          "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER",
+          44
+        ],
+        [
+          "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          9
+        ],
+        [
+          "COMPILER_FAILURE/INELIGIBLE",
+          4
+        ]
+      ],
+      "funnel": {
+        "argument_contract_valid": 16,
+        "compile_valid": 3,
+        "composition_valid": 7,
+        "json_parseable": 60,
+        "macro_ids_valid": 60,
+        "parameter_valid": 7,
+        "response_received": 60,
+        "schema_valid": 16,
+        "type_valid": 7
+      },
+      "generation_calls": 60,
+      "latency_seconds": 543.450352439,
+      "prompt_tokens": 95714,
+      "rates": {
+        "argument_contract_valid": 0.26666666666666666,
+        "compile_valid": 0.05,
+        "composition_valid": 0.11666666666666667,
+        "json_parseable": 1.0,
+        "macro_ids_valid": 1.0,
+        "parameter_valid": 0.11666666666666667,
+        "response_received": 1.0,
+        "schema_valid": 0.26666666666666666,
+        "type_valid": 0.11666666666666667
+      }
+    },
+    "R2_TYPED_EXAMPLES": {
+      "case_count": 60,
+      "category_metrics": {
+        "PARAMETER_CONTRACT": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 15,
+            "compile_valid": 3,
+            "composition_valid": 14,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 14,
+            "response_received": 15,
+            "schema_valid": 15,
+            "type_valid": 14
+          },
+          "rates": {
+            "argument_contract_valid": 1.0,
+            "compile_valid": 0.2,
+            "composition_valid": 0.9333333333333333,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 0.9333333333333333,
+            "response_received": 1.0,
+            "schema_valid": 1.0,
+            "type_valid": 0.9333333333333333
+          }
+        },
+        "SINGLE_MACRO": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 15,
+            "compile_valid": 6,
+            "composition_valid": 6,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 6,
+            "response_received": 15,
+            "schema_valid": 15,
+            "type_valid": 6
+          },
+          "rates": {
+            "argument_contract_valid": 1.0,
+            "compile_valid": 0.4,
+            "composition_valid": 0.4,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 0.4,
+            "response_received": 1.0,
+            "schema_valid": 1.0,
+            "type_valid": 0.4
+          }
+        },
+        "THREE_STEP_COMPOSITION": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 15,
+            "compile_valid": 5,
+            "composition_valid": 15,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 15,
+            "response_received": 15,
+            "schema_valid": 15,
+            "type_valid": 15
+          },
+          "rates": {
+            "argument_contract_valid": 1.0,
+            "compile_valid": 0.3333333333333333,
+            "composition_valid": 1.0,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 1.0,
+            "response_received": 1.0,
+            "schema_valid": 1.0,
+            "type_valid": 1.0
+          }
+        },
+        "TWO_STEP_TYPED_CHAIN": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 15,
+            "compile_valid": 0,
+            "composition_valid": 15,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 15,
+            "response_received": 15,
+            "schema_valid": 15,
+            "type_valid": 15
+          },
+          "rates": {
+            "argument_contract_valid": 1.0,
+            "compile_valid": 0.0,
+            "composition_valid": 1.0,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 1.0,
+            "response_received": 1.0,
+            "schema_valid": 1.0,
+            "type_valid": 1.0
+          }
+        }
+      },
+      "completion_tokens": 8268,
+      "failure_types": [
+        [
+          "COMPILER_FAILURE/INELIGIBLE",
+          36
+        ],
+        [
+          "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          10
+        ]
+      ],
+      "funnel": {
+        "argument_contract_valid": 60,
+        "compile_valid": 14,
+        "composition_valid": 50,
+        "json_parseable": 60,
+        "macro_ids_valid": 60,
+        "parameter_valid": 50,
+        "response_received": 60,
+        "schema_valid": 60,
+        "type_valid": 50
+      },
+      "generation_calls": 60,
+      "latency_seconds": 591.6890972330007,
+      "prompt_tokens": 105194,
+      "rates": {
+        "argument_contract_valid": 1.0,
+        "compile_valid": 0.23333333333333334,
+        "composition_valid": 0.8333333333333334,
+        "json_parseable": 1.0,
+        "macro_ids_valid": 1.0,
+        "parameter_valid": 0.8333333333333334,
+        "response_received": 1.0,
+        "schema_valid": 1.0,
+        "type_valid": 0.8333333333333334
+      }
+    },
+    "R3_TWO_STAGE_TYPED": {
+      "case_count": 60,
+      "category_metrics": {
+        "PARAMETER_CONTRACT": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 7,
+            "compile_valid": 0,
+            "composition_valid": 7,
+            "json_parseable": 12,
+            "macro_ids_valid": 12,
+            "parameter_valid": 7,
+            "response_received": 12,
+            "schema_valid": 7,
+            "type_valid": 7
+          },
+          "rates": {
+            "argument_contract_valid": 0.4666666666666667,
+            "compile_valid": 0.0,
+            "composition_valid": 0.4666666666666667,
+            "json_parseable": 0.8,
+            "macro_ids_valid": 0.8,
+            "parameter_valid": 0.4666666666666667,
+            "response_received": 0.8,
+            "schema_valid": 0.4666666666666667,
+            "type_valid": 0.4666666666666667
+          }
+        },
+        "SINGLE_MACRO": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 0,
+            "compile_valid": 0,
+            "composition_valid": 0,
+            "json_parseable": 13,
+            "macro_ids_valid": 13,
+            "parameter_valid": 0,
+            "response_received": 13,
+            "schema_valid": 0,
+            "type_valid": 0
+          },
+          "rates": {
+            "argument_contract_valid": 0.0,
+            "compile_valid": 0.0,
+            "composition_valid": 0.0,
+            "json_parseable": 0.8666666666666667,
+            "macro_ids_valid": 0.8666666666666667,
+            "parameter_valid": 0.0,
+            "response_received": 0.8666666666666667,
+            "schema_valid": 0.0,
+            "type_valid": 0.0
+          }
+        },
+        "THREE_STEP_COMPOSITION": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 5,
+            "compile_valid": 0,
+            "composition_valid": 5,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 5,
+            "response_received": 15,
+            "schema_valid": 5,
+            "type_valid": 5
+          },
+          "rates": {
+            "argument_contract_valid": 0.3333333333333333,
+            "compile_valid": 0.0,
+            "composition_valid": 0.3333333333333333,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 0.3333333333333333,
+            "response_received": 1.0,
+            "schema_valid": 0.3333333333333333,
+            "type_valid": 0.3333333333333333
+          }
+        },
+        "TWO_STEP_TYPED_CHAIN": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 0,
+            "compile_valid": 0,
+            "composition_valid": 0,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 0,
+            "response_received": 15,
+            "schema_valid": 0,
+            "type_valid": 0
+          },
+          "rates": {
+            "argument_contract_valid": 0.0,
+            "compile_valid": 0.0,
+            "composition_valid": 0.0,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 0.0,
+            "response_received": 1.0,
+            "schema_valid": 0.0,
+            "type_valid": 0.0
+          }
+        }
+      },
+      "completion_tokens": 9662,
+      "failure_types": [
+        [
+          "PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER",
+          35
+        ],
+        [
+          "COMPILER_FAILURE/INELIGIBLE",
+          12
+        ],
+        [
+          "MACRO_API_FAILURE/INVALID_ARGUMENT_NAME",
+          8
+        ]
+      ],
+      "funnel": {
+        "argument_contract_valid": 12,
+        "compile_valid": 0,
+        "composition_valid": 12,
+        "json_parseable": 55,
+        "macro_ids_valid": 55,
+        "parameter_valid": 12,
+        "response_received": 55,
+        "schema_valid": 12,
+        "type_valid": 12
+      },
+      "generation_calls": 115,
+      "latency_seconds": 705.0488051100017,
+      "prompt_tokens": 170076,
+      "rates": {
+        "argument_contract_valid": 0.2,
+        "compile_valid": 0.0,
+        "composition_valid": 0.2,
+        "json_parseable": 0.9166666666666666,
+        "macro_ids_valid": 0.9166666666666666,
+        "parameter_valid": 0.2,
+        "response_received": 0.9166666666666666,
+        "schema_valid": 0.2,
+        "type_valid": 0.2
+      },
+      "skeleton": {
+        "case_count": 60,
+        "funnel": {
+          "final_grid": 55,
+          "json_parseable": 60,
+          "macro_ids_valid": 60,
+          "response_received": 60,
+          "type_valid": 55
+        },
+        "rates": {
+          "final_grid": 0.9166666666666666,
+          "json_parseable": 1.0,
+          "macro_ids_valid": 1.0,
+          "response_received": 1.0,
+          "type_valid": 0.9166666666666666
+        }
+      }
+    },
+    "R4_VERIFIER_GUIDED_API_REPAIR": {
+      "case_count": 60,
+      "category_metrics": {
+        "PARAMETER_CONTRACT": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 15,
+            "compile_valid": 3,
+            "composition_valid": 14,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 14,
+            "response_received": 15,
+            "schema_valid": 15,
+            "type_valid": 14
+          },
+          "rates": {
+            "argument_contract_valid": 1.0,
+            "compile_valid": 0.2,
+            "composition_valid": 0.9333333333333333,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 0.9333333333333333,
+            "response_received": 1.0,
+            "schema_valid": 1.0,
+            "type_valid": 0.9333333333333333
+          }
+        },
+        "SINGLE_MACRO": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 6,
+            "compile_valid": 6,
+            "composition_valid": 6,
+            "json_parseable": 6,
+            "macro_ids_valid": 6,
+            "parameter_valid": 6,
+            "response_received": 15,
+            "schema_valid": 6,
+            "type_valid": 6
+          },
+          "rates": {
+            "argument_contract_valid": 0.4,
+            "compile_valid": 0.4,
+            "composition_valid": 0.4,
+            "json_parseable": 0.4,
+            "macro_ids_valid": 0.4,
+            "parameter_valid": 0.4,
+            "response_received": 1.0,
+            "schema_valid": 0.4,
+            "type_valid": 0.4
+          }
+        },
+        "THREE_STEP_COMPOSITION": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 15,
+            "compile_valid": 5,
+            "composition_valid": 15,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 15,
+            "response_received": 15,
+            "schema_valid": 15,
+            "type_valid": 15
+          },
+          "rates": {
+            "argument_contract_valid": 1.0,
+            "compile_valid": 0.3333333333333333,
+            "composition_valid": 1.0,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 1.0,
+            "response_received": 1.0,
+            "schema_valid": 1.0,
+            "type_valid": 1.0
+          }
+        },
+        "TWO_STEP_TYPED_CHAIN": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 15,
+            "compile_valid": 0,
+            "composition_valid": 15,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 15,
+            "response_received": 15,
+            "schema_valid": 15,
+            "type_valid": 15
+          },
+          "rates": {
+            "argument_contract_valid": 1.0,
+            "compile_valid": 0.0,
+            "composition_valid": 1.0,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 1.0,
+            "response_received": 1.0,
+            "schema_valid": 1.0,
+            "type_valid": 1.0
+          }
+        }
+      },
+      "completion_tokens": 14505,
+      "failure_transitions": [
+        [
+          "COMPILER_FAILURE/INELIGIBLE -> COMPILER_FAILURE/INELIGIBLE",
+          36
+        ],
+        [
+          "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH -> JSON_PARSE_FAILURE/MALFORMED_JSON",
+          9
+        ],
+        [
+          "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH -> TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          1
+        ]
+      ],
+      "failure_types": [
+        [
+          "COMPILER_FAILURE/INELIGIBLE",
+          36
+        ],
+        [
+          "JSON_PARSE_FAILURE/MALFORMED_JSON",
+          9
+        ],
+        [
+          "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          1
+        ]
+      ],
+      "funnel": {
+        "argument_contract_valid": 51,
+        "compile_valid": 14,
+        "composition_valid": 50,
+        "json_parseable": 51,
+        "macro_ids_valid": 51,
+        "parameter_valid": 50,
+        "response_received": 60,
+        "schema_valid": 51,
+        "type_valid": 50
+      },
+      "generation_calls": 106,
+      "latency_seconds": 1045.1383695499999,
+      "prompt_tokens": 195278,
+      "rates": {
+        "argument_contract_valid": 0.85,
+        "compile_valid": 0.23333333333333334,
+        "composition_valid": 0.8333333333333334,
+        "json_parseable": 0.85,
+        "macro_ids_valid": 0.85,
+        "parameter_valid": 0.8333333333333334,
+        "response_received": 1.0,
+        "schema_valid": 0.85,
+        "type_valid": 0.8333333333333334
+      },
+      "raw": {
+        "case_count": 60,
+        "category_metrics": {
+          "PARAMETER_CONTRACT": {
+            "case_count": 15,
+            "funnel": {
+              "argument_contract_valid": 15,
+              "compile_valid": 3,
+              "composition_valid": 14,
+              "json_parseable": 15,
+              "macro_ids_valid": 15,
+              "parameter_valid": 14,
+              "response_received": 15,
+              "schema_valid": 15,
+              "type_valid": 14
+            },
+            "rates": {
+              "argument_contract_valid": 1.0,
+              "compile_valid": 0.2,
+              "composition_valid": 0.9333333333333333,
+              "json_parseable": 1.0,
+              "macro_ids_valid": 1.0,
+              "parameter_valid": 0.9333333333333333,
+              "response_received": 1.0,
+              "schema_valid": 1.0,
+              "type_valid": 0.9333333333333333
+            }
+          },
+          "SINGLE_MACRO": {
+            "case_count": 15,
+            "funnel": {
+              "argument_contract_valid": 15,
+              "compile_valid": 6,
+              "composition_valid": 6,
+              "json_parseable": 15,
+              "macro_ids_valid": 15,
+              "parameter_valid": 6,
+              "response_received": 15,
+              "schema_valid": 15,
+              "type_valid": 6
+            },
+            "rates": {
+              "argument_contract_valid": 1.0,
+              "compile_valid": 0.4,
+              "composition_valid": 0.4,
+              "json_parseable": 1.0,
+              "macro_ids_valid": 1.0,
+              "parameter_valid": 0.4,
+              "response_received": 1.0,
+              "schema_valid": 1.0,
+              "type_valid": 0.4
+            }
+          },
+          "THREE_STEP_COMPOSITION": {
+            "case_count": 15,
+            "funnel": {
+              "argument_contract_valid": 15,
+              "compile_valid": 5,
+              "composition_valid": 15,
+              "json_parseable": 15,
+              "macro_ids_valid": 15,
+              "parameter_valid": 15,
+              "response_received": 15,
+              "schema_valid": 15,
+              "type_valid": 15
+            },
+            "rates": {
+              "argument_contract_valid": 1.0,
+              "compile_valid": 0.3333333333333333,
+              "composition_valid": 1.0,
+              "json_parseable": 1.0,
+              "macro_ids_valid": 1.0,
+              "parameter_valid": 1.0,
+              "response_received": 1.0,
+              "schema_valid": 1.0,
+              "type_valid": 1.0
+            }
+          },
+          "TWO_STEP_TYPED_CHAIN": {
+            "case_count": 15,
+            "funnel": {
+              "argument_contract_valid": 15,
+              "compile_valid": 0,
+              "composition_valid": 15,
+              "json_parseable": 15,
+              "macro_ids_valid": 15,
+              "parameter_valid": 15,
+              "response_received": 15,
+              "schema_valid": 15,
+              "type_valid": 15
+            },
+            "rates": {
+              "argument_contract_valid": 1.0,
+              "compile_valid": 0.0,
+              "composition_valid": 1.0,
+              "json_parseable": 1.0,
+              "macro_ids_valid": 1.0,
+              "parameter_valid": 1.0,
+              "response_received": 1.0,
+              "schema_valid": 1.0,
+              "type_valid": 1.0
+            }
+          }
+        },
+        "failure_types": [
+          [
+            "COMPILER_FAILURE/INELIGIBLE",
+            36
+          ],
+          [
+            "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+            10
+          ]
+        ],
+        "funnel": {
+          "argument_contract_valid": 60,
+          "compile_valid": 14,
+          "composition_valid": 50,
+          "json_parseable": 60,
+          "macro_ids_valid": 60,
+          "parameter_valid": 50,
+          "response_received": 60,
+          "schema_valid": 60,
+          "type_valid": 50
+        },
+        "rates": {
+          "argument_contract_valid": 1.0,
+          "compile_valid": 0.23333333333333334,
+          "composition_valid": 0.8333333333333334,
+          "json_parseable": 1.0,
+          "macro_ids_valid": 1.0,
+          "parameter_valid": 0.8333333333333334,
+          "response_received": 1.0,
+          "schema_valid": 1.0,
+          "type_valid": 0.8333333333333334
+        }
+      },
+      "repair_attempted": 46,
+      "repair_success_rate": 0.0,
+      "repair_successful": 0
+    }
+  },
+  "experiment_id": "MACRO_API_REPRESENTATION_ABLATION_V1",
+  "frozen_config_sha256": "c60ab42357f4c1746b3813583dad4ed5da41906ee01cc16ffccd2435d03a79f0",
+  "generation": {
+    "candidate_budget": 1,
+    "context_window": 12288,
+    "max_new_tokens": 256
+  },
+  "hardware": {
+    "cuda_available": true,
+    "cuda_runtime": null,
+    "gpu_count": 4,
+    "gpus": [
+      {
+        "driver_version": "580.159.04",
+        "index": 0,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      },
+      {
+        "driver_version": "580.159.04",
+        "index": 1,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      },
+      {
+        "driver_version": "580.159.04",
+        "index": 2,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      },
+      {
+        "driver_version": "580.159.04",
+        "index": 3,
+        "name": "NVIDIA L4",
+        "vram_mib": 23034
+      }
+    ],
+    "reason": "",
+    "status": "SUCCESS"
+  },
+  "model": {
+    "architecture": "Qwen3ForCausalLM",
+    "backend": "transformers_local",
+    "dtype": "bfloat16",
+    "internet": false,
+    "local_files_only": true,
+    "model_source": "qwen-lm/qwen-3/Transformers/8b/1"
+  },
+  "model_warmup": {
+    "bytes_read": 16381516776,
+    "event": "MODEL_FILES_WARMED",
+    "seconds": 71.67069493399993,
+    "shard_count": 5
+  },
+  "new_arc_inference": false,
+  "prompt_hashes": {
+    "R1_TYPED_COMPACT": "9d7ef2920d828f429afcff88235241905a77f78a97f73d815a6e642276cc1b44",
+    "R2_TYPED_EXAMPLES": "8f314430828490bc019d8f745a63312b412bc7b8759aa7282072cb6c05f78476",
+    "R3_STAGE1_SKELETON": "b7ae255cfb2e1477910588e9fdb613187757721a2f8e2e79d40004eb5499b63d",
+    "R3_STAGE2_PARAMETER_FILL": "a32974f32a2b424fcfee1c2f3c905031b97b8f55b9fd620a28733d21aa4641dd",
+    "R4_ONE_REPAIR": "8fe17b6270365f09d95c64e8bd9e933f38a8ad46dab715792c5972ad57b784aa"
+  },
+  "prompt_versions": {
+    "R1_TYPED_COMPACT": "macro_interface_v2_1.typed_compact",
+    "R2_TYPED_EXAMPLES": "macro_interface_v2_1.typed_examples",
+    "R3_STAGE1_SKELETON": "macro_interface_v2_1.two_stage_skeleton",
+    "R3_STAGE2_PARAMETER_FILL": "macro_interface_v2_1.two_stage_parameter_fill",
+    "R4_ONE_REPAIR": "verifier_guided_api_repair_v1.one_repair"
+  },
+  "r0_frozen_baseline": {
+    "compile_valid_rate": 0.0,
+    "formal_runs": 0,
+    "name": "CURRENT_V2_REPRESENTATION",
+    "schema_valid_rate": 0.2,
+    "source": "MACRO_API_COMPREHENSION_BENCHMARK_V1",
+    "type_valid_rate": 0.05
+  },
+  "raw_response_policy": "Per-case original and repaired responses exist only in ignored local/Kaggle checkpoints. This aggregate contains metrics, counts, and failure transitions only.",
+  "recommended_next_experiment": "GRAMMAR_CONSTRAINED_DECODING",
+  "registry_hash": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+  "run_wall_seconds": 851.634976516,
+  "sampling": {
+    "seed": 0,
+    "temperature": 0,
+    "thinking": false,
+    "top_p": 1
+  },
+  "schema_hash": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa",
+  "status": "COMPLETE_FROZEN_ONE_RUN_PER_CONDITION",
+  "worker_reports": [
+    {
+      "event": "MODEL_READY",
+      "gpu_after": {
+        "gpu_utilization_percent": 36,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_before": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 0
+      },
+      "gpu_id": 0,
+      "load_elapsed_seconds": 31.071267215000034,
+      "model_load_seconds": 6.750330179999992,
+      "worker_id": 0
+    },
+    {
+      "event": "MODEL_READY",
+      "gpu_after": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_before": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_id": 1,
+      "load_elapsed_seconds": 13.40702816800001,
+      "model_load_seconds": 5.785032427000033,
+      "worker_id": 1
+    },
+    {
+      "event": "MODEL_READY",
+      "gpu_after": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_before": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_id": 2,
+      "load_elapsed_seconds": 13.358881469000039,
+      "model_load_seconds": 5.760957480999991,
+      "worker_id": 2
+    },
+    {
+      "event": "MODEL_READY",
+      "gpu_after": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_before": {
+        "gpu_utilization_percent": 0,
+        "vram_total_mib": 23034,
+        "vram_used_mib": 15964
+      },
+      "gpu_id": 3,
+      "load_elapsed_seconds": 13.251369913999952,
+      "model_load_seconds": 5.720079270000042,
+      "worker_id": 3
+    }
+  ],
+  "worker_to_gpu_mapping": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3
+  }
+}
