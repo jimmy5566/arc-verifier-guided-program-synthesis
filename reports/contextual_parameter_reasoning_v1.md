@@ -1,7 +1,7 @@
 # Contextual Parameter Reasoning V1
 
-- 60-case frozen Macro API benchmark£»ÎŞ ARC data¡¢ARC solution »òĞÂµÄ ARC inference¡£
-- R1/R2/R3 µÄÈ«²¿³ÌĞò¶³½áºó£¬¸¸½ø³Ì²ÅÊ¹ÓÃ canonical semantic scorer ×öÆÀ·Ö¡£
+- 60-case frozen Macro API benchmarkï¼›æ—  ARC dataã€ARC solution æˆ–æ–°çš„ ARC inferenceã€‚
+- R1/R2/R3 çš„å…¨éƒ¨ç¨‹åºå†»ç»“åï¼Œçˆ¶è¿›ç¨‹æ‰ä½¿ç”¨ canonical semantic scorer åšè¯„åˆ†ã€‚
 
 | Condition | Success | Remaining repaired / 12 | Q1 regression / 36 | Patches | Precision |
 | --- | ---: | ---: | ---: | ---: | --- |
@@ -9,23 +9,24 @@
 | R2_CONTEXTUAL_CANDIDATE_CLASSIFIER | 18/60 (30.0%) | 0/12 | 18/36 | 37 | 13.5% |
 | R3_CONSERVATIVE_CONTEXTUAL_REPAIR | 33/60 (55.0%) | 12/12 | 15/36 | 86 | 34.9% |
 
-## ×î¼ÑÌõ¼ş
+## æœ€ä½³æ¡ä»¶
 
-- best: `R1_RELATIONAL_NORMALIZER`£»status: `CONTEXTUAL_PARAMETER_LAYER_SOLVED`¡£
-- 60.0% ¡ú 80.0%£»ĞÂÔö½â¾ö 12£»¾àÀë 80% parameter-only ceiling ÉĞ 0 cases¡£
-- remaining repair: 12/12£»regression: 0/36£»abstain: 36£»compile-valid is retained by frozen skeleton/local patch contract¡£
+- best: `R1_RELATIONAL_NORMALIZER`ï¼›status: `CONTEXTUAL_PARAMETER_LAYER_SOLVED`ã€‚
+- 60.0% â†’ 80.0%ï¼›æ–°å¢è§£å†³ 12ï¼›è·ç¦» 80% parameter-only ceiling å°š 0 casesã€‚
+- remaining repair: 12/12ï¼›regression: 0/36ï¼›abstain: 36ã€‚
 
-## ×Ö¶ÎÓë×ªÒÆ
+## å­—æ®µä¸è½¬ç§»
 
 - transitions: `{'SEMANTIC_EQUIVALENT_ALTERNATE_TO_SEMANTIC_EQUIVALENT_ALTERNATE': 3, 'SEMANTIC_EXACT_CANONICAL_TO_SEMANTIC_EXACT_CANONICAL': 33, 'SEMANTIC_OVER_TRANSFORMED_TO_SEMANTIC_OVER_TRANSFORMED': 3, 'SEMANTIC_PARTIAL_TO_SEMANTIC_PARTIAL': 6, 'SEMANTIC_WRONG_OPERATION_TO_SEMANTIC_WRONG_OPERATION': 3, 'SEMANTIC_WRONG_PARAMETER_TO_SEMANTIC_EXACT_CANONICAL': 12}`
 - per field: `{'color_source': {'remaining_after': 0, 'remaining_before': 6, 'repaired': 6}, 'direction': {'remaining_after': 0, 'remaining_before': 5, 'repaired': 5}, 'orientation': {'remaining_after': 0, 'remaining_before': 12, 'repaired': 12}, 'shape_source': {'remaining_after': 0, 'remaining_before': 7, 'repaired': 7}}`
+- post-freeze compile audit: `{'R1_RELATIONAL_NORMALIZER': {'compile_valid': 60, 'compile_valid_rate': 1.0}, 'R2_CONTEXTUAL_CANDIDATE_CLASSIFIER': {'compile_valid': 45, 'compile_valid_rate': 0.75}, 'R3_CONSERVATIVE_CONTEXTUAL_REPAIR': {'compile_valid': 51, 'compile_valid_rate': 0.85}}`
 
-## ÔËĞĞ
+## è¿è¡Œ
 
-- worker¡úGPU: `{'0': 0, '1': 1}`£»wall: 507.8s¡£
+- workerâ†’GPU: `{'0': 0, '1': 1}`ï¼›wall: 507.8sã€‚
 - warmup: `{'bytes_read': 16381516776, 'event': 'MODEL_FILES_WARMED', 'model_path': '/kaggle/input/models/qwen-lm/qwen-3/transformers/8b/1', 'seconds': 109.10294839799997, 'shard_count': 5}`
 
-## Ğ¹Â©Éó¼Æ
+## æ³„æ¼å®¡è®¡
 
-- model input ½öº¬ instruction¡¢family¡¢frozen skeleton¡¢target slot¡¢legal candidates¡¢relation features£»²»º¬ case ID¡¢canonical¡¢semantic label »ò expected candidate¡£
-- R1 Ó³ÉäÓÉÈ«¾Ö Macro contract ºÍ relation ontology Çı¶¯£»R3 Ä¬ÈÏ KEEP Q1¡£
+- model input ä»…å« instructionã€familyã€frozen skeletonã€target slotã€legal candidatesã€relation featuresï¼›ä¸å« case IDã€canonicalã€semantic label æˆ– expected candidateã€‚
+- R1 æ˜ å°„ç”±å…¨å±€ Macro contract å’Œ relation ontology é©±åŠ¨ï¼›R3 é»˜è®¤ KEEP Q1ã€‚

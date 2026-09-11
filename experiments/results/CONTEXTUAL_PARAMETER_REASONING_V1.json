@@ -219,5 +219,19 @@
   "worker_to_gpu_mapping": {
     "0": 0,
     "1": 1
+  },
+  "post_freeze_compile_audit": {
+    "R1_RELATIONAL_NORMALIZER": {
+      "compile_valid": 60,
+      "compile_valid_rate": 1.0
+    },
+    "R2_CONTEXTUAL_CANDIDATE_CLASSIFIER": {
+      "compile_valid": 45,
+      "compile_valid_rate": 0.75
+    },
+    "R3_CONSERVATIVE_CONTEXTUAL_REPAIR": {
+      "compile_valid": 51,
+      "compile_valid_rate": 0.85
+    }
   }
 }
