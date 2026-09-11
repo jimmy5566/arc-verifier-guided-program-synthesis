@@ -130,7 +130,13 @@ def _worker_entry(*, worker_id: int, condition: str, worker_config: Mapping[str,
         before = gpu_observation(worker_id); load_seconds = provider.load(); after = gpu_observation(worker_id)
         ready.put({"event": "MODEL_READY", "worker_id": worker_id, "gpu_id": worker_id, "model_load_started": started_at, "model_load_completed": _now(), "model_load_seconds": load_seconds, "peak_vram_mb": after.get("vram_used_mib")})
         start.wait()
-        ontology = ParameterSemanticOntologyV1(worker_config["parameter_contract"])
+        # The frozen config stores the public ontology fingerprint, while the
+        # executable contract is globally reconstructed from the same frozen
+        # registry/compiler modules.  This keeps canonical data out of worker
+        # payloads and avoids serialising a second mutable contract copy.
+        ontology = ParameterSemanticOntologyV1()
+        if ontology.sha256 != worker_config["ontology_sha256"]:
+            raise ValueError("worker ontology does not match frozen contract")
         engine = SelectiveParameterRepairV2(); threshold = float(worker_config["scoring"]["minimum_margin"])
         for model_case in model_cases:
             case_id = model_case["case_id"]; instruction = model_case["natural_language_instruction"]
@@ -212,7 +218,7 @@ def run_once(*, benchmark: Mapping[str, Any], frozen: Mapping[str, Any], model_p
     start_time = time.perf_counter(); warmup = warm_model_safetensors(model_path); checkpoints_root.mkdir(parents=True, exist_ok=False)
     cases = {str(item["case_id"]): item for item in benchmark["cases"]}; model_cases = [{"case_id": key, "natural_language_instruction": str(value["natural_language_instruction"])} for key, value in sorted(cases.items())]
     # Deliberately exclude p0 outcomes and Phase-A labels from worker payload.
-    worker_config = {key: frozen[key] for key in ("parameter_contract", "s2_baseline_programs", "scoring")}
+    worker_config = {key: frozen[key] for key in ("s2_baseline_programs", "scoring")} | {"ontology_sha256": frozen["ontology"]["sha256"]}
     context = get_context("spawn"); results, ready, begin = context.Queue(), context.Queue(), context.Event(); processes = []; reports = []
     for worker_id, condition in enumerate(CONDITIONS):
         proc = context.Process(target=_worker_entry, kwargs={"worker_id": worker_id, "condition": condition, "worker_config": worker_config, "model_path": str(model_path), "model_cases": model_cases, "root": str(checkpoints_root), "results": results, "ready": ready, "start": begin}); proc.start(); processes.append(proc)
