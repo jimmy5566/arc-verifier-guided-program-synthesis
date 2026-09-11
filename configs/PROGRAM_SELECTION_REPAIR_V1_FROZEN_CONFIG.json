@@ -1,0 +1,182 @@
+{
+  "experiment_id": "PROGRAM_SELECTION_REPAIR_V1",
+  "status": "FROZEN_BEFORE_ONE_FORMAL_PASS_PER_CONDITION",
+  "benchmark_config": "configs/macro_api_comprehension_benchmark_v1.json",
+  "benchmark_hash": "90aba782703a8b1d2a4e97c8cde81a5e9e04aa0ca673ec882c70e42e0245ff00",
+  "registry_hash": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+  "schema_hash": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa",
+  "case_count": 60,
+  "category_counts": {
+    "PARAMETER_CONTRACT": 15,
+    "SINGLE_MACRO": 15,
+    "THREE_STEP_COMPOSITION": 15,
+    "TWO_STEP_TYPED_CHAIN": 15
+  },
+  "model": {
+    "architecture": "Qwen3ForCausalLM",
+    "backend": "transformers_local",
+    "dtype": "bfloat16",
+    "internet": false,
+    "local_files_only": true,
+    "model_source": "qwen-lm/qwen-3/Transformers/8b/1"
+  },
+  "sampling": {
+    "temperature": 0,
+    "top_p": 1,
+    "seed": 0,
+    "thinking": false
+  },
+  "generation": {
+    "candidate_budget": 1,
+    "max_new_tokens": 256,
+    "context_window": 12288
+  },
+  "prompt_versions": {
+    "S1_MINIMALITY_AWARE_SELECTION": "semantic_program_selector_v1.minimality",
+    "S2_FAMILY_FIRST_SELECTION": "semantic_program_selector_v1.family_first",
+    "S3_CONTRASTIVE_SKELETON_RANKING": "semantic_program_selector_v1.contrastive",
+    "S4_FAMILY_FILTERED_CONTRASTIVE_MINIMALITY": "semantic_program_selector_v1.family_contrastive_minimality"
+  },
+  "prompt_hashes": {
+    "S1_MINIMALITY_AWARE_SELECTION": "83f18c48e9ce86bf4e6890ac0b1b7d0f2979b27a8837285934368e7b7534e6ef",
+    "S2_FAMILY_TAXONOMY": "0184bedf555979f30bb06d4d48d10399b5303f2605bc4081f77b07eeeb4ad855",
+    "S2_FAMILY_FIRST_SELECTION": "abca43865ed166add0354378697c7b86f21aca5abb7fe91b6502e1fbbe577414",
+    "S3_CONTRASTIVE_SKELETON_RANKING": "22722e3b29e69159341e3a05d668ddd014f361e78f9541bb6700b3f9255ad91a",
+    "S4_FAMILY_FILTERED_CONTRASTIVE_MINIMALITY": "e4899ccd24325f40e9e4a27259f03e6407d9fa9d740a54551a1bfe53c3020039",
+    "PARAMETER_FILL": "4c3b5fb56c16fcc04a1cda468aa36e0a001a26e595d4053cda31a77184aa5d3a"
+  },
+  "semantic_scorer": {
+    "module": "llm.c3_semantic_intent",
+    "source_sha256": "8a27d49504d965dd62aca9c7d3ebead11749076dd9ad4a5d282247672e2516f4",
+    "llm_judge_used": false
+  },
+  "compiler_inventory": {
+    "sha256": "59920feba6c956b23d9fe0ca84286e68aa4295a6bef0acd44df7dbef624411c4",
+    "compiler_supported_macro_count": 13,
+    "static_compiler_valid_skeleton_count": 27
+  },
+  "s0_frozen_baseline": {
+    "source": "C3_SEMANTIC_INTENT_AUDIT_V1",
+    "semantic_success": 31,
+    "semantic_success_rate": 0.5166666666666667,
+    "compile_valid": 60,
+    "over_transformed": 19,
+    "wrong_operation": 8,
+    "wrong_parameter": 2,
+    "case_outcomes": {
+      "parameter_count_01": "SEMANTIC_OVER_TRANSFORMED",
+      "parameter_count_02": "SEMANTIC_OVER_TRANSFORMED",
+      "parameter_count_03": "SEMANTIC_OVER_TRANSFORMED",
+      "parameter_count_04": "SEMANTIC_OVER_TRANSFORMED",
+      "parameter_object_01": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_object_02": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_object_03": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_object_04": "SEMANTIC_WRONG_PARAMETER",
+      "parameter_object_05": "SEMANTIC_WRONG_PARAMETER",
+      "parameter_path_01": "SEMANTIC_WRONG_OPERATION",
+      "parameter_path_02": "SEMANTIC_WRONG_OPERATION",
+      "parameter_path_03": "SEMANTIC_WRONG_OPERATION",
+      "parameter_sequence_01": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_sequence_02": "SEMANTIC_EXACT_CANONICAL",
+      "parameter_sequence_03": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_01": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_02": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_03": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_04": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_05": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_06": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_07": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_08": "SEMANTIC_EXACT_CANONICAL",
+      "single_fill_09": "SEMANTIC_EXACT_CANONICAL",
+      "single_symmetry_01": "SEMANTIC_EXACT_CANONICAL",
+      "single_symmetry_02": "SEMANTIC_EQUIVALENT_ALTERNATE",
+      "single_symmetry_03": "SEMANTIC_EXACT_CANONICAL",
+      "single_symmetry_04": "SEMANTIC_EQUIVALENT_ALTERNATE",
+      "single_symmetry_05": "SEMANTIC_EXACT_CANONICAL",
+      "single_symmetry_06": "SEMANTIC_EQUIVALENT_ALTERNATE",
+      "three_step_object_01": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_object_02": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_object_03": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_object_04": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_object_05": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_path_01": "SEMANTIC_WRONG_OPERATION",
+      "three_step_path_02": "SEMANTIC_WRONG_OPERATION",
+      "three_step_path_03": "SEMANTIC_WRONG_OPERATION",
+      "three_step_path_04": "SEMANTIC_WRONG_OPERATION",
+      "three_step_path_05": "SEMANTIC_WRONG_OPERATION",
+      "three_step_sequence_01": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_sequence_02": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_sequence_03": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_sequence_04": "SEMANTIC_EXACT_CANONICAL",
+      "three_step_sequence_05": "SEMANTIC_EXACT_CANONICAL",
+      "two_step_count_generate_01": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_02": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_03": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_04": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_05": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_06": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_07": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_08": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_09": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_10": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_11": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_12": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_13": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_14": "SEMANTIC_OVER_TRANSFORMED",
+      "two_step_count_generate_15": "SEMANTIC_OVER_TRANSFORMED"
+    },
+    "audit_result_sha256": "fcf45005cb13fc4904be197d6dd1953246b2edb38383d21a79b54f4e6b28aad9"
+  },
+  "conditions": {
+    "S0_C3_STRUCTURED_COMPILER_CONSTRAINED": {
+      "formal_passes": 0,
+      "source": "frozen audit"
+    },
+    "S1_MINIMALITY_AWARE_SELECTION": {
+      "formal_passes": 1,
+      "selection_principle": "minimal sufficient semantic operations"
+    },
+    "S2_FAMILY_FIRST_SELECTION": {
+      "formal_passes": 1,
+      "stages": [
+        "family enum",
+        "family-filtered structured selection"
+      ]
+    },
+    "S3_CONTRASTIVE_SKELETON_RANKING": {
+      "formal_passes": 1,
+      "stages": [
+        "global deterministic K candidates",
+        "rank",
+        "structured parameter fill"
+      ]
+    },
+    "S4_FAMILY_FILTERED_CONTRASTIVE_MINIMALITY": {
+      "formal_passes": 1,
+      "stages": [
+        "family enum",
+        "filtered K candidates",
+        "minimality-aware rank",
+        "structured parameter fill"
+      ]
+    }
+  },
+  "protocol": {
+    "arc_data_used": false,
+    "arc_solutions_used": false,
+    "new_arc_inference": false,
+    "one_formal_pass_per_new_condition": true,
+    "no_s0_rerun": true,
+    "candidate_k": 8,
+    "no_canonical_prompt": true,
+    "no_expected_family_prompt": true,
+    "worker_gpu_assignment": {
+      "S1_MINIMALITY_AWARE_SELECTION": 0,
+      "S2_FAMILY_FIRST_SELECTION": 1,
+      "S3_CONTRASTIVE_SKELETON_RANKING": 2,
+      "S4_FAMILY_FILTERED_CONTRASTIVE_MINIMALITY": 3
+    },
+    "startup": "sequential artifact warm-up, staggered worker initialization, READY barrier",
+    "raw_responses_public": false
+  }
+}
