@@ -1527,6 +1527,9 @@
       "config_sha256": "da9360e4a010a66104e89a7e2f76477b6f013bfabf3cf41a80cdf03b8cf8d67e",
       "declared_ids_match": true,
       "duplicate_task_count": 0,
+      "model_response_candidate_count": 137,
+      "no_candidate_silently_missing": true,
+      "parsed_hypothesis_count": 137,
       "prediction_frozen": true,
       "status_counts": {
         "MACRO_SCHEMA_INVALID": 105,
@@ -1544,6 +1547,9 @@
       "config_sha256": "da9360e4a010a66104e89a7e2f76477b6f013bfabf3cf41a80cdf03b8cf8d67e",
       "declared_ids_match": true,
       "duplicate_task_count": 0,
+      "model_response_candidate_count": 132,
+      "no_candidate_silently_missing": true,
+      "parsed_hypothesis_count": 132,
       "prediction_frozen": true,
       "status_counts": {
         "MACRO_SCHEMA_INVALID": 79,

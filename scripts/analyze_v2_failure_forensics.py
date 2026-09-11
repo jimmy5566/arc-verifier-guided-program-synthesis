@@ -24,6 +24,13 @@ def integrity(checkpoint: dict[str, Any], expected_ids: set[str], expected_candi
     candidate_results = [candidate for record in records.values() for candidate in record.get("candidate_results", [])]
     actual_statuses = Counter(str(candidate.get("status")) for candidate in candidate_results)
     ids = set(records)
+    parsed_hypothesis_count = sum(len(record.get("macro_hypotheses", [])) for record in records.values())
+    model_response_candidates = [candidate for candidate in candidate_results if candidate.get("status") not in {"PROVIDER_FAILED", "TIMEOUT"}]
+    candidate_hypothesis_ids_match = all(
+        {str(candidate.get("hypothesis_id")) for candidate in record.get("candidate_results", []) if candidate.get("status") not in {"PROVIDER_FAILED", "TIMEOUT"}}
+        == {str(hypothesis.get("hypothesis_id")) for hypothesis in record.get("macro_hypotheses", [])}
+        for record in records.values()
+    )
     return {
         "complete": checkpoint.get("complete") is True,
         "prediction_frozen": bool(checkpoint.get("prediction_frozen_at_utc")),
@@ -32,6 +39,9 @@ def integrity(checkpoint: dict[str, Any], expected_ids: set[str], expected_candi
         "duplicate_task_count": checkpoint.get("duplicate_task_count"),
         "candidate_count": len(candidate_results),
         "candidate_count_matches": len(candidate_results) == expected_candidates,
+        "model_response_candidate_count": len(model_response_candidates),
+        "parsed_hypothesis_count": parsed_hypothesis_count,
+        "no_candidate_silently_missing": parsed_hypothesis_count == len(model_response_candidates) and candidate_hypothesis_ids_match,
         "status_counts": dict(actual_statuses),
         "status_counts_match": dict(actual_statuses) == expected_statuses,
         "config_sha256": checkpoint.get("frozen_config_sha256"),
@@ -92,7 +102,7 @@ def main() -> None:
         "symbolic_parameter_solver": integrity(symbolic, expected_ids, 134, {"MACRO_SCHEMA_INVALID": 79, "MACRO_TYPE_INVALID": 53, "PROVIDER_FAILED": 2}),
         "direct_parameter_ablation": integrity(direct, expected_ids, 141, {"MACRO_SCHEMA_INVALID": 105, "MACRO_TYPE_INVALID": 32, "PROVIDER_FAILED": 4}),
     }
-    if any(not all(value for key, value in check.items() if key in {"complete", "prediction_frozen", "declared_ids_match", "candidate_count_matches", "status_counts_match", "all_record_task_ids_match_keys"}) or check["duplicate_task_count"] != 0 or check["config_sha256"] != expected_sha for check in checks.values()):
+    if any(not all(value for key, value in check.items() if key in {"complete", "prediction_frozen", "declared_ids_match", "candidate_count_matches", "status_counts_match", "all_record_task_ids_match_keys", "no_candidate_silently_missing"}) or check["duplicate_task_count"] != 0 or check["config_sha256"] != expected_sha for check in checks.values()):
         raise SystemExit(f"frozen-data reconciliation failed: {checks}")
     rows_by_condition = {
         "symbolic_parameter_solver": classify_checkpoint(symbolic, condition="symbolic_parameter_solver"),
