@@ -22,11 +22,13 @@ INCLUDED_FILES = (
     "configs/llm_program_synthesis_v2_pilot_50_qwen3_8b.json",
     "configs/macro_api_comprehension_benchmark_v1.json",
     "configs/MACRO_API_COMPREHENSION_BENCHMARK_V1_FROZEN_CONFIG.json",
+    "configs/MACRO_API_REPRESENTATION_ABLATION_V1_FROZEN_CONFIG.json",
     "scripts/run_qwen3_8b_transformers_preflight.py",
     "scripts/run_qwen3_8b_one_task_smoke.py",
     "scripts/run_qwen3_8b_four_gpu_preflight.py",
     "scripts/run_qwen3_8b_v2_parallel.py",
     "scripts/run_macro_api_comprehension_benchmark.py",
+    "scripts/run_macro_api_representation_ablation.py",
 )
 
 

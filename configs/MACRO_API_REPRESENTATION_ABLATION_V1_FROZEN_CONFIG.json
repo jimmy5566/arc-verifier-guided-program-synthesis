@@ -1,0 +1,90 @@
+{
+  "experiment_id": "MACRO_API_REPRESENTATION_ABLATION_V1",
+  "status": "FROZEN_BEFORE_ONE_FORMAL_PASS_PER_CONDITION",
+  "benchmark_config": "configs/macro_api_comprehension_benchmark_v1.json",
+  "benchmark_hash": "90aba782703a8b1d2a4e97c8cde81a5e9e04aa0ca673ec882c70e42e0245ff00",
+  "registry_hash": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+  "schema_hash": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa",
+  "case_count": 60,
+  "category_counts": {
+    "PARAMETER_CONTRACT": 15,
+    "SINGLE_MACRO": 15,
+    "THREE_STEP_COMPOSITION": 15,
+    "TWO_STEP_TYPED_CHAIN": 15
+  },
+  "model": {
+    "backend": "transformers_local",
+    "model_source": "qwen-lm/qwen-3/Transformers/8b/1",
+    "architecture": "Qwen3ForCausalLM",
+    "dtype": "bfloat16",
+    "local_files_only": true,
+    "internet": false
+  },
+  "sampling": {
+    "temperature": 0,
+    "top_p": 1,
+    "seed": 0,
+    "thinking": false
+  },
+  "generation": {
+    "candidate_budget": 1,
+    "max_new_tokens": 256,
+    "context_window": 12288
+  },
+  "prompt_versions": {
+    "R1_TYPED_COMPACT": "macro_interface_v2_1.typed_compact",
+    "R2_TYPED_EXAMPLES": "macro_interface_v2_1.typed_examples",
+    "R3_STAGE1_SKELETON": "macro_interface_v2_1.two_stage_skeleton",
+    "R3_STAGE2_PARAMETER_FILL": "macro_interface_v2_1.two_stage_parameter_fill",
+    "R4_ONE_REPAIR": "verifier_guided_api_repair_v1.one_repair"
+  },
+  "prompt_hashes": {
+    "R1_TYPED_COMPACT": "9d7ef2920d828f429afcff88235241905a77f78a97f73d815a6e642276cc1b44",
+    "R2_TYPED_EXAMPLES": "8f314430828490bc019d8f745a63312b412bc7b8759aa7282072cb6c05f78476",
+    "R3_STAGE1_SKELETON": "b7ae255cfb2e1477910588e9fdb613187757721a2f8e2e79d40004eb5499b63d",
+    "R3_STAGE2_PARAMETER_FILL": "a32974f32a2b424fcfee1c2f3c905031b97b8f55b9fd620a28733d21aa4641dd",
+    "R4_ONE_REPAIR": "8fe17b6270365f09d95c64e8bd9e933f38a8ad46dab715792c5972ad57b784aa"
+  },
+  "conditions": {
+    "R1_TYPED_COMPACT": {
+      "formal_passes": 1
+    },
+    "R2_TYPED_EXAMPLES": {
+      "formal_passes": 1
+    },
+    "R3_TWO_STAGE_TYPED": {
+      "formal_passes": 1,
+      "stage1": "skeleton_only",
+      "stage2": "frozen_skeleton_parameter_fill"
+    },
+    "R4_VERIFIER_GUIDED_API_REPAIR": {
+      "formal_passes": 1,
+      "base": "R2 raw output",
+      "max_repairs": 1,
+      "feedback": "first_blocking_error_plus_relevant_contract"
+    }
+  },
+  "r0_frozen_baseline": {
+    "name": "CURRENT_V2_REPRESENTATION",
+    "schema_valid_rate": 0.2,
+    "type_valid_rate": 0.05,
+    "compile_valid_rate": 0.0,
+    "formal_runs": 0,
+    "source": "MACRO_API_COMPREHENSION_BENCHMARK_V1"
+  },
+  "protocol": {
+    "arc_data_used": false,
+    "arc_solutions_used": false,
+    "task_prediction": false,
+    "one_formal_pass_per_condition": true,
+    "max_repairs": 1,
+    "worker_gpu_assignment": {
+      "R1_TYPED_COMPACT": 0,
+      "R2_TYPED_EXAMPLES": 1,
+      "R3_TWO_STAGE_TYPED": 2,
+      "R4_VERIFIER_GUIDED_API_REPAIR": 3
+    },
+    "startup": "sequential model artifact warm-up, staggered worker load, then barrier",
+    "raw_responses_public": false
+  }
+}
