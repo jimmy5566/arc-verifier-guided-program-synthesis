@@ -1,0 +1,712 @@
+{
+  "case_assessments": [
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "parameter_count_01",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "parameter_count_02",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "parameter_count_03",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "parameter_count_04",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "case_id": "parameter_object_01",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "case_id": "parameter_object_02",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "case_id": "parameter_object_03",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "case_id": "parameter_object_04",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [
+        "required_parameter_semantics"
+      ],
+      "outcome": "SEMANTIC_WRONG_PARAMETER",
+      "required_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "case_id": "parameter_object_05",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [
+        "required_parameter_semantics"
+      ],
+      "outcome": "SEMANTIC_WRONG_PARAMETER",
+      "required_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "OTHER",
+      "case_id": "parameter_path_01",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [
+        "required_operation_family",
+        "required_relation"
+      ],
+      "outcome": "SEMANTIC_WRONG_OPERATION",
+      "required_operation_family": "PATH_SERIALIZATION",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "OTHER",
+      "case_id": "parameter_path_02",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [
+        "required_operation_family",
+        "required_relation"
+      ],
+      "outcome": "SEMANTIC_WRONG_OPERATION",
+      "required_operation_family": "PATH_SERIALIZATION",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "OTHER",
+      "case_id": "parameter_path_03",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [
+        "required_operation_family",
+        "required_relation"
+      ],
+      "outcome": "SEMANTIC_WRONG_OPERATION",
+      "required_operation_family": "PATH_SERIALIZATION",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "SEQUENCE_TRANSFORM",
+      "case_id": "parameter_sequence_01",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "SEQUENCE_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "SEQUENCE_TRANSFORM",
+      "case_id": "parameter_sequence_02",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "SEQUENCE_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "SEQUENCE_TRANSFORM",
+      "case_id": "parameter_sequence_03",
+      "category": "PARAMETER_CONTRACT",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "SEQUENCE_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "REGION_FILL",
+      "case_id": "single_fill_01",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "REGION_FILL",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "REGION_FILL",
+      "case_id": "single_fill_02",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "REGION_FILL",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "REGION_FILL",
+      "case_id": "single_fill_03",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "REGION_FILL",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "REGION_FILL",
+      "case_id": "single_fill_04",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "REGION_FILL",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "REGION_FILL",
+      "case_id": "single_fill_05",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "REGION_FILL",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "REGION_FILL",
+      "case_id": "single_fill_06",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "REGION_FILL",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "REGION_FILL",
+      "case_id": "single_fill_07",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "REGION_FILL",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "REGION_FILL",
+      "case_id": "single_fill_08",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "REGION_FILL",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "REGION_FILL",
+      "case_id": "single_fill_09",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "REGION_FILL",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "SYMMETRY",
+      "case_id": "single_symmetry_01",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "SYMMETRY",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "SYMMETRY",
+      "case_id": "single_symmetry_02",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [
+        "alternate_idempotent_symmetry_repetition"
+      ],
+      "outcome": "SEMANTIC_EQUIVALENT_ALTERNATE",
+      "required_operation_family": "SYMMETRY",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "SYMMETRY",
+      "case_id": "single_symmetry_03",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "SYMMETRY",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "SYMMETRY",
+      "case_id": "single_symmetry_04",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [
+        "alternate_idempotent_symmetry_repetition"
+      ],
+      "outcome": "SEMANTIC_EQUIVALENT_ALTERNATE",
+      "required_operation_family": "SYMMETRY",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "SYMMETRY",
+      "case_id": "single_symmetry_05",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "SYMMETRY",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "SYMMETRY",
+      "case_id": "single_symmetry_06",
+      "category": "SINGLE_MACRO",
+      "constraint_violations": [
+        "alternate_idempotent_symmetry_repetition"
+      ],
+      "outcome": "SEMANTIC_EQUIVALENT_ALTERNATE",
+      "required_operation_family": "SYMMETRY",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "case_id": "three_step_object_01",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "case_id": "three_step_object_02",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "case_id": "three_step_object_03",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "case_id": "three_step_object_04",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "case_id": "three_step_object_05",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "OBJECT_SELECTION_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "OTHER",
+      "case_id": "three_step_path_01",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [
+        "required_operation_family",
+        "required_relation"
+      ],
+      "outcome": "SEMANTIC_WRONG_OPERATION",
+      "required_operation_family": "PATH_SERIALIZATION",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "OTHER",
+      "case_id": "three_step_path_02",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [
+        "required_operation_family",
+        "required_relation"
+      ],
+      "outcome": "SEMANTIC_WRONG_OPERATION",
+      "required_operation_family": "PATH_SERIALIZATION",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "OTHER",
+      "case_id": "three_step_path_03",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [
+        "required_operation_family",
+        "required_relation"
+      ],
+      "outcome": "SEMANTIC_WRONG_OPERATION",
+      "required_operation_family": "PATH_SERIALIZATION",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "OTHER",
+      "case_id": "three_step_path_04",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [
+        "required_operation_family",
+        "required_relation"
+      ],
+      "outcome": "SEMANTIC_WRONG_OPERATION",
+      "required_operation_family": "PATH_SERIALIZATION",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "OTHER",
+      "case_id": "three_step_path_05",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [
+        "required_operation_family",
+        "required_relation"
+      ],
+      "outcome": "SEMANTIC_WRONG_OPERATION",
+      "required_operation_family": "PATH_SERIALIZATION",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "SEQUENCE_TRANSFORM",
+      "case_id": "three_step_sequence_01",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "SEQUENCE_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "SEQUENCE_TRANSFORM",
+      "case_id": "three_step_sequence_02",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "SEQUENCE_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "SEQUENCE_TRANSFORM",
+      "case_id": "three_step_sequence_03",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "SEQUENCE_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "SEQUENCE_TRANSFORM",
+      "case_id": "three_step_sequence_04",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "SEQUENCE_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "SEQUENCE_TRANSFORM",
+      "case_id": "three_step_sequence_05",
+      "category": "THREE_STEP_COMPOSITION",
+      "constraint_violations": [],
+      "outcome": "SEMANTIC_EXACT_CANONICAL",
+      "required_operation_family": "SEQUENCE_TRANSFORM",
+      "semantic_success": true
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_01",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_02",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_03",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_04",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_05",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_06",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_07",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_08",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_09",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_10",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_11",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_12",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_13",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_14",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    },
+    {
+      "actual_operation_family": "COUNT_GENERATE",
+      "case_id": "two_step_count_generate_15",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "constraint_violations": [
+        "min_required_transformation",
+        "forbidden_extra_operation"
+      ],
+      "outcome": "SEMANTIC_OVER_TRANSFORMED",
+      "required_operation_family": "COUNT_GENERATE",
+      "semantic_success": false
+    }
+  ],
+  "category_metrics": {
+    "PARAMETER_CONTRACT": {
+      "case_count": 15,
+      "outcomes": {
+        "SEMANTIC_EXACT_CANONICAL": 6,
+        "SEMANTIC_OVER_TRANSFORMED": 4,
+        "SEMANTIC_WRONG_OPERATION": 3,
+        "SEMANTIC_WRONG_PARAMETER": 2
+      },
+      "semantic_success": 6,
+      "semantic_success_rate": 0.4
+    },
+    "SINGLE_MACRO": {
+      "case_count": 15,
+      "outcomes": {
+        "SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+        "SEMANTIC_EXACT_CANONICAL": 12
+      },
+      "semantic_success": 15,
+      "semantic_success_rate": 1.0
+    },
+    "THREE_STEP_COMPOSITION": {
+      "case_count": 15,
+      "outcomes": {
+        "SEMANTIC_EXACT_CANONICAL": 10,
+        "SEMANTIC_WRONG_OPERATION": 5
+      },
+      "semantic_success": 10,
+      "semantic_success_rate": 0.6666666666666666
+    },
+    "TWO_STEP_TYPED_CHAIN": {
+      "case_count": 15,
+      "outcomes": {
+        "SEMANTIC_OVER_TRANSFORMED": 15
+      },
+      "semantic_success": 0,
+      "semantic_success_rate": 0.0
+    }
+  },
+  "decision": {
+    "arc_oracle_ladder_allowed": false,
+    "recommended_next_experiment": "PROGRAM_SELECTION_REPAIR",
+    "status": "SEMANTIC_GROUNDING_FAILED"
+  },
+  "experiment_id": "C3_SEMANTIC_INTENT_AUDIT_V1",
+  "metrics": {
+    "canonical_program_exact_match": 28,
+    "canonical_skeleton_exact_match": 30,
+    "case_count": 60,
+    "compile_valid": 60,
+    "semantic_equivalent_alternate": 3,
+    "semantic_success": 31,
+    "semantic_success_rate": 0.5166666666666667,
+    "semantic_wrong": 29
+  },
+  "noncanonical_skeleton_outcomes": {
+    "SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+    "SEMANTIC_OVER_TRANSFORMED": 19,
+    "SEMANTIC_WRONG_OPERATION": 8
+  },
+  "protocol": {
+    "arc_data_used": false,
+    "arc_solutions_used": false,
+    "canonical_program_sent_to_model": false,
+    "frozen_case_count": 60,
+    "llm_judge_used": false,
+    "new_model_generation": false
+  },
+  "semantic_outcomes": {
+    "SEMANTIC_EQUIVALENT_ALTERNATE": 3,
+    "SEMANTIC_EXACT_CANONICAL": 28,
+    "SEMANTIC_OVER_TRANSFORMED": 19,
+    "SEMANTIC_WRONG_OPERATION": 8,
+    "SEMANTIC_WRONG_PARAMETER": 2
+  },
+  "source_experiment": "MACRO_API_COMPILER_AWARE_ABLATION_V1/C3_STRUCTURED_COMPILER_CONSTRAINED",
+  "status": "COMPLETE_NO_NEW_INFERENCE"
+}
