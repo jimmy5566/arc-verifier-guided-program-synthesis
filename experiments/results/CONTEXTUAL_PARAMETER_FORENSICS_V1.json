@@ -1,0 +1,386 @@
+{
+  "experiment_id": "CONTEXTUAL_PARAMETER_FORENSICS_V1",
+  "status": "COMPLETE_OFFLINE_POST_Q1_AUDIT",
+  "arc_data_used": false,
+  "model_called": false,
+  "q1_baseline": {
+    "semantic_success": 36,
+    "case_count": 60,
+    "remaining_pure_parameter_failures": 12
+  },
+  "taxonomy_counts_primary": {
+    "MULTI_SLOT_DEPENDENCY": 12
+  },
+  "taxonomy_counts_aspects": {
+    "CONTEXT_REQUIRED": 12,
+    "IMPLICIT_DIRECTION": 5,
+    "IMPLICIT_ORIENTATION": 12,
+    "IMPLICIT_SOURCE_REFERENCE": 5,
+    "MULTI_SLOT_DEPENDENCY": 12,
+    "RELATIONAL_INFERENCE": 12
+  },
+  "per_field_distribution": {
+    "color_source": 1,
+    "count_kind": 1,
+    "direction": 5,
+    "orientation": 12,
+    "shape_source": 7
+  },
+  "lexical_vs_relational_vs_contextual": {
+    "lexical": 0,
+    "relational": 12,
+    "contextual": 12
+  },
+  "truly_repairable_count": 12,
+  "ambiguous_count": 0,
+  "cases": [
+    {
+      "case_id": "three_step_path_01",
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "parameter_fields": [
+        "direction",
+        "orientation"
+      ],
+      "primary_taxonomy": "MULTI_SLOT_DEPENDENCY",
+      "taxonomy_aspects": [
+        "CONTEXT_REQUIRED",
+        "IMPLICIT_DIRECTION",
+        "IMPLICIT_SOURCE_REFERENCE",
+        "IMPLICIT_ORIENTATION",
+        "RELATIONAL_INFERENCE",
+        "MULTI_SLOT_DEPENDENCY"
+      ],
+      "semantic_features": [
+        "RELATION.HORIZONTAL",
+        "RELATION.PATH_ENDPOINT_ORDER"
+      ],
+      "truly_repairable": true,
+      "ambiguous": false
+    },
+    {
+      "case_id": "three_step_path_02",
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "parameter_fields": [
+        "direction",
+        "orientation"
+      ],
+      "primary_taxonomy": "MULTI_SLOT_DEPENDENCY",
+      "taxonomy_aspects": [
+        "CONTEXT_REQUIRED",
+        "IMPLICIT_DIRECTION",
+        "IMPLICIT_SOURCE_REFERENCE",
+        "IMPLICIT_ORIENTATION",
+        "RELATIONAL_INFERENCE",
+        "MULTI_SLOT_DEPENDENCY"
+      ],
+      "semantic_features": [
+        "RELATION.PATH_ENDPOINT_ORDER",
+        "RELATION.VERTICAL"
+      ],
+      "truly_repairable": true,
+      "ambiguous": false
+    },
+    {
+      "case_id": "three_step_path_03",
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "parameter_fields": [
+        "direction",
+        "orientation"
+      ],
+      "primary_taxonomy": "MULTI_SLOT_DEPENDENCY",
+      "taxonomy_aspects": [
+        "CONTEXT_REQUIRED",
+        "IMPLICIT_DIRECTION",
+        "IMPLICIT_SOURCE_REFERENCE",
+        "IMPLICIT_ORIENTATION",
+        "RELATIONAL_INFERENCE",
+        "MULTI_SLOT_DEPENDENCY"
+      ],
+      "semantic_features": [
+        "RELATION.HORIZONTAL",
+        "RELATION.PATH_ENDPOINT_ORDER"
+      ],
+      "truly_repairable": true,
+      "ambiguous": false
+    },
+    {
+      "case_id": "three_step_path_04",
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "parameter_fields": [
+        "direction",
+        "orientation"
+      ],
+      "primary_taxonomy": "MULTI_SLOT_DEPENDENCY",
+      "taxonomy_aspects": [
+        "CONTEXT_REQUIRED",
+        "IMPLICIT_DIRECTION",
+        "IMPLICIT_SOURCE_REFERENCE",
+        "IMPLICIT_ORIENTATION",
+        "RELATIONAL_INFERENCE",
+        "MULTI_SLOT_DEPENDENCY"
+      ],
+      "semantic_features": [
+        "RELATION.PATH_ENDPOINT_ORDER",
+        "RELATION.VERTICAL"
+      ],
+      "truly_repairable": true,
+      "ambiguous": false
+    },
+    {
+      "case_id": "three_step_path_05",
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "parameter_fields": [
+        "direction",
+        "orientation"
+      ],
+      "primary_taxonomy": "MULTI_SLOT_DEPENDENCY",
+      "taxonomy_aspects": [
+        "CONTEXT_REQUIRED",
+        "IMPLICIT_DIRECTION",
+        "IMPLICIT_SOURCE_REFERENCE",
+        "IMPLICIT_ORIENTATION",
+        "RELATIONAL_INFERENCE",
+        "MULTI_SLOT_DEPENDENCY"
+      ],
+      "semantic_features": [
+        "RELATION.HORIZONTAL",
+        "RELATION.PATH_ENDPOINT_ORDER"
+      ],
+      "truly_repairable": true,
+      "ambiguous": false
+    },
+    {
+      "case_id": "two_step_count_generate_01",
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "parameter_fields": [
+        "orientation",
+        "shape_source"
+      ],
+      "primary_taxonomy": "MULTI_SLOT_DEPENDENCY",
+      "taxonomy_aspects": [
+        "CONTEXT_REQUIRED",
+        "IMPLICIT_ORIENTATION",
+        "RELATIONAL_INFERENCE",
+        "MULTI_SLOT_DEPENDENCY"
+      ],
+      "semantic_features": [
+        "RELATION.FROM_PREVIOUS_COUNT",
+        "RELATION.HORIZONTAL",
+        "RELATION.LITERAL_REFERENCE",
+        "RELATION.OBJECT_COUNT"
+      ],
+      "truly_repairable": true,
+      "ambiguous": false
+    },
+    {
+      "case_id": "two_step_count_generate_05",
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "parameter_fields": [
+        "orientation",
+        "shape_source"
+      ],
+      "primary_taxonomy": "MULTI_SLOT_DEPENDENCY",
+      "taxonomy_aspects": [
+        "CONTEXT_REQUIRED",
+        "IMPLICIT_ORIENTATION",
+        "RELATIONAL_INFERENCE",
+        "MULTI_SLOT_DEPENDENCY"
+      ],
+      "semantic_features": [
+        "RELATION.FROM_PREVIOUS_COUNT",
+        "RELATION.HORIZONTAL",
+        "RELATION.LITERAL_REFERENCE",
+        "RELATION.OBJECT_COUNT"
+      ],
+      "truly_repairable": true,
+      "ambiguous": false
+    },
+    {
+      "case_id": "two_step_count_generate_06",
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "parameter_fields": [
+        "orientation",
+        "shape_source"
+      ],
+      "primary_taxonomy": "MULTI_SLOT_DEPENDENCY",
+      "taxonomy_aspects": [
+        "CONTEXT_REQUIRED",
+        "IMPLICIT_ORIENTATION",
+        "RELATIONAL_INFERENCE",
+        "MULTI_SLOT_DEPENDENCY"
+      ],
+      "semantic_features": [
+        "RELATION.FROM_PREVIOUS_COUNT",
+        "RELATION.LITERAL_REFERENCE",
+        "RELATION.OBJECT_COUNT",
+        "RELATION.VERTICAL"
+      ],
+      "truly_repairable": true,
+      "ambiguous": false
+    },
+    {
+      "case_id": "two_step_count_generate_09",
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "parameter_fields": [
+        "color_source",
+        "count_kind",
+        "orientation",
+        "shape_source"
+      ],
+      "primary_taxonomy": "MULTI_SLOT_DEPENDENCY",
+      "taxonomy_aspects": [
+        "CONTEXT_REQUIRED",
+        "IMPLICIT_ORIENTATION",
+        "RELATIONAL_INFERENCE",
+        "MULTI_SLOT_DEPENDENCY"
+      ],
+      "semantic_features": [
+        "RELATION.COLOR_CELL_COUNT",
+        "RELATION.FROM_PREVIOUS_COUNT",
+        "RELATION.HORIZONTAL",
+        "RELATION.LITERAL_REFERENCE"
+      ],
+      "truly_repairable": true,
+      "ambiguous": false
+    },
+    {
+      "case_id": "two_step_count_generate_10",
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "parameter_fields": [
+        "orientation",
+        "shape_source"
+      ],
+      "primary_taxonomy": "MULTI_SLOT_DEPENDENCY",
+      "taxonomy_aspects": [
+        "CONTEXT_REQUIRED",
+        "IMPLICIT_ORIENTATION",
+        "RELATIONAL_INFERENCE",
+        "MULTI_SLOT_DEPENDENCY"
+      ],
+      "semantic_features": [
+        "RELATION.FROM_PREVIOUS_COUNT",
+        "RELATION.LITERAL_REFERENCE",
+        "RELATION.OBJECT_COUNT",
+        "RELATION.VERTICAL"
+      ],
+      "truly_repairable": true,
+      "ambiguous": false
+    },
+    {
+      "case_id": "two_step_count_generate_11",
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "parameter_fields": [
+        "orientation",
+        "shape_source"
+      ],
+      "primary_taxonomy": "MULTI_SLOT_DEPENDENCY",
+      "taxonomy_aspects": [
+        "CONTEXT_REQUIRED",
+        "IMPLICIT_ORIENTATION",
+        "RELATIONAL_INFERENCE",
+        "MULTI_SLOT_DEPENDENCY"
+      ],
+      "semantic_features": [
+        "RELATION.FROM_PREVIOUS_COUNT",
+        "RELATION.HORIZONTAL",
+        "RELATION.LITERAL_REFERENCE",
+        "RELATION.OBJECT_COUNT"
+      ],
+      "truly_repairable": true,
+      "ambiguous": false
+    },
+    {
+      "case_id": "two_step_count_generate_15",
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "parameter_fields": [
+        "orientation",
+        "shape_source"
+      ],
+      "primary_taxonomy": "MULTI_SLOT_DEPENDENCY",
+      "taxonomy_aspects": [
+        "CONTEXT_REQUIRED",
+        "IMPLICIT_ORIENTATION",
+        "RELATIONAL_INFERENCE",
+        "MULTI_SLOT_DEPENDENCY"
+      ],
+      "semantic_features": [
+        "RELATION.FROM_PREVIOUS_COUNT",
+        "RELATION.HORIZONTAL",
+        "RELATION.LITERAL_REFERENCE",
+        "RELATION.OBJECT_COUNT"
+      ],
+      "truly_repairable": true,
+      "ambiguous": false
+    }
+  ],
+  "protocol": {
+    "canonical_used_only_for_post_freeze_difference_audit": true,
+    "canonical_not_used_for_rule_design_or_model_input": true,
+    "no_case_specific_mapping": true
+  }
+}

@@ -1,0 +1,2212 @@
+{
+  "experiment_id": "CONTEXTUAL_PARAMETER_REASONING_V1",
+  "status": "FROZEN_BEFORE_ONE_FORMAL_PASS_PER_R1_R2_R3",
+  "benchmark_config": "configs/macro_api_comprehension_benchmark_v1.json",
+  "benchmark_hash": "90aba782703a8b1d2a4e97c8cde81a5e9e04aa0ca673ec882c70e42e0245ff00",
+  "registry_hash": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+  "schema_hash": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa",
+  "case_count": 60,
+  "q1_baseline": {
+    "semantic_success": 36,
+    "remaining_pure_parameter_failures": 12,
+    "programs_sha256": "7489dd0a5f11bbcd7bbb8de652ae345da233a94593f1dad78632763116c202f7",
+    "checkpoint_source": "Q1_DETERMINISTIC_ONTOLOGY_REPAIR frozen checkpoint"
+  },
+  "q1_baseline_programs": {
+    "parameter_count_01": {
+      "family": "SEQUENCE_OPERATION",
+      "skeleton_id": "CV018",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 1
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              },
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 1
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_count_02": {
+      "family": "SEQUENCE_OPERATION",
+      "skeleton_id": "CV018",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 2
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              },
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 2
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_count_03": {
+      "family": "SEQUENCE_OPERATION",
+      "skeleton_id": "CV018",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 3
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              },
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 3
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_count_04": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV016",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  },
+                  "count_kind": {
+                    "literal": "COLOR_CELL_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  },
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              },
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_object_01": {
+      "family": "OBJECT_SELECTION",
+      "skeleton_id": "CV026",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "largest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_object_02": {
+      "family": "OBJECT_SELECTION",
+      "skeleton_id": "CV026",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "smallest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_object_03": {
+      "family": "OBJECT_SELECTION",
+      "skeleton_id": "CV026",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "unique_area"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_object_04": {
+      "family": "OBJECT_SELECTION",
+      "skeleton_id": "CV026",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "largest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "color_source": {
+                    "literal": 1
+                  },
+                  "operation": {
+                    "literal": "recolor"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_object_05": {
+      "family": "OBJECT_SELECTION",
+      "skeleton_id": "CV026",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "smallest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "color_source": {
+                    "literal": 2
+                  },
+                  "operation": {
+                    "literal": "recolor"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_path_01": {
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "source": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_path_02": {
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "source": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "source": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_path_03": {
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "source": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_sequence_01": {
+      "family": "SEQUENCE_OPERATION",
+      "skeleton_id": "CV019",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_sequence_02": {
+      "family": "SEQUENCE_OPERATION",
+      "skeleton_id": "CV019",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parameter_sequence_03": {
+      "family": "SEQUENCE_OPERATION",
+      "skeleton_id": "CV019",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_fill_01": {
+      "family": "REGION_OPERATION",
+      "skeleton_id": "CV002",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 1
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_fill_02": {
+      "family": "REGION_OPERATION",
+      "skeleton_id": "CV002",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 2
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_fill_03": {
+      "family": "REGION_OPERATION",
+      "skeleton_id": "CV002",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 3
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_fill_04": {
+      "family": "REGION_OPERATION",
+      "skeleton_id": "CV002",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_fill_05": {
+      "family": "REGION_OPERATION",
+      "skeleton_id": "CV002",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 5
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_fill_06": {
+      "family": "REGION_OPERATION",
+      "skeleton_id": "CV002",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 6
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_fill_07": {
+      "family": "REGION_OPERATION",
+      "skeleton_id": "CV002",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 7
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_fill_08": {
+      "family": "REGION_OPERATION",
+      "skeleton_id": "CV002",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 8
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_fill_09": {
+      "family": "REGION_OPERATION",
+      "skeleton_id": "CV002",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 9
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_symmetry_01": {
+      "family": "SYMMETRY",
+      "skeleton_id": "CV001",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_symmetry_02": {
+      "family": "SYMMETRY",
+      "skeleton_id": "CV003",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              },
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_symmetry_03": {
+      "family": "SYMMETRY",
+      "skeleton_id": "CV001",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_symmetry_04": {
+      "family": "SYMMETRY",
+      "skeleton_id": "CV003",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              },
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_symmetry_05": {
+      "family": "SYMMETRY",
+      "skeleton_id": "CV001",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "single_symmetry_06": {
+      "family": "SYMMETRY",
+      "skeleton_id": "CV003",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              },
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_object_01": {
+      "family": "OBJECT_SELECTION",
+      "skeleton_id": "CV026",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "largest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_object_02": {
+      "family": "OBJECT_SELECTION",
+      "skeleton_id": "CV026",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "smallest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_object_03": {
+      "family": "OBJECT_SELECTION",
+      "skeleton_id": "CV026",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "unique_area"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_object_04": {
+      "family": "OBJECT_SELECTION",
+      "skeleton_id": "CV026",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "largest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_object_05": {
+      "family": "OBJECT_SELECTION",
+      "skeleton_id": "CV026",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "smallest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_path_01": {
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "literal": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_path_02": {
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "literal": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_path_03": {
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "literal": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_path_04": {
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "literal": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_path_05": {
+      "family": "LINE_PATH_CONNECTION",
+      "skeleton_id": "CV027",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "literal": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_sequence_01": {
+      "family": "SEQUENCE_OPERATION",
+      "skeleton_id": "CV019",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_sequence_02": {
+      "family": "SEQUENCE_OPERATION",
+      "skeleton_id": "CV019",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_sequence_03": {
+      "family": "SEQUENCE_OPERATION",
+      "skeleton_id": "CV019",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_sequence_04": {
+      "family": "SEQUENCE_OPERATION",
+      "skeleton_id": "CV019",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "three_step_sequence_05": {
+      "family": "SEQUENCE_OPERATION",
+      "skeleton_id": "CV019",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_01": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 1
+                  },
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 1
+                  },
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_02": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV011",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              },
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 2
+                  },
+                  "count_kind": {
+                    "literal": "REGION_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 2
+                  },
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_03": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV022",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 3
+                  }
+                }
+              },
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 3
+                  },
+                  "count_kind": {
+                    "literal": "RUN_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 3
+                  },
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_04": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV016",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  },
+                  "count_kind": {
+                    "literal": "COLOR_CELL_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  },
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              },
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_05": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 5
+                  },
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 5
+                  },
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_06": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 6
+                  },
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 6
+                  },
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_07": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV011",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              },
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 7
+                  },
+                  "count_kind": {
+                    "literal": "REGION_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 7
+                  },
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_08": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV022",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 8
+                  }
+                }
+              },
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 8
+                  },
+                  "count_kind": {
+                    "literal": "RUN_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 8
+                  },
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_09": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 9
+                  },
+                  "count_kind": {
+                    "literal": "COLOR_CELL_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 9
+                  },
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_10": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 1
+                  },
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 1
+                  },
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_11": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 2
+                  },
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 2
+                  },
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_12": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV011",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              },
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 3
+                  },
+                  "count_kind": {
+                    "literal": "REGION_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 3
+                  },
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_13": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV022",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  }
+                }
+              },
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  },
+                  "count_kind": {
+                    "literal": "RUN_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  },
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_14": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV016",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 5
+                  },
+                  "count_kind": {
+                    "literal": "COLOR_CELL_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 5
+                  },
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              },
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 5
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "two_step_count_generate_15": {
+      "family": "COUNT_GENERATION",
+      "skeleton_id": "CV005",
+      "program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "compiler_constrained",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 6
+                  },
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 6
+                  },
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "literal": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "model": {
+    "architecture": "Qwen3ForCausalLM",
+    "backend": "transformers_local",
+    "dtype": "bfloat16",
+    "internet": false,
+    "local_files_only": true,
+    "model_source": "qwen-lm/qwen-3/Transformers/8b/1"
+  },
+  "tokenizer_version": "Qwen3-8B attached local tokenizer revision 1",
+  "sampling": {
+    "temperature": 0,
+    "thinking": false,
+    "generation_calls": 0,
+    "candidate_budget": 1
+  },
+  "parameter_ontology": {
+    "sha256": "6a4bdfaf812e0eff9d9667e7cc54dcafab158d0d416e97cbcea6acafe4f4e09a"
+  },
+  "relation_ontology": {
+    "sha256": "59d805ebde769cffd1eabbc89c9305f83ec204edee0b2a4acfdf6356762cc0ff"
+  },
+  "semantic_feature_extractor": {
+    "sha256": "72ae872d94ecbbd98d9db996425a97ad0fd7d168ab53383ffad45c427d9bbe3d"
+  },
+  "contextual_ir": {
+    "schema": {
+      "id": "CONTEXTUAL_PARAMETER_IR_V1",
+      "fields": [
+        "instruction",
+        "family",
+        "frozen_skeleton",
+        "target_slot",
+        "allowed_candidates",
+        "semantic_features"
+      ],
+      "candidate_language": "registry-derived ParameterCandidate candidate_id only",
+      "forbidden": [
+        "case_id",
+        "canonical_program",
+        "semantic_label",
+        "expected_candidate"
+      ]
+    },
+    "sha256": "855ab1f9260bfcef7b4046ae0b9beb4be9503b613b326da45509752b87ce2d1d"
+  },
+  "r1": {
+    "mapping_sha256": "47889ef03f4c02f96e41210bbb50c472f863b338ff78e692929a622cd6674350",
+    "rule": "global relation extraction + contract-scoped normalization only"
+  },
+  "r2": {
+    "config_sha256": "7adbad328d039a2325db969401f553912070c51f53e8c9a4579585b7b10bff6b",
+    "minimum_margin": 0.05,
+    "rule": "teacher-forced likelihood over supplied contextual IR candidate IDs"
+  },
+  "r3": {
+    "gate_sha256": "4be81de9bd284e9152ac3a7f88f95e0291f677ce72d73548a346c634123ea63d",
+    "minimum_margin": 0.05,
+    "rule": "R1 priority; otherwise R2 only when high margin and different; otherwise keep Q1"
+  },
+  "conditions": {
+    "R0_Q1_HISTORICAL": {
+      "formal_passes": 0
+    },
+    "R1_RELATIONAL_NORMALIZER": {
+      "formal_passes": 1
+    },
+    "R2_CONTEXTUAL_CANDIDATE_CLASSIFIER": {
+      "formal_passes": 1
+    },
+    "R3_CONSERVATIVE_CONTEXTUAL_REPAIR": {
+      "formal_passes": 1
+    }
+  },
+  "protocol": {
+    "arc_data_used": false,
+    "arc_solutions_used": false,
+    "new_arc_inference": false,
+    "canonical_program_sent_to_model": false,
+    "semantic_label_used_for_repair": false,
+    "all_60_cases_same_logic": true,
+    "one_formal_pass_per_condition": true,
+    "no_retry": true,
+    "no_threshold_sweep": true,
+    "hardware": "exactly 4x NVIDIA L4",
+    "startup": "sequential model artifact warm-up, staggered MODEL_READY barrier",
+    "raw_completions": "none",
+    "raw_scores_public": false
+  }
+}

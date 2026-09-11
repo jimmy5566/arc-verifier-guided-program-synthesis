@@ -27,6 +27,7 @@ INCLUDED_FILES = (
     "configs/PROGRAM_SELECTION_REPAIR_V1_FROZEN_CONFIG.json",
     "configs/PARAMETER_GROUNDING_REPAIR_V1_FROZEN_CONFIG.json",
     "configs/PARAMETER_SEMANTIC_RETRIEVAL_V1_FROZEN_CONFIG.json",
+    "configs/CONTEXTUAL_PARAMETER_REASONING_V1_FROZEN_CONFIG.json",
     "scripts/run_qwen3_8b_transformers_preflight.py",
     "scripts/run_qwen3_8b_one_task_smoke.py",
     "scripts/run_qwen3_8b_four_gpu_preflight.py",
@@ -37,6 +38,7 @@ INCLUDED_FILES = (
     "scripts/run_program_selection_repair.py",
     "scripts/run_parameter_grounding_repair.py",
     "scripts/run_parameter_semantic_retrieval.py",
+    "scripts/run_contextual_parameter_reasoning.py",
 )
 
 
