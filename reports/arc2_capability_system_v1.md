@@ -1,0 +1,428 @@
+# ARC2 Capability System V1
+
+## Capability architecture
+
+The system uses a typed, versioned primitive registry. `CapabilityExecutor` resolves an ID to one deterministic implementation and returns explicit SUCCESS, INVALID, AMBIGUOUS, or EXECUTION_FAILED states. The active V4 library covers region/topology, separators and line connection, graph/path traversal and serialization, counting, generation, sequence conversion, and bounded iteration.
+
+## Primitive typing and composition
+
+`CapabilityProgramExecutor` preserves the latest grid canvas separately from typed intermediate values, so perception can feed parameter provenance without treating a RegionSet, Integer, Path, or Sequence as a grid. The bounded generic grammar currently instantiates Grid→Region→Fill, Grid→Count→Generate, and Grid→Graph→Path→Sequence→Grid templates.
+
+## Parameter inference and hard verification
+
+All colors, path endpoints, count sources, output geometry, and serializer orientation are intersected across train pairs. Dynamic `{$from: ...}` references recompute typed facts on each test input. Every complete candidate must exactly reproduce every train output; test solutions are never consulted to choose a hypothesis.
+
+## Scheduler and budget
+
+The deterministic scheduler ranks multiple families and preserves fallback search. Each graph-path template caps endpoint-pair enumeration with a shared deterministic budget; no unconstrained Cartesian product is used. The comparison below reports the observed scheduler/unscheduled trade-off rather than assuming a runtime win.
+
+## Coverage, ablation, and generalization
+
+The JSON results include standalone versus composition-only coverage, depth, ambiguity, train-consistent-but-test-wrong counts, family-removal ablations, and fixed development/held-out/challenge-like split metrics. Zero-contribution families remain reported as zero rather than being silently excluded.
+
+## Leakage controls
+
+Inference loads only the challenge collection. All composer variants, sanity solvers, and ablations freeze test predictions before the first solution-file load. No task-ID branch, public-evaluation-specific rule, LLM, router, or learned ranker is present.
+
+## Remaining gaps
+
+The scheduler preserves coverage and reduces the measured candidate count, but its primary-stage recall remains limited because many valid hypotheses are recovered by fallback. Existing bounded object/relation and pattern programs are delegated through the unified verifier; the remaining gap is richer fully typed V4 multi-step templates that can produce composition-only gains beyond those frozen families.
+
+## Results
+
+```json
+{
+  "experiment_id": "ARC2_CAPABILITY_SYSTEM_V1",
+  "protocol": {
+    "inference": "training challenges only: train pairs -> compose -> hard verify -> test prediction freeze",
+    "scoring": "training solutions loaded only after all variants and sanity predictions were frozen",
+    "task_id_hardcode": false
+  },
+  "runtime_seconds": 98.36050269985572,
+  "task_count": 1000,
+  "frozen_regression": {
+    "v0_unique": 14,
+    "v0_v1_cumulative": 18,
+    "v0_v1_v2_cumulative": 18,
+    "v0_v1_v2_v3_cumulative": 20,
+    "passed": true
+  },
+  "registry_validation_errors": [],
+  "executor_dispatch_audit": {
+    "registered_v4_primitive_ids": [
+      "COUNT_COLOR_CELLS_V1",
+      "COUNT_OBJECTS_V1",
+      "COUNT_REGIONS_V1",
+      "COUNT_REPEATED_MOTIF_V1",
+      "COUNT_RUNS_V1",
+      "COUNT_SELECTED_REGION_AREA_V1",
+      "COUNT_VALUE_FREQUENCY_V1",
+      "GEN_FILLED_RECTANGLE_V1",
+      "GEN_MASK_TO_GRID_V1",
+      "GEN_N_CELLS_COLUMN_V1",
+      "GEN_N_CELLS_ROW_V1",
+      "GEN_RECTANGLE_V1",
+      "GEN_REPEAT_MASK_V1",
+      "GEN_SOLID_COLUMN_V1",
+      "GEN_SOLID_ROW_V1",
+      "GRAPH_FIND_BRANCH_NODES_V1",
+      "GRAPH_FIND_ENDPOINTS_V1",
+      "GRAPH_FROM_OBJECT_PIXELS_4_V1",
+      "GRAPH_IS_CONNECTED_V1",
+      "GRAPH_IS_SIMPLE_PATH_V1",
+      "GRAPH_SHORTEST_PATH_V1",
+      "GRAPH_TRACE_PATH_V1",
+      "ITERATE_TRANSLATE_BOUNDED_V1",
+      "LINE_CONNECT_ALIGNED_POINTS_V1",
+      "LINE_EXTEND_UNTIL_BOUNDARY_V1",
+      "LINE_FIND_FULL_HORIZONTAL_V1",
+      "LINE_FIND_FULL_VERTICAL_V1",
+      "LINE_FIND_PARTIAL_HORIZONTAL_V1",
+      "LINE_FIND_PARTIAL_VERTICAL_V1",
+      "PATH_COLOR_SEQUENCE_V1",
+      "PATH_SERIALIZE_COLUMN_V1",
+      "PATH_SERIALIZE_ROW_V1",
+      "REG_EXTERIOR_MASK_V1",
+      "REG_EXTRACT_REGION_AT_V1",
+      "REG_FILL_INTERIOR_V1",
+      "REG_FIND_ENCLOSED_REGIONS_V1",
+      "REG_FIND_HOLES_V1",
+      "REG_FIND_REGIONS_4_V1",
+      "REG_FIND_REGIONS_8_V1",
+      "REG_FLOOD_FILL_V1",
+      "REG_INTERIOR_MASK_V1",
+      "REG_REGION_ADJACENCY_V1",
+      "REG_REGION_BOUNDARY_V1",
+      "SEG_SPLIT_BY_SEPARATOR_V1",
+      "SEQ_GRID_TO_COLUMN_V1",
+      "SEQ_GRID_TO_ROW_V1",
+      "SEQ_REPEAT_V1",
+      "SEQ_REVERSE_V1",
+      "SEQ_RUN_LENGTH_ENCODE_V1",
+      "SEQ_TO_COLUMN_GRID_V1",
+      "SEQ_TO_ROW_GRID_V1"
+    ],
+    "registered_v4_count": 51,
+    "executable_dispatch_ids": [
+      "COUNT_COLOR_CELLS_V1",
+      "COUNT_OBJECTS_V1",
+      "COUNT_REGIONS_V1",
+      "COUNT_REPEATED_MOTIF_V1",
+      "COUNT_RUNS_V1",
+      "COUNT_SELECTED_REGION_AREA_V1",
+      "COUNT_VALUE_FREQUENCY_V1",
+      "GEN_FILLED_RECTANGLE_V1",
+      "GEN_MASK_TO_GRID_V1",
+      "GEN_N_CELLS_COLUMN_V1",
+      "GEN_N_CELLS_ROW_V1",
+      "GEN_RECTANGLE_V1",
+      "GEN_REPEAT_MASK_V1",
+      "GEN_SOLID_COLUMN_V1",
+      "GEN_SOLID_ROW_V1",
+      "GRAPH_FIND_BRANCH_NODES_V1",
+      "GRAPH_FIND_ENDPOINTS_V1",
+      "GRAPH_FROM_OBJECT_PIXELS_4_V1",
+      "GRAPH_IS_CONNECTED_V1",
+      "GRAPH_IS_SIMPLE_PATH_V1",
+      "GRAPH_SHORTEST_PATH_V1",
+      "GRAPH_TRACE_PATH_V1",
+      "ITERATE_TRANSLATE_BOUNDED_V1",
+      "LINE_CONNECT_ALIGNED_POINTS_V1",
+      "LINE_EXTEND_UNTIL_BOUNDARY_V1",
+      "LINE_FIND_FULL_HORIZONTAL_V1",
+      "LINE_FIND_FULL_VERTICAL_V1",
+      "LINE_FIND_PARTIAL_HORIZONTAL_V1",
+      "LINE_FIND_PARTIAL_VERTICAL_V1",
+      "PATH_COLOR_SEQUENCE_V1",
+      "PATH_SERIALIZE_COLUMN_V1",
+      "PATH_SERIALIZE_ROW_V1",
+      "REG_EXTERIOR_MASK_V1",
+      "REG_EXTRACT_REGION_AT_V1",
+      "REG_FILL_INTERIOR_V1",
+      "REG_FIND_ENCLOSED_REGIONS_V1",
+      "REG_FIND_HOLES_V1",
+      "REG_FIND_REGIONS_4_V1",
+      "REG_FIND_REGIONS_8_V1",
+      "REG_FLOOD_FILL_V1",
+      "REG_INTERIOR_MASK_V1",
+      "REG_REGION_ADJACENCY_V1",
+      "REG_REGION_BOUNDARY_V1",
+      "SEG_SPLIT_BY_SEPARATOR_V1",
+      "SEQ_GRID_TO_COLUMN_V1",
+      "SEQ_GRID_TO_ROW_V1",
+      "SEQ_REPEAT_V1",
+      "SEQ_REVERSE_V1",
+      "SEQ_RUN_LENGTH_ENCODE_V1",
+      "SEQ_TO_COLUMN_GRID_V1",
+      "SEQ_TO_ROW_GRID_V1"
+    ],
+    "executable_dispatch_count": 51,
+    "unsupported_primitive_ids": [],
+    "missing_handler_methods": [],
+    "all_registered_v4_executable": true
+  },
+  "sanity_solvers": {
+    "EnclosureFillSolver": {
+      "exact_solved_task_ids": [
+        "00d62c1b",
+        "a5313dff"
+      ],
+      "exact_solved_tasks": 2,
+      "test_outputs_solved": 2,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_task_ids": [],
+      "train_consistent_but_test_wrong": 0,
+      "depth_distribution": {
+        "2": 2
+      },
+      "program_ambiguity_tasks": 0,
+      "prediction_ambiguity_tasks": 0,
+      "test_execution_failed_tasks": 0,
+      "runtime_seconds": 0.482996900100261
+    },
+    "PathSerializationSolver": {
+      "exact_solved_task_ids": [],
+      "exact_solved_tasks": 0,
+      "test_outputs_solved": 0,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_task_ids": [],
+      "train_consistent_but_test_wrong": 0,
+      "depth_distribution": {},
+      "program_ambiguity_tasks": 0,
+      "prediction_ambiguity_tasks": 0,
+      "test_execution_failed_tasks": 0,
+      "runtime_seconds": 0.4462526000570506
+    },
+    "CountGenerationSolver": {
+      "exact_solved_task_ids": [],
+      "exact_solved_tasks": 0,
+      "test_outputs_solved": 0,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_task_ids": [],
+      "train_consistent_but_test_wrong": 0,
+      "depth_distribution": {},
+      "program_ambiguity_tasks": 0,
+      "prediction_ambiguity_tasks": 0,
+      "test_execution_failed_tasks": 0,
+      "runtime_seconds": 0.013653000118210912
+    }
+  },
+  "generic_composer": {
+    "unscheduled": {
+      "exact_solved_task_ids": [
+        "00d62c1b",
+        "1cf80156",
+        "23b5c85d",
+        "25ff71a9",
+        "358ba94e",
+        "496994bd",
+        "a5313dff",
+        "be94b721",
+        "f25ffba3"
+      ],
+      "exact_solved_tasks": 9,
+      "test_outputs_solved": 10,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_task_ids": [
+        "1f85a75f"
+      ],
+      "train_consistent_but_test_wrong": 1,
+      "depth_distribution": {
+        "1": 2,
+        "2": 7
+      },
+      "program_ambiguity_tasks": 0,
+      "prediction_ambiguity_tasks": 0,
+      "test_execution_failed_tasks": 1,
+      "runtime_seconds": 84.46073450008407,
+      "stats": {
+        "generated": 4971,
+        "type_pruned": 0,
+        "precondition_pruned": 0,
+        "train_pruned": 4928,
+        "deduplicated": 33,
+        "verified": 10,
+        "budget_exhausted": false
+      },
+      "fallback_tasks": 0,
+      "allowed_families": [
+        "counting",
+        "generation",
+        "graph_path",
+        "object",
+        "pattern",
+        "region",
+        "relation"
+      ]
+    },
+    "scheduled": {
+      "exact_solved_task_ids": [
+        "00d62c1b",
+        "1cf80156",
+        "23b5c85d",
+        "25ff71a9",
+        "358ba94e",
+        "496994bd",
+        "a5313dff",
+        "be94b721",
+        "f25ffba3"
+      ],
+      "exact_solved_tasks": 9,
+      "test_outputs_solved": 10,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_task_ids": [
+        "1f85a75f"
+      ],
+      "train_consistent_but_test_wrong": 1,
+      "depth_distribution": {
+        "1": 2,
+        "2": 7
+      },
+      "program_ambiguity_tasks": 0,
+      "prediction_ambiguity_tasks": 0,
+      "test_execution_failed_tasks": 1,
+      "runtime_seconds": 2.1753914998844266,
+      "stats": {
+        "generated": 4963,
+        "type_pruned": 0,
+        "precondition_pruned": 0,
+        "train_pruned": 4920,
+        "deduplicated": 33,
+        "verified": 10,
+        "budget_exhausted": false
+      },
+      "fallback_tasks": 998,
+      "allowed_families": [
+        "counting",
+        "generation",
+        "graph_path",
+        "object",
+        "pattern",
+        "region",
+        "relation"
+      ]
+    }
+  },
+  "v4_unique_solved_task_ids": [
+    "00d62c1b",
+    "1cf80156",
+    "23b5c85d",
+    "25ff71a9",
+    "358ba94e",
+    "496994bd",
+    "a5313dff",
+    "be94b721",
+    "f25ffba3"
+  ],
+  "v4_unique_solved": 9,
+  "overlap_existing_20": [
+    "1cf80156",
+    "23b5c85d",
+    "25ff71a9",
+    "358ba94e",
+    "496994bd",
+    "be94b721",
+    "f25ffba3"
+  ],
+  "newly_solved_task_ids": [
+    "00d62c1b",
+    "a5313dff"
+  ],
+  "newly_solved": 2,
+  "cumulative_solved": 22,
+  "standalone_newly_solved": 2,
+  "composition_only_task_ids": [],
+  "composition_only_newly_solved": 0,
+  "scheduler": {
+    "top_1_recall": 0.2222222222222222,
+    "top_3_recall": 0.2222222222222222,
+    "top_5_recall": 0.2222222222222222,
+    "fallback_enabled": true,
+    "fallback_tasks": 998,
+    "candidate_reduction_vs_unscheduled": 8,
+    "runtime_delta_seconds": 82.28534300019965
+  },
+  "family_ablation": {
+    "object": {
+      "exact_solved": 4,
+      "delta_vs_unscheduled": -5,
+      "runtime_seconds": 1.282510899938643
+    },
+    "relation": {
+      "exact_solved": 4,
+      "delta_vs_unscheduled": -5,
+      "runtime_seconds": 1.3143886998295784
+    },
+    "pattern": {
+      "exact_solved": 7,
+      "delta_vs_unscheduled": -2,
+      "runtime_seconds": 0.9880174000281841
+    },
+    "region": {
+      "exact_solved": 7,
+      "delta_vs_unscheduled": -2,
+      "runtime_seconds": 0.81124969990924
+    },
+    "graph_path": {
+      "exact_solved": 9,
+      "delta_vs_unscheduled": 0,
+      "runtime_seconds": 0.9705797000788152
+    },
+    "counting": {
+      "exact_solved": 9,
+      "delta_vs_unscheduled": 0,
+      "runtime_seconds": 1.1782927000895143
+    },
+    "generation": {
+      "exact_solved": 9,
+      "delta_vs_unscheduled": 0,
+      "runtime_seconds": 1.267754500033334
+    },
+    "sequence": {
+      "exact_solved": 9,
+      "delta_vs_unscheduled": 0,
+      "runtime_seconds": 1.2864904999732971
+    },
+    "iteration": {
+      "exact_solved": 9,
+      "delta_vs_unscheduled": 0,
+      "runtime_seconds": 1.3131508000660688
+    }
+  },
+  "split_metrics": {
+    "development": {
+      "tasks": 594,
+      "scheduled_generic_exact": 7,
+      "v4_unique_exact": 7
+    },
+    "held_out": {
+      "tasks": 257,
+      "scheduled_generic_exact": 2,
+      "v4_unique_exact": 2
+    },
+    "challenge_like": {
+      "tasks": 149,
+      "scheduled_generic_exact": 0,
+      "v4_unique_exact": 0
+    }
+  },
+  "primitive_usage_on_generic_exact": {
+    "PAT_COMPLETE_MIRROR_HORIZONTAL_V1": 2,
+    "REG_FIND_ENCLOSED_REGIONS_V1": 2,
+    "REG_FILL_INTERIOR_V1": 2,
+    "SEL_RELATIONAL_V1": 5,
+    "OBJ_CROP_V1": 4,
+    "OBJ_MOVE_V1": 1
+  },
+  "leakage_hardcode_audit": [
+    "All inference variants loaded training challenges without a solution path.",
+    "All test predictions were materialized before the first solution-file load.",
+    "No task ID is used in candidate generation, dispatch, scheduler, or scoring selection.",
+    "Hard verification compares candidate outputs only to train outputs."
+  ],
+  "known_scope_limits": [
+    "The generic grammar reuses bounded object/relation programs and instantiates region-fill, count-to-N-cell-generation, graph-path serialization, and registered pattern-completion templates.",
+    "No LLM, router, learned ranker, or unrestricted Cartesian program search is used."
+  ]
+}
+```

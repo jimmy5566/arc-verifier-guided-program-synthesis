@@ -1,0 +1,154 @@
+{
+  "experiment_id": "SOLVER_LIB_V1_OBJECT",
+  "config": {
+    "connectivity": 4,
+    "background": "most_frequent_per_grid",
+    "candidate_budget": 1,
+    "solvers": [
+      "ObjectSelectionSolver",
+      "ObjectTransformSolver",
+      "ObjectCopyMoveSolver"
+    ],
+    "test_solution_access": "after all predictions only"
+  },
+  "total_tasks": 1000,
+  "runtime_seconds": 33.77714499994181,
+  "solver_metrics": {
+    "ObjectSelectionSolver": {
+      "applicable_tasks": 5,
+      "applicable_task_ids": [
+        "1cf80156",
+        "1f85a75f",
+        "23b5c85d",
+        "358ba94e",
+        "be94b721"
+      ],
+      "generated_candidates": 7000,
+      "train_consistent_hypotheses": 13,
+      "rejected_candidates": 6987,
+      "ambiguous_tasks": 2,
+      "ambiguous_task_details": {
+        "1cf80156": {
+          "train_consistent_hypotheses": 6,
+          "different_test_predictions": false
+        },
+        "1f85a75f": {
+          "train_consistent_hypotheses": 4,
+          "different_test_predictions": false
+        }
+      },
+      "ambiguous_tasks_with_different_test_predictions": 0,
+      "inference_runtime_seconds": 1.1850670999847353,
+      "exact_solved_tasks": 5,
+      "solved_task_ids": [
+        "1cf80156",
+        "1f85a75f",
+        "23b5c85d",
+        "358ba94e",
+        "be94b721"
+      ],
+      "test_outputs_solved": 5,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_tasks": 0
+    },
+    "ObjectTransformSolver": {
+      "applicable_tasks": 2,
+      "applicable_task_ids": [
+        "23b5c85d",
+        "25ff71a9"
+      ],
+      "generated_candidates": 112780,
+      "train_consistent_hypotheses": 9,
+      "rejected_candidates": 112771,
+      "ambiguous_tasks": 2,
+      "ambiguous_task_details": {
+        "23b5c85d": {
+          "train_consistent_hypotheses": 3,
+          "different_test_predictions": false
+        },
+        "25ff71a9": {
+          "train_consistent_hypotheses": 6,
+          "different_test_predictions": false
+        }
+      },
+      "ambiguous_tasks_with_different_test_predictions": 0,
+      "inference_runtime_seconds": 25.01072010002099,
+      "exact_solved_tasks": 2,
+      "solved_task_ids": [
+        "23b5c85d",
+        "25ff71a9"
+      ],
+      "test_outputs_solved": 3,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_tasks": 0
+    },
+    "ObjectCopyMoveSolver": {
+      "applicable_tasks": 0,
+      "applicable_task_ids": [],
+      "generated_candidates": 780,
+      "train_consistent_hypotheses": 0,
+      "rejected_candidates": 780,
+      "ambiguous_tasks": 0,
+      "ambiguous_task_details": {},
+      "ambiguous_tasks_with_different_test_predictions": 0,
+      "inference_runtime_seconds": 7.320072999922559,
+      "exact_solved_tasks": 0,
+      "solved_task_ids": [],
+      "test_outputs_solved": 0,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_tasks": 0
+    }
+  },
+  "v0_unique_solved": 14,
+  "v1_object_unique_solved": 6,
+  "overlap_with_v0": [
+    "1cf80156",
+    "25ff71a9"
+  ],
+  "newly_solved_task_ids": [
+    "1f85a75f",
+    "23b5c85d",
+    "358ba94e",
+    "be94b721"
+  ],
+  "total_union_solved": 18,
+  "absolute_gain": 4,
+  "percentage_point_gain": 0.4,
+  "hypothesis_statistics": {
+    "generated": 120560,
+    "train_consistent": 22,
+    "rejected": 120538
+  },
+  "ambiguous_tasks": 4,
+  "ambiguous_tasks_with_different_test_predictions": 0,
+  "primitive_usage": {
+    "selection": {
+      "largest": 3,
+      "smallest": 2,
+      "unique_area": 1,
+      "border": 1
+    },
+    "transform": {
+      "crop:identity": 5,
+      "crop:flip_horizontal": 1,
+      "translate:identity": 1
+    },
+    "template": {
+      "largest->crop:identity": 3,
+      "smallest->crop:identity": 1,
+      "unique_area->crop:identity": 1,
+      "smallest->crop:flip_horizontal": 1,
+      "border->translate:identity": 1
+    }
+  },
+  "leakage_checks": [
+    "Inference used load_dataset(challenges) without test solution file.",
+    "All predictions were generated before load_solutions(training_solutions).",
+    "No task identifier conditions exist in object solver modules."
+  ],
+  "regression_check": {
+    "v0_unique_solved": 14,
+    "expected": 14,
+    "passed": true
+  }
+}

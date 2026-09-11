@@ -1,0 +1,8 @@
+{
+  "config_id": "KAGGLE_L4_SCALING_SMOKE_8",
+  "split": "development",
+  "task_count": 8,
+  "task_ids": ["e7639916", "3eda0437", "e729b7be", "f1bcbc2c", "83eb0a57", "3de23699", "825aa9e9", "9b4c17c4"],
+  "frozen_config": "configs/frozen_llm_program_synthesis_v2.json",
+  "protocol": "No solutions are opened. The identical ordered task set is used for 1-, 2-, and 4-worker throughput measurements."
+}

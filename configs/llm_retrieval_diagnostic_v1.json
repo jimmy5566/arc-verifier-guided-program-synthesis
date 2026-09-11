@@ -1,0 +1,13 @@
+{
+  "config_id": "LLM_CAPABILITY_RETRIEVAL_DIAGNOSTIC_V1",
+  "purpose": "Development-only controlled full-vs-compact catalogue diagnostic. This is separate from frozen main inference.",
+  "task_selection": "First four confirmation tasks with schema errors, first four with type errors, first three with parameter/precondition errors, and the single train-inconsistent task; selected from immutable checkpoint order.",
+  "task_ids": ["6ad5bdfd", "88a62173", "fafd9572", "bcb3040b", "d2acf2cb", "d07ae81c", "af24b4cc", "2f0c5170", "29623171", "985ae207", "320afe60", "d13f3404"],
+  "conditions": {
+    "full": {"catalogue_size": null},
+    "top15": {"catalogue_size": 15},
+    "top30": {"catalogue_size": 30}
+  },
+  "frozen_config": "configs/frozen_llm_config_v1.json",
+  "protocol": "Challenge data only during inference; all three condition checkpoints must complete and freeze predictions before their scorer opens training_solutions."
+}

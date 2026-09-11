@@ -1,0 +1,34 @@
+{
+  "infrastructure_fix_id": "LLAMA_CPP_QWEN3_BACKEND_V1",
+  "status": "FROZEN_BEFORE_VALID_PILOT_INFERENCE",
+  "replaces": {
+    "backend": "ollama",
+    "version": "0.3.14",
+    "reason": "The first generation from the attached Qwen3 14B GGUF failed with HTTP 500: model is not supported by this Ollama version."
+  },
+  "backend": {
+    "name": "llama.cpp llama-server",
+    "upstream_repository": "https://github.com/ggml-org/llama.cpp",
+    "commit": "368b24c355d2e2cf3de2f36f71df18cd910357b1",
+    "cuda_version": "12.5.82",
+    "cuda_architecture": "89",
+    "attached_dataset": "vaibhavpatel/llamacpp-inkling-cuda-sm89",
+    "server_binary_sha256": "3a362477770fc26cc1c127f0d6feccad1315d052f0464b197f251d36d701387e"
+  },
+  "model": {
+    "identifier": "qwen3:14b",
+    "quantization": "Q4_K_M",
+    "source": "existing attached Qwen3 GGUF; no weight, quantization, tokenizer, or template replacement"
+  },
+  "invariants": {
+    "frozen_v2_config": "configs/frozen_llm_program_synthesis_v2.json",
+    "macro_dsl": "unchanged",
+    "parameter_solver": "unchanged",
+    "compiler": "unchanged",
+    "candidate_budget": 5,
+    "temperature": 0,
+    "top_p": 1,
+    "seed": 0,
+    "internet": "off"
+  }
+}

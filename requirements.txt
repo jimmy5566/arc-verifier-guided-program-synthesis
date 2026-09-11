@@ -1,0 +1,6 @@
+-e .[dev]
+# Optional LLM/GPU stack: install only after choosing a PyTorch CUDA wheel for the target machine.
+# transformers
+# accelerate
+# bitsandbytes
+# sentencepiece

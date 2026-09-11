@@ -1,0 +1,10 @@
+backend: ollama
+model: qwen3:14b
+endpoint: http://127.0.0.1:11434/api/generate
+temperature: 0
+top_p: 1.0
+seed: 0
+max_output_tokens: 2000
+context_window: 12288
+structured_output: json_schema
+stream: false

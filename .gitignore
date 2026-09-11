@@ -1,0 +1,81 @@
+# Python environments and caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Editors and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+
+# Credentials and local configuration
+.env
+.env.*
+kaggle.json
+credentials*
+secrets*
+*.pem
+*.key
+id_rsa*
+
+# Datasets, competition material, models, and caches (never redistributed)
+data/
+models/
+model_cache/
+cache/
+artifacts/
+submission/
+notebooks/
+dataset-metadata.json
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.ckpt
+
+# Generated execution state and large runtime diagnostics
+experiments/checkpoints/
+experiments/artifacts/
+*.log
+*.tmp
+*.temp
+reports/failure_cases/
+reports/figures/
+
+# Environment-bound historical provenance retained locally only
+configs/frozen_llm_program_synthesis_v2_qwen3_8b_transformers.json
+
+# Public release is an explicit, reviewed research snapshot. These local
+# historical files remain available here but are intentionally not published.
+RESEARCH.md
+experiments/configs/
+experiments/results/*
+!experiments/results/ARC2_CAPABILITY_SYSTEM_V1.json
+!experiments/results/LLM_HYPOTHESIS_GENERATOR_V1.json
+!experiments/results/LLM_HYPOTHESIS_GENERATOR_V1_REAL.json
+!experiments/results/LLM_PROGRAM_SYNTHESIS_V2.json
+!experiments/results/LLM_PROGRAM_SYNTHESIS_V2_PILOT_50.json
+!experiments/results/SOLVER_LIB_V0.json
+!experiments/results/SOLVER_LIB_V1_OBJECT.json
+!experiments/results/SOLVER_LIB_V2_RELATION_COMPOSITION.json
+!experiments/results/SOLVER_LIB_V3_PATTERN.json
+reports/*
+!reports/arc2_capability_system_v1.md
+!reports/capability_registry_audit.md
+!reports/data_exposure_audit.md
+!reports/llm_failure_diagnostic_v1.md
+!reports/llm_program_synthesis_v2.md
+!reports/llm_program_synthesis_v2_failures.md
+!reports/macro_capability_registry_v1.md

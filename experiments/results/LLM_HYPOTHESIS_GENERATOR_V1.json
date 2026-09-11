@@ -1,0 +1,75 @@
+{
+  "experiment_id": "LLM_HYPOTHESIS_GENERATOR_V1",
+  "status": "BLOCKED_NO_LLM_BACKEND",
+  "reason": "No configured real LLM inference backend is available; no mock or fabricated model output was substituted.",
+  "provider_audit": [
+    {
+      "provider": "none",
+      "available": false,
+      "reason": "No configured real LLM inference backend",
+      "model": null,
+      "package_available": false,
+      "credential_configured": false
+    },
+    {
+      "provider": "openai_responses",
+      "available": false,
+      "reason": "not configured",
+      "model": null,
+      "package_available": false,
+      "credential_configured": false
+    }
+  ],
+  "frozen_capability_registry_count": 119,
+  "capability_comprehension": {
+    "status": "BLOCKED_NO_LLM_BACKEND",
+    "question_count": 40,
+    "accuracy": null,
+    "error_categories": {}
+  },
+  "conditions": {
+    "deterministic_composer_only": "FROZEN_BASELINE_AVAILABLE",
+    "llm_structured_full_catalog": "BLOCKED_NO_LLM_BACKEND",
+    "llm_structured_scheduler_soft_hints": "BLOCKED_NO_LLM_BACKEND",
+    "deterministic_llm_union": "BLOCKED_NO_LLM_BACKEND",
+    "llm_direct_grid_development": "BLOCKED_NO_LLM_BACKEND"
+  },
+  "metrics_not_measured": [
+    "LLM exact solved",
+    "LLM-only composition gain",
+    "direct-grid exact solved",
+    "token usage",
+    "rank recall",
+    "program/prediction ambiguity attributable to LLM proposals",
+    "capability-gap classifications"
+  ],
+  "data_discipline": {
+    "test_solution_access_for_llm_inference": false,
+    "task_id_in_prompt": false,
+    "task_id_hardcode": false,
+    "post_llm_capability_expansion": false
+  },
+  "frozen_deterministic_baseline": {
+    "experiment_id": "ARC2_CAPABILITY_SYSTEM_V1",
+    "cumulative_solved": 22,
+    "generic_composer_exact_solved": 9,
+    "v4_unique_solved": 9,
+    "frozen_regression": {
+      "v0_unique": 14,
+      "v0_v1_cumulative": 18,
+      "v0_v1_v2_cumulative": 18,
+      "v0_v1_v2_v3_cumulative": 20,
+      "passed": true
+    }
+  },
+  "registry_validation_errors": [],
+  "catalogue_artifacts": [
+    "artifacts/llm_capability_catalog_v1.json",
+    "artifacts/llm_capability_catalog_v1_prompt.txt"
+  ],
+  "comprehension_artifact": "artifacts/llm_capability_comprehension_v1.json",
+  "prompt_version": "llm_hypothesis_generator_v1.prompt.1",
+  "models_used": [],
+  "actual_llm_calls": 0,
+  "runtime_seconds": 0.0
+}

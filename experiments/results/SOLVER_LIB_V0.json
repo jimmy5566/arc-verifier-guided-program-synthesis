@@ -1,0 +1,114 @@
+{
+  "experiment_id": "SOLVER_LIB_V0",
+  "protocol": "challenge-only inference and test-prediction freeze before training-solution scoring",
+  "total_tasks": 1000,
+  "solvers": {
+    "GlobalTransformSolver": {
+      "applicable_tasks": 7,
+      "applicable_task_ids": [
+        "3c9b0459",
+        "6150a2bd",
+        "67a3c6ac",
+        "68b16354",
+        "74dd1130",
+        "9dfd6313",
+        "ed36ccf7"
+      ],
+      "inference_runtime_seconds": 4.820561300031841,
+      "exact_solved_tasks": 7,
+      "solved_task_ids": [
+        "3c9b0459",
+        "6150a2bd",
+        "67a3c6ac",
+        "68b16354",
+        "74dd1130",
+        "9dfd6313",
+        "ed36ccf7"
+      ],
+      "test_outputs_solved": 7,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_tasks": 0
+    },
+    "RecolorSolver": {
+      "applicable_tasks": 5,
+      "applicable_task_ids": [
+        "0d3d703e",
+        "aabf363d",
+        "b1948b0a",
+        "c8f0f002",
+        "d511f180"
+      ],
+      "inference_runtime_seconds": 0.013108500046655536,
+      "exact_solved_tasks": 4,
+      "solved_task_ids": [
+        "0d3d703e",
+        "b1948b0a",
+        "c8f0f002",
+        "d511f180"
+      ],
+      "test_outputs_solved": 4,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_tasks": 1
+    },
+    "FixedCropSolver": {
+      "applicable_tasks": 1,
+      "applicable_task_ids": [
+        "5bd6f4ac"
+      ],
+      "inference_runtime_seconds": 0.07606949983164668,
+      "exact_solved_tasks": 1,
+      "solved_task_ids": [
+        "5bd6f4ac"
+      ],
+      "test_outputs_solved": 1,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_tasks": 0
+    },
+    "ForegroundBBoxCropSolver": {
+      "applicable_tasks": 1,
+      "applicable_task_ids": [
+        "1cf80156"
+      ],
+      "inference_runtime_seconds": 0.3533185999840498,
+      "exact_solved_tasks": 1,
+      "solved_task_ids": [
+        "1cf80156"
+      ],
+      "test_outputs_solved": 1,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_tasks": 0
+    },
+    "TranslationSolver": {
+      "applicable_tasks": 1,
+      "applicable_task_ids": [
+        "25ff71a9"
+      ],
+      "inference_runtime_seconds": 0.04462940013036132,
+      "exact_solved_tasks": 1,
+      "solved_task_ids": [
+        "25ff71a9"
+      ],
+      "test_outputs_solved": 2,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_tasks": 0
+    }
+  },
+  "unique_solved_tasks": 14,
+  "unique_solved_task_ids": [
+    "0d3d703e",
+    "1cf80156",
+    "25ff71a9",
+    "3c9b0459",
+    "5bd6f4ac",
+    "6150a2bd",
+    "67a3c6ac",
+    "68b16354",
+    "74dd1130",
+    "9dfd6313",
+    "b1948b0a",
+    "c8f0f002",
+    "d511f180",
+    "ed36ccf7"
+  ],
+  "runtime_seconds": 5.508198000025004
+}

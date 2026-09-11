@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arc2-reasoning"
+version = "0.1.0"
+description = "Reproducible symbolic reasoning research system for ARC-AGI-2"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26", "pandas>=2.2", "matplotlib>=3.8", "scipy>=1.12",
+    "scikit-learn>=1.4", "networkx>=3.2", "pillow>=10", "pydantic>=2.6",
+    "tqdm>=4.66", "joblib>=1.3", "orjson>=3.10",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "jupyter>=1", "kaggle>=1.7"]
+llm = ["torch", "transformers", "accelerate", "bitsandbytes", "sentencepiece"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

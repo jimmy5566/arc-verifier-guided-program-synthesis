@@ -1,0 +1,64 @@
+{
+  "experiment_id": "SOLVER_LIB_V3_PATTERN",
+  "runtime_seconds": 0.597889400087297,
+  "solver_metrics": {
+    "PeriodicCompletionSolver": {
+      "applicable_tasks": 0,
+      "generated_programs": 746,
+      "train_consistent_programs": 0,
+      "rejected_programs": 746,
+      "program_ambiguity_tasks": 0,
+      "prediction_ambiguity_tasks": 0,
+      "exact_solved_tasks": 0,
+      "solved_task_ids": [],
+      "train_consistent_but_test_wrong_tasks": 0
+    },
+    "PatternRepairSolver": {
+      "applicable_tasks": 0,
+      "generated_programs": 10037,
+      "train_consistent_programs": 0,
+      "rejected_programs": 10037,
+      "program_ambiguity_tasks": 0,
+      "prediction_ambiguity_tasks": 0,
+      "exact_solved_tasks": 0,
+      "solved_task_ids": [],
+      "train_consistent_but_test_wrong_tasks": 0
+    },
+    "SymmetryCompletionSolver": {
+      "applicable_tasks": 2,
+      "generated_programs": 4000,
+      "train_consistent_programs": 2,
+      "rejected_programs": 3998,
+      "program_ambiguity_tasks": 0,
+      "prediction_ambiguity_tasks": 0,
+      "exact_solved_tasks": 2,
+      "solved_task_ids": [
+        "496994bd",
+        "f25ffba3"
+      ],
+      "train_consistent_but_test_wrong_tasks": 0
+    }
+  },
+  "v0_unique": 14,
+  "pre_v3_unique": 18,
+  "v3_unique": 2,
+  "overlap_existing": [],
+  "newly_solved_task_ids": [
+    "496994bd",
+    "f25ffba3"
+  ],
+  "cumulative_unique": 20,
+  "absolute_gain": 2,
+  "train_consistent_but_test_wrong": 0,
+  "program_ambiguity_tasks": 0,
+  "prediction_ambiguity_tasks": 0,
+  "registry_validation_errors": [],
+  "leakage_audit": [
+    "Challenge-only inference before solution loading.",
+    "No task-ID logic."
+  ],
+  "regression": {
+    "v0_14": true,
+    "pre_v3_18": true
+  }
+}

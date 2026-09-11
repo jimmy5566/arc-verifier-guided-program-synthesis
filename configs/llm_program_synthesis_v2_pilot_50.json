@@ -1,0 +1,10 @@
+{
+  "config_id": "LLM_PROGRAM_SYNTHESIS_V2_PILOT_50",
+  "split": "development",
+  "selection": "deterministic SHA-256 order from V1 confirmation development set; excludes all 12 retrieval-diagnostic tasks",
+  "task_count": 50,
+  "task_ids": ["e7639916", "3eda0437", "e729b7be", "f1bcbc2c", "83eb0a57", "3de23699", "825aa9e9", "9b4c17c4", "93c31fbe", "d5c634a2", "a5313dff", "8e5a5113", "a87f7484", "e681b708", "4e45f183", "f35d900a", "a416b8f3", "845d6e51", "d631b094", "93b581b8", "46f33fce", "f25ffba3", "b9630600", "73182012", "9f8de559", "8b28cd80", "e99362f0", "a68b268e", "4c4377d9", "673ef223", "3ac3eb23", "6165ea8f", "b25e450b", "681b3aeb", "846bdb03", "c1d99e64", "5d2a5c43", "6855a6e4", "5adee1b2", "6cbe9eb8", "4cd1b7b2", "f2829549", "ce22a75a", "f3e14006", "c7d4e6ad", "396d80d7", "8cb8642d", "d94c3b52", "a65b410d", "c62e2108"],
+  "frozen_config": "configs/frozen_llm_program_synthesis_v2.json",
+  "conditions": ["symbolic", "direct_parameter_ablation"],
+  "protocol": "No solution file during inference. Each condition checkpoints every task; compare only after its predictions freeze."
+}

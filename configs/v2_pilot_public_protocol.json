@@ -1,0 +1,28 @@
+{
+  "experiment_id": "LLM_PROGRAM_SYNTHESIS_V2",
+  "publication_status": "SANITIZED_PORTABLE_PROTOCOL",
+  "private_run_config_sha256": "da9360e4a010a66104e89a7e2f76477b6f013bfabf3cf41a80cdf03b8cf8d67e",
+  "private_run_config_note": "The original byte-identical frozen configuration is retained locally and is not published because it names a competition-mounted model location. This portable description preserves scientific parameters but is not byte-identical.",
+  "model": {
+    "backend": "Transformers",
+    "provider": "transformers_local",
+    "model_source": "qwen-lm/qwen-3/Transformers/8b/1",
+    "model_locator": "set a local model path through the runner or environment",
+    "architecture": "Qwen3ForCausalLM",
+    "dtype": "bfloat16",
+    "context_window": 12288,
+    "local_files_only": true,
+    "trust_remote_code": false
+  },
+  "sampling": {"temperature": 0, "top_p": 1, "seed": 0, "stream": false, "think": false},
+  "generation": {"candidate_budget": 5, "max_output_tokens": 800},
+  "macro_dsl": {
+    "registry_path": "configs/macro_capability_registry_v1.json",
+    "registry_sha256": "cf0fc7b112f41091769be95a041411da020bac7ced4f38ba7c52b72f7b8fd7e7",
+    "prompt_version": "llm_program_synthesis_v2.macro_prompt.1",
+    "schema_version": "llm_program_synthesis_v2.macro_schema.1"
+  },
+  "parameter_solver": {"version": "ParameterSolverV1", "mode": "symbolic_default", "direct_literal_ablation": true},
+  "compiler": {"version": "MacroProgramCompilerV1"},
+  "solution_access": "Challenges only during inference. Solutions may be loaded solely by the gated V2 finalizer after every declared prediction has frozen."
+}

@@ -1,0 +1,31 @@
+{
+  "config_id": "FROZEN_LLM_CONFIG_V1",
+  "status": "FROZEN_FOR_CONFIRMATION_AFTER_INFRA_SCHEMA_FIX",
+  "model": {
+    "backend": "ollama",
+    "model": "qwen3:14b",
+    "quantization": "Q4_K_M",
+    "context_window": 12288
+  },
+  "sampling": {
+    "temperature": 0,
+    "top_p": 1,
+    "seed": 0,
+    "stream": false,
+    "think": false
+  },
+  "generation": {
+    "candidate_budget": 5,
+    "max_output_tokens": 800,
+    "scheduler_hints": false
+  },
+  "catalog": {
+    "registry_count": 119,
+    "catalog_version": "capability_catalog_v1",
+    "prompt_version": "llm_hypothesis_generator_v1.prompt.2",
+    "schema_version": "llm_hypothesis_generator_v1.schema.2"
+  },
+  "selection_reason": "Both structured pilot variants had zero executable and zero train-consistent candidates; full catalogue top-5 used fewer prompt/output tokens and less runtime.",
+  "pilot_compatibility": "The stopped 113-task checkpoint used the same model, temperature, top-p, seed, candidate budget, context window, output cap, and no hints, but predates the canonical-primitive-ID enum schema fix; it is retained only as PILOT_EXPOSED_113 and is not pooled with confirmation/final scores.",
+  "solution_access": "Challenge data only during inference; solutions may be opened only after the declared condition has completed and predictions are frozen."
+}

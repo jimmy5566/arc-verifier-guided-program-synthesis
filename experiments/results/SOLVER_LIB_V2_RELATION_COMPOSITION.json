@@ -1,0 +1,148 @@
+{
+  "experiment_id": "SOLVER_LIB_V2_RELATION_COMPOSITION",
+  "config": {
+    "max_relational_depth": 2,
+    "max_program_depth": 4,
+    "connectivity": 4,
+    "test_labels_after_prediction": true
+  },
+  "runtime_seconds": 57.80157519993372,
+  "registry_validation_errors": [],
+  "solver_metrics": {
+    "RelationalSelectionSolver": {
+      "applicable_tasks": 6,
+      "generated_programs": 35748,
+      "valid_programs": 35748,
+      "train_consistent_programs": 39,
+      "rejected_programs": 35709,
+      "program_ambiguity_tasks": 4,
+      "prediction_ambiguity_tasks": 0,
+      "ambiguous_task_details": {
+        "1cf80156": {
+          "programs": 14,
+          "different_predictions": false
+        },
+        "1f85a75f": {
+          "programs": 5,
+          "different_predictions": false
+        },
+        "23b5c85d": {
+          "programs": 4,
+          "different_predictions": false
+        },
+        "25ff71a9": {
+          "programs": 14,
+          "different_predictions": false
+        }
+      },
+      "inference_runtime_seconds": 32.83366069989279,
+      "exact_solved_tasks": 6,
+      "solved_task_ids": [
+        "1cf80156",
+        "1f85a75f",
+        "23b5c85d",
+        "25ff71a9",
+        "358ba94e",
+        "be94b721"
+      ],
+      "test_outputs_solved": 7,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_tasks": 0
+    },
+    "ObjectAlignmentSolver": {
+      "applicable_tasks": 0,
+      "generated_programs": 15600,
+      "valid_programs": 15600,
+      "train_consistent_programs": 0,
+      "rejected_programs": 15600,
+      "program_ambiguity_tasks": 0,
+      "prediction_ambiguity_tasks": 0,
+      "ambiguous_task_details": {},
+      "inference_runtime_seconds": 14.477863000007346,
+      "exact_solved_tasks": 0,
+      "solved_task_ids": [],
+      "test_outputs_solved": 0,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_tasks": 0
+    },
+    "TwoObjectCompositionSolver": {
+      "applicable_tasks": 0,
+      "generated_programs": 1120,
+      "valid_programs": 1120,
+      "train_consistent_programs": 0,
+      "rejected_programs": 1120,
+      "program_ambiguity_tasks": 0,
+      "prediction_ambiguity_tasks": 0,
+      "ambiguous_task_details": {},
+      "inference_runtime_seconds": 10.28707389999181,
+      "exact_solved_tasks": 0,
+      "solved_task_ids": [],
+      "test_outputs_solved": 0,
+      "test_outputs_total": 1076,
+      "train_consistent_but_test_wrong_tasks": 0
+    }
+  },
+  "v0_unique": 14,
+  "v0_v1_unique": 18,
+  "v2_unique": 6,
+  "overlap_v0": [
+    "1cf80156",
+    "25ff71a9"
+  ],
+  "overlap_v1": [
+    "1f85a75f",
+    "23b5c85d",
+    "358ba94e",
+    "be94b721"
+  ],
+  "newly_solved_task_ids": [],
+  "cumulative_unique": 18,
+  "absolute_gain": 0,
+  "percentage_point_gain": 0.0,
+  "train_consistent_but_test_wrong": 0,
+  "program_ambiguity_tasks": 4,
+  "prediction_ambiguity_tasks": 0,
+  "primitive_usage": {
+    "generated": {
+      "SEL_RELATIONAL_V1": 35748,
+      "OBJ_CROP_V1": 12510,
+      "OBJ_RECOLOR_V1": 20850,
+      "OBJ_REMOVE_V1": 2085,
+      "OBJ_MOVE_V1": 303,
+      "SEL_LARGEST_V1": 8244,
+      "SEL_UNIQUE_COLOR_V1": 5064,
+      "ALIGN_EDGE_V1": 15600,
+      "SEL_SMALLEST_V1": 5676,
+      "SEL_UNIQUE_AREA_V1": 5284,
+      "SEL_UNIQUE_SHAPE_V1": 5008,
+      "SEL_BORDER_V1": 2568,
+      "SEL_NON_BORDER_V1": 1596,
+      "COMP_MASK_UNION_V1": 280,
+      "COMP_MASK_INTERSECTION_V1": 280,
+      "COMP_MASK_DIFF_A_B_V1": 280,
+      "COMP_MASK_DIFF_B_A_V1": 280
+    },
+    "train_consistent": {
+      "SEL_RELATIONAL_V1": 39,
+      "OBJ_CROP_V1": 25,
+      "OBJ_MOVE_V1": 14
+    },
+    "test_correct": {
+      "SEL_RELATIONAL_V1": 6,
+      "OBJ_CROP_V1": 5,
+      "OBJ_MOVE_V1": 1
+    },
+    "program_depth": {
+      "2": 6
+    }
+  },
+  "leakage_audit": [
+    "No task-ID branching.",
+    "Challenge-only inference preceded solution loading.",
+    "No task-specific primitive semantics or test-label candidate selection."
+  ],
+  "regression": {
+    "v0_is_14": true,
+    "v0_v1_is_18": true
+  }
+}

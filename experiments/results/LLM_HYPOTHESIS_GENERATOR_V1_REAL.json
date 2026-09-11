@@ -1,0 +1,501 @@
+{
+  "experiment_id": "LLM_HYPOTHESIS_GENERATOR_V1_REAL",
+  "status": "STAGED_PILOT_ANALYZED",
+  "inference_status": "STOPPED: no model calls after pilot audit began",
+  "pilot": {
+    "label": "PILOT_EXPOSED_113",
+    "actual_task_count": 113,
+    "comparable_cross_condition_task_count": 25,
+    "checkpoint_sha256": "64bea4fdbd77e856c383f68245e4c922217b4de41c5cf8b237aa0ec5bda18153",
+    "checkpoint_complete": false,
+    "structured_status_counts": {
+      "TYPE_INVALID": 70,
+      "PRECONDITION_INVALID": 52,
+      "SCHEMA_INVALID": 12,
+      "TRAIN_INCONSISTENT": 1
+    },
+    "structured_reason_counts": {
+      "mixed legacy/V4 steps are not a supported typed program": 54,
+      "missing parameter(s): height, left, top, width": 24,
+      "program does not produce a Grid": 16,
+      "JSONDecodeError": 5,
+      "col must be non-negative and color an ARC color": 8,
+      "row must be non-negative and color an ARC color": 10,
+      "color and background must be ARC colors": 3,
+      "prediction differs from train output": 1,
+      "unknown parameter(s): color": 4,
+      "KeyError": 3,
+      "color must be an ARC color": 2,
+      "unknown primitive GEN_FILL_RECTANGLE_V1": 1,
+      "unknown parameter(s): color, first, second": 1,
+      "ConnectionResetError": 1,
+      "RuntimeError": 2
+    },
+    "structured_predictions_frozen": 0,
+    "structured_exact_solved": 0
+  },
+  "shared_25_comparison": {
+    "task_ids": [
+      "009d5c81",
+      "025d127b",
+      "03560426",
+      "045e512c",
+      "0520fde7",
+      "05f2a901",
+      "0607ce86",
+      "0692e18c",
+      "070dd51e",
+      "08ed6ac7",
+      "0962bcdd",
+      "0a2355a6",
+      "0bb8deee",
+      "0c9aba6e",
+      "0d3d703e",
+      "0d87d2a6",
+      "0e206a2e",
+      "0e671a1a",
+      "103eff5b",
+      "10fcaaa3",
+      "1190bc91",
+      "11dc524f",
+      "12997ef3",
+      "12eac192",
+      "140c817e"
+    ],
+    "frozen_deterministic_baseline_exact": [
+      "0d3d703e"
+    ],
+    "structured_full_catalog": {
+      "candidates": 30,
+      "by_status": {
+        "PRECONDITION_INVALID": 12,
+        "SCHEMA_INVALID": 3,
+        "TYPE_INVALID": 15
+      },
+      "schema_valid_rate": 0.9,
+      "type_valid_rate": 0.4,
+      "executable_rate": 0.0,
+      "train_consistent_rate": 0.0,
+      "runtime_seconds": 715.540300000459,
+      "mean_hypotheses_per_task": 1.2,
+      "prompt_tokens": 210850,
+      "output_tokens": 4799,
+      "verifier_calls": 30,
+      "exact_solved": 0,
+      "task_ids": [],
+      "diagnostics": {
+        "candidate_statuses": {
+          "PRECONDITION_INVALID": 12,
+          "TYPE_INVALID": 15,
+          "SCHEMA_INVALID": 3
+        }
+      }
+    },
+    "structured_scheduler_soft_hints": {
+      "candidates": 31,
+      "by_status": {
+        "PRECONDITION_INVALID": 15,
+        "SCHEMA_INVALID": 1,
+        "TYPE_INVALID": 15
+      },
+      "schema_valid_rate": 0.967741935483871,
+      "type_valid_rate": 0.4838709677419355,
+      "executable_rate": 0.0,
+      "train_consistent_rate": 0.0,
+      "runtime_seconds": 942.0025039000902,
+      "mean_hypotheses_per_task": 1.24,
+      "prompt_tokens": 220635,
+      "output_tokens": 6292,
+      "verifier_calls": 31,
+      "exact_solved": 0,
+      "task_ids": [],
+      "diagnostics": {
+        "candidate_statuses": {
+          "PRECONDITION_INVALID": 15,
+          "TYPE_INVALID": 15,
+          "SCHEMA_INVALID": 1
+        }
+      }
+    },
+    "structured_union_exact_solved": 0,
+    "structured_composition_only_exact_solved": 0,
+    "direct_grid_diagnostic_only": {
+      "attempted": true,
+      "exact_solved": 2,
+      "task_ids": [
+        "009d5c81",
+        "08ed6ac7"
+      ],
+      "statuses": {
+        "VALID": 19,
+        "MALFORMED_GRID": 6
+      },
+      "token_usage": [
+        {
+          "prompt_tokens": 5781,
+          "output_tokens": 398
+        },
+        {
+          "prompt_tokens": 1520,
+          "output_tokens": 206
+        },
+        {
+          "prompt_tokens": 2205,
+          "output_tokens": 206
+        },
+        {
+          "error": "JSONDecodeError"
+        },
+        {
+          "prompt_tokens": 844,
+          "output_tokens": 24
+        },
+        {
+          "prompt_tokens": 2399,
+          "output_tokens": 226
+        },
+        {
+          "error": "JSONDecodeError"
+        },
+        {
+          "prompt_tokens": 1152,
+          "output_tokens": 168
+        },
+        {
+          "error": "JSONDecodeError"
+        },
+        {
+          "prompt_tokens": 1315,
+          "output_tokens": 168
+        },
+        {
+          "prompt_tokens": 2014,
+          "output_tokens": 294
+        },
+        {
+          "prompt_tokens": 4061,
+          "output_tokens": 516
+        },
+        {
+          "prompt_tokens": 2314,
+          "output_tokens": 162
+        },
+        {
+          "prompt_tokens": 1538,
+          "output_tokens": 54
+        },
+        {
+          "prompt_tokens": 997,
+          "output_tokens": 24
+        },
+        {
+          "error": "JSONDecodeError"
+        },
+        {
+          "error": "JSONDecodeError"
+        },
+        {
+          "prompt_tokens": 4289,
+          "output_tokens": 344
+        },
+        {
+          "error": "JSONDecodeError"
+        },
+        {
+          "prompt_tokens": 1424,
+          "output_tokens": 456
+        },
+        {
+          "prompt_tokens": 1732,
+          "output_tokens": 134
+        },
+        {
+          "prompt_tokens": 3437,
+          "output_tokens": 344
+        },
+        {
+          "prompt_tokens": 2367,
+          "output_tokens": 204
+        },
+        {
+          "prompt_tokens": 1619,
+          "output_tokens": 134
+        },
+        {
+          "prompt_tokens": 2669,
+          "output_tokens": 398
+        }
+      ]
+    }
+  },
+  "decision": {
+    "selected_structured_condition": "full_catalog_top5_without_scheduler_hints",
+    "selection_rule": "No variant reached executable or train-consistent status; choose lower observed runtime and token cost.",
+    "not_pooled_with_final": true
+  },
+  "failure_diagnosis": {
+    "LLM_API_COMPREHENSION_FAILURE": "Dominant: emitted programs were schema/type/precondition-invalid; no structured candidate executed successfully.",
+    "MISSING_CAPABILITY": "No evidence in this pilot; zero successful execution prevents a capability-gap conclusion.",
+    "DIRECT_EXECUTION_FAILURE": "Not established: direct-grid raw predictions were not retained, so valid-but-wrong grids remain unresolved.",
+    "GENERALIZATION_FAILURE": "Not observed: no train-consistent structured program produced a test prediction.",
+    "UNRESOLVED": "Provider errors and the single train-inconsistent candidate require improved structured logging in future conditions."
+  },
+  "leakage_audit": {
+    "solution_blind_structured_inference": "training challenges only; no solution file loaded by this script",
+    "checkpoint_has_predictions": false,
+    "task_id_hardcode_detected": false,
+    "pilot_not_used_for_final_score": true
+  },
+  "confirmation_progress": {
+    "status": "COMPLETE_UNSCORED",
+    "checkpoint_path": "[local checkpoint excluded from public release]",
+    "checkpointed_tasks": 100,
+    "declared_tasks": 100,
+    "solution_access": "PROHIBITED_UNTIL_COMPLETE",
+    "runtime_seconds": 2051.011778498767,
+    "thermal_pause_reason": "Operator stopped worker after observed 86\u201387C thermal throttling; no model job remains active."
+  },
+  "confirmation_result": {
+    "experiment_id": "LLM_CONFIRMATION_DEV_100",
+    "status": "COMPLETE_SCORED_AFTER_PREDICTION_FREEZE",
+    "protocol": "training challenges only; no solution file loaded by this script",
+    "task_ids": [
+      "d2acf2cb",
+      "29623171",
+      "d07ae81c",
+      "6ad5bdfd",
+      "af24b4cc",
+      "985ae207",
+      "2f0c5170",
+      "e57337a4",
+      "a87f7484",
+      "34b99a2b",
+      "22806e14",
+      "9968a131",
+      "c1d99e64",
+      "9f8de559",
+      "aaecdb9a",
+      "846bdb03",
+      "5adee1b2",
+      "320afe60",
+      "c62e2108",
+      "73182012",
+      "3f23242b",
+      "673ef223",
+      "e7639916",
+      "88a62173",
+      "e729b7be",
+      "fafd9572",
+      "72207abc",
+      "8cb8642d",
+      "bcb3040b",
+      "3ac3eb23",
+      "5521c0d9",
+      "d631b094",
+      "896d5239",
+      "4c4377d9",
+      "b25e450b",
+      "3de23699",
+      "396d80d7",
+      "6cbe9eb8",
+      "a65b410d",
+      "83eb0a57",
+      "5d2a5c43",
+      "d5c634a2",
+      "b8cdaf2b",
+      "f2829549",
+      "e7dd8335",
+      "746b3537",
+      "845d6e51",
+      "3194b014",
+      "6e19193c",
+      "93c31fbe",
+      "e99362f0",
+      "4a1cacc2",
+      "8be77c9e",
+      "3eda0437",
+      "c7d4e6ad",
+      "681b3aeb",
+      "825aa9e9",
+      "522fdd07",
+      "be03b35f",
+      "93b581b8",
+      "46f33fce",
+      "a79310a0",
+      "4e45f183",
+      "d94c3b52",
+      "3a301edc",
+      "2c0b0aff",
+      "99306f82",
+      "6855a6e4",
+      "97a05b5b",
+      "a416b8f3",
+      "4093f84a",
+      "d13f3404",
+      "ce22a75a",
+      "f3e14006",
+      "6165ea8f",
+      "b0722778",
+      "8fbca751",
+      "8b28cd80",
+      "2601afb7",
+      "f25ffba3",
+      "54db823b",
+      "a48eeaf7",
+      "8e5a5113",
+      "a5313dff",
+      "a68b268e",
+      "f8cc533f",
+      "f35d900a",
+      "9b4c17c4",
+      "b9630600",
+      "4cd1b7b2",
+      "e681b708",
+      "aa62e3f4",
+      "62b74c02",
+      "f18ec8cc",
+      "66ac4c3b",
+      "aabf363d",
+      "f1bcbc2c",
+      "7ee1c6ea",
+      "27f8ce4f",
+      "8e301a54"
+    ],
+    "task_count": 100,
+    "exact_solved": 0,
+    "exact_solved_task_ids": [],
+    "train_consistent_but_test_wrong": 0,
+    "train_consistent_but_test_wrong_task_ids": [],
+    "frozen_deterministic_exact": 2,
+    "deterministic_plus_llm_union": 2,
+    "llm_only_newly_solved_task_ids": [],
+    "composition_only_task_ids": [],
+    "status_counts": {
+      "TYPE_INVALID": 65,
+      "PRECONDITION_INVALID": 50,
+      "SCHEMA_INVALID": 12,
+      "TRAIN_INCONSISTENT": 1
+    },
+    "candidate_count": 128,
+    "schema_valid_rate": 0.90625,
+    "type_valid_rate": 0.3984375,
+    "executable_rate": 0.0078125,
+    "train_consistent_rate": 0.0,
+    "runtime_seconds": 2051.011778498767,
+    "runtime_per_task_seconds": 20.51011778498767,
+    "prompt_tokens": 781781,
+    "completion_tokens": 17837,
+    "prompt_tokens_per_task": 7817.81,
+    "completion_tokens_per_task": 178.37,
+    "leakage_audit": "The checkpoint completion and declared-ID gates were checked before loading training_solutions."
+  },
+  "next_declared_condition": {
+    "config_id": "LLM_CONFIRMATION_DEV_100",
+    "selection": "development split, excludes all PILOT_EXPOSED_113 task IDs, deterministic SHA-256 order with salt LLM_CONFIRMATION_V1",
+    "task_count": 100,
+    "task_ids": [
+      "d2acf2cb",
+      "29623171",
+      "d07ae81c",
+      "6ad5bdfd",
+      "af24b4cc",
+      "985ae207",
+      "2f0c5170",
+      "e57337a4",
+      "a87f7484",
+      "34b99a2b",
+      "22806e14",
+      "9968a131",
+      "c1d99e64",
+      "9f8de559",
+      "aaecdb9a",
+      "846bdb03",
+      "5adee1b2",
+      "320afe60",
+      "c62e2108",
+      "73182012",
+      "3f23242b",
+      "673ef223",
+      "e7639916",
+      "88a62173",
+      "e729b7be",
+      "fafd9572",
+      "72207abc",
+      "8cb8642d",
+      "bcb3040b",
+      "3ac3eb23",
+      "5521c0d9",
+      "d631b094",
+      "896d5239",
+      "4c4377d9",
+      "b25e450b",
+      "3de23699",
+      "396d80d7",
+      "6cbe9eb8",
+      "a65b410d",
+      "83eb0a57",
+      "5d2a5c43",
+      "d5c634a2",
+      "b8cdaf2b",
+      "f2829549",
+      "e7dd8335",
+      "746b3537",
+      "845d6e51",
+      "3194b014",
+      "6e19193c",
+      "93c31fbe",
+      "e99362f0",
+      "4a1cacc2",
+      "8be77c9e",
+      "3eda0437",
+      "c7d4e6ad",
+      "681b3aeb",
+      "825aa9e9",
+      "522fdd07",
+      "be03b35f",
+      "93b581b8",
+      "46f33fce",
+      "a79310a0",
+      "4e45f183",
+      "d94c3b52",
+      "3a301edc",
+      "2c0b0aff",
+      "99306f82",
+      "6855a6e4",
+      "97a05b5b",
+      "a416b8f3",
+      "4093f84a",
+      "d13f3404",
+      "ce22a75a",
+      "f3e14006",
+      "6165ea8f",
+      "b0722778",
+      "8fbca751",
+      "8b28cd80",
+      "2601afb7",
+      "f25ffba3",
+      "54db823b",
+      "a48eeaf7",
+      "8e5a5113",
+      "a5313dff",
+      "a68b268e",
+      "f8cc533f",
+      "f35d900a",
+      "9b4c17c4",
+      "b9630600",
+      "4cd1b7b2",
+      "e681b708",
+      "aa62e3f4",
+      "62b74c02",
+      "f18ec8cc",
+      "66ac4c3b",
+      "aabf363d",
+      "f1bcbc2c",
+      "7ee1c6ea",
+      "27f8ce4f",
+      "8e301a54"
+    ],
+    "frozen_config": "configs/frozen_llm_config_v1.json",
+    "protocol": "No solution file is opened by inference. Checkpoint after every task. Score only after all 100 predictions are frozen."
+  }
+}
