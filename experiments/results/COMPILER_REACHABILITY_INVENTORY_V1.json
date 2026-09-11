@@ -1,0 +1,1902 @@
+{
+  "chain_inventory": {
+    "1": {
+      "compile_valid_chain_count": 2,
+      "compile_valid_chains": [
+        {
+          "low_level_primitives": [
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1"
+          ],
+          "macro_ids": [
+            "COMPLETE_SYMMETRY"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "REG_FILL_INTERIOR_V1"
+          ],
+          "macro_ids": [
+            "FILL_ENCLOSED_REGION"
+          ]
+        }
+      ],
+      "compiler_coverage_rate": 0.3333333333333333,
+      "type_valid_chain_count": 6
+    },
+    "2": {
+      "compile_valid_chain_count": 6,
+      "compile_valid_chains": [
+        {
+          "low_level_primitives": [
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1"
+          ],
+          "macro_ids": [
+            "COMPLETE_SYMMETRY",
+            "COMPLETE_SYMMETRY"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+            "REG_FILL_INTERIOR_V1"
+          ],
+          "macro_ids": [
+            "COMPLETE_SYMMETRY",
+            "FILL_ENCLOSED_REGION"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "COUNT_OBJECTS_V1",
+            "GEN_N_CELLS_ROW_V1"
+          ],
+          "macro_ids": [
+            "COUNT_STRUCTURES",
+            "GENERATE_FROM_COUNT"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "SEQ_GRID_TO_ROW_V1",
+            "SEQ_TO_ROW_GRID_V1"
+          ],
+          "macro_ids": [
+            "EXTRACT_SEQUENCE",
+            "BUILD_GRID_FROM_SEQUENCE"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "REG_FILL_INTERIOR_V1",
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1"
+          ],
+          "macro_ids": [
+            "FILL_ENCLOSED_REGION",
+            "COMPLETE_SYMMETRY"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "REG_FILL_INTERIOR_V1",
+            "REG_FILL_INTERIOR_V1"
+          ],
+          "macro_ids": [
+            "FILL_ENCLOSED_REGION",
+            "FILL_ENCLOSED_REGION"
+          ]
+        }
+      ],
+      "compiler_coverage_rate": 0.15,
+      "type_valid_chain_count": 40
+    },
+    "3": {
+      "compile_valid_chain_count": 19,
+      "compile_valid_chains": [
+        {
+          "low_level_primitives": [
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1"
+          ],
+          "macro_ids": [
+            "COMPLETE_SYMMETRY",
+            "COMPLETE_SYMMETRY",
+            "COMPLETE_SYMMETRY"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+            "REG_FILL_INTERIOR_V1"
+          ],
+          "macro_ids": [
+            "COMPLETE_SYMMETRY",
+            "COMPLETE_SYMMETRY",
+            "FILL_ENCLOSED_REGION"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+            "COUNT_OBJECTS_V1",
+            "GEN_N_CELLS_ROW_V1"
+          ],
+          "macro_ids": [
+            "COMPLETE_SYMMETRY",
+            "COUNT_STRUCTURES",
+            "GENERATE_FROM_COUNT"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+            "SEQ_GRID_TO_ROW_V1",
+            "SEQ_TO_ROW_GRID_V1"
+          ],
+          "macro_ids": [
+            "COMPLETE_SYMMETRY",
+            "EXTRACT_SEQUENCE",
+            "BUILD_GRID_FROM_SEQUENCE"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+            "REG_FILL_INTERIOR_V1",
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1"
+          ],
+          "macro_ids": [
+            "COMPLETE_SYMMETRY",
+            "FILL_ENCLOSED_REGION",
+            "COMPLETE_SYMMETRY"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+            "REG_FILL_INTERIOR_V1",
+            "REG_FILL_INTERIOR_V1"
+          ],
+          "macro_ids": [
+            "COMPLETE_SYMMETRY",
+            "FILL_ENCLOSED_REGION",
+            "FILL_ENCLOSED_REGION"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "COUNT_OBJECTS_V1",
+            "GEN_N_CELLS_ROW_V1",
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1"
+          ],
+          "macro_ids": [
+            "COUNT_STRUCTURES",
+            "GENERATE_FROM_COUNT",
+            "COMPLETE_SYMMETRY"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "COUNT_OBJECTS_V1",
+            "GEN_N_CELLS_ROW_V1",
+            "REG_FILL_INTERIOR_V1"
+          ],
+          "macro_ids": [
+            "COUNT_STRUCTURES",
+            "GENERATE_FROM_COUNT",
+            "FILL_ENCLOSED_REGION"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "SEQ_GRID_TO_ROW_V1",
+            "SEQ_TO_ROW_GRID_V1",
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1"
+          ],
+          "macro_ids": [
+            "EXTRACT_SEQUENCE",
+            "BUILD_GRID_FROM_SEQUENCE",
+            "COMPLETE_SYMMETRY"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "SEQ_GRID_TO_ROW_V1",
+            "SEQ_TO_ROW_GRID_V1",
+            "REG_FILL_INTERIOR_V1"
+          ],
+          "macro_ids": [
+            "EXTRACT_SEQUENCE",
+            "BUILD_GRID_FROM_SEQUENCE",
+            "FILL_ENCLOSED_REGION"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "SEQ_GRID_TO_ROW_V1",
+            "SEQ_REVERSE_V1",
+            "SEQ_TO_ROW_GRID_V1"
+          ],
+          "macro_ids": [
+            "EXTRACT_SEQUENCE",
+            "TRANSFORM_SEQUENCE",
+            "BUILD_GRID_FROM_SEQUENCE"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "REG_FILL_INTERIOR_V1",
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1"
+          ],
+          "macro_ids": [
+            "FILL_ENCLOSED_REGION",
+            "COMPLETE_SYMMETRY",
+            "COMPLETE_SYMMETRY"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "REG_FILL_INTERIOR_V1",
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+            "REG_FILL_INTERIOR_V1"
+          ],
+          "macro_ids": [
+            "FILL_ENCLOSED_REGION",
+            "COMPLETE_SYMMETRY",
+            "FILL_ENCLOSED_REGION"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "REG_FILL_INTERIOR_V1",
+            "COUNT_OBJECTS_V1",
+            "GEN_N_CELLS_ROW_V1"
+          ],
+          "macro_ids": [
+            "FILL_ENCLOSED_REGION",
+            "COUNT_STRUCTURES",
+            "GENERATE_FROM_COUNT"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "REG_FILL_INTERIOR_V1",
+            "SEQ_GRID_TO_ROW_V1",
+            "SEQ_TO_ROW_GRID_V1"
+          ],
+          "macro_ids": [
+            "FILL_ENCLOSED_REGION",
+            "EXTRACT_SEQUENCE",
+            "BUILD_GRID_FROM_SEQUENCE"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "REG_FILL_INTERIOR_V1",
+            "REG_FILL_INTERIOR_V1",
+            "PAT_COMPLETE_MIRROR_HORIZONTAL_V1"
+          ],
+          "macro_ids": [
+            "FILL_ENCLOSED_REGION",
+            "FILL_ENCLOSED_REGION",
+            "COMPLETE_SYMMETRY"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "REG_FILL_INTERIOR_V1",
+            "REG_FILL_INTERIOR_V1",
+            "REG_FILL_INTERIOR_V1"
+          ],
+          "macro_ids": [
+            "FILL_ENCLOSED_REGION",
+            "FILL_ENCLOSED_REGION",
+            "FILL_ENCLOSED_REGION"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "SEL_LARGEST_V1",
+            "OBJ_CROP_V1"
+          ],
+          "macro_ids": [
+            "FIND_OBJECTS",
+            "SELECT_OBJECT",
+            "TRANSFORM_OBJECT"
+          ]
+        },
+        {
+          "low_level_primitives": [
+            "GRAPH_FROM_OBJECT_PIXELS_4_V1",
+            "GRAPH_TRACE_PATH_V1",
+            "PATH_COLOR_SEQUENCE_V1",
+            "PATH_SERIALIZE_ROW_V1"
+          ],
+          "macro_ids": [
+            "FIND_PATH",
+            "TRACE_PATH",
+            "SERIALIZE_PATH"
+          ]
+        }
+      ],
+      "compiler_coverage_rate": 0.0708955223880597,
+      "type_valid_chain_count": 268
+    }
+  },
+  "compiler_macro_coverage_rate": 0.5416666666666666,
+  "compiler_supported_macro_count": 13,
+  "inventory_id": "COMPILER_REACHABILITY_INVENTORY_V1",
+  "macros": [
+    {
+      "compiler_preconditions": [
+        "S",
+        "e",
+        "l",
+        "e",
+        "c",
+        "t",
+        "e",
+        "d",
+        " ",
+        "a",
+        "n",
+        "d",
+        " ",
+        "r",
+        "e",
+        "f",
+        "e",
+        "r",
+        "e",
+        "n",
+        "c",
+        "e",
+        " ",
+        "o",
+        "b",
+        "j",
+        "e",
+        "c",
+        "t",
+        "s",
+        " ",
+        "a",
+        "r",
+        "e",
+        " ",
+        "u",
+        "n",
+        "i",
+        "q",
+        "u",
+        "e",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": false,
+      "macro_id": "ALIGN_OBJECTS",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "alignment": []
+      },
+      "supported_predecessor_types": [],
+      "supported_successor_types": [],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Objects -> Grid",
+      "valid_low_level_expansions": []
+    },
+    {
+      "compiler_preconditions": [
+        "O",
+        "r",
+        "i",
+        "e",
+        "n",
+        "t",
+        "a",
+        "t",
+        "i",
+        "o",
+        "n",
+        " ",
+        "i",
+        "s",
+        " ",
+        "e",
+        "x",
+        "p",
+        "l",
+        "i",
+        "c",
+        "i",
+        "t",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE"
+      ],
+      "compiler_reachable_successor_macros": [
+        "COMPLETE_SYMMETRY",
+        "FILL_ENCLOSED_REGION"
+      ],
+      "compiler_supported": true,
+      "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "orientation": [
+          {
+            "static_witness": "HORIZONTAL",
+            "wrapper": "literal"
+          }
+        ]
+      },
+      "supported_predecessor_types": [
+        "Sequence"
+      ],
+      "supported_successor_types": [
+        "Grid"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Sequence -> Grid",
+      "valid_low_level_expansions": [
+        "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+        "REG_FILL_INTERIOR_V1",
+        "SEQ_GRID_TO_ROW_V1",
+        "SEQ_REVERSE_V1",
+        "SEQ_TO_ROW_GRID_V1"
+      ]
+    },
+    {
+      "compiler_preconditions": [
+        "P",
+        "e",
+        "r",
+        "i",
+        "o",
+        "d",
+        " ",
+        "a",
+        "n",
+        "d",
+        " ",
+        "o",
+        "u",
+        "t",
+        "p",
+        "u",
+        "t",
+        " ",
+        "r",
+        "e",
+        "l",
+        "a",
+        "t",
+        "i",
+        "o",
+        "n",
+        " ",
+        "a",
+        "r",
+        "e",
+        " ",
+        "u",
+        "n",
+        "i",
+        "q",
+        "u",
+        "e",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": false,
+      "macro_id": "COMPLETE_PATTERN",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "output_shape": [],
+        "period": []
+      },
+      "supported_predecessor_types": [],
+      "supported_successor_types": [],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Pattern -> Grid",
+      "valid_low_level_expansions": []
+    },
+    {
+      "compiler_preconditions": [
+        "A",
+        "x",
+        "i",
+        "s",
+        " ",
+        "i",
+        "s",
+        " ",
+        "t",
+        "r",
+        "a",
+        "i",
+        "n",
+        "-",
+        "c",
+        "o",
+        "n",
+        "s",
+        "i",
+        "s",
+        "t",
+        "e",
+        "n",
+        "t",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [
+        "BUILD_GRID_FROM_SEQUENCE",
+        "COMPLETE_SYMMETRY",
+        "FILL_ENCLOSED_REGION",
+        "GENERATE_FROM_COUNT"
+      ],
+      "compiler_reachable_successor_macros": [
+        "COMPLETE_SYMMETRY",
+        "COUNT_STRUCTURES",
+        "EXTRACT_SEQUENCE",
+        "FILL_ENCLOSED_REGION"
+      ],
+      "compiler_supported": true,
+      "macro_id": "COMPLETE_SYMMETRY",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "axis": [
+          {
+            "static_witness": "HORIZONTAL",
+            "wrapper": "literal"
+          }
+        ]
+      },
+      "supported_predecessor_types": [
+        "Grid"
+      ],
+      "supported_successor_types": [
+        "Grid"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Grid",
+      "valid_low_level_expansions": [
+        "COUNT_OBJECTS_V1",
+        "GEN_N_CELLS_ROW_V1",
+        "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+        "REG_FILL_INTERIOR_V1",
+        "SEQ_GRID_TO_ROW_V1",
+        "SEQ_TO_ROW_GRID_V1"
+      ]
+    },
+    {
+      "compiler_preconditions": [
+        "P",
+        "o",
+        "i",
+        "n",
+        "t",
+        "s",
+        " ",
+        "a",
+        "r",
+        "e",
+        " ",
+        "a",
+        "l",
+        "i",
+        "g",
+        "n",
+        "e",
+        "d",
+        " ",
+        "a",
+        "n",
+        "d",
+        " ",
+        "u",
+        "n",
+        "i",
+        "q",
+        "u",
+        "e",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": false,
+      "macro_id": "CONNECT_STRUCTURES",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "color_source": [],
+        "position": []
+      },
+      "supported_predecessor_types": [],
+      "supported_successor_types": [],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Grid",
+      "valid_low_level_expansions": []
+    },
+    {
+      "compiler_preconditions": [
+        "C",
+        "o",
+        "p",
+        "y",
+        " ",
+        "p",
+        "l",
+        "a",
+        "c",
+        "e",
+        "m",
+        "e",
+        "n",
+        "t",
+        " ",
+        "i",
+        "s",
+        " ",
+        "u",
+        "n",
+        "a",
+        "m",
+        "b",
+        "i",
+        "g",
+        "u",
+        "o",
+        "u",
+        "s",
+        " ",
+        "a",
+        "n",
+        "d",
+        " ",
+        "i",
+        "n",
+        " ",
+        "b",
+        "o",
+        "u",
+        "n",
+        "d",
+        "s",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": false,
+      "macro_id": "COPY_OBJECT",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "translation": []
+      },
+      "supported_predecessor_types": [],
+      "supported_successor_types": [],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "SelectedObject -> Grid",
+      "valid_low_level_expansions": []
+    },
+    {
+      "compiler_preconditions": [
+        "C",
+        "o",
+        "u",
+        "n",
+        "t",
+        "i",
+        "n",
+        "g",
+        " ",
+        "t",
+        "a",
+        "r",
+        "g",
+        "e",
+        "t",
+        " ",
+        "i",
+        "s",
+        " ",
+        "e",
+        "x",
+        "p",
+        "l",
+        "i",
+        "c",
+        "i",
+        "t",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [
+        "COMPLETE_SYMMETRY",
+        "FILL_ENCLOSED_REGION"
+      ],
+      "compiler_reachable_successor_macros": [
+        "GENERATE_FROM_COUNT"
+      ],
+      "compiler_supported": true,
+      "macro_id": "COUNT_STRUCTURES",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "count_kind": [
+          {
+            "static_witness": "OBJECT_COUNT",
+            "wrapper": "literal"
+          }
+        ]
+      },
+      "supported_predecessor_types": [
+        "Grid"
+      ],
+      "supported_successor_types": [
+        "Count"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Count",
+      "valid_low_level_expansions": [
+        "COUNT_OBJECTS_V1",
+        "GEN_N_CELLS_ROW_V1",
+        "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+        "REG_FILL_INTERIOR_V1"
+      ]
+    },
+    {
+      "compiler_preconditions": [
+        "A",
+        "n",
+        "c",
+        "h",
+        "o",
+        "r",
+        " ",
+        "i",
+        "s",
+        " ",
+        "i",
+        "n",
+        " ",
+        "b",
+        "o",
+        "u",
+        "n",
+        "d",
+        "s",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": false,
+      "macro_id": "EXTRACT_REGION",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "position": []
+      },
+      "supported_predecessor_types": [],
+      "supported_successor_types": [],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Region",
+      "valid_low_level_expansions": []
+    },
+    {
+      "compiler_preconditions": [
+        "R",
+        "o",
+        "w",
+        " ",
+        "o",
+        "r",
+        " ",
+        "c",
+        "o",
+        "l",
+        "u",
+        "m",
+        "n",
+        " ",
+        "i",
+        "s",
+        " ",
+        "i",
+        "n",
+        " ",
+        "b",
+        "o",
+        "u",
+        "n",
+        "d",
+        "s",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [
+        "COMPLETE_SYMMETRY",
+        "FILL_ENCLOSED_REGION"
+      ],
+      "compiler_reachable_successor_macros": [
+        "BUILD_GRID_FROM_SEQUENCE",
+        "TRANSFORM_SEQUENCE"
+      ],
+      "compiler_supported": true,
+      "macro_id": "EXTRACT_SEQUENCE",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "orientation": [
+          {
+            "static_witness": "HORIZONTAL",
+            "wrapper": "literal"
+          }
+        ],
+        "position": [
+          {
+            "static_witness": 0,
+            "wrapper": "literal"
+          }
+        ]
+      },
+      "supported_predecessor_types": [
+        "Grid"
+      ],
+      "supported_successor_types": [
+        "Sequence"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Sequence",
+      "valid_low_level_expansions": [
+        "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+        "REG_FILL_INTERIOR_V1",
+        "SEQ_GRID_TO_ROW_V1",
+        "SEQ_REVERSE_V1",
+        "SEQ_TO_ROW_GRID_V1"
+      ]
+    },
+    {
+      "compiler_preconditions": [
+        "A",
+        " ",
+        "s",
+        "i",
+        "n",
+        "g",
+        "l",
+        "e",
+        " ",
+        "f",
+        "i",
+        "l",
+        "l",
+        " ",
+        "c",
+        "o",
+        "l",
+        "o",
+        "r",
+        " ",
+        "i",
+        "s",
+        " ",
+        "t",
+        "r",
+        "a",
+        "i",
+        "n",
+        "-",
+        "c",
+        "o",
+        "n",
+        "s",
+        "i",
+        "s",
+        "t",
+        "e",
+        "n",
+        "t",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [
+        "BUILD_GRID_FROM_SEQUENCE",
+        "COMPLETE_SYMMETRY",
+        "FILL_ENCLOSED_REGION",
+        "GENERATE_FROM_COUNT"
+      ],
+      "compiler_reachable_successor_macros": [
+        "COMPLETE_SYMMETRY",
+        "COUNT_STRUCTURES",
+        "EXTRACT_SEQUENCE",
+        "FILL_ENCLOSED_REGION"
+      ],
+      "compiler_supported": true,
+      "macro_id": "FILL_ENCLOSED_REGION",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "color_source": [
+          {
+            "static_witness": 1,
+            "wrapper": "literal"
+          }
+        ]
+      },
+      "supported_predecessor_types": [
+        "Grid"
+      ],
+      "supported_successor_types": [
+        "Grid"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Grid",
+      "valid_low_level_expansions": [
+        "COUNT_OBJECTS_V1",
+        "GEN_N_CELLS_ROW_V1",
+        "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+        "REG_FILL_INTERIOR_V1",
+        "SEQ_GRID_TO_ROW_V1",
+        "SEQ_TO_ROW_GRID_V1"
+      ]
+    },
+    {
+      "compiler_preconditions": [
+        "A",
+        "n",
+        " ",
+        "e",
+        "n",
+        "c",
+        "l",
+        "o",
+        "s",
+        "e",
+        "d",
+        " ",
+        "r",
+        "e",
+        "g",
+        "i",
+        "o",
+        "n",
+        " ",
+        "e",
+        "x",
+        "i",
+        "s",
+        "t",
+        "s",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": false,
+      "macro_id": "FIND_ENCLOSED_REGION",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {},
+      "supported_predecessor_types": [],
+      "supported_successor_types": [],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Region",
+      "valid_low_level_expansions": []
+    },
+    {
+      "compiler_preconditions": [
+        "G",
+        "r",
+        "i",
+        "d",
+        " ",
+        "c",
+        "o",
+        "n",
+        "t",
+        "a",
+        "i",
+        "n",
+        "s",
+        " ",
+        "a",
+        " ",
+        "d",
+        "e",
+        "t",
+        "e",
+        "r",
+        "m",
+        "i",
+        "n",
+        "i",
+        "s",
+        "t",
+        "i",
+        "c",
+        " ",
+        "f",
+        "o",
+        "r",
+        "e",
+        "g",
+        "r",
+        "o",
+        "u",
+        "n",
+        "d",
+        " ",
+        "v",
+        "i",
+        "e",
+        "w",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [
+        "SELECT_OBJECT"
+      ],
+      "compiler_supported": true,
+      "macro_id": "FIND_OBJECTS",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {},
+      "supported_predecessor_types": [
+        "Grid"
+      ],
+      "supported_successor_types": [
+        "Objects"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Objects",
+      "valid_low_level_expansions": [
+        "OBJ_CROP_V1",
+        "SEL_LARGEST_V1"
+      ]
+    },
+    {
+      "compiler_preconditions": [
+        "F",
+        "o",
+        "r",
+        "e",
+        "g",
+        "r",
+        "o",
+        "u",
+        "n",
+        "d",
+        " ",
+        "g",
+        "r",
+        "a",
+        "p",
+        "h",
+        " ",
+        "i",
+        "s",
+        " ",
+        "w",
+        "e",
+        "l",
+        "l",
+        "-",
+        "f",
+        "o",
+        "r",
+        "m",
+        "e",
+        "d",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [
+        "TRACE_PATH"
+      ],
+      "compiler_supported": true,
+      "macro_id": "FIND_PATH",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {},
+      "supported_predecessor_types": [
+        "Grid"
+      ],
+      "supported_successor_types": [
+        "Graph"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Graph",
+      "valid_low_level_expansions": [
+        "GRAPH_FROM_OBJECT_PIXELS_4_V1",
+        "GRAPH_TRACE_PATH_V1",
+        "PATH_COLOR_SEQUENCE_V1",
+        "PATH_SERIALIZE_ROW_V1"
+      ]
+    },
+    {
+      "compiler_preconditions": [
+        "A",
+        " ",
+        "d",
+        "e",
+        "t",
+        "e",
+        "r",
+        "m",
+        "i",
+        "n",
+        "i",
+        "s",
+        "t",
+        "i",
+        "c",
+        " ",
+        "p",
+        "e",
+        "r",
+        "i",
+        "o",
+        "d",
+        " ",
+        "e",
+        "x",
+        "i",
+        "s",
+        "t",
+        "s",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": false,
+      "macro_id": "FIND_PATTERN",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "axis": []
+      },
+      "supported_predecessor_types": [],
+      "supported_successor_types": [],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Pattern",
+      "valid_low_level_expansions": []
+    },
+    {
+      "compiler_preconditions": [
+        "C",
+        "o",
+        "u",
+        "n",
+        "t",
+        " ",
+        "a",
+        "n",
+        "d",
+        " ",
+        "o",
+        "u",
+        "t",
+        "p",
+        "u",
+        "t",
+        " ",
+        "s",
+        "t",
+        "y",
+        "l",
+        "e",
+        " ",
+        "a",
+        "r",
+        "e",
+        " ",
+        "t",
+        "r",
+        "a",
+        "i",
+        "n",
+        "-",
+        "c",
+        "o",
+        "n",
+        "s",
+        "i",
+        "s",
+        "t",
+        "e",
+        "n",
+        "t",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [
+        "COUNT_STRUCTURES"
+      ],
+      "compiler_reachable_successor_macros": [
+        "COMPLETE_SYMMETRY",
+        "FILL_ENCLOSED_REGION"
+      ],
+      "compiler_supported": true,
+      "macro_id": "GENERATE_FROM_COUNT",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "color_source": [
+          {
+            "static_witness": 1,
+            "wrapper": "literal"
+          }
+        ],
+        "orientation": [
+          {
+            "static_witness": "HORIZONTAL",
+            "wrapper": "literal"
+          }
+        ],
+        "shape_source": [
+          {
+            "static_witness": [
+              1,
+              1
+            ],
+            "wrapper": "literal"
+          }
+        ]
+      },
+      "supported_predecessor_types": [
+        "Count"
+      ],
+      "supported_successor_types": [
+        "Grid"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Count -> Grid",
+      "valid_low_level_expansions": [
+        "COUNT_OBJECTS_V1",
+        "GEN_N_CELLS_ROW_V1",
+        "PAT_COMPLETE_MIRROR_HORIZONTAL_V1",
+        "REG_FILL_INTERIOR_V1"
+      ]
+    },
+    {
+      "compiler_preconditions": [
+        "T",
+        "r",
+        "a",
+        "n",
+        "s",
+        "l",
+        "a",
+        "t",
+        "i",
+        "o",
+        "n",
+        " ",
+        "a",
+        "n",
+        "d",
+        " ",
+        "r",
+        "e",
+        "p",
+        "e",
+        "a",
+        "t",
+        " ",
+        "c",
+        "o",
+        "u",
+        "n",
+        "t",
+        " ",
+        "a",
+        "r",
+        "e",
+        " ",
+        "t",
+        "r",
+        "a",
+        "i",
+        "n",
+        "-",
+        "c",
+        "o",
+        "n",
+        "s",
+        "i",
+        "s",
+        "t",
+        "e",
+        "n",
+        "t",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": false,
+      "macro_id": "PROPAGATE_PATTERN",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "count_source": [],
+        "translation": []
+      },
+      "supported_predecessor_types": [],
+      "supported_successor_types": [],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Grid",
+      "valid_low_level_expansions": []
+    },
+    {
+      "compiler_preconditions": [
+        "A",
+        " ",
+        "u",
+        "n",
+        "i",
+        "q",
+        "u",
+        "e",
+        " ",
+        "n",
+        "o",
+        "n",
+        "-",
+        "t",
+        "r",
+        "i",
+        "v",
+        "i",
+        "a",
+        "l",
+        " ",
+        "r",
+        "e",
+        "p",
+        "a",
+        "i",
+        "r",
+        " ",
+        "e",
+        "x",
+        "i",
+        "s",
+        "t",
+        "s",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": false,
+      "macro_id": "REPAIR_PATTERN",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "period": []
+      },
+      "supported_predecessor_types": [],
+      "supported_successor_types": [],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Grid",
+      "valid_low_level_expansions": []
+    },
+    {
+      "compiler_preconditions": [
+        "S",
+        "t",
+        "a",
+        "r",
+        "t",
+        " ",
+        "a",
+        "n",
+        "d",
+        " ",
+        "d",
+        "i",
+        "r",
+        "e",
+        "c",
+        "t",
+        "i",
+        "o",
+        "n",
+        " ",
+        "a",
+        "r",
+        "e",
+        " ",
+        "u",
+        "n",
+        "a",
+        "m",
+        "b",
+        "i",
+        "g",
+        "u",
+        "o",
+        "u",
+        "s",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": false,
+      "macro_id": "REPEAT_UNTIL_BOUNDARY",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "color_source": [],
+        "direction": [],
+        "position": []
+      },
+      "supported_predecessor_types": [],
+      "supported_successor_types": [],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> Grid",
+      "valid_low_level_expansions": []
+    },
+    {
+      "compiler_preconditions": [
+        "E",
+        "x",
+        "a",
+        "c",
+        "t",
+        "l",
+        "y",
+        " ",
+        "o",
+        "n",
+        "e",
+        " ",
+        "o",
+        "b",
+        "j",
+        "e",
+        "c",
+        "t",
+        " ",
+        "s",
+        "a",
+        "t",
+        "i",
+        "s",
+        "f",
+        "i",
+        "e",
+        "s",
+        " ",
+        "s",
+        "e",
+        "l",
+        "e",
+        "c",
+        "t",
+        "o",
+        "r",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [
+        "FIND_OBJECTS"
+      ],
+      "compiler_reachable_successor_macros": [
+        "TRANSFORM_OBJECT"
+      ],
+      "compiler_supported": true,
+      "macro_id": "SELECT_OBJECT",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "selector": [
+          {
+            "static_witness": "largest",
+            "wrapper": "literal"
+          }
+        ]
+      },
+      "supported_predecessor_types": [
+        "Objects"
+      ],
+      "supported_successor_types": [
+        "SelectedObject"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Objects -> SelectedObject",
+      "valid_low_level_expansions": [
+        "OBJ_CROP_V1",
+        "SEL_LARGEST_V1"
+      ]
+    },
+    {
+      "compiler_preconditions": [
+        "O",
+        "u",
+        "t",
+        "p",
+        "u",
+        "t",
+        " ",
+        "o",
+        "r",
+        "i",
+        "e",
+        "n",
+        "t",
+        "a",
+        "t",
+        "i",
+        "o",
+        "n",
+        " ",
+        "i",
+        "s",
+        " ",
+        "t",
+        "r",
+        "a",
+        "i",
+        "n",
+        "-",
+        "c",
+        "o",
+        "n",
+        "s",
+        "i",
+        "s",
+        "t",
+        "e",
+        "n",
+        "t",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [
+        "TRACE_PATH"
+      ],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": true,
+      "macro_id": "SERIALIZE_PATH",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "orientation": [
+          {
+            "static_witness": "HORIZONTAL",
+            "wrapper": "literal"
+          }
+        ]
+      },
+      "supported_predecessor_types": [
+        "Path"
+      ],
+      "supported_successor_types": [
+        "Grid"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Path -> Grid",
+      "valid_low_level_expansions": [
+        "GRAPH_FROM_OBJECT_PIXELS_4_V1",
+        "GRAPH_TRACE_PATH_V1",
+        "PATH_COLOR_SEQUENCE_V1",
+        "PATH_SERIALIZE_ROW_V1"
+      ]
+    },
+    {
+      "compiler_preconditions": [
+        "E",
+        "x",
+        "a",
+        "c",
+        "t",
+        "l",
+        "y",
+        " ",
+        "o",
+        "n",
+        "e",
+        " ",
+        "s",
+        "e",
+        "l",
+        "e",
+        "c",
+        "t",
+        "e",
+        "d",
+        " ",
+        "f",
+        "u",
+        "l",
+        "l",
+        " ",
+        "s",
+        "e",
+        "p",
+        "a",
+        "r",
+        "a",
+        "t",
+        "o",
+        "r",
+        " ",
+        "e",
+        "x",
+        "i",
+        "s",
+        "t",
+        "s",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": false,
+      "macro_id": "SPLIT_BY_SEPARATOR",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "orientation": [],
+        "position": []
+      },
+      "supported_predecessor_types": [],
+      "supported_successor_types": [],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Grid -> GridPair",
+      "valid_low_level_expansions": []
+    },
+    {
+      "compiler_preconditions": [
+        "G",
+        "r",
+        "a",
+        "p",
+        "h",
+        " ",
+        "i",
+        "s",
+        " ",
+        "a",
+        " ",
+        "s",
+        "i",
+        "m",
+        "p",
+        "l",
+        "e",
+        " ",
+        "p",
+        "a",
+        "t",
+        "h",
+        " ",
+        "a",
+        "n",
+        "d",
+        " ",
+        "d",
+        "i",
+        "r",
+        "e",
+        "c",
+        "t",
+        "i",
+        "o",
+        "n",
+        " ",
+        "i",
+        "s",
+        " ",
+        "u",
+        "n",
+        "a",
+        "m",
+        "b",
+        "i",
+        "g",
+        "u",
+        "o",
+        "u",
+        "s",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [
+        "FIND_PATH"
+      ],
+      "compiler_reachable_successor_macros": [
+        "SERIALIZE_PATH"
+      ],
+      "compiler_supported": true,
+      "macro_id": "TRACE_PATH",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "direction": [
+          {
+            "static_witness": "PATH_ENDPOINT_ORDER",
+            "wrapper": "literal"
+          }
+        ]
+      },
+      "supported_predecessor_types": [
+        "Graph"
+      ],
+      "supported_successor_types": [
+        "Path"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Graph -> Path",
+      "valid_low_level_expansions": [
+        "GRAPH_FROM_OBJECT_PIXELS_4_V1",
+        "GRAPH_TRACE_PATH_V1",
+        "PATH_COLOR_SEQUENCE_V1",
+        "PATH_SERIALIZE_ROW_V1"
+      ]
+    },
+    {
+      "compiler_preconditions": [
+        "S",
+        "e",
+        "l",
+        "e",
+        "c",
+        "t",
+        "e",
+        "d",
+        " ",
+        "o",
+        "b",
+        "j",
+        "e",
+        "c",
+        "t",
+        " ",
+        "a",
+        "n",
+        "d",
+        " ",
+        "r",
+        "e",
+        "q",
+        "u",
+        "e",
+        "s",
+        "t",
+        "e",
+        "d",
+        " ",
+        "t",
+        "r",
+        "a",
+        "n",
+        "s",
+        "f",
+        "o",
+        "r",
+        "m",
+        " ",
+        "a",
+        "r",
+        "e",
+        " ",
+        "u",
+        "n",
+        "i",
+        "q",
+        "u",
+        "e",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [
+        "SELECT_OBJECT"
+      ],
+      "compiler_reachable_successor_macros": [],
+      "compiler_supported": true,
+      "macro_id": "TRANSFORM_OBJECT",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "operation": [
+          {
+            "static_witness": "crop",
+            "wrapper": "literal"
+          }
+        ]
+      },
+      "supported_predecessor_types": [
+        "SelectedObject"
+      ],
+      "supported_successor_types": [
+        "Grid"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "SelectedObject -> Grid",
+      "valid_low_level_expansions": [
+        "OBJ_CROP_V1",
+        "SEL_LARGEST_V1"
+      ]
+    },
+    {
+      "compiler_preconditions": [
+        "O",
+        "p",
+        "e",
+        "r",
+        "a",
+        "t",
+        "i",
+        "o",
+        "n",
+        " ",
+        "p",
+        "a",
+        "r",
+        "a",
+        "m",
+        "e",
+        "t",
+        "e",
+        "r",
+        "s",
+        " ",
+        "a",
+        "r",
+        "e",
+        " ",
+        "d",
+        "e",
+        "t",
+        "e",
+        "r",
+        "m",
+        "i",
+        "n",
+        "i",
+        "s",
+        "t",
+        "i",
+        "c",
+        "."
+      ],
+      "compiler_reachable_predecessor_macros": [
+        "EXTRACT_SEQUENCE"
+      ],
+      "compiler_reachable_successor_macros": [
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "compiler_supported": true,
+      "macro_id": "TRANSFORM_SEQUENCE",
+      "static_audit_scope": "direct literal witnesses with zero ARC train pairs",
+      "supported_argument_forms": {
+        "operation": [
+          {
+            "static_witness": "reverse",
+            "wrapper": "literal"
+          }
+        ]
+      },
+      "supported_predecessor_types": [
+        "Sequence"
+      ],
+      "supported_successor_types": [
+        "Sequence"
+      ],
+      "supported_symbolic_wrappers": [],
+      "type_declared": true,
+      "type_signature": "Sequence -> Sequence",
+      "valid_low_level_expansions": [
+        "SEQ_GRID_TO_ROW_V1",
+        "SEQ_REVERSE_V1",
+        "SEQ_TO_ROW_GRID_V1"
+      ]
+    }
+  ],
+  "registry_macro_count": 24,
+  "scope": "Static no-data compiler reachability; not an ARC execution inventory.",
+  "type_declared_macro_count": 24
+}

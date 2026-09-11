@@ -1,0 +1,272 @@
+{
+  "audit": {
+    "compiler_rejections_correct": true,
+    "deterministic_sample_size": 10,
+    "internal_error_count": 0,
+    "possible_compiler_bug": false,
+    "sample": [
+      {
+        "case_id": "parameter_object_02",
+        "category": "PARAMETER_CONTRACT",
+        "compiler_reason": "symbolic parameter evidence is ambiguous",
+        "compiler_status": "PARAMETER_AMBIGUOUS",
+        "macro_ids": [
+          "FIND_OBJECTS",
+          "SELECT_OBJECT",
+          "TRANSFORM_OBJECT"
+        ],
+        "replay_matches_frozen_score": true,
+        "subtype": "AMBIGUOUS_SYMBOLIC_SOURCE",
+        "taxonomy": "UNSUPPORTED_PARAMETER_FORM"
+      },
+      {
+        "case_id": "three_step_object_01",
+        "category": "THREE_STEP_COMPOSITION",
+        "compiler_reason": "symbolic parameter evidence is ambiguous",
+        "compiler_status": "PARAMETER_AMBIGUOUS",
+        "macro_ids": [
+          "FIND_OBJECTS",
+          "SELECT_OBJECT",
+          "TRANSFORM_OBJECT"
+        ],
+        "replay_matches_frozen_score": true,
+        "subtype": "AMBIGUOUS_SYMBOLIC_SOURCE",
+        "taxonomy": "UNSUPPORTED_PARAMETER_FORM"
+      },
+      {
+        "case_id": "three_step_object_02",
+        "category": "THREE_STEP_COMPOSITION",
+        "compiler_reason": "symbolic parameter evidence is ambiguous",
+        "compiler_status": "PARAMETER_AMBIGUOUS",
+        "macro_ids": [
+          "FIND_OBJECTS",
+          "SELECT_OBJECT",
+          "TRANSFORM_OBJECT"
+        ],
+        "replay_matches_frozen_score": true,
+        "subtype": "AMBIGUOUS_SYMBOLIC_SOURCE",
+        "taxonomy": "UNSUPPORTED_PARAMETER_FORM"
+      },
+      {
+        "case_id": "three_step_object_03",
+        "category": "THREE_STEP_COMPOSITION",
+        "compiler_reason": "symbolic parameter evidence is ambiguous",
+        "compiler_status": "PARAMETER_AMBIGUOUS",
+        "macro_ids": [
+          "FIND_OBJECTS",
+          "SELECT_OBJECT",
+          "TRANSFORM_OBJECT"
+        ],
+        "replay_matches_frozen_score": true,
+        "subtype": "AMBIGUOUS_SYMBOLIC_SOURCE",
+        "taxonomy": "UNSUPPORTED_PARAMETER_FORM"
+      },
+      {
+        "case_id": "three_step_object_04",
+        "category": "THREE_STEP_COMPOSITION",
+        "compiler_reason": "symbolic parameter evidence is ambiguous",
+        "compiler_status": "PARAMETER_AMBIGUOUS",
+        "macro_ids": [
+          "FIND_OBJECTS",
+          "SELECT_OBJECT",
+          "TRANSFORM_OBJECT"
+        ],
+        "replay_matches_frozen_score": true,
+        "subtype": "AMBIGUOUS_SYMBOLIC_SOURCE",
+        "taxonomy": "UNSUPPORTED_PARAMETER_FORM"
+      },
+      {
+        "case_id": "three_step_object_05",
+        "category": "THREE_STEP_COMPOSITION",
+        "compiler_reason": "symbolic parameter evidence is ambiguous",
+        "compiler_status": "PARAMETER_AMBIGUOUS",
+        "macro_ids": [
+          "FIND_OBJECTS",
+          "SELECT_OBJECT",
+          "TRANSFORM_OBJECT"
+        ],
+        "replay_matches_frozen_score": true,
+        "subtype": "AMBIGUOUS_SYMBOLIC_SOURCE",
+        "taxonomy": "UNSUPPORTED_PARAMETER_FORM"
+      },
+      {
+        "case_id": "parameter_object_03",
+        "category": "PARAMETER_CONTRACT",
+        "compiler_reason": "object transform needs a supported resolved operation",
+        "compiler_status": "COMPILER_INVALID",
+        "macro_ids": [
+          "FIND_OBJECTS",
+          "SELECT_OBJECT",
+          "TRANSFORM_OBJECT"
+        ],
+        "replay_matches_frozen_score": true,
+        "subtype": "COMPILER_REQUIRES_STATIC_LITERAL",
+        "taxonomy": "UNSUPPORTED_PARAMETER_FORM"
+      },
+      {
+        "case_id": "parameter_object_04",
+        "category": "PARAMETER_CONTRACT",
+        "compiler_reason": "object transform needs a supported resolved operation",
+        "compiler_status": "COMPILER_INVALID",
+        "macro_ids": [
+          "FIND_OBJECTS",
+          "SELECT_OBJECT",
+          "TRANSFORM_OBJECT"
+        ],
+        "replay_matches_frozen_score": true,
+        "subtype": "COMPILER_REQUIRES_STATIC_LITERAL",
+        "taxonomy": "UNSUPPORTED_PARAMETER_FORM"
+      },
+      {
+        "case_id": "parameter_object_05",
+        "category": "PARAMETER_CONTRACT",
+        "compiler_reason": "object transform needs a supported resolved operation",
+        "compiler_status": "COMPILER_INVALID",
+        "macro_ids": [
+          "FIND_OBJECTS",
+          "SELECT_OBJECT",
+          "TRANSFORM_OBJECT"
+        ],
+        "replay_matches_frozen_score": true,
+        "subtype": "COMPILER_REQUIRES_STATIC_LITERAL",
+        "taxonomy": "UNSUPPORTED_PARAMETER_FORM"
+      },
+      {
+        "case_id": "parameter_sequence_01",
+        "category": "PARAMETER_CONTRACT",
+        "compiler_reason": "sequence extraction needs literal orientation and index",
+        "compiler_status": "COMPILER_INVALID",
+        "macro_ids": [
+          "EXTRACT_SEQUENCE",
+          "TRANSFORM_SEQUENCE",
+          "BUILD_GRID_FROM_SEQUENCE"
+        ],
+        "replay_matches_frozen_score": true,
+        "subtype": "COMPILER_REQUIRES_STATIC_LITERAL",
+        "taxonomy": "UNSUPPORTED_PARAMETER_FORM"
+      }
+    ],
+    "unusual_failure_count": 0
+  },
+  "category_distribution": {
+    "PARAMETER_CONTRACT": 11,
+    "THREE_STEP_COMPOSITION": 10,
+    "TWO_STEP_TYPED_CHAIN": 15
+  },
+  "compiler_capability_gap": {
+    "primary_finding": "R2 failures are static-compiler parameter-form failures, not validator/type-chain failures.",
+    "reachability_summary": {
+      "compiler_supported_macros": 13,
+      "declared_macros": 24,
+      "macro_coverage_rate": 0.5416666666666666,
+      "three_step_compile_valid": 19,
+      "three_step_coverage_rate": 0.0708955223880597,
+      "three_step_type_valid": 268,
+      "two_step_compile_valid": 6,
+      "two_step_coverage_rate": 0.15,
+      "two_step_type_valid": 40
+    },
+    "type_system_exposure_exceeds_static_compiler_reachability": true
+  },
+  "experiment_id": "COMPILER_FAILURE_FORENSICS_V1",
+  "failure_subtypes": {
+    "UNSUPPORTED_PARAMETER_FORM/AMBIGUOUS_SYMBOLIC_SOURCE": 6,
+    "UNSUPPORTED_PARAMETER_FORM/COMPILER_REQUIRES_STATIC_LITERAL": 11,
+    "UNSUPPORTED_PARAMETER_FORM/UNRESOLVED_SYMBOLIC_SOURCE": 19
+  },
+  "failure_taxonomy": {
+    "UNSUPPORTED_PARAMETER_FORM": 36
+  },
+  "first_compiler_errors": [
+    {
+      "count": 19,
+      "reason": "symbolic parameter cannot be resolved"
+    },
+    {
+      "count": 8,
+      "reason": "sequence extraction needs literal orientation and index"
+    },
+    {
+      "count": 6,
+      "reason": "symbolic parameter evidence is ambiguous"
+    },
+    {
+      "count": 3,
+      "reason": "object transform needs a supported resolved operation"
+    }
+  ],
+  "protocol": {
+    "arc_data_used": false,
+    "arc_solutions_used": false,
+    "frozen_r2_record_count": 60,
+    "new_model_generation": false,
+    "replay": "schema -> API -> type -> parameter -> composition -> MacroProgramCompilerV1 using no-data fixture",
+    "selection": "type_valid == true and compile_valid == false"
+  },
+  "r2_counts": {
+    "compile_valid": 14,
+    "replay_matches_frozen_score": 36,
+    "type_valid": 50,
+    "type_valid_compile_invalid": 36
+  },
+  "source_experiment": "MACRO_API_REPRESENTATION_ABLATION_V1/R2_TYPED_EXAMPLES",
+  "top_unsupported_compositions": [
+    {
+      "count": 19,
+      "macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ]
+    },
+    {
+      "count": 9,
+      "macro_ids": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ]
+    },
+    {
+      "count": 8,
+      "macro_ids": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ]
+    }
+  ],
+  "top_unsupported_macros": [
+    {
+      "count": 19,
+      "macro_id": "COUNT_STRUCTURES"
+    },
+    {
+      "count": 19,
+      "macro_id": "GENERATE_FROM_COUNT"
+    },
+    {
+      "count": 9,
+      "macro_id": "FIND_OBJECTS"
+    },
+    {
+      "count": 9,
+      "macro_id": "SELECT_OBJECT"
+    },
+    {
+      "count": 9,
+      "macro_id": "TRANSFORM_OBJECT"
+    },
+    {
+      "count": 8,
+      "macro_id": "EXTRACT_SEQUENCE"
+    },
+    {
+      "count": 8,
+      "macro_id": "TRANSFORM_SEQUENCE"
+    },
+    {
+      "count": 8,
+      "macro_id": "BUILD_GRID_FROM_SEQUENCE"
+    }
+  ]
+}

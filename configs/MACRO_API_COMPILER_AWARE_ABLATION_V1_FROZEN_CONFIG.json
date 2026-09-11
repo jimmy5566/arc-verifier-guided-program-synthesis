@@ -1,0 +1,241 @@
+{
+  "experiment_id": "MACRO_API_COMPILER_AWARE_ABLATION_V1",
+  "status": "FROZEN_BEFORE_ONE_FORMAL_PASS_PER_CONDITION",
+  "benchmark_config": "configs/macro_api_comprehension_benchmark_v1.json",
+  "benchmark_hash": "90aba782703a8b1d2a4e97c8cde81a5e9e04aa0ca673ec882c70e42e0245ff00",
+  "registry_hash": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+  "schema_hash": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa",
+  "case_count": 60,
+  "category_counts": {
+    "PARAMETER_CONTRACT": 15,
+    "SINGLE_MACRO": 15,
+    "THREE_STEP_COMPOSITION": 15,
+    "TWO_STEP_TYPED_CHAIN": 15
+  },
+  "model": {
+    "architecture": "Qwen3ForCausalLM",
+    "backend": "transformers_local",
+    "dtype": "bfloat16",
+    "internet": false,
+    "local_files_only": true,
+    "model_source": "qwen-lm/qwen-3/Transformers/8b/1"
+  },
+  "sampling": {
+    "temperature": 0,
+    "top_p": 1,
+    "seed": 0,
+    "thinking": false
+  },
+  "generation": {
+    "candidate_budget": 1,
+    "max_new_tokens": 256,
+    "context_window": 12288
+  },
+  "prompt_versions": {
+    "C1_COMPILER_AWARE_CATALOGUE": "compiler_aware_interface_v1.catalogue",
+    "C2_COMPILER_VALID_SKELETON": "compiler_aware_interface_v1.skeleton_selection",
+    "C2_PARAMETER_FILL": "compiler_aware_interface_v1.skeleton_parameter_fill",
+    "C3_STRUCTURED_COMPILER_CONSTRAINED": "compiler_aware_interface_v1.structured_constraints"
+  },
+  "prompt_hashes": {
+    "C1_COMPILER_AWARE_CATALOGUE": "2e12142d8e7fba423f2420a17837e3f8b75f45640371a9e2ce82a4ab802c7c6f",
+    "C2_COMPILER_VALID_SKELETON": "1c2454d41362684a75c2aca7a8845a8a8dd50f0332275ace3a1870aa745332dd",
+    "C2_PARAMETER_FILL": "310297d8b5b937ee65f3defc466150427e6db57500aebfae14f6b495ddbc8b00",
+    "C3_STRUCTURED_COMPILER_CONSTRAINED": "4f4abb83ca2f4bf6f69edd1ea815b219c88dd6efbdcd3e02da4170789a71b178"
+  },
+  "compiler_reachability": {
+    "static_scope": "direct literal witnesses with zero ARC train pairs",
+    "inventory_hash": "59920feba6c956b23d9fe0ca84286e68aa4295a6bef0acd44df7dbef624411c4",
+    "compiler_supported_macro_count": 13,
+    "type_declared_macro_count": 24,
+    "compiler_valid_skeleton_count": 27,
+    "max_skeleton_depth": 3
+  },
+  "c0_reference": {
+    "condition": "R2_TYPED_EXAMPLES",
+    "source_experiment": "MACRO_API_REPRESENTATION_ABLATION_V1",
+    "source_result_sha256": "c9bf380db92a776c6b3390a95b626e7845b15ebed3c9b917c3417b78b60de147",
+    "summary": {
+      "case_count": 60,
+      "category_metrics": {
+        "PARAMETER_CONTRACT": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 15,
+            "compile_valid": 3,
+            "composition_valid": 14,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 14,
+            "response_received": 15,
+            "schema_valid": 15,
+            "type_valid": 14
+          },
+          "rates": {
+            "argument_contract_valid": 1.0,
+            "compile_valid": 0.2,
+            "composition_valid": 0.9333333333333333,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 0.9333333333333333,
+            "response_received": 1.0,
+            "schema_valid": 1.0,
+            "type_valid": 0.9333333333333333
+          }
+        },
+        "SINGLE_MACRO": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 15,
+            "compile_valid": 6,
+            "composition_valid": 6,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 6,
+            "response_received": 15,
+            "schema_valid": 15,
+            "type_valid": 6
+          },
+          "rates": {
+            "argument_contract_valid": 1.0,
+            "compile_valid": 0.4,
+            "composition_valid": 0.4,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 0.4,
+            "response_received": 1.0,
+            "schema_valid": 1.0,
+            "type_valid": 0.4
+          }
+        },
+        "THREE_STEP_COMPOSITION": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 15,
+            "compile_valid": 5,
+            "composition_valid": 15,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 15,
+            "response_received": 15,
+            "schema_valid": 15,
+            "type_valid": 15
+          },
+          "rates": {
+            "argument_contract_valid": 1.0,
+            "compile_valid": 0.3333333333333333,
+            "composition_valid": 1.0,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 1.0,
+            "response_received": 1.0,
+            "schema_valid": 1.0,
+            "type_valid": 1.0
+          }
+        },
+        "TWO_STEP_TYPED_CHAIN": {
+          "case_count": 15,
+          "funnel": {
+            "argument_contract_valid": 15,
+            "compile_valid": 0,
+            "composition_valid": 15,
+            "json_parseable": 15,
+            "macro_ids_valid": 15,
+            "parameter_valid": 15,
+            "response_received": 15,
+            "schema_valid": 15,
+            "type_valid": 15
+          },
+          "rates": {
+            "argument_contract_valid": 1.0,
+            "compile_valid": 0.0,
+            "composition_valid": 1.0,
+            "json_parseable": 1.0,
+            "macro_ids_valid": 1.0,
+            "parameter_valid": 1.0,
+            "response_received": 1.0,
+            "schema_valid": 1.0,
+            "type_valid": 1.0
+          }
+        }
+      },
+      "completion_tokens": 8268,
+      "failure_types": [
+        [
+          "COMPILER_FAILURE/INELIGIBLE",
+          36
+        ],
+        [
+          "TYPE_FAILURE/MACRO_INPUT_OUTPUT_CHAIN_MISMATCH",
+          10
+        ]
+      ],
+      "funnel": {
+        "argument_contract_valid": 60,
+        "compile_valid": 14,
+        "composition_valid": 50,
+        "json_parseable": 60,
+        "macro_ids_valid": 60,
+        "parameter_valid": 50,
+        "response_received": 60,
+        "schema_valid": 60,
+        "type_valid": 50
+      },
+      "generation_calls": 60,
+      "latency_seconds": 591.6890972330007,
+      "prompt_tokens": 105194,
+      "rates": {
+        "argument_contract_valid": 1.0,
+        "compile_valid": 0.23333333333333334,
+        "composition_valid": 0.8333333333333334,
+        "json_parseable": 1.0,
+        "macro_ids_valid": 1.0,
+        "parameter_valid": 0.8333333333333334,
+        "response_received": 1.0,
+        "schema_valid": 1.0,
+        "type_valid": 0.8333333333333334
+      }
+    }
+  },
+  "conditions": {
+    "C0_R2_TYPED_EXAMPLES": {
+      "formal_passes": 0,
+      "source": "frozen historical R2 aggregate"
+    },
+    "C1_COMPILER_AWARE_CATALOGUE": {
+      "formal_passes": 1,
+      "catalogue": "compiler-supported Macro contracts and static direct-literal forms only"
+    },
+    "C2_COMPILER_VALID_SKELETON": {
+      "formal_passes": 1,
+      "stage1": "select one globally enumerated compiler-valid skeleton",
+      "stage2": "fill parameters without changing skeleton"
+    },
+    "C3_STRUCTURED_COMPILER_CONSTRAINED": {
+      "formal_passes": 1,
+      "generation": "one structured skeleton/slot JSON response",
+      "materialization": "deterministic literal wrappers only after constraint validation"
+    }
+  },
+  "protocol": {
+    "arc_data_used": false,
+    "arc_solutions_used": false,
+    "task_prediction": false,
+    "one_formal_pass_per_new_condition": true,
+    "no_r2_rerun": true,
+    "worker_gpu_assignment": {
+      "C1_COMPILER_AWARE_CATALOGUE": [
+        0
+      ],
+      "C2_COMPILER_VALID_SKELETON": [
+        1
+      ],
+      "C3_STRUCTURED_COMPILER_CONSTRAINED": [
+        2,
+        3
+      ]
+    },
+    "startup": "sequential model artifact warm-up, staggered worker load, then barrier",
+    "raw_responses_public": false
+  }
+}
