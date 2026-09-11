@@ -129,10 +129,16 @@ class TransformersProvider:
         import torch.nn.functional as F
 
         assert self._model is not None and self._tokenizer is not None
-        prefix = self._tokenizer.apply_chat_template(
+        # Some recent Qwen tokenizer builds return a bare ``Encoding`` from
+        # ``apply_chat_template(..., tokenize=True)`` rather than a Tensor.
+        # Render first, then use the standard tokenizer tensor path; this is
+        # transport compatibility only and leaves the frozen prompt text and
+        # likelihood normalization unchanged.
+        rendered = self._tokenizer.apply_chat_template(
             [{"role": "user", "content": prompt}], add_generation_prompt=True,
-            enable_thinking=False, tokenize=True, return_tensors="pt",
-        )[0].to(self.device)
+            enable_thinking=False, tokenize=False,
+        )
+        prefix = self._tokenizer(rendered, add_special_tokens=False, return_tensors="pt")["input_ids"][0].to(self.device)
         continuation_ids = [self._tokenizer(item, add_special_tokens=False).input_ids for item in continuations]
         if any(not item for item in continuation_ids):
             raise ValueError("continuation tokenization produced no tokens")

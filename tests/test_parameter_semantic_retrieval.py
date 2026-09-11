@@ -11,6 +11,7 @@ from llm.parameter_grounding import SemanticChoice, choices_from_program, parame
 from llm.parameter_semantic_ir import ParameterSemanticIRV1
 from llm.parameter_semantic_ontology import ParameterSemanticOntologyV1, deterministic_match
 from llm.selective_parameter_repair_v2 import SelectiveParameterRepairV2
+from llm.transformers_provider import TransformersProvider
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -69,6 +70,13 @@ def test_likelihood_and_pairwise_scorers_are_deterministic_and_generation_free()
     assert likelihood == ParameterLikelihoodScorerV1(_FixedScorer()).rank("serialize vertical", skeleton, slot, ontology)
     assert contrastive == PairwiseContrastiveScorerV1(_FixedScorer()).rank("serialize vertical", skeleton, slot, ontology)
     assert "generate_text" not in inspect.getsource(ParameterLikelihoodScorerV1)
+
+
+def test_forward_likelihood_uses_tensor_tokenizer_path_not_bare_chat_encoding() -> None:
+    source = inspect.getsource(TransformersProvider.score_continuations)
+    assert "tokenize=False" in source
+    assert 'return_tensors="pt"' in source
+    assert "Encoding" in source  # documents the pinned-runtime compatibility.
 
 
 def test_selective_repair_v2_preserves_family_skeleton_order_and_unaffected_slots() -> None:
