@@ -77,6 +77,7 @@ def test_forward_likelihood_uses_tensor_tokenizer_path_not_bare_chat_encoding() 
     assert "tokenize=False" in source
     assert 'return_tensors="pt"' in source
     assert "Encoding" in source  # documents the pinned-runtime compatibility.
+    assert "logits_to_keep" in source and "use_cache=False" in source
 
 
 def test_selective_repair_v2_preserves_family_skeleton_order_and_unaffected_slots() -> None:
