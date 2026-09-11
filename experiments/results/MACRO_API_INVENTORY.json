@@ -1,0 +1,721 @@
+{
+  "compile_contract_limitations": {
+    "ALIGN_OBJECTS": "existing compiler returns an explicit deterministic-reference-object failure",
+    "COMPLETE_PATTERN": "existing compiler returns an explicit period-resolver failure",
+    "CONNECT_STRUCTURES": "no compiler branch",
+    "COPY_OBJECT": "existing compiler returns an explicit symbolic-placement failure",
+    "PROPAGATE_PATTERN": "no compiler branch",
+    "REPAIR_PATTERN": "existing compiler returns an explicit period-resolver failure",
+    "REPEAT_UNTIL_BOUNDARY": "no compiler branch",
+    "SPLIT_BY_SEPARATOR": "no compiler branch"
+  },
+  "inventory_id": "MACRO_API_INVENTORY",
+  "macro_count": 24,
+  "macros": [
+    {
+      "allowed_enums": {
+        "alignment": [
+          "ALIGN_LEFT",
+          "ALIGN_RIGHT",
+          "ALIGN_TOP",
+          "ALIGN_BOTTOM",
+          "ALIGN_CENTER",
+          "RELATIVE_TO_REFERENCE"
+        ]
+      },
+      "argument_types": {
+        "alignment": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "legacy_object_align",
+      "input_type": "Objects",
+      "macro_id": "ALIGN_OBJECTS",
+      "optional_arguments": [],
+      "output_type": "Grid",
+      "preconditions": "Selected and reference objects are unique.",
+      "required_arguments": [
+        "alignment"
+      ],
+      "supported_symbolic_wrappers": {
+        "alignment": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "orientation": [
+          "HORIZONTAL",
+          "VERTICAL"
+        ]
+      },
+      "argument_types": {
+        "orientation": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "sequence_build",
+      "input_type": "Sequence",
+      "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+      "optional_arguments": [],
+      "output_type": "Grid",
+      "preconditions": "Orientation is explicit.",
+      "required_arguments": [
+        "orientation"
+      ],
+      "supported_symbolic_wrappers": {
+        "orientation": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "output_shape": [
+          "FROM_TRAIN_OUTPUT_RELATION",
+          "SAME_AS_INPUT"
+        ],
+        "period": [
+          "DETECTED_ROW_PERIOD",
+          "DETECTED_COLUMN_PERIOD",
+          "DETECTED_TILE_PERIOD"
+        ]
+      },
+      "argument_types": {
+        "output_shape": "one-key {'source': token} or {'literal': value} wrapper",
+        "period": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "pattern_complete",
+      "input_type": "Pattern",
+      "macro_id": "COMPLETE_PATTERN",
+      "optional_arguments": [],
+      "output_type": "Grid",
+      "preconditions": "Period and output relation are unique.",
+      "required_arguments": [
+        "output_shape",
+        "period"
+      ],
+      "supported_symbolic_wrappers": {
+        "output_shape": [
+          "source"
+        ],
+        "period": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "axis": [
+          "HORIZONTAL",
+          "VERTICAL",
+          "LITERAL"
+        ]
+      },
+      "argument_types": {
+        "axis": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "symmetry_complete",
+      "input_type": "Grid",
+      "macro_id": "COMPLETE_SYMMETRY",
+      "optional_arguments": [],
+      "output_type": "Grid",
+      "preconditions": "Axis is train-consistent.",
+      "required_arguments": [
+        "axis"
+      ],
+      "supported_symbolic_wrappers": {
+        "axis": [
+          "source",
+          "literal"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "color_source": [
+          "FROM_UNIQUE_COLOR",
+          "FROM_SELECTED_OBJECT"
+        ],
+        "position": [
+          "FROM_SELECTED_OBJECT",
+          "RELATIVE_TO_REFERENCE"
+        ]
+      },
+      "argument_types": {
+        "color_source": "one-key {'source': token} or {'literal': value} wrapper",
+        "position": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "connect_structures",
+      "input_type": "Grid",
+      "macro_id": "CONNECT_STRUCTURES",
+      "optional_arguments": [],
+      "output_type": "Grid",
+      "preconditions": "Points are aligned and unique.",
+      "required_arguments": [
+        "color_source",
+        "position"
+      ],
+      "supported_symbolic_wrappers": {
+        "color_source": [
+          "source"
+        ],
+        "position": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "translation": [
+          "INFER_FROM_TRAIN",
+          "TO_REFERENCE_POSITION",
+          "UNTIL_BOUNDARY"
+        ]
+      },
+      "argument_types": {
+        "translation": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "legacy_object_copy",
+      "input_type": "SelectedObject",
+      "macro_id": "COPY_OBJECT",
+      "optional_arguments": [],
+      "output_type": "Grid",
+      "preconditions": "Copy placement is unambiguous and in bounds.",
+      "required_arguments": [
+        "translation"
+      ],
+      "supported_symbolic_wrappers": {
+        "translation": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "color_source": [
+          "FROM_UNIQUE_COLOR",
+          "LITERAL"
+        ],
+        "count_kind": [
+          "LITERAL"
+        ]
+      },
+      "argument_types": {
+        "color_source": "one-key {'source': token} or {'literal': value} wrapper",
+        "count_kind": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "count",
+      "input_type": "Grid",
+      "macro_id": "COUNT_STRUCTURES",
+      "optional_arguments": [
+        "color_source"
+      ],
+      "output_type": "Count",
+      "preconditions": "Counting target is explicit.",
+      "required_arguments": [
+        "count_kind"
+      ],
+      "supported_symbolic_wrappers": {
+        "color_source": [
+          "source",
+          "literal"
+        ],
+        "count_kind": [
+          "source",
+          "literal"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "position": [
+          "FROM_SELECTED_OBJECT",
+          "RELATIVE_TO_REFERENCE",
+          "LITERAL"
+        ]
+      },
+      "argument_types": {
+        "position": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "extract_region",
+      "input_type": "Grid",
+      "macro_id": "EXTRACT_REGION",
+      "optional_arguments": [],
+      "output_type": "Region",
+      "preconditions": "Anchor is in bounds.",
+      "required_arguments": [
+        "position"
+      ],
+      "supported_symbolic_wrappers": {
+        "position": [
+          "source",
+          "literal"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "orientation": [
+          "HORIZONTAL",
+          "VERTICAL"
+        ],
+        "position": [
+          "LITERAL",
+          "RELATIVE_TO_REFERENCE"
+        ]
+      },
+      "argument_types": {
+        "orientation": "one-key {'source': token} or {'literal': value} wrapper",
+        "position": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "sequence_extract",
+      "input_type": "Grid",
+      "macro_id": "EXTRACT_SEQUENCE",
+      "optional_arguments": [],
+      "output_type": "Sequence",
+      "preconditions": "Row or column is in bounds.",
+      "required_arguments": [
+        "orientation",
+        "position"
+      ],
+      "supported_symbolic_wrappers": {
+        "orientation": [
+          "source"
+        ],
+        "position": [
+          "source",
+          "literal"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "color_source": [
+          "FROM_BOUNDARY",
+          "FROM_UNIQUE_COLOR",
+          "FROM_TRAIN_COLOR_MAPPING"
+        ]
+      },
+      "argument_types": {
+        "color_source": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "fill_enclosed_region",
+      "input_type": "Grid",
+      "macro_id": "FILL_ENCLOSED_REGION",
+      "optional_arguments": [],
+      "output_type": "Grid",
+      "preconditions": "A single fill color is train-consistent.",
+      "required_arguments": [
+        "color_source"
+      ],
+      "supported_symbolic_wrappers": {
+        "color_source": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {},
+      "argument_types": {},
+      "compiler_mapping": "enclosed_region_perception",
+      "input_type": "Grid",
+      "macro_id": "FIND_ENCLOSED_REGION",
+      "optional_arguments": [],
+      "output_type": "Region",
+      "preconditions": "An enclosed region exists.",
+      "required_arguments": [],
+      "supported_symbolic_wrappers": {}
+    },
+    {
+      "allowed_enums": {},
+      "argument_types": {},
+      "compiler_mapping": "object_perception",
+      "input_type": "Grid",
+      "macro_id": "FIND_OBJECTS",
+      "optional_arguments": [],
+      "output_type": "Objects",
+      "preconditions": "Grid contains a deterministic foreground view.",
+      "required_arguments": [],
+      "supported_symbolic_wrappers": {}
+    },
+    {
+      "allowed_enums": {},
+      "argument_types": {},
+      "compiler_mapping": "path_graph",
+      "input_type": "Grid",
+      "macro_id": "FIND_PATH",
+      "optional_arguments": [],
+      "output_type": "Graph",
+      "preconditions": "Foreground graph is well-formed.",
+      "required_arguments": [],
+      "supported_symbolic_wrappers": {}
+    },
+    {
+      "allowed_enums": {
+        "axis": [
+          "HORIZONTAL",
+          "VERTICAL",
+          "DETECTED_ROW_PERIOD",
+          "DETECTED_COLUMN_PERIOD",
+          "DETECTED_TILE_PERIOD"
+        ]
+      },
+      "argument_types": {
+        "axis": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "pattern_perception",
+      "input_type": "Grid",
+      "macro_id": "FIND_PATTERN",
+      "optional_arguments": [
+        "axis"
+      ],
+      "output_type": "Pattern",
+      "preconditions": "A deterministic period exists.",
+      "required_arguments": [],
+      "supported_symbolic_wrappers": {
+        "axis": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "color_source": [
+          "FROM_UNIQUE_COLOR",
+          "FROM_TRAIN_COLOR_MAPPING"
+        ],
+        "orientation": [
+          "HORIZONTAL",
+          "VERTICAL"
+        ],
+        "shape_source": [
+          "SAME_AS_INPUT",
+          "FROM_TRAIN_OUTPUT_RELATION"
+        ]
+      },
+      "argument_types": {
+        "color_source": "one-key {'source': token} or {'literal': value} wrapper",
+        "orientation": "one-key {'source': token} or {'literal': value} wrapper",
+        "shape_source": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "generate_from_count",
+      "input_type": "Count",
+      "macro_id": "GENERATE_FROM_COUNT",
+      "optional_arguments": [],
+      "output_type": "Grid",
+      "preconditions": "Count and output style are train-consistent.",
+      "required_arguments": [
+        "color_source",
+        "orientation",
+        "shape_source"
+      ],
+      "supported_symbolic_wrappers": {
+        "color_source": [
+          "source"
+        ],
+        "orientation": [
+          "source"
+        ],
+        "shape_source": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "count_source": [
+          "OBJECT_COUNT",
+          "REGION_COUNT",
+          "RUN_COUNT"
+        ],
+        "translation": [
+          "INFER_FROM_TRAIN",
+          "UNTIL_BOUNDARY"
+        ]
+      },
+      "argument_types": {
+        "count_source": "one-key {'source': token} or {'literal': value} wrapper",
+        "translation": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "bounded_translation",
+      "input_type": "Grid",
+      "macro_id": "PROPAGATE_PATTERN",
+      "optional_arguments": [
+        "count_source"
+      ],
+      "output_type": "Grid",
+      "preconditions": "Translation and repeat count are train-consistent.",
+      "required_arguments": [
+        "translation"
+      ],
+      "supported_symbolic_wrappers": {
+        "count_source": [
+          "source"
+        ],
+        "translation": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "period": [
+          "DETECTED_ROW_PERIOD"
+        ]
+      },
+      "argument_types": {
+        "period": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "pattern_repair",
+      "input_type": "Grid",
+      "macro_id": "REPAIR_PATTERN",
+      "optional_arguments": [],
+      "output_type": "Grid",
+      "preconditions": "A unique non-trivial repair exists.",
+      "required_arguments": [
+        "period"
+      ],
+      "supported_symbolic_wrappers": {
+        "period": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "color_source": [
+          "FROM_UNIQUE_COLOR",
+          "FROM_SELECTED_OBJECT"
+        ],
+        "direction": [
+          "INFER_FROM_TRAIN",
+          "HORIZONTAL",
+          "VERTICAL"
+        ],
+        "position": [
+          "FROM_SELECTED_OBJECT",
+          "RELATIVE_TO_REFERENCE"
+        ]
+      },
+      "argument_types": {
+        "color_source": "one-key {'source': token} or {'literal': value} wrapper",
+        "direction": "one-key {'source': token} or {'literal': value} wrapper",
+        "position": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "extend_line",
+      "input_type": "Grid",
+      "macro_id": "REPEAT_UNTIL_BOUNDARY",
+      "optional_arguments": [],
+      "output_type": "Grid",
+      "preconditions": "Start and direction are unambiguous.",
+      "required_arguments": [
+        "color_source",
+        "direction",
+        "position"
+      ],
+      "supported_symbolic_wrappers": {
+        "color_source": [
+          "source"
+        ],
+        "direction": [
+          "source"
+        ],
+        "position": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "selector": [
+          "LITERAL"
+        ]
+      },
+      "argument_types": {
+        "selector": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "legacy_selector",
+      "input_type": "Objects",
+      "macro_id": "SELECT_OBJECT",
+      "optional_arguments": [],
+      "output_type": "SelectedObject",
+      "preconditions": "Exactly one object satisfies selector.",
+      "required_arguments": [
+        "selector"
+      ],
+      "supported_symbolic_wrappers": {
+        "selector": [
+          "source",
+          "literal"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "orientation": [
+          "HORIZONTAL",
+          "VERTICAL",
+          "INFER_FROM_TRAIN"
+        ]
+      },
+      "argument_types": {
+        "orientation": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "path_serialize",
+      "input_type": "Path",
+      "macro_id": "SERIALIZE_PATH",
+      "optional_arguments": [],
+      "output_type": "Grid",
+      "preconditions": "Output orientation is train-consistent.",
+      "required_arguments": [
+        "orientation"
+      ],
+      "supported_symbolic_wrappers": {
+        "orientation": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "orientation": [
+          "HORIZONTAL",
+          "VERTICAL"
+        ],
+        "position": [
+          "INFER_FROM_TRAIN",
+          "LITERAL"
+        ]
+      },
+      "argument_types": {
+        "orientation": "one-key {'source': token} or {'literal': value} wrapper",
+        "position": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "separator_split",
+      "input_type": "Grid",
+      "macro_id": "SPLIT_BY_SEPARATOR",
+      "optional_arguments": [],
+      "output_type": "GridPair",
+      "preconditions": "Exactly one selected full separator exists.",
+      "required_arguments": [
+        "orientation",
+        "position"
+      ],
+      "supported_symbolic_wrappers": {
+        "orientation": [
+          "source"
+        ],
+        "position": [
+          "source",
+          "literal"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "direction": [
+          "PATH_ENDPOINT_ORDER",
+          "INFER_FROM_TRAIN"
+        ]
+      },
+      "argument_types": {
+        "direction": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "path_trace",
+      "input_type": "Graph",
+      "macro_id": "TRACE_PATH",
+      "optional_arguments": [],
+      "output_type": "Path",
+      "preconditions": "Graph is a simple path and direction is unambiguous.",
+      "required_arguments": [
+        "direction"
+      ],
+      "supported_symbolic_wrappers": {
+        "direction": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "color_source": [
+          "FROM_UNIQUE_COLOR",
+          "FROM_TRAIN_COLOR_MAPPING",
+          "FROM_SELECTED_OBJECT"
+        ],
+        "operation": [
+          "LITERAL"
+        ],
+        "translation": [
+          "INFER_FROM_TRAIN",
+          "TO_REFERENCE_POSITION"
+        ]
+      },
+      "argument_types": {
+        "color_source": "one-key {'source': token} or {'literal': value} wrapper",
+        "operation": "one-key {'source': token} or {'literal': value} wrapper",
+        "translation": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "legacy_object_transform",
+      "input_type": "SelectedObject",
+      "macro_id": "TRANSFORM_OBJECT",
+      "optional_arguments": [
+        "color_source",
+        "translation"
+      ],
+      "output_type": "Grid",
+      "preconditions": "Selected object and requested transform are unique.",
+      "required_arguments": [
+        "operation"
+      ],
+      "supported_symbolic_wrappers": {
+        "color_source": [
+          "source"
+        ],
+        "operation": [
+          "source",
+          "literal"
+        ],
+        "translation": [
+          "source"
+        ]
+      }
+    },
+    {
+      "allowed_enums": {
+        "count_source": [
+          "OBJECT_COUNT",
+          "REGION_COUNT",
+          "RUN_COUNT"
+        ],
+        "operation": [
+          "LITERAL"
+        ]
+      },
+      "argument_types": {
+        "count_source": "one-key {'source': token} or {'literal': value} wrapper",
+        "operation": "one-key {'source': token} or {'literal': value} wrapper"
+      },
+      "compiler_mapping": "sequence_transform",
+      "input_type": "Sequence",
+      "macro_id": "TRANSFORM_SEQUENCE",
+      "optional_arguments": [
+        "count_source"
+      ],
+      "output_type": "Sequence",
+      "preconditions": "Operation parameters are deterministic.",
+      "required_arguments": [
+        "operation"
+      ],
+      "supported_symbolic_wrappers": {
+        "count_source": [
+          "source"
+        ],
+        "operation": [
+          "source",
+          "literal"
+        ]
+      }
+    }
+  ],
+  "registry_hash": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+  "schema_hash": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+}

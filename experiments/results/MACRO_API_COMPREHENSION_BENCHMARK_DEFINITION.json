@@ -1,0 +1,29 @@
+{
+  "benchmark_hash": "90aba782703a8b1d2a4e97c8cde81a5e9e04aa0ca673ec882c70e42e0245ff00",
+  "benchmark_id": "MACRO_API_COMPREHENSION_BENCHMARK_V1",
+  "case_count": 60,
+  "category_counts": {
+    "PARAMETER_CONTRACT": 15,
+    "SINGLE_MACRO": 15,
+    "THREE_STEP_COMPOSITION": 15,
+    "TWO_STEP_TYPED_CHAIN": 15
+  },
+  "creation_timestamp_utc": "2026-09-11T13:59:44.368278+00:00",
+  "generation_method": "deterministic compiler-reachable templates derived from the current Macro registry and compiler",
+  "inventory_limitations": {
+    "ALIGN_OBJECTS": "existing compiler returns an explicit deterministic-reference-object failure",
+    "COMPLETE_PATTERN": "existing compiler returns an explicit period-resolver failure",
+    "CONNECT_STRUCTURES": "no compiler branch",
+    "COPY_OBJECT": "existing compiler returns an explicit symbolic-placement failure",
+    "PROPAGATE_PATTERN": "no compiler branch",
+    "REPAIR_PATTERN": "existing compiler returns an explicit period-resolver failure",
+    "REPEAT_UNTIL_BOUNDARY": "no compiler branch",
+    "SPLIT_BY_SEPARATOR": "no compiler branch"
+  },
+  "no_arc_data_used": true,
+  "no_arc_solutions_used": true,
+  "prompt_version": "macro_api_comprehension_prompt.v1_frozen_v2_contract",
+  "registry_hash": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+  "schema_hash": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa",
+  "version": "macro_api_comprehension_benchmark_v1"
+}

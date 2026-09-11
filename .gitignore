@@ -73,6 +73,9 @@ experiments/results/*
 !experiments/results/SOLVER_LIB_V1_OBJECT.json
 !experiments/results/SOLVER_LIB_V2_RELATION_COMPOSITION.json
 !experiments/results/SOLVER_LIB_V3_PATTERN.json
+!experiments/results/MACRO_API_INVENTORY.json
+!experiments/results/MACRO_API_COMPREHENSION_BENCHMARK_DEFINITION.json
+!experiments/results/MACRO_API_COMPREHENSION_BENCHMARK_V1.json
 reports/*
 !reports/arc2_capability_system_v1.md
 !reports/capability_registry_audit.md
@@ -82,3 +85,4 @@ reports/*
 !reports/llm_program_synthesis_v2_failures.md
 !reports/llm_program_synthesis_v2_failure_forensics.md
 !reports/macro_capability_registry_v1.md
+!reports/macro_api_comprehension_benchmark_v1.md

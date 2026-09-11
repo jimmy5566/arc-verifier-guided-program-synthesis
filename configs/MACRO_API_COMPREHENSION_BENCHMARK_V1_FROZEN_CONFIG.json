@@ -1,0 +1,38 @@
+{
+  "experiment_id": "MACRO_API_COMPREHENSION_BENCHMARK_V1",
+  "status": "FROZEN_BEFORE_FIRST_AND_ONLY_RUN",
+  "benchmark_config": "configs/macro_api_comprehension_benchmark_v1.json",
+  "benchmark_hash": "90aba782703a8b1d2a4e97c8cde81a5e9e04aa0ca673ec882c70e42e0245ff00",
+  "registry_hash": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+  "schema_hash": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa",
+  "model": {
+    "backend": "transformers_local",
+    "model_source": "qwen-lm/qwen-3/Transformers/8b/1",
+    "architecture": "Qwen3ForCausalLM",
+    "dtype": "bfloat16",
+    "local_files_only": true,
+    "internet": false
+  },
+  "sampling": {
+    "temperature": 0,
+    "top_p": 1,
+    "seed": 0,
+    "thinking": false
+  },
+  "generation": {
+    "candidate_budget": 1,
+    "max_new_tokens": 256,
+    "context_window": 12288
+  },
+  "prompt_version": "macro_api_comprehension_prompt.v1_frozen_v2_contract",
+  "protocol": {
+    "arc_data_used": false,
+    "arc_solutions_used": false,
+    "task_prediction": false,
+    "one_shot_run_only": true,
+    "worker_count": 4,
+    "worker_gpu_mapping": {"0": 0, "1": 1, "2": 2, "3": 3},
+    "startup": "sequential model artifact warm-up, staggered worker load, then shared queue barrier",
+    "raw_responses_public": false
+  }
+}

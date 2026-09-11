@@ -1,0 +1,3620 @@
+{
+  "benchmark_hash": "90aba782703a8b1d2a4e97c8cde81a5e9e04aa0ca673ec882c70e42e0245ff00",
+  "benchmark_id": "MACRO_API_COMPREHENSION_BENCHMARK_V1",
+  "case_count": 60,
+  "cases": [
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 1
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_fill_01",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "expected_parameter_contract": [
+        "color_source",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that fills an enclosed region using literal ARC color 1. Use the exact color_source field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 2
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_fill_02",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "expected_parameter_contract": [
+        "color_source",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that fills an enclosed region using literal ARC color 2. Use the exact color_source field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 3
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_fill_03",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "expected_parameter_contract": [
+        "color_source",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that fills an enclosed region using literal ARC color 3. Use the exact color_source field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_fill_04",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "expected_parameter_contract": [
+        "color_source",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that fills an enclosed region using literal ARC color 4. Use the exact color_source field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 5
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_fill_05",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "expected_parameter_contract": [
+        "color_source",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that fills an enclosed region using literal ARC color 5. Use the exact color_source field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 6
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_fill_06",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "expected_parameter_contract": [
+        "color_source",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that fills an enclosed region using literal ARC color 6. Use the exact color_source field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 7
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_fill_07",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "expected_parameter_contract": [
+        "color_source",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that fills an enclosed region using literal ARC color 7. Use the exact color_source field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 8
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_fill_08",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "expected_parameter_contract": [
+        "color_source",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that fills an enclosed region using literal ARC color 8. Use the exact color_source field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FILL_ENCLOSED_REGION",
+                "params": {
+                  "color_source": {
+                    "literal": 9
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_fill_09",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "expected_parameter_contract": [
+        "color_source",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that fills an enclosed region using literal ARC color 9. Use the exact color_source field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FILL_ENCLOSED_REGION"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_symmetry_01",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COMPLETE_SYMMETRY"
+      ],
+      "expected_parameter_contract": [
+        "axis",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that completes horizontal symmetry. Use the exact axis field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COMPLETE_SYMMETRY"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_symmetry_02",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COMPLETE_SYMMETRY"
+      ],
+      "expected_parameter_contract": [
+        "axis",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that completes vertical symmetry. Use the exact axis field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COMPLETE_SYMMETRY"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_symmetry_03",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COMPLETE_SYMMETRY"
+      ],
+      "expected_parameter_contract": [
+        "axis",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that completes horizontal symmetry. Use the exact axis field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COMPLETE_SYMMETRY"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_symmetry_04",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COMPLETE_SYMMETRY"
+      ],
+      "expected_parameter_contract": [
+        "axis",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that completes vertical symmetry. Use the exact axis field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COMPLETE_SYMMETRY"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_symmetry_05",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COMPLETE_SYMMETRY"
+      ],
+      "expected_parameter_contract": [
+        "axis",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that completes horizontal symmetry. Use the exact axis field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COMPLETE_SYMMETRY"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COMPLETE_SYMMETRY",
+                "params": {
+                  "axis": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "single_symmetry_06",
+      "category": "SINGLE_MACRO",
+      "difficulty_level": "basic",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COMPLETE_SYMMETRY"
+      ],
+      "expected_parameter_contract": [
+        "axis",
+        "literal"
+      ],
+      "natural_language_instruction": "Return one Macro program that completes vertical symmetry. Use the exact axis field and a direct literal wrapper.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COMPLETE_SYMMETRY"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "largest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_object_01",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Objects"
+        ],
+        [
+          "Objects",
+          "SelectedObject"
+        ],
+        [
+          "SelectedObject",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "expected_parameter_contract": [
+        "selector",
+        "operation"
+      ],
+      "natural_language_instruction": "Find objects, select the largest object, then crop it. Use the documented selector and operation wrappers.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "smallest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_object_02",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Objects"
+        ],
+        [
+          "Objects",
+          "SelectedObject"
+        ],
+        [
+          "SelectedObject",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "expected_parameter_contract": [
+        "selector",
+        "operation"
+      ],
+      "natural_language_instruction": "Find objects, select the smallest object, then crop it. Use the documented selector and operation wrappers.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "unique_area"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_object_03",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Objects"
+        ],
+        [
+          "Objects",
+          "SelectedObject"
+        ],
+        [
+          "SelectedObject",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "expected_parameter_contract": [
+        "selector",
+        "operation"
+      ],
+      "natural_language_instruction": "Find objects, select the unique_area object, then crop it. Use the documented selector and operation wrappers.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "largest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "color_source": {
+                    "literal": 1
+                  },
+                  "operation": {
+                    "literal": "recolor"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_object_04",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Objects"
+        ],
+        [
+          "Objects",
+          "SelectedObject"
+        ],
+        [
+          "SelectedObject",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "expected_parameter_contract": [
+        "selector",
+        "operation",
+        "color_source"
+      ],
+      "natural_language_instruction": "Find objects, select the largest object, then recolor it using literal color 1. Use the documented selector and operation wrappers.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "smallest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "color_source": {
+                    "literal": 2
+                  },
+                  "operation": {
+                    "literal": "recolor"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_object_05",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Objects"
+        ],
+        [
+          "Objects",
+          "SelectedObject"
+        ],
+        [
+          "SelectedObject",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "expected_parameter_contract": [
+        "selector",
+        "operation",
+        "color_source"
+      ],
+      "natural_language_instruction": "Find objects, select the smallest object, then recolor it using literal color 2. Use the documented selector and operation wrappers.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "source": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_path_01",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Graph"
+        ],
+        [
+          "Graph",
+          "Path"
+        ],
+        [
+          "Path",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "expected_parameter_contract": [
+        "direction",
+        "orientation",
+        "source"
+      ],
+      "natural_language_instruction": "Find a path, trace it in endpoint order, and serialize it as a horizontal grid. Use source wrappers for direction and orientation.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "source": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "source": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_path_02",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Graph"
+        ],
+        [
+          "Graph",
+          "Path"
+        ],
+        [
+          "Path",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "expected_parameter_contract": [
+        "direction",
+        "orientation",
+        "source"
+      ],
+      "natural_language_instruction": "Find a path, trace it in endpoint order, and serialize it as a vertical grid. Use source wrappers for direction and orientation.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "source": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_path_03",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Graph"
+        ],
+        [
+          "Graph",
+          "Path"
+        ],
+        [
+          "Path",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "expected_parameter_contract": [
+        "direction",
+        "orientation",
+        "source"
+      ],
+      "natural_language_instruction": "Find a path, trace it in endpoint order, and serialize it as a horizontal grid. Use source wrappers for direction and orientation.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 1
+                  },
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_count_01",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "Count object_count and generate a horizontal grid from that count using literal color 1. Use the exact count_kind, shape_source, color_source, and orientation contracts.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "REGION_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 2
+                  },
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_count_02",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "Count region_count and generate a horizontal grid from that count using literal color 2. Use the exact count_kind, shape_source, color_source, and orientation contracts.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "RUN_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 3
+                  },
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_count_03",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "Count run_count and generate a horizontal grid from that count using literal color 3. Use the exact count_kind, shape_source, color_source, and orientation contracts.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 3
+                  },
+                  "count_kind": {
+                    "literal": "COLOR_CELL_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  },
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_count_04",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "Count color_cell_count and generate a horizontal grid from that count using literal color 4. Use the exact count_kind, shape_source, color_source, and orientation contracts.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_sequence_01",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "expected_parameter_contract": [
+        "orientation",
+        "position",
+        "operation"
+      ],
+      "natural_language_instruction": "Extract horizontal sequence position 0, reverse it, and rebuild a horizontal grid. Use direct literal wrappers for orientation, position, and operation.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_sequence_02",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "expected_parameter_contract": [
+        "orientation",
+        "position",
+        "operation"
+      ],
+      "natural_language_instruction": "Extract vertical sequence position 0, reverse it, and rebuild a vertical grid. Use direct literal wrappers for orientation, position, and operation.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "parameter_sequence_03",
+      "category": "PARAMETER_CONTRACT",
+      "difficulty_level": "contract",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "expected_parameter_contract": [
+        "orientation",
+        "position",
+        "operation"
+      ],
+      "natural_language_instruction": "Extract horizontal sequence position 0, reverse it, and rebuild a horizontal grid. Use direct literal wrappers for orientation, position, and operation.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 1
+                  },
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_01",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count object_count. Then generate a horizontal grid from that count using literal color 1. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "REGION_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 2
+                  },
+                  "orientation": {
+                    "source": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_02",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count region_count. Then generate a vertical grid from that count using literal color 2. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "RUN_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 3
+                  },
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_03",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count run_count. Then generate a horizontal grid from that count using literal color 3. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  },
+                  "count_kind": {
+                    "literal": "COLOR_CELL_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  },
+                  "orientation": {
+                    "source": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_04",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count color_cell_count. Then generate a vertical grid from that count using literal color 4. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 5
+                  },
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_05",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count object_count. Then generate a horizontal grid from that count using literal color 5. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 6
+                  },
+                  "orientation": {
+                    "source": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_06",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count object_count. Then generate a vertical grid from that count using literal color 6. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "REGION_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 7
+                  },
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_07",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count region_count. Then generate a horizontal grid from that count using literal color 7. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "RUN_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 8
+                  },
+                  "orientation": {
+                    "source": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_08",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count run_count. Then generate a vertical grid from that count using literal color 8. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 9
+                  },
+                  "count_kind": {
+                    "literal": "COLOR_CELL_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 9
+                  },
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_09",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count color_cell_count. Then generate a horizontal grid from that count using literal color 9. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 1
+                  },
+                  "orientation": {
+                    "source": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_10",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count object_count. Then generate a vertical grid from that count using literal color 1. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 2
+                  },
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_11",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count object_count. Then generate a horizontal grid from that count using literal color 2. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "REGION_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 3
+                  },
+                  "orientation": {
+                    "source": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_12",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count region_count. Then generate a vertical grid from that count using literal color 3. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "RUN_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 4
+                  },
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_13",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count run_count. Then generate a horizontal grid from that count using literal color 4. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "color_source": {
+                    "literal": 5
+                  },
+                  "count_kind": {
+                    "literal": "COLOR_CELL_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 5
+                  },
+                  "orientation": {
+                    "source": "VERTICAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_14",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count color_cell_count. Then generate a vertical grid from that count using literal color 5. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "COUNT_STRUCTURES",
+                "params": {
+                  "count_kind": {
+                    "literal": "OBJECT_COUNT"
+                  }
+                }
+              },
+              {
+                "macro_id": "GENERATE_FROM_COUNT",
+                "params": {
+                  "color_source": {
+                    "literal": 6
+                  },
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  },
+                  "shape_source": {
+                    "source": "SAME_AS_INPUT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "two_step_count_generate_15",
+      "category": "TWO_STEP_TYPED_CHAIN",
+      "difficulty_level": "typed_chain",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Count"
+        ],
+        [
+          "Count",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "expected_parameter_contract": [
+        "count_kind",
+        "shape_source",
+        "color_source",
+        "orientation"
+      ],
+      "natural_language_instruction": "First count object_count. Then generate a horizontal grid from that count using literal color 6. Return exactly the two declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "COUNT_STRUCTURES",
+        "GENERATE_FROM_COUNT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "largest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_object_01",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Objects"
+        ],
+        [
+          "Objects",
+          "SelectedObject"
+        ],
+        [
+          "SelectedObject",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "expected_parameter_contract": [
+        "selector",
+        "operation"
+      ],
+      "natural_language_instruction": "Find objects, select the largest object, then crop it back to a grid. Return exactly these three Macro steps with literal wrapper syntax.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "smallest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_object_02",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Objects"
+        ],
+        [
+          "Objects",
+          "SelectedObject"
+        ],
+        [
+          "SelectedObject",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "expected_parameter_contract": [
+        "selector",
+        "operation"
+      ],
+      "natural_language_instruction": "Find objects, select the smallest object, then crop it back to a grid. Return exactly these three Macro steps with literal wrapper syntax.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "unique_area"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_object_03",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Objects"
+        ],
+        [
+          "Objects",
+          "SelectedObject"
+        ],
+        [
+          "SelectedObject",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "expected_parameter_contract": [
+        "selector",
+        "operation"
+      ],
+      "natural_language_instruction": "Find objects, select the unique_area object, then crop it back to a grid. Return exactly these three Macro steps with literal wrapper syntax.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "largest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_object_04",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Objects"
+        ],
+        [
+          "Objects",
+          "SelectedObject"
+        ],
+        [
+          "SelectedObject",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "expected_parameter_contract": [
+        "selector",
+        "operation"
+      ],
+      "natural_language_instruction": "Find objects, select the largest object, then crop it back to a grid. Return exactly these three Macro steps with literal wrapper syntax.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_OBJECTS",
+                "params": {}
+              },
+              {
+                "macro_id": "SELECT_OBJECT",
+                "params": {
+                  "selector": {
+                    "literal": "smallest"
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_OBJECT",
+                "params": {
+                  "operation": {
+                    "literal": "crop"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_object_05",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Objects"
+        ],
+        [
+          "Objects",
+          "SelectedObject"
+        ],
+        [
+          "SelectedObject",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "expected_parameter_contract": [
+        "selector",
+        "operation"
+      ],
+      "natural_language_instruction": "Find objects, select the smallest object, then crop it back to a grid. Return exactly these three Macro steps with literal wrapper syntax.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_OBJECTS",
+        "SELECT_OBJECT",
+        "TRANSFORM_OBJECT"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "source": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_path_01",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Graph"
+        ],
+        [
+          "Graph",
+          "Path"
+        ],
+        [
+          "Path",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "expected_parameter_contract": [
+        "direction",
+        "orientation"
+      ],
+      "natural_language_instruction": "Find a path, trace it in endpoint order, then serialize it to a horizontal grid. Return exactly the three declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "source": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "source": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_path_02",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Graph"
+        ],
+        [
+          "Graph",
+          "Path"
+        ],
+        [
+          "Path",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "expected_parameter_contract": [
+        "direction",
+        "orientation"
+      ],
+      "natural_language_instruction": "Find a path, trace it in endpoint order, then serialize it to a vertical grid. Return exactly the three declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "source": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_path_03",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Graph"
+        ],
+        [
+          "Graph",
+          "Path"
+        ],
+        [
+          "Path",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "expected_parameter_contract": [
+        "direction",
+        "orientation"
+      ],
+      "natural_language_instruction": "Find a path, trace it in endpoint order, then serialize it to a horizontal grid. Return exactly the three declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "source": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "source": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_path_04",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Graph"
+        ],
+        [
+          "Graph",
+          "Path"
+        ],
+        [
+          "Path",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "expected_parameter_contract": [
+        "direction",
+        "orientation"
+      ],
+      "natural_language_instruction": "Find a path, trace it in endpoint order, then serialize it to a vertical grid. Return exactly the three declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "FIND_PATH",
+                "params": {}
+              },
+              {
+                "macro_id": "TRACE_PATH",
+                "params": {
+                  "direction": {
+                    "source": "PATH_ENDPOINT_ORDER"
+                  }
+                }
+              },
+              {
+                "macro_id": "SERIALIZE_PATH",
+                "params": {
+                  "orientation": {
+                    "source": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_path_05",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Graph"
+        ],
+        [
+          "Graph",
+          "Path"
+        ],
+        [
+          "Path",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "expected_parameter_contract": [
+        "direction",
+        "orientation"
+      ],
+      "natural_language_instruction": "Find a path, trace it in endpoint order, then serialize it to a horizontal grid. Return exactly the three declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "FIND_PATH",
+        "TRACE_PATH",
+        "SERIALIZE_PATH"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_sequence_01",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "expected_parameter_contract": [
+        "orientation",
+        "position",
+        "operation"
+      ],
+      "natural_language_instruction": "Extract horizontal sequence position 0, reverse it, then rebuild a horizontal grid. Return exactly the three declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_sequence_02",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "expected_parameter_contract": [
+        "orientation",
+        "position",
+        "operation"
+      ],
+      "natural_language_instruction": "Extract vertical sequence position 0, reverse it, then rebuild a vertical grid. Return exactly the three declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_sequence_03",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "expected_parameter_contract": [
+        "orientation",
+        "position",
+        "operation"
+      ],
+      "natural_language_instruction": "Extract horizontal sequence position 0, reverse it, then rebuild a horizontal grid. Return exactly the three declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "VERTICAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_sequence_04",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "expected_parameter_contract": [
+        "orientation",
+        "position",
+        "operation"
+      ],
+      "natural_language_instruction": "Extract vertical sequence position 0, reverse it, then rebuild a vertical grid. Return exactly the three declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    },
+    {
+      "canonical_program": {
+        "hypotheses": [
+          {
+            "hypothesis_id": "canonical",
+            "steps": [
+              {
+                "macro_id": "EXTRACT_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  },
+                  "position": {
+                    "literal": 0
+                  }
+                }
+              },
+              {
+                "macro_id": "TRANSFORM_SEQUENCE",
+                "params": {
+                  "operation": {
+                    "literal": "reverse"
+                  }
+                }
+              },
+              {
+                "macro_id": "BUILD_GRID_FROM_SEQUENCE",
+                "params": {
+                  "orientation": {
+                    "literal": "HORIZONTAL"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "case_id": "three_step_sequence_05",
+      "category": "THREE_STEP_COMPOSITION",
+      "difficulty_level": "composition",
+      "expected_input_output_types": [
+        [
+          "Grid",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Sequence"
+        ],
+        [
+          "Sequence",
+          "Grid"
+        ]
+      ],
+      "expected_macro_ids": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "expected_parameter_contract": [
+        "orientation",
+        "position",
+        "operation"
+      ],
+      "natural_language_instruction": "Extract horizontal sequence position 0, reverse it, then rebuild a horizontal grid. Return exactly the three declared Macro steps.",
+      "registry_version": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+      "required_macro_family": [
+        "EXTRACT_SEQUENCE",
+        "TRANSFORM_SEQUENCE",
+        "BUILD_GRID_FROM_SEQUENCE"
+      ],
+      "schema_version": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa"
+    }
+  ],
+  "category_counts": {
+    "PARAMETER_CONTRACT": 15,
+    "SINGLE_MACRO": 15,
+    "THREE_STEP_COMPOSITION": 15,
+    "TWO_STEP_TYPED_CHAIN": 15
+  },
+  "creation_timestamp_utc": "2026-09-11T13:59:44.368278+00:00",
+  "generation_method": "deterministic compiler-reachable templates derived from the current Macro registry and compiler",
+  "inventory_limitations": {
+    "ALIGN_OBJECTS": "existing compiler returns an explicit deterministic-reference-object failure",
+    "COMPLETE_PATTERN": "existing compiler returns an explicit period-resolver failure",
+    "CONNECT_STRUCTURES": "no compiler branch",
+    "COPY_OBJECT": "existing compiler returns an explicit symbolic-placement failure",
+    "PROPAGATE_PATTERN": "no compiler branch",
+    "REPAIR_PATTERN": "existing compiler returns an explicit period-resolver failure",
+    "REPEAT_UNTIL_BOUNDARY": "no compiler branch",
+    "SPLIT_BY_SEPARATOR": "no compiler branch"
+  },
+  "no_arc_data_used": true,
+  "no_arc_solutions_used": true,
+  "prompt_version": "macro_api_comprehension_prompt.v1_frozen_v2_contract",
+  "registry_hash": "d7309e5f8c4f255c90a2c9866254c85710c627854c0438a784e9598dfa490951",
+  "schema_hash": "48edf7f64ca095ce75ebf640a542366e10fc784b1a81ad82f6f5837b0ea658fa",
+  "version": "macro_api_comprehension_benchmark_v1"
+}

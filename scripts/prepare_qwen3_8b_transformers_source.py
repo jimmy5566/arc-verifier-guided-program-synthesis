@@ -20,10 +20,13 @@ INCLUDED_FILES = (
     "configs/frozen_llm_program_synthesis_v2_qwen3_8b_transformers.json",
     "configs/qwen3_8b_transformers_scaling_smoke_8.json",
     "configs/llm_program_synthesis_v2_pilot_50_qwen3_8b.json",
+    "configs/macro_api_comprehension_benchmark_v1.json",
+    "configs/MACRO_API_COMPREHENSION_BENCHMARK_V1_FROZEN_CONFIG.json",
     "scripts/run_qwen3_8b_transformers_preflight.py",
     "scripts/run_qwen3_8b_one_task_smoke.py",
     "scripts/run_qwen3_8b_four_gpu_preflight.py",
     "scripts/run_qwen3_8b_v2_parallel.py",
+    "scripts/run_macro_api_comprehension_benchmark.py",
 )
 
 
@@ -47,9 +50,9 @@ def main() -> None:
     shutil.make_archive(str(dataset / "ARC2"), "gztar", root_dir=dataset, base_dir="ARC2")
     shutil.rmtree(project)
     metadata = {
-        "title": "ARC2 Qwen3-8B V2 Runtime Source",
+        "title": "ARC2 Qwen3-8B Macro API Benchmark Source",
         "subtitle": "Private offline source attachment; no ARC solution data.",
-        "description": "Direct-Transformers Qwen3-8B V2 source and frozen configuration for ARC Prize 2026 competition runtime.",
+        "description": "Direct-Transformers Qwen3-8B source and frozen Macro API comprehension benchmark; no ARC data or solutions.",
         "id": f"{args.owner}/{args.dataset_slug}",
         "licenses": [{"name": "other"}],
     }
