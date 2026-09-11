@@ -112,6 +112,12 @@ def report(result: Mapping[str, Any], tests: int) -> str:
 
 {failure_lines}
 
+## 限制与解释
+
+- C1 的主要失败为 `PARAMETER_FAILURE/INVALID_SYMBOLIC_PARAMETER`；C2 的主要失败为参数 wrapper 失配及结构约束拒绝。
+- C3 的 compiler-valid 是由预先冻结的全局 compiler-valid skeleton/slot grammar 保证，而不是从 canonical answer 选择或自动修补得到。
+- C3 skeleton canonical-sequence-match 为 {c3['structured']['canonical_sequence_match']}/60；因此 100% compile-valid 只证明 API/编译接口可达，**不**证明 transformation intent 或 ARC reasoning 已正确。
+
 ## 结论
 
 - BEST_API_PIPELINE: **{result['best_api_pipeline']}**；状态: **{result['api_status']}**。
