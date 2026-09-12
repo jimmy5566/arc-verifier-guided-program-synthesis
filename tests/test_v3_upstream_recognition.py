@@ -63,7 +63,7 @@ def test_track_u_source_has_no_downstream_or_gold_import_and_freeze_hashes_match
         "recognizer": ROOT / "src/v3/recognition/recognizer_interface.py",
         "runner": ROOT / "scripts/run_v3_rule_recognition.py",
     }
-    assert config["upstream_evidence_version"] == "U9"
+    assert config["upstream_evidence_version"] == "U10"
     assert all(hashlib.sha256(path.read_bytes()).hexdigest().upper() == config["frozen_source_sha256"][name] for name, path in paths.items())
     assert "PREDICTIONS_FROZEN_BEFORE_GOLD_SCORING" in source_text
 

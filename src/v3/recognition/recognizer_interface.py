@@ -63,7 +63,7 @@ def _relation_summary(graph: Any) -> dict[str, Any]:
         "a": True,
         "e": edge_count,
         "c": correspondence_count,
-        "l": sorted(labels)[:8],
+        "l": sorted(labels)[:5],
     }
 
 
@@ -77,7 +77,7 @@ def _object_summary(objects: Sequence[Any]) -> dict[str, Any]:
         ordered = sorted(items, key=lambda item: (item.area, item.bbox))
         # tuple format: colour, count, min-area, max-area, representative bbox
         by_color.append([color, len(ordered), ordered[0].area, ordered[-1].area, list(ordered[0].bbox)])
-    return {"n": len(objects), "by_color": by_color[:4], "truncated": len(by_color) > 4}
+    return {"n": len(objects), "by_color": by_color[:3], "truncated": len(by_color) > 3}
 
 
 def _symmetry_summary(grid: Any) -> dict[str, bool]:
@@ -122,10 +122,7 @@ def _facts(evidence: EvidenceBundle, cross_pair: CrossPairEvidence) -> dict[str,
             },
             "all_intersections_nonempty": bool(cross_pair.invariants["all_pair_candidate_intersection_nonempty"]),
         },
-        "format": {
-            "pair_fields": {"i": "input object summary [color,count,min_area,max_area,bbox]", "o": "output object summary", "x": "changed [count,coordinate sample,bbox,truncated]", "r": "[directions,distances,steps,counts,terminations]", "g": "spatial relation graph summary", "s": "[input symmetry,output symmetry]; h/v/d"},
-            "all_pixels_are_in_train_grids": True,
-        },
+        "format": "i/o=object [color,count,min_area,max_area,bbox]; x=[changed_count,sample,bbox,truncated]; r=[direction,distance,step,count,termination]; g=relations; s=[input,output] symmetry h/v/d; exact pixels are in train_grids",
     }
 
 
