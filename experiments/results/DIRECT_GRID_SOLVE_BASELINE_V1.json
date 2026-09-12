@@ -1,0 +1,62 @@
+{
+  "backend": "Transformers BF16",
+  "cohort_task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8",
+  "condition": "D0_RAW_GRIDS_ONLY",
+  "context_window": 32768,
+  "direct_advantage_cases": 1,
+  "direct_exact_tasks": 1,
+  "direct_solver_status": "DIRECT_SOLVER_VERY_WEAK",
+  "experiment_id": "DIRECT_GRID_SOLVE_BASELINE_V1",
+  "failure_taxonomy": {
+    "INVALID_GRID_OUTPUT": 10,
+    "MISSED_ITERATION": 2,
+    "OTHER_GRID_ERROR": 1,
+    "OVER_TRANSFORM": 1,
+    "PARTIAL_TRANSFORMATION": 1,
+    "RIGHT_SHAPE_WRONG_COLOR": 2,
+    "WRONG_CONDITIONAL_RULE": 2,
+    "WRONG_DIMENSION": 6,
+    "WRONG_ITERATION_COUNT": 4
+  },
+  "generation_seconds_sum": 1260.454380706,
+  "kernel_wall_seconds": 596.838060217,
+  "leakage_audit": [
+    "Direct prediction bytes and SHA256 were established before target files were opened.",
+    "Kaggle inference source only uses local model files plus challenge train pairs and test inputs.",
+    "No public/held-out/challenge inference, web access, target, oracle, task label, semantic IR, capability library, compiler, executor, verifier, or search dependency is present in the inference runner."
+  ],
+  "metrics": {
+    "any_of_2_test_exact": 0.03333333333333333,
+    "color_set_valid": 0.6666666666666666,
+    "mean_cell_accuracy": 0.3329209504432321,
+    "mean_changed_cell_precision": 0.2627395993836672,
+    "mean_changed_cell_recall": 0.22226190476190474,
+    "output_shape_correct": 0.4666666666666667,
+    "top1_test_exact": 0.03333333333333333,
+    "valid_grid_rate": 0.6666666666666666
+  },
+  "model": "Qwen3-8B",
+  "prediction_freeze_hash": "cdb70eccd744f1153c5dfb3c98d086442eb8f9426487008dd30619557486cfe0",
+  "prompt_preflight": {
+    "max_prompt_tokens": 12403,
+    "median_prompt_tokens": 1563.0,
+    "min_prompt_tokens": 333,
+    "task_count": 30,
+    "truncated_tasks": 0
+  },
+  "public_heldout_inference": false,
+  "recognition_artifact": "GRID_SEMANTIC_RECOGNITION_V1",
+  "recognition_overlap": {
+    "recognition_fail_direct_exact": 1,
+    "recognition_fail_direct_fail": 25,
+    "recognition_success_direct_exact": 0,
+    "recognition_success_direct_fail": 4
+  },
+  "recognition_success_count": 4,
+  "scoring_seconds": 0.12148510001134127,
+  "semantic_interface_signal": "PARTIAL",
+  "status": "COMPLETE_SCORED_AFTER_PREDICTION_FREEZE",
+  "structured_capability_representable": 1,
+  "task_count": 30,
+  "web_access": false
+}

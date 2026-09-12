@@ -30,6 +30,7 @@ INCLUDED_FILES = (
     "configs/CONTEXTUAL_PARAMETER_REASONING_V1_FROZEN_CONFIG.json",
     "configs/ARC_SEMANTIC_IR_V1_SCHEMA.json",
     "configs/GRID_SEMANTIC_RECOGNITION_V1_FROZEN_CONFIG.json",
+    "configs/DIRECT_GRID_SOLVE_BASELINE_V1_FROZEN_CONFIG.json",
     "configs/ARC_PARALLEL_DIAGNOSTIC_V2_FROZEN_CONFIG.json",
     "scripts/run_qwen3_8b_transformers_preflight.py",
     "scripts/run_qwen3_8b_one_task_smoke.py",
@@ -44,6 +45,7 @@ INCLUDED_FILES = (
     "scripts/run_contextual_parameter_reasoning.py",
     "scripts/run_grid_semantic_recognition.py",
     "scripts/run_parallel_semantic_ablation.py",
+    "scripts/run_direct_grid_solve_baseline_v1.py",
 )
 
 
@@ -68,6 +70,8 @@ def main() -> None:
     runtime_cohort = project / "configs/grid_semantic_recognition_v1_runtime_cohort.json"
     runtime_cohort.parent.mkdir(parents=True, exist_ok=True)
     runtime_cohort.write_text(json.dumps({"task_ids": cohort["task_ids"], "task_ids_public": False}, indent=2) + "\n", encoding="utf-8")
+    direct_runtime_cohort = project / "configs/direct_grid_solve_baseline_v1_runtime_cohort.json"
+    direct_runtime_cohort.write_text(json.dumps({"task_ids": cohort["task_ids"], "task_ids_public": False}, indent=2) + "\n", encoding="utf-8")
     if list(project.rglob("*solutions*.json")):
         raise RuntimeError("solution-bearing files are forbidden from the source attachment")
     shutil.make_archive(str(dataset / "ARC2"), "gztar", root_dir=dataset, base_dir="ARC2")
