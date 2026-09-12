@@ -17,6 +17,7 @@ from recognition.semantic_interfaces import (
     normalize_slots,
     parse_slot_response,
 )
+from scripts.run_parallel_semantic_ablation import _infer_one
 
 
 def _task() -> ARCTask:
@@ -104,6 +105,25 @@ def test_runtime_fragmentation_fix_is_set_before_transformers_import() -> None:
     text = (root / "scripts/run_parallel_semantic_ablation.py").read_text(encoding="utf-8")
     worker = text[text.index("def _worker"):text.index("def _buckets")]
     assert worker.index("PYTORCH_ALLOC_CONF") < worker.index("from llm.models")
+
+
+class _FakeGenerated:
+    text = "\n".join(f"{key}={values[0]}" for key, values in candidate_ontology().items())
+    prompt_tokens = 1
+    completion_tokens = 1
+    elapsed_seconds = 0.0
+
+
+class _FakeProvider:
+    def generate_text(self, _prompt: str, _config: object) -> _FakeGenerated:
+        return _FakeGenerated()
+
+
+def test_track_c_runner_resolves_all_prompt_builders() -> None:
+    provider = _FakeProvider()
+    for condition in ("C1_FLAT_TYPED_SLOTS", "C2_FINITE_CANDIDATE_CLASSIFICATION"):
+        result = _infer_one(provider, _task(), condition, object())
+        assert result["request_count"] == 1
 
 
 def test_finalizer_is_the_explicit_local_oracle_boundary() -> None:

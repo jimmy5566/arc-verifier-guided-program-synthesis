@@ -44,6 +44,7 @@ def _infer_one(provider: Any, task: Any, condition: str, generation: Any) -> dic
         HIERARCHICAL,
         SLOT_ORDER,
         candidate_prompt_for,
+        flat_prompt_for,
         family_prompt_for,
         hierarchical_slot_prompt_for,
         parse_family_response,
