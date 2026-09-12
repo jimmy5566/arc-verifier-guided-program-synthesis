@@ -133,11 +133,23 @@ def _tokenization_preflight(task_ids: tuple[str, ...], challenge_path: Path, mod
         for task_id in task_ids:
             if condition in ("A0_RAW_GRID_ONLY", "A1_DETERMINISTIC_FEATURES_ONLY", "A2_RAW_PLUS_CURRENT_FEATURES", "A3_RAW_PLUS_OBJECT_RELATION_GRAPH", "M0_QWEN3_8B", "M2_SPECIALIZED_ARC_SFT"):
                 prompt = _full_json_prompt(tasks[task_id], "A2_RAW_PLUS_CURRENT_FEATURES" if condition.startswith("M") else condition)
+            elif condition == "C1_FLAT_TYPED_SLOTS":
+                from recognition.semantic_interfaces import flat_prompt_for
+                prompt = flat_prompt_for(tasks[task_id])
+            elif condition == "C2_FINITE_CANDIDATE_CLASSIFICATION":
+                from recognition.semantic_interfaces import candidate_prompt_for
+                prompt = candidate_prompt_for(tasks[task_id])
+            elif condition == "C3_HIERARCHICAL_SLOT_CLASSIFICATION":
+                from recognition.semantic_interfaces import family_prompt_for, hierarchical_slot_prompt_for
+                # The second prompt depends on a generated family.  Its worst
+                # possible token length is measured deterministically over the
+                # finite frozen family ontology, still without generation.
+                from recognition.arc_semantic_ir import FAMILIES
+                family_prompt = family_prompt_for(tasks[task_id])
+                slot_prompts = [hierarchical_slot_prompt_for(tasks[task_id], family) for family in FAMILIES]
+                prompt = max([family_prompt, *slot_prompts], key=len)
             else:
-                # C prompts are necessarily much smaller than the corresponding
-                # full JSON schema prompt; retain a conservative full-prompt
-                # count as a transport-only upper-bound for this gate.
-                prompt = _full_json_prompt(tasks[task_id], "A2_RAW_PLUS_CURRENT_FEATURES")
+                raise ValueError(f"unsupported preflight condition: {condition}")
             encoded = tokenizer.apply_chat_template(
                 [{"role": "user", "content": prompt}], add_generation_prompt=True,
                 enable_thinking=False, tokenize=True, return_tensors="pt", return_dict=True,
