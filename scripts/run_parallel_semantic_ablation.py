@@ -136,9 +136,9 @@ def _tokenization_preflight(task_ids: tuple[str, ...], challenge_path: Path, mod
                 prompt = _full_json_prompt(tasks[task_id], "A2_RAW_PLUS_CURRENT_FEATURES")
             encoded = tokenizer.apply_chat_template(
                 [{"role": "user", "content": prompt}], add_generation_prompt=True,
-                enable_thinking=False, tokenize=True, return_tensors="pt",
+                enable_thinking=False, tokenize=True, return_tensors="pt", return_dict=True,
             )
-            counts.append(int(encoded.shape[-1]))
+            counts.append(int(encoded["input_ids"].shape[-1]))
         by_condition[condition] = {"min_prompt_tokens": min(counts), "max_prompt_tokens": max(counts), "mean_prompt_tokens": round(sum(counts) / len(counts), 2)}
     print(json.dumps({"status": "TOKENIZATION_PREFLIGHT_COMPLETE_NO_GENERATION", "conditions": by_condition, "task_count": len(task_ids)}, sort_keys=True))
 
