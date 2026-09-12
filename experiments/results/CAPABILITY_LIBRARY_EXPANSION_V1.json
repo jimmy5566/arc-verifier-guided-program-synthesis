@@ -1,0 +1,105 @@
+{
+  "added_capabilities": [
+    {
+      "capability_id": "CAP_DIAGONAL_SEQUENCE_TRAIL_V1",
+      "input_type": "Sequence",
+      "marginal_coverage_gain": 1,
+      "output_type": "Grid",
+      "parameters": [
+        "repeats",
+        "background"
+      ],
+      "preconditions": "Finite nonempty ARC-color sequence and positive repeat count.",
+      "semantics": "Construct a square diagonal trail from a 1-D color sequence.",
+      "test_exact_coverage": 1
+    },
+    {
+      "capability_id": "CAP_REPEAT_COPY_TRANSLATION_V1",
+      "input_type": "Grid",
+      "marginal_coverage_gain": 0,
+      "output_type": "Grid",
+      "parameters": [
+        "dr",
+        "dc",
+        "repeats",
+        "background"
+      ],
+      "preconditions": "Nonempty foreground, nonzero direction, all copies in bounds.",
+      "semantics": "Preserve a foreground and add a finite series of copies translated from the original.",
+      "test_exact_coverage": 0
+    },
+    {
+      "capability_id": "CAP_REPEAT_COPY_UNTIL_BOUNDARY_V1",
+      "input_type": "Grid",
+      "marginal_coverage_gain": 0,
+      "output_type": "Grid",
+      "parameters": [
+        "dr",
+        "dc",
+        "background"
+      ],
+      "preconditions": "Nonempty foreground and nonzero direction.",
+      "semantics": "Preserve a foreground and add every original-relative translated copy while it remains in bounds.",
+      "test_exact_coverage": 0
+    },
+    {
+      "capability_id": "CAP_TILE_MASK_AT_ANCHORS_V1",
+      "input_type": "Mask",
+      "marginal_coverage_gain": 0,
+      "output_type": "Grid",
+      "parameters": [
+        "shape",
+        "anchors",
+        "color",
+        "background"
+      ],
+      "preconditions": "All anchors fit the target canvas.",
+      "semantics": "Render one binary motif at an explicit finite set of anchors.",
+      "test_exact_coverage": 0
+    },
+    {
+      "capability_id": "CAP_TRANSFER_EXTERNAL_MOTIF_TO_FRAME_V1",
+      "input_type": "Grid",
+      "marginal_coverage_gain": 0,
+      "output_type": "Grid",
+      "parameters": [
+        "frame_color"
+      ],
+      "preconditions": "At least one frame and a unique external motif of matching interior extent.",
+      "semantics": "Move unique shape-matched external motifs into closed monochrome rectangular frames.",
+      "test_exact_coverage": 0
+    }
+  ],
+  "after_rate": 0.03333333333333333,
+  "after_representable": 1,
+  "audit_protocol": "generic train-derived candidates -> train exact -> development test exact oracle check; no recognition imports, outputs, or scores",
+  "before_representable": 0,
+  "experiment_id": "CAPABILITY_LIBRARY_EXPANSION_V1",
+  "family_coverage": {
+    "composition": {
+      "covered": 0,
+      "total": 2
+    },
+    "conditional": {
+      "covered": 0,
+      "total": 4
+    },
+    "iteration_repeat": {
+      "covered": 0,
+      "total": 15
+    },
+    "output_construction": {
+      "covered": 1,
+      "total": 1
+    },
+    "relational": {
+      "covered": 0,
+      "total": 8
+    }
+  },
+  "leakage_audit": "task IDs, candidate programs, grids, and solutions stay in ignored private artifacts; public aggregate contains no per-task data.",
+  "runtime_seconds": 7.654412600008072,
+  "status": "COMPLETE",
+  "task_count": 30,
+  "threshold_status": "CAPABILITY_STILL_BLOCKED"
+}
