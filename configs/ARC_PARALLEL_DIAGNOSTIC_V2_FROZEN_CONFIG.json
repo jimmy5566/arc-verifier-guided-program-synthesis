@@ -1,6 +1,6 @@
 {
   "experiment_id": "ARC_PARALLEL_DIAGNOSTIC_V2",
-  "status": "FROZEN_BEFORE_NEW_INFERENCE",
+  "status": "FROZEN_AFTER_CONTEXT_PREFLIGHT",
   "cohort": {
     "source": "DOWNSTREAM_CAPABILITY_GAP_FORENSICS_V1 private frozen cohort",
     "split": "development",
@@ -46,6 +46,8 @@
       "A3_RAW_PLUS_OBJECT_RELATION_GRAPH"
     ],
     "only_variable": "input_representation",
+    "context_window": 32768,
+    "representation_bound": "A3 retains full raw grids and a deterministic bounded object graph (four canonical components per color; sparse nearest-sector edges; one correspondence candidate per source) after a pre-inference context-size audit. No semantic prediction artifact existed before this bound was frozen.",
     "a2_reused_prediction_freeze_hash": "b8df3ae0e79a20b6e39ce36ab8117eda8ef45fbd9ea2bdee88454ccbbe5dfb5a"
   },
   "track_b": {

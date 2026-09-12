@@ -143,25 +143,64 @@ def _edge(left: dict[str, Any], right: dict[str, Any]) -> list[dict[str, Any]]:
 
 def _object_graph(grid: np.ndarray, name: str) -> dict[str, Any]:
     objects = _components(grid)
-    nodes = [{"object_id": f"{name}_{index}", **item} for index, item in enumerate(objects)]
+    # Dense multicolour grids can contain hundreds of isolated one-cell noise
+    # components.  Full pixels remain in A3's raw-grid channel; the graph has
+    # a deterministic bounded node budget: retain at most four canonical
+    # components per colour, ordered by area then geometry.  This is
+    # independent of task identity or output and is necessary to keep the
+    # structured representation consumable by the fixed model context.
+    by_color: dict[int, list[dict[str, Any]]] = {}
+    for item in objects:
+        by_color.setdefault(item["color"], []).append(item)
+    retained: list[dict[str, Any]] = []
+    suppressed: dict[int, int] = {}
+    for color, values in sorted(by_color.items()):
+        selected = sorted(values, key=lambda item: (-item["area"], item["bbox"], item["shape_signature"]))[:4]
+        retained.extend(selected)
+        suppressed[color] = len(values) - len(selected)
+    retained.sort(key=lambda item: (item["bbox"], item["color"], item["shape_signature"]))
+    nodes = [{"object_id": f"{name}_{index}", **item} for index, item in enumerate(retained)]
+    # A complete graph is not an observation a bounded-context recognizer can
+    # consume.  Preserve *all* object nodes, but retain only deterministic
+    # nearest-neighbour relations (one nearest node for each cardinal sector)
+    # plus containment/overlap/touching relations.  This is a graph encoding,
+    # not a task-dependent lossy selection.
     edges: list[dict[str, Any]] = []
+    seen_edges: set[tuple[str, str]] = set()
     for source_index, source in enumerate(nodes):
+        sectors: dict[str, tuple[float, dict[str, Any]]] = {}
         for target_index, target in enumerate(nodes):
             if source_index == target_index:
                 continue
-            for relationship in _edge(source, target):
-                edges.append({"source": source["object_id"], "target": target["object_id"], **relationship})
-    return {"nodes": nodes, "edges": edges}
+            dr, dc = target["centroid"][0] - source["centroid"][0], target["centroid"][1] - source["centroid"][1]
+            sector = "RIGHT" if abs(dc) >= abs(dr) and dc > 0 else "LEFT" if abs(dc) >= abs(dr) else "DOWN" if dr > 0 else "UP"
+            distance = abs(dr) + abs(dc)
+            if sector not in sectors or (distance, target["object_id"]) < (sectors[sector][0], sectors[sector][1]["object_id"]):
+                sectors[sector] = (distance, target)
+        for _distance, target in sectors.values():
+            relationships = _edge(source, target)
+            key = (source["object_id"], target["object_id"])
+            if relationships and key not in seen_edges:
+                seen_edges.add(key)
+                edges.append({"source": source["object_id"], "target": target["object_id"], "relations": [item["relation"] for item in relationships], "delta": relationships[0]["delta"]})
+    return {
+        "nodes": nodes,
+        "edge_fields": ["source", "target", "relations", "delta"],
+        "edges": [[edge["source"], edge["target"], edge["relations"], edge["delta"]] for edge in edges],
+        "suppressed_component_count_by_color": [[color, count] for color, count in sorted(suppressed.items()) if count],
+    }
 
 
 def _correspondences(source_graph: dict[str, Any], target_graph: dict[str, Any]) -> list[dict[str, Any]]:
     links: list[dict[str, Any]] = []
     for source in source_graph["nodes"]:
+        candidates: list[tuple[int, str, dict[str, Any]]] = []
         for target in target_graph["nodes"]:
             exact_shape = source["shape_signature"] == target["shape_signature"]
             size_match = source["area"] == target["area"]
             color_match = source["color"] == target["color"]
-            if not (exact_shape or size_match or color_match):
+            score = 4 * int(exact_shape) + 2 * int(size_match) + int(color_match)
+            if not score:
                 continue
             delta = [round(target["centroid"][0] - source["centroid"][0], 3), round(target["centroid"][1] - source["centroid"][1], 3)]
             labels = []
@@ -175,16 +214,10 @@ def _correspondences(source_graph: dict[str, Any], target_graph: dict[str, Any])
                 labels.append("MOVED_RELATIVE")
             if exact_shape and not color_match:
                 labels.append("RECOLORED")
-            links.append(
-                {
-                    "source": source["object_id"],
-                    "target": target["object_id"],
-                    "relations": labels,
-                    "translation_delta": delta,
-                    "color_delta": target["color"] - source["color"],
-                    "size_delta": target["area"] - source["area"],
-                }
-            )
+            candidates.append((score, target["object_id"], {"source": source["object_id"], "target": target["object_id"], "relations": labels, "translation_delta": delta, "color_delta": target["color"] - source["color"], "size_delta": target["area"] - source["area"]}))
+        # Keep a single best candidate per source, avoiding quadratic
+        # same-color singleton correspondences on dense ARC grids.
+        links.extend(item for _score, _target, item in sorted(candidates, key=lambda item: (-item[0], item[1]))[:1])
     return links
 
 
@@ -216,7 +249,11 @@ def relation_graph_features(task: ARCTask) -> dict[str, Any]:
             {
                 "input_graph": source_graph,
                 "output_graph": target_graph,
-                "candidate_correspondences": _correspondences(source_graph, target_graph),
+                "correspondence_fields": ["source", "target", "relations", "translation_delta", "color_delta", "size_delta"],
+                "candidate_correspondences": [
+                    [item["source"], item["target"], item["relations"], item["translation_delta"], item["color_delta"], item["size_delta"]]
+                    for item in _correspondences(source_graph, target_graph)
+                ],
             }
         )
     return {"train_pair_relation_graphs": pairs, "policy": "deterministic train-pair object graph; object IDs are local temporary indexes"}
