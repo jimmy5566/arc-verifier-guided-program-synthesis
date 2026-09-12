@@ -126,14 +126,18 @@ def extract_evidence(train_pairs: Iterable[tuple[np.ndarray, np.ndarray]], *, a3
         input_background, output_background = _background(source_values), _background(target_values)
         source_colors = frozenset(int(value) for value in np.unique(source_values) if int(value) != input_background)
         output_colors = frozenset(int(value) for value in np.unique(target_values) if int(value) != output_background)
-        changed_target_colors = frozenset(int(target_values[row, col]) for row, col in changed if int(target_values[row, col]) != output_background)
+        # A color that becomes the target background is still a real target
+        # parameter when a rule recolors the source background.  Candidate
+        # generation must retain changed-cell facts rather than infer that the
+        # most frequent output color is semantically unselectable.
+        changed_target_colors = frozenset(int(target_values[row, col]) for row, col in changed)
         directions, steps, counts, termination = _repeat_candidates(input_objects, output_objects, source_values.shape)
         pairs.append(PairEvidence(source_values, target_values, input_objects, output_objects, changed, {
             "DIRECTION": directions,
             "DISTANCE": _distance_candidates(input_objects, output_objects, source_values.shape),
             "STEP": steps,
             "COUNT": counts,
-            "TARGET_COLOR": changed_target_colors or output_colors,
+            "TARGET_COLOR": changed_target_colors or frozenset(int(value) for value in np.unique(target_values)),
             "SOURCE_COLOR": source_colors,
             "REFERENCE_COLOR": source_colors,
             "TERMINATION": termination,

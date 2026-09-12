@@ -18,7 +18,12 @@ def candidates_for_pair(skeleton: RuleSkeleton, evidence: PairEvidence) -> dict[
     for slot in skeleton.required_slots:
         if slot is ParameterSlot.SELECTOR:
             background = min(((-int((evidence.input_grid == color).sum()), int(color)) for color in set(evidence.input_grid.flat)))[1]
-            colors = {f"COLOR:{int(color)}" for color in set(evidence.input_grid.flat) if int(color) != background}
+            # Background is normally not an object selector, but it is a
+            # canonical color class and must be selectable for rules such as
+            # "recolor the canvas background".  The executor already gives
+            # COLOR:<n> precise color semantics; this merely restores that
+            # valid class to the finite candidate space.
+            colors = {f"COLOR:{int(color)}" for color in set(evidence.input_grid.flat)}
             result[slot] = frozenset({"ALL_NON_BACKGROUND", "SMALLEST_OBJECT", *colors})
         else:
             result[slot] = frozenset(evidence.parameter_candidates.get(_EVIDENCE_KEY[slot], frozenset()))

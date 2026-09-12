@@ -13,10 +13,12 @@ from v3.evidence.cross_pair import intersect_candidates
 from v3.evidence.extractor import extract_evidence, extract_task_evidence
 from v3.parameters.joint_solver import infer_parameters
 from v3.pipeline import train_consistent_rule_specs
+from v3.recognition.recognizer_interface import parse_hypotheses, recognition_prompt
 from v3.schema.rule_skeleton import OperationId, ParameterSlot, RuleSkeleton
 from v3.schema.rule_spec import RuleSpec
 from v3.verification.verifier import HardVerifier
 from v3.execution.rule_executor import RuleExecutor
+from v3.diagnostics.backend_forensics import primary_failure_attribution, recolor_candidate_semantic_recall, semantic_sufficiency
 
 
 ROOT = Path(__file__).parents[1]
@@ -40,6 +42,21 @@ def test_evidence_bundle_reuses_a3_graph_and_excludes_test_data() -> None:
     assert bundle.invariants["pair_count"] == 1
     assert bundle.pairs[0].a3_relation_graph is not None
     assert 9 not in bundle.pairs[0].input_grid and 9 not in bundle.pairs[0].output_grid
+
+
+def test_upstream_prompt_normalizes_train_derived_numpy_facts_and_parser_rejects_bad_slots() -> None:
+    task = ARCTask(
+        "fixture",
+        (ARCExample(ARCGrid([[0, 1], [0, 0]]), ARCGrid([[0, 2], [0, 0]])),),
+        (ARCExample(ARCGrid([[9, 9]]), None),),
+    )
+    evidence = extract_task_evidence(task)
+    from v3.evidence.cross_pair import derive_cross_pair_evidence
+    prompt = recognition_prompt(task, evidence, derive_cross_pair_evidence(evidence), top_k=1)
+    assert json.loads(prompt)["train_grids"]["train_pairs"][0]["output"] == [[0, 2], [0, 0]]
+    assert "9" not in prompt
+    raw = json.dumps({"hypotheses": [{"family": "X", "operations": ["RECOLOR"], "required_slots": "$TARGET_COLOR"}]})
+    assert parse_hypotheses(raw, limit=1)[0] == ()
 
 
 def test_every_exposed_operation_has_real_executor_semantics_and_no_noop() -> None:
@@ -88,6 +105,41 @@ def test_vertical_slice_recolor() -> None:
         pairs.append((source, target))
     spec = _run(_skeleton("RECOLOR", OperationId.SELECT, OperationId.RECOLOR), pairs)
     assert spec.value(ParameterSlot.TARGET_COLOR) == 2
+
+
+def test_background_recolor_is_a_generic_color_selector_and_target_candidate() -> None:
+    pairs = []
+    for source in (
+        np.array([[7, 1, 7], [1, 7, 7]], dtype=int),
+        np.array([[2, 7, 7], [7, 2, 7]], dtype=int),
+    ):
+        target = source.copy(); target[target == 7] = 5
+        pairs.append((source, target))
+    evidence = extract_evidence(pairs)
+    inferred = infer_parameters(_skeleton("RECOLOR", OperationId.SELECT, OperationId.RECOLOR), evidence)
+    assert "COLOR:7" in inferred.candidates[ParameterSlot.SELECTOR]
+    assert 5 in inferred.candidates[ParameterSlot.TARGET_COLOR]
+    _run(_skeleton("RECOLOR", OperationId.SELECT, OperationId.RECOLOR), pairs)
+
+
+def test_backend_forensics_attributes_missing_skeleton_semantics_without_task_ids() -> None:
+    repeat_oracle = {
+        "iteration": {"mode": "PROGRESSIVE_EXPANSION", "step_rule": "UNIT_STEP"},
+        "semantic_parameters": {"color_policy": "SEQUENCE_FROM_MARKERS"},
+        "selection_criteria": [], "conditional_logic": {"enabled": False},
+    }
+    repeat = _skeleton("ITERATION", OperationId.SELECT, OperationId.REPEAT)
+    assert primary_failure_attribution(repeat_oracle, repeat, "VERIFICATION_FAILURE") == "SKELETON_LOST_RULE_SEMANTICS"
+    assert semantic_sufficiency(repeat_oracle, repeat) == (False, "SKELETON_LOST_RULE_SEMANTICS")
+    assert primary_failure_attribution({**repeat_oracle, "conditional_logic": {"enabled": True}}, None, "EXECUTION_CAPABILITY_FAILURE") == "MISSING_CANONICAL_OPERATION_CONDITIONAL_ROLE_LOGIC"
+
+
+def test_train_derived_candidate_semantic_recall_for_uniform_recolor() -> None:
+    source = np.array([[7, 1], [7, 7]], dtype=int)
+    target = np.array([[5, 1], [5, 5]], dtype=int)
+    skeleton = _skeleton("RECOLOR", OperationId.SELECT, OperationId.RECOLOR)
+    audit = recolor_candidate_semantic_recall(skeleton, extract_evidence([(source, target)]))
+    assert audit["assessable"] and audit["semantic_recall"] == audit["selector_recall"] == audit["target_color_recall"] == 1.0
 
 
 def test_vertical_slice_copy_move_and_instance_binding() -> None:
