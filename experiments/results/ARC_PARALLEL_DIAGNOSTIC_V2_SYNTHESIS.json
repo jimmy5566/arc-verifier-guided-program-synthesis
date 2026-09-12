@@ -1,0 +1,23 @@
+{
+  "experiment_id": "ARC_PARALLEL_DIAGNOSTIC_V2_SYNTHESIS",
+  "status": "COMPLETE_DETERMINISTIC_SYNTHESIS_NO_NEW_INFERENCE",
+  "frozen_tasks": {"count": 30, "split": "development_only", "task_ids_public": false, "task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8"},
+  "scope_audit": {"heldout_public_challenge_inference": false, "combined_best_rerun": false, "downstream_gate_in_recognition": false, "recognition_test_targets_or_oracle_seen_during_inference": false},
+  "track_a_input": {"semantic_success": {"A0_RAW_GRID_ONLY": "0/30 (0.0%)", "A1_DETERMINISTIC_FEATURES_ONLY": "2/30 (6.7%)", "A2_RAW_PLUS_CURRENT_FEATURES_REUSED_V1": "4/30 (13.3%)", "A3_RAW_PLUS_OBJECT_RELATION_GRAPH": "7/30 (23.3%)"}, "best": "A3_RAW_PLUS_OBJECT_RELATION_GRAPH", "gain_over_a2_pp": 10.0, "decision": "INPUT_REPRESENTATION_ALONE_INSUFFICIENT"},
+  "track_b_model": {"M0_QWEN3_8B": "4/30 (13.3%) reused", "M1_STRONGER_GENERIC": "M1_UNAVAILABLE_NO_EXISTING_ATTACHED_GENERIC_MODEL", "M2_SPECIALIZED_ARC_SFT": "0/30; 30/30 ARCSEMANTICIRV1 schema invalid", "decision": "MODEL_CAPACITY_UNRESOLVED"},
+  "track_c_interface": {"semantic_success": {"C0_CURRENT_FULL_JSON_IR_REUSED_V1": "4/30 (13.3%)", "C1_FLAT_TYPED_SLOTS": "1/30 (3.3%)", "C2_FINITE_CANDIDATE_CLASSIFICATION": "0/30 (0.0%)", "C3_HIERARCHICAL_SLOT_CLASSIFICATION": "0/30 (0.0%)"}, "schema_validity": {"C0": "66.7%", "C1": "86.7%", "C2": "70.0%", "C3": "100.0%"}, "interface_recovery": "0/30", "decision": "IR_INTERFACE_NOT_MAJOR_BOTTLENECK"},
+  "track_d_capability": {"before_representable": "0/30", "after_representable": "1/30 (3.3%)", "iteration": "0/15", "relational": "0/8", "conditional": "0/4", "composition": "0/2", "output_construction": "1/1", "added_high_level_capabilities": ["CAP_REPEAT_COPY_TRANSLATION_V1", "CAP_REPEAT_COPY_UNTIL_BOUNDARY_V1", "CAP_TILE_MASK_AT_ANCHORS_V1", "CAP_DIAGONAL_SEQUENCE_TRAIL_V1", "CAP_TRANSFER_EXTERNAL_MOTIF_TO_FRAME_V1"], "registry_executor_dispatch": "5/5 expansion capabilities; no unsupported V4 primitive IDs", "decision": "CAPABILITY_STILL_BLOCKED"},
+  "bottleneck_ranking": [
+    {"rank": 1, "name": "TRUE_SEMANTIC_REASONING_AND_FIELD_GROUNDING", "evidence": "Best recognition success is 7/30; C3 eliminates schema invalidity but has 0/30 semantic success, and no condition solves iteration/conditional/composition semantics."},
+    {"rank": 2, "name": "CAPABILITY_COVERAGE", "evidence": "Independent representability moves only 0/30 to 1/30 after five generic typed capabilities."},
+    {"rank": 3, "name": "INPUT_REPRESENTATION", "evidence": "A3 improves A2 by +10pp and relational semantic success, but is below the +15pp criterion and below 25% absolute success."},
+    {"rank": 4, "name": "MODEL_CAPACITY", "evidence": "Unresolved: no attached stronger generic model. The available 4B ARC-SFT condition is specialized and IR-schema incompatible."}
+  ],
+  "strongest_observed_recognition_configuration": "A3 raw grids plus bounded object/relation graph, Qwen3-8B, current full ARCSEMANTICIRV1 JSON; 7/30 semantic success. This was observed in Track A, not a combined-best rerun.",
+  "execution_status": "CAPABILITY_STILL_BLOCKED",
+  "recommended_next_experiment": "GRID_SEMANTIC_GROUNDING_V1",
+  "runtime": {"new_generation_seconds_aggregate": 2624.601168005, "capability_audit_seconds": 12.2977579, "total_measured_execution_seconds": 2636.898925905, "interpretation": "Aggregate worker generation/audit time, not wall-clock time; reused V1 M0/C0/A2 generation is excluded."},
+  "tests": {"passed": 181},
+  "commits": ["caee303", "69e456a", "96401cb", "ea2b681", "9a4b662", "7f128b4", "477640a"],
+  "leakage_and_regression_audit": "All recognition inference artifacts were frozen and hashed before local oracle scoring. Recognition runners exclude scorer/oracle/solutions/test targets/macro registry/compiler/executor/verifier/search/ranking. D does not import recognition outputs. All published aggregates omit private task IDs, grids, targets, oracle labels, and raw responses. 181 tests passed."
+}
