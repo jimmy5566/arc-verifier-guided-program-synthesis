@@ -4,8 +4,8 @@
   "model": {"source": "qwen-lm/qwen-3/Transformers/8b/1", "dtype": "bfloat16", "hardware": "4x NVIDIA L4", "internet": false, "thinking": false},
   "generation": {"temperature": 0.0, "top_p": 1.0, "seed": 20260912, "max_new_tokens": 768, "context_window": 12288},
   "top_k": [1, 3],
-  "upstream_evidence_version": "U14",
-  "frozen_source_sha256": {"evidence_extractor": "20B9C6E2DCC711D86509A011ECF0E3C694CD5868D42FEADB4A0599E0DD075309", "cross_pair": "C1866414C946504D7806F7A0435CEA01E54E9F6E79F760E55DD4FD6AFF00054F", "recognizer": "3AFC452BC9A2CD80B39659A2B06C2409D31309117AA23CF0C935132898BE55A8", "runner": "A4754BE3217EA1358E4CEDA19A5B4C4521C7CB117962703D95C686734E067031"},
-  "inference_isolation": "No gold skeleton, semantic oracle, backend audit records, parameter solver, RuleSpec, executor, verifier, Macro, compiler, test output, or solution file may enter the inference source or process.",
+  "upstream_evidence_version": "U15",
+  "frozen_source_sha256": {"evidence_extractor": "20B9C6E2DCC711D86509A011ECF0E3C694CD5868D42FEADB4A0599E0DD075309", "cross_pair": "C1866414C946504D7806F7A0435CEA01E54E9F6E79F760E55DD4FD6AFF00054F", "recognizer": "898029C4FB3948BCC86D281B3174E8438800F694EEF0DD412E9BEC52FF179968", "runner": "D18D5D263C15F07234272800AA3F39617A29D38E0E5721C89E5BE1B27ABC3A2B"},
+  "inference_isolation": "No gold skeleton, semantic oracle, backend audit records, instance binding, executor, verifier, Macro, compiler, test output, or solution file may enter the inference source or process.",
   "prediction_protocol": "all 30 predictions -> artifact SHA256 -> PREDICTIONS_FROZEN_BEFORE_GOLD_SCORING -> local-only gold scoring"
 }

@@ -7,6 +7,7 @@ import numpy as np
 
 from v3.schema.rule_skeleton import OperationId, ParameterSlot
 from v3.schema.rule_spec import RuleSpec
+from v3.binding.instance_binder import BoundRuleSpec, InstanceBinder
 
 from .legacy_capability_adapter import translate_cells
 
@@ -49,7 +50,12 @@ class RuleExecutor:
             "no_op_operations": (),
         }
 
-    def _select(self, grid: np.ndarray, selector: str) -> list[tuple[int, int]]:
+    def _select(self, grid: np.ndarray, selector: str, bound: BoundRuleSpec) -> list[tuple[int, int]]:
+        if selector.startswith("ROLE:"):
+            name = selector.split(":", 1)[1]
+            if name not in bound.roles:
+                raise ValueError(f"unbound executor role: {name}")
+            return list(bound.roles[name].cells)
         if selector == "ALL_NON_BACKGROUND":
             background = _background(grid)
             return [tuple(index) for index in np.argwhere(grid != background)]
@@ -62,6 +68,16 @@ class RuleExecutor:
         raise ValueError(f"unsupported selector: {selector}")
 
     def execute(self, rule_spec: RuleSpec, grid: np.ndarray) -> np.ndarray:
+        """Compatibility entry point: bind the complete rule then execute it."""
+        return self.execute_bound(InstanceBinder().bind(rule_spec, grid), grid)
+
+    def execute_bound(self, bound_rule_spec: BoundRuleSpec, grid: np.ndarray) -> np.ndarray:
+        """Execute an already preflighted and instance-bound RuleSpec.
+
+        No candidate generation, parameter inference or repair is performed in
+        this path.
+        """
+        rule_spec = bound_rule_spec.rule_spec
         canvas = np.asarray(grid, dtype=int).copy()
         selected: list[tuple[int, int]] = []
         for step in rule_spec.skeleton.steps:
@@ -69,13 +85,13 @@ class RuleExecutor:
             if operation not in self.SUPPORTED_OPERATIONS:
                 raise ValueError(f"unsupported V3 operation: {operation}")
             if operation is OperationId.SELECT:
-                selected = self._select(canvas, str(rule_spec.value(ParameterSlot.SELECTOR)))
+                selected = self._select(canvas, str(bound_rule_spec.value(ParameterSlot.SELECTOR)), bound_rule_spec)
             elif operation is OperationId.RECOLOR or operation is OperationId.FILL:
-                color = int(rule_spec.value(ParameterSlot.TARGET_COLOR))
+                color = int(bound_rule_spec.value(ParameterSlot.TARGET_COLOR))
                 for row, col in selected:
                     canvas[row, col] = color
             elif operation in (OperationId.COPY, OperationId.MOVE):
-                direction, distance = rule_spec.value(ParameterSlot.DIRECTION), int(rule_spec.value(ParameterSlot.DISTANCE))
+                direction, distance = bound_rule_spec.value(ParameterSlot.DIRECTION), int(bound_rule_spec.value(ParameterSlot.DISTANCE))
                 translated = translate_cells(canvas, selected, direction, distance)
                 if operation is OperationId.MOVE:
                     background = _background(canvas)
@@ -86,23 +102,26 @@ class RuleExecutor:
                 if operation is OperationId.MOVE:
                     selected = [(row, col) for row, col, _value in translated]
             elif operation is OperationId.REPEAT:
-                direction, step_size = rule_spec.value(ParameterSlot.DIRECTION), int(rule_spec.value(ParameterSlot.STEP))
-                termination, count = rule_spec.value(ParameterSlot.TERMINATION), int(rule_spec.value(ParameterSlot.COUNT))
-                if termination not in {"BOUNDARY", "FIXED_COUNT"}:
+                direction, step_size = bound_rule_spec.value(ParameterSlot.DIRECTION), int(bound_rule_spec.value(ParameterSlot.STEP))
+                termination, count = bound_rule_spec.value(ParameterSlot.TERMINATION), int(bound_rule_spec.value(ParameterSlot.COUNT))
+                if termination not in {"BOUNDARY", "FIXED_COUNT", "COLLISION"}:
                     raise ValueError(f"unsupported repeat termination: {termination}")
+                protected = {(row, col) for row, col in selected}
                 multiplier = 1
-                while termination == "BOUNDARY" or multiplier <= count:
+                while termination in {"BOUNDARY", "COLLISION"} or multiplier <= count:
                     translated = translate_cells(canvas, selected, direction, step_size * multiplier)
                     if len(translated) != len(selected):
-                        if termination == "BOUNDARY":
+                        if termination in {"BOUNDARY", "COLLISION"}:
                             break
                         raise ValueError("fixed repeat exceeds grid boundary")
+                    if termination == "COLLISION" and any((row, col) not in protected and int(canvas[row, col]) != _background(canvas) for row, col, _value in translated):
+                        break
                     for row, col, value in translated:
                         canvas[row, col] = value
                     multiplier += 1
             elif operation is OperationId.RELATIONAL_COPY:
-                reference_color = int(rule_spec.value(ParameterSlot.REFERENCE_COLOR))
-                direction, distance = rule_spec.value(ParameterSlot.DIRECTION), int(rule_spec.value(ParameterSlot.DISTANCE))
+                reference_color = int(bound_rule_spec.value(ParameterSlot.REFERENCE_COLOR))
+                direction, distance = bound_rule_spec.value(ParameterSlot.DIRECTION), int(bound_rule_spec.value(ParameterSlot.DISTANCE))
                 for row, col in np.argwhere(canvas == reference_color):
                     for sr, sc in selected:
                         nr, nc = int(row) + direction[0] * distance + (sr - selected[0][0]), int(col) + direction[1] * distance + (sc - selected[0][1])

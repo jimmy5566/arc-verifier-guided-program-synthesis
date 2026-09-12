@@ -53,7 +53,7 @@ def test_upstream_prompt_normalizes_train_derived_numpy_facts_and_parser_rejects
     evidence = extract_task_evidence(task)
     from v3.evidence.cross_pair import derive_cross_pair_evidence
     prompt = recognition_prompt(task, evidence, derive_cross_pair_evidence(evidence), top_k=1)
-    assert json.loads(prompt)["train_grids"]["train_pairs"][0]["output"] == [[0, 2], [0, 0]]
+    assert json.loads(prompt)["train_grids"]["train_pairs"][0]["output_rows"] == ["02", "00"]
     assert "9" not in prompt
     raw = json.dumps({"hypotheses": [{"family": "X", "operations": ["RECOLOR"], "required_slots": "$TARGET_COLOR"}]})
     assert parse_hypotheses(raw, limit=1)[0] == ()

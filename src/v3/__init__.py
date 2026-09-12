@@ -1,1 +1,1 @@
-"""ARC2 V3: evidence → rule skeleton → parameters → RuleSpec → verification."""
+"""ARC2 V3: evidence → complete RuleSpec → preflight → bind → execute → verify."""

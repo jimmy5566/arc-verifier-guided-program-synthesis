@@ -1,4 +1,4 @@
-"""Offline gold-blind V3 RuleSkeleton recognition runner (Track U only)."""
+"""Offline gold-blind V3 complete-RuleSpec recognition runner (Track U only)."""
 from __future__ import annotations
 
 import argparse
@@ -73,6 +73,7 @@ def _worker(worker_id: int, task_ids: list[str], challenge_path: str, model_path
         from v3.evidence.cross_pair import derive_cross_pair_evidence
         from v3.evidence.extractor import extract_task_evidence
         from v3.recognition.recognizer_interface import parse_hypotheses, recognition_prompt
+        from v3.upstream import complete_rule_specs
 
         provider = TransformersProvider(model_path=Path(model_path), device="cuda:0")
         seconds = provider.load()
@@ -88,7 +89,8 @@ def _worker(worker_id: int, task_ids: list[str], challenge_path: str, model_path
             prompt = recognition_prompt(task, evidence, cross, top_k=3)
             generated = provider.generate_text(prompt, generation)
             hypotheses, status = parse_hypotheses(generated.text, limit=3)
-            results.put({"task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "status": status, "hypotheses": [item.to_dict() for item in hypotheses], "raw_response": generated.text, "prompt_tokens": generated.prompt_tokens, "completion_tokens": generated.completion_tokens, "generation_seconds": generated.elapsed_seconds})
+            complete = complete_rule_specs(hypotheses, evidence) if status == "SUCCESS" else ()
+            results.put({"task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "status": status, "rule_specs": [item.to_dict() for item in complete], "raw_response": generated.text, "prompt_tokens": generated.prompt_tokens, "completion_tokens": generated.completion_tokens, "generation_seconds": generated.elapsed_seconds})
         results.put({"event": "WORKER_COMPLETE", "worker_id": worker_id})
     except Exception as exc:
         failure = {"event": "WORKER_FAILED", "worker_id": worker_id, "error": f"{type(exc).__name__}: {exc}"}
@@ -128,7 +130,7 @@ def main() -> None:
         else: records[item["task_id"]] = item
     for worker in workers: worker.join(timeout=30)
     if set(records) != set(task_ids): raise RuntimeError("incomplete recognition predictions")
-    artifact = {"experiment_id": "ARC2_V3_RULE_RECOGNITION_INDEPENDENT_V1", "status": "PREDICTIONS_FROZEN_BEFORE_GOLD_SCORING", "task_ids_hash": task_hash, "config_sha256": hashlib.sha256(args.config.read_bytes()).hexdigest(), "upstream_evidence_version": config["upstream_evidence_version"], "context_preflight": {"max_prompt_tokens": max(context_tokens.values()), "generation_reserved_tokens": config["generation"]["max_new_tokens"]}, "protocol": "Track U: train grids + frozen deterministic evidence only; no gold, backend, parameter solver, RuleSpec, executor, verifier, Macro, compiler, test output, or solution access", "hardware": hardware.to_dict(), "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")}, "records": records}
+    artifact = {"experiment_id": "ARC2_V3_RULE_RECOGNITION_INDEPENDENT_V1", "status": "PREDICTIONS_FROZEN_BEFORE_GOLD_SCORING", "task_ids_hash": task_hash, "config_sha256": hashlib.sha256(args.config.read_bytes()).hexdigest(), "upstream_evidence_version": config["upstream_evidence_version"], "context_preflight": {"max_prompt_tokens": max(context_tokens.values()), "generation_reserved_tokens": config["generation"]["max_new_tokens"]}, "protocol": "Track U: train grids + frozen deterministic evidence -> complete RuleSpec only; no gold, instance binding, executor, verifier, Macro, compiler, test output, or solution access", "hardware": hardware.to_dict(), "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")}, "records": records}
     atomic_write_json(args.output, artifact)
     print(json.dumps({"status": artifact["status"], "tasks": len(records)}, sort_keys=True))
 

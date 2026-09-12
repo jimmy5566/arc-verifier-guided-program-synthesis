@@ -142,7 +142,15 @@ def _json_default(value: Any) -> Any:
 
 
 def recognition_prompt(task: ARCTask, evidence: EvidenceBundle, cross_pair: CrossPairEvidence, *, top_k: int) -> str:
-    raw = {"train_pairs": [{"input": item.input.values.tolist(), "output": item.output.values.tolist()} for item in task.train]}
+    # ARC colours are single decimal digits. A row-string representation is
+    # lossless while avoiding hundreds of punctuation tokens on large grids.
+    raw = {"encoding": "each grid is an ordered list of digit rows", "train_pairs": [
+        {
+            "input_rows": ["".join(map(str, row)) for row in item.input.values.tolist()],
+            "output_rows": ["".join(map(str, row)) for row in item.output.values.tolist()],
+        }
+        for item in task.train
+    ]}
     return json.dumps({
         "train_grids": raw,
         "deterministic_evidence": _facts(evidence, cross_pair),

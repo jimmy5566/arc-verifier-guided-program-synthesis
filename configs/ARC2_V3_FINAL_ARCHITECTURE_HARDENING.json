@@ -1,0 +1,8 @@
+{
+  "experiment_id": "ARC2_V3_FINAL_ARCHITECTURE_HARDENING",
+  "base_commit": "bc1d25d1cecdae9d81fc198808bc5a0e335d94cd",
+  "cohort": {"task_count": 30, "task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8"},
+  "architecture": "train pairs -> deterministic evidence -> rule plus parameter inference -> Complete RuleSpec -> Preflight Validator -> Instance Binding -> deterministic Executor -> HardVerifier",
+  "execution_policy": "No Macro, Compiler, Repair, LLM, Router, test output or solution file in this audit.",
+  "upstream_local_gate": {"serializable_tasks": 30, "tokenizer_preflight_tasks": 30, "maximum_prompt_tokens": 11000, "formal_inference": false}
+}

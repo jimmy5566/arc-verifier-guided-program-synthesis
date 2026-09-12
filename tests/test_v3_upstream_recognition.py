@@ -54,7 +54,7 @@ def test_track_u_source_has_no_downstream_or_gold_import_and_freeze_hashes_match
         node.module for node in ast.walk(ast.parse(source_text))
         if isinstance(node, ast.ImportFrom) and node.module
     }
-    forbidden = ("parameters", "rule_spec", "execution", "verification", "macro", "compiler", "oracle", "solution")
+    forbidden = ("binding", "execution", "verification", "macro", "compiler", "oracle", "solution")
     assert not any(any(term in module.lower() for term in forbidden) for module in imported)
     config = json.loads((ROOT / "configs/ARC2_V3_RULE_RECOGNITION_INDEPENDENT_V1_FROZEN_CONFIG.json").read_text(encoding="utf-8"))
     paths = {
@@ -63,7 +63,7 @@ def test_track_u_source_has_no_downstream_or_gold_import_and_freeze_hashes_match
         "recognizer": ROOT / "src/v3/recognition/recognizer_interface.py",
         "runner": ROOT / "scripts/run_v3_rule_recognition.py",
     }
-    assert config["upstream_evidence_version"] == "U14"
+    assert config["upstream_evidence_version"] == "U15"
     assert all(hashlib.sha256(path.read_bytes()).hexdigest().upper() == config["frozen_source_sha256"][name] for name, path in paths.items())
     assert "PREDICTIONS_FROZEN_BEFORE_GOLD_SCORING" in source_text
 
