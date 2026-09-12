@@ -51,11 +51,14 @@ Recognition status: **GRID_RECOGNITION_WEAK**.
 
 ## Failure taxonomy
 
+- COMPOSITION_INCOMPLETE: 20
 - CONDITION_WRONG: 1
 - FAMILY_WRONG: 15
 - IR_SCHEMA_FAILURE: 10
 - ITERATION_MISSED: 5
 - ITERATION_PARAMETER_WRONG: 8
+- OBJECT_ROLE_WRONG: 20
+- OUTPUT_CONSTRUCTION_WRONG: 16
 - RELATION_WRONG: 20
 
 Gold、task IDs、raw grids、test solutions、raw responses 与逐题 IR 均保留在 ignored private artifacts。
