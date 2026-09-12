@@ -5,6 +5,7 @@
   "failure_taxonomy": {
     "CONDITION_WRONG": 1,
     "FAMILY_WRONG": 15,
+    "IR_SCHEMA_FAILURE": 10,
     "ITERATION_MISSED": 5,
     "ITERATION_PARAMETER_WRONG": 8,
     "RELATION_WRONG": 20
@@ -79,6 +80,28 @@
       "tasks": 8
     }
   },
+  "forensic_strata_metrics": {
+    "composition_execution_gap": {
+      "semantic_success": 1,
+      "tasks": 2
+    },
+    "conditional_role": {
+      "semantic_success": 0,
+      "tasks": 4
+    },
+    "iteration_repeat": {
+      "semantic_success": 0,
+      "tasks": 15
+    },
+    "output_construction": {
+      "semantic_success": 0,
+      "tasks": 1
+    },
+    "relational": {
+      "semantic_success": 3,
+      "tasks": 8
+    }
+  },
   "generation_seconds_sum": 574.9759948809998,
   "leakage_audit": [
     "Kaggle inference artifact declares train-pairs-only input and gold-blind protocol.",
@@ -108,7 +131,7 @@
   "prediction_freeze_hash": "b8df3ae0e79a20b6e39ce36ab8117eda8ef45fbd9ea2bdee88454ccbbe5dfb5a",
   "recognition_status": "GRID_RECOGNITION_WEAK",
   "runtime_seconds": 574.9759948809998,
-  "scoring_seconds": 0.0056379999878117815,
+  "scoring_seconds": 0.003094100015005097,
   "status": "COMPLETE",
   "task_count": 30
 }
