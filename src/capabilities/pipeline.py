@@ -85,6 +85,9 @@ class CapabilityProgramExecutor:
             "SEQ_GRID_TO_COLUMN_V1",
             "ITERATE_TRANSLATE_BOUNDED_V1",
             "LINE_EXTEND_UNTIL_BOUNDARY_V1",
+            "CAP_REPEAT_COPY_TRANSLATION_V1",
+            "CAP_REPEAT_COPY_UNTIL_BOUNDARY_V1",
+            "CAP_TRANSFER_EXTERNAL_MOTIF_TO_FRAME_V1",
         }
     )
 

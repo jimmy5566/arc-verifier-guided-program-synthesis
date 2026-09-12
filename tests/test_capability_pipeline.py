@@ -80,6 +80,11 @@ def _representative_calls():
         "SEQ_RUN_LENGTH_ENCODE_V1": ((1, 1, 2, 2, 2), {}),
         "ITERATE_TRANSLATE_BOUNDED_V1": (np.array([[0, 0, 0], [0, 2, 0], [0, 0, 0]], dtype=np.int16), {"dr": 1, "dc": 0, "repeats": 1}),
         "LINE_EXTEND_UNTIL_BOUNDARY_V1": (BLANK, {"row": 2, "col": 0, "dr": 0, "dc": 1, "color": 4}),
+        "CAP_REPEAT_COPY_TRANSLATION_V1": (np.array([[1, 0, 0, 0, 0]], dtype=np.int16), {"dr": 0, "dc": 2, "repeats": 2}),
+        "CAP_REPEAT_COPY_UNTIL_BOUNDARY_V1": (np.array([[1, 0, 0, 0, 0]], dtype=np.int16), {"dr": 0, "dc": 2}),
+        "CAP_TILE_MASK_AT_ANCHORS_V1": (np.array([[True, False], [False, True]]), {"shape": (4, 4), "anchors": [(0, 0), (2, 2)], "color": 2}),
+        "CAP_DIAGONAL_SEQUENCE_TRAIL_V1": ((0, 0, 2, 0, 0), {}),
+        "CAP_TRANSFER_EXTERNAL_MOTIF_TO_FRAME_V1": (np.array([[2, 2, 0, 0, 5, 5, 5, 5], [2, 2, 0, 0, 5, 0, 0, 5], [0, 0, 0, 0, 5, 0, 0, 5], [0, 0, 0, 0, 5, 5, 5, 5]], dtype=np.int16), {"frame_color": 5}),
     }
 
 

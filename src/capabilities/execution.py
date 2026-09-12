@@ -14,7 +14,7 @@ from typing import Any, Callable, Iterable, Mapping
 
 import numpy as np
 
-from capabilities import counting, generation, iteration, lines, paths, regions, sequence
+from capabilities import counting, expansion_v1, generation, iteration, lines, paths, regions, sequence
 from primitives.registry import REGISTRY
 
 
@@ -91,6 +91,11 @@ class CapabilityExecutor:
         "SEQ_RUN_LENGTH_ENCODE_V1": "_sequence_rle",
         "ITERATE_TRANSLATE_BOUNDED_V1": "_repeat_translation",
         "LINE_EXTEND_UNTIL_BOUNDARY_V1": "_extend_line",
+        "CAP_REPEAT_COPY_TRANSLATION_V1": "_repeat_copy_translation",
+        "CAP_REPEAT_COPY_UNTIL_BOUNDARY_V1": "_repeat_copy_until_boundary",
+        "CAP_TILE_MASK_AT_ANCHORS_V1": "_tile_mask_at_anchors",
+        "CAP_DIAGONAL_SEQUENCE_TRAIL_V1": "_diagonal_sequence_trail",
+        "CAP_TRANSFER_EXTERNAL_MOTIF_TO_FRAME_V1": "_transfer_external_motif_to_frame",
     }
 
     @classmethod
@@ -818,6 +823,84 @@ class CapabilityExecutor:
             return self._invalid("expected ARC Grid")
         output = iteration.extend_line_until_boundary(grid, *(int(params[name]) for name in required))
         return self._invalid("line start is outside the grid") if output is None else self._success(output, "Grid")
+
+    # High-level capability-expansion V1.  These calls intentionally retain
+    # explicit typed values: induction/search is not part of this executor.
+    def _repeat_copy_translation(self, value: object, params: Mapping[str, Any]) -> Result:
+        required = ("dr", "dc", "repeats")
+        error = self._params(params, allowed=(*required, "background"), required=required)
+        if error:
+            return self._invalid(error)
+        if not all(self._is_int(params[name]) for name in ("dr", "dc")) or not self._is_int(params["repeats"], minimum=1):
+            return self._invalid("dr/dc must be integers and repeats must be a positive integer")
+        if int(params["dr"]) == 0 and int(params["dc"]) == 0:
+            return self._invalid("translation direction must be non-zero")
+        if "background" in params and not self._color(params["background"]):
+            return self._invalid("background must be an ARC color")
+        grid = self._grid(value)
+        if grid is None:
+            return self._invalid("expected ARC Grid")
+        output = expansion_v1.repeat_copy_translation(grid, dr=int(params["dr"]), dc=int(params["dc"]), repeats=int(params["repeats"]), background=params.get("background"))
+        return self._invalid("empty foreground or translated copy exceeds grid bounds") if output is None else self._success(output, "Grid")
+
+    def _repeat_copy_until_boundary(self, value: object, params: Mapping[str, Any]) -> Result:
+        required = ("dr", "dc")
+        error = self._params(params, allowed=(*required, "background"), required=required)
+        if error:
+            return self._invalid(error)
+        if not all(self._is_int(params[name]) for name in required) or (int(params["dr"]) == 0 and int(params["dc"]) == 0):
+            return self._invalid("translation direction must be non-zero integer coordinates")
+        if "background" in params and not self._color(params["background"]):
+            return self._invalid("background must be an ARC color")
+        grid = self._grid(value)
+        if grid is None:
+            return self._invalid("expected ARC Grid")
+        output = expansion_v1.repeat_copy_until_boundary(grid, dr=int(params["dr"]), dc=int(params["dc"]), background=params.get("background"))
+        return self._invalid("empty foreground or no copy fits before the boundary") if output is None else self._success(output, "Grid")
+
+    def _tile_mask_at_anchors(self, value: object, params: Mapping[str, Any]) -> Result:
+        required = ("shape", "anchors", "color")
+        error = self._params(params, allowed=(*required, "background"), required=required)
+        if error:
+            return self._invalid(error)
+        mask = self._mask(value)
+        shape = self._shape(params, (1, 1))
+        anchors = params["anchors"]
+        if mask is None or shape is None or not isinstance(anchors, (tuple, list)) or not anchors:
+            return self._invalid("expected nonempty Mask, GridShape, and anchors")
+        parsed_anchors = tuple(self._coordinate(anchor) for anchor in anchors)
+        if any(anchor is None for anchor in parsed_anchors) or not self._color(params["color"]):
+            return self._invalid("anchors must be non-negative coordinates and color an ARC color")
+        if "background" in params and not self._color(params["background"]):
+            return self._invalid("background must be an ARC color")
+        output = expansion_v1.tile_mask_at_anchors(mask, shape=shape, anchors=parsed_anchors, color=int(params["color"]), background=int(params.get("background", 0)))
+        return self._invalid("anchor does not fit the target canvas") if output is None else self._success(output, "Grid")
+
+    def _diagonal_sequence_trail(self, value: object, params: Mapping[str, Any]) -> Result:
+        error = self._params(params, allowed=("repeats", "background"))
+        if error:
+            return self._invalid(error)
+        sequence_value = self._sequence(value)
+        if sequence_value is None:
+            return self._invalid("expected nonempty ARC-color Sequence")
+        if "repeats" in params and not self._is_int(params["repeats"], minimum=1):
+            return self._invalid("repeats must be a positive integer")
+        if "background" in params and not self._color(params["background"]):
+            return self._invalid("background must be an ARC color")
+        output = expansion_v1.diagonal_sequence_trail(sequence_value, repeats=None if "repeats" not in params else int(params["repeats"]), background=int(params.get("background", 0)))
+        return self._invalid("sequence cannot produce a diagonal trail") if output is None else self._success(output, "Grid")
+
+    def _transfer_external_motif_to_frame(self, value: object, params: Mapping[str, Any]) -> Result:
+        error = self._params(params, allowed=("frame_color",), required=("frame_color",))
+        if error:
+            return self._invalid(error)
+        if not self._color(params["frame_color"]):
+            return self._invalid("frame_color must be an ARC color")
+        grid = self._grid(value)
+        if grid is None:
+            return self._invalid("expected ARC Grid")
+        output = expansion_v1.transfer_external_motif_to_matching_frame(grid, frame_color=int(params["frame_color"]))
+        return self._invalid("no unique external motif/frame correspondence") if output is None else self._success(output, "Grid")
 
 
 def hard_verify(executor: CapabilityExecutor, primitive_id: str, params: Mapping[str, Any], train: Iterable[tuple[object, object]]) -> Result:

@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import subprocess
 import sys
 from collections import Counter
 from datetime import date
@@ -15,6 +16,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from arc.io import load_dataset
 from capabilities.expansion_audit_v1 import audit_task
+from capabilities.execution import CapabilityExecutor
 from capabilities.expansion_v1 import CAPABILITIES, validate_capabilities
 
 
@@ -41,6 +43,10 @@ def main() -> None:
     errors = validate_capabilities()
     if errors:
         raise RuntimeError(f"capability registry invalid: {errors}")
+    dispatch = CapabilityExecutor().dispatch_audit()
+    missing_dispatch = set(CAPABILITIES) - set(dispatch["executable_dispatch_ids"])
+    if missing_dispatch or not dispatch["all_registered_v4_executable"]:
+        raise RuntimeError(f"registered capability dispatch is incomplete: {sorted(missing_dispatch)}")
     task_ids = json.loads(args.cohort.read_text(encoding="utf-8"))["task_ids"]
     if len(task_ids) != 30 or len(set(task_ids)) != 30:
         raise ValueError("requires the exact frozen 30-task development cohort")
@@ -86,6 +92,12 @@ def main() -> None:
             "output_construction": {"covered": family_coverage["MISSING_OUTPUT_CONSTRUCTION"], "total": 1},
         },
         "audit_protocol": "generic train-derived candidates -> train exact -> development test exact oracle check; no recognition imports, outputs, or scores",
+        "registry_executor_audit": {
+            "expansion_registered_count": len(CAPABILITIES),
+            "expansion_dispatch_count": len(set(CAPABILITIES) & set(dispatch["executable_dispatch_ids"])),
+            "all_registered_v4_executable": dispatch["all_registered_v4_executable"],
+            "unsupported_primitive_ids": list(dispatch["unsupported_primitive_ids"]),
+        },
         "runtime_seconds": perf_counter() - started,
         "leakage_audit": "task IDs, candidate programs, grids, and solutions stay in ignored private artifacts; public aggregate contains no per-task data.",
     }
@@ -95,9 +107,16 @@ def main() -> None:
     _write(output_path, result)
     report = ["# Capability Library Expansion V1", "", "这是与 Recognition 隔离的 development-only solution-aware representability audit。候选仅从 train pairs 归纳，并且必须同时 train exact 与 test exact 才计入。", "", f"- Before: **0/30**", f"- After: **{after}/30 ({after / 30:.1%})**", f"- Status: **{threshold}**", "", "## Family coverage", "", "| Family | Covered | Total |", "| --- | ---: | ---: |", *[f"| {name} | {item['covered']} | {item['total']} |" for name, item in result["family_coverage"].items()], "", "## Added generic capabilities", "", "| Capability | Test-exact coverage | Marginal gain |", "| --- | ---: | ---: |", *[f"| {item['capability_id']} | {item['test_exact_coverage']} | {item['marginal_coverage_gain']} |" for item in result["added_capabilities"]], "", "所有 per-task witness、grid 与 test target 仅保存在 ignored 私有 artifact。"]
     (ROOT / "reports/capability_library_expansion_v1.md").write_text("\n".join(report) + "\n", encoding="utf-8")
-    with (ROOT / "experiments/experiments.csv").open("a", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=["experiment_id", "date", "git_commit", "solver", "representation", "search_method", "llm_model", "candidate_budget", "validation_split", "tasks_solved", "accuracy", "runtime_seconds", "gpu_hours", "notes"])
-        writer.writerow({"experiment_id": "CAPABILITY_LIBRARY_EXPANSION_V1", "date": str(date.today()), "git_commit": "pending", "solver": "generic high-level capability oracle audit", "representation": "typed capability expansion V1", "search_method": "bounded train-derived generic candidates", "llm_model": "", "candidate_budget": 0, "validation_split": "development_only_30", "tasks_solved": after, "accuracy": after / 30, "runtime_seconds": result["runtime_seconds"], "gpu_hours": 0, "notes": json.dumps({"threshold": threshold}, sort_keys=True)})
+    fieldnames = ["experiment_id", "date", "git_commit", "solver", "representation", "search_method", "llm_model", "candidate_budget", "validation_split", "tasks_solved", "accuracy", "runtime_seconds", "gpu_hours", "notes"]
+    csv_path = ROOT / "experiments/experiments.csv"
+    with csv_path.open(encoding="utf-8", newline="") as handle:
+        prior_rows = [row for row in csv.DictReader(handle) if row["experiment_id"] != "CAPABILITY_LIBRARY_EXPANSION_V1"]
+    commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    with csv_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(prior_rows)
+        writer.writerow({"experiment_id": "CAPABILITY_LIBRARY_EXPANSION_V1", "date": str(date.today()), "git_commit": commit, "solver": "generic high-level capability oracle audit", "representation": "typed capability expansion V1", "search_method": "bounded train-derived generic candidates", "llm_model": "", "candidate_budget": 0, "validation_split": "development_only_30", "tasks_solved": after, "accuracy": after / 30, "runtime_seconds": result["runtime_seconds"], "gpu_hours": 0, "notes": json.dumps({"threshold": threshold}, sort_keys=True)})
     print(json.dumps({"after": after, "status": threshold}, sort_keys=True))
 
 
