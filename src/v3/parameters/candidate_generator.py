@@ -10,6 +10,7 @@ _EVIDENCE_KEY = {
     ParameterSlot.REFERENCE_COLOR: "REFERENCE_COLOR", ParameterSlot.DIRECTION: "DIRECTION",
     ParameterSlot.DISTANCE: "DISTANCE", ParameterSlot.STEP: "STEP",
     ParameterSlot.COUNT: "COUNT", ParameterSlot.TERMINATION: "TERMINATION",
+    ParameterSlot.TRANSFORM: "TRANSFORM", ParameterSlot.PADDING: "PADDING",
 }
 
 

@@ -8,22 +8,24 @@ from typing import Any, Protocol, Sequence
 from arc.task import ARCTask
 from v3.evidence.cross_pair import CrossPairEvidence
 from v3.evidence.extractor import EvidenceBundle
-from v3.schema.rule_skeleton import OperationId, RuleSkeleton
+from v3.schema.rule_skeleton import OperationId, ParameterSlot, RuleSkeleton
+from v3.schema.rule_spec import RuleSpec
+from v3.schema.value_expr import DerivedFunction, DerivedValue, RoleReference, SelectorRule, SlotReference
 
 
 class RuleRecognizer(Protocol):
-    def recognize(self, task: ARCTask, evidence: EvidenceBundle, cross_pair: CrossPairEvidence, *, top_k: int = 1) -> Sequence[RuleSkeleton]:
-        """Return zero or more parameter-free skeleton hypotheses only."""
+    def recognize(self, task: ARCTask, evidence: EvidenceBundle, cross_pair: CrossPairEvidence, *, top_k: int = 1) -> Sequence[RuleSpec]:
+        """Return complete, directly bindable RuleSpec hypotheses only."""
 
 
 class PredefinedRecognizer:
     """Deterministic test seam; production adapters implement RuleRecognizer."""
-    def __init__(self, skeletons: Sequence[RuleSkeleton]) -> None:
-        self._skeletons = tuple(skeletons)
+    def __init__(self, rule_specs: Sequence[RuleSpec]) -> None:
+        self._rule_specs = tuple(rule_specs)
 
-    def recognize(self, task: ARCTask, evidence: EvidenceBundle, cross_pair: CrossPairEvidence, *, top_k: int = 1) -> Sequence[RuleSkeleton]:
+    def recognize(self, task: ARCTask, evidence: EvidenceBundle, cross_pair: CrossPairEvidence, *, top_k: int = 1) -> Sequence[RuleSpec]:
         del task, evidence, cross_pair
-        return self._skeletons[:top_k]
+        return self._rule_specs[:top_k]
 
 
 def _object_payload(item: Any) -> dict[str, Any]:
@@ -154,17 +156,24 @@ def recognition_prompt(task: ARCTask, evidence: EvidenceBundle, cross_pair: Cros
     return json.dumps({
         "train_grids": raw,
         "deterministic_evidence": _facts(evidence, cross_pair),
-        "slot_contract": "SELECT:$SELECTOR;COPY/MOVE:$DIRECTION,$DISTANCE;REPEAT:$DIRECTION,$STEP,$COUNT,$TERMINATION;RECOLOR/FILL:$TARGET_COLOR;RELATIONAL_COPY:$REFERENCE_COLOR,$DIRECTION,$DISTANCE;ROTATE/REFLECT/CROP:[]",
+        "complete_rulespec_contract": {
+            "operations": "SELECT:$SELECTOR;COPY/MOVE:$DIRECTION,$DISTANCE;REPEAT:$DIRECTION,$STEP,$COUNT,$TERMINATION;RECOLOR/FILL:$TARGET_COLOR;RELATIONAL_COPY:$REFERENCE_COLOR,$DIRECTION,$DISTANCE;ROTATE/REFLECT:$TRANSFORM;CROP:$SELECTOR,$PADDING",
+            "hypothesis": "family, operations, parameters, roles",
+            "value": "literal | {derive:FUNCTION,arguments:{...}} | {role_ref:ROLE} | {slot_ref:$SLOT}",
+            "roles": "name:{kind:COLOR|COLOR_ALL|SMALLEST_OBJECT|LARGEST_OBJECT|ARGMIN|ARGMAX|ALL_NON_BACKGROUND,value:optional}",
+            "derived_functions": "RELATIVE_DIRECTION,GAP,DISTANCE,WIDTH,HEIGHT,COLOR_OF,ARGMIN,ARGMAX,BOUNDARY,COLLISION",
+        },
         "instruction": (
-            f"Infer at most {top_k} distinct general rule skeletons from TRAIN only. "
-            "Return exactly one JSON object with one key named hypotheses. Each hypothesis has exactly family, operations, and required_slots. "
-            "family is uppercase. operations is a non-empty ordered list from slot_contract. required_slots is its sorted slot union. "
-            "Do not copy any prompt text or contract. Do not emit literal parameter values, grids, code, rationale, or markdown."
+            f"Infer at most {top_k} distinct complete general RuleSpecs from TRAIN only. "
+            "Return exactly one JSON object with one key named hypotheses. Each hypothesis has exactly family, operations, parameters, and roles. "
+            "parameters must contain every and only the typed slots required by operations. Use literals or the declared derived functions and role references. "
+            "Do not copy prompt text or contract. Do not emit grids, code, rationale, or markdown."
         ),
     }, separators=(",", ":"), default=_json_default)
 
 
 def parse_hypotheses(raw: str, *, limit: int) -> tuple[tuple[RuleSkeleton, ...], str]:
+    """Legacy skeleton parser retained solely to read historical frozen output."""
     start, end = raw.find("{"), raw.rfind("}")
     if start < 0 or end < start:
         return (), "SCHEMA_FAILURE:no JSON"
@@ -195,15 +204,68 @@ def parse_hypotheses(raw: str, *, limit: int) -> tuple[tuple[RuleSkeleton, ...],
     return tuple(parsed), "SUCCESS"
 
 
+def _parse_expression(value: Any, *, slot: ParameterSlot | None = None) -> Any:
+    if isinstance(value, dict):
+        keys = set(value)
+        if keys == {"role_ref"} and isinstance(value["role_ref"], str):
+            return RoleReference(value["role_ref"])
+        if keys == {"slot_ref"} and isinstance(value["slot_ref"], str):
+            return SlotReference(ParameterSlot(value["slot_ref"]))
+        if keys == {"derive", "arguments"} and isinstance(value["derive"], str) and isinstance(value["arguments"], dict):
+            return DerivedValue(DerivedFunction(value["derive"]), {name: _parse_expression(item) for name, item in value["arguments"].items()})
+        raise ValueError("invalid value expression")
+    if slot is ParameterSlot.DIRECTION and isinstance(value, list) and len(value) == 2 and all(isinstance(item, int) for item in value):
+        return tuple(value)
+    if slot is ParameterSlot.PADDING and isinstance(value, list) and len(value) == 4 and all(isinstance(item, int) for item in value):
+        return tuple(value)
+    if isinstance(value, (str, int, bool)) or value is None:
+        return value
+    raise ValueError("unsupported literal value")
+
+
+def parse_complete_rulespec_hypotheses(raw: str, *, limit: int) -> tuple[tuple[RuleSpec, ...], str]:
+    """Parse only fully specified, typed and serialisable RuleSpec hypotheses."""
+    start, end = raw.find("{"), raw.rfind("}")
+    if start < 0 or end < start: return (), "SCHEMA_FAILURE:no JSON"
+    try:
+        hypotheses = json.loads(raw[start:end + 1])["hypotheses"]
+    except (json.JSONDecodeError, KeyError, TypeError):
+        return (), "SCHEMA_FAILURE:invalid JSON envelope"
+    if not isinstance(hypotheses, list) or not 1 <= len(hypotheses) <= limit:
+        return (), "SCHEMA_FAILURE:hypothesis count"
+    parsed: list[RuleSpec] = []
+    for item in hypotheses:
+        if not isinstance(item, dict) or set(item) != {"family", "operations", "parameters", "roles"}:
+            return (), "SCHEMA_FAILURE:complete rulespec fields"
+        if not isinstance(item["family"], str) or not item["family"] or not isinstance(item["operations"], list) or not isinstance(item["parameters"], dict) or not isinstance(item["roles"], dict):
+            return (), "SCHEMA_FAILURE:complete rulespec types"
+        try:
+            skeleton = RuleSkeleton.from_operations(item["family"], tuple(OperationId(name) for name in item["operations"]))
+            parameters = {ParameterSlot(name): _parse_expression(value, slot=ParameterSlot(name)) for name, value in item["parameters"].items()}
+            roles = {
+                name: SelectorRule(str(selector["kind"]), selector.get("value"))
+                for name, selector in item["roles"].items()
+                if isinstance(name, str) and isinstance(selector, dict) and set(selector) <= {"kind", "value"} and "kind" in selector
+            }
+            if len(roles) != len(item["roles"]): raise ValueError("invalid role selector")
+            rule_spec = RuleSpec(skeleton, parameters, roles)
+        except (KeyError, TypeError, ValueError):
+            return (), "SCHEMA_FAILURE:invalid complete rulespec"
+        if rule_spec in parsed:
+            return (), "SCHEMA_FAILURE:duplicate complete rulespec"
+        parsed.append(rule_spec)
+    return tuple(parsed), "SUCCESS"
+
+
 @dataclass
 class QwenRuleRecognizer:
-    """Production, offline adapter. It is deliberately upstream-only."""
+    """Production, offline adapter whose final upstream output is a RuleSpec."""
     provider: Any
     generation_config: Any
 
-    def recognize(self, task: ARCTask, evidence: EvidenceBundle, cross_pair: CrossPairEvidence, *, top_k: int = 1) -> Sequence[RuleSkeleton]:
+    def recognize(self, task: ARCTask, evidence: EvidenceBundle, cross_pair: CrossPairEvidence, *, top_k: int = 1) -> Sequence[RuleSpec]:
         generated = self.provider.generate_text(recognition_prompt(task, evidence, cross_pair, top_k=top_k), self.generation_config)
-        skeletons, status = parse_hypotheses(generated.text, limit=top_k)
+        rule_specs, status = parse_complete_rulespec_hypotheses(generated.text, limit=top_k)
         if status != "SUCCESS":
             return ()
-        return skeletons
+        return rule_specs

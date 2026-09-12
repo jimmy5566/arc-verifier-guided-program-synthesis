@@ -128,13 +128,31 @@ class RuleExecutor:
                         if 0 <= nr < canvas.shape[0] and 0 <= nc < canvas.shape[1]:
                             canvas[nr, nc] = canvas[sr, sc]
             elif operation is OperationId.ROTATE:
-                canvas = np.rot90(canvas)
+                transform = str(bound_rule_spec.value(ParameterSlot.TRANSFORM))
+                transforms = {
+                    "ROTATE_90": lambda grid: np.rot90(grid), "ROTATE_180": lambda grid: np.rot90(grid, 2),
+                    "ROTATE_270": lambda grid: np.rot90(grid, 3), "FLIP_HORIZONTAL": np.fliplr,
+                    "FLIP_VERTICAL": np.flipud, "TRANSPOSE": lambda grid: grid.T,
+                    "ANTI_TRANSPOSE": lambda grid: np.fliplr(np.flipud(grid)).T,
+                }
+                if transform not in transforms: raise ValueError(f"unsupported transform: {transform}")
+                canvas = transforms[transform](canvas)
             elif operation is OperationId.REFLECT:
-                canvas = np.fliplr(canvas)
+                transform = str(bound_rule_spec.value(ParameterSlot.TRANSFORM))
+                transforms = {
+                    "FLIP_HORIZONTAL": np.fliplr, "FLIP_VERTICAL": np.flipud,
+                    "TRANSPOSE": lambda grid: grid.T, "ANTI_TRANSPOSE": lambda grid: np.fliplr(np.flipud(grid)).T,
+                }
+                if transform not in transforms: raise ValueError(f"unsupported reflection: {transform}")
+                canvas = transforms[transform](canvas)
             elif operation is OperationId.CROP:
                 if selected:
                     rows, cols = zip(*selected)
-                    canvas = canvas[min(rows):max(rows) + 1, min(cols):max(cols) + 1]
+                    raw_padding = bound_rule_spec.value(ParameterSlot.PADDING)
+                    top_pad, bottom_pad, left_pad, right_pad = (raw_padding, raw_padding, raw_padding, raw_padding) if isinstance(raw_padding, int) else raw_padding
+                    top, left = max(0, min(rows) - top_pad), max(0, min(cols) - left_pad)
+                    bottom, right = min(canvas.shape[0], max(rows) + 1 + bottom_pad), min(canvas.shape[1], max(cols) + 1 + right_pad)
+                    canvas = canvas[top:bottom, left:right]
             else:
                 raise ValueError(f"V3 executor operation not implemented: {operation}")
         return canvas

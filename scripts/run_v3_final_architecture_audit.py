@@ -67,6 +67,21 @@ def _classify(spec: Any, train: tuple[tuple[np.ndarray, np.ndarray], ...], valid
     return "COVERED" if verifier.verify(spec, train).passed else "VERIFIER_FAILURE"
 
 
+def _semantic_taxonomy(semantic: Mapping[str, Any], status: str, reason: str | None) -> str:
+    """Generic category attribution; it never branches on a task identifier."""
+    if reason: return reason
+    operations = set(semantic["operations"])
+    if "REPEAT" in operations and status != "COVERED":
+        return "REPEAT_MOTIF_OR_TERMINATION_SEMANTICS_INSUFFICIENT"
+    if "EXTRACT" in operations and status != "COVERED":
+        return "REFERENCE_ROLE_CROP_RELATION_INSUFFICIENT"
+    if semantic["conditional_logic"]["enabled"]:
+        return "CONDITIONAL_ROLE_SEMANTICS_INSUFFICIENT"
+    if status == "PREFLIGHT_FAILURE": return "NO_COMPLETE_RULESPEC_FROM_GENERIC_TRAIN_FACTS"
+    if status == "VERIFIER_FAILURE": return "GENERIC_OPERATION_COMPOSITION_INSUFFICIENT"
+    return status
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--cohort", type=Path, required=True)
@@ -85,8 +100,9 @@ def main() -> None:
     records: dict[str, dict[str, Any]] = {}
     for task_id in task_ids:
         skeleton, reason = skeleton_from_oracle(oracle["gold"][task_id])
+        semantic = oracle["gold"][task_id]
         if skeleton is None:
-            records[task_id] = {"status": "PREFLIGHT_FAILURE", "reason": reason, "complete_rulespec_candidates": 0}
+            records[task_id] = {"status": "PREFLIGHT_FAILURE", "reason": reason, "taxonomy": _semantic_taxonomy(semantic, "PREFLIGHT_FAILURE", reason), "complete_rulespec_candidates": 0, "stage": {"preflight": False, "binding": False, "execution": False, "exact": False}}
             continue
         task = tasks[task_id]
         train = tuple((item.input.values, item.output.values) for item in task.train)
@@ -97,15 +113,27 @@ def main() -> None:
         elif "EXECUTION_FAILURE" in statuses: status = "EXECUTION_FAILURE"
         elif "BINDING_FAILURE" in statuses: status = "BINDING_FAILURE"
         else: status = "PREFLIGHT_FAILURE"
-        records[task_id] = {"status": status, "reason": reason, "complete_rulespec_candidates": len(candidates), "candidate_status_counts": dict(Counter(statuses))}
+        records[task_id] = {
+            "status": status, "reason": reason, "taxonomy": _semantic_taxonomy(semantic, status, reason),
+            "complete_rulespec_candidates": len(candidates), "candidate_status_counts": dict(Counter(statuses)),
+            "stage": {
+                "preflight": bool(candidates) and any(item != "PREFLIGHT_FAILURE" for item in statuses),
+                "binding": any(item in {"COVERED", "VERIFIER_FAILURE", "EXECUTION_FAILURE"} for item in statuses),
+                "execution": any(item in {"COVERED", "VERIFIER_FAILURE"} for item in statuses),
+                "exact": status == "COVERED",
+            },
+        }
     counts = Counter(record["status"] for record in records.values())
+    taxonomy = Counter(record["taxonomy"] for record in records.values())
     artifact = {
         "experiment_id": "ARC2_V3_FINAL_ARCHITECTURE_HARDENING",
         "status": "TRAIN_ONLY_COMPLETE_RULESPEC_AUDIT_FROZEN",
         "task_ids_hash": task_hash,
         "protocol": "Private semantic oracle selected only generic operation family. Train pairs derived every concrete RuleSpec value. Validator, binder, executor and HardVerifier used train pairs only; no Qwen, test grid/output or solution file was opened.",
         "coverage": {"covered": counts["COVERED"], "total": len(records)},
+        "stage_coverage": {name: sum(bool(record["stage"][name]) for record in records.values()) for name in ("preflight", "binding", "execution", "exact")},
         "failures": {key.lower(): counts[key] for key in ("PREFLIGHT_FAILURE", "BINDING_FAILURE", "EXECUTION_FAILURE", "VERIFIER_FAILURE")},
+        "semantic_taxonomy": dict(sorted(taxonomy.items())),
         "records": records,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

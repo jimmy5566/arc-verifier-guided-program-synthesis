@@ -72,8 +72,7 @@ def _worker(worker_id: int, task_ids: list[str], challenge_path: str, model_path
         from llm.transformers_provider import TransformersProvider
         from v3.evidence.cross_pair import derive_cross_pair_evidence
         from v3.evidence.extractor import extract_task_evidence
-        from v3.recognition.recognizer_interface import parse_hypotheses, recognition_prompt
-        from v3.upstream import complete_rule_specs
+        from v3.recognition.recognizer_interface import parse_complete_rulespec_hypotheses, recognition_prompt
 
         provider = TransformersProvider(model_path=Path(model_path), device="cuda:0")
         seconds = provider.load()
@@ -88,9 +87,8 @@ def _worker(worker_id: int, task_ids: list[str], challenge_path: str, model_path
             cross = derive_cross_pair_evidence(evidence)
             prompt = recognition_prompt(task, evidence, cross, top_k=3)
             generated = provider.generate_text(prompt, generation)
-            hypotheses, status = parse_hypotheses(generated.text, limit=3)
-            complete = complete_rule_specs(hypotheses, evidence) if status == "SUCCESS" else ()
-            results.put({"task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "status": status, "rule_specs": [item.to_dict() for item in complete], "raw_response": generated.text, "prompt_tokens": generated.prompt_tokens, "completion_tokens": generated.completion_tokens, "generation_seconds": generated.elapsed_seconds})
+            rule_specs, status = parse_complete_rulespec_hypotheses(generated.text, limit=3)
+            results.put({"task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "status": status, "rule_specs": [item.to_dict() for item in rule_specs], "raw_response": generated.text, "prompt_tokens": generated.prompt_tokens, "completion_tokens": generated.completion_tokens, "generation_seconds": generated.elapsed_seconds})
         results.put({"event": "WORKER_COMPLETE", "worker_id": worker_id})
     except Exception as exc:
         failure = {"event": "WORKER_FAILED", "worker_id": worker_id, "error": f"{type(exc).__name__}: {exc}"}

@@ -30,6 +30,8 @@ class ParameterSlot(StrEnum):
     COUNT = "$COUNT"
     TERMINATION = "$TERMINATION"
     CONDITION = "$CONDITION"
+    TRANSFORM = "$TRANSFORM"
+    PADDING = "$PADDING"
 
 
 _REQUIRED_SLOTS: dict[OperationId, frozenset[ParameterSlot]] = {
@@ -38,7 +40,9 @@ _REQUIRED_SLOTS: dict[OperationId, frozenset[ParameterSlot]] = {
     OperationId.MOVE: frozenset({ParameterSlot.DIRECTION, ParameterSlot.DISTANCE}),
     OperationId.REPEAT: frozenset({ParameterSlot.DIRECTION, ParameterSlot.STEP, ParameterSlot.COUNT, ParameterSlot.TERMINATION}),
     OperationId.RECOLOR: frozenset({ParameterSlot.TARGET_COLOR}),
-    OperationId.ROTATE: frozenset(), OperationId.REFLECT: frozenset(), OperationId.CROP: frozenset(),
+    OperationId.ROTATE: frozenset({ParameterSlot.TRANSFORM}),
+    OperationId.REFLECT: frozenset({ParameterSlot.TRANSFORM}),
+    OperationId.CROP: frozenset({ParameterSlot.SELECTOR, ParameterSlot.PADDING}),
     OperationId.FILL: frozenset({ParameterSlot.TARGET_COLOR}),
     OperationId.RELATIONAL_COPY: frozenset({ParameterSlot.REFERENCE_COLOR, ParameterSlot.DIRECTION, ParameterSlot.DISTANCE}),
 }

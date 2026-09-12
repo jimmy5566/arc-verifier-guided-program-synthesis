@@ -85,6 +85,23 @@ def test_boundary_and_collision_termination_are_resolved_and_executed() -> None:
     assert np.array_equal(RuleExecutor().execute(collision, np.array([[1, 0, 2, 0]])), np.array([[1, 1, 2, 0]]))
 
 
+def test_orientation_and_padded_crop_are_complete_rulespec_semantics() -> None:
+    transform = RuleSpec(_rule(OperationId.ROTATE), {ParameterSlot.TRANSFORM: "FLIP_VERTICAL"})
+    source = np.array([[1, 2], [3, 4]])
+    assert HardVerifier().verify(transform, ((source, np.array([[3, 4], [1, 2]])),)).passed
+    crop = RuleSpec(
+        _rule(OperationId.SELECT, OperationId.CROP), {ParameterSlot.SELECTOR: "COLOR:5", ParameterSlot.PADDING: 1},
+    )
+    grid = np.array([[0, 0, 0, 0, 0], [0, 5, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
+    assert np.array_equal(RuleExecutor().execute(crop, grid), np.array([[0, 0, 0], [0, 5, 0], [0, 0, 0]]))
+    role_crop = RuleSpec(
+        _rule(OperationId.SELECT, OperationId.CROP), {ParameterSlot.SELECTOR: "ROLE:markers", ParameterSlot.PADDING: (0, 0, 1, 1)},
+        {"markers": SelectorRule("COLOR_ALL", 5)},
+    )
+    marked = np.array([[0, 5, 0, 0, 5, 0], [0, 5, 0, 0, 5, 0]])
+    assert InstanceBinder().bind(role_crop, marked).roles["markers"].bbox == (0, 1, 1, 4)
+
+
 def test_preflight_rejects_type_reference_and_dependency_failures_before_binding() -> None:
     invalid = RuleSpec(
         _rule(OperationId.SELECT, OperationId.MOVE),

@@ -27,6 +27,8 @@ _SLOT_TYPES: dict[ParameterSlot, type | tuple[type, ...]] = {
     ParameterSlot.COUNT: int,
     ParameterSlot.TERMINATION: str,
     ParameterSlot.CONDITION: (bool, str),
+    ParameterSlot.TRANSFORM: str,
+    ParameterSlot.PADDING: int,
 }
 
 _FUNCTION_TYPES: dict[DerivedFunction, type | tuple[type, ...]] = {
@@ -72,6 +74,8 @@ class RuleSpecPreflightValidator:
         expected = _SLOT_TYPES[slot]
         if slot is ParameterSlot.DIRECTION:
             return isinstance(value, tuple) and len(value) == 2 and all(isinstance(part, int) and part in {-1, 0, 1} for part in value)
+        if slot is ParameterSlot.PADDING:
+            return (isinstance(value, int) and not isinstance(value, bool) and value >= 0) or (isinstance(value, tuple) and len(value) == 4 and all(isinstance(part, int) and not isinstance(part, bool) and part >= 0 for part in value))
         if slot in {ParameterSlot.DISTANCE, ParameterSlot.STEP, ParameterSlot.COUNT}:
             return isinstance(value, int) and not isinstance(value, bool) and value >= 0
         if slot in {ParameterSlot.TARGET_COLOR, ParameterSlot.SOURCE_COLOR, ParameterSlot.REFERENCE_COLOR}:
@@ -93,9 +97,9 @@ class RuleSpecPreflightValidator:
                 diagnostics.append(f"role_selector_invalid:{name}")
                 continue
             kind = selector.kind.upper()
-            if kind not in {"COLOR", "SMALLEST_OBJECT", "LARGEST_OBJECT", "ARGMIN", "ARGMAX", "ALL_NON_BACKGROUND"}:
+            if kind not in {"COLOR", "COLOR_ALL", "SMALLEST_OBJECT", "LARGEST_OBJECT", "ARGMIN", "ARGMAX", "ALL_NON_BACKGROUND"}:
                 diagnostics.append(f"role_selector_unsupported:{name}:{selector.kind}")
-            if kind == "COLOR" and not self._literal_type_valid(ParameterSlot.TARGET_COLOR, selector.value):
+            if kind in {"COLOR", "COLOR_ALL"} and not self._literal_type_valid(ParameterSlot.TARGET_COLOR, selector.value):
                 diagnostics.append(f"role_selector_invalid_color:{name}")
             if kind in {"ARGMIN", "ARGMAX"} and str(selector.value).upper() not in {"AREA", "WIDTH", "HEIGHT", "COLOR"}:
                 diagnostics.append(f"role_selector_invalid_metric:{name}")

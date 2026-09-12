@@ -117,6 +117,35 @@ def _repeat_candidates(source: Sequence[GridObject], target: Sequence[GridObject
     return directions, steps, counts, frozenset(termination)
 
 
+def _transform_candidates(source: np.ndarray, target: np.ndarray) -> frozenset[str]:
+    """Return exact whole-grid transforms evidenced by one train pair."""
+    transforms = {
+        "ROTATE_90": lambda grid: np.rot90(grid), "ROTATE_180": lambda grid: np.rot90(grid, 2),
+        "ROTATE_270": lambda grid: np.rot90(grid, 3), "FLIP_HORIZONTAL": np.fliplr,
+        "FLIP_VERTICAL": np.flipud, "TRANSPOSE": lambda grid: grid.T,
+        "ANTI_TRANSPOSE": lambda grid: np.fliplr(np.flipud(grid)).T,
+    }
+    return frozenset(name for name, transform in transforms.items() if np.array_equal(transform(source), target))
+
+
+def _crop_padding_candidates(source: np.ndarray, target: np.ndarray) -> frozenset[object]:
+    """Find lossless colour-bounding-box crop paddings evidenced by a pair."""
+    candidates: set[object] = set()
+    for color in np.unique(source):
+        cells = np.argwhere(source == color)
+        rows, cols = cells[:, 0], cells[:, 1]
+        for top in range(int(rows.min()) + 1):
+            bottom = top + target.shape[0]
+            if bottom > source.shape[0] or not (top <= int(rows.min()) and bottom > int(rows.max())): continue
+            for left in range(int(cols.min()) + 1):
+                right = left + target.shape[1]
+                if right > source.shape[1] or not (left <= int(cols.min()) and right > int(cols.max())): continue
+                if np.array_equal(source[top:bottom, left:right], target):
+                    padding = (int(rows.min()) - top, bottom - 1 - int(rows.max()), int(cols.min()) - left, right - 1 - int(cols.max()))
+                    candidates.add(padding[0] if len(set(padding)) == 1 else padding)
+    return frozenset(candidates)
+
+
 def extract_evidence(train_pairs: Iterable[tuple[np.ndarray, np.ndarray]], *, a3_relation_graphs: Sequence[Mapping[str, Any]] | None = None) -> EvidenceBundle:
     pairs: list[PairEvidence] = []
     for index, (source, target) in enumerate(train_pairs):
@@ -141,6 +170,8 @@ def extract_evidence(train_pairs: Iterable[tuple[np.ndarray, np.ndarray]], *, a3
             "SOURCE_COLOR": source_colors,
             "REFERENCE_COLOR": source_colors,
             "TERMINATION": termination,
+            "TRANSFORM": _transform_candidates(source_values, target_values),
+            "PADDING": _crop_padding_candidates(source_values, target_values),
         }, None if a3_relation_graphs is None else a3_relation_graphs[index]))
     if not pairs:
         raise ValueError("at least one train pair is required")

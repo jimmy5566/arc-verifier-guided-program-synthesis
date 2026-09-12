@@ -89,6 +89,12 @@ class InstanceBinder:
             matches = tuple(item for item in objects if item.color == int(rule.value))
             if len(matches) != 1: raise BindingError(f"COLOR role requires one object, got {len(matches)}")
             return matches[0]
+        if kind == "COLOR_ALL":
+            matches = tuple(item for item in objects if item.color == int(rule.value))
+            if not matches: raise BindingError("COLOR_ALL role found no matching object")
+            cells = tuple(cell for item in matches for cell in item.cells)
+            rows, cols = zip(*cells)
+            return ObjectInstance(int(rule.value), tuple(sorted(cells)), (min(rows), min(cols), max(rows), max(cols)))
         if kind in {"SMALLEST_OBJECT", "LARGEST_OBJECT", "ARGMIN", "ARGMAX"}:
             if not objects: raise BindingError("no object available for selector")
             if kind == "SMALLEST_OBJECT": metric, reverse = "AREA", False
