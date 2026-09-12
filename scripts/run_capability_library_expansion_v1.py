@@ -51,6 +51,13 @@ def main() -> None:
     if len(task_ids) != 30 or len(set(task_ids)) != 30:
         raise ValueError("requires the exact frozen 30-task development cohort")
     tasks, solutions = load_dataset(args.challenge), json.loads(args.solutions.read_text(encoding="utf-8"))
+    missing_challenges = sorted(set(task_ids) - set(tasks))
+    missing_solutions = sorted(set(task_ids) - set(solutions))
+    if missing_challenges or missing_solutions:
+        raise ValueError(
+            "selected challenge/solution split does not contain the frozen cohort "
+            f"(missing challenges={len(missing_challenges)}, missing solutions={len(missing_solutions)})"
+        )
     private_records = []
     covered_by_capability: Counter[str] = Counter()
     family_coverage: Counter[str] = Counter()
