@@ -63,9 +63,18 @@ def test_track_u_source_has_no_downstream_or_gold_import_and_freeze_hashes_match
         "recognizer": ROOT / "src/v3/recognition/recognizer_interface.py",
         "runner": ROOT / "scripts/run_v3_rule_recognition.py",
     }
-    assert config["upstream_evidence_version"] == "U10"
+    assert config["upstream_evidence_version"] == "U14"
     assert all(hashlib.sha256(path.read_bytes()).hexdigest().upper() == config["frozen_source_sha256"][name] for name, path in paths.items())
     assert "PREDICTIONS_FROZEN_BEFORE_GOLD_SCORING" in source_text
+
+
+def test_prompt_provides_real_operation_slot_contract_without_placeholder_schema_echo() -> None:
+    from v3.recognition.recognizer_interface import recognition_prompt
+    task = _task(); evidence = extract_task_evidence(task)
+    prompt = recognition_prompt(task, evidence, derive_cross_pair_evidence(evidence), top_k=3)
+    assert "slot_contract" in prompt
+    assert '"STRING"' not in prompt and '"CANONICAL_OPERATION"' not in prompt and '"$TYPED_SLOT"' not in prompt
+    assert "RECOLOR/FILL:$TARGET_COLOR" in prompt
 
 
 def test_attachment_builder_excludes_gold_and_backend_dependencies() -> None:

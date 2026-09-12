@@ -122,7 +122,6 @@ def _facts(evidence: EvidenceBundle, cross_pair: CrossPairEvidence) -> dict[str,
             },
             "all_intersections_nonempty": bool(cross_pair.invariants["all_pair_candidate_intersection_nonempty"]),
         },
-        "format": "i/o=object [color,count,min_area,max_area,bbox]; x=[changed_count,sample,bbox,truncated]; r=[direction,distance,step,count,termination]; g=relations; s=[input,output] symmetry h/v/d; exact pixels are in train_grids",
     }
 
 
@@ -147,9 +146,13 @@ def recognition_prompt(task: ARCTask, evidence: EvidenceBundle, cross_pair: Cros
     return json.dumps({
         "train_grids": raw,
         "deterministic_evidence": _facts(evidence, cross_pair),
-        "allowed_operations": [item.value for item in OperationId],
-        "output_schema": {"hypotheses": [{"family": "STRING", "operations": ["CANONICAL_OPERATION"], "required_slots": ["$TYPED_SLOT"]}]},
-        "instruction": f"Infer at most {top_k} distinct general rule skeletons from TRAIN pairs only. Return JSON only. Each hypothesis must use allowed_operations, and required_slots must be exactly the typed holes implied by its operation sequence. Do not emit any concrete color, direction, number, coordinate, object identity, termination value, parameter assignment, test grid, prose, or explanation.",
+        "slot_contract": "SELECT:$SELECTOR;COPY/MOVE:$DIRECTION,$DISTANCE;REPEAT:$DIRECTION,$STEP,$COUNT,$TERMINATION;RECOLOR/FILL:$TARGET_COLOR;RELATIONAL_COPY:$REFERENCE_COLOR,$DIRECTION,$DISTANCE;ROTATE/REFLECT/CROP:[]",
+        "instruction": (
+            f"Infer at most {top_k} distinct general rule skeletons from TRAIN only. "
+            "Return exactly one JSON object with one key named hypotheses. Each hypothesis has exactly family, operations, and required_slots. "
+            "family is uppercase. operations is a non-empty ordered list from slot_contract. required_slots is its sorted slot union. "
+            "Do not copy any prompt text or contract. Do not emit literal parameter values, grids, code, rationale, or markdown."
+        ),
     }, separators=(",", ":"), default=_json_default)
 
 

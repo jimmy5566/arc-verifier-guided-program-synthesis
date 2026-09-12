@@ -65,11 +65,13 @@ def _score_one(predictions: list[Mapping[str, Any]], gold: RuleSkeleton | None, 
         decoded = [_decode(item) for item in predictions]
     except (KeyError, TypeError, ValueError):
         return {"schema_valid": False, "primary_failure": "SCHEMA_FAILURE", "true_recognition_failure": True}
+    # A parsed envelope with zero hypotheses is not a valid Track-U response,
+    # regardless of whether the independently-derived gold can be represented.
+    if not decoded:
+        return {"schema_valid": False, "primary_failure": "SCHEMA_FAILURE", "true_recognition_failure": True}
     if gold is None:
         return {"schema_valid": True, "primary_failure": gold_reason, "true_recognition_failure": False}
     top1 = decoded[0] if decoded else None
-    if top1 is None:
-        return {"schema_valid": False, "primary_failure": "SCHEMA_FAILURE", "true_recognition_failure": True}
     gold_steps = tuple(step.operation for step in gold.steps)
     top_steps = tuple(step.operation for step in top1.steps)
     exact = top1 == gold
