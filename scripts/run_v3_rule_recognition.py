@@ -53,9 +53,9 @@ def _validate_context_budget(task_ids: tuple[str, ...], challenge_path: Path, mo
         prompt = recognition_prompt(task, evidence, derive_cross_pair_evidence(evidence), top_k=3)
         encoded = tokenizer.apply_chat_template(
             [{"role": "user", "content": prompt}], add_generation_prompt=True,
-            enable_thinking=False, tokenize=True, return_tensors="pt",
+            enable_thinking=False, tokenize=True, return_tensors="pt", return_dict=True,
         )
-        input_ids = encoded["input_ids"] if isinstance(encoded, dict) else encoded
+        input_ids = encoded["input_ids"]
         token_count = int(input_ids.shape[-1])
         if token_count > budget:
             raise ValueError(f"context preflight failed: task={task_id} prompt_tokens={token_count} budget={budget}")
