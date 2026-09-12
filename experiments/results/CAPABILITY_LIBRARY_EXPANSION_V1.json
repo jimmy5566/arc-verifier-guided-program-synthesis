@@ -98,7 +98,13 @@
     }
   },
   "leakage_audit": "task IDs, candidate programs, grids, and solutions stay in ignored private artifacts; public aggregate contains no per-task data.",
-  "runtime_seconds": 7.654412600008072,
+  "registry_executor_audit": {
+    "all_registered_v4_executable": true,
+    "expansion_dispatch_count": 5,
+    "expansion_registered_count": 5,
+    "unsupported_primitive_ids": []
+  },
+  "runtime_seconds": 12.297757899999851,
   "status": "COMPLETE",
   "task_count": 30,
   "threshold_status": "CAPABILITY_STILL_BLOCKED"
