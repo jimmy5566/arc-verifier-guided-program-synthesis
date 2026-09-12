@@ -32,14 +32,15 @@ def _task_ids(cohort: dict[str, Any]) -> tuple[str, ...]:
     return task_ids
 
 
-def tokenization_preflight(task_ids: tuple[str, ...], challenge_path: Path, model_path: Path, context_window: int) -> dict[str, float | int]:
+def tokenization_preflight(task_ids: tuple[str, ...], challenge_path: Path, model_path: Path, context_window: int, chat_template_fallback_model_path: Path | None = None) -> dict[str, float | int]:
     """Tokenize all complete raw-grid prompts without weights or generation."""
     from arc.io import load_dataset
     from inference.direct_grid_solver import build_direct_grid_prompt
     from transformers import AutoTokenizer
 
     tasks = load_dataset(challenge_path)
-    tokenizer = AutoTokenizer.from_pretrained(str(model_path), local_files_only=True, trust_remote_code=False)
+    tokenizer_path = chat_template_fallback_model_path or model_path
+    tokenizer = AutoTokenizer.from_pretrained(str(tokenizer_path), local_files_only=True, trust_remote_code=False)
     counts: list[int] = []
     for task_id in task_ids:
         encoded = tokenizer.apply_chat_template(
@@ -64,7 +65,8 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], challenge_path: str, mode
         from llm.models import GenerationConfig
         from llm.transformers_provider import TransformersProvider
 
-        provider = TransformersProvider(model_path=Path(model_path), device="cuda:0")
+        fallback = config.get("chat_template_fallback_model_path")
+        provider = TransformersProvider(model_path=Path(model_path), device="cuda:0", chat_template_fallback_path=Path(fallback) if fallback else None)
         load_seconds = provider.load()
         ready.put({"event": "MODEL_READY", "worker_id": worker_id, "physical_gpu_id": worker_id, "model_load_seconds": load_seconds})
         if not start.wait(timeout=MODEL_LOAD_WATCHDOG_SECONDS):
@@ -79,7 +81,7 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], challenge_path: str, mode
             generated = provider.generate_text(build_direct_grid_prompt(tasks[task_id]), generation)
             parsed = parse_direct_grid_response(generated.text, len(tasks[task_id].test))
             records.put({
-                "task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id,
+                "task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "chat_template_source": provider.chat_template_source,
                 "status": parsed.status, "attempt_1": parsed.attempt_1, "attempt_2": parsed.attempt_2,
                 "raw_response": generated.text, "prompt_tokens": generated.prompt_tokens,
                 "completion_tokens": generated.completion_tokens, "generation_seconds": generated.elapsed_seconds,
@@ -101,13 +103,15 @@ def main() -> None:
     parser.add_argument("--challenge-path", type=Path, required=True)
     parser.add_argument("--model-path", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--experiment-id", default="DIRECT_GRID_SOLVE_BASELINE_V1")
+    parser.add_argument("--chat-template-fallback-model-path", type=Path)
     parser.add_argument("--tokenization-preflight", action="store_true")
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError("refusing to overwrite a frozen prediction artifact")
     task_ids = _task_ids(json.loads(args.cohort.read_text(encoding="utf-8")))
     config = json.loads(args.frozen_config.read_text(encoding="utf-8"))
-    preflight = tokenization_preflight(task_ids, args.challenge_path, args.model_path, int(config["generation"]["context_window"]))
+    preflight = tokenization_preflight(task_ids, args.challenge_path, args.model_path, int(config["generation"]["context_window"]), args.chat_template_fallback_model_path)
     if args.tokenization_preflight:
         print(json.dumps({"status": "TOKENIZATION_PREFLIGHT_COMPLETE_NO_GENERATION", "preflight": preflight}, sort_keys=True)); return
     hardware = inspect_hardware()
@@ -119,7 +123,8 @@ def main() -> None:
     children = []
     try:
         for worker_id, bucket in enumerate(_buckets(task_ids)):
-            child = context.Process(target=_worker, args=(worker_id, bucket, str(args.challenge_path), str(args.model_path), config, records, ready, start))
+            run_config = {**config, "chat_template_fallback_model_path": str(args.chat_template_fallback_model_path) if args.chat_template_fallback_model_path else None}
+            child = context.Process(target=_worker, args=(worker_id, bucket, str(args.challenge_path), str(args.model_path), run_config, records, ready, start))
             child.start(); children.append(child)
             state = ready.get(timeout=MODEL_LOAD_WATCHDOG_SECONDS)
             if state.get("event") != "MODEL_READY":
@@ -139,11 +144,12 @@ def main() -> None:
             child.join(timeout=30)
             if child.is_alive(): child.terminate()
     artifact = {
-        "experiment_id": "DIRECT_GRID_SOLVE_BASELINE_V1", "status": "PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING",
+        "experiment_id": args.experiment_id, "status": "PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING",
         "protocol": "offline raw train grids plus test input only; targets, oracle, semantic IR, capability libraries, compiler, executor, verifier, search, and scorer are not imported",
         "task_ids_hash": hashlib.sha256(json.dumps(sorted(task_ids), separators=(",", ":")).encode("utf-8")).hexdigest(),
         "frozen_config_sha256": hashlib.sha256(args.frozen_config.read_bytes()).hexdigest(), "preflight": preflight,
-        "hardware": hardware.to_dict(), "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")}, "records": by_task,
+        "hardware": hardware.to_dict(), "chat_template_fallback_model_path": str(args.chat_template_fallback_model_path) if args.chat_template_fallback_model_path else None,
+        "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")}, "records": by_task,
     }
     atomic_write_json(args.output, artifact)
     print(json.dumps({"status": artifact["status"], "task_count": len(by_task), "truncated_tasks": 0}, sort_keys=True))

@@ -1,0 +1,37 @@
+{
+  "experiment_id": "ARC_SPECIALIZED_MODEL_AND_INFERENCE_ABLATION_V1",
+  "cohort": {
+    "source": "DIRECT_GRID_SOLVE_BASELINE_V1 exact frozen cohort",
+    "task_count": 30,
+    "task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8",
+    "order": "identical private frozen cohort order"
+  },
+  "D0_reference": {
+    "model": "qwen-lm/qwen-3/Transformers/8b/1",
+    "prediction_freeze_sha256": "cdb70eccd744f1153c5dfb3c98d086442eb8f9426487008dd30619557486cfe0",
+    "any_of_2_exact": "1/30",
+    "status": "REUSED_NOT_RERUN"
+  },
+  "model": {
+    "model_source": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1",
+    "model_path": "/kaggle/input/models/sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1",
+    "model_version": "1",
+    "model_artifact_hash": "NOT_AVAILABLE_FROM_ATTACHED_READ_ONLY_KAGGLE_MODEL",
+    "dtype": "bfloat16",
+    "backend": "Transformers",
+    "hardware": "4x NVIDIA L4",
+    "internet": false
+  },
+  "D1_ARC_SFT_CHECKPOINT_ONLY": {
+    "prompt_interface": "byte-identical D0 raw-grid prompt via inference.direct_grid_solver.build_direct_grid_prompt",
+    "chat_template_transport": "Qwen3-8B local template fallback because ARC-SFT artifact has no tokenizer chat_template; transport-only, not a native ARC interface",
+    "forbidden": ["native ARC prompt", "augmentation", "TTT", "LoRA", "beam", "sampling", "ranking", "test targets", "semantic IR", "DSL", "compiler", "executor", "verifier", "search"]
+  },
+  "generation": {"temperature": 0.0, "top_p": 1.0, "seed": 20260912, "thinking": false, "max_new_tokens": 3072, "context_window": 32768, "calls_per_task": 1, "maximum_attempts": 2},
+  "D2_ARC_SFT_NATIVE_INTERFACE": {
+    "status": "NOT_RUN_NATIVE_INTERFACE_UNRESOLVED",
+    "reason": "No native ARC serialization/template was present in the locally inspected checkpoint package or frozen repository artifacts; no prompt will be invented."
+  },
+  "formal_protocol": "offline inference -> complete candidate artifact -> SHA256 freeze -> only then local exact scoring",
+  "network_policy": "no web or external data during formal inference"
+}

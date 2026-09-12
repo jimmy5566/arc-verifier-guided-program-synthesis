@@ -31,6 +31,7 @@ INCLUDED_FILES = (
     "configs/ARC_SEMANTIC_IR_V1_SCHEMA.json",
     "configs/GRID_SEMANTIC_RECOGNITION_V1_FROZEN_CONFIG.json",
     "configs/DIRECT_GRID_SOLVE_BASELINE_V1_FROZEN_CONFIG.json",
+    "configs/ARC_SPECIALIZED_MODEL_ABLATION_V1_FROZEN_CONFIG.json",
     "configs/ARC_PARALLEL_DIAGNOSTIC_V2_FROZEN_CONFIG.json",
     "scripts/run_qwen3_8b_transformers_preflight.py",
     "scripts/run_qwen3_8b_one_task_smoke.py",

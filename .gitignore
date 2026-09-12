@@ -90,6 +90,7 @@ experiments/results/*
 !experiments/results/CAPABILITY_LIBRARY_EXPANSION_V1.json
 !experiments/results/ARC_PARALLEL_DIAGNOSTIC_V2_SYNTHESIS.json
 !experiments/results/DIRECT_GRID_SOLVE_BASELINE_V1.json
+!experiments/results/ARC_SPECIALIZED_MODEL_ABLATION_V1.json
 reports/*
 !reports/arc2_capability_system_v1.md
 !reports/capability_registry_audit.md
@@ -111,3 +112,4 @@ reports/*
 !reports/capability_library_expansion_v1.md
 !reports/arc_parallel_diagnostic_v2_synthesis.md
 !reports/direct_grid_solve_baseline_v1.md
+!reports/arc_specialized_model_ablation_v1.md

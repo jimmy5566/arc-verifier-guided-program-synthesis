@@ -1,0 +1,141 @@
+{
+  "D0": {
+    "metrics": {
+      "any_of_2_exact": 0.03333333333333333,
+      "correct_dimensions": 0.4666666666666667,
+      "mean_cell_accuracy": 0.3329209504432321,
+      "top1_exact": 0.03333333333333333,
+      "valid_grid_rate": 0.6666666666666666
+    },
+    "prediction_freeze_hash": "cdb70eccd744f1153c5dfb3c98d086442eb8f9426487008dd30619557486cfe0",
+    "status": "REUSED_FROZEN_NOT_RERUN"
+  },
+  "D1": {
+    "backend": "Transformers BF16",
+    "chat_template_transport": "local Qwen3-8B fallback tokenizer",
+    "decision": "ARC_SFT_WEIGHTS_WEAK_ALONE",
+    "delta_any_of_2_pp_vs_D0": -3.3333333333333335,
+    "failure_taxonomy": {
+      "INVALID_GRID_OUTPUT": 30
+    },
+    "generation_seconds_sum": 65.70024926899987,
+    "kernel_wall_seconds": 154.677534037,
+    "metrics": {
+      "any_of_2_exact": 0.0,
+      "correct_dimensions": 0.0,
+      "mean_cell_accuracy": 0.0,
+      "top1_exact": 0.0,
+      "valid_grid_rate": 0.0
+    },
+    "model_artifact_hash": "NOT_AVAILABLE_FROM_ATTACHED_READ_ONLY_KAGGLE_MODEL",
+    "model_path": "/kaggle/input/models/sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1",
+    "model_source": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1",
+    "model_version": "1",
+    "prediction_freeze_hash": "0754755c624df5613e499f1de200a876b16097afb98aac4e6a04fb65db064b2c",
+    "prompt_preflight": {
+      "max_prompt_tokens": 12403,
+      "median_prompt_tokens": 1563.0,
+      "min_prompt_tokens": 333,
+      "task_count": 30,
+      "truncated_tasks": 0
+    },
+    "status": "COMPLETE_SCORED_AFTER_PREDICTION_FREEZE"
+  },
+  "D2": {
+    "reason": "No native ARC serialization/template existed in local checkpoint package or frozen repository artifacts. No prompt was invented.",
+    "status": "NOT_RUN_NATIVE_INTERFACE_UNRESOLVED"
+  },
+  "D3": {
+    "status": "NOT_RUN_DEPENDS_ON_D2_NATIVE_INTERFACE"
+  },
+  "D3_GENERIC_CONTROL": {
+    "status": "NOT_RUN_DUE_COMPUTE_BUDGET"
+  },
+  "D4": {
+    "status": "NOT_RUN_DEPENDS_ON_D3"
+  },
+  "D5": {
+    "status": "NOT_RUN_NO_D4_CANDIDATE_POOL"
+  },
+  "cohort_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8",
+  "experiment_id": "ARC_SPECIALIZED_MODEL_AND_INFERENCE_ABLATION_V1",
+  "formal_web_access": false,
+  "leakage_audit": [
+    "D0/D1 artifacts were validated and SHA256-hashed before development targets were opened.",
+    "D1 inference was offline and uses only train pairs plus test inputs.",
+    "No Semantic IR, DSL, capability registry, compiler, executor, verifier, target, oracle, public, held-out, or challenge dependency occurs in D1 inference."
+  ],
+  "main_decomposition": {
+    "ARC_SFT_checkpoint_contribution": "LOW",
+    "TTT_contribution": "NOT_MEASURABLE",
+    "native_interface_contribution": "NOT_MEASURABLE",
+    "search_augmentation_contribution": "NOT_MEASURABLE",
+    "selection_bottleneck": "NOT_MEASURABLE"
+  },
+  "public_heldout_challenge_inference": false,
+  "recognition_overlap": {
+    "GRID_SEMANTIC_RECOGNITION_V1_D1": {
+      "recognition_fail_direct_exact": 0,
+      "recognition_fail_direct_fail": 26,
+      "recognition_success_direct_exact": 0,
+      "recognition_success_direct_fail": 4
+    },
+    "TRACK_A_A3": "NOT_AVAILABLE_PRIVATE_PREDICTION_ARTIFACT; not rerun"
+  },
+  "scoring_seconds": 0.11548730000504293,
+  "status": "COMPLETE_WITH_D2_NATIVE_INTERFACE_UNRESOLVED",
+  "strata": {
+    "Composition": {
+      "D0": "0/2",
+      "D1": "0/2",
+      "D2": "NOT_RUN_NATIVE_INTERFACE_UNRESOLVED",
+      "D3": "NOT_RUN_DEPENDS_ON_D2",
+      "D4": "NOT_RUN_DEPENDS_ON_D3",
+      "D5": "NOT_APPLICABLE_NO_D4_POOL"
+    },
+    "Conditional/Role": {
+      "D0": "1/4",
+      "D1": "0/4",
+      "D2": "NOT_RUN_NATIVE_INTERFACE_UNRESOLVED",
+      "D3": "NOT_RUN_DEPENDS_ON_D2",
+      "D4": "NOT_RUN_DEPENDS_ON_D3",
+      "D5": "NOT_APPLICABLE_NO_D4_POOL"
+    },
+    "Iteration": {
+      "D0": "0/15",
+      "D1": "0/15",
+      "D2": "NOT_RUN_NATIVE_INTERFACE_UNRESOLVED",
+      "D3": "NOT_RUN_DEPENDS_ON_D2",
+      "D4": "NOT_RUN_DEPENDS_ON_D3",
+      "D5": "NOT_APPLICABLE_NO_D4_POOL"
+    },
+    "Output Construction": {
+      "D0": "0/1",
+      "D1": "0/1",
+      "D2": "NOT_RUN_NATIVE_INTERFACE_UNRESOLVED",
+      "D3": "NOT_RUN_DEPENDS_ON_D2",
+      "D4": "NOT_RUN_DEPENDS_ON_D3",
+      "D5": "NOT_APPLICABLE_NO_D4_POOL"
+    },
+    "Relational": {
+      "D0": "0/8",
+      "D1": "0/8",
+      "D2": "NOT_RUN_NATIVE_INTERFACE_UNRESOLVED",
+      "D3": "NOT_RUN_DEPENDS_ON_D2",
+      "D4": "NOT_RUN_DEPENDS_ON_D3",
+      "D5": "NOT_APPLICABLE_NO_D4_POOL"
+    }
+  },
+  "task_count": 30,
+  "task_transitions": {
+    "D0_to_D1": {
+      "both_fail": 29,
+      "fail_to_success": 0,
+      "success_to_fail": 1,
+      "success_to_success": 0
+    },
+    "D1_to_D2": "NOT_RUN",
+    "D2_to_D3": "NOT_RUN",
+    "D3_to_D4": "NOT_RUN"
+  }
+}
