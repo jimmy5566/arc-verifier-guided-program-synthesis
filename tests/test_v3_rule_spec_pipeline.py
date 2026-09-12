@@ -47,6 +47,8 @@ def test_cross_pair_joint_intersection_and_train_consistency() -> None:
         {"DIRECTION": frozenset({(0, 1), (0, -1)}), "STEP": frozenset({2})},
     ])
     assert cross.candidates == {"DIRECTION": frozenset({(0, 1)}), "STEP": frozenset({2})}
+    assert cross.candidate_frequency["DIRECTION"][(0, 1)] == 3
+    assert cross.invariants["all_pair_candidate_intersection_nonempty"]
     pairs = []
     for row in (0, 1, 2):
         source = np.zeros((3, 7), dtype=int); source[row, 1] = 1
