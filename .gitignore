@@ -91,6 +91,9 @@ experiments/results/*
 !experiments/results/ARC_PARALLEL_DIAGNOSTIC_V2_SYNTHESIS.json
 !experiments/results/DIRECT_GRID_SOLVE_BASELINE_V1.json
 !experiments/results/ARC_SPECIALIZED_MODEL_ABLATION_V1.json
+!experiments/results/ARC2_V3_BACKEND_AUDIT_V1.json
+!experiments/results/ARC2_V3_RECOGNITION_V1.json
+!experiments/results/ARC2_V3_E2E_V1.json
 reports/*
 !reports/arc2_capability_system_v1.md
 !reports/capability_registry_audit.md
@@ -115,3 +118,7 @@ reports/*
 !reports/arc_specialized_model_ablation_v1.md
 !reports/arc2_v3_asset_migration.md
 !reports/arc2_v3_refactor_phase1.md
+!reports/arc2_v3_backend_audit_v1.md
+!reports/arc2_v3_recognition_v1.md
+!reports/arc2_v3_e2e_v1.md
+!reports/arc2_v3_final_architecture.md

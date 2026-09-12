@@ -1,0 +1,10 @@
+{
+  "experiment_id": "ARC2_V3_STAGED_VALIDATION_V1",
+  "base_commit": "a6126192876d804040752d91721a5e5b20e3d343",
+  "cohort": {"source": "GRID_SEMANTIC_RECOGNITION_V1 frozen development cohort", "task_count": 30, "task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8", "task_ids_public": false},
+  "phase_a": {"model_calls": 0, "gold_input": "oracle semantic IR mapped deterministically to V3 operation skeleton only; concrete parameters excluded", "backend_train_coverage_gate": 15, "require_no_exposed_noop": true, "require_no_unsupported_exposed_operations": true, "test_exact_protocol": "only after complete train RuleSpec audit artifact is SHA256-frozen"},
+  "phase_b": {"enabled_only_if_phase_a_passes": true, "model": "qwen-lm/qwen-3/Transformers/8b/1", "offline": true, "top_k": [1, 3], "top3_recall_gate": 9},
+  "phase_c": {"enabled_only_if_phase_a_and_b_pass": true, "max_final_grid_candidates": 2, "selection": ["fewest_operations", "smallest_parameter_assignment_space", "recognition_rank", "canonical_rulespec"]},
+  "runtime_forbidden_dependencies": ["recognition.arc_semantic_ir", "llm.macro_compiler_v1", "compiler_repair", "llm_tool_stitching", "legacy_program_synthesis"],
+  "network_policy": "offline; no external task lookup or solution search"
+}

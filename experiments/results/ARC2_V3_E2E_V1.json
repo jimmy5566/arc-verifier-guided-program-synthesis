@@ -1,0 +1,5 @@
+{
+  "experiment_id": "ARC2_V3_E2E_V1",
+  "reason": "Phase A gate failed; no Qwen inference, test prediction, or E2E scoring was run.",
+  "status": "NOT_RUN_PHASE_A_BACKEND_NOT_READY"
+}

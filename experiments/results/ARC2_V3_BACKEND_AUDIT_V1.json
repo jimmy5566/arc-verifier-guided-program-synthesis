@@ -1,0 +1,65 @@
+{
+  "cohort": {
+    "source": "GRID_SEMANTIC_RECOGNITION_V1 frozen development cohort",
+    "task_count": 30,
+    "task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8",
+    "task_ids_public": false
+  },
+  "experiment_id": "ARC2_V3_BACKEND_AUDIT_V1",
+  "failure_attribution": {
+    "EXECUTION_CAPABILITY_FAILURE": 5,
+    "PARAMETER_INFERENCE_FAILURE": 4,
+    "VERIFICATION_FAILURE": 21
+  },
+  "frozen_train_audit_sha256": "03b528014051d317174928dba78a0c3ecebc4bd69e9a9846c41eaf412cc7b665",
+  "leakage_audit": "No LLM, test output, solution file, held-out, public, or challenge inference was used. The frozen audit consumed oracle semantic IR only to derive parameter-free skeletons; it never consumed concrete oracle parameters.",
+  "metrics": {
+    "at_least_one_train_consistent_rulespec": 0,
+    "backend_train_coverage": 0,
+    "executor_unsupported_operation": 5,
+    "gold_skeleton_supported": 25,
+    "parameter_hypotheses_generated": 21,
+    "parameter_inference_failure": 4,
+    "unique_train_consistent_rulespec": 0,
+    "verification_failure": 21
+  },
+  "model_calls": 0,
+  "operation_audit": {
+    "exposed_operations": [
+      "COPY",
+      "CROP",
+      "FILL",
+      "MOVE",
+      "RECOLOR",
+      "REFLECT",
+      "RELATIONAL_COPY",
+      "REPEAT",
+      "ROTATE",
+      "SELECT"
+    ],
+    "fully_executable_operations": [
+      "COPY",
+      "CROP",
+      "FILL",
+      "MOVE",
+      "RECOLOR",
+      "REFLECT",
+      "RELATIONAL_COPY",
+      "REPEAT",
+      "ROTATE",
+      "SELECT"
+    ],
+    "no_op_operations": [],
+    "unsupported_exposed_operations": []
+  },
+  "oracle_skeleton_test_exact": "NOT_RUN_PHASE_A_GATE_FAILED",
+  "phase_a_gate": {
+    "backend_train_coverage": 0,
+    "no_exposed_noop": true,
+    "required": 15,
+    "unsupported_exposed_operation_count": 0
+  },
+  "phase_b": "NOT_RUN_PHASE_A_BACKEND_NOT_READY",
+  "phase_c": "NOT_RUN_PHASE_A_BACKEND_NOT_READY",
+  "status": "BACKEND_NOT_READY"
+}

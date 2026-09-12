@@ -1,0 +1,5 @@
+{
+  "experiment_id": "ARC2_V3_RECOGNITION_V1",
+  "reason": "Phase A gate failed; no Qwen inference was run.",
+  "status": "NOT_RUN_PHASE_A_BACKEND_NOT_READY"
+}
