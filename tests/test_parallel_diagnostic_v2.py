@@ -67,3 +67,11 @@ def test_v2_recognition_runner_is_oracle_and_execution_blind() -> None:
     text = (root / "scripts/run_parallel_semantic_ablation.py").read_text(encoding="utf-8").lower()
     for forbidden in ("semantic_ir_scorer", "solutions", "macro_compiler", "capabilityprogramexecutor", "hardverifier", "program_search"):
         assert forbidden not in text
+
+
+def test_finalizer_is_the_explicit_local_oracle_boundary() -> None:
+    root = Path(__file__).parents[1]
+    text = (root / "scripts/finalize_semantic_ablation.py").read_text(encoding="utf-8")
+    assert "semantic_ir_scorer" in text
+    assert "--gold" in text
+    assert "PREDICTIONS_FROZEN_BEFORE_GOLD_SCORING" in text
