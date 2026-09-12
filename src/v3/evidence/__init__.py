@@ -1,0 +1,1 @@
+"""Deterministic train-pair evidence."""

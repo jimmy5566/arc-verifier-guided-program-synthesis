@@ -1,0 +1,128 @@
+from __future__ import annotations
+
+import ast
+import hashlib
+from dataclasses import replace
+from pathlib import Path
+
+import numpy as np
+
+from arc.task import ARCExample, ARCGrid, ARCTask
+from v3.evidence.cross_pair import intersect_candidates
+from v3.evidence.extractor import extract_evidence, extract_task_evidence
+from v3.parameters.joint_solver import infer_parameters
+from v3.pipeline import train_consistent_rule_specs
+from v3.schema.rule_skeleton import OperationId, ParameterSlot, RuleSkeleton
+from v3.schema.rule_spec import RuleSpec
+from v3.verification.verifier import HardVerifier
+
+
+ROOT = Path(__file__).parents[1]
+
+
+def _skeleton(family: str, *operations: OperationId) -> RuleSkeleton:
+    return RuleSkeleton.from_operations(family, operations)
+
+
+def _run(skeleton: RuleSkeleton, pairs: list[tuple[np.ndarray, np.ndarray]]):
+    evidence = extract_evidence(pairs)
+    candidates = train_consistent_rule_specs((skeleton,), evidence, pairs)
+    assert candidates
+    assert HardVerifier().verify(candidates[0], pairs).passed
+    return candidates[0]
+
+
+def test_evidence_bundle_reuses_a3_graph_and_excludes_test_data() -> None:
+    task = ARCTask("fixture", (ARCExample(ARCGrid([[0, 1], [0, 0]]), ARCGrid([[0, 2], [0, 0]])),), (ARCExample(ARCGrid([[9, 9]]), None),))
+    bundle = extract_task_evidence(task)
+    assert bundle.invariants["pair_count"] == 1
+    assert bundle.pairs[0].a3_relation_graph is not None
+    assert 9 not in bundle.pairs[0].input_grid and 9 not in bundle.pairs[0].output_grid
+
+
+def test_cross_pair_joint_intersection_and_train_consistency() -> None:
+    cross = intersect_candidates([
+        {"DIRECTION": frozenset({(0, 1), (1, 0)}), "STEP": frozenset({2})},
+        {"DIRECTION": frozenset({(0, 1)}), "STEP": frozenset({2, 3})},
+        {"DIRECTION": frozenset({(0, 1), (0, -1)}), "STEP": frozenset({2})},
+    ])
+    assert cross.candidates == {"DIRECTION": frozenset({(0, 1)}), "STEP": frozenset({2})}
+    pairs = []
+    for row in (0, 1, 2):
+        source = np.zeros((3, 7), dtype=int); source[row, 1] = 1
+        target = source.copy(); target[row, 3] = target[row, 5] = 1
+        pairs.append((source, target))
+    spec = _run(_skeleton("ITERATION", OperationId.SELECT, OperationId.REPEAT), pairs)
+    assert spec.value(ParameterSlot.DIRECTION) == (0, 1) and spec.value(ParameterSlot.STEP) == 2
+
+
+def test_vertical_slice_recolor() -> None:
+    pairs = []
+    for row in (1, 2):
+        source = np.zeros((4, 4), dtype=int); source[row, 1] = 1
+        target = source.copy(); target[row, 1] = 2
+        pairs.append((source, target))
+    spec = _run(_skeleton("RECOLOR", OperationId.SELECT, OperationId.RECOLOR), pairs)
+    assert spec.value(ParameterSlot.TARGET_COLOR) == 2
+
+
+def test_vertical_slice_copy_move_and_instance_binding() -> None:
+    pairs = []
+    for row in (1, 2):
+        source = np.zeros((5, 6), dtype=int); source[row, 1] = 1
+        target = source.copy(); target[row, 3] = 1; target[row, 1] = 0
+        pairs.append((source, target))
+    _run(_skeleton("MOVE", OperationId.SELECT, OperationId.MOVE), pairs)
+    skeleton = _skeleton("RECOLOR", OperationId.SELECT, OperationId.RECOLOR)
+    fixed = RuleSpec(skeleton, {ParameterSlot.SELECTOR: "SMALLEST_OBJECT", ParameterSlot.TARGET_COLOR: 7})
+    first = np.array([[0, 1, 0, 2, 2], [0, 0, 0, 2, 2]], dtype=int)
+    second = np.array([[2, 2, 0, 0, 1], [2, 2, 0, 0, 0]], dtype=int)
+    expected_first, expected_second = first.copy(), second.copy(); expected_first[0, 1] = expected_second[0, 4] = 7
+    assert HardVerifier().verify(fixed, ((first, expected_first), (second, expected_second))).passed
+
+
+def test_vertical_slice_relational_copy_and_composition() -> None:
+    pairs = []
+    for row in (1, 2):
+        source = np.zeros((5, 6), dtype=int); source[row, 1] = 1; source[row, 3] = 2
+        target = source.copy(); target[row, 4] = 1
+        pairs.append((source, target))
+    evidence = extract_evidence(pairs)
+    forced = tuple(replace(pair, parameter_candidates={**pair.parameter_candidates, "DIRECTION": frozenset({(0, 1)}), "DISTANCE": frozenset({1}), "REFERENCE_COLOR": frozenset({2})}) for pair in evidence.pairs)
+    specs = train_consistent_rule_specs((_skeleton("RELATIONAL", OperationId.SELECT, OperationId.RELATIONAL_COPY),), replace(evidence, pairs=forced), pairs)
+    assert specs and HardVerifier().verify(specs[0], pairs).passed
+    source = np.zeros((4, 6), dtype=int); source[1, 1] = 1
+    target = source.copy(); target[1, 1] = 0; target[1, 3] = 3
+    _run(_skeleton("COMPOSITION", OperationId.SELECT, OperationId.MOVE, OperationId.RECOLOR, OperationId.COMPOSE), [(source, target)])
+
+
+def test_parameter_and_execution_layers_have_no_llm_or_macro_compiler_dependency() -> None:
+    for relative in ("src/v3/parameters/candidate_generator.py", "src/v3/parameters/joint_solver.py", "src/v3/execution/rule_executor.py"):
+        tree = ast.parse((ROOT / relative).read_text(encoding="utf-8"))
+        imported = {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom) and node.module}
+        assert all("llm" not in module.lower() and "macro_compiler" not in module.lower() for module in imported)
+    verifier = (ROOT / "src/v3/verification/verifier.py").read_text(encoding="utf-8")
+    assert "repair" in verifier and "def repair" not in verifier
+    imports = {node.module for node in ast.walk(ast.parse((ROOT / "src/v3/execution/rule_executor.py").read_text(encoding="utf-8"))) if isinstance(node, ast.ImportFrom) and node.module}
+    assert "compiler" not in imports
+
+
+def test_v3_dependency_direction_and_legacy_artifacts_are_isolated() -> None:
+    forbidden = {
+        "evidence": {"recognition", "parameters", "execution", "verification"},
+        "recognition": {"parameters", "execution", "verification"},
+        "parameters": {"recognition", "execution", "verification"},
+        "execution": {"recognition", "parameters", "verification"},
+        "verification": {"recognition", "parameters"},
+    }
+    for path in (ROOT / "src/v3").rglob("*.py"):
+        layer = next((name for name in forbidden if f"{name}" in path.parts), None)
+        if layer is None:
+            continue
+        imports = {node.module for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))) if isinstance(node, ast.ImportFrom) and node.module and node.module.startswith("v3.")}
+        for module in imports:
+            dependency = module.split(".")[1]
+            assert dependency not in forbidden[layer]
+    legacy = ROOT / "experiments/results/GRID_SEMANTIC_RECOGNITION_V1.json"
+    assert legacy.exists()
+    assert hashlib.sha256(legacy.read_bytes()).hexdigest() == "f176fd363d475007639d7094810c6ac9b533ed2a58c93575d7245b4d73188aba"
