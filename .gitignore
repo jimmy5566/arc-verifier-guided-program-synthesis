@@ -113,3 +113,5 @@ reports/*
 !reports/arc_parallel_diagnostic_v2_synthesis.md
 !reports/direct_grid_solve_baseline_v1.md
 !reports/arc_specialized_model_ablation_v1.md
+!reports/arc2_v3_asset_migration.md
+!reports/arc2_v3_refactor_phase1.md
