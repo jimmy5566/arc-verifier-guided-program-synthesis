@@ -92,9 +92,10 @@ def _worker(worker_id: int, work: list[tuple[str, str]], challenge_path: str, mo
         from llm.models import GenerationConfig
         from llm.transformers_provider import TransformersProvider
 
-        provider = TransformersProvider(model_path=Path(model_path), device="cuda:0")
+        fallback_path = config.get("chat_template_fallback_model_path")
+        provider = TransformersProvider(model_path=Path(model_path), device="cuda:0", chat_template_fallback_path=Path(fallback_path) if fallback_path else None)
         seconds = provider.load()
-        ready.put({"event": "MODEL_READY", "worker_id": worker_id, "gpu_id": worker_id, "model_load_seconds": seconds})
+        ready.put({"event": "MODEL_READY", "worker_id": worker_id, "gpu_id": worker_id, "model_load_seconds": seconds, "chat_template_source": provider.chat_template_source})
         if not start.wait(timeout=MODEL_LOAD_WATCHDOG_SECONDS):
             raise TimeoutError("ablation start barrier timed out")
         tasks = load_dataset(challenge_path)
@@ -105,7 +106,7 @@ def _worker(worker_id: int, work: list[tuple[str, str]], challenge_path: str, mo
         )
         for condition, task_id in work:
             record = _infer_one(provider, tasks[task_id], condition, generation)
-            results.put({"condition": condition, "task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, **record})
+            results.put({"condition": condition, "task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "chat_template_source": provider.chat_template_source, **record})
         results.put({"event": "WORKER_COMPLETE", "worker_id": worker_id})
     except Exception as exc:
         failure = {"event": "WORKER_FAILED", "worker_id": worker_id, "error": f"{type(exc).__name__}: {exc}"}
@@ -179,6 +180,7 @@ def main() -> None:
     parser.add_argument("--frozen-config", type=Path, required=True)
     parser.add_argument("--challenge-path", type=Path, required=True)
     parser.add_argument("--model-path", type=Path, required=True)
+    parser.add_argument("--chat-template-fallback-model-path", type=Path)
     parser.add_argument("--track-model", required=True)
     parser.add_argument("--prompt-version", required=True)
     parser.add_argument("--context-window", type=int, default=12288)
@@ -200,7 +202,7 @@ def main() -> None:
     if hardware.status.value != "SUCCESS" or len(hardware.gpus) != 4:
         raise RuntimeError(f"requires exactly four GPUs: {hardware.to_dict()}")
     warmup = warm_model_safetensors(args.model_path)
-    run_config = {"generation": frozen["generation"], "track_model": args.track_model, "prompt_version": args.prompt_version, "context_window": args.context_window}
+    run_config = {"generation": frozen["generation"], "track_model": args.track_model, "prompt_version": args.prompt_version, "context_window": args.context_window, "chat_template_fallback_model_path": str(args.chat_template_fallback_model_path) if args.chat_template_fallback_model_path else None}
     work = [(condition, task_id) for condition in conditions for task_id in task_ids]
     context = get_context("spawn")
     results, ready, start = context.Queue(), context.Queue(), context.Event()
@@ -236,6 +238,7 @@ def main() -> None:
         "conditions": conditions,
         "hardware": hardware.to_dict(),
         "runtime": {"pytorch_allocator": "expandable_segments:True"},
+        "chat_template_fallback_model_path": str(args.chat_template_fallback_model_path) if args.chat_template_fallback_model_path else None,
         "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")},
         "records": records,
     }

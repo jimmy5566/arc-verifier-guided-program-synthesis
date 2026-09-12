@@ -18,6 +18,7 @@ from recognition.semantic_interfaces import (
     parse_slot_response,
 )
 from scripts.run_parallel_semantic_ablation import _infer_one
+from llm.transformers_provider import TransformersProvider
 
 
 def _task() -> ARCTask:
@@ -124,6 +125,17 @@ def test_track_c_runner_resolves_all_prompt_builders() -> None:
     for condition in ("C1_FLAT_TYPED_SLOTS", "C2_FINITE_CANDIDATE_CLASSIFICATION"):
         result = _infer_one(provider, _task(), condition, object())
         assert result["request_count"] == 1
+
+
+def test_local_chat_template_fallback_is_explicit_and_not_silent() -> None:
+    assert TransformersProvider._resolve_chat_template("template", "fallback") == ("template", "model_tokenizer")
+    assert TransformersProvider._resolve_chat_template(None, "fallback") == ("fallback", "local_fallback_tokenizer")
+    try:
+        TransformersProvider._resolve_chat_template(None, None)
+    except RuntimeError as error:
+        assert "no chat template" in str(error)
+    else:
+        raise AssertionError("missing templates must reject")
 
 
 def test_finalizer_is_the_explicit_local_oracle_boundary() -> None:

@@ -27,12 +27,23 @@ class TextGeneration:
 class TransformersProvider:
     """Direct local Transformers inference on one explicitly selected CUDA GPU."""
 
-    def __init__(self, *, model_path: Path, device: str = "cuda:0", expected_architecture: str = "Qwen3ForCausalLM") -> None:
+    def __init__(self, *, model_path: Path, device: str = "cuda:0", expected_architecture: str = "Qwen3ForCausalLM", chat_template_fallback_path: Path | None = None) -> None:
         self.model_path = Path(model_path)
         self.device = device
         self.expected_architecture = expected_architecture
+        self.chat_template_fallback_path = Path(chat_template_fallback_path) if chat_template_fallback_path else None
         self._model: Any | None = None
         self._tokenizer: Any | None = None
+        self.chat_template_source = "unloaded"
+
+    @staticmethod
+    def _resolve_chat_template(primary: str | None, fallback: str | None) -> tuple[str, str]:
+        """Choose a model template, or an explicitly supplied local fallback."""
+        if isinstance(primary, str) and primary:
+            return primary, "model_tokenizer"
+        if isinstance(fallback, str) and fallback:
+            return fallback, "local_fallback_tokenizer"
+        raise RuntimeError("LOCAL_TRANSFORMERS_UNAVAILABLE: tokenizer has no chat template and no local fallback template was supplied")
 
     def availability(self) -> ProviderAvailability:
         torch_available = importlib.util.find_spec("torch") is not None
@@ -67,6 +78,12 @@ class TransformersProvider:
             raise RuntimeError(f"LOCAL_TRANSFORMERS_UNAVAILABLE: requested {self.device}, visible CUDA devices={torch.cuda.device_count()}")
         started = time.perf_counter()
         self._tokenizer = AutoTokenizer.from_pretrained(str(self.model_path), local_files_only=True, trust_remote_code=False)
+        fallback_template = None
+        if self.chat_template_fallback_path is not None:
+            fallback_tokenizer = AutoTokenizer.from_pretrained(str(self.chat_template_fallback_path), local_files_only=True, trust_remote_code=False)
+            fallback_template = getattr(fallback_tokenizer, "chat_template", None)
+        template, self.chat_template_source = self._resolve_chat_template(getattr(self._tokenizer, "chat_template", None), fallback_template)
+        self._tokenizer.chat_template = template
         self._model = AutoModelForCausalLM.from_pretrained(
             str(self.model_path), local_files_only=True, trust_remote_code=False,
             torch_dtype=torch.bfloat16, low_cpu_mem_usage=True,
