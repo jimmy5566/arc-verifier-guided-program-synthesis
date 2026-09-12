@@ -83,6 +83,7 @@ experiments/results/*
 !experiments/results/GRID_TO_END2END_V1.json
 !experiments/results/GRID_RECOGNITION_AND_END2END_DIAGNOSTIC_V1.json
 !experiments/results/DOWNSTREAM_CAPABILITY_GAP_FORENSICS_V1.json
+!experiments/results/GRID_SEMANTIC_RECOGNITION_V1.json
 reports/*
 !reports/arc2_capability_system_v1.md
 !reports/capability_registry_audit.md
@@ -97,3 +98,4 @@ reports/*
 !reports/contextual_parameter_reasoning_v1.md
 !reports/grid_recognition_and_end2end_diagnostic_v1.md
 !reports/downstream_capability_gap_forensics_v1.md
+!reports/grid_semantic_recognition_v1.md

@@ -1,0 +1,291 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "composition": {
+      "items": {
+        "enum": [
+          "RECOLOR",
+          "COPY",
+          "SELECT",
+          "EXTRACT",
+          "TRANSFORM",
+          "EXPAND",
+          "REPEAT",
+          "CONSTRUCT",
+          "FILL",
+          "REARRANGE",
+          "CONNECT"
+        ]
+      },
+      "maxItems": 4,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "conditional_logic": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "enum": [
+            "RECOLOR",
+            "COPY",
+            "SELECT",
+            "EXTRACT",
+            "TRANSFORM",
+            "EXPAND",
+            "REPEAT",
+            "CONSTRUCT",
+            "FILL",
+            "REARRANGE",
+            "CONNECT",
+            "NONE"
+          ]
+        },
+        "condition": {
+          "enum": [
+            "NONE",
+            "ROLE_MATCH",
+            "COLOR_MATCH",
+            "SHAPE_MATCH",
+            "POSITION_MATCH",
+            "RELATION_MATCH"
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "enabled",
+        "condition",
+        "action"
+      ],
+      "type": "object"
+    },
+    "iteration": {
+      "additionalProperties": false,
+      "properties": {
+        "direction": {
+          "enum": [
+            "NONE",
+            "UP",
+            "DOWN",
+            "LEFT",
+            "RIGHT",
+            "HORIZONTAL",
+            "VERTICAL",
+            "DIAGONAL",
+            "OUTWARD"
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "mode": {
+          "enum": [
+            "NONE",
+            "REPEAT_UNTIL_BOUNDARY",
+            "FIXED_COUNT",
+            "PERIODIC_TILING",
+            "PROGRESSIVE_EXPANSION"
+          ]
+        },
+        "step_rule": {
+          "enum": [
+            "NONE",
+            "FIXED_INTERVAL",
+            "UNIT_STEP",
+            "OBJECT_SIZE_STEP",
+            "COLOR_SEQUENCE"
+          ]
+        },
+        "termination": {
+          "enum": [
+            "NONE",
+            "GRID_BOUNDARY",
+            "FIXED_EXTENT",
+            "OBJECT_EXHAUSTED"
+          ]
+        }
+      },
+      "required": [
+        "enabled",
+        "mode",
+        "direction",
+        "step_rule",
+        "termination"
+      ],
+      "type": "object"
+    },
+    "object_roles": {
+      "items": {
+        "enum": [
+          "SOURCE_OBJECT",
+          "TARGET_OBJECT",
+          "REFERENCE_OBJECT",
+          "MARKER",
+          "MOTIF",
+          "BACKGROUND",
+          "OUTPUT_OBJECT",
+          "NONE"
+        ]
+      },
+      "maxItems": 4,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "operations": {
+      "items": {
+        "enum": [
+          "RECOLOR",
+          "COPY",
+          "SELECT",
+          "EXTRACT",
+          "TRANSFORM",
+          "EXPAND",
+          "REPEAT",
+          "CONSTRUCT",
+          "FILL",
+          "REARRANGE",
+          "CONNECT"
+        ]
+      },
+      "maxItems": 4,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "output_construction": {
+      "enum": [
+        "SAME_CANVAS",
+        "CROPPED_OBJECT",
+        "NEW_COMPACT_GRID",
+        "EXPANDED_CANVAS",
+        "CONSTRUCTED_PATTERN"
+      ]
+    },
+    "primary_family": {
+      "enum": [
+        "COLOR_RECOLOR",
+        "ITERATION_REPEAT",
+        "RELATIONAL_TRANSFORMATION",
+        "CONDITIONAL_ROLE_LOGIC",
+        "COMPOSITION",
+        "OUTPUT_CONSTRUCTION",
+        "GLOBAL_TRANSFORM",
+        "OBJECT_EXTRACTION",
+        "PATTERN_COMPLETION"
+      ]
+    },
+    "relations": {
+      "items": {
+        "enum": [
+          "NONE",
+          "ADJACENT",
+          "ALIGNED_ROW",
+          "ALIGNED_COLUMN",
+          "CONTAINS",
+          "INSIDE",
+          "RELATIVE_POSITION",
+          "CORRESPONDS_BY_COLOR",
+          "CORRESPONDS_BY_SHAPE",
+          "SEPARATED_BY_DIVIDER"
+        ]
+      },
+      "maxItems": 4,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "selection_criteria": {
+      "items": {
+        "enum": [
+          "NONE",
+          "UNIQUE_COLOR",
+          "UNIQUE_SHAPE",
+          "UNIQUE_SIZE",
+          "BORDER_OBJECT",
+          "MARKED_OBJECT",
+          "RELATION_TO_REFERENCE"
+        ]
+      },
+      "maxItems": 3,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "semantic_parameters": {
+      "additionalProperties": false,
+      "properties": {
+        "color_policy": {
+          "enum": [
+            "NONE",
+            "PRESERVE",
+            "MAP_BY_ROLE",
+            "SEQUENCE_FROM_MARKERS"
+          ]
+        },
+        "repeat_object": {
+          "enum": [
+            "NONE",
+            "MOTIF",
+            "SELECTED_OBJECT",
+            "ROW_OR_COLUMN_PATTERN"
+          ]
+        }
+      },
+      "required": [
+        "color_policy",
+        "repeat_object"
+      ],
+      "type": "object"
+    },
+    "spatial_transform": {
+      "additionalProperties": false,
+      "properties": {
+        "direction": {
+          "enum": [
+            "NONE",
+            "UP",
+            "DOWN",
+            "LEFT",
+            "RIGHT",
+            "HORIZONTAL",
+            "VERTICAL",
+            "DIAGONAL",
+            "OUTWARD"
+          ]
+        },
+        "transform": {
+          "enum": [
+            "NONE",
+            "ROTATE",
+            "REFLECT",
+            "TRANSLATE",
+            "SCALE",
+            "CROP",
+            "REARRANGE"
+          ]
+        }
+      },
+      "required": [
+        "direction",
+        "transform"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "primary_family",
+    "operations",
+    "object_roles",
+    "relations",
+    "selection_criteria",
+    "spatial_transform",
+    "iteration",
+    "conditional_logic",
+    "composition",
+    "output_construction",
+    "semantic_parameters"
+  ],
+  "schema_id": "ARCSEMANTICIRV1",
+  "schema_sha256": "4441b5fb72d9d67057946cb3623e2f7e4a18ab371332fd55248b162e163ff887",
+  "type": "object"
+}

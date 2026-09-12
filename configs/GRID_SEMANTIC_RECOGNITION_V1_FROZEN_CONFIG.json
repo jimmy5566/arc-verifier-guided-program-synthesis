@@ -1,0 +1,13 @@
+{
+  "experiment_id": "GRID_SEMANTIC_RECOGNITION_V1",
+  "cohort": {"source": "DOWNSTREAM_CAPABILITY_GAP_FORENSICS_V1 private frozen cohort", "task_count": 30, "task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8", "task_ids_public": false},
+  "model": {"model_source": "qwen-lm/qwen-3/Transformers/8b/1", "architecture": "Qwen3ForCausalLM", "dtype": "bfloat16", "context_window": 12288, "internet": false, "accelerator": "4x NVIDIA L4"},
+  "generation": {"temperature": 0, "top_p": 1, "seed": 20260912, "max_new_tokens": 600, "top_k": 1, "thinking": false},
+  "prompt_version": "GRID_SEMANTIC_RECOGNITION_V1_RAW_GRIDS_PLUS_TRAIN_FEATURES",
+  "semantic_ir_schema_sha256": "4441b5fb72d9d67057946cb3623e2f7e4a18ab371332fd55248b162e163ff887",
+  "input_policy": "all train input/output grids plus deterministic train-derived observations; no test input/output",
+  "oracle_isolation": "gold semantic IR and development solutions are local-only and cannot be imported by the Kaggle inference source",
+  "forbidden_dependencies": ["macro_capability_registry", "macro_compiler", "CapabilityProgramExecutor", "HardVerifier", "program_search", "hypothesis_ranking"],
+  "scorer": "evaluation.semantic_ir_scorer.v1 deterministic",
+  "downstream_capability_gate_used": false
+}
