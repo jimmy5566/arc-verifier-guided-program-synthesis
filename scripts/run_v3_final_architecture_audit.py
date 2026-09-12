@@ -29,25 +29,25 @@ from v3.validation import RuleSpecPreflightValidator
 from v3.verification.verifier import HardVerifier
 
 
-def skeleton_from_oracle(semantic: Mapping[str, Any]) -> tuple[RuleSkeleton | None, str | None]:
+def skeletons_from_oracle(semantic: Mapping[str, Any]) -> tuple[tuple[RuleSkeleton, ...], str | None]:
     """Generic semantic-family mapping; values are never supplied by gold."""
     if semantic["conditional_logic"]["enabled"]:
-        return None, "MISSING_GENERIC_CONDITIONAL_ROLE_OPERATION"
+        return (), "MISSING_GENERIC_CONDITIONAL_ROLE_OPERATION"
     family, operations = str(semantic["primary_family"]), tuple(semantic["operations"])
     if "REPEAT" in operations:
-        return RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.REPEAT)), None
+        return (RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.REPEAT)),), None
     if operations == ("RECOLOR",):
-        return RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.RECOLOR)), None
+        return (RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.RECOLOR)),), None
     if operations == ("TRANSFORM",):
         transform = semantic["spatial_transform"]["transform"]
-        if transform == "ROTATE": return RuleSkeleton.from_operations(family, (OperationId.ROTATE,)), None
-        if transform == "REFLECT": return RuleSkeleton.from_operations(family, (OperationId.REFLECT,)), None
-        return None, "MISSING_GENERIC_TRANSFORM_OPERATION"
+        if transform == "ROTATE": return (RuleSkeleton.from_operations(family, (OperationId.ROTATE,)),), None
+        if transform == "REFLECT": return (RuleSkeleton.from_operations(family, (OperationId.REFLECT,)),), None
+        return (), "MISSING_GENERIC_TRANSFORM_OPERATION"
     if "EXTRACT" in operations:
-        return RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.CROP)), None
+        return (RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.CROP)),), None
     if "FILL" in operations:
-        return RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.FILL)), None
-    return None, "MISSING_GENERIC_OPERATION_SEMANTICS"
+        return (RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.FILL)),), None
+    return (), "MISSING_GENERIC_OPERATION_SEMANTICS"
 
 
 def _classify(spec: Any, train: tuple[tuple[np.ndarray, np.ndarray], ...], validator: RuleSpecPreflightValidator, binder: InstanceBinder, executor: RuleExecutor, verifier: HardVerifier) -> str:
@@ -99,16 +99,19 @@ def main() -> None:
     validator, binder, executor, verifier = RuleSpecPreflightValidator(), InstanceBinder(), RuleExecutor(), HardVerifier()
     records: dict[str, dict[str, Any]] = {}
     for task_id in task_ids:
-        skeleton, reason = skeleton_from_oracle(oracle["gold"][task_id])
+        skeletons, reason = skeletons_from_oracle(oracle["gold"][task_id])
         semantic = oracle["gold"][task_id]
-        if skeleton is None:
+        if not skeletons:
             records[task_id] = {"status": "PREFLIGHT_FAILURE", "reason": reason, "taxonomy": _semantic_taxonomy(semantic, "PREFLIGHT_FAILURE", reason), "complete_rulespec_candidates": 0, "stage": {"preflight": False, "binding": False, "execution": False, "exact": False}}
             continue
         task = tasks[task_id]
         train = tuple((item.input.values, item.output.values) for item in task.train)
-        candidates = complete_rule_specs((skeleton,), extract_task_evidence(task))
+        candidates = complete_rule_specs(skeletons, extract_task_evidence(task))
         statuses = [_classify(item, train, validator, binder, executor, verifier) for item in candidates]
-        if "COVERED" in statuses: status = "COVERED"
+        matching_rule_spec = None
+        if "COVERED" in statuses:
+            status = "COVERED"
+            matching_rule_spec = candidates[statuses.index("COVERED")].to_dict()
         elif "VERIFIER_FAILURE" in statuses: status = "VERIFIER_FAILURE"
         elif "EXECUTION_FAILURE" in statuses: status = "EXECUTION_FAILURE"
         elif "BINDING_FAILURE" in statuses: status = "BINDING_FAILURE"
@@ -116,6 +119,7 @@ def main() -> None:
         records[task_id] = {
             "status": status, "reason": reason, "taxonomy": _semantic_taxonomy(semantic, status, reason),
             "complete_rulespec_candidates": len(candidates), "candidate_status_counts": dict(Counter(statuses)),
+            "matching_complete_rulespec": matching_rule_spec,
             "stage": {
                 "preflight": bool(candidates) and any(item != "PREFLIGHT_FAILURE" for item in statuses),
                 "binding": any(item in {"COVERED", "VERIFIER_FAILURE", "EXECUTION_FAILURE"} for item in statuses),

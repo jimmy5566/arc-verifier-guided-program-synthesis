@@ -65,6 +65,33 @@ class SelectorRule:
         return {"kind": self.kind, "value": self.value}
 
 
+@dataclass(frozen=True)
+class RepeatSemantics:
+    """Optional reusable state semantics for a ``REPEAT`` operation.
+
+    The base slots still supply source, direction, step and termination. This
+    contract only describes how successive copies evolve; it never encodes a
+    task identifier or a target grid.
+    """
+
+    motif_transform: str = "IDENTITY"
+    progressive_step_delta: int = 0
+    color_sequence: tuple[int, ...] = ()
+    state_update: str = "ACCUMULATE"
+    state_color: int | None = None
+    alignment_role: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "motif_transform": self.motif_transform,
+            "progressive_step_delta": self.progressive_step_delta,
+            "color_sequence": list(self.color_sequence),
+            "state_update": self.state_update,
+            "state_color": self.state_color,
+            "alignment_role": self.alignment_role,
+        }
+
+
 def expression_dependencies(value: Any) -> frozenset[ParameterSlot]:
     """Return direct slot dependencies without evaluating the expression."""
     if isinstance(value, SlotReference):

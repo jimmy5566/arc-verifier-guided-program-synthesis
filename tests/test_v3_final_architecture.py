@@ -7,7 +7,7 @@ from v3.binding import InstanceBinder
 from v3.execution.rule_executor import RuleExecutor
 from v3.schema.rule_skeleton import OperationId, ParameterSlot, RuleSkeleton
 from v3.schema.rule_spec import RuleSpec
-from v3.schema.value_expr import DerivedFunction, DerivedValue, RoleReference, SelectorRule, SlotReference
+from v3.schema.value_expr import DerivedFunction, DerivedValue, RepeatSemantics, RoleReference, SelectorRule, SlotReference
 from v3.validation import RuleSpecPreflightValidator
 from v3.verification.verifier import HardVerifier
 
@@ -83,6 +83,50 @@ def test_boundary_and_collision_termination_are_resolved_and_executed() -> None:
         },
     )
     assert np.array_equal(RuleExecutor().execute(collision, np.array([[1, 0, 2, 0]])), np.array([[1, 1, 2, 0]]))
+
+
+def test_repeat_semantics_support_progressive_color_state_alignment_and_no_change() -> None:
+    progressive = RuleSpec(
+        _rule(OperationId.SELECT, OperationId.REPEAT),
+        {ParameterSlot.SELECTOR: "COLOR:1", ParameterSlot.DIRECTION: (0, 1), ParameterSlot.STEP: 2, ParameterSlot.COUNT: 3, ParameterSlot.TERMINATION: "FIXED_COUNT"},
+        repeat_semantics=RepeatSemantics(progressive_step_delta=1, color_sequence=(2, 3, 4)),
+    )
+    source = np.array([[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
+    expected = np.array([[1, 0, 2, 0, 0, 3, 0, 0, 0, 4, 0]])
+    assert HardVerifier().verify(progressive, ((source, expected),)).passed
+
+    transformed = RuleSpec(
+        _rule(OperationId.SELECT, OperationId.REPEAT),
+        {ParameterSlot.SELECTOR: "ALL_NON_BACKGROUND", ParameterSlot.DIRECTION: (1, 0), ParameterSlot.STEP: 2, ParameterSlot.COUNT: 1, ParameterSlot.TERMINATION: "FIXED_COUNT"},
+        repeat_semantics=RepeatSemantics(motif_transform="ROTATE_90"),
+    )
+    transformed_source = np.array([[1, 2, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
+    transformed_expected = np.array([[1, 2, 0], [0, 0, 0], [1, 0, 0], [2, 0, 0]])
+    assert HardVerifier().verify(transformed, ((transformed_source, transformed_expected),)).passed
+
+    alignment = RuleSpec(
+        _rule(OperationId.SELECT, OperationId.REPEAT),
+        {ParameterSlot.SELECTOR: "ROLE:motif", ParameterSlot.DIRECTION: (0, 1), ParameterSlot.STEP: 1, ParameterSlot.COUNT: 0, ParameterSlot.TERMINATION: "ALIGNMENT"},
+        {"motif": SelectorRule("COLOR", 1), "reference": SelectorRule("COLOR", 2)},
+        RepeatSemantics(alignment_role="reference"),
+    )
+    aligned_source = np.array([[1, 0, 0, 0, 0, 2, 0]])
+    aligned_expected = np.array([[1, 1, 1, 1, 1, 2, 0]])
+    assert HardVerifier().verify(alignment, ((aligned_source, aligned_expected),)).passed
+
+    stateful = RuleSpec(
+        _rule(OperationId.SELECT, OperationId.REPEAT),
+        {ParameterSlot.SELECTOR: "COLOR:1", ParameterSlot.DIRECTION: (0, 1), ParameterSlot.STEP: 2, ParameterSlot.COUNT: 1, ParameterSlot.TERMINATION: "FIXED_COUNT"},
+        repeat_semantics=RepeatSemantics(state_update="REPLACE_BACKGROUND", state_color=3),
+    )
+    assert np.array_equal(RuleExecutor().execute(stateful, np.array([[0, 1, 0, 0, 0]])), np.array([[3, 1, 3, 1, 3]]))
+
+    no_change = RuleSpec(
+        _rule(OperationId.SELECT, OperationId.REPEAT),
+        {ParameterSlot.SELECTOR: "COLOR:1", ParameterSlot.DIRECTION: (0, 1), ParameterSlot.STEP: 0, ParameterSlot.COUNT: 0, ParameterSlot.TERMINATION: "NO_CHANGE"},
+    )
+    unchanged = np.array([[0, 1, 0]])
+    assert HardVerifier().verify(no_change, ((unchanged, unchanged),)).passed
 
 
 def test_orientation_and_padded_crop_are_complete_rulespec_semantics() -> None:

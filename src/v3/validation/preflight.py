@@ -7,7 +7,7 @@ from typing import Any
 from v3.execution.rule_executor import RuleExecutor
 from v3.schema.rule_skeleton import OperationId, ParameterSlot
 from v3.schema.rule_spec import RuleSpec
-from v3.schema.value_expr import DerivedFunction, DerivedValue, RoleReference, SelectorRule, SlotReference, expression_roles
+from v3.schema.value_expr import DerivedFunction, DerivedValue, RepeatSemantics, RoleReference, SelectorRule, SlotReference, expression_roles
 
 
 @dataclass(frozen=True)
@@ -92,6 +92,25 @@ class RuleSpecPreflightValidator:
         for step in rule_spec.skeleton.steps:
             if step.operation not in self._supported_operations:
                 diagnostics.append(f"operation_unsupported:{step.operation.value}")
+        repeat = rule_spec.repeat_semantics
+        if repeat is not None:
+            if OperationId.REPEAT not in {step.operation for step in rule_spec.skeleton.steps}:
+                diagnostics.append("repeat_semantics_without_repeat_operation")
+            if not isinstance(repeat, RepeatSemantics):
+                diagnostics.append("repeat_semantics_invalid")
+            else:
+                if repeat.motif_transform not in {"IDENTITY", "ROTATE_90", "ROTATE_180", "ROTATE_270", "FLIP_HORIZONTAL", "FLIP_VERTICAL"}:
+                    diagnostics.append("repeat_motif_transform_unsupported")
+                if not isinstance(repeat.progressive_step_delta, int) or repeat.progressive_step_delta < 0:
+                    diagnostics.append("repeat_progressive_step_delta_invalid")
+                if any(not isinstance(color, int) or not 0 <= color <= 9 for color in repeat.color_sequence):
+                    diagnostics.append("repeat_color_sequence_invalid")
+                if repeat.state_update not in {"ACCUMULATE", "REPLACE_BACKGROUND"}:
+                    diagnostics.append("repeat_state_update_unsupported")
+                if repeat.state_update == "REPLACE_BACKGROUND" and (not isinstance(repeat.state_color, int) or not 0 <= repeat.state_color <= 9):
+                    diagnostics.append("repeat_state_color_invalid")
+                if repeat.alignment_role is not None and repeat.alignment_role not in rule_spec.role_selectors:
+                    diagnostics.append("repeat_alignment_role_unresolvable")
         for name, selector in rule_spec.role_selectors.items():
             if not name or not isinstance(selector, SelectorRule):
                 diagnostics.append(f"role_selector_invalid:{name}")

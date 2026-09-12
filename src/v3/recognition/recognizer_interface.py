@@ -10,7 +10,7 @@ from v3.evidence.cross_pair import CrossPairEvidence
 from v3.evidence.extractor import EvidenceBundle
 from v3.schema.rule_skeleton import OperationId, ParameterSlot, RuleSkeleton
 from v3.schema.rule_spec import RuleSpec
-from v3.schema.value_expr import DerivedFunction, DerivedValue, RoleReference, SelectorRule, SlotReference
+from v3.schema.value_expr import DerivedFunction, DerivedValue, RepeatSemantics, RoleReference, SelectorRule, SlotReference
 
 
 class RuleRecognizer(Protocol):
@@ -158,14 +158,15 @@ def recognition_prompt(task: ARCTask, evidence: EvidenceBundle, cross_pair: Cros
         "deterministic_evidence": _facts(evidence, cross_pair),
         "complete_rulespec_contract": {
             "operations": "SELECT:$SELECTOR;COPY/MOVE:$DIRECTION,$DISTANCE;REPEAT:$DIRECTION,$STEP,$COUNT,$TERMINATION;RECOLOR/FILL:$TARGET_COLOR;RELATIONAL_COPY:$REFERENCE_COLOR,$DIRECTION,$DISTANCE;ROTATE/REFLECT:$TRANSFORM;CROP:$SELECTOR,$PADDING",
-            "hypothesis": "family, operations, parameters, roles",
+            "hypothesis": "family, operations, parameters, roles, repeat",
             "value": "literal | {derive:FUNCTION,arguments:{...}} | {role_ref:ROLE} | {slot_ref:$SLOT}",
             "roles": "name:{kind:COLOR|COLOR_ALL|SMALLEST_OBJECT|LARGEST_OBJECT|ARGMIN|ARGMAX|ALL_NON_BACKGROUND,value:optional}",
             "derived_functions": "RELATIVE_DIRECTION,GAP,DISTANCE,WIDTH,HEIGHT,COLOR_OF,ARGMIN,ARGMAX,BOUNDARY,COLLISION",
+            "repeat": "optional {motif_transform,progressive_step_delta,color_sequence,state_update,state_color,alignment_role}; termination may be BOUNDARY,COLLISION,NO_CHANGE,ALIGNMENT",
         },
         "instruction": (
             f"Infer at most {top_k} distinct complete general RuleSpecs from TRAIN only. "
-            "Return exactly one JSON object with one key named hypotheses. Each hypothesis has exactly family, operations, parameters, and roles. "
+            "Return exactly one JSON object with one key named hypotheses. Each hypothesis has exactly family, operations, parameters, roles, and repeat. "
             "parameters must contain every and only the typed slots required by operations. Use literals or the declared derived functions and role references. "
             "Do not copy prompt text or contract. Do not emit grids, code, rationale, or markdown."
         ),
@@ -235,7 +236,7 @@ def parse_complete_rulespec_hypotheses(raw: str, *, limit: int) -> tuple[tuple[R
         return (), "SCHEMA_FAILURE:hypothesis count"
     parsed: list[RuleSpec] = []
     for item in hypotheses:
-        if not isinstance(item, dict) or set(item) != {"family", "operations", "parameters", "roles"}:
+        if not isinstance(item, dict) or set(item) != {"family", "operations", "parameters", "roles", "repeat"}:
             return (), "SCHEMA_FAILURE:complete rulespec fields"
         if not isinstance(item["family"], str) or not item["family"] or not isinstance(item["operations"], list) or not isinstance(item["parameters"], dict) or not isinstance(item["roles"], dict):
             return (), "SCHEMA_FAILURE:complete rulespec types"
@@ -248,7 +249,17 @@ def parse_complete_rulespec_hypotheses(raw: str, *, limit: int) -> tuple[tuple[R
                 if isinstance(name, str) and isinstance(selector, dict) and set(selector) <= {"kind", "value"} and "kind" in selector
             }
             if len(roles) != len(item["roles"]): raise ValueError("invalid role selector")
-            rule_spec = RuleSpec(skeleton, parameters, roles)
+            repeat_data = item["repeat"]
+            if repeat_data is not None and (not isinstance(repeat_data, dict) or set(repeat_data) - {"motif_transform", "progressive_step_delta", "color_sequence", "state_update", "state_color", "alignment_role"}):
+                raise ValueError("invalid repeat semantics")
+            repeat = None if repeat_data is None else RepeatSemantics(
+                motif_transform=str(repeat_data.get("motif_transform", "IDENTITY")),
+                progressive_step_delta=repeat_data.get("progressive_step_delta", 0),
+                color_sequence=tuple(repeat_data.get("color_sequence", ())),
+                state_update=str(repeat_data.get("state_update", "ACCUMULATE")),
+                state_color=repeat_data.get("state_color"), alignment_role=repeat_data.get("alignment_role"),
+            )
+            rule_spec = RuleSpec(skeleton, parameters, roles, repeat)
         except (KeyError, TypeError, ValueError):
             return (), "SCHEMA_FAILURE:invalid complete rulespec"
         if rule_spec in parsed:

@@ -5,7 +5,7 @@
   "generation": {"temperature": 0.0, "top_p": 1.0, "seed": 20260912, "max_new_tokens": 768, "context_window": 12288},
   "top_k": [1, 3],
   "upstream_evidence_version": "U16",
-  "frozen_source_sha256": {"evidence_extractor": "819B43EB9B69CB061B56D16C6393E7CBDAFA6683D2CCD9826383B1E4C22A991A", "cross_pair": "C1866414C946504D7806F7A0435CEA01E54E9F6E79F760E55DD4FD6AFF00054F", "recognizer": "07F851549F606B11C9A710372356BA1F084F6FDFA939735827B00FB0FF7772D0", "runner": "31BE7A83148916497CE25438D1F884851F88029853055117DFE56AB970742DD6"},
+  "frozen_source_sha256": {"evidence_extractor": "819B43EB9B69CB061B56D16C6393E7CBDAFA6683D2CCD9826383B1E4C22A991A", "cross_pair": "C1866414C946504D7806F7A0435CEA01E54E9F6E79F760E55DD4FD6AFF00054F", "recognizer": "A2AF8F714A05AC58E3CFF139E04CC04908FDE56DEF5754CFBEC68DD49FF57592", "runner": "31BE7A83148916497CE25438D1F884851F88029853055117DFE56AB970742DD6"},
   "inference_isolation": "No gold skeleton, semantic oracle, backend audit records, instance binding, executor, verifier, Macro, compiler, test output, or solution file may enter the inference source or process.",
   "prediction_protocol": "all 30 predictions -> artifact SHA256 -> PREDICTIONS_FROZEN_BEFORE_GOLD_SCORING -> local-only gold scoring"
 }

@@ -7,6 +7,7 @@ import numpy as np
 
 from v3.schema.rule_skeleton import OperationId, ParameterSlot
 from v3.schema.rule_spec import RuleSpec
+from v3.schema.value_expr import RepeatSemantics
 from v3.binding.instance_binder import BoundRuleSpec, InstanceBinder
 
 from .legacy_capability_adapter import translate_cells
@@ -71,6 +72,33 @@ class RuleExecutor:
         """Compatibility entry point: bind the complete rule then execute it."""
         return self.execute_bound(InstanceBinder().bind(rule_spec, grid), grid)
 
+    @staticmethod
+    def _repeat_motif(source: np.ndarray, selected: list[tuple[int, int]], transform: str) -> tuple[list[tuple[int, int, int]], int, int]:
+        """Return a locally transformed motif plus its anchor-relative extent."""
+        if not selected: return [], 0, 0
+        top, left = min(row for row, _ in selected), min(col for _, col in selected)
+        height, width = max(row for row, _ in selected) - top + 1, max(col for _, col in selected) - left + 1
+        def coordinate(row: int, col: int) -> tuple[int, int]:
+            if transform == "IDENTITY": return row, col
+            if transform == "ROTATE_90": return col, height - 1 - row
+            if transform == "ROTATE_180": return height - 1 - row, width - 1 - col
+            if transform == "ROTATE_270": return width - 1 - col, row
+            if transform == "FLIP_HORIZONTAL": return row, width - 1 - col
+            if transform == "FLIP_VERTICAL": return height - 1 - row, col
+            raise ValueError(f"unsupported repeat motif transform: {transform}")
+        transformed = [(*coordinate(row - top, col - left), int(source[row, col])) for row, col in selected]
+        out_height = max((row for row, _col, _color in transformed), default=-1) + 1
+        out_width = max((col for _row, col, _color in transformed), default=-1) + 1
+        return transformed, out_height, out_width
+
+    @staticmethod
+    def _touches_reference(cells: list[tuple[int, int, int]], reference: object) -> bool:
+        reference_cells = set(getattr(reference, "cells", ()))
+        if not reference_cells: return False
+        for row, col, _color in cells:
+            if any(abs(row - rr) + abs(col - rc) <= 1 for rr, rc in reference_cells): return True
+        return False
+
     def execute_bound(self, bound_rule_spec: BoundRuleSpec, grid: np.ndarray) -> np.ndarray:
         """Execute an already preflighted and instance-bound RuleSpec.
 
@@ -104,20 +132,32 @@ class RuleExecutor:
             elif operation is OperationId.REPEAT:
                 direction, step_size = bound_rule_spec.value(ParameterSlot.DIRECTION), int(bound_rule_spec.value(ParameterSlot.STEP))
                 termination, count = bound_rule_spec.value(ParameterSlot.TERMINATION), int(bound_rule_spec.value(ParameterSlot.COUNT))
-                if termination not in {"BOUNDARY", "FIXED_COUNT", "COLLISION"}:
+                if termination not in {"BOUNDARY", "FIXED_COUNT", "COLLISION", "NO_CHANGE", "ALIGNMENT"}:
                     raise ValueError(f"unsupported repeat termination: {termination}")
+                semantics = rule_spec.repeat_semantics or RepeatSemantics()
+                if semantics.state_update == "REPLACE_BACKGROUND":
+                    canvas[canvas == _background(canvas)] = int(semantics.state_color)
+                motif, _motif_height, _motif_width = self._repeat_motif(np.asarray(grid, dtype=int), selected, semantics.motif_transform)
                 protected = {(row, col) for row, col in selected}
                 multiplier = 1
-                while termination in {"BOUNDARY", "COLLISION"} or multiplier <= count:
-                    translated = translate_cells(canvas, selected, direction, step_size * multiplier)
-                    if len(translated) != len(selected):
-                        if termination in {"BOUNDARY", "COLLISION"}:
+                while termination in {"BOUNDARY", "COLLISION", "NO_CHANGE", "ALIGNMENT"} or multiplier <= count:
+                    distance = step_size * multiplier + semantics.progressive_step_delta * multiplier * (multiplier - 1) // 2
+                    anchor_row, anchor_col = min((row for row, _ in selected), default=0) + direction[0] * distance, min((col for _, col in selected), default=0) + direction[1] * distance
+                    translated = [(anchor_row + row, anchor_col + col, color) for row, col, color in motif]
+                    if any(row < 0 or col < 0 or row >= canvas.shape[0] or col >= canvas.shape[1] for row, col, _color in translated):
+                        if termination in {"BOUNDARY", "COLLISION", "NO_CHANGE", "ALIGNMENT"}:
                             break
                         raise ValueError("fixed repeat exceeds grid boundary")
                     if termination == "COLLISION" and any((row, col) not in protected and int(canvas[row, col]) != _background(canvas) for row, col, _value in translated):
                         break
+                    before = canvas.copy()
+                    sequence_color = semantics.color_sequence[(multiplier - 1) % len(semantics.color_sequence)] if semantics.color_sequence else None
                     for row, col, value in translated:
-                        canvas[row, col] = value
+                        canvas[row, col] = value if sequence_color is None else sequence_color
+                    if termination == "NO_CHANGE" and np.array_equal(before, canvas): break
+                    if termination == "ALIGNMENT":
+                        if semantics.alignment_role is None: raise ValueError("ALIGNMENT repeat requires alignment_role")
+                        if self._touches_reference(translated, bound_rule_spec.roles[semantics.alignment_role]): break
                     multiplier += 1
             elif operation is OperationId.RELATIONAL_COPY:
                 reference_color = int(bound_rule_spec.value(ParameterSlot.REFERENCE_COLOR))

@@ -35,16 +35,16 @@ def _task() -> ARCTask:
 
 def test_qwen_recognizer_returns_only_unique_complete_rulespecs() -> None:
     raw = json.dumps({"hypotheses": [
-        {"family": "RECOLOR", "operations": ["SELECT", "RECOLOR"], "parameters": {"$SELECTOR": "COLOR:1", "$TARGET_COLOR": 2}, "roles": {}},
-        {"family": "RECOLOR", "operations": ["SELECT", "RECOLOR"], "parameters": {"$SELECTOR": "COLOR:2", "$TARGET_COLOR": {"derive": "COLOR_OF", "arguments": {"object": {"role_ref": "reference"}}}}, "roles": {"reference": {"kind": "COLOR", "value": 3}}},
+        {"family": "RECOLOR", "operations": ["SELECT", "RECOLOR"], "parameters": {"$SELECTOR": "COLOR:1", "$TARGET_COLOR": 2}, "roles": {}, "repeat": None},
+        {"family": "RECOLOR", "operations": ["SELECT", "RECOLOR"], "parameters": {"$SELECTOR": "COLOR:2", "$TARGET_COLOR": {"derive": "COLOR_OF", "arguments": {"object": {"role_ref": "reference"}}}}, "roles": {"reference": {"kind": "COLOR", "value": 3}}, "repeat": None},
     ]})
     task = _task(); evidence = extract_task_evidence(task)
     result = QwenRuleRecognizer(_Provider(raw), object()).recognize(task, evidence, derive_cross_pair_evidence(evidence), top_k=2)
     assert [item.to_dict()["skeleton"]["steps"][-1]["operation"] for item in result] == ["RECOLOR", "RECOLOR"]
     assert all(RuleSpecPreflightValidator().validate(item).passed for item in result)
     duplicate = json.dumps({"hypotheses": [
-        {"family": "RECOLOR", "operations": ["SELECT", "RECOLOR"], "parameters": {"$SELECTOR": "COLOR:1", "$TARGET_COLOR": 2}, "roles": {}},
-        {"family": "RECOLOR", "operations": ["SELECT", "RECOLOR"], "parameters": {"$SELECTOR": "COLOR:1", "$TARGET_COLOR": 2}, "roles": {}},
+        {"family": "RECOLOR", "operations": ["SELECT", "RECOLOR"], "parameters": {"$SELECTOR": "COLOR:1", "$TARGET_COLOR": 2}, "roles": {}, "repeat": None},
+        {"family": "RECOLOR", "operations": ["SELECT", "RECOLOR"], "parameters": {"$SELECTOR": "COLOR:1", "$TARGET_COLOR": 2}, "roles": {}, "repeat": None},
     ]})
     assert parse_complete_rulespec_hypotheses(duplicate, limit=2)[0] == ()
     assert parse_hypotheses(json.dumps({"hypotheses": [{"family": "GLOBAL", "operations": ["ROTATE"], "required_slots": []}]}), limit=1)[1] == "SCHEMA_FAILURE:wrong typed slots"
