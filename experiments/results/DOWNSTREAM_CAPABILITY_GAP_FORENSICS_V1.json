@@ -1,0 +1,77 @@
+{
+  "aggregate": {
+    "capability_gap": 30,
+    "classification_counts": {
+      "DSL_VALID_BUT_COMPILER_UNSUPPORTED": 0,
+      "MISSING_COMPOSITION": 2,
+      "MISSING_CONDITIONAL_OR_ROLE_LOGIC": 4,
+      "MISSING_ITERATION_OR_REPEAT": 15,
+      "MISSING_OUTPUT_CONSTRUCTION": 1,
+      "MISSING_PATTERN_COMPLETION": 0,
+      "MISSING_PRIMITIVE": 0,
+      "MISSING_RELATIONAL_CAPABILITY": 8,
+      "OTHER_CAPABILITY_GAP": 0,
+      "REPRESENTABLE_BUT_SEARCH_MISSED": 0,
+      "REPRESENTABLE_EXISTING": 0
+    },
+    "compiler_gap": 0,
+    "representability_rate": 0.0,
+    "representable": 0,
+    "search_coverage_counts": {
+      "COMPOSITION_SPACE_MISSED": 0,
+      "ENUMERATED_AND_FOUND": 0,
+      "ENUMERATED_BUT_PRUNED": 0,
+      "NOT_APPLICABLE": 30,
+      "PARAMETER_SPACE_MISSED": 0,
+      "REPRESENTABLE_BUT_NOT_ENUMERATED": 0
+    },
+    "search_found_oracle": 0,
+    "search_missed": 0,
+    "task_count": 30,
+    "witness_family_counts": {
+      "GLOBAL_TRANSFORM": 1,
+      "RECOLOR": 1
+    }
+  },
+  "cohort": {
+    "cohort_commitment_hash": "0a0e6fe94f87f5b04babb687dbeaa5624232ba50c3581e4a736cebe355d30e32",
+    "config_id": "DOWNSTREAM_CAPABILITY_GAP_FORENSICS_V1_TASKS",
+    "eligible_development_pool_size": 435,
+    "excluded_historical_prompt_study_count": 213,
+    "oracle_programs_public": false,
+    "raw_grids_public": false,
+    "selection": "deterministic SHA-256 sample from eligible development tasks before oracle analysis",
+    "selection_salt": "DOWNSTREAM_CAPABILITY_GAP_FORENSICS_V1",
+    "solutions_public": false,
+    "split": "development",
+    "task_count": 30,
+    "task_ids_public": false
+  },
+  "decision": {
+    "main_bottleneck": "CAPABILITY_COVERAGE",
+    "next_experiment": "CAPABILITY_LIBRARY_EXPANSION_V1"
+  },
+  "experiment_id": "DOWNSTREAM_CAPABILITY_GAP_FORENSICS_V1",
+  "frozen_downstream": {
+    "candidate_space_hash": "3016ac7e5dd1cbaf8fc5a98c00916482443d65b8af4127b4f8f22684ec687b52",
+    "historical_candidate_audit": {
+      "compiled": 3739652,
+      "generated": 8223505,
+      "train_consistent": 4
+    }
+  },
+  "leakage_audit": [
+    "Development-only cohort commitment precedes oracle analysis.",
+    "Solutions are read only in the diagnostic oracle boundary.",
+    "No task IDs, raw grids, solutions, oracle programs, or test outputs appear in public outputs.",
+    "No task-specific production rule or frozen DOWNSTREAM_V1 change was made."
+  ],
+  "legacy_score_audit": {
+    "genuine_test_wrong": 0,
+    "legacy_records": 4,
+    "serialization_false_negative_count": 4,
+    "status": "LEGACY_TUPLE_LIST_COMPARISON_FALSE_NEGATIVE"
+  },
+  "runtime_seconds": 141.63049820000015,
+  "status": "COMPLETE_SOLUTION_AWARE_DEVELOPMENT_ONLY"
+}

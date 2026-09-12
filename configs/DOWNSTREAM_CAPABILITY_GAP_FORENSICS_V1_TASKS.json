@@ -1,0 +1,14 @@
+{
+  "cohort_commitment_hash": "0a0e6fe94f87f5b04babb687dbeaa5624232ba50c3581e4a736cebe355d30e32",
+  "config_id": "DOWNSTREAM_CAPABILITY_GAP_FORENSICS_V1_TASKS",
+  "eligible_development_pool_size": 435,
+  "excluded_historical_prompt_study_count": 213,
+  "oracle_programs_public": false,
+  "raw_grids_public": false,
+  "selection": "deterministic SHA-256 sample from eligible development tasks before oracle analysis",
+  "selection_salt": "DOWNSTREAM_CAPABILITY_GAP_FORENSICS_V1",
+  "solutions_public": false,
+  "split": "development",
+  "task_count": 30,
+  "task_ids_public": false
+}
