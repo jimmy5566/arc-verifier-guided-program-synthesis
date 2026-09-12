@@ -1,0 +1,53 @@
+{
+  "experiment_id": "GRID_RECOGNITION_AND_END2END_DIAGNOSTIC_V1",
+  "status": "BLOCKED_CAPABILITY_COVERAGE_BEFORE_FORMAL_A_B_C",
+  "task_set_hash": "914430a2d92d6f4a720d86c697ffb3aa5e5bc0679d29c8318b2aeadbef09af6e",
+  "structured_hypothesis_ir_schema_hash": "f58f56af98f71d0838bf0e52d98bb4fb771dda5dca2ba77232d6417f8223d2c7",
+  "feature_extractor_hash": "f744c556f59c9dbbc68da2c87a0f9ea7a98e05cfecdbdad5e81d7136d3913076",
+  "downstream_v1": {
+    "macro_registry_hash": "cf0fc7b112f41091769be95a041411da020bac7ced4f38ba7c52b72f7b8fd7e7",
+    "compiler_hash": "6cc99180742bbaf2d066cbcbb597b221f80eaeb4d48e872d753dc031b5080948",
+    "family_first_hash": "062f308f7219ff3c4d554658fc5c87b7178cc475644faea686b6898da1b9146f",
+    "q1_ontology_hash": "25a5a1b4c756529d80b2cb6e3410b8bffd77201909ae0cfeaa32b1dafad48f7c",
+    "r1_relation_hash": "59cf018e0169b96ba7443a82829bab867edfe54fc96ace2dce5e55f37b604e10"
+  },
+  "recognizer": {
+    "model": "qwen-lm/qwen-3/Transformers/8b/1",
+    "backend": "transformers_local",
+    "dtype": "bfloat16",
+    "temperature": 0,
+    "thinking": false,
+    "top_k": 1,
+    "prompt_hash": "386077681033cea1031d57bfdc83a5e52430710a838d4f20620d2724e83f3a34",
+    "executed": false
+  },
+  "prediction_freeze_protocol": "GRID_DIAGNOSTIC_PREDICTION_FREEZE_V1",
+  "formal_passes": {
+    "A_RECOGNITION_ONLY": 0,
+    "B_ORACLE_IR_DOWNSTREAM": 0,
+    "C_END_TO_END": 0
+  },
+  "gate": {
+    "development_pool_size_after_exposure_exclusion": 435,
+    "excluded_historical_prompt_study_count": 213,
+    "train_consistent_oracle_pool_size": 4,
+    "test_exact_oracle_pool_size": 0,
+    "candidate_audit_totals": {
+      "compiled": 3739652,
+      "generated": 8223505,
+      "train_consistent": 4
+    },
+    "prediction_freeze_hash": "91fba82af0da4c39133df1e50c5ee27573dc4e54d4872676626b0c45361d6353",
+    "gate_reason": "fewer than 24 development tasks have a train-consistent and test-exact frozen DOWNSTREAM_V1 oracle; formal A/B/C is prohibited"
+  },
+  "protocol": {
+    "development_only": true,
+    "public_eval_used": false,
+    "held_out_used": false,
+    "challenge_like_used": false,
+    "solutions_opened_only_after_oracle_prediction_freeze": true,
+    "oracle_details_public": false,
+    "raw_grids_public": false,
+    "raw_test_outputs_public": false
+  }
+}

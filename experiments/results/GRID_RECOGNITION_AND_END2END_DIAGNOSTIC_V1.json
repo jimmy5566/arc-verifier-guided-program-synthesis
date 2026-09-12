@@ -1,0 +1,26 @@
+{
+  "experiment_id": "GRID_RECOGNITION_AND_END2END_DIAGNOSTIC_V1",
+  "status": "NOT_RUN_CAPABILITY_GATE_FAILED",
+  "reason": "fewer than 24 development tasks have a train-consistent and test-exact frozen DOWNSTREAM_V1 oracle; formal A/B/C is prohibited",
+  "task_count": 0,
+  "metric_status": "N/A",
+  "new_model_inference": false,
+  "prediction_freeze_hash": "91fba82af0da4c39133df1e50c5ee27573dc4e54d4872676626b0c45361d6353",
+  "condition": "AGGREGATE",
+  "frozen_config": "configs\\GRID_RECOGNITION_AND_END2END_DIAGNOSTIC_V1_FROZEN_CONFIG.json",
+  "gate": {
+    "development_pool_size_after_exposure_exclusion": 435,
+    "excluded_historical_prompt_study_count": 213,
+    "train_consistent_oracle_pool_size": 4,
+    "test_exact_oracle_pool_size": 0,
+    "candidate_audit_totals": {
+      "compiled": 3739652,
+      "generated": 8223505,
+      "train_consistent": 4
+    },
+    "prediction_freeze_hash": "91fba82af0da4c39133df1e50c5ee27573dc4e54d4872676626b0c45361d6353",
+    "gate_reason": "fewer than 24 development tasks have a train-consistent and test-exact frozen DOWNSTREAM_V1 oracle; formal A/B/C is prohibited"
+  },
+  "main_bottleneck": "DOWNSTREAM_CAPABILITY_COVERAGE_GATE_BLOCKED",
+  "conclusion": "No valid 24-task controlled cohort exists under frozen DOWNSTREAM_V1; formal recognition/downstream/end-to-end metrics are intentionally not fabricated."
+}

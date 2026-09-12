@@ -1,0 +1,13 @@
+{
+  "experiment_id": "GRID_RECOGNITION_AND_END2END_DIAGNOSTIC_V1",
+  "status": "NOT_RUN_CAPABILITY_GATE_FAILED",
+  "reason": "fewer than 24 development tasks have a train-consistent and test-exact frozen DOWNSTREAM_V1 oracle; formal A/B/C is prohibited",
+  "task_count": 0,
+  "metric_status": "N/A",
+  "new_model_inference": false,
+  "prediction_freeze_hash": "91fba82af0da4c39133df1e50c5ee27573dc4e54d4872676626b0c45361d6353",
+  "condition": "B_ORACLE_IR_DOWNSTREAM",
+  "oracle_access": true,
+  "gate_train_consistent": 4,
+  "gate_test_exact": 0
+}

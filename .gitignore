@@ -78,6 +78,10 @@ experiments/results/*
 !experiments/results/MACRO_API_COMPREHENSION_BENCHMARK_V1.json
 !experiments/results/CONTEXTUAL_PARAMETER_FORENSICS_V1.json
 !experiments/results/CONTEXTUAL_PARAMETER_REASONING_V1.json
+!experiments/results/GRID_RECOGNITION_ONLY_V1.json
+!experiments/results/ORACLE_IR_DOWNSTREAM_V1.json
+!experiments/results/GRID_TO_END2END_V1.json
+!experiments/results/GRID_RECOGNITION_AND_END2END_DIAGNOSTIC_V1.json
 reports/*
 !reports/arc2_capability_system_v1.md
 !reports/capability_registry_audit.md
@@ -90,3 +94,4 @@ reports/*
 !reports/macro_api_comprehension_benchmark_v1.md
 !reports/contextual_parameter_forensics_v1.md
 !reports/contextual_parameter_reasoning_v1.md
+!reports/grid_recognition_and_end2end_diagnostic_v1.md

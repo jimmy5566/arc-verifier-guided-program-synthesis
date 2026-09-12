@@ -1,0 +1,23 @@
+{
+  "config_id": "GRID_RECOGNITION_DIAGNOSTIC_V1_TASKS",
+  "status": "BLOCKED_CAPABILITY_COVERAGE",
+  "split": "development",
+  "task_count_required": 24,
+  "selected_task_ids": [],
+  "selection": "deterministic SHA-256 sampling from exact oracle-capability pool after excluding historical LLM/Macro/parameter prompt-study task IDs",
+  "selection_salt": "GRID_RECOGNITION_DIAGNOSTIC_V1",
+  "development_pool_size_after_exposure_exclusion": 435,
+  "excluded_historical_prompt_study_count": 213,
+  "train_consistent_oracle_pool_size": 4,
+  "test_exact_oracle_pool_size": 0,
+  "candidate_audit_totals": {
+    "compiled": 3739652,
+    "generated": 8223505,
+    "train_consistent": 4
+  },
+  "prediction_freeze_hash": "91fba82af0da4c39133df1e50c5ee27573dc4e54d4872676626b0c45361d6353",
+  "oracle_programs_public": false,
+  "raw_grids_public": false,
+  "test_outputs_public": false,
+  "gate_reason": "fewer than 24 development tasks have a train-consistent and test-exact frozen DOWNSTREAM_V1 oracle; formal A/B/C is prohibited"
+}
