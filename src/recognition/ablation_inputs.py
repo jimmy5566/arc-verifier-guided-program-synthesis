@@ -7,6 +7,7 @@ the displayed train grids, not hypotheses about a particular ARC task.
 from __future__ import annotations
 
 from collections import Counter, deque
+from hashlib import sha256
 from typing import Any, Iterable
 
 import numpy as np
@@ -55,6 +56,12 @@ def _components(grid: np.ndarray) -> list[dict[str, Any]]:
         rows, cols = zip(*cells)
         top, left, bottom, right = min(rows), min(cols), max(rows), max(cols)
         normalized = tuple(sorted((r - top, c - left) for r, c in cells))
+        # Exact pixels remain in A0/A2/A3's raw-grid channel.  Repeating a
+        # potentially 900-cell coordinate string for every object is not new
+        # semantic evidence; this stable digest retains shape identity while
+        # preserving finite-context capacity for the recognizer.
+        signature_bytes = ";".join(f"{r},{c}" for r, c in normalized).encode("ascii")
+        shape_signature = f"{right - left + 1}x{bottom - top + 1}:{len(cells)}:{sha256(signature_bytes).hexdigest()[:16]}"
         output.append(
             {
                 "color": color,
@@ -63,10 +70,19 @@ def _components(grid: np.ndarray) -> list[dict[str, Any]]:
                 "centroid": [round(sum(rows) / len(rows), 3), round(sum(cols) / len(cols), 3)],
                 "width": right - left + 1,
                 "height": bottom - top + 1,
-                "shape_signature": ";".join(f"{r},{c}" for r, c in normalized),
+                "shape_signature": shape_signature,
             }
         )
     return sorted(output, key=lambda item: (item["bbox"], item["color"], item["shape_signature"]))
+
+
+def _bounded_objects(objects: Iterable[dict[str, Any]], *, limit: int) -> tuple[list[dict[str, Any]], dict[int, int]]:
+    """Keep canonical salient objects while recording all suppressed counts."""
+    values = list(objects)
+    selected = sorted(values, key=lambda item: (-item["area"], item["bbox"], item["color"], item["shape_signature"]))[:limit]
+    selected_ids = {id(item) for item in selected}
+    suppressed: Counter[int] = Counter(item["color"] for item in values if id(item) not in selected_ids)
+    return sorted(selected, key=lambda item: (item["bbox"], item["color"], item["shape_signature"])), dict(suppressed)
 
 
 def _symmetry(grid: np.ndarray) -> dict[str, bool]:
@@ -98,7 +114,9 @@ def _grid_observation(grid: np.ndarray, *, include_objects: bool) -> dict[str, A
         "periodicity": _periods(grid),
     }
     if include_objects:
-        observation["objects"] = _components(grid)
+        objects, suppressed = _bounded_objects(_components(grid), limit=12)
+        observation["objects"] = objects
+        observation["suppressed_component_count_by_color"] = [[color, count] for color, count in sorted(suppressed.items())]
     return observation
 
 
@@ -143,22 +161,11 @@ def _edge(left: dict[str, Any], right: dict[str, Any]) -> list[dict[str, Any]]:
 
 def _object_graph(grid: np.ndarray, name: str) -> dict[str, Any]:
     objects = _components(grid)
-    # Dense multicolour grids can contain hundreds of isolated one-cell noise
-    # components.  Full pixels remain in A3's raw-grid channel; the graph has
-    # a deterministic bounded node budget: retain at most four canonical
-    # components per colour, ordered by area then geometry.  This is
-    # independent of task identity or output and is necessary to keep the
-    # structured representation consumable by the fixed model context.
-    by_color: dict[int, list[dict[str, Any]]] = {}
-    for item in objects:
-        by_color.setdefault(item["color"], []).append(item)
-    retained: list[dict[str, Any]] = []
-    suppressed: dict[int, int] = {}
-    for color, values in sorted(by_color.items()):
-        selected = sorted(values, key=lambda item: (-item["area"], item["bbox"], item["shape_signature"]))[:4]
-        retained.extend(selected)
-        suppressed[color] = len(values) - len(selected)
-    retained.sort(key=lambda item: (item["bbox"], item["color"], item["shape_signature"]))
+    # Dense grids may have hundreds of isolated components.  Full pixels stay
+    # in A3's raw channel; the graph has four canonical nodes per grid, chosen
+    # independently of task identity or output, with the omitted counts made
+    # explicit.  This prevents graph notation from crowding out pixel evidence.
+    retained, suppressed = _bounded_objects(objects, limit=4)
     nodes = [{"object_id": f"{name}_{index}", **item} for index, item in enumerate(retained)]
     # A complete graph is not an observation a bounded-context recognizer can
     # consume.  Preserve *all* object nodes, but retain only deterministic

@@ -112,6 +112,37 @@ def _buckets(work: list[tuple[str, str]]) -> list[list[tuple[str, str]]]:
     return [work[index::4] for index in range(4)]
 
 
+def _tokenization_preflight(task_ids: tuple[str, ...], challenge_path: Path, model_path: Path, conditions: tuple[str, ...]) -> None:
+    """Measure exact chat-template prompt sizes without loading model weights.
+
+    This is a capacity gate only: it reads the attached local tokenizer and
+    train challenge pairs, executes no model, and produces no predictions.
+    """
+    from arc.io import load_dataset
+    from transformers import AutoTokenizer
+
+    tokenizer = AutoTokenizer.from_pretrained(str(model_path), local_files_only=True, trust_remote_code=False)
+    tasks = load_dataset(challenge_path)
+    by_condition: dict[str, dict[str, int]] = {}
+    for condition in conditions:
+        counts = []
+        for task_id in task_ids:
+            if condition in ("A0_RAW_GRID_ONLY", "A1_DETERMINISTIC_FEATURES_ONLY", "A2_RAW_PLUS_CURRENT_FEATURES", "A3_RAW_PLUS_OBJECT_RELATION_GRAPH", "M0_QWEN3_8B", "M2_SPECIALIZED_ARC_SFT"):
+                prompt = _full_json_prompt(tasks[task_id], "A2_RAW_PLUS_CURRENT_FEATURES" if condition.startswith("M") else condition)
+            else:
+                # C prompts are necessarily much smaller than the corresponding
+                # full JSON schema prompt; retain a conservative full-prompt
+                # count as a transport-only upper-bound for this gate.
+                prompt = _full_json_prompt(tasks[task_id], "A2_RAW_PLUS_CURRENT_FEATURES")
+            encoded = tokenizer.apply_chat_template(
+                [{"role": "user", "content": prompt}], add_generation_prompt=True,
+                enable_thinking=False, tokenize=True, return_tensors="pt",
+            )
+            counts.append(int(encoded.shape[-1]))
+        by_condition[condition] = {"min_prompt_tokens": min(counts), "max_prompt_tokens": max(counts), "mean_prompt_tokens": round(sum(counts) / len(counts), 2)}
+    print(json.dumps({"status": "TOKENIZATION_PREFLIGHT_COMPLETE_NO_GENERATION", "conditions": by_condition, "task_count": len(task_ids)}, sort_keys=True))
+
+
 def _validate_conditions(track: str, conditions: Iterable[str]) -> tuple[str, ...]:
     from recognition.ablation_inputs import TRACK_A_CONDITIONS
     from recognition.semantic_interfaces import TRACK_C_CONDITIONS
@@ -135,6 +166,7 @@ def main() -> None:
     parser.add_argument("--prompt-version", required=True)
     parser.add_argument("--context-window", type=int, default=12288)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--tokenization-preflight", action="store_true")
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError("refusing to overwrite frozen prediction artifact")
@@ -144,6 +176,9 @@ def main() -> None:
     if len(task_ids) != 30 or len(set(task_ids)) != 30:
         raise ValueError("requires the exact 30-task frozen cohort")
     conditions = _validate_conditions(args.track, (item for item in args.conditions.split(",") if item))
+    if args.tokenization_preflight:
+        _tokenization_preflight(task_ids, args.challenge_path, args.model_path, conditions)
+        return
     hardware = inspect_hardware()
     if hardware.status.value != "SUCCESS" or len(hardware.gpus) != 4:
         raise RuntimeError(f"requires exactly four GPUs: {hardware.to_dict()}")

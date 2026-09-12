@@ -44,6 +44,27 @@ def test_track_a_payloads_are_deterministic_and_gold_blind() -> None:
     assert "candidate_correspondences" in graph
 
 
+def test_relation_graph_shape_signature_is_bounded_without_losing_identity() -> None:
+    grid = ARCGrid([[0] * 30 for _ in range(29)] + [[2] * 30])
+    task = ARCTask("fixture", (ARCExample(grid, grid),), (ARCExample(grid),))
+    graph = payload_for_condition(task, RAW_RELATION_GRAPH)["relation_graph"]
+    signature = graph["train_pair_relation_graphs"][0]["input_graph"]["nodes"][0]["shape_signature"]
+    assert len(signature) < 40
+    assert ";" not in signature
+
+
+def test_dense_grid_feature_and_graph_budgets_are_deterministic() -> None:
+    values = [[(row + col) % 2 for col in range(30)] for row in range(30)]
+    grid = ARCGrid(values)
+    task = ARCTask("fixture", (ARCExample(grid, grid),), (ARCExample(grid),))
+    features = payload_for_condition(task, FEATURES_ONLY)["train_pair_features"][0]["input"]
+    graph = payload_for_condition(task, RAW_RELATION_GRAPH)["relation_graph"]["train_pair_relation_graphs"][0]["input_graph"]
+    assert len(features["objects"]) <= 12
+    assert len(graph["nodes"]) <= 4
+    assert features["suppressed_component_count_by_color"]
+    assert graph["suppressed_component_count_by_color"]
+
+
 def test_finite_slots_normalize_without_changing_semantic_ontology() -> None:
     ontology = candidate_ontology()
     assert tuple(ontology) == SLOT_ORDER
@@ -67,6 +88,15 @@ def test_v2_recognition_runner_is_oracle_and_execution_blind() -> None:
     text = (root / "scripts/run_parallel_semantic_ablation.py").read_text(encoding="utf-8").lower()
     for forbidden in ("semantic_ir_scorer", "solutions", "macro_compiler", "capabilityprogramexecutor", "hardverifier", "program_search"):
         assert forbidden not in text
+
+
+def test_tokenization_preflight_is_explicitly_generation_free() -> None:
+    root = Path(__file__).parents[1]
+    text = (root / "scripts/run_parallel_semantic_ablation.py").read_text(encoding="utf-8")
+    start = text.index("def _tokenization_preflight")
+    end = text.index("def _validate_conditions", start)
+    assert ".generate(" not in text[start:end]
+    assert "TOKENIZATION_PREFLIGHT_COMPLETE_NO_GENERATION" in text[start:end]
 
 
 def test_finalizer_is_the_explicit_local_oracle_boundary() -> None:
