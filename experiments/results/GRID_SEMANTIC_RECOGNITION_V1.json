@@ -1,0 +1,114 @@
+{
+  "downstream_capability_gate_used": false,
+  "execution_bottleneck": "CAPABILITY_COVERAGE",
+  "experiment_id": "GRID_SEMANTIC_RECOGNITION_V1",
+  "failure_taxonomy": {
+    "CONDITION_WRONG": 1,
+    "FAMILY_WRONG": 15,
+    "ITERATION_MISSED": 5,
+    "ITERATION_PARAMETER_WRONG": 8,
+    "RELATION_WRONG": 20
+  },
+  "family_metrics": {
+    "COLOR_RECOLOR": {
+      "primary_family_correct": 1,
+      "semantic_success": 1,
+      "tasks": 1
+    },
+    "CONDITIONAL_ROLE_LOGIC": {
+      "primary_family_correct": 0,
+      "semantic_success": 0,
+      "tasks": 4
+    },
+    "GLOBAL_TRANSFORM": {
+      "primary_family_correct": 0,
+      "semantic_success": 0,
+      "tasks": 1
+    },
+    "ITERATION_REPEAT": {
+      "primary_family_correct": 0,
+      "semantic_success": 0,
+      "tasks": 15
+    },
+    "OUTPUT_CONSTRUCTION": {
+      "primary_family_correct": 0,
+      "semantic_success": 0,
+      "tasks": 1
+    },
+    "RELATIONAL_TRANSFORMATION": {
+      "primary_family_correct": 4,
+      "semantic_success": 3,
+      "tasks": 8
+    }
+  },
+  "focused_metrics": {
+    "conditional_role": {
+      "conditional_detection": 0,
+      "iteration_detection": 0,
+      "iteration_semantics": 0,
+      "object_role_f1": 0.16666666666666666,
+      "relation_f1": 0.0,
+      "semantic_success": 0,
+      "tasks": 4
+    },
+    "iteration_repeat": {
+      "conditional_detection": 5,
+      "iteration_detection": 7,
+      "iteration_semantics": 0,
+      "object_role_f1": 0.0,
+      "relation_f1": 0.18666666666666668,
+      "semantic_success": 0,
+      "tasks": 15
+    },
+    "output_construction": {
+      "conditional_detection": 0,
+      "iteration_detection": 1,
+      "iteration_semantics": 0,
+      "object_role_f1": 0.0,
+      "relation_f1": 0.0,
+      "semantic_success": 0,
+      "tasks": 1
+    },
+    "relational": {
+      "conditional_detection": 3,
+      "iteration_detection": 3,
+      "iteration_semantics": 3,
+      "object_role_f1": 0.28571428571428575,
+      "relation_f1": 0.15000000000000002,
+      "semantic_success": 3,
+      "tasks": 8
+    }
+  },
+  "generation_seconds_sum": 574.9759948809998,
+  "leakage_audit": [
+    "Kaggle inference artifact declares train-pairs-only input and gold-blind protocol.",
+    "Gold was opened only by this local scorer after prediction artifact freeze.",
+    "No raw grids, oracle IR, test outputs, task IDs, or raw responses are included in this public aggregate."
+  ],
+  "macro_compiler_executor_called": false,
+  "metrics": {
+    "composition_accuracy": 0.0,
+    "conditional_logic_accuracy": 0.3333333333333333,
+    "core_operation_accuracy": 0.36666666666666664,
+    "full_semantic_ir_exact": 0.0,
+    "iteration_detection_accuracy": 0.43333333333333335,
+    "iteration_semantic_accuracy": 0.16666666666666666,
+    "object_role_accuracy": 0.09841269841269842,
+    "output_construction_accuracy": 0.13333333333333333,
+    "primary_family_accuracy": 0.16666666666666666,
+    "relation_f1": 0.13333333333333333,
+    "selection_criteria_accuracy": 0.03333333333333333,
+    "semantic_ir_success": 0.13333333333333333,
+    "semantic_parameter_accuracy": 0.03333333333333333,
+    "slot_f1": 0.09393939393939395
+  },
+  "model": "Qwen3-8B",
+  "new_heldout_public_challenge_inference": false,
+  "oracle_gold_hash": "4969ebb048a1780e6b73fd3bc9a1d526b441d9647cab7e4f887078ae2fb876e1",
+  "prediction_freeze_hash": "b8df3ae0e79a20b6e39ce36ab8117eda8ef45fbd9ea2bdee88454ccbbe5dfb5a",
+  "recognition_status": "GRID_RECOGNITION_WEAK",
+  "runtime_seconds": 574.9759948809998,
+  "scoring_seconds": 0.0056379999878117815,
+  "status": "COMPLETE",
+  "task_count": 30
+}

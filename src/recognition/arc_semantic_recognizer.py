@@ -9,7 +9,7 @@ from .arc_grid_feature_extractor import task_payload
 from .arc_semantic_ir import SCHEMA, validate
 
 
-PROMPT_VERSION = "GRID_SEMANTIC_RECOGNITION_V1_RAW_GRIDS_PLUS_TRAIN_FEATURES"
+PROMPT_VERSION = "GRID_SEMANTIC_RECOGNITION_V1_RAW_GRIDS_PLUS_COMPACT_TRAIN_FEATURES"
 
 
 def prompt_for(task: ARCTask) -> str:

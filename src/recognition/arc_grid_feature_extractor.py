@@ -24,6 +24,20 @@ def _components(grid: np.ndarray) -> list[dict[str, Any]]:
     return sorted(result, key=lambda item: (item["color"], item["bbox"]))
 
 
+def _component_summary(grid: np.ndarray) -> dict[str, Any]:
+    """Bounded component evidence; full pixels remain in the serialized grid."""
+    components = _components(grid)
+    by_color: dict[int, list[dict[str, Any]]] = {}
+    for component in components: by_color.setdefault(component["color"], []).append(component)
+    return {
+        "non_background_component_count": len(components),
+        "by_color": [
+            {"color": color, "count": len(items), "largest_size": max(item["size"] for item in items), "largest_bbox": min((item["bbox"] for item in items if item["size"] == max(candidate["size"] for candidate in items)))}
+            for color, items in sorted(by_color.items())
+        ],
+    }
+
+
 def _grid(values: np.ndarray) -> list[list[int]]:
     return np.asarray(values).astype(int).tolist()
 
@@ -38,6 +52,6 @@ def task_payload(task: ARCTask) -> dict[str, Any]:
             "input_shape": list(source.shape), "output_shape": list(target.shape),
             "input_colors": sorted(map(int, np.unique(source))), "output_colors": sorted(map(int, np.unique(target))),
             "changed_cells": None if source.shape != target.shape else int(np.count_nonzero(source != target)),
-            "input_components": _components(source), "output_components": _components(target),
+            "input_component_summary": _component_summary(source), "output_component_summary": _component_summary(target),
         })
     return {"train_pairs": pairs, "observation_policy": "all observations are deterministic functions of train input/output pairs only"}
