@@ -84,6 +84,11 @@ experiments/results/*
 !experiments/results/GRID_RECOGNITION_AND_END2END_DIAGNOSTIC_V1.json
 !experiments/results/DOWNSTREAM_CAPABILITY_GAP_FORENSICS_V1.json
 !experiments/results/GRID_SEMANTIC_RECOGNITION_V1.json
+!experiments/results/GRID_RECOGNITION_INPUT_ABLATION_V1.json
+!experiments/results/GRID_RECOGNITION_MODEL_CAPACITY_V1.json
+!experiments/results/SEMANTIC_IR_INTERFACE_ABLATION_V1.json
+!experiments/results/CAPABILITY_LIBRARY_EXPANSION_V1.json
+!experiments/results/ARC_PARALLEL_DIAGNOSTIC_V2_SYNTHESIS.json
 reports/*
 !reports/arc2_capability_system_v1.md
 !reports/capability_registry_audit.md
@@ -99,3 +104,8 @@ reports/*
 !reports/grid_recognition_and_end2end_diagnostic_v1.md
 !reports/downstream_capability_gap_forensics_v1.md
 !reports/grid_semantic_recognition_v1.md
+!reports/grid_recognition_input_ablation_v1.md
+!reports/grid_recognition_model_capacity_v1.md
+!reports/semantic_ir_interface_ablation_v1.md
+!reports/capability_library_expansion_v1.md
+!reports/arc_parallel_diagnostic_v2_synthesis.md

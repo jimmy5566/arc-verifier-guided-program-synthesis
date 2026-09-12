@@ -30,6 +30,7 @@ INCLUDED_FILES = (
     "configs/CONTEXTUAL_PARAMETER_REASONING_V1_FROZEN_CONFIG.json",
     "configs/ARC_SEMANTIC_IR_V1_SCHEMA.json",
     "configs/GRID_SEMANTIC_RECOGNITION_V1_FROZEN_CONFIG.json",
+    "configs/ARC_PARALLEL_DIAGNOSTIC_V2_FROZEN_CONFIG.json",
     "scripts/run_qwen3_8b_transformers_preflight.py",
     "scripts/run_qwen3_8b_one_task_smoke.py",
     "scripts/run_qwen3_8b_four_gpu_preflight.py",
@@ -42,6 +43,7 @@ INCLUDED_FILES = (
     "scripts/run_parameter_semantic_retrieval.py",
     "scripts/run_contextual_parameter_reasoning.py",
     "scripts/run_grid_semantic_recognition.py",
+    "scripts/run_parallel_semantic_ablation.py",
 )
 
 

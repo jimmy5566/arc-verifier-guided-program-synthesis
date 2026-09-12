@@ -1,0 +1,88 @@
+{
+  "experiment_id": "ARC_PARALLEL_DIAGNOSTIC_V2",
+  "status": "FROZEN_BEFORE_NEW_INFERENCE",
+  "cohort": {
+    "source": "DOWNSTREAM_CAPABILITY_GAP_FORENSICS_V1 private frozen cohort",
+    "split": "development",
+    "task_count": 30,
+    "task_ids_public": false,
+    "task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8"
+  },
+  "shared_recognition": {
+    "semantic_ir": "ARCSEMANTICIRV1",
+    "semantic_ir_schema_canonical_sha256": "4441b5fb72d9d67057946cb3623e2f7e4a18ab371332fd55248b162e163ff887",
+    "taxonomy": "ARCSEMANTICIRV1 finite generic ontology; no task-specific IDs",
+    "scorer": "evaluation.semantic_ir_scorer.v1 deterministic",
+    "input_scope": "development train input/output pairs only",
+    "forbidden": [
+      "development test outputs",
+      "oracle semantic IR",
+      "oracle labels",
+      "macro registry",
+      "compiler",
+      "executor",
+      "hard verifier",
+      "program search",
+      "hypothesis ranking"
+    ],
+    "prediction_protocol": "generate -> save private artifact -> hash/freeze -> only then local oracle scoring"
+  },
+  "generation": {
+    "temperature": 0,
+    "top_p": 1,
+    "top_k": 1,
+    "seed": 20260912,
+    "max_new_tokens": 600,
+    "thinking": false,
+    "retries": 0
+  },
+  "track_a": {
+    "experiment_id": "GRID_RECOGNITION_INPUT_ABLATION_V1",
+    "model": "qwen-lm/qwen-3/Transformers/8b/1",
+    "conditions": [
+      "A0_RAW_GRID_ONLY",
+      "A1_DETERMINISTIC_FEATURES_ONLY",
+      "A2_RAW_PLUS_CURRENT_FEATURES_REUSED_V1",
+      "A3_RAW_PLUS_OBJECT_RELATION_GRAPH"
+    ],
+    "only_variable": "input_representation",
+    "a2_reused_prediction_freeze_hash": "b8df3ae0e79a20b6e39ce36ab8117eda8ef45fbd9ea2bdee88454ccbbe5dfb5a"
+  },
+  "track_b": {
+    "experiment_id": "GRID_RECOGNITION_MODEL_CAPACITY_V1",
+    "baseline_input": "A2_RAW_PLUS_CURRENT_FEATURES",
+    "conditions": {
+      "M0_QWEN3_8B_REUSED_V1": "qwen-lm/qwen-3/Transformers/8b/1",
+      "M1_STRONGER_GENERIC": "M1_UNAVAILABLE_NO_EXISTING_ATTACHED_GENERIC_MODEL",
+      "M2_SPECIALIZED_ARC_SFT": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1"
+    },
+    "only_variable": "model"
+  },
+  "track_c": {
+    "experiment_id": "SEMANTIC_IR_INTERFACE_ABLATION_V1",
+    "model": "qwen-lm/qwen-3/Transformers/8b/1",
+    "input": "A2_RAW_PLUS_CURRENT_FEATURES",
+    "conditions": [
+      "C0_CURRENT_FULL_JSON_IR_REUSED_V1",
+      "C1_FLAT_TYPED_SLOTS",
+      "C2_FINITE_CANDIDATE_CLASSIFICATION",
+      "C3_HIERARCHICAL_SLOT_CLASSIFICATION"
+    ],
+    "only_variable": "semantic_output_interface"
+  },
+  "track_d": {
+    "experiment_id": "CAPABILITY_LIBRARY_EXPANSION_V1",
+    "baseline_representable": "0/30",
+    "evidence_scope": "frozen development-only solution-aware forensic taxonomy",
+    "maximum_new_high_level_capabilities": 7,
+    "forbidden_dependencies": ["recognition outputs", "recognition scores", "recognizer source"],
+    "representability_requirement": "a generic typed witness must be train-exact and test-exact"
+  },
+  "isolation": {
+    "no_cross_track_midstream_tuning": true,
+    "no_combined_best_configuration_rerun": true,
+    "track_d_independent_of_recognition": true,
+    "internet": false,
+    "hardware": "4x NVIDIA L4 for recognition inference only"
+  }
+}

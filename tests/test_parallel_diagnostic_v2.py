@@ -1,0 +1,69 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+from arc.task import ARCExample, ARCGrid, ARCTask
+from recognition.ablation_inputs import (
+    FEATURES_ONLY,
+    RAW_GRID_ONLY,
+    RAW_RELATION_GRAPH,
+    TRACK_A_CONDITIONS,
+    no_test_oracle_terms,
+    payload_for_condition,
+)
+from recognition.semantic_interfaces import (
+    SLOT_ORDER,
+    candidate_ontology,
+    normalize_slots,
+    parse_slot_response,
+)
+
+
+def _task() -> ARCTask:
+    return ARCTask(
+        "fixture",
+        (
+            ARCExample(ARCGrid([[0, 1, 0], [0, 1, 0]]), ARCGrid([[0, 2, 0], [0, 2, 0]])),
+        ),
+        (ARCExample(ARCGrid([[9, 9, 9]]), None),),
+    )
+
+
+def test_track_a_payloads_are_deterministic_and_gold_blind() -> None:
+    task = _task()
+    assert len(TRACK_A_CONDITIONS) == 4
+    for condition in TRACK_A_CONDITIONS:
+        left, right = payload_for_condition(task, condition), payload_for_condition(task, condition)
+        assert left == right
+        assert no_test_oracle_terms(left)
+    assert "input" in payload_for_condition(task, RAW_GRID_ONLY)["train_pairs"][0]
+    assert "objects" in payload_for_condition(task, FEATURES_ONLY)["train_pair_features"][0]["input"]
+    assert payload_for_condition(task, FEATURES_ONLY)["train_pair_features"][0]["input"]["shape"] == [2, 3]
+    graph = payload_for_condition(task, RAW_RELATION_GRAPH)["relation_graph"]["train_pair_relation_graphs"][0]
+    assert {"nodes", "edges"} <= set(graph["input_graph"])
+    assert "candidate_correspondences" in graph
+
+
+def test_finite_slots_normalize_without_changing_semantic_ontology() -> None:
+    ontology = candidate_ontology()
+    assert tuple(ontology) == SLOT_ORDER
+    slots = {name: values[0] for name, values in ontology.items()}
+    slots.update({"FAMILY": "ITERATION_REPEAT", "OPERATION": "REPEAT", "SOURCE_ROLE": "MOTIF", "TARGET_ROLE": "NONE", "RELATION": "RELATIVE_POSITION", "ITERATION": "TRUE", "DIRECTION": "RIGHT", "STEP_RULE": "FIXED_INTERVAL", "TERMINATION": "GRID_BOUNDARY", "OUTPUT_MODE": "CONSTRUCTED_PATTERN", "REPEAT_OBJECT": "MOTIF"})
+    value, status = normalize_slots(slots)
+    assert status == "SUCCESS" and value is not None
+    assert value["primary_family"] == "ITERATION_REPEAT"
+    assert value["iteration"]["direction"] == "RIGHT"
+
+
+def test_flat_interface_rejects_missing_or_invalid_slots() -> None:
+    full = "\n".join(f"{key}={values[0]}" for key, values in candidate_ontology().items())
+    assert parse_slot_response(full)[0] is not None
+    assert parse_slot_response("FAMILY=ITERATION_REPEAT")[0] is None
+    assert parse_slot_response(full.replace("FAMILY=COLOR_RECOLOR", "FAMILY=TASK_SPECIFIC_123"))[0] is None
+
+
+def test_v2_recognition_runner_is_oracle_and_execution_blind() -> None:
+    root = Path(__file__).parents[1]
+    text = (root / "scripts/run_parallel_semantic_ablation.py").read_text(encoding="utf-8").lower()
+    for forbidden in ("semantic_ir_scorer", "solutions", "macro_compiler", "capabilityprogramexecutor", "hardverifier", "program_search"):
+        assert forbidden not in text
