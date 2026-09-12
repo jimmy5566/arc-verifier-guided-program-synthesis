@@ -99,6 +99,13 @@ def test_tokenization_preflight_is_explicitly_generation_free() -> None:
     assert "TOKENIZATION_PREFLIGHT_COMPLETE_NO_GENERATION" in text[start:end]
 
 
+def test_runtime_fragmentation_fix_is_set_before_transformers_import() -> None:
+    root = Path(__file__).parents[1]
+    text = (root / "scripts/run_parallel_semantic_ablation.py").read_text(encoding="utf-8")
+    worker = text[text.index("def _worker"):text.index("def _buckets")]
+    assert worker.index("PYTORCH_ALLOC_CONF") < worker.index("from llm.models")
+
+
 def test_finalizer_is_the_explicit_local_oracle_boundary() -> None:
     root = Path(__file__).parents[1]
     text = (root / "scripts/finalize_semantic_ablation.py").read_text(encoding="utf-8")

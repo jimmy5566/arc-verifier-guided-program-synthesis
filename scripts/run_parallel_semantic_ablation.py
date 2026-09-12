@@ -82,6 +82,10 @@ def _infer_one(provider: Any, task: Any, condition: str, generation: Any) -> dic
 
 def _worker(worker_id: int, work: list[tuple[str, str]], challenge_path: str, model_path: str, config: dict[str, Any], results: Any, ready: Any, start: Any) -> None:
     os.environ["CUDA_VISIBLE_DEVICES"] = str(worker_id)
+    # V29 had no prediction artifact and failed during a 636 MiB allocation
+    # while 1.21 GiB remained reserved-but-unallocated.  This allocator policy
+    # is an infrastructure-only fragmentation fix, set before torch import.
+    os.environ.setdefault("PYTORCH_ALLOC_CONF", "expandable_segments:True")
     try:
         from arc.io import load_dataset
         from llm.models import GenerationConfig
@@ -218,6 +222,7 @@ def main() -> None:
         "frozen_config_sha256": hashlib.sha256(args.frozen_config.read_bytes()).hexdigest(),
         "conditions": conditions,
         "hardware": hardware.to_dict(),
+        "runtime": {"pytorch_allocator": "expandable_segments:True"},
         "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")},
         "records": records,
     }

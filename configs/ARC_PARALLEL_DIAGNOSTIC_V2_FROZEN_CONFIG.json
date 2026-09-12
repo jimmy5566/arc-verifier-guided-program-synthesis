@@ -36,6 +36,10 @@
     "thinking": false,
     "retries": 0
   },
+  "runtime_infrastructure": {
+    "pytorch_allocator": "expandable_segments:True",
+    "rationale": "V29 produced no predictions and failed on a reserved-but-unallocated CUDA fragmentation allocation; this does not change scientific variables."
+  },
   "track_a": {
     "experiment_id": "GRID_RECOGNITION_INPUT_ABLATION_V1",
     "model": "qwen-lm/qwen-3/Transformers/8b/1",
