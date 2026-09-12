@@ -1,0 +1,40 @@
+{
+  "experiment_id": "GRID_SKELETON_RECOGNITION_V1",
+  "cohort": {
+    "source": "GRID_SEMANTIC_RECOGNITION_V1 private frozen cohort",
+    "task_count": 30,
+    "task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8",
+    "task_ids_public": false,
+    "re_sampling": false
+  },
+  "model": {
+    "model_source": "qwen-lm/qwen-3/Transformers/8b/1",
+    "architecture": "Qwen3ForCausalLM",
+    "tokenizer_version": "Qwen3-8B attached local tokenizer revision 1",
+    "dtype": "bfloat16",
+    "context_window": 12288,
+    "accelerator": "4x NVIDIA L4",
+    "internet": false
+  },
+  "input": "A3_RAW_PLUS_OBJECT_RELATION_GRAPH: full train input/output grids plus bounded deterministic train-pair object/relation graph",
+  "output": "ARCSKELETONIRV1 finite operation IDs plus typed symbolic holes only",
+  "generation": {
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "seed": 20260912,
+    "thinking": false,
+    "top_k": 1,
+    "max_new_tokens": 600,
+    "retries": 0
+  },
+  "prompt_version": "GRID_SKELETON_RECOGNITION_V1_A3_TYPED_HOLES",
+  "frozen_implementation_hashes": {
+    "skeleton_schema": "EB7E4B6809FB31A87AF1D4EFDF7538F267B559BC4D2E6BC7C73B131DC79116DB",
+    "recognizer_prompt_parser": "040A44B78073ABD35F93EF179ECDEC5DA4BECCC5E29EE390CC3A31D201CF1B63",
+    "a3_feature_extractor": "B91963182F90CDA0BB7BA1916FE72FA134CC8969D41569B02F1ABDF275EBC207"
+  },
+  "oracle_isolation": "Inference source contains no semantic oracle, derived skeleton gold, development solutions, test output, or forensic labels. All 30 predictions are frozen and SHA256-hashed before local-only oracle derivation and scoring.",
+  "forbidden_dependencies": ["parameter_solver", "macro_capability_registry", "macro_compiler", "CapabilityProgramExecutor", "HardVerifier", "program_search", "hypothesis_ranking"],
+  "scorer": "evaluation.skeleton_scorer.v1 deterministic",
+  "semantic_parameter_values_allowed": false
+}
