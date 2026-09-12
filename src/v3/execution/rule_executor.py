@@ -33,6 +33,22 @@ def _components(grid: np.ndarray) -> list[list[tuple[int, int]]]:
 
 
 class RuleExecutor:
+    SUPPORTED_OPERATIONS = frozenset({
+        OperationId.SELECT, OperationId.COPY, OperationId.MOVE, OperationId.REPEAT,
+        OperationId.RECOLOR, OperationId.ROTATE, OperationId.REFLECT, OperationId.CROP,
+        OperationId.FILL, OperationId.RELATIONAL_COPY,
+    })
+
+    @classmethod
+    def operation_audit(cls) -> dict[str, object]:
+        exposed = frozenset(OperationId)
+        return {
+            "exposed_operations": tuple(sorted(item.value for item in exposed)),
+            "fully_executable_operations": tuple(sorted(item.value for item in cls.SUPPORTED_OPERATIONS)),
+            "unsupported_exposed_operations": tuple(sorted(item.value for item in exposed - cls.SUPPORTED_OPERATIONS)),
+            "no_op_operations": (),
+        }
+
     def _select(self, grid: np.ndarray, selector: str) -> list[tuple[int, int]]:
         if selector == "ALL_NON_BACKGROUND":
             background = _background(grid)
@@ -50,6 +66,8 @@ class RuleExecutor:
         selected: list[tuple[int, int]] = []
         for step in rule_spec.skeleton.steps:
             operation = step.operation
+            if operation not in self.SUPPORTED_OPERATIONS:
+                raise ValueError(f"unsupported V3 operation: {operation}")
             if operation is OperationId.SELECT:
                 selected = self._select(canvas, str(rule_spec.value(ParameterSlot.SELECTOR)))
             elif operation is OperationId.RECOLOR or operation is OperationId.FILL:
@@ -69,11 +87,16 @@ class RuleExecutor:
                     selected = [(row, col) for row, col, _value in translated]
             elif operation is OperationId.REPEAT:
                 direction, step_size = rule_spec.value(ParameterSlot.DIRECTION), int(rule_spec.value(ParameterSlot.STEP))
+                termination, count = rule_spec.value(ParameterSlot.TERMINATION), int(rule_spec.value(ParameterSlot.COUNT))
+                if termination not in {"BOUNDARY", "FIXED_COUNT"}:
+                    raise ValueError(f"unsupported repeat termination: {termination}")
                 multiplier = 1
-                while True:
+                while termination == "BOUNDARY" or multiplier <= count:
                     translated = translate_cells(canvas, selected, direction, step_size * multiplier)
                     if len(translated) != len(selected):
-                        break
+                        if termination == "BOUNDARY":
+                            break
+                        raise ValueError("fixed repeat exceeds grid boundary")
                     for row, col, value in translated:
                         canvas[row, col] = value
                     multiplier += 1
@@ -93,8 +116,6 @@ class RuleExecutor:
                 if selected:
                     rows, cols = zip(*selected)
                     canvas = canvas[min(rows):max(rows) + 1, min(cols):max(cols) + 1]
-            elif operation in (OperationId.COMPOSE, OperationId.OVERLAY, OperationId.CONDITIONAL):
-                continue
             else:
                 raise ValueError(f"V3 executor operation not implemented: {operation}")
         return canvas

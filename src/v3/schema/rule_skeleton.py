@@ -16,12 +16,7 @@ class OperationId(StrEnum):
     REFLECT = "REFLECT"
     CROP = "CROP"
     FILL = "FILL"
-    EXTEND = "EXTEND"
-    CONNECT = "CONNECT"
-    OVERLAY = "OVERLAY"
     RELATIONAL_COPY = "RELATIONAL_COPY"
-    CONDITIONAL = "CONDITIONAL"
-    COMPOSE = "COMPOSE"
 
 
 class ParameterSlot(StrEnum):
@@ -41,16 +36,11 @@ _REQUIRED_SLOTS: dict[OperationId, frozenset[ParameterSlot]] = {
     OperationId.SELECT: frozenset({ParameterSlot.SELECTOR}),
     OperationId.COPY: frozenset({ParameterSlot.DIRECTION, ParameterSlot.DISTANCE}),
     OperationId.MOVE: frozenset({ParameterSlot.DIRECTION, ParameterSlot.DISTANCE}),
-    OperationId.REPEAT: frozenset({ParameterSlot.DIRECTION, ParameterSlot.STEP, ParameterSlot.TERMINATION}),
+    OperationId.REPEAT: frozenset({ParameterSlot.DIRECTION, ParameterSlot.STEP, ParameterSlot.COUNT, ParameterSlot.TERMINATION}),
     OperationId.RECOLOR: frozenset({ParameterSlot.TARGET_COLOR}),
     OperationId.ROTATE: frozenset(), OperationId.REFLECT: frozenset(), OperationId.CROP: frozenset(),
     OperationId.FILL: frozenset({ParameterSlot.TARGET_COLOR}),
-    OperationId.EXTEND: frozenset({ParameterSlot.DIRECTION}),
-    OperationId.CONNECT: frozenset({ParameterSlot.TARGET_COLOR}),
-    OperationId.OVERLAY: frozenset(),
     OperationId.RELATIONAL_COPY: frozenset({ParameterSlot.REFERENCE_COLOR, ParameterSlot.DIRECTION, ParameterSlot.DISTANCE}),
-    OperationId.CONDITIONAL: frozenset({ParameterSlot.CONDITION}),
-    OperationId.COMPOSE: frozenset(),
 }
 
 

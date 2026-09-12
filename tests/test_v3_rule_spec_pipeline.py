@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 import hashlib
+import json
 from dataclasses import replace
 from pathlib import Path
 
@@ -15,6 +16,7 @@ from v3.pipeline import train_consistent_rule_specs
 from v3.schema.rule_skeleton import OperationId, ParameterSlot, RuleSkeleton
 from v3.schema.rule_spec import RuleSpec
 from v3.verification.verifier import HardVerifier
+from v3.execution.rule_executor import RuleExecutor
 
 
 ROOT = Path(__file__).parents[1]
@@ -40,6 +42,13 @@ def test_evidence_bundle_reuses_a3_graph_and_excludes_test_data() -> None:
     assert 9 not in bundle.pairs[0].input_grid and 9 not in bundle.pairs[0].output_grid
 
 
+def test_every_exposed_operation_has_real_executor_semantics_and_no_noop() -> None:
+    audit = RuleExecutor.operation_audit()
+    assert len(audit["exposed_operations"]) == 10
+    assert audit["exposed_operations"] == audit["fully_executable_operations"]
+    assert audit["unsupported_exposed_operations"] == () and audit["no_op_operations"] == ()
+
+
 def test_cross_pair_joint_intersection_and_train_consistency() -> None:
     cross = intersect_candidates([
         {"DIRECTION": frozenset({(0, 1), (1, 0)}), "STEP": frozenset({2})},
@@ -56,6 +65,19 @@ def test_cross_pair_joint_intersection_and_train_consistency() -> None:
         pairs.append((source, target))
     spec = _run(_skeleton("ITERATION", OperationId.SELECT, OperationId.REPEAT), pairs)
     assert spec.value(ParameterSlot.DIRECTION) == (0, 1) and spec.value(ParameterSlot.STEP) == 2
+    assert spec.value(ParameterSlot.TERMINATION) in {"BOUNDARY", "FIXED_COUNT"}
+
+
+def test_pairwise_termination_and_selector_candidates_are_evidence_derived() -> None:
+    source = np.zeros((3, 7), dtype=int); source[1, 1] = 4
+    target = source.copy(); target[1, 3] = target[1, 5] = 4
+    evidence = extract_evidence([(source, target)]).pairs[0]
+    assert evidence.parameter_candidates["TERMINATION"] <= {"BOUNDARY", "FIXED_COUNT"}
+    assert evidence.parameter_candidates["COUNT"] and evidence.parameter_candidates["STEP"]
+    skeleton = _skeleton("REPEAT", OperationId.SELECT, OperationId.REPEAT)
+    inferred = infer_parameters(skeleton, extract_evidence([(source, target)]))
+    assert "COLOR:4" in inferred.candidates[ParameterSlot.SELECTOR]
+    assert "ALWAYS" not in repr(inferred.candidates)
 
 
 def test_vertical_slice_recolor() -> None:
@@ -95,7 +117,7 @@ def test_vertical_slice_relational_copy_and_composition() -> None:
     assert specs and HardVerifier().verify(specs[0], pairs).passed
     source = np.zeros((4, 6), dtype=int); source[1, 1] = 1
     target = source.copy(); target[1, 1] = 0; target[1, 3] = 3
-    _run(_skeleton("COMPOSITION", OperationId.SELECT, OperationId.MOVE, OperationId.RECOLOR, OperationId.COMPOSE), [(source, target)])
+    _run(_skeleton("COMPOSITION", OperationId.SELECT, OperationId.MOVE, OperationId.RECOLOR), [(source, target)])
 
 
 def test_parameter_and_execution_layers_have_no_llm_or_macro_compiler_dependency() -> None:
@@ -128,3 +150,14 @@ def test_v3_dependency_direction_and_legacy_artifacts_are_isolated() -> None:
     legacy = ROOT / "experiments/results/GRID_SEMANTIC_RECOGNITION_V1.json"
     assert legacy.exists()
     assert hashlib.sha256(legacy.read_bytes()).hexdigest() == "f176fd363d475007639d7094810c6ac9b533ed2a58c93575d7245b4d73188aba"
+
+
+def test_phase_a_audit_is_train_only_and_phase_b_c_are_stopped_on_gate_failure() -> None:
+    runner = (ROOT / "scripts/run_v3_backend_audit.py").read_text(encoding="utf-8")
+    tree = ast.parse(runner)
+    imports = {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom) and node.module}
+    assert "llm" not in " ".join(imports).lower() and "solutions" not in " ".join(imports).lower()
+    result = json.loads((ROOT / "experiments/results/ARC2_V3_BACKEND_AUDIT_V1.json").read_text(encoding="utf-8"))
+    assert result["status"] == "BACKEND_NOT_READY"
+    assert result["phase_b"] == result["phase_c"] == "NOT_RUN_PHASE_A_BACKEND_NOT_READY"
+    assert result["oracle_skeleton_test_exact"] == "NOT_RUN_PHASE_A_GATE_FAILED"

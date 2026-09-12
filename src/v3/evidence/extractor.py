@@ -81,21 +81,62 @@ def _distance_candidates(source: Sequence[GridObject], target: Sequence[GridObje
     return frozenset(value for value in values if value) or frozenset(range(1, max(shape)))
 
 
+def _repeat_candidates(source: Sequence[GridObject], target: Sequence[GridObject], shape: tuple[int, int]) -> tuple[frozenset[Direction], frozenset[int], frozenset[int], frozenset[str]]:
+    """Extract finite repetition hypotheses from corresponding train objects.
+
+    Values are derived from observed same-colour/same-shape translations.  A
+    BOUNDARY candidate is emitted only when an observed terminal translated
+    object cannot make one more observed-size step on the canvas; otherwise
+    FIXED_COUNT is the compatible explanation.
+    """
+    direction_to_steps: dict[Direction, set[int]] = {}
+    direction_to_counts: dict[Direction, set[int]] = {}
+    for item in source:
+        matches = [other for other in target if other.color == item.color and other.area == item.area]
+        displacements = [(other.bbox[0] - item.bbox[0], other.bbox[1] - item.bbox[1]) for other in matches if other.bbox != item.bbox]
+        by_direction: dict[Direction, list[int]] = {}
+        for dr, dc in displacements:
+            direction = (0 if dr == 0 else (1 if dr > 0 else -1), 0 if dc == 0 else (1 if dc > 0 else -1))
+            by_direction.setdefault(direction, []).append(abs(dr) + abs(dc))
+        for direction, distances in by_direction.items():
+            step = min(distances)
+            if step and all(distance % step == 0 for distance in distances):
+                direction_to_steps.setdefault(direction, set()).add(step)
+                direction_to_counts.setdefault(direction, set()).add(max(distance // step for distance in distances))
+    directions = frozenset(direction_to_steps) or _direction_candidates(source, target)
+    steps = frozenset(value for values in direction_to_steps.values() for value in values) or _distance_candidates(source, target, shape)
+    counts = frozenset(value for values in direction_to_counts.values() for value in values if value > 0) or frozenset({1})
+    termination = {"FIXED_COUNT"}
+    for direction in directions:
+        dr, dc = direction
+        for item in target:
+            for step in steps:
+                next_top, next_left = item.bbox[0] + dr * step, item.bbox[1] + dc * step
+                if next_top < 0 or next_left < 0 or next_top + (item.bbox[2] - item.bbox[0]) >= shape[0] or next_left + (item.bbox[3] - item.bbox[1]) >= shape[1]:
+                    termination.add("BOUNDARY")
+    return directions, steps, counts, frozenset(termination)
+
+
 def extract_evidence(train_pairs: Iterable[tuple[np.ndarray, np.ndarray]], *, a3_relation_graphs: Sequence[Mapping[str, Any]] | None = None) -> EvidenceBundle:
     pairs: list[PairEvidence] = []
     for index, (source, target) in enumerate(train_pairs):
         source_values, target_values = np.asarray(source, dtype=int), np.asarray(target, dtype=int)
         input_objects, output_objects = _components(source_values), _components(target_values)
         changed = tuple(map(tuple, np.argwhere(source_values != target_values))) if source_values.shape == target_values.shape else tuple()
-        colors = frozenset(int(value) for value in np.unique(np.concatenate((source_values.flat, target_values.flat))))
+        input_background, output_background = _background(source_values), _background(target_values)
+        source_colors = frozenset(int(value) for value in np.unique(source_values) if int(value) != input_background)
+        output_colors = frozenset(int(value) for value in np.unique(target_values) if int(value) != output_background)
+        changed_target_colors = frozenset(int(target_values[row, col]) for row, col in changed if int(target_values[row, col]) != output_background)
+        directions, steps, counts, termination = _repeat_candidates(input_objects, output_objects, source_values.shape)
         pairs.append(PairEvidence(source_values, target_values, input_objects, output_objects, changed, {
-            "DIRECTION": _direction_candidates(input_objects, output_objects),
+            "DIRECTION": directions,
             "DISTANCE": _distance_candidates(input_objects, output_objects, source_values.shape),
-            "STEP": _distance_candidates(input_objects, output_objects, source_values.shape),
-            "TARGET_COLOR": colors,
-            "SOURCE_COLOR": colors,
-            "REFERENCE_COLOR": colors,
-            "TERMINATION": frozenset({"BOUNDARY"}),
+            "STEP": steps,
+            "COUNT": counts,
+            "TARGET_COLOR": changed_target_colors or output_colors,
+            "SOURCE_COLOR": source_colors,
+            "REFERENCE_COLOR": source_colors,
+            "TERMINATION": termination,
         }, None if a3_relation_graphs is None else a3_relation_graphs[index]))
     if not pairs:
         raise ValueError("at least one train pair is required")

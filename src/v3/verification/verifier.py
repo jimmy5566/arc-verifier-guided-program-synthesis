@@ -23,7 +23,11 @@ class HardVerifier:
     def verify(self, rule_spec: RuleSpec, train_pairs: Iterable[tuple[np.ndarray, np.ndarray]]) -> VerificationResult:
         diagnostics: list[str] = []
         for index, (source, expected) in enumerate(train_pairs):
-            actual = self._executor.execute(rule_spec, source)
+            try:
+                actual = self._executor.execute(rule_spec, source)
+            except (TypeError, ValueError) as exc:
+                diagnostics.append(f"pair={index}:execution_failure:{exc}")
+                continue
             if actual.shape != expected.shape:
                 diagnostics.append(f"pair={index}:shape_mismatch")
                 continue
