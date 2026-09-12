@@ -1,0 +1,15 @@
+{
+  "experiment_id": "GRID_RECOGNITION_MODEL_CAPACITY_V1",
+  "status": "COMPLETE_WITH_M1_UNAVAILABLE",
+  "task_count": 30,
+  "cohort": {"split": "development_only", "task_ids_public": false, "task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8"},
+  "scientific_controls": {"input": "V1/A2 raw grids plus current deterministic features", "semantic_ir": "ARCSEMANTICIRV1", "temperature": 0, "top_1": true, "retries": 0, "thinking": false},
+  "available_model_evidence": {"authoritative_kernel_metadata_model_sources": ["qwen-lm/qwen-3/Transformers/8b/1", "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1"], "stronger_generic_model_attached": false},
+  "conditions": {
+    "M0_QWEN3_8B_REUSED_V1": {"kind": "generic_8B", "status": "REUSED_FROZEN", "metrics": {"schema_validity": 0.666667, "primary_family_accuracy": 0.166667, "core_operation_accuracy": 0.366667, "object_role_f1": 0.098413, "relation_f1": 0.133333, "iteration_semantic_accuracy": 0.166667, "semantic_ir_success": 0.133333}, "semantic_success": "4/30", "prediction_freeze_sha256": "b8df3ae0e79a20b6e39ce36ab8117eda8ef45fbd9ea2bdee88454ccbbe5dfb5a"},
+    "M1_STRONGER_GENERIC": {"kind": "stronger_generic", "status": "M1_UNAVAILABLE_NO_EXISTING_ATTACHED_GENERIC_MODEL", "reason": "The authoritative notebook metadata has Qwen3-8B and the separate 4B ARC-SFT source only; no stronger generic attached model was available. No model was downloaded."},
+    "M2_SPECIALIZED_ARC_SFT": {"kind": "SPECIALIZED_MODEL", "model": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1", "status": "COMPLETE_SPECIALIZED_SCHEMA_INCOMPATIBLE", "tokenizer_transport": "Missing model tokenizer template explicitly reused the locally attached Qwen3-8B template; user prompt text and decoding were unchanged.", "metrics": {"schema_validity": 0.0, "primary_family_accuracy": 0.0, "core_operation_accuracy": 0.0, "object_role_f1": 0.0, "relation_f1": 0.0, "iteration_semantic_accuracy": 0.0, "semantic_ir_success": 0.0}, "semantic_ir_schema_failures": "30/30", "completion_tokens_total": 1309, "completion_tokens_nonzero_tasks": 30, "generation_seconds": 68.553912962, "prediction_freeze_sha256": "dbd6e74fc645dc49605e37d9698cade36756262adbed4f1c4dff9f9789e237e8"}
+  },
+  "decision": {"model_capacity_major_bottleneck": "UNRESOLVED", "reason": "The required stronger generic condition M1 was unavailable. M2 is explicitly specialized, smaller (4B), and incompatible with ARCSEMANTICIRV1 serialization, so its 0% result is not evidence about generic model capacity."},
+  "leakage_audit": "Inference used development TRAIN input/output pairs only. Oracle was opened only locally after frozen artifact hashing. This aggregate excludes task IDs, grids, test targets, oracle labels, and raw model responses."
+}
