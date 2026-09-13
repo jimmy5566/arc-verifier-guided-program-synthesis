@@ -9,6 +9,7 @@ from inference.arc_native_io import ARCNativeInputAdapter, ARCNativeOutputParser
 from inference.nvarc_native_augmentation import NativeAugmentation, bounded_native_augmentations
 from inference.nvarc_native_candidates import NativeGridCandidate, deduplicate_candidates, rank_candidates
 from inference.native_ranker import CandidateRankingFeatures, rank_indices, select_method_from_pseudovalidation
+from inference.native_train_verifier import rank_with_verifier, train_verifier_scores
 from inference.nvarc_native import native_messages, parse_native_grid, serialize_grid
 from arc.task import ARCExample, ARCGrid, ARCTask
 
@@ -172,3 +173,21 @@ def test_ranker_forensics_and_pseudo_scorer_keep_oracle_boundaries() -> None:
     assert forensics.index("CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING") < forensics.index("from arc.io import load_challenges, load_solutions")
     assert "load_solutions" not in pseudo and "solutions-path" not in pseudo
     assert "train_pair" in pseudo.lower() and "selected_ranker" in pseudo
+
+
+def test_train_only_verifier_scores_generic_pair_relations_and_fuses_likelihood() -> None:
+    pairs = [
+        ([[0, 1], [0, 0]], [[1, 0], [0, 0]]),
+        ([[0, 2], [0, 0]], [[2, 0], [0, 0]]),
+    ]
+    scores = train_verifier_scores(pairs, [[0, 3], [0, 0]], [[[3, 0], [0, 0]], [[3, 3], [0, 0]]])
+    assert len(scores) == 2 and scores[0] > scores[1]
+    ranks = rank_with_verifier([-2.0, -0.1], scores)
+    assert ranks["likelihood"] == [1, 0] and ranks["verifier"] == [0, 1]
+
+
+def test_train_verifier_oracle_boundary_is_after_rerank_freeze() -> None:
+    rerank = (ROOT / "scripts/rerank_native_with_train_verifier.py").read_text(encoding="utf-8")
+    scorer = (ROOT / "scripts/score_native_train_verifier.py").read_text(encoding="utf-8")
+    assert "load_solutions" not in rerank
+    assert scorer.index("CANDIDATES_RERANKED_BY_TRAIN_ONLY_VERIFIER_FROZEN_BEFORE_EXACT_SCORING") < scorer.index("from arc.io import load_solutions")
