@@ -6,5 +6,12 @@
   "ttt": {"rank": 8, "alpha": 16, "steps": 24, "learning_rate": 0.0005, "targets": ["q_proj", "v_proj"], "reset_between_tasks": true, "train_pairs_only": true},
   "development": {"selection": "deterministic SHA-256 salt ARC2_NATIVE_TTT_VERIFIER_DEV_V1; excludes frozen30 and prior ranker-development cohort", "task_ids": ["d4c90558", "d406998b", "891232d6", "67a423a3", "dbc1a6ce", "62c24649", "6cbe9eb8"], "task_ids_hash": "bb603dff90312fb8a7b09446fe5dcf4c4e11dd0595a4e29bb45eb8d77749d5d1", "smoke_task_count": 2, "pilot_task_count": 5},
   "held_out": {"selection": "deterministic SHA-256 salt ARC2_NATIVE_TTT_VERIFIER_HELDOUT_V1; excludes prior held-out8 and is committed before inference", "task_ids": ["e9b4f6fc", "973e499e", "8719f442", "b5bb5719", "264363fd"], "task_ids_hash": "8e2d25627dc6ee33a39a4fd542243da45b6d041a647f8f927a039056209573c2", "task_count": 5},
+  "untouched_validation_v2": {
+    "selection": "deterministic SHA-256 salt ARC2_NATIVE_TTT_VERIFIER_UNTOUCHED_V2; excludes prior development, legacy held-out, prior ranker cohorts, and every frozen30 task; selected and committed before inference",
+    "task_ids": ["d5d6de2d", "88a10436", "e41c6fd3", "25ff71a9", "a64e4611"],
+    "task_ids_hash": "348b108d1796a2d36dc26827ed36aa1a21fc563ffdffbd195bc866022ca76580",
+    "task_count": 5,
+    "ttt_policy": "Apply the fixed 24-step train-pairs-only adaptation to every task. Do not select tasks using predictions or solutions. Freeze each candidate artifact before train-only reranking and solution scoring."
+  },
   "protocol": "Baseline candidate artifacts freeze before verifier reranking. Development solutions identify candidate-miss tasks only after that freeze. TTT receives only selected tasks' train pairs. Held-out TTT policy is fixed from development before held-out inference."
 }
