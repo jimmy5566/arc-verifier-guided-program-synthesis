@@ -27,8 +27,9 @@ def main() -> None:
     args = parser.parse_args()
     if args.output.exists(): raise FileExistsError("refusing to overwrite native score")
     frozen = json.loads(args.predictions.read_text(encoding="utf-8")); records = frozen.get("records")
-    if frozen.get("status") != "CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING" or frozen.get("task_ids_hash") != COHORT_HASH or not isinstance(records, dict) or len(records) != 30:
-        raise ValueError("requires complete frozen30 native candidate artifact before opening solutions")
+    stage_count = int(frozen.get("stage_task_count", -1))
+    if frozen.get("status") != "CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING" or frozen.get("task_ids_hash") != COHORT_HASH or not isinstance(records, dict) or len(records) != stage_count or stage_count not in (2, 5, 30):
+        raise ValueError("requires complete frozen native stage candidate artifact before opening solutions")
     # Targets become available only after the structural frozen-artifact gate.
     from arc.io import load_challenges, load_solutions
     challenges, solutions = load_challenges(args.challenge_path), load_solutions(args.solutions_path)
@@ -51,6 +52,7 @@ def main() -> None:
         "experiment_id": "ARC2_QWEN4B_MAX_NATIVE_CAPABILITY_PUSH_B_C", "status": "COMPLETE_SCORED_AFTER_CANDIDATE_FREEZE",
         "prediction_sha256": hashlib.sha256(args.predictions.read_bytes()).hexdigest(),
         "protocol": "Candidates and ranked predictions were frozen completely before this scorer opened targets. Ranking used no target outputs.",
+        "stage": frozen.get("stage"), "stage_task_count": stage_count,
         "metrics": {
             "baseline_top1_exact": sum(item["baseline_top1_exact"] for item in by_task.values()),
             "augmentation_search_top1_exact": sum(item["baseline_top1_exact"] for item in by_task.values()),

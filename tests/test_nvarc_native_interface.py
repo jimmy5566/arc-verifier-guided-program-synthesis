@@ -130,6 +130,8 @@ def test_native_capability_push_stays_native_and_gold_blind_until_scorer() -> No
     assert "load_solutions" not in runner and "ARCNativeInputAdapter" not in runner
     assert "RuleSpec" not in runner and "HardVerifier" not in runner
     assert scorer.index("CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING") < scorer.index("from arc.io import load_challenges, load_solutions")
+    assert "CANDIDATE_HEARTBEAT" in runner and "RUNNER_HEARTBEAT" in runner
+    assert 'choices=("smoke", "pilot", "full")' in runner
 
 
 def test_native_ttt_uses_only_train_pairs_and_resets_per_task() -> None:
@@ -138,3 +140,12 @@ def test_native_ttt_uses_only_train_pairs_and_resets_per_task() -> None:
     assert "self.reset()" in source and "training_pairs_only" in source
     assert "rulespec" not in source and "heuristic" not in source and "solver" not in source
     assert "parent._modules[part]" in source
+
+
+def test_native_capability_stages_are_fixed_nested_scale_gates() -> None:
+    config = json.loads((ROOT / "configs/QWEN4B_MAX_NATIVE_CAPABILITY_PUSH_V1.json").read_text(encoding="utf-8"))
+    assert config["stages"] == {
+        "smoke": {"task_count": 2, "augmentation_count": 4, "worker_count": 1},
+        "pilot": {"task_count": 5, "augmentation_count": 8, "worker_count": 2},
+        "full": {"task_count": 30, "augmentation_count": 32, "worker_count": 4},
+    }

@@ -11,6 +11,11 @@
     "candidate_budget_per_test_input": 32,
     "decode": {"do_sample": false, "temperature": 0.0, "seed": 20260913, "max_new_tokens": 1024, "context_window": 16384}
   },
+  "stages": {
+    "smoke": {"task_count": 2, "augmentation_count": 4, "worker_count": 1},
+    "pilot": {"task_count": 5, "augmentation_count": 8, "worker_count": 2},
+    "full": {"task_count": 30, "augmentation_count": 32, "worker_count": 4}
+  },
   "C_ranking": {"method": "mean conditional native-token log likelihood of model-generated candidates under original native prompt", "uses_test_output": false},
   "D_ttt_lora": {"status": "AVAILABLE_AFTER_B_C_RECALL_GATE", "train_pairs_only": true, "no_test_targets": true, "rank": 8, "alpha": 16, "steps": 24, "learning_rate": 0.0005, "target_suffixes": ["q_proj", "v_proj"]},
   "formal_protocol": "offline train-pairs plus test-input inference -> complete candidate/prediction artifact -> SHA256 freeze -> only then local scoring"

@@ -92,4 +92,7 @@ def bounded_native_augmentations(*, color_offsets: tuple[int, ...] = (0, 1), pai
     """Return a deterministic, fixed 8×color×order pool (32 by default)."""
     if not color_offsets or not pair_orders:
         raise ValueError("native augmentation pool cannot be empty")
-    return tuple(NativeAugmentation(geometry, offset, order) for geometry in _GEOMETRIES for offset in color_offsets for order in pair_orders)
+    # Geometry varies first so 4/8/32 stage prefixes are meaningful nested
+    # pools: first 4 are rotations, first 8 all dihedral geometries, then the
+    # same geometry set for the next reversible color/order condition.
+    return tuple(NativeAugmentation(geometry, offset, order) for offset in color_offsets for order in pair_orders for geometry in _GEOMETRIES)
