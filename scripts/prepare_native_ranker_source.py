@@ -31,7 +31,7 @@ def main() -> None:
     bad = [str(path.relative_to(project)) for path in project.rglob("*") if any(term in str(path.relative_to(project)).lower() for term in forbidden)]
     if bad: raise RuntimeError(f"native ranker source is not isolated: {bad}")
     dataset = args.output / "dataset"; shutil.make_archive(str(dataset / "ARC2"), "gztar", root_dir=dataset, base_dir="ARC2"); shutil.rmtree(project)
-    metadata = {"title": "ARC2 Native Ranker Validation Source", "subtitle": "Private train-pair pseudo-validation / held-out candidate generation; no solutions", "description": "Native candidate-ranking validation source with no test targets or downstream stack.", "id": f"{args.owner}/{args.dataset_slug}", "licenses": [{"name": "other"}]}
+    metadata = {"title": "ARC2 Native Ranker Validation Source", "subtitle": "Private native ranker validation; no solutions", "description": "Native candidate-ranking validation source with no test targets or downstream stack.", "id": f"{args.owner}/{args.dataset_slug}", "licenses": [{"name": "other"}]}
     (dataset / "dataset-metadata.json").write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"dataset": metadata["id"], "contains_solutions": False, "forbidden_files": 0}))
 
