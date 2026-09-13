@@ -29,10 +29,18 @@ def discover_models(models_root: Path) -> dict[str, Path]:
         except (OSError, json.JSONDecodeError): continue
         marker = (str(config_path.parent) + " " + json.dumps(config)).lower()
         choices.append((config_path.parent, config, marker))
+    # Kaggle model attachments occasionally expose a safetensors directory
+    # before (or instead of) a conventional config.json at the same depth.
+    # Keep discovery data-driven: the attachment's own name and weights decide.
+    existing = {path for path, _config, _marker in choices}
+    for weight in models_root.rglob("*.safetensors"):
+        if weight.parent not in existing:
+            choices.append((weight.parent, {}, str(weight.parent).lower())); existing.add(weight.parent)
     native = [item for item in choices if any(token in item[2] for token in ("grids15", "sft139", "native_arc"))]
     soar = [item for item in choices if "soar" in item[2]]
     if len(native) != 1 or len(soar) != 1:
-        raise RuntimeError(f"could not uniquely discover native/SOAR models: native={len(native)}, soar={len(soar)}, scanned={len(choices)}")
+        inventory = sorted(str(path.relative_to(models_root)) for path, _config, _marker in choices)[:32]
+        raise RuntimeError(f"could not uniquely discover native/SOAR models: native={len(native)}, soar={len(soar)}, scanned={len(choices)}, inventory={inventory}")
     return {"native": native[0][0], "soar": soar[0][0]}
 
 
