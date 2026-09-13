@@ -17,7 +17,7 @@ from inference.native_train_verifier import rank_with_verifier, train_verifier_s
 from inference.native_multiview_likelihood import aggregate, calibrated, ranks
 from inference.native_strategy_hypotheses import infer_strategies, score_predictions
 import inference.dual_reasoning_smoke as dual_smoke
-from inference.dual_reasoning_smoke import discover_models, extract_program, soar_prompt, validate_program
+from inference.dual_reasoning_smoke import discover_models, execute_program, extract_program, soar_prompt, validate_program, verify_program
 from inference.nvarc_native import native_messages, parse_native_grid, serialize_grid
 from arc.task import ARCExample, ARCGrid, ARCTask
 
@@ -264,12 +264,28 @@ def test_strategy_hypotheses_are_train_only_and_score_generic_transform_and_reco
 
 def test_dual_reasoning_soar_prompt_and_program_parser_stay_target_blind_and_restricted() -> None:
     prompt = soar_prompt([([[0, 1]], [[1, 0]])])
-    assert "def transform(grid):" in prompt and "Example 1" in prompt
+    assert "transform(input_grid)" in prompt and "import numpy as np" in prompt and "Example 1" in prompt
     assert extract_program("reasoning\n```python\ndef transform(grid):\n return grid\n```") == "def transform(grid):\n return grid"
     assert validate_program("def transform(grid):\n return [row[:] for row in grid]") == (True, "ok")
     assert not validate_program("import os\ndef transform(grid):\n return grid")[0]
     source = (ROOT / "scripts/run_dual_reasoning_smoke.py").read_text(encoding="utf-8")
     assert "load_solutions" not in source and "--branch" in source and "discover_models" in source
+
+
+def test_dual_reasoning_soar_numpy_transport_is_safe_and_normalizes_ndarray() -> None:
+    program = "import numpy as np\n\ndef transform(grid_lst):\n    return np.array(grid_lst)"
+    result = execute_program(program, [[1, 2], [3, 4]])
+    assert result["ok"] and result["grid"] == [[1, 2], [3, 4]]
+    assert result["parse_valid"] and result["static_safe"] and result["executable"] and result["output_valid"]
+    verification = verify_program(program, [([[1, 2]], [[1, 2]])])
+    assert verification["all_train_exact"] and verification["train_execution"][0]["output_valid"]
+
+
+def test_dual_reasoning_soar_rejects_unsafe_import_and_invalid_signature() -> None:
+    unsafe = execute_program("import os\n\ndef transform(grid):\n    return grid", [[1]])
+    assert unsafe["status"] == "PROGRAM_INVALID"
+    assert not unsafe["static_safe"] and unsafe["reason"] == "only_import_numpy_as_np_allowed"
+    assert not validate_program("def transform(grid, extra):\n    return grid")[0]
 
 
 def test_dual_reasoning_branch_discovery_does_not_block_native_on_later_soar_attachment(tmp_path: Path) -> None:

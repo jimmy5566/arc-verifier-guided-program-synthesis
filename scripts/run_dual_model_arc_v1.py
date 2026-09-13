@@ -104,9 +104,20 @@ def induction_records(*, tasks: dict[str, Any], model_path: Path) -> tuple[dict[
             program = extract_program(raw)
             verification = verify_program(program, pairs) if program else {
                 "program_valid": False, "train_pass_count": 0, "train_pair_count": len(pairs),
+                "parse_valid": False, "static_safe": False, "reason": "no_transform_code_extracted",
                 "all_train_exact": False, "train_execution": [],
             }
-            candidates.append({"candidate_index": candidate_index, "raw_model_output": raw, "extracted_code": program, "verification": verification})
+            executions = verification["train_execution"]
+            failure = next((row.get("error") or row.get("reason") for row in executions if not row.get("ok")), verification.get("reason"))
+            candidates.append({
+                "candidate_index": candidate_index, "raw_model_output": raw, "extracted_code": program,
+                "parse_valid": verification["parse_valid"], "static_safe": verification["static_safe"],
+                "executable": bool(executions) and all(bool(row.get("executable")) for row in executions),
+                "output_valid": bool(executions) and all(bool(row.get("output_valid")) for row in executions),
+                "per_train_pair_exact": [bool(row.get("ok") and row.get("grid") == target) for row, (_source, target) in zip(executions, pairs, strict=True)],
+                "all_train_exact": verification["all_train_exact"], "failure_reason": failure,
+                "verification": verification,
+            })
         passing = next((candidate for candidate in candidates if candidate["verification"]["all_train_exact"]), None)
         test_execution = execute_program(passing["extracted_code"], task.test[0].input.to_list()) if passing else {
             "ok": False, "status": "NO_TRAIN_EXACT_PROGRAM"
