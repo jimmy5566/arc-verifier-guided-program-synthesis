@@ -135,3 +135,26 @@ class NVARCNativeProvider:
             output = self.model.generate(**encoded, max_new_tokens=max_new_tokens, do_sample=False, eos_token_id=self.tokenizer.eos_token_id, pad_token_id=self.tokenizer.pad_token_id)
         generated = output[0, prompt_tokens:]
         return NativeGeneration(self.tokenizer.decode(generated, skip_special_tokens=True), prompt_tokens, int(generated.shape[-1]), time.perf_counter() - started)
+
+    def continuation_log_likelihood(self, messages: list[dict[str, str]], continuation: str, *, context_window: int) -> float:
+        """Mean conditional log-likelihood for a generated native grid.
+
+        This is a label-free candidate ranking signal: ``continuation`` must
+        already be a model-generated candidate and is never an ARC target.
+        """
+        self.load(); import torch
+        assert self.model is not None and self.tokenizer is not None
+        prefix = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True)["input_ids"]
+        continuation_ids = self.tokenizer(continuation, add_special_tokens=False, return_tensors="pt")["input_ids"]
+        # The native decoder normally terminates with <|im_end|>; include it
+        # in the likelihood while keeping it out of parser-visible text.
+        eos = torch.tensor([[int(self.tokenizer.eos_token_id)]], dtype=continuation_ids.dtype)
+        ids = torch.cat((prefix, continuation_ids, eos), dim=1).to(self.device)
+        if int(ids.shape[-1]) > context_window:
+            raise ValueError(f"native candidate score has {int(ids.shape[-1])} tokens, exceeds frozen context {context_window}")
+        with torch.inference_mode():
+            logits = self.model(input_ids=ids).logits
+            target = ids[:, int(prefix.shape[-1]):]
+            predicted = logits[:, int(prefix.shape[-1]) - 1:-1, :]
+            token_log_probs = torch.log_softmax(predicted.float(), dim=-1).gather(-1, target.unsqueeze(-1)).squeeze(-1)
+        return float(token_log_probs.mean().item())

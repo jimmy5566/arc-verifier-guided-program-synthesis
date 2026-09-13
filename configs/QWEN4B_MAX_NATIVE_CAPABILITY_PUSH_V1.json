@@ -1,0 +1,17 @@
+{
+  "experiment_id": "ARC2_QWEN4B_MAX_NATIVE_CAPABILITY_PUSH",
+  "base_commit": "5f2068b5f0d7d5bde26107fbce1999d5c9535b8f",
+  "cohort": {"task_count": 30, "task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8"},
+  "model": {"source": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1", "dtype": "bfloat16", "backend": "Transformers", "hardware": "4x NVIDIA L4", "internet": false},
+  "native_contract": {"tokenizer": "checkpoint-native 16-token NVARC vocabulary", "adapter": "ARCNativeInputAdapter", "parser": "ARCNativeOutputParser", "no_generic_qwen_prompt": true},
+  "B_augmentation_search": {
+    "geometry": ["identity", "rot90", "rot180", "rot270", "flip_lr", "flip_ud", "transpose", "anti_transpose"],
+    "color_offsets": [0, 1],
+    "train_pair_orders": ["canonical", "reversed"],
+    "candidate_budget_per_test_input": 32,
+    "decode": {"do_sample": false, "temperature": 0.0, "seed": 20260913, "max_new_tokens": 1024, "context_window": 16384}
+  },
+  "C_ranking": {"method": "mean conditional native-token log likelihood of model-generated candidates under original native prompt", "uses_test_output": false},
+  "D_ttt_lora": {"status": "PENDING_B_C_RECALL_GATE", "train_pairs_only": true, "no_test_targets": true},
+  "formal_protocol": "offline train-pairs plus test-input inference -> complete candidate/prediction artifact -> SHA256 freeze -> only then local scoring"
+}

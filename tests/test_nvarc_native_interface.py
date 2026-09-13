@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 
 from inference.arc_native_io import ARCNativeInputAdapter, ARCNativeOutputParser
+from inference.nvarc_native_augmentation import NativeAugmentation, bounded_native_augmentations
+from inference.nvarc_native_candidates import NativeGridCandidate, deduplicate_candidates, rank_candidates
 from inference.nvarc_native import native_messages, parse_native_grid, serialize_grid
 from arc.task import ARCExample, ARCGrid, ARCTask
 
@@ -88,3 +90,43 @@ def test_native_attachment_builder_isolated_from_v3_and_solution_data() -> None:
     source = (ROOT / "scripts/prepare_qwen4b_native_upstream_source.py").read_text(encoding="utf-8")
     assert '"src/v3"' not in source and '"*solutions*.json"' in source
     assert "native upstream source is not isolated" in source
+
+
+def test_native_augmentations_are_task_agnostic_reversible_and_bounded() -> None:
+    grid = [[0, 1, 2], [3, 4, 5]]
+    task = _task()
+    pool = bounded_native_augmentations()
+    assert len(pool) == 32
+    for augmentation in pool:
+        assert augmentation.inverse_grid(augmentation.transform_grid(grid)) == grid
+        transformed = augmentation.transform_task(task)
+        assert transformed.task_id == task.task_id
+        assert len(transformed.train) == len(task.train) and len(transformed.test) == len(task.test)
+    reversed_task = NativeAugmentation(pair_order="reversed").transform_task(task)
+    assert reversed_task.train[0].input.to_list() == task.train[-1].input.to_list()
+
+
+def test_native_candidates_deduplicate_and_rank_without_targets() -> None:
+    identity = NativeAugmentation()
+    shifted = NativeAugmentation(color_offset=1)
+    first = NativeGridCandidate(identity, (((0, 1), (2, 3)),), 4, 0.1)
+    duplicate = NativeGridCandidate(shifted, (((0, 1), (2, 3)),), 4, 0.1)
+    second = NativeGridCandidate(shifted, (((3, 2), (1, 0)),), 4, 0.1)
+
+    class Provider:
+        def continuation_log_likelihood(self, messages, continuation, *, context_window):
+            assert messages == [{"role": "user", "content": "01"}] and context_window == 99
+            return {"01\n23": -3.0, "32\n10": -1.0}[continuation]
+
+    unique = deduplicate_candidates([first, duplicate, second])
+    assert unique == [first, second]
+    ranked = rank_candidates(Provider(), unique, [[{"role": "user", "content": "01"}]], context_window=99)
+    assert ranked[0][0] is second and ranked[0][1] == -1.0
+
+
+def test_native_capability_push_stays_native_and_gold_blind_until_scorer() -> None:
+    runner = (ROOT / "scripts/run_qwen4b_native_augmentation_search.py").read_text(encoding="utf-8")
+    scorer = (ROOT / "scripts/score_qwen4b_native_augmentation_search.py").read_text(encoding="utf-8")
+    assert "load_solutions" not in runner and "ARCNativeInputAdapter" not in runner
+    assert "RuleSpec" not in runner and "HardVerifier" not in runner
+    assert scorer.index("CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING") < scorer.index("from arc.io import load_challenges, load_solutions")
