@@ -18,7 +18,11 @@ def main() -> None:
     args = parser.parse_args()
     if args.output.exists(): raise FileExistsError("refusing to overwrite verifier-frozen artifact")
     frozen = json.loads(args.frozen.read_text(encoding="utf-8")); records = frozen.get("records")
-    if frozen.get("status") != "CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING" or not isinstance(records, dict) or not records:
+    allowed_statuses = {
+        "CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING",
+        "CANDIDATES_COMBINED_FROZEN_BEFORE_TRAIN_VERIFIER_RERANK",
+    }
+    if frozen.get("status") not in allowed_statuses or not isinstance(records, dict) or not records:
         raise ValueError("requires complete frozen candidate artifact before opening train challenges")
     # Challenge JSON supplies public task inputs and their train outputs only.
     challenges = json.loads(args.challenge_path.read_text(encoding="utf-8")); result = copy.deepcopy(frozen)
