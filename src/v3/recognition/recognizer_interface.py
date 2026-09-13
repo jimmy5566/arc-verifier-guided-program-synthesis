@@ -157,7 +157,7 @@ def recognition_prompt(task: ARCTask, evidence: EvidenceBundle, cross_pair: Cros
         "train_grids": raw,
         "deterministic_evidence": _facts(evidence, cross_pair),
         "complete_rulespec_contract": {
-            "operations": "SELECT:$SELECTOR;COPY/MOVE:$DIRECTION,$DISTANCE;REPEAT:$DIRECTION,$STEP,$COUNT,$TERMINATION;RECOLOR/FILL:$TARGET_COLOR;RELATIONAL_COPY:$REFERENCE_COLOR,$DIRECTION,$DISTANCE;ROTATE/REFLECT:$TRANSFORM;CROP:$SELECTOR,$PADDING",
+            "operations": "SELECT:$SELECTOR;COPY/MOVE:$DIRECTION,$DISTANCE;REPEAT:$DIRECTION,$STEP,$COUNT,$TERMINATION;RECOLOR/FILL:$TARGET_COLOR;RELATIONAL_COPY:$REFERENCE_COLOR,$DIRECTION,$DISTANCE;ROTATE/REFLECT:$TRANSFORM;CROP:$SELECTOR,$PADDING;PANEL_OVERLAY:$REFERENCE_COLOR;FRAME:$TARGET_COLOR;AREA_RECOLOR:$COUNT,$TARGET_COLOR,$REFERENCE_COLOR;COLOR_COUNT_SEQUENCE;NESTED_COLOR_REVERSE;MIRROR_ACROSS_FULL_LINE",
             "hypothesis": "family, operations, parameters, roles, repeat",
             "value": "literal | {derive:FUNCTION,arguments:{...}} | {role_ref:ROLE} | {slot_ref:$SLOT}",
             "roles": "name:{kind:COLOR|COLOR_ALL|SMALLEST_OBJECT|LARGEST_OBJECT|ARGMIN|ARGMAX|ALL_NON_BACKGROUND,value:optional}",

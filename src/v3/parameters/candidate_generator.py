@@ -25,7 +25,7 @@ def candidates_for_pair(skeleton: RuleSkeleton, evidence: PairEvidence) -> dict[
             # COLOR:<n> precise color semantics; this merely restores that
             # valid class to the finite candidate space.
             colors = {f"COLOR:{int(color)}" for color in set(evidence.input_grid.flat)}
-            result[slot] = frozenset({"ALL_NON_BACKGROUND", "SMALLEST_OBJECT", *colors})
+            result[slot] = frozenset({"ALL_NON_BACKGROUND", "SMALLEST_OBJECT", "SYMMETRIC_OBJECT", *colors})
         else:
             result[slot] = frozenset(evidence.parameter_candidates.get(_EVIDENCE_KEY[slot], frozenset()))
     return result

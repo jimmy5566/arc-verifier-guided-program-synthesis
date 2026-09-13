@@ -38,7 +38,8 @@ class RuleExecutor:
     SUPPORTED_OPERATIONS = frozenset({
         OperationId.SELECT, OperationId.COPY, OperationId.MOVE, OperationId.REPEAT,
         OperationId.RECOLOR, OperationId.ROTATE, OperationId.REFLECT, OperationId.CROP,
-        OperationId.FILL, OperationId.RELATIONAL_COPY,
+        OperationId.FILL, OperationId.RELATIONAL_COPY, OperationId.PANEL_OVERLAY, OperationId.FRAME, OperationId.AREA_RECOLOR,
+        OperationId.COLOR_COUNT_SEQUENCE, OperationId.NESTED_COLOR_REVERSE, OperationId.MIRROR_ACROSS_FULL_LINE,
     })
 
     @classmethod
@@ -63,6 +64,20 @@ class RuleExecutor:
         if selector == "SMALLEST_OBJECT":
             components = _components(grid)
             return min(components, key=lambda cells: (len(cells), cells)) if components else []
+        if selector == "SYMMETRIC_OBJECT":
+            symmetric: list[list[tuple[int, int]]] = []
+            for cells in _components(grid):
+                if len(cells) < 2:
+                    continue
+                rows, cols = zip(*cells)
+                top, left = min(rows), min(cols)
+                mask = np.zeros((max(rows) - top + 1, max(cols) - left + 1), dtype=bool)
+                for row, col in cells: mask[row - top, col - left] = True
+                if np.array_equal(mask, np.fliplr(mask)) or np.array_equal(mask, np.flipud(mask)):
+                    symmetric.append(cells)
+            if len(symmetric) != 1:
+                raise ValueError(f"SYMMETRIC_OBJECT requires exactly one matching object, got {len(symmetric)}")
+            return symmetric[0]
         if selector.startswith("COLOR:"):
             color = int(selector.split(":", 1)[1])
             return [tuple(index) for index in np.argwhere(grid == color)]
@@ -167,6 +182,121 @@ class RuleExecutor:
                         nr, nc = int(row) + direction[0] * distance + (sr - selected[0][0]), int(col) + direction[1] * distance + (sc - selected[0][1])
                         if 0 <= nr < canvas.shape[0] and 0 <= nc < canvas.shape[1]:
                             canvas[nr, nc] = canvas[sr, sc]
+            elif operation is OperationId.PANEL_OVERLAY:
+                separator_color = int(bound_rule_spec.value(ParameterSlot.REFERENCE_COLOR))
+                separator_columns = [column for column in range(canvas.shape[1]) if np.all(canvas[:, column] == separator_color)]
+                if len(separator_columns) != 1:
+                    raise ValueError("panel overlay requires exactly one full-height separator column")
+                separator = separator_columns[0]
+                left, right = canvas[:, :separator], canvas[:, separator + 1:]
+                if left.shape != right.shape or not left.size:
+                    raise ValueError("panel overlay requires equal nonempty panels")
+                background = _background(grid)
+                canvas = left.copy()
+                holes, overlay = left == background, right != background
+                if np.array_equal(holes, overlay):
+                    canvas[holes] = right[holes]
+            elif operation is OperationId.FRAME:
+                color = int(bound_rule_spec.value(ParameterSlot.TARGET_COLOR))
+                canvas[0, :] = color
+                canvas[-1, :] = color
+                canvas[:, 0] = color
+                canvas[:, -1] = color
+            elif operation is OperationId.AREA_RECOLOR:
+                selected_area = int(bound_rule_spec.value(ParameterSlot.COUNT))
+                matching_color = int(bound_rule_spec.value(ParameterSlot.TARGET_COLOR))
+                other_color = int(bound_rule_spec.value(ParameterSlot.REFERENCE_COLOR))
+                for cells in _components(canvas):
+                    color = matching_color if len(cells) == selected_area else other_color
+                    for row, col in cells:
+                        canvas[row, col] = color
+            elif operation is OperationId.COLOR_COUNT_SEQUENCE:
+                background = _background(canvas)
+                counts = Counter(int(value) for value in canvas.flat if int(value) != background)
+                if len(counts) < 2:
+                    raise ValueError("color count sequence requires non-background colors")
+                scaffold, _count = min(counts.items(), key=lambda item: (-item[1], item[0]))
+                ordered = [color for color, _count in sorted(counts.items(), key=lambda item: (-item[1], item[0])) if color != scaffold]
+                canvas = np.asarray(ordered, dtype=int).reshape(-1, 1)
+            elif operation is OperationId.NESTED_COLOR_REVERSE:
+                objects = _components(canvas)
+                groups: list[list[list[tuple[int, int]]]] = []
+                remaining = list(objects)
+                while remaining:
+                    group = [remaining.pop(0)]
+                    changed = True
+                    while changed:
+                        changed = False
+                        for item in tuple(remaining):
+                            item_rows, item_cols = zip(*item)
+                            item_box = (min(item_rows), min(item_cols), max(item_rows), max(item_cols))
+                            if any(not (item_box[2] < min(row for row, _ in other) or max(row for row, _ in other) < item_box[0] or item_box[3] < min(col for _, col in other) or max(col for _, col in other) < item_box[1]) for other in group):
+                                group.append(item); remaining.remove(item); changed = True
+                    groups.append(group)
+                original = np.asarray(grid, dtype=int)
+                for group in groups:
+                    if len(group) < 2:
+                        continue
+                    def footprint(item: list[tuple[int, int]]) -> int:
+                        rows, cols = zip(*item)
+                        return (max(rows) - min(rows) + 1) * (max(cols) - min(cols) + 1)
+                    ordered = sorted(group, key=lambda item: (-footprint(item), item))
+                    colors = [int(original[item[0]]) for item in ordered]
+                    for item, color in zip(ordered, reversed(colors)):
+                        for row, col in item:
+                            canvas[row, col] = color
+            elif operation is OperationId.MIRROR_ACROSS_FULL_LINE:
+                background = _background(canvas)
+                horizontal = [row for row in range(canvas.shape[0]) if len(set(int(value) for value in canvas[row, :])) == 1 and int(canvas[row, 0]) != background]
+                vertical = [col for col in range(canvas.shape[1]) if len(set(int(value) for value in canvas[:, col])) == 1 and int(canvas[0, col]) != background]
+                if len(horizontal) == len(vertical) == 1:
+                    row_axis, column_axis = horizontal[0], vertical[0]
+                    quadrants = (
+                        ((range(0, row_axis), range(0, column_axis))),
+                        ((range(0, row_axis), range(column_axis + 1, canvas.shape[1]))),
+                        ((range(row_axis + 1, canvas.shape[0]), range(0, column_axis))),
+                        ((range(row_axis + 1, canvas.shape[0]), range(column_axis + 1, canvas.shape[1]))),
+                    )
+                    populated = [sum(int(canvas[row, col]) != background for row in rows for col in columns) for rows, columns in quadrants]
+                    if populated.count(max(populated)) != 1 or max(populated) == 0:
+                        raise ValueError("cross mirror requires one populated quadrant")
+                    rows, columns = quadrants[populated.index(max(populated))]
+                    source = canvas.copy()
+                    for row in rows:
+                        for col in columns:
+                            if source[row, col] == background:
+                                continue
+                            for reflected_row, reflected_col in ((row, col), (2 * row_axis - row, col), (row, 2 * column_axis - col), (2 * row_axis - row, 2 * column_axis - col)):
+                                if 0 <= reflected_row < canvas.shape[0] and 0 <= reflected_col < canvas.shape[1]:
+                                    canvas[reflected_row, reflected_col] = source[row, col]
+                elif bool(horizontal) and (not vertical or canvas.shape[1] >= canvas.shape[0]):
+                    if len(horizontal) != 1:
+                        raise ValueError("mirror requires one horizontal separator line")
+                    axis = horizontal[0]
+                    upper = sum(int(value) != background for value in canvas[:axis, :].flat)
+                    lower = sum(int(value) != background for value in canvas[axis + 1:, :].flat)
+                    source_rows = range(axis - 1, -1, -1) if upper >= lower else range(axis + 1, canvas.shape[0])
+                    for row in source_rows:
+                        destination = 2 * axis - row
+                        if not 0 <= destination < canvas.shape[0]:
+                            continue
+                        for col in range(canvas.shape[1]):
+                            if canvas[row, col] != background:
+                                canvas[destination, col] = canvas[row, col]
+                else:
+                    if len(vertical) != 1:
+                        raise ValueError("mirror requires one vertical separator line")
+                    axis = vertical[0]
+                    left = sum(int(value) != background for value in canvas[:, :axis].flat)
+                    right = sum(int(value) != background for value in canvas[:, axis + 1:].flat)
+                    source_cols = range(axis - 1, -1, -1) if left >= right else range(axis + 1, canvas.shape[1])
+                    for col in source_cols:
+                        destination = 2 * axis - col
+                        if not 0 <= destination < canvas.shape[1]:
+                            continue
+                        for row in range(canvas.shape[0]):
+                            if canvas[row, col] != background:
+                                canvas[row, destination] = canvas[row, col]
             elif operation is OperationId.ROTATE:
                 transform = str(bound_rule_spec.value(ParameterSlot.TRANSFORM))
                 transforms = {

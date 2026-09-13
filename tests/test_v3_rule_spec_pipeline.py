@@ -61,7 +61,7 @@ def test_upstream_prompt_normalizes_train_derived_numpy_facts_and_parser_rejects
 
 def test_every_exposed_operation_has_real_executor_semantics_and_no_noop() -> None:
     audit = RuleExecutor.operation_audit()
-    assert len(audit["exposed_operations"]) == 10
+    assert len(audit["exposed_operations"]) == 16
     assert audit["exposed_operations"] == audit["fully_executable_operations"]
     assert audit["unsupported_exposed_operations"] == () and audit["no_op_operations"] == ()
 

@@ -169,6 +169,64 @@ def test_preflight_rejects_type_reference_and_dependency_failures_before_binding
     assert any(item.startswith("dependency_cycle") for item in RuleSpecPreflightValidator().validate(cyclic).diagnostics)
 
 
+def test_panel_overlay_extracts_equal_panels_through_a_typed_separator_role() -> None:
+    panel_overlay = RuleSpec(_rule(OperationId.PANEL_OVERLAY), {ParameterSlot.REFERENCE_COLOR: 5})
+    source = np.array([
+        [1, 1, 1, 1, 5, 0, 0, 0, 0],
+        [1, 0, 0, 1, 5, 0, 6, 6, 0],
+        [1, 0, 0, 1, 5, 0, 6, 6, 0],
+        [1, 1, 1, 1, 5, 0, 0, 0, 0],
+    ])
+    expected = np.array([[1, 1, 1, 1], [1, 6, 6, 1], [1, 6, 6, 1], [1, 1, 1, 1]])
+    assert HardVerifier().verify(panel_overlay, ((source, expected),)).passed
+
+
+def test_symmetric_object_selector_is_a_generic_crop_source() -> None:
+    crop = RuleSpec(
+        _rule(OperationId.SELECT, OperationId.CROP),
+        {ParameterSlot.SELECTOR: "SYMMETRIC_OBJECT", ParameterSlot.PADDING: 0},
+    )
+    source = np.array([[0, 4, 4, 0, 0], [0, 4, 4, 0, 8], [0, 0, 0, 8, 8]])
+    assert HardVerifier().verify(crop, ((source, np.array([[4, 4], [4, 4]])),)).passed
+
+
+def test_frame_constructs_a_typed_border_on_any_input_canvas() -> None:
+    frame = RuleSpec(_rule(OperationId.FRAME), {ParameterSlot.TARGET_COLOR: 8})
+    source = np.zeros((4, 5), dtype=int)
+    expected = np.array([[8, 8, 8, 8, 8], [8, 0, 0, 0, 8], [8, 0, 0, 0, 8], [8, 8, 8, 8, 8]])
+    assert HardVerifier().verify(frame, ((source, expected),)).passed
+
+
+def test_area_recolor_uses_a_typed_object_property_predicate() -> None:
+    rule = RuleSpec(
+        _rule(OperationId.AREA_RECOLOR),
+        {ParameterSlot.COUNT: 2, ParameterSlot.TARGET_COLOR: 2, ParameterSlot.REFERENCE_COLOR: 1},
+    )
+    source = np.array([[5, 5, 0, 5, 5, 5], [0, 0, 0, 0, 0, 0]])
+    expected = np.array([[2, 2, 0, 1, 1, 1], [0, 0, 0, 0, 0, 0]])
+    assert HardVerifier().verify(rule, ((source, expected),)).passed
+
+
+def test_color_count_sequence_generates_non_background_colors_in_count_order() -> None:
+    rule = RuleSpec(_rule(OperationId.COLOR_COUNT_SEQUENCE), {})
+    source = np.array([[0, 7, 7, 7, 7, 2, 2, 2, 1], [7, 7, 7, 7, 7, 8, 8, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]])
+    assert HardVerifier().verify(rule, ((source, np.array([[2], [1], [8]])),)).passed
+
+
+def test_nested_color_reverse_reuses_the_palette_by_containment_rank() -> None:
+    rule = RuleSpec(_rule(OperationId.NESTED_COLOR_REVERSE), {})
+    source = np.array([[0, 0, 0, 0, 0, 0, 0], [0, 8, 8, 8, 8, 8, 0], [0, 8, 2, 2, 2, 8, 0], [0, 8, 2, 1, 2, 8, 0], [0, 8, 2, 2, 2, 8, 0], [0, 8, 8, 8, 8, 8, 0], [0, 0, 0, 0, 0, 0, 0]])
+    expected = np.array([[0, 0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 1, 0], [0, 1, 2, 2, 2, 1, 0], [0, 1, 2, 8, 2, 1, 0], [0, 1, 2, 2, 2, 1, 0], [0, 1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0]])
+    assert HardVerifier().verify(rule, ((source, expected),)).passed
+
+
+def test_mirror_across_full_line_derives_axis_and_populated_side_from_input() -> None:
+    rule = RuleSpec(_rule(OperationId.MIRROR_ACROSS_FULL_LINE), {})
+    source = np.array([[0, 2, 0], [0, 0, 3], [1, 1, 1], [0, 0, 0], [0, 0, 0]])
+    expected = np.array([[0, 2, 0], [0, 0, 3], [1, 1, 1], [0, 0, 3], [0, 2, 0]])
+    assert HardVerifier().verify(rule, ((source, expected),)).passed
+
+
 def test_final_audit_and_local_preflight_are_train_only_and_not_task_specific() -> None:
     audit = (ROOT / "scripts/run_v3_final_architecture_audit.py").read_text(encoding="utf-8")
     local = (ROOT / "scripts/preflight_v3_upstream_local.py").read_text(encoding="utf-8")

@@ -17,6 +17,12 @@ class OperationId(StrEnum):
     CROP = "CROP"
     FILL = "FILL"
     RELATIONAL_COPY = "RELATIONAL_COPY"
+    PANEL_OVERLAY = "PANEL_OVERLAY"
+    FRAME = "FRAME"
+    AREA_RECOLOR = "AREA_RECOLOR"
+    COLOR_COUNT_SEQUENCE = "COLOR_COUNT_SEQUENCE"
+    NESTED_COLOR_REVERSE = "NESTED_COLOR_REVERSE"
+    MIRROR_ACROSS_FULL_LINE = "MIRROR_ACROSS_FULL_LINE"
 
 
 class ParameterSlot(StrEnum):
@@ -45,6 +51,12 @@ _REQUIRED_SLOTS: dict[OperationId, frozenset[ParameterSlot]] = {
     OperationId.CROP: frozenset({ParameterSlot.SELECTOR, ParameterSlot.PADDING}),
     OperationId.FILL: frozenset({ParameterSlot.TARGET_COLOR}),
     OperationId.RELATIONAL_COPY: frozenset({ParameterSlot.REFERENCE_COLOR, ParameterSlot.DIRECTION, ParameterSlot.DISTANCE}),
+    OperationId.PANEL_OVERLAY: frozenset({ParameterSlot.REFERENCE_COLOR}),
+    OperationId.FRAME: frozenset({ParameterSlot.TARGET_COLOR}),
+    OperationId.AREA_RECOLOR: frozenset({ParameterSlot.COUNT, ParameterSlot.TARGET_COLOR, ParameterSlot.REFERENCE_COLOR}),
+    OperationId.COLOR_COUNT_SEQUENCE: frozenset(),
+    OperationId.NESTED_COLOR_REVERSE: frozenset(),
+    OperationId.MIRROR_ACROSS_FULL_LINE: frozenset(),
 }
 
 

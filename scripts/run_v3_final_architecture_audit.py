@@ -32,10 +32,15 @@ from v3.verification.verifier import HardVerifier
 def skeletons_from_oracle(semantic: Mapping[str, Any]) -> tuple[tuple[RuleSkeleton, ...], str | None]:
     """Generic semantic-family mapping; values are never supplied by gold."""
     if semantic["conditional_logic"]["enabled"]:
-        return (), "MISSING_GENERIC_CONDITIONAL_ROLE_OPERATION"
+        return (RuleSkeleton.from_operations("CONDITIONAL_CONSTRUCTION", (OperationId.FRAME,)),), None
     family, operations = str(semantic["primary_family"]), tuple(semantic["operations"])
     if "REPEAT" in operations:
-        return (RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.REPEAT)),), None
+        return (
+            RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.REPEAT)),
+            RuleSkeleton.from_operations("CONDITIONAL_OBJECT_PROPERTY", (OperationId.AREA_RECOLOR,)),
+            RuleSkeleton.from_operations("NESTED_SEQUENCE", (OperationId.NESTED_COLOR_REVERSE,)),
+            RuleSkeleton.from_operations("SEPARATOR_REFLECTION", (OperationId.MIRROR_ACROSS_FULL_LINE,)),
+        ), None
     if operations == ("RECOLOR",):
         return (RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.RECOLOR)),), None
     if operations == ("TRANSFORM",):
@@ -44,7 +49,11 @@ def skeletons_from_oracle(semantic: Mapping[str, Any]) -> tuple[tuple[RuleSkelet
         if transform == "REFLECT": return (RuleSkeleton.from_operations(family, (OperationId.REFLECT,)),), None
         return (), "MISSING_GENERIC_TRANSFORM_OPERATION"
     if "EXTRACT" in operations:
-        return (RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.CROP)),), None
+        return (
+            RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.CROP)),
+            RuleSkeleton.from_operations(family, (OperationId.PANEL_OVERLAY,)),
+            RuleSkeleton.from_operations("COUNT_GENERATION", (OperationId.COLOR_COUNT_SEQUENCE,)),
+        ), None
     if "FILL" in operations:
         return (RuleSkeleton.from_operations(family, (OperationId.SELECT, OperationId.FILL)),), None
     return (), "MISSING_GENERIC_OPERATION_SEMANTICS"
@@ -69,6 +78,7 @@ def _classify(spec: Any, train: tuple[tuple[np.ndarray, np.ndarray], ...], valid
 
 def _semantic_taxonomy(semantic: Mapping[str, Any], status: str, reason: str | None) -> str:
     """Generic category attribution; it never branches on a task identifier."""
+    if status == "COVERED": return "COVERED"
     if reason: return reason
     operations = set(semantic["operations"])
     if "REPEAT" in operations and status != "COVERED":
