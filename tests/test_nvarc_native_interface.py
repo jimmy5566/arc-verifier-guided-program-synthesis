@@ -137,3 +137,4 @@ def test_native_ttt_uses_only_train_pairs_and_resets_per_task() -> None:
     assert "augmented.train" in source and "task.test" not in source
     assert "self.reset()" in source and "training_pairs_only" in source
     assert "rulespec" not in source and "heuristic" not in source and "solver" not in source
+    assert "parent._modules[part]" in source

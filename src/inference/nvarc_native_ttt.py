@@ -76,7 +76,11 @@ class NativeTaskLoRA:
 
     def _parent(self, name: str) -> tuple[Any, str]:
         parts = name.split("."); parent = self.model
-        for part in parts[:-1]: parent = getattr(parent, part)
+        for part in parts[:-1]:
+            # Transformer blocks commonly live in ModuleList entries such as
+            # ``model.layers.0``.  Resolve both named attributes and indexed
+            # registered submodules without assuming a specific architecture.
+            parent = parent._modules[part] if part in getattr(parent, "_modules", {}) else getattr(parent, part)
         return parent, parts[-1]
 
     def reset(self) -> None:
