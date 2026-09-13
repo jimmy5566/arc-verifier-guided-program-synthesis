@@ -1,7 +1,7 @@
 """Bounded native-grid candidate bookkeeping and label-free ranking."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any, Protocol
 
 from inference.nvarc_native_augmentation import NativeAugmentation
@@ -19,13 +19,17 @@ class NativeGridCandidate:
     prediction: tuple[tuple[tuple[int, ...], ...], ...]
     completion_tokens: int
     generation_seconds: float
+    support_augmentations: tuple[NativeAugmentation, ...] = ()
 
     def key(self) -> tuple[tuple[tuple[int, ...], ...], ...]:
         return self.prediction
 
     def to_dict(self) -> dict[str, Any]:
+        support = self.support_augmentations or (self.augmentation,)
         return {
             "augmentation": self.augmentation.to_dict(),
+            "support_augmentations": [item.to_dict() for item in support],
+            "support_count": len(support),
             "prediction": [[list(row) for row in grid] for grid in self.prediction],
             "completion_tokens": self.completion_tokens,
             "generation_seconds": self.generation_seconds,
@@ -36,7 +40,11 @@ def deduplicate_candidates(candidates: list[NativeGridCandidate]) -> list[Native
     """Preserve first deterministic occurrence of each full multi-test output."""
     unique: dict[tuple[tuple[tuple[int, ...], ...], ...], NativeGridCandidate] = {}
     for candidate in candidates:
-        unique.setdefault(candidate.key(), candidate)
+        existing = unique.get(candidate.key())
+        if existing is None:
+            unique[candidate.key()] = replace(candidate, support_augmentations=candidate.support_augmentations or (candidate.augmentation,))
+        else:
+            unique[candidate.key()] = replace(existing, support_augmentations=existing.support_augmentations + (candidate.augmentation,))
     return list(unique.values())
 
 

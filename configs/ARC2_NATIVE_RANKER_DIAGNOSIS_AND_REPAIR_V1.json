@@ -1,0 +1,15 @@
+{
+  "experiment_id": "ARC2_NATIVE_RANKER_DIAGNOSIS_AND_REPAIR_V1",
+  "base_commit": "d8839ca9c5de462f256e480227112c159bba5e89",
+  "model": {"source": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1", "backend": "Transformers", "dtype": "bfloat16", "internet": false},
+  "candidate_pool": {"augmentation_count": 32, "worker_count": 4, "decode": "native checkpoint tokenizer, greedy deterministic, existing frozen configuration"},
+  "development_pseudo_validation": {
+    "split": "development", "selection": "deterministic SHA-256 order salt ARC2_NATIVE_RANKER_DEV_PSEUDOVALIDATION_V1; excludes frozen30", "task_ids": ["3ad05f52", "d07ae81c", "1190bc91", "469497ad"], "task_ids_hash": "4e9b64c1f4e9914d80bf9a27edf8361a76b2aae59c1fc104fdfa03d7ad112411", "leave_one_train_pair_out": true
+  },
+  "held_out_validation": {
+    "split": "held_out", "selection": "deterministic SHA-256 order salt ARC2_NATIVE_RANKER_HELDOUT_V1; selected before any held-out inference; no task-specific filtering", "task_ids": ["a78176bb", "a57f2f04", "fcb5c309", "b1948b0a", "484b58aa", "1acc24af", "58c02a16", "a85d4709"], "task_ids_hash": "d41dc4677de308cd3b58f5afe877f8d6c0908d70e185f9f13588f0e1df3bcb24"
+  },
+  "rankers": ["likelihood", "consensus_frequency", "augmentation_diversity_consensus", "likelihood_plus_consensus", "combined"],
+  "selection_protocol": "Select one fixed ranker only from leave-one-train-pair-out pseudo-validation. Do not read development test or held-out outputs during ranker selection.",
+  "held_out_protocol": "Generate candidate artifact from held-out train pairs plus test inputs, freeze it, then locally open held-out solutions exactly once for scoring."
+}

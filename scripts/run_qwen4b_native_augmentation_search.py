@@ -27,8 +27,9 @@ COHORT_HASH = "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8"
 def _ids(cohort: dict[str, Any]) -> tuple[str, ...]:
     values = tuple(cohort.get("task_ids", ()))
     digest = hashlib.sha256(json.dumps(sorted(values), separators=(",", ":")).encode()).hexdigest()
-    if len(values) != 30 or len(set(values)) != 30 or digest != COHORT_HASH:
-        raise ValueError("requires exact frozen30 cohort")
+    expected = str(cohort.get("task_ids_hash", digest))
+    if not values or len(values) != len(set(values)) or digest != expected:
+        raise ValueError("cohort task IDs must be unique and match the committed hash")
     return values
 
 
@@ -76,6 +77,7 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], task_positions: dict[str,
         from inference.nvarc_native import NVARCNativeProvider, native_messages, parse_native_grid
         from inference.nvarc_native_augmentation import bounded_native_augmentations
         from inference.nvarc_native_candidates import NativeGridCandidate, deduplicate_candidates, rank_candidates
+        from inference.native_ranker import feature_rows, rank_indices
         if enable_ttt:
             from inference.nvarc_native_ttt import NativeLoRAConfig, NativeTaskLoRA
 
@@ -131,12 +133,14 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], task_positions: dict[str,
                 records.put({"event": "CANDIDATE_HEARTBEAT", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "task_position": task_positions[task_id], "task_total": task_total, "augmentation_position": index + 1, "augmentation_total": len(augmentations), "generated": generated_count, "valid": len(candidates), "unique": len(unique_keys), "elapsed_seconds": time.perf_counter() - task_started, **telemetry})
             unique = deduplicate_candidates(candidates)
             ranked = rank_candidates(provider, unique, original_messages, context_window=int(settings["decode"]["context_window"])) if unique else []
+            likelihood_by_index = {unique.index(item): float(score) for item, score in ranked}
+            ranking_indices = rank_indices(feature_rows([item.to_dict() for item in unique], likelihood_by_index)) if unique else {}
             records.put({
                 "task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "status": "SUCCESS" if ranked else "NO_VALID_NATIVE_CANDIDATE",
                 "baseline_prediction": baseline_prediction[0] if baseline_prediction and len(baseline_prediction) == 1 else baseline_prediction,
                 "candidates": [item.to_dict() for item in unique],
                 "ranked_candidate_indices": [unique.index(item) for item, _score in ranked],
-                "candidate_scores": [score for _item, score in ranked],
+                "candidate_scores": [score for _item, score in ranked], "ranking_indices": ranking_indices,
                 "ranked_prediction": ([[list(row) for row in grid] for grid in ranked[0][0].prediction][0] if len(ranked[0][0].prediction) == 1 else [[list(row) for row in grid] for grid in ranked[0][0].prediction]) if ranked else None,
                 "generated_candidate_count": generated_count, "unique_candidate_count": len(unique), "invalid_candidate_count": invalid,
                 "completion_tokens": token_total, "generation_seconds": generation_seconds, "model_vram_mb": provider.load_metadata.get("model_vram_mb"),
@@ -155,16 +159,26 @@ def main() -> None:
     for name in ("cohort", "config", "challenge_path", "model_path", "native_config_dir", "output"):
         parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
     parser.add_argument("--preflight-only", action="store_true"); parser.add_argument("--enable-ttt", action="store_true")
-    parser.add_argument("--stage", choices=("smoke", "pilot", "full"), required=True)
+    parser.add_argument("--stage", choices=("smoke", "pilot", "full", "external"), required=True)
+    parser.add_argument("--external-augmentation-count", type=int)
+    parser.add_argument("--external-worker-count", type=int)
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError("refusing to overwrite frozen artifact")
     config = json.loads(args.config.read_text(encoding="utf-8"))
     all_task_ids = _ids(json.loads(args.cohort.read_text(encoding="utf-8")))
     settings = config["B_augmentation_search"]
-    stage = config["stages"][args.stage]
-    task_ids = all_task_ids[:int(stage["task_count"])]
-    augmentation_count, worker_count = int(stage["augmentation_count"]), int(stage["worker_count"])
+    if args.stage == "external":
+        if args.external_augmentation_count is None or args.external_worker_count is None:
+            raise ValueError("external stage requires augmentation and worker counts")
+        task_ids = all_task_ids
+        augmentation_count, worker_count = args.external_augmentation_count, args.external_worker_count
+    else:
+        if hashlib.sha256(json.dumps(sorted(all_task_ids), separators=(",", ":")).encode()).hexdigest() != COHORT_HASH:
+            raise ValueError("built-in smoke/pilot/full stages require the exact frozen30 cohort")
+        stage = config["stages"][args.stage]
+        task_ids = all_task_ids[:int(stage["task_count"])]
+        augmentation_count, worker_count = int(stage["augmentation_count"]), int(stage["worker_count"])
     if augmentation_count > len(bounded_native_augmentations(color_offsets=tuple(settings["color_offsets"]), pair_orders=tuple(settings["train_pair_orders"]))):
         raise ValueError("stage augmentation count exceeds frozen pool")
     preflight = _preflight(task_ids, args.challenge_path, args.model_path, args.native_config_dir, int(settings["decode"]["context_window"]), augmentation_count)
@@ -211,7 +225,7 @@ def main() -> None:
     artifact = {
         "experiment_id": config["experiment_id"], "status": "CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING",
         "protocol": "native ARC-safe reversible augmentation and label-free model likelihood ranking; train pairs plus test inputs only; no targets, downstream stack, or task-specific heuristic",
-        "task_ids_hash": COHORT_HASH, "stage": args.stage, "stage_task_count": len(task_ids), "stage_augmentation_count": augmentation_count, "stage_worker_count": worker_count, "config_sha256": hashlib.sha256(args.config.read_bytes()).hexdigest(), "preflight": preflight,
+        "task_ids_hash": hashlib.sha256(json.dumps(sorted(task_ids), separators=(",", ":")).encode()).hexdigest(), "stage": args.stage, "stage_task_count": len(task_ids), "stage_augmentation_count": augmentation_count, "stage_worker_count": worker_count, "config_sha256": hashlib.sha256(args.config.read_bytes()).hexdigest(), "preflight": preflight,
         "hardware": hardware.to_dict(), "worker_ready": worker_ready, "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")}, "ttt_enabled": args.enable_ttt,
         "runtime_seconds": time.perf_counter() - started, "generation_seconds_sum": sum(float(item["generation_seconds"]) for item in by_task.values()),
         "gpu_utilization": {"sample_count": len(gpu_utilization_samples), "mean_pct": statistics.mean(gpu_utilization_samples) if gpu_utilization_samples else None, "min_pct": min(gpu_utilization_samples) if gpu_utilization_samples else None, "max_pct": max(gpu_utilization_samples) if gpu_utilization_samples else None}, "records": by_task,

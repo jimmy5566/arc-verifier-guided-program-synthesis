@@ -8,6 +8,7 @@ from pathlib import Path
 from inference.arc_native_io import ARCNativeInputAdapter, ARCNativeOutputParser
 from inference.nvarc_native_augmentation import NativeAugmentation, bounded_native_augmentations
 from inference.nvarc_native_candidates import NativeGridCandidate, deduplicate_candidates, rank_candidates
+from inference.native_ranker import CandidateRankingFeatures, rank_indices, select_method_from_pseudovalidation
 from inference.nvarc_native import native_messages, parse_native_grid, serialize_grid
 from arc.task import ARCExample, ARCGrid, ARCTask
 
@@ -119,9 +120,10 @@ def test_native_candidates_deduplicate_and_rank_without_targets() -> None:
             return {"01\n23": -3.0, "32\n10": -1.0}[continuation]
 
     unique = deduplicate_candidates([first, duplicate, second])
-    assert unique == [first, second]
+    assert [item.prediction for item in unique] == [first.prediction, second.prediction]
+    assert len(unique[0].support_augmentations) == 2 and len(unique[1].support_augmentations) == 1
     ranked = rank_candidates(Provider(), unique, [[{"role": "user", "content": "01"}]], context_window=99)
-    assert ranked[0][0] is second and ranked[0][1] == -1.0
+    assert ranked[0][0].prediction == second.prediction and ranked[0][1] == -1.0
 
 
 def test_native_capability_push_stays_native_and_gold_blind_until_scorer() -> None:
@@ -132,7 +134,7 @@ def test_native_capability_push_stays_native_and_gold_blind_until_scorer() -> No
     assert scorer.index("CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING") < scorer.index("from arc.io import load_challenges, load_solutions")
     assert "CANDIDATE_HEARTBEAT" in runner and "RUNNER_HEARTBEAT" in runner
     assert "gpu_utilization_pct" in runner and "nvidia-smi" in runner
-    assert 'choices=("smoke", "pilot", "full")' in runner
+    assert 'choices=("smoke", "pilot", "full", "external")' in runner
 
 
 def test_native_ttt_uses_only_train_pairs_and_resets_per_task() -> None:
@@ -150,3 +152,23 @@ def test_native_capability_stages_are_fixed_nested_scale_gates() -> None:
         "pilot": {"task_count": 5, "augmentation_count": 8, "worker_count": 2},
         "full": {"task_count": 30, "augmentation_count": 32, "worker_count": 4},
     }
+
+
+def test_label_free_native_ranker_features_and_pseudovalidation_tie_break() -> None:
+    rows = [
+        CandidateRankingFeatures(0, -1.0, 3, 2, 2, 2),
+        CandidateRankingFeatures(1, -0.1, 1, 1, 1, 1),
+    ]
+    ranks = rank_indices(rows)
+    assert ranks["likelihood"] == [1, 0]
+    assert ranks["consensus_frequency"] == [0, 1]
+    assert ranks["augmentation_diversity_consensus"] == [0, 1]
+    assert select_method_from_pseudovalidation({"likelihood": 2, "consensus_frequency": 2}) == "likelihood"
+
+
+def test_ranker_forensics_and_pseudo_scorer_keep_oracle_boundaries() -> None:
+    forensics = (ROOT / "scripts/analyze_native_ranker_frozen.py").read_text(encoding="utf-8")
+    pseudo = (ROOT / "scripts/score_native_ranker_pseudovalidation.py").read_text(encoding="utf-8")
+    assert forensics.index("CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING") < forensics.index("from arc.io import load_challenges, load_solutions")
+    assert "load_solutions" not in pseudo and "solutions-path" not in pseudo
+    assert "train_pair" in pseudo.lower() and "selected_ranker" in pseudo
