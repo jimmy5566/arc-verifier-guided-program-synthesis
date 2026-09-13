@@ -67,7 +67,8 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], challenge_path: str, mode
             records.put({"task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "status": "SUCCESS" if valid else "INVALID_NATIVE_GRID_OUTPUT", "attempt_1": outputs[0] if len(outputs) == 1 else outputs if valid else None, "attempt_2": None, "raw_response": raw, "completion_tokens": token_total, "generation_seconds": elapsed, "peak_vram_mb": provider.load_metadata.get("peak_vram_mb")})
         records.put({"event": "WORKER_COMPLETE", "worker_id": worker_id})
     except Exception as exc:
-        failure = {"event": "WORKER_FAILED", "worker_id": worker_id, "error": f"{type(exc).__name__}: {exc}"}; ready.put(failure); records.put(failure)
+        import traceback
+        failure = {"event": "WORKER_FAILED", "worker_id": worker_id, "error": f"{type(exc).__name__}: {exc}", "traceback": traceback.format_exc()}; ready.put(failure); records.put(failure)
 
 
 def main() -> None:
