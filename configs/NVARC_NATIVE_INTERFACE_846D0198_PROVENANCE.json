@@ -1,0 +1,17 @@
+{
+  "source_url": "https://github.com/1ytic/NVARC",
+  "source_commit": "846d0198efa752534594e321fc3289fc0a06c657",
+  "formal_inference_network": "OFFLINE",
+  "files": {
+    "ARChitects/qwen3_configs/chat_template.j2": {"sha256": "f977733ab83e9428a34a99d9d71dd5717da444bb5795ee8be0fd8dc0c187175c", "vendored_path": "configs/nvarc_native_846d0198/chat_template.j2"},
+    "ARChitects/qwen3_configs/tokenizer_config.json": {"sha256": "137f5946b9873e7eaf716f3d086c2a471216d43a994a0448fea1ead1592a345a", "vendored_path": "configs/nvarc_native_846d0198/tokenizer_config.json"},
+    "ARChitects/qwen3_configs/vocab.json": {"sha256": "c9266c53904ebe17d95b7398a35232ef5d355fb22b4db94974069a68da08540b", "vendored_path": "configs/nvarc_native_846d0198/vocab.json"},
+    "SDG/scripts/build_datasets.py": {"sha256": "1996ed8010afa28135f3d3fad5d89ae113ca845a0f235ab7392e4167cb23f5e8", "vendored_path": null, "verified_functions": ["convert_grid_to_string", "prepare_messages", "apply_augmentation"]}
+  },
+  "verified_contract": {
+    "grid_serialization": "each row is concatenated digit cells; rows are separated by newline; no spaces, commas, brackets, JSON, or prose",
+    "message_structure": "alternating user input and assistant output messages; final test input is a user message followed by add_generation_prompt",
+    "chat_template": "<|im_start|>{role}\\n{content}<|im_end|> then <|im_start|>assistant\\n",
+    "vocabulary": "digits 0..9, newline, user, assistant, and special tokens; 16 tokens total"
+  }
+}

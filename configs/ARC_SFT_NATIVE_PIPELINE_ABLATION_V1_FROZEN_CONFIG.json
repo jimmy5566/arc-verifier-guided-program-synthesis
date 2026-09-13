@@ -1,0 +1,10 @@
+{
+  "experiment_id": "RESUME_ARC_SPECIALIZED_ABLATION_WITH_VERIFIED_NVARC_INTERFACE",
+  "cohort": {"task_count": 30, "task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8", "source": "DIRECT_GRID_SOLVE_BASELINE_V1 frozen cohort"},
+  "model": {"source": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1", "path": "/kaggle/input/models/sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1", "version": "1", "dtype": "bfloat16", "backend": "Transformers", "hardware": "4x NVIDIA L4", "internet": false},
+  "provenance": {"source_url": "https://github.com/1ytic/NVARC", "source_commit": "846d0198efa752534594e321fc3289fc0a06c657", "manifest": "configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json", "native_config_dir": "configs/nvarc_native_846d0198"},
+  "D1": {"status": "INTERFACE_INCOMPATIBLE_CONTROL", "original_prediction_freeze_sha256": "0754755c624df5613e499f1de200a876b16097afb98aac4e6a04fb65db064b2c", "reason": "The SFT139 model has a 16-token ARC vocabulary and cannot emit the prior JSON punctuation contract."},
+  "D2": {"condition": "D2_ARC_SFT_NATIVE_INTERFACE", "serialization": "NVARC newline-delimited digit rows", "message_template": "official NVARC chat_template.j2", "decoding_label": "NATIVE_SERIALIZATION_WITH_FROZEN_BASELINE_DECODING", "temperature": 0.0, "do_sample": false, "seed": 20260912, "max_new_tokens": 1024, "context_window": 16384, "candidates_per_test_input": 1, "no_ttt": true, "no_augmentation": true, "no_search": true, "no_targets_during_inference": true},
+  "D3": {"status": "PENDING_D2_VALID_GRID_RATE_GATE", "gate": "D2 valid native grid rate >= 0.90"},
+  "formal_protocol": "offline inference -> complete prediction/candidate artifact -> SHA256 freeze -> only then local scoring"
+}
