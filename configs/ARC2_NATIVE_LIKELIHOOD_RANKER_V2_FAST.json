@@ -1,0 +1,18 @@
+{
+  "experiment_id": "ARC2_NATIVE_LIKELIHOOD_RANKER_V2_FAST",
+  "base_commit": "0f3dba6e6273044c744bfa054486f514a1db2d9f",
+  "model": {"source": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1", "backend": "Transformers", "dtype": "bfloat16", "internet": false},
+  "candidate_generation": {"reuse_runner": "run_qwen4b_native_augmentation_search.py", "augmentation_count": 8, "worker_count": 2, "unchanged": true},
+  "views": {"geometries": ["identity", "rot90", "rot180", "rot270"], "color_offset": 0, "pair_order": "canonical"},
+  "aggregation": {"methods": ["mean", "median", "trimmed_mean", "calibrated"], "trim_each_tail": 1, "calibration": "leave-one-train-pair-out softmax over mean native teacher-forced likelihood; uniform fallback when fewer than two train pairs"},
+  "smoke": {"frozen_candidates": "native_ttt_verifier_smoke_baseline_output/SMOKE_BASELINE_CANDIDATES_FROZEN.json", "task_ids": ["d406998b", "d4c90558"], "solutions_forbidden_until_rerank_freeze": true},
+  "untouched_validation": {
+    "selection": "deterministic SHA-256 salt ARC2_NATIVE_LIKELIHOOD_RANKER_V2_UNTOUCHED; excludes all prior native ranker, TTT verifier, and frozen30 cohorts; committed before candidate generation",
+    "task_ids": ["ad173014", "e50d258f", "aaef0977", "6f473927", "bd14c3bf", "9356391f", "3d6c6e23", "3cd86f4f"],
+    "task_ids_hash": "f260a9096d52f3269d69dc511883f288fb9ab4c7ac0ae5a84501ba6cbe1e0e20",
+    "task_count": 8,
+    "one_shot": true,
+    "solutions_forbidden_until_rerank_freeze": true
+  },
+  "selection_protocol": "Smoke checks implementation and changes in rank only. The precommitted calibrated method is used unchanged for the single untouched cohort. No test target, task-specific feature, or post-score rerun is permitted."
+}

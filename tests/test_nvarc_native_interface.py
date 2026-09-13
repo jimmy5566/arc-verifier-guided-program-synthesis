@@ -12,6 +12,7 @@ from inference.nvarc_native_augmentation import NativeAugmentation, bounded_nati
 from inference.nvarc_native_candidates import NativeGridCandidate, deduplicate_candidates, rank_candidates
 from inference.native_ranker import CandidateRankingFeatures, rank_indices, select_method_from_pseudovalidation
 from inference.native_train_verifier import rank_with_verifier, train_verifier_scores
+from inference.native_multiview_likelihood import aggregate, calibrated, ranks
 from inference.nvarc_native import native_messages, parse_native_grid, serialize_grid
 from arc.task import ARCExample, ARCGrid, ARCTask
 
@@ -232,3 +233,12 @@ def test_combined_native_pool_is_target_blind_and_deduplicates_predictions(tmp_p
     assert combined["status"] == "CANDIDATES_COMBINED_FROZEN_BEFORE_TRAIN_VERIFIER_RERANK"
     assert len(record["candidates"]) == 3 and record["candidates"][1]["combined_provenance"] == ["baseline", "ttt"]
     assert "candidate_count" in completed.stdout
+
+
+def test_multiview_robust_aggregation_and_calibrated_ranking_are_deterministic() -> None:
+    values = [-4.0, -1.0, -1.0, -40.0]
+    assert aggregate(values, "mean") < aggregate(values, "median")
+    assert aggregate(values, "trimmed_mean") == -2.5
+    scores = {"original_likelihood": [-2.0, -1.0], "calibrated_likelihood": [calibrated([-1.0, -8.0], [0.9, 0.1]), calibrated([-2.0, -1.0], [0.9, 0.1])]} 
+    assert ranks(scores)["original_likelihood"] == [1, 0]
+    assert ranks(scores)["calibrated_likelihood"] == [0, 1]
