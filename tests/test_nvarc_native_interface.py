@@ -13,6 +13,7 @@ from inference.nvarc_native_candidates import NativeGridCandidate, deduplicate_c
 from inference.native_ranker import CandidateRankingFeatures, rank_indices, select_method_from_pseudovalidation
 from inference.native_train_verifier import rank_with_verifier, train_verifier_scores
 from inference.native_multiview_likelihood import aggregate, calibrated, ranks
+from inference.native_strategy_hypotheses import infer_strategies, score_predictions
 from inference.nvarc_native import native_messages, parse_native_grid, serialize_grid
 from arc.task import ARCExample, ARCGrid, ARCTask
 
@@ -242,3 +243,16 @@ def test_multiview_robust_aggregation_and_calibrated_ranking_are_deterministic()
     scores = {"original_likelihood": [-2.0, -1.0], "calibrated_likelihood": [calibrated([-1.0, -8.0], [0.9, 0.1]), calibrated([-2.0, -1.0], [0.9, 0.1])]} 
     assert ranks(scores)["original_likelihood"] == [1, 0]
     assert ranks(scores)["calibrated_likelihood"] == [0, 1]
+
+
+def test_strategy_hypotheses_are_train_only_and_score_generic_transform_and_recolor() -> None:
+    transform = ARCTask("not-used", (ARCExample(ARCGrid([[1, 2], [3, 4]]), ARCGrid([[3, 1], [4, 2]])), ARCExample(ARCGrid([[5, 6], [7, 8]]), ARCGrid([[7, 5], [8, 6]]))), (ARCExample(ARCGrid([[1, 0], [2, 3]])),))
+    hypothesis = infer_strategies(transform)
+    assert "rot270" in hypothesis.global_transforms
+    assert score_predictions(hypothesis, transform, [[[2, 1], [3, 0]]]) > score_predictions(hypothesis, transform, [[[1, 0], [2, 3]]])
+    recolor = ARCTask("not-used", (ARCExample(ARCGrid([[1, 2]]), ARCGrid([[3, 4]])), ARCExample(ARCGrid([[2, 1]]), ARCGrid([[4, 3]]))), (ARCExample(ARCGrid([[1, 2]])),))
+    recolor_hypothesis = infer_strategies(recolor)
+    assert recolor_hypothesis.color_map == ((1, 3), (2, 4))
+    assert score_predictions(recolor_hypothesis, recolor, [[[3, 4]]]) > score_predictions(recolor_hypothesis, recolor, [[[1, 2]]])
+    source = (ROOT / "src/inference/native_strategy_hypotheses.py").read_text(encoding="utf-8").lower()
+    assert "solutions" not in source and "task_id" not in source
