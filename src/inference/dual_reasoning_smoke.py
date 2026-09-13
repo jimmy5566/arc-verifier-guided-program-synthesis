@@ -21,8 +21,16 @@ from time import perf_counter
 from typing import Any
 
 
-def discover_models(models_root: Path) -> dict[str, Path]:
-    """Discover attached native/SOAR checkpoints without fixed user paths."""
+def discover_models(models_root: Path, *, required: tuple[str, ...] = ("native", "soar")) -> dict[str, Path]:
+    """Discover requested attached checkpoints without fixed user paths.
+
+    A sequential smoke persists the completed Native result before loading SOAR.
+    Consequently its Native invocation must not fail merely because a later SOAR
+    attachment is absent; the induction invocation still requires SOAR itself.
+    """
+    unknown = set(required).difference({"native", "soar"})
+    if unknown:
+        raise ValueError(f"unknown required model roles: {sorted(unknown)}")
     choices: list[tuple[Path, dict[str, Any], str]] = []
     for config_path in models_root.rglob("config.json"):
         try: config = json.loads(config_path.read_text(encoding="utf-8"))
@@ -38,10 +46,17 @@ def discover_models(models_root: Path) -> dict[str, Path]:
             choices.append((weight.parent, {}, str(weight.parent).lower())); existing.add(weight.parent)
     native = [item for item in choices if any(token in item[2] for token in ("grids15", "sft139", "native_arc"))]
     soar = [item for item in choices if "soar" in item[2]]
-    if len(native) != 1 or len(soar) != 1:
+    selected = {"native": native, "soar": soar}
+    invalid = {role: len(selected[role]) for role in required if len(selected[role]) != 1}
+    if invalid:
         inventory = sorted(str(path.relative_to(models_root)) for path, _config, _marker in choices)[:32]
-        raise RuntimeError(f"could not uniquely discover native/SOAR models: native={len(native)}, soar={len(soar)}, scanned={len(choices)}, inventory={inventory}")
-    return {"native": native[0][0], "soar": soar[0][0]}
+        counts = {role: len(values) for role, values in selected.items()}
+        raise RuntimeError(
+            "could not uniquely discover required model checkpoints: "
+            f"required={required}, invalid={invalid}, counts={counts}, "
+            f"scanned={len(choices)}, inventory={inventory}"
+        )
+    return {role: selected[role][0][0] for role in required}
 
 
 def gpu_memory_mb() -> dict[str, int]:

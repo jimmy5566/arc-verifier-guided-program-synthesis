@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from inference.arc_native_io import ARCNativeInputAdapter, ARCNativeOutputParser
 from inference.nvarc_native_augmentation import NativeAugmentation, bounded_native_augmentations
 from inference.nvarc_native_candidates import NativeGridCandidate, deduplicate_candidates, rank_candidates
@@ -14,7 +16,7 @@ from inference.native_ranker import CandidateRankingFeatures, rank_indices, sele
 from inference.native_train_verifier import rank_with_verifier, train_verifier_scores
 from inference.native_multiview_likelihood import aggregate, calibrated, ranks
 from inference.native_strategy_hypotheses import infer_strategies, score_predictions
-from inference.dual_reasoning_smoke import extract_program, soar_prompt, validate_program
+from inference.dual_reasoning_smoke import discover_models, extract_program, soar_prompt, validate_program
 from inference.nvarc_native import native_messages, parse_native_grid, serialize_grid
 from arc.task import ARCExample, ARCGrid, ARCTask
 
@@ -267,3 +269,12 @@ def test_dual_reasoning_soar_prompt_and_program_parser_stay_target_blind_and_res
     assert not validate_program("import os\ndef transform(grid):\n return grid")[0]
     source = (ROOT / "scripts/run_dual_reasoning_smoke.py").read_text(encoding="utf-8")
     assert "load_solutions" not in source and "--branch" in source and "discover_models" in source
+
+
+def test_dual_reasoning_branch_discovery_does_not_block_native_on_later_soar_attachment(tmp_path: Path) -> None:
+    native = tmp_path / "sorokin" / "qwen3_4b_grids15_sft139" / "transformers" / "bfloat16" / "1"
+    native.mkdir(parents=True)
+    (native / "config.json").write_text('{"model_type":"qwen3"}', encoding="utf-8")
+    assert discover_models(tmp_path, required=("native",)) == {"native": native}
+    with pytest.raises(RuntimeError, match="required model checkpoints"):
+        discover_models(tmp_path, required=("soar",))
