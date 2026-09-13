@@ -14,6 +14,7 @@ from inference.native_ranker import CandidateRankingFeatures, rank_indices, sele
 from inference.native_train_verifier import rank_with_verifier, train_verifier_scores
 from inference.native_multiview_likelihood import aggregate, calibrated, ranks
 from inference.native_strategy_hypotheses import infer_strategies, score_predictions
+from inference.dual_reasoning_smoke import extract_program, soar_prompt, validate_program
 from inference.nvarc_native import native_messages, parse_native_grid, serialize_grid
 from arc.task import ARCExample, ARCGrid, ARCTask
 
@@ -256,3 +257,13 @@ def test_strategy_hypotheses_are_train_only_and_score_generic_transform_and_reco
     assert score_predictions(recolor_hypothesis, recolor, [[[3, 4]]]) > score_predictions(recolor_hypothesis, recolor, [[[1, 2]]])
     source = (ROOT / "src/inference/native_strategy_hypotheses.py").read_text(encoding="utf-8").lower()
     assert "solutions" not in source and "task_id" not in source
+
+
+def test_dual_reasoning_soar_prompt_and_program_parser_stay_target_blind_and_restricted() -> None:
+    prompt = soar_prompt([([[0, 1]], [[1, 0]])])
+    assert "def transform(grid):" in prompt and "Example 1" in prompt
+    assert extract_program("reasoning\n```python\ndef transform(grid):\n return grid\n```") == "def transform(grid):\n return grid"
+    assert validate_program("def transform(grid):\n return [row[:] for row in grid]") == (True, "ok")
+    assert not validate_program("import os\ndef transform(grid):\n return grid")[0]
+    source = (ROOT / "scripts/run_dual_reasoning_smoke.py").read_text(encoding="utf-8")
+    assert "load_solutions" not in source and "--branch" in source and "discover_models" in source
