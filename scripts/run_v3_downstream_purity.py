@@ -14,23 +14,13 @@ sys.path.insert(0, str(ROOT / "src"))
 from arc.io import load_dataset
 from v3.binding import BindingError, InstanceBinder
 from v3.execution.rule_executor import RuleExecutor
-from v3.recognition.recognizer_interface import parse_complete_rulespec_hypotheses
+from v3.schema.rule_spec import RuleSpec
 from v3.validation import RuleSpecPreflightValidator
 from v3.verification.verifier import HardVerifier
 
 
 def _spec_from_manifest(value: dict[str, Any]) -> Any:
-    skeleton = value["skeleton"]
-    hypothesis = {
-        "family": skeleton["family"],
-        "operations": [step["operation"] for step in skeleton["steps"]],
-        "parameters": value["rule_parameters"],
-        "roles": value["role_selectors"],
-        "repeat": value["repeat_semantics"],
-    }
-    parsed, status = parse_complete_rulespec_hypotheses(json.dumps({"hypotheses": [hypothesis]}), limit=1)
-    if status != "SUCCESS": raise ValueError(f"invalid frozen complete RuleSpec: {status}")
-    return parsed[0]
+    return RuleSpec.from_dict(value)
 
 
 def main() -> None:

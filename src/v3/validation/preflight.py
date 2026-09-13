@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from v3.execution.rule_executor import RuleExecutor
+from v3.schema.capability_library import REPEAT_STATE_SOURCES
 from v3.schema.rule_skeleton import OperationId, ParameterSlot
 from v3.schema.rule_spec import RuleSpec
 from v3.schema.value_expr import DerivedFunction, DerivedValue, RepeatSemantics, RoleReference, SelectorRule, SlotReference, expression_roles
@@ -111,6 +112,8 @@ class RuleSpecPreflightValidator:
                     diagnostics.append("repeat_state_color_invalid")
                 if repeat.alignment_role is not None and repeat.alignment_role not in rule_spec.role_selectors:
                     diagnostics.append("repeat_alignment_role_unresolvable")
+                if repeat.state_source not in REPEAT_STATE_SOURCES:
+                    diagnostics.append("repeat_state_source_unsupported")
         for name, selector in rule_spec.role_selectors.items():
             if not name or not isinstance(selector, SelectorRule):
                 diagnostics.append(f"role_selector_invalid:{name}")

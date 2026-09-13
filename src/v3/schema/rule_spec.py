@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from typing import Any, Mapping
 
 from .rule_skeleton import ParameterSlot, RuleSkeleton
-from .value_expr import RepeatSemantics, SelectorRule, expression_dependencies, value_to_dict
+from .value_expr import RepeatSemantics, SelectorRule, expression_dependencies, value_from_dict, value_to_dict
 
 
 @dataclass(frozen=True)
@@ -42,3 +42,25 @@ class RuleSpec:
             "repeat_semantics": None if self.repeat_semantics is None else self.repeat_semantics.to_dict(),
             "dependencies": {slot.value: sorted(item.value for item in values) for slot, values in self.dependencies.items()},
         }
+
+    @classmethod
+    def from_dict(cls, value: object) -> "RuleSpec":
+        """Restore a complete specification without consulting any ARC pair."""
+        required = {"skeleton", "rule_parameters", "role_selectors", "repeat_semantics", "dependencies"}
+        if not isinstance(value, dict) or set(value) != required:
+            raise ValueError("invalid RuleSpec mapping")
+        if not isinstance(value["rule_parameters"], dict) or not isinstance(value["role_selectors"], dict):
+            raise ValueError("invalid RuleSpec mapping types")
+        skeleton = RuleSkeleton.from_dict(value["skeleton"])
+        parameters = {
+            ParameterSlot(name): value_from_dict(item, slot=ParameterSlot(name))
+            for name, item in value["rule_parameters"].items()
+        }
+        roles = {str(name): SelectorRule.from_dict(item) for name, item in value["role_selectors"].items()}
+        repeat_data = value["repeat_semantics"]
+        repeat = None if repeat_data is None else RepeatSemantics.from_dict(repeat_data)
+        spec = cls(skeleton, parameters, roles, repeat)
+        declared_dependencies = value["dependencies"]
+        if not isinstance(declared_dependencies, dict) or declared_dependencies != spec.to_dict()["dependencies"]:
+            raise ValueError("RuleSpec dependency declaration does not match expressions")
+        return spec

@@ -2,62 +2,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import StrEnum
 from typing import Iterable
-
-
-class OperationId(StrEnum):
-    SELECT = "SELECT"
-    COPY = "COPY"
-    MOVE = "MOVE"
-    REPEAT = "REPEAT"
-    RECOLOR = "RECOLOR"
-    ROTATE = "ROTATE"
-    REFLECT = "REFLECT"
-    CROP = "CROP"
-    FILL = "FILL"
-    RELATIONAL_COPY = "RELATIONAL_COPY"
-    PANEL_OVERLAY = "PANEL_OVERLAY"
-    FRAME = "FRAME"
-    AREA_RECOLOR = "AREA_RECOLOR"
-    COLOR_COUNT_SEQUENCE = "COLOR_COUNT_SEQUENCE"
-    NESTED_COLOR_REVERSE = "NESTED_COLOR_REVERSE"
-    MIRROR_ACROSS_FULL_LINE = "MIRROR_ACROSS_FULL_LINE"
-
-
-class ParameterSlot(StrEnum):
-    SELECTOR = "$SELECTOR"
-    SOURCE_COLOR = "$SOURCE_COLOR"
-    TARGET_COLOR = "$TARGET_COLOR"
-    REFERENCE_COLOR = "$REFERENCE_COLOR"
-    DIRECTION = "$DIRECTION"
-    DISTANCE = "$DISTANCE"
-    STEP = "$STEP"
-    COUNT = "$COUNT"
-    TERMINATION = "$TERMINATION"
-    CONDITION = "$CONDITION"
-    TRANSFORM = "$TRANSFORM"
-    PADDING = "$PADDING"
-
-
-_REQUIRED_SLOTS: dict[OperationId, frozenset[ParameterSlot]] = {
-    OperationId.SELECT: frozenset({ParameterSlot.SELECTOR}),
-    OperationId.COPY: frozenset({ParameterSlot.DIRECTION, ParameterSlot.DISTANCE}),
-    OperationId.MOVE: frozenset({ParameterSlot.DIRECTION, ParameterSlot.DISTANCE}),
-    OperationId.REPEAT: frozenset({ParameterSlot.DIRECTION, ParameterSlot.STEP, ParameterSlot.COUNT, ParameterSlot.TERMINATION}),
-    OperationId.RECOLOR: frozenset({ParameterSlot.TARGET_COLOR}),
-    OperationId.ROTATE: frozenset({ParameterSlot.TRANSFORM}),
-    OperationId.REFLECT: frozenset({ParameterSlot.TRANSFORM}),
-    OperationId.CROP: frozenset({ParameterSlot.SELECTOR, ParameterSlot.PADDING}),
-    OperationId.FILL: frozenset({ParameterSlot.TARGET_COLOR}),
-    OperationId.RELATIONAL_COPY: frozenset({ParameterSlot.REFERENCE_COLOR, ParameterSlot.DIRECTION, ParameterSlot.DISTANCE}),
-    OperationId.PANEL_OVERLAY: frozenset({ParameterSlot.REFERENCE_COLOR}),
-    OperationId.FRAME: frozenset({ParameterSlot.TARGET_COLOR}),
-    OperationId.AREA_RECOLOR: frozenset({ParameterSlot.COUNT, ParameterSlot.TARGET_COLOR, ParameterSlot.REFERENCE_COLOR}),
-    OperationId.COLOR_COUNT_SEQUENCE: frozenset(),
-    OperationId.NESTED_COLOR_REVERSE: frozenset(),
-    OperationId.MIRROR_ACROSS_FULL_LINE: frozenset(),
-}
+from .capability_library import CAPABILITY_LIBRARY, OperationId, ParameterSlot
 
 
 @dataclass(frozen=True)
@@ -66,8 +12,9 @@ class SkeletonStep:
     required_slots: frozenset[ParameterSlot]
 
     def __post_init__(self) -> None:
-        if self.required_slots != _REQUIRED_SLOTS[self.operation]:
-            raise ValueError(f"{self.operation} requires exactly {_REQUIRED_SLOTS[self.operation]}")
+        expected = frozenset(CAPABILITY_LIBRARY[self.operation].required_slots)
+        if self.required_slots != expected:
+            raise ValueError(f"{self.operation} requires exactly {expected}")
 
 
 @dataclass(frozen=True)
@@ -86,7 +33,26 @@ class RuleSkeleton:
 
     @classmethod
     def from_operations(cls, family: str, operations: Iterable[OperationId]) -> "RuleSkeleton":
-        return cls(family, tuple(SkeletonStep(operation, _REQUIRED_SLOTS[operation]) for operation in operations))
+        return cls(family, tuple(SkeletonStep(operation, frozenset(CAPABILITY_LIBRARY[operation].required_slots)) for operation in operations))
+
+    @classmethod
+    def from_dict(cls, value: object) -> "RuleSkeleton":
+        if not isinstance(value, dict) or set(value) != {"family", "steps"}:
+            raise ValueError("invalid RuleSkeleton mapping")
+        family, steps = value["family"], value["steps"]
+        if not isinstance(family, str) or not isinstance(steps, list):
+            raise ValueError("invalid RuleSkeleton types")
+        operations: list[OperationId] = []
+        for item in steps:
+            if not isinstance(item, dict) or set(item) != {"operation", "required_slots"}:
+                raise ValueError("invalid RuleSkeleton step")
+            operation = OperationId(item["operation"])
+            declared = item["required_slots"]
+            expected = sorted(slot.value for slot in CAPABILITY_LIBRARY[operation].required_slots)
+            if not isinstance(declared, list) or sorted(declared) != expected:
+                raise ValueError("RuleSkeleton typed slots do not match capability library")
+            operations.append(operation)
+        return cls.from_operations(family, operations)
 
     def to_dict(self) -> dict[str, object]:
         return {"family": self.family, "steps": [{"operation": step.operation.value, "required_slots": sorted(slot.value for slot in step.required_slots)} for step in self.steps]}

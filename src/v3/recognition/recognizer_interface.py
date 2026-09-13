@@ -8,9 +8,16 @@ from typing import Any, Protocol, Sequence
 from arc.task import ARCTask
 from v3.evidence.cross_pair import CrossPairEvidence
 from v3.evidence.extractor import EvidenceBundle
+from v3.schema.capability_library import (
+    DERIVED_FUNCTION_IDS,
+    REPEAT_FIELD_IDS,
+    REPEAT_STATE_SOURCES,
+    ROLE_SELECTOR_KINDS,
+    capability_prompt_contract,
+)
 from v3.schema.rule_skeleton import OperationId, ParameterSlot, RuleSkeleton
 from v3.schema.rule_spec import RuleSpec
-from v3.schema.value_expr import DerivedFunction, DerivedValue, RepeatSemantics, RoleReference, SelectorRule, SlotReference
+from v3.schema.value_expr import DerivedFunction, DerivedValue, RepeatSemantics, RoleReference, SelectorRule, SlotReference, value_from_dict
 
 
 class RuleRecognizer(Protocol):
@@ -157,12 +164,12 @@ def recognition_prompt(task: ARCTask, evidence: EvidenceBundle, cross_pair: Cros
         "train_grids": raw,
         "deterministic_evidence": _facts(evidence, cross_pair),
         "complete_rulespec_contract": {
-            "operations": "SELECT:$SELECTOR;COPY/MOVE:$DIRECTION,$DISTANCE;REPEAT:$DIRECTION,$STEP,$COUNT,$TERMINATION;RECOLOR/FILL:$TARGET_COLOR;RELATIONAL_COPY:$REFERENCE_COLOR,$DIRECTION,$DISTANCE;ROTATE/REFLECT:$TRANSFORM;CROP:$SELECTOR,$PADDING;PANEL_OVERLAY:$REFERENCE_COLOR;FRAME:$TARGET_COLOR;AREA_RECOLOR:$COUNT,$TARGET_COLOR,$REFERENCE_COLOR;COLOR_COUNT_SEQUENCE;NESTED_COLOR_REVERSE;MIRROR_ACROSS_FULL_LINE",
+            "operations": capability_prompt_contract(),
             "hypothesis": "family, operations, parameters, roles, repeat",
             "value": "literal | {derive:FUNCTION,arguments:{...}} | {role_ref:ROLE} | {slot_ref:$SLOT}",
-            "roles": "name:{kind:COLOR|COLOR_ALL|SMALLEST_OBJECT|LARGEST_OBJECT|ARGMIN|ARGMAX|ALL_NON_BACKGROUND,value:optional}",
-            "derived_functions": "RELATIVE_DIRECTION,GAP,DISTANCE,WIDTH,HEIGHT,COLOR_OF,ARGMIN,ARGMAX,BOUNDARY,COLLISION",
-            "repeat": "optional {motif_transform,progressive_step_delta,color_sequence,state_update,state_color,alignment_role}; termination may be BOUNDARY,COLLISION,NO_CHANGE,ALIGNMENT",
+            "roles": "name:{kind:" + "|".join(ROLE_SELECTOR_KINDS) + ",value:optional}",
+            "derived_functions": ",".join(DERIVED_FUNCTION_IDS),
+            "repeat": "optional {" + ",".join(REPEAT_FIELD_IDS) + "}; termination may be BOUNDARY,COLLISION,NO_CHANGE,ALIGNMENT; state_source is " + " or ".join(REPEAT_STATE_SOURCES),
         },
         "instruction": (
             f"Infer at most {top_k} distinct complete general RuleSpecs from TRAIN only. "
@@ -206,22 +213,7 @@ def parse_hypotheses(raw: str, *, limit: int) -> tuple[tuple[RuleSkeleton, ...],
 
 
 def _parse_expression(value: Any, *, slot: ParameterSlot | None = None) -> Any:
-    if isinstance(value, dict):
-        keys = set(value)
-        if keys == {"role_ref"} and isinstance(value["role_ref"], str):
-            return RoleReference(value["role_ref"])
-        if keys == {"slot_ref"} and isinstance(value["slot_ref"], str):
-            return SlotReference(ParameterSlot(value["slot_ref"]))
-        if keys == {"derive", "arguments"} and isinstance(value["derive"], str) and isinstance(value["arguments"], dict):
-            return DerivedValue(DerivedFunction(value["derive"]), {name: _parse_expression(item) for name, item in value["arguments"].items()})
-        raise ValueError("invalid value expression")
-    if slot is ParameterSlot.DIRECTION and isinstance(value, list) and len(value) == 2 and all(isinstance(item, int) for item in value):
-        return tuple(value)
-    if slot is ParameterSlot.PADDING and isinstance(value, list) and len(value) == 4 and all(isinstance(item, int) for item in value):
-        return tuple(value)
-    if isinstance(value, (str, int, bool)) or value is None:
-        return value
-    raise ValueError("unsupported literal value")
+    return value_from_dict(value, slot=slot)
 
 
 def parse_complete_rulespec_hypotheses(raw: str, *, limit: int) -> tuple[tuple[RuleSpec, ...], str]:
@@ -250,15 +242,7 @@ def parse_complete_rulespec_hypotheses(raw: str, *, limit: int) -> tuple[tuple[R
             }
             if len(roles) != len(item["roles"]): raise ValueError("invalid role selector")
             repeat_data = item["repeat"]
-            if repeat_data is not None and (not isinstance(repeat_data, dict) or set(repeat_data) - {"motif_transform", "progressive_step_delta", "color_sequence", "state_update", "state_color", "alignment_role"}):
-                raise ValueError("invalid repeat semantics")
-            repeat = None if repeat_data is None else RepeatSemantics(
-                motif_transform=str(repeat_data.get("motif_transform", "IDENTITY")),
-                progressive_step_delta=repeat_data.get("progressive_step_delta", 0),
-                color_sequence=tuple(repeat_data.get("color_sequence", ())),
-                state_update=str(repeat_data.get("state_update", "ACCUMULATE")),
-                state_color=repeat_data.get("state_color"), alignment_role=repeat_data.get("alignment_role"),
-            )
+            repeat = None if repeat_data is None else RepeatSemantics.from_dict(repeat_data)
             rule_spec = RuleSpec(skeleton, parameters, roles, repeat)
         except (KeyError, TypeError, ValueError):
             return (), "SCHEMA_FAILURE:invalid complete rulespec"

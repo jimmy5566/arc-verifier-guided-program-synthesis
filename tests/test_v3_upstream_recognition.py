@@ -9,6 +9,10 @@ from arc.task import ARCExample, ARCGrid, ARCTask
 from v3.evidence.cross_pair import derive_cross_pair_evidence
 from v3.evidence.extractor import extract_task_evidence
 from v3.recognition.recognizer_interface import QwenRuleRecognizer, parse_complete_rulespec_hypotheses, parse_hypotheses
+from v3.schema.capability_library import CAPABILITY_LIBRARY, DERIVED_FUNCTION_IDS, capability_prompt_contract
+from v3.schema.rule_skeleton import OperationId, ParameterSlot, RuleSkeleton
+from v3.schema.rule_spec import RuleSpec
+from v3.schema.value_expr import DerivedFunction, DerivedValue, RepeatSemantics, RoleReference, SelectorRule
 from v3.validation import RuleSpecPreflightValidator
 
 
@@ -77,7 +81,33 @@ def test_prompt_provides_real_operation_slot_contract_without_placeholder_schema
     prompt = recognition_prompt(task, evidence, derive_cross_pair_evidence(evidence), top_k=3)
     assert "complete_rulespec_contract" in prompt
     assert '"STRING"' not in prompt and '"CANONICAL_OPERATION"' not in prompt and '"$TYPED_SLOT"' not in prompt
-    assert "RECOLOR/FILL:$TARGET_COLOR" in prompt and "COLOR_OF" in prompt
+    assert capability_prompt_contract() in prompt and "RECOLOR:$TARGET_COLOR" in prompt and "FILL:$TARGET_COLOR" in prompt
+    assert "COLOR_OF" in prompt and set(DERIVED_FUNCTION_IDS) == {item.value for item in DerivedFunction}
+
+
+def test_capability_library_is_the_typed_operation_contract_single_source() -> None:
+    assert set(CAPABILITY_LIBRARY) == set(OperationId)
+    for operation, capability in CAPABILITY_LIBRARY.items():
+        skeleton = RuleSkeleton.from_operations("CHECK", (operation,))
+        assert skeleton.required_slots == frozenset(capability.required_slots)
+        assert capability.prompt_fragment in capability_prompt_contract()
+
+
+def test_complete_rulespec_round_trip_preserves_typed_repeat_state_semantics() -> None:
+    skeleton = RuleSkeleton.from_operations("REPEAT", (OperationId.SELECT, OperationId.REPEAT))
+    spec = RuleSpec(
+        skeleton,
+        {
+            ParameterSlot.SELECTOR: "COLOR:2",
+            ParameterSlot.DIRECTION: DerivedValue(DerivedFunction.RELATIVE_DIRECTION, {"source": RoleReference("motif"), "reference": RoleReference("anchor")}),
+            ParameterSlot.STEP: 2,
+            ParameterSlot.COUNT: 3,
+            ParameterSlot.TERMINATION: "COLLISION",
+        },
+        {"motif": SelectorRule("COLOR", 2), "anchor": SelectorRule("COLOR", 3)},
+        RepeatSemantics(progressive_step_delta=1, color_sequence=(2, 3), state_update="ACCUMULATE", state_source="PREVIOUS_STATE", alignment_role="anchor"),
+    )
+    assert RuleSpec.from_dict(spec.to_dict()).to_dict() == spec.to_dict()
 
 
 def test_attachment_builder_excludes_gold_and_backend_dependencies() -> None:
