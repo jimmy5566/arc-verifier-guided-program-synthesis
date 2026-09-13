@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import os
+import subprocess
 import statistics
 import sys
 import time
@@ -29,6 +30,21 @@ def _ids(cohort: dict[str, Any]) -> tuple[str, ...]:
     if len(values) != 30 or len(set(values)) != 30 or digest != COHORT_HASH:
         raise ValueError("requires exact frozen30 cohort")
     return values
+
+
+def _gpu_telemetry(gpu_id: int) -> dict[str, int | None]:
+    """Read an instantaneous physical-GPU sample without affecting inference."""
+    try:
+        output = subprocess.check_output(
+            ["nvidia-smi", "--query-gpu=utilization.gpu,memory.used,memory.total", "--format=csv,noheader,nounits"],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        )
+        lines = [line.strip() for line in output.splitlines() if line.strip()]
+        utilization, memory_used, memory_total = (int(part.strip()) for part in lines[gpu_id].split(","))
+        return {"gpu_utilization_pct": utilization, "gpu_memory_used_mb": memory_used, "gpu_memory_total_mb": memory_total}
+    except (OSError, subprocess.SubprocessError, ValueError, IndexError):
+        return {"gpu_utilization_pct": None, "gpu_memory_used_mb": None, "gpu_memory_total_mb": None}
 
 
 def _preflight(task_ids: tuple[str, ...], challenge_path: Path, model_path: Path, native_config_dir: Path, context_window: int, augmentation_count: int) -> dict[str, Any]:
@@ -86,7 +102,7 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], task_positions: dict[str,
             invalid, generated_count, token_total, generation_seconds = 0, 0, 0, 0.0
             original_messages = [native_messages(task, index) for index in range(len(task.test))]
             baseline_prediction = None
-            unique_keys: set[tuple[tuple[tuple[int, ...], ...], ...]] = set()
+            unique_keys: set[tuple[tuple[tuple[int, ...], ...], ...]] = set(); gpu_samples: list[dict[str, int | None]] = []
             for index, augmentation in enumerate(augmentations):
                 augmented_task = augmentation.transform_task(task)
                 grids, raw = [], []
@@ -101,9 +117,10 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], task_positions: dict[str,
                 generated_count += 1
                 token_total += candidate_tokens
                 generation_seconds += candidate_elapsed
+                telemetry = _gpu_telemetry(worker_id); gpu_samples.append(telemetry)
                 if any(grid is None for grid in grids):
                     invalid += 1
-                    records.put({"event": "CANDIDATE_HEARTBEAT", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "task_position": task_positions[task_id], "task_total": task_total, "augmentation_position": index + 1, "augmentation_total": len(augmentations), "generated": generated_count, "valid": len(candidates), "unique": len(unique_keys), "elapsed_seconds": time.perf_counter() - task_started})
+                    records.put({"event": "CANDIDATE_HEARTBEAT", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "task_position": task_positions[task_id], "task_total": task_total, "augmentation_position": index + 1, "augmentation_total": len(augmentations), "generated": generated_count, "valid": len(candidates), "unique": len(unique_keys), "elapsed_seconds": time.perf_counter() - task_started, **telemetry})
                     continue
                 prediction = tuple(tuple(tuple(int(cell) for cell in row) for row in grid) for grid in grids if grid is not None)
                 item = NativeGridCandidate(augmentation, prediction, candidate_tokens, candidate_elapsed)
@@ -111,7 +128,7 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], task_positions: dict[str,
                 unique_keys.add(item.key())
                 if index == 0:
                     baseline_prediction = [[list(row) for row in grid] for grid in item.prediction]
-                records.put({"event": "CANDIDATE_HEARTBEAT", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "task_position": task_positions[task_id], "task_total": task_total, "augmentation_position": index + 1, "augmentation_total": len(augmentations), "generated": generated_count, "valid": len(candidates), "unique": len(unique_keys), "elapsed_seconds": time.perf_counter() - task_started})
+                records.put({"event": "CANDIDATE_HEARTBEAT", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "task_position": task_positions[task_id], "task_total": task_total, "augmentation_position": index + 1, "augmentation_total": len(augmentations), "generated": generated_count, "valid": len(candidates), "unique": len(unique_keys), "elapsed_seconds": time.perf_counter() - task_started, **telemetry})
             unique = deduplicate_candidates(candidates)
             ranked = rank_candidates(provider, unique, original_messages, context_window=int(settings["decode"]["context_window"])) if unique else []
             records.put({
@@ -124,7 +141,7 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], task_positions: dict[str,
                 "generated_candidate_count": generated_count, "unique_candidate_count": len(unique), "invalid_candidate_count": invalid,
                 "completion_tokens": token_total, "generation_seconds": generation_seconds, "model_vram_mb": provider.load_metadata.get("model_vram_mb"),
                 "ttt": ttt_metrics,
-                "elapsed_seconds": time.perf_counter() - task_started,
+                "elapsed_seconds": time.perf_counter() - task_started, "gpu_samples": gpu_samples,
             })
         records.put({"event": "WORKER_COMPLETE", "worker_id": worker_id})
     except Exception as exc:
@@ -190,12 +207,14 @@ def main() -> None:
         for child in children:
             child.join(timeout=30)
             if child.is_alive(): child.terminate()
+    gpu_utilization_samples = [sample["gpu_utilization_pct"] for item in by_task.values() for sample in item.get("gpu_samples", ()) if sample.get("gpu_utilization_pct") is not None]
     artifact = {
         "experiment_id": config["experiment_id"], "status": "CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING",
         "protocol": "native ARC-safe reversible augmentation and label-free model likelihood ranking; train pairs plus test inputs only; no targets, downstream stack, or task-specific heuristic",
         "task_ids_hash": COHORT_HASH, "stage": args.stage, "stage_task_count": len(task_ids), "stage_augmentation_count": augmentation_count, "stage_worker_count": worker_count, "config_sha256": hashlib.sha256(args.config.read_bytes()).hexdigest(), "preflight": preflight,
         "hardware": hardware.to_dict(), "worker_ready": worker_ready, "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")}, "ttt_enabled": args.enable_ttt,
-        "runtime_seconds": time.perf_counter() - started, "generation_seconds_sum": sum(float(item["generation_seconds"]) for item in by_task.values()), "records": by_task,
+        "runtime_seconds": time.perf_counter() - started, "generation_seconds_sum": sum(float(item["generation_seconds"]) for item in by_task.values()),
+        "gpu_utilization": {"sample_count": len(gpu_utilization_samples), "mean_pct": statistics.mean(gpu_utilization_samples) if gpu_utilization_samples else None, "min_pct": min(gpu_utilization_samples) if gpu_utilization_samples else None, "max_pct": max(gpu_utilization_samples) if gpu_utilization_samples else None}, "records": by_task,
     }
     atomic_write_json(args.output, artifact)
     print(json.dumps({"status": artifact["status"], "task_count": len(by_task), "candidate_count": sum(item["unique_candidate_count"] for item in by_task.values())}, sort_keys=True))
