@@ -147,6 +147,11 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], task_positions: dict[str,
                 "ttt": ttt_metrics,
                 "elapsed_seconds": time.perf_counter() - task_started, "gpu_samples": gpu_samples,
             })
+            if ttt is not None:
+                # Explicit task boundary: a worker can process several tasks,
+                # so reset learned adapters and transient CUDA caches now,
+                # not merely when the next fit begins.
+                ttt.finish_task()
         records.put({"event": "WORKER_COMPLETE", "worker_id": worker_id})
     except Exception as exc:
         import traceback
@@ -213,7 +218,9 @@ def main() -> None:
                 last_heartbeat = time.perf_counter()
                 continue
             if item.get("event") == "WORKER_COMPLETE": complete += 1; continue
-            if item.get("event") == "WORKER_FAILED": raise RuntimeError(item["error"])
+            if item.get("event") == "WORKER_FAILED":
+                print(json.dumps(item, sort_keys=True), flush=True)
+                raise RuntimeError(item["error"])
             by_task[item["task_id"]] = item
         if set(by_task) != set(task_ids):
             raise RuntimeError("incomplete native augmentation prediction artifact")

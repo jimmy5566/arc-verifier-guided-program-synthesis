@@ -133,8 +133,15 @@ class NVARCNativeProvider:
         torch.manual_seed(seed); torch.cuda.manual_seed_all(seed); started = time.perf_counter()
         with torch.inference_mode():
             output = self.model.generate(**encoded, max_new_tokens=max_new_tokens, do_sample=False, eos_token_id=self.tokenizer.eos_token_id, pad_token_id=self.tokenizer.pad_token_id)
-        generated = output[0, prompt_tokens:]
-        return NativeGeneration(self.tokenizer.decode(generated, skip_special_tokens=True), prompt_tokens, int(generated.shape[-1]), time.perf_counter() - started)
+        # Move the tiny native-token result off device before the next
+        # augmentation.  This keeps each long-lived worker's CUDA footprint
+        # bounded rather than retaining a generation tensor through decoding.
+        generated = output[0, prompt_tokens:].detach().cpu()
+        text = self.tokenizer.decode(generated, skip_special_tokens=True)
+        result = NativeGeneration(text, prompt_tokens, int(generated.shape[-1]), time.perf_counter() - started)
+        del output, encoded, generated
+        torch.cuda.empty_cache()
+        return result
 
     def continuation_log_likelihood(self, messages: list[dict[str, str]], continuation: str, *, context_window: int) -> float:
         """Mean conditional log-likelihood for a generated native grid.
@@ -157,4 +164,9 @@ class NVARCNativeProvider:
             target = ids[:, int(prefix.shape[-1]):]
             predicted = logits[:, int(prefix.shape[-1]) - 1:-1, :]
             token_log_probs = torch.log_softmax(predicted.float(), dim=-1).gather(-1, target.unsqueeze(-1)).squeeze(-1)
-        return float(token_log_probs.mean().item())
+        score = float(token_log_probs.mean().item())
+        # Likelihood is called once per candidate (and test input); release
+        # the full vocabulary logits before scoring the next candidate.
+        del logits, token_log_probs, predicted, target, ids, prefix, continuation_ids, eos
+        torch.cuda.empty_cache()
+        return score

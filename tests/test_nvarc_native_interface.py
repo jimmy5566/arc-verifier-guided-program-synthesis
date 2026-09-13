@@ -141,9 +141,22 @@ def test_native_capability_push_stays_native_and_gold_blind_until_scorer() -> No
 def test_native_ttt_uses_only_train_pairs_and_resets_per_task() -> None:
     source = (ROOT / "src/inference/nvarc_native_ttt.py").read_text(encoding="utf-8").lower()
     assert "augmented.train" in source and "task.test" not in source
-    assert "self.reset()" in source and "training_pairs_only" in source
+    assert "self.reset(seed=self.config.seed)" in source and "training_pairs_only" in source
     assert "rulespec" not in source and "heuristic" not in source and "solver" not in source
     assert "parent._modules[part]" in source
+
+
+def test_native_ttt_memory_hardening_freezes_base_and_records_phase_memory() -> None:
+    source = (ROOT / "src/inference/nvarc_native_ttt.py").read_text(encoding="utf-8").lower()
+    smoke = (ROOT / "scripts/run_native_ttt_memory_smoke.py").read_text(encoding="utf-8").lower()
+    assert "for parameter in model.parameters(): parameter.requires_grad_(false)" in source
+    assert "_assert_trainable_boundary" in source
+    assert "gradient_checkpointing_enable" in source and "use_cache = false" in source
+    assert "before_forward" in source and "after_backward" in source and "after_optimizer" in source
+    assert "step_seed = self.config.seed + step" in source
+    assert "foreach=false, fused=false" in source and "base_model_unchanged" in source
+    assert "memory_safe" in smoke and "deterministic_reset" in smoke
+    assert "no test candidate generation" in smoke and "task.test" not in smoke
 
 
 def test_native_capability_stages_are_fixed_nested_scale_gates() -> None:

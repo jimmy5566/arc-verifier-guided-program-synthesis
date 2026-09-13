@@ -24,11 +24,21 @@ def main() -> None:
     challenges = json.loads(args.challenge_path.read_text(encoding="utf-8")); result = copy.deepcopy(frozen)
     for task_id, record in result["records"].items():
         task = challenges[task_id]; candidates = record["candidates"]
-        if len(task["test"]) != 1: raise ValueError("verifier v1 currently requires one test input per task")
         likelihood_by_index = dict(zip(record["ranked_candidate_indices"], record["candidate_scores"], strict=True))
         likelihood = [float(likelihood_by_index[index]) for index in range(len(candidates))]
-        verifier = train_verifier_scores([(item["input"], item["output"]) for item in task["train"]], task["test"][0]["input"], [item["prediction"][0] for item in candidates])
-        record["train_verifier"] = {"scores": verifier, "leave_one_train_pair_out": True}
+        train_pairs = [(item["input"], item["output"]) for item in task["train"]]
+        test_inputs = [item["input"] for item in task["test"]]
+        verifier = []
+        for candidate in candidates:
+            prediction = candidate["prediction"]
+            if len(prediction) != len(test_inputs):
+                raise ValueError(f"candidate test-output count does not match task test-input count: {task_id}")
+            per_test = train_verifier_scores(train_pairs, test_inputs[0], [prediction[0]])
+            scores = [per_test[0]]
+            for test_input, test_prediction in zip(test_inputs[1:], prediction[1:], strict=True):
+                scores.append(train_verifier_scores(train_pairs, test_input, [test_prediction])[0])
+            verifier.append(sum(scores) / len(scores))
+        record["train_verifier"] = {"scores": verifier, "leave_one_train_pair_out": True, "test_input_count": len(test_inputs), "aggregation": "mean_per_test_relation_consistency"}
         record["verifier_ranking_indices"] = rank_with_verifier(likelihood, verifier)
     result["status"] = "CANDIDATES_RERANKED_BY_TRAIN_ONLY_VERIFIER_FROZEN_BEFORE_EXACT_SCORING"
     result["verifier_source_frozen_sha256"] = hashlib.sha256(args.frozen.read_bytes()).hexdigest()
