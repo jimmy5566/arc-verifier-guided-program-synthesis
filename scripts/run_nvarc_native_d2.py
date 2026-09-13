@@ -64,7 +64,7 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], challenge_path: str, mode
                 generated = provider.generate(native_messages(tasks[task_id], test_index), max_new_tokens=config["D2"]["max_new_tokens"], context_window=config["D2"]["context_window"], seed=config["D2"]["seed"])
                 outputs.append(parse_native_grid(generated.text)); raw.append(generated.text); token_total += generated.completion_tokens; elapsed += generated.elapsed_seconds
             valid = all(grid is not None for grid in outputs)
-            records.put({"task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "status": "SUCCESS" if valid else "INVALID_NATIVE_GRID_OUTPUT", "attempt_1": outputs[0] if len(outputs) == 1 else outputs if valid else None, "attempt_2": None, "raw_response": raw, "completion_tokens": token_total, "generation_seconds": elapsed, "peak_vram_mb": provider.load_metadata.get("peak_vram_mb")})
+            records.put({"task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "status": "SUCCESS" if valid else "INVALID_NATIVE_GRID_OUTPUT", "attempt_1": outputs[0] if len(outputs) == 1 else outputs if valid else None, "attempt_2": None, "raw_response": raw, "completion_tokens": token_total, "generation_seconds": elapsed, "model_vram_mb": provider.load_metadata.get("model_vram_mb")})
         records.put({"event": "WORKER_COMPLETE", "worker_id": worker_id})
     except Exception as exc:
         import traceback

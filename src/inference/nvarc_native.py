@@ -108,11 +108,6 @@ class NVARCNativeProvider:
 
         if not torch.cuda.is_available():
             raise RuntimeError("NVARC native provider requires CUDA")
-        # Workers mask one physical card to logical index zero before torch is
-        # imported.  CUDA telemetry APIs are strict about an integer index on
-        # this Kaggle runtime, whereas ``model.to`` accepts the string device.
-        device_index = 0
-        torch.cuda.reset_peak_memory_stats(device_index)
         started = time.perf_counter()
         self.tokenizer, tokenizer_metadata = checkpoint_native_tokenizer(self.model_path, self.tokenizer_config_dir)
         self.model = AutoModelForCausalLM.from_pretrained(str(self.model_path), local_files_only=True, trust_remote_code=False, torch_dtype=torch.bfloat16, low_cpu_mem_usage=True).to(self.device).eval()
@@ -123,8 +118,8 @@ class NVARCNativeProvider:
         self.load_metadata = {
             **tokenizer_metadata,
             "model_load_seconds": elapsed,
-            "gpu_name": torch.cuda.get_device_name(device_index),
-            "peak_vram_mb": round(torch.cuda.max_memory_allocated(device_index) / (1024 * 1024), 1),
+            "gpu_name": torch.cuda.get_device_name(),
+            "model_vram_mb": round(torch.cuda.memory_allocated() / (1024 * 1024), 1),
         }
         return elapsed
 
