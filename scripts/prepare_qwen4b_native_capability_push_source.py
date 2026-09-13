@@ -11,7 +11,7 @@ _FILES = (
     "pyproject.toml", "requirements.txt", "configs/QWEN4B_MAX_NATIVE_CAPABILITY_PUSH_V1.json",
     "configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json", "scripts/run_qwen4b_native_augmentation_search.py",
     "src/arc", "src/inference/__init__.py", "src/inference/arc_native_io.py", "src/inference/nvarc_native.py",
-    "src/inference/nvarc_native_augmentation.py", "src/inference/nvarc_native_candidates.py",
+    "src/inference/nvarc_native_augmentation.py", "src/inference/nvarc_native_candidates.py", "src/inference/nvarc_native_ttt.py",
     "src/inference/kaggle_l4_parallel_runner.py", "src/inference/qwen3_transformers_parallel_runner.py",
 )
 

@@ -50,7 +50,7 @@ def _preflight(task_ids: tuple[str, ...], challenge_path: Path, model_path: Path
     return {**native, "task_count": len(task_ids), "augmentation_count": len(augmentations), "test_input_count": sum(len(tasks[task_id].test) for task_id in task_ids), "min_prompt_tokens": min(counts), "median_prompt_tokens": statistics.median(counts), "max_prompt_tokens": max(counts), "truncated_tasks": 0}
 
 
-def _worker(worker_id: int, task_ids: tuple[str, ...], challenge_path: str, model_path: str, native_config_dir: str, config: dict[str, Any], records: Any, ready: Any, start: Any) -> None:
+def _worker(worker_id: int, task_ids: tuple[str, ...], challenge_path: str, model_path: str, native_config_dir: str, config: dict[str, Any], records: Any, ready: Any, start: Any, enable_ttt: bool) -> None:
     os.environ["CUDA_VISIBLE_DEVICES"] = str(worker_id)
     os.environ.setdefault("PYTORCH_ALLOC_CONF", "expandable_segments:True")
     try:
@@ -58,10 +58,16 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], challenge_path: str, mode
         from inference.nvarc_native import NVARCNativeProvider, native_messages, parse_native_grid
         from inference.nvarc_native_augmentation import bounded_native_augmentations
         from inference.nvarc_native_candidates import NativeGridCandidate, deduplicate_candidates, rank_candidates
+        if enable_ttt:
+            from inference.nvarc_native_ttt import NativeLoRAConfig, NativeTaskLoRA
 
         settings = config["B_augmentation_search"]
         provider = NVARCNativeProvider(model_path=Path(model_path), tokenizer_config_dir=Path(native_config_dir), device="cuda:0")
         load_seconds = provider.load()
+        ttt = None
+        if enable_ttt:
+            ttt_settings = config["D_ttt_lora"]
+            ttt = NativeTaskLoRA(provider.model, NativeLoRAConfig(rank=int(ttt_settings["rank"]), alpha=int(ttt_settings["alpha"]), steps=int(ttt_settings["steps"]), learning_rate=float(ttt_settings["learning_rate"]), target_suffixes=tuple(ttt_settings["target_suffixes"])))
         ready.put({"event": "MODEL_READY", "worker_id": worker_id, "physical_gpu_id": worker_id, "model_load_seconds": load_seconds, **provider.load_metadata})
         if not start.wait(timeout=MODEL_LOAD_WATCHDOG_SECONDS):
             raise TimeoutError("native augmentation start barrier timed out")
@@ -69,6 +75,10 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], challenge_path: str, mode
         augmentations = bounded_native_augmentations(color_offsets=tuple(settings["color_offsets"]), pair_orders=tuple(settings["train_pair_orders"]))
         for task_id in task_ids:
             task = tasks[task_id]
+            ttt_metrics = None
+            if ttt is not None:
+                train_augmentations = tuple(item for item in augmentations if item.pair_order == "canonical")
+                ttt_metrics = ttt.fit_task(provider, task, augmentations=train_augmentations, context_window=int(settings["decode"]["context_window"]))
             candidates: list[NativeGridCandidate] = []
             invalid, generated_count, token_total, generation_seconds = 0, 0, 0, 0.0
             original_messages = [native_messages(task, index) for index in range(len(task.test))]
@@ -106,6 +116,7 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], challenge_path: str, mode
                 "ranked_prediction": ([[list(row) for row in grid] for grid in ranked[0][0].prediction][0] if len(ranked[0][0].prediction) == 1 else [[list(row) for row in grid] for grid in ranked[0][0].prediction]) if ranked else None,
                 "generated_candidate_count": generated_count, "unique_candidate_count": len(unique), "invalid_candidate_count": invalid,
                 "completion_tokens": token_total, "generation_seconds": generation_seconds, "model_vram_mb": provider.load_metadata.get("model_vram_mb"),
+                "ttt": ttt_metrics,
             })
         records.put({"event": "WORKER_COMPLETE", "worker_id": worker_id})
     except Exception as exc:
@@ -118,7 +129,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     for name in ("cohort", "config", "challenge_path", "model_path", "native_config_dir", "output"):
         parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
-    parser.add_argument("--preflight-only", action="store_true")
+    parser.add_argument("--preflight-only", action="store_true"); parser.add_argument("--enable-ttt", action="store_true")
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError("refusing to overwrite frozen artifact")
@@ -137,7 +148,7 @@ def main() -> None:
     try:
         buckets = [task_ids[index::4] for index in range(4)]
         for worker_id in range(4):
-            child = context.Process(target=_worker, args=(worker_id, buckets[worker_id], str(args.challenge_path), str(args.model_path), str(args.native_config_dir), config, records, ready, start)); child.start(); children.append(child)
+            child = context.Process(target=_worker, args=(worker_id, buckets[worker_id], str(args.challenge_path), str(args.model_path), str(args.native_config_dir), config, records, ready, start, args.enable_ttt)); child.start(); children.append(child)
             state = ready.get(timeout=MODEL_LOAD_WATCHDOG_SECONDS)
             if state.get("event") != "MODEL_READY":
                 raise RuntimeError(f"native model load failed: {state}")
@@ -158,7 +169,7 @@ def main() -> None:
         "experiment_id": config["experiment_id"], "status": "CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING",
         "protocol": "native ARC-safe reversible augmentation and label-free model likelihood ranking; train pairs plus test inputs only; no targets, downstream stack, or task-specific heuristic",
         "task_ids_hash": COHORT_HASH, "config_sha256": hashlib.sha256(args.config.read_bytes()).hexdigest(), "preflight": preflight,
-        "hardware": hardware.to_dict(), "worker_ready": worker_ready, "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")},
+        "hardware": hardware.to_dict(), "worker_ready": worker_ready, "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")}, "ttt_enabled": args.enable_ttt,
         "runtime_seconds": time.perf_counter() - started, "generation_seconds_sum": sum(float(item["generation_seconds"]) for item in by_task.values()), "records": by_task,
     }
     atomic_write_json(args.output, artifact)

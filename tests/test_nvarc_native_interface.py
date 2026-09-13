@@ -130,3 +130,10 @@ def test_native_capability_push_stays_native_and_gold_blind_until_scorer() -> No
     assert "load_solutions" not in runner and "ARCNativeInputAdapter" not in runner
     assert "RuleSpec" not in runner and "HardVerifier" not in runner
     assert scorer.index("CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING") < scorer.index("from arc.io import load_challenges, load_solutions")
+
+
+def test_native_ttt_uses_only_train_pairs_and_resets_per_task() -> None:
+    source = (ROOT / "src/inference/nvarc_native_ttt.py").read_text(encoding="utf-8").lower()
+    assert "augmented.train" in source and "task.test" not in source
+    assert "self.reset()" in source and "training_pairs_only" in source
+    assert "rulespec" not in source and "heuristic" not in source and "solver" not in source
