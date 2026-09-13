@@ -16,6 +16,7 @@ from inference.native_ranker import CandidateRankingFeatures, rank_indices, sele
 from inference.native_train_verifier import rank_with_verifier, train_verifier_scores
 from inference.native_multiview_likelihood import aggregate, calibrated, ranks
 from inference.native_strategy_hypotheses import infer_strategies, score_predictions
+import inference.dual_reasoning_smoke as dual_smoke
 from inference.dual_reasoning_smoke import discover_models, extract_program, soar_prompt, validate_program
 from inference.nvarc_native import native_messages, parse_native_grid, serialize_grid
 from arc.task import ARCExample, ARCGrid, ARCTask
@@ -278,3 +279,15 @@ def test_dual_reasoning_branch_discovery_does_not_block_native_on_later_soar_att
     assert discover_models(tmp_path, required=("native",)) == {"native": native}
     with pytest.raises(RuntimeError, match="required model checkpoints"):
         discover_models(tmp_path, required=("soar",))
+
+
+def test_dual_reasoning_discovers_only_a_large_named_soar_gguf_from_notebook_inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    models = tmp_path / "models"
+    models.mkdir()
+    notebook = tmp_path / "notebooks" / "soar-model"
+    notebook.mkdir(parents=True)
+    gguf = notebook / "Soar-qwen-14b-Q4_K_M.gguf"
+    gguf.write_bytes(b"gguf")
+    monkeypatch.setattr(dual_smoke, "MIN_SOAR_GGUF_BYTES", 4)
+    assert discover_models(models, required=("soar",), input_root=tmp_path) == {"soar": gguf}
+    assert "q4_k_m" in gguf.name.lower()

@@ -21,7 +21,15 @@ from time import perf_counter
 from typing import Any
 
 
-def discover_models(models_root: Path, *, required: tuple[str, ...] = ("native", "soar")) -> dict[str, Path]:
+MIN_SOAR_GGUF_BYTES = 1 * 1024 * 1024 * 1024
+
+
+def discover_models(
+    models_root: Path,
+    *,
+    required: tuple[str, ...] = ("native", "soar"),
+    input_root: Path | None = None,
+) -> dict[str, Path]:
     """Discover requested attached checkpoints without fixed user paths.
 
     A sequential smoke persists the completed Native result before loading SOAR.
@@ -46,17 +54,36 @@ def discover_models(models_root: Path, *, required: tuple[str, ...] = ("native",
             choices.append((weight.parent, {}, str(weight.parent).lower())); existing.add(weight.parent)
     native = [item for item in choices if any(token in item[2] for token in ("grids15", "sft139", "native_arc"))]
     soar = [item for item in choices if "soar" in item[2]]
-    selected = {"native": native, "soar": soar}
+    # SOAR is attached as a notebook-input GGUF rather than a Kaggle Model
+    # source.  Search every mounted input only for its own role, and reject
+    # any HTML or tiny placeholder with an explicit multi-GiB size gate.
+    search_root = input_root if input_root is not None else models_root
+    gguf_candidates = sorted(
+        path for path in search_root.rglob("*.gguf")
+        if path.is_file()
+        and "soar" in path.name.lower()
+        and "14b" in path.name.lower()
+        and "q4_k_m" in path.name.lower()
+        and path.stat().st_size >= MIN_SOAR_GGUF_BYTES
+    )
+    selected = {"native": native, "soar": gguf_candidates}
     invalid = {role: len(selected[role]) for role in required if len(selected[role]) != 1}
     if invalid:
         inventory = sorted(str(path.relative_to(models_root)) for path, _config, _marker in choices)[:32]
+        gguf_inventory = sorted(
+            f"{path.relative_to(search_root)}:{path.stat().st_size}"
+            for path in search_root.rglob("*.gguf") if path.is_file()
+        )[:32]
         counts = {role: len(values) for role, values in selected.items()}
         raise RuntimeError(
             "could not uniquely discover required model checkpoints: "
             f"required={required}, invalid={invalid}, counts={counts}, "
-            f"scanned={len(choices)}, inventory={inventory}"
+            f"scanned={len(choices)}, inventory={inventory}, gguf_inventory={gguf_inventory}"
         )
-    return {role: selected[role][0][0] for role in required}
+    return {
+        role: selected[role][0][0] if role == "native" else selected[role][0]
+        for role in required
+    }
 
 
 def gpu_memory_mb() -> dict[str, int]:
