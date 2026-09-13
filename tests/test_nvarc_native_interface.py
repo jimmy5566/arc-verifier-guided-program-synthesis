@@ -5,6 +5,7 @@ import ast
 import json
 from pathlib import Path
 
+from inference.arc_native_io import ARCNativeInputAdapter, ARCNativeOutputParser
 from inference.nvarc_native import native_messages, parse_native_grid, serialize_grid
 from arc.task import ARCExample, ARCGrid, ARCTask
 
@@ -28,6 +29,9 @@ def test_native_parser_requires_rectangular_1_to_30_digit_rows() -> None:
     assert parse_native_grid("") is None
     assert parse_native_grid("a1") is None
     assert parse_native_grid("0" * 31) is None
+    assert ARCNativeOutputParser.parse("01\n23\n") == [[0, 1], [2, 3]]
+    for invalid in (" 01\n23", "01\n23\ntext", "[[0,1]]", "<|im_end|>", "01\r\n23"):
+        assert ARCNativeOutputParser.parse(invalid) is None
 
 
 def test_native_messages_follow_official_alternating_train_and_independent_test_structure() -> None:
@@ -36,6 +40,13 @@ def test_native_messages_follow_official_alternating_train_and_independent_test_
     assert first == [{"role": "user", "content": "01\n23"}, {"role": "assistant", "content": "32\n10"}, {"role": "user", "content": "45\n67"}]
     assert second[-1] == {"role": "user", "content": "8"}
     assert "hidden-id" not in str(first)
+    assert ARCNativeInputAdapter().messages(task, 0) == first
+
+
+def test_native_adapter_and_parser_have_no_solving_or_downstream_dependencies() -> None:
+    source = (ROOT / "src/inference/arc_native_io.py").read_text(encoding="utf-8").lower()
+    forbidden = ("rulespec", "solver", "heuristic", "semantic", "executor", "verifier", "candidate", "infer")
+    assert not any(term in source for term in forbidden)
 
 
 def test_official_provenance_freezes_commit_and_required_hashes() -> None:

@@ -15,7 +15,7 @@ _FILES = (
     "scripts/run_nvarc_native_d2.py",
     "src/arc",
     "src/inference/__init__.py",
-    "src/inference/direct_grid_solver.py",
+    "src/inference/arc_native_io.py",
     "src/inference/kaggle_l4_parallel_runner.py",
     "src/inference/qwen3_transformers_parallel_runner.py",
     "src/inference/nvarc_native.py",

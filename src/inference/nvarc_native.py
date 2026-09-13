@@ -11,38 +11,21 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from inference.direct_grid_solver import Grid, validate_grid
+from inference.arc_native_io import ARCNativeInputAdapter, ARCNativeOutputParser, ARCGridValue
+
+Grid = ARCGridValue
 
 
 def serialize_grid(grid: Any) -> str:
-    value = validate_grid(grid)
-    if value is None or len(value) > 30 or len(value[0]) > 30:
-        raise ValueError("NVARC grid must be rectangular 1..30 with ARC colors")
-    return "\n".join("".join(str(cell) for cell in row) for row in value)
+    return ARCNativeInputAdapter.serialize_grid(grid)
 
 
 def parse_native_grid(text: str) -> Grid | None:
-    """Accept only the checkpoint's newline-separated digit-grid output."""
-    if not isinstance(text, str):
-        return None
-    lines = text.strip().splitlines()
-    if not lines or len(lines) > 30 or any(not row or len(row) > 30 or any(char not in "0123456789" for char in row) for row in lines):
-        return None
-    if len({len(row) for row in lines}) != 1:
-        return None
-    return validate_grid([[int(char) for char in row] for row in lines])
+    return ARCNativeOutputParser.parse(text)
 
 
 def native_messages(task: Any, test_index: int) -> list[dict[str, str]]:
-    if not 0 <= test_index < len(task.test):
-        raise IndexError("test index out of range")
-    messages: list[dict[str, str]] = []
-    for example in task.train:
-        if example.output is None:
-            raise ValueError("train output is required")
-        messages.extend(({"role": "user", "content": serialize_grid(example.input.to_list())}, {"role": "assistant", "content": serialize_grid(example.output.to_list())}))
-    messages.append({"role": "user", "content": serialize_grid(task.test[test_index].input.to_list())})
-    return messages
+    return ARCNativeInputAdapter().messages(task, test_index)
 
 
 _EXPECTED_TOKENS = {
