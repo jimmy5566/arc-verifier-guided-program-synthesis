@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import ast
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 from inference.arc_native_io import ARCNativeInputAdapter, ARCNativeOutputParser
@@ -204,3 +206,29 @@ def test_train_verifier_oracle_boundary_is_after_rerank_freeze() -> None:
     scorer = (ROOT / "scripts/score_native_train_verifier.py").read_text(encoding="utf-8")
     assert "load_solutions" not in rerank
     assert scorer.index("CANDIDATES_RERANKED_BY_TRAIN_ONLY_VERIFIER_FROZEN_BEFORE_EXACT_SCORING") < scorer.index("from arc.io import load_solutions")
+
+
+def test_combined_native_pool_is_target_blind_and_deduplicates_predictions(tmp_path: Path) -> None:
+    def artifact(candidates: list[list[list[int]]], scores: list[float]) -> dict[str, object]:
+        return {
+            "status": "CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING",
+            "records": {
+                "unseen": {
+                    "candidates": [{"prediction": [grid]} for grid in candidates],
+                    "ranked_candidate_indices": list(range(len(candidates))),
+                    "candidate_scores": scores,
+                }
+            },
+        }
+    baseline, ttt, output = tmp_path / "baseline.json", tmp_path / "ttt.json", tmp_path / "combined.json"
+    baseline.write_text(json.dumps(artifact([[[0]], [[1]]], [-2.0, -1.0])), encoding="utf-8")
+    ttt.write_text(json.dumps(artifact([[[1]], [[2]]], [-3.0, -0.1])), encoding="utf-8")
+    completed = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/combine_native_candidate_artifacts.py"), "--baseline", str(baseline), "--ttt", str(ttt), "--output", str(output)],
+        check=True, capture_output=True, text=True,
+    )
+    combined = json.loads(output.read_text(encoding="utf-8")); record = combined["records"]["unseen"]
+    assert "load_solutions" not in (ROOT / "scripts/combine_native_candidate_artifacts.py").read_text(encoding="utf-8")
+    assert combined["status"] == "CANDIDATES_COMBINED_FROZEN_BEFORE_TRAIN_VERIFIER_RERANK"
+    assert len(record["candidates"]) == 3 and record["candidates"][1]["combined_provenance"] == ["baseline", "ttt"]
+    assert "candidate_count" in completed.stdout
