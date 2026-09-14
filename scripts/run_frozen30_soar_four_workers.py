@@ -7,7 +7,8 @@ from typing import Any
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'src'))
 from arc.io import load_dataset,load_solutions
 from inference.dual_reasoning_smoke import soar_prompt,extract_program,verify_program,execute_program
-from run_frozen30_native_soar_complementarity import native_labels,model_path,load_single,generate,PROGRAM_BUDGET,SEED_BASE,write_json
+from run_frozen30_native_soar_complementarity import native_labels, write_json
+from run_soar_single_gpu_parallel_smoke import model_path, load_single, generate, K as PROGRAM_BUDGET, SEED_BASE
 
 def worker(wid:int,gpu:int,model_s:str,items:list[tuple[str,list]],out_s:str)->None:
  os.environ['CUDA_VISIBLE_DEVICES']=str(gpu); started=time();model,tok=load_single(Path(model_s));out=Path(out_s);out.mkdir(parents=True,exist_ok=True)
@@ -18,10 +19,20 @@ def worker(wid:int,gpu:int,model_s:str,items:list[tuple[str,list]],out_s:str)->N
   write_json(out/f'{tid}.json',{'task_id':tid,'worker_id':wid,'gpu_id':gpu,'candidate_programs':cs});print(json.dumps({'event':'SOAR_4W_GENERATED','worker_id':wid,'task_id':tid,'count':PROGRAM_BUDGET}),flush=True)
  write_json(out/f'worker_{wid}.json',{'worker_id':wid,'gpu_id':gpu,'started_epoch':started,'completed_epoch':time(),'task_count':len(items)})
 
+def startup_worker(wid:int,gpu:int,model_s:str,out_s:str)->None:
+ os.environ['CUDA_VISIBLE_DEVICES']=str(gpu); started=time(); model,tok=load_single(Path(model_s)); write_json(Path(out_s)/f'worker_{wid}.json',{'worker_id':wid,'gpu_id':gpu,'started_epoch':started,'ready_epoch':time(),'status':'MODEL_READY','visible_devices':os.environ['CUDA_VISIBLE_DEVICES']}); del model,tok
+
 def main()->None:
- p=argparse.ArgumentParser();p.add_argument('--challenge-path',type=Path,required=True);p.add_argument('--solutions-path',type=Path,required=True);p.add_argument('--native-frozen',type=Path,required=True);p.add_argument('--calibration',type=Path,required=True);p.add_argument('--input-root',type=Path,required=True);p.add_argument('--output-root',type=Path,required=True);a=p.parse_args();started=perf_counter()
+ p=argparse.ArgumentParser();p.add_argument('--challenge-path',type=Path,required=True);p.add_argument('--solutions-path',type=Path,required=True);p.add_argument('--native-frozen',type=Path,required=True);p.add_argument('--calibration',type=Path,required=True);p.add_argument('--input-root',type=Path,required=True);p.add_argument('--output-root',type=Path,required=True);p.add_argument('--startup-smoke',action='store_true');a=p.parse_args();started=perf_counter()
  native=json.loads(a.native_frozen.read_text());ids=list(native['records']);tasks=load_dataset(a.challenge_path);timeout=float(json.loads(a.calibration.read_text())['timeout_policy']['selected_timeout_seconds']);path=model_path(a.input_root)
- payload=[(tid,[{'input':e.input.to_list(),'output':e.output.to_list()} for e in tasks[tid].train]) for tid in ids]; shards=[payload[i::4] for i in range(4)]; rawdir=a.output_root/'generation';ps=[]
+ rawdir=a.output_root/'generation';ps=[]
+ if a.startup_smoke:
+  for w in range(4):
+   x=mp.get_context('spawn').Process(target=startup_worker,args=(w,w,str(path),str(rawdir)));x.start();ps.append(x)
+  for x in ps:x.join()
+  if any(x.exitcode for x in ps):raise RuntimeError(f'worker exits={[x.exitcode for x in ps]}')
+  write_json(a.output_root/'four_worker_startup.json',{'status':'PASS','workers':[json.loads((rawdir/f'worker_{i}.json').read_text()) for i in range(4)]});return
+ payload=[(tid,[{'input':e.input.to_list(),'output':e.output.to_list()} for e in tasks[tid].train]) for tid in ids]; shards=[payload[i::4] for i in range(4)]
  for w,shard in enumerate(shards):
   x=mp.get_context('spawn').Process(target=worker,args=(w,w,str(path),shard,str(rawdir)));x.start();ps.append(x)
  for x in ps:x.join()
