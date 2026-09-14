@@ -6,6 +6,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+import importlib.util
 
 import pytest
 
@@ -24,6 +25,14 @@ from arc.task import ARCExample, ARCGrid, ARCTask
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _script_module(name: str):
+    spec = importlib.util.spec_from_file_location(name, ROOT / "scripts" / f"{name}.py")
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def _task() -> ARCTask:
@@ -157,6 +166,29 @@ def test_public_reference_ablation_stays_gold_blind_until_the_postfreeze_scorer(
     assert scorer.index("frozen before exact scoring") < scorer.index("from arc.io import load_challenges, load_solutions")
     assert "--search-beams" in runner and "deterministic_native_token_beam_search" in runner
     assert "--checkpoint-dir" in runner and "atomic_write_json(checkpoint_path" in runner
+
+
+def test_untouched60_manifest_is_deterministic_and_excludes_historical_ids(tmp_path: Path) -> None:
+    builder = _script_module("build_untouched60_manifest")
+    project = tmp_path / "project"
+    (project / "data/splits").mkdir(parents=True)
+    (project / "artifacts").mkdir(); (project / "configs").mkdir(); (project / "reports").mkdir(); (project / "scripts").mkdir()
+    (project / "data/splits/task_splits.csv").write_text("task_id,split\n00000000,held_out\n00000001,held_out\n00000002,held_out\n", encoding="utf-8")
+    (project / "artifacts/native_output.json").write_text('{"task_id":"00000001"}', encoding="utf-8")
+    (project / "configs/QWEN4B_MAX_NATIVE_CAPABILITY_PUSH_V1.json").write_text("{}", encoding="utf-8")
+    (project / "scripts/rerank_native_public_reference_selection.py").write_text("selector", encoding="utf-8")
+    manifest = builder.build_manifest(project, project / "manifest.json", count=2)
+    assert manifest["task_ids"] == ["00000000", "00000002"]
+    assert manifest["integrity"]["solutions_opened"] is False
+
+
+def test_untouched60_freezer_requires_identical_candidate_pools_and_no_solutions() -> None:
+    freezer = (ROOT / "scripts/freeze_untouched60_predictions.py").read_text(encoding="utf-8")
+    scorer = (ROOT / "scripts/score_untouched60_native_b.py").read_text(encoding="utf-8")
+    assert "load_solutions" not in freezer and "solutions-path" not in freezer
+    assert scorer.index("Sole solution/target boundary") < scorer.index("from arc.io import load_solutions")
+    assert "B is not demonstrably derived from this exact A candidate artifact" in freezer
+    assert "exact_two_sided_binomial_p" in scorer and "two_attempt_wilson_95" in scorer
 
 
 def test_partial_ablation_freezes_only_complete_checkpoints_and_d_is_offline() -> None:
