@@ -69,7 +69,7 @@ def _preflight(task_ids: tuple[str, ...], challenge_path: Path, model_path: Path
     return {**native, "task_count": len(task_ids), "augmentation_count": len(augmentations), "test_input_count": sum(len(tasks[task_id].test) for task_id in task_ids), "min_prompt_tokens": min(counts), "median_prompt_tokens": statistics.median(counts), "max_prompt_tokens": max(counts), "truncated_tasks": 0}
 
 
-def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: int, augmentation_count: int, challenge_path: str, model_path: str, native_config_dir: str, config: dict[str, Any], records: Any, ready: Any, start: Any, enable_ttt: bool, search_beams: int, checkpoint_dir: str | None, checkpoint_identity: str) -> None:
+def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: int, augmentation_count: int, challenge_path: str, model_path: str, native_config_dir: str, config: dict[str, Any], records: Any, ready: Any, start: Any, enable_ttt: bool, search_beams: int, checkpoint_dir: str | None, checkpoint_identity: str, config_sha256: str, deadline_unix: float | None) -> None:
     """One persistent CUDA worker pulling dynamically from the shared queue."""
     os.environ["CUDA_VISIBLE_DEVICES"] = str(worker_id)
     os.environ.setdefault("PYTORCH_ALLOC_CONF", "expandable_segments:True")
@@ -84,6 +84,13 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
         if enable_ttt:
             from inference.nvarc_native_ttt import NativeLoRAConfig, NativeTaskLoRA
 
+        import torch
+        if not torch.cuda.is_available():
+            raise RuntimeError("worker CUDA is unavailable")
+        # CUDA_VISIBLE_DEVICES maps this assigned physical GPU to local cuda:0.
+        torch.cuda.set_device(0)
+        if torch.cuda.current_device() != 0:
+            raise RuntimeError(f"worker {worker_id}: local CUDA binding is not cuda:0")
         settings = config["B_augmentation_search"]
         provider = NVARCNativeProvider(model_path=Path(model_path), tokenizer_config_dir=Path(native_config_dir), device="cuda:0")
         load_seconds = provider.load()
@@ -91,8 +98,8 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
         if enable_ttt:
             ttt_settings = config["D_ttt_lora"]
             ttt = NativeTaskLoRA(provider.model, NativeLoRAConfig(rank=int(ttt_settings["rank"]), alpha=int(ttt_settings["alpha"]), steps=int(ttt_settings["steps"]), learning_rate=float(ttt_settings["learning_rate"]), target_suffixes=tuple(ttt_settings["target_suffixes"])))
-        ready.put({"event": "MODEL_READY", "worker_id": worker_id, "physical_gpu_id": worker_id, "model_load_seconds": load_seconds, **provider.load_metadata})
         model_ready = True
+        ready.put({"event": "MODEL_READY", "worker_id": worker_id, "physical_gpu_id": worker_id, "local_cuda_device": torch.cuda.current_device(), "gpu_name": torch.cuda.get_device_name(0), "model_instances": 1, "model_load_seconds": load_seconds, **provider.load_metadata})
         if not start.wait(timeout=MODEL_LOAD_WATCHDOG_SECONDS):
             raise TimeoutError("native augmentation start barrier timed out")
         tasks = load_dataset(challenge_path)
@@ -104,6 +111,9 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
             with queue_remaining.get_lock():
                 queue_remaining.value -= 1
                 remaining = int(queue_remaining.value)
+            if deadline_unix is not None and time.time() >= deadline_unix:
+                records.put({"event": "TASK_DEADLINE_SKIPPED", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "queue_remaining": remaining})
+                continue
             records.put({"event": "TASK_START", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "queue_remaining": remaining, "task_total": task_total})
             checkpoint_path = Path(checkpoint_dir) / "tasks" / f"{task_id}.json" if checkpoint_dir else None
             completed_record = None
@@ -145,14 +155,34 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
                     break
                 except Exception as exc:
                     import traceback
+                    # A failed task must not retain tensors/adapters into its
+                    # retry or the next dynamically assigned task.
+                    if ttt is not None:
+                        ttt.finish_task()
+                    torch.cuda.empty_cache()
                     if attempt == 0:
                         records.put({"event": "TASK_RETRY", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "error": f"{type(exc).__name__}: {exc}"})
                         continue
                     records.put({"event": "TASK_FAILED", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "error": f"{type(exc).__name__}: {exc}", "traceback": traceback.format_exc()})
             if completed_record is not None:
                 if checkpoint_path:
-                    atomic_write_json(checkpoint_path, {"checkpoint_identity": checkpoint_identity, "task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "generation_config": {"augmentation_count": augmentation_count, "search_beams": search_beams, "decode": settings["decode"]}, "record": completed_record})
-                records.put({"event": "TASK_COMPLETE", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "task_seconds": completed_record["elapsed_seconds"], "queue_remaining": remaining, "record": completed_record})
+                    checkpoint_error = None
+                    for checkpoint_attempt in range(2):
+                        try:
+                            atomic_write_json(checkpoint_path, {"checkpoint_identity": checkpoint_identity, "config_sha256": config_sha256, "task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "generation_config": {"augmentation_count": augmentation_count, "search_beams": search_beams, "decode": settings["decode"]}, "record": completed_record})
+                            if _valid_checkpoint(checkpoint_path, task_id, checkpoint_identity, config_sha256) is None:
+                                raise RuntimeError(f"{task_id}: atomic checkpoint validation failed")
+                            checkpoint_error = None
+                            break
+                        except Exception as exc:
+                            checkpoint_error = exc
+                            if checkpoint_attempt == 0:
+                                records.put({"event": "TASK_RETRY", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "stage": "checkpoint", "error": f"{type(exc).__name__}: {exc}"})
+                    if checkpoint_error is not None:
+                        records.put({"event": "TASK_FAILED", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "stage": "checkpoint", "error": f"{type(checkpoint_error).__name__}: {checkpoint_error}"})
+                        completed_record = None
+                if completed_record is not None:
+                    records.put({"event": "TASK_COMPLETE", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "task_seconds": completed_record["elapsed_seconds"], "queue_remaining": remaining, "record": completed_record})
             if ttt is not None: ttt.finish_task()
         records.put({"event": "WORKER_COMPLETE", "worker_id": worker_id})
     except Exception as exc:
@@ -162,13 +192,13 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
         records.put(failure)
 
 
-def _valid_checkpoint(path: Path, task_id: str, checkpoint_identity: str) -> dict[str, Any] | None:
+def _valid_checkpoint(path: Path, task_id: str, checkpoint_identity: str, config_sha256: str) -> dict[str, Any] | None:
     """Return a reusable completed record only when its identity is exact."""
     try:
         saved = json.loads(path.read_text(encoding="utf-8")); record = saved.get("record")
     except (OSError, json.JSONDecodeError):
         return None
-    if saved.get("checkpoint_identity") != checkpoint_identity or saved.get("task_id") != task_id or not isinstance(record, dict) or record.get("task_id") != task_id:
+    if saved.get("checkpoint_identity") != checkpoint_identity or saved.get("config_sha256") != config_sha256 or saved.get("task_id") != task_id or not isinstance(record, dict) or record.get("task_id") != task_id:
         return None
     if record.get("status") not in {"SUCCESS", "NO_VALID_NATIVE_CANDIDATE"}:
         return None
@@ -186,6 +216,9 @@ def main() -> None:
     parser.add_argument("--stage", choices=("smoke", "pilot", "full", "external"), required=True)
     parser.add_argument("--external-augmentation-count", type=int)
     parser.add_argument("--external-worker-count", type=int)
+    parser.add_argument("--deadline-seconds", type=float, default=None)
+    parser.add_argument("--deadline-unix", type=float, default=None)
+    parser.add_argument("--allow-deadline-partial", action="store_true")
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError("refusing to overwrite frozen artifact")
@@ -205,7 +238,8 @@ def main() -> None:
         augmentation_count, worker_count = int(stage["augmentation_count"]), int(stage["worker_count"])
     if augmentation_count > len(bounded_native_augmentations(color_offsets=tuple(settings["color_offsets"]), pair_orders=tuple(settings["train_pair_orders"]))):
         raise ValueError("stage augmentation count exceeds frozen pool")
-    checkpoint_identity = hashlib.sha256(json.dumps({"config_sha256": hashlib.sha256(args.config.read_bytes()).hexdigest(), "task_ids": sorted(task_ids), "augmentation_count": augmentation_count, "worker_count": worker_count, "search_beams": args.search_beams}, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    config_sha256 = hashlib.sha256(args.config.read_bytes()).hexdigest()
+    checkpoint_identity = hashlib.sha256(json.dumps({"config_sha256": config_sha256, "task_ids": sorted(task_ids), "augmentation_count": augmentation_count, "worker_count": worker_count, "search_beams": args.search_beams}, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     if args.checkpoint_dir:
         (args.checkpoint_dir / "tasks").mkdir(parents=True, exist_ok=True)
     elif args.resume:
@@ -221,7 +255,7 @@ def main() -> None:
     by_task: dict[str, Any] = {}
     if args.resume and args.checkpoint_dir:
         for task_id in task_ids:
-            checkpoint = _valid_checkpoint(args.checkpoint_dir / "tasks" / f"{task_id}.json", task_id, checkpoint_identity)
+            checkpoint = _valid_checkpoint(args.checkpoint_dir / "tasks" / f"{task_id}.json", task_id, checkpoint_identity, config_sha256)
             if checkpoint is not None:
                 by_task[task_id] = checkpoint
     unfinished = [task_id for task_id in task_ids if task_id not in by_task]
@@ -230,18 +264,31 @@ def main() -> None:
     for _ in range(worker_count):
         task_queue.put(None)
     queue_remaining = context.Value("i", len(unfinished))
+    deadline_unix = args.deadline_unix if args.deadline_unix is not None else (time.time() + args.deadline_seconds if args.deadline_seconds is not None else None)
     children, worker_ready = [], []
     try:
         for worker_id in range(worker_count):
-            child = context.Process(target=_worker, args=(worker_id, task_queue, queue_remaining, len(task_ids), augmentation_count, str(args.challenge_path), str(args.model_path), str(args.native_config_dir), config, records, ready, start, args.enable_ttt, args.search_beams, str(args.checkpoint_dir) if args.checkpoint_dir else None, checkpoint_identity)); child.start(); children.append(child)
-            state = ready.get(timeout=MODEL_LOAD_WATCHDOG_SECONDS)
+            child = context.Process(target=_worker, args=(worker_id, task_queue, queue_remaining, len(task_ids), augmentation_count, str(args.challenge_path), str(args.model_path), str(args.native_config_dir), config, records, ready, start, args.enable_ttt, args.search_beams, str(args.checkpoint_dir) if args.checkpoint_dir else None, checkpoint_identity, config_sha256, deadline_unix)); child.start(); children.append(child)
+            ready_deadline = time.monotonic() + MODEL_LOAD_WATCHDOG_SECONDS
+            while True:
+                try:
+                    state = ready.get(timeout=min(5.0, max(0.1, ready_deadline - time.monotonic())))
+                    break
+                except Empty:
+                    if child.exitcode is not None:
+                        raise RuntimeError(f"worker {worker_id} exited during model initialization: {child.exitcode}")
+                    if time.monotonic() >= ready_deadline:
+                        raise TimeoutError(f"worker {worker_id} model initialization exceeded {MODEL_LOAD_WATCHDOG_SECONDS}s")
             if state.get("event") != "MODEL_READY":
                 raise RuntimeError(f"native model load failed: {state}")
+            if state.get("local_cuda_device") != 0 or state.get("physical_gpu_id") != worker_id or state.get("model_instances") != 1:
+                raise RuntimeError(f"worker GPU/model binding validation failed: {state}")
             worker_ready.append(state)
-        start.set(); complete = 0; last_heartbeat = time.perf_counter(); worker_state = {worker: "IDLE" for worker in range(worker_count)}; failures: list[dict[str, Any]] = []
+            print(json.dumps({"event": "WORKER_GPU_BOUND", "worker_id": worker_id, "physical_gpu_id": state["physical_gpu_id"], "local_cuda_device": state["local_cuda_device"], "gpu_name": state["gpu_name"], "model_instances": state["model_instances"], "model_load_seconds": state["model_load_seconds"]}, sort_keys=True), flush=True)
+        start.set(); terminal_workers: set[int] = set(); last_heartbeat = time.perf_counter(); worker_state = {worker: "IDLE" for worker in range(worker_count)}; failures: list[dict[str, Any]] = []; active_tasks: set[str] = set(); deadline_skipped: list[str] = []
         for task_id in sorted(by_task):
             print(json.dumps({"event": "TASK_RESUMED", "task_id": task_id, "completed_tasks": len(by_task), "task_total": len(task_ids)}, sort_keys=True), flush=True)
-        while complete < worker_count:
+        while len(terminal_workers) < worker_count:
             try:
                 item = records.get(timeout=5)
             except Empty:
@@ -251,9 +298,15 @@ def main() -> None:
                     estimate = (statistics.mean(completed_seconds) * remaining / worker_count) if completed_seconds else None
                     print(json.dumps({"event": "RUNNER_HEARTBEAT", "stage": args.stage, "completed_tasks": len(by_task), "task_total": len(task_ids), "remaining": remaining, "worker_state": worker_state, "elapsed_seconds": time.perf_counter() - started, "estimated_remaining_seconds": estimate}, sort_keys=True), flush=True)
                     last_heartbeat = time.perf_counter()
+                dead = [index for index, child in enumerate(children) if child.exitcode is not None and index not in terminal_workers]
+                if dead:
+                    raise RuntimeError(f"worker exited unexpectedly without terminal event: {dead}")
                 continue
             event = item.get("event")
             if event == "TASK_START":
+                if item["task_id"] in active_tasks or item["task_id"] in by_task:
+                    raise RuntimeError(f"duplicate concurrent task ownership: {item['task_id']}")
+                active_tasks.add(item["task_id"])
                 worker_state[int(item["worker_id"])] = f"BUSY:{item['task_id']}"
                 print(json.dumps(item, sort_keys=True), flush=True)
                 last_heartbeat = time.perf_counter()
@@ -262,18 +315,22 @@ def main() -> None:
                 print(json.dumps(item, sort_keys=True), flush=True)
                 continue
             if event == "TASK_COMPLETE":
-                by_task[item["task_id"]] = item["record"]; worker_state[int(item["worker_id"])] = "IDLE"
+                if item["task_id"] not in active_tasks:
+                    raise RuntimeError(f"task completed without active ownership: {item['task_id']}")
+                active_tasks.remove(item["task_id"]); by_task[item["task_id"]] = item["record"]; worker_state[int(item["worker_id"])] = "IDLE"
                 print(json.dumps({key: value for key, value in item.items() if key != "record"}, sort_keys=True), flush=True)
                 last_heartbeat = time.perf_counter()
                 continue
             if event == "TASK_FAILED":
-                failures.append(item); worker_state[int(item["worker_id"])] = "IDLE"; print(json.dumps(item, sort_keys=True), flush=True); continue
-            if event == "WORKER_COMPLETE": complete += 1; worker_state[int(item["worker_id"])] = "STOPPED"; continue
-            if event == "WORKER_FAILED": failures.append(item); print(json.dumps(item, sort_keys=True), flush=True); continue
+                active_tasks.discard(item["task_id"]); failures.append(item); worker_state[int(item["worker_id"])] = "IDLE"; print(json.dumps(item, sort_keys=True), flush=True); continue
+            if event == "TASK_DEADLINE_SKIPPED":
+                deadline_skipped.append(item["task_id"]); print(json.dumps(item, sort_keys=True), flush=True); continue
+            if event == "WORKER_COMPLETE": terminal_workers.add(int(item["worker_id"])); worker_state[int(item["worker_id"])] = "STOPPED"; continue
+            if event == "WORKER_FAILED": terminal_workers.add(int(item["worker_id"])); failures.append(item); print(json.dumps(item, sort_keys=True), flush=True); continue
             raise RuntimeError(f"unexpected worker message: {item}")
-        if failures:
+        if failures and not args.allow_deadline_partial:
             raise RuntimeError(f"native task failures after one retry: {[item.get('task_id', item.get('worker_id')) for item in failures]}")
-        if set(by_task) != set(task_ids):
+        if set(by_task) != set(task_ids) and not args.allow_deadline_partial:
             raise RuntimeError("incomplete native augmentation prediction artifact")
     finally:
         for child in children:
@@ -281,13 +338,14 @@ def main() -> None:
             if child.is_alive(): child.terminate()
     gpu_utilization_samples = [sample["gpu_utilization_pct"] for item in by_task.values() for sample in item.get("gpu_samples", ()) if sample.get("gpu_utilization_pct") is not None]
     artifact = {
-        "experiment_id": config["experiment_id"], "status": "CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING",
+        "experiment_id": config["experiment_id"], "status": "CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING" if set(by_task) == set(task_ids) else "DEADLINE_PARTIAL_CANDIDATES_FROZEN",
         "protocol": "native ARC-safe reversible augmentation and label-free model likelihood ranking; train pairs plus test inputs only; no targets, downstream stack, or task-specific heuristic",
-        "task_ids_hash": hashlib.sha256(json.dumps(sorted(task_ids), separators=(",", ":")).encode()).hexdigest(), "stage": args.stage, "stage_task_count": len(task_ids), "stage_augmentation_count": augmentation_count, "stage_worker_count": worker_count, "config_sha256": hashlib.sha256(args.config.read_bytes()).hexdigest(), "preflight": preflight,
+        "task_ids_hash": hashlib.sha256(json.dumps(sorted(task_ids), separators=(",", ":")).encode()).hexdigest(), "stage": args.stage, "stage_task_count": len(task_ids), "stage_augmentation_count": augmentation_count, "stage_worker_count": worker_count, "config_sha256": config_sha256, "preflight": preflight,
         "hardware": hardware.to_dict(), "worker_ready": worker_ready, "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")}, "ttt_enabled": args.enable_ttt,
         "search": {"algorithm": "deterministic_native_token_beam_search" if args.search_beams > 1 else "greedy", "beams_per_augmentation": args.search_beams, "bounded_total_branches_per_task": augmentation_count * args.search_beams},
         "checkpointing": {"enabled": bool(args.checkpoint_dir), "resume": args.resume, "checkpoint_identity": checkpoint_identity, "root": str(args.checkpoint_dir) if args.checkpoint_dir else None, "resumed_task_count": len(task_ids) - len(unfinished)},
         "scheduling": {"type": "dynamic_fifo_shared_queue", "persistent_workers": worker_count, "worker_gpu_mapping": {str(worker): worker for worker in range(worker_count)}, "seed_policy": "SHA-256(global_seed, task_id, augmentation, test_index); independent of worker and queue order"},
+        "deadline": {"deadline_unix": deadline_unix, "allow_partial": args.allow_deadline_partial, "skipped_task_ids": sorted(set(deadline_skipped)), "failed_task_ids": sorted({str(item.get("task_id")) for item in failures if item.get("task_id")}), "unfinished_task_ids": sorted(set(task_ids) - set(by_task))},
         "runtime_seconds": time.perf_counter() - started, "generation_seconds_sum": sum(float(item["generation_seconds"]) for item in by_task.values()),
         "gpu_utilization": {"sample_count": len(gpu_utilization_samples), "mean_pct": statistics.mean(gpu_utilization_samples) if gpu_utilization_samples else None, "min_pct": min(gpu_utilization_samples) if gpu_utilization_samples else None, "max_pct": max(gpu_utilization_samples) if gpu_utilization_samples else None}, "records": by_task,
     }

@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import heapq
 import multiprocessing as mp
+import os
 import time
 from dataclasses import dataclass
 from typing import Callable, Iterable, Mapping
@@ -95,3 +96,65 @@ def run_cpu_scheduler(durations: Mapping[str, float], worker_count: int, *, dyna
         child.join(timeout=30)
         if child.exitcode != 0: raise RuntimeError(f"CPU scheduler worker failed: {child.exitcode}")
     return observed, time.perf_counter() - started
+
+
+def _cpu_retry_worker(worker_id: int, queue: object, results: object, durations: Mapping[str, float], fail_once: frozenset[str]) -> None:
+    """CPU-only analogue of the production task retry contract."""
+    while True:
+        item = queue.get()  # type: ignore[attr-defined]
+        if item is None:
+            return
+        task_id, attempt = item
+        if task_id in fail_once and attempt == 0:
+            results.put(("retry", worker_id, task_id, attempt))  # type: ignore[attr-defined]
+            queue.put((task_id, 1))  # type: ignore[attr-defined]
+            continue
+        started = time.perf_counter(); time.sleep(float(durations[task_id]))
+        results.put(("complete", worker_id, task_id, attempt, time.perf_counter() - started))  # type: ignore[attr-defined]
+
+
+def run_cpu_retry_scheduler(durations: Mapping[str, float], worker_count: int, *, fail_once: Iterable[str]) -> tuple[dict[str, int], dict[str, int]]:
+    """Verify one retry, no duplicate completion, and persistent workers without CUDA."""
+    if worker_count < 1 or not set(fail_once) <= set(durations):
+        raise ValueError("invalid CPU retry scheduler input")
+    context = mp.get_context("spawn"); queue, results = context.Queue(), context.Queue()
+    for task_id in durations:
+        queue.put((task_id, 0))
+    children = [context.Process(target=_cpu_retry_worker, args=(worker, queue, results, durations, frozenset(fail_once))) for worker in range(worker_count)]
+    for child in children:
+        child.start()
+    completed: dict[str, int] = {}; retries: dict[str, int] = {}
+    while len(completed) < len(durations):
+        event = results.get(timeout=30)
+        if event[0] == "retry":
+            _kind, _worker, task_id, _attempt = event
+            retries[task_id] = retries.get(task_id, 0) + 1
+            continue
+        _kind, worker, task_id, _attempt, _elapsed = event
+        if task_id in completed:
+            raise RuntimeError(f"duplicate task completion: {task_id}")
+        completed[task_id] = worker
+    for _ in children:
+        queue.put(None)
+    for child in children:
+        child.join(timeout=30)
+        if child.exitcode != 0:
+            raise RuntimeError(f"CPU retry worker failed: {child.exitcode}")
+    return completed, retries
+
+
+def _cpu_intentional_crash() -> None:
+    os._exit(23)
+
+
+def detect_cpu_dead_worker() -> int:
+    """Exercise the same nonzero-exit detection used by the production parent."""
+    context = mp.get_context("spawn")
+    child = context.Process(target=_cpu_intentional_crash)
+    child.start(); child.join(timeout=30)
+    if child.is_alive():
+        child.terminate(); child.join(timeout=30)
+        raise TimeoutError("intentional CPU worker did not terminate")
+    if child.exitcode is None or child.exitcode == 0:
+        raise RuntimeError("CPU dead-worker test did not observe a failed child")
+    return int(child.exitcode)

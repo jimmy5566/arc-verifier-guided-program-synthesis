@@ -15,11 +15,12 @@ FILES = (
     "scripts/run_qwen4b_native_augmentation_search.py",
     "scripts/rerank_native_public_reference_selection.py",
     "scripts/freeze_untouched60_predictions.py",
-    "scripts/build_public_lb_native_b_cohort.py", "scripts/build_public_lb_submission.py",
+    "scripts/build_public_lb_native_b_cohort.py", "scripts/build_public_lb_submission.py", "scripts/initialize_public_lb_fallback.py",
     "src/arc", "src/inference/__init__.py", "src/inference/arc_native_io.py",
     "src/inference/nvarc_native.py", "src/inference/nvarc_native_augmentation.py",
     "src/inference/nvarc_native_candidates.py", "src/inference/nvarc_public_reference.py",
     "src/inference/native_multiview_likelihood.py", "src/inference/native_ranker.py",
+    "src/inference/dynamic_task_scheduler.py",
     "src/inference/kaggle_l4_parallel_runner.py", "src/inference/qwen3_transformers_parallel_runner.py",
 )
 

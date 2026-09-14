@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from inference.dynamic_task_scheduler import run_cpu_scheduler, simulate_dynamic_queue, simulate_static_round_robin, task_seed
+from inference.dynamic_task_scheduler import detect_cpu_dead_worker, run_cpu_retry_scheduler, run_cpu_scheduler, simulate_dynamic_queue, simulate_static_round_robin, task_seed
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,9 +37,21 @@ def test_task_seed_is_task_scoped_and_not_worker_scoped() -> None:
     assert task_seed("abc", 7, "augmentation:1") != task_seed("abc", 7, "augmentation:2")
 
 
+def test_cpu_scheduler_retries_failed_task_once_without_duplicate_completion() -> None:
+    completed, retries = run_cpu_retry_scheduler({"a": 0.01, "b": 0.01, "c": 0.01}, 2, fail_once={"b"})
+    assert set(completed) == {"a", "b", "c"}
+    assert retries == {"b": 1}
+
+
+def test_cpu_scheduler_detects_a_dead_worker() -> None:
+    assert detect_cpu_dead_worker() == 23
+
+
 def test_native_runner_uses_dynamic_queue_and_compact_task_events() -> None:
     source = (ROOT / "scripts/run_qwen4b_native_augmentation_search.py").read_text(encoding="utf-8")
     assert "task_queue.get()" in source and '"dynamic_fifo_shared_queue"' in source
     assert "TASK_START" in source and "TASK_COMPLETE" in source and "TASK_RETRY" in source
+    assert "get_context(\"spawn\")" in source and "torch.cuda.current_device()" in source
+    assert "worker exited unexpectedly" in source and "TASK_DEADLINE_SKIPPED" in source
     assert "CANDIDATE_HEARTBEAT" not in source
     assert "buckets = [task_ids[index::worker_count]" not in source

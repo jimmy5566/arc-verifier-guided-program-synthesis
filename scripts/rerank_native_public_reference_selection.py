@@ -42,22 +42,29 @@ def main() -> None:
         parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--context-window", type=int, default=16384)
+    parser.add_argument("--deadline-unix", type=float)
+    parser.add_argument("--allow-deadline-partial", action="store_true")
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError("refusing to overwrite frozen selection artifact")
     source = json.loads(args.frozen.read_text(encoding="utf-8"))
     records = source.get("records")
-    if source.get("status") != FROZEN or not isinstance(records, dict) or not records:
+    accepted = {FROZEN, "DEADLINE_PARTIAL_CANDIDATES_FROZEN"} if args.allow_deadline_partial else {FROZEN}
+    if source.get("status") not in accepted or not isinstance(records, dict) or not records:
         raise ValueError("requires a complete native candidate artifact frozen before exact scoring")
     # Crucially, task challenges carry train pairs/test inputs only; no target
     # solutions path exists in this CLI.
     tasks = load_dataset(args.challenge_path)
+    if args.deadline_unix is not None and time.time() >= args.deadline_unix:
+        result = copy.deepcopy(source); result["records"] = {}; result["status"] = "PUBLIC_REFERENCE_SELECTION_PARTIAL_DEADLINE_FROZEN"; result["deadline_skipped_task_ids"] = sorted(records); result["public_reference_source_sha256"] = hashlib.sha256(args.frozen.read_bytes()).hexdigest(); args.output.parent.mkdir(parents=True, exist_ok=True); args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"); return
     provider = NVARCNativeProvider(model_path=args.model_path, tokenizer_config_dir=args.native_config_dir, device=args.device)
     provider.load()
     views = tuple(NativeAugmentation(geometry=geometry) for geometry in ("identity", "rot90", "rot180", "rot270", "flip_lr", "flip_ud", "transpose", "anti_transpose"))
-    result = copy.deepcopy(source); started = time.perf_counter()
+    result = copy.deepcopy(source); result["records"] = {}; started = time.perf_counter(); skipped: list[str] = []
     for position, task_id in enumerate(sorted(records), 1):
-        record = result["records"][task_id]; candidates = list(record.get("candidates", ()))
+        if args.deadline_unix is not None and time.time() >= args.deadline_unix:
+            skipped.extend(sorted(records)[position - 1:]); break
+        record = copy.deepcopy(records[task_id]); candidates = list(record.get("candidates", ()))
         if task_id not in tasks or not candidates:
             raise ValueError(f"{task_id}: missing challenge or valid frozen candidates")
         original = _original_scores(record)
@@ -83,8 +90,10 @@ def main() -> None:
             "ranked_candidate_indices": ranked,
             "attempt_candidate_indices": attempts,
         }
+        result["records"][task_id] = record
         print(json.dumps({"event": "PUBLIC_REFERENCE_SELECTION_FROZEN", "task": f"{position}/{len(records)}", "task_id": task_id, "candidate_count": len(candidates), "attempt_count": len(attempts)}, sort_keys=True), flush=True)
-    result["status"] = "PUBLIC_REFERENCE_SELECTION_FROZEN_BEFORE_EXACT_SCORING"
+    result["status"] = "PUBLIC_REFERENCE_SELECTION_FROZEN_BEFORE_EXACT_SCORING" if not skipped and source.get("status") == FROZEN else "PUBLIC_REFERENCE_SELECTION_PARTIAL_DEADLINE_FROZEN"
+    result["deadline_skipped_task_ids"] = skipped
     result["public_reference_source_sha256"] = hashlib.sha256(args.frozen.read_bytes()).hexdigest()
     result["public_reference_selection_runtime_seconds"] = time.perf_counter() - started
     result["public_reference_selection_protocol"] = "Existing native candidates only; teacher-forced scores in fixed reversible views; no candidate generation, target outputs, or task-specific rules."
