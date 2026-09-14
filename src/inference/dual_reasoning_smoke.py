@@ -125,7 +125,7 @@ def extract_program(text: str) -> str | None:
     return candidate if candidate.strip() else None
 
 
-_FORBIDDEN_AST = (ast.ImportFrom, ast.ClassDef, ast.Lambda, ast.Global, ast.Nonlocal, ast.With, ast.AsyncWith, ast.Try, ast.Raise, ast.Delete)
+_FORBIDDEN_AST = (ast.ImportFrom, ast.ClassDef, ast.Global, ast.Nonlocal, ast.With, ast.AsyncWith, ast.Try, ast.Raise, ast.Delete)
 _SAFE_BUILTINS = {"range": range, "len": len, "enumerate": enumerate, "min": min, "max": max, "sum": sum, "abs": abs, "sorted": sorted, "set": set, "dict": dict, "tuple": tuple, "list": list, "int": int, "bool": bool, "zip": zip}
 _FORBIDDEN_NAMES = {"open", "eval", "exec", "compile", "globals", "locals", "vars", "input", "help", "breakpoint", "os", "sys", "subprocess", "pathlib", "socket", "requests", "shutil", "ctypes", "importlib", "__import__"}
 _FORBIDDEN_NUMPY_ATTRIBUTES = {"load", "save", "savez", "savez_compressed", "savetxt", "loadtxt", "genfromtxt", "fromfile", "tofile", "memmap", "DataSource", "ctypeslib", "f2py"}
@@ -191,7 +191,7 @@ def _program_worker(program: str, grid: Any, queue: Any) -> None:
     try:
         try:
             import resource
-            resource.setrlimit(resource.RLIMIT_CPU, (2, 2)); resource.setrlimit(resource.RLIMIT_AS, (512 * 1024 * 1024, 512 * 1024 * 1024))
+            resource.setrlimit(resource.RLIMIT_CPU, (2, 2)); resource.setrlimit(resource.RLIMIT_AS, (2 * 1024 * 1024 * 1024, 2 * 1024 * 1024 * 1024))
         except Exception: pass
         environment = {"__builtins__": {**_SAFE_BUILTINS, "__import__": _safe_import}}
         exec(compile(program, "<soar-program>", "exec"), environment, environment)
@@ -207,7 +207,7 @@ def execute_program(program: str, grid: Any, *, timeout_seconds: float = 2.0) ->
     context = mp.get_context("spawn"); queue = context.Queue(maxsize=1); process = context.Process(target=_program_worker, args=(program, grid, queue)); process.start(); process.join(timeout_seconds)
     if process.is_alive(): process.terminate(); process.join(); return {"ok": False, "status": "TIMEOUT", "executable": True, "output_valid": False, **inspection, "error": "execution_timeout"}
     try: value = queue.get_nowait()
-    except Empty: return {"ok": False, "status": "EXECUTION_FAILED", "executable": True, "output_valid": False, **inspection, "error": f"exitcode:{process.exitcode}"}
+    except Empty: return {"ok": False, "status": "EXECUTION_FAILED", "executable": False, "output_valid": False, **inspection, "error": f"exitcode:{process.exitcode}"}
     return {"status": "SUCCESS" if value["ok"] else "EXECUTION_FAILED", "executable": True, **inspection, **value}
 
 

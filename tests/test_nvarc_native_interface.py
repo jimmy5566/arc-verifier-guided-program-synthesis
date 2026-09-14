@@ -279,6 +279,7 @@ def test_dual_reasoning_soar_numpy_transport_is_safe_and_normalizes_ndarray() ->
     assert result["parse_valid"] and result["static_safe"] and result["executable"] and result["output_valid"]
     verification = verify_program(program, [([[1, 2]], [[1, 2]])])
     assert verification["all_train_exact"] and verification["train_execution"][0]["output_valid"]
+    assert validate_program("def transform(x):\n    return sorted(x, key=lambda row: len(row))")[0]
 
 
 def test_dual_reasoning_soar_rejects_unsafe_import_and_invalid_signature() -> None:
