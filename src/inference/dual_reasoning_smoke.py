@@ -168,13 +168,14 @@ def _safe_import(name: str, globals_: Any = None, locals_: Any = None, fromlist:
     return numpy
 
 
-def _normalise_grid(result: Any) -> list[list[int]]:
-    try:
-        import numpy as np
-        if isinstance(result, np.ndarray):
-            result = result.tolist()
-    except ImportError:
-        pass
+def _normalise_grid(result: Any, *, numpy_allowed: bool) -> list[list[int]]:
+    if numpy_allowed:
+        try:
+            import numpy as np
+            if isinstance(result, np.ndarray):
+                result = result.tolist()
+        except ImportError:
+            pass
     if not isinstance(result, list) or not result or not all(isinstance(row, list) and row for row in result):
         raise ValueError("result_not_nonempty_grid")
     width = len(result[0])
@@ -185,6 +186,16 @@ def _normalise_grid(result: Any) -> list[list[int]]:
     return [[int(cell) for cell in row] for row in result]
 
 
+def _linux_rss_mb() -> dict[str, float | None]:
+    """Current and high-water RSS from Linux procfs when it is available."""
+    try:
+        rows = Path("/proc/self/status").read_text(encoding="utf-8").splitlines()
+        values = {line.split(":", 1)[0]: int(line.split()[1]) / 1024.0 for line in rows if line.startswith(("VmRSS:", "VmHWM:"))}
+        return {"rss_mb": round(values.get("VmRSS"), 3) if "VmRSS" in values else None, "peak_rss_mb": round(values.get("VmHWM"), 3) if "VmHWM" in values else None}
+    except (OSError, ValueError, IndexError):
+        return {"rss_mb": None, "peak_rss_mb": None}
+
+
 def _sandbox_result(program: str, grid: Any) -> dict[str, Any]:
     """Run in a fresh ``exec``-ed interpreter, never in the model process."""
     try:
@@ -193,23 +204,16 @@ def _sandbox_result(program: str, grid: Any) -> dict[str, Any]:
             # This is a fresh Python interpreter, so its address space contains
             # no torch/CUDA model mappings.  Keep a generous data-segment cap
             # for ordinary numpy grids without using a tiny inherited RLIMIT_AS.
-            resource.setrlimit(resource.RLIMIT_CPU, (2, 2))
             if hasattr(resource, "RLIMIT_DATA"):
                 resource.setrlimit(resource.RLIMIT_DATA, (1024 * 1024 * 1024, 1024 * 1024 * 1024))
         except Exception: pass
         environment = {"__builtins__": {**_SAFE_BUILTINS, "__import__": _safe_import}}
         exec(compile(program, "<soar-program>", "exec"), environment, environment)
         result = environment["transform"]([[int(cell) for cell in row] for row in grid])
-        payload: dict[str, Any] = {"ok": True, "grid": _normalise_grid(result), "output_valid": True}
+        payload: dict[str, Any] = {"ok": True, "grid": _normalise_grid(result, numpy_allowed="import numpy as np" in program), "output_valid": True}
     except BaseException as error:
         payload = {"ok": False, "error": f"{type(error).__name__}:{error}"}
-    try:
-        import resource
-        # Linux reports ru_maxrss in KiB; macOS uses bytes. Kaggle is Linux.
-        raw_rss = int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
-        payload["peak_rss_mb"] = round(raw_rss / 1024.0, 3) if sys.platform != "darwin" else round(raw_rss / (1024.0 * 1024.0), 3)
-    except Exception:
-        payload["peak_rss_mb"] = None
+    payload.update(_linux_rss_mb())
     return payload
 
 
