@@ -17,6 +17,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from time import perf_counter
 from typing import Any
 
 
@@ -207,18 +208,32 @@ def _sandbox_result(program: str, grid: Any) -> dict[str, Any]:
             if hasattr(resource, "RLIMIT_DATA"):
                 resource.setrlimit(resource.RLIMIT_DATA, (1024 * 1024 * 1024, 1024 * 1024 * 1024))
         except Exception: pass
-        environment = {"__builtins__": {**_SAFE_BUILTINS, "__import__": _safe_import}}
+        numpy_import_seconds = 0.0
+
+        def sandbox_import(name: str, globals_: Any = None, locals_: Any = None, fromlist: Any = (), level: int = 0) -> Any:
+            nonlocal numpy_import_seconds
+            started = perf_counter()
+            value = _safe_import(name, globals_, locals_, fromlist, level)
+            numpy_import_seconds += perf_counter() - started
+            return value
+
+        environment = {"__builtins__": {**_SAFE_BUILTINS, "__import__": sandbox_import}}
         exec(compile(program, "<soar-program>", "exec"), environment, environment)
+        transform_started = perf_counter()
         result = environment["transform"]([[int(cell) for cell in row] for row in grid])
-        payload: dict[str, Any] = {"ok": True, "grid": _normalise_grid(result, numpy_allowed="import numpy as np" in program), "output_valid": True}
+        payload: dict[str, Any] = {
+            "ok": True, "grid": _normalise_grid(result, numpy_allowed="import numpy as np" in program), "output_valid": True,
+            "numpy_import_seconds": numpy_import_seconds, "transform_seconds": perf_counter() - transform_started,
+        }
     except BaseException as error:
-        payload = {"ok": False, "error": f"{type(error).__name__}:{error}"}
+        payload = {"ok": False, "error": f"{type(error).__name__}:{error}", "numpy_import_seconds": locals().get("numpy_import_seconds", 0.0), "transform_seconds": None}
     payload.update(_linux_rss_mb())
     return payload
 
 
 def _sandbox_main() -> int:
     """JSON-line entrypoint deliberately free of torch/transformers imports."""
+    started = perf_counter()
     try:
         request = json.loads(sys.stdin.read())
         program, grid = request["program"], request["grid"]
@@ -226,7 +241,7 @@ def _sandbox_main() -> int:
         value = _sandbox_result(program, grid) if inspection["static_safe"] else {
             "ok": False, "output_valid": False, "error": inspection["reason"]
         }
-        print(json.dumps({**inspection, **value}), flush=True)
+        print(json.dumps({**inspection, **value, "sandbox_work_seconds": perf_counter() - started}), flush=True)
         return 0
     except BaseException as error:
         print(json.dumps({"ok": False, "output_valid": False, "error": f"sandbox:{type(error).__name__}:{error}"}), flush=True)
@@ -241,8 +256,13 @@ def execute_program(program: str, grid: Any, *, timeout_seconds: float = 2.0) ->
     environment = {
         **os.environ,
         "CUDA_VISIBLE_DEVICES": "",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
         "PYTHONPATH": source_root + (os.pathsep + os.environ["PYTHONPATH"] if os.environ.get("PYTHONPATH") else ""),
     }
+    outer_started = perf_counter()
     try:
         completed = subprocess.run(
             [sys.executable, "-m", "inference.dual_reasoning_smoke", "--sandbox"],
@@ -250,17 +270,23 @@ def execute_program(program: str, grid: Any, *, timeout_seconds: float = 2.0) ->
             capture_output=True, timeout=timeout_seconds, env=environment,
         )
     except subprocess.TimeoutExpired:
-        return {"ok": False, "status": "TIMEOUT", "process_started": True, "executable": True, "output_valid": False, **inspection, "error": "execution_timeout"}
+        return {"ok": False, "status": "TIMEOUT", "process_started": True, "executable": True, "output_valid": False, **inspection, "error": "execution_timeout", "total_wall_seconds": perf_counter() - outer_started}
     try:
         value = json.loads(completed.stdout.strip())
     except json.JSONDecodeError:
         error = (completed.stderr.strip() or completed.stdout.strip() or f"exitcode:{completed.returncode}")[-1000:]
-        return {"ok": False, "status": "EXECUTION_FAILED", "process_started": True, "executable": False, "output_valid": False, **inspection, "error": error, "returncode": completed.returncode}
-    return {"status": "SUCCESS" if value["ok"] else "EXECUTION_FAILED", "process_started": True, "executable": True, **inspection, **value, "returncode": completed.returncode}
+        return {"ok": False, "status": "EXECUTION_FAILED", "process_started": True, "executable": False, "output_valid": False, **inspection, "error": error, "returncode": completed.returncode, "total_wall_seconds": perf_counter() - outer_started}
+    total_wall = perf_counter() - outer_started
+    work_seconds = value.get("sandbox_work_seconds")
+    return {
+        "status": "SUCCESS" if value["ok"] else "EXECUTION_FAILED", "process_started": True, "executable": True,
+        **inspection, **value, "returncode": completed.returncode, "total_wall_seconds": total_wall,
+        "python_startup_seconds": max(0.0, total_wall - float(work_seconds)) if work_seconds is not None else None,
+    }
 
 
-def verify_program(program: str, train_pairs: list[tuple[Any, Any]]) -> dict[str, Any]:
-    rows = [execute_program(program, source) for source, _target in train_pairs]
+def verify_program(program: str, train_pairs: list[tuple[Any, Any]], *, timeout_seconds: float = 2.0) -> dict[str, Any]:
+    rows = [execute_program(program, source, timeout_seconds=timeout_seconds) for source, _target in train_pairs]
     passes = sum(int(row.get("ok") and row.get("grid") == target) for row, (_source, target) in zip(rows, train_pairs, strict=True))
     inspection = inspect_program(program)
     return {"program_valid": inspection["static_safe"], **inspection, "train_pass_count": passes, "train_pair_count": len(train_pairs), "all_train_exact": passes == len(train_pairs), "train_execution": rows}
