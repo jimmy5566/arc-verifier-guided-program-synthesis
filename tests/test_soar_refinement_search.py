@@ -37,3 +37,10 @@ def test_task_checkpoint_has_exactly_one_generation_writer():
     locations = {job["candidate_id"] + job["task_id"]: index for index, shard in enumerate(shards) for job in shard}
     assert locations["r0-c0a"] == locations["r0-c1a"]
     assert locations["r0-c0b"] == locations["r0-c1b"]
+
+
+def test_reverification_is_train_only():
+    source = (ROOT / "scripts" / "reverify_soar_search_artifact.py").read_text(encoding="utf-8")
+    assert "load_solutions" not in source
+    assert "challenge-path" in source
+    assert "safe_allowlisted_helpers_stdlib_v2" in source

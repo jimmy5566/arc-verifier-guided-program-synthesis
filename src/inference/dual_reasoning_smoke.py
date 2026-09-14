@@ -119,12 +119,28 @@ def soar_prompt(train_pairs: list[tuple[Any, Any]]) -> str:
 
 
 def extract_program(text: str) -> str | None:
-    fenced = re.search(r"```(?:python)?\s*(.*?)```", text, flags=re.IGNORECASE | re.DOTALL)
-    candidate = fenced.group(1).strip() if fenced else text[text.find("def transform("):] if "def transform(" in text else ""
-    return candidate if candidate.strip() else None
+    """Use SOAR's documented fenced-code extraction transport.
+
+    As in the official ``postprocess_transform``, retain only imports and
+    function definitions.  This drops narrative/top-level scratch statements,
+    never edits a function body, and is therefore parsing transport rather than
+    semantic repair.
+    """
+    blocks = re.findall(r"```python\s*(.*?)```", text, flags=re.IGNORECASE | re.DOTALL)
+    candidate = next((block for block in reversed(blocks) if "def transform(" in block), "")
+    if not candidate and "def transform(" in text:
+        candidate = text[text.find("def transform("):]
+    if not candidate.strip():
+        return None
+    try:
+        tree = ast.parse(candidate, mode="exec")
+        nodes = [node for node in tree.body if isinstance(node, (ast.Import, ast.ImportFrom, ast.FunctionDef))]
+        return ast.unparse(ast.Module(body=nodes, type_ignores=[])).strip() or None
+    except (SyntaxError, ValueError):
+        return candidate.strip()
 
 
-_FORBIDDEN_AST = (ast.ImportFrom, ast.ClassDef, ast.Global, ast.Nonlocal, ast.With, ast.AsyncWith, ast.Try, ast.Raise, ast.Delete)
+_FORBIDDEN_AST = (ast.ClassDef, ast.Global, ast.Nonlocal, ast.With, ast.AsyncWith, ast.Try, ast.Raise, ast.Delete)
 # Deliberately boring, deterministic Python-only helpers.  SOAR's public
 # programs routinely use ``all``, ``any``, numeric conversion and iteration;
 # withholding those made otherwise safe programs fail after static validation.
@@ -136,9 +152,17 @@ _SAFE_BUILTINS = {
     "dict": dict, "tuple": tuple, "list": list, "int": int, "float": float,
     "bool": bool, "str": str, "zip": zip, "all": all, "any": any,
     "next": next, "reversed": reversed, "isinstance": isinstance,
+    "map": map, "filter": filter, "frozenset": frozenset, "round": round,
 }
 _FORBIDDEN_NAMES = {"open", "eval", "exec", "compile", "globals", "locals", "vars", "input", "help", "breakpoint", "os", "sys", "subprocess", "pathlib", "socket", "requests", "shutil", "ctypes", "importlib", "__import__"}
 _FORBIDDEN_NUMPY_ATTRIBUTES = {"load", "save", "savez", "savez_compressed", "savetxt", "loadtxt", "genfromtxt", "fromfile", "tofile", "memmap", "DataSource", "ctypeslib", "f2py"}
+_ALLOWED_IMPORTS = {
+    "numpy": {"np"},
+    "collections": {"Counter", "defaultdict", "deque"},
+    "itertools": {"combinations", "permutations", "product"},
+    "math": set(),
+    "typing": {"Any", "Dict", "List", "Sequence", "Set", "Tuple"},
+}
 
 
 def inspect_program(program: str) -> dict[str, Any]:
@@ -148,16 +172,24 @@ def inspect_program(program: str) -> dict[str, Any]:
     except SyntaxError as error:
         return {"parse_valid": False, "static_safe": False, "reason": f"syntax:{error.msg}"}
     functions = [item for item in tree.body if isinstance(item, ast.FunctionDef)]
-    imports = [item for item in tree.body if isinstance(item, ast.Import)]
+    imports = [item for item in tree.body if isinstance(item, (ast.Import, ast.ImportFrom))]
     permitted_body = set(functions + imports)
-    if len(tree.body) != len(permitted_body) or len(functions) != 1 or functions[0].name != "transform":
-        return {"parse_valid": True, "static_safe": False, "reason": "requires_imports_and_one_transform_function"}
-    arguments = functions[0].args
+    transform_functions = [item for item in functions if item.name == "transform"]
+    if len(tree.body) != len(permitted_body) or len(transform_functions) != 1:
+        return {"parse_valid": True, "static_safe": False, "reason": "requires_imports_helpers_and_one_transform_function"}
+    arguments = transform_functions[0].args
     if len(arguments.args) != 1 or arguments.defaults or arguments.posonlyargs or arguments.vararg or arguments.kwarg or arguments.kwonlyargs:
         return {"parse_valid": True, "static_safe": False, "reason": "requires_one_required_positional_parameter"}
     for imported in imports:
-        if len(imported.names) != 1 or imported.names[0].name != "numpy" or imported.names[0].asname != "np":
-            return {"parse_valid": True, "static_safe": False, "reason": "only_import_numpy_as_np_allowed"}
+        if isinstance(imported, ast.Import):
+            if len(imported.names) != 1:
+                return {"parse_valid": True, "static_safe": False, "reason": "invalid_import"}
+            item = imported.names[0]
+            if item.name not in _ALLOWED_IMPORTS or item.asname not in _ALLOWED_IMPORTS[item.name]:
+                return {"parse_valid": True, "static_safe": False, "reason": "import_not_allowlisted"}
+        else:
+            if imported.level != 0 or imported.module not in _ALLOWED_IMPORTS or any(item.name not in _ALLOWED_IMPORTS[imported.module] or item.asname for item in imported.names):
+                return {"parse_valid": True, "static_safe": False, "reason": "import_not_allowlisted"}
     for node in ast.walk(tree):
         if isinstance(node, _FORBIDDEN_AST):
             return {"parse_valid": True, "static_safe": False, "reason": f"forbidden:{type(node).__name__}"}
@@ -174,10 +206,14 @@ def validate_program(program: str) -> tuple[bool, str]:
 
 
 def _safe_import(name: str, globals_: Any = None, locals_: Any = None, fromlist: Any = (), level: int = 0) -> Any:
-    if name != "numpy" or level != 0:
-        raise ImportError("only numpy is allowed")
-    import numpy
-    return numpy
+    """Trusted import bridge matching the statically validated small allowlist."""
+    if level != 0 or name not in _ALLOWED_IMPORTS:
+        raise ImportError("import is not allowlisted")
+    requested = set(fromlist or ())
+    allowed = _ALLOWED_IMPORTS[name]
+    if requested and not requested.issubset(allowed):
+        raise ImportError("import member is not allowlisted")
+    return __import__(name, globals_, locals_, tuple(requested), 0)
 
 
 def _normalise_grid(result: Any, *, numpy_allowed: bool) -> list[list[int]]:

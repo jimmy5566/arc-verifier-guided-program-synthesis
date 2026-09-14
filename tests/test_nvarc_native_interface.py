@@ -266,6 +266,7 @@ def test_dual_reasoning_soar_prompt_and_program_parser_stay_target_blind_and_res
     prompt = soar_prompt([([[0, 1]], [[1, 0]])])
     assert "transform(input_grid)" in prompt and "import numpy as np" in prompt and "Example 1" in prompt
     assert extract_program("reasoning\n```python\ndef transform(grid):\n return grid\n```") == "def transform(grid):\n return grid"
+    assert extract_program("```python\nnotes = 1\ndef helper(x): return x\ndef transform(grid): return helper(grid)\n```") == "def helper(x):\n    return x\n\ndef transform(grid):\n    return helper(grid)"
     assert validate_program("def transform(grid):\n return [row[:] for row in grid]") == (True, "ok")
     assert not validate_program("import os\ndef transform(grid):\n return grid")[0]
     source = (ROOT / "scripts/run_dual_reasoning_smoke.py").read_text(encoding="utf-8")
@@ -289,10 +290,17 @@ def test_dual_reasoning_safe_executor_allows_non_capability_builtins_only() -> N
     assert not validate_program("def transform(grid):\n    return eval('grid')")[0]
 
 
+def test_dual_reasoning_safe_executor_allows_official_style_helpers_and_small_stdlib() -> None:
+    program = "from collections import deque\n\ndef helper(grid):\n    return deque(grid)\n\ndef transform(grid):\n    return list(helper(grid))"
+    result = execute_program(program, [[1, 2], [3, 4]])
+    assert result["ok"] and result["grid"] == [[1, 2], [3, 4]]
+    assert not validate_program("from pathlib import Path\n\ndef transform(grid):\n return grid")[0]
+
+
 def test_dual_reasoning_soar_rejects_unsafe_import_and_invalid_signature() -> None:
     unsafe = execute_program("import os\n\ndef transform(grid):\n    return grid", [[1]])
     assert unsafe["status"] == "PROGRAM_INVALID"
-    assert not unsafe["static_safe"] and unsafe["reason"] == "only_import_numpy_as_np_allowed"
+    assert not unsafe["static_safe"] and unsafe["reason"] == "import_not_allowlisted"
     assert not validate_program("def transform(grid, extra):\n    return grid")[0]
 
 
