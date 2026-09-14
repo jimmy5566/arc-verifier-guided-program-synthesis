@@ -1,6 +1,6 @@
 """Frozen30 SOAR induction using four independent single-L4 workers."""
 from __future__ import annotations
-import argparse,json,multiprocessing as mp,os,sys
+import argparse,json,multiprocessing as mp,os,sys,hashlib
 from pathlib import Path
 from time import perf_counter,time
 from typing import Any
@@ -10,21 +10,29 @@ from inference.dual_reasoning_smoke import soar_prompt,extract_program,verify_pr
 from run_frozen30_native_soar_complementarity import native_labels, write_json
 from run_soar_single_gpu_parallel_smoke import model_path, load_single, generate, K as PROGRAM_BUDGET, SEED_BASE
 
-def worker(wid:int,gpu:int,model_s:str,items:list[tuple[str,list]],out_s:str)->None:
+def atomic(path:Path,value:dict)->None:
+ path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix('.tmp');tmp.write_text(json.dumps(value),encoding='utf-8');os.replace(tmp,path)
+def valid(path:Path,config_hash:str)->bool:
+ try:
+  d=json.loads(path.read_text());return d.get('config_hash')==config_hash and len(d.get('candidate_programs',[]))==PROGRAM_BUDGET
+ except Exception:return False
+def worker(wid:int,gpu:int,model_s:str,items:list[tuple[str,list]],out_s:str,config_hash:str)->None:
  os.environ['CUDA_VISIBLE_DEVICES']=str(gpu); started=time();model,tok=load_single(Path(model_s));out=Path(out_s);out.mkdir(parents=True,exist_ok=True)
  for local,(tid,pairs) in enumerate(items):
+  target=out/'tasks'/f'{tid}.json'
+  if valid(target,config_hash): print(json.dumps({'event':'SOAR_4W_RESUMED','worker_id':wid,'task_id':tid}),flush=True);continue
   rows=[(x['input'],x['output']) for x in pairs];prompt=soar_prompt(rows); cs=[]
   for ci in range(PROGRAM_BUDGET):
    raw=generate(model,tok,prompt,SEED_BASE+(wid*10000)+(local*PROGRAM_BUDGET)+ci);cs.append({'candidate_index':ci,'raw_model_output':raw,'extracted_code':extract_program(raw)})
-  write_json(out/f'{tid}.json',{'task_id':tid,'worker_id':wid,'gpu_id':gpu,'candidate_programs':cs});print(json.dumps({'event':'SOAR_4W_GENERATED','worker_id':wid,'task_id':tid,'count':PROGRAM_BUDGET}),flush=True)
+  atomic(target,{'task_id':tid,'worker_id':wid,'gpu_id':gpu,'model_path':model_s,'config_hash':config_hash,'candidate_programs':cs,'completed_epoch':time()});print(json.dumps({'event':'SOAR_4W_GENERATED','worker_id':wid,'task_id':tid,'count':PROGRAM_BUDGET}),flush=True)
  write_json(out/f'worker_{wid}.json',{'worker_id':wid,'gpu_id':gpu,'started_epoch':started,'completed_epoch':time(),'task_count':len(items)})
 
 def startup_worker(wid:int,gpu:int,model_s:str,out_s:str)->None:
  os.environ['CUDA_VISIBLE_DEVICES']=str(gpu); started=time(); model,tok=load_single(Path(model_s)); write_json(Path(out_s)/f'worker_{wid}.json',{'worker_id':wid,'gpu_id':gpu,'started_epoch':started,'ready_epoch':time(),'status':'MODEL_READY','visible_devices':os.environ['CUDA_VISIBLE_DEVICES']}); del model,tok
 
 def main()->None:
- p=argparse.ArgumentParser();p.add_argument('--challenge-path',type=Path,required=True);p.add_argument('--solutions-path',type=Path,required=True);p.add_argument('--native-frozen',type=Path,required=True);p.add_argument('--calibration',type=Path,required=True);p.add_argument('--input-root',type=Path,required=True);p.add_argument('--output-root',type=Path,required=True);p.add_argument('--startup-smoke',action='store_true');a=p.parse_args();started=perf_counter()
- native=json.loads(a.native_frozen.read_text());ids=list(native['records']);tasks=load_dataset(a.challenge_path);timeout=float(json.loads(a.calibration.read_text())['timeout_policy']['selected_timeout_seconds']);path=model_path(a.input_root)
+ p=argparse.ArgumentParser();p.add_argument('--challenge-path',type=Path,required=True);p.add_argument('--solutions-path',type=Path,required=True);p.add_argument('--native-frozen',type=Path,required=True);p.add_argument('--calibration',type=Path,required=True);p.add_argument('--input-root',type=Path,required=True);p.add_argument('--output-root',type=Path,required=True);p.add_argument('--startup-smoke',action='store_true');p.add_argument('--checkpoint-smoke',action='store_true');a=p.parse_args();started=perf_counter()
+ native=json.loads(a.native_frozen.read_text());ids=list(native['records']);tasks=load_dataset(a.challenge_path);timeout=float(json.loads(a.calibration.read_text())['timeout_policy']['selected_timeout_seconds']);path=model_path(a.input_root); labels=native_labels(native,load_solutions(a.solutions_path));assert sum(x['native_failure_class']=='SELECTION_MISS' for x in labels.values())==12 and sum(x['native_failure_class']=='GENERATION_MISS' for x in labels.values())==9
  rawdir=a.output_root/'generation';ps=[]
  if a.startup_smoke:
   for w in range(4):
@@ -32,12 +40,15 @@ def main()->None:
   for x in ps:x.join()
   if any(x.exitcode for x in ps):raise RuntimeError(f'worker exits={[x.exitcode for x in ps]}')
   write_json(a.output_root/'four_worker_startup.json',{'status':'PASS','workers':[json.loads((rawdir/f'worker_{i}.json').read_text()) for i in range(4)]});return
- payload=[(tid,[{'input':e.input.to_list(),'output':e.output.to_list()} for e in tasks[tid].train]) for tid in ids]; shards=[payload[i::4] for i in range(4)]
+ if a.checkpoint_smoke: ids=ids[:2]
+ payload=[(tid,[{'input':e.input.to_list(),'output':e.output.to_list()} for e in tasks[tid].train]) for tid in ids]; shards=[payload[i::4] for i in range(4)];config_hash=hashlib.sha256(json.dumps({'K':PROGRAM_BUDGET,'seed':SEED_BASE,'prompt':'soar_v1','sampling':[.2,.95,768]},sort_keys=True).encode()).hexdigest()
  for w,shard in enumerate(shards):
-  x=mp.get_context('spawn').Process(target=worker,args=(w,w,str(path),shard,str(rawdir)));x.start();ps.append(x)
+  x=mp.get_context('spawn').Process(target=worker,args=(w,w,str(path),shard,str(rawdir),config_hash));x.start();ps.append(x)
  for x in ps:x.join()
  if any(x.exitcode for x in ps):raise RuntimeError(f'worker exits={[x.exitcode for x in ps]}')
- records={tid:json.loads((rawdir/f'{tid}.json').read_text()) for tid in ids}
+ files=list((rawdir/'tasks').glob('*.json'));assert len(files)==len(ids) and all(valid(rawdir/'tasks'/f'{tid}.json',config_hash) for tid in ids);write_json(a.output_root/'generation_manifest.json',{'task_ids':ids,'config_hash':config_hash,'task_file_count':len(files),'total_candidates':len(files)*PROGRAM_BUDGET});
+ if a.checkpoint_smoke:return
+ records={tid:json.loads((rawdir/'tasks'/f'{tid}.json').read_text()) for tid in ids}
  for tid in ids:
   pairs=[(e.input.to_list(),e.output.to_list()) for e in tasks[tid].train]
   for c in records[tid]['candidate_programs']:
