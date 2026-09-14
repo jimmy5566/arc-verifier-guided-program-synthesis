@@ -1,0 +1,53 @@
+{
+  "experiment_id": "ARC2_PUBLIC_REFERENCE_SELECTION_SEARCH_ABLATION_V1",
+  "cohort": {
+    "name": "frozen30_diagnostic",
+    "task_count": 30,
+    "task_ids_hash": "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8"
+  },
+  "model": {
+    "source": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1",
+    "backend": "Transformers",
+    "dtype": "bfloat16",
+    "internet": false,
+    "worker_policy": "four independent complete model instances; worker i binds physical GPU i; no model sharding"
+  },
+  "A_baseline": {
+    "source_artifact": "ARC2_QWEN4B_NATIVE_CAPABILITY_PUSH_BC_PREDICTIONS_FROZEN.json",
+    "expected_top1": 9,
+    "expected_any_of_k": 21,
+    "rerun_generation": false
+  },
+  "B_public_reference_selection": {
+    "candidate_pool": "exact_A_frozen_pool",
+    "generation": false,
+    "views": ["identity", "rot90", "rot180", "rot270", "flip_lr", "flip_ud", "transpose", "anti_transpose"],
+    "ranking": "equivalent_output_support_minus_mean_augmentation_view_nll",
+    "attempt_2": "next_distinct_output_in_the_same_predeclared_ranking",
+    "uses_test_targets": false
+  },
+  "C_public_reference_search": {
+    "candidate_pool": "new",
+    "augmentation_count": 32,
+    "search_algorithm": "deterministic_native_token_beam_search",
+    "beams_per_augmentation": 4,
+    "max_candidates_before_dedup": 128,
+    "selection": "existing_mean_original_prompt_conditional_log_likelihood",
+    "task_level_checkpoints": true,
+    "resume": true,
+    "uses_test_targets": false
+  },
+  "D_search_plus_public_reference_selection": {
+    "candidate_pool": "exact_C_frozen_pool",
+    "generation": false,
+    "selection": "same_as_B",
+    "attempt_2": "same_as_B",
+    "uses_test_targets": false
+  },
+  "provenance": {
+    "public_reference": "1ytic/NVARC ARC-AGI1/002_ivan_arc1.ipynb at commit 846d0198efa752534594e321fc3289fc0a06c657",
+    "ideas_reimplemented": ["equivalent-output aggregation", "augmentation-view likelihood scoring", "bounded decoding search"],
+    "not_reused": ["training code", "LoRA/TTT", "Unsloth runtime", "dataset code", "submission code"]
+  },
+  "scoring": "Candidate pools and selected attempt ranks must be frozen before loading ARC solutions. frozen30 is diagnostic only; no target result changes any fixed setting."
+}

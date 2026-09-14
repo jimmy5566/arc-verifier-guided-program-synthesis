@@ -69,7 +69,7 @@ def _preflight(task_ids: tuple[str, ...], challenge_path: Path, model_path: Path
     return {**native, "task_count": len(task_ids), "augmentation_count": len(augmentations), "test_input_count": sum(len(tasks[task_id].test) for task_id in task_ids), "min_prompt_tokens": min(counts), "median_prompt_tokens": statistics.median(counts), "max_prompt_tokens": max(counts), "truncated_tasks": 0}
 
 
-def _worker(worker_id: int, task_ids: tuple[str, ...], task_positions: dict[str, int], task_total: int, augmentation_count: int, challenge_path: str, model_path: str, native_config_dir: str, config: dict[str, Any], records: Any, ready: Any, start: Any, enable_ttt: bool) -> None:
+def _worker(worker_id: int, task_ids: tuple[str, ...], task_positions: dict[str, int], task_total: int, augmentation_count: int, challenge_path: str, model_path: str, native_config_dir: str, config: dict[str, Any], records: Any, ready: Any, start: Any, enable_ttt: bool, search_beams: int, checkpoint_dir: str | None, checkpoint_identity: str, resume: bool) -> None:
     os.environ["CUDA_VISIBLE_DEVICES"] = str(worker_id)
     os.environ.setdefault("PYTORCH_ALLOC_CONF", "expandable_segments:True")
     try:
@@ -94,6 +94,14 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], task_positions: dict[str,
         tasks = load_dataset(challenge_path)
         augmentations = bounded_native_augmentations(color_offsets=tuple(settings["color_offsets"]), pair_orders=tuple(settings["train_pair_orders"]))[:augmentation_count]
         for task_id in task_ids:
+            checkpoint_path = Path(checkpoint_dir) / "tasks" / f"{task_id}.json" if checkpoint_dir else None
+            if resume and checkpoint_path and checkpoint_path.exists():
+                saved = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+                if saved.get("checkpoint_identity") == checkpoint_identity and isinstance(saved.get("record"), dict):
+                    reused = dict(saved["record"])
+                    records.put(reused)
+                    records.put({"event": "TASK_RESUMED", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id})
+                    continue
             task = tasks[task_id]
             task_started = time.perf_counter()
             ttt_metrics = None
@@ -107,35 +115,41 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], task_positions: dict[str,
             unique_keys: set[tuple[tuple[tuple[int, ...], ...], ...]] = set(); gpu_samples: list[dict[str, int | None]] = []
             for index, augmentation in enumerate(augmentations):
                 augmented_task = augmentation.transform_task(task)
-                grids, raw = [], []
-                candidate_tokens, candidate_elapsed = 0, 0.0
+                grids_by_beam: list[list[list[list[int]] | None]] = [[] for _ in range(search_beams)]
+                candidate_tokens, candidate_elapsed = [0] * search_beams, [0.0] * search_beams
                 for test_index in range(len(task.test)):
-                    generated = provider.generate(native_messages(augmented_task, test_index), max_new_tokens=int(settings["decode"]["max_new_tokens"]), context_window=int(settings["decode"]["context_window"]), seed=int(settings["decode"]["seed"]))
-                    raw.append(generated.text)
-                    candidate_tokens += generated.completion_tokens
-                    candidate_elapsed += generated.elapsed_seconds
-                    parsed = parse_native_grid(generated.text)
-                    grids.append(None if parsed is None else augmentation.inverse_grid(parsed))
-                generated_count += 1
-                token_total += candidate_tokens
-                generation_seconds += candidate_elapsed
+                    if search_beams == 1:
+                        single = provider.generate(native_messages(augmented_task, test_index), max_new_tokens=int(settings["decode"]["max_new_tokens"]), context_window=int(settings["decode"]["context_window"]), seed=int(settings["decode"]["seed"]))
+                        generated_items = [single]
+                    else:
+                        generated_items = provider.generate_beams(native_messages(augmented_task, test_index), max_new_tokens=int(settings["decode"]["max_new_tokens"]), context_window=int(settings["decode"]["context_window"]), beam_width=search_beams)
+                    if len(generated_items) != search_beams:
+                        raise RuntimeError("native beam search returned an unexpected branch count")
+                    for beam_index, generated in enumerate(generated_items):
+                        candidate_tokens[beam_index] += generated.completion_tokens
+                        candidate_elapsed[beam_index] += generated.elapsed_seconds
+                        parsed = parse_native_grid(generated.text)
+                        grids_by_beam[beam_index].append(None if parsed is None else augmentation.inverse_grid(parsed))
+                generated_count += search_beams
+                token_total += sum(candidate_tokens)
+                generation_seconds += sum(candidate_elapsed)
                 telemetry = _gpu_telemetry(worker_id); gpu_samples.append(telemetry)
-                if any(grid is None for grid in grids):
-                    invalid += 1
-                    records.put({"event": "CANDIDATE_HEARTBEAT", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "task_position": task_positions[task_id], "task_total": task_total, "augmentation_position": index + 1, "augmentation_total": len(augmentations), "generated": generated_count, "valid": len(candidates), "unique": len(unique_keys), "elapsed_seconds": time.perf_counter() - task_started, **telemetry})
-                    continue
-                prediction = tuple(tuple(tuple(int(cell) for cell in row) for row in grid) for grid in grids if grid is not None)
-                item = NativeGridCandidate(augmentation, prediction, candidate_tokens, candidate_elapsed)
-                candidates.append(item)
-                unique_keys.add(item.key())
-                if index == 0:
-                    baseline_prediction = [[list(row) for row in grid] for grid in item.prediction]
+                for beam_index, grids in enumerate(grids_by_beam):
+                    if any(grid is None for grid in grids):
+                        invalid += 1
+                        continue
+                    prediction = tuple(tuple(tuple(int(cell) for cell in row) for row in grid) for grid in grids if grid is not None)
+                    item = NativeGridCandidate(augmentation, prediction, candidate_tokens[beam_index], candidate_elapsed[beam_index])
+                    candidates.append(item)
+                    unique_keys.add(item.key())
+                    if index == 0 and beam_index == 0:
+                        baseline_prediction = [[list(row) for row in grid] for grid in item.prediction]
                 records.put({"event": "CANDIDATE_HEARTBEAT", "worker_id": worker_id, "physical_gpu_id": worker_id, "task_id": task_id, "task_position": task_positions[task_id], "task_total": task_total, "augmentation_position": index + 1, "augmentation_total": len(augmentations), "generated": generated_count, "valid": len(candidates), "unique": len(unique_keys), "elapsed_seconds": time.perf_counter() - task_started, **telemetry})
             unique = deduplicate_candidates(candidates)
             ranked = rank_candidates(provider, unique, original_messages, context_window=int(settings["decode"]["context_window"])) if unique else []
             likelihood_by_index = {unique.index(item): float(score) for item, score in ranked}
             ranking_indices = rank_indices(feature_rows([item.to_dict() for item in unique], likelihood_by_index)) if unique else {}
-            records.put({
+            completed_record = {
                 "task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "status": "SUCCESS" if ranked else "NO_VALID_NATIVE_CANDIDATE",
                 "baseline_prediction": baseline_prediction[0] if baseline_prediction and len(baseline_prediction) == 1 else baseline_prediction,
                 "candidates": [item.to_dict() for item in unique],
@@ -146,7 +160,17 @@ def _worker(worker_id: int, task_ids: tuple[str, ...], task_positions: dict[str,
                 "completion_tokens": token_total, "generation_seconds": generation_seconds, "model_vram_mb": provider.load_metadata.get("model_vram_mb"),
                 "ttt": ttt_metrics,
                 "elapsed_seconds": time.perf_counter() - task_started, "gpu_samples": gpu_samples,
-            })
+            }
+            if checkpoint_path:
+                atomic_write_json(checkpoint_path, {
+                    "checkpoint_identity": checkpoint_identity,
+                    "task_id": task_id,
+                    "worker_id": worker_id,
+                    "physical_gpu_id": worker_id,
+                    "generation_config": {"augmentation_count": augmentation_count, "search_beams": search_beams, "decode": settings["decode"]},
+                    "record": completed_record,
+                })
+            records.put(completed_record)
             if ttt is not None:
                 # Explicit task boundary: a worker can process several tasks,
                 # so reset learned adapters and transient CUDA caches now,
@@ -164,6 +188,9 @@ def main() -> None:
     for name in ("cohort", "config", "challenge_path", "model_path", "native_config_dir", "output"):
         parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
     parser.add_argument("--preflight-only", action="store_true"); parser.add_argument("--enable-ttt", action="store_true")
+    parser.add_argument("--search-beams", type=int, default=1, choices=range(1, 9))
+    parser.add_argument("--checkpoint-dir", type=Path)
+    parser.add_argument("--resume", action="store_true")
     parser.add_argument("--stage", choices=("smoke", "pilot", "full", "external"), required=True)
     parser.add_argument("--external-augmentation-count", type=int)
     parser.add_argument("--external-worker-count", type=int)
@@ -186,6 +213,11 @@ def main() -> None:
         augmentation_count, worker_count = int(stage["augmentation_count"]), int(stage["worker_count"])
     if augmentation_count > len(bounded_native_augmentations(color_offsets=tuple(settings["color_offsets"]), pair_orders=tuple(settings["train_pair_orders"]))):
         raise ValueError("stage augmentation count exceeds frozen pool")
+    checkpoint_identity = hashlib.sha256(json.dumps({"config_sha256": hashlib.sha256(args.config.read_bytes()).hexdigest(), "task_ids": sorted(task_ids), "augmentation_count": augmentation_count, "worker_count": worker_count, "search_beams": args.search_beams}, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    if args.checkpoint_dir:
+        (args.checkpoint_dir / "tasks").mkdir(parents=True, exist_ok=True)
+    elif args.resume:
+        raise ValueError("--resume requires --checkpoint-dir")
     preflight = _preflight(task_ids, args.challenge_path, args.model_path, args.native_config_dir, int(settings["decode"]["context_window"]), augmentation_count)
     if args.preflight_only:
         print(json.dumps({"status": "NATIVE_AUGMENTATION_PREFLIGHT_COMPLETE", "preflight": preflight}, sort_keys=True)); return
@@ -199,7 +231,7 @@ def main() -> None:
         buckets = [task_ids[index::worker_count] for index in range(worker_count)]
         positions = {task_id: index + 1 for index, task_id in enumerate(task_ids)}
         for worker_id in range(worker_count):
-            child = context.Process(target=_worker, args=(worker_id, buckets[worker_id], positions, len(task_ids), augmentation_count, str(args.challenge_path), str(args.model_path), str(args.native_config_dir), config, records, ready, start, args.enable_ttt)); child.start(); children.append(child)
+            child = context.Process(target=_worker, args=(worker_id, buckets[worker_id], positions, len(task_ids), augmentation_count, str(args.challenge_path), str(args.model_path), str(args.native_config_dir), config, records, ready, start, args.enable_ttt, args.search_beams, str(args.checkpoint_dir) if args.checkpoint_dir else None, checkpoint_identity, args.resume)); child.start(); children.append(child)
             state = ready.get(timeout=MODEL_LOAD_WATCHDOG_SECONDS)
             if state.get("event") != "MODEL_READY":
                 raise RuntimeError(f"native model load failed: {state}")
@@ -216,6 +248,9 @@ def main() -> None:
             if item.get("event") == "CANDIDATE_HEARTBEAT":
                 print(json.dumps(item, sort_keys=True), flush=True)
                 last_heartbeat = time.perf_counter()
+                continue
+            if item.get("event") == "TASK_RESUMED":
+                print(json.dumps(item, sort_keys=True), flush=True)
                 continue
             if item.get("event") == "WORKER_COMPLETE": complete += 1; continue
             if item.get("event") == "WORKER_FAILED":
@@ -234,6 +269,8 @@ def main() -> None:
         "protocol": "native ARC-safe reversible augmentation and label-free model likelihood ranking; train pairs plus test inputs only; no targets, downstream stack, or task-specific heuristic",
         "task_ids_hash": hashlib.sha256(json.dumps(sorted(task_ids), separators=(",", ":")).encode()).hexdigest(), "stage": args.stage, "stage_task_count": len(task_ids), "stage_augmentation_count": augmentation_count, "stage_worker_count": worker_count, "config_sha256": hashlib.sha256(args.config.read_bytes()).hexdigest(), "preflight": preflight,
         "hardware": hardware.to_dict(), "worker_ready": worker_ready, "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")}, "ttt_enabled": args.enable_ttt,
+        "search": {"algorithm": "deterministic_native_token_beam_search" if args.search_beams > 1 else "greedy", "beams_per_augmentation": args.search_beams, "bounded_total_branches_per_task": augmentation_count * args.search_beams},
+        "checkpointing": {"enabled": bool(args.checkpoint_dir), "resume": args.resume, "checkpoint_identity": checkpoint_identity, "root": str(args.checkpoint_dir) if args.checkpoint_dir else None},
         "runtime_seconds": time.perf_counter() - started, "generation_seconds_sum": sum(float(item["generation_seconds"]) for item in by_task.values()),
         "gpu_utilization": {"sample_count": len(gpu_utilization_samples), "mean_pct": statistics.mean(gpu_utilization_samples) if gpu_utilization_samples else None, "min_pct": min(gpu_utilization_samples) if gpu_utilization_samples else None, "max_pct": max(gpu_utilization_samples) if gpu_utilization_samples else None}, "records": by_task,
     }

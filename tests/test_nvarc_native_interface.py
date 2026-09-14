@@ -16,6 +16,7 @@ from inference.native_ranker import CandidateRankingFeatures, rank_indices, sele
 from inference.native_train_verifier import rank_with_verifier, train_verifier_scores
 from inference.native_multiview_likelihood import aggregate, calibrated, ranks
 from inference.native_strategy_hypotheses import infer_strategies, score_predictions
+from inference.nvarc_public_reference import PublicReferenceEvidence, grouped_public_reference_ranking, two_attempt_indices
 import inference.dual_reasoning_smoke as dual_smoke
 from inference.dual_reasoning_smoke import discover_models, execute_program, extract_program, soar_prompt, validate_program, verify_program
 from inference.nvarc_native import native_messages, parse_native_grid, serialize_grid
@@ -133,6 +134,29 @@ def test_native_candidates_deduplicate_and_rank_without_targets() -> None:
     assert len(unique[0].support_augmentations) == 2 and len(unique[1].support_augmentations) == 1
     ranked = rank_candidates(Provider(), unique, [[{"role": "user", "content": "01"}]], context_window=99)
     assert ranked[0][0].prediction == second.prediction and ranked[0][1] == -1.0
+
+
+def test_public_reference_selection_groups_equivalent_outputs_and_declares_distinct_attempts() -> None:
+    rows = [
+        PublicReferenceEvidence(0, "same", -1.0, (1.2, 1.0)),
+        PublicReferenceEvidence(1, "same", -2.0, (0.9, 1.1)),
+        PublicReferenceEvidence(2, "other", -0.1, (0.2, 0.2)),
+    ]
+    # Two independently generated equivalent outputs outrank the single more
+    # likely output through fixed support-minus-NLL aggregation.
+    assert grouped_public_reference_ranking(rows) == [0, 2]
+    candidates = [{"prediction": [[[0]]]}, {"prediction": [[[0]]]}, {"prediction": [[[1]]]}]
+    assert two_attempt_indices([0, 1, 2], candidates) == [0, 2]
+
+
+def test_public_reference_ablation_stays_gold_blind_until_the_postfreeze_scorer() -> None:
+    selection = (ROOT / "scripts/rerank_native_public_reference_selection.py").read_text(encoding="utf-8")
+    scorer = (ROOT / "scripts/score_public_reference_ablation.py").read_text(encoding="utf-8")
+    runner = (ROOT / "scripts/run_qwen4b_native_augmentation_search.py").read_text(encoding="utf-8")
+    assert "load_solutions" not in selection and "solutions-path" not in selection
+    assert scorer.index("frozen before exact scoring") < scorer.index("from arc.io import load_challenges, load_solutions")
+    assert "--search-beams" in runner and "deterministic_native_token_beam_search" in runner
+    assert "--checkpoint-dir" in runner and "atomic_write_json(checkpoint_path" in runner
 
 
 def test_native_capability_push_stays_native_and_gold_blind_until_scorer() -> None:

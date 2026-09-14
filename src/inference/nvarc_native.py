@@ -91,6 +91,17 @@ class NativeGeneration:
     elapsed_seconds: float
 
 
+@dataclass(frozen=True)
+class NativeBeamGeneration:
+    """One completed sequence from deterministic bounded beam search."""
+
+    text: str
+    prompt_tokens: int
+    completion_tokens: int
+    elapsed_seconds: float
+    sequence_score: float | None
+
+
 class NVARCNativeProvider:
     """Local BF16 generation with the verified 16-token NVARC tokenizer."""
 
@@ -140,6 +151,60 @@ class NVARCNativeProvider:
         text = self.tokenizer.decode(generated, skip_special_tokens=True)
         result = NativeGeneration(text, prompt_tokens, int(generated.shape[-1]), time.perf_counter() - started)
         del output, encoded, generated
+        torch.cuda.empty_cache()
+        return result
+
+    def generate_beams(
+        self,
+        messages: list[dict[str, str]],
+        *,
+        max_new_tokens: int,
+        context_window: int,
+        beam_width: int,
+    ) -> list[NativeBeamGeneration]:
+        """Return a fixed, bounded set of native-token beam completions.
+
+        This is inference-time search only.  It uses the checkpoint's tiny
+        native vocabulary, performs no adaptation, and exposes no ARC target.
+        ``beam_width`` bounds every generated branch before any parse/dedup.
+        """
+        if not 1 <= beam_width <= 8:
+            raise ValueError("native beam width must be in 1..8")
+        self.load(); import torch
+        assert self.model is not None and self.tokenizer is not None
+        encoded = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True)
+        encoded = {name: value.to(self.device) for name, value in encoded.items()}
+        prompt_tokens = int(encoded["input_ids"].shape[-1])
+        if prompt_tokens > context_window:
+            raise ValueError(f"native prompt has {prompt_tokens} tokens, exceeds frozen context {context_window}")
+        started = time.perf_counter()
+        with torch.inference_mode():
+            generated = self.model.generate(
+                **encoded,
+                max_new_tokens=max_new_tokens,
+                do_sample=False,
+                num_beams=beam_width,
+                num_return_sequences=beam_width,
+                early_stopping=True,
+                return_dict_in_generate=True,
+                output_scores=True,
+                eos_token_id=self.tokenizer.eos_token_id,
+                pad_token_id=self.tokenizer.pad_token_id,
+            )
+        elapsed = time.perf_counter() - started
+        sequence_scores = getattr(generated, "sequences_scores", None)
+        result: list[NativeBeamGeneration] = []
+        for index, sequence in enumerate(generated.sequences):
+            suffix = sequence[prompt_tokens:].detach().cpu()
+            result.append(NativeBeamGeneration(
+                text=self.tokenizer.decode(suffix, skip_special_tokens=True),
+                prompt_tokens=prompt_tokens,
+                completion_tokens=int(suffix.shape[-1]),
+                elapsed_seconds=elapsed / beam_width,
+                sequence_score=float(sequence_scores[index].item()) if sequence_scores is not None else None,
+            ))
+            del suffix
+        del generated, encoded
         torch.cuda.empty_cache()
         return result
 
