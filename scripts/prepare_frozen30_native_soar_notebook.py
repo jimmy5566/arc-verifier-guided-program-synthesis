@@ -15,8 +15,8 @@ from pathlib import Path
 
 input_root = Path("/kaggle/input")
 root = next(input_root.rglob("run_frozen30_native_soar_complementarity.py")).parents[1]
-native = next(input_root.rglob("ARC2_QWEN4B_NATIVE_CAPABILITY_PUSH_BC_PREDICTIONS_FROZEN.json"))
-calibration = next(input_root.rglob("soar_numpy_sandbox_calibration.json"))
+native = next(input_root.rglob("native_frozen30.json"))
+calibration = next(input_root.rglob("sandbox_calibration.json"))
 challenge = next(input_root.rglob("arc-agi_training_challenges.json"))
 solutions = next(input_root.rglob("arc-agi_training_solutions.json"))
 output = Path("/kaggle/working/artifacts/frozen30_native_soar_v1")

@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 _FILES = (
     "pyproject.toml", "requirements.txt", "configs/QWEN4B_MAX_NATIVE_CAPABILITY_PUSH_V1.json", "configs/ARC2_NATIVE_TTT_AND_STRONG_VERIFIER_V1.json", "configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json",
-    "configs/ARC2_NATIVE_LIKELIHOOD_RANKER_V2_FAST.json", "scripts/run_qwen4b_native_augmentation_search.py", "scripts/run_native_ttt_memory_smoke.py", "scripts/rerank_native_multiview_likelihood.py", "scripts/run_dual_reasoning_smoke.py", "scripts/run_dual_model_arc_v1.py", "scripts/run_soar_numpy_sandbox_calibration.py", "scripts/run_frozen30_native_soar_complementarity.py", "artifacts/native_multiview_frozen30_pool_v3_stage/dataset/ARC2_QWEN4B_NATIVE_CAPABILITY_PUSH_BC_PREDICTIONS_FROZEN.json", "artifacts/soar_numpy_sandbox_calibration_v21/artifacts/soar_numpy_sandbox_calibration.json", "src/arc", "src/inference/__init__.py", "src/inference/arc_native_io.py", "src/inference/nvarc_native.py", "src/inference/nvarc_native_augmentation.py", "src/inference/nvarc_native_candidates.py", "src/inference/native_ranker.py", "src/inference/native_multiview_likelihood.py", "src/inference/dual_reasoning_smoke.py", "src/inference/llama_cpp_backend.py", "src/inference/nvarc_native_ttt.py", "src/inference/kaggle_l4_parallel_runner.py", "src/inference/qwen3_transformers_parallel_runner.py",
+    "configs/ARC2_NATIVE_LIKELIHOOD_RANKER_V2_FAST.json", "scripts/run_qwen4b_native_augmentation_search.py", "scripts/run_native_ttt_memory_smoke.py", "scripts/rerank_native_multiview_likelihood.py", "scripts/run_dual_reasoning_smoke.py", "scripts/run_dual_model_arc_v1.py", "scripts/run_soar_numpy_sandbox_calibration.py", "scripts/run_frozen30_native_soar_complementarity.py", "src/arc", "src/inference/__init__.py", "src/inference/arc_native_io.py", "src/inference/nvarc_native.py", "src/inference/nvarc_native_augmentation.py", "src/inference/nvarc_native_candidates.py", "src/inference/native_ranker.py", "src/inference/native_multiview_likelihood.py", "src/inference/dual_reasoning_smoke.py", "src/inference/llama_cpp_backend.py", "src/inference/nvarc_native_ttt.py", "src/inference/kaggle_l4_parallel_runner.py", "src/inference/qwen3_transformers_parallel_runner.py",
 )
 
 
@@ -24,6 +24,9 @@ def main() -> None:
     if args.output.exists(): raise FileExistsError(f"refusing to overwrite staging directory: {args.output}")
     project = args.output / "dataset" / "ARC2"
     for relative in _FILES: _copy(relative, project)
+    frozen = project / "frozen_inputs"; frozen.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(ROOT / "artifacts/native_multiview_frozen30_pool_v3_stage/dataset/ARC2_QWEN4B_NATIVE_CAPABILITY_PUSH_BC_PREDICTIONS_FROZEN.json", frozen / "native_frozen30.json")
+    shutil.copy2(ROOT / "artifacts/soar_numpy_sandbox_calibration_v21/artifacts/soar_numpy_sandbox_calibration.json", frozen / "sandbox_calibration.json")
     shutil.copytree(ROOT / "configs/nvarc_native_846d0198", project / "configs/nvarc_native_846d0198")
     if list(project.rglob("*solutions*.json")): raise RuntimeError("solution-bearing files are forbidden from TTT inference source")
     forbidden = ("v3", "executor", "verifier.py", "compiler", "rulespec", "oracle", "score_")
