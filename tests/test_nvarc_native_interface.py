@@ -159,6 +159,14 @@ def test_public_reference_ablation_stays_gold_blind_until_the_postfreeze_scorer(
     assert "--checkpoint-dir" in runner and "atomic_write_json(checkpoint_path" in runner
 
 
+def test_partial_ablation_freezes_only_complete_checkpoints_and_d_is_offline() -> None:
+    source = (ROOT / "scripts/prepare_partial_public_reference_ablation.py").read_text(encoding="utf-8")
+    assert 'record.get("generated_candidate_count") != 128' in source
+    assert 'record.get("invalid_candidate_count") != 0' in source
+    assert "No GPU/model load" in source
+    assert "NVARCNativeProvider" not in source and "load_solutions" not in source
+
+
 def test_native_capability_push_stays_native_and_gold_blind_until_scorer() -> None:
     runner = (ROOT / "scripts/run_qwen4b_native_augmentation_search.py").read_text(encoding="utf-8")
     scorer = (ROOT / "scripts/score_qwen4b_native_augmentation_search.py").read_text(encoding="utf-8")
