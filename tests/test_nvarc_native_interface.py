@@ -265,7 +265,7 @@ def test_strategy_hypotheses_are_train_only_and_score_generic_transform_and_reco
 def test_dual_reasoning_soar_prompt_and_program_parser_stay_target_blind_and_restricted() -> None:
     prompt = soar_prompt([([[0, 1]], [[1, 0]])])
     assert "transform(input_grid)" in prompt and "import numpy as np" in prompt and "Example 1" in prompt
-    assert extract_program("reasoning\n```python\ndef transform(grid):\n return grid\n```") == "def transform(grid):\n return grid"
+    assert extract_program("reasoning\n```python\ndef transform(grid):\n return grid\n```") == "def transform(grid):\n    return grid"
     assert extract_program("```python\nnotes = 1\ndef helper(x): return x\ndef transform(grid): return helper(grid)\n```") == "def helper(x):\n    return x\n\ndef transform(grid):\n    return helper(grid)"
     assert validate_program("def transform(grid):\n return [row[:] for row in grid]") == (True, "ok")
     assert not validate_program("import os\ndef transform(grid):\n return grid")[0]
