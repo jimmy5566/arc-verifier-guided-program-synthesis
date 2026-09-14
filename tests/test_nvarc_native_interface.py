@@ -191,6 +191,15 @@ def test_untouched60_freezer_requires_identical_candidate_pools_and_no_solutions
     assert "exact_two_sided_binomial_p" in scorer and "two_attempt_wilson_95" in scorer
 
 
+def test_public_lb_submission_is_transport_only_and_uses_frozen_b_attempts() -> None:
+    builder = (ROOT / "scripts/build_public_lb_submission.py").read_text(encoding="utf-8")
+    cohort = (ROOT / "scripts/build_public_lb_native_b_cohort.py").read_text(encoding="utf-8")
+    notebook = (ROOT / "scripts/build_public_lb_native_b_notebook.py").read_text(encoding="utf-8")
+    assert "load_solutions" not in builder and "load_solutions" not in cohort and "load_solutions" not in notebook
+    assert "attempt_candidate_indices" in builder and "duplicate_fallback" in builder
+    assert '"--search-beams", "1"' in notebook and "PUBLIC_LB_B_SELECTION" in notebook
+
+
 def test_partial_ablation_freezes_only_complete_checkpoints_and_d_is_offline() -> None:
     source = (ROOT / "scripts/prepare_partial_public_reference_ablation.py").read_text(encoding="utf-8")
     assert 'record.get("generated_candidate_count") != 128' in source

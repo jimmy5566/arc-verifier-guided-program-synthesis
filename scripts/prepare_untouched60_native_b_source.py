@@ -15,6 +15,7 @@ FILES = (
     "scripts/run_qwen4b_native_augmentation_search.py",
     "scripts/rerank_native_public_reference_selection.py",
     "scripts/freeze_untouched60_predictions.py",
+    "scripts/build_public_lb_native_b_cohort.py", "scripts/build_public_lb_submission.py",
     "src/arc", "src/inference/__init__.py", "src/inference/arc_native_io.py",
     "src/inference/nvarc_native.py", "src/inference/nvarc_native_augmentation.py",
     "src/inference/nvarc_native_candidates.py", "src/inference/nvarc_public_reference.py",
