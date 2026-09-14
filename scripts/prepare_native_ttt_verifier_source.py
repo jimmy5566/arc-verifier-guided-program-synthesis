@@ -27,6 +27,9 @@ def main() -> None:
     frozen = project / "frozen_inputs"; frozen.mkdir(parents=True, exist_ok=True)
     shutil.copy2(ROOT / "artifacts/native_multiview_frozen30_pool_v3_stage/dataset/ARC2_QWEN4B_NATIVE_CAPABILITY_PUSH_BC_PREDICTIONS_FROZEN.json", frozen / "native_frozen30.json")
     shutil.copy2(ROOT / "artifacts/soar_numpy_sandbox_calibration_v21/artifacts/soar_numpy_sandbox_calibration.json", frozen / "sandbox_calibration.json")
+    resume = frozen / "resume_tasks"; resume.mkdir()
+    for task_id in ("228f6490", "2bcee788"):
+        shutil.copy2(ROOT / f"artifacts/frozen30_checkpoint_v27/artifacts/frozen30_native_soar_v1/generation/tasks/{task_id}.json", resume / f"{task_id}.json")
     shutil.copytree(ROOT / "configs/nvarc_native_846d0198", project / "configs/nvarc_native_846d0198")
     if list(project.rglob("*solutions*.json")): raise RuntimeError("solution-bearing files are forbidden from TTT inference source")
     forbidden = ("v3", "executor", "verifier.py", "compiler", "rulespec", "oracle", "score_")

@@ -10,7 +10,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    source = '''import os, subprocess, sys
+    source = '''import os, subprocess, sys, shutil
 from pathlib import Path
 
 input_root = Path("/kaggle/input")
@@ -20,9 +20,13 @@ calibration = next(input_root.rglob("sandbox_calibration.json"))
 challenge = next(input_root.rglob("arc-agi_training_challenges.json"))
 solutions = next(input_root.rglob("arc-agi_training_solutions.json"))
 output = Path("/kaggle/working/artifacts/frozen30_native_soar_v1")
+resume = next(input_root.rglob("resume_tasks"))
+(output / "generation/tasks").mkdir(parents=True, exist_ok=True)
+for checkpoint in resume.glob("*.json"):
+    shutil.copy2(checkpoint, output / "generation/tasks" / checkpoint.name)
 script = root / "scripts/run_frozen30_soar_four_workers.py"
 print({"event": "FROZEN30_NATIVE_SOAR_START", "script": str(script), "native_frozen": str(native), "gpus": subprocess.check_output(["nvidia-smi", "-L"], text=True).splitlines()})
-command = [sys.executable, str(script), "--challenge-path", str(challenge), "--solutions-path", str(solutions), "--native-frozen", str(native), "--calibration", str(calibration), "--input-root", str(input_root), "--output-root", str(output), "--checkpoint-smoke"]
+command = [sys.executable, str(script), "--challenge-path", str(challenge), "--solutions-path", str(solutions), "--native-frozen", str(native), "--calibration", str(calibration), "--input-root", str(input_root), "--output-root", str(output)]
 if subprocess.run(command, text=True, env=dict(os.environ, CUDA_VISIBLE_DEVICES="0,1,2,3")).returncode:
     raise RuntimeError("frozen30 complementarity study failed")
 print({"event": "FROZEN30_NATIVE_SOAR_COMPLETE", "artifacts": [str(item) for item in sorted(output.glob("*.json"))]})
