@@ -67,7 +67,9 @@ def native_labels(native: dict[str, Any], solutions: dict[str, Any]) -> dict[str
     labels: dict[str, dict[str, Any]] = {}
     for task_id, record in native["records"].items():
         target = solutions[task_id]
-        top1 = record["ranked_prediction"] == target
+        # ``ranked_prediction`` is a legacy baseline field.  The immutable
+        # final Native Top1 is the first index in the frozen rank ordering.
+        top1 = record["candidates"][record["ranked_candidate_indices"][0]]["prediction"] == target
         any_hit = any(candidate.get("prediction") == target for candidate in record["candidates"])
         failure_class = "TOP1_SOLVED" if top1 else "SELECTION_MISS" if any_hit else "GENERATION_MISS"
         labels[task_id] = {"native_top1_correct": top1, "native_any_of_k_hit": any_hit, "native_failure_class": failure_class}
