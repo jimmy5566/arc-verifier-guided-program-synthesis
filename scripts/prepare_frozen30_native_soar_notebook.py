@@ -14,13 +14,13 @@ def main() -> None:
 from pathlib import Path
 
 input_root = Path("/kaggle/input")
-root = next(input_root.rglob("run_frozen30_native_soar_complementarity.py")).parents[1]
+root = next(input_root.rglob("run_frozen30_soar_four_workers.py")).parents[1]
 native = next(input_root.rglob("native_frozen30.json"))
 calibration = next(input_root.rglob("sandbox_calibration.json"))
 challenge = next(input_root.rglob("arc-agi_training_challenges.json"))
 solutions = next(input_root.rglob("arc-agi_training_solutions.json"))
 output = Path("/kaggle/working/artifacts/frozen30_native_soar_v1")
-script = root / "scripts/run_frozen30_native_soar_complementarity.py"
+script = root / "scripts/run_frozen30_soar_four_workers.py"
 print({"event": "FROZEN30_NATIVE_SOAR_START", "script": str(script), "native_frozen": str(native), "gpus": subprocess.check_output(["nvidia-smi", "-L"], text=True).splitlines()})
 command = [sys.executable, str(script), "--challenge-path", str(challenge), "--solutions-path", str(solutions), "--native-frozen", str(native), "--calibration", str(calibration), "--input-root", str(input_root), "--output-root", str(output)]
 if subprocess.run(command, text=True, env=dict(os.environ, CUDA_VISIBLE_DEVICES="0,1,2,3")).returncode:
