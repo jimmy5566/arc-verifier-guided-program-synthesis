@@ -277,6 +277,7 @@ def test_dual_reasoning_soar_numpy_transport_is_safe_and_normalizes_ndarray() ->
     result = execute_program(program, [[1, 2], [3, 4]])
     assert result["ok"] and result["grid"] == [[1, 2], [3, 4]]
     assert result["parse_valid"] and result["static_safe"] and result["executable"] and result["output_valid"]
+    assert result["process_started"] and (result["peak_rss_mb"] is None or isinstance(result["peak_rss_mb"], float))
     verification = verify_program(program, [([[1, 2]], [[1, 2]])])
     assert verification["all_train_exact"] and verification["train_execution"][0]["output_valid"]
     assert validate_program("def transform(x):\n    return sorted(x, key=lambda row: len(row))")[0]
@@ -287,6 +288,16 @@ def test_dual_reasoning_soar_rejects_unsafe_import_and_invalid_signature() -> No
     assert unsafe["status"] == "PROGRAM_INVALID"
     assert not unsafe["static_safe"] and unsafe["reason"] == "only_import_numpy_as_np_allowed"
     assert not validate_program("def transform(grid, extra):\n    return grid")[0]
+
+
+def test_dual_reasoning_exec_sandbox_is_cuda_free_and_not_a_model_process() -> None:
+    source = (ROOT / "src/inference/dual_reasoning_smoke.py").read_text(encoding="utf-8")
+    runner = (ROOT / "scripts/run_dual_model_arc_v1.py").read_text(encoding="utf-8")
+    assert '"CUDA_VISIBLE_DEVICES": ""' in source
+    assert '"-m", "inference.dual_reasoning_smoke", "--sandbox"' in source
+    assert source.index("def execute_program") < source.index("if __name__ == \"__main__\"")
+    assert runner.index("generate_candidate_records") < runner.index("execute_candidate_records")
+    assert "SOAR_UNLOADED_BEFORE_SANDBOX" in runner
 
 
 def test_dual_reasoning_branch_discovery_does_not_block_native_on_later_soar_attachment(tmp_path: Path) -> None:

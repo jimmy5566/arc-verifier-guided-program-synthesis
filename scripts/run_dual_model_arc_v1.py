@@ -83,7 +83,12 @@ def generate_program(model: Any, tokenizer: Any, prompt: str, *, seed: int) -> s
     return text
 
 
-def induction_records(*, tasks: dict[str, Any], model_path: Path) -> tuple[dict[str, Any], dict[str, int], dict[str, int]]:
+def generate_candidate_records(*, tasks: dict[str, Any], model_path: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Phase A: generate and persist text while SOAR is the only loaded expert.
+
+    Crucially, this function never calls the program executor.  The process
+    that owns torch/CUDA is fully released before Phase B starts any sandbox.
+    """
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -102,6 +107,33 @@ def induction_records(*, tasks: dict[str, Any], model_path: Path) -> tuple[dict[
         for candidate_index in range(PROGRAM_BUDGET):
             raw = generate_program(model, tokenizer, soar_prompt(pairs), seed=20260914 + task_index * PROGRAM_BUDGET + candidate_index)
             program = extract_program(raw)
+            candidates.append({
+                "candidate_index": candidate_index, "raw_model_output": raw, "extracted_code": program,
+                "generation_status": "FROZEN_BEFORE_SANDBOX_EXECUTION",
+            })
+        records[task_id] = {
+            "candidate_programs": candidates,
+            "generation_seconds": perf_counter() - started,
+        }
+        print(json.dumps({"event": "SOAR_GENERATION_FROZEN", "task_id": task_id, "program_count": len(candidates)}), flush=True)
+    peak = gpu_memory_mb()
+    del model, tokenizer
+    gc.collect()
+    after = unload_model(None)
+    lifecycle = {"before_load": before, "peak": peak, "after_unload": after}
+    print(json.dumps({"event": "SOAR_UNLOADED_BEFORE_SANDBOX", "gpu_memory": after}), flush=True)
+    return records, lifecycle
+
+
+def execute_candidate_records(*, records: dict[str, Any], tasks: dict[str, Any]) -> None:
+    """Phase B: run fresh CUDA-disabled Python sandboxes after SOAR unload."""
+    for task_id in TASK_IDS:
+        task = tasks[task_id]
+        pairs = [(example.input.to_list(), example.output.to_list()) for example in task.train]
+        started = perf_counter()
+        candidates = records[task_id]["candidate_programs"]
+        for candidate in candidates:
+            program = candidate["extracted_code"]
             verification = verify_program(program, pairs) if program else {
                 "program_valid": False, "train_pass_count": 0, "train_pair_count": len(pairs),
                 "parse_valid": False, "static_safe": False, "reason": "no_transform_code_extracted",
@@ -109,9 +141,9 @@ def induction_records(*, tasks: dict[str, Any], model_path: Path) -> tuple[dict[
             }
             executions = verification["train_execution"]
             failure = next((row.get("error") or row.get("reason") for row in executions if not row.get("ok")), verification.get("reason"))
-            candidates.append({
-                "candidate_index": candidate_index, "raw_model_output": raw, "extracted_code": program,
+            candidate.update({
                 "parse_valid": verification["parse_valid"], "static_safe": verification["static_safe"],
+                "process_started": bool(executions) and all(bool(row.get("process_started")) for row in executions),
                 "executable": bool(executions) and all(bool(row.get("executable")) for row in executions),
                 "output_valid": bool(executions) and all(bool(row.get("output_valid")) for row in executions),
                 "per_train_pair_exact": [bool(row.get("ok") and row.get("grid") == target) for row, (_source, target) in zip(executions, pairs, strict=True)],
@@ -119,21 +151,14 @@ def induction_records(*, tasks: dict[str, Any], model_path: Path) -> tuple[dict[
                 "verification": verification,
             })
         passing = next((candidate for candidate in candidates if candidate["verification"]["all_train_exact"]), None)
-        test_execution = execute_program(passing["extracted_code"], task.test[0].input.to_list()) if passing else {
-            "ok": False, "status": "NO_TRAIN_EXACT_PROGRAM"
-        }
-        records[task_id] = {
-            "candidate_programs": candidates,
+        records[task_id].update({
             "train_exact_pass": passing is not None,
             "frozen_passing_program": passing["extracted_code"] if passing else None,
-            "test_prediction_execution": test_execution,
-            "runtime_seconds": perf_counter() - started,
-        }
-    peak = gpu_memory_mb()
-    del model, tokenizer
-    gc.collect()
-    after = unload_model(None)
-    return records, before, {"peak": peak, "after_unload": after}
+            "test_prediction_execution": execute_program(passing["extracted_code"], task.test[0].input.to_list()) if passing else {"ok": False, "status": "NO_TRAIN_EXACT_PROGRAM"},
+            "execution_seconds": perf_counter() - started,
+        })
+        records[task_id]["runtime_seconds"] = records[task_id]["generation_seconds"] + records[task_id]["execution_seconds"]
+        print(json.dumps({"event": "SOAR_SANDBOX_EXECUTED", "task_id": task_id, "program_count": len(candidates), "train_exact": records[task_id]["train_exact_pass"]}), flush=True)
 
 
 def main() -> None:
@@ -151,12 +176,13 @@ def main() -> None:
     write_json(args.output_root / "native.json", native)
     model_path = discover_soar7(args.input_root)
     load_started = perf_counter()
-    records, before, lifecycle = induction_records(tasks=tasks, model_path=model_path)
+    records, lifecycle = generate_candidate_records(tasks=tasks, model_path=model_path)
+    execute_candidate_records(records=records, tasks=tasks)
     induction = {
         "status": "INDUCTION_PREDICTIONS_FROZEN", "task_ids": list(TASK_IDS),
         "model_path": str(model_path), "loader_backend": "transformers",
         "dtype": "torch.bfloat16", "program_budget": PROGRAM_BUDGET,
-        "records": records, "lifecycle": {"before_load": before, **lifecycle},
+        "records": records, "lifecycle": lifecycle,
         "wall_seconds": perf_counter() - load_started,
     }
     write_json(args.output_root / "induction.json", induction)

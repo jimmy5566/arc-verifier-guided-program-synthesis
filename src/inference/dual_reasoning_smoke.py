@@ -10,15 +10,13 @@ from __future__ import annotations
 import ast
 import gc
 import json
-import multiprocessing as mp
 import numbers
 import os
 import re
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
-from queue import Empty
-from time import perf_counter
 from typing import Any
 
 
@@ -187,28 +185,74 @@ def _normalise_grid(result: Any) -> list[list[int]]:
     return [[int(cell) for cell in row] for row in result]
 
 
-def _program_worker(program: str, grid: Any, queue: Any) -> None:
+def _sandbox_result(program: str, grid: Any) -> dict[str, Any]:
+    """Run in a fresh ``exec``-ed interpreter, never in the model process."""
     try:
         try:
             import resource
-            resource.setrlimit(resource.RLIMIT_CPU, (2, 2)); resource.setrlimit(resource.RLIMIT_AS, (2 * 1024 * 1024 * 1024, 2 * 1024 * 1024 * 1024))
+            # This is a fresh Python interpreter, so its address space contains
+            # no torch/CUDA model mappings.  Keep a generous data-segment cap
+            # for ordinary numpy grids without using a tiny inherited RLIMIT_AS.
+            resource.setrlimit(resource.RLIMIT_CPU, (2, 2))
+            if hasattr(resource, "RLIMIT_DATA"):
+                resource.setrlimit(resource.RLIMIT_DATA, (1024 * 1024 * 1024, 1024 * 1024 * 1024))
         except Exception: pass
         environment = {"__builtins__": {**_SAFE_BUILTINS, "__import__": _safe_import}}
         exec(compile(program, "<soar-program>", "exec"), environment, environment)
         result = environment["transform"]([[int(cell) for cell in row] for row in grid])
-        queue.put({"ok": True, "grid": _normalise_grid(result), "output_valid": True})
-    except BaseException as error: queue.put({"ok": False, "error": f"{type(error).__name__}:{error}"})
+        payload: dict[str, Any] = {"ok": True, "grid": _normalise_grid(result), "output_valid": True}
+    except BaseException as error:
+        payload = {"ok": False, "error": f"{type(error).__name__}:{error}"}
+    try:
+        import resource
+        # Linux reports ru_maxrss in KiB; macOS uses bytes. Kaggle is Linux.
+        raw_rss = int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
+        payload["peak_rss_mb"] = round(raw_rss / 1024.0, 3) if sys.platform != "darwin" else round(raw_rss / (1024.0 * 1024.0), 3)
+    except Exception:
+        payload["peak_rss_mb"] = None
+    return payload
+
+
+def _sandbox_main() -> int:
+    """JSON-line entrypoint deliberately free of torch/transformers imports."""
+    try:
+        request = json.loads(sys.stdin.read())
+        program, grid = request["program"], request["grid"]
+        inspection = inspect_program(program)
+        value = _sandbox_result(program, grid) if inspection["static_safe"] else {
+            "ok": False, "output_valid": False, "error": inspection["reason"]
+        }
+        print(json.dumps({**inspection, **value}), flush=True)
+        return 0
+    except BaseException as error:
+        print(json.dumps({"ok": False, "output_valid": False, "error": f"sandbox:{type(error).__name__}:{error}"}), flush=True)
+        return 1
 
 
 def execute_program(program: str, grid: Any, *, timeout_seconds: float = 2.0) -> dict[str, Any]:
     inspection = inspect_program(program)
     if not inspection["static_safe"]:
         return {"ok": False, "status": "PROGRAM_INVALID", "executable": False, "output_valid": False, **inspection, "error": inspection["reason"]}
-    context = mp.get_context("spawn"); queue = context.Queue(maxsize=1); process = context.Process(target=_program_worker, args=(program, grid, queue)); process.start(); process.join(timeout_seconds)
-    if process.is_alive(): process.terminate(); process.join(); return {"ok": False, "status": "TIMEOUT", "executable": True, "output_valid": False, **inspection, "error": "execution_timeout"}
-    try: value = queue.get_nowait()
-    except Empty: return {"ok": False, "status": "EXECUTION_FAILED", "executable": False, "output_valid": False, **inspection, "error": f"exitcode:{process.exitcode}"}
-    return {"status": "SUCCESS" if value["ok"] else "EXECUTION_FAILED", "executable": True, **inspection, **value}
+    source_root = str(Path(__file__).resolve().parents[1])
+    environment = {
+        **os.environ,
+        "CUDA_VISIBLE_DEVICES": "",
+        "PYTHONPATH": source_root + (os.pathsep + os.environ["PYTHONPATH"] if os.environ.get("PYTHONPATH") else ""),
+    }
+    try:
+        completed = subprocess.run(
+            [sys.executable, "-m", "inference.dual_reasoning_smoke", "--sandbox"],
+            input=json.dumps({"program": program, "grid": grid}), text=True,
+            capture_output=True, timeout=timeout_seconds, env=environment,
+        )
+    except subprocess.TimeoutExpired:
+        return {"ok": False, "status": "TIMEOUT", "process_started": True, "executable": True, "output_valid": False, **inspection, "error": "execution_timeout"}
+    try:
+        value = json.loads(completed.stdout.strip())
+    except json.JSONDecodeError:
+        error = (completed.stderr.strip() or completed.stdout.strip() or f"exitcode:{completed.returncode}")[-1000:]
+        return {"ok": False, "status": "EXECUTION_FAILED", "process_started": True, "executable": False, "output_valid": False, **inspection, "error": error, "returncode": completed.returncode}
+    return {"status": "SUCCESS" if value["ok"] else "EXECUTION_FAILED", "process_started": True, "executable": True, **inspection, **value, "returncode": completed.returncode}
 
 
 def verify_program(program: str, train_pairs: list[tuple[Any, Any]]) -> dict[str, Any]:
@@ -216,3 +260,9 @@ def verify_program(program: str, train_pairs: list[tuple[Any, Any]]) -> dict[str
     passes = sum(int(row.get("ok") and row.get("grid") == target) for row, (_source, target) in zip(rows, train_pairs, strict=True))
     inspection = inspect_program(program)
     return {"program_valid": inspection["static_safe"], **inspection, "train_pass_count": passes, "train_pair_count": len(train_pairs), "all_train_exact": passes == len(train_pairs), "train_execution": rows}
+
+
+if __name__ == "__main__":
+    if "--sandbox" not in sys.argv:
+        raise SystemExit("this module only exposes the --sandbox child entrypoint")
+    raise SystemExit(_sandbox_main())
