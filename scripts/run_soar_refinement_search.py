@@ -182,8 +182,19 @@ def _prepare_states(tasks: dict[str, Any], output: Path, config_hash: str) -> No
             atomic(path, _state(task_id, task, config_hash))
 
 
+def _shard_by_task(jobs: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
+    """Assign each task checkpoint to one writer; never split its candidates."""
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for job in jobs:
+        grouped.setdefault(str(job["task_id"]), []).append(job)
+    shards = [[] for _ in range(WORKER_COUNT)]
+    for index, task_jobs in enumerate(grouped.values()):
+        shards[index % WORKER_COUNT].extend(task_jobs)
+    return shards
+
+
 def _launch(jobs: list[dict[str, Any]], *, model_path: Path, output: Path, config: dict[str, Any]) -> None:
-    shards = [jobs[index::WORKER_COUNT] for index in range(WORKER_COUNT)]
+    shards = _shard_by_task(jobs)
     processes: list[mp.Process] = []
     for worker_id, shard in enumerate(shards):
         if not shard:

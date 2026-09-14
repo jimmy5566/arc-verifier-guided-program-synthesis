@@ -24,3 +24,16 @@ def test_search_uses_official_budget_and_sequential_model_sandbox_lifecycle():
     assert "refinement_max_new_tokens\": 2048" in source
     main_body = source[source.index("def main()") :]
     assert main_body.index("_launch(initial_jobs") < main_body.index("_verify_unverified(tasks")
+
+
+def test_task_checkpoint_has_exactly_one_generation_writer():
+    jobs = [
+        {"task_id": "a", "candidate_id": "r0-c0"},
+        {"task_id": "a", "candidate_id": "r0-c1"},
+        {"task_id": "b", "candidate_id": "r0-c0"},
+        {"task_id": "b", "candidate_id": "r0-c1"},
+    ]
+    shards = search._shard_by_task(jobs)
+    locations = {job["candidate_id"] + job["task_id"]: index for index, shard in enumerate(shards) for job in shard}
+    assert locations["r0-c0a"] == locations["r0-c1a"]
+    assert locations["r0-c0b"] == locations["r0-c1b"]
