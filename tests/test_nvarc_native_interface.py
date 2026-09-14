@@ -214,7 +214,7 @@ def test_native_capability_push_stays_native_and_gold_blind_until_scorer() -> No
     assert "load_solutions" not in runner and "ARCNativeInputAdapter" not in runner
     assert "RuleSpec" not in runner and "HardVerifier" not in runner
     assert scorer.index("CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING") < scorer.index("from arc.io import load_challenges, load_solutions")
-    assert "CANDIDATE_HEARTBEAT" in runner and "RUNNER_HEARTBEAT" in runner
+    assert "TASK_START" in runner and "TASK_COMPLETE" in runner and "RUNNER_HEARTBEAT" in runner
     assert "gpu_utilization_pct" in runner and "nvidia-smi" in runner
     assert 'choices=("smoke", "pilot", "full", "external")' in runner
 
