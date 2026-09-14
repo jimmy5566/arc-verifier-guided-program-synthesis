@@ -283,6 +283,12 @@ def test_dual_reasoning_soar_numpy_transport_is_safe_and_normalizes_ndarray() ->
     assert validate_program("def transform(x):\n    return sorted(x, key=lambda row: len(row))")[0]
 
 
+def test_dual_reasoning_safe_executor_allows_non_capability_builtins_only() -> None:
+    program = "def transform(grid):\n    return [[int(float(cell)) for cell in row] for row in grid] if all(any(cell >= 0 for cell in row) for row in grid) else grid"
+    assert execute_program(program, [[1, 2]])["grid"] == [[1, 2]]
+    assert not validate_program("def transform(grid):\n    return eval('grid')")[0]
+
+
 def test_dual_reasoning_soar_rejects_unsafe_import_and_invalid_signature() -> None:
     unsafe = execute_program("import os\n\ndef transform(grid):\n    return grid", [[1]])
     assert unsafe["status"] == "PROGRAM_INVALID"

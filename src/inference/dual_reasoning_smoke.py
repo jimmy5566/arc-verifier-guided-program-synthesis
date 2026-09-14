@@ -125,7 +125,18 @@ def extract_program(text: str) -> str | None:
 
 
 _FORBIDDEN_AST = (ast.ImportFrom, ast.ClassDef, ast.Global, ast.Nonlocal, ast.With, ast.AsyncWith, ast.Try, ast.Raise, ast.Delete)
-_SAFE_BUILTINS = {"range": range, "len": len, "enumerate": enumerate, "min": min, "max": max, "sum": sum, "abs": abs, "sorted": sorted, "set": set, "dict": dict, "tuple": tuple, "list": list, "int": int, "bool": bool, "zip": zip}
+# Deliberately boring, deterministic Python-only helpers.  SOAR's public
+# programs routinely use ``all``, ``any``, numeric conversion and iteration;
+# withholding those made otherwise safe programs fail after static validation.
+# Capability-opening functions (file/process/introspection/dynamic execution)
+# remain absent and are separately rejected by the AST policy below.
+_SAFE_BUILTINS = {
+    "range": range, "len": len, "enumerate": enumerate, "min": min,
+    "max": max, "sum": sum, "abs": abs, "sorted": sorted, "set": set,
+    "dict": dict, "tuple": tuple, "list": list, "int": int, "float": float,
+    "bool": bool, "str": str, "zip": zip, "all": all, "any": any,
+    "next": next, "reversed": reversed, "isinstance": isinstance,
+}
 _FORBIDDEN_NAMES = {"open", "eval", "exec", "compile", "globals", "locals", "vars", "input", "help", "breakpoint", "os", "sys", "subprocess", "pathlib", "socket", "requests", "shutil", "ctypes", "importlib", "__import__"}
 _FORBIDDEN_NUMPY_ATTRIBUTES = {"load", "save", "savez", "savez_compressed", "savetxt", "loadtxt", "genfromtxt", "fromfile", "tofile", "memmap", "DataSource", "ctypeslib", "f2py"}
 
