@@ -196,7 +196,7 @@ def test_public_lb_submission_is_transport_only_and_uses_frozen_b_attempts() -> 
     cohort = (ROOT / "scripts/build_public_lb_native_b_cohort.py").read_text(encoding="utf-8")
     notebook = (ROOT / "scripts/build_public_lb_native_b_notebook.py").read_text(encoding="utf-8")
     assert "load_solutions" not in builder and "load_solutions" not in cohort and "load_solutions" not in notebook
-    assert "attempt_candidate_indices" in builder and "duplicate_fallback" in builder
+    assert "attempt_candidate_indices" in builder and "IDENTITY_FALLBACK" in builder and "a_fallback_task_count" in builder
     assert '"--search-beams", "1"' in notebook and "PUBLIC_LB_B_SELECTION" in notebook
 
 

@@ -116,12 +116,20 @@ class NVARCNativeProvider:
             return 0.0
         import torch
         from transformers import AutoModelForCausalLM
+        from transformers.utils import logging as transformers_logging
 
         if not torch.cuda.is_available():
             raise RuntimeError("NVARC native provider requires CUDA")
+        # ``from_pretrained`` uses a tqdm-style per-parameter materialization
+        # display.  Kaggle renders every carriage-return update as a separate
+        # log line (and sometimes duplicates it), producing tens of thousands
+        # of misleading ``Loading weights: n/399`` lines.  Load telemetry is
+        # emitted by the worker as one structured MODEL_READY event instead.
+        transformers_logging.disable_progress_bar()
+        transformers_logging.set_verbosity_error()
         started = time.perf_counter()
         self.tokenizer, tokenizer_metadata = checkpoint_native_tokenizer(self.model_path, self.tokenizer_config_dir)
-        self.model = AutoModelForCausalLM.from_pretrained(str(self.model_path), local_files_only=True, trust_remote_code=False, torch_dtype=torch.bfloat16, low_cpu_mem_usage=True).to(self.device).eval()
+        self.model = AutoModelForCausalLM.from_pretrained(str(self.model_path), local_files_only=True, trust_remote_code=False, dtype=torch.bfloat16, low_cpu_mem_usage=True).to(self.device).eval()
         vocab_size = int(getattr(self.model.config, "vocab_size", -1))
         if vocab_size != len(self.tokenizer):
             raise RuntimeError(f"NVARC tokenizer/model vocabulary mismatch: model={vocab_size}, tokenizer={len(self.tokenizer)}")

@@ -93,6 +93,7 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
         if torch.cuda.current_device() != 0:
             raise RuntimeError(f"worker {worker_id}: local CUDA binding is not cuda:0")
         settings = config["B_augmentation_search"]
+        records.put({"event": "MODEL_LOAD_STARTED", "worker_id": worker_id, "physical_gpu_id": worker_id})
         provider = NVARCNativeProvider(model_path=Path(model_path), tokenizer_config_dir=Path(native_config_dir), device="cuda:0")
         load_seconds = provider.load()
         ttt = None
@@ -243,6 +244,26 @@ def _valid_checkpoint(path: Path, task_id: str, checkpoint_identity: str, config
     return dict(record)
 
 
+def checkpoint_identity_for(*, config_sha256: str, task_ids: tuple[str, ...], augmentation_count: int, worker_count: int, search_beams: int, generation_micro_batch_size: int, likelihood_micro_batch_size: int) -> str:
+    """Stable checkpoint identity shared with deadline recovery.
+
+    A parent watchdog may terminate this runner between atomic task writes and
+    the final aggregate write.  Keeping this construction public lets the
+    recovery tool accept only checkpoints produced by this exact frozen run.
+    """
+    payload = {
+        "config_sha256": config_sha256,
+        "task_ids": sorted(task_ids),
+        "augmentation_count": augmentation_count,
+        "worker_count": worker_count,
+        "search_beams": search_beams,
+        "generation_micro_batch_size": generation_micro_batch_size,
+        "likelihood_micro_batch_size": likelihood_micro_batch_size,
+        "inline_b_support_scoring": True,
+    }
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     for name in ("cohort", "config", "challenge_path", "model_path", "native_config_dir", "output"):
@@ -279,7 +300,7 @@ def main() -> None:
     if augmentation_count > len(bounded_native_augmentations(color_offsets=tuple(settings["color_offsets"]), pair_orders=tuple(settings["train_pair_orders"]))):
         raise ValueError("stage augmentation count exceeds frozen pool")
     config_sha256 = hashlib.sha256(args.config.read_bytes()).hexdigest()
-    checkpoint_identity = hashlib.sha256(json.dumps({"config_sha256": config_sha256, "task_ids": sorted(task_ids), "augmentation_count": augmentation_count, "worker_count": worker_count, "search_beams": args.search_beams, "generation_micro_batch_size": args.generation_micro_batch_size, "likelihood_micro_batch_size": args.likelihood_micro_batch_size, "inline_b_support_scoring": True}, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    checkpoint_identity = checkpoint_identity_for(config_sha256=config_sha256, task_ids=task_ids, augmentation_count=augmentation_count, worker_count=worker_count, search_beams=args.search_beams, generation_micro_batch_size=args.generation_micro_batch_size, likelihood_micro_batch_size=args.likelihood_micro_batch_size)
     if args.checkpoint_dir:
         (args.checkpoint_dir / "tasks").mkdir(parents=True, exist_ok=True)
     elif args.resume:
@@ -291,6 +312,7 @@ def main() -> None:
     if hardware.status.value != "SUCCESS" or len(hardware.gpus) < worker_count:
         raise RuntimeError(f"requires at least {worker_count} GPUs: {hardware.to_dict()}")
     started = time.perf_counter(); warmup = warm_model_safetensors(args.model_path)
+    print(json.dumps(warmup, sort_keys=True), flush=True)
     context = get_context("spawn"); records, ready, start, task_queue = context.Queue(), context.Queue(), context.Event(), context.Queue()
     by_task: dict[str, Any] = {}
     if args.resume and args.checkpoint_dir:
@@ -350,6 +372,9 @@ def main() -> None:
                 worker_state[int(item["worker_id"])] = f"BUSY:{item['task_id']}"
                 print(json.dumps(item, sort_keys=True), flush=True)
                 last_heartbeat = time.perf_counter()
+                continue
+            if event == "MODEL_LOAD_STARTED":
+                print(json.dumps(item, sort_keys=True), flush=True)
                 continue
             if event == "TASK_RETRY":
                 print(json.dumps(item, sort_keys=True), flush=True)

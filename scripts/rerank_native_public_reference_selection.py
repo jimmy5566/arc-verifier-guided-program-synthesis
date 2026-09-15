@@ -74,6 +74,7 @@ def main() -> None:
     parser.add_argument("--context-window", type=int, default=16384)
     parser.add_argument("--deadline-unix", type=float)
     parser.add_argument("--allow-deadline-partial", action="store_true")
+    parser.add_argument("--require-cached-evidence", action="store_true", help="never start a model for legacy/missing B evidence; leave those tasks for A fallback")
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError("refusing to overwrite frozen selection artifact")
@@ -87,6 +88,12 @@ def main() -> None:
     views = tuple(NativeAugmentation(geometry=geometry) for geometry in ("identity", "rot90", "rot180", "rot270", "flip_lr", "flip_ud", "transpose", "anti_transpose"))
     cached_by_task = {task_id: _cached_b_support_evidence(record, views) for task_id, record in records.items()}
     needs_model = any(value is None for value in cached_by_task.values())
+    if args.require_cached_evidence:
+        # Production has a fixed time reserve for assembly.  Inline evidence
+        # is part of the frozen Dynamic-B generation record; a legacy record
+        # is deliberately omitted so the finalizer can retain its A attempts
+        # instead of launching a surprise serial GPU scoring stage.
+        needs_model = False
     provider = None
     tasks = None
     if needs_model:
@@ -108,6 +115,9 @@ def main() -> None:
         evidence = cached_by_task[task_id]
         evidence_source = "task_local_inline_cache"
         if evidence is None:
+            if args.require_cached_evidence:
+                skipped.append(task_id)
+                continue
             assert provider is not None and tasks is not None
             original = _original_scores(record); evidence = []
             for index, candidate in enumerate(candidates):
@@ -132,7 +142,7 @@ def main() -> None:
     result["public_reference_source_sha256"] = hashlib.sha256(args.frozen.read_bytes()).hexdigest()
     result["public_reference_selection_runtime_seconds"] = time.perf_counter() - started
     result["public_reference_selection_protocol"] = "Existing native candidates only; teacher-forced scores in fixed reversible views; no candidate generation, target outputs, or task-specific rules."
-    result["public_reference_evidence_mode"] = "task_local_inline_cache" if not needs_model else "mixed_or_legacy_serial_model_scoring"
+    result["public_reference_evidence_mode"] = "task_local_inline_cache_required" if args.require_cached_evidence else ("task_local_inline_cache" if not needs_model else "mixed_or_legacy_serial_model_scoring")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 

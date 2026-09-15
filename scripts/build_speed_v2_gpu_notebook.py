@@ -78,20 +78,36 @@ print(json.dumps({{"event": "SPEED_V2_START", "source": str(root), "gpus": subpr
 # target-blind candidate/B-attempt equivalence reports below.
 phase1 = out / "phase1"; phase1.mkdir(exist_ok=True)
 smoke_cohort = frozen_cohort(phase1 / "cohort.json", SMOKE_TASK_IDS, "ARC2_SPEED_V2_8_TASK_BATCH_GATE", "fixed predeclared engineering smoke")
+phase1_failures = {{}}
 for batch_size in MICRO_BATCH_SIZES:
     condition = phase1 / f"batch_{{batch_size}}"; condition.mkdir(exist_ok=True)
     candidate, selection = condition / "A_candidates_frozen.json", condition / "B_selection_frozen.json"
     checkpoints, comparison = condition / "checkpoints", condition / "comparison_vs_batch1.json"
     if not candidate.exists():
-        run([sys.executable, str(root / "scripts/run_qwen4b_native_augmentation_search.py"), "--cohort", str(smoke_cohort), "--config", str(config), "--challenge-path", str(challenge), "--model-path", str(model), "--native-config-dir", str(native_config), "--output", str(candidate), "--stage", "external", "--external-augmentation-count", "32", "--external-worker-count", "4", "--search-beams", "1", "--generation-micro-batch-size", str(batch_size), "--likelihood-micro-batch-size", str(batch_size), "--checkpoint-dir", str(checkpoints), "--resume"], f"PHASE1_BATCH_{{batch_size}}_GENERATION", dict(os.environ, CUDA_VISIBLE_DEVICES="0,1,2,3"))
+        try:
+            run([sys.executable, str(root / "scripts/run_qwen4b_native_augmentation_search.py"), "--cohort", str(smoke_cohort), "--config", str(config), "--challenge-path", str(challenge), "--model-path", str(model), "--native-config-dir", str(native_config), "--output", str(candidate), "--stage", "external", "--external-augmentation-count", "32", "--external-worker-count", "4", "--search-beams", "1", "--generation-micro-batch-size", str(batch_size), "--likelihood-micro-batch-size", str(batch_size), "--checkpoint-dir", str(checkpoints), "--resume"], f"PHASE1_BATCH_{{batch_size}}_GENERATION", dict(os.environ, CUDA_VISIBLE_DEVICES="0,1,2,3"))
+        except subprocess.CalledProcessError as exc:
+            phase1_failures[str(batch_size)] = {{"stage": "generation", "returncode": exc.returncode}}
+            (condition / "FAILED.json").write_text(json.dumps(phase1_failures[str(batch_size)], indent=2, sort_keys=True) + "\\n", encoding="utf-8")
+            print(json.dumps({{"event": "PHASE1_BATCH_FAILED", "batch_size": batch_size, **phase1_failures[str(batch_size)]}}, sort_keys=True), flush=True)
+            continue
     if not selection.exists():
-        run([sys.executable, str(root / "scripts/rerank_native_public_reference_selection.py"), "--frozen", str(candidate), "--challenge-path", str(challenge), "--model-path", str(model), "--native-config-dir", str(native_config), "--output", str(selection)], f"PHASE1_BATCH_{{batch_size}}_B_SELECTION", dict(os.environ, CUDA_VISIBLE_DEVICES=""))
+        try:
+            run([sys.executable, str(root / "scripts/rerank_native_public_reference_selection.py"), "--frozen", str(candidate), "--challenge-path", str(challenge), "--model-path", str(model), "--native-config-dir", str(native_config), "--output", str(selection)], f"PHASE1_BATCH_{{batch_size}}_B_SELECTION", dict(os.environ, CUDA_VISIBLE_DEVICES=""))
+        except subprocess.CalledProcessError as exc:
+            phase1_failures[str(batch_size)] = {{"stage": "cpu_selection", "returncode": exc.returncode}}
+            (condition / "FAILED.json").write_text(json.dumps(phase1_failures[str(batch_size)], indent=2, sort_keys=True) + "\\n", encoding="utf-8")
+            continue
     baseline_candidate = phase1 / "batch_1" / "A_candidates_frozen.json" if batch_size != 1 else baselines / "old_smoke_A.json"
     baseline_selection = phase1 / "batch_1" / "B_selection_frozen.json" if batch_size != 1 else baselines / "old_smoke_B.json"
     if not comparison.exists():
-        run([sys.executable, str(root / "scripts/compare_speed_v2_artifacts.py"), "--baseline-candidates", str(baseline_candidate), "--candidate-candidates", str(candidate), "--baseline-selection", str(baseline_selection), "--candidate-selection", str(selection), "--output", str(comparison)], f"PHASE1_BATCH_{{batch_size}}_TARGET_BLIND_COMPARISON", dict(os.environ, CUDA_VISIBLE_DEVICES=""))
+        try:
+            run([sys.executable, str(root / "scripts/compare_speed_v2_artifacts.py"), "--baseline-candidates", str(baseline_candidate), "--candidate-candidates", str(candidate), "--baseline-selection", str(baseline_selection), "--candidate-selection", str(selection), "--output", str(comparison)], f"PHASE1_BATCH_{{batch_size}}_TARGET_BLIND_COMPARISON", dict(os.environ, CUDA_VISIBLE_DEVICES=""))
+        except subprocess.CalledProcessError as exc:
+            phase1_failures[str(batch_size)] = {{"stage": "target_blind_comparison", "returncode": exc.returncode}}
+            (condition / "FAILED.json").write_text(json.dumps(phase1_failures[str(batch_size)], indent=2, sort_keys=True) + "\\n", encoding="utf-8")
 
-comparisons = {{batch_size: json.loads((phase1 / f"batch_{{batch_size}}" / "comparison_vs_batch1.json").read_text(encoding="utf-8")) for batch_size in MICRO_BATCH_SIZES}}
+comparisons = {{batch_size: json.loads((phase1 / f"batch_{{batch_size}}" / "comparison_vs_batch1.json").read_text(encoding="utf-8")) for batch_size in MICRO_BATCH_SIZES if (phase1 / f"batch_{{batch_size}}" / "comparison_vs_batch1.json").exists()}}
 eligible = []
 for batch_size, report in comparisons.items():
     runtime = report["candidate_runtime"]
@@ -100,7 +116,7 @@ for batch_size, report in comparisons.items():
     if exact and safe: eligible.append((runtime["wall_seconds"], batch_size))
 if not eligible: raise RuntimeError("no Speed V2 micro-batch setting preserved target-blind 8-task candidate/B outputs")
 selected_batch = min(eligible)[1]
-selection_gate = {{"status": "SPEED_V2_BATCH_CONFIGURATION_FROZEN_TARGET_BLIND", "selected_batch_size": selected_batch, "eligible": [batch for _runtime, batch in sorted(eligible)], "comparisons": {{str(batch): {{key: comparisons[batch][key] for key in ("candidate_pool_support_exact_tasks", "candidate_order_exact_tasks", "b_attempt_exact_tasks", "max_abs_likelihood_delta", "baseline_runtime", "candidate_runtime")}} for batch in MICRO_BATCH_SIZES}}, "solutions_opened": False}}
+selection_gate = {{"status": "SPEED_V2_BATCH_CONFIGURATION_FROZEN_TARGET_BLIND", "selected_batch_size": selected_batch, "eligible": [batch for _runtime, batch in sorted(eligible)], "comparisons": {{str(batch): {{key: comparisons[batch][key] for key in ("candidate_pool_support_exact_tasks", "candidate_order_exact_tasks", "b_attempt_exact_tasks", "max_abs_likelihood_delta", "baseline_runtime", "candidate_runtime")}} for batch in comparisons}}, "failed_or_rejected_conditions": phase1_failures, "solutions_opened": False}}
 (phase1 / "selected_config.json").write_text(json.dumps(selection_gate, indent=2, sort_keys=True) + "\\n", encoding="utf-8")
 print(json.dumps({{"event": "PHASE1_SELECTED", "batch_size": selected_batch, "solutions_opened": False}}, sort_keys=True), flush=True)
 
