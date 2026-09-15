@@ -150,3 +150,13 @@ def test_speed_v2_target_blind_comparison_requires_same_support_and_b_attempts()
     assert report["candidate_order_exact_tasks"] == 1
     assert report["b_attempt_exact_tasks"] == 1
     assert report["max_abs_likelihood_delta"] == 0.0
+
+
+def test_speed_v2_reused_subset_runtime_is_not_a_wall_time_benchmark() -> None:
+    reused = _artifact()
+    reused["runtime_seconds"] = None
+    reused["runtime_scope"] = {"available": False, "reason": "subset_of_larger_dynamic_run"}
+    report = compare(reused, _artifact(), _selection(), _selection())
+    assert report["baseline_runtime"]["wall_seconds"] is None
+    assert report["baseline_runtime"]["wall_time_comparable"] is False
+    assert report["baseline_runtime"]["runtime_scope"]["reason"] == "subset_of_larger_dynamic_run"

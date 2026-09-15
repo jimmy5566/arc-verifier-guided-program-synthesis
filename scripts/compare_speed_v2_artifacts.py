@@ -75,8 +75,15 @@ def _runtime(artifact: dict[str, Any]) -> dict[str, Any]:
         item = by_worker.setdefault(worker, {"tasks": 0, "elapsed_seconds": 0.0})
         item["tasks"] = int(item["tasks"]) + 1
         item["elapsed_seconds"] = float(item["elapsed_seconds"]) + float(record.get("elapsed_seconds", 0.0))
+    raw_wall_seconds = artifact.get("runtime_seconds")
+    # A reused subset of a larger dynamic run has no meaningful wall time.
+    # Preserve the target-blind artifact comparison, but never let its parent
+    # job's runtime silently become a subset benchmark runtime.
+    wall_seconds = float(raw_wall_seconds) if isinstance(raw_wall_seconds, (int, float)) else None
     return {
-        "wall_seconds": float(artifact.get("runtime_seconds", 0.0)),
+        "wall_seconds": wall_seconds,
+        "wall_time_comparable": wall_seconds is not None,
+        "runtime_scope": artifact.get("runtime_scope", {"available": wall_seconds is not None}),
         "generation_wall_seconds_sum": float(artifact.get("generation_wall_seconds_sum", 0.0)),
         "original_likelihood_seconds_sum": float(artifact.get("original_likelihood_seconds_sum", 0.0)),
         "b_support_scoring_seconds_sum": float(artifact.get("b_support_scoring_seconds_sum", 0.0)),

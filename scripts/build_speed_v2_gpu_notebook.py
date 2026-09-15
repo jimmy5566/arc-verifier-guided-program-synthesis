@@ -69,6 +69,11 @@ def subset(source_path, task_ids, output):
     source["records"] = {{task_id: source["records"][task_id] for task_id in task_ids}}
     source["task_ids_hash"] = hashlib.sha256(json.dumps(sorted(task_ids), separators=(",", ":")).encode()).hexdigest()
     source["stage_task_count"] = len(task_ids)
+    # A full-job wall time is not a wall time for an arbitrary subset of its
+    # dynamically scheduled tasks.  The predictions remain reusable, but a
+    # matched OLD timing control is required before claiming a speedup.
+    source["runtime_seconds"] = None
+    source["runtime_scope"] = {{"available": False, "reason": "subset_of_larger_dynamic_run"}}
     output.write_text(json.dumps(source, indent=2, sort_keys=True) + "\\n", encoding="utf-8")
 
 print(json.dumps({{"event": "SPEED_V2_START", "source": str(root), "gpus": subprocess.check_output(["nvidia-smi", "-L"], text=True).splitlines(), "solutions_opened": False, "phase1_task_ids": SMOKE_TASK_IDS}}, sort_keys=True), flush=True)
@@ -148,6 +153,8 @@ if not score.exists():
     run([sys.executable, str(root / "scripts/score_speed_v2_frozen30.py"), "--manifest", str(frozen30), "--old-candidates", str(old_candidate), "--old-selection", str(old_selection), "--new-candidates", str(new_candidate), "--new-selection", str(new_selection), "--solutions-path", str(solutions), "--output", str(score)], "PHASE3_POST_FREEZE_SCORING")
 old_new = json.loads(comparison.read_text(encoding="utf-8")); scored = json.loads(score.read_text(encoding="utf-8"))
 old_wall, new_wall = old_new["baseline_runtime"]["wall_seconds"], old_new["candidate_runtime"]["wall_seconds"]
+if old_wall is None or new_wall is None:
+    raise RuntimeError("Speed V2 wall-time comparison requires matched full-run OLD and NEW artifacts")
 summary = {{"status": "SPEED_V2_COMPLETE", "selected_batch_size": selected_batch, "old_runtime_seconds": old_wall, "new_runtime_seconds": new_wall, "speedup": old_wall / new_wall if new_wall else None, "runtime_reduction_pct": (1 - new_wall / old_wall) * 100 if old_wall else None, "candidate_pool_support_exact_tasks": old_new["candidate_pool_support_exact_tasks"], "b_attempt_exact_tasks": old_new["b_attempt_exact_tasks"], "old_two_attempt_accuracy": scored["old"]["two_attempt_exact"], "new_two_attempt_accuracy": scored["new"]["two_attempt_exact"], "phase1": selection_gate, "per_gpu_load": old_new["candidate_runtime"]["worker_load"], "peak_vram_mb": old_new["candidate_runtime"]["peak_allocated_vram_mb"], "retries": old_new["candidate_runtime"]["retries"], "solutions_loaded_only_after_new_predictions_frozen": True}}
 (out / "SPEED_V2_REPORT.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\\n", encoding="utf-8")
 print(json.dumps({{"event": "SPEED_V2_COMPLETE", **summary, "report": str(out / "SPEED_V2_REPORT.json")}}, sort_keys=True), flush=True)
