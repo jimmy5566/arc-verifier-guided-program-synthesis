@@ -38,6 +38,19 @@ def _legacy_transform(task: ARCTask, augmentation: NativeAugmentation) -> ARCTas
     return ARCTask(task.task_id, train, test)
 
 
+def _legacy_native_messages(task: ARCTask, test_index: int) -> list[dict[str, str]]:
+    adapter = ARCNativeInputAdapter()
+    messages: list[dict[str, str]] = []
+    for example in task.train:
+        assert example.output is not None
+        messages.extend((
+            {"role": "user", "content": adapter.serialize_grid(example.input.to_list())},
+            {"role": "assistant", "content": adapter.serialize_grid(example.output.to_list())},
+        ))
+    messages.append({"role": "user", "content": adapter.serialize_grid(task.test[test_index].input.to_list())})
+    return messages
+
+
 def test_pair_order_factoring_matches_legacy_for_every_frozen30_task() -> None:
     tasks = load_dataset(ROOT / "data/raw/arc-agi_training_challenges.json")
     augmentations = bounded_native_augmentations(color_offsets=(0, 1), pair_orders=("canonical", "reversed"))
@@ -54,7 +67,9 @@ def test_cached_training_prefix_matches_native_messages_for_every_frozen30_task(
         for transformed in transform_tasks_for_augmentations(tasks[task_id], augmentations):
             prefix = native_training_message_prefix(transformed)
             for test_index, example in enumerate(transformed.test):
-                assert native_messages_from_training_prefix(prefix, example.input) == native_messages(transformed, test_index), task_id
+                legacy = _legacy_native_messages(transformed, test_index)
+                assert native_messages_from_training_prefix(prefix, example.input) == legacy, task_id
+                assert native_messages(transformed, test_index) == legacy, task_id
 
 
 def test_trusted_serializer_matches_validated_serializer_for_every_frozen30_grid() -> None:
