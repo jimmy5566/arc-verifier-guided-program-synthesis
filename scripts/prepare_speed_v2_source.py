@@ -20,6 +20,7 @@ FILES = (
     "scripts/build_public_lb_submission.py",
     "scripts/recover_public_lb_partial_candidates.py",
     "scripts/compare_speed_v2_artifacts.py",
+    "scripts/build_likelihood_speed_v39_notebook.py",
     "scripts/score_speed_v2_frozen30.py",
     "src/arc", "src/inference/__init__.py", "src/inference/arc_native_io.py",
     "src/inference/nvarc_native.py", "src/inference/nvarc_native_augmentation.py",

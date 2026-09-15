@@ -119,6 +119,14 @@ def test_speed_v2_runner_keeps_b_support_task_local_and_no_per_candidate_empty_c
     assert "task_local_inline_cache" in reranker and "needs_model" in reranker
 
 
+def test_likelihood_v39_keeps_generation_batch_frozen_and_tests_only_likelihood() -> None:
+    builder = (ROOT / "scripts/build_likelihood_speed_v39_notebook.py").read_text(encoding="utf-8")
+    assert "GENERATION_MICRO_BATCH_SIZE = 1" in builder
+    assert "LIKELIHOOD_MICRO_BATCH_SIZES = (1, 2, 4, 8, 16)" in builder
+    assert '"--generation-micro-batch-size", "1"' in builder
+    assert '"--likelihood-micro-batch-size", str(likelihood_batch_size)' in builder
+
+
 def _artifact(*, evidence: bool = True) -> dict:
     record = {
         "worker_id": 0,
@@ -148,7 +156,9 @@ def test_speed_v2_target_blind_comparison_requires_same_support_and_b_attempts()
     assert report["targets_or_solutions_opened"] is False
     assert report["candidate_pool_support_exact_tasks"] == 1
     assert report["candidate_order_exact_tasks"] == 1
+    assert report["ranked_candidate_indices_exact_tasks"] == 1
     assert report["b_attempt_exact_tasks"] == 1
+    assert report["b_attempt_indices_exact_tasks"] == 1
     assert report["max_abs_likelihood_delta"] == 0.0
 
 

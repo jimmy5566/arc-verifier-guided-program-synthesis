@@ -50,6 +50,28 @@ def _b_attempts(record: dict[str, Any]) -> list[str]:
     return values + [values[0]] * (2 - len(values))
 
 
+def _ranked_candidate_indices(record: dict[str, Any]) -> list[int]:
+    """Return the complete original-likelihood rank order, strictly.
+
+    A likelihood micro-batch is accepted only if it preserves not merely the
+    emitted grids, but also the deterministic ranking that feeds B-SUPPORT.
+    """
+    indices = [int(index) for index in record.get("ranked_candidate_indices", ())]
+    count = len(record.get("candidates", ()))
+    if len(indices) != count or set(indices) != set(range(count)):
+        raise ValueError("invalid ranked candidate indices")
+    return indices
+
+
+def _b_attempt_indices(record: dict[str, Any]) -> list[int]:
+    selected = record.get("public_reference_selection", {})
+    indices = [int(index) for index in selected.get("attempt_candidate_indices", ())]
+    count = len(record.get("candidates", ()))
+    if not indices or len(indices) > 2 or any(index < 0 or index >= count for index in indices):
+        raise ValueError("invalid frozen B attempt indices")
+    return indices + [indices[0]] * (2 - len(indices))
+
+
 def _evidence(record: dict[str, Any]) -> dict[str, tuple[float, tuple[float, ...]]]:
     candidates = list(record.get("candidates", ()))
     raw = record.get("b_support_evidence")
@@ -106,7 +128,9 @@ def compare(baseline: dict[str, Any], candidate: dict[str, Any], baseline_select
     for task_id in task_ids:
         base_support, new_support = _candidate_support(base_records[task_id]), _candidate_support(new_records[task_id])
         base_order, new_order = _candidate_order(base_records[task_id]), _candidate_order(new_records[task_id])
+        base_ranked, new_ranked = _ranked_candidate_indices(base_records[task_id]), _ranked_candidate_indices(new_records[task_id])
         base_attempts, new_attempts = _b_attempts(base_selected[task_id]), _b_attempts(new_selected[task_id])
+        base_attempt_indices, new_attempt_indices = _b_attempt_indices(base_selected[task_id]), _b_attempt_indices(new_selected[task_id])
         old_evidence, new_evidence = _evidence(base_records[task_id]), _evidence(new_records[task_id])
         deltas: list[float] = []
         if old_evidence and new_evidence and set(old_evidence) == set(new_evidence):
@@ -117,9 +141,11 @@ def compare(baseline: dict[str, Any], candidate: dict[str, Any], baseline_select
         per_task[task_id] = {
             "candidate_pool_support_exact": base_support == new_support,
             "candidate_order_exact": base_order == new_order,
+            "ranked_candidate_indices_exact": base_ranked == new_ranked,
             "candidate_count_baseline": len(base_support),
             "candidate_count_candidate": len(new_support),
             "b_attempts_exact": base_attempts == new_attempts,
+            "b_attempt_indices_exact": base_attempt_indices == new_attempt_indices,
             "baseline_attempts": base_attempts,
             "candidate_attempts": new_attempts,
             "max_abs_likelihood_delta": max(deltas) if deltas else None,
@@ -132,7 +158,9 @@ def compare(baseline: dict[str, Any], candidate: dict[str, Any], baseline_select
         "task_ids_hash": hashlib.sha256(json.dumps(task_ids, separators=(",", ":")).encode()).hexdigest(),
         "candidate_pool_support_exact_tasks": sum(item["candidate_pool_support_exact"] for item in per_task.values()),
         "candidate_order_exact_tasks": sum(item["candidate_order_exact"] for item in per_task.values()),
+        "ranked_candidate_indices_exact_tasks": sum(item["ranked_candidate_indices_exact"] for item in per_task.values()),
         "b_attempt_exact_tasks": sum(item["b_attempts_exact"] for item in per_task.values()),
+        "b_attempt_indices_exact_tasks": sum(item["b_attempt_indices_exact"] for item in per_task.values()),
         "max_abs_likelihood_delta": max((item["max_abs_likelihood_delta"] or 0.0 for item in per_task.values()), default=0.0),
         "baseline_runtime": _runtime(baseline),
         "candidate_runtime": _runtime(candidate),
@@ -153,7 +181,7 @@ def main() -> None:
     result = compare(_read(args.baseline_candidates), _read(args.candidate_candidates), _read(args.baseline_selection), _read(args.candidate_selection))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps({key: result[key] for key in ("status", "task_count", "candidate_pool_support_exact_tasks", "candidate_order_exact_tasks", "b_attempt_exact_tasks", "max_abs_likelihood_delta")}, sort_keys=True))
+    print(json.dumps({key: result[key] for key in ("status", "task_count", "candidate_pool_support_exact_tasks", "candidate_order_exact_tasks", "ranked_candidate_indices_exact_tasks", "b_attempt_exact_tasks", "b_attempt_indices_exact_tasks", "max_abs_likelihood_delta")}, sort_keys=True))
 
 
 if __name__ == "__main__":

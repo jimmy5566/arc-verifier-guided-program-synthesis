@@ -281,7 +281,10 @@ def main() -> None:
     parser.add_argument("--external-augmentation-count", type=int)
     parser.add_argument("--external-worker-count", type=int)
     parser.add_argument("--generation-micro-batch-size", type=int, default=1, choices=(1, 2, 4, 8))
-    parser.add_argument("--likelihood-micro-batch-size", type=int, default=1, choices=(1, 2, 4, 8))
+    # Generation and teacher-forced likelihood batching are deliberately
+    # independent controls.  The latter accepts 16 for the likelihood-only
+    # throughput gate; generation remains capped at the frozen values.
+    parser.add_argument("--likelihood-micro-batch-size", type=int, default=1, choices=(1, 2, 4, 8, 16))
     parser.add_argument("--deadline-seconds", type=float, default=None)
     parser.add_argument("--deadline-unix", type=float, default=None)
     parser.add_argument("--allow-deadline-partial", action="store_true")
