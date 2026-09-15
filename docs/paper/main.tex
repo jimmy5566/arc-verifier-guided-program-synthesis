@@ -4,7 +4,7 @@
 \usepackage{graphicx,booktabs,amsmath,hyperref,enumitem}
 \hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue,pdftitle={From Verifier-Guided Program Synthesis to Provenance-Aware Test-Time Inference for ARC-AGI},pdfauthor={Yuzhe Ma}}
 \title{From Verifier-Guided Program Synthesis to Provenance-Aware Test-Time Inference for ARC-AGI}
-\author{Yuzhe Ma\\\small University of Adelaide\\\small \texttt{a1918429@adelaide.edu.au}\\\small \url{https://github.com/jimmy5566}}
+\author{Yuzhe Ma\\\small University of Adelaide\\\small \texttt{a1918429@adelaide.edu.au}\\\small \url{https://github.com/jimmy5566/arc-verifier-guided-program-synthesis}}
 \date{Research preprint draft --- September 2026}
 \begin{document}
 \maketitle
@@ -18,7 +18,7 @@ ARC was proposed as a setting for studying skill acquisition and abstract reason
 
 The contribution is primarily experimental and systems-oriented. The author designed the experiments and implemented the symbolic/RuleSpec components, deterministic executor and verifier, augmentation and deduplication pipeline, candidate provenance, ranking diagnostics, frozen-cohort method, and multi-GPU operation. Public Qwen and NVARC-derived assets are external dependencies, not author-trained checkpoints. Results are intentionally scoped: diagnostic, train-only, held-out, and systems measurements are not combined.
 
-\paragraph{Research questions.} \textbf{RQ1:} How should representation capacity, neural candidate generation, and candidate selection be separated and measured? \textbf{RQ2:} Can provenance-aware, target-blind grid-level selection improve use of generated candidates without leaking target information? \textbf{RQ3:} How can inference be scaled operationally without changing the solver's semantics?
+\paragraph{Research questions.} \textbf{RQ1:} How should representation capacity, neural candidate generation, and candidate selection be separated and measured? \textbf{RQ2:} Can provenance-aware, target-blind grid-level selection improve two-attempt exact success relative to likelihood-only ranking? \textbf{RQ3:} How can inference be scaled operationally without changing the solver's semantics?
 
 \section{Related work}
 ARC foregrounds generalization from sparse examples \cite{chollet2019measure}. ARC-specific work has paired program representations with neural-guided bidirectional search \cite{alford2021neuralguided} and explored inductive logic programming over object-centric DSLs \cite{rocha2024ilp}. More broadly, neural-symbolic research studies learned representations alongside explicit reasoning \cite{garcez2015neurosymbolic}. Candidate-search work considers diverse-path aggregation \cite{wang2023selfconsistency} and deliberate branching \cite{yao2023treeofthoughts}; here the focus is instead a fixed, target-blind grid-level selector with logged provenance.
@@ -122,7 +122,7 @@ This project reframes ARC inference as a chain of inspectable decisions. Determi
 Frozen studies separate inference from scoring. The untouched60 A/B artifacts record the task list, method and configuration hashes, pre-inference freeze, post-prediction scoring gate, and paired outcome sets. Partial frozen30 reports list all included and excluded task IDs. Candidate generation uses fixed augmentation/search budgets, exact output deduplication, and predeclared distinct attempts.
 
 \section{Reproducibility}
-The public repository supports Python 3.11+ CPU tests and configuration inspection. GPU replay requires separately acquired ARC data, external public model assets, appropriate PyTorch/CUDA tooling, and historically four L4 GPUs for matching production topology. No raw datasets, test solutions, checkpoints, raw completions, or credentials are distributed. See \texttt{REPRODUCIBILITY.md} and \texttt{docs/EXPERIMENT\_INDEX.md}.
+The public repository supports Python 3.11+ CPU tests and configuration inspection. GPU replay requires separately acquired ARC data, external public model assets, appropriate PyTorch/CUDA tooling, and historically four L4 GPUs for matching production topology. No raw datasets, test solutions, checkpoints, raw completions, or credentials are distributed. See \texttt{REPRODUCIBILITY.md} and \texttt{docs/EXPERIMENT\_INDEX.md}. Code and public documentation are available in the linked repository; restricted competition artifacts, private predictions, and externally licensed model assets are not redistributed.
 
 {\footnotesize
 \bibliographystyle{plain}
