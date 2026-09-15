@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite it as below."
+title: "From Verifier-Guided Program Synthesis to Provenance-Aware Test-Time Inference for ARC-AGI"
+type: software
+authors:
+  - alias: "jimmy5566"
+repository-code: "https://github.com/jimmy5566/arc-verifier-guided-program-synthesis"
+abstract: "Independent research code and documentation for verifier-guided program synthesis, provenance-aware candidate selection, and frozen-cohort evaluation on ARC-style reasoning tasks."
+keywords:
+  - ARC-AGI
+  - neuro-symbolic reasoning
+  - program synthesis
+  - test-time inference
+  - verification
+license: "NOASSERTION"

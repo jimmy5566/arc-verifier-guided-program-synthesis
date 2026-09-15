@@ -1,109 +1,121 @@
-# Verifier-Guided LLM Program Synthesis for Abstract Reasoning
+# From Verifier-Guided Program Synthesis to Provenance-Aware Test-Time Inference for ARC-AGI
 
-An experimental neuro-symbolic framework for generating, compiling, executing, and deterministically verifying symbolic programs on ARC-style tasks.
+An independent research project on reliable reasoning for ARC-AGI: how to generate, verify, rank, and operationally run candidate grid-transformation programs when correct answers are unavailable at inference time.
 
-> **Research milestone:** V2 frozen Pilot 50 is complete with a **NO_GO** decision. The pipeline operated end to end, but neither frozen condition achieved an exact solve. This repository preserves that negative result.
+**What is original here.** This repository develops the experimental design and implementation around a typed symbolic/RuleSpec path, evidence extraction and deterministic execution, hard train-pair verification, reversible augmentation search, candidate provenance and deduplication, ranking diagnostics, frozen-cohort protocols, and a resumable multi-GPU inference system. It does **not** claim authorship or training of the public Qwen/NVARC-derived checkpoints used in several experiments.
 
-## Overview
+**Strongest held-out evidence.** On one 60-task cohort frozen before inference and target access, provenance-aware method B achieved 21/60 two-attempt exact solves versus 18/60 for method A (+3 net; exact paired two-sided binomial \(p=0.375\)). This is a directional result with limited power, not a statistical-significance or competition-performance claim. The same study found 30/60 candidate recall for both methods, isolating selection as a separate bottleneck. [Full audit](docs/RESEARCH_AUDIT.md) · [canonical experiment index](docs/EXPERIMENT_INDEX.md)
 
-This project asks whether an LLM can solve abstract reasoning tasks more reliably by proposing executable symbolic programs, then submitting them to a deterministic verifier, rather than directly predicting output grids. Program synthesis makes hypotheses inspectable and testable; exact train-pair verification supplies a hard correctness filter.
+## Research question
+
+Can a system that separates hypothesis generation from deterministic execution, train-pair verification, and provenance-aware selection make ARC-style test-time inference more reliable and diagnosable under fixed compute budgets?
+
+## Why ARC-AGI
+
+ARC tasks require inferring a transformation from a small number of input/output examples and producing output grids for unseen inputs. Their small-data structure makes it useful to distinguish representation, candidate generation, verification, and ranking failures rather than reporting only a final accuracy. ARC is the benchmark context for this work, not merely a competition target. See Chollet's original ARC proposal and the current [ARC Prize competition](https://arcprize.org/competitions/2026/arc-agi-2).
+
+## Main contributions
+
+- Designed a progression from bounded symbolic libraries and macro program synthesis to an evidence → RuleSpec → executor → hard-verifier architecture.
+- Built deterministic, typed execution and train-pair hard verification so candidate claims can be inspected independently of the neural generator.
+- Introduced reversible augmentation, exact-output deduplication with provenance, and fixed two-attempt selection protocols for candidate portfolios.
+- Used frozen, target-blind cohorts and post-freeze scoring to separate candidate recall, Top-1 ranking, and two-attempt exact success.
+- Implemented checkpointed multi-worker inference and evaluated a dynamic 4-worker scheduler by CPU-only replay of frozen task runtimes.
 
 ## System architecture
 
 ```mermaid
-flowchart TD
-    A[ARC task: train pairs and test input] --> B[Qwen3-8B high-level planner]
-    B --> C[Macro DSL]
-    C --> D[Symbolic or direct parameter formulation]
-    D --> E[ParameterSolver]
-    E --> F[MacroProgramCompiler]
-    F --> G[Deterministic CapabilityExecutor]
-    G --> H[HardVerifier on train pairs]
-    H -->|train-consistent| I[Freeze test prediction]
-    H -->|rejected| J[Reject candidate]
+flowchart LR
+  A[Task train pairs + test input] --> B[Candidate generators]
+  B --> C[Symbolic / RuleSpec path or native grid candidates]
+  C --> D[Deterministic executor]
+  D --> E[Hard train-pair verifier]
+  E --> F[Deduplicate + retain candidate provenance]
+  F --> G[Train-only likelihood / fixed selection]
+  G --> H[Freeze one or two distinct test attempts]
+  H --> I[Separate exact scoring, when labels are permitted]
 ```
 
-The low-level capability registry and verifier are deterministic. The LLM proposes hypotheses; it does not select against test solutions.
+The verifier is a hard consistency filter over training pairs; it is not a proof that a selected test output is correct. Candidate ranking never accesses test targets in the frozen protocols documented here.
 
-## Research evolution
+## Research journey
 
-**V1 — low-level primitive generation.** The primitive registry grew to roughly 119 capabilities. Schema validity was high, but executable rate was about 0.46%, train-consistent rate was 0%, and exact rate was 0%. The evidence points to API comprehension and parameter inference as the principal bottleneck.
+1. **Bounded symbolic libraries.** Whole-grid, object, relation, and pattern libraries established small but interpretable train-only baselines. They exposed coverage limits rather than yielding a general ARC solver.
+2. **LLM program synthesis failure analysis.** Low-level program generation showed high schema validity but 0% train consistency in frozen LLM conditions; the Macro DSL improved interface control but initially remained blocked by semantic grounding and parameter handling.
+3. **RuleSpec semantics.** The V3 representation separates evidence, rule recognition, parameter binding, deterministic execution, and verification. A train-only construction audit recovered 10/30 exact training coverages from 3/30 without reading test outputs; it is not end-to-end held-out accuracy.
+4. **Native neural candidate search.** Public ARC-specialized Qwen-derived inference with reversible views generated diverse candidate pools. This made candidate recall versus selection measurable.
+5. **Selection and deployment.** Multi-view likelihood, provenance-aware aggregation, fixed two-attempt policies, frozen cohorts, TTT safety gates, and dynamic scheduling focus on reliable test-time operation rather than model retraining.
 
-**V2 — Macro DSL and compilation.** V2 raises the planner's abstraction level: Qwen3-8B produces Macro DSL hypotheses, then symbolic/direct parameter handling, compilation, execution, and hard verification are deterministic. The hypothesis was that reducing low-level API burden would improve the executable pathway.
+## Experimental methodology
 
-## Experimental protocol
+Every scored cohort has a stated scope. In the stronger frozen studies, task IDs and method configuration were committed or hashed before inference; candidate pools and selected attempt ranks were frozen before solution files were opened. Results are never merged across cohorts.
 
-- Development-only iteration and frozen, deterministic task selection.
-- No task-ID-specific solver logic or answer patches.
-- Inference uses challenge inputs; predictions are frozen before the gated scorer may open solution files.
-- Exact train-pair verification, frozen configuration hashes, atomic task checkpoints, and deterministic seeds are recorded.
-- Public aggregate results exclude raw model completions, prediction grids, checkpoints, datasets, and model artifacts.
+| Cohort / artifact | N | Method | Metric | Result | Status / caveat |
+| --- | ---: | --- | --- | ---: | --- |
+| Symbolic library v0 | 1,000 training tasks | bounded whole-grid primitives | exact | 14/1,000 | train-only baseline |
+| V2 Pilot 50 | 50 + 50 | Qwen3-8B Macro DSL, symbolic/direct parameter routes | exact | 0/50 each | frozen pilot; retained negative result |
+| V3 construction push | 30 | complete RuleSpec, train-only hard verification | exact train coverage | 10/30 (from 3/30) | representation audit, not E2E test accuracy |
+| frozen30 diagnostic | 25 complete tasks | A/B/C/D candidate-search/selection ablation | Any-of-K / Top-1 / two attempts | D: 22/25 / 9/25 / 13/25 | partial diagnostic cohort; C was stopped before five tasks |
+| untouched60 | 60 | A vs provenance-aware B | two attempts | A 18/60; B 21/60 | target-blind frozen A/B, paired \(p=0.375\) |
+| dynamic scheduler replay | 60 | static vs dynamic four-worker assignment | makespan | 7,557.76 s → 5,564.09 s | CPU-only replay of frozen runtimes |
 
-See [Research status](docs/RESEARCH_STATUS.md), [reproducibility notes](docs/REPRODUCIBILITY.md), and the [data exposure audit](reports/data_exposure_audit.md).
+See [the complete evidence table](docs/RESEARCH_AUDIT.md) for sources, confidence, and qualification of every claim.
 
-## Infrastructure
+## Key results and failure analysis
 
-The V2 pilot used the Qwen3-8B competition model through local offline Transformers inference on Kaggle with four NVIDIA L4 GPUs. Four independent workers were mapped one-to-one to GPUs, with task-level parallelism, atomic checkpoints, and resume/no-duplicate behavior. A fresh-kernel four-way cold-load contention issue was diagnosed and corrected through a sequential artifact warm-up followed by staggered worker initialization.
+The central empirical observation is deliberately narrow: **a correct candidate in the pool is not equivalent to a solved task.** On frozen30 forensics, correct candidates existed for 21/30 tasks while likelihood Top-1 was exact for 9/30; median correct-candidate rank was 2. On untouched60, both A and B retained 30/60 diagnostic Any-of-K recall, but B changed two-attempt exact success from 18/60 to 21/60. These results support studying portfolio selection separately from candidate generation; they do not establish broad causal or statistically significant superiority.
 
-This is experimental infrastructure, not a claim of solver quality.
+Negative results remain part of the record: the V2 Macro DSL pilot had zero exact solves, a public ARC-SFT checkpoint was weak alone on a 30-task development diagnostic, and robust multi-view likelihood did not improve Top-1 on its one eight-task untouched evaluation despite improving some rank diagnostics.
 
-## V2 Pilot 50 results
+## Test-time inference pipeline
 
-| Condition | Tasks | Wall time | Exact |
-| --- | ---: | ---: | ---: |
-| Symbolic parameter | 50 | 652.94 s | 0 |
-| Direct parameter | 50 | 637.70 s | 0 |
+The current production-oriented path uses a public, pretrained ARC-specific Qwen-derived checkpoint through Transformers. It serializes grids in the verified NVARC-compatible contract, applies predeclared reversible augmentations, decodes bounded candidate branches where configured, deduplicates exact grid outputs while retaining origin support, scores with fixed train-only likelihood features, and emits two distinct attempts in a predeclared order. The repository’s original contribution is the surrounding research and inference system, not checkpoint training.
 
-**Decision: NO_GO.** Macro-level symbolic abstraction and deterministic compilation produced a fully operational research pipeline, but the frozen Qwen3-8B V2 Pilot did not achieve exact ARC solves. The appropriate next step is structured failure analysis, not a larger-scale evaluation of this failed configuration. The machine-readable aggregate is [LLM_PROGRAM_SYNTHESIS_V2_PILOT_50.json](experiments/results/LLM_PROGRAM_SYNTHESIS_V2_PILOT_50.json).
+## Multi-GPU production system
 
-## Key findings
+The runner supports complete model instances per L4, atomic task checkpoints, resume/no-duplicate behavior, deterministic task identity, and a dynamic shared queue. A 60-task historical replay estimates that dynamic assignment would reduce makespan by 26.38% (7,557.76 s to 5,564.09 s) and increase estimated utilization from 72.81% to 98.90%. Because this is a replay of frozen task times, it is systems evidence rather than a live throughput benchmark; inference semantics are unchanged.
 
-- Low-level LLM API interaction was the central V1 bottleneck.
-- V2 improved the architecture and verification pathway, but exact task solving remains unresolved.
-- Infrastructure is no longer the dominant blocker; hypothesis quality and abstraction alignment are the next targets.
-- Negative results are retained rather than hidden.
+## Reproducibility
 
-## Repository layout
+Start with [REPRODUCIBILITY.md](REPRODUCIBILITY.md). The public CPU test suite can be run without datasets or models. GPU studies require separately obtained data and public checkpoints under their respective terms; raw solutions, weights, prediction files, and private Kaggle artifacts are intentionally not redistributed.
 
-- `src/` — ARC data types, representations, deterministic capabilities, compiler, verification, and inference runners.
-- `configs/` — capability registries and public, portable experiment protocol descriptions.
-- `scripts/` — reproducible experiment and audit entry points; expensive inference is not run by the unit suite.
-- `tests/` — deterministic unit and integration tests.
-- `experiments/results/` — sanitized aggregate research summaries.
-- `reports/` and `docs/` — research, exposure-audit, and reproduction documentation.
+## Repository structure
 
-Raw datasets, restricted solutions, model weights, checkpoints, generated logs, notebook runtime state, and credentials are intentionally not distributed.
+- `src/` — symbolic representations, evidence extraction, executor/verifier, inference and scheduler code.
+- `configs/` — frozen protocols, model-interface provenance, and experiment configuration.
+- `experiments/results/` — versioned, sanitized aggregate results.
+- `artifacts/` — local/private detailed artifacts; not all are versioned because they may contain restricted data or outputs.
+- `reports/` — contemporaneous experimental reports, including negative findings.
+- `docs/` — research audit, paper draft, portfolio material, and experiment index.
+- `tests/` — CPU-oriented unit and integration tests.
 
-## Reproduction
+## External resources and attribution
 
-Python 3.11 or newer is required by the package metadata.
+ARC data and ARC Prize materials are external. The native inference work uses public Qwen/NVARC-derived assets where recorded in [`configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json`](configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json); the repository reimplements selected interface/search ideas and does not redistribute model weights or represent them as author-trained. PyTorch, Transformers, Kaggle, and their respective licenses govern their own components. See [LICENSE_NOTES.md](LICENSE_NOTES.md) and the paper references.
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -e ".[dev]"
-python -m pytest -q
-```
+## Limitations
 
-The v0.1.0 V2 Pilot release verified **78 passed**; the current public snapshot verifies **103 passed**. Obtain any ARC dataset yourself under its original terms and place it outside version control (for example, `data/raw/`). GPU/model-dependent runs require a separately acquired Qwen3-8B-compatible model and a CUDA-capable environment; see [reproducibility notes](docs/REPRODUCIBILITY.md). Do not use restricted competition solutions for development or scoring outside their permitted environment.
+- Diagnostic cohorts are small, and the untouched60 A/B difference is not statistically significant by the recorded paired exact test.
+- Candidate recall, Top-1, and two-attempt exact success are distinct; the selector remains a principal bottleneck.
+- Results depend on public pretrained ARC-specific checkpoints and on constrained compute.
+- Train-only representability audits do not demonstrate end-to-end generalization.
+- Historical scheduler evidence is a replay, not a new live benchmark.
+- Internal diagnostics and competition hidden tests differ; no public leaderboard result, rank, or medal is claimed.
 
-## Current status and roadmap
+## Competition status
 
-**Current milestone:** V2 frozen Pilot complete — **NO_GO**.
+**ARC Prize 2026**
 
-Planned research, not completed results:
+| Field | Status |
+| --- | --- |
+| Public LB | Pending |
+| Final rank | Pending |
+| Medal | Pending |
 
-- V2 failure taxonomy and stage-funnel analysis.
-- A controlled comparison with an ARC-adapted Qwen3-4B SFT under the same symbolic architecture.
-- Verifier-guided iterative repair.
-- Only then, consideration of a larger held-out evaluation.
+## Current status
 
-## Research integrity
+This is a research preprint and portfolio package, not a peer-reviewed publication and not a claim of an effective general ARC solver. The immediate research question is how to improve target-blind selection without contaminating frozen evaluation.
 
-This repository does not claim state-of-the-art performance, a competition ranking, or that it solves ARC. It uses no task-ID hardcoding, preserves inference-before-solutions gates, protects held-out evaluation, records frozen configurations, and reports negative outcomes.
+## Citation
 
-## Citation and contact
-
-No paper citation is claimed. Please cite this repository by its URL and release tag when referring to this research snapshot.
-
-Third-party assets are not redistributed; see [LICENSE_NOTES.md](LICENSE_NOTES.md).
+If you refer to this repository, use [`CITATION.cff`](CITATION.cff). No repository-wide license is asserted; see [LICENSE_NOTES.md](LICENSE_NOTES.md).
