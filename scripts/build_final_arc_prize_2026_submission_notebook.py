@@ -22,6 +22,7 @@ import signal
 import subprocess
 import sys
 import time
+import zipfile
 from pathlib import Path
 
 input_root = Path("/kaggle/input")
@@ -123,11 +124,15 @@ def run_competition_rerun():
     soft_dispatch_cutoff_unix = started_unix + (9 * 60 * 60 + 30 * 60)
     hard_inference_stop_unix = started_unix + (10 * 60 * 60 + 30 * 60)
     hard_finalize_unix = started_unix + (11 * 60 * 60 + 30 * 60)
-    source_archive = next(input_root.rglob("ARC2.tar.gz"), None)
     source_script = next(input_root.rglob("run_qwen4b_native_augmentation_search.py"), None)
-    root = working_root / "ARC2"
-    if not root.exists() and source_archive is not None:
-        shutil.unpack_archive(str(source_archive), str(working_root))
+    source_zip = next(input_root.rglob("ARC2.zip"), None)
+    source_archive = next(input_root.rglob("ARC2.tar.gz"), None)
+    root = working_root / "production_source" / "ARC2"
+    if not root.exists() and source_zip is not None:
+        with zipfile.ZipFile(source_zip) as archive:
+            archive.extractall(root.parent)
+    elif not root.exists() and source_archive is not None:
+        shutil.unpack_archive(str(source_archive), str(root.parent))
     elif not root.exists() and source_script is not None:
         shutil.copytree(source_script.parents[1], root)
     elif not root.exists():

@@ -104,6 +104,7 @@ def test_version4_notebook_has_real_watchdog_and_never_labels_fast_commit_a_pred
     assert "9 * 60 * 60 + 30 * 60" in source and "10 * 60 * 60 + 30 * 60" in source and "11 * 60 * 60 + 30 * 60" in source
     assert "PRODUCTION_INFERENCE_ACTIVE" in source and "NOT A COMPETITION PREDICTION" in source
     assert "recover_public_lb_partial_candidates.py" in source and "--require-model-prediction" in source
+    assert 'rglob("ARC2.zip")' in source and "zipfile.ZipFile" in source
 
 
 def test_recovery_uses_only_exact_atomic_checkpoints(tmp_path: Path) -> None:
