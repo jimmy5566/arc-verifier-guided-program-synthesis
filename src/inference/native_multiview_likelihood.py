@@ -40,6 +40,47 @@ def candidate_view_scores(provider: LikelihoodProvider, task: ARCTask, predictio
     return result
 
 
+def candidate_view_scores_many(
+    provider: LikelihoodProvider,
+    task: ARCTask,
+    predictions: list[list[list[list[int]]]],
+    views: tuple[NativeAugmentation, ...],
+    *,
+    context_window: int,
+    batch_size: int = 1,
+) -> list[list[float]]:
+    """Return fixed multi-view likelihoods for a whole candidate pool.
+
+    This is a transport optimization only: requests retain the historical
+    candidate -> view -> test ordering and every score uses the same original
+    conditional likelihood.  Providers without a batch API transparently use
+    the legacy scalar path.
+    """
+    if batch_size < 1:
+        raise ValueError("likelihood batch_size must be positive")
+    if any(len(prediction) != len(task.test) for prediction in predictions):
+        raise ValueError("candidate must supply one grid per test input")
+    requests: list[tuple[list[dict[str, str]], str]] = []
+    locations: list[tuple[int, int]] = []
+    for candidate_index, prediction in enumerate(predictions):
+        for view_index, view in enumerate(views):
+            for test_index, grid in enumerate(prediction):
+                transformed = view.transform_grid(grid).astype(int).tolist()
+                requests.append((_messages(task, view, test_index), serialize_grid(transformed)))
+                locations.append((candidate_index, view_index))
+    batched = getattr(provider, "continuation_log_likelihood_many", None)
+    if callable(batched):
+        scores = list(batched(requests, context_window=context_window, batch_size=batch_size))
+    else:
+        scores = [provider.continuation_log_likelihood(messages, continuation, context_window=context_window) for messages, continuation in requests]
+    if len(scores) != len(locations):
+        raise RuntimeError("native likelihood provider returned a mismatched multi-view score count")
+    grouped: list[list[list[float]]] = [[[] for _view in views] for _candidate in predictions]
+    for (candidate_index, view_index), score in zip(locations, scores, strict=True):
+        grouped[candidate_index][view_index].append(float(score))
+    return [[float(mean(view_scores)) for view_scores in candidate_views] for candidate_views in grouped]
+
+
 def loo_view_weights(provider: LikelihoodProvider, task: ARCTask, views: tuple[NativeAugmentation, ...], *, context_window: int) -> tuple[list[float], list[float]]:
     """Choose view weights solely from held-out *train* pair likelihoods."""
     if len(task.train) < 2: return [1.0 / len(views)] * len(views), []

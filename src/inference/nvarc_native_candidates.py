@@ -11,6 +11,10 @@ class NativeLikelihoodProvider(Protocol):
     def continuation_log_likelihood(self, messages: list[dict[str, str]], continuation: str, *, context_window: int) -> float: ...
 
 
+class BatchedNativeLikelihoodProvider(NativeLikelihoodProvider, Protocol):
+    def continuation_log_likelihood_many(self, requests: list[tuple[list[dict[str, str]], str]], *, context_window: int, batch_size: int) -> list[float]: ...
+
+
 @dataclass(frozen=True)
 class NativeGridCandidate:
     """One generated native grid, expressed back in the original task frame."""
@@ -54,6 +58,7 @@ def rank_candidates(
     original_messages: list[list[dict[str, str]]],
     *,
     context_window: int,
+    likelihood_batch_size: int = 1,
 ) -> list[tuple[NativeGridCandidate, float]]:
     """Rank candidates only by model likelihood conditioned on original inputs.
 
@@ -65,11 +70,23 @@ def rank_candidates(
 
     if not candidates or any(len(item.prediction) != len(original_messages) for item in candidates):
         raise ValueError("candidate predictions must align with original test inputs")
-    ranked = []
-    for candidate in candidates:
-        scores = [
-            provider.continuation_log_likelihood(messages, serialize_grid([list(row) for row in grid]), context_window=context_window)
-            for messages, grid in zip(original_messages, candidate.prediction, strict=True)
-        ]
-        ranked.append((candidate, sum(scores) / len(scores)))
+    if likelihood_batch_size < 1:
+        raise ValueError("likelihood_batch_size must be positive")
+    requests: list[tuple[list[dict[str, str]], str]] = []
+    owners: list[int] = []
+    for candidate_index, candidate in enumerate(candidates):
+        for messages, grid in zip(original_messages, candidate.prediction, strict=True):
+            requests.append((messages, serialize_grid([list(row) for row in grid])))
+            owners.append(candidate_index)
+    batched = getattr(provider, "continuation_log_likelihood_many", None)
+    if callable(batched):
+        scores = list(batched(requests, context_window=context_window, batch_size=likelihood_batch_size))
+    else:
+        scores = [provider.continuation_log_likelihood(messages, continuation, context_window=context_window) for messages, continuation in requests]
+    if len(scores) != len(owners):
+        raise RuntimeError("native likelihood provider returned a mismatched score count")
+    by_candidate: list[list[float]] = [[] for _ in candidates]
+    for owner, score in zip(owners, scores, strict=True):
+        by_candidate[owner].append(float(score))
+    ranked = [(candidate, sum(by_candidate[index]) / len(by_candidate[index])) for index, candidate in enumerate(candidates)]
     return sorted(ranked, key=lambda item: (-item[1], item[0].augmentation.geometry, item[0].augmentation.color_offset, item[0].augmentation.pair_order))

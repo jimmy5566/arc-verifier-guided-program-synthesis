@@ -69,7 +69,7 @@ def _preflight(task_ids: tuple[str, ...], challenge_path: Path, model_path: Path
     return {**native, "task_count": len(task_ids), "augmentation_count": len(augmentations), "test_input_count": sum(len(tasks[task_id].test) for task_id in task_ids), "min_prompt_tokens": min(counts), "median_prompt_tokens": statistics.median(counts), "max_prompt_tokens": max(counts), "truncated_tasks": 0}
 
 
-def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: int, augmentation_count: int, challenge_path: str, model_path: str, native_config_dir: str, config: dict[str, Any], records: Any, ready: Any, start: Any, enable_ttt: bool, search_beams: int, checkpoint_dir: str | None, checkpoint_identity: str, config_sha256: str, deadline_unix: float | None) -> None:
+def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: int, augmentation_count: int, challenge_path: str, model_path: str, native_config_dir: str, config: dict[str, Any], records: Any, ready: Any, start: Any, enable_ttt: bool, search_beams: int, checkpoint_dir: str | None, checkpoint_identity: str, config_sha256: str, deadline_unix: float | None, generation_micro_batch_size: int, likelihood_micro_batch_size: int) -> None:
     """One persistent CUDA worker pulling dynamically from the shared queue."""
     os.environ["CUDA_VISIBLE_DEVICES"] = str(worker_id)
     os.environ.setdefault("PYTORCH_ALLOC_CONF", "expandable_segments:True")
@@ -78,8 +78,9 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
         from arc.io import load_dataset
         from inference.dynamic_task_scheduler import task_seed
         from inference.nvarc_native import NVARCNativeProvider, native_messages, parse_native_grid
-        from inference.nvarc_native_augmentation import bounded_native_augmentations
+        from inference.nvarc_native_augmentation import NativeAugmentation, bounded_native_augmentations
         from inference.nvarc_native_candidates import NativeGridCandidate, deduplicate_candidates, rank_candidates
+        from inference.native_multiview_likelihood import candidate_view_scores_many
         from inference.native_ranker import feature_rows, rank_indices
         if enable_ttt:
             from inference.nvarc_native_ttt import NativeLoRAConfig, NativeTaskLoRA
@@ -104,6 +105,7 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
             raise TimeoutError("native augmentation start barrier timed out")
         tasks = load_dataset(challenge_path)
         augmentations = bounded_native_augmentations(color_offsets=tuple(settings["color_offsets"]), pair_orders=tuple(settings["train_pair_orders"]))[:augmentation_count]
+        b_support_views = tuple(NativeAugmentation(geometry=geometry) for geometry in ("identity", "rot90", "rot180", "rot270", "flip_lr", "flip_ud", "transpose", "anti_transpose"))
         while True:
             task_id = task_queue.get()
             if task_id is None:
@@ -129,29 +131,62 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
                     invalid, generated_count, token_total, generation_seconds = 0, 0, 0, 0.0
                     original_messages = [native_messages(task, index) for index in range(len(task.test))]
                     baseline_prediction = None; gpu_samples: list[dict[str, int | None]] = []
-                    for index, augmentation in enumerate(augmentations):
-                        augmented_task = augmentation.transform_task(task)
-                        grids_by_beam: list[list[list[list[int]] | None]] = [[] for _ in range(search_beams)]
-                        candidate_tokens, candidate_elapsed = [0] * search_beams, [0.0] * search_beams
-                        for test_index in range(len(task.test)):
-                            if search_beams == 1:
-                                seed = task_seed(task_id, int(settings["decode"]["seed"]), f"augmentation:{index}:test:{test_index}")
-                                generated_items = [provider.generate(native_messages(augmented_task, test_index), max_new_tokens=int(settings["decode"]["max_new_tokens"]), context_window=int(settings["decode"]["context_window"]), seed=seed)]
-                            else:
-                                generated_items = provider.generate_beams(native_messages(augmented_task, test_index), max_new_tokens=int(settings["decode"]["max_new_tokens"]), context_window=int(settings["decode"]["context_window"]), beam_width=search_beams)
-                            if len(generated_items) != search_beams: raise RuntimeError("native beam search returned an unexpected branch count")
-                            for beam_index, generated in enumerate(generated_items):
-                                candidate_tokens[beam_index] += generated.completion_tokens; candidate_elapsed[beam_index] += generated.elapsed_seconds
-                                parsed = parse_native_grid(generated.text); grids_by_beam[beam_index].append(None if parsed is None else augmentation.inverse_grid(parsed))
-                        generated_count += search_beams; token_total += sum(candidate_tokens); generation_seconds += sum(candidate_elapsed); gpu_samples.append(_gpu_telemetry(worker_id))
-                        for beam_index, grids in enumerate(grids_by_beam):
+                    generation_started = time.perf_counter()
+                    if search_beams == 1:
+                        requests: list[tuple[int, int, list[dict[str, str]], int]] = []
+                        for index, augmentation in enumerate(augmentations):
+                            augmented_task = augmentation.transform_task(task)
+                            for test_index in range(len(task.test)):
+                                requests.append((index, test_index, native_messages(augmented_task, test_index), task_seed(task_id, int(settings["decode"]["seed"]), f"augmentation:{index}:test:{test_index}")))
+                        generated_by_augmentation: list[list[Any | None]] = [[None] * len(task.test) for _augmentation in augmentations]
+                        for offset in range(0, len(requests), generation_micro_batch_size):
+                            batch = requests[offset:offset + generation_micro_batch_size]
+                            generated_batch = provider.generate_many([item[2] for item in batch], max_new_tokens=int(settings["decode"]["max_new_tokens"]), context_window=int(settings["decode"]["context_window"]), seeds=[item[3] for item in batch])
+                            if len(generated_batch) != len(batch): raise RuntimeError("native micro-batch returned an unexpected result count")
+                            for (index, test_index, _messages, _seed), generated in zip(batch, generated_batch, strict=True):
+                                generated_by_augmentation[index][test_index] = generated
+                        for index, augmentation in enumerate(augmentations):
+                            generated_items = generated_by_augmentation[index]
+                            if any(item is None for item in generated_items): raise RuntimeError("native micro-batch omitted a request")
+                            candidate_tokens = sum(item.completion_tokens for item in generated_items if item is not None)
+                            candidate_elapsed = sum(item.elapsed_seconds for item in generated_items if item is not None)
+                            grids = []
+                            for generated in generated_items:
+                                parsed = None if generated is None else parse_native_grid(generated.text)
+                                grids.append(None if parsed is None else augmentation.inverse_grid(parsed))
+                            generated_count += 1; token_total += candidate_tokens; generation_seconds += candidate_elapsed
                             if any(grid is None for grid in grids): invalid += 1; continue
                             prediction = tuple(tuple(tuple(int(cell) for cell in row) for row in grid) for grid in grids if grid is not None)
-                            item = NativeGridCandidate(augmentation, prediction, candidate_tokens[beam_index], candidate_elapsed[beam_index]); candidates.append(item)
-                            if index == 0 and beam_index == 0: baseline_prediction = [[list(row) for row in grid] for grid in item.prediction]
-                    unique = deduplicate_candidates(candidates); ranked = rank_candidates(provider, unique, original_messages, context_window=int(settings["decode"]["context_window"])) if unique else []
+                            item = NativeGridCandidate(augmentation, prediction, candidate_tokens, candidate_elapsed); candidates.append(item)
+                            if index == 0: baseline_prediction = [[list(row) for row in grid] for grid in item.prediction]
+                    else:
+                        for index, augmentation in enumerate(augmentations):
+                            augmented_task = augmentation.transform_task(task)
+                            grids_by_beam: list[list[list[list[int]] | None]] = [[] for _ in range(search_beams)]
+                            candidate_tokens, candidate_elapsed = [0] * search_beams, [0.0] * search_beams
+                            for test_index in range(len(task.test)):
+                                generated_items = provider.generate_beams(native_messages(augmented_task, test_index), max_new_tokens=int(settings["decode"]["max_new_tokens"]), context_window=int(settings["decode"]["context_window"]), beam_width=search_beams)
+                                if len(generated_items) != search_beams: raise RuntimeError("native beam search returned an unexpected branch count")
+                                for beam_index, generated in enumerate(generated_items):
+                                    candidate_tokens[beam_index] += generated.completion_tokens; candidate_elapsed[beam_index] += generated.elapsed_seconds
+                                    parsed = parse_native_grid(generated.text); grids_by_beam[beam_index].append(None if parsed is None else augmentation.inverse_grid(parsed))
+                            generated_count += search_beams; token_total += sum(candidate_tokens); generation_seconds += sum(candidate_elapsed)
+                            for beam_index, grids in enumerate(grids_by_beam):
+                                if any(grid is None for grid in grids): invalid += 1; continue
+                                prediction = tuple(tuple(tuple(int(cell) for cell in row) for row in grid) for grid in grids if grid is not None)
+                                item = NativeGridCandidate(augmentation, prediction, candidate_tokens[beam_index], candidate_elapsed[beam_index]); candidates.append(item)
+                                if index == 0 and beam_index == 0: baseline_prediction = [[list(row) for row in grid] for grid in item.prediction]
+                    generation_wall_seconds = time.perf_counter() - generation_started
+                    likelihood_started = time.perf_counter()
+                    unique = deduplicate_candidates(candidates); ranked = rank_candidates(provider, unique, original_messages, context_window=int(settings["decode"]["context_window"]), likelihood_batch_size=likelihood_micro_batch_size) if unique else []
+                    original_likelihood_seconds = time.perf_counter() - likelihood_started
                     likelihood_by_index = {unique.index(item): float(score) for item, score in ranked}; ranking_indices = rank_indices(feature_rows([item.to_dict() for item in unique], likelihood_by_index)) if unique else {}
-                    completed_record = {"task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "status": "SUCCESS" if ranked else "NO_VALID_NATIVE_CANDIDATE", "baseline_prediction": baseline_prediction[0] if baseline_prediction and len(baseline_prediction) == 1 else baseline_prediction, "candidates": [item.to_dict() for item in unique], "ranked_candidate_indices": [unique.index(item) for item, _score in ranked], "candidate_scores": [score for _item, score in ranked], "ranking_indices": ranking_indices, "ranked_prediction": ([[list(row) for row in grid] for grid in ranked[0][0].prediction][0] if len(ranked[0][0].prediction) == 1 else [[list(row) for row in grid] for grid in ranked[0][0].prediction]) if ranked else None, "generated_candidate_count": generated_count, "unique_candidate_count": len(unique), "invalid_candidate_count": invalid, "completion_tokens": token_total, "generation_seconds": generation_seconds, "model_vram_mb": provider.load_metadata.get("model_vram_mb"), "ttt": ttt_metrics, "elapsed_seconds": time.perf_counter() - task_started, "gpu_samples": gpu_samples, "seed_policy": "sha256(global_seed, task_id, augmentation, test_index)"}
+                    b_support_started = time.perf_counter()
+                    view_scores = candidate_view_scores_many(provider, task, [item.to_dict()["prediction"] for item in unique], b_support_views, context_window=int(settings["decode"]["context_window"]), batch_size=likelihood_micro_batch_size) if unique else []
+                    b_support_evidence = [{"candidate_index": index, "original_log_likelihood": likelihood_by_index[index], "view_negative_log_likelihoods": [-float(score) for score in view_scores[index]]} for index in range(len(unique))]
+                    b_support_scoring_seconds = time.perf_counter() - b_support_started
+                    gpu_samples.append(_gpu_telemetry(worker_id))
+                    completed_record = {"task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "status": "SUCCESS" if ranked else "NO_VALID_NATIVE_CANDIDATE", "baseline_prediction": baseline_prediction[0] if baseline_prediction and len(baseline_prediction) == 1 else baseline_prediction, "candidates": [item.to_dict() for item in unique], "ranked_candidate_indices": [unique.index(item) for item, _score in ranked], "candidate_scores": [score for _item, score in ranked], "ranking_indices": ranking_indices, "ranked_prediction": ([[list(row) for row in grid] for grid in ranked[0][0].prediction][0] if len(ranked[0][0].prediction) == 1 else [[list(row) for row in grid] for grid in ranked[0][0].prediction]) if ranked else None, "generated_candidate_count": generated_count, "unique_candidate_count": len(unique), "invalid_candidate_count": invalid, "completion_tokens": token_total, "generation_seconds": generation_seconds, "generation_wall_seconds": generation_wall_seconds, "original_likelihood_seconds": original_likelihood_seconds, "b_support_scoring_seconds": b_support_scoring_seconds, "b_support_view_spec": [view.to_dict() for view in b_support_views], "b_support_evidence": b_support_evidence, "model_vram_mb": provider.load_metadata.get("model_vram_mb"), "ttt": ttt_metrics, "elapsed_seconds": time.perf_counter() - task_started, "gpu_samples": gpu_samples, "seed_policy": "sha256(global_seed, task_id, augmentation, test_index)", "execution_optimization": {"generation_micro_batch_size": generation_micro_batch_size, "likelihood_micro_batch_size": likelihood_micro_batch_size, "inline_b_support_scoring": True}}
                     break
                 except Exception as exc:
                     import traceback
@@ -169,7 +204,7 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
                     checkpoint_error = None
                     for checkpoint_attempt in range(2):
                         try:
-                            atomic_write_json(checkpoint_path, {"checkpoint_identity": checkpoint_identity, "config_sha256": config_sha256, "task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "generation_config": {"augmentation_count": augmentation_count, "search_beams": search_beams, "decode": settings["decode"]}, "record": completed_record})
+                            atomic_write_json(checkpoint_path, {"checkpoint_identity": checkpoint_identity, "config_sha256": config_sha256, "task_id": task_id, "worker_id": worker_id, "physical_gpu_id": worker_id, "generation_config": {"augmentation_count": augmentation_count, "search_beams": search_beams, "generation_micro_batch_size": generation_micro_batch_size, "likelihood_micro_batch_size": likelihood_micro_batch_size, "decode": settings["decode"]}, "record": completed_record})
                             if _valid_checkpoint(checkpoint_path, task_id, checkpoint_identity, config_sha256) is None:
                                 raise RuntimeError(f"{task_id}: atomic checkpoint validation failed")
                             checkpoint_error = None
@@ -216,6 +251,8 @@ def main() -> None:
     parser.add_argument("--stage", choices=("smoke", "pilot", "full", "external"), required=True)
     parser.add_argument("--external-augmentation-count", type=int)
     parser.add_argument("--external-worker-count", type=int)
+    parser.add_argument("--generation-micro-batch-size", type=int, default=1, choices=(1, 2, 4, 8))
+    parser.add_argument("--likelihood-micro-batch-size", type=int, default=1, choices=(1, 2, 4, 8))
     parser.add_argument("--deadline-seconds", type=float, default=None)
     parser.add_argument("--deadline-unix", type=float, default=None)
     parser.add_argument("--allow-deadline-partial", action="store_true")
@@ -239,7 +276,7 @@ def main() -> None:
     if augmentation_count > len(bounded_native_augmentations(color_offsets=tuple(settings["color_offsets"]), pair_orders=tuple(settings["train_pair_orders"]))):
         raise ValueError("stage augmentation count exceeds frozen pool")
     config_sha256 = hashlib.sha256(args.config.read_bytes()).hexdigest()
-    checkpoint_identity = hashlib.sha256(json.dumps({"config_sha256": config_sha256, "task_ids": sorted(task_ids), "augmentation_count": augmentation_count, "worker_count": worker_count, "search_beams": args.search_beams}, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    checkpoint_identity = hashlib.sha256(json.dumps({"config_sha256": config_sha256, "task_ids": sorted(task_ids), "augmentation_count": augmentation_count, "worker_count": worker_count, "search_beams": args.search_beams, "generation_micro_batch_size": args.generation_micro_batch_size, "likelihood_micro_batch_size": args.likelihood_micro_batch_size, "inline_b_support_scoring": True}, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     if args.checkpoint_dir:
         (args.checkpoint_dir / "tasks").mkdir(parents=True, exist_ok=True)
     elif args.resume:
@@ -268,7 +305,7 @@ def main() -> None:
     children, worker_ready = [], []
     try:
         for worker_id in range(worker_count):
-            child = context.Process(target=_worker, args=(worker_id, task_queue, queue_remaining, len(task_ids), augmentation_count, str(args.challenge_path), str(args.model_path), str(args.native_config_dir), config, records, ready, start, args.enable_ttt, args.search_beams, str(args.checkpoint_dir) if args.checkpoint_dir else None, checkpoint_identity, config_sha256, deadline_unix)); child.start(); children.append(child)
+            child = context.Process(target=_worker, args=(worker_id, task_queue, queue_remaining, len(task_ids), augmentation_count, str(args.challenge_path), str(args.model_path), str(args.native_config_dir), config, records, ready, start, args.enable_ttt, args.search_beams, str(args.checkpoint_dir) if args.checkpoint_dir else None, checkpoint_identity, config_sha256, deadline_unix, args.generation_micro_batch_size, args.likelihood_micro_batch_size)); child.start(); children.append(child)
             ready_deadline = time.monotonic() + MODEL_LOAD_WATCHDOG_SECONDS
             while True:
                 try:
@@ -343,10 +380,11 @@ def main() -> None:
         "task_ids_hash": hashlib.sha256(json.dumps(sorted(task_ids), separators=(",", ":")).encode()).hexdigest(), "stage": args.stage, "stage_task_count": len(task_ids), "stage_augmentation_count": augmentation_count, "stage_worker_count": worker_count, "config_sha256": config_sha256, "preflight": preflight,
         "hardware": hardware.to_dict(), "worker_ready": worker_ready, "warmup": {key: warmup[key] for key in ("shard_count", "bytes_read", "seconds")}, "ttt_enabled": args.enable_ttt,
         "search": {"algorithm": "deterministic_native_token_beam_search" if args.search_beams > 1 else "greedy", "beams_per_augmentation": args.search_beams, "bounded_total_branches_per_task": augmentation_count * args.search_beams},
+        "execution_optimization": {"generation_micro_batch_size": args.generation_micro_batch_size, "likelihood_micro_batch_size": args.likelihood_micro_batch_size, "inline_b_support_scoring": True},
         "checkpointing": {"enabled": bool(args.checkpoint_dir), "resume": args.resume, "checkpoint_identity": checkpoint_identity, "root": str(args.checkpoint_dir) if args.checkpoint_dir else None, "resumed_task_count": len(task_ids) - len(unfinished)},
         "scheduling": {"type": "dynamic_fifo_shared_queue", "persistent_workers": worker_count, "worker_gpu_mapping": {str(worker): worker for worker in range(worker_count)}, "seed_policy": "SHA-256(global_seed, task_id, augmentation, test_index); independent of worker and queue order"},
         "deadline": {"deadline_unix": deadline_unix, "allow_partial": args.allow_deadline_partial, "skipped_task_ids": sorted(set(deadline_skipped)), "failed_task_ids": sorted({str(item.get("task_id")) for item in failures if item.get("task_id")}), "unfinished_task_ids": sorted(set(task_ids) - set(by_task))},
-        "runtime_seconds": time.perf_counter() - started, "generation_seconds_sum": sum(float(item["generation_seconds"]) for item in by_task.values()),
+        "runtime_seconds": time.perf_counter() - started, "generation_seconds_sum": sum(float(item["generation_seconds"]) for item in by_task.values()), "generation_wall_seconds_sum": sum(float(item.get("generation_wall_seconds", 0.0)) for item in by_task.values()), "original_likelihood_seconds_sum": sum(float(item.get("original_likelihood_seconds", 0.0)) for item in by_task.values()), "b_support_scoring_seconds_sum": sum(float(item.get("b_support_scoring_seconds", 0.0)) for item in by_task.values()),
         "gpu_utilization": {"sample_count": len(gpu_utilization_samples), "mean_pct": statistics.mean(gpu_utilization_samples) if gpu_utilization_samples else None, "min_pct": min(gpu_utilization_samples) if gpu_utilization_samples else None, "max_pct": max(gpu_utilization_samples) if gpu_utilization_samples else None}, "records": by_task,
     }
     atomic_write_json(args.output, artifact)

@@ -151,7 +151,68 @@ class NVARCNativeProvider:
         text = self.tokenizer.decode(generated, skip_special_tokens=True)
         result = NativeGeneration(text, prompt_tokens, int(generated.shape[-1]), time.perf_counter() - started)
         del output, encoded, generated
-        torch.cuda.empty_cache()
+        return result
+
+    def generate_many(
+        self,
+        messages_batch: list[list[dict[str, str]]],
+        *,
+        max_new_tokens: int,
+        context_window: int,
+        seeds: list[int],
+    ) -> list[NativeGeneration]:
+        """Greedily generate a padded batch of native prompts.
+
+        The per-request seeds remain part of the frozen task-local provenance,
+        although deterministic greedy decoding does not consume randomness.
+        A size-one batch deliberately uses the legacy path, giving the speed
+        benchmark an exact serial reference condition.
+        """
+        if not messages_batch or len(messages_batch) != len(seeds):
+            raise ValueError("native generation batch/messages seeds must align and be non-empty")
+        if len(messages_batch) == 1:
+            return [self.generate(messages_batch[0], max_new_tokens=max_new_tokens, context_window=context_window, seed=seeds[0])]
+        self.load(); import torch
+        assert self.model is not None and self.tokenizer is not None
+        rows = [
+            self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True)["input_ids"][0]
+            for messages in messages_batch
+        ]
+        prompt_lengths = [int(row.shape[-1]) for row in rows]
+        if max(prompt_lengths) > context_window:
+            raise ValueError(f"native prompt has {max(prompt_lengths)} tokens, exceeds frozen context {context_window}")
+        width = max(prompt_lengths)
+        input_ids = torch.full((len(rows), width), int(self.tokenizer.pad_token_id), dtype=rows[0].dtype)
+        attention_mask = torch.zeros((len(rows), width), dtype=torch.long)
+        for index, row in enumerate(rows):
+            input_ids[index, width - int(row.shape[-1]):] = row
+            attention_mask[index, width - int(row.shape[-1]):] = 1
+        # Greedy decoding is seed-independent, but retain deterministic seed
+        # initialization for the same provider contract as the serial path.
+        torch.manual_seed(int(seeds[0])); torch.cuda.manual_seed_all(int(seeds[0]))
+        started = time.perf_counter()
+        with torch.inference_mode():
+            output = self.model.generate(
+                input_ids=input_ids.to(self.device), attention_mask=attention_mask.to(self.device),
+                max_new_tokens=max_new_tokens, do_sample=False,
+                eos_token_id=self.tokenizer.eos_token_id, pad_token_id=self.tokenizer.pad_token_id,
+            )
+        elapsed = time.perf_counter() - started
+        result: list[NativeGeneration] = []
+        for index in range(len(rows)):
+            suffix = output[index, width:].detach().cpu()
+            eos_positions = (suffix == int(self.tokenizer.eos_token_id)).nonzero(as_tuple=False)
+            if len(eos_positions):
+                suffix = suffix[:int(eos_positions[0].item()) + 1]
+            else:
+                pad_positions = (suffix == int(self.tokenizer.pad_token_id)).nonzero(as_tuple=False)
+                if len(pad_positions):
+                    suffix = suffix[:int(pad_positions[0].item())]
+            result.append(NativeGeneration(
+                self.tokenizer.decode(suffix, skip_special_tokens=True), prompt_lengths[index],
+                int(suffix.shape[-1]), elapsed / len(rows),
+            ))
+        del output, input_ids, attention_mask, rows
         return result
 
     def generate_beams(
@@ -205,7 +266,6 @@ class NVARCNativeProvider:
             ))
             del suffix
         del generated, encoded
-        torch.cuda.empty_cache()
         return result
 
     def continuation_log_likelihood(self, messages: list[dict[str, str]], continuation: str, *, context_window: int) -> float:
@@ -230,8 +290,53 @@ class NVARCNativeProvider:
             predicted = logits[:, int(prefix.shape[-1]) - 1:-1, :]
             token_log_probs = torch.log_softmax(predicted.float(), dim=-1).gather(-1, target.unsqueeze(-1)).squeeze(-1)
         score = float(token_log_probs.mean().item())
-        # Likelihood is called once per candidate (and test input); release
-        # the full vocabulary logits before scoring the next candidate.
         del logits, token_log_probs, predicted, target, ids, prefix, continuation_ids, eos
-        torch.cuda.empty_cache()
         return score
+
+    def continuation_log_likelihood_many(
+        self,
+        requests: list[tuple[list[dict[str, str]], str]],
+        *,
+        context_window: int,
+        batch_size: int,
+    ) -> list[float]:
+        """Score native continuations in padded forward-pass micro-batches.
+
+        Each returned value is exactly the existing mean conditional
+        log-likelihood definition.  Padding is left-aligned with an explicit
+        attention mask, and the per-row prefix boundary selects only the
+        continuation plus terminal ``<|im_end|>`` tokens.
+        """
+        if not requests:
+            return []
+        if batch_size < 1:
+            raise ValueError("likelihood batch_size must be positive")
+        if batch_size == 1:
+            return [self.continuation_log_likelihood(messages, continuation, context_window=context_window) for messages, continuation in requests]
+        self.load(); import torch
+        assert self.model is not None and self.tokenizer is not None
+        result: list[float] = []
+        for start in range(0, len(requests), batch_size):
+            batch = requests[start:start + batch_size]
+            prefixes = [self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True)["input_ids"][0] for messages, _continuation in batch]
+            continuations = [self.tokenizer(continuation, add_special_tokens=False, return_tensors="pt")["input_ids"][0] for _messages, continuation in batch]
+            eos = torch.tensor([int(self.tokenizer.eos_token_id)], dtype=prefixes[0].dtype)
+            rows = [torch.cat((prefix, continuation, eos)) for prefix, continuation in zip(prefixes, continuations, strict=True)]
+            if max(int(row.shape[-1]) for row in rows) > context_window:
+                raise ValueError("native candidate score exceeds frozen context")
+            width = max(int(row.shape[-1]) for row in rows)
+            ids = torch.full((len(rows), width), int(self.tokenizer.pad_token_id), dtype=rows[0].dtype)
+            attention_mask = torch.zeros((len(rows), width), dtype=torch.long)
+            offsets: list[int] = []
+            for index, row in enumerate(rows):
+                offset = width - int(row.shape[-1]); offsets.append(offset)
+                ids[index, offset:] = row; attention_mask[index, offset:] = 1
+            with torch.inference_mode():
+                logits = self.model(input_ids=ids.to(self.device), attention_mask=attention_mask.to(self.device)).logits
+                for index, (prefix, continuation) in enumerate(zip(prefixes, continuations, strict=True)):
+                    target = ids[index, offsets[index] + int(prefix.shape[-1]):]
+                    predicted = logits[index, offsets[index] + int(prefix.shape[-1]) - 1:offsets[index] + int(rows[index].shape[-1]) - 1, :]
+                    token_log_probs = torch.log_softmax(predicted.float(), dim=-1).gather(-1, target.to(self.device).unsqueeze(-1)).squeeze(-1)
+                    result.append(float(token_log_probs.mean().item()))
+            del logits, ids, attention_mask, prefixes, continuations, rows, eos
+        return result
