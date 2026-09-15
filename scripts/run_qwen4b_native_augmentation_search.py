@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from inference.kaggle_l4_parallel_runner import atomic_write_json, inspect_hardware
-from inference.nvarc_native_augmentation import bounded_native_augmentations
+from inference.nvarc_native_augmentation import bounded_native_augmentations, transform_tasks_for_augmentations
 from inference.qwen3_transformers_parallel_runner import MODEL_LOAD_WATCHDOG_SECONDS, warm_model_safetensors
 
 COHORT_HASH = "a2f8fb66af4b83ec09bd2f3f2bf3fc5e948a6f7a6839898b5dbf26c6f77d1fc8"
@@ -78,7 +78,7 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
         from arc.io import load_dataset
         from inference.dynamic_task_scheduler import task_seed
         from inference.nvarc_native import NVARCNativeProvider, native_messages, parse_native_grid
-        from inference.nvarc_native_augmentation import NativeAugmentation, bounded_native_augmentations
+        from inference.nvarc_native_augmentation import NativeAugmentation, bounded_native_augmentations, transform_tasks_for_augmentations
         from inference.nvarc_native_candidates import NativeGridCandidate, deduplicate_candidates, rank_candidates
         from inference.native_multiview_likelihood import candidate_view_scores_many
         from inference.native_ranker import feature_rows, rank_indices
@@ -138,8 +138,8 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
                     generation_started = time.perf_counter()
                     if search_beams == 1:
                         requests: list[tuple[int, int, list[dict[str, str]], int]] = []
-                        for index, augmentation in enumerate(augmentations):
-                            augmented_task = augmentation.transform_task(task)
+                        transformed_tasks = transform_tasks_for_augmentations(task, augmentations)
+                        for index, augmented_task in enumerate(transformed_tasks):
                             for test_index in range(len(task.test)):
                                 requests.append((index, test_index, native_messages(augmented_task, test_index), task_seed(task_id, int(settings["decode"]["seed"]), f"augmentation:{index}:test:{test_index}")))
                         generated_by_augmentation: list[list[Any | None]] = [[None] * len(task.test) for _augmentation in augmentations]
@@ -164,8 +164,9 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
                             item = NativeGridCandidate(augmentation, prediction, candidate_tokens, candidate_elapsed); candidates.append(item)
                             if index == 0: baseline_prediction = [[list(row) for row in grid] for grid in item.prediction]
                     else:
+                        transformed_tasks = transform_tasks_for_augmentations(task, augmentations)
                         for index, augmentation in enumerate(augmentations):
-                            augmented_task = augmentation.transform_task(task)
+                            augmented_task = transformed_tasks[index]
                             grids_by_beam: list[list[list[list[int]] | None]] = [[] for _ in range(search_beams)]
                             candidate_tokens, candidate_elapsed = [0] * search_beams, [0.0] * search_beams
                             for test_index in range(len(task.test)):

@@ -50,6 +50,29 @@ _INVERSE: dict[Geometry, Geometry] = {
 }
 
 
+def _transform_task_geometry_and_color(task: ARCTask, geometry: Geometry, color_offset: int) -> ARCTask:
+    """Transform pixels once, deliberately leaving train-pair order canonical."""
+    augmentation = NativeAugmentation(geometry=geometry, color_offset=color_offset)
+    train = tuple(
+        ARCExample(
+            ARCGrid(augmentation.transform_grid(example.input.values)),
+            ARCGrid(augmentation.transform_grid(example.output.values)),
+        )
+        for example in task.train
+    )
+    test = tuple(ARCExample(ARCGrid(augmentation.transform_grid(example.input.values))) for example in task.test)
+    return ARCTask(task.task_id, train, test)
+
+
+def _with_pair_order(task: ARCTask, pair_order: PairOrder) -> ARCTask:
+    """Return the canonical transformed task or its exact reversed train view."""
+    if pair_order == "canonical":
+        return task
+    if pair_order == "reversed":
+        return ARCTask(task.task_id, tuple(reversed(task.train)), task.test)
+    raise ValueError(f"unsupported pair order: {pair_order}")
+
+
 @dataclass(frozen=True)
 class NativeAugmentation:
     """A fully invertible global augmentation, independent of task identity."""
@@ -75,14 +98,7 @@ class NativeAugmentation:
         return _geometric(values, _INVERSE[self.geometry]).astype(int).tolist()
 
     def transform_task(self, task: ARCTask) -> ARCTask:
-        train = tuple(
-            ARCExample(ARCGrid(self.transform_grid(example.input.values)), ARCGrid(self.transform_grid(example.output.values)))
-            for example in task.train
-        )
-        if self.pair_order == "reversed":
-            train = tuple(reversed(train))
-        test = tuple(ARCExample(ARCGrid(self.transform_grid(example.input.values))) for example in task.test)
-        return ARCTask(task.task_id, train, test)
+        return _with_pair_order(_transform_task_geometry_and_color(task, self.geometry, self.color_offset), self.pair_order)
 
     def to_dict(self) -> dict[str, object]:
         return {"geometry": self.geometry, "color_offset": self.color_offset, "pair_order": self.pair_order}
@@ -96,3 +112,17 @@ def bounded_native_augmentations(*, color_offsets: tuple[int, ...] = (0, 1), pai
     # pools: first 4 are rotations, first 8 all dihedral geometries, then the
     # same geometry set for the next reversible color/order condition.
     return tuple(NativeAugmentation(geometry, offset, order) for offset in color_offsets for order in pair_orders for geometry in _GEOMETRIES)
+
+
+def transform_tasks_for_augmentations(task: ARCTask, augmentations: tuple[NativeAugmentation, ...]) -> tuple[ARCTask, ...]:
+    """Build views in input order, sharing geometry/color work across pair orders."""
+    bases: dict[tuple[Geometry, int], ARCTask] = {}
+    transformed: list[ARCTask] = []
+    for augmentation in augmentations:
+        key = (augmentation.geometry, augmentation.color_offset)
+        base = bases.get(key)
+        if base is None:
+            base = _transform_task_geometry_and_color(task, *key)
+            bases[key] = base
+        transformed.append(_with_pair_order(base, augmentation.pair_order))
+    return tuple(transformed)

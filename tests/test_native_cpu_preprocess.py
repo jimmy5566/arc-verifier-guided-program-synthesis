@@ -1,0 +1,44 @@
+"""CPU-only exact-equivalence checks for Frozen30 native preprocessing."""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from arc.io import load_dataset
+from arc.task import ARCExample, ARCGrid, ARCTask
+from inference.nvarc_native_augmentation import NativeAugmentation, bounded_native_augmentations, transform_tasks_for_augmentations
+
+
+ROOT = Path(__file__).resolve().parents[1]
+FROZEN30 = json.loads((ROOT / "artifacts/speed_v2_frozen30_manifest.json").read_text(encoding="utf-8"))["task_ids"]
+
+
+def _signature(task: ARCTask) -> tuple[object, ...]:
+    return (
+        task.task_id,
+        tuple((example.input.to_list(), None if example.output is None else example.output.to_list()) for example in task.train),
+        tuple(example.input.to_list() for example in task.test),
+    )
+
+
+def _legacy_transform(task: ARCTask, augmentation: NativeAugmentation) -> ARCTask:
+    train = tuple(
+        ARCExample(
+            ARCGrid(augmentation.transform_grid(example.input.values)),
+            ARCGrid(augmentation.transform_grid(example.output.values)),
+        )
+        for example in task.train
+    )
+    if augmentation.pair_order == "reversed":
+        train = tuple(reversed(train))
+    test = tuple(ARCExample(ARCGrid(augmentation.transform_grid(example.input.values))) for example in task.test)
+    return ARCTask(task.task_id, train, test)
+
+
+def test_pair_order_factoring_matches_legacy_for_every_frozen30_task() -> None:
+    tasks = load_dataset(ROOT / "data/raw/arc-agi_training_challenges.json")
+    augmentations = bounded_native_augmentations(color_offsets=(0, 1), pair_orders=("canonical", "reversed"))
+    for task_id in FROZEN30:
+        legacy = tuple(_signature(_legacy_transform(tasks[task_id], augmentation)) for augmentation in augmentations)
+        optimized = tuple(_signature(value) for value in transform_tasks_for_augmentations(tasks[task_id], augmentations))
+        assert optimized == legacy, task_id
