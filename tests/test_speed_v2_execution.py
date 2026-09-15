@@ -11,6 +11,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from scripts.compare_speed_v2_artifacts import compare
 from arc.task import ARCExample, ARCGrid, ARCTask
 from inference.native_multiview_likelihood import candidate_view_scores, candidate_view_scores_many
 from inference.nvarc_native_augmentation import NativeAugmentation
@@ -116,3 +117,36 @@ def test_speed_v2_runner_keeps_b_support_task_local_and_no_per_candidate_empty_c
     assert "candidate_view_scores_many" in runner and '"b_support_evidence"' in runner
     assert '"generation_micro_batch_size"' in runner and '"likelihood_micro_batch_size"' in runner
     assert "task_local_inline_cache" in reranker and "needs_model" in reranker
+
+
+def _artifact(*, evidence: bool = True) -> dict:
+    record = {
+        "worker_id": 0,
+        "elapsed_seconds": 1.0,
+        "candidates": [
+            {"prediction": [[[0]]], "support_count": 3},
+            {"prediction": [[[1]]], "support_count": 1},
+        ],
+        "ranked_candidate_indices": [0, 1],
+        "candidate_scores": [-0.2, -0.3],
+    }
+    if evidence:
+        record["b_support_evidence"] = [
+            {"candidate_index": 0, "original_log_likelihood": -0.2, "view_negative_log_likelihoods": [0.1] * 8},
+            {"candidate_index": 1, "original_log_likelihood": -0.3, "view_negative_log_likelihoods": [0.2] * 8},
+        ]
+    return {"status": "CANDIDATES_AND_RANKED_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING", "runtime_seconds": 2.0, "records": {"task": record}}
+
+
+def _selection() -> dict:
+    artifact = _artifact()["records"]["task"]
+    return {"status": "PUBLIC_REFERENCE_SELECTION_FROZEN_BEFORE_EXACT_SCORING", "records": {"task": {**artifact, "public_reference_selection": {"attempt_candidate_indices": [0, 1]}}}}
+
+
+def test_speed_v2_target_blind_comparison_requires_same_support_and_b_attempts() -> None:
+    report = compare(_artifact(), _artifact(), _selection(), _selection())
+    assert report["targets_or_solutions_opened"] is False
+    assert report["candidate_pool_support_exact_tasks"] == 1
+    assert report["candidate_order_exact_tasks"] == 1
+    assert report["b_attempt_exact_tasks"] == 1
+    assert report["max_abs_likelihood_delta"] == 0.0
