@@ -8,6 +8,7 @@ from arc.io import load_dataset
 from arc.task import ARCExample, ARCGrid, ARCTask
 from inference.nvarc_native_augmentation import NativeAugmentation, bounded_native_augmentations, transform_tasks_for_augmentations
 from inference.nvarc_native import native_messages, native_messages_from_training_prefix, native_training_message_prefix
+from inference.nvarc_native_candidates import NativeGridCandidate
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,3 +54,17 @@ def test_cached_training_prefix_matches_native_messages_for_every_frozen30_task(
             prefix = native_training_message_prefix(transformed)
             for test_index, example in enumerate(transformed.test):
                 assert native_messages_from_training_prefix(prefix, example.input) == native_messages(transformed, test_index), task_id
+
+
+def test_candidate_dict_cache_preserves_serialized_values_and_is_not_mutated() -> None:
+    augmentations = bounded_native_augmentations(color_offsets=(0, 1), pair_orders=("canonical", "reversed"))
+    candidates = [
+        NativeGridCandidate(augmentation, (((index % 10, (index + 1) % 10),),), index + 1, float(index))
+        for index, augmentation in enumerate(augmentations)
+    ]
+    legacy = [item.to_dict() for item in candidates]
+    cached = [item.to_dict() for item in candidates]
+    # The downstream CPU consumers receive the same data and only read it.
+    _ = [item["prediction"] for item in cached]
+    assert cached == legacy
+    assert [item.to_dict() for item in candidates] == legacy
