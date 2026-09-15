@@ -94,3 +94,18 @@ def test_candidate_dict_cache_preserves_serialized_values_and_is_not_mutated() -
     _ = [item["prediction"] for item in cached]
     assert cached == legacy
     assert [item.to_dict() for item in candidates] == legacy
+
+
+def test_candidate_dict_cache_matches_repeated_serialization_for_every_frozen30_task() -> None:
+    tasks = load_dataset(ROOT / "data/raw/arc-agi_training_challenges.json")
+    augmentations = bounded_native_augmentations(color_offsets=(0, 1), pair_orders=("canonical", "reversed"))
+    for task_id in FROZEN30:
+        task = tasks[task_id]
+        prediction = tuple(tuple(tuple(int(cell) for cell in row) for row in example.input.to_list()) for example in task.test)
+        unique = [
+            NativeGridCandidate(augmentation, prediction, index + 1, float(index), (augmentation,))
+            for index, augmentation in enumerate(augmentations)
+        ]
+        legacy = [item.to_dict() for item in unique]
+        cached = [item.to_dict() for item in unique]
+        assert [item.to_dict() for item in unique] == legacy == cached, task_id
