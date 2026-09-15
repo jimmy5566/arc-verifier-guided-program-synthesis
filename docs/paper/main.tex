@@ -1,9 +1,10 @@
 \documentclass[10pt]{article}
+\linespread{0.95}\selectfont
 \usepackage[margin=0.82in]{geometry}
 \usepackage{graphicx,booktabs,amsmath,hyperref,enumitem}
-\hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
+\hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue,pdftitle={From Verifier-Guided Program Synthesis to Provenance-Aware Test-Time Inference for ARC-AGI},pdfauthor={Yuzhe Ma}}
 \title{From Verifier-Guided Program Synthesis to Provenance-Aware Test-Time Inference for ARC-AGI}
-\author{Independent Research Project\\\small Repository: \url{https://github.com/jimmy5566/arc-verifier-guided-program-synthesis}}
+\author{Yuzhe Ma\\\small University of Adelaide\\\small \texttt{a1918429@adelaide.edu.au}\\\small \url{https://github.com/jimmy5566}}
 \date{Research preprint draft --- September 2026}
 \begin{document}
 \maketitle
@@ -17,8 +18,12 @@ ARC was proposed as a setting for studying skill acquisition and abstract reason
 
 The contribution is primarily experimental and systems-oriented. The author designed the experiments and implemented the symbolic/RuleSpec components, deterministic executor and verifier, augmentation and deduplication pipeline, candidate provenance, ranking diagnostics, frozen-cohort method, and multi-GPU operation. Public Qwen and NVARC-derived assets are external dependencies, not author-trained checkpoints. Results are intentionally scoped: diagnostic, train-only, held-out, and systems measurements are not combined.
 
+\paragraph{Research questions.} \textbf{RQ1:} How should representation capacity, neural candidate generation, and candidate selection be separated and measured? \textbf{RQ2:} Can provenance-aware, target-blind grid-level selection improve use of generated candidates without leaking target information? \textbf{RQ3:} How can inference be scaled operationally without changing the solver's semantics?
+
 \section{Related work}
-ARC foregrounds generalization from sparse examples \cite{chollet2019measure}. This work uses public Qwen-family models \cite{qwen3} through the Transformers ecosystem \cite{wolf2020transformers}, but studies their behavior inside a constrained inference architecture rather than training a new foundation model. The grid serialization and selected candidate-search concepts were independently reimplemented after an interface/provenance audit of NVARC \cite{nvarc}; training code, LoRA/TTT implementation, datasets, and submission code were not reused. The current project is not a comparison against these external works.
+ARC foregrounds generalization from sparse examples \cite{chollet2019measure}. ARC-specific work has paired program representations with neural-guided bidirectional search \cite{alford2021neuralguided} and explored inductive logic programming over object-centric DSLs \cite{rocha2024ilp}. More broadly, neural-symbolic research studies learned representations alongside explicit reasoning \cite{garcez2015neurosymbolic}. Candidate-search work considers diverse-path aggregation \cite{wang2023selfconsistency} and deliberate branching \cite{yao2023treeofthoughts}; here the focus is instead a fixed, target-blind grid-level selector with logged provenance.
+
+This work uses public Qwen-family models \cite{qwen3} through the Transformers ecosystem \cite{wolf2020transformers}, but studies their behavior inside a constrained inference architecture rather than training a new foundation model. The grid serialization and selected candidate-search concepts were independently reimplemented after an interface/provenance audit of NVARC \cite{nvarc}; training code, LoRA/TTT implementation, datasets, and submission code were not reused. The current project is not a comparison against these external works.
 
 \section{Problem setting}
 Each task provides training input/output grids and a test input. A candidate is acceptable to the symbolic path only if deterministic execution exactly matches every training output. For neural grid candidates, train pairs inform prompts and train-only scores, but not hidden test targets. We distinguish three outcomes: (i) \emph{Any-of-K} candidate recall, scored after freezing, asks whether any candidate equals the target; (ii) Top-1 asks whether the predeclared first ranked output is exact; and (iii) two-attempt exact success asks whether either of two distinct predeclared outputs is exact. Any-of-K is diagnostic, not a deployable accuracy.
@@ -26,7 +31,7 @@ Each task provides training input/output grids and a test input. A candidate is 
 \section{Symbolic and neuro-symbolic architecture}
 The symbolic path is \emph{evidence extraction $\rightarrow$ rule recognition $\rightarrow$ parameter inference $\rightarrow$ RuleSpec $\rightarrow$ deterministic execution $\rightarrow$ hard verification}. Typed values, selectors, and bindings make intermediate assumptions inspectable. The hard verifier establishes train consistency; it cannot certify that a test output is correct.
 
-Early bounded libraries established an interpretable but weak reference: the V0 library solved 14/1,000 official training tasks, while V1 object and V2 relation libraries each solved 6/1,000. A V2 Qwen3-8B Macro DSL pipeline completed both frozen 50-task symbolic and direct-parameter pilot conditions with 0 exact solves. The retained failure analysis attributed the bottleneck to planner/interface and parameter grounding rather than claiming that deterministic verification was defective.
+Early bounded libraries established an interpretable but weak reference on 1,000 official training tasks. V0 produced 14 standalone exact task solves (and thus 14 cumulative solves). V1 object solvers produced 6 standalone solves, of which 4 were newly added over V0, raising the V0+V1 union to 18. V2 relation/composition solvers also produced 6 standalone solves, but all overlapped the V0+V1 union: they added 0 and left cumulative coverage at 18. A V2 Qwen3-8B Macro DSL pipeline completed both frozen 50-task symbolic and direct-parameter pilot conditions with 0 exact solves. The retained failure analysis attributed the bottleneck to planner/interface and parameter grounding rather than claiming that deterministic verification was defective.
 
 \begin{figure}[t]
 \centering\includegraphics[width=\linewidth]{figures/research_evolution.png}
@@ -119,6 +124,8 @@ Frozen studies separate inference from scoring. The untouched60 A/B artifacts re
 \section{Reproducibility}
 The public repository supports Python 3.11+ CPU tests and configuration inspection. GPU replay requires separately acquired ARC data, external public model assets, appropriate PyTorch/CUDA tooling, and historically four L4 GPUs for matching production topology. No raw datasets, test solutions, checkpoints, raw completions, or credentials are distributed. See \texttt{REPRODUCIBILITY.md} and \texttt{docs/EXPERIMENT\_INDEX.md}.
 
+{\footnotesize
 \bibliographystyle{plain}
 \bibliography{references}
+}
 \end{document}

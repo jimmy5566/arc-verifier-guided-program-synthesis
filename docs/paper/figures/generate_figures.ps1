@@ -25,13 +25,13 @@ function Draw-BarChart($filename, $title, $labels, $series, [int]$maximum, $ylab
     $bmp, $g = New-Canvas 1300 680
     $black = [System.Drawing.Color]::FromArgb(40,40,40)
     Draw-Text $g $title 55 24 25 $black
-    $left=115; $top=100; $right=1240; $bottom=560; $plotH=$bottom-$top; $groupW=($right-$left)/$labels.Count
+    $left=165; $top=100; $right=1240; $bottom=560; $plotH=$bottom-$top; $groupW=($right-$left)/$labels.Count
     $pen=[System.Drawing.Pen]::new($black,2); $g.DrawLine($pen,$left,$bottom,$right,$bottom); $g.DrawLine($pen,$left,$top,$left,$bottom)
-    foreach($tick in @(0, [int]($maximum/2), $maximum)) { $y=$bottom-($tick/$maximum*$plotH); $grid=[System.Drawing.Pen]::new([System.Drawing.Color]::FromArgb(220,225,230),1); $g.DrawLine($grid,$left,$y,$right,$y); $grid.Dispose(); Draw-Text $g "$tick" 65 ($y-10) 16 $black }
-    Draw-Text $g $ylabel 12 295 15 $black 90
+    foreach($tick in @(0, [int]($maximum/2), $maximum)) { $y=$bottom-($tick/$maximum*$plotH); $grid=[System.Drawing.Pen]::new([System.Drawing.Color]::FromArgb(220,225,230),1); $g.DrawLine($grid,$left,$y,$right,$y); $grid.Dispose(); Draw-Text $g "$tick" 105 ($y-12) 18 $black }
+    Draw-Text $g $ylabel 8 290 18 $black 145
     $colors=@([System.Drawing.Color]::FromArgb(76,120,168),[System.Drawing.Color]::FromArgb(245,133,24),[System.Drawing.Color]::FromArgb(84,162,75))
-    for($s=0;$s -lt $series.Count;$s++) { $entry=$series[$s]; $barW=($groupW*0.52)/$series.Count; for($i=0;$i -lt $labels.Count;$i++){ $val=$entry.values[$i]; $x=$left+$i*$groupW+$groupW*.24+$s*$barW; $h=$val/$maximum*$plotH; $brush=[System.Drawing.SolidBrush]::new($colors[$s]); $g.FillRectangle($brush,$x,$bottom-$h,$barW-5,$h); $brush.Dispose(); Draw-Text $g "$val" ($x+4) ($bottom-$h-24) 14 $black }; Draw-Text $g $entry.name (820+$s*0) (70+$s*24) 14 $colors[$s] }
-    for($i=0;$i -lt $labels.Count;$i++){ Draw-Text $g $labels[$i] ($left+$i*$groupW+$groupW*.20) 585 15 $black ($groupW*.7) }
+    for($s=0;$s -lt $series.Count;$s++) { $entry=$series[$s]; $barW=($groupW*0.52)/$series.Count; for($i=0;$i -lt $labels.Count;$i++){ $val=$entry.values[$i]; $x=$left+$i*$groupW+$groupW*.24+$s*$barW; $h=$val/$maximum*$plotH; $brush=[System.Drawing.SolidBrush]::new($colors[$s]); $g.FillRectangle($brush,$x,$bottom-$h,$barW-5,$h); $brush.Dispose(); Draw-Text $g "$val" ($x+4) ($bottom-$h-27) 16 $black }; Draw-Text $g $entry.name 805 (64+$s*28) 17 $colors[$s] }
+    for($i=0;$i -lt $labels.Count;$i++){ Draw-Text $g $labels[$i] ($left+$i*$groupW+$groupW*.20) 585 18 $black ($groupW*.7) }
     $pen.Dispose(); Save-Canvas $bmp $g $filename
 }
 
