@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import Any, TypeAlias
 
 ARCGridValue: TypeAlias = list[list[int]]
+_DIGITS = "0123456789"
 
 
 def _checked_grid(value: Any) -> ARCGridValue | None:
@@ -32,6 +33,16 @@ class ARCNativeInputAdapter:
             raise ValueError("ARC native transport requires a rectangular 1..30 grid of colors 0..9")
         return "\n".join("".join(str(cell) for cell in row) for row in checked)
 
+    @staticmethod
+    def serialize_trusted_grid(grid: Any) -> str:
+        """Fast exact renderer for already-validated internal ``ARCGrid`` values.
+
+        This intentionally performs no validation.  Callers use it only for
+        arrays held by ``ARCGrid`` after the public boundary has validated
+        shape and colors; untrusted lists continue through ``serialize_grid``.
+        """
+        return "\n".join("".join(_DIGITS[int(cell)] for cell in row) for row in grid)
+
     def training_prefix(self, task: Any) -> tuple[tuple[str, str], ...]:
         """Serialize train examples once for reuse across a task's test inputs."""
         messages: list[tuple[str, str]] = []
@@ -39,16 +50,19 @@ class ARCNativeInputAdapter:
             if example.output is None:
                 raise ValueError("native few-shot adapter requires every train output")
             messages.extend((
-                ("user", self.serialize_grid(example.input.to_list())),
-                ("assistant", self.serialize_grid(example.output.to_list())),
+                ("user", self.serialize_trusted_grid(example.input.values)),
+                ("assistant", self.serialize_trusted_grid(example.output.values)),
             ))
         return tuple(messages)
 
     def messages_from_training_prefix(self, prefix: tuple[tuple[str, str], ...], test_input: Any) -> list[dict[str, str]]:
         """Materialize independent message dictionaries from immutable prefix text."""
         messages = [{"role": role, "content": content} for role, content in prefix]
-        value = test_input.to_list() if hasattr(test_input, "to_list") else test_input
-        messages.append({"role": "user", "content": self.serialize_grid(value)})
+        if hasattr(test_input, "values"):
+            text = self.serialize_trusted_grid(test_input.values)
+        else:
+            text = self.serialize_grid(test_input)
+        messages.append({"role": "user", "content": text})
         return messages
 
     def messages(self, task: Any, test_index: int) -> list[dict[str, str]]:

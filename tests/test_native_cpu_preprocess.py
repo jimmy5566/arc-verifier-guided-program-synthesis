@@ -9,6 +9,7 @@ from arc.task import ARCExample, ARCGrid, ARCTask
 from inference.nvarc_native_augmentation import NativeAugmentation, bounded_native_augmentations, transform_tasks_for_augmentations
 from inference.nvarc_native import native_messages, native_messages_from_training_prefix, native_training_message_prefix
 from inference.nvarc_native_candidates import NativeGridCandidate
+from inference.arc_native_io import ARCNativeInputAdapter
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,6 +55,16 @@ def test_cached_training_prefix_matches_native_messages_for_every_frozen30_task(
             prefix = native_training_message_prefix(transformed)
             for test_index, example in enumerate(transformed.test):
                 assert native_messages_from_training_prefix(prefix, example.input) == native_messages(transformed, test_index), task_id
+
+
+def test_trusted_serializer_matches_validated_serializer_for_every_frozen30_grid() -> None:
+    tasks = load_dataset(ROOT / "data/raw/arc-agi_training_challenges.json")
+    adapter = ARCNativeInputAdapter()
+    for task_id in FROZEN30:
+        for example in (*tasks[task_id].train, *tasks[task_id].test):
+            assert adapter.serialize_trusted_grid(example.input.values) == adapter.serialize_grid(example.input.to_list()), task_id
+            if example.output is not None:
+                assert adapter.serialize_trusted_grid(example.output.values) == adapter.serialize_grid(example.output.to_list()), task_id
 
 
 def test_candidate_dict_cache_preserves_serialized_values_and_is_not_mutated() -> None:
