@@ -7,6 +7,7 @@ from pathlib import Path
 from arc.io import load_dataset
 from arc.task import ARCExample, ARCGrid, ARCTask
 from inference.nvarc_native_augmentation import NativeAugmentation, bounded_native_augmentations, transform_tasks_for_augmentations
+from inference.nvarc_native import native_messages, native_messages_from_training_prefix, native_training_message_prefix
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -42,3 +43,13 @@ def test_pair_order_factoring_matches_legacy_for_every_frozen30_task() -> None:
         legacy = tuple(_signature(_legacy_transform(tasks[task_id], augmentation)) for augmentation in augmentations)
         optimized = tuple(_signature(value) for value in transform_tasks_for_augmentations(tasks[task_id], augmentations))
         assert optimized == legacy, task_id
+
+
+def test_cached_training_prefix_matches_native_messages_for_every_frozen30_task() -> None:
+    tasks = load_dataset(ROOT / "data/raw/arc-agi_training_challenges.json")
+    augmentations = bounded_native_augmentations(color_offsets=(0, 1), pair_orders=("canonical", "reversed"))
+    for task_id in FROZEN30:
+        for transformed in transform_tasks_for_augmentations(tasks[task_id], augmentations):
+            prefix = native_training_message_prefix(transformed)
+            for test_index, example in enumerate(transformed.test):
+                assert native_messages_from_training_prefix(prefix, example.input) == native_messages(transformed, test_index), task_id

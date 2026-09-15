@@ -77,7 +77,7 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
     try:
         from arc.io import load_dataset
         from inference.dynamic_task_scheduler import task_seed
-        from inference.nvarc_native import NVARCNativeProvider, native_messages, parse_native_grid
+        from inference.nvarc_native import NVARCNativeProvider, native_messages, native_messages_from_training_prefix, native_training_message_prefix, parse_native_grid
         from inference.nvarc_native_augmentation import NativeAugmentation, bounded_native_augmentations, transform_tasks_for_augmentations
         from inference.nvarc_native_candidates import NativeGridCandidate, deduplicate_candidates, rank_candidates
         from inference.native_multiview_likelihood import candidate_view_scores_many
@@ -133,15 +133,17 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
                         ttt_metrics = ttt.fit_task(provider, task, augmentations=train_augmentations, context_window=int(settings["decode"]["context_window"]))
                     candidates: list[NativeGridCandidate] = []
                     invalid, generated_count, token_total, generation_seconds = 0, 0, 0, 0.0
-                    original_messages = [native_messages(task, index) for index in range(len(task.test))]
+                    original_prefix = native_training_message_prefix(task)
+                    original_messages = [native_messages_from_training_prefix(original_prefix, task.test[index].input) for index in range(len(task.test))]
                     baseline_prediction = None; gpu_samples: list[dict[str, int | None]] = []
                     generation_started = time.perf_counter()
                     if search_beams == 1:
                         requests: list[tuple[int, int, list[dict[str, str]], int]] = []
                         transformed_tasks = transform_tasks_for_augmentations(task, augmentations)
+                        transformed_prefixes = [native_training_message_prefix(value) for value in transformed_tasks]
                         for index, augmented_task in enumerate(transformed_tasks):
                             for test_index in range(len(task.test)):
-                                requests.append((index, test_index, native_messages(augmented_task, test_index), task_seed(task_id, int(settings["decode"]["seed"]), f"augmentation:{index}:test:{test_index}")))
+                                requests.append((index, test_index, native_messages_from_training_prefix(transformed_prefixes[index], augmented_task.test[test_index].input), task_seed(task_id, int(settings["decode"]["seed"]), f"augmentation:{index}:test:{test_index}")))
                         generated_by_augmentation: list[list[Any | None]] = [[None] * len(task.test) for _augmentation in augmentations]
                         for offset in range(0, len(requests), generation_micro_batch_size):
                             batch = requests[offset:offset + generation_micro_batch_size]
@@ -165,12 +167,13 @@ def _worker(worker_id: int, task_queue: Any, queue_remaining: Any, task_total: i
                             if index == 0: baseline_prediction = [[list(row) for row in grid] for grid in item.prediction]
                     else:
                         transformed_tasks = transform_tasks_for_augmentations(task, augmentations)
+                        transformed_prefixes = [native_training_message_prefix(value) for value in transformed_tasks]
                         for index, augmentation in enumerate(augmentations):
                             augmented_task = transformed_tasks[index]
                             grids_by_beam: list[list[list[list[int]] | None]] = [[] for _ in range(search_beams)]
                             candidate_tokens, candidate_elapsed = [0] * search_beams, [0.0] * search_beams
                             for test_index in range(len(task.test)):
-                                generated_items = provider.generate_beams(native_messages(augmented_task, test_index), max_new_tokens=int(settings["decode"]["max_new_tokens"]), context_window=int(settings["decode"]["context_window"]), beam_width=search_beams)
+                                generated_items = provider.generate_beams(native_messages_from_training_prefix(transformed_prefixes[index], augmented_task.test[test_index].input), max_new_tokens=int(settings["decode"]["max_new_tokens"]), context_window=int(settings["decode"]["context_window"]), beam_width=search_beams)
                                 if len(generated_items) != search_beams: raise RuntimeError("native beam search returned an unexpected branch count")
                                 for beam_index, generated in enumerate(generated_items):
                                     candidate_tokens[beam_index] += generated.completion_tokens; candidate_elapsed[beam_index] += generated.elapsed_seconds

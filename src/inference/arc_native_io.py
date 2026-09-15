@@ -32,19 +32,29 @@ class ARCNativeInputAdapter:
             raise ValueError("ARC native transport requires a rectangular 1..30 grid of colors 0..9")
         return "\n".join("".join(str(cell) for cell in row) for row in checked)
 
-    def messages(self, task: Any, test_index: int) -> list[dict[str, str]]:
-        if not 0 <= test_index < len(task.test):
-            raise IndexError("test index out of range")
-        messages: list[dict[str, str]] = []
+    def training_prefix(self, task: Any) -> tuple[tuple[str, str], ...]:
+        """Serialize train examples once for reuse across a task's test inputs."""
+        messages: list[tuple[str, str]] = []
         for example in task.train:
             if example.output is None:
                 raise ValueError("native few-shot adapter requires every train output")
             messages.extend((
-                {"role": "user", "content": self.serialize_grid(example.input.to_list())},
-                {"role": "assistant", "content": self.serialize_grid(example.output.to_list())},
+                ("user", self.serialize_grid(example.input.to_list())),
+                ("assistant", self.serialize_grid(example.output.to_list())),
             ))
-        messages.append({"role": "user", "content": self.serialize_grid(task.test[test_index].input.to_list())})
+        return tuple(messages)
+
+    def messages_from_training_prefix(self, prefix: tuple[tuple[str, str], ...], test_input: Any) -> list[dict[str, str]]:
+        """Materialize independent message dictionaries from immutable prefix text."""
+        messages = [{"role": role, "content": content} for role, content in prefix]
+        value = test_input.to_list() if hasattr(test_input, "to_list") else test_input
+        messages.append({"role": "user", "content": self.serialize_grid(value)})
         return messages
+
+    def messages(self, task: Any, test_index: int) -> list[dict[str, str]]:
+        if not 0 <= test_index < len(task.test):
+            raise IndexError("test index out of range")
+        return self.messages_from_training_prefix(self.training_prefix(task), task.test[test_index].input)
 
 
 class ARCNativeOutputParser:

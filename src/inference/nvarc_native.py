@@ -28,6 +28,14 @@ def native_messages(task: Any, test_index: int) -> list[dict[str, str]]:
     return ARCNativeInputAdapter().messages(task, test_index)
 
 
+def native_training_message_prefix(task: Any) -> tuple[tuple[str, str], ...]:
+    return ARCNativeInputAdapter().training_prefix(task)
+
+
+def native_messages_from_training_prefix(prefix: tuple[tuple[str, str], ...], test_input: Any) -> list[dict[str, str]]:
+    return ARCNativeInputAdapter().messages_from_training_prefix(prefix, test_input)
+
+
 _EXPECTED_TOKENS = {
     "0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8,
     "9": 9, "Ċ": 10, "user": 11, "assistant": 12, "<|endoftext|>": 13,
