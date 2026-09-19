@@ -145,7 +145,7 @@ def main() -> None:
     })
     kernel = args.output / "kernel"; kernel.mkdir()
     notebook_name = f"{args.kernel_slug}.ipynb"
-    _write(kernel / notebook_name, {"cells":[{"cell_type":"code","execution_count":None,"metadata":{},"outputs":[],"source":[line + "\\n" for line in _notebook_source(f"{args.owner}/{args.dataset_slug}").splitlines()]}],"metadata":{"kernelspec":{"display_name":"Python 3","language":"python","name":"python3"},"language_info":{"name":"python","version":"3.12"},"kaggle":{"accelerator":"nvidiaL4","isGpuEnabled":True,"isInternetEnabled":False,"language":"python","sourceType":"notebook"}},"nbformat":4,"nbformat_minor":4})
+    _write(kernel / notebook_name, {"cells":[{"cell_type":"code","execution_count":None,"metadata":{},"outputs":[],"source":[line + "\n" for line in _notebook_source(f"{args.owner}/{args.dataset_slug}").splitlines()]}],"metadata":{"kernelspec":{"display_name":"Python 3","language":"python","name":"python3"},"language_info":{"name":"python","version":"3.12"},"kaggle":{"accelerator":"nvidiaL4","isGpuEnabled":True,"isInternetEnabled":False,"language":"python","sourceType":"notebook"}},"nbformat":4,"nbformat_minor":4})
     _write(kernel / "kernel-metadata.json", {
         "id": f"{args.owner}/{args.kernel_slug}", "title": "ARC2 Evaluation60 Aug8 Generalization", "code_file": notebook_name,
         "language":"python", "kernel_type":"notebook", "is_private":True, "enable_gpu":True, "enable_tpu":False, "enable_internet":False,
