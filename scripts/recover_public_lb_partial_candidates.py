@@ -62,6 +62,14 @@ def main() -> None:
         "task_ids_hash": hashlib.sha256(json.dumps(sorted(task_ids), separators=(",", ":")).encode()).hexdigest(),
         "config_sha256": config_sha256,
         "checkpoint_identity": checkpoint_identity,
+        "stage_task_count": len(task_ids),
+        "stage_augmentation_count": args.augmentation_count,
+        "stage_worker_count": args.worker_count,
+        "search": {"beams_per_augmentation": args.search_beams},
+        "execution_optimization": {
+            "generation_micro_batch_size": args.generation_micro_batch_size,
+            "likelihood_micro_batch_size": args.likelihood_micro_batch_size,
+        },
         "recovery": {"checkpoint_dir": str(args.checkpoint_dir), "completed_task_ids": sorted(records), "unfinished_task_ids": sorted(set(task_ids) - set(records)), "corrupt_or_mismatched_task_ids": corrupt_or_mismatched},
         "records": records,
     }
