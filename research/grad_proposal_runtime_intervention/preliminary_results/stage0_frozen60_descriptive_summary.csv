@@ -1,0 +1,15 @@
+metric,value
+task_count,60
+any_of_k_correct,30
+top1_correct,16
+top2_correct,21
+success_count,16
+selection_failure_count,14
+generator_limited_failure_count,30
+non_selection_responsible_failure_fraction,0.6818181818181818
+conditional_selector_accuracy,0.5333333333333333
+top2_conditional_retention,0.7
+any_of_k_to_top2_headroom,0.15
+top2_to_top1_headroom,0.08333333333333333
+top1_wrong_top2_correct,5
+correct_candidate_below_top2,9
