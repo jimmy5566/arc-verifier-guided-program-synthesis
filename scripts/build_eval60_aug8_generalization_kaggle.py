@@ -120,7 +120,9 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--owner", default="jimmy5566")
     parser.add_argument("--dataset-slug", default="arc2-eval60-aug8-generalization-source")
-    parser.add_argument("--kernel-slug", default="arc2-eval60-aug8-generalization")
+    # Keep metadata ID aligned with Kaggle's normalized title slug.  Kaggle
+    # treats ``Evaluation60`` as one token, not the abbreviated ``eval60``.
+    parser.add_argument("--kernel-slug", default="arc2-evaluation60-aug8-generalization")
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError(f"refusing to overwrite staging: {args.output}")
