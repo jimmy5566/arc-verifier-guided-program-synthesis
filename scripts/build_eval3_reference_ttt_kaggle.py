@@ -97,11 +97,9 @@ def _frozen_inputs() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
 
 def _notebook(dataset_slug: str) -> str:
     return "\n".join([
-        "import json, os, shutil, subprocess, sys, tarfile", "from pathlib import Path", "",
+        "import json, os, shutil, subprocess, sys", "from pathlib import Path", "",
         'inputs = Path("/kaggle/input")',
-        'source_root = Path("/kaggle/working/reference_ttt_source")',
-        'with tarfile.open(next(inputs.rglob("ARC2.tar"))) as archive: archive.extractall(source_root, filter="data")',
-        'root = source_root / "ARC2"',
+        'root = next(inputs.rglob("run_eval3_reference_ttt.py")).parents[1]',
         'frozen = next(inputs.rglob("eval3_manifest.json")).parent',
         'challenge = Path("/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_evaluation_challenges.json")',
         'solutions = Path("/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_evaluation_solutions.json")',
