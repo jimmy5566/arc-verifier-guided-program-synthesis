@@ -97,9 +97,11 @@ def _frozen_inputs() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
 
 def _notebook(dataset_slug: str) -> str:
     return "\n".join([
-        "import json, os, shutil, subprocess, sys", "from pathlib import Path", "",
+        "import json, os, shutil, subprocess, sys, tarfile", "from pathlib import Path", "",
         'inputs = Path("/kaggle/input")',
-        'root = next(inputs.rglob("run_eval3_reference_ttt.py")).parents[1]',
+        'source_root = Path("/kaggle/working/reference_ttt_source")',
+        'with tarfile.open(next(inputs.rglob("ARC2.tar"))) as archive: archive.extractall(source_root, filter="data")',
+        'root = source_root / "ARC2"',
         'frozen = next(inputs.rglob("eval3_manifest.json")).parent',
         'challenge = Path("/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_evaluation_challenges.json")',
         'solutions = Path("/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_evaluation_solutions.json")',
@@ -137,6 +139,8 @@ def main() -> None:
     frozen = source_root / "eval3_reference_ttt"; _write(frozen / "eval3_manifest.json", manifest); _write(frozen / "reference_ttt_config_frozen.json", config); _write(frozen / "s0_greedy_reused_candidates_frozen.json", baseline)
     if list(source_root.rglob("*solutions*.json")):
         raise RuntimeError("target-blind source dataset contains evaluation solutions")
+    with tarfile.open(args.output / "dataset" / "ARC2.tar", "w") as archive:
+        archive.add(source_root, arcname="ARC2")
     _write(args.output / "dataset" / "dataset-metadata.json", {"title": "ARC2 Eval3 Reference TTT Source", "subtitle": "Target-blind official-style NVARC rank-256 partial TTT pilot", "description": "Private source attachment without ARC evaluation solution grids.", "id": f"{args.owner}/{args.dataset_slug}", "licenses": [{"name": "other"}]})
     kernel = args.output / "kernel"; kernel.mkdir(); notebook_name = f"{args.kernel_slug}.ipynb"
     _write(kernel / notebook_name, {"cells": [{"cell_type": "code", "execution_count": None, "metadata": {}, "outputs": [], "source": [line + "\n" for line in _notebook(f"{args.owner}/{args.dataset_slug}").splitlines()]}], "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"}, "language_info": {"name": "python", "version": "3.11"}, "kaggle": {"accelerator": "nvidiaL4", "isGpuEnabled": True, "isInternetEnabled": False, "language": "python", "sourceType": "notebook"}}, "nbformat": 4, "nbformat_minor": 4})
