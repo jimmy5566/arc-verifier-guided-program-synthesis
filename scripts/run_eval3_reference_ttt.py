@@ -132,13 +132,16 @@ def _fit_task(
     import math
     import torch
     from peft import set_peft_model_state_dict
-    from inference.nvarc_native import serialize_grid
+    from inference.arc_native_io import ARCNativeInputAdapter
 
     from unsloth import FastLanguageModel
 
     set_peft_model_state_dict(model, {key: value.clone() for key, value in default_state.items()}, adapter_name="default")
     variants = _reference_variants(task)
-    token_ids = [tokenizer(_full_dialogue(item, serialize_grid), add_special_tokens=False, return_tensors="pt")["input_ids"][0] for item in variants]
+    token_ids = [
+        tokenizer(_full_dialogue(item, ARCNativeInputAdapter.serialize_trusted_grid), add_special_tokens=False, return_tensors="pt")["input_ids"][0]
+        for item in variants
+    ]
     kept = [value for value in token_ids if len(value) <= int(config["max_sequence_length"])]
     if not kept:
         raise RuntimeError("all reference train-only sequences exceed the frozen context bound")
@@ -239,8 +242,8 @@ def main() -> None:
     os.environ["HF_HUB_OFFLINE"] = "1"; os.environ["TRANSFORMERS_OFFLINE"] = "1"; os.environ["TOKENIZERS_PARALLELISM"] = "false"
     import gc
     import torch
-    from peft import get_peft_model_state_dict, set_peft_model_state_dict
     from unsloth import FastLanguageModel
+    from peft import get_peft_model_state_dict, set_peft_model_state_dict
     from arc.io import load_dataset
     from inference.nvarc_native import checkpoint_native_tokenizer
 

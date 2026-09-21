@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 
 from scripts.build_eval3_reference_ttt_kaggle import _frozen_inputs
-from scripts.run_eval3_reference_ttt import _assistant_labels
+from scripts.run_eval3_reference_ttt import _assistant_labels, _full_dialogue, _reference_variants
 
 
 def test_eval3_uses_exactly_three_deterministic_pool_misses_and_fixed_ttt() -> None:
@@ -21,6 +21,17 @@ def test_eval3_assistant_mask_preserves_only_assistant_completion() -> None:
 
     token_ids = torch.tensor([11, 10, 1, 15, 12, 10, 2, 15])
     assert _assistant_labels(token_ids).tolist() == [-100, -100, -100, -100, -100, -100, 2, 15]
+
+
+def test_eval3_ttt_dialogue_uses_the_existing_trusted_internal_serializer() -> None:
+    from pathlib import Path
+
+    from arc.io import load_dataset
+    from inference.arc_native_io import ARCNativeInputAdapter
+
+    task = load_dataset(Path("data/raw/arc-agi_evaluation_challenges.json"))["5dbc8537"]
+    dialogue = _full_dialogue(_reference_variants(task)[0], ARCNativeInputAdapter.serialize_trusted_grid)
+    assert dialogue.startswith("<|im_start|>user\n") and "<|im_start|>assistant\n" in dialogue
 
 
 def test_eval3_runner_is_target_blind_and_does_not_search() -> None:
