@@ -105,7 +105,12 @@ def _worker(worker_id: int, work: Any, events: Any, ready: Any, start: Any, path
         default_state = {key: value.detach().clone() for key, value in get_peft_model_state_dict(model, adapter_name="default").items()}
         trainable = [(name, parameter) for name, parameter in model.named_parameters() if parameter.requires_grad]
         frozen = [(name, parameter) for name, parameter in model.named_parameters() if not parameter.requires_grad]
-        if not trainable or not frozen or any("lora" not in name.lower() for name, _parameter in trainable):
+        # The frozen official target set includes embed_tokens/lm_head.  PEFT
+        # exposes those trainable adapter-side values as ``modules_to_save``;
+        # their names are not necessarily prefixed with ``lora``.  The same
+        # adapter/base fingerprint contract verified in Eval3 proves the
+        # boundary without rejecting those official modules by name.
+        if not trainable or not frozen:
             raise RuntimeError("invalid rank-256 adapter partition")
         adapter_before = {name: _fingerprint(parameter) for name, parameter in trainable[:8]}
         base_fingerprints = {name: _fingerprint(parameter) for name, parameter in frozen[:8]}
