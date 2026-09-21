@@ -39,3 +39,4 @@ def test_eval3_runner_is_target_blind_and_does_not_search() -> None:
     assert "solutions_path" not in source
     assert "beam" not in source
     assert "dfs" not in source
+    assert "tokenizer = native_tokenizer" in source

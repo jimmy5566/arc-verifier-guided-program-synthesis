@@ -261,6 +261,10 @@ def main() -> None:
         native_tokenizer, metadata = checkpoint_native_tokenizer(args.model_path, args.native_config_dir)
         if len(tokenizer) != 16 or len(native_tokenizer) != 16 or tokenizer.get_vocab() != native_tokenizer.get_vocab():
             raise RuntimeError("Unsloth tokenizer differs from the frozen NVARC native tokenizer")
+        # FastLanguageModel returns the checkpoint tokenizer without a chat
+        # template.  The verified NVARC transport supplies the official
+        # fallback template without adding tokens or changing embeddings.
+        tokenizer = native_tokenizer
         model = FastLanguageModel.get_peft_model(model, r=int(config["rank"]), target_modules=list(config["target_modules"]), lora_alpha=int(config["alpha"]), lora_dropout=0.0, bias="none", use_gradient_checkpointing=False, random_state=int(config["seed"]), use_rslora=True, loftq_config=None)
         for _, parameter in model.named_parameters():
             if parameter.dtype == torch.float32:
