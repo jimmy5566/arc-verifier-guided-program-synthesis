@@ -156,17 +156,17 @@ def _fit_task(
         optimizer,
         lr_lambda=lambda step: (float(step + 1) / max(1, warmup)) if step < warmup else 0.5 * (1.0 + math.cos(math.pi * (step - warmup) / max(1, schedule_total - warmup))),
     )
-    torch.cuda.reset_peak_memory_stats(); FastLanguageModel.for_training(model); losses: list[float] = []; step_seconds: list[float] = []; started = time.perf_counter()
+    torch.cuda.reset_peak_memory_stats(); FastLanguageModel.for_training(model); losses: list[float] = []; step_seconds: list[float] = []; fit_started = time.perf_counter()
     try:
         for step in range(actual_steps):
-            started = time.perf_counter()
+            step_started = time.perf_counter()
             ids, target = token_ids[step % len(token_ids)].unsqueeze(0).to(model.device), labels[step % len(labels)].unsqueeze(0).to(model.device)
             optimizer.zero_grad(set_to_none=True)
             loss = model(input_ids=ids, labels=target, use_cache=False, return_dict=True).loss
             if not torch.isfinite(loss):
                 raise FloatingPointError(f"non-finite loss at step {step + 1}")
             loss.backward(); optimizer.step(); scheduler.step(); torch.cuda.synchronize()
-            losses.append(float(loss.detach().item())); step_seconds.append(time.perf_counter() - started)
+            losses.append(float(loss.detach().item())); step_seconds.append(time.perf_counter() - step_started)
             print(json.dumps({"event": "EVAL3_TTT_STEP", "task_id": task.task_id, "step": step + 1, "loss": losses[-1], "seconds": step_seconds[-1]}, sort_keys=True), flush=True)
             del ids, target, loss
         adapter_after = {name: _fingerprint(parameter) for name, parameter in list((item for item in model.named_parameters() if item[1].requires_grad))[:8]}
@@ -176,7 +176,7 @@ def _fit_task(
             "target_modules": config["target_modules"], "ttt_steps": actual_steps, "reference_schedule_total_steps": schedule_total,
             "train_variant_count": len(variants), "kept_sequence_count": len(kept), "full_dialogue_assistant_only_loss": True,
             "train_pairs_only": True, "loss_finite": True, "first_loss": losses[0], "last_loss": losses[-1], "loss_curve": losses,
-            "seconds": time.perf_counter() - started,
+            "seconds": time.perf_counter() - fit_started,
             "step_seconds": step_seconds, "seconds_per_step": sum(step_seconds) / len(step_seconds),
             "adapter_updated": adapter_before != adapter_after, "base_model_unchanged": base_fingerprints == base_after,
             "peak_allocated_vram_mb": int(torch.cuda.max_memory_allocated() / (1024 * 1024)),

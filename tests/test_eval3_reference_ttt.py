@@ -40,3 +40,9 @@ def test_eval3_runner_is_target_blind_and_does_not_search() -> None:
     assert "beam" not in source
     assert "dfs" not in source
     assert "tokenizer = native_tokenizer" in source
+
+
+def test_eval3_scorer_can_run_as_a_script_from_the_project_root() -> None:
+    source = open("scripts/score_eval3_reference_ttt.py", encoding="utf-8").read()
+    assert "sys.path.insert(0, str(ROOT))" in source
+    assert "sum(ttt[\"step_seconds\"])" in source

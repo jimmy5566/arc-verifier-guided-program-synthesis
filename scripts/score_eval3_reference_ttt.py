@@ -5,8 +5,13 @@ import argparse
 import csv
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from scripts.run_eval3_reference_ttt import FROZEN_STATUS, _task_hash
 
@@ -49,8 +54,9 @@ def main() -> None:
         record, ttt = candidates["records"][task_id], candidates["records"][task_id]["ttt"]
         if not (ttt.get("train_pairs_only") and ttt.get("full_dialogue_assistant_only_loss") and ttt.get("loss_finite") and ttt.get("adapter_updated") and ttt.get("base_model_unchanged")):
             raise ValueError(f"{task_id}: TTT integrity violation")
-        rows.append({"task_id": task_id, "baseline_any_of_k": False, "ttt_any_of_k": bool(ttt_hits), "correct_candidate_indices": json.dumps(ttt_hits), "ttt_seconds": ttt["seconds"], "seconds_per_ttt_step": ttt["seconds_per_step"], "generation_seconds": record["generation_seconds"], "unique_candidates": record["unique_candidate_count"], "invalid_candidates": record["invalid_candidate_count"], "peak_allocated_vram_mb": record["peak_allocated_vram_mb"]})
-    report = {"experiment_id": "ARC2_REFERENCE_STYLE_TTT_EVAL3_PILOT", "status": "COMPLETE_SCORED_AFTER_CANDIDATE_FREEZE", "BASELINE_ANYK": "0/3", "TTT_ANYK": f"{len(recovered)}/3", "NEW_RECOVERIES": len(recovered), "new_recovery_task_ids": recovered, "TTT_SECONDS_PER_TASK": sum(float(row["ttt_seconds"]) for row in rows) / len(rows), "GENERATION_SECONDS_PER_TASK": sum(float(row["generation_seconds"]) for row in rows) / len(rows), "PEAK_VRAM_GB": max(int(row["peak_allocated_vram_mb"]) for row in rows) / 1024.0, "TTT_SIGNAL": "TTT_SIGNAL" if recovered else "NO_TTT_SIGNAL", "task_ids": task_ids, "task_ids_hash": manifest["task_ids_hash"]}
+        optimizer_seconds = float(sum(ttt["step_seconds"]))
+        rows.append({"task_id": task_id, "baseline_any_of_k": False, "ttt_any_of_k": bool(ttt_hits), "correct_candidate_indices": json.dumps(ttt_hits), "ttt_optimizer_seconds": optimizer_seconds, "seconds_per_ttt_step": ttt["seconds_per_step"], "generation_seconds": record["generation_seconds"], "unique_candidates": record["unique_candidate_count"], "invalid_candidates": record["invalid_candidate_count"], "peak_allocated_vram_mb": record["peak_allocated_vram_mb"]})
+    report = {"experiment_id": "ARC2_REFERENCE_STYLE_TTT_EVAL3_PILOT", "status": "COMPLETE_SCORED_AFTER_CANDIDATE_FREEZE", "BASELINE_ANYK": "0/3", "TTT_ANYK": f"{len(recovered)}/3", "NEW_RECOVERIES": len(recovered), "new_recovery_task_ids": recovered, "TTT_SECONDS_PER_TASK": sum(float(row["ttt_optimizer_seconds"]) for row in rows) / len(rows), "GENERATION_SECONDS_PER_TASK": sum(float(row["generation_seconds"]) for row in rows) / len(rows), "PEAK_VRAM_GB": max(int(row["peak_allocated_vram_mb"]) for row in rows) / 1024.0, "TTT_SIGNAL": "TTT_SIGNAL" if recovered else "NO_TTT_SIGNAL", "task_ids": task_ids, "task_ids_hash": manifest["task_ids_hash"]}
     args.output_dir.mkdir(parents=True, exist_ok=True)
     with (args.output_dir / "per_task_results.csv").open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0])); writer.writeheader(); writer.writerows(rows)
