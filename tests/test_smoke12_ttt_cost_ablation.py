@@ -24,7 +24,7 @@ def test_smoke12_beam2_restores_unsloth_generation_state_after_ttt() -> None:
     assert transition in source[beam_start:settings_start]
 
 
-def test_smoke12_beam2_uses_independent_legacy_tuple_caches_without_reordering() -> None:
+def test_smoke12_beam2_uses_independent_prefixes_without_legacy_cache_transport() -> None:
     class Tokenizer:
         eos_token_id = 15
 
@@ -49,8 +49,9 @@ def test_smoke12_beam2_uses_independent_legacy_tuple_caches_without_reordering()
                 logits[0, 0, 1], logits[0, 0, 2] = 10.0, 9.0
             else:
                 logits[0, 0, 15] = 10.0
-            # This is deliberately a legacy tuple: the regression was caused
-            # by generic BeamSearch trying to call tuple.reorder_cache().
+            # This is deliberately a legacy tuple: generic BeamSearch tries
+            # to call tuple.reorder_cache(), so the experimental decoder must
+            # not pass it back to any child forward call.
             return SimpleNamespace(logits=logits, past_key_values=("legacy-cache", last))
 
     model = Model()
@@ -60,8 +61,8 @@ def test_smoke12_beam2_uses_independent_legacy_tuple_caches_without_reordering()
     )
 
     assert [beam["text"] for beam in beams] == ["1", "2"]
-    assert stats["backend"] == "independent_kv_cache_beam2"
-    assert any(cache == ("legacy-cache", 14) for _token, cache in model.calls[1:])
+    assert stats["backend"] == "independent_prefix_beam2_no_cache"
+    assert all(cache is None for _token, cache in model.calls)
 
 
 def test_smoke12_union_is_base_then_ttt_and_preserves_duplicate_provenance() -> None:

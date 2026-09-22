@@ -131,13 +131,12 @@ def _independent_cache_beams(
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Run a bounded Beam2 decode without cache reordering.
 
-    The reference Unsloth/PEFT stack exposes its post-TTT KV cache as a
-    legacy tuple.  Transformers' generic beam-search implementation attempts
-    to call ``reorder_cache`` on that object, even though ordinary cached
-    forward calls work.  This experimental-only decoder keeps one independent
-    cache per live beam and therefore never reorders or mutates a shared
-    cache.  It remains deterministic model-probability Beam2; no ARC target,
-    parser feedback, or semantic constraint participates in decoding.
+    The reference Unsloth/PEFT stack exposes a legacy post-TTT cache which is
+    incompatible with both Transformers cache reordering and cache transport
+    into the next forward call.  This experimental-only decoder therefore
+    evaluates each live beam as an independent complete prompt prefix.  It
+    remains deterministic model-probability Beam2; no ARC target, parser
+    feedback, or semantic constraint participates in decoding.
     """
     import torch
 
@@ -152,12 +151,13 @@ def _independent_cache_beams(
     prompt_tokens = int(encoded["input_ids"].shape[-1])
     if prompt_tokens > context_window:
         raise ValueError(f"native prompt has {prompt_tokens} tokens, exceeds frozen context {context_window}")
+    prompt_ids = encoded["input_ids"][0].detach().cpu().tolist()
     eos_token_id = int(provider.tokenizer.eos_token_id)
     started = time.perf_counter()
     with torch.inference_mode():
-        output = provider.model(**encoded, use_cache=True, return_dict=True)
+        output = provider.model(**encoded, use_cache=False, return_dict=True)
         live: list[dict[str, Any]] = [{
-            "token_ids": (), "score": 0.0, "logits": output.logits[0, -1, :], "cache": output.past_key_values,
+            "token_ids": (), "score": 0.0, "logits": output.logits[0, -1, :],
         }]
         del output, encoded
         completed: list[dict[str, Any]] = []
@@ -184,18 +184,18 @@ def _independent_cache_beams(
                     continue
                 if len(next_live) >= beam_width:
                     continue
-                next_input = torch.tensor([[token_ids[-1]]], dtype=torch.long, device=provider.device)
+                if prompt_tokens + len(token_ids) > context_window:
+                    continue
+                next_input = torch.tensor([prompt_ids + list(token_ids)], dtype=torch.long, device=provider.device)
                 child = provider.model(
                     input_ids=next_input,
-                    past_key_values=proposal["parent"]["cache"],
-                    use_cache=True,
+                    use_cache=False,
                     return_dict=True,
                 )
                 next_live.append({
                     "token_ids": token_ids,
                     "score": proposal["score"],
                     "logits": child.logits[0, -1, :],
-                    "cache": child.past_key_values,
                 })
                 del child, next_input
             del proposals
@@ -219,7 +219,7 @@ def _independent_cache_beams(
         "decode_steps": steps,
         "completed_paths": len(completed),
         "returned_paths": len(results),
-        "backend": "independent_kv_cache_beam2",
+        "backend": "independent_prefix_beam2_no_cache",
     }
 
 
@@ -309,7 +309,7 @@ def _beam2_candidates(*, provider: Any, task: Any, config: dict[str, Any]) -> tu
         "generated_candidate_count": generated,
         "invalid_candidate_count": invalid,
         "search_path_stats": path_stats,
-        "search": "independent_kv_cache_beam2",
+        "search": "independent_prefix_beam2_no_cache",
     }
     return [item.to_dict() for item in unique], invalid, metadata, time.perf_counter() - started
 
