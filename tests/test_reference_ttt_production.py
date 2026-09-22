@@ -63,12 +63,17 @@ def test_reference_ttt_strict_finalizer_rejects_no_candidate_without_writing_sub
     assert not (tmp_path / "submission.json").exists()
 
 
-def test_production_runner_and_notebook_forbid_nonproduction_paths() -> None:
+def test_production_runner_and_notebook_run_full_production_in_both_environment_modes() -> None:
     runner = (ROOT / "scripts" / "run_reference_ttt_production_4gpu.py").read_text(encoding="utf-8")
     builder = (ROOT / "scripts" / "build_reference_ttt_production_kaggle.py").read_text(encoding="utf-8")
     combined = runner + builder
-    for forbidden in ("KAGGLE_IS_COMPETITION_RERUN", "FAST_COMMIT", "allow-deadline-partial", "identity fallback", "beam2", "DFS"):
+    for forbidden in ("FAST_COMMIT", "allow-deadline-partial", "identity fallback", "beam2", "DFS"):
         assert forbidden.lower() not in combined.lower()
+    assert "KAGGLE_IS_COMPETITION_RERUN" in builder
+    assert '"full_reference_ttt_production":True' in builder
+    # The rerun signal is observable provenance only; its two branches choose
+    # a log label, never a different model, submission, or workload path.
+    assert "if is_competition_rerun else" in builder
     assert 'get_context("spawn")' in runner
     assert "for worker_id in range(4)" in runner
     assert "TRITON_PTXAS_PATH" in builder

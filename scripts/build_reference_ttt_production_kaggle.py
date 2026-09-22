@@ -64,6 +64,7 @@ def _notebook(dataset_slug: str, source_commit: str) -> str:
     return "\n".join([
         "import hashlib, json, os, shutil, subprocess, sys, tarfile, time", "from pathlib import Path", "",
         'started_unix=time.time(); inputs=Path("/kaggle/input"); work=Path("/kaggle/working")',
+        'is_competition_rerun=os.getenv("KAGGLE_IS_COMPETITION_RERUN", "").strip().lower() in {"1", "true", "yes"}',
         'archive=next(inputs.rglob("ARC2.tar"), None); direct=next(inputs.rglob("run_reference_ttt_production_4gpu.py"), None)',
         'source=direct.parents[1] if direct is not None else work / "ARC2"',
         'if direct is None:', '    if archive is None: raise RuntimeError("reference-TTT source artifact missing")', '    source.mkdir(parents=True, exist_ok=True)', '    with tarfile.open(archive) as handle: handle.extractall(source, filter="data")',
@@ -77,7 +78,7 @@ def _notebook(dataset_slug: str, source_commit: str) -> str:
         'if len(gpus)!=4 or any("NVIDIA L4" not in row for row in gpus): raise RuntimeError(f"requires exactly 4 NVIDIA L4 GPUs: {gpus}")',
         'if os.environ.get("KAGGLE_KERNEL_INTERNET_ENABLED", "").strip().lower() in {"1", "true", "yes"}: raise RuntimeError("Internet must be off")',
         'if not ptxas.is_file(): raise RuntimeError("verified PTXAS path unavailable")',
-        'print(json.dumps({"event":"REFERENCE_TTT_ALWAYS_PRODUCTION_MODE","source_commit":"' + source_commit + '","gpus":gpus,"ptxas":str(ptxas),"internet":False,"solutions_opened":False},sort_keys=True),flush=True)',
+        'print(json.dumps({"event":"COMPETITION_RERUN_MODE" if is_competition_rerun else "SAVE_VERSION_PRODUCTION_MODE","competition_rerun_detected":is_competition_rerun,"full_reference_ttt_production":True,"source_commit":"' + source_commit + '","gpus":gpus,"ptxas":str(ptxas),"internet":False,"solutions_opened":False},sort_keys=True),flush=True)',
         'out.mkdir(parents=True, exist_ok=True); shutil.copy2(frozen / "reference_ttt_production_manifest.json", out / "manifest.json"); shutil.copy2(frozen / "reference_ttt_config_frozen.json", out / "config.json")',
         'candidates=out / "candidates_frozen.json"; checkpoints=out / "checkpoints"',
         'generation=[sys.executable,str(root/"scripts"/"run_reference_ttt_production_4gpu.py"),"--manifest",str(out/"manifest.json"),"--reference-config",str(out/"config.json"),"--challenge-path",str(challenge),"--model-path",str(model),"--native-config-dir",str(root/"configs"/"nvarc_native_846d0198"),"--output",str(candidates),"--checkpoint-dir",str(checkpoints),"--resume"]',
