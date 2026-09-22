@@ -1,0 +1,27 @@
+{
+  "experiment_id": "SMOKE12_TTT_COST_ACCURACY_R1_S2",
+  "execution_id": "5920b87f04735834346ae3a289864881e226090625dd869ddfbc4656a04841bb",
+  "execution_id_contract": "SHA256(UTF-8 canonical_cohort_hash + ':' + config_hash + ':' + source_commit)",
+  "cohort_ids": ["142ca369", "16de56c4", "446ef5d2", "58490d8a", "5dbc8537", "7b3084d4", "80a900e0", "97d7923e", "b5ca7ac4", "b99e7126", "cb2d8a2c", "dfadab01"],
+  "canonical_cohort_hash": "4513f6e1f2aaa759344b9ce8c5b9f09cc6efbb9480dbd75b0566071920d823de",
+  "source_commit": "b45fa8c398d21dd9329b24a94f4b20aaab0420cb",
+  "baseline_artifact_hashes": {
+    "base_candidates": "b859f9d157a5d16f58febf7232117fb4d12359ff9059d5785f517edeaac3ab2b",
+    "strong_ttt_candidates": "dbbd0a0f8a5cf004417e0eb46aea980f6a654813c6e3bd2816e558991433ef75",
+    "strong_ttt_config": "63379036f4881f8649a2a61b003d60b3af5977743ad0472301fed307f1e4dc26"
+  },
+  "config_hash": "964e574a1393d82b81034379ebda655ee6e986cf7ebc8eadbcef72a0ddb59f35",
+  "config_hash_contract": "SHA256(UTF-8 canonical JSON with lexicographically sorted object keys and preserved array order)",
+  "model_identity": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1",
+  "reference_ttt_base": "ARC2_REFERENCE_STYLE_TTT_EVAL60_4GPU_CONFIRMATION",
+  "ttt": {"rank": 256, "alpha": 32, "steps": 48},
+  "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj", "embed_tokens", "lm_head"],
+  "augmentation": {"count": 8, "order": ["identity", "rot90", "rot180", "rot270", "flip_lr", "flip_ud", "transpose", "anti_transpose"]},
+  "search": {"mode": "greedy", "beam_width": 1},
+  "seed_policy": {"global_seed": 42, "per_condition_variation": false},
+  "parser_dedup_version": {"version": "eval60_reference_ttt_native_candidate_parser_dedup_v1", "runner_sha256": "11e2715cea6122cb3c06636b0c76138a5c1528772102b097f9c83eee9990937f"},
+  "scoring_version": {"version": "score_eval60_reference_ttt_4gpu_v1", "scorer_sha256": "cc9dd1f8899d906d3290425d3e237efd33ce662cd5167a306f2aeedc33ff1386"},
+  "gpu_count": 4,
+  "runtime_budget": {"max_wall_minutes": 60, "estimated_wall_minutes": 26.22, "estimated_gpu_seconds": 4730.888},
+  "status": "EXECUTION_IDENTITY_FROZEN_PENDING_S2_APPROVAL"
+}

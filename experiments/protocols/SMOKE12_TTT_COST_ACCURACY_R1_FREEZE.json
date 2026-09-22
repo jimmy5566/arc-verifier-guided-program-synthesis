@@ -1,6 +1,6 @@
 {
   "round_id": "SMOKE12_TTT_COST_ACCURACY_R1",
-  "status": "COHORT_FROZEN_PRE_RUN_AUDIT_PASS_GPU_NOT_APPROVED",
+  "status": "SMOKE12_TTT_COST_ABLATION_COHORT_FROZEN",
   "scope": "development diagnostic only; no Kaggle submission; no GPU run launched",
   "pre_run_audit": {
     "status": "PASS",
@@ -58,6 +58,10 @@
       "path": "artifacts/eval60_aug8_kaggle_v2_output/artifacts/eval60_aug8/per_task_results.csv",
       "sha256": "c5258ee717208a95db9672898725b51a46038cef8f4b886e719d58e549433509"
     },
+    "base_candidates": {
+      "path": "artifacts/eval60_aug8_kaggle_v2_output/artifacts/eval60_aug8/A_candidates_frozen.json",
+      "sha256": "b859f9d157a5d16f58febf7232117fb4d12359ff9059d5785f517edeaac3ab2b"
+    },
     "strong_ttt_config": {
       "path": "artifacts/eval60_reference_ttt_4gpu_kernel_v5_output/artifacts/eval60_reference_ttt_4gpu/ttt_config_frozen.json",
       "sha256": "63379036f4881f8649a2a61b003d60b3af5977743ad0472301fed307f1e4dc26"
@@ -88,7 +92,32 @@
       "80a900e0",
       "16de56c4"
     ],
-    "task_ids_hash": "ca4de9de17d90cbc958606bc8a5aab9729e028a742bf5756d97c5dae2e6b8561"
+    "task_ids_hash": "4513f6e1f2aaa759344b9ce8c5b9f09cc6efbb9480dbd75b0566071920d823de",
+    "canonical_hash_contract": {
+      "version": "SMOKE12_TASK_IDS_JSON_V1",
+      "input": "the lexicographically sorted list of the exact 12 task IDs",
+      "serialization": "UTF-8 json.dumps(sorted(task_ids), separators=(',', ':'))",
+      "canonical_task_ids": [
+        "142ca369",
+        "16de56c4",
+        "446ef5d2",
+        "58490d8a",
+        "5dbc8537",
+        "7b3084d4",
+        "80a900e0",
+        "97d7923e",
+        "b5ca7ac4",
+        "b99e7126",
+        "cb2d8a2c",
+        "dfadab01"
+      ],
+      "canonical_cohort_hash": "4513f6e1f2aaa759344b9ce8c5b9f09cc6efbb9480dbd75b0566071920d823de"
+    },
+    "legacy_hashes": {
+      "old_declared_newline_selection_order_hash": "ca4de9de17d90cbc958606bc8a5aab9729e028a742bf5756d97c5dae2e6b8561",
+      "old_repository_task_hash": "4513f6e1f2aaa759344b9ce8c5b9f09cc6efbb9480dbd75b0566071920d823de",
+      "audit_note": "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_HASH_RECONCILIATION.md"
+    }
   },
   "conditions": {
     "S0": "reuse frozen strong-TTT 24-step greedy artifacts only; do not rerun",
@@ -97,6 +126,7 @@
     "S3": "Auditor: CPU-only union of frozen base Aug8 and strong-TTT candidate pools before scoring; Any-of-K only; no selector"
   },
   "fixed_configuration": {
+    "reference_ttt_base": "ARC2_REFERENCE_STYLE_TTT_EVAL60_4GPU_CONFIRMATION",
     "model_checkpoint": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1",
     "rank": 256,
     "alpha": 32,
