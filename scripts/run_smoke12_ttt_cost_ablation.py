@@ -121,20 +121,114 @@ def _valid_checkpoint(path: Path, task_id: str, identity: str, condition: str, t
     return record
 
 
-def _beam2_candidates(*, provider: Any, task: Any, config: dict[str, Any]) -> tuple[list[dict[str, Any]], int, dict[str, Any], float]:
-    """Use the existing bounded native Beam2 generator after TTT.
+def _independent_cache_beams(
+    provider: Any,
+    messages: list[dict[str, str]],
+    *,
+    max_new_tokens: int,
+    context_window: int,
+    beam_width: int = 2,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Run a bounded Beam2 decode without cache reordering.
 
-    The generic candidate-search helper is reused rather than reimplementing
-    token extraction, train-prefix serialization, augmentation inversion, or
-    multi-test rank alignment.  It has no solution input and only exposes
-    model-probability beam completions.  TTT leaves the shared Unsloth PEFT
-    model in training mode; restore its supported generation state before the
-    generic provider invokes ``model.generate``.  This is the same transition
-    already used by the validated greedy TTT path, not a decoding change.
+    The reference Unsloth/PEFT stack exposes its post-TTT KV cache as a
+    legacy tuple.  Transformers' generic beam-search implementation attempts
+    to call ``reorder_cache`` on that object, even though ordinary cached
+    forward calls work.  This experimental-only decoder keeps one independent
+    cache per live beam and therefore never reorders or mutates a shared
+    cache.  It remains deterministic model-probability Beam2; no ARC target,
+    parser feedback, or semantic constraint participates in decoding.
     """
+    import torch
+
+    if provider.model is None or provider.tokenizer is None:
+        raise RuntimeError("Beam2 provider is not initialized")
+    if beam_width != 2:
+        raise ValueError("Smoke12 independent-cache decoder is fixed to Beam2")
+    encoded = provider.tokenizer.apply_chat_template(
+        messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True
+    )
+    encoded = {name: value.to(provider.device) for name, value in encoded.items()}
+    prompt_tokens = int(encoded["input_ids"].shape[-1])
+    if prompt_tokens > context_window:
+        raise ValueError(f"native prompt has {prompt_tokens} tokens, exceeds frozen context {context_window}")
+    eos_token_id = int(provider.tokenizer.eos_token_id)
+    started = time.perf_counter()
+    with torch.inference_mode():
+        output = provider.model(**encoded, use_cache=True, return_dict=True)
+        live: list[dict[str, Any]] = [{
+            "token_ids": (), "score": 0.0, "logits": output.logits[0, -1, :], "cache": output.past_key_values,
+        }]
+        del output, encoded
+        completed: list[dict[str, Any]] = []
+        steps = 0
+        while live and steps < max_new_tokens:
+            proposals: list[dict[str, Any]] = []
+            for parent_index, state in enumerate(live):
+                log_probs = torch.log_softmax(state["logits"].float(), dim=-1)
+                values, token_ids = torch.topk(log_probs, k=beam_width)
+                for local_rank, (value, token_id) in enumerate(zip(values.tolist(), token_ids.tolist(), strict=True)):
+                    proposals.append({
+                        "token_ids": tuple(state["token_ids"]) + (int(token_id),),
+                        "score": float(state["score"]) + float(value),
+                        "parent": state,
+                        "parent_index": parent_index,
+                        "local_rank": local_rank,
+                    })
+            proposals.sort(key=lambda item: (-float(item["score"]), item["token_ids"], item["parent_index"], item["local_rank"]))
+            next_live: list[dict[str, Any]] = []
+            for proposal in proposals:
+                token_ids = proposal["token_ids"]
+                if token_ids[-1] == eos_token_id:
+                    completed.append({"token_ids": token_ids, "score": proposal["score"]})
+                    continue
+                if len(next_live) >= beam_width:
+                    continue
+                next_input = torch.tensor([[token_ids[-1]]], dtype=torch.long, device=provider.device)
+                child = provider.model(
+                    input_ids=next_input,
+                    past_key_values=proposal["parent"]["cache"],
+                    use_cache=True,
+                    return_dict=True,
+                )
+                next_live.append({
+                    "token_ids": token_ids,
+                    "score": proposal["score"],
+                    "logits": child.logits[0, -1, :],
+                    "cache": child.past_key_values,
+                })
+                del child, next_input
+            del proposals
+            live = next_live
+            steps += 1
+            if len(completed) >= beam_width:
+                break
+    ranked = completed + [{"token_ids": state["token_ids"], "score": state["score"]} for state in live]
+    ranked.sort(key=lambda item: (-float(item["score"]) / max(1, len(item["token_ids"])), item["token_ids"]))
+    elapsed = time.perf_counter() - started
+    selected = ranked[:beam_width]
+    results = [{
+        "text": provider.tokenizer.decode(list(item["token_ids"]), skip_special_tokens=True),
+        "completion_tokens": len(item["token_ids"]),
+        "elapsed_seconds": elapsed / max(1, len(selected)),
+        "sequence_score": float(item["score"]) / max(1, len(item["token_ids"])),
+    } for item in selected]
+    return results, {
+        "prompt_tokens": prompt_tokens,
+        "beam_width": beam_width,
+        "decode_steps": steps,
+        "completed_paths": len(completed),
+        "returned_paths": len(results),
+        "backend": "independent_kv_cache_beam2",
+    }
+
+
+def _beam2_candidates(*, provider: Any, task: Any, config: dict[str, Any]) -> tuple[list[dict[str, Any]], int, dict[str, Any], float]:
+    """Generate Aug8 Beam2 candidates after TTT using independent caches."""
     from unsloth import FastLanguageModel
-    from inference.nvarc_native_candidates import deduplicate_candidates
-    from scripts.run_eval30_candidate_search import _generate_task
+    from inference.nvarc_native import native_messages_from_training_prefix, native_training_message_prefix, parse_native_grid
+    from inference.nvarc_native_augmentation import bounded_native_augmentations, transform_tasks_for_augmentations
+    from inference.nvarc_native_candidates import NativeGridCandidate, deduplicate_candidates
 
     if provider.model is None:
         raise RuntimeError("Beam2 provider model is not initialized")
@@ -155,9 +249,69 @@ def _beam2_candidates(*, provider: Any, task: Any, config: dict[str, Any]) -> tu
         "context_window": int(config["generation_context_window"]),
     }
     started = time.perf_counter()
-    raw, metadata = _generate_task(provider, task, condition="beam2", spec=spec, settings=settings)
+    augmentations = bounded_native_augmentations(
+        color_offsets=tuple(settings["color_offsets"]), pair_orders=tuple(settings["train_pair_orders"])
+    )[:8]
+    transformed = transform_tasks_for_augmentations(task, augmentations)
+    prefixes = [native_training_message_prefix(view) for view in transformed]
+    raw: list[Any] = []
+    invalid = 0
+    generated = 0
+    path_stats: list[dict[str, Any]] = []
+    for augmentation_index, (augmentation, view) in enumerate(zip(augmentations, transformed, strict=True)):
+        by_rank: list[list[tuple[list[list[int]] | None, int, float]]] = []
+        per_test_stats: list[dict[str, Any]] = []
+        for test_index, example in enumerate(view.test):
+            messages = native_messages_from_training_prefix(prefixes[augmentation_index], example.input)
+            beams, beam_stats = _independent_cache_beams(
+                provider,
+                messages,
+                max_new_tokens=int(spec["max_new_tokens"]),
+                context_window=int(spec["context_window"]),
+                beam_width=int(spec["beam_width"]),
+            )
+            entries: list[tuple[list[list[int]] | None, int, float]] = []
+            for item in beams:
+                parsed = parse_native_grid(str(item["text"]))
+                entries.append((None if parsed is None else augmentation.inverse_grid(parsed), int(item["completion_tokens"]), float(item["elapsed_seconds"])))
+            by_rank.append(entries)
+            per_test_stats.append({
+                "test_index": test_index,
+                **beam_stats,
+                "valid": sum(value[0] is not None for value in entries),
+                "sequence_scores": [item["sequence_score"] for item in beams],
+            })
+        aligned = min((len(values) for values in by_rank), default=0)
+        generated += aligned
+        for rank in range(aligned):
+            selected = [items[rank] for items in by_rank]
+            if any(grid is None for grid, _tokens, _elapsed in selected):
+                invalid += 1
+                continue
+            raw.append(NativeGridCandidate(
+                augmentation=augmentation,
+                prediction=tuple(
+                    tuple(tuple(int(value) for value in row) for row in grid)
+                    for grid, _tokens, _elapsed in selected
+                    if grid is not None
+                ),
+                completion_tokens=sum(tokens for _grid, tokens, _elapsed in selected),
+                generation_seconds=max(elapsed for _grid, _tokens, elapsed in selected),
+            ))
+        path_stats.append({
+            "augmentation_index": augmentation_index,
+            "augmentation": augmentation.to_dict(),
+            "per_test": per_test_stats,
+            "aligned_paths": aligned,
+        })
     unique = deduplicate_candidates(raw)
-    return [item.to_dict() for item in unique], int(metadata["invalid_candidate_count"]), metadata, time.perf_counter() - started
+    metadata = {
+        "generated_candidate_count": generated,
+        "invalid_candidate_count": invalid,
+        "search_path_stats": path_stats,
+        "search": "independent_kv_cache_beam2",
+    }
+    return [item.to_dict() for item in unique], invalid, metadata, time.perf_counter() - started
 
 
 def _worker(

@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+from types import SimpleNamespace
+
+import torch
+
 from scripts.prepare_smoke12_ttt_reused_pools import _union_candidates
-from scripts.run_smoke12_ttt_cost_ablation import _frozen_task_ids, _source_challenge_sha256
+from scripts.run_smoke12_ttt_cost_ablation import _frozen_task_ids, _independent_cache_beams, _source_challenge_sha256
 
 
 def test_smoke12_beam2_keeps_exact_aug8_transport_contract() -> None:
@@ -18,6 +22,46 @@ def test_smoke12_beam2_restores_unsloth_generation_state_after_ttt() -> None:
     settings_start = source.index("    settings = {", beam_start)
     transition = "FastLanguageModel.for_inference(provider.model)"
     assert transition in source[beam_start:settings_start]
+
+
+def test_smoke12_beam2_uses_independent_legacy_tuple_caches_without_reordering() -> None:
+    class Tokenizer:
+        eos_token_id = 15
+
+        @staticmethod
+        def apply_chat_template(*_args: object, **_kwargs: object) -> dict[str, torch.Tensor]:
+            return {"input_ids": torch.tensor([[14]], dtype=torch.long)}
+
+        @staticmethod
+        def decode(token_ids: list[int], *, skip_special_tokens: bool) -> str:
+            assert skip_special_tokens is True
+            return "".join(str(token) for token in token_ids if token != 15)
+
+    class Model:
+        def __init__(self) -> None:
+            self.calls: list[tuple[int, object | None]] = []
+
+        def __call__(self, *, input_ids: torch.Tensor, past_key_values: object | None = None, **_kwargs: object) -> object:
+            last = int(input_ids[0, -1].item())
+            self.calls.append((last, past_key_values))
+            logits = torch.full((1, 1, 16), -100.0)
+            if last == 14:
+                logits[0, 0, 1], logits[0, 0, 2] = 10.0, 9.0
+            else:
+                logits[0, 0, 15] = 10.0
+            # This is deliberately a legacy tuple: the regression was caused
+            # by generic BeamSearch trying to call tuple.reorder_cache().
+            return SimpleNamespace(logits=logits, past_key_values=("legacy-cache", last))
+
+    model = Model()
+    provider = SimpleNamespace(model=model, tokenizer=Tokenizer(), device="cpu")
+    beams, stats = _independent_cache_beams(
+        provider, [{"role": "user", "content": "grid"}], max_new_tokens=8, context_window=64
+    )
+
+    assert [beam["text"] for beam in beams] == ["1", "2"]
+    assert stats["backend"] == "independent_kv_cache_beam2"
+    assert any(cache == ("legacy-cache", 14) for _token, cache in model.calls[1:])
 
 
 def test_smoke12_union_is_base_then_ttt_and_preserves_duplicate_provenance() -> None:
