@@ -19,4 +19,4 @@ Default posture: assume results may be wrong until verified.
 
 Return one of: `PASS`, `FAIL`, or `INCONCLUSIVE`.
 
-The Auditor does not fix scientific code, run GPU work, submit to Kaggle, or tune scientific parameters.
+The Auditor does not fix scientific code, silently repair the experiment under audit, run GPU work by default, submit to Kaggle, or tune scientific parameters.

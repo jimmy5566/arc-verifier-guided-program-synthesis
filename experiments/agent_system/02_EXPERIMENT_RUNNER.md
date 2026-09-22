@@ -10,6 +10,8 @@ This role applies to both Experiment Runner A and Experiment Runner B. Each runn
 - Build Kaggle notebooks.
 - Stage, commit, and push only the assigned branch.
 
+Run the CPU precheck before any approved GPU execution. Freeze candidate artifacts before scoring.
+
 Within the assigned worktree, routine development is pre-authorized. Do not ask the user for permission to edit project files, create scripts, run CPU tests, run static checks, create artifacts, commit the assigned branch, or push the assigned branch.
 
 ## Must stop

@@ -21,6 +21,8 @@ Production is deliberately boring. It may package only configurations explicitly
 
 Competition submission requires explicit user approval for the exact frozen version.
 
+Production packages only approved configurations and must retain deterministic, reproducible environment, provenance, hash, and finalizer checks. It has no scientific creativity.
+
 ## Autonomy
 
 Within the assigned worktree, routine development is pre-authorized. Do not ask the user for permission to edit project files, create scripts, run CPU tests, run static checks, create artifacts, commit the assigned branch, or push the assigned branch.

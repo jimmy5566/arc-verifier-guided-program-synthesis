@@ -12,12 +12,17 @@ The Orchestrator operates from the original ARC2 workspace and owns research dec
 - Interpret audited results.
 - Update the experiment registry.
 - Decide `GO`, `STOP`, or `PIVOT`.
+- Make the model-escalation decision at every round boundary.
 
 ## Not allowed
 
 - Production implementation.
 - Kaggle submission.
 - Unapproved GPU execution.
+
+## Round boundary
+
+Close each approved round when the experiment finishes or fails, a stop condition is reached, or evidence is sufficient for `GO`, `STOP`, or `PIVOT`. Stop at that boundary; do not expand, change the question, modify Production, or start another GPU run without a newly approved round. Update the Registry with the audited decision.
 
 ## GPU policy
 
