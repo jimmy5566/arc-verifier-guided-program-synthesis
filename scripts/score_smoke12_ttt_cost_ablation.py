@@ -63,9 +63,53 @@ def _cost(artifact: dict[str, Any], *, is_reused: bool = False) -> dict[str, Any
     }
 
 
+def _reused_subset_cost(
+    source: dict[str, Any],
+    *,
+    task_ids: list[str],
+    expected_source_sha256: str,
+    source_path: Path,
+) -> dict[str, Any]:
+    """Recover task-local S0 timing without mutating its frozen subset pool.
+
+    S0 deliberately reuses a subset of the already-frozen Eval60 run.  Its
+    subset artifact contains candidates only, while the cited source artifact
+    retains per-task timing.  This function reports only reconstructable
+    task-local cost; model startup was not recorded in that historic artifact
+    and is explicitly kept at zero rather than invented.
+    """
+    if _sha256(source_path) != expected_source_sha256:
+        raise ValueError("S0 source artifact hash does not match frozen provenance")
+    records = source.get("records")
+    if not isinstance(records, dict) or set(task_ids) - set(records):
+        raise ValueError("S0 source artifact omits frozen Smoke12 task timing")
+    selected = [records[task_id] for task_id in task_ids]
+    if any(item.get("task_id") != task_id for task_id, item in zip(task_ids, selected, strict=True)):
+        raise ValueError("S0 source task record mismatch")
+    task_seconds = [float(item.get("elapsed_seconds", 0.0)) for item in selected]
+    worker_loads = [
+        sum(float(item.get("elapsed_seconds", 0.0)) for item in selected if int(item.get("worker_id", -1)) == worker_id)
+        for worker_id in range(4)
+    ]
+    task_gpu_seconds = sum(task_seconds)
+    observed_task_wall = max(worker_loads, default=0.0)
+    return {
+        "wall_clock_seconds": observed_task_wall,
+        "task_gpu_seconds": task_gpu_seconds,
+        "model_load_gpu_seconds": 0.0,
+        "gpu_seconds_total": task_gpu_seconds,
+        "seconds_per_task_gpu": task_gpu_seconds / len(selected),
+        "peak_vram_gb": max((float(item.get("peak_allocated_vram_mb", 0.0)) / 1024.0 for item in selected), default=0.0),
+        "projected_240_wall_seconds": observed_task_wall * 20.0,
+        "projected_240_gpu_seconds": task_gpu_seconds / len(selected) * 240.0,
+        "reused_historical_estimate": True,
+        "cost_provenance": "task-local timings reconstructed from the exact frozen Eval60 source; source did not record model startup",
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    for name in ("manifest", "s0", "s1", "s2", "s3", "solutions_path", "output_dir"):
+    for name in ("manifest", "s0", "s1", "s2", "s3", "s0_source", "solutions_path", "output_dir"):
         parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
     args = parser.parse_args()
     manifest, s0, s1, s2, s3 = (_read(args.manifest), _read(args.s0), _read(args.s1), _read(args.s2), _read(args.s3))
@@ -118,15 +162,24 @@ def main() -> None:
             "new_recovery_count_vs_s0": len(hits - s0_hits) if label != "S0" else 0,
             "mean_unique_candidates_per_task": statistics.fmean(len(artifact["records"][task_id]["candidates"]) for task_id in task_ids),
         }
-    s0_cost, s1_cost, s2_cost = _cost(s0, is_reused=True), _cost(s1), _cost(s2)
+    s0_source = _read(args.s0_source)
+    s0_cost = _reused_subset_cost(
+        s0_source,
+        task_ids=task_ids,
+        expected_source_sha256=str(s0["strong_ttt_candidates_sha256"]),
+        source_path=args.s0_source,
+    )
+    s1_cost, s2_cost = _cost(s1), _cost(s2)
     s3_cost = {"cpu_only": True, "new_gpu_seconds": 0.0, "candidate_generation_reused": True}
     for label, cost in (("S0", s0_cost), ("S1", s1_cost), ("S2", s2_cost)):
         recovered = metrics[label]["new_recovery_count_vs_s0"]
         metrics[label]["cost"] = cost
         metrics[label]["gpu_seconds_per_new_recovery"] = None if not recovered else cost["gpu_seconds_total"] / recovered
     metrics["S3"]["cost"] = s3_cost
-    beam_extra = s1_cost["gpu_seconds_total"] - s0_cost["gpu_seconds_total"]
-    ttt48_extra = s2_cost["gpu_seconds_total"] - s0_cost["gpu_seconds_total"]
+    # Compare task work only: S0's historic source omitted startup telemetry,
+    # and a production run pays the same four-model startup once per method.
+    beam_extra = s1_cost["task_gpu_seconds"] - s0_cost["task_gpu_seconds"]
+    ttt48_extra = s2_cost["task_gpu_seconds"] - s0_cost["task_gpu_seconds"]
     extras = {
         "BEAM2_EXTRA_GPU_COST": beam_extra,
         "TTT48_EXTRA_GPU_COST": ttt48_extra,
