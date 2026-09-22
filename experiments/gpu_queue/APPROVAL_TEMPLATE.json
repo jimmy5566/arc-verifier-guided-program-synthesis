@@ -1,0 +1,11 @@
+{
+  "approved": false,
+  "experiment_id": "",
+  "branch": "",
+  "commit_sha": "",
+  "max_wall_minutes": 120,
+  "gpu_count": 4,
+  "one_run_only": true,
+  "approved_by": "",
+  "notes": ""
+}

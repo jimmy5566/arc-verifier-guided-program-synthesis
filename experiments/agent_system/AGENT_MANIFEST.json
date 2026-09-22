@@ -1,0 +1,28 @@
+{
+  "Orchestrator": {
+    "model_class": "strong_reasoning",
+    "workspace": "original ARC2",
+    "gpu_permission": false
+  },
+  "Experiment_A": {
+    "model_class": "coding",
+    "workspace": "ARC2-exp-a",
+    "gpu_permission": "approval_only"
+  },
+  "Experiment_B": {
+    "model_class": "coding",
+    "workspace": "ARC2-exp-b",
+    "gpu_permission": "approval_only"
+  },
+  "Auditor": {
+    "model_class": "independent_different_model_family_preferred",
+    "workspace": "ARC2-audit",
+    "gpu_permission": false
+  },
+  "Production": {
+    "model_class": "conservative_coding",
+    "workspace": "ARC2-production",
+    "gpu_permission": "build/save_allowed",
+    "competition_submit": "explicit_user_approval_only"
+  }
+}
