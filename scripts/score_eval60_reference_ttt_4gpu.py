@@ -25,8 +25,16 @@ def _valid_grid(grid: Any) -> bool:
     return isinstance(grid, list) and bool(grid) and all(isinstance(row, list) and row and len(row) == len(grid[0]) and all(isinstance(cell, int) and 0 <= cell <= 9 for cell in row) for row in grid)
 
 
-def _select(record: dict[str, Any]) -> tuple[dict[str, Any], list[list[list[int]]], list[list[list[int]]]]:
+def _select(record: dict[str, Any]) -> tuple[dict[str, Any], list[list[list[int]]] | None, list[list[list[int]]] | None]:
     candidates = list(record["candidates"]); views = tuple(NativeAugmentation(geometry=name) for name in ("identity", "rot90", "rot180", "rot270", "flip_lr", "flip_ud", "transpose", "anti_transpose"))
+    # A task with no parse-valid generated candidate is a completed,
+    # target-blind pool miss, not an execution failure.  Preserve that state
+    # explicitly so post-freeze reporting can score it as incorrect without
+    # fabricating a grid or aborting the other 59 frozen records.
+    if not candidates:
+        if record.get("status") != "NO_VALID_NATIVE_CANDIDATE":
+            raise ValueError(f"{record['task_id']}: empty candidate pool has invalid status")
+        return ({"method": "equivalent_output_support_minus_mean_augmentation_view_nll", "ranked_candidate_indices": [], "attempt_candidate_indices": [], "evidence": [], "status": "NO_VALID_NATIVE_CANDIDATE"}, None, None)
     if record.get("b_support_view_spec") != [view.to_dict() for view in views] or len(record.get("b_support_evidence", ())) != len(candidates):
         raise ValueError(f"{record['task_id']}: incomplete cached B-support evidence")
     original = dict(zip(record["ranked_candidate_indices"], record["candidate_scores"], strict=True))
@@ -39,7 +47,7 @@ def _select(record: dict[str, Any]) -> tuple[dict[str, Any], list[list[list[int]
     if not attempts: raise ValueError(f"{record['task_id']}: B-support produced no attempt")
     first, second = candidates[attempts[0]]["prediction"], candidates[attempts[1] if len(attempts) > 1 else attempts[0]]["prediction"]
     if not all(_valid_grid(grid) for output in (first, second) for grid in output): raise ValueError(f"{record['task_id']}: invalid selected grid")
-    return {"method": "equivalent_output_support_minus_mean_augmentation_view_nll", "ranked_candidate_indices": ranked, "attempt_candidate_indices": attempts, "evidence": [{"candidate_index": item.index, "support_count": item.support_count, "mean_view_nll": item.mean_view_nll, "original_log_likelihood": item.original_log_likelihood} for item in evidence]}, first, second
+    return {"method": "equivalent_output_support_minus_mean_augmentation_view_nll", "ranked_candidate_indices": ranked, "attempt_candidate_indices": attempts, "evidence": [{"candidate_index": item.index, "support_count": item.support_count, "mean_view_nll": item.mean_view_nll, "original_log_likelihood": item.original_log_likelihood} for item in evidence], "status": "SUCCESS"}, first, second
 
 
 def main() -> None:
@@ -61,7 +69,7 @@ def main() -> None:
         if record.get("adapter_reset_success") is not True or record["ttt"].get("train_pairs_only") is not True or record["ttt"].get("loss_finite") is not True or record["ttt"].get("base_model_unchanged") is not True:
             raise ValueError(f"{task_id}: invalid TTT integrity")
         selection, first, second = _select(record); selections[task_id] = {**record, "public_reference_selection": selection}
-        predictions[task_id] = {"attempt_1": first, "attempt_2": second, "attempt_candidate_indices": selection["attempt_candidate_indices"], "worker_id": record["worker_id"], "physical_gpu_id": record["physical_gpu_id"]}
+        predictions[task_id] = {"attempt_1": first, "attempt_2": second, "attempt_candidate_indices": selection["attempt_candidate_indices"], "status": selection["status"], "worker_id": record["worker_id"], "physical_gpu_id": record["physical_gpu_id"]}
         runtime_rows.append({"task_id": task_id, "worker_id": record["worker_id"], "physical_gpu_id": record["physical_gpu_id"], "ttt_seconds": record["ttt_seconds"], "generation_seconds": record["generation_seconds"], "total_task_seconds": record["elapsed_seconds"], "initial_ttt_loss": record["ttt"]["first_loss"], "final_ttt_loss": record["ttt"]["last_loss"], "peak_vram_mb": record["peak_allocated_vram_mb"], "generated_candidate_count": record["generated_candidate_count"], "unique_candidate_count": record["unique_candidate_count"], "invalid_candidate_count": record["invalid_candidate_count"], "adapter_reset_success": record["adapter_reset_success"]})
     selection_artifact = {"experiment_id": candidates["experiment_id"], "status": "PUBLIC_REFERENCE_SELECTION_FROZEN_BEFORE_EXACT_SCORING", "task_ids": task_ids, "task_ids_hash": manifest["task_ids_hash"], "records": selections, "source_sha256": _sha256(args.candidates)}
     prediction_artifact = {"experiment_id": candidates["experiment_id"], "status": "EVAL60_REFERENCE_TTT_4GPU_PREDICTIONS_FROZEN_BEFORE_EXACT_SCORING", "solutions_opened": False, "task_ids": task_ids, "task_ids_hash": manifest["task_ids_hash"], "records": predictions, "candidate_artifact_sha256": _sha256(args.candidates)}
@@ -83,11 +91,19 @@ def main() -> None:
         if pool_hit and not baseline_pool_hit: recovered.append(task_id)
     # The baseline denominator/statistics are frozen in the requested protocol.
     worker_counts = {str(index): sum(row["worker_id"] == index for row in runtime_rows) for index in range(4)}
+    worker_loads = {str(index): sum(float(row["total_task_seconds"]) for row in runtime_rows if row["worker_id"] == index) for index in range(4)}
     task_seconds = [float(row["total_task_seconds"]) for row in runtime_rows]; wall = float(candidates["runtime_seconds"]); throughput = len(task_ids) * 3600.0 / wall
     p = lambda q: statistics.quantiles(task_seconds, n=100, method="inclusive")[int(q) - 1]
-    conservative = max(wall / len(task_ids) * 240.0, max(sum(float(row["total_task_seconds"]) for row in runtime_rows if row["worker_id"] == index) for index in range(4)) * 60.0)
+    # Dynamic scheduling's observed tail is the largest accumulated worker
+    # load.  Project four equivalent 60-task waves, retain fixed startup /
+    # teardown overhead, then add one observed P95-minus-median tail.  The
+    # previous expression multiplied a seconds quantity by 60, a unit error
+    # that falsely reported a >100-hour conservative projection.
+    max_worker_load = max(worker_loads.values())
+    startup_overhead = max(0.0, wall - max_worker_load)
+    conservative = max_worker_load * 4.0 + startup_overhead + max(0.0, p(95) - statistics.median(task_seconds))
     report = {"experiment_id": candidates["experiment_id"], "status": "COMPLETE_SCORED_AFTER_TARGET_BLIND_FREEZE", "BASELINE_ANYK": "2/60", "TTT_ANY_OF_K": f"{anyk}/60", "TTT_TOP1": f"{top1}/60", "TTT_TOP2": f"{top2}/60", "NEW_RECOVERIES": recovered, "POOL_MISS_COUNT": pool_miss, "SELECTION_MISS_COUNT": selection_miss, "ANYK_GAIN": anyk - 2, "TOP1_GAIN": top1 - 2, "TOP2_GAIN": top2 - 2, "TOTAL_WALL_CLOCK_SECONDS": wall, "TASKS_PER_HOUR_4GPU": throughput, "MEAN_TASK_SECONDS": statistics.fmean(task_seconds), "P50_TASK_SECONDS": statistics.median(task_seconds), "P90_TASK_SECONDS": p(90), "P95_TASK_SECONDS": p(95), "MAX_TASK_SECONDS": max(task_seconds), "GPU_TASK_COUNTS": worker_counts, "PROJECTED_240_FROM_THROUGHPUT_SECONDS": 240.0 / throughput * 3600.0, "PROJECTED_240_CONSERVATIVE_SECONDS": conservative, "DECISION": "TTT_STRONG_GO" if anyk >= 10 and conservative < 10 * 3600 else "TTT_GO" if anyk >= 6 and conservative < 10 * 3600 else "TTT_WEAK" if anyk >= 3 else "TTT_PIVOT", "baseline_is_development_not_untouched": True, "solutions_opened_only_after_predictions_frozen": True}
-    atomic(args.output_dir / "worker_summary.json", {"worker_task_counts": worker_counts, "worker_runtime_seconds": {str(index): sum(float(row["total_task_seconds"]) for row in runtime_rows if row["worker_id"] == index) for index in range(4)}}); atomic(args.output_dir / "EVAL60_TTT_4GPU_REPORT.json", report)
+    atomic(args.output_dir / "worker_summary.json", {"worker_task_counts": worker_counts, "worker_runtime_seconds": worker_loads}); atomic(args.output_dir / "EVAL60_TTT_4GPU_REPORT.json", report)
     (args.output_dir / "EVAL60_TTT_4GPU_REPORT.md").write_text("# Eval60 reference-style TTT 4xL4 confirmation\n\n" + "\n".join(f"- {key} = `{value}`" for key, value in report.items()) + "\n", encoding="utf-8")
     print(json.dumps(report, sort_keys=True), flush=True)
 

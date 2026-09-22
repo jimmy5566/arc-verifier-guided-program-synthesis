@@ -27,3 +27,18 @@ def test_eval60_scorer_persists_predictions_before_solution_boundary() -> None:
     assert "solutions = _read(args.solutions_path)" in source
     assert source.index('atomic(args.output_dir / "predictions_frozen.json", prediction_artifact)') < source.index("solutions = _read(args.solutions_path)")
     assert "grouped_public_reference_ranking" in source
+
+
+def test_eval60_scorer_keeps_empty_candidate_pool_as_a_target_blind_pool_miss() -> None:
+    from scripts.score_eval60_reference_ttt_4gpu import _select
+
+    selection, first, second = _select({"task_id": "empty", "status": "NO_VALID_NATIVE_CANDIDATE", "candidates": []})
+    assert selection["status"] == "NO_VALID_NATIVE_CANDIDATE"
+    assert selection["attempt_candidate_indices"] == []
+    assert first is None and second is None
+
+
+def test_eval60_conservative_projection_does_not_apply_a_minutes_multiplier() -> None:
+    source = open("scripts/score_eval60_reference_ttt_4gpu.py", encoding="utf-8").read()
+    assert "max_worker_load * 4.0" in source
+    assert "* 60.0" not in source
