@@ -1,0 +1,122 @@
+{
+  "round_id": "SMOKE12_TTT_COST_ACCURACY_R1",
+  "status": "COHORT_FROZEN_PRE_RUN_AUDIT_PASS_GPU_NOT_APPROVED",
+  "scope": "development diagnostic only; no Kaggle submission; no GPU run launched",
+  "pre_run_audit": {
+    "status": "PASS",
+    "accounting_conflict": false,
+    "reconciliation": {
+      "base_solved": [
+        "45a5af55",
+        "981571dc"
+      ],
+      "ttt_solved": [
+        "1818057f",
+        "2d0172a1",
+        "31f7f899",
+        "3a25b0d8",
+        "45a5af55",
+        "4c3d4a41",
+        "71e489b6",
+        "7b0280bc",
+        "aa4ec2a5",
+        "c7f57c3e",
+        "db0c5428",
+        "de809cff"
+      ],
+      "intersection": [
+        "45a5af55"
+      ],
+      "new_recoveries": [
+        "1818057f",
+        "2d0172a1",
+        "31f7f899",
+        "3a25b0d8",
+        "4c3d4a41",
+        "71e489b6",
+        "7b0280bc",
+        "aa4ec2a5",
+        "c7f57c3e",
+        "db0c5428",
+        "de809cff"
+      ],
+      "lost_from_base": [
+        "981571dc"
+      ],
+      "pool_miss_count": 48,
+      "evidence": "45a5af55 has frozen TTT status SUCCESS; 981571dc has frozen TTT status NO_VALID_NATIVE_CANDIDATE. The frozen report's 11 NEW_RECOVERIES are TTT-only, yielding 12 TTT-solved tasks and 48 misses."
+    }
+  },
+  "source_artifacts": {
+    "eval60_manifest": {
+      "path": "artifacts/eval60_reference_ttt_4gpu_kernel_v5_output/artifacts/eval60_reference_ttt_4gpu/eval60_reference_ttt_4gpu_manifest.json",
+      "sha256": "62c5f0d034f356759e0f74ca7d9c742ed6ab8d8d425a4f997dbd23d3d0db35be",
+      "task_ids_hash": "950b5a6c985d57fa73ba973248051e1a4687c885fbf2094c0e1563a5e3b05288",
+      "source_challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8"
+    },
+    "baseline_per_task_scores": {
+      "path": "artifacts/eval60_aug8_kaggle_v2_output/artifacts/eval60_aug8/per_task_results.csv",
+      "sha256": "c5258ee717208a95db9672898725b51a46038cef8f4b886e719d58e549433509"
+    },
+    "strong_ttt_config": {
+      "path": "artifacts/eval60_reference_ttt_4gpu_kernel_v5_output/artifacts/eval60_reference_ttt_4gpu/ttt_config_frozen.json",
+      "sha256": "63379036f4881f8649a2a61b003d60b3af5977743ad0472301fed307f1e4dc26"
+    },
+    "strong_ttt_report": {
+      "path": "artifacts/eval60_reference_ttt_4gpu_kernel_v5_output/artifacts/eval60_reference_ttt_4gpu/postprocessed_cpu_v3_final/EVAL60_TTT_4GPU_REPORT.json",
+      "sha256": "51c39d0e2618917140b397e7e0040ab0eb2de08654406fd6e136a0ded2ebeb44"
+    },
+    "strong_ttt_predictions": {
+      "path": "artifacts/eval60_reference_ttt_4gpu_kernel_v5_output/artifacts/eval60_reference_ttt_4gpu/postprocessed_cpu_v3_final/predictions_frozen.json",
+      "sha256": "0a3944f10e168dd8a7e5a89685e3f260d6dfefaa95bb4d78d29ef4e7de8fae9c"
+    }
+  },
+  "selection": {
+    "population": "the 48 task IDs not in frozen strong-TTT Any-of-K solved membership",
+    "rule": "sort pool-miss task IDs by SHA-256(UTF-8 task_id) ascending, then take the first 12; task ID breaks ties",
+    "task_ids": [
+      "5dbc8537",
+      "97d7923e",
+      "cb2d8a2c",
+      "b99e7126",
+      "7b3084d4",
+      "dfadab01",
+      "58490d8a",
+      "142ca369",
+      "446ef5d2",
+      "b5ca7ac4",
+      "80a900e0",
+      "16de56c4"
+    ],
+    "task_ids_hash": "ca4de9de17d90cbc958606bc8a5aab9729e028a742bf5756d97c5dae2e6b8561"
+  },
+  "conditions": {
+    "S0": "reuse frozen strong-TTT 24-step greedy artifacts only; do not rerun",
+    "S1": "Experiment Runner A: strong-TTT 24 steps plus Beam2",
+    "S2": "Experiment Runner B: strong-TTT 48 steps plus greedy; only TTT steps change from 24 to 48",
+    "S3": "Auditor: CPU-only union of frozen base Aug8 and strong-TTT candidate pools before scoring; Any-of-K only; no selector"
+  },
+  "fixed_configuration": {
+    "model_checkpoint": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1",
+    "rank": 256,
+    "alpha": 32,
+    "reference_target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj",
+      "embed_tokens",
+      "lm_head"
+    ],
+    "generation": "same Unsloth/reference path; Aug8; fixed serialization, parser, and deduplication; no DFS; no Aug16/32; no B-SUPPORT tuning",
+    "candidate_freeze_before_scoring": true
+  },
+  "gpu_gate": {
+    "approved": false,
+    "reason": "S1 and S2 require a passing Auditor pre-run audit and an exact approval record with experiment ID, runner branch, runner commit SHA, and runtime budget before launch",
+    "gpu_runs_started": 0
+  }
+}
