@@ -82,3 +82,14 @@ def test_production_builder_freezes_240_target_blind_task_ids() -> None:
     assert len(manifest["task_ids"]) == 240
     assert manifest["task_ids_hash"] == hashlib.sha256(json.dumps(sorted(manifest["task_ids"]), separators=(",", ":")).encode()).hexdigest()
     assert config["rank"] == 256 and config["alpha"] == 32 and config["ttt_steps"] == 24
+
+
+def test_production_builder_places_frozen_sidecars_at_dataset_root(tmp_path: Path) -> None:
+    spec = importlib.util.spec_from_file_location("reference_ttt_production_builder", ROOT / "scripts" / "build_reference_ttt_production_kaggle.py")
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+    # The full builder invokes git archive; inspect its source contract here so
+    # the transport requirement remains explicit without staging an archive.
+    source = (ROOT / "scripts" / "build_reference_ttt_production_kaggle.py").read_text(encoding="utf-8")
+    assert 'args.output / "dataset" / "reference_ttt_production_manifest.json"' in source
+    assert 'args.output / "dataset" / "reference_ttt_config_frozen.json"' in source

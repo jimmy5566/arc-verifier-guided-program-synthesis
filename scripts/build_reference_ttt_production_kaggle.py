@@ -108,7 +108,12 @@ def main() -> None:
     manifest, config = _frozen_inputs(); commit = _commit()
     source_root = args.output / "dataset" / "ARC2"; source_root.mkdir(parents=True)
     _archive(source_root, commit)
-    frozen = source_root / "reference_ttt_production"; _write(frozen / "reference_ttt_production_manifest.json", manifest); _write(frozen / "reference_ttt_config_frozen.json", config)
+    # These two sidecars deliberately live at the dataset root.  Kaggle's
+    # ``--dir-mode skip`` uploads the immutable source tar but skips nested
+    # directories, so keeping them beside the archive is essential transport
+    # provenance rather than a runtime fallback.
+    _write(args.output / "dataset" / "reference_ttt_production_manifest.json", manifest)
+    _write(args.output / "dataset" / "reference_ttt_config_frozen.json", config)
     if list(source_root.rglob("*solutions*.json")):
         raise RuntimeError("target-blind production source archive contains solution grids")
     _write(args.output / "dataset" / "dataset-metadata.json", {"title":"ARC2 Reference TTT Production Source","subtitle":"Target-blind rank-256 reference-style TTT Aug8 source","description":"Private source attachment containing no ARC solution grids.","id":f"{args.owner}/{args.dataset_slug}","licenses":[{"name":"other"}]})
