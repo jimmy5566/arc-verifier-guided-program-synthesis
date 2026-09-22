@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import hashlib
+import json
+from pathlib import Path
 from types import SimpleNamespace
 
 import torch
 
 from scripts.prepare_smoke12_ttt_reused_pools import _union_candidates
 from scripts.run_smoke12_ttt_cost_ablation import _frozen_task_ids, _independent_cache_beams, _source_challenge_sha256
+from scripts.score_smoke12_ttt_cost_ablation import _reused_subset_cost
 
 
 def test_smoke12_beam2_keeps_exact_aug8_transport_contract() -> None:
@@ -104,3 +108,20 @@ def test_smoke12_protocol_manifest_resolves_nested_evaluation_challenge_hash() -
     assert _source_challenge_sha256({
         "source_artifacts": {"eval60_manifest": {"source_challenge_sha256": "nested-hash"}},
     }) == "nested-hash"
+
+
+def test_smoke12_reused_s0_cost_uses_hashed_source_task_telemetry(tmp_path: Path) -> None:
+    source_path = tmp_path / "strong_ttt.json"
+    source_path.write_text(json.dumps({"records": {
+        "a": {"task_id": "a", "elapsed_seconds": 10.0, "worker_id": 0, "peak_allocated_vram_mb": 1024},
+        "b": {"task_id": "b", "elapsed_seconds": 20.0, "worker_id": 1, "peak_allocated_vram_mb": 2048},
+    }}), encoding="utf-8")
+    cost = _reused_subset_cost(
+        json.loads(source_path.read_text(encoding="utf-8")),
+        task_ids=["a", "b"],
+        expected_source_sha256=hashlib.sha256(source_path.read_bytes()).hexdigest(),
+        source_path=source_path,
+    )
+    assert cost["task_gpu_seconds"] == 30.0
+    assert cost["wall_clock_seconds"] == 20.0
+    assert cost["model_load_gpu_seconds"] == 0.0
