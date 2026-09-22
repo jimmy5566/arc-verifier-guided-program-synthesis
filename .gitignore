@@ -122,3 +122,13 @@ reports/*
 !reports/arc2_v3_recognition_v1.md
 !reports/arc2_v3_e2e_v1.md
 !reports/arc2_v3_final_architecture.md
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.out
+
+# Local temporary artifacts
+tmp/
+tmp_*/
