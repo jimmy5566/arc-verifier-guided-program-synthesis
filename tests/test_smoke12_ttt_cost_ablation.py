@@ -125,3 +125,21 @@ def test_smoke12_reused_s0_cost_uses_hashed_source_task_telemetry(tmp_path: Path
     assert cost["task_gpu_seconds"] == 30.0
     assert cost["wall_clock_seconds"] == 20.0
     assert cost["model_load_gpu_seconds"] == 0.0
+
+
+def test_smoke12_reused_s0_cost_excludes_historical_ranking_stages(tmp_path: Path) -> None:
+    source_path = tmp_path / "strong_ttt_with_ranking.json"
+    source_path.write_text(json.dumps({"records": {
+        "a": {
+            "task_id": "a", "elapsed_seconds": 30.0, "worker_id": 0,
+            "peak_allocated_vram_mb": 1024, "original_likelihood_seconds": 4.0,
+            "b_support_scoring_seconds": 6.0,
+        },
+    }}), encoding="utf-8")
+    cost = _reused_subset_cost(
+        json.loads(source_path.read_text(encoding="utf-8")),
+        task_ids=["a"],
+        expected_source_sha256=hashlib.sha256(source_path.read_bytes()).hexdigest(),
+        source_path=source_path,
+    )
+    assert cost["task_gpu_seconds"] == 20.0

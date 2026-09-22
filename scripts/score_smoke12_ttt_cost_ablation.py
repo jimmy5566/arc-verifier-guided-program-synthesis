@@ -86,9 +86,20 @@ def _reused_subset_cost(
     selected = [records[task_id] for task_id in task_ids]
     if any(item.get("task_id") != task_id for task_id, item in zip(task_ids, selected, strict=True)):
         raise ValueError("S0 source task record mismatch")
-    task_seconds = [float(item.get("elapsed_seconds", 0.0)) for item in selected]
+    # The historical Eval60 run performed ranking as well as candidate
+    # generation.  S1/S2 intentionally stop after candidate freezing, so
+    # remove the explicitly instrumented ranking stages rather than comparing
+    # an all-in historical run with candidate-generation-only runs.
+    def _candidate_stage_seconds(item: dict[str, Any]) -> float:
+        elapsed = float(item.get("elapsed_seconds", 0.0))
+        excluded = float(item.get("original_likelihood_seconds", 0.0)) + float(item.get("b_support_scoring_seconds", 0.0))
+        if excluded > elapsed:
+            raise ValueError("S0 source has invalid ranking-stage telemetry")
+        return elapsed - excluded
+
+    task_seconds = [_candidate_stage_seconds(item) for item in selected]
     worker_loads = [
-        sum(float(item.get("elapsed_seconds", 0.0)) for item in selected if int(item.get("worker_id", -1)) == worker_id)
+        sum(_candidate_stage_seconds(item) for item in selected if int(item.get("worker_id", -1)) == worker_id)
         for worker_id in range(4)
     ]
     task_gpu_seconds = sum(task_seconds)
@@ -103,7 +114,7 @@ def _reused_subset_cost(
         "projected_240_wall_seconds": observed_task_wall * 20.0,
         "projected_240_gpu_seconds": task_gpu_seconds / len(selected) * 240.0,
         "reused_historical_estimate": True,
-        "cost_provenance": "task-local timings reconstructed from the exact frozen Eval60 source; source did not record model startup",
+        "cost_provenance": "candidate-stage task timings reconstructed from exact frozen Eval60 source; historical original-likelihood and B-support stages excluded, and source did not record model startup",
     }
 
 
