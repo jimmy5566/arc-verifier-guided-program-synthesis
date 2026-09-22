@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from scripts.prepare_smoke12_ttt_reused_pools import _union_candidates
-from scripts.run_smoke12_ttt_cost_ablation import _frozen_task_ids
+from scripts.run_smoke12_ttt_cost_ablation import _frozen_task_ids, _source_challenge_sha256
 
 
 def test_smoke12_beam2_keeps_exact_aug8_transport_contract() -> None:
@@ -45,3 +45,9 @@ def test_smoke12_protocol_manifest_uses_nested_selection_hash_contract() -> None
     selected, task_hash = _frozen_task_ids({"selection": {"task_ids": task_ids, "task_ids_hash": _task_hash(task_ids)}})
     assert selected == task_ids
     assert task_hash == _task_hash(task_ids)
+
+
+def test_smoke12_protocol_manifest_resolves_nested_evaluation_challenge_hash() -> None:
+    assert _source_challenge_sha256({
+        "source_artifacts": {"eval60_manifest": {"source_challenge_sha256": "nested-hash"}},
+    }) == "nested-hash"

@@ -63,6 +63,19 @@ def _frozen_task_ids(manifest: dict[str, Any]) -> tuple[list[str], str]:
     return task_ids, expected_hash
 
 
+def _source_challenge_sha256(manifest: dict[str, Any]) -> str:
+    """Resolve the challenge identity from either supported freeze form."""
+    top_level = manifest.get("source_challenge_sha256")
+    if isinstance(top_level, str):
+        return top_level
+    source_artifacts = manifest.get("source_artifacts")
+    if isinstance(source_artifacts, dict):
+        eval_manifest = source_artifacts.get("eval60_manifest")
+        if isinstance(eval_manifest, dict) and isinstance(eval_manifest.get("source_challenge_sha256"), str):
+            return eval_manifest["source_challenge_sha256"]
+    raise ValueError("Smoke12 manifest has no evaluation challenge hash")
+
+
 def _identity(task_ids_hash: str, experiment: dict[str, Any], condition: str) -> str:
     return _sha256_json({
         "task_ids_hash": task_ids_hash,
@@ -293,7 +306,8 @@ def main() -> None:
         or not args.challenge_path.is_file() or not args.model_path.is_dir() or not args.native_config_dir.is_dir()
     ):
         raise ValueError("invalid frozen Smoke12 identity or required input")
-    if hashlib.sha256(args.challenge_path.read_bytes()).hexdigest() != manifest["source_challenge_sha256"]:
+    challenge_sha256 = _source_challenge_sha256(manifest)
+    if hashlib.sha256(args.challenge_path.read_bytes()).hexdigest() != challenge_sha256:
         raise ValueError("evaluation challenge differs from the frozen Smoke12 source")
     required = {"rank": 256, "alpha": 32, "generation_augmentation_count": 8, "max_new_tokens": 1024}
     if {key: config.get(key) for key in required} != required:
@@ -365,7 +379,7 @@ def main() -> None:
         "solutions_opened": False, "condition": str(args.condition), "condition_config": spec,
         "reference_ttt_config": config, "experiment_config_hash": experiment["config_hash"],
         "task_ids": task_ids, "task_ids_hash": task_ids_hash,
-        "source_challenge_sha256": manifest["source_challenge_sha256"], "identity": identity,
+        "source_challenge_sha256": challenge_sha256, "identity": identity,
         "hardware": hardware.to_dict(), "worker_count": 4, "worker_gpu_mapping": {str(index): index for index in range(4)},
         "worker_model_loads": ready_events, "resumed_task_count": len(records) - len(unfinished),
         "runtime_seconds": time.perf_counter() - started, "task_gpu_seconds": task_gpu_seconds,
