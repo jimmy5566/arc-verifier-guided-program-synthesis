@@ -21,15 +21,17 @@ def main() -> None:
         raise FileExistsError(f"refusing to overwrite preflight package: {args.output}")
     args.output.mkdir(parents=True)
     code = '''import json
+import os
 from pathlib import Path
 
 inputs = Path("/kaggle/input")
 inventory = {}
-for child in sorted(inputs.iterdir()):
-    if child.is_dir():
-        inventory[child.name] = [item.name for item in sorted(child.iterdir())[:40]]
-    else:
-        inventory[child.name] = "FILE"
+for root, directories, files in os.walk(inputs):
+    relative = Path(root).relative_to(inputs)
+    if len(relative.parts) > 3:
+        directories[:] = []
+        continue
+    inventory[str(relative)] = {"directories": sorted(directories)[:40], "files": sorted(files)[:40]}
 print(json.dumps({"event": "KAGGLE_INPUT_MOUNT_PREFLIGHT", "cuda_or_model_loaded": False, "inputs": inventory}, sort_keys=True), flush=True)
 '''
     notebook_name = f"{args.kernel_slug}.ipynb"
