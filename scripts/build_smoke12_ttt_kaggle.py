@@ -89,15 +89,14 @@ def _write_json(path: Path, value: Any) -> None:
 
 
 def _notebook(*, dataset_slug: str, condition: str, source_commit: str) -> dict[str, Any]:
-    code = f'''import hashlib, json, os, shutil, subprocess, sys, tarfile, time
+    code = f'''import hashlib, json, os, shutil, subprocess, sys, time
 from pathlib import Path
 
 def sha256_file(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
-dataset = Path("/kaggle/input/{dataset_slug}")
+dataset = Path("/kaggle/input/datasets/jimmy5566/{dataset_slug}")
 required = {{
-    "archive": dataset / "ARC2.tar",
     "freeze": dataset / "freeze_manifest.json",
     "runner_config": dataset / "runner_experiment_config.json",
     "experiment": dataset / "experiment_config.json",
@@ -120,11 +119,7 @@ ptxas = Path("/usr/local/cuda-12.5/bin/ptxas")
 if not ptxas.is_file():
     raise RuntimeError("verified ptxas is unavailable")
 work = Path("/kaggle/working")
-source = work / "ARC2"
-if source.exists():
-    raise FileExistsError("refusing to reuse an existing Smoke12 source directory")
-with tarfile.open(required["archive"]) as archive:
-    archive.extractall(source, filter="data")
+source = dataset / "ARC2"
 runner = source / "scripts" / "run_smoke12_ttt_cost_ablation.py"
 native = source / "configs" / "nvarc_native_846d0198"
 challenge = Path("/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_evaluation_challenges.json")
