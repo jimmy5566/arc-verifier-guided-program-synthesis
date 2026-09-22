@@ -1,4 +1,10 @@
-# ARC2 GPU Governance Policy
+# ARC2 historical optional multi-agent GPU policy
+
+> **Optional / legacy mode.** This is not a mandatory agent-routing workflow.
+> The effective authorization rules are in root `AGENTS.md`; production release
+> is governed by `docs/RELEASE_CHECKLIST.md`.
+
+When this legacy mode is explicitly selected:
 
 - Only one Kaggle GPU run may be active at a time.
 - Every run requires a committed, exact-match approval record: experiment ID, branch, and commit SHA must match the run.

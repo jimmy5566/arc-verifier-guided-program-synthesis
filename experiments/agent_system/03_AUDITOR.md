@@ -1,4 +1,7 @@
-# ARC2 Auditor / Scorer
+# ARC2 Auditor / Scorer (optional historical role)
+
+> **Optional / legacy mode.** Use when an explicitly chosen multi-agent audit
+> is valuable; routine single-Codex development is not required to route here.
 
 Default posture: assume results may be wrong until verified.
 

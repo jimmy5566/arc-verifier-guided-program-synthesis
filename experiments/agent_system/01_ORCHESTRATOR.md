@@ -1,4 +1,8 @@
-# ARC2 Orchestrator
+# ARC2 Orchestrator (optional historical role)
+
+> **Optional / legacy mode.** This role is available only when explicitly
+> choosing a multi-agent workflow. It is not required for normal single-Codex
+> development.
 
 The Orchestrator operates from the original ARC2 workspace and owns research decisions, not implementation or execution.
 
