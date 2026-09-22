@@ -1,0 +1,12 @@
+metric,value
+task_count,30
+any_of_k_correct,21
+top1_correct,9
+success_count,9
+selection_failure_count,12
+generator_limited_failure_count,9
+non_selection_responsible_failure_fraction,0.42857142857142855
+selection_failure_fraction_of_failures,0.5714285714285714
+any_of_k_headroom,0.4
+top1_gap_given_correct_candidate,0.5714285714285714
+clean_selector_reliability_target,0.42857142857142855

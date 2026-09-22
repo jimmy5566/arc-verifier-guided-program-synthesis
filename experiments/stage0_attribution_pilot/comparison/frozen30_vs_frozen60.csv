@@ -1,0 +1,3 @@
+cohort,task_count,any_of_k,any_of_k_rate,top1,top1_rate,top2,top2_rate,conditional_selector_accuracy,generator_limited_failures,selection_failures,all_failures,non_selection_responsible_failure_fraction,naive_reliability_estimate,oracle_skip_reliability_estimate,naive_absolute_error,oracle_skip_absolute_error
+Frozen30 historical,30,21,0.7,9,0.3,,,0.42857142857142855,9,12,21,0.42857142857142855,0.3125,0.43478260869565216,0.11607142857142855,0.006211180124223614
+Frozen60 primary,60,30,0.5,16,0.26666666666666666,21,0.35,0.5333333333333333,30,14,44,0.6818181818181818,0.27419354838709675,0.53125,0.2591397849462366,0.002083333333333326

@@ -1,0 +1,30 @@
+[
+  {
+    "regime": "A_balanced",
+    "recovery_ratio": 0.9912888803520786,
+    "oracle_gain": 0.41719611939856605,
+    "predicted_gain": 0.41356187408583667,
+    "macro_f1": 0.6900485899236314
+  },
+  {
+    "regime": "B_low_external",
+    "recovery_ratio": 0.8654539321609406,
+    "oracle_gain": 0.1995486973516272,
+    "predicted_gain": 0.17270020478055922,
+    "macro_f1": 0.6756290329895048
+  },
+  {
+    "regime": "C_high_non_selector",
+    "recovery_ratio": 0.9582471388721047,
+    "oracle_gain": 0.5211001913626685,
+    "predicted_gain": 0.4993427674389833,
+    "macro_f1": 0.6917415731079173
+  },
+  {
+    "regime": "D_selector_heavy",
+    "recovery_ratio": 0.8631635648017123,
+    "oracle_gain": 0.2527865620758422,
+    "predicted_gain": 0.2181961500553533,
+    "macro_f1": 0.6755695006849387
+  }
+]

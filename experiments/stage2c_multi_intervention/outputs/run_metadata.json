@@ -1,0 +1,119 @@
+{
+  "status": "PASS",
+  "calibration_episodes": 8000,
+  "validation_episodes_unused": 2000,
+  "id_test_episodes": 12000,
+  "ood_test_episodes": 12000,
+  "actions": [
+    "COMMIT",
+    "REGENERATE",
+    "STRONG_VERIFY",
+    "TOOL_RETRY",
+    "REOBSERVE_REPLAN"
+  ],
+  "costs": {
+    "BASE": [
+      0.0,
+      0.05,
+      0.15,
+      0.08,
+      0.1
+    ],
+    "CHEAP_STRONG": [
+      0.0,
+      0.05,
+      0.04,
+      0.08,
+      0.1
+    ],
+    "HIGH_INTERVENTION": [
+      0.0,
+      0.12,
+      0.24,
+      0.18,
+      0.22
+    ]
+  },
+  "effects": {
+    "BASE": [
+      [
+        0.99,
+        0.03,
+        0.03,
+        0.03,
+        0.03
+      ],
+      [
+        0.96,
+        0.82,
+        0.12,
+        0.1,
+        0.12
+      ],
+      [
+        0.98,
+        0.18,
+        0.84,
+        0.08,
+        0.1
+      ],
+      [
+        0.97,
+        0.12,
+        0.1,
+        0.78,
+        0.4
+      ],
+      [
+        0.97,
+        0.1,
+        0.1,
+        0.38,
+        0.82
+      ]
+    ],
+    "V_STRONG": [
+      [
+        0.99,
+        0.03,
+        0.03,
+        0.03,
+        0.03
+      ],
+      [
+        0.96,
+        0.82,
+        0.12,
+        0.1,
+        0.12
+      ],
+      [
+        0.98,
+        0.18,
+        0.97,
+        0.08,
+        0.1
+      ],
+      [
+        0.97,
+        0.12,
+        0.1,
+        0.78,
+        0.4
+      ],
+      [
+        0.97,
+        0.1,
+        0.1,
+        0.38,
+        0.82
+      ]
+    ]
+  },
+  "full_attribution_id_macro_f1": 0.7051222238209397,
+  "outputs": [
+    "policy_results.csv",
+    "intervention_confusion.csv",
+    "attribution_metrics.csv"
+  ]
+}

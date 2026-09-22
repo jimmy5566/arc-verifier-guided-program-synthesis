@@ -1,0 +1,110 @@
+[
+  {
+    "prior_alpha": 0.5,
+    "prior_beta": 0.5,
+    "method": "STATIC",
+    "estimate": 0.5,
+    "lower_95": 0.001541333133436012,
+    "upper_95": 0.9984586668665639,
+    "absolute_error_vs_clean_target": 0.033333333333333326
+  },
+  {
+    "prior_alpha": 0.5,
+    "prior_beta": 0.5,
+    "method": "NAIVE",
+    "estimate": 0.27049180327868855,
+    "lower_95": 0.16760179964583777,
+    "upper_95": 0.38762754296255597,
+    "absolute_error_vs_clean_target": 0.2628415300546448
+  },
+  {
+    "prior_alpha": 0.5,
+    "prior_beta": 0.5,
+    "method": "ORACLE_SKIP",
+    "estimate": 0.532258064516129,
+    "lower_95": 0.358672288592008,
+    "upper_95": 0.7018977439287897,
+    "absolute_error_vs_clean_target": 0.0010752688172043223
+  },
+  {
+    "prior_alpha": 0.5,
+    "prior_beta": 0.5,
+    "method": "ORACLE_CLEAN",
+    "estimate": 0.532258064516129,
+    "lower_95": 0.358672288592008,
+    "upper_95": 0.7018977439287897,
+    "absolute_error_vs_clean_target": 0.0010752688172043223
+  },
+  {
+    "prior_alpha": 1.0,
+    "prior_beta": 1.0,
+    "method": "STATIC",
+    "estimate": 0.5,
+    "lower_95": 0.025,
+    "upper_95": 0.975,
+    "absolute_error_vs_clean_target": 0.033333333333333326
+  },
+  {
+    "prior_alpha": 1.0,
+    "prior_beta": 1.0,
+    "method": "NAIVE",
+    "estimate": 0.27419354838709675,
+    "lower_95": 0.1714720842602806,
+    "upper_95": 0.39070585284081016,
+    "absolute_error_vs_clean_target": 0.2591397849462366
+  },
+  {
+    "prior_alpha": 1.0,
+    "prior_beta": 1.0,
+    "method": "ORACLE_SKIP",
+    "estimate": 0.53125,
+    "lower_95": 0.36034232716081716,
+    "upper_95": 0.6984543492876587,
+    "absolute_error_vs_clean_target": 0.002083333333333326
+  },
+  {
+    "prior_alpha": 1.0,
+    "prior_beta": 1.0,
+    "method": "ORACLE_CLEAN",
+    "estimate": 0.53125,
+    "lower_95": 0.36034232716081716,
+    "upper_95": 0.6984543492876587,
+    "absolute_error_vs_clean_target": 0.002083333333333326
+  },
+  {
+    "prior_alpha": 2.0,
+    "prior_beta": 2.0,
+    "method": "STATIC",
+    "estimate": 0.5,
+    "lower_95": 0.09429932405024609,
+    "upper_95": 0.9057006759497539,
+    "absolute_error_vs_clean_target": 0.033333333333333326
+  },
+  {
+    "prior_alpha": 2.0,
+    "prior_beta": 2.0,
+    "method": "NAIVE",
+    "estimate": 0.28125,
+    "lower_95": 0.17892920663883624,
+    "upper_95": 0.3965147192934922,
+    "absolute_error_vs_clean_target": 0.2520833333333333
+  },
+  {
+    "prior_alpha": 2.0,
+    "prior_beta": 2.0,
+    "method": "ORACLE_SKIP",
+    "estimate": 0.5294117647058824,
+    "lower_95": 0.3635065310148468,
+    "upper_95": 0.6920365563952677,
+    "absolute_error_vs_clean_target": 0.0039215686274509665
+  },
+  {
+    "prior_alpha": 2.0,
+    "prior_beta": 2.0,
+    "method": "ORACLE_CLEAN",
+    "estimate": 0.5294117647058824,
+    "lower_95": 0.3635065310148468,
+    "upper_95": 0.6920365563952677,
+    "absolute_error_vs_clean_target": 0.0039215686274509665
+  }
+]

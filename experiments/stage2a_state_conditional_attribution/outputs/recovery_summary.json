@@ -1,0 +1,26 @@
+[
+  {
+    "state": "A_high",
+    "predicted_recovery_ratio": 0.9447881338797522,
+    "predicted_vs_state_naive_success_delta": -0.06787709497206695,
+    "predicted_vs_state_naive_wrong_commit_delta": 0.07150837988826815
+  },
+  {
+    "state": "B_medium",
+    "predicted_recovery_ratio": 0.9816109553548285,
+    "predicted_vs_state_naive_success_delta": -0.16779431664411368,
+    "predicted_vs_state_naive_wrong_commit_delta": 0.17523680649526388
+  },
+  {
+    "state": "C_low",
+    "predicted_recovery_ratio": 0.8745467673370804,
+    "predicted_vs_state_naive_success_delta": 0.0,
+    "predicted_vs_state_naive_wrong_commit_delta": 0.0
+  },
+  {
+    "state": "D_volatile",
+    "predicted_recovery_ratio": 0.9918226949502875,
+    "predicted_vs_state_naive_success_delta": -0.13935810810810811,
+    "predicted_vs_state_naive_wrong_commit_delta": 0.14400337837837837
+  }
+]

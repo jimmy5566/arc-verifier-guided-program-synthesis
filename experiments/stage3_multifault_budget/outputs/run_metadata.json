@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "calibration_episodes": 10000,
+  "validation_episodes_unused": 2500,
+  "id_test_episodes": 15000,
+  "ood_test_episodes": 15000,
+  "id_prevalence": {
+    "none": 0.33713333333333334,
+    "single": 0.3873333333333333,
+    "dual": 0.27553333333333335
+  },
+  "ood_prevalence": {
+    "none": 0.19706666666666667,
+    "single": 0.3184,
+    "dual": 0.4845333333333333
+  },
+  "outputs": [
+    "policy_results.csv",
+    "component_action_confusion.csv",
+    "multilabel_attribution_metrics.csv"
+  ]
+}

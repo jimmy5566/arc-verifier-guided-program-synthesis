@@ -1,0 +1,71 @@
+{
+  "single_feature_macro_f1": {
+    "steps": 0.11206449755254824,
+    "failure_step_ratio": 0.11206449755254824,
+    "candidate_count": 0.23454938154304358,
+    "score_margin": 0.23397005210652194,
+    "selector_entropy": 0.2650307704658742,
+    "disagreement": 0.22327718808816366,
+    "committed_action": 0.11206449755254824,
+    "executor_status": 0.22123403942405026,
+    "execution_latency": 0.21127470409415644,
+    "state_delta_ratio": 0.273007877909449,
+    "expected_transition": 0.22814484091808412,
+    "environment_warning": 0.20783331862824256,
+    "prior_failure_rate": 0.11206449755254824
+  },
+  "uniform_random_attribution": {
+    "accuracy": 0.3892,
+    "macro_f1": 0.11206449755254824,
+    "f1_success": 0.5603224877627412,
+    "f1_generator": 0.0,
+    "f1_selector": 0.0,
+    "f1_executor": 0.0,
+    "f1_environment": 0.0,
+    "selector_f1": 0.0,
+    "selector_auroc": 0.5,
+    "selector_brier": 0.13300000000000003,
+    "selector_ece": 0.044999999999999984,
+    "confusion": [
+      [
+        1946,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        712,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        775,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        790,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        777,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "design": "No latent source/injection flag is included in FEATURES. Execution status deliberately overlaps executor and environment sources.",
+  "max_single_feature_macro_f1": 0.273007877909449,
+  "obvious_execution_feature_ablation_macro_f1": 0.4605541731328667,
+  "all_without_executor_status_macro_f1": 0.6638398997560712
+}

@@ -1,0 +1,3 @@
+threshold,rho,definition
+statistical_naive_vs_oracle_skip_95pct_excludes_zero,0.0,first rho where naive reliability-bias 95% interval excludes Oracle-Skip bias
+practical_naive_bias_exceeds_5pp,0.0,heuristic: first rho where absolute mean naive bias versus clean selector target exceeds 0.05
