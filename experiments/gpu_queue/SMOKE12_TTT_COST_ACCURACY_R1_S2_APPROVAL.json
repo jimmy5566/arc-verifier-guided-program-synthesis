@@ -1,0 +1,16 @@
+{
+  "approved": true,
+  "experiment_id": "SMOKE12_TTT_COST_ACCURACY_R1_S2",
+  "branch": "agent/exp-b",
+  "commit_sha": "df7371fb5e446eaddebd21697184cf82e30dee61",
+  "max_wall_minutes": 60,
+  "gpu_count": 4,
+  "one_run_only": true,
+  "approved_by": "Research Orchestrator",
+  "notes": "Approved after independent CPU-only Auditor PASS. Execute only this exact Experiment B commit using execution_id 5920b87f04735834346ae3a289864881e226090625dd869ddfbc4656a04841bb. S1 is not approved. Do not launch automatically; freeze candidates before scoring and stop at the round boundary.",
+  "canonical_cohort_hash": "4513f6e1f2aaa759344b9ce8c5b9f09cc6efbb9480dbd75b0566071920d823de",
+  "config_hash": "964e574a1393d82b81034379ebda655ee6e986cf7ebc8eadbcef72a0ddb59f35",
+  "execution_id": "5920b87f04735834346ae3a289864881e226090625dd869ddfbc4656a04841bb",
+  "pre_run_audit": "PASS",
+  "launch_status": "APPROVED_NOT_LAUNCHED"
+}
