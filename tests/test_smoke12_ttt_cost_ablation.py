@@ -12,6 +12,14 @@ def test_smoke12_beam2_keeps_exact_aug8_transport_contract() -> None:
     assert '"train_pair_orders": ["canonical", "reversed"]' not in source
 
 
+def test_smoke12_beam2_restores_unsloth_generation_state_after_ttt() -> None:
+    source = open("scripts/run_smoke12_ttt_cost_ablation.py", encoding="utf-8").read()
+    beam_start = source.index("def _beam2_candidates")
+    settings_start = source.index("    settings = {", beam_start)
+    transition = "FastLanguageModel.for_inference(provider.model)"
+    assert transition in source[beam_start:settings_start]
+
+
 def test_smoke12_union_is_base_then_ttt_and_preserves_duplicate_provenance() -> None:
     base = [
         {"prediction": [[[1]]], "support_count": 1},

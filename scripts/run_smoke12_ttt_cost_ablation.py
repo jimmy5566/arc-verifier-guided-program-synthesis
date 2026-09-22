@@ -127,10 +127,18 @@ def _beam2_candidates(*, provider: Any, task: Any, config: dict[str, Any]) -> tu
     The generic candidate-search helper is reused rather than reimplementing
     token extraction, train-prefix serialization, augmentation inversion, or
     multi-test rank alignment.  It has no solution input and only exposes
-    model-probability beam completions.
+    model-probability beam completions.  TTT leaves the shared Unsloth PEFT
+    model in training mode; restore its supported generation state before the
+    generic provider invokes ``model.generate``.  This is the same transition
+    already used by the validated greedy TTT path, not a decoding change.
     """
+    from unsloth import FastLanguageModel
     from inference.nvarc_native_candidates import deduplicate_candidates
     from scripts.run_eval30_candidate_search import _generate_task
+
+    if provider.model is None:
+        raise RuntimeError("Beam2 provider model is not initialized")
+    FastLanguageModel.for_inference(provider.model)
 
     settings = {
         # This condition changes *only* decoding from greedy to Beam2.  In
