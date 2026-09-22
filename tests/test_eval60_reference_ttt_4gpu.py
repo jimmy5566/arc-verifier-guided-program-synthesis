@@ -41,4 +41,5 @@ def test_eval60_scorer_keeps_empty_candidate_pool_as_a_target_blind_pool_miss() 
 def test_eval60_conservative_projection_does_not_apply_a_minutes_multiplier() -> None:
     source = open("scripts/score_eval60_reference_ttt_4gpu.py", encoding="utf-8").read()
     assert "max_worker_load * 4.0" in source
+    assert "max(throughput_projection, workload_projection)" in source
     assert "* 60.0" not in source
