@@ -34,9 +34,38 @@ def _sha256_json(value: Any) -> str:
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def _identity(manifest: dict[str, Any], experiment: dict[str, Any], condition: str) -> str:
+def _frozen_task_ids(manifest: dict[str, Any]) -> tuple[list[str], str]:
+    """Read either supported Smoke12 freeze-manifest representation.
+
+    The protocol manifest deliberately keeps cohort-selection provenance under
+    ``selection``.  Kaggle execution packages flatten those two fields for
+    convenience.  Both forms represent the same canonical sorted-ID hash;
+    accepting both prevents a transport-only schema difference from changing
+    the frozen cohort or blocking a target-blind run.
+    """
+    top_level_ids, top_level_hash = manifest.get("task_ids"), manifest.get("task_ids_hash")
+    if isinstance(top_level_ids, list) and isinstance(top_level_hash, str):
+        task_ids, expected_hash = list(top_level_ids), top_level_hash
+    else:
+        selection = manifest.get("selection")
+        if not isinstance(selection, dict):
+            raise ValueError("Smoke12 manifest has no task-id selection")
+        task_ids = list(selection.get("task_ids", ()))
+        expected_hash = selection.get("task_ids_hash")
+    if (
+        len(task_ids) != 12
+        or len(task_ids) != len(set(task_ids))
+        or not all(isinstance(task_id, str) for task_id in task_ids)
+        or not isinstance(expected_hash, str)
+        or expected_hash != _task_hash(task_ids)
+    ):
+        raise ValueError("invalid frozen Smoke12 task-id contract")
+    return task_ids, expected_hash
+
+
+def _identity(task_ids_hash: str, experiment: dict[str, Any], condition: str) -> str:
     return _sha256_json({
-        "task_ids_hash": manifest["task_ids_hash"],
+        "task_ids_hash": task_ids_hash,
         "experiment_config_hash": experiment["config_hash"],
         "condition": condition,
     })
@@ -91,8 +120,11 @@ def _beam2_candidates(*, provider: Any, task: Any, config: dict[str, Any]) -> tu
     from scripts.run_eval30_candidate_search import _generate_task
 
     settings = {
-        "color_offsets": [0, 1],
-        "train_pair_orders": ["canonical", "reversed"],
+        # This condition changes *only* decoding from greedy to Beam2.  In
+        # particular, it must use the same eight geometry-only views as S0:
+        # no colour permutation and no train-pair reorder expansion.
+        "color_offsets": [0],
+        "train_pair_orders": ["canonical"],
         "decode": {"seed": int(config["seed"])},
     }
     spec = {
@@ -253,12 +285,10 @@ def main() -> None:
     parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
     manifest, experiment = _read(args.manifest), _read(args.experiment_config)
-    task_ids = list(manifest.get("task_ids", ()))
+    task_ids, task_ids_hash = _frozen_task_ids(manifest)
     config, spec = _condition_config(experiment, str(args.condition))
     if (
         manifest.get("status") != "SMOKE12_TTT_COST_ABLATION_COHORT_FROZEN"
-        or len(task_ids) != 12 or len(task_ids) != len(set(task_ids))
-        or manifest.get("task_ids_hash") != _task_hash(task_ids)
         or experiment.get("config_hash") != _sha256_json({key: value for key, value in experiment.items() if key != "config_hash"})
         or not args.challenge_path.is_file() or not args.model_path.is_dir() or not args.native_config_dir.is_dir()
     ):
@@ -273,7 +303,7 @@ def main() -> None:
     hardware = inspect_hardware()
     if len(hardware.gpus) != 4 or any("NVIDIA L4" not in item.name for item in hardware.gpus):
         raise RuntimeError(f"Smoke12 requires exactly four NVIDIA L4 GPUs: {hardware.to_dict()}")
-    identity = _identity(manifest, experiment, str(args.condition))
+    identity = _identity(task_ids_hash, experiment, str(args.condition))
     args.checkpoint_dir.mkdir(parents=True, exist_ok=True); (args.checkpoint_dir / "tasks").mkdir(exist_ok=True)
     resumed = {
         task_id: _valid_checkpoint(args.checkpoint_dir / "tasks" / f"{task_id}.json", task_id, identity, str(args.condition), int(config["ttt_steps"]))
@@ -334,7 +364,7 @@ def main() -> None:
         "protocol": "Target-blind reference-style rank-256 TTT followed by fixed Aug8 candidate generation. Candidate recall only: no B-support scoring, selection, or evaluation solution access in this executable.",
         "solutions_opened": False, "condition": str(args.condition), "condition_config": spec,
         "reference_ttt_config": config, "experiment_config_hash": experiment["config_hash"],
-        "task_ids": task_ids, "task_ids_hash": manifest["task_ids_hash"],
+        "task_ids": task_ids, "task_ids_hash": task_ids_hash,
         "source_challenge_sha256": manifest["source_challenge_sha256"], "identity": identity,
         "hardware": hardware.to_dict(), "worker_count": 4, "worker_gpu_mapping": {str(index): index for index in range(4)},
         "worker_model_loads": ready_events, "resumed_task_count": len(records) - len(unfinished),

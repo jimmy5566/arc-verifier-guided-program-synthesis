@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "src"))
 
 from inference.kaggle_l4_parallel_runner import atomic_write_json
 from scripts.run_eval3_reference_ttt import _read, _task_hash
-from scripts.run_smoke12_ttt_cost_ablation import FROZEN_STATUS
+from scripts.run_smoke12_ttt_cost_ablation import FROZEN_STATUS, _frozen_task_ids
 
 
 def _sha256(path: Path) -> str:
@@ -69,8 +69,11 @@ def main() -> None:
         parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
     args = parser.parse_args()
     manifest, s0, s1, s2, s3 = (_read(args.manifest), _read(args.s0), _read(args.s1), _read(args.s2), _read(args.s3))
-    task_ids = list(manifest.get("task_ids", ()))
-    if manifest.get("status") != "SMOKE12_TTT_COST_ABLATION_COHORT_FROZEN" or len(task_ids) != 12 or manifest.get("task_ids_hash") != _task_hash(task_ids):
+    try:
+        task_ids, task_ids_hash = _frozen_task_ids(manifest)
+    except ValueError as exc:
+        raise ValueError("invalid frozen Smoke12 manifest") from exc
+    if manifest.get("status") != "SMOKE12_TTT_COST_ABLATION_COHORT_FROZEN":
         raise ValueError("invalid frozen Smoke12 manifest")
     expected = {
         "S0": "SMOKE12_S0_REUSED_STRONG_TTT24_GREEDY_CANDIDATES_FROZEN",
@@ -92,7 +95,7 @@ def main() -> None:
     freeze = {
         "experiment_id": "ARC2_SMOKE12_TTT_COST_ACCURACY_ABLATION",
         "status": "SMOKE12_ALL_CANDIDATE_POOLS_CONFIRMED_FROZEN_BEFORE_EXACT_SCORING",
-        "task_ids": task_ids, "task_ids_hash": manifest["task_ids_hash"], "solutions_opened": False,
+        "task_ids": task_ids, "task_ids_hash": task_ids_hash, "solutions_opened": False,
         "candidate_artifact_sha256": {label: _sha256(path) for label, path in {"S0": args.s0, "S1": args.s1, "S2": args.s2, "S3": args.s3}.items()},
     }
     atomic_write_json(args.output_dir / "candidate_pools_frozen.json", freeze)
@@ -138,7 +141,11 @@ def main() -> None:
     report = {
         "experiment_id": "ARC2_SMOKE12_TTT_COST_ACCURACY_ABLATION",
         "status": "COMPLETE_SCORED_AFTER_TARGET_BLIND_CANDIDATE_FREEZE",
-        "cohort": {"task_ids": task_ids, "task_ids_hash": manifest["task_ids_hash"], "selection_note": manifest["selection_note"]},
+        "cohort": {
+            "task_ids": task_ids,
+            "task_ids_hash": task_ids_hash,
+            "selection_note": manifest.get("selection_note") or manifest.get("selection", {}).get("rule"),
+        },
         "S0_ANYK": metrics["S0"]["any_of_k"], "S1_BEAM2_ANYK": metrics["S1"]["any_of_k"],
         "S2_TTT48_ANYK": metrics["S2"]["any_of_k"], "S3_BASE_TTT_UNION_ANYK": metrics["S3"]["any_of_k"],
         "BEAM2_NEW_RECOVERIES": metrics["S1"]["new_recovery_count_vs_s0"],
