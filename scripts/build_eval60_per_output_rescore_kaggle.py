@@ -39,7 +39,7 @@ def _notebook(slug:str)->str:
     ])
 
 def main()->None:
-    p=argparse.ArgumentParser(); p.add_argument("--output",type=Path,required=True); p.add_argument("--owner",default="jimmy5566"); p.add_argument("--dataset-slug",default="arc2-eval60-per-output-rescore-source"); p.add_argument("--kernel-slug",default="arc2-eval60-per-output-rescore"); args=p.parse_args()
+    p=argparse.ArgumentParser(); p.add_argument("--output",type=Path,required=True); p.add_argument("--owner",default="jimmy5566"); p.add_argument("--dataset-slug",default="arc2-eval60-per-output-rescore-source"); p.add_argument("--kernel-slug",default="arc2-eval60-per-output-frozen-pool-rescore"); args=p.parse_args()
     if args.output.exists(): raise FileExistsError("refusing to overwrite staging")
     inputs=_inputs(); commit=_commit(); base=args.output/"dataset"/"ARC2"; base.mkdir(parents=True); _archive(base,commit); frozen=base/"eval60_per_output_rescore"; [frozen.mkdir(parents=True,exist_ok=True)]
     for name,path in inputs.items(): (frozen/name).write_bytes(path.read_bytes())
