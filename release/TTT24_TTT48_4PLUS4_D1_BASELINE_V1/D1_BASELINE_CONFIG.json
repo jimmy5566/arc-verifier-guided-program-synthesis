@@ -1,0 +1,27 @@
+{
+  "baseline_name": "TTT24_TTT48_4PLUS4_D1_BASELINE_V1",
+  "evidence_scope": "RETROSPECTIVE_DEVELOPMENT_EVIDENCE_NOT_HELD_OUT_NOT_LB_PERFORMANCE",
+  "generation": {
+    "decoding": "greedy",
+    "slots_per_test_output": 8,
+    "ttt24": ["flip_lr", "flip_ud", "transpose", "anti_transpose"],
+    "ttt48": ["identity", "rot90", "flip_ud", "anti_transpose"]
+  },
+  "selector": {
+    "name": "D1_L_RRF_EXACT_B_RRF_TIE_BREAK",
+    "primary_score": "frozen source-local B-SUPPORT/support aggregation/B_RRF",
+    "tie_break": "source-local original-likelihood L_RRF only when B_RRF values are exactly equal",
+    "source_likelihood_aggregation": "arithmetic mean per exact grid within each source",
+    "final_order": "(-B_RRF, -L_RRF, historical_representative, grid_key)",
+    "forbidden": ["near_tie_epsilon", "cross_source_raw_likelihood_comparison", "new_weights", "task_specific_exception"]
+  },
+  "expected_cpu_replay": {
+    "output_count": 89,
+    "top1": 20,
+    "top2": 28,
+    "pool_oracle": 30,
+    "new_solves_vs_historical_b": 1,
+    "regressions_vs_historical_b": 0
+  },
+  "reference_zip_sha256": "79a90750202b6988cfb4a0ca0c45f96846b5a89a2ca6647434ebffff47685c35"
+}
