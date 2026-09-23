@@ -119,6 +119,7 @@ def main() -> None:
     payload = args.output / "dataset"; archive = archive_source(payload / "ARC2.tar", commit)
     write(payload / "d1_release_config.json", config)
     write(payload / "SOURCE_MANIFEST.json", {"source_commit": commit, "archive": "ARC2.tar", "archive_sha256": sha256(archive), "config": "d1_release_config.json", "config_sha256": sha256(payload / "d1_release_config.json"), "archive_inspected": True})
+    write(payload / "dataset-metadata.json", {"id": "jimmy5566/arc2-d1-release-source", "title": "ARC2 D1 release source", "licenses": [{"name": "CC0-1.0"}], "isPrivate": True})
     kernel = args.output / "kernel"; kernel.mkdir(parents=True)
     write(kernel / "arc2-d1-fixed4plus4-production.ipynb", notebook(args.source_input_path, sha256(archive), "d1_release_config.json"))
     write(kernel / "kernel-metadata.json", {"id": "jimmy5566/arc2-fixed4plus4-d1-release", "title": "ARC2 fixed 4+4 D1 release", "code_file": "arc2-d1-fixed4plus4-production.ipynb", "language": "python", "kernel_type": "notebook", "is_private": True, "enable_gpu": True, "enable_internet": False, "dataset_sources": ["jimmy5566/arc2-d1-release-source"], "kernel_sources": ["sorokin/pip-install-unsloth-flash-patch"], "competition_sources": ["arc-prize-2026-arc-agi-2"], "model_sources": ["sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1"], "docker_image": "gcr.io/kaggle-private-byod/python@sha256:320043e14c68293f1c946585b9257123385205a58af4b94b17d31868cae4e868", "machine_shape": "NvidiaL4"})
