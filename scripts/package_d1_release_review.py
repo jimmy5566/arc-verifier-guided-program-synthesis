@@ -43,7 +43,6 @@ def main() -> None:
         "source/tests/test_audit_d1_baseline_release.py": ROOT / "tests" / "test_audit_d1_baseline_release.py",
         "source/tests/test_release_checklist_cpu_behavior.py": ROOT / "tests" / "test_release_checklist_cpu_behavior.py",
         "source/tests/test_release_contract_mutations.py": ROOT / "tests" / "test_release_contract_mutations.py",
-        "evidence/reference_selector_handoff.zip": args.reference_zip,
         "evidence/D1_REPLAY_REPORT.json": D1 / "D1_REPLAY_REPORT.json",
         "evidence/D1_REPLAY_REPORT.md": D1 / "D1_REPLAY_REPORT.md",
         "evidence/d1_config_frozen.json": D1 / "d1_config_frozen.json",
@@ -52,6 +51,8 @@ def main() -> None:
         "evidence/d1_predictions_frozen.json": D1 / "d1_predictions_frozen.json",
         "evidence/D1_RELEASE_RUNTIME_CONFIG.json": RELEASE / "D1_RELEASE_RUNTIME_CONFIG.json",
     }
+    if args.reference_zip.is_file():
+        files["evidence/reference_selector_handoff.zip"] = args.reference_zip
     if LOG.is_file():
         files["evidence/failed_ttt48_cross_score_version2_logs.json"] = LOG
     missing = [str(path) for path in files.values() if not path.is_file()]
@@ -69,6 +70,12 @@ def main() -> None:
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, target)
         (stage / "MANIFEST.sha256.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        if not args.reference_zip.is_file():
+            (stage / "evidence" / "REFERENCE_SELECTOR_HANDOFF_NOT_AVAILABLE.md").write_text(
+                "The historical selector handoff ZIP was not present when this review package was built. "
+                "The frozen D1 replay artifacts in this package remain the authoritative CPU replay evidence.\n",
+                encoding="utf-8",
+            )
         with zipfile.ZipFile(args.output, "x", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
             for path in sorted(stage.rglob("*")):
                 if path.is_file():

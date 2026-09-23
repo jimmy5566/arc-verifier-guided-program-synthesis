@@ -1,7 +1,7 @@
 {
   "baseline_name": "TTT24_TTT48_4PLUS4_D1_BASELINE_V1",
   "competition_submitted": "NO",
-  "cpu_test_summary": "14 passed",
+  "cpu_test_summary": "431 passed in 48.63s",
   "d1_replay": {
     "attempt_record_count": 89,
     "baseline_replay_sha256": "6e18b12901f6f1a531e055f5320cc6ea895c6f35863becac34a3e3928fd87b76",
@@ -23,10 +23,10 @@
   "expected_outputs_valid_outputs": "NOT_RUN",
   "expected_tasks_completed_tasks": "NOT_RUN",
   "failed_unfinished": "NOT_RUN",
-  "failure_injection_tests": "CPU_D1_RELEASE_CONTRACT_TESTS_REQUIRED",
+  "failure_injection_tests": "PASS_CPU_RUNTIME_IDS_MULTITEST_STALE_CHECKPOINT_WORKER_TIMEOUT_EMPTY_POOL",
   "fallback_counts_by_reason": "NOT_RUN",
-  "full_saved_run_status": "NOT_RUN_QUOTA_AND_MODEL_STATE_BLOCKED",
-  "gpu_smoke_status": "NOT_RUN_QUOTA_AND_MODEL_STATE_BLOCKED",
+  "full_saved_run_status": "NOT_RUN_LIVE_WORKER_AND_MODEL_STATE_PARITY_BLOCKED",
+  "gpu_smoke_status": "NOT_RUN_LIVE_WORKER_AND_MODEL_STATE_PARITY_BLOCKED",
   "live_4plus4_evidence_parity": "NOT_VERIFIED",
   "model_state_parity": {
     "anchor_mismatch_task_count": 50,
@@ -97,9 +97,11 @@
   "production_static_audit": {
     "builder_sha256": "185658be75ddf1eb0bae925ee1527f3fc85cac881b117e57f8e1d7abca4fd88e",
     "finalizer_sha256": "6fc13fd38abc25bcaf91c788f02aa59deb939dfdc000a03303b19fed9f277b5f",
-    "issues": [],
+    "issues": [
+      "LIVE_D1_WORKER_BOOTSTRAP_UNBOUND: CPU route is verified, but the exact CUDA TTT24/48 worker has not been parity-bound"
+    ],
     "runner_sha256": "850292e5dc9516ab69a44fb02716402f1f0ca192b7261c4a6d93a77a154e0bf3",
-    "status": "PASS"
+    "status": "FAIL"
   },
   "quota_status": {
     "available_gpu_hours": null,
@@ -108,13 +110,14 @@
     "status": "QUOTA_NOT_VERIFIED"
   },
   "release_blockers": [
+    "LIVE_D1_WORKER_BOOTSTRAP_UNBOUND: CPU route is verified, but the exact CUDA TTT24/48 worker has not been parity-bound",
     "MODEL_STATE_PARITY_UNVERIFIED: failed TTT48 cross-score run had numerical anchor mismatches"
   ],
   "release_status": "RELEASE_BLOCKED",
   "remaining_quota": null,
-  "rerun_path_test": "NOT_RUN",
+  "rerun_path_test": "PASS_CPU_SINGLE_INFERENCE_PATH_ENV_FLAG_IS_DIAGNOSTIC_ONLY",
   "scope": "RETROSPECTIVE_DEVELOPMENT_EVIDENCE_NOT_HELD_OUT_NOT_LB_PERFORMANCE",
-  "source_commit": "376e34a8e8df727645378743f74e3553258b77be",
+  "source_commit": "713fcee2fb7382aaac6d327a11e5a8498b1e4480",
   "submission_sha256": "NOT_CREATED",
   "total_runtime": "NOT_RUN"
 }
