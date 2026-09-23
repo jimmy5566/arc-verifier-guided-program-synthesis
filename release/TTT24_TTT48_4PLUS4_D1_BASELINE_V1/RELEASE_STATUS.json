@@ -1,7 +1,7 @@
 {
   "baseline_name": "TTT24_TTT48_4PLUS4_D1_BASELINE_V1",
   "competition_submitted": "NO",
-  "cpu_test_summary": "15 focused CPU tests passed",
+  "cpu_test_summary": "432 passed in 48.69s",
   "d1_replay": {
     "attempt_record_count": 89,
     "baseline_replay_sha256": "6e18b12901f6f1a531e055f5320cc6ea895c6f35863becac34a3e3928fd87b76",
@@ -122,13 +122,14 @@
   "release_blockers": [
     "MODEL_STATE_PARITY_UNVERIFIED: failed TTT48 cross-score run had numerical anchor mismatches",
     "NEW_CONTRACT_REPLAY_NOT_CLEAN: strict finalizer did not produce a complete historical submission",
-    "EMPTY_COMBINED_POOL_OBSERVED: frozen D1 evidence has at least one output with no model candidate"
+    "EMPTY_COMBINED_POOL_OBSERVED: frozen D1 evidence has at least one output with no model candidate",
+    "MODEL_IDENTITY_HASH_UNPINNED: release configuration deliberately refuses CUDA launch until the mounted checkpoint hash is recorded"
   ],
   "release_status": "RELEASE_BLOCKED",
   "remaining_quota": null,
   "rerun_path_test": "PASS_CPU_SINGLE_INFERENCE_PATH_ENV_FLAG_IS_DIAGNOSTIC_ONLY",
   "scope": "RETROSPECTIVE_DEVELOPMENT_EVIDENCE_NOT_HELD_OUT_NOT_LB_PERFORMANCE",
-  "source_commit": "d3becf046723bdd9a6ec4dba64be8336c4781282",
+  "source_commit": "fa523c1381b990505aedf7791ed5f581f1ed75b3",
   "submission_sha256": "NOT_CREATED",
   "total_runtime": "NOT_RUN"
 }

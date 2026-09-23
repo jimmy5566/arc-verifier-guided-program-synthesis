@@ -5,13 +5,14 @@ This is a CPU-only review gate. It is not a Kaggle run, a hidden-coverage result
 - Baseline: `TTT24_TTT48_4PLUS4_D1_BASELINE_V1`
 - D1 replay: Top-1 `20/89`; Top-2 `28/89`; pool oracle `30/89`.
 - Remaining Kaggle GPU quota observed: `None`.
-- CPU test suite: `15 focused CPU tests passed`.
+- CPU test suite: `432 passed in 48.69s`.
 - Release status: **RELEASE_BLOCKED**.
 
 ## Blockers
 - MODEL_STATE_PARITY_UNVERIFIED: failed TTT48 cross-score run had numerical anchor mismatches
 - NEW_CONTRACT_REPLAY_NOT_CLEAN: strict finalizer did not produce a complete historical submission
 - EMPTY_COMBINED_POOL_OBSERVED: frozen D1 evidence has at least one output with no model candidate
+- MODEL_IDENTITY_HASH_UNPINNED: release configuration deliberately refuses CUDA launch until the mounted checkpoint hash is recorded
 
 ## Required before any release re-evaluation
 
