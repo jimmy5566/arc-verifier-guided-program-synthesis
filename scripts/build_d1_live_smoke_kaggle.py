@@ -27,7 +27,7 @@ def main() -> None:
     if sha256(source / "ARC2.tar") != manifest["archive_sha256"] or sha256(source / "d1_release_config.json") != manifest["config_sha256"]:
         raise ValueError("two-task harness source/config hash mismatch")
     kernel = args.output / "kernel"
-    write(kernel / "arc2-d1-two-task-live-check.ipynb", notebook("/kaggle/input/arc2-d1-release-source/ARC2.tar", manifest["archive_sha256"], "d1_release_config.json", smoke_task_ids=TASK_IDS))
+    write(kernel / "arc2-d1-two-task-live-check.ipynb", notebook("/kaggle/input/datasets/jimmy5566/arc2-d1-release-source/ARC2.tar", manifest["archive_sha256"], "d1_release_config.json", smoke_task_ids=TASK_IDS))
     write(kernel / "kernel-metadata.json", {"id": "jimmy5566/arc2-d1-two-task-live-check", "title": "ARC2 D1 two-task live check", "code_file": "arc2-d1-two-task-live-check.ipynb", "language": "python", "kernel_type": "notebook", "is_private": True, "enable_gpu": True, "enable_internet": False, "dataset_sources": ["jimmy5566/arc2-d1-release-source"], "kernel_sources": ["sorokin/pip-install-unsloth-flash-patch"], "competition_sources": ["arc-prize-2026-arc-agi-2"], "model_sources": ["sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1"], "docker_image": IMAGE, "machine_shape": "NvidiaL4"})
     print(json.dumps({"event": "D1_TWO_TASK_LIVE_HARNESS_READY", "task_ids": TASK_IDS, "source_archive_sha256": manifest["archive_sha256"], "hard_budget_seconds": 900}, sort_keys=True))
 

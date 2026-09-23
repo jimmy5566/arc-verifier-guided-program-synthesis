@@ -68,18 +68,17 @@ def notebook(source_archive: str, source_sha256: str, config_name: str, *, smoke
         '    if hashlib.sha256((source_root/name).read_bytes()).hexdigest()!=expected: raise RuntimeError(f"D1 mounted source hash mismatch: {name}")',
         'root=work/"ARC2"; shutil.copytree(source_root,root)',
         'challenge=Path("/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_test_challenges.json")',
-        'config=Path("/kaggle/input/arc2-d1-release-source/' + config_name + '")',
+        'config=Path("/kaggle/input/datasets/jimmy5566/arc2-d1-release-source/' + config_name + '")',
         'if not config.is_file(): raise RuntimeError("explicit D1 release config missing")',
         'if hashlib.sha256(config.read_bytes()).hexdigest()!=source_manifest["config_sha256"]: raise RuntimeError("D1 release config hash mismatch")',
         'cfg=json.loads(config.read_text())',
-        'bootstrap=Path("/kaggle/input/pip-install-unsloth-flash-patch")',
-        'if not (bootstrap/"unsloth").is_dir() or not (bootstrap/"unsloth_zoo").is_dir(): raise RuntimeError("offline reference Unsloth bootstrap input missing")',
-        'shutil.copytree(bootstrap,work,dirs_exist_ok=True)',
-        'sys.path.insert(0,str(work)); os.environ["PYTHONPATH"]=str(work)+os.pathsep+os.environ.get("PYTHONPATH","")',
-        'print(json.dumps({"event":"D1_OFFLINE_REFERENCE_ENV_BOOTSTRAPPED","source":str(bootstrap),"pythonpath":str(work)},sort_keys=True),flush=True)',
+        'if cfg["environment"].get("bootstrap_mode")!="pinned_kaggle_image_offline": raise RuntimeError("unverified offline bootstrap mode")',
+        'os.environ.update({"TRITON_PTXAS_PATH":cfg["environment"]["ptxas_path"],"HF_HUB_OFFLINE":"1","TRANSFORMERS_OFFLINE":"1","TOKENIZERS_PARALLELISM":"false"})',
+        'print(json.dumps({"event":"D1_OFFLINE_REFERENCE_ENV_BOOTSTRAPPED","mode":"pinned_kaggle_image_offline","ptxas":os.environ["TRITON_PTXAS_PATH"]},sort_keys=True),flush=True)',
         'import importlib.metadata as md',
         'if not sys.version.startswith(cfg["environment"]["python_prefix"]): raise RuntimeError(f"Python mismatch: {sys.version}")',
-        'if md.version("unsloth")!=cfg["environment"]["unsloth"] or md.version("transformers")!=cfg["environment"]["transformers"]: raise RuntimeError("frozen dependency mismatch")',
+        'for package in ("unsloth","unsloth-zoo","transformers","torch","torchao","peft","trl","triton"):',
+        '    if md.version(package)!=cfg["environment"][package]: raise RuntimeError(f"frozen dependency mismatch: {package}")',
         'ptxas=Path(cfg["environment"]["ptxas_path"]); model=Path("/kaggle/input/models/sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1")',
         'if not ptxas.is_file() or subprocess.run([str(ptxas),"--version"],capture_output=True).returncode: raise RuntimeError("verified ptxas unavailable")',
         'if not model.is_dir(): raise RuntimeError("explicit model mount missing")',
@@ -97,21 +96,21 @@ def notebook(source_archive: str, source_sha256: str, config_name: str, *, smoke
     if smoke_task_ids:
         if len(smoke_task_ids) != 2 or len(set(smoke_task_ids)) != 2:
             raise ValueError("the D1 live harness requires exactly two predeclared tasks")
-        lines.insert(lines.index('config=Path("/kaggle/input/arc2-d1-release-source/' + config_name + '")'),
+        lines.insert(lines.index('config=Path("/kaggle/input/datasets/jimmy5566/arc2-d1-release-source/' + config_name + '")'),
             'mounted_eval=Path("/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_evaluation_challenges.json"); eval_tasks=json.loads(mounted_eval.read_text()); smoke_ids=' + repr(smoke_task_ids) + '; assert all(task_id in eval_tasks for task_id in smoke_ids); challenge=work/"d1_smoke_challenges.json"; challenge.write_text(json.dumps({task_id:eval_tasks[task_id] for task_id in smoke_ids},sort_keys=True))')
         lines.insert(lines.index('import importlib.metadata as md'),
             'cfg["runtime"]["hard_deadline_seconds"]=900; cfg["runtime"]["finalization_margin_seconds"]=120; config=work/"d1_smoke_config.json"; config.write_text(json.dumps(cfg,sort_keys=True))')
         lines = [line.replace('submission=work/"submission.json"', 'submission=out/"smoke_submission.json"') for line in lines]
         lines[-1] = lines[-1].replace('"D1_RELEASE_COMPLETE"', '"D1_SMOKE_COMPLETE"')
     else:
-        lines.insert(lines.index('config=Path("/kaggle/input/arc2-d1-release-source/' + config_name + '")'), 'if not challenge.is_file(): raise RuntimeError("mounted competition challenge missing")')
+        lines.insert(lines.index('config=Path("/kaggle/input/datasets/jimmy5566/arc2-d1-release-source/' + config_name + '")'), 'if not challenge.is_file(): raise RuntimeError("mounted competition challenge missing")')
     return {"cells": [{"cell_type": "code", "execution_count": None, "metadata": {}, "outputs": [], "source": [line + "\n" for line in lines]}], "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"}, "language_info": {"name": "python", "version": "3.11"}, "kaggle": {"accelerator": "nvidiaL4", "isGpuEnabled": True, "isInternetEnabled": False, "language": "python", "sourceType": "notebook"}}, "nbformat": 4, "nbformat_minor": 4}
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True); parser.add_argument("--release-config", type=Path, required=True)
-    parser.add_argument("--source-input-path", default="/kaggle/input/arc2-d1-release-source/ARC2.tar")
+    parser.add_argument("--source-input-path", default="/kaggle/input/datasets/jimmy5566/arc2-d1-release-source/ARC2.tar")
     args = parser.parse_args()
     if args.output.exists(): raise FileExistsError("refusing to overwrite release staging")
     config = json.loads(args.release_config.read_text(encoding="utf-8"))

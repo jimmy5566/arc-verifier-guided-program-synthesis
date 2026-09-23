@@ -2,7 +2,14 @@
   "environment": {
     "python_prefix": "3.11.13",
     "unsloth": "2025.9.7",
+    "unsloth-zoo": "2025.9.9",
     "transformers": "4.55.4",
+    "torch": "2.8.0",
+    "torchao": "0.14.1",
+    "peft": "0.17.1",
+    "trl": "0.22.2",
+    "triton": "3.4.0",
+    "bootstrap_mode": "pinned_kaggle_image_offline",
     "ptxas_path": "/usr/local/cuda-12.5/bin/ptxas"
   },
   "generation": {

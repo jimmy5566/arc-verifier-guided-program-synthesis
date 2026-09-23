@@ -39,6 +39,9 @@ def validate_live_config(config: Mapping[str, Any]) -> None:
         expected = metadata.get("sha256", "") if isinstance(metadata, dict) else ""
         if Path(name).name != name or len(expected) != 64 or any(character not in "0123456789abcdef" for character in expected.lower()) or not isinstance(metadata.get("size"), int):
             raise ReleaseContractError(f"model file SHA256 is not pinned: {name}")
+    expected_environment = {"python_prefix": "3.11.13", "unsloth": "2025.9.7", "unsloth-zoo": "2025.9.9", "transformers": "4.55.4", "torch": "2.8.0", "torchao": "0.14.1", "peft": "0.17.1", "trl": "0.22.2", "triton": "3.4.0", "bootstrap_mode": "pinned_kaggle_image_offline", "ptxas_path": "/usr/local/cuda-12.5/bin/ptxas"}
+    if any(config["environment"].get(key) != value for key, value in expected_environment.items()):
+        raise ReleaseContractError("offline reference environment lock mismatch")
     expected_recipes = {"rank": 256, "alpha": 32, "learning_rate": 5e-5, "scheduler": "cosine", "warmup_ratio": 0.1, "reference_schedule_total_steps": 128, "max_sequence_length": 8192, "max_new_tokens": 1024, "generation_context_window": 16384, "seed": 42}
     for source, steps in (("ttt24_recipe", 24), ("ttt48_recipe", 48)):
         recipe = config[source]
