@@ -1,7 +1,7 @@
 {
   "baseline_name": "TTT24_TTT48_4PLUS4_D1_BASELINE_V1",
   "competition_submitted": "NO",
-  "cpu_test_summary": "429 passed, 3 xfailed, 53.38s (CPU only)",
+  "cpu_test_summary": "14 passed",
   "d1_replay": {
     "attempt_record_count": 89,
     "baseline_replay_sha256": "6e18b12901f6f1a531e055f5320cc6ea895c6f35863becac34a3e3928fd87b76",
@@ -23,7 +23,7 @@
   "expected_outputs_valid_outputs": "NOT_RUN",
   "expected_tasks_completed_tasks": "NOT_RUN",
   "failed_unfinished": "NOT_RUN",
-  "failure_injection_tests": "CPU_FINALIZER_INJECTIONS_PASS_RELEASE_CONTRACT_XFAIL_REMAINS",
+  "failure_injection_tests": "CPU_D1_RELEASE_CONTRACT_TESTS_REQUIRED",
   "fallback_counts_by_reason": "NOT_RUN",
   "full_saved_run_status": "NOT_RUN_QUOTA_AND_MODEL_STATE_BLOCKED",
   "gpu_smoke_status": "NOT_RUN_QUOTA_AND_MODEL_STATE_BLOCKED",
@@ -95,29 +95,26 @@
     "status": "FAILED_NUMERICAL_PARITY"
   },
   "production_static_audit": {
-    "builder_sha256": "5dd9c053e77cef19f538eae1f9c5aa5350789d0f2122ecded5b68029857b0993",
-    "issues": [
-      "RERUN_PATH_NOT_EQUIVALENT: production builder retains a fast-commit/dummy branch",
-      "RUNTIME_IDENTITY_NOT_DYNAMIC: runner requires a pre-frozen 240-task manifest",
-      "CHECKPOINT_IDENTITY_NOT_BOUND_TO_RUNTIME_CHALLENGE_CONTENT_AND_TEST_SHAPE",
-      "AMBIGUOUS_INPUT_DISCOVERY: builder uses first rglob match for source archive"
-    ],
-    "runner_sha256": "6c9e3f3f7974ff3b8cefedcfdf813e9cbf28058a9c33f37acb4ab1c44faababb",
-    "status": "FAIL"
+    "builder_sha256": "185658be75ddf1eb0bae925ee1527f3fc85cac881b117e57f8e1d7abca4fd88e",
+    "finalizer_sha256": "6fc13fd38abc25bcaf91c788f02aa59deb939dfdc000a03303b19fed9f277b5f",
+    "issues": [],
+    "runner_sha256": "850292e5dc9516ab69a44fb02716402f1f0ca192b7261c4a6d93a77a154e0bf3",
+    "status": "PASS"
+  },
+  "quota_status": {
+    "available_gpu_hours": null,
+    "estimated_gpu_hours": null,
+    "recovery_reserve_gpu_hours": null,
+    "status": "QUOTA_NOT_VERIFIED"
   },
   "release_blockers": [
-    "RERUN_PATH_NOT_EQUIVALENT: production builder retains a fast-commit/dummy branch",
-    "RUNTIME_IDENTITY_NOT_DYNAMIC: runner requires a pre-frozen 240-task manifest",
-    "CHECKPOINT_IDENTITY_NOT_BOUND_TO_RUNTIME_CHALLENGE_CONTENT_AND_TEST_SHAPE",
-    "AMBIGUOUS_INPUT_DISCOVERY: builder uses first rglob match for source archive",
-    "MODEL_STATE_PARITY_UNVERIFIED: failed TTT48 cross-score run had numerical anchor mismatches",
-    "QUOTA_BLOCKED: remaining quota is below a fully costed 4xL4 adaptation/generation/rescoring run plus recovery reserve"
+    "MODEL_STATE_PARITY_UNVERIFIED: failed TTT48 cross-score run had numerical anchor mismatches"
   ],
   "release_status": "RELEASE_BLOCKED",
-  "remaining_quota": "GPU 1.19h remaining as observed 2026-09-24",
-  "rerun_path_test": "FAIL_STATIC",
+  "remaining_quota": null,
+  "rerun_path_test": "NOT_RUN",
   "scope": "RETROSPECTIVE_DEVELOPMENT_EVIDENCE_NOT_HELD_OUT_NOT_LB_PERFORMANCE",
-  "source_commit": "9497aa597788ebde7e176e10ed2acfdf8173f61e",
+  "source_commit": "376e34a8e8df727645378743f74e3553258b77be",
   "submission_sha256": "NOT_CREATED",
   "total_runtime": "NOT_RUN"
 }

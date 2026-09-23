@@ -14,8 +14,7 @@ def test_cross_score_anchor_audit_detects_logged_mismatch(tmp_path: Path) -> Non
     assert result["anchor_mismatch_task_ids"] == ["abcdef12"]
 
 
-def test_static_production_audit_reports_current_release_blockers() -> None:
+def test_static_production_audit_identifies_only_the_unbound_live_worker() -> None:
     result = _production_static_audit()
     assert result["status"] == "FAIL"
-    assert any("RERUN_PATH_NOT_EQUIVALENT" in issue for issue in result["issues"])
-    assert any("RUNTIME_IDENTITY_NOT_DYNAMIC" in issue for issue in result["issues"])
+    assert result["issues"] == ["LIVE_D1_WORKER_BOOTSTRAP_UNBOUND: CPU route is verified, but the exact CUDA TTT24/48 worker has not been parity-bound"]

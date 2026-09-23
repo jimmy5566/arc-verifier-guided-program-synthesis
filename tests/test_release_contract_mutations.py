@@ -1,196 +1,78 @@
-"""CPU-only release-contract probes against the real reference-TTT path.
-
-The xfail cases intentionally document unmet production requirements without
-changing the frozen solver or release implementation in this governance-only
-round. XFAIL never counts as a release PASS; it is a named release blocker.
-"""
+"""CPU integration contracts for the actual fixed-4+4+D1 release route."""
 from __future__ import annotations
 
-import hashlib
-import importlib.util
 import json
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 
-
-ROOT = Path(__file__).resolve().parents[1]
-BUILDER_PATH = ROOT / "scripts" / "build_reference_ttt_production_kaggle.py"
-FINALIZER = ROOT / "scripts" / "build_reference_ttt_strict_submission.py"
+from inference.d1_release_contract import PORTFOLIO, ReleaseContractError, runtime_manifest, valid_checkpoint
+from scripts.run_d1_release_4gpu import run_release
 
 
-def _write(path: Path, value: object) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value), encoding="utf-8")
+def config() -> dict[str, object]:
+    return {"model_identity": {"path": "/mounted/model", "sha256": "model"}, "ttt24_recipe": {"steps": 24, "hash": "24"}, "ttt48_recipe": {"steps": 48, "hash": "48"}, "generation": {"slots": PORTFOLIO}, "scoring": {"selector": "D1", "hash": "score"}}
 
 
-def _load_builder() -> object:
-    spec = importlib.util.spec_from_file_location("release_contract_builder", BUILDER_PATH)
-    assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+def challenges(*, multi: bool = False, changed: bool = False) -> dict[str, object]:
+    return {"alternate-b": {"train": [], "test": [{"input": [[2 if changed else 1]]}, {"input": [[3]]}] if multi else [{"input": [[2 if changed else 1]]}]}, "alternate-a": {"train": [], "test": [{"input": [[4]]}]}}
 
 
-def _strict_inputs(
-    tmp_path: Path, *, multi_test: bool = False, incomplete: bool = False, no_candidate: bool = False
-) -> tuple[Path, Path, Path]:
-    task_ids = [f"runtime-{index:03d}" for index in range(240)]
-    manifest = tmp_path / "manifest.json"
-    sample = tmp_path / "sample.json"
-    candidates = tmp_path / "candidates.json"
-    task_hash = hashlib.sha256(json.dumps(sorted(task_ids), separators=(",", ":")).encode()).hexdigest()
-    _write(manifest, {
-        "status": "REFERENCE_TTT_PRODUCTION_TASKS_FROZEN_BEFORE_INFERENCE",
-        "task_ids": task_ids,
-        "task_ids_hash": task_hash,
-    })
-    sample_payload = {task_id: [{}] for task_id in task_ids}
-    if multi_test:
-        sample_payload[task_ids[0]] = [{}, {}]
-    _write(sample, sample_payload)
-    view_spec = [
-        {"geometry": name, "color_offset": 0, "pair_order": "canonical"}
-        for name in ("identity", "rot90", "rot180", "rot270", "flip_lr", "flip_ud", "transpose", "anti_transpose")
-    ]
-    records = {}
-    for task_id in task_ids:
-        prediction = [[[0]], [[1]]] if multi_test and task_id == task_ids[0] else [[[0]]]
-        records[task_id] = {
-            "task_id": task_id,
-            "status": "SUCCESS",
-            "worker_id": 0,
-            "physical_gpu_id": 0,
-            "unique_candidate_count": 1,
-            "elapsed_seconds": 1.0,
-            "candidates": [{"prediction": prediction, "support_count": 1}],
-            "ranked_candidate_indices": [0],
-            "candidate_scores": [0.0],
-            "b_support_view_spec": view_spec,
-            "b_support_evidence": [{
-                "candidate_index": 0,
-                "original_log_likelihood": 0.0,
-                "view_negative_log_likelihoods": [0.0] * 8,
-            }],
-        }
-    if no_candidate:
-        records[task_ids[-1]]["status"] = "NO_VALID_NATIVE_CANDIDATE"
-        records[task_ids[-1]]["candidates"] = []
-    _write(candidates, {
-        "experiment_id": "release-contract-mutation",
-        "status": "REFERENCE_TTT_PRODUCTION_CANDIDATES_FROZEN_BEFORE_SUBMISSION",
-        "completed_task_count": 239 if incomplete else 240,
-        "failed_worker_task_count": 0,
-        "unfinished_task_count": 0,
-        "records": records,
-    })
-    return manifest, sample, candidates
+def worker(task_id: str, task: object, manifest: object) -> dict[str, object]:
+    count = len(task["test"])
+    def source(label: str) -> dict[str, object]:
+        candidates = [{"prediction": [[[1 + index]] for index in range(count)], "augmentation": {"geometry": tag}} for tag in PORTFOLIO[label]]
+        evidence = [{"test_index": index, "candidates": [{"candidate_index": candidate_index, "original_log_likelihood": -float(candidate_index), "view_negative_log_likelihoods": [float(candidate_index)] * 8} for candidate_index in range(len(candidates))]} for index in range(count)]
+        return {"candidates": candidates, "per_output_evidence": evidence}
+    return {"task_id": task_id, "status": "SUCCESS", "sources": {"TTT24": source("TTT24"), "TTT48": source("TTT48")}}
 
 
-def _finalize(tmp_path: Path, manifest: Path, sample: Path, candidates: Path) -> subprocess.CompletedProcess[str]:
-    return subprocess.run([
-        sys.executable, str(FINALIZER), "--manifest", str(manifest), "--sample-submission", str(sample),
-        "--candidates", str(candidates), "--selection-output", str(tmp_path / "selection.json"),
-        "--provenance-output", str(tmp_path / "provenance.json"), "--output", str(tmp_path / "submission.json"),
-    ], cwd=ROOT, text=True, capture_output=True, check=False)
-
-
-@pytest.mark.xfail(
-    strict=True,
-    reason="RELEASE_BLOCKER: builder rejects arbitrary runtime task IDs because it hardcodes a 240-task shape",
-)
-def test_a_runtime_manifest_accepts_complete_task_id_replacement(tmp_path: Path) -> None:
-    builder = _load_builder()
-    builder.ROOT = tmp_path
-    _write(tmp_path / "data/raw/arc-agi_test_challenges.json", {
-        "alternate-a": {"test": [{"input": [[1]]}]},
-        "alternate-b": {"test": [{"input": [[2]]}]},
-    })
-    _write(tmp_path / "data/raw/sample_submission.json", {"alternate-a": [{}], "alternate-b": [{}]})
-    builder._reference_inputs = lambda: ({}, {"rank": 256})
-    manifest, _config = builder._frozen_inputs()
+def test_a_runtime_manifest_accepts_complete_task_id_replacement_and_multitest(tmp_path: Path) -> None:
+    manifest = runtime_manifest(challenges(multi=True), config())
     assert manifest["task_ids"] == ["alternate-a", "alternate-b"]
+    assert [item["test_index"] for item in manifest["tasks"]["alternate-b"]["test_outputs"]] == [0, 1]
+    artifact = run_release(challenges(multi=True), config(), tmp_path, worker)
+    assert set(artifact["records"]) == set(manifest["task_ids"])
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="RELEASE_BLOCKER: builder rejects a runtime multi-test structure unless the visible 240-task shape is pre-assumed",
-)
-def test_b_runtime_manifest_adapts_to_multitest_structure(tmp_path: Path) -> None:
-    builder = _load_builder()
-    builder.ROOT = tmp_path
-    _write(tmp_path / "data/raw/arc-agi_test_challenges.json", {
-        "alternate": {"test": [{"input": [[1]]}, {"input": [[2]]}]},
-    })
-    _write(tmp_path / "data/raw/sample_submission.json", {"alternate": [{}, {}]})
-    builder._reference_inputs = lambda: ({}, {"rank": 256})
-    manifest, _config = builder._frozen_inputs()
-    assert manifest["runtime_test_index_structure"] == {"alternate": 2}
+def test_b_rerun_flag_does_not_change_inference_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("KAGGLE_IS_COMPETITION_RERUN", raising=False)
+    normal = run_release(challenges(), config(), tmp_path / "normal", worker)
+    monkeypatch.setenv("KAGGLE_IS_COMPETITION_RERUN", "true")
+    rerun = run_release(challenges(), config(), tmp_path / "rerun", worker)
+    assert normal["records"] == rerun["records"]
+    assert normal["started_single_inference_path"] is rerun["started_single_inference_path"] is True
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="RELEASE_BLOCKER: checkpoint identity omits runtime challenge content and test-index structure",
-)
-def test_c_and_d_changed_runtime_input_invalidates_same_task_id_checkpoint(tmp_path: Path) -> None:
-    from scripts.run_eval3_reference_ttt import _identity, _valid_checkpoint
-
-    task_hash = hashlib.sha256(b'["same-id"]').hexdigest()
-    old_manifest = {"task_ids_hash": task_hash, "source_challenge_sha256": "old", "test_index_structure": {"same-id": 1}}
-    new_manifest = {"task_ids_hash": task_hash, "source_challenge_sha256": "new", "test_index_structure": {"same-id": 2}}
-    config = {"rank": 256}
-    old_identity, new_identity = _identity(old_manifest, config), _identity(new_manifest, config)
-    checkpoint = tmp_path / "same-id.json"
-    _write(checkpoint, {
-        "identity": old_identity,
-        "task_id": "same-id",
-        "record": {"task_id": "same-id", "status": "SUCCESS", "candidates": []},
-    })
-    assert old_identity != new_identity
-    assert _valid_checkpoint(checkpoint, "same-id", new_identity) is None
+def test_c_changed_runtime_input_invalidates_same_task_id_checkpoint(tmp_path: Path) -> None:
+    first = run_release(challenges(), config(), tmp_path, worker)
+    old = first["manifest"]
+    new = runtime_manifest(challenges(changed=True), config())
+    assert old["release_identity"] != new["release_identity"]
+    assert valid_checkpoint(tmp_path / "tasks" / "alternate-b.json", "alternate-b", new) is None
 
 
-def test_e_sample_submission_mismatch_fails_explicitly(tmp_path: Path) -> None:
-    manifest, sample, candidates = _strict_inputs(tmp_path)
-    payload = json.loads(sample.read_text(encoding="utf-8"))
-    payload.pop("runtime-239")
-    _write(sample, payload)
-    result = _finalize(tmp_path, manifest, sample, candidates)
-    assert result.returncode != 0
-    assert "manifest_or_sample_submission_mismatch" in result.stdout
-    assert not (tmp_path / "submission.json").exists()
+def test_d_both_sources_reach_per_output_d1_and_empty_pool_fails_closed(tmp_path: Path) -> None:
+    artifact = run_release(challenges(multi=True), config(), tmp_path, worker)
+    from inference.d1_release_contract import select_record
+    selected = select_record(artifact["records"]["alternate-b"], artifact["manifest"]["tasks"]["alternate-b"])
+    assert [row["test_index"] for row in selected["outputs"]] == [0, 1]
+    broken = json.loads(json.dumps(artifact["records"]["alternate-a"]))
+    broken["sources"]["TTT48"]["candidates"] = []
+    with pytest.raises(ReleaseContractError, match="empty selected TTT48"):
+        select_record(broken, artifact["manifest"]["tasks"]["alternate-a"])
 
 
-def test_f_multitest_mapping_reaches_final_submission_by_task_and_index(tmp_path: Path) -> None:
-    manifest, sample, candidates = _strict_inputs(tmp_path, multi_test=True)
-    result = _finalize(tmp_path, manifest, sample, candidates)
-    assert result.returncode == 0, result.stderr
-    submission = json.loads((tmp_path / "submission.json").read_text(encoding="utf-8"))
-    assert submission["runtime-000"] == [
-        {"attempt_1": [[0]], "attempt_2": [[0]]},
-        {"attempt_1": [[1]], "attempt_2": [[1]]},
-    ]
+def test_e_worker_errors_and_timeouts_are_explicit(tmp_path: Path) -> None:
+    def failing(*_args: object) -> dict[str, object]: raise TimeoutError("deliberate")
+    with pytest.raises(RuntimeError, match="TIMEOUT"):
+        run_release(challenges(), config(), tmp_path, failing)
 
 
-def test_g_zero_valid_candidate_fails_closed_without_submission(tmp_path: Path) -> None:
-    manifest, sample, candidates = _strict_inputs(tmp_path, no_candidate=True)
-    result = _finalize(tmp_path, manifest, sample, candidates)
-    assert result.returncode != 0
-    assert "complete_model_coverage_required" in result.stdout
-    assert not (tmp_path / "submission.json").exists()
-
-
-def test_h_incomplete_candidate_artifact_fails_closed_and_output_overwrite_is_rejected(tmp_path: Path) -> None:
-    manifest, sample, candidates = _strict_inputs(tmp_path, incomplete=True)
-    result = _finalize(tmp_path, manifest, sample, candidates)
-    assert result.returncode != 0
-    assert "candidate_coverage_invalid" in result.stdout
-    assert not (tmp_path / "submission.json").exists()
-    # A pre-existing output must not be silently replaced on a later release.
-    (tmp_path / "submission.json").write_text("{}", encoding="utf-8")
-    complete_manifest, complete_sample, complete_candidates = _strict_inputs(tmp_path / "fresh")
-    second = _finalize(tmp_path, complete_manifest, complete_sample, complete_candidates)
-    assert second.returncode != 0
-    assert "FileExistsError" in second.stderr
+def test_f_single_candidate_pool_duplicates_documented_attempt() -> None:
+    from inference.d1_release_contract import select_record
+    manifest = runtime_manifest({"one": {"test": [{"input": [[0]]}]}}, config())
+    source = {"candidates": [{"prediction": [[[7]]], "augmentation": {"geometry": tag}} for tag in PORTFOLIO["TTT24"]], "per_output_evidence": [{"test_index": 0, "candidates": [{"candidate_index": index, "original_log_likelihood": -1.0, "view_negative_log_likelihoods": [1.0]} for index in range(4)]}]}
+    record = {"status": "SUCCESS", "sources": {"TTT24": source, "TTT48": source}}
+    output = select_record(record, manifest["tasks"]["one"])["outputs"][0]
+    assert output["attempt_1"] == output["attempt_2"] == [[7]]

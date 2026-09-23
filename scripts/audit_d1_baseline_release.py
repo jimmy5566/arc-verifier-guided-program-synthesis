@@ -58,20 +58,28 @@ def _cross_score_anchor_state(path: Path) -> dict[str, Any]:
 
 
 def _production_static_audit() -> dict[str, Any]:
-    builder = (ROOT / "scripts" / "build_reference_ttt_production_kaggle.py").read_text(encoding="utf-8")
-    runner = (ROOT / "scripts" / "run_reference_ttt_production_4gpu.py").read_text(encoding="utf-8")
+    """Audit the isolated D1 release route, never the retired Aug8 route."""
+    builder = (ROOT / "scripts" / "build_d1_release_kaggle.py").read_text(encoding="utf-8")
+    runner = (ROOT / "scripts" / "run_d1_release_4gpu.py").read_text(encoding="utf-8")
+    finalizer = (ROOT / "scripts" / "build_d1_release_submission.py").read_text(encoding="utf-8")
+    contract = (ROOT / "src" / "inference" / "d1_release_contract.py").read_text(encoding="utf-8")
     issues: list[str] = []
-    if "KAGGLE_IS_COMPETITION_RERUN" in builder or "FAST_COMMIT_MODE" in builder:
-        issues.append("RERUN_PATH_NOT_EQUIVALENT: production builder retains a fast-commit/dummy branch")
-    if "len(task_ids) != 240" in runner:
-        issues.append("RUNTIME_IDENTITY_NOT_DYNAMIC: runner requires a pre-frozen 240-task manifest")
-    if "source_challenge_sha256" not in runner or "test_index_structure" not in runner:
+    if "FAST_COMMIT_MODE" in builder or "STRUCTURAL_DUMMY_ONLY" in builder:
+        issues.append("RERUN_PATH_NOT_EQUIVALENT: D1 builder retains a fast-commit/dummy branch")
+    if "len(task_ids) != 240" in runner or "240" in finalizer:
+        issues.append("RUNTIME_IDENTITY_NOT_DYNAMIC: D1 route contains a fixed visible task count")
+    if "release_identity" not in runner or "task_contract" not in contract:
         issues.append("CHECKPOINT_IDENTITY_NOT_BOUND_TO_RUNTIME_CHALLENGE_CONTENT_AND_TEST_SHAPE")
-    if 'next(inputs.rglob("ARC2.tar"), None)' in builder:
-        issues.append("AMBIGUOUS_INPUT_DISCOVERY: builder uses first rglob match for source archive")
+    if ".rglob(" in builder:
+        issues.append("AMBIGUOUS_INPUT_DISCOVERY: D1 builder uses rglob source discovery")
+    if "select_record" not in finalizer or "fixed_TTT24_TTT48_4plus4_per_output_D1" not in contract:
+        issues.append("D1_PER_OUTPUT_FINALIZER_NOT_WIRED")
+    if "release-image-only" in runner:
+        issues.append("LIVE_D1_WORKER_BOOTSTRAP_UNBOUND: CPU route is verified, but the exact CUDA TTT24/48 worker has not been parity-bound")
     return {"status": "FAIL" if issues else "PASS", "issues": issues,
             "builder_sha256": hashlib.sha256(builder.encode()).hexdigest(),
-            "runner_sha256": hashlib.sha256(runner.encode()).hexdigest()}
+            "runner_sha256": hashlib.sha256(runner.encode()).hexdigest(),
+            "finalizer_sha256": hashlib.sha256(finalizer.encode()).hexdigest()}
 
 
 def _d1_replay_state(d1_dir: Path) -> dict[str, Any]:
@@ -110,9 +118,8 @@ def _markdown(report: dict[str, Any]) -> str:
         "## Required before any release re-evaluation",
         "",
         "1. Establish the TTT48 numerical anchor parity using the same verified adaptation path; do not relax its tolerance.",
-        "2. Replace the fast-commit/rerun split with one runtime-challenge-derived, fail-closed production entry path.",
-        "3. Bind checkpoints to challenge content and test-index structure, then pass failure-injection tests.",
-        "4. Re-evaluate GPU quota only after those CPU/model-state gates pass.",
+        "2. Bind the verified live CUDA worker bootstrap into the D1 release image, then run a separate no-submission GPU parity gate.",
+        "3. Re-evaluate GPU quota only when a cost estimate and recovery reserve are supplied.",
     ]
     return "\n".join(lines) + "\n"
 
@@ -122,7 +129,9 @@ def main() -> None:
     parser.add_argument("--release-dir", type=Path, default=DEFAULT_RELEASE)
     parser.add_argument("--d1-dir", type=Path, default=DEFAULT_D1)
     parser.add_argument("--cross-score-log", type=Path, default=DEFAULT_LOG)
-    parser.add_argument("--remaining-quota", default="NOT_QUERIED")
+    parser.add_argument("--remaining-quota", type=float)
+    parser.add_argument("--estimated-gpu-hours", type=float)
+    parser.add_argument("--recovery-reserve-gpu-hours", type=float)
     parser.add_argument("--cpu-test-summary", default="NOT_RUN")
     args = parser.parse_args()
     for filename in ("D1_BASELINE_CONFIG.json",):
@@ -131,12 +140,14 @@ def main() -> None:
     d1 = _d1_replay_state(args.d1_dir)
     production = _production_static_audit()
     anchor = _cross_score_anchor_state(args.cross_score_log)
+    from inference.d1_release_contract import quota_status
+    quota = quota_status(available=args.remaining_quota, estimate=args.estimated_gpu_hours, reserve=args.recovery_reserve_gpu_hours)
     blockers = []
-    if production["status"] != "PASS":
-        blockers.extend(production["issues"])
+    blockers.extend(production["issues"])
     if anchor["status"] != "NO_ANCHOR_MISMATCH_FOUND":
         blockers.append("MODEL_STATE_PARITY_UNVERIFIED: failed TTT48 cross-score run had numerical anchor mismatches")
-    blockers.append("QUOTA_BLOCKED: remaining quota is below a fully costed 4xL4 adaptation/generation/rescoring run plus recovery reserve")
+    if quota["status"] == "QUOTA_INSUFFICIENT":
+        blockers.append("QUOTA_INSUFFICIENT: supplied cost estimate plus recovery reserve exceeds available quota")
     report = {
         "baseline_name": "TTT24_TTT48_4PLUS4_D1_BASELINE_V1",
         "scope": "RETROSPECTIVE_DEVELOPMENT_EVIDENCE_NOT_HELD_OUT_NOT_LB_PERFORMANCE",
@@ -144,7 +155,7 @@ def main() -> None:
         "live_4plus4_evidence_parity": "NOT_VERIFIED",
         "model_state_parity": anchor,
         "rerun_path_test": "FAIL_STATIC" if production["status"] != "PASS" else "NOT_RUN",
-        "failure_injection_tests": "CPU_FINALIZER_INJECTIONS_PASS_RELEASE_CONTRACT_XFAIL_REMAINS",
+        "failure_injection_tests": "CPU_D1_RELEASE_CONTRACT_TESTS_REQUIRED",
         "cpu_test_summary": args.cpu_test_summary,
         "gpu_smoke_status": "NOT_RUN_QUOTA_AND_MODEL_STATE_BLOCKED",
         "full_saved_run_status": "NOT_RUN_QUOTA_AND_MODEL_STATE_BLOCKED",
@@ -154,6 +165,7 @@ def main() -> None:
         "fallback_counts_by_reason": "NOT_RUN",
         "failed_unfinished": "NOT_RUN",
         "total_runtime": "NOT_RUN",
+        "quota_status": quota,
         "remaining_quota": args.remaining_quota,
         "submission_sha256": "NOT_CREATED",
         "production_static_audit": production,

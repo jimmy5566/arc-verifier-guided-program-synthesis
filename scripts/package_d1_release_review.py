@@ -32,8 +32,12 @@ def main() -> None:
     files = {
         **{f"release/{path.name}": path for path in RELEASE.iterdir() if path.is_file()},
         "source/src/inference/selector_d1.py": ROOT / "src" / "inference" / "selector_d1.py",
+        "source/src/inference/d1_release_contract.py": ROOT / "src" / "inference" / "d1_release_contract.py",
         "source/scripts/run_eval60_4plus4_d1_selector.py": ROOT / "scripts" / "run_eval60_4plus4_d1_selector.py",
         "source/scripts/audit_d1_baseline_release.py": ROOT / "scripts" / "audit_d1_baseline_release.py",
+        "source/scripts/run_d1_release_4gpu.py": ROOT / "scripts" / "run_d1_release_4gpu.py",
+        "source/scripts/build_d1_release_submission.py": ROOT / "scripts" / "build_d1_release_submission.py",
+        "source/scripts/build_d1_release_kaggle.py": ROOT / "scripts" / "build_d1_release_kaggle.py",
         "source/scripts/package_d1_release_review.py": ROOT / "scripts" / "package_d1_release_review.py",
         "source/tests/test_selector_d1.py": ROOT / "tests" / "test_selector_d1.py",
         "source/tests/test_audit_d1_baseline_release.py": ROOT / "tests" / "test_audit_d1_baseline_release.py",
@@ -46,6 +50,7 @@ def main() -> None:
         "evidence/baseline_replay_frozen.json": D1 / "baseline_replay_frozen.json",
         "evidence/d1_rankings_frozen.json": D1 / "d1_rankings_frozen.json",
         "evidence/d1_predictions_frozen.json": D1 / "d1_predictions_frozen.json",
+        "evidence/D1_RELEASE_RUNTIME_CONFIG.json": RELEASE / "D1_RELEASE_RUNTIME_CONFIG.json",
     }
     if LOG.is_file():
         files["evidence/failed_ttt48_cross_score_version2_logs.json"] = LOG
