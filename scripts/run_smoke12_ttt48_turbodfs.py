@@ -61,7 +61,11 @@ def _generate_turbodfs(*, model: Any, tokenizer: Any, task: Any, turbo: dict[str
     FastLanguageModel.for_inference(model)
     started = time.perf_counter(); deadline = started + float(turbo["max_wall_seconds_per_task"])
     raw: list[dict[str, Any]] = []; telemetry: list[dict[str, Any]] = []
-    totals = {"expanded_branches": 0, "pruned_probability": 0, "complete_candidates": 0, "generated_tokens": 0, "invalid_view_count": 0, "task_time_cap_reached": False}
+    # Keep aggregate metric names identical to ``TurboDFSResult``.  The
+    # per-view display field below intentionally uses the human-facing
+    # ``pruned_probability`` spelling, but aggregation must use the result
+    # object's canonical attribute name.
+    totals = {"expanded_branches": 0, "probability_pruned": 0, "complete_candidates": 0, "generated_tokens": 0, "invalid_view_count": 0, "task_time_cap_reached": False}
     for augmentation_index, (augmentation, view, prefix) in enumerate(zip(augmentations, views, prefixes, strict=True)):
         per_test: list[list[tuple[list[list[int]], Any]]] = []
         for test_index, example in enumerate(view.test):
