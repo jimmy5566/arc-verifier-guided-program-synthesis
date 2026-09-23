@@ -8,7 +8,7 @@ import pytest
 
 from inference.d1_release_contract import PORTFOLIO, ReleaseContractError, runtime_manifest, valid_checkpoint
 from scripts.run_d1_release_4gpu import run_release
-from scripts.run_d1_release_4gpu import validate_live_config
+from scripts.run_d1_release_4gpu import _historical_view_seed_index, _selected_views, _worker_exit_faults, validate_live_config, verify_model_files
 
 
 def config() -> dict[str, object]:
@@ -53,17 +53,25 @@ def test_c_changed_runtime_input_invalidates_same_task_id_checkpoint(tmp_path: P
     assert valid_checkpoint(tmp_path / "tasks" / "alternate-b.json", "alternate-b", new) is None
 
 
-def test_d_both_sources_reach_per_output_d1_and_empty_pool_fails_closed(tmp_path: Path) -> None:
+def test_d_both_sources_reach_per_output_d1_and_completed_empty_has_versioned_fallback(tmp_path: Path) -> None:
     artifact = run_release(challenges(multi=True), config(), tmp_path, worker)
     from inference.d1_release_contract import select_record
     selected = select_record(artifact["records"]["alternate-b"], artifact["manifest"]["tasks"]["alternate-b"])
     assert [row["test_index"] for row in selected["outputs"]] == [0, 1]
     broken = json.loads(json.dumps(artifact["records"]["alternate-a"]))
     broken["sources"]["TTT48"]["candidates"] = []
+    broken["sources"]["TTT48"]["status"] = "COMPLETED_EMPTY"
+    broken["sources"]["TTT48"]["per_output_evidence"][0]["candidates"] = []
     assert select_record(broken, artifact["manifest"]["tasks"]["alternate-a"])["status"] == "SUCCESS"
     broken["sources"]["TTT24"]["candidates"] = []
-    with pytest.raises(ReleaseContractError, match="empty combined"):
-        select_record(broken, artifact["manifest"]["tasks"]["alternate-a"])
+    broken["sources"]["TTT24"]["status"] = "COMPLETED_EMPTY"
+    broken["sources"]["TTT24"]["per_output_evidence"][0]["candidates"] = []
+    row = select_record(broken, artifact["manifest"]["tasks"]["alternate-a"], [[[4]]])["outputs"][0]
+    assert row["attempt_1"] == row["attempt_2"] == [[4]]
+    assert row["selection_source"] == "COMPLETED_EMPTY_INPUT_COPY"
+    broken["sources"]["TTT48"]["status"] = "FAILED"
+    with pytest.raises(ReleaseContractError, match="completed-empty provenance"):
+        select_record(broken, artifact["manifest"]["tasks"]["alternate-a"], [[[4]]])
 
 
 def test_e_worker_errors_and_timeouts_are_explicit(tmp_path: Path) -> None:
@@ -85,3 +93,46 @@ def test_g_live_route_rejects_unpinned_model_identity_before_cuda() -> None:
     incomplete = {"environment": {}, "model_identity": {"checkpoint_sha256": "REQUIRED_AT_MOUNT"}, "generation": {}, "scoring": {}, "ttt24_recipe": {}, "ttt48_recipe": {}}
     with pytest.raises(ReleaseContractError, match="SHA256"):
         validate_live_config(incomplete)
+
+
+def test_h_actual_selected_view_specs_are_canonical_zero_color() -> None:
+    for tags in PORTFOLIO.values():
+        views = _selected_views(tags)
+        assert [item.geometry for item in views] == list(tags)
+        assert all(item.color_offset == 0 and item.pair_order == "canonical" for item in views)
+    assert _historical_view_seed_index("flip_lr") == 4
+    assert _historical_view_seed_index("anti_transpose") == 7
+
+
+def test_i_model_mount_bytes_reject_modified_file(tmp_path: Path) -> None:
+    import hashlib
+    source = Path("release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/D1_RELEASE_RUNTIME_CONFIG.json")
+    cfg = json.loads(source.read_text(encoding="utf-8"))
+    cfg["model_identity"]["files"] = {"config.json": {"size": 4, "sha256": hashlib.sha256(b"good").hexdigest()}}
+    (tmp_path / "config.json").write_bytes(b"good")
+    assert verify_model_files(tmp_path, cfg)["config.json"] == hashlib.sha256(b"good").hexdigest()
+    (tmp_path / "config.json").write_bytes(b"bad!")
+    with pytest.raises(ReleaseContractError, match="mismatch"):
+        verify_model_files(tmp_path, cfg)
+
+
+def test_j_dead_worker_and_clean_exit_without_result_are_detected() -> None:
+    class Process:
+        def __init__(self, exitcode: int | None) -> None: self.exitcode = exitcode
+    assert _worker_exit_faults([Process(0)], set(), {"task"}, set())
+    assert _worker_exit_faults([Process(1)], set(), {"task"}, set(), include_clean_exit=False)
+    assert _worker_exit_faults([Process(0)], {0}, {"task"}, set())
+
+
+def test_k_generated_notebook_uses_offline_setup_then_real_inference() -> None:
+    from scripts.build_d1_release_kaggle import notebook
+    cell = "".join(notebook("/kaggle/input/arc2-d1-release-source/ARC2.tar", "a" * 64, "d1_release_config.json")["cells"][0]["source"])
+    compile(cell, "d1-release-notebook", "exec")
+    assert cell.index("shutil.copytree(bootstrap,work") < cell.index('md.version("unsloth")')
+    assert "run_d1_release_4gpu.py" in cell and "build_d1_release_submission.py" in cell
+    assert "FAST_COMMIT" not in cell and "raise SystemExit(0)" not in cell
+    smoke = "".join(notebook("/kaggle/input/arc2-d1-release-source/ARC2.tar", "a" * 64, "d1_release_config.json", smoke_task_ids=("58490d8a", "f931b4a8"))["cells"][0]["source"])
+    compile(smoke, "d1-two-task-harness", "exec")
+    assert 'submission=out/"smoke_submission.json"' in smoke
+    assert 'submission=work/"submission.json"' in cell
+    assert "d1_smoke_challenges.json" not in cell

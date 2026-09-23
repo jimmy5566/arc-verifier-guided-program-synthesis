@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 
 from scripts.build_eval3_reference_ttt_kaggle import _frozen_inputs
-from scripts.run_eval3_reference_ttt import _assistant_labels, _full_dialogue, _reference_variants
+from scripts.run_eval3_reference_ttt import _assistant_labels, _full_dialogue, _reference_variants, _training_pair
 
 
 def test_eval3_uses_exactly_three_deterministic_pool_misses_and_fixed_ttt() -> None:
@@ -46,3 +46,15 @@ def test_eval3_scorer_can_run_as_a_script_from_the_project_root() -> None:
     source = open("scripts/score_eval3_reference_ttt.py", encoding="utf-8").read()
     assert "sys.path.insert(0, str(ROOT))" in source
     assert "sum(ttt[\"step_seconds\"])" in source
+
+
+def test_filtered_training_inputs_and_labels_keep_same_sequence() -> None:
+    import torch
+    original = [torch.tensor([11, 10, 1, 15, 12, 10, 2, 15]), torch.ones(20, dtype=torch.long), torch.tensor([11, 10, 3, 15, 12, 10, 4, 15])]
+    kept = [item for item in original if len(item) <= 8]
+    labels = [_assistant_labels(item) for item in kept]
+    for step in range(5):
+        ids, target = _training_pair(kept, labels, step)
+        assert ids is kept[step % 2] and target is labels[step % 2]
+    all_labels = [_assistant_labels(item) for item in (original[0], original[2])]
+    assert _training_pair([original[0], original[2]], all_labels, 1)[0] is original[2]

@@ -18,7 +18,8 @@ from typing import Any, Mapping
 from .selector_d1 import attempts_from_order, d1_order, verify_d1_scope
 
 
-SCHEMA_VERSION = "ARC2_D1_RELEASE_V1"
+SCHEMA_VERSION = "ARC2_D1_RELEASE_V2"
+EMPTY_POOL_POLICY = "ARC2_D1_COMPLETED_EMPTY_INPUT_COPY_V1"
 PORTFOLIO = {
     "TTT24": ("flip_lr", "flip_ud", "transpose", "anti_transpose"),
     "TTT48": ("identity", "rot90", "flip_ud", "anti_transpose"),
@@ -94,7 +95,20 @@ def valid_checkpoint(path: Path, task_id: str, manifest: Mapping[str, Any]) -> d
     if (payload.get("schema_version"), payload.get("release_identity"), payload.get("task_id"), payload.get("task_contract")) != (SCHEMA_VERSION, manifest.get("release_identity"), task_id, manifest.get("tasks", {}).get(task_id)):
         return None
     record = payload.get("record")
-    return dict(record) if isinstance(record, Mapping) else None
+    if not isinstance(record, Mapping) or record.get("status") != "SUCCESS" or record.get("task_id") != task_id or record.get("release_identity") != manifest.get("release_identity"):
+        return None
+    sources = record.get("sources")
+    if not isinstance(sources, Mapping) or set(sources) != set(PORTFOLIO):
+        return None
+    for source in sources.values():
+        if not isinstance(source, Mapping) or not isinstance(source.get("candidates"), list):
+            return None
+        if source.get("status", "SUCCESS") != ("SUCCESS" if source["candidates"] else "COMPLETED_EMPTY"):
+            return None
+        evidence = source.get("per_output_evidence")
+        if not isinstance(evidence, list) or {row.get("test_index") for row in evidence if isinstance(row, Mapping)} != {row["test_index"] for row in manifest["tasks"][task_id]["test_outputs"]}:
+            return None
+    return dict(record)
 
 
 def atomic_json(path: Path, payload: Any) -> None:
@@ -139,7 +153,13 @@ def pool_for_output(sources: Mapping[str, Mapping[str, Any]], test_index: int) -
         source = sources.get(source_name)
         if not isinstance(source, Mapping) or not isinstance(source.get("candidates"), list):
             raise ReleaseContractError(f"missing {source_name} candidate source")
+        if not source["candidates"] and source.get("status") != "COMPLETED_EMPTY":
+            raise ReleaseContractError(f"{source_name} empty pool lacks completed-empty provenance")
+        if source["candidates"] and source.get("status", "SUCCESS") != "SUCCESS":
+            raise ReleaseContractError(f"{source_name} candidate source is not successful")
         evidence = _evidence_by_index(source, test_index)
+        if not source["candidates"] and evidence:
+            raise ReleaseContractError(f"{source_name} empty pool has candidate evidence")
         per_grid: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for index, candidate in enumerate(source["candidates"]):
             selected_tags = tuple(tag for tag in _tags(candidate) if tag in wanted_tags)
@@ -166,14 +186,12 @@ def pool_for_output(sources: Mapping[str, Mapping[str, Any]], test_index: int) -
             entry = grouped.setdefault(token, {"grid_key": token, "grid": per_grid[token][0]["grid"], "source_rows": []})
             entry["source_rows"].extend(per_grid[token])
             entry.setdefault("_source_ranks", {})[source_name] = rank
-    if not grouped:
-        raise ReleaseContractError("empty combined fixed-4+4 candidate pool")
     for entry in grouped.values():
         entry["rrf_score"] = sum(1.0 / rank for rank in entry.pop("_source_ranks").values())
     return list(grouped.values())
 
 
-def select_record(record: Mapping[str, Any], task_contract: Mapping[str, Any]) -> dict[str, Any]:
+def select_record(record: Mapping[str, Any], task_contract: Mapping[str, Any], test_inputs: list[list[list[int]]] | None = None) -> dict[str, Any]:
     sources = record.get("sources")
     if record.get("status") != "SUCCESS" or not isinstance(sources, Mapping):
         raise ReleaseContractError("worker did not produce successful dual-source evidence")
@@ -181,12 +199,18 @@ def select_record(record: Mapping[str, Any], task_contract: Mapping[str, Any]) -
     for output in task_contract["test_outputs"]:
         index = int(output["test_index"])
         pool = pool_for_output(sources, index)
+        if not pool:
+            if test_inputs is None or index >= len(test_inputs) or digest(validate_grid(test_inputs[index])) != output["input_sha256"]:
+                raise ReleaseContractError("completed-empty fallback requires the bound runtime test input")
+            fallback = validate_grid(test_inputs[index])
+            outputs.append({"test_index": index, "attempt_1": fallback, "attempt_2": fallback, "ordered_grid_keys": [], "likelihood_ranks": {}, "likelihood_rrf": {}, "candidate_pool": [], "selection_source": "COMPLETED_EMPTY_INPUT_COPY", "fallback_policy": EMPTY_POOL_POLICY})
+            continue
         ordered, likelihood_ranks, l_rrf = d1_order(pool)
         verify_d1_scope(pool, ordered)
         first, second = attempts_from_order(pool, ordered)
         if first is None or second is None:
             raise ReleaseContractError("empty candidate pool")
-        outputs.append({"test_index": index, "attempt_1": first, "attempt_2": second, "ordered_grid_keys": ordered, "likelihood_ranks": likelihood_ranks, "likelihood_rrf": l_rrf, "candidate_pool": pool})
+        outputs.append({"test_index": index, "attempt_1": first, "attempt_2": second, "ordered_grid_keys": ordered, "likelihood_ranks": likelihood_ranks, "likelihood_rrf": l_rrf, "candidate_pool": pool, "selection_source": "D1_MODEL"})
     return {"status": "SUCCESS", "method": "fixed_TTT24_TTT48_4plus4_per_output_D1", "outputs": outputs}
 
 

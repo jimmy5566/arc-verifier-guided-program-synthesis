@@ -29,9 +29,18 @@ def write(path: Path, value: Any) -> None:
 
 
 def archive_source(destination: Path, commit: str) -> Path:
+    allowed = (
+        "scripts/run_d1_release_4gpu.py", "scripts/build_d1_release_submission.py", "scripts/run_eval3_reference_ttt.py",
+        "src/arc/__init__.py", "src/arc/io.py", "src/arc/task.py",
+        "src/inference/__init__.py", "src/inference/arc_native_io.py", "src/inference/d1_release_contract.py",
+        "src/inference/dynamic_task_scheduler.py", "src/inference/kaggle_l4_parallel_runner.py",
+        "src/inference/nvarc_native.py", "src/inference/nvarc_native_augmentation.py",
+        "src/inference/nvarc_native_candidates.py", "src/inference/selector_d1.py",
+        "configs/nvarc_native_846d0198",
+    )
     destination.parent.mkdir(parents=True, exist_ok=True)
     with destination.open("wb") as handle:
-        subprocess.run(["git", "archive", "--format=tar", commit], cwd=ROOT, stdout=handle, check=True)
+        subprocess.run(["git", "archive", "--format=tar", commit, *allowed], cwd=ROOT, stdout=handle, check=True)
     with tarfile.open(destination) as archive:
         names = [member.name for member in archive.getmembers() if member.isfile()]
     if not names:
@@ -45,7 +54,7 @@ def archive_source(destination: Path, commit: str) -> Path:
     return destination
 
 
-def notebook(source_archive: str, source_sha256: str, config_name: str) -> dict[str, Any]:
+def notebook(source_archive: str, source_sha256: str, config_name: str, *, smoke_task_ids: tuple[str, ...] = ()) -> dict[str, Any]:
     lines = [
         "import hashlib, json, os, shutil, subprocess, sys, tarfile",
         "from pathlib import Path",
@@ -56,10 +65,16 @@ def notebook(source_archive: str, source_sha256: str, config_name: str) -> dict[
         'root=work/"ARC2"; root.mkdir(exist_ok=False)',
         'with tarfile.open(source_archive) as archive: archive.extractall(root, filter="data")',
         'challenge=Path("/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_test_challenges.json")',
-        'if not challenge.is_file(): raise RuntimeError("mounted competition challenge missing")',
         'config=Path("/kaggle/input/arc2-d1-release-source/' + config_name + '")',
         'if not config.is_file(): raise RuntimeError("explicit D1 release config missing")',
+        'source_manifest=json.loads(Path("/kaggle/input/arc2-d1-release-source/SOURCE_MANIFEST.json").read_text())',
+        'if hashlib.sha256(config.read_bytes()).hexdigest()!=source_manifest["config_sha256"]: raise RuntimeError("D1 release config hash mismatch")',
         'cfg=json.loads(config.read_text())',
+        'bootstrap=Path("/kaggle/input/pip-install-unsloth-flash-patch")',
+        'if not (bootstrap/"unsloth").is_dir() or not (bootstrap/"unsloth_zoo").is_dir(): raise RuntimeError("offline reference Unsloth bootstrap input missing")',
+        'shutil.copytree(bootstrap,work,dirs_exist_ok=True)',
+        'sys.path.insert(0,str(work)); os.environ["PYTHONPATH"]=str(work)+os.pathsep+os.environ.get("PYTHONPATH","")',
+        'print(json.dumps({"event":"D1_OFFLINE_REFERENCE_ENV_BOOTSTRAPPED","source":str(bootstrap),"pythonpath":str(work)},sort_keys=True),flush=True)',
         'import importlib.metadata as md',
         'if not sys.version.startswith(cfg["environment"]["python_prefix"]): raise RuntimeError(f"Python mismatch: {sys.version}")',
         'if md.version("unsloth")!=cfg["environment"]["unsloth"] or md.version("transformers")!=cfg["environment"]["transformers"]: raise RuntimeError("frozen dependency mismatch")',
@@ -77,6 +92,17 @@ def notebook(source_archive: str, source_sha256: str, config_name: str) -> dict[
         'if set(payload)!=set(mounted) or any(len(payload[k])!=len(mounted[k]["test"]) for k in mounted): raise RuntimeError("runtime challenge/submission mapping mismatch")',
         'print(json.dumps({"event":"D1_RELEASE_COMPLETE","task_count":len(payload),"test_output_count":sum(len(v) for v in payload.values()),"submission_sha256":hashlib.sha256(submission.read_bytes()).hexdigest(),"solutions_opened":False},sort_keys=True),flush=True)',
     ]
+    if smoke_task_ids:
+        if len(smoke_task_ids) != 2 or len(set(smoke_task_ids)) != 2:
+            raise ValueError("the D1 live harness requires exactly two predeclared tasks")
+        lines.insert(lines.index('config=Path("/kaggle/input/arc2-d1-release-source/' + config_name + '")'),
+            'mounted_eval=Path("/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_evaluation_challenges.json"); eval_tasks=json.loads(mounted_eval.read_text()); smoke_ids=' + repr(smoke_task_ids) + '; assert all(task_id in eval_tasks for task_id in smoke_ids); challenge=work/"d1_smoke_challenges.json"; challenge.write_text(json.dumps({task_id:eval_tasks[task_id] for task_id in smoke_ids},sort_keys=True))')
+        lines.insert(lines.index('import importlib.metadata as md'),
+            'cfg["runtime"]["hard_deadline_seconds"]=900; cfg["runtime"]["finalization_margin_seconds"]=120; config=work/"d1_smoke_config.json"; config.write_text(json.dumps(cfg,sort_keys=True))')
+        lines = [line.replace('submission=work/"submission.json"', 'submission=out/"smoke_submission.json"') for line in lines]
+        lines[-1] = lines[-1].replace('"D1_RELEASE_COMPLETE"', '"D1_SMOKE_COMPLETE"')
+    else:
+        lines.insert(lines.index('config=Path("/kaggle/input/arc2-d1-release-source/' + config_name + '")'), 'if not challenge.is_file(): raise RuntimeError("mounted competition challenge missing")')
     return {"cells": [{"cell_type": "code", "execution_count": None, "metadata": {}, "outputs": [], "source": [line + "\n" for line in lines]}], "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"}, "language_info": {"name": "python", "version": "3.11"}, "kaggle": {"accelerator": "nvidiaL4", "isGpuEnabled": True, "isInternetEnabled": False, "language": "python", "sourceType": "notebook"}}, "nbformat": 4, "nbformat_minor": 4}
 
 
@@ -95,7 +121,7 @@ def main() -> None:
     write(payload / "SOURCE_MANIFEST.json", {"source_commit": commit, "archive": "ARC2.tar", "archive_sha256": sha256(archive), "config": "d1_release_config.json", "config_sha256": sha256(payload / "d1_release_config.json"), "archive_inspected": True})
     kernel = args.output / "kernel"; kernel.mkdir(parents=True)
     write(kernel / "arc2-d1-fixed4plus4-production.ipynb", notebook(args.source_input_path, sha256(archive), "d1_release_config.json"))
-    write(kernel / "kernel-metadata.json", {"id": "jimmy5566/arc2-fixed4plus4-d1-release", "title": "ARC2 fixed 4+4 D1 release", "code_file": "arc2-d1-fixed4plus4-production.ipynb", "language": "python", "kernel_type": "notebook", "is_private": True, "enable_gpu": True, "enable_internet": False, "dataset_sources": ["jimmy5566/arc2-d1-release-source"], "kernel_sources": ["sorokin/pip-install-unsloth-flash-patch"], "competition_sources": ["arc-prize-2026-arc-agi-2"], "model_sources": ["sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1"], "machine_shape": "NvidiaL4"})
+    write(kernel / "kernel-metadata.json", {"id": "jimmy5566/arc2-fixed4plus4-d1-release", "title": "ARC2 fixed 4+4 D1 release", "code_file": "arc2-d1-fixed4plus4-production.ipynb", "language": "python", "kernel_type": "notebook", "is_private": True, "enable_gpu": True, "enable_internet": False, "dataset_sources": ["jimmy5566/arc2-d1-release-source"], "kernel_sources": ["sorokin/pip-install-unsloth-flash-patch"], "competition_sources": ["arc-prize-2026-arc-agi-2"], "model_sources": ["sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1"], "docker_image": "gcr.io/kaggle-private-byod/python@sha256:320043e14c68293f1c946585b9257123385205a58af4b94b17d31868cae4e868", "machine_shape": "NvidiaL4"})
     print(json.dumps({"event": "D1_RELEASE_STAGING_READY", "source_commit": commit, "archive_sha256": sha256(archive), "archive_members_inspected": True}, sort_keys=True))
 
 

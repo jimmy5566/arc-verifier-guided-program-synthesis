@@ -21,7 +21,7 @@ def read(path: Path) -> Any: return json.loads(path.read_text(encoding="utf-8"))
 
 def sources_for_task(raw24: dict[str, Any], raw48: dict[str, Any], frozen_pool: dict[str, Any], task_id: str) -> dict[str, Any]:
     """Rehydrate raw source candidates plus their frozen per-output scores."""
-    sources = {"TTT24": {"task_id": task_id, "candidates": raw24["candidates"], "per_output_evidence": []}, "TTT48": {"task_id": task_id, "candidates": raw48["candidates"], "per_output_evidence": []}}
+    sources = {"TTT24": {"task_id": task_id, "status": "SUCCESS" if raw24["candidates"] else "COMPLETED_EMPTY", "candidates": raw24["candidates"], "per_output_evidence": []}, "TTT48": {"task_id": task_id, "status": "SUCCESS" if raw48["candidates"] else "COMPLETED_EMPTY", "candidates": raw48["candidates"], "per_output_evidence": []}}
     for per_test in frozen_pool["per_test"]:
         by_source: dict[str, dict[int, dict[str, Any]]] = {"TTT24": {}, "TTT48": {}}
         for candidate in per_test["candidates"]:
@@ -64,36 +64,36 @@ def main() -> None:
     records = {}
     for task_id in manifest["task_ids"]:
         records[task_id] = {"task_id": task_id, "status": "SUCCESS", "release_identity": manifest["release_identity"], "sources": sources_for_task(raw24["records"][task_id], raw48["records"][task_id], pools["pools"][task_id], task_id)}
-    selection_records: dict[str, Any] = {}; submission: dict[str, Any] = {}; empty_outputs = []
-    for task_id in manifest["task_ids"]:
-        try:
-            selection = select_record(records[task_id], manifest["tasks"][task_id]); selection_records[task_id] = selection
-            submission[task_id] = [{"attempt_1": row["attempt_1"], "attempt_2": row["attempt_2"]} for row in selection["outputs"]]
-        except ReleaseContractError as exc:
-            expected_empty = all(value is None for value in expected[task_id]["attempt_1"] + expected[task_id]["attempt_2"])
-            if not expected_empty: raise
-            empty_outputs.append({"task_id": task_id, "error": str(exc)})
-            submission[task_id] = [{"attempt_1": None, "attempt_2": None} for _ in manifest["tasks"][task_id]["test_outputs"]]
-    # The strict live finalizer must reject this historical source fixture if
-    # it contains an empty combined pool; recording that failure proves the
-    # production policy rather than silently retaining null historical output.
-    try:
-        finalize(challenge, config, {"release_identity": manifest["release_identity"], "records": records})
-        finalizer_status = "PASS"
-    except ReleaseContractError as exc:
-        finalizer_status = "FAIL_CLOSED_EMPTY_POOL"; finalizer_error = str(exc)
-    else:
-        finalizer_error = None
+    selection_artifact, submission, provenance = finalize(challenge, config, {"release_identity": manifest["release_identity"], "records": records})
+    selection_records = selection_artifact["records"]
+    pool_mismatches = []
+    for task_id, selection in selection_records.items():
+        for index, output in enumerate(selection["outputs"]):
+            actual_pool = {row["grid_key"]: row for row in output["candidate_pool"]}
+            expected_pool = {row["grid_key"]: row for row in pools["pools"][task_id]["per_test"][index]["candidates"]}
+            if set(actual_pool) != set(expected_pool):
+                pool_mismatches.append({"task_id": task_id, "test_index": index, "field": "candidate_keys"})
+                continue
+            for token, actual in actual_pool.items():
+                frozen = expected_pool[token]
+                actual_rows = sorted((row["source"], row["candidate_index"], row["selected_support_count"], tuple(row["slot_tags"])) for row in actual["source_rows"])
+                frozen_rows = sorted((row["source"], row["candidate_index"], row["selected_support_count"], tuple(row["slot_tags"])) for row in frozen["source_rows"])
+                if actual_rows != frozen_rows or abs(actual["rrf_score"] - frozen["rrf_score"]) > 1e-12:
+                    pool_mismatches.append({"task_id": task_id, "test_index": index, "field": "support_or_rrf", "grid_key": token})
+    empty_outputs = [{"task_id": task_id, "test_index": index} for task_id, selection in selection_records.items() for index, row in enumerate(selection["outputs"]) if row.get("selection_source") == "COMPLETED_EMPTY_INPUT_COPY"]
+    historical_submission = {task_id: [{"attempt_1": expected[task_id]["attempt_1"][index], "attempt_2": expected[task_id]["attempt_2"][index]} for index in range(len(expected[task_id]["attempt_1"]))] for task_id in manifest["task_ids"]}
     mismatches = []
     for task_id in manifest["task_ids"]:
         actual = submission[task_id]
         for index, row in enumerate(actual):
-            if row["attempt_1"] != expected[task_id]["attempt_1"][index] or row["attempt_2"] != expected[task_id]["attempt_2"][index]: mismatches.append({"task_id": task_id, "test_index": index})
+            if {"task_id": task_id, "test_index": index} not in empty_outputs and (row["attempt_1"] != expected[task_id]["attempt_1"][index] or row["attempt_2"] != expected[task_id]["attempt_2"][index]): mismatches.append({"task_id": task_id, "test_index": index})
     # Solutions are deliberately opened only after all outputs and comparisons are frozen.
-    top1, top2, total = score(submission, read(args.solutions))
-    report = {"status": "PASS_WITH_STRICT_EMPTY_POOL_BLOCKER" if not mismatches and (top1, top2, total) == (20, 28, 89) and finalizer_status == "FAIL_CLOSED_EMPTY_POOL" else "FAIL", "new_contract": "pool_for_output_to_select_record_to_finalizer", "candidate_pool_membership_checked": True, "source_local_rank_and_b_rrf_checked": True, "d1_tie_break_checked": True, "attempt_mismatches": mismatches, "top1": top1, "top2": top2, "pool_oracle": 30, "output_count": total, "empty_pool_outputs": empty_outputs, "strict_finalizer_status": finalizer_status, "strict_finalizer_error": finalizer_error, "selection": selection_records, "submission": submission}
+    solutions = read(args.solutions)
+    historical_top1, historical_top2, total = score(historical_submission, solutions)
+    fallback_top1, fallback_top2, _ = score(submission, solutions)
+    report = {"status": "PASS" if not mismatches and not pool_mismatches and (historical_top1, historical_top2, total) == (20, 28, 89) and provenance["completed_empty_fallback_output_count"] == len(empty_outputs) else "FAIL", "new_contract": "pool_for_output_to_select_record_to_finalizer", "candidate_pool_membership_checked": not pool_mismatches, "source_local_rank_and_b_rrf_checked": not pool_mismatches, "d1_tie_break_checked": True, "pool_mismatches": pool_mismatches, "attempt_mismatches": mismatches, "historical_nonempty_top1": historical_top1, "historical_nonempty_top2": historical_top2, "fallback_inclusive_top1": fallback_top1, "fallback_inclusive_top2": fallback_top2, "pool_oracle": 30, "output_count": total, "empty_pool_outputs": empty_outputs, "finalizer_provenance": provenance, "selection": selection_records, "submission": submission}
     args.output.parent.mkdir(parents=True, exist_ok=True); args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps({key: report[key] for key in ("status", "top1", "top2", "pool_oracle", "output_count")}, sort_keys=True))
+    print(json.dumps({key: report[key] for key in ("status", "historical_nonempty_top1", "historical_nonempty_top2", "fallback_inclusive_top1", "fallback_inclusive_top2", "pool_oracle", "output_count")}, sort_keys=True))
 
 
 if __name__ == "__main__": main()

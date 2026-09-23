@@ -113,6 +113,14 @@ def _valid_checkpoint(path: Path, task_id: str, identity: str) -> dict[str, Any]
     return record if isinstance(record.get("candidates"), list) else None
 
 
+def _training_pair(kept: list[Any], labels: list[Any], step: int) -> tuple[Any, Any]:
+    """Keep inputs and assistant masks aligned after long views are filtered."""
+    if not kept or len(kept) != len(labels):
+        raise ValueError("filtered training inputs and labels are misaligned")
+    index = step % len(kept)
+    return kept[index], labels[index]
+
+
 def _cuda_snapshot() -> dict[str, int]:
     import torch
 
@@ -160,7 +168,8 @@ def _fit_task(
     try:
         for step in range(actual_steps):
             step_started = time.perf_counter()
-            ids, target = token_ids[step % len(token_ids)].unsqueeze(0).to(model.device), labels[step % len(labels)].unsqueeze(0).to(model.device)
+            selected_ids, selected_labels = _training_pair(kept, labels, step)
+            ids, target = selected_ids.unsqueeze(0).to(model.device), selected_labels.unsqueeze(0).to(model.device)
             optimizer.zero_grad(set_to_none=True)
             loss = model(input_ids=ids, labels=target, use_cache=False, return_dict=True).loss
             if not torch.isfinite(loss):

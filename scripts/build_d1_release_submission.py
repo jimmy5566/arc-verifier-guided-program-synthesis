@@ -31,13 +31,14 @@ def finalize(challenge: dict[str, Any], release_config: dict[str, Any], artifact
         record = records[task_id]
         if record.get("release_identity") != manifest["release_identity"]:
             raise ReleaseContractError(f"stale or foreign checkpoint record for {task_id}")
-        selection = select_record(record, manifest["tasks"][task_id])
+        selection = select_record(record, manifest["tasks"][task_id], [example["input"] for example in challenge[task_id]["test"]])
         outputs = [{"attempt_1": validate_grid(item["attempt_1"]), "attempt_2": validate_grid(item["attempt_2"])} for item in selection["outputs"]]
         if len(outputs) != len(manifest["tasks"][task_id]["test_outputs"]):
             raise ReleaseContractError(f"test-index output coverage failure for {task_id}")
         selections[task_id] = selection; submission[task_id] = outputs
     selection_artifact = {"schema_version": manifest["schema_version"], "release_identity": manifest["release_identity"], "task_ids": manifest["task_ids"], "records": selections, "solutions_opened": False}
-    provenance = {"status": "STRICT_D1_RELEASE_COVERAGE_PASS", "release_identity": manifest["release_identity"], "challenge_sha256": manifest["challenge_sha256"], "task_count": len(submission), "test_output_count": sum(len(value) for value in submission.values()), "solutions_opened": False}
+    fallback_outputs = sum(item.get("selection_source") == "COMPLETED_EMPTY_INPUT_COPY" for selection in selections.values() for item in selection["outputs"])
+    provenance = {"status": "STRICT_D1_RELEASE_COVERAGE_PASS", "release_identity": manifest["release_identity"], "challenge_sha256": manifest["challenge_sha256"], "task_count": len(submission), "test_output_count": sum(len(value) for value in submission.values()), "d1_model_output_count": sum(len(value) for value in submission.values()) - fallback_outputs, "completed_empty_fallback_output_count": fallback_outputs, "completed_empty_fallback_task_count": sum(any(item.get("selection_source") == "COMPLETED_EMPTY_INPUT_COPY" for item in selection["outputs"]) for selection in selections.values()), "empty_pool_policy": "ARC2_D1_COMPLETED_EMPTY_INPUT_COPY_V1", "solutions_opened": False}
     return selection_artifact, submission, provenance
 
 
