@@ -101,6 +101,7 @@ def _markdown(report: dict[str, Any]) -> str:
         f"- Baseline: `{report['baseline_name']}`",
         f"- D1 replay: Top-1 `{report['d1_replay']['top1']}/89`; Top-2 `{report['d1_replay']['top2']}/89`; pool oracle `{report['d1_replay']['pool_oracle']}/89`.",
         f"- Remaining Kaggle GPU quota observed: `{report['remaining_quota']}`.",
+        f"- CPU test suite: `{report['cpu_test_summary']}`.",
         f"- Release status: **{report['release_status']}**.",
         "",
         "## Blockers",
@@ -122,6 +123,7 @@ def main() -> None:
     parser.add_argument("--d1-dir", type=Path, default=DEFAULT_D1)
     parser.add_argument("--cross-score-log", type=Path, default=DEFAULT_LOG)
     parser.add_argument("--remaining-quota", default="NOT_QUERIED")
+    parser.add_argument("--cpu-test-summary", default="NOT_RUN")
     args = parser.parse_args()
     for filename in ("D1_BASELINE_CONFIG.json",):
         if not (args.release_dir / filename).is_file():
@@ -142,7 +144,8 @@ def main() -> None:
         "live_4plus4_evidence_parity": "NOT_VERIFIED",
         "model_state_parity": anchor,
         "rerun_path_test": "FAIL_STATIC" if production["status"] != "PASS" else "NOT_RUN",
-        "failure_injection_tests": "EXISTING_CPU_TESTS_ONLY_NOT_A_RELEASE_PASS",
+        "failure_injection_tests": "CPU_FINALIZER_INJECTIONS_PASS_RELEASE_CONTRACT_XFAIL_REMAINS",
+        "cpu_test_summary": args.cpu_test_summary,
         "gpu_smoke_status": "NOT_RUN_QUOTA_AND_MODEL_STATE_BLOCKED",
         "full_saved_run_status": "NOT_RUN_QUOTA_AND_MODEL_STATE_BLOCKED",
         "expected_tasks_completed_tasks": "NOT_RUN",
