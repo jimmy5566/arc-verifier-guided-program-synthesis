@@ -40,7 +40,8 @@ def _archive(destination: Path, commit: str) -> None:
 def _notebook(dataset_slug: str) -> str:
     return "\n".join([
         "import hashlib,json,os,shutil,subprocess,sys,time", "from pathlib import Path", "",
-        f'dataset=Path("/kaggle/input/datasets/jimmy5566/{dataset_slug}")', 'source=dataset/"ARC2"; work=Path("/kaggle/working/artifacts/smoke30_representation_alignment")',
+        f'dataset=Path("/kaggle/input/datasets/jimmy5566/{dataset_slug}")', 'source=dataset/"ARC2"; source_work=Path("/kaggle/working/smoke30_representation_source"); work=Path("/kaggle/working/artifacts/smoke30_representation_alignment")',
+        'if not source.is_dir():\n    archive=dataset/"ARC2.zip"\n    if not archive.is_file(): raise RuntimeError("Smoke30 source is neither an unpacked ARC2 directory nor ARC2.zip")\n    shutil.unpack_archive(archive, source_work)\n    source=source_work',
         'required={"manifest":dataset/"smoke30_manifest.json","variants":dataset/"reference_variant_config.json","reference":dataset/"reference_ttt24_config.json","baseline_candidates":dataset/"ttt24_candidates_frozen.json","baseline_predictions":dataset/"ttt24_per_output_predictions_frozen.json","runner":source/"scripts/run_smoke30_representation_alignment.py","scorer":source/"scripts/score_smoke30_representation_alignment.py","native":source/"configs/nvarc_native_846d0198"}',
         'missing=[name for name,path in required.items() if not path.exists()]', 'if missing: raise RuntimeError(f"Smoke30 attached source incomplete: {missing}")',
         'gpus=subprocess.check_output(["nvidia-smi","-L"],text=True).splitlines()', 'if len(gpus)!=4 or any("NVIDIA L4" not in row for row in gpus): raise RuntimeError(f"requires exactly 4 L4 GPUs: {gpus}")', 'if os.environ.get("KAGGLE_KERNEL_INTERNET_ENABLED","").strip().lower() in {"1","true","yes"}: raise RuntimeError("Internet must be disabled")',
