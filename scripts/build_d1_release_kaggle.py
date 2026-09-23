@@ -56,18 +56,20 @@ def archive_source(destination: Path, commit: str) -> Path:
 
 def notebook(source_archive: str, source_sha256: str, config_name: str, *, smoke_task_ids: tuple[str, ...] = ()) -> dict[str, Any]:
     lines = [
-        "import hashlib, json, os, shutil, subprocess, sys, tarfile",
+        "import hashlib, json, os, shutil, subprocess, sys",
         "from pathlib import Path",
         'work=Path("/kaggle/working"); source_archive=Path("' + source_archive + '")',
         'expected_source_sha256="' + source_sha256 + '"',
-        'if not source_archive.is_file(): raise RuntimeError("explicit D1 source archive is missing")',
-        'if hashlib.sha256(source_archive.read_bytes()).hexdigest()!=expected_source_sha256: raise RuntimeError("D1 source archive hash mismatch")',
-        'root=work/"ARC2"; root.mkdir(exist_ok=False)',
-        'with tarfile.open(source_archive) as archive: archive.extractall(root, filter="data")',
+        'source_root=source_archive.parent/"ARC2"; source_manifest=json.loads((source_archive.parent/"SOURCE_MANIFEST.json").read_text())',
+        'if source_manifest["archive_sha256"]!=expected_source_sha256 or not source_root.is_dir(): raise RuntimeError("explicit D1 source identity/mount mismatch")',
+        'expected_files=source_manifest["file_sha256"]; mounted_files={Path(base,name).relative_to(source_root).as_posix() for base,_,files in os.walk(source_root) for name in files}',
+        'if mounted_files!=set(expected_files): raise RuntimeError("D1 mounted source file set mismatch")',
+        'for name,expected in expected_files.items():',
+        '    if hashlib.sha256((source_root/name).read_bytes()).hexdigest()!=expected: raise RuntimeError(f"D1 mounted source hash mismatch: {name}")',
+        'root=work/"ARC2"; shutil.copytree(source_root,root)',
         'challenge=Path("/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_test_challenges.json")',
         'config=Path("/kaggle/input/arc2-d1-release-source/' + config_name + '")',
         'if not config.is_file(): raise RuntimeError("explicit D1 release config missing")',
-        'source_manifest=json.loads(Path("/kaggle/input/arc2-d1-release-source/SOURCE_MANIFEST.json").read_text())',
         'if hashlib.sha256(config.read_bytes()).hexdigest()!=source_manifest["config_sha256"]: raise RuntimeError("D1 release config hash mismatch")',
         'cfg=json.loads(config.read_text())',
         'bootstrap=Path("/kaggle/input/pip-install-unsloth-flash-patch")',
@@ -118,7 +120,9 @@ def main() -> None:
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     payload = args.output / "dataset"; archive = archive_source(payload / "ARC2.tar", commit)
     write(payload / "d1_release_config.json", config)
-    write(payload / "SOURCE_MANIFEST.json", {"source_commit": commit, "archive": "ARC2.tar", "archive_sha256": sha256(archive), "config": "d1_release_config.json", "config_sha256": sha256(payload / "d1_release_config.json"), "archive_inspected": True})
+    with tarfile.open(archive) as source:
+        file_hashes = {member.name: hashlib.sha256(source.extractfile(member).read()).hexdigest() for member in source.getmembers() if member.isfile()}
+    write(payload / "SOURCE_MANIFEST.json", {"source_commit": commit, "archive": "ARC2.tar", "archive_sha256": sha256(archive), "file_sha256": file_hashes, "config": "d1_release_config.json", "config_sha256": sha256(payload / "d1_release_config.json"), "archive_inspected": True})
     write(payload / "dataset-metadata.json", {"id": "jimmy5566/arc2-d1-release-source", "title": "ARC2 D1 release source", "licenses": [{"name": "CC0-1.0"}], "isPrivate": True})
     kernel = args.output / "kernel"; kernel.mkdir(parents=True)
     write(kernel / "arc2-d1-fixed4plus4-production.ipynb", notebook(args.source_input_path, sha256(archive), "d1_release_config.json"))
