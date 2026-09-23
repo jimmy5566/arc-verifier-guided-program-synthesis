@@ -31,6 +31,13 @@ def _select(entries:list[dict[str,Any]], candidates:list[dict[str,Any]])->tuple[
 
 def _output_hits(pred:dict[str,Any], target:list[Any])->tuple[list[bool],list[bool]]:
     first=pred["attempt_1"]; second=pred["attempt_2"]
+    # Historical bundle artifacts represent an empty candidate pool as two
+    # null attempts.  That is a scored miss, not a malformed iterable.
+    if first is None:
+        return [False]*len(target),[False]*len(target)
+    if second is None:
+        top1=[a is not None and a==y for a,y in zip(first,target,strict=True)]
+        return top1,top1.copy()
     return [a is not None and a==y for a,y in zip(first,target,strict=True)],[a is not None and a==y or b is not None and b==y for a,b,y in zip(first,second,target,strict=True)]
 
 

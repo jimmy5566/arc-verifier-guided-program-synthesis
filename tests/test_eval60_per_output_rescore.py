@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from scripts.build_eval60_per_output_rescore_kaggle import _inputs, _notebook
-from scripts.score_eval60_per_output_rescore import _select
+from scripts.score_eval60_per_output_rescore import _output_hits, _select
 
 
 def test_frozen_per_output_inputs_are_complete() -> None:
@@ -19,6 +19,10 @@ def test_per_output_selector_preserves_fixed_b_support_formula() -> None:
     result, first, second = _select(entries, [{"prediction": [[1]]}, {"prediction": [[2]]}])
     assert result["attempt_candidate_indices"] == [1, 0]
     assert first == [[2]] and second == [[1]]
+
+
+def test_empty_historical_attempts_are_scored_as_misses() -> None:
+    assert _output_hits({"attempt_1": None, "attempt_2": None}, [[[0]]]) == ([False], [False])
 
 
 def test_runner_remains_target_blind_and_has_no_generation() -> None:
