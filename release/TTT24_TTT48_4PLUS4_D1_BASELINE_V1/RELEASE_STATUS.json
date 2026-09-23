@@ -1,7 +1,7 @@
 {
   "baseline_name": "TTT24_TTT48_4PLUS4_D1_BASELINE_V1",
   "competition_submitted": "NO",
-  "cpu_test_summary": "431 passed in 48.63s",
+  "cpu_test_summary": "15 focused CPU tests passed",
   "d1_replay": {
     "attempt_record_count": 89,
     "baseline_replay_sha256": "6e18b12901f6f1a531e055f5320cc6ea895c6f35863becac34a3e3928fd87b76",
@@ -94,14 +94,24 @@
     "runner_final_event": null,
     "status": "FAILED_NUMERICAL_PARITY"
   },
-  "production_static_audit": {
-    "builder_sha256": "185658be75ddf1eb0bae925ee1527f3fc85cac881b117e57f8e1d7abca4fd88e",
-    "finalizer_sha256": "6fc13fd38abc25bcaf91c788f02aa59deb939dfdc000a03303b19fed9f277b5f",
-    "issues": [
-      "LIVE_D1_WORKER_BOOTSTRAP_UNBOUND: CPU route is verified, but the exact CUDA TTT24/48 worker has not been parity-bound"
+  "new_contract_replay": {
+    "empty_pool_outputs": [
+      {
+        "error": "empty combined fixed-4+4 candidate pool",
+        "task_id": "981571dc"
+      }
     ],
-    "runner_sha256": "850292e5dc9516ab69a44fb02716402f1f0ca192b7261c4a6d93a77a154e0bf3",
-    "status": "FAIL"
+    "expected_metrics": true,
+    "sha256": "aa623be932e5394b51f1b12f0aa5b1dc627ef05e35cab41fdec89e46df6ad405",
+    "status": "PASS_WITH_STRICT_EMPTY_POOL_BLOCKER",
+    "strict_finalizer_status": "FAIL_CLOSED_EMPTY_POOL"
+  },
+  "production_static_audit": {
+    "builder_sha256": "d4443d0e420bd6198055c66c418703838f1efe895e6d56804c2401e0700d4fb0",
+    "finalizer_sha256": "dbced5b0797f5e079ce58a42dfce38edf655f98b03c2bf6f13cafb3173e720e8",
+    "issues": [],
+    "runner_sha256": "22a3cc6ecd0e21d89c22579ec0fb58f5ff9a86cc140e921574efa8b87dbbb32c",
+    "status": "PASS"
   },
   "quota_status": {
     "available_gpu_hours": null,
@@ -110,14 +120,15 @@
     "status": "QUOTA_NOT_VERIFIED"
   },
   "release_blockers": [
-    "LIVE_D1_WORKER_BOOTSTRAP_UNBOUND: CPU route is verified, but the exact CUDA TTT24/48 worker has not been parity-bound",
-    "MODEL_STATE_PARITY_UNVERIFIED: failed TTT48 cross-score run had numerical anchor mismatches"
+    "MODEL_STATE_PARITY_UNVERIFIED: failed TTT48 cross-score run had numerical anchor mismatches",
+    "NEW_CONTRACT_REPLAY_NOT_CLEAN: strict finalizer did not produce a complete historical submission",
+    "EMPTY_COMBINED_POOL_OBSERVED: frozen D1 evidence has at least one output with no model candidate"
   ],
   "release_status": "RELEASE_BLOCKED",
   "remaining_quota": null,
   "rerun_path_test": "PASS_CPU_SINGLE_INFERENCE_PATH_ENV_FLAG_IS_DIAGNOSTIC_ONLY",
   "scope": "RETROSPECTIVE_DEVELOPMENT_EVIDENCE_NOT_HELD_OUT_NOT_LB_PERFORMANCE",
-  "source_commit": "713fcee2fb7382aaac6d327a11e5a8498b1e4480",
+  "source_commit": "d3becf046723bdd9a6ec4dba64be8336c4781282",
   "submission_sha256": "NOT_CREATED",
   "total_runtime": "NOT_RUN"
 }

@@ -1,7 +1,63 @@
 {
-  "generation": {"decoding": "greedy", "portfolio": {"TTT24": ["flip_lr", "flip_ud", "transpose", "anti_transpose"], "TTT48": ["identity", "rot90", "flip_ud", "anti_transpose"]}, "schema": "native-grid-v1"},
-  "model_identity": {"checkpoint": "sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1", "checkpoint_sha256": "REQUIRED_AT_MOUNT"},
-  "scoring": {"b_support_views": ["identity", "rot90", "rot180", "rot270", "flip_lr", "flip_ud", "transpose", "anti_transpose"], "selector": "D1_L_RRF_EXACT_B_RRF_TIE_BREAK"},
-  "ttt24_recipe": {"alpha": 32, "rank": 256, "steps": 24, "trajectory_parity": "NOT_LIVE_VERIFIED"},
-  "ttt48_recipe": {"alpha": 32, "rank": 256, "steps": 48, "trajectory_parity": "NOT_LIVE_VERIFIED"}
+  "environment": {
+    "python_prefix": "3.11.13",
+    "unsloth": "2025.9.7",
+    "transformers": "4.55.4",
+    "ptxas_path": "/usr/local/cuda-12.5/bin/ptxas"
+  },
+  "generation": {
+    "decoding": "greedy",
+    "portfolio": {
+      "TTT24": ["flip_lr", "flip_ud", "transpose", "anti_transpose"],
+      "TTT48": ["identity", "rot90", "flip_ud", "anti_transpose"]
+    },
+    "schema": "native-grid-v1"
+  },
+  "model_identity": {
+    "checkpoint": "sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1",
+    "checkpoint_sha256": "REQUIRED_AT_MOUNT",
+    "tokenizer_contract": "native-vocabulary-16-exact-match"
+  },
+  "scoring": {
+    "b_support_views": ["identity", "rot90", "rot180", "rot270", "flip_lr", "flip_ud", "transpose", "anti_transpose"],
+    "selector": "D1_L_RRF_EXACT_B_RRF_TIE_BREAK"
+  },
+  "ttt24_recipe": {
+    "alpha": 32,
+    "rank": 256,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj", "embed_tokens", "lm_head"],
+    "use_rslora": true,
+    "learning_rate": 0.00005,
+    "scheduler": "cosine",
+    "warmup_ratio": 0.1,
+    "reference_schedule_total_steps": 128,
+    "ttt_steps": 24,
+    "bf16": true,
+    "gradient_checkpointing": false,
+    "train_pair_order": "random_full_permutation",
+    "assistant_only_masking": true,
+    "max_sequence_length": 8192,
+    "max_new_tokens": 1024,
+    "generation_context_window": 16384,
+    "seed": 42
+  },
+  "ttt48_recipe": {
+    "alpha": 32,
+    "rank": 256,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj", "embed_tokens", "lm_head"],
+    "use_rslora": true,
+    "learning_rate": 0.00005,
+    "scheduler": "cosine",
+    "warmup_ratio": 0.1,
+    "reference_schedule_total_steps": 128,
+    "ttt_steps": 48,
+    "bf16": true,
+    "gradient_checkpointing": false,
+    "train_pair_order": "random_full_permutation",
+    "assistant_only_masking": true,
+    "max_sequence_length": 8192,
+    "max_new_tokens": 1024,
+    "generation_context_window": 16384,
+    "seed": 42
+  }
 }

@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RELEASE = ROOT / "release" / "TTT24_TTT48_4PLUS4_D1_BASELINE_V1"
 DEFAULT_D1 = ROOT / "artifacts" / "eval60_4plus4_d1_selector"
 DEFAULT_LOG = ROOT / "artifacts" / "kaggle_downloads" / "ttt48_missing_cross_scores_v2" / "version2_logs.json"
+DEFAULT_NEW_REPLAY = ROOT / "artifacts" / "d1_release_contract_replay" / "NEW_CONTRACT_REPLAY.json"
 
 
 def _read(path: Path) -> Any:
@@ -99,6 +100,13 @@ def _d1_replay_state(d1_dir: Path) -> dict[str, Any]:
     }
 
 
+def _new_contract_state(path: Path) -> dict[str, Any]:
+    if not path.is_file(): return {"status": "NOT_RUN"}
+    payload = _read(path)
+    required = (payload.get("top1"), payload.get("top2"), payload.get("pool_oracle"), payload.get("output_count"))
+    return {"status": payload.get("status"), "sha256": _sha256(path), "expected_metrics": required == (20, 28, 30, 89), "strict_finalizer_status": payload.get("strict_finalizer_status"), "empty_pool_outputs": payload.get("empty_pool_outputs", [])}
+
+
 def _markdown(report: dict[str, Any]) -> str:
     blockers = report["release_blockers"]
     lines = [
@@ -129,6 +137,7 @@ def main() -> None:
     parser.add_argument("--release-dir", type=Path, default=DEFAULT_RELEASE)
     parser.add_argument("--d1-dir", type=Path, default=DEFAULT_D1)
     parser.add_argument("--cross-score-log", type=Path, default=DEFAULT_LOG)
+    parser.add_argument("--new-contract-replay", type=Path, default=DEFAULT_NEW_REPLAY)
     parser.add_argument("--remaining-quota", type=float)
     parser.add_argument("--estimated-gpu-hours", type=float)
     parser.add_argument("--recovery-reserve-gpu-hours", type=float)
@@ -138,20 +147,29 @@ def main() -> None:
         if not (args.release_dir / filename).is_file():
             raise FileNotFoundError(args.release_dir / filename)
     d1 = _d1_replay_state(args.d1_dir)
+    new_contract = _new_contract_state(args.new_contract_replay)
     production = _production_static_audit()
     anchor = _cross_score_anchor_state(args.cross_score_log)
+    runtime_config = _read(args.release_dir / "D1_RELEASE_RUNTIME_CONFIG.json")
     from inference.d1_release_contract import quota_status
     quota = quota_status(available=args.remaining_quota, estimate=args.estimated_gpu_hours, reserve=args.recovery_reserve_gpu_hours)
     blockers = []
     blockers.extend(production["issues"])
     if anchor["status"] != "NO_ANCHOR_MISMATCH_FOUND":
         blockers.append("MODEL_STATE_PARITY_UNVERIFIED: failed TTT48 cross-score run had numerical anchor mismatches")
+    if new_contract["status"] != "PASS":
+        blockers.append("NEW_CONTRACT_REPLAY_NOT_CLEAN: strict finalizer did not produce a complete historical submission")
+    if new_contract.get("empty_pool_outputs"):
+        blockers.append("EMPTY_COMBINED_POOL_OBSERVED: frozen D1 evidence has at least one output with no model candidate")
+    if str(runtime_config.get("model_identity", {}).get("checkpoint_sha256", "")).startswith("REQUIRED_"):
+        blockers.append("MODEL_IDENTITY_HASH_UNPINNED: release configuration deliberately refuses CUDA launch until the mounted checkpoint hash is recorded")
     if quota["status"] == "QUOTA_INSUFFICIENT":
         blockers.append("QUOTA_INSUFFICIENT: supplied cost estimate plus recovery reserve exceeds available quota")
     report = {
         "baseline_name": "TTT24_TTT48_4PLUS4_D1_BASELINE_V1",
         "scope": "RETROSPECTIVE_DEVELOPMENT_EVIDENCE_NOT_HELD_OUT_NOT_LB_PERFORMANCE",
         "d1_replay": d1,
+        "new_contract_replay": new_contract,
         "live_4plus4_evidence_parity": "NOT_VERIFIED",
         "model_state_parity": anchor,
         "rerun_path_test": "PASS_CPU_SINGLE_INFERENCE_PATH_ENV_FLAG_IS_DIAGNOSTIC_ONLY",

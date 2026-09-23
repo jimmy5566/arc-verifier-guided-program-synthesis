@@ -59,9 +59,23 @@ def notebook(source_archive: str, source_sha256: str, config_name: str) -> dict[
         'if not challenge.is_file(): raise RuntimeError("mounted competition challenge missing")',
         'config=Path("/kaggle/input/arc2-d1-release-source/' + config_name + '")',
         'if not config.is_file(): raise RuntimeError("explicit D1 release config missing")',
-        'print(json.dumps({"event":"D1_RELEASE_SINGLE_INFERENCE_PATH","rerun_flag_observed":os.getenv("KAGGLE_IS_COMPETITION_RERUN", ""),"challenge":str(challenge),"source_sha256":expected_source_sha256},sort_keys=True),flush=True)',
-        '# No fast-commit or dummy branch exists.  The release image supplies the verified CUDA worker bootstrap.',
-        'raise RuntimeError("D1 live worker bootstrap must be bound in the verified release image before Kaggle execution")',
+        'cfg=json.loads(config.read_text())',
+        'import importlib.metadata as md',
+        'if not sys.version.startswith(cfg["environment"]["python_prefix"]): raise RuntimeError(f"Python mismatch: {sys.version}")',
+        'if md.version("unsloth")!=cfg["environment"]["unsloth"] or md.version("transformers")!=cfg["environment"]["transformers"]: raise RuntimeError("frozen dependency mismatch")',
+        'ptxas=Path(cfg["environment"]["ptxas_path"]); model=Path("/kaggle/input/models/sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1")',
+        'if not ptxas.is_file() or subprocess.run([str(ptxas),"--version"],capture_output=True).returncode: raise RuntimeError("verified ptxas unavailable")',
+        'if not model.is_dir(): raise RuntimeError("explicit model mount missing")',
+        'out=work/"artifacts"/"d1_release"; out.mkdir(parents=True,exist_ok=True); candidates=out/"candidates_frozen.json"; selection=out/"d1_selection_frozen.json"; provenance=out/"PRODUCTION_PROVENANCE.json"; submission=work/"submission.json"',
+        'print(json.dumps({"event":"D1_RELEASE_SINGLE_INFERENCE_PATH","rerun_flag_observed":os.getenv("KAGGLE_IS_COMPETITION_RERUN", ""),"challenge":str(challenge),"source_sha256":expected_source_sha256,"model":str(model),"portfolio":cfg["generation"]["portfolio"]},sort_keys=True),flush=True)',
+        'run=[sys.executable,str(root/"scripts"/"run_d1_release_4gpu.py"),"--challenge",str(challenge),"--release-config",str(config),"--model-path",str(model),"--native-config-dir",str(root/"configs"/"nvarc_native_846d0198"),"--checkpoint-dir",str(out/"checkpoints"),"--output",str(candidates),"--resume"]',
+        'if subprocess.run(run,env={**os.environ,"TRITON_PTXAS_PATH":str(ptxas),"HF_HUB_OFFLINE":"1","TRANSFORMERS_OFFLINE":"1"}).returncode: raise RuntimeError("D1_REAL_WORKERS_FAILED")',
+        'finalize=[sys.executable,str(root/"scripts"/"build_d1_release_submission.py"),"--challenge",str(challenge),"--release-config",str(config),"--records",str(candidates),"--selection-output",str(selection),"--provenance-output",str(provenance),"--output",str(submission)]',
+        'if subprocess.run(finalize,env={**os.environ,"CUDA_VISIBLE_DEVICES":""}).returncode: raise RuntimeError("D1_PER_OUTPUT_FINALIZATION_FAILED")',
+        'if not submission.is_file(): raise RuntimeError("D1 submission missing")',
+        'payload=json.loads(submission.read_text()); mounted=json.loads(challenge.read_text())',
+        'if set(payload)!=set(mounted) or any(len(payload[k])!=len(mounted[k]["test"]) for k in mounted): raise RuntimeError("runtime challenge/submission mapping mismatch")',
+        'print(json.dumps({"event":"D1_RELEASE_COMPLETE","task_count":len(payload),"test_output_count":sum(len(v) for v in payload.values()),"submission_sha256":hashlib.sha256(submission.read_bytes()).hexdigest(),"solutions_opened":False},sort_keys=True),flush=True)',
     ]
     return {"cells": [{"cell_type": "code", "execution_count": None, "metadata": {}, "outputs": [], "source": [line + "\n" for line in lines]}], "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"}, "language_info": {"name": "python", "version": "3.11"}, "kaggle": {"accelerator": "nvidiaL4", "isGpuEnabled": True, "isInternetEnabled": False, "language": "python", "sourceType": "notebook"}}, "nbformat": 4, "nbformat_minor": 4}
 
@@ -81,7 +95,7 @@ def main() -> None:
     write(payload / "SOURCE_MANIFEST.json", {"source_commit": commit, "archive": "ARC2.tar", "archive_sha256": sha256(archive), "config": "d1_release_config.json", "config_sha256": sha256(payload / "d1_release_config.json"), "archive_inspected": True})
     kernel = args.output / "kernel"; kernel.mkdir(parents=True)
     write(kernel / "arc2-d1-fixed4plus4-production.ipynb", notebook(args.source_input_path, sha256(archive), "d1_release_config.json"))
-    write(kernel / "kernel-metadata.json", {"title": "ARC2 fixed 4+4 D1 release (review only)", "code_file": "arc2-d1-fixed4plus4-production.ipynb", "language": "python", "kernel_type": "notebook", "is_private": True, "enable_gpu": True, "enable_internet": False})
+    write(kernel / "kernel-metadata.json", {"id": "jimmy5566/arc2-fixed4plus4-d1-release", "title": "ARC2 fixed 4+4 D1 release", "code_file": "arc2-d1-fixed4plus4-production.ipynb", "language": "python", "kernel_type": "notebook", "is_private": True, "enable_gpu": True, "enable_internet": False, "dataset_sources": ["jimmy5566/arc2-d1-release-source"], "kernel_sources": ["sorokin/pip-install-unsloth-flash-patch"], "competition_sources": ["arc-prize-2026-arc-agi-2"], "model_sources": ["sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1"], "machine_shape": "NvidiaL4"})
     print(json.dumps({"event": "D1_RELEASE_STAGING_READY", "source_commit": commit, "archive_sha256": sha256(archive), "archive_members_inspected": True}, sort_keys=True))
 
 

@@ -8,6 +8,7 @@ import pytest
 
 from inference.d1_release_contract import PORTFOLIO, ReleaseContractError, runtime_manifest, valid_checkpoint
 from scripts.run_d1_release_4gpu import run_release
+from scripts.run_d1_release_4gpu import validate_live_config
 
 
 def config() -> dict[str, object]:
@@ -59,7 +60,9 @@ def test_d_both_sources_reach_per_output_d1_and_empty_pool_fails_closed(tmp_path
     assert [row["test_index"] for row in selected["outputs"]] == [0, 1]
     broken = json.loads(json.dumps(artifact["records"]["alternate-a"]))
     broken["sources"]["TTT48"]["candidates"] = []
-    with pytest.raises(ReleaseContractError, match="empty selected TTT48"):
+    assert select_record(broken, artifact["manifest"]["tasks"]["alternate-a"])["status"] == "SUCCESS"
+    broken["sources"]["TTT24"]["candidates"] = []
+    with pytest.raises(ReleaseContractError, match="empty combined"):
         select_record(broken, artifact["manifest"]["tasks"]["alternate-a"])
 
 
@@ -76,3 +79,9 @@ def test_f_single_candidate_pool_duplicates_documented_attempt() -> None:
     record = {"status": "SUCCESS", "sources": {"TTT24": source, "TTT48": source}}
     output = select_record(record, manifest["tasks"]["one"])["outputs"][0]
     assert output["attempt_1"] == output["attempt_2"] == [[7]]
+
+
+def test_g_live_route_rejects_unpinned_model_identity_before_cuda() -> None:
+    incomplete = {"environment": {}, "model_identity": {"checkpoint_sha256": "REQUIRED_AT_MOUNT"}, "generation": {}, "scoring": {}, "ttt24_recipe": {}, "ttt48_recipe": {}}
+    with pytest.raises(ReleaseContractError, match="SHA256"):
+        validate_live_config(incomplete)

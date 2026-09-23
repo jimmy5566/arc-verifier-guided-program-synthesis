@@ -18,15 +18,12 @@ def read(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    for name in ("challenge", "release_config", "records", "selection_output", "provenance_output", "output"):
-        parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
-    args = parser.parse_args()
-    if any(path.exists() for path in (args.selection_output, args.provenance_output, args.output)):
-        raise FileExistsError("refusing to overwrite frozen D1 release output")
-    manifest = runtime_manifest(read(args.challenge), read(args.release_config))
-    artifact = read(args.records); records = artifact.get("records")
+def finalize(challenge: dict[str, Any], release_config: dict[str, Any], artifact: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Pure finalization used by the real CLI and frozen-evidence contract replay."""
+    manifest = runtime_manifest(challenge, release_config)
+    records = artifact.get("records")
+    if artifact.get("release_identity") != manifest["release_identity"]:
+        raise ReleaseContractError("candidate artifact identity does not match mounted challenge/configuration")
     if not isinstance(records, dict) or set(records) != set(manifest["task_ids"]):
         raise ReleaseContractError("candidate record coverage does not match mounted challenge")
     selections: dict[str, Any] = {}; submission: dict[str, Any] = {}
@@ -35,15 +32,28 @@ def main() -> None:
         if record.get("release_identity") != manifest["release_identity"]:
             raise ReleaseContractError(f"stale or foreign checkpoint record for {task_id}")
         selection = select_record(record, manifest["tasks"][task_id])
-        outputs = []
-        for item in selection["outputs"]:
-            outputs.append({"attempt_1": validate_grid(item["attempt_1"]), "attempt_2": validate_grid(item["attempt_2"])})
+        outputs = [{"attempt_1": validate_grid(item["attempt_1"]), "attempt_2": validate_grid(item["attempt_2"])} for item in selection["outputs"]]
         if len(outputs) != len(manifest["tasks"][task_id]["test_outputs"]):
             raise ReleaseContractError(f"test-index output coverage failure for {task_id}")
         selections[task_id] = selection; submission[task_id] = outputs
-    atomic_json(args.selection_output, {"schema_version": manifest["schema_version"], "release_identity": manifest["release_identity"], "task_ids": manifest["task_ids"], "records": selections, "solutions_opened": False})
+    selection_artifact = {"schema_version": manifest["schema_version"], "release_identity": manifest["release_identity"], "task_ids": manifest["task_ids"], "records": selections, "solutions_opened": False}
+    provenance = {"status": "STRICT_D1_RELEASE_COVERAGE_PASS", "release_identity": manifest["release_identity"], "challenge_sha256": manifest["challenge_sha256"], "task_count": len(submission), "test_output_count": sum(len(value) for value in submission.values()), "solutions_opened": False}
+    return selection_artifact, submission, provenance
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    for name in ("challenge", "release_config", "records", "selection_output", "provenance_output", "output"):
+        parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
+    args = parser.parse_args()
+    if any(path.exists() for path in (args.selection_output, args.provenance_output, args.output)):
+        raise FileExistsError("refusing to overwrite frozen D1 release output")
+    challenge, config, artifact = read(args.challenge), read(args.release_config), read(args.records)
+    selection_artifact, submission, provenance = finalize(challenge, config, artifact)
+    atomic_json(args.selection_output, selection_artifact)
     atomic_json(args.output, submission)
-    atomic_json(args.provenance_output, {"status": "STRICT_D1_RELEASE_COVERAGE_PASS", "release_identity": manifest["release_identity"], "challenge_sha256": manifest["challenge_sha256"], "task_count": len(submission), "test_output_count": sum(len(value) for value in submission.values()), "selection_sha256": hashlib.sha256(args.selection_output.read_bytes()).hexdigest(), "submission_sha256": hashlib.sha256(args.output.read_bytes()).hexdigest(), "solutions_opened": False})
+    provenance.update({"selection_sha256": hashlib.sha256(args.selection_output.read_bytes()).hexdigest(), "submission_sha256": hashlib.sha256(args.output.read_bytes()).hexdigest()})
+    atomic_json(args.provenance_output, provenance)
     print(json.dumps({"event": "STRICT_D1_RELEASE_COVERAGE_PASS", "task_count": len(submission), "test_output_count": sum(len(value) for value in submission.values())}, sort_keys=True))
 
 

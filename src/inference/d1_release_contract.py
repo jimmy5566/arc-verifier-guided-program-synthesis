@@ -106,13 +106,14 @@ def atomic_json(path: Path, payload: Any) -> None:
     os.replace(temporary, path)
 
 
-def _tag(candidate: Mapping[str, Any]) -> str:
-    if isinstance(candidate.get("augmentation"), Mapping):
-        return str(candidate["augmentation"].get("geometry", ""))
+def _tags(candidate: Mapping[str, Any]) -> tuple[str, ...]:
+    """All raw view tags supporting a deduplicated candidate, in stable order."""
     values = candidate.get("support_augmentations", [])
-    if isinstance(values, list) and values and isinstance(values[0], Mapping):
-        return str(values[0].get("geometry", ""))
-    return str(candidate.get("geometry", ""))
+    if isinstance(values, list) and values and all(isinstance(item, Mapping) for item in values):
+        return tuple(str(item.get("geometry", "")) for item in values)
+    if isinstance(candidate.get("augmentation"), Mapping):
+        return (str(candidate["augmentation"].get("geometry", "")),)
+    return (str(candidate.get("geometry", "")),)
 
 
 def _evidence_by_index(source: Mapping[str, Any], test_index: int) -> dict[int, Mapping[str, Any]]:
@@ -141,7 +142,8 @@ def pool_for_output(sources: Mapping[str, Mapping[str, Any]], test_index: int) -
         evidence = _evidence_by_index(source, test_index)
         per_grid: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for index, candidate in enumerate(source["candidates"]):
-            if _tag(candidate) not in wanted_tags:
+            selected_tags = tuple(tag for tag in _tags(candidate) if tag in wanted_tags)
+            if not selected_tags:
                 continue
             predictions = candidate.get("prediction")
             if not isinstance(predictions, list) or test_index >= len(predictions):
@@ -152,15 +154,20 @@ def pool_for_output(sources: Mapping[str, Mapping[str, Any]], test_index: int) -
             nlls = item.get("view_negative_log_likelihoods")
             if not isinstance(nlls, list) or not nlls:
                 raise ReleaseContractError("missing B-support view likelihoods")
-            per_grid[token].append({"source": source_name, "candidate_index": index, "original_log_likelihood": float(item["original_log_likelihood"]), "mean_view_nll": fmean(float(value) for value in nlls), "grid": grid, "slot_tag": _tag(candidate)})
+            per_grid[token].append({"source": source_name, "candidate_index": index, "original_log_likelihood": float(item["original_log_likelihood"]), "mean_view_nll": fmean(float(value) for value in nlls), "grid": grid, "slot_tags": selected_tags, "selected_support_count": len(selected_tags)})
+        # A source can legitimately parse no grid on a task.  It remains in
+        # the evidence record, but D1 must not invent an attempt; fail only if
+        # *both* sources leave the output with no candidate at all.
         if not per_grid:
-            raise ReleaseContractError(f"empty selected {source_name} pool")
+            continue
         # Existing source-local B-support: support multiplicity minus mean view NLL.
-        source_ranked = sorted(per_grid, key=lambda token: (-max(len(per_grid[token]) - row["mean_view_nll"] for row in per_grid[token]), min(row["candidate_index"] for row in per_grid[token]), token))
+        source_ranked = sorted(per_grid, key=lambda token: (-max(row["selected_support_count"] - row["mean_view_nll"] for row in per_grid[token]), min(row["candidate_index"] for row in per_grid[token]), token))
         for rank, token in enumerate(source_ranked, 1):
             entry = grouped.setdefault(token, {"grid_key": token, "grid": per_grid[token][0]["grid"], "source_rows": []})
             entry["source_rows"].extend(per_grid[token])
             entry.setdefault("_source_ranks", {})[source_name] = rank
+    if not grouped:
+        raise ReleaseContractError("empty combined fixed-4+4 candidate pool")
     for entry in grouped.values():
         entry["rrf_score"] = sum(1.0 / rank for rank in entry.pop("_source_ranks").values())
     return list(grouped.values())

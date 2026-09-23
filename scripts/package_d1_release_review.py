@@ -38,6 +38,7 @@ def main() -> None:
         "source/scripts/run_d1_release_4gpu.py": ROOT / "scripts" / "run_d1_release_4gpu.py",
         "source/scripts/build_d1_release_submission.py": ROOT / "scripts" / "build_d1_release_submission.py",
         "source/scripts/build_d1_release_kaggle.py": ROOT / "scripts" / "build_d1_release_kaggle.py",
+        "source/scripts/replay_d1_release_contract.py": ROOT / "scripts" / "replay_d1_release_contract.py",
         "source/scripts/package_d1_release_review.py": ROOT / "scripts" / "package_d1_release_review.py",
         "source/tests/test_selector_d1.py": ROOT / "tests" / "test_selector_d1.py",
         "source/tests/test_audit_d1_baseline_release.py": ROOT / "tests" / "test_audit_d1_baseline_release.py",
@@ -50,6 +51,7 @@ def main() -> None:
         "evidence/d1_rankings_frozen.json": D1 / "d1_rankings_frozen.json",
         "evidence/d1_predictions_frozen.json": D1 / "d1_predictions_frozen.json",
         "evidence/D1_RELEASE_RUNTIME_CONFIG.json": RELEASE / "D1_RELEASE_RUNTIME_CONFIG.json",
+        "evidence/NEW_CONTRACT_REPLAY.json": ROOT / "artifacts" / "d1_release_contract_replay" / "NEW_CONTRACT_REPLAY.json",
     }
     if args.reference_zip.is_file():
         files["evidence/reference_selector_handoff.zip"] = args.reference_zip
