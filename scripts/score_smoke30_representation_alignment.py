@@ -108,12 +108,17 @@ def main() -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0])); writer.writeheader(); writer.writerows(rows)
     output_total = len(rows); intersection = len(g0_keys & g1_keys); union = len(g0_keys | g1_keys)
     top2_gain = counts["g1_top2"] - counts["g0_top2"]
-    if counts["new_output"] >= 4 and top2_gain > 0: decision = "REPRESENTATION_ALIGNMENT_STRONG_GO"
-    elif counts["new_output"] in {2, 3} and top2_gain > 0: decision = "REPRESENTATION_ALIGNMENT_GO"
-    elif counts["new_output"] == 1: decision = "WEAK_SIGNAL"
-    else: decision = "NO_GAIN"
+    net_output_gain = counts["new_output"] - counts["lost_output"]
+    if counts["new_output"] >= 4 and top2_gain > 0:
+        decision = "REPRESENTATION_ALIGNMENT_STRONG_GO"
+    elif counts["new_output"] in {2, 3} and top2_gain > 0:
+        decision = "REPRESENTATION_ALIGNMENT_GO"
+    elif counts["new_output"] == 1 and net_output_gain > 0:
+        decision = "WEAK_SIGNAL"
+    else:
+        decision = "NO_GAIN"
     task_seconds = sum(float(record["elapsed_seconds"]) for record in candidates["records"].values())
-    report = {"experiment_id": manifest["experiment_id"], "status": "COMPLETE_SCORED_AFTER_TARGET_BLIND_FREEZE", "cohort_task_count": 30, "cohort_output_count": output_total, "G0_OUTPUT_ANYK": f"{counts['g0_output_anyk']}/{output_total}", "G1_OUTPUT_ANYK": f"{counts['g1_output_anyk']}/{output_total}", "G0_TASK_ANYK": f"{counts['g0_task_anyk']}/30", "G1_TASK_ANYK": f"{counts['g1_task_anyk']}/30", "G0_TOP2_OUTPUTS": f"{counts['g0_top2']}/{output_total}", "G1_TOP2_OUTPUTS": f"{counts['g1_top2']}/{output_total}", "G0_TOP2_TASKS": f"{counts['g0_task_top2']}/30", "G1_TOP2_TASKS": f"{counts['g1_task_top2']}/30", "NEW_OUTPUT_RECOVERIES": new_outputs, "REGRESSIONS": regressions, "NET_OUTPUT_GAIN": counts['new_output'] - counts['lost_output'], "TOP2_OUTPUT_GAIN": top2_gain, "COMPLEMENTARY_RECOVERIES": new_outputs, "G0_UNIQUE_CANDIDATES": g0_unique, "G1_UNIQUE_CANDIDATES": g1_unique, "POOL_OVERLAP_JACCARD_GLOBAL": 0.0 if not union else intersection / union, "G1_INVALID_RATE": f"{g1_invalid}/240", "G1_GPU_SECONDS": task_seconds, "G1_WALL_CLOCK_SECONDS": float(candidates["runtime_seconds"]), "G1_SECONDS_PER_TASK": task_seconds / 30.0, "G1_PEAK_VRAM_GB": max(float(record["peak_allocated_vram_mb"]) for record in candidates["records"].values()) / 1024.0, "PROJECTED_240_RUNTIME_SECONDS": float(candidates["runtime_seconds"]) / 30.0 * 240.0, "candidate_generation_count_per_task": 8, "solutions_opened_only_after_predictions_frozen": True, "DECISION": decision}
+    report = {"experiment_id": manifest["experiment_id"], "status": "COMPLETE_SCORED_AFTER_TARGET_BLIND_FREEZE", "cohort_task_count": 30, "cohort_output_count": output_total, "G0_OUTPUT_ANYK": f"{counts['g0_output_anyk']}/{output_total}", "G1_OUTPUT_ANYK": f"{counts['g1_output_anyk']}/{output_total}", "G0_TASK_ANYK": f"{counts['g0_task_anyk']}/30", "G1_TASK_ANYK": f"{counts['g1_task_anyk']}/30", "G0_TOP2_OUTPUTS": f"{counts['g0_top2']}/{output_total}", "G1_TOP2_OUTPUTS": f"{counts['g1_top2']}/{output_total}", "G0_TOP2_TASKS": f"{counts['g0_task_top2']}/30", "G1_TOP2_TASKS": f"{counts['g1_task_top2']}/30", "NEW_OUTPUT_RECOVERIES": new_outputs, "REGRESSIONS": regressions, "NET_OUTPUT_GAIN": net_output_gain, "TOP2_OUTPUT_GAIN": top2_gain, "COMPLEMENTARY_RECOVERIES": new_outputs, "G0_UNIQUE_CANDIDATES": g0_unique, "G1_UNIQUE_CANDIDATES": g1_unique, "POOL_OVERLAP_JACCARD_GLOBAL": 0.0 if not union else intersection / union, "G1_INVALID_RATE": f"{g1_invalid}/240", "G1_GPU_SECONDS": task_seconds, "G1_WALL_CLOCK_SECONDS": float(candidates["runtime_seconds"]), "G1_SECONDS_PER_TASK": task_seconds / 30.0, "G1_PEAK_VRAM_GB": max(float(record["peak_allocated_vram_mb"]) for record in candidates["records"].values()) / 1024.0, "PROJECTED_240_RUNTIME_SECONDS": float(candidates["runtime_seconds"]) / 30.0 * 240.0, "candidate_generation_count_per_task": 8, "solutions_opened_only_after_predictions_frozen": True, "DECISION": decision}
     atomic_write_json(args.output_dir / "SMOKE30_REPRESENTATION_REPORT.json", report)
     (args.output_dir / "SMOKE30_REPRESENTATION_REPORT.md").write_text("# Smoke30 reference-like representation alignment\n\n" + "\n".join(f"- {key} = `{value}`" for key, value in report.items()) + "\n", encoding="utf-8")
     print(json.dumps(report, sort_keys=True), flush=True)
