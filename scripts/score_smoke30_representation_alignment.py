@@ -14,7 +14,9 @@ sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "src"))
 
 from inference.kaggle_l4_parallel_runner import atomic_write_json
 from scripts.run_eval3_reference_ttt import _read
-from scripts.run_eval60_per_output_rescore import _select
+# Selection is CPU-only and operates on frozen evidence.  Keep this import
+# pinned to its actual definition rather than the GPU evidence producer.
+from scripts.score_eval60_per_output_rescore import _select
 from scripts.score_eval60_per_output_rescore import _output_hits
 from scripts.run_smoke30_representation_alignment import FROZEN_STATUS
 
