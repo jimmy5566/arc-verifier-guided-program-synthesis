@@ -13,6 +13,7 @@
   "storage_policy_version": "runpod-arc2-v1",
   "persistent_volume_path": null,
   "persistent_volume_status": "UNVERIFIED_OR_UNAVAILABLE_ON_CURRENT_POD",
+  "persistent_sync_policy": "atomic local task checkpoints; publish only frozen runs with scripts/sync_arc2_run_to_persistent.sh",
   "required_persistent_layout": [
     "models",
     "wheels",
@@ -35,6 +36,8 @@
   "model_persisted": false,
   "xformers_wheel_persisted": false,
   "environment_lock_persisted": false,
+  "compiled_xformers_hash": null,
+  "environment_lock_hash": null,
   "notes": [
     "The current Pod has no mounted /network-volume and /root is local overlay storage.",
     "No credential or token is stored under the persistent artifact layout.",
