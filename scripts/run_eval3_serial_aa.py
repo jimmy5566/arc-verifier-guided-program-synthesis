@@ -31,8 +31,26 @@ FROZEN_STATUS = "EVAL3_SERIAL_AA_CANDIDATES_FROZEN_BEFORE_EXACT_SCORING"
 TRACE_STEPS = (0, 1, 2, 4, 8, 16, 24)
 
 
+def _json_identity(value: Any) -> Any:
+    """Convert immutable task representations to canonical JSON identity data.
+
+    ARC task grids are NumPy arrays in the live runner, whereas the frozen
+    challenge file represents the same grids as lists.  The conversion is
+    strictly diagnostic: it is used only for identity hashes and never fed
+    back into TTT, prompt construction, generation, or scoring.
+    """
+    if hasattr(value, "tolist"):
+        return value.tolist()
+    if isinstance(value, dict):
+        return {str(key): _json_identity(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_identity(item) for item in value]
+    return value
+
+
 def _sha256(value: Any) -> str:
-    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+    canonical = _json_identity(value)
+    return hashlib.sha256(json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
 
 
 def _read(path: Path) -> dict[str, Any]:
