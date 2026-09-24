@@ -1,0 +1,10 @@
+{
+  "competition_submitted": false,
+  "config_sha256": "8f68d5365223695086998861402c026e8f87b5d268d85664cdba70df93d74398",
+  "kaggle_published": false,
+  "release_id": "d1-failsoft-v2-candidate",
+  "runtime_resilience_changed": true,
+  "scientific_algorithm_changed": false,
+  "source_archive_sha256": "50a3ad1ba6cb87e601bdf1f836621a23ac24a3415ca4bb6db652061e3081656b",
+  "source_commit": "c4d5be2d2454babca03f07f04e9f2d73970604da"
+}

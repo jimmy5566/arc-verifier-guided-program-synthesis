@@ -134,7 +134,11 @@ def main() -> None:
     if args.output.exists():
         raise FileExistsError("refusing to overwrite fail-soft candidate")
     commit = subprocess.check_output(["git", "rev-parse", args.source_commit], cwd=ROOT, text=True).strip()
-    config = json.loads(args.release_config.read_text(encoding="utf-8"))
+    supplied = json.loads(args.release_config.read_text(encoding="utf-8"))
+    config = supplied.get("algorithm", {}).get("release_config", supplied)
+    required = {"environment", "model_identity", "generation", "scoring", "runtime", "ttt24_recipe", "ttt48_recipe"}
+    if not isinstance(config, dict) or not required.issubset(config):
+        raise ValueError("fail-soft release config lacks the frozen release identity fields")
     payload = args.output / "dataset"
     archive = archive_source(payload / "ARC2.tar", commit)
     write(payload / "d1_failsoft_release_config.json", config)
@@ -184,4 +188,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

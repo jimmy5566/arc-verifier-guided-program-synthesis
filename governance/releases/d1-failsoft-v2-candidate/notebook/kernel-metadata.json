@@ -1,0 +1,24 @@
+{
+  "code_file": "arc2-d1-failsoft-v2-candidate.ipynb",
+  "competition_sources": [
+    "arc-prize-2026-arc-agi-2"
+  ],
+  "dataset_sources": [
+    "jimmy5566/arc2-d1-failsoft-v2-source"
+  ],
+  "docker_image": "gcr.io/kaggle-private-byod/python@sha256:320043e14c68293f1c946585b9257123385205a58af4b94b17d31868cae4e868",
+  "enable_gpu": true,
+  "enable_internet": false,
+  "id": "jimmy5566/arc2-d1-failsoft-v2-candidate",
+  "is_private": true,
+  "kernel_sources": [
+    "sorokin/pip-install-unsloth-flash-patch"
+  ],
+  "kernel_type": "notebook",
+  "language": "python",
+  "machine_shape": "NvidiaL4",
+  "model_sources": [
+    "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1"
+  ],
+  "title": "ARC2 D1 fail-soft V2 candidate"
+}
