@@ -1,0 +1,15 @@
+{
+  "environment_id": "5090-blackwell-2gpu-portable-v1",
+  "base_environment": "5090-blackwell-env-v2",
+  "purpose": "portable two-RTX-5090 research infrastructure; never a production or Kaggle release",
+  "expected_gpu_inventory": [
+    {"physical_gpu_id": 0, "name": "NVIDIA GeForce RTX 5090", "capability": [12, 0]},
+    {"physical_gpu_id": 1, "name": "NVIDIA GeForce RTX 5090", "capability": [12, 0]}
+  ],
+  "persistent_root": "/workspace-global/arc2",
+  "local_runtime_root": "/root/arc-runtime",
+  "required_persistent_layout": ["models", "wheels", "env", "benchmarks", "bootstrap", "frozen-runs"],
+  "worker_semantics": "two independent one-model ARC task workers; no tensor/model parallelism and no multi-task model trajectory",
+  "scientific_code_changed": false,
+  "gpu_experiment_started": false
+}
