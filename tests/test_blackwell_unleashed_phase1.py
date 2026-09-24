@@ -38,6 +38,15 @@ def test_phase1_reference_config_has_portable_historical_provenance() -> None:
     assert _json_digest(config) == provenance["canonical_json_sha256"]
 
 
+def test_queue_and_cpu_scorer_bootstrap_their_staged_src_tree() -> None:
+    for relative in (
+        "scripts/run_5090_blackwell_unleashed_phase1_queue.py",
+        "scripts/score_eval3_blackwell_unleashed_phase1.py",
+    ):
+        source = (ROOT / relative).read_text(encoding="utf-8")
+        assert 'sys.path.insert(0, str(ROOT / "src"))' in source
+
+
 def test_batched_suffix_keeps_eos_and_drops_only_rectangular_completion_pad() -> None:
     sequence = torch.tensor([0, 11, 12, 13, 15, 0, 0])
     assert _generated_suffix(sequence, input_width=2, eos_token_id=15, pad_token_id=0).tolist() == [12, 13, 15]
