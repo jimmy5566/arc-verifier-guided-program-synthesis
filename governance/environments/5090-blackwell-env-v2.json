@@ -36,8 +36,9 @@
   "model_persisted": false,
   "xformers_wheel_persisted": false,
   "environment_lock_persisted": false,
-  "compiled_xformers_hash": null,
-  "environment_lock_hash": null,
+  "compiled_xformers_hash": "UNVERIFIED_NO_PERSISTED_WHEEL",
+  "xformers_distribution_record_sha256": "fce7179924ee5e74c8b609e5767f5588d09a64484a78262caca2cba588ffd9bb",
+  "environment_lock_hash": "f1020fd6e651a3d7a0ed6167e71af673f65bb03c6737efb8b56ba6ad64fda0ce",
   "notes": [
     "The current Pod has no mounted /network-volume and /root is local overlay storage.",
     "No credential or token is stored under the persistent artifact layout.",
