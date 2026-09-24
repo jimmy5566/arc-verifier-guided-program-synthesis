@@ -1,0 +1,39 @@
+{
+  "schema_version": "ARC2_LEGACY_EVAL3_COHORT_V1",
+  "status": "EVAL3_REFERENCE_TTT_COHORT_FROZEN",
+  "experiment_id": "ARC2_REFERENCE_STYLE_TTT_EVAL3_PILOT",
+  "task_ids": [
+    "5dbc8537",
+    "97d7923e",
+    "3a25b0d8"
+  ],
+  "task_ids_hash": "b11e21882fbafc4c2433dc124edb7297ad58e888c449db2c89a30b3bd4b501ff",
+  "source_challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "selection_rule": "three smallest SHA256(task_id) values from immutable Eval30 Aug8 greedy A_POOL_MISS cohort; task_id breaks ties",
+  "selection_provenance": "Eval30 was previously selected from Evaluation60 pool misses. This cohort record preserves the historical task set only; no evaluation solutions are included.",
+  "frozen_inference": {
+    "augmentation_count": 8,
+    "generation_micro_batch_size": 1,
+    "likelihood_micro_batch_size": 1,
+    "model": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1",
+    "search_beams": 1,
+    "source_commit": "ec5a787ff16a6ff0240a76e77f6060b73e47fec3",
+    "worker_count": 4
+  },
+  "integrity": {
+    "no_b_support_change": true,
+    "no_beam": true,
+    "no_dfs": true,
+    "selection_is_immutable": true,
+    "targets_inspected_during_ttt_or_generation": false
+  },
+  "recovery_provenance": {
+    "original_manifest_sha256": "378a53bdce8c4ded40c3a2ea31874deaf75e8a4304ecdfa93006842752749e3f",
+    "independent_duplicate_manifest_sha256": "378a53bdce8c4ded40c3a2ea31874deaf75e8a4304ecdfa93006842752749e3f",
+    "historical_reference_ttt_config_sha256": "63379036f4881f8649a2a61b003d60b3af5977743ad0472301fed307f1e4dc26",
+    "historical_s0_reused_candidates_sha256": "20bbfebadfa08ae150ba5d2861f1a9adaa471442f1d689f9ce1077f9d6dbfb7b",
+    "historical_reference_config_commit": "846d0198efa752534594e321fc3289fc0a06c657",
+    "reconstructed": false,
+    "raw_solutions_included": false
+  }
+}
