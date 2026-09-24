@@ -1,0 +1,43 @@
+{
+  "environment_id": "5090-blackwell-env-v2",
+  "purpose": "research-only RTX 5090 Blackwell environment; never Kaggle/L4 production",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "cuda": "12.8",
+  "python": "3.11.13",
+  "torch": "2.8.0+cu128",
+  "transformers": "4.55.4",
+  "unsloth": "2025.9.7",
+  "peft": "0.17.1",
+  "xformers": "0.0.33+5d4b92a.d20260924",
+  "attention_backend": "xformers_verified_in_5090-blackwell-env-v2",
+  "storage_policy_version": "runpod-arc2-v1",
+  "persistent_volume_path": null,
+  "persistent_volume_status": "UNVERIFIED_OR_UNAVAILABLE_ON_CURRENT_POD",
+  "required_persistent_layout": [
+    "models",
+    "wheels",
+    "environments",
+    "datasets",
+    "manifests",
+    "runs",
+    "artifacts"
+  ],
+  "local_runtime_cache_path": "/root/arc-runtime",
+  "runtime_cache_variables": {
+    "HF_HOME": "/root/arc-runtime/hf_cache",
+    "HUGGINGFACE_HUB_CACHE": "/root/arc-runtime/hf_cache/hub",
+    "TRANSFORMERS_CACHE": "/root/arc-runtime/hf_cache/transformers",
+    "TORCH_HOME": "/root/arc-runtime/torch_cache",
+    "TRITON_CACHE_DIR": "/root/arc-runtime/triton_cache",
+    "UV_CACHE_DIR": "/root/arc-runtime/uv_cache"
+  },
+  "model_identifier": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1",
+  "model_persisted": false,
+  "xformers_wheel_persisted": false,
+  "environment_lock_persisted": false,
+  "notes": [
+    "The current Pod has no mounted /network-volume and /root is local overlay storage.",
+    "No credential or token is stored under the persistent artifact layout.",
+    "The bootstrap script refuses to rebuild xFormers or implicitly download a model."
+  ]
+}
