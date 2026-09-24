@@ -1,0 +1,11 @@
+{
+  "cohort_id": "competition_runtime",
+  "exposure_status": "COMPETITION_RUNTIME",
+  "intended_use": "release only",
+  "partition_unit": "TASK",
+  "schema_version": "ARC2_COHORT_V1",
+  "selection_method": "all tasks in current mounted challenge",
+  "status": "DYNAMIC_AT_RUNTIME",
+  "task_ids": "DERIVE_FROM_CURRENT_MOUNTED_CHALLENGE",
+  "test_index_structure": "DERIVE_FROM_CURRENT_MOUNTED_CHALLENGE"
+}

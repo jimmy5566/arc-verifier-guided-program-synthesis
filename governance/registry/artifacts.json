@@ -1,0 +1,28 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "d1-submitted-v1-notebook",
+      "availability": "TRACKED_SNAPSHOT",
+      "path": "governance/releases/d1-submitted-v1/notebook/arc2-fixed-4-4-d1-release-v1.ipynb",
+      "sha256": "7db1bf2e52d4468f25b9b439dbb0af09ff645654a479b367205aee8b153ddd95",
+      "stage": "RELEASE"
+    },
+    {
+      "artifact_id": "d1-eval60-predictions",
+      "availability": "LOCAL_UNTRACKED_HISTORICAL",
+      "path": "artifacts/eval60_4plus4_d1_selector/d1_predictions_frozen.json",
+      "provenance_completeness": "PARTIAL",
+      "sha256": "96bca55b1a97f839a6ac1fa13a5b30fd64b18c2fd39ed323f4ba0f1d6af899e3",
+      "stage": "SELECTION"
+    },
+    {
+      "artifact_id": "d1-eval60-rankings",
+      "availability": "LOCAL_UNTRACKED_HISTORICAL",
+      "path": "artifacts/eval60_4plus4_d1_selector/d1_rankings_frozen.json",
+      "provenance_completeness": "PARTIAL",
+      "sha256": "9105e2307a6590c3e9c086befafe58bddf455802a04e0b16016a73105ce4a70b",
+      "stage": "SELECTION"
+    }
+  ],
+  "schema_version": "ARC2_ARTIFACT_INDEX_V1"
+}

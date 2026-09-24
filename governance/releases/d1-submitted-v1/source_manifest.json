@@ -1,0 +1,31 @@
+{
+  "archive": "ARC2.tar",
+  "archive_inspected": true,
+  "archive_sha256": "2b4bc0043bb96e400bbbee77eccffb6168250b36ed0af0721b9816737d4642f9",
+  "config": "d1_release_config.json",
+  "config_sha256": "8f68d5365223695086998861402c026e8f87b5d268d85664cdba70df93d74398",
+  "file_sha256": {
+    "configs/nvarc_native_846d0198/added_tokens.json": "55f6548a2d750982fc904054446a8dd4c1419dc8447f40a1b4263d42e88033f6",
+    "configs/nvarc_native_846d0198/chat_template.j2": "23664eed0d8ee3fda2a91a61f9462bd42b89c5b63417dc30d888cdb77c6035ef",
+    "configs/nvarc_native_846d0198/special_tokens_map.json": "8c5fde7d8405b5b7ca178eb6b3cf89fd94be5b9015aaa9bbb0f8d952adacda73",
+    "configs/nvarc_native_846d0198/tokenizer.json": "a573ed8ae7a5c14a77680905f74138f5c18ad6c28c0d43cb77d60d7e51e8a51c",
+    "configs/nvarc_native_846d0198/tokenizer_config.json": "915f1185ed3bba4a5eb49251115ddbbf5f740a57a63228a41aa9942ca8c5de27",
+    "configs/nvarc_native_846d0198/vocab.json": "ac26c4284e0bc4bfe4bc214a6a36919b8c13fac63657446fd634781fe4b625ee",
+    "scripts/build_d1_release_submission.py": "f65b8c91ac2c7bf145ca116932b351873dfdea59c41e3f3c5bd6fa1f263525bb",
+    "scripts/run_d1_release_4gpu.py": "5b9dee90413f0b6a3bc76d9da40b830e552409deaff7c96c6887d209a91c3fa6",
+    "scripts/run_eval3_reference_ttt.py": "477fac4230aa24eaa0edd4ec074568cbd3b4da87d8e632ae071055fed9d53168",
+    "src/arc/__init__.py": "134af3b5b892c0f229ebebf6e950d4f4250714dc509350f071bff6ab3e123b0b",
+    "src/arc/io.py": "75bfe62f6fa13cce8b42d91e2de0e3faaf6fcbb4b122b6f6d89fb44eae4a6db0",
+    "src/arc/task.py": "da2c68d878d63dbdbacf6962c0b40d5ab994da4da1e93af2b7c677001d770136",
+    "src/inference/__init__.py": "5675cbfe15c793d175776a36921011fd7783d25cd3a634508f0252a14b98db65",
+    "src/inference/arc_native_io.py": "94573a825f2d925f54025303206586dd17bde0eacf6b36c3d4edfc35fa261437",
+    "src/inference/d1_release_contract.py": "9dedbfbda1103a26d3548333e8a2f46f83df55e059202699a2a394d1d113f776",
+    "src/inference/dynamic_task_scheduler.py": "fee54a697d3686b5a023cc4c02d6fa9c921b7b1d00b9df7c2a982b98af16df5d",
+    "src/inference/kaggle_l4_parallel_runner.py": "85fc01d90419e599bea62c89e2b26163fcb4bfa2ead5f951f45e647bea85f73d",
+    "src/inference/nvarc_native.py": "8871bbdf8331eeb51b7cea88ac625562d59acdce2bdcd6b7f9fb5835ac12d547",
+    "src/inference/nvarc_native_augmentation.py": "2f3e4db965f40eb9aa7a7d13410919fe07babb1e007b99a0c1c82cae2ffda915",
+    "src/inference/nvarc_native_candidates.py": "c86cbc3696e340a68f5cf2f41082a737ad94c58194a6b34c9c855571f337bd95",
+    "src/inference/selector_d1.py": "a24be7e669798d78b1432529597f7d156f3e60b0ae435c9e3ba048bf8d00f22c"
+  },
+  "source_commit": "2716e25484e2a6df28e7c4b43989373efa764f2d"
+}

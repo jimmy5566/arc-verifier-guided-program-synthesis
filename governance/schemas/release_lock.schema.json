@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ARC2_FROZEN_RELEASE_LOCK_V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "immutable", "release_id", "git", "kaggle", "notebook_snapshot", "source_dataset", "model", "environment", "algorithm", "submission_binding", "evidence", "known_limitations", "verification"],
+  "properties": {
+    "schema_version": {"const": "ARC2_FROZEN_RELEASE_LOCK_V1"},
+    "immutable": {"const": true},
+    "release_id": {"type": "string", "minLength": 1},
+    "git": {"type": "object"},
+    "kaggle": {"type": "object"},
+    "notebook_snapshot": {"type": "object"},
+    "source_dataset": {"type": "object"},
+    "model": {"type": "object"},
+    "environment": {"type": "object"},
+    "algorithm": {"type": "object"},
+    "submission_binding": {"type": "object"},
+    "evidence": {"type": "object"},
+    "known_limitations": {"type": "array", "items": {"type": "string"}},
+    "verification": {"type": "object"},
+    "frozen_at_utc": {"type": "string"}
+  }
+}

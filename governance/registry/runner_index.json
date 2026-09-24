@@ -1,0 +1,24 @@
+{
+  "authoritative": {
+    "contract": "src/inference/d1_release_contract.py",
+    "experiment_launcher": "scripts/run_experiment_workbench.py",
+    "finalizer": "scripts/build_d1_release_submission.py:finalize",
+    "selector": "src/inference/selector_d1.py",
+    "solver": "scripts/run_d1_release_4gpu.py:run_live"
+  },
+  "historical_do_not_delete": [
+    {
+      "path": "scripts/run_eval60_reference_ttt_4gpu.py",
+      "status": "HISTORICAL"
+    },
+    {
+      "path": "scripts/run_reference_ttt_production_4gpu.py",
+      "status": "HISTORICAL"
+    },
+    {
+      "path": "scripts/run_eval60_4plus4_d1_selector.py",
+      "status": "HISTORICAL"
+    }
+  ],
+  "schema_version": "ARC2_RUNNER_INDEX_V1"
+}

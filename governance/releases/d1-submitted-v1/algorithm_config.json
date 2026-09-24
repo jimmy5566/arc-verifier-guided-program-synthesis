@@ -1,0 +1,155 @@
+{
+  "environment": {
+    "bootstrap_mode": "pinned_kaggle_image_offline",
+    "peft": "0.17.1",
+    "ptxas_path": "/usr/local/cuda-12.5/bin/ptxas",
+    "python_prefix": "3.11.13",
+    "torch": "2.8.0",
+    "torchao": "0.14.1",
+    "transformers": "4.55.4",
+    "triton": "3.4.0",
+    "trl": "0.22.2",
+    "unsloth": "2025.9.7",
+    "unsloth-zoo": "2025.9.9"
+  },
+  "generation": {
+    "decoding": "greedy",
+    "portfolio": {
+      "TTT24": [
+        "flip_lr",
+        "flip_ud",
+        "transpose",
+        "anti_transpose"
+      ],
+      "TTT48": [
+        "identity",
+        "rot90",
+        "flip_ud",
+        "anti_transpose"
+      ]
+    },
+    "schema": "native-grid-v1"
+  },
+  "model_identity": {
+    "checkpoint": "sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1",
+    "files": {
+      "added_tokens.json": {
+        "sha256": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce",
+        "size": 68
+      },
+      "config.json": {
+        "sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0",
+        "size": 1532
+      },
+      "generation_config.json": {
+        "sha256": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02",
+        "size": 113
+      },
+      "model-00001-of-00002.safetensors": {
+        "sha256": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529",
+        "size": 4996836472
+      },
+      "model-00002-of-00002.safetensors": {
+        "sha256": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0",
+        "size": 2270397024
+      },
+      "model.safetensors.index.json": {
+        "sha256": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4",
+        "size": 32913
+      },
+      "special_tokens_map.json": {
+        "sha256": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+        "size": 367
+      },
+      "tokenizer.json": {
+        "sha256": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+        "size": 1731
+      },
+      "tokenizer_config.json": {
+        "sha256": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+        "size": 988
+      },
+      "vocab.json": {
+        "sha256": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82",
+        "size": 94
+      }
+    },
+    "tokenizer_contract": "native-vocabulary-16-exact-match"
+  },
+  "runtime": {
+    "completed_empty_policy": "ARC2_D1_COMPLETED_EMPTY_INPUT_COPY_V1",
+    "finalization_margin_seconds": 1800,
+    "hard_deadline_seconds": 40500
+  },
+  "scoring": {
+    "b_support_views": [
+      "identity",
+      "rot90",
+      "rot180",
+      "rot270",
+      "flip_lr",
+      "flip_ud",
+      "transpose",
+      "anti_transpose"
+    ],
+    "selector": "D1_L_RRF_EXACT_B_RRF_TIE_BREAK"
+  },
+  "ttt24_recipe": {
+    "alpha": 32,
+    "assistant_only_masking": true,
+    "bf16": true,
+    "generation_context_window": 16384,
+    "gradient_checkpointing": false,
+    "learning_rate": 5e-05,
+    "max_new_tokens": 1024,
+    "max_sequence_length": 8192,
+    "rank": 256,
+    "reference_schedule_total_steps": 128,
+    "scheduler": "cosine",
+    "seed": 42,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj",
+      "embed_tokens",
+      "lm_head"
+    ],
+    "train_pair_order": "random_full_permutation",
+    "ttt_steps": 24,
+    "use_rslora": true,
+    "warmup_ratio": 0.1
+  },
+  "ttt48_recipe": {
+    "alpha": 32,
+    "assistant_only_masking": true,
+    "bf16": true,
+    "generation_context_window": 16384,
+    "gradient_checkpointing": false,
+    "learning_rate": 5e-05,
+    "max_new_tokens": 1024,
+    "max_sequence_length": 8192,
+    "rank": 256,
+    "reference_schedule_total_steps": 128,
+    "scheduler": "cosine",
+    "seed": 42,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj",
+      "embed_tokens",
+      "lm_head"
+    ],
+    "train_pair_order": "random_full_permutation",
+    "ttt_steps": 48,
+    "use_rslora": true,
+    "warmup_ratio": 0.1
+  }
+}

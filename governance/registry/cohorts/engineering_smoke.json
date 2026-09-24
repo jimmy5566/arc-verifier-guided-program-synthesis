@@ -1,0 +1,41 @@
+{
+  "authoritative_manifest": "scripts/build_d1_live_smoke_kaggle.py",
+  "cohort_id": "engineering_smoke",
+  "exposure_status": "EXPOSED_ENGINEERING",
+  "intended_use": "functional engineering only; not a performance benchmark",
+  "partition_unit": "TASK",
+  "schema_version": "ARC2_COHORT_V1",
+  "selection_method": "existing predeclared single-output plus multi-output D1 live smoke pair",
+  "source_challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "source_dataset_version": "ARC-AGI-2 evaluation challenge local mirror",
+  "task_count": 2,
+  "task_ids": [
+    "58490d8a",
+    "f931b4a8"
+  ],
+  "task_ids_sha256": "f5e0f405983e2bc200d4c16cbdafd8ff066c17fc41e9084c7b0b4be798908f0a",
+  "tasks": {
+    "58490d8a": {
+      "task_sha256": "d6c60727e19c07b0aaa5c49150702c8d98d5633ac15664c314c2c012e2051865",
+      "test_index_structure": [
+        {
+          "input_sha256": "1de2ab73a75c0f50aadb9ac6df3dc295b8e2e9163ce6ac9ec01f23929ce1edbc",
+          "test_index": 0
+        }
+      ]
+    },
+    "f931b4a8": {
+      "task_sha256": "12fc8ffedec671355cfdc1efe8e5cf97481b35c20cae9397d6c94c4a15c26758",
+      "test_index_structure": [
+        {
+          "input_sha256": "253ed07bf136664ee361bdcd51b93cf60aa4de935101437599df4317a82d6c53",
+          "test_index": 0
+        },
+        {
+          "input_sha256": "147f1bca717970270f2a13b08ab141c929af770ffc6df4a09b254157c383343d",
+          "test_index": 1
+        }
+      ]
+    }
+  }
+}

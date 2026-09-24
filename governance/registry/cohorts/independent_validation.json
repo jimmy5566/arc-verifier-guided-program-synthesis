@@ -1,0 +1,11 @@
+{
+  "cohort_id": "independent_validation",
+  "exposure_status": "UNKNOWN",
+  "intended_use": "reserved label; do not use until non-development exposure is evidenced",
+  "partition_unit": "TASK",
+  "schema_version": "ARC2_COHORT_V1",
+  "selection_method": "UNVERIFIED",
+  "status": "NOT_ESTABLISHED",
+  "task_count": 0,
+  "task_ids": []
+}

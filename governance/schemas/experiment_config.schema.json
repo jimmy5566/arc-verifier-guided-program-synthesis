@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ARC2_EXPERIMENT_CONFIG_V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["algorithm", "experiment", "execution"],
+  "properties": {
+    "algorithm": {
+      "type": "object",
+      "required": ["solver_id", "source_commit", "source_package_sha256", "release_config", "views", "decoder", "scoring", "selector"]
+    },
+    "experiment": {
+      "type": "object",
+      "required": ["experiment_id", "run_id", "hypothesis", "baseline_reference", "cohort_reference", "seeds", "primary_metric", "compute_budget", "storage_budget", "requested_evidence"]
+    },
+    "execution": {
+      "type": "object",
+      "required": ["challenge_path", "model_path", "native_config_dir", "artifact_root", "worker_count", "hard_deadline_seconds", "finalization_margin_seconds"]
+    }
+  }
+}

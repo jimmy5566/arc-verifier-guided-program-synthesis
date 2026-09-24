@@ -1,0 +1,23 @@
+{
+  "runs": [
+    {
+      "kind": "FROZEN_RELEASE",
+      "path": "governance/releases/d1-submitted-v1",
+      "run_id": "d1-submitted-v1",
+      "state": "SUBMITTED_STATUS_IN_APPEND_ONLY_EVENT_LOG"
+    },
+    {
+      "artifact_location": "local untracked artifacts/eval60_4plus4_d1_selector",
+      "exposure_status": "EXPOSED_DEVELOPMENT",
+      "kind": "HISTORICAL_DEVELOPMENT",
+      "metrics": {
+        "pool_oracle": "30/89",
+        "top1": "20/89",
+        "top2": "28/89"
+      },
+      "run_id": "eval60-d1-historical",
+      "state": "COMPLETE_SCORED"
+    }
+  ],
+  "schema_version": "ARC2_RUN_REGISTRY_V1"
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "ARC2_DATA_REGISTRY_V1",
+  "sources": [
+    {
+      "content_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+      "path_not_committed": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\data\\raw\\arc-agi_evaluation_challenges.json",
+      "physical_target_isolation": "LOCAL_PROCESS_POLICY_ONLY_WHERE_PLATFORM_MOUNT_EXPOSES_SOLUTIONS",
+      "provenance": "local mirror of ARC-AGI evaluation challenges",
+      "raw_read_only": true,
+      "source_id": "arc_agi_evaluation_challenges_local_mirror",
+      "test_targets_location": "SEPARATE_LOCAL_EVALUATION_ARTIFACT"
+    },
+    {
+      "content_sha256": "DYNAMIC_AT_RUNTIME",
+      "path": "/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_test_challenges.json",
+      "provenance": "current competition mount",
+      "raw_read_only": true,
+      "source_id": "competition_runtime",
+      "test_targets_location": "NOT_ATTACHED_TO_WORKBENCH_BUNDLE"
+    }
+  ]
+}
