@@ -130,9 +130,10 @@ def test_k_generated_notebook_uses_offline_setup_then_real_inference() -> None:
     compile(cell, "d1-release-notebook", "exec")
     assert cell.index('os.environ.update({"TRITON_PTXAS_PATH"') < cell.index('md.version(package)')
     assert "run_d1_release_4gpu.py" in cell and "build_d1_release_submission.py" in cell
-    assert "FAST_COMMIT" not in cell and "raise SystemExit(0)" not in cell
+    assert "KAGGLE_IS_COMPETITION_RERUN" in cell and "FAST_SAVE_ONLY" in cell
+    assert "raise SystemExit(0)" not in cell
     smoke = "".join(notebook("/kaggle/input/arc2-d1-release-source/ARC2.tar", "a" * 64, "d1_release_config.json", smoke_task_ids=("58490d8a", "f931b4a8"))["cells"][0]["source"])
     compile(smoke, "d1-two-task-harness", "exec")
-    assert 'submission=out/"smoke_submission.json"' in smoke
+    assert 'submission=work/"artifacts"/"d1_release"/"smoke_submission.json"' in smoke
     assert 'submission=work/"submission.json"' in cell
     assert "d1_smoke_challenges.json" not in cell
