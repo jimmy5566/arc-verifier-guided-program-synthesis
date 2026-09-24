@@ -1,10 +1,10 @@
 {
   "authoritative": {
-    "contract": "src/inference/d1_release_contract.py",
+    "contract": "src/inference/d1_failsoft_runtime.py",
     "experiment_launcher": "scripts/run_experiment_workbench.py",
-    "finalizer": "scripts/build_d1_release_submission.py:finalize",
+    "finalizer": "src/inference/d1_failsoft_runtime.py:finalize_failsoft",
     "selector": "src/inference/selector_d1.py",
-    "solver": "scripts/run_d1_release_4gpu.py:run_live"
+    "solver": "scripts/run_d1_failsoft_4gpu.py:run_live_failsoft"
   },
   "historical_do_not_delete": [
     {

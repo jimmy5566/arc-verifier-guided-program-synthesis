@@ -17,6 +17,7 @@ def notebook(source_root: str, config_path: str) -> dict[str, object]:
         f'root=Path({source_root!r}); config=Path({config_path!r})',
         'runner=root/"scripts"/"run_experiment_workbench.py"',
         'if not runner.is_file() or not config.is_file(): raise RuntimeError("explicit workbench source/config missing")',
+        'print(json.dumps({"event":"EXPERIMENT_SHARED_FAILSOFT_RUNTIME","runner":str(runner)},sort_keys=True),flush=True)',
         'validate=[sys.executable,str(runner),"validate","--config",str(config)]',
         'subprocess.run(validate,check=True)',
         'prepare=[sys.executable,str(runner),"prepare","--config",str(config)]',

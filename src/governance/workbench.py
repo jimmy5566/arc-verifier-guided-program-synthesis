@@ -54,8 +54,12 @@ def atomic_json(path: Path, payload: Any, *, sort_keys: bool = True) -> None:
 
 def append_event(path: Path, event: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("a", encoding="utf-8") as handle:
+    prior = path.read_text(encoding="utf-8") if path.exists() else ""
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=path.parent, delete=False, suffix=".tmp") as handle:
+        handle.write(prior)
         handle.write(canonical(dict(event)) + "\n")
+        temporary = Path(handle.name)
+    os.replace(temporary, path)
 
 
 def parse_rerun_flag(raw: str | None) -> bool:
@@ -148,9 +152,9 @@ def resolve_experiment_config(config: Mapping[str, Any]) -> dict[str, Any]:
     resolved["schema_version"] = SCHEMA_VERSION
     resolved["config_sha256"] = digest(config)
     resolved["authoritative_modules"] = {
-        "solver": "scripts.run_d1_release_4gpu.run_live",
-        "finalizer": "scripts.build_d1_release_submission.finalize",
-        "contract": "inference.d1_release_contract",
+        "solver": "scripts.run_d1_failsoft_4gpu.run_live_failsoft",
+        "finalizer": "inference.d1_failsoft_runtime.finalize_failsoft",
+        "contract": "inference.d1_failsoft_runtime",
         "selector": "inference.selector_d1",
     }
     return resolved

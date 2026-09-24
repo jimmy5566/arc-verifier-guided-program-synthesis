@@ -37,14 +37,17 @@ overwrite a completed or partial run.
 ## 3. Authorize and run
 
 GPU execution is a separate explicitly authorized action. The thin workbench
-imports the existing `run_live` solver only for the `run` subcommand:
+imports `run_live_failsoft` and the shared fail-soft finalizer only for the
+`run` subcommand:
 
 ```powershell
 python scripts/run_experiment_workbench.py run --run-dir <runs/run-id>
 ```
 
 The result freezes `candidates_frozen.json`, `scores_frozen.json`, and
-`predictions_frozen.json`. It does not create or submit `submission.json`.
+`predictions_frozen.json`. Runtime control artifacts `events.jsonl`,
+`runtime_status.json`, `failures.json`, and `task_summary.json` are persisted
+atomically. It does not create or submit `submission.json`.
 If an attempt reaches `FAILED` or is explicitly recorded `INCOMPLETE`, rerun
 the same command against the same run directory. The workbench rejects changed
 resolved config bytes and delegates exact checkpoint compatibility to the

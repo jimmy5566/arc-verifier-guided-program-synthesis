@@ -54,10 +54,10 @@ def main() -> None:
         print(json.dumps({"event": "EXPERIMENT_SCORED", **report}, sort_keys=True))
         return
     # Import the authoritative inference path only after explicit ``run``.
-    from scripts.build_d1_release_submission import finalize
-    from scripts.run_d1_release_4gpu import run_live
+    from inference.d1_failsoft_runtime import finalize_failsoft
+    from scripts.run_d1_failsoft_4gpu import run_live_failsoft
 
-    execute_run(args.run_dir, run_live, finalize)
+    execute_run(args.run_dir, run_live_failsoft, finalize_failsoft)
     print(json.dumps({"event": "EXPERIMENT_PREDICTIONS_FROZEN", "run_dir": str(args.run_dir)}, sort_keys=True))
 
 

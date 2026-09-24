@@ -66,7 +66,8 @@ def test_unknown_rerun_value_is_error() -> None:
 
 def test_config_is_explicit_and_unsupported_solver_fails() -> None:
     resolved = resolve_experiment_config(load(EXAMPLE))
-    assert resolved["authoritative_modules"]["solver"] == "scripts.run_d1_release_4gpu.run_live"
+    assert resolved["authoritative_modules"]["solver"] == "scripts.run_d1_failsoft_4gpu.run_live_failsoft"
+    assert resolved["authoritative_modules"]["finalizer"] == "inference.d1_failsoft_runtime.finalize_failsoft"
     assert all(set(view) == {"geometry", "color_offset", "pair_order"} for rows in resolved["algorithm"]["views"].values() for view in rows)
     changed = load(EXAMPLE); changed["algorithm"]["solver_id"] = "new-copied-solver"
     with pytest.raises(GovernanceError, match="unsupported"):
@@ -243,10 +244,10 @@ def test_historical_d1_reference_remains_retrospective_28_of_89() -> None:
     assert lock["evidence"]["d1_eval60"] == {"scope": "RETROSPECTIVE_EXPOSED_DEVELOPMENT_EVIDENCE", "top1": "20/89", "top2": "28/89", "pool_oracle": "30/89"}
 
 
-def test_installed_launcher_is_thin_and_calls_existing_solver() -> None:
+def test_installed_launcher_is_thin_and_calls_shared_failsoft_solver() -> None:
     source = (ROOT / "scripts" / "run_experiment_workbench.py").read_text(encoding="utf-8")
-    assert "from scripts.run_d1_release_4gpu import run_live" in source
-    assert "from scripts.build_d1_release_submission import finalize" in source
+    assert "from scripts.run_d1_failsoft_4gpu import run_live_failsoft" in source
+    assert "from inference.d1_failsoft_runtime import finalize_failsoft" in source
     for copied_implementation in ("def _live_worker", "def _fit_task", "model.generate(", "continuation_log_likelihood(", "def d1_order"):
         assert copied_implementation not in source
 
@@ -256,6 +257,7 @@ def test_staged_workbench_rejects_rerun_and_has_no_fast_save_path() -> None:
     assert len(notebook["cells"]) == 1
     code = "".join(notebook["cells"][0]["source"]); compile(code, "workbench-notebook", "exec")
     assert "EXPERIMENT_WORKBENCH_REJECTS_COMPETITION_RERUN" in code
+    assert "EXPERIMENT_SHARED_FAILSOFT_RUNTIME" in code
     assert "run_experiment_workbench.py" in code
     assert "FAST_SAVE" not in code and "SAVE_ONLY_PLACEHOLDER" not in code
     assert "competitions submit" not in code and "kernels push" not in code

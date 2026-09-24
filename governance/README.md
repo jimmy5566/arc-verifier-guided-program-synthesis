@@ -18,9 +18,9 @@ submitted release wrapper is not modified by this governance layer.
 
 ## Authoritative shared solver
 
-- `scripts/run_d1_release_4gpu.py:run_live`
-- `scripts/build_d1_release_submission.py:finalize`
-- `src/inference/d1_release_contract.py`
+- `scripts/run_d1_failsoft_4gpu.py:run_live_failsoft`
+- `src/inference/d1_failsoft_runtime.py:finalize_failsoft`
+- `src/inference/d1_failsoft_runtime.py`
 - `src/inference/selector_d1.py`
 
 Historical runners remain indexed under `registry/runner_index.json`; they are
