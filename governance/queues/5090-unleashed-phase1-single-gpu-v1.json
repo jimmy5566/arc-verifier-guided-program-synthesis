@@ -1,0 +1,85 @@
+{
+  "schema_version": "ARC2_BLACKWELL_UNLEASHED_QUEUE_V1",
+  "queue_id": "5090-unleashed-phase1-single-gpu-v1",
+  "execution_policy": "single_gpu_ephemeral_offpod_backup",
+  "amends_queue": "5090-unleashed-phase1-v1",
+  "amendment_reason": "Phase-1 measures generation execution modes only; one verified RTX 5090 provides a cleaner serial comparison when every completed run is backed up off-Pod before the next dispatch.",
+  "base_branch": "governance/v1",
+  "infrastructure_baseline_commit": "5cb7ba47e3be243a58b882eda82e0ad3ccedf108",
+  "cohort": {
+    "name": "legacy-eval3",
+    "manifest": "governance/benchmarks/legacy-eval3/eval3_manifest.json",
+    "expected_task_count": 3
+  },
+  "backend": {
+    "id": "blackwell_unleashed_v1",
+    "scope": "generation_execution_only",
+    "ttt_batching": false,
+    "likelihood_batching": false,
+    "torch_compile": false,
+    "cuda_graphs": false
+  },
+  "required_hardware": {
+    "gpu_count": 1,
+    "gpu_name_substring": "RTX 5090",
+    "compute_capability": [12, 0],
+    "persistent_root": null,
+    "runtime_root": "/root/arc-runtime"
+  },
+  "artifact_policy": {
+    "global_volume_required": false,
+    "must_backup_to_local_pc_before_next_run": true,
+    "off_pod_backup_transport": "ssh_stdout_base64_tar",
+    "remote_run_retention": "keep_until_local_sha256_matches_remote_archive"
+  },
+  "runs": [
+    {
+      "run_id": "5090-unleashed-phase1-single-run-01-serial-batch1",
+      "physical_gpu_id": 0,
+      "queue_position": 1,
+      "mode": "serial",
+      "generation_micro_batch_size": 1,
+      "role": "reference_serial"
+    },
+    {
+      "run_id": "5090-unleashed-phase1-single-run-02-generation-batch2",
+      "physical_gpu_id": 0,
+      "queue_position": 2,
+      "mode": "serial",
+      "generation_micro_batch_size": 2,
+      "role": "batch2"
+    },
+    {
+      "run_id": "5090-unleashed-phase1-single-run-03-generation-batch4",
+      "physical_gpu_id": 0,
+      "queue_position": 3,
+      "mode": "serial",
+      "generation_micro_batch_size": 4,
+      "role": "batch4"
+    },
+    {
+      "run_id": "5090-unleashed-phase1-single-run-04-generation-batch4-repeat",
+      "physical_gpu_id": 0,
+      "queue_position": 4,
+      "mode": "serial",
+      "generation_micro_batch_size": 4,
+      "role": "batch4_repeat"
+    }
+  ],
+  "stop_conditions": [
+    "cuda_oom",
+    "non_finite_model_state",
+    "adapter_or_base_integrity_failure",
+    "malformed_output_or_schema",
+    "gpu_or_environment_failure",
+    "local_backup_or_sha256_verification_failure"
+  ],
+  "non_stop_diagnostics": [
+    "candidate_drift",
+    "candidate_jaccard_change",
+    "intermediate_any_of_k_change"
+  ],
+  "scientific_config_changed": false,
+  "eval60_authorized": false,
+  "ttt12_authorized": false
+}

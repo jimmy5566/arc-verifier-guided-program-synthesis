@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import torch
 
-from scripts.run_5090_blackwell_unleashed_phase1_queue import _load_queue, _resolved_config, _telemetry
+from scripts.run_5090_blackwell_unleashed_phase1_queue import _json_digest, _load_queue, _resolved_config, _telemetry
 from scripts.run_eval3_runtime_opt import _generated_suffix
 
 
@@ -18,6 +19,23 @@ def test_frozen_phase1_queue_has_exactly_the_authorized_two_gpu_schedule() -> No
         (0, 1, 1), (1, 1, 2), (0, 2, 4), (1, 2, 4),
     ]
     assert all(item.mode == "serial" for item in runs)
+
+
+def test_single_gpu_amendment_keeps_all_four_batch_conditions_on_gpu_zero() -> None:
+    queue, runs = _load_queue(ROOT / "governance" / "queues" / "5090-unleashed-phase1-single-gpu-v1.json")
+    assert queue["execution_policy"] == "single_gpu_ephemeral_offpod_backup"
+    assert [item.physical_gpu_id for item in runs] == [0, 0, 0, 0]
+    assert [item.generation_micro_batch_size for item in runs] == [1, 2, 4, 4]
+    assert [item.queue_position for item in runs] == [1, 2, 3, 4]
+
+
+def test_phase1_reference_config_has_portable_historical_provenance() -> None:
+    config_path = ROOT / "governance" / "benchmarks" / "legacy-eval3" / "reference_ttt_config_frozen.json"
+    provenance_path = config_path.with_name("reference_ttt_config_provenance.json")
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
+    assert provenance["historical_export_file_sha256"] == "63379036f4881f8649a2a61b003d60b3af5977743ad0472301fed307f1e4dc26"
+    assert _json_digest(config) == provenance["canonical_json_sha256"]
 
 
 def test_batched_suffix_keeps_eos_and_drops_only_rectangular_completion_pad() -> None:

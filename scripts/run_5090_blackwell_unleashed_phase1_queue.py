@@ -91,8 +91,8 @@ def _load_queue(path: Path) -> tuple[dict[str, Any], tuple[RunSpec, ...]]:
     if queue.get("schema_version") != QUEUE_SCHEMA:
         raise ValueError("unsupported Blackwell Phase-1 queue schema")
     hardware = queue.get("required_hardware", {})
-    if hardware.get("gpu_count") != 2 or hardware.get("compute_capability") != [12, 0]:
-        raise ValueError("queue does not require exactly two sm_120 GPUs")
+    if hardware.get("compute_capability") != [12, 0]:
+        raise ValueError("queue does not require sm_120 GPUs")
     if queue.get("backend", {}).get("id") != BLACKWELL_UNLEASHED_BACKEND_ID:
         raise ValueError("queue backend is not blackwell_unleashed_v1")
     if any(bool(queue["backend"].get(key)) for key in ("ttt_batching", "likelihood_batching", "torch_compile", "cuda_graphs")):
@@ -101,14 +101,27 @@ def _load_queue(path: Path) -> tuple[dict[str, Any], tuple[RunSpec, ...]]:
         runs = tuple(RunSpec(**item) for item in queue["runs"])
     except (KeyError, TypeError) as error:
         raise ValueError("invalid queue run specification") from error
-    expected = {
-        ("5090-unleashed-phase1-run-01-serial-batch1", 0, 1, 1),
-        ("5090-unleashed-phase1-run-02-generation-batch2", 1, 1, 2),
-        ("5090-unleashed-phase1-run-03-generation-batch4", 0, 2, 4),
-        ("5090-unleashed-phase1-run-04-generation-batch4-repeat", 1, 2, 4),
+    policy = queue.get("execution_policy", "persistent_two_gpu")
+    expected_by_policy = {
+        "persistent_two_gpu": {
+            ("5090-unleashed-phase1-run-01-serial-batch1", 0, 1, 1),
+            ("5090-unleashed-phase1-run-02-generation-batch2", 1, 1, 2),
+            ("5090-unleashed-phase1-run-03-generation-batch4", 0, 2, 4),
+            ("5090-unleashed-phase1-run-04-generation-batch4-repeat", 1, 2, 4),
+        },
+        "single_gpu_ephemeral_offpod_backup": {
+            ("5090-unleashed-phase1-single-run-01-serial-batch1", 0, 1, 1),
+            ("5090-unleashed-phase1-single-run-02-generation-batch2", 0, 2, 2),
+            ("5090-unleashed-phase1-single-run-03-generation-batch4", 0, 3, 4),
+            ("5090-unleashed-phase1-single-run-04-generation-batch4-repeat", 0, 4, 4),
+        },
     }
+    if policy not in expected_by_policy:
+        raise ValueError(f"unsupported Phase-1 execution policy: {policy}")
+    expected = expected_by_policy[policy]
     actual = {(item.run_id, item.physical_gpu_id, item.queue_position, item.generation_micro_batch_size) for item in runs}
-    if actual != expected or any(item.mode != "serial" for item in runs):
+    expected_gpu_count = 2 if policy == "persistent_two_gpu" else 1
+    if hardware.get("gpu_count") != expected_gpu_count or actual != expected or any(item.mode != "serial" for item in runs):
         raise ValueError("queue schedule differs from the frozen 1/2/4/4 Phase-1 plan")
     return queue, runs
 
@@ -124,6 +137,17 @@ def _require_inputs(args: argparse.Namespace, queue: dict[str, Any]) -> dict[str
     if hashlib.sha256(args.challenge_path.read_bytes()).hexdigest() != manifest.get("source_challenge_sha256"):
         raise ValueError("challenge file does not match the frozen Eval3 source hash")
     config = _read(args.reference_config)
+    # The historical Kaggle export used CRLF, while portable Git archives may
+    # normalize line endings. Verify parsed canonical JSON instead of treating
+    # that non-scientific byte difference as configuration drift. The
+    # companion still records the source export's raw-file digest.
+    provenance_path = args.reference_config.with_name("reference_ttt_config_provenance.json")
+    if not provenance_path.is_file():
+        raise FileNotFoundError(f"reference configuration provenance is missing: {provenance_path}")
+    provenance = _read(provenance_path)
+    expected_canonical_hash = provenance.get("canonical_json_sha256")
+    if not isinstance(expected_canonical_hash, str) or _json_digest(config) != expected_canonical_hash:
+        raise ValueError("reference TTT configuration does not match the historical canonical config")
     frozen_required = {"rank": 256, "alpha": 32, "ttt_steps": 24, "generation_augmentation_count": 8}
     if {key: config.get(key) for key in frozen_required} != frozen_required:
         raise ValueError("reference TTT configuration violates frozen Eval3 settings")
@@ -131,7 +155,7 @@ def _require_inputs(args: argparse.Namespace, queue: dict[str, Any]) -> dict[str
         raise ValueError("queue and manifest task counts differ")
     if not args.ptxas_path.is_file() or not os.access(args.ptxas_path, os.X_OK):
         raise FileNotFoundError(f"verified PTXAS executable is missing: {args.ptxas_path}")
-    return {"manifest": manifest, "reference_config": config}
+    return {"manifest": manifest, "reference_config": config, "reference_config_provenance": provenance}
 
 
 def _bootstrap(args: argparse.Namespace, queue: dict[str, Any]) -> dict[str, Any]:
@@ -170,6 +194,66 @@ def _bootstrap(args: argparse.Namespace, queue: dict[str, Any]) -> dict[str, Any
         if item.get("physical_gpu_id") != expected_id or "RTX 5090" not in item.get("name", "") or item.get("capability") != [12, 0]:
             raise RuntimeError("BOOTSTRAP_FAILED: GPU inventory is not two RTX 5090 sm_120 devices")
     return ready
+
+
+def _ephemeral_single_gpu_preflight(args: argparse.Namespace) -> dict[str, Any]:
+    """Validate the already-built one-GPU Blackwell environment without CUDA model loading."""
+    if not args.python.is_file():
+        raise FileNotFoundError(f"Blackwell environment Python is missing: {args.python}")
+    if not (args.model_path / "config.json").is_file():
+        raise FileNotFoundError(f"model config is missing: {args.model_path / 'config.json'}")
+    environment = {
+        **os.environ,
+        "TRITON_PTXAS_PATH": str(args.ptxas_path),
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "CUDA_VISIBLE_DEVICES": "0",
+    }
+    source = """
+import hashlib, importlib.metadata, json, sys
+from pathlib import Path
+import torch, transformers, unsloth, peft, xformers
+import xformers.ops as xops
+if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
+    raise SystemExit(f'GPU_INVENTORY_MISMATCH: expected=1 actual={torch.cuda.device_count()}')
+name = torch.cuda.get_device_name(0); capability = torch.cuda.get_device_capability(0)
+if 'RTX 5090' not in name or capability != (12, 0):
+    raise SystemExit(f'BLACKWELL_GPU_MISMATCH: name={name} capability={capability}')
+q = torch.randn((1, 16, 4, 64), device='cuda', dtype=torch.bfloat16)
+value = xops.memory_efficient_attention(q, q, q)
+torch.cuda.synchronize()
+if not bool(torch.isfinite(value).all()):
+    raise SystemExit('XFORMERS_BF16_SMOKE_NONFINITE')
+record = importlib.metadata.distribution('xformers').read_text('RECORD') or ''
+model_config = Path(sys.argv[1]) / 'config.json'
+print(json.dumps({
+  'event':'READY_FOR_ARC2_EPHEMERAL_PHASE1',
+  'gpu_inventory':[{'physical_gpu_id':0,'name':name,'capability':list(capability)}],
+  'versions':{'python':'.'.join(map(str,sys.version_info[:3])),'torch':torch.__version__,'cuda':torch.version.cuda,'transformers':transformers.__version__,'unsloth':unsloth.__version__,'peft':peft.__version__,'xformers':xformers.__version__,'torchao':importlib.metadata.version('torchao'),'triton':importlib.metadata.version('triton')},
+  'model_config_sha256':hashlib.sha256(model_config.read_bytes()).hexdigest(),
+  'xformers_distribution_record_sha256':hashlib.sha256(record.encode()).hexdigest(),
+  'bf16_xformers_attention_smoke':True,
+},sort_keys=True))
+"""
+    completed = subprocess.run([str(args.python), "-c", source, str(args.model_path)], env=environment, text=True, capture_output=True)
+    preflight_log = args.runtime_root / "active_run" / "5090-unleashed-phase1-single-gpu-v1" / "ephemeral_preflight.log"
+    preflight_log.parent.mkdir(parents=True, exist_ok=True)
+    _atomic_text(preflight_log, completed.stdout + completed.stderr)
+    if completed.returncode:
+        raise RuntimeError(f"EPHEMERAL_BLACKWELL_PREFLIGHT_FAILED exit={completed.returncode}; see {preflight_log}")
+    try:
+        ready = json.loads(completed.stdout.strip().splitlines()[-1])
+    except (IndexError, json.JSONDecodeError) as error:
+        raise RuntimeError("EPHEMERAL_BLACKWELL_PREFLIGHT_FAILED: missing JSON manifest") from error
+    if ready.get("event") != "READY_FOR_ARC2_EPHEMERAL_PHASE1" or ready.get("gpu_inventory", [{}])[0].get("capability") != [12, 0]:
+        raise RuntimeError("EPHEMERAL_BLACKWELL_PREFLIGHT_FAILED: malformed inventory")
+    return ready
+
+
+def _environment_preflight(args: argparse.Namespace, queue: dict[str, Any]) -> dict[str, Any]:
+    if queue.get("execution_policy") == "single_gpu_ephemeral_offpod_backup":
+        return _ephemeral_single_gpu_preflight(args)
+    return _bootstrap(args, queue)
 
 
 def _resolved_config(*, frozen_config: dict[str, Any], ptxas_path: Path, spec: RunSpec) -> tuple[dict[str, Any], str]:
@@ -358,10 +442,10 @@ def _freeze_and_score_run(
         "physical_gpu_id": spec.physical_gpu_id,
         "cuda_visible_devices": str(spec.physical_gpu_id),
         "ptxas_path": str(args.ptxas_path),
-        "environment_lock_sha256": _sha256_file(args.environment_lock),
-        "environment_manifest_sha256": _sha256_file(args.environment_manifest),
-        "environment_versions": _read(args.environment_manifest).get("versions"),
-        "model_manifest_sha256": _sha256_file(args.model_manifest),
+        "environment_lock_sha256": _sha256_file(args.environment_lock) if args.environment_lock else None,
+        "environment_manifest_sha256": _sha256_file(args.environment_manifest) if args.environment_manifest else None,
+        "environment_versions": _read(args.environment_manifest).get("versions") if args.environment_manifest else bootstrap_ready.get("versions"),
+        "model_manifest_sha256": _sha256_file(args.model_manifest) if args.model_manifest else None,
         "queue_config_sha256": _sha256_file(args.queue_config),
     }
     manifest = {
@@ -384,19 +468,29 @@ def _freeze_and_score_run(
     atomic_write_json(run_dir / "telemetry.json", _telemetry(records))
     _write_event(event_handle, {"event": "PHASE1_CANDIDATES_FROZEN", "run_id": spec.run_id, "candidate_hashes": _candidate_hashes(records), "solutions_opened": False})
 
-    score_command = [
-        str(args.python), str(args.repo_dir / "scripts" / "score_eval3_blackwell_unleashed_phase1.py"),
-        "--manifest", str(args.manifest),
-        "--candidates", str(run_dir / "candidates_frozen.json"),
-        "--challenge-path", str(args.challenge_path),
-        "--solutions-path", str(args.solutions_path),
-        "--output", str(run_dir / "evaluation" / "report.json"),
-    ]
-    score_environment = {**os.environ, "CUDA_VISIBLE_DEVICES": ""}
-    completed = subprocess.run(score_command, env=score_environment, text=True, capture_output=True)
-    _write_event(event_handle, {"event": "PHASE1_POST_FREEZE_SCORE", "run_id": spec.run_id, "returncode": completed.returncode, "stdout": completed.stdout, "stderr": completed.stderr})
-    if completed.returncode:
-        raise RuntimeError(f"{spec.run_id}: post-freeze Any-of-K scoring failed")
+    report_path = run_dir / "evaluation" / "report.json"
+    if args.defer_local_scoring:
+        atomic_write_json(report_path, {
+            "status": "CANDIDATES_FROZEN_PENDING_LOCAL_POST_FREEZE_SCORING",
+            "run_id": spec.run_id,
+            "candidate_artifact_sha256": _sha256_file(run_dir / "candidates_frozen.json"),
+            "solutions_opened_on_gpu_pod": False,
+        })
+        _write_event(event_handle, {"event": "PHASE1_LOCAL_SCORE_DEFERRED", "run_id": spec.run_id, "solutions_opened": False})
+    else:
+        score_command = [
+            str(args.python), str(args.repo_dir / "scripts" / "score_eval3_blackwell_unleashed_phase1.py"),
+            "--manifest", str(args.manifest),
+            "--candidates", str(run_dir / "candidates_frozen.json"),
+            "--challenge-path", str(args.challenge_path),
+            "--solutions-path", str(args.solutions_path),
+            "--output", str(report_path),
+        ]
+        score_environment = {**os.environ, "CUDA_VISIBLE_DEVICES": ""}
+        completed = subprocess.run(score_command, env=score_environment, text=True, capture_output=True)
+        _write_event(event_handle, {"event": "PHASE1_POST_FREEZE_SCORE", "run_id": spec.run_id, "returncode": completed.returncode, "stdout": completed.stdout, "stderr": completed.stderr})
+        if completed.returncode:
+            raise RuntimeError(f"{spec.run_id}: post-freeze Any-of-K scoring failed")
     _write_event(event_handle, {"event": "PHASE1_RUN_FREEZE_COMPLETE", "run_id": spec.run_id})
     _write_hashes(run_dir)
     _validate_frozen_run(run_dir)
@@ -484,9 +578,9 @@ def _args() -> argparse.Namespace:
     parser.add_argument("--solutions-path", type=Path, required=True)
     parser.add_argument("--model-path", type=Path, required=True)
     parser.add_argument("--native-config-dir", type=Path, required=True)
-    parser.add_argument("--environment-lock", type=Path, required=True)
-    parser.add_argument("--environment-manifest", type=Path, required=True)
-    parser.add_argument("--model-manifest", type=Path, required=True)
+    parser.add_argument("--environment-lock", type=Path)
+    parser.add_argument("--environment-manifest", type=Path)
+    parser.add_argument("--model-manifest", type=Path)
     parser.add_argument("--ptxas-path", type=Path, required=True)
     parser.add_argument("--persistent-root", type=Path, default=Path("/workspace-global/arc2"))
     parser.add_argument("--global-mount", type=Path, default=Path("/workspace-global"))
@@ -494,20 +588,39 @@ def _args() -> argparse.Namespace:
     parser.add_argument("--repo-dir", type=Path, default=Path("/root/arc-runtime/arc2"))
     parser.add_argument("--repo-url", default="")
     parser.add_argument("--python", type=Path, default=Path("/root/arc-runtime/env/5090-blackwell-env-v2/bin/python"))
+    parser.add_argument("--run-id", help="execute exactly one predeclared run; required by the ephemeral off-Pod controller")
+    parser.add_argument("--skip-persistent-sync", action="store_true", help="only valid for the single-GPU off-Pod-backup policy")
+    parser.add_argument("--defer-local-scoring", action="store_true", help="only valid for the single-GPU off-Pod controller; candidate freeze is scored after verified local backup")
     return parser.parse_args()
 
 
 def main() -> None:
     args = _args()
     queue, runs = _load_queue(args.queue_config)
-    if not args.bootstrap_script.is_file() or not args.sync_script.is_file() or not args.environment_lock.is_file() or not args.environment_manifest.is_file() or not args.model_manifest.is_file():
-        raise FileNotFoundError("queue launcher is missing bootstrap/sync scripts, environment identities, or model manifest")
+    ephemeral = queue.get("execution_policy") == "single_gpu_ephemeral_offpod_backup"
+    if not args.bootstrap_script.is_file() or not args.sync_script.is_file():
+        raise FileNotFoundError("queue launcher is missing bootstrap/sync scripts")
+    if not ephemeral and (not args.environment_lock or not args.environment_lock.is_file() or not args.environment_manifest or not args.environment_manifest.is_file() or not args.model_manifest or not args.model_manifest.is_file()):
+        raise FileNotFoundError("persistent queue requires environment lock/manifest and model manifest")
+    for optional in (args.environment_lock, args.environment_manifest, args.model_manifest):
+        if optional is not None and not optional.is_file():
+            raise FileNotFoundError(f"environment identity input is missing: {optional}")
+    if ephemeral and not args.run_id:
+        raise ValueError("ephemeral Phase-1 requires --run-id so the local controller can back up every completed run before dispatching the next")
+    if not ephemeral and args.skip_persistent_sync:
+        raise ValueError("persistent queue may not skip atomic persistent sync")
+    if args.defer_local_scoring and not (ephemeral and args.skip_persistent_sync):
+        raise ValueError("deferred scoring is only valid for the single-GPU off-Pod backup controller")
     inputs = _require_inputs(args, queue)
-    bootstrap_ready = _bootstrap(args, queue)
+    bootstrap_ready = _environment_preflight(args, queue)
     if not args.python.is_file():
-        raise FileNotFoundError(f"BOOTSTRAP_FAILED: validated environment Python missing: {args.python}")
+        raise FileNotFoundError(f"ENVIRONMENT_PREFLIGHT_FAILED: validated environment Python missing: {args.python}")
     run_root = args.runtime_root / "active_run" / queue["queue_id"]
     run_root.mkdir(parents=True, exist_ok=True)
+    if args.run_id:
+        runs = tuple(spec for spec in runs if spec.run_id == args.run_id)
+        if len(runs) != 1:
+            raise ValueError(f"run ID is not in the frozen queue: {args.run_id}")
     fatal = threading.Event()
     errors: list[str] = []
     errors_lock = threading.Lock()
@@ -528,20 +641,24 @@ def main() -> None:
                 with (run_dir / "events.jsonl").open("a", encoding="utf-8") as events:
                     _write_event(events, {"event": "PHASE1_RUN_START", "queue_id": queue["queue_id"], "run_id": spec.run_id, "physical_gpu_id": spec.physical_gpu_id, "generation_micro_batch_size": spec.generation_micro_batch_size})
                     _freeze_and_score_run(args, queue, inputs, bootstrap_ready, spec, run_dir, events)
-                _sync_run(args, run_dir)
+                if not args.skip_persistent_sync:
+                    _sync_run(args, run_dir)
             except Exception as error:  # deliberate terminal queue guard
                 with errors_lock:
                     errors.append(f"{spec.run_id}: {type(error).__name__}: {error}")
                 fatal.set()
                 return
 
-    workers = [threading.Thread(target=worker, args=(gpu_id,), name=f"phase1-gpu-{gpu_id}", daemon=False) for gpu_id in (0, 1)]
+    workers = [threading.Thread(target=worker, args=(gpu_id,), name=f"phase1-gpu-{gpu_id}", daemon=False) for gpu_id in sorted({spec.physical_gpu_id for spec in runs})]
     for thread in workers:
         thread.start()
     for thread in workers:
         thread.join()
     if errors:
         raise RuntimeError("PHASE1_QUEUE_STOPPED: " + " | ".join(errors))
+    if args.run_id:
+        print(json.dumps({"event": "PHASE1_RUN_COMPLETE", "queue_id": queue["queue_id"], "run_id": args.run_id, "local_run_dir": str(run_root / args.run_id), "persistent_sync_skipped": args.skip_persistent_sync}, sort_keys=True), flush=True)
+        return
     summary_dir = _final_queue_summary(args, queue, runs, run_root, bootstrap_ready)
     _sync_run(args, summary_dir)
     print(json.dumps({"event": "PHASE1_QUEUE_COMPLETE", "queue_id": queue["queue_id"], "summary": str(summary_dir)}, sort_keys=True), flush=True)

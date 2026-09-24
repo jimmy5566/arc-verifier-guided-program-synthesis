@@ -45,3 +45,19 @@ the promotion decision once all four runs have completed.
 Candidate drift, Jaccard differences and Any-of-K changes remain diagnostics,
 not stop conditions.  OOM, non-finite/integrity failure, malformed artifacts,
 environment failure and persistent-sync failure stop subsequent dispatch.
+
+## Single-GPU ephemeral amendment
+
+`5090-unleashed-phase1-single-gpu-v1.json` amends the queue for a verified
+single RTX 5090 Pod without a Global Volume.  It runs the same four conditions
+on physical GPU0 in this strict order: batch 1, batch 2, batch 4, batch 4
+repeat.  It does not use `/workspace-global`.
+
+The local controller
+`scripts/run_5090_blackwell_unleashed_phase1_offpod_controller.py` is the only
+supported dispatcher for this amendment.  It runs one remote condition, waits
+for the remote atomic candidate freeze and SHA256 manifest, transfers the run
+as a terminal-safe base64/tar archive, verifies the archive and candidate hash
+on the local PC, scores locally only after that freeze, then dispatches the
+next condition without human interpretation.  A failed transfer or hash check
+stops the queue before more GPU time is used.  Eval60 remains out of scope.

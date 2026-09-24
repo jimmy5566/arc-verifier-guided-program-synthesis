@@ -1,0 +1,7 @@
+{
+  "schema_version": "ARC2_REFERENCE_TTT_CONFIG_PROVENANCE_V1",
+  "historical_export_file_sha256": "63379036f4881f8649a2a61b003d60b3af5977743ad0472301fed307f1e4dc26",
+  "canonical_json_sha256": "441389aa3d21196e66910129b589e4755ed7dd4f48a96eb26283a17de1b6a665",
+  "historical_source": "ARC2/artifacts/eval3_reference_ttt_kernel_v4_output/artifacts/eval3_reference_ttt/reference_ttt_config_frozen.json",
+  "line_ending_note": "The historical Kaggle export was CRLF. Portable source archives may use LF; canonical_json_sha256 verifies identical parsed scientific settings."
+}
