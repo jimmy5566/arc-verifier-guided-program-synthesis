@@ -112,18 +112,38 @@ def _remote(args: argparse.Namespace, command: str, *, timeout: int | None = Non
     return output
 
 
-def _copy_bytes_to_remote(args: argparse.Namespace, *, payload: bytes, remote_path: Path) -> None:
+def _write_bytes_to_remote(args: argparse.Namespace, *, payload: bytes, remote_path: Path, append: bool) -> None:
     marker = "__ARC2_OFFPOD_UPLOAD_PAYLOAD__"
     encoded = base64.encodebytes(payload).decode("ascii")
+    redirection = ">>" if append else ">"
     command = (
         f"mkdir -p {_quote(remote_path.parent)}; umask 077; "
-        f"base64 -d > {_quote(remote_path)} <<'{marker}'\n"
+        f"base64 -d {redirection} {_quote(remote_path)} <<'{marker}'\n"
         f"{encoded}{marker}"
     )
     completed = _terminal_run(args, command, timeout=300)
     output, status = _terminal_result(completed)
     if completed.returncode or status:
         raise RuntimeError(f"REMOTE_UPLOAD_FAILED path={remote_path}: {completed.stdout}{completed.stderr}")
+
+
+def _copy_bytes_to_remote(args: argparse.Namespace, *, payload: bytes, remote_path: Path) -> None:
+    _write_bytes_to_remote(args, payload=payload, remote_path=remote_path, append=False)
+
+
+def _upload_bytes_in_chunks(args: argparse.Namespace, *, payload: bytes, remote_path: Path, chunk_bytes: int = 256 * 1024) -> None:
+    """Upload a bounded archive through the forced terminal gateway safely."""
+    if chunk_bytes <= 0:
+        raise ValueError("chunk_bytes must be positive")
+    _remote(args, f"rm -f {_quote(remote_path)}; mkdir -p {_quote(remote_path.parent)}; umask 077; : > {_quote(remote_path)}")
+    total = (len(payload) + chunk_bytes - 1) // chunk_bytes
+    for index, start in enumerate(range(0, len(payload), chunk_bytes), start=1):
+        _write_bytes_to_remote(args, payload=payload[start:start + chunk_bytes], remote_path=remote_path, append=True)
+        print(json.dumps({"event": "OFFPOD_SOURCE_STAGE_CHUNK", "chunk": index, "chunks_total": total}, sort_keys=True), flush=True)
+    actual = _remote(args, f"sha256sum {_quote(remote_path)}").split()[0]
+    expected = hashlib.sha256(payload).hexdigest()
+    if actual != expected:
+        raise RuntimeError(f"REMOTE_SOURCE_ARCHIVE_SHA256_MISMATCH expected={expected} actual={actual}")
 
 
 def _stage_source(args: argparse.Namespace, commit: str) -> None:
@@ -133,19 +153,17 @@ def _stage_source(args: argparse.Namespace, commit: str) -> None:
         if current == commit:
             return
         raise RuntimeError(f"REMOTE_SOURCE_PATH_EXISTS_WITH_DIFFERENT_OR_UNKNOWN_CONTENT: {args.remote_repo}")
-    archive = subprocess.check_output(["git", "archive", "--format=tar", commit], cwd=ROOT)
-    marker = "__ARC2_OFFPOD_SOURCE_PAYLOAD__"
-    encoded = base64.encodebytes(archive).decode("ascii")
-    command = (
+    archive = subprocess.check_output(["git", "archive", "--format=tar.gz", commit], cwd=ROOT)
+    remote_archive = args.remote_repo.parent / f".arc2-phase1-source-{commit}.tar.gz"
+    _upload_bytes_in_chunks(args, payload=archive, remote_path=remote_archive)
+    _remote(
+        args,
         f"mkdir -p {_quote(args.remote_repo)}; "
-        f"base64 -d <<'{marker}' | tar -xf - -C {_quote(args.remote_repo)}\n"
-        f"{encoded}{marker}\n"
-        f"printf %s {_quote(commit)} > {_quote(args.remote_repo / '.arc2-source-commit')}"
+        f"tar -xzf {_quote(remote_archive)} -C {_quote(args.remote_repo)}; "
+        f"printf %s {_quote(commit)} > {_quote(args.remote_repo / '.arc2-source-commit')}; "
+        f"rm -f {_quote(remote_archive)}",
+        timeout=600,
     )
-    completed = _terminal_run(args, command, timeout=600)
-    output, status = _terminal_result(completed)
-    if completed.returncode or status:
-        raise RuntimeError(f"REMOTE_SOURCE_STAGE_FAILED: {completed.stdout}{completed.stderr}")
 
 
 def _stage_challenge(args: argparse.Namespace) -> None:
