@@ -30,6 +30,7 @@ from scripts import run_eval3_reference_ttt as frozen
 
 
 EXPERIMENT_ID = "5090-blackwell-runtime-opt-v1"
+BLACKWELL_UNLEASHED_BACKEND_ID = "blackwell_unleashed_v1"
 FROZEN_STATUS = "EVAL3_RUNTIME_OPT_CANDIDATES_FROZEN_BEFORE_EXACT_SCORING"
 
 
@@ -45,15 +46,15 @@ def _task_hash(task_ids: list[str]) -> str:
     return frozen._task_hash(task_ids)
 
 
-def _identity(manifest: dict[str, Any], config: dict[str, Any], mode: str, batch_size: int) -> str:
-    return _sha256({"experiment": EXPERIMENT_ID, "manifest_hash": manifest["task_ids_hash"], "config": config, "mode": mode, "generation_micro_batch_size": batch_size})
+def _identity(manifest: dict[str, Any], config: dict[str, Any], mode: str, batch_size: int, backend_id: str) -> str:
+    return _sha256({"experiment": backend_id, "manifest_hash": manifest["task_ids_hash"], "config": config, "mode": mode, "generation_micro_batch_size": batch_size})
 
 
 @dataclass
 class GpuSampler:
     """Low-overhead nvidia-smi sampling for a single, bounded stage."""
 
-    device: int
+    physical_device: int
     interval_seconds: float = 0.25
     samples: list[dict[str, float]] = field(default_factory=list)
     _stop: threading.Event = field(default_factory=threading.Event)
@@ -63,7 +64,7 @@ class GpuSampler:
         while not self._stop.is_set():
             try:
                 completed = subprocess.run(
-                    ["nvidia-smi", f"--id={self.device}", "--query-gpu=utilization.gpu,memory.used", "--format=csv,noheader,nounits"],
+                    ["nvidia-smi", f"--id={self.physical_device}", "--query-gpu=utilization.gpu,memory.used", "--format=csv,noheader,nounits"],
                     capture_output=True, text=True, check=True, timeout=3,
                 )
                 pieces = completed.stdout.strip().split(",")
@@ -104,7 +105,12 @@ def _stage(name: str, *, device: int = 0) -> Iterable[dict[str, Any]]:
     torch.cuda.reset_peak_memory_stats(device)
     started = time.perf_counter()
     record: dict[str, Any] = {"stage": name, "allocated_start_bytes": int(torch.cuda.memory_allocated(device)), "reserved_start_bytes": int(torch.cuda.memory_reserved(device))}
-    with GpuSampler(device) as sampler:
+    # CUDA-visible device 0 is intentionally local to the worker process.
+    # nvidia-smi, however, addresses physical devices.  The launcher binds
+    # this value before importing torch so GPU1 telemetry cannot silently
+    # sample GPU0.
+    physical_device = int(os.environ.get("ARC2_PHYSICAL_GPU_ID", str(device)))
+    with GpuSampler(physical_device) as sampler:
         try:
             yield record
         finally:
@@ -153,6 +159,28 @@ def _left_pad(items: list[dict[str, Any]], *, pad_token_id: int) -> tuple[dict[s
             source_mask = torch.ones((1, length), dtype=torch.long)
         masks.append(torch.nn.functional.pad(source_mask[0], (pad, 0), value=0))
     return {"input_ids": torch.stack(ids, dim=0), "attention_mask": torch.stack(masks, dim=0)}, lengths
+
+
+def _generated_suffix(sequence: Any, *, input_width: int, eos_token_id: int | None, pad_token_id: int | None) -> Any:
+    """Return one sequence's real continuation, excluding batch completion pad.
+
+    `generate` returns a rectangular tensor.  In a heterogeneous greedy batch,
+    shorter examples may be padded after their EOS.  Parsing those pads is
+    harmless for the native tokenizer, but counting them as model output is
+    not.  This helper preserves EOS itself (as serial generation does) and
+    never strips a token before the first EOS.
+    """
+    suffix = sequence[input_width:]
+    if eos_token_id is not None:
+        eos_positions = (suffix == int(eos_token_id)).nonzero(as_tuple=False)
+        if len(eos_positions):
+            return suffix[: int(eos_positions[0].item()) + 1]
+    if pad_token_id is not None and pad_token_id != eos_token_id:
+        end = int(suffix.shape[-1])
+        while end and int(suffix[end - 1].item()) == int(pad_token_id):
+            end -= 1
+        return suffix[:end]
+    return suffix
 
 
 def _verify_kv_cache(model: Any, *, tokenizer: Any) -> dict[str, Any]:
@@ -220,12 +248,19 @@ def _generate_aug8_runtime(
     generated_tokens = 0
     prompt_lengths: list[int] = []
     generated_lengths: list[int] = []
+    padded_prompt_tokens = 0
+    packed_prompt_tokens = 0
+    batch_count = 0
     with _stage("generation") as telemetry:
         for offset in range(0, len(requests), micro_batch_size):
             batch = requests[offset : offset + micro_batch_size]
             encoded = [item.get("encoded") or _encoded_prompt(tokenizer, item["messages"]) for item in batch]
             packed, lengths = _left_pad(encoded, pad_token_id=int(tokenizer.pad_token_id))
             prompt_lengths.extend(lengths)
+            packed_width = int(packed["input_ids"].shape[-1])
+            padded_prompt_tokens += packed_width * len(batch) - sum(lengths)
+            packed_prompt_tokens += packed_width * len(batch)
+            batch_count += 1
             if any(length > int(config["generation_context_window"]) for length in lengths):
                 raise ValueError(f"generation prompt exceeds context: {max(lengths)}")
             # Greedy decoding does not consume RNG. Preserve the documented seed
@@ -244,7 +279,10 @@ def _generate_aug8_runtime(
             elapsed = time.perf_counter() - began
             input_width = int(packed["input_ids"].shape[-1])
             for position, item in enumerate(batch):
-                suffix = result[position, input_width:].detach().cpu()
+                suffix = _generated_suffix(
+                    result[position], input_width=input_width,
+                    eos_token_id=tokenizer.eos_token_id, pad_token_id=tokenizer.pad_token_id,
+                ).detach().cpu()
                 text = tokenizer.decode(suffix, skip_special_tokens=True)
                 parsed = parse_native_grid(text)
                 grid = None if parsed is None else item["augmentation"].inverse_grid(parsed)
@@ -276,6 +314,10 @@ def _generate_aug8_runtime(
         "max_generation_prompt_tokens": max(prompt_lengths, default=0),
         "max_generated_tokens": max(generated_lengths, default=0),
         "request_count": len(requests), "micro_batch_size": micro_batch_size,
+        "batch_count": batch_count,
+        "padding_tokens": padded_prompt_tokens,
+        "packed_prompt_tokens": packed_prompt_tokens,
+        "padding_ratio": padded_prompt_tokens / max(packed_prompt_tokens, 1),
         "cache_static_inputs": cache_static_inputs,
         "invalid_candidate_count": invalid,
     })
@@ -335,6 +377,7 @@ def _args() -> argparse.Namespace:
         parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
     parser.add_argument("--mode", choices=("serial", "cache"), required=True)
     parser.add_argument("--generation-micro-batch-size", type=int, choices=(1, 2, 4), required=True)
+    parser.add_argument("--backend-id", default=EXPERIMENT_ID)
     parser.add_argument("--resume", action="store_true")
     return parser.parse_args()
 
@@ -350,7 +393,9 @@ def main() -> None:
     required = {"rank": 256, "alpha": 32, "ttt_steps": 24, "generation_augmentation_count": 8}
     if {key: config.get(key) for key in required} != required:
         raise ValueError("Eval3 TTT config violates the frozen contract")
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"; os.environ["TRITON_PTXAS_PATH"] = str(config["ptxas_path"])
+    # The parent queue owns physical GPU binding.  Preserve it when supplied;
+    # inside every child process the selected physical GPU is cuda:0.
+    os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0"); os.environ["TRITON_PTXAS_PATH"] = str(config["ptxas_path"])
     os.environ["HF_HUB_OFFLINE"] = "1"; os.environ["TRANSFORMERS_OFFLINE"] = "1"; os.environ["TOKENIZERS_PARALLELISM"] = "false"
     import torch
     from unsloth import FastLanguageModel
@@ -364,11 +409,11 @@ def main() -> None:
     gpu_name = torch.cuda.get_device_name(0)
     if "RTX 5090" not in gpu_name:
         raise RuntimeError(f"requires RTX 5090 Blackwell candidate environment, got {gpu_name}")
-    identity = _identity(manifest, config, args.mode, args.generation_micro_batch_size)
+    identity = _identity(manifest, config, args.mode, args.generation_micro_batch_size, args.backend_id)
     args.checkpoint_dir.mkdir(parents=True, exist_ok=True); (args.checkpoint_dir / "tasks").mkdir(exist_ok=True)
     resumed = {task_id: _valid_checkpoint(args.checkpoint_dir / "tasks" / f"{task_id}.json", task_id, identity) for task_id in task_ids} if args.resume else {}
     records = {key: value for key, value in resumed.items() if value is not None}; tasks = load_dataset(args.challenge_path)
-    print(json.dumps({"event": "EVAL3_RUNTIME_OPT_TARGET_BLIND_START", "experiment_id": EXPERIMENT_ID, "mode": args.mode, "generation_micro_batch_size": args.generation_micro_batch_size, "task_ids": task_ids, "resumed": sorted(records), "solutions_opened": False, "gpu": gpu_name}, sort_keys=True), flush=True)
+    print(json.dumps({"event": "EVAL3_RUNTIME_OPT_TARGET_BLIND_START", "experiment_id": args.backend_id, "mode": args.mode, "generation_micro_batch_size": args.generation_micro_batch_size, "task_ids": task_ids, "resumed": sorted(records), "solutions_opened": False, "gpu": gpu_name, "physical_gpu_id": int(os.environ.get("ARC2_PHYSICAL_GPU_ID", "0"))}, sort_keys=True), flush=True)
     try:
         with _stage("model_load") as load_telemetry:
             model, tokenizer = FastLanguageModel.from_pretrained(model_name=str(args.model_path), full_finetuning=False, load_in_4bit=False, local_files_only=True, use_gradient_checkpointing=False, max_seq_length=int(config["max_sequence_length"]))
@@ -427,7 +472,7 @@ def main() -> None:
             torch.cuda.empty_cache()
     if set(records) != set(task_ids):
         raise RuntimeError("incomplete Eval3 candidate freeze")
-    artifact = {"experiment_id": EXPERIMENT_ID, "status": FROZEN_STATUS, "mode": args.mode, "generation_micro_batch_size": args.generation_micro_batch_size, "task_ids": task_ids, "task_ids_hash": manifest["task_ids_hash"], "identity": identity, "reference_config": config, "records": {task_id: records[task_id] for task_id in task_ids}, "solutions_opened": False, "scoring_stage": "NOT_APPLICABLE_IN_FROZEN_EVAL3_ANY_OF_K_PROTOCOL"}
+    artifact = {"experiment_id": args.backend_id, "status": FROZEN_STATUS, "mode": args.mode, "generation_micro_batch_size": args.generation_micro_batch_size, "task_ids": task_ids, "task_ids_hash": manifest["task_ids_hash"], "identity": identity, "reference_config": config, "records": {task_id: records[task_id] for task_id in task_ids}, "solutions_opened": False, "scoring_stage": "NOT_APPLICABLE_IN_FROZEN_EVAL3_ANY_OF_K_PROTOCOL", "physical_gpu_id": int(os.environ.get("ARC2_PHYSICAL_GPU_ID", "0"))}
     atomic_write_json(args.output, artifact)
     print(json.dumps({"event": "EVAL3_RUNTIME_OPT_CANDIDATES_FROZEN", "task_count": len(task_ids), "candidate_count": sum(row["unique_candidate_count"] for row in records.values()), "solutions_opened": False}, sort_keys=True), flush=True)
 

@@ -24,9 +24,18 @@ if ! findmnt -T "${global_mount}" >/dev/null 2>&1; then
   echo "GLOBAL_VOLUME_UNAVAILABLE: ${global_mount}" >&2
   exit 2
 fi
-if [[ ! -f "${source_run}/candidates_frozen.json" && ! -f "${source_run}/SERIAL_AA_STORAGE_GOVERNANCE_REPORT.json" ]]; then
-  echo "RUN_NOT_FROZEN: expected immutable candidates or completed report" >&2
+if [[ ! -f "${source_run}/candidates_frozen.json" && ! -f "${source_run}/SERIAL_AA_STORAGE_GOVERNANCE_REPORT.json" && ! -f "${source_run}/phase1_queue_summary.json" ]]; then
+  echo "RUN_NOT_FROZEN: expected immutable candidates or completed summary/report" >&2
   exit 3
+fi
+if [[ -f "${source_run}/candidates_frozen.json" ]]; then
+  required=(manifest.json config_resolved.json environment.json candidates_frozen.json telemetry.json events.jsonl hashes.json evaluation/report.json)
+  for item in "${required[@]}"; do
+    if [[ ! -f "${source_run}/${item}" ]]; then
+      echo "RUN_ARTIFACT_MISSING: ${source_run}/${item}" >&2
+      exit 3
+    fi
+  done
 fi
 if [[ -e "${destination}" ]]; then
   echo "DESTINATION_EXISTS: ${destination}; immutable runs are never overwritten" >&2
