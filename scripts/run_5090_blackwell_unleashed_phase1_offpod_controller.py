@@ -28,6 +28,9 @@ if str(ROOT) not in sys.path:
 
 from scripts.run_5090_blackwell_unleashed_phase1_queue import _candidate_grid_set, _jaccard, _load_queue
 
+TERMINAL_BEGIN = "__ARC2_PHASE1_COMMAND_BEGIN__"
+TERMINAL_END = "__ARC2_PHASE1_COMMAND_END__"
+
 
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -47,7 +50,10 @@ def _atomic_json(path: Path, value: Any) -> None:
 def _quote(value: str | Path) -> str:
     import shlex
 
-    return shlex.quote(str(value))
+    # This controller runs on Windows while every quoted path is consumed by
+    # the Linux Pod.  pathlib renders a POSIX-looking remote Path as a
+    # WindowsPath with backslashes, which Bash would treat as escape markers.
+    return shlex.quote(str(value).replace("\\", "/"))
 
 
 def _ssh_base(args: argparse.Namespace) -> list[str]:
@@ -56,18 +62,67 @@ def _ssh_base(args: argparse.Namespace) -> list[str]:
     return ["ssh", "-F", "NUL", "-tt", "-o", "BatchMode=yes", "-o", "ConnectTimeout=30", "-i", str(args.identity_file), args.ssh_target]
 
 
+def _terminal_script(body: str) -> str:
+    """Execute a command through RunPod's forced interactive shell gateway.
+
+    The gateway discards SSH's usual remote-command argument, so commands
+    must arrive over the terminal stream.  Disabling echo prevents a large
+    staged source archive from being reflected into the controller logs.
+    """
+    return (
+        "stty -echo\n"
+        "unset PROMPT_COMMAND\n"
+        "PS1=''\n"
+        "PS2=''\n"
+        f"printf '%s\\n' '{TERMINAL_BEGIN}'\n"
+        + body.rstrip()
+        + f"\narc2_status=$?\nprintf '\\n{TERMINAL_END} %s\\n' \"$arc2_status\"\nexit \"$arc2_status\"\n"
+    )
+
+
+def _terminal_run(args: argparse.Namespace, body: str, *, timeout: int | None = None) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(_ssh_base(args), input=_terminal_script(body), text=True, capture_output=True, timeout=timeout)
+
+
+def _terminal_result(completed: subprocess.CompletedProcess[str]) -> tuple[str, int]:
+    """Extract bounded command output and status from noisy terminal output."""
+    clean_output = re.sub(r"\x1b\][^\x07]*(?:\x07|\x1b\\)", "", completed.stdout)
+    clean_output = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]", "", clean_output).replace("\r", "")
+    matches = list(re.finditer(
+        rf"(?m)^{re.escape(TERMINAL_BEGIN)}\r?$\n?(.*?)^{re.escape(TERMINAL_END)} (\d+)\r?$",
+        clean_output,
+        flags=re.DOTALL,
+    ))
+    if not matches:
+        raise RuntimeError("REMOTE_COMMAND_PROTOCOL_FAILED: missing terminal output markers")
+    match = matches[-1]
+    return match.group(1).strip(), int(match.group(2))
+
+
 def _remote(args: argparse.Namespace, command: str, *, timeout: int | None = None) -> str:
-    completed = subprocess.run(_ssh_base(args) + [command], text=True, capture_output=True, timeout=timeout)
+    completed = _terminal_run(args, command, timeout=timeout)
     if completed.returncode:
         raise RuntimeError(f"REMOTE_COMMAND_FAILED exit={completed.returncode}: {completed.stdout}{completed.stderr}")
-    return completed.stdout
+    # The RunPod gateway echoes the initial terminal stream before it reaches
+    # the login shell. Match only marker lines emitted after PS1 is cleared,
+    # rather than marker text embedded in that echoed command stream.
+    output, status = _terminal_result(completed)
+    if status:
+        raise RuntimeError(f"REMOTE_COMMAND_FAILED exit={status}: {output}")
+    return output
 
 
 def _copy_bytes_to_remote(args: argparse.Namespace, *, payload: bytes, remote_path: Path) -> None:
-    encoded = base64.b64encode(payload).decode("ascii")
-    command = f"mkdir -p {_quote(remote_path.parent)}; umask 077; base64 -d > {_quote(remote_path)}"
-    completed = subprocess.run(_ssh_base(args) + [command], input=encoded, text=True, capture_output=True, timeout=300)
-    if completed.returncode:
+    marker = "__ARC2_OFFPOD_UPLOAD_PAYLOAD__"
+    encoded = base64.encodebytes(payload).decode("ascii")
+    command = (
+        f"mkdir -p {_quote(remote_path.parent)}; umask 077; "
+        f"base64 -d > {_quote(remote_path)} <<'{marker}'\n"
+        f"{encoded}{marker}"
+    )
+    completed = _terminal_run(args, command, timeout=300)
+    output, status = _terminal_result(completed)
+    if completed.returncode or status:
         raise RuntimeError(f"REMOTE_UPLOAD_FAILED path={remote_path}: {completed.stdout}{completed.stderr}")
 
 
@@ -79,14 +134,17 @@ def _stage_source(args: argparse.Namespace, commit: str) -> None:
             return
         raise RuntimeError(f"REMOTE_SOURCE_PATH_EXISTS_WITH_DIFFERENT_OR_UNKNOWN_CONTENT: {args.remote_repo}")
     archive = subprocess.check_output(["git", "archive", "--format=tar", commit], cwd=ROOT)
-    encoded = base64.b64encode(archive).decode("ascii")
+    marker = "__ARC2_OFFPOD_SOURCE_PAYLOAD__"
+    encoded = base64.encodebytes(archive).decode("ascii")
     command = (
         f"mkdir -p {_quote(args.remote_repo)}; "
-        f"base64 -d | tar -xf - -C {_quote(args.remote_repo)}; "
+        f"base64 -d <<'{marker}' | tar -xf - -C {_quote(args.remote_repo)}\n"
+        f"{encoded}{marker}\n"
         f"printf %s {_quote(commit)} > {_quote(args.remote_repo / '.arc2-source-commit')}"
     )
-    completed = subprocess.run(_ssh_base(args) + [command], input=encoded, text=True, capture_output=True, timeout=600)
-    if completed.returncode:
+    completed = _terminal_run(args, command, timeout=600)
+    output, status = _terminal_result(completed)
+    if completed.returncode or status:
         raise RuntimeError(f"REMOTE_SOURCE_STAGE_FAILED: {completed.stdout}{completed.stderr}")
 
 
