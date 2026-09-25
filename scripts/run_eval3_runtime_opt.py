@@ -46,8 +46,8 @@ def _task_hash(task_ids: list[str]) -> str:
     return frozen._task_hash(task_ids)
 
 
-def _identity(manifest: dict[str, Any], config: dict[str, Any], mode: str, batch_size: int, backend_id: str) -> str:
-    return _sha256({"experiment": backend_id, "manifest_hash": manifest["task_ids_hash"], "config": config, "mode": mode, "generation_micro_batch_size": batch_size})
+def _identity(manifest: dict[str, Any], config: dict[str, Any], mode: str, batch_size: int, backend_id: str, task_ids: list[str], generation_execution: str) -> str:
+    return _sha256({"experiment": backend_id, "manifest_hash": manifest["task_ids_hash"], "task_ids": task_ids, "config": config, "mode": mode, "generation_micro_batch_size": batch_size, "generation_execution": generation_execution})
 
 
 @dataclass
@@ -64,12 +64,16 @@ class GpuSampler:
         while not self._stop.is_set():
             try:
                 completed = subprocess.run(
-                    ["nvidia-smi", f"--id={self.physical_device}", "--query-gpu=utilization.gpu,memory.used", "--format=csv,noheader,nounits"],
+                    ["nvidia-smi", f"--id={self.physical_device}", "--query-gpu=utilization.gpu,memory.used,power.draw", "--format=csv,noheader,nounits"],
                     capture_output=True, text=True, check=True, timeout=3,
                 )
                 pieces = completed.stdout.strip().split(",")
-                if len(pieces) == 2:
-                    self.samples.append({"utilization_pct": float(pieces[0].strip()), "memory_used_mb": float(pieces[1].strip())})
+                if len(pieces) == 3:
+                    self.samples.append({
+                        "utilization_pct": float(pieces[0].strip()),
+                        "memory_used_mb": float(pieces[1].strip()),
+                        "power_w": float(pieces[2].strip()),
+                    })
             except (OSError, subprocess.SubprocessError, ValueError):
                 # Telemetry failure never changes model execution semantics.
                 pass
@@ -88,11 +92,22 @@ class GpuSampler:
     def summary(self) -> dict[str, Any]:
         values = [item["utilization_pct"] for item in self.samples]
         memory = [item["memory_used_mb"] for item in self.samples]
+        power = [item["power_w"] for item in self.samples]
+        def percentile(items: list[float], percent: float) -> float | None:
+            if not items:
+                return None
+            ordered = sorted(items)
+            index = int(round((len(ordered) - 1) * percent))
+            return ordered[index]
         return {
             "gpu_utilization_samples": len(values),
             "gpu_utilization_avg_pct": (sum(values) / len(values)) if values else None,
+            "gpu_utilization_p90_pct": percentile(values, 0.90),
             "gpu_utilization_max_pct": max(values) if values else None,
             "nvidia_smi_memory_max_mb": max(memory) if memory else None,
+            "gpu_power_avg_w": (sum(power) / len(power)) if power else None,
+            "gpu_power_p90_w": percentile(power, 0.90),
+            "gpu_power_max_w": max(power) if power else None,
         }
 
 
@@ -183,6 +198,71 @@ def _generated_suffix(sequence: Any, *, input_width: int, eos_token_id: int | No
     return suffix
 
 
+def _select_cache_rows(cache: Any, indices: Any) -> Any:
+    """Retain only unfinished batch rows in a Transformers dynamic cache.
+
+    This is deliberately limited to the documented cache APIs.  Falling back
+    to an undocumented tensor walk would make this performance experiment a
+    model-state experiment instead.
+    """
+    if hasattr(cache, "batch_select_indices"):
+        result = cache.batch_select_indices(indices)
+        return cache if result is None else result
+    if hasattr(cache, "reorder_cache"):
+        result = cache.reorder_cache(indices)
+        return cache if result is None else result
+    raise RuntimeError("active compaction requires a documented dynamic-cache row-selection API")
+
+
+def _greedy_active_compaction(
+    *, model: Any, packed: dict[str, Any], max_new_tokens: int, eos_token_id: int | None,
+) -> list[Any]:
+    """Greedy decode with removal of EOS-completed rows.
+
+    It is an execution-only equivalent of the frozen greedy `generate` call:
+    no sampling, no altered maximum length, no altered EOS policy, and no
+    candidate-level pruning.  The implementation intentionally refuses cache
+    types that cannot select active rows through a public API.
+    """
+    import torch
+
+    inputs = {name: value.to(model.device) for name, value in packed.items()}
+    active_indices = torch.arange(inputs["input_ids"].shape[0], device=model.device)
+    outputs: list[list[int]] = [[] for _ in range(int(active_indices.shape[0]))]
+    attention_mask = inputs.get("attention_mask")
+    with torch.inference_mode():
+        response = model(**inputs, use_cache=True, return_dict=True)
+        cache = getattr(response, "past_key_values", None)
+        if cache is None:
+            raise RuntimeError("active compaction requested but model did not return a KV cache")
+        logits = response.logits[:, -1, :]
+        for _ in range(max_new_tokens):
+            next_tokens = torch.argmax(logits, dim=-1)
+            keep_positions: list[int] = []
+            for position, token in enumerate(next_tokens.detach().cpu().tolist()):
+                original = int(active_indices[position].item())
+                outputs[original].append(int(token))
+                if eos_token_id is None or int(token) != int(eos_token_id):
+                    keep_positions.append(position)
+            if not keep_positions:
+                break
+            positions = torch.tensor(keep_positions, dtype=torch.long, device=model.device)
+            cache = _select_cache_rows(cache, positions)
+            active_indices = active_indices.index_select(0, positions)
+            next_input = next_tokens.index_select(0, positions).unsqueeze(-1)
+            if attention_mask is not None:
+                attention_mask = attention_mask.index_select(0, positions)
+                attention_mask = torch.cat(
+                    [attention_mask, torch.ones((attention_mask.shape[0], 1), dtype=attention_mask.dtype, device=model.device)], dim=-1,
+                )
+            response = model(input_ids=next_input, attention_mask=attention_mask, past_key_values=cache, use_cache=True, return_dict=True)
+            cache = getattr(response, "past_key_values", None)
+            if cache is None:
+                raise RuntimeError("active compaction lost the KV cache during decode")
+            logits = response.logits[:, -1, :]
+    return [torch.tensor(values, dtype=torch.long) for values in outputs]
+
+
 def _verify_kv_cache(model: Any, *, tokenizer: Any) -> dict[str, Any]:
     """Verify a cache object once, independent of target data or decoding."""
     import torch
@@ -230,7 +310,8 @@ def _max_ttt_sequence_tokens(*, tokenizer: Any, task: Any, config: dict[str, Any
 
 
 def _generate_aug8_runtime(
-    *, model: Any, tokenizer: Any, task: Any, config: dict[str, Any], cache_static_inputs: bool, micro_batch_size: int
+    *, model: Any, tokenizer: Any, task: Any, config: dict[str, Any], cache_static_inputs: bool, micro_batch_size: int,
+    generation_kwargs: dict[str, Any] | None = None,
 ) -> tuple[list[dict[str, Any]], int, dict[str, Any], list[dict[str, Any]]]:
     """Frozen greedy Aug8 semantics with ordered micro-batched execution."""
     import torch
@@ -241,6 +322,7 @@ def _generate_aug8_runtime(
 
     if micro_batch_size not in {1, 2, 4}:
         raise ValueError("generation micro-batch must be one of 1, 2, 4")
+    generation_kwargs = dict(generation_kwargs or {})
     requests, augmentations = _prepare_requests(tokenizer=tokenizer, task=task, config=config, cache_static_inputs=cache_static_inputs)
     FastLanguageModel.for_inference(model)
     raw: list[dict[str, Any]] = []
@@ -251,6 +333,7 @@ def _generate_aug8_runtime(
     padded_prompt_tokens = 0
     packed_prompt_tokens = 0
     batch_count = 0
+    active_sequence_trace: list[dict[str, Any]] = []
     with _stage("generation") as telemetry:
         for offset in range(0, len(requests), micro_batch_size):
             batch = requests[offset : offset + micro_batch_size]
@@ -270,19 +353,32 @@ def _generate_aug8_runtime(
                 torch.manual_seed(seed)
                 torch.cuda.manual_seed_all(torch.initial_seed())
             began = time.perf_counter()
-            with torch.inference_mode():
-                result = model.generate(
-                    **{name: value.to(model.device) for name, value in packed.items()},
-                    max_new_tokens=int(config["max_new_tokens"]), do_sample=False,
-                    eos_token_id=tokenizer.eos_token_id, pad_token_id=tokenizer.pad_token_id, use_cache=True,
+            batch_generation_kwargs = dict(generation_kwargs)
+            active_compaction = bool(batch_generation_kwargs.pop("active_sequence_compaction", False))
+            if active_compaction:
+                suffixes = _greedy_active_compaction(
+                    model=model, packed=packed, max_new_tokens=int(config["max_new_tokens"]), eos_token_id=tokenizer.eos_token_id,
                 )
+                result = None
+            else:
+                with torch.inference_mode():
+                    result = model.generate(
+                        **{name: value.to(model.device) for name, value in packed.items()},
+                        max_new_tokens=int(config["max_new_tokens"]), do_sample=False,
+                        eos_token_id=tokenizer.eos_token_id, pad_token_id=tokenizer.pad_token_id, use_cache=True, **batch_generation_kwargs,
+                    )
             elapsed = time.perf_counter() - began
             input_width = int(packed["input_ids"].shape[-1])
+            batch_generated_lengths: list[int] = []
             for position, item in enumerate(batch):
-                suffix = _generated_suffix(
-                    result[position], input_width=input_width,
-                    eos_token_id=tokenizer.eos_token_id, pad_token_id=tokenizer.pad_token_id,
-                ).detach().cpu()
+                suffix = (
+                    suffixes[position].detach().cpu()
+                    if active_compaction
+                    else _generated_suffix(
+                        result[position], input_width=input_width,
+                        eos_token_id=tokenizer.eos_token_id, pad_token_id=tokenizer.pad_token_id,
+                    ).detach().cpu()
+                )
                 text = tokenizer.decode(suffix, skip_special_tokens=True)
                 parsed = parse_native_grid(text)
                 grid = None if parsed is None else item["augmentation"].inverse_grid(parsed)
@@ -294,7 +390,17 @@ def _generate_aug8_runtime(
                 }
                 raw.append(value); by_augmentation[item["augmentation_index"]][item["test_index"]] = value
                 generated_tokens += int(suffix.shape[-1]); generated_lengths.append(int(suffix.shape[-1]))
+                batch_generated_lengths.append(int(suffix.shape[-1]))
                 del suffix
+            max_length = max(batch_generated_lengths, default=0)
+            active_sequence_trace.append({
+                "batch_index": batch_count - 1,
+                "initial_sequence_count": len(batch_generated_lengths),
+                "max_generated_tokens": max_length,
+                "real_generated_tokens": sum(batch_generated_lengths),
+                "padded_finished_slot_tokens": max_length * len(batch_generated_lengths) - sum(batch_generated_lengths),
+                "active_sequence_count_by_token": [sum(length > token for length in batch_generated_lengths) for token in range(max_length)],
+            })
             del packed, encoded, result
     generated_candidates: list[Any] = []
     invalid = 0
@@ -320,6 +426,12 @@ def _generate_aug8_runtime(
         "padding_ratio": padded_prompt_tokens / max(packed_prompt_tokens, 1),
         "cache_static_inputs": cache_static_inputs,
         "invalid_candidate_count": invalid,
+        "active_sequence_trace": active_sequence_trace,
+        "finished_slot_waste_tokens": sum(int(item["padded_finished_slot_tokens"]) for item in active_sequence_trace),
+        "finished_slot_waste_fraction": (
+            sum(int(item["padded_finished_slot_tokens"]) for item in active_sequence_trace)
+            / max(sum(int(item["max_generated_tokens"]) * int(item["initial_sequence_count"]) for item in active_sequence_trace), 1)
+        ),
     })
     return candidates, invalid, telemetry, raw
 
@@ -378,6 +490,8 @@ def _args() -> argparse.Namespace:
     parser.add_argument("--mode", choices=("serial", "cache"), required=True)
     parser.add_argument("--generation-micro-batch-size", type=int, choices=(1, 2, 4), required=True)
     parser.add_argument("--backend-id", default=EXPERIMENT_ID)
+    parser.add_argument("--task-id", action="append", default=[])
+    parser.add_argument("--generation-execution", choices=("baseline", "active_compaction", "static_kv", "torch_compile", "static_kv_torch_compile", "active_compaction_static_kv"), default="baseline")
     parser.add_argument("--resume", action="store_true")
     return parser.parse_args()
 
@@ -387,9 +501,12 @@ def main() -> None:
     if args.output.exists():
         raise FileExistsError("refusing to overwrite frozen runtime-optimization candidates")
     manifest, config = _read(args.manifest), _read(args.reference_config)
-    task_ids = list(manifest.get("task_ids", ()))
-    if manifest.get("status") != "EVAL3_REFERENCE_TTT_COHORT_FROZEN" or len(task_ids) != 3 or manifest.get("task_ids_hash") != _task_hash(task_ids):
+    manifest_task_ids = list(manifest.get("task_ids", ()))
+    if manifest.get("status") != "EVAL3_REFERENCE_TTT_COHORT_FROZEN" or len(manifest_task_ids) != 3 or manifest.get("task_ids_hash") != _task_hash(manifest_task_ids):
         raise ValueError("invalid frozen Eval3 manifest")
+    task_ids = list(args.task_id) if args.task_id else manifest_task_ids
+    if not task_ids or len(set(task_ids)) != len(task_ids) or set(task_ids) - set(manifest_task_ids):
+        raise ValueError("requested task IDs must be a unique subset of the frozen Eval3 manifest")
     required = {"rank": 256, "alpha": 32, "ttt_steps": 24, "generation_augmentation_count": 8}
     if {key: config.get(key) for key in required} != required:
         raise ValueError("Eval3 TTT config violates the frozen contract")
@@ -409,7 +526,7 @@ def main() -> None:
     gpu_name = torch.cuda.get_device_name(0)
     if "RTX 5090" not in gpu_name:
         raise RuntimeError(f"requires RTX 5090 Blackwell candidate environment, got {gpu_name}")
-    identity = _identity(manifest, config, args.mode, args.generation_micro_batch_size, args.backend_id)
+    identity = _identity(manifest, config, args.mode, args.generation_micro_batch_size, args.backend_id, task_ids, args.generation_execution)
     args.checkpoint_dir.mkdir(parents=True, exist_ok=True); (args.checkpoint_dir / "tasks").mkdir(exist_ok=True)
     resumed = {task_id: _valid_checkpoint(args.checkpoint_dir / "tasks" / f"{task_id}.json", task_id, identity) for task_id in task_ids} if args.resume else {}
     records = {key: value for key, value in resumed.items() if value is not None}; tasks = load_dataset(args.challenge_path)
@@ -426,6 +543,11 @@ def main() -> None:
                 if parameter.dtype == torch.float32:
                     parameter.data = parameter.data.to(torch.bfloat16)
         kv_cache = _verify_kv_cache(model, tokenizer=tokenizer)
+        generation_kwargs: dict[str, Any] = {}
+        if args.generation_execution in {"static_kv", "static_kv_torch_compile", "active_compaction_static_kv"}:
+            generation_kwargs["cache_implementation"] = "static"
+        if args.generation_execution in {"active_compaction", "active_compaction_static_kv"}:
+            generation_kwargs["active_sequence_compaction"] = True
         default_state = {key: value.detach().clone() for key, value in get_peft_model_state_dict(model, adapter_name="default").items()}
         trainable = [(name, parameter) for name, parameter in model.named_parameters() if parameter.requires_grad]
         frozen_params = [(name, parameter) for name, parameter in model.named_parameters() if not parameter.requires_grad]
@@ -444,7 +566,16 @@ def main() -> None:
                 ttt = frozen._fit_task(model=model, tokenizer=tokenizer, task=task, config=config, default_state=default_state, adapter_before=adapter_before, base_fingerprints=base_fingerprints)
             if not ttt["adapter_updated"] or not ttt["base_model_unchanged"]:
                 raise RuntimeError(f"{task_id}: TTT integrity criterion failed")
-            candidates, invalid, generation_stage, raw_views = _generate_aug8_runtime(model=model, tokenizer=tokenizer, task=task, config=config, cache_static_inputs=(args.mode == "cache"), micro_batch_size=args.generation_micro_batch_size)
+            generation_model = model
+            if args.generation_execution in {"torch_compile", "static_kv_torch_compile"}:
+                # Compile only after the frozen TTT update.  TTT itself keeps
+                # its exact eager trajectory; this probes generation launch
+                # overhead only.  The original PEFT model remains the source
+                # of truth for adapter reset and integrity checks.
+                generation_model = torch.compile(model, mode="reduce-overhead", fullgraph=False, dynamic=False)
+            candidates, invalid, generation_stage, raw_views = _generate_aug8_runtime(model=generation_model, tokenizer=tokenizer, task=task, config=config, cache_static_inputs=(args.mode == "cache"), micro_batch_size=args.generation_micro_batch_size, generation_kwargs=generation_kwargs)
+            if generation_model is not model:
+                del generation_model
             torch.cuda.synchronize()
             whole_peak = {
                 "allocated_mb": _mb(max(int(ttt_stage["peak_allocated_bytes"]), int(generation_stage["peak_allocated_bytes"]))),
@@ -456,7 +587,7 @@ def main() -> None:
                 "task_id": task_id, "status": "SUCCESS" if candidates else "NO_VALID_NATIVE_CANDIDATE", "candidates": candidates, "raw_views": raw_views,
                 "generated_candidate_count": 8, "unique_candidate_count": len(candidates), "invalid_candidate_count": invalid,
                 "ttt": ttt, "telemetry": {"ttt": ttt_stage, "generation": generation_stage, "scoring": {"stage": "scoring", "status": "NOT_APPLICABLE_IN_FROZEN_EVAL3_ANY_OF_K_PROTOCOL", "seconds": 0.0, "tokens_per_second": None}, "whole_task": {"seconds": time.perf_counter() - task_started, "peak": whole_peak}},
-                "KV_CACHE": kv_cache, "generation_micro_batch_size": args.generation_micro_batch_size, "cache_static_inputs": args.mode == "cache", "max_ttt_sequence_tokens": max_ttt_tokens, "attention_backend": "xformers_verified_in_5090-blackwell-env-v2", "fail_soft_events": [], "tokenizer": metadata,
+                "KV_CACHE": {**kv_cache, "generation_execution": args.generation_execution, "generation_kwargs": generation_kwargs}, "generation_micro_batch_size": args.generation_micro_batch_size, "cache_static_inputs": args.mode == "cache", "max_ttt_sequence_tokens": max_ttt_tokens, "attention_backend": "xformers_verified_in_5090-blackwell-env-v2", "fail_soft_events": [], "tokenizer": metadata,
             }
             checkpoint = args.checkpoint_dir / "tasks" / f"{task_id}.json"; atomic_write_json(checkpoint, {"identity": identity, "task_id": task_id, "record": record})
             if _valid_checkpoint(checkpoint, task_id, identity) is None:
@@ -472,7 +603,7 @@ def main() -> None:
             torch.cuda.empty_cache()
     if set(records) != set(task_ids):
         raise RuntimeError("incomplete Eval3 candidate freeze")
-    artifact = {"experiment_id": args.backend_id, "status": FROZEN_STATUS, "mode": args.mode, "generation_micro_batch_size": args.generation_micro_batch_size, "task_ids": task_ids, "task_ids_hash": manifest["task_ids_hash"], "identity": identity, "reference_config": config, "records": {task_id: records[task_id] for task_id in task_ids}, "solutions_opened": False, "scoring_stage": "NOT_APPLICABLE_IN_FROZEN_EVAL3_ANY_OF_K_PROTOCOL", "physical_gpu_id": int(os.environ.get("ARC2_PHYSICAL_GPU_ID", "0"))}
+    artifact = {"experiment_id": args.backend_id, "status": FROZEN_STATUS, "mode": args.mode, "generation_execution": args.generation_execution, "generation_micro_batch_size": args.generation_micro_batch_size, "task_ids": task_ids, "task_ids_hash": _task_hash(task_ids), "parent_manifest_task_ids_hash": manifest["task_ids_hash"], "identity": identity, "reference_config": config, "records": {task_id: records[task_id] for task_id in task_ids}, "solutions_opened": False, "scoring_stage": "NOT_APPLICABLE_IN_FROZEN_EVAL3_ANY_OF_K_PROTOCOL", "physical_gpu_id": int(os.environ.get("ARC2_PHYSICAL_GPU_ID", "0"))}
     atomic_write_json(args.output, artifact)
     print(json.dumps({"event": "EVAL3_RUNTIME_OPT_CANDIDATES_FROZEN", "task_count": len(task_ids), "candidate_count": sum(row["unique_candidate_count"] for row in records.values()), "solutions_opened": False}, sort_keys=True), flush=True)
 
