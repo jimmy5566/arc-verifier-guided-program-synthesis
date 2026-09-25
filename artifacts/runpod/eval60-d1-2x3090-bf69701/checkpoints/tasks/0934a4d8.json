@@ -1,0 +1,948 @@
+{
+  "record": {
+    "elapsed_seconds": 235.13292786478996,
+    "peak_allocated_vram_mb": 13168,
+    "physical_gpu_id": 0,
+    "release_identity": "409d8b464387d2306c63bca9d830e86acbddfc3db8d1cf75c8fc3c3508fb41bd",
+    "source_metrics": {
+      "TTT24": {
+        "adapter_reset_success": true,
+        "generation_seconds": 9.502582032233477,
+        "invalid_candidate_count": 0,
+        "recipe_sha256": "980b6fee7075bfe517dc3804127daecd6dd9600f3db8fe01a2b14def6d1d8d12",
+        "ttt": {
+          "adapter_updated": true,
+          "alpha": 32,
+          "base_model_unchanged": true,
+          "first_loss": 0.00861839298158884,
+          "full_dialogue_assistant_only_loss": true,
+          "kept_sequence_count": 128,
+          "last_loss": 1.0308312084816862e-05,
+          "loss_curve": [
+            0.00861839298158884,
+            0.018581265583634377,
+            0.03434767574071884,
+            0.002747188089415431,
+            0.0013820456806570292,
+            0.0003615359601099044,
+            7.501919753849506e-05,
+            0.020381519570946693,
+            7.121433736756444e-05,
+            0.009718784131109715,
+            0.0013544091489166021,
+            2.071939525194466e-05,
+            0.0018288107821717858,
+            4.477979018702172e-06,
+            7.935294706840068e-05,
+            0.00043484813068062067,
+            1.2711318959190976e-05,
+            3.0160646929289214e-05,
+            8.710593829164281e-05,
+            1.2015583479296765e-06,
+            1.2595799034897937e-06,
+            1.70888176853623e-06,
+            0.01725003868341446,
+            1.0308312084816862e-05
+          ],
+          "loss_finite": true,
+          "peak_allocated_vram_mb": 13169,
+          "rank": 256,
+          "reference_schedule_total_steps": 128,
+          "seconds": 55.870731050148606,
+          "seconds_per_step": 2.327131276639799,
+          "step_seconds": [
+            7.435987938195467,
+            2.086442843079567,
+            2.098549824208021,
+            2.1030768118798733,
+            2.1002940852195024,
+            2.107177885249257,
+            2.088234504684806,
+            2.0897822957485914,
+            2.0923445392400026,
+            2.0957614090293646,
+            2.0950285084545612,
+            2.0978142097592354,
+            2.1050810795277357,
+            2.1127177346497774,
+            2.1114837918430567,
+            2.11356577090919,
+            2.111859431490302,
+            2.1124823689460754,
+            2.1133303120732307,
+            2.113000374287367,
+            2.115336801856756,
+            2.115963978692889,
+            2.1176111474633217,
+            2.1182229928672314
+          ],
+          "style": "official_nvarc_train_only_partial_24_steps",
+          "target_modules": [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj",
+            "embed_tokens",
+            "lm_head"
+          ],
+          "train_pairs_only": true,
+          "train_variant_count": 128,
+          "ttt_steps": 24
+        }
+      },
+      "TTT48": {
+        "adapter_reset_success": true,
+        "generation_seconds": 9.30516210384667,
+        "invalid_candidate_count": 0,
+        "recipe_sha256": "b44842bb94e6e09496e184aca53d20b9f9b360da7e3a840be566fc2e42e4de5d",
+        "ttt": {
+          "adapter_updated": true,
+          "alpha": 32,
+          "base_model_unchanged": true,
+          "first_loss": 0.00861839298158884,
+          "full_dialogue_assistant_only_loss": true,
+          "kept_sequence_count": 128,
+          "last_loss": 0.0006769554456695914,
+          "loss_curve": [
+            0.00861839298158884,
+            0.019773900508880615,
+            0.03328670188784599,
+            0.0027186009101569653,
+            0.0019292384386062622,
+            0.0003955860738642514,
+            8.41441797092557e-05,
+            0.01989838108420372,
+            6.313301128102466e-05,
+            0.007206898182630539,
+            0.0011167577467858791,
+            1.0392325748398434e-05,
+            0.0009151225094683468,
+            6.479820058302721e-06,
+            0.016907379031181335,
+            0.00026899768272414804,
+            0.005159953609108925,
+            7.933092274470255e-05,
+            0.0015091169625520706,
+            0.1279807686805725,
+            0.04880654811859131,
+            0.00010351254604756832,
+            0.017597083002328873,
+            0.0010170828318223357,
+            0.0012686519185081124,
+            0.00757096242159605,
+            0.007188749499619007,
+            0.0032842850778251886,
+            0.008097638376057148,
+            0.0008163442835211754,
+            0.0026429248973727226,
+            0.00022098787303548306,
+            0.0012304980773478746,
+            0.002615049248561263,
+            0.06780139356851578,
+            0.0007900974014773965,
+            0.00026857026387006044,
+            0.0007435053121298552,
+            0.0036140563897788525,
+            0.00500338152050972,
+            0.0005548815242946148,
+            0.0006460068980231881,
+            0.001024843193590641,
+            0.0005553600494749844,
+            0.00039654996362514794,
+            0.0007138494402170181,
+            0.0004948048735968769,
+            0.0006769554456695914
+          ],
+          "loss_finite": true,
+          "peak_allocated_vram_mb": 13168,
+          "rank": 256,
+          "reference_schedule_total_steps": 128,
+          "seconds": 102.37693905830383,
+          "seconds_per_step": 2.1323002191881337,
+          "step_seconds": [
+            2.118709459900856,
+            2.127724578604102,
+            2.1291798409074545,
+            2.1280853301286697,
+            2.1264307387173176,
+            2.1286967638880014,
+            2.129282021895051,
+            2.1304065883159637,
+            2.131647728383541,
+            2.1318657267838717,
+            2.1295403633266687,
+            2.130521483719349,
+            2.1306012962013483,
+            2.1317536383867264,
+            2.132012600079179,
+            2.1315563917160034,
+            2.1324935238808393,
+            2.1315991394221783,
+            2.1317957993596792,
+            2.1314095482230186,
+            2.130936885252595,
+            2.132050968706608,
+            2.132878690958023,
+            2.1339893080294132,
+            2.1321784388273954,
+            2.132256366312504,
+            2.1332736797630787,
+            2.1345759723335505,
+            2.134374264627695,
+            2.1340876948088408,
+            2.1320987585932016,
+            2.1319963950663805,
+            2.1330351401120424,
+            2.134581271559,
+            2.133632767945528,
+            2.133624540641904,
+            2.1328439451754093,
+            2.133748134598136,
+            2.1343442033976316,
+            2.1354749873280525,
+            2.1361663844436407,
+            2.137612557038665,
+            2.1371014304459095,
+            2.136325942352414,
+            2.1345137637108564,
+            2.135895235463977,
+            2.1348765902221203,
+            2.136623641476035
+          ],
+          "style": "official_nvarc_train_only_partial_24_steps",
+          "target_modules": [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj",
+            "embed_tokens",
+            "lm_head"
+          ],
+          "train_pairs_only": true,
+          "train_variant_count": 128,
+          "ttt_steps": 48
+        }
+      }
+    },
+    "sources": {
+      "TTT24": {
+        "candidates": [
+          {
+            "augmentation": {
+              "color_offset": 0,
+              "geometry": "flip_lr",
+              "pair_order": "canonical"
+            },
+            "completion_tokens": 36,
+            "generation_seconds": 2.707622915506363,
+            "prediction": [
+              [
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  4,
+                  4,
+                  9
+                ],
+                [
+                  4,
+                  4,
+                  9
+                ],
+                [
+                  4,
+                  4,
+                  9
+                ],
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  6,
+                  6,
+                  1
+                ],
+                [
+                  6,
+                  6,
+                  6
+                ],
+                [
+                  1,
+                  6,
+                  1
+                ]
+              ]
+            ],
+            "support_augmentations": [
+              {
+                "color_offset": 0,
+                "geometry": "flip_lr",
+                "pair_order": "canonical"
+              }
+            ],
+            "support_count": 1
+          },
+          {
+            "augmentation": {
+              "color_offset": 0,
+              "geometry": "flip_ud",
+              "pair_order": "canonical"
+            },
+            "completion_tokens": 36,
+            "generation_seconds": 2.444823857396841,
+            "prediction": [
+              [
+                [
+                  9,
+                  4,
+                  9
+                ],
+                [
+                  9,
+                  7,
+                  9
+                ],
+                [
+                  9,
+                  7,
+                  9
+                ],
+                [
+                  9,
+                  4,
+                  9
+                ],
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  6,
+                  6,
+                  1
+                ],
+                [
+                  6,
+                  6,
+                  6
+                ],
+                [
+                  6,
+                  6,
+                  5
+                ]
+              ]
+            ],
+            "support_augmentations": [
+              {
+                "color_offset": 0,
+                "geometry": "flip_ud",
+                "pair_order": "canonical"
+              }
+            ],
+            "support_count": 1
+          },
+          {
+            "augmentation": {
+              "color_offset": 0,
+              "geometry": "transpose",
+              "pair_order": "canonical"
+            },
+            "completion_tokens": 30,
+            "generation_seconds": 2.157116087153554,
+            "prediction": [
+              [
+                [
+                  6,
+                  6,
+                  1
+                ],
+                [
+                  6,
+                  6,
+                  6
+                ],
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  6,
+                  6,
+                  1
+                ],
+                [
+                  6,
+                  6,
+                  6
+                ],
+                [
+                  1,
+                  6,
+                  1
+                ],
+                [
+                  6,
+                  6,
+                  5
+                ],
+                [
+                  4,
+                  7,
+                  7
+                ]
+              ]
+            ],
+            "support_augmentations": [
+              {
+                "color_offset": 0,
+                "geometry": "transpose",
+                "pair_order": "canonical"
+              }
+            ],
+            "support_count": 1
+          },
+          {
+            "augmentation": {
+              "color_offset": 0,
+              "geometry": "anti_transpose",
+              "pair_order": "canonical"
+            },
+            "completion_tokens": 30,
+            "generation_seconds": 2.1594889517873526,
+            "prediction": [
+              [
+                [
+                  3,
+                  1,
+                  9
+                ],
+                [
+                  2,
+                  9,
+                  9
+                ],
+                [
+                  2,
+                  9,
+                  9
+                ],
+                [
+                  3,
+                  1,
+                  9
+                ],
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  6,
+                  6,
+                  1
+                ],
+                [
+                  6,
+                  6,
+                  6
+                ],
+                [
+                  1,
+                  6,
+                  1
+                ]
+              ]
+            ],
+            "support_augmentations": [
+              {
+                "color_offset": 0,
+                "geometry": "anti_transpose",
+                "pair_order": "canonical"
+              }
+            ],
+            "support_count": 1
+          }
+        ],
+        "per_output_evidence": [
+          {
+            "candidates": [
+              {
+                "candidate_index": 0,
+                "original_log_likelihood": -0.3802852928638458,
+                "support_count": 1,
+                "view_negative_log_likelihoods": [
+                  0.3802852928638458,
+                  0.2953932583332062,
+                  0.3686700165271759,
+                  0.6352853178977966,
+                  0.02291126176714897,
+                  0.6040005087852478,
+                  0.35569578409194946,
+                  0.6305327415466309
+                ]
+              },
+              {
+                "candidate_index": 1,
+                "original_log_likelihood": -1.0103044509887695,
+                "support_count": 1,
+                "view_negative_log_likelihoods": [
+                  1.0103044509887695,
+                  1.1588267087936401,
+                  0.9312270283699036,
+                  1.028799295425415,
+                  1.007196068763733,
+                  0.08722768723964691,
+                  1.4333797693252563,
+                  1.0917609930038452
+                ]
+              },
+              {
+                "candidate_index": 2,
+                "original_log_likelihood": -1.446413516998291,
+                "support_count": 1,
+                "view_negative_log_likelihoods": [
+                  1.446413516998291,
+                  0.5101236701011658,
+                  1.4221385717391968,
+                  1.1549402475357056,
+                  1.3923524618148804,
+                  1.1414607763290405,
+                  0.048998862504959106,
+                  1.1122701168060303
+                ]
+              },
+              {
+                "candidate_index": 3,
+                "original_log_likelihood": -0.8384613394737244,
+                "support_count": 1,
+                "view_negative_log_likelihoods": [
+                  0.8384613394737244,
+                  0.11345839500427246,
+                  0.13956642150878906,
+                  0.7419080138206482,
+                  0.9589956402778625,
+                  0.5064982175827026,
+                  0.7839546799659729,
+                  0.017255272716283798
+                ]
+              }
+            ],
+            "test_index": 0
+          }
+        ],
+        "status": "SUCCESS"
+      },
+      "TTT48": {
+        "candidates": [
+          {
+            "augmentation": {
+              "color_offset": 0,
+              "geometry": "identity",
+              "pair_order": "canonical"
+            },
+            "completion_tokens": 36,
+            "generation_seconds": 2.4707903899252415,
+            "prediction": [
+              [
+                [
+                  9,
+                  1,
+                  3
+                ],
+                [
+                  9,
+                  9,
+                  2
+                ],
+                [
+                  9,
+                  9,
+                  2
+                ],
+                [
+                  9,
+                  1,
+                  3
+                ],
+                [
+                  7,
+                  2,
+                  7
+                ],
+                [
+                  7,
+                  7,
+                  9
+                ],
+                [
+                  1,
+                  6,
+                  7
+                ],
+                [
+                  6,
+                  6,
+                  7
+                ],
+                [
+                  1,
+                  6,
+                  1
+                ]
+              ]
+            ],
+            "support_augmentations": [
+              {
+                "color_offset": 0,
+                "geometry": "identity",
+                "pair_order": "canonical"
+              }
+            ],
+            "support_count": 1
+          },
+          {
+            "augmentation": {
+              "color_offset": 0,
+              "geometry": "rot90",
+              "pair_order": "canonical"
+            },
+            "completion_tokens": 30,
+            "generation_seconds": 2.1691461075097322,
+            "prediction": [
+              [
+                [
+                  3,
+                  1,
+                  9
+                ],
+                [
+                  2,
+                  9,
+                  9
+                ],
+                [
+                  2,
+                  9,
+                  9
+                ],
+                [
+                  3,
+                  1,
+                  9
+                ],
+                [
+                  7,
+                  2,
+                  7
+                ],
+                [
+                  9,
+                  7,
+                  7
+                ],
+                [
+                  7,
+                  6,
+                  1
+                ],
+                [
+                  7,
+                  6,
+                  6
+                ],
+                [
+                  4,
+                  5,
+                  1
+                ]
+              ]
+            ],
+            "support_augmentations": [
+              {
+                "color_offset": 0,
+                "geometry": "rot90",
+                "pair_order": "canonical"
+              }
+            ],
+            "support_count": 1
+          },
+          {
+            "augmentation": {
+              "color_offset": 0,
+              "geometry": "flip_ud",
+              "pair_order": "canonical"
+            },
+            "completion_tokens": 36,
+            "generation_seconds": 2.4613877907395363,
+            "prediction": [
+              [
+                [
+                  6,
+                  6,
+                  5
+                ],
+                [
+                  1,
+                  6,
+                  1
+                ],
+                [
+                  6,
+                  6,
+                  6
+                ],
+                [
+                  1,
+                  6,
+                  1
+                ],
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  6,
+                  6,
+                  1
+                ],
+                [
+                  6,
+                  6,
+                  6
+                ],
+                [
+                  1,
+                  6,
+                  1
+                ]
+              ]
+            ],
+            "support_augmentations": [
+              {
+                "color_offset": 0,
+                "geometry": "flip_ud",
+                "pair_order": "canonical"
+              }
+            ],
+            "support_count": 1
+          },
+          {
+            "augmentation": {
+              "color_offset": 0,
+              "geometry": "anti_transpose",
+              "pair_order": "canonical"
+            },
+            "completion_tokens": 30,
+            "generation_seconds": 2.172445459291339,
+            "prediction": [
+              [
+                [
+                  3,
+                  1,
+                  9
+                ],
+                [
+                  2,
+                  9,
+                  9
+                ],
+                [
+                  2,
+                  9,
+                  9
+                ],
+                [
+                  3,
+                  1,
+                  9
+                ],
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  4,
+                  4,
+                  7
+                ],
+                [
+                  6,
+                  6,
+                  1
+                ],
+                [
+                  6,
+                  6,
+                  6
+                ],
+                [
+                  1,
+                  6,
+                  1
+                ]
+              ]
+            ],
+            "support_augmentations": [
+              {
+                "color_offset": 0,
+                "geometry": "anti_transpose",
+                "pair_order": "canonical"
+              }
+            ],
+            "support_count": 1
+          }
+        ],
+        "per_output_evidence": [
+          {
+            "candidates": [
+              {
+                "candidate_index": 0,
+                "original_log_likelihood": -0.023702461272478104,
+                "support_count": 1,
+                "view_negative_log_likelihoods": [
+                  0.023702461272478104,
+                  0.9737181663513184,
+                  0.3625626564025879,
+                  0.8144901990890503,
+                  0.3034835457801819,
+                  0.5906736254692078,
+                  0.8441867232322693,
+                  0.5717875957489014
+                ]
+              },
+              {
+                "candidate_index": 1,
+                "original_log_likelihood": -0.46856895089149475,
+                "support_count": 1,
+                "view_negative_log_likelihoods": [
+                  0.46856895089149475,
+                  0.07669607549905777,
+                  0.4859708249568939,
+                  0.9448179602622986,
+                  0.11024326831102371,
+                  0.5753191709518433,
+                  0.6548112630844116,
+                  0.44598954916000366
+                ]
+              },
+              {
+                "candidate_index": 2,
+                "original_log_likelihood": -0.5790760517120361,
+                "support_count": 1,
+                "view_negative_log_likelihoods": [
+                  0.5790760517120361,
+                  0.7379061579704285,
+                  0.2702831029891968,
+                  0.45784178376197815,
+                  0.6052815318107605,
+                  0.07997322082519531,
+                  0.61347895860672,
+                  0.7105209827423096
+                ]
+              },
+              {
+                "candidate_index": 3,
+                "original_log_likelihood": -0.5723779797554016,
+                "support_count": 1,
+                "view_negative_log_likelihoods": [
+                  0.5723779797554016,
+                  0.11736713349819183,
+                  0.100374236702919,
+                  0.7091168165206909,
+                  0.6217129230499268,
+                  0.2614194452762604,
+                  0.6486692428588867,
+                  0.014186250977218151
+                ]
+              }
+            ],
+            "test_index": 0
+          }
+        ],
+        "status": "SUCCESS"
+      }
+    },
+    "status": "SUCCESS",
+    "task_id": "0934a4d8",
+    "tokenizer": {
+      "chat_template_source": "nvarc_official_for_missing_checkpoint_template",
+      "config_vocab_size": 16,
+      "eos_token_id": 15,
+      "pad_token_id": 13,
+      "token_mapping": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "<|endoftext|>": 13,
+        "<|im_end|>": 15,
+        "<|im_start|>": 14,
+        "assistant": 12,
+        "user": 11,
+        "\u010a": 10
+      },
+      "tokenizer_vocab_size": 16
+    },
+    "worker_id": 0
+  },
+  "release_identity": "409d8b464387d2306c63bca9d830e86acbddfc3db8d1cf75c8fc3c3508fb41bd",
+  "schema_version": "ARC2_D1_RELEASE_V2",
+  "task_contract": {
+    "task_sha256": "81b38188c5d62658a730cf38952148c6b086d5880b5ee34bab219dbf58e028cb",
+    "test_outputs": [
+      {
+        "input_sha256": "3a2d6d8042a4437f5eb7c981a945f3a0f634dbe36fb199506f00f59848779e35",
+        "test_index": 0
+      }
+    ]
+  },
+  "task_id": "0934a4d8"
+}
