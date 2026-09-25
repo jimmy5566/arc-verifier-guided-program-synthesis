@@ -78,7 +78,8 @@ def test_load_frozen_eval60_accepts_governance_hash_alias_and_validates_task_con
     challenge_path = tmp_path / "challenge.json"
     challenge_path.write_text(json.dumps(challenge), encoding="utf-8")
     manifest = _manifest(ids, challenge_path)
-    manifest["task_ids_sha256"] = manifest.pop("task_ids_hash")
+    manifest["task_ids_sha256"] = RUNNER._task_ids_hash(ids, preserve_order=True)
+    manifest.pop("task_ids_hash")
     manifest["tasks"] = {
         task_id: {
             "task_sha256": hashlib.sha256(RUNNER._canonical(challenge[task_id]).encode()).hexdigest(),

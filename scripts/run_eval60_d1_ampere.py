@@ -435,8 +435,15 @@ def _resume_records(checkpoint_dir: Path, manifest: Mapping[str, Any], resume: b
     }
 
 
-def _task_ids_hash(task_ids: list[str]) -> str:
-    return hashlib.sha256(json.dumps(sorted(task_ids), separators=(",", ":")).encode("utf-8")).hexdigest()
+def _task_ids_hash(task_ids: list[str], *, preserve_order: bool = False) -> str:
+    """Hash a frozen cohort under the semantics declared by its schema.
+
+    Legacy ``task_ids_hash`` denotes the sorted-set representation. Governance
+    ``task_ids_sha256`` denotes the recorded task order, which is part of the
+    frozen execution contract and must not be normalized away.
+    """
+    values = task_ids if preserve_order else sorted(task_ids)
+    return hashlib.sha256(json.dumps(values, separators=(",", ":")).encode("utf-8")).hexdigest()
 
 
 def load_frozen_eval60(challenge_path: Path, cohort_manifest_path: Path) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -446,8 +453,11 @@ def load_frozen_eval60(challenge_path: Path, cohort_manifest_path: Path) -> tupl
     task_ids = cohort.get("task_ids")
     if not isinstance(task_ids, list) or len(task_ids) != 60 or len(set(task_ids)) != 60 or not all(isinstance(value, str) for value in task_ids):
         raise AmpereRunnerError("Eval60 cohort manifest must freeze exactly 60 unique task ids")
-    frozen_ids_hash = cohort.get("task_ids_hash") or cohort.get("task_ids_sha256")
-    if frozen_ids_hash != _task_ids_hash(task_ids):
+    legacy_ids_hash = cohort.get("task_ids_hash")
+    ordered_ids_hash = cohort.get("task_ids_sha256")
+    if legacy_ids_hash is not None and legacy_ids_hash != _task_ids_hash(task_ids):
+        raise AmpereRunnerError("Eval60 cohort task_ids_hash mismatch")
+    if ordered_ids_hash is not None and ordered_ids_hash != _task_ids_hash(task_ids, preserve_order=True):
         raise AmpereRunnerError("Eval60 cohort task_ids_hash mismatch")
     source_sha = cohort.get("source_challenge_sha256") or cohort.get("source_challenge_hash") or cohort.get("challenge_sha256")
     if source_sha is not None:
