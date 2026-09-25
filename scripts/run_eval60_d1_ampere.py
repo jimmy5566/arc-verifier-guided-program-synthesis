@@ -446,7 +446,8 @@ def load_frozen_eval60(challenge_path: Path, cohort_manifest_path: Path) -> tupl
     task_ids = cohort.get("task_ids")
     if not isinstance(task_ids, list) or len(task_ids) != 60 or len(set(task_ids)) != 60 or not all(isinstance(value, str) for value in task_ids):
         raise AmpereRunnerError("Eval60 cohort manifest must freeze exactly 60 unique task ids")
-    if cohort.get("task_ids_hash") != _task_ids_hash(task_ids):
+    frozen_ids_hash = cohort.get("task_ids_hash") or cohort.get("task_ids_sha256")
+    if frozen_ids_hash != _task_ids_hash(task_ids):
         raise AmpereRunnerError("Eval60 cohort task_ids_hash mismatch")
     source_sha = cohort.get("source_challenge_sha256") or cohort.get("source_challenge_hash") or cohort.get("challenge_sha256")
     if source_sha is not None:
@@ -457,6 +458,28 @@ def load_frozen_eval60(challenge_path: Path, cohort_manifest_path: Path) -> tupl
     missing = sorted(set(task_ids) - set(challenge))
     if missing:
         raise AmpereRunnerError(f"frozen Eval60 tasks missing from mounted challenge: {missing}")
+    # The governance cohort carries a stronger per-task and per-test contract.
+    # Validate it when available, rather than trusting matching identifiers.
+    task_contracts = cohort.get("tasks")
+    if task_contracts is not None:
+        if not isinstance(task_contracts, Mapping):
+            raise AmpereRunnerError("Eval60 task contracts are not a mapping")
+        for task_id in task_ids:
+            expected = task_contracts.get(task_id)
+            if not isinstance(expected, Mapping):
+                raise AmpereRunnerError(f"missing frozen task contract: {task_id}")
+            actual_task_hash = hashlib.sha256(_canonical(challenge[task_id]).encode("utf-8")).hexdigest()
+            if expected.get("task_sha256") != actual_task_hash:
+                raise AmpereRunnerError(f"Eval60 task content hash mismatch: {task_id}")
+            tests = challenge[task_id].get("test") if isinstance(challenge[task_id], Mapping) else None
+            expected_tests = expected.get("test_index_structure")
+            if not isinstance(tests, list) or not isinstance(expected_tests, list) or len(tests) != len(expected_tests):
+                raise AmpereRunnerError(f"Eval60 test-index structure mismatch: {task_id}")
+            for index, expected_test in enumerate(expected_tests):
+                actual_input = tests[index].get("input") if isinstance(tests[index], Mapping) else None
+                actual_hash = hashlib.sha256(_canonical(actual_input).encode("utf-8")).hexdigest()
+                if not isinstance(expected_test, Mapping) or expected_test.get("test_index") != index or expected_test.get("input_sha256") != actual_hash:
+                    raise AmpereRunnerError(f"Eval60 test input hash mismatch: {task_id}:{index}")
     return {task_id: challenge[task_id] for task_id in task_ids}, cohort
 
 

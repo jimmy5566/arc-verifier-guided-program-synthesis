@@ -72,6 +72,34 @@ def test_load_frozen_eval60_rejects_nonfrozen_selection(tmp_path: Path) -> None:
         RUNNER.load_frozen_eval60(challenge_path, manifest_path)
 
 
+def test_load_frozen_eval60_accepts_governance_hash_alias_and_validates_task_contract(tmp_path: Path) -> None:
+    ids = _ids()
+    challenge = _challenge(ids)
+    challenge_path = tmp_path / "challenge.json"
+    challenge_path.write_text(json.dumps(challenge), encoding="utf-8")
+    manifest = _manifest(ids, challenge_path)
+    manifest["task_ids_sha256"] = manifest.pop("task_ids_hash")
+    manifest["tasks"] = {
+        task_id: {
+            "task_sha256": hashlib.sha256(RUNNER._canonical(challenge[task_id]).encode()).hexdigest(),
+            "test_index_structure": [{"test_index": 0, "input_sha256": hashlib.sha256(RUNNER._canonical([[0]]).encode()).hexdigest()}],
+        }
+        for task_id in ids
+    }
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    selected, _ = RUNNER.load_frozen_eval60(challenge_path, manifest_path)
+    assert list(selected) == ids
+    challenge[ids[0]]["test"][0]["input"] = [[1]]
+    challenge_path.write_text(json.dumps(challenge), encoding="utf-8")
+    # Rebind source hash so the test proves the task-level contract catches it.
+    manifest["source_challenge_sha256"] = hashlib.sha256(challenge_path.read_bytes()).hexdigest()
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(RUNNER.AmpereRunnerError, match="task content hash mismatch"):
+        RUNNER.load_frozen_eval60(challenge_path, manifest_path)
+
+
 def test_3090_inventory_contract_accepts_one_or_two_and_rejects_wrong_model(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(RUNNER, "_nvidia_inventory", lambda: [
         {"physical_gpu_id": "0", "name": "NVIDIA GeForce RTX 3090"},
