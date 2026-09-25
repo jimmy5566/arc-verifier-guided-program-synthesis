@@ -276,19 +276,33 @@ def _verify_kv_cache(model: Any, *, tokenizer: Any) -> dict[str, Any]:
     return {"requested_use_cache": True, "model_config_use_cache": config_use_cache, "past_key_values_present": active, "KV_CACHE_ACTIVE": bool(config_use_cache and active)}
 
 
-def _prepare_requests(*, tokenizer: Any, task: Any, config: dict[str, Any], cache_static_inputs: bool) -> tuple[list[dict[str, Any]], list[Any]]:
-    """Create ordered Aug8 requests.  Cache mode freezes CPU prompt tensors."""
+def _prepare_requests(
+    *, tokenizer: Any, task: Any, config: dict[str, Any], cache_static_inputs: bool,
+    augmentations: list[Any] | None = None, augmentation_seed_indices: list[int] | None = None,
+) -> tuple[list[dict[str, Any]], list[Any]]:
+    """Create ordered generation requests without changing their prompt semantics.
+
+    ``augmentations`` is deliberately optional.  The Eval3 runtime benchmark
+    keeps its frozen first-eight behaviour by default.  The 5090 Eval60
+    fixed-4+4 runner supplies a subset together with its *historical Aug8
+    seed positions*, so portfolio execution can share this batch/static-KV
+    implementation without re-numbering the frozen view seeds.
+    """
     from inference.nvarc_native import native_messages_from_training_prefix, native_training_message_prefix
     from inference.nvarc_native_augmentation import bounded_native_augmentations, transform_tasks_for_augmentations
 
-    augmentations = bounded_native_augmentations()[: int(config["generation_augmentation_count"])]
+    augmentations = list(augmentations) if augmentations is not None else list(bounded_native_augmentations()[: int(config["generation_augmentation_count"])])
+    if augmentation_seed_indices is None:
+        augmentation_seed_indices = list(range(len(augmentations)))
+    if len(augmentation_seed_indices) != len(augmentations):
+        raise ValueError("augmentation seed indices must match the generation views")
     transformed = transform_tasks_for_augmentations(task, augmentations)
     prefixes = [native_training_message_prefix(item) for item in transformed]
     requests: list[dict[str, Any]] = []
-    for augmentation_index, (augmentation, augmented) in enumerate(zip(augmentations, transformed, strict=True)):
+    for augmentation_index, (augmentation, seed_index, augmented) in enumerate(zip(augmentations, augmentation_seed_indices, transformed, strict=True)):
         for test_index in range(len(task.test)):
             messages = native_messages_from_training_prefix(prefixes[augmentation_index], augmented.test[test_index].input)
-            request = {"augmentation_index": augmentation_index, "test_index": test_index, "augmentation": augmentation, "messages": messages}
+            request = {"augmentation_index": augmentation_index, "seed_index": int(seed_index), "test_index": test_index, "augmentation": augmentation, "messages": messages}
             if cache_static_inputs:
                 request["encoded"] = _encoded_prompt(tokenizer, messages)
             requests.append(request)
@@ -311,7 +325,8 @@ def _max_ttt_sequence_tokens(*, tokenizer: Any, task: Any, config: dict[str, Any
 
 def _generate_aug8_runtime(
     *, model: Any, tokenizer: Any, task: Any, config: dict[str, Any], cache_static_inputs: bool, micro_batch_size: int,
-    generation_kwargs: dict[str, Any] | None = None,
+    generation_kwargs: dict[str, Any] | None = None, augmentations: list[Any] | None = None,
+    augmentation_seed_indices: list[int] | None = None,
 ) -> tuple[list[dict[str, Any]], int, dict[str, Any], list[dict[str, Any]]]:
     """Frozen greedy Aug8 semantics with ordered micro-batched execution."""
     import torch
@@ -323,7 +338,10 @@ def _generate_aug8_runtime(
     if micro_batch_size not in {1, 2, 4}:
         raise ValueError("generation micro-batch must be one of 1, 2, 4")
     generation_kwargs = dict(generation_kwargs or {})
-    requests, augmentations = _prepare_requests(tokenizer=tokenizer, task=task, config=config, cache_static_inputs=cache_static_inputs)
+    requests, augmentations = _prepare_requests(
+        tokenizer=tokenizer, task=task, config=config, cache_static_inputs=cache_static_inputs,
+        augmentations=augmentations, augmentation_seed_indices=augmentation_seed_indices,
+    )
     FastLanguageModel.for_inference(model)
     raw: list[dict[str, Any]] = []
     by_augmentation: dict[int, dict[int, dict[str, Any]]] = {index: {} for index in range(len(augmentations))}
@@ -348,7 +366,7 @@ def _generate_aug8_runtime(
                 raise ValueError(f"generation prompt exceeds context: {max(lengths)}")
             # Greedy decoding does not consume RNG. Preserve the documented seed
             # derivation as explicit provenance for every request nonetheless.
-            seeds = [task_seed(task.task_id, int(config["seed"]), f"reference-ttt:{item['augmentation_index']}:{item['test_index']}") for item in batch]
+            seeds = [task_seed(task.task_id, int(config["seed"]), f"reference-ttt:{item['seed_index']}:{item['test_index']}") for item in batch]
             for seed in seeds:
                 torch.manual_seed(seed)
                 torch.cuda.manual_seed_all(torch.initial_seed())
