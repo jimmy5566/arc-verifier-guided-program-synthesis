@@ -76,6 +76,10 @@ def _git_identity(repo_dir: Path) -> str:
     return subprocess.run(["git", "-C", str(repo_dir), "rev-parse", "HEAD"], text=True, capture_output=True, check=True).stdout.strip()
 
 
+def _is_ancestor(repo_dir: Path, older: str, newer: str) -> bool:
+    return subprocess.run(["git", "-C", str(repo_dir), "merge-base", "--is-ancestor", older, newer], text=True, capture_output=True).returncode == 0
+
+
 def _gpu_identity() -> dict[str, str]:
     completed = subprocess.run(
         ["nvidia-smi", "--id=0", "--query-gpu=index,uuid,name,driver_version", "--format=csv,noheader,nounits"],
@@ -225,8 +229,14 @@ def main() -> None:
             if not args.resume:
                 raise RuntimeError(f"REFUSING_AMBIGUOUS_REUSE: {run_dir}")
             prior = _read(run_dir / "run.json") if (run_dir / "run.json").is_file() else {}
-            if prior.get("status") != "SUCCESS" or prior.get("source_commit") != source_commit:
-                raise RuntimeError(f"RESUME_REJECTED: {run_dir} is not a matching successful frozen run")
+            prior_source = prior.get("source_commit")
+            if prior.get("status") != "SUCCESS" or not isinstance(prior_source, str):
+                raise RuntimeError(f"RESUME_REJECTED: {run_dir} is not a successful frozen run")
+            # A resume may run under a descendant commit that fixes only the
+            # FUSE backup transport.  Keep the original execution commit in
+            # the evidence and refuse unrelated source histories.
+            if prior_source != source_commit and not _is_ancestor(args.repo_dir, prior_source, source_commit):
+                raise RuntimeError(f"RESUME_REJECTED: {run_dir} source is not an ancestor of the backup-resume source")
             candidates = _read(run_dir / "candidates_frozen.json")
             if not valid_frozen_artifact(candidates, TASK_ID):
                 raise RuntimeError(f"RESUME_REJECTED: {run_dir} candidate freeze is invalid")
@@ -235,7 +245,7 @@ def main() -> None:
             if report.get("status") != "COMPLETE_SCORED_AFTER_CANDIDATE_FREEZE" or metrics.get("invalid_candidate_count") != 0:
                 raise RuntimeError(f"RESUME_REJECTED: {run_dir} score or structural metrics are invalid")
             successful.add(backend)
-            summaries[backend] = {"status": "SUCCESS", "execution": prior.get("execution"), **metrics, "resumed_without_model_execution": True}
+            summaries[backend] = {"status": "SUCCESS", "execution": prior.get("execution"), "execution_source_commit": prior_source, "resume_controller_commit": source_commit, **metrics, "resumed_without_model_execution": True}
             destination = frozen_root / run_dir.name
             if destination.exists():
                 summaries[backend]["persistent_run"] = str(destination)
