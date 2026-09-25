@@ -138,7 +138,19 @@ def _sync_verified(run_dir: Path, frozen_root: Path) -> Path:
         raise RuntimeError(f"IMMUTABLE_BACKUP_DESTINATION_EXISTS: {destination}")
     frozen_root.mkdir(parents=True, exist_ok=True)
     try:
-        shutil.copytree(run_dir, staging, copy_function=shutil.copyfile)
+        # Global Volume FUSE accepts ordinary file bytes and directory
+        # creation, but rejects metadata operations such as chmod/copystat.
+        # Do not use copytree: its metadata propagation turns an otherwise
+        # complete immutable backup into a permission failure.
+        for source in sorted(run_dir.rglob("*")):
+            relative = source.relative_to(run_dir)
+            target = staging / relative
+            if source.is_dir():
+                target.mkdir(parents=True, exist_ok=True)
+            elif source.is_file():
+                target.parent.mkdir(parents=True, exist_ok=True)
+                with source.open("rb") as reader, target.open("wb") as writer:
+                    shutil.copyfileobj(reader, writer, length=1024 * 1024)
         source_hashes = _hash_tree(run_dir)
         destination_hashes = _hash_tree(staging)
         if source_hashes != destination_hashes:
@@ -178,6 +190,7 @@ def _args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     for name in ("manifest", "reference_config", "challenge_path", "solutions_path", "model_path", "native_config_dir", "ptxas_path", "python", "repo_dir", "runtime_root", "global_root"):
         parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
+    parser.add_argument("--resume", action="store_true", help="resume only an already valid, unmodified Phase-2 run after a backup interruption")
     return parser.parse_args()
 
 
@@ -198,9 +211,9 @@ def main() -> None:
         if not path.exists():
             raise FileNotFoundError(path)
     run_root = args.runtime_root / "active_run" / QUEUE_ID
-    if run_root.exists():
+    if run_root.exists() and not args.resume:
         raise RuntimeError(f"REFUSING_AMBIGUOUS_REUSE: {run_root}")
-    run_root.mkdir(parents=True)
+    run_root.mkdir(parents=True, exist_ok=args.resume)
     frozen_root = args.global_root / "frozen-runs"
     successful: set[str] = set()
     summaries: dict[str, Any] = {}
@@ -208,6 +221,27 @@ def main() -> None:
         execution, reason = execution_for_backend(backend, successful=successful)
         run_name = f"{QUEUE_ID}-{index:02d}-{backend}"
         run_dir = run_root / run_name
+        if run_dir.exists():
+            if not args.resume:
+                raise RuntimeError(f"REFUSING_AMBIGUOUS_REUSE: {run_dir}")
+            prior = _read(run_dir / "run.json") if (run_dir / "run.json").is_file() else {}
+            if prior.get("status") != "SUCCESS" or prior.get("source_commit") != source_commit:
+                raise RuntimeError(f"RESUME_REJECTED: {run_dir} is not a matching successful frozen run")
+            candidates = _read(run_dir / "candidates_frozen.json")
+            if not valid_frozen_artifact(candidates, TASK_ID):
+                raise RuntimeError(f"RESUME_REJECTED: {run_dir} candidate freeze is invalid")
+            report = _read(run_dir / "evaluation" / "report.json")
+            metrics = _read(run_dir / "telemetry.json")
+            if report.get("status") != "COMPLETE_SCORED_AFTER_CANDIDATE_FREEZE" or metrics.get("invalid_candidate_count") != 0:
+                raise RuntimeError(f"RESUME_REJECTED: {run_dir} score or structural metrics are invalid")
+            successful.add(backend)
+            summaries[backend] = {"status": "SUCCESS", "execution": prior.get("execution"), **metrics, "resumed_without_model_execution": True}
+            destination = frozen_root / run_dir.name
+            if destination.exists():
+                summaries[backend]["persistent_run"] = str(destination)
+            else:
+                summaries[backend]["persistent_run"] = str(_sync_verified(run_dir, frozen_root))
+            continue
         if execution is None:
             _freeze_not_applicable(run_dir, backend, reason or "NOT_APPLICABLE", source_commit)
             persistent = _sync_verified(run_dir, frozen_root)
