@@ -1,6 +1,7 @@
 {
   "environment_id": "4090-ada-env-v1",
   "purpose": "portable RTX 4090 Ada research environment; not a Kaggle or competition production release",
+  "bootstrap_source_commit": "7ad9c78026a6e6509fc9746075cc6e72c006a180",
   "validated_source_commit": "9602b851dea2b4b4ae69b25585a9e591af1de523",
   "validated_readiness_run": {
     "run_id": "4090-ada-readiness-smoke-v1",
