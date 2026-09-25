@@ -7,12 +7,17 @@ On a fresh RunPod Pod with the persistent volume mounted at `/workspace`:
 
     git clone https://github.com/jimmy5566/arc-verifier-guided-program-synthesis.git /root/bootstrap-source
     cd /root/bootstrap-source
-    git checkout 7ad9c78026a6e6509fc9746075cc6e72c006a180
+    git checkout 7a7e20ae2aac1c090b513f6e9b97582cf4a216d1
     ARC2_REQUIRED_GPUS=1 bash scripts/bootstrap_4090_ada_env.sh
 
 For a two-card Ada Pod, replace the last line with:
 
     ARC2_REQUIRED_GPUS=2 bash scripts/bootstrap_4090_ada_env.sh
+
+`ARC2_REQUIRED_GPUS=1` is also the intended one-card preflight: it checks
+exactly one RTX 4090 / sm_89 device and runs a real BF16 FA3 attention
+forward/backward smoke, but launches no ARC task. `auto` selects the visible
+GPU count only when it is one or two; any other count fails closed.
 
 The first checkout is the immutable bootstrap implementation. The script then
 checks out the separate frozen scientific source commit
