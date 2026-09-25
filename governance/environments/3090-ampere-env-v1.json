@@ -42,6 +42,7 @@
   },
   "bootstrap": {
     "script": "scripts/bootstrap_3090_ampere_env.sh",
+    "local_runtime_root": "/root/arc-runtime-3090",
     "single_gpu_command": "ARC2_REQUIRED_GPUS=1 bash scripts/bootstrap_3090_ampere_env.sh",
     "two_gpu_command": "ARC2_REQUIRED_GPUS=2 bash scripts/bootstrap_3090_ampere_env.sh"
   },
