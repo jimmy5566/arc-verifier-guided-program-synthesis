@@ -1,0 +1,50 @@
+{
+  "environment_id": "4090-ada-env-v1",
+  "purpose": "portable RTX 4090 Ada research environment; not a Kaggle or competition production release",
+  "validated_source_commit": "9602b851dea2b4b4ae69b25585a9e591af1de523",
+  "validated_readiness_run": {
+    "run_id": "4090-ada-readiness-smoke-v1",
+    "task_id": "5dbc8537",
+    "target_blind": true,
+    "solutions_opened": false,
+    "scientific_config_changed": false,
+    "status": "PASS"
+  },
+  "gpu_contract": {
+    "accepted_name_substring": "RTX 4090",
+    "compute_capability": [8, 9],
+    "supported_requested_gpu_counts": [1, 2],
+    "worker_semantics": "one independent ARC task worker per GPU; no tensor/model parallelism"
+  },
+  "runtime_contract": {
+    "python": "3.11.13",
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "triton": "3.4.0",
+    "unsloth": "2025.9.7",
+    "unsloth_zoo": "2025.9.9",
+    "transformers": "4.55.4",
+    "peft": "0.17.1",
+    "torchao": "0.14.1",
+    "xformers": "0.0.32.post2",
+    "attention_backend": "fa3F@2.8.0.post2-3-g3ba6f82",
+    "runtime_ptxas": "/usr/local/cuda/bin/ptxas"
+  },
+  "persistent_layout": {
+    "default_root": "/workspace/arc2",
+    "model_archive": "models/qwen3_4b_grids15_sft139-transformers-bfloat16-v1.tar.gz",
+    "model_archive_sha256": "cee6e64f3b4f759813f378bdd644d5780a55b540339a7a4e2bfd17faa4fe71ee",
+    "environment_archive": "env/4090-ada-env-v1.tar.zst",
+    "environment_archive_sha256": "8320b98ef8428612d6aedb0ee4fcd6ca85fa2f4511a058e67775a84891bc5204",
+    "python_runtime_archive": "env/uv-python-3.11.13.tar.zst",
+    "python_runtime_archive_sha256": "3b540825d4f09db0baf1da33ef579a3aca95a5d11ad5be25579d56fc82c7b21f"
+  },
+  "bootstrap": {
+    "script": "scripts/bootstrap_4090_ada_env.sh",
+    "default_mode": "auto",
+    "single_gpu_command": "ARC2_REQUIRED_GPUS=1 bash scripts/bootstrap_4090_ada_env.sh",
+    "two_gpu_command": "ARC2_REQUIRED_GPUS=2 bash scripts/bootstrap_4090_ada_env.sh"
+  },
+  "scientific_code_changed": false,
+  "gpu_experiment_started": false
+}
