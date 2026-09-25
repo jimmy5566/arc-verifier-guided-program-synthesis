@@ -8,6 +8,10 @@ RUNTIME_ROOT="${ARC2_RUNTIME_ROOT:-/root/arc-runtime}"
 REPO_URL="${ARC2_REPO_URL:-https://github.com/jimmy5566/arc-verifier-guided-program-synthesis.git}"
 SOURCE_COMMIT="${ARC2_SOURCE_COMMIT:-9602b851dea2b4b4ae69b25585a9e591af1de523}"
 REQUESTED_GPUS="${ARC2_REQUIRED_GPUS:-auto}"
+ENVIRONMENT_ID="${ARC2_ENVIRONMENT_ID:-4090-ada-env-v1}"
+ENV_ARCHIVE_LAYOUT="${ARC2_ENV_ARCHIVE_LAYOUT:-4090-ada-env-v1}"
+EXPECTED_GPU_NAME="${ARC2_EXPECTED_GPU_NAME:-RTX 4090}"
+EXPECTED_GPU_CAPABILITY="${ARC2_EXPECTED_GPU_CAPABILITY:-8,9}"
 
 ENV_ARCHIVE="${PERSISTENT_ROOT}/env/4090-ada-env-v1.tar.zst"
 ENV_SHA="${ENV_ARCHIVE}.sha256"
@@ -16,7 +20,7 @@ PYTHON_SHA="${PYTHON_ARCHIVE}.sha256"
 MODEL_ARCHIVE="${PERSISTENT_ROOT}/models/qwen3_4b_grids15_sft139-transformers-bfloat16-v1.tar.gz"
 MODEL_SHA="${MODEL_ARCHIVE}.sha256"
 MODEL_IMPORTANT_SHA="${PERSISTENT_ROOT}/models/qwen3_4b_grids15_sft139-transformers-bfloat16-v1.important_sha256.txt"
-LOCAL_ENV="${RUNTIME_ROOT}/env/4090-ada-env-v1"
+LOCAL_ENV="${RUNTIME_ROOT}/env/${ENVIRONMENT_ID}"
 LOCAL_MODEL="${RUNTIME_ROOT}/model-stage/qwen3_4b_grids15_sft139-transformers-bfloat16-v1"
 REPO_DIR="${ARC2_REPO_DIR:-${RUNTIME_ROOT}/arc2}"
 UV_PYTHON_ROOT="/root/.local/share/uv/python"
@@ -81,7 +85,7 @@ verify_archive "${PYTHON_ARCHIVE}" "${PYTHON_SHA}"
 verify_archive "${MODEL_ARCHIVE}" "${MODEL_SHA}"
 mkdir -p "${UV_PYTHON_ROOT}"
 stage_tar_zst "${PYTHON_ARCHIVE}" "cpython-3.11.13-linux-x86_64-gnu" "${UV_PYTHON_ROOT}" "${UV_PYTHON_DIR}"
-stage_tar_zst "${ENV_ARCHIVE}" "4090-ada-env-v1" "${RUNTIME_ROOT}/env" "${LOCAL_ENV}"
+stage_tar_zst "${ENV_ARCHIVE}" "${ENV_ARCHIVE_LAYOUT}" "${RUNTIME_ROOT}/env" "${LOCAL_ENV}"
 stage_tar_gz "${MODEL_ARCHIVE}" "${LOCAL_MODEL}"
 [[ -x "${LOCAL_ENV}/bin/python" ]] || fail "restored Python is unavailable"
 [[ -f "${LOCAL_MODEL}/config.json" ]] || fail "restored model is unavailable"
@@ -96,7 +100,7 @@ git -C "${REPO_DIR}" checkout --detach --quiet "${SOURCE_COMMIT}"
 [[ -z "$(git -C "${REPO_DIR}" status --porcelain)" ]] || fail "source checkout is dirty"
 
 export ARC2_REQUESTED_GPUS="${REQUESTED_GPUS}"
-"${LOCAL_ENV}/bin/python" - "${MODEL_IMPORTANT_SHA}" "${LOCAL_MODEL}" "${REQUESTED_GPUS}" "${PERSISTENT_ROOT}" "${RUNTIME_ROOT}" "${SOURCE_COMMIT}" <<'PY'
+"${LOCAL_ENV}/bin/python" - "${MODEL_IMPORTANT_SHA}" "${LOCAL_MODEL}" "${REQUESTED_GPUS}" "${PERSISTENT_ROOT}" "${RUNTIME_ROOT}" "${SOURCE_COMMIT}" "${ENVIRONMENT_ID}" "${EXPECTED_GPU_NAME}" "${EXPECTED_GPU_CAPABILITY}" <<'PY'
 import hashlib
 import importlib.metadata
 import json
@@ -116,6 +120,9 @@ requested = sys.argv[3]
 persistent_root = sys.argv[4]
 runtime_root = sys.argv[5]
 commit = sys.argv[6]
+environment_id = sys.argv[7]
+expected_name = sys.argv[8]
+expected_capability = tuple(int(part) for part in sys.argv[9].split(","))
 
 if requested == "auto":
     selected_count = 2 if torch.cuda.device_count() >= 2 else 1
@@ -139,8 +146,12 @@ inventory = []
 for index in range(selected_count):
     name = torch.cuda.get_device_name(index)
     capability = tuple(torch.cuda.get_device_capability(index))
-    if "RTX 4090" not in name or capability != (8, 9):
-        raise SystemExit(f"ADA_GPU_MISMATCH: index={index}, name={name}, capability={capability}")
+    if expected_name not in name or capability != expected_capability:
+        raise SystemExit(
+            f"GPU_CONTRACT_MISMATCH: expected_name={expected_name}, "
+            f"expected_capability={expected_capability}, index={index}, "
+            f"name={name}, capability={capability}"
+        )
     inventory.append({"worker_id": index, "physical_gpu_id": index, "name": name, "capability": list(capability)})
 if not torch.cuda.is_bf16_supported():
     raise SystemExit("BF16_UNAVAILABLE")
@@ -199,7 +210,7 @@ for index in range(selected_count):
 
 payload = {
     "event": "READY_FOR_ARC2_EXPERIMENTS",
-    "environment_id": "4090-ada-env-v1",
+    "environment_id": environment_id,
     "persistent_root": persistent_root,
     "local_runtime_root": runtime_root,
     "source_commit": commit,
