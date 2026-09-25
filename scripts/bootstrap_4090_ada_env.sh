@@ -213,4 +213,3 @@ payload = {
 Path(runtime_root, "READY_FOR_ARC2_EXPERIMENTS.json").write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 print(json.dumps(payload, sort_keys=True))
 PY
-PY
