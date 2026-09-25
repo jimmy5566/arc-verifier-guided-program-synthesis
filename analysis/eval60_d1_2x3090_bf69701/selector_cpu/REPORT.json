@@ -1,0 +1,16 @@
+{
+  "candidate_sha256": "1f693a6e84a73e279213956000e50bec4df354c34aa5516fc102c90aeaf2dd25",
+  "d1": {
+    "oracle": 29,
+    "top1": 18,
+    "top2": 25
+  },
+  "scope": "FROZEN_EVAL60_DEVELOPMENT_EVIDENCE_NOT_HELD_OUT_NOT_LB_PERFORMANCE",
+  "selection_sha256": "203253178660d833d747232d111e423610d381c8c718063c8367eecdd60ad084",
+  "selector2_source_diverse": {
+    "oracle": 29,
+    "top1": 21,
+    "top2": 26
+  },
+  "status": "COMPLETE_SCORED_AFTER_D1_AND_S2_FREEZE"
+}
