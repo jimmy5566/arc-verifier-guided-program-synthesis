@@ -1,0 +1,27 @@
+{
+  "cell": {
+    "adapter_update_observed": true,
+    "cross_validation_score": {
+      "nll_per_token": 0.002626954112201929,
+      "token_accuracy": 1.0,
+      "token_count": 272
+    },
+    "depth": 48,
+    "gen_view": "flip_lr",
+    "generation_length": 272,
+    "generation_seconds": 13.880199879407883,
+    "loo_greedy_exact": true,
+    "mean_logprob_per_token": -0.001865754177647946,
+    "mean_token_entropy": 0.0030542529999984212,
+    "mean_token_top1_top2_margin": 15.672794117647058,
+    "minimum_token_margin": 0.5,
+    "parse_valid": true,
+    "prompt_tokens": 1518,
+    "sequence_logprob": -0.5074851363202413,
+    "task_id": "71e489b6",
+    "ttt_loss": 0.00556569267064333,
+    "ttt_recent_loss_delta": -0.0035105226561427116
+  },
+  "identity": "5ab5a82639de1606437a77047323eb19c56698b40a6a653f64a0646efddd5c52",
+  "status": "FROZEN"
+}

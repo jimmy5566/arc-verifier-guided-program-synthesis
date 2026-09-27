@@ -1,0 +1,27 @@
+{
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "cohort_sha256": "fad2fff3743efdf8ad959bfe00d5bdb45ffff81b90e3285f13c9399bfb347a58",
+  "config_sha256": "019f57f05e3d96c45d0cea9428444b23f67d52603e0735a91fad7c144d636172",
+  "depths": [
+    0,
+    12,
+    24,
+    48,
+    72
+  ],
+  "experiment_id": "ADAPTIVE_TTT_STEP1_DEPTH_VIEW_CONFIDENCE_V1",
+  "gen_views": [
+    "identity",
+    "rot90",
+    "rot180",
+    "rot270",
+    "flip_lr",
+    "flip_ud",
+    "transpose",
+    "anti_transpose"
+  ],
+  "hard_wall_seconds": 5100,
+  "planned_cells": 480,
+  "status": "ADAPTIVE_TTT_STEP1_CONFIGURATION_FROZEN",
+  "target_blindness": "Evaluation test outputs absent; only deterministic held-out train output is used after each cell is generated."
+}
