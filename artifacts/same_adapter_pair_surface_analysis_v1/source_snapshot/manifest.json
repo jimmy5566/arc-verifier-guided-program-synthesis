@@ -1,0 +1,48 @@
+{
+  "adapter_state_control": "one continuous all-train trajectory; every pair at a depth is scored under the same adapter state",
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "depths": [
+    0,
+    12,
+    24,
+    48,
+    72
+  ],
+  "epsilon_values": [
+    0.0001,
+    0.0005,
+    0.001,
+    0.002,
+    0.005,
+    0.01
+  ],
+  "evaluation_solutions_opened": false,
+  "experiment_id": "SAME_ADAPTER_MULTI_PAIR_SURFACE_AUDIT",
+  "frozen_archive_commit": "e66da47a3403913c6d1e06a7cfb29a6d484e1faf",
+  "frozen_raw_archive_sha256": "84cdf9faced48ac98503f580c4355de234ced2b397c5d5155c72cf615e136ce4",
+  "frozen_source_commit": "7466df3d336335218463d341cee141b975311995",
+  "generation_performed": false,
+  "loo_folds_rerun": false,
+  "sentinel_task_ids": [
+    "28a6681f",
+    "21897d95",
+    "e87109e9",
+    "89565ca0",
+    "fc7cae8d",
+    "a47bf94d"
+  ],
+  "sentinel_task_ids_sha256": "b25ba34222f79529f90e91e6e94c81d5efd6005c3fbac85fbee11cbe61c0ba3b",
+  "source_commit": "37d862407d01d055d0e95813b38dbf0dd8c3f107",
+  "status": "SAME_ADAPTER_MULTI_PAIR_SURFACE_CONFIGURATION_FROZEN",
+  "teacher_forced_pair_prompt": "target pair excluded from prompt train prefix using historical _loo_task; adapter was trained on all pairs",
+  "views": [
+    "identity",
+    "rot90",
+    "rot180",
+    "rot270",
+    "flip_lr",
+    "flip_ud",
+    "transpose",
+    "anti_transpose"
+  ]
+}

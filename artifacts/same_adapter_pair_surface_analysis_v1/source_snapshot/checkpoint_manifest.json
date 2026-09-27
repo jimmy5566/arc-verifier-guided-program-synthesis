@@ -1,0 +1,248 @@
+{
+  "adapter_only": true,
+  "checkpoint_count": 30,
+  "checkpoints": [
+    {
+      "adapter_tensor_count": 506,
+      "depth": 0,
+      "format": "safetensors_adapter_only",
+      "path": "/root/arc-runtime-adaptive-2x3090/active_run/same_adapter_pair_surface_v1/checkpoints/28a6681f/depth000/adapter_model.safetensors",
+      "sha256": "db427ebe01999b70f7e5ec9944e1f51a27520caf7c32fd59c67262a8618cdb5b",
+      "task_id": "28a6681f"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 12,
+      "format": "safetensors_adapter_only",
+      "path": "/root/arc-runtime-adaptive-2x3090/active_run/same_adapter_pair_surface_v1/checkpoints/28a6681f/depth012/adapter_model.safetensors",
+      "sha256": "674856afa63de3842a298c4cdcab26f6426c27b730899542d911faa6bef6c686",
+      "task_id": "28a6681f"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 24,
+      "format": "safetensors_adapter_only",
+      "path": "/root/arc-runtime-adaptive-2x3090/active_run/same_adapter_pair_surface_v1/checkpoints/28a6681f/depth024/adapter_model.safetensors",
+      "sha256": "f5f7bf9299c449f436368d431c7c3de96d9d0834ba1054842920f39d3976eb74",
+      "task_id": "28a6681f"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 48,
+      "format": "safetensors_adapter_only",
+      "path": "/root/arc-runtime-adaptive-2x3090/active_run/same_adapter_pair_surface_v1/checkpoints/28a6681f/depth048/adapter_model.safetensors",
+      "sha256": "90c733fa7a98bb3c22ebfa20c750ee7fd0f0523d8055d1ba32b285cac522cabe",
+      "task_id": "28a6681f"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 72,
+      "format": "safetensors_adapter_only",
+      "path": "/root/arc-runtime-adaptive-2x3090/active_run/same_adapter_pair_surface_v1/checkpoints/28a6681f/depth072/adapter_model.safetensors",
+      "sha256": "309e7c3d2ce5b096df90d6abeefbf12ff139b2830391536b77b068683607a5bf",
+      "task_id": "28a6681f"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 0,
+      "format": "safetensors_adapter_only",
+      "path": "/root/arc-runtime-adaptive-2x3090/active_run/same_adapter_pair_surface_v1/checkpoints/21897d95/depth000/adapter_model.safetensors",
+      "sha256": "709f990044b44b9c9b70315d8c459a83afa2fdd842cdca7b6d6d55a7d10d8242",
+      "task_id": "21897d95"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 12,
+      "format": "safetensors_adapter_only",
+      "path": "/root/arc-runtime-adaptive-2x3090/active_run/same_adapter_pair_surface_v1/checkpoints/21897d95/depth012/adapter_model.safetensors",
+      "sha256": "042c8a672693c5dca915124c1cf59334c317da9b0787dbf64bbf919166f9911e",
+      "task_id": "21897d95"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 24,
+      "format": "safetensors_adapter_only",
+      "path": "/root/arc-runtime-adaptive-2x3090/active_run/same_adapter_pair_surface_v1/checkpoints/21897d95/depth024/adapter_model.safetensors",
+      "sha256": "69054f569a7f358ccb9a8c22a6131c5370cf5310cca32927fea57c306d4fd2fb",
+      "task_id": "21897d95"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 48,
+      "format": "safetensors_adapter_only",
+      "path": "/root/arc-runtime-adaptive-2x3090/active_run/same_adapter_pair_surface_v1/checkpoints/21897d95/depth048/adapter_model.safetensors",
+      "sha256": "07dac2ec14af0c03e9c6bf92aee565391304d6874326a1853cab66cd9271bdeb",
+      "task_id": "21897d95"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 72,
+      "format": "safetensors_adapter_only",
+      "path": "/root/arc-runtime-adaptive-2x3090/active_run/same_adapter_pair_surface_v1/checkpoints/21897d95/depth072/adapter_model.safetensors",
+      "sha256": "48ae92cd65238ef28b956856a803607baed0d5b6b424da04db65ab0e4bdf7fa7",
+      "task_id": "21897d95"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 0,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/e87109e9/depth000/adapter_model.safetensors",
+      "sha256": "7392c23e8f636bffa4942a27261902c0ed596a8c2732285edbf3a96087f31fb2",
+      "task_id": "e87109e9"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 12,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/e87109e9/depth012/adapter_model.safetensors",
+      "sha256": "08af6433f1000615ecfd43cb3e657619cef524cdf9c7a4213b241a98708bb97b",
+      "task_id": "e87109e9"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 24,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/e87109e9/depth024/adapter_model.safetensors",
+      "sha256": "c03cca0f4fc83211e264047b173c6372a36ba599e5fd0b218851c507c536b1cf",
+      "task_id": "e87109e9"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 48,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/e87109e9/depth048/adapter_model.safetensors",
+      "sha256": "fe88096afcf1aaf6dd3e1ea4211f0493ad3658e523f588e2a774dbe61ae50a7d",
+      "task_id": "e87109e9"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 72,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/e87109e9/depth072/adapter_model.safetensors",
+      "sha256": "7105a107a59fc53ed0e7228759b3b81073eb609f8c0ad7633da95d16b408a2d6",
+      "task_id": "e87109e9"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 0,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/89565ca0/depth000/adapter_model.safetensors",
+      "sha256": "e6d9ff4b380f9839a8937e60386c7bed2ca0042e4625eb4fa7f6d79c8abeff12",
+      "task_id": "89565ca0"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 12,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/89565ca0/depth012/adapter_model.safetensors",
+      "sha256": "c35f4d04883ca66d04e2bd98c9fe00a5e55c3f6fcd4e541837b7a31cdef83af9",
+      "task_id": "89565ca0"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 24,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/89565ca0/depth024/adapter_model.safetensors",
+      "sha256": "b3fa6a4e694646885d8b4ea8339eacb996b9dc40f96dba4199e8604eeb12c224",
+      "task_id": "89565ca0"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 48,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/89565ca0/depth048/adapter_model.safetensors",
+      "sha256": "886226502516be7c6e9aea8f794ee9a3e949e62ef7a746d7697194aecfdaa523",
+      "task_id": "89565ca0"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 72,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/89565ca0/depth072/adapter_model.safetensors",
+      "sha256": "0ee65a5ffac8888008c6f87f697ba066efa0aedcce9a7b3375fcf9f2b89451eb",
+      "task_id": "89565ca0"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 0,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/fc7cae8d/depth000/adapter_model.safetensors",
+      "sha256": "2da78526976eae477e5fcef528417e52aa1cbaefd97c1b2accc4fb8ff02ef64b",
+      "task_id": "fc7cae8d"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 12,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/fc7cae8d/depth012/adapter_model.safetensors",
+      "sha256": "b7af68b73f829b161efa4f0257fb0f344d2216e25f446461e482d4420295a471",
+      "task_id": "fc7cae8d"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 24,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/fc7cae8d/depth024/adapter_model.safetensors",
+      "sha256": "0da05737ae8bfc1ff6e658078f4f255785ea83a9710e209f8aa7bab970cd440d",
+      "task_id": "fc7cae8d"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 48,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/fc7cae8d/depth048/adapter_model.safetensors",
+      "sha256": "85b07d471b48a4835f86c10d296d54812c129e3e292c950682eb575a11035171",
+      "task_id": "fc7cae8d"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 72,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/fc7cae8d/depth072/adapter_model.safetensors",
+      "sha256": "6906f70a4d0d6a9fdd81c193ee0627e3610f6f1e5da86f165af835cbef60bef6",
+      "task_id": "fc7cae8d"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 0,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/a47bf94d/depth000/adapter_model.safetensors",
+      "sha256": "996bb3b0bf9651c5649bebe81bc07502b8d175d194dabce3d5e32322cd268d66",
+      "task_id": "a47bf94d"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 12,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/a47bf94d/depth012/adapter_model.safetensors",
+      "sha256": "0047c12511f74c371efba8dfa13df3ae9a50b2f037115fa3d0ae9dd73c75e20e",
+      "task_id": "a47bf94d"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 24,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/a47bf94d/depth024/adapter_model.safetensors",
+      "sha256": "8c05d19c756ffd878d2276b22f289171210ffb33dd6d07debb1592252ae3f9db",
+      "task_id": "a47bf94d"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 48,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/a47bf94d/depth048/adapter_model.safetensors",
+      "sha256": "04277b08e37217f6b28c05d6f352f6fee31f9daa44fcbdb86b2cab9e0ff91a30",
+      "task_id": "a47bf94d"
+    },
+    {
+      "adapter_tensor_count": 506,
+      "depth": 72,
+      "format": "safetensors_adapter_only",
+      "path": "/workspace/arc2/active_runs/same_adapter_pair_surface_v1/checkpoints/a47bf94d/depth072/adapter_model.safetensors",
+      "sha256": "0125ad9c55ed41983cbac4c7c6fbeab10c8d6a9d716325e6d0901a49561c71d1",
+      "task_id": "a47bf94d"
+    }
+  ],
+  "identity": "70c2b8e563baad384f20a8c5b88bcd8b5410c89d9f881742bd573b4c348b1cf3",
+  "status": "FROZEN"
+}

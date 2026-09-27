@@ -1,0 +1,11 @@
+{
+  "evaluation_solutions_opened": false,
+  "generation_performed": false,
+  "identity": "70c2b8e563baad384f20a8c5b88bcd8b5410c89d9f881742bd573b4c348b1cf3",
+  "physical_gpu_id": 1,
+  "task_ids": [
+    "89565ca0",
+    "a47bf94d"
+  ],
+  "worker_id": 1
+}

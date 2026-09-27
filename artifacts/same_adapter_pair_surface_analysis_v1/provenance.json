@@ -1,0 +1,48 @@
+{
+  "analysis": "CPU_ONLY",
+  "frozen_source_modified": false,
+  "gpu_used": false,
+  "integrity": {
+    "adapter_binary_bytes_downloaded": false,
+    "adapter_only": true,
+    "adapter_sha_manifest_present": true,
+    "checkpoint_count": 30,
+    "checkpoint_sha_entries": 30,
+    "depths": [
+      0,
+      12,
+      24,
+      48,
+      72
+    ],
+    "duplicate_cell_count": 0,
+    "expected_record_count": 760,
+    "invalid_cell_count": 0,
+    "pass": true,
+    "record_count": 760,
+    "task_count": 6,
+    "verified_downloaded_hashes": {
+      "checkpoint_manifest.json": true,
+      "cohort.json": true,
+      "config_resolved.json": true,
+      "manifest.json": true,
+      "old_loo_surface_reference.csv": true,
+      "provenance.json": true,
+      "same_adapter_pair_surface.csv": true
+    },
+    "views": [
+      "anti_transpose",
+      "flip_lr",
+      "flip_ud",
+      "identity",
+      "rot180",
+      "rot270",
+      "rot90",
+      "transpose"
+    ]
+  },
+  "new_ttt_run": false,
+  "old_loo_surface_sha256": "e348e05b0e5a21e4b824fb6b2f4c8434ddc2c216934a4304699d391d689e09ab",
+  "source_manifest_sha256": "e21b4c4caec4e0fe42b9c54085e3a181654b0a1b6948529dc412eb89636f4737",
+  "surface_sha256": "1fdd8bb3b582b385484843aedf69c58fd99c457f63b34d719e71dd99f383f762"
+}

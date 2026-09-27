@@ -1,0 +1,23 @@
+{
+  "elapsed_seconds": 457.6749084275216,
+  "generation_performed": false,
+  "gpu_id": 0,
+  "identity": "70c2b8e563baad384f20a8c5b88bcd8b5410c89d9f881742bd573b4c348b1cf3",
+  "results": [
+    {
+      "cells": 120,
+      "pairs": 3,
+      "status": "SUCCESS",
+      "task_id": "e87109e9",
+      "wall_seconds": 310.09794715978205
+    },
+    {
+      "cells": 120,
+      "pairs": 3,
+      "status": "SUCCESS",
+      "task_id": "fc7cae8d",
+      "wall_seconds": 145.10834405198693
+    }
+  ],
+  "worker_id": 0
+}

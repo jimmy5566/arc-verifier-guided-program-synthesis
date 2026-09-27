@@ -1,0 +1,7 @@
+base_pair_heterogeneity,loo_caveat,loo_structural_top4_same_minus_old_median,task_id,ttt_within_same_adapter_top4_12_to_72
+depth0 top2=0.000; top4=0.143; eps001=0.000,different score target; no causal percentage,0.0,28a6681f,UNCHANGED
+depth0 top2=0.167; top4=0.333; eps001=0.000,different score target; no causal percentage,0.09523809523809523,21897d95,UNCHANGED
+depth0 top2=0.000; top4=0.333; eps001=0.000,different score target; no causal percentage,0.0,e87109e9,DECREASES
+depth0 top2=0.333; top4=0.600; eps001=0.000,different score target; no causal percentage,0.0,89565ca0,DECREASES
+depth0 top2=0.333; top4=0.600; eps001=0.000,different score target; no causal percentage,-0.19047619047619047,fc7cae8d,INCREASES
+depth0 top2=0.333; top4=0.600; eps001=0.200,different score target; no causal percentage,0.0,a47bf94d,INCREASES

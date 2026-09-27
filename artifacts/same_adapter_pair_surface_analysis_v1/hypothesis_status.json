@@ -1,0 +1,18 @@
+{
+  "J1": "WEAKLY_SUPPORTED",
+  "J2": "SUPPORTED",
+  "J3": "NOT_SUPPORTED",
+  "J4": "NOT_SUPPORTED",
+  "J5": "NOT_SUPPORTED",
+  "J6": "WEAKLY_SUPPORTED",
+  "J7": "INSUFFICIENT",
+  "best_coarse_overlap_depth": 0,
+  "best_strict_basin_depth": 72,
+  "decision_gate": "F",
+  "limits": [
+    "N=6 development tasks",
+    "old LOO uses a different score target context",
+    "no generalization claim"
+  ],
+  "should_ttt_config_optimization_precede_decoder": "NOT_YET"
+}
