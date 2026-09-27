@@ -1,0 +1,36 @@
+{
+  "experiment": "NONBLIND_DEVELOPMENT_LOO_TRANSFER30_V1",
+  "snapshot_scope": "target-blind frozen LOO rankings only; no evaluation solutions opened",
+  "source_commit": "7466df3d336335218463d341cee141b975311995",
+  "ranking_files": 13,
+  "ranking_snapshot_sha256": "d81e3f414d15044140caa4f190b2e333ecf1f8a3f163fe5c27935137c63124b65",
+  "top1_depth_counts": {
+    "0": 4,
+    "12": 6,
+    "24": 2,
+    "48": 0,
+    "72": 1
+  },
+  "top2_inclusion_depth_counts": {
+    "0": 8,
+    "12": 12,
+    "24": 3,
+    "48": 2,
+    "72": 1
+  },
+  "top1_task_depth": {
+    "195c6913": 24,
+    "20a9e565": 0,
+    "21897d95": 12,
+    "291dc1e1": 12,
+    "3dc255db": 12,
+    "409aa875": 0,
+    "4c416de3": 12,
+    "65b59efc": 72,
+    "88e364bc": 12,
+    "8f3a5a89": 0,
+    "a25697e4": 0,
+    "da515329": 12,
+    "e87109e9": 24
+  }
+}
