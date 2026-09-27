@@ -39,9 +39,10 @@ inventory=$(nvidia-smi --query-gpu=name,compute_cap --format=csv,noheader)
 [[ $(printf '%s\n' "$inventory" | wc -l) -ge $REQUIRED_GPUS ]] || fail "insufficient GPUs: $inventory"
 printf '%s\n' "$inventory" | head -n "$REQUIRED_GPUS" | grep -Eq '^NVIDIA GeForce RTX 3090, 8\.6$' || fail "expected RTX3090/sm86, got: $inventory"
 
-mkdir -p "$RUNTIME_ROOT"/{env,model-stage,hf_cache,torch_cache,triton_cache,uv_cache,active_run,tmp}
+mkdir -p "$RUNTIME_ROOT"/{env,model-stage,hf_cache,torch_cache,triton_cache,uv_cache,pip_cache,active_run,tmp}
 export HF_HOME=$RUNTIME_ROOT/hf_cache HUGGINGFACE_HUB_CACHE=$RUNTIME_ROOT/hf_cache/hub
 export TORCH_HOME=$RUNTIME_ROOT/torch_cache TRITON_CACHE_DIR=$RUNTIME_ROOT/triton_cache UV_CACHE_DIR=$RUNTIME_ROOT/uv_cache
+export PIP_CACHE_DIR=$RUNTIME_ROOT/pip_cache
 export TOKENIZERS_PARALLELISM=false
 
 if [[ ! -d "$VENV" ]]; then
