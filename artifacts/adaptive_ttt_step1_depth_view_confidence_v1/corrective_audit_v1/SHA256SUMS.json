@@ -1,0 +1,18 @@
+{
+  "REPORT.json": "d33d13325c2af78cc2739d4b4fe690ab34392f38e8df12fb4da880e7e728613c",
+  "REPORT.md": "686eac4a8055435350cb35c1285e7e3d1dad6d1931b2b9fb3646d19349f98429",
+  "competence_audit.csv": "4cdfed7e2831174b3879ef9c2640c497d57ee1e3cd5d8864647351a5d545287f",
+  "curve_table.csv": "30118fd17ac9d32912d736e38f478ea579319773995eb35e33209e1aa799b320",
+  "extended_cells.csv": "45f46f7715374f191fd0be96ffecb2fd75767d3bce6d15fc8d47d0d3f956903f",
+  "figures/01_all_views_exact_rate_vs_depth.png": "b8efdf48f457cb1d9d5ff30ba85f2226d9a21cc26e9d0671bf33d035553a7062",
+  "figures/02_all_views_confidence_vs_depth.png": "b5e772fe650c4fe5181152498fea207bcfd5919d75b608bea3f3182427d70d0f",
+  "figures/03_exact_rate_per_view.png": "82d9d4a322a2cea33ba9ee66df5e9b16e20f7377a151b4fbdfce25e91d629342",
+  "figures/04_confidence_per_view.png": "f869f65a62c16e514633c44aecbccdae4e7fe9fed1dea77295d7f58baf9f3c03",
+  "figures/05_confidence_bin_calibration.png": "966bebe3e84a256425d698ba217d39b1e92a61fd91008463ab44178c7b6d656c",
+  "figures/06_loo_competence_bin_calibration.png": "67afb6708daa3671264363ef4d285c2f9d08ef9a2dbd174de8a0c5256a3cfdbf",
+  "figures/07_best_depth_distribution.png": "f6ed00d6817fa3590c43036f24edbb6f2bebc28d1c7bea71e1fb6a94d4688387",
+  "figures/08_unique_contribution_by_view_depth.png": "9067a810b32eb647cbbc53991bbe0bd678abdcfcb10e6d635dea6ad0cc1fdfec",
+  "primary_cells.csv": "a91c709294cb842749296a22e003c796e5dc027e2e89c7d88c5b04689980755f",
+  "unique_contributions.csv": "b10787dfba6c3bc5844d637a847b6bce955cb37b6808d9c24193629e8e2528b5",
+  "within_task_confidence.csv": "c0eba7ed0a0055222fdf81deb0fd9752861062edc6624d182a0e8a76b1356b89"
+}
