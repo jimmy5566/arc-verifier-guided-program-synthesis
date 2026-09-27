@@ -30,6 +30,24 @@ def grid_key(grid: Any) -> str | None:
     return None if grid is None else json.dumps(grid, separators=(",", ":"), sort_keys=True)
 
 
+def solution_target(gold: dict[str, Any], task_id: str, output_index: int) -> Any:
+    """Return one official ARC evaluation target without normalising the file.
+
+    The public ARC solution releases have existed in both task-object
+    (``{task_id: {"test": [{"output": ...}]}}``) and compact task-list
+    (``{task_id: [grid, ...]}``) forms.  This post-freeze reader accepts those
+    documented layouts only; it never derives targets from challenge inputs.
+    """
+    task_solutions = gold[task_id]
+    if isinstance(task_solutions, list):
+        return task_solutions[output_index]
+    if isinstance(task_solutions, dict):
+        test_cases = task_solutions["test"]
+        item = test_cases[output_index]
+        return item["output"] if isinstance(item, dict) else item
+    raise TypeError(f"unsupported official solution layout for {task_id}: {type(task_solutions).__name__}")
+
+
 def write_checkpoint_retention(root: Path) -> None:
     rows = []
     for path in sorted((root / "checkpoints").rglob("metadata.json")):
@@ -78,7 +96,7 @@ def attach_gold(root: Path, solutions: Path) -> None:
     groups: dict[tuple[str, int], list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
         task_id, output_index = row["task_id"], int(row["output_index"])
-        target = gold[task_id]["test"][output_index]["output"]
+        target = solution_target(gold, task_id, output_index)
         exact = bool(row["valid_grid"] and row["canonical_candidate"] == target)
         item = {"task_id": task_id, "output_index": output_index, "depth": int(row["depth"]), "view": row["view"],
                 "GREEDY_EXACT": exact, "valid_grid": bool(row["valid_grid"]), "checkpoint_sha256": row["checkpoint_sha256"],
