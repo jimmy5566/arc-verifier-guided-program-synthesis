@@ -172,7 +172,7 @@ def _decode_cell(*, model: Any, tokenizer: Any, task: Any, target: Any, config: 
     return cell
 
 
-def _run_task(*, model: Any, tokenizer: Any, raw_task: Any, entry: dict[str, Any], config: dict[str, Any], state: dict[str, Any], adapter_before: dict[str, str], base_before: dict[str, str], identity: str, deadline: float) -> dict[str, Any]:
+def _run_task(*, model: Any, tokenizer: Any, raw_task: Any, entry: dict[str, Any], config: dict[str, Any], state: dict[str, Any], adapter_before: dict[str, str], base_before: dict[str, str], identity: str, deadline: float, worker_id: int) -> dict[str, Any]:
     import torch
     from peft import set_peft_model_state_dict
     from unsloth import FastLanguageModel
@@ -198,7 +198,7 @@ def _run_task(*, model: Any, tokenizer: Any, raw_task: Any, entry: dict[str, Any
                     # and is never used by the primary H1 router calculation.
                     cell.update({"cross_validation_score": _cross_validation_score(model=model, tokenizer=tokenizer, task=task, target=target, view=view), "ttt_loss": losses[-1] if losses else None, "ttt_recent_loss_delta": loss_delta, "adapter_update_observed": adapter_before != {name: _fingerprint(value) for name, value in list((pair for pair in model.named_parameters() if pair[1].requires_grad))[:8]}})
                     atomic_write_json(checkpoint, {"identity": identity, "status": "FROZEN", "cell": cell})
-                    _append_jsonl(Path(config["output_dir"]) / "cells.jsonl", cell)
+                    _append_jsonl(Path(config["output_dir"]) / f"cells_worker{worker_id}.jsonl", cell)
                     cells.append(cell)
             if step == 72:
                 break
@@ -217,7 +217,7 @@ def _run_task(*, model: Any, tokenizer: Any, raw_task: Any, entry: dict[str, Any
             raise RuntimeError("base model changed during Step 1")
         trajectory = {"task_id": raw_task.task_id, "held_out_train_index": entry["held_out_train_index"], "loss_curve": losses, "step_seconds": steps, "kept_sequence_count": len(kept), "train_variant_count": 128, "base_model_unchanged": True}
         atomic_write_json(Path(config["output_dir"]) / "checkpoints" / "trajectories" / f"{raw_task.task_id}.json", {"identity": identity, "trajectory": trajectory})
-        _append_jsonl(Path(config["output_dir"]) / "ttt_trajectories.jsonl", trajectory)
+        _append_jsonl(Path(config["output_dir"]) / f"ttt_trajectories_worker{worker_id}.jsonl", trajectory)
         return {"task_id": raw_task.task_id, "status": "SUCCESS", "cells": cells, "loss_curve": losses}
     finally:
         optimizer.zero_grad(set_to_none=True)
@@ -235,6 +235,9 @@ def main() -> None:
     parser.add_argument("--model-path", type=Path, required=True)
     parser.add_argument("--native-config-dir", type=Path, required=True)
     parser.add_argument("--deadline-seconds", type=int, default=5100)
+    parser.add_argument("--gpu-id", type=int, default=0)
+    parser.add_argument("--worker-id", type=int, default=0)
+    parser.add_argument("--task-ids", nargs="*")
     args = parser.parse_args()
     manifest, cohort, config = (_read(args.output_dir / name) for name in ("manifest.json", "cohort.json", "config_resolved.json"))
     _validate_inputs(manifest, cohort, config, args.challenge)
@@ -242,7 +245,13 @@ def main() -> None:
         raise RuntimeError(f"PTXAS unavailable: {config['ptxas_path']}")
     config["output_dir"] = str(args.output_dir)
     identity = _sha({"manifest": manifest, "cohort": cohort, "config": {key: value for key, value in config.items() if key != "output_dir"}})
-    os.environ.update({"CUDA_VISIBLE_DEVICES": "0", "TRITON_PTXAS_PATH": config["ptxas_path"], "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1", "TOKENIZERS_PARALLELISM": "false"})
+    if args.gpu_id < 0:
+        raise ValueError("gpu-id must be non-negative")
+    requested = set(args.task_ids or cohort["task_ids"])
+    unknown = requested - set(cohort["task_ids"])
+    if unknown:
+        raise ValueError(f"task ids outside frozen cohort: {sorted(unknown)}")
+    os.environ.update({"CUDA_VISIBLE_DEVICES": str(args.gpu_id), "TRITON_PTXAS_PATH": config["ptxas_path"], "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1", "TOKENIZERS_PARALLELISM": "false"})
     import torch
     from arc.io import load_dataset
     from peft import get_peft_model_state_dict
@@ -268,18 +277,20 @@ def main() -> None:
     adapter_before = {name: _fingerprint(value) for name, value in trainable[:8]}; base_before = {name: _fingerprint(value) for name, value in frozen[:8]}
     if not adapter_before or not base_before:
         raise RuntimeError("adapter/base partition invalid")
-    atomic_write_json(args.output_dir / "runtime_start.json", {"identity": identity, "gpu": torch.cuda.get_device_name(0), "tokenizer": metadata, "source_solutions_opened": False, "deadline_seconds": args.deadline_seconds})
+    atomic_write_json(args.output_dir / f"runtime_start_worker{args.worker_id}.json", {"identity": identity, "worker_id": args.worker_id, "physical_gpu_id": args.gpu_id, "gpu": torch.cuda.get_device_name(0), "tokenizer": metadata, "source_solutions_opened": False, "deadline_seconds": args.deadline_seconds, "task_ids": sorted(requested)})
     results = []
     try:
         for entry in cohort["entries"]:
+            if entry["task_id"] not in requested:
+                continue
             if time.monotonic() >= deadline:
                 break
-            result = _run_task(model=model, tokenizer=tokenizer, raw_task=tasks[entry["task_id"]], entry=entry, config=config, state=state, adapter_before=adapter_before, base_before=base_before, identity=identity, deadline=deadline)
+            result = _run_task(model=model, tokenizer=tokenizer, raw_task=tasks[entry["task_id"]], entry=entry, config=config, state=state, adapter_before=adapter_before, base_before=base_before, identity=identity, deadline=deadline, worker_id=args.worker_id)
             results.append(result)
             print(json.dumps({"event": "STEP1_TASK", "task_id": entry["task_id"], "status": result["status"], "cells": len(result["cells"])}, sort_keys=True), flush=True)
     finally:
         del model; gc.collect(); torch.cuda.empty_cache()
-    atomic_write_json(args.output_dir / "runtime_stop.json", {"identity": identity, "elapsed_seconds": time.monotonic() - began, "deadline_reached": time.monotonic() >= deadline, "task_results": [{key: value for key, value in item.items() if key != "cells"} for item in results], "solutions_opened": False})
+    atomic_write_json(args.output_dir / f"runtime_stop_worker{args.worker_id}.json", {"identity": identity, "worker_id": args.worker_id, "physical_gpu_id": args.gpu_id, "elapsed_seconds": time.monotonic() - began, "deadline_reached": time.monotonic() >= deadline, "task_results": [{key: value for key, value in item.items() if key != "cells"} for item in results], "solutions_opened": False})
     print(json.dumps({"event": "ADAPTIVE_TTT_STEP1_STOP", "elapsed_seconds": time.monotonic() - began, "completed_task_attempts": len(results), "solutions_opened": False}, sort_keys=True))
 
 
