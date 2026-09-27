@@ -194,7 +194,11 @@ def runtime(args: argparse.Namespace) -> tuple[Path, dict[str, Any], dict[str, A
         max_new_tokens=int(turbo_payload["max_new_tokens"]),
         max_cumulative_nll=float(turbo_payload["max_cumulative_nll"]),
         max_wall_seconds=float(turbo_payload["max_wall_seconds"]),
-        max_batch_forward_passes=int(turbo_payload["max_batch_forward_passes"]),
+        max_batch_forward_passes=(
+            None
+            if turbo_payload.get("max_batch_forward_passes") is None
+            else int(turbo_payload["max_batch_forward_passes"])
+        ),
         max_complete_candidates_per_prompt=int(turbo_payload["max_complete_candidates_per_prompt"]),
         top_k_trace=int(turbo_payload["top_k_trace"]),
         capture_full_arc_distribution=bool(turbo_payload["capture_full_arc_distribution"]),
@@ -422,7 +426,7 @@ def calibrate(args: argparse.Namespace) -> None:
     if len(selected) != 2:
         raise RuntimeError("missing first two hash-selected outputs")
     manifest["status"] = "STAGE2_CALIBRATING"; atomic_json(root / "run_manifest.json", manifest)
-    decoder = TurboDFSOptConfig(max_new_tokens=int(turbo_payload["max_new_tokens"]), max_cumulative_nll=float(turbo_payload["max_cumulative_nll"]), max_wall_seconds=float(turbo_payload["max_wall_seconds"]), max_batch_forward_passes=int(turbo_payload["max_batch_forward_passes"]), max_complete_candidates_per_prompt=int(turbo_payload["max_complete_candidates_per_prompt"]), top_k_trace=int(turbo_payload["top_k_trace"]), capture_full_arc_distribution=bool(turbo_payload["capture_full_arc_distribution"]), pad_token_id=int(turbo_payload["pad_token_id"]), branch_ordering=str(turbo_payload["branch_ordering"]))
+    decoder = TurboDFSOptConfig(max_new_tokens=int(turbo_payload["max_new_tokens"]), max_cumulative_nll=float(turbo_payload["max_cumulative_nll"]), max_wall_seconds=float(turbo_payload["max_wall_seconds"]), max_batch_forward_passes=(None if turbo_payload.get("max_batch_forward_passes") is None else int(turbo_payload["max_batch_forward_passes"])), max_complete_candidates_per_prompt=int(turbo_payload["max_complete_candidates_per_prompt"]), top_k_trace=int(turbo_payload["top_k_trace"]), capture_full_arc_distribution=bool(turbo_payload["capture_full_arc_distribution"]), pad_token_id=int(turbo_payload["pad_token_id"]), branch_ordering=str(turbo_payload["branch_ordering"]))
     adapters_by_task: dict[str, dict[int, dict[str, Any]]] = {}
     cells = []
     try:

@@ -1,0 +1,24 @@
+PUBLIC `turbo_dfs` stopping condition:
+  while time.time() - start_time < 540 and time.time() < end_time:
+  no forward-pass cap
+
+PREVIOUS LOCAL V1 configuration:
+  max_wall_seconds = 45.0
+  max_batch_forward_passes = 256
+
+FROZEN PUBLIC-INFORMED LOCAL V1 configuration:
+  max_wall_seconds = 540.0
+  max_batch_forward_passes = null
+
+Shared source semantics:
+  nll = prior_cumulative_nll - log_softmax(logits)
+  retain only score < -log(0.2)
+  ARC token vocabulary is digits/newline/EOS
+  score ordered live candidates
+  model(input token, position_id, past_key_values, use_cache=True)
+  recursive return of EOS completed suffixes
+
+Explicit local differences retained:
+  up to four completed candidates retained per prompt
+  score then token-id deterministic ties
+  rich node/probability trace retention

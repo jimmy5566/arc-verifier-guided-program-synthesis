@@ -1,0 +1,29 @@
+{
+  "decoder_id": "TURBODFS_OPT_V1",
+  "implementation": "src/inference/nvarc_turbodfs_opt.py",
+  "implementation_semantics_sha256_input": "public-notebook feature matrix and local implementation diff",
+  "public_source": {
+    "repository": "https://github.com/1ytic/NVARC",
+    "commit": "846d0198efa752534594e321fc3289fc0a06c657",
+    "notebook": "ARC-AGI1/002_ivan_arc1.ipynb",
+    "notebook_sha256": "24e57f6ae39e63d0041641ae2302a40f7afb9c2973420fb8db05054028537e52",
+    "source_functions": ["arc_solver.py:turbo_dfs", "arc_solver.py:inference_turbo_dfs"]
+  },
+  "algorithm": "public_nvarc_batched_kv_cached_cumulative_nll_dfs_with_explicit_local_candidate_retention",
+  "allowed_tokens": "native_digits_0_to_9_newline_plus_eos",
+  "pad_token_id": 13,
+  "max_new_tokens": 931,
+  "max_cumulative_nll": 1.6094379124341003,
+  "max_wall_seconds": 540.0,
+  "max_batch_forward_passes": null,
+  "max_complete_candidates_per_prompt": 4,
+  "top_k_trace": 8,
+  "capture_full_arc_distribution": true,
+  "branch_ordering": "cumulative_nll_ascending_then_token_id",
+  "candidate_ordering": "cumulative_nll_ascending_then_token_ids",
+  "cache_behavior": "public_style_past_key_values_per_batched_live_lane",
+  "stopping_criteria": ["search_exhausted", "max_wall_seconds", "max_complete_candidates_per_prompt", "max_new_tokens"],
+  "target_blind": true,
+  "gold_access_forbidden_before_generation_freeze": true,
+  "v1_local_safety_cap_removed_for_public_time_stop_parity": true
+}
