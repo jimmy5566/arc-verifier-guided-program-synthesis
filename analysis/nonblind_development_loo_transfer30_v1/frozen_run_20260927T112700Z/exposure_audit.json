@@ -1,0 +1,1328 @@
+{
+  "audit_mode": "CPU_ONLY_REPOSITORY_EXPOSURE_AUDIT",
+  "counts": {
+    "EXCLUDED_ADAPTIVE_DEVELOPMENT": 60,
+    "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE": 60
+  },
+  "excluded_eval60_count": 60,
+  "excluded_prior_adaptive_count": 26,
+  "repo_root": "/root/arc-runtime-adaptive-2x3090/arc2",
+  "solutions_opened": false,
+  "tasks": [
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_loo_transfer12_v1/cohort.json"
+      ],
+      "task_id": "0934a4d8",
+      "test_output_count": 1,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "135a2760",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "136b0064",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_loo_transfer12_v1/cohort.json"
+      ],
+      "task_id": "13e47133",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S1_EXECUTION.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S2_EXECUTION.json",
+        "tests/test_smoke12_ttt_cost_ablation.py",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "142ca369",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "16b78196",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S1_EXECUTION.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S2_EXECUTION.json",
+        "tests/test_smoke12_ttt_cost_ablation.py",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "16de56c4",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "governance/registry/cohorts/eval60.json"
+      ],
+      "task_id": "1818057f",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "195c6913",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "1ae2feb7",
+      "test_output_count": 3,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_loo_transfer12_v1/cohort.json"
+      ],
+      "task_id": "20270e3b",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "20a9e565",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "21897d95",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "221dfab4",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "247ef758",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "269e22fb",
+      "test_output_count": 2,
+      "train_pair_count": 5
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "271d71e2",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "28a6681f",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "291dc1e1",
+      "test_output_count": 1,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "2b83f449",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "2ba387bc",
+      "test_output_count": 1,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_loo_transfer12_v1/cohort.json"
+      ],
+      "task_id": "2c181942",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_step1_depth_view_confidence_v1/cohort.json",
+        "artifacts/adaptive_ttt_step1_depth_view_confidence_v1/runtime_start_worker1.json",
+        "artifacts/adaptive_ttt_step1_depth_view_confidence_v1/runtime_stop_worker1.json",
+        "artifacts/adaptive_ttt_step1_depth_view_confidence_v1/checkpoints/cells/2d0172a1/depth-00-identity.json"
+      ],
+      "task_id": "2d0172a1",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "31f7f899",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "332f06d7",
+      "test_output_count": 1,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "35ab12c3",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "36a08778",
+      "test_output_count": 2,
+      "train_pair_count": 6
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "38007db0",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "governance/benchmarks/legacy-eval3/eval3_manifest.json",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "3a25b0d8",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "3dc255db",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "3e6067c3",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "409aa875",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S1_EXECUTION.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S2_EXECUTION.json",
+        "tests/test_smoke12_ttt_cost_ablation.py",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "446ef5d2",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "45a5af55",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_loo_transfer12_v1/cohort.json"
+      ],
+      "task_id": "4a21e3da",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "4c3d4a41",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "4c416de3",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "4c7dc4dd",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "4e34c42c",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "53fb4810",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "5545f144",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "581f7754",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S1_EXECUTION.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S2_EXECUTION.json",
+        "scripts/build_d1_live_smoke_kaggle.py",
+        "tests/test_release_contract_mutations.py",
+        "tests/test_smoke12_ttt_cost_ablation.py",
+        "governance/registry/cohorts/engineering_smoke.json"
+      ],
+      "task_id": "58490d8a",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "58f5dbd5",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "5961cc34",
+      "test_output_count": 1,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S1_EXECUTION.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S2_EXECUTION.json",
+        "scripts/build_official_nvarc_preflight_kaggle.py",
+        "scripts/run_5090_blackwell_unleashed_phase2_queue.py",
+        "tests/test_eval3_reference_ttt.py",
+        "tests/test_phase2_backend_contract.py"
+      ],
+      "task_id": "5dbc8537",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "62593bfd",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "64efde09",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "65b59efc",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "67e490f4",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "6e453dd6",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "6e4f6532",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_loo_transfer12_v1/cohort.json"
+      ],
+      "task_id": "6ffbe589",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "governance/ADAPTIVE_TTT_DECISION_LOG.md",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_step1_depth_view_confidence_v1/cohort.json",
+        "artifacts/adaptive_ttt_step1_depth_view_confidence_v1/runtime_start_worker1.json",
+        "artifacts/adaptive_ttt_step1_depth_view_confidence_v1/runtime_stop_worker1.json"
+      ],
+      "task_id": "71e489b6",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "7491f3cf",
+      "test_output_count": 1,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "7666fa5d",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "78332cb0",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "7b0280bc",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S1_EXECUTION.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S2_EXECUTION.json",
+        "tests/test_smoke12_ttt_cost_ablation.py",
+        "governance/ADAPTIVE_TTT_DECISION_LOG.md",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json"
+      ],
+      "task_id": "7b3084d4",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "7b5033c1",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "7b80bb43",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "7c66cb00",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "7ed72f31",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "800d221b",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S1_EXECUTION.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S2_EXECUTION.json",
+        "tests/test_smoke12_ttt_cost_ablation.py",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "80a900e0",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "8698868d",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "88bcf3b4",
+      "test_output_count": 2,
+      "train_pair_count": 5
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "88e364bc",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "89565ca0",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "898e7135",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "8b7bacbf",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "8b9c3697",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "8e5c0c38",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "8f215267",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "8f3a5a89",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "9385bd28",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S1_EXECUTION.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S2_EXECUTION.json",
+        "tests/test_smoke12_ttt_cost_ablation.py",
+        "governance/benchmarks/legacy-eval3/eval3_manifest.json",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json"
+      ],
+      "task_id": "97d7923e",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "scripts/audit_adaptive_ttt_step1_corrective.py",
+        "governance/ADAPTIVE_TTT_DECISION_LOG.md",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_step1_depth_view_confidence_v1/cohort.json"
+      ],
+      "task_id": "981571dc",
+      "test_output_count": 1,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "9aaea919",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_loo_transfer12_v1/cohort.json"
+      ],
+      "task_id": "9bbf930d",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "a251c730",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "a25697e4",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_loo_transfer12_v1/cohort.json"
+      ],
+      "task_id": "a32d8b75",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "a395ee82",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "a47bf94d",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "a6f40cea",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "governance/registry/cohorts/eval60.json",
+        "artifacts/adaptive_ttt_loo_transfer12_v1/cohort.json"
+      ],
+      "task_id": "aa4ec2a5",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "abc82100",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "b0039139",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "b10624e5",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S1_EXECUTION.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S2_EXECUTION.json",
+        "tests/test_smoke12_ttt_cost_ablation.py",
+        "governance/ADAPTIVE_TTT_DECISION_LOG.md",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json"
+      ],
+      "task_id": "b5ca7ac4",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_loo_transfer12_v1/cohort.json"
+      ],
+      "task_id": "b6f77b65",
+      "test_output_count": 3,
+      "train_pair_count": 5
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S1_EXECUTION.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S2_EXECUTION.json",
+        "tests/test_smoke12_ttt_cost_ablation.py",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "b99e7126",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "b9e38dc0",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "bf45cf4b",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json",
+        "artifacts/adaptive_ttt_loo_transfer12_v1/cohort.json"
+      ],
+      "task_id": "c4d067a0",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "c7f57c3e",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S1_EXECUTION.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S2_EXECUTION.json",
+        "tests/test_smoke12_ttt_cost_ablation.py",
+        "governance/ADAPTIVE_TTT_DECISION_LOG.md",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json"
+      ],
+      "task_id": "cb2d8a2c",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "cbebaa4b",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "d35bdbdc",
+      "test_output_count": 3,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "d59b0160",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "d8e07eb2",
+      "test_output_count": 2,
+      "train_pair_count": 5
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "da515329",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "governance/registry/cohorts/eval60.json",
+        "artifacts/adaptive_ttt_loo_transfer12_v1/cohort.json"
+      ],
+      "task_id": "db0c5428",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "db695cfb",
+      "test_output_count": 1,
+      "train_pair_count": 5
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "dbff022c",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "dd6b8c4b",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "de809cff",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_FREEZE.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S1_EXECUTION.json",
+        "experiments/protocols/SMOKE12_TTT_COST_ACCURACY_R1_S2_EXECUTION.json",
+        "tests/test_smoke12_ttt_cost_ablation.py",
+        "governance/ADAPTIVE_TTT_DECISION_LOG.md",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json"
+      ],
+      "task_id": "dfadab01",
+      "test_output_count": 1,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "e12f9a14",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "e3721c99",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "e376de54",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "e8686506",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "e87109e9",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "governance/registry/cohorts/eval60.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "edb79dae",
+      "test_output_count": 1,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "eee78d87",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "f560132c",
+      "test_output_count": 2,
+      "train_pair_count": 2
+    },
+    {
+      "exposure_class": "EXCLUDED_ADAPTIVE_DEVELOPMENT",
+      "historical_paths": [
+        "experiments/experiments.csv",
+        "scripts/build_d1_live_smoke_kaggle.py",
+        "tests/test_release_contract_mutations.py",
+        "governance/registry/cohorts/engineering_smoke.json",
+        "governance/registry/cohorts/eval60.json",
+        "governance/registry/cohorts/smoke30.json",
+        "release/TTT24_TTT48_4PLUS4_D1_BASELINE_V1/RELEASE_STATUS.json"
+      ],
+      "task_id": "f931b4a8",
+      "test_output_count": 2,
+      "train_pair_count": 5
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "faa9f03d",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "fc7cae8d",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    }
+  ]
+}

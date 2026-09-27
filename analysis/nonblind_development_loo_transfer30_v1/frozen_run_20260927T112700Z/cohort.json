@@ -1,0 +1,312 @@
+{
+  "entries": [
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "a25697e4",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "4c416de3",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "21897d95",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "3dc255db",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "20a9e565",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "da515329",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "291dc1e1",
+      "test_output_count": 1,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "e87109e9",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "195c6913",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "65b59efc",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "409aa875",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "88e364bc",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "8f3a5a89",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "fc7cae8d",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "a47bf94d",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "6e453dd6",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "5545f144",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "e12f9a14",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "8f215267",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "136b0064",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "8b9c3697",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "b0039139",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "581f7754",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "7c66cb00",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "5961cc34",
+      "test_output_count": 1,
+      "train_pair_count": 4
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "faa9f03d",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "35ab12c3",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "89565ca0",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "269e22fb",
+      "test_output_count": 2,
+      "train_pair_count": 5
+    },
+    {
+      "exposure_class": "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE",
+      "historical_paths": [
+        "experiments/experiments.csv"
+      ],
+      "task_id": "28a6681f",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    }
+  ],
+  "scope": "development transfer / mechanism validation only; not unseen, untouched, held-out, strict blind validation, or final generalization evidence",
+  "selection_rule": "Official evaluation challenge; exclude all Eval60 and all prior adaptive/LOO exposure; among HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE tasks with >=3 train pairs select 30 smallest SHA256(task_id)",
+  "solutions_opened": false,
+  "source_challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "status": "NONBLIND_DEVELOPMENT_COHORT_FROZEN_TARGET_BLIND_WITH_RESPECT_TO_CURRENT_RUN",
+  "task_ids": [
+    "a25697e4",
+    "4c416de3",
+    "21897d95",
+    "3dc255db",
+    "20a9e565",
+    "da515329",
+    "291dc1e1",
+    "e87109e9",
+    "195c6913",
+    "65b59efc",
+    "409aa875",
+    "88e364bc",
+    "8f3a5a89",
+    "fc7cae8d",
+    "a47bf94d",
+    "6e453dd6",
+    "5545f144",
+    "e12f9a14",
+    "8f215267",
+    "136b0064",
+    "8b9c3697",
+    "b0039139",
+    "581f7754",
+    "7c66cb00",
+    "5961cc34",
+    "faa9f03d",
+    "35ab12c3",
+    "89565ca0",
+    "269e22fb",
+    "28a6681f"
+  ],
+  "task_ids_sha256": "88603acf9336361efba2b4864f2d19fd3dede61f8cb3141309887f5e7f3728e7"
+}

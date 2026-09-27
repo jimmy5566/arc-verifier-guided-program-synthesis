@@ -1,0 +1,30 @@
+{
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "cohort_sha256": "d9e29904645e6e1530560b5e7bcf6bae869b731e9e4daf910b64cec0c5aa48c5",
+  "config_sha256": "2c98d33f7d5c0103971d2ce195f6c819f360e1dd2962a582d3456a4244ad6c7d",
+  "depths": [
+    0,
+    12,
+    24,
+    48,
+    72
+  ],
+  "experiment_id": "NONBLIND_DEVELOPMENT_LOO_TRANSFER30_V1",
+  "gen_views": [
+    "identity",
+    "rot90",
+    "rot180",
+    "rot270",
+    "flip_lr",
+    "flip_ud",
+    "transpose",
+    "anti_transpose"
+  ],
+  "planned_tasks": 30,
+  "scope": "development transfer / mechanism validation only",
+  "sentinel_sha256": "752229b1b2c20fce90bc8662ba9e8dc12d9fe82453b6bc62a7b3c36229e566a4",
+  "sentinel_tasks": 6,
+  "source_commit": "7466df3d336335218463d341cee141b975311995",
+  "status": "NONBLIND_DEVELOPMENT_LOO_TRANSFER30_V1_CONFIGURATION_FROZEN",
+  "test_targets_available_to_gpu": false
+}

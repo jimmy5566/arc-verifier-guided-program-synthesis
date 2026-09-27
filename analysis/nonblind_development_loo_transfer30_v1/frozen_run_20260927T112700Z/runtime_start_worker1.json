@@ -1,0 +1,8 @@
+{
+  "dynamic_task_claims": true,
+  "identity": "e1371543e1bc07cf519b3fbd426e3c0df1523fc320694af5e41c0301f08b786a",
+  "physical_gpu_id": 1,
+  "source_commit": "7466df3d336335218463d341cee141b975311995",
+  "source_solutions_opened": false,
+  "worker_id": 1
+}
