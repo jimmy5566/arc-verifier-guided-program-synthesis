@@ -1,0 +1,172 @@
+{
+  "caveat": "Gold Test NLL is measured on reconstructed all-train trajectories, not the exact adapter tensors from the frozen Transfer30 run.",
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "current_local_head_at_prepare": "c33f85856305c92ad63f04b7a512c9278a0a4399",
+  "depths": [
+    0,
+    12,
+    24,
+    48,
+    72
+  ],
+  "exact_replay": false,
+  "experiment_id": "RECONSTRUCTED_TRAJECTORY_GOLD_NLL_AUDIT",
+  "frozen_archive_commit": "e66da47a3403913c6d1e06a7cfb29a6d484e1faf",
+  "frozen_raw_archive_sha256": "84cdf9faced48ac98503f580c4355de234ced2b397c5d5155c72cf615e136ce4",
+  "frozen_source_commit": "7466df3d336335218463d341cee141b975311995",
+  "gen_view_definitions": [
+    {
+      "color_offset": 0,
+      "geometry": "identity",
+      "pair_order": "canonical"
+    },
+    {
+      "color_offset": 0,
+      "geometry": "rot90",
+      "pair_order": "canonical"
+    },
+    {
+      "color_offset": 0,
+      "geometry": "rot180",
+      "pair_order": "canonical"
+    },
+    {
+      "color_offset": 0,
+      "geometry": "rot270",
+      "pair_order": "canonical"
+    },
+    {
+      "color_offset": 0,
+      "geometry": "flip_lr",
+      "pair_order": "canonical"
+    },
+    {
+      "color_offset": 0,
+      "geometry": "flip_ud",
+      "pair_order": "canonical"
+    },
+    {
+      "color_offset": 0,
+      "geometry": "transpose",
+      "pair_order": "canonical"
+    },
+    {
+      "color_offset": 0,
+      "geometry": "anti_transpose",
+      "pair_order": "canonical"
+    }
+  ],
+  "model_id": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1",
+  "new_gpu_work": "six continuous all-train trajectories to depth 72 plus teacher-forced gold scoring at five depths by eight views; no decoding",
+  "raw_run_path": "C:\\Users\\asus\\AppData\\Local\\Temp\\arc2-nonblind-transfer30-e66da47-raw\\nonblind_development_loo_transfer30_v1",
+  "reconstructed_trajectory": true,
+  "scoring_implementation": "scripts.run_adaptive_ttt_step1._cross_validation_score plus exact-detail parity implementation in this audit",
+  "scoring_source_path": "scripts/run_adaptive_ttt_step1.py",
+  "sentinel_output_count": 7,
+  "sentinel_task_ids": [
+    "28a6681f",
+    "21897d95",
+    "e87109e9",
+    "89565ca0",
+    "fc7cae8d",
+    "a47bf94d"
+  ],
+  "sentinel_task_ids_sha256": "b25ba34222f79529f90e91e6e94c81d5efd6005c3fbac85fbee11cbe61c0ba3b",
+  "solutions_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "solutions_usage": "INTENTIONAL_GOLD_TEACHER_FORCING_ONLY; no candidate generation, selector, ranking choice, or retries",
+  "source_solutions_were_opened_previously": true,
+  "status": "RECONSTRUCTED_TRAJECTORY_GOLD_NLL_AUDIT_CONFIGURATION_FROZEN",
+  "tokenizer_id": "checkpoint_native_tokenizer",
+  "ttt_config": {
+    "alpha": 32,
+    "augmentation_colour_permutations": 16,
+    "augmentation_geometry_count": 8,
+    "bf16": true,
+    "cv_folds": "all leave-one-train-pair-out",
+    "depths": [
+      0,
+      12,
+      24,
+      48,
+      72
+    ],
+    "dynamic_queue": "atomic task claim; one continuous trajectory per GPU at a time",
+    "experiment_id": "NONBLIND_DEVELOPMENT_LOO_TRANSFER30_V1",
+    "fixed_baselines": {
+      "FIXED_24_IDENTITY": [
+        24,
+        "identity"
+      ],
+      "FIXED_48_IDENTITY": [
+        48,
+        "identity"
+      ],
+      "STEP1_BEST_FIXED_12_TRANSPOSE": [
+        12,
+        "transpose"
+      ]
+    },
+    "full_train_steps": 72,
+    "gen_views": [
+      "identity",
+      "rot90",
+      "rot180",
+      "rot270",
+      "flip_lr",
+      "flip_ud",
+      "transpose",
+      "anti_transpose"
+    ],
+    "generation": "unchanged greedy Aug8; beam=1",
+    "generation_augmentation_count": 8,
+    "generation_color_offsets": [
+      0
+    ],
+    "generation_context_window": 16384,
+    "generation_pair_orders": [
+      "canonical"
+    ],
+    "gradient_checkpointing": false,
+    "historical_outcomes_permitted_only_after_prediction_freeze": true,
+    "kernel_source": "sorokin/pip-install-unsloth-flash-patch",
+    "learning_rate": 5e-05,
+    "max_new_tokens": 1024,
+    "max_sequence_length": 8192,
+    "primary_competence": "arithmetic_mean_cv_nll_per_token",
+    "ptxas_path": "/usr/local/cuda-12.8/bin/ptxas",
+    "rank": 256,
+    "reference_commit": "846d0198efa752534594e321fc3289fc0a06c657",
+    "reference_notebook": "sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue",
+    "reference_repository": "https://github.com/1ytic/NVARC",
+    "reference_schedule_total_steps": 128,
+    "scheduler": "cosine",
+    "seed": 42,
+    "source_commit": "7466df3d336335218463d341cee141b975311995",
+    "style": "official_nvarc_train_only_partial_24_steps",
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj",
+      "embed_tokens",
+      "lm_head"
+    ],
+    "train_pair_order": "random full permutation",
+    "ttt_steps": 72,
+    "use_rslora": true,
+    "warmup_ratio": 0.1
+  },
+  "views": [
+    "identity",
+    "rot90",
+    "rot180",
+    "rot270",
+    "flip_lr",
+    "flip_ud",
+    "transpose",
+    "anti_transpose"
+  ]
+}

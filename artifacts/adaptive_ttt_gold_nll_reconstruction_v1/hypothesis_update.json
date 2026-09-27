@@ -1,0 +1,156 @@
+{
+  "case": "CASE_C_RECONSTRUCTION_LIMITED",
+  "caveat": "Gold surface derives from newly reconstructed all-train TTT trajectories; exact frozen adapter-state replay was impossible because adapter tensors/checkpoints were not preserved.",
+  "decision": "REJECTED_FOR_RECONSTRUCTED_TRAJECTORY_GOLD_NLL_ROUTING",
+  "depth_view_recovery": {
+    "depth_top1": 2,
+    "depth_top2": 3,
+    "depth_top4": 3,
+    "gold_best_depth_counts": {
+      "0": 1,
+      "12": 0,
+      "24": 3,
+      "48": 2,
+      "72": 1
+    },
+    "gold_best_view_counts": {
+      "anti_transpose": 1,
+      "flip_lr": 0,
+      "flip_ud": 0,
+      "identity": 1,
+      "rot180": 1,
+      "rot270": 0,
+      "rot90": 4,
+      "transpose": 0
+    },
+    "joint_top1": 0,
+    "joint_top2": 0,
+    "joint_top4": 0,
+    "view_top1": 0,
+    "view_top2": 0,
+    "view_top4": 2
+  },
+  "experiment": "RECONSTRUCTED_TRAJECTORY_GOLD_NLL_AUDIT",
+  "gold_path_accessibility": {
+    "GREEDY_FRIENDLY": 2,
+    "SEARCH_FRIENDLY": 5
+  },
+  "h3b": "NOT_SUPPORTED_ON_RECONSTRUCTED_SENTINEL6",
+  "interpretation_timing": "POST_FREEZE; no numeric decision threshold was preregistered",
+  "macro": {
+    "gold_rank_of_loo_top1": {
+      "mean": 14.285714285714286,
+      "median": 12.0
+    },
+    "kendall": {
+      "mean": 0.07692307692307691,
+      "median": 0.14102564102564102
+    },
+    "loo_rank_of_gold_top1": {
+      "mean": 21.571428571428573,
+      "median": 25.0
+    },
+    "spearman": {
+      "mean": 0.11042615920664701,
+      "median": 0.24896810506566605
+    },
+    "top1_regret": {
+      "mean": 0.023496036683874472,
+      "median": 0.012913528829813004
+    },
+    "top2_regret": {
+      "mean": 0.023496036683874472,
+      "median": 0.012913528829813004
+    },
+    "top4_regret": {
+      "mean": 0.015690655514065708,
+      "median": 0.012913528829813004
+    }
+  },
+  "next_experiment": "STOP LOO routing expansion; no TurboDFS trigger because CASE A was not supported.",
+  "no_all30_without_user_approval": true,
+  "old_greedy_exact_cells": [
+    {
+      "depth": 48,
+      "gold_nll_mean": 0.003784291911870241,
+      "gold_nll_rank": 2,
+      "output_index": 0,
+      "task_id": "fc7cae8d",
+      "view": "anti_transpose"
+    },
+    {
+      "depth": 72,
+      "gold_nll_mean": 0.003178156679496169,
+      "gold_nll_rank": 1,
+      "output_index": 0,
+      "task_id": "fc7cae8d",
+      "view": "anti_transpose"
+    },
+    {
+      "depth": 48,
+      "gold_nll_mean": 0.0033076705876737833,
+      "gold_nll_rank": 1,
+      "output_index": 0,
+      "task_id": "a47bf94d",
+      "view": "rot90"
+    },
+    {
+      "depth": 72,
+      "gold_nll_mean": 0.003816381562501192,
+      "gold_nll_rank": 2,
+      "output_index": 0,
+      "task_id": "a47bf94d",
+      "view": "flip_ud"
+    }
+  ],
+  "rationale": "All seven frozen LOO Top1/Top2/Top4 selections missed the reconstructed Gold-NLL-best depth-view cell; loss curves were correlated but not identical, so this does not prove the same failure for unpreserved original adapter states.",
+  "retrieval": {
+    "top1": 0,
+    "top2": 0,
+    "top4": 0
+  },
+  "trajectory_reconstruction": {
+    "21897d95": {
+      "descriptive_classification": "CLOSE",
+      "first_measurable_divergence_step": 2,
+      "loss_curve_correlation": 0.9989439381101339,
+      "max_abs_loss_delta": 0.009422985836863518,
+      "mean_abs_loss_delta": 0.0018876321587918533
+    },
+    "28a6681f": {
+      "descriptive_classification": "CLOSE",
+      "first_measurable_divergence_step": 2,
+      "loss_curve_correlation": 0.9985043320879773,
+      "max_abs_loss_delta": 0.010256309993565083,
+      "mean_abs_loss_delta": 0.0010575345030853593
+    },
+    "89565ca0": {
+      "descriptive_classification": "MODERATELY_DIFFERENT",
+      "first_measurable_divergence_step": 2,
+      "loss_curve_correlation": 0.9948617471680937,
+      "max_abs_loss_delta": 0.0636010468006134,
+      "mean_abs_loss_delta": 0.0110592157062557
+    },
+    "a47bf94d": {
+      "descriptive_classification": "MODERATELY_DIFFERENT",
+      "first_measurable_divergence_step": 2,
+      "loss_curve_correlation": 0.9924171307468502,
+      "max_abs_loss_delta": 0.005471779499202967,
+      "mean_abs_loss_delta": 0.0006592787208824626
+    },
+    "e87109e9": {
+      "descriptive_classification": "MODERATELY_DIFFERENT",
+      "first_measurable_divergence_step": 2,
+      "loss_curve_correlation": 0.9902298971283626,
+      "max_abs_loss_delta": 0.009211366064846516,
+      "mean_abs_loss_delta": 0.0012206507784261096
+    },
+    "fc7cae8d": {
+      "descriptive_classification": "MODERATELY_DIFFERENT",
+      "first_measurable_divergence_step": 2,
+      "loss_curve_correlation": 0.980502938824774,
+      "max_abs_loss_delta": 0.020027701277285814,
+      "mean_abs_loss_delta": 0.0030774688475250717
+    }
+  }
+}

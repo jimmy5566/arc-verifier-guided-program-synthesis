@@ -1,0 +1,42 @@
+{
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "depths": [
+    0,
+    12,
+    24,
+    48,
+    72
+  ],
+  "exact_replay": false,
+  "experiment_id": "RECONSTRUCTED_TRAJECTORY_GOLD_NLL_AUDIT",
+  "frozen_archive_commit": "e66da47a3403913c6d1e06a7cfb29a6d484e1faf",
+  "frozen_raw_archive_sha256": "84cdf9faced48ac98503f580c4355de234ced2b397c5d5155c72cf615e136ce4",
+  "frozen_source_commit": "7466df3d336335218463d341cee141b975311995",
+  "new_gpu_work": "six continuous all-train trajectories to depth 72 plus teacher-forced gold scoring at five depths by eight views; no decoding",
+  "raw_run_path": "C:\\Users\\asus\\AppData\\Local\\Temp\\arc2-nonblind-transfer30-e66da47-raw\\nonblind_development_loo_transfer30_v1",
+  "reconstructed_trajectory": true,
+  "sentinel_output_count": 7,
+  "sentinel_task_ids": [
+    "28a6681f",
+    "21897d95",
+    "e87109e9",
+    "89565ca0",
+    "fc7cae8d",
+    "a47bf94d"
+  ],
+  "sentinel_task_ids_sha256": "b25ba34222f79529f90e91e6e94c81d5efd6005c3fbac85fbee11cbe61c0ba3b",
+  "solutions_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "solutions_usage": "INTENTIONAL_GOLD_TEACHER_FORCING_ONLY; no candidate generation, selector, ranking choice, or retries",
+  "source_solutions_were_opened_previously": true,
+  "status": "RECONSTRUCTED_TRAJECTORY_GOLD_NLL_AUDIT_CONFIGURATION_FROZEN",
+  "views": [
+    "identity",
+    "rot90",
+    "rot180",
+    "rot270",
+    "flip_lr",
+    "flip_ud",
+    "transpose",
+    "anti_transpose"
+  ]
+}
