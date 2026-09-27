@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Frozen all-fold LOO competence transfer validation on unseen Eval tasks.
+"""Frozen all-fold LOO competence development transfer validation.
 
 ``prepare`` is CPU-only and never accepts an evaluation solution path.
 ``worker`` uses only challenge train pairs plus test inputs; it freezes every
@@ -48,8 +48,8 @@ from scripts.run_adaptive_ttt_loo_transfer12 import (
 from scripts.run_adaptive_ttt_step1 import _cross_validation_score, _fingerprint, _loo_task
 
 
-EXPERIMENT = "LOO_TRANSFER30_V1"
-MANIFEST_STATUS = "LOO_TRANSFER30_V1_CONFIGURATION_FROZEN"
+EXPERIMENT = "NONBLIND_DEVELOPMENT_LOO_TRANSFER30_V1"
+MANIFEST_STATUS = "NONBLIND_DEVELOPMENT_LOO_TRANSFER30_V1_CONFIGURATION_FROZEN"
 TASK_ID_RE = re.compile(r"(?<![0-9a-f])[0-9a-f]{8}(?![0-9a-f])", re.IGNORECASE)
 TEXT_SUFFIXES = {".csv", ".json", ".jsonl", ".md", ".py", ".txt", ".yaml", ".yml"}
 
@@ -136,18 +136,19 @@ def prepare(args: argparse.Namespace) -> None:
     audit = _exposure_audit(challenge=challenge, repo_root=args.repo_root.resolve(), eval60_ids=eval60_ids, step1_ids=step1_ids)
     eligible = [
         row for row in audit["tasks"]
-        if row["exposure_class"] == "ADAPTIVE_UNSEEN" and int(row["train_pair_count"]) >= 3
+        if row["exposure_class"] == "HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE" and int(row["train_pair_count"]) >= 3
     ]
     selected_rows = sorted(eligible, key=lambda row: hashlib.sha256(str(row["task_id"]).encode()).hexdigest())[:30]
-    if len(selected_rows) < 30:
-        raise RuntimeError(f"only {len(selected_rows)} genuinely ADAPTIVE_UNSEEN tasks with >=3 train pairs; refusing exposed fill")
     task_ids = [str(row["task_id"]) for row in selected_rows]
-    sentinel_ids = sorted(task_ids, key=lambda task_id: hashlib.sha256(f"{EXPERIMENT}:REAL_TEST_SENTINEL6:{task_id}".encode()).hexdigest())[:6]
+    if not task_ids:
+        raise RuntimeError("no HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE tasks with >=3 train pairs")
+    sentinel_ids = sorted(task_ids, key=lambda task_id: hashlib.sha256(f"{EXPERIMENT}:REAL_TEST_SENTINEL6:{task_id}".encode()).hexdigest())[:min(6, len(task_ids))]
     base = read_json(args.base_config)
     challenge_sha = _hash_file(args.challenge)
     cohort = {
-        "status": "LOO_TRANSFER30_V1_COHORT_FROZEN_TARGET_BLIND",
-        "selection_rule": "Official evaluation challenge; exclude all Eval60 and all prior adaptive/LOO exposure; among ADAPTIVE_UNSEEN tasks with >=3 train pairs select 30 smallest SHA256(task_id)",
+        "status": "NONBLIND_DEVELOPMENT_COHORT_FROZEN_TARGET_BLIND_WITH_RESPECT_TO_CURRENT_RUN",
+        "scope": "development transfer / mechanism validation only; not unseen, untouched, held-out, strict blind validation, or final generalization evidence",
+        "selection_rule": "Official evaluation challenge; exclude all Eval60 and all prior adaptive/LOO exposure; among HISTORICALLY_EXPOSED_BUT_NOT_ADAPTIVE tasks with >=3 train pairs select 30 smallest SHA256(task_id)",
         "source_challenge_sha256": challenge_sha,
         "task_ids": task_ids,
         "task_ids_sha256": sha(task_ids),
@@ -155,7 +156,7 @@ def prepare(args: argparse.Namespace) -> None:
         "solutions_opened": False,
     }
     sentinel = {
-        "status": "REAL_TEST_SENTINEL6_FROZEN_TARGET_BLIND",
+        "status": "NONBLIND_DEVELOPMENT_REAL_TEST_SENTINEL6_FROZEN_TARGET_BLIND_WITH_RESPECT_TO_CURRENT_RUN",
         "selection_rule": "Among frozen Transfer30 IDs select six smallest SHA256('LOO_TRANSFER30_V1:REAL_TEST_SENTINEL6:' + task_id)",
         "task_ids": sentinel_ids,
         "task_ids_sha256": sha(sentinel_ids),
@@ -170,6 +171,7 @@ def prepare(args: argparse.Namespace) -> None:
         "source_commit": args.source_commit,
         "fixed_baselines": FIXED,
         "dynamic_queue": "atomic task claim; one continuous trajectory per GPU at a time",
+        "historical_outcomes_permitted_only_after_prediction_freeze": True,
     })
     manifest = {
         "experiment_id": EXPERIMENT,
@@ -184,6 +186,7 @@ def prepare(args: argparse.Namespace) -> None:
         "planned_tasks": len(task_ids),
         "sentinel_tasks": len(sentinel_ids),
         "test_targets_available_to_gpu": False,
+        "scope": "development transfer / mechanism validation only",
     }
     output.mkdir(parents=True)
     for name, value in (("manifest.json", manifest), ("exposure_audit.json", audit), ("cohort.json", cohort), ("sentinel6.json", sentinel), ("config_resolved.json", config)):
