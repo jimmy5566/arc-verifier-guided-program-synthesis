@@ -1,0 +1,18 @@
+{
+  "H1": {
+    "evidence": "Historical Step1's reported 8/8 pseudo-test result supports held-out-train competence retrieval in that train-reconstruction regime; it was not re-run here.",
+    "status": "SUPPORTED"
+  },
+  "H2": {
+    "evidence": "The frozen LOO protocol defines and scores train-pair competence basins. This support is limited to the train-pair teacher-forced objective, not test extrapolation.",
+    "status": "SUPPORTED"
+  },
+  "H3": {
+    "evidence": "All 4 Sentinel exact cells ranked [18, 24, 25, 32]; none was in frozen Top4.",
+    "status": "NOT SUPPORTED"
+  },
+  "H4": {
+    "evidence": "2/2 Sentinel oracle outputs were exact under adaptive depth/view cells while Fixed TTT24 identity was not exact. The sample is only 2 oracle outputs.",
+    "status": "WEAK"
+  }
+}

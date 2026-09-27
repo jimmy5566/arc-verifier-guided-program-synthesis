@@ -1,0 +1,26 @@
+{
+  "archive_sha256": "84cdf9faced48ac98503f580c4355de234ced2b397c5d5155c72cf615e136ce4",
+  "fold_count": 97,
+  "frozen_artifact_git_commit": "e66da47a3403913c6d1e06a7cfb29a6d484e1faf",
+  "gpu_freeze": {
+    "baseline_predictions": 123,
+    "folds": 97,
+    "identity": "e1371543e1bc07cf519b3fbd426e3c0df1523fc320694af5e41c0301f08b786a",
+    "main_predictions": 164,
+    "sentinel_surface_predictions": 280,
+    "solutions_opened": false,
+    "tasks": 30
+  },
+  "output_count": 41,
+  "raw_manifest": {
+    "entries": 114,
+    "manifest_sha256": "791709ec563d062c086eff9eef55308505a5ffd5334c3461d8ef01d975ad8dd7",
+    "mismatches": 0
+  },
+  "raw_output": "C:\\Users\\asus\\AppData\\Local\\Temp\\arc2-nonblind-transfer30-e66da47-raw\\nonblind_development_loo_transfer30_v1",
+  "scoring_git_commit": "b94659258dbe55cbc66a820851cd90cd6ab95e41",
+  "solutions_opened_after_verified_gpu_freeze": true,
+  "solutions_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2_v8_visible_scoring_input\\arc-agi_evaluation_solutions.json",
+  "source_commit": "7466df3d336335218463d341cee141b975311995",
+  "task_count": 30
+}

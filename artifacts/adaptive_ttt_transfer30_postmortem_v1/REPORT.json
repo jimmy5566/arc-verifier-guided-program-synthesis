@@ -1,0 +1,342 @@
+{
+  "experiment": "NONBLIND_DEVELOPMENT_LOO_TRANSFER30_V1",
+  "hypotheses": {
+    "H1": {
+      "evidence": "Historical Step1's reported 8/8 pseudo-test result supports held-out-train competence retrieval in that train-reconstruction regime; it was not re-run here.",
+      "status": "SUPPORTED"
+    },
+    "H2": {
+      "evidence": "The frozen LOO protocol defines and scores train-pair competence basins. This support is limited to the train-pair teacher-forced objective, not test extrapolation.",
+      "status": "SUPPORTED"
+    },
+    "H3": {
+      "evidence": "All 4 Sentinel exact cells ranked [18, 24, 25, 32]; none was in frozen Top4.",
+      "status": "NOT SUPPORTED"
+    },
+    "H4": {
+      "evidence": "2/2 Sentinel oracle outputs were exact under adaptive depth/view cells while Fixed TTT24 identity was not exact. The sample is only 2 oracle outputs.",
+      "status": "WEAK"
+    }
+  },
+  "inferred": [
+    "Teacher-forced held-out-train competence can be decoupled from real-test extrapolation for this sampled Sentinel surface."
+  ],
+  "measured": [
+    "Frozen score reproduction matched 3/41, 2/41, 2/41, 4/41.",
+    "Sentinel exact-cell ranks were [18, 24, 25, 32]; Top4 selected none."
+  ],
+  "not_established": [
+    "A general population effect, a causal adapter mechanism, or a replacement selector."
+  ],
+  "provenance": {
+    "archive_sha256": "84cdf9faced48ac98503f580c4355de234ced2b397c5d5155c72cf615e136ce4",
+    "fold_count": 97,
+    "frozen_artifact_git_commit": "e66da47a3403913c6d1e06a7cfb29a6d484e1faf",
+    "gpu_freeze": {
+      "baseline_predictions": 123,
+      "folds": 97,
+      "identity": "e1371543e1bc07cf519b3fbd426e3c0df1523fc320694af5e41c0301f08b786a",
+      "main_predictions": 164,
+      "sentinel_surface_predictions": 280,
+      "solutions_opened": false,
+      "tasks": 30
+    },
+    "output_count": 41,
+    "raw_manifest": {
+      "entries": 114,
+      "manifest_sha256": "791709ec563d062c086eff9eef55308505a5ffd5334c3461d8ef01d975ad8dd7",
+      "mismatches": 0
+    },
+    "raw_output": "C:\\Users\\asus\\AppData\\Local\\Temp\\arc2-nonblind-transfer30-e66da47-raw\\nonblind_development_loo_transfer30_v1",
+    "scoring_git_commit": "b94659258dbe55cbc66a820851cd90cd6ab95e41",
+    "solutions_opened_after_verified_gpu_freeze": true,
+    "solutions_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2_v8_visible_scoring_input\\arc-agi_evaluation_solutions.json",
+    "source_commit": "7466df3d336335218463d341cee141b975311995",
+    "task_count": 30
+  },
+  "recommendation": {
+    "choice": "B",
+    "text": "STOP LOO AS SELECTOR, but retain adaptive depth/view as a candidate-generation axis."
+  },
+  "scope": "development transfer / mechanism validation only; not unseen, untouched, held-out, strict blind validation, or final generalization evidence",
+  "score_reproduction": {
+    "counts": {
+      "FIXED_24_IDENTITY": 3,
+      "LOO_TOP1": 2,
+      "LOO_TOP2": 2,
+      "LOO_TOP4": 4
+    },
+    "expected": {
+      "FIXED_24_IDENTITY": 3,
+      "LOO_TOP1": 2,
+      "LOO_TOP2": 2,
+      "LOO_TOP4": 4
+    },
+    "outputs": 41,
+    "overlap_categories": {
+      "adaptive_only_top4": [
+        "65b59efc:0",
+        "5961cc34:0"
+      ],
+      "fixed_only": [
+        "8f3a5a89:0"
+      ],
+      "shared_fixed_top4": [
+        "6e453dd6:0",
+        "7c66cb00:0"
+      ],
+      "top1_hits": [
+        "65b59efc:0",
+        "7c66cb00:0"
+      ],
+      "top1_to_top2_incremental_rescues": [],
+      "top2_to_top4_incremental_rescues": [
+        "6e453dd6:0",
+        "5961cc34:0"
+      ]
+    },
+    "pass": true
+  },
+  "sentinel6": {
+    "basin_rule": "ISOLATED=1 exact cell; MEDIUM=2-4; BROAD>=5; descriptive only.",
+    "exact_cell_rows": [
+      {
+        "cv_nll_mean": 0.09285084654887517,
+        "cv_nll_median": 0.07794757932424545,
+        "cv_nll_worst": 0.14190015196800232,
+        "depth": 48,
+        "fold_nll_json": "[0.14190015196800232,0.07794757932424545,0.05870480835437775]",
+        "fold_nll_max": 0.14190015196800232,
+        "fold_nll_min": 0.05870480835437775,
+        "fold_nll_std": 0.035561653788163526,
+        "fold_rank_mean": 28.666666666666668,
+        "fold_rank_std": 8.219218670625303,
+        "gen_view": "anti_transpose",
+        "loo_percentile": 0.6,
+        "loo_rank": 24,
+        "nll_gap_vs_top1": 0.06933170650154352,
+        "real_test_exact": true,
+        "same_depth_top1": false,
+        "same_view_top1": false,
+        "selected_top1": false,
+        "selected_top2": false,
+        "selected_top4": false,
+        "task_id": "fc7cae8d",
+        "test_index": 0
+      },
+      {
+        "cv_nll_mean": 0.0973143254717191,
+        "cv_nll_median": 0.08115293085575104,
+        "cv_nll_worst": 0.15825466811656952,
+        "depth": 72,
+        "fold_nll_json": "[0.15825466811656952,0.08115293085575104,0.05253537744283676]",
+        "fold_nll_max": 0.15825466811656952,
+        "fold_nll_min": 0.05253537744283676,
+        "fold_nll_std": 0.04464702388057597,
+        "fold_rank_mean": 29.0,
+        "fold_rank_std": 10.424330514074592,
+        "gen_view": "anti_transpose",
+        "loo_percentile": 0.625,
+        "loo_rank": 25,
+        "nll_gap_vs_top1": 0.07379518542438745,
+        "real_test_exact": true,
+        "same_depth_top1": false,
+        "same_view_top1": false,
+        "selected_top1": false,
+        "selected_top2": false,
+        "selected_top4": false,
+        "task_id": "fc7cae8d",
+        "test_index": 0
+      },
+      {
+        "cv_nll_mean": 0.019092230902363855,
+        "cv_nll_median": 0.024061055853962898,
+        "cv_nll_worst": 0.027184637263417244,
+        "depth": 48,
+        "fold_nll_json": "[0.006030999589711428,0.027184637263417244,0.024061055853962898]",
+        "fold_nll_max": 0.027184637263417244,
+        "fold_nll_min": 0.006030999589711428,
+        "fold_nll_std": 0.009323304591446513,
+        "fold_rank_mean": 16.666666666666668,
+        "fold_rank_std": 7.586537784494028,
+        "gen_view": "rot90",
+        "loo_percentile": 0.45,
+        "loo_rank": 18,
+        "nll_gap_vs_top1": 0.007587526769687731,
+        "real_test_exact": true,
+        "same_depth_top1": false,
+        "same_view_top1": false,
+        "selected_top1": false,
+        "selected_top2": false,
+        "selected_top4": false,
+        "task_id": "a47bf94d",
+        "test_index": 0
+      },
+      {
+        "cv_nll_mean": 0.027429668543239433,
+        "cv_nll_median": 0.024907415732741356,
+        "cv_nll_worst": 0.0518120601773262,
+        "depth": 72,
+        "fold_nll_json": "[0.005569529719650745,0.0518120601773262,0.024907415732741356]",
+        "fold_nll_max": 0.0518120601773262,
+        "fold_nll_min": 0.005569529719650745,
+        "fold_nll_std": 0.01896249324697414,
+        "fold_rank_mean": 22.0,
+        "fold_rank_std": 13.140268896284683,
+        "gen_view": "flip_ud",
+        "loo_percentile": 0.8,
+        "loo_rank": 32,
+        "nll_gap_vs_top1": 0.01592496441056331,
+        "real_test_exact": true,
+        "same_depth_top1": false,
+        "same_view_top1": false,
+        "selected_top1": false,
+        "selected_top2": false,
+        "selected_top4": false,
+        "task_id": "a47bf94d",
+        "test_index": 0
+      }
+    ],
+    "exact_cells": 4,
+    "exact_rank_list": [
+      18,
+      24,
+      25,
+      32
+    ],
+    "oracle_output_records": [
+      {
+        "basin": "MEDIUM",
+        "exact_cells": 2,
+        "exact_depths": [
+          48,
+          72
+        ],
+        "exact_pairs": [
+          [
+            48,
+            "anti_transpose"
+          ],
+          [
+            72,
+            "anti_transpose"
+          ]
+        ],
+        "exact_ranks": [
+          24,
+          25
+        ],
+        "exact_views": [
+          "anti_transpose"
+        ],
+        "fixed24_identity_exact": false,
+        "largest_same_depth_exact_cluster": 1,
+        "largest_same_view_exact_cluster": 2,
+        "task_id": "fc7cae8d",
+        "test_index": 0,
+        "top1_nll": 0.02351914004733165,
+        "top1_pair": [
+          12,
+          "flip_ud"
+        ],
+        "top1_rank": 1,
+        "topk_coverage": {
+          "top1": {
+            "depth_family": false,
+            "exact_cell": false,
+            "view_family": false
+          },
+          "top2": {
+            "depth_family": true,
+            "exact_cell": false,
+            "view_family": false
+          },
+          "top4": {
+            "depth_family": true,
+            "exact_cell": false,
+            "view_family": false
+          }
+        }
+      },
+      {
+        "basin": "MEDIUM",
+        "exact_cells": 2,
+        "exact_depths": [
+          48,
+          72
+        ],
+        "exact_pairs": [
+          [
+            48,
+            "rot90"
+          ],
+          [
+            72,
+            "flip_ud"
+          ]
+        ],
+        "exact_ranks": [
+          18,
+          32
+        ],
+        "exact_views": [
+          "flip_ud",
+          "rot90"
+        ],
+        "fixed24_identity_exact": false,
+        "largest_same_depth_exact_cluster": 1,
+        "largest_same_view_exact_cluster": 1,
+        "task_id": "a47bf94d",
+        "test_index": 0,
+        "top1_nll": 0.011504704132676125,
+        "top1_pair": [
+          12,
+          "identity"
+        ],
+        "top1_rank": 1,
+        "topk_coverage": {
+          "top1": {
+            "depth_family": false,
+            "exact_cell": false,
+            "view_family": false
+          },
+          "top2": {
+            "depth_family": false,
+            "exact_cell": false,
+            "view_family": false
+          },
+          "top4": {
+            "depth_family": false,
+            "exact_cell": false,
+            "view_family": true
+          }
+        }
+      }
+    ],
+    "oracle_outputs": 2,
+    "outputs": 7,
+    "score_association": {
+      "auprc": 0.04018927044078418,
+      "auroc": 0.75,
+      "base_rate": 0.014285714285714285,
+      "positive_exact_cells": 4,
+      "spearman_rank_vs_exact": 0.044323166141441266,
+      "total_cells": 280
+    },
+    "topk_depth_family_coverage": {
+      "top1": 0,
+      "top2": 1,
+      "top4": 1
+    },
+    "topk_exact_cell_coverage": {
+      "top1": 0,
+      "top2": 0,
+      "top4": 0
+    },
+    "topk_view_family_coverage": {
+      "top1": 0,
+      "top2": 0,
+      "top4": 1
+    }
+  }
+}

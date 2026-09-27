@@ -1,0 +1,13 @@
+{
+  "POSTMORTEM.md": "3699ab5c16ac4378def70fcd71c9132f229e97c044ecfba9ded4b65ac9f27e3f",
+  "README.md": "aa64caebeed980fe69fd13220142e8eb17a83f94f68723b105ad9732f8ad16c6",
+  "REPORT.json": "9f9257c85e8981e31728014b1bc4608772faeef79d26f5ade7fe392c4d0c0b3d",
+  "all41_overlap.csv": "29a7d69d74b3fea7beb6fd9dc770c5d95a2323443feb2f3f817dd76ef1fef1a5",
+  "depth_view_failure_summary.json": "c22990bcddf902c8a25fecc70d9b65705c52c63de7acc7858d6fa18fc82655c0",
+  "final_score_reproduction.json": "1bd4f50bb2f8fb47f8fccab24b74f3fcf9b08b0fe7e61c8d8172c40b4a6b68fc",
+  "hypothesis_status.json": "90da34f6c09b5ba1a9b6fb27dfdf6918761c8a5003b0f6d1e59cfcd106b5e2e1",
+  "provenance.json": "9aad391e284b1fc64b05bcb98576c3a9948f04ecb4a4d306ccd906339e1e7989",
+  "sentinel6_exact_cell_ranks.csv": "10c4b9a07d43358128e3183c88d35bd0a6e9d563a6c932a9e19df0efbb158f76",
+  "sentinel6_fold_level_nll.csv": "fcba2075aea707377bc0cd7964fe5374926e0214987ebeeb78fc86c2d6636559",
+  "sentinel6_full_surface.csv": "e348e05b0e5a21e4b824fb6b2f4c8434ddc2c216934a4304699d391d689e09ab"
+}

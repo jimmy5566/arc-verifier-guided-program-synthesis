@@ -1,0 +1,129 @@
+{
+  "diagnosis": "DEPTH_VIEW_INTERACTION_FAILURE: no Top1/2/4 candidate was an exact depth\u00d7view cell; family coverage is reported descriptively and cannot support a population conclusion from two oracle outputs.",
+  "exact_cells": 4,
+  "oracle_output_records": [
+    {
+      "basin": "MEDIUM",
+      "exact_cells": 2,
+      "exact_depths": [
+        48,
+        72
+      ],
+      "exact_pairs": [
+        [
+          48,
+          "anti_transpose"
+        ],
+        [
+          72,
+          "anti_transpose"
+        ]
+      ],
+      "exact_ranks": [
+        24,
+        25
+      ],
+      "exact_views": [
+        "anti_transpose"
+      ],
+      "fixed24_identity_exact": false,
+      "largest_same_depth_exact_cluster": 1,
+      "largest_same_view_exact_cluster": 2,
+      "task_id": "fc7cae8d",
+      "test_index": 0,
+      "top1_nll": 0.02351914004733165,
+      "top1_pair": [
+        12,
+        "flip_ud"
+      ],
+      "top1_rank": 1,
+      "topk_coverage": {
+        "top1": {
+          "depth_family": false,
+          "exact_cell": false,
+          "view_family": false
+        },
+        "top2": {
+          "depth_family": true,
+          "exact_cell": false,
+          "view_family": false
+        },
+        "top4": {
+          "depth_family": true,
+          "exact_cell": false,
+          "view_family": false
+        }
+      }
+    },
+    {
+      "basin": "MEDIUM",
+      "exact_cells": 2,
+      "exact_depths": [
+        48,
+        72
+      ],
+      "exact_pairs": [
+        [
+          48,
+          "rot90"
+        ],
+        [
+          72,
+          "flip_ud"
+        ]
+      ],
+      "exact_ranks": [
+        18,
+        32
+      ],
+      "exact_views": [
+        "flip_ud",
+        "rot90"
+      ],
+      "fixed24_identity_exact": false,
+      "largest_same_depth_exact_cluster": 1,
+      "largest_same_view_exact_cluster": 1,
+      "task_id": "a47bf94d",
+      "test_index": 0,
+      "top1_nll": 0.011504704132676125,
+      "top1_pair": [
+        12,
+        "identity"
+      ],
+      "top1_rank": 1,
+      "topk_coverage": {
+        "top1": {
+          "depth_family": false,
+          "exact_cell": false,
+          "view_family": false
+        },
+        "top2": {
+          "depth_family": false,
+          "exact_cell": false,
+          "view_family": false
+        },
+        "top4": {
+          "depth_family": false,
+          "exact_cell": false,
+          "view_family": true
+        }
+      }
+    }
+  ],
+  "oracle_outputs": 2,
+  "topk_depth_family_coverage": {
+    "top1": 0,
+    "top2": 1,
+    "top4": 1
+  },
+  "topk_exact_cell_coverage": {
+    "top1": 0,
+    "top2": 0,
+    "top4": 0
+  },
+  "topk_view_family_coverage": {
+    "top1": 0,
+    "top2": 0,
+    "top4": 1
+  }
+}

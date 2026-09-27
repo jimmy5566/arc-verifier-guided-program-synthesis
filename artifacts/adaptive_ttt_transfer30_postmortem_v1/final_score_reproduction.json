@@ -1,0 +1,38 @@
+{
+  "counts": {
+    "FIXED_24_IDENTITY": 3,
+    "LOO_TOP1": 2,
+    "LOO_TOP2": 2,
+    "LOO_TOP4": 4
+  },
+  "expected": {
+    "FIXED_24_IDENTITY": 3,
+    "LOO_TOP1": 2,
+    "LOO_TOP2": 2,
+    "LOO_TOP4": 4
+  },
+  "outputs": 41,
+  "overlap_categories": {
+    "adaptive_only_top4": [
+      "65b59efc:0",
+      "5961cc34:0"
+    ],
+    "fixed_only": [
+      "8f3a5a89:0"
+    ],
+    "shared_fixed_top4": [
+      "6e453dd6:0",
+      "7c66cb00:0"
+    ],
+    "top1_hits": [
+      "65b59efc:0",
+      "7c66cb00:0"
+    ],
+    "top1_to_top2_incremental_rescues": [],
+    "top2_to_top4_incremental_rescues": [
+      "6e453dd6:0",
+      "5961cc34:0"
+    ]
+  },
+  "pass": true
+}
