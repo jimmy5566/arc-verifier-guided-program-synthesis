@@ -62,6 +62,7 @@ deadline_epoch=$(( $(date -u -d "$(cat "$T0_FILE")" +%s) + 13*3600 + 15*60 ))
 now_epoch=$(date -u +%s)
 if (( now_epoch >= deadline_epoch )); then
   echo "[$(date -u +%FT%TZ)] TURBODFS V3 NOT STARTED: 13h15 deadline reached"
+  "$PY" "$SRC/scripts/make_eval60_authoritative_handoff.py" --output "$RUN"
   exit 0
 fi
 
@@ -89,6 +90,7 @@ enough=$(( deadline_epoch - now_epoch ))
 needed=$("$PY" -c "print(int(float('$micro_p90')*24*1.15))")
 if (( enough < needed )); then
   echo "[$(date -u +%FT%TZ)] V3 full NOT STARTED: remaining=${enough}s estimated=${needed}s"
+  "$PY" "$SRC/scripts/make_eval60_authoritative_handoff.py" --output "$RUN"
   exit 0
 fi
 echo "[$(date -u +%FT%TZ)] starting target-blind V3 full calibration"
