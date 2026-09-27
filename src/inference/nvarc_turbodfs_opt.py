@@ -39,7 +39,9 @@ class TurboDFSOptConfig:
     # ``None`` means use the wall-clock stopping rule alone, matching the
     # public notebook's decoder loop.  V1 supplied an integer safety cap.
     max_batch_forward_passes: int | None
-    max_complete_candidates_per_prompt: int
+    # ``None`` exactly matches the public notebook's unbounded completed-suffix
+    # retention.  Integer values preserve the prior V1/V2 bounded experiment.
+    max_complete_candidates_per_prompt: int | None
     top_k_trace: int = 8
     capture_full_arc_distribution: bool = True
     pad_token_id: int = 13
@@ -52,7 +54,10 @@ class TurboDFSOptConfig:
             raise ValueError("NLL and wall limits must be positive")
         if self.max_batch_forward_passes is not None and self.max_batch_forward_passes < 1:
             raise ValueError("batch-forward cap must be positive when supplied")
-        if self.max_complete_candidates_per_prompt < 1:
+        if (
+            self.max_complete_candidates_per_prompt is not None
+            and self.max_complete_candidates_per_prompt < 1
+        ):
             raise ValueError("candidate cap must be positive")
         if self.top_k_trace < 8:
             raise ValueError("top_k_trace must be at least eight")
@@ -208,7 +213,10 @@ def turbodfs_opt(
                         state="completed", prune_reason=None,
                         termination_reason="eos", candidate_id=next_candidate_id,
                     )
-                    if len(suffixes[lane]) < config.max_complete_candidates_per_prompt:
+                    if (
+                        config.max_complete_candidates_per_prompt is None
+                        or len(suffixes[lane]) < config.max_complete_candidates_per_prompt
+                    ):
                         suffixes[lane].append(TurboDFSOptCandidate(next_candidate_id, suffix, next_score, node_id))
                         next_candidate_id += 1
                         completed += 1
@@ -279,13 +287,16 @@ def turbodfs_opt(
             for lane, lane_candidates in enumerate(descendants):
                 if not lane_candidates:
                     continue
-                capacity = config.max_complete_candidates_per_prompt - len(suffixes[lane])
-                if capacity <= 0:
-                    candidate_cap_reached = True
-                    continue
-                suffixes[lane].extend(lane_candidates[:capacity])
-                if len(lane_candidates) > capacity:
-                    candidate_cap_reached = True
+                if config.max_complete_candidates_per_prompt is None:
+                    suffixes[lane].extend(lane_candidates)
+                else:
+                    capacity = config.max_complete_candidates_per_prompt - len(suffixes[lane])
+                    if capacity <= 0:
+                        candidate_cap_reached = True
+                        continue
+                    suffixes[lane].extend(lane_candidates[:capacity])
+                    if len(lane_candidates) > capacity:
+                        candidate_cap_reached = True
             del outputs
         if expired():
             timed_out = True
