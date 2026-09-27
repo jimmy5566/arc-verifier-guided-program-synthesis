@@ -1,0 +1,83 @@
+{
+  "entries": [
+    {
+      "task_id": "13e47133",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "task_id": "c4d067a0",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "task_id": "20270e3b",
+      "test_output_count": 2,
+      "train_pair_count": 4
+    },
+    {
+      "task_id": "2c181942",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "task_id": "6ffbe589",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "task_id": "4a21e3da",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "task_id": "a32d8b75",
+      "test_output_count": 2,
+      "train_pair_count": 3
+    },
+    {
+      "task_id": "aa4ec2a5",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "task_id": "0934a4d8",
+      "test_output_count": 1,
+      "train_pair_count": 4
+    },
+    {
+      "task_id": "db0c5428",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "task_id": "9bbf930d",
+      "test_output_count": 1,
+      "train_pair_count": 3
+    },
+    {
+      "task_id": "b6f77b65",
+      "test_output_count": 3,
+      "train_pair_count": 5
+    }
+  ],
+  "selection_rule": "Eval60 tasks with >=3 train pairs, exclude Step1 cohort, select next 12 by SHA256(task_id)",
+  "solutions_opened": false,
+  "source_challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "status": "LOO_TRANSFER12_V1_COHORT_FROZEN_TARGET_BLIND",
+  "task_ids": [
+    "13e47133",
+    "c4d067a0",
+    "20270e3b",
+    "2c181942",
+    "6ffbe589",
+    "4a21e3da",
+    "a32d8b75",
+    "aa4ec2a5",
+    "0934a4d8",
+    "db0c5428",
+    "9bbf930d",
+    "b6f77b65"
+  ],
+  "task_ids_sha256": "d8ac61198f41c567e5e54b086d9c0856af5727ff82019ed5eb8e8c8edec31bc5"
+}

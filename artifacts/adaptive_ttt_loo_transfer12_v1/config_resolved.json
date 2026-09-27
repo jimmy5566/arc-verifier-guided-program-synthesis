@@ -1,0 +1,80 @@
+{
+  "alpha": 32,
+  "augmentation_colour_permutations": 16,
+  "augmentation_geometry_count": 8,
+  "bf16": true,
+  "cv_folds": "all leave-one-train-pair-out",
+  "depths": [
+    0,
+    12,
+    24,
+    48,
+    72
+  ],
+  "experiment_id": "LOO_TRANSFER12_V1",
+  "fixed_baselines": {
+    "FIXED_24_IDENTITY": [
+      24,
+      "identity"
+    ],
+    "FIXED_48_IDENTITY": [
+      48,
+      "identity"
+    ],
+    "STEP1_BEST_FIXED_12_TRANSPOSE": [
+      12,
+      "transpose"
+    ]
+  },
+  "full_train_steps": 72,
+  "gen_views": [
+    "identity",
+    "rot90",
+    "rot180",
+    "rot270",
+    "flip_lr",
+    "flip_ud",
+    "transpose",
+    "anti_transpose"
+  ],
+  "generation": "unchanged greedy Aug8; beam=1",
+  "generation_augmentation_count": 8,
+  "generation_color_offsets": [
+    0
+  ],
+  "generation_context_window": 16384,
+  "generation_pair_orders": [
+    "canonical"
+  ],
+  "gradient_checkpointing": false,
+  "kernel_source": "sorokin/pip-install-unsloth-flash-patch",
+  "learning_rate": 5e-05,
+  "max_new_tokens": 1024,
+  "max_sequence_length": 8192,
+  "primary_competence": "arithmetic_mean_cv_nll_per_token",
+  "ptxas_path": "/usr/local/cuda-12.8/bin/ptxas",
+  "rank": 256,
+  "reference_commit": "846d0198efa752534594e321fc3289fc0a06c657",
+  "reference_notebook": "sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue",
+  "reference_repository": "https://github.com/1ytic/NVARC",
+  "reference_schedule_total_steps": 128,
+  "scheduler": "cosine",
+  "seed": 42,
+  "source_commit": "93853280dd2abc6a3fff80753ceb8191c8eaff23",
+  "style": "official_nvarc_train_only_partial_24_steps",
+  "target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj",
+    "embed_tokens",
+    "lm_head"
+  ],
+  "train_pair_order": "random full permutation",
+  "ttt_steps": 72,
+  "use_rslora": true,
+  "warmup_ratio": 0.1
+}

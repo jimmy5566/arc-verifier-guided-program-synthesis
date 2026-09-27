@@ -1,0 +1,27 @@
+{
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "cohort_sha256": "ab0376620e57321a59d2dfa3bd0b5c2cab1fc37483a3aad8d2e272389e64523e",
+  "config_sha256": "224e9bc139630343a1100d4cb31f4a99d5b88866447b865408057bb78b13f13f",
+  "depths": [
+    0,
+    12,
+    24,
+    48,
+    72
+  ],
+  "experiment_id": "LOO_TRANSFER12_V1",
+  "gen_views": [
+    "identity",
+    "rot90",
+    "rot180",
+    "rot270",
+    "flip_lr",
+    "flip_ud",
+    "transpose",
+    "anti_transpose"
+  ],
+  "planned_tasks": 12,
+  "source_commit": "93853280dd2abc6a3fff80753ceb8191c8eaff23",
+  "status": "LOO_TRANSFER12_CONFIGURATION_FROZEN",
+  "test_targets_available_to_gpu": false
+}
