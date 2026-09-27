@@ -246,7 +246,7 @@ def main() -> None:
     }
     report = {
         "experiment_id": manifest.get("experiment_id"), "analysis_mode": "CPU_ONLY_FROZEN_CHECKPOINTS", "solutions_opened": False,
-        "source": {"manifest_sha256": sha256_file(root / "manifest.json"), "cohort_sha256": sha256_file(root / "cohort.json"), "config_sha256": sha256_file(root / "config_resolved.json"), "cell_identity": read_json(next((root / "checkpoints" / "cells").glob("*/*.json"))["identity"] if rows else None},
+        "source": {"manifest_sha256": sha256_file(root / "manifest.json"), "cohort_sha256": sha256_file(root / "cohort.json"), "config_sha256": sha256_file(root / "config_resolved.json"), "cell_identity": read_json(next((root / "checkpoints" / "cells").glob("*/*.json")))["identity"] if rows else None},
         "completion": {"expected_cells": len(expected_keys), "frozen_cells": len(rows), "missing_cells": len(missing), "missing_cell_keys": [{"task_id": task, "depth": depth, "gen_view": view} for task, depth, view in missing], "rejected_checkpoints": rejected, "complete": complete},
         "outcomes": {"exact_cells": sum(exact_labels), "parse_valid_cells": sum(bool(row["parse_valid"]) for row in rows), "task_count_with_cells": len(by_task), "task_oracle_exact": sum(task_oracle.values()), "random_cell_expected_exact_tasks": random_expectation * len(by_task), "best_fixed_depth_view": best_fixed},
         "primary_self_confidence": signal_summary, "analytic_confidence_router": router_summary,
