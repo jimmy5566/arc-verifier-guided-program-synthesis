@@ -20,6 +20,11 @@
   competition submission, or a release-time science change.
 - A new experiment normally means a new resolved config and isolated run
   directory under the shared workbench, not a copied inference implementation.
+- After every completed or controlled-stop experiment, freeze/hash its small
+  reproducibility artifacts, commit the intended source and artifact manifest,
+  and push it to the configured GitHub branch before reporting it as
+  preserved.  In this repository, a user request to "提交" means commit **and
+  push**; a local-only commit is not a submission/preservation event.
 - Experiment and release entry identities are distinct. Experiment launchers
   never FAST_SAVE, create the official top-level `submission.json`, or submit.
 - Test targets are evaluation-only and remain outside staged inference bundles.
