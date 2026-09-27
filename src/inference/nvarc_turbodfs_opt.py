@@ -36,7 +36,9 @@ class TurboDFSOptConfig:
     max_new_tokens: int
     max_cumulative_nll: float
     max_wall_seconds: float
-    max_batch_forward_passes: int
+    # ``None`` means use the wall-clock stopping rule alone, matching the
+    # public notebook's decoder loop.  V1 supplied an integer safety cap.
+    max_batch_forward_passes: int | None
     max_complete_candidates_per_prompt: int
     top_k_trace: int = 8
     capture_full_arc_distribution: bool = True
@@ -48,8 +50,10 @@ class TurboDFSOptConfig:
             raise ValueError("max_new_tokens must be at least two")
         if self.max_cumulative_nll <= 0 or self.max_wall_seconds <= 0:
             raise ValueError("NLL and wall limits must be positive")
-        if self.max_batch_forward_passes < 1 or self.max_complete_candidates_per_prompt < 1:
-            raise ValueError("batch-forward and candidate caps must be positive")
+        if self.max_batch_forward_passes is not None and self.max_batch_forward_passes < 1:
+            raise ValueError("batch-forward cap must be positive when supplied")
+        if self.max_complete_candidates_per_prompt < 1:
+            raise ValueError("candidate cap must be positive")
         if self.top_k_trace < 8:
             raise ValueError("top_k_trace must be at least eight")
         if self.branch_ordering != "cumulative_nll_ascending_then_token_id":
@@ -253,7 +257,10 @@ def turbodfs_opt(
                 alive += 1
             if not alive:
                 break
-            if batch_forward_passes >= config.max_batch_forward_passes:
+            if (
+                config.max_batch_forward_passes is not None
+                and batch_forward_passes >= config.max_batch_forward_passes
+            ):
                 branch_cap_reached = True
                 break
             outputs = model(

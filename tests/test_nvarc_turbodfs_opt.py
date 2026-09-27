@@ -48,3 +48,15 @@ def test_turbodfs_opt_has_explicit_safety_semantics() -> None:
     )
     assert result.branch_cap_reached is True
     assert result.termination_reason == "max_batch_forward_passes"
+
+
+def test_turbodfs_opt_supports_public_time_only_stop() -> None:
+    result = turbodfs_opt(
+        _ToyModel(),
+        input_ids=torch.tensor([[2, 2]], dtype=torch.long),
+        eos_token_id=15,
+        config=TurboDFSOptConfig(4, 1.7, 5.0, None, 4),
+    )
+    assert result.branch_cap_reached is False
+    assert result.complete_candidates == 1
+    assert result.termination_reason == "search_exhausted"
