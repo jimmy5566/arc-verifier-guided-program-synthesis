@@ -1,0 +1,23 @@
+{
+  "authoritative_run_started": false,
+  "calibration": {
+    "micro_complete_cells": 4,
+    "micro_complete_rate": 0.6666666666666666,
+    "micro_required_complete_cells": 5,
+    "micro_status": "FAIL",
+    "p90_seconds_per_cell": 24.20728439092636,
+    "zero_complete_rate": 0.33333333333333337
+  },
+  "decoder": "TURBODFS_OPT_V2",
+  "decoder_config_sha256": "11820ff4ce6d398e789c185860c7ea482db154ff01f4e60bc2920545975d6f1b",
+  "failed_v1_artifacts_modified": false,
+  "full_24_cell_calibration_started": false,
+  "gold_accessed": false,
+  "next_action": "STOP_CLEANLY_V2B_NOT_AUTHORIZED",
+  "reason": "The two V2 micro failures both terminate as search_exhausted without a branch cap. A budget-only V2B would not address the remaining frozen failure mechanism.",
+  "v1_failure_classes": {
+    "C_BRANCH_OR_NODE_BUDGET": 13,
+    "E_OVER_PRUNING": 6
+  },
+  "v2b_used": false
+}

@@ -1,0 +1,16 @@
+{
+  "source": "TURBODFS_OPT_V1 frozen 24-cell calibration traces",
+  "target_blind": true,
+  "trace_count": 24,
+  "zero_complete_count": 19,
+  "failure_class_counts": {
+    "COMPLETE": 5,
+    "C_BRANCH_OR_NODE_BUDGET": 13,
+    "E_OVER_PRUNING": 6
+  },
+  "gold_accessed": false,
+  "full_trace_csv": {
+    "remote_path": "/workspace/arc2/active_runs/eval60_adaptive_inference_joint_v2_repair/repair_artifacts/turbodfs_v1_failure_anatomy.csv",
+    "sha256": "af63127540f2969e7e8065a2461b7be075959814b0a7934a69999930cd66f1f8"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "experiment": "TURBODFS_OPT_V2_RAPID_REPAIR",
+  "status": "CONTROLLED_STOP_MICRO_GATE_FAILED",
+  "source_commit": "2269753018470a588f4c71aa9d0474a50593738f",
+  "target_blind": true,
+  "gold_accessed_before_generation_freeze": false,
+  "v1_failure_anatomy": {
+    "remote_path": "/workspace/arc2/active_runs/eval60_adaptive_inference_joint_v2_repair/repair_artifacts/turbodfs_v1_failure_anatomy.csv",
+    "sha256": "af63127540f2969e7e8065a2461b7be075959814b0a7934a69999930cd66f1f8",
+    "generation_script": "scripts/audit_turbodfs_v1_failure_anatomy.py",
+    "summary_sha256": "3269d7"
+  },
+  "v2_micro": {
+    "remote_path": "/workspace/arc2/active_runs/eval60_adaptive_inference_joint_v2_repair/v2_micro/micro_calibration_v2.json",
+    "sha256": "01e72895e66b9a249c3ec0c33cded9af97cfe3911f0c70e778b93a2c6b7d3c46",
+    "repair_manifest_sha256": "593b08838212bc9f1fd1fbd6c412650f3d59e91ed74d48549c2d9c43698b0aa0"
+  },
+  "clean_stop": {
+    "remote_stop_path": "/workspace/arc2/active_runs/eval60_adaptive_inference_joint_v2_repair/REPAIR_STOP.json",
+    "remote_stop_sha256": "f0d5f365104880987cc5bf909adbaed9cbac27fec283d75b9dc732c0f540cba7",
+    "remote_handoff_path": "/workspace/arc2/active_runs/eval60_adaptive_inference_joint_v2_repair/MORNING_HANDOFF.md",
+    "remote_handoff_sha256": "b5bbbe55064ac08ecddb5b5198f2ec73ce359a43066e2ea46342cfabb86a093d",
+    "remote_hashes_sha256": "20e6de5757978c92b2fa03a8b62ef2f8de072b11895b0c171ba9337a5f0cfdf7"
+  }
+}

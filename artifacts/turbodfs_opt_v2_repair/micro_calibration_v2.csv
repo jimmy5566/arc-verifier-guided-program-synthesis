@@ -1,0 +1,7 @@
+task_id,output_index,depth,view,v1_complete_candidate_count,v1_termination_reason,v1_branch_cap_hit,v2_complete_candidate_count,v2_valid_grid_count,v2_runtime_seconds,v2_termination_reason,v2_branch_cap_hit,v2_max_search_depth
+53fb4810,0,12,anti_transpose,0,max_batch_forward_passes,True,1,1,24.073711156845093,search_exhausted,False,468
+53fb4810,0,24,identity,0,max_batch_forward_passes,True,1,1,24.20728439092636,search_exhausted,False,475
+97d7923e,0,12,flip_ud,0,search_exhausted,False,0,0,2.1210076455026865,search_exhausted,False,30
+97d7923e,0,24,transpose,1,search_exhausted,False,1,1,11.454284248873591,search_exhausted,False,220
+97d7923e,0,48,identity,1,search_exhausted,False,1,1,11.154427468776703,search_exhausted,False,210
+97d7923e,0,48,transpose,0,max_batch_forward_passes,True,0,0,22.51370631158352,search_exhausted,False,217
