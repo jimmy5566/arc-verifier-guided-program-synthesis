@@ -1,0 +1,15 @@
+{
+  "experiment": "NONBLIND_DEVELOPMENT_LOO_TRANSFER30_V1",
+  "scope": "development transfer / mechanism validation only; not unseen, untouched, held-out, strict blind validation, or final generalization evidence",
+  "frozen_artifact_git_commit": "e66da47a3403913c6d1e06a7cfb29a6d484e1faf",
+  "frozen_artifact_archive": "analysis/nonblind_development_loo_transfer30_v1/frozen_run_20260927T112700Z/nonblind_development_loo_transfer30_v1.raw.tar.gz",
+  "frozen_artifact_archive_sha256": "84cdf9faced48ac98503f580c4355de234ced2b397c5d5155c72cf615e136ce4",
+  "raw_manifest_entries_verified": 114,
+  "raw_manifest_mismatches": 0,
+  "scoring": {
+    "gpu_freeze_complete_sha256": "27e89ef0b62b56d4eebf657e41b6df5478c8957050db5b4cc69c02cfd5a82457",
+    "solutions_opened_after_gpu_freeze": true,
+    "evaluation_solutions_source": "C:/Users/asus/Desktop/py/kaggle/ARC2_v8_visible_scoring_input/arc-agi_evaluation_solutions.json",
+    "execution": "CPU-only local retrospective scorer"
+  }
+}

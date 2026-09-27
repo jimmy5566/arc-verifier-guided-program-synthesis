@@ -1,0 +1,122 @@
+{
+  "cohort_outputs": 41,
+  "cohort_tasks": 30,
+  "decision": "NO_TRANSFER",
+  "experiment_id": "NONBLIND_DEVELOPMENT_COHORT_FROZEN_TARGET_BLIND_WITH_RESPECT_TO_CURRENT_RUN",
+  "methods": {
+    "FIXED_24_IDENTITY": {
+      "denominator_outputs": 41,
+      "exact_output_hits": 3,
+      "fully_solved_task_ids": [
+        "6e453dd6",
+        "7c66cb00",
+        "8f3a5a89"
+      ],
+      "fully_solved_tasks": 3
+    },
+    "FIXED_48_IDENTITY": {
+      "denominator_outputs": 41,
+      "exact_output_hits": 1,
+      "fully_solved_task_ids": [
+        "6e453dd6"
+      ],
+      "fully_solved_tasks": 1
+    },
+    "LOO_TOP1": {
+      "denominator_outputs": 41,
+      "exact_output_hits": 2,
+      "fully_solved_task_ids": [
+        "7c66cb00"
+      ],
+      "fully_solved_tasks": 1
+    },
+    "LOO_TOP2": {
+      "denominator_outputs": 41,
+      "exact_output_hits": 2,
+      "fully_solved_task_ids": [
+        "7c66cb00"
+      ],
+      "fully_solved_tasks": 1
+    },
+    "LOO_TOP4": {
+      "denominator_outputs": 41,
+      "exact_output_hits": 4,
+      "fully_solved_task_ids": [
+        "5961cc34",
+        "6e453dd6",
+        "7c66cb00"
+      ],
+      "fully_solved_tasks": 3
+    },
+    "STEP1_BEST_FIXED_12_TRANSPOSE": {
+      "denominator_outputs": 41,
+      "exact_output_hits": 0,
+      "fully_solved_task_ids": [],
+      "fully_solved_tasks": 0
+    }
+  },
+  "recommendation": "STOP_ADAPTIVE_ROUTING",
+  "scope": "development transfer / mechanism validation only; not unseen, untouched, held-out, strict blind validation, or final generalization evidence",
+  "sentinel6": {
+    "correct_cell_rank_distribution": {
+      "no_correct_cell_exists": 5,
+      "rank_gt_8": 2
+    },
+    "correct_cells": {
+      "a47bf94d:0": [
+        {
+          "depth": 48,
+          "loo_rank": 18,
+          "view": "rot90"
+        },
+        {
+          "depth": 72,
+          "loo_rank": 32,
+          "view": "flip_ud"
+        }
+      ],
+      "fc7cae8d:0": [
+        {
+          "depth": 48,
+          "loo_rank": 24,
+          "view": "anti_transpose"
+        },
+        {
+          "depth": 72,
+          "loo_rank": 25,
+          "view": "anti_transpose"
+        }
+      ]
+    },
+    "depth_only_oracle": 2,
+    "full_surface_oracle": 2,
+    "joint_oracle": 2,
+    "loo_topk_oracle_retention": {
+      "TOP1": {
+        "hits": 0,
+        "oracle_outputs": 2,
+        "retention": 0.0
+      },
+      "TOP2": {
+        "hits": 0,
+        "oracle_outputs": 2,
+        "retention": 0.0
+      },
+      "TOP4": {
+        "hits": 0,
+        "oracle_outputs": 2,
+        "retention": 0.0
+      }
+    },
+    "outputs": 7,
+    "unique_depth_contributions": {},
+    "unique_depth_view_contributions": {},
+    "unique_view_contributions": {
+      "anti_transpose": [
+        "fc7cae8d:0"
+      ]
+    },
+    "view_only_oracle": 2
+  },
+  "solutions_opened_after_gpu_freeze": true
+}

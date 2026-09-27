@@ -1,0 +1,8 @@
+FIXED_24_IDENTITY,FIXED_48_IDENTITY,LOO_TOP1,LOO_TOP2,LOO_TOP4,STEP1_BEST_FIXED_12_TRANSPOSE,sentinel,sentinel_oracle,task_id,test_index
+False,False,False,False,False,False,True,False,21897d95,0
+False,False,False,False,False,False,True,False,21897d95,1
+False,False,False,False,False,False,True,False,e87109e9,0
+False,False,False,False,False,False,True,True,fc7cae8d,0
+False,False,False,False,False,False,True,True,a47bf94d,0
+False,False,False,False,False,False,True,False,89565ca0,0
+False,False,False,False,False,False,True,False,28a6681f,0
