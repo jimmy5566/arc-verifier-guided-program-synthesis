@@ -1,0 +1,85 @@
+{
+  "alpha": 32,
+  "augmentation_colour_permutations": 16,
+  "augmentation_geometry_count": 8,
+  "bf16": true,
+  "cv_folds": "all leave-one-train-pair-out",
+  "depths": [
+    0,
+    12,
+    24,
+    48,
+    72
+  ],
+  "dynamic_queue": "atomic task claim; one continuous trajectory per GPU at a time",
+  "experiment_id": "FULL_EVIDENCE_SENTINEL6_AUTHORITATIVE_RERUN_V1",
+  "fixed_baselines": {
+    "FIXED_24_IDENTITY": [
+      24,
+      "identity"
+    ],
+    "FIXED_48_IDENTITY": [
+      48,
+      "identity"
+    ],
+    "STEP1_BEST_FIXED_12_TRANSPOSE": [
+      12,
+      "transpose"
+    ]
+  },
+  "full_evidence_only": true,
+  "full_train_steps": 72,
+  "gen_views": [
+    "identity",
+    "rot90",
+    "rot180",
+    "rot270",
+    "flip_lr",
+    "flip_ud",
+    "transpose",
+    "anti_transpose"
+  ],
+  "generation": "unchanged greedy Aug8; beam=1",
+  "generation_augmentation_count": 8,
+  "generation_color_offsets": [
+    0
+  ],
+  "generation_context_window": 16384,
+  "generation_pair_orders": [
+    "canonical"
+  ],
+  "generation_performed": false,
+  "gradient_checkpointing": false,
+  "historical_outcomes_permitted_only_after_prediction_freeze": true,
+  "kernel_source": "sorokin/pip-install-unsloth-flash-patch",
+  "learning_rate": 5e-05,
+  "max_new_tokens": 1024,
+  "max_sequence_length": 8192,
+  "primary_competence": "arithmetic_mean_cv_nll_per_token",
+  "ptxas_path": "/usr/local/cuda-12.8/bin/ptxas",
+  "rank": 256,
+  "reference_commit": "846d0198efa752534594e321fc3289fc0a06c657",
+  "reference_notebook": "sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue",
+  "reference_repository": "https://github.com/1ytic/NVARC",
+  "reference_schedule_total_steps": 128,
+  "same_adapter_surface": true,
+  "scheduler": "cosine",
+  "seed": 42,
+  "source_commit": "081f4ead4c3267bc750228355e34b4f17de39769",
+  "style": "official_nvarc_train_only_partial_24_steps",
+  "target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj",
+    "embed_tokens",
+    "lm_head"
+  ],
+  "train_pair_order": "random full permutation",
+  "ttt_steps": 72,
+  "use_rslora": true,
+  "warmup_ratio": 0.1
+}
