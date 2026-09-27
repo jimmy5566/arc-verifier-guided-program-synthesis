@@ -1,0 +1,105 @@
+{
+  "elapsed_seconds": 10646.288775576279,
+  "identity": "e1371543e1bc07cf519b3fbd426e3c0df1523fc320694af5e41c0301f08b786a",
+  "physical_gpu_id": 1,
+  "solutions_opened": false,
+  "task_results": [
+    {
+      "status": "SUCCESS",
+      "task_id": "a25697e4",
+      "wall_seconds": 998.239028390497
+    },
+    {
+      "status": "REUSED_FROZEN",
+      "task_id": "4c416de3"
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "3dc255db",
+      "wall_seconds": 209.23450147733092
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "20a9e565",
+      "wall_seconds": 666.5280217509717
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "da515329",
+      "wall_seconds": 520.1025719046593
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "291dc1e1",
+      "wall_seconds": 327.90305808372796
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "e87109e9",
+      "wall_seconds": 1704.8239804171026
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "65b59efc",
+      "wall_seconds": 554.5487107075751
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "409aa875",
+      "wall_seconds": 346.25836177915335
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "8f3a5a89",
+      "wall_seconds": 304.3795699365437
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "a47bf94d",
+      "wall_seconds": 1826.131562186405
+    },
+    {
+      "status": "REUSED_FROZEN",
+      "task_id": "6e453dd6"
+    },
+    {
+      "status": "REUSED_FROZEN",
+      "task_id": "5545f144"
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "8f215267",
+      "wall_seconds": 677.5720853060484
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "8b9c3697",
+      "wall_seconds": 603.10604993999
+    },
+    {
+      "status": "REUSED_FROZEN",
+      "task_id": "b0039139"
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "7c66cb00",
+      "wall_seconds": 894.6254015918821
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "faa9f03d",
+      "wall_seconds": 330.8707905448973
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "89565ca0",
+      "wall_seconds": 333.5375853460282
+    },
+    {
+      "status": "SUCCESS",
+      "task_id": "28a6681f",
+      "wall_seconds": 347.9207740277052
+    }
+  ],
+  "worker_id": 1
+}

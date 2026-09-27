@@ -1,0 +1,9 @@
+{
+  "baseline_predictions": 123,
+  "folds": 97,
+  "identity": "e1371543e1bc07cf519b3fbd426e3c0df1523fc320694af5e41c0301f08b786a",
+  "main_predictions": 164,
+  "sentinel_surface_predictions": 280,
+  "solutions_opened": false,
+  "tasks": 30
+}

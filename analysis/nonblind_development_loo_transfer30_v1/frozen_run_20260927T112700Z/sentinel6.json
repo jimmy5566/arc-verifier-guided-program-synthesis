@@ -1,0 +1,14 @@
+{
+  "selection_rule": "Among frozen Transfer30 IDs select six smallest SHA256('LOO_TRANSFER30_V1:REAL_TEST_SENTINEL6:' + task_id)",
+  "solutions_opened": false,
+  "status": "NONBLIND_DEVELOPMENT_REAL_TEST_SENTINEL6_FROZEN_TARGET_BLIND_WITH_RESPECT_TO_CURRENT_RUN",
+  "task_ids": [
+    "28a6681f",
+    "21897d95",
+    "e87109e9",
+    "89565ca0",
+    "fc7cae8d",
+    "a47bf94d"
+  ],
+  "task_ids_sha256": "b25ba34222f79529f90e91e6e94c81d5efd6005c3fbac85fbee11cbe61c0ba3b"
+}
