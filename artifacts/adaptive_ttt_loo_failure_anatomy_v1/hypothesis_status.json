@@ -1,0 +1,47 @@
+{
+  "H-A": {
+    "evidence": "Input-shift associations are descriptive only; N=7 and no classifier/regression was fit.",
+    "shift_vs_gold_rank_spearman": 0.6071428571428571,
+    "shift_vs_regret_spearman": 0.14285714285714285,
+    "status": "WEAKLY_SUPPORTED"
+  },
+  "H-B": {
+    "evidence": "LOO early-depth winners=6/7; Gold early-depth winners=1/7. This is a descriptive shallow-to-late displacement in a reconstructed N=7 audit.",
+    "status": "WEAKLY_SUPPORTED"
+  },
+  "H-C": {
+    "evidence": "Joint Top1/Top2/Top4 recovery was 0/7 while marginal depth and view coverage were nonzero. Gold is not uniformly more interaction-heavy than LOO, so this is not a universal interaction claim.",
+    "status": "WEAKLY_SUPPORTED"
+  },
+  "H-D": {
+    "evidence": "One Gold cell improves to rank 3 under its frozen best-fold summary while mean ranks it 32, but other Gold cells remain poor under all predefined summaries; aggregation is not the whole failure.",
+    "status": "WEAKLY_SUPPORTED"
+  },
+  "H-E": {
+    "evidence": "Fold-winner instability versus regret is descriptive at N=7.",
+    "spearman_unique_fold_winner_vs_regret": -0.31622776601683794,
+    "status": "INSUFFICIENT"
+  },
+  "H-F": {
+    "evidence": "All results use reconstructed trajectories. CLOSE tasks also miss joint Top4, so drift alone is not established as sufficient.",
+    "spearman_mean_loss_delta_vs_regret": 0.5405624776173353,
+    "status": "INSUFFICIENT"
+  },
+  "H-G": {
+    "evidence": "At epsilon=1e-3, every output has median pairwise basin Jaccard 0 and zero all-fold intersection; Top4 median overlap is also 0.",
+    "status": "NOT_SUPPORTED"
+  },
+  "H-H": {
+    "evidence": "Frozen fold winners have off-diagonal median rank 21.0; only 1/54 remain Top4 on another fold.",
+    "status": "NOT_SUPPORTED"
+  },
+  "H-I": {
+    "evidence": "Gold Top1 lies in the epsilon=1e-3 majority basin for 0/7 outputs.",
+    "status": "NOT_SUPPORTED"
+  },
+  "overall": {
+    "another_loo_routing_experiment": "NO",
+    "interpretation": "E_MIXED_WITH_DISJOINT_TRAIN_FOLD_BASINS",
+    "reason": "No stable shared multi-fold basin or cross-fold winner transfer was observed, and the Gold optimum is absent from every epsilon=1e-3 consensus basin."
+  }
+}

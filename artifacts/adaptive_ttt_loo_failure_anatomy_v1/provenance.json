@@ -1,0 +1,16 @@
+{
+  "cells": 280,
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "cpu_only": true,
+  "experiment": "LOO_TRANSFER_FAILURE_ANATOMY",
+  "gold_dir": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2-governance-v1\\artifacts\\adaptive_ttt_gold_nll_reconstruction_v1",
+  "no_generation": true,
+  "no_model_loading": true,
+  "no_new_router": true,
+  "no_ttt": true,
+  "outputs": 7,
+  "postmortem_dir": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2-governance-v1\\artifacts\\adaptive_ttt_transfer30_postmortem_v1",
+  "raw_archive_expected_sha256": "84cdf9faced48ac98503f580c4355de234ced2b397c5d5155c72cf615e136ce4",
+  "raw_archive_sha256": "84cdf9faced48ac98503f580c4355de234ced2b397c5d5155c72cf615e136ce4",
+  "reconstruction_caveat": "Gold Test NLL comes from newly reconstructed all-train trajectories; original adapter checkpoints were not preserved."
+}

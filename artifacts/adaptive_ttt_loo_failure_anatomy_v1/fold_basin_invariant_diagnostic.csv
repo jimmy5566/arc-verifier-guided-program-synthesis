@@ -1,0 +1,8 @@
+evidence,invariant_rule_diagnostic,median_eps001_jaccard,median_top4_jaccard,offdiagonal_winner_rank_median,output_index,task_id
+descriptive TopK/epsilon/cross-fold evidence only; no causal claim,DISJOINT_BASINS,0.0,0.0,21.0,0,21897d95
+descriptive TopK/epsilon/cross-fold evidence only; no causal claim,DISJOINT_BASINS,0.0,0.0,21.0,1,21897d95
+descriptive TopK/epsilon/cross-fold evidence only; no causal claim,DISJOINT_BASINS,0.0,0.0,17.0,0,28a6681f
+descriptive TopK/epsilon/cross-fold evidence only; no causal claim,DISJOINT_BASINS,0.0,0.0,28.0,0,89565ca0
+descriptive TopK/epsilon/cross-fold evidence only; no causal claim,DISJOINT_BASINS,0.0,0.0,19.5,0,a47bf94d
+descriptive TopK/epsilon/cross-fold evidence only; no causal claim,DISJOINT_BASINS,0.0,0.0,14.5,0,e87109e9
+descriptive TopK/epsilon/cross-fold evidence only; no causal claim,DISJOINT_BASINS,0.0,0.0,26.5,0,fc7cae8d
