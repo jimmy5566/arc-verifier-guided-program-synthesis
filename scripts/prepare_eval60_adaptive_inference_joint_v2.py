@@ -182,7 +182,9 @@ def main() -> None:
         "gold_accessed_pre_freeze": False,
     }
     output.mkdir(parents=True, exist_ok=False)
-    shutil.copy2(args.turbodfs_config, output / "turbodfs_opt_config.json")
+    # Global/FUSE storage used on RunPod does not permit timestamp updates.
+    # Copy only immutable bytes; provenance is recorded separately by SHA256.
+    shutil.copyfile(args.turbodfs_config, output / "turbodfs_opt_config.json")
     with (output / "output_execution_order.csv").open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=["ordinal", "task_id", "output_index", "sha256"])
         writer.writeheader()
