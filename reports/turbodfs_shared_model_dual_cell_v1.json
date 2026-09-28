@@ -1,0 +1,36 @@
+{
+  "experiment": "TURBODFS_SHARED_MODEL_DUAL_CELL_V1",
+  "scope": "target-blind execution-engine parity gate; no Gold or evaluation solutions accessed",
+  "source_commit": "d3a768cfd00ec89d1b65074b403962350bf0f253",
+  "run_directory": "/workspace/arc2/active_runs/eval60_v5_vs_greedy_4worker_v1",
+  "validation_cells": 8,
+  "model_instances_per_gpu": 1,
+  "logical_searches_per_gpu": 2,
+  "unit_tests": {"passed": 11, "total": 11, "status": "PASS"},
+  "candidate_set_parity_cells": 0,
+  "termination_parity_cells": 8,
+  "frontier_floor_parity_cells": 0,
+  "median_nodes_ratio": 1.4785714285714286,
+  "median_forwards_ratio": 1.4869565217391303,
+  "median_tokens_ratio": 1.4785714285714286,
+  "serial_peak_reserved_gib": 13.3515625,
+  "shared_peak_reserved_gib": 13.3515625,
+  "serial_cells_per_min_gpu": 13.849551402501382,
+  "shared_cells_per_min_gpu": 3.7336781134720023,
+  "throughput_speedup": 0.26958837907180583,
+  "gates": {
+    "candidate_set_parity": "FAIL",
+    "termination": "PASS",
+    "search_work": "PASS",
+    "vram": "PASS",
+    "throughput": "FAIL",
+    "deployment": "BLOCKED"
+  },
+  "interpretation": "The V5 decoder is batch-sensitive in this execution environment: serial one-lane and two-lane calls produced different candidate sets and frontier-floor activity. The proposed shared route is therefore not semantically interchangeable with the frozen serial route and was not deployed.",
+  "remote_artifact_sha256": {
+    "shared_engine_unit_tests.json": "de04f87f2c14668be2e4183572e6e55af01c6776aceb21fdcedf79607dacf298",
+    "shared_validation.json": "4485d226906c01db84eb431c5c9d1d0f47788ab512ec95b875cf5c3b1bf7bd2f",
+    "shared_parity_results.csv": "5b46f5e4388f6d941b215ff9e32335147744135d993af672b544cac8d36c20b3",
+    "serial_reference_cells.csv": "6e3cfa8eb477caf70009e7677d6b10940d05732db2a1f01fe99209e8bc3c78a4"
+  }
+}

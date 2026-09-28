@@ -122,6 +122,8 @@ reports/*
 !reports/arc2_v3_recognition_v1.md
 !reports/arc2_v3_e2e_v1.md
 !reports/arc2_v3_final_architecture.md
+!reports/turbodfs_shared_model_dual_cell_v1.md
+!reports/turbodfs_shared_model_dual_cell_v1.json
 
 # LaTeX build artifacts
 *.aux
