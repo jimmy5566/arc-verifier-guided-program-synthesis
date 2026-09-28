@@ -1,0 +1,22 @@
+{
+  "ambiguous_candidate_link_cells": 0,
+  "complete_outputs": 84,
+  "confirmed_greedy_miss_rescues": [
+    "62593bfd:o1",
+    "78332cb0:o0",
+    "b6f77b65:o2",
+    "de809cff:o0"
+  ],
+  "db_quick_check": "ok",
+  "db_sha256": "12529cc829509f224f466446ccf08663083dd7fd5aea849f73cb2e449d7ac485",
+  "greedy_union_v5_oracle_lower_bound": "33/89",
+  "missing_cells": 0,
+  "outputs": 89,
+  "partial_outputs": 5,
+  "scheduler_done_cells": 1068,
+  "scheduler_rows": 1068,
+  "status": "INTERIM_PARTIAL",
+  "trustworthy_candidate_linked_cells": 1061,
+  "unresolved_no_artifact_cells": 7,
+  "v5_pool_oracle_lower_bound": "33/89"
+}

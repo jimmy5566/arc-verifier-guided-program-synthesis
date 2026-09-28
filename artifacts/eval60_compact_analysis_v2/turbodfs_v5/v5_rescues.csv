@@ -1,0 +1,5 @@
+task_id,output_index,output_id,rescue_depths,rescue_views,fast_rescue,heavy_rescue,heavy_unique_rescue,num_gold_hit_cells,best_gold_candidate_nll,frontier_floor_required_by_any_gold_candidate,frontier_floor_required_by_best_gold_candidate,first_confirmed_rescue_origin
+62593bfd,1,62593bfd:o1,12;24,flip_ud,false,true,false,2,2.1179683208465576,UNKNOWN,UNKNOWN,HEAVY_REPAIR
+78332cb0,0,78332cb0:o0,48,identity,false,false,false,1,1.4902262687683105,UNKNOWN,UNKNOWN,EXISTING_LABEL_UNSPECIFIED
+b6f77b65,2,b6f77b65:o2,48,identity,true,false,false,1,2.094907760620117,UNKNOWN,UNKNOWN,FAST_PASS
+de809cff,0,de809cff:o0,24,anti_transpose,false,true,true,1,1.0392999649047852,UNKNOWN,UNKNOWN,HEAVY_REPAIR

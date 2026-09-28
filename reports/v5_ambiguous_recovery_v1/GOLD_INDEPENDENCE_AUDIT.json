@@ -1,0 +1,14 @@
+{
+  "GOLD_USED_FOR_LINKAGE": false,
+  "PASS": true,
+  "PASS_1_HASH": {
+    "recovered_sha256_first": "27d244718763eb25e38537f08f6f1bac63862b47b9805370a0649401323a1815",
+    "resolutions_sha256_first": "b0afdb94f7d5e28fbd21553e290486ad0bcd876de14bb7629181cc760ed12dce",
+    "unresolved_sha256_first": "1eb64a6b93d716215f5ba70e656cae1b68616805385c241a42ddb3af712f42fe"
+  },
+  "PASS_2_HASH": {
+    "recovered_sha256_repeat": "27d244718763eb25e38537f08f6f1bac63862b47b9805370a0649401323a1815",
+    "resolutions_sha256_repeat": "b0afdb94f7d5e28fbd21553e290486ad0bcd876de14bb7629181cc760ed12dce",
+    "unresolved_sha256_repeat": "1eb64a6b93d716215f5ba70e656cae1b68616805385c241a42ddb3af712f42fe"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "gold_used_for_linkage": false,
+  "missing_scheduler_cells": 0,
+  "recovered_exact_link": 284,
+  "scheduler_done_cells": 1068,
+  "trustworthy_candidate_linked_cells": 1061,
+  "unresolved_no_artifact_cells": 7
+}

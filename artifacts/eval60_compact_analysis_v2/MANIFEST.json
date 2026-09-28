@@ -1,0 +1,47 @@
+{
+  "confirmed_greedy_miss_rescues": [
+    "62593bfd:o1",
+    "78332cb0:o0",
+    "b6f77b65:o2",
+    "de809cff:o0"
+  ],
+  "dataset_version": "eval60_compact_analysis_v2",
+  "export_timestamp": "2026-09-28T18:29:45.481314+00:00",
+  "file_sha256": {
+    "README.md": "c67ed933f78054ad2221572f725741d26b4d30344ba64c2e687afc3c7cda4eec",
+    "greedy/greedy_cells.csv": "9bb945bcfa012667149083c63d90aaa85aac9fe75cc5f9d38a3669e0b400b49c",
+    "greedy/greedy_manifest.json": "b414ca92325207537c16409dbfa1ecbbb8102945a5c3bee0bb22b7538156053b",
+    "greedy/greedy_outputs.csv": "772622a64a4ed0021be62d3b060efb8eb3672a0664b0c3546769e3d3b9760040",
+    "provenance/config_hashes.json": "432dacb459bddfe4abe76ec1d6254dccdab8352592e6786ad2b7fdcaaed06f0f",
+    "provenance/data_quality_report.md": "6f32a0010ac1c452f745415e520468140ce26a8e1612a191b04da9539f68e290",
+    "provenance/raw_artifact_hashes.csv": "27edfe34bfda5a068ca5441e1dc3ddb2314b1a0bf1951d8ca34939d986a0da66",
+    "provenance/source_paths.json": "52a3c7637c82b40134aa898a141f2acf93f140a562f3a0f4bff2acac6f6372f0",
+    "turbodfs_v5/v5_candidates.csv": "2c9be0726c8e2df794a2a6bc07288baebfa93ff192f0cad543c3d20da90aa4c1",
+    "turbodfs_v5/v5_cells.csv": "068129f804e575a52d083129926de43fcf25e3063d212e1bd1540207d5c16e1b",
+    "turbodfs_v5/v5_manifest.json": "ce18d0195542ab2383d0672f889a6f0b7c7ddc77104a0ce9d52675106997e8a8",
+    "turbodfs_v5/v5_outputs.csv": "7d2bf7df6888e4fab397af2bf07b7f0f8b603967da5f2c6213ef11f080b2ae53",
+    "turbodfs_v5/v5_rescues.csv": "295e0093b3070d5db04a3eb3403468d953bd9b131614c8a595ac9dd6227bdde4"
+  },
+  "git_source_commit": "d157bc7977527a9bc02b576be7735e78c202aef0",
+  "gold_disclosure_status": "NONBLIND_USER_AUTHORIZED_CONTINUATION",
+  "greedy_expected_cells": 1068,
+  "greedy_expected_outputs": 89,
+  "greedy_exported_cells": 1068,
+  "greedy_oracle": "29/89",
+  "greedy_union_v5_oracle_lower_bound": "33/89",
+  "scientific_config_hashes": {
+    "adapter_checkpoint_manifest_sha256": "e3e95956b0c17e3017b3bb99999c53bfc5307908df68c43fc6641e8b1459c2a6",
+    "ttt_reference_config_sha256": "8968f67e5a5c8c1f838dc1a45120d052527d65e95188cd9e155426ba56481486",
+    "v5_config_sha256": "e5beec92c9992930f4d6b468db1806ee2f3b9224e13179af7d4e8bb5897148e0"
+  },
+  "v5_ambiguous_candidate_link_cells": 0,
+  "v5_dataset_relative_dir": "turbodfs_v5",
+  "v5_dataset_status": "PROVENANCE_RECOVERED_PARTIAL",
+  "v5_expected_cells": 1068,
+  "v5_missing_cells": 0,
+  "v5_pool_oracle_lower_bound": "33/89",
+  "v5_scheduler_done_cells": 1068,
+  "v5_scheduler_rows": 1068,
+  "v5_trustworthy_candidate_linked_cells": 1061,
+  "v5_unresolved_no_artifact_cells": 7
+}

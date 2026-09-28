@@ -1,0 +1,31 @@
+{
+  "adapter_checkpoint_manifest_sha256": "e3e95956b0c17e3017b3bb99999c53bfc5307908df68c43fc6641e8b1459c2a6",
+  "after_missing": 0,
+  "after_trustworthy": 1061,
+  "after_unresolved": 7,
+  "before_ambiguous": 291,
+  "before_trustworthy": 777,
+  "expected_cells": 1068,
+  "file_sha256": {
+    "AFTER_RECOVERY_SUMMARY.json": "078785593e01ed45d4748613023afcfa705687ebf57cf296656a2d63ace8addf",
+    "BEFORE_RECOVERY_SUMMARY.json": "c5f34322646e26f5400d72b291bb6b161957338a1e00e256736645ca10f0f026",
+    "GOLD_INDEPENDENCE_AUDIT.json": "6862070da6c262c9e1285187c1c40e0ce73e12d893b96318aef2647b09b9dd25",
+    "GOLD_INDEPENDENCE_TEST.json": "fba6f8ab86d18fac81bb6e5606aff391f9ac8a82ecc80fe4f7d93a0a8d969971",
+    "PROVENANCE_RECOVERY_FREEZE.json": "161a1413d50709a44d5beca8ce93dfb2780084c1169d5a5c20848e7b21f38cef",
+    "RECOVERY_REPORT.md": "72de7d48db9a906e532593f847c3c713000f189b437cc8a4c6fcff71bad17cf5",
+    "ambiguous_cells_before.csv": "e458af778d88bd563c889c7fa087ca323b42b902bb78b2a739ab8e278f09a988",
+    "artifact_index.csv": "58ae5c6f13711f32bcbdd1c9358c86971678ed2db00782110f239b95f228d0a5",
+    "cell_attempt_history.csv": "fb6a5335fb491e8940d31a92b307ccdad4bdd5e619c52dab4f1e3099ec015a47",
+    "provenance_resolution.jsonl": "645fad7b8fa8533d45cd48ad3c8cf1a590b7bd611c630475949935607efcc9b0",
+    "recovered_cells.csv": "9832fc0d65221f3fbbbdca0fa16cdaffe44ba2e70a142b9473e8169b6bd7c230",
+    "unresolved_cells.csv": "07dafc1d180776ffbdb1b16ac92e68dd1320fc6d4c05b5966ec06bd550c962c5",
+    "v1_v2_trustworthy_stability.csv": "81ed74f32f8b4d46375c871177478380794366b775677d829a76df8d9a021b57"
+  },
+  "gold_used_for_linkage": false,
+  "independent_recovery_passes": 2,
+  "recovered_exact_link": 284,
+  "recovery_pass_hash_match": true,
+  "scheduler_done_cells": 1068,
+  "ttt_config_sha256": "8968f67e5a5c8c1f838dc1a45120d052527d65e95188cd9e155426ba56481486",
+  "v5_config_sha256": "e5beec92c9992930f4d6b468db1806ee2f3b9224e13179af7d4e8bb5897148e0"
+}

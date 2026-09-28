@@ -1,0 +1,7 @@
+{
+  "gold_grid_exported": false,
+  "gold_source": "/workspace/arc2/benchmarks/arc-agi_evaluation_solutions.json",
+  "greedy_run": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1",
+  "v5_recovered_scheduler_db": "/root/arc-runtime-turbodfs-v5-benchmark/state/eval60_v5_nonblind_recovered.sqlite",
+  "v5_run": "/workspace/arc2/active_runs/eval60_v5_vs_greedy_4worker_v1"
+}

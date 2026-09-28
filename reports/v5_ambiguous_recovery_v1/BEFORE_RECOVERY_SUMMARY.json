@@ -1,0 +1,9 @@
+{
+  "ambiguous_candidate_link_cells": 291,
+  "missing_cells": 0,
+  "scheduler_done_cells": 1068,
+  "scheduler_rows": 1068,
+  "snapshot_dir": "artifacts/eval60_compact_analysis_v1/snapshots/20260928T170900Z_777_done/turbodfs_v5",
+  "source_package": "eval60_compact_analysis_v1",
+  "trustworthy_candidate_linked_cells": 777
+}
