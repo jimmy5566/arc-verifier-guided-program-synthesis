@@ -306,9 +306,11 @@ def process_pair(root: Path, db: sqlite3.Connection, worker: str, gpu: int, mode
                     (DONE, str(path), float(value["runtime_seconds"]), int(value["nodes_expanded"]), int(value["model_forwards"]), int(value["tokens_advanced"]), int(value["candidate_count"]), int(value["frontier_floor_activation_count"]), now(), cell_key(task, output, depth, str(value["view"]))),
                 )
             event(db, worker, task, "CELL_PAIR_DONE", {"output_index": output, "depth": depth, "views": views, "mode": mode})
-        compact_if_ready(root, db, task, depth)
-        with db:
-            derive_task_statuses(db)
+        # Compaction and task/output summaries are intentionally deferred to
+        # pass boundaries.  They are derived views, whereas the just-written
+        # pair is the authoritative atomic result.  Keeping them out of this
+        # multi-worker hot path avoids turning a harmless SQLite summary-lock
+        # collision into a false retry of an already durable cell.
         return adapter_key
     except Exception as exc:
         text = f"{type(exc).__name__}: {exc}"
@@ -321,7 +323,8 @@ def process_pair(root: Path, db: sqlite3.Connection, worker: str, gpu: int, mode
                 for view in views:
                     db.execute("INSERT OR REPLACE INTO heavy_repair_queue(cell_key,task_id,output_index,depth,view,reason,attempts,status,created_unix,updated_unix) VALUES(?,?,?,?,?,?,?,?,?,?)", (cell_key(task, output, depth, view), task, output, depth, view, "CUDA_OOM", attempt, next_state, now(), now()))
             event(db, worker, task, "CELL_PAIR_ERROR", {"output_index": output, "depth": depth, "views": views, "mode": mode, "next_state": next_state, "error": text})
-            derive_task_statuses(db)
+            # Task status is derived at pass boundaries.  Do not contend on a
+            # whole-task summary row while other workers are persisting cells.
         if oom:
             raise SystemExit(75)
         return adapter_key
@@ -358,6 +361,11 @@ def worker(args: argparse.Namespace) -> int:
 def reports(root: Path) -> dict[str, Any]:
     db = db_open(root); migrate(db)
     try:
+        # Reports are invoked only after a pass supervisor has drained its
+        # workers, so summary derivation is safe and does not participate in
+        # the per-cell write path.
+        with db:
+            derive_task_statuses(db)
         statuses = dict(db.execute("SELECT status,count(*) FROM cells GROUP BY status"))
         with (root / "oom_cells.csv").open("w", newline="", encoding="utf-8") as handle:
             writer = csv.writer(handle); writer.writerow(("task_id", "output_index", "depth", "view", "status", "error_json"))
@@ -386,7 +394,20 @@ def reports(root: Path) -> dict[str, Any]:
         db.close()
 
 
+def compact_all_done(root: Path) -> None:
+    """Create compact depth shards after all workers have stopped."""
+    db = db_open(root); migrate(db)
+    try:
+        for task, depth in list(db.execute("SELECT DISTINCT task_id,depth FROM cells ORDER BY task_id,depth")):
+            compact_if_ready(root, db, str(task), int(depth))
+        with db:
+            derive_task_statuses(db)
+    finally:
+        db.close()
+
+
 def freeze(root: Path) -> None:
+    compact_all_done(root)
     summary = reports(root)
     db = db_open(root); migrate(db)
     try:
