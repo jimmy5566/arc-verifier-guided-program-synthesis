@@ -1,0 +1,40 @@
+{
+  "status": "GENERATION_COMPLETE_STANDARD_FREEZE_BLOCKED",
+  "disclosure": "NONBLIND_USER_AUTHORIZED_CONTINUATION",
+  "generation_uses_gold": false,
+  "cells": {
+    "expected": 1068,
+    "done": 1068,
+    "fast_pass_done": 879,
+    "heavy_repair_done": 189
+  },
+  "record_validation": {
+    "validated_records": 880,
+    "unverified_done_cells_excluded": 188,
+    "db_record_view_mismatches": 7
+  },
+  "analysis": {
+    "v5_pool_oracle_lower_bound": "28/89",
+    "greedy_union_v5_pool_oracle_lower_bound": "33/89",
+    "top2": "NOT_COMPUTABLE"
+  },
+  "standard_freeze_blocker": {
+    "task_output_depth": "1818057f:o0:d12",
+    "error": "DONE cells without a valid temp group",
+    "done_rows_without_direct_temp_path": 284
+  },
+  "identities": {
+    "v5_config_sha256": "e5beec92c9992930f4d6b468db1806ee2f3b9224e13179af7d4e8bb5897148e0",
+    "ttt_config_sha256": "8968f67e5a5c8c1f838dc1a45120d052527d65e95188cd9e155426ba56481486",
+    "adapter_checkpoint_manifest_sha256": "e3e95956b0c17e3017b3bb99999c53bfc5307908df68c43fc6641e8b1459c2a6",
+    "recovered_state_db_sha256": "7840b5de1629f7b54e21d71800384b92dd7622b9a8e6d0accc4b1f46f6ce6e68"
+  },
+  "raw_artifacts": {
+    "candidate_trace_dir": "/workspace/arc2/active_runs/eval60_v5_vs_greedy_4worker_v1/tmp",
+    "candidate_trace_size": "3.8 GiB",
+    "state_db_path": "/root/arc-runtime-turbodfs-v5-benchmark/state/eval60_v5_nonblind_recovered.sqlite",
+    "state_db_size_bytes": 1056768,
+    "ordinary_git_upload": "NOT_PERFORMED"
+  },
+  "checkpoint_commit": "10ec3f79ce80c4a843806416c4530079f55a66af"
+}
