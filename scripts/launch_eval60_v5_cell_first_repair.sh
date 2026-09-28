@@ -46,7 +46,14 @@ supervise() {
   done
 }
 
-"$PYTHON" "$SCRIPT" recover --output "$RUN_ROOT" --adapter-manifest "$ADAPTER_MANIFEST" | tee "$LOG_DIR/recover.json"
+if [[ "${ARC2_SKIP_RECOVERY:-0}" != "1" ]]; then
+  "$PYTHON" "$SCRIPT" recover --output "$RUN_ROOT" --adapter-manifest "$ADAPTER_MANIFEST" | tee "$LOG_DIR/recover.json"
+else
+  # Recovery has already been reconciled and hashed before this controller
+  # starts.  Re-running it is unnecessary and can block on Global Volume
+  # SQLite close semantics.
+  [[ -f "$RUN_ROOT/pre_patch_recovery_summary.json" ]] || { echo "missing recovered-state summary" >&2; exit 2; }
+fi
 supervise 0 fast0 fast & p0=$!
 supervise 0 fast1 fast & p1=$!
 supervise 1 fast2 fast & p2=$!
