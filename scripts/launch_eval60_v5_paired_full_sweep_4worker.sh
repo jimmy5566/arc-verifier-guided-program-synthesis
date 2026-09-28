@@ -16,7 +16,6 @@ BENCHMARK_ROOT=${ARC2_CONCURRENCY_BENCHMARK:?set ARC2_CONCURRENCY_BENCHMARK}
 PYTHON=${ARC2_PYTHON:?set ARC2_PYTHON}
 REPO_ROOT=${ARC2_REPO_ROOT:?set ARC2_REPO_ROOT}
 LOG_DIR="$RUN_ROOT/logs"
-mkdir -p "$LOG_DIR"
 
 fail() { echo "EVAL60_V5_PAIRED_FULL_SWEEP_FAIL=$*" >&2; exit 2; }
 [[ $(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l) -eq 2 ]] || fail exactly_two_rtx3090_required
@@ -46,7 +45,8 @@ SOURCE_COMMIT=$(git -C "$REPO_ROOT" rev-parse HEAD)
   --output "$RUN_ROOT" --challenge "$CHALLENGE" --reference-config "$REFERENCE_CONFIG" \
   --authoritative-root "$AUTHORITATIVE_ROOT" --adapter-manifest "$ADAPTER_MANIFEST" \
   --global-asset-manifest "$GLOBAL_ASSET_MANIFEST" --final-config "$FINAL_CONFIG" \
-  --final-config-sha "$FINAL_CONFIG_SHA" --source-commit "$SOURCE_COMMIT" >"$LOG_DIR/prepare.log" 2>&1
+  --final-config-sha "$FINAL_CONFIG_SHA" --source-commit "$SOURCE_COMMIT"
+mkdir -p "$LOG_DIR"
 "$PYTHON" "$REPO_ROOT/scripts/run_eval60_v5_paired_full_sweep.py" init --output "$RUN_ROOT" >"$LOG_DIR/init.log" 2>&1
 
 worker() {
