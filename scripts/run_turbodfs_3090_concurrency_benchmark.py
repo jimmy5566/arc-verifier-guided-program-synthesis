@@ -180,9 +180,10 @@ def run_child(args: argparse.Namespace) -> None:
         metadata = read_json(auth_root / "checkpoints" / representative["task_id"] / f"depth_{int(representative['depth']):03d}" / "metadata.json")
         safe_adapter_load(model, metadata, mapping)
         torch.cuda.synchronize();
-        ready = {"status": "READY", "worker_index": spec["worker_index"], "model_load_seconds": model_load_seconds,
+        ready = {"status": "MODEL_READY", "worker_index": spec["worker_index"], "model_load_seconds": model_load_seconds,
                  "allocated_bytes": int(torch.cuda.memory_allocated()), "reserved_bytes": int(torch.cuda.memory_reserved()),
-                 "adapter_checkpoint_sha256": mapping["sha256"], "pid": os.getpid()}
+                 "adapter_checkpoint_sha256": mapping["sha256"], "pid": os.getpid(),
+                 "sys_executable": sys.executable, "worker_bootstrap_calls": 0}
         atomic_json(ready_path, ready)
         while not go_path.exists() and not abort_path.exists(): time.sleep(0.05)
         if abort_path.exists():
@@ -253,6 +254,7 @@ def run_config(args: argparse.Namespace, *, config_id: str, worker_count: int, c
             "challenge": str(args.challenge.resolve()), "reference_config": str(args.reference_config.resolve()),
             "model_path": str(args.model_path.resolve()), "native_config_dir": str(args.native_config_dir.resolve()),
             "adapter_manifest": str(args.adapter_manifest.resolve()), "final_config": str(args.final_config.resolve()),
+            "controller_python": sys.executable,
         }
         path = config_root / f"worker_{index}.spec.json"; atomic_json(path, spec); specs.append(path)
         environment = os.environ.copy(); environment.update({"CUDA_VISIBLE_DEVICES": str(args.gpu_id), "TRITON_PTXAS_PATH": args.ptxas})
@@ -289,8 +291,10 @@ def run_config(args: argparse.Namespace, *, config_id: str, worker_count: int, c
                       for path in (config_root / f"worker_{index}.json" for index in range(worker_count))]
     records = [record for result in worker_results for record in result.get("records", [])]
     status = "PASS"
+    python_mismatch = any(row.get("sys_executable") != sys.executable for row in readiness)
     if safety_fail: status = "INVALID_SAFETY"
     elif startup_fail: status = "ERROR_STARTUP"
+    elif python_mismatch: status = "INVALID_PYTHON_MISMATCH"
     elif any(result.get("status") == "ERROR" or item["returncode"] != 0 for result, item in zip(worker_results, stdout_stderr, strict=True)):
         status = "OOM" if any("out of memory" in str(result).lower() or "out of memory" in item["stderr"].lower() for result, item in zip(worker_results, stdout_stderr, strict=True)) else "ERROR"
     elif len(records) != len(cells): status = "INVALID"
@@ -298,7 +302,9 @@ def run_config(args: argparse.Namespace, *, config_id: str, worker_count: int, c
             "shared_model_batch_size": 1, "status": status, "load_only": load_only,
             "elapsed_batch_wall_seconds": elapsed, "readiness": readiness, "records": records,
             "telemetry": telemetry, "worker_results": worker_results, "worker_logs": stdout_stderr,
-            "max_nvidia_used_mib": max_used, "reserved_sum_bytes": reserved_sum, "control_root": str(config_root)}
+            "max_nvidia_used_mib": max_used, "reserved_sum_bytes": reserved_sum, "control_root": str(config_root),
+            "controller_python": sys.executable, "workers_share_controller_venv": not python_mismatch,
+            "worker_bootstrap_calls": 0}
 
 
 def parity_against_serial(serial: dict[str, Any], candidate: dict[str, Any]) -> list[dict[str, Any]]:
@@ -373,6 +379,40 @@ def render_report(root: Path, *, source_commit: str, config_sha: str, cells: lis
     (root / "CONCURRENCY_BENCHMARK_REPORT.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+BOOTSTRAP_FILES = (
+    "BOOTSTRAP_RUNTIME_CONTRACT.md",
+    "bootstrap_timing.json",
+    "runtime_paths.json",
+    "environment_fingerprint.json",
+    "bootstrap_validation.json",
+)
+
+
+def refresh_bootstrap_validation(path: Path, serial: dict[str, Any]) -> None:
+    """Attach first-real-worker evidence without creating a second model load."""
+    payload = read_json(path)
+    readiness = serial.get("readiness", [])
+    payload.update({
+        "model_ready_smoke": "PASS" if readiness and serial.get("status") == "PASS" else "FAIL",
+        "workers_share_controller_venv": bool(serial.get("workers_share_controller_venv")),
+        "worker_bootstrap_calls": int(serial.get("worker_bootstrap_calls", -1)),
+        "first_worker_python": readiness[0].get("sys_executable") if readiness else None,
+    })
+    atomic_json(path, payload)
+
+
+def copy_bootstrap_artifacts(source: Path | None, destination: Path) -> None:
+    if source is None:
+        return
+    missing = [name for name in BOOTSTRAP_FILES if not (source / name).is_file()]
+    if missing:
+        raise RuntimeError(f"bootstrap artifacts incomplete:{missing}")
+    target = destination / "bootstrap"
+    target.mkdir(parents=True, exist_ok=True)
+    for name in BOOTSTRAP_FILES:
+        shutil.copy2(source / name, target / name)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--child", action="store_true"); parser.add_argument("--spec", type=Path)
@@ -382,6 +422,7 @@ def main() -> None:
     parser.add_argument("--adapter-manifest", type=Path); parser.add_argument("--final-config", type=Path)
     parser.add_argument("--gpu-id", type=int, default=0); parser.add_argument("--ptxas", default="/usr/local/cuda/bin/ptxas")
     parser.add_argument("--source-commit", default="UNKNOWN"); parser.add_argument("--load-timeout-seconds", type=float, default=360.0)
+    parser.add_argument("--bootstrap-artifact-dir", type=Path)
     args = parser.parse_args()
     if args.child:
         if args.spec is None: parser.error("--child requires --spec")
@@ -407,6 +448,8 @@ def main() -> None:
         "shared_model_multi_cell_batching": "NOT_CURRENTLY_SUPPORTED", "reason": "existing V5 interface is fixed to one task and two paired view lanes"})
     serial = run_config(args, config_id="A1_serial", worker_count=1, cells=cells)
     if serial["status"] != "PASS": raise RuntimeError(f"serial baseline failed:{serial['status']}")
+    if args.bootstrap_artifact_dir is not None:
+        refresh_bootstrap_validation(args.bootstrap_artifact_dir / "bootstrap_validation.json", serial)
     serial_parity = [{"configuration_id": "A1_serial", "task_id": row["task_id"], "output_index": row["output_index"], "depth": row["depth"], "view": row["view"],
                       "candidate_tokens_equal": True, "termination_equal": True, "complete_candidate_count_equal": True, "search_tree_equal": True, "parity_pass": True,
                       "serial_candidate_signature": row["candidate_signature"], "candidate_signature": row["candidate_signature"]} for row in serial["records"]]
@@ -446,6 +489,13 @@ def main() -> None:
         "summaries": summaries, "best_configuration": best_summary["configuration_id"] if best_summary else None,
         "shared_model_multi_cell_batching": "NOT_CURRENTLY_SUPPORTED"})
     render_report(args.output, source_commit=args.source_commit, config_sha=sha_file(args.final_config), cells=cells, summaries=summaries, parity=parity, best=best_summary, repeat=repeat)
+    copy_bootstrap_artifacts(args.bootstrap_artifact_dir, args.output)
+    (args.output / "README.md").write_text(
+        "# TurboDFS RTX3090 concurrency benchmark\n\n"
+        "Target-blind capacity measurement only. It reuses frozen retained adapters, "
+        "does not run TTT or Greedy, and never accesses evaluation solutions.\n",
+        encoding="utf-8",
+    )
     hashes = {path.name: sha_file(path) for path in sorted(args.output.iterdir()) if path.is_file() and path.name != "hashes.json"}
     atomic_json(args.output / "hashes.json", hashes)
     print(json.dumps({"BENCHMARK_COMPLETED": "YES", "BEST_CONFIGURATION": best_summary["configuration_id"] if best_summary else None,

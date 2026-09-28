@@ -186,7 +186,9 @@ def main() -> None:
         writer=csv.DictWriter(handle,fieldnames=["task_id","depth","global_path","original_path","size","sha256","storage_method"]); writer.writeheader(); writer.writerows(adapter_rows)
     payload={"global_root":str(global_root),"repository":"https://github.com/jimmy5566/arc-verifier-guided-program-synthesis.git","source_commit":args.source_commit,"assets":model_assets+adapter_assets+[reference_asset],"adapter_manifest":str(adapter_manifest),"model_manifest":str(model_target/"model_manifest.json")}
     (v5root/"GLOBAL_ASSET_MANIFEST.json").write_text(json.dumps(payload,indent=2,sort_keys=True)+"\n")
-    env={"ARC2_GLOBAL_ROOT":str(global_root),"ARC2_MODEL_PATH":str(model_target),"ARC2_ADAPTER_ROOT":str(global_root/"adapters"/"eval60_authoritative_greedy_v1"),"ARC2_ADAPTER_MANIFEST":str(adapter_manifest),"ARC2_GLOBAL_ASSET_MANIFEST":str(v5root/"GLOBAL_ASSET_MANIFEST.json"),"ARC2_REFERENCE_BUNDLE":reference_asset["absolute_path"],"ARC2_REPO_ROOT":str(args.repo_root.resolve()),"ARC2_NATIVE_CONFIG_DIR":str(args.native_config_dir.resolve()),"ARC2_FINAL_TURBODFS_CONFIG":str(args.final_config.resolve())}
+    # Global Storage is intentionally asset-only.  ARC2_REPO_ROOT and
+    # PYTHONPATH must be derived from each Pod's exact Git checkout at runtime.
+    env={"ARC2_GLOBAL_ROOT":str(global_root),"ARC2_MODEL_PATH":str(model_target),"ARC2_ADAPTER_ROOT":str(global_root/"adapters"/"eval60_authoritative_greedy_v1"),"ARC2_ADAPTER_MANIFEST":str(adapter_manifest),"ARC2_GLOBAL_ASSET_MANIFEST":str(v5root/"GLOBAL_ASSET_MANIFEST.json"),"ARC2_REFERENCE_BUNDLE":reference_asset["absolute_path"],"ARC2_FINAL_TURBODFS_CONFIG":str(args.final_config.resolve()),"ARC2_SOURCE_POLICY":"GIT_EXACT_COMMIT_ONLY"}
     (v5root/"GLOBAL_RUNTIME_PATHS.env").write_text("\n".join(f"{k}={v}" for k,v in env.items())+"\n")
     # Each adapter was byte-verified in this invocation or validated against a
     # prior immutable attestation; never trigger a redundant second 177-GiB scan.
