@@ -10,6 +10,7 @@ REFERENCE_CONFIG=${ARC2_REFERENCE_CONFIG:?set ARC2_REFERENCE_CONFIG}
 MODEL_PATH=${ARC2_MODEL_PATH:?set ARC2_MODEL_PATH}
 NATIVE_CONFIG_DIR=${ARC2_NATIVE_CONFIG_DIR:?set ARC2_NATIVE_CONFIG_DIR}
 ADAPTER_MANIFEST=${ARC2_ADAPTER_MANIFEST:?set ARC2_ADAPTER_MANIFEST}
+GLOBAL_ASSET_MANIFEST=${ARC2_GLOBAL_ASSET_MANIFEST:?set ARC2_GLOBAL_ASSET_MANIFEST}
 SOLUTIONS=${ARC2_SOLUTIONS:?set ARC2_SOLUTIONS; this path is only consumed after freeze}
 PYTHON=${ARC2_PYTHON:-python}
 REPO_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
@@ -20,6 +21,7 @@ fail() { printf 'TURBODFS_V5_CONTROLLER_FAIL=%s\n' "$*" >&2; exit 2; }
 [[ -f "$RUN_ROOT/FINAL_TURBODFS_CONFIG.json" ]] || fail final_decoder_not_frozen
 [[ -f "$AUTHORITATIVE_ROOT/GREEDY_GENERATION_FROZEN.flag" ]] || fail authoritative_greedy_not_frozen
 [[ -f "$ADAPTER_MANIFEST" ]] || fail global_adapter_manifest_missing
+[[ -f "$GLOBAL_ASSET_MANIFEST" ]] || fail global_asset_manifest_missing
 [[ -f "$CHALLENGE" && -f "$REFERENCE_CONFIG" ]] || fail runtime_input_missing
 [[ -f "$SOLUTIONS" ]] || fail explicit_gold_file_missing
 [[ $(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l) -ge 2 ]] || fail two_gpu_required
@@ -37,7 +39,7 @@ worker() {
     --output "$RUN_ROOT" --authoritative-root "$AUTHORITATIVE_ROOT" \
     --challenge "$CHALLENGE" --reference-config "$REFERENCE_CONFIG" \
     --model-path "$MODEL_PATH" --native-config-dir "$NATIVE_CONFIG_DIR" \
-    --adapter-manifest "$ADAPTER_MANIFEST" --gpu-id "$physical_gpu" \
+    --adapter-manifest "$ADAPTER_MANIFEST" --global-asset-manifest "$GLOBAL_ASSET_MANIFEST" --gpu-id "$physical_gpu" \
     --worker-index "$worker_index" --workers 2 --resume
 }
 

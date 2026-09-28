@@ -72,6 +72,39 @@ def adapter_lookup(path: Path) -> dict[tuple[str, int], dict[str, str]]:
     return result
 
 
+def attest_adapter_identity(*, adapters: dict[tuple[str, int], dict[str, str]], global_manifest: Path, authoritative: Path) -> None:
+    """Validate the immutable adapter attestation once, without re-hashing tensors.
+
+    Global promotion is the one byte-level 180-adapter SHA256 audit.  A cell
+    worker must still fail closed if the immutable mapping is absent, altered,
+    or disagrees with the authoritative checkpoint manifest, but reading the
+    same one-GiB safetensors file just to recompute SHA before every output
+    block adds no new evidence.  Actual adapter loading remains unchanged.
+    """
+    payload = read_json(global_manifest)
+    assets = {
+        (asset.get("logical_name"), asset.get("absolute_path")): asset
+        for asset in payload.get("assets", [])
+    }
+    checkpoint_path = authoritative / "checkpoint_manifest.csv"
+    with checkpoint_path.open(newline="", encoding="utf-8") as handle:
+        authoritative_hashes = {
+            (str(row["task_id"]), int(row["depth"])): str(row.get("checkpoint_sha256") or row.get("sha256") or "")
+            for row in csv.DictReader(handle)
+        }
+    if len(authoritative_hashes) != 180:
+        raise RuntimeError("authoritative checkpoint manifest must map 180 task/depth records")
+    for key, mapping in adapters.items():
+        task_id, depth = key
+        path = Path(mapping["global_path"])
+        asset = assets.get((f"adapter/{task_id}/depth_{depth:03d}", str(path)))
+        expected = authoritative_hashes.get(key)
+        if asset is None or expected != mapping["sha256"] or asset.get("sha256") != expected:
+            raise RuntimeError(f"global adapter attestation mismatch:{task_id} d{depth}")
+        if not path.is_file() or path.stat().st_size != int(mapping["size"]):
+            raise RuntimeError(f"global adapter inaccessible or size mismatch:{path}")
+
+
 def compact_block(root: Path, *, task_id: str, output_index: int, rows: list[dict[str, Any]]) -> tuple[Path, str]:
     """Write one immutable table shard; complex trace arrays are JSON columns."""
     import pandas as pd
@@ -103,7 +136,7 @@ def complete_in_db(db: sqlite3.Connection, *, row: dict[str, Any], decoder_sha: 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    for name in ("output", "authoritative-root", "challenge", "reference-config", "model-path", "native-config-dir", "adapter-manifest"):
+    for name in ("output", "authoritative-root", "challenge", "reference-config", "model-path", "native-config-dir", "adapter-manifest", "global-asset-manifest"):
         parser.add_argument(f"--{name}", type=Path, required=True)
     parser.add_argument("--gpu-id", type=int, required=True); parser.add_argument("--worker-index", type=int, required=True); parser.add_argument("--workers", type=int, default=2); parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
@@ -113,7 +146,9 @@ def main() -> None:
     if manifest.get("status") not in {"FULL_CALIBRATION_PASS", "TURBODFS_RUNNING"}: raise RuntimeError("V5 full calibration PASS is required before collection")
     if not (authoritative / "GREEDY_GENERATION_FROZEN.flag").is_file(): raise RuntimeError("authoritative Greedy freeze required")
     config_path = root / "FINAL_TURBODFS_CONFIG.json"; _config, decoder = decoder_from(config_path); decoder_sha = sha256_file(config_path)
-    adapters = adapter_lookup(args.adapter_manifest.resolve()); selected = [row for index, row in enumerate(order(root)) if index % 2 == args.worker_index]
+    adapters = adapter_lookup(args.adapter_manifest.resolve())
+    attest_adapter_identity(adapters=adapters, global_manifest=args.global_asset_manifest.resolve(), authoritative=authoritative)
+    selected = [row for index, row in enumerate(order(root)) if index % 2 == args.worker_index]
     db = state_db(root); manifest["status"] = "TURBODFS_RUNNING"; common.atomic_json(root / "run_manifest.json", manifest)
     runtime_args = SimpleNamespace(output=authoritative, challenge=args.challenge, reference_config=args.reference_config, model_path=args.model_path, native_config_dir=args.native_config_dir, gpu_id=args.gpu_id)
     _auth_root, _auth_manifest, generation_config, tasks, model, tokenizer, _initial, _base = greedy._runtime(runtime_args)
@@ -131,7 +166,7 @@ def main() -> None:
                 mapping = adapters.get((row["task_id"], depth))
                 if mapping is None: raise RuntimeError(f"global adapter missing: {row['task_id']} d{depth}")
                 adapter_path = Path(mapping["global_path"])
-                if not adapter_path.is_file() or sha256_file(adapter_path) != mapping["sha256"]: raise RuntimeError(f"global adapter identity mismatch:{adapter_path}")
+                if not adapter_path.is_file() or adapter_path.stat().st_size != int(mapping["size"]): raise RuntimeError(f"global adapter identity mismatch:{adapter_path}")
                 checkpoint_shas.append(mapping["sha256"])
                 metadata = read_json(authoritative / "checkpoints" / row["task_id"] / f"depth_{depth:03d}" / "metadata.json")
                 if metadata["checkpoint_sha256"] != mapping["sha256"]: raise RuntimeError("global/authoritative adapter hash disagreement")
