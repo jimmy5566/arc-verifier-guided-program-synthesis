@@ -13,7 +13,6 @@ GLOBAL_ASSET_MANIFEST=${ARC2_GLOBAL_ASSET_MANIFEST:?set ARC2_GLOBAL_ASSET_MANIFE
 FINAL_CONFIG=${ARC2_FINAL_TURBODFS_CONFIG:?set ARC2_FINAL_TURBODFS_CONFIG}
 FINAL_CONFIG_SHA=${ARC2_FINAL_TURBODFS_CONFIG_SHA:?set ARC2_FINAL_TURBODFS_CONFIG_SHA}
 BENCHMARK_ROOT=${ARC2_CONCURRENCY_BENCHMARK:?set ARC2_CONCURRENCY_BENCHMARK}
-SOLUTIONS=${ARC2_SOLUTIONS:?set ARC2_SOLUTIONS; this value is not opened until V5 freeze}
 PYTHON=${ARC2_PYTHON:?set ARC2_PYTHON}
 REPO_ROOT=${ARC2_REPO_ROOT:?set ARC2_REPO_ROOT}
 LOG_DIR="$RUN_ROOT/logs"
@@ -25,7 +24,6 @@ fail() { echo "EVAL60_V5_PAIRED_FULL_SWEEP_FAIL=$*" >&2; exit 2; }
 [[ -f "$FINAL_CONFIG" && -f "$FINAL_CONFIG_SHA" && -f "$ADAPTER_MANIFEST" && -f "$GLOBAL_ASSET_MANIFEST" ]] || fail global_input_missing
 [[ -d "$MODEL_PATH" && -f "$CHALLENGE" && -f "$REFERENCE_CONFIG" ]] || fail runtime_input_missing
 [[ -x "$PYTHON" ]] || fail controller_python_missing
-[[ -f "$SOLUTIONS" ]] || fail explicit_solutions_path_missing
 [[ -z $(git -C "$REPO_ROOT" status --porcelain) ]] || fail dirty_git_checkout
 
 # The benchmark is an infrastructure gate.  It must show a clean two-copy pass;
@@ -118,5 +116,7 @@ set -e
 [[ -f "$RUN_ROOT/STOP_AFTER_CURRENT_TASK.flag" ]] && fail CONCURRENCY_DEGRADES_SEARCH_BUDGET
 "$PYTHON" "$REPO_ROOT/scripts/finalize_eval60_v5_paired_full_sweep.py" freeze --output "$RUN_ROOT" >"$LOG_DIR/freeze.log" 2>&1
 [[ -f "$RUN_ROOT/V5_GENERATION_FROZEN.flag" ]] || fail V5_generation_freeze_missing
+SOLUTIONS=${ARC2_SOLUTIONS:?set ARC2_SOLUTIONS only after verified V5 generation freeze}
+[[ -f "$SOLUTIONS" ]] || fail explicit_gold_solutions_file_missing_after_freeze
 "$PYTHON" "$REPO_ROOT/scripts/finalize_eval60_v5_paired_full_sweep.py" gold --output "$RUN_ROOT" --authoritative-root "$AUTHORITATIVE_ROOT" --solutions "$SOLUTIONS" >"$LOG_DIR/gold.log" 2>&1
 echo "EVAL60_V5_PAIRED_FULL_SWEEP_COMPLETE=$RUN_ROOT"
