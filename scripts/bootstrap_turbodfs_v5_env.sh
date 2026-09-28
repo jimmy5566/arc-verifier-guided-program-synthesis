@@ -13,6 +13,7 @@ VENV="$RUNTIME_ROOT/env/turbodfs-v5"
 WHEEL_DIR="$RUNTIME_ROOT/wheelhouse-py311-cu128-v1"
 MODEL_SOURCE="$GLOBAL_ROOT/models/qwen3_4b_grids15_sft139"
 MODEL_STAGE="$RUNTIME_ROOT/model-stage/qwen3_4b_grids15_sft139"
+REFERENCE_STAGE="$RUNTIME_ROOT/reference-assets"
 WHEEL_TAR="$GLOBAL_ROOT/wheelhouse/wheelhouse-py311-cu128-v1.tar"
 WHEEL_TAR_SHA="$GLOBAL_ROOT/wheelhouse/wheelhouse-py311-cu128-v1.tar.sha256"
 WHEEL_REQ="$GLOBAL_ROOT/wheelhouse/requirements-py311-cu128-v1.txt"
@@ -119,8 +120,8 @@ if [[ ! -d "$MODEL_STAGE" ]]; then
   mv "$stage" "$MODEL_STAGE"
 fi
 [[ -f "$MODEL_STAGE/model_manifest.json" ]] || fail local_model_stage_missing_manifest
-NATIVE_CONFIG="$REPO/reference_assets/nvarc_native_846d0198"
-if [[ ! -d "$NATIVE_CONFIG" ]]; then mkdir -p "$REPO/reference_assets"; tar --zstd -C "$REPO/reference_assets" -xf "$REFERENCE_BUNDLE"; fi
+NATIVE_CONFIG="$REFERENCE_STAGE/nvarc_native_846d0198"
+if [[ ! -d "$NATIVE_CONFIG" ]]; then mkdir -p "$REFERENCE_STAGE"; tar --zstd -C "$REFERENCE_STAGE" -xf "$REFERENCE_BUNDLE"; fi
 need_dir "$NATIVE_CONFIG"
 
 # PTXAS is an execution-environment path.  Preserve every scientific field in
