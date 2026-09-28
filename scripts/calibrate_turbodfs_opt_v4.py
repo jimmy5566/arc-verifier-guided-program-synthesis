@@ -57,7 +57,12 @@ def main() -> None:
     args = parser.parse_args()
     root, authoritative = args.output.resolve(), args.authoritative_root.resolve()
     manifest = read_json(root / "run_manifest.json")
-    if manifest.get("status") not in {"PREPARED_TARGET_BLIND", "MICRO_PASS", "FULL_CALIBRATING"}:
+    allowed_statuses = {"PREPARED_TARGET_BLIND", "MICRO_PASS", "FULL_CALIBRATING"}
+    # A single corrective retry is permitted only after a failed n=1 attempt
+    # has been classified as the public batched-lane integration defect.
+    if args.public_lanes:
+        allowed_statuses.add("MICRO_FAIL")
+    if manifest.get("status") not in allowed_statuses:
         raise RuntimeError("invalid V4 run-manifest lifecycle")
     if not (authoritative / "GREEDY_GENERATION_FROZEN.flag").is_file():
         raise RuntimeError("authoritative Greedy freeze is required")
@@ -141,6 +146,15 @@ def main() -> None:
         summary["status"] = "PASS" if valid / len(results) >= .75 and zero / len(results) <= .25 else "FAIL"
         manifest["status"] = "FULL_CALIBRATION_PASS" if summary["status"] == "PASS" else "FULL_CALIBRATION_FAIL"
     summary_name = f"turbodfs_v4_{args.mode}_calibration{'_public_lanes' if args.public_lanes else ''}.json"
+    if args.public_lanes:
+        manifest["decoder_config_sha256"] = sha256_file(config_path)
+        attempts = list(manifest.get("calibration_attempts", []))
+        attempts.append({
+            "mode": args.mode, "integration": "public_batched_lane_pairs",
+            "summary": summary_name, "status": summary["status"],
+            "config_sha256": summary["config_sha256"], "solutions_accessed": False,
+        })
+        manifest["calibration_attempts"] = attempts
     common.atomic_json(root / summary_name, summary)
     common.atomic_json(root / "run_manifest.json", manifest)
     print(json.dumps(summary, sort_keys=True))
