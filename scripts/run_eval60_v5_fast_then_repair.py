@@ -234,13 +234,17 @@ def phase_summary(root: Path, phase: str) -> dict[str, Any]:
     try:
         configure_schema(db); engine = engine_for(phase)
         rows = list(db.execute("SELECT runtime_seconds FROM cells WHERE status=? AND execution_engine=? AND runtime_seconds IS NOT NULL", (DONE, engine)))
-        event_rows = list(db.execute("SELECT detail_json FROM events WHERE kind='FAST_REPAIR_CELL_ERROR'"))
-        ooms = [json.loads(row[0]) for row in event_rows if json.loads(row[0]).get("phase") == phase and "out of memory" in json.loads(row[0]).get("error", "").lower()]
+        event_rows = list(db.execute("SELECT task_id,detail_json FROM events WHERE kind='FAST_REPAIR_CELL_ERROR'"))
+        ooms = []
+        for task_id, raw_detail in event_rows:
+            detail = json.loads(raw_detail)
+            if detail.get("phase") == phase and "out of memory" in detail.get("error", "").lower():
+                ooms.append({"task_id": task_id, **detail})
         status_counts = dict(db.execute("SELECT status,count(*) FROM cells GROUP BY status"))
     finally:
         db.close()
     seconds = [float(row[0]) for row in rows]
-    payload = {"phase": phase, "engine": engine, "done_cells": len(seconds), "median_seconds_per_cell": statistics.median(seconds) if seconds else None, "cells_per_min_total": (len(seconds) / (sum(seconds) / 60.0)) if seconds and sum(seconds) else None, "cells_per_min_gpu": ((len(seconds) / (sum(seconds) / 60.0)) / (2 if phase != "isolated" else 1)) if seconds and sum(seconds) else None, "oom_events": len(ooms), "unique_oom_cells": len({(x.get("output_index"), x.get("depth"), x.get("view")) for x in ooms}), "status_counts": status_counts, "target_blind": True}
+    payload = {"phase": phase, "engine": engine, "done_cells": len(seconds), "median_seconds_per_cell": statistics.median(seconds) if seconds else None, "cells_per_min_total": (len(seconds) / (sum(seconds) / 60.0)) if seconds and sum(seconds) else None, "cells_per_min_gpu": ((len(seconds) / (sum(seconds) / 60.0)) / (2 if phase != "isolated" else 1)) if seconds and sum(seconds) else None, "oom_events": len(ooms), "unique_oom_cells": len({(x.get("task_id"), x.get("output_index"), x.get("depth"), x.get("view")) for x in ooms}), "status_counts": status_counts, "target_blind": True}
     common.atomic_json(artifacts(root) / f"{phase}_pass_summary.json", payload)
     return payload
 

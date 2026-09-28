@@ -16,7 +16,10 @@ phase={'fast':('PENDING','RETRY_TRANSIENT'),'heavy':('RETRY_HEAVY_OOM','RETRY_TR
 c=sqlite3.connect(sys.argv[1]); print(c.execute('select count(*) from cells where status in (%s)' % ','.join('?'*len(phase)),phase).fetchone()[0])
 PY
 }
-wait_released() { local gpu=$1; for _ in $(seq 1 60); do nvidia-smi --query-compute-apps=pid --format=csv,noheader 2>/dev/null | grep -q . || return 0; sleep 1; done; return 0; }
+# `worker` is foreground, so its Python PID has already exited before this is
+# called.  Do not wait for *other* independent workers on the same GPU: that
+# accidentally serialises the fast phase after every cell-local OOM.
+wait_released() { sleep 1; }
 worker() { local gpu=$1 id=$2 phase=$3; CUDA_VISIBLE_DEVICES="$gpu" "$PYTHON" "$SCRIPT" worker "${ARGS[@]}" --phase "$phase" --gpu-id "$gpu" --worker-id "$id"; }
 supervise() { local gpu=$1 id=$2 phase=$3; while [[ $(count_phase "$phase") -gt 0 ]]; do set +e; worker "$gpu" "$id" "$phase" >>"$LOG_DIR/${id}_${phase}.log" 2>&1; rc=$?; set -e; [[ $rc -eq 0 || $rc -eq 75 || $rc -eq 76 ]] || exit "$rc"; [[ $rc -eq 0 ]] && break; wait_released "$gpu"; done; }
 
