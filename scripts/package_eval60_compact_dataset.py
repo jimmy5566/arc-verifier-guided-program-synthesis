@@ -216,7 +216,14 @@ def load_json_records(path: Path) -> list[dict[str, Any]]:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
-        data = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        try:
+            data = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            return []
+    except UnicodeDecodeError:
+        # A scheduler shard may be binary.  It is not a trustworthy JSON
+        # candidate record, so leave affected cells explicitly ambiguous.
+        return []
     found: list[dict[str, Any]] = []
     stack: list[Any] = [data]
     while stack:
