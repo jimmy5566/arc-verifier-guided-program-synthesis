@@ -66,11 +66,11 @@ class FrontierFloorTurboDFSResult:
     termination_reason: str
 
 
-def _record_node(state: dict[str, Any], **payload: Any) -> int:
+def _record_node(ledger: dict[str, Any], **payload: Any) -> int:
     """Keep V4 tree fields, adding explicit V5 provenance where relevant."""
     payload.setdefault("frontier_floor_activated", False)
     payload.setdefault("frontier_floor_restore_rank", None)
-    return state["new_node"](**payload)
+    return ledger["new_node"](**payload)
 
 
 def frontier_floor_turbo_dfs(
