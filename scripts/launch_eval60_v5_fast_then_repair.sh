@@ -22,7 +22,24 @@ PY
 # accidentally serialises the fast phase after every cell-local OOM.
 wait_released() { sleep 1; }
 worker() { local gpu=$1 id=$2 phase=$3; CUDA_VISIBLE_DEVICES="$gpu" "$PYTHON" "$SCRIPT" worker "${ARGS[@]}" --phase "$phase" --gpu-id "$gpu" --worker-id "$id"; }
-supervise() { local gpu=$1 id=$2 phase=$3; while [[ $(count_phase "$phase") -gt 0 ]]; do set +e; worker "$gpu" "$id" "$phase" >>"$LOG_DIR/${id}_${phase}.log" 2>&1; rc=$?; set -e; [[ $rc -eq 0 || $rc -eq 75 || $rc -eq 76 ]] || exit "$rc"; [[ $rc -eq 0 ]] && break; wait_released "$gpu"; done; }
+supervise() {
+  local gpu=$1 id=$2 phase=$3 rc startup_failures=0
+  while [[ $(count_phase "$phase") -gt 0 ]]; do
+    set +e; worker "$gpu" "$id" "$phase" >>"$LOG_DIR/${id}_${phase}.log" 2>&1; rc=$?; set -e
+    if [[ $rc -ne 0 && $rc -ne 75 && $rc -ne 76 ]]; then
+      # A model-import/bootstrap error occurs before a cell is leased. Retry a
+      # bounded number of clean processes instead of silently stranding one GPU.
+      startup_failures=$((startup_failures + 1))
+      echo "WORKER_STARTUP_FAILURE id=$id gpu=$gpu phase=$phase rc=$rc retry=$startup_failures" >>"$LOG_DIR/${id}_${phase}.log"
+      [[ $startup_failures -lt 3 ]] || exit "$rc"
+      sleep 5
+      continue
+    fi
+    startup_failures=0
+    [[ $rc -eq 0 ]] && break
+    wait_released "$gpu"
+  done
+}
 
 "$PYTHON" "$SCRIPT" recover --output "$RUN_ROOT" | tee "$LOG_DIR/recover.json"
 supervise 0 fast0 fast & a=$!; supervise 0 fast1 fast & b=$!; supervise 1 fast2 fast & c=$!; supervise 1 fast3 fast & d=$!; wait "$a" "$b" "$c" "$d"
