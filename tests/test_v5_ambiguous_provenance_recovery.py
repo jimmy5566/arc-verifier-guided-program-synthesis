@@ -101,3 +101,11 @@ def test_gold_independence_by_contract():
     first = resolve([record()])[1]
     second = resolve([record()])[1]
     assert first == second
+
+
+def test_portable_record_excludes_unbounded_search_trace_fields():
+    item = record(nodes_json="very-large-trace", branch_probabilities_json="very-large-probabilities")
+    portable = RECOVERY.portable_record(item)
+    assert portable["candidates"] == item["candidates"]
+    assert "nodes_json" not in portable
+    assert "branch_probabilities_json" not in portable

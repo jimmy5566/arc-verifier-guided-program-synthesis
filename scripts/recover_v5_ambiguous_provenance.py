@@ -110,6 +110,41 @@ def candidates(record: dict[str, Any]) -> list[dict[str, Any]]:
     return [item for item in raw if isinstance(item, dict)] if isinstance(raw, list) else []
 
 
+def portable_record(rec: dict[str, Any]) -> dict[str, Any]:
+    """Return the bounded, candidate-bearing payload needed by the V2 exporter.
+
+    Raw TurboDFS records can embed full node traces and branch-probability
+    histories.  Those are useful as source artifacts but are neither needed
+    for deterministic linkage nor suitable for the Git-safe compact package.
+    Keeping this allowlist also prevents accidental inclusion of unrelated
+    fields if a future worker adds them.
+    """
+    task_id, output_index, depth, view = rec["key"]
+    return {
+        "task_id": task_id,
+        "output_index": output_index,
+        "depth": depth,
+        "view": view,
+        "checkpoint_sha256": rec["checkpoint_sha256"],
+        "decoder_config_sha256": rec["config_sha256"],
+        "execution_engine": rec["execution_engine"],
+        "worker_id": rec["worker_id"],
+        "worker_pid": rec["worker_pid"],
+        "candidate_count": rec["candidate_count"],
+        "complete_candidate_count": rec["complete_candidate_count"],
+        "nodes_expanded": rec["nodes_expanded"],
+        "model_forwards": rec["model_forwards"],
+        "batch_forward_passes": rec["batch_forward_passes"],
+        "tokens_advanced": rec["tokens_advanced"],
+        "frontier_floor_activation_count": rec["frontier_floor_activation_count"],
+        "runtime_seconds": rec["runtime_seconds"],
+        "termination_reason": rec["termination_reason"],
+        "start_timestamp": rec["start_timestamp"],
+        "finish_timestamp": rec["finish_timestamp"],
+        "candidates": rec["candidates"],
+    }
+
+
 def candidate_signature(record: dict[str, Any]) -> str:
     values = []
     for rank, candidate in enumerate(candidates(record)):
@@ -345,7 +380,7 @@ def resolve(db: dict[str, Any], records: list[dict[str, Any]], old_status: dict[
         # only candidate content plus scheduler-relevant provenance.
         resolutions.append({"cell_key": key_text(key), "status": "TRUSTWORTHY", "match_class": match_class,
                             "artifact_path": rec["path"], "artifact_sha256": info["selected_artifact_sha256"],
-                            "record_index": rec["record_index"], "record": rec["raw"]})
+                            "record_index": rec["record_index"], "record": portable_record(rec)})
         status_rows.append({"key": key, "status": "TRUSTWORTHY", "record": rec})
     return history, recovered, unresolved, resolutions, status_rows
 
@@ -366,6 +401,29 @@ def main() -> None:
         raise RuntimeError("V1 status surface is not the expected 777/291 baseline")
     records = index_artifacts(args.run, out)
     history, recovered, unresolved, resolutions, status_rows = resolve(db, records, old_status)
+    # The linkage route has no Gold input.  Repeat the pure resolution against
+    # the exact same frozen scheduler/artifact index before any scoring stage
+    # and require identical selected records and unresolved surface.
+    _, recovered_repeat, unresolved_repeat, resolutions_repeat, _ = resolve(db, records, old_status)
+    independence = {
+        "gold_used_for_linkage": False,
+        "gold_input_path": None,
+        "recovered_sha256_first": digest_bytes(stable(recovered).encode()),
+        "recovered_sha256_repeat": digest_bytes(stable(recovered_repeat).encode()),
+        "unresolved_sha256_first": digest_bytes(stable(unresolved).encode()),
+        "unresolved_sha256_repeat": digest_bytes(stable(unresolved_repeat).encode()),
+        "resolutions_sha256_first": digest_bytes(stable(resolutions).encode()),
+        "resolutions_sha256_repeat": digest_bytes(stable(resolutions_repeat).encode()),
+    }
+    independence["pass"] = len({
+        independence["recovered_sha256_first"], independence["recovered_sha256_repeat"]
+    }) == 1 and len({
+        independence["unresolved_sha256_first"], independence["unresolved_sha256_repeat"]
+    }) == 1 and len({
+        independence["resolutions_sha256_first"], independence["resolutions_sha256_repeat"]
+    }) == 1
+    if not independence["pass"]:
+        raise RuntimeError("Gold-independent provenance repeat was not deterministic")
     write_csv(out / "cell_attempt_history.csv", HISTORY_FIELDS, history)
     write_csv(out / "recovered_cells.csv", RECOVERED_FIELDS, recovered)
     write_csv(out / "unresolved_cells.csv", UNRESOLVED_FIELDS, unresolved)
@@ -381,6 +439,7 @@ def main() -> None:
     freeze_files = [out / name for name in ("artifact_index.csv", "cell_attempt_history.csv", "recovered_cells.csv", "unresolved_cells.csv", "provenance_resolution.jsonl")]
     hashes = {path.name: sha256(path) for path in freeze_files}
     (out / "PROVENANCE_RECOVERY_FREEZE.json").write_text(stable({"gold_used_for_linkage": False, "before": before, "after": after, "match_class_counts": counts, "sha256": hashes}) + "\n", encoding="utf-8")
+    (out / "GOLD_INDEPENDENCE_TEST.json").write_text(stable(independence) + "\n", encoding="utf-8")
     (out / "PROVENANCE_RECOVERY_FROZEN.flag").write_text("FROZEN\n", encoding="utf-8")
     print(stable({"before": before, "after": after, "match_class_counts": counts, "indexed_records": len(records)}))
 
