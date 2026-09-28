@@ -2,7 +2,7 @@
 # Pod-local TurboDFS V5 runtime bootstrap. Source is always this exact Git checkout.
 set -Eeuo pipefail
 
-BOOTSTRAP_SCHEMA_VERSION=2
+BOOTSTRAP_SCHEMA_VERSION=3
 GLOBAL_ROOT=${ARC2_GLOBAL_ROOT:-/workspace/arc2}
 RUNTIME_ROOT=${ARC2_RUNTIME_ROOT:-/root/arc-runtime-turbodfs-v5}
 SOURCE_REF=${ARC2_SOURCE_REF:?set ARC2_SOURCE_REF to the exact Git commit}
