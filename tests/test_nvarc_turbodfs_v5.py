@@ -12,9 +12,9 @@ class TransitionModel:
 
     def __call__(self, *, input_ids, **_kwargs):
         batch = int(input_ids.shape[0])
-        logits = torch.full((batch, 1, 16), -100.0)
+        logits = torch.zeros((batch, 1, 16))
         for lane, token in enumerate(input_ids[:, -1].tolist()):
-            logits[lane, 0, 15 if token == 1 else 1] = 10.0
+            logits[lane, 0, 15 if token == 1 else 1] = 5.0
         return SimpleNamespace(logits=logits, past_key_values=object())
 
 
@@ -48,7 +48,7 @@ def test_v5_equals_v4_when_public_pruning_has_survivors() -> None:
 
 
 def test_v5_restores_exactly_one_lowest_legal_successor_when_public_pruning_empties_frontier() -> None:
-    result = inference_frontier_floor_turbo_dfs(TransitionModel(), input_ids=torch.tensor([[2, 2]]), config=v5_config(0.0001))
+    result = inference_frontier_floor_turbo_dfs(TransitionModel(), input_ids=torch.tensor([[2, 2]]), config=v5_config(0.01))
     assert len(result.frontier_floor_events) >= 1
     first = result.frontier_floor_events[0]
     assert first["restored_count"] == 1
@@ -68,7 +68,7 @@ def test_v5_never_restores_illegal_non_eos_branch_at_max_length() -> None:
 
 def test_v5_completed_candidate_and_cache_lane_contract_remain_intact() -> None:
     result = inference_frontier_floor_turbo_dfs(
-        TransitionModel(), input_ids=torch.tensor([[2, 2], [2, 2]]), config=v5_config(0.0001),
+        TransitionModel(), input_ids=torch.tensor([[2, 2], [2, 2]]), config=v5_config(0.01),
     )
     assert [lane[0].token_ids for lane in result.candidates] == [(1, 15), (1, 15)]
     assert result.completed_candidates == 2
@@ -76,5 +76,5 @@ def test_v5_completed_candidate_and_cache_lane_contract_remain_intact() -> None:
 
 
 def test_v5_floor_two_is_explicit_and_bounded() -> None:
-    result = inference_frontier_floor_turbo_dfs(TransitionModel(), input_ids=torch.tensor([[2, 2]]), config=v5_config(0.0001, floor=2))
+    result = inference_frontier_floor_turbo_dfs(TransitionModel(), input_ids=torch.tensor([[2, 2]]), config=v5_config(0.01, floor=2))
     assert result.frontier_floor_events[0]["restored_count"] == 2
