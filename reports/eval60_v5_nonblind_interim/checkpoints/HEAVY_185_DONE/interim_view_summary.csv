@@ -1,0 +1,5 @@
+cell_gold_hits,output_gold_hits,unique_output_rescues_available,view
+25,17,2,identity
+29,12,1,flip_ud
+29,13,0,transpose
+37,20,1,anti_transpose

@@ -1,0 +1,60 @@
+{
+  "adapter_checkpoint_manifest_sha256": "e3e95956b0c17e3017b3bb99999c53bfc5307908df68c43fc6641e8b1459c2a6",
+  "analyzed_validated_records": 876,
+  "complete_outputs": 65,
+  "database_integrity": "ok",
+  "database_path": "/root/arc-runtime-turbodfs-v5-benchmark/state/eval60_v5_nonblind_recovered.sqlite",
+  "db_record_view_mismatches": 7,
+  "frontier_floor_rescues": 12,
+  "frontier_floor_unknown": 0,
+  "generation_uses_gold": false,
+  "generator_config_changed": false,
+  "gold_disclosure_status": "NONBLIND_USER_AUTHORIZED_CONTINUATION",
+  "greedy_miss_rescues": 4,
+  "greedy_oracle": 29,
+  "greedy_union_v5_oracle_lower_bound": 33,
+  "heavy_unique_rescue_count": 1,
+  "heavy_unique_rescue_ids": [
+    "de809cff:o0"
+  ],
+  "known_historical_rescue_present": {
+    "62593bfd:o1": true,
+    "78332cb0:o0": true
+  },
+  "outputs": 89,
+  "partial_outputs": 24,
+  "raw_artifacts": [
+    {
+      "note": "not rescanned; candidate files remain Pod-local",
+      "path": "/workspace/arc2/active_runs/eval60_v5_vs_greedy_4worker_v1/tmp"
+    },
+    {
+      "path": "/root/arc-runtime-turbodfs-v5-benchmark/state/eval60_v5_nonblind_recovered.sqlite",
+      "sha256": "2a374388083b8f25477e352eb513bfe8efc48b215ad3b8139945714cef4af7ff",
+      "size_bytes": 1044480
+    }
+  ],
+  "rescued_output_ids": [
+    "62593bfd:o1",
+    "78332cb0:o0",
+    "b6f77b65:o2",
+    "de809cff:o0"
+  ],
+  "snapshot_done_cells": 1064,
+  "snapshot_label": "INTERIM_V5_NONBLIND_930_DONE",
+  "snapshot_timestamp": "2026-09-28T15:37:47.073530+00:00",
+  "source_commit": "6472769f3c183d3caa141736f29c120e02622675",
+  "statuses": {
+    "DONE": 1064,
+    "RETRY_HEAVY_OOM": 3,
+    "RUNNING": 1
+  },
+  "top2_status": "NOT_COMPUTABLE",
+  "total_cells": 1068,
+  "ttt_config_sha256": "8968f67e5a5c8c1f838dc1a45120d052527d65e95188cd9e155426ba56481486",
+  "unverified_done_cells_excluded": 188,
+  "v5_complete_output_oracle": 22,
+  "v5_config_sha256": "e5beec92c9992930f4d6b468db1806ee2f3b9224e13179af7d4e8bb5897148e0",
+  "v5_global_oracle_lower_bound": 28,
+  "zero_outputs": 0
+}
