@@ -420,26 +420,34 @@ def package_v5(run: Path, db_path: Path, gold: dict[tuple[str, int], str], greed
             })
     if len(output_rows) != 89:
         raise RuntimeError(f"V5 output universe broken: {len(output_rows)}")
-    done = sum(r["status"] == "DONE" for r in cell_rows)
+    # Scheduler completion and immutable candidate linkage are separate facts.
+    # Every source DB row is DONE, but rows without exactly one matching raw
+    # artifact remain AMBIGUOUS and must never be reported as linked evidence.
+    scheduler_rows = len(db_rows)
+    scheduler_done = sum(r["status"] == "DONE" for r in db_rows.values())
     ambiguous = sum(r["status"] == "AMBIGUOUS" for r in cell_rows)
     missing = sum(r["status"] == "MISSING" for r in cell_rows)
     trustworthy = sum(r["provenance_status"] == "TRUSTWORTHY" for r in cell_rows)
     complete_outputs = sum(r["coverage_status"] == "COMPLETE" for r in output_rows)
     v5_oracle = sum(v5_hits.values())
     union_oracle = sum(greedy_hits[k] or v5_hits[k] for k in greedy_hits)
-    snapshot_dir = output_root / "snapshots" / f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}_{done}_done" / "turbodfs_v5"
+    snapshot_dir = output_root / "snapshots" / f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}_{scheduler_done}_scheduler_done" / "turbodfs_v5"
     write_csv(snapshot_dir / "v5_cells.csv", V5_CELL_COLUMNS, cell_rows)
     write_csv(snapshot_dir / "v5_candidates.csv", V5_CANDIDATE_COLUMNS, candidate_rows)
     write_csv(snapshot_dir / "v5_outputs.csv", V5_OUTPUT_COLUMNS, output_rows)
     write_csv(snapshot_dir / "v5_rescues.csv", RESCUE_COLUMNS, rescue_rows)
     (snapshot_dir / "v5_manifest.json").write_text(json.dumps({
-        "status": "INTERIM_PARTIAL", "db_done_cells": done, "trustworthy_candidate_linked_cells": trustworthy,
-        "ambiguous_cells": ambiguous, "missing_cells": missing, "outputs": 89, "complete_outputs": complete_outputs,
+        "status": "INTERIM_PARTIAL", "scheduler_rows": scheduler_rows,
+        "scheduler_done_cells": scheduler_done,
+        "trustworthy_candidate_linked_cells": trustworthy,
+        "ambiguous_candidate_link_cells": ambiguous, "missing_cells": missing, "outputs": 89, "complete_outputs": complete_outputs,
         "partial_outputs": 89 - complete_outputs, "v5_pool_oracle_lower_bound": f"{v5_oracle}/89",
         "greedy_union_v5_oracle_lower_bound": f"{union_oracle}/89", "confirmed_greedy_miss_rescues": [r["output_id"] for r in rescue_rows],
         "db_sha256": sha256(db_path), "db_quick_check": quick_check,
     }, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return ({"done": done, "trustworthy": trustworthy, "ambiguous": ambiguous, "missing": missing,
+    return ({"scheduler_rows": scheduler_rows, "scheduler_done_cells": scheduler_done,
+             "trustworthy_candidate_linked_cells": trustworthy,
+             "ambiguous_candidate_link_cells": ambiguous, "missing": missing,
              "candidate_rows": len(candidate_rows), "complete_outputs": complete_outputs, "partial_outputs": 89 - complete_outputs,
              "v5_oracle": v5_oracle, "union_oracle": union_oracle, "rescues": [r["output_id"] for r in rescue_rows],
              "heavy_unique": sum(r["heavy_unique_rescue"] == "true" for r in rescue_rows), "snapshot_dir": snapshot_dir,
@@ -494,9 +502,10 @@ def main() -> None:
 
 ## TurboDFS V5 snapshot
 
-- Scheduler DB DONE cells: {v5_summary['done']}/1068
-- Trustworthy candidate-linked cells: {v5_summary['trustworthy']}
-- Ambiguous cells: {v5_summary['ambiguous']}
+- Scheduler rows: {v5_summary['scheduler_rows']}/1068
+- Scheduler DONE cells: {v5_summary['scheduler_done_cells']}/1068
+- Trustworthy candidate-linked cells: {v5_summary['trustworthy_candidate_linked_cells']}
+- Ambiguous candidate-link cells: {v5_summary['ambiguous_candidate_link_cells']}
 - Missing cells: {v5_summary['missing']}
 - Candidate rows exported: {v5_summary['candidate_rows']}
 - Complete outputs: {v5_summary['complete_outputs']}/89
@@ -517,7 +526,7 @@ artifacts for audit and CPU analysis. It contains 60 tasks and 89 test outputs.
 
 - Greedy has 1,068 cells (3 TTT depths × 4 views) and reproduces pool oracle
   **29/89**.
-- TurboDFS V5 has 1,068 scheduler DONE rows, but only {v5_summary['trustworthy']}
+- TurboDFS V5 has 1,068 scheduler DONE rows, but only {v5_summary['trustworthy_candidate_linked_cells']}
   have an unambiguous immutable candidate-artifact link. Its export is stored as
   `INTERIM_PARTIAL` under `snapshots/`; it is not a standard final V5 freeze.
 - Gold grids are never written here. Only pre-existing exact-match booleans and
@@ -537,8 +546,12 @@ large search traces remain outside Git.
         "dataset_version": "eval60_compact_analysis_v1",
         "export_timestamp": datetime.now(timezone.utc).isoformat(), "git_source_commit": args.git_source_commit,
         "greedy_expected_cells": 1068, "greedy_exported_cells": greedy_summary["cells"], "greedy_expected_outputs": 89,
-        "greedy_oracle": "29/89", "v5_expected_cells": 1068, "v5_done_cells": v5_summary["done"],
-        "v5_missing_cells": v5_summary["missing"], "v5_ambiguous_cells": v5_summary["ambiguous"],
+        "greedy_oracle": "29/89", "v5_expected_cells": 1068,
+        "v5_scheduler_rows": v5_summary["scheduler_rows"],
+        "v5_scheduler_done_cells": v5_summary["scheduler_done_cells"],
+        "v5_trustworthy_candidate_linked_cells": v5_summary["trustworthy_candidate_linked_cells"],
+        "v5_ambiguous_candidate_link_cells": v5_summary["ambiguous_candidate_link_cells"],
+        "v5_missing_cells": v5_summary["missing"],
         "v5_dataset_status": "INTERIM_PARTIAL", "v5_dataset_relative_dir": str(v5_summary["snapshot_dir"].relative_to(args.output)),
         "v5_pool_oracle_lower_bound": f"{v5_summary['v5_oracle']}/89", "greedy_union_v5_oracle_lower_bound": f"{v5_summary['union_oracle']}/89",
         "confirmed_greedy_miss_rescues": v5_summary["rescues"], "gold_disclosure_status": "NONBLIND_USER_AUTHORIZED_CONTINUATION",
