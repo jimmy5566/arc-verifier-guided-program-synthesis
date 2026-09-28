@@ -42,7 +42,8 @@ HISTORY_FIELDS = [
     "match_to_scheduler", "resolution_reason",
 ]
 RECOVERED_FIELDS = [
-    "cell_key", "old_status", "new_status", "selected_artifact_path", "selected_artifact_sha256", "match_class",
+    "cell_key", "task_id", "output_index", "depth", "view", "old_status", "new_status",
+    "selected_artifact_path", "selected_artifact_sha256", "checkpoint_sha256", "v5_config_sha256", "match_class",
     "checkpoint_match", "config_match", "candidate_count_match", "nodes_match", "forwards_match", "tokens_match",
     "floor_match", "alternative_artifact_count", "resolution_explanation",
 ]
@@ -363,8 +364,10 @@ def resolve(db: dict[str, Any], records: list[dict[str, Any]], old_status: dict[
             status_rows.append({"key": key, "status": "AMBIGUOUS", "record": None})
             continue
         rec = selected["rec"]
-        info = {"cell_key": key_text(key), "old_status": old_status.get(key, "AMBIGUOUS"), "new_status": "TRUSTWORTHY",
+        info = {"cell_key": key_text(key), "task_id": key[0], "output_index": key[1], "depth": key[2], "view": key[3],
+                "old_status": old_status.get(key, "AMBIGUOUS"), "new_status": "TRUSTWORTHY",
                 "selected_artifact_path": rec["path"], "selected_artifact_sha256": rec["artifact_sha256"],
+                "checkpoint_sha256": rec["checkpoint_sha256"], "v5_config_sha256": rec["config_sha256"],
                 "match_class": match_class, "checkpoint_match": "YES" if text(row.get("checkpoint_sha256")) == rec["checkpoint_sha256"] else "UNAVAILABLE",
                 "config_match": "YES" if text(row.get("config_sha256")) == rec["config_sha256"] else "UNAVAILABLE",
                 "candidate_count_match": "YES" if "candidate_count" in selected["matched"] else "UNAVAILABLE",

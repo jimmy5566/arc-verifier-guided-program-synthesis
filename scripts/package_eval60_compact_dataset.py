@@ -250,7 +250,27 @@ def origin_from(record: sqlite3.Row, artifact: dict[str, Any] | None) -> str:
     return "EXISTING_LABEL_UNSPECIFIED"
 
 
-def package_v5(run: Path, db_path: Path, gold: dict[tuple[str, int], str], greedy_hits: dict[tuple[str, int], bool], expected: list[tuple[str, int, int, str]], output_root: Path, config_hash: str) -> tuple[dict[str, Any], list[Path]]:
+def load_provenance_resolution(path: Path | None) -> dict[tuple[str, int, int, str], dict[str, Any]]:
+    """Load the frozen, Gold-independent V5 candidate linkage mapping."""
+    if path is None:
+        return {}
+    trusted: dict[tuple[str, int, int, str], dict[str, Any]] = {}
+    with path.open(encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            item = json.loads(line)
+            record = item.get("record")
+            if item.get("status") != "TRUSTWORTHY" or not isinstance(record, dict):
+                raise RuntimeError("invalid frozen provenance resolution")
+            key = cell_key(record["task_id"], record["output_index"], record["depth"], record["view"])
+            if key in trusted:
+                raise RuntimeError(f"duplicate frozen provenance resolution: {key}")
+            trusted[key] = item
+    return trusted
+
+
+def package_v5(run: Path, db_path: Path, gold: dict[tuple[str, int], str], greedy_hits: dict[tuple[str, int], bool], expected: list[tuple[str, int, int, str]], output_root: Path, config_hash: str, provenance_resolution: Path | None = None) -> tuple[dict[str, Any], list[Path]]:
     con = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     con.row_factory = sqlite3.Row
     quick_check = con.execute("PRAGMA quick_check").fetchone()[0]
@@ -259,13 +279,17 @@ def package_v5(run: Path, db_path: Path, gold: dict[tuple[str, int], str], greed
     db_rows = {cell_key(r["task_id"], r["output_index"], r["depth"], r["view"]): r for r in con.execute("SELECT * FROM cells")}
     if len(db_rows) != 1068 or sum(r["status"] == "DONE" for r in db_rows.values()) != 1068:
         raise RuntimeError(f"V5 DB contract broken: rows={len(db_rows)} done={sum(r['status'] == 'DONE' for r in db_rows.values())}")
+    resolved = load_provenance_resolution(provenance_resolution)
     source_paths: set[Path] = set()
-    for row in db_rows.values():
-        for value in (row["temp_path"], row["task_depth_shard"]):
-            if value:
-                candidate = Path(value)
-                if candidate.is_file():
-                    source_paths.add(candidate)
+    if provenance_resolution is None:
+        for row in db_rows.values():
+            for value in (row["temp_path"], row["task_depth_shard"]):
+                if value:
+                    candidate = Path(value)
+                    if candidate.is_file():
+                        source_paths.add(candidate)
+    elif len(resolved) != 1061:
+        raise RuntimeError(f"frozen resolver coverage must be 1061, got {len(resolved)}")
     by_file_key: dict[tuple[Path, tuple[str, int, int, str]], list[dict[str, Any]]] = defaultdict(list)
     for path in sorted(source_paths):
         try:
@@ -300,31 +324,37 @@ def package_v5(run: Path, db_path: Path, gold: dict[tuple[str, int], str], greed
                    "record_link_status": "NO_DB_ROW", "provenance_status": "MISSING"}
             quality["missing"] += 1
             cell_rows.append(row); per_output[(task, index)].append(row); continue
-        artifact_candidates: list[tuple[Path, dict[str, Any]]] = []
-        for source in (db["temp_path"], db["task_depth_shard"]):
-            if not source:
-                continue
-            path = Path(source)
-            for record in by_file_key.get((path, key), []):
-                if record.get("checkpoint_sha256") and db["checkpoint_sha256"] and record["checkpoint_sha256"] != db["checkpoint_sha256"]:
+        artifact_candidates: list[tuple[Path, dict[str, Any], str | None]] = []
+        if provenance_resolution is not None:
+            item = resolved.get(key)
+            if item is not None:
+                artifact_candidates.append((Path(item["artifact_path"]), item["record"], str(item["artifact_sha256"])))
+        else:
+            for source in (db["temp_path"], db["task_depth_shard"]):
+                if not source:
                     continue
-                artifact_candidates.append((path, record))
-        unique = {(str(path), json.dumps(record, sort_keys=True, separators=(",", ":"))) for path, record in artifact_candidates}
+                path = Path(source)
+                for record in by_file_key.get((path, key), []):
+                    if record.get("checkpoint_sha256") and db["checkpoint_sha256"] and record["checkpoint_sha256"] != db["checkpoint_sha256"]:
+                        continue
+                    artifact_candidates.append((path, record, None))
+        unique = {(str(path), json.dumps(record, sort_keys=True, separators=(",", ":"))) for path, record, _ in artifact_candidates}
         if len(unique) != 1:
-            link_status = "NO_MATCHING_ARTIFACT" if not unique else "MULTIPLE_MATCHING_ARTIFACTS"
+            frozen_unresolved = provenance_resolution is not None and key not in resolved
+            link_status = "NO_ARTIFACT" if frozen_unresolved else ("NO_MATCHING_ARTIFACT" if not unique else "MULTIPLE_MATCHING_ARTIFACTS")
             row = {**base, "checkpoint_path_or_id": db["checkpoint_sha256"] or "", "checkpoint_sha256": db["checkpoint_sha256"] or "",
-                   "status": "AMBIGUOUS", "execution_origin": origin_from(db, None), "runtime_seconds": n(db["runtime_seconds"]),
+                   "status": "UNRESOLVED_NO_ARTIFACT" if frozen_unresolved else "AMBIGUOUS", "execution_origin": origin_from(db, None), "runtime_seconds": n(db["runtime_seconds"]),
                    "termination_reason": "", "candidate_count": n(db["candidate_count"]), "complete_candidate_count": "",
                    "nodes_expanded": n(db["nodes_expanded"]), "batch_forward_passes": n(db["model_forwards"]),
                    "tokens_advanced": n(db["tokens_advanced"]), "probability_pruned": "",
                    "frontier_floor_activation_count": n(db["frontier_floor_activation_count"]), "timed_out": "", "oom_observed": "",
                    "gold_hit_any_candidate": "", "gold_hit_candidate_count": "", "best_gold_candidate_nll": "", "best_candidate_nll": "",
                    "source_artifact_path": "", "source_artifact_sha256": "", "record_link_status": link_status,
-                   "provenance_status": "AMBIGUOUS"}
-            quality["ambiguous"] += 1
+                   "provenance_status": "UNRESOLVED" if frozen_unresolved else "AMBIGUOUS"}
+            quality["unresolved" if frozen_unresolved else "ambiguous"] += 1
             cell_rows.append(row); per_output[(task, index)].append(row); continue
-        source_path, artifact = artifact_candidates[0]
-        source_hashes.setdefault(source_path, sha256(source_path))
+        source_path, artifact, frozen_sha = artifact_candidates[0]
+        source_hashes.setdefault(source_path, frozen_sha or sha256(source_path))
         raw_candidates = artifact.get("candidates") if isinstance(artifact.get("candidates"), list) else []
         db_count = db["candidate_count"]
         artifact_count = artifact.get("candidate_count")
@@ -358,7 +388,7 @@ def package_v5(run: Path, db_path: Path, gold: dict[tuple[str, int], str], greed
         hits = [r for r in emitted if r["gold_exact_match"] == "true"]
         nlls = [float(r["cumulative_nll"]) for r in emitted if r["cumulative_nll"] != ""]
         hit_nlls = [float(r["cumulative_nll"]) for r in hits if r["cumulative_nll"] != ""]
-        pruned = sum(1 for node in artifact.get("nodes", []) if isinstance(node, dict) and node.get("pruned"))
+        pruned = sum(1 for node in artifact.get("nodes", []) if isinstance(node, dict) and node.get("pruned")) if "nodes" in artifact else ""
         row = {**base, "checkpoint_path_or_id": db["checkpoint_sha256"] or "", "checkpoint_sha256": db["checkpoint_sha256"] or "",
                "status": status, "execution_origin": origin_from(db, artifact), "runtime_seconds": n(artifact.get("runtime_seconds", db["runtime_seconds"])),
                "termination_reason": n(artifact.get("termination_reason")), "candidate_count": n(artifact.get("candidate_count", db["candidate_count"])),
@@ -426,12 +456,13 @@ def package_v5(run: Path, db_path: Path, gold: dict[tuple[str, int], str], greed
     scheduler_rows = len(db_rows)
     scheduler_done = sum(r["status"] == "DONE" for r in db_rows.values())
     ambiguous = sum(r["status"] == "AMBIGUOUS" for r in cell_rows)
+    unresolved = sum(r["status"] == "UNRESOLVED_NO_ARTIFACT" for r in cell_rows)
     missing = sum(r["status"] == "MISSING" for r in cell_rows)
     trustworthy = sum(r["provenance_status"] == "TRUSTWORTHY" for r in cell_rows)
     complete_outputs = sum(r["coverage_status"] == "COMPLETE" for r in output_rows)
     v5_oracle = sum(v5_hits.values())
     union_oracle = sum(greedy_hits[k] or v5_hits[k] for k in greedy_hits)
-    snapshot_dir = output_root / "snapshots" / f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}_{scheduler_done}_scheduler_done" / "turbodfs_v5"
+    snapshot_dir = output_root / "turbodfs_v5" if provenance_resolution is not None else output_root / "snapshots" / f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}_{scheduler_done}_scheduler_done" / "turbodfs_v5"
     write_csv(snapshot_dir / "v5_cells.csv", V5_CELL_COLUMNS, cell_rows)
     write_csv(snapshot_dir / "v5_candidates.csv", V5_CANDIDATE_COLUMNS, candidate_rows)
     write_csv(snapshot_dir / "v5_outputs.csv", V5_OUTPUT_COLUMNS, output_rows)
@@ -440,14 +471,14 @@ def package_v5(run: Path, db_path: Path, gold: dict[tuple[str, int], str], greed
         "status": "INTERIM_PARTIAL", "scheduler_rows": scheduler_rows,
         "scheduler_done_cells": scheduler_done,
         "trustworthy_candidate_linked_cells": trustworthy,
-        "ambiguous_candidate_link_cells": ambiguous, "missing_cells": missing, "outputs": 89, "complete_outputs": complete_outputs,
+        "ambiguous_candidate_link_cells": ambiguous, "unresolved_no_artifact_cells": unresolved, "missing_cells": missing, "outputs": 89, "complete_outputs": complete_outputs,
         "partial_outputs": 89 - complete_outputs, "v5_pool_oracle_lower_bound": f"{v5_oracle}/89",
         "greedy_union_v5_oracle_lower_bound": f"{union_oracle}/89", "confirmed_greedy_miss_rescues": [r["output_id"] for r in rescue_rows],
         "db_sha256": sha256(db_path), "db_quick_check": quick_check,
     }, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return ({"scheduler_rows": scheduler_rows, "scheduler_done_cells": scheduler_done,
              "trustworthy_candidate_linked_cells": trustworthy,
-             "ambiguous_candidate_link_cells": ambiguous, "missing": missing,
+             "ambiguous_candidate_link_cells": ambiguous, "unresolved_no_artifact_cells": unresolved, "missing": missing,
              "candidate_rows": len(candidate_rows), "complete_outputs": complete_outputs, "partial_outputs": 89 - complete_outputs,
              "v5_oracle": v5_oracle, "union_oracle": union_oracle, "rescues": [r["output_id"] for r in rescue_rows],
              "heavy_unique": sum(r["heavy_unique_rescue"] == "true" for r in rescue_rows), "snapshot_dir": snapshot_dir,
@@ -462,6 +493,7 @@ def main() -> None:
     parser.add_argument("--gold", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--git-source-commit", required=True)
+    parser.add_argument("--provenance-resolution", type=Path)
     args = parser.parse_args()
     if args.output.exists():
         shutil.rmtree(args.output)
@@ -477,7 +509,10 @@ def main() -> None:
         "adapter_checkpoint_manifest_sha256": "e3e95956b0c17e3017b3bb99999c53bfc5307908df68c43fc6641e8b1459c2a6",
     }
     greedy_hits, greedy_summary, greedy_sources = load_greedy(args.greedy_run, gold, args.output)
-    v5_summary, v5_sources = package_v5(args.v5_run, args.v5_db, gold, greedy_hits, expected, args.output, config_hashes["v5_config_sha256"])
+    v5_summary, v5_sources = package_v5(
+        args.v5_run, args.v5_db, gold, greedy_hits, expected, args.output,
+        config_hashes["v5_config_sha256"], args.provenance_resolution,
+    )
     source_hash_rows = []
     all_sources = {path for path in greedy_sources + v5_sources if path.is_file()}
     for path in sorted(all_sources):
@@ -543,7 +578,7 @@ large search traces remain outside Git.
 """
     (args.output / "README.md").write_text(readme, encoding="utf-8")
     manifest = {
-        "dataset_version": "eval60_compact_analysis_v1",
+        "dataset_version": "eval60_compact_analysis_v2" if args.provenance_resolution else "eval60_compact_analysis_v1",
         "export_timestamp": datetime.now(timezone.utc).isoformat(), "git_source_commit": args.git_source_commit,
         "greedy_expected_cells": 1068, "greedy_exported_cells": greedy_summary["cells"], "greedy_expected_outputs": 89,
         "greedy_oracle": "29/89", "v5_expected_cells": 1068,
@@ -551,8 +586,9 @@ large search traces remain outside Git.
         "v5_scheduler_done_cells": v5_summary["scheduler_done_cells"],
         "v5_trustworthy_candidate_linked_cells": v5_summary["trustworthy_candidate_linked_cells"],
         "v5_ambiguous_candidate_link_cells": v5_summary["ambiguous_candidate_link_cells"],
+        "v5_unresolved_no_artifact_cells": v5_summary.get("unresolved_no_artifact_cells", 0),
         "v5_missing_cells": v5_summary["missing"],
-        "v5_dataset_status": "INTERIM_PARTIAL", "v5_dataset_relative_dir": str(v5_summary["snapshot_dir"].relative_to(args.output)),
+        "v5_dataset_status": "PROVENANCE_RECOVERED_PARTIAL" if args.provenance_resolution else "INTERIM_PARTIAL", "v5_dataset_relative_dir": str(v5_summary["snapshot_dir"].relative_to(args.output)),
         "v5_pool_oracle_lower_bound": f"{v5_summary['v5_oracle']}/89", "greedy_union_v5_oracle_lower_bound": f"{v5_summary['union_oracle']}/89",
         "confirmed_greedy_miss_rescues": v5_summary["rescues"], "gold_disclosure_status": "NONBLIND_USER_AUTHORIZED_CONTINUATION",
         "scientific_config_hashes": config_hashes, "file_sha256": {},
