@@ -69,18 +69,58 @@ def write_checkpoint_retention(root: Path) -> None:
 def write_data_dictionary(root: Path) -> None:
     (root / "DATA_DICTIONARY.md").write_text(
         "# Eval60 authoritative data dictionary\n\n"
-        "| artifact / field | definition | deployment-available | Gold-derived | source |\n"
-        "|---|---|---:|---:|---|\n"
-        "| `01_cells.parquet` | one generation cell and static execution identity | yes | no | raw Greedy/Turbo cells |\n"
-        "| `02_greedy_tokens.parquet` | token position, selected-token score, native-token log probabilities, entropy and margin | yes | no | raw Greedy cells |\n"
-        "| `03_greedy_candidates.parquet` | Greedy decoded canonical candidate and sequence statistics | yes | no | raw Greedy cells |\n"
-        "| `04_turbodfs_candidates.parquet` | complete TurboDFS candidates and score/discovery fields | yes | no | raw TurboDFS cells |\n"
-        "| `05_turbodfs_nodes.parquet` | reconstructible search-tree nodes | yes | no | raw TurboDFS cells |\n"
-        "| `06_runtime.parquet` | generation runtime seconds and token counts | yes | no | raw cells |\n"
-        "| `07_cross_aug_features.parquet` | canonical-grid support and agreement across the four views | yes | no | frozen Greedy candidates |\n"
-        "| `08_cross_depth_features.parquet` | equality and confidence deltas across depths | yes | no | frozen Greedy candidates |\n"
-        "| `09_gold_labels.parquet` | exact post-hoc correctness labels | no | yes | evaluation solutions after Greedy freeze |\n",
+        "All tables use one row per stated unit. `deployment-available` means the\n"
+        "field exists before reading evaluation solutions. JSON payload columns are\n"
+        "lossless compact serializations of the retained raw artifact.\n\n"
+        "| table / field(s) | dtype / units | definition | deployment-available | Gold-derived | source |\n"
+        "|---|---|---|---:|---:|---|\n"
+        "| `01_cells`: `task_id`, `output_index`, `depth`, `view`, `decoder`, `checkpoint_sha256` | string/int/int/string/string/string | cell identity and exact adapted-model identity | yes | no | raw Greedy/Turbo cell |\n"
+        "| `02_greedy_tokens`: identity fields, `token_index`, `chosen_token_id`, `top1_token_id`, `top2_token_id` | string/int | generated-token identity and selected/top-ranked native token IDs | yes | no | `token_telemetry` |\n"
+        "| `02_greedy_tokens`: `chosen_token_logprob`, `top1_prob`, `top2_prob`, `top1_minus_top2_margin`, `entropy`, `cumulative_sequence_logprob` | float / nats except probabilities | per-token confidence and cumulative score | yes | no | `token_telemetry` |\n"
+        "| `02_greedy_tokens`: `full_native_logprobs` | JSON float vector / nats | full compact native grid-token log-probability vector | yes | no | `token_telemetry` |\n"
+        "| `03_greedy_candidates`: `canonical_candidate_json`, `token_ids_json`, `valid_grid`, `sequence_logprob_sum`, `sequence_logprob_mean`, `mean_entropy`, `mean_margin`, `generation_seconds` | JSON/bool/float / nats or seconds | canonical grid and sequence-level Greedy evidence | yes | no | raw Greedy cell |\n"
+        "| `04_turbodfs_candidates`: identity, `candidate_index`, `candidate_json`, `scope` | scalar + JSON | every retained V3 candidate; scope distinguishes non-primary micro calibration | yes | no | raw V3 cell |\n"
+        "| `05_turbodfs_nodes`: identity, `node_index`, `node_json`, `scope` | scalar + JSON | reconstructible V3 search-tree node payload | yes | no | raw V3 cell |\n"
+        "| `06_runtime`: identity, `generation_seconds`, `generated_token_count`, `gpu_id` | scalar / seconds, tokens | generation runtime and volume | yes | no | raw Greedy cell |\n"
+        "| `07_cross_aug_features`: `number_unique_candidates`, `max_support_count`, `max_support_ratio`, `candidate_frequency_entropy`, `pairwise_exact_agreement` | int/float | canonical-grid agreement across four views at one depth | yes | no | frozen Greedy candidates |\n"
+        "| `08_cross_depth_features`: equality booleans and entropy/margin deltas | bool/float / nats | same-view agreement and confidence change across depths | yes | no | frozen Greedy candidates |\n"
+        "| `09_gold_labels`: `GREEDY_EXACT`, `GREEDY_OUTPUT_ORACLE` | bool | post-hoc exact correctness labels | no | yes | official solutions after Greedy freeze |\n"
+        "| `10_checkpoint_map.csv`: task/depth/path/size/sha/tensor count | scalar / bytes | retained adapter byte identity | yes | no | checkpoint metadata |\n"
+        "| `11_decoder_config.json` | JSON | frozen Greedy and V3 configuration identities | yes | no | frozen configs |\n",
         encoding="utf-8")
+
+
+def write_turbodfs_calibration_tables(root: Path) -> None:
+    """Expose retained V3 micro traces without pretending they are primary data.
+
+    V3 may fail its frozen gate, in which case no primary Eval60 TurboDFS blocks
+    exist.  The calibration traces are still valuable CPU-analysis evidence and
+    are written with an explicit non-primary scope rather than discarded or
+    silently merged with a future expansion.
+    """
+    raw = root / "raw" / "turbodfs_v3_calibration" / "micro"
+    candidate_columns = ["task_id", "output_index", "depth", "view", "checkpoint_sha256", "decoder_config_sha256", "scope", "candidate_index", "candidate_json"]
+    node_columns = ["task_id", "output_index", "depth", "view", "checkpoint_sha256", "decoder_config_sha256", "scope", "node_index", "node_json"]
+    candidates: list[dict[str, Any]] = []
+    nodes: list[dict[str, Any]] = []
+    cells = 0
+    for path in sorted(raw.glob("*.json")) if raw.is_dir() else []:
+        row = read_json(path); cells += 1
+        base = {key: row.get(key) for key in ("task_id", "output_index", "depth", "view", "checkpoint_sha256", "decoder_config_sha256")}
+        base["scope"] = "V3_MICRO_CALIBRATION_NOT_PRIMARY"
+        for index, candidate in enumerate(row.get("candidates", [])):
+            candidates.append({**base, "candidate_index": index, "candidate_json": json.dumps(candidate, sort_keys=True, separators=(",", ":"))})
+        for index, node in enumerate(row.get("nodes", [])):
+            nodes.append({**base, "node_index": index, "node_json": json.dumps(node, sort_keys=True, separators=(",", ":"))})
+    out = root / "analysis_ready"; out.mkdir(exist_ok=True)
+    write_parquet(candidates, out / "04_turbodfs_candidates.parquet") if candidates else write_parquet([{column: None for column in candidate_columns}], out / "04_turbodfs_candidates.parquet")
+    write_parquet(nodes, out / "05_turbodfs_nodes.parquet") if nodes else write_parquet([{column: None for column in node_columns}], out / "05_turbodfs_nodes.parquet")
+    (out / "TURBODFS_TABLES_STATUS.json").write_text(json.dumps({
+        "cells": cells, "candidate_rows": len(candidates), "node_rows": len(nodes),
+        "scope": "V3_MICRO_CALIBRATION_NOT_PRIMARY",
+        "primary_turbodfs_blocks": 0,
+        "reason": "V3 micro calibration failed its pre-registered gate; no primary blocks were launched.",
+    }, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def attach_gold(root: Path, solutions: Path) -> None:
@@ -156,7 +196,7 @@ def attach_gold(root: Path, solutions: Path) -> None:
                             "margin_48_minus_24": (lookup[48].get("mean_margin") or 0.0) - (lookup[24].get("mean_margin") or 0.0)})
     write_parquet(cross_aug, out / "07_cross_aug_features.parquet")
     write_parquet(cross_depth, out / "08_cross_depth_features.parquet")
-    write_checkpoint_retention(root); write_data_dictionary(root)
+    write_turbodfs_calibration_tables(root); write_checkpoint_retention(root); write_data_dictionary(root)
     (out / "11_decoder_config.json").write_text(json.dumps({"greedy_views": list(greedy.VIEWS), "ttt_config": read_json(root / "reference_ttt_config_cuda128_runtime.json"), "turbodfs_v3_config": read_json(root / "turbodfs_opt_v3_config.json")}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     summary = {"GREEDY_OUTPUT_ORACLE": sum(oracle.values()), "GREEDY_ORACLE_BY_DEPTH": depth_hits, "GREEDY_ORACLE_BY_VIEW": view_hits,
                "GREEDY_UNIQUE_DEPTH": unique_depth, "GREEDY_UNIQUE_VIEW": unique_view, "GOLD_ACCESSED_BEFORE_GREEDY_FREEZE": False,
