@@ -1,0 +1,9 @@
+{
+  "expected_cells": 1068,
+  "expected_outputs": 89,
+  "exported_cells": 1068,
+  "pool_oracle": "29/89",
+  "source_cells_sha256": "fa87fe954b14c15b1c71ea733e22a50fbb50c3fe6187179c8e6fbeec86c4c79d",
+  "source_gold_label_sha256": "61e226251eecc35272f3856e259e8b68267c14e6841c2116562dc916e12ce2b5",
+  "status": "COMPLETE"
+}
