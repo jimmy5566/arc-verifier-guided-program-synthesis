@@ -1,5 +1,5 @@
 {
-  "analysis_ready": "GREEDY_ONLY_COMPLETE",
+  "analysis_ready": "COMPLETE_WITH_V3_MICRO_NONPRIMARY",
   "authoritative_greedy_complete": true,
   "checkpoints": {
     "hash_valid": 180,
@@ -23,9 +23,18 @@
     "solution_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1"
   },
   "integrity_audit_sha256": "8a3244b294db0d5ed74ea9b541fcc2c7245d70c0b6adecff10832af49b60316c",
+  "derived_turbodfs_tables": {
+    "candidates_rows": 3,
+    "candidates_sha256": "c1b20f8192acc37f031e9d5b1e5ae842e4d4f56e092e1719a4de21c2b6fafe29",
+    "nodes_rows": 21270,
+    "nodes_sha256": "919e582f82ea0a0301d920d0f31e3faa8eb50b69e69e14f8da3bc5f8042d9981",
+    "scope": "V3_MICRO_CALIBRATION_NOT_PRIMARY",
+    "status_sha256": "205ed487eb5915e093ac8583264ba60c17078e0e1ae6a27570d2a2f671ee9d95"
+  },
   "raw_run_directory": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1",
   "run_source_commit": "59fe0e2fa56ac9bace9ce58c43b0bf230ee11fa0",
   "schema_recovery": {
+    "derived_tables_commit": "008bd3887571fd1de7bd2d512ef2c839c700b2a4",
     "finalizer_fix_commit": "c01bb06e38f570bcd007e2c31b74683a2d25471a",
     "meaning": "Official compact-list evaluation solutions were accepted only after the Greedy freeze.",
     "status": "APPLIED"

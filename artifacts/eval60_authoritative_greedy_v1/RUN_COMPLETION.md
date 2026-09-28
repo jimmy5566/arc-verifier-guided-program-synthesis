@@ -1,7 +1,9 @@
 # Eval60 authoritative Greedy completion
 
 Status: **PARTIAL — authoritative Greedy surface complete; TurboDFS V3 did not
-pass its pre-registered micro gate.**
+pass its pre-registered micro gate.** The analysis-ready package is complete:
+the TurboDFS tables contain retained V3 micro-calibration evidence and are
+explicitly marked non-primary.
 
 The exact Eval60 cohort contains 60 tasks and 89 outputs.  The frozen Greedy
 surface contains all 1,068 cells (three retained TTT depths by four views per
@@ -18,4 +20,4 @@ The official evaluation solutions were read only after the Greedy generation
 freeze.  They yield a retrospective Greedy pool oracle of 29/89.  Raw cells,
 adapters, telemetry, hashes, Gold labels, and the morning handoff remain at the
 run directory recorded in `RUN_COMPLETION_MANIFEST.json`; they are deliberately
-not tracked in Git.
+not tracked in Git. The small completion manifest and this report are tracked.
