@@ -37,7 +37,7 @@ or state row was modified to make this pass.
 | --- | --- | ---: | --- |
 | Raw V5 candidate traces | `/workspace/arc2/active_runs/eval60_v5_vs_greedy_4worker_v1/tmp` | 3.8 GiB | Pod-resident; not pushed to ordinary Git |
 | Runtime generation inputs | `/workspace/arc2/active_runs/eval60_v5_vs_greedy_4worker_v1/generation_inputs` | 1002 KiB | Pod-resident, identities below |
-| Recovered state database | `/root/arc-runtime-turbodfs-v5-benchmark/state/eval60_v5_nonblind_recovered.sqlite` | 1,056,768 bytes | Pod-resident; SHA256 recorded below |
+| Recovered state database | `/root/arc-runtime-turbodfs-v5-benchmark/state/eval60_v5_nonblind_recovered.sqlite` | 1,056,768 bytes | Static byte-verified snapshot copied to `/workspace/arc2/active_runs/eval60_v5_vs_greedy_4worker_v1/recovered_state_snapshot/`; ordinary Git upload not performed |
 | Compact reports and provenance | this Git directory plus the HEAVY checkpoints | small | pushed to GitHub |
 
 Normal Git/LFS tracking was not configured for the 3.8 GiB candidate directory;
@@ -49,5 +49,6 @@ durable-artifact transfer decision is required before deleting the Pod.
 - V5 config SHA256: `e5beec92c9992930f4d6b468db1806ee2f3b9224e13179af7d4e8bb5897148e0`
 - TTT config SHA256: `8968f67e5a5c8c1f838dc1a45120d052527d65e95188cd9e155426ba56481486`
 - Adapter/checkpoint manifest SHA256: `e3e95956b0c17e3017b3bb99999c53bfc5307908df68c43fc6641e8b1459c2a6`
-- Recovered DB SHA256 at final heavy checkpoint: `7840b5de1629f7b54e21d71800384b92dd7622b9a8e6d0accc4b1f46f6ce6e68`
+- Current recovered DB SHA256: `12529cc829509f224f466446ccf08663083dd7fd5aea849f73cb2e449d7ac485`
+- Static `/workspace` snapshot SHA256: `12529cc829509f224f466446ccf08663083dd7fd5aea849f73cb2e449d7ac485` (byte-identical). The FUSE mount did not support timestamp preservation during copy; content verification passed.
 

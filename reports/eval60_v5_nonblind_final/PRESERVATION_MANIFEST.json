@@ -27,12 +27,16 @@
     "v5_config_sha256": "e5beec92c9992930f4d6b468db1806ee2f3b9224e13179af7d4e8bb5897148e0",
     "ttt_config_sha256": "8968f67e5a5c8c1f838dc1a45120d052527d65e95188cd9e155426ba56481486",
     "adapter_checkpoint_manifest_sha256": "e3e95956b0c17e3017b3bb99999c53bfc5307908df68c43fc6641e8b1459c2a6",
-    "recovered_state_db_sha256": "7840b5de1629f7b54e21d71800384b92dd7622b9a8e6d0accc4b1f46f6ce6e68"
+    "recovered_state_db_sha256": "12529cc829509f224f466446ccf08663083dd7fd5aea849f73cb2e449d7ac485",
+    "static_workspace_snapshot_sha256": "12529cc829509f224f466446ccf08663083dd7fd5aea849f73cb2e449d7ac485"
   },
   "raw_artifacts": {
     "candidate_trace_dir": "/workspace/arc2/active_runs/eval60_v5_vs_greedy_4worker_v1/tmp",
     "candidate_trace_size": "3.8 GiB",
     "state_db_path": "/root/arc-runtime-turbodfs-v5-benchmark/state/eval60_v5_nonblind_recovered.sqlite",
+    "static_workspace_snapshot_path": "/workspace/arc2/active_runs/eval60_v5_vs_greedy_4worker_v1/recovered_state_snapshot/eval60_v5_nonblind_recovered.sqlite",
+    "static_workspace_snapshot_verified": true,
+    "static_workspace_snapshot_note": "Byte-identical SHA256 verified; FUSE did not support timestamp preservation during copy.",
     "state_db_size_bytes": 1056768,
     "ordinary_git_upload": "NOT_PERFORMED"
   },
