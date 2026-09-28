@@ -78,6 +78,7 @@ setsid env \
   ARC2_MODEL_PATH="$CLEAN_ROOT/model-stage/qwen3_4b_grids15_sft139" \
   ARC2_NATIVE_CONFIG_DIR="$CLEAN_ROOT/repo/reference_assets/nvarc_native_846d0198" \
   ARC2_ADAPTER_MANIFEST="$GLOBAL_ROOT/turbodfs_v5/eval60_adapter_manifest.csv" \
+  ARC2_GLOBAL_ASSET_MANIFEST="$GLOBAL_ROOT/turbodfs_v5/GLOBAL_ASSET_MANIFEST.json" \
   ARC2_SOLUTIONS="$SOLUTIONS" ARC2_PYTHON="$CLEAN_ROOT/env/turbodfs-v5/bin/python" \
   bash "$CLEAN_ROOT/repo/scripts/launch_eval60_turbodfs_v5_2x3090.sh" \
   >"$RUN_ROOT/logs/turbodfs_v5_controller.log" 2>&1 < /dev/null &
