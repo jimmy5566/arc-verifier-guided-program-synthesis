@@ -410,7 +410,10 @@ def copy_bootstrap_artifacts(source: Path | None, destination: Path) -> None:
     target = destination / "bootstrap"
     target.mkdir(parents=True, exist_ok=True)
     for name in BOOTSTRAP_FILES:
-        shutil.copy2(source / name, target / name)
+        # Global Storage rejects utime/chown metadata updates attempted by
+        # copy2().  Content-only copying is sufficient: hashes are frozen
+        # immediately after this operation.
+        shutil.copyfile(source / name, target / name)
 
 
 def main() -> None:
@@ -441,7 +444,9 @@ def main() -> None:
     cells = select_cells(calibration)
     args.output.mkdir(parents=True)
     write_csv(args.output / "benchmark_cells.csv", cells, ["task_id", "output_index", "depth", "view", "selection_hash"])
-    shutil.copy2(args.final_config, args.output / "FINAL_TURBODFS_CONFIG.json")
+    # Global Storage is content-addressed for this run and may reject the
+    # metadata mutation performed by shutil.copy2().
+    shutil.copyfile(args.final_config, args.output / "FINAL_TURBODFS_CONFIG.json")
     atomic_json(args.output / "run_manifest.json", {"run_id": "turbodfs_3090_concurrency_benchmark_v1", "source_commit": args.source_commit,
         "decoder_config_sha256": sha_file(args.final_config), "decoder_id": final["decoder_id"], "target_blind": True,
         "solutions_accessed": False, "benchmark_cells_sha256": sha_file(args.output / "benchmark_cells.csv"), "cells": len(cells),
