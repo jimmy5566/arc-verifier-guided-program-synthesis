@@ -36,7 +36,10 @@ def promote_file(source: Path, destination: Path) -> str:
         try:
             subprocess.run(["cp","--reflink=always","--preserve=mode,timestamps",str(source),str(destination)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); method="reflink"
         except Exception:
-            shutil.copy2(source,destination); method="copy"
+            # Global Storage can reject chmod/utime metadata operations even
+            # after accepting byte writes.  Artifact identity is the SHA256,
+            # not POSIX timestamp/mode metadata, so use a byte-only copy.
+            shutil.copyfile(source,destination); method="copy"
     if sha256(destination)!=expected: raise RuntimeError(f"promoted global file hash mismatch:{destination}")
     return method
 
