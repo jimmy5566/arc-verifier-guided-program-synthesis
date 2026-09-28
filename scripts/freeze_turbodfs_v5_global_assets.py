@@ -112,13 +112,16 @@ def main() -> None:
     for row in source_rows:
         task_id,depth=str(row["task_id"]),int(row["depth"]); source=Path(row.get("checkpoint_path") or row.get("adapter_path") or "")
         expected=row.get("checkpoint_sha256") or row.get("sha256")
-        if not source.is_file() or not expected or sha256(source)!=expected: raise RuntimeError(f"authoritative adapter identity failure:{task_id} d{depth}")
+        source_sha = sha256(source) if source.is_file() else None
+        if not source.is_file() or not expected or source_sha!=expected: raise RuntimeError(f"authoritative adapter identity failure:{task_id} d{depth}")
         if already_in_global(source=source, global_root=global_root):
             target, method = source, "authoritative_already_global"
+            target_sha = source_sha
         else:
             target=global_root/"adapters"/"eval60_authoritative_greedy_v1"/task_id/f"depth_{depth:03d}"/source.name
             method=promote_file(source,target)
-        if sha256(target)!=expected: raise RuntimeError(f"global adapter hash mismatch:{target}")
+            target_sha = sha256(target)
+        if target_sha!=expected: raise RuntimeError(f"global adapter hash mismatch:{target}")
         adapter_rows.append({"task_id":task_id,"depth":depth,"global_path":str(target),"original_path":str(source),"size":target.stat().st_size,"sha256":expected,"storage_method":method})
         adapter_assets.append({"logical_name":f"adapter/{task_id}/depth_{depth:03d}","absolute_path":str(target),"size_bytes":target.stat().st_size,"sha256":expected,"source_path":str(source),"storage_method":method,"immutable":True})
     v5root=global_root/"turbodfs_v5"; v5root.mkdir(parents=True,exist_ok=True)
