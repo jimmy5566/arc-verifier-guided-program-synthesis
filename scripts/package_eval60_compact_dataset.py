@@ -548,7 +548,15 @@ large search traces remain outside Git.
         if path.name != "MANIFEST.json":
             manifest["file_sha256"][str(path.relative_to(args.output))] = sha256(path)
     (args.output / "MANIFEST.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps({"greedy": greedy_summary, "v5": {k: v for k, v in v5_summary.items() if k not in {"source_hashes", "quality"}}}, sort_keys=True))
+    # Keep the machine-readable terminal summary JSON-safe.  The richer
+    # in-process summary intentionally carries ``snapshot_dir`` as a Path for
+    # subsequent manifest construction, but a Path is not directly serializable.
+    terminal_v5 = {
+        key: (str(value) if isinstance(value, Path) else value)
+        for key, value in v5_summary.items()
+        if key not in {"source_hashes", "quality"}
+    }
+    print(json.dumps({"greedy": greedy_summary, "v5": terminal_v5}, sort_keys=True))
 
 
 if __name__ == "__main__":
