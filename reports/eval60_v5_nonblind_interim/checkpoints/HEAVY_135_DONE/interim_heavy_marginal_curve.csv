@@ -1,0 +1,8 @@
+cumulative_greedy_miss_rescues,cumulative_heavy_cells,cumulative_heavy_runtime_seconds,cumulative_heavy_unique_rescues,cumulative_v5_pool_oracle_lower_bound,requested_heavy_cells
+3,0,0,0,26,0
+3,25,1614.7644981704652,0,26,25
+3,50,2825.394239190966,0,27,50
+3,75,4340.935115681961,0,27,75
+4,100,6006.3126030582935,1,28,100
+4,125,6842.865985296667,1,28,125
+4,135,7208.00637922436,1,28,135

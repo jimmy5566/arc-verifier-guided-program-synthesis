@@ -1,0 +1,5 @@
+cells,gold_hit_cells,gold_hit_rate,gpu_seconds_per_completed_cell,gpu_seconds_per_gold_hit_cell,gpu_seconds_per_new_rescue,new_greedy_miss_rescues,new_output_rescues,origin,runtime_seconds
+691,96,0.1389290882778582,39.368868111717674,283.3738319291345,9067.962621732304,3,3,FAST_PASS,27203.887865196913
+135,20,0.14814814814814814,53.39263984610637,360.400318961218,3604.00318961218,2,1,HEAVY_REPAIR,7208.00637922436
+0,0,,,,,0,0,ISOLATED_REPAIR,0
+0,0,,,,,0,0,UNKNOWN,0
