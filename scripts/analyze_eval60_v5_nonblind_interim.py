@@ -259,13 +259,13 @@ def main() -> None:
     for depth in DEPTHS:
         hit_set = {key for key, rows in by_output.items() if any(r["cell"].depth == depth and r["row"]["gold_hit"] for r in rows)}
         other = {key for key, rows in by_output.items() if any(r["cell"].depth != depth and r["row"]["gold_hit"] for r in rows)}
-        depth_rows.append({"depth": depth, "cell_gold_hits": sum(r["row"]["gold_hit"] for r in cell_rows if r["depth"] == depth),
+        depth_rows.append({"depth": depth, "cell_gold_hits": sum(r["gold_hit"] for r in cell_rows if r["depth"] == depth),
                            "output_gold_hits": len(hit_set), "unique_output_hits_available": len(hit_set - other)})
     view_rows = []
     for view in VIEWS:
         hit_set = {key for key, rows in by_output.items() if any(r["cell"].view == view and r["row"]["gold_hit"] for r in rows)}
         other = {key for key, rows in by_output.items() if any(r["cell"].view != view and r["row"]["gold_hit"] for r in rows)}
-        view_rows.append({"view": view, "cell_gold_hits": sum(r["row"]["gold_hit"] for r in cell_rows if r["view"] == view),
+        view_rows.append({"view": view, "cell_gold_hits": sum(r["gold_hit"] for r in cell_rows if r["view"] == view),
                           "output_gold_hits": len(hit_set), "unique_output_rescues_available": len((hit_set - other) - greedy_set)})
     origin_rows = []
     for label in ("FAST_PASS", "HEAVY_REPAIR", "ISOLATED_REPAIR", "UNKNOWN"):
