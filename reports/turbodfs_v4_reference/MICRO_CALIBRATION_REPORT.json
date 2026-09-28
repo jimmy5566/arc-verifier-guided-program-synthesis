@@ -1,0 +1,59 @@
+{
+  "run_id": "eval60_turbodfs_v4_reference",
+  "status": "MICRO_FAIL_STOP",
+  "decoder": "TURBODFS_OPT_V4_REFERENCE_PARITY",
+  "source_commit": "3c6082ca5d01e3d208257ded7a33ec8314142f22",
+  "solutions_accessed": false,
+  "authoritative_greedy": {
+    "root": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1",
+    "frozen_cells": 1068,
+    "freeze_sha256": "54f16cce21f504c30562260ca9163725eb8d6d9e1475fc6f4459c874fb786bc2",
+    "modified": false
+  },
+  "attempts": [
+    {
+      "integration": "initial_single_lane",
+      "config_sha256": "87c431e2378ff0e03a1b87916e9a44e5fb6f3f6b6d35fcbc0fe7b57e451982a2",
+      "complete_valid_cells": 3,
+      "cells": 6,
+      "zero_complete_rate": 0.5,
+      "status": "FAIL",
+      "summary_sha256": "e2d9b8aa7c58cf789c919febcab9e5a310f02d9b2bd20aca13fc30c916a3e917"
+    },
+    {
+      "integration": "public_batched_lane_pairs",
+      "lane_groups": [["identity", "flip_ud"], ["transpose", "anti_transpose"]],
+      "config_sha256": "d47c111624da7a626220674254a3714f7783b6fe8999a230b5894e26332f59ab",
+      "complete_valid_cells": 4,
+      "cells": 6,
+      "zero_complete_rate": 0.3333333333333333,
+      "median_seconds_per_cell": 12.491042262874544,
+      "p90_seconds_per_cell": 21.40509297605604,
+      "mean_model_forwards": 442.1666666666667,
+      "mean_candidates": 0.8333333333333334,
+      "status": "FAIL",
+      "summary_sha256": "805686e1207cedcfd6afe709899e84c03b377e8a7190915023ab846773bc5515"
+    }
+  ],
+  "bounded_failure_classification": {
+    "attempt_limit_used": 1,
+    "complete_valid": 4,
+    "E_PUBLIC_REFERENCE_SEARCH_EXHAUSTED": 2,
+    "classification_sha256": "2cdd836bacc828d77a979b5cbe87a43c48b84d9dd48410acb2b2ee9afcd65a4c",
+    "conclusion": "The corrected public-lane V4 path remains below the required 5/6 micro gate. The two residual cells exhausted only the public cumulative-NLL frontier; no further heuristic repair or full Eval60 launch is permitted."
+  },
+  "full_eval60": {
+    "started": false,
+    "turbodfs_cells": 0,
+    "complete_output_blocks": 0,
+    "analysis_ready_export": false,
+    "gold_attached": false
+  },
+  "remote_artifacts": {
+    "run_directory": "/workspace/arc2/active_runs/eval60_turbodfs_v4_reference",
+    "run_manifest_sha256": "fdf4ca2ff28f33e7426921c3208c8b1f9bbe132d0f764983585e865d69c27815",
+    "handoff_sha256": "8f81e23db4ae7bcbf8594dc947c894df9bd9029a20bb2ed6dd54c9bee8c5b6d1",
+    "size_bytes": 48603478,
+    "raw_calibration_records": 18
+  }
+}
