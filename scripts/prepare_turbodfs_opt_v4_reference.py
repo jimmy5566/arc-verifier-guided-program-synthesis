@@ -54,38 +54,14 @@ def main() -> None:
     # is therefore an explicitly recoverable *preparation-only* staging root;
     # no calibration, candidate or checkpoint artifact can exist yet.
     output.mkdir(parents=True, exist_ok=True)
-    config = {
-        "decoder_id": "TURBODFS_OPT_V4_REFERENCE_PARITY",
-        "algorithm": "direct_public_notebook_turbo_dfs",
-        "public_notebook_commit": PUBLIC_NVARC_COMMIT,
-        "public_notebook_path": "ARC-AGI1/002_ivan_arc1.ipynb",
-        "public_notebook_cell": 4,
-        "max_new_tokens": 931,
-        "max_score": 1.6094379124341003,
-        "local_time_limit_seconds": PUBLIC_LOCAL_TIME_LIMIT_SECONDS,
-        "absolute_end_time": None,
-        "arc_tokens": list(PUBLIC_ARC_TOKENS),
-        "pad_token_id": 13,
-        "eos_token_id": 15,
-        "branch_ordering": "public_score_only_stable_arc_token_order",
-        "candidate_ordering": "public_score_only_stable_discovery_order",
-        "cache_semantics": "public_batched_past_key_values_direct_recursive_pass",
-        # The public decoder's lane count is the prompt-batch dimension.  ARC2
-        # deliberately does not add the public notebook's pair-order duplicate
-        # prompts, so the fixed four-view surface is executed as its two
-        # same-shape geometry pairs rather than as four isolated n=1 calls.
-        "lane_count": 2,
-        "lane_groups": [["identity", "flip_ud"], ["transpose", "anti_transpose"]],
-        "lane_grouping": "fixed_view_same_serialization_shape_pairs",
-        "completion": "native_eos_only; grid_parse_post_search",
-        "dedup": "none_inside_search; retain_all_completed_suffixes",
-        "candidate_retention": "all_completed_suffixes",
-        "capture_full_arc_distribution": True,
-        "calibration_assertions": True,
-        "non_reference_caps": [],
-        "target_blind": True,
-        "solutions_accessed": False,
-    }
+    template = ROOT / "configs" / "turbodfs_opt_v4_reference_config.json"
+    config = read(template)
+    # Fail closed if the tracked template is not the public V4 contract.  The
+    # copied runtime file below is the exact config artifact that gets hashed.
+    if (config.get("public_notebook_commit") != PUBLIC_NVARC_COMMIT or
+            config.get("arc_tokens") != list(PUBLIC_ARC_TOKENS) or
+            config.get("local_time_limit_seconds") != PUBLIC_LOCAL_TIME_LIMIT_SECONDS):
+        raise RuntimeError("tracked V4 reference config is not the public decoder contract")
     config_path = output / "turbodfs_opt_v4_reference_config.json"
     atomic_json(config_path, config)
     config_sha = sha256_file(config_path)
