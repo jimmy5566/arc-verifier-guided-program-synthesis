@@ -39,12 +39,22 @@ def _read_sha_file(path: Path) -> str:
     return fields[0]
 
 
-def _task_rows(challenge: Path) -> list[dict[str, Any]]:
+def _task_rows(challenge: Path, authoritative: Path) -> list[dict[str, Any]]:
     _reject_gold_in_challenge(challenge)
     payload = read_json(challenge)
+    frozen_order = authoritative / "task_execution_order.csv"
+    if not frozen_order.is_file():
+        raise FileNotFoundError(frozen_order)
+    with frozen_order.open(newline="", encoding="utf-8") as handle:
+        selected_ids = [str(row["task_id"]) for row in csv.DictReader(handle)]
+    if len(selected_ids) != 60 or len(set(selected_ids)) != 60:
+        raise RuntimeError("authoritative Eval60 task execution order must contain exactly 60 unique task IDs")
     rows = []
     outputs = 0
-    for task_id, task in payload.items():
+    for task_id in selected_ids:
+        if task_id not in payload:
+            raise RuntimeError(f"authoritative Eval60 task absent from public challenge: {task_id}")
+        task = payload[task_id]
         count = len(task.get("test", []))
         if count < 1:
             raise RuntimeError(f"task has no test inputs: {task_id}")
@@ -85,7 +95,7 @@ def main() -> None:
     actual_config_sha = sha_file(args.final_config)
     if actual_config_sha != expected_config_sha:
         raise RuntimeError("FINAL_TURBODFS_CONFIG.sha256 disagrees with frozen config bytes")
-    rows = _task_rows(args.challenge.resolve())
+    rows = _task_rows(args.challenge.resolve(), args.authoritative_root.resolve())
     output.mkdir(parents=True)
     inputs = output / "generation_inputs"; inputs.mkdir()
     # Both copies below are target-blind metadata/input and intentionally exclude Gold/candidates.
@@ -117,6 +127,7 @@ def main() -> None:
         "source_freeze_sha256": sha_file(output / "source_freeze.json"), "challenge_sha256": sha_file(inputs / "evaluation_challenges.json"),
         "reference_config_sha256": sha_file(inputs / "reference_ttt_config.json"),
         "checkpoint_manifest_sha256": sha_file(inputs / "checkpoint_manifest.csv"),
+        "authoritative_task_execution_order_sha256": sha_file(args.authoritative_root / "task_execution_order.csv"),
         "adapter_manifest_sha256": sha_file(args.adapter_manifest), "global_asset_manifest_sha256": sha_file(args.global_asset_manifest),
         "final_v5_config_sha256": expected_config_sha, "task_order_sha256": sha_file(order),
         "generation_inputs": str(inputs), "authoritative_greedy_root": str(args.authoritative_root.resolve()),
