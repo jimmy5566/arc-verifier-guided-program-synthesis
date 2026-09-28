@@ -39,8 +39,8 @@ def main() -> None:
     parser.add_argument("--source-commit", required=True)
     args = parser.parse_args()
     source, output = args.authoritative_root.resolve(), args.output.resolve()
-    if output.exists():
-        raise FileExistsError(f"refusing to overwrite V4 run root: {output}")
+    if output.exists() and (output / "run_manifest.json").is_file():
+        raise FileExistsError(f"refusing to overwrite prepared V4 run root: {output}")
     greedy = source / "GREEDY_GENERATION_FROZEN.flag"
     checkpoint_manifest = source / "checkpoint_manifest.csv"
     contract = source / "greedy_cell_contract.csv"
@@ -49,7 +49,11 @@ def main() -> None:
     frozen = read(greedy)
     if frozen.get("greedy_cells") != 1068 or frozen.get("adapters") != 180 or frozen.get("gold_accessed_pre_freeze") is not False:
         raise RuntimeError("authoritative Greedy identity is incomplete")
-    output.mkdir(parents=True)
+    # A FUSE-backed Global Volume can reject metadata restoration (`copy2`),
+    # while ordinary content writes are safe.  A directory without a manifest
+    # is therefore an explicitly recoverable *preparation-only* staging root;
+    # no calibration, candidate or checkpoint artifact can exist yet.
+    output.mkdir(parents=True, exist_ok=True)
     config = {
         "decoder_id": "TURBODFS_OPT_V4_REFERENCE_PARITY",
         "algorithm": "direct_public_notebook_turbo_dfs",
@@ -82,7 +86,7 @@ def main() -> None:
         origin = source / name
         if not origin.is_file():
             raise RuntimeError(f"required existing V2/V3 calibration cohort missing: {origin}")
-        shutil.copy2(origin, output / name.replace("v3", "v4"))
+        shutil.copyfile(origin, output / name.replace("v3", "v4"))
     outputs: set[tuple[str, int]] = set()
     with contract.open(newline="", encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
