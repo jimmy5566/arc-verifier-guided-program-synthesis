@@ -126,7 +126,9 @@ def snapshot_cells(db_path: Path) -> tuple[list[Cell], list[tuple[str, int]], di
     return cells, output_keys, {str(key): int(value) for key, value in statuses.items()}, str(integrity)
 
 
-def matching_record(cell: Cell) -> dict[str, Any]:
+def matching_record(cell: Cell) -> dict[str, Any] | None:
+    if not cell.temp_path.is_file():
+        return None
     payload = json.loads(cell.temp_path.read_text(encoding="utf-8"))
     if not isinstance(payload, list):
         raise RuntimeError(f"cell payload is not a list: {cell.temp_path}")
@@ -135,9 +137,14 @@ def matching_record(cell: Cell) -> dict[str, Any]:
     matches = [record for record in payload if str(record.get("task_id")) == cell.task_id
                and int(record.get("output_index", -1)) == cell.output_index
                and int(record.get("depth", -1)) == cell.depth]
-    if len(matches) != 1:
-        raise RuntimeError(f"expected one matching record for {cell.task_id}:o{cell.output_index}:d{cell.depth}:{cell.view}")
-    return matches[0]
+    exact = [record for record in matches if str(record.get("view")) == cell.view]
+    if len(exact) == 1:
+        return exact[0]
+    if len(matches) == 1:
+        return matches[0]
+    # An ambiguous association must not silently donate its candidates to a
+    # different DB cell.  It is reported but excluded from all lower bounds.
+    return None
 
 
 def load_greedy(path: Path, targets: dict[str, Any], keys: set[tuple[str, int]]) -> dict[tuple[str, int], bool]:
@@ -174,11 +181,20 @@ def main() -> None:
     targets = {task: targets_all[task] for task, _ in output_keys}
     greedy_hits = load_greedy(args.greedy_parquet.resolve(), targets, set(output_keys))
 
+    db_done_by_output: dict[tuple[str, int], int] = defaultdict(int)
+    for cell in cells:
+        db_done_by_output[(cell.task_id, cell.output_index)] += 1
     by_output: dict[tuple[str, int], list[dict[str, Any]]] = defaultdict(list)
     cell_rows: list[dict[str, Any]] = []
     rescue_rows: list[dict[str, Any]] = []
+    unverified_cells: list[dict[str, Any]] = []
     for cell in cells:
         record = matching_record(cell)
+        if record is None:
+            unverified_cells.append({"task_id": cell.task_id, "output_index": cell.output_index,
+                                     "depth": cell.depth, "view": cell.view, "temp_path": str(cell.temp_path),
+                                     "reason": "missing_or_ambiguous_record"})
+            continue
         target = targets[cell.task_id][cell.output_index]
         exact = []
         for candidate in record.get("candidates", []):
@@ -215,6 +231,7 @@ def main() -> None:
     for key in output_keys:
         entries = by_output[key]
         done = len(entries)
+        db_done = db_done_by_output[key]
         validated_count = len({(entry["row"]["depth"], entry["row"]["view"]) for entry in entries})
         v5_hit = any(entry["row"]["gold_hit"] for entry in entries)
         if v5_hit:
@@ -222,9 +239,9 @@ def main() -> None:
         if validated_count == len(DEPTHS) * len(VIEWS):
             complete_outputs.add(key)
         output_rows.append({
-            "task_id": key[0], "output_index": key[1], "db_done_cells": done,
+            "task_id": key[0], "output_index": key[1], "db_done_cells": db_done,
             "validated_record_slots": validated_count, "v5_cells_expected": 12,
-            "coverage": "COMPLETE" if validated_count == 12 else "PARTIAL" if done else "ZERO",
+            "coverage": "COMPLETE" if validated_count == 12 else "PARTIAL" if db_done else "ZERO",
             "greedy_pool_hit": greedy_hits[key], "v5_pool_hit_available": v5_hit,
             "union_pool_hit_available": greedy_hits[key] or v5_hit,
             "fast_v5_hit": any(e["row"]["gold_hit"] and e["row"]["origin"] == "FAST_PASS" for e in entries),
@@ -294,7 +311,7 @@ def main() -> None:
         "ttt_config_sha256": sha256_file(ttt), "adapter_checkpoint_manifest_sha256": sha256_file(adapters),
         "gold_disclosure_status": "NONBLIND_USER_AUTHORIZED_CONTINUATION",
         "generator_config_changed": False, "generation_uses_gold": False,
-        "outputs": len(output_keys), "complete_outputs": len(complete_outputs),
+        "analyzed_validated_records": len(cell_rows), "outputs": len(output_keys), "complete_outputs": len(complete_outputs),
         "partial_outputs": sum(row["coverage"] == "PARTIAL" for row in output_rows),
         "zero_outputs": sum(row["coverage"] == "ZERO" for row in output_rows),
         "greedy_oracle": len(greedy_set), "v5_complete_output_oracle": sum(row["v5_pool_hit_available"] for row in output_rows if row["coverage"] == "COMPLETE"),
@@ -308,9 +325,11 @@ def main() -> None:
                           {"path": str(args.state_db.resolve()), "size_bytes": args.state_db.stat().st_size, "sha256": sha256_file(args.state_db)}],
     }
     summary["db_record_view_mismatches"] = sum(not bool(row["db_record_view_match"]) for row in cell_rows)
+    summary["unverified_done_cells_excluded"] = len(unverified_cells)
     for row in output_rows:
         row["output_id"] = f"{row['task_id']}:o{row['output_index']}"
     write_csv(report_dir / "interim_output_status.csv", output_rows)
+    write_csv(report_dir / "interim_unverified_cells.csv", unverified_cells)
     write_csv(report_dir / "interim_rescued_outputs.csv", rescue_rows)
     write_csv(report_dir / "interim_depth_summary.csv", depth_rows)
     write_csv(report_dir / "interim_view_summary.csv", view_rows)
