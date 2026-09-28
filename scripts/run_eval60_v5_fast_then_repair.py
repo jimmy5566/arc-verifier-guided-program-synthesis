@@ -72,12 +72,15 @@ def configure_schema(db: sqlite3.Connection) -> None:
         db.execute("ALTER TABLE cells ADD COLUMN execution_engine TEXT")
 
 
-def require_target_blind(root: Path) -> None:
+def require_generation_authorized(root: Path) -> None:
     manifest = read_json(root / "run_manifest.json")
-    if manifest.get("solutions_accessed") is not False:
-        raise RuntimeError("V5 recovery must remain target-blind")
     if (root / "V5_GENERATION_FROZEN.flag").exists():
         raise RuntimeError("cannot resume a frozen V5 run")
+    if manifest.get("solutions_accessed") is False:
+        return
+    if os.environ.get("ARC2_V5_NONBLIND_AUTHORIZED") == "1" and manifest.get("status") == "NONBLIND_USER_AUTHORIZED_RECOVERY":
+        return
+    raise RuntimeError("V5 generation requires target-blind state or explicit authorized nonblind recovery")
 
 
 def valid_done_row(row: sqlite3.Row | tuple[Any, ...], root: Path, config_sha: str) -> bool:
@@ -107,7 +110,7 @@ def valid_done_row(row: sqlite3.Row | tuple[Any, ...], root: Path, config_sha: s
 
 
 def recover(root: Path) -> dict[str, Any]:
-    require_target_blind(root)
+    require_generation_authorized(root)
     config_sha = (root / "FINAL_TURBODFS_CONFIG.sha256").read_text(encoding="utf-8").split()[0]
     db = db_open(root)
     try:
@@ -210,7 +213,7 @@ def process_cell(*, root: Path, db: sqlite3.Connection, worker: str, phase: str,
 
 
 def worker(args: argparse.Namespace) -> int:
-    configure_cpu_threads(); root = args.output.resolve(); require_target_blind(root)
+    configure_cpu_threads(); root = args.output.resolve(); require_generation_authorized(root)
     decoder_sha = (root / "FINAL_TURBODFS_CONFIG.sha256").read_text(encoding="utf-8").split()[0]
     _payload, decoder = decoder_from(root / "FINAL_TURBODFS_CONFIG.json")
     adapters = adapter_map(args.adapter_manifest.resolve(), root / "generation_inputs" / "checkpoint_manifest.csv")
@@ -263,11 +266,12 @@ def final_reports(root: Path) -> dict[str, Any]:
             writer = csv.writer(handle); writer.writerow(("task_id", "output_index", "depth", "view", "status", "error_json")); writer.writerows(db.execute("SELECT task_id,output_index,depth,view,status,error_json FROM cells WHERE status IN (?,?,?) ORDER BY task_id,output_index,depth,view", (HEAVY, ISOLATED, PERMANENT_OOM)))
     finally:
         db.close()
-    return {"expected_cells": 1068, "done_cells": int(counts.get(DONE, 0)), "permanent_failures": int(counts.get(PERMANENT, 0)) + int(counts.get(PERMANENT_OOM, 0)), "status_counts": counts, "gold_accessed_before_freeze": False}
+    manifest = read_json(root / "run_manifest.json")
+    return {"expected_cells": 1068, "done_cells": int(counts.get(DONE, 0)), "permanent_failures": int(counts.get(PERMANENT, 0)) + int(counts.get(PERMANENT_OOM, 0)), "status_counts": counts, "gold_accessed_before_freeze": manifest.get("solutions_accessed") is True}
 
 
 def freeze(root: Path) -> dict[str, Any]:
-    require_target_blind(root); compact_all_done(root); summary = final_reports(root)
+    require_generation_authorized(root); compact_all_done(root); summary = final_reports(root)
     retryable = summary["status_counts"].get(PENDING, 0) + summary["status_counts"].get(HEAVY, 0) + summary["status_counts"].get(TRANSIENT, 0) + summary["status_counts"].get(ISOLATED, 0)
     if retryable:
         raise RuntimeError(f"cannot freeze with retryable cells: {retryable}")
@@ -275,7 +279,8 @@ def freeze(root: Path) -> dict[str, Any]:
     for path in sorted(artifacts(root).glob("*.csv")) + sorted(artifacts(root).glob("*.json")):
         files.append({"path": str(path.relative_to(root)), "sha256": sha256_file(path), "size_bytes": path.stat().st_size})
     common.atomic_json(artifacts(root) / "artifact_manifest.json", {"files": files})
-    flag = {"status": "FROZEN" if summary["done_cells"] == 1068 else "FROZEN_PARTIAL", "expected_cells": 1068, "done_cells": summary["done_cells"], "permanent_failures": summary["permanent_failures"], "v5_config_sha256": (root / "FINAL_TURBODFS_CONFIG.sha256").read_text(encoding="utf-8").split()[0], "checkpoint_map_sha256": sha256_file(root / "generation_inputs" / "checkpoint_manifest.csv"), "artifact_manifest_sha256": sha256_file(artifacts(root) / "artifact_manifest.json"), "gold_accessed_before_freeze": False}
+    nonblind = bool(summary["gold_accessed_before_freeze"])
+    flag = {"status": ("FROZEN_NONBLIND_USER_AUTHORIZED" if nonblind else ("FROZEN" if summary["done_cells"] == 1068 else "FROZEN_PARTIAL")), "expected_cells": 1068, "done_cells": summary["done_cells"], "permanent_failures": summary["permanent_failures"], "v5_config_sha256": (root / "FINAL_TURBODFS_CONFIG.sha256").read_text(encoding="utf-8").split()[0], "checkpoint_map_sha256": sha256_file(root / "generation_inputs" / "checkpoint_manifest.csv"), "artifact_manifest_sha256": sha256_file(artifacts(root) / "artifact_manifest.json"), "gold_accessed_before_freeze": nonblind}
     common.atomic_json(root / "V5_GENERATION_FROZEN.flag", flag)
     manifest = read_json(root / "run_manifest.json"); manifest.update({"status": "V5_GENERATION_FROZEN", "v5_generation_freeze": flag}); common.atomic_json(root / "run_manifest.json", manifest)
     common.atomic_json(artifacts(root) / "freeze_summary.json", flag)

@@ -37,8 +37,22 @@ def atomic_json(path: Path, data: Any) -> None:
     common.atomic_json(path, data)
 
 
+def state_db_path(root: Path) -> Path:
+    """Return the V5 coordination database location.
+
+    Candidate artifacts may live on a shared FUSE volume, but SQLite WAL files
+    must live on a POSIX-local filesystem when several independent workers
+    commit concurrently.  The environment override preserves the historical
+    location by default while allowing a RunPod-local coordinator database.
+    """
+    configured = os.environ.get("ARC2_V5_STATE_DB")
+    return Path(configured).expanduser().resolve() if configured else root / "run_state.sqlite"
+
+
 def db_open(root: Path) -> sqlite3.Connection:
-    db = sqlite3.connect(root / "run_state.sqlite", timeout=60.0, isolation_level=None)
+    path = state_db_path(root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    db = sqlite3.connect(path, timeout=60.0, isolation_level=None)
     db.execute("PRAGMA journal_mode=WAL"); db.execute("PRAGMA synchronous=FULL"); db.execute("PRAGMA busy_timeout=60000")
     db.execute("""CREATE TABLE IF NOT EXISTS tasks(task_id TEXT PRIMARY KEY, output_count INTEGER NOT NULL, order_hash TEXT NOT NULL,
         status TEXT NOT NULL, attempts INTEGER NOT NULL DEFAULT 0, lease_owner TEXT, lease_expires_unix REAL, error_json TEXT, updated_unix REAL NOT NULL)""")

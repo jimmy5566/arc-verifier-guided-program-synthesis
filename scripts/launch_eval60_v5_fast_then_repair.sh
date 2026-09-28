@@ -4,13 +4,14 @@ set -Eeuo pipefail
 source "${ARC2_RUNTIME_ENV:?set ARC2_RUNTIME_ENV}"
 REPO_ROOT=${ARC2_REPO_ROOT:?missing ARC2_REPO_ROOT}
 RUN_ROOT=${ARC2_V5_RUN_ROOT:?missing ARC2_V5_RUN_ROOT}
+STATE_DB=${ARC2_V5_STATE_DB:?missing ARC2_V5_STATE_DB}
 PYTHON=${ARC2_PYTHON:-/root/arc-runtime-turbodfs-v5-benchmark/env/turbodfs-v5/bin/python}
 SCRIPT="$REPO_ROOT/scripts/run_eval60_v5_fast_then_repair.py"
 LOG_DIR="$RUN_ROOT/logs/fast_then_repair"; mkdir -p "$LOG_DIR"
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 TOKENIZERS_PARALLELISM=false TORCHINDUCTOR_COMPILE_THREADS=1
 ARGS=(--output "$RUN_ROOT" --model-path "$ARC2_MODEL_PATH" --native-config-dir "$ARC2_NATIVE_CONFIG_DIR" --adapter-manifest "$ARC2_ADAPTER_MANIFEST" --lease-seconds 900)
 
-count_phase() { "$PYTHON" - "$RUN_ROOT/run_state.sqlite" "$1" <<'PY'
+count_phase() { "$PYTHON" - "$STATE_DB" "$1" <<'PY'
 import sqlite3,sys
 phase={'fast':('PENDING','RETRY_TRANSIENT'),'heavy':('RETRY_HEAVY_OOM','RETRY_TRANSIENT'),'isolated':('RETRY_ISOLATED_OOM')}[sys.argv[2]]
 c=sqlite3.connect(sys.argv[1]); print(c.execute('select count(*) from cells where status in (%s)' % ','.join('?'*len(phase)),phase).fetchone()[0])
