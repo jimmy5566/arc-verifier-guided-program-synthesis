@@ -1,0 +1,42 @@
+{
+  "analysis_ready": "GREEDY_ONLY_COMPLETE",
+  "authoritative_greedy_complete": true,
+  "checkpoints": {
+    "hash_valid": 180,
+    "retained": 180
+  },
+  "cohort": {
+    "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+    "cohort_sha256": "ee2213363e2207626f9b00262fb90982b3de88964bbefc22c371ad410b6acb29",
+    "outputs": 89,
+    "tasks": 60
+  },
+  "generation": {
+    "adapters": 180,
+    "greedy_cells": 1068,
+    "greedy_cells_sha256": "90f4eace5be5c8fa5993df22e36a8cf0b4acdd3bbd241f42a4149c29f07d2787",
+    "gold_accessed_before_greedy_freeze": false,
+    "greedy_frozen": true
+  },
+  "gold": {
+    "greedy_oracle": 29,
+    "solution_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1"
+  },
+  "integrity_audit_sha256": "8a3244b294db0d5ed74ea9b541fcc2c7245d70c0b6adecff10832af49b60316c",
+  "raw_run_directory": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1",
+  "run_source_commit": "59fe0e2fa56ac9bace9ce58c43b0bf230ee11fa0",
+  "schema_recovery": {
+    "finalizer_fix_commit": "c01bb06e38f570bcd007e2c31b74683a2d25471a",
+    "meaning": "Official compact-list evaluation solutions were accepted only after the Greedy freeze.",
+    "status": "APPLIED"
+  },
+  "turbodfs_v3": {
+    "config_sha256": "dc2d75e35f93f67a5a52a203ff64c0c4a8bddd9f0bec29cab7cc7d13de1d036e",
+    "full_calibration_started": false,
+    "micro_cells": 6,
+    "micro_complete_valid_cells": 3,
+    "micro_status": "FAIL",
+    "turbo_blocks_started": 0,
+    "turbo_generation_frozen": false
+  }
+}
