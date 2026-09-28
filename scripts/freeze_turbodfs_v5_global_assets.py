@@ -44,6 +44,21 @@ def promote_file(source: Path, destination: Path) -> str:
     return method
 
 
+def already_in_global(*, source: Path, global_root: Path) -> bool:
+    """Whether an immutable authoritative asset is already durable in Global.
+
+    Some RunPod layouts mount both the authoritative run and Global root under
+    the same persistent volume.  Duplicating 180 one-GiB adapters in that case
+    is neither a promotion nor a safety improvement; the canonical immutable
+    source path itself is the Global path and is recorded as such.
+    """
+    try:
+        source.resolve().relative_to(global_root.resolve())
+        return True
+    except ValueError:
+        return False
+
+
 def bundle_reference_assets(*, native_config_dir: Path, destination: Path) -> dict[str, Any]:
     """Create one verified archive for the non-Git native-tokenizer snapshot.
 
@@ -98,7 +113,11 @@ def main() -> None:
         task_id,depth=str(row["task_id"]),int(row["depth"]); source=Path(row.get("checkpoint_path") or row.get("adapter_path") or "")
         expected=row.get("checkpoint_sha256") or row.get("sha256")
         if not source.is_file() or not expected or sha256(source)!=expected: raise RuntimeError(f"authoritative adapter identity failure:{task_id} d{depth}")
-        target=global_root/"adapters"/"eval60_authoritative_greedy_v1"/task_id/f"depth_{depth:03d}"/source.name; method=promote_file(source,target)
+        if already_in_global(source=source, global_root=global_root):
+            target, method = source, "authoritative_already_global"
+        else:
+            target=global_root/"adapters"/"eval60_authoritative_greedy_v1"/task_id/f"depth_{depth:03d}"/source.name
+            method=promote_file(source,target)
         if sha256(target)!=expected: raise RuntimeError(f"global adapter hash mismatch:{target}")
         adapter_rows.append({"task_id":task_id,"depth":depth,"global_path":str(target),"original_path":str(source),"size":target.stat().st_size,"sha256":expected,"storage_method":method})
         adapter_assets.append({"logical_name":f"adapter/{task_id}/depth_{depth:03d}","absolute_path":str(target),"size_bytes":target.stat().st_size,"sha256":expected,"source_path":str(source),"storage_method":method,"immutable":True})

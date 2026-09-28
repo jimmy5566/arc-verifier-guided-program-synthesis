@@ -10,8 +10,11 @@ Pods.  After a passing V5 calibration, the promotion command creates:
 
 - `models/qwen3_4b_grids15_sft139/`: the materialized offline Qwen checkpoint
   and tokenizer, with a file manifest;
-- `adapters/eval60_authoritative_greedy_v1/`: hardlinked/reflinked/copied
-  immutable adapters, never moved from the authoritative Greedy run;
+- the 180 immutable adapters: hardlinked/reflinked/copied into
+  `adapters/eval60_authoritative_greedy_v1/` only when their authoritative
+  originals are outside Global.  When the authoritative run is already under
+  the established Global root, the compact adapter manifest records those
+  original immutable paths directly rather than duplicating roughly 177GiB;
 - `assets/reference_bundle.tar.zst`: one compressed native-tokenizer reference
   bundle, not hundreds of small files;
 - `turbodfs_v5/GLOBAL_ASSET_MANIFEST.json`,
