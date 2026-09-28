@@ -70,6 +70,13 @@ def main() -> None:
         "branch_ordering": "public_score_only_stable_arc_token_order",
         "candidate_ordering": "public_score_only_stable_discovery_order",
         "cache_semantics": "public_batched_past_key_values_direct_recursive_pass",
+        # The public decoder's lane count is the prompt-batch dimension.  ARC2
+        # deliberately does not add the public notebook's pair-order duplicate
+        # prompts, so the fixed four-view surface is executed as its two
+        # same-shape geometry pairs rather than as four isolated n=1 calls.
+        "lane_count": 2,
+        "lane_groups": [["identity", "flip_ud"], ["transpose", "anti_transpose"]],
+        "lane_grouping": "fixed_view_same_serialization_shape_pairs",
         "completion": "native_eos_only; grid_parse_post_search",
         "dedup": "none_inside_search; retain_all_completed_suffixes",
         "candidate_retention": "all_completed_suffixes",

@@ -47,3 +47,15 @@ recursion above with no cross-lane candidate sharing.  V4 retains lane, cache
 batch, model-forward and branch-probability telemetry solely for calibration
 assertions and later reconstruction; those additions do not affect branching.
 
+## V4 calibration integration correction
+
+The initial V4 micro attempt called the public primitive with one lane per
+stored cell. That preserved the recursive token logic but not the public
+worker's batched-cache invocation. This is a **B: cache/lane integration
+defect**, not a search-policy adjustment. The corrected frozen V4 integration
+executes the fixed views in two equal-serialization-shape lane groups:
+`(identity, flip_ud)` and `(transpose, anti_transpose)`. ARC2 does not invent
+the notebook's extra pair-order duplicates merely to reach four lanes, because
+those would be new views outside this experiment's frozen 4-view surface. The
+public decoder itself is unchanged: its lane count is the prompt-batch size.
+

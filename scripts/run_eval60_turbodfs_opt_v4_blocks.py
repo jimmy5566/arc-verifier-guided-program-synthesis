@@ -20,10 +20,11 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 from scripts import run_eval60_adaptive_inference_joint_v2 as common
 from scripts import run_eval60_authoritative_greedy_v1 as greedy
 from scripts.run_adaptive_ttt_loo_transfer12 import read_json, view_task
-from scripts.turbodfs_v4_common import decoder_from, sha256_file, turbo_cell_v4
+from scripts.turbodfs_v4_common import decoder_from, sha256_file, turbo_cells_v4_batch
 
 DEPTHS = (12, 24, 48)
 VIEWS = ("identity", "flip_ud", "transpose", "anti_transpose")
+PUBLIC_LANE_GROUPS = (("identity", "flip_ud"), ("transpose", "anti_transpose"))
 
 
 def order(root: Path) -> list[dict[str, Any]]:
@@ -106,6 +107,15 @@ def main() -> None:
             bpath = block_path(root, task_id, output_index)
             previous = read_json(bpath) if bpath.is_file() else {}
             if previous.get("status") == "COMPLETE":
+                # A completed block is resumable only when each of its twelve
+                # atomic cells still satisfies this frozen decoder contract.
+                for depth in DEPTHS:
+                    metadata_path = authoritative / "checkpoints" / task_id / f"depth_{depth:03d}" / "metadata.json"
+                    metadata = read_json(metadata_path)
+                    for view in VIEWS:
+                        if valid_cell(cell_path(root, task_id, output_index, depth, view),
+                                      config_sha=config_sha, checkpoint_sha=metadata["checkpoint_sha256"]) is None:
+                            raise RuntimeError(f"complete V4 block has a missing cell: {task_id} o{output_index} d{depth} {view}")
                 completed.append({"task_id": task_id, "output_index": output_index, "status": "SKIPPED_COMPLETE"})
                 continue
             records: list[dict[str, Any]] = []
@@ -118,41 +128,53 @@ def main() -> None:
                 if sha256_file(adapter) != metadata["checkpoint_sha256"]:
                     raise RuntimeError(f"authoritative checkpoint hash mismatch: {metadata_path}")
                 common.load_adapter(model=model, metadata=metadata)
-                for view in VIEWS:
-                    path = cell_path(root, task_id, output_index, depth, view)
-                    existing = valid_cell(path, config_sha=config_sha, checkpoint_sha=metadata["checkpoint_sha256"])
-                    if existing is None:
+                for views in PUBLIC_LANE_GROUPS:
+                    paths = [cell_path(root, task_id, output_index, depth, view) for view in views]
+                    existing_rows = [valid_cell(path, config_sha=config_sha, checkpoint_sha=metadata["checkpoint_sha256"]) for path in paths]
+                    if any(item is None for item in existing_rows):
+                        if any(item is not None for item in existing_rows):
+                            raise RuntimeError("V4 public lane pair must resume atomically; mixed lane completion is invalid")
+                        cells: list[dict[str, Any]] | None = None
                         last_error: Exception | None = None
                         for attempt in range(2):  # exactly one same-semantics transient retry
                             try:
-                                cell = turbo_cell_v4(model=model, tokenizer=tokenizer, task=view_task(tasks[task_id], output_index),
-                                                     task_id=task_id, output_index=output_index, depth=depth, view=view,
-                                                     generation_config=generation_config, decoder=decoder,
-                                                     checkpoint_sha=metadata["checkpoint_sha256"])
-                                cell.update({"decoder_config_sha256": config_sha, "authoritative_checkpoint_metadata_sha256": sha256_file(metadata_path),
-                                             "gpu_id": args.gpu_id, "worker_index": args.worker_index, "attempt": attempt + 1,
-                                             "solutions_accessed": False})
-                                common.atomic_json(path, cell)
-                                existing = cell
+                                cells = turbo_cells_v4_batch(
+                                    model=model, tokenizer=tokenizer, task=view_task(tasks[task_id], output_index),
+                                    task_id=task_id, output_index=output_index, depth=depth, views=views,
+                                    generation_config=generation_config, decoder=decoder,
+                                    checkpoint_sha=metadata["checkpoint_sha256"],
+                                )
+                                for path, cell in zip(paths, cells, strict=True):
+                                    cell.update({"decoder_config_sha256": config_sha, "authoritative_checkpoint_metadata_sha256": sha256_file(metadata_path),
+                                                 "gpu_id": args.gpu_id, "worker_index": args.worker_index, "attempt": attempt + 1,
+                                                 "solutions_accessed": False})
+                                    common.atomic_json(path, cell)
+                                existing_rows = cells
                                 break
                             except Exception as error:  # retain then retry once without changing semantics
                                 last_error = error
-                                common.atomic_json(path.with_suffix(f".attempt{attempt + 1}.failure.json"), {
-                                    "task_id": task_id, "output_index": output_index, "depth": depth, "view": view,
-                                    "attempt": attempt + 1, "error_type": type(error).__name__, "error": str(error),
-                                    "decoder_config_sha256": config_sha, "solutions_accessed": False, "unix": time.time(),
-                                })
+                                for path, view in zip(paths, views, strict=True):
+                                    common.atomic_json(path.with_suffix(f".attempt{attempt + 1}.failure.json"), {
+                                        "task_id": task_id, "output_index": output_index, "depth": depth, "view": view,
+                                        "lane_group": list(views), "attempt": attempt + 1,
+                                        "error_type": type(error).__name__, "error": str(error),
+                                        "decoder_config_sha256": config_sha, "solutions_accessed": False, "unix": time.time(),
+                                    })
                                 common.load_adapter(model=model, metadata=metadata)
-                        if existing is None:
+                        if cells is None:
                             failed_block = True
-                            error = {"task_id": task_id, "output_index": output_index, "depth": depth, "view": view,
+                            error = {"task_id": task_id, "output_index": output_index, "depth": depth, "view_group": list(views),
                                      "error_type": type(last_error).__name__ if last_error else "Unknown", "error": str(last_error)}
                             failures.append(error)
                             write_block(root, task_id=task_id, output_index=output_index, order_hash=row["hash"], cells=records, status="PARTIAL_FAILED", error=error)
                             break
-                    records.append({"depth": depth, "view": view, "path": str(path), "sha256": sha256_file(path),
-                                    "checkpoint_sha256": metadata["checkpoint_sha256"], "runtime_seconds": existing.get("runtime_seconds")})
+                    for path, view, existing in zip(paths, views, existing_rows, strict=True):
+                        assert existing is not None
+                        records.append({"depth": depth, "view": view, "path": str(path), "sha256": sha256_file(path),
+                                        "checkpoint_sha256": metadata["checkpoint_sha256"], "runtime_seconds": existing.get("runtime_seconds")})
                     write_block(root, task_id=task_id, output_index=output_index, order_hash=row["hash"], cells=records, status="PARTIAL")
+                    if failed_block:
+                        break
                 if failed_block: break
             if not failed_block and len(records) == 12:
                 write_block(root, task_id=task_id, output_index=output_index, order_hash=row["hash"], cells=records, status="COMPLETE")
