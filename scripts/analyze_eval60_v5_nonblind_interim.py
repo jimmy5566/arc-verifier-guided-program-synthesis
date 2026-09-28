@@ -130,9 +130,11 @@ def matching_record(cell: Cell) -> dict[str, Any]:
     payload = json.loads(cell.temp_path.read_text(encoding="utf-8"))
     if not isinstance(payload, list):
         raise RuntimeError(f"cell payload is not a list: {cell.temp_path}")
+    # A recovered DB lane key can disagree with its immutable record's view.
+    # Candidate provenance comes from the record; retain the DB view separately.
     matches = [record for record in payload if str(record.get("task_id")) == cell.task_id
                and int(record.get("output_index", -1)) == cell.output_index
-               and int(record.get("depth", -1)) == cell.depth and str(record.get("view")) == cell.view]
+               and int(record.get("depth", -1)) == cell.depth]
     if len(matches) != 1:
         raise RuntimeError(f"expected one matching record for {cell.task_id}:o{cell.output_index}:d{cell.depth}:{cell.view}")
     return matches[0]
@@ -183,9 +185,13 @@ def main() -> None:
             hit = bool(candidate.get("valid_grid")) and grid(candidate) == target
             exact.append((candidate, hit))
         hit_candidates = [candidate for candidate, hit in exact if hit]
+        record_depth = int(record.get("depth", cell.depth))
+        record_view = str(record.get("view", cell.view))
         row = {
-            "task_id": cell.task_id, "output_index": cell.output_index, "depth": cell.depth,
-            "view": cell.view, "origin": origin(cell.execution_engine), "execution_engine": cell.execution_engine,
+            "task_id": cell.task_id, "output_index": cell.output_index, "depth": record_depth,
+            "view": record_view, "db_depth": cell.depth, "db_view": cell.view,
+            "db_record_view_match": record_depth == cell.depth and record_view == cell.view,
+            "origin": origin(cell.execution_engine), "execution_engine": cell.execution_engine,
             "runtime_seconds": record.get("runtime_seconds", cell.runtime_seconds), "updated_unix": cell.updated_unix,
             "candidate_count": record.get("candidate_count"), "valid_grid_count": record.get("valid_grid_count"),
             "gold_hit": bool(hit_candidates), "frontier_floor_activation_count": record.get("frontier_floor_activation_count"),
@@ -196,7 +202,7 @@ def main() -> None:
         by_output[(cell.task_id, cell.output_index)].append(entry)
         for candidate in hit_candidates:
             rescue_rows.append({
-                "task_id": cell.task_id, "output_index": cell.output_index, "depth": cell.depth, "view": cell.view,
+                "task_id": cell.task_id, "output_index": cell.output_index, "depth": record_depth, "view": record_view,
                 "origin": row["origin"], "candidate_id": candidate.get("candidate_id"),
                 "cumulative_nll": candidate.get("cumulative_nll"),
                 "frontier_floor_activation_count": record.get("frontier_floor_activation_count"),
@@ -209,14 +215,16 @@ def main() -> None:
     for key in output_keys:
         entries = by_output[key]
         done = len(entries)
+        validated_count = len({(entry["row"]["depth"], entry["row"]["view"]) for entry in entries})
         v5_hit = any(entry["row"]["gold_hit"] for entry in entries)
         if v5_hit:
             v5_hits.add(key)
-        if done == len(DEPTHS) * len(VIEWS):
+        if validated_count == len(DEPTHS) * len(VIEWS):
             complete_outputs.add(key)
         output_rows.append({
-            "task_id": key[0], "output_index": key[1], "v5_cells_done": done, "v5_cells_expected": 12,
-            "coverage": "COMPLETE" if done == 12 else "PARTIAL" if done else "ZERO",
+            "task_id": key[0], "output_index": key[1], "db_done_cells": done,
+            "validated_record_slots": validated_count, "v5_cells_expected": 12,
+            "coverage": "COMPLETE" if validated_count == 12 else "PARTIAL" if done else "ZERO",
             "greedy_pool_hit": greedy_hits[key], "v5_pool_hit_available": v5_hit,
             "union_pool_hit_available": greedy_hits[key] or v5_hit,
             "fast_v5_hit": any(e["row"]["gold_hit"] and e["row"]["origin"] == "FAST_PASS" for e in entries),
@@ -299,6 +307,7 @@ def main() -> None:
         "raw_artifacts": [{"path": str(args.run / "tmp"), "note": "not rescanned; candidate files remain Pod-local"},
                           {"path": str(args.state_db.resolve()), "size_bytes": args.state_db.stat().st_size, "sha256": sha256_file(args.state_db)}],
     }
+    summary["db_record_view_mismatches"] = sum(not bool(row["db_record_view_match"]) for row in cell_rows)
     for row in output_rows:
         row["output_id"] = f"{row['task_id']}:o{row['output_index']}"
     write_csv(report_dir / "interim_output_status.csv", output_rows)
@@ -313,6 +322,7 @@ def main() -> None:
               f"- Snapshot DONE cells: `{len(cells)}/{sum(statuses.values())}`", f"- Greedy pool oracle: `{len(greedy_set)}/{len(output_keys)}`",
               f"- V5 global lower-bound pool oracle: `{len(v5_hits)}/{len(output_keys)}`", f"- Greedy union V5 lower bound: `{len(greedy_set | v5_hits)}/{len(output_keys)}`",
               f"- Greedy-miss rescues: `{len(rescues)}`", f"- Complete outputs: `{len(complete_outputs)}/{len(output_keys)}`", f"- Partial outputs: `{summary['partial_outputs']}/{len(output_keys)}`",
+              f"- DB/record view mismatches: `{summary['db_record_view_mismatches']}` (record provenance used)",
               "- Top-2: `NOT_COMPUTABLE` (no frozen V5 selector evidence).", "", "Gold was explicitly user-authorized after generation began. Remaining generation remains mechanically frozen and does not consume Gold."]
     (report_dir / "INTERIM_V5_NONBLIND_930_DONE.md").write_text("\n".join(report) + "\n", encoding="utf-8")
     (report_dir / "README.md").write_text("# Eval60 V5 nonblind interim reports\n\nGold was explicitly user-authorized before completion. This is a nonblind interim evaluation of a frozen-config generator, not a final target-blind result. Partial outputs are not final misses. No Top-2 result is reported because the current V5 pool has no frozen selector evidence.\n", encoding="utf-8")
