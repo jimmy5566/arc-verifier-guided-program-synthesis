@@ -16,7 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
 from inference.nvarc_turbodfs_reference import PUBLIC_NVARC_COMMIT
-from inference.nvarc_turbodfs_v5 import FrontierFloorTurboDFSConfig, inference_frontier_floor_turbo_dfs
+from inference.nvarc_turbodfs_v5 import FrontierFloorTurboDFSConfig
+from inference.nvarc_turbodfs_v5_shared import SearchContext, SharedForwardExecutor
 from scripts.turbodfs_v4_common import assert_native_token_contract, read_json, sha256_file
 
 
@@ -77,12 +78,21 @@ def turbo_cells_v5_batch(
     widths = {int(value.shape[-1]) for value in encoded_rows}
     if len(widths) != 1 or any(int(value.shape[0]) != 1 for value in encoded_rows):
         raise RuntimeError("V5 requires the same frozen equal-width V4 lane construction")
-    input_ids = torch.cat(encoded_rows, dim=0).to(model.device)
-    prompt_tokens, lane_count = int(input_ids.shape[-1]), int(input_ids.shape[0])
+    prompt_tokens, lane_count = int(encoded_rows[0].shape[-1]), len(encoded_rows)
+    contexts = tuple(
+        SearchContext(
+            context_id=f"{task_id}:o{output_index}:d{depth}:{view}",
+            cell_key=f"{task_id}:o{output_index}:d{depth}:{view}",
+            adapter_identity=checkpoint_sha,
+            input_ids=input_ids,
+        )
+        for view, input_ids in zip(views, encoded_rows, strict=True)
+    )
     FastLanguageModel.for_inference(model)
     torch.cuda.reset_peak_memory_stats()
     started = time.perf_counter()
-    result = inference_frontier_floor_turbo_dfs(model, input_ids=input_ids, config=decoder)
+    execution = SharedForwardExecutor(model, decoder).execute(contexts)
+    result = execution.result
     torch.cuda.synchronize()
     elapsed = time.perf_counter() - started
     events_by_lane: dict[int, list[dict[str, Any]]] = {lane: [] for lane in range(lane_count)}
@@ -91,11 +101,15 @@ def turbo_cells_v5_batch(
     records: list[dict[str, Any]] = []
     for lane, (view, (_encoded, augmentation)) in enumerate(zip(views, encoded_views, strict=True)):
         candidates: list[dict[str, Any]] = []
-        for candidate in result.candidates[lane]:
+        context = contexts[lane]
+        for local_candidate_id, candidate in enumerate(result.candidates[lane]):
             raw_grid = parse_native_grid(tokenizer.decode(list(candidate.token_ids), skip_special_tokens=True))
             canonical = None if raw_grid is None else augmentation.inverse_grid(raw_grid)
             candidates.append({
                 "candidate_id": candidate.candidate_id, "candidate_token_ids": list(candidate.token_ids),
+                "cell_candidate_id": local_candidate_id,
+                "search_context_id": context.context_id,
+                "cache_slot": lane,
                 "raw_transformed_grid": raw_grid, "canonical_inverse_transformed_grid": canonical,
                 "canonical_candidate": canonical, "valid_grid": canonical is not None,
                 "cumulative_nll": candidate.cumulative_nll, "candidate_discovery_order": candidate.candidate_id,
@@ -104,9 +118,11 @@ def turbo_cells_v5_batch(
                 "forward_count_at_discovery": candidate.discovery_forward_index,
                 "terminal_node_id": candidate.terminal_node_id,
             })
-        node_rows = [{**node, "expanded": node.get("state") == "expanded", "pruned": node.get("state") == "pruned", "completed": node.get("state") == "completed"}
+        node_rows = [{**node, "search_context_id": context.context_id, "cache_slot": lane,
+                      "expanded": node.get("state") == "expanded", "pruned": node.get("state") == "pruned", "completed": node.get("state") == "completed"}
                      for node in result.nodes if int(node.get("lane", -1)) == lane]
-        probability_rows = [row for row in result.branch_probabilities if int(row.get("lane", -1)) == lane]
+        probability_rows = [{**row, "search_context_id": context.context_id, "cache_slot": lane}
+                            for row in result.branch_probabilities if int(row.get("lane", -1)) == lane]
         lane_events = events_by_lane[lane]
         records.append({
             "task_id": task_id, "output_index": output_index, "depth": depth, "view": view,
@@ -125,6 +141,7 @@ def turbo_cells_v5_batch(
             "tokens_advanced": sum(bool(row["expanded"]) for row in node_rows),
             "max_frontier_size": result.max_frontier_size, "lane_count": lane_count,
             "lane_index": lane, "mean_batch_size": float(lane_count),
+            "model_instances_per_gpu": 1, "logical_searches_in_forward": lane_count,
             "termination_reason": result.termination_reason, "timed_out": result.timed_out,
             "peak_allocated_bytes": int(torch.cuda.max_memory_allocated()),
             "peak_reserved_bytes": int(torch.cuda.max_memory_reserved()),
