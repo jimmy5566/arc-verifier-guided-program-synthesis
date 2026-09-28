@@ -32,6 +32,8 @@
     "status_sha256": "205ed487eb5915e093ac8583264ba60c17078e0e1ae6a27570d2a2f671ee9d95"
   },
   "raw_run_directory": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1",
+  "run_data_size_gib": 178.0,
+  "morning_handoff_sha256": "472e865e289877251102ef9c93127f22c87f938ccf5858e98ef4ae8f10e2ecd4",
   "run_source_commit": "59fe0e2fa56ac9bace9ce58c43b0bf230ee11fa0",
   "schema_recovery": {
     "derived_tables_commit": "008bd3887571fd1de7bd2d512ef2c839c700b2a4",
