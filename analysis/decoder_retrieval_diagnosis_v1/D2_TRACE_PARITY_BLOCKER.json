@@ -1,0 +1,34 @@
+{
+  "experiment_id": "D2_RETRIEVAL_AND_SEARCH_EFFICIENCY_DIAGNOSIS_V1",
+  "status": "BLOCKED_PRETRACE",
+  "parity_cells": [
+    "20270e3b:o0:d24:identity",
+    "332f06d7:o0:d24:anti_transpose"
+  ],
+  "policies_exactly_reproduced": [
+    "TOPK_LOCAL_k=2",
+    "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400",
+    "CUMULATIVE_REGRET_r=4.00"
+  ],
+  "v5_current_mismatches": [
+    {
+      "cell_key": "20270e3b:o0:d24:identity",
+      "frozen_nodes_expanded": 1873,
+      "frozen_termination_reason": "budget_exhausted",
+      "instrumented_nodes_expanded": 92,
+      "instrumented_termination_reason": "search_exhausted"
+    },
+    {
+      "cell_key": "332f06d7:o0:d24:anti_transpose",
+      "frozen_nodes_expanded": 419,
+      "frozen_termination_reason": "search_exhausted",
+      "instrumented_nodes_expanded": 419,
+      "instrumented_termination_reason": "search_exhausted",
+      "candidate_pool_identical": false
+    }
+  ],
+  "frozen_v5_reference_source": "legacy paired raw fallback without fixed_budget_contract_sha256",
+  "actual_d2_trace_started": false,
+  "gold_opened_after_d2_trace_freeze": false,
+  "historical_union_updated": false
+}
