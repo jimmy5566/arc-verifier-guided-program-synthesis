@@ -493,6 +493,14 @@ def score_fixed_smoke_gold(args: argparse.Namespace) -> None:
         raise RuntimeError("Gold solutions file missing")
     policies = (CONTROL_POLICY,) + tuple(policy for policy in POLICIES if policy != CONTROL_POLICY)
     solutions = json.loads(solution_path.read_text(encoding="utf-8"))
+    def gold_grid(task_id: str, output_index: int) -> Any:
+        """Accept both ARC challenge-shaped and solution-only benchmark files."""
+        entry = solutions[task_id]
+        if isinstance(entry, dict):
+            return entry["test"][output_index]["output"]
+        if isinstance(entry, list):
+            return entry[output_index]
+        raise RuntimeError(f"unsupported Gold schema for task {task_id}")
     cells: list[dict[str, Any]] = []
     freeze_hashes: dict[str, str] = {}
     for policy in policies:
@@ -515,7 +523,7 @@ def score_fixed_smoke_gold(args: argparse.Namespace) -> None:
         for row in collect_policy_cells(root, manifest, policy, selected):
             key = cell_key(output_id=str(row["output_id"]), depth=int(row["depth"]), view=str(row["view"]))
             candidates = list(row.get("candidates", []))
-            gold = solutions[row["task_id"]]["test"][int(row["output_index"])]["output"]
+            gold = gold_grid(str(row["task_id"]), int(row["output_index"]))
             hit_indices = [index + 1 for index, candidate in enumerate(candidates)
                            if candidate.get("valid_grid") and candidate.get("canonical_candidate") == gold]
             cells.append({
