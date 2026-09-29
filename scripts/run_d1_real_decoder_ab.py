@@ -473,6 +473,134 @@ def attach_policy_gold(args: argparse.Namespace) -> None:
     atomic_json(root / "gold" / f"{suffix}.json", {"policy": policy, "records": rows, "gold_attached_after_freeze": True})
 
 
+def score_fixed_smoke_gold(args: argparse.Namespace) -> None:
+    """Score immutable D1 smoke pools after policy-specific freeze verification.
+
+    This is intentionally a retrospective, CPU-only scorer.  It never writes
+    into a raw cell or a freeze file; its compact report carries pool hashes so
+    the post-freeze Gold comparison remains auditable without storing Gold.
+    """
+    root = args.output.resolve(); manifest = read_json(root / "D1_MANIFEST.json")
+    selected = load_selected_cell_keys(args.cell_manifest)
+    if selected is None or len(selected) != 8:
+        raise RuntimeError("fixed Gold scoring requires exactly eight frozen smoke cells")
+    contract_path = Path(args.contract).resolve()
+    if not contract_path.is_file():
+        raise RuntimeError("fixed-budget contract missing")
+    contract_sha = sha256_file(contract_path)
+    solution_path = Path(args.solutions).resolve()
+    if not solution_path.is_file():
+        raise RuntimeError("Gold solutions file missing")
+    policies = (CONTROL_POLICY,) + tuple(policy for policy in POLICIES if policy != CONTROL_POLICY)
+    solutions = json.loads(solution_path.read_text(encoding="utf-8"))
+    cells: list[dict[str, Any]] = []
+    freeze_hashes: dict[str, str] = {}
+    for policy in policies:
+        suffix = hashlib.sha256(policy.encode("utf-8")).hexdigest()[:12] + ".smoke.json"
+        freeze_path = root / "freezes" / suffix
+        if not freeze_path.is_file():
+            raise RuntimeError(f"policy smoke freeze missing: {policy}")
+        frozen = read_json(freeze_path)
+        if frozen.get("solutions_accessed") is not False or set(frozen.get("cell_hashes", {})) != selected:
+            raise RuntimeError(f"invalid or contaminated policy freeze: {policy}")
+        freeze_hashes[policy] = sha256_file(freeze_path)
+        label = CONTROL_LABEL if policy == CONTROL_POLICY else policy
+        for row in collect_policy_cells(root, manifest, policy, selected):
+            key = cell_key(output_id=str(row["output_id"]), depth=int(row["depth"]), view=str(row["view"]))
+            candidates = list(row.get("candidates", []))
+            gold = solutions[row["task_id"]]["test"][int(row["output_index"])]["output"]
+            hit_indices = [index + 1 for index, candidate in enumerate(candidates)
+                           if candidate.get("valid_grid") and candidate.get("canonical_candidate") == gold]
+            cells.append({
+                "contract_sha256": contract_sha,
+                "decoder_policy": label,
+                "implementation_policy": policy,
+                "cell_key": key,
+                "output_id": row["output_id"],
+                "task_id": row["task_id"],
+                "output_index": row["output_index"],
+                "depth": row["depth"],
+                "view": row["view"],
+                "candidate_count": len(candidates),
+                "candidate_pool_sha256": sha_json(candidates),
+                "frozen_cell_sha256": frozen["cell_hashes"][key],
+                "gold_hit_any_candidate": bool(hit_indices),
+                "gold_hit_candidate_count": len(hit_indices),
+                "first_gold_candidate_index": hit_indices[0] if hit_indices else None,
+                "rank_semantics": "decoder_completion_order_1_based",
+                "gold_attached_after_freeze": True,
+            })
+    by_policy: dict[str, list[dict[str, Any]]] = {}
+    for row in cells:
+        by_policy.setdefault(str(row["decoder_policy"]), []).append(row)
+    output_sets = {policy: {str(row["output_id"]) for row in rows if row["gold_hit_any_candidate"]}
+                   for policy, rows in by_policy.items()}
+    control = output_sets[CONTROL_LABEL]
+    summary: list[dict[str, Any]] = []
+    for policy in (CONTROL_LABEL,) + tuple(policy for policy in POLICIES if policy != CONTROL_POLICY):
+        rows = by_policy[policy]; hits = output_sets[policy]
+        summary.append({"decoder_policy": policy, "cell_count": len(rows),
+                        "gold_hit_cells": sum(bool(row["gold_hit_any_candidate"]) for row in rows),
+                        "gold_hit_outputs": len(hits), "gold_hit_output_ids_json": json.dumps(sorted(hits)),
+                        "new_gold_hit_outputs_vs_v5": len(hits - control),
+                        "new_gold_hit_ids_vs_v5_json": json.dumps(sorted(hits - control))})
+    policy_labels = list(output_sets)
+    overlap: list[dict[str, Any]] = []
+    for index, left in enumerate(policy_labels):
+        for right in policy_labels[index + 1:]:
+            overlap.append({"policy_a": left, "policy_b": right,
+                            "gold_hit_output_overlap": len(output_sets[left] & output_sets[right]),
+                            "overlap_output_ids_json": json.dumps(sorted(output_sets[left] & output_sets[right])),
+                            "a_only_output_ids_json": json.dumps(sorted(output_sets[left] - output_sets[right])),
+                            "b_only_output_ids_json": json.dumps(sorted(output_sets[right] - output_sets[left]))})
+    finalists = tuple(policy for policy in policy_labels if policy != CONTROL_LABEL)
+    topk, affine, regret = finalists[2], finalists[1], finalists[0]
+    affine_unique_vs_topk = output_sets[affine] - output_sets[topk]
+    regret_unique_vs_others = output_sets[regret] - (output_sets[CONTROL_LABEL] | output_sets[topk] | output_sets[affine])
+    all_new = set().union(*(output_sets[policy] - control for policy in finalists))
+    decision = {
+        "experiment_id": FIXED_BUDGET_EXPERIMENT,
+        "contract_sha256": contract_sha,
+        "unique_smoke_outputs": len({str(row["output_id"]) for row in cells}),
+        "PROMOTE_TOPK2_TO_FULL144": "YES" if output_sets[topk] - control else "NO",
+        "RETAIN_AFFINE_FOR_LATER_VALIDATION": "YES" if affine_unique_vs_topk else "NO",
+        "RUN_FULL144_REGRET4": "YES" if regret_unique_vs_others else "NO",
+        "NEXT_IF_NO_FINALIST_RESCUE": "EXPAND_DETERMINISTIC_VALIDATION_BY_8_TO_16_CELLS" if not all_new else None,
+        "historical_33_of_89_updated": False,
+        "evidence_scope": "D1 fixed-budget, post-freeze Gold-scored pilot only",
+    }
+    out = Path(args.report_dir).resolve(); out.mkdir(parents=True, exist_ok=True)
+    def write_csv(name: str, rows: list[dict[str, Any]]) -> None:
+        fields = sorted({key for row in rows for key in row})
+        with (out / name).open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
+            writer.writeheader(); writer.writerows(rows)
+    write_csv("d1_smoke_gold_cells.csv", cells)
+    write_csv("d1_smoke_gold_policy_summary.csv", summary)
+    write_csv("d1_smoke_gold_rescue_overlap.csv", overlap)
+    atomic_json(out / "D1_SMOKE_GOLD_DECISION.json", decision)
+    atomic_json(out / "D1_SMOKE_GOLD_PROVENANCE.json", {
+        "contract_sha256": contract_sha, "solution_sha256": sha256_file(solution_path),
+        "policy_freeze_sha256": freeze_hashes, "selected_cell_keys_sha256": sha_json(sorted(selected)),
+        "gold_attached_after_verified_freeze": True, "raw_candidate_pools_modified": False,
+    })
+    hash_inputs = [out / name for name in ("d1_smoke_gold_cells.csv", "d1_smoke_gold_policy_summary.csv",
+                                             "d1_smoke_gold_rescue_overlap.csv", "D1_SMOKE_GOLD_DECISION.json",
+                                             "D1_SMOKE_GOLD_PROVENANCE.json")]
+    atomic_json(out / "D1_SMOKE_GOLD_HASHES.json", {path.name: sha256_file(path) for path in hash_inputs})
+    lines = ["# D1 fixed-budget smoke: post-freeze Gold scoring", "",
+             "This CPU-only report scores immutable, target-blind frozen candidate pools. It is D1 fixed-budget pilot evidence only and does not update the historical 33/89 union.", "",
+             f"- Contract SHA256: `{contract_sha}`", f"- Unique smoke outputs: `{decision['unique_smoke_outputs']}`", "",
+             "| Policy | Gold-hit cells | Gold-hit outputs | New outputs vs V5 |", "|---|---:|---:|---:|"]
+    for row in summary:
+        lines.append(f"| {row['decoder_policy']} | {row['gold_hit_cells']} | {row['gold_hit_outputs']} | {row['new_gold_hit_outputs_vs_v5']} |")
+    lines += ["", f"- Promote TopK2 to Full144: `{decision['PROMOTE_TOPK2_TO_FULL144']}`",
+              f"- Retain Affine for later validation: `{decision['RETAIN_AFFINE_FOR_LATER_VALIDATION']}`",
+              f"- Run Full144 Regret4: `{decision['RUN_FULL144_REGRET4']}`",
+              f"- If no finalist rescue: `{decision['NEXT_IF_NO_FINALIST_RESCUE']}`"]
+    (out / "D1_SMOKE_GOLD_REPORT.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def fixed_cost_report(args: argparse.Namespace) -> None:
     """Write Phase-1/3 compact reports without launching full finalist surfaces."""
     root = args.output.resolve(); manifest = read_json(root / "D1_MANIFEST.json")
@@ -665,10 +793,12 @@ def main() -> None:
     gold_policy_p = sub.add_parser("gold-policy"); gold_policy_p.add_argument("--output", type=Path, required=True); gold_policy_p.add_argument("--policy", required=True); gold_policy_p.add_argument("--solutions", type=Path, required=True); gold_policy_p.add_argument("--cell-manifest", type=Path)
     final_p = sub.add_parser("finalize"); final_p.add_argument("--output", type=Path, required=True); final_p.add_argument("--report-dir", type=Path, required=True)
     cost_p = sub.add_parser("fixed-cost-report"); cost_p.add_argument("--output", type=Path, required=True); cost_p.add_argument("--contract", type=Path, required=True); cost_p.add_argument("--cell-manifest", type=Path, required=True); cost_p.add_argument("--report-dir", type=Path, required=True)
+    gold_smoke_p = sub.add_parser("score-fixed-smoke-gold"); gold_smoke_p.add_argument("--output", type=Path, required=True); gold_smoke_p.add_argument("--contract", type=Path, required=True); gold_smoke_p.add_argument("--cell-manifest", type=Path, required=True); gold_smoke_p.add_argument("--solutions", type=Path, required=True); gold_smoke_p.add_argument("--report-dir", type=Path, required=True)
     args = parser.parse_args()
     {"prepare": prepare, "worker": worker, "freeze": freeze, "freeze-policy": freeze_policy, "fixed-contract": fixed_contract,
      "select-smoke-cells": select_smoke_cells, "validate-smoke": validate_smoke, "gold": attach_gold, "gold-policy": attach_policy_gold,
-     "finalize": finalise, "fixed-cost-report": fixed_cost_report}[args.mode](args)
+     "finalize": finalise, "fixed-cost-report": fixed_cost_report,
+     "score-fixed-smoke-gold": score_fixed_smoke_gold}[args.mode](args)
 
 
 if __name__ == "__main__": main()
