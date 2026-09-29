@@ -185,22 +185,29 @@ def _incremental_kv_replay(*, model: Any, encoded: dict[str, Any], tokens: list[
     # than introducing any selective masking or position IDs.
     if "attention_mask" not in first:
         first["attention_mask"] = torch.ones_like(first["input_ids"])
-    first.update({"use_cache": True, "return_dict": True})
+    # Crucially, use the model's *actual* generation preparation hook.  Unsloth
+    # supplies this hook for Qwen/Llama and derives its cache position / position
+    # IDs there.  Calling ``model`` directly after prefill skips that generation
+    # path and cannot reproduce the historical cached decode semantics.
+    sequence = first["input_ids"]
+    first_inputs = model.prepare_inputs_for_generation(
+        sequence, attention_mask=first["attention_mask"], use_cache=True,
+    )
+    first_inputs["return_dict"] = True
     with torch.inference_mode():
-        output = model(**first)
+        output = model(**first_inputs)
     replay_logits = [output.logits[0, -1, :]]
     cache = output.past_key_values
     attention_mask = first["attention_mask"]
     for token in tokens[:-1]:
         one = torch.tensor([[token]], dtype=first["input_ids"].dtype, device=model.device)
-        next_inputs: dict[str, Any] = {
-            "input_ids": one,
-            "past_key_values": cache,
-            "use_cache": True,
-            "return_dict": True,
-        }
+        sequence = torch.cat((sequence, one), dim=1)
         attention_mask = torch.cat((attention_mask, torch.ones_like(one)), dim=1)
-        next_inputs["attention_mask"] = attention_mask
+        next_inputs = model.prepare_inputs_for_generation(
+            sequence, past_key_values=cache, attention_mask=attention_mask,
+            use_cache=True,
+        )
+        next_inputs["return_dict"] = True
         with torch.inference_mode():
             output = model(**next_inputs)
         cache = output.past_key_values
