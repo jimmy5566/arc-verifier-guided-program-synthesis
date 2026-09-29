@@ -32,6 +32,10 @@ WINDOW_SIZES = (8, 16, 32)
 TOPK = (1, 2, 3, 4)
 MARGIN_THRESHOLDS = (0.05, 0.10, 0.20, 0.40, 0.80)
 EPSILON = 1e-12
+# The finalist screen is fixed before reading results. It continues the prior
+# counterfactual study's bounded-local-proxy convention, and deliberately
+# excludes policies whose apparent Gold survival comes from obvious widening.
+FINALIST_LOCAL_PROXY_CAP = 2.0
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -361,7 +365,13 @@ def taxonomy(rows: list[dict[str, str]], grouped: dict[tuple[str, int, int, str]
 
 
 def rank_family(rows: list[dict[str, Any]], family: str) -> dict[str, Any] | None:
-    candidates = [row for row in rows if row["family"] == family and int(row["NEW_SEARCHABLE_OUTPUTS_VS_V5"]) > 0]
+    candidates = [
+        row for row in rows
+        if row["family"] == family
+        and int(row["NEW_SEARCHABLE_OUTPUTS_VS_V5"]) > 0
+        and bool(row["ROBUST_PARETO"])
+        and float(row["LOCAL_BRANCHING_PROXY_RATIO"]) <= FINALIST_LOCAL_PROXY_CAP + EPSILON
+    ]
     if not candidates:
         return None
     candidates.sort(key=lambda row: (-int(row["ROBUST_PARETO_FOLDS"]), -int(row["OUTPUT_ANY_GOLD_SURVIVAL"]), float(row["LOCAL_BRANCHING_PROXY_RATIO"]), str(row["config_id"])))
@@ -457,12 +467,18 @@ def run_study(trace_rows: list[dict[str, str]], summary_rows: list[dict[str, str
         row["ROBUST_PARETO_FOLDS"] = robust_counts[str(row["config_id"])]
         row["ROBUST_PARETO"] = robust_counts[str(row["config_id"])] >= 3
 
+    global_pareto = pareto_flags(summaries)
+    for row in summaries:
+        row["GLOBAL_PARETO"] = global_pareto[str(row["config_id"])]
+
     taxonomy_rows = taxonomy(trace_rows, grouped)
     failure_counts = Counter(row["failure_taxonomy"] for row in taxonomy_rows)
     family_best = {family: rank_family(summaries, family) for family in ("LENGTH_AWARE", "RELATIVE_REGRET", "RANK_MARGIN", "HYBRID")}
     finalists = []
-    # Different mechanism first; only positive, robust policies can be promoted.
-    for family, label in (("RELATIVE_REGRET", "FINALIST_A"), ("LENGTH_AWARE", "FINALIST_B"), ("HYBRID", "FINALIST_C")):
+    # Different mechanisms first.  The rank policy is retained as the third
+    # finalist because it is the bounded direct-insurance control; the best
+    # hybrid reserve is reported but not promoted if it is dominated by it.
+    for family, label in (("RELATIVE_REGRET", "FINALIST_A"), ("LENGTH_AWARE", "FINALIST_B"), ("RANK_MARGIN", "FINALIST_C")):
         best = family_best[family]
         finalists.append({"slot": label, "config_id": best["config_id"] if best and best["ROBUST_PARETO"] else "NONE",
                           "family": family, "reason": "highest robust fixed-grid survival with bounded local proxy" if best and best["ROBUST_PARETO"] else "no positive robust fixed-grid candidate"})
@@ -479,6 +495,8 @@ def run_study(trace_rows: list[dict[str, str]], summary_rows: list[dict[str, str
         "GPU_USED": "NO", "MODEL_LOADED": "NO", "DFS_RUN": "NO",
         "LOCAL_BRANCHING_PROXY_LIMITATION": "Gold-prefix conditional retained-successor counts only; not actual DFS nodes, runtime multiplier, or true search complexity.",
         "FOLD_RULE": "sha256(output_id) mod 4; robust Pareto means Pareto-optimal or fixed near-Pareto in >=3/4 folds.",
+        "FINALIST_LOCAL_PROXY_CAP": FINALIST_LOCAL_PROXY_CAP,
+        "FAMILY_BEST_BOUNDED": {family: (family_best[family]["config_id"] if family_best[family] else "NONE") for family in family_best},
     }
     # Track rows are a strict deterministic split of all summaries.
     output = {
@@ -514,11 +532,12 @@ def markdown(decision: dict[str, Any], outputs: dict[str, list[dict[str, Any]]])
              "**Limit:** `LOCAL_BRANCHING_PROXY` is a Gold-prefix conditional statistic. It is not actual DFS nodes, runtime, or true search complexity.", "",
              "## Family bests", "", "| Family | Config | Outputs | Local proxy ratio | Robust folds |", "|---|---|---:|---:|---:|"]
     for family in ("LENGTH_AWARE", "RELATIVE_REGRET", "RANK_MARGIN", "HYBRID"):
-        rows = [row for row in outputs["all"] if row["family"] == family]
-        if rows:
-            rows.sort(key=lambda row: (-int(row["OUTPUT_ANY_GOLD_SURVIVAL"]), float(row["LOCAL_BRANCHING_PROXY_RATIO"]), str(row["config_id"])))
-            row = rows[0]
+        bounded_id = decision["FAMILY_BEST_BOUNDED"].get(family, "NONE")
+        row = next((entry for entry in outputs["all"] if entry["config_id"] == bounded_id), None)
+        if row:
             lines.append(f"| {family} | {row['config_id']} | {row['OUTPUT_ANY_GOLD_SURVIVAL']} | {row['LOCAL_BRANCHING_PROXY_RATIO']:.3f} | {row['ROBUST_PARETO_FOLDS']}/4 |")
+        else:
+            lines.append(f"| {family} | NONE within {decision['FINALIST_LOCAL_PROXY_CAP']:.1f}x cap | — | — | — |")
     lines += ["", "## Finalists", ""]
     for finalist in outputs["finalists"]:
         lines.append(f"- {finalist['slot']}: {finalist['config_id']} ({finalist['reason']})")
@@ -558,7 +577,7 @@ def main() -> None:
     write_csv(out / "track_e_failure_taxonomy.csv", output["E"])
     write_csv(out / "all_decoder_configs.csv", output["all"])
     write_csv(out / "fold_robustness.csv", output["folds"])
-    frontier = [row for row in output["all"] if bool(row["ROBUST_PARETO"])]
+    frontier = [row for row in output["all"] if bool(row["GLOBAL_PARETO"])]
     write_csv(out / "pareto_frontier.csv", frontier)
     write_csv(out / "finalists.csv", output["finalists"])
     (out / "DECODER_PARALLEL_STUDY.md").write_text(markdown(decision, output), encoding="utf-8")
