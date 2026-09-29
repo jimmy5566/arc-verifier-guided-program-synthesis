@@ -75,13 +75,13 @@ class D1TurboDFSResult:
     termination_reason: str
 
 
-def _node(state: dict[str, Any], **payload: Any) -> int:
+def _node(runtime_state: dict[str, Any], **payload: Any) -> int:
     payload.setdefault("frontier_floor_activated", False)
     payload.setdefault("frontier_floor_restore_rank", None)
     payload.setdefault("cumulative_regret", None)
-    value = int(state["next_node_id"])
-    state["next_node_id"] += 1
-    state["nodes"].append({"node_id": value, **payload})
+    value = int(runtime_state["next_node_id"])
+    runtime_state["next_node_id"] += 1
+    runtime_state["nodes"].append({"node_id": value, **payload})
     return value
 
 
