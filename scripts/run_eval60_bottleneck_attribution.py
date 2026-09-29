@@ -51,7 +51,10 @@ def sha_file(path: Path) -> str:
 
 def atomic_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(path.name + ".partial")
+    # Independent task shards can publish distinct cells concurrently.  A
+    # process-specific temporary name prevents an unrelated shard from racing
+    # on a shared manifest's temporary file before the atomic replace.
+    temporary = path.with_name(path.name + f".{os.getpid()}.partial")
     temporary.write_text(json.dumps(payload, sort_keys=True, indent=2) + "\n", encoding="utf-8")
     temporary.replace(path)
 
@@ -162,12 +165,34 @@ def prepare_miss_set(args: argparse.Namespace) -> list[dict[str, Any]]:
                 })
     if len(misses) != 56:
         raise RuntimeError(f"expected exactly 56 mechanical lower-bound misses, got {len(misses)}")
-    destination = args.report_dir / "current_union_miss_outputs.csv"
-    write_csv(destination, misses)
-    atomic_json(args.scratch / "manifest" / "miss_set.json", {
-        "status": "FROZEN", "count": len(misses), "source": source,
-        "rows_sha256": hashlib.sha256(json.dumps(misses, sort_keys=True).encode()).hexdigest(),
-    })
+    full_miss_count = len(misses)
+    full_rows_sha256 = hashlib.sha256(json.dumps(misses, sort_keys=True).encode()).hexdigest()
+    if args.cohort_output_count is not None:
+        if not 1 <= args.cohort_output_count <= full_miss_count:
+            raise RuntimeError(
+                f"invalid cohort_output_count={args.cohort_output_count}; "
+                f"expected 1..{full_miss_count}"
+            )
+        misses = sorted(
+            misses,
+            key=lambda row: (
+                hashlib.sha256(row["output_id"].encode("utf-8")).hexdigest(),
+                row["output_id"],
+            ),
+        )[:args.cohort_output_count]
+        source += f"_SHA256_OUTPUT_PREFIX_{args.cohort_output_count}_OF_{full_miss_count}"
+    # Shards all derive the same immutable list.  Only shard zero (or a
+    # non-sharded finalizer) publishes shared manifests/reports.
+    if args.task_shard_count == 1 or args.task_shard_index == 0:
+        destination = args.report_dir / "current_union_miss_outputs.csv"
+        write_csv(destination, misses)
+        atomic_json(args.scratch / "manifest" / "miss_set.json", {
+            "status": "FROZEN", "count": len(misses), "source": source,
+            "rows_sha256": hashlib.sha256(json.dumps(misses, sort_keys=True).encode()).hexdigest(),
+            "full_miss_count": full_miss_count,
+            "full_rows_sha256": full_rows_sha256,
+            "selection": "ALL" if args.cohort_output_count is None else "SHA256_OUTPUT_ID_ASCENDING_PREFIX",
+        })
     return misses
 
 
@@ -447,6 +472,20 @@ def run_gold_surface(args: argparse.Namespace, *, phase: str, depths: tuple[int,
                     payload = {**row, **summary, "phase": phase, "depth": depth, "view": view, "checkpoint_sha256": checkpoint_sha,
                                "wall_seconds": time.perf_counter() - began, "token_trace": traces}
                     atomic_json(destination, payload)
+        task_expected_cells = len(by_task[task_id]) * len(depths) * len(views)
+        task_completed_cells = sum(
+            _cell_path(args.scratch, phase, task_id, int(row["output_index"]), depth, view).is_file()
+            for depth in depths
+            for row in by_task[task_id]
+            for view in views
+        )
+        if task_completed_cells != task_expected_cells:
+            raise RuntimeError(f"{phase} task checkpoint incomplete {task_id} {task_completed_cells}/{task_expected_cells}")
+        atomic_json(args.scratch / phase / "tasks" / f"{task_id}.json", {
+            "status": "COMPLETE_TASK", "phase": phase, "task_id": task_id,
+            "output_ids": [row["output_id"] for row in by_task[task_id]],
+            "completed_cells": task_completed_cells, "expected_cells": task_expected_cells,
+        })
     if args.task_shard_count > 1:
         completed_shard_cells = sum(
             _cell_path(args.scratch, phase, task_id, int(row["output_index"]), depth, view).is_file()
@@ -534,6 +573,20 @@ def run_g3_greedy(args: argparse.Namespace) -> None:
                     payload = common.greedy_cell(model=model, tokenizer=tokenizer, task=target_task, task_id=task_id, output_index=int(row["output_index"]), depth=depth, view=view, config=config, checkpoint_sha=metadata["checkpoint_sha256"])
                     payload.update(row); payload.update({"phase": "g3_greedy", "gold_exact": payload.get("canonical_candidate") == gold})
                     atomic_json(destination, payload)
+        task_expected_cells = len(by_task[task_id]) * len(DEPTHS) * len(D4_VIEWS)
+        task_completed_cells = sum(
+            _cell_path(args.scratch, "g3_greedy", task_id, int(row["output_index"]), depth, view).is_file()
+            for depth in DEPTHS
+            for row in by_task[task_id]
+            for view in D4_VIEWS
+        )
+        if task_completed_cells != task_expected_cells:
+            raise RuntimeError(f"g3_greedy task checkpoint incomplete {task_id} {task_completed_cells}/{task_expected_cells}")
+        atomic_json(args.scratch / "g3_greedy" / "tasks" / f"{task_id}.json", {
+            "status": "COMPLETE_TASK", "phase": "g3_greedy", "task_id": task_id,
+            "output_ids": [row["output_id"] for row in by_task[task_id]],
+            "completed_cells": task_completed_cells, "expected_cells": task_expected_cells,
+        })
     if args.task_shard_count > 1:
         completed_shard_cells = sum(
             _cell_path(args.scratch, "g3_greedy", task_id, int(row["output_index"]), depth, view).is_file()
@@ -645,6 +698,8 @@ def parser() -> argparse.ArgumentParser:
                       help="Deterministic task shard index; scheduling only.")
     item.add_argument("--task-shard-count", type=int, default=1,
                       help="Total deterministic task shards; scheduling only.")
+    item.add_argument("--cohort-output-count", type=int,
+                      help="Deterministic SHA256 output-prefix size; diagnostic stop gate only.")
     return item
 
 
