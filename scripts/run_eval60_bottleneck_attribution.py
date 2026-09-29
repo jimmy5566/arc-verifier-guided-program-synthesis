@@ -1320,6 +1320,22 @@ def run_g3a_freeze(args: argparse.Namespace) -> None:
     atomic_json(args.report_dir / "G3A_PROVENANCE.json", provenance)
 
 
+def _g3a_runtime_incidents(scratch: Path) -> list[dict[str, str]]:
+    """Retain launch faults in the post-freeze report instead of masking retries."""
+    markers = (
+        ("traceback", "TRACEBACK"),
+        ("cuda out of memory", "OOM"),
+        ("non-finite", "NONFINITE"),
+    )
+    incidents: list[dict[str, str]] = []
+    for path in sorted((scratch / "logs").glob("*.log")):
+        text = path.read_text(encoding="utf-8", errors="replace").lower()
+        for needle, kind in markers:
+            if needle in text:
+                incidents.append({"log": path.name, "kind": kind})
+    return incidents
+
+
 def run_g3a_finalize(args: argparse.Namespace) -> None:
     """Attach exact Gold labels only to an already frozen G3A inventory."""
     flag = args.scratch / G3A_PHASE / "G3A_GENERATION_FROZEN.flag"
@@ -1377,8 +1393,10 @@ def run_g3a_finalize(args: argparse.Namespace) -> None:
     write_csv(args.report_dir / "g3a_historical_prediction_agreement.csv", agreement)
     conclusion = "AUGMENTATION_COVERAGE_SUPPORTED" if rescue_ids else "TTT24_OMITTED_D4_GREEDY_NO_GAIN"
     next_step = "TTT12_OMITTED_D4_SMALL_CONTROL" if rescue_ids else "DECODER_PRUNING_REDESIGN"
+    runtime_incidents = _g3a_runtime_incidents(args.scratch)
+    status = "PASS" if not runtime_incidents else "PARTIAL"
     decision = {
-        "G3A_STATUS": "PASS", "COHORT_OUTPUTS": len(misses), "EXPECTED_CELLS": 112,
+        "G3A_STATUS": status, "COHORT_OUTPUTS": len(misses), "EXPECTED_CELLS": 112,
         "GREEDY_CELLS_COMPLETE": f"{len(labelled)}/112", "CURRENT_ADAPTER_SHA_VERIFIED": "YES",
         "NEW_GREEDY_EXACT_CELLS": sum(_bool(row["exact_gold_hit"]) for row in labelled),
         "NEW_GREEDY_RESCUE_OUTPUTS": len(rescue_ids), "NEW_GREEDY_RESCUE_IDS": rescue_ids,
@@ -1389,13 +1407,15 @@ def run_g3a_finalize(args: argparse.Namespace) -> None:
         "HISTORICAL_DIFFERENT_PREDICTIONS": sum(row["different_predictions"] for row in agreement),
         "CURRENT_DEVELOPMENT_UNION": "33/89", "NEW_NONBLIND_DEVELOPMENT_UNION": f"{33 + len(rescue_ids)}/89",
         "AUGMENTATION_COVERAGE_CONCLUSION": conclusion, "NEXT_RECOMMENDED_EXPERIMENT": next_step,
+        "RUNTIME_INCIDENTS": runtime_incidents,
         "GPU_USED": "YES", "NEW_TTT": "NO", "NEW_DFS": "NO", "GOLD_PATH_SCORING": "NO", "SCIENTIFIC_CONFIG_CHANGED": "NO",
     }
     atomic_json(args.report_dir / "G3A_DECISION.json", decision)
     report = ["# G3A current TTT24 omitted-D4 Greedy coverage", "", "NONBLIND_DEVELOPMENT_MEASUREMENT", "",
               "Predictions were atomically frozen before Gold was opened.",
               f"- Cells: {len(labelled)}/112", f"- New exact rescue outputs: {len(rescue_ids)}", f"- New rescue IDs: {rescue_ids}",
-              f"- Development union: {33 + len(rescue_ids)}/89", f"- Conclusion: {conclusion}", "", "## View contributions"]
+              f"- Development union: {33 + len(rescue_ids)}/89", f"- Conclusion: {conclusion}", f"- Run status: {status}",
+              f"- Runtime incidents: {runtime_incidents}", "", "## View contributions"]
     report += [f"- {row['view']}: exact cells={row['exact_cells']}; rescue outputs={row['rescue_outputs']}; unique rescues={row['uniquely_rescued_outputs']}" for row in view_rows]
     report += ["", "## Historical prediction agreement (diagnostic only)"]
     report += [f"- {row['view']}: comparable={row['historical_comparable_cells']}; identical={row['identical_predictions']}; different={row['different_predictions']}" for row in agreement]
