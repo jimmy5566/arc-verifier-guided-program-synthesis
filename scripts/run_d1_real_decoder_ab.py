@@ -496,13 +496,20 @@ def score_fixed_smoke_gold(args: argparse.Namespace) -> None:
     cells: list[dict[str, Any]] = []
     freeze_hashes: dict[str, str] = {}
     for policy in policies:
-        suffix = hashlib.sha256(policy.encode("utf-8")).hexdigest()[:12] + ".smoke.json"
-        freeze_path = root / "freezes" / suffix
-        if not freeze_path.is_file():
-            raise RuntimeError(f"policy smoke freeze missing: {policy}")
-        frozen = read_json(freeze_path)
-        if frozen.get("solutions_accessed") is not False or set(frozen.get("cell_hashes", {})) != selected:
-            raise RuntimeError(f"invalid or contaminated policy freeze: {policy}")
+        # The original 144-cell V5 control is frozen as a superset, whereas
+        # finalists are frozen exactly on Smoke8.  Match policy identity and
+        # require the selected immutable cell hashes rather than encoding a
+        # filename convention into the Gold scorer.
+        matches = []
+        for candidate_path in sorted((root / "freezes").glob("*.json")):
+            candidate_freeze = read_json(candidate_path)
+            if (candidate_freeze.get("policy_id") == policy
+                    and candidate_freeze.get("solutions_accessed") is False
+                    and selected <= set(candidate_freeze.get("cell_hashes", {}))):
+                matches.append((candidate_path, candidate_freeze))
+        if len(matches) != 1:
+            raise RuntimeError(f"expected one compatible policy freeze for {policy}, found {len(matches)}")
+        freeze_path, frozen = matches[0]
         freeze_hashes[policy] = sha256_file(freeze_path)
         label = CONTROL_LABEL if policy == CONTROL_POLICY else policy
         for row in collect_policy_cells(root, manifest, policy, selected):
