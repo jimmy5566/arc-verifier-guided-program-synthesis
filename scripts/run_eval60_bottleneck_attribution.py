@@ -102,38 +102,56 @@ def _adapter_metadata(adapters: Path, task_id: str, depth: int) -> dict[str, Any
 
 
 def prepare_miss_set(args: argparse.Namespace) -> list[dict[str, Any]]:
-    compact = args.compact.resolve()
-    greedy = {row["output_id"]: row for row in _csv_rows(compact / "greedy" / "greedy_outputs.csv")}
-    v5 = {row["output_id"]: row for row in _csv_rows(compact / "turbodfs_v5" / "v5_outputs.csv")}
-    if len(greedy) != 89 or len(v5) != 89:
-        raise RuntimeError(f"compact output inventory mismatch greedy={len(greedy)} v5={len(v5)}")
-    misses: list[dict[str, Any]] = []
-    for output_id in sorted(greedy):
-        g, t = greedy[output_id], v5[output_id]
-        greedy_hit = _bool(g["pool_gold_hit"])
-        # ``v5_pool_gold_hit_available`` describes whether a V5 Gold verdict
-        # is available at all; it is false for five provenance-limited rows,
-        # including rows already solved by Greedy.  The frozen V2 union field
-        # is the mechanically correct lower-bound hit indicator.
-        union_hit = _bool(t["union_greedy_v5_hit"])
-        if not union_hit:
-            task_id, index = output_id.split(":o")
-            misses.append({
-                "task_id": task_id, "output_index": int(index), "output_id": output_id,
-                "greedy_pool_hit": greedy_hit,
-                "v5_pool_gold_hit_available": _bool(t["v5_pool_gold_hit_available"]),
-                "union_greedy_v5_hit": union_hit,
-                "original_v5_oracle_certainty": (
-                    "ORIGINAL_V5_ORACLE_UNCERTAIN" if output_id in {"446ef5d2:o0", "cb2d8a2c:o0"}
-                    else "TRUSTWORTHY_LOWER_BOUND_MISS"
-                ),
-            })
+    # The immutable V2 compact archive may be intentionally absent from a
+    # compute Pod.  In that case use the already Git-frozen, mechanically
+    # derived 56-output manifest made from it during G0.  This never derives a
+    # new cohort from Gold or from mutable runtime output.
+    if args.frozen_miss_manifest is not None:
+        rows = _csv_rows(args.frozen_miss_manifest)
+        misses = [{
+            "task_id": str(row["task_id"]), "output_index": int(row["output_index"]),
+            "output_id": str(row["output_id"]), "greedy_pool_hit": _bool(row["greedy_pool_hit"]),
+            "v5_pool_gold_hit_available": _bool(row["v5_pool_gold_hit_available"]),
+            "union_greedy_v5_hit": _bool(row["union_greedy_v5_hit"]),
+            "original_v5_oracle_certainty": str(row["original_v5_oracle_certainty"]),
+        } for row in rows]
+        if len(misses) != 56 or len({row["output_id"] for row in misses}) != 56 or any(row["union_greedy_v5_hit"] for row in misses):
+            raise RuntimeError("invalid frozen 56-output union-miss manifest")
+        source = "FROZEN_G0_MANIFEST"
+    else:
+        source = EXPECTED_COMPACT_COMMIT
+        compact = args.compact.resolve()
+        greedy = {row["output_id"]: row for row in _csv_rows(compact / "greedy" / "greedy_outputs.csv")}
+        v5 = {row["output_id"]: row for row in _csv_rows(compact / "turbodfs_v5" / "v5_outputs.csv")}
+        if len(greedy) != 89 or len(v5) != 89:
+            raise RuntimeError(f"compact output inventory mismatch greedy={len(greedy)} v5={len(v5)}")
+        misses = []
+        for output_id in sorted(greedy):
+            g, t = greedy[output_id], v5[output_id]
+            greedy_hit = _bool(g["pool_gold_hit"])
+            # ``v5_pool_gold_hit_available`` describes whether a V5 Gold verdict
+            # is available at all; it is false for five provenance-limited rows,
+            # including rows already solved by Greedy.  The frozen V2 union field
+            # is the mechanically correct lower-bound hit indicator.
+            union_hit = _bool(t["union_greedy_v5_hit"])
+            if not union_hit:
+                task_id, index = output_id.split(":o")
+                misses.append({
+                    "task_id": task_id, "output_index": int(index), "output_id": output_id,
+                    "greedy_pool_hit": greedy_hit,
+                    "v5_pool_gold_hit_available": _bool(t["v5_pool_gold_hit_available"]),
+                    "union_greedy_v5_hit": union_hit,
+                    "original_v5_oracle_certainty": (
+                        "ORIGINAL_V5_ORACLE_UNCERTAIN" if output_id in {"446ef5d2:o0", "cb2d8a2c:o0"}
+                        else "TRUSTWORTHY_LOWER_BOUND_MISS"
+                    ),
+                })
     if len(misses) != 56:
         raise RuntimeError(f"expected exactly 56 mechanical lower-bound misses, got {len(misses)}")
     destination = args.report_dir / "current_union_miss_outputs.csv"
     write_csv(destination, misses)
     atomic_json(args.scratch / "manifest" / "miss_set.json", {
-        "status": "FROZEN", "count": len(misses), "source_commit": EXPECTED_COMPACT_COMMIT,
+        "status": "FROZEN", "count": len(misses), "source": source,
         "rows_sha256": hashlib.sha256(json.dumps(misses, sort_keys=True).encode()).hexdigest(),
     })
     return misses
@@ -537,6 +555,7 @@ def parser() -> argparse.ArgumentParser:
     item.add_argument("--scratch", type=Path, required=True)
     item.add_argument("--report-dir", type=Path, required=True)
     item.add_argument("--compact", type=Path, required=True)
+    item.add_argument("--frozen-miss-manifest", type=Path)
     item.add_argument("--global-root", type=Path, default=Path("/workspace/arc2"))
     item.add_argument("--adapters", type=Path, required=True)
     item.add_argument("--challenge", type=Path, required=True)
