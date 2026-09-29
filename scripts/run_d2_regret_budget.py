@@ -125,7 +125,8 @@ def score(args:argparse.Namespace)->None:
     challenge_ids=list(challenge)
     expected_counts={task_id:len(task["test"]) for task_id,task in challenge.items() if isinstance(task,dict) and isinstance(task.get("test"),list)}
     if len(expected_counts)!=len(challenge_ids): raise ValueError("frozen challenge contains invalid task/test schema")
-    sols=normalize_arc_solutions(read_json(args.solutions),task_ids_in_challenge_order=challenge_ids,expected_output_counts=expected_counts)
+    raw_solutions=read_json(args.solutions)
+    sols=normalize_arc_solutions(raw_solutions,task_ids_in_challenge_order=challenge_ids,expected_output_counts=expected_counts)
     rs=records(root,m);out=args.report_dir.resolve();out.mkdir(parents=True,exist_ok=True); cells=[]; hits=[]; fails=[]
     for r in rs:
         gold=sols[r["task_id"]][int(r["output_index"])]; exact=[c for c in r["candidates"] if c.get("valid_grid") and c.get("canonical_candidate")==gold]; first=None
@@ -141,10 +142,17 @@ def score(args:argparse.Namespace)->None:
         events=sorted((e for e in raw["search_trace"] if e.get("candidate_completion_index") is not None and (limit is None or int(e.get("nodes_expanded_so_far") or 0)<=limit)),key=lambda e:int(e["candidate_completion_index"]))
         candidates={int(c["candidate_id"]):c for c in raw["candidates"]}
         return [{"candidate_id":int(e["candidate_completion_index"]),"tokens":candidates[int(e["candidate_completion_index"])]["candidate_token_ids"],"nll":candidates[int(e["candidate_completion_index"])]["cumulative_nll"]} for e in events]
-    for key in sorted({r["cell_key"] for r in reps}):
-        b=repmap.get((key,4096)); base=rawmap[(key,"REGRET4_4096_VALIDATION")]
+    # The 1024/2048 cells exist only for the four frozen representatives, not
+    # for every 4096 validation cell.  Drive parity solely from those explicit
+    # prefix jobs; expanding the set would incorrectly demand nonexistent raw
+    # checkpoints and has no bearing on generation/search semantics.
+    representative_keys=sorted({r["cell_key"] for r in cells if r["label"]=="REGRET4_1024_PREFIX"})
+    for key in representative_keys:
+        b=repmap.get((key,4096)); base=rawmap.get((key,"REGRET4_4096_VALIDATION"))
+        if b is None or base is None: raise RuntimeError(f"missing frozen 4096 representative for {key}")
         for budget in (1024,2048):
-            s=repmap.get((key,budget)); run=rawmap[(key,f"REGRET4_{budget}_PREFIX")]
+            s=repmap.get((key,budget)); run=rawmap.get((key,f"REGRET4_{budget}_PREFIX"))
+            if s is None or run is None: raise RuntimeError(f"missing frozen {budget} prefix representative for {key}")
             expected=completion_signature(base,budget); actual=completion_signature(run)
             task_id, output_index, _depth, _view = parse_key(key)
             gold=sols[task_id][output_index]
@@ -169,6 +177,19 @@ def score(args:argparse.Namespace)->None:
         runtime.append({k:r.get(k) for k in ("label","policy","cell_key","budget","nodes_expanded","runtime_seconds","candidate_count","gold_hit","first_gold_node","first_gold_time")} | {"seconds_per_node":float(r["runtime_seconds"])/max(1,int(r["nodes_expanded"])),"candidates_per_1000_nodes":1000*int(r["candidate_count"])/max(1,int(r["nodes_expanded"]))} | completion_nodes(raw))
     write_csv(out/"regret_budget_cells.csv",cells);write_csv(out/"regret_gold_first_hit.csv",hits);write_csv(out/"regret_budget_curve.csv",curve);write_csv(out/"regret_prefix_parity.csv",par);write_csv(out/"retrieval_failure_attribution.csv",fails);write_csv(out/"topk2_retrieval_trace_summary.csv",[r for r in fails if r["label"]=="TOPK2_4096_TRACE"]);write_csv(out/"affine_retrieval_trace_summary.csv",[r for r in fails if r["label"]=="AFFINE_4096_TRACE"]);write_csv(out/"d2_v5_clean_control.csv",[r for r in cells if r["label"]=="D2_V5_CLEAN_CONTROL"]);write_csv(out/"regret_runtime_analysis.csv",runtime)
     shutil.copyfile(root/"REGRET_BUDGET_COHORT.json",out/"REGRET_BUDGET_COHORT.json")
+    atomic_json(out/"POSTPROCESS_PROVENANCE.json",{
+        "experiment_id":EXPERIMENT,
+        "frozen_generation_records":len(rs),
+        "solutions_accessed_before_generation":False,
+        "gold_access_stage":"post-freeze CPU scoring only",
+        "raw_candidate_or_trace_artifacts_changed":False,
+        "gpu_cells_rerun":False,
+        "scientific_decoder_configuration_changed":False,
+        "solution_root_type":type(raw_solutions).__name__,
+        "solution_root_length":len(raw_solutions) if isinstance(raw_solutions,(dict,list)) else None,
+        "challenge_task_count":len(challenge_ids),
+        "normalization":"strict dict task-id match; list roots require exact frozen challenge ordering",
+    })
     prefix_valid=all(bool(r["candidate_order_identical"]) and bool(r["candidate_hash_identical"]) and bool(r["nodes_prefix_consistent"]) and bool(r["gold_status_identical"]) and bool(r["termination_semantics_consistent"]) for r in par)
     c={int(row["budget"]):int(row["R"]) for row in curve}; new_ids=[r["cell_key"] for r in validation if r["gold_hit"]]
     if c[1024]==c[2048]==c[4096]: recommended="1024"
