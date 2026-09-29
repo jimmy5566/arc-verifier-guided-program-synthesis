@@ -35,7 +35,7 @@ from scripts.turbodfs_d1_common import d1_cells_batch
 from scripts.turbodfs_v4_common import sha256_file
 
 
-EXPERIMENT = "REGRET_ROUTER_V0_UNTOUCHED12_VALIDATION"
+EXPERIMENT = "REGRET_ROUTER_V0_UNTOUCHED24_VALIDATION"
 POLICY = "CUMULATIVE_REGRET_r=4.00"
 DEPTHS = (12, 24, 48)
 VIEWS = ("identity", "flip_ud", "transpose", "anti_transpose")
@@ -185,6 +185,46 @@ def prepare(args: argparse.Namespace) -> None:
         "solutions_accessed": False,
     }
     atomic_json(output / "ROUTER_V0_STATIC_MANIFEST.json", manifest)
+
+
+def preflight(args: argparse.Namespace) -> None:
+    """Verify a prepared target-blind run without loading a model or Gold.
+
+    The adapter manifest is a CSV, rather than a directory.  Resolve every
+    required task/depth record through the same helper used by the worker and
+    verify the referenced adapter's immutable size before any GPU process is
+    launched.
+    """
+    output = args.output.resolve()
+    manifest = read_json(output / "ROUTER_V0_STATIC_MANIFEST.json")
+    no_gold_challenge(Path(manifest["challenge_path"]))
+    if len(manifest.get("router_jobs", [])) != 288 or len(manifest.get("shadow_jobs", [])) != 192:
+        raise RuntimeError("unexpected Untouched24 Router/shadow job dimensions")
+    adapters = adapter_records(Path(manifest["adapter_manifest"]))
+    missing: list[dict[str, Any]] = []
+    for job in manifest["router_jobs"] + manifest["shadow_jobs"]:
+        task_id, _ = parse_output(str(job["output_id"]))
+        key = (task_id, int(job["depth"]))
+        row = adapters.get(key)
+        if row is None:
+            missing.append({"cell_key": job["cell_key"], "reason": "adapter_manifest_key_missing"})
+            continue
+        path = Path(row["global_path"])
+        if not path.is_file() or path.stat().st_size != int(row["size"]):
+            missing.append({"cell_key": job["cell_key"], "reason": "adapter_file_identity_mismatch", "path": str(path)})
+    if missing:
+        raise RuntimeError(f"adapter preflight failed for {len(missing)} job(s): {missing[:3]}")
+    atomic_json(output / "PRELAUNCH_VERIFIED.json", {
+        "status": "PASS_NO_GPU_NO_GOLD",
+        "experiment_id": manifest["experiment_id"],
+        "router_jobs": len(manifest["router_jobs"]),
+        "shadow_jobs": len(manifest["shadow_jobs"]),
+        "adapter_records": len(adapters),
+        "adapter_jobs_verified": len(manifest["router_jobs"]) + len(manifest["shadow_jobs"]),
+        "challenge_sha256": sha256_file(Path(manifest["challenge_path"])),
+        "manifest_sha256": sha256_file(output / "ROUTER_V0_STATIC_MANIFEST.json"),
+        "solutions_accessed": False,
+    })
 
 
 def worker(args: argparse.Namespace) -> None:
@@ -453,11 +493,12 @@ def main() -> None:
     p.add_argument("--output", type=Path, required=True); p.add_argument("--gpu-id", type=int, required=True)
     p.add_argument("--worker-index", type=int, required=True); p.add_argument("--claim-stale-seconds", type=float, default=300.0)
     p.add_argument("--phase", choices=("router", "shadow"), required=True)
+    p = sub.add_parser("preflight"); p.add_argument("--output", type=Path, required=True)
     p = sub.add_parser("freeze"); p.add_argument("--output", type=Path, required=True); p.add_argument("--phase", choices=("router", "all"), required=True)
     p = sub.add_parser("score")
     p.add_argument("--output", type=Path, required=True); p.add_argument("--solutions", type=Path, required=True); p.add_argument("--report-dir", type=Path, required=True)
     args = parser.parse_args()
-    {"prepare": prepare, "worker": worker, "freeze": freeze, "score": score}[args.cmd](args)
+    {"prepare": prepare, "preflight": preflight, "worker": worker, "freeze": freeze, "score": score}[args.cmd](args)
 
 
 if __name__ == "__main__":
