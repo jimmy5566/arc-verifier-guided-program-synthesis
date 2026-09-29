@@ -1,0 +1,4 @@
+cell_key,nodes_expanded,output_id,reason,termination_reason
+20270e3b:o0:d12:identity,835,20270e3b:o0,no_1024_decision_state,budget_exhausted
+5dbc8537:o0:d12:transpose,502,5dbc8537:o0,no_1024_decision_state,budget_exhausted
+5dbc8537:o0:d48:transpose,704,5dbc8537:o0,no_1024_decision_state,budget_exhausted

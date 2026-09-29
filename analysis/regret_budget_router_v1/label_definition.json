@@ -1,0 +1,6 @@
+{
+  "Y_CONTINUE": "1 iff Gold absent by node 1024 and first appears at nodes 1025..4096; Gold is evaluation-only and never a feature.",
+  "negative": 9,
+  "positive": 4,
+  "rows": 13
+}

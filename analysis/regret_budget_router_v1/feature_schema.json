@@ -1,0 +1,35 @@
+{
+  "cutoff_nodes": 1024,
+  "experiment_id": "REGRET_BUDGET_ROUTER_V1",
+  "feature_notes": {
+    "exact_duplicate_rate_proxy": "completed valid candidate grids at/before node 1024",
+    "pairwise_hamming": "not emitted: complete per-candidate grids are insufficiently standardized for an unambiguous cheap metric",
+    "retained_regret_*_proxy_1024": "retained trace paths, not an exactly reconstructible active frontier"
+  },
+  "features_exclude": [
+    "Gold rank",
+    "Gold NLL",
+    "Gold survival",
+    "first_gold_node",
+    "exact hit",
+    "future 4096 statistics"
+  ],
+  "ineligible_before_1024": 3,
+  "metadata": [
+    "depth",
+    "view",
+    "output_id"
+  ],
+  "model_features": [
+    "candidate_yield_last256",
+    "nodes_since_last_candidate",
+    "frontier_growth_last256",
+    "retained_successors_last256",
+    "frontier_size_1024",
+    "retained_regret_min_proxy_1024"
+  ],
+  "raw_manifest_sha256": "6776c35bf88678658807ac4522fd40b9417fa8cec0cf40210b77b506fd3d6827",
+  "router_rows": 13,
+  "source": "frozen D2 REGRET4_4096_VALIDATION raw traces",
+  "target_blind": true
+}

@@ -1,0 +1,71 @@
+# Regret router deterministic expansion plan
+
+This is a plan only: no GPU work was launched.
+
+- Proposed rows: 60 (five SHA256-ranked cells in each available depth/view stratum).
+- Eligibility reads only frozen identifier/depth/view fields from D0 RELREGRET_4.0 rows; Gold-derived columns are not read.
+- Existing router output IDs excluded: 5.
+- Estimated GPU time: 3.17 GPU-hours using the D2 validation-cell median runtime; about 1.58 h wall on two equal GPUs, before overhead.
+
+## Frozen proposed cells
+
+- `dd6b8c4b:o1:d12:anti_transpose`
+- `a32d8b75:o0:d48:identity`
+- `e3721c99:o1:d24:anti_transpose`
+- `5dbc8537:o0:d12:identity`
+- `446ef5d2:o0:d24:anti_transpose`
+- `7491f3cf:o0:d12:identity`
+- `a32d8b75:o0:d24:anti_transpose`
+- `cb2d8a2c:o0:d12:identity`
+- `446ef5d2:o0:d12:transpose`
+- `13e47133:o0:d24:flip_ud`
+- `898e7135:o0:d48:identity`
+- `5dbc8537:o1:d48:transpose`
+- `9385bd28:o0:d12:flip_ud`
+- `247ef758:o1:d48:flip_ud`
+- `446ef5d2:o0:d48:anti_transpose`
+- `a32d8b75:o0:d24:transpose`
+- `446ef5d2:o0:d12:anti_transpose`
+- `5dbc8537:o0:d24:anti_transpose`
+- `dd6b8c4b:o1:d12:identity`
+- `7491f3cf:o0:d48:flip_ud`
+- `0934a4d8:o0:d48:transpose`
+- `9385bd28:o0:d48:flip_ud`
+- `13e47133:o0:d48:transpose`
+- `0934a4d8:o0:d12:identity`
+- `cbebaa4b:o0:d12:transpose`
+- `e3721c99:o1:d12:flip_ud`
+- `5dbc8537:o0:d12:transpose`
+- `16b78196:o0:d48:identity`
+- `9385bd28:o0:d12:anti_transpose`
+- `446ef5d2:o1:d48:anti_transpose`
+- `16b78196:o0:d48:flip_ud`
+- `cb2d8a2c:o0:d24:flip_ud`
+- `c4d067a0:o0:d24:anti_transpose`
+- `cbebaa4b:o0:d48:transpose`
+- `446ef5d2:o1:d24:flip_ud`
+- `446ef5d2:o1:d48:identity`
+- `20270e3b:o0:d48:identity`
+- `16de56c4:o1:d48:transpose`
+- `64efde09:o0:d24:flip_ud`
+- `a32d8b75:o1:d48:flip_ud`
+- `64efde09:o0:d12:anti_transpose`
+- `446ef5d2:o0:d12:flip_ud`
+- `a32d8b75:o0:d12:transpose`
+- `64efde09:o0:d12:flip_ud`
+- `142ca369:o1:d12:transpose`
+- `9385bd28:o0:d24:flip_ud`
+- `c4d067a0:o0:d48:anti_transpose`
+- `dd6b8c4b:o1:d24:transpose`
+- `446ef5d2:o1:d12:flip_ud`
+- `446ef5d2:o1:d24:identity`
+- `16b78196:o0:d24:identity`
+- `6ffbe589:o0:d24:transpose`
+- `142ca369:o1:d24:transpose`
+- `13e47133:o0:d24:identity`
+- `5dbc8537:o0:d24:identity`
+- `16de56c4:o1:d24:identity`
+- `5dbc8537:o1:d48:anti_transpose`
+- `a32d8b75:o0:d48:anti_transpose`
+- `446ef5d2:o1:d12:anti_transpose`
+- `16de56c4:o1:d24:transpose`

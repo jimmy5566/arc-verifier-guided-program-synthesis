@@ -1,0 +1,32 @@
+{
+  "best_simple_router": "LOGISTIC_C=10",
+  "best_single_feature": "candidate_yield_last256",
+  "estimated_gpu_seconds": 11409.078215248883,
+  "experiment_id": "REGRET_BUDGET_ROUTER_V1",
+  "gpu_used": "NO",
+  "loo_best_100": {
+    "continuation_rate": 0.6153846153846154,
+    "cv_scheme": "loo",
+    "estimated_extra_nodes_saved": 7180.0,
+    "extra_node_saving_fraction": 0.24224021592442646,
+    "false_continue_count": 4,
+    "false_stop_count": 0,
+    "late_rescue_recall": 1.0,
+    "model": "LOGISTIC_C=10",
+    "operating_point": "100",
+    "threshold": 0.09880357155355012
+  },
+  "more_data_required": true,
+  "negative": 9,
+  "next": "EXPAND_ROUTER_DATA",
+  "pause_resume_feasible": "NO",
+  "pause_resume_parity": "NOT_RUN",
+  "positive": 4,
+  "positive_unique_outputs": 2,
+  "proposed_expansion_rows": 60,
+  "router_rows": 13,
+  "router_signal": "ROUTER_SIGNAL_NOT_ESTABLISHED",
+  "scope": "NONBLIND DEVELOPMENT; historical 33/89 unchanged",
+  "two_feature_rules": "NOT_RUN: no preregistered R0 relationship and insufficient grouped sample",
+  "unique_outputs": 5
+}
