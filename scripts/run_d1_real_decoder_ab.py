@@ -295,6 +295,10 @@ def worker(args: argparse.Namespace) -> None:
     if any(policy not in POLICIES for policy in policies):
         raise RuntimeError("unknown D1 queue policy")
     selected_keys = load_selected_cell_keys(args.cell_manifest)
+    contract_marker = root / "D1_FIXED_BUDGET_CONTRACT_SHA.json"
+    contract_sha = None
+    if contract_marker.is_file():
+        contract_sha = str(read_json(contract_marker).get("contract_sha256"))
     items = queue_items(manifest, policies=policies, selected_cell_keys=selected_keys) if args.shared_queue else list(work_items(manifest, args.smoke))
     for policy, output, depth, views in items:
         if args.shared_queue:
@@ -336,6 +340,8 @@ def worker(args: argparse.Namespace) -> None:
                 row.update({"output_id": output, "decoder_config_sha256": config_sha, "adapter_sha": adapter_sha,
                             "worker_index": args.worker_index, "gpu_id": args.gpu_id, "solutions_accessed": False,
                             "scheduler": "shared_reclaimable_queue" if args.shared_queue else "static_hash_shard"})
+                if contract_sha:
+                    row["fixed_budget_contract_sha256"] = contract_sha
             atomic_json(destination, rows)
         finally:
             if claim is not None and destination.is_file():
