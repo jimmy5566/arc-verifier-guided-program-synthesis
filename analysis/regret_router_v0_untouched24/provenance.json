@@ -1,0 +1,8 @@
+{
+  "cohort_sha256": "e027d044a00fcf78bd091fe55302894fcbf7894280d5b5a68943dbfce1e14e05",
+  "gold_accessed": false,
+  "gpu_used": false,
+  "source_commit": "17f3c28af26f026c279befc1df2a4393c8c4d276",
+  "static_contract_sha256": "071aa298e1392d6865f77ed35cdaf187c820c388eb20f16b886cf9b76c9018ed",
+  "status": "PRELAUNCH_FROZEN"
+}

@@ -14,6 +14,8 @@ import hashlib
 import json
 import shutil
 import sys
+import threading
+import time
 from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
@@ -72,6 +74,13 @@ def row_path(root: Path, job: dict[str, Any]) -> Path:
     return root / "raw" / token / (job["cell_key"].replace(":", "_") + ".json")
 
 
+def write_heartbeat(path: Path, *, worker_id: str, gpu_id: int, phase: str, current: str | None, state: str) -> None:
+    atomic_json(path, {
+        "worker_id": worker_id, "gpu_id": gpu_id, "phase": phase,
+        "current_cell_key": current, "state": state, "timestamp_unix": time.time(),
+    })
+
+
 def static_contract(original: dict[str, Any]) -> dict[str, Any]:
     required = {
         "rule_id": "REGRET_ROUTER_V0",
@@ -81,7 +90,7 @@ def static_contract(original: dict[str, Any]) -> dict[str, Any]:
     if any(original.get(key) != value for key, value in required.items()):
         raise RuntimeError("unexpected original frozen Router-v0 contract")
     contract = {
-        "experiment_id": EXPERIMENT,
+        "experiment_id": cohort["experiment_id"],
         "rule_id": "REGRET_ROUTER_V0_STATIC_DEPTH_BUDGET",
         "router_decision_changed": False,
         "execution_protocol_changed": True,
@@ -100,33 +109,26 @@ def static_contract(original: dict[str, Any]) -> dict[str, Any]:
     return contract
 
 
-def make_jobs(outputs: list[str]) -> list[dict[str, Any]]:
+def make_jobs(outputs: list[str], arm: str) -> list[dict[str, Any]]:
+    if arm not in {ROUTER_ARM, SHADOW_ARM}:
+        raise ValueError(f"unknown arm: {arm}")
     jobs: list[dict[str, Any]] = []
     for output_id in outputs:
-        for depth in DEPTHS:
+        active_depths = DEPTHS if arm == ROUTER_ARM else (12, 48)
+        for depth in active_depths:
             for view in VIEWS:
                 jobs.append({
-                    "arm": ROUTER_ARM,
+                    "arm": arm,
                     "output_id": output_id,
                     "cell_key": cell_key(output_id, depth, view),
                     "depth": depth,
                     "view": view,
-                    "max_expanded_nodes": 4096 if depth == 24 else 1024,
+                    "max_expanded_nodes": 4096 if arm == SHADOW_ARM or depth == 24 else 1024,
                     "policy": POLICY,
                 })
-        for depth in (12, 48):
-            for view in VIEWS:
-                jobs.append({
-                    "arm": SHADOW_ARM,
-                    "output_id": output_id,
-                    "cell_key": cell_key(output_id, depth, view),
-                    "depth": depth,
-                    "view": view,
-                    "max_expanded_nodes": 4096,
-                    "policy": POLICY,
-                })
-    if len(jobs) != 240:
-        raise RuntimeError(f"expected 240 total records, got {len(jobs)}")
+    expected = len(outputs) * (12 if arm == ROUTER_ARM else 8)
+    if len(jobs) != expected:
+        raise RuntimeError(f"expected {expected} {arm} records, got {len(jobs)}")
     return jobs
 
 
@@ -136,13 +138,20 @@ def prepare(args: argparse.Namespace) -> None:
         raise RuntimeError(f"refusing to overwrite existing run root: {output}")
     cohort = read_json(args.cohort.resolve())
     leakage = read_json(args.leakage.resolve())
-    original = read_json(args.original_contract.resolve())
-    if cohort.get("output_ids_sha256") != "2c892bd08e7f3754a1d26380c7cc2976649d9523ba3f26bbda414a2f46efb54d":
-        raise RuntimeError("Untouched12 cohort hash differs from the preflight freeze")
+    contract = read_json(args.execution_contract.resolve())
+    required_contract = {
+        "rule_id": "REGRET_ROUTER_V0_STATIC_DEPTH_BUDGET", "router_decision_changed": False,
+        "execution_protocol_changed": True, "policy": "CUMULATIVE_REGRET_r=4.0", "candidate_cap": 32,
+        "depth_budgets": {"12": 1024, "24": 4096, "48": 1024},
+        "shadow_depth_budgets": {"12": 4096, "48": 4096},
+    }
+    if any(contract.get(key) != value for key, value in required_contract.items()):
+        raise RuntimeError("invalid frozen static-depth Router-v0 contract")
     outputs = list(cohort.get("output_ids", []))
-    if len(outputs) != 12 or len(set(outputs)) != 12 or int(leakage.get("LEAKAGE_WITH_ROUTER_DEV", -1)) != 0:
-        raise RuntimeError("invalid frozen Untouched12 cohort/leakage audit")
-    contract = static_contract(original)
+    tranche_a = list(cohort.get("tranche_a", []))
+    tranche_b = list(cohort.get("tranche_b", []))
+    if len(outputs) != 24 or len(set(outputs)) != 24 or len(tranche_a) != 12 or len(tranche_b) != 12 or outputs != tranche_a + tranche_b or int(leakage.get("LEAKAGE_WITH_ROUTER_DEV", -1)) != 0:
+        raise RuntimeError("invalid frozen Untouched24 cohort/leakage audit")
     d2 = read_json(args.d2_manifest.resolve())
     d1_root = Path(d2["d1_root"])
     d1_manifest = read_json(d1_root / "D1_MANIFEST.json")
@@ -151,18 +160,19 @@ def prepare(args: argparse.Namespace) -> None:
     output.mkdir(parents=True)
     (output / "generation_inputs").mkdir()
     shutil.copyfile(challenge, output / "generation_inputs" / "evaluation_challenges.json")
-    atomic_json(output / "ROUTER_V0_STATIC_DEPTH_BUDGET_CONTRACT.json", contract)
-    atomic_json(output / "UNTOUCHED12_MANIFEST.json", cohort)
+    shutil.copyfile(args.execution_contract.resolve(), output / "ROUTER_V0_STATIC_DEPTH_BUDGET_CONTRACT.json")
+    atomic_json(output / "UNTOUCHED24_MANIFEST.json", cohort)
     atomic_json(output / "LEAKAGE_AUDIT.json", leakage)
     manifest = {
         "experiment_id": EXPERIMENT,
         "source_commit": args.source_commit,
         "router_contract_sha256": contract["contract_sha256"],
-        "original_router_contract_sha256": original["contract_sha256"],
+        "original_router_contract_sha256": contract["original_router_contract_sha256"],
         "cohort_sha256": cohort["output_ids_sha256"],
-        "cohort_output_ids": outputs,
+        "cohort_output_ids": outputs, "tranche_a": tranche_a, "tranche_b": tranche_b,
         "leakage_with_router_dev": 0,
-        "jobs": make_jobs(outputs),
+        "router_jobs": make_jobs(outputs, ROUTER_ARM),
+        "shadow_jobs": make_jobs(outputs, SHADOW_ARM),
         "challenge_path": str(output / "generation_inputs" / "evaluation_challenges.json"),
         "challenge_sha256": sha256_file(challenge),
         "d1_root": str(d1_root),
@@ -181,6 +191,16 @@ def worker(args: argparse.Namespace) -> None:
     output = args.output.resolve()
     manifest = read_json(output / "ROUTER_V0_STATIC_MANIFEST.json")
     no_gold_challenge(Path(manifest["challenge_path"]))
+    worker_id = f"router-v0-{args.worker_index}@gpu{args.gpu_id}"
+    heartbeat = output / "heartbeats" / f"{args.phase}_gpu{args.gpu_id}.json"
+    current: dict[str, str | None] = {"cell": None}
+    stop_heartbeat = threading.Event()
+    def beat() -> None:
+        while not stop_heartbeat.wait(60.0):
+            write_heartbeat(heartbeat, worker_id=worker_id, gpu_id=args.gpu_id, phase=args.phase, current=current["cell"], state="RUNNING")
+    write_heartbeat(heartbeat, worker_id=worker_id, gpu_id=args.gpu_id, phase=args.phase, current=None, state="STARTING")
+    heartbeat_thread = threading.Thread(target=beat, daemon=True)
+    heartbeat_thread.start()
     from scripts import run_eval60_authoritative_greedy_v1 as greedy
     runtime_args = SimpleNamespace(
         output=Path(manifest["authoritative_root"]),
@@ -194,7 +214,8 @@ def worker(args: argparse.Namespace) -> None:
     d1_manifest = read_json(Path(manifest["d1_root"]) / "D1_MANIFEST.json")
     adapters = adapter_records(Path(manifest["adapter_manifest"]))
     last_adapter: tuple[str, int] | None = None
-    order = sorted(manifest["jobs"], key=lambda row: (hashlib.sha256((row["arm"] + row["cell_key"]).encode()).hexdigest(), row["arm"], row["cell_key"]))
+    jobs_key = "router_jobs" if args.phase == "router" else "shadow_jobs"
+    order = sorted(manifest[jobs_key], key=lambda row: (hashlib.sha256((row["arm"] + row["cell_key"]).encode()).hexdigest(), row["arm"], row["cell_key"]))
     for job in order:
         destination = row_path(output, job)
         if destination.is_file():
@@ -202,13 +223,15 @@ def worker(args: argparse.Namespace) -> None:
         task_id, output_index = parse_output(job["output_id"])
         claim = claim_cell(
             claims_root=output / "claims", policy=job["arm"], output_id=job["output_id"], depth=int(job["depth"]), view=job["view"],
-            worker_id=f"router-v0-{args.worker_index}@gpu{args.gpu_id}", stale_seconds=float(args.claim_stale_seconds),
+            worker_id=worker_id, stale_seconds=float(args.claim_stale_seconds),
         )
         if claim is None:
             continue
         try:
             if destination.is_file():
                 continue
+            current["cell"] = job["cell_key"]
+            write_heartbeat(heartbeat, worker_id=worker_id, gpu_id=args.gpu_id, phase=args.phase, current=current["cell"], state="RUNNING")
             adapter_key = (task_id, int(job["depth"]))
             adapter_sha = load_adapter(model, adapters[adapter_key]) if adapter_key != last_adapter else str(adapters[adapter_key]["sha256"])
             last_adapter = adapter_key
@@ -229,12 +252,16 @@ def worker(args: argparse.Namespace) -> None:
         finally:
             if destination.is_file():
                 release_claim(claim)
+            current["cell"] = None
+    stop_heartbeat.set()
+    heartbeat_thread.join(timeout=2.0)
+    write_heartbeat(heartbeat, worker_id=worker_id, gpu_id=args.gpu_id, phase=args.phase, current=None, state="EXITED")
     del model
 
 
-def records(output: Path, manifest: dict[str, Any]) -> list[dict[str, Any]]:
+def records(output: Path, manifest: dict[str, Any], jobs: list[dict[str, Any]]) -> list[dict[str, Any]]:
     result = []
-    for job in manifest["jobs"]:
+    for job in jobs:
         path = row_path(output, job)
         if not path.is_file():
             raise RuntimeError(f"missing raw checkpoint {job['arm']} {job['cell_key']}")
@@ -248,11 +275,21 @@ def records(output: Path, manifest: dict[str, Any]) -> list[dict[str, Any]]:
 def freeze(args: argparse.Namespace) -> None:
     output = args.output.resolve()
     manifest = read_json(output / "ROUTER_V0_STATIC_MANIFEST.json")
-    rows = records(output, manifest)
+    if args.phase == "router":
+        jobs = manifest["router_jobs"]
+        flag = output / "ROUTER_ARM_GENERATION_FROZEN.flag"
+    elif args.phase == "all":
+        jobs = manifest["router_jobs"] + manifest["shadow_jobs"]
+        if not (output / "ROUTER_ARM_GENERATION_FROZEN.flag").is_file():
+            raise RuntimeError("cannot freeze full surface before Router arm freeze")
+        flag = output / "ROUTER_V0_STATIC_GENERATION_FROZEN.flag"
+    else:
+        raise ValueError(args.phase)
+    rows = records(output, manifest, jobs)
     hashes = {str(row_path(output, row["router_job"]).relative_to(output)): sha256_file(row_path(output, row["router_job"])) for row in rows}
-    atomic_json(output / "ROUTER_V0_STATIC_GENERATION_FROZEN.flag", {
+    atomic_json(flag, {
         "records": len(rows), "router_records": sum(row["arm"] == ROUTER_ARM for row in rows),
-        "shadow_records": sum(row["arm"] == SHADOW_ARM for row in rows), "raw_hashes": hashes,
+        "shadow_records": sum(row["arm"] == SHADOW_ARM for row in rows), "raw_hashes": hashes, "phase": args.phase,
         "manifest_sha256": sha256_file(output / "ROUTER_V0_STATIC_MANIFEST.json"), "solutions_accessed": False,
     })
 
@@ -274,7 +311,7 @@ def score(args: argparse.Namespace) -> None:
     if not (output / "ROUTER_V0_STATIC_GENERATION_FROZEN.flag").is_file():
         raise RuntimeError("Gold scoring forbidden before complete target-blind freeze")
     manifest = read_json(output / "ROUTER_V0_STATIC_MANIFEST.json")
-    raw = records(output, manifest)
+    raw = records(output, manifest, manifest["router_jobs"] + manifest["shadow_jobs"])
     challenge = read_json(Path(manifest["challenge_path"]))
     task_ids = list(challenge)
     expected = {task_id: len(task["test"]) for task_id, task in challenge.items()}
@@ -298,7 +335,8 @@ def score(args: argparse.Namespace) -> None:
     router = [row for row in cells if row["arm"] == ROUTER_ARM]
     shadows = [row for row in cells if row["arm"] == SHADOW_ARM]
     always = [row for row in router if row["depth"] == 24] + shadows
-    if len(router) != 144 or len(shadows) != 96 or len(always) != 144:
+    expected_router, expected_shadow = len(manifest["cohort_output_ids"]) * 12, len(manifest["cohort_output_ids"]) * 8
+    if len(router) != expected_router or len(shadows) != expected_shadow or len(always) != expected_router:
         raise RuntimeError("unexpected static-depth surface dimensions")
 
     def output_summary(name: str, values: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], set[str]]:
@@ -317,10 +355,25 @@ def score(args: argparse.Namespace) -> None:
 
     router_outputs, router_hits = output_summary("ROUTER_V0", router)
     always_outputs, always_hits = output_summary("ALWAYS_REGRET4096", always)
+    tranche_a = set(manifest["tranche_a"])
+    tranche_b = set(manifest["tranche_b"])
+    def tranche_stats(output_ids: set[str]) -> dict[str, Any]:
+        router_subset = router_hits & output_ids
+        always_subset = always_hits & output_ids
+        return {
+            "router_unique_rescues": len(router_subset), "always4096_unique_rescues": len(always_subset),
+            "router_rescue_ids": sorted(router_subset), "always4096_rescue_ids": sorted(always_subset),
+            "missed_by_router_ids": sorted(always_subset - router_subset),
+            "rescue_retention": None if not always_subset else len(router_subset) / len(always_subset),
+        }
+    tranche_a_stats = tranche_stats(tranche_a)
+    tranche_b_stats = tranche_stats(tranche_b)
     missed = sorted(always_hits - router_hits)
     retention: float | None = None if not always_hits else len(router_hits) / len(always_hits)
     router_by_depth = {str(depth): sum(row["gold_hit"] for row in router if row["depth"] == depth) for depth in DEPTHS}
     always_by_depth = {str(depth): sum(row["gold_hit"] for row in always if row["depth"] == depth) for depth in DEPTHS}
+    router_unique_by_depth = {str(depth): sorted({row["output_id"] for row in router if row["depth"] == depth and row["gold_hit"]}) for depth in DEPTHS}
+    always_unique_by_depth = {str(depth): sorted({row["output_id"] for row in always if row["depth"] == depth and row["gold_hit"]}) for depth in DEPTHS}
     router_nodes, always_nodes = sum(row["nodes_expanded"] for row in router), sum(row["nodes_expanded"] for row in always)
     router_seconds, always_seconds = sum(row["runtime_seconds"] for row in router), sum(row["runtime_seconds"] for row in always)
     node_saving = 1.0 - router_nodes / always_nodes if always_nodes else None
@@ -331,14 +384,21 @@ def score(args: argparse.Namespace) -> None:
         verdict = "STRONG_VALIDATION"
     elif retention is not None and retention >= .80 and node_saving is not None and node_saving >= .25:
         verdict = "PROMISING_VALIDATION"
+    elif missed and any(row["depth"] in {12, 48} and row["gold_hit"] and (row["first_gold_node"] or 0) > 1024 for row in always):
+        verdict = "FAILED_VALIDATION"
     elif node_saving is not None and node_saving > 0:
         verdict = "WEAK_VALIDATION"
     else:
         verdict = "FAILED_VALIDATION"
-    late = [row for row in always if row["gold_hit"] and row["output_id"] in missed]
+    late = [row for row in always if row["gold_hit"] and (row["first_gold_node"] or 0) > 1024]
+    late_by_depth = {str(depth): [row["output_id"] for row in late if row["depth"] == depth] for depth in DEPTHS}
     write_csv(report / "router_v0_cells.csv", router, list(router[0]) if router else [])
     write_csv(report / "always4096_shadow_cells.csv", shadows, list(shadows[0]) if shadows else [])
-    write_csv(report / "router_v0_output_results.csv", router_outputs + always_outputs, ["system", "output_id", "gold_hit_any_cell", "gold_hit_cell_count", "gold_hit_cell_keys"])
+    summary_fields = ["system", "output_id", "gold_hit_any_cell", "gold_hit_cell_count", "gold_hit_cell_keys"]
+    write_csv(report / "router_v0_output_results.csv", router_outputs + always_outputs, summary_fields)
+    write_csv(report / "tranche_a_results.csv", [row for row in router_outputs + always_outputs if row["output_id"] in tranche_a], summary_fields)
+    write_csv(report / "tranche_b_results.csv", [row for row in router_outputs + always_outputs if row["output_id"] in tranche_b], summary_fields)
+    write_csv(report / "combined24_results.csv", router_outputs + always_outputs, summary_fields)
     write_csv(report / "budget_rescue_comparison.csv", [
         {"system": "ROUTER_V0", "unique_rescues": len(router_hits), "rescue_ids": ";".join(sorted(router_hits))},
         {"system": "ALWAYS_REGRET4096", "unique_rescues": len(always_hits), "rescue_ids": ";".join(sorted(always_hits))},
@@ -348,16 +408,22 @@ def score(args: argparse.Namespace) -> None:
         {"system": "ALWAYS_REGRET4096", "total_nodes": always_nodes, "gpu_seconds": always_seconds, "rescues_per_gpu_hour": None if not always_seconds else len(always_hits) * 3600 / always_seconds},
     ], ["system", "total_nodes", "gpu_seconds", "rescues_per_gpu_hour"])
     write_csv(report / "late_rescue_cells.csv", late, list(cells[0]) if cells else [])
+    b_retention = tranche_b_stats["rescue_retention"]
+    depth_generalizes = "YES" if b_retention is not None and b_retention >= .80 else "NO" if b_retention is not None else "PARTIAL"
     decision = {
-        "status": "COMPLETE_SCORED_AFTER_TARGET_BLIND_FREEZE", "unique_outputs": 12, "total_router_cells": 144,
+        "status": "COMPLETE_SCORED_AFTER_TARGET_BLIND_FREEZE", "unique_outputs": len(manifest["cohort_output_ids"]), "total_router_cells": expected_router,
         "router_unique_rescues": len(router_hits), "always4096_unique_rescues": len(always_hits),
         "router_rescue_ids": sorted(router_hits), "always4096_rescue_ids": sorted(always_hits), "missed_by_router_ids": missed,
-        "rescue_retention": retention, "router_hits_by_depth": router_by_depth, "always4096_hits_by_depth": always_by_depth,
+        "rescue_retention": retention, "tranche_a": tranche_a_stats, "tranche_b": tranche_b_stats,
+        "router_hits_by_depth": router_by_depth, "always4096_hits_by_depth": always_by_depth,
+        "router_unique_output_ids_by_depth": router_unique_by_depth, "always4096_unique_output_ids_by_depth": always_unique_by_depth,
+        "late_rescues_by_depth": late_by_depth,
         "router_total_nodes": router_nodes, "always4096_total_nodes": always_nodes, "node_saving": node_saving,
         "router_gpu_seconds": router_seconds, "always4096_gpu_seconds": always_seconds, "gpu_time_saving": time_saving,
         "validation_verdict": verdict,
         "next": "FREEZE_ROUTER_V0" if verdict in {"STRONG_VALIDATION", "PROMISING_VALIDATION"} else "DESIGN_ROUTER_V1" if always_hits else "COLLECT_MORE_DATA",
         "historical_union": "33/89 unchanged", "gold_access_stage": "post-freeze CPU scoring only",
+        "depth_router_generalizes": depth_generalizes,
     }
     atomic_json(report / "DECISION.json", decision)
     atomic_json(report / "provenance.json", {
@@ -365,12 +431,15 @@ def score(args: argparse.Namespace) -> None:
         "cohort_sha256": manifest["cohort_sha256"], "generation_freeze_sha256": sha256_file(output / "ROUTER_V0_STATIC_GENERATION_FROZEN.flag"),
         "solutions_accessed_before_generation": False, "raw_artifacts_changed_during_scoring": False,
     })
-    (report / "REGRET_ROUTER_V0_VALIDATION.md").write_text(
-        "# Static-depth Regret Router-v0 untouched12 validation\n\n"
+    (report / "REGRET_ROUTER_V0_UNTOUCHED24_REPORT.md").write_text(
+        "# Static-depth Regret Router-v0 untouched24 validation\n\n"
         "Gold was attached only after the full Router and shadow surfaces were frozen. This is held-out nonblind development evidence; historical union remains 33/89 unchanged.\n\n"
         f"- Router unique rescues: {len(router_hits)}\n- Always4096 unique rescues: {len(always_hits)}\n"
         f"- Retention: {retention if retention is not None else 'NOT_ESTABLISHED'}\n- Node saving: {node_saving}\n"
-        f"- GPU-time saving: {time_saving}\n- Verdict: {verdict}\n", encoding="utf-8")
+        f"- GPU-time saving: {time_saving}\n- Verdict: {verdict}\n"
+        f"- Tranche A retention: {tranche_a_stats['rescue_retention']}\n- Tranche B retention: {tranche_b_stats['rescue_retention']}\n"
+        f"- Late d12/d24/d48 rescues: {len(late_by_depth['12'])} / {len(late_by_depth['24'])} / {len(late_by_depth['48'])}\n"
+        f"- Depth-router generalizes: {depth_generalizes}\n", encoding="utf-8")
 
 
 def main() -> None:
@@ -379,11 +448,12 @@ def main() -> None:
     p = sub.add_parser("prepare")
     p.add_argument("--output", type=Path, required=True); p.add_argument("--source-commit", required=True)
     p.add_argument("--cohort", type=Path, required=True); p.add_argument("--leakage", type=Path, required=True)
-    p.add_argument("--original-contract", type=Path, required=True); p.add_argument("--d2-manifest", type=Path, required=True)
+    p.add_argument("--execution-contract", type=Path, required=True); p.add_argument("--d2-manifest", type=Path, required=True)
     p = sub.add_parser("worker")
     p.add_argument("--output", type=Path, required=True); p.add_argument("--gpu-id", type=int, required=True)
-    p.add_argument("--worker-index", type=int, required=True); p.add_argument("--claim-stale-seconds", type=float, default=900.0)
-    p = sub.add_parser("freeze"); p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--worker-index", type=int, required=True); p.add_argument("--claim-stale-seconds", type=float, default=300.0)
+    p.add_argument("--phase", choices=("router", "shadow"), required=True)
+    p = sub.add_parser("freeze"); p.add_argument("--output", type=Path, required=True); p.add_argument("--phase", choices=("router", "all"), required=True)
     p = sub.add_parser("score")
     p.add_argument("--output", type=Path, required=True); p.add_argument("--solutions", type=Path, required=True); p.add_argument("--report-dir", type=Path, required=True)
     args = parser.parse_args()
