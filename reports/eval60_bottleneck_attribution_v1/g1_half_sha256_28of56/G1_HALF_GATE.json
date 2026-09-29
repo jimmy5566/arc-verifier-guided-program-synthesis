@@ -1,0 +1,12 @@
+{
+  "A_any_current_v5_searchable": 0,
+  "B_pruning_policy_blocked": 28,
+  "C_all_current_states_probability_limited": 0,
+  "cells": 336,
+  "decision": "STOP_G1_AND_RUN_G2",
+  "decision_rule": "continue remaining G1 iff A_any_current_v5_searchable > 0",
+  "outputs": 28,
+  "scope": "G1_HALF_SHA256_OUTPUT_PREFIX",
+  "status": "COMPLETE",
+  "strict_searchable": 0
+}
