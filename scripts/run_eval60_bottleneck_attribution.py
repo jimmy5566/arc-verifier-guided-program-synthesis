@@ -126,6 +126,15 @@ def prepare_miss_set(args: argparse.Namespace) -> list[dict[str, Any]]:
     # new cohort from Gold or from mutable runtime output.
     if args.frozen_miss_manifest is not None:
         rows = _csv_rows(args.frozen_miss_manifest)
+        required_columns = {
+            "task_id", "output_index", "output_id", "greedy_pool_hit",
+            "v5_pool_gold_hit_available", "union_greedy_v5_hit",
+            "original_v5_oracle_certainty",
+        }
+        present_columns = set(rows[0]) if rows else set()
+        missing_columns = sorted(required_columns - present_columns)
+        if missing_columns:
+            raise RuntimeError(f"frozen miss manifest missing required columns:{','.join(missing_columns)}")
         misses = [{
             "task_id": str(row["task_id"]), "output_index": int(row["output_index"]),
             "output_id": str(row["output_id"]), "greedy_pool_hit": _bool(row["greedy_pool_hit"]),
@@ -133,9 +142,49 @@ def prepare_miss_set(args: argparse.Namespace) -> list[dict[str, Any]]:
             "union_greedy_v5_hit": _bool(row["union_greedy_v5_hit"]),
             "original_v5_oracle_certainty": str(row["original_v5_oracle_certainty"]),
         } for row in rows]
-        if len(misses) != 56 or len({row["output_id"] for row in misses}) != 56 or any(row["union_greedy_v5_hit"] for row in misses):
-            raise RuntimeError("invalid frozen 56-output union-miss manifest")
-        source = "FROZEN_G0_MANIFEST"
+        if len({row["output_id"] for row in misses}) != len(misses):
+            raise RuntimeError("frozen miss manifest contains duplicate output_id")
+        if any(row["union_greedy_v5_hit"] for row in misses):
+            raise RuntimeError("frozen miss manifest contains a union Greedy/V5 hit")
+        frozen_manifest_count = len(misses)
+        full_miss_count = 56
+        full_rows_sha256 = hashlib.sha256(json.dumps(misses, sort_keys=True).encode()).hexdigest()
+        if args.cohort_output_count is None:
+            if frozen_manifest_count != full_miss_count:
+                raise RuntimeError(
+                    "frozen miss manifest without cohort_output_count must contain the original 56 outputs"
+                )
+            source = "FROZEN_G0_MANIFEST"
+            selection = "ALL"
+        elif frozen_manifest_count == full_miss_count:
+            if not 1 <= args.cohort_output_count <= full_miss_count:
+                raise RuntimeError(
+                    f"invalid cohort_output_count={args.cohort_output_count}; expected 1..{full_miss_count}"
+                )
+            if args.cohort_output_count < full_miss_count:
+                misses = sorted(
+                    misses,
+                    key=lambda row: (
+                        hashlib.sha256(row["output_id"].encode("utf-8")).hexdigest(),
+                        row["output_id"],
+                    ),
+                )[:args.cohort_output_count]
+                source = f"FROZEN_G0_MANIFEST_SHA256_OUTPUT_PREFIX_{args.cohort_output_count}_OF_{full_miss_count}"
+                selection = "SHA256_OUTPUT_ID_ASCENDING_PREFIX"
+            else:
+                source = "FROZEN_G0_MANIFEST"
+                selection = "ALL"
+        elif frozen_manifest_count == args.cohort_output_count:
+            # A pre-registered subset is already an immutable cohort.  Never
+            # expand it, re-sort it, or derive a replacement from another
+            # manifest: membership is scientific provenance, not scheduling.
+            source = f"FROZEN_MANIFEST_ALREADY_SUBSET_{frozen_manifest_count}"
+            selection = "ALREADY_FROZEN_SUBSET"
+        else:
+            raise RuntimeError(
+                f"frozen manifest count {frozen_manifest_count} does not match cohort_output_count={args.cohort_output_count} "
+                f"and is not the original {full_miss_count}-output manifest"
+            )
     else:
         source = EXPECTED_COMPACT_COMMIT
         compact = args.compact.resolve()
@@ -164,11 +213,13 @@ def prepare_miss_set(args: argparse.Namespace) -> list[dict[str, Any]]:
                         else "TRUSTWORTHY_LOWER_BOUND_MISS"
                     ),
                 })
-    if len(misses) != 56:
-        raise RuntimeError(f"expected exactly 56 mechanical lower-bound misses, got {len(misses)}")
-    full_miss_count = len(misses)
-    full_rows_sha256 = hashlib.sha256(json.dumps(misses, sort_keys=True).encode()).hexdigest()
-    if args.cohort_output_count is not None:
+    if args.frozen_miss_manifest is None:
+        if len(misses) != 56:
+            raise RuntimeError(f"expected exactly 56 mechanical lower-bound misses, got {len(misses)}")
+        full_miss_count = len(misses)
+        full_rows_sha256 = hashlib.sha256(json.dumps(misses, sort_keys=True).encode()).hexdigest()
+        selection = "ALL"
+    if args.frozen_miss_manifest is None and args.cohort_output_count is not None:
         if not 1 <= args.cohort_output_count <= full_miss_count:
             raise RuntimeError(
                 f"invalid cohort_output_count={args.cohort_output_count}; "
@@ -182,6 +233,7 @@ def prepare_miss_set(args: argparse.Namespace) -> list[dict[str, Any]]:
             ),
         )[:args.cohort_output_count]
         source += f"_SHA256_OUTPUT_PREFIX_{args.cohort_output_count}_OF_{full_miss_count}"
+        selection = "SHA256_OUTPUT_ID_ASCENDING_PREFIX"
     # Shards all derive the same immutable list.  Only shard zero (or a
     # non-sharded finalizer) publishes shared manifests/reports.
     if args.task_shard_count == 1 or args.task_shard_index == 0:
@@ -192,7 +244,7 @@ def prepare_miss_set(args: argparse.Namespace) -> list[dict[str, Any]]:
             "rows_sha256": hashlib.sha256(json.dumps(misses, sort_keys=True).encode()).hexdigest(),
             "full_miss_count": full_miss_count,
             "full_rows_sha256": full_rows_sha256,
-            "selection": "ALL" if args.cohort_output_count is None else "SHA256_OUTPUT_ID_ASCENDING_PREFIX",
+            "selection": selection,
         })
     return misses
 
