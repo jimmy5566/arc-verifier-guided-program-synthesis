@@ -544,7 +544,23 @@ def fixed_cost_report(args: argparse.Namespace) -> None:
     def write_csv(name: str, rows: list[dict[str, Any]]) -> None:
         with (out / name).open("w", encoding="utf-8", newline="") as handle:
             writer = csv.DictWriter(handle, fieldnames=sorted({key for row in rows for key in row}), lineterminator="\n"); writer.writeheader(); writer.writerows(rows)
-    write_csv("d1_v5_control_cells.csv", [{"contract_sha256": contract_sha, **row} for row in control_rows])
+    # The control rows contain complete candidate payloads.  This report is
+    # deliberately Git-safe: preserve only the scalar provenance and cost
+    # telemetry needed to reproduce the comparisons, while the immutable raw
+    # candidate records remain at the frozen run root.
+    compact_control_fields = (
+        "output_id", "task_id", "output_index", "depth", "view", "decoder_policy",
+        "runtime_seconds", "nodes_expanded", "successors_considered",
+        "successors_retained", "batch_forward_passes", "tokens_advanced",
+        "candidate_count", "unique_candidate_count", "max_frontier_size",
+        "mean_frontier_size", "termination_reason", "budget_exhausted",
+        "search_exhausted", "peak_vram_mb", "lane_count", "solutions_accessed",
+    )
+    compact_control_rows = [
+        {"contract_sha256": contract_sha, **{field: row.get(field) for field in compact_control_fields}}
+        for row in control_rows
+    ]
+    write_csv("d1_v5_control_cells.csv", compact_control_rows)
     write_csv("d1_cost_smoke.csv", cells); write_csv("d1_policy_cells.csv", cells); write_csv("d1_policy_summary.csv", summary)
     write_csv("d1_policy_outputs.csv", [{"decoder_policy": CONTROL_LABEL, "output_id": output, "phase": "CONTROL_FULL", "candidate_cells": sum(1 for row in control_rows if row["output_id"] == output)} for output in manifest["cohort_output_ids"]])
     write_csv("d1_rescue_overlap.csv", [])
