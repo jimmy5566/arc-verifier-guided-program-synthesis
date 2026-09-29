@@ -34,6 +34,9 @@ VIEWS = ("identity", "flip_ud", "transpose", "anti_transpose")
 GROUPS = (("identity", "flip_ud"), ("transpose", "anti_transpose"))
 D0_COMMIT = "9fa2810ca38288235d492e12af2e0ec0bebee1ea"
 EXPERIMENT = "D1_SMALL_REAL_GPU_DECODER_AB"
+FIXED_BUDGET_EXPERIMENT = "D1_FIXED_BUDGET_DECODER_AB_V1"
+CONTROL_POLICY = "V5_CURRENT"
+CONTROL_LABEL = "D1_V5_CAPPED_CONTROL"
 
 
 def atomic_json(path: Path, payload: Any) -> None:
@@ -225,6 +228,34 @@ def existing_cell(root: Path, policy: str, output: str, depth: int, view: str, c
     return None
 
 
+def collect_policy_cells(root: Path, manifest: dict[str, Any], policy: str,
+                         selected_cell_keys: set[str] | None = None) -> list[dict[str, Any]]:
+    """Read canonical per-view cells from paired legacy or queue checkpoints.
+
+    A valid checkpoint is immutable evidence.  The shared queue is allowed to
+    fill only absent cells, so this reader deliberately gives either storage
+    representation the same per-view schema without rewriting legacy rows.
+    """
+    if policy not in manifest["policies"]:
+        raise RuntimeError(f"policy absent from manifest: {policy}")
+    _decoder, config_sha = config_for(manifest, policy)
+    rows: list[dict[str, Any]] = []
+    for output in manifest["cohort_output_ids"]:
+        for depth in DEPTHS:
+            for view in VIEWS:
+                key = cell_key(output_id=str(output), depth=depth, view=view)
+                if selected_cell_keys is not None and key not in selected_cell_keys:
+                    continue
+                row = existing_cell(root, policy, str(output), depth, view, config_sha)
+                if row is None:
+                    raise RuntimeError(f"missing/invalid D1 cell: {policy} {key}")
+                rows.append(row)
+    expected = len(manifest["cohort_output_ids"]) * len(DEPTHS) * len(VIEWS)
+    if selected_cell_keys is None and len(rows) != expected:
+        raise RuntimeError(f"expected {expected} cells, got {len(rows)}")
+    return rows
+
+
 def queue_items(manifest: dict[str, Any], *, policies: tuple[str, ...], selected_cell_keys: set[str] | None) -> list[tuple[str, str, int, str]]:
     values = []
     for policy in policies:
@@ -332,6 +363,193 @@ def freeze(args: argparse.Namespace) -> None:
     atomic_json(root / "D1_GENERATION_FROZEN.flag", {"records": len(records), "raw_hashes": hashes, "manifest_sha256": sha256_file(root / "D1_MANIFEST.json"), "solutions_accessed": False})
 
 
+def hash_existing_cells(root: Path, manifest: dict[str, Any], policy: str,
+                        selected_cell_keys: set[str] | None = None) -> dict[str, str]:
+    _decoder, config_sha = config_for(manifest, policy)
+    values: dict[str, str] = {}
+    for output in manifest["cohort_output_ids"]:
+        for depth in DEPTHS:
+            for view in VIEWS:
+                key = cell_key(output_id=str(output), depth=depth, view=view)
+                if selected_cell_keys is not None and key not in selected_cell_keys:
+                    continue
+                direct = cell_path(root, policy, str(output), depth, view)
+                if valid_unit(direct, policy, str(output), depth, (view,), config_sha):
+                    values[key] = sha256_file(direct)
+                    continue
+                paired_path = None
+                for group in GROUPS:
+                    if view in group:
+                        candidate = unit_path(root, policy, str(output), depth, group, smoke=False)
+                        if valid_unit(candidate, policy, str(output), depth, group, config_sha):
+                            paired_path = candidate; break
+                if paired_path is None:
+                    raise RuntimeError(f"cannot hash missing D1 cell: {policy} {key}")
+                values[key] = sha256_file(paired_path)
+    return values
+
+
+def freeze_policy(args: argparse.Namespace) -> None:
+    root = args.output.resolve(); manifest = read_json(root / "D1_MANIFEST.json")
+    policy = str(args.policy)
+    selected = load_selected_cell_keys(args.cell_manifest)
+    rows = collect_policy_cells(root, manifest, policy, selected)
+    if any(row.get("solutions_accessed") is not False for row in rows):
+        raise RuntimeError("cannot freeze contaminated D1 policy cells")
+    payload = {
+        "experiment_id": FIXED_BUDGET_EXPERIMENT, "policy_id": policy,
+        "policy_label": CONTROL_LABEL if policy == CONTROL_POLICY else policy,
+        "records": len(rows), "selected_cell_keys": sorted(selected) if selected is not None else None,
+        "selected_cell_keys_sha256": sha_json(sorted(selected)) if selected is not None else None,
+        "cell_hashes": hash_existing_cells(root, manifest, policy, selected),
+        "manifest_sha256": sha256_file(root / "D1_MANIFEST.json"), "solutions_accessed": False,
+    }
+    suffix = hashlib.sha256(policy.encode("utf-8")).hexdigest()[:12]
+    if selected is not None:
+        suffix += ".smoke"
+    atomic_json(root / "freezes" / f"{suffix}.json", payload)
+
+
+def fixed_contract(args: argparse.Namespace) -> None:
+    """Freeze a small, hashable policy-independent D1 comparison contract."""
+    root = args.output.resolve(); manifest = read_json(root / "D1_MANIFEST.json")
+    payloads = manifest["policies"]
+    common = ("max_new_tokens", "max_score", "local_time_limit_seconds", "pad_token_id", "arc_tokens", "frontier_floor",
+              "max_expanded_nodes", "max_completed_candidates")
+    exemplar = payloads[CONTROL_POLICY]
+    if any(any(payload[key] != exemplar[key] for key in common) for payload in payloads.values()):
+        raise RuntimeError("D1 policy configs do not share a fixed budget contract")
+    contract = {
+        "experiment_id": FIXED_BUDGET_EXPERIMENT,
+        "control": CONTROL_LABEL,
+        "control_implementation_id": CONTROL_POLICY,
+        "policies": [CONTROL_LABEL, "CUMULATIVE_REGRET_r=4.00", "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400", "TOPK_LOCAL_k=2"],
+        "cohort_output_ids": manifest["cohort_output_ids"], "cohort_hash": manifest["cohort_hash"],
+        "depths": manifest["depths"], "views": manifest["views"],
+        "caps": {key: exemplar[key] for key in common},
+        "current_adapters_manifest_sha256": manifest["adapter_manifest_sha256"],
+        "challenge_sha256": manifest["challenge_sha256"],
+        "reference_config_sha256": manifest["reference_config_sha256"],
+        "source_manifest_sha256": sha256_file(root / "D1_MANIFEST.json"),
+        "decoder_module": "src/inference/nvarc_turbodfs_d1.py",
+        "checkpoint_format": "atomic per-view JSON, legacy paired JSON accepted only for immutable reused control cells",
+        "hardware_regime": "one model worker per RTX3090 GPU; shared reclaimable unfinished-cell queue",
+        "explicit_statement": "This D1 control is not numerically equivalent to the historical authoritative V5 run. D1 evaluates decoder policies under a new shared fixed-budget contract.",
+        "historical_v5_reuse": "NO",
+        "target_blind_generation_required": True,
+    }
+    atomic_json(Path(args.contract).resolve(), contract)
+    contract_sha = sha256_file(Path(args.contract).resolve())
+    atomic_json(root / "D1_FIXED_BUDGET_CONTRACT_SHA.json", {"contract_path": str(Path(args.contract).resolve()), "contract_sha256": contract_sha})
+
+
+def select_smoke_cells(args: argparse.Namespace) -> None:
+    root = args.output.resolve(); manifest = read_json(root / "D1_MANIFEST.json")
+    keys = [cell_key(output_id=str(output), depth=depth, view=view) for output in manifest["cohort_output_ids"] for depth in DEPTHS for view in VIEWS]
+    selected = sorted(keys, key=lambda key: (hashlib.sha256(key.encode("utf-8")).hexdigest(), key))[:int(args.count)]
+    if len(selected) != int(args.count):
+        raise RuntimeError("insufficient D1 cells for requested smoke")
+    atomic_json(Path(args.cell_manifest).resolve(), selected)
+
+
+def attach_policy_gold(args: argparse.Namespace) -> None:
+    root = args.output.resolve(); manifest = read_json(root / "D1_MANIFEST.json")
+    policy = str(args.policy); selected = load_selected_cell_keys(args.cell_manifest)
+    freeze_name = hashlib.sha256(policy.encode("utf-8")).hexdigest()[:12] + (".smoke" if selected is not None else "") + ".json"
+    if not (root / "freezes" / freeze_name).is_file():
+        raise RuntimeError("policy freeze required before Gold attachment")
+    solutions = json.loads(Path(args.solutions).read_text(encoding="utf-8"))
+    rows = collect_policy_cells(root, manifest, policy, selected)
+    for row in rows:
+        gold = solutions[row["task_id"]]["test"][int(row["output_index"])]["output"]
+        row["exact_gold_candidate_hit"] = any(candidate.get("canonical_candidate") == gold for candidate in row["candidates"] if candidate.get("valid_grid"))
+    suffix = hashlib.sha256(policy.encode("utf-8")).hexdigest()[:12] + (".smoke" if selected is not None else "")
+    atomic_json(root / "gold" / f"{suffix}.json", {"policy": policy, "records": rows, "gold_attached_after_freeze": True})
+
+
+def fixed_cost_report(args: argparse.Namespace) -> None:
+    """Write Phase-1/3 compact reports without launching full finalist surfaces."""
+    root = args.output.resolve(); manifest = read_json(root / "D1_MANIFEST.json")
+    selected = load_selected_cell_keys(args.cell_manifest)
+    if selected is None or len(selected) != 8:
+        raise RuntimeError("fixed cost report requires exactly eight deterministic cells")
+    contract_path = Path(args.contract).resolve()
+    if not contract_path.is_file():
+        raise RuntimeError("fixed-budget contract missing")
+    contract_sha = sha256_file(contract_path)
+    control_rows = collect_policy_cells(root, manifest, CONTROL_POLICY)
+    smoke_rows: dict[str, list[dict[str, Any]]] = {}
+    policies = tuple(policy for policy in POLICIES if policy != CONTROL_POLICY)
+    for policy in policies:
+        freeze_path = root / "freezes" / f"{hashlib.sha256(policy.encode('utf-8')).hexdigest()[:12]}.smoke.json"
+        if not freeze_path.is_file():
+            raise RuntimeError(f"smoke freeze missing: {policy}")
+        smoke_rows[policy] = collect_policy_cells(root, manifest, policy, selected)
+    control_by_key = {cell_key(output_id=row["output_id"], depth=int(row["depth"]), view=str(row["view"])): row for row in control_rows}
+    if set(control_by_key) < selected:
+        raise RuntimeError("control lacks one or more deterministic smoke cells")
+    metric_keys = ("runtime_seconds", "nodes_expanded", "successors_retained", "max_frontier_size", "batch_forward_passes", "candidate_count", "peak_vram_mb")
+    cells: list[dict[str, Any]] = []
+    for label, rows in [(CONTROL_LABEL, [control_by_key[key] for key in sorted(selected)])] + list(smoke_rows.items()):
+        for row in rows:
+            key = cell_key(output_id=row["output_id"], depth=int(row["depth"]), view=str(row["view"]))
+            cells.append({"contract_sha256": contract_sha, "decoder_policy": CONTROL_LABEL if label == CONTROL_POLICY else label,
+                          "implementation_policy": label, "cell_key": key,
+                          **{metric: row.get(metric, row.get("model_forwards") if metric == "batch_forward_passes" else None) for metric in metric_keys},
+                          "termination_reason": row.get("termination_reason"), "budget_exhausted": row.get("budget_exhausted"),
+                          "search_exhausted": row.get("search_exhausted", row.get("termination_reason") == "search_exhausted"),
+                          "lane_count": row.get("lane_count"), "solutions_accessed": row.get("solutions_accessed")})
+    by_policy: dict[str, list[dict[str, Any]]] = {}
+    for row in cells: by_policy.setdefault(str(row["decoder_policy"]), []).append(row)
+    control = by_policy[CONTROL_LABEL]
+    control_metrics = {metric: [float(row[metric]) for row in control] for metric in metric_keys if all(row.get(metric) is not None for row in control)}
+    summary: list[dict[str, Any]] = []
+    for policy, rows in by_policy.items():
+        values = {metric: [float(row[metric]) for row in rows] for metric in metric_keys if all(row.get(metric) is not None for row in rows)}
+        record: dict[str, Any] = {"contract_sha256": contract_sha, "decoder_policy": policy, "cell_count": len(rows), "phase": "CONTROL_FULL" if policy == CONTROL_LABEL else "EIGHT_CELL_COST_SMOKE"}
+        for metric, numbers in values.items():
+            record[f"median_{metric}"] = quantile(numbers, 0.5); record[f"p90_{metric}"] = quantile(numbers, 0.9); record[f"total_{metric}"] = sum(numbers)
+            if policy != CONTROL_LABEL and metric in control_metrics:
+                record[f"{metric}_ratio_vs_v5"] = quantile(numbers, 0.5) / quantile(control_metrics[metric], 0.5) if quantile(control_metrics[metric], 0.5) else None
+        summary.append(record)
+    costs = {row["decoder_policy"]: row for row in summary}
+    regret = costs.get("CUMULATIVE_REGRET_r=4.00", {})
+    cause = "NOT_ESTABLISHED"
+    if regret:
+        node_ratio = float(regret.get("nodes_expanded_ratio_vs_v5") or 0)
+        forward_ratio = float(regret.get("batch_forward_passes_ratio_vs_v5") or 0)
+        runtime_ratio = float(regret.get("runtime_seconds_ratio_vs_v5") or 0)
+        per_node = (float(regret.get("median_runtime_seconds") or 0) / float(regret.get("median_nodes_expanded") or 1)) / (float(costs[CONTROL_LABEL].get("median_runtime_seconds") or 0) / float(costs[CONTROL_LABEL].get("median_nodes_expanded") or 1))
+        if runtime_ratio > 1.25 and node_ratio > 1.25 and per_node <= 1.25: cause = "SEARCH_TREE_EXPANSION"
+        elif runtime_ratio > 1.25 and node_ratio <= 1.25 and per_node > 1.25: cause = "IMPLEMENTATION_OVERHEAD"
+        elif runtime_ratio > 1.25 and node_ratio > 1.25 and per_node > 1.25: cause = "BOTH"
+    ordered = sorted((row for row in summary if row["decoder_policy"] != CONTROL_LABEL), key=lambda row: float(row.get("median_runtime_seconds") or float("inf")))
+    decision = {"experiment_id": FIXED_BUDGET_EXPERIMENT, "contract_sha256": contract_sha, "D1_V5_CONTROL": "144/144",
+                "actual_cost_order": [row["decoder_policy"] for row in ordered], "regret4_slowdown_cause": cause,
+                "daytime_policy": ordered[0]["decoder_policy"] if ordered else None,
+                "second_policy": ordered[1]["decoder_policy"] if len(ordered) > 1 else None,
+                "overnight_policy": ordered[2]["decoder_policy"] if len(ordered) > 2 else None,
+                "workers": "1/GPU", "shared_queue": "ENABLED", "orphan_recovery": "ENABLED",
+                "historical_v5_reuse": "NO", "d1_is_new_fixed_budget_experiment": "YES",
+                "phase4_started": False, "phase3_only": True}
+    out = Path(args.report_dir).resolve(); out.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(contract_path, out / "D1_FIXED_BUDGET_CONTRACT.json")
+    atomic_json(out / "D1_FIXED_BUDGET_PROVENANCE.json", {"contract_sha256": contract_sha, "source_manifest_sha256": sha256_file(root / "D1_MANIFEST.json"), "d0_commit": D0_COMMIT, "source_commit": manifest["source_commit"], "gold_status": "control labels attached only after control freeze", "predecessor_v5_audit": "historical context only; superseded for this D1 fixed-budget A/B"})
+    def write_csv(name: str, rows: list[dict[str, Any]]) -> None:
+        with (out / name).open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=sorted({key for row in rows for key in row}), lineterminator="\n"); writer.writeheader(); writer.writerows(rows)
+    write_csv("d1_v5_control_cells.csv", [{"contract_sha256": contract_sha, **row} for row in control_rows])
+    write_csv("d1_cost_smoke.csv", cells); write_csv("d1_policy_cells.csv", cells); write_csv("d1_policy_summary.csv", summary)
+    write_csv("d1_policy_outputs.csv", [{"decoder_policy": CONTROL_LABEL, "output_id": output, "phase": "CONTROL_FULL", "candidate_cells": sum(1 for row in control_rows if row["output_id"] == output)} for output in manifest["cohort_output_ids"]])
+    write_csv("d1_rescue_overlap.csv", [])
+    atomic_json(out / "D1_DECISION.json", decision)
+    lines = ["# D1 fixed-budget decoder A/B: control and 8-cell cost smoke", "", "This is a new fixed-budget decoder comparison, not historical V5 parity. Candidate retrieval is target-blind; no D1 result updates the historical 33/89 union.", "", f"- Contract SHA256: `{contract_sha}`", f"- Control completion: `144/144`", f"- Deterministic smoke cells: `{len(selected)}`", "", "| Policy | Median seconds/cell | P90 seconds/cell | Median nodes | Runtime ratio vs control | Node ratio vs control |", "|---|---:|---:|---:|---:|---:|"]
+    for row in summary:
+        lines.append(f"| {row['decoder_policy']} | {row.get('median_runtime_seconds', float('nan')):.3f} | {row.get('p90_runtime_seconds', float('nan')):.3f} | {row.get('median_nodes_expanded', float('nan')):.1f} | {row.get('runtime_seconds_ratio_vs_v5', 1.0):.3f} | {row.get('nodes_expanded_ratio_vs_v5', 1.0):.3f} |")
+    lines += ["", f"- Regret4 slowdown classification: `{cause}`", "- Phase 4 finalist surfaces have not started."]
+    (out / "D1_FIXED_BUDGET_DECODER_REPORT.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def validate_smoke(args: argparse.Namespace) -> None:
     root = args.output.resolve(); manifest = read_json(root / "D1_MANIFEST.json")
     records = collect(root, manifest, smoke=True)
@@ -417,11 +635,18 @@ def main() -> None:
     prepare_p = sub.add_parser("prepare"); prepare_p.add_argument("--output", type=Path, required=True); prepare_p.add_argument("--g1-summary", type=Path, required=True); prepare_p.add_argument("--v5-root", type=Path, required=True); prepare_p.add_argument("--challenge", type=Path, required=True); prepare_p.add_argument("--reference-config", type=Path, required=True); prepare_p.add_argument("--adapter-manifest", type=Path, required=True); prepare_p.add_argument("--authoritative-root", type=Path, required=True); prepare_p.add_argument("--model-path", type=Path, required=True); prepare_p.add_argument("--native-config-dir", type=Path, required=True); prepare_p.add_argument("--source-commit", required=True)
     worker_p = sub.add_parser("worker"); worker_p.add_argument("--output", type=Path, required=True); worker_p.add_argument("--gpu-id", type=int, required=True); worker_p.add_argument("--worker-index", type=int, required=True); worker_p.add_argument("--workers", type=int, required=True); worker_p.add_argument("--smoke", action="store_true"); worker_p.add_argument("--shared-queue", action="store_true"); worker_p.add_argument("--policies"); worker_p.add_argument("--cell-manifest", type=Path); worker_p.add_argument("--claim-stale-seconds", type=float, default=900.0)
     freeze_p = sub.add_parser("freeze"); freeze_p.add_argument("--output", type=Path, required=True)
+    freeze_policy_p = sub.add_parser("freeze-policy"); freeze_policy_p.add_argument("--output", type=Path, required=True); freeze_policy_p.add_argument("--policy", required=True); freeze_policy_p.add_argument("--cell-manifest", type=Path)
+    contract_p = sub.add_parser("fixed-contract"); contract_p.add_argument("--output", type=Path, required=True); contract_p.add_argument("--contract", type=Path, required=True)
+    select_p = sub.add_parser("select-smoke-cells"); select_p.add_argument("--output", type=Path, required=True); select_p.add_argument("--cell-manifest", type=Path, required=True); select_p.add_argument("--count", type=int, default=8)
     smoke_p = sub.add_parser("validate-smoke"); smoke_p.add_argument("--output", type=Path, required=True)
     gold_p = sub.add_parser("gold"); gold_p.add_argument("--output", type=Path, required=True); gold_p.add_argument("--solutions", type=Path, required=True)
+    gold_policy_p = sub.add_parser("gold-policy"); gold_policy_p.add_argument("--output", type=Path, required=True); gold_policy_p.add_argument("--policy", required=True); gold_policy_p.add_argument("--solutions", type=Path, required=True); gold_policy_p.add_argument("--cell-manifest", type=Path)
     final_p = sub.add_parser("finalize"); final_p.add_argument("--output", type=Path, required=True); final_p.add_argument("--report-dir", type=Path, required=True)
+    cost_p = sub.add_parser("fixed-cost-report"); cost_p.add_argument("--output", type=Path, required=True); cost_p.add_argument("--contract", type=Path, required=True); cost_p.add_argument("--cell-manifest", type=Path, required=True); cost_p.add_argument("--report-dir", type=Path, required=True)
     args = parser.parse_args()
-    {"prepare": prepare, "worker": worker, "freeze": freeze, "validate-smoke": validate_smoke, "gold": attach_gold, "finalize": finalise}[args.mode](args)
+    {"prepare": prepare, "worker": worker, "freeze": freeze, "freeze-policy": freeze_policy, "fixed-contract": fixed_contract,
+     "select-smoke-cells": select_smoke_cells, "validate-smoke": validate_smoke, "gold": attach_gold, "gold-policy": attach_policy_gold,
+     "finalize": finalise, "fixed-cost-report": fixed_cost_report}[args.mode](args)
 
 
 if __name__ == "__main__": main()

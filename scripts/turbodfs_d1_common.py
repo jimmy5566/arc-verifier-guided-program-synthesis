@@ -76,8 +76,12 @@ def d1_cells_batch(*, model: Any, tokenizer: Any, task: Any, task_id: str, outpu
             "successors_considered": considered, "successors_retained": retained, "max_frontier_size": result.max_frontier_size,
             "mean_frontier_size": float(sum(frontier_samples) / len(frontier_samples)) if frontier_samples else 0.0,
             "model_forwards": result.model_forwards, "tokens_advanced": sum(bool(row["expanded"]) for row in nodes),
+            # Alias the decoder-level forward count explicitly for the fixed-budget
+            # cost contract.  This is telemetry only; it does not alter decoding.
+            "batch_forward_passes": result.model_forwards,
             "lane_count": len(views), "lane_index": lane, "termination_reason": result.termination_reason,
             "timed_out": result.timed_out, "budget_exhausted": result.budget_exhausted,
+            "search_exhausted": result.termination_reason == "search_exhausted",
             "peak_vram_mb": int(torch.cuda.max_memory_allocated() / (1024 * 1024)),
             "peak_reserved_vram_mb": int(torch.cuda.max_memory_reserved() / (1024 * 1024)),
             "search_tree_reconstructible": True, "full_branch_probabilities_saved": True,
