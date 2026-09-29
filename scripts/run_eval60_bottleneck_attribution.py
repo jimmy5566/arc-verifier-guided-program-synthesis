@@ -92,6 +92,20 @@ def _cell_path(scratch: Path, phase: str, task_id: str, output_index: int, depth
     return scratch / phase / "cells" / task_id / f"o{output_index:02d}_d{depth:03d}_{view}.json"
 
 
+def _sharded_task_ids(task_ids: list[str], args: argparse.Namespace) -> list[str]:
+    """Return a deterministic disjoint task shard without changing cell semantics."""
+    if args.task_shard_count < 1:
+        raise RuntimeError("task_shard_count must be positive")
+    if not 0 <= args.task_shard_index < args.task_shard_count:
+        raise RuntimeError(
+            f"invalid task shard {args.task_shard_index}/{args.task_shard_count}"
+        )
+    return [
+        task_id for index, task_id in enumerate(task_ids)
+        if index % args.task_shard_count == args.task_shard_index
+    ]
+
+
 def _adapter_metadata(adapters: Path, task_id: str, depth: int) -> dict[str, Any]:
     path = adapters / task_id / f"depth_{depth:03d}" / "metadata.json"
     metadata = read_json(path)
@@ -410,7 +424,9 @@ def run_gold_surface(args: argparse.Namespace, *, phase: str, depths: tuple[int,
     v5_config = read_json(args.v5_config); max_score, max_tokens = float(v5_config["max_score"]), int(v5_config["max_new_tokens"])
     by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in misses: by_task[row["task_id"]].append(row)
-    for task_id in sorted(by_task):
+    task_ids = _sharded_task_ids(sorted(by_task), args)
+    expected_shard_cells = 0
+    for task_id in task_ids:
         for depth in depths:
             if use_initial_adapter:
                 restore_adapter(model, initial); checkpoint_sha = "INITIAL_TTT0"
@@ -419,6 +435,7 @@ def run_gold_surface(args: argparse.Namespace, *, phase: str, depths: tuple[int,
             for row in by_task[task_id]:
                 target_task = view_task(tasks[task_id], int(row["output_index"])); gold = output_gold(solutions, task_id, int(row["output_index"]))
                 for view in views:
+                    expected_shard_cells += 1
                     destination = _cell_path(args.scratch, phase, task_id, int(row["output_index"]), depth, view)
                     if destination.is_file(): continue
                     began = time.perf_counter()
@@ -430,6 +447,33 @@ def run_gold_surface(args: argparse.Namespace, *, phase: str, depths: tuple[int,
                     payload = {**row, **summary, "phase": phase, "depth": depth, "view": view, "checkpoint_sha256": checkpoint_sha,
                                "wall_seconds": time.perf_counter() - began, "token_trace": traces}
                     atomic_json(destination, payload)
+    if args.task_shard_count > 1:
+        completed_shard_cells = sum(
+            _cell_path(args.scratch, phase, task_id, int(row["output_index"]), depth, view).is_file()
+            for task_id in task_ids
+            for depth in depths
+            for row in by_task[task_id]
+            for view in views
+        )
+        if completed_shard_cells != expected_shard_cells:
+            raise RuntimeError(
+                f"{phase} shard {args.task_shard_index}/{args.task_shard_count} incomplete "
+                f"{completed_shard_cells}/{expected_shard_cells}"
+            )
+        atomic_json(
+            args.scratch / phase / f"shard-{args.task_shard_index:02d}-of-{args.task_shard_count:02d}.json",
+            {
+                "status": "COMPLETE_SHARD",
+                "phase": phase,
+                "task_shard_index": args.task_shard_index,
+                "task_shard_count": args.task_shard_count,
+                "task_ids": task_ids,
+                "completed_cells": completed_shard_cells,
+                "expected_cells": expected_shard_cells,
+                "wall_seconds": time.perf_counter() - started,
+            },
+        )
+        return
     cells = _iter_phase_cells(args.scratch, phase)
     expected = len(misses) * len(depths) * len(views)
     if len(cells) != expected: raise RuntimeError(f"{phase} incomplete {len(cells)}/{expected}")
@@ -476,17 +520,47 @@ def run_g3_greedy(args: argparse.Namespace) -> None:
     tasks, solutions = load_dataset(args.challenge), json.loads(args.solutions.read_text(encoding="utf-8"))
     by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in misses: by_task[row["task_id"]].append(row)
-    for task_id in sorted(by_task):
+    task_ids = _sharded_task_ids(sorted(by_task), args)
+    expected_shard_cells = 0
+    for task_id in task_ids:
         for depth in DEPTHS:
             metadata = _adapter_metadata(args.adapters, task_id, depth); common.load_adapter(model=model, metadata=metadata)
             for row in by_task[task_id]:
                 target_task = view_task(tasks[task_id], int(row["output_index"])); gold = output_gold(solutions, task_id, int(row["output_index"]))
                 for view in D4_VIEWS:
+                    expected_shard_cells += 1
                     destination = _cell_path(args.scratch, "g3_greedy", task_id, int(row["output_index"]), depth, view)
                     if destination.is_file(): continue
                     payload = common.greedy_cell(model=model, tokenizer=tokenizer, task=target_task, task_id=task_id, output_index=int(row["output_index"]), depth=depth, view=view, config=config, checkpoint_sha=metadata["checkpoint_sha256"])
                     payload.update(row); payload.update({"phase": "g3_greedy", "gold_exact": payload.get("canonical_candidate") == gold})
                     atomic_json(destination, payload)
+    if args.task_shard_count > 1:
+        completed_shard_cells = sum(
+            _cell_path(args.scratch, "g3_greedy", task_id, int(row["output_index"]), depth, view).is_file()
+            for task_id in task_ids
+            for depth in DEPTHS
+            for row in by_task[task_id]
+            for view in D4_VIEWS
+        )
+        if completed_shard_cells != expected_shard_cells:
+            raise RuntimeError(
+                f"g3_greedy shard {args.task_shard_index}/{args.task_shard_count} incomplete "
+                f"{completed_shard_cells}/{expected_shard_cells}"
+            )
+        atomic_json(
+            args.scratch / "g3_greedy" / f"shard-{args.task_shard_index:02d}-of-{args.task_shard_count:02d}.json",
+            {
+                "status": "COMPLETE_SHARD",
+                "phase": "g3_greedy",
+                "task_shard_index": args.task_shard_index,
+                "task_shard_count": args.task_shard_count,
+                "task_ids": task_ids,
+                "completed_cells": completed_shard_cells,
+                "expected_cells": expected_shard_cells,
+                "wall_seconds": time.perf_counter() - started,
+            },
+        )
+        return
     cells = _iter_phase_cells(args.scratch, "g3_greedy")
     expected = len(misses) * len(DEPTHS) * len(D4_VIEWS)
     if len(cells) != expected: raise RuntimeError(f"g3 greedy incomplete {len(cells)}/{expected}")
@@ -567,6 +641,10 @@ def parser() -> argparse.ArgumentParser:
     item.add_argument("--ptxas", type=Path, required=True)
     item.add_argument("--greedy-parquet", type=Path, required=True)
     item.add_argument("--g0-logprob-tolerance", type=float, default=0.05)
+    item.add_argument("--task-shard-index", type=int, default=0,
+                      help="Deterministic task shard index; scheduling only.")
+    item.add_argument("--task-shard-count", type=int, default=1,
+                      help="Total deterministic task shards; scheduling only.")
     return item
 
 
@@ -576,7 +654,8 @@ def main() -> None:
     elif args.mode == "g0": run_g0(args)
     elif args.mode == "g1": run_gold_surface(args, phase="g1", depths=DEPTHS, views=CURRENT_VIEWS)
     elif args.mode == "g2":
-        run_gold_surface(args, phase="g2", depths=(0,), views=CURRENT_VIEWS, use_initial_adapter=True); run_g2_summary(args)
+        run_gold_surface(args, phase="g2", depths=(0,), views=CURRENT_VIEWS, use_initial_adapter=True)
+        if args.task_shard_count == 1: run_g2_summary(args)
     elif args.mode == "g3-tf": run_gold_surface(args, phase="g3", depths=DEPTHS, views=D4_VIEWS)
     elif args.mode == "g3-greedy": run_g3_greedy(args)
     elif args.mode == "g4-discover": g4_discovery(args)
