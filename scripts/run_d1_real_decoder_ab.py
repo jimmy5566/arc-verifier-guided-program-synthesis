@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
 from inference.nvarc_turbodfs_d1 import D1TurboDFSConfig, POLICIES
+from inference.d1_shared_queue import cell_key, claim_cell, deterministic_order, release_claim
 from scripts.run_adaptive_ttt_loo_transfer12 import read_json, view_task
 from scripts.turbodfs_v4_common import sha256_file
 from scripts.turbodfs_d1_common import d1_cells_batch
@@ -194,6 +195,11 @@ def unit_path(root: Path, policy: str, output: str, depth: int, views: tuple[str
     return root / prefix / policy_key / output.replace(":", "_") / f"d{depth:03d}_{view_key}.json"
 
 
+def cell_path(root: Path, policy: str, output: str, depth: int, view: str) -> Path:
+    policy_key = hashlib.sha256(policy.encode("utf-8")).hexdigest()[:12]
+    return root / "queue_cells" / policy_key / output.replace(":", "_") / f"d{depth:03d}_{view}.json"
+
+
 def valid_unit(path: Path, policy: str, output: str, depth: int, views: tuple[str, ...], config_sha: str) -> bool:
     try:
         rows = json.loads(path.read_text(encoding="utf-8"))
@@ -202,6 +208,42 @@ def valid_unit(path: Path, policy: str, output: str, depth: int, views: tuple[st
     if not isinstance(rows, list) or len(rows) != len(views): return False
     return all(row.get("decoder_policy") == policy and row.get("output_id") == output and int(row.get("depth", -1)) == depth and
                row.get("view") in views and row.get("decoder_config_sha256") == config_sha and row.get("solutions_accessed") is False for row in rows)
+
+
+def existing_cell(root: Path, policy: str, output: str, depth: int, view: str, config_sha: str) -> dict[str, Any] | None:
+    """Return one valid cell from new queue storage or pre-existing paired storage."""
+    direct = cell_path(root, policy, output, depth, view)
+    if valid_unit(direct, policy, output, depth, (view,), config_sha):
+        return json.loads(direct.read_text(encoding="utf-8"))[0]
+    for group in GROUPS:
+        if view not in group:
+            continue
+        paired = unit_path(root, policy, output, depth, group, smoke=False)
+        if valid_unit(paired, policy, output, depth, group, config_sha):
+            rows = json.loads(paired.read_text(encoding="utf-8"))
+            return next(row for row in rows if row["view"] == view)
+    return None
+
+
+def queue_items(manifest: dict[str, Any], *, policies: tuple[str, ...], selected_cell_keys: set[str] | None) -> list[tuple[str, str, int, str]]:
+    values = []
+    for policy in policies:
+        for output in manifest["cohort_output_ids"]:
+            for depth in DEPTHS:
+                for view in VIEWS:
+                    key = cell_key(output_id=str(output), depth=depth, view=view)
+                    if selected_cell_keys is None or key in selected_cell_keys:
+                        values.append((policy, str(output), depth, view))
+    return deterministic_order(values)
+
+
+def load_selected_cell_keys(path: Path | None) -> set[str] | None:
+    if path is None:
+        return None
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, list) or not all(isinstance(value, str) for value in payload):
+        raise RuntimeError("selected cell manifest must be a JSON string list")
+    return set(payload)
 
 
 def worker(args: argparse.Namespace) -> None:
@@ -216,27 +258,57 @@ def worker(args: argparse.Namespace) -> None:
     _root, _runtime_manifest, generation_config, tasks, model, tokenizer, _initial, _base = greedy._runtime(runtime_args)
     adapters = adapter_records(Path(manifest["adapter_manifest"]))
     last_adapter: tuple[str, int] | None = None
-    items = list(work_items(manifest, args.smoke))
+    if args.shared_queue and args.smoke:
+        raise RuntimeError("shared queue is only for non-smoke D1 cells")
+    policies = tuple(args.policies.split(",")) if args.policies else POLICIES
+    if any(policy not in POLICIES for policy in policies):
+        raise RuntimeError("unknown D1 queue policy")
+    selected_keys = load_selected_cell_keys(args.cell_manifest)
+    items = queue_items(manifest, policies=policies, selected_cell_keys=selected_keys) if args.shared_queue else list(work_items(manifest, args.smoke))
     for policy, output, depth, views in items:
-        identity = f"{policy}|{output}|{depth}|{'-'.join(views)}"
-        if int(hashlib.sha256(identity.encode("utf-8")).hexdigest(), 16) % args.workers != args.worker_index:
-            continue
-        decoder, config_sha = config_for(manifest, policy)
-        destination = unit_path(root, policy, output, depth, views, args.smoke)
-        if valid_unit(destination, policy, output, depth, views, config_sha):
-            continue
-        task_id, output_index = output_key(output); adapter_key = (task_id, depth)
-        if adapter_key != last_adapter:
-            adapter_sha = load_adapter(model, adapters[adapter_key]); last_adapter = adapter_key
+        if args.shared_queue:
+            view = views  # queue rows store exactly one view in this local variable
+            if not isinstance(view, str):
+                raise RuntimeError("shared queue requires individual views")
         else:
-            adapter_sha = str(adapters[adapter_key]["sha256"])
-        rows = d1_cells_batch(model=model, tokenizer=tokenizer, task=view_task(tasks[task_id], output_index), task_id=task_id,
-                              output_index=output_index, depth=depth, views=views, generation_config=generation_config,
-                              decoder=decoder, checkpoint_sha=adapter_sha)
-        for row in rows:
-            row.update({"output_id": output, "decoder_config_sha256": config_sha, "adapter_sha": adapter_sha,
-                        "worker_index": args.worker_index, "gpu_id": args.gpu_id, "solutions_accessed": False})
-        atomic_json(destination, rows)
+            identity = f"{policy}|{output}|{depth}|{'-'.join(views)}"
+            if int(hashlib.sha256(identity.encode("utf-8")).hexdigest(), 16) % args.workers != args.worker_index:
+                continue
+        decoder, config_sha = config_for(manifest, policy)
+        if args.shared_queue:
+            destination = cell_path(root, policy, output, depth, view)
+            if existing_cell(root, policy, output, depth, view, config_sha) is not None:
+                continue
+            claim = claim_cell(claims_root=root / "claims", policy=policy, output_id=output, depth=depth, view=view,
+                               worker_id=f"{args.worker_index}@gpu{args.gpu_id}", stale_seconds=float(args.claim_stale_seconds))
+            if claim is None:
+                continue
+            if existing_cell(root, policy, output, depth, view, config_sha) is not None:
+                release_claim(claim); continue
+            run_views = (view,)
+        else:
+            destination = unit_path(root, policy, output, depth, views, args.smoke)
+            if valid_unit(destination, policy, output, depth, views, config_sha):
+                continue
+            claim = None
+            run_views = views
+        task_id, output_index = output_key(output); adapter_key = (task_id, depth)
+        try:
+            if adapter_key != last_adapter:
+                adapter_sha = load_adapter(model, adapters[adapter_key]); last_adapter = adapter_key
+            else:
+                adapter_sha = str(adapters[adapter_key]["sha256"])
+            rows = d1_cells_batch(model=model, tokenizer=tokenizer, task=view_task(tasks[task_id], output_index), task_id=task_id,
+                                  output_index=output_index, depth=depth, views=run_views, generation_config=generation_config,
+                                  decoder=decoder, checkpoint_sha=adapter_sha)
+            for row in rows:
+                row.update({"output_id": output, "decoder_config_sha256": config_sha, "adapter_sha": adapter_sha,
+                            "worker_index": args.worker_index, "gpu_id": args.gpu_id, "solutions_accessed": False,
+                            "scheduler": "shared_reclaimable_queue" if args.shared_queue else "static_hash_shard"})
+            atomic_json(destination, rows)
+        finally:
+            if claim is not None and destination.is_file():
+                release_claim(claim)
     del model
 
 
@@ -343,7 +415,7 @@ def finalise(args: argparse.Namespace) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(); sub = parser.add_subparsers(dest="mode", required=True)
     prepare_p = sub.add_parser("prepare"); prepare_p.add_argument("--output", type=Path, required=True); prepare_p.add_argument("--g1-summary", type=Path, required=True); prepare_p.add_argument("--v5-root", type=Path, required=True); prepare_p.add_argument("--challenge", type=Path, required=True); prepare_p.add_argument("--reference-config", type=Path, required=True); prepare_p.add_argument("--adapter-manifest", type=Path, required=True); prepare_p.add_argument("--authoritative-root", type=Path, required=True); prepare_p.add_argument("--model-path", type=Path, required=True); prepare_p.add_argument("--native-config-dir", type=Path, required=True); prepare_p.add_argument("--source-commit", required=True)
-    worker_p = sub.add_parser("worker"); worker_p.add_argument("--output", type=Path, required=True); worker_p.add_argument("--gpu-id", type=int, required=True); worker_p.add_argument("--worker-index", type=int, required=True); worker_p.add_argument("--workers", type=int, required=True); worker_p.add_argument("--smoke", action="store_true")
+    worker_p = sub.add_parser("worker"); worker_p.add_argument("--output", type=Path, required=True); worker_p.add_argument("--gpu-id", type=int, required=True); worker_p.add_argument("--worker-index", type=int, required=True); worker_p.add_argument("--workers", type=int, required=True); worker_p.add_argument("--smoke", action="store_true"); worker_p.add_argument("--shared-queue", action="store_true"); worker_p.add_argument("--policies"); worker_p.add_argument("--cell-manifest", type=Path); worker_p.add_argument("--claim-stale-seconds", type=float, default=900.0)
     freeze_p = sub.add_parser("freeze"); freeze_p.add_argument("--output", type=Path, required=True)
     smoke_p = sub.add_parser("validate-smoke"); smoke_p.add_argument("--output", type=Path, required=True)
     gold_p = sub.add_parser("gold"); gold_p.add_argument("--output", type=Path, required=True); gold_p.add_argument("--solutions", type=Path, required=True)
