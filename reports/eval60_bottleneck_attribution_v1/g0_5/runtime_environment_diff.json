@@ -1,0 +1,128 @@
+{
+  "comparison_status": "HISTORICAL_METADATA_AVAILABLE",
+  "current": {
+    "allow_tf32_cudnn": true,
+    "allow_tf32_matmul": false,
+    "compute_capability": [
+      8,
+      6
+    ],
+    "cuda_driver": "NVIDIA GeForce RTX 3090, 580.126.20",
+    "cudnn_benchmark": false,
+    "deterministic_algorithms": false,
+    "gpu_name": "NVIDIA GeForce RTX 3090",
+    "kv_cache_replay": "past_key_values, batch=1, no custom position_ids",
+    "model_attn_implementation": "eager",
+    "model_dtype": "torch.bfloat16",
+    "peft": "0.17.1",
+    "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+    "python": "3.11.13 (main, Jun  4 2025, 08:57:30) [GCC 13.3.0]",
+    "torch": "2.8.0+cu128",
+    "torch_cuda": "12.8",
+    "transformers": "4.55.4",
+    "triton": "3.4.0",
+    "unsloth": "2025.9.7",
+    "xformers": "0.0.33+5d4b92a.d20260925"
+  },
+  "historical": {
+    "files": [
+      {
+        "path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/reference_ttt_config_cuda128_runtime.json",
+        "payload": {
+          "_runtime_compatibility": {
+            "change": "ptxas_path_only",
+            "from": "/usr/local/cuda-12.5/bin/ptxas",
+            "scientific_config_changed": false,
+            "source_sha256": "5554c0c0fa7abe93c5aa2e1bb0c4d0d5bae1d6f5476acf1ac8dc37f8a8e6c42d",
+            "to": "/usr/local/cuda-12.8/bin/ptxas"
+          },
+          "alpha": 32,
+          "augmentation_colour_permutations": 16,
+          "augmentation_geometry_count": 8,
+          "bf16": true,
+          "generation": "unchanged greedy Aug8; beam=1",
+          "generation_augmentation_count": 8,
+          "generation_context_window": 16384,
+          "gradient_checkpointing": false,
+          "kernel_source": "sorokin/pip-install-unsloth-flash-patch",
+          "learning_rate": 5e-05,
+          "max_new_tokens": 1024,
+          "max_sequence_length": 8192,
+          "ptxas_path": "/usr/local/cuda-12.8/bin/ptxas",
+          "rank": 256,
+          "reference_commit": "846d0198efa752534594e321fc3289fc0a06c657",
+          "reference_notebook": "sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue",
+          "reference_repository": "https://github.com/1ytic/NVARC",
+          "reference_schedule_total_steps": 128,
+          "scheduler": "cosine",
+          "seed": 42,
+          "style": "official_nvarc_train_only_partial_24_steps",
+          "target_modules": [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj",
+            "embed_tokens",
+            "lm_head"
+          ],
+          "train_pair_order": "random full permutation",
+          "ttt_steps": 24,
+          "use_rslora": true,
+          "warmup_ratio": 0.1
+        }
+      },
+      {
+        "path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/runtime_patch_manifest.json",
+        "payload": {
+          "gold_accessed_by_manifest_writer": false,
+          "local_non_scientific_patch_commits": [
+            "938b6fd",
+            "fa5e8d0",
+            "bffa451"
+          ],
+          "remote_source_dirty_paths": [
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/README.md",
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/SENTINEL6_GOLD_NLL_RECONSTRUCTION_AUDIT.md",
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/SHA256SUMS.txt",
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/config_resolved.json",
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/hypothesis_update.json",
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/manifest.json",
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/provenance.json",
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/sentinel6_depth_view_recovery.json",
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/sentinel6_frozen_loo_reference.csv",
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/sentinel6_gold_path_accessibility.csv",
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/sentinel6_gold_test_nll_surface.csv",
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/sentinel6_loo_vs_gold_rank.csv",
+            " D artifacts/adaptive_ttt_gold_nll_reconstruction_v1/sentinel6_trajectory_reconstruction.csv",
+            " D artifacts/adaptive_ttt_loo_failure_anatomy_v1/basin_stability_vs_gold_transfer.csv",
+            " D artifacts/adaptive_ttt_loo_failure_anatomy_v1/fold_basin_vs_gold_test.csv",
+            " D artifacts/adaptive_ttt_loo_failure_anatomy_v1/gold_cell_fold_anatomy.csv",
+            " M scripts/prepare_eval60_adaptive_inference_joint_v2.py",
+            " M scripts/run_eval60_adaptive_inference_joint_v2.py",
+            " M src/inference/nvarc_turbodfs_opt.py",
+            "?? scripts/audit_eval60_authoritative_completion.py",
+            "?? scripts/calibrate_turbodfs_opt_v3.py",
+            "?? scripts/finalize_eval60_authoritative_greedy_v1.py",
+            "?? scripts/finalize_eval60_turbodfs_opt_v3.py",
+            "?? scripts/make_eval60_authoritative_handoff.py",
+            "?? scripts/overnight_eval60_authoritative_controller.sh",
+            "?? scripts/prepare_eval60_authoritative_greedy_v1.py",
+            "?? scripts/run_eval60_authoritative_greedy_v1.py",
+            "?? scripts/run_eval60_turbodfs_opt_v3_blocks.py"
+          ],
+          "remote_source_head": "2269753018470a588f4c71aa9d0474a50593738f",
+          "runtime_files": {
+            "completion_audit_sha256": "a308d54e45d514b501462a421e2b759476e290f4547abbd4ca00bf11caff5ae7",
+            "controller_sha256": "af8a646e3f0077f4bec3d95bbe3fd1d1563c4d9dc7e4ab6a27c5b49dc9142337",
+            "v3_failure_mechanism_sha256": "74101e351e201ef9e3e54adf33c11d41c022165ab1d86dc8bde0d1f54d2a2fff"
+          },
+          "scope": "Documentation, completion audit and post-controller handoff only. The running Greedy workers and their scientific configuration were not restarted or altered."
+        }
+      }
+    ],
+    "status": "AVAILABLE"
+  }
+}

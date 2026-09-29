@@ -1,0 +1,51 @@
+{
+  "runtime": {
+    "allow_tf32_cudnn": true,
+    "allow_tf32_matmul": false,
+    "compute_capability": [
+      8,
+      6
+    ],
+    "cuda_driver": "NVIDIA GeForce RTX 3090, 580.126.20",
+    "cudnn_benchmark": false,
+    "deterministic_algorithms": false,
+    "gpu_name": "NVIDIA GeForce RTX 3090",
+    "kv_cache_replay": "past_key_values, batch=1, no custom position_ids",
+    "model_attn_implementation": "eager",
+    "model_dtype": "torch.bfloat16",
+    "peft": "0.17.1",
+    "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+    "python": "3.11.13 (main, Jun  4 2025, 08:57:30) [GCC 13.3.0]",
+    "torch": "2.8.0+cu128",
+    "torch_cuda": "12.8",
+    "transformers": "4.55.4",
+    "triton": "3.4.0",
+    "unsloth": "2025.9.7",
+    "xformers": "0.0.33+5d4b92a.d20260925"
+  },
+  "tokenizer": {
+    "chat_template_source": "nvarc_official_for_missing_checkpoint_template",
+    "config_vocab_size": 16,
+    "eos_token_id": 15,
+    "pad_token_id": 13,
+    "token_mapping": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "5": 5,
+      "6": 6,
+      "7": 7,
+      "8": 8,
+      "9": 9,
+      "<|endoftext|>": 13,
+      "<|im_end|>": 15,
+      "<|im_start|>": 14,
+      "assistant": 12,
+      "user": 11,
+      "\u010a": 10
+    },
+    "tokenizer_vocab_size": 16
+  }
+}
