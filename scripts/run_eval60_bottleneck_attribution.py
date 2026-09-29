@@ -104,10 +104,18 @@ def _sharded_task_ids(task_ids: list[str], args: argparse.Namespace) -> list[str
         raise RuntimeError(
             f"invalid task shard {args.task_shard_index}/{args.task_shard_count}"
         )
-    return [
+    shard = [
         task_id for index, task_id in enumerate(task_ids)
         if index % args.task_shard_count == args.task_shard_index
     ]
+    # This is scheduling-only: a bounded smoke writes real, resumable cells
+    # for the first deterministic task in each shard.  The later full pass
+    # uses the same immutable cohort and fills the remaining cell keys.
+    if args.max_tasks_per_shard is not None:
+        if args.max_tasks_per_shard < 1:
+            raise RuntimeError("max_tasks_per_shard must be positive")
+        shard = shard[:args.max_tasks_per_shard]
+    return shard
 
 
 def _adapter_metadata(adapters: Path, task_id: str, depth: int) -> dict[str, Any]:
@@ -1106,6 +1114,293 @@ def run_g3_greedy(args: argparse.Namespace) -> None:
     atomic_json(args.scratch / "g3_greedy" / "status.json", {"status": "COMPLETE", "cells": len(cells), "expected_cells": expected, "wall_seconds": time.perf_counter() - started})
 
 
+G3A_PHASE = "g3a_ttt24_omitted_d4_greedy"
+
+
+def _g3a_contract(config: dict[str, Any], tokenizer: Any) -> dict[str, Any]:
+    """Return only frozen decode-contract fields relevant to G3A identity."""
+    return {
+        "decoder": "greedy",
+        "do_sample": False,
+        "return_dict_in_generate": True,
+        "output_scores": True,
+        "max_new_tokens": int(config["max_new_tokens"]),
+        "generation_context_window": int(config["generation_context_window"]),
+        "eos_token_id": int(tokenizer.eos_token_id),
+        "pad_token_id": int(tokenizer.pad_token_id),
+        "views": list(D4_VIEWS),
+        "color_offset": 0,
+        "pair_order": "canonical",
+    }
+
+
+def _g3a_expected_keys(misses: list[dict[str, Any]]) -> set[tuple[str, int, int, str]]:
+    return {
+        (str(row["task_id"]), int(row["output_index"]), 24, view)
+        for row in misses for view in D4_VIEWS
+    }
+
+
+def _g3a_historical_predictions() -> dict[tuple[str, int, str], list[str]]:
+    """Load diagnostic-only hashes from the committed non-exact audit.
+
+    These rows never affect decoding, checkpoint selection, retries, Gold
+    labels, or final rescue totals.  They only make agreement transparent.
+    """
+    path = ROOT / "analysis/historical_eval60_aug8_reuse_v1/hard28_ttt24_omitted_view_greedy.csv"
+    if not path.is_file():
+        return {}
+    result: dict[tuple[str, int, str], list[str]] = defaultdict(list)
+    for row in _csv_rows(path):
+        if row.get("historical_prediction_available") != "TRUE":
+            continue
+        if row.get("prediction_sha") in {None, "", "UNAVAILABLE"}:
+            continue
+        result[(str(row["task_id"]), int(row["output_index"]), str(row["view"]))].append(str(row["prediction_sha"]))
+    return result
+
+
+def run_g3a_prepare(args: argparse.Namespace) -> None:
+    """Freeze the exact existing hard28 membership without model/Gold access."""
+    misses = prepare_miss_set(args)
+    if len(misses) != 28:
+        raise RuntimeError(f"G3A requires the frozen 28-output cohort, got {len(misses)}")
+    g1_path = args.report_dir.parent / "g1_half_sha256_28of56/g1_output_summary.csv"
+    if not g1_path.is_file():
+        raise RuntimeError(f"missing frozen G1-half output summary:{g1_path}")
+    g1_ids = {str(row["output_id"]) for row in _csv_rows(g1_path)}
+    miss_ids = {str(row["output_id"]) for row in misses}
+    if g1_ids != miss_ids:
+        raise RuntimeError("G3A cohort does not exactly match frozen G1-half membership")
+    expected = _g3a_expected_keys(misses)
+    payload = {
+        "experiment": "G3A_CURRENT_TTT24_OMITTED_D4_GREEDY_HALF28",
+        "status": "PREPARED_GOLD_UNREAD",
+        "cohort_output_ids": [row["output_id"] for row in misses],
+        "cohort_output_count": len(misses),
+        "expected_cells": len(expected),
+        "depth": 24,
+        "views": list(D4_VIEWS),
+        "solutions_opened_before_generation": False,
+        "g1_membership_verified": True,
+        "frozen_miss_manifest_sha256": sha_file(args.frozen_miss_manifest),
+    }
+    atomic_json(args.report_dir / "G3A_MANIFEST.json", payload)
+    atomic_json(args.scratch / G3A_PHASE / "manifest.json", payload)
+
+
+def run_g3a_greedy(args: argparse.Namespace) -> None:
+    """Generate only current-adapter TTT24 omitted-D4 cells, Gold unread."""
+    started = time.perf_counter(); identity = _runtime_identity(args)
+    misses = prepare_miss_set(args)
+    if len(misses) != 28:
+        raise RuntimeError(f"G3A requires exactly 28 frozen outputs, got {len(misses)}")
+    model, tokenizer, _initial, config, tokenizer_info = _load_runtime(args)
+    from arc.io import load_dataset
+    tasks = load_dataset(args.challenge)  # Challenge only: no evaluation solutions are opened here.
+    historical = _g3a_historical_predictions()
+    contract = _g3a_contract(config, tokenizer)
+    contract_sha = hashlib.sha256(json.dumps(contract, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in misses:
+        by_task[str(row["task_id"])].append(row)
+    task_ids = _sharded_task_ids(sorted(by_task), args)
+    expected_shard_cells = sum(len(by_task[task_id]) * len(D4_VIEWS) for task_id in task_ids)
+    for task_id in task_ids:
+        metadata = _adapter_metadata(args.adapters, task_id, 24)
+        checkpoint_sha = str(metadata["checkpoint_sha256"])
+        if len(checkpoint_sha) != 64:
+            raise RuntimeError(f"invalid current TTT24 adapter SHA for {task_id}")
+        common.load_adapter(model=model, metadata=metadata)
+        for row in by_task[task_id]:
+            target_task = view_task(tasks[task_id], int(row["output_index"]))
+            for view in D4_VIEWS:
+                destination = _cell_path(args.scratch, G3A_PHASE, task_id, int(row["output_index"]), 24, view)
+                if destination.is_file():
+                    continue
+                payload = common.greedy_cell(
+                    model=model, tokenizer=tokenizer, task=target_task, task_id=task_id,
+                    output_index=int(row["output_index"]), depth=24, view=view,
+                    config=config, checkpoint_sha=checkpoint_sha,
+                )
+                candidate = payload.get("canonical_candidate")
+                prediction_sha = (
+                    hashlib.sha256(json.dumps(candidate, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+                    if candidate is not None else "UNAVAILABLE"
+                )
+                historical_hashes = sorted(set(historical.get((task_id, int(row["output_index"]), view), [])))
+                payload.update({
+                    **row,
+                    "phase": G3A_PHASE,
+                    "adapter_checkpoint_path": str(metadata["checkpoint_path"]),
+                    "adapter_checkpoint_sha256": checkpoint_sha,
+                    "generation_contract": contract,
+                    "generation_contract_sha256": contract_sha,
+                    "canonical_prediction": candidate,
+                    "prediction_sha256": prediction_sha,
+                    "parse_valid": bool(payload.get("valid_grid")),
+                    "gold_attached": False,
+                    "solutions_opened_before_generation": False,
+                    "historical_matching_prediction_sha256": ";".join(historical_hashes) if historical_hashes else "UNAVAILABLE",
+                    "historical_prediction_same_as_current": (
+                        "UNAVAILABLE" if not historical_hashes or prediction_sha == "UNAVAILABLE"
+                        else str(prediction_sha in historical_hashes).upper()
+                    ),
+                })
+                atomic_json(destination, payload)
+        expected_task_cells = len(by_task[task_id]) * len(D4_VIEWS)
+        complete_task_cells = sum(
+            _cell_path(args.scratch, G3A_PHASE, task_id, int(row["output_index"]), 24, view).is_file()
+            for row in by_task[task_id] for view in D4_VIEWS
+        )
+        if complete_task_cells != expected_task_cells:
+            raise RuntimeError(f"G3A incomplete task checkpoint {task_id}: {complete_task_cells}/{expected_task_cells}")
+        atomic_json(args.scratch / G3A_PHASE / "tasks" / f"{task_id}.json", {
+            "status": "COMPLETE_TASK_GOLD_UNREAD", "task_id": task_id,
+            "completed_cells": complete_task_cells, "expected_cells": expected_task_cells,
+            "adapter_checkpoint_sha256": checkpoint_sha,
+            "solutions_opened_before_generation": False,
+        })
+    complete_shard_cells = sum(
+        _cell_path(args.scratch, G3A_PHASE, task_id, int(row["output_index"]), 24, view).is_file()
+        for task_id in task_ids for row in by_task[task_id] for view in D4_VIEWS
+    )
+    if complete_shard_cells != expected_shard_cells:
+        raise RuntimeError(f"G3A shard incomplete {complete_shard_cells}/{expected_shard_cells}")
+    atomic_json(args.scratch / G3A_PHASE / f"shard-{args.task_shard_index:02d}-of-{args.task_shard_count:02d}.json", {
+        "status": "COMPLETE_SHARD_GOLD_UNREAD", "task_shard_index": args.task_shard_index,
+        "task_shard_count": args.task_shard_count, "task_ids": task_ids,
+        "completed_cells": complete_shard_cells, "expected_cells": expected_shard_cells,
+        "wall_seconds": time.perf_counter() - started, "runtime_identity": identity,
+        "tokenizer": tokenizer_info, "generation_contract_sha256": contract_sha,
+        "solutions_opened_before_generation": False,
+    })
+
+
+def _g3a_cells(args: argparse.Namespace) -> list[dict[str, Any]]:
+    return _iter_phase_cells(args.scratch, G3A_PHASE)
+
+
+def run_g3a_freeze(args: argparse.Namespace) -> None:
+    """Validate and mark all 112 prediction cells frozen before Gold access."""
+    misses = prepare_miss_set(args)
+    expected = _g3a_expected_keys(misses)
+    cells = _g3a_cells(args)
+    keys = {(str(cell.get("task_id")), int(cell.get("output_index")), int(cell.get("depth")), str(cell.get("view"))) for cell in cells}
+    if len(cells) != 112 or keys != expected or len(keys) != 112:
+        raise RuntimeError(f"G3A generation inventory mismatch cells={len(cells)} keys={len(keys)} expected={len(expected)}")
+    required = {
+        "adapter_checkpoint_path", "adapter_checkpoint_sha256", "generation_contract_sha256",
+        "prediction_sha256", "parse_valid", "canonical_prediction", "gold_attached",
+        "solutions_opened_before_generation",
+    }
+    for cell in cells:
+        missing = required - set(cell)
+        if missing or cell.get("gold_attached") is not False or cell.get("solutions_opened_before_generation") is not False:
+            raise RuntimeError(f"G3A target-blind cell contract failure {cell.get('output_id')}:{missing}")
+        if int(cell["depth"]) != 24 or str(cell["view"]) not in D4_VIEWS:
+            raise RuntimeError("G3A cell surface drift")
+        if len(str(cell["adapter_checkpoint_sha256"])) != 64:
+            raise RuntimeError("G3A adapter SHA unavailable")
+    frozen_sha = hashlib.sha256(json.dumps(cells, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    flag = args.scratch / G3A_PHASE / "G3A_GENERATION_FROZEN.flag"
+    atomic_json(flag, {
+        "status": "FROZEN_GOLD_UNREAD", "cells": len(cells), "unique_keys": len(keys),
+        "cell_inventory_sha256": frozen_sha, "solutions_opened_before_generation": False,
+    })
+    provenance = {
+        "experiment": "G3A_CURRENT_TTT24_OMITTED_D4_GREEDY_HALF28",
+        "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        "generation_frozen": True, "solutions_opened_before_generation": False,
+        "current_adapter_sha_verified": True, "adapter_manifest_sha256": sha_file(args.adapters.parent / "checkpoint_manifest.csv"),
+        "cell_inventory_sha256": frozen_sha, "cells": len(cells), "views": list(D4_VIEWS), "depth": 24,
+        "gpu_used": True, "new_ttt": False, "new_dfs": False, "gold_path_scoring": False,
+    }
+    atomic_json(args.report_dir / "G3A_PROVENANCE.json", provenance)
+
+
+def run_g3a_finalize(args: argparse.Namespace) -> None:
+    """Attach exact Gold labels only to an already frozen G3A inventory."""
+    flag = args.scratch / G3A_PHASE / "G3A_GENERATION_FROZEN.flag"
+    if not flag.is_file():
+        raise RuntimeError("G3A Gold attachment forbidden before generation freeze")
+    freeze = read_json(flag)
+    if freeze.get("status") != "FROZEN_GOLD_UNREAD" or int(freeze.get("cells", -1)) != 112:
+        raise RuntimeError("invalid G3A generation freeze flag")
+    misses = prepare_miss_set(args)
+    cells = _g3a_cells(args)
+    if len(cells) != 112:
+        raise RuntimeError("G3A cells changed after freeze")
+    solutions = json.loads(args.solutions.read_text(encoding="utf-8"))
+    labelled: list[dict[str, Any]] = []
+    by_output: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for cell in cells:
+        gold = output_gold(solutions, str(cell["task_id"]), int(cell["output_index"]))
+        row = {
+            **{key: value for key, value in cell.items() if key != "token_telemetry"},
+            "exact_gold_hit": bool(cell.get("parse_valid")) and cell.get("canonical_prediction") == gold,
+            "gold_attached_post_generation": True,
+        }
+        labelled.append(row); by_output[str(row["output_id"])].append(row)
+    write_csv(args.report_dir / "g3a_greedy_cells.csv", labelled)
+    rescues: list[dict[str, Any]] = []
+    for miss in sorted(misses, key=lambda row: str(row["output_id"])):
+        output_id = str(miss["output_id"]); rows = by_output[output_id]
+        if len(rows) != len(D4_VIEWS):
+            raise RuntimeError(f"G3A incomplete output surface {output_id}")
+        exact = [row for row in rows if _bool(row["exact_gold_hit"])]
+        exact_views = sorted(str(row["view"]) for row in exact)
+        rescues.append({
+            "task_id": miss["task_id"], "output_id": output_id, "output_index": miss["output_index"],
+            "current_union_hit": False, "new_greedy_rescue": bool(exact),
+            "exact_cell_count": len(exact), "exact_views": ";".join(exact_views),
+        })
+    write_csv(args.report_dir / "g3a_output_rescues.csv", rescues)
+    rescue_ids = [row["output_id"] for row in rescues if _bool(row["new_greedy_rescue"])]
+    view_rows: list[dict[str, Any]] = []
+    for view in D4_VIEWS:
+        exact_cells = [row for row in labelled if row["view"] == view and _bool(row["exact_gold_hit"])]
+        rescued_outputs = {row["output_id"] for row in exact_cells}
+        unique = {
+            row["output_id"] for row in exact_cells
+            if len([x for x in by_output[row["output_id"]] if _bool(x["exact_gold_hit"])]) == 1
+        }
+        view_rows.append({"view": view, "exact_cells": len(exact_cells), "rescue_outputs": len(rescued_outputs), "uniquely_rescued_outputs": len(unique), "unique_rescue_ids": ";".join(sorted(unique))})
+    write_csv(args.report_dir / "g3a_view_contributions.csv", view_rows)
+    agreement: list[dict[str, Any]] = []
+    for view in D4_VIEWS:
+        view_cells = [row for row in labelled if row["view"] == view]
+        comparable = [row for row in view_cells if row.get("historical_prediction_same_as_current") != "UNAVAILABLE"]
+        identical = [row for row in comparable if row.get("historical_prediction_same_as_current") == "TRUE"]
+        agreement.append({"view": view, "current_cells": len(view_cells), "historical_comparable_cells": len(comparable), "identical_predictions": len(identical), "different_predictions": len(comparable) - len(identical)})
+    write_csv(args.report_dir / "g3a_historical_prediction_agreement.csv", agreement)
+    conclusion = "AUGMENTATION_COVERAGE_SUPPORTED" if rescue_ids else "TTT24_OMITTED_D4_GREEDY_NO_GAIN"
+    next_step = "TTT12_OMITTED_D4_SMALL_CONTROL" if rescue_ids else "DECODER_PRUNING_REDESIGN"
+    decision = {
+        "G3A_STATUS": "PASS", "COHORT_OUTPUTS": len(misses), "EXPECTED_CELLS": 112,
+        "GREEDY_CELLS_COMPLETE": f"{len(labelled)}/112", "CURRENT_ADAPTER_SHA_VERIFIED": "YES",
+        "NEW_GREEDY_EXACT_CELLS": sum(_bool(row["exact_gold_hit"]) for row in labelled),
+        "NEW_GREEDY_RESCUE_OUTPUTS": len(rescue_ids), "NEW_GREEDY_RESCUE_IDS": rescue_ids,
+        "BY_VIEW": {row["view"]: {"exact_cells": row["exact_cells"], "rescue_outputs": row["rescue_outputs"]} for row in view_rows},
+        "UNIQUE_RESCUES_BY_VIEW": {row["view"]: row["uniquely_rescued_outputs"] for row in view_rows},
+        "HISTORICAL_COMPARABLE_CELLS": sum(row["historical_comparable_cells"] for row in agreement),
+        "HISTORICAL_IDENTICAL_PREDICTIONS": sum(row["identical_predictions"] for row in agreement),
+        "HISTORICAL_DIFFERENT_PREDICTIONS": sum(row["different_predictions"] for row in agreement),
+        "CURRENT_DEVELOPMENT_UNION": "33/89", "NEW_NONBLIND_DEVELOPMENT_UNION": f"{33 + len(rescue_ids)}/89",
+        "AUGMENTATION_COVERAGE_CONCLUSION": conclusion, "NEXT_RECOMMENDED_EXPERIMENT": next_step,
+        "GPU_USED": "YES", "NEW_TTT": "NO", "NEW_DFS": "NO", "GOLD_PATH_SCORING": "NO", "SCIENTIFIC_CONFIG_CHANGED": "NO",
+    }
+    atomic_json(args.report_dir / "G3A_DECISION.json", decision)
+    report = ["# G3A current TTT24 omitted-D4 Greedy coverage", "", "NONBLIND_DEVELOPMENT_MEASUREMENT", "",
+              "Predictions were atomically frozen before Gold was opened.",
+              f"- Cells: {len(labelled)}/112", f"- New exact rescue outputs: {len(rescue_ids)}", f"- New rescue IDs: {rescue_ids}",
+              f"- Development union: {33 + len(rescue_ids)}/89", f"- Conclusion: {conclusion}", "", "## View contributions"]
+    report += [f"- {row['view']}: exact cells={row['exact_cells']}; rescue outputs={row['rescue_outputs']}; unique rescues={row['uniquely_rescued_outputs']}" for row in view_rows]
+    report += ["", "## Historical prediction agreement (diagnostic only)"]
+    report += [f"- {row['view']}: comparable={row['historical_comparable_cells']}; identical={row['identical_predictions']}; different={row['different_predictions']}" for row in agreement]
+    (args.report_dir / "G3A_CURRENT_AUGMENTATION_REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
+
+
 def g4_discovery(args: argparse.Namespace) -> None:
     candidates = []
     for root in (args.global_root / "models", args.global_root / "assets", args.global_root / "source"):
@@ -1123,7 +1418,7 @@ def g4_discovery(args: argparse.Namespace) -> None:
 
 def parser() -> argparse.ArgumentParser:
     item = argparse.ArgumentParser()
-    item.add_argument("mode", choices=("prepare", "g0", "g1", "g1-half-finalize", "g2", "g2-greedy", "g2-finalize", "g3-tf", "g3-greedy", "g4-discover"))
+    item.add_argument("mode", choices=("prepare", "g0", "g1", "g1-half-finalize", "g2", "g2-greedy", "g2-finalize", "g3-tf", "g3-greedy", "g3a-prepare", "g3a-greedy", "g3a-freeze", "g3a-finalize", "g4-discover"))
     item.add_argument("--scratch", type=Path, required=True)
     item.add_argument("--report-dir", type=Path, required=True)
     item.add_argument("--compact", type=Path, required=True)
@@ -1143,6 +1438,8 @@ def parser() -> argparse.ArgumentParser:
                       help="Deterministic task shard index; scheduling only.")
     item.add_argument("--task-shard-count", type=int, default=1,
                       help="Total deterministic task shards; scheduling only.")
+    item.add_argument("--max-tasks-per-shard", type=int,
+                      help="Optional scheduling-only bounded smoke prefix; written cells remain part of the frozen cohort.")
     item.add_argument("--cohort-output-count", type=int,
                       help="Deterministic SHA256 output-prefix size; diagnostic stop gate only.")
     return item
@@ -1160,6 +1457,10 @@ def main() -> None:
     elif args.mode == "g2-finalize": run_g2_finalize(args)
     elif args.mode == "g3-tf": run_gold_surface(args, phase="g3", depths=DEPTHS, views=D4_VIEWS)
     elif args.mode == "g3-greedy": run_g3_greedy(args)
+    elif args.mode == "g3a-prepare": run_g3a_prepare(args)
+    elif args.mode == "g3a-greedy": run_g3a_greedy(args)
+    elif args.mode == "g3a-freeze": run_g3a_freeze(args)
+    elif args.mode == "g3a-finalize": run_g3a_finalize(args)
     elif args.mode == "g4-discover": g4_discovery(args)
 
 
