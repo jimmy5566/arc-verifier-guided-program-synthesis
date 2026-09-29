@@ -111,12 +111,18 @@ def prepare_miss_set(args: argparse.Namespace) -> list[dict[str, Any]]:
     for output_id in sorted(greedy):
         g, t = greedy[output_id], v5[output_id]
         greedy_hit = _bool(g["pool_gold_hit"])
-        v5_hit = _bool(t["v5_pool_gold_hit_available"])
-        if not greedy_hit and not v5_hit:
+        # ``v5_pool_gold_hit_available`` describes whether a V5 Gold verdict
+        # is available at all; it is false for five provenance-limited rows,
+        # including rows already solved by Greedy.  The frozen V2 union field
+        # is the mechanically correct lower-bound hit indicator.
+        union_hit = _bool(t["union_greedy_v5_hit"])
+        if not union_hit:
             task_id, index = output_id.split(":o")
             misses.append({
                 "task_id": task_id, "output_index": int(index), "output_id": output_id,
-                "greedy_pool_hit": greedy_hit, "v5_pool_hit_available": v5_hit,
+                "greedy_pool_hit": greedy_hit,
+                "v5_pool_gold_hit_available": _bool(t["v5_pool_gold_hit_available"]),
+                "union_greedy_v5_hit": union_hit,
                 "original_v5_oracle_certainty": (
                     "ORIGINAL_V5_ORACLE_UNCERTAIN" if output_id in {"446ef5d2:o0", "cb2d8a2c:o0"}
                     else "TRUSTWORTHY_LOWER_BOUND_MISS"
