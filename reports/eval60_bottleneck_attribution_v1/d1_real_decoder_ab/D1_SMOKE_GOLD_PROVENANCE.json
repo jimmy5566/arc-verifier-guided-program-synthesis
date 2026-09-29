@@ -1,0 +1,13 @@
+{
+  "contract_sha256": "caaa3ff7490eaa6deb3f4965ed7e382ddf5d6a1b315382bf820fc3090eeff6a1",
+  "gold_attached_after_verified_freeze": true,
+  "policy_freeze_sha256": {
+    "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400": "a69c4655a561f9c7a72d3817dd1a53e544860c261e3e8f681a17fdc4b8b2e4cb",
+    "CUMULATIVE_REGRET_r=4.00": "38d343b2c8031d89d6a7114377470395e553f30ed0feae383050847b69bf9ee5",
+    "TOPK_LOCAL_k=2": "1f7116e7c4526ec252f9cb7a7b79cd0e9968a1b021929d7b07ab5feaacf1bccc",
+    "V5_CURRENT": "2747d076d8905d3dde89a4e2d02923730d30413a509e148829f26b9ea5238fc9"
+  },
+  "raw_candidate_pools_modified": false,
+  "selected_cell_keys_sha256": "2c6b9ffd10c4f379fecdc58bdc8cc3db6e322a3165d73a17f96928f662eb29f8",
+  "solution_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1"
+}

@@ -1,0 +1,11 @@
+{
+  "NEXT_IF_NO_FINALIST_RESCUE": null,
+  "PROMOTE_TOPK2_TO_FULL144": "NO",
+  "RETAIN_AFFINE_FOR_LATER_VALIDATION": "NO",
+  "RUN_FULL144_REGRET4": "YES",
+  "contract_sha256": "caaa3ff7490eaa6deb3f4965ed7e382ddf5d6a1b315382bf820fc3090eeff6a1",
+  "evidence_scope": "D1 fixed-budget, post-freeze Gold-scored pilot only",
+  "experiment_id": "D1_FIXED_BUDGET_DECODER_AB_V1",
+  "historical_33_of_89_updated": false,
+  "unique_smoke_outputs": 7
+}

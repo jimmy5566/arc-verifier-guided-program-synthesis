@@ -1,0 +1,7 @@
+a_only_output_ids_json,b_only_output_ids_json,gold_hit_output_overlap,overlap_output_ids_json,policy_a,policy_b
+[],"[""20270e3b:o0""]",0,[],D1_V5_CAPPED_CONTROL,CUMULATIVE_REGRET_r=4.00
+[],[],0,[],D1_V5_CAPPED_CONTROL,AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400
+[],[],0,[],D1_V5_CAPPED_CONTROL,TOPK_LOCAL_k=2
+"[""20270e3b:o0""]",[],0,[],CUMULATIVE_REGRET_r=4.00,AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400
+"[""20270e3b:o0""]",[],0,[],CUMULATIVE_REGRET_r=4.00,TOPK_LOCAL_k=2
+[],[],0,[],AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400,TOPK_LOCAL_k=2

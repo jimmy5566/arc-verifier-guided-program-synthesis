@@ -1,0 +1,5 @@
+cell_count,decoder_policy,gold_hit_cells,gold_hit_output_ids_json,gold_hit_outputs,new_gold_hit_ids_vs_v5_json,new_gold_hit_outputs_vs_v5
+8,D1_V5_CAPPED_CONTROL,0,[],0,[],0
+8,CUMULATIVE_REGRET_r=4.00,1,"[""20270e3b:o0""]",1,"[""20270e3b:o0""]",1
+8,AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400,0,[],0,[],0
+8,TOPK_LOCAL_k=2,0,[],0,[],0
