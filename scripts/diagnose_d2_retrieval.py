@@ -108,6 +108,9 @@ def load_g1_cells(root: Path) -> dict[str, dict[str, Any]]:
         key = cell_key(payload)
         if key in cells:
             raise RuntimeError(f"duplicate G1 cell {key}")
+        # Keep provenance alongside the parsed trace, but never emit the raw
+        # Gold trace in the compact analysis package.
+        payload["_source_file_sha256"] = sha256_file(path)
         cells[key] = payload
     if not cells:
         raise RuntimeError("no G1 cell traces found")
@@ -146,6 +149,10 @@ def choose_cohort(rows: list[dict[str, Any]]) -> tuple[list[str], dict[str, list
         key=lambda key: (hashlib.sha256(key.encode("utf-8")).hexdigest(), key),
     )
     current_runaway = {key for key in chosen if key in regret_runaway}
+    # Make the constraint auditable even where the coverage pass had already
+    # selected a runaway before this explicit constraint pass.
+    for key in sorted(current_runaway, key=lambda value: (hashlib.sha256(value.encode("utf-8")).hexdigest(), value)):
+        rationale.setdefault(key, []).append("Regret4 near-4096-node runaway")
     for key in regret_runaway:
         if len(current_runaway) >= 2 or len(chosen) >= 10:
             break
@@ -216,6 +223,15 @@ def main() -> None:
     write_csv(out / "D2_CELL_ALIGNMENT.csv", alignment)
     write_csv(out / "D2_CELL_ALIGNMENT_SUMMARY.csv", per_policy)
     write_json(out / "D2_MECHANISM_COHORT.json", cohort_payload)
+    write_json(out / "D2_INPUT_PROVENANCE.json", {
+        "experiment_id": cohort_payload["experiment_id"],
+        "input_hashes": cohort_payload["source_hashes"],
+        "selected_g1_trace_sha256": {
+            key: str(g1_cells[key]["_source_file_sha256"])
+            for key in cohort
+        },
+        "raw_gold_trace_included": False,
+    })
     lines = ["# D2 retrieval alignment (CPU-only)", "",
              "D0 Gold-prefix survival was recomputed from frozen G1 incremental-KV traces and joined only to post-freeze D1 Smoke8 pools. This is nonblind mechanism evidence, not accuracy validation.", "",
              "| Policy | Surviving smoke cells | Actual-hit cells | Retrieval conversion |", "|---|---:|---:|---:|"]
