@@ -1,0 +1,52 @@
+{
+  "adapted_rank_one_outputs": 0,
+  "best_by_mean_legal_rank": {
+    "TTT0": 8,
+    "TTT12": 14,
+    "TTT24": 13,
+    "TTT48": 11
+  },
+  "best_by_nll_per_token": {
+    "TTT0": 5,
+    "TTT12": 12,
+    "TTT24": 8,
+    "TTT48": 3
+  },
+  "best_by_prune_fraction": {
+    "TTT0": 14,
+    "TTT12": 11,
+    "TTT24": 19,
+    "TTT48": 17
+  },
+  "classification_counts": {
+    "NO_CLEAR_TTT_EFFECT": 15,
+    "TTT_DEPTH_SENSITIVE": 3,
+    "TTT_HARMFUL_SOFT": 1,
+    "TTT_HELPFUL_SOFT": 9
+  },
+  "current_development_union": "33/89",
+  "g1_remaining_run": false,
+  "g3_run": false,
+  "g4_run": false,
+  "gold_path": "INCREMENTAL_KV_REPLAY",
+  "main_g2_conclusion": "AUGMENTATION_COVERAGE_SUSPECT",
+  "metric_tie_output_counts": {
+    "mean_legal_rank": 11,
+    "nll_per_token": 0,
+    "prune_fraction": 16
+  },
+  "new_development_union": "33/89",
+  "new_ttt0_goldpath_cells": 112,
+  "new_ttt0_greedy_cells": 112,
+  "next_recommended_experiment": "AUGMENTATION_COVERAGE_TEST",
+  "outputs": 28,
+  "scientific_config_changed": false,
+  "scope": "NONBLIND_G2_FROZEN_G1_HALF_28_OUTPUTS",
+  "status": "COMPLETE",
+  "ttt0_greedy_exact_cells": 0,
+  "ttt0_greedy_exact_outputs": 0,
+  "ttt0_new_rescue_ids": [],
+  "ttt0_strict_searchable_outputs": 0,
+  "ttt0_v5_searchable_outputs": 0,
+  "v5_rerun": false
+}
