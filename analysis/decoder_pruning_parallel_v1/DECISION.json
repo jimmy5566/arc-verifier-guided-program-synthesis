@@ -1,0 +1,47 @@
+{
+  "CPU_AUDIT_STATUS": "PASS",
+  "CURRENT_UNION": "33/89",
+  "CURRENT_V5_SEARCHABLE": "0/28",
+  "DECODER_PRUNING_HYPOTHESIS": "STRONGLY_SUPPORTED",
+  "DFS_RUN": "NO",
+  "FAMILY_BEST_BOUNDED": {
+    "HYBRID": "V5_REGRET_RESERVE_r=2.00",
+    "LENGTH_AWARE": "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400",
+    "RANK_MARGIN": "TOPK_LOCAL_k=2",
+    "RELATIVE_REGRET": "CUMULATIVE_REGRET_r=4.00"
+  },
+  "FINALISTS": [
+    {
+      "config_id": "CUMULATIVE_REGRET_r=4.00",
+      "family": "RELATIVE_REGRET",
+      "reason": "highest robust fixed-grid survival with bounded local proxy",
+      "slot": "FINALIST_A"
+    },
+    {
+      "config_id": "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400",
+      "family": "LENGTH_AWARE",
+      "reason": "highest robust fixed-grid survival with bounded local proxy",
+      "slot": "FINALIST_B"
+    },
+    {
+      "config_id": "TOPK_LOCAL_k=2",
+      "family": "RANK_MARGIN",
+      "reason": "highest robust fixed-grid survival with bounded local proxy",
+      "slot": "FINALIST_C"
+    }
+  ],
+  "FINALIST_LOCAL_PROXY_CAP": 2.0,
+  "FOLD_RULE": "sha256(output_id) mod 4; robust Pareto means Pareto-optimal or fixed near-Pareto in >=3/4 folds.",
+  "GPU_USED": "NO",
+  "LOCAL_BRANCHING_PROXY_LIMITATION": "Gold-prefix conditional retained-successor counts only; not actual DFS nodes, runtime multiplier, or true search complexity.",
+  "MODEL_LOADED": "NO",
+  "MOST_SUPPORTED_FAILURE_MECHANISM": "MIXED",
+  "NEXT": "D1_SMALL_REAL_GPU_AB",
+  "OUTPUTS": 28,
+  "TRACE_CELLS": "336/336",
+  "failure_taxonomy_cell_counts": {
+    "FEW_TOKEN_SPIKE": 58,
+    "MIXED": 188,
+    "RANK_FAILURE": 90
+  }
+}

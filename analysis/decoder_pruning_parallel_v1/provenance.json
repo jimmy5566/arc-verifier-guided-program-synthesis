@@ -1,0 +1,57 @@
+{
+  "current_development_union": "33/89",
+  "dfs_run": false,
+  "experiment": "D0_PARALLEL_DECODER_POLICY_SWEEP_V1",
+  "frozen_evidence": {
+    "G1_HALF": "5e3f6ca253631b446971da9ef0e6fddc313b345a",
+    "G2": "5253dd868ad7c536236184f92e175fd5c570e103",
+    "G3A": "a26a94d4327cd8a00e2110ef6c85fb178560bcc7"
+  },
+  "gpu_used": false,
+  "model_loaded": false,
+  "source_g1_summary": "reports/eval60_bottleneck_attribution_v1/g1_half_sha256_28of56/g1_output_summary.csv",
+  "source_trace": "reports/eval60_bottleneck_attribution_v1/g1_half_sha256_28of56/g1_token_trace.csv",
+  "trace_schema": {
+    "cumulative_gold_nll": "AVAILABLE",
+    "depth": "AVAILABLE",
+    "entropy": "DERIVABLE_FROM_FROZEN_LEGAL_TOKEN_VECTOR",
+    "fields": [
+      "cumulative_gold_nll",
+      "depth",
+      "gold_token_id",
+      "gold_token_logprob",
+      "gold_token_probability",
+      "gold_token_rank_legal_arc_vocab",
+      "legal_arc_token_logprobs_json",
+      "output_id",
+      "output_index",
+      "phase",
+      "scoring_path",
+      "strict_gold_survives",
+      "strict_survivor_count",
+      "task_id",
+      "token_position",
+      "top1_logprob",
+      "top1_token_id",
+      "top2_logprob",
+      "top2_token_id",
+      "v5_floor_activated",
+      "v5_floor_restores_gold",
+      "v5_local_gold_survives",
+      "view"
+    ],
+    "first_prune_position": "DERIVABLE_FROM_FROZEN_CURRENT_V5_LOCAL_SURVIVAL",
+    "gold_token_logprob": "AVAILABLE",
+    "legal_token_logprob_vector": "AVAILABLE",
+    "legal_token_rank": "AVAILABLE",
+    "scoring_path": [
+      "INCREMENTAL_KV_REPLAY"
+    ],
+    "sequence_length": "DERIVABLE_FROM_TOKEN_POSITIONS",
+    "top1_top2_columns": "AVAILABLE",
+    "trace_cells": 336,
+    "trace_outputs": 28,
+    "trace_rows": 148956,
+    "view": "AVAILABLE"
+  }
+}

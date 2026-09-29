@@ -1,0 +1,4 @@
+config_id,family,reason,slot
+CUMULATIVE_REGRET_r=4.00,RELATIVE_REGRET,highest robust fixed-grid survival with bounded local proxy,FINALIST_A
+AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400,LENGTH_AWARE,highest robust fixed-grid survival with bounded local proxy,FINALIST_B
+TOPK_LOCAL_k=2,RANK_MARGIN,highest robust fixed-grid survival with bounded local proxy,FINALIST_C
