@@ -115,7 +115,7 @@ def node_stats(events: list[dict[str, Any]]) -> tuple[float | None, float | None
     return mean(value[0] for value in per_node.values()), mean(value[1] for value in per_node.values())
 
 
-def features_for(path: Path, row: dict[str, Any]) -> dict[str, Any]:
+def features_for(path: Path, raw_relative_path: str, row: dict[str, Any]) -> dict[str, Any]:
     key = row["d2_job"]["cell_key"]
     task, output_index, depth, view = parse_cell(key)
     events = [event for event in row["search_trace"] if int(event.get("nodes_expanded_so_far") or 0) <= CUT]
@@ -142,7 +142,10 @@ def features_for(path: Path, row: dict[str, Any]) -> dict[str, Any]:
     row_features = {
         "cell_key": key, "output_id": f"{task}:o{output_index}", "task_id": task,
         "output_index": output_index, "depth": depth, "view": view,
-        "raw_path": path.name, "nodes_expanded_total": int(row["nodes_expanded"]),
+        # A cell filename is shared by D2's 4096 and prefix-budget jobs, so
+        # basename lookup is not an identity.  Preserve the immutable path
+        # relative to the frozen run for exact post-freeze Gold annotation.
+        "raw_relative_path": raw_relative_path, "nodes_expanded_total": int(row["nodes_expanded"]),
         "termination_reason_total": row["termination_reason"],
         "additional_nodes_actual": min(max(0, int(row["nodes_expanded"]) - CUT), MAX_NODES - CUT),
         "candidate_count_1024": completed,
@@ -188,7 +191,7 @@ def build(args: argparse.Namespace) -> None:
         if int(row["nodes_expanded"]) < CUT:
             early.append({"cell_key": job["cell_key"], "output_id": row["output_id"], "nodes_expanded": row["nodes_expanded"], "termination_reason": row["termination_reason"], "reason": "no_1024_decision_state"})
             continue
-        features.append(features_for(path, row))
+        features.append(features_for(path, path.relative_to(run).as_posix(), row))
     features.sort(key=lambda row: row["cell_key"])
     write_csv(out / "router_features_frozen.csv", features)
     write_csv(out / "router_ineligible_early_termination.csv", early)
@@ -390,13 +393,20 @@ def score(args: argparse.Namespace) -> None:
     run, out, repo = args.d2_run.resolve(), args.out.resolve(), ROOT
     frozen = read_json(out / "ROUTER_FEATURES_FROZEN.json")
     if sha256_file(out / "router_features_frozen.csv") != frozen["features_sha256"]: raise RuntimeError("router feature freeze hash mismatch")
-    manifest, raw = raw_records(run); raw_by_name = {path.name: row for path, row in raw}
+    manifest, raw = raw_records(run)
+    raw_by_relative = {path.relative_to(run).as_posix(): row for path, row in raw}
+    if len(raw_by_relative) != len(raw): raise RuntimeError("non-unique frozen raw relative paths")
     challenge = read_json(Path(manifest["challenge_path"])); challenge_ids = list(challenge)
     counts = {task: len(item["test"]) for task, item in challenge.items()}
     solutions = normalize_arc_solutions(read_json(args.solutions), task_ids_in_challenge_order=challenge_ids, expected_output_counts=counts)
     dataset = []
     for row in read_csv(out / "router_features_frozen.csv"):
-        raw_row = raw_by_name[row["raw_path"]]; gold = solutions[row["task_id"]][int(row["output_index"])]
+        raw_path = row["raw_relative_path"]
+        if raw_path not in raw_by_relative: raise RuntimeError(f"frozen raw record missing: {raw_path}")
+        raw_row = raw_by_relative[raw_path]
+        if raw_row["d2_job"].get("cell_key") != row["cell_key"] or raw_row["d2_job"].get("label") != VALIDATION_LABEL:
+            raise RuntimeError(f"frozen raw identity mismatch for {row['cell_key']}: {raw_path}")
+        gold = solutions[row["task_id"]][int(row["output_index"])]
         first = first_gold_node(raw_row, gold)
         labelled = dict(row); labelled["first_gold_node_EVAL_ONLY"] = first; labelled["Y_CONTINUE"] = int(first is not None and CUT < first <= MAX_NODES)
         dataset.append(labelled)
