@@ -429,6 +429,7 @@ def _write_g1_exports(args: argparse.Namespace, phase: str, cells: list[dict[str
         v5 = any(_bool(x.get("v5_local_gold_path_survives")) for x in group)
         if strict: primary = "DECODER_EXECUTION_SUSPECT"
         elif v5: primary = "DECODER_PRUNING_LIMITED"
+        elif statuses == {"PRUNING_POLICY_BLOCKED"}: primary = "PRUNING_POLICY_BLOCKED"
         elif "TOKEN_BUDGET_BLOCKED" in statuses and statuses == {"TOKEN_BUDGET_BLOCKED"}: primary = "TOKEN_BUDGET_BLOCKED"
         elif "SERIALIZATION_OR_TRANSPORT_FAILURE" in statuses: primary = "SERIALIZATION_OR_TRANSPORT_FAILURE"
         else: primary = "CURRENT_PROBABILITY_STATE_LIMITED"
@@ -438,6 +439,44 @@ def _write_g1_exports(args: argparse.Namespace, phase: str, cells: list[dict[str
     write_csv(args.report_dir / f"{prefix}_token_trace.csv", token_rows)
     write_csv(args.report_dir / f"{prefix}_cell_summary.csv", summaries)
     write_csv(args.report_dir / ("g1_output_summary.csv" if phase == "g1" else "g3_extra_view_output_summary.csv"), output_rows)
+
+
+def run_g1_half_gate(args: argparse.Namespace) -> None:
+    """Finalize the pre-registered 28-output G1 stop gate without model work."""
+    misses = prepare_miss_set(args)
+    cells = _iter_phase_cells(args.scratch, "g1")
+    expected = len(misses) * len(DEPTHS) * len(CURRENT_VIEWS)
+    if len(cells) != expected:
+        raise RuntimeError(f"g1 half incomplete {len(cells)}/{expected}")
+    _write_g1_exports(args, "g1", cells)
+    outputs = _csv_rows(args.report_dir / "g1_output_summary.csv")
+    if len(outputs) != len(misses):
+        raise RuntimeError(f"g1 half output inventory mismatch {len(outputs)}/{len(misses)}")
+    strict = sum(_bool(row["any_strict_searchable"]) for row in outputs)
+    v5 = sum(_bool(row["any_v5_local_searchable"]) for row in outputs)
+    pruning = sum(row["output_class"] == "PRUNING_POLICY_BLOCKED" for row in outputs)
+    probability = sum(row["output_class"] == "CURRENT_PROBABILITY_STATE_LIMITED" for row in outputs)
+    decision = "CONTINUE_REMAINING_G1" if v5 > 0 else "STOP_G1_AND_RUN_G2"
+    payload = {
+        "status": "COMPLETE", "scope": "G1_HALF_SHA256_OUTPUT_PREFIX",
+        "outputs": len(outputs), "cells": len(cells),
+        "A_any_current_v5_searchable": v5,
+        "B_pruning_policy_blocked": pruning,
+        "C_all_current_states_probability_limited": probability,
+        "strict_searchable": strict,
+        "decision": decision,
+        "decision_rule": "continue remaining G1 iff A_any_current_v5_searchable > 0",
+    }
+    atomic_json(args.report_dir / "G1_HALF_GATE.json", payload)
+    report = ["# G1 half stop gate", "", "NONBLIND_MECHANISM_DIAGNOSTIC", "",
+              f"A = #(any current V5-searchable) = {v5}",
+              f"B = #(pruning-policy blocked) = {pruning}",
+              f"C = #(all current states probability-limited) = {probability}",
+              f"Strict-searchable outputs = {strict}", "",
+              f"Decision: {decision}",
+              "Rule: complete remaining G1 only when A > 0; otherwise jump to G2."]
+    (args.report_dir / "G1_HALF_GATE.md").write_text("\n".join(report) + "\n", encoding="utf-8")
+    atomic_json(args.scratch / "g1" / "half_gate.json", payload)
 
 
 def run_gold_surface(args: argparse.Namespace, *, phase: str, depths: tuple[int, ...], views: tuple[str, ...], use_initial_adapter: bool = False) -> None:
@@ -681,7 +720,7 @@ def g4_discovery(args: argparse.Namespace) -> None:
 
 def parser() -> argparse.ArgumentParser:
     item = argparse.ArgumentParser()
-    item.add_argument("mode", choices=("prepare", "g0", "g1", "g2", "g3-tf", "g3-greedy", "g4-discover"))
+    item.add_argument("mode", choices=("prepare", "g0", "g1", "g1-half-finalize", "g2", "g3-tf", "g3-greedy", "g4-discover"))
     item.add_argument("--scratch", type=Path, required=True)
     item.add_argument("--report-dir", type=Path, required=True)
     item.add_argument("--compact", type=Path, required=True)
@@ -711,6 +750,7 @@ def main() -> None:
     if args.mode == "prepare": prepare_miss_set(args)
     elif args.mode == "g0": run_g0(args)
     elif args.mode == "g1": run_gold_surface(args, phase="g1", depths=DEPTHS, views=CURRENT_VIEWS)
+    elif args.mode == "g1-half-finalize": run_g1_half_gate(args)
     elif args.mode == "g2":
         run_gold_surface(args, phase="g2", depths=(0,), views=CURRENT_VIEWS, use_initial_adapter=True)
         if args.task_shard_count == 1: run_g2_summary(args)
