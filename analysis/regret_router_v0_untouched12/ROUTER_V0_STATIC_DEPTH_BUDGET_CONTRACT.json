@@ -1,0 +1,36 @@
+{
+  "candidate_cap": 32,
+  "contract_sha256": "132ba1640beebc0237af85da606898e08ec7d9041fc6a6f1e3ad39f48c99fa6a",
+  "depth_budgets": {
+    "12": 1024,
+    "24": 4096,
+    "48": 1024
+  },
+  "execution_protocol_changed": true,
+  "experiment_id": "REGRET_ROUTER_V0_UNTOUCHED12_VALIDATION",
+  "forbidden": [
+    "gold",
+    "confidence",
+    "task_exceptions",
+    "view_exceptions",
+    "2048_tier",
+    "candidate_cap_change"
+  ],
+  "gold_accessed": false,
+  "original_router_contract_sha256": "6103195de42911e7eb27c06d90c2c662815ac1487683bc132786baf5ff822a4e",
+  "policy": "CUMULATIVE_REGRET_r=4.0",
+  "reason": "exact resume engine unavailable",
+  "router_decision_changed": false,
+  "rule_id": "REGRET_ROUTER_V0_STATIC_DEPTH_BUDGET",
+  "shadow_depth_budgets": {
+    "12": 4096,
+    "48": 4096
+  },
+  "status": "FROZEN_BEFORE_GPU",
+  "views": [
+    "identity",
+    "flip_ud",
+    "transpose",
+    "anti_transpose"
+  ]
+}

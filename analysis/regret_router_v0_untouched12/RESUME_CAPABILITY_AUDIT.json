@@ -9,6 +9,6 @@
   },
   "reason": "current frozen decoder constructs state, frontier and KV cache as call-local values and exposes no serializable resume checkpoint API",
   "required_before_gpu": "implement and independently prove exact state serialization/resume parity on deterministic cells; a fresh 4096 restart is prohibited by this contract",
-  "resume_parity": "NOT_RUN",
+  "resume_parity": "NOT_APPLICABLE_STATIC_EXECUTION",
   "status": "BLOCKED"
 }

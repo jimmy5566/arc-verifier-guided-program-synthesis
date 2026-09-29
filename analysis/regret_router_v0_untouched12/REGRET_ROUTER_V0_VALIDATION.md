@@ -1,9 +1,9 @@
 # Regret Router-v0 untouched12 validation
 
-## Controlled prelaunch stop
+## Static-depth execution amendment
 
-The Router-v0 contract and leakage-free 12-output cohort are frozen. GPU validation did not start: the frozen decoder has no external serializable search-state/KV-cache resume interface. The required 1024 checkpoint to 4096 exact-resume parity therefore cannot be run. Restarting at node zero would violate the registered protocol.
+The original exact-resume route is unavailable because the frozen decoder has no external serializable search-state/KV-cache resume interface. The amended execution contract is frozen before GPU work: d12/d48 run at 1024 and d24 runs directly at 4096; separate d12/d48 4096 runs provide the shadow control. This changes execution only, not the Router-v0 depth decision.
 
-- `RESUME_PARITY = NOT_RUN`
-- `GPU_USED = NO`
+- `RESUME_PARITY = NOT_APPLICABLE_STATIC_EXECUTION`
+- `GPU_USED = NO` before the subsequent target-blind run
 - Historical union remains `33/89 unchanged`.

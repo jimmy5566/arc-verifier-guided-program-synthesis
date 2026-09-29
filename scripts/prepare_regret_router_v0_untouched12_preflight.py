@@ -109,6 +109,24 @@ def main() -> int:
     }
     contract["contract_sha256"] = canonical_hash(contract)
     atomic_json(out / "ROUTER_V0_CONTRACT.json", contract)
+    static_contract = {
+        "experiment_id": contract["experiment_id"],
+        "rule_id": "REGRET_ROUTER_V0_STATIC_DEPTH_BUDGET",
+        "router_decision_changed": False,
+        "execution_protocol_changed": True,
+        "reason": "exact resume engine unavailable",
+        "original_router_contract_sha256": contract["contract_sha256"],
+        "policy": contract["policy"],
+        "candidate_cap": 32,
+        "depth_budgets": {"12": 1024, "24": 4096, "48": 1024},
+        "shadow_depth_budgets": {"12": 4096, "48": 4096},
+        "views": ["identity", "flip_ud", "transpose", "anti_transpose"],
+        "forbidden": ["gold", "confidence", "task_exceptions", "view_exceptions", "2048_tier", "candidate_cap_change"],
+        "gold_accessed": False,
+        "status": "FROZEN_BEFORE_GPU",
+    }
+    static_contract["contract_sha256"] = canonical_hash(static_contract)
+    atomic_json(out / "ROUTER_V0_STATIC_DEPTH_BUDGET_CONTRACT.json", static_contract)
 
     cohort = {
         "experiment_id": contract["experiment_id"],
@@ -147,7 +165,7 @@ def main() -> int:
     # implementation constructs state/frontier/cache only inside a single call.
     static_resume = {
         "status": "BLOCKED",
-        "resume_parity": "NOT_RUN",
+        "resume_parity": "NOT_APPLICABLE_STATIC_EXECUTION",
         "reason": "current frozen decoder constructs state, frontier and KV cache as call-local values and exposes no serializable resume checkpoint API",
         "decoder_path": str(decoder.relative_to(repo)).replace("\\", "/"),
         "decoder_sha256": sha_bytes(decoder.read_bytes()),
@@ -167,32 +185,35 @@ def main() -> int:
         "gpu_used": False,
         "status": "CONTROLLED_PRELAUNCH_STOP",
         "router_contract_sha256": contract["contract_sha256"],
+        "static_execution_contract_sha256": static_contract["contract_sha256"],
         "cohort_sha256": cohort["output_ids_sha256"],
         "resume_parity": "NOT_RUN",
     }
     atomic_json(out / "provenance.json", provenance)
     decision = {
-        "status": "PRELAUNCH_BLOCKED",
+        "status": "STATIC_DEPTH_EXECUTION_READY",
         "validation_verdict": "NOT_RUN",
-        "reason": static_resume["reason"],
+        "reason": "static-depth execution amendment replaces unavailable exact-resume implementation without changing the Router-v0 depth decision",
         "router_contract_frozen": True,
+        "ROUTER_DECISION_CHANGED": "NO",
+        "EXECUTION_PROTOCOL_CHANGED": "YES",
         "cohort_frozen": True,
         "LEAKAGE_WITH_ROUTER_DEV": 0,
-        "RESUME_PARITY": "NOT_RUN",
+        "RESUME_PARITY": "NOT_APPLICABLE_STATIC_EXECUTION",
         "GPU_USED": False,
-        "next": "IMPLEMENT_AND_VALIDATE_EXACT_RESUME_ENGINE_BEFORE_GPU_VALIDATION",
+        "next": "RUN_FROZEN_STATIC_DEPTH_SURFACE_THEN_POST_FREEZE_SCORE",
         "historical_union": "33/89 unchanged",
     }
     atomic_json(out / "DECISION.json", decision)
     (out / "REGRET_ROUTER_V0_VALIDATION.md").write_text(
         "# Regret Router-v0 untouched12 validation\n\n"
-        "## Controlled prelaunch stop\n\n"
-        "The Router-v0 contract and leakage-free 12-output cohort are frozen. GPU validation did not start: "
-        "the frozen decoder has no external serializable search-state/KV-cache resume interface. "
-        "The required 1024 checkpoint to 4096 exact-resume parity therefore cannot be run. "
-        "Restarting at node zero would violate the registered protocol.\n\n"
-        "- `RESUME_PARITY = NOT_RUN`\n"
-        "- `GPU_USED = NO`\n"
+        "## Static-depth execution amendment\n\n"
+        "The original exact-resume route is unavailable because the frozen decoder has no external serializable "
+        "search-state/KV-cache resume interface. The amended execution contract is frozen before GPU work: "
+        "d12/d48 run at 1024 and d24 runs directly at 4096; separate d12/d48 4096 runs provide the shadow control. "
+        "This changes execution only, not the Router-v0 depth decision.\n\n"
+        "- `RESUME_PARITY = NOT_APPLICABLE_STATIC_EXECUTION`\n"
+        "- `GPU_USED = NO` before the subsequent target-blind run\n"
         "- Historical union remains `33/89 unchanged`.\n",
         encoding="utf-8",
     )

@@ -4,6 +4,7 @@
   "gpu_used": false,
   "resume_parity": "NOT_RUN",
   "router_contract_sha256": "6103195de42911e7eb27c06d90c2c662815ac1487683bc132786baf5ff822a4e",
-  "source_commit": "32f6ae585f28884be081ddf1c66472a137effa10",
+  "source_commit": "fd5e55896d099fa82e875753830f31be7e12cbef",
+  "static_execution_contract_sha256": "132ba1640beebc0237af85da606898e08ec7d9041fc6a6f1e3ad39f48c99fa6a",
   "status": "CONTROLLED_PRELAUNCH_STOP"
 }
