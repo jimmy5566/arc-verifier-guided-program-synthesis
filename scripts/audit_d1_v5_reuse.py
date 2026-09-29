@@ -22,7 +22,11 @@ EXPECTED_CONFIG_SHA = "e5beec92c9992930f4d6b468db1806ee2f3b9224e13179af7d4e8bb58
 
 
 def sha_grid(value: Any) -> str:
-    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+    # Historical v5_candidates.csv hashes this exact ARC grid serialization.
+    if not isinstance(value, list) or not all(isinstance(row, list) for row in value):
+        raise ValueError("candidate is not a grid")
+    payload = ";".join(",".join(str(int(cell)) for cell in row) for row in value)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
 def current_rows(root: Path, manifest: dict[str, Any]) -> dict[tuple[str, int, str], dict[str, Any]]:
