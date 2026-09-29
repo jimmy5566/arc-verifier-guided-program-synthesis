@@ -142,6 +142,7 @@ def evaluate_cell(rows: list[dict[str, str]], policy: str, max_score: float) -> 
         "estimated_retained_branches_per_step_median": median(retained_counts),
         "estimated_retained_branches_per_step_p90": percentile([float(value) for value in retained_counts], 0.9),
         "estimated_retained_branches_per_step_max": max(retained_counts),
+        "_retained_counts": retained_counts,
     }
 
 
@@ -161,12 +162,15 @@ def audit(trace_rows: list[dict[str, str]], summary_rows: list[dict[str, str]]) 
         raise RuntimeError(f"frozen G1 trace inventory mismatch cells={len(grouped)} outputs={len(trace_outputs)}")
 
     cell_rows: list[dict[str, Any]] = []
+    step_counts_by_policy: dict[str, list[float]] = defaultdict(list)
     for policy in policy_ids():
         for key in sorted(grouped):
-            cell_rows.append(evaluate_cell(grouped[key], policy, MAX_SCORE))
+            cell = evaluate_cell(grouped[key], policy, MAX_SCORE)
+            step_counts_by_policy[policy].extend(float(value) for value in cell.pop("_retained_counts"))
+            cell_rows.append(cell)
 
     current = [row for row in cell_rows if row["policy"] == "CURRENT_V5"]
-    current_cost = mean(float(row["estimated_retained_branches_per_step_mean"]) for row in current)
+    current_cost = mean(step_counts_by_policy["CURRENT_V5"])
     output_rows: list[dict[str, Any]] = []
     cost_rows: list[dict[str, Any]] = []
     policy_output_counts: dict[str, int] = {}
@@ -188,20 +192,22 @@ def audit(trace_rows: list[dict[str, str]], summary_rows: list[dict[str, str]]) 
                 ), "output_searchable": bool(surviving),
             })
         policy_output_counts[policy] = searchable
-        retained = [float(row["estimated_retained_branches_per_step_mean"]) for row in selected]
-        step_values: list[float] = []
+        retained = step_counts_by_policy[policy]
+        depth_view = defaultdict(int)
         for row in selected:
-            step_values.extend([float(row["estimated_retained_branches_per_step_median"]), float(row["estimated_retained_branches_per_step_p90"])])
+            if bool(row["gold_path_survives"]):
+                depth_view[f"d{row['depth']}:{row['view']}"] += 1
         cost_rows.append({
             "policy": policy,
             "gold_surviving_cells": sum(bool(row["gold_path_survives"]) for row in selected),
             "searchable_outputs": searchable,
             "new_searchable_outputs_vs_current": searchable - policy_output_counts.get("CURRENT_V5", 0),
             "estimated_mean_retained_branches_per_step": mean(retained),
-            "median_cell_retained_branches_per_step": median(retained),
-            "p90_cell_retained_branches_per_step": percentile(retained, 0.9),
+            "median_retained_branches_per_step": median(retained),
+            "p90_retained_branches_per_step": percentile(retained, 0.9),
             "estimated_local_expansion_multiplier_vs_current": mean(retained) / current_cost,
             "cost_within_predeclared_2x_local_cap": mean(retained) / current_cost <= LOCAL_COST_CAP,
+            "gold_surviving_cells_by_depth_view": json.dumps(dict(sorted(depth_view.items())), separators=(",", ":")),
             "cost_proxy_scope": "LOCAL_GOLD_PREFIX_CONDITIONAL_NOT_RECONSTRUCTED_DFS_TREE",
         })
 
