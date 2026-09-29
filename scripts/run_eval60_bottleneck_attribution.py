@@ -199,9 +199,12 @@ def prepare_miss_set(args: argparse.Namespace) -> list[dict[str, Any]]:
 def _load_runtime(args: argparse.Namespace) -> tuple[Any, Any, Any, dict[str, Any], dict[str, Any]]:
     """Load the exact 4B model once.  Callers must retain this one process."""
     os.environ.update({
-        "CUDA_VISIBLE_DEVICES": "0", "TRITON_PTXAS_PATH": str(args.ptxas),
+        "TRITON_PTXAS_PATH": str(args.ptxas),
         "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1", "TOKENIZERS_PARALLELISM": "false",
     })
+    # Scheduler-only: honor the physical device pin supplied by the worker
+    # launcher.  The default preserves the historical single-worker route.
+    os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
     import torch
     from peft import get_peft_model_state_dict
     from unsloth import FastLanguageModel
