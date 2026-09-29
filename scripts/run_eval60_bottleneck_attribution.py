@@ -276,7 +276,9 @@ def teacher_force(
 
 
 def _runtime_identity(args: argparse.Namespace) -> dict[str, Any]:
-    adapter_manifest = args.adapters / "checkpoint_manifest.csv"
+    # ``--adapters`` intentionally points to the immutable checkpoints
+    # directory, while the authoritative manifest lives at the run root.
+    adapter_manifest = args.adapters.parent / "checkpoint_manifest.csv"
     v5_sha = sha_file(args.v5_config)
     adapter_sha = sha_file(adapter_manifest)
     if v5_sha != EXPECTED_V5_CONFIG_SHA:
