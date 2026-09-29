@@ -404,7 +404,12 @@ def run(args: argparse.Namespace) -> None:
     inc_decision = all(_bool(row["ALL_CHOSEN_RANK_PARITY_INCREMENTAL"]) and _bool(row["ALL_STRICT_SURVIVOR_SET_PARITY_INCREMENTAL"]) and _bool(row["ALL_FRONTIER_FLOOR_PARITY_INCREMENTAL"]) and _bool(row["ALL_SEARCHABILITY_CLASS_PARITY_INCREMENTAL"]) for row in cell_rows)
     full_decision = all(_bool(row["ALL_CHOSEN_RANK_PARITY_FULLTF"]) and _bool(row["ALL_STRICT_SURVIVOR_SET_PARITY_FULLTF"]) and _bool(row["ALL_FRONTIER_FLOOR_PARITY_FULLTF"]) and _bool(row["ALL_SEARCHABILITY_CLASS_PARITY_FULLTF"]) for row in cell_rows)
     if numerical_incremental == 6 and inc_decision:
-        status, root_cause, g1_path = "PASS_NUMERICAL", "NO_RUNTIME_PARITY_BLOCKER", "INCREMENTAL_KV_REPLAY"
+        root_cause = (
+            "NO_RUNTIME_PARITY_BLOCKER"
+            if numerical_full == 6 and full_decision
+            else "FULL_SEQUENCE_FORWARD_NUMERIC_PATH_DIFFERS_FROM_INCREMENTAL_KV_PATH"
+        )
+        status, g1_path = "PASS_NUMERICAL", "INCREMENTAL_KV_REPLAY"
     elif inc_decision:
         status, root_cause, g1_path = "PASS_DECISION_PARITY", "FULL_SEQUENCE_FORWARD_NUMERIC_PATH_DIFFERS_FROM_INCREMENTAL_KV_PATH", "INCREMENTAL_KV_REPLAY"
     else:
@@ -418,7 +423,7 @@ def run(args: argparse.Namespace) -> None:
     historical_env = _historical_environment(args.authoritative_run)
     _atomic_json(report_dir / "runtime_current.json", {"tokenizer": tokenizer_info, "runtime": current})
     _atomic_json(report_dir / "runtime_environment_diff.json", {"historical": historical_env, "current": current, "comparison_status": "HISTORICAL_METADATA_AVAILABLE" if historical_env["status"] == "AVAILABLE" else "HISTORICAL_METADATA_NOT_AVAILABLE"})
-    report = ["# G0.5 incremental KV replay parity", "", f"STATUS: {status}", f"Tolerance: {args.tolerance}", "", "The incremental path starts with the original encoded prompt, uses `past_key_values` one frozen token at a time, and does not supply custom position IDs.  Full TF is retained only as a diagnostic control.", "", "| depth | task/output/view | historical LP | incremental LP | full-TF LP | inc abs delta | full abs delta | inc max native delta | full max native delta | inc strict parity | full strict parity |", "|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|"]
+    report = ["# G0.5 incremental KV replay parity", "", f"STATUS: {status}", f"Tolerance: {args.tolerance}", "", "The incremental path uses the same `model.generate` KV-cache loop as the historical Greedy run. A diagnostics-only logits processor captures each raw distribution and forces the frozen historical token; no free decoding is performed. No custom position IDs are supplied. Full TF is retained only as a diagnostic control.", "", "| depth | task/output/view | historical LP | incremental LP | full-TF LP | inc abs delta | full abs delta | inc max native delta | full max native delta | inc strict parity | full strict parity |", "|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|"]
     report += [f"| {row['depth']} | {row['task_id']}:o{row['output_index']} / {row['view']} | {row['historical_sequence_logprob_sum']:.8g} | {row['incremental_sequence_logprob_sum']:.8g} | {row['fulltf_sequence_logprob_sum']:.8g} | {row['abs_delta_incremental']:.8g} | {row['abs_delta_fulltf']:.8g} | {row['max_token_native_abs_delta_incremental']:.8g} | {row['max_token_native_abs_delta_fulltf']:.8g} | {row['ALL_STRICT_SURVIVOR_SET_PARITY_INCREMENTAL']} | {row['ALL_STRICT_SURVIVOR_SET_PARITY_FULLTF']} |" for row in cell_rows]
     report += ["", f"Root cause classification: `{root_cause}`.", f"G1 allowed: `{status != 'FAIL'}`.", f"Required G1 scoring path: `{g1_path}`.", "Scientific configuration changed: NO.  TTT rerun: NO.  Greedy rerun: NO.  V5 rerun: NO."]
     (report_dir / "G0_5_INCREMENTAL_REPLAY_REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
