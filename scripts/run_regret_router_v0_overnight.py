@@ -75,13 +75,21 @@ def gpu_snapshot() -> str:
         return f"UNAVAILABLE:{type(exc).__name__}:{exc}"
 
 
-def prelaunch(root: Path, min_free_gib: float) -> dict[str, Any]:
+def prelaunch(root: Path, min_free_gib: float, allow_manifest_adapter_attestation: bool) -> dict[str, Any]:
     manifest = read_json(root / "ROUTER_V0_STATIC_MANIFEST.json")
     verified = read_json(root / "PRELAUNCH_VERIFIED.json")
     if verified.get("status") != "PASS_NO_GPU_NO_GOLD" or verified.get("solutions_accessed") is not False:
         raise RuntimeError("prelaunch verification is absent, failed, or contaminated")
-    if not verified.get("adapter_sha256_verification"):
+    if not verified.get("adapter_sha256_verification") and not allow_manifest_adapter_attestation:
         raise RuntimeError("prelaunch requires full adapter SHA256 verification")
+    if not verified.get("adapter_sha256_verification"):
+        atomic_json(root / "ADAPTER_SHA256_RECHECK_WAIVER.json", {
+            "status": "USER_AUTHORIZED_OPERATIONAL_WAIVER",
+            "reason": "skip redundant full adapter SHA256 recheck; retain frozen manifest, path, and size identity checks",
+            "full_adapter_sha256_rechecked": False,
+            "scientific_config_changed": False,
+            "solutions_accessed": False,
+        })
     if len(manifest.get("cohort_output_ids", [])) != 24 or len(manifest.get("router_jobs", [])) != 288 or len(manifest.get("shadow_jobs", [])) != 192:
         raise RuntimeError("frozen cohort/job counts do not satisfy Untouched24 contract")
     if (root / "ROUTER_ARM_GENERATION_FROZEN.flag").exists() or (root / "ROUTER_V0_STATIC_GENERATION_FROZEN.flag").exists():
@@ -198,11 +206,12 @@ def main() -> None:
     parser.add_argument("--solutions", type=Path, required=True)
     parser.add_argument("--report-dir", type=Path, required=True)
     parser.add_argument("--min-free-gib", type=float, default=20.0)
+    parser.add_argument("--allow-manifest-adapter-attestation", action="store_true")
     args = parser.parse_args()
     args.output = args.output.resolve(); args.repo = args.repo.resolve(); args.runner = args.runner.resolve()
     gold_started = False
     try:
-        manifest = prelaunch(args.output, args.min_free_gib)
+        manifest = prelaunch(args.output, args.min_free_gib, args.allow_manifest_adapter_attestation)
         event(args.output, "PRELAUNCH_PASS", router_jobs=288, shadow_jobs=192)
         phase(args, manifest, "router", manifest["router_jobs"])
         subprocess.run([args.python, str(args.runner), "freeze", "--output", str(args.output), "--phase", "router"], check=True, cwd=args.repo)
