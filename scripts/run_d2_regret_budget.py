@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 from inference.d1_shared_queue import claim_cell, release_claim
 from inference.nvarc_turbodfs_d1 import POLICIES
+from arc.solution_normalization import normalize_arc_solutions
 from scripts.run_adaptive_ttt_loo_transfer12 import read_json, view_task
 from scripts.run_d1_real_decoder_ab import adapter_records, atomic_json, config_for, load_adapter, no_gold_challenge, output_key
 from scripts.turbodfs_d1_common import d1_cells_batch
@@ -114,9 +115,15 @@ def classify(row:dict[str,Any],gold:list[int])->str:
 def score(args:argparse.Namespace)->None:
     root=args.output.resolve();m=read_json(root/"D2_BUDGET_MANIFEST.json");
     if not (root/"D2_BUDGET_GENERATION_FROZEN.flag").is_file():raise RuntimeError("freeze before Gold")
-    sols=read_json(args.solutions);rs=records(root,m);out=args.report_dir.resolve();out.mkdir(parents=True,exist_ok=True); cells=[]; hits=[]; fails=[]
+    challenge=read_json(Path(m["challenge_path"]))
+    if not isinstance(challenge,dict): raise ValueError("frozen challenge must be task-id object")
+    challenge_ids=list(challenge)
+    expected_counts={task_id:len(task["test"]) for task_id,task in challenge.items() if isinstance(task,dict) and isinstance(task.get("test"),list)}
+    if len(expected_counts)!=len(challenge_ids): raise ValueError("frozen challenge contains invalid task/test schema")
+    sols=normalize_arc_solutions(read_json(args.solutions),task_ids_in_challenge_order=challenge_ids,expected_output_counts=expected_counts)
+    rs=records(root,m);out=args.report_dir.resolve();out.mkdir(parents=True,exist_ok=True); cells=[]; hits=[]; fails=[]
     for r in rs:
-        gold=sols[r["task_id"]]["test"][int(r["output_index"])]["output"]; exact=[c for c in r["candidates"] if c.get("valid_grid") and c.get("canonical_candidate")==gold]; first=None
+        gold=sols[r["task_id"]][int(r["output_index"])]; exact=[c for c in r["candidates"] if c.get("valid_grid") and c.get("canonical_candidate")==gold]; first=None
         if exact:
             cid=min(int(c["candidate_id"]) for c in exact); event=next((e for e in r["search_trace"] if e.get("candidate_completion_index")==cid),None);first={"first_gold_candidate_index":cid,"first_gold_node":None if event is None else event.get("nodes_expanded_so_far"),"first_gold_time":None if event is None else event.get("elapsed_seconds")}
         base={"label":r["d2_job"]["label"],"policy":r["decoder_policy"],"cell_key":r["d2_job"]["cell_key"],"purpose":r["d2_job"]["purpose"],"budget":r["d2_job"]["max_expanded_nodes"],"nodes_expanded":r["nodes_expanded"],"runtime_seconds":r["runtime_seconds"],"candidate_count":r["candidate_count"],"termination_reason":r["termination_reason"],"candidate_pool_sha256":digest(r["candidates"]),"gold_hit":bool(exact),"gold_hit_candidate_count":len(exact),**(first or {})};cells.append(base)
@@ -134,7 +141,8 @@ def score(args:argparse.Namespace)->None:
         for budget in (1024,2048):
             s=repmap.get((key,budget)); run=rawmap[(key,f"REGRET4_{budget}_PREFIX")]
             expected=completion_signature(base,budget); actual=completion_signature(run)
-            gold=sols[parse_key(key)[0]]["test"][parse_key(key)[1]]["output"]
+            task_id, output_index, _depth, _view = parse_key(key)
+            gold=sols[task_id][output_index]
             base_candidates={int(c["candidate_id"]):c for c in base["candidates"]}
             expected_gold=any(base_candidates[int(e["candidate_completion_index"])].get("canonical_candidate")==gold for e in base["search_trace"] if e.get("candidate_completion_index") is not None and int(e.get("nodes_expanded_so_far") or 0)<=budget)
             expected_nodes=min(int(b["nodes_expanded"]),budget)
