@@ -178,12 +178,19 @@ def _incremental_kv_replay(*, model: Any, encoded: dict[str, Any], tokens: list[
     import torch
 
     first = {key: value.to(model.device) for key, value in encoded.items()}
+    # ``GenerationMixin`` creates an all-one mask when generate receives no
+    # attention mask for this unpadded B=1 prompt.  The Unsloth cache-forward
+    # wrapper requires that materialised mask on subsequent calls (otherwise it
+    # dereferences ``None``).  This therefore mirrors generate's default rather
+    # than introducing any selective masking or position IDs.
+    if "attention_mask" not in first:
+        first["attention_mask"] = torch.ones_like(first["input_ids"])
     first.update({"use_cache": True, "return_dict": True})
     with torch.inference_mode():
         output = model(**first)
     replay_logits = [output.logits[0, -1, :]]
     cache = output.past_key_values
-    attention_mask = first.get("attention_mask")
+    attention_mask = first["attention_mask"]
     for token in tokens[:-1]:
         one = torch.tensor([[token]], dtype=first["input_ids"].dtype, device=model.device)
         next_inputs: dict[str, Any] = {
@@ -192,9 +199,8 @@ def _incremental_kv_replay(*, model: Any, encoded: dict[str, Any], tokens: list[
             "use_cache": True,
             "return_dict": True,
         }
-        if attention_mask is not None:
-            attention_mask = torch.cat((attention_mask, torch.ones_like(one)), dim=1)
-            next_inputs["attention_mask"] = attention_mask
+        attention_mask = torch.cat((attention_mask, torch.ones_like(one)), dim=1)
+        next_inputs["attention_mask"] = attention_mask
         with torch.inference_mode():
             output = model(**next_inputs)
         cache = output.past_key_values
