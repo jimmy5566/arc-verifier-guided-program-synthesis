@@ -202,6 +202,7 @@ def preflight(args: argparse.Namespace) -> None:
         raise RuntimeError("unexpected Untouched24 Router/shadow job dimensions")
     adapters = adapter_records(Path(manifest["adapter_manifest"]))
     missing: list[dict[str, Any]] = []
+    verified_paths: set[Path] = set()
     for job in manifest["router_jobs"] + manifest["shadow_jobs"]:
         task_id, _ = parse_output(str(job["output_id"]))
         key = (task_id, int(job["depth"]))
@@ -212,6 +213,13 @@ def preflight(args: argparse.Namespace) -> None:
         path = Path(row["global_path"])
         if not path.is_file() or path.stat().st_size != int(row["size"]):
             missing.append({"cell_key": job["cell_key"], "reason": "adapter_file_identity_mismatch", "path": str(path)})
+            continue
+        if args.verify_adapter_sha and path not in verified_paths:
+            actual = sha256_file(path)
+            if actual != row["sha256"]:
+                missing.append({"cell_key": job["cell_key"], "reason": "adapter_sha256_mismatch", "path": str(path), "actual": actual})
+                continue
+            verified_paths.add(path)
     if missing:
         raise RuntimeError(f"adapter preflight failed for {len(missing)} job(s): {missing[:3]}")
     atomic_json(output / "PRELAUNCH_VERIFIED.json", {
@@ -221,6 +229,8 @@ def preflight(args: argparse.Namespace) -> None:
         "shadow_jobs": len(manifest["shadow_jobs"]),
         "adapter_records": len(adapters),
         "adapter_jobs_verified": len(manifest["router_jobs"]) + len(manifest["shadow_jobs"]),
+        "adapter_files_sha256_verified": len(verified_paths) if args.verify_adapter_sha else 0,
+        "adapter_sha256_verification": bool(args.verify_adapter_sha),
         "challenge_sha256": sha256_file(Path(manifest["challenge_path"])),
         "manifest_sha256": sha256_file(output / "ROUTER_V0_STATIC_MANIFEST.json"),
         "solutions_accessed": False,
@@ -494,6 +504,7 @@ def main() -> None:
     p.add_argument("--worker-index", type=int, required=True); p.add_argument("--claim-stale-seconds", type=float, default=300.0)
     p.add_argument("--phase", choices=("router", "shadow"), required=True)
     p = sub.add_parser("preflight"); p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--verify-adapter-sha", action="store_true")
     p = sub.add_parser("freeze"); p.add_argument("--output", type=Path, required=True); p.add_argument("--phase", choices=("router", "all"), required=True)
     p = sub.add_parser("score")
     p.add_argument("--output", type=Path, required=True); p.add_argument("--solutions", type=Path, required=True); p.add_argument("--report-dir", type=Path, required=True)
