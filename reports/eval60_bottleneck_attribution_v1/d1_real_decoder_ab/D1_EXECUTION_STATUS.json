@@ -1,0 +1,22 @@
+{
+  "V5_EXACT_REUSE": "NO",
+  "V5_INITIAL_PARITY_CELLS_DECLARED": 58,
+  "V5_NEW_PARITY_CELLS_OBSERVED": 90,
+  "V5_PARITY_CELLS_ADDED_BEFORE_GRACEFUL_STOP": 32,
+  "V5_PARITY_MISMATCHES": 46,
+  "V5_REUSED_CELLS": 0,
+  "classification": "PARITY_MISMATCH",
+  "config_hash_match": true,
+  "current_v5_config_sha256": "e5beec92c9992930f4d6b468db1806ee2f3b9224e13179af7d4e8bb5897148e0",
+  "expected_v5_config_sha256": "e5beec92c9992930f4d6b468db1806ee2f3b9224e13179af7d4e8bb5897148e0",
+  "finalist_gpu_smoke": "BLOCKED_BY_V5_IDENTITY_MISMATCH",
+  "gold_read": false,
+  "historical_cells_present": 144,
+  "identity_blockers": [
+    "D1 adds max_expanded_nodes=4096 whereas historical V5 declares non_reference_caps=[]",
+    "D1 adds max_completed_candidates=32 whereas historical V5 declares non_reference_caps=[]",
+    "D1 uses a separate decoder implementation module; source identity is not the frozen V5 implementation"
+  ],
+  "orphan_shard_recovery": "ENABLED_CPU_VALIDATED",
+  "scientific_config_changed": "NO"
+}
