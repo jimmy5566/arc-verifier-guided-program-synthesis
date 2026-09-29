@@ -1,0 +1,5 @@
+view,historical_source_rows,unique_hard28_logical_cells,parse_valid_rows,exact_reusable_rows,new_greedy_rescues,reason
+rot90,56,27,54,0,NOT_ESTABLISHED_NONEXACT_REUSE,missing historical per-task adapter SHA256 blocks exact reuse
+rot180,56,23,46,0,NOT_ESTABLISHED_NONEXACT_REUSE,missing historical per-task adapter SHA256 blocks exact reuse
+rot270,56,27,54,0,NOT_ESTABLISHED_NONEXACT_REUSE,missing historical per-task adapter SHA256 blocks exact reuse
+flip_lr,56,23,46,0,NOT_ESTABLISHED_NONEXACT_REUSE,missing historical per-task adapter SHA256 blocks exact reuse

@@ -1,0 +1,26 @@
+{
+  "AUGMENTATION_COVERAGE_CONCLUSION": "HISTORICAL_ONLY",
+  "BY_VIEW": {
+    "flip_lr": "NOT_ESTABLISHED_NONEXACT_REUSE",
+    "rot180": "NOT_ESTABLISHED_NONEXACT_REUSE",
+    "rot270": "NOT_ESTABLISHED_NONEXACT_REUSE",
+    "rot90": "NOT_ESTABLISHED_NONEXACT_REUSE"
+  },
+  "CPU_AUDIT_STATUS": "PASS",
+  "CURRENT_DEVELOPMENT_UNION": "33/89",
+  "CURRENT_HARD28_OUTPUTS": 28,
+  "EXACT_REUSE_AVAILABLE": "NO",
+  "EXACT_REUSE_REASON": "Both historical Eval60 TTT24 Aug8 greedy artifacts lack per-task adapter checkpoint SHA256; additional tokenizer/current-recipe and full greedy-semantic fields are also insufficient for all eight identity gates.",
+  "HISTORICAL_EVAL60_AUG8_FOUND": "YES",
+  "NEW_DEVELOPMENT_UNION": "NOT_ESTABLISHED_NONEXACT_REUSE",
+  "NEW_GREEDY_RESCUE_IDS": [],
+  "NEW_GREEDY_RESCUE_OUTPUTS": "NOT_ESTABLISHED_NONEXACT_REUSE",
+  "NEXT_RECOMMENDED_EXPERIMENT": "Run the preregistered current-adapter TTT24 omitted-D4 Greedy coverage cells, with per-task adapter SHA and native decoder contract frozen before Gold scoring.",
+  "TTT24_OMITTED_VIEW_CELLS_AVAILABLE": {
+    "exact_reusable_cells": 0,
+    "expected_logical_cells": 112,
+    "historical_prediction_available_source_rows": 200,
+    "historical_prediction_available_unique": 100
+  },
+  "directional_information": "The artifacts verify historical Eval60 coverage for all omitted D4 views, but cannot establish current decoder-positive rescues without adapter identity parity."
+}

@@ -1,0 +1,56 @@
+{
+  "cpu_only": true,
+  "current_development_union": "33/89",
+  "current_hard28_outputs": [
+    "0934a4d8:o0",
+    "13e47133:o0",
+    "142ca369:o1",
+    "16b78196:o0",
+    "16de56c4:o1",
+    "20270e3b:o0",
+    "247ef758:o1",
+    "332f06d7:o0",
+    "446ef5d2:o0",
+    "446ef5d2:o1",
+    "5dbc8537:o0",
+    "5dbc8537:o1",
+    "64efde09:o0",
+    "6ffbe589:o0",
+    "7491f3cf:o0",
+    "898e7135:o0",
+    "9385bd28:o0",
+    "97d7923e:o0",
+    "a32d8b75:o0",
+    "a32d8b75:o1",
+    "c4d067a0:o0",
+    "cb2d8a2c:o0",
+    "cb2d8a2c:o1",
+    "cbebaa4b:o0",
+    "d59b0160:o0",
+    "dd6b8c4b:o1",
+    "e3721c99:o1",
+    "f931b4a8:o1"
+  ],
+  "current_hard28_sha256": "7a95556162f636416cd67e08d5fb3da4a6bdf801ddcd01427a935de48051331d",
+  "experiment": "HISTORICAL_EVAL60_AUG8_REUSE_V1",
+  "gold_access": "NOT_OPENED: exact reuse identity gate failed before historical prediction scoring",
+  "gpu_used": false,
+  "historical_sources": [
+    {
+      "label": "historical_eval60_ttt24_aug8_1",
+      "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\kaggle_packages\\eval60_per_output_rescore_v2\\dataset\\ARC2\\eval60_per_output_rescore\\ttt24_candidates_frozen.json",
+      "sha256": "dbbd0a0f8a5cf004417e0eb46aea980f6a654813c6e3bd2816e558991433ef75"
+    },
+    {
+      "label": "historical_eval60_ttt24_aug8_2",
+      "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\kaggle_packages\\eval60_ttt48_paired_confirmation\\dataset\\ARC2\\eval60_ttt48_confirmation\\ttt24_candidates_frozen.json",
+      "sha256": "7568d18a54c7adafdc149117d9e05cad00e49f768e94ce015b08135ee629899a"
+    }
+  ],
+  "identity_rule": "All eight gates must be evidenced PASS for exact reuse. Missing adapter SHA is a blocking failure.",
+  "model_loaded": false,
+  "new_dfs": false,
+  "new_generation": false,
+  "new_ttt": false,
+  "source_commit": "5253dd868ad7c536236184f92e175fd5c570e103"
+}
