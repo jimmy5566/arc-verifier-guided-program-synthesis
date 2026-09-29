@@ -143,6 +143,7 @@ def write_status(root: Path, phase: str, jobs: list[dict[str, Any]], complete: i
 def phase(args: argparse.Namespace, manifest: dict[str, Any], name: str, jobs: list[dict[str, Any]]) -> None:
     root = args.output
     started, last_status, last_complete = time.time(), 0.0, -1
+    (root / "logs").mkdir(parents=True, exist_ok=True)
     logs = {gpu: (root / "logs" / f"{name}_gpu{gpu}.log").open("a", encoding="utf-8") for gpu in (0, 1)}
     processes = {gpu: start_worker(args, name, gpu, logs[gpu]) for gpu in (0, 1)}
     retries: dict[str, int] = {}
