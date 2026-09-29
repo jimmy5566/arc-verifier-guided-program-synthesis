@@ -1,0 +1,49 @@
+{
+  "budget_curve_reuse_valid": true,
+  "curve": [
+    {
+      "R": 0,
+      "budget": 512,
+      "validation_cells": 16
+    },
+    {
+      "R": 2,
+      "budget": 1024,
+      "validation_cells": 16
+    },
+    {
+      "R": 2,
+      "budget": 2048,
+      "validation_cells": 16
+    },
+    {
+      "R": 6,
+      "budget": 4096,
+      "validation_cells": 16
+    }
+  ],
+  "experiment_id": "D2_REGRET_BUDGET_AND_RETRIEVAL_V1",
+  "historical_union": "33/89 unchanged",
+  "new_regret_rescue_ids": [
+    "d59b0160:o0:d24:identity",
+    "97d7923e:o0:d48:identity",
+    "97d7923e:o0:d24:flip_ud",
+    "d59b0160:o0:d24:flip_ud",
+    "d59b0160:o0:d24:transpose",
+    "20270e3b:o0:d12:identity"
+  ],
+  "recommended_regret_budget": "4096",
+  "regret_runaway_cause": "SEARCH_TREE_EXPANSION",
+  "scope": "NONBLIND DEVELOPMENT",
+  "topk2_and_affine_failure_counts": {
+    "BRANCH_NOT_DISCOVERED": 0,
+    "CANDIDATE_CAP_PREEMPTION": 0,
+    "DEDUP_OR_STATE_COLLISION": 0,
+    "FRONTIER_STARVATION": 0,
+    "IMPLEMENTATION_SEMANTICS_GAP": 0,
+    "MIXED": 0,
+    "NODE_BUDGET_PREEMPTION": 0,
+    "NOT_ESTABLISHED": 8
+  },
+  "validation_cells": 16
+}

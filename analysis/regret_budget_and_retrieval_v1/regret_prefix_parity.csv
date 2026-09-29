@@ -1,0 +1,9 @@
+budget,candidate_count_4096_prefix,candidate_count_run,candidate_hash_identical,candidate_order_identical,cell_key,gold_4096,gold_expected_prefix,gold_run,gold_status_identical,nodes_4096,nodes_expected,nodes_prefix_consistent,nodes_run,termination_4096,termination_run,termination_semantics_consistent
+1024,13,13,True,True,97d7923e:o0:d48:identity,True,True,True,True,1994,1024,True,1024,search_exhausted,budget_exhausted,True
+2048,28,28,True,True,97d7923e:o0:d48:identity,True,True,True,True,1994,1994,True,1994,search_exhausted,search_exhausted,True
+1024,10,10,True,True,d59b0160:o0:d12:anti_transpose,False,False,False,True,2741,1024,True,1024,budget_exhausted,budget_exhausted,True
+2048,23,23,True,True,d59b0160:o0:d12:anti_transpose,False,False,False,True,2741,2048,True,2048,budget_exhausted,budget_exhausted,True
+1024,8,8,True,True,d59b0160:o0:d12:identity,False,False,False,True,4096,1024,True,1024,budget_exhausted,budget_exhausted,True
+2048,16,16,True,True,d59b0160:o0:d12:identity,False,False,False,True,4096,2048,True,2048,budget_exhausted,budget_exhausted,True
+1024,6,6,True,True,d59b0160:o0:d24:identity,True,False,False,True,4096,1024,True,1024,budget_exhausted,budget_exhausted,True
+2048,13,13,True,True,d59b0160:o0:d24:identity,True,False,False,True,4096,2048,True,2048,budget_exhausted,budget_exhausted,True

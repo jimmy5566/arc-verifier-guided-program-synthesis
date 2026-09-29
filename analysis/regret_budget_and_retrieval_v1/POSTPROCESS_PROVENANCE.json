@@ -1,0 +1,13 @@
+{
+  "challenge_task_count": 120,
+  "experiment_id": "D2_REGRET_BUDGET_AND_RETRIEVAL_V1",
+  "frozen_generation_records": 39,
+  "gold_access_stage": "post-freeze CPU scoring only",
+  "gpu_cells_rerun": false,
+  "normalization": "strict dict task-id match; list roots require exact frozen challenge ordering",
+  "raw_candidate_or_trace_artifacts_changed": false,
+  "scientific_decoder_configuration_changed": false,
+  "solution_root_length": 120,
+  "solution_root_type": "dict",
+  "solutions_accessed_before_generation": false
+}

@@ -1,0 +1,292 @@
+{
+  "adapter_manifest": "/workspace/arc2/turbodfs_v5/eval60_adapter_manifest.csv",
+  "authoritative_root": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1",
+  "challenge_path": "/root/arc-runtime-g1g3-2x3090/active_run/d2_regret_budget_and_retrieval_v1/generation_inputs/evaluation_challenges.json",
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "d1_contract_sha256": "caaa3ff7490eaa6deb3f4965ed7e382ddf5d6a1b315382bf820fc3090eeff6a1",
+  "d1_root": "/root/arc-runtime-g1g3-2x3090/active_run/d1_real_decoder_ab_v1",
+  "experiment_id": "D2_REGRET_BUDGET_AND_RETRIEVAL_V1",
+  "g1_root": "/root/arc-runtime-g1g3-2x3090/active_run/g1_half_sha256_28of56/g1",
+  "jobs": [
+    {
+      "cell_key": "d59b0160:o0:d12:anti_transpose",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "d59b0160:o0:d24:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "d59b0160:o0:d12:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "97d7923e:o0:d48:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "97d7923e:o0:d24:flip_ud",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "5dbc8537:o0:d48:transpose",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "d59b0160:o0:d24:flip_ud",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "d59b0160:o0:d12:flip_ud",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "d59b0160:o0:d24:transpose",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "332f06d7:o0:d12:flip_ud",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "cb2d8a2c:o1:d12:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "5dbc8537:o0:d12:transpose",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "f931b4a8:o1:d12:transpose",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "20270e3b:o0:d12:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "97d7923e:o0:d12:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "97d7923e:o0:d12:flip_ud",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_VALIDATION",
+      "max_expanded_nodes": 4096,
+      "purpose": "unseen_for_D1_smoke_retrieval_validation"
+    },
+    {
+      "cell_key": "20270e3b:o0:d24:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_4096_REFERENCE",
+      "max_expanded_nodes": 4096,
+      "purpose": "known_smoke_success_reference_only"
+    },
+    {
+      "cell_key": "64efde09:o0:d12:transpose",
+      "implementation_policy": "TOPK_LOCAL_k=2",
+      "label": "TOPK2_4096_TRACE",
+      "max_expanded_nodes": 4096,
+      "purpose": "D1_survive1_hit0_failure_trace"
+    },
+    {
+      "cell_key": "332f06d7:o0:d24:anti_transpose",
+      "implementation_policy": "TOPK_LOCAL_k=2",
+      "label": "TOPK2_4096_TRACE",
+      "max_expanded_nodes": 4096,
+      "purpose": "D1_survive1_hit0_failure_trace"
+    },
+    {
+      "cell_key": "a32d8b75:o1:d48:anti_transpose",
+      "implementation_policy": "TOPK_LOCAL_k=2",
+      "label": "TOPK2_4096_TRACE",
+      "max_expanded_nodes": 4096,
+      "purpose": "D1_survive1_hit0_failure_trace"
+    },
+    {
+      "cell_key": "64efde09:o0:d24:transpose",
+      "implementation_policy": "TOPK_LOCAL_k=2",
+      "label": "TOPK2_4096_TRACE",
+      "max_expanded_nodes": 4096,
+      "purpose": "D1_survive1_hit0_failure_trace"
+    },
+    {
+      "cell_key": "20270e3b:o0:d24:identity",
+      "implementation_policy": "TOPK_LOCAL_k=2",
+      "label": "TOPK2_4096_TRACE",
+      "max_expanded_nodes": 4096,
+      "purpose": "D1_survive1_hit0_failure_trace"
+    },
+    {
+      "cell_key": "c4d067a0:o0:d12:anti_transpose",
+      "implementation_policy": "TOPK_LOCAL_k=2",
+      "label": "TOPK2_4096_TRACE",
+      "max_expanded_nodes": 4096,
+      "purpose": "D1_survive1_hit0_failure_trace"
+    },
+    {
+      "cell_key": "332f06d7:o0:d24:anti_transpose",
+      "implementation_policy": "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400",
+      "label": "AFFINE_4096_TRACE",
+      "max_expanded_nodes": 4096,
+      "purpose": "D1_survive1_hit0_failure_trace"
+    },
+    {
+      "cell_key": "c4d067a0:o0:d12:anti_transpose",
+      "implementation_policy": "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400",
+      "label": "AFFINE_4096_TRACE",
+      "max_expanded_nodes": 4096,
+      "purpose": "D1_survive1_hit0_failure_trace"
+    },
+    {
+      "cell_key": "64efde09:o0:d12:transpose",
+      "implementation_policy": "V5_CURRENT",
+      "label": "D2_V5_CLEAN_CONTROL",
+      "max_expanded_nodes": 4096,
+      "purpose": "fresh_fixed_contract_mechanism_control"
+    },
+    {
+      "cell_key": "332f06d7:o0:d24:anti_transpose",
+      "implementation_policy": "V5_CURRENT",
+      "label": "D2_V5_CLEAN_CONTROL",
+      "max_expanded_nodes": 4096,
+      "purpose": "fresh_fixed_contract_mechanism_control"
+    },
+    {
+      "cell_key": "a32d8b75:o1:d48:anti_transpose",
+      "implementation_policy": "V5_CURRENT",
+      "label": "D2_V5_CLEAN_CONTROL",
+      "max_expanded_nodes": 4096,
+      "purpose": "fresh_fixed_contract_mechanism_control"
+    },
+    {
+      "cell_key": "64efde09:o0:d24:transpose",
+      "implementation_policy": "V5_CURRENT",
+      "label": "D2_V5_CLEAN_CONTROL",
+      "max_expanded_nodes": 4096,
+      "purpose": "fresh_fixed_contract_mechanism_control"
+    },
+    {
+      "cell_key": "20270e3b:o0:d24:identity",
+      "implementation_policy": "V5_CURRENT",
+      "label": "D2_V5_CLEAN_CONTROL",
+      "max_expanded_nodes": 4096,
+      "purpose": "fresh_fixed_contract_mechanism_control"
+    },
+    {
+      "cell_key": "c4d067a0:o0:d12:anti_transpose",
+      "implementation_policy": "V5_CURRENT",
+      "label": "D2_V5_CLEAN_CONTROL",
+      "max_expanded_nodes": 4096,
+      "purpose": "fresh_fixed_contract_mechanism_control"
+    },
+    {
+      "cell_key": "d59b0160:o0:d12:anti_transpose",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_1024_PREFIX",
+      "max_expanded_nodes": 1024,
+      "purpose": "prefix_nesting_check"
+    },
+    {
+      "cell_key": "d59b0160:o0:d24:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_1024_PREFIX",
+      "max_expanded_nodes": 1024,
+      "purpose": "prefix_nesting_check"
+    },
+    {
+      "cell_key": "d59b0160:o0:d12:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_1024_PREFIX",
+      "max_expanded_nodes": 1024,
+      "purpose": "prefix_nesting_check"
+    },
+    {
+      "cell_key": "97d7923e:o0:d48:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_1024_PREFIX",
+      "max_expanded_nodes": 1024,
+      "purpose": "prefix_nesting_check"
+    },
+    {
+      "cell_key": "d59b0160:o0:d12:anti_transpose",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_2048_PREFIX",
+      "max_expanded_nodes": 2048,
+      "purpose": "prefix_nesting_check"
+    },
+    {
+      "cell_key": "d59b0160:o0:d24:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_2048_PREFIX",
+      "max_expanded_nodes": 2048,
+      "purpose": "prefix_nesting_check"
+    },
+    {
+      "cell_key": "d59b0160:o0:d12:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_2048_PREFIX",
+      "max_expanded_nodes": 2048,
+      "purpose": "prefix_nesting_check"
+    },
+    {
+      "cell_key": "97d7923e:o0:d48:identity",
+      "implementation_policy": "CUMULATIVE_REGRET_r=4.00",
+      "label": "REGRET4_2048_PREFIX",
+      "max_expanded_nodes": 2048,
+      "purpose": "prefix_nesting_check"
+    }
+  ],
+  "model_path": "/root/arc-runtime-g1g3-2x3090/model-stage/qwen3_4b_grids15_sft139",
+  "native_config_dir": "/workspace/arc2/arc2/source/configs/nvarc_native_846d0198",
+  "plan_sha256": "11fe584416d047b32dfd563e586313864635802a9b9d93b69e941397a337a7eb",
+  "reference_config": "/root/arc-runtime-g1g3-2x3090/active_run/d1_real_decoder_ab_v1/generation_inputs/reference_ttt_config.json",
+  "solutions_accessed": false,
+  "source_commit": "e31cb72ae2114774cac6ed3a59bcef7f6972f3fe",
+  "workers": "one worker per GPU; shared reclaimable queue"
+}

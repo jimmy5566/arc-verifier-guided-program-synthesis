@@ -1,0 +1,72 @@
+{
+  "budget_curve": {
+    "512": 0,
+    "1024": 2,
+    "2048": 2,
+    "4096": 6
+  },
+  "budget_curve_reuse_valid": true,
+  "experiment_id": "D2_REGRET_BUDGET_AND_RETRIEVAL_V1",
+  "first_gold_node_distribution": {
+    "1025-2048": 0,
+    "2049-4096": 4,
+    "513-1024": 2,
+    "<=512": 0
+  },
+  "frozen_generation_reused": "39/39",
+  "gpu_rerun": "NO",
+  "need_budget_router": "YES",
+  "need_complex_early_stop": "YES",
+  "new_regret_gold_rescues": 6,
+  "new_regret_rescue_ids": [
+    "d59b0160:o0:d24:identity",
+    "97d7923e:o0:d48:identity",
+    "97d7923e:o0:d24:flip_ud",
+    "d59b0160:o0:d24:flip_ud",
+    "d59b0160:o0:d24:transpose",
+    "20270e3b:o0:d12:identity"
+  ],
+  "next_research": "Validate a budget-aware/early-stop control before primary use; no claim beyond this nonblind development cohort.",
+  "prefix_parity_rows": 8,
+  "recommended_regret_budget": "4096",
+  "regret_retrieval_conversion": {
+    "denominator": 16,
+    "numerator": 6,
+    "rate": 0.375
+  },
+  "regret_runaway_cause": "SEARCH_TREE_EXPANSION",
+  "retrieval_failures": {
+    "AFFINE": {
+      "dominant_failure": "NOT_ESTABLISHED",
+      "failure_counts": {
+        "BRANCH_NOT_DISCOVERED": 0,
+        "CANDIDATE_CAP_PREEMPTION": 0,
+        "FRONTIER_STARVATION": 0,
+        "NODE_BUDGET_PREEMPTION": 0,
+        "OTHER": 2
+      },
+      "gold_hit_cells": 0,
+      "total_trace_cells": 2
+    },
+    "TOPK2": {
+      "dominant_failure": "NOT_ESTABLISHED",
+      "failure_counts": {
+        "BRANCH_NOT_DISCOVERED": 0,
+        "CANDIDATE_CAP_PREEMPTION": 0,
+        "FRONTIER_STARVATION": 0,
+        "NODE_BUDGET_PREEMPTION": 0,
+        "OTHER": 6
+      },
+      "gold_hit_cells": 0,
+      "total_trace_cells": 6
+    }
+  },
+  "schema_normalization": {
+    "actual_entries": 120,
+    "actual_solution_root": "dict",
+    "list_support": "only via exact frozen challenge ordering",
+    "value_schema": "task_id -> compact output-grid list"
+  },
+  "scientific_config_changed": "NO",
+  "scope": "NONBLIND DEVELOPMENT; post-freeze Gold diagnosis only; historical 33/89 unchanged"
+}

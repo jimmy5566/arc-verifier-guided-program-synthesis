@@ -1,0 +1,20 @@
+{
+  "D2_BUDGET_GENERATION_FROZEN.json": "c93ca6d609d04fdddde29cb17bd4744cc6e3da02fb7c2811269b1b285c17c922",
+  "D2_BUDGET_MANIFEST.json": "6776c35bf88678658807ac4522fd40b9417fa8cec0cf40210b77b506fd3d6827",
+  "D2_FINAL_SUMMARY.json": "fee2428cebd536542b4fbaac25c275a5871b3e35f9711e15eab61d58eb07f41e",
+  "D2_FINAL_SUMMARY.md": "a3adcc494ffcda102f04e9241a1771176a5acfd6331a8f1d956bde0f08168cf4",
+  "DECISION.json": "d632aa5dd676b418e81bab24fada4b2a90518173c0244bfbc3fdf8a2da164cbe",
+  "POSTPROCESS_PROVENANCE.json": "2a753ebe3010683cd74feb8893e055aa66c02fe985a4f4bc3aa453713eb89c1e",
+  "REGRET_BUDGET_COHORT.json": "11fe584416d047b32dfd563e586313864635802a9b9d93b69e941397a337a7eb",
+  "REGRET_BUDGET_RESPONSE_REPORT.md": "94c59f86da0923d829739494ee7b06fc19332c0f67f253cde63390e503afe709",
+  "RETRIEVAL_FAILURE_REPORT.md": "4472079b23694acf8e16fbb89e60f5fb25787ef3eaa9852e849376f1215796a9",
+  "affine_retrieval_trace_summary.csv": "9663ea44c8e613412194ca1de85b6d6287d99e287edb7a71e6d80cd56a67d21a",
+  "d2_v5_clean_control.csv": "c94c4c5e5e4846b2342efba83bea46b25900b778bfe4ce0953b85bed58e07df9",
+  "regret_budget_cells.csv": "e4bb9ed9945c451eae375abdd97e6d834d1b338a1db2322124fdded4812227d6",
+  "regret_budget_curve.csv": "7b720879effa5ebc47bdbf7a7fab2c668218732bdd8b4bfaaed4f6caea324065",
+  "regret_gold_first_hit.csv": "cedc358d0e9020d4527fa87078002c5f29626bd2d3e990abe904eb3a055ab19b",
+  "regret_prefix_parity.csv": "fad1ce22174fa969869fb4991c940b0b137f6c13416000dd81c40b9774a77def",
+  "regret_runtime_analysis.csv": "4d9a672b73290256c407590e84511c71180821d859cc3c0ebd1a30e6ba57ce8a",
+  "retrieval_failure_attribution.csv": "3c1ac87894327d6f8cb5f8243eeb03a00e6fc0e3f7bc64a10c6b2c826f5a9ce0",
+  "topk2_retrieval_trace_summary.csv": "49471721f723474f966d367c595109d134d2abd81569b7a80b5795de15f177b7"
+}
