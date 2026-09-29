@@ -16,7 +16,8 @@ from scripts.turbodfs_v4_common import assert_native_token_contract
 
 def d1_cells_batch(*, model: Any, tokenizer: Any, task: Any, task_id: str, output_index: int,
                    depth: int, views: tuple[str, ...], generation_config: dict[str, Any],
-                   decoder: D1TurboDFSConfig, checkpoint_sha: str) -> list[dict[str, Any]]:
+                   decoder: D1TurboDFSConfig, checkpoint_sha: str,
+                   diagnostic_trace: bool = False) -> list[dict[str, Any]]:
     """Run one frozen equal-width view pair, retaining a schema-compatible cell per lane."""
     import torch
     from unsloth import FastLanguageModel
@@ -34,6 +35,8 @@ def d1_cells_batch(*, model: Any, tokenizer: Any, task: Any, task_id: str, outpu
     FastLanguageModel.for_inference(model)
     torch.cuda.reset_peak_memory_stats()
     started = time.perf_counter()
+    if diagnostic_trace != bool(decoder.diagnostic_trace):
+        raise RuntimeError("D1 diagnostic trace flag must match the decoder configuration")
     result = inference_d1_turbo_dfs(model, input_ids=input_ids, config=decoder)
     torch.cuda.synchronize()
     elapsed = time.perf_counter() - started
@@ -41,6 +44,7 @@ def d1_cells_batch(*, model: Any, tokenizer: Any, task: Any, task_id: str, outpu
     for lane, (view, (_encoded, augmentation)) in enumerate(zip(views, encoded_views, strict=True)):
         context_id = f"{task_id}:o{output_index}:d{depth}:{view}"
         candidates: list[dict[str, Any]] = []
+        candidate_parse_started = time.perf_counter()
         for local_id, candidate in enumerate(result.candidates[lane]):
             raw = parse_native_grid(tokenizer.decode(list(candidate.token_ids), skip_special_tokens=True))
             canonical = None if raw is None else augmentation.inverse_grid(raw)
@@ -53,6 +57,10 @@ def d1_cells_batch(*, model: Any, tokenizer: Any, task: Any, task_id: str, outpu
                 "candidate_discovery_timestamp_unix": candidate.discovery_unix, "terminal_node_id": candidate.terminal_node_id,
                 "node_count_at_discovery": candidate.terminal_node_id, "forward_count_at_discovery": candidate.discovery_forward_index,
             })
+        candidate_parse_seconds = time.perf_counter() - candidate_parse_started
+        dedup_started = time.perf_counter()
+        unique_grid_count = len({json.dumps(row["canonical_candidate"], separators=(",", ":")) for row in candidates if row["valid_grid"]})
+        dedup_seconds = time.perf_counter() - dedup_started
         nodes = [{**row, "search_context_id": context_id, "cache_slot": lane,
                   "expanded": row.get("state") == "expanded", "pruned": row.get("state") == "pruned",
                   "completed": row.get("state") == "completed"}
@@ -70,7 +78,7 @@ def d1_cells_batch(*, model: Any, tokenizer: Any, task: Any, task_id: str, outpu
             "runtime_seconds": elapsed / len(views), "shared_batch_runtime_seconds": elapsed,
             "candidate_count": len(candidates), "complete_candidate_count": len(result.candidates[lane]),
             "valid_grid_count": sum(bool(row["valid_grid"]) for row in candidates),
-            "unique_grid_count": len({json.dumps(row["canonical_candidate"], separators=(",", ":")) for row in candidates if row["valid_grid"]}),
+            "unique_grid_count": unique_grid_count,
             "candidates": candidates, "nodes": nodes, "branch_probabilities": probabilities, "frontier_floor_events": floors,
             "frontier_floor_activation_count": len(floors), "nodes_expanded": sum(bool(row["expanded"]) for row in nodes),
             "successors_considered": considered, "successors_retained": retained, "max_frontier_size": result.max_frontier_size,
@@ -79,12 +87,19 @@ def d1_cells_batch(*, model: Any, tokenizer: Any, task: Any, task_id: str, outpu
             # Alias the decoder-level forward count explicitly for the fixed-budget
             # cost contract.  This is telemetry only; it does not alter decoding.
             "batch_forward_passes": result.model_forwards,
+            "model_forward_seconds": float(result.model_forward_seconds) / len(views),
+            "candidate_parse_seconds": candidate_parse_seconds,
+            "dedup_seconds": dedup_seconds,
+            "python_overhead_seconds": max(0.0, (elapsed / len(views)) - (float(result.model_forward_seconds) / len(views)) - candidate_parse_seconds - dedup_seconds),
             "lane_count": len(views), "lane_index": lane, "termination_reason": result.termination_reason,
             "timed_out": result.timed_out, "budget_exhausted": result.budget_exhausted,
             "search_exhausted": result.termination_reason == "search_exhausted",
             "peak_vram_mb": int(torch.cuda.max_memory_allocated() / (1024 * 1024)),
             "peak_reserved_vram_mb": int(torch.cuda.max_memory_reserved() / (1024 * 1024)),
             "search_tree_reconstructible": True, "full_branch_probabilities_saved": True,
+            "diagnostic_trace_enabled": bool(diagnostic_trace),
+            "search_trace": [{**row, "search_context_id": context_id, "cache_slot": lane}
+                             for row in result.search_trace if int(row.get("lane", -1)) == lane] if diagnostic_trace else [],
             "solutions_accessed": False,
         })
     return records
