@@ -105,7 +105,12 @@ def pref(tokens:list[int])->str:return hashlib.sha256(",".join(map(str,tokens)).
 def gold_tokens(m:dict[str,Any],key:str)->list[int]:
     task,oi,d,v=parse_key(key); p=Path(m["g1_root"])/"cells"/task/f"o{oi:02d}_d{d:03d}_{v}.json";x=read_json(p);return [int(r["gold_token_id"]) for r in sorted(x["token_trace"],key=lambda z:int(z["token_position"]))]
 def classify(row:dict[str,Any],gold:list[int])->str:
-    ev=row["search_trace"]; gold_events=[e for e in ev if e.get("prefix_hash") in {pref(gold[:n]) for n in range(1,len(gold)+1)}]
+    ev=row["search_trace"]
+    # This is a post-freeze diagnostic only.  Materialising the target prefix
+    # set once preserves the exact predicate while avoiding re-hashing it for
+    # every recorded search event.
+    gold_prefixes={pref(gold[:n]) for n in range(1,len(gold)+1)}
+    gold_events=[e for e in ev if e.get("prefix_hash") in gold_prefixes]
     if not gold_events:return "BRANCH_NOT_DISCOVERED"
     if any(e.get("prune_reason") in {"topk_local","affine_nll_budget","cumulative_regret","public_cumulative_nll"} for e in gold_events):return "IMPLEMENTATION_SEMANTICS_GAP"
     inserted=[e for e in gold_events if e.get("frontier_insert_order") is not None]
