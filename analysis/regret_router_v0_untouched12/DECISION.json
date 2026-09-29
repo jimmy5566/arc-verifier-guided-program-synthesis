@@ -1,0 +1,12 @@
+{
+  "GPU_USED": false,
+  "LEAKAGE_WITH_ROUTER_DEV": 0,
+  "RESUME_PARITY": "NOT_RUN",
+  "cohort_frozen": true,
+  "historical_union": "33/89 unchanged",
+  "next": "IMPLEMENT_AND_VALIDATE_EXACT_RESUME_ENGINE_BEFORE_GPU_VALIDATION",
+  "reason": "current frozen decoder constructs state, frontier and KV cache as call-local values and exposes no serializable resume checkpoint API",
+  "router_contract_frozen": true,
+  "status": "PRELAUNCH_BLOCKED",
+  "validation_verdict": "NOT_RUN"
+}

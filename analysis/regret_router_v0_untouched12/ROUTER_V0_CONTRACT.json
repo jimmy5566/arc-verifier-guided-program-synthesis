@@ -1,0 +1,40 @@
+{
+  "candidate_cap": 32,
+  "contract_sha256": "6103195de42911e7eb27c06d90c2c662815ac1487683bc132786baf5ff822a4e",
+  "contract_status": "FROZEN_PRELAUNCH",
+  "experiment_id": "REGRET_ROUTER_V0_UNTOUCHED12_VALIDATION",
+  "forbidden": [
+    "gold",
+    "confidence",
+    "task_exceptions",
+    "view_exceptions",
+    "2048_tier",
+    "restart_from_zero"
+  ],
+  "phase_a_max_expanded_nodes": 1024,
+  "phase_b_router_continuation": {
+    "depth": 24,
+    "resume_to_max_expanded_nodes": 4096
+  },
+  "phase_c_shadow_always4096": {
+    "depths": [
+      12,
+      48
+    ],
+    "resume_to_max_expanded_nodes": 4096
+  },
+  "policy": "CUMULATIVE_REGRET_r=4.0",
+  "required_resume_parity": [
+    "candidate_order",
+    "candidate_hashes",
+    "first_candidate_nodes",
+    "termination",
+    "nodes_expanded"
+  ],
+  "rule_id": "REGRET_ROUTER_V0",
+  "stop_conditions": {
+    "depth_12_or_48_active_at_1024": "ROUTER_STOP_AT_1024",
+    "depth_24_active_at_1024": "EXACT_RESUME_TO_4096",
+    "natural_termination_before_1024": "STOP"
+  }
+}

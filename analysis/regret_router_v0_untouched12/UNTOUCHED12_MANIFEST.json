@@ -1,0 +1,49 @@
+{
+  "cell_surface": {
+    "cells": 144,
+    "depths": [
+      12,
+      24,
+      48
+    ],
+    "views": [
+      "identity",
+      "flip_ud",
+      "transpose",
+      "anti_transpose"
+    ]
+  },
+  "cohort_status": "FROZEN_PRELAUNCH",
+  "eligible_count_after_exclusion": 28,
+  "experiment_id": "REGRET_ROUTER_V0_UNTOUCHED12_VALIDATION",
+  "gold_accessed": false,
+  "leakage_exclusion_rule": "exclude output_id appearing in compact router-development descendants before SHA256 ranking",
+  "original_miss_pool_count": 56,
+  "original_miss_pool_sha256": "7d2bf7df6888e4fab397af2bf07b7f0f8b603967da5f2c6213ef11f080b2ae53",
+  "original_miss_pool_source": "artifacts/eval60_compact_analysis_v2/turbodfs_v5/v5_outputs.csv",
+  "output_ids": [
+    "dfadab01:o0",
+    "8b7bacbf:o1",
+    "13e47133:o1",
+    "e3721c99:o0",
+    "4e34c42c:o0",
+    "247ef758:o0",
+    "cbebaa4b:o1",
+    "7b3084d4:o0",
+    "dd6b8c4b:o0",
+    "36a08778:o1",
+    "88bcf3b4:o0",
+    "80a900e0:o0"
+  ],
+  "output_ids_sha256": "2c892bd08e7f3754a1d26380c7cc2976649d9523ba3f26bbda414a2f46efb54d",
+  "scope": "held-out nonblind development; historically scored only to establish original miss pool",
+  "selection": "sort sha256(output_id) ascending, take first 12",
+  "selection_not_based_on": [
+    "Gold",
+    "D0 survival",
+    "depth",
+    "view",
+    "Regret expectation",
+    "difficulty"
+  ]
+}
