@@ -208,6 +208,97 @@ def _incremental_kv_replay(*, model: Any, tokenizer: Any, encoded: dict[str, Any
     return captured
 
 
+def incremental_gold_path(
+    *, model: Any, tokenizer: Any, task: Any, view: str, config: dict[str, Any],
+    target_grid: list[list[int]], max_score: float, max_new_tokens: int,
+    forced_token_ids: list[int] | None = None,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """Score a fixed Gold continuation through the G0.5-validated KV path.
+
+    This is deliberately a scorer, not a decoder: each continuation token is
+    frozen before model execution.  It is the only G1/G2/G3 Gold-path scorer
+    permitted after G0.5; full-sequence teacher forcing is not called here.
+    """
+    from inference.nvarc_native import parse_native_grid, serialize_grid
+
+    encoded, augmentation = _encoded_view(tokenizer, task, view, config)
+    prompt = encoded["input_ids"]
+    if forced_token_ids is None:
+        transformed = augmentation.transform_grid(target_grid).astype(int).tolist()
+        serialized = serialize_grid(transformed)
+        plain = [int(value) for value in tokenizer(serialized, add_special_tokens=False)["input_ids"]]
+        tokens = plain + [int(tokenizer.eos_token_id)]
+        serialization_ok = parse_native_grid(serialized) == transformed
+    else:
+        tokens = [int(value) for value in forced_token_ids]
+        serialized = tokenizer.decode(tokens, skip_special_tokens=True)
+        serialization_ok = True
+    illegal = [token for token in tokens if token not in LEGAL_ARC_TOKENS]
+    if illegal or not serialization_ok:
+        return ({
+            "status": "SERIALIZATION_FAILURE", "prompt_tokens": int(prompt.shape[-1]),
+            "gold_token_count": len(tokens), "illegal_token_ids": illegal,
+            "serialized_gold": serialized, "view": view,
+        }, [])
+    if int(prompt.shape[-1]) + len(tokens) > int(config["generation_context_window"]):
+        return ({
+            "status": "SERIALIZATION_FAILURE", "reason": "context_overflow",
+            "prompt_tokens": int(prompt.shape[-1]), "gold_token_count": len(tokens), "view": view,
+        }, [])
+    token_budget_blocked = len(tokens) > max_new_tokens
+    logits = _incremental_kv_replay(model=model, tokenizer=tokenizer, encoded=encoded, tokens=tokens)
+    cumulative_nll = 0.0
+    strict_path, floor_path = True, True
+    first_prune_position: int | None = None
+    first_prune_nll: float | None = None
+    traces: list[dict[str, Any]] = []
+    for index, token in enumerate(tokens):
+        row = _distribution_row(values=logits[index], token=token, prefix_nll=cumulative_nll, max_score=max_score, tokenizer=tokenizer)
+        strict_gold = token in row["strict_survivors"]
+        floor_gold = (not row["strict_survivors"]) and row["frontier_floor_token"] == token
+        v5_gold = strict_gold or floor_gold
+        if not strict_gold and first_prune_position is None:
+            first_prune_position, first_prune_nll = index, cumulative_nll - row["chosen_logprob"]
+        strict_path = strict_path and strict_gold
+        floor_path = floor_path and v5_gold
+        cumulative_nll -= row["chosen_logprob"]
+        traces.append({
+            "token_position": index, "gold_token_id": token,
+            "gold_token_logprob": row["chosen_logprob"],
+            "gold_token_probability": float(__import__("math").exp(row["chosen_logprob"])),
+            "gold_token_rank_legal_arc_vocab": row["chosen_rank_native"],
+            "cumulative_gold_nll": cumulative_nll,
+            "top1_token_id": row["top1_token_id"], "top1_logprob": None,
+            "top2_token_id": row["top2_token_id"], "top2_logprob": None,
+            "strict_gold_survives": strict_gold,
+            "strict_survivor_count": len(row["strict_survivors"]),
+            "v5_floor_activated": not bool(row["strict_survivors"]),
+            "v5_floor_restores_gold": floor_gold,
+            "v5_local_gold_survives": v5_gold,
+            "legal_arc_token_logprobs_json": json.dumps({str(k): v for k, v in row["native"].items()}, separators=(",", ":")),
+            "scoring_path": "INCREMENTAL_KV_REPLAY",
+        })
+    if token_budget_blocked:
+        status = "TOKEN_BUDGET_BLOCKED"
+    elif strict_path:
+        status = "STRICT_SEARCHABLE"
+    elif floor_path:
+        status = "FLOOR_REQUIRED_AND_SEARCHABLE"
+    else:
+        status = "PRUNING_POLICY_BLOCKED"
+    return ({
+        "status": status, "prompt_tokens": int(prompt.shape[-1]), "gold_token_count": len(tokens),
+        "serialized_gold": serialized, "target_serialization_ok": serialization_ok,
+        "strict_public_searchable": bool(strict_path and not token_budget_blocked),
+        "v5_local_gold_path_survives": bool(floor_path and not token_budget_blocked),
+        "token_budget_blocked": bool(token_budget_blocked), "final_gold_nll": cumulative_nll,
+        "mean_gold_legal_rank": sum(row["gold_token_rank_legal_arc_vocab"] for row in traces) / len(traces),
+        "worst_gold_legal_rank": max(row["gold_token_rank_legal_arc_vocab"] for row in traces),
+        "first_strict_prune_position": first_prune_position, "first_strict_prune_nll": first_prune_nll,
+        "view": view, "scoring_path": "INCREMENTAL_KV_REPLAY",
+    }, traces)
+
+
 def _raw_cell_path(root: Path, task_id: str, output_index: int, depth: int, view: str) -> Path:
     return root / task_id / f"o{output_index:02d}_d{depth:03d}_{view}.json"
 

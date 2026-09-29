@@ -367,7 +367,8 @@ def _write_g1_exports(args: argparse.Namespace, phase: str, cells: list[dict[str
         statuses = {str(x.get("status")) for x in group}
         strict = any(_bool(x.get("strict_public_searchable")) for x in group)
         v5 = any(_bool(x.get("v5_local_gold_path_survives")) for x in group)
-        if v5: primary = "CURRENT_STATE_SEARCHABLE"
+        if strict: primary = "DECODER_EXECUTION_SUSPECT"
+        elif v5: primary = "DECODER_PRUNING_LIMITED"
         elif "TOKEN_BUDGET_BLOCKED" in statuses and statuses == {"TOKEN_BUDGET_BLOCKED"}: primary = "TOKEN_BUDGET_BLOCKED"
         elif "SERIALIZATION_OR_TRANSPORT_FAILURE" in statuses: primary = "SERIALIZATION_OR_TRANSPORT_FAILURE"
         else: primary = "CURRENT_PROBABILITY_STATE_LIMITED"
@@ -380,6 +381,9 @@ def _write_g1_exports(args: argparse.Namespace, phase: str, cells: list[dict[str
 
 
 def run_gold_surface(args: argparse.Namespace, *, phase: str, depths: tuple[int, ...], views: tuple[str, ...], use_initial_adapter: bool = False) -> None:
+    # Late import avoids a circular dependency: the G0.5 scorer deliberately
+    # reuses this runner's immutable source-identity/load helpers.
+    from scripts.run_g0_5_incremental_kv_replay import incremental_gold_path
     started = time.perf_counter(); _runtime_identity(args)
     misses = prepare_miss_set(args)
     model, tokenizer, initial, config, _info = _load_runtime(args)
@@ -400,8 +404,11 @@ def run_gold_surface(args: argparse.Namespace, *, phase: str, depths: tuple[int,
                     destination = _cell_path(args.scratch, phase, task_id, int(row["output_index"]), depth, view)
                     if destination.is_file(): continue
                     began = time.perf_counter()
-                    summary, traces = teacher_force(model=model, tokenizer=tokenizer, task=target_task, view=view, config=config, target_grid=gold,
-                                                    max_score=max_score, max_new_tokens=max_tokens)
+                    summary, traces = incremental_gold_path(
+                        model=model, tokenizer=tokenizer, task=target_task, view=view,
+                        config=config, target_grid=gold, max_score=max_score,
+                        max_new_tokens=max_tokens,
+                    )
                     payload = {**row, **summary, "phase": phase, "depth": depth, "view": view, "checkpoint_sha256": checkpoint_sha,
                                "wall_seconds": time.perf_counter() - began, "token_trace": traces}
                     atomic_json(destination, payload)
@@ -469,15 +476,43 @@ def run_g3_greedy(args: argparse.Namespace) -> None:
     write_csv(args.report_dir / "g3_extra_view_greedy_cells.csv", summaries)
     per_output: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in cells: per_output[row["output_id"]].append(row)
+    tf_cells = _iter_phase_cells(args.scratch, "g3")
+    expected_tf = len(misses) * len(DEPTHS) * len(D4_VIEWS)
+    if len(tf_cells) != expected_tf:
+        raise RuntimeError(f"g3 incremental audit incomplete {len(tf_cells)}/{expected_tf}")
+    tf_by_output: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in tf_cells:
+        tf_by_output[row["output_id"]].append(row)
     combined = []
     for output_id, rows in sorted(per_output.items()):
         exact = [row for row in rows if _bool(row.get("gold_exact"))]
-        combined.append({"output_id": output_id, "extra_d4_exact_rescue": bool(exact), "best_new_view": exact[0]["view"] if exact else None,
-                         "new_view_exact_count": len(exact)})
+        tf_rows = tf_by_output[output_id]
+        strict = any(_bool(row.get("strict_public_searchable")) for row in tf_rows)
+        v5 = any(_bool(row.get("v5_local_gold_path_survives")) for row in tf_rows)
+        classification = "AUGMENTATION_EXACT_RESCUE" if exact else (
+            "AUGMENTATION_ACCESSIBILITY_RESCUE" if v5 else "NO_D4_BENEFIT"
+        )
+        combined.append({
+            "output_id": output_id, "extra_d4_exact_rescue": bool(exact),
+            "best_new_view": exact[0]["view"] if exact else None,
+            "new_view_exact_count": len(exact), "any_d4_strict_searchable": strict,
+            "any_d4_v5_searchable": v5, "g3_classification": classification,
+        })
     write_csv(args.report_dir / "g3_full_d4_union.csv", combined)
     write_csv(args.report_dir / "g3_extra_view_output_summary.csv", combined)
     view_counts = Counter(row["view"] for row in cells if _bool(row.get("gold_exact")))
-    (args.report_dir / "G3_FULL_D4_REPORT.md").write_text("# G3 full D4 representation test\n\n" + "\n".join(f"- {view}: {view_counts[view]} exact cells" for view in D4_VIEWS) + f"\n\nWall seconds: {time.perf_counter()-started:.3f}\n", encoding="utf-8")
+    rescue_ids = [row["output_id"] for row in combined if _bool(row["extra_d4_exact_rescue"])]
+    accessibility_only = [row["output_id"] for row in combined if row["g3_classification"] == "AUGMENTATION_ACCESSIBILITY_RESCUE"]
+    unique_by_view = {
+        view: sum(1 for row in combined if row["extra_d4_exact_rescue"] and row["best_new_view"] == view and row["new_view_exact_count"] == 1)
+        for view in D4_VIEWS
+    }
+    report = ["# G3 full D4 representation test", "", "NONBLIND_MECHANISM_DIAGNOSTIC", "",
+              f"Exact rescue outputs: {len(rescue_ids)}", f"Accessibility-only outputs: {len(accessibility_only)}",
+              f"Development union after G3: {33 + len(rescue_ids)}/89", "", "## Exact rescue IDs", *[f"- {value}" for value in rescue_ids], "", "## Per-view exact cells"]
+    report += [f"- {view}: exact_cells={view_counts[view]}, unique_rescue_outputs={unique_by_view[view]}" for view in D4_VIEWS]
+    report.append(f"\nWall seconds: {time.perf_counter()-started:.3f}")
+    (args.report_dir / "G3_FULL_D4_REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
     atomic_json(args.scratch / "g3_greedy" / "status.json", {"status": "COMPLETE", "cells": len(cells), "expected_cells": expected, "wall_seconds": time.perf_counter() - started})
 
 
