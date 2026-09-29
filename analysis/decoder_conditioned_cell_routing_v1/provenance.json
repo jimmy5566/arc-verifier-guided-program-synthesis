@@ -1,0 +1,64 @@
+{
+  "cpu_only": true,
+  "created_utc": "2026-09-29T06:28:36.653260+00:00",
+  "g1_half_reference_commit": "5e3f6ca253631b446971da9ef0e6fddc313b345a",
+  "gpu_used": false,
+  "input_sha256": {
+    "analysis\\nonblind_development_loo_transfer30_v1\\frozen_run_20260927T112700Z\\loo_rankings_frozen.json": "2c3a4c02ae1420cd81407994ccbb41a8f8d1838359162ac0581a8c9fc8657d7e",
+    "artifacts\\adaptive_ttt_loo_transfer12_v1\\config_resolved.json": "472051b923e247f6d939384a358fcc0a99a41937517167c92f30e70786ec6615",
+    "artifacts\\adaptive_ttt_step1_depth_view_confidence_v1\\analysis\\surface.csv": "edf508ac8f37fcc7258b3ae55e427e4ed7aa55f0f0c30ec0d824560733f9a5f3",
+    "artifacts\\eval60_compact_analysis_v2\\greedy\\greedy_cells.csv": "9bb945bcfa012667149083c63d90aaa85aac9fe75cc5f9d38a3669e0b400b49c",
+    "artifacts\\eval60_compact_analysis_v2\\turbodfs_v5\\v5_cells.csv": "068129f804e575a52d083129926de43fcf25e3063d212e1bd1540207d5c16e1b",
+    "artifacts\\same_adapter_pair_surface_analysis_v1\\source_snapshot\\checkpoint_manifest.json": "1d46dcb8ab94793bb327482fc0c527b1433eb70845fa1311945dbb986b4aca0f",
+    "artifacts\\same_adapter_pair_surface_analysis_v1\\source_snapshot\\old_loo_surface_reference.csv": "e348e05b0e5a21e4b824fb6b2f4c8434ddc2c216934a4304699d391d689e09ab",
+    "artifacts\\same_adapter_pair_surface_analysis_v1\\source_snapshot\\same_adapter_pair_surface.csv": "1fdd8bb3b582b385484843aedf69c58fd99c457f63b34d719e71dd99f383f762"
+  },
+  "l2_evidence_inventory": {
+    "adaptive_ttt_loo_transfer12_v1": "manifest/config only; no finalized usable scores reconstructed",
+    "nonblind_development_loo_transfer30_v1": "finalized LOO scores exist but have zero task-id overlap with compact V2 Eval60",
+    "same_adapter_old_loo_reference": "finalized reference surface exists but has zero task-id overlap with compact V2 Eval60"
+  },
+  "l3_checkpoint_hash_matches": 0,
+  "l3_status": "MISSING_EVIDENCE_UNMATCHED_PRODUCTION_CHECKPOINT_STATE",
+  "label_policy": {
+    "Y_F": "trustworthy matched DONE V5 pool contains Gold",
+    "Y_G": "trustworthy Greedy exact Gold",
+    "unknown_v5": "preserved_unknown"
+  },
+  "model_loaded": false,
+  "new_dfs": false,
+  "new_generation": false,
+  "new_ttt": false,
+  "output_sha256": {
+    "DECODER_CONDITIONED_ROUTING_AUDIT.md": "91541f77a534d68b2e34c0bd6e6fee2b2b91a373edc6fb88137d52011364fcbb",
+    "README.md": "7e6727e7d3c08372871b89ab197258e67cd3b968e733f3316418a94a1c2e7098",
+    "all_available_comparison.csv": "28552bba7c5538fea8767d992d277f8632432c5428400838ec36b58393d65f46",
+    "common_cohort_comparison.csv": "63b56da632825239e1714a03a22f2052481863da1e359b09a061bd9f2c1196b7",
+    "decoder_calibration_cv.csv": "0a8cf2465a14d9da527b4e269c5df7b4d58fdc5c2bbf45023f433e73db08ca60",
+    "decoder_calibration_summary.csv": "df02a548ba25cfa2ff7e52a6d63ab283500b3b2d917da3c39be0395ddddd44dc",
+    "decoder_cell_labels.csv": "6c66e259010b4bebdcb5e7e25622c56e390b3cc5fbf322abb3be0c00e765faa8",
+    "dfs_rescue_case_studies.csv": "e70d12efa3f15a7c2f533a9d8d8290e1899f645fe202faad37649716c5e61e9c",
+    "hypothesis_status.json": "4908052a694c131048e6c9f7df4383dca3a76c707466441d0c8b48a8ec978f76",
+    "l1_decoder_alignment.csv": "e7b179122585cc45d49596cb0fcac14b25e570072ea4ddbe15ef886c034191ff",
+    "l2_decoder_alignment.csv": "d4a3f8055d9eb4ffe4fdb63bbc8c5a4790599defe956386688eb609d32372af8",
+    "l3_decoder_alignment.csv": "01c7f39253e17eac2fc61e35a9bbc33a50d66fd5364c93af8d041c6243686029",
+    "layer_first_positive_rank.csv": "6f35b0df6b1810281f5a9c7407e732443fd470b84a7f9621843194901f2281f1",
+    "layer_recall_curves.csv": "793ccb1ff7f4e39d4ad977e04a445ad61fb593def9ad7cdeb95f09a5ff07cec6",
+    "output_coverage_classes.csv": "4ad3832dabff58746afedf906fbd04dc87fa5d174d952f8f124774d16f827113"
+  },
+  "primary_surface": {
+    "cells_per_output": 12,
+    "depths": [
+      12,
+      24,
+      48
+    ],
+    "views": [
+      "identity",
+      "flip_ud",
+      "transpose",
+      "anti_transpose"
+    ]
+  },
+  "source_commit": "28d31729c825a54b5add7fc625ffde6b3fa94ec7"
+}

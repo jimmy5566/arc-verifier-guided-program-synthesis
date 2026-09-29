@@ -1,0 +1,13 @@
+output_id,coverage_class,actual_dfs_positive_cells,layer,first_dfs_positive_rank,top1_retains,top2_retains,top4_retains,top6_retains,evidence_status
+62593bfd:o1,OBSERVED_POSITIVE,d12/flip_ud;d24/flip_ud,L1_SINGLE_HELDOUT,,False,False,False,False,UNAVAILABLE
+62593bfd:o1,OBSERVED_POSITIVE,d12/flip_ud;d24/flip_ud,L2_MULTIFOLD_LOO,,False,False,False,False,UNAVAILABLE
+62593bfd:o1,OBSERVED_POSITIVE,d12/flip_ud;d24/flip_ud,L3_FULL_TRAIN_SAME_STATE,,False,False,False,False,UNAVAILABLE
+78332cb0:o0,OBSERVED_POSITIVE,d48/identity,L1_SINGLE_HELDOUT,,False,False,False,False,UNAVAILABLE
+78332cb0:o0,OBSERVED_POSITIVE,d48/identity,L2_MULTIFOLD_LOO,,False,False,False,False,UNAVAILABLE
+78332cb0:o0,OBSERVED_POSITIVE,d48/identity,L3_FULL_TRAIN_SAME_STATE,,False,False,False,False,UNAVAILABLE
+b6f77b65:o2,OBSERVED_POSITIVE,d48/identity,L1_SINGLE_HELDOUT,,False,False,False,False,UNAVAILABLE
+b6f77b65:o2,OBSERVED_POSITIVE,d48/identity,L2_MULTIFOLD_LOO,,False,False,False,False,UNAVAILABLE
+b6f77b65:o2,OBSERVED_POSITIVE,d48/identity,L3_FULL_TRAIN_SAME_STATE,,False,False,False,False,UNAVAILABLE
+de809cff:o0,OBSERVED_POSITIVE,d24/anti_transpose,L1_SINGLE_HELDOUT,,False,False,False,False,UNAVAILABLE
+de809cff:o0,OBSERVED_POSITIVE,d24/anti_transpose,L2_MULTIFOLD_LOO,,False,False,False,False,UNAVAILABLE
+de809cff:o0,OBSERVED_POSITIVE,d24/anti_transpose,L3_FULL_TRAIN_SAME_STATE,,False,False,False,False,UNAVAILABLE

@@ -1,0 +1,29 @@
+{
+  "inferred": {
+    "best_supported_k": "NOT_ESTABLISHED",
+    "best_supported_layer_for_decoder_capability": "NOT_ESTABLISHED",
+    "dfs_rescue_routing_signal": "INSUFFICIENT",
+    "image_model_readiness": "PREMATURE",
+    "surface_coverage_bottleneck": "HIGH"
+  },
+  "measured": {
+    "coverage_counts": {
+      "CENSORED": 2,
+      "OBSERVED_NO_POSITIVE": 54,
+      "OBSERVED_POSITIVE": 33
+    },
+    "l1_available_tasks": 12,
+    "l2_available_tasks": 0,
+    "l3_available_tasks": 0,
+    "l3_checkpoint_hash_matches_current_production": 0,
+    "three_way_common_tasks": 0
+  },
+  "not_established": [
+    "L3 full-train same-state evidence for current production checkpoints.",
+    "A three-way layer winner.",
+    "A safe production reduction from 12 cells to 6/4/2 cells.",
+    "Image/surface model readiness for deployment."
+  ],
+  "scope": "CPU-only retrospective development audit on frozen artifacts; no hidden-test deployment claim.",
+  "status": "PARTIAL"
+}
