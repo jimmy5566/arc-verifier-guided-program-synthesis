@@ -1,0 +1,5 @@
+actual_hit_cells,decoder_policy,retrieval_conversion,smoke_cells,surviving_smoke_cells
+0,D1_V5_CAPPED_CONTROL,,8,0
+0,TOPK_LOCAL_k=2,0.0,8,6
+0,AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400,0.0,8,2
+1,CUMULATIVE_REGRET_r=4.00,1.0,8,1

@@ -1,0 +1,50 @@
+{
+  "cohort_scope": "nonblind development mechanism diagnosis; not an accuracy estimate",
+  "experiment_id": "NONBLIND_MECHANISM_DIAGNOSTIC_D2_V1",
+  "required_success_cell": "20270e3b:o0:d24:identity",
+  "selected_cell_count": 6,
+  "selected_cell_keys": [
+    "20270e3b:o0:d24:identity",
+    "332f06d7:o0:d24:anti_transpose",
+    "c4d067a0:o0:d12:anti_transpose",
+    "64efde09:o0:d12:transpose",
+    "a32d8b75:o1:d48:anti_transpose",
+    "64efde09:o0:d24:transpose"
+  ],
+  "selection_rationale": {
+    "20270e3b:o0:d24:identity": [
+      "required Regret4 success case"
+    ],
+    "332f06d7:o0:d24:anti_transpose": [
+      "SURVIVE1_HIT0",
+      "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400",
+      "TOPK_LOCAL_k=2",
+      "Regret4 near-4096-node runaway"
+    ],
+    "64efde09:o0:d12:transpose": [
+      "SURVIVE1_HIT0",
+      "TOPK_LOCAL_k=2",
+      "Regret4 near-4096-node runaway"
+    ],
+    "64efde09:o0:d24:transpose": [
+      "SURVIVE1_HIT0",
+      "TOPK_LOCAL_k=2",
+      "Regret4 near-4096-node runaway"
+    ],
+    "a32d8b75:o1:d48:anti_transpose": [
+      "SURVIVE1_HIT0",
+      "TOPK_LOCAL_k=2"
+    ],
+    "c4d067a0:o0:d12:anti_transpose": [
+      "SURVIVE1_HIT0",
+      "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400",
+      "TOPK_LOCAL_k=2",
+      "Regret4 near-4096-node runaway"
+    ]
+  },
+  "selection_rule": "success first; maximize surviving-but-not-retrieved policy overlap; then ensure two deterministic Regret4 near-budget cells",
+  "source_hashes": {
+    "d1_cost_cells": "78a8f927ee82b12b1af6c01504e88aa8197b52a87d3785d09a4c7730a3149f9a",
+    "d1_gold_cells": "8fd46121797c03b0d680a47509038f21b160a591ff9495f3f3beb3cb3b803ab8"
+  }
+}

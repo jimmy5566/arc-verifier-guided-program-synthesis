@@ -1,0 +1,16 @@
+{
+  "experiment_id": "NONBLIND_MECHANISM_DIAGNOSTIC_D2_V1",
+  "input_hashes": {
+    "d1_cost_cells": "78a8f927ee82b12b1af6c01504e88aa8197b52a87d3785d09a4c7730a3149f9a",
+    "d1_gold_cells": "8fd46121797c03b0d680a47509038f21b160a591ff9495f3f3beb3cb3b803ab8"
+  },
+  "raw_gold_trace_included": false,
+  "selected_g1_trace_sha256": {
+    "20270e3b:o0:d24:identity": "02ce2f07f05ed4bf6d938f16ba8d3e5ba6a739c1b005a4ab97d32144e2b5420b",
+    "332f06d7:o0:d24:anti_transpose": "463495946d9f8ce1268e092845f92b4b0c4ddd1c025f5077ccb15674f96c8744",
+    "64efde09:o0:d12:transpose": "953e32849920b2cd993c852dc1a030acb52fa3ed4f9d7163a5ea9ba92e445d91",
+    "64efde09:o0:d24:transpose": "d38818a30dc2dd11cfa0ba291774d734be13cfa1eed64bede8506ee694e1d9ca",
+    "a32d8b75:o1:d48:anti_transpose": "5011ec8edb103efa3bb7e7c126eeac5c20c430458accf5257a0a8f770bbf79c1",
+    "c4d067a0:o0:d12:anti_transpose": "1bc3802fc0b04422d13f6fe97b87521f29db4600ab82bece66835a7b631855b1"
+  }
+}
