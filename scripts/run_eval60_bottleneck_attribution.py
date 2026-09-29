@@ -2,9 +2,10 @@
 """Nonblind, resumable Eval60 Gold-path bottleneck attribution.
 
 This program deliberately separates *measurement* from search.  It never
-recreates the historical Greedy or V5 candidate pools.  G1/G2 use a single
-teacher-forced forward pass for each frozen model state and G3 runs only the
-four previously omitted geometry views through the already-frozen Greedy path.
+recreates the historical Greedy or V5 candidate pools.  G1/G2 Gold-path
+measurements use the G0.5-validated incremental KV replay for each frozen
+model state, while G3 runs only the four previously omitted geometry views
+through the already-frozen Greedy path.
 
 All per-cell JSON files live in a Pod-local scratch directory.  The CSV/JSON
 reports written under ``reports/`` are compact, reproducible exports suitable
@@ -594,6 +595,356 @@ def run_g2_summary(args: argparse.Namespace) -> None:
     (args.report_dir / "G2_TTT_STATE_REPORT.md").write_text("# G2 TTT state comparison\n\n" + "\n".join(f"- {key}: {value}" for key, value in sorted(counts.items())) + "\n", encoding="utf-8")
 
 
+def _float_metric(cell: dict[str, Any], key: str) -> float:
+    """Return a required finite numeric G2 metric, failing closed on gaps."""
+    try:
+        value = float(cell[key])
+    except (KeyError, TypeError, ValueError) as error:
+        raise RuntimeError(f"missing numeric G2 metric {key} in {cell.get('output_id')}") from error
+    if value != value or value in (float("inf"), -float("inf")):
+        raise RuntimeError(f"non-finite G2 metric {key} in {cell.get('output_id')}")
+    return value
+
+
+def _first_prune_fraction(cell: dict[str, Any]) -> float:
+    """Map no strict prune to the latest possible fraction (1.0).
+
+    The frozen scorer records a zero-based first failing token.  A path that
+    never fails strict pruning is later than every actual failure, so 1.0 is
+    the only ordering-preserving value for the requested "latest" comparison.
+    The raw position remains exported alongside this derived comparison field.
+    """
+    count = int(cell.get("gold_token_count", 0))
+    if count <= 0:
+        raise RuntimeError(f"invalid gold_token_count in {cell.get('output_id')}")
+    position = cell.get("first_strict_prune_position")
+    if position in (None, "", "None"):
+        return 1.0
+    position_float = float(position)
+    if not 0.0 <= position_float < float(count):
+        raise RuntimeError(f"invalid first strict prune position in {cell.get('output_id')}")
+    return position_float / float(count)
+
+
+def _g2_cell_metrics(cell: dict[str, Any]) -> dict[str, Any]:
+    """Attach derived, non-semantic G2 comparison values to a frozen cell."""
+    count = int(cell.get("gold_token_count", 0))
+    nll = _float_metric(cell, "final_gold_nll")
+    if count <= 0:
+        raise RuntimeError(f"invalid gold_token_count in {cell.get('output_id')}")
+    return {
+        **cell,
+        "mean_gold_nll_per_token": nll / float(count),
+        "first_strict_prune_fraction": _first_prune_fraction(cell),
+    }
+
+
+def _metric_winners(cells: list[dict[str, Any]], key: str, *, higher_is_better: bool) -> tuple[float, list[dict[str, Any]]]:
+    values = [_float_metric(cell, key) for cell in cells]
+    best = max(values) if higher_is_better else min(values)
+    # Exact numerical equality is intentional: G2 must not introduce an
+    # unregistered epsilon/tie-breaker when comparing frozen evidence.
+    return best, [cell for cell in cells if _float_metric(cell, key) == best]
+
+
+def _view_names(cells: list[dict[str, Any]]) -> str:
+    return ",".join(sorted(str(cell["view"]) for cell in cells))
+
+
+def _state_summary(cells: list[dict[str, Any]], *, output_id: str, depth: int) -> dict[str, Any]:
+    if len(cells) != len(CURRENT_VIEWS) or {str(cell.get("view")) for cell in cells} != set(CURRENT_VIEWS):
+        raise RuntimeError(f"incomplete view surface for {output_id} depth={depth}")
+    derived = [_g2_cell_metrics(cell) for cell in cells]
+    nll, nll_winners = _metric_winners(derived, "final_gold_nll", higher_is_better=False)
+    nll_per_token, nll_per_token_winners = _metric_winners(derived, "mean_gold_nll_per_token", higher_is_better=False)
+    prune_fraction, prune_winners = _metric_winners(derived, "first_strict_prune_fraction", higher_is_better=True)
+    rank, rank_winners = _metric_winners(derived, "mean_gold_legal_rank", higher_is_better=False)
+    return {
+        "depth": depth,
+        "cells": derived,
+        "best_final_gold_nll": nll,
+        "best_final_gold_nll_views": _view_names(nll_winners),
+        "best_nll_per_token": nll_per_token,
+        "best_nll_per_token_views": _view_names(nll_per_token_winners),
+        "latest_prune_fraction": prune_fraction,
+        "latest_prune_fraction_views": _view_names(prune_winners),
+        "lowest_mean_legal_rank": rank,
+        "lowest_mean_legal_rank_views": _view_names(rank_winners),
+        "any_strict_searchable": any(_bool(cell.get("strict_public_searchable")) for cell in derived),
+        "any_v5_local_searchable": any(_bool(cell.get("v5_local_gold_path_survives")) for cell in derived),
+    }
+
+
+def _same_cell_harmful_soft(ttt0: dict[str, Any], adapted: list[dict[str, Any]]) -> bool:
+    """Require one TTT0 view to beat every adapted depth on both metrics."""
+    return any(
+        _float_metric(cell, "mean_gold_nll_per_token") < min(state["best_nll_per_token"] for state in adapted)
+        and _float_metric(cell, "first_strict_prune_fraction") > max(state["latest_prune_fraction"] for state in adapted)
+        for cell in ttt0["cells"]
+    )
+
+
+def _same_cell_helpful_soft(ttt0: dict[str, Any], adapted: list[dict[str, Any]]) -> bool:
+    """Require one adapted view to dominate the whole TTT0 surface."""
+    return any(
+        _float_metric(cell, "mean_gold_nll_per_token") < ttt0["best_nll_per_token"]
+        and _float_metric(cell, "first_strict_prune_fraction") > ttt0["latest_prune_fraction"]
+        for state in adapted for cell in state["cells"]
+    )
+
+
+def run_g2_greedy(args: argparse.Namespace) -> None:
+    """Generate the frozen TTT0 four-view surface without accessing Gold.
+
+    Gold is intentionally attached only by ``g2-finalize`` after the complete
+    per-cell candidate inventory is frozen.  This preserves the requested
+    generation-before-evaluation boundary even inside this nonblind study.
+    """
+    started = time.perf_counter(); _runtime_identity(args)
+    misses = prepare_miss_set(args)
+    model, tokenizer, initial, config, _info = _load_runtime(args)
+    from arc.io import load_dataset
+    tasks = load_dataset(args.challenge)
+    by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in misses:
+        by_task[row["task_id"]].append(row)
+    task_ids = _sharded_task_ids(sorted(by_task), args)
+    expected_shard_cells = 0
+    for task_id in task_ids:
+        # TTT0 is the fresh base/SFT adapter state.  Restoring it per task
+        # makes the no-task-update contract explicit and guards against any
+        # mutable state left by model generation.
+        restore_adapter(model, initial)
+        for row in by_task[task_id]:
+            target_task = view_task(tasks[task_id], int(row["output_index"]))
+            for view in CURRENT_VIEWS:
+                expected_shard_cells += 1
+                destination = _cell_path(args.scratch, "g2_greedy", task_id, int(row["output_index"]), 0, view)
+                if destination.is_file():
+                    continue
+                payload = common.greedy_cell(
+                    model=model, tokenizer=tokenizer, task=target_task,
+                    task_id=task_id, output_index=int(row["output_index"]),
+                    depth=0, view=view, config=config, checkpoint_sha="INITIAL_TTT0",
+                )
+                payload.update(row)
+                payload.update({"phase": "g2_greedy", "ttt_updates": 0, "gold_attached": False})
+                atomic_json(destination, payload)
+        task_expected_cells = len(by_task[task_id]) * len(CURRENT_VIEWS)
+        task_completed_cells = sum(
+            _cell_path(args.scratch, "g2_greedy", task_id, int(row["output_index"]), 0, view).is_file()
+            for row in by_task[task_id] for view in CURRENT_VIEWS
+        )
+        if task_completed_cells != task_expected_cells:
+            raise RuntimeError(f"g2_greedy task checkpoint incomplete {task_id} {task_completed_cells}/{task_expected_cells}")
+        atomic_json(args.scratch / "g2_greedy" / "tasks" / f"{task_id}.json", {
+            "status": "COMPLETE_TASK", "phase": "g2_greedy", "task_id": task_id,
+            "output_ids": [row["output_id"] for row in by_task[task_id]],
+            "completed_cells": task_completed_cells, "expected_cells": task_expected_cells,
+            "gold_accessed_during_generation": False,
+        })
+    if args.task_shard_count > 1:
+        completed_shard_cells = sum(
+            _cell_path(args.scratch, "g2_greedy", task_id, int(row["output_index"]), 0, view).is_file()
+            for task_id in task_ids for row in by_task[task_id] for view in CURRENT_VIEWS
+        )
+        if completed_shard_cells != expected_shard_cells:
+            raise RuntimeError(f"g2_greedy shard {args.task_shard_index}/{args.task_shard_count} incomplete {completed_shard_cells}/{expected_shard_cells}")
+        atomic_json(args.scratch / "g2_greedy" / f"shard-{args.task_shard_index:02d}-of-{args.task_shard_count:02d}.json", {
+            "status": "COMPLETE_SHARD", "phase": "g2_greedy",
+            "task_shard_index": args.task_shard_index, "task_shard_count": args.task_shard_count,
+            "task_ids": task_ids, "completed_cells": completed_shard_cells,
+            "expected_cells": expected_shard_cells, "wall_seconds": time.perf_counter() - started,
+            "gold_accessed_during_generation": False,
+        })
+        return
+    cells = _iter_phase_cells(args.scratch, "g2_greedy")
+    expected = len(misses) * len(CURRENT_VIEWS)
+    if len(cells) != expected:
+        raise RuntimeError(f"g2_greedy incomplete {len(cells)}/{expected}")
+    atomic_json(args.scratch / "g2_greedy" / "status.json", {
+        "status": "COMPLETE_GENERATION_GOLD_UNREAD", "cells": len(cells), "expected_cells": expected,
+        "wall_seconds": time.perf_counter() - started,
+    })
+
+
+def run_g2_finalize(args: argparse.Namespace) -> None:
+    """Attach Gold only after both G2 surfaces are fully frozen and report G2."""
+    misses = prepare_miss_set(args)
+    expected_g1 = len(misses) * len(DEPTHS) * len(CURRENT_VIEWS)
+    expected_g2 = len(misses) * len(CURRENT_VIEWS)
+    g1 = _iter_phase_cells(args.scratch, "g1")
+    g2 = _iter_phase_cells(args.scratch, "g2")
+    greedy = _iter_phase_cells(args.scratch, "g2_greedy")
+    if len(g1) != expected_g1:
+        raise RuntimeError(f"frozen G1-half inventory mismatch {len(g1)}/{expected_g1}")
+    if len(g2) != expected_g2:
+        raise RuntimeError(f"TTT0 incremental-Gold inventory mismatch {len(g2)}/{expected_g2}")
+    if len(greedy) != expected_g2:
+        raise RuntimeError(f"TTT0 Greedy inventory mismatch {len(greedy)}/{expected_g2}")
+    if any(str(cell.get("scoring_path")) != "INCREMENTAL_KV_REPLAY" for cell in g1 + g2):
+        raise RuntimeError("G2 requires G0.5 incremental KV replay for every Gold-path cell")
+    wanted = {row["output_id"] for row in misses}
+    if {row.get("output_id") for row in g1 + g2 + greedy} != wanted:
+        raise RuntimeError("G2 output inventory does not equal frozen G1-half cohort")
+
+    g2_export = [{key: value for key, value in _g2_cell_metrics(cell).items() if key != "token_trace"} for cell in g2]
+    write_csv(args.report_dir / "g2_ttt0_goldpath_cells.csv", g2_export)
+
+    by_output: dict[str, dict[int, list[dict[str, Any]]]] = defaultdict(lambda: defaultdict(list))
+    for cell in g1 + g2:
+        by_output[str(cell["output_id"])][int(cell["depth"])].append(cell)
+    depth_rows: list[dict[str, Any]] = []
+    output_rows: list[dict[str, Any]] = []
+    classification_counts: Counter[str] = Counter()
+    depth_win_counts = {
+        "nll_per_token": Counter(), "prune_fraction": Counter(), "mean_legal_rank": Counter(),
+    }
+    tie_outputs = {"nll_per_token": 0, "prune_fraction": 0, "mean_legal_rank": 0}
+    for output_id in sorted(wanted):
+        states = {depth: _state_summary(by_output[output_id].get(depth, []), output_id=output_id, depth=depth) for depth in (0, *DEPTHS)}
+        for depth, state in states.items():
+            depth_rows.append({
+                "output_id": output_id, "depth": depth,
+                "best_final_gold_nll": state["best_final_gold_nll"],
+                "best_final_gold_nll_views": state["best_final_gold_nll_views"],
+                "best_nll_per_token": state["best_nll_per_token"],
+                "best_nll_per_token_views": state["best_nll_per_token_views"],
+                "latest_prune_fraction": state["latest_prune_fraction"],
+                "latest_prune_fraction_views": state["latest_prune_fraction_views"],
+                "lowest_mean_legal_rank": state["lowest_mean_legal_rank"],
+                "lowest_mean_legal_rank_views": state["lowest_mean_legal_rank_views"],
+                "any_strict_searchable": state["any_strict_searchable"],
+                "any_v5_local_searchable": state["any_v5_local_searchable"],
+            })
+        metric_specs = (
+            ("nll_per_token", "best_nll_per_token", False),
+            ("prune_fraction", "latest_prune_fraction", True),
+            ("mean_legal_rank", "lowest_mean_legal_rank", False),
+        )
+        winners: dict[str, list[int]] = {}
+        for label, key, higher in metric_specs:
+            values = {depth: float(state[key]) for depth, state in states.items()}
+            best = max(values.values()) if higher else min(values.values())
+            winners[label] = [depth for depth in sorted(values) if values[depth] == best]
+            depth_win_counts[label].update(winners[label])
+            tie_outputs[label] += int(len(winners[label]) > 1)
+        ttt0, adapted = states[0], [states[12], states[24], states[48]]
+        adapted_any_v5 = any(state["any_v5_local_searchable"] for state in adapted)
+        if ttt0["any_v5_local_searchable"] and not adapted_any_v5:
+            classification = "TTT_HARMFUL_STRONG"
+        elif not ttt0["any_v5_local_searchable"] and adapted_any_v5:
+            classification = "TTT_HELPFUL_STRONG"
+        elif _same_cell_harmful_soft(ttt0, adapted):
+            classification = "TTT_HARMFUL_SOFT"
+        elif _same_cell_helpful_soft(ttt0, adapted):
+            classification = "TTT_HELPFUL_SOFT"
+        elif all(len(winners[label]) == 1 for label in winners) and len({winners[label][0] for label in winners}) > 1:
+            classification = "TTT_DEPTH_SENSITIVE"
+        else:
+            classification = "NO_CLEAR_TTT_EFFECT"
+        classification_counts[classification] += 1
+        output_rows.append({
+            "output_id": output_id, "g2_ttt_class": classification,
+            "best_nll_per_token_depths": ",".join(map(str, winners["nll_per_token"])),
+            "best_prune_fraction_depths": ",".join(map(str, winners["prune_fraction"])),
+            "best_mean_legal_rank_depths": ",".join(map(str, winners["mean_legal_rank"])),
+            **{f"ttt{depth}_{key}": value for depth, state in states.items() for key, value in (
+                ("best_final_gold_nll", state["best_final_gold_nll"]),
+                ("best_nll_per_token", state["best_nll_per_token"]),
+                ("latest_prune_fraction", state["latest_prune_fraction"]),
+                ("lowest_mean_legal_rank", state["lowest_mean_legal_rank"]),
+                ("any_strict_searchable", state["any_strict_searchable"]),
+                ("any_v5_local_searchable", state["any_v5_local_searchable"]),
+            )},
+        })
+    write_csv(args.report_dir / "g2_depth_comparison.csv", depth_rows)
+    write_csv(args.report_dir / "g2_output_attribution.csv", output_rows)
+
+    # Only now does the Greedy evaluator open solutions.  It does not alter the
+    # frozen candidate JSON cells; labels exist solely in this final report CSV.
+    solutions = json.loads(args.solutions.read_text(encoding="utf-8"))
+    greedy_export: list[dict[str, Any]] = []
+    greedy_by_output: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for cell in greedy:
+        gold = output_gold(solutions, str(cell["task_id"]), int(cell["output_index"]))
+        labelled = {
+            **{key: value for key, value in cell.items() if key != "token_telemetry"},
+            "gold_exact": bool(cell.get("valid_grid")) and cell.get("canonical_candidate") == gold,
+            "gold_attached_post_generation": True,
+        }
+        greedy_export.append(labelled); greedy_by_output[str(cell["output_id"])].append(labelled)
+    write_csv(args.report_dir / "g2_ttt0_greedy_cells.csv", greedy_export)
+    rescues: list[dict[str, Any]] = []
+    for output_id in sorted(wanted):
+        exact = [cell for cell in greedy_by_output[output_id] if _bool(cell["gold_exact"])]
+        rescues.append({
+            "output_id": output_id, "ttt0_greedy_exact_output": bool(exact),
+            "ttt0_greedy_exact_cell_count": len(exact),
+            "exact_views": _view_names(exact) if exact else "",
+            "current_union_greedy_v5_hit": False,
+            "new_rescue_vs_current_union": bool(exact),
+        })
+    write_csv(args.report_dir / "g2_ttt0_rescues.csv", rescues)
+    strict_outputs = sum(bool(states[0]["any_strict_searchable"]) for states in (
+        {depth: _state_summary(by_output[output_id].get(depth, []), output_id=output_id, depth=depth) for depth in (0, *DEPTHS)} for output_id in sorted(wanted)
+    ))
+    v5_outputs = sum(bool(states[0]["any_v5_local_searchable"]) for states in (
+        {depth: _state_summary(by_output[output_id].get(depth, []), output_id=output_id, depth=depth) for depth in (0, *DEPTHS)} for output_id in sorted(wanted)
+    ))
+    rescue_ids = [row["output_id"] for row in rescues if _bool(row["new_rescue_vs_current_union"])]
+    adapted_best_rank_one = sum(
+        any(float(state["lowest_mean_legal_rank"]) <= 1.0 for state in (
+            _state_summary(by_output[output_id].get(depth, []), output_id=output_id, depth=depth) for depth in DEPTHS
+        )) for output_id in sorted(wanted)
+    )
+    harmful = classification_counts["TTT_HARMFUL_STRONG"] + classification_counts["TTT_HARMFUL_SOFT"]
+    if rescue_ids or harmful >= 0.20 * len(wanted):
+        next_step, bottleneck = "INVESTIGATE_SHALLOW_OR_ADAPTIVE_TTT", "TTT_BOTTLENECK"
+    elif adapted_best_rank_one > 0:
+        next_step, bottleneck = "DECODER_PRUNING_REDESIGN", "DECODER_PRUNING_BOTTLENECK"
+    else:
+        next_step, bottleneck = "AUGMENTATION_COVERAGE_TEST", "AUGMENTATION_COVERAGE_SUSPECT"
+    decision = {
+        "status": "COMPLETE", "scope": "NONBLIND_G2_FROZEN_G1_HALF_28_OUTPUTS",
+        "outputs": len(wanted), "new_ttt0_goldpath_cells": len(g2), "new_ttt0_greedy_cells": len(greedy),
+        "ttt0_strict_searchable_outputs": strict_outputs, "ttt0_v5_searchable_outputs": v5_outputs,
+        "best_by_nll_per_token": {f"TTT{depth}": depth_win_counts["nll_per_token"][depth] for depth in (0, 12, 24, 48)},
+        "best_by_prune_fraction": {f"TTT{depth}": depth_win_counts["prune_fraction"][depth] for depth in (0, 12, 24, 48)},
+        "best_by_mean_legal_rank": {f"TTT{depth}": depth_win_counts["mean_legal_rank"][depth] for depth in (0, 12, 24, 48)},
+        "metric_tie_output_counts": tie_outputs,
+        "classification_counts": dict(sorted(classification_counts.items())),
+        "ttt0_greedy_exact_cells": sum(int(row["ttt0_greedy_exact_cell_count"]) for row in rescues),
+        "ttt0_greedy_exact_outputs": len(rescue_ids), "ttt0_new_rescue_ids": rescue_ids,
+        "current_development_union": "33/89", "new_development_union": f"{33 + len(rescue_ids)}/89",
+        "adapted_rank_one_outputs": adapted_best_rank_one,
+        "next_recommended_experiment": next_step, "main_g2_conclusion": bottleneck,
+        "gold_path": "INCREMENTAL_KV_REPLAY", "scientific_config_changed": False,
+        "g1_remaining_run": False, "v5_rerun": False, "g3_run": False, "g4_run": False,
+    }
+    atomic_json(args.report_dir / "G2_DECISION.json", decision)
+    report = ["# G2 TTT0 hard-miss attribution", "", "NONBLIND_MECHANISM_DIAGNOSTIC", "",
+              "Gold scoring: G0.5-validated INCREMENTAL_KV_REPLAY only.",
+              "TTT0 Greedy Gold labels were attached only after its candidate cells were frozen.", "",
+              f"Outputs: {len(wanted)}; TTT0 Gold cells: {len(g2)}; TTT0 Greedy cells: {len(greedy)}",
+              f"TTT0 strict-searchable outputs: {strict_outputs}", f"TTT0 V5-searchable outputs: {v5_outputs}",
+              f"TTT0 Greedy exact outputs: {len(rescue_ids)}", f"New rescue IDs: {rescue_ids}",
+              f"Current development union: 33/89; new nonblind development union: {33 + len(rescue_ids)}/89", "",
+              "## Depth win counts (ties count for each co-winner)"]
+    for label, key in (("NLL/token", "nll_per_token"), ("prune fraction", "prune_fraction"), ("mean legal rank", "mean_legal_rank")):
+        report.append(f"- {label}: " + ", ".join(f"TTT{depth}={depth_win_counts[key][depth]}" for depth in (0, 12, 24, 48)) + f"; tied outputs={tie_outputs[key]}")
+    report += ["", "## Attribution classes"] + [f"- {key}: {value}" for key, value in sorted(classification_counts.items())]
+    report += ["", "## Required answers",
+               f"1. TTT0 better on hard misses: {harmful} harmful strong/soft outputs; exact TTT0 rescues={len(rescue_ids)}.",
+               "2. Deeper TTT systematic worsening: see per-output comparison; no aggregate causal claim is made beyond these nonblind 28 outputs.",
+               f"3. TTT12 better than TTT0: inspect metric win counts and per-output classes; TTT12 wins are not collapsed into a fake composite metric.",
+               f"4. TTT0 V5-searchable outputs: {v5_outputs}.",
+               f"5. TTT0 Greedy direct new exact solves: {len(rescue_ids)}.",
+               f"6. Dominant next bottleneck: {bottleneck}; recommended next experiment: {next_step}."]
+    (args.report_dir / "G2_TTT_EFFECT_REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
+    atomic_json(args.scratch / "g2" / "finalized.json", decision)
+
+
 def run_g3_greedy(args: argparse.Namespace) -> None:
     started = time.perf_counter(); _runtime_identity(args)
     misses = prepare_miss_set(args); model, tokenizer, _initial, config, _info = _load_runtime(args)
@@ -720,7 +1071,7 @@ def g4_discovery(args: argparse.Namespace) -> None:
 
 def parser() -> argparse.ArgumentParser:
     item = argparse.ArgumentParser()
-    item.add_argument("mode", choices=("prepare", "g0", "g1", "g1-half-finalize", "g2", "g3-tf", "g3-greedy", "g4-discover"))
+    item.add_argument("mode", choices=("prepare", "g0", "g1", "g1-half-finalize", "g2", "g2-greedy", "g2-finalize", "g3-tf", "g3-greedy", "g4-discover"))
     item.add_argument("--scratch", type=Path, required=True)
     item.add_argument("--report-dir", type=Path, required=True)
     item.add_argument("--compact", type=Path, required=True)
@@ -753,7 +1104,8 @@ def main() -> None:
     elif args.mode == "g1-half-finalize": run_g1_half_gate(args)
     elif args.mode == "g2":
         run_gold_surface(args, phase="g2", depths=(0,), views=CURRENT_VIEWS, use_initial_adapter=True)
-        if args.task_shard_count == 1: run_g2_summary(args)
+    elif args.mode == "g2-greedy": run_g2_greedy(args)
+    elif args.mode == "g2-finalize": run_g2_finalize(args)
     elif args.mode == "g3-tf": run_gold_surface(args, phase="g3", depths=DEPTHS, views=D4_VIEWS)
     elif args.mode == "g3-greedy": run_g3_greedy(args)
     elif args.mode == "g4-discover": g4_discovery(args)
