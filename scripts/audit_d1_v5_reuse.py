@@ -108,7 +108,8 @@ def main() -> None:
     write_csv(report / "v5_reuse_cells.csv", rows)
     summary = {
         "V5_EXACT_REUSE": "YES" if outcome == "EXACT_REUSE" else "NO", "V5_REUSED_CELLS": 144 if outcome == "EXACT_REUSE" else 0,
-        "V5_NEW_PARITY_CELLS_OBSERVED": len(current), "V5_PARITY_MISMATCHES": parity_mismatches,
+        "V5_NEW_PARITY_CELLS_OBSERVED": len(current), "V5_INITIAL_PARITY_CELLS_DECLARED": 58,
+        "V5_PARITY_CELLS_ADDED_BEFORE_GRACEFUL_STOP": max(0, len(current) - 58), "V5_PARITY_MISMATCHES": parity_mismatches,
         "historical_cells_present": exact_rows, "expected_v5_config_sha256": EXPECTED_CONFIG_SHA,
         "current_v5_config_sha256": manifest.get("v5_config_sha256"), "config_hash_match": config_ok,
         "identity_blockers": [
@@ -117,6 +118,7 @@ def main() -> None:
             "D1 uses a separate decoder implementation module; source identity is not the frozen V5 implementation" ,
         ],
         "classification": outcome, "gold_read": False, "scientific_config_changed": "NO",
+        "orphan_shard_recovery": "ENABLED_CPU_VALIDATED", "finalist_gpu_smoke": "BLOCKED_BY_V5_IDENTITY_MISMATCH",
     }
     summary["identity_blockers"] = [value for value in summary["identity_blockers"] if value]
     (report / "D1_EXECUTION_STATUS.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -125,6 +127,13 @@ def main() -> None:
     lines += [f"- {value}" for value in summary["identity_blockers"]]
     lines += ["", "Because identity differs materially, no finalist GPU smoke is authorized by this audit. The shared-queue scheduler may be used only after an explicitly frozen compatible decoder contract exists."]
     (report / "V5_REUSE_AUDIT.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    smoke_rows = [{"decoder_policy": policy, "status": "NOT_RUN_IDENTITY_BLOCKED", "median_sec_cell": None,
+                   "p90_sec_cell": None, "node_ratio_vs_v5": None, "gold_read": False}
+                  for policy in ("CUMULATIVE_REGRET_r=4.00", "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400", "TOPK_LOCAL_k=2")]
+    write_csv(report / "finalist_cost_smoke.csv", smoke_rows)
+    (report / "FINALIST_COST_SMOKE.md").write_text(
+        "# Finalist actual-cost smoke\n\nNot run. The exact-V5 reuse audit found material decoder/budget identity and observed parity mismatches; the protocol requires this mismatch be reported before further GPU spend.\n",
+        encoding="utf-8")
 
 
 if __name__ == "__main__":
