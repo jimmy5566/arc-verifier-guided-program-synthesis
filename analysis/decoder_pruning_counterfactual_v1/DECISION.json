@@ -1,0 +1,21 @@
+{
+  "BEST_POLICY_1": "TOPK_INSURANCE_2",
+  "BEST_POLICY_2": "RELREGRET_4.0",
+  "COST_PROXY_LIMITATION": "Local retained-successor counts on frozen Gold-prefix states; actual DFS-tree expansion is not established.",
+  "CPU_AUDIT_STATUS": "PASS",
+  "CURRENT_UNION": "33/89",
+  "CURRENT_V5_SEARCHABLE_OUTPUTS": 0,
+  "DECODER_PRUNING_HYPOTHESIS": "SUPPORTED",
+  "ESTIMATED_COST_MULTIPLIER": 1.9981689526811768,
+  "GPU_USED": "NO",
+  "NEXT": "SMALL_REAL_DFS_AB_TEST",
+  "RELREGRET_0.5_SEARCHABLE_OUTPUTS": 0,
+  "RELREGRET_1.0_SEARCHABLE_OUTPUTS": 1,
+  "RELREGRET_2.0_SEARCHABLE_OUTPUTS": 4,
+  "RELREGRET_4.0_SEARCHABLE_OUTPUTS": 10,
+  "SELECTION_RULE": "fixed policy grid; select up to two policies with positive new searchable outputs and <= 2.0x local cost proxy",
+  "TOPK_INSURANCE_1_SEARCHABLE_OUTPUTS": 0,
+  "TOPK_INSURANCE_2_SEARCHABLE_OUTPUTS": 22,
+  "TRACE_CELLS": 336,
+  "TRACE_OUTPUTS": 28
+}
