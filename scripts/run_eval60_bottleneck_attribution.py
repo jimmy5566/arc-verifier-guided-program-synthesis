@@ -191,13 +191,20 @@ def teacher_force(
 
     encoded, augmentation = _encoded_view(tokenizer, task, view, config)
     prompt = encoded["input_ids"]
-    transformed_gold = augmentation.transform_grid(target_grid).astype(int).tolist()
-    serialized = serialize_grid(transformed_gold)
-    tokenized = [int(x) for x in tokenizer(serialized, add_special_tokens=False)["input_ids"]]
-    tokens = list(forced_token_ids) if forced_token_ids is not None else tokenized + [int(tokenizer.eos_token_id)]
-    serialization_ok = forced_token_ids is not None or (
-        parse_native_grid(serialized) == transformed_gold and tuple(tokenized + [int(tokenizer.eos_token_id)]) == tuple(tokens)
-    )
+    # G0 replays an already-frozen native suffix.  Its stored display grid is
+    # deliberately not parsed/re-serialized here: only the original token
+    # transport can test logit parity.  G1/G2/G3 always take the Gold-grid
+    # branch below and therefore exercise the complete transform/serializer.
+    if forced_token_ids is not None:
+        tokens = [int(x) for x in forced_token_ids]
+        serialized = tokenizer.decode(tokens, skip_special_tokens=True)
+        serialization_ok = True
+    else:
+        transformed_gold = augmentation.transform_grid(target_grid).astype(int).tolist()
+        serialized = serialize_grid(transformed_gold)
+        tokenized = [int(x) for x in tokenizer(serialized, add_special_tokens=False)["input_ids"]]
+        tokens = tokenized + [int(tokenizer.eos_token_id)]
+        serialization_ok = parse_native_grid(serialized) == transformed_gold and tuple(tokenized + [int(tokenizer.eos_token_id)]) == tuple(tokens)
     illegal = [token for token in tokens if token not in LEGAL_ARC_TOKENS]
     if illegal or not serialization_ok:
         return ({
