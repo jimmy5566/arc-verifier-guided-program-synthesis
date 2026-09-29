@@ -1,0 +1,70 @@
+{
+  "caps": {
+    "arc_tokens": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      15
+    ],
+    "frontier_floor": 1,
+    "local_time_limit_seconds": 540.0,
+    "max_completed_candidates": 32,
+    "max_expanded_nodes": 4096,
+    "max_new_tokens": 931,
+    "max_score": 1.6094379124341003,
+    "pad_token_id": 13
+  },
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "checkpoint_format": "atomic per-view JSON, legacy paired JSON accepted only for immutable reused control cells",
+  "cohort_hash": "64f027c5db5e47991fad1713d06c96b72de6e50aba2774d2dea5ecb7e4545976",
+  "cohort_output_ids": [
+    "332f06d7:o0",
+    "c4d067a0:o0",
+    "dd6b8c4b:o1",
+    "247ef758:o1",
+    "16de56c4:o1",
+    "cb2d8a2c:o1",
+    "a32d8b75:o1",
+    "a32d8b75:o0",
+    "cbebaa4b:o0",
+    "64efde09:o0",
+    "e3721c99:o1",
+    "20270e3b:o0"
+  ],
+  "control": "D1_V5_CAPPED_CONTROL",
+  "control_implementation_id": "V5_CURRENT",
+  "current_adapters_manifest_sha256": "a8077dd91e344577d42d4f22227178b27d29fd92b3d4725d3957ef3e852bcbd0",
+  "decoder_module": "src/inference/nvarc_turbodfs_d1.py",
+  "depths": [
+    12,
+    24,
+    48
+  ],
+  "experiment_id": "D1_FIXED_BUDGET_DECODER_AB_V1",
+  "explicit_statement": "This D1 control is not numerically equivalent to the historical authoritative V5 run. D1 evaluates decoder policies under a new shared fixed-budget contract.",
+  "hardware_regime": "one model worker per RTX3090 GPU; shared reclaimable unfinished-cell queue",
+  "historical_v5_reuse": "NO",
+  "policies": [
+    "D1_V5_CAPPED_CONTROL",
+    "CUMULATIVE_REGRET_r=4.00",
+    "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400",
+    "TOPK_LOCAL_k=2"
+  ],
+  "reference_config_sha256": "8968f67e5a5c8c1f838dc1a45120d052527d65e95188cd9e155426ba56481486",
+  "source_manifest_sha256": "afac00408496fbe321e3ff8b8b0d2e24827ac2af4973f3ebd904856f71bd50a7",
+  "target_blind_generation_required": true,
+  "views": [
+    "identity",
+    "flip_ud",
+    "transpose",
+    "anti_transpose"
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "run_root": "/root/arc-runtime-g1g3-2x3090/active_run/d1_real_decoder_ab_v1",
+  "files": [
+    {
+      "path": "D1_FIXED_BUDGET_CONTRACT.json",
+      "sha256": "caaa3ff7490eaa6deb3f4965ed7e382ddf5d6a1b315382bf820fc3090eeff6a1",
+      "bytes": 2054
+    },
+    {
+      "path": "D1_FIXED_BUDGET_SMOKE8.json",
+      "sha256": "decf3b831c990dc62f09bc64ac0d05f5152589d0d0393ab8155272c808b4d56b",
+      "bytes": 263
+    },
+    {
+      "path": "freezes/01df54057ae9.smoke.json",
+      "sha256": "38d343b2c8031d89d6a7114377470395e553f30ed0feae383050847b69bf9ee5",
+      "bytes": 1528
+    },
+    {
+      "path": "freezes/7ac15d7f552f.json",
+      "sha256": "2747d076d8905d3dde89a4e2d02923730d30413a509e148829f26b9ea5238fc9",
+      "bytes": 14970
+    },
+    {
+      "path": "freezes/a33741019d4e.smoke.json",
+      "sha256": "a69c4655a561f9c7a72d3817dd1a53e544860c261e3e8f681a17fdc4b8b2e4cb",
+      "bytes": 1564
+    },
+    {
+      "path": "freezes/fbfc92b826bc.smoke.json",
+      "sha256": "1f7116e7c4526ec252f9cb7a7b79cd0e9968a1b021929d7b07ab5feaacf1bccc",
+      "bytes": 1508
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/D1_DECISION.json",
+      "sha256": "362ebc3ed78fec0d7a8f786b4762de4f3a0d87820468a9f50e40a8f43f1ff428",
+      "bytes": 706
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/D1_EXECUTION_STATUS.json",
+      "sha256": "87b3d339c259fad1445cebb10f0981082a06e2d31ca52737f3c2ac289ef02ae0",
+      "bytes": 1011
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/D1_FIXED_BUDGET_CONTRACT.json",
+      "sha256": "caaa3ff7490eaa6deb3f4965ed7e382ddf5d6a1b315382bf820fc3090eeff6a1",
+      "bytes": 2054
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/D1_FIXED_BUDGET_DECODER_REPORT.md",
+      "sha256": "bdaf29f51be142c1ba6736d2a912dad8d90f2240da9e57a0ca033ed3a7f8ecb7",
+      "bytes": 905
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/D1_FIXED_BUDGET_PROVENANCE.json",
+      "sha256": "5143c452d391282e35f41dadf7c0a4c42be2b590192594af4c970195f543dabc",
+      "bytes": 474
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/FINALIST_COST_SMOKE.md",
+      "sha256": "c419d8a0704020c55233dfaa42bdb566408e157f35c0678f855b6c5bf156085e",
+      "bytes": 209
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/V5_REUSE_AUDIT.md",
+      "sha256": "1676208879fd81cd4446b9470510d4ed32fb815bbf8d606911e5e26c13f9e3ef",
+      "bytes": 772
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/d1_cost_smoke.csv",
+      "sha256": "78a8f927ee82b12b1af6c01504e88aa8197b52a87d3785d09a4c7730a3149f9a",
+      "bytes": 7392
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/d1_policy_cells.csv",
+      "sha256": "78a8f927ee82b12b1af6c01504e88aa8197b52a87d3785d09a4c7730a3149f9a",
+      "bytes": 7392
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/d1_policy_outputs.csv",
+      "sha256": "a319e2bf171866f3c4a4b5143227cf32a2916046350ae9423bb5601670458251",
+      "bytes": 635
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/d1_policy_summary.csv",
+      "sha256": "7e950742b8b5e14a11dcf6563315fd55025d833debeac162d5dc398bd7a275e8",
+      "bytes": 2188
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/d1_rescue_overlap.csv",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/d1_v5_control_cells.csv",
+      "sha256": "873ae4d8db4520cae840db4f0f82d8c8a3fec6fd8b8c193dc9d49b916880b9f4",
+      "bytes": 31402
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/finalist_cost_smoke.csv",
+      "sha256": "41e81ff75f15d366d31fe86cbd3dd7685c2d72885d39c3ea2193ea92a4169936",
+      "bytes": 267
+    },
+    {
+      "path": "arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/v5_reuse_cells.csv",
+      "sha256": "b7675ff0dcb8167be9388985ff888dff2840c15bea18fe92889a55495f0fb75b",
+      "bytes": 57292
+    }
+  ]
+}

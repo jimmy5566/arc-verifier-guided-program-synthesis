@@ -1,0 +1,21 @@
+{
+  "D1_V5_CONTROL": "144/144",
+  "actual_cost_order": [
+    "TOPK_LOCAL_k=2",
+    "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400",
+    "CUMULATIVE_REGRET_r=4.00"
+  ],
+  "contract_sha256": "caaa3ff7490eaa6deb3f4965ed7e382ddf5d6a1b315382bf820fc3090eeff6a1",
+  "d1_is_new_fixed_budget_experiment": "YES",
+  "daytime_policy": "TOPK_LOCAL_k=2",
+  "experiment_id": "D1_FIXED_BUDGET_DECODER_AB_V1",
+  "historical_v5_reuse": "NO",
+  "orphan_recovery": "ENABLED",
+  "overnight_policy": "CUMULATIVE_REGRET_r=4.00",
+  "phase3_only": true,
+  "phase4_started": false,
+  "regret4_slowdown_cause": "BOTH",
+  "second_policy": "AFFINE_NLL_BUDGET_tau0=2.000_lambda=0.0400",
+  "shared_queue": "ENABLED",
+  "workers": "1/GPU"
+}

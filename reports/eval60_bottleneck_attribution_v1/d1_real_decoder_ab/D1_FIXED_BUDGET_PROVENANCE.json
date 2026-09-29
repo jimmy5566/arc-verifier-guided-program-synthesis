@@ -1,0 +1,8 @@
+{
+  "contract_sha256": "caaa3ff7490eaa6deb3f4965ed7e382ddf5d6a1b315382bf820fc3090eeff6a1",
+  "d0_commit": "9fa2810ca38288235d492e12af2e0ec0bebee1ea",
+  "gold_status": "control labels attached only after control freeze",
+  "predecessor_v5_audit": "historical context only; superseded for this D1 fixed-budget A/B",
+  "source_commit": "ad7bb255ec6b56953cff6729f68dee9be91260fe",
+  "source_manifest_sha256": "afac00408496fbe321e3ff8b8b0d2e24827ac2af4973f3ebd904856f71bd50a7"
+}
