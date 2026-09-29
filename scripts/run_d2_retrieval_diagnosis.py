@@ -208,12 +208,12 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(); sub = parser.add_subparsers(dest="mode", required=True)
+    parser = argparse.ArgumentParser(); sub = parser.add_subparsers(dest="command", required=True)
     p = sub.add_parser("prepare"); p.add_argument("--output", type=Path, required=True); p.add_argument("--d1-root", type=Path, required=True); p.add_argument("--cohort", type=Path, required=True); p.add_argument("--g1-root", type=Path, required=True); p.add_argument("--source-commit", required=True)
     p = sub.add_parser("worker"); p.add_argument("--output", type=Path, required=True); p.add_argument("--cells", type=Path, required=True); p.add_argument("--gpu-id", type=int, required=True); p.add_argument("--worker-index", type=int, required=True); p.add_argument("--mode", choices=("parity", "trace"), required=True); p.add_argument("--claim-stale-seconds", type=float, default=900.0)
     p = sub.add_parser("freeze-parity"); p.add_argument("--output", type=Path, required=True); p.add_argument("--cells", type=Path, required=True)
     p = sub.add_parser("freeze-trace"); p.add_argument("--output", type=Path, required=True); p.add_argument("--cells", type=Path, required=True)
-    args = parser.parse_args(); {"prepare": prepare, "worker": worker, "freeze-parity": freeze_parity, "freeze-trace": freeze_trace}[args.mode](args)
+    args = parser.parse_args(); {"prepare": prepare, "worker": worker, "freeze-parity": freeze_parity, "freeze-trace": freeze_trace}[args.command](args)
 
 
 if __name__ == "__main__": main()
