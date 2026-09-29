@@ -167,52 +167,45 @@ def _full_teacher_force(*, model: Any, encoded: dict[str, Any], tokens: list[int
     return [output.logits[0, int(prompt.shape[-1]) - 1 + index, :] for index in range(len(tokens))]
 
 
-def _incremental_kv_replay(*, model: Any, encoded: dict[str, Any], tokens: list[int]) -> list[Any]:
+def _incremental_kv_replay(*, model: Any, tokenizer: Any, encoded: dict[str, Any], tokens: list[int]) -> list[Any]:
     """Replay exact tokens through the cache path without sampling/argmax.
 
-    We pass the original encoded prompt mapping on the first call.  Afterwards
-    we pass only input_ids, the cache, and an incrementally extended attention
-    mask when the historical encoded mapping contained one.  No custom
-    ``position_ids`` are supplied: neither did the original ``generate`` call.
+    The historical run used ``model.generate``.  Its Unsloth implementation
+    owns cache-position and position-id preparation, so calling the raw model
+    after prefill is not equivalent.  A logits processor records each *raw*
+    distribution and then forces the known historical token.  This keeps the
+    original incremental-KV execution loop while making no free decoding choice.
     """
     import torch
+    from transformers import LogitsProcessor
 
-    first = {key: value.to(model.device) for key, value in encoded.items()}
-    # ``GenerationMixin`` creates an all-one mask when generate receives no
-    # attention mask for this unpadded B=1 prompt.  The Unsloth cache-forward
-    # wrapper requires that materialised mask on subsequent calls (otherwise it
-    # dereferences ``None``).  This therefore mirrors generate's default rather
-    # than introducing any selective masking or position IDs.
-    if "attention_mask" not in first:
-        first["attention_mask"] = torch.ones_like(first["input_ids"])
-    # Crucially, use the model's *actual* generation preparation hook.  Unsloth
-    # supplies this hook for Qwen/Llama and derives its cache position / position
-    # IDs there.  Calling ``model`` directly after prefill skips that generation
-    # path and cannot reproduce the historical cached decode semantics.
-    sequence = first["input_ids"]
-    first_inputs = model.prepare_inputs_for_generation(
-        sequence, attention_mask=first["attention_mask"], use_cache=True,
-    )
-    first_inputs["return_dict"] = True
+    prompt_tokens = int(encoded["input_ids"].shape[-1])
+    captured: list[Any] = []
+
+    class ForceFrozenToken(LogitsProcessor):
+        def __call__(self, input_ids: Any, scores: Any) -> Any:
+            index = int(input_ids.shape[-1]) - prompt_tokens
+            if not 0 <= index < len(tokens):
+                raise RuntimeError(f"unexpected replay position:{index}")
+            captured.append(scores[0].detach().clone())
+            forced = torch.full_like(scores, -float("inf"))
+            forced[:, tokens[index]] = scores[:, tokens[index]]
+            return forced
+
+    inputs = {key: value.to(model.device) for key, value in encoded.items()}
     with torch.inference_mode():
-        output = model(**first_inputs)
-    replay_logits = [output.logits[0, -1, :]]
-    cache = output.past_key_values
-    attention_mask = first["attention_mask"]
-    for token in tokens[:-1]:
-        one = torch.tensor([[token]], dtype=first["input_ids"].dtype, device=model.device)
-        sequence = torch.cat((sequence, one), dim=1)
-        attention_mask = torch.cat((attention_mask, torch.ones_like(one)), dim=1)
-        next_inputs = model.prepare_inputs_for_generation(
-            sequence, past_key_values=cache, attention_mask=attention_mask,
-            use_cache=True,
+        result = model.generate(
+            **inputs,
+            max_new_tokens=len(tokens), do_sample=False,
+            eos_token_id=int(tokenizer.eos_token_id),
+            pad_token_id=int(tokenizer.pad_token_id),
+            return_dict_in_generate=True, output_scores=False,
+            logits_processor=[ForceFrozenToken()],
         )
-        next_inputs["return_dict"] = True
-        with torch.inference_mode():
-            output = model(**next_inputs)
-        cache = output.past_key_values
-        replay_logits.append(output.logits[0, -1, :])
-    return replay_logits
+    suffix = [int(value) for value in result.sequences[0, prompt_tokens:].detach().cpu().tolist()]
+    if suffix != tokens or len(captured) != len(tokens):
+        raise RuntimeError(f"forced incremental replay transport mismatch:{suffix!r}")
+    return captured
 
 
 def _raw_cell_path(root: Path, task_id: str, output_index: int, depth: int, view: str) -> Path:
@@ -397,7 +390,7 @@ def run(args: argparse.Namespace) -> None:
         if int(encoded["input_ids"].shape[-1]) != int(frozen["prompt_tokens"]):
             raise RuntimeError(f"prompt token mismatch:{task_id}:d{depth}:{view}")
         torch.cuda.synchronize()
-        incremental = _incremental_kv_replay(model=model, encoded=encoded, tokens=tokens)
+        incremental = _incremental_kv_replay(model=model, tokenizer=tokenizer, encoded=encoded, tokens=tokens)
         torch.cuda.synchronize()
         full = _full_teacher_force(model=model, encoded=encoded, tokens=tokens)
         torch.cuda.synchronize()
