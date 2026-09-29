@@ -1,0 +1,21 @@
+{
+  "adapter_manifest_sha256": "e3e95956b0c17e3017b3bb99999c53bfc5307908df68c43fc6641e8b1459c2a6",
+  "cell_inventory_sha256": "99fe985f523b4cc348f43638f7eeda10f8f4c17fc496fd7efa56ca7cfcfc305d",
+  "cells": 112,
+  "current_adapter_sha_verified": true,
+  "depth": 24,
+  "experiment": "G3A_CURRENT_TTT24_OMITTED_D4_GREEDY_HALF28",
+  "generation_frozen": true,
+  "gold_path_scoring": false,
+  "gpu_used": true,
+  "new_dfs": false,
+  "new_ttt": false,
+  "solutions_opened_before_generation": false,
+  "source_commit": "e16e83f54a8b56866752e63280abf3e45902f4e6",
+  "views": [
+    "rot90",
+    "rot180",
+    "rot270",
+    "flip_lr"
+  ]
+}

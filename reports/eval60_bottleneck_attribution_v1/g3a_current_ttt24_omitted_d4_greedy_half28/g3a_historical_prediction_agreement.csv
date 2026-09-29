@@ -1,0 +1,5 @@
+current_cells,different_predictions,historical_comparable_cells,identical_predictions,view
+28,11,27,16,rot90
+28,11,23,12,rot180
+28,16,27,11,rot270
+28,12,23,11,flip_lr

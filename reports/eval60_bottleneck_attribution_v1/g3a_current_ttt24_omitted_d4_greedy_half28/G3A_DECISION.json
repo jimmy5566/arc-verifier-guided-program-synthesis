@@ -1,0 +1,52 @@
+{
+  "AUGMENTATION_COVERAGE_CONCLUSION": "TTT24_OMITTED_D4_GREEDY_NO_GAIN",
+  "BY_VIEW": {
+    "flip_lr": {
+      "exact_cells": 0,
+      "rescue_outputs": 0
+    },
+    "rot180": {
+      "exact_cells": 0,
+      "rescue_outputs": 0
+    },
+    "rot270": {
+      "exact_cells": 0,
+      "rescue_outputs": 0
+    },
+    "rot90": {
+      "exact_cells": 0,
+      "rescue_outputs": 0
+    }
+  },
+  "COHORT_OUTPUTS": 28,
+  "CURRENT_ADAPTER_SHA_VERIFIED": "YES",
+  "CURRENT_DEVELOPMENT_UNION": "33/89",
+  "EXPECTED_CELLS": 112,
+  "G3A_STATUS": "PARTIAL",
+  "GOLD_PATH_SCORING": "NO",
+  "GPU_USED": "YES",
+  "GREEDY_CELLS_COMPLETE": "112/112",
+  "HISTORICAL_COMPARABLE_CELLS": 100,
+  "HISTORICAL_DIFFERENT_PREDICTIONS": 50,
+  "HISTORICAL_IDENTICAL_PREDICTIONS": 50,
+  "NEW_DFS": "NO",
+  "NEW_GREEDY_EXACT_CELLS": 0,
+  "NEW_GREEDY_RESCUE_IDS": [],
+  "NEW_GREEDY_RESCUE_OUTPUTS": 0,
+  "NEW_NONBLIND_DEVELOPMENT_UNION": "33/89",
+  "NEW_TTT": "NO",
+  "NEXT_RECOMMENDED_EXPERIMENT": "DECODER_PRUNING_REDESIGN",
+  "RUNTIME_INCIDENTS": [
+    {
+      "kind": "TRACEBACK",
+      "log": "full_shard2.log"
+    }
+  ],
+  "SCIENTIFIC_CONFIG_CHANGED": "NO",
+  "UNIQUE_RESCUES_BY_VIEW": {
+    "flip_lr": 0,
+    "rot180": 0,
+    "rot270": 0,
+    "rot90": 0
+  }
+}
