@@ -392,7 +392,11 @@ def run(args: argparse.Namespace) -> None:
         elif not clone_pass and (aliases or prefill_mutation or idle_mutation):
             cause = "ROOT_CACHE_OR_CACHE_MUTATION_SUPPORTED"
         elif not clone_pass:
-            cause = "MIXED_OR_MODEL_STATE_INTERACTION"
+            # A deep clone itself changes the cache container to legacy tuples.
+            # With no storage alias, checksum mutation, or observed model-level
+            # mutable state, this audit cannot attribute divergence beyond a
+            # non-root-cache shared-execution effect.
+            cause = "NON_ROOT_CACHE_SHARED_EXECUTION_EFFECT_NOT_ESTABLISHED"
         decision = {
             "experiment": EXPERIMENT, "source_commit": contract["source_commit"], "adapter_sha256": adapter_sha,
             "cross_cell_root_storage_aliases": aliases, "cross_prefill_mutation": prefill_mutation,

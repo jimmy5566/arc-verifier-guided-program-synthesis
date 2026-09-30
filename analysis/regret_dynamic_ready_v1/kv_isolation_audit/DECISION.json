@@ -11,7 +11,7 @@
   "isolated_B1_parity": "4/4 (previous frozen B1.1 evidence)",
   "model_level_shared_mutable_state": false,
   "next": "CPU_REVIEW_REQUIRED",
-  "root_cause": "MIXED_OR_MODEL_STATE_INTERACTION",
+  "root_cause": "NON_ROOT_CACHE_SHARED_EXECUTION_EFFECT_NOT_ESTABLISHED",
   "root_clone_shared_B1_parity": "1/4",
   "source_commit": "7655c47f60b5293a091e9babeb532770d9fce07c",
   "untouched12_used": false,

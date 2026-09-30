@@ -8,7 +8,7 @@ Target-blind diagnostic. Gold was not opened and Dynamic Batch2 was not instanti
 - Model mutable-state entries changed: 0
 - Root-clone shared B1 parity: 1/4
 - First scheduled cell exact in both construction orders: True
-- Root-cause classification: MIXED_OR_MODEL_STATE_INTERACTION
+- Root-cause classification: NON_ROOT_CACHE_SHARED_EXECUTION_EFFECT_NOT_ESTABLISHED
 
 ## Scope
 
