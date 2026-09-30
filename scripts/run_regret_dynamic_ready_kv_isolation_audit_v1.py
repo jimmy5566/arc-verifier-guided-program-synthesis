@@ -415,7 +415,18 @@ def run(args: argparse.Namespace) -> None:
                  "## Scope", "", "- Cell family: d59b0160:o0:d24 {identity, flip_ud, transpose, anti_transpose}",
                  "- Decoder: fixed CUMULATIVE_REGRET_r=4.00, 4096 nodes, 32 candidates", "- Dynamic Batch2: not run", "- Gold: not accessed", "- Untouched12/Untouched24: not used"]
         (output / "KV_ISOLATION_AUDIT.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
-        files = [path for path in output.iterdir() if path.is_file() and path.name != "HASHES.json"]
+        # Runtime logs/PIDs are deliberately local operational state, not
+        # immutable research evidence.  Hash only the portable audit payload.
+        artifact_names = {
+            "KV_ISOLATION_CONTRACT.json", "root_cache_storage_map.csv",
+            "prefill_cross_mutation.csv", "incremental_cross_mutation.csv",
+            "model_mutable_state_audit.json", "ROOT_CLONE_SHARED_B1_PARITY.csv",
+            "execution_order_audit.csv", "FLIP_UD_FIRST_DIVERGENCE.csv",
+            "KV_ISOLATION_AUDIT.md", "DECISION.json",
+        }
+        files = [output / name for name in sorted(artifact_names)]
+        if any(not path.is_file() for path in files):
+            raise RuntimeError("KV audit core artifact missing before hash freeze")
         atomic_json(output / "HASHES.json", {"sha256": {path.name: sha256_file(path) for path in sorted(files)}, "solutions_accessed": False})
     finally:
         del model
