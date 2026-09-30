@@ -45,6 +45,9 @@ class D1TurboDFSConfig:
     arc_tokens: tuple[int, ...] = PUBLIC_ARC_TOKENS
     calibration_assertions: bool = True
     diagnostic_trace: bool = False
+    # Disabled on normal decoder paths. The performance-only microprofile may
+    # enable it to time executor sections without changing search state.
+    performance_profile: bool = False
     # This is deliberately opt-in.  The frozen historical D1 route retains
     # its shared counter semantics; the Regret fast engine uses independent
     # logical-cell budgets while sharing only model forwards/KV lanes.
@@ -91,9 +94,11 @@ class D1TurboDFSResult:
     budget_exhausted_by_lane: tuple[bool, ...] = ()
     termination_reason_by_lane: tuple[str, ...] = ()
     max_frontier_size_by_lane: tuple[int, ...] = ()
+    performance_telemetry: dict[str, float] | None = None
 
 
 def _node(runtime_state: dict[str, Any], **payload: Any) -> int:
+    started = time.perf_counter() if runtime_state.get("performance_profile", False) else None
     payload.setdefault("frontier_floor_activated", False)
     payload.setdefault("frontier_floor_restore_rank", None)
     payload.setdefault("cumulative_regret", None)
@@ -105,6 +110,8 @@ def _node(runtime_state: dict[str, Any], **payload: Any) -> int:
         value = int(runtime_state["next_node_id"])
         runtime_state["next_node_id"] += 1
     runtime_state["nodes"].append({"node_id": value, **payload})
+    if started is not None:
+        runtime_state["performance_telemetry"]["node_and_state_seconds"] += time.perf_counter() - started
     return value
 
 
@@ -117,6 +124,7 @@ def _trace(state: dict[str, Any], **payload: Any) -> dict[str, Any] | None:
     """Append-only diagnostic event recorder, disabled on the frozen D1 path."""
     if not state.get("diagnostic_trace", False):
         return None
+    started = time.perf_counter() if state.get("performance_profile", False) else None
     lane = int(payload.get("lane", 0))
     if state.get("independent_lane_budgets", False):
         payload.setdefault("trace_event_id", int(state["next_trace_event_id_by_lane"][lane]))
@@ -126,11 +134,14 @@ def _trace(state: dict[str, Any], **payload: Any) -> dict[str, Any] | None:
         state["next_trace_event_id"] += 1
     payload.setdefault("elapsed_seconds", time.perf_counter() - float(state["trace_started_perf"]))
     state["search_trace"].append(payload)
+    if started is not None:
+        state["performance_telemetry"]["trace_telemetry_seconds"] += time.perf_counter() - started
     return payload
 
 
 def _record_frontier(state: dict[str, Any], candidates: list[list[Any]]) -> None:
     """Capture actual pending successor counts without changing search order."""
+    started = time.perf_counter() if state.get("performance_profile", False) else None
     lanes = [len(values) for values in candidates]
     total = sum(lanes)
     state["max_frontier_size"] = max(state["max_frontier_size"], total)
@@ -138,6 +149,8 @@ def _record_frontier(state: dict[str, Any], candidates: list[list[Any]]) -> None
         for lane, value in enumerate(lanes):
             state["max_frontier_size_by_lane"][lane] = max(state["max_frontier_size_by_lane"][lane], value)
     state["frontier_samples"].append({"total": total, "lanes": lanes})
+    if started is not None:
+        state["performance_telemetry"]["frontier_bookkeeping_seconds"] += time.perf_counter() - started
 
 
 def _lane_counter(state: dict[str, Any], name: str, lane: int) -> int:
@@ -381,9 +394,16 @@ def d1_turbo_dfs(
         _record_frontier(state, candidates)
         if active == 0:
             break
+        prep_started = time.perf_counter()
+        next_input_ids = torch.tensor(tokens, device=model.device, dtype=torch.long).view(-1, 1)
+        next_position_ids = torch.full((lanes, 1), pos, device=model.device)
+        if state.get("performance_profile", False):
+            state["performance_telemetry"]["batch_preparation_seconds"] += time.perf_counter() - prep_started
         forward_started = time.perf_counter()
-        outputs = model(input_ids=torch.tensor(tokens, device=model.device, dtype=torch.long).view(-1, 1),
-                        position_ids=torch.full((lanes, 1), pos, device=model.device), past_key_values=cache, return_dict=True, use_cache=True)
+        # The executor passes the cache through directly. It does not pack,
+        # copy, or select per-lane KV tensors on this route.
+        outputs = model(input_ids=next_input_ids, position_ids=next_position_ids,
+                        past_key_values=cache, return_dict=True, use_cache=True)
         state["model_forward_seconds"] += time.perf_counter() - forward_started
         if config.calibration_assertions and int(outputs.logits.shape[0]) != lanes:
             raise RuntimeError("D1 model forward batch mismatch")
@@ -427,6 +447,12 @@ def inference_d1_turbo_dfs(model: Any, *, input_ids: Any, config: D1TurboDFSConf
                              "trace_pending": {}, "trace_started_perf": time.perf_counter(), "diagnostic_trace": config.diagnostic_trace,
                              "model_forward_seconds": 0.0, "max_frontier_size": 0, "expanded_nodes": 0, "budget_exhausted": False,
                              "independent_lane_budgets": bool(config.independent_lane_budgets),
+                             "performance_profile": bool(config.performance_profile),
+                             "performance_telemetry": {"batch_preparation_seconds": 0.0,
+                                                       "trace_telemetry_seconds": 0.0,
+                                                       "node_and_state_seconds": 0.0,
+                                                       "frontier_bookkeeping_seconds": 0.0,
+                                                       "kv_pack_or_select_seconds": 0.0},
                              "model_forwards_by_lane": [0] * lanes, "tokens_advanced_by_lane": [0] * lanes,
                              "completed_candidates_by_lane": [0] * lanes, "expanded_nodes_by_lane": [0] * lanes,
                              "budget_exhausted_by_lane": [False] * lanes, "next_candidate_id_by_lane": [0] * lanes,
@@ -468,4 +494,5 @@ def inference_d1_turbo_dfs(model: Any, *, input_ids: Any, config: D1TurboDFSConf
                              tuple(int(value) for value in state["completed_candidates_by_lane"]),
                              tuple(int(value) for value in state["expanded_nodes_by_lane"]),
                              tuple(bool(value) for value in state["budget_exhausted_by_lane"]), lane_reason,
-                             tuple(int(value) for value in state["max_frontier_size_by_lane"]))
+                             tuple(int(value) for value in state["max_frontier_size_by_lane"]),
+                             dict(state["performance_telemetry"]))

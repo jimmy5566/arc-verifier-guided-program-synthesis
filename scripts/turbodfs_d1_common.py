@@ -100,6 +100,9 @@ def d1_cells_batch(*, model: Any, tokenizer: Any, task: Any, task_id: str, outpu
             # cost contract.  This is telemetry only; it does not alter decoding.
             "batch_forward_passes": lane_forwards,
             "model_forward_seconds": float(result.model_forward_seconds) / len(views),
+            # Empty/default telemetry is preserved on ordinary decoder routes.
+            # The performance-only microprofile enables these executor timers.
+            "executor_performance_telemetry": dict(result.performance_telemetry or {}),
             "candidate_parse_seconds": candidate_parse_seconds,
             "dedup_seconds": dedup_seconds,
             "python_overhead_seconds": max(0.0, (elapsed / len(views)) - (float(result.model_forward_seconds) / len(views)) - candidate_parse_seconds - dedup_seconds),
