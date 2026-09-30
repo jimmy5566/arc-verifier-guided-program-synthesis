@@ -1,0 +1,5 @@
+budget,hits,incremental_gain
+512,8,
+1024,11,3
+2048,13,2
+4096,14,1

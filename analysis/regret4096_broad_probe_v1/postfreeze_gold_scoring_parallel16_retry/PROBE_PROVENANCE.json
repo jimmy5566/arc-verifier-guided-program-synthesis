@@ -1,0 +1,8 @@
+{
+  "challenge_gold_status": "verified stripped",
+  "contract_sha256": "386b02ed59224849032c7a7f98515c9ae64b7bafaab36549144462a1db30e3de",
+  "gold_access": "FORBIDDEN_UNTIL_RAW_GENERATION_FROZEN.json",
+  "manifest_sha256": "42a2bba67487d60704e5b2ac8e5508f35afb3fc92aff40c7208b3d21f345a15b",
+  "raw_storage": "/workspace/arc2/active_runs/regret4096_broad_probe_v1/raw",
+  "repository_compact_export": "/root/arc-runtime-regret-speed/arc2/analysis/regret4096_broad_probe_v1"
+}

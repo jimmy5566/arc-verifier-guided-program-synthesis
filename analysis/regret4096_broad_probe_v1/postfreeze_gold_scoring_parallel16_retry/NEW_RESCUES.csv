@@ -1,0 +1,13 @@
+all_hit_cells,best_cell_key,best_depth,best_first_gold_node,best_first_gold_time_seconds,best_gold_candidate_rank,best_view,cells_hit_gold,cells_tested,output_gold_hit,output_id,rescue_class,rescue_multiplicity
+"[""1818057f:o0:d24:identity""]",1818057f:o0:d24:identity,24,505,31.1237664911896,1,identity,1,1,True,1818057f:o0,NEWLY_OBSERVED_REGRET_RESCUE,SINGLE_CELL_RESCUE
+"[""20270e3b:o1:d24:identity""]",20270e3b:o1:d24:identity,24,447,26.366223273798823,10,identity,1,1,True,20270e3b:o1,NEWLY_OBSERVED_REGRET_RESCUE,SINGLE_CELL_RESCUE
+"[""2d0172a1:o0:d24:identity""]",2d0172a1:o0:d24:identity,24,125,7.74371388182044,1,identity,1,1,True,2d0172a1:o0,NEWLY_OBSERVED_REGRET_RESCUE,SINGLE_CELL_RESCUE
+"[""31f7f899:o0:d24:identity""]",31f7f899:o0:d24:identity,24,360,21.884449234232306,2,identity,1,1,True,31f7f899:o0,NEWLY_OBSERVED_REGRET_RESCUE,SINGLE_CELL_RESCUE
+"[""36a08778:o0:d24:identity""]",36a08778:o0:d24:identity,24,271,16.016001718118787,1,identity,1,1,True,36a08778:o0,NEWLY_OBSERVED_REGRET_RESCUE,SINGLE_CELL_RESCUE
+"[""3a25b0d8:o0:d24:identity""]",3a25b0d8:o0:d24:identity,24,480,30.121929850429296,2,identity,1,1,True,3a25b0d8:o0,NEWLY_OBSERVED_REGRET_RESCUE,SINGLE_CELL_RESCUE
+"[""3a25b0d8:o1:d24:identity""]",3a25b0d8:o1:d24:identity,24,167,10.019304575398564,1,identity,1,1,True,3a25b0d8:o1,NEWLY_OBSERVED_REGRET_RESCUE,SINGLE_CELL_RESCUE
+"[""71e489b6:o0:d24:identity""]",71e489b6:o0:d24:identity,24,271,16.410566564649343,1,identity,1,1,True,71e489b6:o0,NEWLY_OBSERVED_REGRET_RESCUE,SINGLE_CELL_RESCUE
+"[""71e489b6:o1:d24:identity""]",71e489b6:o1:d24:identity,24,626,37.156291311606765,4,identity,1,1,True,71e489b6:o1,NEWLY_OBSERVED_REGRET_RESCUE,SINGLE_CELL_RESCUE
+"[""78332cb0:o0:d24:identity""]",78332cb0:o0:d24:identity,24,569,34.11001105606556,7,identity,1,1,True,78332cb0:o0,NEWLY_OBSERVED_REGRET_RESCUE,SINGLE_CELL_RESCUE
+"[""7ed72f31:o0:d24:identity""]",7ed72f31:o0:d24:identity,24,1442,86.04133280925453,7,identity,1,1,True,7ed72f31:o0,NEWLY_OBSERVED_REGRET_RESCUE,SINGLE_CELL_RESCUE
+"[""8e5c0c38:o1:d24:identity""]",8e5c0c38:o1:d24:identity,24,1506,88.87979745492339,4,identity,1,1,True,8e5c0c38:o1,NEWLY_OBSERVED_REGRET_RESCUE,SINGLE_CELL_RESCUE

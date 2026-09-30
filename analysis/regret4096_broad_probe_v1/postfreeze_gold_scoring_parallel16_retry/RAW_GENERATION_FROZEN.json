@@ -1,0 +1,13 @@
+{
+  "cells_completed": 73,
+  "cells_interrupted_by_global_deadline": 0,
+  "cells_started": 74,
+  "experiment": "REGRET4096_BROAD_PROBE_V1",
+  "experiment_end_time_unix": 1790764862.5922744,
+  "experiment_start_time_unix": 1790752868.731445,
+  "official_window": "ORIGINAL_4_HOUR_WINDOW",
+  "raw_hashes_sha256": "6884e8b33997f389a41c1e1ae9eeddd895bfc588738d38f4d3240c7327225f6b",
+  "raw_record_count": 73,
+  "solutions_accessed_before_freeze": false,
+  "total_gpu_wall_seconds": 11993.860829353333
+}

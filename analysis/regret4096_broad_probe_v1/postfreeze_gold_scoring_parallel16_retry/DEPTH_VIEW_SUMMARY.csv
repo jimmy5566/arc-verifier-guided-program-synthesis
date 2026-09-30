@@ -1,0 +1,8 @@
+axis,gold_cells,median_first_gold_node,median_first_gold_time_seconds,median_runtime_seconds,total_cells_run,unique_outputs_rescued,unique_rescues_not_other_axis,value
+depth,0,,,,0,0,0,12
+depth,14,492.5,30.622848170809448,129.65525065362453,73,14,14,24
+depth,0,,,,0,0,0,48
+view,14,492.5,30.622848170809448,129.65525065362453,73,14,14,identity
+view,0,,,,0,0,0,flip_ud
+view,0,,,,0,0,0,transpose
+view,0,,,,0,0,0,anti_transpose
