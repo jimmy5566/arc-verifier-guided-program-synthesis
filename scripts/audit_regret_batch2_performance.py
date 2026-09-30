@@ -187,7 +187,7 @@ def main() -> None:
 
 CPU analysis of frozen A1.1 raw evidence plus a separately labelled contaminated
 performance-only 97d7923e microprofile. The microprofile did not access Gold.
-Raw A1.1 SHA256: `{freeze['raw_sha256']}`.
+Frozen A1.1 manifest SHA256: `{sha256_file(frozen / 'RAW_TARGET_BLIND_FREEZE.json')}`.
 
 ## Occupancy
 
