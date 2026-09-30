@@ -53,11 +53,14 @@ class ReadyCell:
     config: D1TurboDFSConfig
     state: dict[str, Any]
     started_unix: float
+    created_perf: float
     generator: Generator[ReadyForwardRequest, Any, list[ReferenceTurboDFSCandidate]]
     request: ReadyForwardRequest | None = None
     result: list[ReferenceTurboDFSCandidate] | None = None
     request_count: int = 0
     prompt_forwards: int = 1
+    prefill_seconds: float = 0.0
+    active_elapsed_seconds: float = 0.0
 
 
 def _new_state(config: D1TurboDFSConfig) -> dict[str, Any]:
@@ -71,6 +74,10 @@ def _new_state(config: D1TurboDFSConfig) -> dict[str, Any]:
         "next_candidate_id": 0, "next_node_id": 0, "next_trace_event_id": 0,
         "next_frontier_insert_order": 0, "next_frontier_pop_order": 0,
         "trace_pending": {}, "trace_started_perf": time.perf_counter(),
+        # B1.1 may account the fixed local time budget by work attributable to
+        # this cell rather than by wall time since construction.  The default
+        # remains the historical wall-clock predicate until explicitly enabled.
+        "active_time_accounting": False, "active_elapsed_seconds": 0.0,
         "diagnostic_trace": config.diagnostic_trace, "model_forward_seconds": 0.0,
         "max_frontier_size": 0, "expanded_nodes": 0, "budget_exhausted": False,
         "independent_lane_budgets": False, "performance_profile": False,
@@ -257,7 +264,8 @@ def _ready_dfs(
                 state["trace_pending"][(parent_node, token, next_score)] = event
     candidates.sort(key=lambda value: (value[0], value[2]))
     _record_frontier(state, [candidates])
-    while (not state["budget_exhausted"] and time.time() - started_unix < config.local_time_limit_seconds and
+    elapsed_budget = (lambda: float(state["active_elapsed_seconds"])) if state["active_time_accounting"] else (lambda: time.time() - started_unix)
+    while (not state["budget_exhausted"] and elapsed_budget() < config.local_time_limit_seconds and
            (config.absolute_end_time_unix is None or time.time() < config.absolute_end_time_unix)):
         if not candidates or state["expanded_nodes"] >= config.max_expanded_nodes:
             if state["expanded_nodes"] >= config.max_expanded_nodes:
@@ -298,7 +306,7 @@ def _ready_dfs(
 
 
 def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, cell_key: str,
-                     normalize_root_cache: bool) -> ReadyCell:
+                     normalize_root_cache: bool, active_time_accounting: bool = False) -> ReadyCell:
     """Run the required scalar prefill, then expose the first incremental request."""
     import torch
 
@@ -306,10 +314,14 @@ def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, ce
         raise ValueError("dynamic-ready cells require one prompt at a time")
     state = _new_state(config)
     started_unix = time.time()
+    created_perf = time.perf_counter()
+    state["active_time_accounting"] = active_time_accounting
     with torch.no_grad():
         started = time.perf_counter()
         outputs = model(input_ids=input_ids, return_dict=True, use_cache=True)
-        state["model_forward_seconds"] += time.perf_counter() - started
+        prefill_seconds = time.perf_counter() - started
+        state["model_forward_seconds"] += prefill_seconds
+        state["active_elapsed_seconds"] += prefill_seconds
     state["model_forwards"] = 1
     root = _node(state, parent_node_id=None, lane=0, token_position=int(input_ids.size(1)), branch_depth=0,
                  selected_token=None, token_logprob=None, cumulative_score=0.0, cumulative_regret=0.0,
@@ -318,20 +330,27 @@ def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, ce
     generator = _ready_dfs(cell_key=cell_key, logits=outputs.logits[:, -1], max_new_tokens=config.max_new_tokens,
                            score=0.0, regret=0.0, pos=int(input_ids.size(1)), cache=root_cache, config=config,
                            started_unix=started_unix, state=state, parent_node=root, prefix=tuple(), ordinal=[0])
-    cell = ReadyCell(cell_key, config, state, started_unix, generator)
-    try:
-        cell.request = next(generator)
-    except StopIteration as completed:
-        cell.result = completed.value
+    cell = ReadyCell(cell_key, config, state, started_unix, created_perf, generator,
+                     prefill_seconds=prefill_seconds, active_elapsed_seconds=prefill_seconds)
+    _advance_cell(cell)
     return cell
 
 
-def _reply(cell: ReadyCell, outputs: Any) -> None:
+def _advance_cell(cell: ReadyCell, outputs: Any | None = None) -> None:
+    """Advance one coroutine segment and charge only its own CPU work."""
+    started = time.perf_counter()
     try:
-        cell.request = cell.generator.send(outputs)
+        cell.request = next(cell.generator) if outputs is None else cell.generator.send(outputs)
     except StopIteration as completed:
         cell.result = completed.value
         cell.request = None
+    elapsed = time.perf_counter() - started
+    cell.active_elapsed_seconds += elapsed
+    cell.state["active_elapsed_seconds"] += elapsed
+
+
+def _reply(cell: ReadyCell, outputs: Any) -> None:
+    _advance_cell(cell, outputs)
     cell.request_count += 1
 
 
@@ -378,7 +397,11 @@ def run_ready_scheduler(*, model: Any, cells: list[ReadyCell], dynamic_batch2: b
         elapsed = time.perf_counter() - started
         forwards += 1
         for cell in selected:
-            cell.state["model_forward_seconds"] += elapsed / len(selected)
+            # One physical B2 forward is fully attributable to every logical
+            # cell it advances; dividing it would extend the scientific budget.
+            cell.state["model_forward_seconds"] += elapsed
+            cell.active_elapsed_seconds += elapsed
+            cell.state["active_elapsed_seconds"] += elapsed
         events.append({"forward_index": forwards, "physical_batch": len(selected), "position": first.request.position,
                        "cache_geometry": repr(first.request.cache_key), "cell_keys": [cell.cell_key for cell in selected],
                        "wall_seconds": elapsed})
@@ -393,7 +416,8 @@ def ready_result(cell: ReadyCell) -> D1TurboDFSResult:
     if cell.result is None:
         raise RuntimeError("dynamic-ready cell has not completed")
     state = cell.state
-    timed_out = time.time() - cell.started_unix >= cell.config.local_time_limit_seconds or (
+    elapsed_budget = cell.active_elapsed_seconds if state["active_time_accounting"] else time.time() - cell.started_unix
+    timed_out = elapsed_budget >= cell.config.local_time_limit_seconds or (
         cell.config.absolute_end_time_unix is not None and time.time() >= cell.config.absolute_end_time_unix)
     reason = "budget_exhausted" if state["budget_exhausted"] else "wall_time" if timed_out else "search_exhausted"
     return D1TurboDFSResult((tuple(sorted(cell.result, key=lambda item: item.cumulative_nll)),), tuple(state["nodes"]),

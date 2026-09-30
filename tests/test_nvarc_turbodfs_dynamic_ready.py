@@ -4,6 +4,8 @@ import torch
 
 from inference.nvarc_turbodfs_d1 import D1TurboDFSConfig, inference_d1_turbo_dfs
 from inference.nvarc_turbodfs_dynamic_ready import (
+    ReadyCell,
+    _new_state,
     normalized_result_signature,
     ready_result,
     run_ready_scheduler,
@@ -58,3 +60,13 @@ def test_dynamic_ready_batches_only_same_real_geometry_and_preserves_independenc
     assert telemetry["mean_effective_batch"] == 2.0
     assert [item.token_ids for item in ready_result(left).candidates[0]] == [item.token_ids for item in _scalar(prompt).candidates[0]]
     assert [item.token_ids for item in ready_result(right).candidates[0]] == [item.token_ids for item in _scalar(prompt).candidates[0]]
+
+
+def test_active_time_budget_excludes_elapsed_queue_wall_time():
+    config = _config()
+    state = _new_state(config)
+    state["active_time_accounting"] = True
+    cell = ReadyCell("a", config, state, 0.0, 0.0, (item for item in ()), result=[], active_elapsed_seconds=0.0)
+    assert ready_result(cell).termination_reason == "search_exhausted"
+    state["active_time_accounting"] = False
+    assert ready_result(cell).termination_reason == "wall_time"
