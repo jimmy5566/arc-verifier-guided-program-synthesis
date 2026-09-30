@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -28,6 +29,14 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 
 def mean(values: list[float]) -> float | None:
     return sum(values) / len(values) if values else None
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def forward_summary(calls: list[dict[str, Any]], active: int) -> dict[str, float | int | None]:
@@ -115,11 +124,11 @@ def main() -> None:
         final = [{"cell_key": row["cell_key"], "nodes": row["nodes_expanded"], "candidates": row["candidate_count"],
                   "termination": row["termination_reason"], "forwards": row["model_forwards"]} for row in rows]
         if index == 0:
-            cause = "MIXED: early candidate-cap asymmetry plus recursive lockstep"
-            evidence = "Both one-lane masks occur; lane 0 ends at 1362 nodes/32 candidates while lane 1 continues to 4096."
+            cause = "MIXED: one lane reaches the candidate cap, while recursive lockstep exposes the other lane alone"
+            evidence = "Both one-lane masks occur; lane 0 ends at 1362 nodes/32 candidates while lane 1 continues to the 4096-node cap."
         else:
             cause = "RECURSIVE_LOCKSTEP"
-            evidence = "Both lanes finish at the same 4096-node/32-candidate cap, yet each owns 3560 one-lane records."
+            evidence = "Both lanes finish at the same 4096-node cap (only 29/30 candidates), yet each owns 3560 one-lane records."
         desync.append({"group_index": index, "task_id": group["task_id"], "depth": group["depth"],
                        "active1_physical_forwards": active1, "active2_physical_forwards": active2,
                        "lane0_only_logical_records": masks["lane0_only"], "lane1_only_logical_records": masks["lane1_only"],
@@ -147,9 +156,12 @@ def main() -> None:
     # more than a scalar forward and all orchestration is free. It is therefore
     # deliberately optimistic.
     occupancy_ceiling = effective
+    model_only_speedup = (total_logical * float(scalar["mean_cuda_forward_ms"])) / (
+        total_active1 * float(batch1["mean_cuda_forward_ms"]) + total_active2 * float(batch2["mean_cuda_forward_ms"]) )
     policy = {
         "ROOT_CAUSE": "Correct masking exposed true fixed-pair under-occupancy; padded batch-2 forwards dominate and recursive lockstep prevents ready work from being dynamically paired.",
-        "frozen_raw_sha256": freeze["raw_sha256"], "effective_batch": effective,
+        "frozen_raw_manifest_sha256": sha256_file(frozen / "RAW_TARGET_BLIND_FREEZE.json"),
+        "frozen_raw_file_sha256": freeze["raw_sha256"], "effective_batch": effective,
         "active1_forward_fraction": total_active1 / total_physical,
         "active2_forward_fraction": total_active2 / total_physical,
         "effective_lane_utilization": utilization, "wasted_lane_fraction": 1.0 - utilization,
@@ -161,6 +173,7 @@ def main() -> None:
         "premask_high_occupancy_cause": "INACTIVE_LANE_REACTIVATION",
         "desynchronization_primary_cause": "RECURSIVE_LOCKSTEP",
         "current_architecture_max_speedup_estimate": occupancy_ceiling,
+        "microprofile_model_only_speedup_vs_scalar": model_only_speedup,
         "is_fixed_pair_batch2_fundamentally_low_occupancy": "YES",
         "would_dynamic_ready_pool_plausibly_help": "YES",
         "gold_status": "Known canaries preserved 2/2 post-freeze; this is performance failure plus numerical trajectory divergence, not Gold-destruction evidence.",
@@ -192,7 +205,7 @@ The corrected engine no longer lets an inactive pad/cache lane enter the decoder
 The pre-mask apparent occupancy near two was therefore **INACTIVE_LANE_REACTIVATION**,
 not valid parallel search. The frozen masks show most calls have one live logical
 state. Group 1 is the strongest scheduler evidence: both lanes end at identical
-caps, but 7,120 physical calls are singly active (3,560 observed from each lane).
+node caps, but 7,120 physical calls are singly active (3,560 observed from each lane).
 That is recursive lockstep exposing work at different stack levels, not merely a
 permanently finished companion cell. Group 0 additionally has real early terminal
 asymmetry (candidate cap versus node cap).
@@ -213,8 +226,10 @@ batch-shaped cache directly; it does not compact/select cache rows.
 
 Even under an impossible optimistic assumption—two-wide forward latency equal to
 scalar and zero overhead—the fixed-pair ceiling is the measured effective batch,
-only **{occupancy_ceiling:.4f}x**. Therefore >1.15x cannot be obtained while
-occupancy remains at this level. A dynamic ready pool could raise occupancy by
+only **{occupancy_ceiling:.4f}x**. The actual microprofile model-only comparison
+is **{model_only_speedup:.4f}x**, because an active-one Batch2 forward is slower
+than a scalar forward. Therefore >1.15x cannot be obtained while occupancy
+remains at this level. A dynamic ready pool could raise occupancy by
 batching independent ready states, but it would be a **new decoder execution
 architecture**, and it would still retain the known BF16 batch numerical path
 divergence. It is not scalar-equivalent engineering.
