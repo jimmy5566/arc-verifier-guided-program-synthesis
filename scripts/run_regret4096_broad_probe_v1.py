@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import replace
 import hashlib
 import json
@@ -337,6 +338,42 @@ def gold_event(row: dict[str, Any], gold: Any) -> dict[str, Any] | None:
             "first_gold_timing_status": "CAPTURED" if event is not None else "NOT_CAPTURED"}
 
 
+def score_raw_cell(context: tuple[str, dict[str, Any], str, Any]) -> dict[str, Any]:
+    """Hash, deserialize, and Gold-score one frozen raw record in a CPU worker.
+
+    The worker returns only the compact per-cell result.  Candidate pools never
+    leave their source process, which makes post-freeze scoring parallel without
+    changing any candidate or Gold-comparison semantics.
+    """
+    root_text, job, expected_hash, gold = context
+    root = Path(root_text)
+    path = raw_path(root, int(job["ordinal"]), str(job["cell_key"]))
+    payload = path.read_bytes()
+    actual_hash = hashlib.sha256(payload).hexdigest()
+    if actual_hash != expected_hash:
+        raise RuntimeError(f"raw hash mismatch: {path}")
+    raw = json.loads(payload)
+    if raw.get("solutions_accessed") is not False or raw.get("cell_key") != job["cell_key"] or raw.get("output_id") != job["output_id"]:
+        raise RuntimeError(f"invalid/checkpoint-corrupt raw record: {path}")
+    hit = gold_event(raw, gold)
+    base = {"cell_key": raw["cell_key"], "output_id": raw["output_id"], "task_id": raw["task_id"],
+            "output_index": raw["output_index"], "depth": raw["depth"], "view": raw["view"],
+            "nodes_expanded": raw["nodes_expanded"], "model_forwards": raw["model_forwards"],
+            "runtime_seconds": raw["runtime_seconds"], "model_forward_seconds": raw["model_forward_seconds"],
+            "candidate_count": raw["candidate_count"], "valid_grid_count": raw["valid_grid_count"],
+            "unique_grid_count": raw["unique_grid_count"], "termination_reason": raw["termination_reason"],
+            "budget_exhausted": raw["budget_exhausted"], "search_exhausted": raw["search_exhausted"],
+            "timed_out": raw["timed_out"], "max_frontier_size": raw["max_frontier_size"],
+            "mean_frontier_size": raw["mean_frontier_size"], "frontier_floor_activation_count": raw["frontier_floor_activation_count"],
+            "candidate_pool_sha256": stable_json_sha(raw["candidates"]), "gold_hit": False, "gold_candidate_count": 0}
+    base.update(hit or {})
+    base["seconds_per_node"] = float(base["runtime_seconds"]) / max(1, int(base["nodes_expanded"]))
+    base["nodes_before_gold"] = base.get("first_gold_node")
+    base["seconds_to_gold"] = base.get("first_gold_time_seconds")
+    base["candidate_rank_to_gold"] = base.get("first_gold_candidate_rank")
+    return base
+
+
 def existing_known_outputs(path: Path | None) -> tuple[set[str], dict[str, Any]]:
     if path is None or not path.is_file():
         return set(), {"status": "NOT_AVAILABLE", "source": None}
@@ -354,37 +391,29 @@ def score(args: argparse.Namespace) -> None:
     root = args.output.resolve(); frozen = root / "RAW_GENERATION_FROZEN.json"
     if not frozen.exists():
         raise RuntimeError("Gold scoring forbidden before RAW_GENERATION_FROZEN.json")
-    manifest = read_json(root / "PROBE_MANIFEST.json"); rows = completed_rows(root, manifest)
+    manifest = read_json(root / "PROBE_MANIFEST.json")
     frozen_hashes = read_json(root / "RAW_HASHES.json")["raw_hashes"]
-    for relative, expected in frozen_hashes.items():
-        if sha256_file(root / relative) != expected:
-            raise RuntimeError(f"raw hash mismatch: {relative}")
     challenge = read_json(root / "generation_inputs" / "evaluation_challenges.json")
     challenge_ids = list(challenge); expected = {task: len(value["test"]) for task, value in challenge.items()}
     solutions = normalize_arc_solutions(read_json(args.solutions.resolve()), task_ids_in_challenge_order=challenge_ids,
                                         expected_output_counts=expected)
     known, known_provenance = existing_known_outputs(args.known_regret_evidence.resolve() if args.known_regret_evidence else None)
     report = args.report_dir.resolve(); report.mkdir(parents=True, exist_ok=True)
-    cells: list[dict[str, Any]] = []
-    for raw in rows:
-        gold = solutions[raw["task_id"]][int(raw["output_index"])]
-        hit = gold_event(raw, gold)
-        base = {"cell_key": raw["cell_key"], "output_id": raw["output_id"], "task_id": raw["task_id"],
-                "output_index": raw["output_index"], "depth": raw["depth"], "view": raw["view"],
-                "nodes_expanded": raw["nodes_expanded"], "model_forwards": raw["model_forwards"],
-                "runtime_seconds": raw["runtime_seconds"], "model_forward_seconds": raw["model_forward_seconds"],
-                "candidate_count": raw["candidate_count"], "valid_grid_count": raw["valid_grid_count"],
-                "unique_grid_count": raw["unique_grid_count"], "termination_reason": raw["termination_reason"],
-                "budget_exhausted": raw["budget_exhausted"], "search_exhausted": raw["search_exhausted"],
-                "timed_out": raw["timed_out"], "max_frontier_size": raw["max_frontier_size"],
-                "mean_frontier_size": raw["mean_frontier_size"], "frontier_floor_activation_count": raw["frontier_floor_activation_count"],
-                "candidate_pool_sha256": stable_json_sha(raw["candidates"]), "gold_hit": False, "gold_candidate_count": 0}
-        base.update(hit or {})
-        base["seconds_per_node"] = float(base["runtime_seconds"]) / max(1, int(base["nodes_expanded"]))
-        base["nodes_before_gold"] = base.get("first_gold_node")
-        base["seconds_to_gold"] = base.get("first_gold_time_seconds")
-        base["candidate_rank_to_gold"] = base.get("first_gold_candidate_rank")
-        cells.append(base)
+    contexts = []
+    for job in manifest["schedule"]:
+        path = raw_path(root, int(job["ordinal"]), str(job["cell_key"]))
+        if not path.exists():
+            continue
+        relative = str(path.relative_to(root))
+        if relative not in frozen_hashes:
+            raise RuntimeError(f"completed raw record absent from freeze manifest: {relative}")
+        contexts.append((str(root), job, frozen_hashes[relative], solutions[job["task_id"]][int(job["output_index"])]))
+    worker_count = min(max(1, int(args.workers)), max(1, len(contexts)))
+    if worker_count == 1:
+        cells = [score_raw_cell(context) for context in contexts]
+    else:
+        with ProcessPoolExecutor(max_workers=worker_count) as pool:
+            cells = list(pool.map(score_raw_cell, contexts))
     outputs: list[dict[str, Any]] = []
     for output in sorted({row["output_id"] for row in cells}):
         group = [row for row in cells if row["output_id"] == output]; hits = [row for row in group if row["gold_hit"]]
@@ -475,7 +504,7 @@ def main() -> None:
     p.add_argument("--compact-report-dir", type=Path, required=True); p.add_argument("--source-commit", required=True)
     p = sub.add_parser("run"); p.add_argument("--output", type=Path, required=True); p.add_argument("--gpu-id", type=int, default=0)
     p = sub.add_parser("freeze"); p.add_argument("--output", type=Path, required=True)
-    p = sub.add_parser("score"); p.add_argument("--output", type=Path, required=True); p.add_argument("--solutions", type=Path, required=True); p.add_argument("--report-dir", type=Path, required=True); p.add_argument("--known-regret-evidence", type=Path)
+    p = sub.add_parser("score"); p.add_argument("--output", type=Path, required=True); p.add_argument("--solutions", type=Path, required=True); p.add_argument("--report-dir", type=Path, required=True); p.add_argument("--known-regret-evidence", type=Path); p.add_argument("--workers", type=int, default=1)
     args = parser.parse_args(); {"prepare": prepare, "run": run, "freeze": freeze, "score": score}[args.cmd](args)
 
 
