@@ -16,6 +16,7 @@ from __future__ import annotations
 from collections.abc import Generator
 from dataclasses import dataclass
 import hashlib
+import json
 import math
 import time
 from typing import Any
@@ -419,4 +420,7 @@ def normalized_result_signature(result: D1TurboDFSResult) -> str:
         "nodes_expanded": sum(1 for item in result.nodes if item.get("state") == "expanded"),
         "completed": result.completed_candidates, "termination": result.termination_reason,
     }
-    return hashlib.sha256(repr(payload).encode("utf-8")).hexdigest()
+    # Trace dictionaries may acquire the same keys in a different insertion
+    # order when a coroutine resumes.  Canonical JSON tests evidence equality,
+    # not incidental Python dict construction order.
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
