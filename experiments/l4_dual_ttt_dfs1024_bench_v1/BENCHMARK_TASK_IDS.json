@@ -1,0 +1,28 @@
+{
+  "benchmark_id": "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1",
+  "cohort_source": "exposed Eval60 development task IDs",
+  "population_count": 60,
+  "selection_rule": "sort unique exposed Eval60 task IDs by (SHA256(task_id), task_id), take first 8",
+  "solutions_accessed_for_selection": false,
+  "task_ids": [
+    "5dbc8537",
+    "97d7923e",
+    "3a25b0d8",
+    "cb2d8a2c",
+    "b99e7126",
+    "de809cff",
+    "7b3084d4",
+    "dfadab01"
+  ],
+  "task_id_sha256": {
+    "5dbc8537": "01863d601123c70acda3ffa4ec0648e798f9a98f1432a9bd393897b0912f753f",
+    "97d7923e": "044f47cc7c16e4292d763684413df7b83344506f3f59f736d5d06a4014decbab",
+    "3a25b0d8": "047af8443f9091d8fc26f6b4d92fc833b6ebe301cf5c615240f779aeb2d900eb",
+    "cb2d8a2c": "04cba8e734d26f3573876d1fe47f9f6ed3323c6fb96b5109e06a2a73bc24c845",
+    "b99e7126": "06111750ea1bf355e97e5036b2e4be33f3501cdd176110e3b1de0afe95bc64dd",
+    "de809cff": "0771ff722862e6dfc11a83cd98e91300770ff22a0a3f405177976fd91491a681",
+    "7b3084d4": "0968ebdfa6d2c86250ca98c681262e5a5ea4ffacd919231fab707b0f9610a116",
+    "dfadab01": "09f47ebbbd3b23992aff1e6800183b8e1879b5975db665b4d8a6ee13a26fbb62"
+  },
+  "task_ids_canonical_sha256": "d6d4c7ac9017e2d3005a17c9b9ffdcf7f0e6c59ecd273abd87ba43e618c6f8c7"
+}
