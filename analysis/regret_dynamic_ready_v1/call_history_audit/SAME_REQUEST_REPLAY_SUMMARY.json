@@ -1,0 +1,10 @@
+{
+  "arc_ranking_same": true,
+  "fresh_same_request_deterministic": true,
+  "full_logits_same": true,
+  "max_abs_arc_logit_delta": 0.0,
+  "max_abs_arc_logprob_delta": 0.0,
+  "max_abs_full_logit_delta": 0.0,
+  "top1_same": true,
+  "top2_same": true
+}
