@@ -151,7 +151,7 @@ def run(args: argparse.Namespace) -> None:
     output = args.output.resolve(); contract = read_json(output / "DYNAMIC_READY_CONTRACT.json")
     no_gold_challenge(Path(contract["challenge"])); _required_caps(contract["caps"])
     from scripts import run_eval60_authoritative_greedy_v1 as greedy
-    from scripts import run_adaptive_ttt_loo_transfer12 as loo
+    from scripts import run_eval60_adaptive_inference_joint_v2 as common
     from unsloth import FastLanguageModel
 
     runtime_args = SimpleNamespace(output=Path(contract["authoritative_root"]), challenge=Path(contract["challenge"]),
@@ -164,7 +164,7 @@ def run(args: argparse.Namespace) -> None:
         if adapter_sha != ADAPTER_SHA:
             raise RuntimeError(f"unexpected d59 depth24 adapter {adapter_sha}")
         task = view_task(tasks[TASK_ID], OUTPUT_INDEX)
-        encoded_views = [loo.encoded_view(tokenizer=tokenizer, task=task, view=view, config=generation_config) for view in VIEWS]
+        encoded_views = [common.encoded_view(tokenizer=tokenizer, task=task, view=view, config=generation_config) for view in VIEWS]
         if any(int(encoded.shape[0]) != 1 for encoded, _aug in encoded_views):
             raise RuntimeError("dynamic-ready requires individual B1 view prompts")
         native = assert_native_token_contract(tokenizer)
