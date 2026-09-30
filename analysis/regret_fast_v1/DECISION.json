@@ -1,0 +1,23 @@
+{
+  "batch_executed_nodes": 10884,
+  "batch_nodes_per_second": 30.69985454943832,
+  "batch_wall_seconds": 354.52936698682606,
+  "best_config": "SCALAR",
+  "cells": 4,
+  "elapsed_time_ratio_scalar_over_batch": 2.2446702413104527,
+  "experiment": "REGRET_FAST_V1",
+  "max_peak_vram_mb": 10293,
+  "max_reserved_vram_mb": 10688,
+  "mean_effective_batch": 1.986131386861314,
+  "mode": "BATCH2",
+  "parity_pass": false,
+  "physical_model_forwards": 5480,
+  "policy": "CUMULATIVE_REGRET_r=4.00",
+  "promotion": false,
+  "raw_freeze_sha256": "22bbc978488fc51089308513b7b8f1e6f11fee77c3b11d7a9471e147662d4730",
+  "scalar_executed_nodes": 13767,
+  "scalar_nodes_per_second": 17.299539719897446,
+  "scalar_wall_seconds": 795.8015197459608,
+  "solutions_accessed": false,
+  "valid_throughput_speedup": null
+}

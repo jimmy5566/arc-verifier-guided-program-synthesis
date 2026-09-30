@@ -1,0 +1,65 @@
+{
+  "adapter_manifest": "/workspace/arc2/turbodfs_v5/eval60_adapter_manifest.csv",
+  "adapter_manifest_sha256": "a8077dd91e344577d42d4f22227178b27d29fd92b3d4725d3957ef3e852bcbd0",
+  "authoritative_root": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1",
+  "caps": {
+    "arc_tokens": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      15
+    ],
+    "frontier_floor": 1,
+    "local_time_limit_seconds": 540.0,
+    "max_completed_candidates": 32,
+    "max_expanded_nodes": 4096,
+    "max_new_tokens": 931,
+    "max_score": 1.6094379124341003,
+    "pad_token_id": 13
+  },
+  "challenge": "/workspace/arc2/benchmarks/arc-agi_evaluation_challenges.json",
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "contract": "/root/arc-runtime-regret-speed/arc2/reports/eval60_bottleneck_attribution_v1/d1_real_decoder_ab/D1_FIXED_BUDGET_CONTRACT.json",
+  "contract_sha256": "caaa3ff7490eaa6deb3f4965ed7e382ddf5d6a1b315382bf820fc3090eeff6a1",
+  "experiment": "REGRET_FAST_V1",
+  "groups": [
+    {
+      "depth": 12,
+      "output_index": 0,
+      "task_id": "97d7923e",
+      "views": [
+        "identity",
+        "flip_ud"
+      ]
+    },
+    {
+      "depth": 24,
+      "output_index": 0,
+      "task_id": "d59b0160",
+      "views": [
+        "identity",
+        "flip_ud"
+      ]
+    }
+  ],
+  "model_path": "/root/arc-runtime-regret-speed/model-stage/qwen3_4b_grids15_sft139",
+  "native_config_dir": "/workspace/arc2/arc2/source/configs/nvarc_native_846d0198",
+  "policy": "CUMULATIVE_REGRET_r=4.00",
+  "reference_config": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/reference_ttt_config_cuda128_runtime.json",
+  "scheduler": {
+    "logical_state_budgets": "independent",
+    "max_concurrent_states": 4,
+    "model_instances": 1,
+    "no_gold": true
+  },
+  "solutions_accessed": false,
+  "source_commit": "053bd24c6df0db87428cfc61d4e8cea96e47ab76"
+}
