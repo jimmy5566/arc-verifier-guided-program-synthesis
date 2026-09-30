@@ -132,14 +132,14 @@ def run_config(args: argparse.Namespace) -> dict[str, Any]:
 
 def prepare(args: argparse.Namespace) -> None:
     output = args.output.resolve()
-    if output.exists():
+    if output.exists() and any(output.iterdir()):
         raise RuntimeError(f"refusing existing run: {output}")
     config = run_config(args)
     adapters = adapter_records(Path(config["adapter_manifest"]))
     for group in config["groups"]:
         if (group["task_id"], int(group["depth"])) not in adapters:
             raise RuntimeError(f"missing authoritative adapter: {group}")
-    output.mkdir(parents=True)
+    output.mkdir(parents=True, exist_ok=True)
     atomic_json(output / "REGRET_FAST_CONTRACT.json", config)
     atomic_json(output / "TARGET_BLIND_PREPARED.json", {"config_sha256": sha_json(config), "solutions_accessed": False})
 
