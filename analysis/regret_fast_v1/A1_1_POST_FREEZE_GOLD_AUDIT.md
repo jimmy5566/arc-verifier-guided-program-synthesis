@@ -6,12 +6,14 @@ Gold was opened only after `RAW_TARGET_BLIND_FREEZE.json` was verified.
 - GPU used: no
 - Raw artifacts modified: no
 
-| cell | scalar hit / rank / node | batch2 hit / rank / node | preserved |
+| cell | scalar hit / rank / Gold expanded node | batch2 hit / rank / Gold expanded node | preserved |
 |---|---:|---:|---|
 | `97d7923e:o0:d12:identity` | False / None / None | False / None / None | NA |
 | `97d7923e:o0:d12:flip_ud` | False / None / None | False / None / None | NA |
-| `d59b0160:o0:d24:identity` | True / 7 / 35997 | True / 7 / 35996 | YES |
-| `d59b0160:o0:d24:flip_ud` | True / 18 / 39945 | True / 19 / 40629 | YES |
+| `d59b0160:o0:d24:identity` | True / 7 / 2999 | True / 7 / 2999 | YES |
+| `d59b0160:o0:d24:flip_ud` | True / 18 / 3328 | True / 19 / 3385 | YES |
+
+The Gold-node metric is `nodes_expanded_so_far`; `terminal_node_id` includes pruned nodes.
 
 KNOWN_GOLD_CANARIES = 2
 BATCH2_GOLD_PRESERVED = 2/2
