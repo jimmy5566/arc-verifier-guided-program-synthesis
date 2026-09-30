@@ -222,7 +222,8 @@ def finalize(args: argparse.Namespace) -> None:
     group_rows = frozen["groups"]
     scalar_wall = sum(float(row["scalar_wall_seconds"]) for row in group_rows)
     batch_wall = sum(float(row["batch_wall_seconds"]) for row in group_rows)
-    nodes = sum(int(row["nodes_expanded"]) for row in scalar_rows)
+    scalar_nodes = sum(int(row["nodes_expanded"]) for row in scalar_rows)
+    batch_nodes = sum(int(row["nodes_expanded"]) for row in batch_rows)
     physical_forwards = sum(int(row["batch_physical_forwards"]) for row in group_rows)
     physical_tokens = sum(int(row["batch_physical_tokens"]) for row in group_rows)
     distribution: list[dict[str, Any]] = []
@@ -236,8 +237,14 @@ def finalize(args: argparse.Namespace) -> None:
     summary = {
         "experiment": EXPERIMENT, "policy": POLICY, "mode": f"BATCH{len(config['groups'][0]['views'])}", "cells": len(parity),
         "parity_pass": all_parity, "scalar_wall_seconds": scalar_wall, "batch_wall_seconds": batch_wall,
-        "scalar_nodes_per_second": nodes / max(scalar_wall, 1e-9), "batch_nodes_per_second": nodes / max(batch_wall, 1e-9),
-        "throughput_speedup": scalar_wall / max(batch_wall, 1e-9), "total_nodes": nodes,
+        # A batch lane may not follow the same search tree.  Never divide the
+        # scalar node count by batch elapsed time: that would manufacture a
+        # speedup when A/A parity has failed.
+        "scalar_nodes_per_second": scalar_nodes / max(scalar_wall, 1e-9),
+        "batch_nodes_per_second": batch_nodes / max(batch_wall, 1e-9),
+        "scalar_executed_nodes": scalar_nodes,
+        "batch_executed_nodes": batch_nodes,
+        "elapsed_time_ratio_scalar_over_batch": scalar_wall / max(batch_wall, 1e-9),
         "mean_effective_batch": physical_tokens / max(1, physical_forwards), "physical_model_forwards": physical_forwards,
         "max_peak_vram_mb": max(int(row["peak_vram_mb"]) for row in batch_rows),
         "max_reserved_vram_mb": max(int(row["peak_reserved_vram_mb"]) for row in batch_rows),
@@ -248,13 +255,17 @@ def finalize(args: argparse.Namespace) -> None:
     write_csv(report / "A1_BATCH2_BENCHMARK.csv", [{key: value for key, value in summary.items() if key != "solutions_accessed"}])
     write_csv(report / "effective_batch_distribution.csv", distribution)
     atomic_json(report / "REGRET_FAST_CONTRACT.json", config)
-    atomic_json(report / "DECISION.json", {**summary, "best_config": "BATCH2" if all_parity and summary["throughput_speedup"] >= 1.15 else "SCALAR",
-                                              "promotion": bool(all_parity and summary["throughput_speedup"] >= 1.15)})
+    valid_speedup = (summary["batch_nodes_per_second"] / max(summary["scalar_nodes_per_second"], 1e-9)) if all_parity else None
+    summary["valid_throughput_speedup"] = valid_speedup
+    atomic_json(report / "DECISION.json", {**summary, "best_config": "BATCH2" if valid_speedup is not None and valid_speedup >= 1.15 else "SCALAR",
+                                              "promotion": bool(valid_speedup is not None and valid_speedup >= 1.15)})
     (report / "REGRET_FAST_REPORT.md").write_text(
         "# Regret Fast V1\n\n"
         f"Target-blind contaminated-cell A/B only. A1 batch2 parity: **{'PASS' if all_parity else 'FAIL'}**. "
-        f"Scalar {summary['scalar_nodes_per_second']:.3f} nodes/s; batch {summary['batch_nodes_per_second']:.3f} nodes/s; "
-        f"speedup {summary['throughput_speedup']:.3f}x. No Router-v0 Untouched12/24 or Gold was accessed.\n",
+        f"Scalar {summary['scalar_nodes_per_second']:.3f} nodes/s ({scalar_nodes} nodes); "
+        f"batch {summary['batch_nodes_per_second']:.3f} nodes/s ({batch_nodes} nodes). "
+        f"Valid throughput speedup: {valid_speedup if valid_speedup is not None else 'NOT_APPLICABLE (parity failed)'}. "
+        f"No Router-v0 Untouched12/24 or Gold was accessed.\n",
         encoding="utf-8",
     )
 
