@@ -1,0 +1,1148 @@
+{
+  "diffs": [
+    {
+      "changes": [],
+      "transition": "PREFILL_identity"
+    },
+    {
+      "changes": [],
+      "transition": "PREFILL_flip_ud"
+    },
+    {
+      "changes": [],
+      "transition": "PREFILL_transpose"
+    },
+    {
+      "changes": [],
+      "transition": "PREFILL_anti_transpose"
+    },
+    {
+      "changes": [],
+      "transition": "SHORT_INCREMENTAL_IDENTITY"
+    }
+  ],
+  "native_token_contract": {
+    "arc_tokens": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      15
+    ],
+    "digit_token_ids": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "5": 5,
+      "6": 6,
+      "7": 7,
+      "8": 8,
+      "9": 9
+    },
+    "eos_token_id": 15,
+    "newline_token_id": 10,
+    "pad_token_id": 13
+  },
+  "note": "Runtime state metadata only; model weights and Gold were not inspected.",
+  "shared_mutable_model_state_detected": false,
+  "snapshots": [
+    {
+      "entries": [
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "PeftModelForCausalLM",
+          "scalar": true,
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029968331328,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029968331200,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029968330944,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029968331072,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "method",
+          "name": "base_model_prepare_inputs_for_generation",
+          "object_id": 125029975160000,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "Qwen3ForCausalLM",
+          "scalar": true,
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029969960384,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029969953856,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029969960512,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029969953088,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "GenerationConfig",
+          "name": "generation_config",
+          "object_id": 125029976800912,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        }
+      ],
+      "label": "BEFORE_ALL_PREFILLS"
+    },
+    {
+      "entries": [
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "PeftModelForCausalLM",
+          "scalar": true,
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029968331328,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029968331200,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029968330944,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029968331072,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "method",
+          "name": "base_model_prepare_inputs_for_generation",
+          "object_id": 125029975160000,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "Qwen3ForCausalLM",
+          "scalar": true,
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029969960384,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029969953856,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029969960512,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029969953088,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "GenerationConfig",
+          "name": "generation_config",
+          "object_id": 125029976800912,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        }
+      ],
+      "label": "BEFORE_PREFILL_identity"
+    },
+    {
+      "entries": [
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "PeftModelForCausalLM",
+          "scalar": true,
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029968331328,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029968331200,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029968330944,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029968331072,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "method",
+          "name": "base_model_prepare_inputs_for_generation",
+          "object_id": 125029975160000,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "Qwen3ForCausalLM",
+          "scalar": true,
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029969960384,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029969953856,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029969960512,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029969953088,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "GenerationConfig",
+          "name": "generation_config",
+          "object_id": 125029976800912,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        }
+      ],
+      "label": "AFTER_PREFILL_identity"
+    },
+    {
+      "entries": [
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "PeftModelForCausalLM",
+          "scalar": true,
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029968331328,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029968331200,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029968330944,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029968331072,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "method",
+          "name": "base_model_prepare_inputs_for_generation",
+          "object_id": 125029975160000,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "Qwen3ForCausalLM",
+          "scalar": true,
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029969960384,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029969953856,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029969960512,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029969953088,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "GenerationConfig",
+          "name": "generation_config",
+          "object_id": 125029976800912,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        }
+      ],
+      "label": "BEFORE_PREFILL_flip_ud"
+    },
+    {
+      "entries": [
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "PeftModelForCausalLM",
+          "scalar": true,
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029968331328,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029968331200,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029968330944,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029968331072,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "method",
+          "name": "base_model_prepare_inputs_for_generation",
+          "object_id": 125029975160000,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "Qwen3ForCausalLM",
+          "scalar": true,
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029969960384,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029969953856,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029969960512,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029969953088,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "GenerationConfig",
+          "name": "generation_config",
+          "object_id": 125029976800912,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        }
+      ],
+      "label": "AFTER_PREFILL_flip_ud"
+    },
+    {
+      "entries": [
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "PeftModelForCausalLM",
+          "scalar": true,
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029968331328,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029968331200,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029968330944,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029968331072,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "method",
+          "name": "base_model_prepare_inputs_for_generation",
+          "object_id": 125029975160000,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "Qwen3ForCausalLM",
+          "scalar": true,
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029969960384,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029969953856,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029969960512,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029969953088,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "GenerationConfig",
+          "name": "generation_config",
+          "object_id": 125029976800912,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        }
+      ],
+      "label": "BEFORE_PREFILL_transpose"
+    },
+    {
+      "entries": [
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "PeftModelForCausalLM",
+          "scalar": true,
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029968331328,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029968331200,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029968330944,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029968331072,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "method",
+          "name": "base_model_prepare_inputs_for_generation",
+          "object_id": 125029975160000,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "Qwen3ForCausalLM",
+          "scalar": true,
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029969960384,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029969953856,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029969960512,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029969953088,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "GenerationConfig",
+          "name": "generation_config",
+          "object_id": 125029976800912,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        }
+      ],
+      "label": "AFTER_PREFILL_transpose"
+    },
+    {
+      "entries": [
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "PeftModelForCausalLM",
+          "scalar": true,
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029968331328,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029968331200,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029968330944,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029968331072,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "method",
+          "name": "base_model_prepare_inputs_for_generation",
+          "object_id": 125029975160000,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "Qwen3ForCausalLM",
+          "scalar": true,
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029969960384,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029969953856,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029969960512,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029969953088,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "GenerationConfig",
+          "name": "generation_config",
+          "object_id": 125029976800912,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        }
+      ],
+      "label": "BEFORE_PREFILL_anti_transpose"
+    },
+    {
+      "entries": [
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "PeftModelForCausalLM",
+          "scalar": true,
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029968331328,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029968331200,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029968330944,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029968331072,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "method",
+          "name": "base_model_prepare_inputs_for_generation",
+          "object_id": 125029975160000,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "Qwen3ForCausalLM",
+          "scalar": true,
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029969960384,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029969953856,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029969960512,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029969953088,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "GenerationConfig",
+          "name": "generation_config",
+          "object_id": 125029976800912,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        }
+      ],
+      "label": "AFTER_PREFILL_anti_transpose"
+    },
+    {
+      "entries": [
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "PeftModelForCausalLM",
+          "scalar": true,
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029968331328,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029968331200,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029968330944,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029968331072,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "method",
+          "name": "base_model_prepare_inputs_for_generation",
+          "object_id": 125029975160000,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "Qwen3ForCausalLM",
+          "scalar": true,
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029969960384,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029969953856,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029969960512,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029969953088,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "GenerationConfig",
+          "name": "generation_config",
+          "object_id": 125029976800912,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        }
+      ],
+      "label": "BEFORE_SHORT_INCREMENTAL"
+    },
+    {
+      "entries": [
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "PeftModelForCausalLM",
+          "scalar": true,
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029968331328,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029968331200,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029968330944,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029968331072,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "method",
+          "name": "base_model_prepare_inputs_for_generation",
+          "object_id": 125029975160000,
+          "owner": "PeftModelForCausalLM",
+          "scope": "model"
+        },
+        {
+          "class": "bool",
+          "name": "_flag_for_generation",
+          "object_id": 9601792,
+          "owner": "Qwen3ForCausalLM",
+          "scalar": true,
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_post_hooks",
+          "object_id": 125029969960384,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_load_state_dict_pre_hooks",
+          "object_id": 125029969953856,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_hooks",
+          "object_id": 125029969960512,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "OrderedDict",
+          "container_len": 0,
+          "name": "_state_dict_pre_hooks",
+          "object_id": 125029969953088,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        },
+        {
+          "class": "GenerationConfig",
+          "name": "generation_config",
+          "object_id": 125029976800912,
+          "owner": "Qwen3ForCausalLM",
+          "scope": "base_model"
+        }
+      ],
+      "label": "AFTER_SHORT_INCREMENTAL"
+    }
+  ]
+}

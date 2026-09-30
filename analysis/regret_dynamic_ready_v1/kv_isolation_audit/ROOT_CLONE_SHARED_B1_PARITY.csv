@@ -1,0 +1,5 @@
+authoritative_nodes,authoritative_termination,branch_probabilities_parity,candidate_tokens_parity,cell_key,clone_shared_nodes,clone_shared_termination,completed_candidates_parity,decision_trace_parity,exact_parity,frontier_floor_parity,mean_effective_batch,node_trace_parity,nodes_expanded_parity,physical_forwards,root_cache_mode,termination_parity
+4096,budget_exhausted,False,False,d59b0160:o0:d24:identity,3899,budget_exhausted,False,False,False,True,1.0,False,False,14946,DEEP_CLONED_LEGACY,True
+4096,budget_exhausted,False,False,d59b0160:o0:d24:flip_ud,3249,budget_exhausted,False,False,False,True,1.0,False,False,14946,DEEP_CLONED_LEGACY,True
+3716,budget_exhausted,False,False,d59b0160:o0:d24:transpose,3899,budget_exhausted,True,False,False,True,1.0,False,False,14946,DEEP_CLONED_LEGACY,True
+3899,budget_exhausted,True,True,d59b0160:o0:d24:anti_transpose,3899,budget_exhausted,True,False,True,True,1.0,True,True,14946,DEEP_CLONED_LEGACY,True

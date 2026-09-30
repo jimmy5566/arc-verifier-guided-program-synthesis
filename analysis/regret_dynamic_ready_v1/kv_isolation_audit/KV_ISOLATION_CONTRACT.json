@@ -1,0 +1,68 @@
+{
+  "adapter_manifest": "/workspace/arc2/turbodfs_v5/eval60_adapter_manifest.csv",
+  "adapter_manifest_sha256": "a8077dd91e344577d42d4f22227178b27d29fd92b3d4725d3957ef3e852bcbd0",
+  "authoritative_root": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1",
+  "caps": {
+    "arc_tokens": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      15
+    ],
+    "frontier_floor": 1,
+    "local_time_limit_seconds": 540.0,
+    "max_completed_candidates": 32,
+    "max_expanded_nodes": 4096,
+    "max_new_tokens": 931,
+    "max_score": 1.6094379124341003,
+    "pad_token_id": 13
+  },
+  "challenge": "/workspace/arc2/benchmarks/arc-agi_evaluation_challenges.json",
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "depth": 24,
+  "dynamic_batch2_executed": false,
+  "execution_orders": {
+    "A": [
+      "identity",
+      "flip_ud",
+      "transpose",
+      "anti_transpose"
+    ],
+    "B": [
+      "flip_ud",
+      "anti_transpose",
+      "identity",
+      "transpose"
+    ]
+  },
+  "experiment": "REGRET_DYNAMIC_READY_KV_ISOLATION_AUDIT_V1",
+  "fixed_budget_contract": "/root/arc-runtime-regret-speed/arc2/analysis/regret_fast_v1/REGRET_FAST_CONTRACT.json",
+  "fixed_budget_contract_sha256": "d57fdba8f41a8589bbdac9ec4ed94adf0bbe647d5ff20f435a7d097bdf0130e8",
+  "model_path": "/root/arc-runtime-regret-speed/model-stage/qwen3_4b_grids15_sft139",
+  "native_config_dir": "/workspace/arc2/arc2/source/configs/nvarc_native_846d0198",
+  "output_index": 0,
+  "policy": "CUMULATIVE_REGRET_r=4.00",
+  "prior_scalar": "/root/arc-runtime-regret-speed/active_run/regret_dynamic_ready_v1/raw_scalar.json",
+  "prior_scalar_sha256": "d9cd75f769d824d3b20df8c05c5217f4e4130192ded7764c26b69dd0d48b65c1",
+  "reference_config": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/reference_ttt_config_cuda128_runtime.json",
+  "solutions_accessed": false,
+  "source_commit": "7655c47f60b5293a091e9babeb532770d9fce07c",
+  "target_blind": true,
+  "task_id": "d59b0160",
+  "untouched12_used": false,
+  "untouched24_used": false,
+  "views": [
+    "identity",
+    "flip_ud",
+    "transpose",
+    "anti_transpose"
+  ]
+}

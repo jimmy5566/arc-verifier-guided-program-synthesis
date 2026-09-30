@@ -1,0 +1,17 @@
+{
+  "sha256": {
+    "DECISION.json": "3b19e3728acf92800723970f18c2ef1618e13738b13192040b5bd40b3db4cd57",
+    "FLIP_UD_FIRST_DIVERGENCE.csv": "47392be9b712d653b9827dc6f087faeda2174562ab5eae9b2a48aa5440679a5f",
+    "KV_ISOLATION_AUDIT.md": "53fd39c623c440159d80f0508b7cb4b45d775815df66c2d8988d2630b2384891",
+    "KV_ISOLATION_CONTRACT.json": "48db3d256263702553e163d2b85026e0b962c527b6cd3e7f0c89efb2212f2b71",
+    "ROOT_CLONE_SHARED_B1_PARITY.csv": "0963da1caff79137f4923609bbc491cd849d2a9f5375d0f770a400b996fe0d17",
+    "execution_order_audit.csv": "9f5e5f21b6b3aa42c9e4cb2f1b130509dd8856344a989bcdb69cb8ad41c20e2e",
+    "incremental_cross_mutation.csv": "963377cc2609c5538bb7a73ed8c23aea2c283ef26dd5922b47dd109f5e2a18cb",
+    "kv_isolation_run.log": "3bcd3f8300334f8827583c54167d3671d0b5cb1722706edd231c63a608f121de",
+    "kv_isolation_run.pid": "008541461e3f5514617b57053315ed30fd1e9e602ccd0cee94f8c3654e2920fa",
+    "model_mutable_state_audit.json": "552d010d79f3ac3eeeb19fec5a88e246187fd59b2325e5d4c2d211dac3f66569",
+    "prefill_cross_mutation.csv": "339ecbed3827ba05cb2ec3b45e9ade7ea580e849fd3170b566bd2ecf4ee54a91",
+    "root_cache_storage_map.csv": "d28052fcb252e0822f7302aade6f077a83a4d79a6380540a9d5544330b8154ee"
+  },
+  "solutions_accessed": false
+}
