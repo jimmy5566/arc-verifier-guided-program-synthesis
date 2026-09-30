@@ -45,6 +45,10 @@ class D1TurboDFSConfig:
     arc_tokens: tuple[int, ...] = PUBLIC_ARC_TOKENS
     calibration_assertions: bool = True
     diagnostic_trace: bool = False
+    # This is deliberately opt-in.  The frozen historical D1 route retains
+    # its shared counter semantics; the Regret fast engine uses independent
+    # logical-cell budgets while sharing only model forwards/KV lanes.
+    independent_lane_budgets: bool = False
 
     def __post_init__(self) -> None:
         if self.policy_id not in POLICIES:
@@ -77,14 +81,29 @@ class D1TurboDFSResult:
     budget_exhausted: bool
     timed_out: bool
     termination_reason: str
+    # Per-lane fields are populated for the cross-cell executor.  They remain
+    # empty on the historical path so existing callers cannot accidentally
+    # reinterpret the frozen aggregate telemetry.
+    model_forwards_by_lane: tuple[int, ...] = ()
+    tokens_advanced_by_lane: tuple[int, ...] = ()
+    completed_candidates_by_lane: tuple[int, ...] = ()
+    expanded_nodes_by_lane: tuple[int, ...] = ()
+    budget_exhausted_by_lane: tuple[bool, ...] = ()
+    termination_reason_by_lane: tuple[str, ...] = ()
+    max_frontier_size_by_lane: tuple[int, ...] = ()
 
 
 def _node(runtime_state: dict[str, Any], **payload: Any) -> int:
     payload.setdefault("frontier_floor_activated", False)
     payload.setdefault("frontier_floor_restore_rank", None)
     payload.setdefault("cumulative_regret", None)
-    value = int(runtime_state["next_node_id"])
-    runtime_state["next_node_id"] += 1
+    lane = int(payload.get("lane", 0))
+    if runtime_state.get("independent_lane_budgets", False):
+        value = int(runtime_state["next_node_id_by_lane"][lane])
+        runtime_state["next_node_id_by_lane"][lane] += 1
+    else:
+        value = int(runtime_state["next_node_id"])
+        runtime_state["next_node_id"] += 1
     runtime_state["nodes"].append({"node_id": value, **payload})
     return value
 
@@ -98,8 +117,13 @@ def _trace(state: dict[str, Any], **payload: Any) -> dict[str, Any] | None:
     """Append-only diagnostic event recorder, disabled on the frozen D1 path."""
     if not state.get("diagnostic_trace", False):
         return None
-    payload.setdefault("trace_event_id", int(state["next_trace_event_id"]))
-    state["next_trace_event_id"] += 1
+    lane = int(payload.get("lane", 0))
+    if state.get("independent_lane_budgets", False):
+        payload.setdefault("trace_event_id", int(state["next_trace_event_id_by_lane"][lane]))
+        state["next_trace_event_id_by_lane"][lane] += 1
+    else:
+        payload.setdefault("trace_event_id", int(state["next_trace_event_id"]))
+        state["next_trace_event_id"] += 1
     payload.setdefault("elapsed_seconds", time.perf_counter() - float(state["trace_started_perf"]))
     state["search_trace"].append(payload)
     return payload
@@ -110,6 +134,9 @@ def _record_frontier(state: dict[str, Any], candidates: list[list[Any]]) -> None
     lanes = [len(values) for values in candidates]
     total = sum(lanes)
     state["max_frontier_size"] = max(state["max_frontier_size"], total)
+    if state.get("independent_lane_budgets", False):
+        for lane, value in enumerate(lanes):
+            state["max_frontier_size_by_lane"][lane] = max(state["max_frontier_size_by_lane"][lane], value)
     state["frontier_samples"].append({"total": total, "lanes": lanes})
 
 
@@ -171,7 +198,8 @@ def d1_turbo_dfs(
         ranked = sorted(values, key=lambda pair: (-pair[1], pair[0]))
         probabilities = [math.exp(logprob) for _token, logprob in values]
         state["branch_probabilities"].append({
-            "forward_index": state["model_forwards"], "lane": lane, "parent_node_id": parent_nodes[lane],
+            "forward_index": (state["model_forwards_by_lane"][lane] if state.get("independent_lane_budgets", False)
+                              else state["model_forwards"]), "lane": lane, "parent_node_id": parent_nodes[lane],
             "token_position": pos, "prefix_length": len(prefixes[lane]), "cumulative_score_before": float(scores[lane]),
             "cumulative_regret_before": float(regrets[lane]), "full_arc_logprobs": [{"token_id": token, "logprob": logprob} for token, logprob in values],
             "top1_token_id": ranked[0][0], "top1_logprob": ranked[0][1], "top2_token_id": ranked[1][0], "top2_logprob": ranked[1][1],
@@ -237,7 +265,11 @@ def d1_turbo_dfs(
                 "candidates_completed_so_far": int(state["completed_candidates"]),
             }
             if token == 15:
-                if state["completed_candidates"] >= config.max_completed_candidates:
+                completed = (state["completed_candidates_by_lane"][lane] if state.get("independent_lane_budgets", False)
+                             else state["completed_candidates"])
+                if completed >= config.max_completed_candidates:
+                    if state.get("independent_lane_budgets", False):
+                        state["budget_exhausted_by_lane"][lane] = True
                     state["budget_exhausted"] = True
                     _node(state, parent_node_id=parent_nodes[lane], lane=lane, token_position=pos, branch_depth=len(prefixes[lane]) + 1,
                           selected_token=token, token_logprob=logprob, cumulative_score=score, cumulative_regret=regret,
@@ -248,29 +280,51 @@ def d1_turbo_dfs(
                                 selected_token=token, token_logprob=logprob, cumulative_score=score, cumulative_regret=regret,
                                 state="completed", prune_reason=None, termination_reason="eos", branch_rank=None,
                                 frontier_floor_activated=restored, frontier_floor_restore_rank=restore_rank if restored else None)
-                suffixes[lane].append(ReferenceTurboDFSCandidate(state["next_candidate_id"], (15,), score, node_id, state["model_forwards"], time.time()))
+                if state.get("independent_lane_budgets", False):
+                    candidate_id = int(state["next_candidate_id_by_lane"][lane])
+                    state["next_candidate_id_by_lane"][lane] += 1
+                    discovery_forward = int(state["model_forwards_by_lane"][lane])
+                else:
+                    candidate_id = int(state["next_candidate_id"])
+                    state["next_candidate_id"] += 1
+                    discovery_forward = int(state["model_forwards"])
+                suffixes[lane].append(ReferenceTurboDFSCandidate(candidate_id, (15,), score, node_id, discovery_forward, time.time()))
                 _trace(state, **{**retained_trace, "candidate_completed": True,
-                                 "candidate_completion_index": int(state["next_candidate_id"])})
-                state["next_candidate_id"] += 1; state["completed_candidates"] += 1
+                                 "candidate_completion_index": candidate_id})
+                state["completed_candidates"] += 1
+                if state.get("independent_lane_budgets", False):
+                    state["completed_candidates_by_lane"][lane] += 1
             else:
                 candidates[lane].append((score, regret, token, restored, restore_rank if restored else None))
+                insert_order = (int(state["next_frontier_insert_order_by_lane"][lane])
+                                if state.get("independent_lane_budgets", False)
+                                else int(state["next_frontier_insert_order"]))
                 event = _trace(state, **{**retained_trace,
-                                         "frontier_insert_order": int(state["next_frontier_insert_order"]),
+                                         "frontier_insert_order": insert_order,
                                          "frontier_size_at_insert": sum(len(values) for values in candidates)})
-                state["next_frontier_insert_order"] += 1
+                if state.get("independent_lane_budgets", False):
+                    state["next_frontier_insert_order_by_lane"][lane] += 1
+                else:
+                    state["next_frontier_insert_order"] += 1
                 if event is not None:
                     state["trace_pending"][(lane, parent_nodes[lane], token, score)] = event
     for lane in range(lanes):
         candidates[lane].sort(key=lambda value: (value[0], value[2]))
     _record_frontier(state, candidates)
 
-    while (not state["budget_exhausted"] and time.time() - started_unix < config.local_time_limit_seconds and
+    while ((not state["budget_exhausted"] or state.get("independent_lane_budgets", False)) and time.time() - started_unix < config.local_time_limit_seconds and
            (config.absolute_end_time_unix is None or time.time() < config.absolute_end_time_unix)):
         tokens: list[int] = []; next_scores: list[float] = []; next_regrets: list[float] = []
         next_parents: list[int | None] = []; next_prefixes: list[tuple[int, ...]] = []; active = 0
         for lane in range(lanes):
-            if not candidates[lane] or state["expanded_nodes"] >= config.max_expanded_nodes:
-                if state["expanded_nodes"] >= config.max_expanded_nodes:
+            expanded = (state["expanded_nodes_by_lane"][lane] if state.get("independent_lane_budgets", False)
+                        else state["expanded_nodes"])
+            lane_budget = (state["budget_exhausted_by_lane"][lane] if state.get("independent_lane_budgets", False)
+                           else state["budget_exhausted"])
+            if lane_budget or not candidates[lane] or expanded >= config.max_expanded_nodes:
+                if expanded >= config.max_expanded_nodes:
+                    if state.get("independent_lane_budgets", False):
+                        state["budget_exhausted_by_lane"][lane] = True
                     state["budget_exhausted"] = True
                 tokens.append(config.pad_token_id); next_scores.append(1000.0); next_regrets.append(1000.0)
                 next_parents.append(parent_nodes[lane]); next_prefixes.append(prefixes[lane]); continue
@@ -279,15 +333,24 @@ def d1_turbo_dfs(
                             selected_token=token, token_logprob=-(score - float(scores[lane])), cumulative_score=score,
                             cumulative_regret=regret, state="expanded", prune_reason=None, termination_reason=None, branch_rank=1,
                             frontier_floor_activated=restored, frontier_floor_restore_rank=restore_rank)
-            state["expanded_nodes"] += 1; tokens.append(token); next_scores.append(score); next_regrets.append(regret)
+            state["expanded_nodes"] += 1
+            if state.get("independent_lane_budgets", False):
+                state["expanded_nodes_by_lane"][lane] += 1
+            tokens.append(token); next_scores.append(score); next_regrets.append(regret)
             trace_event = state["trace_pending"].pop((lane, parent_nodes[lane], token, score), None)
             if trace_event is not None:
-                trace_event.update({"frontier_pop_order": int(state["next_frontier_pop_order"]),
+                pop_order = (int(state["next_frontier_pop_order_by_lane"][lane])
+                             if state.get("independent_lane_budgets", False)
+                             else int(state["next_frontier_pop_order"]))
+                trace_event.update({"frontier_pop_order": pop_order,
                                     "frontier_size_at_pop": sum(len(values) for values in candidates),
                                     "expanded_node_id": node_id,
                                     "nodes_expanded_so_far": int(state["expanded_nodes"]),
                                     "elapsed_seconds": time.perf_counter() - float(state["trace_started_perf"])})
-                state["next_frontier_pop_order"] += 1
+                if state.get("independent_lane_budgets", False):
+                    state["next_frontier_pop_order_by_lane"][lane] += 1
+                else:
+                    state["next_frontier_pop_order"] += 1
             next_parents.append(node_id); next_prefixes.append(prefixes[lane] + (token,)); active += 1
         _record_frontier(state, candidates)
         if active == 0:
@@ -299,6 +362,11 @@ def d1_turbo_dfs(
         if config.calibration_assertions and int(outputs.logits.shape[0]) != lanes:
             raise RuntimeError("D1 model forward batch mismatch")
         state["model_forwards"] += 1; state["tokens_advanced"] += active
+        if state.get("independent_lane_budgets", False):
+            for lane, token in enumerate(tokens):
+                if token != config.pad_token_id:
+                    state["model_forwards_by_lane"][lane] += 1
+                    state["tokens_advanced_by_lane"][lane] += 1
         descendants = d1_turbo_dfs(model, logits=outputs.logits[:, -1], max_new_tokens=max_new_tokens - 1, scores=next_scores,
                                    regrets=next_regrets, pos=pos + 1, cache=outputs.past_key_values, config=config,
                                    started_unix=started_unix, state=state, parent_nodes=next_parents, prefixes=next_prefixes)
@@ -320,13 +388,23 @@ def inference_d1_turbo_dfs(model: Any, *, input_ids: Any, config: D1TurboDFSConf
                              "tokens_advanced": 0, "completed_candidates": 0, "next_candidate_id": 0, "next_node_id": 0,
                              "next_trace_event_id": 0, "next_frontier_insert_order": 0, "next_frontier_pop_order": 0,
                              "trace_pending": {}, "trace_started_perf": time.perf_counter(), "diagnostic_trace": config.diagnostic_trace,
-                             "model_forward_seconds": 0.0, "max_frontier_size": 0, "expanded_nodes": 0, "budget_exhausted": False}
+                             "model_forward_seconds": 0.0, "max_frontier_size": 0, "expanded_nodes": 0, "budget_exhausted": False,
+                             "independent_lane_budgets": bool(config.independent_lane_budgets),
+                             "model_forwards_by_lane": [0] * lanes, "tokens_advanced_by_lane": [0] * lanes,
+                             "completed_candidates_by_lane": [0] * lanes, "expanded_nodes_by_lane": [0] * lanes,
+                             "budget_exhausted_by_lane": [False] * lanes, "next_candidate_id_by_lane": [0] * lanes,
+                             "next_node_id_by_lane": [0] * lanes, "next_trace_event_id_by_lane": [0] * lanes,
+                             "next_frontier_insert_order_by_lane": [0] * lanes, "next_frontier_pop_order_by_lane": [0] * lanes,
+                             "max_frontier_size_by_lane": [0] * lanes}
     started = time.time()
     with torch.no_grad():
         forward_started = time.perf_counter()
         outputs = model(input_ids=input_ids, return_dict=True, use_cache=True)
         state["model_forward_seconds"] += time.perf_counter() - forward_started
         state["model_forwards"] += 1
+        if config.independent_lane_budgets:
+            for lane in range(lanes):
+                state["model_forwards_by_lane"][lane] = 1
         roots = [_node(state, parent_node_id=None, lane=lane, token_position=int(input_ids.size(1)), branch_depth=0,
                        selected_token=None, token_logprob=None, cumulative_score=0.0, state="root", prune_reason=None,
                        termination_reason=None, branch_rank=None, cumulative_regret=0.0) for lane in range(lanes)]
@@ -335,8 +413,18 @@ def inference_d1_turbo_dfs(model: Any, *, input_ids: Any, config: D1TurboDFSConf
                                   started_unix=started, state=state, parent_nodes=roots, prefixes=[tuple() for _ in range(lanes)])
         del outputs
     timed_out = time.time() - started >= config.local_time_limit_seconds or (config.absolute_end_time_unix is not None and time.time() >= config.absolute_end_time_unix)
+    lane_reason = tuple(
+        "budget_exhausted" if state["budget_exhausted_by_lane"][lane] else "wall_time" if timed_out else "search_exhausted"
+        for lane in range(lanes)
+    )
     return D1TurboDFSResult(tuple(tuple(sorted(items, key=lambda item: item.cumulative_nll)) for items in candidates), tuple(state["nodes"]),
                              tuple(state["branch_probabilities"]), tuple(state["frontier_floor_events"]), tuple(state["frontier_samples"]), tuple(state["search_trace"]), float(state["model_forward_seconds"]), int(state["model_forwards"]),
                              int(state["tokens_advanced"]), int(state["completed_candidates"]), int(state["max_frontier_size"]),
                              bool(state["budget_exhausted"]), timed_out,
-                             "budget_exhausted" if state["budget_exhausted"] else "wall_time" if timed_out else "search_exhausted")
+                             "budget_exhausted" if state["budget_exhausted"] else "wall_time" if timed_out else "search_exhausted",
+                             tuple(int(value) for value in state["model_forwards_by_lane"]),
+                             tuple(int(value) for value in state["tokens_advanced_by_lane"]),
+                             tuple(int(value) for value in state["completed_candidates_by_lane"]),
+                             tuple(int(value) for value in state["expanded_nodes_by_lane"]),
+                             tuple(bool(value) for value in state["budget_exhausted_by_lane"]), lane_reason,
+                             tuple(int(value) for value in state["max_frontier_size_by_lane"]))
