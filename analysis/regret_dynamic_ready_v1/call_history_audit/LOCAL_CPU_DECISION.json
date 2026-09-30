@@ -1,0 +1,20 @@
+{
+  "analysis_mode": "CPU_ONLY_POST_STOP",
+  "source_snapshot_commit": "e45b2d6c2212e69e028ff5b3926deb48d028879b",
+  "gpu_used": false,
+  "gold_accessed": false,
+  "dynamic_batch2_executed": false,
+  "scheduler_interleaving_in_first_50": false,
+  "same_request_immediate_replay_deterministic": true,
+  "history_zero_replay_deterministic": true,
+  "history_one_forward_logit_drift": true,
+  "same_recorded_token_position_cache_at_history_one": true,
+  "root_cause_boundary": "MODEL_RUNTIME_CALL_HISTORY_NUMERICAL_EFFECT",
+  "internal_backend_cause": "NOT_ESTABLISHED",
+  "uncompleted_live_controls": [
+    "FORCED_FIRST_PARITY",
+    "PREFILL_AFTER_HISTORY",
+    "FIRST_TRUE_DIVERGENCE_FORWARD"
+  ],
+  "safe_operational_conclusion": "Do not treat shared B1 multi-view execution as parity-valid on this runtime; retain isolated execution."
+}
