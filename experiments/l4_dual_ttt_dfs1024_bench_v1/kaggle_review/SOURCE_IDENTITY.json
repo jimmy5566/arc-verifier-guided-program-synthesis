@@ -1,0 +1,23 @@
+{
+  "benchmark_id": "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1",
+  "scientific_base_commit": "95827d06b6f99c7c47007a1b1035a11274f8c9a8",
+  "source_branch": "bench/l4-dual-ttt-dfs1024-v1",
+  "source_commit": "05584e40f3e81b5206b4f8ecc855592cc480428b",
+  "source_git_status": "PACKAGED_CLEAN_FROM_GIT_ARCHIVE",
+  "source_paths": [
+    "src",
+    "configs/nvarc_native_846d0198",
+    "scripts/run_l4_dual_ttt_dfs1024_benchmark.py",
+    "scripts/run_adaptive_ttt_loo_transfer12.py",
+    "scripts/run_adaptive_ttt_step1.py",
+    "scripts/run_eval3_reference_ttt.py",
+    "scripts/turbodfs_d1_common.py",
+    "scripts/turbodfs_v4_common.py",
+    "scripts/run_eval60_adaptive_inference_joint_v2.py",
+    "experiments/l4_dual_ttt_dfs1024_bench_v1/BENCHMARK_TASK_IDS.json",
+    "experiments/l4_dual_ttt_dfs1024_bench_v1/BENCHMARK_COHORT_SHA256.txt",
+    "experiments/l4_dual_ttt_dfs1024_bench_v1/benchmark_config.json",
+    "experiments/l4_dual_ttt_dfs1024_bench_v1/README.md",
+    "pyproject.toml"
+  ]
+}

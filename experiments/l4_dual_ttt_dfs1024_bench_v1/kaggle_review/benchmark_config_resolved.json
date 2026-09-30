@@ -1,0 +1,222 @@
+{
+  "augmentation_manifest": {
+    "TTT24": [
+      {
+        "color_offset": 0,
+        "geometry": "flip_lr",
+        "pair_order": "canonical"
+      },
+      {
+        "color_offset": 0,
+        "geometry": "flip_ud",
+        "pair_order": "canonical"
+      },
+      {
+        "color_offset": 0,
+        "geometry": "transpose",
+        "pair_order": "canonical"
+      },
+      {
+        "color_offset": 0,
+        "geometry": "anti_transpose",
+        "pair_order": "canonical"
+      }
+    ],
+    "TTT48": [
+      {
+        "color_offset": 0,
+        "geometry": "identity",
+        "pair_order": "canonical"
+      },
+      {
+        "color_offset": 0,
+        "geometry": "rot90",
+        "pair_order": "canonical"
+      },
+      {
+        "color_offset": 0,
+        "geometry": "flip_ud",
+        "pair_order": "canonical"
+      },
+      {
+        "color_offset": 0,
+        "geometry": "anti_transpose",
+        "pair_order": "canonical"
+      }
+    ]
+  },
+  "authoritative_source_branch": "transfer/turbodfs-opt-v2-repair",
+  "authoritative_source_commit": "05584e40f3e81b5206b4f8ecc855592cc480428b",
+  "benchmark_id": "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1",
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "environment": {
+    "peft": "0.17.1",
+    "ptxas_path": "/usr/local/cuda-12.5/bin/ptxas",
+    "python_prefix": "3.11.13",
+    "torch": "2.8.0",
+    "torchao": "0.14.1",
+    "transformers": "4.55.4",
+    "triton": "3.4.0",
+    "trl": "0.22.2",
+    "unsloth": "2025.9.7",
+    "unsloth-zoo": "2025.9.9"
+  },
+  "hardware": {
+    "expected_gpu_count": 4,
+    "expected_gpu_name": "NVIDIA L4",
+    "model_workers_per_gpu": 1,
+    "task_level_parallelism": true,
+    "tensor_parallel": false,
+    "worker_count": 4
+  },
+  "model_identity": {
+    "checkpoint": "sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1",
+    "files": {
+      "added_tokens.json": {
+        "sha256": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce",
+        "size": 68
+      },
+      "config.json": {
+        "sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0",
+        "size": 1532
+      },
+      "generation_config.json": {
+        "sha256": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02",
+        "size": 113
+      },
+      "model-00001-of-00002.safetensors": {
+        "sha256": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529",
+        "size": 4996836472
+      },
+      "model-00002-of-00002.safetensors": {
+        "sha256": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0",
+        "size": 2270397024
+      },
+      "model.safetensors.index.json": {
+        "sha256": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4",
+        "size": 32913
+      },
+      "special_tokens_map.json": {
+        "sha256": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+        "size": 367
+      },
+      "tokenizer.json": {
+        "sha256": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+        "size": 1731
+      },
+      "tokenizer_config.json": {
+        "sha256": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+        "size": 988
+      },
+      "vocab.json": {
+        "sha256": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82",
+        "size": 94
+      }
+    },
+    "tokenizer_contract": "native-vocabulary-16-exact-match"
+  },
+  "projection": {
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 20260930,
+    "confidence_for_8_tasks": "MEDIUM",
+    "eval60_test_outputs": 89
+  },
+  "rerun": {
+    "auto_rerun": false,
+    "enabled": false,
+    "resume_completed": false,
+    "retry_failed_task": false
+  },
+  "scientific_base_commit": "95827d06b6f99c7c47007a1b1035a11274f8c9a8",
+  "search": {
+    "arc_tokens": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      15
+    ],
+    "batch2_cross_cell": false,
+    "batch4_regret": false,
+    "diagnostic_trace": false,
+    "engine": "authoritative_scalar_d1_regret",
+    "frontier_floor": 1,
+    "lane_count": 1,
+    "local_time_limit_seconds": 540.0,
+    "max_completed_candidates": 32,
+    "max_expanded_nodes": 1024,
+    "max_new_tokens": 931,
+    "max_score": 1.6094379124341003,
+    "pad_token_id": 13,
+    "policy": "CUMULATIVE_REGRET_r=4.00"
+  },
+  "solutions_accessed": false,
+  "telemetry": {
+    "gpu_sample_interval_seconds": 1.0,
+    "progress_interval_seconds": 30.0,
+    "system_sample_interval_seconds": 1.0
+  },
+  "ttt24_recipe": {
+    "alpha": 32,
+    "assistant_only_masking": true,
+    "bf16": true,
+    "generation_context_window": 16384,
+    "gradient_checkpointing": false,
+    "learning_rate": 5e-05,
+    "max_sequence_length": 8192,
+    "rank": 256,
+    "reference_schedule_total_steps": 128,
+    "scheduler": "cosine",
+    "seed": 42,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj",
+      "embed_tokens",
+      "lm_head"
+    ],
+    "train_pair_order": "random_full_permutation",
+    "ttt_steps": 24,
+    "use_rslora": true,
+    "warmup_ratio": 0.1
+  },
+  "ttt48_recipe": {
+    "alpha": 32,
+    "assistant_only_masking": true,
+    "bf16": true,
+    "generation_context_window": 16384,
+    "gradient_checkpointing": false,
+    "learning_rate": 5e-05,
+    "max_sequence_length": 8192,
+    "rank": 256,
+    "reference_schedule_total_steps": 128,
+    "scheduler": "cosine",
+    "seed": 42,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj",
+      "embed_tokens",
+      "lm_head"
+    ],
+    "train_pair_order": "random_full_permutation",
+    "ttt_steps": 48,
+    "use_rslora": true,
+    "warmup_ratio": 0.1
+  }
+}
