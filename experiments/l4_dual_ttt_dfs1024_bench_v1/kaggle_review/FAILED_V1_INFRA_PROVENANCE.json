@@ -1,0 +1,18 @@
+{
+  "benchmark_id": "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1",
+  "candidates": 0,
+  "dfs_cells": 0,
+  "failure": "TypeError: cannot pickle 'torch._C._CUuuid' object",
+  "failure_stage": "MODEL_READY_QUEUE_SERIALIZATION",
+  "infra_fix_only": true,
+  "kaggle_kernel": "jimmy5566/arc2-l4-dual-ttt-dfs1024-performance-benchmark",
+  "kaggle_log_sha256": "c7c5dc7c6c12fd9fec2897b006fecbc02c1133feb3bf087b6508487121312b8f",
+  "model_load": "PASS",
+  "model_ready": "FAIL",
+  "notebook_version": 1,
+  "previous_gpu_run_scientific_data": "NONE",
+  "scientific_data_produced": false,
+  "status": "ERROR",
+  "tasks_started": 0,
+  "ttt_runs": 0
+}

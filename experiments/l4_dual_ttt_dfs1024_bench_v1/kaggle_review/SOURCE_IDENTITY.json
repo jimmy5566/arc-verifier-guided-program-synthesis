@@ -1,8 +1,10 @@
 {
   "benchmark_id": "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1",
+  "infra_fix_only": true,
+  "previous_gpu_run_scientific_data": "NONE",
   "scientific_base_commit": "95827d06b6f99c7c47007a1b1035a11274f8c9a8",
   "source_branch": "bench/l4-dual-ttt-dfs1024-v1",
-  "source_commit": "05584e40f3e81b5206b4f8ecc855592cc480428b",
+  "source_commit": "4af765141b70a766140889150bb7266fae98d7a6",
   "source_git_status": "PACKAGED_CLEAN_FROM_GIT_ARCHIVE",
   "source_paths": [
     "src",
@@ -17,6 +19,7 @@
     "experiments/l4_dual_ttt_dfs1024_bench_v1/BENCHMARK_TASK_IDS.json",
     "experiments/l4_dual_ttt_dfs1024_bench_v1/BENCHMARK_COHORT_SHA256.txt",
     "experiments/l4_dual_ttt_dfs1024_bench_v1/benchmark_config.json",
+    "experiments/l4_dual_ttt_dfs1024_bench_v1/FAILED_V1_INFRA_PROVENANCE.json",
     "experiments/l4_dual_ttt_dfs1024_bench_v1/README.md",
     "pyproject.toml"
   ]

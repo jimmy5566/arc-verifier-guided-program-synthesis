@@ -21,7 +21,7 @@ def test_review_snapshot_is_exactly_the_unlaunched_commit_package() -> None:
     identity = read("SOURCE_IDENTITY.json")
     status = read("REVIEW_STATUS.json")
     package = read("PACKAGE_MANIFEST.json")
-    assert identity["source_commit"] == "05584e40f3e81b5206b4f8ecc855592cc480428b"
+    assert identity["source_commit"] == "4af765141b70a766140889150bb7266fae98d7a6"
     assert identity["scientific_base_commit"] == "95827d06b6f99c7c47007a1b1035a11274f8c9a8"
     assert package["source_commit"] == identity["source_commit"]
     assert status == {
@@ -53,7 +53,7 @@ def test_review_notebook_compiles_and_is_target_blind_one_shot() -> None:
 def test_review_config_and_metadata_keep_the_frozen_contract() -> None:
     config = read("benchmark_config_resolved.json")
     metadata = read("kernel-metadata.json")
-    assert config["authoritative_source_commit"] == "05584e40f3e81b5206b4f8ecc855592cc480428b"
+    assert config["authoritative_source_commit"] == "4af765141b70a766140889150bb7266fae98d7a6"
     assert config["search"]["max_expanded_nodes"] == 1024
     assert config["search"]["lane_count"] == 1
     assert config["search"]["batch2_cross_cell"] is False
@@ -65,8 +65,37 @@ def test_review_config_and_metadata_keep_the_frozen_contract() -> None:
     assert metadata["is_private"] is True
 
 
+def test_resolved_package_changes_provenance_only_not_science_or_cohort() -> None:
+    frozen_config = json.loads(
+        (ROOT / "experiments" / "l4_dual_ttt_dfs1024_bench_v1" / "benchmark_config.json").read_text(encoding="utf-8")
+    )
+    resolved = read("benchmark_config_resolved.json")
+    assert resolved.pop("scientific_base_commit") == frozen_config["authoritative_source_commit"]
+    assert resolved.pop("authoritative_source_commit") == "4af765141b70a766140889150bb7266fae98d7a6"
+    frozen_config.pop("authoritative_source_commit")
+    assert resolved == frozen_config
+    frozen_cohort = json.loads(
+        (ROOT / "experiments" / "l4_dual_ttt_dfs1024_bench_v1" / "BENCHMARK_TASK_IDS.json").read_text(encoding="utf-8")
+    )
+    assert read("BENCHMARK_TASK_IDS.json") == frozen_cohort
+
+
 def test_source_package_manifest_contains_no_answer_artifacts() -> None:
     manifest = read("SOURCE_PACKAGE_MANIFEST.json")
     assert manifest["contains_solution_artifacts"] is False
     forbidden_suffixes = ("solutions.json", "answers.json", "gold.json", "predictions.json")
     assert not any(name.lower().endswith(forbidden_suffixes) for name in manifest["files"])
+
+
+def test_failed_v1_is_preserved_as_infrastructure_only_provenance() -> None:
+    record = read("FAILED_V1_INFRA_PROVENANCE.json")
+    identity = read("SOURCE_IDENTITY.json")
+    assert record["benchmark_id"] == "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1"
+    assert record["notebook_version"] == 1
+    assert record["infra_fix_only"] is True
+    assert record["previous_gpu_run_scientific_data"] == "NONE"
+    assert record["model_load"] == "PASS"
+    assert record["model_ready"] == "FAIL"
+    assert record["tasks_started"] == record["ttt_runs"] == record["dfs_cells"] == record["candidates"] == 0
+    assert identity["infra_fix_only"] is True
+    assert identity["previous_gpu_run_scientific_data"] == "NONE"

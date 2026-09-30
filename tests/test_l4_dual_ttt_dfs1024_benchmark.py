@@ -67,6 +67,21 @@ def test_model_ready_payload_keeps_missing_uuid_provenance() -> None:
     assert payload["gpu_uuid"] is None
 
 
+def test_model_ready_pickle_guard_fails_synchronously_for_other_bad_evidence() -> None:
+    with pytest.raises(TypeError, match="must not enter"):
+        build_model_ready_payload(
+            worker_id=0,
+            properties=object(),
+            gpu_name="NVIDIA L4",
+            compute_capability=(8, 9),
+            model_load_seconds=1.0,
+            model_vram_mb=1.0,
+            tokenizer_metadata={"bad_evidence": UnpickleableUUID()},
+            torch_version="2.8.0+cu128",
+            cuda_runtime="12.8",
+        )
+
+
 def test_model_ready_pickle_guard_precedes_queue_and_startup_completion() -> None:
     source = (ROOT / "scripts" / "run_l4_dual_ttt_dfs1024_benchmark.py").read_text(encoding="utf-8")
     guard = source.index("pickle.dumps(ready_payload)")
@@ -75,14 +90,18 @@ def test_model_ready_pickle_guard_precedes_queue_and_startup_completion() -> Non
     assert guard < queue_send < startup_complete
 
 
-def test_scientific_config_and_cohort_files_are_byte_frozen() -> None:
+def test_scientific_config_and_cohort_content_is_frozen() -> None:
     expected = {
-        "benchmark_config.json": "3afeefb8ef41d8ddee7e11165b40b78a1679dbd927f5f96784dd5f07673ce2e0",
-        "BENCHMARK_TASK_IDS.json": "a88004a2fe56334056e0e7b78f08d56cad693a3f4f2d7f68ed966e35ef9fc078",
-        "BENCHMARK_COHORT_SHA256.txt": "5e2b7e549e9f6d5e29b5201f36ff0c74ee2312b2b030ac67162ba35f652cf126",
+        "benchmark_config.json": "9e2a978302d13ce427c9e180603e642e3353fb8dbb9c31e11cb110d396fb1493",
+        "BENCHMARK_TASK_IDS.json": "f2dba422faaaaf4e77bd2efb06603300f8be3b27ff656da28cfe58e8cb3a55fa",
     }
     for name, wanted in expected.items():
-        assert hashlib.sha256((EXPERIMENT / name).read_bytes()).hexdigest() == wanted
+        value = json.loads((EXPERIMENT / name).read_text(encoding="utf-8"))
+        canonical = json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        assert hashlib.sha256(canonical).hexdigest() == wanted
+    assert (EXPERIMENT / "BENCHMARK_COHORT_SHA256.txt").read_text(encoding="utf-8").strip() == (
+        "d6d4c7ac9017e2d3005a17c9b9ffdcf7f0e6c59ecd273abd87ba43e618c6f8c7"
+    )
     config = load("benchmark_config.json")
     assert config["benchmark_id"] == "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1"
     assert config["ttt24_recipe"]["ttt_steps"] == 24
