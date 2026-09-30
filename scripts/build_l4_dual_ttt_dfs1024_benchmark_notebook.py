@@ -33,6 +33,7 @@ SOURCE_PATHS = (
     "experiments/l4_dual_ttt_dfs1024_bench_v1/BENCHMARK_TASK_IDS.json",
     "experiments/l4_dual_ttt_dfs1024_bench_v1/BENCHMARK_COHORT_SHA256.txt",
     "experiments/l4_dual_ttt_dfs1024_bench_v1/benchmark_config.json",
+    "experiments/l4_dual_ttt_dfs1024_bench_v1/FAILED_V1_INFRA_PROVENANCE.json",
     "experiments/l4_dual_ttt_dfs1024_bench_v1/README.md",
     "pyproject.toml",
 )
@@ -198,6 +199,8 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     (dataset / "BENCHMARK_COHORT_SHA256.txt").write_text(cohort["task_ids_canonical_sha256"] + "\n", encoding="utf-8")
     source_identity = {
         "benchmark_id": BENCHMARK_ID,
+        "infra_fix_only": True,
+        "previous_gpu_run_scientific_data": "NONE",
         "source_commit": commit,
         "scientific_base_commit": config["scientific_base_commit"],
         "source_branch": source_branch,
@@ -267,6 +270,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         shutil.copy2(dataset / "benchmark_config_resolved.json", review / "benchmark_config_resolved.json")
         shutil.copy2(dataset / "BENCHMARK_TASK_IDS.json", review / "BENCHMARK_TASK_IDS.json")
         shutil.copy2(dataset / "SOURCE_IDENTITY.json", review / "SOURCE_IDENTITY.json")
+        shutil.copy2(source / "experiments/l4_dual_ttt_dfs1024_bench_v1/FAILED_V1_INFRA_PROVENANCE.json", review / "FAILED_V1_INFRA_PROVENANCE.json")
         shutil.copy2(args.output / "SOURCE_PACKAGE_MANIFEST.json", review / "SOURCE_PACKAGE_MANIFEST.json")
         shutil.copy2(args.output / "PACKAGE_MANIFEST.json", review / "PACKAGE_MANIFEST.json")
         write_json(

@@ -16,6 +16,7 @@ import io
 import json
 import math
 import os
+import pickle
 import platform
 import queue
 import random
@@ -153,6 +154,41 @@ def environment_versions() -> dict[str, str | None]:
         "torchao": _package_version("torchao"),
         "xformers": _package_version("xformers"),
     }
+
+
+def build_model_ready_payload(
+    *,
+    worker_id: int,
+    properties: Any,
+    gpu_name: str,
+    compute_capability: Sequence[int],
+    model_load_seconds: float,
+    model_vram_mb: float,
+    tokenizer_metadata: Mapping[str, Any],
+    torch_version: str,
+    cuda_runtime: str | None,
+) -> dict[str, Any]:
+    """Build and synchronously validate the spawn-safe MODEL_READY payload."""
+    raw_uuid = getattr(properties, "uuid", None)
+    gpu_uuid = None if raw_uuid is None else str(raw_uuid)
+    ready_payload = {
+        "event": "MODEL_READY",
+        "worker_id": worker_id,
+        "physical_gpu_id": worker_id,
+        "gpu_name": gpu_name,
+        "gpu_uuid": gpu_uuid,
+        "compute_capability": list(compute_capability),
+        "model_load_seconds": model_load_seconds,
+        "model_vram_mb": model_vram_mb,
+        "tokenizer": dict(tokenizer_metadata),
+        "torch_version": torch_version,
+        "cuda_runtime": cuda_runtime,
+    }
+    # multiprocessing.Queue serializes in a background feeder thread.  Guard
+    # synchronously so an invalid payload enters the startup failure path
+    # instead of leaving the parent waiting for MODEL_READY at the barrier.
+    pickle.dumps(ready_payload)
+    return ready_payload
 
 
 def validate_environment(config: Mapping[str, Any], actual: Mapping[str, str | None]) -> None:
@@ -438,13 +474,18 @@ def worker_main(worker_id: int, work: Any, events: Any, ready: Any, start_barrie
         decoder = decoder_from_config(config)
         load_seconds = time.perf_counter() - model_started
         properties = torch.cuda.get_device_properties(0)
-        ready.put({
-            "event": "MODEL_READY", "worker_id": worker_id, "physical_gpu_id": worker_id,
-            "gpu_name": torch.cuda.get_device_name(0), "gpu_uuid": getattr(properties, "uuid", None),
-            "compute_capability": list(torch.cuda.get_device_capability(0)), "model_load_seconds": load_seconds,
-            "model_vram_mb": float(torch.cuda.memory_allocated() / (1024 ** 2)), "tokenizer": tokenizer_metadata,
-            "torch_version": torch.__version__, "cuda_runtime": torch.version.cuda,
-        })
+        ready_payload = build_model_ready_payload(
+            worker_id=worker_id,
+            properties=properties,
+            gpu_name=torch.cuda.get_device_name(0),
+            compute_capability=torch.cuda.get_device_capability(0),
+            model_load_seconds=load_seconds,
+            model_vram_mb=float(torch.cuda.memory_allocated() / (1024 ** 2)),
+            tokenizer_metadata=tokenizer_metadata,
+            torch_version=torch.__version__,
+            cuda_runtime=torch.version.cuda,
+        )
+        ready.put(ready_payload)
         startup_complete = True
         if not start_barrier.wait(timeout=1200):
             raise TimeoutError("benchmark start barrier timeout")

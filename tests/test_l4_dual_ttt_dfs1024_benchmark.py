@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import pickle
 from pathlib import Path
 
 import pytest
@@ -13,6 +14,7 @@ from scripts.build_l4_dual_ttt_dfs1024_benchmark_notebook import (
     notebook_source,
 )
 from scripts.run_l4_dual_ttt_dfs1024_benchmark import (
+    build_model_ready_payload,
     compact_cell,
     decoder_from_config,
     projections,
@@ -27,6 +29,80 @@ EXPERIMENT = ROOT / "experiments" / "l4_dual_ttt_dfs1024_bench_v1"
 
 def load(name: str) -> dict:
     return json.loads((EXPERIMENT / name).read_text(encoding="utf-8"))
+
+
+class UnpickleableUUID:
+    def __str__(self) -> str:
+        return "GPU-test-uuid"
+
+    def __reduce__(self) -> object:
+        raise TypeError("UUID-like object must not enter the queue payload")
+
+
+def model_ready_payload(properties: object) -> dict:
+    return build_model_ready_payload(
+        worker_id=2,
+        properties=properties,
+        gpu_name="NVIDIA L4",
+        compute_capability=(8, 9),
+        model_load_seconds=12.5,
+        model_vram_mb=7123.0,
+        tokenizer_metadata={"vocab_size": 16},
+        torch_version="2.8.0+cu128",
+        cuda_runtime="12.8",
+    )
+
+
+def test_model_ready_payload_converts_uuid_and_is_pickleable() -> None:
+    properties = type("Properties", (), {"uuid": UnpickleableUUID()})()
+    payload = model_ready_payload(properties)
+    assert payload["gpu_uuid"] == "GPU-test-uuid"
+    assert payload["gpu_name"] == "NVIDIA L4"
+    assert pickle.loads(pickle.dumps(payload)) == payload
+
+
+def test_model_ready_payload_keeps_missing_uuid_provenance() -> None:
+    payload = model_ready_payload(object())
+    assert "gpu_uuid" in payload
+    assert payload["gpu_uuid"] is None
+
+
+def test_model_ready_pickle_guard_precedes_queue_and_startup_completion() -> None:
+    source = (ROOT / "scripts" / "run_l4_dual_ttt_dfs1024_benchmark.py").read_text(encoding="utf-8")
+    guard = source.index("pickle.dumps(ready_payload)")
+    queue_send = source.index("ready.put(ready_payload)")
+    startup_complete = source.index("startup_complete = True", queue_send)
+    assert guard < queue_send < startup_complete
+
+
+def test_scientific_config_and_cohort_files_are_byte_frozen() -> None:
+    expected = {
+        "benchmark_config.json": "3afeefb8ef41d8ddee7e11165b40b78a1679dbd927f5f96784dd5f07673ce2e0",
+        "BENCHMARK_TASK_IDS.json": "a88004a2fe56334056e0e7b78f08d56cad693a3f4f2d7f68ed966e35ef9fc078",
+        "BENCHMARK_COHORT_SHA256.txt": "5e2b7e549e9f6d5e29b5201f36ff0c74ee2312b2b030ac67162ba35f652cf126",
+    }
+    for name, wanted in expected.items():
+        assert hashlib.sha256((EXPERIMENT / name).read_bytes()).hexdigest() == wanted
+    config = load("benchmark_config.json")
+    assert config["benchmark_id"] == "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1"
+    assert config["ttt24_recipe"]["ttt_steps"] == 24
+    assert config["ttt48_recipe"]["ttt_steps"] == 48
+    assert config["search"] == {
+        "engine": "authoritative_scalar_d1_regret",
+        "policy": "CUMULATIVE_REGRET_r=4.00",
+        "max_expanded_nodes": 1024,
+        "max_completed_candidates": 32,
+        "max_new_tokens": 931,
+        "max_score": 1.6094379124341003,
+        "frontier_floor": 1,
+        "local_time_limit_seconds": 540.0,
+        "pad_token_id": 13,
+        "arc_tokens": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15],
+        "lane_count": 1,
+        "diagnostic_trace": False,
+        "batch2_cross_cell": False,
+        "batch4_regret": False,
+    }
 
 
 def test_frozen_config_is_scalar_dfs1024_with_rerun_off() -> None:
