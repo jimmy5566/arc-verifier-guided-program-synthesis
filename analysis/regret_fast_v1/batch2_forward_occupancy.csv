@@ -1,0 +1,5 @@
+active_logical_lanes,depth,group_index,inactive_padded_lanes,logical_tokens_from_forward_count,physical_batch_width,physical_forward_count,reconstruction,reported_physical_tokens_advanced,task_id
+1,12,0,1,5040,2,5040,active1 logical record=one physical call; active2 has two lane records=one physical call,5458,97d7923e
+2,12,0,0,420,2,210,active1 logical record=one physical call; active2 has two lane records=one physical call,5458,97d7923e
+1,24,1,1,7120,2,7120,active1 logical record=one physical call; active2 has two lane records=one physical call,8192,d59b0160
+2,24,1,0,1074,2,537,active1 logical record=one physical call; active2 has two lane records=one physical call,8192,d59b0160

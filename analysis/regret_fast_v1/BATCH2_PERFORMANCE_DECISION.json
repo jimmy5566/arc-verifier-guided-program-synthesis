@@ -1,0 +1,30 @@
+{
+  "ROOT_CAUSE": "Correct masking exposed true fixed-pair under-occupancy; padded batch-2 forwards dominate and recursive lockstep prevents ready work from being dynamically paired.",
+  "active1_forward_fraction": 0.9421244286046332,
+  "active2_forward_fraction": 0.05787557139536686,
+  "cpu_orchestration_fraction": 0.02915165380256224,
+  "current_architecture_max_speedup_estimate": 1.0575656620438523,
+  "desynchronization_primary_cause": "RECURSIVE_LOCKSTEP",
+  "effective_batch": 1.0575656620438523,
+  "effective_lane_utilization": 0.5287828310219261,
+  "frozen_raw_file_sha256": {
+    "group_0_batch2.json": "89b8b39f1f1c530f4bb338efb6fe17f17df2af8865e6984c831865b03f5586a9",
+    "group_0_scalar.json": "dedb92964ca7536bc85f4134cddf64698bf0d928e7383dc695aad44c1a2f7478",
+    "group_1_batch2.json": "ffea712bbb26bcd92724e06a415b48bad131dd95bd3c5ed727353a1a188fbf1f",
+    "group_1_scalar.json": "1f8d664110f70948d301e5208beac7bf434b30e7e68876ca75220ca4adce67b4"
+  },
+  "frozen_raw_manifest_sha256": "ce6afb4fc5f33901fa7bbe0813d7df7cae7f24a12f5a85960bf2298d79a1673b",
+  "gold_status": "Known canaries preserved 2/2 post-freeze; this is performance failure plus numerical trajectory divergence, not Gold-destruction evidence.",
+  "is_fixed_pair_batch2_fundamentally_low_occupancy": "YES",
+  "masked_batch2_active1_forward_ms": 64.98808912398323,
+  "masked_batch2_active2_forward_ms": 66.10006479535784,
+  "microprofile_model_only_speedup_vs_scalar": 0.946964350511329,
+  "model_forward_fraction": 0.9708483461974378,
+  "next": "DESIGN_DYNAMIC_READY_BATCHER_AS_NEW_DECODER",
+  "premask_high_occupancy_cause": "INACTIVE_LANE_REACTIVATION",
+  "scalar_batch1_forward_ms": 58.24919328626305,
+  "scientific_status": "Performance-only contaminated microprofile; no Gold read by the microprofile.",
+  "wasted_lane_fraction": 0.47121716897807386,
+  "when_only_one_lane_active": "PHYSICAL_BATCH2_WITH_PAD",
+  "would_dynamic_ready_pool_plausibly_help": "YES"
+}
