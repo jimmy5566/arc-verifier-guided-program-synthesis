@@ -4,7 +4,7 @@
 
 CPU analysis of frozen A1.1 raw evidence plus a separately labelled contaminated
 performance-only 97d7923e microprofile. The microprofile did not access Gold.
-Raw A1.1 SHA256: `{'group_0_batch2.json': '89b8b39f1f1c530f4bb338efb6fe17f17df2af8865e6984c831865b03f5586a9', 'group_0_scalar.json': 'dedb92964ca7536bc85f4134cddf64698bf0d928e7383dc695aad44c1a2f7478', 'group_1_batch2.json': 'ffea712bbb26bcd92724e06a415b48bad131dd95bd3c5ed727353a1a188fbf1f', 'group_1_scalar.json': '1f8d664110f70948d301e5208beac7bf434b30e7e68876ca75220ca4adce67b4'}`.
+Frozen A1.1 manifest SHA256: `ce6afb4fc5f33901fa7bbe0813d7df7cae7f24a12f5a85960bf2298d79a1673b`.
 
 ## Occupancy
 
