@@ -6,6 +6,7 @@ from inference.nvarc_turbodfs_d1 import D1TurboDFSConfig, inference_d1_turbo_dfs
 from inference.nvarc_turbodfs_dynamic_ready import (
     ReadyCell,
     _new_state,
+    clone_legacy_cache,
     normalized_result_signature,
     ready_result,
     run_ready_scheduler,
@@ -70,3 +71,12 @@ def test_active_time_budget_excludes_elapsed_queue_wall_time():
     assert ready_result(cell).termination_reason == "search_exhausted"
     state["active_time_accounting"] = False
     assert ready_result(cell).termination_reason == "wall_time"
+
+
+def test_root_cache_clone_has_independent_tensor_storage():
+    root = ((torch.arange(4, dtype=torch.float32).reshape(1, 1, 4, 1),
+             torch.zeros((1, 1, 4, 1))),)
+    cloned = clone_legacy_cache(root)
+    assert cloned[0][0].data_ptr() != root[0][0].data_ptr()
+    cloned[0][0].add_(10)
+    assert root[0][0].flatten().tolist() == [0.0, 1.0, 2.0, 3.0]

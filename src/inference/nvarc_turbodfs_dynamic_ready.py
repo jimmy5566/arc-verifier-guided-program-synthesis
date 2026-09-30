@@ -19,7 +19,7 @@ import hashlib
 import json
 import math
 import time
-from typing import Any
+from typing import Any, Callable
 
 from inference.nvarc_turbodfs_d1 import (
     D1TurboDFSConfig,
@@ -110,6 +110,17 @@ def _legacy_cache(cache: Any) -> tuple[tuple[Any, ...], ...]:
             raise RuntimeError("dynamic-ready encountered non-tensor KV cache")
         rows.append(tuple(layer))
     return tuple(rows)
+
+
+def clone_legacy_cache(cache: Any) -> tuple[tuple[Any, ...], ...]:
+    """Deep-clone a splittable root KV cache without retaining storage aliases.
+
+    The dynamic-ready audit uses this only to test whether the root cache
+    returned by a scalar prefill is the source of cross-cell interference.
+    A legacy tuple is accepted by the same model path as the native cache
+    object, while each tensor has independent storage.
+    """
+    return tuple(tuple(value.detach().clone() for value in layer) for layer in _legacy_cache(cache))
 
 
 def cache_geometry(cache: Any) -> tuple[Any, ...]:
@@ -306,7 +317,8 @@ def _ready_dfs(
 
 
 def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, cell_key: str,
-                     normalize_root_cache: bool, active_time_accounting: bool = False) -> ReadyCell:
+                     normalize_root_cache: bool, active_time_accounting: bool = False,
+                     root_cache_transform: Callable[[Any], Any] | None = None) -> ReadyCell:
     """Run the required scalar prefill, then expose the first incremental request."""
     import torch
 
@@ -327,6 +339,8 @@ def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, ce
                  selected_token=None, token_logprob=None, cumulative_score=0.0, cumulative_regret=0.0,
                  state="root", prune_reason=None, termination_reason=None, branch_rank=None)
     root_cache = _legacy_cache(outputs.past_key_values) if normalize_root_cache else outputs.past_key_values
+    if root_cache_transform is not None:
+        root_cache = root_cache_transform(root_cache)
     generator = _ready_dfs(cell_key=cell_key, logits=outputs.logits[:, -1], max_new_tokens=config.max_new_tokens,
                            score=0.0, regret=0.0, pos=int(input_ids.size(1)), cache=root_cache, config=config,
                            started_unix=started_unix, state=state, parent_node=root, prefix=tuple(), ordinal=[0])
