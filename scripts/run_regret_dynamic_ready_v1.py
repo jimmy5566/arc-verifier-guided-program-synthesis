@@ -246,6 +246,9 @@ def score(args: argparse.Namespace) -> None:
     output = args.output.resolve(); frozen = output / "DYNAMIC_READY_GENERATION_FROZEN.flag"
     if not frozen.exists() or not (output / "RAW_FREEZE_HASHES.json").exists():
         raise RuntimeError("refusing Gold: dynamic raw generation is not frozen")
+    raw_hashes = read_json(output / "RAW_FREEZE_HASHES.json").get("raw_sha256", {})
+    if not raw_hashes or any(sha256_file(output / name) != value for name, value in raw_hashes.items()):
+        raise RuntimeError("refusing Gold: frozen raw SHA256 verification failed")
     solutions = read_json(args.solutions.resolve())
     rows = read_json(output / "raw_dynamic_ready.json")
     scored: list[dict[str, Any]] = []
