@@ -219,7 +219,8 @@ def d1_turbo_dfs(
             "cumulative_regret_before": float(regrets[lane]), "full_arc_logprobs": [{"token_id": token, "logprob": logprob} for token, logprob in values],
             "top1_token_id": ranked[0][0], "top1_logprob": ranked[0][1], "top2_token_id": ranked[1][0], "top2_logprob": ranked[1][1],
             "margin": ranked[0][1] - ranked[1][1], "entropy": -sum(p * lp for p, (_token, lp) in zip(probabilities, values, strict=True)),
-            "batch_size": lanes, "active_lane_count": sum(active_mask), "decoder_policy": config.policy_id,
+            "batch_size": lanes, "active_lane_count": sum(active_mask),
+            "active_mask": tuple(bool(value) for value in active_mask), "decoder_policy": config.policy_id,
         })
         kept, prune_reason = _retained(config, ranked, score_before=float(scores[lane]), regret_before=float(regrets[lane]),
                                        remaining=max_new_tokens, generated_length=len(prefixes[lane]))

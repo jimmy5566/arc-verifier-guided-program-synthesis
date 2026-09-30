@@ -70,13 +70,29 @@ def stable_candidate(candidate: dict[str, Any]) -> dict[str, Any]:
     )}
 
 
+def stable_node(node: dict[str, Any]) -> dict[str, Any]:
+    """Remove physical-slot/context decorations from a cell-local node trace."""
+    return {key: value for key, value in node.items() if key not in {"lane", "cache_slot", "search_context_id"}}
+
+
+def stable_floor(event: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in event.items() if key not in {"lane", "cache_slot", "search_context_id"}}
+
+
+def stable_trace(event: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in event.items()
+            if key not in {"lane", "cache_slot", "search_context_id", "elapsed_seconds"}}
+
+
 def signature(row: dict[str, Any]) -> dict[str, Any]:
     """Exclude wall-clock-only timestamps; retain all logical search evidence."""
     return {
         "adapter_sha256": row["checkpoint_sha256"],
         "prompt_sha256": row["prompt_sha256"],
         "candidates": [stable_candidate(item) for item in row["candidates"]],
-        "nodes": row["nodes"],
+        "nodes": [stable_node(item) for item in row["nodes"]],
+        "frontier_floor_events": [stable_floor(item) for item in row["frontier_floor_events"]],
+        "search_trace": [stable_trace(item) for item in row["search_trace"]],
         "candidate_count": row["candidate_count"],
         "nodes_expanded": row["nodes_expanded"],
         "successors_retained": row["successors_retained"],
@@ -88,6 +104,42 @@ def signature(row: dict[str, Any]) -> dict[str, Any]:
 
 def stable_pool_sha(row: dict[str, Any]) -> str:
     return sha_json([stable_candidate(item) for item in row["candidates"]])
+
+
+def _top12(probability: dict[str, Any]) -> list[dict[str, Any]]:
+    return sorted(probability["full_arc_logprobs"], key=lambda row: (-float(row["logprob"]), int(row["token_id"])))[:12]
+
+
+def first_divergence(cell_key: str, scalar: dict[str, Any], batch: dict[str, Any]) -> dict[str, Any]:
+    """Diagnostic only: identify the first aligned logical probability mismatch."""
+    scalar_steps = scalar.get("branch_probabilities", [])
+    batch_steps = batch.get("branch_probabilities", [])
+    for index, (left, right) in enumerate(zip(scalar_steps, batch_steps)):
+        same_state = all(left.get(key) == right.get(key) for key in (
+            "token_position", "prefix_length", "cumulative_score_before", "cumulative_regret_before",
+        ))
+        left_probs = {int(row["token_id"]): float(row["logprob"]) for row in left["full_arc_logprobs"]}
+        right_probs = {int(row["token_id"]): float(row["logprob"]) for row in right["full_arc_logprobs"]}
+        tokens = sorted(set(left_probs) | set(right_probs))
+        max_delta = max((abs(left_probs.get(token, float("inf")) - right_probs.get(token, float("inf"))) for token in tokens), default=0.0)
+        if not same_state or max_delta != 0.0:
+            return {
+                "cell_key": cell_key, "logical_step": index, "prefix_length": left.get("prefix_length"),
+                "position_id": left.get("token_position"), "active_mask": right.get("active_mask"),
+                "same_logical_state": same_state, "max_abs_logit_delta": None,
+                "max_abs_arc_logprob_delta": max_delta,
+                "scalar_top12": _top12(left), "batch_top12": _top12(right),
+                "cause": "MODEL_NUMERICAL_BATCH_PATH" if same_state else "EXECUTOR_STATE_MUTATION",
+            }
+    if len(scalar_steps) != len(batch_steps):
+        return {"cell_key": cell_key, "logical_step": min(len(scalar_steps), len(batch_steps)),
+                "prefix_length": None, "position_id": None, "active_mask": None, "same_logical_state": False,
+                "max_abs_logit_delta": None, "max_abs_arc_logprob_delta": None,
+                "scalar_top12": None, "batch_top12": None, "cause": "EXECUTOR_STATE_MUTATION"}
+    return {"cell_key": cell_key, "logical_step": None, "prefix_length": None, "position_id": None,
+            "active_mask": None, "same_logical_state": True, "max_abs_logit_delta": 0.0,
+            "max_abs_arc_logprob_delta": 0.0, "scalar_top12": None, "batch_top12": None,
+            "cause": "NOT_ESTABLISHED"}
 
 
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -216,6 +268,8 @@ def finalize(args: argparse.Namespace) -> None:
             "nodes_exact_parity": one_sig["nodes"] == many_sig["nodes"],
             "candidate_count_parity": one_sig["candidate_count"] == many_sig["candidate_count"],
             "successors_retained_parity": one_sig["successors_retained"] == many_sig["successors_retained"],
+            "floor_events_exact_parity": one_sig["frontier_floor_events"] == many_sig["frontier_floor_events"],
+            "trace_decision_exact_parity": one_sig["search_trace"] == many_sig["search_trace"],
             "termination_exact_parity": one_sig["termination_reason"] == many_sig["termination_reason"] and one_sig["budget_exhausted"] == many_sig["budget_exhausted"] and one_sig["search_exhausted"] == many_sig["search_exhausted"],
             "scalar_nodes": one["nodes_expanded"], "batch_nodes": many["nodes_expanded"],
         })
@@ -233,7 +287,11 @@ def finalize(args: argparse.Namespace) -> None:
         tokens = int(batch_group[0]["physical_tokens_advanced"]); forwards = int(batch_group[0]["physical_model_forwards"])
         distribution.append({"group_index": index, "batch_width": width, "physical_forwards": forwards,
                              "logical_tokens_advanced": tokens, "mean_effective_batch": tokens / max(1, forwards)})
-    all_parity = all(all(bool(row[field]) for field in ("adapter_sha_parity", "prompt_hash_parity", "candidate_pool_exact_parity", "nodes_exact_parity", "candidate_count_parity", "successors_retained_parity", "termination_exact_parity")) for row in parity)
+    all_parity = all(all(bool(row[field]) for field in (
+        "adapter_sha_parity", "prompt_hash_parity", "candidate_pool_exact_parity", "nodes_exact_parity",
+        "candidate_count_parity", "successors_retained_parity", "floor_events_exact_parity",
+        "trace_decision_exact_parity", "termination_exact_parity",
+    )) for row in parity)
     summary = {
         "experiment": EXPERIMENT, "policy": POLICY, "mode": f"BATCH{len(config['groups'][0]['views'])}", "cells": len(parity),
         "parity_pass": all_parity, "scalar_wall_seconds": scalar_wall, "batch_wall_seconds": batch_wall,
@@ -251,16 +309,27 @@ def finalize(args: argparse.Namespace) -> None:
         "solutions_accessed": False, "raw_freeze_sha256": sha256_file(output / "RAW_TARGET_BLIND_FREEZE.json"),
     }
     report = args.report_dir.resolve(); report.mkdir(parents=True, exist_ok=True)
-    write_csv(report / "A1_BATCH2_PARITY.csv", parity)
-    write_csv(report / "A1_BATCH2_BENCHMARK.csv", [{key: value for key, value in summary.items() if key != "solutions_accessed"}])
+    prefix = args.report_prefix
+    divergence_fields = (
+        "candidate_pool_exact_parity", "nodes_exact_parity", "candidate_count_parity",
+        "successors_retained_parity", "floor_events_exact_parity", "trace_decision_exact_parity",
+        "termination_exact_parity",
+    )
+    divergences = [first_divergence(key, scalar_by[key], batch_by[key]) for key in sorted(scalar_by)
+                   if not all(next(row for row in parity if row["cell_key"] == key)[field] for field in divergence_fields)]
+    write_csv(report / f"{prefix}_BATCH2_PARITY.csv", parity)
+    write_csv(report / f"{prefix}_BATCH2_BENCHMARK.csv", [{key: value for key, value in summary.items() if key != "solutions_accessed"}])
+    write_csv(report / f"{prefix}_FIRST_DIVERGENCE.csv", divergences)
     write_csv(report / "effective_batch_distribution.csv", distribution)
     atomic_json(report / "REGRET_FAST_CONTRACT.json", config)
     valid_speedup = (summary["batch_nodes_per_second"] / max(summary["scalar_nodes_per_second"], 1e-9)) if all_parity else None
     summary["valid_throughput_speedup"] = valid_speedup
-    atomic_json(report / "DECISION.json", {**summary, "best_config": "BATCH2" if valid_speedup is not None and valid_speedup >= 1.15 else "SCALAR",
-                                              "promotion": bool(valid_speedup is not None and valid_speedup >= 1.15)})
-    (report / "REGRET_FAST_REPORT.md").write_text(
-        "# Regret Fast V1\n\n"
+    decision = {**summary, "best_config": "BATCH2" if valid_speedup is not None and valid_speedup >= 1.15 else "SCALAR",
+                "promotion": bool(valid_speedup is not None and valid_speedup >= 1.15)}
+    atomic_json(report / "DECISION.json", decision)
+    atomic_json(report / f"{prefix}_DECISION.json", decision)
+    (report / f"{prefix}_DIAGNOSIS.md").write_text(
+        f"# {prefix} Regret Fast\n\n"
         f"Target-blind contaminated-cell A/B only. A1 batch2 parity: **{'PASS' if all_parity else 'FAIL'}**. "
         f"Scalar {summary['scalar_nodes_per_second']:.3f} nodes/s ({scalar_nodes} nodes); "
         f"batch {summary['batch_nodes_per_second']:.3f} nodes/s ({batch_nodes} nodes). "
@@ -278,6 +347,7 @@ def main() -> None:
     prepared.add_argument("--source-commit", required=True)
     runner = sub.add_parser("run"); runner.add_argument("--output", type=Path, required=True)
     final = sub.add_parser("finalize"); final.add_argument("--output", type=Path, required=True); final.add_argument("--report-dir", type=Path, required=True)
+    final.add_argument("--report-prefix", default="A1")
     args = parser.parse_args(); {"prepare": prepare, "run": run, "finalize": finalize}[args.command](args)
 
 
