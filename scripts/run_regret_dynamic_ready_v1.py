@@ -164,7 +164,9 @@ def run(args: argparse.Namespace) -> None:
         if adapter_sha != ADAPTER_SHA:
             raise RuntimeError(f"unexpected d59 depth24 adapter {adapter_sha}")
         task = view_task(tasks[TASK_ID], OUTPUT_INDEX)
-        encoded_views = [common.encoded_view(tokenizer=tokenizer, task=task, view=view, config=generation_config) for view in VIEWS]
+        encoded_views = [(encoded["input_ids"], augmentation) for encoded, augmentation in
+                         (common.encoded_view(tokenizer=tokenizer, task=task, view=view, config=generation_config)
+                          for view in VIEWS)]
         if any(int(encoded.shape[0]) != 1 for encoded, _aug in encoded_views):
             raise RuntimeError("dynamic-ready requires individual B1 view prompts")
         native = assert_native_token_contract(tokenizer)
