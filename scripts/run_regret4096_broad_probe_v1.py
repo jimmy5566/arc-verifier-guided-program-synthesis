@@ -432,7 +432,7 @@ def score(args: argparse.Namespace) -> None:
         hit_outputs = {row["output_id"] for row in hit_cells}
         budget_rows.append({"budget": budget, "cell_hits_by_budget": len(hit_cells), "unique_output_hits_by_budget": len(hit_outputs),
                             "incremental_cell_gain": None, "incremental_output_gain": None})
-    for prior, current in zip(budget_rows, budget_rows[1:], strict=True):
+    for prior, current in zip(budget_rows, budget_rows[1:]):
         current["incremental_cell_gain"] = int(current["cell_hits_by_budget"]) - int(prior["cell_hits_by_budget"])
         current["incremental_output_gain"] = int(current["unique_output_hits_by_budget"]) - int(prior["unique_output_hits_by_budget"])
     time_rows = []
