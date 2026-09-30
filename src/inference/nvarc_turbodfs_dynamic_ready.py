@@ -356,21 +356,25 @@ def run_ready_scheduler(*, model: Any, cells: list[ReadyCell], dynamic_batch2: b
         requests = [cell.request for cell in selected]
         assert all(request is not None for request in requests)
         started = time.perf_counter()
-        if len(selected) == 1:
-            request = requests[0]
-            outputs = model(input_ids=torch.tensor([[request.token_id]], device=model.device, dtype=torch.long),
-                            position_ids=torch.tensor([[request.position]], device=model.device, dtype=torch.long),
-                            past_key_values=request.cache, return_dict=True, use_cache=True)
-            outputs_by_cell = [outputs]
-        else:
-            merged_cache = _cat_caches([request.cache for request in requests])
-            outputs = model(input_ids=torch.tensor([[request.token_id] for request in requests], device=model.device, dtype=torch.long),
-                            position_ids=torch.tensor([[request.position] for request in requests], device=model.device, dtype=torch.long),
-                            past_key_values=merged_cache, return_dict=True, use_cache=True)
-            split_cache = _split_cache(outputs.past_key_values, len(selected))
-            outputs_by_cell = []
-            for lane, cache in enumerate(split_cache):
-                outputs_by_cell.append(type("Reply", (), {"logits": outputs.logits[lane:lane + 1], "past_key_values": cache})())
+        # The authoritative decoder executes every model forward under
+        # ``torch.no_grad``.  The scheduler must keep that invariant even
+        # though it owns the incremental calls rather than the recursive body.
+        with torch.no_grad():
+            if len(selected) == 1:
+                request = requests[0]
+                outputs = model(input_ids=torch.tensor([[request.token_id]], device=model.device, dtype=torch.long),
+                                position_ids=torch.tensor([[request.position]], device=model.device, dtype=torch.long),
+                                past_key_values=request.cache, return_dict=True, use_cache=True)
+                outputs_by_cell = [outputs]
+            else:
+                merged_cache = _cat_caches([request.cache for request in requests])
+                outputs = model(input_ids=torch.tensor([[request.token_id] for request in requests], device=model.device, dtype=torch.long),
+                                position_ids=torch.tensor([[request.position] for request in requests], device=model.device, dtype=torch.long),
+                                past_key_values=merged_cache, return_dict=True, use_cache=True)
+                split_cache = _split_cache(outputs.past_key_values, len(selected))
+                outputs_by_cell = []
+                for lane, cache in enumerate(split_cache):
+                    outputs_by_cell.append(type("Reply", (), {"logits": outputs.logits[lane:lane + 1], "past_key_values": cache})())
         elapsed = time.perf_counter() - started
         forwards += 1
         for cell in selected:
