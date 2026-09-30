@@ -1,0 +1,8 @@
+{
+  "sha256": {
+    "B1_1_ISOLATED_PARITY.csv": "524925aa5c4fd3e6566df87d9c4d4e0c688676d0ace42385e8cc3ff085c30778",
+    "B1_1_SHARED_SCHEDULER_PARITY.csv": "c79613e46e998fd3f5cbab3b0d8420187514c6897d5f29bd5fe5a4154895be04",
+    "B1_1_TIME_ACCOUNTING.csv": "3bd50bc5ee4ab6733e86bd608d0e5c1fe47922edcaf7bfd77056a06f521b5238"
+  },
+  "solutions_accessed": false
+}

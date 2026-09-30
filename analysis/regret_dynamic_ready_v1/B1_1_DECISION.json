@@ -1,0 +1,11 @@
+{
+  "B1_refactor_gate": "FAIL",
+  "dynamic_B2_executed": false,
+  "gold_accessed": false,
+  "isolated_B1_parity": "4/4",
+  "next": "FIX_STATE_MACHINE",
+  "root_cause": "MIXED",
+  "shared_scheduler_B1_parity": "1/4",
+  "untouched12_used": false,
+  "untouched24_used": false
+}

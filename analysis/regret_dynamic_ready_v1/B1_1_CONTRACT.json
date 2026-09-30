@@ -1,0 +1,23 @@
+{
+  "adapter_manifest": "/workspace/arc2/turbodfs_v5/eval60_adapter_manifest.csv",
+  "adapter_manifest_sha256": "a8077dd91e344577d42d4f22227178b27d29fd92b3d4725d3957ef3e852bcbd0",
+  "authoritative_root": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1",
+  "caps": {"arc_tokens": [0,1,2,3,4,5,6,7,8,9,10,15], "frontier_floor": 1, "local_time_limit_seconds": 540.0, "max_completed_candidates": 32, "max_expanded_nodes": 4096, "max_new_tokens": 931, "max_score": 1.6094379124341003, "pad_token_id": 13},
+  "challenge": "/workspace/arc2/benchmarks/arc-agi_evaluation_challenges.json",
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "dynamic_batch2_executed": false,
+  "experiment": "REGRET_DYNAMIC_READY_B1_1_TIME_BUDGET_REPAIR",
+  "fixed_budget_contract": "/root/arc-runtime-regret-speed/arc2/analysis/regret_fast_v1/REGRET_FAST_CONTRACT.json",
+  "fixed_budget_contract_sha256": "d57fdba8f41a8589bbdac9ec4ed94adf0bbe647d5ff20f435a7d097bdf0130e8",
+  "microbatch_size": 1,
+  "model_path": "/root/arc-runtime-regret-speed/model-stage/qwen3_4b_grids15_sft139",
+  "native_config_dir": "/workspace/arc2/arc2/source/configs/nvarc_native_846d0198",
+  "policy": "CUMULATIVE_REGRET_r=4.00",
+  "pool_size_isolated": 1,
+  "pool_size_shared": 4,
+  "prior_audit_sha256": "b1ee134a1a6a1f192b9d42e65b575c0d6be35c33a120aa1b19a30df9c07f62a3",
+  "prior_output": "/root/arc-runtime-regret-speed/active_run/regret_dynamic_ready_v1",
+  "reference_config": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/reference_ttt_config_cuda128_runtime.json",
+  "solutions_accessed": false,
+  "source_commit": "cf44a25cbef94e628a0675b1c567e9be4baaa64a"
+}

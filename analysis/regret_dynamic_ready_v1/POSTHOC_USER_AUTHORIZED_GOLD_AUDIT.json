@@ -1,0 +1,11 @@
+{
+  "scope": "POSTHOC_USER_AUTHORIZED_GOLD_AUDIT_OF_FROZEN_PRIOR_SCALAR_REFERENCE",
+  "raw_scalar_sha256": "d9cd75f769d824d3b20df8c05c5217f4e4130192ded7764c26b69dd0d48b65c1",
+  "isolated_B1_relation": "Each isolated B1 result had exact deterministic parity and candidate_tokens_parity with this scalar reference; this does not establish Gold status for non-parity shared B1 cells.",
+  "rows": [
+    {"cell_key": "d59b0160:o0:d24:identity", "candidate_count": 28, "gold_hit_any_candidate": true, "gold_hit_candidate_count": 1, "first_gold_candidate_rank": 7, "candidate_pool_sha256": "3eec2779052f42c5d266e87b6cd5f0c715a5272b6ea00019fbdd560f36aa90c5"},
+    {"cell_key": "d59b0160:o0:d24:flip_ud", "candidate_count": 29, "gold_hit_any_candidate": true, "gold_hit_candidate_count": 1, "first_gold_candidate_rank": 18, "candidate_pool_sha256": "4a29868f09f9d8676d3ede14b0ee2fc2c597a8f9c316bbc5910fafce28b866bd"},
+    {"cell_key": "d59b0160:o0:d24:transpose", "candidate_count": 32, "gold_hit_any_candidate": true, "gold_hit_candidate_count": 1, "first_gold_candidate_rank": 11, "candidate_pool_sha256": "14e9bd71f9a7059f5e9a14ad869326079469d70f4a13be1e2761e37f655104bc"},
+    {"cell_key": "d59b0160:o0:d24:anti_transpose", "candidate_count": 32, "gold_hit_any_candidate": true, "gold_hit_candidate_count": 1, "first_gold_candidate_rank": 10, "candidate_pool_sha256": "f169b4b616c4e2a96bbb7d63006ec0254655f4a9c02ff7e7e0c1dc60b095041f"}
+  ]
+}

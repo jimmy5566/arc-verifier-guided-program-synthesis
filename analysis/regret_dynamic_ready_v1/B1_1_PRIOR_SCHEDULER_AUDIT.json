@@ -1,0 +1,18 @@
+{
+  "all_physical_forwards_scalar": true,
+  "hypothesis_verified": true,
+  "lexicographic_ready_order": ["d59b0160:o0:d24:anti_transpose", "d59b0160:o0:d24:flip_ud", "d59b0160:o0:d24:identity", "d59b0160:o0:d24:transpose"],
+  "observed_first_seen_scheduler_order": ["d59b0160:o0:d24:anti_transpose", "d59b0160:o0:d24:flip_ud", "d59b0160:o0:d24:identity", "d59b0160:o0:d24:transpose"],
+  "per_cell_scheduler_service": {
+    "d59b0160:o0:d24:anti_transpose": {"first_forward_index": 1, "forwards": 3899, "last_forward_index": 3899, "scheduler_seconds_before_first_forward": 0.0, "service_seconds": 222.2943673506379},
+    "d59b0160:o0:d24:flip_ud": {"first_forward_index": 3900, "forwards": 3249, "last_forward_index": 7148, "scheduler_seconds_before_first_forward": 222.2943673506379, "service_seconds": 184.96984463185072},
+    "d59b0160:o0:d24:identity": {"first_forward_index": 7149, "forwards": 2110, "last_forward_index": 9258, "scheduler_seconds_before_first_forward": 407.26421198248863, "service_seconds": 119.79512384161353},
+    "d59b0160:o0:d24:transpose": {"first_forward_index": 9259, "forwards": 10, "last_forward_index": 9268, "scheduler_seconds_before_first_forward": 527.0593358241022, "service_seconds": 0.5615098308771849}
+  },
+  "prior_output": "/root/arc-runtime-regret-speed/active_run/regret_dynamic_ready_v1",
+  "prior_raw_sha256": "a413764ace0b85d06fec034e67c268e4f47301048dc26dc5f59382d6850f349d",
+  "scheduler_selects_lexicographically_first_ready": true,
+  "solutions_accessed": false,
+  "timer_assignment": "all ReadyCell objects are constructed before run_ready_scheduler",
+  "view_construction_order": ["d59b0160:o0:d24:identity", "d59b0160:o0:d24:flip_ud", "d59b0160:o0:d24:transpose", "d59b0160:o0:d24:anti_transpose"]
+}
