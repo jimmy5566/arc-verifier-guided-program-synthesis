@@ -1,0 +1,19 @@
+{
+  "cells_completed": 73,
+  "cells_interrupted_by_global_deadline": 0,
+  "cells_started": 74,
+  "contract_sha256": "386b02ed59224849032c7a7f98515c9ae64b7bafaab36549144462a1db30e3de",
+  "current_cell_key": "67e490f4:o0:d24:identity",
+  "deadline_time_unix": 1790767268.7314472,
+  "experiment": "REGRET4096_BROAD_PROBE_V1",
+  "experiment_end_time_unix": 1790764862.5922744,
+  "experiment_start_time_monotonic": 14129009.49640159,
+  "experiment_start_time_unix": 1790752868.731445,
+  "incomplete_cell_key": "67e490f4:o0:d24:identity",
+  "incomplete_current_cell_discarded": true,
+  "last_completed_cell_key": "142ca369:o0:d24:identity",
+  "requested_stop_reason": "USER_REQUESTED_CONTROLLED_FREEZE_AFTER_73_COMPLETED_ATOMIC_CELLS",
+  "solutions_accessed": false,
+  "status": "USER_REQUESTED_CONTROLLED_STOP",
+  "user_requested_early_freeze": true
+}
