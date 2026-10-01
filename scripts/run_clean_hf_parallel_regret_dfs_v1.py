@@ -16,6 +16,7 @@ import json
 import os
 import sys
 import tempfile
+import time
 from pathlib import Path
 from typing import Any
 
@@ -152,9 +153,11 @@ def _verify_frozen_foundation(path: Path, identity: dict[str, Any]) -> dict[str,
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
+    import torch
     from arc.io import load_dataset
 
     _assert_challenge_only(args.challenge)
+    run_started = time.perf_counter()
     foundation_identity = json.loads(args.adapter_foundation.read_text(encoding="utf-8"))
     if foundation_identity.get("status") != "PASS" or int(foundation_identity.get("exact_match_count", -1)) != 506:
         raise RuntimeError("frozen clean-HF adapter foundation is not a 506/506 PASS")
@@ -174,6 +177,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     if args.output_index >= len(task.test):
         raise RuntimeError("requested output index is not in the challenge")
     config = _config(args.budget)
+    torch.cuda.reset_peak_memory_stats(device=args.device)
     def make_cell(view: str) -> Any:
         key = f"{args.task_id}:o{args.output_index}:d{args.depth}:{view}"
         return start_ready_cell(
@@ -249,6 +253,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "task": {"task_id": args.task_id, "output_index": args.output_index, "depth": args.depth, "views": list(VIEWS)},
         "cells": [_result_payload(cell) for cell in cells],
         "scheduler": canonical_semantic_value(scheduler),
+        "runtime_telemetry": {
+            "total_host_wall_seconds": time.perf_counter() - run_started,
+            "cuda_allocated_bytes_end": int(torch.cuda.memory_allocated(device=args.device)),
+            "cuda_reserved_bytes_end": int(torch.cuda.memory_reserved(device=args.device)),
+            "cuda_peak_allocated_bytes": int(torch.cuda.max_memory_allocated(device=args.device)),
+            "cuda_peak_reserved_bytes": int(torch.cuda.max_memory_reserved(device=args.device)),
+        },
     }
     payload["raw_sha256"] = _sha256_json(payload)
     _atomic_json(args.output, payload)
