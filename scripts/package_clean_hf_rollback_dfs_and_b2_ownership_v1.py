@@ -80,6 +80,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             if _directory == "b2_micro_corrected_v2":
                 required_copy[destination] = (b2_directory, source_name)
         required_copy.update({
+            "B2_SEMANTIC_CLASSIFICATION.json": (
+                "b2_semantic_classification", "B2_SEMANTIC_CLASSIFICATION.json"),
             "B2_FIRST_DIVERGENCE_DEFAULT.json": (
                 "b2_internal_divergence_v4", "CLEAN_HF_B2_FIRST_DIVERGENCE.json"),
             "B2_FIRST_DIVERGENCE_BF16_FULL_REDUCTION.json": (
@@ -105,6 +107,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     dynamic = ({"classification": "NOT_RUN_B2_GATE_FAILED",
                 "reason": "B1/B2 first-forward BF16 batch numerical divergence"}
                if args.b2_blocked else _read(source / "r128_dynamic_b2" / "R128_DYNAMIC_B2_DECISION.json"))
+    b2_classification = (_read(source / "b2_semantic_classification" / "B2_SEMANTIC_CLASSIFICATION.json")
+                         if args.b2_blocked else None)
     conditions = {
         "crop": crop.get("all_exact") is True,
         "branch_backtrack": branch.get("strict_exact") is True,
@@ -128,10 +132,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "conditions": conditions, "final_decision": final_state,
         "crop": crop, "branch": branch, "snapshot": snapshot, "isolated": isolated,
         "serial": serial, "round_robin": round_robin, "round_robin_audit": rr_audit,
-        "b2_memory": b2, "b2_micro": b2_semantic, "dynamic": dynamic,
+        "b2_memory": b2, "b2_micro": b2_semantic, "b2_semantic_classification": b2_classification, "dynamic": dynamic,
         "raw_provenance": {
             "crop_gate": str(source / "crop_gate"), "r32": str(source / "r32"),
             "r128_b1": str(source / "r128_b1"), "b2_micro": str(source / b2_directory),
+            "b2_semantic_classification": (str(source / "b2_semantic_classification") if args.b2_blocked else None),
             "dynamic": None if args.b2_blocked else str(source / "r128_dynamic_b2"),
         },
     }
@@ -152,6 +157,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     if args.b2_blocked:
         report_rows += [
             "- Dynamic B2 was not run because the root B1/B2 micro gate failed on the first model forward.",
+            f"- Frozen B2 classification: `{b2_classification.get('classification') if b2_classification else None}`.",
             "- `B2_FIRST_DIVERGENCE_DEFAULT.json` localizes the difference to layer-0 Q/K/V projections; owner identity and plateau remain valid.",
         ]
     else:

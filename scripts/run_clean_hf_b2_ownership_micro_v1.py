@@ -121,6 +121,19 @@ def _semantic(cell: Any) -> dict[str, Any]:
     }
 
 
+def _discrete_semantics(cell: Any) -> dict[str, Any]:
+    """Target-blind branch topology, intentionally excluding numeric scores."""
+    result = ready_result(cell)
+    node_fields = (
+        "node_id", "parent_node_id", "state", "prune_reason", "termination_reason",
+        "selected_token", "token_position", "branch_depth", "branch_rank",
+    )
+    return canonical_semantic_value({
+        "candidate_token_ids": [[list(item.token_ids) for item in lane] for lane in result.candidates],
+        "node_topology": [{field: row.get(field) for field in node_fields} for row in result.nodes],
+    })
+
+
 def _strict_pair_equal(left: Any, right: Any) -> bool:
     a, b = _semantic(left), _semantic(right)
     return a["semantic_sha256"] == b["semantic_sha256"] and a["per_forward_trace_sha256"] == b["per_forward_trace_sha256"]
@@ -160,6 +173,9 @@ def _first_difference(left: Any, right: Any, path: str = "$") -> dict[str, Any] 
 
 def _comparison_detail(left: Any, right: Any) -> dict[str, Any]:
     a, b = _semantic(left), _semantic(right)
+    discrete_left, discrete_right = _discrete_semantics(left), _discrete_semantics(right)
+    candidate_tokens_exact = discrete_left["candidate_token_ids"] == discrete_right["candidate_token_ids"]
+    node_topology_exact = discrete_left["node_topology"] == discrete_right["node_topology"]
     return {
         "strict_exact": a["semantic_sha256"] == b["semantic_sha256"]
         and a["per_forward_trace_sha256"] == b["per_forward_trace_sha256"],
@@ -170,6 +186,9 @@ def _comparison_detail(left: Any, right: Any) -> dict[str, Any]:
         "first_semantic_difference": _first_difference(a["payload"]["semantic"], b["payload"]["semantic"]),
         "first_forward_difference": _first_difference(
             a["payload"]["per_forward_trace"], b["payload"]["per_forward_trace"]),
+        "candidate_tokens_exact": candidate_tokens_exact,
+        "node_topology_exact": node_topology_exact,
+        "discrete_semantics_exact": candidate_tokens_exact and node_topology_exact,
     }
 
 
@@ -288,6 +307,29 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
     b1_a, b1_b, b1_seconds = run_b1()
     b2_a, b2_b, b2_scheduler, identity_rows, b2_seconds = run_b2(swap=False, label="B2_A_B")
+    if args.semantic_only:
+        comparisons = {
+            "B1(A)_vs_B2(A,B)_A": _comparison_detail(b1_a, b2_a),
+            "B1(B)_vs_B2(A,B)_B": _comparison_detail(b1_b, b2_b),
+        }
+        discrete_exact = all(item["discrete_semantics_exact"] for item in comparisons.values())
+        classification = "BATCH_NUMERICAL_ONLY" if discrete_exact else "SEARCH_TRAJECTORY_SHIFT"
+        result = {
+            "experiment": "CLEAN_HF_B2_SEMANTIC_CLASSIFICATION_V1",
+            "target_blind": True, "gold_loaded": False, "unsloth_inference": False,
+            "budget": args.budget, "classification": classification,
+            "B1_VS_B2_STRICT_EXACT": all(item["strict_exact"] for item in comparisons.values()),
+            "B1_VS_B2_DISCRETE_EXACT": discrete_exact,
+            "comparisons": comparisons,
+            "B1_seconds": b1_seconds, "B2_seconds": b2_seconds,
+            "B1_physical_forwards": sum(ready_result(cell).model_forwards - 1 for cell in (b1_a, b1_b)),
+            "B2_physical_forwards": b2_scheduler["physical_forwards"],
+        }
+        _atomic_json(args.output / "B2_SEMANTIC_CLASSIFICATION.json", result)
+        _atomic_json(args.output / "HASHES.json", {
+            path.name: _sha(path) for path in args.output.iterdir() if path.is_file()
+        })
+        return result
     swapped_a, swapped_b, swapped_scheduler, swapped_ids, swapped_seconds = run_b2(swap=True, label="B2_B_A")
     repeat_rows: list[dict[str, Any]] = []
     repeats_pass = True
@@ -430,9 +472,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--depth", type=int, default=24)
     parser.add_argument("--budget", type=int, default=32)
     parser.add_argument("--device", default="cuda:0")
+    parser.add_argument("--semantic-only", action="store_true")
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     result = run(parse_args())
-    print(json.dumps({key: result[key] for key in ("B2_OWNER_IDENTITY", "B2_MICRO_SEMANTICS", "B2_REPEATABILITY", "plateau_status")}, sort_keys=True))
+    print(json.dumps({key: result.get(key) for key in (
+        "B2_OWNER_IDENTITY", "B2_MICRO_SEMANTICS", "B2_REPEATABILITY", "plateau_status", "classification"
+    )}, sort_keys=True))
