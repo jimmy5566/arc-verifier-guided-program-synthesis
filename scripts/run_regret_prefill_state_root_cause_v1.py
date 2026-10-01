@@ -392,7 +392,6 @@ def _write_trace_condition(args: argparse.Namespace) -> None:
     contract = read_json(args.contract.resolve())
     no_gold_challenge(Path(contract["challenge"]))
     model, encoded, dec, adapter_sha, native = _runtime(contract, args.gpu_id)
-    handles = []
     captured: dict[str, dict[str, Any]] = {}
     try:
         flip = _new_cell(model, encoded, dec, PRIMARY); request = flip.request
@@ -403,16 +402,27 @@ def _write_trace_condition(args: argparse.Namespace) -> None:
             if anti.request is None:
                 raise RuntimeError("anti completed before requested trace history")
             outputs, _summary = _one_forward(model, anti.request); _reply(anti, outputs)
-        for label, module in _trace_modules(model):
-            def hook(_module: Any, _inputs: Any, value: Any, *, label: str = label) -> None:
-                tensor = _first_tensor(value)
-                if tensor is None:
-                    raise RuntimeError(f"trace stage {label} produced no tensor")
-                cpu = tensor.detach().float().cpu().contiguous()
-                captured[label] = {"shape": list(cpu.shape), "dtype": str(tensor.dtype),
-                                   "sha256": _tensor_sha(cpu), "values": cpu.tolist()}
-            handles.append(module.register_forward_hook(hook))
-        outputs, summary = _one_forward(model, request)
+        # Unsloth routes most blocks through patched fast-forward functions,
+        # bypassing ordinary PyTorch module hooks.  The model's public
+        # ``hidden_states`` output is therefore the first faithful per-block
+        # observation point for this diagnostic forward.
+        with torch.no_grad():
+            outputs = model(input_ids=torch.tensor([[request.token_id]], device=model.device, dtype=torch.long),
+                            position_ids=torch.tensor([[request.position]], device=model.device, dtype=torch.long),
+                            past_key_values=request.cache, return_dict=True, use_cache=True,
+                            output_hidden_states=True)
+        summary = _logit_summary(outputs.logits)
+        hidden = getattr(outputs, "hidden_states", None)
+        if not hidden:
+            raise RuntimeError("model did not return hidden_states for first-level diagnostic trace")
+        for index, tensor in enumerate(hidden):
+            label = "input_embedding" if index == 0 else f"transformer_block_{index - 1:02d}"
+            cpu = tensor.detach().float().cpu().contiguous()
+            captured[label] = {"shape": list(cpu.shape), "dtype": str(tensor.dtype),
+                               "sha256": _tensor_sha(cpu), "values": cpu.tolist()}
+        logits_cpu = outputs.logits[:, -1].detach().float().cpu().contiguous()
+        captured["lm_head"] = {"shape": list(logits_cpu.shape), "dtype": str(outputs.logits.dtype),
+                               "sha256": _tensor_sha(logits_cpu), "values": logits_cpu.tolist()}
         atomic_json(args.result.resolve(), {
             "history_length": args.history_length, "cell_key": f"{TASK_ID}:o{OUTPUT_INDEX}:d{DEPTH}:{PRIMARY}",
             "request_token_id": int(request.token_id), "request_position": int(request.position),
@@ -423,8 +433,6 @@ def _write_trace_condition(args: argparse.Namespace) -> None:
             "stages": captured, "gold_accessed": False, "dfs_executed": False,
         })
     finally:
-        for handle in handles:
-            handle.remove()
         _release(model)
 
 
@@ -435,7 +443,7 @@ def trace(args: argparse.Namespace) -> None:
     decision_path = output / "DECISION.json"; decision = read_json(decision_path)
     if decision.get("foreign_incremental_history_first_drift") in (None, "NONE_THROUGH_32"):
         raise RuntimeError("first-level trace requires an established history-length drift")
-    trace_root = output / "layer_trace"; trace_root.mkdir(exist_ok=True)
+    trace_root = output / "layer_trace_hidden_states"; trace_root.mkdir(exist_ok=True)
     for history_length in (0, int(decision["foreign_incremental_history_first_drift"])):
         result = trace_root / f"N{history_length}.json"
         if result.exists():
