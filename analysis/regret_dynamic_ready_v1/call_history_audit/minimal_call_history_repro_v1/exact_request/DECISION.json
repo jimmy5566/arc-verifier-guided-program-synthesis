@@ -1,0 +1,9 @@
+{
+  "experiment": "MINIMAL_CALL_HISTORY_REPRO_V1",
+  "foreign_call_changes_arc_ranking": false,
+  "foreign_call_reproduces_drift": false,
+  "gold_accessed": false,
+  "immediate_replay_exact": true,
+  "next": "DO_NOT_IMPLEMENT_FIX",
+  "target_blind": true
+}

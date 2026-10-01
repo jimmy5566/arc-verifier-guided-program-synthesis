@@ -1,0 +1,25 @@
+{
+  "adapter_manifest": "/workspace/arc2/turbodfs_v5/eval60_adapter_manifest.csv",
+  "adapter_manifest_sha256": "a8077dd91e344577d42d4f22227178b27d29fd92b3d4725d3957ef3e852bcbd0",
+  "authoritative_root": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1",
+  "caps": {
+    "max_completed_candidates": 32,
+    "max_expanded_nodes": 4096
+  },
+  "challenge": "/workspace/arc2/benchmarks/arc-agi_evaluation_challenges.json",
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "depth": 24,
+  "experiment": "MINIMAL_CALL_HISTORY_REPRO_V1",
+  "foreign_view": "anti_transpose",
+  "gold_accessed": false,
+  "model_path": "/root/arc-runtime-3090-v2/model-stage/qwen3_4b_grids15_sft139",
+  "native_config_dir": "/root/arc2/configs/nvarc_native_846d0198",
+  "output_index": 0,
+  "policy": "CUMULATIVE_REGRET_r=4.00",
+  "primary_view": "flip_ud",
+  "protocol": "fresh model per condition; A/B immediate replay; C/D/E one foreign incremental; no search",
+  "reference_config": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/reference_ttt_config_cuda128_runtime.json",
+  "source_commit": "14b2abba2d75331782eaf890f126d83691b958ca",
+  "target_blind": true,
+  "task_id": "d59b0160"
+}

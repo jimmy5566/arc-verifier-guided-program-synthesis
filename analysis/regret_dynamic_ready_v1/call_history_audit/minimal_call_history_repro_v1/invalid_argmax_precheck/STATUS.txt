@@ -1,0 +1,1 @@
+invalid_argmax_precheck: this preliminary run used raw argmax rather than Dynamic-READY request selection; it is retained only as invalid provenance and must not be used for conclusions.

@@ -1,0 +1,9 @@
+{
+  "gold_accessed": false,
+  "sha256": {
+    "CONTRACT.json": "430f9658bb46d289cdd9478407903f190804cef0d2bb800f56380ed199386cae",
+    "DECISION.json": "3706b7adb6a30ebd40a33a27935b2d6e3788071e8d07b2051f9e97f067d171c1",
+    "FOREIGN_CALL_REPLAY.json": "fecc8a75adf2043ae99bed81b12bbbb859839b6aee63044e8c8069d9067dff7b",
+    "IMMEDIATE_REPLAY.json": "217343d46cba12e1f576e998b59e4db0089122717eb11bae3cbeab8af7a53a47"
+  }
+}
