@@ -6,6 +6,7 @@ from inference.nvarc_turbodfs_d1 import D1TurboDFSConfig, inference_d1_turbo_dfs
 from inference.nvarc_turbodfs_dynamic_ready import (
     ReadyCell,
     _new_state,
+    canonical_semantic_value,
     clone_legacy_cache,
     normalized_result_signature,
     ready_result,
@@ -96,3 +97,10 @@ def test_root_cache_clone_has_independent_tensor_storage():
     assert cloned[0][0].data_ptr() != root[0][0].data_ptr()
     cloned[0][0].add_(10)
     assert root[0][0].flatten().tolist() == [0.0, 1.0, 2.0, 3.0]
+
+
+def test_semantic_canonicalization_ignores_json_tuple_shape_and_elapsed_time_only():
+    native = {"active_mask": (True,), "elapsed_seconds": 0.1, "rank": 2, "logprob": -0.3}
+    json_round_trip = {"active_mask": [True], "elapsed_seconds": 9.9, "rank": 2, "logprob": -0.3}
+    assert canonical_semantic_value(native) == canonical_semantic_value(json_round_trip)
+    assert canonical_semantic_value({**native, "rank": 3}) != canonical_semantic_value(json_round_trip)

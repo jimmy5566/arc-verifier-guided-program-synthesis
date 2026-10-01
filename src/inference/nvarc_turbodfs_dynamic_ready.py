@@ -466,3 +466,43 @@ def normalized_result_signature(result: D1TurboDFSResult) -> str:
     # order when a coroutine resumes.  Canonical JSON tests evidence equality,
     # not incidental Python dict construction order.
     return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+# Wall-clock observations are useful performance telemetry, but are never
+# decoder semantics.  Keep this helper public so every diagnostic and gate
+# applies the same representation rule rather than comparing Python tuples
+# against JSON-decoded lists by accident.
+NON_SEMANTIC_PARITY_FIELDS = frozenset({
+    "elapsed_seconds",
+    "wall_seconds",
+    "wall_time_seconds",
+    "timestamp",
+    "timestamp_utc",
+    "discovery_unix",
+    "discovery_wall_seconds",
+})
+
+
+def canonical_semantic_value(value: Any) -> Any:
+    """Canonical, JSON-safe representation of deterministic decoder evidence.
+
+    This intentionally preserves probabilities, ranks, node IDs, Regret
+    values, frontier state, candidates, and termination information.  It only
+    removes explicitly non-semantic wall-clock observations and normalizes
+    tuple/list representation introduced by JSON serialization.
+    """
+    if isinstance(value, dict):
+        return {
+            str(key): canonical_semantic_value(item)
+            for key, item in sorted(value.items(), key=lambda pair: str(pair[0]))
+            if str(key) not in NON_SEMANTIC_PARITY_FIELDS
+        }
+    if isinstance(value, (tuple, list)):
+        return [canonical_semantic_value(item) for item in value]
+    return value
+
+
+def semantic_value_sha256(value: Any) -> str:
+    """Hash canonical decoder evidence for artifact-to-artifact parity."""
+    payload = canonical_semantic_value(value)
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()

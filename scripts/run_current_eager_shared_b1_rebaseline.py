@@ -27,9 +27,11 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
 from inference.nvarc_turbodfs_dynamic_ready import (
     _reply,
+    canonical_semantic_value,
     normalized_result_signature,
     ready_result,
     run_ready_scheduler,
+    semantic_value_sha256,
     start_ready_cell,
 )
 from scripts.run_adaptive_ttt_loo_transfer12 import read_json, view_task
@@ -183,21 +185,40 @@ def _snapshot(result: Any) -> dict[str, Any]:
 
 
 def _parity(reference: dict[str, Any], actual: dict[str, Any]) -> dict[str, Any]:
-    same = lambda key: reference[key] == actual[key]
+    raw_same = lambda key: reference[key] == actual[key]
+    semantic_same = lambda key: canonical_semantic_value(reference[key]) == canonical_semantic_value(actual[key])
     fields = ("candidate_tokens", "nodes", "branch_probabilities", "frontier_floor_events", "search_trace",
               "nodes_expanded", "completed_candidates", "termination_reason")
-    return {
-        "exact_parity": reference["signature"] == actual["signature"],
-        "candidate_tokens_parity": same("candidate_tokens"),
-        "node_trace_parity": same("nodes"),
-        "branch_probabilities_parity": same("branch_probabilities"),
-        "frontier_floor_parity": same("frontier_floor_events"),
-        "search_trace_parity": same("search_trace"),
-        "nodes_expanded_parity": same("nodes_expanded"),
-        "completed_candidates_parity": same("completed_candidates"),
-        "termination_parity": same("termination_reason"),
-        "all_required_fields_equal": all(same(key) for key in fields),
+    aliases = {
+        "candidate_tokens": "candidate_tokens",
+        "nodes": "node_trace",
+        "branch_probabilities": "branch_probabilities",
+        "frontier_floor_events": "frontier_floor",
+        "search_trace": "search_trace",
+        "nodes_expanded": "nodes_expanded",
+        "completed_candidates": "completed_candidates",
+        "termination_reason": "termination",
     }
+    semantic = {key: semantic_same(key) for key in fields}
+    strict = all(semantic.values())
+    row: dict[str, Any] = {
+        # ``exact_parity`` remains the gate-compatible name, but is now strict
+        # canonical semantic equality rather than a partial signature check.
+        "exact_parity": strict,
+        "strict_semantic_parity": strict,
+        "normalized_signature_parity": reference["signature"] == actual["signature"],
+        "all_required_fields_equal": strict,
+    }
+    for key in fields:
+        alias = aliases[key]
+        row[f"{alias}_raw_parity"] = raw_same(key)
+        row[f"{alias}_semantic_parity"] = semantic[key]
+        # Existing CSV consumers use these names.  They now correctly mean
+        # semantic rather than incidental Python-object equality.
+        row[f"{alias}_parity"] = semantic[key]
+        row[f"{alias}_reference_semantic_sha256"] = semantic_value_sha256(reference[key])
+        row[f"{alias}_actual_semantic_sha256"] = semantic_value_sha256(actual[key])
+    return row
 
 
 def run_round_robin_b1(*, model: Any, cells: list[Any], order: tuple[str, ...]) -> dict[str, Any]:
