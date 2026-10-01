@@ -23,6 +23,11 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _tensor_sha256(tensor: Any) -> str:
+    """Hash exact tensor storage bytes, including BF16 without lossy casts."""
+    return hashlib.sha256(tensor.detach().cpu().contiguous().view(__import__("torch").uint8).numpy().tobytes()).hexdigest()
+
+
 def load_hf_peft_inference(*, model_path: Path, adapter_path: Path, device: str) -> tuple[Any, Any, dict[str, Any]]:
     """Load a frozen adapter with stock Transformers and PEFT only."""
     import torch
@@ -76,7 +81,7 @@ def adapter_tensor_manifest(adapter_path: Path) -> list[dict[str, Any]]:
         for name in sorted(handle.keys()):
             tensor = handle.get_tensor(name).contiguous()
             rows.append({"canonical_parameter_name": name, "shape": list(tensor.shape), "dtype": str(tensor.dtype),
-                         "source_sha256": hashlib.sha256(tensor.numpy().tobytes()).hexdigest()})
+                         "source_sha256": _tensor_sha256(tensor)})
     return rows
 
 
@@ -88,7 +93,7 @@ def loaded_adapter_tensor_parity(model: Any, source_rows: list[dict[str, Any]]) 
         candidates = (name, f"base_model.model.{name.removeprefix('base_model.model.')}")
         loaded_name = next((candidate for candidate in candidates if candidate in state), None)
         tensor = state.get(loaded_name) if loaded_name else None
-        loaded_sha = None if tensor is None else hashlib.sha256(tensor.detach().cpu().contiguous().numpy().tobytes()).hexdigest()
+        loaded_sha = None if tensor is None else _tensor_sha256(tensor)
         rows.append({**source, "loaded_parameter_name": loaded_name, "loaded_sha256": loaded_sha,
                      "exact_equal": bool(loaded_sha == source["source_sha256"])})
     return rows
