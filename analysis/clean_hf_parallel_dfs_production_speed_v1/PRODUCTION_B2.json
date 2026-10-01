@@ -1,0 +1,218 @@
+{
+  "adapter_exact": {
+    "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+    "adapter_sha256": "a91e4375da1cf5f544a083221292ded0dd41e50b4a4c63e80bb4c37ab0e42854",
+    "exact_match_count": 506,
+    "foundation_path": "/root/arc-runtime-3090-v2/arc2/analysis/clean_hf_parallel_regret_dfs_v1/ADAPTER_PARITY_SUMMARY.json"
+  },
+  "cache_strategy": "rollback",
+  "candidate_pool_sha256": "b3e6ad5dc1e4be3227c66bdc317cd8d78af336e4c738fd9929cac2538652a1cf",
+  "candidate_reference": {
+    "path": "/root/arc-runtime-3090-v2/active_run/clean_hf_rollback_dfs_and_b2_ownership_v1/r128_dynamic_b2/R128_DYNAMIC_B2_RAW.json",
+    "sha256": "5a2ae512a4cc05d926936f713cd9499312a98e0f15beda11e32cb78520e7fdb4"
+  },
+  "config": {
+    "absolute_end_time_unix": null,
+    "arc_tokens": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      15
+    ],
+    "calibration_assertions": true,
+    "diagnostic_trace": false,
+    "frontier_floor": 1,
+    "independent_lane_budgets": true,
+    "local_time_limit_seconds": 540.0,
+    "max_completed_candidates": 32,
+    "max_expanded_nodes": 128,
+    "max_new_tokens": 931,
+    "max_score": 1.6094379124341003,
+    "pad_token_id": 13,
+    "performance_profile": false,
+    "policy_id": "CUMULATIVE_REGRET_r=4.00"
+  },
+  "diagnostic_trace": false,
+  "experiment": "CLEAN_HF_PARALLEL_DFS_PRODUCTION_SPEED_V1",
+  "gold_loaded": false,
+  "memory": {
+    "cuda_allocated_bytes_end": 9614227456,
+    "cuda_peak_allocated_bytes": 11432903680,
+    "cuda_peak_reserved_bytes": 12513705984,
+    "cuda_reserved_bytes_end": 12513705984
+  },
+  "mode": "dynamic-ready",
+  "per_cell": [
+    {
+      "budget_exhausted": true,
+      "candidate_pool_match_reference": true,
+      "cell_key": "d59b0160:o0:d24:anti_transpose",
+      "completed_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128
+    },
+    {
+      "budget_exhausted": true,
+      "candidate_pool_match_reference": true,
+      "cell_key": "d59b0160:o0:d24:flip_ud",
+      "completed_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128
+    },
+    {
+      "budget_exhausted": true,
+      "candidate_pool_match_reference": true,
+      "cell_key": "d59b0160:o0:d24:identity",
+      "completed_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128
+    },
+    {
+      "budget_exhausted": true,
+      "candidate_pool_match_reference": true,
+      "cell_key": "d59b0160:o0:d24:transpose",
+      "completed_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128
+    }
+  ],
+  "production_mode": true,
+  "raw_sha256": "afa911aee7d7cc63ce9fe689a0e812265363046de77e17d7272f6f2e2a84a7e2",
+  "runtime_identity": {
+    "adapter_config": {
+      "lora_alpha": 32,
+      "modules_to_save": [
+        "lm_head",
+        "embed_tokens"
+      ],
+      "r": 256,
+      "target_modules": [
+        "down_proj",
+        "gate_proj",
+        "k_proj",
+        "o_proj",
+        "q_proj",
+        "up_proj",
+        "v_proj"
+      ],
+      "target_modules_schema_translated": true,
+      "use_rslora": true
+    },
+    "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+    "adapter_identity_verification": "committed_506_506_foundation_binding",
+    "adapter_sha256": "a91e4375da1cf5f544a083221292ded0dd41e50b4a4c63e80bb4c37ab0e42854",
+    "attention_implementation": "sdpa",
+    "backend": "transformers_peft_clean",
+    "base_model_class": "Qwen3ForCausalLM",
+    "cuda": "12.8",
+    "dtype": "torch.bfloat16",
+    "forward_module": "peft.peft_model",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "model_class": "PeftModelForCausalLM",
+    "peft": "0.17.1",
+    "tokenizer_identity": {
+      "chat_template_source": "nvarc_official_for_missing_checkpoint_template",
+      "config_vocab_size": 16,
+      "eos_token_id": 15,
+      "pad_token_id": 13,
+      "token_mapping": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "<|endoftext|>": 13,
+        "<|im_end|>": 15,
+        "<|im_start|>": 14,
+        "assistant": 12,
+        "user": 11,
+        "\u010a": 10
+      },
+      "tokenizer_vocab_size": 16
+    },
+    "tokenizer_vocab_size": 16,
+    "torch": "2.8.0+cu128",
+    "transformers": "4.55.4"
+  },
+  "sanity": {
+    "all_cells_completed": true,
+    "all_cells_expanded_exact_budget": true,
+    "all_termination_budget_exhausted": true,
+    "candidate_pools_match_reference": true,
+    "cell_count": 4,
+    "no_cache_generation_leak_indicator": true
+  },
+  "scheduler": {
+    "active2_fraction": 1.0,
+    "b1_forwards": 0,
+    "b2_forwards": 256,
+    "cache_adoption_seconds": 0.6723002586513758,
+    "cache_pack_seconds": 0.5310556292533875,
+    "logical_advances": 512,
+    "mean_effective_batch": 2.0,
+    "model_call_seconds": 19.170614577829838,
+    "physical_forwards": 256,
+    "scheduler_overhead_seconds": 0.2325355727225542
+  },
+  "target_blind": true,
+  "task": {
+    "depth": 24,
+    "output_index": 0,
+    "task_id": "d59b0160",
+    "views": [
+      "anti_transpose",
+      "flip_ud",
+      "identity",
+      "transpose"
+    ]
+  },
+  "timing": {
+    "inference_nodes_per_second": 22.23508069437265,
+    "inference_wall_seconds": 23.02667604573071,
+    "logical_nodes": 512,
+    "model_only_nodes_per_second": 26.70754231281195,
+    "prefill_wall_seconds": 1.7964196652173996,
+    "search_nodes_per_second": 24.116524587519876,
+    "search_wall_seconds": 21.23025638051331
+  },
+  "timing_contract": {
+    "cuda_synchronized_before_and_after_prefill": true,
+    "cuda_synchronized_before_and_after_search": true,
+    "excluded": [
+      "python_startup",
+      "imports",
+      "model_loading",
+      "peft_adapter_loading",
+      "tokenizer_loading",
+      "adapter_identity_validation",
+      "challenge_loading",
+      "result_serialization",
+      "file_writes"
+    ],
+    "per_forward_cache_or_logits_hashing": false,
+    "per_forward_event_trace": false
+  },
+  "unsloth_inference": false,
+  "warmup_used": false
+}

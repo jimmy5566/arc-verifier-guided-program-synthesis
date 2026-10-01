@@ -1,0 +1,67 @@
+{
+  "experiment": "CLEAN_HF_PARALLEL_DFS_PRODUCTION_SPEED_V1",
+  "gold_loaded": false,
+  "performance_contract": {
+    "cuda_synchronized_before_and_after_prefill": true,
+    "cuda_synchronized_before_and_after_search": true,
+    "excluded": [
+      "python_startup",
+      "imports",
+      "model_loading",
+      "peft_adapter_loading",
+      "tokenizer_loading",
+      "adapter_identity_validation",
+      "challenge_loading",
+      "result_serialization",
+      "file_writes"
+    ],
+    "per_forward_cache_or_logits_hashing": false,
+    "per_forward_event_trace": false
+  },
+  "scientific_contract": {
+    "cache_strategy": "rollback",
+    "config": {
+      "absolute_end_time_unix": null,
+      "arc_tokens": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        15
+      ],
+      "calibration_assertions": true,
+      "diagnostic_trace": false,
+      "frontier_floor": 1,
+      "independent_lane_budgets": true,
+      "local_time_limit_seconds": 540.0,
+      "max_completed_candidates": 32,
+      "max_expanded_nodes": 128,
+      "max_new_tokens": 931,
+      "max_score": 1.6094379124341003,
+      "pad_token_id": 13,
+      "performance_profile": false,
+      "policy_id": "CUMULATIVE_REGRET_r=4.00"
+    },
+    "task": {
+      "depth": 24,
+      "output_index": 0,
+      "task_id": "d59b0160",
+      "views": [
+        "anti_transpose",
+        "flip_ud",
+        "identity",
+        "transpose"
+      ]
+    }
+  },
+  "source_commit": "207b1790b5180cf0c52c2e190a178ea8359c5ff9",
+  "target_blind": true,
+  "unsloth_inference": false
+}
