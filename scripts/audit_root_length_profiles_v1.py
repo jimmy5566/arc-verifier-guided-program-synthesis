@@ -101,14 +101,24 @@ def _native_prompt_length(*, tokenizer: Any, task: Any, output_index: int, candi
 def run(args: argparse.Namespace) -> None:
     _assert_challenge_only(args.challenge)
     raw = json.loads(args.challenge.read_text(encoding="utf-8")); tasks = load_dataset(args.challenge)
-    outputs = _outputs_from_manifest(args.output_manifest)
+    manifest_outputs = _outputs_from_manifest(args.output_manifest)
+    outputs: list[tuple[str, int]] = []
+    unavailable: list[dict[str, Any]] = []
+    for task_id, output_index in manifest_outputs:
+        if task_id not in tasks or task_id not in raw:
+            unavailable.append({"output_id": f"{task_id}:o{output_index}", "reason": "TASK_ABSENT_FROM_CURRENT_TARGET_BLIND_CHALLENGE"})
+        elif output_index >= len(tasks[task_id].test):
+            unavailable.append({"output_id": f"{task_id}:o{output_index}", "reason": "OUTPUT_INDEX_ABSENT_FROM_CURRENT_TARGET_BLIND_CHALLENGE",
+                                "available_test_inputs": len(tasks[task_id].test)})
+        else:
+            outputs.append((task_id, output_index))
+    if not outputs:
+        raise RuntimeError("frozen Census manifest has no addressable outputs in the current target-blind challenge")
     candidates = _load_aug16(args.candidate_pool, args.aug16_ids)
     tokenizer, tokenizer_identity = checkpoint_native_tokenizer(args.model_path, args.native_config_dir)
     candidate_ids = [str(item["candidate_id"]) for item in candidates]
     rows: list[dict[str, Any]] = []; assignments: dict[str, Any] = {}
     for task_id, output_index in outputs:
-        if task_id not in tasks or task_id not in raw or output_index >= len(tasks[task_id].test):
-            raise RuntimeError(f"frozen output unavailable in target-blind challenge: {task_id}:o{output_index}")
         lengths: list[int] = []
         for candidate in candidates:
             lengths.append(_native_prompt_length(tokenizer=tokenizer, task=tasks[task_id], output_index=output_index,
@@ -134,12 +144,15 @@ def run(args: argparse.Namespace) -> None:
              "frozen_output_manifest": str(args.output_manifest), "frozen_output_manifest_sha256": _sha256_file(args.output_manifest),
              "challenge_sha256": _sha256_file(args.challenge), "candidate_pool_sha256": _sha256_file(args.candidate_pool),
              "aug16_ids_sha256": _sha256_file(args.aug16_ids), "tokenizer_identity": tokenizer_identity,
-             "output_count": len(rows), "cohort_root_length_summary": {"min": min(maxima), "median": statistics.median(maxima),
+             "source_manifest_output_count": len(manifest_outputs), "output_count": len(rows),
+             "manifest_layout_reconciliation": {"status": "PASS" if not unavailable else "PUBLIC_LAYOUT_RECONCILED",
+             "addressable_output_count": len(rows), "unavailable_output_count": len(unavailable), "unavailable_outputs": unavailable},
+             "cohort_root_length_summary": {"min": min(maxima), "median": statistics.median(maxima),
              "p90": _quantile(maxima, 0.90), "max": max(maxima)}, "profile_counts": counts,
              "kv_block_tokens": KV_BLOCK_TOKENS, "max_new_tokens": MAX_NEW_TOKENS, "assignments": assignments}
     _atomic_json(args.output / "PROFILE_ASSIGNMENTS.json", audit)
-    report = ["# Root-length profile audit V1", "", "Tokenizer-only, target-blind audit over the frozen 89-output Census manifest. No model, adapter, GPU inference, or Gold was loaded.", "",
-              f"- Outputs: `{len(rows)}`", f"- Root max length min / median / p90 / max: `{min(maxima)}` / `{statistics.median(maxima)}` / `{_quantile(maxima, 0.90)}` / `{max(maxima)}`", "", "## Frozen profiles", ""]
+    report = ["# Root-length profile audit V1", "", "Tokenizer-only, target-blind audit. No model, adapter, GPU inference, or Gold was loaded.", "",
+              f"- Frozen manifest outputs: `{len(manifest_outputs)}`", f"- Addressable outputs in current public challenge: `{len(rows)}`", f"- Unavailable manifest entries: `{len(unavailable)}`", f"- Root max length min / median / p90 / max: `{min(maxima)}` / `{statistics.median(maxima)}` / `{_quantile(maxima, 0.90)}` / `{max(maxima)}`", "", "## Frozen profiles", ""]
     report.extend(f"- `{name}`: `{count}`" for name, count in counts.items())
     (args.output / "REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
     hashes = {path.name: _sha256_file(path) for path in args.output.iterdir() if path.is_file() and path.name != "HASHES.json"}
