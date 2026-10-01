@@ -1,0 +1,2 @@
+B1_physical_forwards,B1_seconds,B2_mean_effective_batch,B2_physical_forwards,B2_seconds,B2_vs_B1_speedup,lane_swapped_seconds
+64,35.38261021673679,2.0,32,48.906470734626055,0.7234750266223097,49.8702492043376

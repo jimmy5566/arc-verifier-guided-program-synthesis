@@ -1,0 +1,5 @@
+comparison,strict_exact
+"B1(A)_vs_B2(A,B)_A",False
+"B1(B)_vs_B2(A,B)_B",False
+"B1(A)_vs_B2(B,A)_A",False
+"B1(B)_vs_B2(B,A)_B",False

@@ -1,0 +1,15 @@
+{
+  "decoder_policy": "CUMULATIVE_REGRET_r=4.00",
+  "experiment": "CLEAN_HF_ROLLBACK_DFS_AND_B2_OWNERSHIP_V1",
+  "forbidden": [
+    "Gold",
+    "Unsloth inference",
+    "Census",
+    "torch.cuda.empty_cache",
+    "per-branch production snapshots"
+  ],
+  "gold_loaded": false,
+  "model_runtime": "Clean-HF/PEFT BF16",
+  "production_cache_contract": "one stable mutable DynamicCache object per logical view; sequence-length rollback; B2 split content copied into existing owners",
+  "target_blind": true
+}
