@@ -174,7 +174,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     args.output.mkdir(parents=True, exist_ok=True)
     csv_path = args.output / "R128_DYNAMIC_B2_SEMANTICS.csv"
     with csv_path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=sorted({key for row in rows for key in row}))
+        writer = csv.DictWriter(handle, fieldnames=sorted({key for row in rows for key in row}),
+                                lineterminator="\n")
         writer.writeheader(); writer.writerows(rows)
     decision = {
         "target_blind": True, "gold_loaded": False, "classification": classification,
