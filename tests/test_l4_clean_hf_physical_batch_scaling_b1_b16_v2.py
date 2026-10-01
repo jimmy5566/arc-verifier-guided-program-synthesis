@@ -39,6 +39,10 @@ class L4CleanHFPhysicalBatchScalingV2Tests(unittest.TestCase):
     assert contract["measurement"]["warmup_forwards"] == 2
     assert contract["measurement"]["measurement_forwards"] == 12
     assert contract["measurement"]["streaming_split_and_adopt_for_batched_widths"] is True
+    assert contract["benchmark_model_mode"]["global_24_worker_identity_required"] is True
+    assert contract["benchmark_model_mode"]["per_worker_fallback_forbidden"] is True
+    assert contract["runtime_dynamiccache_preflight"]["physical_batch"] == 4
+    assert contract["runtime_dynamiccache_preflight"]["timed"] is False
     with self.assertRaisesRegex(RuntimeError, "source commit"):
         runner.experiment_contract(source_commit="not-the-frozen-source")
 
@@ -90,12 +94,50 @@ class L4CleanHFPhysicalBatchScalingV2Tests(unittest.TestCase):
     assert runner._bootstrap_ratio({0: [1.0]}, new) is None
 
 
+ def test_fail_closed_ready_identity_and_model_mode_gates(self) -> None:
+    def row(gpu: int, *, mode: str = "DETERMINISTIC_BENCHMARK_LORA", state: str = "state", config: str = "config") -> dict:
+        return {"type": "READY", "gpu_id": gpu, "benchmark_model_mode": mode,
+                "benchmark_adapter_state_sha256": state, "benchmark_adapter_config_sha256": config}
+
+    good = [row(gpu) for gpu in range(4)]
+    accepted = runner._ready_identity_gate(ready_rows=good, expected_mode="DETERMINISTIC_BENCHMARK_LORA",
+                                           prior_identity=None)
+    assert accepted["status"] == "PASS"
+    assert accepted["identity"]["benchmark_adapter_state_sha256"] == "state"
+
+    mixed_adapter = good[:3] + [row(3, state="other-state")]
+    assert runner._ready_identity_gate(ready_rows=mixed_adapter, expected_mode="DETERMINISTIC_BENCHMARK_LORA",
+                                       prior_identity=None)["status"] == "INVALID_MIXED_ADAPTER_IDENTITY"
+    mixed_mode = good[:3] + [row(3, mode="BASE_MODEL_ONLY")]
+    assert runner._ready_identity_gate(ready_rows=mixed_mode, expected_mode="DETERMINISTIC_BENCHMARK_LORA",
+                                       prior_identity=None)["status"] == "INVALID_MIXED_BENCHMARK_MODEL_MODE"
+    assert runner._ready_identity_gate(ready_rows=good, expected_mode="DETERMINISTIC_BENCHMARK_LORA",
+                                       prior_identity={**accepted["identity"], "benchmark_adapter_state_sha256": "old"})[
+                                           "status"] == "INVALID_MIXED_ADAPTER_IDENTITY"
+
+
+ def test_global_identity_requires_exactly_twenty_four_same_instances(self) -> None:
+    def ready(gpu: int, *, state: str = "s", config: str = "c") -> dict:
+        return {"type": "READY", "gpu_id": gpu, "benchmark_model_mode": "DETERMINISTIC_BENCHMARK_LORA",
+                "benchmark_adapter_state_sha256": state, "benchmark_adapter_config_sha256": config}
+
+    widths = {width: {"ready": [ready(gpu) for gpu in range(4)]} for width in runner.WIDTHS}
+    accepted = runner._global_identity_gate(all_widths=widths, expected_mode="DETERMINISTIC_BENCHMARK_LORA")
+    assert accepted["status"] == "PASS" and accepted["instance_count"] == 24
+    widths[16]["ready"][0]["benchmark_adapter_state_sha256"] = "different"
+    assert runner._global_identity_gate(all_widths=widths, expected_mode="DETERMINISTIC_BENCHMARK_LORA")[
+        "status"] == "INVALID_MIXED_ADAPTER_IDENTITY"
+
+
  def test_runner_has_no_target_path_and_no_submission_behavior(self) -> None:
     source = RUNNER_PATH.read_text(encoding="utf-8")
     for forbidden in ("evaluation_solutions", "arc-agi_evaluation_solutions", "submission.json", "kaggle kernels push"):
         assert forbidden not in source
     assert "streaming_split_and_adopt" in source
     assert "release_batch_temporaries_for_audit" in source
+    assert "RUNTIME_DYNAMICCACHE_PREFLIGHT_FAILED" in source
+    assert "DETERMINISTIC_BENCHMARK_LORA_ATTACH_FAILED" in source
+    assert "fallback_reason" not in source
 
 
  def test_private_review_package_is_target_blind_and_not_launched(self) -> None:
@@ -107,7 +149,8 @@ class L4CleanHFPhysicalBatchScalingV2Tests(unittest.TestCase):
     assert manifest["authoritative_source_commit"] == runner.AUTHORITATIVE_SOURCE_COMMIT
     notebook = json.loads((staged / "kernel" / "private-kernel.ipynb").read_text(encoding="utf-8"))
     source = "".join(notebook["cells"][0]["source"])
-    assert "controller" in source and "nvidia-smi" in source
+    assert "controller" in source and "nvidia-smi" in source and "runtime_preflight" in source
+    assert source.index("runtime_preflight") < source.index("controller")
     assert "submission.json" not in source and "evaluation_solutions" not in source
     packaged = staged / "dataset" / "ARC2" / "scripts" / RUNNER_PATH.name
     assert packaged.is_file()

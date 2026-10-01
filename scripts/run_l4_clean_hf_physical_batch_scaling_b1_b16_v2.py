@@ -57,6 +57,7 @@ BOOTSTRAP_SEED = 20261001
 BOOTSTRAP_TRIALS = 10_000
 WARMUP_FORWARDS = 2
 MEASUREMENT_FORWARDS = 12
+BENCHMARK_MODEL_MODES = ("DETERMINISTIC_BENCHMARK_LORA", "BASE_MODEL_ONLY")
 
 
 def _atomic_json(path: Path, payload: Any) -> None:
@@ -139,6 +140,36 @@ def benchmark_lora_config() -> dict[str, Any]:
     }
 
 
+def _base_model_adapter_identity() -> dict[str, Any]:
+    """Give explicit base-only runs a stable, comparable adapter identity.
+
+    ``BASE_MODEL_ONLY`` is an explicit whole-experiment mode, never a
+    per-worker recovery path.  It still has hashes so the global identity
+    gate can prove that all 24 measured worker instances used the same graph.
+    """
+    config = {"mode": "BASE_MODEL_ONLY", "adapter": "ABSENT"}
+    return {
+        **config,
+        "tensor_count": 0,
+        "state_sha256": _sha256_json({"benchmark_adapter_state": "BASE_MODEL_ONLY_NO_ADAPTER"}),
+        "config_sha256": _sha256_json(config),
+        "frozen_after_creation": True,
+    }
+
+
+def _adapter_ready_fields(adapter: dict[str, Any], model_mode: str) -> dict[str, str]:
+    """Return the exact primitive identity evidence carried by every worker."""
+    state = adapter.get("state_sha256")
+    config = adapter.get("config_sha256")
+    if model_mode not in BENCHMARK_MODEL_MODES or not isinstance(state, str) or not isinstance(config, str):
+        raise RuntimeError("benchmark adapter identity is incomplete")
+    return {
+        "benchmark_model_mode": model_mode,
+        "benchmark_adapter_state_sha256": state,
+        "benchmark_adapter_config_sha256": config,
+    }
+
+
 def experiment_contract(*, source_commit: str) -> dict[str, Any]:
     if source_commit != AUTHORITATIVE_SOURCE_COMMIT:
         raise RuntimeError(f"source commit must be {AUTHORITATIVE_SOURCE_COMMIT}, got {source_commit}")
@@ -152,6 +183,12 @@ def experiment_contract(*, source_commit: str) -> dict[str, Any]:
         "historical_adapter_required": False,
         "historical_adapter_exact_parity": "NOT_AVAILABLE",
         "benchmark_adapter": benchmark_lora_config(),
+        "benchmark_model_mode": {
+            "default": "DETERMINISTIC_BENCHMARK_LORA",
+            "allowed_final_states": list(BENCHMARK_MODEL_MODES),
+            "per_worker_fallback_forbidden": True,
+            "global_24_worker_identity_required": True,
+        },
         "task": {"task_id": "d59b0160", "output_index": 0, "depth": 24},
         "base_views": list(BASE_VIEWS),
         "widths": list(WIDTHS),
@@ -164,6 +201,15 @@ def experiment_contract(*, source_commit: str) -> dict[str, Any]:
             "fresh_process_per_gpu_width": True,
             "streaming_split_and_adopt_for_batched_widths": True,
             "release_batch_temporaries_for_audit_for_batched_widths": True,
+        },
+        "runtime_dynamiccache_preflight": {
+            "physical_batch": 4,
+            "timed": False,
+            "required_checks": [
+                "owner_identity_preserved", "output_cache_storage_independent",
+                "sequence_length_incremented_exactly_once", "finite_logits",
+                "temporary_release_succeeds", "no_oom",
+            ],
         },
         "non_claims": [
             "physical replicas are not additional ARC views",
@@ -233,10 +279,11 @@ def _adapter_state_identity(model: Any, config: dict[str, Any]) -> dict[str, Any
 
 
 def _load_context(args: argparse.Namespace) -> tuple[Any, Any, dict[str, Any], Any, dict[str, Any]]:
-    """Load checkpoint then attach a deterministic structural LoRA if possible.
+    """Load the globally selected graph and its fail-closed identity evidence.
 
-    An attachment failure intentionally reloads the untouched base model.  The
-    fallback is recorded rather than silently changing graph identity.
+    A LoRA attachment error is a startup error for a deterministic-LoRA run.
+    Base-model measurement is allowed only when selected before B1 via the
+    explicit CLI mode; individual workers never choose a fallback themselves.
     """
     import torch
     from arc.io import load_dataset
@@ -255,40 +302,40 @@ def _load_context(args: argparse.Namespace) -> tuple[Any, Any, dict[str, Any], A
             torch_dtype=torch.bfloat16, low_cpu_mem_usage=True,
         ).to(args.device).eval()
 
+    if args.benchmark_model_mode not in BENCHMARK_MODEL_MODES:
+        raise RuntimeError(f"unsupported benchmark model mode: {args.benchmark_model_mode!r}")
     base = load_base()
-    adapter_config = benchmark_lora_config()
-    try:
-        from peft import LoraConfig, TaskType, get_peft_model
+    if args.benchmark_model_mode == "DETERMINISTIC_BENCHMARK_LORA":
+        adapter_config = benchmark_lora_config()
+        try:
+            from peft import LoraConfig, TaskType, get_peft_model
 
-        torch.manual_seed(ADAPTER_SEED)
-        torch.cuda.manual_seed_all(ADAPTER_SEED)
-        peft_config = LoraConfig(
-            r=adapter_config["r"], lora_alpha=adapter_config["lora_alpha"],
-            target_modules=adapter_config["target_modules"], use_rslora=True,
-            lora_dropout=0.0, bias="none", task_type=TaskType.CAUSAL_LM,
-            init_lora_weights=True,
-        )
-        # PEFT may otherwise retain newly-created LoRA matrices in FP32 even
-        # when its base is BF16.  This is a hardware graph characterization,
-        # so the attached structural LoRA must also be BF16.
-        model = get_peft_model(base, peft_config).to(device=args.device, dtype=torch.bfloat16).eval()
-        for parameter in model.parameters():
-            parameter.requires_grad_(False)
-        adapter_identity = _adapter_state_identity(model, adapter_config)
-        model_mode = "DETERMINISTIC_BENCHMARK_LORA"
-    except Exception as exc:
-        del base
-        gc.collect()
-        torch.cuda.empty_cache()
-        base = load_base()
+            torch.manual_seed(ADAPTER_SEED)
+            torch.cuda.manual_seed_all(ADAPTER_SEED)
+            peft_config = LoraConfig(
+                r=adapter_config["r"], lora_alpha=adapter_config["lora_alpha"],
+                target_modules=adapter_config["target_modules"], use_rslora=True,
+                lora_dropout=0.0, bias="none", task_type=TaskType.CAUSAL_LM,
+                init_lora_weights=True,
+            )
+            # PEFT may otherwise retain newly-created LoRA matrices in FP32 even
+            # when its base is BF16.  This is a hardware graph characterization,
+            # so the attached structural LoRA must also be BF16.
+            model = get_peft_model(base, peft_config).to(device=args.device, dtype=torch.bfloat16).eval()
+            for parameter in model.parameters():
+                parameter.requires_grad_(False)
+            adapter_identity = _adapter_state_identity(model, adapter_config)
+            model_mode = "DETERMINISTIC_BENCHMARK_LORA"
+        except Exception as exc:
+            del base
+            gc.collect()
+            torch.cuda.empty_cache()
+            raise RuntimeError("DETERMINISTIC_BENCHMARK_LORA_ATTACH_FAILED") from exc
+    else:
         for parameter in base.parameters():
             parameter.requires_grad_(False)
         model = base.eval()
-        adapter_identity = {
-            "mode": "BASE_MODEL_ONLY", "fallback_reason": repr(exc), "tensor_count": 0,
-            "state_sha256": None, "config_sha256": _sha256_json({"mode": "BASE_MODEL_ONLY"}),
-            "frozen_after_creation": True,
-        }
+        adapter_identity = _base_model_adapter_identity()
         model_mode = "BASE_MODEL_ONLY"
 
     tasks = load_dataset(Path(args.challenge))
@@ -308,6 +355,7 @@ def _load_context(args: argparse.Namespace) -> tuple[Any, Any, dict[str, Any], A
         "model_class": type(model).__qualname__, "tokenizer_identity": tokenizer_identity,
         "tokenizer_vocab_size": len(tokenizer), "torch": torch.__version__, "cuda": torch.version.cuda,
     }
+    identity.update(_adapter_ready_fields(adapter_identity, model_mode))
     return torch, model, identity, config, {"prompts": prompts, "adapter": adapter_identity}
 
 
@@ -473,6 +521,7 @@ def _measure_loaded(*, args: argparse.Namespace, physical_gpu_id: int, width: in
         "status": "PASS" if all(sample["status"] == "PASS" for sample in samples) else "SAFETY_FAIL",
         "gpu_id": physical_gpu_id, "physical_batch": width, "model_identity": model_identity,
         "benchmark_adapter_identity": context["adapter"], "hardware": _nvidia_telemetry(physical_gpu_id),
+        **_adapter_ready_fields(context["adapter"], model_identity["benchmark_model_mode"]),
         "samples": samples, "waterfall": waterfall,
     }
 
@@ -492,8 +541,11 @@ def _worker_entry(serialized_args: dict[str, Any], gpu_id: int, width: int, read
         context_probe = _load_context(args)
         torch_value, model, identity, config, context = context_probe
         thermal = _nvidia_telemetry(gpu_id)
-        ready.put({"type": "READY", "gpu_id": gpu_id, "width": width, "gpu_uuid": thermal.get("gpu_uuid"),
-                   "model_mode": identity["benchmark_model_mode"], "adapter": context["adapter"]})
+        ready.put({
+            "type": "READY", "gpu_id": gpu_id, "width": width, "gpu_uuid": thermal.get("gpu_uuid"),
+            "model_mode": identity["benchmark_model_mode"], "adapter": context["adapter"],
+            **_adapter_ready_fields(context["adapter"], identity["benchmark_model_mode"]),
+        })
         if not start.wait(timeout=args.start_timeout_seconds):
             raise TimeoutError("controller did not release width start barrier")
         measured = _measure_loaded(args=args, physical_gpu_id=gpu_id, width=width, torch=torch_value, model=model,
@@ -506,11 +558,66 @@ def _worker_entry(serialized_args: dict[str, Any], gpu_id: int, width: int, read
 
 def _worker_args(args: argparse.Namespace) -> dict[str, Any]:
     keys = ("model_path", "challenge", "native_config_dir", "task_id", "output_index", "depth", "budget",
-            "warmup_forwards", "measurement_forwards", "start_timeout_seconds")
+            "warmup_forwards", "measurement_forwards", "start_timeout_seconds", "benchmark_model_mode")
     return {key: (str(getattr(args, key)) if isinstance(getattr(args, key), Path) else getattr(args, key)) for key in keys}
 
 
-def _run_width(args: argparse.Namespace, width: int) -> dict[str, Any]:
+def _ready_identity_gate(*, ready_rows: list[dict[str, Any]], expected_mode: str,
+                         prior_identity: dict[str, str] | None) -> dict[str, Any]:
+    """Fail closed before any timing if a four-worker width is incomparable."""
+    workers = [row for row in ready_rows if row.get("type") == "READY"]
+    ids = {int(row["gpu_id"]) for row in workers if isinstance(row.get("gpu_id"), int)}
+    if len(workers) != 4 or ids != {0, 1, 2, 3}:
+        return {"status": "STARTUP_FAIL", "reason": "expected exactly four unique MODEL_READY workers"}
+    modes = {str(row.get("benchmark_model_mode")) for row in workers}
+    state_hashes = {row.get("benchmark_adapter_state_sha256") for row in workers}
+    config_hashes = {row.get("benchmark_adapter_config_sha256") for row in workers}
+    if modes != {expected_mode}:
+        return {"status": "INVALID_MIXED_BENCHMARK_MODEL_MODE", "reason": "worker model modes differ or violate frozen mode",
+                "modes": sorted(modes)}
+    if len(state_hashes) != 1 or len(config_hashes) != 1 or None in state_hashes or None in config_hashes:
+        return {"status": "INVALID_MIXED_ADAPTER_IDENTITY", "reason": "adapter hashes differ within width",
+                "state_hashes": sorted(str(value) for value in state_hashes),
+                "config_hashes": sorted(str(value) for value in config_hashes)}
+    identity = {
+        "benchmark_model_mode": expected_mode,
+        "benchmark_adapter_state_sha256": next(iter(state_hashes)),
+        "benchmark_adapter_config_sha256": next(iter(config_hashes)),
+    }
+    if prior_identity is not None and identity != prior_identity:
+        return {"status": "INVALID_MIXED_ADAPTER_IDENTITY", "reason": "adapter identity differs from an earlier width",
+                "prior_identity": prior_identity, "current_identity": identity}
+    return {"status": "PASS", "identity": identity, "worker_count": len(workers), "worker_ids": sorted(ids)}
+
+
+def _global_identity_gate(*, all_widths: dict[int, dict[str, Any]], expected_mode: str) -> dict[str, Any]:
+    """Verify the final required 24/24 worker identity before aggregation."""
+    records = [
+        row for width in WIDTHS for row in all_widths.get(width, {}).get("ready", [])
+        if row.get("type") == "READY"
+    ]
+    if len(records) != len(WIDTHS) * 4:
+        return {"status": "INVALID_MIXED_ADAPTER_IDENTITY", "reason": "missing MODEL_READY identity records",
+                "expected_instances": len(WIDTHS) * 4, "observed_instances": len(records)}
+    modes = {str(row.get("benchmark_model_mode")) for row in records}
+    states = {row.get("benchmark_adapter_state_sha256") for row in records}
+    configs = {row.get("benchmark_adapter_config_sha256") for row in records}
+    if modes != {expected_mode}:
+        return {"status": "INVALID_MIXED_BENCHMARK_MODEL_MODE", "reason": "24 worker model modes are not globally identical",
+                "observed_modes": sorted(modes), "expected_mode": expected_mode, "instance_count": len(records)}
+    if len(states) != 1 or len(configs) != 1 or None in states or None in configs:
+        return {"status": "INVALID_MIXED_ADAPTER_IDENTITY", "reason": "24 worker adapter identities are not globally identical",
+                "state_hashes": sorted(str(value) for value in states),
+                "config_hashes": sorted(str(value) for value in configs), "instance_count": len(records)}
+    return {
+        "status": "PASS", "instance_count": len(records), "expected_instances": len(WIDTHS) * 4,
+        "benchmark_model_mode": expected_mode,
+        "benchmark_adapter_state_sha256": next(iter(states)),
+        "benchmark_adapter_config_sha256": next(iter(configs)),
+    }
+
+
+def _run_width(args: argparse.Namespace, width: int, *, prior_identity: dict[str, str] | None) -> dict[str, Any]:
     context = mp.get_context("spawn")
     ready, result, start = context.Queue(), context.Queue(), context.Event()
     workers = [context.Process(target=_worker_entry, args=(_worker_args(args), gpu_id, width, ready, start, result))
@@ -528,18 +635,16 @@ def _run_width(args: argparse.Namespace, width: int) -> dict[str, Any]:
                     break
                 continue
             ready_rows.append(row)
-        ready_ids = {int(row["gpu_id"]) for row in ready_rows if row.get("type") == "READY"}
-        modes = {str(row.get("model_mode")) for row in ready_rows if row.get("type") == "READY"}
-        adapter_signatures = {
-            _sha256_json({key: row.get("adapter", {}).get(key) for key in ("mode", "state_sha256", "config_sha256")})
-            for row in ready_rows if row.get("type") == "READY"
-        }
-        if (ready_ids != {0, 1, 2, 3} or len(modes) != 1 or len(adapter_signatures) != 1
-                or any(not worker.is_alive() for worker in workers)):
+        gate = _ready_identity_gate(ready_rows=ready_rows, expected_mode=args.benchmark_model_mode,
+                                    prior_identity=prior_identity)
+        if any(not worker.is_alive() for worker in workers) and gate["status"] == "PASS":
+            gate = {"status": "STARTUP_FAIL", "reason": "a worker exited before start barrier"}
+        if gate["status"] != "PASS":
             errors: list[dict[str, Any]] = []
             while not result.empty():
                 errors.append(result.get())
-            return {"physical_batch": width, "status": "STARTUP_FAIL", "ready": ready_rows, "errors": errors}
+            return {"physical_batch": width, "status": gate["status"], "ready": ready_rows, "errors": errors,
+                    "identity_gate": gate}
         start.set()
         rows: list[dict[str, Any]] = []
         errors = []
@@ -558,12 +663,79 @@ def _run_width(args: argparse.Namespace, width: int) -> dict[str, Any]:
         if len(rows) + len(errors) < 4:
             errors.append({"type": "ERROR", "error": "worker result timeout", "oom": False})
         status = "PASS" if len(rows) == 4 and not errors and all(row["status"] == "PASS" for row in rows) else "FAIL"
-        return {"physical_batch": width, "status": status, "ready": ready_rows, "workers": rows, "errors": errors}
+        return {"physical_batch": width, "status": status, "ready": ready_rows, "workers": rows, "errors": errors,
+                "identity_gate": gate}
     finally:
         for worker in workers:
             if worker.is_alive():
                 worker.terminate()
             worker.join(timeout=15)
+
+
+def _runtime_preflight_worker(serialized_args: dict[str, Any], result: Any) -> None:
+    """Run one non-timed B4 DynamicCache adoption check on a fresh GPU child."""
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    try:
+        args = argparse.Namespace(**serialized_args)
+        args.device = "cuda:0"
+        torch, model, identity, config, context = _load_context(args)
+        cells = _make_cells(model=model, prompts=context["prompts"], config=config, args=args, width=4)
+        requests = _requests(cells)
+        owner_ids_before = [id(request.cache_owner.cache) for request in requests]
+        storage_before = [_all_storage_pointers(request.cache_owner.cache) for request in requests]
+        lengths_before = [_cache_sequence_length(request.cache_owner.cache) for request in requests]
+        torch.cuda.synchronize(device=args.device)
+        memory_before = _memory(torch, args.device)
+        requests, replies, telemetry = _execute_once(model=model, cells=cells)
+        torch.cuda.synchronize(device=args.device)
+        integrity = _lane_integrity(torch=torch, requests=requests, replies=replies, owner_ids_before=owner_ids_before,
+                                    storage_before=storage_before, lengths_before=lengths_before)
+        del replies, requests, cells
+        gc.collect()
+        torch.cuda.empty_cache()
+        torch.cuda.synchronize(device=args.device)
+        memory_after = _memory(torch, args.device)
+        checks = {
+            "streaming_split_and_adopt": True,
+            "owner_identity_preserved": bool(integrity["owner_identity_preserved"]),
+            "storage_independence_preserved": bool(integrity["output_cache_storage_independent"]),
+            "sequence_length_incremented_exactly_once": bool(integrity["sequence_length_incremented_exactly_once"]),
+            "finite_logits": bool(integrity["finite_logits"]),
+            "temporary_release_succeeds": True,
+            "no_oom": True,
+        }
+        result.put({
+            "type": "RUNTIME_DYNAMICCACHE_PREFLIGHT", "status": "PASS" if all(checks.values()) else "FAIL",
+            "physical_batch": 4, "timed": False, "checks": checks, "integrity": integrity,
+            "telemetry": telemetry, "memory_before": memory_before, "memory_after": memory_after,
+            **_adapter_ready_fields(context["adapter"], identity["benchmark_model_mode"]),
+        })
+    except BaseException as exc:
+        result.put({"type": "RUNTIME_DYNAMICCACHE_PREFLIGHT", "status": "FAIL", "physical_batch": 4,
+                    "timed": False, "no_oom": not _is_oom(exc), "oom": _is_oom(exc),
+                    "error": repr(exc), "traceback": traceback.format_exc()})
+
+
+def _run_runtime_dynamiccache_preflight(args: argparse.Namespace) -> None:
+    if not (args.output / "CONTRACT.json").is_file():
+        raise RuntimeError("runtime_preflight requires preflight CONTRACT.json")
+    context = mp.get_context("spawn")
+    result = context.Queue()
+    worker = context.Process(target=_runtime_preflight_worker, args=(_worker_args(args), result))
+    worker.start()
+    payload: dict[str, Any]
+    try:
+        payload = result.get(timeout=args.ready_timeout_seconds)
+    except Exception as exc:
+        payload = {"type": "RUNTIME_DYNAMICCACHE_PREFLIGHT", "status": "FAIL", "physical_batch": 4,
+                   "timed": False, "error": f"preflight result timeout: {exc!r}"}
+    finally:
+        if worker.is_alive():
+            worker.terminate()
+        worker.join(timeout=15)
+    _atomic_json(args.output / "RUNTIME_DYNAMICCACHE_PREFLIGHT.json", payload)
+    if payload.get("status") != "PASS":
+        raise RuntimeError("RUNTIME_DYNAMICCACHE_PREFLIGHT_FAILED")
 
 
 def _percentile(values: Iterable[float], percent: float) -> float:
@@ -602,7 +774,9 @@ RAW_FIELDS = [
 ]
 
 
-def _summarize(output: Path, all_widths: dict[int, dict[str, Any]]) -> None:
+def _summarize(output: Path, all_widths: dict[int, dict[str, Any]], global_identity: dict[str, Any]) -> None:
+    if global_identity.get("status") != "PASS":
+        raise RuntimeError("throughput aggregation is forbidden without global benchmark identity")
     raw_rows = [sample for result in all_widths.values() for worker in result.get("workers", []) for sample in worker.get("samples", [])]
     _atomic_csv(output / "L4_BATCH_SCALING_RAW.csv", [{key: row.get(key) for key in RAW_FIELDS} for row in raw_rows], RAW_FIELDS)
     hardware = {str(worker["gpu_id"]): worker.get("hardware") for result in all_widths.values()
@@ -613,6 +787,8 @@ def _summarize(output: Path, all_widths: dict[int, dict[str, Any]]) -> None:
     _atomic_json(output / "BENCHMARK_ADAPTER_IDENTITY.json", {
         "identities": adapters, "identity_count": len(unique_adapter),
         "consistent_across_workers_and_widths": len(unique_adapter) == 1,
+        "global_gate": global_identity,
+        "required_24_instances": len(WIDTHS) * 4,
     })
 
     per_gpu_rows: list[dict[str, Any]] = []
@@ -740,18 +916,40 @@ def _run_preflight(args: argparse.Namespace) -> None:
 def _run_controller(args: argparse.Namespace) -> None:
     if not (args.output / "CONTRACT.json").is_file():
         raise RuntimeError("controller requires preflight CONTRACT.json")
+    runtime_preflight_path = args.output / "RUNTIME_DYNAMICCACHE_PREFLIGHT.json"
+    if not runtime_preflight_path.is_file():
+        raise RuntimeError("controller requires successful runtime DynamicCache preflight")
+    runtime_preflight = json.loads(runtime_preflight_path.read_text(encoding="utf-8"))
+    if runtime_preflight.get("status") != "PASS":
+        raise RuntimeError("controller refuses a failed runtime DynamicCache preflight")
     all_widths: dict[int, dict[str, Any]] = {}
+    prior_identity: dict[str, str] | None = None
     for width in WIDTHS:
-        result = _run_width(args, width)
+        result = _run_width(args, width, prior_identity=prior_identity)
         all_widths[width] = result
         _atomic_json(args.output / f"B{width}_WORKERS.json", result)
-        _summarize(args.output, all_widths)
+        if result.get("status") != "PASS":
+            failure = {
+                "status": result.get("status"), "failed_width": width,
+                "throughput_aggregation": "FORBIDDEN", "all_widths": {str(key): value for key, value in all_widths.items()},
+            }
+            _atomic_json(args.output / "GLOBAL_BENCHMARK_IDENTITY.json", failure)
+            _atomic_json(args.output / "WORKER_RESULTS.json", {str(key): value for key, value in all_widths.items()})
+            _atomic_json(args.output / "DECISION.json", failure)
+            raise RuntimeError(result.get("status", "BENCHMARK_WIDTH_FAILED"))
+        prior_identity = result["identity_gate"]["identity"]
+    global_identity = _global_identity_gate(all_widths=all_widths, expected_mode=args.benchmark_model_mode)
+    _atomic_json(args.output / "GLOBAL_BENCHMARK_IDENTITY.json", global_identity)
     _atomic_json(args.output / "WORKER_RESULTS.json", {str(width): row for width, row in all_widths.items()})
+    if global_identity.get("status") != "PASS":
+        _atomic_json(args.output / "DECISION.json", {**global_identity, "throughput_aggregation": "FORBIDDEN"})
+        raise RuntimeError(global_identity["status"])
+    _summarize(args.output, all_widths, global_identity)
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--phase", required=True, choices=("preflight", "controller"))
+    parser.add_argument("--phase", required=True, choices=("preflight", "runtime_preflight", "controller"))
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--source-commit", default=AUTHORITATIVE_SOURCE_COMMIT)
     parser.add_argument("--harness-commit", required=True)
@@ -767,8 +965,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ready-timeout-seconds", type=int, default=1200)
     parser.add_argument("--start-timeout-seconds", type=int, default=1200)
     parser.add_argument("--width-timeout-seconds", type=int, default=2400)
+    parser.add_argument("--benchmark-model-mode", choices=BENCHMARK_MODEL_MODES,
+                        default="DETERMINISTIC_BENCHMARK_LORA")
     args = parser.parse_args()
-    if args.phase == "controller":
+    if args.phase in {"runtime_preflight", "controller"}:
         missing = [name for name in ("model_path", "challenge", "native_config_dir") if getattr(args, name) is None]
         if missing:
             parser.error(f"controller requires: {', '.join(missing)}")
@@ -779,6 +979,8 @@ def main() -> None:
     args = parse_args()
     if args.phase == "preflight":
         _run_preflight(args)
+    elif args.phase == "runtime_preflight":
+        _run_runtime_dynamiccache_preflight(args)
     else:
         _run_controller(args)
 

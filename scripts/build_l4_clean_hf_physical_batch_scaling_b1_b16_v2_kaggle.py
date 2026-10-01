@@ -107,11 +107,12 @@ def _notebook_source(dataset_slug: str, harness_commit: str) -> str:
         "contract = json.loads((dataset / 'L4_BENCHMARK_CONTRACT.json').read_text())",
         "if contract['experiment'] != 'L4_CLEAN_HF_PHYSICAL_BATCH_SCALING_B1_B16_V2' or contract['authoritative_source_commit'] != '1eb8e7f60a3ca682438bb326ab3ea65ec286ed6f': raise RuntimeError('benchmark contract mismatch')",
         "env = {**os.environ, 'HF_HUB_OFFLINE':'1', 'TRANSFORMERS_OFFLINE':'1', 'TOKENIZERS_PARALLELISM':'false'}",
-        "common = [sys.executable, str(runner), '--output', str(out), '--source-commit', contract['authoritative_source_commit'], '--harness-commit', " + repr(harness_commit) + ", '--model-path', str(model), '--challenge', str(challenge), '--native-config-dir', str(native)]",
+        "common = [sys.executable, str(runner), '--output', str(out), '--source-commit', contract['authoritative_source_commit'], '--harness-commit', " + repr(harness_commit) + ", '--model-path', str(model), '--challenge', str(challenge), '--native-config-dir', str(native), '--benchmark-model-mode', 'DETERMINISTIC_BENCHMARK_LORA']",
         "print(json.dumps({'event':'L4_BATCH_SCALING_START','experiment':contract['experiment'],'target_blind':True,'gold_loaded':False,'hardware':gpus,'widths':contract['widths']}, sort_keys=True), flush=True)",
         "subprocess.run(common[:2] + ['--phase','preflight'] + common[2:], env=env, check=True)",
+        "subprocess.run(common[:2] + ['--phase','runtime_preflight'] + common[2:], env=env, check=True)",
         "subprocess.run(common[:2] + ['--phase','controller'] + common[2:], env=env, check=True)",
-        "required_output = ['CONTRACT.json','SOURCE_IDENTITY.json','BENCHMARK_ADAPTER_IDENTITY.json','L4_HARDWARE.json','L4_BATCH_SCALING_RAW.csv','L4_BATCH_SCALING_PER_GPU.csv','L4_BATCH_SCALING_AGGREGATE.csv','L4_BATCH_SCALING_BOOTSTRAP.csv','B12_MEMORY_WATERFALL.csv','B16_MEMORY_WATERFALL.csv','RTX3090_REFERENCE.json','RTX3090_VS_L4_BATCH_SCALING.csv','DECISION.json','REPORT.md','HASHES.json']",
+        "required_output = ['CONTRACT.json','SOURCE_IDENTITY.json','RUNTIME_DYNAMICCACHE_PREFLIGHT.json','GLOBAL_BENCHMARK_IDENTITY.json','BENCHMARK_ADAPTER_IDENTITY.json','L4_HARDWARE.json','L4_BATCH_SCALING_RAW.csv','L4_BATCH_SCALING_PER_GPU.csv','L4_BATCH_SCALING_AGGREGATE.csv','L4_BATCH_SCALING_BOOTSTRAP.csv','B12_MEMORY_WATERFALL.csv','B16_MEMORY_WATERFALL.csv','RTX3090_REFERENCE.json','RTX3090_VS_L4_BATCH_SCALING.csv','DECISION.json','REPORT.md','HASHES.json']",
         "missing_output = [name for name in required_output if not (out / name).is_file()]",
         "if missing_output: raise RuntimeError(f'benchmark output incomplete: {missing_output}')",
         "print(json.dumps({'event':'L4_BATCH_SCALING_COMPLETE','artifacts':str(out),'submission_created':False}, sort_keys=True), flush=True)",
@@ -123,7 +124,7 @@ def _assert_notebook_contract(notebook: dict[str, Any]) -> None:
     forbidden = ("submission.json", "KAGGLE_IS_COMPETITION_RERUN", "FAST_COMMIT", "evaluation_solutions", "arc-agi_evaluation_solutions")
     if any(token in source for token in forbidden):
         raise RuntimeError("review notebook violates target-blind/no-submission contract")
-    if "nvidia-smi" not in source or "L4" not in source or "controller" not in source:
+    if "nvidia-smi" not in source or "L4" not in source or "controller" not in source or "runtime_preflight" not in source:
         raise RuntimeError("review notebook is missing L4 controller preflight")
 
 
