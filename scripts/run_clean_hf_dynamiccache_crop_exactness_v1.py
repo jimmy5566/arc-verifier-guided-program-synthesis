@@ -71,7 +71,10 @@ def _sequence_length(cache: Any) -> int:
 def _retained_from_logits(logits: Any, config: D1TurboDFSConfig) -> list[int]:
     import torch
 
-    log_probs = logits.float().cpu().log_softmax(-1)[0]
+    # Incremental replies retain their one-token sequence dimension.  The
+    # comparison concerns the next-token distribution, exactly as the DFS
+    # coroutine uses it, rather than a 1 x 1 x vocab tensor.
+    log_probs = logits.float().cpu().log_softmax(-1)[0, -1]
     values = [(token, float(log_probs[token].item())) for token in config.arc_tokens]
     ranked = sorted(values, key=lambda pair: (-pair[1], pair[0]))
     kept, _reason = _retained(
