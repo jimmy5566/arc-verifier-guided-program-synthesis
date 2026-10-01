@@ -11,8 +11,17 @@ from inference.nvarc_turbodfs_dynamic_ready import (
     normalized_result_signature,
     ready_result,
     run_ready_scheduler,
+    ready_incremental_forward_kwargs,
     start_ready_cell,
 )
+
+
+def test_ready_incremental_forward_kwargs_explicitly_binds_cache_position() -> None:
+    kwargs = ready_incremental_forward_kwargs(token_ids=[3, 7], position=1928, cache="cache", device="cpu")
+    assert kwargs["input_ids"].tolist() == [[3], [7]]
+    assert kwargs["position_ids"].tolist() == [[1928], [1928]]
+    assert kwargs["cache_position"].tolist() == [1928]
+    assert kwargs["past_key_values"] == "cache"
 
 
 class CacheTransitionModel:

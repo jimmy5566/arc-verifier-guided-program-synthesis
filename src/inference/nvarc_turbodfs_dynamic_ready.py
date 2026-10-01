@@ -63,6 +63,33 @@ class ReadyCell:
     active_elapsed_seconds: float = 0.0
 
 
+def ready_incremental_forward_kwargs(*, token_ids: list[int], position: int, cache: Any, device: Any) -> dict[str, Any]:
+    """Build the complete Qwen continuation contract for ready-cell forwards.
+
+    ``position_ids`` controls RoPE positions, while ``cache_position`` controls
+    the Transformers causal-mask/cache update path.  They happen to carry the
+    same absolute index for this one-token decoder, but are *not*
+    interchangeable: omitting ``cache_position`` lets the patched Qwen
+    runtime infer it from mutable call history.  Passing it explicitly keeps a
+    ReadyForwardRequest self-contained and independent of unrelated cells.
+    """
+    import torch
+
+    if not token_ids:
+        raise ValueError("incremental forward requires at least one token")
+    batch = len(token_ids)
+    return {
+        "input_ids": torch.tensor([[token] for token in token_ids], device=device, dtype=torch.long),
+        "position_ids": torch.full((batch, 1), int(position), device=device, dtype=torch.long),
+        # Transformers expects this as the sequence dimension, not one item
+        # per batch lane.  Dynamic B2 only groups identical positions.
+        "cache_position": torch.tensor([int(position)], device=device, dtype=torch.long),
+        "past_key_values": cache,
+        "return_dict": True,
+        "use_cache": True,
+    }
+
+
 def _new_state(config: D1TurboDFSConfig) -> dict[str, Any]:
     """Exact one-lane state layout used by the historical scalar D1 route."""
     # The dynamic engine is intentionally a one-logical-lane state machine.
@@ -395,15 +422,17 @@ def run_ready_scheduler(*, model: Any, cells: list[ReadyCell], dynamic_batch2: b
         with torch.no_grad():
             if len(selected) == 1:
                 request = requests[0]
-                outputs = model(input_ids=torch.tensor([[request.token_id]], device=model.device, dtype=torch.long),
-                                position_ids=torch.tensor([[request.position]], device=model.device, dtype=torch.long),
-                                past_key_values=request.cache, return_dict=True, use_cache=True)
+                outputs = model(**ready_incremental_forward_kwargs(
+                    token_ids=[request.token_id], position=request.position,
+                    cache=request.cache, device=model.device,
+                ))
                 outputs_by_cell = [outputs]
             else:
                 merged_cache = _cat_caches([request.cache for request in requests])
-                outputs = model(input_ids=torch.tensor([[request.token_id] for request in requests], device=model.device, dtype=torch.long),
-                                position_ids=torch.tensor([[request.position] for request in requests], device=model.device, dtype=torch.long),
-                                past_key_values=merged_cache, return_dict=True, use_cache=True)
+                outputs = model(**ready_incremental_forward_kwargs(
+                    token_ids=[request.token_id for request in requests], position=first.request.position,
+                    cache=merged_cache, device=model.device,
+                ))
                 split_cache = _split_cache(outputs.past_key_values, len(selected))
                 outputs_by_cell = []
                 for lane, cache in enumerate(split_cache):

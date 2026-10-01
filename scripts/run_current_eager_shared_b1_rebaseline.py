@@ -29,6 +29,7 @@ from inference.nvarc_turbodfs_dynamic_ready import (
     _reply,
     canonical_semantic_value,
     normalized_result_signature,
+    ready_incremental_forward_kwargs,
     ready_result,
     run_ready_scheduler,
     semantic_value_sha256,
@@ -246,13 +247,10 @@ def run_round_robin_b1(*, model: Any, cells: list[Any], order: tuple[str, ...]) 
         request = selected.request
         started = time.perf_counter()
         with torch.no_grad():
-            outputs = model(
-                input_ids=torch.tensor([[request.token_id]], device=model.device, dtype=torch.long),
-                position_ids=torch.tensor([[request.position]], device=model.device, dtype=torch.long),
-                past_key_values=request.cache,
-                return_dict=True,
-                use_cache=True,
-            )
+            outputs = model(**ready_incremental_forward_kwargs(
+                token_ids=[request.token_id], position=request.position,
+                cache=request.cache, device=model.device,
+            ))
         elapsed = time.perf_counter() - started
         forwards += 1
         selected.state["model_forward_seconds"] += elapsed
