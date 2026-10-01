@@ -273,8 +273,15 @@ def _canary_parity(args: argparse.Namespace) -> dict[str, Any]:
             "semantic_chunked": chunked["semantic_gate"]["status"] == "PASS",
         })
         for key in sorted(set(ref_cells) | set(new_cells)):
-            if ref_cells.get(key) != new_cells.get(key) or reference["candidate_pools"].get(key) != chunked["candidate_pools"].get(key):
-                first_difference = {"cell_key": key, "reference": ref_cells.get(key), "chunked": new_cells.get(key)}
+            ref, new = ref_cells.get(key), new_cells.get(key)
+            semantic_fields = ("nodes_expanded", "termination_reason", "completed_candidates", "tokens_advanced", "budget_exhausted")
+            differs = (
+                ref is None or new is None
+                or any(ref.get(field) != new.get(field) for field in semantic_fields)
+                or reference["candidate_pools"].get(key) != chunked["candidate_pools"].get(key)
+            )
+            if differs:
+                first_difference = {"cell_key": key, "reference": ref, "chunked": new}
                 break
     return {"status": "PASS" if all(checks.values()) else "FAIL", "checks": checks, "first_difference": first_difference,
             "reference_raw_sha256": reference.get("raw_sha256"), "chunked_raw_sha256": chunked.get("raw_sha256")}
