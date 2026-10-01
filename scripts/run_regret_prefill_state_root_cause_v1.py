@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
 from inference.nvarc_turbodfs_d1 import _retained
-from inference.nvarc_turbodfs_dynamic_ready import clone_legacy_cache
+from inference.nvarc_turbodfs_dynamic_ready import clone_legacy_cache, ready_incremental_forward_kwargs
 from scripts.run_d1_real_decoder_ab import atomic_json, no_gold_challenge
 from scripts.run_regret_dynamic_ready_b1_1 import write_csv
 from scripts.run_regret_dynamic_ready_v1 import ADAPTER_SHA, DEPTH, OUTPUT_INDEX, TASK_ID
@@ -96,6 +96,18 @@ def _retained_successors(logits: Any, config: Any) -> list[dict[str, Any]]:
     return [{"token_id": int(token), "logprob": float(logprob), "cumulative_nll": float(score),
              "cumulative_regret": float(regret), "reason": reason}
             for score, regret, token, logprob in kept]
+
+
+def _fixed_incremental_forward(model: Any, request: Any) -> tuple[Any, dict[str, Any]]:
+    """One ready continuation under the self-contained cache-position fix."""
+    import torch
+
+    with torch.no_grad():
+        outputs = model(**ready_incremental_forward_kwargs(
+            token_ids=[int(request.token_id)], position=int(request.position),
+            cache=request.cache, device=model.device,
+        ))
+    return outputs, _logit_summary(outputs.logits)
 
 
 def _write_condition(args: argparse.Namespace) -> None:
@@ -334,6 +346,72 @@ def history(args: argparse.Namespace) -> None:
     atomic_json(output / "HASHES.json", {"sha256": hashes, "gold_accessed": False})
 
 
+def _write_fix_condition(args: argparse.Namespace) -> None:
+    """Fresh-process N-history micro gate for the explicit cache-position repair."""
+    contract = read_json(args.contract.resolve())
+    no_gold_challenge(Path(contract["challenge"]))
+    model, encoded, dec, adapter_sha, native = _runtime(contract, args.gpu_id)
+    try:
+        flip = _new_cell(model, encoded, dec, PRIMARY)
+        request = flip.request
+        if request is None:
+            raise RuntimeError("flip root prefill did not yield an incremental request")
+        anti = _new_cell(model, encoded, dec, HISTORY)
+        actual = 0
+        while actual < args.history_length:
+            if anti.request is None:
+                raise RuntimeError(f"anti completed before requested history {args.history_length}")
+            outputs, _summary = _fixed_incremental_forward(model, anti.request)
+            _reply(anti, outputs); actual += 1
+        outputs, summary = _fixed_incremental_forward(model, request)
+        atomic_json(args.result.resolve(), {
+            "history_length_requested": int(args.history_length), "history_length_executed": actual,
+            "cell_key": f"{TASK_ID}:o{OUTPUT_INDEX}:d{DEPTH}:{PRIMARY}",
+            "foreign_cell_key": f"{TASK_ID}:o{OUTPUT_INDEX}:d{DEPTH}:{HISTORY}",
+            "request_token_id": int(request.token_id), "request_position": int(request.position),
+            "request_ordinal": int(request.ordinal), "adapter_sha256": adapter_sha,
+            "native_token_contract": native, "explicit_cache_position": int(request.position),
+            "full_logits_sha256": summary["full_logits_sha256"], "arc_logits": summary["arc_logits"],
+            "arc_logprobs": summary["arc_logprobs"], "arc_ranking": summary["arc_ranking"],
+            "retained_regret_successors": _retained_successors(outputs.logits, dec),
+            "gold_accessed": False, "dfs_executed": False, "dynamic_b2_executed": False,
+        })
+    finally:
+        _release(model)
+
+
+def fix(args: argparse.Namespace) -> None:
+    """Run the preregistered 0/1/8/32 micro-fix parity gate in fresh processes."""
+    output = args.output.resolve()
+    contract = output / "PREFILL_STATE_ROOT_CAUSE_CONTRACT.json"
+    if not contract.is_file():
+        raise RuntimeError("fix requires the frozen causal contract")
+    root = output / "fix_raw"; root.mkdir(exist_ok=True)
+    lengths = (0, 1, 8, 32)
+    for length in lengths:
+        result = root / f"N{length}.json"
+        if result.exists():
+            raise RuntimeError(f"refusing to overwrite existing micro-fix condition {result}")
+        subprocess.run([sys.executable, str(Path(__file__).resolve()), "fix-condition", "--contract", str(contract),
+                        "--result", str(result), "--history-length", str(length), "--gpu-id", str(args.gpu_id)], check=True)
+    rows = [read_json(root / f"N{length}.json") for length in lengths]
+    baseline = rows[0]
+    summary = []
+    for row in rows:
+        summary.append({"history_length": row["history_length_requested"],
+                        "request_token_id": row["request_token_id"], "request_position": row["request_position"],
+                        "explicit_cache_position": row["explicit_cache_position"], **_same(baseline, row)})
+    write_csv(output / "MICRO_FIX_PARITY.csv", summary)
+    if not all(bool(row["strict_forward_parity"]) for row in summary):
+        raise RuntimeError("explicit cache-position micro-fix did not restore strict parity")
+    decision = read_json(output / "DECISION.json")
+    decision.update({"causal_classification": "MICRO_FIX_VALIDATED",
+                     "minimal_fix": "EXPLICIT_CACHE_POSITION_ON_EVERY_READY_INCREMENTAL_FORWARD",
+                     "micro_fix_parity": "4/4_STRICT_FOR_N0_N1_N8_N32",
+                     "next": "RUN_FIXED_ISOLATED_B1", "dynamic_b2_safe_next": False})
+    atomic_json(output / "DECISION.json", decision)
+
+
 def _first_tensor(value: Any) -> Any:
     if hasattr(value, "detach"):
         return value
@@ -542,6 +620,7 @@ def main() -> None:
         item.add_argument("--source-commit", required=True)
     run_parser = sub.add_parser("run"); run_parser.add_argument("--output", type=Path, required=True); run_parser.add_argument("--gpu-id", type=int, default=0)
     history_parser = sub.add_parser("history"); history_parser.add_argument("--output", type=Path, required=True); history_parser.add_argument("--gpu-id", type=int, default=0); history_parser.add_argument("--source-commit", required=True)
+    fix_parser = sub.add_parser("fix"); fix_parser.add_argument("--output", type=Path, required=True); fix_parser.add_argument("--gpu-id", type=int, default=0)
     trace_parser = sub.add_parser("trace"); trace_parser.add_argument("--output", type=Path, required=True); trace_parser.add_argument("--gpu-id", type=int, default=0); trace_parser.add_argument("--source-commit", required=True)
     finalizer = sub.add_parser("finalize"); finalizer.add_argument("--output", type=Path, required=True)
     condition = sub.add_parser("condition"); condition.add_argument("--contract", type=Path, required=True); condition.add_argument("--result", type=Path, required=True)
@@ -549,6 +628,8 @@ def main() -> None:
     condition.add_argument("--foreign-prefill", action="store_true"); condition.add_argument("--gpu-id", type=int, default=0)
     history_condition = sub.add_parser("history-condition"); history_condition.add_argument("--contract", type=Path, required=True); history_condition.add_argument("--result", type=Path, required=True)
     history_condition.add_argument("--history-length", type=int, choices=(0, 1, 2, 8, 32), required=True); history_condition.add_argument("--gpu-id", type=int, default=0)
+    fix_condition = sub.add_parser("fix-condition"); fix_condition.add_argument("--contract", type=Path, required=True); fix_condition.add_argument("--result", type=Path, required=True)
+    fix_condition.add_argument("--history-length", type=int, choices=(0, 1, 8, 32), required=True); fix_condition.add_argument("--gpu-id", type=int, default=0)
     trace_condition = sub.add_parser("trace-condition"); trace_condition.add_argument("--contract", type=Path, required=True); trace_condition.add_argument("--result", type=Path, required=True)
     trace_condition.add_argument("--history-length", type=int, choices=(0, 1, 2, 8, 32), required=True); trace_condition.add_argument("--gpu-id", type=int, default=0)
     args = parser.parse_args()
@@ -556,6 +637,8 @@ def main() -> None:
     elif args.command == "run": run(args)
     elif args.command == "condition": _write_condition(args)
     elif args.command == "history": history(args)
+    elif args.command == "fix": fix(args)
+    elif args.command == "fix-condition": _write_fix_condition(args)
     elif args.command == "trace": trace(args)
     elif args.command == "trace-condition": _write_trace_condition(args)
     elif args.command == "finalize": finalize(args)
