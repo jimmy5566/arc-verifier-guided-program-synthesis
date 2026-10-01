@@ -33,7 +33,6 @@ from inference.root_length_memory_profile import (  # noqa: E402
 )
 from inference.hf_peft_backend import load_hf_peft_inference  # noqa: E402
 from inference.nvarc_turbodfs_dynamic_ready import (  # noqa: E402
-    FixedB8Aug16Config,
     MemoryAwareAug16Config,
     cache_geometry,
     ready_result,
@@ -311,10 +310,9 @@ def _surface(
                                         scheduling_policy="dynamic_ready", observer=observer,
                                         streaming_split_and_adopt=True, collect_event_trace=False)
     elif physical_batch == 8 and len(cells) == 16:
-        scheduler = run_ready_scheduler(
-            model=model, cells=cells, dynamic_batch2=True, max_physical_batch=8,
-            scheduling_policy="fixed_b8_aug16", fixed_b8_config=FixedB8Aug16Config(),
-            observer=observer, streaming_split_and_adopt=True, collect_event_trace=False,
+        raise RuntimeError(
+            "the fixed sixteen-owner B8 path is retired for non-S execution; "
+            "use run_non_s_rolling_resident_v1.py"
         )
     elif physical_batch == 16:
         scheduler = run_ready_scheduler(

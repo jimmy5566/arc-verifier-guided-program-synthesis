@@ -30,7 +30,7 @@ def test_capacity_is_root_adaptive_not_a_global_3072_cap() -> None:
 def test_resident_groups_preserve_frozen_order_and_full_aug16_coverage() -> None:
     ids = tuple(f"aug{index:02d}" for index in range(16))
     assert deterministic_resident_groups(ids, PROFILE_S) == (ids,)
-    assert deterministic_resident_groups(ids, PROFILE_M) == (ids,)
+    assert deterministic_resident_groups(ids, PROFILE_M) == (ids[:8], ids[8:])
     assert deterministic_resident_groups(ids, PROFILE_L) == (ids[:8], ids[8:])
     assert deterministic_resident_groups(ids, PROFILE_XL) == (ids[:4], ids[4:8], ids[8:12], ids[12:])
     assert deterministic_resident_groups(ids, PROFILE_XXL) == tuple(ids[index:index + 2] for index in range(0, 16, 2))

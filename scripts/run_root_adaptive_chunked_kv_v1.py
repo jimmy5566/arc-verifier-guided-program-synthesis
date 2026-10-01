@@ -158,7 +158,7 @@ def _contract(args: argparse.Namespace, assignments: dict[str, dict[str, Any]]) 
         },
         "root_profile_table": {
             "PROFILE_S": {"max_root": 2048, "resident_width": 16, "physical_batch": 16, "b16_to_b8": True},
-            "PROFILE_M": {"min_root": 2049, "max_root": 2653, "resident_width": 16, "physical_batch": 8},
+            "PROFILE_M": {"min_root": 2049, "max_root": 2653, "resident_width": 8, "physical_batch": 8},
             "PROFILE_L": {"min_root": 2654, "max_root": 6493, "resident_width": 8, "physical_batch": 8},
             "PROFILE_XL": {"min_root": 6494, "max_root": 17245, "resident_width": 4, "physical_batch": 4},
             "PROFILE_XXL": {"min_root": 17246, "max_root": 36701, "resident_width": 2, "physical_batch": 2},
@@ -189,14 +189,15 @@ def _unit_gate(args: argparse.Namespace) -> dict[str, Any]:
         "s=importlib.util.spec_from_file_location('c','tests/test_chunked_kv_cache.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m);"
         "[getattr(m,n)() for n in dir(m) if n.startswith('test_')];"
         "s=importlib.util.spec_from_file_location('d','tests/test_nvarc_turbodfs_dynamic_ready.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m);"
-        "m.test_fixed_b8_aug16_keeps_sixteen_owners_and_alternates_fair_groups();print('ROOT_ADAPTIVE_UNIT_PASS')"
+        "s=importlib.util.spec_from_file_location('r','tests/test_rolling_resident_pool.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m);"
+        "[getattr(m,n)() for n in dir(m) if n.startswith('test_')];print('ROOT_ADAPTIVE_UNIT_PASS')"
     )
     completed = subprocess.run([sys.executable, "-c", harness], cwd=ROOT, text=True, capture_output=True, check=False)
     checks = {
         "profile_boundaries": completed.returncode == 0,
         "root_adaptive_capacity": completed.returncode == 0,
         "rollback_capacity_stability": completed.returncode == 0,
-        "fixed_b8_fair_split": completed.returncode == 0,
+        "rolling_resident_fifo": completed.returncode == 0,
         "cpu_only": True,
         "gold_not_loaded": True,
     }
@@ -307,6 +308,11 @@ def _release_completed_group(torch: Any, device: str, surface: dict[str, Any]) -
 def _run_non_s_worker(args: argparse.Namespace, *, profile_name: str, budget: int, prefix: str) -> int:
     import torch
 
+    # This historical grouped-worker entry point retained one entire group to
+    # completion before admitting the next.  It remains readable as frozen
+    # provenance only; a new non-S run must use the FIFO rolling-resident
+    # controller so PROFILE_M never materializes sixteen owners.
+    raise RuntimeError("deprecated fixed-group non-S worker; use run_non_s_rolling_resident_v1.py")
     _assert_challenge_only(args.challenge)
     assignments = _audit_assignments(args)
     selection = _select_non_s_representatives(args, assignments).get(profile_name)

@@ -34,7 +34,11 @@ class RootProfileExecutionPlan:
 
 
 PROFILE_S = MemoryProfile("PROFILE_S", 0, 2048, 16, 16, True)
-PROFILE_M = MemoryProfile("PROFILE_M", 2049, 2653, 16, 8, False)
+# PROFILE_M deliberately has the same physical width as before, but no longer
+# keeps all sixteen logical DFS owners resident.  Non-S execution uses a FIFO
+# rolling pool; this field is the simultaneous owner/cache limit, not a wave
+# size.
+PROFILE_M = MemoryProfile("PROFILE_M", 2049, 2653, 8, 8, False)
 PROFILE_L = MemoryProfile("PROFILE_L", 2654, 6493, 8, 8, False)
 PROFILE_XL = MemoryProfile("PROFILE_XL", 6494, 17245, 4, 4, False)
 PROFILE_XXL = MemoryProfile("PROFILE_XXL", 17246, 36701, 2, 2, False)
