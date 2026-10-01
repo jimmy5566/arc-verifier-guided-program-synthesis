@@ -41,6 +41,10 @@ class L4CleanHFPhysicalBatchScalingV2Tests(unittest.TestCase):
     assert contract["measurement"]["streaming_split_and_adopt_for_batched_widths"] is True
     assert contract["benchmark_model_mode"]["global_24_worker_identity_required"] is True
     assert contract["benchmark_model_mode"]["per_worker_fallback_forbidden"] is True
+    assert contract["benchmark_model_mode"]["allowed_final_states"] == [
+        "ALL_DETERMINISTIC_BENCHMARK_LORA", "ALL_BASE_MODEL_ONLY",
+    ]
+    assert contract["benchmark_model_mode"]["base_model_only_requires_fresh_experiment_from_b1"] is True
     assert contract["runtime_dynamiccache_preflight"]["physical_batch"] == 4
     assert contract["runtime_dynamiccache_preflight"]["timed"] is False
     with self.assertRaisesRegex(RuntimeError, "source commit"):
@@ -124,6 +128,7 @@ class L4CleanHFPhysicalBatchScalingV2Tests(unittest.TestCase):
     widths = {width: {"ready": [ready(gpu) for gpu in range(4)]} for width in runner.WIDTHS}
     accepted = runner._global_identity_gate(all_widths=widths, expected_mode="DETERMINISTIC_BENCHMARK_LORA")
     assert accepted["status"] == "PASS" and accepted["instance_count"] == 24
+    assert accepted["global_benchmark_model_mode"] == "ALL_DETERMINISTIC_BENCHMARK_LORA"
     widths[16]["ready"][0]["benchmark_adapter_state_sha256"] = "different"
     assert runner._global_identity_gate(all_widths=widths, expected_mode="DETERMINISTIC_BENCHMARK_LORA")[
         "status"] == "INVALID_MIXED_ADAPTER_IDENTITY"

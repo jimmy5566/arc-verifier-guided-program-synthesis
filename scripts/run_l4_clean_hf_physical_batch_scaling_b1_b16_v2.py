@@ -58,6 +58,10 @@ BOOTSTRAP_TRIALS = 10_000
 WARMUP_FORWARDS = 2
 MEASUREMENT_FORWARDS = 12
 BENCHMARK_MODEL_MODES = ("DETERMINISTIC_BENCHMARK_LORA", "BASE_MODEL_ONLY")
+GLOBAL_MODEL_MODE_STATES = {
+    "DETERMINISTIC_BENCHMARK_LORA": "ALL_DETERMINISTIC_BENCHMARK_LORA",
+    "BASE_MODEL_ONLY": "ALL_BASE_MODEL_ONLY",
+}
 
 
 def _atomic_json(path: Path, payload: Any) -> None:
@@ -185,9 +189,10 @@ def experiment_contract(*, source_commit: str) -> dict[str, Any]:
         "benchmark_adapter": benchmark_lora_config(),
         "benchmark_model_mode": {
             "default": "DETERMINISTIC_BENCHMARK_LORA",
-            "allowed_final_states": list(BENCHMARK_MODEL_MODES),
+            "allowed_final_states": list(GLOBAL_MODEL_MODE_STATES.values()),
             "per_worker_fallback_forbidden": True,
             "global_24_worker_identity_required": True,
+            "base_model_only_requires_fresh_experiment_from_b1": True,
         },
         "task": {"task_id": "d59b0160", "output_index": 0, "depth": 24},
         "base_views": list(BASE_VIEWS),
@@ -612,6 +617,7 @@ def _global_identity_gate(*, all_widths: dict[int, dict[str, Any]], expected_mod
     return {
         "status": "PASS", "instance_count": len(records), "expected_instances": len(WIDTHS) * 4,
         "benchmark_model_mode": expected_mode,
+        "global_benchmark_model_mode": GLOBAL_MODEL_MODE_STATES[expected_mode],
         "benchmark_adapter_state_sha256": next(iter(states)),
         "benchmark_adapter_config_sha256": next(iter(configs)),
     }
