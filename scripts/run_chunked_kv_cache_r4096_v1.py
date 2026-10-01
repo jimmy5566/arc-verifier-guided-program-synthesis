@@ -25,6 +25,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
 from arc.io import load_dataset  # noqa: E402
 from inference.chunked_kv_cache import ChunkedDynamicCache  # noqa: E402
+from inference.root_length_memory_profile import KV_BLOCK_TOKENS, required_capacity_for_root  # noqa: E402
 from inference.hf_peft_backend import load_hf_peft_inference  # noqa: E402
 from inference.nvarc_turbodfs_dynamic_ready import (  # noqa: E402
     MemoryAwareAug16Config,
@@ -59,14 +60,14 @@ from scripts.run_real_project_aug16_dynamic_b16_pilot_v1 import (  # noqa: E402
 
 
 EXPERIMENT = "CHUNKED_KV_CACHE_R4096_V1"
-BLOCK_TOKENS = 256
+BLOCK_TOKENS = KV_BLOCK_TOKENS
 PHASES = (256, 512, 4096)
 SOFT_PEAK_ALLOCATED_BYTES = 21 * 1024**3
 HARD_PEAK_ALLOCATED_BYTES = int(21.5 * 1024**3)
 
 
 def _phase_name(budget: int) -> str:
-    if budget not in PHASES:
+    if budget not in (*PHASES, 128):
         raise ValueError(f"unsupported phase {budget}")
     return f"R{budget}"
 
@@ -100,8 +101,9 @@ def _contract(args: argparse.Namespace) -> dict[str, Any]:
         },
         "cache_contract": {
             "strategy": "fixed_block_logical_length_cache", "block_tokens": BLOCK_TOKENS,
-            "root_logical_length": 1928, "maximum_useful_logical_length": 2858,
-            "capacity_progression": [2048, 2304, 2560, 2816, 3072],
+            "capacity_policy": "root_adaptive; initial and final boundaries are computed per output",
+            "current_canary_root_logical_length": 1928, "current_canary_maximum_useful_logical_length": 2859,
+            "current_canary_final_capacity": 3072,
             "unused_tail_visible_to_model": False,
             "rollback": "valid_length_only_no_shrink_reallocation",
             "owner": "one_stable_chunked_owner_per_logical_cell",
@@ -132,7 +134,8 @@ def _unit_gate(args: argparse.Namespace) -> int:
         "import importlib.util,sys;sys.path[:0]=['src','.'];"
         "s=importlib.util.spec_from_file_location('t','tests/test_chunked_kv_cache.py');"
         "m=importlib.util.module_from_spec(s);s.loader.exec_module(m);"
-        "m.test_chunked_cache_grows_only_at_frozen_256_token_boundaries();"
+        "m.test_chunked_cache_canary_grows_only_at_frozen_256_token_boundaries();"
+        "m.test_chunked_cache_longer_root_has_no_universal_3072_ceiling();"
         "m.test_chunked_cache_rollback_preserves_capacity_and_sibling_isolation();"
         "m.test_chunked_cache_adopts_only_suffix_and_never_exposes_capacity_tail();"
         "print('CHUNKED_CACHE_UNIT_GATE_PASS')"
@@ -145,7 +148,7 @@ def _unit_gate(args: argparse.Namespace) -> int:
         "sibling_rollback": completed.returncode == 0,
         "no_cross_lane_alias": completed.returncode == 0,
         "stable_owner_identity": completed.returncode == 0,
-        "frozen_progression_2048_to_3072": completed.returncode == 0,
+        "canary_progression_2048_to_3072": completed.returncode == 0,
         "cpu_only": True, "gold_not_loaded": True,
     }
     payload = {"experiment": EXPERIMENT, "status": "PASS" if all(checks.values()) else "FAIL",
@@ -394,15 +397,17 @@ def _semantic_gate(surface: dict[str, Any], budget: int, *, chunked: bool) -> di
     }
     if chunked:
         growth_rows, _ = _growth_summary(surface["growth_events"])
-        allowed = {2048, 2304, 2560, 2816, 3072}
+        root_max = max(int(row["initial_cache_sequence_length"]) for row in surface["manifest"])
+        required_capacity = required_capacity_for_root(root_max)
         checks.update({
             "chunked_owner_representation": all(isinstance(cell.cache_owner.cache, ChunkedDynamicCache) for cell in cells),
             "valid_length_never_exceeds_capacity": all(int(row["valid_length"]) <= int(row["capacity_length"]) for row in rows),
-            "capacity_is_frozen_block_progression": all(int(row["new_capacity"]) in allowed and int(row["new_capacity"]) % BLOCK_TOKENS == 0 for row in growth_rows),
-            "capacity_never_exceeds_3072": all(int(row["capacity_length"]) <= 3072 for row in rows),
+            "capacity_is_256_block_aligned": all(int(row["new_capacity"]) % BLOCK_TOKENS == 0 for row in growth_rows),
+            "capacity_does_not_exceed_output_required_bound": all(int(row["capacity_length"]) <= required_capacity for row in rows),
             "suffix_adoption_keeps_owner": all(bool(row["owner_id_stable"]) for row in rows),
         })
     return {"status": "PASS" if all(checks.values()) else "FAIL", "checks": checks,
+            "root_adaptive_final_capacity": required_capacity if chunked else None,
             "failures": surface["failures"], "owner_before": surface["owner_before"], "owner_after": surface["owner_after"]}
 
 

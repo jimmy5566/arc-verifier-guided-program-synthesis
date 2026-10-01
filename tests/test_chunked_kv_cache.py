@@ -25,7 +25,7 @@ def _append(cache: ChunkedDynamicCache, count: int, value: float) -> None:
         assert int(returned_value.shape[-2]) == cache.get_seq_length(layer_index)
 
 
-def test_chunked_cache_grows_only_at_frozen_256_token_boundaries() -> None:
+def test_chunked_cache_canary_grows_only_at_frozen_256_token_boundaries() -> None:
     events: list[dict] = []
     cache = ChunkedDynamicCache.from_legacy_cache(
         _legacy(), owner_id="owner-a", growth_observer=events.append,
@@ -50,6 +50,17 @@ def test_chunked_cache_grows_only_at_frozen_256_token_boundaries() -> None:
 
     layer_zero_capacities = [event["new_capacity"] for event in events if event["layer_index"] == 0]
     assert layer_zero_capacities == [2048, 2304, 2560, 2816, 3072]
+
+
+def test_chunked_cache_longer_root_has_no_universal_3072_ceiling() -> None:
+    cache = ChunkedDynamicCache.from_legacy_cache(_legacy(length=3000), owner_id="long-root")
+    assert cache.capacity_lengths() == [3072, 3072]
+    _append(cache, 73, 17.0)
+    assert cache.get_seq_length() == 3073
+    assert cache.capacity_lengths() == [3328, 3328]
+    _append(cache, 768, 18.0)
+    assert cache.get_seq_length() == 3841
+    assert cache.capacity_lengths() == [4096, 4096]
 
 
 def test_chunked_cache_rollback_preserves_capacity_and_sibling_isolation() -> None:
