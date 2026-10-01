@@ -341,7 +341,11 @@ def _run_raw_b16(args: argparse.Namespace) -> None:
     for _ in range(2):
         cells = _make_replicas(model=model, prompts=prompts, config=config, args=args, width=WIDTH)
         _requests, replies, _telemetry = _run_one_forward(model=model, cells=cells, streaming=True, release=True)
-        del cells, replies
+        # ``_requests`` owns the cache-owner references.  Each warmup is an
+        # independent hardware sample, so retaining that list would retain a
+        # whole previous B16 KV cohort and manufacture an OOM unrelated to
+        # either the streaming algorithm or a physical forward.
+        del _requests, cells, replies
         gc.collect()
     torch.cuda.synchronize(device=args.device)
     samples: list[dict[str, float]] = []
@@ -363,7 +367,7 @@ def _run_raw_b16(args: argparse.Namespace) -> None:
             "cache_pack_seconds": float(telemetry["cache_pack_seconds"]),
             "cache_adoption_seconds": float(telemetry["cache_adoption_seconds"]),
         })
-        del cells, replies
+        del _requests, cells, replies
         gc.collect()
     lanes = statistics.median(item["lanes_per_second"] for item in samples)
     result = {
