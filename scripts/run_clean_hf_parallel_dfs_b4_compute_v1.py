@@ -453,6 +453,19 @@ def _classification(*, raw: dict[int, dict[str, float]], dynamic: dict[str, Any]
     return "B4_MODERATE_SCALING", "CONSIDER_ONE_B8_CHARACTERIZATION"
 
 
+def _production_sanity_pass(sanity: dict[str, Any]) -> bool:
+    """Evaluate positive gates while preserving explicit negative indicators."""
+    required_true = (
+        "all_cells_completed",
+        "all_cells_expanded_exact_budget",
+        "all_termination_budget_exhausted",
+        "finite_results",
+        "no_cache_generation_leak_indicator",
+        "no_oom",
+    )
+    return all(bool(sanity.get(key)) for key in required_true) and sanity.get("owner_identity_failure") is False
+
+
 def _run_finalize(args: argparse.Namespace) -> None:
     output = args.output
     micro = json.loads((output / "B4_MICRO_GATE.json").read_text(encoding="utf-8"))
@@ -465,7 +478,7 @@ def _run_finalize(args: argparse.Namespace) -> None:
         raise RuntimeError("B4 micro gate is not PASS")
     if not memory.get("no_oom") or not memory.get("owner_ids_preserved") or not memory.get("owner_storage_distinct"):
         raise RuntimeError("B4 memory invariants failed")
-    if not all(bool(value) for value in dynamic.get("sanity", {}).values()):
+    if not _production_sanity_pass(dynamic.get("sanity", {})):
         raise RuntimeError("B4 production sanity failed")
     for reference in (b1, b2):
         if reference.get("target_blind") is not True or reference.get("gold_loaded") is not False:
@@ -511,7 +524,7 @@ def _run_finalize(args: argparse.Namespace) -> None:
             "b4_memory_owner_identity": memory["owner_ids_preserved"],
             "b4_memory_storage_isolation": memory["owner_storage_distinct"],
             "b4_no_oom": memory["no_oom"],
-            "b4_production_sanity": all(bool(value) for value in dynamic["sanity"].values()),
+            "b4_production_sanity": _production_sanity_pass(dynamic["sanity"]),
         },
         "comparison": comparison,
     }
