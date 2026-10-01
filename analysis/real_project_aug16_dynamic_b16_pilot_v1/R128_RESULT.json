@@ -1,0 +1,623 @@
+{
+  "batch_distribution": {
+    "b12_plus_forward_fraction": 1.0,
+    "b16_forward_fraction": 1.0,
+    "b8_plus_forward_fraction": 1.0,
+    "mean": 16.0,
+    "median": 16.0,
+    "p25": 16.0,
+    "p75": 16.0
+  },
+  "budget_per_logical_cell": 128,
+  "candidate_pools": {
+    "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": [
+      []
+    ],
+    "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": [
+      []
+    ]
+  },
+  "experiment": "REAL_PROJECT_AUG16_DYNAMIC_B16_PILOT_V1",
+  "gold_loaded": false,
+  "memory": {
+    "allocated_bytes_end": 13249971200,
+    "peak_allocated_bytes": 22958445568,
+    "peak_reserved_bytes": 24958205952,
+    "reserved_bytes_end": 24113053696
+  },
+  "nominal_augmentation_cells": 16,
+  "per_cell": [
+    {
+      "augmentation_id": "geom=identity__color=id__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=flip_ud__color=id__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=transpose__color=id__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=rot90__color=id__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=rot180__color=id__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=rot270__color=id__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=flip_lr__color=id__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=identity__color=p00_4150723698__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=rot90__color=p02_4950812673__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=flip_ud__color=p03_5980213764__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=anti_transpose__color=p05_5436201789__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=identity__color=id__order=reverse",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=rot180__color=id__order=rotate_left_1",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=transpose__color=p01_1602397845__order=reverse",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    },
+    {
+      "augmentation_id": "geom=flip_lr__color=p07_7690351428__order=rotate_left_1",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    }
+  ],
+  "prompt_equivalence_classes": [
+    {
+      "augmentation_ids": "geom=anti_transpose__color=id__order=canonical",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "0be7be095352d29f898564a6894f68f99b96bbc604ac28860f18642fb9261a20"
+    },
+    {
+      "augmentation_ids": "geom=identity__color=p00_4150723698__order=canonical",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "104f15c9cdb2e1a47d43a8652c75543ea4fe6f15ac585329acb77bcf86f62ae1"
+    },
+    {
+      "augmentation_ids": "geom=rot90__color=id__order=canonical",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "17d50ff0525ac218d819a207527aebf0c49c6e86eb64807218c2790f9473868f"
+    },
+    {
+      "augmentation_ids": "geom=identity__color=id__order=canonical",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "5faf46e4b50ab7fc8b9e909355058a7f79abda5e00e220af6454de77f6857bcd"
+    },
+    {
+      "augmentation_ids": "geom=transpose__color=p01_1602397845__order=reverse",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "6ebb5d9fe4bcf4a59c1a4a6430e893ace7c69159f234a40724058cc35685add7"
+    },
+    {
+      "augmentation_ids": "geom=rot180__color=id__order=rotate_left_1",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "73394284c30755fbb012e233cd5913487d564aab4a1a0f54eab46f7c7bb894aa"
+    },
+    {
+      "augmentation_ids": "geom=transpose__color=id__order=canonical",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "82b956a80592698b8103c982bdcfc3bfd9dedb1b5e3631ea9b107bc729d22b16"
+    },
+    {
+      "augmentation_ids": "geom=anti_transpose__color=p05_5436201789__order=canonical",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "88604ca0b9f048773a841f3a79bf05a459984ef3f128730ec7da1284905f4b2a"
+    },
+    {
+      "augmentation_ids": "geom=rot270__color=id__order=canonical",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "99e8465cdcec4ffb531b7838bdeb8c0319a38b95876520a9416c1dda4496673b"
+    },
+    {
+      "augmentation_ids": "geom=flip_lr__color=id__order=canonical",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "9d7749955506ca71ba311b73e4af77f280046b591beb7bb1d29108a8fca0171d"
+    },
+    {
+      "augmentation_ids": "geom=flip_lr__color=p07_7690351428__order=rotate_left_1",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "a51ab3db7b3a6beba193cfb64a3cc39c09b4ba8cd81fc1c5e0040d0899548d6b"
+    },
+    {
+      "augmentation_ids": "geom=identity__color=id__order=reverse",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "ac2d5cc8742298e3d474393a7552b8eb32f13a01d46c2595b84521a387abe629"
+    },
+    {
+      "augmentation_ids": "geom=rot180__color=id__order=canonical",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "ac49e5366af03e9a80dff7b4bc1d5b2edc75edece11647eec0ef6e9bf49e579a"
+    },
+    {
+      "augmentation_ids": "geom=flip_ud__color=p03_5980213764__order=canonical",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "bada2613d49b62ccf404522f35ba47f96740251cec8d5d2d50656b516760f0c9"
+    },
+    {
+      "augmentation_ids": "geom=rot90__color=p02_4950812673__order=canonical",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "c6cfed6c26f2e645f26d9ba4c9b23ebf47e7124e5c0de4d26379c75c2c70b888"
+    },
+    {
+      "augmentation_ids": "geom=flip_ud__color=id__order=canonical",
+      "equivalence_class_size": 1,
+      "prompt_sha256": "ecac9fc3e0c1c04440f91a8bcc37e04bde61d7d65ca191f89f62f37ab8198034"
+    }
+  ],
+  "raw_b16_reference": {
+    "lanes_per_second": 138.915,
+    "latency_ms": 115.179
+  },
+  "raw_sha256": "f75fbd05e73d0e712310566a75470c998918e45649e2ae76bace451fea63bae5",
+  "root_compatibility_groups": [
+    {
+      "augmentation_ids": "geom=identity__color=id__order=canonical;geom=flip_ud__color=id__order=canonical;geom=transpose__color=id__order=canonical;geom=anti_transpose__color=id__order=canonical;geom=rot90__color=id__order=canonical;geom=rot180__color=id__order=canonical;geom=rot270__color=id__order=canonical;geom=flip_lr__color=id__order=canonical;geom=identity__color=p00_4150723698__order=canonical;geom=rot90__color=p02_4950812673__order=canonical;geom=flip_ud__color=p03_5980213764__order=canonical;geom=anti_transpose__color=p05_5436201789__order=canonical;geom=identity__color=id__order=reverse;geom=rot180__color=id__order=rotate_left_1;geom=transpose__color=p01_1602397845__order=reverse;geom=flip_lr__color=p07_7690351428__order=rotate_left_1",
+      "cache_geometry": "(36, (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))))",
+      "prompt_token_length": 1928,
+      "root_compatible_count": 16
+    }
+  ],
+  "scheduler": {
+    "active2_fraction": 0.0,
+    "active4_logical_fraction": 0.0,
+    "b1_forwards": 0,
+    "b2_forwards": 0,
+    "b3_forwards": 0,
+    "b4_forward_fraction": 0.0,
+    "b4_forwards": 0,
+    "cache_adoption_seconds": 2.883965454995632,
+    "cache_pack_seconds": 0.7730473503470421,
+    "logical_advances": 2048,
+    "mean_effective_batch": 16.0,
+    "model_call_seconds": 10.916294895112514,
+    "physical_batch_histogram": {
+      "16": 128
+    },
+    "physical_forwards": 128,
+    "scheduler_overhead_seconds": 0.0038155075162649155
+  },
+  "semantic_gate": {
+    "checks": {
+      "all_cells_completed": true,
+      "all_logical_cell_ids_preserved": true,
+      "candidate_canonicalization_accounted": true,
+      "finite_outputs_and_scores": true,
+      "inverse_geometry_and_colour_roundtrip": true,
+      "no_durable_cache_generation_leak": true,
+      "no_lane_swapping_or_cross_lane_cache_owner": true,
+      "no_oom": true,
+      "owner_identity_preserved": true,
+      "owner_storage_independent": true,
+      "per_cell_budget_accounting": true,
+      "sequence_length_increments_correctly": true
+    },
+    "finite_reply_failures": [],
+    "owner_after": {
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": [
+        138276943684432,
+        138252258420736,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": [
+        138277012799312,
+        138249632759808,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": [
+        138276944635344,
+        138249972514816,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": [
+        138276476608464,
+        138244941447168,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": [
+        138276943205200,
+        138256788275200,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": [
+        138276943299664,
+        138249137848320,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": [
+        138277012762768,
+        138255500574720,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": [
+        138276474797328,
+        138249464971264,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": [
+        138276476271120,
+        138251729977344,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": [
+        138276476197968,
+        138254670135296,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": [
+        138276476333456,
+        138249309847552,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": [
+        138276476266576,
+        138252925304832,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": [
+        138276476362896,
+        138257081843712,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": [
+        138276476553360,
+        138254800142336,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": [
+        138276944898320,
+        138250014474240,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": [
+        138276474797520,
+        138253013467136,
+        1928,
+        1
+      ]
+    },
+    "owner_before": {
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": [
+        138276943684432,
+        138257748721664,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": [
+        138277012799312,
+        138251787878400,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": [
+        138276944635344,
+        138253619560448,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": [
+        138276476608464,
+        138249506177024,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": [
+        138276943205200,
+        138255577554944,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": [
+        138276943299664,
+        138251926044672,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": [
+        138277012762768,
+        138255147270144,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": [
+        138276474797328,
+        138250710188032,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": [
+        138276476271120,
+        138253726138368,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": [
+        138276476197968,
+        138254748565504,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": [
+        138276476333456,
+        138250173317120,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": [
+        138276476266576,
+        138254146560000,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": [
+        138276476362896,
+        138256329572352,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": [
+        138276476553360,
+        138252455018496,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": [
+        138276944898320,
+        138257048027136,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": [
+        138276474797520,
+        138249644343296,
+        1928
+      ]
+    },
+    "request_invariant_failures": [],
+    "status": "PASS"
+  },
+  "target_blind": true,
+  "timing": {
+    "cache_adoption_seconds": 2.883965454995632,
+    "cache_pack_seconds": 0.7730473503470421,
+    "logical_nodes": 2048,
+    "logical_nodes_per_second": 114.60944885845801,
+    "model_call_seconds": 10.916294895112514,
+    "prefill_seconds": 6.174433929845691,
+    "realized_efficiency_vs_raw_b16": 0.8250329255908866,
+    "scheduler_overhead_seconds": 0.0038155075162649155,
+    "search_wall_seconds": 17.869381804019213
+  },
+  "unique_prompt_state_count": 16
+}

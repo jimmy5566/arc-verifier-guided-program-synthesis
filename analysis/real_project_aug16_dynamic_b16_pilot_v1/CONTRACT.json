@@ -1,0 +1,97 @@
+{
+  "adapter_exact": {
+    "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+    "adapter_sha256": "a91e4375da1cf5f544a083221292ded0dd41e50b4a4c63e80bb4c37ab0e42854",
+    "exact_match_count": 506,
+    "foundation_path": "/root/arc-runtime-3090-v2/arc2/analysis/clean_hf_parallel_regret_dfs_v1/ADAPTER_PARITY_SUMMARY.json"
+  },
+  "augmentation_ids_sha256": "9538b5135a743c7536213440e8d3c41c0e8ab7eac0a982320ca9838681d707c3",
+  "authoritative_step0_commit": "461e61121777d251e6b96d26d6511cdd698e27e5",
+  "candidate_pool_sha256": "a16e4194e7597e83e55c180896125638cfd595b108b4c935d5cd742058c90a13",
+  "experiment": "REAL_PROJECT_AUG16_DYNAMIC_B16_PILOT_V1",
+  "gold_loaded": false,
+  "project_augmentation_set": "PROJECT_RESEARCH_AUG16",
+  "runtime_identity": {
+    "adapter_config": {
+      "lora_alpha": 32,
+      "modules_to_save": [
+        "lm_head",
+        "embed_tokens"
+      ],
+      "r": 256,
+      "target_modules": [
+        "down_proj",
+        "gate_proj",
+        "k_proj",
+        "o_proj",
+        "q_proj",
+        "up_proj",
+        "v_proj"
+      ],
+      "target_modules_schema_translated": true,
+      "use_rslora": true
+    },
+    "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+    "adapter_identity_verification": "committed_506_506_foundation_binding",
+    "adapter_sha256": "a91e4375da1cf5f544a083221292ded0dd41e50b4a4c63e80bb4c37ab0e42854",
+    "attention_implementation": "sdpa",
+    "backend": "transformers_peft_clean",
+    "base_model_class": "Qwen3ForCausalLM",
+    "cuda": "12.8",
+    "dtype": "torch.bfloat16",
+    "forward_module": "peft.peft_model",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "model_class": "PeftModelForCausalLM",
+    "peft": "0.17.1",
+    "tokenizer_identity": {
+      "chat_template_source": "nvarc_official_for_missing_checkpoint_template",
+      "config_vocab_size": 16,
+      "eos_token_id": 15,
+      "pad_token_id": 13,
+      "token_mapping": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "<|endoftext|>": 13,
+        "<|im_end|>": 15,
+        "<|im_start|>": 14,
+        "assistant": 12,
+        "user": 11,
+        "\u010a": 10
+      },
+      "tokenizer_vocab_size": 16
+    },
+    "tokenizer_vocab_size": 16,
+    "torch": "2.8.0+cu128",
+    "transformers": "4.55.4"
+  },
+  "scientific_contract": {
+    "cache_adoption": "streaming_split_and_adopt",
+    "cache_sha": false,
+    "cache_strategy": "rollback DynamicCache",
+    "checkpoint": "Qwen3-4B",
+    "decoder_policy": "CUMULATIVE_REGRET_r=4.00",
+    "diagnostic_trace": false,
+    "dtype": "BF16",
+    "frontier_floor": 1,
+    "inference_backend": "Transformers + PEFT",
+    "max_completed_candidates": 32,
+    "max_physical_batch": 16,
+    "qkv_hooks": false,
+    "ttt_backend": "Unsloth adaptation only; no TTT launched here",
+    "ttt_depth": 24
+  },
+  "target_blind": true,
+  "task": {
+    "depth": 24,
+    "output_index": 0,
+    "task_id": "d59b0160"
+  }
+}

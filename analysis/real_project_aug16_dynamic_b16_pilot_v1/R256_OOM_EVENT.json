@@ -1,0 +1,13 @@
+{
+  "cuda_memory_message": null,
+  "error": "CUDA out of memory. Tried to allocate 62.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 61.00 MiB is free. Process 881063 has 23.49 GiB memory in use. Of the allocated memory 22.45 GiB is allocated by PyTorch, and 748.69 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "gold_loaded": false,
+  "phase": "R256",
+  "r128_raw_sha256": "f75fbd05e73d0e712310566a75470c998918e45649e2ae76bace451fea63bae5",
+  "r128_semantic_status": "PASS",
+  "retry_decision": "NOT_RETRIED: fixed B16 R256 configuration exhausted device capacity; a rerun would not be a new evidentiary condition.",
+  "same_r256_retry_count": 0,
+  "scientific_configuration_changed": false,
+  "status": "CUDA_OUT_OF_MEMORY",
+  "target_blind": true
+}

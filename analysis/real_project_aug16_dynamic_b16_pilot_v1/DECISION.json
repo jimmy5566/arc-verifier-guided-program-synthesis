@@ -1,0 +1,16 @@
+{
+  "classification": "REAL_AUG16_R256_CAPACITY_STOP",
+  "classification_explanation": "R128 semantic and occupancy gates passed, but the fixed B16 R256 phase exhausted the 24 GiB RTX 3090. The preregistered R256 final-class gate is therefore NOT_ESTABLISHED.",
+  "experiment": "PROJECT_RESEARCH_AUG16_DYNAMIC_B16_PILOT",
+  "gold_loaded": false,
+  "next_step": "Do not run a census. A separately frozen capacity-engineering protocol would be required before changing physical batch or cache policy.",
+  "r128_gate": "R128_PASS",
+  "r128_pass": true,
+  "r256_attempted": true,
+  "r256_completed": false,
+  "r256_result": "NOT_AVAILABLE",
+  "r256_status": "CUDA_OUT_OF_MEMORY",
+  "recommended_physical_batch_ceiling_large_3090_census": "NOT_ESTABLISHED: B16 validated only through R128; not validated at R256.",
+  "retention30_ttt24_ttt48_aug16_r4096_census": "DO_NOT_PROCEED",
+  "target_blind": true
+}

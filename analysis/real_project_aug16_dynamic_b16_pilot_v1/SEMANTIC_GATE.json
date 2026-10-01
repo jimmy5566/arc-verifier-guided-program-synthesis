@@ -1,0 +1,206 @@
+{
+  "r128": {
+    "checks": {
+      "all_cells_completed": true,
+      "all_logical_cell_ids_preserved": true,
+      "candidate_canonicalization_accounted": true,
+      "finite_outputs_and_scores": true,
+      "inverse_geometry_and_colour_roundtrip": true,
+      "no_durable_cache_generation_leak": true,
+      "no_lane_swapping_or_cross_lane_cache_owner": true,
+      "no_oom": true,
+      "owner_identity_preserved": true,
+      "owner_storage_independent": true,
+      "per_cell_budget_accounting": true,
+      "sequence_length_increments_correctly": true
+    },
+    "finite_reply_failures": [],
+    "owner_after": {
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": [
+        138276943684432,
+        138252258420736,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": [
+        138277012799312,
+        138249632759808,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": [
+        138276944635344,
+        138249972514816,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": [
+        138276476608464,
+        138244941447168,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": [
+        138276943205200,
+        138256788275200,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": [
+        138276943299664,
+        138249137848320,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": [
+        138277012762768,
+        138255500574720,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": [
+        138276474797328,
+        138249464971264,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": [
+        138276476271120,
+        138251729977344,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": [
+        138276476197968,
+        138254670135296,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": [
+        138276476333456,
+        138249309847552,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": [
+        138276476266576,
+        138252925304832,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": [
+        138276476362896,
+        138257081843712,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": [
+        138276476553360,
+        138254800142336,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": [
+        138276944898320,
+        138250014474240,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": [
+        138276474797520,
+        138253013467136,
+        1928,
+        1
+      ]
+    },
+    "owner_before": {
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": [
+        138276943684432,
+        138257748721664,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": [
+        138277012799312,
+        138251787878400,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": [
+        138276944635344,
+        138253619560448,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": [
+        138276476608464,
+        138249506177024,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": [
+        138276943205200,
+        138255577554944,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": [
+        138276943299664,
+        138251926044672,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": [
+        138277012762768,
+        138255147270144,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": [
+        138276474797328,
+        138250710188032,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": [
+        138276476271120,
+        138253726138368,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": [
+        138276476197968,
+        138254748565504,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": [
+        138276476333456,
+        138250173317120,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": [
+        138276476266576,
+        138254146560000,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": [
+        138276476362896,
+        138256329572352,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": [
+        138276476553360,
+        138252455018496,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": [
+        138276944898320,
+        138257048027136,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": [
+        138276474797520,
+        138249644343296,
+        1928
+      ]
+    },
+    "request_invariant_failures": [],
+    "status": "PASS"
+  },
+  "r256": {
+    "oom_event": "R256_OOM_EVENT.json",
+    "semantic_status": "NOT_ESTABLISHED",
+    "status": "NOT_COMPLETED_DUE_TO_OOM"
+  }
+}
