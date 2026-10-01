@@ -327,6 +327,7 @@ def history(args: argparse.Namespace) -> None:
         decision["causal_classification"] = "FOREIGN_INCREMENTAL_HISTORY_REQUIRED"
         decision["next"] = "FIRST_LEVEL_ROOT_CAUSE_LOCALIZATION"
         decision["foreign_incremental_history_first_drift"] = first_drift
+    decision["history_sweep_source_commit"] = args.source_commit
     atomic_json(decision_path, decision)
     hashes = {path.relative_to(output).as_posix(): sha256_file(path) for path in sorted(output.rglob("*"))
               if path.is_file() and path.name != "HASHES.json"}
@@ -343,7 +344,7 @@ def main() -> None:
         item.add_argument("--adapter-manifest", type=Path, required=True); item.add_argument("--fixed-budget-contract", type=Path, required=True)
         item.add_argument("--source-commit", required=True)
     run_parser = sub.add_parser("run"); run_parser.add_argument("--output", type=Path, required=True); run_parser.add_argument("--gpu-id", type=int, default=0)
-    history_parser = sub.add_parser("history"); history_parser.add_argument("--output", type=Path, required=True); history_parser.add_argument("--gpu-id", type=int, default=0)
+    history_parser = sub.add_parser("history"); history_parser.add_argument("--output", type=Path, required=True); history_parser.add_argument("--gpu-id", type=int, default=0); history_parser.add_argument("--source-commit", required=True)
     condition = sub.add_parser("condition"); condition.add_argument("--contract", type=Path, required=True); condition.add_argument("--result", type=Path, required=True)
     condition.add_argument("--condition-id", required=True); condition.add_argument("--cache-mode", choices=("NATIVE", "LEGACY_DEEP_CLONE"), required=True)
     condition.add_argument("--foreign-prefill", action="store_true"); condition.add_argument("--gpu-id", type=int, default=0)
