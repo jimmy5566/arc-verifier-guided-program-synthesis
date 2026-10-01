@@ -178,7 +178,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         # Shared phases intentionally create all roots up front; only the
         # scheduling order distinguishes serial-shared from round-robin.
         cells = [make_cell(view) for view in VIEWS]
-    if args.mode == "serial-shared":
+    if args.mode == "isolated":
+        pass
+    elif args.mode == "serial-shared":
         events = []
         for cell in cells:
             events.extend(run_ready_scheduler(model=model, cells=[cell], dynamic_batch2=False)["events"])
