@@ -425,12 +425,21 @@ def _finalize(args: argparse.Namespace) -> None:
     original_rows = list(__import__("csv").DictReader((args.output / "B16_MEMORY_WATERFALL.csv").open(encoding="utf-8")))
     original_peak_alloc = max(int(row["peak_allocated_bytes"] or 0) for row in original_rows)
     original_peak_reserved = max(int(row["peak_reserved_bytes"] or 0) for row in original_rows)
+    retry_peak_alloc = int(retry.get("peak_allocated_bytes", 0))
+    retry_peak_reserved = int(retry.get("peak_reserved_bytes", 0))
     payload = {
         "experiment": EXPERIMENT, "decision": decision, "recommended_production_max_physical_batch": recommended,
         "original_outcome": original, "original_peak_allocated_bytes": original_peak_alloc,
         "original_peak_reserved_bytes": original_peak_reserved, "optimized_retry": retry, "raw_b16": raw,
+        "original_b16_oom_reproduced": original.get("status") == "OOM",
+        "original_b16_exact_stage": original.get("exact_stage", "NOT_REPRODUCED_IN_FRESH_PROCESS"),
+        "vram_saved_vs_original_path": {
+            "allocated_bytes": original_peak_alloc - retry_peak_alloc if retry_peak_alloc else None,
+            "reserved_bytes": original_peak_reserved - retry_peak_reserved if retry_peak_reserved else None,
+        },
         "allocator_fragmentation": {
             "original_reserved_minus_allocated_bytes": max(0, original_peak_reserved - original_peak_alloc),
+            "expandable_segments_tested": False,
             "interpretation": "Reported separately; allocator configuration was not used as the primary fix.",
         },
         "target_blind": True, "gold_loaded": False,
@@ -439,7 +448,7 @@ def _finalize(args: argparse.Namespace) -> None:
     report = [
         f"# {EXPERIMENT}", "", "- Target-blind raw physical-forward capacity study only.",
         "- B16 uses four independent replicas of each of four frozen views; replicas are not ARC coverage.",
-        f"- Original B16 outcome: `{original.get('status')}` at `{original.get('exact_stage', 'N/A')}`.",
+        f"- Original B16 outcome: `{original.get('status')}` at `{original.get('exact_stage', 'NOT_REPRODUCED_IN_FRESH_PROCESS')}`.",
         f"- Streaming-adoption retry: `{retry.get('status')}`.",
         f"- Final decision: `{decision}`.",
         f"- Recommended production maximum physical batch: `{recommended}`.", "",
