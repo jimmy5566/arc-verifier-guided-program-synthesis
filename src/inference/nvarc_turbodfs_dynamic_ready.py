@@ -772,13 +772,19 @@ def run_ready_scheduler(
             "wall_seconds": elapsed,
         })
         for trace, cell, reply in zip(trace_inputs or [None] * len(selected), selected, outputs_by_cell, strict=True):
+            if trace is not None:
+                # Capture the physical reply *before* resuming the DFS
+                # coroutine.  In rollback mode that resume can descend and
+                # crop the one mutable owner several times before yielding its
+                # next request; hashing afterwards misattributes a later
+                # parent state to this forward.
+                trace.update(_logits_diagnostic(reply.logits, cell.config.arc_tokens))
+                trace["output_cache_sha256"] = cache_sha256(reply.past_key_values)
             _reply(cell, reply)
             if trace is not None:
-                trace.update(_logits_diagnostic(reply.logits, cell.config.arc_tokens))
                 trace["retained_successors"] = cell.state["retained_successors_by_parent"].get(
                     trace["request_parent_node_id"],
                 )
-                trace["output_cache_sha256"] = cache_sha256(reply.past_key_values)
                 cell.state["per_forward_trace"].append(trace)
         if len(selected) > 1 and cache_pack_observer is not None:
             cache_pack_observer("after_logical_resume", {"outputs_by_cell": outputs_by_cell})
