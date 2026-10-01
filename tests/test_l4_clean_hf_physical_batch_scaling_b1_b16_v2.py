@@ -159,4 +159,5 @@ class L4CleanHFPhysicalBatchScalingV2Tests(unittest.TestCase):
     assert "submission.json" not in source and "evaluation_solutions" not in source
     packaged = staged / "dataset" / "ARC2" / "scripts" / RUNNER_PATH.name
     assert packaged.is_file()
+    assert (staged / "dataset" / "ARC2" / "src" / "inference" / "hf_peft_backend.py").is_file()
     assert not list((staged / "dataset").rglob("*solution*.json"))

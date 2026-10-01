@@ -5,8 +5,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import subprocess
+import sys
 import tarfile
 from pathlib import Path
 from typing import Any
@@ -58,6 +60,7 @@ def _archive_curated_source(destination: Path) -> None:
         "src/arc",
         "src/inference/__init__.py",
         "src/inference/arc_native_io.py",
+        "src/inference/hf_peft_backend.py",
         "src/inference/nvarc_native.py",
         "src/inference/nvarc_native_augmentation.py",
         "src/inference/nvarc_turbodfs_d1.py",
@@ -85,6 +88,20 @@ def _archive_curated_source(destination: Path) -> None:
                  and "solution" in path.name.lower()]
     if forbidden:
         raise RuntimeError(f"curated target-blind source contains forbidden file names: {forbidden}")
+
+
+def _assert_staged_runner_importable(source: Path) -> None:
+    """Exercise the package import closure, not the developer worktree's one."""
+    runner = source / "scripts" / "run_l4_clean_hf_physical_batch_scaling_b1_b16_v2.py"
+    if not runner.is_file():
+        raise RuntimeError("curated source is missing the benchmark runner")
+    environment = {**os.environ, "PYTHONPATH": str(source)}
+    probe = subprocess.run(
+        [sys.executable, "-c", "import runpy, sys; sys.path.insert(0, sys.argv[1]); runpy.run_path(sys.argv[2])", str(source), str(runner)],
+        cwd=source, env=environment, text=True, capture_output=True,
+    )
+    if probe.returncode:
+        raise RuntimeError(f"curated runner import closure failed:\n{probe.stderr}")
 
 
 def _notebook_source(dataset_slug: str, harness_commit: str) -> str:
@@ -139,6 +156,7 @@ def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str) -> d
     source = dataset / "ARC2"
     source.mkdir(parents=True)
     _archive_curated_source(source)
+    _assert_staged_runner_importable(source)
     contract = experiment_contract(source_commit=AUTHORITATIVE_SOURCE_COMMIT)
     _write(dataset / "L4_BENCHMARK_CONTRACT.json", contract)
     (dataset / "README.md").write_text(
