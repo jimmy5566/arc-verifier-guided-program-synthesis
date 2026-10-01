@@ -26,7 +26,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from inference.nvarc_turbodfs_dynamic_ready import execute_ready_forward, start_ready_cell  # noqa: E402
-from scripts.run_clean_hf_parallel_dfs_v1 import VIEWS, _atomic_json, _cache_transform, _sha256_json  # noqa: E402
+from scripts.run_clean_hf_parallel_regret_dfs_v1 import VIEWS, _atomic_json, _cache_transform  # noqa: E402
 from scripts.run_clean_hf_parallel_dfs_b4_compute_v1 import (  # noqa: E402
     _atomic_csv,
     _cache_sequence_length,
