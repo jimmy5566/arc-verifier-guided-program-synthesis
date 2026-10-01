@@ -131,6 +131,35 @@ def _write_contract_files(args: argparse.Namespace) -> dict[str, Any]:
     return contract
 
 
+def _verify_adapter_foundation(path: Path, identity: dict[str, Any]) -> dict[str, Any]:
+    """Accept the two already-frozen 506/506 foundation receipt schemas.
+
+    Older Clean-HF receipts nest the exact adapter identity under
+    ``runtime_identity`` and spell the parity as ``506/506 exact``.  The
+    newer helper uses a flattened PASS schema.  Both bind the same adapter
+    file and config hashes before target-blind generation; this adapter does
+    not fabricate, recompute, or relax a parity claim.
+    """
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("status") == "PASS" and int(payload.get("exact_match_count", -1)) == 506:
+        return _verify_frozen_foundation(path, identity)
+    frozen = payload.get("runtime_identity", {})
+    if payload.get("adapter_parity") != "506/506 exact":
+        raise RuntimeError("adapter foundation is not a frozen 506/506 exact receipt")
+    for key in ("adapter_sha256", "adapter_config_sha256"):
+        if frozen.get(key) != identity.get(key):
+            raise RuntimeError(f"loaded adapter identity mismatches frozen foundation: {key}")
+    if identity.get("dtype") != "torch.bfloat16":
+        raise RuntimeError("clean-HF decoder must remain BF16")
+    return {
+        "foundation_path": str(path),
+        "exact_match_count": 506,
+        "adapter_sha256": identity["adapter_sha256"],
+        "adapter_config_sha256": identity["adapter_config_sha256"],
+        "foundation_schema": "legacy_nested_506_506_exact",
+    }
+
+
 def _unit_gate(args: argparse.Namespace) -> int:
     """Run the CPU-only mechanical scheduler gate and freeze its receipt."""
     contract = _write_contract_files(args)
@@ -434,8 +463,19 @@ def _run_phase(args: argparse.Namespace) -> int:
     raw_challenge = json.loads(args.challenge.read_text(encoding="utf-8"))
     candidates = _load_aug16(args.candidate_pool, args.aug16_ids)
     foundation = json.loads(args.adapter_foundation.read_text(encoding="utf-8"))
-    if foundation.get("status") != "PASS" or int(foundation.get("exact_match_count", -1)) != 506:
-        raise RuntimeError("validated frozen 506/506 Clean-HF adapter foundation is required")
+    if foundation.get("status") == "PASS" and int(foundation.get("exact_match_count", -1)) == 506:
+        frozen_adapter_identity = {
+            "adapter_sha256": str(foundation["adapter_sha256"]),
+            "adapter_config_sha256": str(foundation["adapter_config_sha256"]),
+        }
+    else:
+        frozen_identity = foundation.get("runtime_identity", {})
+        if foundation.get("adapter_parity") != "506/506 exact":
+            raise RuntimeError("validated frozen 506/506 Clean-HF adapter foundation is required")
+        frozen_adapter_identity = {
+            "adapter_sha256": str(frozen_identity["adapter_sha256"]),
+            "adapter_config_sha256": str(frozen_identity["adapter_config_sha256"]),
+        }
     tasks = load_dataset(args.challenge)
     if args.task_id not in tasks or args.task_id not in raw_challenge:
         raise RuntimeError(f"canary task missing from challenge: {args.task_id}")
@@ -448,12 +488,9 @@ def _run_phase(args: argparse.Namespace) -> int:
             adapter_path=args.adapter_path,
             device=args.device,
             native_config_dir=args.native_config_dir,
-            frozen_adapter_identity={
-                "adapter_sha256": str(foundation["adapter_sha256"]),
-                "adapter_config_sha256": str(foundation["adapter_config_sha256"]),
-            },
+            frozen_adapter_identity=frozen_adapter_identity,
         )
-        adapter = _verify_frozen_foundation(args.adapter_foundation, identity)
+        adapter = _verify_adapter_foundation(args.adapter_foundation, identity)
         surface = _run_surface(
             torch=torch, model=model, tokenizer=tokenizer, task=task, raw_task=raw_challenge[args.task_id],
             candidates=candidates, budget=args.phase, task_id=args.task_id, output_index=args.output_index,
