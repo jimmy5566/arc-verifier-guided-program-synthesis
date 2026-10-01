@@ -563,6 +563,7 @@ def _select_ready_cells(
     cells: list[ReadyCell],
     scheduling_policy: SchedulingPolicy,
     round_robin_cursor: int,
+    capture_ready_keys: bool = True,
 ) -> tuple[list[ReadyCell], int | None, int | None, list[str]]:
     """Select the next logical B1 lane without changing its physical forward.
 
@@ -585,13 +586,15 @@ def _select_ready_cells(
             index = (round_robin_cursor + offset) % len(cells)
             cell = cells[index]
             if cell.request is not None:
-                return [cell], index, (index + 1) % len(cells), [item.cell_key for item in ready]
+                keys = [item.cell_key for item in ready] if capture_ready_keys else []
+                return [cell], index, (index + 1) % len(cells), keys
         raise AssertionError("ready set was nonempty but no round-robin cell was selected")
     ordered = sorted(
         ready,
         key=lambda cell: (cell.cell_key, cell.request.ordinal if cell.request else -1),
     )
-    return [ordered[0]], None, None, [item.cell_key for item in ordered]
+    keys = [item.cell_key for item in ordered] if capture_ready_keys else []
+    return [ordered[0]], None, None, keys
 
 
 def run_ready_scheduler(
@@ -603,6 +606,7 @@ def run_ready_scheduler(
     observer: Callable[[str, dict[str, Any]], None] | None = None,
     cache_pack_observer: Callable[[str, dict[str, Any]], None] | None = None,
     release_b2_temporaries_for_audit: bool = False,
+    collect_event_trace: bool = True,
 ) -> dict[str, Any]:
     """Drive independent cells through one shared physical B1/B2 path.
 
@@ -618,12 +622,20 @@ def run_ready_scheduler(
         raise ValueError("round_robin is a B1 policy and cannot enable physical B2")
     events: list[dict[str, Any]] = []
     forwards = 0
+    logical_advances = 0
+    b1_forwards = 0
+    b2_forwards = 0
+    model_call_seconds_total = 0.0
+    cache_pack_seconds_total = 0.0
+    cache_adoption_seconds_total = 0.0
+    scheduler_overhead_seconds_total = 0.0
     round_robin_cursor = 0
     while True:
         selected, selected_index, next_cursor, ready_keys = _select_ready_cells(
             cells=cells,
             scheduling_policy=scheduling_policy,
             round_robin_cursor=round_robin_cursor,
+            capture_ready_keys=collect_event_trace,
         )
         if not selected:
             break
@@ -761,6 +773,13 @@ def run_ready_scheduler(
                 "model_elapsed_seconds": elapsed,
             })
         forwards += 1
+        logical_advances += len(selected)
+        b1_forwards += int(len(selected) == 1)
+        b2_forwards += int(len(selected) == 2)
+        model_call_seconds_total += model_call_seconds
+        cache_pack_seconds_total += cache_pack_seconds
+        cache_adoption_seconds_total += cache_adoption_seconds
+        scheduler_overhead_seconds_total += scheduler_overhead_seconds
         for cell in selected:
             # One physical B2 forward is fully attributable to every logical
             # cell it advances; dividing it would extend the scientific budget.
@@ -771,23 +790,24 @@ def run_ready_scheduler(
         if scheduling_policy == "round_robin":
             assert selected_index is not None and next_cursor is not None
             round_robin_cursor = next_cursor
-        events.append({
-            "forward_index": forwards,
-            "physical_batch": len(selected),
-            "position": first.request.position,
-            "host_model_call_seconds": model_call_seconds,
-            "host_cache_pack_seconds": cache_pack_seconds,
-            "host_cache_adoption_seconds": cache_adoption_seconds,
-            "host_scheduler_overhead_seconds": scheduler_overhead_seconds,
-            "cache_geometry": repr(first.request.cache_key),
-            "cell_keys": [cell.cell_key for cell in selected],
-            "request_ordinals": [request.ordinal for request in requests],
-            "scheduling_policy": scheduling_policy,
-            "ready_cell_keys": ready_keys,
-            "round_robin_cursor_before": cursor_before,
-            "round_robin_cursor_after": round_robin_cursor if scheduling_policy == "round_robin" else None,
-            "wall_seconds": elapsed,
-        })
+        if collect_event_trace:
+            events.append({
+                "forward_index": forwards,
+                "physical_batch": len(selected),
+                "position": first.request.position,
+                "host_model_call_seconds": model_call_seconds,
+                "host_cache_pack_seconds": cache_pack_seconds,
+                "host_cache_adoption_seconds": cache_adoption_seconds,
+                "host_scheduler_overhead_seconds": scheduler_overhead_seconds,
+                "cache_geometry": repr(first.request.cache_key),
+                "cell_keys": [cell.cell_key for cell in selected],
+                "request_ordinals": [request.ordinal for request in requests],
+                "scheduling_policy": scheduling_policy,
+                "ready_cell_keys": ready_keys,
+                "round_robin_cursor_before": cursor_before,
+                "round_robin_cursor_after": round_robin_cursor if scheduling_policy == "round_robin" else None,
+                "wall_seconds": elapsed,
+            })
         for trace, cell, reply in zip(trace_inputs or [None] * len(selected), selected, outputs_by_cell, strict=True):
             if trace is not None:
                 # Capture the physical reply *before* resuming the DFS
@@ -806,8 +826,20 @@ def run_ready_scheduler(
         if len(selected) > 1 and cache_pack_observer is not None:
             cache_pack_observer("after_logical_resume", {"outputs_by_cell": outputs_by_cell})
         del outputs
+    telemetry = {
+        "physical_forwards": forwards,
+        "b1_forwards": b1_forwards,
+        "b2_forwards": b2_forwards,
+        "logical_advances": logical_advances,
+        "mean_effective_batch": logical_advances / forwards if forwards else 0.0,
+        "active2_fraction": (2 * b2_forwards) / logical_advances if logical_advances else 0.0,
+        "model_call_seconds": model_call_seconds_total,
+        "cache_pack_seconds": cache_pack_seconds_total,
+        "cache_adoption_seconds": cache_adoption_seconds_total,
+        "scheduler_overhead_seconds": scheduler_overhead_seconds_total,
+    }
     return {"scheduling_policy": scheduling_policy, "physical_forwards": forwards, "events": events,
-            "mean_effective_batch": (sum(row["physical_batch"] for row in events) / len(events)) if events else 0.0}
+            "mean_effective_batch": telemetry["mean_effective_batch"], "telemetry": telemetry}
 
 
 def ready_result(cell: ReadyCell) -> D1TurboDFSResult:

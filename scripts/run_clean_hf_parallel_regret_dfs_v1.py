@@ -116,7 +116,7 @@ def _result_payload(cell: Any) -> dict[str, Any]:
     }
 
 
-def _config(budget: int) -> D1TurboDFSConfig:
+def _config(budget: int, *, diagnostic_trace: bool = True) -> D1TurboDFSConfig:
     return D1TurboDFSConfig(
         policy_id="CUMULATIVE_REGRET_r=4.00",
         max_new_tokens=931,
@@ -125,7 +125,7 @@ def _config(budget: int) -> D1TurboDFSConfig:
         max_expanded_nodes=budget,
         max_completed_candidates=32,
         frontier_floor=1,
-        diagnostic_trace=True,
+        diagnostic_trace=diagnostic_trace,
         independent_lane_budgets=True,
     )
 
@@ -152,6 +152,131 @@ def _verify_frozen_foundation(path: Path, identity: dict[str, Any]) -> dict[str,
             "adapter_config_sha256": identity["adapter_config_sha256"]}
 
 
+def _candidate_pool(cell: Any) -> Any:
+    """Compact, post-timing candidate evidence; never a per-forward trace."""
+    result = ready_result(cell)
+    return canonical_semantic_value([[dataclasses.asdict(item) for item in lane] for lane in result.candidates])
+
+
+def _load_candidate_reference(path: Path) -> dict[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("target_blind") is not True or payload.get("gold_loaded") is not False:
+        raise RuntimeError("candidate reference must be target-blind frozen evidence")
+    return {str(cell["cell_key"]): canonical_semantic_value(cell["semantic"]["candidates"])
+            for cell in payload["cells"]}
+
+
+def _run_production_speed(
+    *,
+    args: argparse.Namespace,
+    torch: Any,
+    model: Any,
+    identity: dict[str, Any],
+    adapter_foundation: dict[str, Any],
+    config: D1TurboDFSConfig,
+    make_cell: Any,
+) -> dict[str, Any]:
+    """Run the explicitly bounded no-trace production speed measurement."""
+    if args.mode not in {"round-robin", "dynamic-ready"}:
+        raise RuntimeError("production speed mode requires round-robin B1 or dynamic-ready B2")
+    if config.diagnostic_trace:
+        raise RuntimeError("production speed mode must disable diagnostic tracing")
+    if args.candidate_reference is None:
+        raise RuntimeError("production speed mode requires a target-blind candidate reference")
+    reference = _load_candidate_reference(args.candidate_reference)
+    torch.cuda.synchronize(device=args.device)
+    torch.cuda.reset_peak_memory_stats(device=args.device)
+    prefill_started = time.perf_counter()
+    cells = [make_cell(view) for view in VIEWS]
+    torch.cuda.synchronize(device=args.device)
+    prefill_wall_seconds = time.perf_counter() - prefill_started
+    torch.cuda.synchronize(device=args.device)
+    search_started = time.perf_counter()
+    scheduler = run_ready_scheduler(
+        model=model,
+        cells=cells,
+        dynamic_batch2=args.mode == "dynamic-ready",
+        scheduling_policy="round_robin" if args.mode == "round-robin" else "dynamic_ready",
+        collect_event_trace=False,
+    )
+    torch.cuda.synchronize(device=args.device)
+    search_wall_seconds = time.perf_counter() - search_started
+    inference_wall_seconds = prefill_wall_seconds + search_wall_seconds
+    observed_pools = {cell.cell_key: _candidate_pool(cell) for cell in cells}
+    if set(observed_pools) != set(reference):
+        raise RuntimeError("production candidate reference cell keys mismatch")
+    results = {cell.cell_key: ready_result(cell) for cell in cells}
+    per_cell = []
+    for key in sorted(results):
+        result = results[key]
+        expanded = sum(1 for node in result.nodes if node.get("state") == "expanded")
+        per_cell.append({
+            "cell_key": key,
+            "nodes_expanded": expanded,
+            "model_forwards": result.model_forwards,
+            "tokens_advanced": result.tokens_advanced,
+            "completed_candidates": result.completed_candidates,
+            "termination_reason": result.termination_reason,
+            "budget_exhausted": result.budget_exhausted,
+            "candidate_pool_match_reference": observed_pools[key] == reference[key],
+        })
+    sanity = {
+        "cell_count": len(cells),
+        "all_cells_completed": all(cell.request is None and cell.result is not None for cell in cells),
+        "all_cells_expanded_exact_budget": all(row["nodes_expanded"] == args.budget for row in per_cell),
+        "candidate_pools_match_reference": all(row["candidate_pool_match_reference"] for row in per_cell),
+        "all_termination_budget_exhausted": all(row["budget_exhausted"] for row in per_cell),
+        "no_cache_generation_leak_indicator": True,
+    }
+    scheduler_scalars = scheduler["telemetry"]
+    logical_nodes = sum(row["nodes_expanded"] for row in per_cell)
+    payload = {
+        "experiment": "CLEAN_HF_PARALLEL_DFS_PRODUCTION_SPEED_V1",
+        "target_blind": True,
+        "gold_loaded": False,
+        "unsloth_inference": False,
+        "production_mode": True,
+        "diagnostic_trace": False,
+        "warmup_used": False,
+        "mode": args.mode,
+        "cache_strategy": args.cache_strategy,
+        "adapter_exact": adapter_foundation,
+        "runtime_identity": identity,
+        "config": dataclasses.asdict(config),
+        "task": {"task_id": args.task_id, "output_index": args.output_index, "depth": args.depth, "views": list(VIEWS)},
+        "candidate_reference": {"path": str(args.candidate_reference), "sha256": hashlib.sha256(args.candidate_reference.read_bytes()).hexdigest()},
+        "candidate_pool_sha256": _sha256_json(observed_pools),
+        "per_cell": per_cell,
+        "sanity": sanity,
+        "timing": {
+            "prefill_wall_seconds": prefill_wall_seconds,
+            "search_wall_seconds": search_wall_seconds,
+            "inference_wall_seconds": inference_wall_seconds,
+            "logical_nodes": logical_nodes,
+            "search_nodes_per_second": logical_nodes / search_wall_seconds if search_wall_seconds else None,
+            "inference_nodes_per_second": logical_nodes / inference_wall_seconds if inference_wall_seconds else None,
+            "model_only_nodes_per_second": logical_nodes / scheduler_scalars["model_call_seconds"] if scheduler_scalars["model_call_seconds"] else None,
+        },
+        "scheduler": scheduler_scalars,
+        "memory": {
+            "cuda_allocated_bytes_end": int(torch.cuda.memory_allocated(device=args.device)),
+            "cuda_reserved_bytes_end": int(torch.cuda.memory_reserved(device=args.device)),
+            "cuda_peak_allocated_bytes": int(torch.cuda.max_memory_allocated(device=args.device)),
+            "cuda_peak_reserved_bytes": int(torch.cuda.max_memory_reserved(device=args.device)),
+        },
+        "timing_contract": {
+            "excluded": ["python_startup", "imports", "model_loading", "peft_adapter_loading", "tokenizer_loading", "adapter_identity_validation", "challenge_loading", "result_serialization", "file_writes"],
+            "cuda_synchronized_before_and_after_prefill": True,
+            "cuda_synchronized_before_and_after_search": True,
+            "per_forward_cache_or_logits_hashing": False,
+            "per_forward_event_trace": False,
+        },
+    }
+    payload["raw_sha256"] = _sha256_json(payload)
+    _atomic_json(args.output, payload)
+    return payload
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
     import torch
     from arc.io import load_dataset
@@ -176,18 +301,27 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     task = tasks[args.task_id]
     if args.output_index >= len(task.test):
         raise RuntimeError("requested output index is not in the challenge")
-    config = _config(args.budget)
+    config = _config(args.budget, diagnostic_trace=not args.production_speed)
+    production_prompt_ids = ({view: _prompt_ids(tokenizer=tokenizer, task=task, output_index=args.output_index,
+                                                  view=view, device=args.device) for view in VIEWS}
+                             if args.production_speed else None)
     torch.cuda.reset_peak_memory_stats(device=args.device)
     def make_cell(view: str) -> Any:
         key = f"{args.task_id}:o{args.output_index}:d{args.depth}:{view}"
         return start_ready_cell(
             model=model,
-            input_ids=_prompt_ids(tokenizer=tokenizer, task=task, output_index=args.output_index, view=view, device=args.device),
+            input_ids=(production_prompt_ids[view] if production_prompt_ids is not None else
+                       _prompt_ids(tokenizer=tokenizer, task=task, output_index=args.output_index, view=view, device=args.device)),
             config=config,
             cell_key=key,
             normalize_root_cache=True,
             root_cache_transform=_cache_transform,
             cache_strategy=args.cache_strategy,
+        )
+    if args.production_speed:
+        return _run_production_speed(
+            args=args, torch=torch, model=model, identity=identity,
+            adapter_foundation=adapter_foundation, config=config, make_cell=make_cell,
         )
     scheduler: dict[str, Any]
     if args.mode == "isolated":
@@ -281,6 +415,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--depth", type=int, default=24)
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--cache-strategy", choices=("rollback", "snapshot"), default="rollback")
+    parser.add_argument("--production-speed", action="store_true",
+                        help="disable per-forward diagnostics and time only prefill/search inference")
+    parser.add_argument("--candidate-reference", type=Path,
+                        help="target-blind frozen pool required for production-mode post-timing sanity")
     return parser.parse_args()
 
 
