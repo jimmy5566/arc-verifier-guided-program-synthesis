@@ -28,7 +28,13 @@ def _tensor_sha256(tensor: Any) -> str:
     return hashlib.sha256(tensor.detach().cpu().contiguous().view(__import__("torch").uint8).numpy().tobytes()).hexdigest()
 
 
-def load_hf_peft_inference(*, model_path: Path, adapter_path: Path, device: str) -> tuple[Any, Any, dict[str, Any]]:
+def load_hf_peft_inference(
+    *,
+    model_path: Path,
+    adapter_path: Path,
+    device: str,
+    native_config_dir: Path | None = None,
+) -> tuple[Any, Any, dict[str, Any]]:
     """Load a frozen adapter with stock Transformers and PEFT only."""
     import torch
     from peft import PeftConfig, PeftModel
@@ -40,7 +46,18 @@ def load_hf_peft_inference(*, model_path: Path, adapter_path: Path, device: str)
     if not model_path.is_dir() or any(not item.is_file() for item in required):
         raise FileNotFoundError(f"missing clean-HF source or adapter files: model={model_path}, adapter={adapter_path}")
     transformers_logging.disable_progress_bar(); transformers_logging.set_verbosity_error()
-    tokenizer = AutoTokenizer.from_pretrained(str(model_path), local_files_only=True, trust_remote_code=False)
+    tokenizer_identity: dict[str, Any]
+    if native_config_dir is None:
+        tokenizer = AutoTokenizer.from_pretrained(str(model_path), local_files_only=True, trust_remote_code=False)
+        tokenizer_identity = {"chat_template_source": "checkpoint_or_unverified"}
+    else:
+        # The frozen NVARC checkpoint intentionally omits a chat template.
+        # Use its audited, vocabulary-preserving formatter rather than an
+        # arbitrary Transformers default; this remains entirely within the
+        # stock Transformers inference boundary.
+        from inference.nvarc_native import checkpoint_native_tokenizer
+
+        tokenizer, tokenizer_identity = checkpoint_native_tokenizer(model_path, Path(native_config_dir))
     base = AutoModelForCausalLM.from_pretrained(str(model_path), local_files_only=True, trust_remote_code=False,
                                                  torch_dtype=torch.bfloat16, low_cpu_mem_usage=True).to(device).eval()
     adapter_config = json.loads((adapter_path / "adapter_config.json").read_text(encoding="utf-8"))
@@ -76,6 +93,7 @@ def load_hf_peft_inference(*, model_path: Path, adapter_path: Path, device: str)
         "attention_implementation": getattr(base.config, "_attn_implementation", None),
         "dtype": str(next(model.parameters()).dtype), "adapter_sha256": _sha256_file(adapter_path / "adapter_model.safetensors"),
         "adapter_config_sha256": _sha256_file(adapter_path / "adapter_config.json"), "tokenizer_vocab_size": len(tokenizer),
+        "tokenizer_identity": tokenizer_identity,
         "adapter_config": {**{key: adapter_config.get(key) for key in ("r", "lora_alpha", "use_rslora", "modules_to_save")},
                            "target_modules": parsed_targets, "target_modules_schema_translated": isinstance(adapter_config.get("target_modules"), str)},
     }
