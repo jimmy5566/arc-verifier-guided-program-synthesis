@@ -11,11 +11,13 @@ from scripts.run_eval60_dual_ttt_dfs1024_retention30 import (
     EXPECTED_CELLS,
     EXPECTED_OUTPUTS,
     EXPECTED_VIEWS,
+    PHASES,
     _deduplicated_candidates,
     build_union,
     candidate_freeze,
     grid_key,
     persist_cell,
+    phase_summary,
     tag_telemetry,
     validate_manifest,
     value_sha256,
@@ -211,8 +213,34 @@ def test_11_gold_scoring_rejects_mutated_candidate_before_opening_solutions(tmp_
 
 def test_12_phase_ledger_defines_all_required_training_and_dfs_phases() -> None:
     source = (ROOT / "scripts" / "run_eval60_dual_ttt_dfs1024_retention30.py").read_text(encoding="utf-8")
-    for phase in ("MODEL_LOAD", "TTT24_TRAIN", "TTT24_DFS", "RESET_TRANSITION", "TTT48_TRAIN", "TTT48_DFS", "SERIALIZE", "IDLE"):
+    for phase in ("MODEL_LOAD", "TTT24_TRAIN", "TTT24_DFS", "RESET_TRANSITION", "TTT48_TRAIN", "TTT48_DFS", "SERIALIZE", "IDLE", "UNCLASSIFIED"):
         assert f'"{phase}"' in source
+        assert phase in PHASES
+
+
+def test_12b_model_init_gpu_work_is_inside_model_load_phase() -> None:
+    source = (ROOT / "scripts" / "run_eval60_dual_ttt_dfs1024_retention30.py").read_text(encoding="utf-8")
+    start = source.index('with ledger.phase("MODEL_LOAD")')
+    end = source.index('mark("MODEL_LOAD_COMPLETE"', start)
+    covered = source[start:end]
+    assert "parameter.data = parameter.data.to(torch.bfloat16)" in covered
+    assert "default_state =" in covered
+    assert "adapter_before =" in covered and "base_before =" in covered
+
+
+def test_12c_cell_candidate_persistence_is_explicitly_serialized() -> None:
+    source = (ROOT / "scripts" / "run_eval60_dual_ttt_dfs1024_retention30.py").read_text(encoding="utf-8")
+    serialize = source.index('with ledger.phase("SERIALIZE", task_id=task_id, output_index=output_index, source=source, view=view)')
+    persist = source.index("persist_cell(", serialize)
+    event = source.index('bench._event(events, "CELL_COMPLETE"', persist)
+    assert serialize < persist < event
+
+
+def test_12d_idle_is_reserved_for_explicit_work_queue_wait() -> None:
+    source = (ROOT / "scripts" / "run_eval60_dual_ttt_dfs1024_retention30.py").read_text(encoding="utf-8")
+    wait = source.index('with ledger.phase("IDLE")')
+    get = source.index("task_id = work.get()", wait)
+    assert wait < get
 
 
 def test_13_telemetry_join_is_deterministic_and_overlap_fails() -> None:
@@ -221,6 +249,24 @@ def test_13_telemetry_join_is_deterministic_and_overlap_fails() -> None:
     assert tag_telemetry(rows, intervals)[0]["phase"] == "TTT24_DFS"
     with pytest.raises(RuntimeError, match="overlapping"):
         tag_telemetry(rows, [*intervals, {**intervals[0], "phase": "IDLE"}])
+
+
+def test_13b_unmatched_is_unclassified_and_idle_matches_only_explicit_wait() -> None:
+    rows = [
+        {"timestamp": 0.5, "gpu_id": 0, "gpu_util_percent": 1},
+        {"timestamp": 2.0, "gpu_id": 0, "gpu_util_percent": 2},
+        {"timestamp": 4.0, "gpu_id": 0, "gpu_util_percent": 80},
+    ]
+    intervals = [
+        {"gpu_id": 0, "worker_id": 0, "phase": "IDLE", "task_id": None, "output_index": None, "source": None, "view": None, "start_timestamp": 1.0, "end_timestamp": 3.0},
+        {"gpu_id": 0, "worker_id": 0, "phase": "TTT24_DFS", "task_id": "x", "output_index": 0, "source": "TTT24", "view": "flip_lr", "start_timestamp": 3.0, "end_timestamp": 5.0},
+    ]
+    tagged = tag_telemetry(rows, intervals)
+    assert [row["phase"] for row in tagged] == ["UNCLASSIFIED", "IDLE", "TTT24_DFS"]
+    assert [row["timestamp"] for row in tagged if row["phase"] == "IDLE"] == [2.0]
+    summary = {(row["gpu_id"], row["phase"]): row for row in phase_summary(tagged)}
+    assert summary[(0, "UNCLASSIFIED")]["samples"] == 1
+    assert summary[(0, "UNCLASSIFIED")]["sample_coverage_seconds"] == 1.0
 
 
 def test_14_rerun_retry_resume_are_all_disabled() -> None:
@@ -249,3 +295,15 @@ def test_18_notebook_separates_target_blind_runner_from_gold_scorer() -> None:
     assert "SOLUTIONS" not in runner_line
     assert '"--solutions"' in source and '"--retention"' in source
     assert "kaggle datasets version" not in source and "kaggle kernels push" not in source
+
+
+def test_19_telemetry_patch_does_not_change_frozen_science_or_cohort_bytes() -> None:
+    assert hashlib.sha256((EXPERIMENT / "retention_config.json").read_bytes()).hexdigest() == "7dd68cc726c9818e70ff325cb7518f835a76e1f919354ef0bb23e6322f5f9477"
+    assert hashlib.sha256((EXPERIMENT / "TARGET_BLIND_RUN_MANIFEST.json").read_bytes()).hexdigest() == "8069af5dacea3e8b4c97f7fef821e1a867ae2212dd0dec868e3793b3fbcee06f"
+    config = load("retention_config.json")
+    manifest = load("TARGET_BLIND_RUN_MANIFEST.json")
+    assert (manifest["retention_output_count"], manifest["unique_task_count"], manifest["expected_logical_cells"]) == (30, 22, 240)
+    assert config["search"]["policy"] == "CUMULATIVE_REGRET_r=4.00"
+    assert config["search"]["max_expanded_nodes"] == 1024 and config["search"]["max_completed_candidates"] == 32
+    assert config["search"]["lane_count"] == 1 and config["search"]["batch2_cross_cell"] is False and config["search"]["batch4_regret"] is False
+    assert config["rerun"] == {"enabled": False, "auto_rerun": False, "retry_failed_task": False, "resume_completed": False}

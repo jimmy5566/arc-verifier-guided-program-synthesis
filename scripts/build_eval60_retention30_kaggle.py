@@ -93,7 +93,7 @@ def notebook_source(owner: str, dataset_slug: str) -> str:
         "dfs_candidates_frozen.json", "ttt24_union_candidates_frozen.json",
         "ttt48_union_candidates_frozen.json", "dual_union_candidates_frozen.json",
         "dfs_cells.csv", "phase_intervals.csv", "gpu_telemetry_1s.csv",
-        "gpu_phase_summary.csv", "worker_summary.csv", "dfs_source_hit_overlap.csv",
+        "gpu_phase_summary.csv", "TELEMETRY_SUMMARY.json", "worker_summary.csv", "dfs_source_hit_overlap.csv",
         "DFS_HIT_OVERLAP_SUMMARY.json", "dfs_view_gold_contribution.csv",
         "historical_ttt48_marginal_under_dfs.csv", "historical_ttt24_marginal_under_dfs.csv",
         "historical_top2_retention.csv", "historical_oracle_only_retention.csv",
@@ -168,7 +168,17 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     write_json(dataset / "retention_config_resolved.json", config)
     for name in ("TARGET_BLIND_RUN_MANIFEST.json", "RETENTION30_OUTPUTS.json", "RETENTION30_COHORT_SHA256.txt", "HISTORICAL_GREEDY_SOURCE_CLASSES.csv", "PROVENANCE.json"):
         shutil.copy2(EXPERIMENT / name, dataset / name)
-    write_json(dataset / "SOURCE_IDENTITY.json", {"experiment_id": EXPERIMENT_ID, "source_commit": commit, "source_branch": branch, "source_git_status": "PACKAGED_CLEAN_FROM_GIT_ARCHIVE", "source_paths": list(SOURCE_PATHS)})
+    write_json(dataset / "SOURCE_IDENTITY.json", {
+        "experiment_id": EXPERIMENT_ID,
+        "source_commit": commit,
+        "source_branch": branch,
+        "source_git_status": "PACKAGED_CLEAN_FROM_GIT_ARCHIVE",
+        "source_paths": list(SOURCE_PATHS),
+        "telemetry_infra_only": True,
+        "scientific_config_changed": False,
+        "cohort_changed": False,
+        "telemetry_unmatched_policy": "UNCLASSIFIED",
+    })
     write_json(dataset / "dataset-metadata.json", {"id": f"{args.owner}/{args.dataset_slug}", "title": "ARC2 Eval60 Dual-TTT DFS1024 Retention30", "subtitle": "Private target-blind Retention30 experiment source", "description": "Contains a frozen output-ID manifest but no solution grids or historical candidate answers.", "licenses": [{"name": "other"}]})
     forbidden = [
         path
@@ -199,6 +209,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         "kernel_slug": f"{args.owner}/{args.kernel_slug}", "notebook_sha256": sha256_file(kernel / notebook_name),
         "config_sha256": sha256_file(dataset / "retention_config_resolved.json"),
         "cohort_sha256": (dataset / "RETENTION30_COHORT_SHA256.txt").read_text(encoding="utf-8").strip(),
+        "telemetry_infra_only": True, "scientific_config_changed": False, "cohort_changed": False,
         "kaggle_dataset_pushed": False, "kaggle_notebook_pushed": False, "kaggle_run_started": False,
         "competition_submissions": 0,
     }
@@ -207,7 +218,16 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         args.review_output.mkdir(parents=True)
         for source_file in (kernel / notebook_name, kernel / "kernel-metadata.json", dataset / "retention_config_resolved.json", dataset / "TARGET_BLIND_RUN_MANIFEST.json", dataset / "RETENTION30_OUTPUTS.json", dataset / "RETENTION30_COHORT_SHA256.txt", dataset / "HISTORICAL_GREEDY_SOURCE_CLASSES.csv", dataset / "SOURCE_IDENTITY.json", args.output / "SOURCE_PACKAGE_MANIFEST.json", args.output / "PACKAGE_MANIFEST.json"):
             shutil.copy2(source_file, args.review_output / source_file.name)
-        write_json(args.review_output / "REVIEW_STATUS.json", {"status": "READY_FOR_RETENTION30_KAGGLE_REVIEW", "gpu_runs_started": 0, "kaggle_datasets_pushed": 0, "kaggle_notebooks_pushed": 0, "competition_submissions": 0})
+        write_json(args.review_output / "REVIEW_STATUS.json", {
+            "status": "READY_FOR_RETENTION30_KAGGLE_RUN",
+            "telemetry_infra_only": True,
+            "scientific_config_changed": False,
+            "cohort_changed": False,
+            "gpu_runs_started": 0,
+            "kaggle_datasets_pushed": 0,
+            "kaggle_notebooks_pushed": 0,
+            "competition_submissions": 0,
+        })
     return package
 
 

@@ -40,6 +40,7 @@ EXPERIMENT_ID = "EVAL60_DUAL_TTT_DFS1024_RETENTION30_V1"
 PHASES = (
     "MODEL_LOAD",
     "IDLE",
+    "UNCLASSIFIED",
     "RESET_TRANSITION",
     "TTT24_TRAIN",
     "TTT24_DFS",
@@ -258,22 +259,22 @@ def retention_worker_main(worker_id: int, work: Any, events: Any, ready: Any, st
                 use_gradient_checkpointing=False, random_state=int(recipe24["seed"]),
                 use_rslora=True, loftq_config=None,
             )
+            mark("LORA_ATTACHED")
+            native_tokenizer, tokenizer_metadata = checkpoint_native_tokenizer(Path(paths["model"]), Path(paths["native_config"]))
+            if len(checkpoint_tokenizer) != 16 or len(native_tokenizer) != 16 or checkpoint_tokenizer.get_vocab() != native_tokenizer.get_vocab():
+                raise RuntimeError("checkpoint/native tokenizer mismatch")
+            mark("TOKENIZER_VERIFIED", tokenizer=dict(tokenizer_metadata))
+            for _name, parameter in model.named_parameters():
+                if parameter.dtype == torch.float32:
+                    parameter.data = parameter.data.to(torch.bfloat16)
+            default_state = {key: value.detach().clone() for key, value in get_peft_model_state_dict(model, adapter_name="default").items()}
+            trainable = [(name, parameter) for name, parameter in model.named_parameters() if parameter.requires_grad]
+            frozen = [(name, parameter) for name, parameter in model.named_parameters() if not parameter.requires_grad]
+            if not trainable or not frozen:
+                raise RuntimeError("invalid official adapter partition")
+            adapter_before = {name: _fingerprint(parameter) for name, parameter in trainable[:8]}
+            base_before = {name: _fingerprint(parameter) for name, parameter in frozen[:8]}
         mark("MODEL_LOAD_COMPLETE", model_load_seconds=time.perf_counter() - model_started, model_vram_mb=float(torch.cuda.memory_allocated() / (1024 ** 2)), gpu_name=torch.cuda.get_device_name(0))
-        native_tokenizer, tokenizer_metadata = checkpoint_native_tokenizer(Path(paths["model"]), Path(paths["native_config"]))
-        if len(checkpoint_tokenizer) != 16 or len(native_tokenizer) != 16 or checkpoint_tokenizer.get_vocab() != native_tokenizer.get_vocab():
-            raise RuntimeError("checkpoint/native tokenizer mismatch")
-        mark("TOKENIZER_VERIFIED", tokenizer=dict(tokenizer_metadata))
-        mark("LORA_ATTACHED")
-        for _name, parameter in model.named_parameters():
-            if parameter.dtype == torch.float32:
-                parameter.data = parameter.data.to(torch.bfloat16)
-        default_state = {key: value.detach().clone() for key, value in get_peft_model_state_dict(model, adapter_name="default").items()}
-        trainable = [(name, parameter) for name, parameter in model.named_parameters() if parameter.requires_grad]
-        frozen = [(name, parameter) for name, parameter in model.named_parameters() if not parameter.requires_grad]
-        if not trainable or not frozen:
-            raise RuntimeError("invalid official adapter partition")
-        adapter_before = {name: _fingerprint(parameter) for name, parameter in trainable[:8]}
-        base_before = {name: _fingerprint(parameter) for name, parameter in frozen[:8]}
         mark("DEFAULT_STATE_CAPTURED", adapter_tensor_count=len(default_state))
         tasks = load_dataset(Path(paths["challenge"]))
         manifest = bench.read_json(Path(str(config["_runtime_manifest_path"])))
@@ -350,7 +351,8 @@ def retention_worker_main(worker_id: int, work: Any, events: Any, ready: Any, st
                                     generation_config=recipe, decoder=decoder,
                                     checkpoint_sha="NOT_PERSISTED_RETENTION_EXPERIMENT", diagnostic_trace=False,
                                 )[0]
-                            cell, _cell_path = persist_cell(output=output, row=row, source=source, depth=depth, worker_id=worker_id)
+                            with ledger.phase("SERIALIZE", task_id=task_id, output_index=output_index, source=source, view=view):
+                                cell, _cell_path = persist_cell(output=output, row=row, source=source, depth=depth, worker_id=worker_id)
                             source_cells.append(cell)
                             cells.append(cell)
                             bench._event(events, "CELL_COMPLETE", task_id=task_id, worker_id=worker_id, gpu_id=worker_id, cell=cell)
@@ -556,13 +558,13 @@ def tag_telemetry(gpu_rows: Sequence[Mapping[str, Any]], intervals: Sequence[Map
         row = dict(raw)
         gpu = int(row["gpu_id"])
         timestamp = float(row["timestamp"])
-        matches = [interval for interval in by_gpu[gpu] if float(interval["start_timestamp"]) <= timestamp <= float(interval["end_timestamp"])]
+        matches = [interval for interval in by_gpu[gpu] if float(interval["start_timestamp"]) <= timestamp < float(interval["end_timestamp"])]
         if len(matches) > 1:
             raise RuntimeError(f"overlapping explicit phase intervals for gpu={gpu}, timestamp={timestamp}")
         interval = matches[0] if matches else None
         row.update({
             "worker_id": gpu,
-            "phase": "IDLE" if interval is None else interval["phase"],
+            "phase": "UNCLASSIFIED" if interval is None else interval["phase"],
             "task_id": None if interval is None else interval.get("task_id"),
             "output_index": None if interval is None else interval.get("output_index"),
             "source": None if interval is None else interval.get("source"),
@@ -572,7 +574,7 @@ def tag_telemetry(gpu_rows: Sequence[Mapping[str, Any]], intervals: Sequence[Map
     return tagged
 
 
-def phase_summary(tagged: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+def phase_summary(tagged: Sequence[Mapping[str, Any]], *, sample_interval_seconds: float = 1.0) -> list[dict[str, Any]]:
     grouped: dict[tuple[int, str], list[Mapping[str, Any]]] = defaultdict(list)
     for row in tagged:
         grouped[(int(row["gpu_id"]), str(row["phase"]))].append(row)
@@ -596,6 +598,7 @@ def phase_summary(tagged: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
             "gpu_id": gpu,
             "phase": phase,
             "samples": len(rows),
+            "sample_coverage_seconds": len(rows) * sample_interval_seconds,
             "gpu_util_mean": statistics.fmean(utils) if utils else None,
             "gpu_util_median": statistics.median(utils) if utils else None,
             "gpu_util_p10": percentile(utils, 0.10),
@@ -629,15 +632,18 @@ def finalize_target_blind(*, output: Path, manifest: Mapping[str, Any], run: Map
     atomic_csv(output / "dfs_cells.csv", cells)
     atomic_csv(output / "phase_intervals.csv", intervals)
     atomic_csv(output / "gpu_telemetry_1s.csv", tagged)
-    phase_rows = phase_summary(tagged)
+    sample_interval_seconds = 1.0
+    phase_rows = phase_summary(tagged, sample_interval_seconds=sample_interval_seconds)
     interval_wall: dict[tuple[int, str], float] = defaultdict(float)
     for interval in intervals:
         interval_wall[(int(interval["gpu_id"]), str(interval["phase"]))] += float(interval["duration_seconds"])
     existing_phase_keys = {(int(row["gpu_id"]), str(row["phase"])) for row in phase_rows}
-    for key in sorted(interval_wall):
+    required_phase_keys = set(interval_wall) | {(gpu_id, phase) for gpu_id in range(4) for phase in PHASES}
+    for key in sorted(required_phase_keys):
         if key not in existing_phase_keys:
             phase_rows.append({
                 "gpu_id": key[0], "phase": key[1], "samples": 0,
+                "sample_coverage_seconds": 0.0,
                 "gpu_util_mean": None, "gpu_util_median": None, "gpu_util_p10": None,
                 "gpu_util_p50": None, "gpu_util_p90": None, "gpu_util_p95": None,
                 "gpu_util_max": None, "memory_used_mean_mb": None, "memory_used_peak_mb": None,
@@ -646,7 +652,14 @@ def finalize_target_blind(*, output: Path, manifest: Mapping[str, Any], run: Map
                 "gpu_active_fraction": None, "gpu_high_util_fraction": None, "gpu_idle_fraction": None,
             })
     for row in phase_rows:
-        row["wall_seconds"] = interval_wall[(int(row["gpu_id"]), str(row["phase"]))]
+        phase = str(row["phase"])
+        if phase == "UNCLASSIFIED":
+            row["explicit_ledger_wall_seconds"] = None
+            row["wall_seconds"] = None
+        else:
+            explicit_seconds = interval_wall[(int(row["gpu_id"]), phase)]
+            row["explicit_ledger_wall_seconds"] = explicit_seconds
+            row["wall_seconds"] = explicit_seconds
     atomic_csv(output / "gpu_phase_summary.csv", sorted(phase_rows, key=lambda row: (int(row["gpu_id"]), str(row["phase"]))))
     atomic_csv(output / "task_runtime.csv", tasks)
     worker_rows = []
@@ -689,6 +702,15 @@ def finalize_target_blind(*, output: Path, manifest: Mapping[str, Any], run: Map
     active_values = [float(row["task_wall_s"]) for row in worker_rows]
     mean_active = statistics.fmean(active_values) if active_values else 0.0
     imbalance = (max(active_values) - mean_active) / mean_active if mean_active else None
+    unclassified_sample_count = sum(str(row["phase"]) == "UNCLASSIFIED" for row in tagged)
+    telemetry_summary = {
+        "sample_interval_seconds": sample_interval_seconds,
+        "total_sample_count": len(tagged),
+        "UNCLASSIFIED_SAMPLE_COUNT": unclassified_sample_count,
+        "UNCLASSIFIED_SAMPLE_FRACTION": unclassified_sample_count / len(tagged) if tagged else 0.0,
+        "unclassified_wall_seconds_source": "SAMPLE_COVERAGE_ONLY_NO_EXPLICIT_LEDGER_INTERVAL",
+    }
+    bench.atomic_json(output / "TELEMETRY_SUMMARY.json", telemetry_summary)
     summary = {
         "experiment_id": EXPERIMENT_ID,
         "status": "TARGET_BLIND_PHASE_COMPLETE",
@@ -701,6 +723,8 @@ def finalize_target_blind(*, output: Path, manifest: Mapping[str, Any], run: Map
         "model_load_wall_s": float(run["model_load_wall_s"]),
         "total_gpu_hours": float(run["workload_wall_s"]) * 4 / 3600.0,
         "load_imbalance": imbalance,
+        "UNCLASSIFIED_SAMPLE_COUNT": telemetry_summary["UNCLASSIFIED_SAMPLE_COUNT"],
+        "UNCLASSIFIED_SAMPLE_FRACTION": telemetry_summary["UNCLASSIFIED_SAMPLE_FRACTION"],
         "by_source": source_rows,
     }
     bench.atomic_json(output / "target_blind_runtime_summary.json", summary)

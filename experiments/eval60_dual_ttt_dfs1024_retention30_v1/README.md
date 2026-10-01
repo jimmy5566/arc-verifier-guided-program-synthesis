@@ -13,3 +13,8 @@ No DFS Top-1 or Top-2 selector is defined in this experiment.  Its primary
 scientific result is exact candidate-pool oracle retention.
 
 This directory is a review source.  It does not authorize a Kaggle push or run.
+
+The pre-launch telemetry-only correction reserves `IDLE` for explicit queue
+waiting, labels unmatched samples `UNCLASSIFIED`, phases per-cell candidate
+serialization, and keeps initial GPU model preparation inside `MODEL_LOAD`.
+The frozen cohort and scientific configuration are byte-identical.
