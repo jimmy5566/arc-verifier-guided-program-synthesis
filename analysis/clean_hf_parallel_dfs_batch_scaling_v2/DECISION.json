@@ -1,0 +1,22 @@
+{
+  "baseline_b4": {
+    "lanes_per_second": 49.26944269607013,
+    "latency_ms": 81.18622377514839,
+    "scaling_efficiency": 0.8359097566903824,
+    "scaling_vs_b1": 3.3436390267615295
+  },
+  "classification": "B16_OOM_FAIL",
+  "experiment": "CLEAN_HF_PARALLEL_DFS_BATCH_SCALING_V2",
+  "gold_loaded": false,
+  "highest_efficient_physical_batch": 12,
+  "highest_tested_physical_batch": 16,
+  "recommended_next_step": "INVESTIGATE_HARDWARE_CAPACITY_BOUNDARY",
+  "remaining_vram_bytes_at_largest_successful_batch": 5382340608,
+  "results_reached": {
+    "12": "PASS",
+    "16": "FAIL",
+    "8": "PASS"
+  },
+  "target_blind": true,
+  "unsloth_inference": false
+}

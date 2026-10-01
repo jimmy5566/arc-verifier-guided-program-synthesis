@@ -1,0 +1,56 @@
+{
+  "baseline_commit": "a3234c0399a69ff9af62e13df6e12ecc6bb0458a",
+  "experiment": "CLEAN_HF_PARALLEL_DFS_BATCH_SCALING_V2",
+  "gold_loaded": false,
+  "hardware_replica_contract": {
+    "independent_dynamic_cache_per_lane": true,
+    "not_additional_arc_views": true,
+    "replicas_per_four_base_views": {
+      "12": 3,
+      "16": 4,
+      "8": 2
+    },
+    "widths": [
+      8,
+      12,
+      16
+    ]
+  },
+  "measurement_contract": {
+    "b4_reference_sha256": "10effd4e93032d93b0088b4c8b21fa6b267aa22f3eb680a5a7620bfdbe7906c3",
+    "diagnostic_trace": false,
+    "frozen_b4": {
+      "lanes_per_second": 49.26944269607013,
+      "latency_ms": 81.18622377514839,
+      "scaling_efficiency": 0.8359097566903824,
+      "scaling_vs_b1": 3.3436390267615295
+    },
+    "measurement_forwards": 8,
+    "minimum_throughput_improvement": 1.1,
+    "no_dynamic_scientific_search": true,
+    "per_forward_hashing": false,
+    "qkv_hooks": false,
+    "raw_incremental_forwards_only": true,
+    "warmup_forwards": 2
+  },
+  "scientific_contract": {
+    "adapter": "d59b0160/depth_024",
+    "backend": "Clean Transformers + PEFT",
+    "base_views": [
+      "anti_transpose",
+      "flip_ud",
+      "identity",
+      "transpose"
+    ],
+    "cache_strategy": "rollback",
+    "depth": 24,
+    "dtype": "BF16",
+    "model": "Qwen3-4B",
+    "output_index": 0,
+    "task_id": "d59b0160"
+  },
+  "source_commit": "32b7fbe93ca5c2fc02798d5f52b70bd3e7f31fc7",
+  "status": "PRE_GPU_FROZEN",
+  "target_blind": true,
+  "unsloth_inference": false
+}

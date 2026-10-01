@@ -1,0 +1,200 @@
+{
+  "diagnostic_trace": false,
+  "failure": null,
+  "gold_loaded": false,
+  "memory": {
+    "durable_allocated_growth_bytes": -1984512,
+    "free_vram_bytes_after_temporary_release": 5382340608,
+    "no_oom": true,
+    "owned_kv_tensor_growth_bytes": 1769472,
+    "owner_ids_preserved": true,
+    "owner_storage_distinct": true,
+    "peak_allocated_bytes": 19046995968,
+    "peak_reserved_bytes": 19576913920,
+    "physical_batch": 12,
+    "shared_forward_telemetry": {
+      "cache_adoption_seconds": 0.015785977244377136,
+      "cache_pack_seconds": 0.02019306644797325,
+      "model_call_seconds": 0.08604441210627556,
+      "scheduler_elapsed_seconds": 0.12791620753705502
+    },
+    "stages": {
+      "after_adoption": {
+        "allocated_bytes": 18759999488,
+        "free_vram_bytes": 5382340608,
+        "peak_allocated_bytes": 19046995968,
+        "peak_reserved_bytes": 19576913920,
+        "reserved_bytes": 19576913920,
+        "total_vram_bytes": 25298141184
+      },
+      "after_model_forward": {
+        "allocated_bytes": 18761984000,
+        "free_vram_bytes": 5487198208,
+        "peak_allocated_bytes": 18763170816,
+        "peak_reserved_bytes": 19472056320,
+        "reserved_bytes": 19472056320,
+        "total_vram_bytes": 25298141184
+      },
+      "after_pack": {
+        "allocated_bytes": 15289099776,
+        "free_vram_bytes": 8960081920,
+        "peak_allocated_bytes": 15289099776,
+        "peak_reserved_bytes": 15999172608,
+        "reserved_bytes": 15999172608,
+        "total_vram_bytes": 25298141184
+      },
+      "after_temporary_release": {
+        "allocated_bytes": 11814231552,
+        "free_vram_bytes": 5382340608,
+        "peak_allocated_bytes": 19046995968,
+        "peak_reserved_bytes": 19576913920,
+        "reserved_bytes": 19576913920,
+        "total_vram_bytes": 25298141184
+      },
+      "before_pack": {
+        "allocated_bytes": 11816216064,
+        "free_vram_bytes": 12432965632,
+        "peak_allocated_bytes": 11816216064,
+        "peak_reserved_bytes": 12526288896,
+        "reserved_bytes": 12526288896,
+        "total_vram_bytes": 25298141184
+      }
+    }
+  },
+  "micro": {
+    "base_views": [
+      "anti_transpose",
+      "flip_ud",
+      "identity",
+      "transpose"
+    ],
+    "finite_outputs": true,
+    "input_storage_unique": true,
+    "lane_order": [
+      "d59b0160:o0:d24:anti_transpose:hardware_replica1of3",
+      "d59b0160:o0:d24:flip_ud:hardware_replica1of3",
+      "d59b0160:o0:d24:identity:hardware_replica1of3",
+      "d59b0160:o0:d24:transpose:hardware_replica1of3",
+      "d59b0160:o0:d24:anti_transpose:hardware_replica2of3",
+      "d59b0160:o0:d24:flip_ud:hardware_replica2of3",
+      "d59b0160:o0:d24:identity:hardware_replica2of3",
+      "d59b0160:o0:d24:transpose:hardware_replica2of3",
+      "d59b0160:o0:d24:anti_transpose:hardware_replica3of3",
+      "d59b0160:o0:d24:flip_ud:hardware_replica3of3",
+      "d59b0160:o0:d24:identity:hardware_replica3of3",
+      "d59b0160:o0:d24:transpose:hardware_replica3of3"
+    ],
+    "no_cache_generation_leak": true,
+    "no_oom": true,
+    "output_storage_unique": true,
+    "owner_identity_preserved": true,
+    "owner_ids_unique": true,
+    "physical_batch": 12,
+    "replica_count": 3,
+    "request_positions": [
+      1928,
+      1928,
+      1928,
+      1928,
+      1928,
+      1928,
+      1928,
+      1928,
+      1928,
+      1928,
+      1928,
+      1928
+    ],
+    "request_tokens": [
+      7,
+      0,
+      7,
+      7,
+      7,
+      0,
+      7,
+      7,
+      7,
+      0,
+      7,
+      7
+    ],
+    "sequence_length_incremented_once": true,
+    "status": "PASS"
+  },
+  "minimum_improvement_vs_previous": 1.1,
+  "physical_batch": 12,
+  "raw": {
+    "cache_adoption_seconds_median": 0.014830376021564007,
+    "cache_pack_seconds_median": 0.004908783361315727,
+    "improvement_vs_previous": 1.3189439789848934,
+    "lanes_per_second_median": 114.3020153711416,
+    "latency_ms_median": 104.98632397502661,
+    "previous_physical_batch": 8,
+    "sample_count": 8,
+    "samples": [
+      {
+        "cache_adoption_seconds": 0.014275133609771729,
+        "cache_pack_seconds": 0.00485590286552906,
+        "lanes_per_second": 115.64651027333873,
+        "latency_ms": 103.7644799798727,
+        "sample_index": 0.0
+      },
+      {
+        "cache_adoption_seconds": 0.014300603419542313,
+        "cache_pack_seconds": 0.004654562100768089,
+        "lanes_per_second": 115.08744870932709,
+        "latency_ms": 104.26853783428669,
+        "sample_index": 1.0
+      },
+      {
+        "cache_adoption_seconds": 0.016214748844504356,
+        "cache_pack_seconds": 0.005788041278719902,
+        "lanes_per_second": 111.72460248933501,
+        "latency_ms": 107.40696080029011,
+        "sample_index": 2.0
+      },
+      {
+        "cache_adoption_seconds": 0.01578332856297493,
+        "cache_pack_seconds": 0.004961663857102394,
+        "lanes_per_second": 109.43593907681635,
+        "latency_ms": 109.65319164097309,
+        "sample_index": 3.0
+      },
+      {
+        "cache_adoption_seconds": 0.014449115842580795,
+        "cache_pack_seconds": 0.004781199619174004,
+        "lanes_per_second": 117.41549913521938,
+        "latency_ms": 102.20115818083286,
+        "sample_index": 4.0
+      },
+      {
+        "cache_adoption_seconds": 0.0150075051933527,
+        "cache_pack_seconds": 0.005082432180643082,
+        "lanes_per_second": 113.21410759919085,
+        "latency_ms": 105.99385760724545,
+        "sample_index": 5.0
+      },
+      {
+        "cache_adoption_seconds": 0.014972275123000145,
+        "cache_pack_seconds": 0.004855701699852943,
+        "lanes_per_second": 113.90003759569643,
+        "latency_ms": 105.35554029047489,
+        "sample_index": 6.0
+      },
+      {
+        "cache_adoption_seconds": 0.014688476920127869,
+        "cache_pack_seconds": 0.0050575826317071915,
+        "lanes_per_second": 114.70399314658675,
+        "latency_ms": 104.61710765957832,
+        "sample_index": 7.0
+      }
+    ],
+    "scaling_efficiency": 0.646419393913247,
+    "scaling_vs_b1": 7.757032726958964,
+    "scaling_vs_b4": 2.319937249467988
+  },
+  "status": "PASS",
+  "target_blind": true,
+  "unsloth_inference": false
+}
