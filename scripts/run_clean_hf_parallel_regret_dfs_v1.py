@@ -264,7 +264,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--adapter-foundation", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--mode", choices=("isolated", "serial-shared", "round-robin", "dynamic-ready"), required=True)
-    parser.add_argument("--budget", type=int, choices=(128, 256, 4096), required=True)
+    parser.add_argument("--budget", type=int, choices=(32, 128, 256, 4096), required=True)
     parser.add_argument("--task-id", default="d59b0160")
     parser.add_argument("--output-index", type=int, default=0)
     parser.add_argument("--depth", type=int, default=24)
