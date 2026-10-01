@@ -1,0 +1,220 @@
+{
+  "adapter_exact": {
+    "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+    "adapter_sha256": "a91e4375da1cf5f544a083221292ded0dd41e50b4a4c63e80bb4c37ab0e42854",
+    "exact_match_count": 506,
+    "foundation_path": "/root/arc-runtime-3090-v2/arc2/analysis/clean_hf_parallel_regret_dfs_v1/ADAPTER_PARITY_SUMMARY.json"
+  },
+  "cache_strategy": "rollback",
+  "candidate_pool_sha256": "b3e6ad5dc1e4be3227c66bdc317cd8d78af336e4c738fd9929cac2538652a1cf",
+  "config": {
+    "absolute_end_time_unix": null,
+    "arc_tokens": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      15
+    ],
+    "calibration_assertions": true,
+    "diagnostic_trace": false,
+    "frontier_floor": 1,
+    "independent_lane_budgets": true,
+    "local_time_limit_seconds": 540.0,
+    "max_completed_candidates": 32,
+    "max_expanded_nodes": 128,
+    "max_new_tokens": 931,
+    "max_score": 1.6094379124341003,
+    "pad_token_id": 13,
+    "performance_profile": false,
+    "policy_id": "CUMULATIVE_REGRET_r=4.00"
+  },
+  "diagnostic_trace": false,
+  "experiment": "CLEAN_HF_PARALLEL_DFS_B4_COMPUTE_V1",
+  "gold_loaded": false,
+  "max_physical_batch": 4,
+  "memory": {
+    "cuda_allocated_bytes_end": 9611984384,
+    "cuda_peak_allocated_bytes": 12340020736,
+    "cuda_peak_reserved_bytes": 13887340544,
+    "cuda_reserved_bytes_end": 13887340544
+  },
+  "mode": "dynamic-ready",
+  "per_cell": [
+    {
+      "budget_exhausted": true,
+      "cell_key": "d59b0160:o0:d24:anti_transpose",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128
+    },
+    {
+      "budget_exhausted": true,
+      "cell_key": "d59b0160:o0:d24:flip_ud",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128
+    },
+    {
+      "budget_exhausted": true,
+      "cell_key": "d59b0160:o0:d24:identity",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128
+    },
+    {
+      "budget_exhausted": true,
+      "cell_key": "d59b0160:o0:d24:transpose",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128
+    }
+  ],
+  "performance_profile": false,
+  "production_mode": true,
+  "raw_sha256": "fb7a5c58ab2852c5f7dafdd0f7760e83b46bfe044adbcbf38db37fa00e9422f5",
+  "runtime_identity": {
+    "adapter_config": {
+      "lora_alpha": 32,
+      "modules_to_save": [
+        "lm_head",
+        "embed_tokens"
+      ],
+      "r": 256,
+      "target_modules": [
+        "down_proj",
+        "gate_proj",
+        "k_proj",
+        "o_proj",
+        "q_proj",
+        "up_proj",
+        "v_proj"
+      ],
+      "target_modules_schema_translated": true,
+      "use_rslora": true
+    },
+    "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+    "adapter_identity_verification": "committed_506_506_foundation_binding",
+    "adapter_sha256": "a91e4375da1cf5f544a083221292ded0dd41e50b4a4c63e80bb4c37ab0e42854",
+    "attention_implementation": "sdpa",
+    "backend": "transformers_peft_clean",
+    "base_model_class": "Qwen3ForCausalLM",
+    "cuda": "12.8",
+    "dtype": "torch.bfloat16",
+    "forward_module": "peft.peft_model",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "model_class": "PeftModelForCausalLM",
+    "peft": "0.17.1",
+    "tokenizer_identity": {
+      "chat_template_source": "nvarc_official_for_missing_checkpoint_template",
+      "config_vocab_size": 16,
+      "eos_token_id": 15,
+      "pad_token_id": 13,
+      "token_mapping": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "<|endoftext|>": 13,
+        "<|im_end|>": 15,
+        "<|im_start|>": 14,
+        "assistant": 12,
+        "user": 11,
+        "\u010a": 10
+      },
+      "tokenizer_vocab_size": 16
+    },
+    "tokenizer_vocab_size": 16,
+    "torch": "2.8.0+cu128",
+    "transformers": "4.55.4"
+  },
+  "sanity": {
+    "all_cells_completed": true,
+    "all_cells_expanded_exact_budget": true,
+    "all_termination_budget_exhausted": true,
+    "cell_count": 4,
+    "finite_results": true,
+    "no_cache_generation_leak_indicator": true,
+    "no_oom": true,
+    "owner_identity_failure": false
+  },
+  "scheduler": {
+    "active2_fraction": 0.0,
+    "active4_logical_fraction": 1.0,
+    "b1_forwards": 0,
+    "b2_forwards": 0,
+    "b3_forwards": 0,
+    "b4_forward_fraction": 1.0,
+    "b4_forwards": 128,
+    "cache_adoption_seconds": 0.5685108825564384,
+    "cache_pack_seconds": 0.32396822050213814,
+    "logical_advances": 512,
+    "mean_effective_batch": 4.0,
+    "model_call_seconds": 9.148177361115813,
+    "physical_forwards": 128,
+    "scheduler_overhead_seconds": 0.3771602623164654
+  },
+  "target_blind": true,
+  "task": {
+    "depth": 24,
+    "output_index": 0,
+    "task_id": "d59b0160",
+    "views": [
+      "anti_transpose",
+      "flip_ud",
+      "identity",
+      "transpose"
+    ]
+  },
+  "timing": {
+    "inference_nodes_per_second": 39.70626733193283,
+    "inference_wall_seconds": 12.894689790904522,
+    "logical_nodes": 512,
+    "prefill_wall_seconds": 1.854274295270443,
+    "search_nodes_per_second": 46.37506624659822,
+    "search_wall_seconds": 11.040415495634079
+  },
+  "timing_contract": {
+    "cuda_synchronized_before_and_after_prefill": true,
+    "cuda_synchronized_before_and_after_search": true,
+    "excluded": [
+      "python_startup",
+      "imports",
+      "model_loading",
+      "peft_adapter_loading",
+      "tokenizer_loading",
+      "adapter_identity_validation",
+      "challenge_loading",
+      "result_serialization",
+      "file_writes"
+    ],
+    "per_forward_cache_or_logits_hashing": false,
+    "per_forward_event_trace": false
+  },
+  "unsloth_inference": false
+}

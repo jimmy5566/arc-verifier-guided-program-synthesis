@@ -1,0 +1,118 @@
+{
+  "diagnostic_trace": false,
+  "experiment": "CLEAN_HF_PARALLEL_DFS_B4_COMPUTE_V1",
+  "first": {
+    "finite_logits": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "lane_order": [
+      "d59b0160:o0:d24:anti_transpose",
+      "d59b0160:o0:d24:flip_ud",
+      "d59b0160:o0:d24:identity",
+      "d59b0160:o0:d24:transpose"
+    ],
+    "no_exception": true,
+    "no_oom": true,
+    "output_cache_sequence_lengths": [
+      1929,
+      1929,
+      1929,
+      1929
+    ],
+    "owner_first_storage_unique": true,
+    "owner_identity_preserved": true,
+    "owner_ids_after": [
+      140373063234192,
+      140373027550416,
+      140372489369168,
+      140372976047376
+    ],
+    "owner_ids_before": [
+      140373063234192,
+      140373027550416,
+      140372489369168,
+      140372976047376
+    ],
+    "owner_ids_unique": true,
+    "physical_batch": 4,
+    "request_positions": [
+      1928,
+      1928,
+      1928,
+      1928
+    ],
+    "request_tokens": [
+      7,
+      0,
+      7,
+      7
+    ],
+    "sequence_length_incremented_once": true
+  },
+  "gold_loaded": false,
+  "performance_profile": false,
+  "repeat": {
+    "finite_logits": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "lane_order": [
+      "d59b0160:o0:d24:anti_transpose",
+      "d59b0160:o0:d24:flip_ud",
+      "d59b0160:o0:d24:identity",
+      "d59b0160:o0:d24:transpose"
+    ],
+    "no_exception": true,
+    "no_oom": true,
+    "output_cache_sequence_lengths": [
+      1929,
+      1929,
+      1929,
+      1929
+    ],
+    "owner_first_storage_unique": true,
+    "owner_identity_preserved": true,
+    "owner_ids_after": [
+      140373025216336,
+      140372489369296,
+      140372488234640,
+      140372484299408
+    ],
+    "owner_ids_before": [
+      140373025216336,
+      140372489369296,
+      140372488234640,
+      140372484299408
+    ],
+    "owner_ids_unique": true,
+    "physical_batch": 4,
+    "request_positions": [
+      1928,
+      1928,
+      1928,
+      1928
+    ],
+    "request_tokens": [
+      7,
+      0,
+      7,
+      7
+    ],
+    "sequence_length_incremented_once": true
+  },
+  "repeatability_fields": [
+    "physical_batch",
+    "lane_order",
+    "request_tokens",
+    "request_positions",
+    "output_cache_sequence_lengths"
+  ],
+  "status": "PASS",
+  "target_blind": true,
+  "unsloth_inference": false
+}

@@ -1,0 +1,36 @@
+{
+  "gpu_utilization_percent": {
+    "max": 100.0,
+    "mean": 16.0431654676259,
+    "sample_count": 139
+  },
+  "memory_clock_mhz": {
+    "max": 9751.0,
+    "mean": 8702.73381294964,
+    "sample_count": 139
+  },
+  "memory_controller_utilization_percent": {
+    "max": 41.0,
+    "mean": 8.690647482014388,
+    "sample_count": 139
+  },
+  "memory_used_mib": {
+    "max": 13568.0,
+    "mean": 7893.294964028777,
+    "sample_count": 139
+  },
+  "power_watts": {
+    "max": 331.1,
+    "mean": 143.51690647482013,
+    "sample_count": 139
+  },
+  "primary_timing_affected": false,
+  "sample_count": 139,
+  "sample_interval_target_seconds": 0.25,
+  "secondary_descriptive_repeat": true,
+  "sm_clock_mhz": {
+    "max": 1950.0,
+    "mean": 1600.0359712230215,
+    "sample_count": 139
+  }
+}

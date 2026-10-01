@@ -1,0 +1,62 @@
+{
+  "current_kv_sequence_lengths": [
+    1929,
+    1929,
+    1929,
+    1929
+  ],
+  "durable_allocated_growth_bytes": 7124992,
+  "durable_growth_consistent_with_current_kv": true,
+  "experiment": "CLEAN_HF_PARALLEL_DFS_B4_COMPUTE_V1",
+  "gold_loaded": false,
+  "no_oom": true,
+  "owned_kv_tensor_growth_bytes": 589824,
+  "owner_ids_preserved": true,
+  "owner_storage_distinct": true,
+  "peak_allocated_bytes": 12229834752,
+  "peak_reserved_bytes": 12979273728,
+  "physical_batch": 4,
+  "stages": {
+    "after_adoption": {
+      "allocated_bytes": 11927844864,
+      "free_vram_bytes": 11979980800,
+      "peak_allocated_bytes": 12229834752,
+      "peak_reserved_bytes": 12979273728,
+      "reserved_bytes": 12979273728,
+      "total_vram_bytes": 25298141184
+    },
+    "after_pack": {
+      "allocated_bytes": 10780999168,
+      "free_vram_bytes": 11979980800,
+      "peak_allocated_bytes": 10780999168,
+      "peak_reserved_bytes": 12979273728,
+      "reserved_bytes": 12979273728,
+      "total_vram_bytes": 25298141184
+    },
+    "after_temporary_release": {
+      "allocated_bytes": 9580164608,
+      "free_vram_bytes": 11979980800,
+      "peak_allocated_bytes": 12229834752,
+      "peak_reserved_bytes": 12979273728,
+      "reserved_bytes": 12979273728,
+      "total_vram_bytes": 25298141184
+    },
+    "allocated_before_pack": {
+      "allocated_bytes": 9573039616,
+      "free_vram_bytes": 11979980800,
+      "peak_allocated_bytes": 9573039616,
+      "peak_reserved_bytes": 12979273728,
+      "reserved_bytes": 12979273728,
+      "total_vram_bytes": 25298141184
+    },
+    "peak_model_forward": {
+      "allocated_bytes": 11920719872,
+      "free_vram_bytes": 11979980800,
+      "peak_allocated_bytes": 11921116160,
+      "peak_reserved_bytes": 12979273728,
+      "reserved_bytes": 12979273728,
+      "total_vram_bytes": 25298141184
+    }
+  },
+  "target_blind": true
+}

@@ -1,0 +1,68 @@
+{
+  "classification": "B4_STRONG_SCALING",
+  "comparison": {
+    "b1_search_nodes_per_second": 14.580337106752355,
+    "b2_search_nodes_per_second": 24.116524587519876,
+    "b4_dynamic_inference_nodes_per_second": 39.70626733193283,
+    "b4_dynamic_inference_wall_seconds": 12.894689790904522,
+    "b4_dynamic_prefill_wall_seconds": 1.854274295270443,
+    "b4_dynamic_search_nodes_per_second": 46.37506624659822,
+    "b4_dynamic_search_wall_seconds": 11.040415495634079,
+    "b4_memory": {
+      "cuda_allocated_bytes_end": 9611984384,
+      "cuda_peak_allocated_bytes": 12340020736,
+      "cuda_peak_reserved_bytes": 13887340544,
+      "cuda_reserved_bytes_end": 13887340544
+    },
+    "b4_scheduler": {
+      "active2_fraction": 0.0,
+      "active4_logical_fraction": 1.0,
+      "b1_forwards": 0,
+      "b2_forwards": 0,
+      "b3_forwards": 0,
+      "b4_forward_fraction": 1.0,
+      "b4_forwards": 128,
+      "cache_adoption_seconds": 0.5685108825564384,
+      "cache_pack_seconds": 0.32396822050213814,
+      "logical_advances": 512,
+      "mean_effective_batch": 4.0,
+      "model_call_seconds": 9.148177361115813,
+      "physical_forwards": 128,
+      "scheduler_overhead_seconds": 0.3771602623164654
+    },
+    "b4_vs_b1_speedup": 3.1806580264266517,
+    "b4_vs_b2_speedup": 1.9229580978097058,
+    "raw": {
+      "1": {
+        "lanes_per_second": 14.735275638826923,
+        "latency_ms": 67.86435656249523,
+        "scaling_efficiency": 1.0,
+        "scaling_vs_b1": 1.0
+      },
+      "2": {
+        "lanes_per_second": 26.186354516603167,
+        "latency_ms": 76.37565582990646,
+        "scaling_efficiency": 0.8885600499933324,
+        "scaling_vs_b1": 1.7771200999866648
+      },
+      "4": {
+        "lanes_per_second": 49.26944269607013,
+        "latency_ms": 81.18622377514839,
+        "scaling_efficiency": 0.8359097566903824,
+        "scaling_vs_b1": 3.3436390267615295
+      }
+    }
+  },
+  "experiment": "CLEAN_HF_PARALLEL_DFS_B4_COMPUTE_V1",
+  "gold_loaded": false,
+  "recommended_next_step": "TEST_B8_PHYSICAL_BATCH_SCALING",
+  "safety": {
+    "b4_memory_owner_identity": true,
+    "b4_memory_storage_isolation": true,
+    "b4_micro_pass": true,
+    "b4_no_oom": true,
+    "b4_production_sanity": true
+  },
+  "target_blind": true,
+  "unsloth_inference": false
+}
