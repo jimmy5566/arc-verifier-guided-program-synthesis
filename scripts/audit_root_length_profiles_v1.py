@@ -19,6 +19,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
 from arc.io import load_dataset  # noqa: E402
 from inference.nvarc_native import checkpoint_native_tokenizer  # noqa: E402
+from inference.nvarc_native import native_messages_from_training_prefix, native_training_message_prefix  # noqa: E402
 from inference.root_length_memory_profile import (  # noqa: E402
     KV_BLOCK_TOKENS,
     MAX_NEW_TOKENS,
@@ -27,7 +28,7 @@ from inference.root_length_memory_profile import (  # noqa: E402
     select_memory_profile,
 )
 from scripts.run_clean_hf_parallel_regret_dfs_v1 import _assert_challenge_only  # noqa: E402
-from scripts.run_real_project_aug16_dynamic_b16_pilot_v1 import _load_aug16, _prompt_record  # noqa: E402
+from scripts.run_real_project_aug16_dynamic_b16_pilot_v1 import _load_aug16, _transform_task  # noqa: E402
 
 
 EXPERIMENT = "ROOT_LENGTH_PROFILE_AUDIT_V1"
@@ -83,6 +84,20 @@ def _quantile(values: list[int], point: float) -> float:
     return float(statistics.quantiles(values, n=100, method="inclusive")[int(point * 100) - 1]) if len(values) > 1 else float(values[0])
 
 
+def _native_prompt_length(*, tokenizer: Any, task: Any, output_index: int, candidate: dict[str, Any]) -> int:
+    """Tokenize the exact frozen native prompt without loading a model.
+
+    The Step-0 public text helper intentionally addresses only ``test[0]``;
+    this audit covers multi-output tasks and must instead bind the selected
+    public test input through the native formatter itself.
+    """
+    transformed = _transform_task(task, output_index, candidate)
+    prefix = native_training_message_prefix(transformed)
+    messages = native_messages_from_training_prefix(prefix, transformed.test[0].input)
+    encoded = tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True)
+    return int(encoded["input_ids"].shape[-1])
+
+
 def run(args: argparse.Namespace) -> None:
     _assert_challenge_only(args.challenge)
     raw = json.loads(args.challenge.read_text(encoding="utf-8")); tasks = load_dataset(args.challenge)
@@ -96,9 +111,8 @@ def run(args: argparse.Namespace) -> None:
             raise RuntimeError(f"frozen output unavailable in target-blind challenge: {task_id}:o{output_index}")
         lengths: list[int] = []
         for candidate in candidates:
-            _ids, record = _prompt_record(tokenizer=tokenizer, task=tasks[task_id], output_index=output_index,
-                                           raw_task=raw[task_id], candidate=candidate, device="cpu")
-            lengths.append(int(record["prompt_token_length"]))
+            lengths.append(_native_prompt_length(tokenizer=tokenizer, task=tasks[task_id], output_index=output_index,
+                                                 candidate=candidate))
         root_max = max(lengths); profile = select_memory_profile(root_max); groups = deterministic_resident_groups(candidate_ids, profile)
         row = {"output_id": f"{task_id}:o{output_index}", "task_id": task_id, "output_index": output_index,
                "root_length_min": min(lengths), "root_length_max": root_max, "root_length_mean": statistics.fmean(lengths),
