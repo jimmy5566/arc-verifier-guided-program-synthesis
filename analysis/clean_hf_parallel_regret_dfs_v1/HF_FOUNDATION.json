@@ -1,0 +1,87 @@
+{
+  "adapter_parity": "506/506 exact",
+  "dynamic_cache": "Transformers DynamicCache",
+  "experiment": "CLEAN_HF_PARALLEL_REGRET_DFS_V1",
+  "no_gold": true,
+  "no_unsloth_inference": true,
+  "reentrancy_calls": [
+    0,
+    1,
+    2,
+    8,
+    32,
+    128
+  ],
+  "reentrancy_hash": "cc2b22d5e76a5fd945899eda66c21eeddbc486a120327f124e270db73f129d4b",
+  "request_contract": {
+    "attention_mask": "omitted because every request is a single unpadded sequence",
+    "cache_position": "explicit absolute position",
+    "input_ids": "one continuation token",
+    "past_key_values": "Transformers DynamicCache",
+    "position_ids": "explicit absolute position",
+    "return_dict": true,
+    "use_cache": true
+  },
+  "runtime_identity": {
+    "adapter_config": {
+      "lora_alpha": 32,
+      "modules_to_save": [
+        "lm_head",
+        "embed_tokens"
+      ],
+      "r": 256,
+      "target_modules": [
+        "down_proj",
+        "gate_proj",
+        "k_proj",
+        "o_proj",
+        "q_proj",
+        "up_proj",
+        "v_proj"
+      ],
+      "target_modules_schema_translated": true,
+      "use_rslora": true
+    },
+    "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+    "adapter_sha256": "a91e4375da1cf5f544a083221292ded0dd41e50b4a4c63e80bb4c37ab0e42854",
+    "attention_implementation": "sdpa",
+    "backend": "transformers_peft_clean",
+    "base_model_class": "Qwen3ForCausalLM",
+    "cuda": "12.8",
+    "dtype": "torch.bfloat16",
+    "forward_module": "peft.peft_model",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "model_class": "PeftModelForCausalLM",
+    "peft": "0.17.1",
+    "tokenizer_identity": {
+      "chat_template_source": "nvarc_official_for_missing_checkpoint_template",
+      "config_vocab_size": 16,
+      "eos_token_id": 15,
+      "pad_token_id": 13,
+      "token_mapping": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "<|endoftext|>": 13,
+        "<|im_end|>": 15,
+        "<|im_start|>": 14,
+        "assistant": 12,
+        "user": 11,
+        "\u010a": 10
+      },
+      "tokenizer_vocab_size": 16
+    },
+    "tokenizer_vocab_size": 16,
+    "torch": "2.8.0+cu128",
+    "transformers": "4.55.4"
+  },
+  "same_request_exact": true,
+  "source_commit": "1c10fee6001cf5669ddec2ac44430f970a9c90b4"
+}

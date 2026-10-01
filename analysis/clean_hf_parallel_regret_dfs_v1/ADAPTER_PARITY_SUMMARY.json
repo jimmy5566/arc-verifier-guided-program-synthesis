@@ -1,0 +1,8 @@
+{
+  "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+  "adapter_sha256": "a91e4375da1cf5f544a083221292ded0dd41e50b4a4c63e80bb4c37ab0e42854",
+  "dtype": "torch.bfloat16",
+  "exact_match_count": 506,
+  "source_adapter_tensor_count": 506,
+  "status": "PASS"
+}
