@@ -103,6 +103,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     dynamic_b2 = [event for event in dynamic_events if int(event.get("physical_batch", 1)) == 2]
     dynamic_b1 = [event for event in dynamic_events if int(event.get("physical_batch", 1)) == 1]
     logical_advances = sum(int(event.get("physical_batch", 1)) for event in dynamic_events)
+
+    def _mean_ms(events: list[dict[str, Any]]) -> float | None:
+        value = _mean([float(event.get("wall_seconds", 0.0)) for event in events])
+        return None if value is None else 1000.0 * value
+
     telemetry = {
         "b1_nodes": _nodes(b1), "dynamic_nodes": _nodes(dynamic),
         "b1_scheduler_wall_seconds": b1_wall, "dynamic_scheduler_wall_seconds": dynamic_wall,
@@ -114,9 +119,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "effective_batch": logical_advances / len(dynamic_events) if dynamic_events else None,
         "active2_fraction": (sum(2 for _event in dynamic_b2) / logical_advances) if logical_advances else None,
         "b2_fraction": len(dynamic_b2) / len(dynamic_events) if dynamic_events else None,
-        "b1_forward_ms": 1000.0 * _mean([float(event.get("wall_seconds", 0.0)) for event in b1_events]),
-        "dynamic_b1_forward_ms": 1000.0 * _mean([float(event.get("wall_seconds", 0.0)) for event in dynamic_b1]),
-        "dynamic_b2_forward_ms": 1000.0 * _mean([float(event.get("wall_seconds", 0.0)) for event in dynamic_b2]),
+        "b1_forward_ms": _mean_ms(b1_events),
+        "dynamic_b1_forward_ms": _mean_ms(dynamic_b1),
+        "dynamic_b2_forward_ms": _mean_ms(dynamic_b2),
         "dynamic_cache_pack_seconds": sum(float(event.get("host_cache_pack_seconds", 0.0)) for event in dynamic_events),
         "dynamic_cache_adoption_seconds": sum(float(event.get("host_cache_adoption_seconds", 0.0)) for event in dynamic_events),
         "dynamic_scheduler_overhead_seconds": sum(float(event.get("host_scheduler_overhead_seconds", 0.0)) for event in dynamic_events),
