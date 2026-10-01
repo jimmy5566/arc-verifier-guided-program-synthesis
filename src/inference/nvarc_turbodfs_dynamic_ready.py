@@ -33,6 +33,19 @@ from inference.nvarc_turbodfs_d1 import (
 from inference.nvarc_turbodfs_reference import ReferenceTurboDFSCandidate, _cache_batch_size
 
 
+@dataclass
+class CacheOwner:
+    """The one mutable ``DynamicCache`` owned by a logical DFS view.
+
+    A recursive DFS frame owns only a sequence-length checkpoint.  It must
+    never retain a child-generation cache object: descendants advance this
+    owner in place and crop it back to their parent checkpoint on return.
+    This is the critical ownership boundary for Dynamic Ready B2.
+    """
+
+    cache: Any
+
+
 @dataclass(frozen=True)
 class ReadyForwardRequest:
     """One real incremental forward request from one independent DFS cell."""
@@ -41,12 +54,17 @@ class ReadyForwardRequest:
     ordinal: int
     token_id: int
     position: int
-    cache: Any
+    cache_owner: CacheOwner
     cache_key: tuple[Any, ...]
     # The expanded node whose continuation logits this request will produce.
     # It lets optional diagnostics bind a reply to the exact DFS state without
     # changing scheduling or decoding behaviour.
     parent_node_id: int
+
+    @property
+    def cache(self) -> Any:
+        """The current cache object, retained for existing scheduler callers."""
+        return self.cache_owner.cache
 
 
 @dataclass
@@ -65,6 +83,7 @@ class ReadyCell:
     prompt_forwards: int = 1
     prefill_seconds: float = 0.0
     active_elapsed_seconds: float = 0.0
+    cache_owner: CacheOwner | None = None
 
 
 def ready_incremental_forward_kwargs(*, token_ids: list[int], position: int, cache: Any, device: Any) -> dict[str, Any]:
@@ -174,6 +193,37 @@ def _restore_cache_kind(legacy: tuple[tuple[Any, ...], ...], exemplar: Any) -> A
     return DynamicCache.from_legacy_cache(legacy)
 
 
+def replace_cache_contents_in_place(destination: Any, source: Any) -> None:
+    """Copy ``source`` into an existing Transformers DynamicCache object.
+
+    Dynamic B2 produces a temporary packed cache and temporary lane slices.
+    A DFS lane may *adopt their contents* but must never adopt their cache
+    object: suspended recursion frames and every ReadyForwardRequest refer to
+    the lane's original owner object.  Transformers 4.55 stores dynamic
+    layers as public ``layers`` objects with ``keys`` and ``values`` tensors.
+    Replacing that list leaves the destination cache identity unchanged while
+    a deep clone avoids retaining storage aliases to the temporary B2 result.
+
+    This is intentionally not a zero-copy optimisation.  Ownership and
+    bounded lifetime come first; the B2 memory plateau gate measures its cost.
+    """
+    if not _is_transformers_cache(destination):
+        raise RuntimeError("in-place cache adoption requires a Transformers DynamicCache destination")
+    legacy = _legacy_cache(source)
+    from transformers.cache_utils import DynamicLayer
+
+    destination_id = id(destination)
+    layers = []
+    for layer in legacy:
+        if len(layer) != 2:
+            raise RuntimeError("DynamicCache adoption expects key/value pairs")
+        key, value = layer
+        layers.append(DynamicLayer.from_tensors(key.detach().clone(), value.detach().clone()))
+    destination.layers = layers
+    if id(destination) != destination_id:
+        raise AssertionError("cache adoption replaced the owner object")
+
+
 def cache_geometry(cache: Any) -> tuple[Any, ...]:
     """Stable compatibility key excluding the real batch dimension."""
     legacy = _legacy_cache(cache)
@@ -250,13 +300,19 @@ def _split_cache(cache: Any, expected: int) -> list[tuple[tuple[Any, ...], ...]]
 
 def _ready_dfs(
     *, cell_key: str, logits: Any, max_new_tokens: int, score: float, regret: float,
-    pos: int, cache: Any, config: D1TurboDFSConfig, started_unix: float,
+    pos: int, cache_owner: CacheOwner, config: D1TurboDFSConfig, started_unix: float,
     state: dict[str, Any], parent_node: int | None, prefix: tuple[int, ...],
-    ordinal: list[int],
+    ordinal: list[int], cache_strategy: Literal["rollback", "snapshot"],
 ) -> Generator[ReadyForwardRequest, Any, list[ReferenceTurboDFSCandidate]]:
     """Single-lane coroutine equivalent to the D1 recursive search function."""
     import torch
 
+    # In production ``rollback`` mode this local reference always points to
+    # the one logical view owner.  ``snapshot`` is a diagnostic-only oracle:
+    # it clones this parent cache for each child request, deliberately trading
+    # memory for immutable branch state.
+    cache = cache_owner.cache
+    entry_sequence_length = int(_legacy_cache(cache)[0][0].shape[-2])
     if config.calibration_assertions:
         cached = _cache_batch_size(cache)
         if cached is not None and cached != 1:
@@ -391,30 +447,56 @@ def _ready_dfs(
                                 "elapsed_seconds": time.perf_counter() - state["trace_started_perf"]})
             state["next_frontier_pop_order"] += 1
         _record_frontier(state, [candidates])
+        if cache_strategy == "rollback":
+            # A child exploration may have advanced this single mutable cache.
+            # Restore the current frame's parent state before every sibling.
+            if _is_transformers_cache(cache_owner.cache):
+                cache_owner.cache.crop(entry_sequence_length)
+            elif int(_legacy_cache(cache_owner.cache)[0][0].shape[-2]) != entry_sequence_length:
+                raise RuntimeError("rollback DFS requires a croppable Transformers DynamicCache")
+            if cache_owner.cache is not cache:
+                raise RuntimeError("DFS cache owner object changed during backtracking")
+            forward_owner = cache_owner
+        else:
+            forward_owner = CacheOwner(_restore_cache_kind(clone_legacy_cache(cache_owner.cache), cache_owner.cache))
         request = ReadyForwardRequest(
-            cell_key, ordinal[0], token, pos, cache, cache_geometry(cache), node_id,
+            cell_key, ordinal[0], token, pos, forward_owner, cache_geometry(forward_owner.cache), node_id,
         )
         ordinal[0] += 1
         outputs = yield request
         if config.calibration_assertions and int(outputs.logits.shape[0]) != 1:
             raise RuntimeError("dynamic-ready B1 reply must have one logical lane")
+        if _is_transformers_cache(forward_owner.cache):
+            if outputs.past_key_values is not forward_owner.cache:
+                raise RuntimeError("B1 reply did not update the logical cache owner in place")
+        else:
+            # Legacy tuples exist only in CPU compatibility tests and the
+            # immutable snapshot oracle.  They cannot support crop-based
+            # production rollback, so their branch-local owner may advance to
+            # the model-returned tuple.
+            forward_owner.cache = outputs.past_key_values
         state["model_forwards"] += 1; state["tokens_advanced"] += 1
         descendants = yield from _ready_dfs(
             cell_key=cell_key, logits=outputs.logits[:, -1], max_new_tokens=max_new_tokens - 1,
-            score=next_score, regret=next_regret, pos=pos + 1, cache=outputs.past_key_values,
+            score=next_score, regret=next_regret, pos=pos + 1, cache_owner=forward_owner,
             config=config, started_unix=started_unix, state=state, parent_node=node_id,
-            prefix=prefix + (token,), ordinal=ordinal,
+            prefix=prefix + (token,), ordinal=ordinal, cache_strategy=cache_strategy,
         )
         suffixes.extend(ReferenceTurboDFSCandidate(item.candidate_id, (token,) + item.token_ids,
                                                     item.cumulative_nll, item.terminal_node_id,
                                                     item.discovery_forward_index, item.discovery_unix)
                         for item in descendants)
+        # The child restores its own entry state (this token included); remove
+        # that token before this parent moves to the next sibling or returns.
+        if cache_strategy == "rollback":
+            cache_owner.cache.crop(entry_sequence_length)
     return suffixes
 
 
 def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, cell_key: str,
                      normalize_root_cache: bool, active_time_accounting: bool = False,
-                     root_cache_transform: Callable[[Any], Any] | None = None) -> ReadyCell:
+                     root_cache_transform: Callable[[Any], Any] | None = None,
+                     cache_strategy: Literal["rollback", "snapshot"] = "rollback") -> ReadyCell:
     """Run the required scalar prefill, then expose the first incremental request."""
     import torch
 
@@ -438,11 +520,19 @@ def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, ce
     root_cache = _legacy_cache(outputs.past_key_values) if normalize_root_cache else outputs.past_key_values
     if root_cache_transform is not None:
         root_cache = root_cache_transform(root_cache)
+    if cache_strategy == "rollback" and not _is_transformers_cache(root_cache):
+        # Preserve the old CPU-only legacy-cache tests without claiming that
+        # such a tuple implements production rollback semantics.
+        cache_strategy = "snapshot"
+    state["cache_strategy"] = cache_strategy
+    cache_owner = CacheOwner(root_cache)
     generator = _ready_dfs(cell_key=cell_key, logits=outputs.logits[:, -1], max_new_tokens=config.max_new_tokens,
-                           score=0.0, regret=0.0, pos=int(input_ids.size(1)), cache=root_cache, config=config,
-                           started_unix=started_unix, state=state, parent_node=root, prefix=tuple(), ordinal=[0])
+                           score=0.0, regret=0.0, pos=int(input_ids.size(1)), cache_owner=cache_owner, config=config,
+                           started_unix=started_unix, state=state, parent_node=root, prefix=tuple(), ordinal=[0],
+                           cache_strategy=cache_strategy)
     cell = ReadyCell(cell_key, config, state, started_unix, created_perf, generator,
-                     prefill_seconds=prefill_seconds, active_elapsed_seconds=prefill_seconds)
+                     prefill_seconds=prefill_seconds, active_elapsed_seconds=prefill_seconds,
+                     cache_owner=cache_owner)
     _advance_cell(cell)
     return cell
 
@@ -604,15 +694,39 @@ def run_ready_scheduler(
                         "merged_legacy": merged_legacy, "merged_cache": merged_cache,
                         "outputs": outputs, "split_legacy": split_legacy,
                     })
-                split_cache = [
-                    _restore_cache_kind(item, outputs.past_key_values)
-                    for item in split_legacy
-                ]
-                if cache_pack_observer is not None:
-                    cache_pack_observer("after_split", {"merged_legacy": merged_legacy, "merged_cache": merged_cache, "split_cache": split_cache})
+                # A lane must retain its original CacheOwner object across B2.
+                # Copy the temporary result into that object; never give a
+                # suspended recursive frame a fresh DynamicCache generation.
+                adopted_cache_ids: list[int] = []
+                for request, lane_legacy in zip(requests, split_legacy, strict=True):
+                    assert request is not None
+                    owner_cache = request.cache_owner.cache
+                    owner_id = id(owner_cache)
+                    if _is_transformers_cache(owner_cache):
+                        replace_cache_contents_in_place(owner_cache, lane_legacy)
+                        if id(request.cache_owner.cache) != owner_id:
+                            raise RuntimeError("B2 cache adoption replaced a logical owner object")
+                        adopted_cache_ids.append(owner_id)
+                    else:
+                        # Compatibility only for deterministic CPU legacy-KV
+                        # tests.  Production Clean-HF always reaches the
+                        # DynamicCache branch above.
+                        request.cache_owner.cache = lane_legacy
+                        adopted_cache_ids.append(id(request.cache_owner.cache))
                 outputs_by_cell = []
-                for lane, cache in enumerate(split_cache):
-                    outputs_by_cell.append(type("Reply", (), {"logits": outputs.logits[lane:lane + 1], "past_key_values": cache})())
+                for lane, request in enumerate(requests):
+                    assert request is not None
+                    outputs_by_cell.append(type("Reply", (), {
+                        "logits": outputs.logits[lane:lane + 1],
+                        "past_key_values": request.cache_owner.cache,
+                    })())
+                if cache_pack_observer is not None:
+                    cache_pack_observer("after_split_adoption", {
+                        "merged_legacy": merged_legacy,
+                        "merged_cache": merged_cache,
+                        "split_legacy": split_legacy,
+                        "adopted_cache_ids": adopted_cache_ids,
+                    })
                 # This is deliberately opt-in and exists solely for the memory
                 # audit.  The replies own the tensors needed below; releasing
                 # these transient pack intermediates cannot change DFS state.
@@ -620,7 +734,6 @@ def run_ready_scheduler(
                     merged_legacy = None
                     merged_cache = None
                     split_legacy = None
-                    split_cache = None
                     outputs = None
                     if cache_pack_observer is not None:
                         cache_pack_observer("after_release_temporaries", {"outputs_by_cell": outputs_by_cell})

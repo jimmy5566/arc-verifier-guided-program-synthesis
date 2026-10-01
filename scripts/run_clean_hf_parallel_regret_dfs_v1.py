@@ -183,6 +183,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             cell_key=key,
             normalize_root_cache=True,
             root_cache_transform=_cache_transform,
+            cache_strategy=args.cache_strategy,
         )
     scheduler: dict[str, Any]
     if args.mode == "isolated":
@@ -241,6 +242,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "gold_loaded": False,
         "unsloth_inference": False,
         "mode": args.mode,
+        "cache_strategy": args.cache_strategy,
         "adapter_exact": adapter_foundation,
         "runtime_identity": identity,
         "config": dataclasses.asdict(config),
@@ -267,6 +269,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-index", type=int, default=0)
     parser.add_argument("--depth", type=int, default=24)
     parser.add_argument("--device", default="cuda:0")
+    parser.add_argument("--cache-strategy", choices=("rollback", "snapshot"), default="rollback")
     return parser.parse_args()
 
 
