@@ -18,6 +18,7 @@ from scripts.run_l4_dual_ttt_dfs1024_benchmark import (
     EXPECTED_WORKER_IDS,
     STARTUP_MILESTONES,
     abort_startup,
+    benchmark_execution_pass,
     build_model_ready_payload,
     build_worker_failure,
     collect_startup_diagnostics,
@@ -26,6 +27,7 @@ from scripts.run_l4_dual_ttt_dfs1024_benchmark import (
     drain_startup_queue,
     persist_startup_failure,
     persist_startup_milestone,
+    pre_barrier_health_issues,
     projections,
     record_startup_message,
     startup_failure_path,
@@ -295,6 +297,63 @@ def test_all_requested_startup_milestones_are_frozen() -> None:
     )
 
 
+def test_model_ready_then_worker_death_fails_final_pre_barrier_gate(tmp_path: Path) -> None:
+    (tmp_path / "checkpoints" / "startup").mkdir(parents=True)
+    (tmp_path / "failures.jsonl").write_text("", encoding="utf-8")
+    ready = {worker_id: ready_for(worker_id) for worker_id in range(4)}
+    for worker_id in range(4):
+        persist_startup_milestone(tmp_path, worker_id, "START_BARRIER_ENTERED")
+    processes = [FakeProcess(index) for index in range(4)]
+    processes[2] = FakeProcess(2, alive=False, exitcode=1)
+    issues = pre_barrier_health_issues(
+        output=tmp_path,
+        processes=processes,
+        ready_by_worker=ready,
+        failures_by_worker={},
+    )
+    assert any("worker 2 is not alive before barrier" in issue for issue in issues)
+    barrier = FakeBarrier()
+    report = abort_startup(
+        output=tmp_path,
+        processes=processes,
+        start_barrier=barrier,
+        ready_by_worker=ready,
+        failures_by_worker={},
+        duplicate_ready_counts={},
+        reason="; ".join(issues),
+    )
+    assert report["status"] == "STARTUP_FAILED"
+    assert barrier.was_set is True
+    assert all(process.terminated for index, process in enumerate(processes) if index != 2)
+    assert report["UNIQUE_MODEL_READY_COUNT"] == 4
+
+
+def test_final_pre_barrier_gate_requires_ready_sent_milestones(tmp_path: Path) -> None:
+    (tmp_path / "checkpoints" / "startup").mkdir(parents=True)
+    ready = {worker_id: ready_for(worker_id) for worker_id in range(4)}
+    processes = [FakeProcess(index) for index in range(4)]
+    for worker_id in range(4):
+        milestone = "MODEL_READY_SENT" if worker_id < 3 else "MODEL_READY_PAYLOAD_PICKLE_PASS"
+        persist_startup_milestone(tmp_path, worker_id, milestone)
+    issues = pre_barrier_health_issues(
+        output=tmp_path,
+        processes=processes,
+        ready_by_worker=ready,
+        failures_by_worker={},
+    )
+    assert issues == ["worker 3 startup milestone is before MODEL_READY_SENT: MODEL_READY_PAYLOAD_PICKLE_PASS"]
+
+
+def test_final_health_gate_precedes_workload_barrier_release() -> None:
+    source = (ROOT / "scripts" / "run_l4_dual_ttt_dfs1024_benchmark.py").read_text(encoding="utf-8")
+    gate = source.index("# Final fail-closed health gate")
+    health_check = source.index("pre_barrier_health_issues(", gate)
+    abort = source.index("abort_startup(", health_check)
+    release = source.index("workload_start_mono =", abort)
+    barrier_set = source.index("start_barrier.set()", release)
+    assert gate < health_check < abort < release < barrier_set
+
+
 def test_scientific_config_and_cohort_content_is_frozen() -> None:
     expected = {
         "benchmark_config.json": "9e2a978302d13ce427c9e180603e642e3353fb8dbb9c31e11cb110d396fb1493",
@@ -453,9 +512,25 @@ def test_compact_cell_keeps_scalar_telemetry_and_empty_pool_visible() -> None:
     assert result["nodes_per_second"] == 512.0
     assert result["model_forward_sec_per_node"] == pytest.approx(1.5 / 1024)
     assert result["unique_candidates"] == 0
+    assert result["empty_pool"] is True
     assert result["invalid_candidates"] == 4
     assert result["budget_exhausted"] is True
     assert result["candidate_cap_reached"] is False
+
+
+def test_completed_empty_pool_is_not_an_execution_failure() -> None:
+    run = {"failures": {}, "cell_failures": []}
+    assert benchmark_execution_pass(
+        run=run,
+        task_row_count=8,
+        actual_cell_count=72,
+        expected_cell_count=72,
+        model_ready_count=4,
+    ) is True
+    source = (ROOT / "scripts" / "run_l4_dual_ttt_dfs1024_benchmark.py").read_text(encoding="utf-8")
+    assert 'exception_type": "EmptyCandidatePool"' not in source
+    assert '_event(events, "CELL_FAILED"' not in source
+    assert '"EMPTY_POOL_CELLS"' in source
 
 
 def test_projections_keep_task_and_output_denominators_separate(tmp_path: Path) -> None:

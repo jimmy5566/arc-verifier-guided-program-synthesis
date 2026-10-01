@@ -521,6 +521,7 @@ def compact_cell(
     nodes = int(row["nodes_expanded"])
     forwards = int(row["model_forwards"])
     model_wall = float(row.get("model_forward_seconds", 0.0))
+    unique_candidates = int(row.get("unique_grid_count", 0))
     return {
         "task_id": row["task_id"], "output_index": int(row["output_index"]), "ttt_depth": int(row["depth"]),
         "view": row["view"], "gpu_id": gpu_id, "worker_id": worker_id,
@@ -530,7 +531,8 @@ def compact_cell(
         "model_forward_sec_per_node": model_wall / nodes if nodes else None,
         "logical_tokens_generated": int(row.get("tokens_advanced", 0)),
         "completed_candidates": int(row.get("complete_candidate_count", 0)),
-        "unique_candidates": int(row.get("unique_grid_count", 0)),
+        "unique_candidates": unique_candidates,
+        "empty_pool": unique_candidates == 0,
         "invalid_candidates": int(row.get("candidate_count", 0)) - int(row.get("valid_grid_count", 0)),
         "termination_reason": row.get("termination_reason"),
         "budget_exhausted": bool(row.get("budget_exhausted")),
@@ -719,26 +721,6 @@ def worker_main(worker_id: int, work: Any, events: Any, ready: Any, start_barrie
                             )
                             source_cells.append(cell); cells.append(cell)
                             _event(events, "CELL_COMPLETE", task_id=task_id, worker_id=worker_id, gpu_id=worker_id, cell=cell)
-                            if int(cell["unique_candidates"]) == 0:
-                                _event(
-                                    events,
-                                    "CELL_FAILED",
-                                    task_id=task_id,
-                                    worker_id=worker_id,
-                                    gpu_id=worker_id,
-                                    failure={
-                                        "task_id": task_id,
-                                        "output_id": output_index,
-                                        "depth": depth,
-                                        "view": view,
-                                        "gpu": worker_id,
-                                        "timestamp": time.time(),
-                                        "exception_type": "EmptyCandidatePool",
-                                        "error": "scalar DFS completed without a valid unique candidate",
-                                        "short_traceback": None,
-                                        "rerun": False,
-                                    },
-                                )
                             active_view = None
                     dfs_seconds = time.perf_counter() - dfs_started
                     source_metrics[source] = {
@@ -868,6 +850,38 @@ def read_startup_artifacts(output: Path) -> tuple[dict[int, dict[str, Any]], dic
         if failure_path.is_file():
             failures[worker_id] = read_json(failure_path)
     return statuses, failures
+
+
+def pre_barrier_health_issues(
+    *,
+    output: Path,
+    processes: Sequence[Any],
+    ready_by_worker: Mapping[int, Mapping[str, Any]],
+    failures_by_worker: Mapping[int, Mapping[str, Any]],
+) -> list[str]:
+    """Return fail-closed health issues after 4/4 ready and before release."""
+    issues: list[str] = []
+    if set(ready_by_worker) != EXPECTED_WORKER_IDS:
+        issues.append(f"MODEL_READY set mismatch: {sorted(ready_by_worker)}")
+    statuses, disk_failures = read_startup_artifacts(output)
+    failed_workers = sorted(set(failures_by_worker) | set(disk_failures))
+    if failed_workers:
+        issues.append(f"startup failure evidence exists for workers: {failed_workers}")
+    milestone_rank = {name: index for index, name in enumerate(STARTUP_MILESTONES)}
+    minimum_rank = milestone_rank["MODEL_READY_SENT"]
+    for worker_id in sorted(EXPECTED_WORKER_IDS):
+        process = processes[worker_id]
+        if not process.is_alive() or process.exitcode is not None:
+            issues.append(
+                f"worker {worker_id} is not alive before barrier: "
+                f"alive={process.is_alive()} exitcode={process.exitcode}"
+            )
+        milestone = statuses.get(worker_id, {}).get("last_startup_milestone")
+        if milestone_rank.get(str(milestone), -1) < minimum_rank:
+            issues.append(
+                f"worker {worker_id} startup milestone is before MODEL_READY_SENT: {milestone}"
+            )
+    return issues
 
 
 def collect_startup_diagnostics(
@@ -1131,6 +1145,40 @@ def run_workers(*, challenge: Path, model: Path, native_config: Path, output: Pa
 
     if set(ready_by_worker) != EXPECTED_WORKER_IDS or startup_failures:
         raise AssertionError("startup loop exited without exact four-worker readiness")
+
+    # Final fail-closed health gate. A worker can publish MODEL_READY and then
+    # fail while the queue feeder is delivering it; readiness alone is not
+    # authorization to release the task barrier.
+    final_gate_errors: list[str] = []
+    try:
+        consume(drain_startup_queue(ready, grace_seconds=STARTUP_QUEUE_DRAIN_GRACE_SECONDS))
+    except Exception as exc:
+        final_gate_errors.append(f"final startup queue drain failed: {type(exc).__name__}: {exc}")
+    _statuses, disk_failures = read_startup_artifacts(output)
+    for worker_id, failure in disk_failures.items():
+        startup_failures.setdefault(worker_id, failure)
+    final_gate_errors.extend(
+        pre_barrier_health_issues(
+            output=output,
+            processes=processes,
+            ready_by_worker=ready_by_worker,
+            failures_by_worker=startup_failures,
+        )
+    )
+    if final_gate_errors:
+        reason = "; ".join(final_gate_errors)
+        abort_startup(
+            output=output,
+            processes=processes,
+            start_barrier=start_barrier,
+            ready_by_worker=ready_by_worker,
+            failures_by_worker=startup_failures,
+            duplicate_ready_counts=duplicate_ready_counts,
+            reason=reason,
+        )
+        raise RuntimeError(
+            f"pre-barrier worker health gate failed; diagnostics={output / 'STARTUP_FAILURE_REPORT.json'}"
+        )
     write_startup_summary(
         output=output,
         status="STARTUP_READY",
@@ -1314,6 +1362,24 @@ def projections(*, task_rows: Sequence[Mapping[str, Any]], workload_wall: float,
     return result
 
 
+def benchmark_execution_pass(
+    *,
+    run: Mapping[str, Any],
+    task_row_count: int,
+    actual_cell_count: int,
+    expected_cell_count: int,
+    model_ready_count: int,
+) -> bool:
+    """Execution health excludes normal completed cells with empty pools."""
+    return (
+        not run.get("failures")
+        and not run.get("cell_failures")
+        and task_row_count == 8
+        and actual_cell_count == expected_cell_count
+        and model_ready_count == 4
+    )
+
+
 def summarize(*, output: Path, config: Mapping[str, Any], cohort_info: Mapping[str, Any], run: Mapping[str, Any], notebook_start: float, env_init_s: float, challenge: Path, provenance: Mapping[str, Any]) -> dict[str, Any]:
     save_started = time.perf_counter()
     task_rows, cell_rows = _task_and_cells(output, run["completions"])
@@ -1426,14 +1492,20 @@ def summarize(*, output: Path, config: Mapping[str, Any], cohort_info: Mapping[s
         gpu_id = int(row["gpu_id"])
         summary[f"GPU{gpu_id}_UTIL_MEAN"] = row["gpu_util_mean"]
         summary[f"GPU{gpu_id}_PEAK_VRAM_MB"] = row["peak_used_mb"]
-    exact_cells = len(cell_rows) == int(cohort_info["num_dfs_cells"])
-    pass_status = not run["failures"] and not run.get("cell_failures") and len(task_rows) == 8 and exact_cells and len(ordered_loads) == 4
+    pass_status = benchmark_execution_pass(
+        run=run,
+        task_row_count=len(task_rows),
+        actual_cell_count=len(cell_rows),
+        expected_cell_count=int(cohort_info["num_dfs_cells"]),
+        model_ready_count=len(ordered_loads),
+    )
     summary["NOTEBOOK_TEST_STATUS"] = "PASS" if pass_status else "FAIL"
     decision = {
         "benchmark_id": BENCHMARK_ID, "status": summary["NOTEBOOK_TEST_STATUS"],
         "scientific_semantics_changed": False, "gold_accessed": False,
         "rerun_enabled": False, "expected_cells": cohort_info["num_dfs_cells"], "actual_cells": len(cell_rows),
-        "failed_tasks": sorted(run["failures"]), "cell_failures": list(run.get("cell_failures", [])), "required_artifacts": list(REQUIRED_OUTPUTS),
+        "failed_tasks": sorted(run["failures"]), "cell_failures": list(run.get("cell_failures", [])),
+        "empty_pool_cells": summary["EMPTY_POOL_CELLS"], "required_artifacts": list(REQUIRED_OUTPUTS),
         "provenance_sha256": sha256_file(output / "benchmark_provenance.json"),
     }
     atomic_json(output / "DECISION.json", decision)
@@ -1451,7 +1523,7 @@ def summarize(*, output: Path, config: Mapping[str, Any], cohort_info: Mapping[s
         "MEDIAN_CELL_NODES_S", "P90_CELL_NODES_S", "WEIGHTED_SEC_PER_NODE", "TASKS_PER_HOUR", "OUTPUTS_PER_HOUR", "DFS_CELLS_PER_HOUR",
         "GPU0_UTIL_MEAN", "GPU1_UTIL_MEAN", "GPU2_UTIL_MEAN", "GPU3_UTIL_MEAN", "GPU_UTIL_ALL_MEAN", "GPU_UTIL_ALL_P90",
         "GPU0_PEAK_VRAM_MB", "GPU1_PEAK_VRAM_MB", "GPU2_PEAK_VRAM_MB", "GPU3_PEAK_VRAM_MB", "POWER_MEAN_ALL_GPU_W", "POWER_MAX_ANY_GPU_W",
-        "CPU_UTIL_MEAN", "CPU_UTIL_P90", "RAM_PEAK_GB", "LOAD_IMBALANCE_PERCENT", "FAILED_TASKS", "FAILED_CELLS", "OOM_COUNT",
+        "CPU_UTIL_MEAN", "CPU_UTIL_P90", "RAM_PEAK_GB", "LOAD_IMBALANCE_PERCENT", "FAILED_TASKS", "FAILED_CELLS", "EMPTY_POOL_CELLS", "OOM_COUNT",
         "PROJECTED_60_TASK_H", "PROJECTED_120_TASK_H", "PROJECTED_240_TASK_H", "PROJECTION_CONFIDENCE", "NOTEBOOK_TEST_STATUS",
     ]
     print(BENCHMARK_ID)
