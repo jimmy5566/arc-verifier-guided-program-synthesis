@@ -412,6 +412,87 @@ def fix(args: argparse.Namespace) -> None:
     atomic_json(output / "DECISION.json", decision)
 
 
+def _write_same_request_warmup_condition(args: argparse.Namespace) -> None:
+    """Test whether *any* first incremental call causes the S0 -> S1 transition.
+
+    The discarded call uses a deep clone of the very same flip request.  Thus
+    it cannot mutate the real continuation cache and contains no foreign view
+    prefill or foreign token.  A changed second output proves a runtime-level
+    first-call transition rather than cross-cell cache contamination.
+    """
+    contract = read_json(args.contract.resolve())
+    no_gold_challenge(Path(contract["challenge"]))
+    model, encoded, dec, adapter_sha, native = _runtime(contract, args.gpu_id)
+    try:
+        flip = _new_cell(model, encoded, dec, PRIMARY)
+        request = flip.request
+        if request is None:
+            raise RuntimeError("flip root prefill did not yield an incremental request")
+        frozen_cache = clone_legacy_cache(request.cache)
+        warmup_summary = None
+        if args.discard_same_request_warmup:
+            warmup_request = type("Request", (), {
+                "token_id": request.token_id, "position": request.position,
+                "cache": clone_legacy_cache(frozen_cache),
+            })()
+            _warmup, warmup_summary = _one_forward(model, warmup_request)
+        actual_request = type("Request", (), {
+            "token_id": request.token_id, "position": request.position,
+            "cache": clone_legacy_cache(frozen_cache),
+        })()
+        outputs, summary = _one_forward(model, actual_request)
+        atomic_json(args.result.resolve(), {
+            "condition_id": args.condition_id, "discard_same_request_warmup": bool(args.discard_same_request_warmup),
+            "cell_key": f"{TASK_ID}:o{OUTPUT_INDEX}:d{DEPTH}:{PRIMARY}",
+            "request_token_id": int(request.token_id), "request_position": int(request.position),
+            "request_ordinal": int(request.ordinal), "adapter_sha256": adapter_sha,
+            "native_token_contract": native, "frozen_cache": _cache_details(frozen_cache),
+            "discarded_warmup": warmup_summary, "full_logits_sha256": summary["full_logits_sha256"],
+            "arc_logits": summary["arc_logits"], "arc_logprobs": summary["arc_logprobs"],
+            "arc_ranking": summary["arc_ranking"], "retained_regret_successors": _retained_successors(outputs.logits, dec),
+            "gold_accessed": False, "dfs_executed": False, "dynamic_b2_executed": False,
+        })
+    finally:
+        _release(model)
+
+
+def warmup_causality(args: argparse.Namespace) -> None:
+    output = args.output.resolve(); contract = output / "PREFILL_STATE_ROOT_CAUSE_CONTRACT.json"
+    if not contract.is_file():
+        raise RuntimeError("warmup-causality requires the frozen causal contract")
+    root = output / "same_request_warmup_raw"; root.mkdir(exist_ok=True)
+    conditions = (("W0_NO_DISCARDED_INCREMENTAL", False), ("W1_DISCARDED_SAME_REQUEST_INCREMENTAL", True))
+    for condition_id, enabled in conditions:
+        result = root / f"{condition_id}.json"
+        if result.exists():
+            raise RuntimeError(f"refusing to overwrite warmup condition {result}")
+        command = [sys.executable, str(Path(__file__).resolve()), "warmup-condition", "--contract", str(contract),
+                   "--result", str(result), "--condition-id", condition_id, "--gpu-id", str(args.gpu_id)]
+        if enabled:
+            command.append("--discard-same-request-warmup")
+        subprocess.run(command, check=True)
+    zero, one = (read_json(root / f"{condition_id}.json") for condition_id, _enabled in conditions)
+    parity = _same(zero, one)
+    expected_s1 = read_json(output / "history_raw" / "N1.json")
+    one_matches_s1 = _same(expected_s1, one)
+    write_csv(output / "SAME_REQUEST_WARMUP_CAUSALITY.csv", [
+        {"comparison": "no discarded forward vs discarded same-request forward", **parity},
+        {"comparison": "discarded same-request forward vs foreign-N1", **one_matches_s1},
+    ])
+    decision = read_json(output / "DECISION.json")
+    if not parity["strict_forward_parity"] and one_matches_s1["strict_forward_parity"]:
+        decision.update({
+            "causal_classification": "UNSLOTH_INCREMENTAL_FIRST_CALL_RUNTIME_TRANSITION",
+            "first_divergent_layer_or_operation": "FIRST_UNSLOTH_INCREMENTAL_FORWARD_AFTER_ROOT_PREFILL",
+            "minimal_fix": "ONE_DISCARDED_CLONED_READY_REQUEST_WARMUP_BEFORE_SCHEDULING",
+            "next": "IMPLEMENT_AND_MICRO_VALIDATE_ONE_TIME_READY_RUNTIME_WARMUP",
+            "dynamic_b2_safe_next": False,
+        })
+    else:
+        decision.update({"next": "STOP_FOR_REVIEW_SAME_REQUEST_WARMUP_NOT_CAUSAL", "dynamic_b2_safe_next": False})
+    atomic_json(output / "DECISION.json", decision)
+
+
 def _first_tensor(value: Any) -> Any:
     if hasattr(value, "detach"):
         return value
@@ -621,6 +702,7 @@ def main() -> None:
     run_parser = sub.add_parser("run"); run_parser.add_argument("--output", type=Path, required=True); run_parser.add_argument("--gpu-id", type=int, default=0)
     history_parser = sub.add_parser("history"); history_parser.add_argument("--output", type=Path, required=True); history_parser.add_argument("--gpu-id", type=int, default=0); history_parser.add_argument("--source-commit", required=True)
     fix_parser = sub.add_parser("fix"); fix_parser.add_argument("--output", type=Path, required=True); fix_parser.add_argument("--gpu-id", type=int, default=0)
+    warmup_parser = sub.add_parser("warmup-causality"); warmup_parser.add_argument("--output", type=Path, required=True); warmup_parser.add_argument("--gpu-id", type=int, default=0)
     trace_parser = sub.add_parser("trace"); trace_parser.add_argument("--output", type=Path, required=True); trace_parser.add_argument("--gpu-id", type=int, default=0); trace_parser.add_argument("--source-commit", required=True)
     finalizer = sub.add_parser("finalize"); finalizer.add_argument("--output", type=Path, required=True)
     condition = sub.add_parser("condition"); condition.add_argument("--contract", type=Path, required=True); condition.add_argument("--result", type=Path, required=True)
@@ -630,6 +712,8 @@ def main() -> None:
     history_condition.add_argument("--history-length", type=int, choices=(0, 1, 2, 8, 32), required=True); history_condition.add_argument("--gpu-id", type=int, default=0)
     fix_condition = sub.add_parser("fix-condition"); fix_condition.add_argument("--contract", type=Path, required=True); fix_condition.add_argument("--result", type=Path, required=True)
     fix_condition.add_argument("--history-length", type=int, choices=(0, 1, 8, 32), required=True); fix_condition.add_argument("--gpu-id", type=int, default=0)
+    warmup_condition = sub.add_parser("warmup-condition"); warmup_condition.add_argument("--contract", type=Path, required=True); warmup_condition.add_argument("--result", type=Path, required=True)
+    warmup_condition.add_argument("--condition-id", required=True); warmup_condition.add_argument("--discard-same-request-warmup", action="store_true"); warmup_condition.add_argument("--gpu-id", type=int, default=0)
     trace_condition = sub.add_parser("trace-condition"); trace_condition.add_argument("--contract", type=Path, required=True); trace_condition.add_argument("--result", type=Path, required=True)
     trace_condition.add_argument("--history-length", type=int, choices=(0, 1, 2, 8, 32), required=True); trace_condition.add_argument("--gpu-id", type=int, default=0)
     args = parser.parse_args()
@@ -639,6 +723,8 @@ def main() -> None:
     elif args.command == "history": history(args)
     elif args.command == "fix": fix(args)
     elif args.command == "fix-condition": _write_fix_condition(args)
+    elif args.command == "warmup-causality": warmup_causality(args)
+    elif args.command == "warmup-condition": _write_same_request_warmup_condition(args)
     elif args.command == "trace": trace(args)
     elif args.command == "trace-condition": _write_trace_condition(args)
     elif args.command == "finalize": finalize(args)
