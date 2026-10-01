@@ -56,7 +56,17 @@ def load_hf_peft_inference(*, model_path: Path, adapter_path: Path, device: str)
     peft_config = PeftConfig.from_pretrained(str(adapter_path), local_files_only=True)
     if parsed_targets is not None:
         peft_config.target_modules = set(parsed_targets)
-    model = PeftModel.from_pretrained(base, str(adapter_path), config=peft_config, is_trainable=False).to(device).eval()
+    # PEFT defaults to `autocast_adapter_dtype=True`, which silently promotes
+    # FP16/BF16 LoRA tensors to FP32.  That is fine for generic inference but
+    # invalid for this frozen-adapter parity boundary: the decoder must consume
+    # the exact persisted BF16 adapter bytes.
+    model = PeftModel.from_pretrained(
+        base,
+        str(adapter_path),
+        config=peft_config,
+        is_trainable=False,
+        autocast_adapter_dtype=False,
+    ).to(device).eval()
     identity = {
         "backend": "transformers_peft_clean", "torch": torch.__version__,
         "transformers": importlib.metadata.version("transformers"), "peft": importlib.metadata.version("peft"),
@@ -92,7 +102,12 @@ def loaded_adapter_tensor_parity(model: Any, source_rows: list[dict[str, Any]]) 
     def canonical(name: str) -> str:
         # PEFT owns adapter-name insertion.  The frozen export omits the
         # default-adapter component, so remove only that structural segment.
-        return name.replace(".lora_A.default.", ".lora_A.").replace(".lora_B.default.", ".lora_B.").replace(".modules_to_save.default.", ".")
+        return (
+            name.replace(".lora_A.default.", ".lora_A.")
+            .replace(".lora_B.default.", ".lora_B.")
+            .replace(".modules_to_save.default.", ".")
+            .replace(".modules_to_save.", ".")
+        )
 
     state = get_peft_model_state_dict(model)
     canonical_loaded: dict[str, tuple[str, Any]] = {}
@@ -106,6 +121,9 @@ def loaded_adapter_tensor_parity(model: Any, source_rows: list[dict[str, Any]]) 
         name = str(source["canonical_parameter_name"])
         loaded_name, tensor = canonical_loaded.get(name, (None, None))
         loaded_sha = None if tensor is None else _tensor_sha256(tensor)
-        rows.append({**source, "loaded_parameter_name": loaded_name, "loaded_sha256": loaded_sha,
+        rows.append({**source, "loaded_parameter_name": loaded_name,
+                     "loaded_shape": None if tensor is None else list(tensor.shape),
+                     "loaded_dtype": None if tensor is None else str(tensor.dtype),
+                     "loaded_sha256": loaded_sha,
                      "exact_equal": bool(loaded_sha == source["source_sha256"])})
     return rows
