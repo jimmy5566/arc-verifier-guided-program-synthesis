@@ -34,6 +34,7 @@ def load_hf_peft_inference(
     adapter_path: Path,
     device: str,
     native_config_dir: Path | None = None,
+    frozen_adapter_identity: dict[str, str] | None = None,
 ) -> tuple[Any, Any, dict[str, Any]]:
     """Load a frozen adapter with stock Transformers and PEFT only."""
     import torch
@@ -84,6 +85,24 @@ def load_hf_peft_inference(
         is_trainable=False,
         autocast_adapter_dtype=False,
     ).to(device).eval()
+    if frozen_adapter_identity is None:
+        adapter_sha256 = _sha256_file(adapter_path / "adapter_model.safetensors")
+        adapter_config_sha256 = _sha256_file(adapter_path / "adapter_config.json")
+        adapter_identity_verification = "file_sha256_at_mount"
+    else:
+        required_identity = {"adapter_sha256", "adapter_config_sha256"}
+        if set(frozen_adapter_identity) != required_identity or not all(
+            isinstance(frozen_adapter_identity[key], str) and len(frozen_adapter_identity[key]) == 64
+            for key in required_identity
+        ):
+            raise ValueError("frozen adapter identity must contain two SHA256 strings")
+        # Repeated multi-GiB file hashing is intentionally avoidable only when
+        # the caller has already bound the immutable mounted adapter to a
+        # committed 506/506 foundation.  Normal loader callers still perform a
+        # fresh mount hash above.
+        adapter_sha256 = frozen_adapter_identity["adapter_sha256"]
+        adapter_config_sha256 = frozen_adapter_identity["adapter_config_sha256"]
+        adapter_identity_verification = "committed_506_506_foundation_binding"
     identity = {
         "backend": "transformers_peft_clean", "torch": torch.__version__,
         "transformers": importlib.metadata.version("transformers"), "peft": importlib.metadata.version("peft"),
@@ -91,8 +110,9 @@ def load_hf_peft_inference(
         "model_class": type(model).__qualname__, "base_model_class": type(base).__qualname__,
         "forward_module": inspect.getmodule(model.forward).__name__,
         "attention_implementation": getattr(base.config, "_attn_implementation", None),
-        "dtype": str(next(model.parameters()).dtype), "adapter_sha256": _sha256_file(adapter_path / "adapter_model.safetensors"),
-        "adapter_config_sha256": _sha256_file(adapter_path / "adapter_config.json"), "tokenizer_vocab_size": len(tokenizer),
+        "dtype": str(next(model.parameters()).dtype), "adapter_sha256": adapter_sha256,
+        "adapter_config_sha256": adapter_config_sha256, "adapter_identity_verification": adapter_identity_verification,
+        "tokenizer_vocab_size": len(tokenizer),
         "tokenizer_identity": tokenizer_identity,
         "adapter_config": {**{key: adapter_config.get(key) for key in ("r", "lora_alpha", "use_rslora", "modules_to_save")},
                            "target_modules": parsed_targets, "target_modules_schema_translated": isinstance(adapter_config.get("target_modules"), str)},

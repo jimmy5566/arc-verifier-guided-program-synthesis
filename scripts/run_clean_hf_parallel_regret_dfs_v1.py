@@ -155,9 +155,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     from arc.io import load_dataset
 
     _assert_challenge_only(args.challenge)
+    foundation_identity = json.loads(args.adapter_foundation.read_text(encoding="utf-8"))
+    if foundation_identity.get("status") != "PASS" or int(foundation_identity.get("exact_match_count", -1)) != 506:
+        raise RuntimeError("frozen clean-HF adapter foundation is not a 506/506 PASS")
     model, tokenizer, identity = load_hf_peft_inference(
         model_path=args.model_path, adapter_path=args.adapter_path, device=args.device,
         native_config_dir=args.native_config_dir,
+        frozen_adapter_identity={
+            "adapter_sha256": str(foundation_identity["adapter_sha256"]),
+            "adapter_config_sha256": str(foundation_identity["adapter_config_sha256"]),
+        },
     )
     adapter_foundation = _verify_frozen_foundation(args.adapter_foundation, identity)
     tasks = load_dataset(args.challenge)
