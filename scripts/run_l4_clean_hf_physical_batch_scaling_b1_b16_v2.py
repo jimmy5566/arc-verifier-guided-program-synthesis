@@ -530,7 +530,12 @@ def _run_width(args: argparse.Namespace, width: int) -> dict[str, Any]:
             ready_rows.append(row)
         ready_ids = {int(row["gpu_id"]) for row in ready_rows if row.get("type") == "READY"}
         modes = {str(row.get("model_mode")) for row in ready_rows if row.get("type") == "READY"}
-        if ready_ids != {0, 1, 2, 3} or len(modes) != 1 or any(not worker.is_alive() for worker in workers):
+        adapter_signatures = {
+            _sha256_json({key: row.get("adapter", {}).get(key) for key in ("mode", "state_sha256", "config_sha256")})
+            for row in ready_rows if row.get("type") == "READY"
+        }
+        if (ready_ids != {0, 1, 2, 3} or len(modes) != 1 or len(adapter_signatures) != 1
+                or any(not worker.is_alive() for worker in workers)):
             errors: list[dict[str, Any]] = []
             while not result.empty():
                 errors.append(result.get())
