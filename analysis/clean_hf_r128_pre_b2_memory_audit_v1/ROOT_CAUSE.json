@@ -1,0 +1,29 @@
+{
+  "classification": "SPLIT_CONTIGUOUS_COPY",
+  "classification_reason": "The first B2 leaves two independent split caches live after logical reply; their measured physical storage accounts for the historical allocation delta at about twenty retained B2 generations.",
+  "equivalent_retained_b2_split_generations_estimate": 20.3242529959223,
+  "forward_allocation_delta_bytes": 568885760,
+  "fresh_process": true,
+  "from_legacy_cache": "ZERO_COPY_WRAPPER",
+  "merged_legacy_allocation_bytes": 568590336,
+  "micro_gate_retention": "NOT_RECONSTRUCTABLE_NO_COMMITTED_DEDICATED_RUNNER",
+  "p6_unattributed_bytes": 75362048,
+  "post_reply_live_kv_delta_bytes": 568885248,
+  "prior_extra_over_fresh_p6_bytes_estimate": 11562167706,
+  "prior_oom_allocated_gib": 19.65,
+  "r32_projection": {
+    "assumption": "one pair is merged and split while the maximum simultaneous four-view snapshot remains live",
+    "corrected_end_state_projection_bug": true,
+    "estimated_b2_merged_kv_bytes": 575668224,
+    "estimated_b2_split_kv_bytes": 575668224,
+    "fits_24gb": true,
+    "four_current_kv_bytes": 1151336448,
+    "projected_peak_expected_bytes": 10626989312,
+    "projection_source_snapshot": "F96",
+    "total_gpu_bytes": 25298141184
+  },
+  "secondary_observation": "The historical OOM also had 3.59 GiB reserved-but-unallocated memory, so allocator fragmentation was material but not the primary allocated-byte explanation.",
+  "smallest_safe_fix": "Do not launch long dynamic-B2 R128 work on 24GB until cache ownership/lifetime is redesigned and parity-validated; release merged intermediates immediately after reply construction, then validate a cache-sharing or bounded-lifetime design separately.",
+  "split_copy_bytes": 568885248,
+  "transient_release_after_b8_bytes": 568590336
+}

@@ -1,6 +1,11 @@
 {
-  "estimated_b2_merged_kv_bytes": 0,
-  "fits_24gb": false,
-  "four_current_kv_bytes": 0,
-  "projected_peak_expected_bytes": 8324316416
+  "assumption": "one pair is merged and split while the maximum simultaneous four-view snapshot remains live",
+  "corrected_end_state_projection_bug": true,
+  "estimated_b2_merged_kv_bytes": 575668224,
+  "estimated_b2_split_kv_bytes": 575668224,
+  "fits_24gb": true,
+  "four_current_kv_bytes": 1151336448,
+  "projected_peak_expected_bytes": 10626989312,
+  "projection_source_snapshot": "F96",
+  "total_gpu_bytes": 25298141184
 }

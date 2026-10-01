@@ -1,0 +1,8 @@
+{
+  "budget": 128,
+  "experiment": "CLEAN_HF_R128_PRE_B2_MEMORY_AUDIT_V1",
+  "gold_loaded": false,
+  "pid": 29250,
+  "source": "fresh_process",
+  "target_blind": true
+}
