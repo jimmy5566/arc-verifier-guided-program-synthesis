@@ -125,7 +125,7 @@ def audit(raw: dict[str, Any], artifact_sha256: str) -> dict[str, Any]:
     return {
         "experiment": "CLEAN_HF_PARALLEL_REGRET_DFS_V1",
         "target_blind": raw.get("target_blind") is True,
-        "gold_loaded": raw.get("gold_loaded") is False,
+        "gold_loaded": raw.get("gold_loaded"),
         "raw_artifact_sha256": artifact_sha256,
         "raw_declared_sha256": raw.get("raw_sha256"),
         "frozen_logical_order": logical_order,
