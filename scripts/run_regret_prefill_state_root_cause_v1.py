@@ -146,8 +146,11 @@ def _same(lhs: dict[str, Any], rhs: dict[str, Any]) -> dict[str, Any]:
 
 def prepare(args: argparse.Namespace) -> None:
     output = args.output.resolve()
-    if output.exists() and any(output.iterdir()):
-        raise RuntimeError(f"refusing to overwrite {output}")
+    allowed_existing = {"COMPARATOR_FIX_AUDIT.md", "ISOLATED_PARITY_REAUDIT.csv"}
+    existing = {path.name for path in output.iterdir()} if output.exists() else set()
+    unexpected = existing - allowed_existing
+    if unexpected:
+        raise RuntimeError(f"refusing to overwrite {output}; unexpected files: {sorted(unexpected)}")
     challenge = args.challenge.resolve(); no_gold_challenge(challenge)
     source = read_json(args.fixed_budget_contract.resolve())
     caps = source.get("caps", {})
