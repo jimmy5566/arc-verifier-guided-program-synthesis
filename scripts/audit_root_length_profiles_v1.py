@@ -24,6 +24,7 @@ from inference.root_length_memory_profile import (  # noqa: E402
     KV_BLOCK_TOKENS,
     MAX_NEW_TOKENS,
     deterministic_resident_groups,
+    make_root_profile_execution_plan,
     required_capacity_for_root,
     select_memory_profile,
 )
@@ -123,13 +124,12 @@ def run(args: argparse.Namespace) -> None:
         for candidate in candidates:
             lengths.append(_native_prompt_length(tokenizer=tokenizer, task=tasks[task_id], output_index=output_index,
                                                  candidate=candidate))
-        root_max = max(lengths); profile = select_memory_profile(root_max); groups = deterministic_resident_groups(candidate_ids, profile)
+        root_max = max(lengths); plan = make_root_profile_execution_plan(root_max, candidate_ids); profile = plan.profile; groups = plan.resident_groups
         row = {"output_id": f"{task_id}:o{output_index}", "task_id": task_id, "output_index": output_index,
                "root_length_min": min(lengths), "root_length_max": root_max, "root_length_mean": statistics.fmean(lengths),
                "unique_prompt_lengths": len(set(lengths)), "profile": profile.name, "resident_width": profile.resident_width,
                "physical_batch_ceiling": profile.physical_batch_ceiling, "resident_group_count": len(groups),
-               "initial_kv_capacity": ((root_max + KV_BLOCK_TOKENS - 1) // KV_BLOCK_TOKENS) * KV_BLOCK_TOKENS,
-               "final_required_kv_capacity": required_capacity_for_root(root_max),
+               "initial_kv_capacity": plan.initial_kv_capacity, "final_required_kv_capacity": plan.final_required_kv_capacity,
                **{f"aug{index:02d}_token_length": length for index, length in enumerate(lengths)}}
         rows.append(row)
         assignments[row["output_id"]] = {**row, "augmentation_ids": candidate_ids,

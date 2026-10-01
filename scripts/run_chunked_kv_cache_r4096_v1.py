@@ -25,9 +25,15 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
 from arc.io import load_dataset  # noqa: E402
 from inference.chunked_kv_cache import ChunkedDynamicCache  # noqa: E402
-from inference.root_length_memory_profile import KV_BLOCK_TOKENS, required_capacity_for_root  # noqa: E402
+from inference.root_length_memory_profile import (  # noqa: E402
+    KV_BLOCK_TOKENS,
+    deterministic_resident_groups,
+    required_capacity_for_root,
+    select_memory_profile,
+)
 from inference.hf_peft_backend import load_hf_peft_inference  # noqa: E402
 from inference.nvarc_turbodfs_dynamic_ready import (  # noqa: E402
+    FixedB8Aug16Config,
     MemoryAwareAug16Config,
     cache_geometry,
     ready_result,
@@ -249,6 +255,16 @@ def _surface(
     state["cell_key"] = None
     torch.cuda.synchronize(device=args.device)
     prefill_seconds = time.perf_counter() - started_prefill
+    root_max = max(int(row["initial_cache_sequence_length"]) for row in manifest)
+    profile = select_memory_profile(root_max)
+    candidate_ids = [str(candidate["candidate_id"]) for candidate in candidates]
+    resident_groups = deterministic_resident_groups(candidate_ids, profile)
+    # This runner is deliberately the PROFILE_S canary implementation.  It
+    # must refuse a longer prompt rather than accidentally retaining sixteen
+    # owners under a narrower profile; grouped profiles use their dispatcher
+    # route and never enter this all-resident surface.
+    if physical_batch == 16 and profile.name != "PROFILE_S":
+        raise RuntimeError(f"PROFILE_S canary runner refuses {profile.name}; use root-profile grouped execution")
 
     def observer(event: str, payload: dict[str, Any]) -> None:
         if event == "before_forward":
@@ -290,10 +306,16 @@ def _surface(
                                      "capacity_length_mean": sum(capacity) / len(capacity) if capacity else None})
 
     torch.cuda.synchronize(device=args.device); started_search = time.perf_counter()
-    if physical_batch == 4:
-        scheduler = run_ready_scheduler(model=model, cells=cells, dynamic_batch2=True, max_physical_batch=4,
+    if physical_batch in {2, 4} or (physical_batch == 8 and len(cells) <= 8):
+        scheduler = run_ready_scheduler(model=model, cells=cells, dynamic_batch2=True, max_physical_batch=physical_batch,
                                         scheduling_policy="dynamic_ready", observer=observer,
                                         streaming_split_and_adopt=True, collect_event_trace=False)
+    elif physical_batch == 8 and len(cells) == 16:
+        scheduler = run_ready_scheduler(
+            model=model, cells=cells, dynamic_batch2=True, max_physical_batch=8,
+            scheduling_policy="fixed_b8_aug16", fixed_b8_config=FixedB8Aug16Config(),
+            observer=observer, streaming_split_and_adopt=True, collect_event_trace=False,
+        )
     elif physical_batch == 16:
         scheduler = run_ready_scheduler(
             model=model, cells=cells, dynamic_batch2=True, max_physical_batch=16,
@@ -303,7 +325,7 @@ def _surface(
             observer=observer, streaming_split_and_adopt=True, collect_event_trace=False,
         )
     else:
-        raise ValueError("frozen experiment supports AUG4 B4 or AUG16 memory-aware B16/B8 only")
+        raise ValueError("unsupported frozen resident/physical topology")
     torch.cuda.synchronize(device=args.device); search_seconds = time.perf_counter() - started_search
 
     per_cell: list[dict[str, Any]] = []; candidate_pools: dict[str, Any] = {}; owner_after: dict[str, dict[str, Any]] = {}
@@ -343,6 +365,11 @@ def _surface(
             "peak_allocated_bytes": int(torch.cuda.max_memory_allocated(device=args.device)),
             "peak_reserved_bytes": int(torch.cuda.max_memory_reserved(device=args.device))},
             "max_valid_length_observed": state["max_valid_length"], "max_capacity_length_observed": state["max_capacity_length"],
+            "memory_profile": {"name": profile.name, "root_max": root_max, "resident_width": profile.resident_width,
+                               "physical_batch_ceiling": profile.physical_batch_ceiling,
+                               "initial_capacity": ((root_max + BLOCK_TOKENS - 1) // BLOCK_TOKENS) * BLOCK_TOKENS,
+                               "final_required_capacity": required_capacity_for_root(root_max),
+                               "resident_groups": [list(group) for group in resident_groups]},
             "prompt_equivalence_classes": prompt_rows, "root_compatibility_groups": compatibility_rows}
 
 
@@ -432,6 +459,7 @@ def _result(surface: dict[str, Any], budget: int, *, chunked: bool, identity: di
         "reallocations_per_cell": reallocations, "total_capacity_growth_copied_bytes": sum(int(row["copied_existing_bytes"]) for row in growth_rows),
         "max_valid_length_observed": surface["max_valid_length_observed"],
         "max_capacity_length_observed": surface["max_capacity_length_observed"],
+        "memory_profile": surface["memory_profile"],
     }
     payload["raw_sha256"] = _sha256_json(payload)
     return payload

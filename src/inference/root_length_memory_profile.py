@@ -23,6 +23,16 @@ class MemoryProfile:
     b16_to_b8_fallback: bool
 
 
+@dataclass(frozen=True)
+class RootProfileExecutionPlan:
+    """Frozen execution topology chosen solely from the AUG16 root maximum."""
+    root_max: int
+    profile: MemoryProfile
+    initial_kv_capacity: int
+    final_required_kv_capacity: int
+    resident_groups: tuple[tuple[str, ...], ...]
+
+
 PROFILE_S = MemoryProfile("PROFILE_S", 0, 2048, 16, 16, True)
 PROFILE_M = MemoryProfile("PROFILE_M", 2049, 2653, 16, 8, False)
 PROFILE_L = MemoryProfile("PROFILE_L", 2654, 6493, 8, 8, False)
@@ -69,3 +79,14 @@ def deterministic_resident_groups(candidate_ids: Iterable[str], profile: MemoryP
     if len(ids) % width:
         raise AssertionError("frozen profile width must partition AUG16 exactly")
     return tuple(ids[index:index + width] for index in range(0, len(ids), width))
+
+
+def make_root_profile_execution_plan(root_max: int, candidate_ids: Iterable[str]) -> RootProfileExecutionPlan:
+    """Build a table-driven resident plan; free VRAM and model scores are excluded."""
+    profile = select_memory_profile(root_max)
+    return RootProfileExecutionPlan(
+        root_max=int(root_max), profile=profile,
+        initial_kv_capacity=aligned_capacity(int(root_max)),
+        final_required_kv_capacity=required_capacity_for_root(int(root_max)),
+        resident_groups=deterministic_resident_groups(candidate_ids, profile),
+    )

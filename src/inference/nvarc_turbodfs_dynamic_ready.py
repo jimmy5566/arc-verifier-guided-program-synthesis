@@ -705,7 +705,9 @@ def _reply(cell: ReadyCell, outputs: Any) -> None:
     cell.request_count += 1
 
 
-SchedulingPolicy = Literal["serial", "round_robin", "dynamic_ready", "memory_aware_aug16"]
+SchedulingPolicy = Literal[
+    "serial", "round_robin", "dynamic_ready", "memory_aware_aug16", "fixed_b8_aug16",
+]
 
 
 @dataclass(frozen=True)
@@ -730,6 +732,23 @@ class MemoryAwareAug16Config:
             raise ValueError("memory-aware hard threshold must be >= soft threshold")
         if self.logical_lane_count != 16 or self.split_batch_size != 8:
             raise ValueError("MEMORY_AWARE_AUG16 is frozen to sixteen lanes split into B8 groups")
+
+
+@dataclass(frozen=True)
+class FixedB8Aug16Config:
+    """Frozen PROFILE_M executor: sixteen resident lanes, fair physical B8.
+
+    Unlike ``MemoryAwareAug16Config``, this policy never attempts a B16
+    forward and does not inspect CUDA memory to decide its schedule.  It is
+    the table-driven PROFILE_M implementation, not a fallback heuristic.
+    """
+
+    logical_lane_count: int = 16
+    split_batch_size: int = 8
+
+    def __post_init__(self) -> None:
+        if self.logical_lane_count != 16 or self.split_batch_size != 8:
+            raise ValueError("FIXED_B8_AUG16 is frozen to sixteen lanes split into B8 groups")
 
 
 def _request_cache_length(cache: Any) -> int | None:
@@ -1016,6 +1035,7 @@ def run_ready_scheduler(
     collect_event_trace: bool = True,
     max_physical_batch: int | None = None,
     memory_aware_config: MemoryAwareAug16Config | None = None,
+    fixed_b8_config: FixedB8Aug16Config | None = None,
     memory_stats_reader: Callable[[], dict[str, int]] | None = None,
     memory_peak_reset: Callable[[], None] | None = None,
     memory_synchronize: Callable[[], None] | None = None,
@@ -1033,7 +1053,7 @@ def run_ready_scheduler(
     """
     import torch
 
-    if scheduling_policy not in {"serial", "round_robin", "dynamic_ready", "memory_aware_aug16"}:
+    if scheduling_policy not in {"serial", "round_robin", "dynamic_ready", "memory_aware_aug16", "fixed_b8_aug16"}:
         raise ValueError(f"unknown scheduling policy: {scheduling_policy}")
     physical_limit = (2 if dynamic_batch2 else 1) if max_physical_batch is None else max_physical_batch
     if physical_limit not in {1, 2, 4, 8, 12, 16}:
@@ -1069,6 +1089,13 @@ def run_ready_scheduler(
         else:
             memory_peak_reset = memory_peak_reset or (lambda: None)
             memory_synchronize = memory_synchronize or (lambda: None)
+    if scheduling_policy == "fixed_b8_aug16":
+        if fixed_b8_config is None:
+            raise ValueError("fixed_b8_aug16 requires an explicit frozen FixedB8Aug16Config")
+        if physical_limit != 8:
+            raise ValueError("fixed_b8_aug16 requires max_physical_batch=8")
+        if len(cells) != fixed_b8_config.logical_lane_count:
+            raise ValueError("fixed_b8_aug16 requires exactly the frozen sixteen logical cells")
     events: list[dict[str, Any]] = []
     forwards = 0
     logical_advances = 0
@@ -1101,13 +1128,15 @@ def run_ready_scheduler(
         memory_group: str | None = None
         selected_index: int | None = None
         next_cursor: int | None = None
-        if scheduling_policy == "memory_aware_aug16":
+        if scheduling_policy in {"memory_aware_aug16", "fixed_b8_aug16"}:
             selected, memory_group_cursor, memory_mode, memory_group, ready_keys = _select_memory_aware_aug16(
                 cells=cells,
-                b16_enabled=b16_enabled,
+                b16_enabled=b16_enabled if scheduling_policy == "memory_aware_aug16" else False,
                 group_cursor=memory_group_cursor,
                 capture_ready_keys=collect_event_trace,
             )
+            if scheduling_policy == "fixed_b8_aug16":
+                memory_mode = "B8_FIXED_SPLIT_MODE"
         else:
             selected, selected_index, next_cursor, ready_keys = _select_ready_cells(
                 cells=cells,
@@ -1118,7 +1147,7 @@ def run_ready_scheduler(
         if not selected:
             break
         first = selected[0]
-        if physical_limit > 1 and scheduling_policy != "memory_aware_aug16":
+        if physical_limit > 1 and scheduling_policy not in {"memory_aware_aug16", "fixed_b8_aug16"}:
             ready = sorted(
                 (cell for cell in cells if cell.request is not None),
                 key=lambda cell: (cell.cell_key, cell.request.ordinal if cell.request else -1),
@@ -1209,7 +1238,7 @@ def run_ready_scheduler(
         b4_forwards += int(len(selected) == 4)
         physical_batch_histogram[len(selected)] = physical_batch_histogram.get(len(selected), 0) + 1
         b16_forward_count += int(scheduling_policy == "memory_aware_aug16" and len(selected) == 16)
-        b8_forward_count += int(memory_mode == "B8_SPLIT_MODE" and len(selected) == 8)
+        b8_forward_count += int(memory_mode in {"B8_SPLIT_MODE", "B8_FIXED_SPLIT_MODE"} and len(selected) == 8)
         model_call_seconds_total += model_call_seconds
         cache_pack_seconds_total += cache_pack_seconds
         cache_adoption_seconds_total += cache_adoption_seconds
@@ -1350,6 +1379,17 @@ def run_ready_scheduler(
             "physical_batch_sequence": physical_batch_sequence,
             "memory_transitions": memory_transitions,
             "b16_peak_samples": b16_peak_samples,
+            "max_cache_length_observed": max_cache_length_observed,
+        })
+    if scheduling_policy == "fixed_b8_aug16":
+        telemetry.update({
+            "scheduler_mode": "FIXED_B8_AUG16",
+            "b16_enabled_initially": False,
+            "b8_forward_count": b8_forward_count,
+            "other_batch_forward_counts": {
+                str(width): count for width, count in sorted(physical_batch_histogram.items()) if width != 8
+            },
+            "physical_batch_sequence": physical_batch_sequence,
             "max_cache_length_observed": max_cache_length_observed,
         })
     return {"scheduling_policy": scheduling_policy, "physical_forwards": forwards, "events": events,

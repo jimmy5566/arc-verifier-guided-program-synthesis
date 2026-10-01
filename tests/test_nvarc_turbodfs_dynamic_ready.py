@@ -4,6 +4,7 @@ import torch
 
 from inference.nvarc_turbodfs_d1 import D1TurboDFSConfig, inference_d1_turbo_dfs
 from inference.nvarc_turbodfs_dynamic_ready import (
+    FixedB8Aug16Config,
     MemoryAwareAug16Config,
     ReadyCell,
     _new_state,
@@ -216,6 +217,49 @@ def test_memory_aware_aug16_switches_once_to_fair_b8_without_resetting_cells():
     assert [item["split_group"] for item in b8[:6]] == ["A", "B", "A", "B", "A", "B"]
     assert all(item["physical_batch"] <= 8 for item in b8)
     assert all(item["scheduler_mode"] != "B16_ENABLED" for item in sequence[1:])
+    assert set().union(*(set(item["cell_keys"]) for item in b8)) == set(names)
+    assert len(owner_ids) == len(set(owner_ids)) == 16
+    assert [id(cell.cache_owner) for cell in cells] == owner_ids
+    assert all(cell.request is None for cell in cells)
+    assert {cell.cell_key: normalized_result_signature(ready_result(cell)) for cell in cells} == expected
+
+
+def test_fixed_b8_aug16_keeps_sixteen_owners_and_alternates_fair_groups():
+    """PROFILE_M has sixteen resident lanes but never attempts physical B16."""
+    prompt = torch.tensor([[2, 2]])
+    names = [f"aug{index:02d}" for index in range(16)]
+
+    def make_cells():
+        return [
+            start_ready_cell(
+                model=CacheTransitionModel(), input_ids=prompt, config=_config(),
+                cell_key=name, normalize_root_cache=True,
+            )
+            for name in names
+        ]
+
+    reference = make_cells()
+    run_ready_scheduler(
+        model=CacheTransitionModel(), cells=reference, dynamic_batch2=True,
+        max_physical_batch=16, scheduling_policy="dynamic_ready",
+        streaming_split_and_adopt=True,
+    )
+    expected = {cell.cell_key: normalized_result_signature(ready_result(cell)) for cell in reference}
+
+    cells = make_cells()
+    owner_ids = [id(cell.cache_owner) for cell in cells]
+    scheduler = run_ready_scheduler(
+        model=CacheTransitionModel(), cells=cells, dynamic_batch2=True,
+        max_physical_batch=8, scheduling_policy="fixed_b8_aug16",
+        fixed_b8_config=FixedB8Aug16Config(), streaming_split_and_adopt=True,
+    )["telemetry"]
+    sequence = scheduler["physical_batch_sequence"]
+    b8 = [item for item in sequence if item["scheduler_mode"] == "B8_FIXED_SPLIT_MODE"]
+    assert scheduler["scheduler_mode"] == "FIXED_B8_AUG16"
+    assert scheduler["b16_enabled_initially"] is False
+    assert b8
+    assert [item["split_group"] for item in b8[:6]] == ["A", "B", "A", "B", "A", "B"]
+    assert all(item["physical_batch"] <= 8 for item in b8)
     assert set().union(*(set(item["cell_keys"]) for item in b8)) == set(names)
     assert len(owner_ids) == len(set(owner_ids)) == 16
     assert [id(cell.cache_owner) for cell in cells] == owner_ids

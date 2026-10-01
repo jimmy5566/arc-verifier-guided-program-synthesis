@@ -6,6 +6,7 @@ from inference.root_length_memory_profile import (
     PROFILE_XL,
     PROFILE_XXL,
     deterministic_resident_groups,
+    make_root_profile_execution_plan,
     required_capacity_for_root,
     select_memory_profile,
 )
@@ -34,3 +35,12 @@ def test_resident_groups_preserve_frozen_order_and_full_aug16_coverage() -> None
     assert deterministic_resident_groups(ids, PROFILE_XL) == (ids[:4], ids[4:8], ids[8:12], ids[12:])
     assert deterministic_resident_groups(ids, PROFILE_XXL) == tuple(ids[index:index + 2] for index in range(0, 16, 2))
     assert deterministic_resident_groups(ids, PROFILE_OVERSIZE) == ()
+
+
+def test_execution_plan_uses_only_root_length_and_frozen_order() -> None:
+    ids = tuple(f"aug{index:02d}" for index in range(16))
+    plan = make_root_profile_execution_plan(3000, ids)
+    assert plan.profile is PROFILE_L
+    assert plan.initial_kv_capacity == 3072
+    assert plan.final_required_kv_capacity == 4096
+    assert plan.resident_groups == (ids[:8], ids[8:])
