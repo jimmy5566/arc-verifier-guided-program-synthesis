@@ -454,6 +454,13 @@ def _finalize(args: argparse.Namespace) -> None:
         f"- Recommended production maximum physical batch: `{recommended}`.", "",
     ]
     (args.output / "REPORT.md").write_text("\n".join(report), encoding="utf-8", newline="\n")
+    # ``csv.DictWriter`` defaults to CRLF even on the Linux Pod.  Normalize
+    # compact evidence before hashing so Git's whitespace guard and the
+    # published digest see the same stable bytes.
+    for csv_name in ("B16_MEMORY_WATERFALL.csv", "B16_RETRY_MEMORY_WATERFALL.csv"):
+        csv_path = args.output / csv_name
+        if csv_path.is_file():
+            csv_path.write_bytes(csv_path.read_bytes().replace(b"\r\n", b"\n"))
     # Hash the compact, versioned evidence set—not ephemeral remote logs.
     evidence_names = (
         "CONTRACT.json", "ORIGINAL_B16_OUTCOME.json", "B16_MEMORY_WATERFALL.csv",
