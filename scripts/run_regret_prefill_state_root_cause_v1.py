@@ -156,7 +156,7 @@ def prepare(args: argparse.Namespace) -> None:
     caps = source.get("caps", {})
     if int(caps.get("max_expanded_nodes", -1)) != 4096 or int(caps.get("max_completed_candidates", -1)) != 32:
         raise RuntimeError("requires fixed Regret 4096/32 contract")
-    output.mkdir(parents=True)
+    output.mkdir(parents=True, exist_ok=True)
     contract = {
         "experiment": EXPERIMENT, "source_commit": args.source_commit, "target_blind": True,
         "gold_accessed": False, "dynamic_b2_executed": False, "dfs_executed": False,
