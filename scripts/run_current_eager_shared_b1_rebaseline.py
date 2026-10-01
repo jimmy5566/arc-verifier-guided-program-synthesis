@@ -255,8 +255,12 @@ def run_round_robin_b1(*, model: Any, cells: list[Any], order: tuple[str, ...]) 
 
 def prepare(args: argparse.Namespace) -> None:
     output = args.output.resolve()
-    if output.exists() and any(output.iterdir()):
-        raise RuntimeError(f"refusing to overwrite output: {output}")
+    # A detached controller must create its log and PID before calling this
+    # command.  They are infrastructure-only and contain no experimental
+    # evidence; every scientific artifact remains write-once.
+    permitted_controller_files = {"controller.log", "controller.pid"}
+    if output.exists() and {path.name for path in output.iterdir()} - permitted_controller_files:
+        raise RuntimeError(f"refusing to overwrite scientific output: {output}")
     challenge = args.challenge.resolve()
     no_gold_challenge(challenge)
     fixed = read_json(args.fixed_budget_contract.resolve())
