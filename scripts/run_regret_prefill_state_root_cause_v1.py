@@ -474,6 +474,63 @@ def trace(args: argparse.Namespace) -> None:
     atomic_json(output / "HASHES.json", {"sha256": hashes, "gold_accessed": False})
 
 
+def finalize(args: argparse.Namespace) -> None:
+    """Freeze the measured stop-state without inventing an unavailable layer trace."""
+    output = args.output.resolve(); decision_path = output / "DECISION.json"
+    decision = read_json(decision_path)
+    history = output / "FOREIGN_HISTORY_LENGTH_SWEEP.csv"
+    if not history.is_file() or not (output / "PREFILL_ONLY_CAUSAL_TEST.csv").is_file():
+        raise RuntimeError("cannot finalize without the completed causal micro and history sweep")
+    decision["first_divergent_layer_or_operation"] = (
+        "FLIP_FIRST_INCREMENTAL_AFTER_N1_FOREIGN_INCREMENTAL;LAYER_NOT_ESTABLISHED"
+    )
+    decision["layer_trace_status"] = "NOT_ESTABLISHED_UNSLOTH_FASTPATH_BYPASSES_HOOKS_AND_OMITS_HIDDEN_STATES"
+    decision["minimal_fix"] = "NOT_IDENTIFIED"
+    decision["micro_fix_parity"] = "NOT_RUN_DUE_TO_PRIOR_GATE"
+    decision["final_isolated_semantic_parity"] = "NOT_RUN_DUE_TO_PRIOR_GATE"
+    decision["final_shared_b1_parity"] = "NOT_RUN_DUE_TO_PRIOR_GATE"
+    decision["dynamic_b2_safe_next"] = False
+    decision["next"] = "STOP_FOR_REVIEW"
+    atomic_json(decision_path, decision)
+    write_csv(output / "FIRST_DIVERGENT_LAYER.csv", [{
+        "status": decision["layer_trace_status"],
+        "measured_first_divergent_operation": "flip first incremental forward after one anti incremental forward",
+        "full_logit_hash_n0": read_json(output / "history_raw" / "N0.json")["full_logits_sha256"],
+        "full_logit_hash_n1": read_json(output / "history_raw" / "N1.json")["full_logits_sha256"],
+    }])
+    for name, status in {
+        "NATIVE_CACHE_METADATA_DIFF.json": "NOT_REQUIRED_BY_DECISION_TREE_PREFILL_ONLY_NATIVE_PARITY",
+        "MODEL_STATE_PREFILL_DIFF.json": "NOT_REQUIRED_BY_DECISION_TREE_PREFILL_ONLY_NATIVE_AND_LEGACY_PARITY",
+        "MICRO_FIX_PARITY.csv": "NOT_RUN_DUE_TO_PRIOR_GATE_NO_MINIMAL_FIX_IDENTIFIED",
+        "FINAL_ISOLATED_PARITY.csv": "NOT_RUN_DUE_TO_PRIOR_GATE",
+        "FINAL_SHARED_B1_PARITY.csv": "NOT_RUN_DUE_TO_PRIOR_GATE",
+    }.items():
+        path = output / name
+        if path.suffix == ".json": atomic_json(path, {"status": status})
+        else: path.write_text(f"status\n{status}\n", encoding="utf-8")
+    report = [f"# {EXPERIMENT}", "", "## MEASURED", "",
+              "- The tuple/list plus elapsed-time comparator false-failure mechanism is unit-tested.",
+              "- The old Phase-2 repeat payload was not frozen, so its corrected strict 4/4 value is INDETERMINATE rather than reconstructed.",
+              "- Foreign anti root prefill alone leaves both native and legacy-deep-clone flip continuation outputs strictly identical.",
+              "- One foreign anti incremental forward changes the frozen flip continuation full-logit hash; N=2/8/32 retain the same changed hash.",
+              "", "## NOT ESTABLISHED", "",
+              "- The first divergent transformer block cannot be observed in this runtime: Unsloth bypasses ordinary hooks and does not return hidden states.",
+              "- No minimal repair is identified; no micro-fix, final isolated B1, final Shared B1, or Dynamic B2 was run.",
+              "", "## DECISION", "",
+              "Stop for review. Dynamic B2 remains unsafe because Shared-B1 parity is not repaired."]
+    (output / "REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
+    include = [
+        "COMPARATOR_FIX_AUDIT.md", "ISOLATED_PARITY_REAUDIT.csv", "PREFILL_STATE_ROOT_CAUSE_CONTRACT.json",
+        "PREFILL_ONLY_CAUSAL_TEST.csv", "CACHE_REPRESENTATION_2X2.csv", "FOREIGN_HISTORY_LENGTH_SWEEP.csv",
+        "FIRST_DIVERGENT_LAYER.csv", "NATIVE_CACHE_METADATA_DIFF.json", "MODEL_STATE_PREFILL_DIFF.json",
+        "MICRO_FIX_PARITY.csv", "FINAL_ISOLATED_PARITY.csv", "FINAL_SHARED_B1_PARITY.csv", "DECISION.json", "REPORT.md",
+        *[f"raw/{path.name}" for path in sorted((output / "raw").glob("*.json"))],
+        *[f"history_raw/{path.name}" for path in sorted((output / "history_raw").glob("*.json"))],
+    ]
+    atomic_json(output / "HASHES.json", {"sha256": {name: sha256_file(output / name) for name in include},
+                                           "gold_accessed": False, "dynamic_b2_executed": False})
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(); sub = parser.add_subparsers(dest="command", required=True)
     prep = sub.add_parser("prepare")
@@ -486,6 +543,7 @@ def main() -> None:
     run_parser = sub.add_parser("run"); run_parser.add_argument("--output", type=Path, required=True); run_parser.add_argument("--gpu-id", type=int, default=0)
     history_parser = sub.add_parser("history"); history_parser.add_argument("--output", type=Path, required=True); history_parser.add_argument("--gpu-id", type=int, default=0); history_parser.add_argument("--source-commit", required=True)
     trace_parser = sub.add_parser("trace"); trace_parser.add_argument("--output", type=Path, required=True); trace_parser.add_argument("--gpu-id", type=int, default=0); trace_parser.add_argument("--source-commit", required=True)
+    finalizer = sub.add_parser("finalize"); finalizer.add_argument("--output", type=Path, required=True)
     condition = sub.add_parser("condition"); condition.add_argument("--contract", type=Path, required=True); condition.add_argument("--result", type=Path, required=True)
     condition.add_argument("--condition-id", required=True); condition.add_argument("--cache-mode", choices=("NATIVE", "LEGACY_DEEP_CLONE"), required=True)
     condition.add_argument("--foreign-prefill", action="store_true"); condition.add_argument("--gpu-id", type=int, default=0)
@@ -500,6 +558,7 @@ def main() -> None:
     elif args.command == "history": history(args)
     elif args.command == "trace": trace(args)
     elif args.command == "trace-condition": _write_trace_condition(args)
+    elif args.command == "finalize": finalize(args)
     else: _write_history_condition(args)
 
 
