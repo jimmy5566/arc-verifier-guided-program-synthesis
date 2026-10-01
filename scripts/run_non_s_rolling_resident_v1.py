@@ -355,6 +355,15 @@ def _profile_worker(args: argparse.Namespace, profile: str, budget: int) -> int:
     if list(candidates_by_id) != frozen_ids:
         raise RuntimeError("candidate pool ordering differs from frozen AUG16 order")
     prompt_manifest = {str(row["augmentation_id"]): row for row in contract["prompt_manifests"][profile]}
+    pending_cell_keys = [f"{task_id}:o{output_index}:d24:aug16:{identifier}" for identifier in frozen_ids]
+
+    def augmentation_id_from_cell_key(cell_key: str) -> str:
+        marker = ":aug16:"
+        _prefix, separator, augmentation_id = str(cell_key).partition(marker)
+        if separator != marker or augmentation_id not in candidates_by_id:
+            raise RuntimeError(f"rolling resident queue returned an unknown cell key: {cell_key}")
+        return augmentation_id
+
     model, tokenizer, identity = load_hf_peft_inference(
         model_path=args.model_path, adapter_path=Path(selected["adapter_path"]), device=args.device,
         native_config_dir=args.native_config_dir,
@@ -382,15 +391,15 @@ def _profile_worker(args: argparse.Namespace, profile: str, budget: int) -> int:
     def growth(event: dict[str, Any]) -> None:
         growth_events.append({"physical_forward_index": current_forward, **event, **snapshot()})
 
-    def create_cell(augmentation_id: str) -> Any:
+    def create_cell(cell_key: str) -> Any:
         nonlocal current_forward
+        augmentation_id = augmentation_id_from_cell_key(cell_key)
         candidate = candidates_by_id[augmentation_id]
         prompt_ids, prompt = _native_prompt_record(tokenizer=tokenizer, task=task, output_index=output_index, candidate=candidate)
         expected_prompt = prompt_manifest.get(augmentation_id)
         for key in ("prompt_token_length", "prompt_sha256", "input_ids_sha256", "transformed_test_input_sha256", "inverse_roundtrip_pass"):
             if expected_prompt is None or prompt.get(key) != expected_prompt.get(key):
                 raise RuntimeError(f"frozen prompt manifest mismatch for {augmentation_id}: {key}")
-        cell_key = f"{task_id}:o{output_index}:d24:aug16:{augmentation_id}"
         cell = start_ready_cell(
             model=model, input_ids=prompt_ids.to(args.device), config=_config(budget, diagnostic_trace=False), cell_key=cell_key,
             normalize_root_cache=True,
@@ -403,8 +412,9 @@ def _profile_worker(args: argparse.Namespace, profile: str, budget: int) -> int:
         owner_initial[cell_key] = id(cell.cache_owner.cache)
         return cell
 
-    def consume_result(_augmentation_id: str, cell: Any) -> None:
+    def consume_result(cell_key: str, cell: Any) -> None:
         nonlocal completion_number
+        augmentation_id = augmentation_id_from_cell_key(cell_key)
         completion_number += 1
         candidate = candidates_by_id[_augmentation_id]
         result = ready_result(cell)
@@ -435,7 +445,7 @@ def _profile_worker(args: argparse.Namespace, profile: str, budget: int) -> int:
                                 "termination_reason": result.termination_reason, "nodes_expanded": entry["nodes_expanded"],
                                 "candidate_count": entry["completed_candidates"], "candidate_pool_sha256": entry["candidate_pool_sha256"]})
 
-    def release_cell(_augmentation_id: str, cell: Any) -> None:
+    def release_cell(_cell_key: str, cell: Any) -> None:
         if cell.cache_owner is not None:
             cell.cache_owner.cache = None
         cell.cache_owner = None
@@ -454,7 +464,7 @@ def _profile_worker(args: argparse.Namespace, profile: str, budget: int) -> int:
         torch.cuda.synchronize(device=args.device); torch.cuda.reset_peak_memory_stats(device=args.device)
         started = time.perf_counter()
         scheduler = run_rolling_resident_scheduler(
-            model=model, pending_ids=frozen_ids, resident_capacity=resident_capacity, physical_batch_ceiling=physical_ceiling,
+            model=model, pending_ids=pending_cell_keys, resident_capacity=resident_capacity, physical_batch_ceiling=physical_ceiling,
             create_cell=create_cell, consume_result=consume_result, release_cell=release_cell,
             memory_snapshot=snapshot, cache_summary=_cache_summary, event_sink=event_sink,
         )
@@ -470,12 +480,12 @@ def _profile_worker(args: argparse.Namespace, profile: str, budget: int) -> int:
                 continue
             following = event_by_index.get(int(release["event_index"]) + 1)
             immediate_refills = immediate_refills and bool(following and following["event"] == "ADMIT")
-        expected_cell_keys = {f"{task_id}:o{output_index}:d24:aug16:{identifier}" for identifier in frozen_ids}
+        expected_cell_keys = set(pending_cell_keys)
         actual_cell_keys = {str(row["cell_key"]) for row in per_cell}
         max_batch = max((int(key) for key in scheduler["physical_batch_histogram"]), default=0)
         checks = {
             "all_aug16_exactly_once": actual_cell_keys == expected_cell_keys and len(per_cell) == 16,
-            "fifo_admission_order": admissions == frozen_ids,
+            "fifo_admission_order": admissions == pending_cell_keys,
             "owner_cap_never_exceeded": int(scheduler["max_resident_count"]) <= resident_capacity,
             "physical_ceiling_respected": max_batch <= physical_ceiling,
             "immediate_fifo_refill": immediate_refills,
