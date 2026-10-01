@@ -12,7 +12,7 @@ from inference.nvarc_turbodfs_dynamic_ready import run_ready_scheduler
 from scripts.run_clean_hf_parallel_regret_dfs_v1 import VIEWS,_prompt_ids,_cache_transform,_assert_challenge_only,_verify_frozen_foundation
 from scripts.run_clean_hf_kv_lifetime_audit_v1 import atomic,sha,rows,frames,model_bytes,cache_meta
 
-class StopAfterFirstPack(Exception): pass
+class StopAfterFirstB2(Exception): pass
 def main():
  p=argparse.ArgumentParser()
  for n in ('model_path','adapter_path','challenge','native_config_dir','adapter_foundation','output'):p.add_argument('--'+n.replace('_','-'),type=Path,required=True)
@@ -36,13 +36,18 @@ def main():
  def obs(stage,data):
   if stage=='before_forward' and data['physical_batch']==2: memory('P6',cells,{'selected':[x.cell_key for x in data['selected_cells']]})
  def packobs(stage,data):
-  memory({'legacy_views':'B1','packed_layer':'B2','merged_legacy':'B3','before_restore':'B3','after_restore':'B4','after_split':'B7'}.get(stage,stage),cells,{'stage':stage,'layer':data.get('layer_index')})
+  label={'legacy_views':'B1','packed_layer':'B2','merged_legacy':'B3','before_restore':'B3','after_restore':'B4','before_model_forward':'B5','after_b2_model_forward':'B6','after_split_legacy':'B7','after_split':'B8','after_release_temporaries':'B9','after_logical_resume':'B10'}.get(stage,stage)
+  memory(label,cells,{'stage':stage,'layer':data.get('layer_index')})
   if stage=='after_restore':
    legacy=data['merged_legacy'];converted=data['merged_cache']; l=set(cache_meta(legacy)[1]);c=set(cache_meta(converted)[1]);alias.update({'from_legacy_cache':'ZERO_COPY_WRAPPER' if l==c else 'PARTIAL_COPY' if l&c else 'FULL_COPY','legacy_storage_count':len(l),'converted_storage_count':len(c),'shared_storage_count':len(l&c)})
-   raise StopAfterFirstPack()
+  if stage=='after_split':
+   split=data['split_cache']; split_stores=set(); merged_stores=set(cache_meta(data['merged_legacy'])[1])
+   for cache in split: split_stores.update(cache_meta(cache)[1])
+   alias.update({'split_storage_count':len(split_stores),'split_shared_with_merged_storage_count':len(split_stores&merged_stores),'split_copy_bytes':sum(cache_meta(cache)[0]['total_unique_kv_bytes'] for cache in split)})
+  if stage=='after_logical_resume': raise StopAfterFirstB2()
  try:
-  run_ready_scheduler(model=model,cells=cells,dynamic_batch2=True,scheduling_policy='dynamic_ready',observer=obs,cache_pack_observer=packobs)
- except StopAfterFirstPack: pass
+  run_ready_scheduler(model=model,cells=cells,dynamic_batch2=True,scheduling_policy='dynamic_ready',observer=obs,cache_pack_observer=packobs,release_b2_temporaries_for_audit=True)
+ except StopAfterFirstB2: pass
  rows(a.output/'PRE_B2_MEMORY_WATERFALL.csv',waterfall);rows(a.output/'B2_PACK_MEMORY_WATERFALL.csv',[x for x in waterfall if x['checkpoint'].startswith('B')]);atomic(a.output/'CACHE_CONVERSION_STORAGE_ALIAS.json',alias)
- p6=next((x for x in waterfall if x['checkpoint']=='P6'),waterfall[-1]);unat=int(p6['allocated_bytes'])-persistent['model_parameter_bytes']-persistent['model_buffer_bytes']-int(p6['total_live_kv_bytes']);root={'pid':pid,'persistent':persistent,'p6_unattributed_bytes':unat,'classification':'B2_PACK_TRANSIENT_MULTIPLIER' if any(x['checkpoint'].startswith('B') for x in waterfall) else 'R128_INTRINSIC_STATE_GROWTH','adapter':bind,'alias':alias};atomic(a.output/'ROOT_CAUSE.json',root);(a.output/'PRE_B2_LIVE_CUDA_STORAGE.csv').write_text('scope,bytes\nmodel_and_adapter,%d\nlive_kv,%d\nunattributed,%d\n'%(persistent['model_parameter_bytes']+persistent['model_buffer_bytes'],int(p6['total_live_kv_bytes']),unat));(a.output/'REPORT.md').write_text('# CLEAN_HF_R128_PRE_B2_MEMORY_AUDIT_V1\nFresh-process target-blind audit stopped after first DynamicCache conversion, before B2 model forward.\n');hashes={x.name:sha(x) for x in a.output.iterdir() if x.is_file()};atomic(a.output/'HASHES.json',hashes)
+ p6=next((x for x in waterfall if x['checkpoint']=='P6'),waterfall[-1]);unat=int(p6['allocated_bytes'])-persistent['model_parameter_bytes']-persistent['model_buffer_bytes']-int(p6['total_live_kv_bytes']);root={'pid':pid,'persistent':persistent,'p6_unattributed_bytes':unat,'classification':'B2_PACK_TRANSIENT_MULTIPLIER' if any(x['checkpoint'].startswith('B') for x in waterfall) else 'R128_INTRINSIC_STATE_GROWTH','adapter':bind,'alias':alias};atomic(a.output/'ROOT_CAUSE.json',root);(a.output/'PRE_B2_LIVE_CUDA_STORAGE.csv').write_text('scope,bytes\nmodel_and_adapter,%d\nlive_kv,%d\nunattributed,%d\n'%(persistent['model_parameter_bytes']+persistent['model_buffer_bytes'],int(p6['total_live_kv_bytes']),unat));(a.output/'REPORT.md').write_text('# CLEAN_HF_R128_PRE_B2_MEMORY_AUDIT_V1\nFresh-process, target-blind audit through one real B2 forward and logical reply resume.\n');hashes={x.name:sha(x) for x in a.output.iterdir() if x.is_file()};atomic(a.output/'HASHES.json',hashes)
 if __name__=='__main__':main()

@@ -512,6 +512,7 @@ def run_ready_scheduler(
     scheduling_policy: SchedulingPolicy = "serial",
     observer: Callable[[str, dict[str, Any]], None] | None = None,
     cache_pack_observer: Callable[[str, dict[str, Any]], None] | None = None,
+    release_b2_temporaries_for_audit: bool = False,
 ) -> dict[str, Any]:
     """Drive independent cells through one shared physical B1/B2 path.
 
@@ -588,19 +589,41 @@ def run_ready_scheduler(
                 merged_cache = _restore_cache_kind(merged_legacy, requests[0].cache)
                 if cache_pack_observer is not None:
                     cache_pack_observer("after_restore", {"merged_legacy": merged_legacy, "merged_cache": merged_cache})
+                    cache_pack_observer("before_model_forward", {"merged_legacy": merged_legacy, "merged_cache": merged_cache})
                 outputs = model(**ready_incremental_forward_kwargs(
                     token_ids=[request.token_id for request in requests], position=first.request.position,
                     cache=merged_cache, device=model.device,
                 ))
+                if cache_pack_observer is not None:
+                    cache_pack_observer("after_b2_model_forward", {
+                        "merged_legacy": merged_legacy, "merged_cache": merged_cache, "outputs": outputs,
+                    })
+                split_legacy = _split_cache(outputs.past_key_values, len(selected))
+                if cache_pack_observer is not None:
+                    cache_pack_observer("after_split_legacy", {
+                        "merged_legacy": merged_legacy, "merged_cache": merged_cache,
+                        "outputs": outputs, "split_legacy": split_legacy,
+                    })
                 split_cache = [
                     _restore_cache_kind(item, outputs.past_key_values)
-                    for item in _split_cache(outputs.past_key_values, len(selected))
+                    for item in split_legacy
                 ]
                 if cache_pack_observer is not None:
                     cache_pack_observer("after_split", {"merged_legacy": merged_legacy, "merged_cache": merged_cache, "split_cache": split_cache})
                 outputs_by_cell = []
                 for lane, cache in enumerate(split_cache):
                     outputs_by_cell.append(type("Reply", (), {"logits": outputs.logits[lane:lane + 1], "past_key_values": cache})())
+                # This is deliberately opt-in and exists solely for the memory
+                # audit.  The replies own the tensors needed below; releasing
+                # these transient pack intermediates cannot change DFS state.
+                if release_b2_temporaries_for_audit:
+                    merged_legacy = None
+                    merged_cache = None
+                    split_legacy = None
+                    split_cache = None
+                    outputs = None
+                    if cache_pack_observer is not None:
+                        cache_pack_observer("after_release_temporaries", {"outputs_by_cell": outputs_by_cell})
         elapsed = time.perf_counter() - started
         if observer is not None:
             observer("after_model_forward", {
@@ -644,6 +667,8 @@ def run_ready_scheduler(
                 )
                 trace["output_cache_sha256"] = cache_sha256(reply.past_key_values)
                 cell.state["per_forward_trace"].append(trace)
+        if len(selected) > 1 and cache_pack_observer is not None:
+            cache_pack_observer("after_logical_resume", {"outputs_by_cell": outputs_by_cell})
         del outputs
     return {"scheduling_policy": scheduling_policy, "physical_forwards": forwards, "events": events,
             "mean_effective_batch": (sum(row["physical_batch"] for row in events) / len(events)) if events else 0.0}
