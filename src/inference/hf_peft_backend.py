@@ -12,7 +12,7 @@ import inspect
 import json
 import ast
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 
 def _sha256_file(path: Path) -> str:
@@ -35,6 +35,7 @@ def load_hf_peft_inference(
     device: str,
     native_config_dir: Path | None = None,
     frozen_adapter_identity: dict[str, str] | None = None,
+    load_observer: Callable[[str], None] | None = None,
 ) -> tuple[Any, Any, dict[str, Any]]:
     """Load a frozen adapter with stock Transformers and PEFT only."""
     import torch
@@ -61,6 +62,8 @@ def load_hf_peft_inference(
         tokenizer, tokenizer_identity = checkpoint_native_tokenizer(model_path, Path(native_config_dir))
     base = AutoModelForCausalLM.from_pretrained(str(model_path), local_files_only=True, trust_remote_code=False,
                                                  torch_dtype=torch.bfloat16, low_cpu_mem_usage=True).to(device).eval()
+    if load_observer is not None:
+        load_observer("model_loaded")
     adapter_config = json.loads((adapter_path / "adapter_config.json").read_text(encoding="utf-8"))
     # Older adaptation exports serialize this PEFT field as a Python-set
     # string. PEFT 0.17 rightfully rejects that schema. Parse the exact list
@@ -85,6 +88,8 @@ def load_hf_peft_inference(
         is_trainable=False,
         autocast_adapter_dtype=False,
     ).to(device).eval()
+    if load_observer is not None:
+        load_observer("adapter_loaded")
     if frozen_adapter_identity is None:
         adapter_sha256 = _sha256_file(adapter_path / "adapter_model.safetensors")
         adapter_config_sha256 = _sha256_file(adapter_path / "adapter_config.json")

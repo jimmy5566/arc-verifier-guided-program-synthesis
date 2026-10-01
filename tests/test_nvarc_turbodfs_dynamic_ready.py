@@ -62,6 +62,30 @@ def test_ready_b1_matches_authoritative_scalar_state_machine():
     assert normalized_result_signature(actual) == normalized_result_signature(expected)
 
 
+def test_prefill_hygiene_releases_only_dead_root_logit_storage():
+    """Cloning final-position root logits leaves the ReadyCell DFS semantics intact."""
+    prompt = torch.tensor([[2, 2]])
+    baseline = start_ready_cell(
+        model=CacheTransitionModel(), input_ids=prompt, config=_config(),
+        cell_key="baseline", normalize_root_cache=True,
+    )
+    temporary_outputs = []
+    hygienic = start_ready_cell(
+        model=CacheTransitionModel(), input_ids=prompt, config=_config(),
+        cell_key="hygienic", normalize_root_cache=True,
+        release_prefill_temporaries=True, prefill_output_references=temporary_outputs,
+    )
+    assert len(temporary_outputs) == 1
+    assert baseline.request is not None and hygienic.request is not None
+    assert baseline.request.token_ids == hygienic.request.token_ids
+    assert baseline.request.position == hygienic.request.position
+    assert baseline.request.cache_geometry == hygienic.request.cache_geometry
+    del temporary_outputs[:]
+    run_ready_scheduler(model=CacheTransitionModel(), cells=[baseline], dynamic_batch2=False)
+    run_ready_scheduler(model=CacheTransitionModel(), cells=[hygienic], dynamic_batch2=False)
+    assert normalized_result_signature(ready_result(hygienic)) == normalized_result_signature(ready_result(baseline))
+
+
 def test_dynamic_ready_batches_only_same_real_geometry_and_preserves_independence():
     prompt = torch.tensor([[2, 2]])
     left = start_ready_cell(model=CacheTransitionModel(), input_ids=prompt, config=_config(),

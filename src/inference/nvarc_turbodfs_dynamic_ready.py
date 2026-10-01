@@ -623,7 +623,9 @@ def _ready_dfs(
 def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, cell_key: str,
                      normalize_root_cache: bool, active_time_accounting: bool = False,
                      root_cache_transform: Callable[[Any], Any] | None = None,
-                     cache_strategy: Literal["rollback", "snapshot"] = "rollback") -> ReadyCell:
+                     cache_strategy: Literal["rollback", "snapshot"] = "rollback",
+                     release_prefill_temporaries: bool = False,
+                     prefill_output_references: list[Any] | None = None) -> ReadyCell:
     """Run the required scalar prefill, then expose the first incremental request."""
     import torch
 
@@ -647,13 +649,24 @@ def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, ce
     root_cache = _legacy_cache(outputs.past_key_values) if normalize_root_cache else outputs.past_key_values
     if root_cache_transform is not None:
         root_cache = root_cache_transform(root_cache)
+    # The root coroutine needs only the final-position logits.  A slice is a
+    # view, so retaining it can retain the whole prompt-length logits tensor.
+    # The opt-in hygiene path materializes the identical final-position values
+    # in independent storage and lets a caller explicitly retain the original
+    # output only long enough to measure its lifetime.  It never changes the
+    # cache owner, prompt, token choice, or DFS state machine.
+    root_logits = outputs.logits[:, -1]
+    if release_prefill_temporaries:
+        root_logits = root_logits.clone()
+        if prefill_output_references is not None:
+            prefill_output_references.append(outputs)
     if cache_strategy == "rollback" and not _is_transformers_cache(root_cache):
         # Preserve the old CPU-only legacy-cache tests without claiming that
         # such a tuple implements production rollback semantics.
         cache_strategy = "snapshot"
     state["cache_strategy"] = cache_strategy
     cache_owner = CacheOwner(root_cache)
-    generator = _ready_dfs(cell_key=cell_key, logits=outputs.logits[:, -1], max_new_tokens=config.max_new_tokens,
+    generator = _ready_dfs(cell_key=cell_key, logits=root_logits, max_new_tokens=config.max_new_tokens,
                            score=0.0, regret=0.0, pos=int(input_ids.size(1)), cache_owner=cache_owner, config=config,
                            started_unix=started_unix, state=state, parent_node=root, prefix=tuple(), ordinal=[0],
                            cache_strategy=cache_strategy)
@@ -661,6 +674,8 @@ def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, ce
                      prefill_seconds=prefill_seconds, active_elapsed_seconds=prefill_seconds,
                      cache_owner=cache_owner)
     _advance_cell(cell)
+    if release_prefill_temporaries and prefill_output_references is None:
+        del outputs
     return cell
 
 
@@ -1120,6 +1135,8 @@ def run_ready_scheduler(
                 "selected_cells": selected,
                 "requests": requests,
                 "physical_batch": len(selected),
+                "scheduler_mode": memory_mode if memory_mode is not None else scheduling_policy,
+                "split_group": memory_group,
             })
         trace_inputs = []
         if first.config.diagnostic_trace:
@@ -1172,6 +1189,8 @@ def run_ready_scheduler(
                 "requests": requests,
                 "outputs_by_cell": outputs_by_cell,
                 "physical_batch": len(selected),
+                "scheduler_mode": memory_mode if memory_mode is not None else scheduling_policy,
+                "split_group": memory_group,
                 "model_elapsed_seconds": elapsed,
             })
         forwards += 1
