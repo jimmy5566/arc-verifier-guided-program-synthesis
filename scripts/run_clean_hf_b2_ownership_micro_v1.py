@@ -253,6 +253,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         identity_rows.extend(rows)
     identity_rows.extend(swapped_ids)
 
+    # Freeze every semantic comparison before releasing the completed probe
+    # cells.  The later plateau must retain only its two intended owners.
+    b1_b2_exact = _strict_pair_equal(b1_a, b2_a) and _strict_pair_equal(b1_b, b2_b)
+    swap_exact = _strict_pair_equal(b1_a, swapped_a) and _strict_pair_equal(b1_b, swapped_b)
+    micro_rows = [
+        {"comparison": "B1(A)_vs_B2(A,B)_A", "strict_exact": _strict_pair_equal(b1_a, b2_a)},
+        {"comparison": "B1(B)_vs_B2(A,B)_B", "strict_exact": _strict_pair_equal(b1_b, b2_b)},
+        {"comparison": "B1(A)_vs_B2(B,A)_A", "strict_exact": _strict_pair_equal(b1_a, swapped_a)},
+        {"comparison": "B1(B)_vs_B2(B,A)_B", "strict_exact": _strict_pair_equal(b1_b, swapped_b)},
+    ]
+    b1_physical_forwards = sum(ready_result(cell).model_forwards - 1 for cell in (b1_a, b1_b))
+
     # The plateau gate measures *two* live logical cells, not every completed
     # micro-control cell retained by this Python process.  These results have
     # already been reduced to immutable rows/signatures above; release their
@@ -315,14 +327,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     else:
         plateau_status = "PASS"
 
-    b1_b2_exact = _strict_pair_equal(b1_a, b2_a) and _strict_pair_equal(b1_b, b2_b)
-    swap_exact = _strict_pair_equal(b1_a, swapped_a) and _strict_pair_equal(b1_b, swapped_b)
-    micro_rows = [
-        {"comparison": "B1(A)_vs_B2(A,B)_A", "strict_exact": _strict_pair_equal(b1_a, b2_a)},
-        {"comparison": "B1(B)_vs_B2(A,B)_B", "strict_exact": _strict_pair_equal(b1_b, b2_b)},
-        {"comparison": "B1(A)_vs_B2(B,A)_A", "strict_exact": _strict_pair_equal(b1_a, swapped_a)},
-        {"comparison": "B1(B)_vs_B2(B,A)_B", "strict_exact": _strict_pair_equal(b1_b, swapped_b)},
-    ]
     args.output.mkdir(parents=True, exist_ok=True)
     _csv(args.output / "CACHE_OWNERSHIP_IDENTITY.csv", identity_rows)
     _csv(args.output / "REPEATED_B2_MEMORY_PLATEAU.csv", plateau_rows)
@@ -330,7 +334,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     _csv(args.output / "B2_REPEATABILITY.csv", repeat_rows)
     performance = [{
         "B1_seconds": b1_seconds, "B2_seconds": b2_seconds,
-        "B1_physical_forwards": sum(ready_result(cell).model_forwards - 1 for cell in (b1_a, b1_b)),
+        "B1_physical_forwards": b1_physical_forwards,
         "B2_physical_forwards": b2_scheduler["physical_forwards"],
         "B2_mean_effective_batch": b2_scheduler["mean_effective_batch"],
         "B2_vs_B1_speedup": b1_seconds / b2_seconds if b2_seconds else None,
