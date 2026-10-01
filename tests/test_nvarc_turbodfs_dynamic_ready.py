@@ -4,6 +4,7 @@ import torch
 
 from inference.nvarc_turbodfs_d1 import D1TurboDFSConfig, inference_d1_turbo_dfs
 from inference.nvarc_turbodfs_dynamic_ready import (
+    MemoryAwareAug16Config,
     ReadyCell,
     _new_state,
     canonical_semantic_value,
@@ -121,6 +122,81 @@ def test_dynamic_ready_generalizes_to_eight_independent_compatible_lanes():
     assert len(owner_ids) == len(set(owner_ids)) == 8
     expected = normalized_result_signature(_scalar(prompt))
     assert all(normalized_result_signature(ready_result(cell)) == expected for cell in cells)
+
+
+def test_memory_aware_aug16_switches_once_to_fair_b8_without_resetting_cells():
+    """The executor-only B16 -> B8 switch keeps all sixteen DFS states alive."""
+    prompt = torch.tensor([[2, 2]])
+    names = [f"aug{index:02d}" for index in range(16)]
+
+    def make_cells():
+        return [
+            start_ready_cell(
+                model=CacheTransitionModel(), input_ids=prompt, config=_config(),
+                cell_key=name, normalize_root_cache=True,
+            )
+            for name in names
+        ]
+
+    reference = make_cells()
+    run_ready_scheduler(
+        model=CacheTransitionModel(), cells=reference, dynamic_batch2=True,
+        max_physical_batch=16, scheduling_policy="dynamic_ready",
+        streaming_split_and_adopt=True,
+    )
+    expected = {cell.cell_key: normalized_result_signature(ready_result(cell)) for cell in reference}
+
+    cells = make_cells()
+    owner_ids = [id(cell.cache_owner) for cell in cells]
+    reset_count = 0
+
+    def reset_peak() -> None:
+        nonlocal reset_count
+        reset_count += 1
+
+    def peak_stats() -> dict[str, int]:
+        # Hit the soft gate immediately.  CPU-only deterministic hooks replace
+        # CUDA observation only for this mechanical scheduling test.
+        return {
+            "peak_allocated_bytes": 100,
+            "peak_reserved_bytes": 120,
+            "current_allocated_bytes": 90,
+            "current_reserved_bytes": 110,
+        }
+
+    telemetry = run_ready_scheduler(
+        model=CacheTransitionModel(), cells=cells, dynamic_batch2=True,
+        max_physical_batch=16, scheduling_policy="memory_aware_aug16",
+        memory_aware_config=MemoryAwareAug16Config(
+            soft_peak_allocated_bytes=100,
+            hard_peak_allocated_bytes=200,
+        ),
+        memory_stats_reader=peak_stats,
+        memory_peak_reset=reset_peak,
+        memory_synchronize=lambda: None,
+        streaming_split_and_adopt=True,
+    )
+    scheduler = telemetry["telemetry"]
+    sequence = scheduler["physical_batch_sequence"]
+    transition = scheduler["memory_transitions"]
+    assert reset_count == 1
+    assert scheduler["b16_disabled"] is True
+    assert scheduler["b16_disable_reason"] == "SOFT_PEAK_ALLOCATED_THRESHOLD"
+    assert scheduler["b16_forward_count"] == 1
+    assert sequence[0]["physical_batch"] == 16
+    assert sequence[0]["scheduler_mode"] == "B16_ENABLED"
+    assert transition[0]["forward_index"] == 1
+    assert all(row["request_count"] >= 1 for row in transition[0]["per_cell_progress"].values())
+    b8 = [item for item in sequence if item["scheduler_mode"] == "B8_SPLIT_MODE"]
+    assert b8
+    assert [item["split_group"] for item in b8[:6]] == ["A", "B", "A", "B", "A", "B"]
+    assert all(item["physical_batch"] <= 8 for item in b8)
+    assert all(item["scheduler_mode"] != "B16_ENABLED" for item in sequence[1:])
+    assert set().union(*(set(item["cell_keys"]) for item in b8)) == set(names)
+    assert len(owner_ids) == len(set(owner_ids)) == 16
+    assert [id(cell.cache_owner) for cell in cells] == owner_ids
+    assert all(cell.request is None for cell in cells)
+    assert {cell.cell_key: normalized_result_signature(ready_result(cell)) for cell in cells} == expected
 
 
 def test_round_robin_b1_matches_scalar_without_physical_batching():

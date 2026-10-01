@@ -682,7 +682,91 @@ def _reply(cell: ReadyCell, outputs: Any) -> None:
     cell.request_count += 1
 
 
-SchedulingPolicy = Literal["serial", "round_robin", "dynamic_ready"]
+SchedulingPolicy = Literal["serial", "round_robin", "dynamic_ready", "memory_aware_aug16"]
+
+
+@dataclass(frozen=True)
+class MemoryAwareAug16Config:
+    """Frozen physical-scheduling policy for the sixteen-lane AUG16 run.
+
+    This is deliberately an executor-only contract.  It carries no decoder,
+    prompt, candidate, or TTT setting: callers still create the exact same
+    ``ReadyCell`` instances and this module still uses the one common
+    pack/forward/streaming-adopt path.
+    """
+
+    soft_peak_allocated_bytes: int
+    hard_peak_allocated_bytes: int
+    logical_lane_count: int = 16
+    split_batch_size: int = 8
+
+    def __post_init__(self) -> None:
+        if self.soft_peak_allocated_bytes <= 0:
+            raise ValueError("memory-aware soft threshold must be positive")
+        if self.hard_peak_allocated_bytes < self.soft_peak_allocated_bytes:
+            raise ValueError("memory-aware hard threshold must be >= soft threshold")
+        if self.logical_lane_count != 16 or self.split_batch_size != 8:
+            raise ValueError("MEMORY_AWARE_AUG16 is frozen to sixteen lanes split into B8 groups")
+
+
+def _request_cache_length(cache: Any) -> int | None:
+    """Return the sequence dimension for telemetry without changing cache state."""
+    try:
+        legacy = _legacy_cache(cache)
+        return int(legacy[0][0].shape[-2])
+    except Exception:  # pragma: no cover - telemetry must not alter decoding
+        return None
+
+
+def _compatible_group_in_frozen_order(cells: list[ReadyCell], limit: int) -> list[ReadyCell]:
+    """Choose the largest compatible READY subset, breaking ties by input order."""
+    ready = [cell for cell in cells if cell.request is not None]
+    if not ready:
+        return []
+    candidates: list[list[ReadyCell]] = []
+    for seed in ready:
+        assert seed.request is not None
+        group = [
+            other for other in ready
+            if other.request is not None
+            and other.request.cache_key == seed.request.cache_key
+            and other.request.position == seed.request.position
+        ]
+        candidates.append(group[:limit])
+    # ``max`` preserves the first frozen-order candidate on an equal-size tie.
+    return max(candidates, key=len)
+
+
+def _select_memory_aware_aug16(
+    *,
+    cells: list[ReadyCell],
+    b16_enabled: bool,
+    group_cursor: int,
+    capture_ready_keys: bool,
+) -> tuple[list[ReadyCell], int, str, str | None, list[str]]:
+    """Select a B16 lane set or one fair B8 group using frozen cell order."""
+    ready_keys = [cell.cell_key for cell in cells if cell.request is not None] if capture_ready_keys else []
+    if not ready_keys and not any(cell.request is not None for cell in cells):
+        return [], group_cursor, "B16_ENABLED" if b16_enabled else "B8_SPLIT_MODE", None, ready_keys
+    if b16_enabled:
+        return (
+            _compatible_group_in_frozen_order(cells, 16),
+            group_cursor,
+            "B16_ENABLED",
+            None,
+            ready_keys,
+        )
+
+    groups = (cells[:8], cells[8:])
+    for offset in range(2):
+        selected_group = (group_cursor + offset) % 2
+        selected = _compatible_group_in_frozen_order(list(groups[selected_group]), 8)
+        if selected:
+            # Move after the group actually served.  If its peer was empty,
+            # the next call retries the skipped group first, then serves this
+            # one again only when the peer remains naturally unavailable.
+            return selected, (selected_group + 1) % 2, "B8_SPLIT_MODE", "A" if selected_group == 0 else "B", ready_keys
+    raise AssertionError("memory-aware ready set was nonempty but no B8 group was selected")
 
 
 def _select_ready_cells(
@@ -908,6 +992,10 @@ def run_ready_scheduler(
     streaming_split_and_adopt: bool = False,
     collect_event_trace: bool = True,
     max_physical_batch: int | None = None,
+    memory_aware_config: MemoryAwareAug16Config | None = None,
+    memory_stats_reader: Callable[[], dict[str, int]] | None = None,
+    memory_peak_reset: Callable[[], None] | None = None,
+    memory_synchronize: Callable[[], None] | None = None,
 ) -> dict[str, Any]:
     """Drive independent cells through one shared physical batching path.
 
@@ -922,13 +1010,42 @@ def run_ready_scheduler(
     """
     import torch
 
-    if scheduling_policy not in {"serial", "round_robin", "dynamic_ready"}:
+    if scheduling_policy not in {"serial", "round_robin", "dynamic_ready", "memory_aware_aug16"}:
         raise ValueError(f"unknown scheduling policy: {scheduling_policy}")
     physical_limit = (2 if dynamic_batch2 else 1) if max_physical_batch is None else max_physical_batch
     if physical_limit not in {1, 2, 4, 8, 12, 16}:
         raise ValueError("max_physical_batch must be one of 1, 2, 4, 8, 12, or 16")
     if scheduling_policy == "round_robin" and physical_limit != 1:
         raise ValueError("round_robin is a B1 policy and cannot enable physical batching")
+    if scheduling_policy == "memory_aware_aug16":
+        if memory_aware_config is None:
+            raise ValueError("memory_aware_aug16 requires an explicit frozen MemoryAwareAug16Config")
+        if physical_limit != 16:
+            raise ValueError("memory_aware_aug16 requires max_physical_batch=16")
+        if len(cells) != memory_aware_config.logical_lane_count:
+            raise ValueError("memory_aware_aug16 requires exactly the frozen sixteen logical cells")
+        if memory_stats_reader is None:
+            if not torch.cuda.is_available():
+                raise RuntimeError("memory_aware_aug16 requires CUDA unless deterministic test hooks are supplied")
+
+            def memory_stats_reader() -> dict[str, int]:
+                return {
+                    "peak_allocated_bytes": int(torch.cuda.max_memory_allocated()),
+                    "peak_reserved_bytes": int(torch.cuda.max_memory_reserved()),
+                    "current_allocated_bytes": int(torch.cuda.memory_allocated()),
+                    "current_reserved_bytes": int(torch.cuda.memory_reserved()),
+                }
+
+            def memory_peak_reset() -> None:
+                # This resets only the local B16 observation window.  It is
+                # not allocator control and deliberately does not empty cache.
+                torch.cuda.reset_peak_memory_stats()
+
+            def memory_synchronize() -> None:
+                torch.cuda.synchronize()
+        else:
+            memory_peak_reset = memory_peak_reset or (lambda: None)
+            memory_synchronize = memory_synchronize or (lambda: None)
     events: list[dict[str, Any]] = []
     forwards = 0
     logical_advances = 0
@@ -942,17 +1059,43 @@ def run_ready_scheduler(
     cache_adoption_seconds_total = 0.0
     scheduler_overhead_seconds_total = 0.0
     round_robin_cursor = 0
+    b16_enabled = scheduling_policy == "memory_aware_aug16"
+    memory_group_cursor = 0
+    b16_disabled = False
+    b16_disable_reason: str | None = None
+    b16_disable_forward_index: int | None = None
+    b16_disable_peak_allocated_bytes: int | None = None
+    b16_disable_peak_reserved_bytes: int | None = None
+    b16_forward_count = 0
+    b8_forward_count = 0
+    physical_batch_sequence: list[dict[str, Any]] = []
+    memory_transitions: list[dict[str, Any]] = []
+    b16_peak_samples: list[dict[str, int]] = []
+    previous_b16_stats: dict[str, int] | None = None
+    max_cache_length_observed = 0
     while True:
-        selected, selected_index, next_cursor, ready_keys = _select_ready_cells(
-            cells=cells,
-            scheduling_policy=scheduling_policy,
-            round_robin_cursor=round_robin_cursor,
-            capture_ready_keys=collect_event_trace,
-        )
+        memory_mode: str | None = None
+        memory_group: str | None = None
+        selected_index: int | None = None
+        next_cursor: int | None = None
+        if scheduling_policy == "memory_aware_aug16":
+            selected, memory_group_cursor, memory_mode, memory_group, ready_keys = _select_memory_aware_aug16(
+                cells=cells,
+                b16_enabled=b16_enabled,
+                group_cursor=memory_group_cursor,
+                capture_ready_keys=collect_event_trace,
+            )
+        else:
+            selected, selected_index, next_cursor, ready_keys = _select_ready_cells(
+                cells=cells,
+                scheduling_policy=scheduling_policy,
+                round_robin_cursor=round_robin_cursor,
+                capture_ready_keys=collect_event_trace,
+            )
         if not selected:
             break
         first = selected[0]
-        if physical_limit > 1:
+        if physical_limit > 1 and scheduling_policy != "memory_aware_aug16":
             ready = sorted(
                 (cell for cell in cells if cell.request is not None),
                 key=lambda cell: (cell.cell_key, cell.request.ordinal if cell.request else -1),
@@ -966,6 +1109,11 @@ def run_ready_scheduler(
                     selected.append(other)
         requests = [cell.request for cell in selected]
         assert all(request is not None for request in requests)
+        for request in requests:
+            assert request is not None
+            length = _request_cache_length(request.cache)
+            if length is not None:
+                max_cache_length_observed = max(max_cache_length_observed, length)
         if observer is not None:
             observer("before_forward", {
                 "physical_forward_index": forwards + 1,
@@ -985,8 +1133,13 @@ def run_ready_scheduler(
                     "cache_geometry": repr(request.cache_key),
                     "request_parent_node_id": request.parent_node_id,
                 })
-        # Telemetry remains host-wall only.  Synchronization belongs to the
-        # caller's explicit benchmark timing contract, never this scheduler.
+        is_observed_b16 = scheduling_policy == "memory_aware_aug16" and b16_enabled and len(selected) == 16
+        if is_observed_b16:
+            assert memory_peak_reset is not None
+            memory_peak_reset()
+        # Telemetry remains host-wall only except the explicit memory-aware
+        # local B16 peak window.  That window synchronizes only after the
+        # real pack/forward/streaming-adoption sequence has completed.
         outputs_by_cell, forward_telemetry = execute_ready_forward(
             model=model,
             selected=selected,
@@ -995,6 +1148,18 @@ def run_ready_scheduler(
             release_batch_temporaries_for_audit=release_b2_temporaries_for_audit,
             streaming_split_and_adopt=streaming_split_and_adopt,
         )
+        b16_stats: dict[str, int] | None = None
+        if is_observed_b16:
+            assert memory_synchronize is not None and memory_stats_reader is not None
+            memory_synchronize()
+            b16_stats = {key: int(value) for key, value in memory_stats_reader().items()}
+            required_stats = {
+                "peak_allocated_bytes", "peak_reserved_bytes",
+                "current_allocated_bytes", "current_reserved_bytes",
+            }
+            missing_stats = required_stats.difference(b16_stats)
+            if missing_stats:
+                raise RuntimeError(f"memory-aware peak reader omitted fields: {sorted(missing_stats)}")
         elapsed = forward_telemetry["scheduler_elapsed_seconds"]
         model_call_seconds = forward_telemetry["model_call_seconds"]
         cache_pack_seconds = forward_telemetry["cache_pack_seconds"]
@@ -1016,6 +1181,8 @@ def run_ready_scheduler(
         b3_forwards += int(len(selected) == 3)
         b4_forwards += int(len(selected) == 4)
         physical_batch_histogram[len(selected)] = physical_batch_histogram.get(len(selected), 0) + 1
+        b16_forward_count += int(scheduling_policy == "memory_aware_aug16" and len(selected) == 16)
+        b8_forward_count += int(memory_mode == "B8_SPLIT_MODE" and len(selected) == 8)
         model_call_seconds_total += model_call_seconds
         cache_pack_seconds_total += cache_pack_seconds
         cache_adoption_seconds_total += cache_adoption_seconds
@@ -1030,6 +1197,13 @@ def run_ready_scheduler(
         if scheduling_policy == "round_robin":
             assert selected_index is not None and next_cursor is not None
             round_robin_cursor = next_cursor
+        physical_batch_sequence.append({
+            "forward_index": forwards,
+            "physical_batch": len(selected),
+            "scheduler_mode": memory_mode if memory_mode is not None else scheduling_policy,
+            "split_group": memory_group,
+            "cell_keys": [cell.cell_key for cell in selected],
+        })
         if collect_event_trace:
             events.append({
                 "forward_index": forwards,
@@ -1046,6 +1220,9 @@ def run_ready_scheduler(
                 "ready_cell_keys": ready_keys,
                 "round_robin_cursor_before": cursor_before,
                 "round_robin_cursor_after": round_robin_cursor if scheduling_policy == "round_robin" else None,
+                "scheduler_mode": memory_mode if memory_mode is not None else scheduling_policy,
+                "memory_split_group": memory_group,
+                "b16_peak_memory": b16_stats,
                 "wall_seconds": elapsed,
             })
         for trace, cell, reply in zip(trace_inputs or [None] * len(selected), selected, outputs_by_cell, strict=True):
@@ -1058,6 +1235,9 @@ def run_ready_scheduler(
                 trace.update(_logits_diagnostic(reply.logits, cell.config.arc_tokens))
                 trace["output_cache_sha256"] = cache_sha256(reply.past_key_values)
             _reply(cell, reply)
+            current_length = _request_cache_length(cell.cache_owner.cache) if cell.cache_owner is not None else None
+            if current_length is not None:
+                max_cache_length_observed = max(max_cache_length_observed, current_length)
             if trace is not None:
                 trace["retained_successors"] = cell.state["retained_successors_by_parent"].get(
                     trace["request_parent_node_id"],
@@ -1065,6 +1245,48 @@ def run_ready_scheduler(
                 cell.state["per_forward_trace"].append(trace)
         if len(selected) > 1 and cache_pack_observer is not None:
             cache_pack_observer("after_logical_resume", {"outputs_by_cell": outputs_by_cell})
+        if b16_stats is not None:
+            b16_peak_samples.append({"forward_index": forwards, **b16_stats})
+            if b16_stats["peak_allocated_bytes"] >= memory_aware_config.soft_peak_allocated_bytes:
+                b16_enabled = False
+                b16_disabled = True
+                b16_disable_reason = (
+                    "HARD_PEAK_ALLOCATED_THRESHOLD" if b16_stats["peak_allocated_bytes"] >= memory_aware_config.hard_peak_allocated_bytes
+                    else "SOFT_PEAK_ALLOCATED_THRESHOLD"
+                )
+                b16_disable_forward_index = forwards
+                b16_disable_peak_allocated_bytes = b16_stats["peak_allocated_bytes"]
+                b16_disable_peak_reserved_bytes = b16_stats["peak_reserved_bytes"]
+                lengths = {
+                    cell.cell_key: _request_cache_length(cell.cache_owner.cache) if cell.cache_owner is not None else None
+                    for cell in cells
+                }
+                present_lengths = [value for value in lengths.values() if value is not None]
+                progress = {
+                    cell.cell_key: {
+                        "nodes_expanded": sum(1 for node in cell.state["nodes"] if node.get("state") == "expanded"),
+                        "request_count": int(cell.request_count),
+                        "request_ordinal": cell.request.ordinal if cell.request is not None else None,
+                    }
+                    for cell in cells
+                }
+                memory_transitions.append({
+                    "event": "B16_TO_B8",
+                    "reason": b16_disable_reason,
+                    "forward_index": forwards,
+                    "peak_allocated_bytes": b16_stats["peak_allocated_bytes"],
+                    "peak_reserved_bytes": b16_stats["peak_reserved_bytes"],
+                    "current_allocated_bytes": b16_stats["current_allocated_bytes"],
+                    "current_reserved_bytes": b16_stats["current_reserved_bytes"],
+                    "previous_b16_peak_allocated_bytes": previous_b16_stats["peak_allocated_bytes"] if previous_b16_stats else None,
+                    "previous_b16_peak_reserved_bytes": previous_b16_stats["peak_reserved_bytes"] if previous_b16_stats else None,
+                    "owner_cache_lengths": lengths,
+                    "owner_cache_length_min": min(present_lengths) if present_lengths else None,
+                    "owner_cache_length_max": max(present_lengths) if present_lengths else None,
+                    "owner_cache_length_mean": sum(present_lengths) / len(present_lengths) if present_lengths else None,
+                    "per_cell_progress": progress,
+                })
+            previous_b16_stats = b16_stats
     telemetry = {
         "physical_forwards": forwards,
         "b1_forwards": b1_forwards,
@@ -1082,6 +1304,27 @@ def run_ready_scheduler(
         "cache_adoption_seconds": cache_adoption_seconds_total,
         "scheduler_overhead_seconds": scheduler_overhead_seconds_total,
     }
+    if scheduling_policy == "memory_aware_aug16":
+        telemetry.update({
+            "scheduler_mode": "MEMORY_AWARE_AUG16",
+            "b16_enabled_initially": True,
+            "b16_disabled": b16_disabled,
+            "b16_disable_reason": b16_disable_reason,
+            "b16_disable_forward_index": b16_disable_forward_index,
+            "b16_disable_peak_allocated_bytes": b16_disable_peak_allocated_bytes,
+            "b16_disable_peak_reserved_bytes": b16_disable_peak_reserved_bytes,
+            "soft_peak_allocated_bytes": memory_aware_config.soft_peak_allocated_bytes,
+            "hard_peak_allocated_bytes": memory_aware_config.hard_peak_allocated_bytes,
+            "b16_forward_count": b16_forward_count,
+            "b8_forward_count": b8_forward_count,
+            "other_batch_forward_counts": {
+                str(width): count for width, count in sorted(physical_batch_histogram.items()) if width not in {8, 16}
+            },
+            "physical_batch_sequence": physical_batch_sequence,
+            "memory_transitions": memory_transitions,
+            "b16_peak_samples": b16_peak_samples,
+            "max_cache_length_observed": max_cache_length_observed,
+        })
     return {"scheduling_policy": scheduling_policy, "physical_forwards": forwards, "events": events,
             "mean_effective_batch": telemetry["mean_effective_batch"], "telemetry": telemetry}
 
