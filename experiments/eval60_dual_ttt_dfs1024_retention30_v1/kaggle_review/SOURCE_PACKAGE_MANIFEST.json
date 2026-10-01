@@ -10,7 +10,7 @@
     "ARC2/configs/nvarc_native_846d0198/vocab.json": "ac26c4284e0bc4bfe4bc214a6a36919b8c13fac63657446fd634781fe4b625ee",
     "ARC2/experiments/eval60_dual_ttt_dfs1024_retention30_v1/HISTORICAL_GREEDY_SOURCE_CLASSES.csv": "5527622a89d04b4352fbf16fcb089146688578e4e744f60df3e8441489539299",
     "ARC2/experiments/eval60_dual_ttt_dfs1024_retention30_v1/PROVENANCE.json": "c07d87384ae8b9e659be6fe77c88b78ecef72688482defc442f9f4ff3da4b26b",
-    "ARC2/experiments/eval60_dual_ttt_dfs1024_retention30_v1/README.md": "2d6414c9789f9cdb6a64a363c1252d522bd3cc68ebac2e4e6a9c81a494ef1eca",
+    "ARC2/experiments/eval60_dual_ttt_dfs1024_retention30_v1/README.md": "3bcdebd9417118a0302fa2a8192d83f2d2e2f2a8979d564b160e06bb48e24e9c",
     "ARC2/experiments/eval60_dual_ttt_dfs1024_retention30_v1/RETENTION30_COHORT_SHA256.txt": "39ff9e75d3a0ec0304a78e246f6ea1e8de366e7aca1fd36b337448815bc4d2f9",
     "ARC2/experiments/eval60_dual_ttt_dfs1024_retention30_v1/RETENTION30_OUTPUTS.json": "b1d886837aadc8e99c4d9f12de68929908ce68a3dd187cc8e59939bb28e1e10d",
     "ARC2/experiments/eval60_dual_ttt_dfs1024_retention30_v1/TARGET_BLIND_RUN_MANIFEST.json": "8069af5dacea3e8b4c97f7fef821e1a867ae2212dd0dec868e3793b3fbcee06f",
@@ -20,7 +20,7 @@
     "ARC2/scripts/run_adaptive_ttt_step1.py": "d69c173af5184e4358be444cb7b1eb7124f2ac83c2e04c304b782116286ef433",
     "ARC2/scripts/run_eval3_reference_ttt.py": "477fac4230aa24eaa0edd4ec074568cbd3b4da87d8e632ae071055fed9d53168",
     "ARC2/scripts/run_eval60_adaptive_inference_joint_v2.py": "2244b64c326cb59e3f44b642b530d427ad72d24bd78cf95807cd11946a8d3855",
-    "ARC2/scripts/run_eval60_dual_ttt_dfs1024_retention30.py": "accd4e9e1c15d9a18a8695449b903f3f54c45c3bf682a7f63266b0829448cbbe",
+    "ARC2/scripts/run_eval60_dual_ttt_dfs1024_retention30.py": "af4ba9f0513194a95a72be7618b170b6421b8a1aa9c476f28f8a6e70f6af894a",
     "ARC2/scripts/run_l4_dual_ttt_dfs1024_benchmark.py": "c6d2ea8d658ddfcf19e74372fca5783411d070ecd04c958d0778e6f9f591ef4e",
     "ARC2/scripts/score_eval60_retention30.py": "225b004fe3373535fd1e612f67652fb478e571249ec5b5165e2682454530861e",
     "ARC2/scripts/turbodfs_d1_common.py": "7b95453c06750fdcbe39f41c290316eef8c8bb056adc4d38e555563f6c14774e",
@@ -210,10 +210,10 @@
     "PROVENANCE.json": "c07d87384ae8b9e659be6fe77c88b78ecef72688482defc442f9f4ff3da4b26b",
     "RETENTION30_COHORT_SHA256.txt": "39ff9e75d3a0ec0304a78e246f6ea1e8de366e7aca1fd36b337448815bc4d2f9",
     "RETENTION30_OUTPUTS.json": "b1d886837aadc8e99c4d9f12de68929908ce68a3dd187cc8e59939bb28e1e10d",
-    "SOURCE_IDENTITY.json": "65d06db6686b08c95f173e509ee1ddcc75c512929d21851bf8f8ffeb60e8cf85",
+    "SOURCE_IDENTITY.json": "2227de473a04edc115095d5f61627819a98d8c6aeafb52d6888183e483b89f6b",
     "TARGET_BLIND_RUN_MANIFEST.json": "8069af5dacea3e8b4c97f7fef821e1a867ae2212dd0dec868e3793b3fbcee06f",
     "dataset-metadata.json": "87b76ecff2b06d3df97222ae898d0fbab9f690ea6a1975d9d19f6c85848f92f6",
-    "retention_config_resolved.json": "e907be14d301ae858988ae523bd2b5877eb74fcda4e4f7af9fd7feb094e5fd14"
+    "retention_config_resolved.json": "4bf1f41d0055584ca46788e3c54aee68f990213242e2c53df249ed1465914c9b"
   },
-  "source_commit": "ec66612c6afd0bf7694becf434273d4cea3a97fa"
+  "source_commit": "537224fd35b7bbe2e261e1476d643ffbde588149"
 }

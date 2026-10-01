@@ -1,7 +1,9 @@
 {
+  "cohort_changed": false,
   "experiment_id": "EVAL60_DUAL_TTT_DFS1024_RETENTION30_V1",
+  "scientific_config_changed": false,
   "source_branch": "experiment/eval60-dual-ttt-dfs1024-retention30-v1",
-  "source_commit": "ec66612c6afd0bf7694becf434273d4cea3a97fa",
+  "source_commit": "537224fd35b7bbe2e261e1476d643ffbde588149",
   "source_git_status": "PACKAGED_CLEAN_FROM_GIT_ARCHIVE",
   "source_paths": [
     "src",
@@ -23,5 +25,7 @@
     "experiments/eval60_dual_ttt_dfs1024_retention30_v1/retention_config.json",
     "experiments/eval60_dual_ttt_dfs1024_retention30_v1/README.md",
     "pyproject.toml"
-  ]
+  ],
+  "telemetry_infra_only": true,
+  "telemetry_unmatched_policy": "UNCLASSIFIED"
 }

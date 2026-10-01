@@ -45,7 +45,7 @@
       }
     ]
   },
-  "authoritative_source_commit": "ec66612c6afd0bf7694becf434273d4cea3a97fa",
+  "authoritative_source_commit": "537224fd35b7bbe2e261e1476d643ffbde588149",
   "benchmark_id": "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1",
   "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
   "environment": {

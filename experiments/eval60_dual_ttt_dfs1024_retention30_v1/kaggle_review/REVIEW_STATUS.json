@@ -1,7 +1,10 @@
 {
+  "cohort_changed": false,
   "competition_submissions": 0,
   "gpu_runs_started": 0,
   "kaggle_datasets_pushed": 0,
   "kaggle_notebooks_pushed": 0,
-  "status": "READY_FOR_RETENTION30_KAGGLE_REVIEW"
+  "scientific_config_changed": false,
+  "status": "READY_FOR_RETENTION30_KAGGLE_RUN",
+  "telemetry_infra_only": true
 }
