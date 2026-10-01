@@ -22,11 +22,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
-from inference.hf_peft_backend import (  # noqa: E402
-    adapter_tensor_manifest,
-    loaded_adapter_tensor_parity,
-    load_hf_peft_inference,
-)
+from inference.hf_peft_backend import load_hf_peft_inference  # noqa: E402
 from inference.nvarc_turbodfs_d1 import D1TurboDFSConfig  # noqa: E402
 from inference.nvarc_turbodfs_dynamic_ready import (  # noqa: E402
     canonical_semantic_value,
@@ -133,6 +129,28 @@ def _config(budget: int) -> D1TurboDFSConfig:
     )
 
 
+def _verify_frozen_foundation(path: Path, identity: dict[str, Any]) -> dict[str, Any]:
+    """Bind each DFS launch to the already-frozen 506/506 HF foundation.
+
+    Re-copying every loaded BF16 tensor from GPU to CPU on every small B1
+    execution is neither a new validation nor useful DFS work.  The foundation
+    already establishes byte-level PEFT parity.  Each launch nevertheless
+    recomputes the adapter and config *file* hashes while loading and must
+    exactly match the frozen evidence before any target-blind model forward.
+    """
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("status") != "PASS" or int(payload.get("exact_match_count", -1)) != 506:
+        raise RuntimeError("frozen clean-HF adapter foundation is not a 506/506 PASS")
+    for key in ("adapter_sha256", "adapter_config_sha256"):
+        if payload.get(key) != identity.get(key):
+            raise RuntimeError(f"loaded adapter identity mismatches frozen foundation: {key}")
+    if identity.get("dtype") != "torch.bfloat16":
+        raise RuntimeError("clean-HF decoder must remain BF16")
+    return {"foundation_path": str(path), "exact_match_count": 506,
+            "adapter_sha256": identity["adapter_sha256"],
+            "adapter_config_sha256": identity["adapter_config_sha256"]}
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
     from arc.io import load_dataset
 
@@ -141,10 +159,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         model_path=args.model_path, adapter_path=args.adapter_path, device=args.device,
         native_config_dir=args.native_config_dir,
     )
-    source = adapter_tensor_manifest(args.adapter_path)
-    parity = loaded_adapter_tensor_parity(model, source)
-    if len(source) != 506 or len(parity) != 506 or not all(item["exact_equal"] for item in parity):
-        raise RuntimeError("strict frozen adapter parity failed")
+    adapter_foundation = _verify_frozen_foundation(args.adapter_foundation, identity)
     tasks = load_dataset(args.challenge)
     if args.task_id not in tasks:
         raise RuntimeError(f"unknown challenge task {args.task_id}")
@@ -195,7 +210,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "gold_loaded": False,
         "unsloth_inference": False,
         "mode": args.mode,
-        "adapter_exact": {"source_count": len(source), "loaded_count": len(parity), "exact_count": sum(item["exact_equal"] for item in parity)},
+        "adapter_exact": adapter_foundation,
         "runtime_identity": identity,
         "config": dataclasses.asdict(config),
         "task": {"task_id": args.task_id, "output_index": args.output_index, "depth": args.depth, "views": list(VIEWS)},
@@ -213,6 +228,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--adapter-path", type=Path, required=True)
     parser.add_argument("--challenge", type=Path, required=True)
     parser.add_argument("--native-config-dir", type=Path, required=True)
+    parser.add_argument("--adapter-foundation", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--mode", choices=("isolated", "serial-shared", "round-robin"), required=True)
     parser.add_argument("--budget", type=int, choices=(128, 256, 4096), required=True)
