@@ -135,7 +135,7 @@ def _unit_gate(args: argparse.Namespace) -> int:
     """Run the CPU-only mechanical scheduler gate and freeze its receipt."""
     contract = _write_contract_files(args)
     harness = (
-        "import importlib.util; "
+        "import importlib.util, sys; sys.path[:0]=['src','.']; "
         "spec=importlib.util.spec_from_file_location('memory_aware_scheduler_tests', "
         "'tests/test_nvarc_turbodfs_dynamic_ready.py'); "
         "module=importlib.util.module_from_spec(spec); spec.loader.exec_module(module); "
