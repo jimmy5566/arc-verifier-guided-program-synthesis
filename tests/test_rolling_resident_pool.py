@@ -30,3 +30,38 @@ def test_slow_resident_does_not_block_fifo_admission_after_other_cells_finish() 
     # Cell 0 remains resident throughout, but it never blocks replacement of
     # the other owner slot.
     assert queue.resident_ids == ("0", "4")
+
+
+def test_runtime_callbacks_keep_full_cell_keys_and_not_augmentation_suffixes() -> None:
+    """Mechanical regression for the real scheduler callback key contract."""
+    from types import SimpleNamespace
+    import inference.rolling_resident_pool as module
+
+    original_reply = module._reply
+    original_result = module.ready_result
+    original_execute = module.execute_ready_forward
+    seen: list[str] = []
+
+    class Request:
+        cache_key = ("same",)
+        position = 7
+
+    try:
+        module._reply = lambda cell, _reply: setattr(cell, "request", None)
+        module.ready_result = lambda _cell: SimpleNamespace(termination_reason="search_exhausted")
+        module.execute_ready_forward = lambda **kwargs: ([None] * len(kwargs["selected"]), {})
+        scheduler = module.run_rolling_resident_scheduler(
+            model=object(),
+            pending_ids=["task:o0:d24:aug16:a", "task:o0:d24:aug16:b", "task:o0:d24:aug16:c"],
+            resident_capacity=2,
+            physical_batch_ceiling=2,
+            create_cell=lambda key: SimpleNamespace(cell_key=key, request=Request(), cache_owner=object()),
+            consume_result=lambda key, _cell: seen.append(key),
+            release_cell=lambda _key, _cell: None,
+        )
+    finally:
+        module._reply = original_reply
+        module.ready_result = original_result
+        module.execute_ready_forward = original_execute
+    assert seen == ["task:o0:d24:aug16:a", "task:o0:d24:aug16:b", "task:o0:d24:aug16:c"]
+    assert [row["cell_key"] for row in scheduler["events"] if row["event"] == "ADMIT"] == seen
