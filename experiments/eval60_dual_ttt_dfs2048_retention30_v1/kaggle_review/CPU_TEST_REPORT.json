@@ -1,0 +1,30 @@
+{
+  "focused_contract_tests": {
+    "command": "pytest tests/test_eval60_retention30.py tests/test_eval60_dfs2048_retention30.py -q",
+    "passed": 36,
+    "failed": 0,
+    "status": "PASS"
+  },
+  "post_freeze_scorer_replay": {
+    "candidate_source": "immutable completed DFS1024 artifacts copied to a temporary directory",
+    "gpu_used": false,
+    "freeze_verified_before_solutions": true,
+    "comparison_outputs": 30,
+    "required_reports_created": true,
+    "status": "PASS"
+  },
+  "broader_cpu_suite": {
+    "passed": 563,
+    "failed": 21,
+    "collection_errors_before_exclusions": 7,
+    "status": "ENVIRONMENT_BLOCKED_OUTSIDE_CHANGE_SCOPE",
+    "failure_categories": [
+      "missing historical ignored artifacts/data fixtures",
+      "torch not installed in CPU-only WSL test environment",
+      "missing externally pulled reference notebook"
+    ],
+    "failures_attributed_to_this_change": 0
+  },
+  "gpu_runs_started": 0,
+  "kaggle_runs_started": 0
+}

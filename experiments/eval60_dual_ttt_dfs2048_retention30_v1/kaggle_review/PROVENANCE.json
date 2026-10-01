@@ -1,0 +1,22 @@
+{
+  "experiment_id": "EVAL60_DUAL_TTT_DFS2048_RETENTION30_V1",
+  "base_experiment_id": "EVAL60_DUAL_TTT_DFS1024_RETENTION30_V1",
+  "dfs1024_source_commit": "537224fd35b7bbe2e261e1476d643ffbde588149",
+  "dfs1024_config_sha256": "bb49c55c414b72ccfba1a4190ea4e188de15d3df9f51e62b9bcf3587def9318c",
+  "dfs1024_manifest_sha256": "8069af5dacea3e8b4c97f7fef821e1a867ae2212dd0dec868e3793b3fbcee06f",
+  "dfs1024_cohort_sha256": "7d4767763f8a6d53fadbe64cb38e81e9f8bc6ce345c6934beb520756b84764e3",
+  "scientific_change": {
+    "search.max_expanded_nodes": {
+      "before": 1024,
+      "after": 2048
+    }
+  },
+  "all_other_scientific_fields_identical": true,
+  "reporting_changes": [
+    "UNCLASSIFIED lifecycle split",
+    "startup-to-barrier and actual model-load timing separation",
+    "DFS1024 versus DFS2048 post-freeze comparison"
+  ],
+  "target_blind_gpu_phase": true,
+  "kaggle_run_started": false
+}

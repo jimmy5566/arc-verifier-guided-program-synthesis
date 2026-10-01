@@ -1,0 +1,24 @@
+{
+  "all_other_scientific_fields_identical": true,
+  "cohort_changed": false,
+  "cohort_sha256": "7d4767763f8a6d53fadbe64cb38e81e9f8bc6ce345c6934beb520756b84764e3",
+  "competition_submissions": 0,
+  "config_sha256": "aa42d04355147f06eabfe384b2a6f7840c42a184b98e58b69e307b18868f5d60",
+  "dataset_slug": "jimmy5566/arc2-eval60-dual-ttt-dfs2048-retention30-v1-source",
+  "experiment_id": "EVAL60_DUAL_TTT_DFS2048_RETENTION30_V1",
+  "kaggle_dataset_pushed": false,
+  "kaggle_notebook_pushed": false,
+  "kaggle_run_started": false,
+  "kernel_slug": "jimmy5566/arc2-eval60-dual-ttt-dfs2048-retention30-v1",
+  "notebook_sha256": "24d4123e78217f2c0e3966b21115d826ebe031a9d4c08531ac7e1c42e10f2525",
+  "scientific_config_changed": true,
+  "scientific_config_diff": {
+    "search.max_expanded_nodes": {
+      "after": 2048,
+      "before": 1024
+    }
+  },
+  "source_branch": "experiment/eval60-dual-ttt-dfs2048-retention30-v1",
+  "source_commit": "44cc7e8daa4b7534bc3e58fbcfd1c0043659e50d",
+  "status": "READY_FOR_GITHUB_REVIEW_NOT_PUBLISHED_NOT_RUN"
+}

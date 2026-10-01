@@ -1,0 +1,17 @@
+{
+  "all_other_scientific_fields_identical": true,
+  "cohort_changed": false,
+  "competition_submissions": 0,
+  "gpu_runs_started": 0,
+  "kaggle_datasets_pushed": 0,
+  "kaggle_notebooks_pushed": 0,
+  "kaggle_run_started": false,
+  "scientific_config_changed": true,
+  "scientific_config_diff": {
+    "search.max_expanded_nodes": {
+      "after": 2048,
+      "before": 1024
+    }
+  },
+  "status": "READY_FOR_RETENTION30_KAGGLE_RUN"
+}

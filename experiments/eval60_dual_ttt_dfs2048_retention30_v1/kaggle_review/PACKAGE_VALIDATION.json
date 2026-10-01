@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "experiment_id": "EVAL60_DUAL_TTT_DFS2048_RETENTION30_V1",
+  "source_commit": "44cc7e8daa4b7534bc3e58fbcfd1c0043659e50d",
+  "notebook_sha256": "24d4123e78217f2c0e3966b21115d826ebe031a9d4c08531ac7e1c42e10f2525",
+  "resolved_config_sha256": "aa42d04355147f06eabfe384b2a6f7840c42a184b98e58b69e307b18868f5d60",
+  "cohort_sha256": "7d4767763f8a6d53fadbe64cb38e81e9f8bc6ce345c6934beb520756b84764e3",
+  "source_file_count": 233,
+  "dfs1024_task_checkpoint_count": 22,
+  "notebook_python_syntax": "PASS",
+  "runner_has_no_solutions_argument": true,
+  "gold_scorer_runs_only_after_candidate_freeze": true,
+  "gpu_phase_receives_dfs1024_gold_comparison_path": false,
+  "kaggle_dataset_pushed": false,
+  "kaggle_notebook_pushed": false,
+  "kaggle_run_started": false
+}
