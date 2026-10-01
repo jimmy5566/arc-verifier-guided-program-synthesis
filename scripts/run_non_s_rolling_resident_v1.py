@@ -257,8 +257,17 @@ def _contract(args: argparse.Namespace, assignments: dict[str, dict[str, Any]], 
 
 
 def _unit_gate() -> dict[str, Any]:
-    completed = subprocess.run([sys.executable, "-m", "pytest", "tests/test_root_length_memory_profile.py", "tests/test_rolling_resident_pool.py", "-q"],
-                               cwd=ROOT, text=True, capture_output=True, check=False)
+    # The production runtime is a deliberately slim GPU venv and does not
+    # promise pytest.  Execute the same no-fixture test functions directly so
+    # this mechanical CPU gate never changes the Pod environment.
+    harness = (
+        "import importlib.util,sys;sys.path[:0]=['src','.'];"
+        "paths=('tests/test_root_length_memory_profile.py','tests/test_rolling_resident_pool.py');"
+        "[(lambda s:(s.loader.exec_module(m:=importlib.util.module_from_spec(s)),[getattr(m,n)() for n in dir(m) if n.startswith('test_')]))"
+        "(importlib.util.spec_from_file_location(p.replace('/','_'),p)) for p in paths];"
+        "print('NON_S_ROLLING_UNIT_PASS')"
+    )
+    completed = subprocess.run([sys.executable, "-c", harness], cwd=ROOT, text=True, capture_output=True, check=False)
     checks = {
         "profile_table": completed.returncode == 0,
         "fifo_2_5_0_to_8_9_10": completed.returncode == 0,
