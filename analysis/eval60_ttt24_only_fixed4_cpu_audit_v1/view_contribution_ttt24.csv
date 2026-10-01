@@ -1,0 +1,5 @@
+source,view,correct_outputs,unique_correct_outputs,generated_source_rows,unique_grids,valid_source_rows,invalid_source_rows
+TTT24,flip_lr,8,2,86,86,86,0
+TTT24,flip_ud,10,4,88,88,88,0
+TTT24,transpose,11,1,88,88,88,0
+TTT24,anti_transpose,12,5,88,88,88,0

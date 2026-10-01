@@ -1,0 +1,63 @@
+{
+  "bootstrap_seed": 20261001,
+  "bootstrap_trials": 10000,
+  "classification": "SAFE",
+  "confidence": "LIMITED_SMALL_N_8_TASKS",
+  "evidence": "Kaggle Version 3 measured 8-task, 11-output L4x4 benchmark telemetry",
+  "headroom_percent": 0.39457604992331685,
+  "headroom_to_12h_hours": 4.734912599079802,
+  "headroom_to_12h_seconds": 17045.68535668729,
+  "method_notes": [
+    "task projection resamples measured TTT24 total task durations and applies deterministic four-worker list scheduling",
+    "259-output projection adds 19 empirical extra-output TTT24 four-view DFS costs to 240 sampled task profiles",
+    "model load, notebook startup, shutdown, and platform jitter are not included",
+    "8-task evidence is too small for a high-confidence production runtime guarantee"
+  ],
+  "observed_8_task_ttt24_gpu_seconds": 3180.588361262002,
+  "observed_8_task_ttt24_queue_wall_seconds": 874.6350760540008,
+  "observed_8_task_ttt48_gpu_seconds": 3523.6167831380017,
+  "output_based_240_tasks_259_outputs_bootstrap": {
+    "median_seconds": 25300.65264425202,
+    "p25_seconds": 24950.853712558262,
+    "p75_seconds": 25644.249376809767,
+    "p90_seconds": 25953.20416686262,
+    "p95_seconds": 26154.31464331271
+  },
+  "practical_upper_p95_hours": 7.265087400920198,
+  "practical_upper_p95_seconds": 26154.31464331271,
+  "projected_120_task_hours_task_based_median": 3.365705654332919,
+  "projected_240_task_hours_task_based_median": 6.6753497755256985,
+  "projected_259_output_hours_output_based_median": 7.0279590678477835,
+  "projected_60_task_hours_task_based_median": 1.7086268147922232,
+  "task_based_4worker_bootstrap": {
+    "120": {
+      "median_seconds": 12116.540355598509,
+      "p25_seconds": 11868.469385774257,
+      "p75_seconds": 12364.579244952756,
+      "p90_seconds": 12587.941362828009,
+      "p95_seconds": 12717.979018480708
+    },
+    "240": {
+      "median_seconds": 24031.259191892514,
+      "p25_seconds": 23688.539831176255,
+      "p75_seconds": 24383.14335109777,
+      "p90_seconds": 24699.889613821815,
+      "p95_seconds": 24887.83702120842
+    },
+    "60": {
+      "median_seconds": 6151.056533252004,
+      "p25_seconds": 5967.5372808960055,
+      "p75_seconds": 6328.682855780255,
+      "p90_seconds": 6493.170208615305,
+      "p95_seconds": 6592.793858115302
+    }
+  },
+  "ttt24_dfs_gpu_seconds": 2862.0679133450003,
+  "ttt24_fraction_of_measured_four_gpu_capacity": 0.4218014757160312,
+  "ttt24_share_of_source_gpu_seconds": 0.4744169208364298,
+  "ttt24_train_gpu_seconds": 318.04321279800115,
+  "ttt48_dfs_gpu_seconds": 2936.1749302160006,
+  "ttt48_fraction_of_measured_four_gpu_capacity": 0.4672930257456074,
+  "ttt48_share_of_source_gpu_seconds": 0.5255830791635702,
+  "ttt48_train_gpu_seconds": 587.0931294020002
+}

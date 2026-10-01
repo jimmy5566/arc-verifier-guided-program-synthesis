@@ -1,0 +1,7 @@
+output_key,task_id,test_index,full_oracle,ttt24_oracle,ttt48_oracle,full_top2,ttt24_top2,ttt48_top2,pool_category,lost_top2_without_ttt48,gained_top2_without_ttt48,lost_oracle_without_ttt48
+142ca369:0,142ca369,0,True,False,True,True,False,True,TTT48_ONLY,True,False,True
+36a08778:1,36a08778,1,True,False,True,True,False,True,TTT48_ONLY,True,False,True
+53fb4810:0,53fb4810,0,True,False,True,False,False,True,TTT48_ONLY,False,False,True
+58490d8a:0,58490d8a,0,True,False,True,False,False,True,TTT48_ONLY,False,False,True
+78332cb0:1,78332cb0,1,True,False,True,True,False,True,TTT48_ONLY,True,False,True
+b5ca7ac4:0,b5ca7ac4,0,True,False,True,True,False,True,TTT48_ONLY,True,False,True

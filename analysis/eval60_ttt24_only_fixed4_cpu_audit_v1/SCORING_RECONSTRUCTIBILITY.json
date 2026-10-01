@@ -1,0 +1,13 @@
+{
+  "evidence": {
+    "combined_rrf_reused_for_source_only": false,
+    "full_b_rrf_matches_historical": true,
+    "full_d1_predictions_match_gate": true,
+    "full_d1_rankings_match_gate": true,
+    "source_local_b_ranks_match_historical": true,
+    "source_local_b_support_recomputed_from": "selected_support_count - mean_view_nll",
+    "source_local_likelihood_recomputed_from": "mean original_log_likelihood per exact grid/source"
+  },
+  "solutions_opened": false,
+  "status": "EXACT_SOURCE_LOCAL_RECONSTRUCTIBLE"
+}

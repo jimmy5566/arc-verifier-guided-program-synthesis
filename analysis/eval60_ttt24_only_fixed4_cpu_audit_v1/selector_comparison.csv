@@ -1,0 +1,4 @@
+condition,top1,top2,pool_oracle,selection_loss,denominator
+FULL_4PLUS4_D1,20,28,30,2,89
+TTT24_ONLY_D1,21,24,24,0,89
+TTT48_ONLY_D1,17,24,25,1,89

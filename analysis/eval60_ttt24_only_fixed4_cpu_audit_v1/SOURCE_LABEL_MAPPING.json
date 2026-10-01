@@ -1,0 +1,42 @@
+{
+  "conceptual_to_frozen_label": {
+    "TTT24": "TTT24",
+    "TTT48": "TTT48"
+  },
+  "mapping_method": "exact labels plus portfolio view-set identity from immutable handoff",
+  "sources": {
+    "TTT24": {
+      "conceptual_depth": 24,
+      "configured_views": [
+        "flip_lr",
+        "flip_ud",
+        "transpose",
+        "anti_transpose"
+      ],
+      "observed_slot_tags": [
+        "anti_transpose",
+        "flip_lr",
+        "flip_ud",
+        "transpose"
+      ],
+      "source_row_count": 326
+    },
+    "TTT48": {
+      "conceptual_depth": 48,
+      "configured_views": [
+        "identity",
+        "rot90",
+        "flip_ud",
+        "anti_transpose"
+      ],
+      "observed_slot_tags": [
+        "anti_transpose",
+        "flip_ud",
+        "identity",
+        "rot90"
+      ],
+      "source_row_count": 324
+    }
+  },
+  "status": "FROZEN_BEFORE_SOLUTION_ACCESS"
+}
