@@ -63,6 +63,22 @@ def test_dynamic_ready_batches_only_same_real_geometry_and_preserves_independenc
     assert [item.token_ids for item in ready_result(right).candidates[0]] == [item.token_ids for item in _scalar(prompt).candidates[0]]
 
 
+def test_round_robin_b1_matches_scalar_without_physical_batching():
+    from scripts.run_current_eager_shared_b1_rebaseline import run_round_robin_b1
+    from scripts.run_regret_dynamic_ready_b1_1 import _cell_key
+
+    prompt = torch.tensor([[2, 2]])
+    names = ("anti_transpose", "flip_ud", "identity", "transpose")
+    cells = [start_ready_cell(model=CacheTransitionModel(), input_ids=prompt, config=_config(),
+                              cell_key=_cell_key(name), normalize_root_cache=False,
+                              active_time_accounting=True) for name in names]
+    telemetry = run_round_robin_b1(model=CacheTransitionModel(), cells=cells, order=names)
+    assert telemetry["physical_batch"] == 1
+    assert [event["cell_key"] for event in telemetry["events"][:4]] == [_cell_key(name) for name in names]
+    expected = normalized_result_signature(_scalar(prompt))
+    assert all(normalized_result_signature(ready_result(cell)) == expected for cell in cells)
+
+
 def test_active_time_budget_excludes_elapsed_queue_wall_time():
     config = _config()
     state = _new_state(config)
