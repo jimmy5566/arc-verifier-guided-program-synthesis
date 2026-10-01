@@ -1,0 +1,19 @@
+field,historical_failing_value,historical_status,current_eager_value,current_status,difference_status,interpretation
+python,3.11 family,INFERRED,3.11.13,MEASURED,NOT_ESTABLISHED,No supported historical patch-level comparison
+torch,2.8.0+cu128,INFERRED,2.8.0+cu128,MEASURED,NOT_ESTABLISHED,Lock matches but failing process did not emit pip freeze
+cuda_runtime,12.8,INFERRED,12.8,MEASURED,NOT_ESTABLISHED,Lock matches
+cuda_driver,UNKNOWN,UNKNOWN,595.71.05,MEASURED,UNKNOWN,A related record names 580.126.20 but is not the failing process
+transformers,4.55.4,INFERRED,4.55.4,MEASURED,NOT_ESTABLISHED,Lock matches
+unsloth,2025.9.7,INFERRED,2025.9.7,MEASURED,NOT_ESTABLISHED,Lock matches
+unsloth_zoo,2025.9.9,INFERRED,2025.9.9,MEASURED,NOT_ESTABLISHED,Lock matches
+xformers,0.0.33+5d4b92a.d20260925,INFERRED,0.0.33+5d4b92a.d20260925,MEASURED,NOT_ESTABLISHED,Availability does not identify the model attention path
+triton,3.4.0,INFERRED,3.4.0,MEASURED,NOT_ESTABLISHED,Lock matches
+flash_attention,UNKNOWN,UNKNOWN,FA2=False from Unsloth startup,MEASURED,UNKNOWN,Current message does not reconstruct historical backend
+attention_implementation,UNKNOWN,UNKNOWN,eager,MEASURED,UNKNOWN,Current eager is a negative control only
+attention_class,UNKNOWN,UNKNOWN,not captured by wrapper probe,MEASURED,UNKNOWN,No valid historical comparison
+attention_forward_identity,UNKNOWN,UNKNOWN,unsloth.models.llama.PeftModel_fast_forward wrapper,MEASURED,UNKNOWN,Wrapper identity is not Qwen attention identity
+model_loader_flags,full_finetuning=False load_in_4bit=False local_files_only=True no_gradient_checkpointing,MEASURED,same source blob,MEASURED,MATCHED,No source-path difference
+for_inference,called after prompt construction,MEASURED,called after prompt construction,MEASURED,MATCHED,No source-path difference
+compile_state,UNKNOWN,UNKNOWN,not recorded,UNKNOWN,UNKNOWN,No evidence
+cuda_graph_state,UNKNOWN,UNKNOWN,not recorded,UNKNOWN,UNKNOWN,No evidence
+cache_rope_mask_internal,UNKNOWN,UNKNOWN,not captured,UNKNOWN,UNKNOWN,No evidence

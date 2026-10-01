@@ -1,0 +1,49 @@
+{
+  "analysis": "HISTORICAL_RUNTIME_RECONSTRUCTION_V1",
+  "source_commit_historical": "dfea27d923651be09caa31e8ac041df1706ebcdc",
+  "source_commit_current": "0293382173000c1a31eaee52320211fc941db3de",
+  "gold_accessed": false,
+  "historical_effect": {
+    "token": {"value": 0, "status": "MEASURED"},
+    "position": {"value": 1928, "status": "MEASURED"},
+    "full_logit_delta": {"value": 38.375, "status": "MEASURED"},
+    "arc_logit_delta": {"value": 50.79766845703125, "status": "MEASURED"},
+    "arc_ranking_changed": {"value": true, "status": "MEASURED"},
+    "regret_retained_set_changed": {"value": true, "status": "MEASURED"}
+  },
+  "historical_runtime": {
+    "python": {"value": "3.11 family", "status": "INFERRED"},
+    "torch": {"value": "2.8.0+cu128", "status": "INFERRED"},
+    "cuda_runtime": {"value": "12.8", "status": "INFERRED"},
+    "cuda_driver": {"value": null, "status": "UNKNOWN"},
+    "transformers": {"value": "4.55.4", "status": "INFERRED"},
+    "unsloth": {"value": "2025.9.7", "status": "INFERRED"},
+    "unsloth_zoo": {"value": "2025.9.9", "status": "INFERRED"},
+    "xformers": {"value": "0.0.33+5d4b92a.d20260925", "status": "INFERRED"},
+    "triton": {"value": "3.4.0", "status": "INFERRED"},
+    "flash_attention": {"value": null, "status": "UNKNOWN"},
+    "bitsandbytes": {"value": "0.50.2", "status": "INFERRED"},
+    "torchao": {"value": "0.14.1+cu128", "status": "INFERRED"},
+    "gpu_precision": {"value": "RTX 3090 sm86, BF16", "status": "INFERRED"},
+    "attention_implementation": {"value": null, "status": "UNKNOWN"},
+    "attention_class": {"value": null, "status": "UNKNOWN"},
+    "attention_forward": {"value": null, "status": "UNKNOWN"},
+    "unsloth_patch_identity": {"value": null, "status": "UNKNOWN"},
+    "compile_state": {"value": null, "status": "UNKNOWN"},
+    "cuda_graph_state": {"value": null, "status": "UNKNOWN"}
+  },
+  "measured_source_path": {
+    "model_loader_flags": "full_finetuning=False; load_in_4bit=False; local_files_only=True; use_gradient_checkpointing=False",
+    "for_inference_called": true,
+    "same_science_path_blobs": {
+      "src/inference/nvarc_turbodfs_dynamic_ready.py": "fc898729407198eb3cadf1016e9e4e5f9e2cee69",
+      "scripts/run_eval60_authoritative_greedy_v1.py": "4f0c94a042125648ee4586f45f261468097f03b7",
+      "scripts/run_eval60_adaptive_inference_joint_v2.py": "aeddc1337897fed161f6122722eedb2d2dca6419",
+      "scripts/run_regret_dynamic_ready_v1.py": "018d0d62d4ed12aa2e4b10e54da29155e49e8716",
+      "scripts/run_d1_real_decoder_ab.py": "54953263452ba8ac11c11e248e4165dfde2897d5"
+    }
+  },
+  "decision": "HISTORICAL_RUNTIME_NOT_RECONSTRUCTED",
+  "reason": "No failing-process runtime identity exists that supports a materially different environment recreation.",
+  "later_phases": "NOT_RUN_DUE_TO_FAILED_REPRO_GATE"
+}

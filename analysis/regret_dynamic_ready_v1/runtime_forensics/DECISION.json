@@ -1,0 +1,13 @@
+{
+  "decision": "HISTORICAL_RUNTIME_NOT_RECONSTRUCTED",
+  "historical_drift_reproduced": false,
+  "historical_execution_condition": "NOT_YET_RECONSTRUCTED",
+  "backend_causality": "NOT_ESTABLISHED",
+  "internal_mechanism": "NOT_ESTABLISHED",
+  "minimal_repair": "NOT_IMPLEMENTED",
+  "five_forward_historical_path": "NOT_RUN_DUE_TO_FAILED_REPRO_GATE",
+  "shared_b1_4_of_4": "NOT_RUN_DUE_TO_FAILED_REPRO_GATE",
+  "dynamic_b2_safe_to_test": false,
+  "gold_accessed": false,
+  "gpu_used_this_forensics_stage": false
+}
