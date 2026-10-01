@@ -267,7 +267,7 @@ def prepare(args: argparse.Namespace) -> None:
     caps = fixed.get("caps", {})
     if any(int(caps.get(key, -1)) != value for key, value in REQUIRED_CAPS.items()):
         raise RuntimeError(f"fixed contract caps mismatch: {caps}")
-    output.mkdir(parents=True)
+    output.mkdir(parents=True, exist_ok=True)
     contract = {
         "experiment": EXPERIMENT,
         "source_commit": args.source_commit,
