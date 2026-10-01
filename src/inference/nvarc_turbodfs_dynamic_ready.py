@@ -658,32 +658,42 @@ def run_ready_scheduler(
                     "cache_geometry": repr(request.cache_key),
                     "request_parent_node_id": request.parent_node_id,
                 })
+        # Telemetry is deliberately host-wall measurement only.  It never
+        # synchronizes CUDA or changes the model/cache execution contract.
         started = time.perf_counter()
+        cache_pack_seconds = 0.0
+        cache_adoption_seconds = 0.0
         # The authoritative decoder executes every model forward under
         # ``torch.no_grad``.  The scheduler must keep that invariant even
         # though it owns the incremental calls rather than the recursive body.
         with torch.no_grad():
             if len(selected) == 1:
                 request = requests[0]
+                model_started = time.perf_counter()
                 outputs = model(**ready_incremental_forward_kwargs(
                     token_ids=[request.token_id], position=request.position,
                     cache=request.cache, device=model.device,
                 ))
+                model_call_seconds = time.perf_counter() - model_started
                 outputs_by_cell = [outputs]
             else:
+                pack_started = time.perf_counter()
                 merged_legacy = _cat_caches(
                     [request.cache for request in requests], observer=cache_pack_observer,
                 )
                 if cache_pack_observer is not None:
                     cache_pack_observer("before_restore", {"merged_legacy": merged_legacy})
                 merged_cache = _restore_cache_kind(merged_legacy, requests[0].cache)
+                cache_pack_seconds = time.perf_counter() - pack_started
                 if cache_pack_observer is not None:
                     cache_pack_observer("after_restore", {"merged_legacy": merged_legacy, "merged_cache": merged_cache})
                     cache_pack_observer("before_model_forward", {"merged_legacy": merged_legacy, "merged_cache": merged_cache})
+                model_started = time.perf_counter()
                 outputs = model(**ready_incremental_forward_kwargs(
                     token_ids=[request.token_id for request in requests], position=first.request.position,
                     cache=merged_cache, device=model.device,
                 ))
+                model_call_seconds = time.perf_counter() - model_started
                 if cache_pack_observer is not None:
                     cache_pack_observer("after_b2_model_forward", {
                         "merged_legacy": merged_legacy, "merged_cache": merged_cache, "outputs": outputs,
@@ -697,6 +707,7 @@ def run_ready_scheduler(
                 # A lane must retain its original CacheOwner object across B2.
                 # Copy the temporary result into that object; never give a
                 # suspended recursive frame a fresh DynamicCache generation.
+                adopt_started = time.perf_counter()
                 adopted_cache_ids: list[int] = []
                 for request, lane_legacy in zip(requests, split_legacy, strict=True):
                     assert request is not None
@@ -713,6 +724,7 @@ def run_ready_scheduler(
                         # DynamicCache branch above.
                         request.cache_owner.cache = lane_legacy
                         adopted_cache_ids.append(id(request.cache_owner.cache))
+                cache_adoption_seconds = time.perf_counter() - adopt_started
                 outputs_by_cell = []
                 for lane, request in enumerate(requests):
                     assert request is not None
@@ -738,6 +750,7 @@ def run_ready_scheduler(
                     if cache_pack_observer is not None:
                         cache_pack_observer("after_release_temporaries", {"outputs_by_cell": outputs_by_cell})
         elapsed = time.perf_counter() - started
+        scheduler_overhead_seconds = max(0.0, elapsed - model_call_seconds - cache_pack_seconds - cache_adoption_seconds)
         if observer is not None:
             observer("after_model_forward", {
                 "physical_forward_index": forwards + 1,
@@ -762,6 +775,10 @@ def run_ready_scheduler(
             "forward_index": forwards,
             "physical_batch": len(selected),
             "position": first.request.position,
+            "host_model_call_seconds": model_call_seconds,
+            "host_cache_pack_seconds": cache_pack_seconds,
+            "host_cache_adoption_seconds": cache_adoption_seconds,
+            "host_scheduler_overhead_seconds": scheduler_overhead_seconds,
             "cache_geometry": repr(first.request.cache_key),
             "cell_keys": [cell.cell_key for cell in selected],
             "request_ordinals": [request.ordinal for request in requests],
