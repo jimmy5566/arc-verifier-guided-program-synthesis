@@ -211,18 +211,32 @@ def _logits_diagnostic(logits: Any, arc_tokens: tuple[int, ...]) -> dict[str, An
     }
 
 
-def _cat_caches(caches: list[Any]) -> tuple[tuple[Any, ...], ...]:
+def _cat_caches(
+    caches: list[Any],
+    *,
+    observer: Callable[[str, dict[str, Any]], None] | None = None,
+) -> tuple[tuple[Any, ...], ...]:
     import torch
 
     if not caches:
         raise ValueError("cannot concatenate no caches")
     legacy = [_legacy_cache(cache) for cache in caches]
+    if observer is not None:
+        observer("legacy_views", {"legacy": legacy})
     reference = cache_geometry(legacy[0])
     if any(cache_geometry(item) != reference for item in legacy[1:]):
         raise RuntimeError("attempted dynamic batch with incompatible real KV caches")
-    return tuple(tuple(torch.cat([item[layer_i][part_i] for item in legacy], dim=0)
-                             for part_i in range(len(legacy[0][layer_i])))
-                 for layer_i in range(len(legacy[0])))
+    packed_layers = []
+    for layer_i in range(len(legacy[0])):
+        packed = tuple(torch.cat([item[layer_i][part_i] for item in legacy], dim=0)
+                       for part_i in range(len(legacy[0][layer_i])))
+        packed_layers.append(packed)
+        if observer is not None and layer_i in {0, 8, 16, 24, 35, len(legacy[0]) - 1}:
+            observer("packed_layer", {"layer_index": layer_i, "legacy": legacy, "packed_layers": packed_layers})
+    merged = tuple(packed_layers)
+    if observer is not None:
+        observer("merged_legacy", {"legacy": legacy, "merged": merged})
+    return merged
 
 
 def _split_cache(cache: Any, expected: int) -> list[tuple[tuple[Any, ...], ...]]:
@@ -497,6 +511,7 @@ def run_ready_scheduler(
     dynamic_batch2: bool,
     scheduling_policy: SchedulingPolicy = "serial",
     observer: Callable[[str, dict[str, Any]], None] | None = None,
+    cache_pack_observer: Callable[[str, dict[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     """Drive independent cells through one shared physical B1/B2 path.
 
@@ -565,9 +580,14 @@ def run_ready_scheduler(
                 ))
                 outputs_by_cell = [outputs]
             else:
-                merged_cache = _restore_cache_kind(
-                    _cat_caches([request.cache for request in requests]), requests[0].cache,
+                merged_legacy = _cat_caches(
+                    [request.cache for request in requests], observer=cache_pack_observer,
                 )
+                if cache_pack_observer is not None:
+                    cache_pack_observer("before_restore", {"merged_legacy": merged_legacy})
+                merged_cache = _restore_cache_kind(merged_legacy, requests[0].cache)
+                if cache_pack_observer is not None:
+                    cache_pack_observer("after_restore", {"merged_legacy": merged_legacy, "merged_cache": merged_cache})
                 outputs = model(**ready_incremental_forward_kwargs(
                     token_ids=[request.token_id for request in requests], position=first.request.position,
                     cache=merged_cache, device=model.device,
@@ -576,6 +596,8 @@ def run_ready_scheduler(
                     _restore_cache_kind(item, outputs.past_key_values)
                     for item in _split_cache(outputs.past_key_values, len(selected))
                 ]
+                if cache_pack_observer is not None:
+                    cache_pack_observer("after_split", {"merged_legacy": merged_legacy, "merged_cache": merged_cache, "split_cache": split_cache})
                 outputs_by_cell = []
                 for lane, cache in enumerate(split_cache):
                     outputs_by_cell.append(type("Reply", (), {"logits": outputs.logits[lane:lane + 1], "past_key_values": cache})())
