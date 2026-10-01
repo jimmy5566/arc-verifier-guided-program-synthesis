@@ -55,8 +55,15 @@ def _assert_authoritative_core_unchanged() -> None:
 def _archive_curated_source(destination: Path) -> None:
     """Archive only runtime code/config, excluding historical artifacts and target files."""
     paths = (
-        "src",
-        "configs",
+        "src/arc",
+        "src/inference/__init__.py",
+        "src/inference/arc_native_io.py",
+        "src/inference/nvarc_native.py",
+        "src/inference/nvarc_native_augmentation.py",
+        "src/inference/nvarc_turbodfs_d1.py",
+        "src/inference/nvarc_turbodfs_reference.py",
+        "src/inference/nvarc_turbodfs_dynamic_ready.py",
+        "configs/nvarc_native_846d0198",
         "scripts/run_clean_hf_parallel_regret_dfs_v1.py",
         "scripts/run_clean_hf_parallel_dfs_b4_compute_v1.py",
         "scripts/run_clean_hf_parallel_dfs_batch_scaling_v2.py",
