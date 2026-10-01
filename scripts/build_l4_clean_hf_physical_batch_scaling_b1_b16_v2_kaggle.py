@@ -92,6 +92,7 @@ def _archive_curated_source(destination: Path) -> None:
 
 def _assert_staged_runner_importable(source: Path) -> None:
     """Exercise the package import closure, not the developer worktree's one."""
+    source = source.resolve()
     runner = source / "scripts" / "run_l4_clean_hf_physical_batch_scaling_b1_b16_v2.py"
     if not runner.is_file():
         raise RuntimeError("curated source is missing the benchmark runner")
@@ -146,6 +147,7 @@ def _assert_notebook_contract(notebook: dict[str, Any]) -> None:
 
 
 def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str) -> dict[str, Any]:
+    output = output.resolve()
     _assert_authoritative_core_unchanged()
     if output.exists():
         raise FileExistsError(f"refusing to overwrite staging directory: {output}")
