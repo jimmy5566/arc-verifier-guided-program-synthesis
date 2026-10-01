@@ -21,13 +21,17 @@ REQUIRED_COPY = {
     "FIXED_DFS_SERIAL_SHARED_B1.csv": ("r128_b1", "FIXED_DFS_SERIAL_SHARED_B1.csv"),
     "FIXED_DFS_ROUND_ROBIN_B1.csv": ("r128_b1", "FIXED_DFS_ROUND_ROBIN_B1.csv"),
     "FIXED_DFS_ROUND_ROBIN_SCHEDULER_AUDIT.json": ("r128_b1", "FIXED_DFS_ROUND_ROBIN_SCHEDULER_AUDIT.json"),
-    "CACHE_OWNERSHIP_IDENTITY.csv": ("b2_micro_corrected_v2", "CACHE_OWNERSHIP_IDENTITY.csv"),
-    "REPEATED_B2_MEMORY_PLATEAU.csv": ("b2_micro_corrected_v2", "REPEATED_B2_MEMORY_PLATEAU.csv"),
-    "REPEATED_B2_MEMORY_DECISION.json": ("b2_micro_corrected_v2", "REPEATED_B2_MEMORY_DECISION.json"),
-    "B2_MICRO_SEMANTICS.csv": ("b2_micro_corrected_v2", "B2_MICRO_SEMANTICS.csv"),
-    "B2_REPEATABILITY.csv": ("b2_micro_corrected_v2", "B2_REPEATABILITY.csv"),
+    "CACHE_OWNERSHIP_IDENTITY.csv": ("b2_micro_corrected_v3", "CACHE_OWNERSHIP_IDENTITY.csv"),
+    "REPEATED_B2_MEMORY_PLATEAU.csv": ("b2_micro_corrected_v3", "REPEATED_B2_MEMORY_PLATEAU.csv"),
+    "REPEATED_B2_MEMORY_DECISION.json": ("b2_micro_corrected_v3", "REPEATED_B2_MEMORY_DECISION.json"),
+    "B2_MICRO_SEMANTICS.csv": ("b2_micro_corrected_v3", "B2_MICRO_SEMANTICS.csv"),
+    "B2_REPEATABILITY.csv": ("b2_micro_corrected_v3", "B2_REPEATABILITY.csv"),
+    "B2_SEMANTIC_CLASSIFICATION.json": ("b2_semantic_classification", "B2_SEMANTIC_CLASSIFICATION.json"),
+    "B2_FIRST_DIVERGENCE_DEFAULT.json": ("b2_internal_divergence_v4", "CLEAN_HF_B2_FIRST_DIVERGENCE.json"),
+    "B2_FIRST_DIVERGENCE_BF16_FULL_REDUCTION.json": ("b2_internal_divergence_bf16full", "CLEAN_HF_B2_FIRST_DIVERGENCE.json"),
     "R128_DYNAMIC_B2_SEMANTICS.csv": ("r128_dynamic_b2", "R128_DYNAMIC_B2_SEMANTICS.csv"),
     "B2_PERFORMANCE.json": ("r128_dynamic_b2", "B2_PERFORMANCE.json"),
+    "R128_B1_PERFORMANCE_REBASELINE.json": ("r128_dynamic_b2", "R128_B1_PERFORMANCE_REBASELINE.json"),
 }
 
 
@@ -66,7 +70,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise RuntimeError(f"refusing to overwrite evidence package: {output}")
     output.mkdir(parents=True)
     required_copy = dict(REQUIRED_COPY)
-    b2_directory = "b2_micro_corrected_v2"
+    b2_directory = "b2_micro_corrected_v3"
     if args.b2_blocked:
         # A rejected B2 is still valuable target-blind evidence.  It must not
         # be made to look like a Dynamic-B2 validation by fabricating its
@@ -77,7 +81,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             if value[0] != "r128_dynamic_b2"
         }
         for destination, (_directory, source_name) in list(required_copy.items()):
-            if _directory == "b2_micro_corrected_v2":
+            if _directory == "b2_micro_corrected_v3":
                 required_copy[destination] = (b2_directory, source_name)
         required_copy.update({
             "B2_SEMANTIC_CLASSIFICATION.json": (
@@ -107,8 +111,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     dynamic = ({"classification": "NOT_RUN_B2_GATE_FAILED",
                 "reason": "B1/B2 first-forward BF16 batch numerical divergence"}
                if args.b2_blocked else _read(source / "r128_dynamic_b2" / "R128_DYNAMIC_B2_DECISION.json"))
-    b2_classification = (_read(source / "b2_semantic_classification" / "B2_SEMANTIC_CLASSIFICATION.json")
-                         if args.b2_blocked else None)
+    b2_classification = _read(source / "b2_semantic_classification" / "B2_SEMANTIC_CLASSIFICATION.json")
     conditions = {
         "crop": crop.get("all_exact") is True,
         "branch_backtrack": branch.get("strict_exact") is True,
@@ -118,7 +121,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "round_robin": round_robin.get("all_strict_semantic_exact") is True and rr_audit.get("status") == "PASS",
         "owner_identity": b2.get("B2_OWNER_IDENTITY") == "PASS",
         "memory_plateau": b2.get("plateau_status") == "PASS" and b2.get("B2_CACHE_GENERATION_LEAK") == "NO",
-        "b2_micro": b2.get("B2_MICRO_SEMANTICS") == "PASS" and b2.get("B2_REPEATABILITY") == "PASS" and b2_semantic.get("LANE_SWAP_EXACT") is True,
+        "b2_micro": (b2.get("B2_OWNER_IDENTITY") == "PASS"
+                     and b2.get("B2_REPEATABILITY") == "PASS"
+                     and b2.get("plateau_status") == "PASS"
+                     and b2_classification.get("classification") in {"EXACT_B1_B2", "BATCH_NUMERICAL_ONLY"}
+                     and b2_classification.get("B1_VS_B2_DISCRETE_EXACT") is True),
         "dynamic": (False if args.b2_blocked else dynamic.get("classification") in {"EXACT_B1_B2", "BATCH_NUMERICAL_ONLY", "SEARCH_TRAJECTORY_SHIFT"}),
     }
     final_state = (
@@ -136,7 +143,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "raw_provenance": {
             "crop_gate": str(source / "crop_gate"), "r32": str(source / "r32"),
             "r128_b1": str(source / "r128_b1"), "b2_micro": str(source / b2_directory),
-            "b2_semantic_classification": (str(source / "b2_semantic_classification") if args.b2_blocked else None),
+            "b2_semantic_classification": str(source / "b2_semantic_classification"),
             "dynamic": None if args.b2_blocked else str(source / "r128_dynamic_b2"),
         },
     }

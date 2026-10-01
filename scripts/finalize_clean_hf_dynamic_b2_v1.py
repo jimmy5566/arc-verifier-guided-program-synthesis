@@ -66,6 +66,46 @@ def _mean(rows: list[float]) -> float | None:
     return sum(rows) / len(rows) if rows else None
 
 
+def _event_seconds(events: list[dict[str, Any]], field: str) -> float:
+    """Sum an explicitly recorded host-side timing field without inventing data."""
+    return sum(float(event.get(field, 0.0) or 0.0) for event in events)
+
+
+def _run_wall_seconds(payload: dict[str, Any], events: list[dict[str, Any]]) -> float | None:
+    """Use the runner stopwatch; only fall back to exhaustive event components."""
+    recorded = payload.get("runtime_telemetry", {}).get("total_host_wall_seconds")
+    if recorded is not None:
+        return float(recorded)
+    component_total = _event_seconds(events, "host_model_call_seconds")
+    component_total += _event_seconds(events, "host_cache_pack_seconds")
+    component_total += _event_seconds(events, "host_cache_adoption_seconds")
+    component_total += _event_seconds(events, "host_scheduler_overhead_seconds")
+    return component_total if component_total else None
+
+
+def _reference_b1_comparison(reference: dict[str, Any], current: dict[str, Any]) -> dict[str, Any]:
+    reference_cells = {cell["cell_key"]: cell for cell in reference["cells"]}
+    current_cells = {cell["cell_key"]: cell for cell in current["cells"]}
+    if set(reference_cells) != set(current_cells):
+        raise RuntimeError("frozen/current B1 cell key mismatch")
+    rows: list[dict[str, Any]] = []
+    first_difference: dict[str, Any] | None = None
+    for key in sorted(reference_cells):
+        left, right = reference_cells[key], current_cells[key]
+        exact = (left["semantic_sha256"] == right["semantic_sha256"]
+                 and left["per_forward_trace_sha256"] == right["per_forward_trace_sha256"])
+        divergence = None if exact else _first_trace_difference(left["per_forward_trace"], right["per_forward_trace"])
+        if first_difference is None and divergence is not None:
+            first_difference = {"cell_key": key, **divergence}
+        rows.append({"cell_key": key, "strict_exact": exact,
+                     "reference_semantic_sha256": left["semantic_sha256"],
+                     "current_semantic_sha256": right["semantic_sha256"]})
+    return {"target_blind": True, "gold_loaded": False, "cell_count": len(rows),
+            "strict_exact_count": sum(bool(row["strict_exact"]) for row in rows),
+            "all_strict_semantic_exact": all(bool(row["strict_exact"]) for row in rows),
+            "first_difference": first_difference, "cells": rows}
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
     b1, dynamic = _load(args.b1), _load(args.dynamic)
     b1_cells = {cell["cell_key"]: cell for cell in b1["cells"]}
@@ -98,19 +138,20 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     else:
         classification = "BATCH_NUMERICAL_ONLY"
     b1_events, dynamic_events = _events(b1), _events(dynamic)
-    b1_wall = sum(float(event.get("wall_seconds", 0.0)) for event in b1_events)
-    dynamic_wall = sum(float(event.get("wall_seconds", 0.0)) for event in dynamic_events)
+    b1_wall = _run_wall_seconds(b1, b1_events)
+    dynamic_wall = _run_wall_seconds(dynamic, dynamic_events)
     dynamic_b2 = [event for event in dynamic_events if int(event.get("physical_batch", 1)) == 2]
     dynamic_b1 = [event for event in dynamic_events if int(event.get("physical_batch", 1)) == 1]
     logical_advances = sum(int(event.get("physical_batch", 1)) for event in dynamic_events)
 
     def _mean_ms(events: list[dict[str, Any]]) -> float | None:
-        value = _mean([float(event.get("wall_seconds", 0.0)) for event in events])
+        value = _mean([float(event.get("host_model_call_seconds", 0.0) or 0.0) for event in events])
         return None if value is None else 1000.0 * value
 
     telemetry = {
         "b1_nodes": _nodes(b1), "dynamic_nodes": _nodes(dynamic),
         "b1_scheduler_wall_seconds": b1_wall, "dynamic_scheduler_wall_seconds": dynamic_wall,
+        "b1_total_host_wall_seconds": b1_wall, "dynamic_total_host_wall_seconds": dynamic_wall,
         "b1_nodes_per_second": _nodes(b1) / b1_wall if b1_wall else None,
         "dynamic_nodes_per_second": _nodes(dynamic) / dynamic_wall if dynamic_wall else None,
         "speedup": ((_nodes(dynamic) / dynamic_wall) / (_nodes(b1) / b1_wall)) if b1_wall and dynamic_wall else None,
@@ -122,9 +163,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "b1_forward_ms": _mean_ms(b1_events),
         "dynamic_b1_forward_ms": _mean_ms(dynamic_b1),
         "dynamic_b2_forward_ms": _mean_ms(dynamic_b2),
-        "dynamic_cache_pack_seconds": sum(float(event.get("host_cache_pack_seconds", 0.0)) for event in dynamic_events),
-        "dynamic_cache_adoption_seconds": sum(float(event.get("host_cache_adoption_seconds", 0.0)) for event in dynamic_events),
-        "dynamic_scheduler_overhead_seconds": sum(float(event.get("host_scheduler_overhead_seconds", 0.0)) for event in dynamic_events),
+        "b1_model_call_seconds": _event_seconds(b1_events, "host_model_call_seconds"),
+        "dynamic_model_call_seconds": _event_seconds(dynamic_events, "host_model_call_seconds"),
+        "dynamic_cache_pack_seconds": _event_seconds(dynamic_events, "host_cache_pack_seconds"),
+        "dynamic_cache_adoption_seconds": _event_seconds(dynamic_events, "host_cache_adoption_seconds"),
+        "dynamic_scheduler_overhead_seconds": _event_seconds(dynamic_events, "host_scheduler_overhead_seconds"),
         "dynamic_peak_allocated_bytes": dynamic.get("runtime_telemetry", {}).get("cuda_peak_allocated_bytes"),
         "dynamic_peak_reserved_bytes": dynamic.get("runtime_telemetry", {}).get("cuda_peak_reserved_bytes"),
     }
@@ -133,19 +176,25 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     with csv_path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=sorted({key for row in rows for key in row}))
         writer.writeheader(); writer.writerows(rows)
-    _atomic_json(args.output / "R128_DYNAMIC_B2_DECISION.json", {
+    decision = {
         "target_blind": True, "gold_loaded": False, "classification": classification,
         "strict_exact_count": sum(bool(row["strict_exact"]) for row in rows), "cell_count": len(rows),
         "first_trajectory_divergence": first_divergence,
         "telemetry": telemetry,
-    })
+    }
+    _atomic_json(args.output / "R128_DYNAMIC_B2_DECISION.json", decision)
     _atomic_json(args.output / "B2_PERFORMANCE.json", telemetry)
+    if args.reference_b1 is not None:
+        reference = _load(args.reference_b1)
+        _atomic_json(args.output / "R128_B1_PERFORMANCE_REBASELINE.json", _reference_b1_comparison(reference, b1))
     return {"classification": classification, "telemetry": telemetry, "rows": rows}
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--b1", type=Path, required=True)
+    parser.add_argument("--reference-b1", type=Path,
+                        help="frozen same-semantics B1 evidence used only to validate a timing rebaseline")
     parser.add_argument("--dynamic", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     return parser.parse_args()
