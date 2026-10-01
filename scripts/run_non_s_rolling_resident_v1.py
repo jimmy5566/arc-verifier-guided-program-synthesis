@@ -427,7 +427,7 @@ def _profile_worker(args: argparse.Namespace, profile: str, budget: int) -> int:
             raise RuntimeError("completed cache has divergent layer lengths")
         finite = all(math.isfinite(float(item.cumulative_nll)) for lane in result.candidates for item in lane)
         entry = {
-            "cell_key": cell.cell_key, "augmentation_id": _augmentation_id, "completion_order": completion_number,
+            "cell_key": cell.cell_key, "augmentation_id": augmentation_id, "completion_order": completion_number,
             "nodes_expanded": sum(1 for node in result.nodes if node.get("state") == "expanded"),
             "model_forwards": result.model_forwards, "tokens_advanced": result.tokens_advanced,
             "completed_candidates": result.completed_candidates, "termination_reason": result.termination_reason,
@@ -441,7 +441,7 @@ def _profile_worker(args: argparse.Namespace, profile: str, budget: int) -> int:
         if not finite:
             failures.append({"cell_key": cell.cell_key, "kind": "non_finite_candidate_score"})
         per_cell.append(entry); pools[cell.cell_key] = pool
-        completion_rows.append({"completion_order": completion_number, "cell_key": cell.cell_key, "augmentation_id": _augmentation_id,
+        completion_rows.append({"completion_order": completion_number, "cell_key": cell.cell_key, "augmentation_id": augmentation_id,
                                 "termination_reason": result.termination_reason, "nodes_expanded": entry["nodes_expanded"],
                                 "candidate_count": entry["completed_candidates"], "candidate_pool_sha256": entry["candidate_pool_sha256"]})
 
