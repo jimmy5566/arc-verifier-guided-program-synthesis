@@ -20,8 +20,9 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+for import_root in (ROOT / "src", ROOT):
+    if str(import_root) not in sys.path:
+        sys.path.insert(0, str(import_root))
 
 from inference.nvarc_turbodfs_dynamic_ready import _legacy_cache, execute_ready_forward, start_ready_cell  # noqa: E402
 from scripts.run_clean_hf_parallel_regret_dfs_v1 import VIEWS, _atomic_json, _cache_transform  # noqa: E402
