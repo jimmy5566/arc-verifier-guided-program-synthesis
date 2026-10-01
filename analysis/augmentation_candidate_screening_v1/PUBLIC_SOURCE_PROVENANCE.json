@@ -1,0 +1,20 @@
+{
+  "audit_scope": "public-source recovery only; no model, GPU, TTT, DFS, Gold, or target output was used",
+  "authoritative_mirror": {
+    "commit": "846d0198efa752534594e321fc3289fc0a06c657",
+    "commit_message": "Update README.md",
+    "mirror_relationship": "ARC-AGI1/README.md states the code is the same as the Kaggle winning notebook, with only test-time fine-tuning evaluation-data changes.",
+    "mirror_relationship_source": "ARC-AGI1/README.md at the pinned commit",
+    "notebook": "ARC-AGI1/002_ivan_arc1.ipynb",
+    "notebook_raw_url": "https://raw.githubusercontent.com/1ytic/NVARC/846d0198efa752534594e321fc3289fc0a06c657/ARC-AGI1/002_ivan_arc1.ipynb",
+    "notebook_sha256": "ec0ac985d7de396c7fb7bede70cc0de40a2161d3b6ec00a123d41024fb8e3104",
+    "repo": "https://github.com/1ytic/NVARC"
+  },
+  "kaggle_notebook": {
+    "direct_export_status": "UNAVAILABLE_TO_THIS_AUDIT; anonymous public API endpoints returned 401/403/404",
+    "owner": "sorokin (Ivan)",
+    "script_version_id_discovered_from_oembed": 276863151,
+    "url": "https://www.kaggle.com/code/sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue"
+  },
+  "source_confidence": "HIGH_FOR_AUGMENTATION_CONTROL_FLOW; the repository explicitly identifies this notebook as same-code mirror of the Kaggle notebook."
+}

@@ -1,0 +1,39 @@
+{
+  "allowed": {
+    "colour": "Any explicit 10-colour bijection represented as old-colour -> new-colour digits; inverse stored with candidate.",
+    "demo_order": [
+      "canonical",
+      "reverse",
+      "rotate_left_1"
+    ],
+    "geometry": [
+      "identity",
+      "rot90",
+      "rot180",
+      "rot270",
+      "flip_lr",
+      "flip_ud",
+      "transpose",
+      "anti_transpose"
+    ]
+  },
+  "excluded": [
+    "crop",
+    "resize",
+    "translation",
+    "noise",
+    "non-bijective recolouring",
+    "topology changes",
+    "lossy transforms",
+    "synthetic perturbation",
+    "Gold-dependent selection"
+  ],
+  "invariants": [
+    "target-independent",
+    "Gold-independent",
+    "label/solution preserving",
+    "exactly invertible geometry and colour mapping",
+    "test input remains final query",
+    "deterministic frozen descriptors"
+  ]
+}

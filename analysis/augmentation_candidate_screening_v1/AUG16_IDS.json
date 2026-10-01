@@ -1,0 +1,21 @@
+{
+  "candidate_ids": [
+    "geom=identity__color=id__order=canonical",
+    "geom=flip_ud__color=id__order=canonical",
+    "geom=transpose__color=id__order=canonical",
+    "geom=anti_transpose__color=id__order=canonical",
+    "geom=rot90__color=id__order=canonical",
+    "geom=rot180__color=id__order=canonical",
+    "geom=rot270__color=id__order=canonical",
+    "geom=flip_lr__color=id__order=canonical",
+    "geom=identity__color=p00_4150723698__order=canonical",
+    "geom=rot90__color=p02_4950812673__order=canonical",
+    "geom=flip_ud__color=p03_5980213764__order=canonical",
+    "geom=anti_transpose__color=p05_5436201789__order=canonical",
+    "geom=identity__color=id__order=reverse",
+    "geom=rot180__color=id__order=rotate_left_1",
+    "geom=transpose__color=p01_1602397845__order=reverse",
+    "geom=flip_lr__color=p07_7690351428__order=rotate_left_1"
+  ],
+  "subset": "PROJECT_RESEARCH_AUG16"
+}

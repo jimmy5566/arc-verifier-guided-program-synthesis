@@ -1,0 +1,17 @@
+{
+  "per_augmentation_metrics": [
+    "total_FIX_cells",
+    "unique_FIX_outputs",
+    "overlap_matrix",
+    "Jaccard_overlap",
+    "incremental_union_contribution",
+    "first_Gold_node",
+    "first_Gold_time",
+    "R512/R1024/R2048/R4096_hit",
+    "search_runtime",
+    "physical_batch_occupancy",
+    "marginal_FIX_per_GPU_minute"
+  ],
+  "selection_rule": "Select best K only after development scoring using a preregistered deterministic objective and evaluate the selected subset on held-out outputs, grouped CV, or a separate validation cohort. Never report same-set selection performance as unbiased generalization.",
+  "status": "PREREGISTERED_SCREENING_DESIGN_ONLY; no accuracy or Gold results exist in this artifact"
+}

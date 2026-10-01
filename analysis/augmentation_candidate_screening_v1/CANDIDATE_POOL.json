@@ -1,0 +1,2399 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "geom=identity__color=id__order=canonical",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "canonical",
+      "geometry": "identity",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "identity",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Mandatory D4 structural baseline; uses no colour or order perturbation.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "b635d360dd6cdcb6cc2f481d58ec3c298935abc698dc0a6b3af2aa40e558a5fe",
+        "4e34c42c": "ad6f348567eb1b3a3351b3f19b61aee113b49500117fcb51d5beaadef56f193f",
+        "5dbc8537": "73046547026fd67872af0217bac71a6e5b3736de3224c24899dd535fc4043afb",
+        "67e490f4": "46b693a75285f860a5d3471bbdf51bdbaa9442f9e8d0efabd847f7a29376d849",
+        "b9e38dc0": "3578ddd0afb5fa19f22f5edb6e886b98d88acf9b5de1df7fb422eb1a4a740de9",
+        "d35bdbdc": "c3922c87da2f868ea835c97616c8af3c83fac8345e745b891bd9cc2a5ff6b630",
+        "d59b0160": "5faf46e4b50ab7fc8b9e909355058a7f79abda5e00e220af6454de77f6857bcd",
+        "e87109e9": "37e2a455119860f44e1aa83a49f3c2facb229bea88e79735ef3730e6d073def5"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_D4_BASELINE",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=flip_ud__color=id__order=canonical",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "canonical",
+      "geometry": "flip_ud",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "flip_ud",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Mandatory D4 structural baseline; uses no colour or order perturbation.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "49de943fd189acdcac36754ecd6d5608b121f0e697c47c76d18f2a6953ca9731",
+        "4e34c42c": "7b6643b6e6d2c711b70bda8fa31ad21c92bc1e435df64ca2283fe4bc64c9b605",
+        "5dbc8537": "3e3d5e91b9c90c94ceee377a28b52b7b5a0b2c80f9d8de97368500aa91634143",
+        "67e490f4": "4722db40342821873a82dd1a46da705db20a049e199edaee03f3edfaef5983b7",
+        "b9e38dc0": "670557a90bd592c71a63964120d376b7d522c00e0c784c412cc5540199345698",
+        "d35bdbdc": "d24d48126cfaaf4061a9034801646f3004eea33867f4ddd883ef3655f680e18f",
+        "d59b0160": "ecac9fc3e0c1c04440f91a8bcc37e04bde61d7d65ca191f89f62f37ab8198034",
+        "e87109e9": "f4446edae5f3fa89aa3e456fa712eafae98b1d5c417f922714cd0ef4f7395653"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_D4_BASELINE",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=transpose__color=id__order=canonical",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "canonical",
+      "geometry": "transpose",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "transpose",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Mandatory D4 structural baseline; uses no colour or order perturbation.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "696f75c87c90a6fa20120b53e54768d72642963f53747136afc202e0676240c2",
+        "4e34c42c": "04dc52a07adc24f3e6468c6700fd522c628f761d2720b82e70503d0f9f41b520",
+        "5dbc8537": "3d1530f2ad5d796f532ad2b9163b6679542fba7e3027d6d6461b753cdf137f62",
+        "67e490f4": "e832b15cdc1cc2d88f03cad3807a6ef0697cab0ff426a51cda1dfdccbbf4c26d",
+        "b9e38dc0": "99ac76f60caced9f2678a460396414ef0156c79b36473ff60dec5647ae356acc",
+        "d35bdbdc": "2f895426963febc93a73ea46382df066d7a47df02ad60c98499dd5b9202513cd",
+        "d59b0160": "82b956a80592698b8103c982bdcfc3bfd9dedb1b5e3631ea9b107bc729d22b16",
+        "e87109e9": "d6addb10e5e6910911422cf7ec85bef19c787e4dd4b5705daaa7169402645f39"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_D4_BASELINE",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=anti_transpose__color=id__order=canonical",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "canonical",
+      "geometry": "anti_transpose",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "anti_transpose",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Mandatory D4 structural baseline; uses no colour or order perturbation.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "b07dbc71dbffee59b82516bf225a7ff890fb5a146020089efa95675c6fdd8e3c",
+        "4e34c42c": "67f1b251072a7e8c39136cae8af1d420675cd813d8c65ea312416a15ae734c19",
+        "5dbc8537": "be2fe467c373cee06ba0e578d75a89f64c6f4e335eac5bdafae8a38dc3c05fcc",
+        "67e490f4": "636e8b517cf602e0454d6f4f68f0d2c5e6bc0cb90dcf2ae2cd65a5f929dde6e4",
+        "b9e38dc0": "7b33646f2a49912aa65c3814130bc140316d853f9c612b87a00d07178da227cc",
+        "d35bdbdc": "650c43ec353e1ad2e4c5ab45071e817f9f4afdf3b8d3c5cd047e73d93a52ecea",
+        "d59b0160": "0be7be095352d29f898564a6894f68f99b96bbc604ac28860f18642fb9261a20",
+        "e87109e9": "89e57f8d6c21c8831c2ae08686160b41ef50df2b787055f7fbd1ff6520e428ee"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_D4_BASELINE",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=rot90__color=id__order=canonical",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "canonical",
+      "geometry": "rot90",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "rot270",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Mandatory D4 structural baseline; uses no colour or order perturbation.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "e440a7d80730dad37aca51c485bd5ea5146cd5d47f545ec78e6e1819399fd33f",
+        "4e34c42c": "60bc44e28787cab4e4e03fa6223b62d64b609c547072366b74ad0c4014f7f542",
+        "5dbc8537": "c0b9f4941f87071eb0bb570f808e87aa941e74efe1ec166ead6abcff8b811cbb",
+        "67e490f4": "151d5dc39808d88533520b3109af9c47aa0754dde465f5f014593e065dc0b122",
+        "b9e38dc0": "b9c20ee91aeb83aa4b2f0a9bc3617a7dc3ccf26556d9237bcebc3bbaf5fa6385",
+        "d35bdbdc": "f661e4a876fc2ada7ff0bdebbe1cf8730fbff21b71911251935180cef3c1be4b",
+        "d59b0160": "17d50ff0525ac218d819a207527aebf0c49c6e86eb64807218c2790f9473868f",
+        "e87109e9": "e2f4c2875a56bc96e1b75a9e0dc4549b3c0994dddab476ac77b9bf865e83e81c"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_D4_BASELINE",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=rot180__color=id__order=canonical",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "canonical",
+      "geometry": "rot180",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "rot180",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Mandatory D4 structural baseline; uses no colour or order perturbation.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "a8a1a78cd384769748ecf79189a935125a10dedcfc1fbcb19184d49a854dccd6",
+        "4e34c42c": "01ce2158db0550392a4fa58e22fe8d85f5ca4a9e5e8614b672623390caa1d2fc",
+        "5dbc8537": "598534b897a3e11dc7c852152622c0983900b30f75efb62afdd17d2c9f5aa203",
+        "67e490f4": "5d48b068039209665372b0e3b15ae41ca2058d99d1868ec78d3a87c340bb6fdd",
+        "b9e38dc0": "9ebf029bac2d341e5640e9451cbe73232bbd8a5faab445bde0f16bcfff5162a4",
+        "d35bdbdc": "296f231b79239598415bb3a0025eb08525efd349cd7b214a8bc41afd14bd3184",
+        "d59b0160": "ac49e5366af03e9a80dff7b4bc1d5b2edc75edece11647eec0ef6e9bf49e579a",
+        "e87109e9": "0c2ef90b76af03ccdbff2bf4b26157baa3a8a1377f9105cbc96b95016ff0b301"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_D4_BASELINE",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=rot270__color=id__order=canonical",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "canonical",
+      "geometry": "rot270",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "rot90",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Mandatory D4 structural baseline; uses no colour or order perturbation.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "b5f6ff92a4653204c01d2eaf7e5cf36057e26748b8aad06a00ca1b4397071fa6",
+        "4e34c42c": "75c930fa13da5781587a54887d47d5bcb67ae2757b9dc15bc47f915bb19d463c",
+        "5dbc8537": "28b51c13d8e3b1f310154f1a7881629ab82da4318173cd7442d567079e829e06",
+        "67e490f4": "6dcced9e6b5c9fa43aac6df5abfcfcf4218758bbeebd61051345602b0ba58347",
+        "b9e38dc0": "206851722aee3b62d73ea3dff1e073443f5c2197b3329fb2e5cd4141ba3906d9",
+        "d35bdbdc": "9052a8b8918577f786b6834959f9c634c70b70bb28d04e1beb8d71be16ad1ead",
+        "d59b0160": "99e8465cdcec4ffb531b7838bdeb8c0319a38b95876520a9416c1dda4496673b",
+        "e87109e9": "e5b846d1b91e22a1bd901971c1b2229ed3ac22d327fe45cc9c382d630322c8f9"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_D4_BASELINE",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=flip_lr__color=id__order=canonical",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "canonical",
+      "geometry": "flip_lr",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "flip_lr",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Mandatory D4 structural baseline; uses no colour or order perturbation.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "6da1e45d3f89c3f8eb3433d11468e393ba5317f0bba4b7aca34de14bf98d4c7d",
+        "4e34c42c": "22fb1bf0cdad5175a2c3b30080eae3d7a7f247f1579b27e3a5648f392290040d",
+        "5dbc8537": "732a776d20a04f461038019c9cb5cfaa854281f16261dfcd810d4a3aaabb512d",
+        "67e490f4": "7bfe9d4ced4f8c86c1de662850d39e2aff506f01305c7a5fbef8c55bc10e5f7f",
+        "b9e38dc0": "44808b8297ed424c80a703764aa64792a54febdc86cf452b89a572470a98b23d",
+        "d35bdbdc": "fecc34432d1503fad1f05f2f429115c919b7195b1db5aa7c6ed8d1cbb350a7de",
+        "d59b0160": "9d7749955506ca71ba311b73e4af77f280046b591beb7bb1d29108a8fca0171d",
+        "e87109e9": "24eca3ef872128efc1d6183bc359f789dc33feecf597d9c5d4f1f7b5ee96501e"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_D4_BASELINE",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=identity__color=p00_4150723698__order=canonical",
+      "color_mapping": "4150723698",
+      "color_name": "p00_4150723698",
+      "demo_order": "canonical",
+      "geometry": "identity",
+      "gold_independent": true,
+      "inverse_color_mapping": "3156027498",
+      "inverse_geometry": "identity",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Public seed=2 colour draw on identity isolates colour representation.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "b5dcd663d6ecdc1849aac7adda859af053ebc705068ed6d77fac5504b0c6b098",
+        "4e34c42c": "2e11b75dfbd00a8c149207ffca3b741b7d71a32c60422dcb0562e303e1c92ed1",
+        "5dbc8537": "830aac855dd0bc1775f82fc9c54d0523ed45ae78929ebde9a8aa80d184cc7d7b",
+        "67e490f4": "34a15ed15b33e0748769910222672ab4091e84c2fe1606563f4006d9e452c024",
+        "b9e38dc0": "8af24e099e737602436a4aac7e947f92189ef204fd9cef208aa78626aac546b5",
+        "d35bdbdc": "5e3beeaf055580b60d1950b4d36f2aa04a66c8330d38d7c7c1bab1c1bc4614ac",
+        "d59b0160": "104f15c9cdb2e1a47d43a8652c75543ea4fe6f15ac585329acb77bcf86f62ae1",
+        "e87109e9": "b76d4a08b53557346b41938486e3776172079e0fd8173ff566491afb79e46d8e"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_COMBINED_PUBLIC_COLOR_SEED2",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=rot90__color=p02_4950812673__order=canonical",
+      "color_mapping": "4950812673",
+      "color_name": "p02_4950812673",
+      "demo_order": "canonical",
+      "geometry": "rot90",
+      "gold_independent": true,
+      "inverse_color_mapping": "3569027841",
+      "inverse_geometry": "rot270",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Geometry-times-colour condition with an independent public seed=2 draw.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "d8c94b3b616a08d1a00808654742c8bf9654b273350ef0c84782fc34bdc8e358",
+        "4e34c42c": "0f5ce6ab120a02dad1d7070edf82a23c08924812803d903048ac48d3611c4aed",
+        "5dbc8537": "b27f78a0bcaf3711976242462d11e9cb2a67c3d412217bc3a6cee2148657312f",
+        "67e490f4": "1329b86c3448a3c9566c7dc89b5b5c42a3da68b869af4473a8e5d3bb3ae6718c",
+        "b9e38dc0": "d7ff3005304a1f4b6556a4fb157f00c77895b9c116a45af899461188dc42aa1e",
+        "d35bdbdc": "f7a014cbc9fc0db79af53147c43c6932f225354fa7a00ada788111c613ac76fd",
+        "d59b0160": "c6cfed6c26f2e645f26d9ba4c9b23ebf47e7124e5c0de4d26379c75c2c70b888",
+        "e87109e9": "3e74e2977a5ddd93749e4675ffaf658a6af706203042a3e5893a0bdee0a30cd1"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_COMBINED_PUBLIC_COLOR_SEED2",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=flip_ud__color=p03_5980213764__order=canonical",
+      "color_mapping": "5980213764",
+      "color_name": "p03_5980213764",
+      "demo_order": "canonical",
+      "geometry": "flip_ud",
+      "gold_independent": true,
+      "inverse_color_mapping": "3546908721",
+      "inverse_geometry": "flip_ud",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Geometry-times-colour condition spanning a reflection.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "abe056c621ca57507755202ae0087234fd443862f3f624c5eede7667552704f3",
+        "4e34c42c": "c05ec69d7a8b3d6bd4cf2d8775ebfc730927e911ec6f6337176c60e5d98a9471",
+        "5dbc8537": "f1b78dd8cd2cbdcf4016d638035c1da7452a806b8c4ec7a9839b86ca14a7ce4e",
+        "67e490f4": "80eaaefb3c204af75f243fee96b36286e7c30df2032cb42686f99caa68f42cc7",
+        "b9e38dc0": "d85cbecb694c8a7afd2756ea2c570c09effb1a14d0fd15e5a9e299becf6252c8",
+        "d35bdbdc": "748d3f495a511f4e676c1194bb7714ddbc76c367932eca053002d7a4b62feb63",
+        "d59b0160": "bada2613d49b62ccf404522f35ba47f96740251cec8d5d2d50656b516760f0c9",
+        "e87109e9": "0e36152d700a693148fc2620e879c33f6bba1e301c0544175860ceb3e075315d"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_COMBINED_PUBLIC_COLOR_SEED2",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=anti_transpose__color=p05_5436201789__order=canonical",
+      "color_mapping": "5436201789",
+      "color_name": "p05_5436201789",
+      "demo_order": "canonical",
+      "geometry": "anti_transpose",
+      "gold_independent": true,
+      "inverse_color_mapping": "5642103789",
+      "inverse_geometry": "anti_transpose",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Geometry-times-colour condition spanning the anti-diagonal symmetry.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "71bedd4d4df082d516f7fc9fff3a4cecbd5a68bfbf923169a6dc9bee8cf8fb85",
+        "4e34c42c": "735b909b7265d5e4e08324d0899afe63a1136fc9354c57f6c2e571f9937ffd6a",
+        "5dbc8537": "557d604b7931a4d8c7552ec8780bdc841b81da1eb31053c821ae9d58b6fd8582",
+        "67e490f4": "426e0f8b6e1d2dc08ced52d63b1544eb3b3bbaa2c344d8db774b0805054cc064",
+        "b9e38dc0": "e7b53df7b37caff21512540a73d020e81c876a621b3df20304ada314c877891d",
+        "d35bdbdc": "87c518509157907d74219c2b4210c1fd37e353e532a82c4abdfcc47a3bde4b16",
+        "d59b0160": "88604ca0b9f048773a841f3a79bf05a459984ef3f128730ec7da1284905f4b2a",
+        "e87109e9": "e586aa6225f19d65d4944ec0af097dd8a8c8843ff1d1dcecfe36f72dccc0465c"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_COMBINED_PUBLIC_COLOR_SEED2",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=identity__color=id__order=reverse",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "reverse",
+      "geometry": "identity",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "identity",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Pure deterministic demonstration-order intervention.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "d89ab4a472a63d396029bbccc1bc20cbe921f5a33d2b9d95b67cf150f6d892af",
+        "4e34c42c": "3687e4806638278c50e4f33f399aa3596661c5f55f6825f240470a803cd46563",
+        "5dbc8537": "e6394a15631c99b5251c408ce9e1e89b2b0abdb784974b4b4abe7315cbc98cbd",
+        "67e490f4": "174f6d7fc6d2e58ca7131d3f349fe57940d3b3971757649410147caf26612da0",
+        "b9e38dc0": "4488bf57da8f56edd10c1b307cbb3d7f67879d387ea779079af86429ce92b160",
+        "d35bdbdc": "18f472f26fb266537126d66a3369c68e4c768df0f2b24076634d9e007ca94c68",
+        "d59b0160": "ac2d5cc8742298e3d474393a7552b8eb32f13a01d46c2595b84521a387abe629",
+        "e87109e9": "8e34b4bd8a6d9de750e4200607eadb02861ef9c7756bf6accaeeb795d2ce995f"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_COMBINED_PUBLIC_COLOR_SEED2",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=rot180__color=id__order=rotate_left_1",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "rotate_left_1",
+      "geometry": "rot180",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "rot180",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Geometry-times-demo-order intervention with no recolouring.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "71029c35a9c92b5d8cc836c5038b639577f0afd740f1c0269ae0a91d16597132",
+        "4e34c42c": "61f981aa9cc7e87230444a20f3352a6419f67b09a524429f1e71443d3c9b5315",
+        "5dbc8537": "b4fe5a754fcf2c18664e3eb3aa125f3da94a86ef44f3fa243903056fc9abf712",
+        "67e490f4": "4bd4c0059d88985661196dbcd80a3fcbea4e6cae1c32b0b6cd1077aa1f0df3af",
+        "b9e38dc0": "01465e514fbc6beeea4e6b92f1009cebf0bf2d43c3173618d4d1dcf618a83934",
+        "d35bdbdc": "86d6bd0d8db49f3975ba702611591a9ea316906c996db6b3120f718355f36526",
+        "d59b0160": "73394284c30755fbb012e233cd5913487d564aab4a1a0f54eab46f7c7bb894aa",
+        "e87109e9": "5081d585cf86df84ab18cb080f387cfe07f8f8a399b00af190ce6f739b0df16a"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_COMBINED_PUBLIC_COLOR_SEED2",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=transpose__color=p01_1602397845__order=reverse",
+      "color_mapping": "1602397845",
+      "color_name": "p01_1602397845",
+      "demo_order": "reverse",
+      "geometry": "transpose",
+      "gold_independent": true,
+      "inverse_color_mapping": "2034891675",
+      "inverse_geometry": "transpose",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Combined geometry, public-colour and order condition.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "3f549bc908b734cc43801f788033955663e21334b14cb096252e68175a6a6318",
+        "4e34c42c": "c764c65bd655c4844004e0f60025808aa806400a8911c6915a454a75de063249",
+        "5dbc8537": "786d7dabb87cc60989aaf73ef15d4a8b3f32da7f0fcad260fa68db0a7aba6353",
+        "67e490f4": "4b1dcfdf339fc309060afab5b63f89f6fc03e51ed27b5465654fb3f856913209",
+        "b9e38dc0": "f568be88c83849d4756b8ef7e64654ed83989cfbef41aef8c6019e38a0a8ac85",
+        "d35bdbdc": "aefed66673232d8a2a304ab5b86ee7f8370b5cd12a6439d1a207bd8cb26f6cc9",
+        "d59b0160": "6ebb5d9fe4bcf4a59c1a4a6430e893ace7c69159f234a40724058cc35685add7",
+        "e87109e9": "90285da5c54c5ee7e8ac741a1dfee7f831588756f8a01aad3a29e93a5f477b1a"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_COMBINED_PUBLIC_COLOR_SEED2",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=flip_lr__color=p07_7690351428__order=rotate_left_1",
+      "color_mapping": "7690351428",
+      "color_name": "p07_7690351428",
+      "demo_order": "rotate_left_1",
+      "geometry": "flip_lr",
+      "gold_independent": true,
+      "inverse_color_mapping": "3684751092",
+      "inverse_geometry": "flip_lr",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Combined reflection, public-colour and order condition.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "9a9eb5dbb1e217c77a6f9da29015e248e667c62c37c5bdbab20affea067c7679",
+        "4e34c42c": "e07f33e8fcb812d4d5f37a0f97ab5e0f5e65355104087e4f3d55652b47069d17",
+        "5dbc8537": "aa2f8b9d28985dfe12e26319f79d512de992c731c48238e9a29164c35461a51d",
+        "67e490f4": "eb62474b53bc6d17466884f85edab43cb0085bcc0a0002a1ab536b0287a94284",
+        "b9e38dc0": "56767c402ff8beae26bf6827089c8839aee09822bc8585bd7ed95f24ff4363b7",
+        "d35bdbdc": "73664547f9ca24112c1e9bedf455a3c59b2f8bff5c05b65683330594110c5d30",
+        "d59b0160": "a51ab3db7b3a6beba193cfb64a3cc39c09b4ba8cd81fc1c5e0040d0899548d6b",
+        "e87109e9": "26ca6ba23003b37de9142e74edd7595f0a9a586f26e86073119f943d6fd8e487"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_COMBINED_PUBLIC_COLOR_SEED2",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=identity__color=p06_1654278039__order=canonical",
+      "color_mapping": "1654278039",
+      "color_name": "p06_1654278039",
+      "demo_order": "canonical",
+      "geometry": "identity",
+      "gold_independent": true,
+      "inverse_color_mapping": "7048321569",
+      "inverse_geometry": "identity",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Additional public-colour draw on identity.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "88b4d38624aade884ae75d24dd769a822d03ce28067209c3c049a0484ca13972",
+        "4e34c42c": "6f88c1f117c7a76921ea89a91e515acc0a10a9d8609d1ec264390db359885dcd",
+        "5dbc8537": "20499178a844e03bb64970b829fc57c7ce25029122b1b3e84fddb08882b1ce60",
+        "67e490f4": "ffa766da728d18030972957e6488a2e072851b89c613509440b305a3a73ceb20",
+        "b9e38dc0": "5891f470e48133ead17fa27cdd1c993b7e90947254a1db7864fc67707fc9aea3",
+        "d35bdbdc": "b23d3428945e783b1bfe7ec490241b77fa11fe453892f7fd7c8dd119ba2f3e60",
+        "d59b0160": "36d324c91bd8786c1ac170c29d8c55cd6a272a925c16a81c32050eeba10195d0",
+        "e87109e9": "a40217ecb97f895552dc606a5ff94aefb2c9cb789e268dc580e098612d413989"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_AUG24_EXTENSION",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=rot270__color=p14_4965803712__order=canonical",
+      "color_mapping": "4965803712",
+      "color_name": "p14_4965803712",
+      "demo_order": "canonical",
+      "geometry": "rot270",
+      "gold_independent": true,
+      "inverse_color_mapping": "5896032741",
+      "inverse_geometry": "rot90",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Additional geometry-times-colour condition.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "e8bd398b8c4d5328e40d04132a6ba0a363c256767b829a156e1709b05cf93240",
+        "4e34c42c": "9a5cb6079060dbe13810d4706ae74bfa0960a2a6c4887126eccbb161727323bd",
+        "5dbc8537": "e2562f7200005958530e2686d0e28228cfc48960e151112e2679b36ef9b2f6cf",
+        "67e490f4": "ed4c0d6bcd4f65f2d0d40199e88f9973e48e5f2337ea49900578f2f59fd61119",
+        "b9e38dc0": "67d57f7bd9bff20874f8d71ee42c6980dfd3356c98e7eeb30531d675666f8190",
+        "d35bdbdc": "2f15296464e0567cc11df8b91d645aa47851d83b92087a60912af46e4976008b",
+        "d59b0160": "a5c26cc7de662951406af2ce1fcc01caa56df8ca29b13fa5b350ec222f58dc60",
+        "e87109e9": "a0cc4673072b09020067c1578cb56678e84d358dfc52569fc16ccb4a2a83ea28"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_AUG24_EXTENSION",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=flip_lr__color=p07_7690351428__order=canonical",
+      "color_mapping": "7690351428",
+      "color_name": "p07_7690351428",
+      "demo_order": "canonical",
+      "geometry": "flip_lr",
+      "gold_independent": true,
+      "inverse_color_mapping": "3684751092",
+      "inverse_geometry": "flip_lr",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Separates the flip-left-right colour condition from its AUG16 order perturbation.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "7eb6de5e6a462d72ea32c2c154173468f9ea2d8c3acc8f44a2b5d4552b6f7f42",
+        "4e34c42c": "f0aa23e4d37406948748d4a5397928008f712c417f2799e6832b49a0a0a6900b",
+        "5dbc8537": "386d285bc04076d32d45059e3778d0e5191b6152ffcfa1d47342779dcdc3ded3",
+        "67e490f4": "d66800e190145406383d07050238b52899378f000e3f0de653eb6eec075d0728",
+        "b9e38dc0": "1f531d8f2c0994c20875975d21c94899167ce9b5092db7518ea4e59845172082",
+        "d35bdbdc": "a7cb0267bbac37d2479ee8c551e88301f9d4529796048bd3c814a82b7e6ab07c",
+        "d59b0160": "b35b9ecf526ded4c5c50ac3568e06c5138c34e4191c458b381449cf42fdfba78",
+        "e87109e9": "eaf8993ae2fc301cc3913f8142497f2de3bee4bcda9e247c29fb3ac7b8c888df"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_AUG24_EXTENSION",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=transpose__color=p09_9180254367__order=canonical",
+      "color_mapping": "9180254367",
+      "color_name": "p09_9180254367",
+      "demo_order": "canonical",
+      "geometry": "transpose",
+      "gold_independent": true,
+      "inverse_color_mapping": "3147658920",
+      "inverse_geometry": "transpose",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Additional transposed public-colour condition.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "5f190186051257710afecda3804d8547dd28a915f399b193786693396281ca62",
+        "4e34c42c": "c3726f6b6fca26a51308c14a0b0c6dfad401f6bfcc675440600a74594d27ea6b",
+        "5dbc8537": "e710a9177339b70d716b21170fbc4fc3a693ff7c270febfcd1ce35af4be1eae4",
+        "67e490f4": "70580f2cb61a43972818e8fc55e9cdfcd8d8cb9621319be843b1bfba56ea14e2",
+        "b9e38dc0": "100677c92885cdc5f08bda748deaf331f9638caf97929b0b8e40fb3ecbb84d52",
+        "d35bdbdc": "20bc170a4fc712fba2aa4a5d1a89f41166c97fa302e93180e23320675138f8f4",
+        "d59b0160": "4ed369867621a621dcf34088203404d1ced6436be0052da00ad9f13b028666e1",
+        "e87109e9": "379d48699f4964044e92fa1395bf61ec6cd466808bdb2dd355bb6ca695cae1ea"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_AUG24_EXTENSION",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=identity__color=id__order=rotate_left_1",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "rotate_left_1",
+      "geometry": "identity",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "identity",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Pure rotate-left demonstration-order condition.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "d89ab4a472a63d396029bbccc1bc20cbe921f5a33d2b9d95b67cf150f6d892af",
+        "4e34c42c": "3687e4806638278c50e4f33f399aa3596661c5f55f6825f240470a803cd46563",
+        "5dbc8537": "e6394a15631c99b5251c408ce9e1e89b2b0abdb784974b4b4abe7315cbc98cbd",
+        "67e490f4": "174f6d7fc6d2e58ca7131d3f349fe57940d3b3971757649410147caf26612da0",
+        "b9e38dc0": "af6fc1da8b39b83320a916a411999fd9c7292c7fdd422a959215c2ce9ad39c3a",
+        "d35bdbdc": "e406da2a3d7ac1748b1bfb2184101c4036dca72726c635e7d071ea66ed22458e",
+        "d59b0160": "fbbe0fc15152cfb603768279d628fc53793342122b67603ccaeae57e716eadf1",
+        "e87109e9": "8a71a69899c5236dbae66d3c595976bd7a8e8cbd5927d339dbf2fda3af3aa122"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_AUG24_EXTENSION",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=rot90__color=id__order=rotate_left_1",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "rotate_left_1",
+      "geometry": "rot90",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "rot270",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Rotational geometry-times-order condition.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "6ff8460ea148f2460ace1fc6c4a737f28788f2f0a073d7e1cbc61bab2ed12af9",
+        "4e34c42c": "e9dcd8b9e15de2ab02f1db2cdeaf4aefb4579dcadc43bb47fe2f2ad9b9a19e80",
+        "5dbc8537": "3b350f3c23b42e32e38f36c37fc490ec1072ddefe37d1a91014c0f66d998a54e",
+        "67e490f4": "2d854857de64446b2c51a79d161b645cf6c194674ba2783f38f94fc5b304959d",
+        "b9e38dc0": "7f96caceb2fd1ede453a372835e970e73a911a56d43a7f6605117d4f639bec53",
+        "d35bdbdc": "ae3e2c94fb620f9ca576b4a85e4620e36d09c7a73db3a364187b737558e343cb",
+        "d59b0160": "763d2a641c356a9955bae12f4fdd024a6a4c051d2c640c5712f1d8b3758fd383",
+        "e87109e9": "ec58e6176be0c141c7fd3fe248406238434a4a68f453b99ca3c98b9e1085a3c7"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_AUG24_EXTENSION",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=flip_ud__color=id__order=reverse",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "reverse",
+      "geometry": "flip_ud",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "flip_ud",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Reflection-times-order condition.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "59f3c80f3ba2d18f6267ff6ec3a12b2eafd40b5a644bc28d1105615b5f8a6870",
+        "4e34c42c": "126e202d38349fad69b6d9cb405e1ecda330a869a12df0899f83acb442887f73",
+        "5dbc8537": "cbb29ece46303643b3e595e98d5302ab83058e418297eef377817a55b7788cd2",
+        "67e490f4": "9728763d51bf7cd36eac8621db31df2588a7b2429b56a54f0b4cee43e728820d",
+        "b9e38dc0": "b831df5de654197179f95025475606132ddcaa7dc0c039668a32a61a48cb4e52",
+        "d35bdbdc": "fedc040e3dc95df9b25ad9d5000d5aee3402bb3cfdf3ae38a6e067bafe6f7fae",
+        "d59b0160": "3143b53dda8b6af778457d832e36d8c38e3c7f01c77355eb103596f3bc9d506a",
+        "e87109e9": "6adf165faadaf565358668ea3a679e05e98b66a93279cab274239423e70f583b"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_AUG24_EXTENSION",
+      "test_target_independent": true
+    },
+    {
+      "candidate_id": "geom=anti_transpose__color=id__order=reverse",
+      "color_mapping": "0123456789",
+      "color_name": "id",
+      "demo_order": "reverse",
+      "geometry": "anti_transpose",
+      "gold_independent": true,
+      "inverse_color_mapping": "0123456789",
+      "inverse_geometry": "anti_transpose",
+      "label_solution_preserving": true,
+      "provenance_class": "PROJECT_DEFINED",
+      "rationale": "Anti-diagonal geometry-times-order condition.",
+      "representative_prompt_identity_status": "TASK_DEPENDENT; exact values frozen for deterministic representative task screen",
+      "representative_prompt_sha256_by_task": {
+        "16b78196": "8b0095df80c12e2d952292b8e4be95d1d198f695a7c7bd0d59bd38a2a238f9e8",
+        "4e34c42c": "9c1da3becfa37002c50f928e20ab750bf1c11e6c33efc43204691bf0c041ce18",
+        "5dbc8537": "5b6345caf9d414e5ba58d48c9a30c1de1b9b148f8a6fdb91f499be7fede4c66f",
+        "67e490f4": "c19c72e8352f807b5c398a9621dc315b68cc4ff0a1b03d11cfe8a95732e1e0f9",
+        "b9e38dc0": "94e198dc181ec0bd81954c2cf6579588071064f578dfdc37a0f154e0f6f7d11d",
+        "d35bdbdc": "408747309bbf819ec0f00c50ab9456aa4a2abaad5b844873da00fe53daeeaec1",
+        "d59b0160": "bdb3ae6cf5cf60a281da9d6c0a01532ae1abe2bb6427386e3e54d36a57a289f8",
+        "e87109e9": "a99e8bf6aab1a29455b3a84b4b696a1cb8805bd583d48a31a1c6858b46fed0d8"
+      },
+      "rng_source": "none; explicit frozen mapping/order",
+      "source_family": "PROJECT_AUG24_EXTENSION",
+      "test_target_independent": true
+    }
+  ],
+  "pool_size": 24,
+  "representative_task_prompt_evidence": {
+    "16b78196": {
+      "geom=anti_transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "b07dbc71dbffee59b82516bf225a7ff890fb5a146020089efa95675c6fdd8e3c",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "b8d0cec82640e06df70ab68a5c7a4be9b8d0765f5c8245998b65bdff020c616e"
+      },
+      "geom=anti_transpose__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "8b0095df80c12e2d952292b8e4be95d1d198f695a7c7bd0d59bd38a2a238f9e8",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "b8d0cec82640e06df70ab68a5c7a4be9b8d0765f5c8245998b65bdff020c616e"
+      },
+      "geom=anti_transpose__color=p05_5436201789__order=canonical": {
+        "colour_mapping_sha256": "61738b1f185d51fb7ba0d284bb77579a67da3c06e711c6f04776841cd0f7677f",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "71bedd4d4df082d516f7fc9fff3a4cecbd5a68bfbf923169a6dc9bee8cf8fb85",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "629feb760d5026e958cba7a4e3379651bb62e161d7e6bae80ae93693eb6635c7"
+      },
+      "geom=flip_lr__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "6da1e45d3f89c3f8eb3433d11468e393ba5317f0bba4b7aca34de14bf98d4c7d",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "961da56a04cc905fe89b963c02e6ef25896e1bbf3c40cbfeaf8693df5c0daa31"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=canonical": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "7eb6de5e6a462d72ea32c2c154173468f9ea2d8c3acc8f44a2b5d4552b6f7f42",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "181d8d49a9ce11607e3ba6114e57bf95265eb287c5486097aab14218708a2767"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "9a9eb5dbb1e217c77a6f9da29015e248e667c62c37c5bdbab20affea067c7679",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "181d8d49a9ce11607e3ba6114e57bf95265eb287c5486097aab14218708a2767"
+      },
+      "geom=flip_ud__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "49de943fd189acdcac36754ecd6d5608b121f0e697c47c76d18f2a6953ca9731",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "12ab9bf32d4fff0918cbe4be56170e3993a2849175d031ab95dea946403a21f1"
+      },
+      "geom=flip_ud__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "59f3c80f3ba2d18f6267ff6ec3a12b2eafd40b5a644bc28d1105615b5f8a6870",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "12ab9bf32d4fff0918cbe4be56170e3993a2849175d031ab95dea946403a21f1"
+      },
+      "geom=flip_ud__color=p03_5980213764__order=canonical": {
+        "colour_mapping_sha256": "94e252d1440e7b570f18d051094b3065018d70c5f5488ee5936fc5cb60c94549",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "abe056c621ca57507755202ae0087234fd443862f3f624c5eede7667552704f3",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "1f398b85d01b35990c9a0c79ad182464f5239ca5eaf777b2be7ddc11023a5457"
+      },
+      "geom=identity__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "b635d360dd6cdcb6cc2f481d58ec3c298935abc698dc0a6b3af2aa40e558a5fe",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "14433ddac7fd241da8debb43dfa89ab758317b055bfdb26122d021d7247258af"
+      },
+      "geom=identity__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "d89ab4a472a63d396029bbccc1bc20cbe921f5a33d2b9d95b67cf150f6d892af",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "14433ddac7fd241da8debb43dfa89ab758317b055bfdb26122d021d7247258af"
+      },
+      "geom=identity__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "d89ab4a472a63d396029bbccc1bc20cbe921f5a33d2b9d95b67cf150f6d892af",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "14433ddac7fd241da8debb43dfa89ab758317b055bfdb26122d021d7247258af"
+      },
+      "geom=identity__color=p00_4150723698__order=canonical": {
+        "colour_mapping_sha256": "d1ed26003273414aed7d5f865ff3c7cfdb700185e2d353c9038a4bb437b1a49f",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "b5dcd663d6ecdc1849aac7adda859af053ebc705068ed6d77fac5504b0c6b098",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "dc3575ba5a212b4c8dbd5cf8b64e7437f2a1620e4d61cfdbb97b0d666bf7d8bf"
+      },
+      "geom=identity__color=p06_1654278039__order=canonical": {
+        "colour_mapping_sha256": "2825c8baf933553443348d7a5c0a3ea0c7488f1f4346603b9433ff6efcb4f03d",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "88b4d38624aade884ae75d24dd769a822d03ce28067209c3c049a0484ca13972",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "173f3df560cf452f11168a4ab041c5d25fe9625979ddd0beac0c910d489adea7"
+      },
+      "geom=rot180__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "a8a1a78cd384769748ecf79189a935125a10dedcfc1fbcb19184d49a854dccd6",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "8168eec54c9870f9591453abd243b2074bede961f5a11528e33ca8d440e0a436"
+      },
+      "geom=rot180__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "71029c35a9c92b5d8cc836c5038b639577f0afd740f1c0269ae0a91d16597132",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "8168eec54c9870f9591453abd243b2074bede961f5a11528e33ca8d440e0a436"
+      },
+      "geom=rot270__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "b5f6ff92a4653204c01d2eaf7e5cf36057e26748b8aad06a00ca1b4397071fa6",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ffda5ddfc84365f45327101197d051454409aab5efdd0c0f56dd58f558cfe6d5"
+      },
+      "geom=rot270__color=p14_4965803712__order=canonical": {
+        "colour_mapping_sha256": "116022b5bf62dcae59158476ebfed59bcfe78c753c0dba84dd02aa909ae61249",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "e8bd398b8c4d5328e40d04132a6ba0a363c256767b829a156e1709b05cf93240",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "593f7aaef2052444e4f59c7e4e536b7fdb8bfdc015c84cb9bc4f3f2597020b36"
+      },
+      "geom=rot90__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "e440a7d80730dad37aca51c485bd5ea5146cd5d47f545ec78e6e1819399fd33f",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "cc589019bc0a7fe6abef0ae658466186905aa3bc8833e7209bcdda6ae66e6662"
+      },
+      "geom=rot90__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "6ff8460ea148f2460ace1fc6c4a737f28788f2f0a073d7e1cbc61bab2ed12af9",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "cc589019bc0a7fe6abef0ae658466186905aa3bc8833e7209bcdda6ae66e6662"
+      },
+      "geom=rot90__color=p02_4950812673__order=canonical": {
+        "colour_mapping_sha256": "909681bb13d3a359b83bdaa1dddcb3946c18602572aa8a92d4413d71cf7244e7",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "d8c94b3b616a08d1a00808654742c8bf9654b273350ef0c84782fc34bdc8e358",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "6768df8b72d269fd1d76dfff07259735dfdfcb949e1ce3b4da37afcab3079e86"
+      },
+      "geom=transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "696f75c87c90a6fa20120b53e54768d72642963f53747136afc202e0676240c2",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "4c64a5c721547fa82b451725dc7525e0dd5be51d9770bd01a1e05faf22cac096"
+      },
+      "geom=transpose__color=p01_1602397845__order=reverse": {
+        "colour_mapping_sha256": "9bf21e4901b4cab95818959a6dbf78c3c044fe4cd080a53e5c7e862cf1122ab6",
+        "demo_order": "reverse",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "3f549bc908b734cc43801f788033955663e21334b14cb096252e68175a6a6318",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "93d1c3c99e58fe864151a1276be6cc60541315e3d7278ad946c5f46b71a08187"
+      },
+      "geom=transpose__color=p09_9180254367__order=canonical": {
+        "colour_mapping_sha256": "40d1ef908d5123cd008ab4124907077a9ae68a2c21748f1cb431cc61f4f41c16",
+        "demo_order": "canonical",
+        "prompt_bytes": 4812,
+        "prompt_sha256": "5f190186051257710afecda3804d8547dd28a915f399b193786693396281ca62",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "fba46a330c511484f3c4952870e9468dc7d33385ff4ef72cf2fe66ac1ccb3046"
+      }
+    },
+    "4e34c42c": {
+      "geom=anti_transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2126,
+        "prompt_sha256": "67f1b251072a7e8c39136cae8af1d420675cd813d8c65ea312416a15ae734c19",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "99cb202bd2ba53c5e7a38d5bc7a4c859487b5505f13fbb814c67873ba7316f1c"
+      },
+      "geom=anti_transpose__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 2126,
+        "prompt_sha256": "9c1da3becfa37002c50f928e20ab750bf1c11e6c33efc43204691bf0c041ce18",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "99cb202bd2ba53c5e7a38d5bc7a4c859487b5505f13fbb814c67873ba7316f1c"
+      },
+      "geom=anti_transpose__color=p05_5436201789__order=canonical": {
+        "colour_mapping_sha256": "61738b1f185d51fb7ba0d284bb77579a67da3c06e711c6f04776841cd0f7677f",
+        "demo_order": "canonical",
+        "prompt_bytes": 2126,
+        "prompt_sha256": "735b909b7265d5e4e08324d0899afe63a1136fc9354c57f6c2e571f9937ffd6a",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "e6fc2626e7c055341d1785641069b151f08f701641c591d200c5dd6a605805d0"
+      },
+      "geom=flip_lr__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "22fb1bf0cdad5175a2c3b30080eae3d7a7f247f1579b27e3a5648f392290040d",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "224b486bdf415a8e4e9e4431ad43802533b038e4e6846f3a7f9156b0ff6970ae"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=canonical": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "canonical",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "f0aa23e4d37406948748d4a5397928008f712c417f2799e6832b49a0a0a6900b",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "848fca8aa74f2808cbff2f7a9f76ff25d325883941d1e29bf7ff342735718c4d"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "e07f33e8fcb812d4d5f37a0f97ab5e0f5e65355104087e4f3d55652b47069d17",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "848fca8aa74f2808cbff2f7a9f76ff25d325883941d1e29bf7ff342735718c4d"
+      },
+      "geom=flip_ud__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "7b6643b6e6d2c711b70bda8fa31ad21c92bc1e435df64ca2283fe4bc64c9b605",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "eede64d23153c2baec631cd3767994f71a477448cc75d61a04aca77abbe69e02"
+      },
+      "geom=flip_ud__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "126e202d38349fad69b6d9cb405e1ecda330a869a12df0899f83acb442887f73",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "eede64d23153c2baec631cd3767994f71a477448cc75d61a04aca77abbe69e02"
+      },
+      "geom=flip_ud__color=p03_5980213764__order=canonical": {
+        "colour_mapping_sha256": "94e252d1440e7b570f18d051094b3065018d70c5f5488ee5936fc5cb60c94549",
+        "demo_order": "canonical",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "c05ec69d7a8b3d6bd4cf2d8775ebfc730927e911ec6f6337176c60e5d98a9471",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "f1a3ecb6db9b18dbe7c33250d90fe9da5f239b2750dbd109f98adf8d59ba35cb"
+      },
+      "geom=identity__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "ad6f348567eb1b3a3351b3f19b61aee113b49500117fcb51d5beaadef56f193f",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ccd0bbda932b705ed57a301d30a39882ee16b7f381b0c4912c97e558b8d0be3f"
+      },
+      "geom=identity__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "3687e4806638278c50e4f33f399aa3596661c5f55f6825f240470a803cd46563",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ccd0bbda932b705ed57a301d30a39882ee16b7f381b0c4912c97e558b8d0be3f"
+      },
+      "geom=identity__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "3687e4806638278c50e4f33f399aa3596661c5f55f6825f240470a803cd46563",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ccd0bbda932b705ed57a301d30a39882ee16b7f381b0c4912c97e558b8d0be3f"
+      },
+      "geom=identity__color=p00_4150723698__order=canonical": {
+        "colour_mapping_sha256": "d1ed26003273414aed7d5f865ff3c7cfdb700185e2d353c9038a4bb437b1a49f",
+        "demo_order": "canonical",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "2e11b75dfbd00a8c149207ffca3b741b7d71a32c60422dcb0562e303e1c92ed1",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "fbf40c9de7b4fad09cb9fc8f87fd1592a004e8a72a98f3ec8e43001ca70715a7"
+      },
+      "geom=identity__color=p06_1654278039__order=canonical": {
+        "colour_mapping_sha256": "2825c8baf933553443348d7a5c0a3ea0c7488f1f4346603b9433ff6efcb4f03d",
+        "demo_order": "canonical",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "6f88c1f117c7a76921ea89a91e515acc0a10a9d8609d1ec264390db359885dcd",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ff0c8759d507a950622b9a232dafabb2d713b2431563c904b4c0e0fe17337dbc"
+      },
+      "geom=rot180__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "01ce2158db0550392a4fa58e22fe8d85f5ca4a9e5e8614b672623390caa1d2fc",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "d378750faf445ee8f7f34b7618eb2fcd86d2c21eb423db3465b500bf9e1892aa"
+      },
+      "geom=rot180__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 2116,
+        "prompt_sha256": "61f981aa9cc7e87230444a20f3352a6419f67b09a524429f1e71443d3c9b5315",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "d378750faf445ee8f7f34b7618eb2fcd86d2c21eb423db3465b500bf9e1892aa"
+      },
+      "geom=rot270__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2126,
+        "prompt_sha256": "75c930fa13da5781587a54887d47d5bcb67ae2757b9dc15bc47f915bb19d463c",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "6cf78d786daba7a42ae532433f32ef0aad19a091cbc3ee9e48cfe27c1ad6c7af"
+      },
+      "geom=rot270__color=p14_4965803712__order=canonical": {
+        "colour_mapping_sha256": "116022b5bf62dcae59158476ebfed59bcfe78c753c0dba84dd02aa909ae61249",
+        "demo_order": "canonical",
+        "prompt_bytes": 2126,
+        "prompt_sha256": "9a5cb6079060dbe13810d4706ae74bfa0960a2a6c4887126eccbb161727323bd",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "3d9142205b8e515dbc81826ee46762d70a6c4426236b4dbe3ea873c360de137a"
+      },
+      "geom=rot90__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2126,
+        "prompt_sha256": "60bc44e28787cab4e4e03fa6223b62d64b609c547072366b74ad0c4014f7f542",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "e04d145f69d0694194884f9e4bafe50581061bf1454f951e098690784a8152e0"
+      },
+      "geom=rot90__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 2126,
+        "prompt_sha256": "e9dcd8b9e15de2ab02f1db2cdeaf4aefb4579dcadc43bb47fe2f2ad9b9a19e80",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "e04d145f69d0694194884f9e4bafe50581061bf1454f951e098690784a8152e0"
+      },
+      "geom=rot90__color=p02_4950812673__order=canonical": {
+        "colour_mapping_sha256": "909681bb13d3a359b83bdaa1dddcb3946c18602572aa8a92d4413d71cf7244e7",
+        "demo_order": "canonical",
+        "prompt_bytes": 2126,
+        "prompt_sha256": "0f5ce6ab120a02dad1d7070edf82a23c08924812803d903048ac48d3611c4aed",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "c5b633635dea7b3d5197bc99ece017da8a9ed550497914010ba2c5ea53604261"
+      },
+      "geom=transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2126,
+        "prompt_sha256": "04dc52a07adc24f3e6468c6700fd522c628f761d2720b82e70503d0f9f41b520",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "94a8a46704042090e441a89c2b8309bf8a3be29e3268672fa87d3e564e9798c2"
+      },
+      "geom=transpose__color=p01_1602397845__order=reverse": {
+        "colour_mapping_sha256": "9bf21e4901b4cab95818959a6dbf78c3c044fe4cd080a53e5c7e862cf1122ab6",
+        "demo_order": "reverse",
+        "prompt_bytes": 2126,
+        "prompt_sha256": "c764c65bd655c4844004e0f60025808aa806400a8911c6915a454a75de063249",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "7adec4ebc19c104f677b8960dbf1738ce9ec4c43257ee49e1eb7eaa39052db0b"
+      },
+      "geom=transpose__color=p09_9180254367__order=canonical": {
+        "colour_mapping_sha256": "40d1ef908d5123cd008ab4124907077a9ae68a2c21748f1cb431cc61f4f41c16",
+        "demo_order": "canonical",
+        "prompt_bytes": 2126,
+        "prompt_sha256": "c3726f6b6fca26a51308c14a0b0c6dfad401f6bfcc675440600a74594d27ea6b",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "1fd38d154404fb3fbf0678aa938e173d074c8495c19ed059d5660726482d01e5"
+      }
+    },
+    "5dbc8537": {
+      "geom=anti_transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1784,
+        "prompt_sha256": "be2fe467c373cee06ba0e578d75a89f64c6f4e335eac5bdafae8a38dc3c05fcc",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ac3badf12e5a9b04946eb6f1dc5adeb6e870246db349d02149c7f62c3254914b"
+      },
+      "geom=anti_transpose__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 1784,
+        "prompt_sha256": "5b6345caf9d414e5ba58d48c9a30c1de1b9b148f8a6fdb91f499be7fede4c66f",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ac3badf12e5a9b04946eb6f1dc5adeb6e870246db349d02149c7f62c3254914b"
+      },
+      "geom=anti_transpose__color=p05_5436201789__order=canonical": {
+        "colour_mapping_sha256": "61738b1f185d51fb7ba0d284bb77579a67da3c06e711c6f04776841cd0f7677f",
+        "demo_order": "canonical",
+        "prompt_bytes": 1784,
+        "prompt_sha256": "557d604b7931a4d8c7552ec8780bdc841b81da1eb31053c821ae9d58b6fd8582",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "104252bbbececf7580696d224745fe00a53b3213a668e10ea2d090dc73dc6cf1"
+      },
+      "geom=flip_lr__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "732a776d20a04f461038019c9cb5cfaa854281f16261dfcd810d4a3aaabb512d",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "709ae18b9472c4595253d56e37a647f9653fb9eaf04e3aec94c1918a09ffaed0"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=canonical": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "canonical",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "386d285bc04076d32d45059e3778d0e5191b6152ffcfa1d47342779dcdc3ded3",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "1007d83ab3573bef18972edb46143f03c6f64d613beba43c34eca32f3c0066e0"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "aa2f8b9d28985dfe12e26319f79d512de992c731c48238e9a29164c35461a51d",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "1007d83ab3573bef18972edb46143f03c6f64d613beba43c34eca32f3c0066e0"
+      },
+      "geom=flip_ud__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "3e3d5e91b9c90c94ceee377a28b52b7b5a0b2c80f9d8de97368500aa91634143",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "bfee2be50e92ed87b7a0c53f9654ea3ccab63b1cf20d058ad232722985409d93"
+      },
+      "geom=flip_ud__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "cbb29ece46303643b3e595e98d5302ab83058e418297eef377817a55b7788cd2",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "bfee2be50e92ed87b7a0c53f9654ea3ccab63b1cf20d058ad232722985409d93"
+      },
+      "geom=flip_ud__color=p03_5980213764__order=canonical": {
+        "colour_mapping_sha256": "94e252d1440e7b570f18d051094b3065018d70c5f5488ee5936fc5cb60c94549",
+        "demo_order": "canonical",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "f1b78dd8cd2cbdcf4016d638035c1da7452a806b8c4ec7a9839b86ca14a7ce4e",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "59d3a1722ad10801fdecf08bdab69ae41ee639f51c3b3587019f6a5d2a53e9c6"
+      },
+      "geom=identity__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "73046547026fd67872af0217bac71a6e5b3736de3224c24899dd535fc4043afb",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "3db1f93ec0284adbc8b5f9e2b74cc25f4e2ba044392ef3e2e7e6f68664941462"
+      },
+      "geom=identity__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "e6394a15631c99b5251c408ce9e1e89b2b0abdb784974b4b4abe7315cbc98cbd",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "3db1f93ec0284adbc8b5f9e2b74cc25f4e2ba044392ef3e2e7e6f68664941462"
+      },
+      "geom=identity__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "e6394a15631c99b5251c408ce9e1e89b2b0abdb784974b4b4abe7315cbc98cbd",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "3db1f93ec0284adbc8b5f9e2b74cc25f4e2ba044392ef3e2e7e6f68664941462"
+      },
+      "geom=identity__color=p00_4150723698__order=canonical": {
+        "colour_mapping_sha256": "d1ed26003273414aed7d5f865ff3c7cfdb700185e2d353c9038a4bb437b1a49f",
+        "demo_order": "canonical",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "830aac855dd0bc1775f82fc9c54d0523ed45ae78929ebde9a8aa80d184cc7d7b",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "6bda4f70f95589a190111d8f7180f57ceaad3d59dbd140de09cac1a40c87a2ae"
+      },
+      "geom=identity__color=p06_1654278039__order=canonical": {
+        "colour_mapping_sha256": "2825c8baf933553443348d7a5c0a3ea0c7488f1f4346603b9433ff6efcb4f03d",
+        "demo_order": "canonical",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "20499178a844e03bb64970b829fc57c7ce25029122b1b3e84fddb08882b1ce60",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "09f0bf1bebcd61f251e6c2c286b6f7eac4694983b8f56fe8b7419ceeb2ee6874"
+      },
+      "geom=rot180__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "598534b897a3e11dc7c852152622c0983900b30f75efb62afdd17d2c9f5aa203",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "c77a3fbb84c70a4176b14211c90c564f05bc1edba433a3f91eefdc641ebf77a7"
+      },
+      "geom=rot180__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 1781,
+        "prompt_sha256": "b4fe5a754fcf2c18664e3eb3aa125f3da94a86ef44f3fa243903056fc9abf712",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "c77a3fbb84c70a4176b14211c90c564f05bc1edba433a3f91eefdc641ebf77a7"
+      },
+      "geom=rot270__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1784,
+        "prompt_sha256": "28b51c13d8e3b1f310154f1a7881629ab82da4318173cd7442d567079e829e06",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "2d141bf56d748df3cbdbce65f4bedc17b031f4e7ae66965c44569c4dd507aa85"
+      },
+      "geom=rot270__color=p14_4965803712__order=canonical": {
+        "colour_mapping_sha256": "116022b5bf62dcae59158476ebfed59bcfe78c753c0dba84dd02aa909ae61249",
+        "demo_order": "canonical",
+        "prompt_bytes": 1784,
+        "prompt_sha256": "e2562f7200005958530e2686d0e28228cfc48960e151112e2679b36ef9b2f6cf",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "d72e790c067f68214273193eeaddab8711d1915055045c88a88430ec7813faaf"
+      },
+      "geom=rot90__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1784,
+        "prompt_sha256": "c0b9f4941f87071eb0bb570f808e87aa941e74efe1ec166ead6abcff8b811cbb",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "8875bb6de4c31d0cdaafe389d1b3b2fc7b682d4aa4b4ade9bc53b3b56146990e"
+      },
+      "geom=rot90__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 1784,
+        "prompt_sha256": "3b350f3c23b42e32e38f36c37fc490ec1072ddefe37d1a91014c0f66d998a54e",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "8875bb6de4c31d0cdaafe389d1b3b2fc7b682d4aa4b4ade9bc53b3b56146990e"
+      },
+      "geom=rot90__color=p02_4950812673__order=canonical": {
+        "colour_mapping_sha256": "909681bb13d3a359b83bdaa1dddcb3946c18602572aa8a92d4413d71cf7244e7",
+        "demo_order": "canonical",
+        "prompt_bytes": 1784,
+        "prompt_sha256": "b27f78a0bcaf3711976242462d11e9cb2a67c3d412217bc3a6cee2148657312f",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "5a9b26ef49a55419626e1328190e3ca327a86536e4198ab30ee36df3b7a24cb0"
+      },
+      "geom=transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1784,
+        "prompt_sha256": "3d1530f2ad5d796f532ad2b9163b6679542fba7e3027d6d6461b753cdf137f62",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "7cf459b85d515f57ff4357c1c62c0009628b39d8c13d52150037995135b3d338"
+      },
+      "geom=transpose__color=p01_1602397845__order=reverse": {
+        "colour_mapping_sha256": "9bf21e4901b4cab95818959a6dbf78c3c044fe4cd080a53e5c7e862cf1122ab6",
+        "demo_order": "reverse",
+        "prompt_bytes": 1784,
+        "prompt_sha256": "786d7dabb87cc60989aaf73ef15d4a8b3f32da7f0fcad260fa68db0a7aba6353",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "64b74383f71eb8cbe63ce06d244e7b85f02f3bdebb501114a2719a42fb4fd2cd"
+      },
+      "geom=transpose__color=p09_9180254367__order=canonical": {
+        "colour_mapping_sha256": "40d1ef908d5123cd008ab4124907077a9ae68a2c21748f1cb431cc61f4f41c16",
+        "demo_order": "canonical",
+        "prompt_bytes": 1784,
+        "prompt_sha256": "e710a9177339b70d716b21170fbc4fc3a693ff7c270febfcd1ce35af4be1eae4",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ec1c8d51527bbe4acc91c6513872cc17218972a9eb9ef1549cd07e55675e1ab1"
+      }
+    },
+    "67e490f4": {
+      "geom=anti_transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "636e8b517cf602e0454d6f4f68f0d2c5e6bc0cb90dcf2ae2cd65a5f929dde6e4",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "af028e59b60760e8e3247ea325c0a606d53a0b431c8bb5b4fad0e20b73a7b8b9"
+      },
+      "geom=anti_transpose__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "c19c72e8352f807b5c398a9621dc315b68cc4ff0a1b03d11cfe8a95732e1e0f9",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "af028e59b60760e8e3247ea325c0a606d53a0b431c8bb5b4fad0e20b73a7b8b9"
+      },
+      "geom=anti_transpose__color=p05_5436201789__order=canonical": {
+        "colour_mapping_sha256": "61738b1f185d51fb7ba0d284bb77579a67da3c06e711c6f04776841cd0f7677f",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "426e0f8b6e1d2dc08ced52d63b1544eb3b3bbaa2c344d8db774b0805054cc064",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "69c8b2b1b476279e008fa54d26c8ed440e12caa390bcf42f72b25e1f6c93da0b"
+      },
+      "geom=flip_lr__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "7bfe9d4ced4f8c86c1de662850d39e2aff506f01305c7a5fbef8c55bc10e5f7f",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "e17e6d5824264fc1c793c77f7351a34344a3ac390127ba29eea2f4dc6bd6f125"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=canonical": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "d66800e190145406383d07050238b52899378f000e3f0de653eb6eec075d0728",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "40ac061b9db753c12414184be109e1536a3eaf3503be2782fc3827e01265b22b"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "eb62474b53bc6d17466884f85edab43cb0085bcc0a0002a1ab536b0287a94284",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "40ac061b9db753c12414184be109e1536a3eaf3503be2782fc3827e01265b22b"
+      },
+      "geom=flip_ud__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "4722db40342821873a82dd1a46da705db20a049e199edaee03f3edfaef5983b7",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "01c849dd43028b64632ffddab61a18ff740030b5667acfaa57b1060dd48ed616"
+      },
+      "geom=flip_ud__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "9728763d51bf7cd36eac8621db31df2588a7b2429b56a54f0b4cee43e728820d",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "01c849dd43028b64632ffddab61a18ff740030b5667acfaa57b1060dd48ed616"
+      },
+      "geom=flip_ud__color=p03_5980213764__order=canonical": {
+        "colour_mapping_sha256": "94e252d1440e7b570f18d051094b3065018d70c5f5488ee5936fc5cb60c94549",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "80eaaefb3c204af75f243fee96b36286e7c30df2032cb42686f99caa68f42cc7",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "484404a1661ab03493e76b3bdb128720327d4ca53971db50d7c0f8e2a4f85fc4"
+      },
+      "geom=identity__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "46b693a75285f860a5d3471bbdf51bdbaa9442f9e8d0efabd847f7a29376d849",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "20073a2017acda52bf0a16184c698ac162a3e84f619c1da3392404b8576870f1"
+      },
+      "geom=identity__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "174f6d7fc6d2e58ca7131d3f349fe57940d3b3971757649410147caf26612da0",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "20073a2017acda52bf0a16184c698ac162a3e84f619c1da3392404b8576870f1"
+      },
+      "geom=identity__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "174f6d7fc6d2e58ca7131d3f349fe57940d3b3971757649410147caf26612da0",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "20073a2017acda52bf0a16184c698ac162a3e84f619c1da3392404b8576870f1"
+      },
+      "geom=identity__color=p00_4150723698__order=canonical": {
+        "colour_mapping_sha256": "d1ed26003273414aed7d5f865ff3c7cfdb700185e2d353c9038a4bb437b1a49f",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "34a15ed15b33e0748769910222672ab4091e84c2fe1606563f4006d9e452c024",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ba633974ffd41da78ea9d493edd76e3f657370012c61f9a0861a09a3116ae3bf"
+      },
+      "geom=identity__color=p06_1654278039__order=canonical": {
+        "colour_mapping_sha256": "2825c8baf933553443348d7a5c0a3ea0c7488f1f4346603b9433ff6efcb4f03d",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "ffa766da728d18030972957e6488a2e072851b89c613509440b305a3a73ceb20",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "0b47aee4ec41f68d0b0cef92fef21ef0e3ec5f8daa71f4953a0174cf0f2216bb"
+      },
+      "geom=rot180__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "5d48b068039209665372b0e3b15ae41ca2058d99d1868ec78d3a87c340bb6fdd",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "b96693a2e3a388ad9a84398efc4008b3c15a2678679d0b324e14e52c753ec633"
+      },
+      "geom=rot180__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "4bd4c0059d88985661196dbcd80a3fcbea4e6cae1c32b0b6cd1077aa1f0df3af",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "b96693a2e3a388ad9a84398efc4008b3c15a2678679d0b324e14e52c753ec633"
+      },
+      "geom=rot270__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "6dcced9e6b5c9fa43aac6df5abfcfcf4218758bbeebd61051345602b0ba58347",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "4df0e3aeec5757ac123928d04ab98ea5a76afd05f34d176e1a77592471dc79e9"
+      },
+      "geom=rot270__color=p14_4965803712__order=canonical": {
+        "colour_mapping_sha256": "116022b5bf62dcae59158476ebfed59bcfe78c753c0dba84dd02aa909ae61249",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "ed4c0d6bcd4f65f2d0d40199e88f9973e48e5f2337ea49900578f2f59fd61119",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "e75589afb9187dce987acfab98fb65f21972dea266f666776b86b3e0c0dc6ea4"
+      },
+      "geom=rot90__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "151d5dc39808d88533520b3109af9c47aa0754dde465f5f014593e065dc0b122",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "57b52f7bd3d3e02e67be323acb86aff503ddff628af1f25ad56dca588b97db37"
+      },
+      "geom=rot90__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "2d854857de64446b2c51a79d161b645cf6c194674ba2783f38f94fc5b304959d",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "57b52f7bd3d3e02e67be323acb86aff503ddff628af1f25ad56dca588b97db37"
+      },
+      "geom=rot90__color=p02_4950812673__order=canonical": {
+        "colour_mapping_sha256": "909681bb13d3a359b83bdaa1dddcb3946c18602572aa8a92d4413d71cf7244e7",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "1329b86c3448a3c9566c7dc89b5b5c42a3da68b869af4473a8e5d3bb3ae6718c",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "68d1b5191d9a30e76386d178e1dbfaa1502bb5230cb2811d739e77e682945f65"
+      },
+      "geom=transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "e832b15cdc1cc2d88f03cad3807a6ef0697cab0ff426a51cda1dfdccbbf4c26d",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "4a0fb789a9288429ee5db5846faa82b72a30d058c637d57f9f92dbf72afe1b54"
+      },
+      "geom=transpose__color=p01_1602397845__order=reverse": {
+        "colour_mapping_sha256": "9bf21e4901b4cab95818959a6dbf78c3c044fe4cd080a53e5c7e862cf1122ab6",
+        "demo_order": "reverse",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "4b1dcfdf339fc309060afab5b63f89f6fc03e51ed27b5465654fb3f856913209",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "23d38ca4c4163ab7297a1389e20d88b00aa93031a1410d2c60e4ea63919b8b8f"
+      },
+      "geom=transpose__color=p09_9180254367__order=canonical": {
+        "colour_mapping_sha256": "40d1ef908d5123cd008ab4124907077a9ae68a2c21748f1cb431cc61f4f41c16",
+        "demo_order": "canonical",
+        "prompt_bytes": 3266,
+        "prompt_sha256": "70580f2cb61a43972818e8fc55e9cdfcd8d8cb9621319be843b1bfba56ea14e2",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "2a851825db4076984b422cad388e1e6065db13e501bbe75a794f35e2f7ce8421"
+      }
+    },
+    "b9e38dc0": {
+      "geom=anti_transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1881,
+        "prompt_sha256": "7b33646f2a49912aa65c3814130bc140316d853f9c612b87a00d07178da227cc",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "76adcc0b4f68b1bbd01add231464b12236a3442b94045e3568e6f821cd7aaa6c"
+      },
+      "geom=anti_transpose__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 1881,
+        "prompt_sha256": "94e198dc181ec0bd81954c2cf6579588071064f578dfdc37a0f154e0f6f7d11d",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "76adcc0b4f68b1bbd01add231464b12236a3442b94045e3568e6f821cd7aaa6c"
+      },
+      "geom=anti_transpose__color=p05_5436201789__order=canonical": {
+        "colour_mapping_sha256": "61738b1f185d51fb7ba0d284bb77579a67da3c06e711c6f04776841cd0f7677f",
+        "demo_order": "canonical",
+        "prompt_bytes": 1881,
+        "prompt_sha256": "e7b53df7b37caff21512540a73d020e81c876a621b3df20304ada314c877891d",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "5be9fc779a32456590e1217a90bf0ef34161c4b6db79157240c3236c682763f6"
+      },
+      "geom=flip_lr__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "44808b8297ed424c80a703764aa64792a54febdc86cf452b89a572470a98b23d",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "67fc626391c883f65e70446c0c1eea86b285ecd86b859d6813fc5a87d3f9cd7c"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=canonical": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "canonical",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "1f531d8f2c0994c20875975d21c94899167ce9b5092db7518ea4e59845172082",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "7591bdc6e57643107ee87c5b95dc0f8a3052aa16c62028571d3fdeba6d8c8797"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "56767c402ff8beae26bf6827089c8839aee09822bc8585bd7ed95f24ff4363b7",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "7591bdc6e57643107ee87c5b95dc0f8a3052aa16c62028571d3fdeba6d8c8797"
+      },
+      "geom=flip_ud__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "670557a90bd592c71a63964120d376b7d522c00e0c784c412cc5540199345698",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "d47f4d655485855a204fec64d4d5b22e0455fb90acaf9a90756b1f2c91e991ae"
+      },
+      "geom=flip_ud__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "b831df5de654197179f95025475606132ddcaa7dc0c039668a32a61a48cb4e52",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "d47f4d655485855a204fec64d4d5b22e0455fb90acaf9a90756b1f2c91e991ae"
+      },
+      "geom=flip_ud__color=p03_5980213764__order=canonical": {
+        "colour_mapping_sha256": "94e252d1440e7b570f18d051094b3065018d70c5f5488ee5936fc5cb60c94549",
+        "demo_order": "canonical",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "d85cbecb694c8a7afd2756ea2c570c09effb1a14d0fd15e5a9e299becf6252c8",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "8d28288596131ae9faaaf59d27831d7f70c39f15f83129deccbafa59e6722fde"
+      },
+      "geom=identity__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "3578ddd0afb5fa19f22f5edb6e886b98d88acf9b5de1df7fb422eb1a4a740de9",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "a188e16031257e0734cf39c0a2f64c36bb08250242876a12d012a7d7318c3831"
+      },
+      "geom=identity__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "4488bf57da8f56edd10c1b307cbb3d7f67879d387ea779079af86429ce92b160",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "a188e16031257e0734cf39c0a2f64c36bb08250242876a12d012a7d7318c3831"
+      },
+      "geom=identity__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "af6fc1da8b39b83320a916a411999fd9c7292c7fdd422a959215c2ce9ad39c3a",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "a188e16031257e0734cf39c0a2f64c36bb08250242876a12d012a7d7318c3831"
+      },
+      "geom=identity__color=p00_4150723698__order=canonical": {
+        "colour_mapping_sha256": "d1ed26003273414aed7d5f865ff3c7cfdb700185e2d353c9038a4bb437b1a49f",
+        "demo_order": "canonical",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "8af24e099e737602436a4aac7e947f92189ef204fd9cef208aa78626aac546b5",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "65e1c8d4e4784e5d4f28499473a8e9474add00b6b78bc16b58e51baf94cb522b"
+      },
+      "geom=identity__color=p06_1654278039__order=canonical": {
+        "colour_mapping_sha256": "2825c8baf933553443348d7a5c0a3ea0c7488f1f4346603b9433ff6efcb4f03d",
+        "demo_order": "canonical",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "5891f470e48133ead17fa27cdd1c993b7e90947254a1db7864fc67707fc9aea3",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "d025dd86f077574847492454c3b14eaa0cdd1873e833fc4d92ed15ab9f4258b8"
+      },
+      "geom=rot180__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "9ebf029bac2d341e5640e9451cbe73232bbd8a5faab445bde0f16bcfff5162a4",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ee6232040c855584dac9916f8d1bf5db2c5ee02dd9a967cf82ef7bbd8d4de4b4"
+      },
+      "geom=rot180__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 1867,
+        "prompt_sha256": "01465e514fbc6beeea4e6b92f1009cebf0bf2d43c3173618d4d1dcf618a83934",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ee6232040c855584dac9916f8d1bf5db2c5ee02dd9a967cf82ef7bbd8d4de4b4"
+      },
+      "geom=rot270__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1881,
+        "prompt_sha256": "206851722aee3b62d73ea3dff1e073443f5c2197b3329fb2e5cd4141ba3906d9",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "9cef79800bb90b67171a9d9c96ba8dc55a4d778879c907d66ec211b59f4c091e"
+      },
+      "geom=rot270__color=p14_4965803712__order=canonical": {
+        "colour_mapping_sha256": "116022b5bf62dcae59158476ebfed59bcfe78c753c0dba84dd02aa909ae61249",
+        "demo_order": "canonical",
+        "prompt_bytes": 1881,
+        "prompt_sha256": "67d57f7bd9bff20874f8d71ee42c6980dfd3356c98e7eeb30531d675666f8190",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "b529c829961fd5c7b744f0246b32b4859f5cccfbc4298a0e3b522c9ef00b2c93"
+      },
+      "geom=rot90__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1881,
+        "prompt_sha256": "b9c20ee91aeb83aa4b2f0a9bc3617a7dc3ccf26556d9237bcebc3bbaf5fa6385",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "13559e0474de092b8795975ca6fcfb5e4b3afc6ec679a826d8b31a839fba8a0c"
+      },
+      "geom=rot90__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 1881,
+        "prompt_sha256": "7f96caceb2fd1ede453a372835e970e73a911a56d43a7f6605117d4f639bec53",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "13559e0474de092b8795975ca6fcfb5e4b3afc6ec679a826d8b31a839fba8a0c"
+      },
+      "geom=rot90__color=p02_4950812673__order=canonical": {
+        "colour_mapping_sha256": "909681bb13d3a359b83bdaa1dddcb3946c18602572aa8a92d4413d71cf7244e7",
+        "demo_order": "canonical",
+        "prompt_bytes": 1881,
+        "prompt_sha256": "d7ff3005304a1f4b6556a4fb157f00c77895b9c116a45af899461188dc42aa1e",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "6423933a1a6b3508095782593fd0fc9c0a4397ece316fa43e215291295b2e7fa"
+      },
+      "geom=transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 1881,
+        "prompt_sha256": "99ac76f60caced9f2678a460396414ef0156c79b36473ff60dec5647ae356acc",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "e3279006853d998bcc29b691c07a011e78df54eff77935817f221f92f49bd763"
+      },
+      "geom=transpose__color=p01_1602397845__order=reverse": {
+        "colour_mapping_sha256": "9bf21e4901b4cab95818959a6dbf78c3c044fe4cd080a53e5c7e862cf1122ab6",
+        "demo_order": "reverse",
+        "prompt_bytes": 1881,
+        "prompt_sha256": "f568be88c83849d4756b8ef7e64654ed83989cfbef41aef8c6019e38a0a8ac85",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "74d734d394ca0f40e24a5c73fc49c386798313d4c40cd163f5f25deb1c0bee4f"
+      },
+      "geom=transpose__color=p09_9180254367__order=canonical": {
+        "colour_mapping_sha256": "40d1ef908d5123cd008ab4124907077a9ae68a2c21748f1cb431cc61f4f41c16",
+        "demo_order": "canonical",
+        "prompt_bytes": 1881,
+        "prompt_sha256": "100677c92885cdc5f08bda748deaf331f9638caf97929b0b8e40fb3ecbb84d52",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "f9ae7c5cf6dfd9c2746cff5e5981f3742428e7ed9deea9216687990855ca41a8"
+      }
+    },
+    "d35bdbdc": {
+      "geom=anti_transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "650c43ec353e1ad2e4c5ab45071e817f9f4afdf3b8d3c5cd047e73d93a52ecea",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "8ae39f50f64b90b5468ece18b7908eeffedbb3d97a8769b6c44cbf76788ae7c8"
+      },
+      "geom=anti_transpose__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 989,
+        "prompt_sha256": "408747309bbf819ec0f00c50ab9456aa4a2abaad5b844873da00fe53daeeaec1",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "8ae39f50f64b90b5468ece18b7908eeffedbb3d97a8769b6c44cbf76788ae7c8"
+      },
+      "geom=anti_transpose__color=p05_5436201789__order=canonical": {
+        "colour_mapping_sha256": "61738b1f185d51fb7ba0d284bb77579a67da3c06e711c6f04776841cd0f7677f",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "87c518509157907d74219c2b4210c1fd37e353e532a82c4abdfcc47a3bde4b16",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ba16ed3a9aa6919193fd1b603c45f12235cc81304024144bc856c9a091b927b1"
+      },
+      "geom=flip_lr__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "fecc34432d1503fad1f05f2f429115c919b7195b1db5aa7c6ed8d1cbb350a7de",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "e22f62c660db6c459a5e484fb6c59e7f554236feb8d11d57bd5fc12c1e03883b"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=canonical": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "a7cb0267bbac37d2479ee8c551e88301f9d4529796048bd3c814a82b7e6ab07c",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "3e0ead6c276a96590243fe1256516e260d63c47d9999161562830ea3f3c05b30"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 989,
+        "prompt_sha256": "73664547f9ca24112c1e9bedf455a3c59b2f8bff5c05b65683330594110c5d30",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "3e0ead6c276a96590243fe1256516e260d63c47d9999161562830ea3f3c05b30"
+      },
+      "geom=flip_ud__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "d24d48126cfaaf4061a9034801646f3004eea33867f4ddd883ef3655f680e18f",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ca964278f63c415da48d8a5499dac616e170e3c8ea46976052964c7033a3627a"
+      },
+      "geom=flip_ud__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 989,
+        "prompt_sha256": "fedc040e3dc95df9b25ad9d5000d5aee3402bb3cfdf3ae38a6e067bafe6f7fae",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ca964278f63c415da48d8a5499dac616e170e3c8ea46976052964c7033a3627a"
+      },
+      "geom=flip_ud__color=p03_5980213764__order=canonical": {
+        "colour_mapping_sha256": "94e252d1440e7b570f18d051094b3065018d70c5f5488ee5936fc5cb60c94549",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "748d3f495a511f4e676c1194bb7714ddbc76c367932eca053002d7a4b62feb63",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "4dd38d12578a0a0b051ea56e89ece7ea22e50e7d564ca624977ad03fde3cf527"
+      },
+      "geom=identity__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "c3922c87da2f868ea835c97616c8af3c83fac8345e745b891bd9cc2a5ff6b630",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "8e79d412b58d81d2cfd39ce7be8246e2331f86ffb8a88dc03ef03699419acf1b"
+      },
+      "geom=identity__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 989,
+        "prompt_sha256": "18f472f26fb266537126d66a3369c68e4c768df0f2b24076634d9e007ca94c68",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "8e79d412b58d81d2cfd39ce7be8246e2331f86ffb8a88dc03ef03699419acf1b"
+      },
+      "geom=identity__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 989,
+        "prompt_sha256": "e406da2a3d7ac1748b1bfb2184101c4036dca72726c635e7d071ea66ed22458e",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "8e79d412b58d81d2cfd39ce7be8246e2331f86ffb8a88dc03ef03699419acf1b"
+      },
+      "geom=identity__color=p00_4150723698__order=canonical": {
+        "colour_mapping_sha256": "d1ed26003273414aed7d5f865ff3c7cfdb700185e2d353c9038a4bb437b1a49f",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "5e3beeaf055580b60d1950b4d36f2aa04a66c8330d38d7c7c1bab1c1bc4614ac",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "be658d91c5c98c1f35779d1c56442ed1015b983c2a63c0d8f969b41777606696"
+      },
+      "geom=identity__color=p06_1654278039__order=canonical": {
+        "colour_mapping_sha256": "2825c8baf933553443348d7a5c0a3ea0c7488f1f4346603b9433ff6efcb4f03d",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "b23d3428945e783b1bfe7ec490241b77fa11fe453892f7fd7c8dd119ba2f3e60",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "f8992eaf0a7bbf1272a6c487ebee0af4f1e3b6e62cb731f1b33ddc4bfd3d1d07"
+      },
+      "geom=rot180__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "296f231b79239598415bb3a0025eb08525efd349cd7b214a8bc41afd14bd3184",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "a86bcb4786658dc35771adaa485333a76d1b399523f5200791a709ac316a6c83"
+      },
+      "geom=rot180__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 989,
+        "prompt_sha256": "86d6bd0d8db49f3975ba702611591a9ea316906c996db6b3120f718355f36526",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "a86bcb4786658dc35771adaa485333a76d1b399523f5200791a709ac316a6c83"
+      },
+      "geom=rot270__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "9052a8b8918577f786b6834959f9c634c70b70bb28d04e1beb8d71be16ad1ead",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "c0904abf55bbb6cacb6b69c91bed1e2069a3cd51157e742aef2adac3b3dfdf5b"
+      },
+      "geom=rot270__color=p14_4965803712__order=canonical": {
+        "colour_mapping_sha256": "116022b5bf62dcae59158476ebfed59bcfe78c753c0dba84dd02aa909ae61249",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "2f15296464e0567cc11df8b91d645aa47851d83b92087a60912af46e4976008b",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "cbf1130cf1dcb4fc73c0fecb1da66207a336d266a27d57f397a93123dee2b40f"
+      },
+      "geom=rot90__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "f661e4a876fc2ada7ff0bdebbe1cf8730fbff21b71911251935180cef3c1be4b",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "1f0af4babaecbd9d6538d8ed4db13afd8b89b987f429689a24b67a04064bbee1"
+      },
+      "geom=rot90__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 989,
+        "prompt_sha256": "ae3e2c94fb620f9ca576b4a85e4620e36d09c7a73db3a364187b737558e343cb",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "1f0af4babaecbd9d6538d8ed4db13afd8b89b987f429689a24b67a04064bbee1"
+      },
+      "geom=rot90__color=p02_4950812673__order=canonical": {
+        "colour_mapping_sha256": "909681bb13d3a359b83bdaa1dddcb3946c18602572aa8a92d4413d71cf7244e7",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "f7a014cbc9fc0db79af53147c43c6932f225354fa7a00ada788111c613ac76fd",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "aa726b3b10dbb3d488d09d1c74abd45a1153f625e8c2dad6e87732199e8589f4"
+      },
+      "geom=transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "2f895426963febc93a73ea46382df066d7a47df02ad60c98499dd5b9202513cd",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "67d9279813b90c5855f048cefa4641931c7d447b66d6f685f43adb118c34e7f3"
+      },
+      "geom=transpose__color=p01_1602397845__order=reverse": {
+        "colour_mapping_sha256": "9bf21e4901b4cab95818959a6dbf78c3c044fe4cd080a53e5c7e862cf1122ab6",
+        "demo_order": "reverse",
+        "prompt_bytes": 989,
+        "prompt_sha256": "aefed66673232d8a2a304ab5b86ee7f8370b5cd12a6439d1a207bd8cb26f6cc9",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "44b815668ef7e1edd3f61c240bd48c1448910fd557cffaf11d8c0b05f7de1223"
+      },
+      "geom=transpose__color=p09_9180254367__order=canonical": {
+        "colour_mapping_sha256": "40d1ef908d5123cd008ab4124907077a9ae68a2c21748f1cb431cc61f4f41c16",
+        "demo_order": "canonical",
+        "prompt_bytes": 989,
+        "prompt_sha256": "20bc170a4fc712fba2aa4a5d1a89f41166c97fa302e93180e23320675138f8f4",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "de2a8c6604fdd86e5fb92c90ca84f90b1dfb9f7e1b9a8c39597ece6f5f3318f9"
+      }
+    },
+    "d59b0160": {
+      "geom=anti_transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "0be7be095352d29f898564a6894f68f99b96bbc604ac28860f18642fb9261a20",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "6f13610ebbbec366a1b8c758f494728f9d6937640696ee90ecb85bea4c189a7d"
+      },
+      "geom=anti_transpose__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "bdb3ae6cf5cf60a281da9d6c0a01532ae1abe2bb6427386e3e54d36a57a289f8",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "6f13610ebbbec366a1b8c758f494728f9d6937640696ee90ecb85bea4c189a7d"
+      },
+      "geom=anti_transpose__color=p05_5436201789__order=canonical": {
+        "colour_mapping_sha256": "61738b1f185d51fb7ba0d284bb77579a67da3c06e711c6f04776841cd0f7677f",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "88604ca0b9f048773a841f3a79bf05a459984ef3f128730ec7da1284905f4b2a",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "48dce15392a0d1062c94a02a9cd0f82d6abf365e9a5af426a68c156a882079ac"
+      },
+      "geom=flip_lr__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "9d7749955506ca71ba311b73e4af77f280046b591beb7bb1d29108a8fca0171d",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "573e9903c98549ab5e970fbfd9d2fd31f09c71eff6b923dfb95fa94258ff8411"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=canonical": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "b35b9ecf526ded4c5c50ac3568e06c5138c34e4191c458b381449cf42fdfba78",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "edff6dff6e128dbf0532b768fac6d19a3a7c5166bfb766826585fabb0c6f19af"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "a51ab3db7b3a6beba193cfb64a3cc39c09b4ba8cd81fc1c5e0040d0899548d6b",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "edff6dff6e128dbf0532b768fac6d19a3a7c5166bfb766826585fabb0c6f19af"
+      },
+      "geom=flip_ud__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "ecac9fc3e0c1c04440f91a8bcc37e04bde61d7d65ca191f89f62f37ab8198034",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "1f29e97c523a04ae64732ac5ea16bb0be4f13945873a9af34832575ba7c79b85"
+      },
+      "geom=flip_ud__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "3143b53dda8b6af778457d832e36d8c38e3c7f01c77355eb103596f3bc9d506a",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "1f29e97c523a04ae64732ac5ea16bb0be4f13945873a9af34832575ba7c79b85"
+      },
+      "geom=flip_ud__color=p03_5980213764__order=canonical": {
+        "colour_mapping_sha256": "94e252d1440e7b570f18d051094b3065018d70c5f5488ee5936fc5cb60c94549",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "bada2613d49b62ccf404522f35ba47f96740251cec8d5d2d50656b516760f0c9",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "159b760c4b4fd1e9509c88d4d8e36beb7f8d2cdf708c91cec777056016ef9431"
+      },
+      "geom=identity__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "5faf46e4b50ab7fc8b9e909355058a7f79abda5e00e220af6454de77f6857bcd",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ec02f7907a1a1ca5d6b072a73b8ab61f8468df6831515bfe0b5d8d25154616e1"
+      },
+      "geom=identity__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "ac2d5cc8742298e3d474393a7552b8eb32f13a01d46c2595b84521a387abe629",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ec02f7907a1a1ca5d6b072a73b8ab61f8468df6831515bfe0b5d8d25154616e1"
+      },
+      "geom=identity__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "fbbe0fc15152cfb603768279d628fc53793342122b67603ccaeae57e716eadf1",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ec02f7907a1a1ca5d6b072a73b8ab61f8468df6831515bfe0b5d8d25154616e1"
+      },
+      "geom=identity__color=p00_4150723698__order=canonical": {
+        "colour_mapping_sha256": "d1ed26003273414aed7d5f865ff3c7cfdb700185e2d353c9038a4bb437b1a49f",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "104f15c9cdb2e1a47d43a8652c75543ea4fe6f15ac585329acb77bcf86f62ae1",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "761fba40fe36ecdef4aa861dac87de932c8fcfd6b0aebbb7e95eb1796cb41c13"
+      },
+      "geom=identity__color=p06_1654278039__order=canonical": {
+        "colour_mapping_sha256": "2825c8baf933553443348d7a5c0a3ea0c7488f1f4346603b9433ff6efcb4f03d",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "36d324c91bd8786c1ac170c29d8c55cd6a272a925c16a81c32050eeba10195d0",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "66e74c72980c4ae8ff758b0ca5473d25f1ac7e5bd5bd12b262f71825671409eb"
+      },
+      "geom=rot180__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "ac49e5366af03e9a80dff7b4bc1d5b2edc75edece11647eec0ef6e9bf49e579a",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "3d0c6c49cc2f51c8e321bd2c8df821a61fd7a91d2b7a18ce77b72291ccf60c40"
+      },
+      "geom=rot180__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "73394284c30755fbb012e233cd5913487d564aab4a1a0f54eab46f7c7bb894aa",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "3d0c6c49cc2f51c8e321bd2c8df821a61fd7a91d2b7a18ce77b72291ccf60c40"
+      },
+      "geom=rot270__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "99e8465cdcec4ffb531b7838bdeb8c0319a38b95876520a9416c1dda4496673b",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "176ceeec0451bfa16ed2a0c4d7913dc2fcf20e8f31aafb89fd83d7137ce2e6bf"
+      },
+      "geom=rot270__color=p14_4965803712__order=canonical": {
+        "colour_mapping_sha256": "116022b5bf62dcae59158476ebfed59bcfe78c753c0dba84dd02aa909ae61249",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "a5c26cc7de662951406af2ce1fcc01caa56df8ca29b13fa5b350ec222f58dc60",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "62d04a3ba55b00e9a6cb640cf40be47fbb1d62f83375a68bdc68a65bb5db7f8f"
+      },
+      "geom=rot90__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "17d50ff0525ac218d819a207527aebf0c49c6e86eb64807218c2790f9473868f",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "325504980d0f0c8426f988fc3973038185284f9ff2e1d42836cb903afe806b11"
+      },
+      "geom=rot90__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "763d2a641c356a9955bae12f4fdd024a6a4c051d2c640c5712f1d8b3758fd383",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "325504980d0f0c8426f988fc3973038185284f9ff2e1d42836cb903afe806b11"
+      },
+      "geom=rot90__color=p02_4950812673__order=canonical": {
+        "colour_mapping_sha256": "909681bb13d3a359b83bdaa1dddcb3946c18602572aa8a92d4413d71cf7244e7",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "c6cfed6c26f2e645f26d9ba4c9b23ebf47e7124e5c0de4d26379c75c2c70b888",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "54ace6a9a487446f94367efaf1dc0fe4f54a51c50af543a5f139fc2b681ce46b"
+      },
+      "geom=transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "82b956a80592698b8103c982bdcfc3bfd9dedb1b5e3631ea9b107bc729d22b16",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "a132006f4ff410eb46cdc7231be009256886788b9a76e26d72481f224bd81132"
+      },
+      "geom=transpose__color=p01_1602397845__order=reverse": {
+        "colour_mapping_sha256": "9bf21e4901b4cab95818959a6dbf78c3c044fe4cd080a53e5c7e862cf1122ab6",
+        "demo_order": "reverse",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "6ebb5d9fe4bcf4a59c1a4a6430e893ace7c69159f234a40724058cc35685add7",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "32ec56fd0ca99c6b9710398e7a533f622985d71a978bac519d2c36e1b563e686"
+      },
+      "geom=transpose__color=p09_9180254367__order=canonical": {
+        "colour_mapping_sha256": "40d1ef908d5123cd008ab4124907077a9ae68a2c21748f1cb431cc61f4f41c16",
+        "demo_order": "canonical",
+        "prompt_bytes": 2123,
+        "prompt_sha256": "4ed369867621a621dcf34088203404d1ced6436be0052da00ad9f13b028666e1",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "369e3136c935bbb08d9576c5576d986e21db6013411b720cf05ccbe23fb7ec58"
+      }
+    },
+    "e87109e9": {
+      "geom=anti_transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4275,
+        "prompt_sha256": "89e57f8d6c21c8831c2ae08686160b41ef50df2b787055f7fbd1ff6520e428ee",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "e46dfcbc9f6ee3fb49674f53926d2f39dfe0f39b8702c9a93109b018beb22d7e"
+      },
+      "geom=anti_transpose__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 4275,
+        "prompt_sha256": "a99e8bf6aab1a29455b3a84b4b696a1cb8805bd583d48a31a1c6858b46fed0d8",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "e46dfcbc9f6ee3fb49674f53926d2f39dfe0f39b8702c9a93109b018beb22d7e"
+      },
+      "geom=anti_transpose__color=p05_5436201789__order=canonical": {
+        "colour_mapping_sha256": "61738b1f185d51fb7ba0d284bb77579a67da3c06e711c6f04776841cd0f7677f",
+        "demo_order": "canonical",
+        "prompt_bytes": 4275,
+        "prompt_sha256": "e586aa6225f19d65d4944ec0af097dd8a8c8843ff1d1dcecfe36f72dccc0465c",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "5923f118e5db5664764f76c7940e00cfbdbfd2d8b917b66a46f20951e3b43857"
+      },
+      "geom=flip_lr__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "24eca3ef872128efc1d6183bc359f789dc33feecf597d9c5d4f1f7b5ee96501e",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "2d2f02753d9e4d5627db1a483b7d85dbfee9e659e441a31d87b0c7ab07b7954b"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=canonical": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "canonical",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "eaf8993ae2fc301cc3913f8142497f2de3bee4bcda9e247c29fb3ac7b8c888df",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "cac4a441d8c653a50d48559fb9b14a68e297e02899e2f12fb8b05ef90ffc8335"
+      },
+      "geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+        "colour_mapping_sha256": "91323e06f0755f9fe20d498a1b80e1f5bec74502c19988d2225ec0b3d98b2e03",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "26ca6ba23003b37de9142e74edd7595f0a9a586f26e86073119f943d6fd8e487",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "cac4a441d8c653a50d48559fb9b14a68e297e02899e2f12fb8b05ef90ffc8335"
+      },
+      "geom=flip_ud__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "f4446edae5f3fa89aa3e456fa712eafae98b1d5c417f922714cd0ef4f7395653",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ea419d3373ddff1b741f9d65d883f2b1bc24590738ef2042661bb92632155286"
+      },
+      "geom=flip_ud__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "6adf165faadaf565358668ea3a679e05e98b66a93279cab274239423e70f583b",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "ea419d3373ddff1b741f9d65d883f2b1bc24590738ef2042661bb92632155286"
+      },
+      "geom=flip_ud__color=p03_5980213764__order=canonical": {
+        "colour_mapping_sha256": "94e252d1440e7b570f18d051094b3065018d70c5f5488ee5936fc5cb60c94549",
+        "demo_order": "canonical",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "0e36152d700a693148fc2620e879c33f6bba1e301c0544175860ceb3e075315d",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "a60d1a71b4cf35f984ff87811c74885e22db32cb6f16af5de1e1aa31e4735acd"
+      },
+      "geom=identity__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "37e2a455119860f44e1aa83a49f3c2facb229bea88e79735ef3730e6d073def5",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "6806afdbdce334a277eaa9afdbc09e5e0a85bae9e71e83b827d4c9801321278e"
+      },
+      "geom=identity__color=id__order=reverse": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "reverse",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "8e34b4bd8a6d9de750e4200607eadb02861ef9c7756bf6accaeeb795d2ce995f",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "6806afdbdce334a277eaa9afdbc09e5e0a85bae9e71e83b827d4c9801321278e"
+      },
+      "geom=identity__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "8a71a69899c5236dbae66d3c595976bd7a8e8cbd5927d339dbf2fda3af3aa122",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "6806afdbdce334a277eaa9afdbc09e5e0a85bae9e71e83b827d4c9801321278e"
+      },
+      "geom=identity__color=p00_4150723698__order=canonical": {
+        "colour_mapping_sha256": "d1ed26003273414aed7d5f865ff3c7cfdb700185e2d353c9038a4bb437b1a49f",
+        "demo_order": "canonical",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "b76d4a08b53557346b41938486e3776172079e0fd8173ff566491afb79e46d8e",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "34d45c41f4c39708449c403b029b4328c8a895bff2351009fc63c62ccdbc165d"
+      },
+      "geom=identity__color=p06_1654278039__order=canonical": {
+        "colour_mapping_sha256": "2825c8baf933553443348d7a5c0a3ea0c7488f1f4346603b9433ff6efcb4f03d",
+        "demo_order": "canonical",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "a40217ecb97f895552dc606a5ff94aefb2c9cb789e268dc580e098612d413989",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "5496f0a65e5cba1158ccdfa73523142748002e05feebf3163d064056ce213d01"
+      },
+      "geom=rot180__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "0c2ef90b76af03ccdbff2bf4b26157baa3a8a1377f9105cbc96b95016ff0b301",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "48f545a93b209b362743dd7f5c868b617a9522f963f42ddc9ef2f434b2488269"
+      },
+      "geom=rot180__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 4269,
+        "prompt_sha256": "5081d585cf86df84ab18cb080f387cfe07f8f8a399b00af190ce6f739b0df16a",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "48f545a93b209b362743dd7f5c868b617a9522f963f42ddc9ef2f434b2488269"
+      },
+      "geom=rot270__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4275,
+        "prompt_sha256": "e5b846d1b91e22a1bd901971c1b2229ed3ac22d327fe45cc9c382d630322c8f9",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "56bfa486b2b5227f3e17a2d5ef1fc82f4b4a6af22f8acbd1d92c6652cde89a3d"
+      },
+      "geom=rot270__color=p14_4965803712__order=canonical": {
+        "colour_mapping_sha256": "116022b5bf62dcae59158476ebfed59bcfe78c753c0dba84dd02aa909ae61249",
+        "demo_order": "canonical",
+        "prompt_bytes": 4275,
+        "prompt_sha256": "a0cc4673072b09020067c1578cb56678e84d358dfc52569fc16ccb4a2a83ea28",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "a65276e52f89350238662ee512d1c12231f05abf276f9036f2a0d8664d7d11ee"
+      },
+      "geom=rot90__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4275,
+        "prompt_sha256": "e2f4c2875a56bc96e1b75a9e0dc4549b3c0994dddab476ac77b9bf865e83e81c",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "a99e692d4e743ba4293b5f971f1665955696fa3d30808e52bb796acbfa570127"
+      },
+      "geom=rot90__color=id__order=rotate_left_1": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "rotate_left_1",
+        "prompt_bytes": 4275,
+        "prompt_sha256": "ec58e6176be0c141c7fd3fe248406238434a4a68f453b99ca3c98b9e1085a3c7",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "a99e692d4e743ba4293b5f971f1665955696fa3d30808e52bb796acbfa570127"
+      },
+      "geom=rot90__color=p02_4950812673__order=canonical": {
+        "colour_mapping_sha256": "909681bb13d3a359b83bdaa1dddcb3946c18602572aa8a92d4413d71cf7244e7",
+        "demo_order": "canonical",
+        "prompt_bytes": 4275,
+        "prompt_sha256": "3e74e2977a5ddd93749e4675ffaf658a6af706203042a3e5893a0bdee0a30cd1",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "02086d22ac7b10e33994f18d902ff0625e8a16088ed9d2eb4f97f03099b49b8c"
+      },
+      "geom=transpose__color=id__order=canonical": {
+        "colour_mapping_sha256": "84d89877f0d4041efb6bf91a16f0248f2fd573e6af05c19f96bedb9f882f7882",
+        "demo_order": "canonical",
+        "prompt_bytes": 4275,
+        "prompt_sha256": "d6addb10e5e6910911422cf7ec85bef19c787e4dd4b5705daaa7169402645f39",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "cdd8b17ff2e144241e374d700f56a2fc77efcf92532e318189d38abe1d665696"
+      },
+      "geom=transpose__color=p01_1602397845__order=reverse": {
+        "colour_mapping_sha256": "9bf21e4901b4cab95818959a6dbf78c3c044fe4cd080a53e5c7e862cf1122ab6",
+        "demo_order": "reverse",
+        "prompt_bytes": 4275,
+        "prompt_sha256": "90285da5c54c5ee7e8ac741a1dfee7f831588756f8a01aad3a29e93a5f477b1a",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "a424669da07f8da3ac1c1f53f7c3588443c7ddda85d94c0149139a9fdfe592c4"
+      },
+      "geom=transpose__color=p09_9180254367__order=canonical": {
+        "colour_mapping_sha256": "40d1ef908d5123cd008ab4124907077a9ae68a2c21748f1cb431cc61f4f41c16",
+        "demo_order": "canonical",
+        "prompt_bytes": 4275,
+        "prompt_sha256": "379d48699f4964044e92fa1395bf61ec6cd466808bdb2dd355bb6ca695cae1ea",
+        "prompt_token_length": null,
+        "prompt_token_length_status": "NOT_MEASURED; Qwen tokenizer/model deliberately not loaded in this CPU-only source audit",
+        "transformed_test_input_sha256": "4b9e667251eeb2159ca23d0a2b1f166621fffe8d027852e2497d2d51c5523715"
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "next_gpu_experiment": "DYNAMIC_B16_ONLY_AFTER_EXPLICIT_GPU_AUTHORIZATION; B16 is the relevant next width because the public source configures 16 DFS cells and PROJECT_RESEARCH_AUG16 is now frozen. This audit launches no GPU work.",
+  "public": {
+    "classification": "PUBLIC_DFS_AUG16_CONFIRMED",
+    "distinct_dfs_cells_under_one_task_adapter": true,
+    "fixed_canonical_aug16": false,
+    "reason": "The source constructs 16 DFS cells but colour/demonstration variants are RNG-generated; NumPy is not pinned and train-pair order depends on task train count."
+  },
+  "research": {
+    "aug16_is_public_nvarc": false,
+    "classification": "RESEARCH_AUG16_CANDIDATES_FROZEN",
+    "pool_size": 24,
+    "rationale": "AUG16 extends D4 with balanced source-supported colour, demonstration-order, and combined representation changes without target/Gold selection."
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "candidate_ids": [
+    "geom=identity__color=id__order=canonical",
+    "geom=flip_ud__color=id__order=canonical",
+    "geom=transpose__color=id__order=canonical",
+    "geom=anti_transpose__color=id__order=canonical"
+  ],
+  "subset": "PROJECT_RESEARCH_AUG4"
+}

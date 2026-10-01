@@ -1,0 +1,10 @@
+quantity,value,stage,deterministic,source
+D4 geometry transforms,8,TTT; DFS generation; rescoring,transform family deterministic,ArcDataset.augment lines 251-258
+TTT colour samples per geometry,16,TTT,"seed=1, NumPy global RNG; package version unpinned",arc_solver lines 724-727
+TTT augmented records before cut_to_len,128,TTT,8 geometry x 16 colour draws; order shuffles are task-dependent,ArcDataset.augment + arc_solver lines 724-727
+TTT train-pair order draws,128,TTT,one shuffle_ex draw per record; possible repeats when n_train is small,ArcDataset.shuffle_ex lines 237-249
+DFS colour samples per geometry,2,DFS generation,"seed=2, NumPy global RNG; package version unpinned",arc_solver lines 759-762
+DFS generation augmentations,16,DFS generation,8 geometry x 2 colour draws; train order is task-dependent,arc_solver lines 759-815
+DFS physical batches,4,DFS generation,four source-coded batches of width four,arc_solver lines 769-795
+rescore colour samples per geometry,1,candidate rescoring,seed uses process-salted hash(bk) unless PYTHONHASHSEED is controlled,arc_solver lines 833-852
+candidate rescoring augmentations,8,candidate rescoring,8 geometry x 1 colour draw; task/candidate-specific demo order,arc_solver lines 833-852

@@ -1,0 +1,36 @@
+{
+  "experiment_id": "AUGMENTATION_CANDIDATE_SCREENING_V1",
+  "forbidden": [
+    "GPU",
+    "Qwen model",
+    "tokenizer/model load",
+    "TTT",
+    "DFS",
+    "Gold",
+    "test outputs",
+    "R128",
+    "R256",
+    "Retention30",
+    "decoder-policy changes"
+  ],
+  "mode": "CPU_ONLY_SOURCE_AND_REPRESENTATION_AUDIT",
+  "public_classification": "PUBLIC_DFS_AUG16_CONFIRMED",
+  "representative_task_selection": {
+    "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+    "rule": "sort task IDs by sha256(salt + ':' + task_id), take first 8",
+    "salt": "ARC2_AUGMENTATION_CANDIDATE_SCREENING_V1",
+    "source": "ARC evaluation challenge file only",
+    "task_ids": [
+      "16b78196",
+      "b9e38dc0",
+      "e87109e9",
+      "5dbc8537",
+      "67e490f4",
+      "4e34c42c",
+      "d59b0160",
+      "d35bdbdc"
+    ]
+  },
+  "research_classification": "RESEARCH_AUG16_CANDIDATES_FROZEN",
+  "source_head": "ce617e27fcea1061cfa946b661dba2f5d41afe16"
+}

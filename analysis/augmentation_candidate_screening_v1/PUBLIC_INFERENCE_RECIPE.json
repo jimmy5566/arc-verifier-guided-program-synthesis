@@ -1,0 +1,202 @@
+{
+  "actual_batch_selection_slot_order": [
+    [
+      0,
+      1,
+      4,
+      5
+    ],
+    [
+      2,
+      3,
+      6,
+      7
+    ],
+    [
+      8,
+      9,
+      12,
+      13
+    ],
+    [
+      10,
+      11,
+      14,
+      15
+    ]
+  ],
+  "classification": "PUBLIC_DFS_AUG16_CONFIRMED",
+  "configured_distinct_dfs_cells_per_task_output": 16,
+  "descriptor_observation": {
+    "emulation": "np.random.seed(2); np.random.permutation(10), observed with NumPy 2.5.3 legacy global RNG",
+    "purpose": "Mechanical expansion of the source algorithm only; not a claim of a portable public canonical recipe.",
+    "source_limit": "The public notebook does not pin a NumPy version."
+  },
+  "execution_caveat": "The source has a 1200-second per-puzzle timeout check before each batch; configured 16 cells can be truncated by timeout.",
+  "fixed_canonical_aug16": false,
+  "physical_batch_count": 4,
+  "physical_batch_width": 4,
+  "source_slot_order_after_sorted_eval_keys": [
+    {
+      "color_mapping_old_to_new": "4150723698",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "identity",
+      "inverse_color_mapping_new_to_old": "3156027498",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 0,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 0
+    },
+    {
+      "color_mapping_old_to_new": "9302675184",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "identity",
+      "inverse_color_mapping_new_to_old": "2731964580",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 0,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 1
+    },
+    {
+      "color_mapping_old_to_new": "4281673590",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "rot90",
+      "inverse_color_mapping_new_to_old": "9316074528",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 1,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 2
+    },
+    {
+      "color_mapping_old_to_new": "4950812673",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "rot90",
+      "inverse_color_mapping_new_to_old": "3569027841",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 1,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 3
+    },
+    {
+      "color_mapping_old_to_new": "5386701942",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "rot180",
+      "inverse_color_mapping_new_to_old": "5691803427",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 0,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 4
+    },
+    {
+      "color_mapping_old_to_new": "8579032416",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "rot180",
+      "inverse_color_mapping_new_to_old": "4865719203",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 0,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 5
+    },
+    {
+      "color_mapping_old_to_new": "1654278039",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "rot270",
+      "inverse_color_mapping_new_to_old": "7048321569",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 1,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 6
+    },
+    {
+      "color_mapping_old_to_new": "4965803712",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "rot270",
+      "inverse_color_mapping_new_to_old": "5896032741",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 1,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 7
+    },
+    {
+      "color_mapping_old_to_new": "1602397845",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "transpose",
+      "inverse_color_mapping_new_to_old": "2034891675",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 2,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 8
+    },
+    {
+      "color_mapping_old_to_new": "9180254367",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "transpose",
+      "inverse_color_mapping_new_to_old": "3147658920",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 2,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 9
+    },
+    {
+      "color_mapping_old_to_new": "4907281356",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "flip_ud",
+      "inverse_color_mapping_new_to_old": "2647089351",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 3,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 10
+    },
+    {
+      "color_mapping_old_to_new": "5980213764",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "flip_ud",
+      "inverse_color_mapping_new_to_old": "3546908721",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 3,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 11
+    },
+    {
+      "color_mapping_old_to_new": "0986123745",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "anti_transpose",
+      "inverse_color_mapping_new_to_old": "0456893721",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 2,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 12
+    },
+    {
+      "color_mapping_old_to_new": "5436201789",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "anti_transpose",
+      "inverse_color_mapping_new_to_old": "5642103789",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 2,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 13
+    },
+    {
+      "color_mapping_old_to_new": "6142358709",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "flip_lr",
+      "inverse_color_mapping_new_to_old": "8134250769",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 3,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 14
+    },
+    {
+      "color_mapping_old_to_new": "7690351428",
+      "demo_order": "np.random.permutation(n_train); task-dependent draw after all 16 colour draws",
+      "geometry": "flip_lr",
+      "inverse_color_mapping_new_to_old": "3684751092",
+      "output_inverse": "ArcDataset.invert_mod(array, subkey, inv_perm=True)",
+      "physical_dfs_batch": 3,
+      "rng": "np.random.seed(2) inside ArcDataset.augment; NumPy version not pinned in source",
+      "sorted_subkey_slot": 15
+    }
+  ],
+  "why_not_fixed_canonical": "Colour draws use global NumPy RNG with no pinned NumPy version, and shuffle_ex uses task-dependent random train-pair permutations."
+}
