@@ -121,9 +121,7 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
         source = "".join(notebook["cells"][0]["source"])
         assert "BASE_MODEL_ONLY" in source
         assert "runtime_preflight" in source and "controller" in source
-        assert "source_archive = dataset / 'ARC2.zip'" in source
-        assert "shutil.unpack_archive(source_archive, source)" in source
-        assert "attached source archive missing" in source
+        assert "source = dataset / 'ARC2'" in source
         assert "bootstrap_l4" not in source and "adapter_smoke" not in source
         assert "submission.json" not in source and "evaluation_solutions" not in source
         packaged = staged / "dataset" / "ARC2"
