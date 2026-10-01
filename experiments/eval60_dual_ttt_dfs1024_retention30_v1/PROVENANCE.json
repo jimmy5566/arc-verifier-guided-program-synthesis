@@ -1,0 +1,28 @@
+{
+  "experiment_id": "EVAL60_DUAL_TTT_DFS1024_RETENTION30_V1",
+  "gpu_phase_solution_access": false,
+  "historical_candidate_sha256": "92f546d31606f77b2ad8a9d12168558eec3f8fbc1494d5e89c8e993f0d573b5b",
+  "reference_manifest_verified": {
+    "EVAL60_PER_OUTPUT_RESCORE_REPORT.json": "74ceaefc61276a57a4c8cc8a3625cb2c4ba66c631db2589e0628fbef5d5dbaf9",
+    "PORTFOLIO_AUDIT_REPORT.json": "8d1cf2dd4fd0582365798d332c0f4c5efa58d196fc7a6b9ec5a7c6a723bb1c63",
+    "PORTFOLIO_AUDIT_REPORT.md": "4814cd484da223a4a6fdd35cbebd77c4e19f9453525de37eca3811daf5861e89",
+    "README.md": "c2d32dc9abfa5c8a17ee1eb1d8e91bbf50d1befc1ea24a12f14fa4643de50653",
+    "SELECTOR_OPTIMIZATION_HISTORY.md": "36ee7df7cff47f1fcd7df184dfe2d0dd471b4325b1c25fa3dfcd9ce44a5a7c05",
+    "UNION_SELECTOR_ARCHITECTURE_REPORT.json": "1a76f4d76f4bf75e0e7608a8b70dbdddd3825ab059353806b77b77659b29eefb",
+    "fixed_portfolio_candidates_frozen.json": "92f546d31606f77b2ad8a9d12168558eec3f8fbc1494d5e89c8e993f0d573b5b",
+    "fixed_portfolio_near_miss_details.csv": "feeb5324d2248f202930876559016d444c8fd961d415b4a91d0fec0bbf868ba1",
+    "fixed_portfolio_per_output_results.csv": "ac65112397234af3eaccd8b8dd01ef73ab2e4f53a2638921d04e1efea00f98d4",
+    "fixed_portfolio_predictions_frozen.json": "e06b0f0c2856366c6b9f53941a01ac4f1cbdce519e583c268398dec5d3722f5d",
+    "fixed_portfolio_rankings_frozen.json": "5260f17aeaa2099cf48867acc1de006cce4d7567423168c4c6067a9a9eedcf5a",
+    "fixed_portfolio_slot_overlap.csv": "22abd314222d7036a984cba536b79ef454dbdbd250ac4aa5c5a8d95812f12e72",
+    "portfolio_freeze.json": "50186d0bdd2734da97a9e17bc7082f52e35585bfc460fe18954db6d03c3df735",
+    "portfolio_slots.csv": "216efb6a4878db8dd5b59b56d998594a07733adbbb065b7c1c91aea9ad2c7842",
+    "run_eval60_4plus4_portfolio_audit.py": "80b477cad7aab75f678fb03f566f172f61e5ff308a09580c140cef37db68962d",
+    "three_oracle_selection_misses.csv": "91f31f8348e161de1e664303def108deb221c2a83d4e99120415b56146d42197",
+    "three_oracle_selection_misses.json": "1d0c2f99e49c61cf1849c5da2b37aa3642522035ef90e0d1ef38ff45230c6bdd"
+  },
+  "reference_zip_path": "C:\\Users\\asus\\Downloads\\ARC2_TTT24_TTT48_4plus4_selector_handoff_20260924.zip",
+  "reference_zip_sha256": "79a90750202b6988cfb4a0ca0c45f96846b5a89a2ca6647434ebffff47685c35",
+  "solutions_path_used_only_for_cohort_construction": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2_v8_visible_scoring_input\\arc-agi_evaluation_solutions.json",
+  "solutions_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1"
+}
