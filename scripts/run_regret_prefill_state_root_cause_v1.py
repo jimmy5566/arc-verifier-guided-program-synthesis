@@ -15,6 +15,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+from types import SimpleNamespace
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -493,6 +494,104 @@ def warmup_causality(args: argparse.Namespace) -> None:
     atomic_json(output / "DECISION.json", decision)
 
 
+def _write_foreign_component_condition(args: argparse.Namespace) -> None:
+    """Vary only the foreign request's token/position/KV representation.
+
+    The primary request is always left native and untouched.  This isolates the
+    actual anti continuation from a clone of its KV and from the flip/anti KV
+    content respectively; no decoder loop or solution data is involved.
+    """
+    contract = read_json(args.contract.resolve())
+    no_gold_challenge(Path(contract["challenge"]))
+    model, encoded, dec, adapter_sha, native = _runtime(contract, args.gpu_id)
+    try:
+        flip = _new_cell(model, encoded, dec, PRIMARY)
+        anti = _new_cell(model, encoded, dec, HISTORY)
+        if flip.request is None or anti.request is None:
+            raise RuntimeError("root prefill did not yield both incremental requests")
+        foreign = None
+        if args.mode != "NONE":
+            if args.mode == "ANTI_NATIVE":
+                foreign = anti.request
+            elif args.mode == "ANTI_CLONED_KV":
+                foreign = SimpleNamespace(token_id=anti.request.token_id, position=anti.request.position,
+                                          cache=clone_legacy_cache(anti.request.cache))
+            elif args.mode == "ANTI_TOKEN_FLIP_KV":
+                foreign = SimpleNamespace(token_id=anti.request.token_id, position=anti.request.position,
+                                          cache=clone_legacy_cache(flip.request.cache))
+            elif args.mode == "FLIP_TOKEN_ANTI_KV":
+                foreign = SimpleNamespace(token_id=flip.request.token_id, position=flip.request.position,
+                                          cache=clone_legacy_cache(anti.request.cache))
+            else:
+                raise RuntimeError(f"unknown foreign component mode: {args.mode}")
+            _discarded, foreign_summary = _one_forward(model, foreign)
+        else:
+            foreign_summary = None
+        outputs, summary = _one_forward(model, flip.request)
+        atomic_json(args.result.resolve(), {
+            "condition_id": args.condition_id, "mode": args.mode,
+            "cell_key": f"{TASK_ID}:o{OUTPUT_INDEX}:d{DEPTH}:{PRIMARY}",
+            "foreign_cell_key": f"{TASK_ID}:o{OUTPUT_INDEX}:d{DEPTH}:{HISTORY}",
+            "primary_request": {"token_id": int(flip.request.token_id), "position": int(flip.request.position),
+                                "cache": _cache_details(flip.request.cache)},
+            "foreign_request": None if foreign is None else {
+                "token_id": int(foreign.token_id), "position": int(foreign.position), "cache": _cache_details(foreign.cache),
+                "logits_sha256": foreign_summary["full_logits_sha256"],
+            },
+            "adapter_sha256": adapter_sha, "native_token_contract": native,
+            "full_logits_sha256": summary["full_logits_sha256"], "arc_logits": summary["arc_logits"],
+            "arc_logprobs": summary["arc_logprobs"], "arc_ranking": summary["arc_ranking"],
+            "retained_regret_successors": _retained_successors(outputs.logits, dec),
+            "gold_accessed": False, "dfs_executed": False, "dynamic_b2_executed": False,
+        })
+    finally:
+        _release(model)
+
+
+def foreign_component_causality(args: argparse.Namespace) -> None:
+    output = args.output.resolve(); contract = output / "PREFILL_STATE_ROOT_CAUSE_CONTRACT.json"
+    if not contract.is_file():
+        raise RuntimeError("foreign-component-causality requires the frozen causal contract")
+    root = output / "foreign_component_raw"; root.mkdir(exist_ok=True)
+    conditions = (
+        ("C0_NONE", "NONE"), ("C1_ANTI_NATIVE", "ANTI_NATIVE"),
+        ("C2_ANTI_CLONED_KV", "ANTI_CLONED_KV"), ("C3_ANTI_TOKEN_FLIP_KV", "ANTI_TOKEN_FLIP_KV"),
+        ("C4_FLIP_TOKEN_ANTI_KV", "FLIP_TOKEN_ANTI_KV"),
+    )
+    for condition_id, mode in conditions:
+        result = root / f"{condition_id}.json"
+        if result.exists():
+            raise RuntimeError(f"refusing to overwrite foreign component condition {result}")
+        subprocess.run([sys.executable, str(Path(__file__).resolve()), "foreign-component-condition", "--contract", str(contract),
+                        "--result", str(result), "--condition-id", condition_id, "--mode", mode, "--gpu-id", str(args.gpu_id)], check=True)
+    records = {condition_id: read_json(root / f"{condition_id}.json") for condition_id, _mode in conditions}
+    baseline = records["C0_NONE"]
+    rows = [{"condition_id": condition_id, "mode": mode, **_same(baseline, records[condition_id])}
+            for condition_id, mode in conditions]
+    write_csv(output / "FOREIGN_INCREMENTAL_COMPONENT_CAUSALITY.csv", rows)
+    changed = {key: not _same(baseline, value)["strict_forward_parity"] for key, value in records.items()}
+    if changed["C1_ANTI_NATIVE"] and not changed["C2_ANTI_CLONED_KV"]:
+        classification = "FOREIGN_NATIVE_CACHE_OBJECT_PATH"
+        minimal_fix = "CLONE_FOREIGN_INCREMENTAL_KV_BEFORE_FORWARD"
+    elif changed["C3_ANTI_TOKEN_FLIP_KV"] and not changed["C4_FLIP_TOKEN_ANTI_KV"]:
+        classification = "FOREIGN_INCREMENTAL_TOKEN_POSITION_PATH"
+        minimal_fix = "NOT_IDENTIFIED_TOKEN_POSITION_RUNTIME_STATE"
+    elif changed["C4_FLIP_TOKEN_ANTI_KV"]:
+        classification = "FOREIGN_INCREMENTAL_KV_CONTENT_PATH"
+        minimal_fix = "NOT_IDENTIFIED_KV_CONTENT_RUNTIME_STATE"
+    else:
+        classification = "FOREIGN_INCREMENTAL_MIXED_OR_HIDDEN_RUNTIME_PATH"
+        minimal_fix = "NOT_IDENTIFIED"
+    decision = read_json(output / "DECISION.json")
+    decision.update({"causal_classification": classification,
+                     "foreign_component_changed": changed,
+                     "first_divergent_layer_or_operation": "FIRST_FOREIGN_INCREMENTAL_MODEL_FORWARD_AFTER_ROOT_PREFILL",
+                     "minimal_fix": minimal_fix,
+                     "next": "IMPLEMENT_ONLY_IF_COMPONENT_FIX_IS_MICRO_PROVEN" if minimal_fix != "NOT_IDENTIFIED" else "STOP_FOR_REVIEW_HIDDEN_RUNTIME_PATH",
+                     "dynamic_b2_safe_next": False})
+    atomic_json(output / "DECISION.json", decision)
+
+
 def _first_tensor(value: Any) -> Any:
     if hasattr(value, "detach"):
         return value
@@ -703,6 +802,7 @@ def main() -> None:
     history_parser = sub.add_parser("history"); history_parser.add_argument("--output", type=Path, required=True); history_parser.add_argument("--gpu-id", type=int, default=0); history_parser.add_argument("--source-commit", required=True)
     fix_parser = sub.add_parser("fix"); fix_parser.add_argument("--output", type=Path, required=True); fix_parser.add_argument("--gpu-id", type=int, default=0)
     warmup_parser = sub.add_parser("warmup-causality"); warmup_parser.add_argument("--output", type=Path, required=True); warmup_parser.add_argument("--gpu-id", type=int, default=0)
+    components_parser = sub.add_parser("foreign-component-causality"); components_parser.add_argument("--output", type=Path, required=True); components_parser.add_argument("--gpu-id", type=int, default=0)
     trace_parser = sub.add_parser("trace"); trace_parser.add_argument("--output", type=Path, required=True); trace_parser.add_argument("--gpu-id", type=int, default=0); trace_parser.add_argument("--source-commit", required=True)
     finalizer = sub.add_parser("finalize"); finalizer.add_argument("--output", type=Path, required=True)
     condition = sub.add_parser("condition"); condition.add_argument("--contract", type=Path, required=True); condition.add_argument("--result", type=Path, required=True)
@@ -714,6 +814,8 @@ def main() -> None:
     fix_condition.add_argument("--history-length", type=int, choices=(0, 1, 8, 32), required=True); fix_condition.add_argument("--gpu-id", type=int, default=0)
     warmup_condition = sub.add_parser("warmup-condition"); warmup_condition.add_argument("--contract", type=Path, required=True); warmup_condition.add_argument("--result", type=Path, required=True)
     warmup_condition.add_argument("--condition-id", required=True); warmup_condition.add_argument("--discard-same-request-warmup", action="store_true"); warmup_condition.add_argument("--gpu-id", type=int, default=0)
+    component_condition = sub.add_parser("foreign-component-condition"); component_condition.add_argument("--contract", type=Path, required=True); component_condition.add_argument("--result", type=Path, required=True)
+    component_condition.add_argument("--condition-id", required=True); component_condition.add_argument("--mode", choices=("NONE", "ANTI_NATIVE", "ANTI_CLONED_KV", "ANTI_TOKEN_FLIP_KV", "FLIP_TOKEN_ANTI_KV"), required=True); component_condition.add_argument("--gpu-id", type=int, default=0)
     trace_condition = sub.add_parser("trace-condition"); trace_condition.add_argument("--contract", type=Path, required=True); trace_condition.add_argument("--result", type=Path, required=True)
     trace_condition.add_argument("--history-length", type=int, choices=(0, 1, 2, 8, 32), required=True); trace_condition.add_argument("--gpu-id", type=int, default=0)
     args = parser.parse_args()
@@ -725,6 +827,8 @@ def main() -> None:
     elif args.command == "fix-condition": _write_fix_condition(args)
     elif args.command == "warmup-causality": warmup_causality(args)
     elif args.command == "warmup-condition": _write_same_request_warmup_condition(args)
+    elif args.command == "foreign-component-causality": foreign_component_causality(args)
+    elif args.command == "foreign-component-condition": _write_foreign_component_condition(args)
     elif args.command == "trace": trace(args)
     elif args.command == "trace-condition": _write_trace_condition(args)
     elif args.command == "finalize": finalize(args)
