@@ -93,6 +93,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     from arc.io import load_dataset
 
     _assert_challenge_only(args.challenge)
+    if args.disable_bf16_reduced_precision_reduction:
+        # Diagnostic only: retain BF16 weights/activations but ask cuBLAS not
+        # to use reduced-precision BF16 reductions.  Acceptance requires both
+        # scalar B1 equality to the default reference and B1/B2 equality.
+        torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction = False
     foundation = json.loads(args.adapter_foundation.read_text(encoding="utf-8"))
     model, tokenizer, identity = load_hf_peft_inference(
         model_path=args.model_path, adapter_path=args.adapter_path, device=args.device,
@@ -161,6 +166,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     result: dict[str, Any] = {
         "experiment": "CLEAN_HF_B2_FIRST_DIVERGENCE_V1",
         "target_blind": True, "gold_loaded": False, "unsloth_inference": False,
+        "allow_bf16_reduced_precision_reduction": bool(
+            torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction),
         "task_id": args.task_id, "output_index": args.output_index, "depth": args.depth,
         "token_ids": [int(request.token_id) for request in requests],
         "position": int(first.position),
@@ -199,6 +206,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-index", type=int, default=0)
     parser.add_argument("--depth", type=int, default=24)
     parser.add_argument("--device", default="cuda:0")
+    parser.add_argument("--disable-bf16-reduced-precision-reduction", action="store_true")
     return parser.parse_args()
 
 
