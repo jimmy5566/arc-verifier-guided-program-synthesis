@@ -10,6 +10,7 @@ import hashlib
 import importlib.metadata
 import inspect
 import json
+import ast
 from pathlib import Path
 from typing import Any
 
@@ -25,7 +26,7 @@ def _sha256_file(path: Path) -> str:
 def load_hf_peft_inference(*, model_path: Path, adapter_path: Path, device: str) -> tuple[Any, Any, dict[str, Any]]:
     """Load a frozen adapter with stock Transformers and PEFT only."""
     import torch
-    from peft import PeftModel
+    from peft import PeftConfig, PeftModel
     from transformers import AutoModelForCausalLM, AutoTokenizer
     from transformers.utils import logging as transformers_logging
 
@@ -37,8 +38,20 @@ def load_hf_peft_inference(*, model_path: Path, adapter_path: Path, device: str)
     tokenizer = AutoTokenizer.from_pretrained(str(model_path), local_files_only=True, trust_remote_code=False)
     base = AutoModelForCausalLM.from_pretrained(str(model_path), local_files_only=True, trust_remote_code=False,
                                                  torch_dtype=torch.bfloat16, low_cpu_mem_usage=True).to(device).eval()
-    model = PeftModel.from_pretrained(base, str(adapter_path), is_trainable=False).to(device).eval()
     adapter_config = json.loads((adapter_path / "adapter_config.json").read_text(encoding="utf-8"))
+    # Older adaptation exports serialize this PEFT field as a Python-set
+    # string. PEFT 0.17 rightfully rejects that schema. Parse the exact list
+    # deterministically; this changes neither safetensor keys nor values.
+    parsed_targets = adapter_config.get("target_modules")
+    if isinstance(parsed_targets, str):
+        parsed_targets = ast.literal_eval(parsed_targets)
+        if not isinstance(parsed_targets, (set, tuple, list)) or not all(isinstance(item, str) for item in parsed_targets):
+            raise ValueError("adapter target_modules string is not a string collection")
+        parsed_targets = sorted(parsed_targets)
+    peft_config = PeftConfig.from_pretrained(str(adapter_path), local_files_only=True)
+    if parsed_targets is not None:
+        peft_config.target_modules = set(parsed_targets)
+    model = PeftModel.from_pretrained(base, str(adapter_path), config=peft_config, is_trainable=False).to(device).eval()
     identity = {
         "backend": "transformers_peft_clean", "torch": torch.__version__,
         "transformers": importlib.metadata.version("transformers"), "peft": importlib.metadata.version("peft"),
@@ -48,7 +61,8 @@ def load_hf_peft_inference(*, model_path: Path, adapter_path: Path, device: str)
         "attention_implementation": getattr(base.config, "_attn_implementation", None),
         "dtype": str(next(model.parameters()).dtype), "adapter_sha256": _sha256_file(adapter_path / "adapter_model.safetensors"),
         "adapter_config_sha256": _sha256_file(adapter_path / "adapter_config.json"), "tokenizer_vocab_size": len(tokenizer),
-        "adapter_config": {key: adapter_config.get(key) for key in ("r", "lora_alpha", "use_rslora", "target_modules", "modules_to_save")},
+        "adapter_config": {**{key: adapter_config.get(key) for key in ("r", "lora_alpha", "use_rslora", "modules_to_save")},
+                           "target_modules": parsed_targets, "target_modules_schema_translated": isinstance(adapter_config.get("target_modules"), str)},
     }
     return model, tokenizer, identity
 
