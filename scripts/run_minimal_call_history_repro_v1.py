@@ -22,10 +22,10 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
-from inference.nvarc_turbodfs_dynamic_ready import clone_legacy_cache
+from inference.nvarc_turbodfs_dynamic_ready import clone_legacy_cache, start_ready_cell
 from scripts.run_adaptive_ttt_loo_transfer12 import read_json, view_task
 from scripts.run_d1_real_decoder_ab import adapter_records, atomic_json, load_adapter, no_gold_challenge
-from scripts.run_regret_dynamic_ready_v1 import ADAPTER_SHA, DEPTH, OUTPUT_INDEX, TASK_ID
+from scripts.run_regret_dynamic_ready_v1 import ADAPTER_SHA, DEPTH, OUTPUT_INDEX, TASK_ID, decoder
 from scripts.turbodfs_v4_common import assert_native_token_contract, sha256_file
 
 EXPERIMENT = "MINIMAL_CALL_HISTORY_REPRO_V1"
@@ -201,15 +201,23 @@ def _load(contract: dict[str, Any], gpu_id: int) -> tuple[Any, dict[str, Any], d
     return model, prompts, {"adapter_sha256": adapter_sha, "native_token_contract": assert_native_token_contract(tokenizer)}
 
 
-def _request_from_prefill(model: Any, prompt: Any) -> dict[str, Any]:
-    import torch
+def _request_from_prefill(model: Any, prompt: Any, config: Any, view: str) -> dict[str, Any]:
+    """Expose exactly the first legal Dynamic-READY request, without advancing it.
 
-    with torch.no_grad():
-        output = model(input_ids=prompt.to(model.device), return_dict=True, use_cache=True)
-    root_cache = clone_legacy_cache(output.past_key_values)
-    return {"token_id": int(output.logits[:, -1].float().argmax(dim=-1).item()),
-            "position": int(prompt.shape[-1]), "cache": root_cache,
-            "prefill_logits": _logit_record(output.logits), "prefill_cache": _cache_record(root_cache)}
+    The request is deliberately *not* a raw logits argmax.  Dynamic-READY's
+    frontier-floor and Regret legality rules select it in ``start_ready_cell``.
+    Using the actual coroutine request is required for an apples-to-apples B1
+    call-history discriminator.
+    """
+    cell = start_ready_cell(model=model, input_ids=prompt.to(model.device), config=config,
+                            cell_key=f"{TASK_ID}:o{OUTPUT_INDEX}:d{DEPTH}:{view}",
+                            normalize_root_cache=False, active_time_accounting=True)
+    request = cell.request
+    if request is None:
+        raise RuntimeError(f"{view} prefill yielded no incremental request")
+    root_cache = clone_legacy_cache(request.cache)
+    return {"token_id": int(request.token_id), "position": int(request.position), "ordinal": int(request.ordinal),
+            "cache": root_cache, "prefill_cache": _cache_record(root_cache)}
 
 
 def _release(model: Any) -> None:
@@ -221,7 +229,8 @@ def _release(model: Any) -> None:
 def _condition_immediate(contract: dict[str, Any], gpu_id: int) -> dict[str, Any]:
     model, prompts, load_meta = _load(contract, gpu_id)
     try:
-        flip = _request_from_prefill(model, prompts[PRIMARY])
+        config = decoder(contract["caps"])
+        flip = _request_from_prefill(model, prompts[PRIMARY], config, PRIMARY)
         frozen = clone_legacy_cache(flip["cache"])
         first, first_row = _forward(model, {**flip, "cache": clone_legacy_cache(frozen)}, label="A_baseline")
         second, second_row = _forward(model, {**flip, "cache": clone_legacy_cache(frozen)}, label="B_immediate_replay")
@@ -234,8 +243,9 @@ def _condition_immediate(contract: dict[str, Any], gpu_id: int) -> dict[str, Any
 def _condition_foreign(contract: dict[str, Any], gpu_id: int) -> dict[str, Any]:
     model, prompts, load_meta = _load(contract, gpu_id)
     try:
-        flip = _request_from_prefill(model, prompts[PRIMARY])
-        foreign = _request_from_prefill(model, prompts[FOREIGN])
+        config = decoder(contract["caps"])
+        flip = _request_from_prefill(model, prompts[PRIMARY], config, PRIMARY)
+        foreign = _request_from_prefill(model, prompts[FOREIGN], config, FOREIGN)
         frozen = clone_legacy_cache(flip["cache"])
         baseline, baseline_row = _forward(model, {**flip, "cache": clone_legacy_cache(frozen)}, label="C_baseline_before_foreign")
         foreign_out, foreign_row = _forward(model, foreign, label="D_one_ordinary_anti_incremental")
@@ -260,7 +270,9 @@ def main() -> None:
     no_gold_challenge(args.challenge)
     contract = {"experiment": EXPERIMENT, "source_commit": args.source_commit, "target_blind": True, "gold_accessed": False,
         "task_id": TASK_ID, "output_index": OUTPUT_INDEX, "depth": DEPTH, "primary_view": PRIMARY, "foreign_view": FOREIGN,
-        "policy": "CUMULATIVE_REGRET_r=4.00", "caps": {"max_expanded_nodes": 4096, "max_completed_candidates": 32},
+        "policy": "CUMULATIVE_REGRET_r=4.00", "caps": {"max_new_tokens": 931, "max_score": 1.6094379124341003,
+        "max_expanded_nodes": 4096, "max_completed_candidates": 32, "frontier_floor": 1,
+        "local_time_limit_seconds": 540.0, "pad_token_id": 13, "arc_tokens": list(ARC_TOKENS)},
         "challenge": str(args.challenge.resolve()), "challenge_sha256": sha256_file(args.challenge.resolve()),
         "authoritative_root": str(args.authoritative_root.resolve()), "reference_config": str(args.reference_config.resolve()),
         "model_path": str(args.model_path.resolve()), "native_config_dir": str(args.native_config_dir.resolve()),
