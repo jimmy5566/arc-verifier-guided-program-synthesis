@@ -905,6 +905,7 @@ def run_ready_scheduler(
     observer: Callable[[str, dict[str, Any]], None] | None = None,
     cache_pack_observer: Callable[[str, dict[str, Any]], None] | None = None,
     release_b2_temporaries_for_audit: bool = False,
+    streaming_split_and_adopt: bool = False,
     collect_event_trace: bool = True,
     max_physical_batch: int | None = None,
 ) -> dict[str, Any]:
@@ -913,6 +914,11 @@ def run_ready_scheduler(
     Only READY-cell selection differs between policies.  The request
     construction, cache merge/split, model invocation, reply, and DFS resume
     path below are intentionally common to every policy.
+
+    ``streaming_split_and_adopt`` is intentionally an explicit executor
+    choice.  It preserves every logical cell's owner object while copying a
+    physical batch's continuation cache back one lane at a time.  Existing
+    callers retain the historical split/adopt path unless they opt in.
     """
     import torch
 
@@ -987,6 +993,7 @@ def run_ready_scheduler(
             requests=requests,
             cache_pack_observer=cache_pack_observer,
             release_batch_temporaries_for_audit=release_b2_temporaries_for_audit,
+            streaming_split_and_adopt=streaming_split_and_adopt,
         )
         elapsed = forward_telemetry["scheduler_elapsed_seconds"]
         model_call_seconds = forward_telemetry["model_call_seconds"]
