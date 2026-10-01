@@ -454,8 +454,18 @@ def _finalize(args: argparse.Namespace) -> None:
         f"- Recommended production maximum physical batch: `{recommended}`.", "",
     ]
     (args.output / "REPORT.md").write_text("\n".join(report), encoding="utf-8", newline="\n")
-    hashes = {path.name: _sha256_file(path) for path in sorted(args.output.iterdir())
-              if path.is_file() and path.name != "HASHES.json"}
+    # Hash the compact, versioned evidence set—not ephemeral remote logs.
+    evidence_names = (
+        "CONTRACT.json", "ORIGINAL_B16_OUTCOME.json", "B16_MEMORY_WATERFALL.csv",
+        "TRANSIENT_OWNERSHIP_ANALYSIS.json", "STREAMING_ADOPTION_MICRO.json",
+        "B16_RETRY_MEMORY.json", "B16_RETRY_MEMORY_WATERFALL.csv", "B16_RESULT.json",
+        "DECISION.json", "REPORT.md",
+    )
+    hashes = {
+        name: _sha256_file(args.output / name)
+        for name in evidence_names
+        if (args.output / name).is_file()
+    }
     _atomic_json(args.output / "HASHES.json", hashes)
 
 
