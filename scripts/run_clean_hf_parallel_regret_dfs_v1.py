@@ -424,4 +424,5 @@ def parse_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
     result = run(parse_args())
-    print(json.dumps({"raw_sha256": result["raw_sha256"], "cell_count": len(result["cells"])}, sort_keys=True))
+    print(json.dumps({"raw_sha256": result["raw_sha256"],
+                      "cell_count": len(result.get("cells", result.get("per_cell", [])))}, sort_keys=True))
