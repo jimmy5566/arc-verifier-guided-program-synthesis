@@ -117,14 +117,23 @@ def _assert_staged_runner_importable(source: Path) -> None:
 
 def _notebook_source(dataset_slug: str, harness_commit: str) -> str:
     return "\n".join([
-        "import json, os, subprocess, sys, time",
+        "import json, os, shutil, subprocess, sys, time",
         "from pathlib import Path",
         "dataset = Path('/kaggle/input/datasets/jimmy5566/') / " + repr(dataset_slug),
-        "source = dataset / 'ARC2'",
+        # Kaggle datasets accept directories only as archives when uploaded by
+        # the CLI.  Extract that immutable ARC2.zip into this run's working
+        # directory before resolving any runtime files; no source is taken
+        # from a previous notebook working tree.
+        "source_archive = dataset / 'ARC2.zip'",
+        "source = Path('/kaggle/working/arc2_l4_native_base_batch_source')",
         "out = Path('/kaggle/working/analysis/l4_native_base_batch_scaling_b1_b16_v1')",
         "if os.environ.get('KAGGLE_KERNEL_INTERNET_ENABLED', '').strip().lower() in {'1','true','yes'}: raise RuntimeError('Internet must be disabled')",
         "gpus = subprocess.check_output(['nvidia-smi', '-L'], text=True).splitlines()",
         "if len(gpus) != 4 or any('NVIDIA L4' not in row for row in gpus): raise RuntimeError(f'requires exactly four NVIDIA L4 GPUs: {gpus}')",
+        "if not source_archive.is_file(): raise RuntimeError(f'attached source archive missing: {source_archive}')",
+        "if source.exists(): raise RuntimeError(f'fresh runtime source path unexpectedly exists: {source}')",
+        "source.mkdir(parents=True)",
+        "shutil.unpack_archive(source_archive, source)",
         "model = Path('/kaggle/input/models/sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1')",
         "challenge = Path('/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_evaluation_challenges.json')",
         "native = source / 'configs' / 'nvarc_native_846d0198'",
