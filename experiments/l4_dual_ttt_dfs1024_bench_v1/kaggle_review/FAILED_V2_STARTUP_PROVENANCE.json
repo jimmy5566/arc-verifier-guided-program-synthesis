@@ -1,0 +1,26 @@
+{
+  "benchmark_id": "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1",
+  "candidates": 0,
+  "confirmed_model_ready_workers": [
+    0,
+    1
+  ],
+  "dfs_cells": 0,
+  "failure": "RuntimeError: worker exited during model load: [(3, 0)]",
+  "failure_stage": "STARTUP_HANDSHAKE_BEFORE_4_OF_4_MODEL_READY",
+  "infra_fix_only": true,
+  "kaggle_kernel": "jimmy5566/arc2-l4-dual-ttt-dfs1024-performance-benchmark",
+  "kaggle_log_sha256": "4173792885b3a94222ec1e9eadd0f781d2950da937be6dcac045e02174e82c16",
+  "model_ready_uuid_fix": "PASS",
+  "notebook_version": 2,
+  "parent_failure_detection_seconds_approx": 262,
+  "previous_gpu_run_scientific_data": "NONE",
+  "root_worker_exception": "UNKNOWN_NOT_PERSISTED",
+  "scientific_data_produced": false,
+  "status": "ERROR",
+  "surviving_worker_barrier_timeout_seconds": 1200,
+  "tasks_started": 0,
+  "total_notebook_seconds_approx": 1479,
+  "ttt_runs": 0,
+  "worker_3_observed_exit_code": 0
+}

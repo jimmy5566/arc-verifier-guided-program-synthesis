@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REVIEW = ROOT / "experiments" / "l4_dual_ttt_dfs1024_bench_v1" / "kaggle_review"
+SOURCE_COMMIT = "177c19f1f3159e1fc5db95f16d7faa5d2096957f"
 
 
 def read(name: str) -> dict:
@@ -21,7 +22,7 @@ def test_review_snapshot_is_exactly_the_unlaunched_commit_package() -> None:
     identity = read("SOURCE_IDENTITY.json")
     status = read("REVIEW_STATUS.json")
     package = read("PACKAGE_MANIFEST.json")
-    assert identity["source_commit"] == "4af765141b70a766140889150bb7266fae98d7a6"
+    assert identity["source_commit"] == SOURCE_COMMIT
     assert identity["scientific_base_commit"] == "95827d06b6f99c7c47007a1b1035a11274f8c9a8"
     assert package["source_commit"] == identity["source_commit"]
     assert status == {
@@ -48,12 +49,13 @@ def test_review_notebook_compiles_and_is_target_blind_one_shot() -> None:
     assert "--resume" not in code
     assert "RERUN_ENABLED = FALSE" in code
     assert "run_l4_dual_ttt_dfs1024_benchmark.py" in code
+    assert "startup_summary.json" in code
 
 
 def test_review_config_and_metadata_keep_the_frozen_contract() -> None:
     config = read("benchmark_config_resolved.json")
     metadata = read("kernel-metadata.json")
-    assert config["authoritative_source_commit"] == "4af765141b70a766140889150bb7266fae98d7a6"
+    assert config["authoritative_source_commit"] == SOURCE_COMMIT
     assert config["search"]["max_expanded_nodes"] == 1024
     assert config["search"]["lane_count"] == 1
     assert config["search"]["batch2_cross_cell"] is False
@@ -71,7 +73,7 @@ def test_resolved_package_changes_provenance_only_not_science_or_cohort() -> Non
     )
     resolved = read("benchmark_config_resolved.json")
     assert resolved.pop("scientific_base_commit") == frozen_config["authoritative_source_commit"]
-    assert resolved.pop("authoritative_source_commit") == "4af765141b70a766140889150bb7266fae98d7a6"
+    assert resolved.pop("authoritative_source_commit") == SOURCE_COMMIT
     frozen_config.pop("authoritative_source_commit")
     assert resolved == frozen_config
     frozen_cohort = json.loads(
@@ -99,3 +101,17 @@ def test_failed_v1_is_preserved_as_infrastructure_only_provenance() -> None:
     assert record["tasks_started"] == record["ttt_runs"] == record["dfs_cells"] == record["candidates"] == 0
     assert identity["infra_fix_only"] is True
     assert identity["previous_gpu_run_scientific_data"] == "NONE"
+
+
+def test_failed_v2_and_startup_control_plane_are_in_review_snapshot() -> None:
+    record = read("FAILED_V2_STARTUP_PROVENANCE.json")
+    identity = read("SOURCE_IDENTITY.json")
+    comparison = (REVIEW / "SUCCESSFUL_RUNNER_LIFECYCLE_COMPARISON.md").read_text(encoding="utf-8")
+    assert record["notebook_version"] == 2
+    assert record["model_ready_uuid_fix"] == "PASS"
+    assert record["scientific_data_produced"] is False
+    assert record["tasks_started"] == record["ttt_runs"] == record["dfs_cells"] == record["candidates"] == 0
+    assert identity["fix_type"] == "INFRASTRUCTURE_OBSERVABILITY_AND_ABORT_ONLY"
+    assert identity["version_1_scientific_data"] == "NONE"
+    assert identity["version_2_scientific_data"] == "NONE"
+    assert "exact unique workers `{0,1,2,3}`" in comparison
