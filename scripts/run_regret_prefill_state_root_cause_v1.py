@@ -346,19 +346,39 @@ def _first_tensor(value: Any) -> Any:
 
 
 def _trace_modules(model: Any) -> list[tuple[str, Any]]:
-    core = getattr(model, "model", model)
+    # Unsloth may return a PEFT wrapper whose Qwen stack is at
+    # ``base_model.model.model`` rather than at ``model.model``.  Locate the
+    # real block container structurally, without assuming one wrapper layout.
+    pending = [model]
+    visited: set[int] = set()
+    core = None
+    while pending:
+        candidate = pending.pop(0)
+        if id(candidate) in visited:
+            continue
+        visited.add(id(candidate))
+        layers = getattr(candidate, "layers", None)
+        if layers is not None and len(layers) and all(hasattr(layer, "forward") for layer in layers):
+            core = candidate
+            break
+        for name in ("base_model", "model"):
+            child = getattr(candidate, name, None)
+            if child is not None and hasattr(child, "forward"):
+                pending.append(child)
+    if core is None:
+        raise RuntimeError("cannot locate transformer layer stack for diagnostic trace")
     modules: list[tuple[str, Any]] = []
-    embed = getattr(core, "embed_tokens", None)
+    get_input_embeddings = getattr(model, "get_input_embeddings", None)
+    embed = get_input_embeddings() if callable(get_input_embeddings) else getattr(core, "embed_tokens", None)
     if embed is not None:
         modules.append(("input_embedding", embed))
-    layers = getattr(core, "layers", None)
-    if layers is None:
-        raise RuntimeError("cannot locate transformer layer stack for diagnostic trace")
+    layers = core.layers
     modules.extend((f"transformer_block_{index:02d}", layer) for index, layer in enumerate(layers))
     norm = getattr(core, "norm", None)
     if norm is not None:
         modules.append(("final_norm", norm))
-    head = getattr(model, "lm_head", None)
+    get_output_embeddings = getattr(model, "get_output_embeddings", None)
+    head = get_output_embeddings() if callable(get_output_embeddings) else getattr(model, "lm_head", None)
     if head is None:
         raise RuntimeError("cannot locate lm_head for diagnostic trace")
     modules.append(("lm_head", head))
