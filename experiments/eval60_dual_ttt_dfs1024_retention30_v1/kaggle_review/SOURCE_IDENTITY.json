@@ -1,0 +1,27 @@
+{
+  "experiment_id": "EVAL60_DUAL_TTT_DFS1024_RETENTION30_V1",
+  "source_branch": "experiment/eval60-dual-ttt-dfs1024-retention30-v1",
+  "source_commit": "ec66612c6afd0bf7694becf434273d4cea3a97fa",
+  "source_git_status": "PACKAGED_CLEAN_FROM_GIT_ARCHIVE",
+  "source_paths": [
+    "src",
+    "configs/nvarc_native_846d0198",
+    "scripts/run_eval60_dual_ttt_dfs1024_retention30.py",
+    "scripts/score_eval60_retention30.py",
+    "scripts/run_l4_dual_ttt_dfs1024_benchmark.py",
+    "scripts/run_adaptive_ttt_loo_transfer12.py",
+    "scripts/run_adaptive_ttt_step1.py",
+    "scripts/run_eval3_reference_ttt.py",
+    "scripts/turbodfs_d1_common.py",
+    "scripts/turbodfs_v4_common.py",
+    "scripts/run_eval60_adaptive_inference_joint_v2.py",
+    "experiments/eval60_dual_ttt_dfs1024_retention30_v1/TARGET_BLIND_RUN_MANIFEST.json",
+    "experiments/eval60_dual_ttt_dfs1024_retention30_v1/RETENTION30_OUTPUTS.json",
+    "experiments/eval60_dual_ttt_dfs1024_retention30_v1/RETENTION30_COHORT_SHA256.txt",
+    "experiments/eval60_dual_ttt_dfs1024_retention30_v1/HISTORICAL_GREEDY_SOURCE_CLASSES.csv",
+    "experiments/eval60_dual_ttt_dfs1024_retention30_v1/PROVENANCE.json",
+    "experiments/eval60_dual_ttt_dfs1024_retention30_v1/retention_config.json",
+    "experiments/eval60_dual_ttt_dfs1024_retention30_v1/README.md",
+    "pyproject.toml"
+  ]
+}
