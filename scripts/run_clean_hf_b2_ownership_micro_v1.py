@@ -126,6 +126,53 @@ def _strict_pair_equal(left: Any, right: Any) -> bool:
     return a["semantic_sha256"] == b["semantic_sha256"] and a["per_forward_trace_sha256"] == b["per_forward_trace_sha256"]
 
 
+def _first_difference(left: Any, right: Any, path: str = "$") -> dict[str, Any] | None:
+    """Return the first canonical semantic difference without exporting raw pools.
+
+    The B2 gate is target-blind, but a boolean mismatch alone is not actionable:
+    this minimal diagnostic identifies whether the first departure is the first
+    forward/logit/cache reply or a downstream DFS consequence.  Values already
+    stored as hashes/scalars remain compact; no model activations are written.
+    """
+    if type(left) is not type(right):
+        return {"path": path, "left_type": type(left).__name__, "right_type": type(right).__name__,
+                "left": left, "right": right}
+    if isinstance(left, dict):
+        for key in sorted(set(left) | set(right), key=str):
+            if key not in left or key not in right:
+                return {"path": f"{path}.{key}", "left": left.get(key), "right": right.get(key)}
+            found = _first_difference(left[key], right[key], f"{path}.{key}")
+            if found is not None:
+                return found
+        return None
+    if isinstance(left, list):
+        if len(left) != len(right):
+            return {"path": f"{path}.length", "left": len(left), "right": len(right)}
+        for index, (a, b) in enumerate(zip(left, right, strict=True)):
+            found = _first_difference(a, b, f"{path}[{index}]")
+            if found is not None:
+                return found
+        return None
+    if left != right:
+        return {"path": path, "left": left, "right": right}
+    return None
+
+
+def _comparison_detail(left: Any, right: Any) -> dict[str, Any]:
+    a, b = _semantic(left), _semantic(right)
+    return {
+        "strict_exact": a["semantic_sha256"] == b["semantic_sha256"]
+        and a["per_forward_trace_sha256"] == b["per_forward_trace_sha256"],
+        "left_semantic_sha256": a["semantic_sha256"],
+        "right_semantic_sha256": b["semantic_sha256"],
+        "left_per_forward_trace_sha256": a["per_forward_trace_sha256"],
+        "right_per_forward_trace_sha256": b["per_forward_trace_sha256"],
+        "first_semantic_difference": _first_difference(a["payload"]["semantic"], b["payload"]["semantic"]),
+        "first_forward_difference": _first_difference(
+            a["payload"]["per_forward_trace"], b["payload"]["per_forward_trace"]),
+    }
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
     import torch
     from arc.io import load_dataset
@@ -255,13 +302,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
     # Freeze every semantic comparison before releasing the completed probe
     # cells.  The later plateau must retain only its two intended owners.
-    b1_b2_exact = _strict_pair_equal(b1_a, b2_a) and _strict_pair_equal(b1_b, b2_b)
-    swap_exact = _strict_pair_equal(b1_a, swapped_a) and _strict_pair_equal(b1_b, swapped_b)
+    comparisons = {
+        "B1(A)_vs_B2(A,B)_A": _comparison_detail(b1_a, b2_a),
+        "B1(B)_vs_B2(A,B)_B": _comparison_detail(b1_b, b2_b),
+        "B1(A)_vs_B2(B,A)_A": _comparison_detail(b1_a, swapped_a),
+        "B1(B)_vs_B2(B,A)_B": _comparison_detail(b1_b, swapped_b),
+    }
+    b1_b2_exact = all(comparisons[key]["strict_exact"] for key in (
+        "B1(A)_vs_B2(A,B)_A", "B1(B)_vs_B2(A,B)_B"))
+    swap_exact = all(comparisons[key]["strict_exact"] for key in (
+        "B1(A)_vs_B2(B,A)_A", "B1(B)_vs_B2(B,A)_B"))
     micro_rows = [
-        {"comparison": "B1(A)_vs_B2(A,B)_A", "strict_exact": _strict_pair_equal(b1_a, b2_a)},
-        {"comparison": "B1(B)_vs_B2(A,B)_B", "strict_exact": _strict_pair_equal(b1_b, b2_b)},
-        {"comparison": "B1(A)_vs_B2(B,A)_A", "strict_exact": _strict_pair_equal(b1_a, swapped_a)},
-        {"comparison": "B1(B)_vs_B2(B,A)_B", "strict_exact": _strict_pair_equal(b1_b, swapped_b)},
+        {"comparison": name, "strict_exact": detail["strict_exact"]}
+        for name, detail in comparisons.items()
     ]
     b1_physical_forwards = sum(ready_result(cell).model_forwards - 1 for cell in (b1_a, b1_b))
 
@@ -359,6 +412,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     _atomic_json(args.output / "B2_MICRO_DECISION.json", {
         "B1_VS_B2_EXACT": b1_b2_exact, "LANE_SWAP_EXACT": swap_exact,
         "REPEAT_3_EXACT": repeats_pass,
+        "comparisons": comparisons,
     })
     hashes = {path.name: _sha(path) for path in args.output.iterdir() if path.is_file()}
     _atomic_json(args.output / "HASHES.json", hashes)
