@@ -150,6 +150,25 @@ def clone_legacy_cache(cache: Any) -> tuple[tuple[Any, ...], ...]:
     return tuple(tuple(value.detach().clone() for value in layer) for layer in _legacy_cache(cache))
 
 
+def _is_transformers_cache(cache: Any) -> bool:
+    """Return whether this is a standard Transformers cache object.
+
+    The stock Qwen3 implementation uses the cache API to construct its causal
+    mask.  A legacy tuple is acceptable to older patched backends, but cannot
+    be handed to stock Transformers 4.55 as an inference cache.
+    """
+    return hasattr(cache, "get_mask_sizes") and hasattr(cache, "to_legacy_cache")
+
+
+def _restore_cache_kind(legacy: tuple[tuple[Any, ...], ...], exemplar: Any) -> Any:
+    """Rebuild a cache of the same public representation as ``exemplar``."""
+    if not _is_transformers_cache(exemplar):
+        return legacy
+    from transformers.cache_utils import DynamicCache
+
+    return DynamicCache.from_legacy_cache(legacy)
+
+
 def cache_geometry(cache: Any) -> tuple[Any, ...]:
     """Stable compatibility key excluding the real batch dimension."""
     legacy = _legacy_cache(cache)
@@ -428,12 +447,17 @@ def run_ready_scheduler(*, model: Any, cells: list[ReadyCell], dynamic_batch2: b
                 ))
                 outputs_by_cell = [outputs]
             else:
-                merged_cache = _cat_caches([request.cache for request in requests])
+                merged_cache = _restore_cache_kind(
+                    _cat_caches([request.cache for request in requests]), requests[0].cache,
+                )
                 outputs = model(**ready_incremental_forward_kwargs(
                     token_ids=[request.token_id for request in requests], position=first.request.position,
                     cache=merged_cache, device=model.device,
                 ))
-                split_cache = _split_cache(outputs.past_key_values, len(selected))
+                split_cache = [
+                    _restore_cache_kind(item, outputs.past_key_values)
+                    for item in _split_cache(outputs.past_key_values, len(selected))
+                ]
                 outputs_by_cell = []
                 for lane, cache in enumerate(split_cache):
                     outputs_by_cell.append(type("Reply", (), {"logits": outputs.logits[lane:lane + 1], "past_key_values": cache})())
