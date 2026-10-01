@@ -138,11 +138,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         for request, cache in zip(requests, b1_caches, strict=True):
             b1_outputs.append(model(**ready_incremental_forward_kwargs(
                 token_ids=[request.token_id], position=request.position, cache=cache, device=model.device,
-            ), output_hidden_states=True, return_dict=True))
+            ), output_hidden_states=True))
         b2_outputs = model(**ready_incremental_forward_kwargs(
             token_ids=[request.token_id for request in requests], position=first.position,
             cache=b2_cache, device=model.device,
-        ), output_hidden_states=True, return_dict=True)
+        ), output_hidden_states=True)
     finally:
         for handle in handles:
             handle.remove()
