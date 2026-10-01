@@ -79,7 +79,7 @@ def test_prefill_hygiene_releases_only_dead_root_logit_storage():
     assert baseline.request is not None and hygienic.request is not None
     assert baseline.request.token_id == hygienic.request.token_id
     assert baseline.request.position == hygienic.request.position
-    assert baseline.request.cache_geometry == hygienic.request.cache_geometry
+    assert baseline.request.cache_key == hygienic.request.cache_key
     del temporary_outputs[:]
     run_ready_scheduler(model=CacheTransitionModel(), cells=[baseline], dynamic_batch2=False)
     run_ready_scheduler(model=CacheTransitionModel(), cells=[hygienic], dynamic_batch2=False)
