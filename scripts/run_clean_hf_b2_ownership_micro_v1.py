@@ -164,6 +164,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise RuntimeError("B2 probe cells completed before their first request")
     if probe_a.request.cache_key != probe_b.request.cache_key or probe_a.request.position != probe_b.request.position:
         raise RuntimeError("real identity/flip_ud requests are not B2-compatible; refusing padded test")
+    # Geometry is the probe's only purpose.  Keeping its prefill cache alive
+    # would pollute the later ownership/plateau count.
+    del probe_a, probe_b
 
     def run_b1() -> tuple[Any, Any, float]:
         a, b = make("identity", "A_identity"), make("flip_ud", "B_flip_ud")
@@ -250,6 +253,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         identity_rows.extend(rows)
     identity_rows.extend(swapped_ids)
 
+    # The plateau gate measures *two* live logical cells, not every completed
+    # micro-control cell retained by this Python process.  These results have
+    # already been reduced to immutable rows/signatures above; release their
+    # finished coroutine/cache owners without calling empty_cache().  Allocator
+    # reservation is intentionally left visible in the measurements.
+    del b1_a, b1_b, b2_a, b2_b, swapped_a, swapped_b, left, right
+    import gc
+    gc.collect()
+    torch.cuda.synchronize()
+
     # Repeated real B2 forwards with two equal prompts provide the requested
     # cache-lifetime stress without a fake padding lane or a fixed production
     # scheduler.  It is an ownership/memory gate only.
@@ -278,6 +291,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "unique_cache_owner_ids": len({id(owner.cache) for owner in owners}),
             "owner_kv_bytes": sum(_cache_bytes(owner.cache) for owner in owners),
             "owner_sequence_lengths_json": json.dumps([int(_legacy_cache(owner.cache)[0][0].shape[-2]) for owner in owners]),
+            "max_suspended_recursion_depth": max(len(_frame_owner_ids(cell)) for cell in plateau_cells),
         })
     torch.cuda.reset_peak_memory_stats()
     plateau_scheduler = run_ready_scheduler(model=model, cells=plateau_cells, dynamic_batch2=True,
