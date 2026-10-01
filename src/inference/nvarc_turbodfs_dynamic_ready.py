@@ -406,6 +406,14 @@ def _streaming_split_and_adopt(
             observer("after_streaming_lane_view", {"lane_index": lane_index})
         owner_cache = request.cache_owner.cache
         owner_id = id(owner_cache)
+        if hasattr(owner_cache, "adopt_legacy_suffix"):
+            owner_cache.adopt_legacy_suffix(lane_view)
+            if id(request.cache_owner.cache) != owner_id:
+                raise RuntimeError("streaming cache adoption replaced a chunked logical owner object")
+            del lane_view
+            if observer is not None:
+                observer("after_streaming_lane_adoption", {"lane_index": lane_index})
+            continue
         if _is_transformers_cache(owner_cache):
             replace_cache_contents_streaming_in_place(
                 owner_cache, lane_view, observer=observer, lane_index=lane_index,
