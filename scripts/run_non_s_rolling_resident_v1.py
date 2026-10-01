@@ -9,6 +9,7 @@ and controlled phase sequencing only.
 from __future__ import annotations
 
 import argparse
+import ast
 import csv
 import gc
 import hashlib
@@ -80,11 +81,9 @@ def _canonical_json(value: Any) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
 
 
-def _adapter_identity(adapter: Path) -> dict[str, Any]:
-    model_file = adapter / "adapter_model.safetensors"
-    config_file = adapter / "adapter_config.json"
-    if not model_file.is_file() or not config_file.is_file():
-        raise FileNotFoundError(f"missing exact depth_024 adapter files: {adapter}")
+def _adapter_config_contract(config_file: Path) -> dict[str, Any]:
+    if not config_file.is_file():
+        raise FileNotFoundError(f"missing exact depth_024 adapter config: {config_file}")
     config = _read(config_file)
     required = {
         "peft_type": "LORA",
@@ -94,16 +93,29 @@ def _adapter_identity(adapter: Path) -> dict[str, Any]:
     }
     mismatch = {key: {"expected": value, "actual": config.get(key)} for key, value in required.items() if config.get(key) != value}
     targets = config.get("target_modules")
-    if not isinstance(targets, list) or not targets:
-        mismatch["target_modules"] = {"expected": "nonempty frozen PEFT target module list", "actual": targets}
-    return {
-        "adapter_path": str(adapter),
-        "adapter_sha256": _sha256_file(model_file),
-        "adapter_config_sha256": _sha256_file(config_file),
-        "adapter_config_semantics": {key: config.get(key) for key in (*required, "target_modules")},
-        "status": "PASS" if not mismatch else "FAIL",
-        "mismatches": mismatch,
-    }
+    # PEFT versions serialize this field either as a JSON list or as the
+    # textual representation of its internal set.  Both representations have
+    # identical semantics; reject unknown/missing members rather than making
+    # the preflight depend on that incidental serializer choice.
+    if isinstance(targets, str):
+        try:
+            targets = ast.literal_eval(targets)
+        except (SyntaxError, ValueError):
+            targets = ()
+    canonical_targets = {"q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"}
+    if not isinstance(targets, (list, tuple, set)) or set(map(str, targets)) != canonical_targets:
+        mismatch["target_modules"] = {"expected": sorted(canonical_targets), "actual": targets}
+    return {"adapter_config_semantics": {**{key: config.get(key) for key in required}, "target_modules": sorted(map(str, targets))},
+            "status": "PASS" if not mismatch else "FAIL", "mismatches": mismatch}
+
+
+def _adapter_identity(adapter: Path) -> dict[str, Any]:
+    model_file = adapter / "adapter_model.safetensors"
+    config_file = adapter / "adapter_config.json"
+    if not model_file.is_file():
+        raise FileNotFoundError(f"missing exact depth_024 adapter weights: {model_file}")
+    return {"adapter_path": str(adapter), "adapter_sha256": _sha256_file(model_file),
+            "adapter_config_sha256": _sha256_file(config_file), **_adapter_config_contract(config_file)}
 
 
 def _candidate_ids(args: argparse.Namespace) -> list[str]:
@@ -207,6 +219,12 @@ def _prompt_manifests(args: argparse.Namespace, selected: dict[str, Any]) -> dic
 def _preflight(args: argparse.Namespace, selected: dict[str, Any]) -> dict[str, Any]:
     records: dict[str, Any] = {}
     all_pass = True
+    reuse: dict[str, Any] = {}
+    if args.adapter_preflight_reuse is not None:
+        receipt = _read(args.adapter_preflight_reuse)
+        if receipt.get("experiment") != EXPERIMENT or receipt.get("target_blind") is not True:
+            raise RuntimeError("adapter preflight reuse receipt has incompatible provenance")
+        reuse = dict(receipt.get("profiles", {}))
     for profile in PROFILE_ORDER:
         item = selected[profile]
         if item.get("status") != "SELECTED":
@@ -214,7 +232,20 @@ def _preflight(args: argparse.Namespace, selected: dict[str, Any]) -> dict[str, 
             all_pass = False
             continue
         try:
-            record = _adapter_identity(Path(item["adapter_path"]))
+            old = reuse.get(profile)
+            if old and old.get("adapter_path") == item["adapter_path"] and old.get("adapter_sha256") and old.get("adapter_config_sha256"):
+                # The immediately preceding CPU-only preflight already read
+                # the immutable adapter weights. Revalidate the tiny config's
+                # semantic contract, then bind this run to that frozen SHA
+                # receipt rather than re-reading multi-GB safetensors.
+                fresh = _adapter_config_contract(Path(item["adapter_path"]) / "adapter_config.json")
+                record = {**old, "status": fresh["status"], "mismatches": fresh["mismatches"],
+                          "adapter_config_semantics": fresh["adapter_config_semantics"],
+                          "weight_sha256_reused_from": str(args.adapter_preflight_reuse),
+                          "weight_sha256_recomputed": False}
+            else:
+                record = _adapter_identity(Path(item["adapter_path"]))
+                record["weight_sha256_recomputed"] = True
         except FileNotFoundError as error:
             record = {"status": "FAIL", "reason": "ADAPTER_UNAVAILABLE", "error": str(error), "adapter_path": item["adapter_path"]}
         records[profile] = record
@@ -223,7 +254,7 @@ def _preflight(args: argparse.Namespace, selected: dict[str, Any]) -> dict[str, 
         "experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False,
         "status": "PASS" if all_pass else "FAIL", "required_depth": 24,
         "frozen_clean_hf_requirements": {"backend": "Clean Transformers + PEFT", "dtype": "BF16", "peft_type": "LORA", "r": 256, "lora_alpha": 32},
-        "profiles": records,
+        "profiles": records, "reused_weight_sha_receipt": str(args.adapter_preflight_reuse) if args.adapter_preflight_reuse else None,
     }
 
 
@@ -627,6 +658,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--candidate-pool", type=Path, required=True); parser.add_argument("--aug16-ids", type=Path, required=True)
     parser.add_argument("--profile-audit", type=Path, required=True); parser.add_argument("--non-s-adapter-root", type=Path, required=True)
     parser.add_argument("--s-r4096-receipt", type=Path, required=True); parser.add_argument("--device", default="cuda:0")
+    parser.add_argument("--adapter-preflight-reuse", type=Path)
     parser.add_argument("--run-xl-r256", action="store_true")
     return parser.parse_args()
 
