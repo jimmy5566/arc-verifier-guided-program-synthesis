@@ -1,0 +1,15 @@
+{
+  "artifact_kind": "CPU_ONLY_POST_FREEZE_ARCHIVE_METADATA",
+  "experiment": "MEMORY_AWARE_AUG16_SCHEDULER_V1",
+  "phase": "R4096",
+  "status": "OOM",
+  "target_blind": true,
+  "gold_loaded": false,
+  "scheduler_forward_telemetry_available": false,
+  "reason": "The first R4096 allocation failed before the scheduler serialized per-forward telemetry. Empty CSVs preserve the published schemas without fabricating measurements.",
+  "authoritative_raw_result": "R4096_RESULT.json",
+  "authoritative_worker_log": "R4096_WORKER.log",
+  "raw_artifacts_modified": false,
+  "gpu_work_performed_during_archive": false,
+  "retry_performed": false
+}

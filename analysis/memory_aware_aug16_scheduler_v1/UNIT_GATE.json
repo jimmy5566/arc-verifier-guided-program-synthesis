@@ -1,0 +1,24 @@
+{
+  "checks": {
+    "cpu_only": true,
+    "deterministic_A_B_partition": true,
+    "exact_frozen_aug16_order": true,
+    "fair_A_B_alternation": true,
+    "gold_not_loaded": true,
+    "independent_cache_owner_objects": true,
+    "no_cell_starvation": true,
+    "transition_preserves_dfs_state_and_candidate_pools": true
+  },
+  "command": [
+    "/root/arc-runtime-3090-v2/env/3090-ampere-env-v2/bin/python",
+    "-c",
+    "import importlib.util, sys; sys.path[:0]=['src','.']; spec=importlib.util.spec_from_file_location('memory_aware_scheduler_tests', 'tests/test_nvarc_turbodfs_dynamic_ready.py'); module=importlib.util.module_from_spec(spec); spec.loader.exec_module(module); module.test_dynamic_ready_generalizes_to_eight_independent_compatible_lanes(); module.test_memory_aware_aug16_switches_once_to_fair_b8_without_resetting_cells(); print('MEMORY_AWARE_AUG16_CPU_UNIT_GATE_PASS')"
+  ],
+  "experiment": "MEMORY_AWARE_AUG16_SCHEDULER_V1",
+  "gold_loaded": false,
+  "returncode": 0,
+  "status": "PASS",
+  "stderr": "",
+  "stdout": "MEMORY_AWARE_AUG16_CPU_UNIT_GATE_PASS\n",
+  "target_blind": true
+}

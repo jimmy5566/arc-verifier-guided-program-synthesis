@@ -1,0 +1,24 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "CONTRACT.json": "2b24bd69d1b7a0b748f48d18239841eedd1ea188f860c8b00d968589cd8598cd",
+    "DECISION.json": "ed7000002c147f5c7173e1830609996ce742dfa9e3e82b6317d52d70da527352",
+    "R256_BATCH_HISTOGRAM.csv": "1d50541619944ee6ee9901dcf7b8ac011a64ef4a4c0156617384a9f0c9fda943",
+    "R256_MEMORY_TRANSITIONS.csv": "3c8ce67bc41cecd7927eecfaa83c92af6f76bc98a4214dbfba54d1f45fdb9960",
+    "R256_RESULT.json": "c06cdc9dda011202eac4ac30d4554b9777ed9ed0152dd206fb7b39127ee6af00",
+    "R256_WORKER.log": "a889b7a453a13ae9f0b654183727d4e2848c14c1d7f732548b2890432f4968af",
+    "R4096_RESULT.json": "54fb4709f85a3f206f3a5e8dc14f97b602fdefbf657178658964fd016ccaefeb",
+    "R4096_WORKER.log": "020f7a3d2be4e7a1f810ccdc92d6ce0b8a3ee84abba7705ed2ae405715628463",
+    "R512_BATCH_HISTOGRAM.csv": "92c2115f0a13a6443ecf08bb223a2cbf2905b373b3fbc9e2c481e924ed832983",
+    "R512_MEMORY_TRANSITIONS.csv": "3c8ce67bc41cecd7927eecfaa83c92af6f76bc98a4214dbfba54d1f45fdb9960",
+    "R512_RESULT.json": "2c685d8d7b801a7d34e7ae49a350ac5c9b3637405a07048a8dcc229b56962632",
+    "R512_WORKER.log": "8aa223f91c85a1ab5755df648b34b1b6f44cbf3a16eb389ae27679f24e6047fa",
+    "REPORT.md": "5b9dfe120aca3245af43998dd8ce34aa004415c5afaa143bc0ee9db96c885997",
+    "SCHEDULER_POLICY.json": "25e4d16541ef5353e34a733181e830b86d1605cfe67f988bc6e0af79bc09c459",
+    "SEMANTIC_GATE.json": "6706465d578db45a1306724325c8e987c4f19fc3b33304b8ba71a87fe0c4ab84",
+    "UNIT_GATE.json": "4436bac9c86db63f7ea5ee8b7fca5912212b45d6901e39b14ded7b841c31ff91",
+    "UNIT_GATE_CONTROLLER.log": "169f24774e13a79b6341d6c41c58f159e180701e87e9028aa70afdf8712b6fbb",
+    "controller.log": "1aa015b9f3a4e0fe378fa8bab612cd8f6e83042a2093cdfb11351fae78ef1c90"
+  },
+  "post_freeze_hash_finalization": "controller.log was written after the original manifest; raw scientific artifacts unchanged"
+}

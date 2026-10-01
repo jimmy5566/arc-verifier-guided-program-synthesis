@@ -1,0 +1,33 @@
+{
+  "b8_groups": {
+    "A": [
+      "geom=identity__color=id__order=canonical",
+      "geom=flip_ud__color=id__order=canonical",
+      "geom=transpose__color=id__order=canonical",
+      "geom=anti_transpose__color=id__order=canonical",
+      "geom=rot90__color=id__order=canonical",
+      "geom=rot180__color=id__order=canonical",
+      "geom=rot270__color=id__order=canonical",
+      "geom=flip_lr__color=id__order=canonical"
+    ],
+    "B": [
+      "geom=identity__color=p00_4150723698__order=canonical",
+      "geom=rot90__color=p02_4950812673__order=canonical",
+      "geom=flip_ud__color=p03_5980213764__order=canonical",
+      "geom=anti_transpose__color=p05_5436201789__order=canonical",
+      "geom=identity__color=id__order=reverse",
+      "geom=rot180__color=id__order=rotate_left_1",
+      "geom=transpose__color=p01_1602397845__order=reverse",
+      "geom=flip_lr__color=p07_7690351428__order=rotate_left_1"
+    ]
+  },
+  "fair_split_order": "A->B->A->B; skip a group only when no compatible READY cell remains",
+  "hard_peak_allocated_bytes": 23085449216,
+  "initial_mode": "B16_ENABLED",
+  "mode": "MEMORY_AWARE_AUG16",
+  "no_b16_reentry_after_switch": true,
+  "no_empty_cache_in_search_loop": true,
+  "peak_signal": "torch.cuda.max_memory_allocated measured after pack/forward/streaming-adopt",
+  "permanent_fallback_mode": "B8_SPLIT_MODE",
+  "soft_peak_allocated_bytes": 22548578304
+}

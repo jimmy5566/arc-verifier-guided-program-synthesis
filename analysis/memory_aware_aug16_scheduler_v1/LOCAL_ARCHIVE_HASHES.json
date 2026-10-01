@@ -1,0 +1,13 @@
+{
+  "algorithm": "sha256",
+  "archive_type": "compact_post_freeze_analysis_archive",
+  "raw_remote_manifest": "HASHES.json",
+  "raw_remote_manifest_sha256": "c0da450400dad9ac615dc11383dcf8d21c7bb53984e1d68f22df883277c6b63c",
+  "raw_remote_manifest_verification": "PASS: all 18 entries verified after copy",
+  "post_freeze_derivatives": {
+    "R4096_BATCH_HISTOGRAM.csv": "03f554bb0d83f6b7b8590ba2581069dcdfe9ded194b798917ec2980c723425ac",
+    "R4096_MEMORY_TRANSITIONS.csv": "d14834ed63a64ac44397153bab7b5402ac0be3caf0ed1f14aca701e1a8a971bb",
+    "R4096_FAILURE_CONTEXT.json": "16ba2aa0d91a0d3db52f67036903ef6bf807ee095bfd57b62035a09db9125504"
+  },
+  "notes": "The two R4096 CSVs contain headers only because OOM occurred before scheduler telemetry serialization. No raw artifact was modified and no GPU work occurred during archive finalization."
+}

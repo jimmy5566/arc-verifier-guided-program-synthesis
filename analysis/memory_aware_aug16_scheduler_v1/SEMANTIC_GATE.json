@@ -1,0 +1,447 @@
+{
+  "r256": {
+    "checks": {
+      "all_cells_completed": true,
+      "all_logical_cell_ids_preserved": true,
+      "candidate_canonicalization_accounted": true,
+      "exact_budget_or_valid_natural_termination": true,
+      "finite_outputs_and_scores": true,
+      "inverse_geometry_and_colour_roundtrip": true,
+      "memory_aware_scheduler_mode": true,
+      "no_b16_reentry_after_switch": true,
+      "no_cell_starvation": true,
+      "no_durable_cache_generation_leak": true,
+      "no_lane_swapping_or_cross_lane_cache_owner": true,
+      "no_oom": true,
+      "owner_identity_preserved": true,
+      "owner_storage_independent": true,
+      "per_cell_budget_accounting": true,
+      "sequence_length_increments_correctly": true,
+      "switch_telemetry_complete_when_switched": true
+    },
+    "finite_reply_failures": [],
+    "memory_aware": {
+      "b16_disable_reason": "SOFT_PEAK_ALLOCATED_THRESHOLD",
+      "b16_disabled": true,
+      "no_cell_starvation": true,
+      "transition_count": 1
+    },
+    "owner_after": {
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": [
+        137405534536400,
+        137375553486848,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": [
+        137405436098384,
+        137384897282048,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": [
+        137405536891536,
+        137380864032768,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": [
+        137405436002512,
+        137374168530944,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": [
+        137405538276944,
+        137380908777472,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": [
+        137405436004944,
+        137383127842816,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": [
+        137405535761424,
+        137374902255616,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": [
+        137405559704336,
+        137375137415168,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": [
+        137405435797072,
+        137374215782400,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": [
+        137405435792784,
+        137405123887104,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": [
+        137405436105168,
+        137368547311616,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": [
+        137405536350928,
+        137375850725376,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": [
+        137405534937360,
+        137379978199040,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": [
+        137405537624336,
+        137376909082624,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": [
+        137405538068240,
+        137374580129792,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": [
+        137405435623760,
+        137385510207488,
+        1928,
+        1
+      ]
+    },
+    "owner_before": {
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": [
+        137405534536400,
+        137385534816256,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": [
+        137405436098384,
+        137376960675840,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": [
+        137405536891536,
+        137379123953664,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": [
+        137405436002512,
+        137374678974464,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": [
+        137405538276944,
+        137383363649536,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": [
+        137405436004944,
+        137377489649664,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": [
+        137405535761424,
+        137382933364736,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": [
+        137405559704336,
+        137376822509568,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": [
+        137405435797072,
+        137380908253184,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": [
+        137405435792784,
+        137381056290816,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": [
+        137405436105168,
+        137375744819200,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": [
+        137405536350928,
+        137379700293632,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": [
+        137405534937360,
+        137380926021632,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": [
+        137405537624336,
+        137378026520576,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": [
+        137405538068240,
+        137384834121728,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": [
+        137405435623760,
+        137375207948288,
+        1928
+      ]
+    },
+    "request_invariant_failures": [],
+    "status": "PASS"
+  },
+  "r4096": null,
+  "r512": {
+    "checks": {
+      "all_cells_completed": true,
+      "all_logical_cell_ids_preserved": true,
+      "candidate_canonicalization_accounted": true,
+      "exact_budget_or_valid_natural_termination": true,
+      "finite_outputs_and_scores": true,
+      "inverse_geometry_and_colour_roundtrip": true,
+      "memory_aware_scheduler_mode": true,
+      "no_b16_reentry_after_switch": true,
+      "no_cell_starvation": true,
+      "no_durable_cache_generation_leak": true,
+      "no_lane_swapping_or_cross_lane_cache_owner": true,
+      "no_oom": true,
+      "owner_identity_preserved": true,
+      "owner_storage_independent": true,
+      "per_cell_budget_accounting": true,
+      "sequence_length_increments_correctly": true,
+      "switch_telemetry_complete_when_switched": true
+    },
+    "finite_reply_failures": [],
+    "memory_aware": {
+      "b16_disable_reason": "SOFT_PEAK_ALLOCATED_THRESHOLD",
+      "b16_disabled": true,
+      "no_cell_starvation": true,
+      "transition_count": 1
+    },
+    "owner_after": {
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": [
+        127590131342608,
+        127553151139840,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": [
+        127590129878352,
+        127549057513472,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": [
+        127590126108496,
+        127555678236672,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": [
+        127590129878480,
+        127560349882368,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": [
+        127590595141584,
+        127561711646720,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": [
+        127590126060496,
+        127550596579328,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": [
+        127590128497680,
+        127565427638272,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": [
+        127590126286032,
+        127561092571136,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": [
+        127590126062864,
+        127550547480576,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": [
+        127590131727696,
+        127568850190336,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": [
+        127590127752784,
+        127551621218304,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": [
+        127590125825104,
+        127569161162752,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": [
+        127590131809232,
+        127560978100224,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": [
+        127590595390480,
+        127549809272832,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": [
+        127590127769360,
+        127562765725696,
+        1928,
+        1
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": [
+        127590126293008,
+        127561486166016,
+        1928,
+        1
+      ]
+    },
+    "owner_before": {
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": [
+        127590131342608,
+        127571433881600,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": [
+        127590129878352,
+        127562893295616,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": [
+        127590126108496,
+        127565056573440,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": [
+        127590129878480,
+        127560611594240,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": [
+        127590595141584,
+        127569262714880,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": [
+        127590126060496,
+        127563422269440,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": [
+        127590128497680,
+        127568832430080,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": [
+        127590126286032,
+        127562755129344,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": [
+        127590126062864,
+        127566840872960,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": [
+        127590131727696,
+        127566988910592,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": [
+        127590127752784,
+        127561677438976,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": [
+        127590125825104,
+        127565632913408,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": [
+        127590131809232,
+        127566858641408,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": [
+        127590595390480,
+        127563959140352,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": [
+        127590127769360,
+        127570733187072,
+        1928
+      ],
+      "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": [
+        127590126293008,
+        127561140568064,
+        1928
+      ]
+    },
+    "request_invariant_failures": [],
+    "status": "PASS"
+  },
+  "unit": {
+    "checks": {
+      "cpu_only": true,
+      "deterministic_A_B_partition": true,
+      "exact_frozen_aug16_order": true,
+      "fair_A_B_alternation": true,
+      "gold_not_loaded": true,
+      "independent_cache_owner_objects": true,
+      "no_cell_starvation": true,
+      "transition_preserves_dfs_state_and_candidate_pools": true
+    },
+    "command": [
+      "/root/arc-runtime-3090-v2/env/3090-ampere-env-v2/bin/python",
+      "-c",
+      "import importlib.util, sys; sys.path[:0]=['src','.']; spec=importlib.util.spec_from_file_location('memory_aware_scheduler_tests', 'tests/test_nvarc_turbodfs_dynamic_ready.py'); module=importlib.util.module_from_spec(spec); spec.loader.exec_module(module); module.test_dynamic_ready_generalizes_to_eight_independent_compatible_lanes(); module.test_memory_aware_aug16_switches_once_to_fair_b8_without_resetting_cells(); print('MEMORY_AWARE_AUG16_CPU_UNIT_GATE_PASS')"
+    ],
+    "experiment": "MEMORY_AWARE_AUG16_SCHEDULER_V1",
+    "gold_loaded": false,
+    "returncode": 0,
+    "status": "PASS",
+    "stderr": "",
+    "stdout": "MEMORY_AWARE_AUG16_CPU_UNIT_GATE_PASS\n",
+    "target_blind": true
+  }
+}
