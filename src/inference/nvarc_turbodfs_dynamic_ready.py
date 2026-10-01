@@ -43,6 +43,10 @@ class ReadyForwardRequest:
     position: int
     cache: Any
     cache_key: tuple[Any, ...]
+    # The expanded node whose continuation logits this request will produce.
+    # It lets optional diagnostics bind a reply to the exact DFS state without
+    # changing scheduling or decoding behaviour.
+    parent_node_id: int
 
 
 @dataclass
@@ -106,6 +110,7 @@ def _new_state(config: D1TurboDFSConfig) -> dict[str, Any]:
         # remains the historical wall-clock predicate until explicitly enabled.
         "active_time_accounting": False, "active_elapsed_seconds": 0.0,
         "diagnostic_trace": config.diagnostic_trace, "model_forward_seconds": 0.0,
+        "retained_successors_by_parent": {},
         "max_frontier_size": 0, "expanded_nodes": 0, "budget_exhausted": False,
         "independent_lane_budgets": False, "performance_profile": False,
         "performance_telemetry": {
@@ -178,6 +183,34 @@ def cache_geometry(cache: Any) -> tuple[Any, ...]:
     return tuple(geometry)
 
 
+def cache_sha256(cache: Any) -> str:
+    """Hash public cache contents for optional parity diagnostics only."""
+    digest = hashlib.sha256()
+    for layer in _legacy_cache(cache):
+        for value in layer:
+            tensor = value.detach().cpu().contiguous()
+            digest.update(str(tensor.dtype).encode("ascii"))
+            digest.update(repr(tuple(int(item) for item in tensor.shape)).encode("ascii"))
+            digest.update(tensor.view(__import__("torch").uint8).numpy().tobytes())
+    return digest.hexdigest()
+
+
+def _logits_diagnostic(logits: Any, arc_tokens: tuple[int, ...]) -> dict[str, Any]:
+    """Return the exact model output evidence required to locate B1 drift."""
+    import torch
+
+    last = logits[0, -1].detach()
+    values = torch.log_softmax(last.float(), dim=-1)
+    ranking = torch.argsort(last, descending=True).detach().cpu().tolist()
+    raw = last.cpu().contiguous()
+    return {
+        "full_logits_sha256": hashlib.sha256(raw.view(torch.uint8).numpy().tobytes()).hexdigest(),
+        "arc_logits": {str(token): float(last[token].item()) for token in arc_tokens},
+        "arc_logprobs": {str(token): float(values[token].item()) for token in arc_tokens},
+        "arc_ranking": [int(token) for token in ranking if int(token) in arc_tokens],
+    }
+
+
 def _cat_caches(caches: list[Any]) -> tuple[tuple[Any, ...], ...]:
     import torch
 
@@ -235,6 +268,7 @@ def _ready_dfs(
     })
     kept, prune_reason = _retained(config, ranked, score_before=score, regret_before=regret,
                                    remaining=max_new_tokens, generated_length=len(prefix))
+    state["retained_successors_by_parent"][parent_node] = sorted(int(value[2]) for value in kept)
     legal_tokens = {token for token, _lp in values if token == 15 or max_new_tokens > 1}
     kept_tokens = {value[2] for value in kept}
     for token, logprob in values:
@@ -343,7 +377,9 @@ def _ready_dfs(
                                 "elapsed_seconds": time.perf_counter() - state["trace_started_perf"]})
             state["next_frontier_pop_order"] += 1
         _record_frontier(state, [candidates])
-        request = ReadyForwardRequest(cell_key, ordinal[0], token, pos, cache, cache_geometry(cache))
+        request = ReadyForwardRequest(
+            cell_key, ordinal[0], token, pos, cache, cache_geometry(cache), node_id,
+        )
         ordinal[0] += 1
         outputs = yield request
         if config.calibration_assertions and int(outputs.logits.shape[0]) != 1:
@@ -374,6 +410,7 @@ def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, ce
     started_unix = time.time()
     created_perf = time.perf_counter()
     state["active_time_accounting"] = active_time_accounting
+    state["per_forward_trace"] = []
     with torch.no_grad():
         started = time.perf_counter()
         outputs = model(input_ids=input_ids, return_dict=True, use_cache=True)
@@ -434,6 +471,18 @@ def run_ready_scheduler(*, model: Any, cells: list[ReadyCell], dynamic_batch2: b
                     break
         requests = [cell.request for cell in selected]
         assert all(request is not None for request in requests)
+        trace_inputs = []
+        if first.config.diagnostic_trace:
+            for cell, request in zip(selected, requests, strict=True):
+                assert request is not None
+                trace_inputs.append({
+                    "cell_key": cell.cell_key, "request_ordinal": request.ordinal,
+                    "token_id": request.token_id, "absolute_position": request.position,
+                    "cache_type": type(request.cache).__module__ + "." + type(request.cache).__qualname__,
+                    "input_cache_sha256": cache_sha256(request.cache),
+                    "cache_geometry": repr(request.cache_key),
+                    "request_parent_node_id": request.parent_node_id,
+                })
         started = time.perf_counter()
         # The authoritative decoder executes every model forward under
         # ``torch.no_grad``.  The scheduler must keep that invariant even
@@ -472,8 +521,15 @@ def run_ready_scheduler(*, model: Any, cells: list[ReadyCell], dynamic_batch2: b
         events.append({"forward_index": forwards, "physical_batch": len(selected), "position": first.request.position,
                        "cache_geometry": repr(first.request.cache_key), "cell_keys": [cell.cell_key for cell in selected],
                        "wall_seconds": elapsed})
-        for cell, reply in zip(selected, outputs_by_cell, strict=True):
+        for trace, cell, reply in zip(trace_inputs or [None] * len(selected), selected, outputs_by_cell, strict=True):
             _reply(cell, reply)
+            if trace is not None:
+                trace.update(_logits_diagnostic(reply.logits, cell.config.arc_tokens))
+                trace["retained_successors"] = cell.state["retained_successors_by_parent"].get(
+                    trace["request_parent_node_id"],
+                )
+                trace["output_cache_sha256"] = cache_sha256(reply.past_key_values)
+                cell.state["per_forward_trace"].append(trace)
         del outputs
     return {"physical_forwards": forwards, "events": events,
             "mean_effective_batch": (sum(row["physical_batch"] for row in events) / len(events)) if events else 0.0}
