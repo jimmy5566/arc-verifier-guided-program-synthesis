@@ -193,7 +193,13 @@ def _restore_cache_kind(legacy: tuple[tuple[Any, ...], ...], exemplar: Any) -> A
     return DynamicCache.from_legacy_cache(legacy)
 
 
-def replace_cache_contents_in_place(destination: Any, source: Any) -> None:
+def replace_cache_contents_in_place(
+    destination: Any,
+    source: Any,
+    *,
+    observer: Callable[[str, dict[str, Any]], None] | None = None,
+    lane_index: int | None = None,
+) -> None:
     """Copy ``source`` into an existing Transformers DynamicCache object.
 
     Dynamic B2 produces a temporary packed cache and temporary lane slices.
@@ -214,11 +220,19 @@ def replace_cache_contents_in_place(destination: Any, source: Any) -> None:
 
     destination_id = id(destination)
     layers = []
-    for layer in legacy:
+    for layer_index, layer in enumerate(legacy):
         if len(layer) != 2:
             raise RuntimeError("DynamicCache adoption expects key/value pairs")
+        if observer is not None:
+            observer("before_materialized_adopt_layer", {
+                "lane_index": lane_index, "layer_index": layer_index,
+            })
         key, value = layer
         layers.append(DynamicLayer.from_tensors(key.detach().clone(), value.detach().clone()))
+        if observer is not None:
+            observer("after_materialized_adopt_layer", {
+                "lane_index": lane_index, "layer_index": layer_index,
+            })
     destination.layers = layers
     if id(destination) != destination_id:
         raise AssertionError("cache adoption replaced the owner object")
@@ -289,13 +303,126 @@ def _cat_caches(
     return merged
 
 
-def _split_cache(cache: Any, expected: int) -> list[tuple[tuple[Any, ...], ...]]:
+def _split_cache(
+    cache: Any,
+    expected: int,
+    *,
+    observer: Callable[[str, dict[str, Any]], None] | None = None,
+) -> list[tuple[tuple[Any, ...], ...]]:
+    """Materialize independent legacy cache slices for the historical path.
+
+    The optional observer is diagnostic-only.  It records the last layer/lane
+    about to allocate so a controlled OOM waterfall can name the exact
+    transient phase without hashing or retaining additional tensors.
+    """
     legacy = _legacy_cache(cache)
     size = _cache_batch_size(legacy)
     if size != expected:
         raise RuntimeError(f"dynamic-ready output cache batch mismatch {size} != {expected}")
-    return [tuple(tuple(value[index:index + 1].contiguous() for value in layer) for layer in legacy)
-            for index in range(expected)]
+    lanes: list[list[tuple[Any, ...]]] = [[] for _ in range(expected)]
+    for layer_index, layer in enumerate(legacy):
+        for lane_index in range(expected):
+            if observer is not None:
+                observer("before_split_tensor", {
+                    "layer_index": layer_index,
+                    "lane_index": lane_index,
+                    "split_lane_count": len(lanes[lane_index]),
+                })
+            lane_layer = tuple(value[lane_index:lane_index + 1].contiguous() for value in layer)
+            lanes[lane_index].append(lane_layer)
+            if observer is not None:
+                observer("after_split_tensor", {
+                    "layer_index": layer_index,
+                    "lane_index": lane_index,
+                    "split_lane_count": len(lanes[lane_index]),
+                })
+    return [tuple(lane) for lane in lanes]
+
+
+def replace_cache_contents_streaming_in_place(
+    destination: Any,
+    source: Any,
+    *,
+    observer: Callable[[str, dict[str, Any]], None] | None = None,
+    lane_index: int | None = None,
+) -> None:
+    """Adopt one lane progressively without a full temporary layer list.
+
+    Unlike :func:`replace_cache_contents_in_place`, this replaces each public
+    ``DynamicLayer`` immediately after cloning it.  The CacheOwner object is
+    preserved, but the old layer becomes reclaimable before the next source
+    layer is cloned.  It is used only by the opt-in hardware memory path.
+    """
+    if not _is_transformers_cache(destination):
+        raise RuntimeError("streaming cache adoption requires a Transformers DynamicCache destination")
+    legacy = _legacy_cache(source)
+    from transformers.cache_utils import DynamicLayer
+
+    destination_id = id(destination)
+    for layer_index, layer in enumerate(legacy):
+        if len(layer) != 2:
+            raise RuntimeError("DynamicCache streaming adoption expects key/value pairs")
+        if observer is not None:
+            observer("before_streaming_adopt_layer", {"lane_index": lane_index, "layer_index": layer_index})
+        key, value = layer
+        adopted_layer = DynamicLayer.from_tensors(key.detach().clone(), value.detach().clone())
+        if layer_index < len(destination.layers):
+            destination.layers[layer_index] = adopted_layer
+        else:
+            destination.layers.append(adopted_layer)
+        if observer is not None:
+            observer("after_streaming_adopt_layer", {"lane_index": lane_index, "layer_index": layer_index})
+    if len(destination.layers) > len(legacy):
+        del destination.layers[len(legacy):]
+    if id(destination) != destination_id:
+        raise AssertionError("streaming cache adoption replaced the owner object")
+
+
+def _streaming_split_and_adopt(
+    cache: Any,
+    requests: list[ReadyForwardRequest],
+    *,
+    observer: Callable[[str, dict[str, Any]], None] | None = None,
+) -> None:
+    """Consume each output lane immediately instead of retaining ``split_legacy``.
+
+    Lane slices are views of the batched output cache.  Streaming adoption
+    deep-clones their contents into the existing owner object before the next
+    lane is considered, so no complete list of B16 temporary split copies is
+    materialized.  The production default remains the historical materialized
+    path unless an explicit caller opts in.
+    """
+    legacy = _legacy_cache(cache)
+    size = _cache_batch_size(legacy)
+    if size != len(requests):
+        raise RuntimeError(f"dynamic-ready output cache batch mismatch {size} != {len(requests)}")
+    if observer is not None:
+        observer("before_streaming_split", {"physical_batch": size})
+    for lane_index, request in enumerate(requests):
+        if observer is not None:
+            observer("before_streaming_lane_view", {"lane_index": lane_index})
+        lane_view = tuple(tuple(value[lane_index:lane_index + 1] for value in layer) for layer in legacy)
+        if observer is not None:
+            observer("after_streaming_lane_view", {"lane_index": lane_index})
+        owner_cache = request.cache_owner.cache
+        owner_id = id(owner_cache)
+        if _is_transformers_cache(owner_cache):
+            replace_cache_contents_streaming_in_place(
+                owner_cache, lane_view, observer=observer, lane_index=lane_index,
+            )
+            if id(request.cache_owner.cache) != owner_id:
+                raise RuntimeError("streaming cache adoption replaced a logical owner object")
+        else:
+            # CPU-only compatibility for deterministic unit tests.  Production
+            # Clean-HF takes the DynamicCache branch above.
+            request.cache_owner.cache = tuple(
+                tuple(value.detach().clone() for value in layer) for layer in lane_view
+            )
+        del lane_view
+        if observer is not None:
+            observer("after_streaming_lane_adoption", {"lane_index": lane_index})
+    if observer is not None:
+        observer("after_streaming_split_complete", {"physical_batch": size})
 
 
 def _ready_dfs(
@@ -604,6 +731,7 @@ def execute_ready_forward(
     requests: list[ReadyForwardRequest],
     cache_pack_observer: Callable[[str, dict[str, Any]], None] | None = None,
     release_batch_temporaries_for_audit: bool = False,
+    streaming_split_and_adopt: bool = False,
 ) -> tuple[list[Any], dict[str, float]]:
     """Execute one real physical ready-cell forward for independent lanes.
 
@@ -649,6 +777,7 @@ def execute_ready_forward(
                 [request.cache for request in requests], observer=cache_pack_observer,
             )
             if cache_pack_observer is not None:
+                cache_pack_observer("after_packed_legacy_cache", {"merged_legacy": merged_legacy})
                 cache_pack_observer("before_restore", {"merged_legacy": merged_legacy})
             merged_cache = _restore_cache_kind(merged_legacy, requests[0].cache)
             cache_pack_seconds = time.perf_counter() - pack_started
@@ -665,50 +794,99 @@ def execute_ready_forward(
                 cache_pack_observer("after_b2_model_forward", {
                     "merged_legacy": merged_legacy, "merged_cache": merged_cache, "outputs": outputs,
                 })
-            split_legacy = _split_cache(outputs.past_key_values, len(selected))
-            if cache_pack_observer is not None:
-                cache_pack_observer("after_split_legacy", {
-                    "merged_legacy": merged_legacy, "merged_cache": merged_cache,
-                    "outputs": outputs, "split_legacy": split_legacy,
-                })
-            # Each suspended DFS frame retains its original DynamicCache
-            # owner.  Adopt tensor contents only; never replace that owner.
             adopt_started = time.perf_counter()
             adopted_cache_ids: list[int] = []
-            for request, lane_legacy in zip(requests, split_legacy, strict=True):
-                owner_cache = request.cache_owner.cache
-                owner_id = id(owner_cache)
-                if _is_transformers_cache(owner_cache):
-                    replace_cache_contents_in_place(owner_cache, lane_legacy)
-                    if id(request.cache_owner.cache) != owner_id:
-                        raise RuntimeError("batched cache adoption replaced a logical owner object")
-                    adopted_cache_ids.append(owner_id)
-                else:
-                    # CPU compatibility only.  Production Clean-HF reaches
-                    # the DynamicCache branch above.
-                    request.cache_owner.cache = lane_legacy
-                    adopted_cache_ids.append(id(request.cache_owner.cache))
-            cache_adoption_seconds = time.perf_counter() - adopt_started
-            outputs_by_cell = []
-            for lane, request in enumerate(requests):
-                outputs_by_cell.append(type("Reply", (), {
-                    "logits": outputs.logits[lane:lane + 1],
-                    "past_key_values": request.cache_owner.cache,
-                })())
-            if cache_pack_observer is not None:
-                cache_pack_observer("after_split_adoption", {
-                    "merged_legacy": merged_legacy,
-                    "merged_cache": merged_cache,
-                    "split_legacy": split_legacy,
-                    "adopted_cache_ids": adopted_cache_ids,
-                })
-            if release_batch_temporaries_for_audit:
-                merged_legacy = None
-                merged_cache = None
-                split_legacy = None
-                outputs = None
+            if streaming_split_and_adopt:
                 if cache_pack_observer is not None:
-                    cache_pack_observer("after_release_temporaries", {"outputs_by_cell": outputs_by_cell})
+                    cache_pack_observer("before_split_creation", {
+                        "merged_legacy": merged_legacy, "merged_cache": merged_cache, "outputs": outputs,
+                    })
+                output_cache = outputs.past_key_values
+                _streaming_split_and_adopt(
+                    output_cache, requests, observer=cache_pack_observer,
+                )
+                adopted_cache_ids = [id(request.cache_owner.cache) for request in requests]
+                # Keep only per-lane logits in replies.  The output cache has
+                # been copied into the original owners and can be released.
+                outputs_by_cell = [
+                    type("Reply", (), {
+                        "logits": outputs.logits[lane:lane + 1],
+                        "past_key_values": request.cache_owner.cache,
+                    })()
+                    for lane, request in enumerate(requests)
+                ]
+                if cache_pack_observer is not None:
+                    cache_pack_observer("after_split_legacy", {
+                        "merged_legacy": merged_legacy, "merged_cache": merged_cache,
+                        "outputs": outputs, "streaming": True,
+                    })
+                    cache_pack_observer("after_split_adoption", {
+                        "merged_legacy": merged_legacy, "merged_cache": merged_cache,
+                        "outputs": outputs, "adopted_cache_ids": adopted_cache_ids,
+                        "streaming": True,
+                    })
+                if release_batch_temporaries_for_audit:
+                    output_cache = None
+                    merged_legacy = None
+                    merged_cache = None
+                    outputs = None
+                    if cache_pack_observer is not None:
+                        cache_pack_observer("after_release_temporaries", {"outputs_by_cell": outputs_by_cell})
+            else:
+                if cache_pack_observer is not None:
+                    cache_pack_observer("before_split_creation", {
+                        "merged_legacy": merged_legacy, "merged_cache": merged_cache, "outputs": outputs,
+                    })
+                split_legacy = _split_cache(
+                    outputs.past_key_values, len(selected), observer=cache_pack_observer,
+                )
+                if cache_pack_observer is not None:
+                    cache_pack_observer("after_split_legacy", {
+                        "merged_legacy": merged_legacy, "merged_cache": merged_cache,
+                        "outputs": outputs, "split_legacy": split_legacy,
+                    })
+                    cache_pack_observer("before_cache_adoption", {
+                        "merged_legacy": merged_legacy, "merged_cache": merged_cache,
+                        "outputs": outputs, "split_legacy": split_legacy,
+                    })
+                # Each suspended DFS frame retains its original DynamicCache
+                # owner.  Adopt tensor contents only; never replace that owner.
+                for lane_index, (request, lane_legacy) in enumerate(zip(requests, split_legacy, strict=True)):
+                    owner_cache = request.cache_owner.cache
+                    owner_id = id(owner_cache)
+                    if _is_transformers_cache(owner_cache):
+                        replace_cache_contents_in_place(
+                            owner_cache, lane_legacy, observer=cache_pack_observer, lane_index=lane_index,
+                        )
+                        if id(request.cache_owner.cache) != owner_id:
+                            raise RuntimeError("batched cache adoption replaced a logical owner object")
+                        adopted_cache_ids.append(owner_id)
+                    else:
+                        # CPU compatibility only.  Production Clean-HF reaches
+                        # the DynamicCache branch above.
+                        request.cache_owner.cache = lane_legacy
+                        adopted_cache_ids.append(id(request.cache_owner.cache))
+                outputs_by_cell = []
+                for lane, request in enumerate(requests):
+                    outputs_by_cell.append(type("Reply", (), {
+                        "logits": outputs.logits[lane:lane + 1],
+                        "past_key_values": request.cache_owner.cache,
+                    })())
+                if cache_pack_observer is not None:
+                    cache_pack_observer("after_split_adoption", {
+                        "merged_legacy": merged_legacy,
+                        "merged_cache": merged_cache,
+                        "split_legacy": split_legacy,
+                        "adopted_cache_ids": adopted_cache_ids,
+                    })
+                if release_batch_temporaries_for_audit:
+                    merged_legacy = None
+                    merged_cache = None
+                    split_legacy = None
+                    outputs = None
+                    if cache_pack_observer is not None:
+                        cache_pack_observer("after_release_temporaries", {"outputs_by_cell": outputs_by_cell})
+            cache_adoption_seconds = time.perf_counter() - adopt_started
     elapsed = time.perf_counter() - started
     return outputs_by_cell, {
         "model_call_seconds": model_call_seconds,
