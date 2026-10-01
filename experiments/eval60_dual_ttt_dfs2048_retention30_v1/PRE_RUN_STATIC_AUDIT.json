@@ -1,0 +1,41 @@
+{
+  "experiment_id": "EVAL60_DUAL_TTT_DFS2048_RETENTION30_V1",
+  "base_run": {
+    "source_commit": "537224fd35b7bbe2e261e1476d643ffbde588149",
+    "config_sha256": "bb49c55c414b72ccfba1a4190ea4e188de15d3df9f51e62b9bcf3587def9318c",
+    "cohort_sha256": "7d4767763f8a6d53fadbe64cb38e81e9f8bc6ce345c6934beb520756b84764e3",
+    "workload_wall_seconds": 4671.584365074001,
+    "allocated_gpu_hours": 5.190649294526668
+  },
+  "cohort": {
+    "outputs": 30,
+    "tasks": 22,
+    "logical_cells": 240,
+    "manifest_sha256": "8069af5dacea3e8b4c97f7fef821e1a867ae2212dd0dec868e3793b3fbcee06f",
+    "equal_to_dfs1024": true
+  },
+  "scientific_config_diff": {
+    "search.max_expanded_nodes": {
+      "before": 1024,
+      "after": 2048
+    }
+  },
+  "all_other_scientific_fields_identical": true,
+  "timeout_audit": {
+    "local_time_limit_seconds": 540.0,
+    "dfs1024_min_nodes_per_second": 12.544,
+    "dfs1024_max_cell_wall_seconds": 78.574,
+    "projected_2048_seconds_conservative": 157.148,
+    "projected_timeout_headroom_seconds": 382.852,
+    "potentially_binding": false,
+    "timeout_changed": false
+  },
+  "target_blind": true,
+  "actual_candidate_grids_persisted": true,
+  "rerun": false,
+  "retry": false,
+  "resume": false,
+  "batch2": false,
+  "batch4": false,
+  "kaggle_run_started": false
+}

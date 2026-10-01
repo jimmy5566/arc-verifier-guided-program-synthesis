@@ -20,6 +20,10 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENT = ROOT / "experiments" / "eval60_dual_ttt_dfs1024_retention30_v1"
 EXPERIMENT_ID = "EVAL60_DUAL_TTT_DFS1024_RETENTION30_V1"
+RUNNER_RELATIVE = "scripts/run_eval60_dual_ttt_dfs1024_retention30.py"
+SCORER_RELATIVE = "scripts/score_eval60_retention30.py"
+OUTPUT_FOLDER = "eval60_dual_ttt_dfs1024_retention30_v1"
+NOTEBOOK_TITLE = "ARC2 Eval60 Dual-TTT DFS1024 Retention30"
 IMAGE = "gcr.io/kaggle-private-byod/python@sha256:320043e14c68293f1c946585b9257123385205a58af4b94b17d31868cae4e868"
 MODEL_SOURCE = "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1"
 REFERENCE_KERNEL = "sorokin/pip-install-unsloth-flash-patch"
@@ -45,6 +49,36 @@ SOURCE_PATHS = (
     "experiments/eval60_dual_ttt_dfs1024_retention30_v1/README.md",
     "pyproject.toml",
 )
+DATASET_COPY_NAMES = (
+    "TARGET_BLIND_RUN_MANIFEST.json", "RETENTION30_OUTPUTS.json",
+    "RETENTION30_COHORT_SHA256.txt", "HISTORICAL_GREEDY_SOURCE_CLASSES.csv",
+    "PROVENANCE.json",
+)
+REQUIRED_OUTPUTS = [
+    "PROVENANCE.json", "RETENTION30_OUTPUTS.json", "RETENTION30_COHORT_SHA256.txt",
+    "HISTORICAL_GREEDY_SOURCE_CLASSES.csv", "TARGET_BLIND_RUN_MANIFEST.json",
+    "dfs_candidates_frozen.json", "ttt24_union_candidates_frozen.json",
+    "ttt48_union_candidates_frozen.json", "dual_union_candidates_frozen.json",
+    "dfs_cells.csv", "phase_intervals.csv", "gpu_telemetry_1s.csv",
+    "gpu_phase_summary.csv", "TELEMETRY_SUMMARY.json", "worker_summary.csv", "dfs_source_hit_overlap.csv",
+    "DFS_HIT_OVERLAP_SUMMARY.json", "dfs_view_gold_contribution.csv",
+    "historical_ttt48_marginal_under_dfs.csv", "historical_ttt24_marginal_under_dfs.csv",
+    "historical_top2_retention.csv", "historical_oracle_only_retention.csv",
+    "RETENTION_REPORT.md", "DECISION.json",
+]
+SOURCE_IDENTITY_EXTRA = {
+    "telemetry_infra_only": True,
+    "scientific_config_changed": False,
+    "cohort_changed": False,
+    "telemetry_unmatched_policy": "UNCLASSIFIED",
+}
+PACKAGE_EXTRA = {
+    "telemetry_infra_only": True,
+    "scientific_config_changed": False,
+    "cohort_changed": False,
+}
+DEFAULT_DATASET_SLUG = "arc2-eval60-dual-ttt-dfs1024-retention30-v1-source"
+DEFAULT_KERNEL_SLUG = "arc2-eval60-dual-ttt-dfs1024-retention30-v1"
 
 
 def read_json(path: Path) -> Any:
@@ -87,18 +121,7 @@ def files_manifest(root: Path) -> dict[str, str]:
 
 def notebook_source(owner: str, dataset_slug: str) -> str:
     dataset_id = f"{owner}/{dataset_slug}"
-    required_outputs = [
-        "PROVENANCE.json", "RETENTION30_OUTPUTS.json", "RETENTION30_COHORT_SHA256.txt",
-        "HISTORICAL_GREEDY_SOURCE_CLASSES.csv", "TARGET_BLIND_RUN_MANIFEST.json",
-        "dfs_candidates_frozen.json", "ttt24_union_candidates_frozen.json",
-        "ttt48_union_candidates_frozen.json", "dual_union_candidates_frozen.json",
-        "dfs_cells.csv", "phase_intervals.csv", "gpu_telemetry_1s.csv",
-        "gpu_phase_summary.csv", "TELEMETRY_SUMMARY.json", "worker_summary.csv", "dfs_source_hit_overlap.csv",
-        "DFS_HIT_OVERLAP_SUMMARY.json", "dfs_view_gold_contribution.csv",
-        "historical_ttt48_marginal_under_dfs.csv", "historical_ttt24_marginal_under_dfs.csv",
-        "historical_top2_retention.csv", "historical_oracle_only_retention.csv",
-        "RETENTION_REPORT.md", "DECISION.json",
-    ]
+    required_outputs = REQUIRED_OUTPUTS
     return "\n".join([
         "import json, os, shutil, subprocess, sys, time",
         "from pathlib import Path",
@@ -107,13 +130,13 @@ def notebook_source(owner: str, dataset_slug: str) -> str:
         'SOURCE = DATASET / "ARC2"',
         'CHALLENGE = Path("/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_evaluation_challenges.json")',
         'MODEL = Path("/kaggle/input/models/sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1")',
-        'RUNNER = SOURCE / "scripts/run_eval60_dual_ttt_dfs1024_retention30.py"',
-        'SCORER = SOURCE / "scripts/score_eval60_retention30.py"',
+        f'RUNNER = SOURCE / "{RUNNER_RELATIVE}"',
+        f'SCORER = SOURCE / "{SCORER_RELATIVE}"',
         'NATIVE_CONFIG = SOURCE / "configs/nvarc_native_846d0198"',
         'CONFIG = DATASET / "retention_config_resolved.json"',
         'MANIFEST = DATASET / "TARGET_BLIND_RUN_MANIFEST.json"',
         'RETENTION = DATASET / "RETENTION30_OUTPUTS.json"',
-        'OUTPUT = Path("/kaggle/working/analysis/eval60_dual_ttt_dfs1024_retention30_v1")',
+        f'OUTPUT = Path("/kaggle/working/analysis/{OUTPUT_FOLDER}")',
         'required = [SOURCE, CHALLENGE, MODEL, RUNNER, SCORER, NATIVE_CONFIG, CONFIG, MANIFEST, RETENTION]',
         'missing = [str(path) for path in required if not path.exists()]',
         'if missing: raise RuntimeError(f"retention inputs missing: {missing}")',
@@ -166,7 +189,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     config = read_json(EXPERIMENT / "retention_config.json")
     config["authoritative_source_commit"] = commit
     write_json(dataset / "retention_config_resolved.json", config)
-    for name in ("TARGET_BLIND_RUN_MANIFEST.json", "RETENTION30_OUTPUTS.json", "RETENTION30_COHORT_SHA256.txt", "HISTORICAL_GREEDY_SOURCE_CLASSES.csv", "PROVENANCE.json"):
+    for name in DATASET_COPY_NAMES:
         shutil.copy2(EXPERIMENT / name, dataset / name)
     write_json(dataset / "SOURCE_IDENTITY.json", {
         "experiment_id": EXPERIMENT_ID,
@@ -174,12 +197,9 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         "source_branch": branch,
         "source_git_status": "PACKAGED_CLEAN_FROM_GIT_ARCHIVE",
         "source_paths": list(SOURCE_PATHS),
-        "telemetry_infra_only": True,
-        "scientific_config_changed": False,
-        "cohort_changed": False,
-        "telemetry_unmatched_policy": "UNCLASSIFIED",
+        **SOURCE_IDENTITY_EXTRA,
     })
-    write_json(dataset / "dataset-metadata.json", {"id": f"{args.owner}/{args.dataset_slug}", "title": "ARC2 Eval60 Dual-TTT DFS1024 Retention30", "subtitle": "Private target-blind Retention30 experiment source", "description": "Contains a frozen output-ID manifest but no solution grids or historical candidate answers.", "licenses": [{"name": "other"}]})
+    write_json(dataset / "dataset-metadata.json", {"id": f"{args.owner}/{args.dataset_slug}", "title": NOTEBOOK_TITLE, "subtitle": "Private target-blind Retention30 experiment source", "description": "Contains a frozen output-ID manifest but no solution grids or historical candidate answers.", "licenses": [{"name": "other"}]})
     forbidden = [
         path
         for path in dataset.rglob("*")
@@ -194,7 +214,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     notebook_name = f"{args.kernel_slug}.ipynb"
     write_json(kernel / notebook_name, notebook_document(notebook_source(args.owner, args.dataset_slug)))
     metadata = {
-        "id": f"{args.owner}/{args.kernel_slug}", "title": "ARC2 Eval60 Dual-TTT DFS1024 Retention30",
+        "id": f"{args.owner}/{args.kernel_slug}", "title": NOTEBOOK_TITLE,
         "code_file": notebook_name, "language": "python", "kernel_type": "notebook", "is_private": True,
         "enable_gpu": True, "enable_tpu": False, "enable_internet": False, "keywords": ["gpu", "target-blind", "retention"],
         "dataset_sources": [f"{args.owner}/{args.dataset_slug}"], "kernel_sources": [REFERENCE_KERNEL],
@@ -209,20 +229,18 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         "kernel_slug": f"{args.owner}/{args.kernel_slug}", "notebook_sha256": sha256_file(kernel / notebook_name),
         "config_sha256": sha256_file(dataset / "retention_config_resolved.json"),
         "cohort_sha256": (dataset / "RETENTION30_COHORT_SHA256.txt").read_text(encoding="utf-8").strip(),
-        "telemetry_infra_only": True, "scientific_config_changed": False, "cohort_changed": False,
+        **PACKAGE_EXTRA,
         "kaggle_dataset_pushed": False, "kaggle_notebook_pushed": False, "kaggle_run_started": False,
         "competition_submissions": 0,
     }
     write_json(args.output / "PACKAGE_MANIFEST.json", package)
     if args.review_output is not None:
         args.review_output.mkdir(parents=True)
-        for source_file in (kernel / notebook_name, kernel / "kernel-metadata.json", dataset / "retention_config_resolved.json", dataset / "TARGET_BLIND_RUN_MANIFEST.json", dataset / "RETENTION30_OUTPUTS.json", dataset / "RETENTION30_COHORT_SHA256.txt", dataset / "HISTORICAL_GREEDY_SOURCE_CLASSES.csv", dataset / "SOURCE_IDENTITY.json", args.output / "SOURCE_PACKAGE_MANIFEST.json", args.output / "PACKAGE_MANIFEST.json"):
+        for source_file in (kernel / notebook_name, kernel / "kernel-metadata.json", dataset / "retention_config_resolved.json", *(dataset / name for name in DATASET_COPY_NAMES), dataset / "SOURCE_IDENTITY.json", args.output / "SOURCE_PACKAGE_MANIFEST.json", args.output / "PACKAGE_MANIFEST.json"):
             shutil.copy2(source_file, args.review_output / source_file.name)
         write_json(args.review_output / "REVIEW_STATUS.json", {
             "status": "READY_FOR_RETENTION30_KAGGLE_RUN",
-            "telemetry_infra_only": True,
-            "scientific_config_changed": False,
-            "cohort_changed": False,
+            **PACKAGE_EXTRA,
             "gpu_runs_started": 0,
             "kaggle_datasets_pushed": 0,
             "kaggle_notebooks_pushed": 0,
@@ -236,8 +254,8 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--review-output", type=Path)
     parser.add_argument("--owner", default="jimmy5566")
-    parser.add_argument("--dataset-slug", default="arc2-eval60-dual-ttt-dfs1024-retention30-v1-source")
-    parser.add_argument("--kernel-slug", default="arc2-eval60-dual-ttt-dfs1024-retention30-v1")
+    parser.add_argument("--dataset-slug", default=DEFAULT_DATASET_SLUG)
+    parser.add_argument("--kernel-slug", default=DEFAULT_KERNEL_SLUG)
     parser.add_argument("--source-commit")
     parser.add_argument("--source-branch")
     args = parser.parse_args()

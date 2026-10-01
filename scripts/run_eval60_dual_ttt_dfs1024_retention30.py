@@ -9,6 +9,7 @@ has no solutions argument; Gold is handled by a separate post-freeze scorer.
 from __future__ import annotations
 
 import argparse
+import copy
 import csv
 import gc
 import hashlib
@@ -37,6 +38,11 @@ from scripts.turbodfs_d1_common import d1_cells_batch  # noqa: E402
 
 
 EXPERIMENT_ID = "EVAL60_DUAL_TTT_DFS1024_RETENTION30_V1"
+EXPECTED_BENCHMARK_ID = "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1"
+EXPECTED_MAX_EXPANDED_NODES = 1024
+MANIFEST_EXPERIMENT_ID = EXPERIMENT_ID
+DEFAULT_SOURCE_BRANCH = "experiment/eval60-dual-ttt-dfs1024-retention30-v1"
+EXPECTED_SCIENTIFIC_CONFIG_SHA256: str | None = None
 PHASES = (
     "MODEL_LOAD",
     "IDLE",
@@ -164,11 +170,14 @@ def _deduplicated_candidates(row: Mapping[str, Any]) -> list[dict[str, Any]]:
     return [{**chosen[key], "cell_rank": rank, "candidate_rank_within_cell": rank} for rank, key in enumerate(order)]
 
 
-def persist_cell(*, output: Path, row: Mapping[str, Any], source: str, depth: int, worker_id: int) -> tuple[dict[str, Any], Path]:
+def persist_cell(
+    *, output: Path, row: Mapping[str, Any], source: str, depth: int,
+    worker_id: int, experiment_id: str | None = None,
+) -> tuple[dict[str, Any], Path]:
     candidates = _deduplicated_candidates(row)
     output_id = f"{row['task_id']}:o{int(row['output_index'])}"
     artifact = {
-        "experiment_id": EXPERIMENT_ID,
+        "experiment_id": experiment_id or EXPERIMENT_ID,
         "task_id": row["task_id"],
         "output_index": int(row["output_index"]),
         "output_id": output_id,
@@ -352,7 +361,10 @@ def retention_worker_main(worker_id: int, work: Any, events: Any, ready: Any, st
                                     checkpoint_sha="NOT_PERSISTED_RETENTION_EXPERIMENT", diagnostic_trace=False,
                                 )[0]
                             with ledger.phase("SERIALIZE", task_id=task_id, output_index=output_index, source=source, view=view):
-                                cell, _cell_path = persist_cell(output=output, row=row, source=source, depth=depth, worker_id=worker_id)
+                                cell, _cell_path = persist_cell(
+                                    output=output, row=row, source=source, depth=depth,
+                                    worker_id=worker_id, experiment_id=str(config["experiment_id"]),
+                                )
                             source_cells.append(cell)
                             cells.append(cell)
                             bench._event(events, "CELL_COMPLETE", task_id=task_id, worker_id=worker_id, gpu_id=worker_id, cell=cell)
@@ -367,8 +379,8 @@ def retention_worker_main(worker_id: int, work: Any, events: Any, ready: Any, st
                         "view_dfs_s": {view: sum(float(cell["cell_wall_s"]) for cell in source_cells if cell["view"] == view) for view in EXPECTED_VIEWS[source]},
                     }
                 record = {
-                    "experiment_id": EXPERIMENT_ID,
-                    "benchmark_id": bench.BENCHMARK_ID,
+                    "experiment_id": str(config["experiment_id"]),
+                    "benchmark_id": str(config["benchmark_id"]),
                     "task_id": task_id,
                     "selected_output_indices": selected_outputs,
                     "status": "SUCCESS",
@@ -620,6 +632,42 @@ def phase_summary(tagged: Sequence[Mapping[str, Any]], *, sample_interval_second
     return result
 
 
+def unclassified_lifecycle_summary(
+    tagged: Sequence[Mapping[str, Any]], intervals: Sequence[Mapping[str, Any]]
+) -> dict[str, Any]:
+    """Split unmatched samples around the explicit worker-ledger lifetime."""
+    worker_spans: dict[int, tuple[float, float]] = {}
+    for gpu_id in range(4):
+        gpu_intervals = [row for row in intervals if int(row["gpu_id"]) == gpu_id]
+        if not gpu_intervals:
+            continue
+        worker_spans[gpu_id] = (
+            min(float(row["start_timestamp"]) for row in gpu_intervals),
+            max(float(row["end_timestamp"]) for row in gpu_intervals),
+        )
+    lifecycle = {"PRE_LEDGER": 0, "ACTIVE_WORKER_SPAN": 0, "POST_WORKER": 0}
+    for row in tagged:
+        if str(row["phase"]) != "UNCLASSIFIED":
+            continue
+        gpu_id = int(row["gpu_id"])
+        timestamp = float(row["timestamp"])
+        span = worker_spans.get(gpu_id)
+        if span is None or timestamp < span[0]:
+            lifecycle["PRE_LEDGER"] += 1
+        elif timestamp >= span[1]:
+            lifecycle["POST_WORKER"] += 1
+        else:
+            lifecycle["ACTIVE_WORKER_SPAN"] += 1
+    total = len(tagged)
+    return {
+        "UNCLASSIFIED_PRE_LEDGER": lifecycle["PRE_LEDGER"],
+        "UNCLASSIFIED_ACTIVE_WORKER_SPAN": lifecycle["ACTIVE_WORKER_SPAN"],
+        "UNCLASSIFIED_POST_WORKER": lifecycle["POST_WORKER"],
+        "UNCLASSIFIED_ACTIVE_WORKER_FRACTION": lifecycle["ACTIVE_WORKER_SPAN"] / total if total else 0.0,
+        "unclassified_active_fraction_denominator": "ALL_1S_GPU_SAMPLES",
+    }
+
+
 def finalize_target_blind(*, output: Path, manifest: Mapping[str, Any], run: Mapping[str, Any], full_gpu_rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     if run["failures"] or run.get("cell_failures"):
         raise RuntimeError(f"retention run failures: tasks={sorted(run['failures'])}, cells={len(run.get('cell_failures', []))}")
@@ -703,14 +751,28 @@ def finalize_target_blind(*, output: Path, manifest: Mapping[str, Any], run: Map
     mean_active = statistics.fmean(active_values) if active_values else 0.0
     imbalance = (max(active_values) - mean_active) / mean_active if mean_active else None
     unclassified_sample_count = sum(str(row["phase"]) == "UNCLASSIFIED" for row in tagged)
+    lifecycle_unclassified = unclassified_lifecycle_summary(tagged, intervals)
     telemetry_summary = {
         "sample_interval_seconds": sample_interval_seconds,
         "total_sample_count": len(tagged),
         "UNCLASSIFIED_SAMPLE_COUNT": unclassified_sample_count,
         "UNCLASSIFIED_SAMPLE_FRACTION": unclassified_sample_count / len(tagged) if tagged else 0.0,
         "unclassified_wall_seconds_source": "SAMPLE_COVERAGE_ONLY_NO_EXPLICIT_LEDGER_INTERVAL",
+        **lifecycle_unclassified,
     }
     bench.atomic_json(output / "TELEMETRY_SUMMARY.json", telemetry_summary)
+    startup_summary = bench.read_json(output / "startup_summary.json")
+    model_load_per_worker = {
+        str(row["worker_id"]): float(row["model_load_seconds"])
+        for row in startup_summary.get("workers", [])
+        if row.get("model_load_seconds") is not None
+    }
+    model_load_values = list(model_load_per_worker.values())
+    model_load_ledger_gpu_seconds = sum(
+        float(row["duration_seconds"])
+        for row in intervals
+        if str(row["phase"]) == "MODEL_LOAD"
+    )
     summary = {
         "experiment_id": EXPERIMENT_ID,
         "status": "TARGET_BLIND_PHASE_COMPLETE",
@@ -720,11 +782,16 @@ def finalize_target_blind(*, output: Path, manifest: Mapping[str, Any], run: Map
         "logical_cells": len(cells),
         "candidate_freeze_sha256": bench.sha256_file(output / "TARGET_BLIND_CANDIDATE_FREEZE.json"),
         "workload_wall_s": float(run["workload_wall_s"]),
-        "model_load_wall_s": float(run["model_load_wall_s"]),
+        "STARTUP_TO_BARRIER_WALL_S": float(run["model_load_wall_s"]),
+        "MODEL_LOAD_PER_WORKER_S": model_load_per_worker,
+        "MODEL_LOAD_MEAN_S": statistics.fmean(model_load_values) if model_load_values else None,
+        "MODEL_LOAD_MAX_S": max(model_load_values) if model_load_values else None,
+        "MODEL_LOAD_LEDGER_GPU_SECONDS": model_load_ledger_gpu_seconds,
         "total_gpu_hours": float(run["workload_wall_s"]) * 4 / 3600.0,
         "load_imbalance": imbalance,
         "UNCLASSIFIED_SAMPLE_COUNT": telemetry_summary["UNCLASSIFIED_SAMPLE_COUNT"],
         "UNCLASSIFIED_SAMPLE_FRACTION": telemetry_summary["UNCLASSIFIED_SAMPLE_FRACTION"],
+        "UNCLASSIFIED_ACTIVE_WORKER_FRACTION": telemetry_summary["UNCLASSIFIED_ACTIVE_WORKER_FRACTION"],
         "by_source": source_rows,
     }
     bench.atomic_json(output / "target_blind_runtime_summary.json", summary)
@@ -732,7 +799,7 @@ def finalize_target_blind(*, output: Path, manifest: Mapping[str, Any], run: Map
 
 
 def validate_manifest(manifest: Mapping[str, Any], challenges: Mapping[str, Any]) -> dict[str, Any]:
-    if manifest.get("experiment_id") != EXPERIMENT_ID or manifest.get("solutions_accessed") is not False:
+    if manifest.get("experiment_id") != MANIFEST_EXPERIMENT_ID or manifest.get("solutions_accessed") is not False:
         raise ValueError("target-blind manifest identity mismatch")
     if int(manifest.get("retention_output_count", -1)) != EXPECTED_OUTPUTS or int(manifest.get("expected_logical_cells", -1)) != EXPECTED_CELLS:
         raise ValueError("Retention30 cardinality mismatch")
@@ -753,11 +820,35 @@ def validate_manifest(manifest: Mapping[str, Any], challenges: Mapping[str, Any]
     return {"task_ids": list(manifest["task_ids"]), "num_tasks": len(manifest["task_ids"]), "num_test_outputs": EXPECTED_OUTPUTS, "num_dfs_cells": EXPECTED_CELLS}
 
 
+def validate_experiment_config(config: Mapping[str, Any]) -> None:
+    """Reuse the proven DFS1024 validator while allowing one declared node cap."""
+    if config.get("experiment_id") != EXPERIMENT_ID:
+        raise ValueError("experiment identity mismatch")
+    if config.get("benchmark_id") != EXPECTED_BENCHMARK_ID:
+        raise ValueError("benchmark identity mismatch")
+    if config.get("search", {}).get("max_expanded_nodes") != EXPECTED_MAX_EXPANDED_NODES:
+        raise ValueError("declared scalar Regret node budget mismatch")
+    proxy = copy.deepcopy(dict(config))
+    proxy["benchmark_id"] = bench.BENCHMARK_ID
+    proxy["search"]["max_expanded_nodes"] = 1024
+    bench.validate_config(proxy)
+    scientific = copy.deepcopy(dict(config))
+    for key in (
+        "experiment_id", "benchmark_id", "scientific_reference", "authoritative_source_commit",
+        "cohort_source_experiment_id", "dfs1024_source_commit", "dfs1024_config_sha256",
+        "dfs1024_cohort_sha256",
+    ):
+        scientific.pop(key, None)
+    scientific_hash = value_sha256(scientific)
+    if EXPECTED_SCIENTIFIC_CONFIG_SHA256 is not None and scientific_hash != EXPECTED_SCIENTIFIC_CONFIG_SHA256:
+        raise ValueError(f"scientific configuration hash mismatch: {scientific_hash}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     for name in ("challenge", "model_path", "native_config_dir", "config", "manifest", "output"):
         parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
-    parser.add_argument("--source-branch", default="experiment/eval60-dual-ttt-dfs1024-retention30-v1")
+    parser.add_argument("--source-branch", default=DEFAULT_SOURCE_BRANCH)
     parser.add_argument("--source-git-status", default="PACKAGED_CLEAN_FROM_GIT_ARCHIVE")
     args = parser.parse_args()
     output = args.output.resolve()
@@ -769,7 +860,7 @@ def main() -> None:
     config = bench.read_json(args.config.resolve())
     manifest = bench.read_json(args.manifest.resolve())
     challenges = bench.read_json(args.challenge.resolve())
-    bench.validate_config(config)
+    validate_experiment_config(config)
     actual_environment = bench.environment_versions()
     bench.validate_environment(config, actual_environment)
     cohort_info = validate_manifest(manifest, challenges)
@@ -794,7 +885,9 @@ def main() -> None:
 
     sampler = bench.TelemetrySampler(1.0)
     original_worker = bench.worker_main
+    original_benchmark_id = bench.BENCHMARK_ID
     bench.worker_main = retention_worker_main
+    bench.BENCHMARK_ID = EXPECTED_BENCHMARK_ID
     sampler.start()
     try:
         runtime_config = dict(config)
@@ -806,6 +899,7 @@ def main() -> None:
     finally:
         sampler.close()
         bench.worker_main = original_worker
+        bench.BENCHMARK_ID = original_benchmark_id
     # Outer sampler includes model load.  Inner sampler remains useful to the
     # validated lifecycle but is not the authoritative phase-tagged stream.
     finalize_target_blind(output=output, manifest=manifest, run=run, full_gpu_rows=sampler.gpu_rows)

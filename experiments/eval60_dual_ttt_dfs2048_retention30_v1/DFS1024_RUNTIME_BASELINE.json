@@ -1,0 +1,39 @@
+{
+  "UNCLASSIFIED_SAMPLE_COUNT": 2062,
+  "UNCLASSIFIED_SAMPLE_FRACTION": 0.11524703778224905,
+  "by_source": {
+    "TTT24": {
+      "dfs_gpu_util_mean": 55.794609929078014,
+      "dfs_wall_s_sum": 7717.9077553929965,
+      "empty_pool_cells": 0,
+      "logical_cells": 120,
+      "nodes_expanded": 102604,
+      "nodes_per_second": 13.294276538651815,
+      "total_gpu_seconds": 8438.592446255003,
+      "train_gpu_seconds": 713.7708052320013,
+      "unique_candidates_sum": 801
+    },
+    "TTT48": {
+      "dfs_gpu_util_mean": 55.785756501182036,
+      "dfs_wall_s_sum": 7395.972701923004,
+      "empty_pool_cells": 0,
+      "logical_cells": 120,
+      "nodes_expanded": 98313,
+      "nodes_per_second": 13.292774860355818,
+      "total_gpu_seconds": 8759.116749735003,
+      "train_gpu_seconds": 1355.8131474909997,
+      "unique_candidates_sum": 816
+    }
+  },
+  "candidate_freeze_sha256": "db6814d56b771289c545962f28203667883178190d30be24058585f7c5ed349c",
+  "completed_tasks": 22,
+  "experiment_id": "EVAL60_DUAL_TTT_DFS1024_RETENTION30_V1",
+  "load_imbalance": 0.08206411194892771,
+  "logical_cells": 240,
+  "model_load_wall_s": 216.24343902999954,
+  "retention_outputs": 30,
+  "solutions_accessed": false,
+  "status": "TARGET_BLIND_PHASE_COMPLETE",
+  "total_gpu_hours": 5.190649294526668,
+  "workload_wall_s": 4671.584365074001
+}
