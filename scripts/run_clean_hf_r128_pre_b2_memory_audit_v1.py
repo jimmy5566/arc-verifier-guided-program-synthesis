@@ -41,9 +41,10 @@ def main():
   if stage=='after_restore':
    legacy=data['merged_legacy'];converted=data['merged_cache']; l=set(cache_meta(legacy)[1]);c=set(cache_meta(converted)[1]);alias.update({'from_legacy_cache':'ZERO_COPY_WRAPPER' if l==c else 'PARTIAL_COPY' if l&c else 'FULL_COPY','legacy_storage_count':len(l),'converted_storage_count':len(c),'shared_storage_count':len(l&c)})
   if stage=='after_split':
-   split=data['split_cache']; split_stores=set(); merged_stores=set(cache_meta(data['merged_legacy'])[1])
-   for cache in split: split_stores.update(cache_meta(cache)[1])
-   alias.update({'split_storage_count':len(split_stores),'split_shared_with_merged_storage_count':len(split_stores&merged_stores),'split_copy_bytes':sum(cache_meta(cache)[0]['total_unique_kv_bytes'] for cache in split)})
+   split=data['split_cache']; split_store_map={}; merged_stores=set(cache_meta(data['merged_legacy'])[1])
+   for cache in split: split_store_map.update(cache_meta(cache)[1])
+   split_stores=set(split_store_map)
+   alias.update({'split_storage_count':len(split_stores),'split_shared_with_merged_storage_count':len(split_stores&merged_stores),'split_copy_bytes':sum(split_store_map.values())})
   if stage=='after_logical_resume': raise StopAfterFirstB2()
  try:
   run_ready_scheduler(model=model,cells=cells,dynamic_batch2=True,scheduling_policy='dynamic_ready',observer=obs,cache_pack_observer=packobs,release_b2_temporaries_for_audit=True)
