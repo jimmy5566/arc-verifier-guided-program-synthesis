@@ -86,13 +86,25 @@ def adapter_tensor_manifest(adapter_path: Path) -> list[dict[str, Any]]:
 
 
 def loaded_adapter_tensor_parity(model: Any, source_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Compare source safetensors against adapter tensors installed by PEFT."""
-    state = model.state_dict(); rows: list[dict[str, Any]] = []
+    """Compare source safetensors using PEFT's authoritative adapter export."""
+    from peft import get_peft_model_state_dict
+
+    def canonical(name: str) -> str:
+        # PEFT owns adapter-name insertion.  The frozen export omits the
+        # default-adapter component, so remove only that structural segment.
+        return name.replace(".lora_A.default.", ".lora_A.").replace(".lora_B.default.", ".lora_B.").replace(".modules_to_save.default.", ".")
+
+    state = get_peft_model_state_dict(model)
+    canonical_loaded: dict[str, tuple[str, Any]] = {}
+    for loaded_name, tensor in state.items():
+        key = canonical(str(loaded_name))
+        if key in canonical_loaded:
+            raise RuntimeError(f"ambiguous canonical PEFT adapter key: {key}")
+        canonical_loaded[key] = (str(loaded_name), tensor)
+    rows: list[dict[str, Any]] = []
     for source in source_rows:
         name = str(source["canonical_parameter_name"])
-        candidates = (name, f"base_model.model.{name.removeprefix('base_model.model.')}")
-        loaded_name = next((candidate for candidate in candidates if candidate in state), None)
-        tensor = state.get(loaded_name) if loaded_name else None
+        loaded_name, tensor = canonical_loaded.get(name, (None, None))
         loaded_sha = None if tensor is None else _tensor_sha256(tensor)
         rows.append({**source, "loaded_parameter_name": loaded_name, "loaded_sha256": loaded_sha,
                      "exact_equal": bool(loaded_sha == source["source_sha256"])})
