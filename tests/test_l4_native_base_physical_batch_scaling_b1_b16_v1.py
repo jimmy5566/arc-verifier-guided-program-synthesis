@@ -98,6 +98,8 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
         assert "AutoModelForCausalLM.from_pretrained" in source
         assert "torch_dtype=torch.bfloat16" in source
         assert "DYNAMICCACHE_PREFLIGHT.json" in source
+        assert "dynamic_cache_from_legacy" in source
+        assert "DynamicCache.from_legacy_cache" not in source
         assert "for gpu_id in range(4)" in source
         assert "color_offset=0, pair_order=\"canonical\"" in source
 
@@ -123,6 +125,7 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
         assert "submission.json" not in source and "evaluation_solutions" not in source
         packaged = staged / "dataset" / "ARC2"
         assert (packaged / "scripts" / RUNNER_PATH.name).is_file()
+        assert (packaged / "src" / "inference" / "nvarc_turbodfs_dynamic_ready.py").is_file()
         assert not (packaged / "src" / "inference" / "hf_peft_backend.py").exists()
         assert not list(packaged.rglob("__pycache__"))
         assert not list((staged / "dataset").rglob("*solution*.json"))

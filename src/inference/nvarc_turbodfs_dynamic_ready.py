@@ -151,6 +151,13 @@ def _legacy_cache(cache: Any) -> tuple[tuple[Any, ...], ...]:
     """Return a non-mutating legacy KV view, or fail closed if unavailable."""
     if hasattr(cache, "to_legacy_cache"):
         cache = cache.to_legacy_cache()
+    # Transformers v5 removed ``to_legacy_cache``.  Its public cache layout
+    # remains a list of layers, each exposing ``keys`` and ``values`` tensors.
+    # Read that representation without mutating it so the rest of this module
+    # retains one canonical, splittable KV view across both cache APIs.
+    if not isinstance(cache, (tuple, list)) and hasattr(cache, "layers"):
+        cache = tuple((getattr(layer, "keys", None), getattr(layer, "values", None))
+                      for layer in cache.layers)
     if not isinstance(cache, (tuple, list)) or not cache:
         raise RuntimeError("dynamic-ready requires a splittable legacy KV cache")
     rows: list[tuple[Any, ...]] = []
@@ -181,16 +188,53 @@ def _is_transformers_cache(cache: Any) -> bool:
     mask.  A legacy tuple is acceptable to older patched backends, but cannot
     be handed to stock Transformers 4.55 as an inference cache.
     """
-    return hasattr(cache, "get_mask_sizes") and hasattr(cache, "to_legacy_cache")
+    # v4 exposes ``to_legacy_cache``; v5 instead exposes public ``layers``.
+    # Both have a cache-length/mask contract and are accepted by stock Qwen.
+    return (
+        hasattr(cache, "layers")
+        and (hasattr(cache, "get_mask_sizes") or hasattr(cache, "get_seq_length"))
+    )
+
+
+def dynamic_cache_from_legacy(legacy: tuple[tuple[Any, ...], ...]) -> Any:
+    """Create a stock Transformers DynamicCache from a canonical KV view.
+
+    ``DynamicCache.from_legacy_cache`` is available in the historical v4 API
+    but was removed in Transformers v5.  The v5 constructor accepts the same
+    iterable of ``(key, value)`` tensors as ``ddp_cache_data``.  Keeping the
+    compatibility boundary here avoids changing decoder or timing semantics.
+    """
+    legacy = _legacy_cache(legacy)
+    from transformers.cache_utils import DynamicCache
+
+    from_legacy = getattr(DynamicCache, "from_legacy_cache", None)
+    if callable(from_legacy):
+        return from_legacy(legacy)
+    return DynamicCache(legacy)
 
 
 def _restore_cache_kind(legacy: tuple[tuple[Any, ...], ...], exemplar: Any) -> Any:
     """Rebuild a cache of the same public representation as ``exemplar``."""
     if not _is_transformers_cache(exemplar):
         return legacy
-    from transformers.cache_utils import DynamicCache
+    return dynamic_cache_from_legacy(legacy)
 
-    return DynamicCache.from_legacy_cache(legacy)
+
+def _dynamic_layer_from_tensors(*, destination: Any, layer_index: int, key: Any, value: Any) -> Any:
+    """Materialize one DynamicLayer across Transformers v4 and v5 APIs."""
+    from transformers.cache_utils import DynamicLayer
+
+    template = destination.layers[layer_index] if layer_index < len(destination.layers) else None
+    layer_type = type(template) if template is not None else DynamicLayer
+    from_tensors = getattr(layer_type, "from_tensors", None)
+    if callable(from_tensors):
+        return from_tensors(key.detach().clone(), value.detach().clone())
+    layer = layer_type()
+    update = getattr(layer, "update", None)
+    if not callable(update):
+        raise RuntimeError("DynamicCache layer does not support public tensor adoption")
+    update(key.detach().clone(), value.detach().clone())
+    return layer
 
 
 def replace_cache_contents_in_place(
@@ -216,8 +260,6 @@ def replace_cache_contents_in_place(
     if not _is_transformers_cache(destination):
         raise RuntimeError("in-place cache adoption requires a Transformers DynamicCache destination")
     legacy = _legacy_cache(source)
-    from transformers.cache_utils import DynamicLayer
-
     destination_id = id(destination)
     layers = []
     for layer_index, layer in enumerate(legacy):
@@ -228,7 +270,9 @@ def replace_cache_contents_in_place(
                 "lane_index": lane_index, "layer_index": layer_index,
             })
         key, value = layer
-        layers.append(DynamicLayer.from_tensors(key.detach().clone(), value.detach().clone()))
+        layers.append(_dynamic_layer_from_tensors(
+            destination=destination, layer_index=layer_index, key=key, value=value,
+        ))
         if observer is not None:
             observer("after_materialized_adopt_layer", {
                 "lane_index": lane_index, "layer_index": layer_index,
@@ -356,8 +400,6 @@ def replace_cache_contents_streaming_in_place(
     if not _is_transformers_cache(destination):
         raise RuntimeError("streaming cache adoption requires a Transformers DynamicCache destination")
     legacy = _legacy_cache(source)
-    from transformers.cache_utils import DynamicLayer
-
     destination_id = id(destination)
     for layer_index, layer in enumerate(legacy):
         if len(layer) != 2:
@@ -365,7 +407,9 @@ def replace_cache_contents_streaming_in_place(
         if observer is not None:
             observer("before_streaming_adopt_layer", {"lane_index": lane_index, "layer_index": layer_index})
         key, value = layer
-        adopted_layer = DynamicLayer.from_tensors(key.detach().clone(), value.detach().clone())
+        adopted_layer = _dynamic_layer_from_tensors(
+            destination=destination, layer_index=layer_index, key=key, value=value,
+        )
         if layer_index < len(destination.layers):
             destination.layers[layer_index] = adopted_layer
         else:

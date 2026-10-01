@@ -40,7 +40,12 @@ if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
 from inference.nvarc_turbodfs_d1 import D1TurboDFSConfig  # noqa: E402
-from inference.nvarc_turbodfs_dynamic_ready import _legacy_cache, execute_ready_forward, start_ready_cell  # noqa: E402
+from inference.nvarc_turbodfs_dynamic_ready import (  # noqa: E402
+    _legacy_cache,
+    dynamic_cache_from_legacy,
+    execute_ready_forward,
+    start_ready_cell,
+)
 
 
 EXPERIMENT = "L4_NATIVE_BASE_PHYSICAL_BATCH_SCALING_B1_B16_V1"
@@ -106,8 +111,7 @@ def _assert_challenge_only(path: Path) -> None:
 
 
 def _cache_transform(cache: Any) -> Any:
-    from transformers.cache_utils import DynamicCache
-    return DynamicCache.from_legacy_cache(cache)
+    return dynamic_cache_from_legacy(_legacy_cache(cache))
 
 
 def _config(budget: int, *, diagnostic_trace: bool = False) -> D1TurboDFSConfig:

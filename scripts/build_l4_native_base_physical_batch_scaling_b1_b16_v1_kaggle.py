@@ -25,6 +25,13 @@ from scripts.run_l4_native_base_physical_batch_scaling_b1_b16_v1 import (  # noq
 )
 
 
+# This is the sole permitted source-core delta from the frozen native base
+# benchmark: it adapts the public Transformers v5 cache-layer representation
+# to the pre-existing cache pack/split protocol.  It is a byte-pinned runtime
+# compatibility shim, not a decoder, view, or timing change.
+RUNTIME_DYNAMICCACHE_COMPAT_SHA256 = "4e86b52ba0c65e080c4a24d0df99900dacacf0b0ba2c23af4c8c1649f95509e1"
+
+
 def _write(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -44,7 +51,6 @@ def _git(*args: str) -> str:
 
 def _assert_authoritative_core_unchanged() -> None:
     core = (
-        "src/inference/nvarc_turbodfs_dynamic_ready.py",
         "scripts/run_clean_hf_parallel_dfs_b4_compute_v1.py",
         "scripts/run_clean_hf_parallel_dfs_batch_scaling_v2.py",
         "scripts/run_clean_hf_b16_transient_memory_opt_v1.py",
@@ -52,9 +58,12 @@ def _assert_authoritative_core_unchanged() -> None:
     changed = subprocess.run(["git", "diff", "--quiet", AUTHORITATIVE_SOURCE_COMMIT, "--", *core], cwd=ROOT)
     if changed.returncode != 0:
         raise RuntimeError("frozen authoritative core differs from requested source commit")
+    actual = _sha256(ROOT / "src" / "inference" / "nvarc_turbodfs_dynamic_ready.py")
+    if actual != RUNTIME_DYNAMICCACHE_COMPAT_SHA256:
+        raise RuntimeError("DynamicCache compatibility source differs from the pinned runtime-only patch")
 
 
-def _archive_curated_source(destination: Path) -> None:
+def _archive_curated_source(destination: Path, *, source_ref: str) -> None:
     """Archive only runtime code/config, excluding historical artifacts and target files."""
     paths = (
         "src/arc",
@@ -72,7 +81,7 @@ def _archive_curated_source(destination: Path) -> None:
     )
     archive = destination.parent / "source.tar"
     with archive.open("wb") as handle:
-        subprocess.run(["git", "archive", "--format=tar", AUTHORITATIVE_SOURCE_COMMIT, *paths], cwd=ROOT, stdout=handle, check=True)
+        subprocess.run(["git", "archive", "--format=tar", source_ref, *paths], cwd=ROOT, stdout=handle, check=True)
     with tarfile.open(archive) as handle:
         handle.extractall(destination, filter="data")
     archive.unlink()
@@ -161,7 +170,7 @@ def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str) -> d
     dataset, kernel = output / "dataset", output / "kernel"
     source = dataset / "ARC2"
     source.mkdir(parents=True)
-    _archive_curated_source(source)
+    _archive_curated_source(source, source_ref=harness_commit)
     _assert_staged_runner_importable(source)
     contract = experiment_contract(source_commit=AUTHORITATIVE_SOURCE_COMMIT)
     _write(dataset / "L4_BENCHMARK_CONTRACT.json", contract)
@@ -198,6 +207,7 @@ def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str) -> d
     manifest = {
         "status": "PACKAGE_BUILT_NOT_PUSHED_NOT_LAUNCHED", "experiment": EXPERIMENT,
         "authoritative_source_commit": AUTHORITATIVE_SOURCE_COMMIT, "harness_commit": harness_commit,
+        "runtime_dynamiccache_compatibility_sha256": RUNTIME_DYNAMICCACHE_COMPAT_SHA256,
         "dataset_slug": f"{owner}/{dataset_slug}", "kernel_slug": f"{owner}/{kernel_slug}",
         "github_push": "BLOCKED_PENDING_TOKEN_ROTATION", "kaggle_run_started": False, "files": files,
     }
