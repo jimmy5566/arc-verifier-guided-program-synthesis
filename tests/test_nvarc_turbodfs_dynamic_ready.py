@@ -77,7 +77,7 @@ def test_prefill_hygiene_releases_only_dead_root_logit_storage():
     )
     assert len(temporary_outputs) == 1
     assert baseline.request is not None and hygienic.request is not None
-    assert baseline.request.token_ids == hygienic.request.token_ids
+    assert baseline.request.token_id == hygienic.request.token_id
     assert baseline.request.position == hygienic.request.position
     assert baseline.request.cache_geometry == hygienic.request.cache_geometry
     del temporary_outputs[:]
