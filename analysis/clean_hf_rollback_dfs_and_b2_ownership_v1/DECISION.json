@@ -2645,6 +2645,62 @@
     "LANE_SWAP_EXACT": false,
     "REPEAT_3_EXACT": true
   },
+  "b2_semantic_classification": {
+    "B1_VS_B2_DISCRETE_EXACT": true,
+    "B1_VS_B2_STRICT_EXACT": false,
+    "B1_physical_forwards": 64,
+    "B1_seconds": 37.68701282516122,
+    "B2_physical_forwards": 32,
+    "B2_seconds": 50.125660771504045,
+    "budget": 32,
+    "classification": "BATCH_NUMERICAL_ONLY",
+    "comparisons": {
+      "B1(A)_vs_B2(A,B)_A": {
+        "candidate_tokens_exact": true,
+        "discrete_semantics_exact": true,
+        "first_forward_difference": {
+          "left": 17.0,
+          "path": "$[0].arc_logits.15",
+          "right": 17.125
+        },
+        "first_semantic_difference": {
+          "left": 0.00013111533418464015,
+          "path": "$.branch_probabilities[1].entropy",
+          "right": 0.00020755760549568116
+        },
+        "left_per_forward_trace_sha256": "6e9b5c4c166db636da1c9fe2c11c78a26d6b4f0e0405f17d4398d95c6a24e25a",
+        "left_semantic_sha256": "6300aa36416b467df5db19e5c1eab7c1166a6579a6f36fad3e4f06e5c1d73d57",
+        "node_topology_exact": true,
+        "right_per_forward_trace_sha256": "a7f768255d0ea244c9b7df782c542b9ccb6a9ce6150e83e134d535875fd553d0",
+        "right_semantic_sha256": "c7692ae9a1207ddac1aeaa111ac192cf42932a85973ad35e018a0d7a786bb465",
+        "strict_exact": false
+      },
+      "B1(B)_vs_B2(A,B)_B": {
+        "candidate_tokens_exact": true,
+        "discrete_semantics_exact": true,
+        "first_forward_difference": {
+          "left": 84.0,
+          "path": "$[0].arc_logits.2",
+          "right": 84.5
+        },
+        "first_semantic_difference": {
+          "left": 5.988380871871497e-07,
+          "path": "$.branch_probabilities[1].entropy",
+          "right": 8.080613531303641e-07
+        },
+        "left_per_forward_trace_sha256": "25d4ae4e081f09aa1883c972c4a9780effd0084e09b330d531dfbedd158a3316",
+        "left_semantic_sha256": "c43e81122cd02733f42a607372bb80073ae0cc9f3c81433119da2b053fae8e2b",
+        "node_topology_exact": true,
+        "right_per_forward_trace_sha256": "169d8163141b66513bc1ff92dc97a11db228a21f8079bf08d337ebd7ede57213",
+        "right_semantic_sha256": "d70ef1458a7a11b5ea79642b0afe505b3ddc9089dd0af101326df18929968670",
+        "strict_exact": false
+      }
+    },
+    "experiment": "CLEAN_HF_B2_SEMANTIC_CLASSIFICATION_V1",
+    "gold_loaded": false,
+    "target_blind": true,
+    "unsloth_inference": false
+  },
   "branch": {
     "comparison_keys": [
       "token",
@@ -2662,10 +2718,10 @@
     "strict_exact": true
   },
   "conditions": {
-    "b2_micro": false,
+    "b2_micro": true,
     "branch_backtrack": true,
     "crop": true,
-    "dynamic": false,
+    "dynamic": true,
     "isolated": true,
     "memory_plateau": true,
     "owner_identity": true,
@@ -2683,11 +2739,145 @@
     "status": "PASS"
   },
   "dynamic": {
-    "classification": "NOT_RUN_B2_GATE_FAILED",
-    "reason": "B1/B2 first-forward BF16 batch numerical divergence"
+    "cell_count": 4,
+    "classification": "SEARCH_TRAJECTORY_SHIFT",
+    "first_trajectory_divergence": {
+      "b1": {
+        "arc_logits": {
+          "0": 90.0,
+          "1": 86.5,
+          "10": 56.75,
+          "15": 27.75,
+          "2": 86.0,
+          "3": 86.5,
+          "4": 88.0,
+          "5": 87.0,
+          "6": 85.5,
+          "7": 107.5,
+          "8": 85.5,
+          "9": 84.5
+        },
+        "arc_logprobs": {
+          "0": -17.5,
+          "1": -21.0,
+          "10": -50.75,
+          "15": -79.75,
+          "2": -21.5,
+          "3": -21.0,
+          "4": -19.5,
+          "5": -20.5,
+          "6": -22.0,
+          "7": 0.0,
+          "8": -22.0,
+          "9": -23.0
+        },
+        "arc_ranking": [
+          7,
+          0,
+          4,
+          5,
+          3,
+          1,
+          2,
+          8,
+          6,
+          9,
+          10,
+          15
+        ],
+        "full_logits_sha256": "53e32e475284883b6e8bd087cfb7eb6e0ed5d8ba4f2908c5befaa4385e885f9b",
+        "output_cache_sha256": "62dce4cb5f9b15acecdc8d09032c6682cd96e37c3b6fb95c0c77708c1ecd227b"
+      },
+      "cell_key": "d59b0160:o0:d24:anti_transpose",
+      "changed_fields": [
+        "arc_logits",
+        "arc_logprobs",
+        "arc_ranking",
+        "full_logits_sha256",
+        "output_cache_sha256"
+      ],
+      "dynamic": {
+        "arc_logits": {
+          "0": 89.5,
+          "1": 86.0,
+          "10": 56.75,
+          "15": 27.875,
+          "2": 86.0,
+          "3": 86.0,
+          "4": 87.5,
+          "5": 86.5,
+          "6": 85.0,
+          "7": 107.5,
+          "8": 85.0,
+          "9": 84.0
+        },
+        "arc_logprobs": {
+          "0": -18.0,
+          "1": -21.5,
+          "10": -50.75,
+          "15": -79.625,
+          "2": -21.5,
+          "3": -21.5,
+          "4": -20.0,
+          "5": -21.0,
+          "6": -22.5,
+          "7": 0.0,
+          "8": -22.5,
+          "9": -23.5
+        },
+        "arc_ranking": [
+          7,
+          0,
+          4,
+          5,
+          3,
+          2,
+          1,
+          8,
+          6,
+          9,
+          10,
+          15
+        ],
+        "full_logits_sha256": "02bd69973feaf520ada89a630b12e2cca3e2dcc08c0879344bb951e6626e39cd",
+        "output_cache_sha256": "42812a587f718f2ff9df7c2905abb3f1a9673a1b73151de4076627d96998ad90"
+      },
+      "forward_index": 0
+    },
+    "gold_loaded": false,
+    "strict_exact_count": 0,
+    "target_blind": true,
+    "telemetry": {
+      "active2_fraction": 1.0,
+      "b1_forward_ms": 68.26742930934415,
+      "b1_model_call_seconds": 34.952923806384206,
+      "b1_nodes": 512,
+      "b1_nodes_per_second": 1.669955810355848,
+      "b1_physical_forwards": 512,
+      "b1_scheduler_wall_seconds": 306.5949391145259,
+      "b1_total_host_wall_seconds": 306.5949391145259,
+      "b2_fraction": 1.0,
+      "dynamic_b1_forward_ms": null,
+      "dynamic_b1_forwards": 0,
+      "dynamic_b2_forward_ms": 69.15671595197637,
+      "dynamic_b2_forwards": 256,
+      "dynamic_cache_adoption_seconds": 0.5949666611850262,
+      "dynamic_cache_pack_seconds": 0.9718895778059959,
+      "dynamic_model_call_seconds": 17.70411928370595,
+      "dynamic_nodes": 512,
+      "dynamic_nodes_per_second": 1.7582019556171071,
+      "dynamic_peak_allocated_bytes": 11432822784,
+      "dynamic_peak_reserved_bytes": 12576620544,
+      "dynamic_physical_forwards": 256,
+      "dynamic_scheduler_overhead_seconds": 0.16832506656646729,
+      "dynamic_scheduler_wall_seconds": 291.2065922599286,
+      "dynamic_total_host_wall_seconds": 291.2065922599286,
+      "effective_batch": 2.0,
+      "speedup": 1.0528434014325534
+    }
   },
   "experiment": "CLEAN_HF_ROLLBACK_DFS_AND_B2_OWNERSHIP_V1",
-  "final_decision": "DYNAMIC_B2_BLOCKED_BATCH_NUMERICAL_DIVERGENCE",
+  "final_decision": "PARALLEL_DFS_ENGINE_READY_FOR_CENSUS",
   "gold_loaded": false,
   "isolated": {
     "all_strict_semantic_exact": true,
@@ -2705,8 +2895,9 @@
   },
   "raw_provenance": {
     "b2_micro": "/root/arc-runtime-3090-v2/active_run/clean_hf_rollback_dfs_and_b2_ownership_v1/b2_micro_corrected_v3",
+    "b2_semantic_classification": "/root/arc-runtime-3090-v2/active_run/clean_hf_rollback_dfs_and_b2_ownership_v1/b2_semantic_classification",
     "crop_gate": "/root/arc-runtime-3090-v2/active_run/clean_hf_rollback_dfs_and_b2_ownership_v1/crop_gate",
-    "dynamic": null,
+    "dynamic": "/root/arc-runtime-3090-v2/active_run/clean_hf_rollback_dfs_and_b2_ownership_v1/r128_dynamic_b2",
     "r128_b1": "/root/arc-runtime-3090-v2/active_run/clean_hf_rollback_dfs_and_b2_ownership_v1/r128_b1",
     "r32": "/root/arc-runtime-3090-v2/active_run/clean_hf_rollback_dfs_and_b2_ownership_v1/r32"
   },

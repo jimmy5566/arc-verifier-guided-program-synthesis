@@ -1,0 +1,34 @@
+{
+  "all_strict_semantic_exact": true,
+  "cell_count": 4,
+  "cells": [
+    {
+      "cell_key": "d59b0160:o0:d24:anti_transpose",
+      "current_semantic_sha256": "a0ecfadf1138a6bb6d8e7fb81d06ce642659402baecc92c9be144a828d48e864",
+      "reference_semantic_sha256": "a0ecfadf1138a6bb6d8e7fb81d06ce642659402baecc92c9be144a828d48e864",
+      "strict_exact": true
+    },
+    {
+      "cell_key": "d59b0160:o0:d24:flip_ud",
+      "current_semantic_sha256": "1a09badc0d52889f488522b7628c371207c20d1e9d274f185570745de1ad6ab9",
+      "reference_semantic_sha256": "1a09badc0d52889f488522b7628c371207c20d1e9d274f185570745de1ad6ab9",
+      "strict_exact": true
+    },
+    {
+      "cell_key": "d59b0160:o0:d24:identity",
+      "current_semantic_sha256": "402bc41f8c8bc8da7d66ada6a3c9ad797b5a6254c030b99ebf5dc451a8d12c2a",
+      "reference_semantic_sha256": "402bc41f8c8bc8da7d66ada6a3c9ad797b5a6254c030b99ebf5dc451a8d12c2a",
+      "strict_exact": true
+    },
+    {
+      "cell_key": "d59b0160:o0:d24:transpose",
+      "current_semantic_sha256": "59cb82000410618659ac9e8ce3d911715f25594258929ae69d97b689b5eec8b7",
+      "reference_semantic_sha256": "59cb82000410618659ac9e8ce3d911715f25594258929ae69d97b689b5eec8b7",
+      "strict_exact": true
+    }
+  ],
+  "first_difference": null,
+  "gold_loaded": false,
+  "strict_exact_count": 4,
+  "target_blind": true
+}

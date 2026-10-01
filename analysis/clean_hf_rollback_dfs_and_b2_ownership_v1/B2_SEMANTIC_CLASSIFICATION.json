@@ -1,0 +1,56 @@
+{
+  "B1_VS_B2_DISCRETE_EXACT": true,
+  "B1_VS_B2_STRICT_EXACT": false,
+  "B1_physical_forwards": 64,
+  "B1_seconds": 37.68701282516122,
+  "B2_physical_forwards": 32,
+  "B2_seconds": 50.125660771504045,
+  "budget": 32,
+  "classification": "BATCH_NUMERICAL_ONLY",
+  "comparisons": {
+    "B1(A)_vs_B2(A,B)_A": {
+      "candidate_tokens_exact": true,
+      "discrete_semantics_exact": true,
+      "first_forward_difference": {
+        "left": 17.0,
+        "path": "$[0].arc_logits.15",
+        "right": 17.125
+      },
+      "first_semantic_difference": {
+        "left": 0.00013111533418464015,
+        "path": "$.branch_probabilities[1].entropy",
+        "right": 0.00020755760549568116
+      },
+      "left_per_forward_trace_sha256": "6e9b5c4c166db636da1c9fe2c11c78a26d6b4f0e0405f17d4398d95c6a24e25a",
+      "left_semantic_sha256": "6300aa36416b467df5db19e5c1eab7c1166a6579a6f36fad3e4f06e5c1d73d57",
+      "node_topology_exact": true,
+      "right_per_forward_trace_sha256": "a7f768255d0ea244c9b7df782c542b9ccb6a9ce6150e83e134d535875fd553d0",
+      "right_semantic_sha256": "c7692ae9a1207ddac1aeaa111ac192cf42932a85973ad35e018a0d7a786bb465",
+      "strict_exact": false
+    },
+    "B1(B)_vs_B2(A,B)_B": {
+      "candidate_tokens_exact": true,
+      "discrete_semantics_exact": true,
+      "first_forward_difference": {
+        "left": 84.0,
+        "path": "$[0].arc_logits.2",
+        "right": 84.5
+      },
+      "first_semantic_difference": {
+        "left": 5.988380871871497e-07,
+        "path": "$.branch_probabilities[1].entropy",
+        "right": 8.080613531303641e-07
+      },
+      "left_per_forward_trace_sha256": "25d4ae4e081f09aa1883c972c4a9780effd0084e09b330d531dfbedd158a3316",
+      "left_semantic_sha256": "c43e81122cd02733f42a607372bb80073ae0cc9f3c81433119da2b053fae8e2b",
+      "node_topology_exact": true,
+      "right_per_forward_trace_sha256": "169d8163141b66513bc1ff92dc97a11db228a21f8079bf08d337ebd7ede57213",
+      "right_semantic_sha256": "d70ef1458a7a11b5ea79642b0afe505b3ddc9089dd0af101326df18929968670",
+      "strict_exact": false
+    }
+  },
+  "experiment": "CLEAN_HF_B2_SEMANTIC_CLASSIFICATION_V1",
+  "gold_loaded": false,
+  "target_blind": true,
+  "unsloth_inference": false
+}
