@@ -639,8 +639,11 @@ def _run_controller(args: argparse.Namespace) -> int:
     })
     _atomic_json(args.output / "DECISION.json", decision)
     _write_report(args.output, decision)
+    # The controller's terminal line is redirected into controller.log.  Emit
+    # it before hashing so the frozen manifest cannot record an empty log and
+    # then immediately invalidate itself on process exit.
+    print(json.dumps({"classification": classification, "phases": list(phases)}, sort_keys=True), flush=True)
     _write_hashes(args.output)
-    print(json.dumps({"classification": classification, "phases": list(phases)}, sort_keys=True))
     return 0 if classification == "R4096_MEMORY_AWARE_PASS" else 2
 
 
