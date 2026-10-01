@@ -416,7 +416,7 @@ def _profile_worker(args: argparse.Namespace, profile: str, budget: int) -> int:
         nonlocal completion_number
         augmentation_id = augmentation_id_from_cell_key(cell_key)
         completion_number += 1
-        candidate = candidates_by_id[_augmentation_id]
+        candidate = candidates_by_id[augmentation_id]
         result = ready_result(cell)
         pool, valid, invalid = _candidate_payload(cell, candidate)
         cache = cell.cache_owner.cache if cell.cache_owner is not None else None
