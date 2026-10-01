@@ -156,7 +156,7 @@ def _unit_gate(args: argparse.Namespace) -> int:
         "independent_cache_owner_objects": completed.returncode == 0,
         "transition_preserves_dfs_state_and_candidate_pools": completed.returncode == 0,
         "cpu_only": True,
-        "gold_loaded": False,
+        "gold_not_loaded": True,
     }
     payload = {
         "experiment": EXPERIMENT,
