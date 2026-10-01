@@ -134,10 +134,17 @@ def _write_contract_files(args: argparse.Namespace) -> dict[str, Any]:
 def _unit_gate(args: argparse.Namespace) -> int:
     """Run the CPU-only mechanical scheduler gate and freeze its receipt."""
     contract = _write_contract_files(args)
+    harness = (
+        "import importlib.util; "
+        "spec=importlib.util.spec_from_file_location('memory_aware_scheduler_tests', "
+        "'tests/test_nvarc_turbodfs_dynamic_ready.py'); "
+        "module=importlib.util.module_from_spec(spec); spec.loader.exec_module(module); "
+        "module.test_dynamic_ready_generalizes_to_eight_independent_compatible_lanes(); "
+        "module.test_memory_aware_aug16_switches_once_to_fair_b8_without_resetting_cells(); "
+        "print('MEMORY_AWARE_AUG16_CPU_UNIT_GATE_PASS')"
+    )
     command = [
-        sys.executable, "-m", "pytest", "-q",
-        "tests/test_nvarc_turbodfs_dynamic_ready.py",
-        "-k", "memory_aware_aug16 or dynamic_ready_generalizes_to_eight",
+        sys.executable, "-c", harness,
     ]
     completed = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
     checks = {
