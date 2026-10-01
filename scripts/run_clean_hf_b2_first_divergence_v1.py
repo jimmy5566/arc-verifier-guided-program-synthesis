@@ -55,7 +55,13 @@ def _atomic_json(path: Path, value: dict[str, Any]) -> None:
 
 
 def _sha(tensor: Any) -> str:
+    import torch
+
     cpu = tensor.detach().contiguous().cpu()
+    # NumPy has no native BF16 dtype on this runtime.  Hash its raw IEEE/BF16
+    # words rather than widening values (which could erase a bit-level drift).
+    if cpu.dtype == torch.bfloat16:
+        cpu = cpu.view(torch.uint16)
     return hashlib.sha256(cpu.numpy().tobytes()).hexdigest()
 
 
