@@ -19,7 +19,7 @@ import hashlib
 import json
 import math
 import time
-from typing import Any, Callable
+from typing import Any, Callable, Literal
 
 from inference.nvarc_turbodfs_d1 import (
     D1TurboDFSConfig,
@@ -451,20 +451,81 @@ def _reply(cell: ReadyCell, outputs: Any) -> None:
     cell.request_count += 1
 
 
-def run_ready_scheduler(*, model: Any, cells: list[ReadyCell], dynamic_batch2: bool) -> dict[str, Any]:
-    """Drive independent cells in deterministic ready order with real B1/B2 calls."""
+SchedulingPolicy = Literal["serial", "round_robin", "dynamic_ready"]
+
+
+def _select_ready_cells(
+    *,
+    cells: list[ReadyCell],
+    scheduling_policy: SchedulingPolicy,
+    round_robin_cursor: int,
+) -> tuple[list[ReadyCell], int | None, int | None, list[str]]:
+    """Select the next logical B1 lane without changing its physical forward.
+
+    ``serial`` deliberately preserves the historical lexicographic scheduling
+    behaviour.  ``round_robin`` instead treats the supplied cell list as the
+    frozen logical order and advances its cursor after *every* B1 reply.  A
+    completed cell is the only cell that may be skipped by round-robin.
+
+    ``dynamic_ready`` keeps the deterministic lexical ready set used by the
+    future B2 scheduler; it is intentionally separate so a caller cannot
+    accidentally call that behaviour "round robin".
+    """
+    ready = [cell for cell in cells if cell.request is not None]
+    if not ready:
+        return [], None, None, []
+    if scheduling_policy == "round_robin":
+        if not cells:
+            return [], None, None, []
+        for offset in range(len(cells)):
+            index = (round_robin_cursor + offset) % len(cells)
+            cell = cells[index]
+            if cell.request is not None:
+                return [cell], index, (index + 1) % len(cells), [item.cell_key for item in ready]
+        raise AssertionError("ready set was nonempty but no round-robin cell was selected")
+    ordered = sorted(
+        ready,
+        key=lambda cell: (cell.cell_key, cell.request.ordinal if cell.request else -1),
+    )
+    return [ordered[0]], None, None, [item.cell_key for item in ordered]
+
+
+def run_ready_scheduler(
+    *,
+    model: Any,
+    cells: list[ReadyCell],
+    dynamic_batch2: bool,
+    scheduling_policy: SchedulingPolicy = "serial",
+) -> dict[str, Any]:
+    """Drive independent cells through one shared physical B1/B2 path.
+
+    Only READY-cell selection differs between policies.  The request
+    construction, cache merge/split, model invocation, reply, and DFS resume
+    path below are intentionally common to every policy.
+    """
     import torch
 
+    if scheduling_policy not in {"serial", "round_robin", "dynamic_ready"}:
+        raise ValueError(f"unknown scheduling policy: {scheduling_policy}")
+    if scheduling_policy == "round_robin" and dynamic_batch2:
+        raise ValueError("round_robin is a B1 policy and cannot enable physical B2")
     events: list[dict[str, Any]] = []
     forwards = 0
+    round_robin_cursor = 0
     while True:
-        ready = sorted((cell for cell in cells if cell.request is not None),
-                       key=lambda cell: (cell.cell_key, cell.request.ordinal if cell.request else -1))
-        if not ready:
+        selected, selected_index, next_cursor, ready_keys = _select_ready_cells(
+            cells=cells,
+            scheduling_policy=scheduling_policy,
+            round_robin_cursor=round_robin_cursor,
+        )
+        if not selected:
             break
-        first = ready[0]
-        selected = [first]
+        first = selected[0]
         if dynamic_batch2:
+            ready = sorted(
+                (cell for cell in cells if cell.request is not None),
+                key=lambda cell: (cell.cell_key, cell.request.ordinal if cell.request else -1),
+            )
             for other in ready[1:]:
                 if other.request is not None and other.request.cache_key == first.request.cache_key and other.request.position == first.request.position:
                     selected.append(other)
@@ -518,9 +579,23 @@ def run_ready_scheduler(*, model: Any, cells: list[ReadyCell], dynamic_batch2: b
             cell.state["model_forward_seconds"] += elapsed
             cell.active_elapsed_seconds += elapsed
             cell.state["active_elapsed_seconds"] += elapsed
-        events.append({"forward_index": forwards, "physical_batch": len(selected), "position": first.request.position,
-                       "cache_geometry": repr(first.request.cache_key), "cell_keys": [cell.cell_key for cell in selected],
-                       "wall_seconds": elapsed})
+        cursor_before = round_robin_cursor if scheduling_policy == "round_robin" else None
+        if scheduling_policy == "round_robin":
+            assert selected_index is not None and next_cursor is not None
+            round_robin_cursor = next_cursor
+        events.append({
+            "forward_index": forwards,
+            "physical_batch": len(selected),
+            "position": first.request.position,
+            "cache_geometry": repr(first.request.cache_key),
+            "cell_keys": [cell.cell_key for cell in selected],
+            "request_ordinals": [request.ordinal for request in requests],
+            "scheduling_policy": scheduling_policy,
+            "ready_cell_keys": ready_keys,
+            "round_robin_cursor_before": cursor_before,
+            "round_robin_cursor_after": round_robin_cursor if scheduling_policy == "round_robin" else None,
+            "wall_seconds": elapsed,
+        })
         for trace, cell, reply in zip(trace_inputs or [None] * len(selected), selected, outputs_by_cell, strict=True):
             _reply(cell, reply)
             if trace is not None:
@@ -531,7 +606,7 @@ def run_ready_scheduler(*, model: Any, cells: list[ReadyCell], dynamic_batch2: b
                 trace["output_cache_sha256"] = cache_sha256(reply.past_key_values)
                 cell.state["per_forward_trace"].append(trace)
         del outputs
-    return {"physical_forwards": forwards, "events": events,
+    return {"scheduling_policy": scheduling_policy, "physical_forwards": forwards, "events": events,
             "mean_effective_batch": (sum(row["physical_batch"] for row in events) / len(events)) if events else 0.0}
 
 

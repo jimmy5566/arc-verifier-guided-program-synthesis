@@ -89,6 +89,29 @@ def test_round_robin_b1_matches_scalar_without_physical_batching():
     assert all(normalized_result_signature(ready_result(cell)) == expected for cell in cells)
 
 
+def test_shared_scheduler_round_robin_advances_cursor_after_every_b1_reply():
+    """The common scheduler, not a mode label, must enforce A/B/C/D/A."""
+    prompt = torch.tensor([[2, 2]])
+    names = ("anti_transpose", "flip_ud", "identity", "transpose")
+    cells = [
+        start_ready_cell(
+            model=CacheTransitionModel(), input_ids=prompt, config=_config(),
+            cell_key=name, normalize_root_cache=False,
+        )
+        for name in names
+    ]
+    telemetry = run_ready_scheduler(
+        model=CacheTransitionModel(), cells=cells, dynamic_batch2=False,
+        scheduling_policy="round_robin",
+    )
+    assert [event["cell_keys"][0] for event in telemetry["events"][:8]] == list(names) * 2
+    assert all(event["physical_batch"] == 1 for event in telemetry["events"])
+    assert [event["round_robin_cursor_before"] for event in telemetry["events"][:4]] == [0, 1, 2, 3]
+    assert [event["round_robin_cursor_after"] for event in telemetry["events"][:4]] == [1, 2, 3, 0]
+    expected = normalized_result_signature(_scalar(prompt))
+    assert all(normalized_result_signature(ready_result(cell)) == expected for cell in cells)
+
+
 def test_active_time_budget_excludes_elapsed_queue_wall_time():
     config = _config()
     state = _new_state(config)

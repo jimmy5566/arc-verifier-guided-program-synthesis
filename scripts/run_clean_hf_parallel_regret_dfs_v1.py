@@ -194,7 +194,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             # Python process to make the whole four-view reference repeatable.
             cell = make_cell(view)
             cells.append(cell)
-            events.extend(run_ready_scheduler(model=model, cells=[cell], dynamic_batch2=False)["events"])
+            events.extend(run_ready_scheduler(
+                model=model, cells=[cell], dynamic_batch2=False, scheduling_policy="serial",
+            )["events"])
         scheduler = {"mode": "isolated", "physical_forwards": len(events), "events": events}
     else:
         # Shared phases intentionally create all roots up front; only the
@@ -205,10 +207,21 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     elif args.mode == "serial-shared":
         events = []
         for cell in cells:
-            events.extend(run_ready_scheduler(model=model, cells=[cell], dynamic_batch2=False)["events"])
+            events.extend(run_ready_scheduler(
+                model=model, cells=[cell], dynamic_batch2=False, scheduling_policy="serial",
+            )["events"])
         scheduler = {"mode": "serial-shared", "physical_forwards": len(events), "events": events}
     elif args.mode == "round-robin":
-        scheduler = {"mode": "round-robin", **run_ready_scheduler(model=model, cells=cells, dynamic_batch2=False)}
+        scheduler = {
+            "mode": "round-robin",
+            "frozen_logical_order": list(VIEWS),
+            **run_ready_scheduler(
+                model=model,
+                cells=cells,
+                dynamic_batch2=False,
+                scheduling_policy="round_robin",
+            ),
+        }
     else:  # pragma: no cover - argparse constrains this
         raise ValueError(args.mode)
     payload = {
