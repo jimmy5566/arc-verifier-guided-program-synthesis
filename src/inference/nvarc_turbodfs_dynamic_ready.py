@@ -605,7 +605,7 @@ def execute_ready_forward(
     cache_pack_observer: Callable[[str, dict[str, Any]], None] | None = None,
     release_batch_temporaries_for_audit: bool = False,
 ) -> tuple[list[Any], dict[str, float]]:
-    """Execute one real physical ready-cell forward for one to four lanes.
+    """Execute one real physical ready-cell forward for independent lanes.
 
     The production scheduler and bounded B4 characterization use this exact
     pack/forward/split/adoption path.  It deliberately owns neither READY
@@ -617,8 +617,12 @@ def execute_ready_forward(
 
     if not selected or len(selected) != len(requests):
         raise ValueError("selected cells and requests must be nonempty and aligned")
-    if len(selected) > 4:
-        raise ValueError("physical ready-cell batches above four are not implemented")
+    # The cache pack/split/adoption protocol is lane-count agnostic.  Keep a
+    # concrete upper bound solely as a malformed-caller guard; hardware
+    # characterization intentionally exercises B8/B12/B16 with independent
+    # cache owners, while the scientific B1--B4 scheduler remains unchanged.
+    if len(selected) > 16:
+        raise ValueError("physical ready-cell batches above sixteen are not implemented")
     if any(request is None for request in requests):  # pragma: no cover - type guard for external callers
         raise ValueError("physical ready-cell forward received an empty request")
     first = selected[0]
@@ -726,7 +730,7 @@ def run_ready_scheduler(
     collect_event_trace: bool = True,
     max_physical_batch: int | None = None,
 ) -> dict[str, Any]:
-    """Drive independent cells through one shared physical B1--B4 path.
+    """Drive independent cells through one shared physical batching path.
 
     Only READY-cell selection differs between policies.  The request
     construction, cache merge/split, model invocation, reply, and DFS resume
@@ -737,8 +741,8 @@ def run_ready_scheduler(
     if scheduling_policy not in {"serial", "round_robin", "dynamic_ready"}:
         raise ValueError(f"unknown scheduling policy: {scheduling_policy}")
     physical_limit = (2 if dynamic_batch2 else 1) if max_physical_batch is None else max_physical_batch
-    if physical_limit not in {1, 2, 4}:
-        raise ValueError("max_physical_batch must be one of 1, 2, or 4")
+    if physical_limit not in {1, 2, 4, 8, 12, 16}:
+        raise ValueError("max_physical_batch must be one of 1, 2, 4, 8, 12, or 16")
     if scheduling_policy == "round_robin" and physical_limit != 1:
         raise ValueError("round_robin is a B1 policy and cannot enable physical batching")
     events: list[dict[str, Any]] = []
@@ -748,6 +752,7 @@ def run_ready_scheduler(
     b2_forwards = 0
     b3_forwards = 0
     b4_forwards = 0
+    physical_batch_histogram: dict[int, int] = {}
     model_call_seconds_total = 0.0
     cache_pack_seconds_total = 0.0
     cache_adoption_seconds_total = 0.0
@@ -825,6 +830,7 @@ def run_ready_scheduler(
         b2_forwards += int(len(selected) == 2)
         b3_forwards += int(len(selected) == 3)
         b4_forwards += int(len(selected) == 4)
+        physical_batch_histogram[len(selected)] = physical_batch_histogram.get(len(selected), 0) + 1
         model_call_seconds_total += model_call_seconds
         cache_pack_seconds_total += cache_pack_seconds
         cache_adoption_seconds_total += cache_adoption_seconds
@@ -880,6 +886,7 @@ def run_ready_scheduler(
         "b2_forwards": b2_forwards,
         "b3_forwards": b3_forwards,
         "b4_forwards": b4_forwards,
+        "physical_batch_histogram": {str(width): count for width, count in sorted(physical_batch_histogram.items())},
         "logical_advances": logical_advances,
         "mean_effective_batch": logical_advances / forwards if forwards else 0.0,
         "active2_fraction": (2 * b2_forwards) / logical_advances if logical_advances else 0.0,

@@ -99,6 +99,30 @@ def test_dynamic_ready_generalizes_to_four_real_compatible_lanes():
     assert all(normalized_result_signature(ready_result(cell)) == expected for cell in cells)
 
 
+def test_dynamic_ready_generalizes_to_eight_independent_compatible_lanes():
+    """B8 reuses the physical cache path with eight distinct cache owners."""
+    prompt = torch.tensor([[2, 2]])
+    cells = [
+        start_ready_cell(
+            model=CacheTransitionModel(), input_ids=prompt, config=_config(),
+            cell_key=f"{view}:replica{replica}", normalize_root_cache=True,
+        )
+        for replica in range(2)
+        for view in ("anti_transpose", "flip_ud", "identity", "transpose")
+    ]
+    owner_ids = [id(cell.request.cache_owner.cache) for cell in cells if cell.request is not None]
+    telemetry = run_ready_scheduler(
+        model=CacheTransitionModel(), cells=cells, dynamic_batch2=True,
+        max_physical_batch=8, scheduling_policy="dynamic_ready",
+    )
+    assert telemetry["telemetry"]["physical_batch_histogram"] == {"8": telemetry["physical_forwards"]}
+    assert telemetry["telemetry"]["mean_effective_batch"] == 8.0
+    assert all(cell.request is None for cell in cells)
+    assert len(owner_ids) == len(set(owner_ids)) == 8
+    expected = normalized_result_signature(_scalar(prompt))
+    assert all(normalized_result_signature(ready_result(cell)) == expected for cell in cells)
+
+
 def test_round_robin_b1_matches_scalar_without_physical_batching():
     from scripts.run_current_eager_shared_b1_rebaseline import run_round_robin_b1
     from scripts.run_regret_dynamic_ready_b1_1 import _cell_key
