@@ -222,6 +222,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 scheduling_policy="round_robin",
             ),
         }
+    elif args.mode == "dynamic-ready":
+        scheduler = {
+            "mode": "dynamic-ready",
+            "frozen_logical_order": list(VIEWS),
+            **run_ready_scheduler(
+                model=model,
+                cells=cells,
+                dynamic_batch2=True,
+                scheduling_policy="dynamic_ready",
+            ),
+        }
     else:  # pragma: no cover - argparse constrains this
         raise ValueError(args.mode)
     payload = {
@@ -250,7 +261,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--native-config-dir", type=Path, required=True)
     parser.add_argument("--adapter-foundation", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--mode", choices=("isolated", "serial-shared", "round-robin"), required=True)
+    parser.add_argument("--mode", choices=("isolated", "serial-shared", "round-robin", "dynamic-ready"), required=True)
     parser.add_argument("--budget", type=int, choices=(128, 256, 4096), required=True)
     parser.add_argument("--task-id", default="d59b0160")
     parser.add_argument("--output-index", type=int, default=0)
