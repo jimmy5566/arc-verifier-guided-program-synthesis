@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REVIEW = ROOT / "experiments" / "l4_dual_ttt_dfs1024_bench_v1" / "kaggle_review"
-SOURCE_COMMIT = "177c19f1f3159e1fc5db95f16d7faa5d2096957f"
+SOURCE_COMMIT = "d6c1fd6fa56fa536d19f9171dc381955163b0dfc"
 
 
 def read(name: str) -> dict:

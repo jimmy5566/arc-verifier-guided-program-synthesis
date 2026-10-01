@@ -46,7 +46,7 @@
     ]
   },
   "authoritative_source_branch": "transfer/turbodfs-opt-v2-repair",
-  "authoritative_source_commit": "177c19f1f3159e1fc5db95f16d7faa5d2096957f",
+  "authoritative_source_commit": "d6c1fd6fa56fa536d19f9171dc381955163b0dfc",
   "benchmark_id": "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1",
   "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
   "environment": {

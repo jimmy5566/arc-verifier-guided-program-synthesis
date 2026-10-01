@@ -3,7 +3,7 @@
   "cohort_sha256": "d6d4c7ac9017e2d3005a17c9b9ffdcf7f0e6c59ecd273abd87ba43e618c6f8c7",
   "dataset_slug": "jimmy5566/arc2-l4-dual-ttt-dfs1024-bench-v1-source",
   "files": {
-    "SOURCE_PACKAGE_MANIFEST.json": "7129d47028dff3d6c8681a576f5dc1a88d0b04324a151b35b50b97d01d7f4d68",
+    "SOURCE_PACKAGE_MANIFEST.json": "d38b2822e52a42eeff9ae56834dae859b6ba85e044988781e18653fcea5a2e2b",
     "dataset/ARC2/configs/nvarc_native_846d0198/added_tokens.json": "55f6548a2d750982fc904054446a8dd4c1419dc8447f40a1b4263d42e88033f6",
     "dataset/ARC2/configs/nvarc_native_846d0198/chat_template.j2": "23664eed0d8ee3fda2a91a61f9462bd42b89c5b63417dc30d888cdb77c6035ef",
     "dataset/ARC2/configs/nvarc_native_846d0198/special_tokens_map.json": "8c5fde7d8405b5b7ca178eb6b3cf89fd94be5b9015aaa9bbb0f8d952adacda73",
@@ -22,7 +22,7 @@
     "dataset/ARC2/scripts/run_adaptive_ttt_step1.py": "d69c173af5184e4358be444cb7b1eb7124f2ac83c2e04c304b782116286ef433",
     "dataset/ARC2/scripts/run_eval3_reference_ttt.py": "477fac4230aa24eaa0edd4ec074568cbd3b4da87d8e632ae071055fed9d53168",
     "dataset/ARC2/scripts/run_eval60_adaptive_inference_joint_v2.py": "2244b64c326cb59e3f44b642b530d427ad72d24bd78cf95807cd11946a8d3855",
-    "dataset/ARC2/scripts/run_l4_dual_ttt_dfs1024_benchmark.py": "e3452d026c47755636483512f5a8f5da1c856077b75ea3122f2cca682d2f3f7d",
+    "dataset/ARC2/scripts/run_l4_dual_ttt_dfs1024_benchmark.py": "c6d2ea8d658ddfcf19e74372fca5783411d070ecd04c958d0778e6f9f591ef4e",
     "dataset/ARC2/scripts/turbodfs_d1_common.py": "7b95453c06750fdcbe39f41c290316eef8c8bb056adc4d38e555563f6c14774e",
     "dataset/ARC2/scripts/turbodfs_v4_common.py": "8d6d5065ad23696060231297093dfd0a53cce81d5131e33167ea3aa0df09ee64",
     "dataset/ARC2/src/arc/__init__.py": "134af3b5b892c0f229ebebf6e950d4f4250714dc509350f071bff6ab3e123b0b",
@@ -208,8 +208,8 @@
     "dataset/ARC2/src/verification/verifier.py": "69d7bf3fdd7f12bf3de79f3a401ea7622db1e2091d07a01a931972f3eac0266a",
     "dataset/BENCHMARK_COHORT_SHA256.txt": "d92b9ce732539c7c52f5a6c06e5e144a0b534971339ab8445bcaa995761eae19",
     "dataset/BENCHMARK_TASK_IDS.json": "de9fece24b2c85b959a80f33fbaec80642d4909498494bf6eadbc3666361c00a",
-    "dataset/SOURCE_IDENTITY.json": "5ffae720b17a6697ec8390f8435247abefd786a58c8d918deb521a347973aecb",
-    "dataset/benchmark_config_resolved.json": "8504acb406501b1ca087fd9347651345b8cb685c60d2a07371a995f049b71dc4",
+    "dataset/SOURCE_IDENTITY.json": "8da709311165b7d9d65e401ba5b42e827d48fc60d8f91b54476e0f09333f1bf8",
+    "dataset/benchmark_config_resolved.json": "41316d25576569318b2b0188ab0be597170c9bcaa240afd654c8a4ea8977cb77",
     "dataset/dataset-metadata.json": "a6925f5c7834984e0a88b72c3e3198123f92c5bdab9cb610699fbf3dd3ec37f7",
     "kernel/arc2-l4-dual-ttt-dfs1024-bench-v1.ipynb": "37e5ccf9c449850e109e7b18d552edbb1aa7cb6f56b2903f48af8e36a639c15b",
     "kernel/kernel-metadata.json": "138b0f5d819462019f2257628c459324bd56244fbf0ee41542c99bf52b530475"
@@ -217,8 +217,8 @@
   "kernel_metadata_sha256": "138b0f5d819462019f2257628c459324bd56244fbf0ee41542c99bf52b530475",
   "kernel_slug": "jimmy5566/arc2-l4-dual-ttt-dfs1024-bench-v1",
   "notebook_sha256": "37e5ccf9c449850e109e7b18d552edbb1aa7cb6f56b2903f48af8e36a639c15b",
-  "resolved_config_sha256": "8504acb406501b1ca087fd9347651345b8cb685c60d2a07371a995f049b71dc4",
+  "resolved_config_sha256": "41316d25576569318b2b0188ab0be597170c9bcaa240afd654c8a4ea8977cb77",
   "source_branch": "bench/l4-dual-ttt-dfs1024-v1",
-  "source_commit": "177c19f1f3159e1fc5db95f16d7faa5d2096957f",
+  "source_commit": "d6c1fd6fa56fa536d19f9171dc381955163b0dfc",
   "status": "PACKAGE_BUILT_NOT_PUSHED_NOT_LAUNCHED"
 }

@@ -5,7 +5,7 @@
   "previous_gpu_run_scientific_data": "NONE",
   "scientific_base_commit": "95827d06b6f99c7c47007a1b1035a11274f8c9a8",
   "source_branch": "bench/l4-dual-ttt-dfs1024-v1",
-  "source_commit": "177c19f1f3159e1fc5db95f16d7faa5d2096957f",
+  "source_commit": "d6c1fd6fa56fa536d19f9171dc381955163b0dfc",
   "source_git_status": "PACKAGED_CLEAN_FROM_GIT_ARCHIVE",
   "source_paths": [
     "src",

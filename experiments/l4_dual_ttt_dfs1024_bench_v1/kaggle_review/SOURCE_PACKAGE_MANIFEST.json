@@ -21,7 +21,7 @@
     "ARC2/scripts/run_adaptive_ttt_step1.py": "d69c173af5184e4358be444cb7b1eb7124f2ac83c2e04c304b782116286ef433",
     "ARC2/scripts/run_eval3_reference_ttt.py": "477fac4230aa24eaa0edd4ec074568cbd3b4da87d8e632ae071055fed9d53168",
     "ARC2/scripts/run_eval60_adaptive_inference_joint_v2.py": "2244b64c326cb59e3f44b642b530d427ad72d24bd78cf95807cd11946a8d3855",
-    "ARC2/scripts/run_l4_dual_ttt_dfs1024_benchmark.py": "e3452d026c47755636483512f5a8f5da1c856077b75ea3122f2cca682d2f3f7d",
+    "ARC2/scripts/run_l4_dual_ttt_dfs1024_benchmark.py": "c6d2ea8d658ddfcf19e74372fca5783411d070ecd04c958d0778e6f9f591ef4e",
     "ARC2/scripts/turbodfs_d1_common.py": "7b95453c06750fdcbe39f41c290316eef8c8bb056adc4d38e555563f6c14774e",
     "ARC2/scripts/turbodfs_v4_common.py": "8d6d5065ad23696060231297093dfd0a53cce81d5131e33167ea3aa0df09ee64",
     "ARC2/src/arc/__init__.py": "134af3b5b892c0f229ebebf6e950d4f4250714dc509350f071bff6ab3e123b0b",
@@ -207,10 +207,10 @@
     "ARC2/src/verification/verifier.py": "69d7bf3fdd7f12bf3de79f3a401ea7622db1e2091d07a01a931972f3eac0266a",
     "BENCHMARK_COHORT_SHA256.txt": "d92b9ce732539c7c52f5a6c06e5e144a0b534971339ab8445bcaa995761eae19",
     "BENCHMARK_TASK_IDS.json": "de9fece24b2c85b959a80f33fbaec80642d4909498494bf6eadbc3666361c00a",
-    "SOURCE_IDENTITY.json": "5ffae720b17a6697ec8390f8435247abefd786a58c8d918deb521a347973aecb",
-    "benchmark_config_resolved.json": "8504acb406501b1ca087fd9347651345b8cb685c60d2a07371a995f049b71dc4",
+    "SOURCE_IDENTITY.json": "8da709311165b7d9d65e401ba5b42e827d48fc60d8f91b54476e0f09333f1bf8",
+    "benchmark_config_resolved.json": "41316d25576569318b2b0188ab0be597170c9bcaa240afd654c8a4ea8977cb77",
     "dataset-metadata.json": "a6925f5c7834984e0a88b72c3e3198123f92c5bdab9cb610699fbf3dd3ec37f7"
   },
   "scientific_base_commit": "95827d06b6f99c7c47007a1b1035a11274f8c9a8",
-  "source_commit": "177c19f1f3159e1fc5db95f16d7faa5d2096957f"
+  "source_commit": "d6c1fd6fa56fa536d19f9171dc381955163b0dfc"
 }
