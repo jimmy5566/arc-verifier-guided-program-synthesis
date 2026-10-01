@@ -1,0 +1,629 @@
+{
+  "canary_phases": {
+    "R256": {
+      "checks": {
+        "all_cells_complete": true,
+        "all_expected_logical_cells": true,
+        "budget_accounting": true,
+        "candidate_accounting": true,
+        "capacity_does_not_exceed_output_required_bound": true,
+        "capacity_is_256_block_aligned": true,
+        "chunked_owner_representation": true,
+        "finite_candidate_scores": true,
+        "no_lane_swap_or_request_position_fault": true,
+        "no_oom": true,
+        "owner_identity_preserved": true,
+        "owner_storage_independent": true,
+        "suffix_adoption_keeps_owner": true,
+        "valid_length_never_exceeds_capacity": true
+      },
+      "failures": [],
+      "owner_after": {
+        "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297385294352,
+          "storage_ptr": 128297142845440
+        },
+        "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297385748880,
+          "storage_ptr": 128271316418560
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297386166864,
+          "storage_ptr": 128272802250752
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+          "logical_length": 1928,
+          "owner_id": 128297385580496,
+          "storage_ptr": 128270075428864
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297449352400,
+          "storage_ptr": 128277764112384
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128294163523920,
+          "storage_ptr": 128271594291200
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297556109008,
+          "storage_ptr": 128273031888896
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": {
+          "logical_length": 1928,
+          "owner_id": 128297519095696,
+          "storage_ptr": 128271082061824
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128294163413840,
+          "storage_ptr": 128272533815296
+        },
+        "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297385637840,
+          "storage_ptr": 128273598119936
+        },
+        "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": {
+          "logical_length": 1928,
+          "owner_id": 128297519090448,
+          "storage_ptr": 128264486010880
+        },
+        "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297385283344,
+          "storage_ptr": 128273195466752
+        },
+        "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297385053520,
+          "storage_ptr": 128273947820032
+        },
+        "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297385543760,
+          "storage_ptr": 128271996944384
+        },
+        "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297390940112,
+          "storage_ptr": 128278257991680
+        },
+        "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": {
+          "logical_length": 1928,
+          "owner_id": 128297385170832,
+          "storage_ptr": 128270406254592
+        }
+      },
+      "owner_before": {
+        "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297385294352,
+          "storage_ptr": 128275942735872
+        },
+        "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297385748880,
+          "storage_ptr": 128273476485120
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297386166864,
+          "storage_ptr": 128272859922432
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+          "logical_length": 1928,
+          "owner_id": 128297385580496,
+          "storage_ptr": 128278375186432
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297449352400,
+          "storage_ptr": 128275980238848
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128294163523920,
+          "storage_ptr": 128272129622016
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297556109008,
+          "storage_ptr": 128276148011008
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": {
+          "logical_length": 1928,
+          "owner_id": 128297519095696,
+          "storage_ptr": 128270980874240
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128294163413840,
+          "storage_ptr": 128273041514496
+        },
+        "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297385637840,
+          "storage_ptr": 128273483399168
+        },
+        "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": {
+          "logical_length": 1928,
+          "owner_id": 128297519090448,
+          "storage_ptr": 128275891912704
+        },
+        "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297385283344,
+          "storage_ptr": 128273037320192
+        },
+        "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297385053520,
+          "storage_ptr": 128275849969664
+        },
+        "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297385543760,
+          "storage_ptr": 128272620847104
+        },
+        "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 128297390940112,
+          "storage_ptr": 128278329049088
+        },
+        "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": {
+          "logical_length": 1928,
+          "owner_id": 128297385170832,
+          "storage_ptr": 128297157279744
+        }
+      },
+      "root_adaptive_final_capacity": 3072,
+      "status": "PASS"
+    },
+    "R4096": {
+      "checks": {
+        "all_cells_complete": true,
+        "all_expected_logical_cells": true,
+        "budget_accounting": true,
+        "candidate_accounting": true,
+        "capacity_does_not_exceed_output_required_bound": true,
+        "capacity_is_256_block_aligned": true,
+        "chunked_owner_representation": true,
+        "finite_candidate_scores": true,
+        "no_lane_swap_or_request_position_fault": true,
+        "no_oom": true,
+        "owner_identity_preserved": true,
+        "owner_storage_independent": true,
+        "suffix_adoption_keeps_owner": true,
+        "valid_length_never_exceeds_capacity": true
+      },
+      "failures": [],
+      "owner_after": {
+        "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530844289936,
+          "storage_ptr": 132530528321536
+        },
+        "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530276331280,
+          "storage_ptr": 132503402708992
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530815152272,
+          "storage_ptr": 132504979767296
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+          "logical_length": 1928,
+          "owner_id": 132530717087696,
+          "storage_ptr": 132502099329024
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530814237392,
+          "storage_ptr": 132509788012544
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530281365200,
+          "storage_ptr": 132503742971904
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530814237456,
+          "storage_ptr": 132502664511488
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": {
+          "logical_length": 1928,
+          "owner_id": 132530846914832,
+          "storage_ptr": 132502932946944
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530281522448,
+          "storage_ptr": 132504485888000
+        },
+        "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530282057040,
+          "storage_ptr": 132505828065280
+        },
+        "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": {
+          "logical_length": 1928,
+          "owner_id": 132530844292816,
+          "storage_ptr": 132502606839808
+        },
+        "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530813891024,
+          "storage_ptr": 132505358303232
+        },
+        "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530814532048,
+          "storage_ptr": 132506221281280
+        },
+        "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530282078608,
+          "storage_ptr": 132504217452544
+        },
+        "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530716994128,
+          "storage_ptr": 132510257774592
+        },
+        "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": {
+          "logical_length": 1928,
+          "owner_id": 132530276488272,
+          "storage_ptr": 132496706519040
+        }
+      },
+      "owner_before": {
+        "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530844289936,
+          "storage_ptr": 132507827699712
+        },
+        "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530276331280,
+          "storage_ptr": 132503536926720
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530815152272,
+          "storage_ptr": 132507764539392
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+          "logical_length": 1928,
+          "owner_id": 132530717087696,
+          "storage_ptr": 132503075553280
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530814237392,
+          "storage_ptr": 132507999420416
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530281365200,
+          "storage_ptr": 132507776630784
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530814237456,
+          "storage_ptr": 132508167192576
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": {
+          "logical_length": 1928,
+          "owner_id": 132530846914832,
+          "storage_ptr": 132503080984576
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530281522448,
+          "storage_ptr": 132504514199552
+        },
+        "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530282057040,
+          "storage_ptr": 132505603244032
+        },
+        "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": {
+          "logical_length": 1928,
+          "owner_id": 132530844292816,
+          "storage_ptr": 132502672408576
+        },
+        "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530813891024,
+          "storage_ptr": 132507693481984
+        },
+        "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530814532048,
+          "storage_ptr": 132506229669888
+        },
+        "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530282078608,
+          "storage_ptr": 132505617055744
+        },
+        "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132530716994128,
+          "storage_ptr": 132510348230656
+        },
+        "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": {
+          "logical_length": 1928,
+          "owner_id": 132530276488272,
+          "storage_ptr": 132504451284992
+        }
+      },
+      "root_adaptive_final_capacity": 3072,
+      "status": "PASS"
+    },
+    "R512": {
+      "checks": {
+        "all_cells_complete": true,
+        "all_expected_logical_cells": true,
+        "budget_accounting": true,
+        "candidate_accounting": true,
+        "capacity_does_not_exceed_output_required_bound": true,
+        "capacity_is_256_block_aligned": true,
+        "chunked_owner_representation": true,
+        "finite_candidate_scores": true,
+        "no_lane_swap_or_request_position_fault": true,
+        "no_oom": true,
+        "owner_identity_preserved": true,
+        "owner_storage_independent": true,
+        "suffix_adoption_keeps_owner": true,
+        "valid_length_never_exceeds_capacity": true
+      },
+      "failures": [],
+      "owner_after": {
+        "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132556383117968,
+          "storage_ptr": 132556130353152
+        },
+        "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555912007504,
+          "storage_ptr": 132528937631744
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555916436624,
+          "storage_ptr": 132530514690048
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+          "logical_length": 1928,
+          "owner_id": 132553093643024,
+          "storage_ptr": 132527634251776
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132556382043856,
+          "storage_ptr": 132535356489728
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555912169104,
+          "storage_ptr": 132529277894656
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555913970320,
+          "storage_ptr": 132528199434240
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": {
+          "logical_length": 1928,
+          "owner_id": 132553093156048,
+          "storage_ptr": 132528467869696
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555912207376,
+          "storage_ptr": 132530020810752
+        },
+        "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555912436368,
+          "storage_ptr": 132531362988032
+        },
+        "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": {
+          "logical_length": 1928,
+          "owner_id": 132555911757328,
+          "storage_ptr": 132528141762560
+        },
+        "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132556434072656,
+          "storage_ptr": 132530893225984
+        },
+        "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555911908368,
+          "storage_ptr": 132531722649600
+        },
+        "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132556382001936,
+          "storage_ptr": 132529752375296
+        },
+        "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132556382582864,
+          "storage_ptr": 132535826251776
+        },
+        "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": {
+          "logical_length": 1928,
+          "owner_id": 132555915539280,
+          "storage_ptr": 132522241441792
+        }
+      },
+      "owner_before": {
+        "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132556383117968,
+          "storage_ptr": 132533396176896
+        },
+        "d59b0160:o0:d24:aug16:geom=anti_transpose__color=p05_5436201789__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555912007504,
+          "storage_ptr": 132529071849472
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_lr__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555916436624,
+          "storage_ptr": 132533333016576
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_lr__color=p07_7690351428__order=rotate_left_1": {
+          "logical_length": 1928,
+          "owner_id": 132553093643024,
+          "storage_ptr": 132528610476032
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_ud__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132556382043856,
+          "storage_ptr": 132533567897600
+        },
+        "d59b0160:o0:d24:aug16:geom=flip_ud__color=p03_5980213764__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555912169104,
+          "storage_ptr": 132533345107968
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555913970320,
+          "storage_ptr": 132533735669760
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=id__order=reverse": {
+          "logical_length": 1928,
+          "owner_id": 132553093156048,
+          "storage_ptr": 132528615907328
+        },
+        "d59b0160:o0:d24:aug16:geom=identity__color=p00_4150723698__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555912207376,
+          "storage_ptr": 132530049122304
+        },
+        "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555912436368,
+          "storage_ptr": 132531138166784
+        },
+        "d59b0160:o0:d24:aug16:geom=rot180__color=id__order=rotate_left_1": {
+          "logical_length": 1928,
+          "owner_id": 132555911757328,
+          "storage_ptr": 132528207331328
+        },
+        "d59b0160:o0:d24:aug16:geom=rot270__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132556434072656,
+          "storage_ptr": 132533261959168
+        },
+        "d59b0160:o0:d24:aug16:geom=rot90__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132555911908368,
+          "storage_ptr": 132531731038208
+        },
+        "d59b0160:o0:d24:aug16:geom=rot90__color=p02_4950812673__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132556382001936,
+          "storage_ptr": 132531151978496
+        },
+        "d59b0160:o0:d24:aug16:geom=transpose__color=id__order=canonical": {
+          "logical_length": 1928,
+          "owner_id": 132556382582864,
+          "storage_ptr": 132535916707840
+        },
+        "d59b0160:o0:d24:aug16:geom=transpose__color=p01_1602397845__order=reverse": {
+          "logical_length": 1928,
+          "owner_id": 132555915539280,
+          "storage_ptr": 132529986207744
+        }
+      },
+      "root_adaptive_final_capacity": 3072,
+      "status": "PASS"
+    }
+  },
+  "canary_r128": {
+    "checks": {
+      "aug16_exact_cell_set": true,
+      "candidate_pools": true,
+      "chunked_complete": true,
+      "nodes": true,
+      "reference_complete": true,
+      "semantic_chunked": true,
+      "semantic_reference": true,
+      "terminations": true
+    },
+    "chunked_raw_sha256": "26e51ddc1ba2a752647baad160b5d6ca5d183985fa46509fd00d9a9a3283ce4f",
+    "first_difference": {
+      "cell_key": "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical",
+      "chunked": {
+        "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+        "budget_exhausted": true,
+        "cache_block_tokens": 256,
+        "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+        "capacity_length": 2304,
+        "cell_key": "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical",
+        "completed_candidates": 0,
+        "finite_candidate_scores": true,
+        "invalid_candidates": 0,
+        "model_forwards": 129,
+        "nodes_expanded": 128,
+        "owner_id_stable": true,
+        "termination_reason": "budget_exhausted",
+        "tokens_advanced": 128,
+        "valid_candidates": 0,
+        "valid_length": 1928
+      },
+      "reference": {
+        "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+        "budget_exhausted": true,
+        "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+        "cell_key": "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical",
+        "completed_candidates": 0,
+        "finite_candidate_scores": true,
+        "invalid_candidates": 0,
+        "model_forwards": 129,
+        "nodes_expanded": 128,
+        "termination_reason": "budget_exhausted",
+        "tokens_advanced": 128,
+        "valid_candidates": 0
+      }
+    },
+    "reference_raw_sha256": "722fd113f81d87b6827901564e8852ab5ff0bc5911a82de9e8dd812c3c56481a",
+    "status": "PASS"
+  },
+  "non_s": {
+    "PROFILE_L": null,
+    "PROFILE_M": null,
+    "PROFILE_XL": null,
+    "PROFILE_XXL": null
+  },
+  "unit": {
+    "checks": {
+      "cpu_only": true,
+      "fixed_b8_fair_split": true,
+      "gold_not_loaded": true,
+      "profile_boundaries": true,
+      "rollback_capacity_stability": true,
+      "root_adaptive_capacity": true
+    },
+    "returncode": 0,
+    "status": "PASS",
+    "stderr": "",
+    "stdout": "ROOT_ADAPTIVE_UNIT_PASS\n"
+  }
+}

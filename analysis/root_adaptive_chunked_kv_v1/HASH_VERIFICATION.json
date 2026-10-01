@@ -1,0 +1,15 @@
+{
+  "artifact_source": "/root/arc-runtime-3090-v2/active_run/root_adaptive_chunked_kv_v1",
+  "verification": "copied-file SHA256 against the remote HASHES.json ledger",
+  "verified_entries": 25,
+  "ledger_entries": 26,
+  "status": "PARTIAL_LOG_MUTATION",
+  "mismatch": {
+    "file": "controller.log",
+    "expected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_sha256": "79c097bf7c292c80ef987ad158b86e9b41f17ef100210b21a487ba48461057f0",
+    "reason": "HASHES.json was written before the controller emitted its terminal classification line; all scientific result JSON, progress receipts, contracts, gates, and worker logs match the ledger."
+  },
+  "scientific_result_artifacts_hash_valid": true,
+  "gold_loaded": false
+}

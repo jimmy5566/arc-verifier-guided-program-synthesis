@@ -1,0 +1,185 @@
+{
+  "augmentation_ids_sha256": "9538b5135a743c7536213440e8d3c41c0e8ab7eac0a982320ca9838681d707c3",
+  "authoritative_prior_evidence_commit": "6007de8e71230fabfb1aa5c6d2f74b0e50a72724",
+  "canary": {
+    "audit": {
+      "aug00_token_length": 1928,
+      "aug01_token_length": 1928,
+      "aug02_token_length": 1928,
+      "aug03_token_length": 1928,
+      "aug04_token_length": 1928,
+      "aug05_token_length": 1928,
+      "aug06_token_length": 1928,
+      "aug07_token_length": 1928,
+      "aug08_token_length": 1928,
+      "aug09_token_length": 1928,
+      "aug10_token_length": 1928,
+      "aug11_token_length": 1928,
+      "aug12_token_length": 1928,
+      "aug13_token_length": 1928,
+      "aug14_token_length": 1928,
+      "aug15_token_length": 1928,
+      "augmentation_ids": [
+        "geom=identity__color=id__order=canonical",
+        "geom=flip_ud__color=id__order=canonical",
+        "geom=transpose__color=id__order=canonical",
+        "geom=anti_transpose__color=id__order=canonical",
+        "geom=rot90__color=id__order=canonical",
+        "geom=rot180__color=id__order=canonical",
+        "geom=rot270__color=id__order=canonical",
+        "geom=flip_lr__color=id__order=canonical",
+        "geom=identity__color=p00_4150723698__order=canonical",
+        "geom=rot90__color=p02_4950812673__order=canonical",
+        "geom=flip_ud__color=p03_5980213764__order=canonical",
+        "geom=anti_transpose__color=p05_5436201789__order=canonical",
+        "geom=identity__color=id__order=reverse",
+        "geom=rot180__color=id__order=rotate_left_1",
+        "geom=transpose__color=p01_1602397845__order=reverse",
+        "geom=flip_lr__color=p07_7690351428__order=rotate_left_1"
+      ],
+      "final_required_kv_capacity": 3072,
+      "initial_kv_capacity": 2048,
+      "output_id": "d59b0160:o0",
+      "output_index": 0,
+      "physical_batch_ceiling": 16,
+      "profile": "PROFILE_S",
+      "resident_group_count": 1,
+      "resident_groups": [
+        [
+          "geom=identity__color=id__order=canonical",
+          "geom=flip_ud__color=id__order=canonical",
+          "geom=transpose__color=id__order=canonical",
+          "geom=anti_transpose__color=id__order=canonical",
+          "geom=rot90__color=id__order=canonical",
+          "geom=rot180__color=id__order=canonical",
+          "geom=rot270__color=id__order=canonical",
+          "geom=flip_lr__color=id__order=canonical",
+          "geom=identity__color=p00_4150723698__order=canonical",
+          "geom=rot90__color=p02_4950812673__order=canonical",
+          "geom=flip_ud__color=p03_5980213764__order=canonical",
+          "geom=anti_transpose__color=p05_5436201789__order=canonical",
+          "geom=identity__color=id__order=reverse",
+          "geom=rot180__color=id__order=rotate_left_1",
+          "geom=transpose__color=p01_1602397845__order=reverse",
+          "geom=flip_lr__color=p07_7690351428__order=rotate_left_1"
+        ]
+      ],
+      "resident_width": 16,
+      "root_length_max": 1928,
+      "root_length_mean": 1928.0,
+      "root_length_min": 1928,
+      "task_id": "d59b0160",
+      "unique_prompt_lengths": 1
+    },
+    "depth": 24,
+    "execution_plan": {
+      "final_required_kv_capacity": 3072,
+      "initial_kv_capacity": 2048,
+      "profile": "PROFILE_S",
+      "resident_groups": [
+        [
+          "geom=identity__color=id__order=canonical",
+          "geom=flip_ud__color=id__order=canonical",
+          "geom=transpose__color=id__order=canonical",
+          "geom=anti_transpose__color=id__order=canonical",
+          "geom=rot90__color=id__order=canonical",
+          "geom=rot180__color=id__order=canonical",
+          "geom=rot270__color=id__order=canonical",
+          "geom=flip_lr__color=id__order=canonical",
+          "geom=identity__color=p00_4150723698__order=canonical",
+          "geom=rot90__color=p02_4950812673__order=canonical",
+          "geom=flip_ud__color=p03_5980213764__order=canonical",
+          "geom=anti_transpose__color=p05_5436201789__order=canonical",
+          "geom=identity__color=id__order=reverse",
+          "geom=rot180__color=id__order=rotate_left_1",
+          "geom=transpose__color=p01_1602397845__order=reverse",
+          "geom=flip_lr__color=p07_7690351428__order=rotate_left_1"
+        ]
+      ]
+    },
+    "output_index": 0,
+    "task_id": "d59b0160"
+  },
+  "candidate_pool_sha256": "a16e4194e7597e83e55c180896125638cfd595b108b4c935d5cd742058c90a13",
+  "chunked_kv": {
+    "allowed_empty_cache": "at explicit completed resident-group boundary only",
+    "block_tokens": 256,
+    "empty_cache_inside_dfs": false,
+    "final_required_capacity": "ceil((root_max + 931) / 256) * 256",
+    "growth": "+256 only when valid length requires it",
+    "initial_capacity": "ceil(root_length / 256) * 256",
+    "rollback": "valid_length_only_without_capacity_shrink",
+    "universal_3072": false
+  },
+  "cohort_layout": {
+    "frozen_source_outputs": 89,
+    "target_blind_addressable_outputs": 87,
+    "unavailable_outputs": [
+      {
+        "available_test_inputs": 1,
+        "output_id": "4a21e3da:o1",
+        "reason": "OUTPUT_INDEX_ABSENT_FROM_CURRENT_TARGET_BLIND_CHALLENGE"
+      },
+      {
+        "available_test_inputs": 2,
+        "output_id": "b6f77b65:o2",
+        "reason": "OUTPUT_INDEX_ABSENT_FROM_CURRENT_TARGET_BLIND_CHALLENGE"
+      }
+    ]
+  },
+  "experiment": "ROOT_ADAPTIVE_CHUNKED_KV_V1",
+  "gold_loaded": false,
+  "project_augmentation_set": "PROJECT_RESEARCH_AUG16",
+  "root_profile_audit_sha256": "29b2a8817eb755a6cb59719940151d13114d423e6ba0ba06482ad383c84d4b2f",
+  "root_profile_table": {
+    "PROFILE_L": {
+      "max_root": 6493,
+      "min_root": 2654,
+      "physical_batch": 8,
+      "resident_width": 8
+    },
+    "PROFILE_M": {
+      "max_root": 2653,
+      "min_root": 2049,
+      "physical_batch": 8,
+      "resident_width": 16
+    },
+    "PROFILE_OVERSIZE": {
+      "action": "NO_UNSAFE_MULTICELL_SEARCH",
+      "min_root": 36702
+    },
+    "PROFILE_S": {
+      "b16_to_b8": true,
+      "max_root": 2048,
+      "physical_batch": 16,
+      "resident_width": 16
+    },
+    "PROFILE_XL": {
+      "max_root": 17245,
+      "min_root": 6494,
+      "physical_batch": 4,
+      "resident_width": 4
+    },
+    "PROFILE_XXL": {
+      "max_root": 36701,
+      "min_root": 17246,
+      "physical_batch": 2,
+      "resident_width": 2
+    }
+  },
+  "scientific_contract": {
+    "checkpoint": "Qwen3-4B",
+    "decoder_policy": "CUMULATIVE_REGRET_r=4.00",
+    "diagnostic_trace": false,
+    "dtype": "BF16",
+    "frontier_floor": 1,
+    "inference_backend": "Clean Transformers + PEFT",
+    "max_completed_candidates": 32,
+    "max_expanded_nodes": 4096,
+    "max_new_tokens": 931,
+    "ttt_backend": "Unsloth adaptation only",
+    "ttt_depth": 24
+  },
+  "source_commit": "922041c69dcce7b03da5497ddedee8222ead84fa",
+  "target_blind": true
+}

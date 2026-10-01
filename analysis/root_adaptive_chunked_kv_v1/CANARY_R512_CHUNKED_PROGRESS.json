@@ -1,0 +1,12 @@
+{
+  "allocated_bytes": 13886206976,
+  "driver_free_bytes": 879755264,
+  "fragmentation_ratio": 0.42331828316876413,
+  "phase": "R512",
+  "physical_batch": 1,
+  "physical_forward_index": 1984,
+  "reserved_bytes": 24079499264,
+  "reserved_unallocated_bytes": 10193292288,
+  "scheduler_mode": "B8_SPLIT_MODE",
+  "target_blind": true
+}

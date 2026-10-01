@@ -1,0 +1,50 @@
+{
+  "checks": {
+    "aug16_exact_cell_set": true,
+    "candidate_pools": true,
+    "chunked_complete": true,
+    "nodes": true,
+    "reference_complete": true,
+    "semantic_chunked": true,
+    "semantic_reference": true,
+    "terminations": true
+  },
+  "chunked_raw_sha256": "26e51ddc1ba2a752647baad160b5d6ca5d183985fa46509fd00d9a9a3283ce4f",
+  "first_difference": {
+    "cell_key": "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical",
+    "chunked": {
+      "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+      "budget_exhausted": true,
+      "cache_block_tokens": 256,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "capacity_length": 2304,
+      "cell_key": "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "owner_id_stable": true,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0,
+      "valid_length": 1928
+    },
+    "reference": {
+      "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+      "budget_exhausted": true,
+      "candidate_pool_sha256": "cf1cbb66a638b4860a516671fb74850e6ccf787fe6c4c8d29e9c04efe880bd05",
+      "cell_key": "d59b0160:o0:d24:aug16:geom=anti_transpose__color=id__order=canonical",
+      "completed_candidates": 0,
+      "finite_candidate_scores": true,
+      "invalid_candidates": 0,
+      "model_forwards": 129,
+      "nodes_expanded": 128,
+      "termination_reason": "budget_exhausted",
+      "tokens_advanced": 128,
+      "valid_candidates": 0
+    }
+  },
+  "reference_raw_sha256": "722fd113f81d87b6827901564e8852ab5ff0bc5911a82de9e8dd812c3c56481a",
+  "status": "PASS"
+}

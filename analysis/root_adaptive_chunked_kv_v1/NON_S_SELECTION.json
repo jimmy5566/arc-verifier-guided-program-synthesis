@@ -1,0 +1,30 @@
+{
+  "gold_loaded": false,
+  "selected": {
+    "PROFILE_L": {
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/c4d067a0/depth_024",
+      "output_id": "c4d067a0:o0",
+      "output_index": 0,
+      "profile": "PROFILE_L",
+      "selection_rule": "minimum sha256(output_id) among frozen profile members with mounted authoritative depth_024 adapter",
+      "task_id": "c4d067a0"
+    },
+    "PROFILE_M": {
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/3a25b0d8/depth_024",
+      "output_id": "3a25b0d8:o1",
+      "output_index": 1,
+      "profile": "PROFILE_M",
+      "selection_rule": "minimum sha256(output_id) among frozen profile members with mounted authoritative depth_024 adapter",
+      "task_id": "3a25b0d8"
+    },
+    "PROFILE_XL": {
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/981571dc/depth_024",
+      "output_id": "981571dc:o0",
+      "output_index": 0,
+      "profile": "PROFILE_XL",
+      "selection_rule": "minimum sha256(output_id) among frozen profile members with mounted authoritative depth_024 adapter",
+      "task_id": "981571dc"
+    }
+  },
+  "target_blind": true
+}

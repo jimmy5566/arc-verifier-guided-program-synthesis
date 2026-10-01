@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "cpu_only": true,
+    "fixed_b8_fair_split": true,
+    "gold_not_loaded": true,
+    "profile_boundaries": true,
+    "rollback_capacity_stability": true,
+    "root_adaptive_capacity": true
+  },
+  "returncode": 0,
+  "status": "PASS",
+  "stderr": "",
+  "stdout": "ROOT_ADAPTIVE_UNIT_PASS\n"
+}
