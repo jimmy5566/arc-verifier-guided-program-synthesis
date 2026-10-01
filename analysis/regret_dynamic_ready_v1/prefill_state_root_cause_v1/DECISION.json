@@ -1,0 +1,34 @@
+{
+  "causal_classification": "FOREIGN_INCREMENTAL_HISTORY_REQUIRED",
+  "dynamic_b2_executed": false,
+  "dynamic_b2_safe_next": false,
+  "experiment": "REGRET_PREFILL_STATE_ROOT_CAUSE_V1",
+  "final_isolated_semantic_parity": "NOT_RUN_DUE_TO_PRIOR_GATE",
+  "final_shared_b1_parity": "NOT_RUN_DUE_TO_PRIOR_GATE",
+  "first_divergent_layer_or_operation": "FLIP_FIRST_INCREMENTAL_AFTER_N1_FOREIGN_INCREMENTAL;LAYER_NOT_ESTABLISHED",
+  "first_level_trace_source_commit": "2ce36a6cb12db38147dad5cf3f60e360bb69eb02",
+  "foreign_incremental_history_first_drift": 1,
+  "foreign_prefill_alone_changes_flip": false,
+  "gold_accessed": false,
+  "history_sweep_source_commit": "9c6d12d81afeee88075e7a5ed8483dffa6f1561f",
+  "layer_trace_status": "NOT_ESTABLISHED_UNSLOTH_FASTPATH_BYPASSES_HOOKS_AND_OMITS_HIDDEN_STATES",
+  "legacy_pair": {
+    "arc_logits_same": true,
+    "arc_logprobs_same": true,
+    "arc_ranking_same": true,
+    "full_logits_sha256_same": true,
+    "retained_regret_successors_same": true,
+    "strict_forward_parity": true
+  },
+  "micro_fix_parity": "NOT_RUN_DUE_TO_PRIOR_GATE",
+  "minimal_fix": "NOT_IDENTIFIED",
+  "native_pair": {
+    "arc_logits_same": true,
+    "arc_logprobs_same": true,
+    "arc_ranking_same": true,
+    "full_logits_sha256_same": true,
+    "retained_regret_successors_same": true,
+    "strict_forward_parity": true
+  },
+  "next": "STOP_FOR_REVIEW"
+}

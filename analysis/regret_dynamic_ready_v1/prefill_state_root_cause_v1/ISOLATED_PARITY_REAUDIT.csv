@@ -1,0 +1,5 @@
+cell_key,view,old_raw_branch_parity,new_canonical_branch_parity,old_raw_trace_parity,new_canonical_trace_parity,normalized_signature_parity,strict_semantic_parity,provenance
+d59b0160:o0:d24:identity,identity,False,INDETERMINATE_REPEAT_PAYLOAD_NOT_FROZEN,False,INDETERMINATE_REPEAT_PAYLOAD_NOT_FROZEN,True,INDETERMINATE_REPEAT_PAYLOAD_NOT_FROZEN,phase2 full snapshot was not frozen; only prior CSV survives
+d59b0160:o0:d24:flip_ud,flip_ud,False,INDETERMINATE_REPEAT_PAYLOAD_NOT_FROZEN,False,INDETERMINATE_REPEAT_PAYLOAD_NOT_FROZEN,True,INDETERMINATE_REPEAT_PAYLOAD_NOT_FROZEN,phase2 full snapshot was not frozen; only prior CSV survives
+d59b0160:o0:d24:transpose,transpose,False,INDETERMINATE_REPEAT_PAYLOAD_NOT_FROZEN,False,INDETERMINATE_REPEAT_PAYLOAD_NOT_FROZEN,True,INDETERMINATE_REPEAT_PAYLOAD_NOT_FROZEN,phase2 full snapshot was not frozen; only prior CSV survives
+d59b0160:o0:d24:anti_transpose,anti_transpose,False,INDETERMINATE_REPEAT_PAYLOAD_NOT_FROZEN,False,INDETERMINATE_REPEAT_PAYLOAD_NOT_FROZEN,True,INDETERMINATE_REPEAT_PAYLOAD_NOT_FROZEN,phase2 full snapshot was not frozen; only prior CSV survives
