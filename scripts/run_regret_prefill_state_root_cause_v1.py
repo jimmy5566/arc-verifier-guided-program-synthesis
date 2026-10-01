@@ -334,6 +334,118 @@ def history(args: argparse.Namespace) -> None:
     atomic_json(output / "HASHES.json", {"sha256": hashes, "gold_accessed": False})
 
 
+def _first_tensor(value: Any) -> Any:
+    if hasattr(value, "detach"):
+        return value
+    if isinstance(value, (tuple, list)):
+        for item in value:
+            tensor = _first_tensor(item)
+            if tensor is not None:
+                return tensor
+    return None
+
+
+def _trace_modules(model: Any) -> list[tuple[str, Any]]:
+    core = getattr(model, "model", model)
+    modules: list[tuple[str, Any]] = []
+    embed = getattr(core, "embed_tokens", None)
+    if embed is not None:
+        modules.append(("input_embedding", embed))
+    layers = getattr(core, "layers", None)
+    if layers is None:
+        raise RuntimeError("cannot locate transformer layer stack for diagnostic trace")
+    modules.extend((f"transformer_block_{index:02d}", layer) for index, layer in enumerate(layers))
+    norm = getattr(core, "norm", None)
+    if norm is not None:
+        modules.append(("final_norm", norm))
+    head = getattr(model, "lm_head", None)
+    if head is None:
+        raise RuntimeError("cannot locate lm_head for diagnostic trace")
+    modules.append(("lm_head", head))
+    return modules
+
+
+def _write_trace_condition(args: argparse.Namespace) -> None:
+    """Trace good/bad fresh history conditions, with no search continuation."""
+    import torch
+
+    contract = read_json(args.contract.resolve())
+    no_gold_challenge(Path(contract["challenge"]))
+    model, encoded, dec, adapter_sha, native = _runtime(contract, args.gpu_id)
+    handles = []
+    captured: dict[str, dict[str, Any]] = {}
+    try:
+        flip = _new_cell(model, encoded, dec, PRIMARY); request = flip.request
+        if request is None:
+            raise RuntimeError("flip root prefill did not yield an incremental request")
+        anti = _new_cell(model, encoded, dec, HISTORY)
+        for _ in range(args.history_length):
+            if anti.request is None:
+                raise RuntimeError("anti completed before requested trace history")
+            outputs, _summary = _one_forward(model, anti.request); _reply(anti, outputs)
+        for label, module in _trace_modules(model):
+            def hook(_module: Any, _inputs: Any, value: Any, *, label: str = label) -> None:
+                tensor = _first_tensor(value)
+                if tensor is None:
+                    raise RuntimeError(f"trace stage {label} produced no tensor")
+                cpu = tensor.detach().float().cpu().contiguous()
+                captured[label] = {"shape": list(cpu.shape), "dtype": str(tensor.dtype),
+                                   "sha256": _tensor_sha(cpu), "values": cpu.tolist()}
+            handles.append(module.register_forward_hook(hook))
+        outputs, summary = _one_forward(model, request)
+        atomic_json(args.result.resolve(), {
+            "history_length": args.history_length, "cell_key": f"{TASK_ID}:o{OUTPUT_INDEX}:d{DEPTH}:{PRIMARY}",
+            "request_token_id": int(request.token_id), "request_position": int(request.position),
+            "request_ordinal": int(request.ordinal), "adapter_sha256": adapter_sha,
+            "native_token_contract": native, "full_logits_sha256": summary["full_logits_sha256"],
+            "arc_logits": summary["arc_logits"], "arc_logprobs": summary["arc_logprobs"],
+            "arc_ranking": summary["arc_ranking"], "retained_regret_successors": _retained_successors(outputs.logits, dec),
+            "stages": captured, "gold_accessed": False, "dfs_executed": False,
+        })
+    finally:
+        for handle in handles:
+            handle.remove()
+        _release(model)
+
+
+def trace(args: argparse.Namespace) -> None:
+    import torch
+
+    output = args.output.resolve(); contract = output / "PREFILL_STATE_ROOT_CAUSE_CONTRACT.json"
+    decision_path = output / "DECISION.json"; decision = read_json(decision_path)
+    if decision.get("foreign_incremental_history_first_drift") in (None, "NONE_THROUGH_32"):
+        raise RuntimeError("first-level trace requires an established history-length drift")
+    trace_root = output / "layer_trace"; trace_root.mkdir(exist_ok=True)
+    for history_length in (0, int(decision["foreign_incremental_history_first_drift"])):
+        result = trace_root / f"N{history_length}.json"
+        if result.exists():
+            raise RuntimeError(f"refusing to overwrite trace record {result}")
+        subprocess.run([sys.executable, str(Path(__file__).resolve()), "trace-condition", "--contract", str(contract),
+                        "--result", str(result), "--history-length", str(history_length), "--gpu-id", str(args.gpu_id)], check=True)
+    good, bad = (read_json(trace_root / "N0.json"), read_json(trace_root / f"N{decision['foreign_incremental_history_first_drift']}.json"))
+    rows = []
+    first = "NONE"
+    for stage in good["stages"]:
+        lhs, rhs = good["stages"][stage], bad["stages"].get(stage)
+        if rhs is None:
+            raise RuntimeError(f"bad trace omitted stage {stage}")
+        left = torch.tensor(lhs["values"]); right = torch.tensor(rhs["values"])
+        same = lhs["sha256"] == rhs["sha256"]
+        row = {"stage": stage, "shape": lhs["shape"], "dtype": lhs["dtype"], "tensor_sha256_same": same,
+               "max_abs_delta": float(torch.max(torch.abs(left - right)).item())}
+        rows.append(row)
+        if first == "NONE" and not same:
+            first = stage
+    write_csv(output / "FIRST_DIVERGENT_LAYER.csv", rows)
+    decision["first_divergent_layer_or_operation"] = first
+    decision["first_level_trace_source_commit"] = args.source_commit
+    decision["next"] = "STOP_AFTER_FIRST_LEVEL_ROOT_CAUSE_LOCALIZATION"
+    atomic_json(decision_path, decision)
+    hashes = {path.relative_to(output).as_posix(): sha256_file(path) for path in sorted(output.rglob("*"))
+              if path.is_file() and path.name != "HASHES.json"}
+    atomic_json(output / "HASHES.json", {"sha256": hashes, "gold_accessed": False})
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(); sub = parser.add_subparsers(dest="command", required=True)
     prep = sub.add_parser("prepare")
@@ -345,16 +457,21 @@ def main() -> None:
         item.add_argument("--source-commit", required=True)
     run_parser = sub.add_parser("run"); run_parser.add_argument("--output", type=Path, required=True); run_parser.add_argument("--gpu-id", type=int, default=0)
     history_parser = sub.add_parser("history"); history_parser.add_argument("--output", type=Path, required=True); history_parser.add_argument("--gpu-id", type=int, default=0); history_parser.add_argument("--source-commit", required=True)
+    trace_parser = sub.add_parser("trace"); trace_parser.add_argument("--output", type=Path, required=True); trace_parser.add_argument("--gpu-id", type=int, default=0); trace_parser.add_argument("--source-commit", required=True)
     condition = sub.add_parser("condition"); condition.add_argument("--contract", type=Path, required=True); condition.add_argument("--result", type=Path, required=True)
     condition.add_argument("--condition-id", required=True); condition.add_argument("--cache-mode", choices=("NATIVE", "LEGACY_DEEP_CLONE"), required=True)
     condition.add_argument("--foreign-prefill", action="store_true"); condition.add_argument("--gpu-id", type=int, default=0)
     history_condition = sub.add_parser("history-condition"); history_condition.add_argument("--contract", type=Path, required=True); history_condition.add_argument("--result", type=Path, required=True)
     history_condition.add_argument("--history-length", type=int, choices=(0, 1, 2, 8, 32), required=True); history_condition.add_argument("--gpu-id", type=int, default=0)
+    trace_condition = sub.add_parser("trace-condition"); trace_condition.add_argument("--contract", type=Path, required=True); trace_condition.add_argument("--result", type=Path, required=True)
+    trace_condition.add_argument("--history-length", type=int, choices=(0, 1, 2, 8, 32), required=True); trace_condition.add_argument("--gpu-id", type=int, default=0)
     args = parser.parse_args()
     if args.command == "prepare": prepare(args)
     elif args.command == "run": run(args)
     elif args.command == "condition": _write_condition(args)
     elif args.command == "history": history(args)
+    elif args.command == "trace": trace(args)
+    elif args.command == "trace-condition": _write_trace_condition(args)
     else: _write_history_condition(args)
 
 
