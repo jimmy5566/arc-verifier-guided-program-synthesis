@@ -1,0 +1,24 @@
+{
+  "finite_outputs": true,
+  "free_vram_bytes": 1129316352,
+  "independent_owner_storage": true,
+  "input_owner_storage_independent": true,
+  "owner_identity_preserved": true,
+  "peak_allocated_bytes": 22073468928,
+  "peak_reserved_bytes": 23829938176,
+  "post_release": {
+    "allocated_bytes": 12962502656,
+    "free_vram_bytes": 1129316352,
+    "peak_allocated_bytes": 22073468928,
+    "peak_reserved_bytes": 23829938176,
+    "reserved_bytes": 23829938176,
+    "total_vram_bytes": 25298141184
+  },
+  "status": "PASS",
+  "telemetry": {
+    "cache_adoption_seconds": 0.03913237527012825,
+    "cache_pack_seconds": 0.0237960796803236,
+    "model_call_seconds": 0.17723586782813072,
+    "scheduler_elapsed_seconds": 0.24621777422726154
+  }
+}

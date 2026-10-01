@@ -1,0 +1,102 @@
+{
+  "attempts": [
+    {
+      "cache_generation_leak": false,
+      "finite_outputs": true,
+      "input_owner_storage_unique": true,
+      "lane_order": [
+        "d59b0160:o0:d24:anti_transpose:hardware_replica1of2",
+        "d59b0160:o0:d24:flip_ud:hardware_replica1of2",
+        "d59b0160:o0:d24:identity:hardware_replica1of2",
+        "d59b0160:o0:d24:transpose:hardware_replica1of2",
+        "d59b0160:o0:d24:anti_transpose:hardware_replica2of2",
+        "d59b0160:o0:d24:flip_ud:hardware_replica2of2",
+        "d59b0160:o0:d24:identity:hardware_replica2of2",
+        "d59b0160:o0:d24:transpose:hardware_replica2of2"
+      ],
+      "output_owner_storage_unique": true,
+      "owner_identity_preserved": true,
+      "owner_ids_unique": true,
+      "positions": [
+        1928,
+        1928,
+        1928,
+        1928,
+        1928,
+        1928,
+        1928,
+        1928
+      ],
+      "repeat": 0,
+      "sequence_length_incremented_once": true,
+      "telemetry": {
+        "cache_adoption_seconds": 0.017180543392896652,
+        "cache_pack_seconds": 0.019731761887669563,
+        "model_call_seconds": 0.18203816749155521,
+        "scheduler_elapsed_seconds": 0.2189849391579628
+      },
+      "tokens": [
+        7,
+        0,
+        7,
+        7,
+        7,
+        0,
+        7,
+        7
+      ]
+    },
+    {
+      "cache_generation_leak": false,
+      "finite_outputs": true,
+      "input_owner_storage_unique": true,
+      "lane_order": [
+        "d59b0160:o0:d24:anti_transpose:hardware_replica1of2",
+        "d59b0160:o0:d24:flip_ud:hardware_replica1of2",
+        "d59b0160:o0:d24:identity:hardware_replica1of2",
+        "d59b0160:o0:d24:transpose:hardware_replica1of2",
+        "d59b0160:o0:d24:anti_transpose:hardware_replica2of2",
+        "d59b0160:o0:d24:flip_ud:hardware_replica2of2",
+        "d59b0160:o0:d24:identity:hardware_replica2of2",
+        "d59b0160:o0:d24:transpose:hardware_replica2of2"
+      ],
+      "output_owner_storage_unique": true,
+      "owner_identity_preserved": true,
+      "owner_ids_unique": true,
+      "positions": [
+        1928,
+        1928,
+        1928,
+        1928,
+        1928,
+        1928,
+        1928,
+        1928
+      ],
+      "repeat": 1,
+      "sequence_length_incremented_once": true,
+      "telemetry": {
+        "cache_adoption_seconds": 0.016292911022901535,
+        "cache_pack_seconds": 0.005386693403124809,
+        "model_call_seconds": 0.10363963060081005,
+        "scheduler_elapsed_seconds": 0.1253705807030201
+      },
+      "tokens": [
+        7,
+        0,
+        7,
+        7,
+        7,
+        0,
+        7,
+        7
+      ]
+    }
+  ],
+  "experiment": "CLEAN_HF_B16_TRANSIENT_MEMORY_OPT_V1",
+  "gold_loaded": false,
+  "lane_token_position_repeatable": true,
+  "physical_batch": 8,
+  "status": "PASS",
+  "streaming_split_and_adopt": true
+}

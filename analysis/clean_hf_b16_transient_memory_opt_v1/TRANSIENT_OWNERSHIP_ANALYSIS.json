@@ -1,0 +1,28 @@
+{
+  "base_owner_bytes": 4548722688,
+  "caveat": "Component byte accounting is an upper-bound residency proxy; wrappers can reference the same tensors.",
+  "classification": "B16_MEMORY_TRANSIENT_LIMIT",
+  "components": [
+    "live_owner_kv_bytes",
+    "packed_cache_bytes",
+    "merged_cache_bytes",
+    "output_cache_bytes",
+    "split_cache_bytes"
+  ],
+  "dominant_transient_component": "merged_cache_bytes",
+  "experiment": "CLEAN_HF_B16_TRANSIENT_MEMORY_OPT_V1",
+  "maximum_accounted_overlap_bytes": 22750691328,
+  "maximum_accounted_overlap_stage": "M6_SPLIT_COMPLETE",
+  "original_outcome": {
+    "finite_outputs": true,
+    "owner_identity_preserved": true,
+    "status": "UNEXPECTED_PASS",
+    "telemetry": {
+      "cache_adoption_seconds": 0.039017120376229286,
+      "cache_pack_seconds": 0.02530151605606079,
+      "model_call_seconds": 0.1854689810425043,
+      "scheduler_elapsed_seconds": 0.25549186766147614
+    }
+  },
+  "transient_multiplier_vs_owner_only": 5.001556016597511
+}

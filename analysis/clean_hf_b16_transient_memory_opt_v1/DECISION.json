@@ -1,0 +1,134 @@
+{
+  "allocator_fragmentation": {
+    "expandable_segments_tested": false,
+    "interpretation": "Reported separately; allocator configuration was not used as the primary fix.",
+    "original_reserved_minus_allocated_bytes": 1018634240
+  },
+  "decision": "B16_MEMORY_AND_SCALING_PASS",
+  "experiment": "CLEAN_HF_B16_TRANSIENT_MEMORY_OPT_V1",
+  "gold_loaded": false,
+  "optimized_retry": {
+    "finite_outputs": true,
+    "free_vram_bytes": 1129316352,
+    "independent_owner_storage": true,
+    "input_owner_storage_independent": true,
+    "owner_identity_preserved": true,
+    "peak_allocated_bytes": 22073468928,
+    "peak_reserved_bytes": 23829938176,
+    "post_release": {
+      "allocated_bytes": 12962502656,
+      "free_vram_bytes": 1129316352,
+      "peak_allocated_bytes": 22073468928,
+      "peak_reserved_bytes": 23829938176,
+      "reserved_bytes": 23829938176,
+      "total_vram_bytes": 25298141184
+    },
+    "status": "PASS",
+    "telemetry": {
+      "cache_adoption_seconds": 0.03913237527012825,
+      "cache_pack_seconds": 0.0237960796803236,
+      "model_call_seconds": 0.17723586782813072,
+      "scheduler_elapsed_seconds": 0.24621777422726154
+    }
+  },
+  "original_b16_exact_stage": "NOT_REPRODUCED_IN_FRESH_PROCESS",
+  "original_b16_oom_reproduced": false,
+  "original_outcome": {
+    "finite_outputs": true,
+    "owner_identity_preserved": true,
+    "status": "UNEXPECTED_PASS",
+    "telemetry": {
+      "cache_adoption_seconds": 0.039017120376229286,
+      "cache_pack_seconds": 0.02530151605606079,
+      "model_call_seconds": 0.1854689810425043,
+      "scheduler_elapsed_seconds": 0.25549186766147614
+    }
+  },
+  "original_peak_allocated_bytes": 22349930496,
+  "original_peak_reserved_bytes": 23368564736,
+  "raw_b16": {
+    "cache_adoption_seconds_median": 0.024525328539311886,
+    "cache_pack_seconds_median": 0.00670482125133276,
+    "experiment": "CLEAN_HF_B16_TRANSIENT_MEMORY_OPT_V1",
+    "gold_loaded": false,
+    "improvement_vs_b12": 1.215329786183733,
+    "lanes_per_second_median": 138.91462522037307,
+    "latency_ms_median": 115.17887655645609,
+    "measurement_forwards": 8,
+    "peak_allocated_bytes": 22078425088,
+    "peak_reserved_bytes": 23871881216,
+    "physical_batch": 16,
+    "samples": [
+      {
+        "cache_adoption_seconds": 0.024518024176359177,
+        "cache_pack_seconds": 0.006614472717046738,
+        "lanes_per_second": 139.1063264144278,
+        "latency_ms": 115.01993052661419,
+        "sample_index": 0.0
+      },
+      {
+        "cache_adoption_seconds": 0.02397848479449749,
+        "cache_pack_seconds": 0.006295809522271156,
+        "lanes_per_second": 140.76243104370434,
+        "latency_ms": 113.66669274866581,
+        "sample_index": 1.0
+      },
+      {
+        "cache_adoption_seconds": 0.02448633313179016,
+        "cache_pack_seconds": 0.006795169785618782,
+        "lanes_per_second": 139.26146040568744,
+        "latency_ms": 114.89180102944374,
+        "sample_index": 2.0
+      },
+      {
+        "cache_adoption_seconds": 0.024980533868074417,
+        "cache_pack_seconds": 0.006824720650911331,
+        "lanes_per_second": 134.13131180656688,
+        "latency_ms": 119.28609199821949,
+        "sample_index": 3.0
+      },
+      {
+        "cache_adoption_seconds": 0.02498610131442547,
+        "cache_pack_seconds": 0.00659358873963356,
+        "lanes_per_second": 138.72292402631834,
+        "latency_ms": 115.33782258629799,
+        "sample_index": 4.0
+      },
+      {
+        "cache_adoption_seconds": 0.025230811908841133,
+        "cache_pack_seconds": 0.006829099729657173,
+        "lanes_per_second": 132.19675767361852,
+        "latency_ms": 121.03171274065971,
+        "sample_index": 5.0
+      },
+      {
+        "cache_adoption_seconds": 0.024532632902264595,
+        "cache_pack_seconds": 0.006807567551732063,
+        "lanes_per_second": 136.25437753434676,
+        "latency_ms": 117.42741987109184,
+        "sample_index": 6.0
+      },
+      {
+        "cache_adoption_seconds": 0.02443070150911808,
+        "cache_pack_seconds": 0.006431872025132179,
+        "lanes_per_second": 140.32415505633355,
+        "latency_ms": 114.02170918881893,
+        "sample_index": 7.0
+      }
+    ],
+    "scaling_efficiency": 0.5892783833862667,
+    "scaling_gate": "PASS",
+    "scaling_vs_b1": 9.428454134180267,
+    "scaling_vs_b12": 1.215329786183733,
+    "scaling_vs_b4": 2.819513796106539,
+    "scaling_vs_b8": 1.602947372785916,
+    "target_blind": true,
+    "warmup_forwards": 2
+  },
+  "recommended_production_max_physical_batch": 16,
+  "target_blind": true,
+  "vram_saved_vs_original_path": {
+    "allocated_bytes": 276461568,
+    "reserved_bytes": -461373440
+  }
+}

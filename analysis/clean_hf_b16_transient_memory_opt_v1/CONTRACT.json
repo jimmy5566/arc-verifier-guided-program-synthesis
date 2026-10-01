@@ -1,0 +1,39 @@
+{
+  "baseline": {
+    "b12_lanes_per_second": 114.302,
+    "b12_peak_allocated_bytes_approx": 19048179957,
+    "b12_peak_reserved_bytes_approx": 19574313451,
+    "b4_lanes_per_second": 49.269,
+    "b8_lanes_per_second": 86.662
+  },
+  "experiment": "CLEAN_HF_B16_TRANSIENT_MEMORY_OPT_V1",
+  "gold_loaded": false,
+  "hardware_only_replica_contract": {
+    "independent_dynamic_cache_per_lane": true,
+    "not_new_arc_views": true,
+    "physical_batch": 16,
+    "replicas_per_view": 4
+  },
+  "no_allocator_configuration_as_primary_fix": true,
+  "optimization": "STREAMING_SPLIT_AND_ADOPT",
+  "scientific_contract_unchanged": {
+    "adapter": "d59b0160/depth_024",
+    "backend": "Clean Transformers + PEFT",
+    "base_views": [
+      "anti_transpose",
+      "flip_ud",
+      "identity",
+      "transpose"
+    ],
+    "cache_strategy": "rollback",
+    "depth": 24,
+    "dtype": "BF16",
+    "model": "Qwen3-4B",
+    "output_index": 0,
+    "task_id": "d59b0160"
+  },
+  "source_commit": "14ef908b100b4904981ab5f5226ea4b0bf3e3f4a",
+  "status": "PRE_GPU_FROZEN",
+  "target_blind": true,
+  "unsloth_inference": false
+}

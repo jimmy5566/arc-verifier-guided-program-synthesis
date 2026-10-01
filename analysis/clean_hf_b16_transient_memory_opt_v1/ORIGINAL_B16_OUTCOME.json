@@ -1,0 +1,11 @@
+{
+  "finite_outputs": true,
+  "owner_identity_preserved": true,
+  "status": "UNEXPECTED_PASS",
+  "telemetry": {
+    "cache_adoption_seconds": 0.039017120376229286,
+    "cache_pack_seconds": 0.02530151605606079,
+    "model_call_seconds": 0.1854689810425043,
+    "scheduler_elapsed_seconds": 0.25549186766147614
+  }
+}
