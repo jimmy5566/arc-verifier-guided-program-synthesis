@@ -47,6 +47,27 @@ from scripts.turbodfs_d1_common import d1_cells_batch  # noqa: E402
 BENCHMARK_ID = "L4_DUAL_TTT_DFS1024_NOTEBOOK_BENCH_V1"
 POLICY = "CUMULATIVE_REGRET_r=4.00"
 DEPTHS = (24, 48)
+EXPECTED_WORKER_IDS = frozenset(range(4))
+STARTUP_READY_POLL_SECONDS = 2.0
+STARTUP_QUEUE_DRAIN_GRACE_SECONDS = 1.0
+STARTUP_TERMINATE_JOIN_SECONDS = 5.0
+STARTUP_KILL_JOIN_SECONDS = 5.0
+STARTUP_MILESTONES = (
+    "PROCESS_STARTED",
+    "CUDA_BOUND",
+    "MODEL_LOAD_STARTED",
+    "MODEL_LOAD_COMPLETE",
+    "TOKENIZER_VERIFIED",
+    "LORA_ATTACHED",
+    "DEFAULT_STATE_CAPTURED",
+    "DATASET_LOADED",
+    "DECODER_READY",
+    "MODEL_READY_PAYLOAD_BUILT",
+    "MODEL_READY_PAYLOAD_PICKLE_PASS",
+    "MODEL_READY_SENT",
+    "START_BARRIER_ENTERED",
+    "START_BARRIER_RELEASED",
+)
 REQUIRED_OUTPUTS = (
     "benchmark_provenance.json",
     "BENCHMARK_TASK_IDS.json",
@@ -60,6 +81,7 @@ REQUIRED_OUTPUTS = (
     "throughput_summary.json",
     "runtime_projection.json",
     "failures.jsonl",
+    "startup_summary.json",
     "L4_DUAL_TTT_DFS1024_BENCH_REPORT.md",
     "DECISION.json",
 )
@@ -92,6 +114,75 @@ def atomic_json(path: Path, value: Any) -> None:
         handle.write("\n")
         temporary = Path(handle.name)
     os.replace(temporary, path)
+
+
+def startup_status_path(output: Path, worker_id: int) -> Path:
+    return output / "checkpoints" / "startup" / f"worker_{worker_id}_status.json"
+
+
+def startup_failure_path(output: Path, worker_id: int) -> Path:
+    return output / "checkpoints" / "startup" / f"worker_{worker_id}_failure.json"
+
+
+def persist_startup_milestone(
+    output: Path,
+    worker_id: int,
+    milestone: str,
+    **metadata: Any,
+) -> dict[str, Any]:
+    if milestone not in STARTUP_MILESTONES:
+        raise ValueError(f"unknown startup milestone: {milestone}")
+    record = {
+        "benchmark_id": BENCHMARK_ID,
+        "worker_id": int(worker_id),
+        "physical_gpu_id": int(worker_id),
+        "pid": os.getpid(),
+        "last_startup_milestone": milestone,
+        "timestamp": time.time(),
+        "monotonic": time.perf_counter(),
+        **metadata,
+    }
+    atomic_json(startup_status_path(output, worker_id), record)
+    return record
+
+
+def build_worker_failure(
+    *,
+    worker_id: int,
+    phase: str,
+    last_startup_milestone: str | None,
+    exc: BaseException,
+    traceback_text: str,
+) -> dict[str, Any]:
+    if phase not in {"STARTUP", "RUNTIME"}:
+        raise ValueError(f"invalid worker failure phase: {phase}")
+    return {
+        "event": "WORKER_FAILED",
+        "phase": phase,
+        "worker_id": int(worker_id),
+        "physical_gpu_id": int(worker_id),
+        "timestamp": time.time(),
+        "last_startup_milestone": last_startup_milestone,
+        "exception_type": type(exc).__name__,
+        "error": str(exc),
+        "traceback": traceback_text,
+    }
+
+
+def persist_startup_failure(output: Path, failure: Mapping[str, Any]) -> Path:
+    worker_id = int(failure["worker_id"])
+    destination = startup_failure_path(output, worker_id)
+    atomic_json(destination, dict(failure))
+    return destination
+
+
+def flush_child_queue(target: Any) -> None:
+    """Best-effort flush of this child process's queue feeder only."""
+    try:
+        target.close()
+        target.join_thread()
+    except (AttributeError, OSError, ValueError):
+        pass
 
 
 def write_csv(path: Path, rows: Sequence[Mapping[str, Any]], *, fields: Sequence[str] | None = None) -> None:
@@ -167,8 +258,9 @@ def build_model_ready_payload(
     tokenizer_metadata: Mapping[str, Any],
     torch_version: str,
     cuda_runtime: str | None,
+    validate_pickle: bool = True,
 ) -> dict[str, Any]:
-    """Build and synchronously validate the spawn-safe MODEL_READY payload."""
+    """Build a primitive-only spawn-safe MODEL_READY payload."""
     raw_uuid = getattr(properties, "uuid", None)
     gpu_uuid = None if raw_uuid is None else str(raw_uuid)
     ready_payload = {
@@ -184,11 +276,42 @@ def build_model_ready_payload(
         "torch_version": torch_version,
         "cuda_runtime": cuda_runtime,
     }
-    # multiprocessing.Queue serializes in a background feeder thread.  Guard
-    # synchronously so an invalid payload enters the startup failure path
-    # instead of leaving the parent waiting for MODEL_READY at the barrier.
-    pickle.dumps(ready_payload)
+    if validate_pickle:
+        pickle.dumps(ready_payload)
     return ready_payload
+
+
+def validate_model_ready_payload(
+    payload: Mapping[str, Any],
+    *,
+    expected_worker_ids: frozenset[int] = EXPECTED_WORKER_IDS,
+) -> dict[str, Any]:
+    """Validate handshake semantics and synchronously prove pickleability."""
+    record = dict(payload)
+    if record.get("event") != "MODEL_READY":
+        raise ValueError(f"not a MODEL_READY payload: {record.get('event')}")
+    worker_id = record.get("worker_id")
+    physical_gpu_id = record.get("physical_gpu_id")
+    if not isinstance(worker_id, int) or worker_id not in expected_worker_ids:
+        raise ValueError(f"unexpected MODEL_READY worker_id: {worker_id}")
+    if physical_gpu_id != worker_id:
+        raise ValueError(f"worker/GPU identity mismatch: {worker_id}/{physical_gpu_id}")
+    if "NVIDIA L4" not in str(record.get("gpu_name", "")):
+        raise ValueError(f"MODEL_READY is not from NVIDIA L4: {record.get('gpu_name')}")
+    gpu_uuid = record.get("gpu_uuid")
+    if gpu_uuid is not None and not isinstance(gpu_uuid, str):
+        raise TypeError(f"MODEL_READY gpu_uuid must be str or None: {type(gpu_uuid).__name__}")
+    capability = record.get("compute_capability")
+    if (
+        not isinstance(capability, list)
+        or len(capability) != 2
+        or not all(isinstance(value, int) and value >= 0 for value in capability)
+    ):
+        raise ValueError(f"invalid compute capability: {capability}")
+    # multiprocessing.Queue serializes in a background feeder thread.  This
+    # synchronous guard ensures invalid payloads enter worker startup failure.
+    pickle.dumps(record)
+    return record
 
 
 def validate_environment(config: Mapping[str, Any], actual: Mapping[str, str | None]) -> None:
@@ -433,7 +556,17 @@ def worker_main(worker_id: int, work: Any, events: Any, ready: Any, start_barrie
     })
     model = None
     startup_complete = False
+    runtime_started = False
+    output = Path(paths["output"])
+    last_startup_milestone: str | None = None
+
+    def mark(milestone: str, **metadata: Any) -> None:
+        nonlocal last_startup_milestone
+        persist_startup_milestone(output, worker_id, milestone, **metadata)
+        last_startup_milestone = milestone
+
     try:
+        mark("PROCESS_STARTED")
         import gc
         import torch
         from arc.io import load_dataset
@@ -444,22 +577,36 @@ def worker_main(worker_id: int, work: Any, events: Any, ready: Any, start_barrie
         torch.cuda.set_device(0)
         if torch.cuda.current_device() != 0 or "NVIDIA L4" not in torch.cuda.get_device_name(0):
             raise RuntimeError(f"worker {worker_id} GPU binding failed: {torch.cuda.get_device_name(0)}")
+        mark(
+            "CUDA_BOUND",
+            gpu_name=torch.cuda.get_device_name(0),
+            compute_capability=list(torch.cuda.get_device_capability(0)),
+        )
         model_started = time.perf_counter()
+        mark("MODEL_LOAD_STARTED")
         recipe24 = dict(config["ttt24_recipe"])
         model, checkpoint_tokenizer = FastLanguageModel.from_pretrained(
             model_name=paths["model"], full_finetuning=False, load_in_4bit=False,
             local_files_only=True, use_gradient_checkpointing=False,
             max_seq_length=int(recipe24["max_sequence_length"]),
         )
+        mark(
+            "MODEL_LOAD_COMPLETE",
+            model_load_seconds=time.perf_counter() - model_started,
+            model_vram_mb=float(torch.cuda.memory_allocated() / (1024 ** 2)),
+            gpu_name=torch.cuda.get_device_name(0),
+        )
         native_tokenizer, tokenizer_metadata = checkpoint_native_tokenizer(Path(paths["model"]), Path(paths["native_config"]))
         if len(checkpoint_tokenizer) != 16 or len(native_tokenizer) != 16 or checkpoint_tokenizer.get_vocab() != native_tokenizer.get_vocab():
             raise RuntimeError("checkpoint/native tokenizer mismatch")
+        mark("TOKENIZER_VERIFIED", tokenizer=dict(tokenizer_metadata))
         model = FastLanguageModel.get_peft_model(
             model, r=int(recipe24["rank"]), target_modules=list(recipe24["target_modules"]),
             lora_alpha=int(recipe24["alpha"]), lora_dropout=0.0, bias="none",
             use_gradient_checkpointing=False, random_state=int(recipe24["seed"]),
             use_rslora=True, loftq_config=None,
         )
+        mark("LORA_ATTACHED")
         for _name, parameter in model.named_parameters():
             if parameter.dtype == torch.float32:
                 parameter.data = parameter.data.to(torch.bfloat16)
@@ -470,8 +617,11 @@ def worker_main(worker_id: int, work: Any, events: Any, ready: Any, start_barrie
             raise RuntimeError("invalid official adapter partition")
         adapter_before = {name: _fingerprint(parameter) for name, parameter in trainable[:8]}
         base_before = {name: _fingerprint(parameter) for name, parameter in frozen[:8]}
+        mark("DEFAULT_STATE_CAPTURED", adapter_tensor_count=len(default_state))
         tasks = load_dataset(Path(paths["challenge"]))
+        mark("DATASET_LOADED", task_count=len(tasks))
         decoder = decoder_from_config(config)
+        mark("DECODER_READY")
         load_seconds = time.perf_counter() - model_started
         properties = torch.cuda.get_device_properties(0)
         ready_payload = build_model_ready_payload(
@@ -484,11 +634,38 @@ def worker_main(worker_id: int, work: Any, events: Any, ready: Any, start_barrie
             tokenizer_metadata=tokenizer_metadata,
             torch_version=torch.__version__,
             cuda_runtime=torch.version.cuda,
+            validate_pickle=False,
+        )
+        mark(
+            "MODEL_READY_PAYLOAD_BUILT",
+            model_load_seconds=load_seconds,
+            model_vram_mb=ready_payload["model_vram_mb"],
+            gpu_name=ready_payload["gpu_name"],
+            gpu_uuid=ready_payload["gpu_uuid"],
+        )
+        pickle.dumps(ready_payload)
+        validate_model_ready_payload(ready_payload)
+        mark(
+            "MODEL_READY_PAYLOAD_PICKLE_PASS",
+            model_load_seconds=load_seconds,
+            model_vram_mb=ready_payload["model_vram_mb"],
+            gpu_name=ready_payload["gpu_name"],
+            gpu_uuid=ready_payload["gpu_uuid"],
         )
         ready.put(ready_payload)
         startup_complete = True
+        mark(
+            "MODEL_READY_SENT",
+            model_load_seconds=load_seconds,
+            model_vram_mb=ready_payload["model_vram_mb"],
+            gpu_name=ready_payload["gpu_name"],
+            gpu_uuid=ready_payload["gpu_uuid"],
+        )
+        mark("START_BARRIER_ENTERED")
         if not start_barrier.wait(timeout=1200):
             raise TimeoutError("benchmark start barrier timeout")
+        mark("START_BARRIER_RELEASED")
+        runtime_started = True
 
         while True:
             task_id = work.get()
@@ -608,17 +785,264 @@ def worker_main(worker_id: int, work: Any, events: Any, ready: Any, start_barrie
         gc.collect(); torch.cuda.empty_cache()
         _event(events, "WORKER_COMPLETE", worker_id=worker_id, gpu_id=worker_id)
     except Exception as exc:
-        destination = events if startup_complete else ready
-        destination.put({
-            "event": "WORKER_FAILED", "worker_id": worker_id, "gpu_id": worker_id,
-            "timestamp": time.time(), "error": f"{type(exc).__name__}: {exc}",
-            "traceback": traceback.format_exc(limit=20),
-        })
+        phase = "RUNTIME" if runtime_started else "STARTUP"
+        failure = build_worker_failure(
+            worker_id=worker_id,
+            phase=phase,
+            last_startup_milestone=last_startup_milestone,
+            exc=exc,
+            traceback_text=traceback.format_exc(limit=50),
+        )
+        if phase == "STARTUP":
+            # Disk is authoritative: persist before relying on asynchronous IPC.
+            persist_startup_failure(output, failure)
+            pickle.dumps(failure)
+            ready.put(failure)
+            flush_child_queue(ready)
+            raise SystemExit(1)
+        events.put(failure)
 
 
 def _append_failure(path: Path, failure: Mapping[str, Any]) -> None:
     with path.open("a", encoding="utf-8") as handle:
         handle.write(canonical(dict(failure)) + "\n")
+
+
+def drain_startup_queue(target: Any, *, grace_seconds: float = 0.0) -> list[dict[str, Any]]:
+    """Drain pending startup messages, allowing a short feeder-flush grace."""
+    items: list[dict[str, Any]] = []
+    deadline = time.monotonic() + max(0.0, grace_seconds)
+    while True:
+        try:
+            if grace_seconds > 0 and time.monotonic() < deadline:
+                item = target.get(timeout=min(0.05, max(0.001, deadline - time.monotonic())))
+            else:
+                item = target.get_nowait()
+        except queue.Empty:
+            if grace_seconds > 0 and time.monotonic() < deadline:
+                continue
+            break
+        if not isinstance(item, Mapping):
+            raise TypeError(f"startup IPC item must be a mapping: {type(item).__name__}")
+        items.append(dict(item))
+    return items
+
+
+def record_startup_message(
+    item: Mapping[str, Any],
+    *,
+    ready_by_worker: dict[int, dict[str, Any]],
+    failures_by_worker: dict[int, dict[str, Any]],
+    duplicate_ready_counts: dict[int, int],
+) -> None:
+    event = item.get("event")
+    if event == "MODEL_READY":
+        record = validate_model_ready_payload(item)
+        worker_id = int(record["worker_id"])
+        if worker_id in ready_by_worker:
+            duplicate_ready_counts[worker_id] = duplicate_ready_counts.get(worker_id, 0) + 1
+            if record != ready_by_worker[worker_id]:
+                raise ValueError(f"conflicting duplicate MODEL_READY for worker {worker_id}")
+            return
+        ready_by_worker[worker_id] = record
+        return
+    if event == "WORKER_FAILED":
+        worker_id = item.get("worker_id")
+        if not isinstance(worker_id, int) or worker_id not in EXPECTED_WORKER_IDS:
+            raise ValueError(f"invalid WORKER_FAILED worker_id: {worker_id}")
+        failure = dict(item)
+        pickle.dumps(failure)
+        failures_by_worker[worker_id] = failure
+        return
+    raise ValueError(f"unexpected startup event: {event}")
+
+
+def read_startup_artifacts(output: Path) -> tuple[dict[int, dict[str, Any]], dict[int, dict[str, Any]]]:
+    statuses: dict[int, dict[str, Any]] = {}
+    failures: dict[int, dict[str, Any]] = {}
+    for worker_id in sorted(EXPECTED_WORKER_IDS):
+        status_path = startup_status_path(output, worker_id)
+        failure_path = startup_failure_path(output, worker_id)
+        if status_path.is_file():
+            statuses[worker_id] = read_json(status_path)
+        if failure_path.is_file():
+            failures[worker_id] = read_json(failure_path)
+    return statuses, failures
+
+
+def collect_startup_diagnostics(
+    *,
+    output: Path,
+    processes: Sequence[Any],
+    ready_by_worker: Mapping[int, Mapping[str, Any]],
+    failures_by_worker: Mapping[int, Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    statuses, disk_failures = read_startup_artifacts(output)
+    diagnostics: list[dict[str, Any]] = []
+    for worker_id in sorted(EXPECTED_WORKER_IDS):
+        process = processes[worker_id]
+        status = statuses.get(worker_id, {})
+        ready = ready_by_worker.get(worker_id, {})
+        failure = failures_by_worker.get(worker_id) or disk_failures.get(worker_id, {})
+        diagnostics.append({
+            "worker_id": worker_id,
+            "pid": process.pid,
+            "exit_code": process.exitcode,
+            "model_ready_received": worker_id in ready_by_worker,
+            "worker_failed_received": worker_id in failures_by_worker,
+            "last_startup_milestone": failure.get("last_startup_milestone") or status.get("last_startup_milestone"),
+            "failure_artifact_present": worker_id in disk_failures,
+            "exception_type": failure.get("exception_type"),
+            "error": failure.get("error"),
+            "traceback": failure.get("traceback"),
+            "model_load_seconds": ready.get("model_load_seconds", status.get("model_load_seconds")),
+            "model_vram_mb": ready.get("model_vram_mb", status.get("model_vram_mb")),
+            "gpu_name": ready.get("gpu_name", status.get("gpu_name")),
+            "gpu_uuid": ready.get("gpu_uuid", status.get("gpu_uuid")),
+        })
+    return diagnostics
+
+
+def write_startup_summary(
+    *,
+    output: Path,
+    status: str,
+    processes: Sequence[Any],
+    ready_by_worker: Mapping[int, Mapping[str, Any]],
+    failures_by_worker: Mapping[int, Mapping[str, Any]],
+    duplicate_ready_counts: Mapping[int, int],
+) -> dict[str, Any]:
+    diagnostics = collect_startup_diagnostics(
+        output=output,
+        processes=processes,
+        ready_by_worker=ready_by_worker,
+        failures_by_worker=failures_by_worker,
+    )
+    summary = {
+        "benchmark_id": BENCHMARK_ID,
+        "status": status,
+        "timestamp": time.time(),
+        "UNIQUE_MODEL_READY_COUNT": len(ready_by_worker),
+        "unique_model_ready_workers": sorted(ready_by_worker),
+        "duplicate_model_ready_counts": {str(key): value for key, value in sorted(duplicate_ready_counts.items())},
+        "workers": diagnostics,
+    }
+    atomic_json(output / "startup_summary.json", summary)
+    return summary
+
+
+def join_processes_bounded(processes: Sequence[Any], total_seconds: float) -> None:
+    deadline = time.monotonic() + max(0.0, total_seconds)
+    for process in processes:
+        remaining = max(0.0, deadline - time.monotonic())
+        process.join(timeout=remaining)
+
+
+def abort_startup(
+    *,
+    output: Path,
+    processes: Sequence[Any],
+    start_barrier: Any,
+    ready_by_worker: Mapping[int, Mapping[str, Any]],
+    failures_by_worker: Mapping[int, Mapping[str, Any]],
+    duplicate_ready_counts: Mapping[int, int],
+    reason: str,
+    detected_timestamp: float | None = None,
+    detected_monotonic: float | None = None,
+) -> dict[str, Any]:
+    """Freeze diagnostics, release the barrier, then bound peer cleanup."""
+    detection_timestamp = time.time() if detected_timestamp is None else detected_timestamp
+    detection_monotonic = time.monotonic() if detected_monotonic is None else detected_monotonic
+    statuses, disk_failures = read_startup_artifacts(output)
+    merged_failures = {int(key): dict(value) for key, value in failures_by_worker.items()}
+    for worker_id, failure in disk_failures.items():
+        merged_failures.setdefault(worker_id, failure)
+    dead_workers = [
+        {"worker_id": worker_id, "exit_code": process.exitcode}
+        for worker_id, process in enumerate(processes)
+        if process.exitcode is not None
+    ]
+    alive_workers = [worker_id for worker_id, process in enumerate(processes) if process.is_alive()]
+    for row in dead_workers:
+        worker_id = int(row["worker_id"])
+        if worker_id not in merged_failures and worker_id not in ready_by_worker:
+            status = statuses.get(worker_id, {})
+            merged_failures[worker_id] = {
+                "event": "WORKER_FAILED",
+                "phase": "STARTUP",
+                "worker_id": worker_id,
+                "physical_gpu_id": worker_id,
+                "timestamp": detection_timestamp,
+                "last_startup_milestone": status.get("last_startup_milestone"),
+                "exception_type": "WorkerExit",
+                "error": f"worker exited before MODEL_READY: exitcode={row['exit_code']}",
+                "traceback": None,
+            }
+    write_startup_summary(
+        output=output,
+        status="STARTUP_FAILED_CLEANUP_PENDING",
+        processes=processes,
+        ready_by_worker=ready_by_worker,
+        failures_by_worker=merged_failures,
+        duplicate_ready_counts=duplicate_ready_counts,
+    )
+    initial_report = {
+        "benchmark_id": BENCHMARK_ID,
+        "status": "STARTUP_FAILED_CLEANUP_PENDING",
+        "reason": reason,
+        "failure_detected_timestamp": detection_timestamp,
+        "failure_detected_monotonic": detection_monotonic,
+        "ready_workers": sorted(ready_by_worker),
+        "failed_workers": sorted(merged_failures),
+        "dead_workers": dead_workers,
+        "alive_workers_at_detection": alive_workers,
+        "UNIQUE_MODEL_READY_COUNT": len(ready_by_worker),
+        "cleanup_duration_s": None,
+        "workers": collect_startup_diagnostics(
+            output=output,
+            processes=processes,
+            ready_by_worker=ready_by_worker,
+            failures_by_worker=merged_failures,
+        ),
+    }
+    atomic_json(output / "STARTUP_FAILURE_REPORT.json", initial_report)
+
+    cleanup_started = time.monotonic()
+    start_barrier.set()
+    for process in processes:
+        if process.is_alive():
+            process.terminate()
+    join_processes_bounded(processes, STARTUP_TERMINATE_JOIN_SECONDS)
+    for process in processes:
+        if process.is_alive():
+            kill = getattr(process, "kill", None)
+            if callable(kill):
+                kill()
+    join_processes_bounded(processes, STARTUP_KILL_JOIN_SECONDS)
+    cleanup_duration = time.monotonic() - cleanup_started
+    failure_log = output / "failures.jsonl"
+    for worker_id in sorted(merged_failures):
+        normalized = dict(merged_failures[worker_id])
+        normalized["exit_code"] = processes[worker_id].exitcode
+        normalized["source"] = "STARTUP_IPC_OR_DISK_ARTIFACT"
+        _append_failure(failure_log, normalized)
+
+    final_summary = write_startup_summary(
+        output=output,
+        status="STARTUP_FAILED",
+        processes=processes,
+        ready_by_worker=ready_by_worker,
+        failures_by_worker=merged_failures,
+        duplicate_ready_counts=duplicate_ready_counts,
+    )
+    final_report = {
+        **initial_report,
+        "status": "STARTUP_FAILED",
+        "cleanup_duration_s": cleanup_duration,
+        "workers": final_summary["workers"],
+    }
+    atomic_json(output / "STARTUP_FAILURE_REPORT.json", final_report)
+    return final_report
 
 
 def run_workers(*, challenge: Path, model: Path, native_config: Path, output: Path, config: Mapping[str, Any], cohort: Mapping[str, Any]) -> dict[str, Any]:
@@ -633,30 +1057,101 @@ def run_workers(*, challenge: Path, model: Path, native_config: Path, output: Pa
     spawn_started = time.perf_counter()
     for process in processes:
         process.start()
-    loads: list[dict[str, Any]] = []
-    startup_failures = []
-    while len(loads) + len(startup_failures) < 4:
+    ready_by_worker: dict[int, dict[str, Any]] = {}
+    startup_failures: dict[int, dict[str, Any]] = {}
+    duplicate_ready_counts: dict[int, int] = {}
+
+    def consume(items: Sequence[Mapping[str, Any]]) -> None:
+        for item in items:
+            before = set(ready_by_worker)
+            record_startup_message(
+                item,
+                ready_by_worker=ready_by_worker,
+                failures_by_worker=startup_failures,
+                duplicate_ready_counts=duplicate_ready_counts,
+            )
+            worker_id = item.get("worker_id")
+            if item.get("event") == "MODEL_READY" and worker_id not in before:
+                print(canonical(ready_by_worker[int(worker_id)]), flush=True)
+
+    while set(ready_by_worker) != EXPECTED_WORKER_IDS:
+        received: list[dict[str, Any]] = []
         try:
-            item = ready.get(timeout=10)
+            item = ready.get(timeout=STARTUP_READY_POLL_SECONDS)
+            if not isinstance(item, Mapping):
+                raise TypeError(f"startup IPC item must be a mapping: {type(item).__name__}")
+            received.append(dict(item))
         except queue.Empty:
-            dead = [(index, process.exitcode) for index, process in enumerate(processes) if process.exitcode is not None]
-            if dead:
-                raise RuntimeError(f"worker exited during model load: {dead}")
-            continue
-        if item["event"] == "MODEL_READY":
-            loads.append(item)
-            print(canonical(item), flush=True)
-        else:
-            startup_failures.append(item)
-    if startup_failures:
-        for process in processes:
-            if process.is_alive():
-                process.terminate()
-        raise RuntimeError(f"worker startup failures: {startup_failures}")
+            pass
+        received.extend(drain_startup_queue(ready))
+        try:
+            consume(received)
+        except Exception as exc:
+            report = abort_startup(
+                output=output,
+                processes=processes,
+                start_barrier=start_barrier,
+                ready_by_worker=ready_by_worker,
+                failures_by_worker=startup_failures,
+                duplicate_ready_counts=duplicate_ready_counts,
+                reason=f"invalid startup handshake: {type(exc).__name__}: {exc}",
+            )
+            raise RuntimeError(f"worker startup handshake invalid; diagnostics={output / 'STARTUP_FAILURE_REPORT.json'}") from exc
+
+        disk_statuses, disk_failures = read_startup_artifacts(output)
+        for worker_id, failure in disk_failures.items():
+            startup_failures.setdefault(worker_id, failure)
+        dead = {
+            worker_id: process.exitcode
+            for worker_id, process in enumerate(processes)
+            if process.exitcode is not None
+        }
+        if startup_failures or dead:
+            # A Queue feeder may publish after the process exit becomes visible.
+            # Give it one bounded grace, then prefer the authoritative disk file.
+            try:
+                consume(drain_startup_queue(ready, grace_seconds=STARTUP_QUEUE_DRAIN_GRACE_SECONDS))
+            except Exception as exc:
+                reason = f"startup diagnostic drain failed: {type(exc).__name__}: {exc}"
+            else:
+                reason = "worker startup failure or pre-ready process exit detected"
+            _statuses, disk_failures = read_startup_artifacts(output)
+            for worker_id, failure in disk_failures.items():
+                startup_failures.setdefault(worker_id, failure)
+            abort_startup(
+                output=output,
+                processes=processes,
+                start_barrier=start_barrier,
+                ready_by_worker=ready_by_worker,
+                failures_by_worker=startup_failures,
+                duplicate_ready_counts=duplicate_ready_counts,
+                reason=reason,
+            )
+            raise RuntimeError(f"worker startup failed; diagnostics={output / 'STARTUP_FAILURE_REPORT.json'}")
+
+    if set(ready_by_worker) != EXPECTED_WORKER_IDS or startup_failures:
+        raise AssertionError("startup loop exited without exact four-worker readiness")
+    write_startup_summary(
+        output=output,
+        status="STARTUP_READY",
+        processes=processes,
+        ready_by_worker=ready_by_worker,
+        failures_by_worker=startup_failures,
+        duplicate_ready_counts=duplicate_ready_counts,
+    )
 
     sampler = TelemetrySampler(float(config["telemetry"]["gpu_sample_interval_seconds"]))
     sampler.start()
     workload_start_mono = time.perf_counter(); workload_start_unix = time.time(); start_barrier.set()
+    write_startup_summary(
+        output=output,
+        status="STARTUP_SUCCEEDED",
+        processes=processes,
+        ready_by_worker=ready_by_worker,
+        failures_by_worker=startup_failures,
+        duplicate_ready_counts=duplicate_ready_counts,
+    )
+    loads = [ready_by_worker[worker_id] for worker_id in sorted(EXPECTED_WORKER_IDS)]
     completions: dict[str, dict[str, Any]] = {}
     failures: dict[str, dict[str, Any]] = {}
     cell_failures: list[dict[str, Any]] = []
@@ -999,6 +1494,7 @@ def main() -> None:
     output.mkdir(parents=True, exist_ok=True)
     (output / "checkpoints" / "tasks").mkdir(parents=True)
     (output / "checkpoints" / "failures").mkdir(parents=True)
+    (output / "checkpoints" / "startup").mkdir(parents=True)
     (output / "failures.jsonl").write_text("", encoding="utf-8")
     print("RERUN_ENABLED = FALSE", flush=True)
 

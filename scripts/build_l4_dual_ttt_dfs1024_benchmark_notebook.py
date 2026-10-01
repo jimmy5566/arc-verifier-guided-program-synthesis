@@ -34,6 +34,8 @@ SOURCE_PATHS = (
     "experiments/l4_dual_ttt_dfs1024_bench_v1/BENCHMARK_COHORT_SHA256.txt",
     "experiments/l4_dual_ttt_dfs1024_bench_v1/benchmark_config.json",
     "experiments/l4_dual_ttt_dfs1024_bench_v1/FAILED_V1_INFRA_PROVENANCE.json",
+    "experiments/l4_dual_ttt_dfs1024_bench_v1/FAILED_V2_STARTUP_PROVENANCE.json",
+    "experiments/l4_dual_ttt_dfs1024_bench_v1/SUCCESSFUL_RUNNER_LIFECYCLE_COMPARISON.md",
     "experiments/l4_dual_ttt_dfs1024_bench_v1/README.md",
     "pyproject.toml",
 )
@@ -110,7 +112,7 @@ def notebook_source(owner: str, dataset_slug: str) -> str:
             'command = [sys.executable, str(RUNNER), "--challenge", str(CHALLENGE), "--model-path", str(MODEL), "--native-config-dir", str(NATIVE_CONFIG), "--config", str(CONFIG), "--cohort", str(COHORT), "--output", str(OUTPUT), "--source-branch", identity["source_branch"], "--source-git-status", identity["source_git_status"], "--notebook-start-monotonic", str(NOTEBOOK_START_MONOTONIC), "--env-init-seconds", str(env_init_s)]',
             'print(json.dumps({"event": "BENCHMARK_NOTEBOOK_PREFLIGHT_PASS", "dataset": identity, "gpus": gpus, "internet": False, "rerun": False}, sort_keys=True), flush=True)',
             'subprocess.run(command, check=True, env={**os.environ, "TRITON_PTXAS_PATH": "/usr/local/cuda-12.5/bin/ptxas", "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1", "TOKENIZERS_PARALLELISM": "false"})',
-            'required_outputs = ["benchmark_provenance.json", "BENCHMARK_TASK_IDS.json", "BENCHMARK_COHORT_SHA256.txt", "task_timing.csv", "cell_dfs_metrics.csv", "gpu_telemetry_1s.csv", "gpu_summary.csv", "system_telemetry_1s.csv", "worker_summary.csv", "throughput_summary.json", "runtime_projection.json", "failures.jsonl", "L4_DUAL_TTT_DFS1024_BENCH_REPORT.md", "DECISION.json"]',
+            'required_outputs = ["benchmark_provenance.json", "BENCHMARK_TASK_IDS.json", "BENCHMARK_COHORT_SHA256.txt", "task_timing.csv", "cell_dfs_metrics.csv", "gpu_telemetry_1s.csv", "gpu_summary.csv", "system_telemetry_1s.csv", "worker_summary.csv", "throughput_summary.json", "runtime_projection.json", "failures.jsonl", "startup_summary.json", "L4_DUAL_TTT_DFS1024_BENCH_REPORT.md", "DECISION.json"]',
             'missing_outputs = [name for name in required_outputs if not (OUTPUT / name).is_file()]',
             'if missing_outputs: raise RuntimeError(f"benchmark outputs missing: {missing_outputs}")',
             'decision = json.loads((OUTPUT / "DECISION.json").read_text(encoding="utf-8"))',
@@ -200,6 +202,9 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     source_identity = {
         "benchmark_id": BENCHMARK_ID,
         "infra_fix_only": True,
+        "fix_type": "INFRASTRUCTURE_OBSERVABILITY_AND_ABORT_ONLY",
+        "version_1_scientific_data": "NONE",
+        "version_2_scientific_data": "NONE",
         "previous_gpu_run_scientific_data": "NONE",
         "source_commit": commit,
         "scientific_base_commit": config["scientific_base_commit"],
@@ -271,6 +276,8 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         shutil.copy2(dataset / "BENCHMARK_TASK_IDS.json", review / "BENCHMARK_TASK_IDS.json")
         shutil.copy2(dataset / "SOURCE_IDENTITY.json", review / "SOURCE_IDENTITY.json")
         shutil.copy2(source / "experiments/l4_dual_ttt_dfs1024_bench_v1/FAILED_V1_INFRA_PROVENANCE.json", review / "FAILED_V1_INFRA_PROVENANCE.json")
+        shutil.copy2(source / "experiments/l4_dual_ttt_dfs1024_bench_v1/FAILED_V2_STARTUP_PROVENANCE.json", review / "FAILED_V2_STARTUP_PROVENANCE.json")
+        shutil.copy2(source / "experiments/l4_dual_ttt_dfs1024_bench_v1/SUCCESSFUL_RUNNER_LIFECYCLE_COMPARISON.md", review / "SUCCESSFUL_RUNNER_LIFECYCLE_COMPARISON.md")
         shutil.copy2(args.output / "SOURCE_PACKAGE_MANIFEST.json", review / "SOURCE_PACKAGE_MANIFEST.json")
         shutil.copy2(args.output / "PACKAGE_MANIFEST.json", review / "PACKAGE_MANIFEST.json")
         write_json(
