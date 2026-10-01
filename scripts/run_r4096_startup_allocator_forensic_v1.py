@@ -238,7 +238,11 @@ def _run_initialization(args: argparse.Namespace) -> int:
     contract = _contract(args)
     args.output.mkdir(parents=True, exist_ok=True)
     rows: list[dict[str, Any]] = []
-    torch.cuda.reset_peak_memory_stats(device=args.device)
+    # Create the CUDA context before asking the allocator to reset its peak
+    # counters.  On this PyTorch build, reset_peak_memory_stats("cuda:0")
+    # before context initialization raises ``Invalid device argument``.
+    torch.cuda.init()
+    torch.cuda.reset_peak_memory_stats()
 
     def loader_observer(event: str) -> None:
         label = "M0_MODEL_LOADED" if event == "model_loaded" else "M1_ADAPTER_LOADED"
