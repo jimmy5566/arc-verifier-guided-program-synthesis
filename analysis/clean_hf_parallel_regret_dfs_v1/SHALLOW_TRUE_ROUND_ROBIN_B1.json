@@ -1,0 +1,14 @@
+{
+  "all_strict_semantic_exact": true,
+  "candidate": "/root/arc-runtime-3090-v2/active_run/clean_hf_parallel_regret_dfs_v1/true_round_robin_r128.json",
+  "candidate_raw_sha256": "f6bffb5deeceec55254de444f93c6e0d7232049b01e6cfb02e706907d4093af2",
+  "cell_count": 4,
+  "experiment": "CLEAN_HF_PARALLEL_REGRET_DFS_V1",
+  "first_divergence": null,
+  "gold_loaded": false,
+  "reference": "/root/arc-runtime-3090-v2/active_run/clean_hf_parallel_regret_dfs_v1/isolated_r128_a.json",
+  "reference_raw_sha256": "43b302905280c52f64a6f033e98a59b7e753db8e0b0fe3bc96ef08e9d02c3c64",
+  "rows_sha256": "e8642f402f2e121ce45ad65cff6a7bafd99367e92004f519724ddc1f0981941c",
+  "strict_exact_count": 4,
+  "target_blind": true
+}

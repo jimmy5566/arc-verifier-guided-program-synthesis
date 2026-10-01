@@ -1,0 +1,24 @@
+{
+  "cell_request_counts": {
+    "d59b0160:o0:d24:anti_transpose": 128,
+    "d59b0160:o0:d24:flip_ud": 128,
+    "d59b0160:o0:d24:identity": 128,
+    "d59b0160:o0:d24:transpose": 128
+  },
+  "errors": [],
+  "event_count": 512,
+  "expected_event_count": 512,
+  "experiment": "CLEAN_HF_PARALLEL_REGRET_DFS_V1",
+  "frozen_logical_order": [
+    "anti_transpose",
+    "flip_ud",
+    "identity",
+    "transpose"
+  ],
+  "gold_loaded": false,
+  "physical_batch_required": 1,
+  "raw_artifact_sha256": "1f2997bfe2aa8489107e3d8347c0a6172e9a5477b22224cbaed8110edf441b41",
+  "raw_declared_sha256": "f6bffb5deeceec55254de444f93c6e0d7232049b01e6cfb02e706907d4093af2",
+  "status": "PASS",
+  "target_blind": true
+}
