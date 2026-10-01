@@ -496,6 +496,7 @@ def run_ready_scheduler(
     cells: list[ReadyCell],
     dynamic_batch2: bool,
     scheduling_policy: SchedulingPolicy = "serial",
+    observer: Callable[[str, dict[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     """Drive independent cells through one shared physical B1/B2 path.
 
@@ -532,6 +533,13 @@ def run_ready_scheduler(
                     break
         requests = [cell.request for cell in selected]
         assert all(request is not None for request in requests)
+        if observer is not None:
+            observer("before_forward", {
+                "physical_forward_index": forwards + 1,
+                "selected_cells": selected,
+                "requests": requests,
+                "physical_batch": len(selected),
+            })
         trace_inputs = []
         if first.config.diagnostic_trace:
             for cell, request in zip(selected, requests, strict=True):
@@ -572,6 +580,15 @@ def run_ready_scheduler(
                 for lane, cache in enumerate(split_cache):
                     outputs_by_cell.append(type("Reply", (), {"logits": outputs.logits[lane:lane + 1], "past_key_values": cache})())
         elapsed = time.perf_counter() - started
+        if observer is not None:
+            observer("after_model_forward", {
+                "physical_forward_index": forwards + 1,
+                "selected_cells": selected,
+                "requests": requests,
+                "outputs_by_cell": outputs_by_cell,
+                "physical_batch": len(selected),
+                "model_elapsed_seconds": elapsed,
+            })
         forwards += 1
         for cell in selected:
             # One physical B2 forward is fully attributable to every logical
