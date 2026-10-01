@@ -132,6 +132,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         name: module for name, module in model.named_modules()
         if any(name.endswith(suffix) for suffix in (
             "layers.0.input_layernorm", "layers.0.self_attn",
+            "layers.0.self_attn.q_proj", "layers.0.self_attn.k_proj",
+            "layers.0.self_attn.v_proj", "layers.0.self_attn.o_proj",
             "layers.0.post_attention_layernorm", "layers.0.mlp"))
     }
     captures: dict[str, list[Any]] = {name: [] for name in layer_modules}
