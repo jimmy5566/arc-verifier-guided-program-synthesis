@@ -29,6 +29,7 @@ from scripts.run_regret_shared_b1_call_history_audit_v1 import (
     ARC_TOKEN_IDS,
     HISTORY,
     PRIMARY,
+    _reply,
     _cache_geometry,
     _cache_sha,
     _logit_summary,
@@ -137,6 +138,45 @@ def _write_condition(args: argparse.Namespace) -> None:
         _release(model)
 
 
+def _write_history_condition(args: argparse.Namespace) -> None:
+    """One fresh process/model for exactly N foreign incremental forwards."""
+    contract = read_json(args.contract.resolve())
+    no_gold_challenge(Path(contract["challenge"]))
+    model, encoded, dec, adapter_sha, native = _runtime(contract, args.gpu_id)
+    try:
+        flip = _new_cell(model, encoded, dec, PRIMARY)
+        request = flip.request
+        if request is None:
+            raise RuntimeError("flip root prefill did not yield an incremental request")
+        flip_cache_before = _cache_details(request.cache)
+        anti = _new_cell(model, encoded, dec, HISTORY)
+        actual = 0
+        while actual < args.history_length:
+            if anti.request is None:
+                raise RuntimeError(f"anti completed before requested history {args.history_length}")
+            outputs, _summary = _one_forward(model, anti.request)
+            _reply(anti, outputs); actual += 1
+        flip_cache_after = _cache_details(request.cache)
+        outputs, summary = _one_forward(model, request)
+        atomic_json(args.result.resolve(), {
+            "history_length_requested": int(args.history_length), "history_length_executed": actual,
+            "foreign_incremental_forwards": actual, "foreign_prefill": True,
+            "cell_key": f"{TASK_ID}:o{OUTPUT_INDEX}:d{DEPTH}:{PRIMARY}",
+            "foreign_cell_key": f"{TASK_ID}:o{OUTPUT_INDEX}:d{DEPTH}:{HISTORY}",
+            "request_token_id": int(request.token_id), "request_position": int(request.position),
+            "request_ordinal": int(request.ordinal), "adapter_sha256": adapter_sha,
+            "native_token_contract": native, "request_cache_before": flip_cache_before,
+            "request_cache_after_foreign_history": flip_cache_after,
+            "full_logits_sha256": summary["full_logits_sha256"], "arc_logits": summary["arc_logits"],
+            "arc_logprobs": summary["arc_logprobs"], "arc_ranking": summary["arc_ranking"],
+            "top1": summary["top1"], "top2": summary["top2"],
+            "retained_regret_successors": _retained_successors(outputs.logits, dec),
+            "gold_accessed": False, "dfs_executed": False, "dynamic_b2_executed": False,
+        })
+    finally:
+        _release(model)
+
+
 def _same(lhs: dict[str, Any], rhs: dict[str, Any]) -> dict[str, Any]:
     fields = ("full_logits_sha256", "arc_logits", "arc_logprobs", "arc_ranking", "retained_regret_successors")
     row = {f"{field}_same": lhs[field] == rhs[field] for field in fields}
@@ -225,7 +265,7 @@ def run(args: argparse.Namespace) -> None:
         {"comparison": "A1 vs A2", **native}, {"comparison": "B1 vs B2", **legacy}
     ])
     placeholders = {
-        "FOREIGN_HISTORY_LENGTH_SWEEP.csv": "NOT_REQUIRED_BY_DECISION_TREE" if foreign_changes else "NOT_RUN_DUE_TO_PRIOR_GATE",
+        "FOREIGN_HISTORY_LENGTH_SWEEP.csv": "NOT_REQUIRED_BY_DECISION_TREE" if foreign_changes else "PENDING_NEXT_DECISION_TREE_PHASE",
         "FIRST_DIVERGENT_LAYER.csv": "NOT_RUN_DUE_TO_PRIOR_GATE",
         "NATIVE_CACHE_METADATA_DIFF.json": "NOT_REQUIRED_BY_DECISION_TREE" if decision != "NATIVE_CACHE_OBJECT_STATE_DEPENDENCY" else "NOT_RUN_DUE_TO_PRIOR_GATE",
         "MODEL_STATE_PREFILL_DIFF.json": "NOT_REQUIRED_BY_DECISION_TREE" if decision != "MODEL_LEVEL_PREFILL_MUTABLE_STATE_DEPENDENCY" else "NOT_RUN_DUE_TO_PRIOR_GATE",
@@ -250,6 +290,49 @@ def run(args: argparse.Namespace) -> None:
     atomic_json(output / "HASHES.json", {"sha256": hashes, "gold_accessed": False})
 
 
+def history(args: argparse.Namespace) -> None:
+    output = args.output.resolve(); contract = output / "PREFILL_STATE_ROOT_CAUSE_CONTRACT.json"
+    decision_path = output / "DECISION.json"
+    decision = read_json(decision_path)
+    if decision["causal_classification"] != "FOREIGN_INCREMENTAL_HISTORY_REQUIRED":
+        raise RuntimeError(f"history sweep is not authorized by current decision: {decision['causal_classification']}")
+    no_gold_challenge(Path(read_json(contract)["challenge"]))
+    prior = output / "history_raw"
+    prior.mkdir(exist_ok=True)
+    for length in (0, 1, 2, 8, 32):
+        result = prior / f"N{length}.json"
+        if result.exists():
+            raise RuntimeError(f"refusing to overwrite existing history condition {result}")
+        subprocess.run([sys.executable, str(Path(__file__).resolve()), "history-condition", "--contract", str(contract),
+                        "--result", str(result), "--history-length", str(length), "--gpu-id", str(args.gpu_id)], check=True)
+    rows = [read_json(prior / f"N{length}.json") for length in (0, 1, 2, 8, 32)]
+    baseline = rows[0]
+    summary = []
+    first_drift: int | None = None
+    for row in rows:
+        parity = _same(baseline, row)
+        summary.append({"history_length": row["history_length_requested"], "history_length_executed": row["history_length_executed"],
+                        "flip_token_id": row["request_token_id"], "flip_position": row["request_position"],
+                        "flip_cache_before_sha256": row["request_cache_before"].get("content_sha256"),
+                        "full_logits_sha256": row["full_logits_sha256"], "arc_ranking": row["arc_ranking"],
+                        "retained_regret_successors": row["retained_regret_successors"], **parity})
+        if first_drift is None and not parity["strict_forward_parity"]:
+            first_drift = int(row["history_length_requested"])
+    write_csv(output / "FOREIGN_HISTORY_LENGTH_SWEEP.csv", summary)
+    if first_drift is None:
+        decision["causal_classification"] = "NOT_ESTABLISHED"
+        decision["next"] = "STOP_AND_REVIEW_NO_DRIFT_THROUGH_HISTORY32"
+        decision["foreign_incremental_history_first_drift"] = "NONE_THROUGH_32"
+    else:
+        decision["causal_classification"] = "FOREIGN_INCREMENTAL_HISTORY_REQUIRED"
+        decision["next"] = "FIRST_LEVEL_ROOT_CAUSE_LOCALIZATION"
+        decision["foreign_incremental_history_first_drift"] = first_drift
+    atomic_json(decision_path, decision)
+    hashes = {path.relative_to(output).as_posix(): sha256_file(path) for path in sorted(output.rglob("*"))
+              if path.is_file() and path.name != "HASHES.json"}
+    atomic_json(output / "HASHES.json", {"sha256": hashes, "gold_accessed": False})
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(); sub = parser.add_subparsers(dest="command", required=True)
     prep = sub.add_parser("prepare")
@@ -260,13 +343,18 @@ def main() -> None:
         item.add_argument("--adapter-manifest", type=Path, required=True); item.add_argument("--fixed-budget-contract", type=Path, required=True)
         item.add_argument("--source-commit", required=True)
     run_parser = sub.add_parser("run"); run_parser.add_argument("--output", type=Path, required=True); run_parser.add_argument("--gpu-id", type=int, default=0)
+    history_parser = sub.add_parser("history"); history_parser.add_argument("--output", type=Path, required=True); history_parser.add_argument("--gpu-id", type=int, default=0)
     condition = sub.add_parser("condition"); condition.add_argument("--contract", type=Path, required=True); condition.add_argument("--result", type=Path, required=True)
     condition.add_argument("--condition-id", required=True); condition.add_argument("--cache-mode", choices=("NATIVE", "LEGACY_DEEP_CLONE"), required=True)
     condition.add_argument("--foreign-prefill", action="store_true"); condition.add_argument("--gpu-id", type=int, default=0)
+    history_condition = sub.add_parser("history-condition"); history_condition.add_argument("--contract", type=Path, required=True); history_condition.add_argument("--result", type=Path, required=True)
+    history_condition.add_argument("--history-length", type=int, choices=(0, 1, 2, 8, 32), required=True); history_condition.add_argument("--gpu-id", type=int, default=0)
     args = parser.parse_args()
     if args.command == "prepare": prepare(args)
     elif args.command == "run": run(args)
-    else: _write_condition(args)
+    elif args.command == "condition": _write_condition(args)
+    elif args.command == "history": history(args)
+    else: _write_history_condition(args)
 
 
 if __name__ == "__main__": main()
