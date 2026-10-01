@@ -193,13 +193,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 assert request is not None
                 owner = cell.cache_owner
                 assert owner is not None
+                frame_owner_ids = _frame_owner_ids(cell)
+                owner_id = id(owner.cache)
                 identity_rows.append({
                     "run": label, "physical_forward_index": data["physical_forward_index"],
                     "physical_batch": physical, "cell_key": cell.cell_key,
-                    "cell_owner_cache_id": id(owner.cache), "request_owner_cache_id": id(request.cache_owner.cache),
+                    "cell_owner_cache_id": owner_id, "request_owner_cache_id": id(request.cache_owner.cache),
                     "reply_owner_cache_id": id(reply.past_key_values),
-                    "frame_owner_ids_json": json.dumps(_frame_owner_ids(cell)),
-                    "cache_owner_stable": id(owner.cache) == id(request.cache_owner.cache) == id(reply.past_key_values),
+                    "frame_owner_ids_json": json.dumps(frame_owner_ids),
+                    "cache_owner_stable": owner_id == id(request.cache_owner.cache) == id(reply.past_key_values),
+                    # The suspended DFS recursion is the lifetime-sensitive
+                    # part of this design.  It must never retain a temporary
+                    # B2 cache generation after split/adoption.
+                    "all_suspended_frames_use_owner": bool(frame_owner_ids) and set(frame_owner_ids) == {owner_id},
                     "owner_cache_sequence_length": int(_legacy_cache(owner.cache)[0][0].shape[-2]),
                     "owner_cache_sha256": cache_sha256(owner.cache),
                 })
@@ -278,7 +284,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                                              scheduling_policy="dynamic_ready", observer=plateau_observer)
     expected_points = {1, 2, 4, 8, 16, 32}
     observed_points = {int(row["b2_forward_count"]) for row in plateau_rows}
-    owner_identity_pass = all(bool(row["cache_owner_stable"]) for row in identity_rows)
+    owner_identity_pass = all(
+        bool(row["cache_owner_stable"]) and bool(row["all_suspended_frames_use_owner"])
+        for row in identity_rows
+    )
     plateau_owner_pass = len({id(cell.cache_owner.cache) for cell in plateau_cells if cell.cache_owner is not None}) == 2
     later = [row for row in plateau_rows if int(row["b2_forward_count"]) >= 8]
     allocated_spread = max((int(row["allocated_bytes"]) for row in later), default=0) - min((int(row["allocated_bytes"]) for row in later), default=0)
