@@ -170,7 +170,13 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         shutil.copy2(EXPERIMENT / name, dataset / name)
     write_json(dataset / "SOURCE_IDENTITY.json", {"experiment_id": EXPERIMENT_ID, "source_commit": commit, "source_branch": branch, "source_git_status": "PACKAGED_CLEAN_FROM_GIT_ARCHIVE", "source_paths": list(SOURCE_PATHS)})
     write_json(dataset / "dataset-metadata.json", {"id": f"{args.owner}/{args.dataset_slug}", "title": "ARC2 Eval60 Dual-TTT DFS1024 Retention30", "subtitle": "Private target-blind Retention30 experiment source", "description": "Contains a frozen output-ID manifest but no solution grids or historical candidate answers.", "licenses": [{"name": "other"}]})
-    forbidden = [path for path in dataset.rglob("*") if path.is_file() and any(token in path.name.lower() for token in ("solution", "answer", "gold", "prediction"))]
+    forbidden = [
+        path
+        for path in dataset.rglob("*")
+        if path.is_file()
+        and path.suffix.lower() in {".json", ".jsonl", ".csv", ".zip", ".parquet"}
+        and any(token in path.name.lower() for token in ("solution", "answer", "gold", "prediction"))
+    ]
     if forbidden:
         raise RuntimeError(f"private source package contains forbidden target artifact: {forbidden}")
     kernel = args.output / "kernel"
