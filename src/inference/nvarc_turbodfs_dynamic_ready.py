@@ -597,18 +597,136 @@ def _select_ready_cells(
     return [ordered[0]], None, None, keys
 
 
+def execute_ready_forward(
+    *,
+    model: Any,
+    selected: list[ReadyCell],
+    requests: list[ReadyForwardRequest],
+    cache_pack_observer: Callable[[str, dict[str, Any]], None] | None = None,
+    release_batch_temporaries_for_audit: bool = False,
+) -> tuple[list[Any], dict[str, float]]:
+    """Execute one real physical ready-cell forward for one to four lanes.
+
+    The production scheduler and bounded B4 characterization use this exact
+    pack/forward/split/adoption path.  It deliberately owns neither READY
+    selection nor coroutine resumption: callers retain those responsibilities
+    so a micro benchmark can inspect a single physical forward without
+    altering the DFS scheduler policy.
+    """
+    import torch
+
+    if not selected or len(selected) != len(requests):
+        raise ValueError("selected cells and requests must be nonempty and aligned")
+    if len(selected) > 4:
+        raise ValueError("physical ready-cell batches above four are not implemented")
+    if any(request is None for request in requests):  # pragma: no cover - type guard for external callers
+        raise ValueError("physical ready-cell forward received an empty request")
+    first = selected[0]
+    if any(request.cache_key != requests[0].cache_key or request.position != requests[0].position
+           for request in requests[1:]):
+        raise RuntimeError("attempted physical batch with incompatible ready-cell requests")
+
+    started = time.perf_counter()
+    cache_pack_seconds = 0.0
+    cache_adoption_seconds = 0.0
+    with torch.no_grad():
+        if len(selected) == 1:
+            request = requests[0]
+            model_started = time.perf_counter()
+            outputs = model(**ready_incremental_forward_kwargs(
+                token_ids=[request.token_id], position=request.position,
+                cache=request.cache, device=model.device,
+            ))
+            model_call_seconds = time.perf_counter() - model_started
+            outputs_by_cell = [outputs]
+        else:
+            pack_started = time.perf_counter()
+            merged_legacy = _cat_caches(
+                [request.cache for request in requests], observer=cache_pack_observer,
+            )
+            if cache_pack_observer is not None:
+                cache_pack_observer("before_restore", {"merged_legacy": merged_legacy})
+            merged_cache = _restore_cache_kind(merged_legacy, requests[0].cache)
+            cache_pack_seconds = time.perf_counter() - pack_started
+            if cache_pack_observer is not None:
+                cache_pack_observer("after_restore", {"merged_legacy": merged_legacy, "merged_cache": merged_cache})
+                cache_pack_observer("before_model_forward", {"merged_legacy": merged_legacy, "merged_cache": merged_cache})
+            model_started = time.perf_counter()
+            outputs = model(**ready_incremental_forward_kwargs(
+                token_ids=[request.token_id for request in requests], position=first.request.position,
+                cache=merged_cache, device=model.device,
+            ))
+            model_call_seconds = time.perf_counter() - model_started
+            if cache_pack_observer is not None:
+                cache_pack_observer("after_b2_model_forward", {
+                    "merged_legacy": merged_legacy, "merged_cache": merged_cache, "outputs": outputs,
+                })
+            split_legacy = _split_cache(outputs.past_key_values, len(selected))
+            if cache_pack_observer is not None:
+                cache_pack_observer("after_split_legacy", {
+                    "merged_legacy": merged_legacy, "merged_cache": merged_cache,
+                    "outputs": outputs, "split_legacy": split_legacy,
+                })
+            # Each suspended DFS frame retains its original DynamicCache
+            # owner.  Adopt tensor contents only; never replace that owner.
+            adopt_started = time.perf_counter()
+            adopted_cache_ids: list[int] = []
+            for request, lane_legacy in zip(requests, split_legacy, strict=True):
+                owner_cache = request.cache_owner.cache
+                owner_id = id(owner_cache)
+                if _is_transformers_cache(owner_cache):
+                    replace_cache_contents_in_place(owner_cache, lane_legacy)
+                    if id(request.cache_owner.cache) != owner_id:
+                        raise RuntimeError("batched cache adoption replaced a logical owner object")
+                    adopted_cache_ids.append(owner_id)
+                else:
+                    # CPU compatibility only.  Production Clean-HF reaches
+                    # the DynamicCache branch above.
+                    request.cache_owner.cache = lane_legacy
+                    adopted_cache_ids.append(id(request.cache_owner.cache))
+            cache_adoption_seconds = time.perf_counter() - adopt_started
+            outputs_by_cell = []
+            for lane, request in enumerate(requests):
+                outputs_by_cell.append(type("Reply", (), {
+                    "logits": outputs.logits[lane:lane + 1],
+                    "past_key_values": request.cache_owner.cache,
+                })())
+            if cache_pack_observer is not None:
+                cache_pack_observer("after_split_adoption", {
+                    "merged_legacy": merged_legacy,
+                    "merged_cache": merged_cache,
+                    "split_legacy": split_legacy,
+                    "adopted_cache_ids": adopted_cache_ids,
+                })
+            if release_batch_temporaries_for_audit:
+                merged_legacy = None
+                merged_cache = None
+                split_legacy = None
+                outputs = None
+                if cache_pack_observer is not None:
+                    cache_pack_observer("after_release_temporaries", {"outputs_by_cell": outputs_by_cell})
+    elapsed = time.perf_counter() - started
+    return outputs_by_cell, {
+        "model_call_seconds": model_call_seconds,
+        "cache_pack_seconds": cache_pack_seconds,
+        "cache_adoption_seconds": cache_adoption_seconds,
+        "scheduler_elapsed_seconds": elapsed,
+    }
+
+
 def run_ready_scheduler(
     *,
     model: Any,
     cells: list[ReadyCell],
-    dynamic_batch2: bool,
+    dynamic_batch2: bool = False,
     scheduling_policy: SchedulingPolicy = "serial",
     observer: Callable[[str, dict[str, Any]], None] | None = None,
     cache_pack_observer: Callable[[str, dict[str, Any]], None] | None = None,
     release_b2_temporaries_for_audit: bool = False,
     collect_event_trace: bool = True,
+    max_physical_batch: int | None = None,
 ) -> dict[str, Any]:
-    """Drive independent cells through one shared physical B1/B2 path.
+    """Drive independent cells through one shared physical B1--B4 path.
 
     Only READY-cell selection differs between policies.  The request
     construction, cache merge/split, model invocation, reply, and DFS resume
@@ -618,13 +736,18 @@ def run_ready_scheduler(
 
     if scheduling_policy not in {"serial", "round_robin", "dynamic_ready"}:
         raise ValueError(f"unknown scheduling policy: {scheduling_policy}")
-    if scheduling_policy == "round_robin" and dynamic_batch2:
-        raise ValueError("round_robin is a B1 policy and cannot enable physical B2")
+    physical_limit = (2 if dynamic_batch2 else 1) if max_physical_batch is None else max_physical_batch
+    if physical_limit not in {1, 2, 4}:
+        raise ValueError("max_physical_batch must be one of 1, 2, or 4")
+    if scheduling_policy == "round_robin" and physical_limit != 1:
+        raise ValueError("round_robin is a B1 policy and cannot enable physical batching")
     events: list[dict[str, Any]] = []
     forwards = 0
     logical_advances = 0
     b1_forwards = 0
     b2_forwards = 0
+    b3_forwards = 0
+    b4_forwards = 0
     model_call_seconds_total = 0.0
     cache_pack_seconds_total = 0.0
     cache_adoption_seconds_total = 0.0
@@ -640,15 +763,18 @@ def run_ready_scheduler(
         if not selected:
             break
         first = selected[0]
-        if dynamic_batch2:
+        if physical_limit > 1:
             ready = sorted(
                 (cell for cell in cells if cell.request is not None),
                 key=lambda cell: (cell.cell_key, cell.request.ordinal if cell.request else -1),
             )
-            for other in ready[1:]:
+            for other in ready:
+                if other is first:
+                    continue
+                if len(selected) >= physical_limit:
+                    break
                 if other.request is not None and other.request.cache_key == first.request.cache_key and other.request.position == first.request.position:
                     selected.append(other)
-                    break
         requests = [cell.request for cell in selected]
         assert all(request is not None for request in requests)
         if observer is not None:
@@ -670,98 +796,19 @@ def run_ready_scheduler(
                     "cache_geometry": repr(request.cache_key),
                     "request_parent_node_id": request.parent_node_id,
                 })
-        # Telemetry is deliberately host-wall measurement only.  It never
-        # synchronizes CUDA or changes the model/cache execution contract.
-        started = time.perf_counter()
-        cache_pack_seconds = 0.0
-        cache_adoption_seconds = 0.0
-        # The authoritative decoder executes every model forward under
-        # ``torch.no_grad``.  The scheduler must keep that invariant even
-        # though it owns the incremental calls rather than the recursive body.
-        with torch.no_grad():
-            if len(selected) == 1:
-                request = requests[0]
-                model_started = time.perf_counter()
-                outputs = model(**ready_incremental_forward_kwargs(
-                    token_ids=[request.token_id], position=request.position,
-                    cache=request.cache, device=model.device,
-                ))
-                model_call_seconds = time.perf_counter() - model_started
-                outputs_by_cell = [outputs]
-            else:
-                pack_started = time.perf_counter()
-                merged_legacy = _cat_caches(
-                    [request.cache for request in requests], observer=cache_pack_observer,
-                )
-                if cache_pack_observer is not None:
-                    cache_pack_observer("before_restore", {"merged_legacy": merged_legacy})
-                merged_cache = _restore_cache_kind(merged_legacy, requests[0].cache)
-                cache_pack_seconds = time.perf_counter() - pack_started
-                if cache_pack_observer is not None:
-                    cache_pack_observer("after_restore", {"merged_legacy": merged_legacy, "merged_cache": merged_cache})
-                    cache_pack_observer("before_model_forward", {"merged_legacy": merged_legacy, "merged_cache": merged_cache})
-                model_started = time.perf_counter()
-                outputs = model(**ready_incremental_forward_kwargs(
-                    token_ids=[request.token_id for request in requests], position=first.request.position,
-                    cache=merged_cache, device=model.device,
-                ))
-                model_call_seconds = time.perf_counter() - model_started
-                if cache_pack_observer is not None:
-                    cache_pack_observer("after_b2_model_forward", {
-                        "merged_legacy": merged_legacy, "merged_cache": merged_cache, "outputs": outputs,
-                    })
-                split_legacy = _split_cache(outputs.past_key_values, len(selected))
-                if cache_pack_observer is not None:
-                    cache_pack_observer("after_split_legacy", {
-                        "merged_legacy": merged_legacy, "merged_cache": merged_cache,
-                        "outputs": outputs, "split_legacy": split_legacy,
-                    })
-                # A lane must retain its original CacheOwner object across B2.
-                # Copy the temporary result into that object; never give a
-                # suspended recursive frame a fresh DynamicCache generation.
-                adopt_started = time.perf_counter()
-                adopted_cache_ids: list[int] = []
-                for request, lane_legacy in zip(requests, split_legacy, strict=True):
-                    assert request is not None
-                    owner_cache = request.cache_owner.cache
-                    owner_id = id(owner_cache)
-                    if _is_transformers_cache(owner_cache):
-                        replace_cache_contents_in_place(owner_cache, lane_legacy)
-                        if id(request.cache_owner.cache) != owner_id:
-                            raise RuntimeError("B2 cache adoption replaced a logical owner object")
-                        adopted_cache_ids.append(owner_id)
-                    else:
-                        # Compatibility only for deterministic CPU legacy-KV
-                        # tests.  Production Clean-HF always reaches the
-                        # DynamicCache branch above.
-                        request.cache_owner.cache = lane_legacy
-                        adopted_cache_ids.append(id(request.cache_owner.cache))
-                cache_adoption_seconds = time.perf_counter() - adopt_started
-                outputs_by_cell = []
-                for lane, request in enumerate(requests):
-                    assert request is not None
-                    outputs_by_cell.append(type("Reply", (), {
-                        "logits": outputs.logits[lane:lane + 1],
-                        "past_key_values": request.cache_owner.cache,
-                    })())
-                if cache_pack_observer is not None:
-                    cache_pack_observer("after_split_adoption", {
-                        "merged_legacy": merged_legacy,
-                        "merged_cache": merged_cache,
-                        "split_legacy": split_legacy,
-                        "adopted_cache_ids": adopted_cache_ids,
-                    })
-                # This is deliberately opt-in and exists solely for the memory
-                # audit.  The replies own the tensors needed below; releasing
-                # these transient pack intermediates cannot change DFS state.
-                if release_b2_temporaries_for_audit:
-                    merged_legacy = None
-                    merged_cache = None
-                    split_legacy = None
-                    outputs = None
-                    if cache_pack_observer is not None:
-                        cache_pack_observer("after_release_temporaries", {"outputs_by_cell": outputs_by_cell})
-        elapsed = time.perf_counter() - started
+        # Telemetry remains host-wall only.  Synchronization belongs to the
+        # caller's explicit benchmark timing contract, never this scheduler.
+        outputs_by_cell, forward_telemetry = execute_ready_forward(
+            model=model,
+            selected=selected,
+            requests=requests,
+            cache_pack_observer=cache_pack_observer,
+            release_batch_temporaries_for_audit=release_b2_temporaries_for_audit,
+        )
+        elapsed = forward_telemetry["scheduler_elapsed_seconds"]
+        model_call_seconds = forward_telemetry["model_call_seconds"]
+        cache_pack_seconds = forward_telemetry["cache_pack_seconds"]
+        cache_adoption_seconds = forward_telemetry["cache_adoption_seconds"]
         scheduler_overhead_seconds = max(0.0, elapsed - model_call_seconds - cache_pack_seconds - cache_adoption_seconds)
         if observer is not None:
             observer("after_model_forward", {
@@ -776,6 +823,8 @@ def run_ready_scheduler(
         logical_advances += len(selected)
         b1_forwards += int(len(selected) == 1)
         b2_forwards += int(len(selected) == 2)
+        b3_forwards += int(len(selected) == 3)
+        b4_forwards += int(len(selected) == 4)
         model_call_seconds_total += model_call_seconds
         cache_pack_seconds_total += cache_pack_seconds
         cache_adoption_seconds_total += cache_adoption_seconds
@@ -825,14 +874,17 @@ def run_ready_scheduler(
                 cell.state["per_forward_trace"].append(trace)
         if len(selected) > 1 and cache_pack_observer is not None:
             cache_pack_observer("after_logical_resume", {"outputs_by_cell": outputs_by_cell})
-        del outputs
     telemetry = {
         "physical_forwards": forwards,
         "b1_forwards": b1_forwards,
         "b2_forwards": b2_forwards,
+        "b3_forwards": b3_forwards,
+        "b4_forwards": b4_forwards,
         "logical_advances": logical_advances,
         "mean_effective_batch": logical_advances / forwards if forwards else 0.0,
         "active2_fraction": (2 * b2_forwards) / logical_advances if logical_advances else 0.0,
+        "active4_logical_fraction": (4 * b4_forwards) / logical_advances if logical_advances else 0.0,
+        "b4_forward_fraction": b4_forwards / forwards if forwards else 0.0,
         "model_call_seconds": model_call_seconds_total,
         "cache_pack_seconds": cache_pack_seconds_total,
         "cache_adoption_seconds": cache_adoption_seconds_total,

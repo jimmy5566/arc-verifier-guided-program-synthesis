@@ -73,6 +73,32 @@ def test_dynamic_ready_batches_only_same_real_geometry_and_preserves_independenc
     assert [item.token_ids for item in ready_result(right).candidates[0]] == [item.token_ids for item in _scalar(prompt).candidates[0]]
 
 
+def test_dynamic_ready_generalizes_to_four_real_compatible_lanes():
+    """B4 must use the same real cache-pack/adoption path, never padding."""
+    prompt = torch.tensor([[2, 2]])
+    cells = [
+        start_ready_cell(
+            model=CacheTransitionModel(), input_ids=prompt, config=_config(),
+            cell_key=name, normalize_root_cache=True,
+        )
+        for name in ("anti_transpose", "flip_ud", "identity", "transpose")
+    ]
+    owner_ids = [id(cell.request.cache_owner.cache) for cell in cells if cell.request is not None]
+    telemetry = run_ready_scheduler(
+        model=CacheTransitionModel(), cells=cells, dynamic_batch2=True,
+        max_physical_batch=4, scheduling_policy="dynamic_ready",
+    )
+    assert telemetry["telemetry"]["b4_forwards"] > 0
+    assert telemetry["telemetry"]["b1_forwards"] == 0
+    assert telemetry["telemetry"]["b2_forwards"] == 0
+    assert telemetry["telemetry"]["b3_forwards"] == 0
+    assert telemetry["telemetry"]["active4_logical_fraction"] == 1.0
+    assert all(cell.request is None for cell in cells)
+    assert len(owner_ids) == len(set(owner_ids)) == 4
+    expected = normalized_result_signature(_scalar(prompt))
+    assert all(normalized_result_signature(ready_result(cell)) == expected for cell in cells)
+
+
 def test_round_robin_b1_matches_scalar_without_physical_batching():
     from scripts.run_current_eager_shared_b1_rebaseline import run_round_robin_b1
     from scripts.run_regret_dynamic_ready_b1_1 import _cell_key
