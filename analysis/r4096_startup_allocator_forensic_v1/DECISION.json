@@ -1,0 +1,282 @@
+{
+  "classification": "R4096_LONG_HORIZON_CAPACITY_FAIL",
+  "experiment": "R4096_STARTUP_ALLOCATOR_FORENSIC_V1",
+  "gold_loaded": false,
+  "initialization_hygiene_gate": "PASS",
+  "ownership": {
+    "classes": {
+      "adapter_weights": {
+        "allocated_delta_M1_minus_M0": 1066827776,
+        "evidence": "MEASURED"
+      },
+      "cuda_reserved_but_unused": {
+        "M4_reserved_unallocated_bytes": 958175744,
+        "M7_reserved_unallocated_bytes": 732674560,
+        "evidence": "MEASURED"
+      },
+      "durable_16_owner_kv_caches": {
+        "evidence": "MEASURED",
+        "tensor_bytes": 4548722688
+      },
+      "model_weights": {
+        "allocated_bytes_at_M0": 7323829760,
+        "evidence": "MEASURED"
+      },
+      "other_workspace_or_allocator_residue": {
+        "evidence": "NOT_ESTABLISHED"
+      },
+      "packed_or_cache_temporaries": {
+        "evidence": "NOT_ESTABLISHED",
+        "reason": "No scheduler forward was run in initialization-only phase."
+      },
+      "prefill_logits_and_output_objects": {
+        "allocated_delta_M4_to_M5": -991232,
+        "evidence": "INFERRED_FROM_MEASURED_LIFETIME_DELTA",
+        "reason": "M5 drops only explicitly retained prefill-output references after extracting durable cache and cloned final-position logits.",
+        "reserved_delta_M4_to_M5": 0
+      },
+      "tokenizer_and_prompt_cpu_state": {
+        "evidence": "NOT_ESTABLISHED",
+        "reason": "This GPU allocator audit does not attribute CPU allocator ownership."
+      }
+    },
+    "cleanup": {
+      "M4": {
+        "allocated_bytes": 12964816384,
+        "augmentation_id": null,
+        "cache_owner_identity": null,
+        "cache_sequence_length": null,
+        "cell_index": null,
+        "deferred_prefill_output_count": 16,
+        "driver_free_bytes": 11036262400,
+        "driver_total_bytes": 25298141184,
+        "durable_owner_cache_bytes_total": 4548722688,
+        "fragmentation_ratio": 0.068819671460781,
+        "owner_cache_bytes": null,
+        "peak_allocated_bytes": 13156253184,
+        "peak_reserved_bytes": 13922992128,
+        "reserved_bytes": 13922992128,
+        "reserved_unallocated_bytes": 958175744,
+        "stage": "M4_ALL_16_DURABLE_CELLS_CREATED"
+      },
+      "M5": {
+        "allocated_bytes": 12963825152,
+        "augmentation_id": null,
+        "cache_owner_identity": null,
+        "cache_sequence_length": null,
+        "cell_index": null,
+        "deferred_prefill_output_count": 0,
+        "driver_free_bytes": 11036262400,
+        "driver_total_bytes": 25298141184,
+        "durable_owner_cache_bytes_total": 4548722688,
+        "fragmentation_ratio": 0.06889086535293343,
+        "owner_cache_bytes": null,
+        "peak_allocated_bytes": 13156253184,
+        "peak_reserved_bytes": 13922992128,
+        "reserved_bytes": 13922992128,
+        "reserved_unallocated_bytes": 959166976,
+        "stage": "M5_DEAD_PREFILL_OUTPUTS_RELEASED"
+      },
+      "M6": {
+        "allocated_bytes": 12963825152,
+        "augmentation_id": null,
+        "cache_owner_identity": null,
+        "cache_sequence_length": null,
+        "cell_index": null,
+        "deferred_prefill_output_count": 0,
+        "driver_free_bytes": 11036262400,
+        "driver_total_bytes": 25298141184,
+        "durable_owner_cache_bytes_total": 4548722688,
+        "fragmentation_ratio": 0.06889086535293343,
+        "owner_cache_bytes": null,
+        "peak_allocated_bytes": 13156253184,
+        "peak_reserved_bytes": 13922992128,
+        "reserved_bytes": 13922992128,
+        "reserved_unallocated_bytes": 959166976,
+        "stage": "M6_GC_COLLECTED"
+      },
+      "M7": {
+        "allocated_bytes": 12963825152,
+        "augmentation_id": null,
+        "cache_owner_identity": null,
+        "cache_sequence_length": null,
+        "cell_index": null,
+        "deferred_prefill_output_count": 0,
+        "driver_free_bytes": 11262754816,
+        "driver_total_bytes": 25298141184,
+        "durable_owner_cache_bytes_total": 4548722688,
+        "fragmentation_ratio": 0.05349356225357908,
+        "owner_cache_bytes": null,
+        "peak_allocated_bytes": 13156253184,
+        "peak_reserved_bytes": 13922992128,
+        "reserved_bytes": 13696499712,
+        "reserved_unallocated_bytes": 732674560,
+        "stage": "M7_STARTUP_EMPTY_CACHE_ONCE"
+      }
+    },
+    "experiment": "R4096_STARTUP_ALLOCATOR_FORENSIC_V1",
+    "gold_loaded": false,
+    "prompt_equivalence_classes": [
+      {
+        "augmentation_ids": "geom=anti_transpose__color=id__order=canonical",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "0be7be095352d29f898564a6894f68f99b96bbc604ac28860f18642fb9261a20"
+      },
+      {
+        "augmentation_ids": "geom=identity__color=p00_4150723698__order=canonical",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "104f15c9cdb2e1a47d43a8652c75543ea4fe6f15ac585329acb77bcf86f62ae1"
+      },
+      {
+        "augmentation_ids": "geom=rot90__color=id__order=canonical",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "17d50ff0525ac218d819a207527aebf0c49c6e86eb64807218c2790f9473868f"
+      },
+      {
+        "augmentation_ids": "geom=identity__color=id__order=canonical",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "5faf46e4b50ab7fc8b9e909355058a7f79abda5e00e220af6454de77f6857bcd"
+      },
+      {
+        "augmentation_ids": "geom=transpose__color=p01_1602397845__order=reverse",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "6ebb5d9fe4bcf4a59c1a4a6430e893ace7c69159f234a40724058cc35685add7"
+      },
+      {
+        "augmentation_ids": "geom=rot180__color=id__order=rotate_left_1",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "73394284c30755fbb012e233cd5913487d564aab4a1a0f54eab46f7c7bb894aa"
+      },
+      {
+        "augmentation_ids": "geom=transpose__color=id__order=canonical",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "82b956a80592698b8103c982bdcfc3bfd9dedb1b5e3631ea9b107bc729d22b16"
+      },
+      {
+        "augmentation_ids": "geom=anti_transpose__color=p05_5436201789__order=canonical",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "88604ca0b9f048773a841f3a79bf05a459984ef3f128730ec7da1284905f4b2a"
+      },
+      {
+        "augmentation_ids": "geom=rot270__color=id__order=canonical",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "99e8465cdcec4ffb531b7838bdeb8c0319a38b95876520a9416c1dda4496673b"
+      },
+      {
+        "augmentation_ids": "geom=flip_lr__color=id__order=canonical",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "9d7749955506ca71ba311b73e4af77f280046b591beb7bb1d29108a8fca0171d"
+      },
+      {
+        "augmentation_ids": "geom=flip_lr__color=p07_7690351428__order=rotate_left_1",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "a51ab3db7b3a6beba193cfb64a3cc39c09b4ba8cd81fc1c5e0040d0899548d6b"
+      },
+      {
+        "augmentation_ids": "geom=identity__color=id__order=reverse",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "ac2d5cc8742298e3d474393a7552b8eb32f13a01d46c2595b84521a387abe629"
+      },
+      {
+        "augmentation_ids": "geom=rot180__color=id__order=canonical",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "ac49e5366af03e9a80dff7b4bc1d5b2edc75edece11647eec0ef6e9bf49e579a"
+      },
+      {
+        "augmentation_ids": "geom=flip_ud__color=p03_5980213764__order=canonical",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "bada2613d49b62ccf404522f35ba47f96740251cec8d5d2d50656b516760f0c9"
+      },
+      {
+        "augmentation_ids": "geom=rot90__color=p02_4950812673__order=canonical",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "c6cfed6c26f2e645f26d9ba4c9b23ebf47e7124e5c0de4d26379c75c2c70b888"
+      },
+      {
+        "augmentation_ids": "geom=flip_ud__color=id__order=canonical",
+        "equivalence_class_size": 1,
+        "prompt_sha256": "ecac9fc3e0c1c04440f91a8bcc37e04bde61d7d65ca191f89f62f37ab8198034"
+      }
+    ],
+    "root_compatibility_groups": [
+      {
+        "augmentation_ids": "geom=identity__color=id__order=canonical;geom=flip_ud__color=id__order=canonical;geom=transpose__color=id__order=canonical;geom=anti_transpose__color=id__order=canonical;geom=rot90__color=id__order=canonical;geom=rot180__color=id__order=canonical;geom=rot270__color=id__order=canonical;geom=flip_lr__color=id__order=canonical;geom=identity__color=p00_4150723698__order=canonical;geom=rot90__color=p02_4950812673__order=canonical;geom=flip_ud__color=p03_5980213764__order=canonical;geom=anti_transpose__color=p05_5436201789__order=canonical;geom=identity__color=id__order=reverse;geom=rot180__color=id__order=rotate_left_1;geom=transpose__color=p01_1602397845__order=reverse;geom=flip_lr__color=p07_7690351428__order=rotate_left_1",
+        "cache_geometry": "(36, (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))), (('torch.bfloat16', 'cuda:0', (8, 1928, 128)), ('torch.bfloat16', 'cuda:0', (8, 1928, 128))))",
+        "prompt_token_length": 1928,
+        "root_compatible_count": 16
+      }
+    ],
+    "target_blind": true
+  },
+  "retention30_readiness": "DO_NOT_PROCEED",
+  "retry": {
+    "error": "CUDA out of memory. Tried to allocate 34.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 21.00 MiB is free. Process 1111918 has 23.53 GiB memory in use. Of the allocated memory 17.10 GiB is allocated by PyTorch, and 6.13 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+    "exactly_one_empty_cache_before_search": true,
+    "experiment": "R4096_STARTUP_ALLOCATOR_FORENSIC_V1",
+    "first_successful_physical_batch": {
+      "physical_batch": 16,
+      "physical_forward_index": 1,
+      "scheduler_mode": "B16_ENABLED",
+      "split_group": null
+    },
+    "gold_loaded": false,
+    "last_dispatch": {
+      "cache_length_max": 2117,
+      "cache_length_mean": 2117.0,
+      "cache_length_min": 2117,
+      "last_execution_stage": "DURING_MODEL_FORWARD",
+      "physical_forward_index": 5635,
+      "scheduler_mode": "B8_SPLIT_MODE",
+      "scheduler_search_attempted": true,
+      "selected_batch_size": 8,
+      "split_group": "A"
+    },
+    "memory": {
+      "allocated_bytes": 18356413440,
+      "augmentation_id": null,
+      "cache_owner_identity": null,
+      "cache_sequence_length": null,
+      "cell_index": null,
+      "deferred_prefill_output_count": null,
+      "driver_free_bytes": 22020096,
+      "driver_total_bytes": 25298141184,
+      "durable_owner_cache_bytes_total": null,
+      "fragmentation_ratio": 0.26389538142029684,
+      "owner_cache_bytes": null,
+      "peak_allocated_bytes": 22635742720,
+      "peak_reserved_bytes": 24939331584,
+      "reserved_bytes": 24937234432,
+      "reserved_unallocated_bytes": 6580820992,
+      "stage": "OOM_CAPTURE"
+    },
+    "oom_execution_stage": "DURING_MODEL_FORWARD",
+    "oom_timing_class": "AFTER_SEARCH_STARTED",
+    "phase": "R4096",
+    "pre_search_memory": {
+      "allocated_bytes": 12965725696,
+      "augmentation_id": null,
+      "cache_owner_identity": null,
+      "cache_sequence_length": null,
+      "cell_index": null,
+      "deferred_prefill_output_count": null,
+      "driver_free_bytes": 11262754816,
+      "driver_total_bytes": 25298141184,
+      "durable_owner_cache_bytes_total": null,
+      "fragmentation_ratio": 0.05335480096128081,
+      "owner_cache_bytes": null,
+      "peak_allocated_bytes": 13157224448,
+      "peak_reserved_bytes": 13885243392,
+      "reserved_bytes": 13696499712,
+      "reserved_unallocated_bytes": 730774016,
+      "stage": "PRE_SEARCH_AFTER_VALIDATED_HYGIENE"
+    },
+    "requested_allocation": "34",
+    "retry_performed": true,
+    "status": "OOM",
+    "target_blind": true
+  },
+  "retry_count": 1,
+  "startup_allocator_issue_confirmed": true,
+  "target_blind": true,
+  "unit_gate": "PASS"
+}

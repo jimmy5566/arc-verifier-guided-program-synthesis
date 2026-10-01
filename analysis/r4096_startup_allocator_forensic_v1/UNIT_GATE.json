@@ -1,0 +1,9 @@
+{
+  "experiment": "R4096_STARTUP_ALLOCATOR_FORENSIC_V1",
+  "gold_loaded": false,
+  "returncode": 0,
+  "status": "PASS",
+  "stderr": "",
+  "stdout": "R4096_STARTUP_HYGIENE_CPU_UNIT_PASS\n",
+  "target_blind": true
+}

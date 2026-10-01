@@ -1,0 +1,4 @@
+{"phase": "R4096", "stage": "DURING_MODEL_FORWARD", "status": "OOM"}
+
+--- STDERR ---
+Skipping import of cpp extensions due to incompatible torch version 2.8.0+cu128 for torchao version 0.14.1+cu128             Please see https://github.com/pytorch/ao/issues/2919 for more info

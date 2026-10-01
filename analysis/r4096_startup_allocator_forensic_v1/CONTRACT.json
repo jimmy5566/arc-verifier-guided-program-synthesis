@@ -1,0 +1,73 @@
+{
+  "experiment": "R4096_STARTUP_ALLOCATOR_FORENSIC_V1",
+  "frozen_inputs": {
+    "augmentation_ids_frozen_order": [
+      "geom=identity__color=id__order=canonical",
+      "geom=flip_ud__color=id__order=canonical",
+      "geom=transpose__color=id__order=canonical",
+      "geom=anti_transpose__color=id__order=canonical",
+      "geom=rot90__color=id__order=canonical",
+      "geom=rot180__color=id__order=canonical",
+      "geom=rot270__color=id__order=canonical",
+      "geom=flip_lr__color=id__order=canonical",
+      "geom=identity__color=p00_4150723698__order=canonical",
+      "geom=rot90__color=p02_4950812673__order=canonical",
+      "geom=flip_ud__color=p03_5980213764__order=canonical",
+      "geom=anti_transpose__color=p05_5436201789__order=canonical",
+      "geom=identity__color=id__order=reverse",
+      "geom=rot180__color=id__order=rotate_left_1",
+      "geom=transpose__color=p01_1602397845__order=reverse",
+      "geom=flip_lr__color=p07_7690351428__order=rotate_left_1"
+    ],
+    "augmentation_ids_sha256": "9538b5135a743c7536213440e8d3c41c0e8ab7eac0a982320ca9838681d707c3",
+    "candidate_pool_sha256": "a16e4194e7597e83e55c180896125638cfd595b108b4c935d5cd742058c90a13",
+    "project_augmentation_set": "PROJECT_RESEARCH_AUG16"
+  },
+  "gold_loaded": false,
+  "retry_count": 1,
+  "scheduler": {
+    "hard_peak_allocated_bytes": 23085449216,
+    "initial_mode": "B16_ENABLED",
+    "mode": "MEMORY_AWARE_AUG16",
+    "no_b16_reentry_after_switch": true,
+    "no_empty_cache_in_search_loop": true,
+    "permanent_fallback_mode": "B8_SPLIT_MODE",
+    "soft_peak_allocated_bytes": 22548578304
+  },
+  "scientific_contract": {
+    "backend": "Clean Transformers + PEFT",
+    "cache_adoption": "streaming_split_and_adopt",
+    "cache_strategy": "rollback DynamicCache",
+    "checkpoint": "Qwen3-4B",
+    "decoder_policy": "CUMULATIVE_REGRET_r=4.00",
+    "dtype": "BF16",
+    "frontier_floor": 1,
+    "max_completed_candidates": 32,
+    "max_expanded_nodes": 4096,
+    "ttt_depth": 24
+  },
+  "source_commit": "41bc3dbf1d5d06af015a2ca7cd885280f88e9ee6",
+  "startup_hygiene": {
+    "allowed": [
+      "clone final-position root logits before releasing prefill output",
+      "drop deferred prefill output references",
+      "drop per-cell prompt tensor after ReadyCell creation",
+      "gc.collect once after all durable owner caches exist",
+      "torch.cuda.empty_cache once before search"
+    ],
+    "forbidden": [
+      "Gold",
+      "search-loop empty_cache",
+      "dtype change",
+      "cache offload",
+      "adapter change",
+      "policy change"
+    ]
+  },
+  "target_blind": true,
+  "task": {
+    "depth": 24,
+    "output_index": 0,
+    "task_id": "d59b0160"
+  }
+}
