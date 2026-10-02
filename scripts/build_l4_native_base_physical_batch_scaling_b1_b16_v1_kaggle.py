@@ -243,7 +243,7 @@ def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str,
     _write(kernel / notebook_name, notebook)
     _write(kernel / "kernel-metadata.json", {
         "id": f"{owner}/{kernel_slug}",
-        "title": ("ARC2 L4 Native B1/B16 Engineering Smoke V1" if engineering_smoke
+        "title": ("ARC2 L4 Native Base B1/B16 Engineering Smoke V1" if engineering_smoke
                   else "ARC2 L4 Native Batch B1-B16 V1"),
         "code_file": notebook_name, "language": "python", "kernel_type": "notebook", "is_private": True,
         "enable_gpu": True, "enable_tpu": False, "enable_internet": False,

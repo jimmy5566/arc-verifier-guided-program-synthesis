@@ -453,6 +453,9 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
         assert manifest["execution_widths"] == [1, 16]
         assert manifest["warmup_forwards"] == 1
         assert manifest["measurement_forwards"] == 2
+        metadata = json.loads((staged / "kernel" / "kernel-metadata.json").read_text(encoding="utf-8"))
+        assert metadata["id"] == "private-owner/private-engineering-smoke"
+        assert "Native Base" in metadata["title"]
         notebook = json.loads((staged / "kernel" / "private-engineering-smoke.ipynb").read_text(encoding="utf-8"))
         source = "".join(notebook["cells"][0]["source"])
         assert "ENGINEERING_SMOKE_ONLY" in source
