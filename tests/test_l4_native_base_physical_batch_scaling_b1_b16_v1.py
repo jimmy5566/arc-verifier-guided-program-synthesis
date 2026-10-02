@@ -261,20 +261,94 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
         widths = {width: successful(width) for width in (1, 2, 4, 8, 12)}
         widths[16] = {
             "status": "FAIL", "ready": [{"type": "READY", "gpu_id": gpu} for gpu in range(4)],
-            "errors": [{"gpu_id": gpu, "oom": True, "setup_cost_audit": {"actual_template_prefills": 4}}
+            "errors": [{"type": "ERROR", "gpu_id": gpu, "oom": True,
+                        "setup_cost_audit": {"actual_template_prefills": 4, "expected_template_prefills": 4}}
                        for gpu in range(4)],
         }
         audit = runner._formal_prefill_audit(widths)
         assert audit["FORMAL_PREFILL_AUDIT_STATUS"] == "PASS_WITH_CAPACITY_FAILURE"
         assert audit["actual_successful_prefills_per_gpu"] == {gpu: 15 for gpu in range(4)}
         assert audit["attempted_failed_width_prefills_per_gpu"] == {gpu: 4 for gpu in range(4)}
+        assert audit["capacity_failure_evidence"]["16"]["status"] == "PASS"
         early_oom = {**widths, 16: {
             "status": "FAIL", "ready": [{"type": "READY", "gpu_id": gpu} for gpu in range(4)],
-            "errors": [{"gpu_id": 0, "oom": True, "setup_cost_audit": {"actual_template_prefills": 0, "expected_template_prefills": 4}}],
+            "errors": [{"type": "ERROR", "gpu_id": 0, "oom": True,
+                        "setup_cost_audit": {"actual_template_prefills": 0, "expected_template_prefills": 4}}],
         }}
         assert runner._formal_prefill_audit(early_oom)["FORMAL_PREFILL_AUDIT_STATUS"] == "FAIL"
+        incomplete_terminal = {**widths, 16: {
+            "status": "FAIL", "physical_batch": 16,
+            "ready": [{"type": "READY", "gpu_id": gpu} for gpu in range(4)],
+            "workers": [{"gpu_id": gpu, "status": "PASS", "setup_cost_audit": {"actual_template_prefills": 4, "expected_template_prefills": 4}}
+                        for gpu in (1, 2, 3)],
+            "errors": [{"gpu_id": 0, "type": "ERROR", "oom": True, "setup_cost_audit": {"actual_template_prefills": 4, "expected_template_prefills": 4}}],
+        }}
+        assert runner._capacity_failure_evidence(incomplete_terminal[16])["status"] == "PASS"
+        incomplete_terminal[16]["workers"].pop()
+        evidence = runner._capacity_failure_evidence(incomplete_terminal[16])
+        assert evidence["status"] == "FAIL"
+        assert evidence["checks"]["all_four_terminal"] is False
         complete = {width: successful(width) for width in runner.WIDTHS}
         assert runner._formal_prefill_audit(complete)["FORMAL_PREFILL_AUDIT_STATUS"] == "PASS_COMPLETE"
+
+    def test_smoke_setup_cost_metadata_uses_only_b1_b16_expectations(self) -> None:
+        smoke = SimpleNamespace(engineering_smoke=True)
+        formal = SimpleNamespace(engineering_smoke=False)
+        smoke_expectations = runner._setup_cost_expectations(smoke)
+        formal_expectations = runner._setup_cost_expectations(formal)
+        assert smoke_expectations["execution_widths"] == [1, 16]
+        assert smoke_expectations["expected_controller_prefills_per_gpu"] == 5
+        assert smoke_expectations["expected_total_prefills_per_gpu"] == 9
+        assert smoke_expectations["scientific_benchmark"] is False
+        assert formal_expectations["execution_widths"] == [1, 2, 4, 8, 12, 16]
+        assert formal_expectations["expected_controller_prefills_per_gpu"] == 19
+        assert formal_expectations["expected_total_prefills_per_gpu"] == 23
+
+    def test_smoke_controller_persists_b16_capacity_evidence_and_5_9_cost_metadata(self) -> None:
+        output = Path(tempfile.mkdtemp())
+        self.addCleanup(lambda: __import__("shutil").rmtree(output, ignore_errors=True))
+        (output / "CONTRACT.json").write_text("{}", encoding="utf-8")
+        (output / "DYNAMICCACHE_PREFLIGHT.json").write_text(json.dumps({"status": "PASS", "workers": []}), encoding="utf-8")
+
+        def worker(gpu: int, prefills: int) -> dict:
+            return {
+                "gpu_id": gpu, "status": "PASS",
+                "root_template_memory_audit": {"template_gpu_tensor_count": 0, "template_gpu_bytes": 0},
+                "setup_cost_audit": {"actual_template_prefills": prefills, "expected_template_prefills": prefills},
+            }
+
+        b1 = {
+            "physical_batch": 1, "status": "PASS", "workers": [worker(gpu, 1) for gpu in range(4)],
+            "errors": [], "ready": [{"type": "READY", "gpu_id": gpu} for gpu in range(4)],
+            "identity_gate": {"identity": {"benchmark_model_mode": "BASE_MODEL_ONLY", "benchmark_model_config_sha256": "base"}},
+        }
+        b16 = {
+            "physical_batch": 16, "status": "FAIL", "workers": [],
+            "ready": [{"type": "READY", "gpu_id": gpu} for gpu in range(4)],
+            "errors": [{
+                "type": "ERROR", "gpu_id": gpu, "oom": True,
+                "setup_cost_audit": {
+                    "actual_template_prefills": 4, "expected_template_prefills": 4,
+                    "root_template_memory_audit": {"template_gpu_tensor_count": 0, "template_gpu_bytes": 0},
+                },
+            } for gpu in range(4)],
+        }
+        args = SimpleNamespace(
+            output=output, engineering_smoke=True, benchmark_model_mode="BASE_MODEL_ONLY",
+            run_started_unix=0.0, phase="controller", warmup_forwards=1, measurement_forwards=2,
+        )
+        with mock.patch.object(runner, "_run_width", side_effect=[b1, b16]):
+            runner._run_controller(args)
+        setup = json.loads((output / "SETUP_COST_AUDIT.json").read_text(encoding="utf-8"))
+        smoke = json.loads((output / "ENGINEERING_SMOKE.json").read_text(encoding="utf-8"))
+        checkpoint = json.loads((output / "CHECKPOINT.json").read_text(encoding="utf-8"))
+        assert setup["execution_widths"] == [1, 16]
+        assert setup["expected_controller_prefills_per_gpu"] == 5
+        assert setup["expected_total_prefills_per_gpu"] == 9
+        assert smoke["smoke_status"] == "PASS_WITH_B16_OOM"
+        assert smoke["b16_capacity_failure_evidence"]["status"] == "PASS"
+        assert checkpoint["completed_widths"] == [1]
+        assert checkpoint["failed_width"] == 16
 
     def test_worker_phase_is_serialized_and_timed_clones_precede_timing_boundary(self) -> None:
         args = SimpleNamespace(

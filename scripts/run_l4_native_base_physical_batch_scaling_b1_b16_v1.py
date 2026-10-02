@@ -291,6 +291,29 @@ def expected_controller_prefills() -> int:
     return sum(expected_template_prefills(width) for width in WIDTHS)
 
 
+def _execution_widths(args: argparse.Namespace) -> tuple[int, ...]:
+    """Return the only widths the active runtime is authorised to execute."""
+    return (1, 16) if bool(getattr(args, "engineering_smoke", False)) else WIDTHS
+
+
+def _setup_cost_expectations(args: argparse.Namespace) -> dict[str, Any]:
+    """Describe the active run, never the formal 19-prefill plan in smoke mode."""
+    widths = _execution_widths(args)
+    controller_prefills = sum(expected_template_prefills(width) for width in widths)
+    return {
+        "execution_widths": list(widths),
+        "engineering_smoke_only": bool(getattr(args, "engineering_smoke", False)),
+        "scientific_benchmark": not bool(getattr(args, "engineering_smoke", False)),
+        "expected_controller_prefills_per_gpu": controller_prefills,
+        "runtime_preflight_expected_prefills_per_gpu": 4,
+        "expected_total_prefills_per_gpu": controller_prefills + 4,
+        # Retained only as an explicit formal reference, never as the active
+        # smoke-run expectation.
+        "formal_reference_controller_prefills_per_gpu": expected_controller_prefills(),
+        "formal_reference_total_prefills_per_gpu": expected_controller_prefills() + 4,
+    }
+
+
 def _template_from_cell(cell: Any, *, view: str) -> FrozenRootTemplate:
     request = cell.request
     if request is None:
@@ -870,10 +893,7 @@ def _measure_loaded(*, args: argparse.Namespace, physical_gpu_id: int, width: in
         "physical_forward_seconds_per_sample": [sample["execute_total_seconds"] for sample in samples],
         "template_hashes_after": hashes_after,
         "root_template_mutated": not immutable,
-        "old_expected_controller_prefills_per_gpu": 602,
-        "new_expected_controller_prefills_per_gpu": expected_controller_prefills(),
-        "runtime_preflight_expected_prefills_per_gpu": 4,
-        "new_expected_total_prefills_per_gpu": expected_controller_prefills() + 4,
+        **_setup_cost_expectations(args),
     })
     _emit_worker_progress(args, progress, "WIDTH_RESULT", gpu_id=physical_gpu_id, physical_batch=width,
                           samples=len(samples), root_template_immutable=immutable)
@@ -1180,10 +1200,7 @@ def _runtime_preflight_worker(serialized_args: dict[str, Any], gpu_id: int, resu
             "model_load_seconds": model_load_seconds,
             "template_hashes_after": hashes_after,
             "root_template_mutated": not template_immutable,
-            "old_expected_controller_prefills_per_gpu": 602,
-            "new_expected_controller_prefills_per_gpu": expected_controller_prefills(),
-            "runtime_preflight_expected_prefills_per_gpu": 4,
-            "new_expected_total_prefills_per_gpu": expected_controller_prefills() + 4,
+            **_setup_cost_expectations(args),
         })
         checks = {
             "streaming_split_and_adopt": True,
@@ -1301,8 +1318,7 @@ def _run_runtime_dynamiccache_preflight(args: argparse.Namespace) -> None:
     _atomic_json(args.output / "SETUP_COST_AUDIT.json", {
         "phase": "runtime_preflight", "workers": [{"gpu_id": row.get("gpu_id"), "setup_cost_audit": row.get("setup_cost_audit")} for row in rows],
         "root_template_memory_audit": memory_summary,
-        "old_expected_controller_prefills_per_gpu": 602, "new_expected_controller_prefills_per_gpu": 19,
-        "runtime_preflight_expected_prefills_per_gpu": 4, "new_expected_total_prefills_per_gpu": 23,
+        **_setup_cost_expectations(args),
     })
     if payload["status"] != "PASS":
         raise RuntimeError("RUNTIME_DYNAMICCACHE_PREFLIGHT_FAILED")
@@ -1554,6 +1570,8 @@ def _run_preflight(args: argparse.Namespace) -> None:
 def _formal_prefill_audit(all_widths: dict[int, dict[str, Any]]) -> dict[str, Any]:
     """Separate completed scientific evidence from a clean capacity failure."""
     successful_widths = [width for width, result in all_widths.items() if result.get("status") == "PASS"]
+    capacity_evidence = {str(width): _capacity_failure_evidence(result) for width, result in all_widths.items()
+                         if result.get("status") != "PASS"}
     capacity_failure_widths = [
         width for width, result in all_widths.items()
         if result.get("status") != "PASS" and _is_clean_capacity_failure(result)
@@ -1583,6 +1601,7 @@ def _formal_prefill_audit(all_widths: dict[int, dict[str, Any]]) -> dict[str, An
         "FORMAL_PREFILL_AUDIT_STATUS": status,
         "successful_widths": successful_widths,
         "capacity_failure_widths": capacity_failure_widths,
+        "capacity_failure_evidence": capacity_evidence,
         "expected_successful_prefills_per_gpu": expected_successful,
         "actual_successful_prefills_per_gpu": successful_actual,
         "attempted_failed_width_prefills_per_gpu": attempted_failed,
@@ -1590,22 +1609,54 @@ def _formal_prefill_audit(all_widths: dict[int, dict[str, Any]]) -> dict[str, An
     }
 
 
-def _is_clean_capacity_failure(result: dict[str, Any]) -> bool:
-    """Recognise a B16 OOM only after one worker completed root setup.
+def _capacity_failure_evidence(result: dict[str, Any]) -> dict[str, Any]:
+    """Fail closed unless a whole width reached a clean capacity observation.
 
-    A model-load or root-prefill crash cannot be promoted to a valid physical
-    capacity observation.  The worker that reports the OOM must have reached
-    its complete frozen-template setup count, and all four model-ready records
-    must already have been accepted by the controller.
+    A clean capacity outcome has four accepted MODEL_READY records, four
+    terminal worker payloads, fully completed root-template setup in every
+    terminal payload, only OOM terminal errors, and otherwise successful
+    workers.  This rules out a feeder failure, missing worker, model-load
+    failure, root-prefill failure, timeout, and post-OOM orchestration crash.
     """
     ready_ids = {row.get("gpu_id") for row in result.get("ready", []) if row.get("type") == "READY"}
-    if ready_ids != {0, 1, 2, 3}:
-        return False
-    for error in result.get("errors", []):
-        audit = error.get("setup_cost_audit", {})
-        if bool(error.get("oom")) and int(audit.get("actual_template_prefills", 0)) >= int(audit.get("expected_template_prefills", 1)):
-            return True
-    return False
+    workers = list(result.get("workers", []))
+    errors = list(result.get("errors", []))
+    terminal = [*workers, *errors]
+    terminal_ids = {row.get("gpu_id") for row in terminal if isinstance(row.get("gpu_id"), int)}
+    terminal_complete = len(terminal) == 4 and terminal_ids == {0, 1, 2, 3}
+
+    def setup_complete(row: dict[str, Any]) -> bool:
+        audit = row.get("setup_cost_audit")
+        if not isinstance(audit, dict):
+            return False
+        expected = audit.get("expected_template_prefills")
+        actual = audit.get("actual_template_prefills")
+        return isinstance(expected, int) and expected > 0 and actual == expected
+
+    checks = {
+        "width_failed": result.get("status") != "PASS",
+        "all_four_model_ready": ready_ids == {0, 1, 2, 3},
+        "all_four_terminal": terminal_complete,
+        "terminal_template_setup_complete": terminal_complete and all(setup_complete(row) for row in terminal),
+        "at_least_one_oom": bool(errors) and any(bool(error.get("oom")) for error in errors),
+        "only_oom_errors": bool(errors) and all(
+            error.get("type") == "ERROR" and bool(error.get("oom")) for error in errors
+        ),
+        "non_oom_workers_passed": all(worker.get("status") == "PASS" for worker in workers),
+    }
+    return {
+        "status": "PASS" if all(checks.values()) else "FAIL",
+        "physical_batch": result.get("physical_batch"),
+        "checks": checks,
+        "ready_worker_ids": sorted(ready_ids),
+        "terminal_worker_ids": sorted(terminal_ids),
+        "terminal_worker_count": len(terminal),
+        "oom_worker_ids": sorted(error.get("gpu_id") for error in errors if bool(error.get("oom")) and isinstance(error.get("gpu_id"), int)),
+    }
+
+
+def _is_clean_capacity_failure(result: dict[str, Any]) -> bool:
+    return _capacity_failure_evidence(result)["status"] == "PASS"
 
 
 def _run_controller(args: argparse.Namespace) -> None:
@@ -1626,7 +1677,7 @@ def _run_controller(args: argparse.Namespace) -> None:
         raise RuntimeError("base model identity differs within DynamicCache preflight")
     all_widths: dict[int, dict[str, Any]] = {}
     prior_identity: dict[str, str] | None = None
-    widths = (1, 16) if args.engineering_smoke else WIDTHS
+    widths = _execution_widths(args)
     for width in widths:
         result = _run_width(args, width, prior_identity=prior_identity)
         all_widths[width] = result
@@ -1654,12 +1705,13 @@ def _run_controller(args: argparse.Namespace) -> None:
         })
         _atomic_json(args.output / "SETUP_COST_AUDIT.json", {
             "phase": "controller", "engineering_smoke_only": bool(args.engineering_smoke),
-            "old_expected_controller_prefills_per_gpu": 602,
-            "new_expected_controller_prefills_per_gpu": 19,
-            "runtime_preflight_expected_prefills_per_gpu": 4,
-            "new_expected_total_prefills_per_gpu": 23,
+            **_setup_cost_expectations(args),
             "actual_by_width": {str(item): [worker.get("setup_cost_audit") for worker in value.get("workers", [])]
                                 for item, value in all_widths.items()},
+            "capacity_failure_evidence_by_width": {
+                str(item): _capacity_failure_evidence(value) for item, value in all_widths.items()
+                if value.get("status") != "PASS"
+            },
         })
         if result.get("status") != "PASS":
             if _is_clean_capacity_failure(result):
@@ -1680,7 +1732,8 @@ def _run_controller(args: argparse.Namespace) -> None:
     if args.engineering_smoke:
         b1 = all_widths.get(1, {})
         b16 = all_widths.get(16, {})
-        b16_clean_oom = b16.get("status") != "PASS" and _is_clean_capacity_failure(b16)
+        b16_capacity_evidence = _capacity_failure_evidence(b16)
+        b16_clean_oom = b16.get("status") != "PASS" and b16_capacity_evidence["status"] == "PASS"
         if b1.get("status") == "PASS" and b16.get("status") == "PASS":
             smoke_status = "PASS"
         elif b1.get("status") == "PASS" and b16_clean_oom:
@@ -1706,6 +1759,8 @@ def _run_controller(args: argparse.Namespace) -> None:
             "ROOT_TEMPLATE_GPU_TENSOR_COUNT": 0 if memory_neutral else None,
             "ROOT_TEMPLATE_MEMORY_NEUTRALITY_GATE": "PASS" if memory_neutral else "FAIL",
             "root_template_memory_audit": memory_audits,
+            "b16_capacity_failure_evidence": b16_capacity_evidence,
+            "setup_cost_expectations": _setup_cost_expectations(args),
         })
         _atomic_json(args.output / "WORKER_RESULTS.json", {str(width): row for width, row in all_widths.items()})
         if smoke_status == "FAIL" or not memory_neutral:
@@ -1716,10 +1771,7 @@ def _run_controller(args: argparse.Namespace) -> None:
         raise RuntimeError(f"CONTROLLER_ROOT_TEMPLATE_PREFILL_COUNT_MISMATCH: {prefill_audit}")
     _atomic_json(args.output / "SETUP_COST_AUDIT.json", {
         "phase": "controller_complete", "engineering_smoke_only": False,
-        "old_expected_controller_prefills_per_gpu": 602,
-        "new_expected_controller_prefills_per_gpu": 19,
-        "runtime_preflight_expected_prefills_per_gpu": 4,
-        "new_expected_total_prefills_per_gpu": 23,
+        **_setup_cost_expectations(args),
         "prefill_audit": prefill_audit,
         "actual_controller_template_prefills_per_gpu": prefill_audit["actual_successful_prefills_per_gpu"],
         "actual_total_template_prefills_per_gpu": {str(gpu): count + 4 for gpu, count in prefill_audit["actual_successful_prefills_per_gpu"].items()},
