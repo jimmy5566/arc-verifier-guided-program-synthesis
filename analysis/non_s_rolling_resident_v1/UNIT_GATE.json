@@ -1,0 +1,15 @@
+{
+  "checks": {
+    "cpu_only": true,
+    "fifo_2_5_0_to_8_9_10": true,
+    "gold_not_loaded": true,
+    "profile_table": true,
+    "simultaneous_termination": true,
+    "slow_cell_nonblocking": true
+  },
+  "experiment": "NON_S_ROLLING_RESIDENT_V1",
+  "returncode": 0,
+  "status": "PASS",
+  "stderr": "",
+  "stdout": "NON_S_ROLLING_UNIT_PASS\n"
+}

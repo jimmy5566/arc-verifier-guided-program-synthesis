@@ -1,0 +1,86 @@
+{
+  "experiment": "NON_S_ROLLING_RESIDENT_V1",
+  "frozen_clean_hf_requirements": {
+    "backend": "Clean Transformers + PEFT",
+    "dtype": "BF16",
+    "lora_alpha": 32,
+    "peft_type": "LORA",
+    "r": 256
+  },
+  "gold_loaded": false,
+  "profiles": {
+    "PROFILE_L": {
+      "adapter_config_semantics": {
+        "lora_alpha": 32,
+        "peft_type": "LORA",
+        "r": 256,
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "task_type": "CAUSAL_LM"
+      },
+      "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/c4d067a0/depth_024",
+      "adapter_sha256": "a2bd2c787998746e4f4dfed788bc3fb3b7c910aafd41bd6c1e457ed2d51291e2",
+      "mismatches": {},
+      "status": "PASS",
+      "weight_sha256_recomputed": true
+    },
+    "PROFILE_M": {
+      "adapter_config_semantics": {
+        "lora_alpha": 32,
+        "peft_type": "LORA",
+        "r": 256,
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "task_type": "CAUSAL_LM"
+      },
+      "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/3a25b0d8/depth_024",
+      "adapter_sha256": "2c1884ceb786d54ec3dc8c596ff95122f73fc76b76d3c0f19279c95a1b6734c1",
+      "mismatches": {},
+      "status": "PASS",
+      "weight_sha256_recomputed": true
+    },
+    "PROFILE_XL": {
+      "adapter_config_semantics": {
+        "lora_alpha": 32,
+        "peft_type": "LORA",
+        "r": 256,
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ],
+        "task_type": "CAUSAL_LM"
+      },
+      "adapter_config_sha256": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/981571dc/depth_024",
+      "adapter_sha256": "fb3d177b31e736f132c72e823b2f19d308831e414441d5a1f0c9c2d1e9ab25bb",
+      "mismatches": {},
+      "status": "PASS",
+      "weight_sha256_recomputed": true
+    }
+  },
+  "required_depth": 24,
+  "reused_weight_sha_receipt": null,
+  "status": "PASS",
+  "target_blind": true
+}

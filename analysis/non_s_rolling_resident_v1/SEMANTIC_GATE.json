@@ -1,0 +1,46 @@
+{
+  "experiment": "NON_S_ROLLING_RESIDENT_V1",
+  "profiles": {
+    "PROFILE_L_R128": null,
+    "PROFILE_M_R128": {
+      "all_aug16_exactly_once": true,
+      "candidate_accounting": true,
+      "chunked_capacity_bounds": true,
+      "fifo_admission_order": true,
+      "finite_candidate_scores": true,
+      "immediate_fifo_refill": true,
+      "no_runtime_failures": true,
+      "owner_cap_never_exceeded": true,
+      "owner_identity_preserved": true,
+      "physical_ceiling_respected": true
+    },
+    "PROFILE_M_R256": {
+      "all_aug16_exactly_once": true,
+      "candidate_accounting": true,
+      "chunked_capacity_bounds": true,
+      "fifo_admission_order": true,
+      "finite_candidate_scores": true,
+      "immediate_fifo_refill": true,
+      "no_runtime_failures": true,
+      "owner_cap_never_exceeded": true,
+      "owner_identity_preserved": true,
+      "physical_ceiling_respected": true
+    }
+  },
+  "status": "FAIL",
+  "unit": {
+    "checks": {
+      "cpu_only": true,
+      "fifo_2_5_0_to_8_9_10": true,
+      "gold_not_loaded": true,
+      "profile_table": true,
+      "simultaneous_termination": true,
+      "slow_cell_nonblocking": true
+    },
+    "experiment": "NON_S_ROLLING_RESIDENT_V1",
+    "returncode": 0,
+    "status": "PASS",
+    "stderr": "",
+    "stdout": "NON_S_ROLLING_UNIT_PASS\n"
+  }
+}
