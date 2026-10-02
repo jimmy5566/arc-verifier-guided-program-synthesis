@@ -1,0 +1,2 @@
+# Frozen research artifacts must retain their byte-level hash identity on every platform.
+analysis/non_s_rolling_resident_v1/** -text
