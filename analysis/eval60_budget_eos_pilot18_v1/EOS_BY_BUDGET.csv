@@ -1,0 +1,5 @@
+checkpoint,baseline_cumulative_fix,static_eos_overlay_cumulative_fix,gold_eos_rescue_oracle_count,eos_completed_count,eos_policy_pruned_count,candidate_budget_eos_pruned_count
+512,6,6,0,861,140204,0
+1024,7,7,0,2157,252156,6
+2048,7,7,0,3620,400705,30
+4096,8,8,0,4216,486068,49

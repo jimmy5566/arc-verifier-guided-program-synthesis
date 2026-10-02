@@ -1,0 +1,12 @@
+{
+  "baseline_fix_r4096": 8,
+  "classification": "PILOT18_EOS_COMPLETE",
+  "experiment": "EVAL60_BUDGET_EOS_PILOT18_V1",
+  "final_hash_verification": "PENDING_HASH_LEDGER_VERIFICATION",
+  "generation_occurred_after_gold_access": false,
+  "gold_eos_oracle_r4096": 0,
+  "gold_opened_after_generation_freeze": true,
+  "overlay_upper_fix_r4096": 8,
+  "pre_cap_overlay": "Sensitivity only; earlier injected candidates could change later cap timing.",
+  "static_overlay": "STATIC_EOS_OVERLAY_UPPER_BOUND does not model candidate-cap feedback or changed traversal."
+}

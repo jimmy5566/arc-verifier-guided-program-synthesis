@@ -1,0 +1,16 @@
+{
+  "experiment": "EVAL60_BUDGET_EOS_PILOT18_V1",
+  "frozen_unix": 1790942678.2575293,
+  "generation_after_gold_forbidden": true,
+  "gold_loaded": false,
+  "hash_ledger": "GENERATION_HASHES.json",
+  "hash_verification": {
+    "checked": 86,
+    "mismatches": [],
+    "status": "PASS"
+  },
+  "source_commit": "6823f402e08aa0e55738d8bdc04ed34393273e10",
+  "source_tree": "582e22f7c92be9e5dd6d21c2327d70d429991296",
+  "status": "PILOT18_EOS_GENERATION_FROZEN",
+  "target_blind": true
+}

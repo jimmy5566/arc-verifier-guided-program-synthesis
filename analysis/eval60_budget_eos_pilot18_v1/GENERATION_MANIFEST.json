@@ -1,0 +1,52 @@
+{
+  "checkpoints": [
+    512,
+    1024,
+    2048,
+    4096
+  ],
+  "eos_events": [
+    "16de56c4_o1.jsonl.gz",
+    "1818057f_o0.jsonl.gz",
+    "247ef758_o1.jsonl.gz",
+    "2d0172a1_o0.jsonl.gz",
+    "332f06d7_o0.jsonl.gz",
+    "36a08778_o0.jsonl.gz",
+    "3a25b0d8_o1.jsonl.gz",
+    "64efde09_o0.jsonl.gz",
+    "71e489b6_o0.jsonl.gz",
+    "898e7135_o0.jsonl.gz",
+    "8e5c0c38_o0.jsonl.gz",
+    "a32d8b75_o1.jsonl.gz",
+    "c4d067a0_o0.jsonl.gz",
+    "cb2d8a2c_o1.jsonl.gz",
+    "cbebaa4b_o0.jsonl.gz",
+    "d59b0160_o0.jsonl.gz",
+    "dd6b8c4b_o1.jsonl.gz",
+    "dfadab01_o0.jsonl.gz"
+  ],
+  "experiment": "EVAL60_BUDGET_EOS_PILOT18_V1",
+  "gold_loaded": false,
+  "outputs": [
+    "16de56c4_o1.json",
+    "1818057f_o0.json",
+    "247ef758_o1.json",
+    "2d0172a1_o0.json",
+    "332f06d7_o0.json",
+    "36a08778_o0.json",
+    "3a25b0d8_o1.json",
+    "64efde09_o0.json",
+    "71e489b6_o0.json",
+    "898e7135_o0.json",
+    "8e5c0c38_o0.json",
+    "a32d8b75_o1.json",
+    "c4d067a0_o0.json",
+    "cb2d8a2c_o1.json",
+    "cbebaa4b_o0.json",
+    "d59b0160_o0.json",
+    "dd6b8c4b_o1.json",
+    "dfadab01_o0.json"
+  ],
+  "successful_output_count": 18,
+  "target_blind": true
+}

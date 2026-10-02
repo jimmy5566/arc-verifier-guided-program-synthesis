@@ -1,0 +1,242 @@
+{
+  "augmentation_ids_sha256": "9538b5135a743c7536213440e8d3c41c0e8ab7eac0a982320ca9838681d707c3",
+  "candidate_pool_sha256": "a16e4194e7597e83e55c180896125638cfd595b108b4c935d5cd742058c90a13",
+  "challenge_path": "/workspace/arc2/benchmarks/arc-agi_evaluation_challenges.json",
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "coarse_policy": {
+    "deferred_performance_optimization": [
+      "M resident9/B9 A/B",
+      "B9+B7 versus B8-capped full-search benchmark",
+      "exact arbitrary-integer throughput curve",
+      "fine-grained root/cache-length policy",
+      "XL optimization",
+      "global throughput optimum"
+    ],
+    "experiment": "COARSE_PRODUCTION_POLICY_V1",
+    "fallback_stage_mapping": {
+      "admission_or_prefill": [
+        "AFTER_ADMIT",
+        "AFTER_CELL_PREFILL",
+        "AFTER_ROOT_CHUNK_CONVERSION",
+        "BEFORE_CELL_PREFILL",
+        "BEFORE_ROOT_CHUNK_CONVERSION"
+      ],
+      "fresh_process_required": true,
+      "other": "next configured fallback",
+      "physical_forward": [
+        "AFTER_MODEL_FORWARD",
+        "AFTER_STREAMING_ADOPT",
+        "BEFORE_CACHE_PACK",
+        "BEFORE_MODEL_FORWARD",
+        "BEFORE_STREAMING_ADOPT",
+        "PACKED_LAYER"
+      ]
+    },
+    "gold_loaded": false,
+    "policy_freeze_rule": "Only root/cache length, OOM stage, and attempt index may select a fallback.",
+    "profiles": {
+      "PROFILE_L_HIGH": {
+        "admission": "fifo",
+        "evidence": [
+          "PHYSICAL_R6114_R4_B4_C6144.json"
+        ],
+        "fallbacks": [
+          {
+            "physical_batch_ceiling": 2,
+            "resident_capacity": 4
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 4
+          },
+          {
+            "physical_batch_ceiling": 2,
+            "resident_capacity": 2
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 2
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 1
+          }
+        ],
+        "primary": {
+          "physical_batch_ceiling": 4,
+          "resident_capacity": 4
+        },
+        "root_max_range": [
+          4097,
+          6493
+        ],
+        "runtime_batch_selection": "largest currently compatible READY subset not exceeding the selected ceiling; no power-of-two rounding"
+      },
+      "PROFILE_L_LOW": {
+        "admission": "fifo",
+        "evidence": [
+          "PHYSICAL_R4092_R4_B4_C4096.json"
+        ],
+        "fallbacks": [
+          {
+            "physical_batch_ceiling": 2,
+            "resident_capacity": 4
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 4
+          },
+          {
+            "physical_batch_ceiling": 2,
+            "resident_capacity": 2
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 2
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 1
+          }
+        ],
+        "primary": {
+          "physical_batch_ceiling": 4,
+          "resident_capacity": 4
+        },
+        "root_max_range": [
+          2654,
+          4096
+        ],
+        "runtime_batch_selection": "largest currently compatible READY subset not exceeding the selected ceiling; no power-of-two rounding"
+      },
+      "PROFILE_M": {
+        "admission": "fifo",
+        "evidence": [
+          "PROFILE_M_R128_RESULT.json",
+          "PROFILE_M_R256_RESULT.json"
+        ],
+        "fallbacks": [
+          {
+            "physical_batch_ceiling": 2,
+            "resident_capacity": 8
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 8
+          },
+          {
+            "physical_batch_ceiling": 2,
+            "resident_capacity": 2
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 2
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 1
+          }
+        ],
+        "primary": {
+          "physical_batch_ceiling": 8,
+          "resident_capacity": 8
+        },
+        "root_max_range": [
+          2049,
+          2653
+        ],
+        "runtime_batch_selection": "largest currently compatible READY subset not exceeding the selected ceiling; no power-of-two rounding"
+      },
+      "PROFILE_S": {
+        "admission": "fifo",
+        "evidence": [
+          "PHYSICAL_S_SPLIT_R16_B7_C2816.json",
+          "existing frozen S semantic evidence"
+        ],
+        "fallbacks": [
+          {
+            "physical_batch_ceiling": 2,
+            "resident_capacity": 16
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 16
+          },
+          {
+            "physical_batch_ceiling": 2,
+            "resident_capacity": 2
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 2
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 1
+          }
+        ],
+        "primary": {
+          "physical_batch_ceiling": 7,
+          "resident_capacity": 16
+        },
+        "root_max_range": [
+          1,
+          2048
+        ],
+        "runtime_batch_selection": "largest currently compatible READY subset not exceeding the selected ceiling; no power-of-two rounding"
+      },
+      "PROFILE_XL_CONSERVATIVE": {
+        "admission": "fifo",
+        "evidence": [
+          "CAPACITY_R8400_R2.json"
+        ],
+        "fallbacks": [
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 2
+          },
+          {
+            "physical_batch_ceiling": 1,
+            "resident_capacity": 1
+          }
+        ],
+        "primary": {
+          "physical_batch_ceiling": 2,
+          "resident_capacity": 2
+        },
+        "root_max_range": [
+          6494,
+          100000
+        ],
+        "runtime_batch_selection": "largest currently compatible READY subset not exceeding the selected ceiling; no power-of-two rounding"
+      }
+    },
+    "target_blind": true
+  },
+  "coarse_policy_path": "/root/arc-runtime-3090-v3/arc2/analysis/coarse_production_policy_v1/COARSE_PRODUCTION_POLICY.json",
+  "coarse_policy_sha256": "ab7c87085f19217fbfa1d10a7b7624b95728d630ca04e63ac6ddf4d224d34dcd",
+  "cohort_size": 18,
+  "eos_instrumentation": "observational callback only; no decoder token-retention or traversal mutation",
+  "experiment": "EVAL60_BUDGET_EOS_PILOT18_V1",
+  "generation_plan": "one complete R4096 trajectory per selected output; R512/R1024/R2048 are observational snapshots only",
+  "gold_loaded": false,
+  "oom_contract": "receipt; discard failed attempt outputs; terminate worker; fresh process reruns whole output with next frozen profile/cache fallback",
+  "profile_audit_path": "/root/arc-runtime-3090-v3/arc2/analysis/root_length_profile_audit_v1/PROFILE_ASSIGNMENTS.json",
+  "profile_audit_sha256": "29b2a8817eb755a6cb59719940151d13114d423e6ba0ba06482ad383c84d4b2f",
+  "scientific_configuration": {
+    "augmentation_set": "PROJECT_RESEARCH_AUG16",
+    "backend": "Clean Transformers + PEFT",
+    "decoder": "CUMULATIVE_REGRET_r=4.00",
+    "dtype": "BF16",
+    "eos_token": 15,
+    "frontier_floor": 1,
+    "max_completed_candidates": 32,
+    "max_expanded_nodes": 4096,
+    "max_new_tokens": 931,
+    "model": "Qwen3-4B",
+    "ttt_depth": 24
+  },
+  "source_commit": "6823f402e08aa0e55738d8bdc04ed34393273e10",
+  "source_tree": "582e22f7c92be9e5dd6d21c2327d70d429991296",
+  "target_blind": true
+}

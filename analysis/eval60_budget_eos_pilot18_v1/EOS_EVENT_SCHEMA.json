@@ -1,0 +1,20 @@
+{
+  "experiment": "EVAL60_BUDGET_EOS_PILOT18_V1",
+  "observational_only": true,
+  "primary_classes": {
+    "EOS_CANDIDATE_BUDGET_PRUNED": "EOS retained but max_completed_candidates was already reached.",
+    "EOS_COMPLETED": "EOS retained by frozen policy and appended as a completed candidate.",
+    "EOS_FRONTIER_FLOOR_RESTORED_AND_COMPLETED": "EOS was restored only by the existing frontier floor then completed.",
+    "EOS_MAX_NEW_TOKENS_BLOCKED": "EOS was unavailable because the frozen max_new_tokens boundary was reached.",
+    "EOS_OTHER_PRUNED": "Reserved only for future source-supported EOS states; not fabricated by this runner.",
+    "EOS_POLICY_PRUNED": "EOS legal but absent after frozen retention and frontier-floor resolution."
+  },
+  "raw_fields": [
+    "prune_reason",
+    "termination_reason",
+    "frontier_floor_activated",
+    "frontier_floor_restore_rank"
+  ],
+  "source": "inference.nvarc_turbodfs_dynamic_ready._ready_dfs EOS successor handling",
+  "target_blind": true
+}

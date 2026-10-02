@@ -1,0 +1,55 @@
+{
+  "distributions": {
+    "candidate_completion_index": {
+      "count": 4216,
+      "max": 31.0,
+      "median": 9.0,
+      "min": 0.0,
+      "p90": 24.0
+    },
+    "eos_local_rank": {
+      "count": 490333,
+      "max": 12.0,
+      "median": 12.0,
+      "min": 1.0,
+      "p90": 12.0
+    },
+    "eos_logprob": {
+      "count": 490333,
+      "max": 0.0,
+      "median": -83.0,
+      "min": -100.12504577636719,
+      "p90": -59.875
+    },
+    "eos_logprob_gap_from_best": {
+      "count": 490333,
+      "max": 100.12499988184209,
+      "median": 82.99999964343806,
+      "min": 0.0,
+      "p90": 92.87500009685755
+    },
+    "eos_path_cumulative_regret": {
+      "count": 490333,
+      "max": 103.74999761022877,
+      "median": 85.1249981522576,
+      "min": 0.0,
+      "p90": 94.87499905377672
+    },
+    "nodes_expanded_so_far": {
+      "count": 490333,
+      "max": 4096.0,
+      "median": 979.0,
+      "min": 0.0,
+      "p90": 2516.0
+    },
+    "prefix_length": {
+      "count": 490333,
+      "max": 869.0,
+      "median": 308.0,
+      "min": 0.0,
+      "p90": 665.0
+    }
+  },
+  "gold_loaded": false,
+  "target_blind": true
+}

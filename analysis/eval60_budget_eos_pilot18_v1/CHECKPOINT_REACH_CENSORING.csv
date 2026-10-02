@@ -1,0 +1,5 @@
+checkpoint,reached_or_terminal_outputs,wall_time_censored_outputs
+512,18,2
+1024,18,9
+2048,18,14
+4096,17,14

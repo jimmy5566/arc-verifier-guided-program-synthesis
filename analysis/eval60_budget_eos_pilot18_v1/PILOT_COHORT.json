@@ -1,0 +1,619 @@
+{
+  "experiment": "EVAL60_BUDGET_EOS_PILOT18_V1",
+  "gold_loaded": false,
+  "outputs": [
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/dd6b8c4b/depth_024",
+        "adapter_sha256": "13f4e1eaa1770db060cbdc589ca7f99870e3dd6973c1422df5380640f71fb6a1",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/dd6b8c4b/depth_024",
+      "output_id": "dd6b8c4b:o1",
+      "output_index": 1,
+      "profile": "PROFILE_S",
+      "root_length_max": 948,
+      "root_length_min": 948,
+      "selection_rank": 1,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "LOW",
+      "task_id": "dd6b8c4b"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/16de56c4/depth_024",
+        "adapter_sha256": "ba9d832f85970b1b05037941199701905066b0193595a358ea4b4e9943c1c6c0",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/16de56c4/depth_024",
+      "output_id": "16de56c4:o1",
+      "output_index": 1,
+      "profile": "PROFILE_S",
+      "root_length_max": 1108,
+      "root_length_min": 1064,
+      "selection_rank": 2,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "LOW",
+      "task_id": "16de56c4"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/1818057f/depth_024",
+        "adapter_sha256": "81d8a1f34e5a81a437e709e3cc66a9de5a049c27a2ab25fbf46756ec60bb288f",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/1818057f/depth_024",
+      "output_id": "1818057f:o0",
+      "output_index": 0,
+      "profile": "PROFILE_S",
+      "root_length_max": 1650,
+      "root_length_min": 1642,
+      "selection_rank": 1,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "MID",
+      "task_id": "1818057f"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/247ef758/depth_024",
+        "adapter_sha256": "61805b6a139817651e9d15e27d3ecf5c577420d1e0c9ab3c317316943521f612",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/247ef758/depth_024",
+      "output_id": "247ef758:o1",
+      "output_index": 1,
+      "profile": "PROFILE_S",
+      "root_length_max": 1364,
+      "root_length_min": 1328,
+      "selection_rank": 2,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "MID",
+      "task_id": "247ef758"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/332f06d7/depth_024",
+        "adapter_sha256": "bea56d70b252732b229aaff9f1ca08b1f02208e8e04795b0341b1f3fb516f03c",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/332f06d7/depth_024",
+      "output_id": "332f06d7:o0",
+      "output_index": 0,
+      "profile": "PROFILE_S",
+      "root_length_max": 1946,
+      "root_length_min": 1946,
+      "selection_rank": 1,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "HIGH",
+      "task_id": "332f06d7"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/d59b0160/depth_024",
+        "adapter_sha256": "a91e4375da1cf5f544a083221292ded0dd41e50b4a4c63e80bb4c37ab0e42854",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/d59b0160/depth_024",
+      "output_id": "d59b0160:o0",
+      "output_index": 0,
+      "profile": "PROFILE_S",
+      "root_length_max": 1928,
+      "root_length_min": 1928,
+      "selection_rank": 2,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "HIGH",
+      "task_id": "d59b0160"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/3a25b0d8/depth_024",
+        "adapter_sha256": "2c1884ceb786d54ec3dc8c596ff95122f73fc76b76d3c0f19279c95a1b6734c1",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/3a25b0d8/depth_024",
+      "output_id": "3a25b0d8:o1",
+      "output_index": 1,
+      "profile": "PROFILE_M",
+      "root_length_max": 2078,
+      "root_length_min": 2072,
+      "selection_rank": 1,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "LOW",
+      "task_id": "3a25b0d8"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/71e489b6/depth_024",
+        "adapter_sha256": "ea6d2789afba9b5ae9ea47d40278a06ea9bb0f149c93e37e1cacfc2535344e3d",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/71e489b6/depth_024",
+      "output_id": "71e489b6:o0",
+      "output_index": 0,
+      "profile": "PROFILE_M",
+      "root_length_max": 2068,
+      "root_length_min": 2064,
+      "selection_rank": 2,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "LOW",
+      "task_id": "71e489b6"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/8e5c0c38/depth_024",
+        "adapter_sha256": "d454b65ffa852097f92089568c430f6702ea0375670395863c0c26a62b00f5dd",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/8e5c0c38/depth_024",
+      "output_id": "8e5c0c38:o0",
+      "output_index": 0,
+      "profile": "PROFILE_M",
+      "root_length_max": 2548,
+      "root_length_min": 2548,
+      "selection_rank": 1,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "MID",
+      "task_id": "8e5c0c38"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/36a08778/depth_024",
+        "adapter_sha256": "1b38bb917aac268035f15dac621b1c957b44561b60dce10c8d6a59546d0b24c5",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/36a08778/depth_024",
+      "output_id": "36a08778:o0",
+      "output_index": 0,
+      "profile": "PROFILE_M",
+      "root_length_max": 2360,
+      "root_length_min": 2356,
+      "selection_rank": 2,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "MID",
+      "task_id": "36a08778"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/898e7135/depth_024",
+        "adapter_sha256": "378fddf36e0d36789b6ae6430964a86f04617fc2f4e34d2a6c6b960201871417",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/898e7135/depth_024",
+      "output_id": "898e7135:o0",
+      "output_index": 0,
+      "profile": "PROFILE_M",
+      "root_length_max": 2601,
+      "root_length_min": 2599,
+      "selection_rank": 1,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "HIGH",
+      "task_id": "898e7135"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/dfadab01/depth_024",
+        "adapter_sha256": "3ef53c96baa373f4af1569d357be905880f3da40a827b63dc3e19a6bb8341a16",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/dfadab01/depth_024",
+      "output_id": "dfadab01:o0",
+      "output_index": 0,
+      "profile": "PROFILE_M",
+      "root_length_max": 2570,
+      "root_length_min": 2570,
+      "selection_rank": 2,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "HIGH",
+      "task_id": "dfadab01"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/2d0172a1/depth_024",
+        "adapter_sha256": "0e0b4249e1c60ba1bcbf88ced086422adbd8f779ddeff0188a8ede029daca613",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/2d0172a1/depth_024",
+      "output_id": "2d0172a1:o0",
+      "output_index": 0,
+      "profile": "PROFILE_L_LOW",
+      "root_length_max": 2726,
+      "root_length_min": 2723,
+      "selection_rank": 1,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "LOW",
+      "task_id": "2d0172a1"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/cbebaa4b/depth_024",
+        "adapter_sha256": "a846dd2461b9cbf8cc03c1102ce5999208f40db36dc6027dafdfa111a13358e6",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/cbebaa4b/depth_024",
+      "output_id": "cbebaa4b:o0",
+      "output_index": 0,
+      "profile": "PROFILE_L_LOW",
+      "root_length_max": 2744,
+      "root_length_min": 2744,
+      "selection_rank": 2,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "LOW",
+      "task_id": "cbebaa4b"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/cb2d8a2c/depth_024",
+        "adapter_sha256": "3755412acb672eebd71d4a67e005c800a33bba7ba621b6e1044d27b3aebfddf2",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/cb2d8a2c/depth_024",
+      "output_id": "cb2d8a2c:o1",
+      "output_index": 1,
+      "profile": "PROFILE_L_LOW",
+      "root_length_max": 2975,
+      "root_length_min": 2968,
+      "selection_rank": 1,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "MID",
+      "task_id": "cb2d8a2c"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/64efde09/depth_024",
+        "adapter_sha256": "df725c7005673a98c35c5715cc7488def52cbb5f4c30a03fc22ee3980d53aef8",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/64efde09/depth_024",
+      "output_id": "64efde09:o0",
+      "output_index": 0,
+      "profile": "PROFILE_L_LOW",
+      "root_length_max": 3642,
+      "root_length_min": 3624,
+      "selection_rank": 2,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "MID",
+      "task_id": "64efde09"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/c4d067a0/depth_024",
+        "adapter_sha256": "a2bd2c787998746e4f4dfed788bc3fb3b7c910aafd41bd6c1e457ed2d51291e2",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/c4d067a0/depth_024",
+      "output_id": "c4d067a0:o0",
+      "output_index": 0,
+      "profile": "PROFILE_L_LOW",
+      "root_length_max": 4092,
+      "root_length_min": 4092,
+      "selection_rank": 1,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "HIGH",
+      "task_id": "c4d067a0"
+    },
+    {
+      "adapter_identity": {
+        "adapter_config_semantics": {
+          "lora_alpha": 32,
+          "peft_type": "LORA",
+          "r": 256,
+          "target_modules": [
+            "down_proj",
+            "gate_proj",
+            "k_proj",
+            "o_proj",
+            "q_proj",
+            "up_proj",
+            "v_proj"
+          ],
+          "task_type": "CAUSAL_LM"
+        },
+        "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/a32d8b75/depth_024",
+        "adapter_sha256": "433fd110c85eb9c22fcda471c4f7fba83722dc6b798365ffea006f49f6a1f98f",
+        "mismatches": {},
+        "status": "PASS"
+      },
+      "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/a32d8b75/depth_024",
+      "output_id": "a32d8b75:o1",
+      "output_index": 1,
+      "profile": "PROFILE_L_HIGH",
+      "root_length_max": 4356,
+      "root_length_min": 4314,
+      "selection_rank": 2,
+      "selection_rule": "root_length_max ordered thirds; ascending sha256(output_id); distinct task preferred; exact mounted d24 adapter required",
+      "stratum": "HIGH",
+      "task_id": "a32d8b75"
+    }
+  ],
+  "target_blind": true
+}
