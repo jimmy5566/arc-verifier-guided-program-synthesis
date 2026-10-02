@@ -1,8 +1,10 @@
 """CPU-only classification tests for the same-contract Core gate."""
 from __future__ import annotations
 
+import gzip
 import importlib.util
 from pathlib import Path
+import tempfile
 import unittest
 
 
@@ -75,6 +77,26 @@ class ReproducibilityGateTests(unittest.TestCase):
             "physical_batch_width": 3}]
         payload = raw(value); payload["profile_configuration"] = {"physical_batch_ceiling": 2}
         self.assertEqual("FAIL", MODULE._cache_invariants(payload)["status"])
+
+    def test_selected_prefix_can_freeze_while_preserving_extra_raw_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run = Path(temporary)
+            frozen = run / "FROZEN_RAW_OUTPUTS"; frozen.mkdir()
+            ledger = {}
+            for output_id in ("a:o0", "b:o0", "extra:o0"):
+                path = frozen / f"{MODULE._safe(output_id)}.json.gz"
+                with gzip.open(path, "wb") as handle:
+                    handle.write((output_id + "\n").encode("utf-8"))
+                ledger[str(path.relative_to(run))] = {
+                    "raw_sha256": MODULE._sha_gzip_content(path), "gzip_sha256": MODULE._sha_file(path),
+                    "raw_bytes": len(output_id) + 1, "gzip_bytes": path.stat().st_size,
+                }
+            MODULE._write_json(run / "PARTIAL_RAW_CONTENT.json", ledger)
+            result = MODULE._freeze_run(run, [{"output_id": "a:o0"}, {"output_id": "b:o0"}], allow_preserved_extra=True)
+            self.assertEqual("PASS", result["status"])
+            frozen_state = MODULE._read_json(run / "GENERATION_FREEZE.json")
+            self.assertEqual(2, frozen_state["raw_count"])
+            self.assertEqual(["FROZEN_RAW_OUTPUTS/extra_o0.json.gz"], frozen_state["preserved_extra_frozen_records"])
 
 
 if __name__ == "__main__":

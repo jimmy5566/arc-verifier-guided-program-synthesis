@@ -447,11 +447,17 @@ def _freeze_completed_raw(run: Path, output_id: str) -> None:
     raw.unlink()
 
 
-def _freeze_run(run: Path, outputs: list[dict[str, Any]]) -> dict[str, Any]:
+def _freeze_run(run: Path, outputs: list[dict[str, Any]], *, allow_preserved_extra: bool = False) -> dict[str, Any]:
     content_path = run / "PARTIAL_RAW_CONTENT.json"
     content = _read_json(content_path) if content_path.exists() else {}
-    if len(content) != len(outputs):
-        raise RuntimeError(f"expected {len(outputs)} independently frozen raw outputs, found {len(content)}")
+    selected_names = {f"FROZEN_RAW_OUTPUTS/{_safe(str(row['output_id']))}.json.gz" for row in outputs}
+    missing = sorted(selected_names.difference(content))
+    if missing:
+        raise RuntimeError(f"frozen raw content missing selected outputs: {missing}")
+    preserved_extra = sorted(set(content).difference(selected_names))
+    if preserved_extra and not allow_preserved_extra:
+        raise RuntimeError(f"unexpected extra independently frozen raw outputs: {preserved_extra}")
+    selected_content = {name: content[name] for name in sorted(selected_names)}
     for row in outputs:
         name = f"FROZEN_RAW_OUTPUTS/{_safe(str(row['output_id']))}.json.gz"
         if name not in content:
@@ -469,13 +475,14 @@ def _freeze_run(run: Path, outputs: list[dict[str, Any]]) -> dict[str, Any]:
         elif item.exists(): files.extend(path for path in item.rglob("*") if path.is_file())
     ledger = {str(path.relative_to(run)): _sha_file(path) for path in sorted(files)}
     generation = {"status": "FROZEN", "target_blind": True, "gold_loaded": False,
-                  "raw_codec": "gzip", "raw_content": content, "files": ledger}
+                  "raw_codec": "gzip", "raw_content": selected_content, "files": ledger,
+                  "preserved_extra_frozen_records": preserved_extra}
     _write_json(run / "GENERATION_HASHES.json", generation)
     mismatches = []
     for rel, expected in ledger.items():
         observed = _sha_file(run / rel) if (run / rel).exists() else None
         if observed != expected: mismatches.append({"path": rel, "expected": expected, "actual": observed})
-    for rel, expected in content.items():
+    for rel, expected in selected_content.items():
         path = run / rel
         if not path.exists() or _sha_file(path) != expected["gzip_sha256"] or _sha_gzip_content(path) != expected["raw_sha256"]:
             mismatches.append({"path": rel, "reason": "COMPRESSED_RAW_HASH_MISMATCH"})
@@ -483,11 +490,14 @@ def _freeze_run(run: Path, outputs: list[dict[str, Any]]) -> dict[str, Any]:
     _write_json(run / "GENERATION_HASH_VERIFICATION.json", verification)
     if verification["status"] != "PASS": raise RuntimeError(f"generation hash verification failed: {run}")
     _write_json(run / "GENERATION_FREEZE.json", {"status": "FROZEN", "target_blind": True, "gold_loaded": False,
-                                                    "raw_count": len(content), "raw_codec": "gzip", "hash_verification": "PASS"})
+                                                    "raw_count": len(selected_content), "raw_codec": "gzip", "hash_verification": "PASS",
+                                                    "preserved_extra_frozen_records": preserved_extra})
     return verification
 
 
 def _run_one(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any]], policy: dict[str, Any]) -> dict[str, Any]:
+    if args.reuse_partial_run_a and run.name == "RUN_A":
+        return _freeze_run(run, outputs, allow_preserved_extra=True)
     if (run / "GENERATION_FREEZE.json").exists():
         verification = _read_json(run / "GENERATION_HASH_VERIFICATION.json")
         if verification.get("status") != "PASS": raise RuntimeError(f"pre-existing frozen run fails verification: {run}")
@@ -524,7 +534,7 @@ def _run_one(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any]],
     return _freeze_run(run, outputs)
 
 
-def _compare_runs(output: Path, outputs: list[dict[str, Any]]) -> dict[str, Any]:
+def _compare_runs(output: Path, outputs: list[dict[str, Any]], *, partial_validation: bool = False) -> dict[str, Any]:
     a_root, b_root = output / "RUN_A", output / "RUN_B"
     cell_rows: list[dict[str, Any]] = []
     details: list[dict[str, Any]] = []
@@ -574,11 +584,14 @@ def _compare_runs(output: Path, outputs: list[dict[str, Any]]) -> dict[str, Any]
     counts = {name: sum(row["classification"] == name for row in cell_rows) for name in
               ("EXACT_SEMANTIC_AND_NUMERIC", "SEMANTIC_EXACT_NUMERIC_DRIFT", "LOGICAL_DIVERGENCE")}
     semantic = counts["EXACT_SEMANTIC_AND_NUMERIC"] + counts["SEMANTIC_EXACT_NUMERIC_DRIFT"]
+    passed = semantic == total and cache_audit["status"] == "PASS"
     decision = {
-        "classification": "CORE_CLASS_READY" if semantic == total and cache_audit["status"] == "PASS" else "CORE_CLASS_NOT_READY",
+        "classification": ("PARTIAL_REPRODUCIBILITY_PASS" if passed else "PARTIAL_REPRODUCIBILITY_FAIL") if partial_validation
+        else ("CORE_CLASS_READY" if passed else "CORE_CLASS_NOT_READY"),
         "contract": "TTT24_AUG8_R1024_ROOT_AWARE", "historical_pilot_parity": "RETIRED_AS_CONFOUNDED",
-        "same_contract_reproducibility": "PASS" if semantic == total and cache_audit["status"] == "PASS" else "FAIL",
-        "phase2_authorized": semantic == total and cache_audit["status"] == "PASS", "phase2_started": False,
+        "same_contract_reproducibility": "PASS" if passed else "FAIL",
+        "partial_validation": partial_validation,
+        "phase2_authorized": False if partial_validation else passed, "phase2_started": False,
         "target_blind": True, "gold_loaded": False, "total_cells": total, "counts": counts,
         "semantic_reproducibility_rate": semantic / total if total else 0.0,
         "prefill_semantic_reproducibility_rate": sum(bool(row["semantic_equal"]) for row in prefill_rows) / total if total else 0.0,
@@ -627,6 +640,10 @@ def _parse() -> argparse.Namespace:
     parser.add_argument("--python", type=Path, default=Path(sys.executable))
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--minimum-free-bytes", type=int, default=1_500_000_000)
+    parser.add_argument("--partial-output-count", type=int, default=0,
+                        help="Authorized execution-only subset of the frozen source order; 0 keeps all six.")
+    parser.add_argument("--reuse-partial-run-a", action="store_true",
+                        help="Freeze selected pre-existing RUN_A records without rerunning them.")
     return parser.parse_args()
 
 
@@ -638,10 +655,24 @@ def main() -> None:
     if any("output" in test for task in challenge.values() for test in task.get("test", [])):
         raise RuntimeError("refusing a challenge file containing evaluation outputs")
     outputs = _prepare_static(args)
+    partial_validation = args.partial_output_count > 0
+    if partial_validation:
+        if not args.reuse_partial_run_a:
+            raise RuntimeError("partial-output execution requires explicit reuse of the stopped RUN_A evidence")
+        if args.partial_output_count >= len(outputs):
+            raise RuntimeError("partial-output count must select a strict subset of the frozen six-output Core")
+        outputs = outputs[:args.partial_output_count]
+        _write_json(args.output / "PARTIAL_EXECUTION_AMENDMENT.json", {
+            "status": "AUTHORIZED_EXECUTION_AMENDMENT", "target_blind": True, "gold_loaded": False,
+            "reason": "RUN_A was user-terminated after independently frozen outputs; compare only frozen source-order prefix",
+            "selected_output_count": len(outputs), "selected_output_ids": [row["output_id"] for row in outputs],
+            "run_a_reused": True, "run_a_not_rerun": True,
+            "full_six_output_core_gate_completed": False, "phase2_authorized": False, "phase2_started": False,
+        })
     policy = _read_json(args.coarse_policy)
     verify_a = _run_one(args, args.output / "RUN_A", outputs, policy)
     verify_b = _run_one(args, args.output / "RUN_B", outputs, policy)
-    decision = _compare_runs(args.output, outputs)
+    decision = _compare_runs(args.output, outputs, partial_validation=partial_validation)
     decision["run_a_generation_hash_verification"] = verify_a
     decision["run_b_generation_hash_verification"] = verify_b
     _write_json(args.output / "REPRODUCIBILITY_SUMMARY.json", decision)
