@@ -1,0 +1,8 @@
+{
+  "fresh_phase1_rerun": "NOT_AUTHORIZED_UNLESS_A_CONCRETE_IMPLEMENTATION_BUG_IS_FOUND",
+  "gold_loaded": false,
+  "phase2_status": "NOT_RUN",
+  "root_cause_classification": "OTHER",
+  "status": "CORE_NOT_READY_CAUSE_NOT_ESTABLISHED",
+  "target_blind": true
+}

@@ -32,6 +32,7 @@ TRACE_CELLS = (
     ("1818057f:o0", "geom=transpose__color=id__order=canonical", "MISMATCH_ROOT_4_PLUS_4"),
     ("8e5c0c38:o0", "geom=identity__color=id__order=canonical", "MISMATCH_UNIFORM8"),
 )
+NUMERICAL_SCORE_FIELDS = frozenset({"token_logprob", "cumulative_score", "cumulative_regret"})
 AUDIT_FIELDS = (
     "output_id", "augmentation_id", "old_completed_count", "new_completed_count",
     "old_termination", "new_termination", "old_carried_forward", "new_carried_forward",
@@ -194,7 +195,12 @@ def _old_vs_replay(old: dict[str, Any], replay: dict[str, Any], augmentation_id:
     for index, (old_node, replay_node) in enumerate(zip(left, right, strict=False)):
         fields = sorted(key for key in set(old_node) | set(replay_node) if old_node.get(key) != replay_node.get(key))
         if fields:
-            return {"status": "DIVERGED", "step": index, "category": "LOGICAL_EXPANSION_SEQUENCE",
+            category = (
+                "NUMERICAL_SCORE_DRIFT_SAME_NODE_SEQUENCE"
+                if set(fields).issubset(NUMERICAL_SCORE_FIELDS)
+                else "LOGICAL_EXPANSION_SEQUENCE"
+            )
+            return {"status": "DIVERGED", "step": index, "category": category,
                     "fields": fields, "reference": old_node, "challenger": replay_node,
                     "reference_trace_availability": "NODE_SEQUENCE_ONLY_NO_HISTORICAL_PER_FORWARD_LOGITS"}
     if len(left) != len(right):
@@ -219,16 +225,28 @@ def _prefill_rows(runs: dict[str, Path]) -> tuple[list[dict[str, Any]], bool]:
             observed[regime] = _load_trace(run, output_id, augmentation_id)["trace"]["prefill"]
         comparable = {key: value for key, value in observed.items() if value is not None}
         canonical = ("prompt_token_ids", "prompt_length", "full_logits_sha256", "root_cache_sha256",
-                     "root_cache_valid_length", "root_cache_geometry", "first_ready_request")
+                     "root_cache_valid_length", "root_cache_geometry")
+
+        def _semantic_first_request(trace: dict[str, Any]) -> Any:
+            request = trace.get("first_ready_request")
+            if not isinstance(request, dict):
+                return request
+            # The diagnostic owner ID is a Python-object identity. It is only
+            # meaningful for owner-stability *within* one execution; it must
+            # not be compared between independent replay processes.
+            return {key: value for key, value in request.items() if key != "cache_owner_id"}
+
         baseline = comparable.get("A")
         equal = baseline is not None and all(
             all(baseline.get(field) == trace.get(field) for field in canonical)
+            and _semantic_first_request(baseline) == _semantic_first_request(trace)
             for trace in comparable.values()
         )
         all_equal = all_equal and equal
         rows.append({"label": label, "output_id": output_id, "augmentation_id": augmentation_id,
                      "prefill_equal_A_B_C": equal,
-                     "observed": {name: {field: trace.get(field) for field in canonical}
+                     "semantic_comparison_excludes": ["first_ready_request.cache_owner_id"],
+                     "observed": {name: {field: trace.get(field) for field in (*canonical, "first_ready_request")}
                                   for name, trace in comparable.items()}})
     return rows, all_equal
 
@@ -449,24 +467,39 @@ def _analyse_budget(args: argparse.Namespace, output: Path, runs: dict[str, Path
 
 def _classification(analysis: dict[str, Any]) -> dict[str, Any]:
     rows = analysis["first_rows"]
-    a_exact = all(row["status"] == "EXACT" for row in rows if row["comparison"] == "A_VS_PILOT")
+    a_rows = [row for row in rows if row["comparison"] == "A_VS_PILOT"]
+    a_numeric_drifts = [
+        row for row in a_rows
+        if row["status"] == "DIVERGED"
+        and row["earliest_divergence_category"] == "NUMERICAL_SCORE_DRIFT_SAME_NODE_SEQUENCE"
+    ]
+    a_logical_divergences = [
+        row for row in a_rows
+        if row["status"] == "DIVERGED" and row not in a_numeric_drifts
+    ]
+    a_semantic_prefix_exact = not a_logical_divergences
     b_divergences = [row for row in rows if row["comparison"] == "B_VS_A" and row["status"] == "DIVERGED"]
     c_divergences = [row for row in rows if row["comparison"] == "C_VS_B" and row["status"] == "DIVERGED"]
     cache = analysis["cache_audit"]
     if cache["status"] == "FAIL":
         classification = "CACHE_STATE_BUG"
         decision = "CORE_NOT_READY_CONCRETE_INVARIANT_FAILURE"
-    elif a_exact and b_divergences:
+    elif a_semantic_prefix_exact and a_numeric_drifts and not b_divergences and not c_divergences:
+        classification = "MODEL_CALL_HISTORY_NUMERICAL_DIVERGENCE"
+        decision = "PHASE1_GATE_REDESIGN_REQUIRED"
+    elif a_semantic_prefix_exact and b_divergences:
         classification = "PARITY_REFERENCE_CONFOUNDED"
         decision = "PHASE1_GATE_REDESIGN_REQUIRED"
-    elif a_exact and not b_divergences and c_divergences:
+    elif a_semantic_prefix_exact and not b_divergences and c_divergences:
         classification = "MODEL_CALL_HISTORY_NUMERICAL_DIVERGENCE"
         decision = "PHASE1_GATE_REDESIGN_REQUIRED"
     else:
         classification = "OTHER"
         decision = "CORE_NOT_READY_CAUSE_NOT_ESTABLISHED"
     measured = {
-        "pilot_replay_logical_prefix_exact": a_exact,
+        "pilot_replay_logical_prefix_exact": a_semantic_prefix_exact,
+        "pilot_replay_numeric_score_drifts": a_numeric_drifts,
+        "pilot_replay_logical_divergences": a_logical_divergences,
         "aug16_to_aug8_first_divergences": b_divergences,
         "fifo_to_root_aware_first_divergences": c_divergences,
         "prefill_equal": analysis["prefill_equal"],

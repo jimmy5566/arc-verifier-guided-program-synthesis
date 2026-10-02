@@ -1,0 +1,10 @@
+{
+  "decision": "CORE_NOT_READY_CAUSE_NOT_ESTABLISHED",
+  "ended_unix": 1790956871.207187,
+  "forensic_budget": 512,
+  "gold_loaded": false,
+  "phase2_status": "NOT_RUN",
+  "root_cause": "OTHER",
+  "status": "COMPLETE",
+  "target_blind": true
+}

@@ -1,0 +1,11 @@
+{
+  "bounded_fairness": "NOT_ESTABLISHED_FROM_FINITE_FORENSIC_TRACE",
+  "cache_length_violations": [],
+  "compatibility_violations": [],
+  "completed_cells": 64,
+  "no_incompatible_physical_batch": true,
+  "no_owner_swap": true,
+  "owner_violations": [],
+  "rollback_lengths_coherent": true,
+  "status": "PASS"
+}

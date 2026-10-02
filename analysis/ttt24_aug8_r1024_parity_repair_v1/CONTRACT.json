@@ -1,0 +1,49 @@
+{
+  "decoder_contract": {
+    "candidate_cap": 32,
+    "eos": 15,
+    "frontier_floor": 1,
+    "max_new_tokens": 931,
+    "policy": "CUMULATIVE_REGRET_r=4.00",
+    "ttt_depth": 24
+  },
+  "experiment": "TTT24_AUG8_R1024_PARITY_REPAIR_V1",
+  "forensic_budget_ladder": [
+    128,
+    256,
+    512,
+    1024
+  ],
+  "forensic_outputs": [
+    "1818057f:o0",
+    "8e5c0c38:o0"
+  ],
+  "gold_loaded": false,
+  "no_gold": "No solutions path is accepted by this controller or passed to workers.",
+  "pilot_raw": "/root/arc-runtime-3090-v3/active_run/eval60_budget_eos_pilot18_v1",
+  "regimes": {
+    "A": "Pilot-like AUG16/FIFO/d24 using historical profile capacities; forensic-only reduced budget.",
+    "B": "AUG8/FIFO/d24. The resident count is min(historical capacity, frozen queue size), because a resident pool cannot exceed its active queue.",
+    "C": "AUG8/root-aware/d24 using the same queue-valid profile capacities as B, isolating admission policy."
+  },
+  "source_commit": "467eb66677291f260f253f6d429b9e61eeba8c77",
+  "source_core": "/root/arc-runtime-3090-v3/active_run/ttt24_aug8_r1024_program_v2/ttt24_aug8_r1024_core_v1",
+  "target_blind": true,
+  "trace_cells": [
+    [
+      "1818057f:o0",
+      "geom=identity__color=id__order=canonical",
+      "EXACT_CONTROL"
+    ],
+    [
+      "1818057f:o0",
+      "geom=transpose__color=id__order=canonical",
+      "MISMATCH_ROOT_4_PLUS_4"
+    ],
+    [
+      "8e5c0c38:o0",
+      "geom=identity__color=id__order=canonical",
+      "MISMATCH_UNIFORM8"
+    ]
+  ]
+}

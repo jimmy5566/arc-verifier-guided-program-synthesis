@@ -1,0 +1,28 @@
+{
+  "classification": "OTHER",
+  "decision": "CORE_NOT_READY_CAUSE_NOT_ESTABLISHED",
+  "inferred": [],
+  "measured": {
+    "aug16_to_aug8_first_divergences": [],
+    "cache_scheduler_audit": {
+      "bounded_fairness": "NOT_ESTABLISHED_FROM_FINITE_FORENSIC_TRACE",
+      "cache_length_violations": [],
+      "compatibility_violations": [],
+      "completed_cells": 64,
+      "no_incompatible_physical_batch": true,
+      "no_owner_swap": true,
+      "owner_violations": [],
+      "rollback_lengths_coherent": true,
+      "status": "PASS"
+    },
+    "fifo_to_root_aware_first_divergences": [],
+    "pilot_replay_logical_prefix_exact": false,
+    "prefill_equal": false
+  },
+  "not_established": [
+    "No decoder-policy change is justified.",
+    "No cache-layer rewrite is justified unless the explicit owner/length/compatibility audit fails.",
+    "A historical Pilot run did not retain full per-forward logits/cache hashes; its comparison is a logical expansion-prefix control only."
+  ],
+  "proposed_replacement_gate": "Do not adopt automatically. Compare endpoint semantic fields only within an identical frozen execution contract; across a changed active view population or scheduler, require target-blind prefill identity, request/cache compatibility invariants, and deterministic same-contract replay before a new Phase-1 scientific decision."
+}

@@ -1,0 +1,82 @@
+{
+  "basis": {
+    "cpu_only": true,
+    "frozen_remote_artifacts_modified": false,
+    "gold_loaded": false,
+    "original_remote_root_cause": "OTHER",
+    "original_remote_decision": "CORE_NOT_READY_CAUSE_NOT_ESTABLISHED"
+  },
+  "forensic_comparator_repairs": [
+    {
+      "issue": "Cross-process cache_owner_id was compared as a prefill semantic value.",
+      "effect": "PREFILL_PARITY.json reported FAIL even though every semantic prefill field matched.",
+      "repair": "Treat cache_owner_id as a run-local opaque diagnostic identifier; retain it for within-run owner-stability checks only."
+    },
+    {
+      "issue": "A score-only historical Pilot/replay difference was classified as a generic logical expansion difference and was not mapped to a registered conclusion.",
+      "effect": "ROOT_CAUSE.json fell through to OTHER despite the earliest differing fields being only token_logprob and cumulative_score with identical node identity, parent, selected token, position, branch depth, and cumulative regret.",
+      "repair": "Classify score-only same-node drift as NUMERICAL_SCORE_DRIFT_SAME_NODE_SEQUENCE and map a Pilot-only drift with exact B-vs-A and C-vs-B traces to MODEL_CALL_HISTORY_NUMERICAL_DIVERGENCE."
+    }
+  ],
+  "measured": {
+    "forensic_budget": 512,
+    "pilot_like_A_vs_historical_Pilot": {
+      "first_difference_step": 507,
+      "category": "NUMERICAL_SCORE_DRIFT_SAME_NODE_SEQUENCE",
+      "fields": [
+        "cumulative_score",
+        "token_logprob"
+      ],
+      "same_node_identity": {
+        "node_id": 6096,
+        "parent_node_id": 6084,
+        "selected_token": 2,
+        "token_position": 1802,
+        "branch_depth": 153,
+        "cumulative_regret": 3.4999999217689037
+      },
+      "historical_token_logprob": -7.033323527139146e-06,
+      "replay_token_logprob": -4.410734163684538e-06,
+      "historical_cumulative_score": 3.5326835857394627,
+      "replay_cumulative_score": 3.5326809631500993,
+      "historical_trace_limit": "NODE_SEQUENCE_ONLY_NO_HISTORICAL_PER_FORWARD_LOGITS"
+    },
+    "AUG16_to_AUG8_B_vs_A": "EXACT on all three prespecified diagnostic cells through R512",
+    "FIFO_to_root_aware_C_vs_B": "EXACT on all three prespecified diagnostic cells through R512",
+    "prefill": {
+      "status_after_owner_normalization": "PASS",
+      "matched_fields": [
+        "prompt_token_ids",
+        "prompt_length",
+        "full_logits_sha256",
+        "root_cache_sha256",
+        "root_cache_valid_length",
+        "root_cache_geometry",
+        "first_ready_request except cache_owner_id"
+      ]
+    },
+    "cache_rollback_adoption": {
+      "status": "PASS",
+      "completed_cells": 64,
+      "cache_length_violations": 0,
+      "owner_violations": 0,
+      "compatibility_violations": 0,
+      "no_incompatible_physical_batch": true,
+      "rollback_lengths_coherent": true,
+      "bounded_fairness": "NOT_ESTABLISHED_FROM_FINITE_FORENSIC_TRACE"
+    }
+  },
+  "inference": {
+    "root_cause_classification": "MODEL_CALL_HISTORY_NUMERICAL_DIVERGENCE",
+    "parity_comparator_validity": "CONFOUNDED",
+    "decision": "PHASE1_GATE_REDESIGN_REQUIRED",
+    "reason": "The Pilot-like replay first differs from the historical Pilot before either removing the extra AUG16 views or enabling root-aware admission, while the two controlled execution changes are trace-exact. Therefore historical endpoint equality is not a valid standalone semantic oracle across the Pilot/Core execution regimes."
+  },
+  "not_established": [
+    "A decoder, cache, rollback, pack/split/adoption, or root-aware scheduler implementation bug.",
+    "The earliest internal model operation behind the historical numeric drift, because Pilot lacks per-forward historical logits and cache hashes.",
+    "A replacement Phase-1 gate acceptance decision."
+  ],
+  "phase1_status": "GATE_REDESIGN_REQUIRED",
+  "phase2_status": "NOT_RUN"
+}

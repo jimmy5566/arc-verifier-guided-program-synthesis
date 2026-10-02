@@ -1,0 +1,220 @@
+{
+  "comparator_scope": "The historical comparator is endpoint equality only and does not by itself establish equivalence across AUG16/FIFO/R4096-checkpoint and AUG8/root-aware/true-R1024 contracts.",
+  "exact_control_count": 11,
+  "exact_controls": [
+    {
+      "augmentation_id": "geom=identity__color=id__order=canonical",
+      "output_id": "1818057f:o0"
+    },
+    {
+      "augmentation_id": "geom=flip_ud__color=id__order=canonical",
+      "output_id": "1818057f:o0"
+    },
+    {
+      "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+      "output_id": "1818057f:o0"
+    },
+    {
+      "augmentation_id": "geom=rot180__color=id__order=canonical",
+      "output_id": "1818057f:o0"
+    },
+    {
+      "augmentation_id": "geom=rot270__color=id__order=canonical",
+      "output_id": "1818057f:o0"
+    },
+    {
+      "augmentation_id": "geom=transpose__color=id__order=canonical",
+      "output_id": "3a25b0d8:o1"
+    },
+    {
+      "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+      "output_id": "3a25b0d8:o1"
+    },
+    {
+      "augmentation_id": "geom=rot180__color=id__order=canonical",
+      "output_id": "3a25b0d8:o1"
+    },
+    {
+      "augmentation_id": "geom=rot270__color=id__order=canonical",
+      "output_id": "3a25b0d8:o1"
+    },
+    {
+      "augmentation_id": "geom=identity__color=id__order=canonical",
+      "output_id": "dd6b8c4b:o1"
+    },
+    {
+      "augmentation_id": "geom=rot90__color=id__order=canonical",
+      "output_id": "dd6b8c4b:o1"
+    }
+  ],
+  "gold_loaded": false,
+  "mismatch_count": 34,
+  "mismatches": [
+    {
+      "augmentation_id": "geom=transpose__color=id__order=canonical",
+      "output_id": "1818057f:o0"
+    },
+    {
+      "augmentation_id": "geom=rot90__color=id__order=canonical",
+      "output_id": "1818057f:o0"
+    },
+    {
+      "augmentation_id": "geom=flip_lr__color=id__order=canonical",
+      "output_id": "1818057f:o0"
+    },
+    {
+      "augmentation_id": "geom=identity__color=id__order=canonical",
+      "output_id": "3a25b0d8:o1"
+    },
+    {
+      "augmentation_id": "geom=flip_ud__color=id__order=canonical",
+      "output_id": "3a25b0d8:o1"
+    },
+    {
+      "augmentation_id": "geom=rot90__color=id__order=canonical",
+      "output_id": "3a25b0d8:o1"
+    },
+    {
+      "augmentation_id": "geom=flip_lr__color=id__order=canonical",
+      "output_id": "3a25b0d8:o1"
+    },
+    {
+      "augmentation_id": "geom=identity__color=id__order=canonical",
+      "output_id": "8e5c0c38:o0"
+    },
+    {
+      "augmentation_id": "geom=flip_ud__color=id__order=canonical",
+      "output_id": "8e5c0c38:o0"
+    },
+    {
+      "augmentation_id": "geom=transpose__color=id__order=canonical",
+      "output_id": "8e5c0c38:o0"
+    },
+    {
+      "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+      "output_id": "8e5c0c38:o0"
+    },
+    {
+      "augmentation_id": "geom=rot90__color=id__order=canonical",
+      "output_id": "8e5c0c38:o0"
+    },
+    {
+      "augmentation_id": "geom=rot180__color=id__order=canonical",
+      "output_id": "8e5c0c38:o0"
+    },
+    {
+      "augmentation_id": "geom=rot270__color=id__order=canonical",
+      "output_id": "8e5c0c38:o0"
+    },
+    {
+      "augmentation_id": "geom=flip_lr__color=id__order=canonical",
+      "output_id": "8e5c0c38:o0"
+    },
+    {
+      "augmentation_id": "geom=identity__color=id__order=canonical",
+      "output_id": "c4d067a0:o0"
+    },
+    {
+      "augmentation_id": "geom=flip_ud__color=id__order=canonical",
+      "output_id": "c4d067a0:o0"
+    },
+    {
+      "augmentation_id": "geom=transpose__color=id__order=canonical",
+      "output_id": "c4d067a0:o0"
+    },
+    {
+      "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+      "output_id": "c4d067a0:o0"
+    },
+    {
+      "augmentation_id": "geom=rot90__color=id__order=canonical",
+      "output_id": "c4d067a0:o0"
+    },
+    {
+      "augmentation_id": "geom=rot180__color=id__order=canonical",
+      "output_id": "c4d067a0:o0"
+    },
+    {
+      "augmentation_id": "geom=rot270__color=id__order=canonical",
+      "output_id": "c4d067a0:o0"
+    },
+    {
+      "augmentation_id": "geom=flip_lr__color=id__order=canonical",
+      "output_id": "c4d067a0:o0"
+    },
+    {
+      "augmentation_id": "geom=identity__color=id__order=canonical",
+      "output_id": "cb2d8a2c:o1"
+    },
+    {
+      "augmentation_id": "geom=flip_ud__color=id__order=canonical",
+      "output_id": "cb2d8a2c:o1"
+    },
+    {
+      "augmentation_id": "geom=rot90__color=id__order=canonical",
+      "output_id": "cb2d8a2c:o1"
+    },
+    {
+      "augmentation_id": "geom=rot180__color=id__order=canonical",
+      "output_id": "cb2d8a2c:o1"
+    },
+    {
+      "augmentation_id": "geom=rot270__color=id__order=canonical",
+      "output_id": "cb2d8a2c:o1"
+    },
+    {
+      "augmentation_id": "geom=flip_ud__color=id__order=canonical",
+      "output_id": "dd6b8c4b:o1"
+    },
+    {
+      "augmentation_id": "geom=transpose__color=id__order=canonical",
+      "output_id": "dd6b8c4b:o1"
+    },
+    {
+      "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+      "output_id": "dd6b8c4b:o1"
+    },
+    {
+      "augmentation_id": "geom=rot180__color=id__order=canonical",
+      "output_id": "dd6b8c4b:o1"
+    },
+    {
+      "augmentation_id": "geom=rot270__color=id__order=canonical",
+      "output_id": "dd6b8c4b:o1"
+    },
+    {
+      "augmentation_id": "geom=flip_lr__color=id__order=canonical",
+      "output_id": "dd6b8c4b:o1"
+    }
+  ],
+  "not_comparable": [
+    {
+      "augmentation_id": "geom=transpose__color=id__order=canonical",
+      "output_id": "cb2d8a2c:o1"
+    },
+    {
+      "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+      "output_id": "cb2d8a2c:o1"
+    },
+    {
+      "augmentation_id": "geom=flip_lr__color=id__order=canonical",
+      "output_id": "cb2d8a2c:o1"
+    }
+  ],
+  "not_comparable_count": 3,
+  "source_commit": "467eb66677291f260f253f6d429b9e61eeba8c77",
+  "source_compact_hash_ledger": {
+    "path": "/root/arc-runtime-3090-v3/active_run/ttt24_aug8_r1024_program_v2/ttt24_aug8_r1024_core_v1/HASHES.json",
+    "sha256": "d2065aba9a5ce36c4bd529ccc4a6d6ac3828df93eea747fd8ba01be9cbd1bfcf"
+  },
+  "source_core": "/root/arc-runtime-3090-v3/active_run/ttt24_aug8_r1024_program_v2/ttt24_aug8_r1024_core_v1",
+  "source_generation_hash_ledger": {
+    "path": "/root/arc-runtime-3090-v3/active_run/ttt24_aug8_r1024_program_v2/ttt24_aug8_r1024_core_v1/GENERATION_HASHES.json",
+    "sha256": "2c7af763ac392558711a95ae3e876a14fa8efc510de52e32356c156e3c124e46"
+  },
+  "source_smoke_parity": {
+    "path": "/root/arc-runtime-3090-v3/active_run/ttt24_aug8_r1024_program_v2/ttt24_aug8_r1024_core_v1/SMOKE_PARITY.csv",
+    "sha256": "bea5f861daff9201f2799053eb69f2b530af266c71c62b2a599edbbb51b60c45"
+  },
+  "target_blind": true
+}

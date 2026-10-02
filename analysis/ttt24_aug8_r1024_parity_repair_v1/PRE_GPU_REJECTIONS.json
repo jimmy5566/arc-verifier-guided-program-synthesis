@@ -1,0 +1,19 @@
+{
+  "gold_loaded": false,
+  "recorded_unix": 1790954794.1679473,
+  "rejections": [
+    {
+      "before_any_aug8_gpu_cell": true,
+      "reason": "unsupported PROJECT_RESEARCH_AUG8 marker",
+      "resolution": "immutable CANONICAL_GEOMETRY_AUG8 source-Core IDs",
+      "stage": "AUG8_LOADER"
+    },
+    {
+      "before_any_aug8_gpu_cell": true,
+      "reason": "historical resident_capacity 16 exceeds AUG8 queue length 8",
+      "resolution": "min(historical_capacity, active_frozen_surface_size)",
+      "stage": "QUEUE_CONSTRUCTION"
+    }
+  ],
+  "target_blind": true
+}

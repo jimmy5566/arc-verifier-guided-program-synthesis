@@ -1,0 +1,12 @@
+{
+  "gold_loaded": false,
+  "invalid_path": "/root/arc-runtime-3090-v3/arc2/analysis/augmentation_candidate_screening_v1/AUG8_IDS.json",
+  "invalid_subset": "PROJECT_RESEARCH_AUG8",
+  "invalid_worker_raw_written": false,
+  "reason": "Use the immutable source-Core canonical AUG8 identity file rather than an unsupported external marker.",
+  "status": "CORRECTED_BEFORE_ANY_AUG8_GPU_CELL",
+  "target_blind": true,
+  "valid_path": "/root/arc-runtime-3090-v3/active_run/ttt24_aug8_r1024_program_v2/ttt24_aug8_r1024_core_v1/AUG8_IDS.json",
+  "valid_sha256": "90585a8ac0462248b3be1a8a974851f03ad8167f686b466b286eed804d4151df",
+  "valid_subset": "CANONICAL_GEOMETRY_AUG8"
+}

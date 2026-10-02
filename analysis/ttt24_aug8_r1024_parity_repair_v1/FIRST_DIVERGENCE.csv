@@ -1,0 +1,10 @@
+budget,label,output_id,augmentation_id,comparison,status,first_divergence_step,earliest_divergence_category,differing_fields,reference_trace,challenger_trace,reference_trace_availability
+512,EXACT_CONTROL,1818057f:o0,geom=identity__color=id__order=canonical,A_VS_PILOT,EXACT,,NONE,[],,,NODE_SEQUENCE_ONLY_NO_HISTORICAL_PER_FORWARD_LOGITS
+512,EXACT_CONTROL,1818057f:o0,geom=identity__color=id__order=canonical,B_VS_A,EXACT,,NONE,[],,,FULL_NEW_TRACE
+512,EXACT_CONTROL,1818057f:o0,geom=identity__color=id__order=canonical,C_VS_B,EXACT,,NONE,[],,,FULL_NEW_TRACE
+512,MISMATCH_ROOT_4_PLUS_4,1818057f:o0,geom=transpose__color=id__order=canonical,A_VS_PILOT,DIVERGED,507,LOGICAL_EXPANSION_SEQUENCE,"[""cumulative_score"",""token_logprob""]","{""branch_depth"":153,""cumulative_regret"":3.4999999217689037,""cumulative_score"":3.5326835857394627,""node_id"":6096,""parent_node_id"":6084,""selected_token"":2,""token_logprob"":-7.033323527139146e-06,""token_position"":1802}","{""branch_depth"":153,""cumulative_regret"":3.4999999217689037,""cumulative_score"":3.5326809631500993,""node_id"":6096,""parent_node_id"":6084,""selected_token"":2,""token_logprob"":-4.410734163684538e-06,""token_position"":1802}",NODE_SEQUENCE_ONLY_NO_HISTORICAL_PER_FORWARD_LOGITS
+512,MISMATCH_ROOT_4_PLUS_4,1818057f:o0,geom=transpose__color=id__order=canonical,B_VS_A,EXACT,,NONE,[],,,FULL_NEW_TRACE
+512,MISMATCH_ROOT_4_PLUS_4,1818057f:o0,geom=transpose__color=id__order=canonical,C_VS_B,EXACT,,NONE,[],,,FULL_NEW_TRACE
+512,MISMATCH_UNIFORM8,8e5c0c38:o0,geom=identity__color=id__order=canonical,A_VS_PILOT,EXACT,,NONE,[],,,NODE_SEQUENCE_ONLY_NO_HISTORICAL_PER_FORWARD_LOGITS
+512,MISMATCH_UNIFORM8,8e5c0c38:o0,geom=identity__color=id__order=canonical,B_VS_A,EXACT,,NONE,[],,,FULL_NEW_TRACE
+512,MISMATCH_UNIFORM8,8e5c0c38:o0,geom=identity__color=id__order=canonical,C_VS_B,EXACT,,NONE,[],,,FULL_NEW_TRACE

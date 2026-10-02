@@ -1,0 +1,14 @@
+{
+  "cpu_only": true,
+  "frozen_remote_hash_ledger": {
+    "entries": 12,
+    "status": "PASS"
+  },
+  "local_post_freeze_files": {
+    "EXECUTION_INPUT_CORRECTION.json": "163e7fa14542ead0d6f3f99cc0a3210804e9562bd5b57d4d492078f69cdaf4a0",
+    "POST_FREEZE_RECONCILIATION.json": "5540ce3dd269a30a983c63c5d2f36eb22c7acdca1a0d4a02ff13471dcef7a78d",
+    "PRE_GPU_REJECTIONS.json": "43750a12ed23b75be42194f32ca76e2e907ccb3c49463761186edcbb0dc0d710",
+    "RUN_STATE.json": "d3081bdb4643922b5086af80f1c2cbca2da3a865bde94987f104a04f69808f44"
+  },
+  "status": "PASS"
+}

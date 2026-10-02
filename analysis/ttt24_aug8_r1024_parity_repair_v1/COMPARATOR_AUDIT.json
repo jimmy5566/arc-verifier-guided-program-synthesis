@@ -1,0 +1,13 @@
+{
+  "compared_fields": [
+    "candidate_pool_snapshot",
+    "completed_candidate_count",
+    "termination_reason",
+    "carried_forward_terminal"
+  ],
+  "criterion_across_changed_contract": "NOT_VALID_AS_A_STANDALONE_ORACLE; controlled A/B/C replay required.",
+  "criterion_under_identical_contract": "VALID endpoint semantic-equivalence criterion.",
+  "endpoint_exact_rows": 12,
+  "field_diff_rows": 48,
+  "status": "CONFOUNDED_PENDING_CONTROLLED_REPLAY"
+}
