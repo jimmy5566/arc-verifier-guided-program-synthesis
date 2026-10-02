@@ -349,8 +349,8 @@ def _write_contract(args: argparse.Namespace, output: Path) -> None:
                              "max_new_tokens": 931, "candidate_cap": 32, "frontier_floor": 1, "eos": 15},
         "regimes": {
             "A": "Pilot-like AUG16/FIFO/d24 using historical profile capacities; forensic-only reduced budget.",
-            "B": "AUG8/FIFO/d24 using the same historical profile capacities as A, isolating the extra-view surface.",
-            "C": "AUG8/root-aware/d24 using the same profile capacities as B, isolating admission policy.",
+            "B": "AUG8/FIFO/d24. The resident count is min(historical capacity, frozen queue size), because a resident pool cannot exceed its active queue.",
+            "C": "AUG8/root-aware/d24 using the same queue-valid profile capacities as B, isolating admission policy.",
         },
         "no_gold": "No solutions path is accepted by this controller or passed to workers.",
     }
@@ -401,8 +401,13 @@ def _run_budget(args: argparse.Namespace, output: Path, budget: int) -> dict[str
     for name, run in runs.items():
         run.mkdir(parents=True, exist_ok=True)
         _prepare_cohort(args.source_core, FORENSIC_OUTPUTS, run)
+        active_surface_size = 16 if name == "A" else 8
         for output_id in FORENSIC_OUTPUTS:
             resident, ceiling = _profile_from_pilot(args.pilot_raw, output_id)
+            # A rolling resident queue must never claim more slots than its
+            # immutable active surface. This makes B/C queue-valid without
+            # altering their ceiling or the frozen decoder/search contract.
+            resident = min(resident, active_surface_size)
             if not _raw_path(run, output_id).exists():
                 _run_worker(args, run, output_id, aug_ids=regime[name]["ids"], label=regime[name]["label"],
                             policy=regime[name]["policy"], resident=resident, ceiling=ceiling, budget=budget)
