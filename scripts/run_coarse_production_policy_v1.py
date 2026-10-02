@@ -340,8 +340,13 @@ def _run_profile_output(args: argparse.Namespace, *, policy: dict[str, Any], pro
 
 
 def _controller(args: argparse.Namespace) -> int:
-    if args.output.exists() and any(args.output.iterdir()):
-        raise RuntimeError(f"refusing to overwrite nonempty output: {args.output}")
+    # The launcher records its PID and redirected controller log before this
+    # Python process begins.  Those operational files are not experiment
+    # artifacts and must not make a fresh output directory look contaminated.
+    existing = [path.name for path in args.output.iterdir()] if args.output.exists() else []
+    unexpected = [name for name in existing if name not in {"controller.log", "controller.pid"}]
+    if unexpected:
+        raise RuntimeError(f"refusing to overwrite nonempty output: {args.output} ({unexpected[:4]})")
     args.output.mkdir(parents=True, exist_ok=True)
     calibration._assert_challenge_only(args.challenge)
     calibration_contract = _read(args.calibration_output / "CONTRACT.json")
