@@ -342,7 +342,7 @@ def _checkpoint_region(nodes: int) -> str:
 def _worker(args: argparse.Namespace) -> int:
     import torch
 
-    cohort = _read(args.output / "PILOT_COHORT.json")["outputs"]
+    cohort = _read(args.output / args.cohort_file)["outputs"]
     selected = next((row for row in cohort if row["output_id"] == args.output_id), None)
     if selected is None:
         raise RuntimeError(f"output absent from frozen cohort: {args.output_id}")
@@ -385,21 +385,34 @@ def _worker(args: argparse.Namespace) -> int:
         candidates = _load_aug16(args.candidate_pool, args.aug16_ids)
         candidates_by_id = {str(row["candidate_id"]): row for row in candidates}
         frozen_ids = [str(row["candidate_id"]) for row in candidates]
-        if len(frozen_ids) != 16 or len(set(frozen_ids)) != 16:
-            raise RuntimeError("Pilot18 requires exactly frozen AUG16")
-        config = _config(4096, diagnostic_trace=False)
+        if len(frozen_ids) not in {8, 16} or len(frozen_ids) != len(set(frozen_ids)):
+            raise RuntimeError("worker requires an exact, distinct frozen AUG8 or AUG16 surface")
+        config = _config(int(args.max_expanded_nodes), diagnostic_trace=False)
         profile_cfg = {"resident_capacity": int(args.resident), "physical_batch_ceiling": int(args.ceiling)}
         roots: dict[str, int] = {}
+        prepared_prompts: dict[str, tuple[Any, dict[str, Any]]] = {}
         per_cell_events: dict[str, list[dict[str, Any]]] = defaultdict(list)
         final_cells: dict[str, dict[str, Any]] = {}
         current_stage = "PREFILL"
 
+        # Root-aware admission must be decided before any cell owns a cache.
+        # Tokenization is CPU-only and is not a model forward or a decoder
+        # decision.  The recorded root length is the initial compatibility
+        # feature used by the shared production scheduler.
+        for identifier in frozen_ids:
+            key = f"{selected['task_id']}:o{selected['output_index']}:d{args.ttt_depth}:{args.augmentation_label}:{identifier}"
+            prompt_ids, prompt = _native_prompt_record(
+                tokenizer=tokenizer, task=task, output_index=int(selected["output_index"]),
+                candidate=candidates_by_id[identifier],
+            )
+            roots[key] = int(prompt["prompt_token_length"])
+            prepared_prompts[key] = (prompt_ids, prompt)
+
         def create_cell(cell_key: str) -> Any:
             nonlocal current_stage
-            augmentation_id = cell_key.rsplit(":aug16:", 1)[1]
+            augmentation_id = cell_key.rsplit(":", 1)[1]
             candidate = candidates_by_id[augmentation_id]
-            prompt_ids, prompt = _native_prompt_record(tokenizer=tokenizer, task=task, output_index=int(selected["output_index"]), candidate=candidate)
-            roots[cell_key] = int(prompt["prompt_token_length"])
+            prompt_ids, _prompt = prepared_prompts[cell_key]
             current_stage = "CELL_PREFILL"
             def transform(legacy: Any, key: str = cell_key) -> Any:
                 return ChunkedDynamicCache.from_legacy_cache(legacy, block_tokens=KV_BLOCK_TOKENS, owner_id=key)
@@ -414,7 +427,7 @@ def _worker(args: argparse.Namespace) -> int:
             return cell
 
         def consume_result(cell_key: str, cell: Any) -> None:
-            candidate = candidates_by_id[cell_key.rsplit(":aug16:", 1)[1]]
+            candidate = candidates_by_id[cell_key.rsplit(":", 1)[1]]
             result = ready_result(cell)
             nodes = [dict(node) for node in result.nodes]
             events = per_cell_events[cell_key]
@@ -487,17 +500,29 @@ def _worker(args: argparse.Namespace) -> int:
         stage = "SCHEDULER"
         torch.cuda.synchronize(device=args.device); torch.cuda.reset_peak_memory_stats(device=args.device)
         started = time.perf_counter()
-        keys = [f"{selected['task_id']}:o{selected['output_index']}:d24:aug16:{identifier}" for identifier in frozen_ids]
+        keys = list(prepared_prompts)
+        scheduler_kwargs: dict[str, Any] = {}
+        if args.admission_policy == "root_aware":
+            scheduler_kwargs = {
+                "root_lengths": roots,
+                # FairCompatibilitySelector recomputes exact READY classes
+                # before every physical forward.  The profile ceiling is
+                # frozen; the selected width still shrinks to the current
+                # compatible READY class and resident availability.
+                "safe_batch_ceiling": lambda _position: profile_cfg["physical_batch_ceiling"],
+                "fairness_max_wait": int(args.fairness_max_wait),
+            }
         scheduler = run_rolling_resident_scheduler(
             model=model, pending_ids=keys, resident_capacity=profile_cfg["resident_capacity"],
             physical_batch_ceiling=profile_cfg["physical_batch_ceiling"], create_cell=create_cell,
             consume_result=consume_result, release_cell=release_cell,
-            memory_snapshot=lambda: _memory(torch, args.device), admission_policy="fifo",
+            memory_snapshot=lambda: _memory(torch, args.device), admission_policy=args.admission_policy,
+            **scheduler_kwargs,
         )
         torch.cuda.synchronize(device=args.device)
         wall = time.perf_counter() - started
-        if len(final_cells) != 16:
-            raise RuntimeError(f"Pilot18 output completed {len(final_cells)}/16 cells")
+        if len(final_cells) != len(frozen_ids):
+            raise RuntimeError(f"output completed {len(final_cells)}/{len(frozen_ids)} cells")
         stage = "RAW_OUTPUT_WRITE"
         flat_events = [event for key in sorted(per_cell_events) for event in per_cell_events[key]]
         eos_path.parent.mkdir(parents=True, exist_ok=True)
@@ -514,6 +539,8 @@ def _worker(args: argparse.Namespace) -> int:
         payload = {"experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False, "status": "COMPLETE",
                    "output": selected, "attempt_index": args.attempt, "runtime_identity": runtime_identity,
                    "profile_configuration": profile_cfg, "cells": final_cells,
+                   "root_admission": {"policy": args.admission_policy, "root_lengths": roots,
+                                      "frozen_pending_order": keys, "fairness_max_wait": int(args.fairness_max_wait)},
                    "scheduler": {key: value for key, value in scheduler.items() if key != "events"},
                    "scheduler_events": scheduler["events"], "wall_seconds": wall, "memory": memory,
                    "eos_events_path": str(eos_path.relative_to(args.output)), "eos_event_count": len(flat_events)}
@@ -964,12 +991,34 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--adapter-root", type=Path); parser.add_argument("--adapter-stage", type=Path, required=True)
     parser.add_argument("--coarse-policy", type=Path); parser.add_argument("--solutions", type=Path)
     parser.add_argument("--output-id"); parser.add_argument("--attempt", type=int); parser.add_argument("--resident", type=int); parser.add_argument("--ceiling", type=int)
+    # Worker-only execution parameters preserve the historical Pilot18
+    # defaults.  Later frozen surfaces may explicitly use the same physical
+    # path at a smaller budget/depth without changing the legacy controller.
+    parser.add_argument("--cohort-file", default="PILOT_COHORT.json")
+    parser.add_argument("--max-expanded-nodes", type=int, default=4096)
+    parser.add_argument("--ttt-depth", type=int, default=24)
+    parser.add_argument("--augmentation-label", default="aug16")
+    parser.add_argument("--admission-policy", choices=("fifo", "root_aware"), default="fifo")
+    parser.add_argument("--fairness-max-wait", type=int, default=3)
+    parser.add_argument("--experiment", default=EXPERIMENT)
+    parser.add_argument("--checkpoints", default="512,1024,2048,4096")
     parser.add_argument("--device", default="cuda:0")
     return parser.parse_args()
 
 
 def main() -> None:
+    global EXPERIMENT, CHECKPOINTS
     args = _parse_args()
+    EXPERIMENT = str(args.experiment)
+    try:
+        checkpoints = tuple(int(value.strip()) for value in str(args.checkpoints).split(",") if value.strip())
+    except ValueError as error:
+        raise SystemExit(f"invalid --checkpoints: {error}") from error
+    if not checkpoints or any(value <= 0 for value in checkpoints) or tuple(sorted(set(checkpoints))) != checkpoints:
+        raise SystemExit("--checkpoints must be nonempty, positive, distinct, and strictly increasing")
+    if checkpoints[-1] != int(args.max_expanded_nodes):
+        raise SystemExit("final checkpoint must equal --max-expanded-nodes")
+    CHECKPOINTS = checkpoints
     if args.mode == "worker":
         required = (args.output_id, args.attempt, args.resident, args.ceiling)
         if any(value is None for value in required):

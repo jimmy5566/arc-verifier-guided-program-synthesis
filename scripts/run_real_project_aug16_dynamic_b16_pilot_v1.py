@@ -183,12 +183,21 @@ def _canonical_candidate_grid(token_ids: tuple[int, ...], candidate: dict[str, A
 def _load_aug16(candidates_path: Path, ids_path: Path) -> list[dict[str, Any]]:
     pool = json.loads(candidates_path.read_text(encoding="utf-8"))
     requested = json.loads(ids_path.read_text(encoding="utf-8"))
-    if requested.get("subset") != "PROJECT_RESEARCH_AUG16":
-        raise RuntimeError("AUG16 IDs do not declare PROJECT_RESEARCH_AUG16")
+    subset = str(requested.get("subset", ""))
+    # This loader is shared by frozen AUG16 production work and the later,
+    # explicitly canonical AUG8 experiments.  Keep the legacy name so old
+    # callers remain byte-for-byte on their existing path; validate each
+    # declared surface strictly rather than accepting an arbitrary subset.
+    expected_count = {
+        "PROJECT_RESEARCH_AUG16": 16,
+        "CANONICAL_GEOMETRY_AUG8": 8,
+    }.get(subset)
+    if expected_count is None:
+        raise RuntimeError(f"unsupported frozen augmentation subset: {subset!r}")
     candidate_by_id = {item["candidate_id"]: item for item in pool.get("candidates", [])}
     ids = list(requested.get("candidate_ids", []))
-    if len(ids) != 16 or len(set(ids)) != 16:
-        raise RuntimeError("frozen AUG16 must contain exactly sixteen distinct IDs")
+    if len(ids) != expected_count or len(set(ids)) != expected_count:
+        raise RuntimeError(f"frozen {subset} must contain exactly {expected_count} distinct IDs")
     missing = [item for item in ids if item not in candidate_by_id]
     if missing:
         raise RuntimeError(f"frozen AUG16 IDs missing from candidate pool: {missing}")
