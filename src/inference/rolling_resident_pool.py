@@ -18,6 +18,7 @@ from inference.nvarc_turbodfs_dynamic_ready import (
     execute_ready_forward,
     ready_result,
 )
+from inference.root_adaptive_batch_policy import FairCompatibilitySelector, RootAwareAdmissionQueue
 
 
 @dataclass(frozen=True)
@@ -91,6 +92,12 @@ def run_rolling_resident_scheduler(
     memory_snapshot: Callable[[], dict[str, Any]] | None = None,
     cache_summary: Callable[[Iterable[ReadyCell]], dict[str, Any]] | None = None,
     event_sink: Callable[[dict[str, Any]], None] | None = None,
+    admission_policy: str = "fifo",
+    root_lengths: dict[str, int] | None = None,
+    safe_batch_ceiling: Callable[[int], int] | None = None,
+    fairness_max_wait: int = 3,
+    cache_pack_observer: Callable[[str, dict[str, Any]], None] | None = None,
+    release_batch_temporaries_for_audit: bool = False,
 ) -> dict[str, Any]:
     """Run a FIFO rolling pool through the common physical-forward path.
 
@@ -103,8 +110,19 @@ def run_rolling_resident_scheduler(
     """
     if int(physical_batch_ceiling) <= 0 or int(physical_batch_ceiling) > int(resident_capacity):
         raise ValueError("physical batch ceiling must be in [1, resident_capacity]")
+    if admission_policy not in {"fifo", "root_aware"}:
+        raise ValueError("admission_policy must be fifo or root_aware")
+    pending = tuple(str(item) for item in pending_ids)
+    if admission_policy == "root_aware":
+        if root_lengths is None:
+            raise ValueError("root-aware admission requires root_lengths")
+        queue: Any = RootAwareAdmissionQueue(
+            pending, root_lengths={str(key): int(value) for key, value in root_lengths.items()},
+            resident_capacity=resident_capacity,
+        )
+    else:
+        queue = RollingResidentQueue(pending, resident_capacity)
 
-    queue = RollingResidentQueue(pending_ids, resident_capacity)
     residents: OrderedDict[str, ReadyCell] = OrderedDict()
     events: list[dict[str, Any]] = []
     histogram: dict[int, int] = {}
@@ -112,10 +130,14 @@ def run_rolling_resident_scheduler(
     logical_advances = 0
     event_index = 0
     max_resident_count = 0
+    forward_timing = {"model_call_seconds": 0.0, "cache_pack_seconds": 0.0, "cache_adoption_seconds": 0.0, "elapsed_seconds": 0.0}
+    selector = FairCompatibilitySelector(max_wait=fairness_max_wait) if safe_batch_ceiling is not None else None
+    root_by_key = {str(key): int(value) for key, value in (root_lengths or {}).items()}
 
     def emit(event: str, *, cell_key: str | None, reason: str | None = None,
              physical_forward_index: int | None = None, physical_batch: int | None = None,
-             selected_keys: list[str] | None = None) -> None:
+             selected_keys: list[str] | None = None, compatibility_class: str | None = None,
+             compatibility_wait_before: int | None = None, safe_ceiling: int | None = None) -> None:
         nonlocal event_index, max_resident_count
         event_index += 1
         max_resident_count = max(max_resident_count, len(residents))
@@ -130,6 +152,13 @@ def run_rolling_resident_scheduler(
             "termination_reason": reason,
             "physical_batch": physical_batch,
             "selected_cell_keys": selected_keys or [],
+            "admission_policy": admission_policy,
+            "active_root_length": getattr(queue, "active_root_length", None),
+            "resident_root_lengths": [root_by_key[key] for key in residents if key in root_by_key],
+            "selected_root_lengths": [root_by_key[key] for key in (selected_keys or []) if key in root_by_key],
+            "compatibility_class": compatibility_class,
+            "compatibility_wait_before": compatibility_wait_before,
+            "safe_batch_ceiling": safe_ceiling,
         }
         if memory_snapshot is not None:
             payload.update({f"memory_{key}": value for key, value in memory_snapshot().items()})
@@ -151,7 +180,10 @@ def run_rolling_resident_scheduler(
 
     admit_available(physical_index=0)
     while residents:
-        selected = _compatible_group_in_frozen_order(list(residents.values()), int(physical_batch_ceiling))
+        decision = selector.select(residents.values(), safe_batch_ceiling) if selector is not None else None
+        selected = list(decision.selected) if decision is not None else _compatible_group_in_frozen_order(
+            list(residents.values()), int(physical_batch_ceiling),
+        )
         if not selected:
             raise RuntimeError("rolling resident pool has owners but no READY request")
         requests = [cell.request for cell in selected]
@@ -160,13 +192,20 @@ def run_rolling_resident_scheduler(
         physical_forwards += 1
         physical_batch = len(selected)
         emit("FORWARD", cell_key=None, physical_batch=physical_batch,
-             selected_keys=[cell.cell_key for cell in selected])
-        replies, _telemetry = execute_ready_forward(
+             selected_keys=[cell.cell_key for cell in selected],
+             compatibility_class=decision.class_key if decision is not None else None,
+             compatibility_wait_before=decision.class_wait_before if decision is not None else None,
+             safe_ceiling=decision.safe_ceiling if decision is not None else physical_batch_ceiling)
+        replies, telemetry = execute_ready_forward(
             model=model,
             selected=selected,
             requests=requests,  # type: ignore[arg-type]
             streaming_split_and_adopt=True,
+            cache_pack_observer=cache_pack_observer,
+            release_batch_temporaries_for_audit=release_batch_temporaries_for_audit,
         )
+        for key in forward_timing:
+            forward_timing[key] += float(telemetry.get(key, 0.0))
         histogram[physical_batch] = histogram.get(physical_batch, 0) + 1
         logical_advances += physical_batch
         for cell, reply in zip(selected, replies, strict=True):
@@ -194,6 +233,9 @@ def run_rolling_resident_scheduler(
         "mean_effective_batch": logical_advances / physical_forwards if physical_forwards else 0.0,
         "resident_capacity": queue.capacity,
         "max_resident_count": max_resident_count,
+        "admission_policy": admission_policy,
+        "compatibility_wait_counts": selector.wait_counts() if selector is not None else {},
+        "forward_timing": forward_timing,
         "events": events,
         "status": "COMPLETE",
     }
