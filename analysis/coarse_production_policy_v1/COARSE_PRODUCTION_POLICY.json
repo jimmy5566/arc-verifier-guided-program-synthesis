@@ -1,0 +1,210 @@
+{
+  "deferred_performance_optimization": [
+    "M resident9/B9 A/B",
+    "B9+B7 versus B8-capped full-search benchmark",
+    "exact arbitrary-integer throughput curve",
+    "fine-grained root/cache-length policy",
+    "XL optimization",
+    "global throughput optimum"
+  ],
+  "experiment": "COARSE_PRODUCTION_POLICY_V1",
+  "fallback_stage_mapping": {
+    "admission_or_prefill": [
+      "AFTER_ADMIT",
+      "AFTER_CELL_PREFILL",
+      "AFTER_ROOT_CHUNK_CONVERSION",
+      "BEFORE_CELL_PREFILL",
+      "BEFORE_ROOT_CHUNK_CONVERSION"
+    ],
+    "fresh_process_required": true,
+    "other": "next configured fallback",
+    "physical_forward": [
+      "AFTER_MODEL_FORWARD",
+      "AFTER_STREAMING_ADOPT",
+      "BEFORE_CACHE_PACK",
+      "BEFORE_MODEL_FORWARD",
+      "BEFORE_STREAMING_ADOPT",
+      "PACKED_LAYER"
+    ]
+  },
+  "gold_loaded": false,
+  "policy_freeze_rule": "Only root/cache length, OOM stage, and attempt index may select a fallback.",
+  "profiles": {
+    "PROFILE_L_HIGH": {
+      "admission": "fifo",
+      "evidence": [
+        "PHYSICAL_R6114_R4_B4_C6144.json"
+      ],
+      "fallbacks": [
+        {
+          "physical_batch_ceiling": 2,
+          "resident_capacity": 4
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 4
+        },
+        {
+          "physical_batch_ceiling": 2,
+          "resident_capacity": 2
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 2
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 1
+        }
+      ],
+      "primary": {
+        "physical_batch_ceiling": 4,
+        "resident_capacity": 4
+      },
+      "root_max_range": [
+        4097,
+        6493
+      ],
+      "runtime_batch_selection": "largest currently compatible READY subset not exceeding the selected ceiling; no power-of-two rounding"
+    },
+    "PROFILE_L_LOW": {
+      "admission": "fifo",
+      "evidence": [
+        "PHYSICAL_R4092_R4_B4_C4096.json"
+      ],
+      "fallbacks": [
+        {
+          "physical_batch_ceiling": 2,
+          "resident_capacity": 4
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 4
+        },
+        {
+          "physical_batch_ceiling": 2,
+          "resident_capacity": 2
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 2
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 1
+        }
+      ],
+      "primary": {
+        "physical_batch_ceiling": 4,
+        "resident_capacity": 4
+      },
+      "root_max_range": [
+        2654,
+        4096
+      ],
+      "runtime_batch_selection": "largest currently compatible READY subset not exceeding the selected ceiling; no power-of-two rounding"
+    },
+    "PROFILE_M": {
+      "admission": "fifo",
+      "evidence": [
+        "PROFILE_M_R128_RESULT.json",
+        "PROFILE_M_R256_RESULT.json"
+      ],
+      "fallbacks": [
+        {
+          "physical_batch_ceiling": 2,
+          "resident_capacity": 8
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 8
+        },
+        {
+          "physical_batch_ceiling": 2,
+          "resident_capacity": 2
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 2
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 1
+        }
+      ],
+      "primary": {
+        "physical_batch_ceiling": 8,
+        "resident_capacity": 8
+      },
+      "root_max_range": [
+        2049,
+        2653
+      ],
+      "runtime_batch_selection": "largest currently compatible READY subset not exceeding the selected ceiling; no power-of-two rounding"
+    },
+    "PROFILE_S": {
+      "admission": "fifo",
+      "evidence": [
+        "PHYSICAL_S_SPLIT_R16_B7_C2816.json",
+        "existing frozen S semantic evidence"
+      ],
+      "fallbacks": [
+        {
+          "physical_batch_ceiling": 2,
+          "resident_capacity": 16
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 16
+        },
+        {
+          "physical_batch_ceiling": 2,
+          "resident_capacity": 2
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 2
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 1
+        }
+      ],
+      "primary": {
+        "physical_batch_ceiling": 7,
+        "resident_capacity": 16
+      },
+      "root_max_range": [
+        1,
+        2048
+      ],
+      "runtime_batch_selection": "largest currently compatible READY subset not exceeding the selected ceiling; no power-of-two rounding"
+    },
+    "PROFILE_XL_CONSERVATIVE": {
+      "admission": "fifo",
+      "evidence": [
+        "CAPACITY_R8400_R2.json"
+      ],
+      "fallbacks": [
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 2
+        },
+        {
+          "physical_batch_ceiling": 1,
+          "resident_capacity": 1
+        }
+      ],
+      "primary": {
+        "physical_batch_ceiling": 2,
+        "resident_capacity": 2
+      },
+      "root_max_range": [
+        6494,
+        100000
+      ],
+      "runtime_batch_selection": "largest currently compatible READY subset not exceeding the selected ceiling; no power-of-two rounding"
+    }
+  },
+  "target_blind": true
+}

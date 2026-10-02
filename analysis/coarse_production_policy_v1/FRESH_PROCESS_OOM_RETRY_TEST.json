@@ -1,0 +1,53 @@
+{
+  "attempts": [
+    {
+      "candidate_pools_present": false,
+      "discarded_scientific_results": true,
+      "ended_unix": 1790917358.6891048,
+      "forced_stage": "BEFORE_MODEL_FORWARD",
+      "fresh_process": true,
+      "log_path": "WORKER_FORCED_L_LOW_FORCED_RETRY_FORCED_OOM.log",
+      "mode": "forced_oom",
+      "physical_batch_ceiling": 4,
+      "pid": 33943,
+      "profile": "PROFILE_L_LOW",
+      "resident_capacity": 4,
+      "result_path": "L_LOW_FORCED_RETRY_FORCED_OOM.json",
+      "result_status": "OOM",
+      "returncode": 2,
+      "started_unix": 1790917355.8209882
+    },
+    {
+      "anchor": "L_LOW",
+      "attempt_index": 1,
+      "budget": 1,
+      "cache_length": null,
+      "config": {
+        "physical_batch_ceiling": 2,
+        "resident_capacity": 4
+      },
+      "ended_unix": 1790917416.92817,
+      "failure_stage": null,
+      "fresh_process": true,
+      "log_path": "WORKER_validation_L_LOW_FORCED_RETRY_A1.log",
+      "mode": "validation",
+      "physical_batch_ceiling": 2,
+      "physical_width": null,
+      "pid": 34007,
+      "resident_capacity": 4,
+      "result_path": "L_LOW_FORCED_RETRY_A1.json",
+      "result_status": "COMPLETE",
+      "returncode": 0,
+      "started_unix": 1790917358.6891806
+    }
+  ],
+  "aug16_exactly_once_after_retry": true,
+  "controlled_synthetic_oom": true,
+  "failed_attempt_results_discarded": true,
+  "fresh_retry_from_beginning": true,
+  "status": "PASS",
+  "worker_pids": [
+    33943,
+    34007
+  ]
+}

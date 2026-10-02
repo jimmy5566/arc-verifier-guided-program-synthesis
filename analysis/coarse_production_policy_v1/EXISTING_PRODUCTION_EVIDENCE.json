@@ -1,0 +1,26 @@
+{
+  "M_R128": {
+    "checks_pass": true,
+    "experiment": "NON_S_ROLLING_RESIDENT_V1",
+    "path": "/root/arc-runtime-non-s-rolling/arc2/analysis/non_s_rolling_resident_v1/PROFILE_M_R128_RESULT.json",
+    "result_status": "COMPLETE",
+    "sha256": "8209faad10e6493a33fd98a51801eb636631e3e27fb5f20a5f4b9a3387b76793",
+    "status": "PASS"
+  },
+  "M_R256": {
+    "checks_pass": true,
+    "experiment": "NON_S_ROLLING_RESIDENT_V1",
+    "path": "/root/arc-runtime-non-s-rolling/arc2/analysis/non_s_rolling_resident_v1/PROFILE_M_R256_RESULT.json",
+    "result_status": "COMPLETE",
+    "sha256": "100e4d5de477b07ede9a2716e77c684c17f2da5cda99eba0f2d26c65972e7a10",
+    "status": "PASS"
+  },
+  "S": {
+    "checks_pass": null,
+    "experiment": "CHUNKED_KV_CACHE_R4096_V1",
+    "path": "/root/arc-runtime-non-s-rolling/arc2/analysis/root_adaptive_chunked_kv_v1/CANARY_R4096_CHUNKED.json",
+    "result_status": "COMPLETE",
+    "sha256": "c1c6985cc2b5a24fb8192814ada9e122b17e84a78d9a8e6e4fcdcdf104beeeb5",
+    "status": "PASS"
+  }
+}

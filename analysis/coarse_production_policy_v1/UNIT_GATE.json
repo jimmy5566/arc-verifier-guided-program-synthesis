@@ -1,0 +1,8 @@
+{
+  "arbitrary_integer_batches_supported": true,
+  "cpu_only": true,
+  "gold_not_loaded": true,
+  "status": "PASS",
+  "stderr": "",
+  "stdout": "ROOT_BATCH_UNIT_PASS\n"
+}

@@ -1,0 +1,40 @@
+{
+  "actual_physical_width": 4,
+  "anchor": "R6114",
+  "compatible_class_size": 4,
+  "current_cache_length": 6144,
+  "event_log": "PHYSICAL_R6114_R4_B4_C6144_EVENTS.jsonl",
+  "experiment": "ROOT_LENGTH_ADAPTIVE_BATCH_V1",
+  "finite_outputs": true,
+  "gold_loaded": false,
+  "lanes_per_second": 16.177932014178918,
+  "latency_ms": 247.25039000622928,
+  "memory": {
+    "allocated_bytes": 12174053376,
+    "driver_free_bytes": 4027580416,
+    "fragmentation_ratio": 0.41839084103546736,
+    "peak_allocated_bytes": 19447566336,
+    "peak_reserved_bytes": 20931674112,
+    "reserved_bytes": 20931674112,
+    "reserved_unallocated_bytes": 8757620736
+  },
+  "mode": "physical_batch",
+  "output_id": "b99e7126:o0",
+  "owner_identity_preserved": true,
+  "requested_physical_width": 4,
+  "resident_capacity": 4,
+  "root_length": 6114,
+  "safety": {
+    "driver_free_within_margin": true,
+    "peak_allocated_within_margin": true,
+    "safe": true
+  },
+  "status": "PASS",
+  "target_blind": true,
+  "telemetry": {
+    "cache_adoption_seconds": 0.04796124901622534,
+    "cache_pack_seconds": 0.031733907060697675,
+    "model_call_seconds": 0.1621159880887717,
+    "scheduler_elapsed_seconds": 0.24717222107574344
+  }
+}

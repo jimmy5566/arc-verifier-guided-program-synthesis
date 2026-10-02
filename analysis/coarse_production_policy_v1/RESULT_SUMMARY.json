@@ -1,0 +1,84 @@
+{
+  "calibration_evidence_preserved": true,
+  "classification": "COARSE_SCAN_POLICY_READY",
+  "derivation": "CPU-only compact packaging derived after the terminal target-blind run; raw candidate pools and checkpoint payloads are deliberately not copied.",
+  "experiment": "COARSE_PRODUCTION_POLICY_V1",
+  "fresh_process_oom_retry": {
+    "aug16_exactly_once_after_retry": true,
+    "controlled_synthetic_oom": true,
+    "failed_attempt_results_discarded": true,
+    "fresh_retry_from_beginning": true,
+    "status": "PASS",
+    "worker_pids": [
+      33943,
+      34007
+    ]
+  },
+  "gold_loaded": false,
+  "hash_ledger_entry_count": 27,
+  "l_r128": {
+    "high": {
+      "driver_free_bytes": 4193255424,
+      "logical_advances": 2048,
+      "logical_nodes": 2048,
+      "logical_nodes_per_second": 13.24815698137323,
+      "mean_effective_batch": 1.2572130141190914,
+      "output_id": "0934a4d8:o0",
+      "peak_allocated_bytes": 19959595008,
+      "peak_reserved_bytes": 20765999104,
+      "physical_batch_histogram": {
+        "1": 1272,
+        "2": 324,
+        "3": 4,
+        "4": 29
+      },
+      "physical_forwards": 1629,
+      "profile": "PROFILE_L",
+      "source_file": "L_HIGH_R128_A0.json",
+      "status": "COMPLETE",
+      "wall_seconds": 154.587540204986
+    },
+    "low": {
+      "driver_free_bytes": 3715104768,
+      "logical_advances": 2048,
+      "logical_nodes": 2048,
+      "logical_nodes_per_second": 14.878679973880406,
+      "mean_effective_batch": 2.0,
+      "output_id": "cb2d8a2c:o1",
+      "peak_allocated_bytes": 17228712960,
+      "peak_reserved_bytes": 21244149760,
+      "physical_batch_histogram": {
+        "1": 128,
+        "2": 768,
+        "3": 128
+      },
+      "physical_forwards": 1024,
+      "profile": "PROFILE_L",
+      "source_file": "L_LOW_R128_A0.json",
+      "status": "COMPLETE",
+      "wall_seconds": 137.646619430976
+    }
+  },
+  "next": "STOP_ON_COARSE_POLICY",
+  "output_checkpoints": {
+    "implemented": true,
+    "smoke_checkpoint_files": [
+      "0934a4d8_o0.json",
+      "cb2d8a2c_o1.json"
+    ]
+  },
+  "raw_source_files_not_copied": [
+    "L_LOW_R128_A0.json",
+    "L_HIGH_R128_A0.json",
+    "DECISION.json",
+    "OUTPUT_CHECKPOINTS/*.json"
+  ],
+  "source_hash_ledger_file": "HASHES.json",
+  "source_hash_verification": {
+    "hashes_written_last": true,
+    "mismatches": {},
+    "status": "PASS",
+    "verified_file_count": 27
+  },
+  "target_blind": true
+}

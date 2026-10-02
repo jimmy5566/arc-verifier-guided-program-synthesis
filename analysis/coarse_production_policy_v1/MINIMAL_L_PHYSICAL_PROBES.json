@@ -1,0 +1,54 @@
+{
+  "L_HIGH": [
+    {
+      "anchor": "R6114",
+      "budget": null,
+      "cache_length": 6144,
+      "ended_unix": 1790916950.0749588,
+      "fresh_process": true,
+      "label": "L_HIGH",
+      "log_path": "WORKER_physical_R6114_R4_B4_C6144.log",
+      "mode": "physical",
+      "physical_batch_ceiling": null,
+      "physical_width": 4,
+      "pid": 32818,
+      "resident_capacity": 4,
+      "result_path": "PHYSICAL_R6114_R4_B4_C6144.json",
+      "result_status": "PASS",
+      "returncode": 0,
+      "safety_pass": true,
+      "started_unix": 1790916896.1233914
+    }
+  ],
+  "L_HIGH_primary": {
+    "physical_batch_ceiling": 4,
+    "resident_capacity": 4
+  },
+  "L_LOW": [
+    {
+      "anchor": "R4092",
+      "budget": null,
+      "cache_length": 4096,
+      "ended_unix": 1790916896.123222,
+      "fresh_process": true,
+      "label": "L_LOW",
+      "log_path": "WORKER_physical_R4092_R4_B4_C4096.log",
+      "mode": "physical",
+      "physical_batch_ceiling": null,
+      "physical_width": 4,
+      "pid": 32438,
+      "resident_capacity": 4,
+      "result_path": "PHYSICAL_R4092_R4_B4_C4096.json",
+      "result_status": "PASS",
+      "returncode": 0,
+      "safety_pass": true,
+      "started_unix": 1790916837.3804433
+    }
+  ],
+  "L_LOW_primary": {
+    "physical_batch_ceiling": 4,
+    "resident_capacity": 4
+  },
+  "gold_loaded": false,
+  "target_blind": true
+}
