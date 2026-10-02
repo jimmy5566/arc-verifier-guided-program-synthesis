@@ -379,11 +379,12 @@ def _capacity_worker(args: argparse.Namespace) -> int:
         _atomic_json(result_path, payload)
         return 0
     except torch.OutOfMemoryError as error:
-        recorder.emit("OOM", physical_batch_width=0, error=str(error), failure_stage=recorder.current_stage)
+        failure_stage = recorder.current_stage
+        recorder.emit("OOM", physical_batch_width=0, error=str(error), failure_stage=failure_stage)
         memory = _memory(torch, args.device)
         _atomic_json(result_path, {"experiment": EXPERIMENT, "mode": "admission_capacity", "status": "OOM", "target_blind": True,
                                    "gold_loaded": False, "anchor": args.anchor, "resident_capacity": args.resident,
-                                   "failure_stage": recorder.current_stage, "error": str(error), "memory": memory,
+                                   "failure_stage": failure_stage, "error": str(error), "memory": memory,
                                    "event_log": recorder.path.name})
         return 2
     finally:
@@ -481,10 +482,11 @@ def _physical_worker(args: argparse.Namespace) -> int:
         _atomic_json(args.output / f"{stem}.json", payload)
         return 0 if payload["status"] == "PASS" else 2
     except torch.OutOfMemoryError as error:
-        recorder.emit("OOM", position=args.cache_length, physical_batch_width=args.width, error=str(error), failure_stage=recorder.current_stage)
+        failure_stage = recorder.current_stage
+        recorder.emit("OOM", position=args.cache_length, physical_batch_width=args.width, error=str(error), failure_stage=failure_stage)
         _atomic_json(args.output / f"{stem}.json", {"experiment": EXPERIMENT, "mode": "physical_batch", "status": "OOM", "target_blind": True,
                      "gold_loaded": False, "anchor": args.anchor, "resident_capacity": args.resident, "requested_physical_width": args.width,
-                     "current_cache_length": args.cache_length, "failure_stage": recorder.current_stage, "error": str(error),
+                     "current_cache_length": args.cache_length, "failure_stage": failure_stage, "error": str(error),
                      "memory": _memory(torch, args.device), "event_log": recorder.path.name})
         return 2
     finally:
@@ -600,10 +602,11 @@ def _validation_worker(args: argparse.Namespace) -> int:
         _atomic_json(result_path, payload)
         return 0 if payload["status"] == "COMPLETE" else 2
     except torch.OutOfMemoryError as error:
-        recorder.emit("OOM", error=str(error), failure_stage=recorder.current_stage)
+        failure_stage = recorder.current_stage
+        recorder.emit("OOM", error=str(error), failure_stage=failure_stage)
         _atomic_json(result_path, {"experiment": EXPERIMENT, "mode": "validation", "status": "OOM", "target_blind": True,
                                    "gold_loaded": False, "anchor": args.anchor, "resident_capacity": args.resident, "physical_ceiling": args.ceiling,
-                                   "admission": args.admission, "failure_stage": recorder.current_stage, "error": str(error), "memory": _memory(torch, args.device),
+                                   "admission": args.admission, "failure_stage": failure_stage, "error": str(error), "memory": _memory(torch, args.device),
                                    "event_log": recorder.path.name})
         return 2
     finally:
