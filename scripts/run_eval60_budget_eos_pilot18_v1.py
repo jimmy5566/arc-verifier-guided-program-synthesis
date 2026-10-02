@@ -368,7 +368,10 @@ def _worker(args: argparse.Namespace) -> int:
         expected_identity = dict(selected["adapter_identity"])
         source_adapter = Path(selected["adapter_path"])
         stage = "ADAPTER_STAGE"
-        staged = _stage_adapter(source_adapter, args.adapter_stage / safe)
+        # Workers are strictly serial on this one GPU.  Reuse one explicitly
+        # disposable local staging directory rather than accumulating eighteen
+        # multi-gigabyte adapter copies on the 30-GB pod overlay.
+        staged = _stage_adapter(source_adapter, args.adapter_stage / "current")
         actual_identity = _adapter_identity(staged)
         if actual_identity["adapter_sha256"] != expected_identity["adapter_sha256"] or actual_identity["adapter_config_sha256"] != expected_identity["adapter_config_sha256"]:
             raise RuntimeError("worker adapter does not match frozen cohort identity")
@@ -534,6 +537,7 @@ def _worker(args: argparse.Namespace) -> int:
             torch.cuda.empty_cache()
         except Exception:
             pass
+        shutil.rmtree(args.adapter_stage / "current", ignore_errors=True)
 
 
 def _run_worker(args: argparse.Namespace, selected: dict[str, Any], attempt: int, cfg: dict[str, int]) -> tuple[int, dict[str, Any] | None]:
