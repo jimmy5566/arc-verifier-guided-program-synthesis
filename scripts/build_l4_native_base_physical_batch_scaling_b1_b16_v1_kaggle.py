@@ -244,7 +244,7 @@ def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str,
     _write(kernel / "kernel-metadata.json", {
         "id": f"{owner}/{kernel_slug}",
         "title": ("ARC2 L4 Native Base B1/B16 Engineering Smoke V1" if engineering_smoke
-                  else "ARC2 L4 Native Base Physical Batch Scaling B1-B16 V1"),
+                  else "ARC2 L4 Native Base Batch Scaling B1-B16 V1"),
         "code_file": notebook_name, "language": "python", "kernel_type": "notebook", "is_private": True,
         "enable_gpu": True, "enable_tpu": False, "enable_internet": False,
         "keywords": (["gpu", "benchmark", "engineering-smoke"] if engineering_smoke else ["gpu", "benchmark"]),
@@ -279,7 +279,7 @@ def main() -> None:
     args = parser.parse_args()
     kernel_slug = args.kernel_slug or (
         "arc2-l4-native-base-b1-b16-engineering-smoke-v1" if args.engineering_smoke
-        else "arc2-l4-native-base-physical-batch-scaling-b1-b16-v1"
+        else "arc2-l4-native-base-batch-scaling-b1-b16-v1"
     )
     print(json.dumps(build(
         output=args.output, owner=args.owner, dataset_slug=args.dataset_slug, kernel_slug=kernel_slug,
