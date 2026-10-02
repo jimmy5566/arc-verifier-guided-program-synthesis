@@ -83,6 +83,7 @@ class FrozenRootTemplate:
     ordinal: int
     legacy_cache: tuple[tuple[Any, ...], ...]
     sequence_length: int
+    template_device: str = "cpu"
 
 
 @dataclass
@@ -233,6 +234,38 @@ def _clone_legacy_tensors(cache: Any) -> tuple[tuple[Any, ...], ...]:
     return tuple(tuple(tensor.detach().clone() for tensor in layer) for layer in _legacy_cache(cache))
 
 
+def _snapshot_legacy_cache_to_cpu(cache: Any) -> tuple[tuple[Any, ...], ...]:
+    """Make the immutable root snapshot CPU-resident, never a VRAM resident cache."""
+    return tuple(
+        tuple(tensor.detach().to(device="cpu", non_blocking=False).clone() for tensor in layer)
+        for layer in _legacy_cache(cache)
+    )
+
+
+def _template_memory_audit(templates: dict[str, FrozenRootTemplate]) -> dict[str, Any]:
+    tensors = [tensor for template in templates.values() for layer in template.legacy_cache for tensor in layer]
+    cpu_tensors = [tensor for tensor in tensors if str(tensor.device.type) == "cpu"]
+    gpu_tensors = [tensor for tensor in tensors if str(tensor.device.type) != "cpu"]
+    return {
+        "template_count": len(templates),
+        "template_tensor_count": len(tensors),
+        "template_cpu_bytes": sum(int(tensor.numel()) * int(tensor.element_size()) for tensor in cpu_tensors),
+        "template_gpu_bytes": sum(int(tensor.numel()) * int(tensor.element_size()) for tensor in gpu_tensors),
+        "template_gpu_tensor_count": len(gpu_tensors),
+        "template_devices": sorted({str(tensor.device.type) for tensor in tensors}),
+        "template_device": "cpu" if not gpu_tensors else "non_cpu",
+    }
+
+
+def _require_cpu_root_templates(templates: dict[str, FrozenRootTemplate]) -> dict[str, Any]:
+    audit = _template_memory_audit(templates)
+    if audit["template_gpu_tensor_count"] != 0 or audit["template_gpu_bytes"] != 0:
+        raise RuntimeError("GPU_RESIDENT_ROOT_TEMPLATE_DETECTED")
+    if any(template.template_device != "cpu" for template in templates.values()):
+        raise RuntimeError("GPU_RESIDENT_ROOT_TEMPLATE_DETECTED")
+    return audit
+
+
 def _cache_tensor_hash(torch: Any, cache: Any) -> str:
     """Hash shape, dtype, and bytes without relying on bfloat16 NumPy support."""
     digest = hashlib.sha256()
@@ -270,14 +303,21 @@ def _template_from_cell(cell: Any, *, view: str) -> FrozenRootTemplate:
         cache_key=tuple(request.cache_key),
         parent_node_id=int(request.parent_node_id),
         ordinal=int(request.ordinal),
-        legacy_cache=_clone_legacy_tensors(request.cache_owner.cache),
+        legacy_cache=_snapshot_legacy_cache_to_cpu(request.cache_owner.cache),
         sequence_length=_cache_sequence_length(request.cache_owner.cache),
+        template_device="cpu",
     )
 
 
-def _clone_template_lane(template: FrozenRootTemplate, *, spec: dict[str, Any]) -> BenchmarkReadyLane:
+def _clone_template_lane(template: FrozenRootTemplate, *, spec: dict[str, Any], device: str) -> BenchmarkReadyLane:
     """Create one fresh physical lane without running a prompt prefill."""
-    cache = dynamic_cache_from_legacy(_clone_legacy_tensors(template.legacy_cache))
+    if template.template_device != "cpu":
+        raise RuntimeError("GPU_RESIDENT_ROOT_TEMPLATE_DETECTED")
+    materialized = tuple(
+        tuple(tensor.detach().to(device=device, non_blocking=False).clone() for tensor in layer)
+        for layer in template.legacy_cache
+    )
+    cache = dynamic_cache_from_legacy(materialized)
     owner = CacheOwner(cache)
     cell_key = f"{template.cell_key}:physical_replica{spec['replica_index']}:lane{spec['lane_index']}"
     request = ReadyForwardRequest(
@@ -292,8 +332,9 @@ def _clone_template_lane(template: FrozenRootTemplate, *, spec: dict[str, Any]) 
     return BenchmarkReadyLane(cell_key=cell_key, request=request)
 
 
-def _clone_template_lanes(*, templates: dict[str, FrozenRootTemplate], width: int) -> list[BenchmarkReadyLane]:
-    return [_clone_template_lane(templates[spec["view"]], spec=spec) for spec in lane_specs(width)]
+def _clone_template_lanes(*, templates: dict[str, FrozenRootTemplate], width: int, device: str) -> list[BenchmarkReadyLane]:
+    _require_cpu_root_templates(templates)
+    return [_clone_template_lane(templates[spec["view"]], spec=spec, device=device) for spec in lane_specs(width)]
 
 
 def _template_clone_integrity(*, templates: dict[str, FrozenRootTemplate], cells: list[BenchmarkReadyLane]) -> dict[str, Any]:
@@ -521,7 +562,8 @@ def _load_context(args: argparse.Namespace) -> tuple[Any, Any, dict[str, Any], A
 
 
 def _build_root_templates(*, model: Any, prompts: dict[str, Any], config: Any, args: argparse.Namespace,
-                          width: int, torch: Any, physical_gpu_id: int, progress: Any) -> tuple[
+                          width: int, torch: Any, physical_gpu_id: int, progress: Any,
+                          setup_accounting: dict[str, Any] | None = None) -> tuple[
                               dict[str, FrozenRootTemplate], dict[str, Any], dict[str, Any]
                           ]:
     """Prefill each distinct view once and retain only immutable KV templates.
@@ -532,7 +574,14 @@ def _build_root_templates(*, model: Any, prompts: dict[str, Any], config: Any, a
     """
     templates: dict[str, FrozenRootTemplate] = {}
     parity_cells: dict[str, Any] = {}
-    timing_by_view: dict[str, float] = {}
+    audit = setup_accounting if setup_accounting is not None else {}
+    audit.update({
+        "actual_template_prefills": int(audit.get("actual_template_prefills", 0)),
+        "expected_template_prefills": expected_template_prefills(width),
+        "template_prefill_seconds_total": float(audit.get("template_prefill_seconds_total", 0.0)),
+        "template_prefill_seconds_by_view": dict(audit.get("template_prefill_seconds_by_view", {})),
+        "width": width, "gpu_id": physical_gpu_id,
+    })
     for view in _template_views(width):
         _emit_worker_progress(args, progress, "TEMPLATE_PREFILL_START", gpu_id=physical_gpu_id,
                               physical_batch=width, view=view)
@@ -545,15 +594,14 @@ def _build_root_templates(*, model: Any, prompts: dict[str, Any], config: Any, a
             raise RuntimeError("TEMPLATE_PREFILL_DID_NOT_YIELD_READY_REQUEST")
         templates[view] = _template_from_cell(cell, view=view)
         parity_cells[view] = cell
-        timing_by_view[view] = float(cell.prefill_seconds)
+        audit["actual_template_prefills"] += 1
+        audit["template_prefill_seconds_total"] += float(cell.prefill_seconds)
+        audit["template_prefill_seconds_by_view"][view] = float(cell.prefill_seconds)
         _emit_worker_progress(args, progress, "TEMPLATE_PREFILL_DONE", gpu_id=physical_gpu_id,
                               physical_batch=width, view=view, prefill_seconds=cell.prefill_seconds)
     hashes = {view: _cache_tensor_hash(torch, template.legacy_cache) for view, template in templates.items()}
-    audit = {
-        "actual_template_prefills": len(templates), "expected_template_prefills": expected_template_prefills(width),
-        "template_prefill_seconds_total": sum(timing_by_view.values()),
-        "template_prefill_seconds_by_view": timing_by_view, "template_hashes_before": hashes,
-    }
+    memory_audit = _require_cpu_root_templates(templates)
+    audit.update({"template_hashes_before": hashes, "root_template_memory_audit": memory_audit})
     if audit["actual_template_prefills"] != audit["expected_template_prefills"]:
         raise RuntimeError("ROOT_TEMPLATE_PREFILL_COUNT_MISMATCH")
     return templates, parity_cells, audit
@@ -568,7 +616,7 @@ def _assert_root_template_parity(*, torch: Any, model: Any, templates: dict[str,
         normal_request = normal.request
         if normal_request is None:
             raise RuntimeError("ROOT_TEMPLATE_CLONE_PARITY_FAILED: normal request absent")
-        cloned = _clone_template_lane(template, spec={"replica_index": 0, "lane_index": 0})
+        cloned = _clone_template_lane(template, spec={"replica_index": 0, "lane_index": 0}, device=str(model.device))
         clone_request = cloned.request
         before_checks = {
             "token_id": normal_request.token_id == clone_request.token_id,
@@ -694,7 +742,7 @@ def _waterfall_observer(*, torch: Any, device: str, cells: list[Any], rows: list
 
 def _measure_loaded(*, args: argparse.Namespace, physical_gpu_id: int, width: int, torch: Any, model: Any,
                     model_identity: dict[str, Any], config: Any, context: dict[str, Any], progress: Any,
-                    model_load_seconds: float) -> dict[str, Any]:
+                    model_load_seconds: float, setup_accounting: dict[str, Any]) -> dict[str, Any]:
     """Measure only the frozen physical incremental forward path.
 
     All root prefills, root-template clone construction, telemetry, and
@@ -702,8 +750,9 @@ def _measure_loaded(*, args: argparse.Namespace, physical_gpu_id: int, width: in
     """
     templates, parity_cells, setup_audit = _build_root_templates(
         model=model, prompts=context["prompts"], config=config, args=args, width=width, torch=torch,
-        physical_gpu_id=physical_gpu_id, progress=progress,
+        physical_gpu_id=physical_gpu_id, progress=progress, setup_accounting=setup_accounting,
     )
+    root_template_memory_audit = _require_cpu_root_templates(templates)
     _emit_worker_progress(args, progress, "ROOT_TEMPLATE_PARITY_START", gpu_id=physical_gpu_id, physical_batch=width)
     parity = _assert_root_template_parity(torch=torch, model=model, templates=templates,
                                           parity_cells=parity_cells, width=width)
@@ -720,8 +769,12 @@ def _measure_loaded(*, args: argparse.Namespace, physical_gpu_id: int, width: in
         _emit_worker_progress(args, progress, "WARMUP_START", gpu_id=physical_gpu_id, physical_batch=width,
                               sample_index=warmup_index, iteration=f"{warmup_index + 1}/{args.warmup_forwards}")
         clone_started = time.perf_counter()
-        cells = _clone_template_lanes(templates=templates, width=width)
+        cells = _clone_template_lanes(templates=templates, width=width, device=args.device)
+        # H2D materialisation is part of setup, never the physical-forward
+        # measurement.  Synchronise it explicitly before the warmup forward.
+        torch.cuda.synchronize(device=args.device)
         clone_seconds.append(time.perf_counter() - clone_started)
+        _require_cpu_root_templates(templates)
         template_integrity = _template_clone_integrity(templates=templates, cells=cells)
         if not all(bool(template_integrity[key]) for key in ("template_storage_disjoint", "sample_lane_storage_independent", "cache_owners_unique", "dynamic_caches_unique")):
             raise RuntimeError("ROOT_TEMPLATE_LANE_ISOLATION_FAILED")
@@ -739,8 +792,11 @@ def _measure_loaded(*, args: argparse.Namespace, physical_gpu_id: int, width: in
         _emit_worker_progress(args, progress, "SAMPLE_START", gpu_id=physical_gpu_id, physical_batch=width,
                               sample_index=sample_index, iteration=f"{sample_index + 1}/{args.measurement_forwards}")
         clone_started = time.perf_counter()
-        cells = _clone_template_lanes(templates=templates, width=width)
+        cells = _clone_template_lanes(templates=templates, width=width, device=args.device)
+        # Keep the CPU-template-to-GPU cache copy outside the timed interval.
+        torch.cuda.synchronize(device=args.device)
         clone_seconds.append(time.perf_counter() - clone_started)
+        _require_cpu_root_templates(templates)
         template_integrity = _template_clone_integrity(templates=templates, cells=cells)
         if not all(bool(template_integrity[key]) for key in ("template_storage_disjoint", "sample_lane_storage_independent", "cache_owners_unique", "dynamic_caches_unique")):
             raise RuntimeError("ROOT_TEMPLATE_LANE_ISOLATION_FAILED")
@@ -828,6 +884,7 @@ def _measure_loaded(*, args: argparse.Namespace, physical_gpu_id: int, width: in
         **_model_ready_fields(context["base_model_identity"]),
         "samples": samples, "waterfall": waterfall, "root_template_parity": parity,
         "root_template_immutability": {"status": "PASS" if immutable else "FAIL", "before": hashes_before, "after": hashes_after},
+        "root_template_memory_audit": root_template_memory_audit,
         "setup_cost_audit": setup_audit,
     }
 
@@ -840,6 +897,11 @@ def _worker_entry(serialized_args: dict[str, Any], gpu_id: int, width: int, read
                   progress: Any) -> None:
     # Must precede the first torch import in this spawned child.
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+    setup_accounting: dict[str, Any] = {
+        "gpu_id": gpu_id, "width": width, "actual_template_prefills": 0,
+        "expected_template_prefills": expected_template_prefills(width),
+        "template_prefill_seconds_total": 0.0, "template_prefill_seconds_by_view": {},
+    }
     try:
         args = argparse.Namespace(**serialized_args)
         args.output = Path(args.output)
@@ -851,6 +913,7 @@ def _worker_entry(serialized_args: dict[str, Any], gpu_id: int, width: int, read
         context_probe = _load_context(args)
         torch_value, model, identity, config, context = context_probe
         model_load_seconds = time.perf_counter() - model_started
+        setup_accounting["model_load_seconds"] = model_load_seconds
         _emit_worker_progress(args, progress, "MODEL_LOAD_DONE", gpu_id=gpu_id, physical_batch=width,
                               model_load_seconds=model_load_seconds)
         thermal = _nvidia_telemetry(gpu_id)
@@ -866,7 +929,7 @@ def _worker_entry(serialized_args: dict[str, Any], gpu_id: int, width: int, read
         _emit_worker_progress(args, progress, "START_BARRIER_RELEASED", gpu_id=gpu_id, physical_batch=width)
         measured = _measure_loaded(args=args, physical_gpu_id=gpu_id, width=width, torch=torch_value, model=model,
                                    model_identity=identity, config=config, context=context, progress=progress,
-                                   model_load_seconds=model_load_seconds)
+                                   model_load_seconds=model_load_seconds, setup_accounting=setup_accounting)
         result.put({"type": "RESULT", "gpu_id": gpu_id, "width": width, "payload": measured})
     except BaseException as exc:
         try:
@@ -875,12 +938,12 @@ def _worker_entry(serialized_args: dict[str, Any], gpu_id: int, width: int, read
         except Exception:
             pass
         result.put({"type": "ERROR", "gpu_id": gpu_id, "width": width, "oom": _is_oom(exc),
-                    "error": repr(exc), "traceback": traceback.format_exc()})
+                    "error": repr(exc), "traceback": traceback.format_exc(), "setup_cost_audit": setup_accounting})
 
 
 def _worker_args(args: argparse.Namespace) -> dict[str, Any]:
     keys = ("model_path", "challenge", "native_config_dir", "task_id", "output_index", "depth", "budget",
-            "warmup_forwards", "measurement_forwards", "start_timeout_seconds", "benchmark_model_mode",
+            "warmup_forwards", "measurement_forwards", "start_timeout_seconds", "benchmark_model_mode", "phase",
             "run_started_unix", "output")
     return {key: (str(getattr(args, key)) if isinstance(getattr(args, key), Path) else getattr(args, key)) for key in keys}
 
@@ -1048,6 +1111,11 @@ def _run_width(args: argparse.Namespace, width: int, *, prior_identity: dict[str
 def _runtime_preflight_worker(serialized_args: dict[str, Any], gpu_id: int, result: Any, progress: Any) -> None:
     """Run one non-timed B4 DynamicCache adoption check on one fresh L4."""
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+    setup_accounting: dict[str, Any] = {
+        "gpu_id": gpu_id, "width": 4, "actual_template_prefills": 0,
+        "expected_template_prefills": 4, "template_prefill_seconds_total": 0.0,
+        "template_prefill_seconds_by_view": {},
+    }
     try:
         args = argparse.Namespace(**serialized_args)
         args.output = Path(args.output)
@@ -1057,14 +1125,16 @@ def _runtime_preflight_worker(serialized_args: dict[str, Any], gpu_id: int, resu
         model_started = time.perf_counter()
         torch, model, identity, config, context = _load_context(args)
         model_load_seconds = time.perf_counter() - model_started
+        setup_accounting["model_load_seconds"] = model_load_seconds
         _emit_worker_progress(args, progress, "MODEL_LOAD_DONE", gpu_id=gpu_id, physical_batch=4,
                               phase="runtime_preflight", model_load_seconds=model_load_seconds)
         _emit_worker_progress(args, progress, "PREFLIGHT_ROOT_PREFILL_START", gpu_id=gpu_id, physical_batch=4,
                               phase="runtime_preflight")
         templates, parity_cells, setup_audit = _build_root_templates(
             model=model, prompts=context["prompts"], config=config, args=args, width=4, torch=torch,
-            physical_gpu_id=gpu_id, progress=progress,
+            physical_gpu_id=gpu_id, progress=progress, setup_accounting=setup_accounting,
         )
+        root_template_memory_audit = _require_cpu_root_templates(templates)
         _emit_worker_progress(args, progress, "PREFLIGHT_ROOT_PREFILL_DONE", gpu_id=gpu_id, physical_batch=4,
                               phase="runtime_preflight", root_prefills=setup_audit["actual_template_prefills"])
         _emit_worker_progress(args, progress, "ROOT_TEMPLATE_PARITY_START", gpu_id=gpu_id, physical_batch=4,
@@ -1076,7 +1146,8 @@ def _runtime_preflight_worker(serialized_args: dict[str, Any], gpu_id: int, resu
             raise RuntimeError("ROOT_TEMPLATE_CLONE_PARITY_FAILED")
         _emit_worker_progress(args, progress, "ROOT_TEMPLATE_PARITY_PASS", gpu_id=gpu_id, physical_batch=4,
                               phase="runtime_preflight")
-        cells = _clone_template_lanes(templates=templates, width=4)
+        cells = _clone_template_lanes(templates=templates, width=4, device=args.device)
+        _require_cpu_root_templates(templates)
         clone_integrity = _template_clone_integrity(templates=templates, cells=cells)
         if not all(bool(clone_integrity[key]) for key in ("template_storage_disjoint", "sample_lane_storage_independent", "cache_owners_unique", "dynamic_caches_unique")):
             raise RuntimeError("ROOT_TEMPLATE_LANE_ISOLATION_FAILED")
@@ -1134,6 +1205,7 @@ def _runtime_preflight_worker(serialized_args: dict[str, Any], gpu_id: int, resu
             "telemetry": telemetry, "memory_before": memory_before, "memory_after": memory_after,
             "hardware": _nvidia_telemetry(gpu_id), **_model_ready_fields(context["base_model_identity"]),
             "root_template_parity": parity, "root_template_immutability": {"status": "PASS", "before": setup_audit["template_hashes_before"], "after": hashes_after},
+            "root_template_memory_audit": root_template_memory_audit,
             "setup_cost_audit": setup_audit,
         })
     except BaseException as exc:
@@ -1144,7 +1216,41 @@ def _runtime_preflight_worker(serialized_args: dict[str, Any], gpu_id: int, resu
             pass
         result.put({"type": "RUNTIME_DYNAMICCACHE_PREFLIGHT", "status": "FAIL", "gpu_id": gpu_id, "physical_batch": 4,
                     "timed": False, "no_oom": not _is_oom(exc), "oom": _is_oom(exc),
-                    "error": repr(exc), "traceback": traceback.format_exc()})
+                    "error": repr(exc), "traceback": traceback.format_exc(), "setup_cost_audit": setup_accounting})
+
+
+def _runtime_preflight_template_summary(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Fail closed: four real PASS workers are required for parity evidence."""
+    expected_ids = {0, 1, 2, 3}
+    by_gpu = {row.get("gpu_id"): row for row in rows if isinstance(row.get("gpu_id"), int)}
+    complete = len(rows) == 4 and set(by_gpu) == expected_ids
+    parity_ok = complete and all(
+        row.get("status") == "PASS"
+        and isinstance(row.get("root_template_parity"), dict)
+        and row["root_template_parity"].get("status") == "PASS"
+        for row in by_gpu.values()
+    )
+    immutability_ok = complete and all(
+        row.get("status") == "PASS"
+        and isinstance(row.get("root_template_immutability"), dict)
+        and row["root_template_immutability"].get("status") == "PASS"
+        for row in by_gpu.values()
+    )
+    memory_ok = complete and all(
+        isinstance(row.get("root_template_memory_audit"), dict)
+        and row["root_template_memory_audit"].get("template_gpu_tensor_count") == 0
+        and row["root_template_memory_audit"].get("template_gpu_bytes") == 0
+        for row in by_gpu.values()
+    )
+    base = {"required_worker_count": 4, "observed_worker_count": len(rows), "worker_ids": sorted(str(value) for value in by_gpu)}
+    return (
+        {"phase": "runtime_preflight", "status": "PASS" if parity_ok else "FAIL", **base,
+         "workers": [{"gpu_id": row.get("gpu_id"), "parity": row.get("root_template_parity")} for row in rows]},
+        {"phase": "runtime_preflight", "status": "PASS" if immutability_ok else "FAIL", **base,
+         "workers": [{"gpu_id": row.get("gpu_id"), "immutability": row.get("root_template_immutability")} for row in rows]},
+        {"phase": "runtime_preflight", "status": "PASS" if memory_ok else "FAIL", **base,
+         "workers": [{"gpu_id": row.get("gpu_id"), "memory": row.get("root_template_memory_audit")} for row in rows]},
+    )
 
 
 def _run_runtime_dynamiccache_preflight(args: argparse.Namespace) -> None:
@@ -1178,18 +1284,21 @@ def _run_runtime_dynamiccache_preflight(args: argparse.Namespace) -> None:
         "workers": sorted(rows, key=lambda row: int(row.get("gpu_id", -1))),
         "status": "PASS" if len(rows) == 4 and all(row.get("status") == "PASS" for row in rows) else "FAIL",
     }
+    parity_summary, immutability_summary, memory_summary = _runtime_preflight_template_summary(rows)
     _atomic_json(args.output / "DYNAMICCACHE_PREFLIGHT.json", payload)
-    _atomic_json(args.output / "ROOT_TEMPLATE_PARITY.json", {
-        "phase": "runtime_preflight", "status": "PASS" if all(row.get("root_template_parity", {}).get("status") == "PASS" for row in rows if row.get("status") == "PASS") else "FAIL",
-        "workers": [{"gpu_id": row.get("gpu_id"), "parity": row.get("root_template_parity"), "immutability": row.get("root_template_immutability")} for row in rows],
-    })
+    _atomic_json(args.output / "ROOT_TEMPLATE_PARITY.json", parity_summary)
+    _atomic_json(args.output / "ROOT_TEMPLATE_IMMUTABILITY.json", immutability_summary)
+    _atomic_json(args.output / "ROOT_TEMPLATE_MEMORY_AUDIT.json", memory_summary)
     _atomic_json(args.output / "SETUP_COST_AUDIT.json", {
         "phase": "runtime_preflight", "workers": [{"gpu_id": row.get("gpu_id"), "setup_cost_audit": row.get("setup_cost_audit")} for row in rows],
+        "root_template_memory_audit": memory_summary,
         "old_expected_controller_prefills_per_gpu": 602, "new_expected_controller_prefills_per_gpu": 19,
         "runtime_preflight_expected_prefills_per_gpu": 4, "new_expected_total_prefills_per_gpu": 23,
     })
     if payload["status"] != "PASS":
         raise RuntimeError("RUNTIME_DYNAMICCACHE_PREFLIGHT_FAILED")
+    if parity_summary["status"] != "PASS" or immutability_summary["status"] != "PASS" or memory_summary["status"] != "PASS":
+        raise RuntimeError("ROOT_TEMPLATE_RUNTIME_EVIDENCE_INCOMPLETE")
 
 
 def _percentile(values: Iterable[float], percent: float) -> float:
@@ -1433,6 +1542,63 @@ def _run_preflight(args: argparse.Namespace) -> None:
     })
 
 
+def _formal_prefill_audit(all_widths: dict[int, dict[str, Any]]) -> dict[str, Any]:
+    """Separate completed scientific evidence from a clean capacity failure."""
+    successful_widths = [width for width, result in all_widths.items() if result.get("status") == "PASS"]
+    capacity_failure_widths = [
+        width for width, result in all_widths.items()
+        if result.get("status") != "PASS" and _is_clean_capacity_failure(result)
+    ]
+    successful_actual: dict[int, int] = {gpu: 0 for gpu in range(4)}
+    attempted_failed: dict[int, int] = {gpu: 0 for gpu in range(4)}
+    for width, result in all_widths.items():
+        if result.get("status") == "PASS":
+            for worker in result.get("workers", []):
+                gpu = int(worker.get("gpu_id", -1))
+                if gpu in successful_actual:
+                    successful_actual[gpu] += int(worker.get("setup_cost_audit", {}).get("actual_template_prefills", 0))
+        else:
+            for error in result.get("errors", []):
+                gpu = error.get("gpu_id")
+                if isinstance(gpu, int) and gpu in attempted_failed:
+                    attempted_failed[gpu] += int(error.get("setup_cost_audit", {}).get("actual_template_prefills", 0))
+    expected_successful = sum(expected_template_prefills(width) for width in successful_widths)
+    successful_evidence_ok = set(successful_actual.values()) == {expected_successful}
+    if len(successful_widths) == len(WIDTHS) and successful_evidence_ok:
+        status = "PASS_COMPLETE"
+    elif capacity_failure_widths and successful_evidence_ok:
+        status = "PASS_WITH_CAPACITY_FAILURE"
+    else:
+        status = "FAIL"
+    return {
+        "FORMAL_PREFILL_AUDIT_STATUS": status,
+        "successful_widths": successful_widths,
+        "capacity_failure_widths": capacity_failure_widths,
+        "expected_successful_prefills_per_gpu": expected_successful,
+        "actual_successful_prefills_per_gpu": successful_actual,
+        "attempted_failed_width_prefills_per_gpu": attempted_failed,
+        "expected_complete_prefills_per_gpu": expected_controller_prefills(),
+    }
+
+
+def _is_clean_capacity_failure(result: dict[str, Any]) -> bool:
+    """Recognise a B16 OOM only after one worker completed root setup.
+
+    A model-load or root-prefill crash cannot be promoted to a valid physical
+    capacity observation.  The worker that reports the OOM must have reached
+    its complete frozen-template setup count, and all four model-ready records
+    must already have been accepted by the controller.
+    """
+    ready_ids = {row.get("gpu_id") for row in result.get("ready", []) if row.get("type") == "READY"}
+    if ready_ids != {0, 1, 2, 3}:
+        return False
+    for error in result.get("errors", []):
+        audit = error.get("setup_cost_audit", {})
+        if bool(error.get("oom")) and int(audit.get("actual_template_prefills", 0)) >= int(audit.get("expected_template_prefills", 1)):
+            return True
+    return False
+
+
 def _run_controller(args: argparse.Namespace) -> None:
     if not (args.output / "CONTRACT.json").is_file():
         raise RuntimeError("controller requires preflight CONTRACT.json")
@@ -1456,6 +1622,19 @@ def _run_controller(args: argparse.Namespace) -> None:
         result = _run_width(args, width, prior_identity=prior_identity)
         all_widths[width] = result
         _atomic_json(args.output / f"B{width}_WORKERS.json", result)
+        memory_path = args.output / "ROOT_TEMPLATE_MEMORY_AUDIT.json"
+        try:
+            memory_payload = json.loads(memory_path.read_text(encoding="utf-8")) if memory_path.is_file() else {}
+        except Exception:
+            memory_payload = {}
+        memory_payload.setdefault("controller_widths", {})[str(width)] = [
+            {"gpu_id": row.get("gpu_id"), "memory": row.get("root_template_memory_audit")}
+            for row in result.get("workers", [])
+        ] + [
+            {"gpu_id": row.get("gpu_id"), "memory": row.get("setup_cost_audit", {}).get("root_template_memory_audit")}
+            for row in result.get("errors", [])
+        ]
+        _atomic_json(memory_path, memory_payload)
         _atomic_json(args.output / "CHECKPOINT.json", {
             "experiment": EXPERIMENT, "timestamp": time.time(), "active_phase": "controller",
             "active_width": width, "completed_widths": [item for item, value in all_widths.items() if value.get("status") == "PASS"],
@@ -1474,9 +1653,7 @@ def _run_controller(args: argparse.Namespace) -> None:
                                 for item, value in all_widths.items()},
         })
         if result.get("status") != "PASS":
-            worker_ids = {row.get("gpu_id") for row in result.get("ready", []) if row.get("type") == "READY"}
-            oom_after_ready = worker_ids == {0, 1, 2, 3} and any(bool(error.get("oom")) for error in result.get("errors", []))
-            if oom_after_ready:
+            if _is_clean_capacity_failure(result):
                 # A physical capacity observation is valid evidence for this
                 # width and must not erase measurements already completed at
                 # lower widths.  Continue to later widths without changing the
@@ -1492,31 +1669,51 @@ def _run_controller(args: argparse.Namespace) -> None:
             raise RuntimeError(result.get("status", "BENCHMARK_WIDTH_FAILED"))
         prior_identity = result["identity_gate"]["identity"]
     if args.engineering_smoke:
+        b1 = all_widths.get(1, {})
+        b16 = all_widths.get(16, {})
+        b16_clean_oom = b16.get("status") != "PASS" and _is_clean_capacity_failure(b16)
+        if b1.get("status") == "PASS" and b16.get("status") == "PASS":
+            smoke_status = "PASS"
+        elif b1.get("status") == "PASS" and b16_clean_oom:
+            smoke_status = "PASS_WITH_B16_OOM"
+        else:
+            smoke_status = "FAIL"
+        def memory_rows(result: dict[str, Any]) -> list[dict[str, Any]]:
+            return [row.get("root_template_memory_audit") for row in result.get("workers", [])] + [
+                error.get("setup_cost_audit", {}).get("root_template_memory_audit") for error in result.get("errors", [])
+            ]
+        memory_audits = {str(width): memory_rows(result) for width, result in all_widths.items()}
+        memory_neutral = all(
+            isinstance(audit, dict) and audit.get("template_gpu_tensor_count") == 0 and audit.get("template_gpu_bytes") == 0
+            for audits in memory_audits.values() for audit in audits
+        ) and all(memory_audits.values())
         _atomic_json(args.output / "ENGINEERING_SMOKE.json", {
             "ENGINEERING_SMOKE_ONLY": True, "SCIENTIFIC_BENCHMARK": False,
             "widths": list(widths), "warmup_forwards": args.warmup_forwards,
             "measurement_forwards": args.measurement_forwards,
+            "smoke_status": smoke_status,
+            "completed_widths": [item for item, value in all_widths.items() if value.get("status") == "PASS"],
+            "failed_width": 16 if b16.get("status") != "PASS" else None,
+            "ROOT_TEMPLATE_GPU_TENSOR_COUNT": 0 if memory_neutral else None,
+            "ROOT_TEMPLATE_MEMORY_NEUTRALITY_GATE": "PASS" if memory_neutral else "FAIL",
+            "root_template_memory_audit": memory_audits,
         })
         _atomic_json(args.output / "WORKER_RESULTS.json", {str(width): row for width, row in all_widths.items()})
+        if smoke_status == "FAIL" or not memory_neutral:
+            raise RuntimeError("ENGINEERING_SMOKE_FAILED")
         return
-    actual_prefills_by_gpu = {
-        gpu_id: sum(
-            int(worker.get("setup_cost_audit", {}).get("actual_template_prefills", 0))
-            for result in all_widths.values() for worker in result.get("workers", [])
-            if int(worker.get("gpu_id", -1)) == gpu_id
-        )
-        for gpu_id in range(4)
-    }
-    if set(actual_prefills_by_gpu.values()) != {expected_controller_prefills()}:
-        raise RuntimeError(f"CONTROLLER_ROOT_TEMPLATE_PREFILL_COUNT_MISMATCH: {actual_prefills_by_gpu}")
+    prefill_audit = _formal_prefill_audit(all_widths)
+    if prefill_audit["FORMAL_PREFILL_AUDIT_STATUS"] == "FAIL":
+        raise RuntimeError(f"CONTROLLER_ROOT_TEMPLATE_PREFILL_COUNT_MISMATCH: {prefill_audit}")
     _atomic_json(args.output / "SETUP_COST_AUDIT.json", {
         "phase": "controller_complete", "engineering_smoke_only": False,
         "old_expected_controller_prefills_per_gpu": 602,
         "new_expected_controller_prefills_per_gpu": 19,
         "runtime_preflight_expected_prefills_per_gpu": 4,
         "new_expected_total_prefills_per_gpu": 23,
-        "actual_controller_template_prefills_per_gpu": actual_prefills_by_gpu,
-        "actual_total_template_prefills_per_gpu": {str(gpu): count + 4 for gpu, count in actual_prefills_by_gpu.items()},
+        "prefill_audit": prefill_audit,
+        "actual_controller_template_prefills_per_gpu": prefill_audit["actual_successful_prefills_per_gpu"],
+        "actual_total_template_prefills_per_gpu": {str(gpu): count + 4 for gpu, count in prefill_audit["actual_successful_prefills_per_gpu"].items()},
         "actual_by_width": {str(item): [worker.get("setup_cost_audit") for worker in value.get("workers", [])]
                             for item, value in all_widths.items()},
     })

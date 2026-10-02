@@ -115,7 +115,25 @@ def _assert_staged_runner_importable(source: Path) -> None:
         raise RuntimeError(f"curated source unexpectedly contains bytecode directories: {bytecode}")
 
 
-def _notebook_source(dataset_slug: str, harness_commit: str) -> str:
+def _notebook_source(dataset_slug: str, harness_commit: str, *, engineering_smoke: bool = False) -> str:
+    mode = "ENGINEERING_SMOKE_ONLY" if engineering_smoke else "FORMAL_SCIENTIFIC_BENCHMARK"
+    execution_widths = [1, 16] if engineering_smoke else [1, 2, 4, 8, 12, 16]
+    required_output = (
+        [
+            "CONTRACT.json", "SOURCE_IDENTITY.json", "RUNTIME_ENVIRONMENT.json", "DYNAMICCACHE_PREFLIGHT.json",
+            "ROOT_TEMPLATE_PARITY.json", "ROOT_TEMPLATE_IMMUTABILITY.json", "ROOT_TEMPLATE_MEMORY_AUDIT.json",
+            "SETUP_COST_AUDIT.json", "CHECKPOINT.json", "PROGRESS.jsonl", "B1_WORKERS.json", "B16_WORKERS.json",
+            "B1_PARTIAL.json", "B16_PARTIAL.json", "ENGINEERING_SMOKE.json",
+        ] if engineering_smoke else [
+            "CONTRACT.json", "SOURCE_IDENTITY.json", "RUNTIME_ENVIRONMENT.json", "L4_HARDWARE.json",
+            "DYNAMICCACHE_PREFLIGHT.json", "ROOT_TEMPLATE_PARITY.json", "ROOT_TEMPLATE_IMMUTABILITY.json",
+            "ROOT_TEMPLATE_MEMORY_AUDIT.json", "SETUP_COST_AUDIT.json", "CHECKPOINT.json", "PROGRESS.jsonl",
+            "L4_BATCH_SCALING_RAW.csv", "L4_BATCH_SCALING_PER_GPU.csv", "L4_BATCH_SCALING_AGGREGATE.csv",
+            "L4_BATCH_SCALING_BOOTSTRAP.csv", "B12_MEMORY_WATERFALL.csv", "B16_MEMORY_WATERFALL.csv",
+            "THERMAL_POWER_SUMMARY.csv", "RTX3090_REFERENCE.json", "RTX3090_VS_L4_SCALING_SHAPE.csv",
+            "DECISION.json", "REPORT.md", "HASHES.json",
+        ]
+    )
     return "\n".join([
         "import json, os, subprocess, sys, time",
         "from pathlib import Path",
@@ -137,9 +155,9 @@ def _notebook_source(dataset_slug: str, harness_commit: str) -> str:
         "contract = json.loads((dataset / 'L4_BENCHMARK_CONTRACT.json').read_text())",
         "if contract['experiment'] != 'L4_NATIVE_BASE_PHYSICAL_BATCH_SCALING_B1_B16_V1' or contract['authoritative_source_commit'] != '1eb8e7f60a3ca682438bb326ab3ea65ec286ed6f': raise RuntimeError('benchmark contract mismatch')",
         "env = {**os.environ, 'HF_HUB_OFFLINE':'1', 'TRANSFORMERS_OFFLINE':'1', 'TOKENIZERS_PARALLELISM':'false', 'PYTHONUNBUFFERED':'1'}",
-        "common = [sys.executable, str(runner), '--output', str(out), '--source-commit', contract['authoritative_source_commit'], '--harness-commit', " + repr(harness_commit) + ", '--model-path', str(model), '--challenge', str(challenge), '--native-config-dir', str(native), '--benchmark-model-mode', 'BASE_MODEL_ONLY']",
-        "print(json.dumps({'event':'NOTEBOOK_START','source':str(source),'runner':str(runner),'output':str(out),'hardware_count':len(gpus)}, sort_keys=True), flush=True)",
-        "print(json.dumps({'event':'L4_BATCH_SCALING_START','experiment':contract['experiment'],'target_blind':True,'gold_loaded':False,'hardware':gpus,'widths':contract['widths']}, sort_keys=True), flush=True)",
+        "common = [sys.executable, str(runner), '--output', str(out), '--source-commit', contract['authoritative_source_commit'], '--harness-commit', " + repr(harness_commit) + ", '--model-path', str(model), '--challenge', str(challenge), '--native-config-dir', str(native), '--benchmark-model-mode', 'BASE_MODEL_ONLY']" + (" + ['--engineering-smoke']" if engineering_smoke else ""),
+        "print(json.dumps({'event':'NOTEBOOK_START','mode':" + repr(mode) + ",'source':str(source),'runner':str(runner),'output':str(out),'hardware_count':len(gpus)}, sort_keys=True), flush=True)",
+        "print(json.dumps({'event':'L4_BATCH_SCALING_START','experiment':contract['experiment'],'target_blind':True,'gold_loaded':False,'hardware':gpus,'widths':" + repr(execution_widths) + "}, sort_keys=True), flush=True)",
         "for phase in ('preflight','runtime_preflight','controller'):",
         "    command = [sys.executable, '-u'] + common[1:2] + ['--phase', phase] + common[2:]",
         "    print(json.dumps({'event':'NOTEBOOK_PHASE_START','phase':phase,'command':command}, sort_keys=True), flush=True)",
@@ -149,7 +167,7 @@ def _notebook_source(dataset_slug: str, harness_commit: str) -> str:
         "        print(json.dumps({'event':'NOTEBOOK_PHASE_ERROR','phase':phase,'returncode':completed.returncode,'output_listing':listing}, sort_keys=True), flush=True)",
         "        raise RuntimeError(f'benchmark child failed: phase={phase} returncode={completed.returncode}')",
         "    print(json.dumps({'event':'NOTEBOOK_PHASE_DONE','phase':phase}, sort_keys=True), flush=True)",
-        "required_output = ['CONTRACT.json','SOURCE_IDENTITY.json','RUNTIME_ENVIRONMENT.json','L4_HARDWARE.json','DYNAMICCACHE_PREFLIGHT.json','ROOT_TEMPLATE_PARITY.json','SETUP_COST_AUDIT.json','CHECKPOINT.json','PROGRESS.jsonl','L4_BATCH_SCALING_RAW.csv','L4_BATCH_SCALING_PER_GPU.csv','L4_BATCH_SCALING_AGGREGATE.csv','L4_BATCH_SCALING_BOOTSTRAP.csv','B12_MEMORY_WATERFALL.csv','B16_MEMORY_WATERFALL.csv','THERMAL_POWER_SUMMARY.csv','RTX3090_REFERENCE.json','RTX3090_VS_L4_SCALING_SHAPE.csv','DECISION.json','REPORT.md','HASHES.json']",
+        "required_output = " + repr(required_output),
         "missing_output = [name for name in required_output if not (out / name).is_file()]",
         "if missing_output: raise RuntimeError(f'benchmark output incomplete: {missing_output}')",
         "print(json.dumps({'event':'L4_BATCH_SCALING_COMPLETE','artifacts':str(out),'submission_created':False}, sort_keys=True), flush=True)",
@@ -166,7 +184,8 @@ def _assert_notebook_contract(notebook: dict[str, Any]) -> None:
         raise RuntimeError("review notebook is missing pinned environment or L4 controller preflight")
 
 
-def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str) -> dict[str, Any]:
+def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str,
+          engineering_smoke: bool = False) -> dict[str, Any]:
     output = output.resolve()
     if any(os.environ.get(name) for name in ("GH_TOKEN", "GITHUB_TOKEN")):
         raise RuntimeError("GitHub token environment variables must be unset before benchmark packaging")
@@ -182,20 +201,38 @@ def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str) -> d
     _archive_curated_source(source, source_ref=harness_commit)
     _assert_staged_runner_importable(source)
     contract = experiment_contract(source_commit=AUTHORITATIVE_SOURCE_COMMIT)
+    execution_widths = [1, 16] if engineering_smoke else list(contract["widths"])
+    warmup_forwards = 1 if engineering_smoke else int(contract["measurement"]["warmup_forwards"])
+    measurement_forwards = 2 if engineering_smoke else int(contract["measurement"]["measurement_forwards"])
+    contract.update({
+        "engineering_smoke_only": engineering_smoke,
+        "scientific_benchmark": not engineering_smoke,
+        "execution_widths": execution_widths,
+        "warmup_forwards": warmup_forwards,
+        "measurement_forwards": measurement_forwards,
+    })
     _write(dataset / "L4_BENCHMARK_CONTRACT.json", contract)
     (dataset / "README.md").write_text(
-        "Private target-blind hardware characterization package. No targets, candidate scoring, or competition output.\n",
+        ("Private engineering-smoke package. No scientific aggregate, targets, candidate scoring, or competition output.\n"
+         if engineering_smoke else
+         "Private target-blind hardware characterization package. No targets, candidate scoring, or competition output.\n"),
         encoding="utf-8", newline="\n",
     )
     _write(dataset / "dataset-metadata.json", {
-        "id": f"{owner}/{dataset_slug}", "title": "ARC2 L4 native base physical batch scaling source",
-        "subtitle": "Target-blind stock-Transformers B1-B16 hardware characterization", "licenses": [{"name": "other"}],
+        "id": f"{owner}/{dataset_slug}",
+        "title": ("ARC2 L4 native base B1-B16 engineering smoke source" if engineering_smoke
+                  else "ARC2 L4 native base physical batch scaling source"),
+        "subtitle": ("Target-blind B1/B16 orchestration and capacity smoke" if engineering_smoke
+                     else "Target-blind stock-Transformers B1-B16 hardware characterization"),
+        "licenses": [{"name": "other"}],
     })
     kernel.mkdir(parents=True)
     notebook_name = f"{kernel_slug}.ipynb"
     notebook = {
         "cells": [{"cell_type": "code", "execution_count": None, "metadata": {}, "outputs": [],
-                   "source": [line + "\n" for line in _notebook_source(dataset_slug, harness_commit).splitlines()]}],
+                   "source": [line + "\n" for line in _notebook_source(
+                       dataset_slug, harness_commit, engineering_smoke=engineering_smoke
+                   ).splitlines()]}],
         "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
                      "language_info": {"name": "python", "version": "3.12"},
                      "kaggle": {"accelerator": "nvidiaL4", "isGpuEnabled": True, "isInternetEnabled": False,
@@ -205,9 +242,12 @@ def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str) -> d
     _assert_notebook_contract(notebook)
     _write(kernel / notebook_name, notebook)
     _write(kernel / "kernel-metadata.json", {
-        "id": f"{owner}/{kernel_slug}", "title": "ARC2 L4 Native Batch B1-B16 V1",
+        "id": f"{owner}/{kernel_slug}",
+        "title": ("ARC2 L4 Native B1/B16 Engineering Smoke V1" if engineering_smoke
+                  else "ARC2 L4 Native Batch B1-B16 V1"),
         "code_file": notebook_name, "language": "python", "kernel_type": "notebook", "is_private": True,
-        "enable_gpu": True, "enable_tpu": False, "enable_internet": False, "keywords": ["gpu", "benchmark"],
+        "enable_gpu": True, "enable_tpu": False, "enable_internet": False,
+        "keywords": (["gpu", "benchmark", "engineering-smoke"] if engineering_smoke else ["gpu", "benchmark"]),
         "dataset_sources": [f"{owner}/{dataset_slug}"], "competition_sources": ["arc-prize-2026-arc-agi-2"],
         "model_sources": ["sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1"], "machine_shape": "NvidiaL4",
     })
@@ -218,6 +258,11 @@ def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str) -> d
         "authoritative_source_commit": AUTHORITATIVE_SOURCE_COMMIT, "harness_commit": harness_commit,
         "runtime_dynamiccache_compatibility_sha256": RUNTIME_DYNAMICCACHE_COMPAT_SHA256,
         "dataset_slug": f"{owner}/{dataset_slug}", "kernel_slug": f"{owner}/{kernel_slug}",
+        "engineering_smoke_only": engineering_smoke,
+        "scientific_benchmark": not engineering_smoke,
+        "execution_widths": execution_widths,
+        "warmup_forwards": warmup_forwards,
+        "measurement_forwards": measurement_forwards,
         "github_push": "BLOCKED_PENDING_TOKEN_ROTATION", "kaggle_run_started": False, "files": files,
     }
     _write(output / "PACKAGE_MANIFEST.json", manifest)
@@ -229,9 +274,17 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--owner", default="jimmy5566")
     parser.add_argument("--dataset-slug", default="arc2-l4-native-base-batch-scaling-b1-b16-v1-source")
-    parser.add_argument("--kernel-slug", default="arc2-l4-native-base-physical-batch-scaling-b1-b16-v1")
+    parser.add_argument("--kernel-slug")
+    parser.add_argument("--engineering-smoke", action="store_true")
     args = parser.parse_args()
-    print(json.dumps(build(output=args.output, owner=args.owner, dataset_slug=args.dataset_slug, kernel_slug=args.kernel_slug), sort_keys=True), flush=True)
+    kernel_slug = args.kernel_slug or (
+        "arc2-l4-native-base-b1-b16-engineering-smoke-v1" if args.engineering_smoke
+        else "arc2-l4-native-base-physical-batch-scaling-b1-b16-v1"
+    )
+    print(json.dumps(build(
+        output=args.output, owner=args.owner, dataset_slug=args.dataset_slug, kernel_slug=kernel_slug,
+        engineering_smoke=args.engineering_smoke,
+    ), sort_keys=True), flush=True)
 
 
 if __name__ == "__main__":
