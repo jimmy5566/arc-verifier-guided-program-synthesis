@@ -46,20 +46,21 @@ def test_root_aware_tie_uses_frozen_order() -> None:
     assert queue.admit_available() == ["a", "c"]
 
 
-def test_fair_selector_prefers_largest_then_serves_small_class_before_starvation() -> None:
+def test_fair_selector_recomputes_and_serves_9_then_7() -> None:
     def cell(name: str, cache: str, position: int) -> SimpleNamespace:
         return SimpleNamespace(cell_key=name, request=SimpleNamespace(cache_key=(cache,), position=position))
 
     large = [cell(f"l{index}", "large", 10) for index in range(9)]
     small = [cell(f"s{index}", "small", 10) for index in range(7)]
-    selector = FairCompatibilitySelector(max_wait=2)
+    selector = FairCompatibilitySelector(max_wait=3)
     first = selector.select([*large, *small], lambda _position: 16)
     second = selector.select([*large, *small], lambda _position: 16)
     third = selector.select([*large, *small], lambda _position: 16)
     assert first is not None and first.selected_width == 9
-    assert second is not None and second.selected_width == 9
-    assert third is not None and third.selected_width == 7
-    assert third.class_wait_before == 2
+    assert second is not None and second.selected_width == 7
+    assert third is not None and third.selected_width == 9
+    assert second.class_wait_before == 1
+    assert first.compatible_class_sizes and sorted(size for _key, size in first.compatible_class_sizes) == [7, 9]
 
 
 def test_selector_respects_arbitrary_safe_ceiling_and_exact_position() -> None:

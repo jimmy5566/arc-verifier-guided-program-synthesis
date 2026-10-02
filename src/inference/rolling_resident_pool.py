@@ -137,7 +137,10 @@ def run_rolling_resident_scheduler(
     def emit(event: str, *, cell_key: str | None, reason: str | None = None,
              physical_forward_index: int | None = None, physical_batch: int | None = None,
              selected_keys: list[str] | None = None, compatibility_class: str | None = None,
-             compatibility_wait_before: int | None = None, safe_ceiling: int | None = None) -> None:
+             compatibility_wait_before: int | None = None, safe_ceiling: int | None = None,
+             scheduling_cycle_id: int | None = None, forward_index_within_cycle: int | None = None,
+             compatible_class_sizes: tuple[tuple[str, int], ...] | None = None,
+             selected_class_size: int | None = None, request_position: int | None = None) -> None:
         nonlocal event_index, max_resident_count
         event_index += 1
         max_resident_count = max(max_resident_count, len(residents))
@@ -159,6 +162,18 @@ def run_rolling_resident_scheduler(
             "compatibility_class": compatibility_class,
             "compatibility_wait_before": compatibility_wait_before,
             "safe_batch_ceiling": safe_ceiling,
+            # This is recomputed from the live READY state immediately before
+            # every physical forward; it is never a sticky profile width.
+            "scheduling_cycle_id": scheduling_cycle_id,
+            "forward_index_within_cycle": forward_index_within_cycle,
+            "compatible_class_sizes": [
+                {"compatibility_class": class_key, "size": size}
+                for class_key, size in (compatible_class_sizes or ())
+            ],
+            "selected_class_size": selected_class_size,
+            "actual_batch_width": physical_batch,
+            "request_position": request_position,
+            "current_cache_length": request_position,
         }
         if memory_snapshot is not None:
             payload.update({f"memory_{key}": value for key, value in memory_snapshot().items()})
@@ -195,7 +210,12 @@ def run_rolling_resident_scheduler(
              selected_keys=[cell.cell_key for cell in selected],
              compatibility_class=decision.class_key if decision is not None else None,
              compatibility_wait_before=decision.class_wait_before if decision is not None else None,
-             safe_ceiling=decision.safe_ceiling if decision is not None else physical_batch_ceiling)
+             safe_ceiling=decision.safe_ceiling if decision is not None else physical_batch_ceiling,
+             scheduling_cycle_id=decision.scheduling_cycle_id if decision is not None else physical_forwards - 1,
+             forward_index_within_cycle=decision.forward_index_within_cycle if decision is not None else 0,
+             compatible_class_sizes=decision.compatible_class_sizes if decision is not None else None,
+             selected_class_size=decision.selected_class_size if decision is not None else physical_batch,
+             request_position=int(requests[0].position) if requests else None)
         replies, telemetry = execute_ready_forward(
             model=model,
             selected=selected,

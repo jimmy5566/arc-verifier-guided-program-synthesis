@@ -162,18 +162,23 @@ class CompatibilityDecision:
     class_wait_before: int
     class_wait_after: int
     eligible_class_count: int
+    compatible_class_sizes: tuple[tuple[str, int], ...]
+    selected_class_size: int
     selected_width: int
     safe_ceiling: int
+    scheduling_cycle_id: int
+    forward_index_within_cycle: int
 
 
 class FairCompatibilitySelector:
-    """Largest-compatible scheduling with deterministic bounded waiting.
+    """Recompute-and-select scheduling with deterministic per-round fairness.
 
     A class with a persistent READY request is served after at most
-    ``max_wait`` other physical forwards.  Until that bound is reached, the
-    selector maximises the safely executable compatible width.  This prevents
-    a small 7-way class from being permanently starved by a busy 9-way class
-    while retaining the throughput preference for the latter.
+    ``max_wait`` other physical forwards.  Any class which was READY but not
+    selected is served before a newly observed zero-wait class.  That makes a
+    stable 9/7 surface execute as B9 then B7, while every decision still uses
+    the classes recomputed after the preceding reply.  Width resolves ties
+    only among equally waiting classes.
     """
 
     def __init__(self, *, max_wait: int = 3) -> None:
@@ -181,6 +186,8 @@ class FairCompatibilitySelector:
             raise ValueError("max_wait must be at least one")
         self._max_wait = int(max_wait)
         self._waits: dict[str, int] = {}
+        self._cycle_id = -1
+        self._forward_index_within_cycle = 0
 
     @staticmethod
     def _class_key(cell: Any) -> tuple[str, int]:
@@ -214,14 +221,17 @@ class FairCompatibilitySelector:
             wait = self._waits.get(text, 0)
             width = min(len(group), ceiling)
             candidates.append((key, group, ceiling, wait, width))
-        overdue = [item for item in candidates if item[3] >= self._max_wait]
-        if overdue:
-            # Oldest eligible class wins; width and frozen compatibility key
-            # resolve ties deterministically.
-            selected = min(overdue, key=lambda item: (-item[3], -item[4], self._key_text(item[0])))
+        # A positive wait means this class was READY at the previous physical
+        # decision and was not selected.  Serve it before a fresh class.  This
+        # is the deterministic fair round that produces B9 -> B7 (rather than
+        # repeatedly selecting the larger B9 class) on a 9/7 surface.
+        has_waiting_class = any(item[3] > 0 for item in candidates)
+        if has_waiting_class:
+            self._forward_index_within_cycle += 1
         else:
-            # Throughput first until any class reaches the bounded-wait limit.
-            selected = min(candidates, key=lambda item: (-item[4], self._key_text(item[0])))
+            self._cycle_id += 1
+            self._forward_index_within_cycle = 0
+        selected = min(candidates, key=lambda item: (-item[3], -item[4], self._key_text(item[0])))
         selected_key, group, ceiling, wait_before, width = selected
         selected_text = self._key_text(selected_key)
         for key, _group, _ceiling, current_wait, _width in candidates:
@@ -230,7 +240,11 @@ class FairCompatibilitySelector:
         return CompatibilityDecision(
             selected=tuple(group[:width]), class_key=selected_text,
             class_wait_before=wait_before, class_wait_after=self._waits[selected_text],
-            eligible_class_count=len(candidates), selected_width=width, safe_ceiling=ceiling,
+            eligible_class_count=len(candidates),
+            compatible_class_sizes=tuple((self._key_text(key), len(items)) for key, items, _ceiling, _wait, _width in candidates),
+            selected_class_size=len(group), selected_width=width, safe_ceiling=ceiling,
+            scheduling_cycle_id=self._cycle_id,
+            forward_index_within_cycle=self._forward_index_within_cycle,
         )
 
     def wait_counts(self) -> dict[str, int]:

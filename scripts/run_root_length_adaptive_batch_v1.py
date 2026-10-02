@@ -29,7 +29,13 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 from arc.io import load_dataset  # noqa: E402
 from inference.chunked_kv_cache import ChunkedDynamicCache  # noqa: E402
 from inference.hf_peft_backend import load_hf_peft_inference  # noqa: E402
-from inference.nvarc_turbodfs_dynamic_ready import execute_ready_forward, ready_result, start_ready_cell  # noqa: E402
+from inference.nvarc_turbodfs_dynamic_ready import (  # noqa: E402
+    canonical_semantic_value,
+    execute_ready_forward,
+    ready_result,
+    semantic_value_sha256,
+    start_ready_cell,
+)
 from inference.rolling_resident_pool import run_rolling_resident_scheduler  # noqa: E402
 from inference.root_adaptive_batch_policy import RootAwareAdmissionQueue, RootBatchPolicy, RootBatchPolicyEntry  # noqa: E402
 from inference.root_length_memory_profile import KV_BLOCK_TOKENS  # noqa: E402
@@ -224,7 +230,12 @@ def _contract(args: argparse.Namespace, anchors: dict[str, dict[str, Any]], prom
         "calibration_safety_margin": {"max_peak_allocated_bytes": SAFE_ALLOCATED_LIMIT_BYTES,
                                         "min_driver_free_bytes": SAFE_DRIVER_FREE_BYTES},
         "anchors": anchors, "prompt_manifests": prompt_manifests,
-        "runtime_rule": "actual=min(exact_compatible_ready_class_size, calibrated_safe_ceiling(current_position), resident_count)",
+        "runtime_rule": "actual=min(exact_compatible_ready_class_size, calibrated_safe_ceiling(current_position), resident_count), recomputed before every physical forward; no profile or split root has a sticky batch width",
+        "matched_split_9_7_benchmark": {
+            "policy_a": "B8-capped dynamic: legal B8+B1+B7 only",
+            "policy_b": "arbitrary-width dynamic: B9+B7 when the live classes remain 9+7",
+            "required_metrics": ["physical_forwards", "logical_advances", "mean_effective_batch", "wall_seconds", "logical_nodes_per_second", "model_call_seconds", "cache_pack_seconds", "cache_adoption_seconds", "peak_allocated_bytes", "peak_reserved_bytes", "semantic_pass"],
+        },
         "arbitrary_integer_batches_supported": True,
     }
 
@@ -419,7 +430,12 @@ def _physical_worker(args: argparse.Namespace) -> int:
             if request is None:
                 continue
             grouped.setdefault((request.cache_key, roots[cell.cell_key]), []).append(cell)
-        group = max(grouped.values(), key=len) if grouped else []
+        # For the frozen 9/7 split this deliberately chooses the natural
+        # seven-way class for B7 rather than taking seven lanes from the
+        # unrelated nine-way class.  Other widths retain the largest eligible
+        # exact-cache class, with frozen insertion order resolving ties.
+        exact_groups = [items for items in grouped.values() if len(items) == args.width]
+        group = exact_groups[0] if exact_groups else (max(grouped.values(), key=len) if grouped else [])
         if len(group) < args.width:
             _atomic_json(args.output / f"{stem}.json", {"experiment": EXPERIMENT, "mode": "physical_batch", "status": "UNSUPPORTED_WIDTH",
                          "anchor": args.anchor, "resident_capacity": args.resident, "requested_physical_width": args.width,
@@ -526,7 +542,13 @@ def _validation_worker(args: argparse.Namespace) -> int:
                               selected_keys=event["selected_cell_keys"], compatibility_class=event.get("compatibility_class"),
                               compatibility_wait_before=event.get("compatibility_wait_before"), safe_ceiling=event.get("safe_batch_ceiling"))
                 if len(first_batches) < 32:
-                    first_batches.append({key: event.get(key) for key in ("physical_batch", "selected_cell_keys", "selected_root_lengths", "compatibility_class", "compatibility_wait_before", "safe_batch_ceiling")})
+                    first_batches.append({key: event.get(key) for key in (
+                        "scheduling_cycle_id", "forward_index_within_cycle", "physical_batch",
+                        "actual_batch_width", "selected_cell_keys", "selected_root_lengths",
+                        "compatibility_class", "compatible_class_sizes", "selected_class_size",
+                        "compatibility_wait_before", "safe_batch_ceiling", "request_position",
+                        "current_cache_length", "resident_count", "pending_count",
+                    )})
         def observer(stage: str, _payload: dict[str, Any]) -> None:
             mapping = {"before_model_forward": "BEFORE_MODEL_FORWARD", "after_b2_model_forward": "AFTER_MODEL_FORWARD",
                        "before_split_creation": "BEFORE_STREAMING_ADOPT", "after_split_adoption": "AFTER_STREAMING_ADOPT",
@@ -553,11 +575,23 @@ def _validation_worker(args: argparse.Namespace) -> int:
                   "arbitrary_integer_batches_supported": True, "dynamic_compatibility_recomputed_each_forward": True,
                   "root_aware_admission_deterministic": args.admission == "root_aware"}
         natural_used = natural == [9, 7] and [int(item["physical_batch"]) for item in first_batches[:2]] == [9, 7]
+        dynamic_cycle_telemetry = [
+            {
+                key: event.get(key) for key in (
+                    "scheduling_cycle_id", "forward_index_within_cycle", "physical_forward_index",
+                    "compatible_class_sizes", "selected_class_size", "safe_batch_ceiling",
+                    "actual_batch_width", "request_position", "current_cache_length",
+                    "resident_count", "pending_count", "selected_cell_keys",
+                )
+            }
+            for event in scheduler["events"] if event["event"] == "FORWARD"
+        ]
         payload = {"experiment": EXPERIMENT, "mode": "validation", "status": "COMPLETE" if all(checks.values()) else "SEMANTIC_FAIL",
                    "target_blind": True, "gold_loaded": False, "anchor": args.anchor, "output_id": anchor["output_id"], "profile": anchor["audit_profile"],
                    "budget_per_cell": args.budget, "admission": args.admission, "resident_capacity": args.resident, "physical_ceiling": args.ceiling,
                    "root_lengths": sorted(roots.values()), "initial_root_batches": natural if len(natural) > 1 else [natural[0]],
                    "natural_root_batching_used": natural_used, "first_32_physical_batches": first_batches,
+                   "dynamic_cycle_telemetry": dynamic_cycle_telemetry,
                    "scheduler": scheduler, "timing": {"wall_seconds": wall, "logical_nodes": sum(row["nodes_expanded"] for row in completed),
                                                           "logical_nodes_per_second": sum(row["nodes_expanded"] for row in completed) / wall if wall else 0.0},
                    "memory": memory, "safety": _safety(memory), "checks": checks, "per_cell": sorted(completed, key=lambda row: row["augmentation_id"]),
@@ -696,6 +730,99 @@ def _rows_to_csv(args: argparse.Namespace, capacities: dict[str, list[dict[str, 
     _atomic_csv(args.output / "PHYSICAL_BATCH_HISTOGRAMS.csv", histogram_rows, ["validation", "physical_batch", "physical_forwards"])
     _atomic_csv(args.output / "MEMORY_ENVELOPE.csv", memory_rows, list(memory_rows[0]) if memory_rows else ["validation"])
 
+    dynamic_rows: list[dict[str, Any]] = []
+    for name, row in validations.items():
+        if not row:
+            continue
+        for event in row.get("dynamic_cycle_telemetry", []):
+            dynamic_rows.append({
+                "validation": name,
+                "scheduling_cycle_id": event.get("scheduling_cycle_id"),
+                "forward_index_within_cycle": event.get("forward_index_within_cycle"),
+                "physical_forward_index": event.get("physical_forward_index"),
+                "compatible_class_sizes_json": json.dumps(event.get("compatible_class_sizes", []), sort_keys=True),
+                "selected_class_size": event.get("selected_class_size"),
+                "safe_batch_ceiling": event.get("safe_batch_ceiling"),
+                "actual_batch_width": event.get("actual_batch_width"),
+                "request_position": event.get("request_position"),
+                "current_cache_length": event.get("current_cache_length"),
+                "resident_count": event.get("resident_count"),
+                "pending_count": event.get("pending_count"),
+            })
+    _atomic_csv(args.output / "DYNAMIC_CYCLE_TELEMETRY.csv", dynamic_rows,
+                list(dynamic_rows[0]) if dynamic_rows else ["validation", "scheduling_cycle_id"])
+
+
+def _split_9_7_metrics(row: dict[str, Any]) -> dict[str, Any]:
+    """Summarise only observed dynamic scheduling records for the matched A/B."""
+    events = list(row.get("dynamic_cycle_telemetry", []))
+    cycle_ids = {
+        event.get("scheduling_cycle_id")
+        for event in events
+        if sorted(int(item["size"]) for item in event.get("compatible_class_sizes", [])) == [7, 9]
+    }
+    timing = row.get("timing", {})
+    scheduler_timing = row.get("scheduler", {}).get("forward_timing", {})
+    return {
+        "status": row.get("status"),
+        "physical_forwards": row.get("scheduler", {}).get("physical_forwards"),
+        "logical_advances": row.get("scheduler", {}).get("logical_advances"),
+        "mean_effective_batch": row.get("scheduler", {}).get("mean_effective_batch"),
+        "cycles_with_9_7_classes": len(cycle_ids),
+        "b9_forwards": sum(int(event.get("actual_batch_width") or 0) == 9 for event in events),
+        "b8_forwards": sum(int(event.get("actual_batch_width") or 0) == 8 for event in events),
+        "b7_forwards": sum(int(event.get("actual_batch_width") or 0) == 7 for event in events),
+        "b1_forwards": sum(int(event.get("actual_batch_width") or 0) == 1 for event in events),
+        "wall_seconds": timing.get("wall_seconds"),
+        "logical_nodes_per_second": timing.get("logical_nodes_per_second"),
+        "model_call_seconds": scheduler_timing.get("model_call_seconds"),
+        "cache_pack_seconds": scheduler_timing.get("cache_pack_seconds"),
+        "cache_adoption_seconds": scheduler_timing.get("cache_adoption_seconds"),
+        "peak_allocated_bytes": row.get("memory", {}).get("peak_allocated_bytes"),
+        "peak_reserved_bytes": row.get("memory", {}).get("peak_reserved_bytes"),
+    }
+
+
+def _validation_semantic_evidence(row: dict[str, Any]) -> dict[str, Any]:
+    """Keep only decoder semantics, excluding scheduling and cache telemetry."""
+    cell_fields = (
+        "cell_key", "augmentation_id", "nodes_expanded", "completed_candidates",
+        "valid_candidates", "invalid_candidates", "termination_reason",
+        "finite_candidate_scores",
+    )
+    return {
+        "candidate_pools": row.get("candidate_pools"),
+        "per_cell": [
+            {field: item.get(field) for field in cell_fields}
+            for item in row.get("per_cell", [])
+        ],
+    }
+
+
+def _matched_split_ab(b8: dict[str, Any] | None, b9: dict[str, Any] | None) -> dict[str, Any]:
+    if not b8 or not b9 or b8.get("status") != "COMPLETE" or b9.get("status") != "COMPLETE":
+        return {"status": "NOT_ESTABLISHED", "reason": "matched target-blind B8 and B9 validations did not both complete"}
+    semantic_a = semantic_value_sha256(_validation_semantic_evidence(b8))
+    semantic_b = semantic_value_sha256(_validation_semantic_evidence(b9))
+    a = _split_9_7_metrics(b8); b = _split_9_7_metrics(b9)
+    physical_a, physical_b = int(a["physical_forwards"]), int(b["physical_forwards"])
+    wall_a, wall_b = float(a["wall_seconds"]), float(b["wall_seconds"])
+    return {
+        "status": "COMPLETE",
+        "policy_a": "B8_CAPPED_DYNAMIC", "policy_b": "ARBITRARY_WIDTH_DYNAMIC_B9",
+        "policy_a_metrics": a, "policy_b_metrics": b,
+        "physical_forward_reduction_pct": ((physical_a - physical_b) / physical_a * 100.0) if physical_a else None,
+        "wall_time_speedup": (wall_a / wall_b) if wall_b else None,
+        "logical_throughput_speedup": (
+            float(b["logical_nodes_per_second"]) / float(a["logical_nodes_per_second"])
+            if a["logical_nodes_per_second"] else None
+        ),
+        "peak_allocated_memory_delta_bytes": int(b["peak_allocated_bytes"]) - int(a["peak_allocated_bytes"]),
+        "peak_reserved_memory_delta_bytes": int(b["peak_reserved_bytes"]) - int(a["peak_reserved_bytes"]),
+        "semantic_sha256": {"B8_CAPPED_DYNAMIC": semantic_a, "ARBITRARY_WIDTH_DYNAMIC_B9": semantic_b},
+        "semantic_pass": semantic_a == semantic_b,
+    }
+
 
 def _hashes(args: argparse.Namespace) -> dict[str, Any]:
     files = {path.name: _sha256_file(path) for path in sorted(args.output.iterdir()) if path.is_file() and path.name not in {"HASHES.json", "HASH_VERIFICATION.json"}}
@@ -776,7 +903,14 @@ def _controller(args: argparse.Namespace) -> int:
         _code, result, _path = _child(args, "validation", anchor=anchor, resident=use_resident, ceiling=use_ceiling, budget=budget,
                                       admission=admission, result_stem=name)
         validations[name] = result or {"status": "WORKER_FAILED_NO_RESULT"}
-    run_validation("S_SPLIT_R128", "S_SPLIT", 128)
+    # Matched real 9/7 dynamic A/B.  The B8 control must retain the leftover
+    # one-way class; it may never synthesize an illegal B8 from 1+7 geometry.
+    run_validation("S_SPLIT_R128_B8_CAP", "S_SPLIT", 128, resident=16, ceiling=8)
+    run_validation("S_SPLIT_R128_DYNAMIC_B9", "S_SPLIT", 128, resident=16, ceiling=9)
+    if (validations.get("S_SPLIT_R128_B8_CAP", {}).get("status") == "COMPLETE" and
+            validations.get("S_SPLIT_R128_DYNAMIC_B9", {}).get("status") == "COMPLETE"):
+        run_validation("S_SPLIT_R256_B8_CAP", "S_SPLIT", 256, resident=16, ceiling=8)
+        run_validation("S_SPLIT_R256_DYNAMIC_B9", "S_SPLIT", 256, resident=16, ceiling=9)
     run_validation("S_D59_R128", "S_D59", 128)
     run_validation("M_A_R128_ROOT_AWARE_R8", "M_3A25", 128, resident=8, ceiling=8)
     run_validation("M_B_R128_ROOT_AWARE_R9", "M_3A25", 128, resident=9, ceiling=9)
@@ -789,6 +923,9 @@ def _controller(args: argparse.Namespace) -> int:
     run_validation("L_HIGH_R128", "L_HIGH", 128)
     run_validation("XL_R128", "XL_981", 128)
     _rows_to_csv(args, capacities, physical, validations)
+    split_ab_r128 = _matched_split_ab(validations.get("S_SPLIT_R128_B8_CAP"), validations.get("S_SPLIT_R128_DYNAMIC_B9"))
+    split_ab_r256 = _matched_split_ab(validations.get("S_SPLIT_R256_B8_CAP"), validations.get("S_SPLIT_R256_DYNAMIC_B9"))
+    _atomic_json(args.output / "SPLIT_9_7_DYNAMIC_AB.json", {"R128": split_ab_r128, "R256": split_ab_r256})
     complete = [row for row in validations.values() if row and row.get("status") == "COMPLETE"]
     semantic = {name: row.get("checks") if row else None for name, row in validations.items()}
     semantic_status = "PASS" if complete and all(row.get("checks") and all(row["checks"].values()) for row in complete) else "FAIL"
@@ -798,14 +935,16 @@ def _controller(args: argparse.Namespace) -> int:
                  "no_power_of_two_rounding": True, "split_root_9_7_detected": anchors.get("S_SPLIT", {}).get("root_class_sizes") is not None})
     m8 = validations.get("M_A_R128_ROOT_AWARE_R8"); m9 = validations.get("M_B_R128_ROOT_AWARE_R9")
     m9_better = bool(m8 and m9 and m8.get("status") == m9.get("status") == "COMPLETE" and m9["timing"]["logical_nodes_per_second"] > m8["timing"]["logical_nodes_per_second"] and m9.get("safety", {}).get("safe"))
-    classification = "ROOT_BATCH_POLICY_PASS" if semantic_status == "PASS" and all(name in validations and validations[name].get("status") == "COMPLETE" for name in ("S_SPLIT_R128", "S_D59_R128", "M_A_R128_ROOT_AWARE_R8", "L_C4_R128", "XL_R128")) else "ROOT_BATCH_POLICY_PARTIAL_PASS"
+    classification = "ROOT_BATCH_POLICY_PASS" if semantic_status == "PASS" and all(name in validations and validations[name].get("status") == "COMPLETE" for name in ("S_SPLIT_R128_B8_CAP", "S_SPLIT_R128_DYNAMIC_B9", "S_D59_R128", "M_A_R128_ROOT_AWARE_R8", "L_C4_R128", "XL_R128")) else "ROOT_BATCH_POLICY_PARTIAL_PASS"
     decision = {"experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False, "l_oom_stage": stage, "classification": classification,
                 "root_aware_admission_enabled": True, "m_production_configuration": "resident9_ceiling9" if m9_better else "resident8_ceiling8",
+                "split_9_7_dynamic_ab": {"R128": split_ab_r128, "R256": split_ab_r256},
                 "validations": validations, "retention30_readiness": "NOT_READY", "next": "STOP_AND_REVIEW"}
     _atomic_json(args.output / "ROOT_AWARE_ADMISSION_AB.json", {"M_A": m8, "M_B": m9, "m9_adopted": m9_better})
     _atomic_json(args.output / "DECISION.json", decision)
     report = ["# Root-length adaptive physical batching V1", "", "Target-blind engineering validation; no Gold or evaluation solutions loaded.", "",
-              f"- L OOM stage: `{stage}`", f"- Classification: `{classification}`", f"- Root-aware admission: `YES`", f"- M production choice: `{decision['m_production_configuration']}`", "",
+              f"- L OOM stage: `{stage}`", f"- Classification: `{classification}`", f"- Root-aware admission: `YES`", f"- M production choice: `{decision['m_production_configuration']}`",
+              f"- 9/7 R128 dynamic A/B: `{split_ab_r128.get('status')}`", f"- 9/7 R128 semantic parity: `{split_ab_r128.get('semantic_pass', 'NOT_ESTABLISHED')}`", "",
               "## Validation status", ""]
     report += [f"- `{name}`: `{row.get('status') if row else 'NOT_RUN'}`" for name, row in validations.items()]
     (args.output / "REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
