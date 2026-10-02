@@ -1,0 +1,13 @@
+{
+  "classification": "INFRA_MODEL_PATH_INVALID",
+  "config_json_sha256": null,
+  "config_json_status": "MISSING",
+  "controller_exit_status": "EXITED_NONZERO; exact OS return code was not persisted",
+  "exception_text": "Traceback (most recent call last):\n  File \"/root/arc-runtime-3090-v3/arc2/scripts/run_ttt24_aug8_r1024_core_v1.py\", line 461, in <module>\n    _run(_parse())\n  File \"/root/arc-runtime-3090-v3/arc2/scripts/run_ttt24_aug8_r1024_core_v1.py\", line 410, in _run\n    _run_surface(args, phase1, smoke, depth=24, experiment=\"TTT24_AUG8_R1024_CORE_V1\", policy=policy)\n  File \"/root/arc-runtime-3090-v3/arc2/scripts/run_ttt24_aug8_r1024_core_v1.py\", line 157, in _run_surface\n    raise RuntimeError(f\"worker failed non-OOM for {selected['output_id']} d{depth}: {receipt['log']}\")\nRuntimeError: worker failed non-OOM for dd6b8c4b:o1 d24: WORKER_LOGS/dd6b8c4b__o1_d24_attempt0.log\n",
+  "failed_directory_reused": false,
+  "failed_phase1_directory": "/root/arc-runtime-3090-v3/active_run/ttt24_aug8_r1024_program_v1",
+  "gold_loaded": false,
+  "gpu_generation_occurred": false,
+  "invalid_model_path": "/root/arc-runtime-3090-v3/model-stage",
+  "scientific_artifacts_produced": false
+}

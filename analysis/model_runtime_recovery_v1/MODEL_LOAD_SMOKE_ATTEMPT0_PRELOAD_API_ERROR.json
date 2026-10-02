@@ -1,0 +1,12 @@
+{
+  "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/dd6b8c4b/depth_024",
+  "exception_text": "RuntimeError('Invalid device argument ')",
+  "exception_type": "RuntimeError",
+  "fresh_subprocess": true,
+  "generation_performed": false,
+  "gold_loaded": false,
+  "model_path": "/root/arc-runtime-3090-v3/model-stage/qwen3_4b_grids15_sft139",
+  "peak_allocated_bytes": 0,
+  "peak_reserved_bytes": 0,
+  "status": "FAIL"
+}

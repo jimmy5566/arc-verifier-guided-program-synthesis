@@ -1,0 +1,17 @@
+# Model runtime recovery v1
+
+The prior Phase 1 root model path was a container directory without `config.json`. The verified child directory is a complete Qwen3-4B NVARC checkpoint. No Gold or scientific candidates were accessed.
+
+```json
+{
+  "classification": "MODEL_RUNTIME_RECOVERY_PASS",
+  "cpu_auto_config_gate": "PASS",
+  "cuda_model_smoke": "PASS",
+  "failed_phase1_reused": false,
+  "gold_loaded": false,
+  "invalid_root_model_path": "/root/arc-runtime-3090-v3/model-stage",
+  "native_tokenizer_gate": "PASS",
+  "next": "START_FRESH_PHASE1_ONLY",
+  "recovered_model_path": "/root/arc-runtime-3090-v3/model-stage/qwen3_4b_grids15_sft139"
+}
+```

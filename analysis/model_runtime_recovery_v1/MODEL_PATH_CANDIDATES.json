@@ -1,0 +1,175 @@
+{
+  "candidates": [
+    {
+      "auto_config": "FAIL",
+      "config_sha256": null,
+      "path": "/root/arc-runtime-3090-v3/model-stage",
+      "reason": "missing root config.json; container directory, not a model"
+    },
+    {
+      "architectures": [
+        "Qwen3ForCausalLM"
+      ],
+      "auto_config": "PASS",
+      "auto_tokenizer": "PASS",
+      "config_sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0",
+      "dtype": "torch.bfloat16",
+      "eos_token_id": 15,
+      "model_type": "qwen3",
+      "native_token_gate": "PASS",
+      "native_token_identity": {
+        "chat_template_source": "nvarc_official_for_missing_checkpoint_template",
+        "config_vocab_size": 16,
+        "eos_token_id": 15,
+        "grid_roundtrip": true,
+        "pad_token_id": 13,
+        "synthetic_prompt_tokens": 30,
+        "synthetic_render": "<|im_start|>user\n01\n23<|im_end|><|im_start|>assistant\n32\n10<|im_end|><|im_start|>user\n45\n67<|im_end|><|im_start|>assistant\n",
+        "token_mapping": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "5": 5,
+          "6": 6,
+          "7": 7,
+          "8": 8,
+          "9": 9,
+          "<|endoftext|>": 13,
+          "<|im_end|>": 15,
+          "<|im_start|>": 14,
+          "assistant": 12,
+          "user": 11,
+          "\u010a": 10
+        },
+        "tokenizer_vocab_size": 16
+      },
+      "pad_token_id": 13,
+      "path": "/root/arc-runtime-3090-v3/model-stage/qwen3_4b_grids15_sft139",
+      "reason": "ACCEPTED_QWEN3_4B_NVARC",
+      "tokenizer_files": [
+        "generation_config.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "tokenizer_vocab_size": 16,
+      "vocab_size": 16,
+      "weight_files": [
+        "model-00001-of-00002.safetensors",
+        "model-00002-of-00002.safetensors"
+      ],
+      "weight_total_bytes": 7267233496
+    },
+    {
+      "architectures": [
+        "Qwen3ForCausalLM"
+      ],
+      "auto_config": "PASS",
+      "auto_tokenizer": "PASS",
+      "config_sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0",
+      "dtype": "torch.bfloat16",
+      "eos_token_id": 15,
+      "model_type": "qwen3",
+      "native_token_gate": "PASS",
+      "native_token_identity": {
+        "chat_template_source": "nvarc_official_for_missing_checkpoint_template",
+        "config_vocab_size": 16,
+        "eos_token_id": 15,
+        "grid_roundtrip": true,
+        "pad_token_id": 13,
+        "synthetic_prompt_tokens": 30,
+        "synthetic_render": "<|im_start|>user\n01\n23<|im_end|><|im_start|>assistant\n32\n10<|im_end|><|im_start|>user\n45\n67<|im_end|><|im_start|>assistant\n",
+        "token_mapping": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "5": 5,
+          "6": 6,
+          "7": 7,
+          "8": 8,
+          "9": 9,
+          "<|endoftext|>": 13,
+          "<|im_end|>": 15,
+          "<|im_start|>": 14,
+          "assistant": 12,
+          "user": 11,
+          "\u010a": 10
+        },
+        "tokenizer_vocab_size": 16
+      },
+      "pad_token_id": 13,
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+      "reason": "ACCEPTED_QWEN3_4B_NVARC",
+      "tokenizer_files": [
+        "generation_config.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "tokenizer_vocab_size": 16,
+      "vocab_size": 16,
+      "weight_files": [
+        "model-00001-of-00002.safetensors",
+        "model-00002-of-00002.safetensors"
+      ],
+      "weight_total_bytes": 7267233496
+    },
+    {
+      "auto_config": "FAIL",
+      "auto_tokenizer": "FAIL",
+      "config_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "native_token_gate": "FAIL",
+      "path": "/workspace/.cache/huggingface/hub/models--unslothai--1/snapshots/7ec782b7604cd9ea0781c23a4270f031650f5617",
+      "reason": "OSError(\"It looks like the config file at '/workspace/.cache/huggingface/hub/models--unslothai--1/snapshots/7ec782b7604cd9ea0781c23a4270f031650f5617/config.json' is not a valid JSON file.\")",
+      "tokenizer_files": [],
+      "weight_files": [],
+      "weight_total_bytes": 0
+    },
+    {
+      "auto_config": "FAIL",
+      "auto_tokenizer": "FAIL",
+      "config_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "native_token_gate": "FAIL",
+      "path": "/workspace/.cache/huggingface/hub/models--unslothai--repeat/snapshots/7c48478c02f84ed89f149b0815cc0216ee831fb0",
+      "reason": "OSError(\"It looks like the config file at '/workspace/.cache/huggingface/hub/models--unslothai--repeat/snapshots/7c48478c02f84ed89f149b0815cc0216ee831fb0/config.json' is not a valid JSON file.\")",
+      "tokenizer_files": [],
+      "weight_files": [],
+      "weight_total_bytes": 0
+    },
+    {
+      "auto_config": "FAIL",
+      "auto_tokenizer": "FAIL",
+      "config_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "native_token_gate": "FAIL",
+      "path": "/workspace/.cache/huggingface/hub/models--unslothai--runpod/snapshots/6f8e9b23468ea646932acbd77a598adac5b178a9",
+      "reason": "OSError(\"It looks like the config file at '/workspace/.cache/huggingface/hub/models--unslothai--runpod/snapshots/6f8e9b23468ea646932acbd77a598adac5b178a9/config.json' is not a valid JSON file.\")",
+      "tokenizer_files": [],
+      "weight_files": [],
+      "weight_total_bytes": 0
+    },
+    {
+      "auto_config": "FAIL",
+      "auto_tokenizer": "FAIL",
+      "config_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "native_token_gate": "FAIL",
+      "path": "/workspace/.cache/huggingface/hub/models--unslothai--vram-24/snapshots/61324ceeacd75b2b31f7a789a9c9d82058e6118c",
+      "reason": "OSError(\"It looks like the config file at '/workspace/.cache/huggingface/hub/models--unslothai--vram-24/snapshots/61324ceeacd75b2b31f7a789a9c9d82058e6118c/config.json' is not a valid JSON file.\")",
+      "tokenizer_files": [],
+      "weight_files": [],
+      "weight_total_bytes": 0
+    }
+  ],
+  "search_order": [
+    "Pilot18 runtime",
+    "shell history",
+    "runtime directories",
+    "workspace model",
+    "HF cache"
+  ]
+}

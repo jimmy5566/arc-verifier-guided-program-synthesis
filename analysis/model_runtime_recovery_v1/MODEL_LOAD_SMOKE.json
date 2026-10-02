@@ -1,0 +1,84 @@
+{
+  "adapter_attach_gate": "PASS",
+  "adapter_identity": {
+    "adapter_config_semantics": {
+      "lora_alpha": 32,
+      "peft_type": "LORA",
+      "r": 256,
+      "target_modules": [
+        "down_proj",
+        "gate_proj",
+        "k_proj",
+        "o_proj",
+        "q_proj",
+        "up_proj",
+        "v_proj"
+      ],
+      "task_type": "CAUSAL_LM"
+    },
+    "adapter_config_sha256": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+    "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/dd6b8c4b/depth_024",
+    "adapter_sha256": "13f4e1eaa1770db060cbdc589ca7f99870e3dd6973c1422df5380640f71fb6a1",
+    "mismatches": {},
+    "status": "PASS"
+  },
+  "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/dd6b8c4b/depth_024",
+  "attempt": 2,
+  "bf16_cuda_load_gate": "PASS",
+  "cache_sequence_length": 12,
+  "cache_type": "DynamicCache",
+  "continuation_logits_shape": [
+    1,
+    1,
+    16
+  ],
+  "device": "cuda:0",
+  "dtype": "torch.bfloat16",
+  "fresh_subprocess": true,
+  "generation_performed": false,
+  "gold_loaded": false,
+  "model_load_pass": true,
+  "model_load_seconds": 30.097201852011494,
+  "model_path": "/root/arc-runtime-3090-v3/model-stage/qwen3_4b_grids15_sft139",
+  "one_token_forward_pass": true,
+  "parameter_devices": [
+    "cuda:0"
+  ],
+  "peak_allocated_bytes": 9465873920,
+  "peak_reserved_bytes": 9477029888,
+  "prefill_logits_shape": [
+    1,
+    12,
+    16
+  ],
+  "previous_attempts": [
+    "MODEL_LOAD_SMOKE_ATTEMPT0_PRELOAD_API_ERROR.json",
+    "MODEL_LOAD_SMOKE_ATTEMPT1_PRELOAD_API_ERROR.json"
+  ],
+  "status": "PASS",
+  "tokenizer_identity": {
+    "chat_template_source": "nvarc_official_for_missing_checkpoint_template",
+    "config_vocab_size": 16,
+    "eos_token_id": 15,
+    "pad_token_id": 13,
+    "token_mapping": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "5": 5,
+      "6": 6,
+      "7": 7,
+      "8": 8,
+      "9": 9,
+      "<|endoftext|>": 13,
+      "<|im_end|>": 15,
+      "<|im_start|>": 14,
+      "assistant": 12,
+      "user": 11,
+      "\u010a": 10
+    },
+    "tokenizer_vocab_size": 16
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "adapter_target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "architectures": [
+    "Qwen3ForCausalLM"
+  ],
+  "base_model_identity_status": "MODEL_BYTE_IDENTITY_NOT_HISTORICALLY_PINNED",
+  "canonical_base_model_path": "/root/arc-runtime-3090-v3/model-stage/qwen3_4b_grids15_sft139",
+  "config_sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0",
+  "dtype": "torch.bfloat16",
+  "historical_link": "same surviving runtime model-stage subtree; Pilot raw runtime records Qwen3ForCausalLM BF16 and matching NVARC tokenizer, but no historic full-model hash was recorded",
+  "installed_peft": "0.17.1",
+  "installed_transformers": "4.55.4",
+  "model_type": "qwen3",
+  "torch_cuda": "2.8.0+cu128",
+  "weight_files": [
+    {
+      "bytes": 4996836472,
+      "name": "model-00001-of-00002.safetensors",
+      "sha256": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529"
+    },
+    {
+      "bytes": 2270397024,
+      "name": "model-00002-of-00002.safetensors",
+      "sha256": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0"
+    }
+  ],
+  "weight_total_bytes": 7267233496
+}
