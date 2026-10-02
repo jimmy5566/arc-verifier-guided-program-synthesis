@@ -786,15 +786,7 @@ def _select_memory_aware_aug16(
     group_cursor: int,
     capture_ready_keys: bool,
 ) -> tuple[list[ReadyCell], int, str, str | None, list[str]]:
-    """Select one globally compatible B16/B8-ready group.
-
-    Older code hard-partitioned the physical B8 fallback into ``cells[:8]``
-    and ``cells[8:]``.  That is not a cache-compatibility boundary and could
-    separate otherwise compatible lanes solely because of frozen list
-    position.  The common selector below considers every resident lane.  The
-    caller's cursor is retained only for API compatibility with frozen
-    launchers; it no longer encodes an artificial 8+8 partition.
-    """
+    """Select a B16 lane set or one fair B8 group using frozen cell order."""
     ready_keys = [cell.cell_key for cell in cells if cell.request is not None] if capture_ready_keys else []
     if not ready_keys and not any(cell.request is not None for cell in cells):
         return [], group_cursor, "B16_ENABLED" if b16_enabled else "B8_SPLIT_MODE", None, ready_keys
@@ -807,10 +799,16 @@ def _select_memory_aware_aug16(
             ready_keys,
         )
 
-    selected = _compatible_group_in_frozen_order(cells, 8)
-    if not selected:
-        raise AssertionError("memory-aware ready set was nonempty but no compatible B8 group was selected")
-    return selected, (group_cursor + 1) % max(len(cells), 1), "B8_GLOBAL_COMPAT_MODE", None, ready_keys
+    groups = (cells[:8], cells[8:])
+    for offset in range(2):
+        selected_group = (group_cursor + offset) % 2
+        selected = _compatible_group_in_frozen_order(list(groups[selected_group]), 8)
+        if selected:
+            # Move after the group actually served.  If its peer was empty,
+            # the next call retries the skipped group first, then serves this
+            # one again only when the peer remains naturally unavailable.
+            return selected, (selected_group + 1) % 2, "B8_SPLIT_MODE", "A" if selected_group == 0 else "B", ready_keys
+    raise AssertionError("memory-aware ready set was nonempty but no B8 group was selected")
 
 
 def _select_ready_cells(
