@@ -1243,12 +1243,21 @@ def _runtime_preflight_template_summary(rows: list[dict[str, Any]]) -> tuple[dic
         for row in by_gpu.values()
     )
     base = {"required_worker_count": 4, "observed_worker_count": len(rows), "worker_ids": sorted(str(value) for value in by_gpu)}
+    memory_rows = [row.get("root_template_memory_audit") for row in rows]
+    numeric_memory = [row for row in memory_rows if isinstance(row, dict)]
+    memory_totals = {
+        "template_count": sum(int(row.get("template_count", 0)) for row in numeric_memory),
+        "template_tensor_count": sum(int(row.get("template_tensor_count", 0)) for row in numeric_memory),
+        "template_cpu_bytes": sum(int(row.get("template_cpu_bytes", 0)) for row in numeric_memory),
+        "template_gpu_bytes": sum(int(row.get("template_gpu_bytes", 0)) for row in numeric_memory),
+        "template_gpu_tensor_count": sum(int(row.get("template_gpu_tensor_count", 0)) for row in numeric_memory),
+    }
     return (
         {"phase": "runtime_preflight", "status": "PASS" if parity_ok else "FAIL", **base,
          "workers": [{"gpu_id": row.get("gpu_id"), "parity": row.get("root_template_parity")} for row in rows]},
         {"phase": "runtime_preflight", "status": "PASS" if immutability_ok else "FAIL", **base,
          "workers": [{"gpu_id": row.get("gpu_id"), "immutability": row.get("root_template_immutability")} for row in rows]},
-        {"phase": "runtime_preflight", "status": "PASS" if memory_ok else "FAIL", **base,
+        {"phase": "runtime_preflight", "status": "PASS" if memory_ok else "FAIL", **base, **memory_totals,
          "workers": [{"gpu_id": row.get("gpu_id"), "memory": row.get("root_template_memory_audit")} for row in rows]},
     )
 

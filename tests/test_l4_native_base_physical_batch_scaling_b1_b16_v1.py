@@ -236,12 +236,18 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
                 "gpu_id": gpu, "status": "PASS",
                 "root_template_parity": {"status": "PASS"},
                 "root_template_immutability": {"status": "PASS"},
-                "root_template_memory_audit": {"template_gpu_tensor_count": 0, "template_gpu_bytes": 0},
+                "root_template_memory_audit": {
+                    "template_count": 4, "template_tensor_count": 8, "template_cpu_bytes": 64,
+                    "template_gpu_tensor_count": 0, "template_gpu_bytes": 0,
+                },
             }
             for gpu in range(4)
         ]
         parity, immutability, memory = runner._runtime_preflight_template_summary(rows)
         assert parity["status"] == immutability["status"] == memory["status"] == "PASS"
+        assert memory["template_count"] == 16
+        assert memory["template_cpu_bytes"] == 256
+        assert memory["template_gpu_tensor_count"] == memory["template_gpu_bytes"] == 0
 
     def test_formal_prefill_audit_keeps_clean_b16_capacity_failure_distinct(self) -> None:
         def successful(width: int) -> dict:
