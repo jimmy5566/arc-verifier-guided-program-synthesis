@@ -3,9 +3,11 @@ from __future__ import annotations
 import importlib.util
 import json
 from pathlib import Path
+import sys
 from types import SimpleNamespace
 import tempfile
 import unittest
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +19,7 @@ def _load(path: Path, name: str):
     spec = importlib.util.spec_from_file_location(name, path)
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -54,6 +57,100 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
             assert [item["lane_index"] for item in lanes] == list(range(width))
             assert max(item["replica_index"] for item in lanes) == replicas - 1
 
+    def test_root_template_prefill_plan_is_frozen_and_not_per_sample(self) -> None:
+        assert {width: runner.expected_template_prefills(width) for width in runner.WIDTHS} == {
+            1: 1, 2: 2, 4: 4, 8: 4, 12: 4, 16: 4,
+        }
+        assert runner.expected_controller_prefills() == 19
+        assert runner.expected_controller_prefills() + 4 == 23
+        assert runner.WARMUP_FORWARDS == 2
+        assert runner.MEASUREMENT_FORWARDS == 12
+
+    def test_build_templates_prefills_each_distinct_view_once(self) -> None:
+        calls: list[str] = []
+        fake_template = runner.FrozenRootTemplate(
+            view="", cell_key="k", token_id=1, position=2, cache_key=("same",), parent_node_id=0,
+            ordinal=0, legacy_cache=((object(),),), sequence_length=2,
+        )
+
+        def fake_start(**kwargs):
+            calls.append(kwargs["cell_key"])
+            return SimpleNamespace(request=object(), prefill_seconds=0.25)
+
+        def fake_template_from_cell(cell, *, view):
+            return fake_template.__class__(view=view, cell_key=f"{view}:k", token_id=1, position=2,
+                                           cache_key=("same",), parent_node_id=0, ordinal=0,
+                                           legacy_cache=fake_template.legacy_cache, sequence_length=2)
+
+        output = Path(tempfile.mkdtemp())
+        self.addCleanup(lambda: __import__("shutil").rmtree(output, ignore_errors=True))
+        args = SimpleNamespace(task_id="d59b0160", output_index=0, depth=24, output=output,
+                               run_started_unix=0.0, phase="controller")
+        with mock.patch.object(runner, "start_ready_cell", side_effect=fake_start), \
+                mock.patch.object(runner, "_template_from_cell", side_effect=fake_template_from_cell), \
+                mock.patch.object(runner, "_cache_tensor_hash", return_value="root"), \
+                mock.patch.object(runner, "_emit_worker_progress"):
+            templates, parity_cells, audit = runner._build_root_templates(
+                model=object(), prompts={view: object() for view in runner.BASE_VIEWS}, config=object(), args=args,
+                width=16, torch=object(), physical_gpu_id=0, progress=object(),
+            )
+        assert list(templates) == list(runner.BASE_VIEWS)
+        assert len(parity_cells) == 4
+        assert len(calls) == 4
+        assert audit["actual_template_prefills"] == 4
+
+    def test_template_clones_have_independent_owner_and_dynamiccache_identities(self) -> None:
+        template = runner.FrozenRootTemplate(
+            view="anti_transpose", cell_key="root", token_id=1, position=2, cache_key=("same",),
+            parent_node_id=0, ordinal=0, legacy_cache=((object(),),), sequence_length=2,
+        )
+        with mock.patch.object(runner, "_clone_legacy_tensors", side_effect=lambda _cache: ((object(),),)), \
+                mock.patch.object(runner, "dynamic_cache_from_legacy", side_effect=lambda _legacy: object()):
+            left = runner._clone_template_lane(template, spec={"replica_index": 0, "lane_index": 0})
+            right = runner._clone_template_lane(template, spec={"replica_index": 1, "lane_index": 1})
+        assert left.request.cache_owner is not right.request.cache_owner
+        assert left.request.cache_owner.cache is not right.request.cache_owner.cache
+        assert left.request.token_id == right.request.token_id == template.token_id
+        assert left.request.cache_key == right.request.cache_key == template.cache_key
+
+    def test_progress_jsonl_is_valid_jsonl(self) -> None:
+        output = Path(tempfile.mkdtemp())
+        self.addCleanup(lambda: __import__("shutil").rmtree(output, ignore_errors=True))
+        args = SimpleNamespace(output=output, run_started_unix=0.0, phase="controller")
+        row = runner.emit_progress(args, "SAMPLE_DONE", physical_batch=4, gpu_id=1, sample_index=0)
+        stored = [json.loads(line) for line in (output / "PROGRESS.jsonl").read_text(encoding="utf-8").splitlines()]
+        assert stored == [row]
+
+    def test_engineering_smoke_is_explicit_and_distinct_from_science(self) -> None:
+        original = sys.argv[:]
+        try:
+            sys.argv = ["runner", "--phase", "preflight", "--output", tempfile.mkdtemp(), "--harness-commit", "x", "--engineering-smoke"]
+            args = runner.parse_args()
+        finally:
+            sys.argv = original
+        assert args.engineering_smoke is True
+        assert (args.warmup_forwards, args.measurement_forwards) == (1, 2)
+        assert runner.WIDTHS == (1, 2, 4, 8, 12, 16)
+
+    def test_operational_guards_are_not_scientific_changes(self) -> None:
+        source = RUNNER_PATH.read_text(encoding="utf-8")
+        assert "NO_PROGRESS_TIMEOUT_SECONDS = 300" in source
+        assert "WIDTH_HARD_TIMEOUT_SECONDS = 900" in source
+        assert "timeout=10" in source
+        assert "def _nvidia_snapshot" in source
+        assert "GPU_WORKER_COULD_NOT_BE_KILLED" in source
+        assert "FAILURE.json" in source
+        assert "B{width}_PARTIAL.json" in source
+        assert "ROOT_TEMPLATE_CLONE_PARITY_FAILED" in source
+        assert "CONTROLLER_ROOT_TEMPLATE_PREFILL_COUNT_MISMATCH" in source
+
+    def test_notebook_uses_unbuffered_streaming_subprocesses(self) -> None:
+        notebook_source = builder._notebook_source("private-source", "abc")
+        assert "PYTHONUNBUFFERED':'1" in notebook_source
+        assert "sys.executable, '-u'" in notebook_source
+        assert "NOTEBOOK_START" in notebook_source
+        assert "NOTEBOOK_PHASE_ERROR" in notebook_source
+
     def test_batched_widths_all_use_same_streaming_path(self) -> None:
         calls: list[dict] = []
 
@@ -81,7 +178,7 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
     def test_base_model_identity_gate_requires_four_matching_workers(self) -> None:
         def ready(gpu: int, *, sha: str = "base") -> dict:
             return {"type": "READY", "gpu_id": gpu, "benchmark_model_mode": "BASE_MODEL_ONLY",
-                    "benchmark_model_config_sha256": sha}
+                    "benchmark_model_config_sha256": sha, "startup_milestone": "MODEL_READY_SENT"}
 
         rows = [ready(gpu) for gpu in range(4)]
         accepted = runner._ready_identity_gate(ready_rows=rows, expected_mode="BASE_MODEL_ONLY", prior_identity=None)
