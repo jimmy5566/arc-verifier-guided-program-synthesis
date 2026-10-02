@@ -1,0 +1,56 @@
+{
+  "artifact_kind": "REMOTE_PAUSED_PARTIAL4_RECEIPT",
+  "captured_from": "/root/arc-runtime-3090-v3/active_run/ttt24_aug8_r1024_reproducibility_gate_v2",
+  "capture_mode": "remote_read_only_after_controlled_pause",
+  "target_blind": true,
+  "gold_loaded": false,
+  "phase2_started": false,
+  "full_six_output_core_gate_completed": false,
+  "partial_validation_output_ids": [
+    "dd6b8c4b:o1",
+    "1818057f:o0",
+    "3a25b0d8:o1",
+    "8e5c0c38:o0"
+  ],
+  "run_a": {
+    "selected_prefix_frozen": 4,
+    "generation_hash_verification": {
+      "status": "PASS",
+      "checked": 27,
+      "mismatches": []
+    },
+    "generation_hash_verification_sha256": "70420bed3f11af41cfe5995b060b33e09157ac140c574a5dd1540c8b6936bb2f"
+  },
+  "run_b": {
+    "status": "PAUSED",
+    "completed_output_ids": [
+      "dd6b8c4b:o1",
+      "1818057f:o0"
+    ],
+    "remaining_output_ids": [
+      "3a25b0d8:o1",
+      "8e5c0c38:o0"
+    ],
+    "generation_complete": false,
+    "comparison_complete": false,
+    "paused_generation_hash_verification": {
+      "status": "PASS",
+      "checked": 7,
+      "mismatches": []
+    },
+    "paused_state_sha256": "94ebe3fddfaf669385fc4f1176abc18348efc3833c5aa0d27073562940a1dba7",
+    "paused_generation_hash_verification_sha256": "6d2f016acbe6f4c865734861ff173c8154876642a28605286fd6220bad5cf921"
+  },
+  "top_level_hash_verification": {
+    "status": "PASS",
+    "checked": 11,
+    "mismatches": [],
+    "sha256": "d348e4e70821fa7b920f532d79dcf4d58454f1f2994eaa54ef7c56e4e8599355"
+  },
+  "partial_execution_amendment_sha256": "11fb172f4f874af031b6ccf42ab8771231f2a069d6b22a12ef6fdcd57b82246a",
+  "resume_contract": "Only resume RUN_B with --resume-partial-run-b, the same frozen Partial4 amendment, and no rerun of the two completed B outputs.",
+  "notes": [
+    "The remote repository recorded a compact-artifact commit locally, but its HTTPS push could not authenticate on the Pod and was terminated without supplying credentials.",
+    "This receipt contains the read-only remote verification results and SHA256 identities; no raw candidate pools are included."
+  ]
+}
