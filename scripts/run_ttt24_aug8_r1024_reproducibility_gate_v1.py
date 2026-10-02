@@ -495,6 +495,77 @@ def _freeze_run(run: Path, outputs: list[dict[str, Any]], *, allow_preserved_ext
     return verification
 
 
+def _validated_frozen_prefix(run: Path, outputs: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Return the verified completed source-order prefix, rejecting any gap."""
+    content_path = run / "PARTIAL_RAW_CONTENT.json"
+    if not content_path.exists():
+        raise RuntimeError(f"missing independent raw-content ledger: {content_path}")
+    content = _read_json(content_path)
+    completed: list[dict[str, Any]] = []
+    for row in outputs:
+        rel = f"FROZEN_RAW_OUTPUTS/{_safe(str(row['output_id']))}.json.gz"
+        if rel not in content:
+            break
+        expected = content[rel]
+        path = run / rel
+        if not path.exists() or _sha_file(path) != expected["gzip_sha256"] or _sha_gzip_content(path) != expected["raw_sha256"]:
+            raise RuntimeError(f"independently frozen raw record failed verification: {path}")
+        completed.append(row)
+    completed_names = {f"FROZEN_RAW_OUTPUTS/{_safe(str(row['output_id']))}.json.gz" for row in completed}
+    selected_names = {f"FROZEN_RAW_OUTPUTS/{_safe(str(row['output_id']))}.json.gz" for row in outputs}
+    unexpected = sorted(set(content).difference(selected_names))
+    if unexpected:
+        raise RuntimeError(f"partial RUN_B contains out-of-scope frozen raw records: {unexpected}")
+    later = selected_names.difference(completed_names)
+    if any(name in content for name in later):
+        raise RuntimeError("partial RUN_B frozen records are not a source-order prefix")
+    return completed, content
+
+
+def _pause_partial_run(run: Path, outputs: list[dict[str, Any]]) -> dict[str, Any]:
+    """Freeze an interrupted RUN_B prefix without pretending the run completed."""
+    completed, content = _validated_frozen_prefix(run, outputs)
+    if not completed:
+        raise RuntimeError("refusing to pause-freeze RUN_B without a completed, independently verified raw output")
+    raw_dir = run / "RAW_OUTPUTS"
+    plain = sorted(raw_dir.glob("*.json")) if raw_dir.exists() else []
+    if plain:
+        raise RuntimeError(f"refusing pause freeze with mutable plaintext raw outputs: {plain}")
+    completed_names = [f"FROZEN_RAW_OUTPUTS/{_safe(str(row['output_id']))}.json.gz" for row in completed]
+    files = [run / name for name in completed_names]
+    for name in ("RUN_COHORT.json", "AUG8_IDS.json", "PARTIAL_RAW_CONTENT.json"):
+        path = run / name
+        if path.exists():
+            files.append(path)
+    ledger = {str(path.relative_to(run)): _sha_file(path) for path in sorted(files)}
+    payload = {
+        "status": "PAUSED_FROZEN_PREFIX", "target_blind": True, "gold_loaded": False,
+        "completed_output_ids": [str(row["output_id"]) for row in completed],
+        "remaining_output_ids": [str(row["output_id"]) for row in outputs[len(completed):]],
+        "raw_content": {name: content[name] for name in completed_names}, "files": ledger,
+        "resume_allowed_only_with": "--resume-partial-run-b and the same PARTIAL_EXECUTION_AMENDMENT",
+    }
+    _write_json(run / "PAUSED_GENERATION_HASHES.json", payload)
+    mismatches = [{"path": rel, "expected": expected, "actual": _sha_file(run / rel) if (run / rel).exists() else None}
+                  for rel, expected in ledger.items() if not (run / rel).exists() or _sha_file(run / rel) != expected]
+    for name in completed_names:
+        expected = content[name]
+        path = run / name
+        if not path.exists() or _sha_file(path) != expected["gzip_sha256"] or _sha_gzip_content(path) != expected["raw_sha256"]:
+            mismatches.append({"path": name, "reason": "COMPRESSED_RAW_HASH_MISMATCH"})
+    verification = {"status": "PASS" if not mismatches else "FAIL", "checked": len(ledger) + len(completed_names), "mismatches": mismatches}
+    _write_json(run / "PAUSED_GENERATION_HASH_VERIFICATION.json", verification)
+    if verification["status"] != "PASS":
+        raise RuntimeError("paused RUN_B hash verification failed")
+    _write_json(run / "PAUSED_STATE.json", {
+        "status": "PAUSED", "target_blind": True, "gold_loaded": False,
+        "completed_output_count": len(completed), "total_output_count": len(outputs),
+        "completed_output_ids": payload["completed_output_ids"], "remaining_output_ids": payload["remaining_output_ids"],
+        "hash_verification": "PASS", "generation_complete": False, "comparison_complete": False,
+    })
+    return verification
+
+
 def _run_one(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any]], policy: dict[str, Any]) -> dict[str, Any]:
     if args.reuse_partial_run_a and run.name == "RUN_A":
         return _freeze_run(run, outputs, allow_preserved_extra=True)
@@ -502,16 +573,32 @@ def _run_one(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any]],
         verification = _read_json(run / "GENERATION_HASH_VERIFICATION.json")
         if verification.get("status") != "PASS": raise RuntimeError(f"pre-existing frozen run fails verification: {run}")
         return verification
+    completed_ids: set[str] = set()
     if run.exists() and any(run.iterdir()):
-        raise RuntimeError(f"refusing to reuse incomplete mutable runtime state: {run}")
-    free = shutil.disk_usage(run.parent).free
-    if free < args.minimum_free_bytes:
-        raise RuntimeError(f"insufficient local disk for independent raw run: free={free}, required={args.minimum_free_bytes}")
-    run.mkdir(parents=True, exist_ok=False)
-    _write_json(run / "RUN_COHORT.json", {"experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False, "outputs": outputs})
-    _write_json(run / "AUG8_IDS.json", {"subset": "CANONICAL_GEOMETRY_AUG8", "candidate_ids": list(AUG8)})
+        if not (args.resume_partial_run_b and run.name == "RUN_B"):
+            raise RuntimeError(f"refusing to reuse incomplete mutable runtime state: {run}")
+        paused = _read_json(run / "PAUSED_STATE.json") if (run / "PAUSED_STATE.json").exists() else {}
+        paused_verification = _read_json(run / "PAUSED_GENERATION_HASH_VERIFICATION.json") if (run / "PAUSED_GENERATION_HASH_VERIFICATION.json").exists() else {}
+        if paused.get("status") != "PAUSED" or paused_verification.get("status") != "PASS":
+            raise RuntimeError("partial RUN_B lacks a verified paused-state receipt")
+        completed, _ = _validated_frozen_prefix(run, outputs)
+        if [str(row["output_id"]) for row in completed] != paused.get("completed_output_ids"):
+            raise RuntimeError("paused RUN_B selected-prefix identity changed")
+        completed_ids = {str(row["output_id"]) for row in completed}
+        _write_json(run / "RESUME_RECEIPT.json", {"status": "RESUMED", "target_blind": True, "gold_loaded": False,
+                                                  "completed_output_ids_reused": sorted(completed_ids),
+                                                  "remaining_output_ids": [str(row["output_id"]) for row in outputs if str(row["output_id"]) not in completed_ids]})
+    else:
+        free = shutil.disk_usage(run.parent).free
+        if free < args.minimum_free_bytes:
+            raise RuntimeError(f"insufficient local disk for independent raw run: free={free}, required={args.minimum_free_bytes}")
+        run.mkdir(parents=True, exist_ok=False)
+        _write_json(run / "RUN_COHORT.json", {"experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False, "outputs": outputs})
+        _write_json(run / "AUG8_IDS.json", {"subset": "CANONICAL_GEOMETRY_AUG8", "candidate_ids": list(AUG8)})
     receipts: list[dict[str, Any]] = []
     for output_row in outputs:
+        if str(output_row["output_id"]) in completed_ids:
+            continue
         done = False
         for attempt, config in enumerate(_profile_configs(policy, str(output_row["profile"]))):
             receipt = _run_worker(args, run, output_row, attempt, config)
@@ -530,7 +617,8 @@ def _run_one(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any]],
         if not done:
             _write_csv(run / "OOM_FALLBACK_RECEIPTS.csv", receipts, receipts[0].keys())
             raise RuntimeError(f"all frozen OOM fallbacks failed: {output_row['output_id']}")
-    _write_csv(run / "OOM_FALLBACK_RECEIPTS.csv", receipts, receipts[0].keys())
+    if receipts:
+        _write_csv(run / "OOM_FALLBACK_RECEIPTS.csv", receipts, receipts[0].keys())
     return _freeze_run(run, outputs)
 
 
@@ -644,6 +732,10 @@ def _parse() -> argparse.Namespace:
                         help="Authorized execution-only subset of the frozen source order; 0 keeps all six.")
     parser.add_argument("--reuse-partial-run-a", action="store_true",
                         help="Freeze selected pre-existing RUN_A records without rerunning them.")
+    parser.add_argument("--pause-partial-run-b", action="store_true",
+                        help="CPU-only: hash-freeze the completed RUN_B prefix without completing or comparing it.")
+    parser.add_argument("--resume-partial-run-b", action="store_true",
+                        help="Resume only the missing source-order suffix of a verified paused RUN_B prefix.")
     return parser.parse_args()
 
 
@@ -669,6 +761,12 @@ def main() -> None:
             "run_a_reused": True, "run_a_not_rerun": True,
             "full_six_output_core_gate_completed": False, "phase2_authorized": False, "phase2_started": False,
         })
+    if args.pause_partial_run_b:
+        if not partial_validation or not args.reuse_partial_run_a or args.resume_partial_run_b:
+            raise RuntimeError("pause mode requires the authorized partial RUN_A reuse and forbids resume mode")
+        _pause_partial_run(args.output / "RUN_B", outputs)
+        _compact_hashes(args.output)
+        return
     policy = _read_json(args.coarse_policy)
     verify_a = _run_one(args, args.output / "RUN_A", outputs, policy)
     verify_b = _run_one(args, args.output / "RUN_B", outputs, policy)

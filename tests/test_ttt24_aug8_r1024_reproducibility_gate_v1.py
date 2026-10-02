@@ -98,6 +98,28 @@ class ReproducibilityGateTests(unittest.TestCase):
             self.assertEqual(2, frozen_state["raw_count"])
             self.assertEqual(["FROZEN_RAW_OUTPUTS/extra_o0.json.gz"], frozen_state["preserved_extra_frozen_records"])
 
+    def test_paused_prefix_is_hash_verified_without_claiming_completion(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run = Path(temporary)
+            frozen = run / "FROZEN_RAW_OUTPUTS"; frozen.mkdir()
+            ledger = {}
+            for output_id in ("a:o0", "b:o0"):
+                path = frozen / f"{MODULE._safe(output_id)}.json.gz"
+                with gzip.open(path, "wb") as handle:
+                    handle.write((output_id + "\n").encode("utf-8"))
+                ledger[str(path.relative_to(run))] = {
+                    "raw_sha256": MODULE._sha_gzip_content(path), "gzip_sha256": MODULE._sha_file(path),
+                    "raw_bytes": len(output_id) + 1, "gzip_bytes": path.stat().st_size,
+                }
+            MODULE._write_json(run / "PARTIAL_RAW_CONTENT.json", ledger)
+            result = MODULE._pause_partial_run(run, [{"output_id": "a:o0"}, {"output_id": "b:o0"}, {"output_id": "c:o0"}])
+            self.assertEqual("PASS", result["status"])
+            state = MODULE._read_json(run / "PAUSED_STATE.json")
+            self.assertEqual("PAUSED", state["status"])
+            self.assertEqual(["a:o0", "b:o0"], state["completed_output_ids"])
+            self.assertEqual(["c:o0"], state["remaining_output_ids"])
+            self.assertFalse(state["generation_complete"])
+
 
 if __name__ == "__main__":
     unittest.main()
