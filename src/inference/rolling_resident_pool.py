@@ -131,6 +131,10 @@ def run_rolling_resident_scheduler(
     event_index = 0
     max_resident_count = 0
     forward_timing = {"model_call_seconds": 0.0, "cache_pack_seconds": 0.0, "cache_adoption_seconds": 0.0, "elapsed_seconds": 0.0}
+    # This is observational timing evidence.  It is intentionally populated
+    # after a physical forward has returned and never participates in READY
+    # selection, cache ownership, or decoder resumption.
+    physical_forward_records: list[dict[str, Any]] = []
     selector = FairCompatibilitySelector(max_wait=fairness_max_wait) if safe_batch_ceiling is not None else None
     root_by_key = {str(key): int(value) for key, value in (root_lengths or {}).items()}
 
@@ -226,6 +230,20 @@ def run_rolling_resident_scheduler(
         )
         for key in forward_timing:
             forward_timing[key] += float(telemetry.get(key, 0.0))
+        physical_forward_records.append({
+            "physical_forward_index": physical_forwards,
+            "physical_batch": physical_batch,
+            "selected_cell_keys": [cell.cell_key for cell in selected],
+            # A request is created after its parent expansion.  Reading this
+            # counter at dispatch time makes later segment attribution a
+            # descriptive allocation of measured work, not a lower-budget
+            # counterfactual replay.
+            "selected_nodes_expanded_before": [int(cell.state.get("expanded_nodes", 0)) for cell in selected],
+            "model_call_seconds": float(telemetry.get("model_call_seconds", 0.0)),
+            "cache_pack_seconds": float(telemetry.get("cache_pack_seconds", 0.0)),
+            "cache_adoption_seconds": float(telemetry.get("cache_adoption_seconds", 0.0)),
+            "elapsed_seconds": float(telemetry.get("elapsed_seconds", 0.0)),
+        })
         histogram[physical_batch] = histogram.get(physical_batch, 0) + 1
         logical_advances += physical_batch
         for cell, reply in zip(selected, replies, strict=True):
@@ -256,6 +274,7 @@ def run_rolling_resident_scheduler(
         "admission_policy": admission_policy,
         "compatibility_wait_counts": selector.wait_counts() if selector is not None else {},
         "forward_timing": forward_timing,
+        "physical_forward_records": physical_forward_records,
         "events": events,
         "status": "COMPLETE",
     }

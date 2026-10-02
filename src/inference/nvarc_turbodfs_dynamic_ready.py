@@ -130,6 +130,13 @@ def _new_state(config: D1TurboDFSConfig) -> dict[str, Any]:
         "active_time_accounting": False, "active_elapsed_seconds": 0.0,
         "diagnostic_trace": config.diagnostic_trace, "model_forward_seconds": 0.0,
         "retained_successors_by_parent": {},
+        # An opt-in observational hook used by the frozen Pilot18 protocol.
+        # It is intentionally not part of the decoder configuration: callers
+        # receive the exact same token decisions, frontier and cache path.  A
+        # hook observes an EOS successor decision after the frozen retention
+        # and floor semantics have been resolved; it never supplies a value
+        # back to the coroutine.
+        "eos_event_sink": None,
         "max_frontier_size": 0, "expanded_nodes": 0, "budget_exhausted": False,
         "independent_lane_budgets": False, "performance_profile": False,
         "performance_telemetry": {
@@ -145,6 +152,30 @@ def _new_state(config: D1TurboDFSConfig) -> dict[str, Any]:
         "next_frontier_insert_order_by_lane": [0], "next_frontier_pop_order_by_lane": [0],
         "max_frontier_size_by_lane": [0], "frontier_floor_events_by_lane": [0],
     }
+
+
+def _eos_checkpoint_region(nodes_expanded: int) -> str:
+    """Return the frozen Pilot18 observational budget region."""
+    if nodes_expanded <= 512:
+        return "0_512"
+    if nodes_expanded <= 1024:
+        return "512_1024"
+    if nodes_expanded <= 2048:
+        return "1024_2048"
+    return "2048_4096"
+
+
+def _emit_eos_event(state: dict[str, Any], **event: Any) -> None:
+    """Send compact EOS telemetry without participating in decoding.
+
+    The callback is deliberately stored in runtime state rather than in
+    ``D1TurboDFSConfig`` so the frozen policy/retention contract is unchanged.
+    Its return value is ignored.  It is opt-in and absent from every existing
+    execution path.
+    """
+    sink = state.get("eos_event_sink")
+    if sink is not None:
+        sink(event)
 
 
 def _legacy_cache(cache: Any) -> tuple[tuple[Any, ...], ...]:
@@ -516,6 +547,58 @@ def _ready_dfs(
             "restored_cumulative_nll": [value[0] for value in kept],
             "reason": "policy_pruning_empty_frontier", "decoder_policy": config.policy_id,
         })
+
+    # EOS is one legal successor decision, not a separate decode branch.  The
+    # event below is emitted only after the ordinary frozen retention and
+    # frontier-floor logic has finished deciding its status.  This makes every
+    # event mutually exclusive while leaving the token loop untouched.
+    eos_logprob = next(logprob for token, logprob in values if token == 15)
+    eos_rank = next(index for index, (token, _logprob) in enumerate(ranked, start=1) if token == 15)
+    eos_legal = 15 in legal_tokens
+    eos_retained = any(token == 15 for _score, _regret, token, _logprob in kept)
+
+    def emit_eos(primary_class: str, *, retained: bool, floor_restore_rank: int | None,
+                 candidate_completed: bool, candidate_completion_index: int | None,
+                 raw_prune_reason: str | None, raw_termination_reason: str | None,
+                 candidate_terminal_node_id: int | None = None) -> None:
+        _emit_eos_event(
+            state,
+            cell_key=cell_key,
+            parent_node_id=parent_node,
+            parent_prefix_hash=_prefix_hash(prefix),
+            token_position=pos,
+            prefix_length=len(prefix),
+            nodes_expanded_so_far=int(state["expanded_nodes"]),
+            candidates_completed_so_far=int(state["completed_candidates"]),
+            model_forwards_so_far=int(state["model_forwards"]),
+            eos_token_id=15,
+            eos_local_rank=eos_rank,
+            eos_logprob=eos_logprob,
+            best_token_logprob=ranked[0][1],
+            eos_logprob_gap_from_best=ranked[0][1] - eos_logprob,
+            eos_path_cumulative_nll=score - eos_logprob,
+            eos_path_cumulative_regret=regret + ranked[0][1] - eos_logprob,
+            eos_legal=eos_legal,
+            eos_retained=retained,
+            frontier_floor_activated=restored,
+            frontier_floor_restore_rank=floor_restore_rank,
+            candidate_completed=candidate_completed,
+            candidate_completion_index=candidate_completion_index,
+            candidate_terminal_node_id=candidate_terminal_node_id,
+            prune_reason=raw_prune_reason,
+            termination_reason=raw_termination_reason,
+            eos_primary_class=primary_class,
+            checkpoint_region=_eos_checkpoint_region(int(state["expanded_nodes"])),
+        )
+
+    if not eos_legal:
+        emit_eos("EOS_MAX_NEW_TOKENS_BLOCKED", retained=False, floor_restore_rank=None,
+                 candidate_completed=False, candidate_completion_index=None,
+                 raw_prune_reason="max_new_tokens", raw_termination_reason="max_new_tokens")
+    elif not eos_retained:
+        emit_eos("EOS_POLICY_PRUNED", retained=False, floor_restore_rank=None,
+                 candidate_completed=False, candidate_completion_index=None,
+                 raw_prune_reason=prune_reason, raw_termination_reason=None)
     for restore_rank, (next_score, next_regret, token, logprob) in enumerate(kept, start=1):
         rank = next(index for index, (ranked_token, _x) in enumerate(ranked, start=1) if ranked_token == token)
         retained_trace = {
@@ -539,6 +622,10 @@ def _ready_dfs(
                       cumulative_regret=next_regret, state="pruned", prune_reason="candidate_budget",
                       termination_reason="candidate_budget", branch_rank=None)
                 _trace(state, **{**retained_trace, "prune_reason": "candidate_budget"})
+                emit_eos("EOS_CANDIDATE_BUDGET_PRUNED", retained=True,
+                         floor_restore_rank=restore_rank if restored else None,
+                         candidate_completed=False, candidate_completion_index=None,
+                         raw_prune_reason="candidate_budget", raw_termination_reason="candidate_budget")
                 continue
             node_id = _node(state, parent_node_id=parent_node, lane=0, token_position=pos, branch_depth=len(prefix) + 1,
                             selected_token=token, token_logprob=logprob, cumulative_score=next_score,
@@ -550,6 +637,11 @@ def _ready_dfs(
                                                          state["model_forwards"], time.time()))
             _trace(state, **{**retained_trace, "candidate_completed": True,
                              "candidate_completion_index": candidate_id})
+            emit_eos("EOS_FRONTIER_FLOOR_RESTORED_AND_COMPLETED" if restored else "EOS_COMPLETED",
+                     retained=True, floor_restore_rank=restore_rank if restored else None,
+                     candidate_completed=True, candidate_completion_index=candidate_id,
+                     raw_prune_reason=None, raw_termination_reason="eos",
+                     candidate_terminal_node_id=node_id)
             state["completed_candidates"] += 1
         else:
             candidates.append((next_score, next_regret, token, restored, restore_rank if restored else None))
@@ -633,13 +725,15 @@ def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, ce
                      root_cache_transform: Callable[[Any], Any] | None = None,
                      cache_strategy: Literal["rollback", "snapshot"] = "rollback",
                      release_prefill_temporaries: bool = False,
-                     prefill_output_references: list[Any] | None = None) -> ReadyCell:
+                     prefill_output_references: list[Any] | None = None,
+                     eos_event_sink: Callable[[dict[str, Any]], None] | None = None) -> ReadyCell:
     """Run the required scalar prefill, then expose the first incremental request."""
     import torch
 
     if input_ids.ndim != 2 or tuple(input_ids.shape[:1]) != (1,):
         raise ValueError("dynamic-ready cells require one prompt at a time")
     state = _new_state(config)
+    state["eos_event_sink"] = eos_event_sink
     started_unix = time.time()
     created_perf = time.perf_counter()
     state["active_time_accounting"] = active_time_accounting
