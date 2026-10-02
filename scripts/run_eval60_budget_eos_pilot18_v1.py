@@ -387,7 +387,7 @@ def _worker(args: argparse.Namespace) -> int:
         frozen_ids = [str(row["candidate_id"]) for row in candidates]
         if len(frozen_ids) not in {8, 16} or len(frozen_ids) != len(set(frozen_ids)):
             raise RuntimeError("worker requires an exact, distinct frozen AUG8 or AUG16 surface")
-        config = _config(int(args.max_expanded_nodes), diagnostic_trace=False)
+        config = _config(int(args.max_expanded_nodes), diagnostic_trace=bool(args.diagnostic_trace))
         profile_cfg = {"resident_capacity": int(args.resident), "physical_batch_ceiling": int(args.ceiling)}
         roots: dict[str, int] = {}
         prepared_prompts: dict[str, tuple[Any, dict[str, Any]]] = {}
@@ -487,6 +487,14 @@ def _worker(args: argparse.Namespace) -> int:
                 "active_elapsed_seconds": cell.active_elapsed_seconds, "max_frontier_size": result.max_frontier_size,
                 "prefix_reconstruction_failures": reconstruction_failures,
             }
+            if args.diagnostic_trace:
+                final_cells[cell_key]["diagnostic_trace"] = {
+                    "prefill": cell.state.get("prefill_trace"),
+                    "logical_advances": cell.state.get("per_forward_trace", []),
+                    "branch_probabilities": cell.state.get("branch_probabilities", []),
+                    "frontier_samples": cell.state.get("frontier_samples", []),
+                    "search_trace": cell.state.get("search_trace", []),
+                }
 
         def release_cell(_cell_key: str, cell: Any) -> None:
             if cell.cache_owner is not None:
@@ -1002,6 +1010,8 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--fairness-max-wait", type=int, default=3)
     parser.add_argument("--experiment", default=EXPERIMENT)
     parser.add_argument("--checkpoints", default="512,1024,2048,4096")
+    parser.add_argument("--diagnostic-trace", action="store_true",
+                        help="opt-in observational prefill/per-forward forensic trace; no decoder input")
     parser.add_argument("--device", default="cuda:0")
     return parser.parse_args()
 

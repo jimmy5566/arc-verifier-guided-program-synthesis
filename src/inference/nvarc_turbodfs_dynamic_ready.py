@@ -768,6 +768,25 @@ def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, ce
         cache_strategy = "snapshot"
     state["cache_strategy"] = cache_strategy
     cache_owner = CacheOwner(root_cache)
+    # This is deliberately observational. The forensic runner needs to
+    # distinguish a prefill mismatch from a later shared-execution mismatch,
+    # but ordinary production runs must not retain prompt/logit diagnostics.
+    if config.diagnostic_trace:
+        prompt_tokens = [int(token) for token in input_ids[0].detach().cpu().tolist()]
+        state["prefill_trace"] = {
+            "cell_key": cell_key,
+            "prompt_token_ids": prompt_tokens,
+            "prompt_token_sha256": hashlib.sha256(
+                ",".join(str(token) for token in prompt_tokens).encode("ascii")
+            ).hexdigest(),
+            "prompt_length": len(prompt_tokens),
+            "cache_type": type(root_cache).__module__ + "." + type(root_cache).__qualname__,
+            "root_cache_sha256": cache_sha256(root_cache),
+            "root_cache_geometry": repr(cache_geometry(root_cache)),
+            "root_cache_valid_length": _request_cache_length(root_cache),
+            "cache_owner_id": id(cache_owner),
+            **_logits_diagnostic(outputs.logits, config.arc_tokens),
+        }
     generator = _ready_dfs(cell_key=cell_key, logits=root_logits, max_new_tokens=config.max_new_tokens,
                            score=0.0, regret=0.0, pos=int(input_ids.size(1)), cache_owner=cache_owner, config=config,
                            started_unix=started_unix, state=state, parent_node=root, prefix=tuple(), ordinal=[0],
@@ -776,6 +795,17 @@ def start_ready_cell(*, model: Any, input_ids: Any, config: D1TurboDFSConfig, ce
                      prefill_seconds=prefill_seconds, active_elapsed_seconds=prefill_seconds,
                      cache_owner=cache_owner)
     _advance_cell(cell)
+    if config.diagnostic_trace:
+        request = cell.request
+        state["prefill_trace"]["first_ready_request"] = None if request is None else {
+            "request_ordinal": int(request.ordinal),
+            "token_id": int(request.token_id),
+            "position": int(request.position),
+            "parent_node_id": request.parent_node_id,
+            "cache_compatibility_key": repr(request.cache_key),
+            "cache_owner_id": id(request.cache_owner),
+            "valid_kv_length": _request_cache_length(request.cache),
+        }
     if release_prefill_temporaries and prefill_output_references is None:
         del outputs
     return cell
@@ -1273,13 +1303,27 @@ def run_ready_scheduler(
         if first.config.diagnostic_trace:
             for cell, request in zip(selected, requests, strict=True):
                 assert request is not None
+                parent = next(
+                    (node for node in reversed(cell.state["nodes"])
+                     if node.get("node_id") == request.parent_node_id),
+                    None,
+                )
                 trace_inputs.append({
-                    "cell_key": cell.cell_key, "request_ordinal": request.ordinal,
+                    "cell_key": cell.cell_key, "logical_step": int(request.ordinal),
+                    "request_ordinal": request.ordinal,
                     "token_id": request.token_id, "absolute_position": request.position,
                     "cache_type": type(request.cache).__module__ + "." + type(request.cache).__qualname__,
                     "input_cache_sha256": cache_sha256(request.cache),
                     "cache_geometry": repr(request.cache_key),
                     "request_parent_node_id": request.parent_node_id,
+                    "cache_owner_id": id(request.cache_owner),
+                    "valid_kv_length": _request_cache_length(request.cache),
+                    "physical_batch_width": len(selected),
+                    "physical_batch_member_ids": [member.cell_key for member in selected],
+                    "parent_prefix_hash": None if parent is None else parent.get("prefix_hash"),
+                    "selected_token": None if parent is None else parent.get("selected_token"),
+                    "selected_token_logprob": None if parent is None else parent.get("token_logprob"),
+                    "cumulative_regret": None if parent is None else parent.get("cumulative_regret"),
                 })
         is_observed_b16 = scheduling_policy == "memory_aware_aug16" and b16_enabled and len(selected) == 16
         if is_observed_b16:
@@ -1384,6 +1428,7 @@ def run_ready_scheduler(
                 # parent state to this forward.
                 trace.update(_logits_diagnostic(reply.logits, cell.config.arc_tokens))
                 trace["output_cache_sha256"] = cache_sha256(reply.past_key_values)
+                trace["output_valid_kv_length"] = _request_cache_length(reply.past_key_values)
             _reply(cell, reply)
             current_length = _request_cache_length(cell.cache_owner.cache) if cell.cache_owner is not None else None
             if current_length is not None:
@@ -1391,6 +1436,36 @@ def run_ready_scheduler(
             if trace is not None:
                 trace["retained_successors"] = cell.state["retained_successors_by_parent"].get(
                     trace["request_parent_node_id"],
+                )
+                decision = next(
+                    (row for row in reversed(cell.state["branch_probabilities"])
+                     if row.get("parent_node_id") == trace["request_parent_node_id"]),
+                    None,
+                )
+                if decision is not None:
+                    trace.update({
+                        "top_token": decision.get("top1_token_id"),
+                        "top_k_ordering": [
+                            int(row["token_id"])
+                            for row in sorted(
+                                decision.get("full_arc_logprobs", []),
+                                key=lambda row: (-float(row["logprob"]), int(row["token_id"])),
+                            )
+                        ],
+                        "incremental_regret": None if trace.get("selected_token_logprob") is None else (
+                            float(decision["top1_logprob"]) - float(trace["selected_token_logprob"])
+                        ),
+                    })
+                trace["frontier_size"] = (
+                    cell.state["frontier_samples"][-1]["total"]
+                    if cell.state["frontier_samples"] else 0
+                )
+                trace["completed_candidate_count"] = int(cell.state["completed_candidates"])
+                trace["termination_state"] = (
+                    None if cell.result is None else cell.result.termination_reason
+                )
+                trace["cache_owner_id_after_reply"] = (
+                    None if cell.cache_owner is None else id(cell.cache_owner)
                 )
                 cell.state["per_forward_trace"].append(trace)
         if len(selected) > 1 and cache_pack_observer is not None:
