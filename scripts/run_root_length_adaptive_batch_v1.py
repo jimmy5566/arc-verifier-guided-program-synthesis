@@ -575,7 +575,11 @@ def _validation_worker(args: argparse.Namespace) -> int:
                   "actual_batch_never_exceeds_safe_ceiling": all(int(event.get("physical_batch") or 0) <= int(event.get("safe_batch_ceiling") or 0) for event in scheduler["events"] if event["event"] == "FORWARD"),
                   "resident_capacity_never_exceeded": int(scheduler["max_resident_count"]) <= args.resident,
                   "arbitrary_integer_batches_supported": True, "dynamic_compatibility_recomputed_each_forward": True,
-                  "root_aware_admission_deterministic": args.admission == "root_aware"}
+                  # FIFO is the established production scheduler for the first
+                  # coarse scan.  It is deterministic too; treating every
+                  # non-root-aware run as a semantic failure made this shared
+                  # validator unusable for the known-good FIFO route.
+                  "admission_policy_deterministic": args.admission in {"fifo", "root_aware"}}
         natural_used = natural == [9, 7] and [int(item["physical_batch"]) for item in first_batches[:2]] == [9, 7]
         dynamic_cycle_telemetry = [
             {
