@@ -415,26 +415,51 @@ def _run_worker(args: argparse.Namespace, run: Path, output_row: dict[str, Any],
             "ended_unix": time.time(), "log": str(log.relative_to(run))}
 
 
-def _freeze_run(run: Path, outputs: list[dict[str, Any]]) -> dict[str, Any]:
+def _freeze_completed_raw(run: Path, output_id: str) -> None:
+    """Atomically retain one frozen raw result without accumulating six JSONs.
+
+    This never changes a worker result before its content hash has been
+    reproduced from the compressed frozen record.  It is an execution-storage
+    measure only; the decompressed bytes remain the worker's original JSON.
+    """
     raw_dir = run / "RAW_OUTPUTS"
     frozen_dir = run / "FROZEN_RAW_OUTPUTS"; frozen_dir.mkdir(parents=True, exist_ok=True)
-    content: dict[str, dict[str, Any]] = {}
+    name = f"{_safe(output_id)}.json"
+    raw, gz = raw_dir / name, frozen_dir / f"{name}.gz"
+    if gz.exists():
+        return
+    if not raw.exists():
+        raise RuntimeError(f"raw output missing before per-output freeze: {raw}")
+    content_path = run / "PARTIAL_RAW_CONTENT.json"
+    content = _read_json(content_path) if content_path.exists() else {}
+    if str(gz.relative_to(run)) in content:
+        raise RuntimeError(f"raw-content ledger already contains missing frozen output: {output_id}")
+    raw_hash = _sha_file(raw)
+    temporary = gz.with_suffix(gz.suffix + ".tmp")
+    with raw.open("rb") as source, gzip.open(temporary, "wb", compresslevel=6) as sink:
+        shutil.copyfileobj(source, sink, 1024 * 1024)
+    os.replace(temporary, gz)
+    if _sha_gzip_content(gz) != raw_hash:
+        raise RuntimeError(f"gzip content hash mismatch: {gz}")
+    content[str(gz.relative_to(run))] = {"raw_sha256": raw_hash, "gzip_sha256": _sha_file(gz),
+                                          "raw_bytes": raw.stat().st_size, "gzip_bytes": gz.stat().st_size}
+    _write_json(content_path, content)
+    raw.unlink()
+
+
+def _freeze_run(run: Path, outputs: list[dict[str, Any]]) -> dict[str, Any]:
+    content_path = run / "PARTIAL_RAW_CONTENT.json"
+    content = _read_json(content_path) if content_path.exists() else {}
+    if len(content) != len(outputs):
+        raise RuntimeError(f"expected {len(outputs)} independently frozen raw outputs, found {len(content)}")
     for row in outputs:
-        name = f"{_safe(str(row['output_id']))}.json"
-        raw = raw_dir / name
-        gz = frozen_dir / f"{name}.gz"
-        if not raw.exists():
-            raise RuntimeError(f"raw output missing before freeze: {raw}")
-        raw_hash = _sha_file(raw)
-        temporary = gz.with_suffix(gz.suffix + ".tmp")
-        with raw.open("rb") as source, gzip.open(temporary, "wb", compresslevel=6) as sink:
-            shutil.copyfileobj(source, sink, 1024 * 1024)
-        os.replace(temporary, gz)
-        if _sha_gzip_content(gz) != raw_hash:
-            raise RuntimeError(f"gzip content hash mismatch: {gz}")
-        content[str(gz.relative_to(run))] = {"raw_sha256": raw_hash, "gzip_sha256": _sha_file(gz),
-                                              "raw_bytes": raw.stat().st_size, "gzip_bytes": gz.stat().st_size}
-        raw.unlink()
+        name = f"FROZEN_RAW_OUTPUTS/{_safe(str(row['output_id']))}.json.gz"
+        if name not in content:
+            raise RuntimeError(f"frozen raw content missing from ledger: {name}")
+        gz = run / name
+        expected = content[name]
+        if not gz.exists() or _sha_file(gz) != expected["gzip_sha256"] or _sha_gzip_content(gz) != expected["raw_sha256"]:
+            raise RuntimeError(f"frozen raw content failed verification before run freeze: {gz}")
     # Generated checkpoint/receipt/EOS evidence is still retained, while raw
     # JSON is represented by its independently verified compressed content.
     files = []
@@ -480,9 +505,14 @@ def _run_one(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any]],
         done = False
         for attempt, config in enumerate(_profile_configs(policy, str(output_row["profile"]))):
             receipt = _run_worker(args, run, output_row, attempt, config)
+            # Adapter staging is process-local load state.  It is not a
+            # candidate/checkpoint artifact and must not crowd out the next
+            # independently frozen raw output on the 30-GB local volume.
+            shutil.rmtree(run / "ADAPTER_STAGE", ignore_errors=True)
             receipt["fallback_used"] = attempt > 0
             receipts.append(receipt)
             if receipt["returncode"] == 0:
+                _freeze_completed_raw(run, str(output_row["output_id"]))
                 done = True; break
             if receipt["returncode"] != 2:
                 _write_csv(run / "OOM_FALLBACK_RECEIPTS.csv", receipts, receipts[0].keys())
