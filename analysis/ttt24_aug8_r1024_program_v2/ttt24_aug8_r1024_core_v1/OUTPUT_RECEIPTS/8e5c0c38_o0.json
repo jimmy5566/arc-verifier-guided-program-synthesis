@@ -1,0 +1,17 @@
+{
+  "attempt_index": 0,
+  "checkpoint_output": "OUTPUT_CHECKPOINTS/8e5c0c38_o0.json",
+  "ended_unix": 1790950527.3990557,
+  "eos_events": "EOS_EVENTS/8e5c0c38_o0.jsonl.gz",
+  "experiment": "TTT24_AUG8_R1024_CORE_V1",
+  "gold_loaded": false,
+  "output_id": "8e5c0c38:o0",
+  "profile_configuration": {
+    "physical_batch_ceiling": 8,
+    "resident_capacity": 8
+  },
+  "raw_output": "RAW_OUTPUTS/8e5c0c38_o0.json",
+  "status": "COMPLETE",
+  "target_blind": true,
+  "wall_seconds": 364.92988817498554
+}

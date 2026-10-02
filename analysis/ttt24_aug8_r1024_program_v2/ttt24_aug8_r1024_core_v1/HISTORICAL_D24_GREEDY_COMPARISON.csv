@@ -1,0 +1,7 @@
+output_id,historical_d24_greedy_hit,pilot_d24_aug8_r1024_hit,new_dfs_rescue,lost_historical_hit,provenance
+1818057f:o0,True,False,False,True,RETROSPECTIVE_DEVELOPMENT_EVIDENCE
+3a25b0d8:o1,True,False,False,True,RETROSPECTIVE_DEVELOPMENT_EVIDENCE
+8e5c0c38:o0,True,False,False,True,RETROSPECTIVE_DEVELOPMENT_EVIDENCE
+c4d067a0:o0,False,False,False,False,RETROSPECTIVE_DEVELOPMENT_EVIDENCE
+cb2d8a2c:o1,False,False,False,False,RETROSPECTIVE_DEVELOPMENT_EVIDENCE
+dd6b8c4b:o1,False,False,False,False,RETROSPECTIVE_DEVELOPMENT_EVIDENCE

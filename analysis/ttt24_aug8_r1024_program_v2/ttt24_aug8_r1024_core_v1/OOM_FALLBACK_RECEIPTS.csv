@@ -1,0 +1,7 @@
+output_id,depth,attempt,fresh_process,configuration,returncode,started_unix,ended_unix,log,fallback_used
+dd6b8c4b:o1,24,0,True,"{'resident_capacity': 8, 'physical_batch_ceiling': 7}",0,1790948928.2496533,1790949439.7790713,WORKER_LOGS/dd6b8c4b__o1_d24_attempt0.log,False
+1818057f:o0,24,0,True,"{'resident_capacity': 8, 'physical_batch_ceiling': 7}",0,1790949439.779188,1790949759.5878646,WORKER_LOGS/1818057f__o0_d24_attempt0.log,False
+3a25b0d8:o1,24,0,True,"{'resident_capacity': 8, 'physical_batch_ceiling': 8}",0,1790949759.587949,1790950121.3834236,WORKER_LOGS/3a25b0d8__o1_d24_attempt0.log,False
+8e5c0c38:o0,24,0,True,"{'resident_capacity': 8, 'physical_batch_ceiling': 8}",0,1790950121.383501,1790950530.3345275,WORKER_LOGS/8e5c0c38__o0_d24_attempt0.log,False
+cb2d8a2c:o1,24,0,True,"{'resident_capacity': 4, 'physical_batch_ceiling': 4}",0,1790950530.3346105,1790951021.3558836,WORKER_LOGS/cb2d8a2c__o1_d24_attempt0.log,False
+c4d067a0:o0,24,0,True,"{'resident_capacity': 4, 'physical_batch_ceiling': 4}",0,1790951021.3559942,1790951388.5141747,WORKER_LOGS/c4d067a0__o0_d24_attempt0.log,False
