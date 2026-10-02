@@ -483,6 +483,15 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
         assert "['--engineering-smoke']" in source
         assert "L4_BATCH_SCALING_AGGREGATE.csv" not in source
 
+    def test_formal_kernel_title_resolves_to_its_configured_slug(self) -> None:
+        staged = Path(tempfile.mkdtemp()) / "formal-stage"
+        self.addCleanup(lambda: __import__("shutil").rmtree(staged.parent, ignore_errors=True))
+        slug = "arc2-l4-native-base-physical-batch-scaling-b1-b16-v1"
+        builder.build(output=staged, owner="private-owner", dataset_slug="private-source", kernel_slug=slug)
+        metadata = json.loads((staged / "kernel" / "kernel-metadata.json").read_text(encoding="utf-8"))
+        assert metadata["title"] == "ARC2 L4 Native Base Physical Batch Scaling B1-B16 V1"
+        assert metadata["id"] == f"private-owner/{slug}"
+
 
 if __name__ == "__main__":
     unittest.main()
