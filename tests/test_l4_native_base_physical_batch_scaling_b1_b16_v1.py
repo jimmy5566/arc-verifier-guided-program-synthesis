@@ -355,7 +355,7 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
             model_path=Path("model"), challenge=Path("challenge"), native_config_dir=Path("native"),
             task_id="d59b0160", output_index=0, depth=24, budget=128, warmup_forwards=2,
             measurement_forwards=12, start_timeout_seconds=600, benchmark_model_mode="BASE_MODEL_ONLY",
-            phase="controller", run_started_unix=0.0, output=Path("output"),
+            phase="controller", run_started_unix=0.0, output=Path("output"), engineering_smoke=False,
         )
         assert runner._worker_args(args)["phase"] == "controller"
         source = RUNNER_PATH.read_text(encoding="utf-8")
@@ -363,6 +363,27 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
         timing_start = sample.index("\n        started = time.perf_counter()")
         assert sample.index("_clone_template_lanes") < timing_start
         assert sample.index("torch.cuda.synchronize(device=args.device)") < timing_start
+
+    def test_worker_serializes_engineering_smoke_for_setup_cost_metadata(self) -> None:
+        common = {
+            "model_path": Path("model"), "challenge": Path("challenge"), "native_config_dir": Path("native"),
+            "task_id": "d59b0160", "output_index": 0, "depth": 24, "budget": 128,
+            "warmup_forwards": 2, "measurement_forwards": 12, "start_timeout_seconds": 600,
+            "benchmark_model_mode": "BASE_MODEL_ONLY", "phase": "controller", "run_started_unix": 0.0,
+            "output": Path("output"),
+        }
+        smoke_worker = SimpleNamespace(**runner._worker_args(SimpleNamespace(**common, engineering_smoke=True)))
+        formal_worker = SimpleNamespace(**runner._worker_args(SimpleNamespace(**common, engineering_smoke=False)))
+
+        assert smoke_worker.engineering_smoke is True
+        assert runner._setup_cost_expectations(smoke_worker)["execution_widths"] == [1, 16]
+        assert runner._setup_cost_expectations(smoke_worker)["expected_controller_prefills_per_gpu"] == 5
+        assert runner._setup_cost_expectations(smoke_worker)["expected_total_prefills_per_gpu"] == 9
+
+        assert formal_worker.engineering_smoke is False
+        assert runner._setup_cost_expectations(formal_worker)["execution_widths"] == [1, 2, 4, 8, 12, 16]
+        assert runner._setup_cost_expectations(formal_worker)["expected_controller_prefills_per_gpu"] == 19
+        assert runner._setup_cost_expectations(formal_worker)["expected_total_prefills_per_gpu"] == 23
 
     def test_batched_widths_all_use_same_streaming_path(self) -> None:
         calls: list[dict] = []

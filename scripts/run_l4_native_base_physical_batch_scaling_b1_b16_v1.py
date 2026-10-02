@@ -964,7 +964,7 @@ def _worker_entry(serialized_args: dict[str, Any], gpu_id: int, width: int, read
 def _worker_args(args: argparse.Namespace) -> dict[str, Any]:
     keys = ("model_path", "challenge", "native_config_dir", "task_id", "output_index", "depth", "budget",
             "warmup_forwards", "measurement_forwards", "start_timeout_seconds", "benchmark_model_mode", "phase",
-            "run_started_unix", "output")
+            "run_started_unix", "output", "engineering_smoke")
     return {key: (str(getattr(args, key)) if isinstance(getattr(args, key), Path) else getattr(args, key)) for key in keys}
 
 
