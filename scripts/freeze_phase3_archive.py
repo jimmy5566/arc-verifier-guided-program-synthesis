@@ -337,7 +337,10 @@ def create_archive(source: Path, archive: Path, tools_dir: Path | None = None) -
         (archive / directory).mkdir()
     if tools_dir:
         for tool in sorted(tools_dir.glob("*phase3*archive*.py")) + sorted(tools_dir.glob("build_phase3_failure_pool.py")):
-            shutil.copy2(tool, archive / "scripts" / tool.name)
+            # /workspace on RunPod is FUSE-backed and rejects the timestamp
+            # restoration that copy2 performs.  Archive payload integrity is
+            # established by the later SHA-256 ledger, so copy bytes only.
+            shutil.copyfile(tool, archive / "scripts" / tool.name)
 
     source_records: list[dict[str, Any]] = []
     archive_map: dict[str, dict[str, Any]] = {}
