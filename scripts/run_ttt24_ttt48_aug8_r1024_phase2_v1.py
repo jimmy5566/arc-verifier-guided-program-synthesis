@@ -51,6 +51,12 @@ EXPECTED_PROFILES = {
     "78332cb0:o1": "PROFILE_S",
     "b5ca7ac4:o0": "PROFILE_L_LOW",
 }
+EXPECTED_WORKER_RUNTIME = {
+    "torch": "2.8.0+cu128",
+    "torch_cuda": "12.8",
+    "transformers": "4.55.4",
+    "peft": "0.17.1",
+}
 
 
 def _head() -> str:
@@ -74,6 +80,31 @@ def _check_phase1(path: Path) -> dict[str, Any]:
     return payload
 
 
+def _validate_worker_runtime(worker_python: Path) -> dict[str, Any]:
+    """Fail before generation unless the explicitly selected worker is exact."""
+    if not worker_python.is_file():
+        raise FileNotFoundError(f"WORKER_PYTHON_MISSING:{worker_python}")
+    probe = (
+        "import json,sys,torch,transformers,peft;"
+        "print(json.dumps({'sys_executable':sys.executable,'torch':torch.__version__,"
+        "'torch_cuda':str(torch.version.cuda),'transformers':transformers.__version__,"
+        "'peft':peft.__version__,'cuda_available':torch.cuda.is_available()},sort_keys=True))"
+    )
+    result = subprocess.run([str(worker_python), "-c", probe], text=True, capture_output=True, check=False)
+    if result.returncode != 0:
+        raise RuntimeError(f"WORKER_RUNTIME_IMPORT_FAIL:{worker_python}:{result.stderr.strip()[-500:]}")
+    lines = [line for line in result.stdout.splitlines() if line.strip()]
+    try:
+        runtime = json.loads(lines[-1])
+    except (IndexError, json.JSONDecodeError) as error:
+        raise RuntimeError(f"WORKER_RUNTIME_PROBE_PARSE_FAIL:{worker_python}") from error
+    if {key: runtime.get(key) for key in EXPECTED_WORKER_RUNTIME} != EXPECTED_WORKER_RUNTIME:
+        raise RuntimeError(f"WORKER_RUNTIME_VERSION_DRIFT:{_canonical(runtime)}")
+    if runtime.get("cuda_available") is not True:
+        raise RuntimeError("WORKER_RUNTIME_CUDA_UNAVAILABLE")
+    return runtime
+
+
 def _preflight(args: argparse.Namespace, source_commit: str) -> dict[str, Any]:
     phase1 = _check_phase1(args.phase1_reconciliation)
     required = {
@@ -85,10 +116,12 @@ def _preflight(args: argparse.Namespace, source_commit: str) -> dict[str, Any]:
         "coarse_policy": args.coarse_policy,
         # Checking only the path's existence does not read target content.
         "solutions_path_deferred": args.solutions,
+        "worker_python": args.worker_python,
     }
     missing = [name for name, path in required.items() if not path.exists()]
     if missing:
         raise FileNotFoundError(f"PHASE2_REQUIRED_PATHS_MISSING:{','.join(missing)}")
+    worker_runtime = _validate_worker_runtime(args.worker_python)
     return {
         "status": "PASS",
         "source_commit": source_commit,
@@ -97,6 +130,8 @@ def _preflight(args: argparse.Namespace, source_commit: str) -> dict[str, Any]:
         "gold_loaded": False,
         "phase2_started_before_this_run": False,
         "solutions_contents_read": False,
+        "worker_python": str(args.worker_python),
+        "worker_runtime": worker_runtime,
     }
 
 
@@ -121,6 +156,8 @@ def _phase2_contract(args: argparse.Namespace, source_commit: str, preflight: di
         "admission": "root_aware deterministic fair",
         "batching": "existing profile-safe resident/batch policy",
         "cache_runtime": "same frozen Core executor",
+        "worker_python": preflight["worker_python"],
+        "worker_runtime": preflight["worker_runtime"],
         "forbidden": ["Greedy", "AUG16", "R2048", "R4096", "Eval60", "Phase3"],
     }
 
@@ -292,6 +329,7 @@ def _parse() -> argparse.Namespace:
     parser.add_argument("--coarse-policy", type=Path, required=True)
     parser.add_argument("--phase1-reconciliation", type=Path, required=True)
     parser.add_argument("--solutions", type=Path, required=True)
+    parser.add_argument("--worker-python", type=Path, required=True)
     parser.add_argument("--device", default="cuda:0")
     return parser.parse_args()
 

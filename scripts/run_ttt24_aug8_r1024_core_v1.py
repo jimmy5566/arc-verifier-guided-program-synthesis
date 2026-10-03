@@ -123,7 +123,10 @@ def _write_cohort(path: Path, outputs: list[dict[str, Any]], experiment: str) ->
 
 def _worker(args: argparse.Namespace, run: Path, selected: dict[str, Any], attempt: int, config: dict[str, int], *, depth: int, experiment: str) -> tuple[int, dict[str, Any]]:
     base = ROOT / "scripts" / "run_eval60_budget_eos_pilot18_v1.py"
-    command = [sys.executable, str(base), "--mode", "worker", "--output", str(run), "--cohort-file", "RUN_COHORT.json",
+    # Phase-specific controllers may pin a previously validated interpreter.
+    # Older Core callers retain their original sys.executable behavior.
+    worker_python = str(getattr(args, "worker_python", None) or sys.executable)
+    command = [worker_python, str(base), "--mode", "worker", "--output", str(run), "--cohort-file", "RUN_COHORT.json",
                "--output-id", selected["output_id"], "--attempt", str(attempt), "--resident", str(config["resident_capacity"]),
                "--ceiling", str(config["physical_batch_ceiling"]), "--model-path", str(args.model_path), "--challenge", str(args.challenge),
                "--native-config-dir", str(args.native_config_dir), "--candidate-pool", str(args.candidate_pool),
@@ -136,7 +139,7 @@ def _worker(args: argparse.Namespace, run: Path, selected: dict[str, Any], attem
     log.parent.mkdir(parents=True, exist_ok=True)
     log.write_text(process.stdout + "\n--- STDERR ---\n" + process.stderr, encoding="utf-8")
     return process.returncode, {"output_id": selected["output_id"], "depth": depth, "attempt": attempt, "fresh_process": True,
-                                "configuration": config, "returncode": process.returncode, "started_unix": started,
+                                "worker_python": worker_python, "configuration": config, "returncode": process.returncode, "started_unix": started,
                                 "ended_unix": time.time(), "log": str(log.relative_to(run))}
 
 
