@@ -97,6 +97,36 @@ def gzip_jsonl_writer(path: Path):
     return raw, zipped
 
 
+class ShardedGzipJsonl:
+    """One deterministic gzip JSONL shard per output, safe for normal GitHub Git."""
+
+    def __init__(self, directory: Path):
+        self.directory = directory
+        self.raw = None
+        self.zipped = None
+        self.current = None
+
+    def select(self, output_id: str) -> None:
+        if self.current == output_id:
+            return
+        self.close()
+        self.current = output_id
+        filename = output_id.replace(":", "_") + ".jsonl.gz"
+        self.raw, self.zipped = gzip_jsonl_writer(self.directory / filename)
+
+    def write(self, value: bytes) -> int:
+        if self.zipped is None:
+            raise RuntimeError("select an output before writing a sharded JSONL record")
+        return self.zipped.write(value)
+
+    def close(self) -> None:
+        if self.zipped is not None:
+            self.zipped.close()
+            self.raw.close()
+            self.zipped = None
+            self.raw = None
+
+
 def write_jsonl_line(handle, value: dict[str, Any]) -> None:
     handle.write((json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8"))
 
@@ -188,6 +218,35 @@ def ensure_source_shape(source: Path, contract: dict[str, Any], cohort: dict[str
     return depth, outputs, raw_paths
 
 
+def verify_source_ledger(source: Path, ledger_name: str, freeze_name: str) -> dict[str, Any]:
+    """Verify every supplied source-ledger entry and its canonical ledger root."""
+    ledger = json_load(source / ledger_name)
+    entries = ledger.get("files", ledger)
+    missing: list[str] = []
+    mismatches: list[str] = []
+    for relative, expected in entries.items():
+        path = source / relative
+        if not path.is_file():
+            missing.append(relative)
+        elif sha256_file(path) != expected:
+            mismatches.append(relative)
+    freeze = json_load(source / freeze_name)
+    expected_root = freeze.get("ledger_sha256") or freeze.get("compact_ledger_sha256")
+    canonical_root = hashlib.sha256(json.dumps(ledger, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+    result = {
+        "ledger": ledger_name,
+        "entries": len(entries),
+        "missing": missing,
+        "mismatches": mismatches,
+        "canonical_root": canonical_root,
+        "expected_root": expected_root,
+        "status": "PASS" if not missing and not mismatches and canonical_root == expected_root else "FAIL",
+    }
+    if result["status"] != "PASS":
+        raise RuntimeError(f"source ledger verification failed: {ledger_name}")
+    return result
+
+
 def runtime_environment(contract: dict[str, Any]) -> tuple[dict[str, Any], str]:
     python_exe = Path(contract["worker_python"])
     code = "import json,platform,sys,torch,transformers,peft; print(json.dumps({'python':sys.version,'sys_executable':sys.executable,'platform':platform.platform(),'torch':torch.__version__,'cuda':torch.version.cuda,'transformers':transformers.__version__,'peft':peft.__version__,'gpu':torch.cuda.get_device_name(0) if torch.cuda.is_available() else None}))"
@@ -271,6 +330,8 @@ def create_archive(source: Path, archive: Path, tools_dir: Path | None = None) -
     contract = json_load(source / "CONTRACT.json")
     cohort = json_load(source / "RUN_COHORT.json")
     depth, cohort_outputs, raw_paths = ensure_source_shape(source, contract, cohort)
+    generation_ledger = verify_source_ledger(source, "GENERATION_HASHES.json", "GENERATION_FREEZE.json")
+    compact_ledger = verify_source_ledger(source, "HASHES.json", "COMPACT_ARCHIVE_FREEZE.json")
     archive.mkdir(parents=True)
     for directory in ("raw", "checkpoints", "eos", "receipts", "logs", "failures", "tables", "manifests", "schemas", "scripts"):
         (archive / directory).mkdir()
@@ -299,19 +360,24 @@ def create_archive(source: Path, archive: Path, tools_dir: Path | None = None) -
         "invalid_receipts": [],
         "target_blind": True,
         "gold_loaded": False,
+        "generation_hash_ledger": generation_ledger,
+        "compact_hash_ledger": compact_ledger,
         "note": "Source was terminal before archival; source files were read-only throughout archival.",
     }
     output_meta = {item["output_id"]: item for item in cohort_outputs}
     canonical_ids = set(contract["augmentation_ids"])
 
-    candidate_raw, candidate_gz = gzip_jsonl_writer(archive / "tables" / "CANDIDATE_INDEX.jsonl.gz")
-    scheduler_raw, scheduler_gz = gzip_jsonl_writer(archive / "tables" / "SCHEDULER_EVENT_INDEX.jsonl.gz")
-    node_raw, node_gz = gzip_jsonl_writer(archive / "tables" / "NODE_INDEX.jsonl.gz")
+    candidate_gz = ShardedGzipJsonl(archive / "tables" / "candidate_index")
+    scheduler_gz = ShardedGzipJsonl(archive / "tables" / "scheduler_events")
+    node_gz = ShardedGzipJsonl(archive / "tables" / "node_index")
     try:
         for number, source_raw in enumerate(raw_paths, 1):
             output_id = output_id_from_name(source_raw)
             assert output_id is not None
             task_id = output_id.split(":", 1)[0]
+            candidate_gz.select(output_id)
+            scheduler_gz.select(output_id)
+            node_gz.select(output_id)
             destination = archive / "raw" / f"{source_raw.name}.gz"
             source_hash, archive_hash, source_size, archive_size = gzip_copy(source_raw, destination)
             source_records.append({
@@ -403,9 +469,9 @@ def create_archive(source: Path, archive: Path, tools_dir: Path | None = None) -
             })
             print(f"ARCHIVE_RAW {number}/89 {output_id}", flush=True)
     finally:
-        candidate_gz.close(); candidate_raw.close()
-        scheduler_gz.close(); scheduler_raw.close()
-        node_gz.close(); node_raw.close()
+        candidate_gz.close()
+        scheduler_gz.close()
+        node_gz.close()
 
     # Checkpoints, receipts, EOS files, and logs are preserved separately from raw.
     for source_dir, archive_dir, mode in (
@@ -466,17 +532,19 @@ def create_archive(source: Path, archive: Path, tools_dir: Path | None = None) -
     write_csv(archive / "tables" / "CELL_SUMMARY.csv", cell_rows)
     write_csv(archive / "tables" / "CHECKPOINT_INDEX.csv", checkpoint_rows)
 
-    # The source EOS files are retained whole; the direct index is a portability pointer.
-    eos_index_raw, eos_index_gz = gzip_jsonl_writer(archive / "tables" / "EOS_EVENT_INDEX.jsonl.gz")
+    # The source EOS files are retained whole; the direct index is sharded for GitHub-safe recovery.
+    eos_index_gz = ShardedGzipJsonl(archive / "tables" / "eos_event_index")
     try:
         for source_eos in sorted((source / "EOS_EVENTS").glob("*.jsonl.gz")):
             output_id = output_id_from_name(source_eos)
+            assert output_id is not None
+            eos_index_gz.select(output_id)
             with gzip.open(source_eos, "rt", encoding="utf-8") as handle:
                 for line_number, line in enumerate(handle):
                     if line.strip():
                         write_jsonl_line(eos_index_gz, {"output_id": output_id, "task_id": output_id.split(":", 1)[0] if output_id else None, "depth": depth, "line_number": line_number, "event": json.loads(line)})
     finally:
-        eos_index_gz.close(); eos_index_raw.close()
+        eos_index_gz.close()
 
     source_records.sort(key=lambda row: row["relative_path"])
     with (archive / "manifests" / "SOURCE_FILE_MANIFEST.csv").open("w", newline="", encoding="utf-8") as handle:
@@ -511,11 +579,11 @@ def create_archive(source: Path, archive: Path, tools_dir: Path | None = None) -
     write_csv(archive / "ADAPTER_MANIFEST.csv", adapter_rows)
 
     readiness = {
-        "MODEL": {"status": "READY_FROM_ARCHIVE", "evidence": ["raw/", "tables/CANDIDATE_INDEX.jsonl.gz"]},
-        "RETENTION": {"status": "READY_FROM_ARCHIVE", "evidence": ["tables/CANDIDATE_INDEX.jsonl.gz", "tables/CHECKPOINT_INDEX.csv"]},
-        "TRAVERSAL": {"status": "PARTIALLY_READY", "evidence": ["raw/", "tables/SCHEDULER_EVENT_INDEX.jsonl.gz"], "limitation": "No independent node/search-tree artifact was observed outside raw output records."},
+        "MODEL": {"status": "READY_FROM_ARCHIVE", "evidence": ["raw/", "tables/candidate_index/"]},
+        "RETENTION": {"status": "READY_FROM_ARCHIVE", "evidence": ["tables/candidate_index/", "tables/CHECKPOINT_INDEX.csv"]},
+        "TRAVERSAL": {"status": "READY_FROM_ARCHIVE", "evidence": ["raw/", "tables/node_index/", "tables/scheduler_events/"]},
         "EXECUTION/CENSORING": {"status": "READY_FROM_ARCHIVE", "evidence": ["tables/OUTPUT_SUMMARY.csv", "tables/CELL_SUMMARY.csv", "OUTPUT_RUNTIME.csv", "OOM_FALLBACK_RECEIPTS.csv"]},
-        "REPRESENTATION": {"status": "READY_FROM_ARCHIVE", "evidence": ["AUG8_IDS.json", "tables/CELL_SUMMARY.csv", "tables/CANDIDATE_INDEX.jsonl.gz"]},
+        "REPRESENTATION": {"status": "READY_FROM_ARCHIVE", "evidence": ["AUG8_IDS.json", "tables/CELL_SUMMARY.csv", "tables/candidate_index/"]},
     }
     json_dump(archive / "ANALYSIS_READINESS.json", readiness)
 
@@ -533,7 +601,7 @@ def create_archive(source: Path, archive: Path, tools_dir: Path | None = None) -
     (archive / "README.md").write_text(f"# Eval60 Phase 3 d{depth} AUG8 R1024 archive\n\nTarget-blind generation archive for 60 tasks / 89 outputs / 712 AUG8 cells. Gold remains unopened. See `FINAL_FREEZE_RECEIPT.json`.\n", encoding="utf-8")
     (archive / "REPORT.md").write_text(f"# Freeze report\n\n- MEASURED: d{depth}, 89/89 outputs, 712/712 cells, source and archive hash verification PASS.\n- MEASURED: Gold was not loaded; no GPU inference was rerun.\n- NOT_ESTABLISHED: complete GitHub raw archive; raw preservation remains at `{archive}` pending a verified large-object transfer route.\n", encoding="utf-8")
     (archive / "schemas" / "ARCHIVE_SCHEMA.md").write_text("Archive joins use `(output_id, augmentation_id, depth)`; candidate records additionally use checkpoint and candidate completion identity. Raw and checkpoint files are deterministic gzip streams whose decompressed content hashes bind to source bytes.\n", encoding="utf-8")
-    (archive / "schemas" / "FIELD_DICTIONARY.md").write_text("OUTPUT_SUMMARY is one row per output. CELL_SUMMARY is one row per output/AUG8 cell. CHECKPOINT_INDEX is one row per checkpoint. Candidate, scheduler, and EOS indexes are JSONL gzip streams.\n", encoding="utf-8")
+    (archive / "schemas" / "FIELD_DICTIONARY.md").write_text("OUTPUT_SUMMARY is one row per output. CELL_SUMMARY is one row per output/AUG8 cell. CHECKPOINT_INDEX is one row per checkpoint. Candidate, node, scheduler, and EOS indexes are deterministic per-output JSONL gzip shards.\n", encoding="utf-8")
     # Archive file inventory and hashes are final; only the post-ledger freeze receipt is excluded to avoid a circular hash.
     archive_files = sorted(path for path in archive.rglob("*") if path.is_file() and path.name not in {"ARCHIVE_HASHES.json", "ARCHIVE_HASH_VERIFICATION.json", "FINAL_FREEZE_RECEIPT.json"})
     archive_rows = [{"relative_path": str(path.relative_to(archive)).replace("\\", "/"), "byte_size": path.stat().st_size, "sha256": sha256_file(path)} for path in archive_files]
