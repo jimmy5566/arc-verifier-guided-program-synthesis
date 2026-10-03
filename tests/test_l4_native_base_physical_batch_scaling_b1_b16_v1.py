@@ -453,6 +453,10 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
         source = "".join(notebook["cells"][0]["source"])
         assert "BASE_MODEL_ONLY" in source
         assert "runtime_preflight" in source and "controller" in source
+        assert "input_root = Path('/kaggle/input')" in source
+        assert "contract_paths = sorted(input_root.rglob('L4_BENCHMARK_CONTRACT.json'))" in source
+        assert "expected exactly one matching benchmark source contract" in source
+        assert "/kaggle/input/datasets/jimmy5566" not in source
         assert "source = dataset / str(bundle_contract.get('mount_root', '')) / str(bundle_contract.get('root', ''))" in source
         assert "attached benchmark source hash mismatch" in source
         assert "bootstrap_l4" not in source and "adapter_smoke" not in source
