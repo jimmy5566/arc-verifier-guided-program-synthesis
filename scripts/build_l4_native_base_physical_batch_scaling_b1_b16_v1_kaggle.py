@@ -116,6 +116,14 @@ def _bundle_source_for_dataset(source: Path) -> Path:
     return archive
 
 
+def _source_tree_hashes(source: Path) -> dict[str, str]:
+    return {
+        path.relative_to(source).as_posix(): _sha256(path)
+        for path in sorted(source.rglob("*"))
+        if path.is_file()
+    }
+
+
 def _assert_staged_runner_importable(source: Path) -> None:
     """Exercise the package import closure, not the developer worktree's one."""
     source = source.resolve()
@@ -154,12 +162,9 @@ def _notebook_source(dataset_slug: str, harness_commit: str, *, engineering_smok
         ]
     )
     return "\n".join([
-        "import hashlib, json, os, subprocess, sys, tarfile, time",
+        "import hashlib, json, os, subprocess, sys, time",
         "from pathlib import Path",
         "dataset = Path('/kaggle/input/datasets/jimmy5566/') / " + repr(dataset_slug),
-        "source_archive = dataset / 'ARC2-source.tar'",
-        "source_root = Path('/kaggle/working/l4_native_base_batch_scaling_b1_b16_source')",
-        "source = source_root / 'ARC2'",
         "out = Path('/kaggle/working/analysis/l4_native_base_batch_scaling_b1_b16_v1')",
         "if os.environ.get('KAGGLE_KERNEL_INTERNET_ENABLED', '').strip().lower() in {'1','true','yes'}: raise RuntimeError('Internet must be disabled')",
         "gpus = subprocess.check_output(['nvidia-smi', '-L'], text=True).splitlines()",
@@ -169,18 +174,19 @@ def _notebook_source(dataset_slug: str, harness_commit: str, *, engineering_smok
         "if not (dataset / 'L4_BENCHMARK_CONTRACT.json').is_file(): raise RuntimeError('attached benchmark contract missing')",
         "contract = json.loads((dataset / 'L4_BENCHMARK_CONTRACT.json').read_text())",
         "if contract['experiment'] != 'L4_NATIVE_BASE_PHYSICAL_BATCH_SCALING_B1_B16_V1' or contract['authoritative_source_commit'] != '1eb8e7f60a3ca682438bb326ab3ea65ec286ed6f': raise RuntimeError('benchmark contract mismatch')",
-        "archive_contract = contract.get('source_archive', {})",
-        "if archive_contract.get('path') != source_archive.name or archive_contract.get('root') != 'ARC2' or not source_archive.is_file(): raise RuntimeError('attached benchmark source archive missing or mismatched')",
-        "digest = hashlib.sha256()",
-        "with source_archive.open('rb') as handle:",
-        "    for block in iter(lambda: handle.read(1024 * 1024), b''): digest.update(block)",
-        "if digest.hexdigest() != archive_contract.get('sha256'): raise RuntimeError('attached benchmark source archive hash mismatch')",
-        "if source_root.exists(): raise RuntimeError('source extraction root already exists')",
-        "source_root.mkdir(parents=True)",
-        "with tarfile.open(source_archive) as bundle:",
-        "    members = bundle.getmembers()",
-        "    if any(member.issym() or Path(member.name).is_absolute() or '..' in Path(member.name).parts for member in members): raise RuntimeError('unsafe benchmark source archive')",
-        "    bundle.extractall(source_root, filter='data')",
+        "bundle_contract = contract.get('source_bundle', {})",
+        "source = dataset / str(bundle_contract.get('mount_root', '')) / str(bundle_contract.get('root', ''))",
+        "source_hashes = contract.get('source_tree_files')",
+        "if bundle_contract.get('upload_file') != 'ARC2-source.tar' or bundle_contract.get('mount_root') != 'ARC2-source' or bundle_contract.get('root') != 'ARC2' or not isinstance(source_hashes, dict): raise RuntimeError('attached benchmark source contract malformed')",
+        "for relative, expected_hash in source_hashes.items():",
+        "    relative_path = Path(relative)",
+        "    if relative_path.is_absolute() or '..' in relative_path.parts: raise RuntimeError('unsafe benchmark source manifest path')",
+        "    candidate = source / relative_path",
+        "    if not candidate.is_file(): raise RuntimeError(f'attached benchmark source file missing: {relative}')",
+        "    digest = hashlib.sha256()",
+        "    with candidate.open('rb') as handle:",
+        "        for block in iter(lambda: handle.read(1024 * 1024), b''): digest.update(block)",
+        "    if digest.hexdigest() != expected_hash: raise RuntimeError(f'attached benchmark source hash mismatch: {relative}')",
         "native = source / 'configs' / 'nvarc_native_846d0198'",
         "runner = source / 'scripts' / 'run_l4_native_base_physical_batch_scaling_b1_b16_v1.py'",
         "required = {'source': source, 'runner': runner, 'model': model, 'challenge': challenge, 'native': native}",
@@ -234,7 +240,13 @@ def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str,
     _assert_staged_runner_importable(source)
     source_archive = _bundle_source_for_dataset(source)
     contract = experiment_contract(source_commit=AUTHORITATIVE_SOURCE_COMMIT)
-    contract["source_archive"] = {"path": source_archive.name, "root": "ARC2", "sha256": _sha256(source_archive)}
+    contract["source_bundle"] = {
+        "upload_file": source_archive.name,
+        "mount_root": source_archive.stem,
+        "root": "ARC2",
+        "sha256": _sha256(source_archive),
+    }
+    contract["source_tree_files"] = _source_tree_hashes(source)
     execution_widths = [1, 16] if engineering_smoke else list(contract["widths"])
     warmup_forwards = 1 if engineering_smoke else int(contract["measurement"]["warmup_forwards"])
     measurement_forwards = 2 if engineering_smoke else int(contract["measurement"]["measurement_forwards"])
