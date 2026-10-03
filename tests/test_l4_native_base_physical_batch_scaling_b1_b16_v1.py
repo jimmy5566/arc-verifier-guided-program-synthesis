@@ -4,6 +4,7 @@ import importlib.util
 import json
 from pathlib import Path
 import sys
+import tarfile
 from types import SimpleNamespace
 import tempfile
 import unittest
@@ -452,7 +453,8 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
         source = "".join(notebook["cells"][0]["source"])
         assert "BASE_MODEL_ONLY" in source
         assert "runtime_preflight" in source and "controller" in source
-        assert "source = dataset / 'ARC2'" in source
+        assert "source_archive = dataset / 'ARC2-source.tar'" in source
+        assert "bundle.extractall(source_root, filter='data')" in source
         assert "bootstrap_l4" not in source and "adapter_smoke" not in source
         assert "submission.json" not in source and "evaluation_solutions" not in source
         packaged = staged / "dataset" / "ARC2"
@@ -461,6 +463,15 @@ class L4NativeBasePhysicalBatchScalingV1Tests(unittest.TestCase):
         assert not (packaged / "src" / "inference" / "hf_peft_backend.py").exists()
         assert not list(packaged.rglob("__pycache__"))
         assert not list((staged / "dataset").rglob("*solution*.json"))
+        archive = staged / "dataset" / "ARC2-source.tar"
+        contract = json.loads((staged / "dataset" / "L4_BENCHMARK_CONTRACT.json").read_text(encoding="utf-8"))
+        assert archive.is_file()
+        assert builder._sha256(archive) == contract["source_archive"]["sha256"]
+        with tarfile.open(archive) as bundle:
+            names = [member.name for member in bundle.getmembers()]
+            assert names and all(name.startswith("ARC2/") for name in names)
+            bundle.extractall(staged / "extracted", filter="data")
+        builder._assert_staged_runner_importable(staged / "extracted" / "ARC2")
 
     def test_smoke_package_manifest_is_unambiguous_and_not_formal(self) -> None:
         staged = Path(tempfile.mkdtemp()) / "smoke-stage"

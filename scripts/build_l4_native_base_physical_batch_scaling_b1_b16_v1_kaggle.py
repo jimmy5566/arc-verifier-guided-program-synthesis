@@ -97,6 +97,25 @@ def _archive_curated_source(destination: Path, *, source_ref: str) -> None:
         raise RuntimeError(f"curated target-blind source contains forbidden file names: {forbidden}")
 
 
+def _bundle_source_for_dataset(source: Path) -> Path:
+    """Make the curated tree a root-level file so Kaggle CLI cannot skip it."""
+    archive = source.parent / "ARC2-source.tar"
+    with tarfile.open(archive, "w", format=tarfile.PAX_FORMAT) as bundle:
+        for path in sorted(source.rglob("*")):
+            if not path.is_file():
+                continue
+            arcname = (Path("ARC2") / path.relative_to(source)).as_posix()
+            info = bundle.gettarinfo(str(path), arcname=arcname)
+            info.uid = info.gid = 0
+            info.uname = info.gname = ""
+            info.mtime = 0
+            with path.open("rb") as handle:
+                bundle.addfile(info, handle)
+    if not archive.is_file() or archive.stat().st_size == 0:
+        raise RuntimeError("curated source archive was not created")
+    return archive
+
+
 def _assert_staged_runner_importable(source: Path) -> None:
     """Exercise the package import closure, not the developer worktree's one."""
     source = source.resolve()
@@ -135,25 +154,38 @@ def _notebook_source(dataset_slug: str, harness_commit: str, *, engineering_smok
         ]
     )
     return "\n".join([
-        "import json, os, subprocess, sys, time",
+        "import hashlib, json, os, subprocess, sys, tarfile, time",
         "from pathlib import Path",
         "dataset = Path('/kaggle/input/datasets/jimmy5566/') / " + repr(dataset_slug),
-        # The Kaggle dataset mount exposes the CLI-uploaded ARC2 archive as
-        # this immutable source directory.  Use the mounted source directly.
-        "source = dataset / 'ARC2'",
+        "source_archive = dataset / 'ARC2-source.tar'",
+        "source_root = Path('/kaggle/working/l4_native_base_batch_scaling_b1_b16_source')",
+        "source = source_root / 'ARC2'",
         "out = Path('/kaggle/working/analysis/l4_native_base_batch_scaling_b1_b16_v1')",
         "if os.environ.get('KAGGLE_KERNEL_INTERNET_ENABLED', '').strip().lower() in {'1','true','yes'}: raise RuntimeError('Internet must be disabled')",
         "gpus = subprocess.check_output(['nvidia-smi', '-L'], text=True).splitlines()",
         "if len(gpus) != 4 or any('NVIDIA L4' not in row for row in gpus): raise RuntimeError(f'requires exactly four NVIDIA L4 GPUs: {gpus}')",
         "model = Path('/kaggle/input/models/sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1')",
         "challenge = Path('/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_evaluation_challenges.json')",
-        "native = source / 'configs' / 'nvarc_native_846d0198'",
-        "runner = source / 'scripts' / 'run_l4_native_base_physical_batch_scaling_b1_b16_v1.py'",
-        "required = {'source': source, 'runner': runner, 'model': model, 'challenge': challenge, 'native': native, 'contract': dataset / 'L4_BENCHMARK_CONTRACT.json'}",
-        "missing = [name for name, path in required.items() if not path.exists()]",
-        "if missing: raise RuntimeError(f'attached benchmark package incomplete: {missing}')",
+        "if not (dataset / 'L4_BENCHMARK_CONTRACT.json').is_file(): raise RuntimeError('attached benchmark contract missing')",
         "contract = json.loads((dataset / 'L4_BENCHMARK_CONTRACT.json').read_text())",
         "if contract['experiment'] != 'L4_NATIVE_BASE_PHYSICAL_BATCH_SCALING_B1_B16_V1' or contract['authoritative_source_commit'] != '1eb8e7f60a3ca682438bb326ab3ea65ec286ed6f': raise RuntimeError('benchmark contract mismatch')",
+        "archive_contract = contract.get('source_archive', {})",
+        "if archive_contract.get('path') != source_archive.name or archive_contract.get('root') != 'ARC2' or not source_archive.is_file(): raise RuntimeError('attached benchmark source archive missing or mismatched')",
+        "digest = hashlib.sha256()",
+        "with source_archive.open('rb') as handle:",
+        "    for block in iter(lambda: handle.read(1024 * 1024), b''): digest.update(block)",
+        "if digest.hexdigest() != archive_contract.get('sha256'): raise RuntimeError('attached benchmark source archive hash mismatch')",
+        "if source_root.exists(): raise RuntimeError('source extraction root already exists')",
+        "source_root.mkdir(parents=True)",
+        "with tarfile.open(source_archive) as bundle:",
+        "    members = bundle.getmembers()",
+        "    if any(member.issym() or Path(member.name).is_absolute() or '..' in Path(member.name).parts for member in members): raise RuntimeError('unsafe benchmark source archive')",
+        "    bundle.extractall(source_root, filter='data')",
+        "native = source / 'configs' / 'nvarc_native_846d0198'",
+        "runner = source / 'scripts' / 'run_l4_native_base_physical_batch_scaling_b1_b16_v1.py'",
+        "required = {'source': source, 'runner': runner, 'model': model, 'challenge': challenge, 'native': native}",
+        "missing = [name for name, path in required.items() if not path.exists()]",
+        "if missing: raise RuntimeError(f'extracted benchmark source incomplete: {missing}')",
         "env = {**os.environ, 'HF_HUB_OFFLINE':'1', 'TRANSFORMERS_OFFLINE':'1', 'TOKENIZERS_PARALLELISM':'false', 'PYTHONUNBUFFERED':'1'}",
         "common = [sys.executable, str(runner), '--output', str(out), '--source-commit', contract['authoritative_source_commit'], '--harness-commit', " + repr(harness_commit) + ", '--model-path', str(model), '--challenge', str(challenge), '--native-config-dir', str(native), '--benchmark-model-mode', 'BASE_MODEL_ONLY']" + (" + ['--engineering-smoke']" if engineering_smoke else ""),
         "print(json.dumps({'event':'NOTEBOOK_START','mode':" + repr(mode) + ",'source':str(source),'runner':str(runner),'output':str(out),'hardware_count':len(gpus)}, sort_keys=True), flush=True)",
@@ -200,7 +232,9 @@ def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str,
     source.mkdir(parents=True)
     _archive_curated_source(source, source_ref=harness_commit)
     _assert_staged_runner_importable(source)
+    source_archive = _bundle_source_for_dataset(source)
     contract = experiment_contract(source_commit=AUTHORITATIVE_SOURCE_COMMIT)
+    contract["source_archive"] = {"path": source_archive.name, "root": "ARC2", "sha256": _sha256(source_archive)}
     execution_widths = [1, 16] if engineering_smoke else list(contract["widths"])
     warmup_forwards = 1 if engineering_smoke else int(contract["measurement"]["warmup_forwards"])
     measurement_forwards = 2 if engineering_smoke else int(contract["measurement"]["measurement_forwards"])
