@@ -1,0 +1,9 @@
+{
+  "cli_expected_sha256_normalized": "84be4f4f39d79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "gold_digest": "f2960361b7544ff598e85358b6a17c4c72b7a88ab457b1294b09ce67928f557f",
+  "historical_eval60_manifest": "artifacts/eval60_authoritative_greedy_v1/RUN_COMPLETION_MANIFEST.json",
+  "historical_expected_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "output_count": 89,
+  "solutions_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "source": "/tmp/poetiq/data/arc-prize-2025/arc-agi_evaluation_solutions.json"
+}

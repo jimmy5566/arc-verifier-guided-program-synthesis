@@ -1,0 +1,10 @@
+{
+  "archives_validated_before_scoring": true,
+  "d24_archive": "artifacts/eval60_phase3_d24_aug8_r1024_archive_v1",
+  "d48_archive": "artifacts/eval60_phase3_d48_aug8_r1024_archive_v1",
+  "generation_rerun": false,
+  "gold_opened_post_freeze_only": true,
+  "gpu_used": false,
+  "primary": "ORC/FIX R1024",
+  "top2": "descriptive post-freeze target-blind rankings; not used to retune generation"
+}
