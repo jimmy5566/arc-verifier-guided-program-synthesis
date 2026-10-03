@@ -221,7 +221,10 @@ def _existing_output_gate(run: Path, selected: dict[str, Any]) -> dict[str, Any]
         raise RuntimeError(f"OUTPUT_HASH_REUSE_REFUSED:{selected['output_id']}")
     if set(ledger.get("files", {})) != {str(path.relative_to(run)) for path in required[:4]}:
         raise RuntimeError(f"OUTPUT_LEDGER_SCOPE_FAIL:{selected['output_id']}")
-    return {"output_id": selected["output_id"], "resumed": True, "hash_checked": len(verification["checked"])}
+    # Core's verification receipt stores the number of checked files as an
+    # integer, not a collection.  Preserve it verbatim so an independently
+    # verified output can be resumed without re-running its GPU worker.
+    return {"output_id": selected["output_id"], "resumed": True, "hash_checked": int(verification["checked"])}
 
 
 def _freeze_output(run: Path, selected: dict[str, Any]) -> dict[str, Any]:
@@ -237,7 +240,7 @@ def _freeze_output(run: Path, selected: dict[str, Any]) -> dict[str, Any]:
     _atomic_json(run / "OUTPUT_HASH_VERIFICATION" / f"{safe}.json", verification)
     if verification["status"] != "PASS":
         raise RuntimeError(f"OUTPUT_HASH_FREEZE_FAIL:{selected['output_id']}")
-    return {"output_id": selected["output_id"], "resumed": False, "hash_checked": len(verification["checked"])}
+    return {"output_id": selected["output_id"], "resumed": False, "hash_checked": int(verification["checked"])}
 
 
 def _write_progress(run: Path, completed: list[dict[str, Any]], expected: int) -> None:

@@ -1,8 +1,8 @@
 from pathlib import Path
 
 import scripts.run_phase3a_eval60_d24_aug8_r1024 as phase3
-from scripts.run_phase3a_eval60_d24_aug8_r1024 import _existing_output_gate, _profile_name
-from scripts.run_ttt24_aug8_r1024_core_v1 import _atomic_json, _sha_file
+from scripts.run_phase3a_eval60_d24_aug8_r1024 import _existing_output_gate, _freeze_output, _profile_name
+from scripts.run_ttt24_aug8_r1024_core_v1 import _atomic_json
 
 
 def test_profile_mapping_uses_existing_frozen_boundaries() -> None:
@@ -37,9 +37,7 @@ def test_existing_output_requires_an_independent_hash_ledger(tmp_path: Path) -> 
     checkpoint = tmp_path / "OUTPUT_CHECKPOINTS" / "abc_o0.json"; checkpoint.parent.mkdir(); checkpoint.write_text("{}", encoding="utf-8")
     eos = tmp_path / "EOS_EVENTS" / "abc_o0.jsonl.gz"; eos.parent.mkdir(); eos.write_bytes(b"not-a-gzip-needed-for-hash")
     receipt = tmp_path / "OUTPUT_RECEIPTS" / "abc_o0.json"; receipt.parent.mkdir(); _atomic_json(receipt, {"status": "COMPLETE"})
-    files = [raw, checkpoint, eos, receipt]
-    ledger = tmp_path / "OUTPUT_HASHES" / "abc_o0.json"
-    _atomic_json(ledger, {"files": {str(path.relative_to(tmp_path)): _sha_file(path) for path in files}})
-    verification = tmp_path / "OUTPUT_HASH_VERIFICATION" / "abc_o0.json"; _atomic_json(verification, {"status": "PASS"})
+    frozen = _freeze_output(tmp_path, selected)
+    assert frozen == {"output_id": "abc:o0", "resumed": False, "hash_checked": 4}
     result = _existing_output_gate(tmp_path, selected)
     assert result == {"output_id": "abc:o0", "resumed": True, "hash_checked": 4}
