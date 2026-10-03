@@ -238,7 +238,12 @@ def _root_admission_audit(run: Path) -> None:
 def _run(args: argparse.Namespace) -> None:
     source_commit = _head()
     if args.output.exists():
-        raise RuntimeError(f"FRESH_OUTPUT_DIRECTORY_REQUIRED:{args.output}")
+        # The detached launcher records its PID and stdout in the prospective
+        # run directory before Python starts.  Accept only that non-scientific
+        # bootstrap pair; any scientific artifact still proves this is reuse.
+        existing = {path.relative_to(args.output).as_posix() for path in args.output.rglob("*") if path.is_file()}
+        if existing - {"controller.log", "controller.pid"}:
+            raise RuntimeError(f"FRESH_OUTPUT_DIRECTORY_REQUIRED:{args.output}")
     preflight = _preflight(args, source_commit)
     policy = _read(args.coarse_policy)
     targets = _target_rows(args)
