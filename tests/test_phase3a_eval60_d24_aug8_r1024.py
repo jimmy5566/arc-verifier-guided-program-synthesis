@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import scripts.run_phase3a_eval60_d24_aug8_r1024 as phase3
 from scripts.run_phase3a_eval60_d24_aug8_r1024 import _existing_output_gate, _profile_name
 from scripts.run_ttt24_aug8_r1024_core_v1 import _atomic_json, _sha_file
 
@@ -10,6 +11,16 @@ def test_profile_mapping_uses_existing_frozen_boundaries() -> None:
     assert _profile_name(2654) == "PROFILE_L_LOW"
     assert _profile_name(4097) == "PROFILE_L_HIGH"
     assert _profile_name(6494) == "PROFILE_XL_CONSERVATIVE"
+
+
+def test_d48_uses_the_same_phase3_controller_with_a_distinct_identity() -> None:
+    phase3._configure_depth(48)
+    try:
+        assert phase3.DEPTH == 48
+        assert phase3.EXPERIMENT == "PHASE3B_EVAL60_D48_AUG8_R1024_V1"
+        assert phase3._other_depth_status() == "SEPARATE"
+    finally:
+        phase3._configure_depth(24)
 
 
 def test_existing_output_requires_an_independent_hash_ledger(tmp_path: Path) -> None:

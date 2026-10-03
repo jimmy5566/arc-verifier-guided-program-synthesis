@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Target-blind Phase 3A: full Eval60 D24 canonical-AUG8 R1024 generation.
+"""Target-blind Phase 3 Eval60 canonical-AUG8 R1024 generation.
 
 This controller intentionally owns no model forward.  Each output is delegated
 to the frozen fresh-process Core worker and is independently hash-verified
@@ -46,6 +46,7 @@ from scripts.run_ttt24_aug8_r1024_core_v1 import (  # noqa: E402
 )
 
 
+DEPTH = 24
 EXPERIMENT = "PHASE3A_EVAL60_D24_AUG8_R1024_V1"
 EXPECTED_RUNTIME = {
     "torch": "2.8.0+cu128",
@@ -58,6 +59,20 @@ GENERATION_LEDGER_EXCLUDED = {
     "HASHES.json", "HASH_VERIFICATION.json", "GENERATION_FREEZE.json",
     "COMPACT_ARCHIVE_FREEZE.json", "DECISION.json", "REPORT.md",
 }
+
+
+def _configure_depth(depth: int) -> None:
+    """Select only the pre-registered phase identity; Core execution is shared."""
+    global DEPTH, EXPERIMENT
+    if depth not in {24, 48}:
+        raise ValueError(f"unsupported Phase 3 depth: {depth}")
+    DEPTH = int(depth)
+    phase = "PHASE3A" if DEPTH == 24 else "PHASE3B"
+    EXPERIMENT = f"{phase}_EVAL60_D{DEPTH}_AUG8_R1024_V1"
+
+
+def _other_depth_status() -> str:
+    return "NOT_STARTED" if DEPTH == 24 else "SEPARATE"
 
 
 def _head() -> str:
@@ -141,9 +156,9 @@ def _challenge_outputs(args: argparse.Namespace) -> tuple[list[dict[str, Any]], 
 def _adapter_manifest(args: argparse.Namespace) -> dict[str, dict[str, str]]:
     with args.adapter_manifest.open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
-    selected = {str(row["task_id"]): dict(row) for row in rows if str(row.get("depth")) == "24"}
+    selected = {str(row["task_id"]): dict(row) for row in rows if str(row.get("depth")) == str(DEPTH)}
     if len(selected) != 60:
-        raise RuntimeError(f"D24_ADAPTER_MANIFEST_EXPECTED_60_GOT:{len(selected)}")
+        raise RuntimeError(f"D{DEPTH}_ADAPTER_MANIFEST_EXPECTED_60_GOT:{len(selected)}")
     return selected
 
 
@@ -160,13 +175,13 @@ def _make_cohort(args: argparse.Namespace) -> tuple[list[dict[str, Any]], dict[s
     prepared: list[dict[str, Any]] = []
     for row in rows:
         task_id = row["task_id"]
-        adapter = args.adapter_root / task_id / "depth_024"
+        adapter = args.adapter_root / task_id / f"depth_{DEPTH:03d}"
         identity = _adapter_identity(adapter)
         expected = manifest.get(task_id)
         if identity.get("status") != "PASS" or expected is None:
-            raise RuntimeError(f"D24_ADAPTER_IDENTITY_FAIL:{task_id}")
+            raise RuntimeError(f"D{DEPTH}_ADAPTER_IDENTITY_FAIL:{task_id}")
         if identity.get("adapter_sha256") != expected.get("sha256") or str(adapter / "adapter_model.safetensors") != expected.get("global_path"):
-            raise RuntimeError(f"D24_ADAPTER_MANIFEST_MISMATCH:{task_id}")
+            raise RuntimeError(f"D{DEPTH}_ADAPTER_MANIFEST_MISMATCH:{task_id}")
         adapters.setdefault(task_id, {"adapter_path": str(adapter), "identity": identity, "manifest_sha256": expected["sha256"]})
         task = tasks.get(task_id)
         if task is None or int(row["output_index"]) >= len(task.test):
@@ -237,7 +252,7 @@ def _run_all(args: argparse.Namespace, run: Path, cohort: list[dict[str, Any]], 
             completed.append(reused); _write_progress(run, completed, len(cohort)); continue
         success = False
         for attempt, config in enumerate(_policy(policy, selected["profile"])):
-            code, receipt = _worker(args, run, selected, attempt, config, depth=24, experiment=EXPERIMENT)
+            code, receipt = _worker(args, run, selected, attempt, config, depth=DEPTH, experiment=EXPERIMENT)
             receipt["fallback_used"] = attempt > 0
             attempts.append(receipt)
             _atomic_csv(receipt_path, attempts, attempts[0].keys())
@@ -304,32 +319,35 @@ def _freeze_generation(run: Path, cohort: list[dict[str, Any]], runtime: dict[st
     required = ("RAW_OUTPUTS", "OUTPUT_CHECKPOINTS", "EOS_EVENTS", "OUTPUT_RECEIPTS", "OUTPUT_HASHES", "OUTPUT_HASH_VERIFICATION")
     actual = {name: len(list((run / name).glob("*.json*"))) for name in required}
     if any(actual[name] != expected for name in required):
-        raise RuntimeError(f"PHASE3A_INCOMPLETE_GENERATION:{_canonical(actual)}")
+        raise RuntimeError(f"PHASE3_D{DEPTH}_INCOMPLETE_GENERATION:{_canonical(actual)}")
     for selected in cohort:
         if _existing_output_gate(run, selected) is None:
-            raise RuntimeError(f"PHASE3A_OUTPUT_REVERIFY_FAIL:{selected['output_id']}")
+            raise RuntimeError(f"PHASE3_D{DEPTH}_OUTPUT_REVERIFY_FAIL:{selected['output_id']}")
     manifest = {"experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False, "completed_outputs": expected,
-                "d24_generation": "COMPLETE", "d48_generation": "NOT_STARTED",
+                "d24_generation": "COMPLETE" if DEPTH == 24 else _other_depth_status(),
+                "d48_generation": "COMPLETE" if DEPTH == 48 else _other_depth_status(),
                 "gold_scoring": "DEFERRED_UNTIL_D24_AND_D48_BOTH_FROZEN", "runtime": runtime}
     _atomic_json(run / "GENERATION_MANIFEST.json", manifest)
     ledger = _ledger(run, "GENERATION_HASHES.json", include_raw=True)
     verification = _verify(run, run / "GENERATION_HASHES.json")
     _atomic_json(run / "GENERATION_HASH_VERIFICATION.json", verification)
     if verification["status"] != "PASS":
-        raise RuntimeError("PHASE3A_GENERATION_HASH_FAIL")
+        raise RuntimeError(f"PHASE3_D{DEPTH}_GENERATION_HASH_FAIL")
     _atomic_json(run / "GENERATION_FREEZE.json", {"experiment": EXPERIMENT, "status": "FROZEN", "target_blind": True,
                                                      "gold_loaded": False, "raw_count": expected, "ledger_sha256": _sha_value(ledger)})
     return {"ledger": ledger, "verification": verification, "manifest": manifest}
 
 
 def _finalize(run: Path, cohort: list[dict[str, Any]], runtime: dict[str, Any], generation: dict[str, Any]) -> None:
-    decision = {"experiment": EXPERIMENT, "PHASE3_D24_GENERATION": "COMPLETE", "PHASE3_D48_GENERATION": "NOT_STARTED",
+    decision = {"experiment": EXPERIMENT,
+                "PHASE3_D24_GENERATION": "COMPLETE" if DEPTH == 24 else _other_depth_status(),
+                "PHASE3_D48_GENERATION": "COMPLETE" if DEPTH == 48 else _other_depth_status(),
                 "GOLD_SCORING": "DEFERRED_UNTIL_D24_AND_D48_BOTH_FROZEN", "gold_loaded": False,
                 "completed_outputs": len(cohort), "generation_hash_status": generation["verification"]["status"],
                 "total_gpu_wall_seconds": runtime["total_gpu_wall_seconds"], "oom_fallback_count": runtime["fallback_count"]}
     _atomic_json(run / "DECISION.json", decision)
-    report = "\n".join([f"# {EXPERIMENT}", "", "Target-blind D24-only Eval60 generation is frozen.", "",
-                          f"- Outputs: {len(cohort)}/89", "- D48: NOT_STARTED", "- Gold scoring: DEFERRED_UNTIL_D24_AND_D48_BOTH_FROZEN",
+    report = "\n".join([f"# {EXPERIMENT}", "", f"Target-blind D{DEPTH}-only Eval60 generation is frozen.", "",
+                          f"- Outputs: {len(cohort)}/89", f"- Other depth: {_other_depth_status()}", "- Gold scoring: DEFERRED_UNTIL_D24_AND_D48_BOTH_FROZEN",
                           f"- Generation hashes: {generation['verification']['status']}", f"- Total GPU wall seconds: {runtime['total_gpu_wall_seconds']:.3f}",
                           f"- OOM/fallback count: {runtime['fallback_count']}", ""])
     (run / "REPORT.md").write_text(report, encoding="utf-8")
@@ -337,7 +355,7 @@ def _finalize(run: Path, cohort: list[dict[str, Any]], runtime: dict[str, Any], 
     verification = _verify(run, run / "HASHES.json")
     _atomic_json(run / "HASH_VERIFICATION.json", verification)
     if verification["status"] != "PASS":
-        raise RuntimeError("PHASE3A_COMPACT_HASH_FAIL")
+        raise RuntimeError(f"PHASE3_D{DEPTH}_COMPACT_HASH_FAIL")
     _atomic_json(run / "COMPACT_ARCHIVE_FREEZE.json", {"status": "FROZEN", "compact_ledger_sha256": _sha_value(compact),
                                                           "hash_status": verification["status"], "gold_loaded": False})
 
@@ -348,7 +366,7 @@ def _preflight(args: argparse.Namespace, source_commit: str) -> tuple[list[dict[
                 "coarse_policy": args.coarse_policy, "cohort_registry": args.cohort_registry, "runtime_ready": args.runtime_ready}
     missing = [name for name, path in required.items() if not path.exists()]
     if missing:
-        raise FileNotFoundError(f"PHASE3A_REQUIRED_PATHS_MISSING:{','.join(missing)}")
+        raise FileNotFoundError(f"PHASE3_D{DEPTH}_REQUIRED_PATHS_MISSING:{','.join(missing)}")
     ready = _read(args.runtime_ready)
     if ready.get("event") != "READY_FOR_ARC2_AMPERE_V2" or ready.get("source_commit") != source_commit:
         raise RuntimeError("RUNTIME_READY_IDENTITY_FAIL")
@@ -376,12 +394,14 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--cohort-registry", type=Path, required=True)
     parser.add_argument("--runtime-ready", type=Path, required=True)
     parser.add_argument("--worker-python", type=Path, required=True)
+    parser.add_argument("--ttt-depth", type=int, choices=(24, 48), default=24)
     parser.add_argument("--device", default="cuda:0")
     return parser.parse_args()
 
 
 def main() -> int:
     args = _parse_args()
+    _configure_depth(args.ttt_depth)
     source_commit = _head()
     if args.output.exists():
         if not (args.output / "CONTRACT.json").is_file():
@@ -399,12 +419,14 @@ def main() -> int:
         _atomic_json(args.output / "ADAPTER_IDENTITIES.json", preflight["adapter_identities"])
         _atomic_json(args.output / "RUN_COHORT.json", {"experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False, "outputs": cohort})
         _atomic_json(args.output / "CONTRACT.json", {"experiment": EXPERIMENT, "source_commit": source_commit,
-            "target_blind": True, "gold_loaded": False, "cohort": "Eval60: 60 tasks / 89 outputs", "ttt_depth": 24,
+            "target_blind": True, "gold_loaded": False, "cohort": "Eval60: 60 tasks / 89 outputs", "ttt_depth": DEPTH,
             "augmentation_ids": list(AUG8), "max_expanded_nodes": 1024, "decoder": "CUMULATIVE_REGRET_r=4.00",
             "max_new_tokens": 931, "candidate_cap": 32, "frontier_floor": 1, "eos": 15,
             "admission": "root_aware", "cache": "ChunkedDynamicCache / valid_length rollback",
             "profile_policy": "existing S/M/L/XL frozen coarse policy", "worker_python": str(args.worker_python),
-            "worker_runtime": preflight["worker_runtime"], "generation_scope": "D24_ONLY", "d48": "NOT_STARTED",
+            "worker_runtime": preflight["worker_runtime"], "generation_scope": f"D{DEPTH}_ONLY",
+            "d24": "COMPLETE" if DEPTH == 24 else _other_depth_status(),
+            "d48": "COMPLETE" if DEPTH == 48 else _other_depth_status(),
             "gold_scoring": "DEFERRED_UNTIL_D24_AND_D48_BOTH_FROZEN"})
     args.aug8_ids = args.output / "AUG8_IDS.json"
     completed = _run_all(args, args.output, cohort, policy)
