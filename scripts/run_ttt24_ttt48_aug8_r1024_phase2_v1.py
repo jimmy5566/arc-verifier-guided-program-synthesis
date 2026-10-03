@@ -251,7 +251,11 @@ def _run(args: argparse.Namespace) -> None:
         raise RuntimeError("PHASE2_TARGET_ID_DRIFT")
     if {row["output_id"]: row["profile"] for row in targets} != EXPECTED_PROFILES:
         raise RuntimeError("PHASE2_PROFILE_DRIFT")
-    args.output.mkdir(parents=True)
+    # The detached launcher may have created this directory solely to retain
+    # its PID and stdout.  The guard above has already rejected every other
+    # pre-existing artifact, so make this creation idempotent for that exact
+    # non-scientific bootstrap case.
+    args.output.mkdir(parents=True, exist_ok=True)
     _atomic_json(args.output / "CONTRACT.json", _phase2_contract(args, source_commit, preflight, targets))
     _atomic_json(args.output / "ADAPTER_IDENTITY.json", targets)
     _atomic_json(args.output / "PHASE1_PRECHECK.json", preflight)
