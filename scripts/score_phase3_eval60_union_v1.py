@@ -259,7 +259,15 @@ def main() -> None:
         raise RuntimeError("d24/d48 cohort ordering differs")
     outputs = out24
 
-    gold, gold_manifest = load_gold_compact(args.solutions_json, outputs, args.expected_solutions_sha256)
+    historical_manifest_path = Path(__file__).resolve().parents[1] / "artifacts" / "eval60_authoritative_greedy_v1" / "RUN_COMPLETION_MANIFEST.json"
+    historical_manifest = read_json(historical_manifest_path)
+    historical_expected = str(historical_manifest["gold"]["solution_sha256"]).strip().lower()
+    cli_expected = "".join(ch for ch in str(args.expected_solutions_sha256).strip().lower() if ch in "0123456789abcdef")
+    if cli_expected != historical_expected:
+        raise RuntimeError(f"CLI Gold identity disagrees with frozen Eval60 manifest: cli={cli_expected!r}, frozen={historical_expected!r}")
+    gold, gold_manifest = load_gold_compact(args.solutions_json, outputs, historical_expected)
+    gold_manifest["historical_eval60_manifest"] = str(historical_manifest_path.relative_to(Path(__file__).resolve().parents[1]))
+    gold_manifest["historical_expected_sha256"] = historical_expected
 
     rows = []
     task_to_outputs: dict[str, list[str]] = defaultdict(list)
