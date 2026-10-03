@@ -23,13 +23,18 @@ jobs:
 
       - name: Verify exact challenge and Gold snapshot
         run: |
-          set -euo pipefail
-          CHALLENGE=/tmp/poetiq/data/arc-prize-2025/arc-agi_evaluation_challenges.json
-          SOLUTIONS=/tmp/poetiq/data/arc-prize-2025/arc-agi_evaluation_solutions.json
-          echo "$(sha256sum "$CHALLENGE")"
-          echo "$(sha256sum "$SOLUTIONS")"
-          test "$(sha256sum "$CHALLENGE" | awk '{print $1}')" = "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8"
-          test "$(sha256sum "$SOLUTIONS" | awk '{print $1}')" = "84be4f4f39d79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1"
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = {
+              Path("/tmp/poetiq/data/arc-prize-2025/arc-agi_evaluation_challenges.json"): "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+              Path("/tmp/poetiq/data/arc-prize-2025/arc-agi_evaluation_solutions.json"): "84be4f4f39d79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+          }
+          for path, wanted in expected.items():
+              got = hashlib.sha256(path.read_bytes()).hexdigest()
+              print(path, got)
+              assert got == wanted, (path, got, wanted)
+          PY
 
       - name: Run CPU-only scorer
         run: |
