@@ -1,0 +1,9 @@
+output_id,augmentation_id,semantic_equal,excluded
+cb2d8a2c:o1,geom=identity__color=id__order=canonical,True,first_ready_request.cache_owner_id
+cb2d8a2c:o1,geom=flip_ud__color=id__order=canonical,True,first_ready_request.cache_owner_id
+cb2d8a2c:o1,geom=transpose__color=id__order=canonical,True,first_ready_request.cache_owner_id
+cb2d8a2c:o1,geom=anti_transpose__color=id__order=canonical,True,first_ready_request.cache_owner_id
+cb2d8a2c:o1,geom=rot90__color=id__order=canonical,True,first_ready_request.cache_owner_id
+cb2d8a2c:o1,geom=rot180__color=id__order=canonical,True,first_ready_request.cache_owner_id
+cb2d8a2c:o1,geom=rot270__color=id__order=canonical,True,first_ready_request.cache_owner_id
+cb2d8a2c:o1,geom=flip_lr__color=id__order=canonical,True,first_ready_request.cache_owner_id

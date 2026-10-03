@@ -1,0 +1,9 @@
+output_id,augmentation_id,max_abs_token_logprob_difference,median_abs_token_logprob_difference,max_cumulative_score_difference,max_cumulative_regret_difference,numeric_values_compared,number_of_logical_steps_with_numeric_drift
+cb2d8a2c:o1,geom=identity__color=id__order=canonical,0.0,0.0,0.0,0.0,88107,0
+cb2d8a2c:o1,geom=flip_ud__color=id__order=canonical,0.0,0.0,0.0,0.0,88140,0
+cb2d8a2c:o1,geom=transpose__color=id__order=canonical,0.0,0.0,0.0,0.0,88143,0
+cb2d8a2c:o1,geom=anti_transpose__color=id__order=canonical,0.0,0.0,0.0,0.0,86948,0
+cb2d8a2c:o1,geom=rot90__color=id__order=canonical,0.0,0.0,0.0,0.0,88131,0
+cb2d8a2c:o1,geom=rot180__color=id__order=canonical,0.0,0.0,0.0,0.0,88137,0
+cb2d8a2c:o1,geom=rot270__color=id__order=canonical,0.0,0.0,0.0,0.0,88137,0
+cb2d8a2c:o1,geom=flip_lr__color=id__order=canonical,0.0,0.0,0.0,0.0,88113,0

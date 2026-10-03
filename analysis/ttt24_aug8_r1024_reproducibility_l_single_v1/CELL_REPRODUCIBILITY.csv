@@ -1,0 +1,9 @@
+output_id,profile,augmentation_id,root_length,run_a_nodes,run_b_nodes,logical_trace_equal,candidate_set_equal,candidate_order_equal,termination_equal,scheduler_semantic_equal,prefill_semantic_equal,numeric_exact,first_divergence_step,classification
+cb2d8a2c:o1,PROFILE_L_LOW,geom=identity__color=id__order=canonical,2975,1024,1024,True,True,True,True,True,True,True,,EXACT_SEMANTIC_AND_NUMERIC
+cb2d8a2c:o1,PROFILE_L_LOW,geom=flip_ud__color=id__order=canonical,2975,1024,1024,True,True,True,True,True,True,True,,EXACT_SEMANTIC_AND_NUMERIC
+cb2d8a2c:o1,PROFILE_L_LOW,geom=transpose__color=id__order=canonical,2968,1024,1024,True,True,True,True,True,True,True,,EXACT_SEMANTIC_AND_NUMERIC
+cb2d8a2c:o1,PROFILE_L_LOW,geom=anti_transpose__color=id__order=canonical,2968,1010,1010,True,True,True,True,True,True,True,,EXACT_SEMANTIC_AND_NUMERIC
+cb2d8a2c:o1,PROFILE_L_LOW,geom=rot90__color=id__order=canonical,2968,1024,1024,True,True,True,True,True,True,True,,EXACT_SEMANTIC_AND_NUMERIC
+cb2d8a2c:o1,PROFILE_L_LOW,geom=rot180__color=id__order=canonical,2975,1024,1024,True,True,True,True,True,True,True,,EXACT_SEMANTIC_AND_NUMERIC
+cb2d8a2c:o1,PROFILE_L_LOW,geom=rot270__color=id__order=canonical,2968,1024,1024,True,True,True,True,True,True,True,,EXACT_SEMANTIC_AND_NUMERIC
+cb2d8a2c:o1,PROFILE_L_LOW,geom=flip_lr__color=id__order=canonical,2975,1024,1024,True,True,True,True,True,True,True,,EXACT_SEMANTIC_AND_NUMERIC

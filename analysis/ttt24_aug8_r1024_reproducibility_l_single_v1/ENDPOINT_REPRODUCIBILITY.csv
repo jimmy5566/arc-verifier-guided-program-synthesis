@@ -1,0 +1,9 @@
+output_id,augmentation_id,run_a_nodes,run_b_nodes,candidate_set_equal,candidate_order_equal,termination_equal
+cb2d8a2c:o1,geom=identity__color=id__order=canonical,1024,1024,True,True,True
+cb2d8a2c:o1,geom=flip_ud__color=id__order=canonical,1024,1024,True,True,True
+cb2d8a2c:o1,geom=transpose__color=id__order=canonical,1024,1024,True,True,True
+cb2d8a2c:o1,geom=anti_transpose__color=id__order=canonical,1010,1010,True,True,True
+cb2d8a2c:o1,geom=rot90__color=id__order=canonical,1024,1024,True,True,True
+cb2d8a2c:o1,geom=rot180__color=id__order=canonical,1024,1024,True,True,True
+cb2d8a2c:o1,geom=rot270__color=id__order=canonical,1024,1024,True,True,True
+cb2d8a2c:o1,geom=flip_lr__color=id__order=canonical,1024,1024,True,True,True
