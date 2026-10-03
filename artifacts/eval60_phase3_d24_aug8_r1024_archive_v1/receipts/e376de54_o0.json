@@ -1,0 +1,17 @@
+{
+  "attempt_index": 0,
+  "checkpoint_output": "OUTPUT_CHECKPOINTS/e376de54_o0.json",
+  "ended_unix": 1791043223.56982,
+  "eos_events": "EOS_EVENTS/e376de54_o0.jsonl.gz",
+  "experiment": "PHASE3A_EVAL60_D24_AUG8_R1024_V1",
+  "gold_loaded": false,
+  "output_id": "e376de54:o0",
+  "profile_configuration": {
+    "physical_batch_ceiling": 7,
+    "resident_capacity": 8
+  },
+  "raw_output": "RAW_OUTPUTS/e376de54_o0.json",
+  "status": "COMPLETE",
+  "target_blind": true,
+  "wall_seconds": 351.59547591395676
+}

@@ -1,0 +1,3 @@
+category,source_bytes,archive_bytes,file_count,git_storage_strategy
+raw_generation,17631115763,355808185,89,LFS_OR_EXTERNAL_ARCHIVE_REQUIRED
+compact_evidence,17789064767,728603577,1020,NORMAL_GIT_WHERE_REASONABLE

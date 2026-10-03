@@ -1,0 +1,10 @@
+{
+  "checked": 1024,
+  "excluded_control_receipts": [
+    "ARCHIVE_HASHES.json",
+    "ARCHIVE_HASH_VERIFICATION.json",
+    "FINAL_FREEZE_RECEIPT.json"
+  ],
+  "mismatches": [],
+  "status": "PASS"
+}
