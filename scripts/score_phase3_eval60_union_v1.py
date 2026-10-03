@@ -245,7 +245,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--d24", required=True, type=Path)
     ap.add_argument("--d48", required=True, type=Path)
-    ap.add_argument("--gold-repo", required=True, type=Path)
+    ap.add_argument("--solutions-json", required=True, type=Path)
+    ap.add_argument("--expected-solutions-sha256", required=True)
     ap.add_argument("--output", required=True, type=Path)
     args = ap.parse_args()
     if args.output.exists():
@@ -258,12 +259,7 @@ def main() -> None:
         raise RuntimeError("d24/d48 cohort ordering differs")
     outputs = out24
 
-    gold, gold_files = load_gold(args.gold_repo, outputs)
-    gold_commit = ""
-    head = args.gold_repo / ".git" / "HEAD"
-    if head.exists():
-        import subprocess
-        gold_commit = subprocess.check_output(["git", "-C", str(args.gold_repo), "rev-parse", "HEAD"], text=True).strip()
+    gold, gold_manifest = load_gold_compact(args.solutions_json, outputs, args.expected_solutions_sha256)
 
     rows = []
     task_to_outputs: dict[str, list[str]] = defaultdict(list)
@@ -354,14 +350,7 @@ def main() -> None:
     summary["NEW_MISS_POOL"] = miss
     summary["UNION_R512_TO_R1024_RESCUES"] = rescued_after_512
 
-    gold_manifest = {
-        "source": "arcprize/ARC-AGI-2 public evaluation task files",
-        "git_commit": gold_commit,
-        "task_file_count": len(gold_files),
-        "files": gold_files,
-        "output_count": len(gold),
-        "gold_digest": hashlib.sha256(canonical({k: gold[k] for k in sorted(gold)}).encode()).hexdigest(),
-    }
+    gold_manifest = dict(gold_manifest)
 
     fields = list(rows[0].keys())
     write_csv(args.output / "OUTPUT_RESULTS.csv", rows, fields)
