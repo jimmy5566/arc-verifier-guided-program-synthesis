@@ -26,7 +26,7 @@ def test_d48_uses_the_same_phase3_controller_with_a_distinct_identity() -> None:
 def test_existing_output_requires_an_independent_hash_ledger(tmp_path: Path) -> None:
     selected = {"output_id": "abc:o0"}
     assert _existing_output_gate(tmp_path, selected) is None
-    raw = tmp_path / "RAW_OUTPUTS" / "abc__o0.json"; raw.parent.mkdir()
+    raw = tmp_path / "RAW_OUTPUTS" / "abc_o0.json"; raw.parent.mkdir()
     raw.write_text("{}", encoding="utf-8")
     try:
         _existing_output_gate(tmp_path, selected)
@@ -34,12 +34,12 @@ def test_existing_output_requires_an_independent_hash_ledger(tmp_path: Path) -> 
         assert "UNVERIFIED_PARTIAL_OUTPUT_REFUSED" in str(error)
     else:
         raise AssertionError("partial output was incorrectly reusable")
-    checkpoint = tmp_path / "OUTPUT_CHECKPOINTS" / "abc__o0.json"; checkpoint.parent.mkdir(); checkpoint.write_text("{}", encoding="utf-8")
-    eos = tmp_path / "EOS_EVENTS" / "abc__o0.jsonl.gz"; eos.parent.mkdir(); eos.write_bytes(b"not-a-gzip-needed-for-hash")
-    receipt = tmp_path / "OUTPUT_RECEIPTS" / "abc__o0.json"; receipt.parent.mkdir(); _atomic_json(receipt, {"status": "COMPLETE"})
+    checkpoint = tmp_path / "OUTPUT_CHECKPOINTS" / "abc_o0.json"; checkpoint.parent.mkdir(); checkpoint.write_text("{}", encoding="utf-8")
+    eos = tmp_path / "EOS_EVENTS" / "abc_o0.jsonl.gz"; eos.parent.mkdir(); eos.write_bytes(b"not-a-gzip-needed-for-hash")
+    receipt = tmp_path / "OUTPUT_RECEIPTS" / "abc_o0.json"; receipt.parent.mkdir(); _atomic_json(receipt, {"status": "COMPLETE"})
     files = [raw, checkpoint, eos, receipt]
-    ledger = tmp_path / "OUTPUT_HASHES" / "abc__o0.json"
+    ledger = tmp_path / "OUTPUT_HASHES" / "abc_o0.json"
     _atomic_json(ledger, {"files": {str(path.relative_to(tmp_path)): _sha_file(path) for path in files}})
-    verification = tmp_path / "OUTPUT_HASH_VERIFICATION" / "abc__o0.json"; _atomic_json(verification, {"status": "PASS"})
+    verification = tmp_path / "OUTPUT_HASH_VERIFICATION" / "abc_o0.json"; _atomic_json(verification, {"status": "PASS"})
     result = _existing_output_gate(tmp_path, selected)
     assert result == {"output_id": "abc:o0", "resumed": True, "hash_checked": 4}

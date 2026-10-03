@@ -37,7 +37,6 @@ from scripts.run_ttt24_aug8_r1024_core_v1 import (  # noqa: E402
     _canonical,
     _policy,
     _read,
-    _safe,
     _sha_file,
     _sha_value,
     _subset_file,
@@ -85,6 +84,11 @@ def _task_output(output_id: str) -> tuple[str, int]:
     if marker != ":o" or not task_id or not output.isdecimal():
         raise RuntimeError(f"malformed output id: {output_id}")
     return task_id, int(output)
+
+
+def _worker_safe(output_id: str) -> str:
+    """Match the frozen Pilot worker's file name transport exactly."""
+    return output_id.replace(":", "_")
 
 
 def _runtime_probe(worker_python: Path) -> dict[str, Any]:
@@ -201,7 +205,7 @@ def _make_cohort(args: argparse.Namespace) -> tuple[list[dict[str, Any]], dict[s
 
 
 def _existing_output_gate(run: Path, selected: dict[str, Any]) -> dict[str, Any] | None:
-    safe = _safe(selected["output_id"])
+    safe = _worker_safe(selected["output_id"])
     required = [run / "RAW_OUTPUTS" / f"{safe}.json", run / "OUTPUT_CHECKPOINTS" / f"{safe}.json",
                 run / "EOS_EVENTS" / f"{safe}.jsonl.gz", run / "OUTPUT_RECEIPTS" / f"{safe}.json",
                 run / "OUTPUT_HASHES" / f"{safe}.json", run / "OUTPUT_HASH_VERIFICATION" / f"{safe}.json"]
@@ -221,7 +225,7 @@ def _existing_output_gate(run: Path, selected: dict[str, Any]) -> dict[str, Any]
 
 
 def _freeze_output(run: Path, selected: dict[str, Any]) -> dict[str, Any]:
-    safe = _safe(selected["output_id"])
+    safe = _worker_safe(selected["output_id"])
     files = [run / "RAW_OUTPUTS" / f"{safe}.json", run / "OUTPUT_CHECKPOINTS" / f"{safe}.json",
              run / "EOS_EVENTS" / f"{safe}.jsonl.gz", run / "OUTPUT_RECEIPTS" / f"{safe}.json"]
     if any(not path.is_file() for path in files) or _read(files[-1]).get("status") != "COMPLETE":
@@ -284,7 +288,7 @@ def _runtime_summaries(run: Path, cohort: list[dict[str, Any]], attempts: list[d
     histogram: Counter[tuple[str, int]] = Counter()
     grouped: defaultdict[str, list[dict[str, Any]]] = defaultdict(list)
     for selected in cohort:
-        raw = _read(run / "RAW_OUTPUTS" / f"{_safe(selected['output_id'])}.json")
+        raw = _read(run / "RAW_OUTPUTS" / f"{_worker_safe(selected['output_id'])}.json")
         scheduler = raw["scheduler"]
         row = {"output_id": selected["output_id"], "profile": selected["profile"], "root_length_min": selected["root_length_min"],
                "root_length_max": selected["root_length_max"], "wall_seconds": raw["wall_seconds"],
