@@ -1,0 +1,1 @@
+{"GOLD_SCORING":"DEFERRED_UNTIL_D24_AND_D48_BOTH_FROZEN","PHASE3_D24_GENERATION":"SEPARATE","PHASE3_D48_GENERATION":"COMPLETE","completed_outputs":89,"experiment":"PHASE3B_EVAL60_D48_AUG8_R1024_V1","generation_hash_status":"PASS","gold_loaded":false,"oom_fallback_count":0,"total_gpu_wall_seconds":30353.351489727385}

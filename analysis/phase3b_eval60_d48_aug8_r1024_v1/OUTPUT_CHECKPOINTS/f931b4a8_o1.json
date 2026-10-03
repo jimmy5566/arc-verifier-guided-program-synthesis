@@ -1,0 +1,4994 @@
+{
+  "cells": {
+    "f931b4a8:o1:d48:aug8:geom=anti_transpose__color=id__order=canonical": [
+      {
+        "active_elapsed_seconds": 0.22250233124941587,
+        "actual_nodes_reached": 5,
+        "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+        "candidate_pool_sha256": "c0eda2176bbd24a014cb0ee7109b11ee0db585ff58e8b278b77c5d9d3d1f4de0",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 72,
+            "token_ids": [
+              8,
+              3,
+              10,
+              6,
+              7,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=anti_transpose__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 512,
+        "completed_candidate_count": 1,
+        "elapsed_seconds": 0.22250233124941587,
+        "model_forwards": 6,
+        "nodes_expanded": 5,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 5,
+        "valid_kv_length": 1102,
+        "wall_time_censored": false
+      },
+      {
+        "active_elapsed_seconds": 0.22250233124941587,
+        "actual_nodes_reached": 5,
+        "augmentation_id": "geom=anti_transpose__color=id__order=canonical",
+        "candidate_pool_sha256": "c0eda2176bbd24a014cb0ee7109b11ee0db585ff58e8b278b77c5d9d3d1f4de0",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 72,
+            "token_ids": [
+              8,
+              3,
+              10,
+              6,
+              7,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=anti_transpose__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 1024,
+        "completed_candidate_count": 1,
+        "elapsed_seconds": 0.22250233124941587,
+        "model_forwards": 6,
+        "nodes_expanded": 5,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 5,
+        "valid_kv_length": 1102,
+        "wall_time_censored": false
+      }
+    ],
+    "f931b4a8:o1:d48:aug8:geom=flip_lr__color=id__order=canonical": [
+      {
+        "active_elapsed_seconds": 0.22394094336777925,
+        "actual_nodes_reached": 7,
+        "augmentation_id": "geom=flip_lr__color=id__order=canonical",
+        "candidate_pool_sha256": "766c5d3557efbf950f2857744887b9aa4878e40da886b9c27c76af7f56e8ec14",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 71,
+            "token_ids": [
+              3,
+              7,
+              10,
+              8,
+              6,
+              15
+            ]
+          },
+          {
+            "candidate_id": 1,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 7,
+            "terminal_node_id": 96,
+            "token_ids": [
+              3,
+              7,
+              10,
+              7,
+              6,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=flip_lr__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 512,
+        "completed_candidate_count": 2,
+        "elapsed_seconds": 0.22394094336777925,
+        "model_forwards": 8,
+        "nodes_expanded": 7,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 7,
+        "valid_kv_length": 1113,
+        "wall_time_censored": false
+      },
+      {
+        "active_elapsed_seconds": 0.22394094336777925,
+        "actual_nodes_reached": 7,
+        "augmentation_id": "geom=flip_lr__color=id__order=canonical",
+        "candidate_pool_sha256": "766c5d3557efbf950f2857744887b9aa4878e40da886b9c27c76af7f56e8ec14",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 71,
+            "token_ids": [
+              3,
+              7,
+              10,
+              8,
+              6,
+              15
+            ]
+          },
+          {
+            "candidate_id": 1,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 7,
+            "terminal_node_id": 96,
+            "token_ids": [
+              3,
+              7,
+              10,
+              7,
+              6,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=flip_lr__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 1024,
+        "completed_candidate_count": 2,
+        "elapsed_seconds": 0.22394094336777925,
+        "model_forwards": 8,
+        "nodes_expanded": 7,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 7,
+        "valid_kv_length": 1113,
+        "wall_time_censored": false
+      }
+    ],
+    "f931b4a8:o1:d48:aug8:geom=flip_ud__color=id__order=canonical": [
+      {
+        "active_elapsed_seconds": 0.23375282157212496,
+        "actual_nodes_reached": 14,
+        "augmentation_id": "geom=flip_ud__color=id__order=canonical",
+        "candidate_pool_sha256": "394d756aa4c837d24b34c970b144496b5f2bf94579d1b516d45085122ba4c248",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 70,
+            "token_ids": [
+              6,
+              8,
+              10,
+              7,
+              3,
+              15
+            ]
+          },
+          {
+            "candidate_id": 1,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 9,
+            "terminal_node_id": 119,
+            "token_ids": [
+              6,
+              7,
+              10,
+              7,
+              3,
+              15
+            ]
+          },
+          {
+            "candidate_id": 2,
+            "canonical_grid": [
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 14,
+            "terminal_node_id": 180,
+            "token_ids": [
+              2,
+              7,
+              10,
+              7,
+              2,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=flip_ud__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 512,
+        "completed_candidate_count": 3,
+        "elapsed_seconds": 0.23375282157212496,
+        "model_forwards": 15,
+        "nodes_expanded": 14,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 14,
+        "valid_kv_length": 1113,
+        "wall_time_censored": false
+      },
+      {
+        "active_elapsed_seconds": 0.23375282157212496,
+        "actual_nodes_reached": 14,
+        "augmentation_id": "geom=flip_ud__color=id__order=canonical",
+        "candidate_pool_sha256": "394d756aa4c837d24b34c970b144496b5f2bf94579d1b516d45085122ba4c248",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 70,
+            "token_ids": [
+              6,
+              8,
+              10,
+              7,
+              3,
+              15
+            ]
+          },
+          {
+            "candidate_id": 1,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 9,
+            "terminal_node_id": 119,
+            "token_ids": [
+              6,
+              7,
+              10,
+              7,
+              3,
+              15
+            ]
+          },
+          {
+            "candidate_id": 2,
+            "canonical_grid": [
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 14,
+            "terminal_node_id": 180,
+            "token_ids": [
+              2,
+              7,
+              10,
+              7,
+              2,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=flip_ud__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 1024,
+        "completed_candidate_count": 3,
+        "elapsed_seconds": 0.23375282157212496,
+        "model_forwards": 15,
+        "nodes_expanded": 14,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 14,
+        "valid_kv_length": 1113,
+        "wall_time_censored": false
+      }
+    ],
+    "f931b4a8:o1:d48:aug8:geom=identity__color=id__order=canonical": [
+      {
+        "active_elapsed_seconds": 0.8040414676070213,
+        "actual_nodes_reached": 12,
+        "augmentation_id": "geom=identity__color=id__order=canonical",
+        "candidate_pool_sha256": "b2415ce0ea1dc08032147580bee99d020667edb63658f4afb1d24391ad264eb1",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 71,
+            "token_ids": [
+              7,
+              3,
+              10,
+              6,
+              8,
+              15
+            ]
+          },
+          {
+            "candidate_id": 1,
+            "canonical_grid": [
+              [
+                7,
+                3,
+                7,
+                3
+              ],
+              [
+                6,
+                8,
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 12,
+            "terminal_node_id": 156,
+            "token_ids": [
+              7,
+              3,
+              7,
+              3,
+              10,
+              6,
+              8,
+              6,
+              7,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=identity__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 512,
+        "completed_candidate_count": 2,
+        "elapsed_seconds": 0.8040414676070213,
+        "model_forwards": 13,
+        "nodes_expanded": 12,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 12,
+        "valid_kv_length": 1113,
+        "wall_time_censored": false
+      },
+      {
+        "active_elapsed_seconds": 0.8040414676070213,
+        "actual_nodes_reached": 12,
+        "augmentation_id": "geom=identity__color=id__order=canonical",
+        "candidate_pool_sha256": "b2415ce0ea1dc08032147580bee99d020667edb63658f4afb1d24391ad264eb1",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 71,
+            "token_ids": [
+              7,
+              3,
+              10,
+              6,
+              8,
+              15
+            ]
+          },
+          {
+            "candidate_id": 1,
+            "canonical_grid": [
+              [
+                7,
+                3,
+                7,
+                3
+              ],
+              [
+                6,
+                8,
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 12,
+            "terminal_node_id": 156,
+            "token_ids": [
+              7,
+              3,
+              7,
+              3,
+              10,
+              6,
+              8,
+              6,
+              7,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=identity__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 1024,
+        "completed_candidate_count": 2,
+        "elapsed_seconds": 0.8040414676070213,
+        "model_forwards": 13,
+        "nodes_expanded": 12,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 12,
+        "valid_kv_length": 1113,
+        "wall_time_censored": false
+      }
+    ],
+    "f931b4a8:o1:d48:aug8:geom=rot180__color=id__order=canonical": [
+      {
+        "active_elapsed_seconds": 0.7697152756154537,
+        "actual_nodes_reached": 373,
+        "augmentation_id": "geom=rot180__color=id__order=canonical",
+        "candidate_pool_sha256": "ee2c9db1b57c7909b69a736f6d926223886b2d9a281497063562f41dd53df753",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 9,
+            "terminal_node_id": 115,
+            "token_ids": [
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 1,
+            "canonical_grid": [
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 19,
+            "terminal_node_id": 235,
+            "token_ids": [
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 2,
+            "canonical_grid": [
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 79,
+            "terminal_node_id": 956,
+            "token_ids": [
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 3,
+            "canonical_grid": [
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 82,
+            "terminal_node_id": 992,
+            "token_ids": [
+              7,
+              2,
+              10,
+              2,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 4,
+            "canonical_grid": [
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 88,
+            "terminal_node_id": 1063,
+            "token_ids": [
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 5,
+            "canonical_grid": [
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 100,
+            "terminal_node_id": 1207,
+            "token_ids": [
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 6,
+            "canonical_grid": [
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 106,
+            "terminal_node_id": 1279,
+            "token_ids": [
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 7,
+            "canonical_grid": [
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 124,
+            "terminal_node_id": 1496,
+            "token_ids": [
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 8,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 129,
+            "terminal_node_id": 1557,
+            "token_ids": [
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              8,
+              6,
+              10,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 9,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 133,
+            "terminal_node_id": 1603,
+            "token_ids": [
+              7,
+              6,
+              10,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 10,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 139,
+            "terminal_node_id": 1676,
+            "token_ids": [
+              7,
+              6,
+              10,
+              3,
+              7,
+              10,
+              7,
+              6,
+              10,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 11,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 141,
+            "terminal_node_id": 1700,
+            "token_ids": [
+              7,
+              6,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 12,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 159,
+            "terminal_node_id": 1915,
+            "token_ids": [
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 13,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 165,
+            "terminal_node_id": 1987,
+            "token_ids": [
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 14,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 183,
+            "terminal_node_id": 2204,
+            "token_ids": [
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 15,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 206,
+            "terminal_node_id": 2480,
+            "token_ids": [
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 16,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 224,
+            "terminal_node_id": 2697,
+            "token_ids": [
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 17,
+            "canonical_grid": [
+              [
+                7,
+                6,
+                7,
+                6
+              ],
+              [
+                6,
+                8,
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 231,
+            "terminal_node_id": 2781,
+            "token_ids": [
+              7,
+              6,
+              8,
+              6,
+              10,
+              6,
+              7,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 18,
+            "canonical_grid": [
+              [
+                7,
+                6,
+                7,
+                6
+              ],
+              [
+                6,
+                8,
+                6,
+                7
+              ],
+              [
+                7,
+                6,
+                7,
+                6
+              ],
+              [
+                6,
+                8,
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 241,
+            "terminal_node_id": 2902,
+            "token_ids": [
+              7,
+              6,
+              8,
+              6,
+              10,
+              6,
+              7,
+              6,
+              7,
+              10,
+              7,
+              6,
+              8,
+              6,
+              10,
+              6,
+              7,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 19,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 245,
+            "terminal_node_id": 2947,
+            "token_ids": [
+              7,
+              8,
+              10,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 20,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 251,
+            "terminal_node_id": 3019,
+            "token_ids": [
+              7,
+              8,
+              10,
+              3,
+              7,
+              10,
+              7,
+              8,
+              10,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 21,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 263,
+            "terminal_node_id": 3164,
+            "token_ids": [
+              7,
+              8,
+              10,
+              3,
+              7,
+              10,
+              7,
+              8,
+              10,
+              3,
+              7,
+              10,
+              7,
+              8,
+              10,
+              3,
+              7,
+              10,
+              7,
+              8,
+              10,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 22,
+            "canonical_grid": [
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 265,
+            "terminal_node_id": 3188,
+            "token_ids": [
+              7,
+              8,
+              10,
+              8,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 23,
+            "canonical_grid": [
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 283,
+            "terminal_node_id": 3404,
+            "token_ids": [
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 24,
+            "canonical_grid": [
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 289,
+            "terminal_node_id": 3476,
+            "token_ids": [
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 25,
+            "canonical_grid": [
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 307,
+            "terminal_node_id": 3693,
+            "token_ids": [
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 26,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 309,
+            "terminal_node_id": 3717,
+            "token_ids": [
+              7,
+              8,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 27,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 327,
+            "terminal_node_id": 3933,
+            "token_ids": [
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 28,
+            "canonical_grid": [
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 333,
+            "terminal_node_id": 4005,
+            "token_ids": [
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              15
+            ]
+          },
+          {
+            "candidate_id": 29,
+            "canonical_grid": [
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 351,
+            "terminal_node_id": 4222,
+            "token_ids": [
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              15
+            ]
+          },
+          {
+            "candidate_id": 30,
+            "canonical_grid": [
+              [
+                7,
+                3,
+                7,
+                3
+              ],
+              [
+                8,
+                7,
+                8,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                3
+              ],
+              [
+                8,
+                7,
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 368,
+            "terminal_node_id": 4427,
+            "token_ids": [
+              7,
+              8,
+              7,
+              8,
+              10,
+              3,
+              7,
+              3,
+              7,
+              10,
+              7,
+              8,
+              7,
+              8,
+              10,
+              3,
+              7,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 31,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 373,
+            "terminal_node_id": 4488,
+            "token_ids": [
+              8,
+              6,
+              10,
+              3,
+              7,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=rot180__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 512,
+        "completed_candidate_count": 32,
+        "elapsed_seconds": 0.7697152756154537,
+        "model_forwards": 374,
+        "nodes_expanded": 373,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 373,
+        "valid_kv_length": 1113,
+        "wall_time_censored": false
+      },
+      {
+        "active_elapsed_seconds": 0.7697152756154537,
+        "actual_nodes_reached": 373,
+        "augmentation_id": "geom=rot180__color=id__order=canonical",
+        "candidate_pool_sha256": "ee2c9db1b57c7909b69a736f6d926223886b2d9a281497063562f41dd53df753",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 9,
+            "terminal_node_id": 115,
+            "token_ids": [
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 1,
+            "canonical_grid": [
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 19,
+            "terminal_node_id": 235,
+            "token_ids": [
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 2,
+            "canonical_grid": [
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                2
+              ],
+              [
+                6,
+                8,
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 79,
+            "terminal_node_id": 956,
+            "token_ids": [
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              10,
+              7,
+              2,
+              8,
+              6,
+              10,
+              2,
+              7,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 3,
+            "canonical_grid": [
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 82,
+            "terminal_node_id": 992,
+            "token_ids": [
+              7,
+              2,
+              10,
+              2,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 4,
+            "canonical_grid": [
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 88,
+            "terminal_node_id": 1063,
+            "token_ids": [
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 5,
+            "canonical_grid": [
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 100,
+            "terminal_node_id": 1207,
+            "token_ids": [
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 6,
+            "canonical_grid": [
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 106,
+            "terminal_node_id": 1279,
+            "token_ids": [
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 7,
+            "canonical_grid": [
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 124,
+            "terminal_node_id": 1496,
+            "token_ids": [
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              7,
+              2,
+              10,
+              2,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 8,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 129,
+            "terminal_node_id": 1557,
+            "token_ids": [
+              7,
+              2,
+              10,
+              2,
+              7,
+              10,
+              8,
+              6,
+              10,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 9,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 133,
+            "terminal_node_id": 1603,
+            "token_ids": [
+              7,
+              6,
+              10,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 10,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 139,
+            "terminal_node_id": 1676,
+            "token_ids": [
+              7,
+              6,
+              10,
+              3,
+              7,
+              10,
+              7,
+              6,
+              10,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 11,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 141,
+            "terminal_node_id": 1700,
+            "token_ids": [
+              7,
+              6,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 12,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 159,
+            "terminal_node_id": 1915,
+            "token_ids": [
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 13,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 165,
+            "terminal_node_id": 1987,
+            "token_ids": [
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 14,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 183,
+            "terminal_node_id": 2204,
+            "token_ids": [
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 15,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 206,
+            "terminal_node_id": 2480,
+            "token_ids": [
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 16,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 224,
+            "terminal_node_id": 2697,
+            "token_ids": [
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              6,
+              7,
+              10,
+              7,
+              6,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 17,
+            "canonical_grid": [
+              [
+                7,
+                6,
+                7,
+                6
+              ],
+              [
+                6,
+                8,
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 231,
+            "terminal_node_id": 2781,
+            "token_ids": [
+              7,
+              6,
+              8,
+              6,
+              10,
+              6,
+              7,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 18,
+            "canonical_grid": [
+              [
+                7,
+                6,
+                7,
+                6
+              ],
+              [
+                6,
+                8,
+                6,
+                7
+              ],
+              [
+                7,
+                6,
+                7,
+                6
+              ],
+              [
+                6,
+                8,
+                6,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 241,
+            "terminal_node_id": 2902,
+            "token_ids": [
+              7,
+              6,
+              8,
+              6,
+              10,
+              6,
+              7,
+              6,
+              7,
+              10,
+              7,
+              6,
+              8,
+              6,
+              10,
+              6,
+              7,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 19,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 245,
+            "terminal_node_id": 2947,
+            "token_ids": [
+              7,
+              8,
+              10,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 20,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 251,
+            "terminal_node_id": 3019,
+            "token_ids": [
+              7,
+              8,
+              10,
+              3,
+              7,
+              10,
+              7,
+              8,
+              10,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 21,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 263,
+            "terminal_node_id": 3164,
+            "token_ids": [
+              7,
+              8,
+              10,
+              3,
+              7,
+              10,
+              7,
+              8,
+              10,
+              3,
+              7,
+              10,
+              7,
+              8,
+              10,
+              3,
+              7,
+              10,
+              7,
+              8,
+              10,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 22,
+            "canonical_grid": [
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 265,
+            "terminal_node_id": 3188,
+            "token_ids": [
+              7,
+              8,
+              10,
+              8,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 23,
+            "canonical_grid": [
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 283,
+            "terminal_node_id": 3404,
+            "token_ids": [
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 24,
+            "canonical_grid": [
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 289,
+            "terminal_node_id": 3476,
+            "token_ids": [
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 25,
+            "canonical_grid": [
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 307,
+            "terminal_node_id": 3693,
+            "token_ids": [
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              10,
+              7,
+              8,
+              10,
+              8,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 26,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 309,
+            "terminal_node_id": 3717,
+            "token_ids": [
+              7,
+              8,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 27,
+            "canonical_grid": [
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 327,
+            "terminal_node_id": 3933,
+            "token_ids": [
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 28,
+            "canonical_grid": [
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 333,
+            "terminal_node_id": 4005,
+            "token_ids": [
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              15
+            ]
+          },
+          {
+            "candidate_id": 29,
+            "canonical_grid": [
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 351,
+            "terminal_node_id": 4222,
+            "token_ids": [
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              10,
+              6,
+              7,
+              10,
+              8,
+              6,
+              10,
+              7,
+              8,
+              15
+            ]
+          },
+          {
+            "candidate_id": 30,
+            "canonical_grid": [
+              [
+                7,
+                3,
+                7,
+                3
+              ],
+              [
+                8,
+                7,
+                8,
+                7
+              ],
+              [
+                7,
+                3,
+                7,
+                3
+              ],
+              [
+                8,
+                7,
+                8,
+                7
+              ]
+            ],
+            "nodes_expanded_so_far": 368,
+            "terminal_node_id": 4427,
+            "token_ids": [
+              7,
+              8,
+              7,
+              8,
+              10,
+              3,
+              7,
+              3,
+              7,
+              10,
+              7,
+              8,
+              7,
+              8,
+              10,
+              3,
+              7,
+              3,
+              7,
+              15
+            ]
+          },
+          {
+            "candidate_id": 31,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 373,
+            "terminal_node_id": 4488,
+            "token_ids": [
+              8,
+              6,
+              10,
+              3,
+              7,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=rot180__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 1024,
+        "completed_candidate_count": 32,
+        "elapsed_seconds": 0.7697152756154537,
+        "model_forwards": 374,
+        "nodes_expanded": 373,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 373,
+        "valid_kv_length": 1113,
+        "wall_time_censored": false
+      }
+    ],
+    "f931b4a8:o1:d48:aug8:geom=rot270__color=id__order=canonical": [
+      {
+        "active_elapsed_seconds": 0.2238110415637493,
+        "actual_nodes_reached": 5,
+        "augmentation_id": "geom=rot270__color=id__order=canonical",
+        "candidate_pool_sha256": "4bf5c94b1911a6f1cb59b5fb4cc98aa9fb90887784abfe00009271106e50c081",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 72,
+            "token_ids": [
+              6,
+              7,
+              10,
+              8,
+              3,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=rot270__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 512,
+        "completed_candidate_count": 1,
+        "elapsed_seconds": 0.2238110415637493,
+        "model_forwards": 6,
+        "nodes_expanded": 5,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 5,
+        "valid_kv_length": 1102,
+        "wall_time_censored": false
+      },
+      {
+        "active_elapsed_seconds": 0.2238110415637493,
+        "actual_nodes_reached": 5,
+        "augmentation_id": "geom=rot270__color=id__order=canonical",
+        "candidate_pool_sha256": "4bf5c94b1911a6f1cb59b5fb4cc98aa9fb90887784abfe00009271106e50c081",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 72,
+            "token_ids": [
+              6,
+              7,
+              10,
+              8,
+              3,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=rot270__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 1024,
+        "completed_candidate_count": 1,
+        "elapsed_seconds": 0.2238110415637493,
+        "model_forwards": 6,
+        "nodes_expanded": 5,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 5,
+        "valid_kv_length": 1102,
+        "wall_time_censored": false
+      }
+    ],
+    "f931b4a8:o1:d48:aug8:geom=rot90__color=id__order=canonical": [
+      {
+        "active_elapsed_seconds": 0.22173576056957245,
+        "actual_nodes_reached": 5,
+        "augmentation_id": "geom=rot90__color=id__order=canonical",
+        "candidate_pool_sha256": "ff42f370827bf8852226e8892e2576f72e18e164f5aed8969c3d596659eb71bd",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 72,
+            "token_ids": [
+              3,
+              8,
+              10,
+              7,
+              6,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=rot90__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 512,
+        "completed_candidate_count": 1,
+        "elapsed_seconds": 0.22173576056957245,
+        "model_forwards": 6,
+        "nodes_expanded": 5,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 5,
+        "valid_kv_length": 1102,
+        "wall_time_censored": false
+      },
+      {
+        "active_elapsed_seconds": 0.22173576056957245,
+        "actual_nodes_reached": 5,
+        "augmentation_id": "geom=rot90__color=id__order=canonical",
+        "candidate_pool_sha256": "ff42f370827bf8852226e8892e2576f72e18e164f5aed8969c3d596659eb71bd",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 72,
+            "token_ids": [
+              3,
+              8,
+              10,
+              7,
+              6,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=rot90__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 1024,
+        "completed_candidate_count": 1,
+        "elapsed_seconds": 0.22173576056957245,
+        "model_forwards": 6,
+        "nodes_expanded": 5,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 5,
+        "valid_kv_length": 1102,
+        "wall_time_censored": false
+      }
+    ],
+    "f931b4a8:o1:d48:aug8:geom=transpose__color=id__order=canonical": [
+      {
+        "active_elapsed_seconds": 0.22279657050967216,
+        "actual_nodes_reached": 5,
+        "augmentation_id": "geom=transpose__color=id__order=canonical",
+        "candidate_pool_sha256": "1c31ca49c88aee9e7dc0482205c2ce22cd12bff52019f2b5bd67537b346db58b",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 72,
+            "token_ids": [
+              7,
+              6,
+              10,
+              3,
+              8,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=transpose__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 512,
+        "completed_candidate_count": 1,
+        "elapsed_seconds": 0.22279657050967216,
+        "model_forwards": 6,
+        "nodes_expanded": 5,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 5,
+        "valid_kv_length": 1102,
+        "wall_time_censored": false
+      },
+      {
+        "active_elapsed_seconds": 0.22279657050967216,
+        "actual_nodes_reached": 5,
+        "augmentation_id": "geom=transpose__color=id__order=canonical",
+        "candidate_pool_sha256": "1c31ca49c88aee9e7dc0482205c2ce22cd12bff52019f2b5bd67537b346db58b",
+        "candidate_pool_snapshot": [
+          {
+            "candidate_id": 0,
+            "canonical_grid": [
+              [
+                7,
+                3
+              ],
+              [
+                6,
+                8
+              ]
+            ],
+            "nodes_expanded_so_far": 5,
+            "terminal_node_id": 72,
+            "token_ids": [
+              7,
+              6,
+              10,
+              3,
+              8,
+              15
+            ]
+          }
+        ],
+        "capacity_kv_length": 1280,
+        "carried_forward_terminal": true,
+        "cell_key": "f931b4a8:o1:d48:aug8:geom=transpose__color=id__order=canonical",
+        "checkpoint_reached": false,
+        "checkpoint_requested": 1024,
+        "completed_candidate_count": 1,
+        "elapsed_seconds": 0.22279657050967216,
+        "model_forwards": 6,
+        "nodes_expanded": 5,
+        "output_id": "f931b4a8:o1",
+        "profile": "PROFILE_S",
+        "termination_reason": "search_exhausted",
+        "tokens_advanced": 5,
+        "valid_kv_length": 1102,
+        "wall_time_censored": false
+      }
+    ]
+  },
+  "experiment": "PHASE3B_EVAL60_D48_AUG8_R1024_V1",
+  "gold_loaded": false,
+  "output_id": "f931b4a8:o1",
+  "target_blind": true
+}
