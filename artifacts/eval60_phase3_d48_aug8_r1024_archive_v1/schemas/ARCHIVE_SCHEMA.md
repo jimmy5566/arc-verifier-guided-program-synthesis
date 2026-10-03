@@ -1,0 +1,1 @@
+Archive joins use `(output_id, augmentation_id, depth)`; candidate records additionally use checkpoint and candidate completion identity. Raw and checkpoint files are deterministic gzip streams whose decompressed content hashes bind to source bytes.

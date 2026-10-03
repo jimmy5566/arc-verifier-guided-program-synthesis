@@ -1,0 +1,41 @@
+{
+  "EXECUTION/CENSORING": {
+    "evidence": [
+      "tables/OUTPUT_SUMMARY.csv",
+      "tables/CELL_SUMMARY.csv",
+      "OUTPUT_RUNTIME.csv",
+      "OOM_FALLBACK_RECEIPTS.csv"
+    ],
+    "status": "READY_FROM_ARCHIVE"
+  },
+  "MODEL": {
+    "evidence": [
+      "raw/",
+      "tables/candidate_index/"
+    ],
+    "status": "READY_FROM_ARCHIVE"
+  },
+  "REPRESENTATION": {
+    "evidence": [
+      "AUG8_IDS.json",
+      "tables/CELL_SUMMARY.csv",
+      "tables/candidate_index/"
+    ],
+    "status": "READY_FROM_ARCHIVE"
+  },
+  "RETENTION": {
+    "evidence": [
+      "tables/candidate_index/",
+      "tables/CHECKPOINT_INDEX.csv"
+    ],
+    "status": "READY_FROM_ARCHIVE"
+  },
+  "TRAVERSAL": {
+    "evidence": [
+      "raw/",
+      "tables/node_index/",
+      "tables/scheduler_events/"
+    ],
+    "status": "READY_FROM_ARCHIVE"
+  }
+}

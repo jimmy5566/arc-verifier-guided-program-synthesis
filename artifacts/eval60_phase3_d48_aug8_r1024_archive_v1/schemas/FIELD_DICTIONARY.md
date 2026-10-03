@@ -1,0 +1,1 @@
+OUTPUT_SUMMARY is one row per output. CELL_SUMMARY is one row per output/AUG8 cell. CHECKPOINT_INDEX is one row per checkpoint. Candidate, node, scheduler, and EOS indexes are deterministic per-output JSONL gzip shards.

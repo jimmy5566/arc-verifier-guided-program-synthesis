@@ -1,0 +1,51 @@
+{
+  "contract": {
+    "admission": "root_aware",
+    "augmentation_ids": [
+      "geom=identity__color=id__order=canonical",
+      "geom=flip_ud__color=id__order=canonical",
+      "geom=transpose__color=id__order=canonical",
+      "geom=anti_transpose__color=id__order=canonical",
+      "geom=rot90__color=id__order=canonical",
+      "geom=rot180__color=id__order=canonical",
+      "geom=rot270__color=id__order=canonical",
+      "geom=flip_lr__color=id__order=canonical"
+    ],
+    "cache": "ChunkedDynamicCache / valid_length rollback",
+    "candidate_cap": 32,
+    "cohort": "Eval60: 60 tasks / 89 outputs",
+    "d24": "SEPARATE",
+    "d48": "COMPLETE",
+    "decoder": "CUMULATIVE_REGRET_r=4.00",
+    "eos": 15,
+    "experiment": "PHASE3B_EVAL60_D48_AUG8_R1024_V1",
+    "frontier_floor": 1,
+    "generation_scope": "D48_ONLY",
+    "gold_loaded": false,
+    "gold_scoring": "DEFERRED_UNTIL_D24_AND_D48_BOTH_FROZEN",
+    "max_expanded_nodes": 1024,
+    "max_new_tokens": 931,
+    "profile_policy": "existing S/M/L/XL frozen coarse policy",
+    "source_commit": "16143302be2a44a86daa7eefe5ae30878ab0c47a",
+    "target_blind": true,
+    "ttt_depth": 48,
+    "worker_python": "/root/arc-runtime-phase3b-r2/env/3090-ampere-env-v2/bin/python",
+    "worker_runtime": {
+      "cuda_available": true,
+      "peft": "0.17.1",
+      "sys_executable": "/root/arc-runtime-phase3b-r2/env/3090-ampere-env-v2/bin/python",
+      "torch": "2.8.0+cu128",
+      "torch_cuda": "12.8",
+      "transformers": "4.55.4"
+    }
+  },
+  "contract_source_commit": "16143302be2a44a86daa7eefe5ae30878ab0c47a",
+  "depth": 48,
+  "git": {
+    "branch": "",
+    "generation_source_commit": "16143302be2a44a86daa7eefe5ae30878ab0c47a",
+    "source_commit": "16143302be2a44a86daa7eefe5ae30878ab0c47a",
+    "tree_status": "clean"
+  },
+  "note": "Executor/controller file hashes are established only when their historical source path is supplied; no identity is guessed."
+}

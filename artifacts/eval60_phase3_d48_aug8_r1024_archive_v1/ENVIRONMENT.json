@@ -1,0 +1,10 @@
+{
+  "cuda": "12.8",
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "peft": "0.17.1",
+  "platform": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
+  "python": "3.11.13 (main, Jun  4 2025, 08:57:30) [GCC 13.3.0]",
+  "sys_executable": "/root/arc-runtime-phase3b-r2/env/3090-ampere-env-v2/bin/python",
+  "torch": "2.8.0+cu128",
+  "transformers": "4.55.4"
+}

@@ -1,0 +1,2 @@
+nohup: ignoring input
+{"archive": "/workspace/arc2/artifacts/eval60_phase3_d48_aug8_r1024_archive_v1", "candidate_index_shards": 89, "cells": 712, "depth": 48, "duplicate_output_ids": false, "hash_mismatches": [], "hash_missing": [], "hashes_checked": 1021, "malformed_outputs": [], "outputs": 89, "source_audit_status": "PASS", "status": "PASS"}

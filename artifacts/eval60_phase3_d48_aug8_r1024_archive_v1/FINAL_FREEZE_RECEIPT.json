@@ -1,0 +1,18 @@
+{
+  "adapter_manifest_status": "PASS",
+  "archive_hash_verification": "PASS",
+  "archive_id": "eval60_phase3_d48_aug8_r1024_archive_v1",
+  "archive_payload_hashes_checked": 1021,
+  "cells": "712/712",
+  "depth": 48,
+  "full_github_archive_status": "PENDING_GITHUB_TRANSFER",
+  "gold_accessed": false,
+  "model_runtime_identity_status": "PARTIALLY_ESTABLISHED",
+  "outputs": "89/89",
+  "scientific_generation_rerun": false,
+  "source_generation_identity": "16143302be2a44a86daa7eefe5ae30878ab0c47a",
+  "source_hash_verification": "PASS",
+  "source_run_path": "/root/arc-runtime-phase3b-r2/active_run/phase3b_eval60_d48_aug8_r1024_v2",
+  "source_to_archive_parity": "PASS",
+  "timestamp_utc": "2026-10-03T18:01:03.917540+00:00"
+}

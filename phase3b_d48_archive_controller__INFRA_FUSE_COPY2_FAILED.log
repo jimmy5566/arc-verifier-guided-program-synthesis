@@ -1,0 +1,14 @@
+nohup: ignoring input
+Traceback (most recent call last):
+  File "/root/phase3b_tools/freeze_phase3_archive.py", line 569, in <module>
+    main()
+  File "/root/phase3b_tools/freeze_phase3_archive.py", line 564, in main
+    result = create_archive(args.source.resolve(), args.archive.resolve(), args.tools_dir.resolve() if args.tools_dir else None)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/phase3b_tools/freeze_phase3_archive.py", line 279, in create_archive
+    shutil.copy2(tool, archive / "scripts" / tool.name)
+  File "/usr/lib/python3.11/shutil.py", line 449, in copy2
+    copystat(src, dst, follow_symlinks=follow_symlinks)
+  File "/usr/lib/python3.11/shutil.py", line 380, in copystat
+    lookup("utime")(dst, ns=(st.st_atime_ns, st.st_mtime_ns),
+PermissionError: [Errno 1] Operation not permitted

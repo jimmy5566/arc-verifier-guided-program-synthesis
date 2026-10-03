@@ -1,0 +1,37 @@
+{
+  "canonical_aug8_cells_expected": 712,
+  "canonical_aug8_cells_found": 712,
+  "canonical_aug8_cells_verified": true,
+  "compact_hash_ledger": {
+    "canonical_root": "6bb97ee885bc57128f831bbdb584d7fab5c8caf484ff139435325a27e3a729d0",
+    "entries": 278,
+    "expected_root": "6bb97ee885bc57128f831bbdb584d7fab5c8caf484ff139435325a27e3a729d0",
+    "ledger": "HASHES.json",
+    "mismatches": [],
+    "missing": [],
+    "status": "PASS"
+  },
+  "depth": 48,
+  "duplicate_output_ids": [],
+  "generation_hash_ledger": {
+    "canonical_root": "94e7408a2f9bce89abc2f444e20b80af82a2639437c22274c09fb9a3897bb89d",
+    "entries": 545,
+    "expected_root": "94e7408a2f9bce89abc2f444e20b80af82a2639437c22274c09fb9a3897bb89d",
+    "ledger": "GENERATION_HASHES.json",
+    "mismatches": [],
+    "missing": [],
+    "status": "PASS"
+  },
+  "gold_loaded": false,
+  "invalid_cell_augmentation_sets": [],
+  "invalid_receipts": [],
+  "missing_raw_outputs": [],
+  "missing_required_checkpoints": [],
+  "non_finite_outputs": [],
+  "note": "Source was terminal before archival; source files were read-only throughout archival.",
+  "outputs_expected": 89,
+  "outputs_found": 89,
+  "status": "PASS",
+  "target_blind": true,
+  "tasks": 60
+}

@@ -1,0 +1,17 @@
+{
+  "attempt_index": 0,
+  "checkpoint_output": "OUTPUT_CHECKPOINTS/d59b0160_o0.json",
+  "ended_unix": 1791035064.1831567,
+  "eos_events": "EOS_EVENTS/d59b0160_o0.jsonl.gz",
+  "experiment": "PHASE3B_EVAL60_D48_AUG8_R1024_V1",
+  "gold_loaded": false,
+  "output_id": "d59b0160:o0",
+  "profile_configuration": {
+    "physical_batch_ceiling": 7,
+    "resident_capacity": 8
+  },
+  "raw_output": "RAW_OUTPUTS/d59b0160_o0.json",
+  "status": "COMPLETE",
+  "target_blind": true,
+  "wall_seconds": 453.5512693664059
+}

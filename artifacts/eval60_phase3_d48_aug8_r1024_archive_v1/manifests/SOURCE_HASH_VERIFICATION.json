@@ -1,0 +1,6 @@
+{
+  "checked": 642,
+  "method": "source bytes hashed before or during immutable archive copy; source controller was terminal",
+  "mismatches": [],
+  "status": "PASS"
+}
