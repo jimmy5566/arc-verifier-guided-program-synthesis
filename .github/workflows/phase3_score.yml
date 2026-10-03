@@ -1,0 +1,41 @@
+name: Phase3 post-freeze CPU score
+
+on:
+  push:
+    branches:
+      - transfer/turbodfs-opt-v2-repair
+    paths:
+      - '.github/workflows/phase3_score.yml'
+      - 'scripts/score_phase3_eval60_union_v1.py'
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Clone official ARC-AGI-2
+        run: git clone --depth 1 https://github.com/arcprize/ARC-AGI-2.git /tmp/ARC-AGI-2
+
+      - name: Run CPU-only scorer
+        run: |
+          python scripts/score_phase3_eval60_union_v1.py \
+            --d24 artifacts/eval60_phase3_d24_aug8_r1024_archive_v1 \
+            --d48 artifacts/eval60_phase3_d48_aug8_r1024_archive_v1 \
+            --gold-repo /tmp/ARC-AGI-2 \
+            --output phase3_score_output
+
+      - name: Show summary
+        run: |
+          cat phase3_score_output/SUMMARY.json
+          cat phase3_score_output/REPORT.md
+
+      - name: Upload score artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-score-output
+          path: phase3_score_output/
