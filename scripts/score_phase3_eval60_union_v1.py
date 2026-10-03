@@ -98,26 +98,39 @@ def validate_archive(archive: Path, depth: int) -> list[str]:
     return outputs
 
 
-def load_gold(gold_repo: Path, outputs: list[str]) -> tuple[dict[str, Any], dict[str, Any]]:
+def load_gold_compact(solutions_path: Path, outputs: list[str], expected_sha256: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    observed = sha256(solutions_path)
+    if observed != expected_sha256:
+        raise RuntimeError(f"Gold SHA256 mismatch: expected {expected_sha256}, observed {observed}")
+    payload = read_json(solutions_path)
     gold: dict[str, Any] = {}
-    files: dict[str, Any] = {}
-    for task in sorted({task_id(x) for x in outputs}):
-        path = gold_repo / "data" / "evaluation" / f"{task}.json"
-        if not path.is_file():
-            raise RuntimeError(f"missing official evaluation task: {path}")
-        payload = read_json(path)
-        tests = payload.get("test", [])
-        if not tests or any("output" not in item for item in tests):
-            raise RuntimeError(f"official task lacks public test outputs: {task}")
-        files[task] = {"relative_path": str(path.relative_to(gold_repo)), "sha256": sha256(path)}
-        for oid in [x for x in outputs if task_id(x) == task]:
-            idx = output_index(oid)
+    for oid in outputs:
+        task = task_id(oid)
+        idx = output_index(oid)
+        if task not in payload:
+            raise RuntimeError(f"missing Gold task: {task}")
+        task_solutions = payload[task]
+        if isinstance(task_solutions, list):
+            if idx >= len(task_solutions):
+                raise RuntimeError(f"{oid}: output index out of range in compact Gold")
+            target = task_solutions[idx]
+        elif isinstance(task_solutions, dict):
+            tests = task_solutions.get("test", [])
             if idx >= len(tests):
-                raise RuntimeError(f"{oid}: output index out of range in official task")
-            gold[oid] = tests[idx]["output"]
+                raise RuntimeError(f"{oid}: output index out of range in object Gold")
+            item = tests[idx]
+            target = item["output"] if isinstance(item, dict) else item
+        else:
+            raise RuntimeError(f"{task}: unsupported Gold schema")
+        gold[oid] = target
     if set(gold) != set(outputs):
         raise RuntimeError("Gold output coverage mismatch")
-    return gold, files
+    return gold, {
+        "source": str(solutions_path),
+        "solutions_sha256": observed,
+        "output_count": len(gold),
+        "gold_digest": hashlib.sha256(canonical({k: gold[k] for k in sorted(gold)}).encode()).hexdigest(),
+    }
 
 
 def node_scores(archive: Path, oid: str) -> dict[tuple[str, int], tuple[float | None, float | None]]:
