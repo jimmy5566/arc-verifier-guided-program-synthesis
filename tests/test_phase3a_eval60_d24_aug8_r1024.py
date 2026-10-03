@@ -1,4 +1,5 @@
 from pathlib import Path
+from types import SimpleNamespace
 
 import scripts.run_phase3a_eval60_d24_aug8_r1024 as phase3
 from scripts.run_phase3a_eval60_d24_aug8_r1024 import _existing_output_gate, _freeze_output, _profile_name
@@ -41,3 +42,19 @@ def test_existing_output_requires_an_independent_hash_ledger(tmp_path: Path) -> 
     assert frozen == {"output_id": "abc:o0", "resumed": False, "hash_checked": 4}
     result = _existing_output_gate(tmp_path, selected)
     assert result == {"output_id": "abc:o0", "resumed": True, "hash_checked": 4}
+
+
+def test_controller_only_repair_records_both_source_identities(tmp_path: Path) -> None:
+    args = SimpleNamespace(output=tmp_path, resume_controller_repair_from="prior")
+    receipt = phase3._controller_repair_receipt(args, "current", {"source_commit": "prior"})
+    assert receipt == {
+        "status": "CONTROLLER_ONLY_REPAIR",
+        "target_blind": True,
+        "gold_loaded": False,
+        "prior_contract_source_commit": "prior",
+        "controller_source_commit": "current",
+        "repair": "OUTPUT_HASH_PROGRESS_COUNT_FIX",
+        "scientific_configuration_changed": False,
+        "per_output_worker_reexecution": "ONLY_MISSING_OUTPUTS",
+    }
+    assert phase3._controller_repair_receipt(args, "current", {"source_commit": "prior"}) == receipt

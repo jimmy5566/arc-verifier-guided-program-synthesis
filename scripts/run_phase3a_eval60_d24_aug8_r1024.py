@@ -79,6 +79,38 @@ def _head() -> str:
     return result.stdout.strip()
 
 
+def _controller_repair_receipt(args: argparse.Namespace, source_commit: str, contract: dict[str, Any]) -> dict[str, Any] | None:
+    """Permit one explicit, provenance-preserving controller-only resume.
+
+    A per-output ledger binds the raw result to the source that produced it.
+    A later controller-only repair must therefore not overwrite that identity.
+    The caller has to name the prior contract commit explicitly, and the
+    transition is recorded alongside the immutable original contract.
+    """
+    previous = str(contract.get("source_commit", ""))
+    if previous == source_commit:
+        return None
+    if args.resume_controller_repair_from != previous:
+        raise RuntimeError("RESUME_CONTRACT_IDENTITY_FAIL")
+    receipt = {
+        "status": "CONTROLLER_ONLY_REPAIR",
+        "target_blind": True,
+        "gold_loaded": False,
+        "prior_contract_source_commit": previous,
+        "controller_source_commit": source_commit,
+        "repair": "OUTPUT_HASH_PROGRESS_COUNT_FIX",
+        "scientific_configuration_changed": False,
+        "per_output_worker_reexecution": "ONLY_MISSING_OUTPUTS",
+    }
+    path = args.output / "CONTROLLER_REPAIR_RECEIPT.json"
+    if path.exists():
+        if _read(path) != receipt:
+            raise RuntimeError("CONTROLLER_REPAIR_RECEIPT_IDENTITY_FAIL")
+    else:
+        _atomic_json(path, receipt)
+    return receipt
+
+
 def _task_output(output_id: str) -> tuple[str, int]:
     task_id, marker, output = str(output_id).partition(":o")
     if marker != ":o" or not task_id or not output.isdecimal():
@@ -402,6 +434,8 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--runtime-ready", type=Path, required=True)
     parser.add_argument("--worker-python", type=Path, required=True)
     parser.add_argument("--ttt-depth", type=int, choices=(24, 48), default=24)
+    parser.add_argument("--resume-controller-repair-from", default=None,
+                        help="Explicit prior contract SHA for a recorded controller-only repair resume.")
     parser.add_argument("--device", default="cuda:0")
     return parser.parse_args()
 
@@ -414,8 +448,9 @@ def main() -> int:
         if not (args.output / "CONTRACT.json").is_file():
             raise RuntimeError(f"OUTPUT_DIR_EXISTS_WITHOUT_RESUMABLE_CONTRACT:{args.output}")
         contract = _read(args.output / "CONTRACT.json")
-        if contract.get("experiment") != EXPERIMENT or contract.get("source_commit") != source_commit:
+        if contract.get("experiment") != EXPERIMENT:
             raise RuntimeError("RESUME_CONTRACT_IDENTITY_FAIL")
+        _controller_repair_receipt(args, source_commit, contract)
         cohort = _read(args.output / "RUN_COHORT.json")["outputs"]
         policy = _read(args.coarse_policy)
     else:
