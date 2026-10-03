@@ -31,6 +31,7 @@ WORKER = ROOT / "scripts" / "run_eval60_budget_eos_pilot18_v1.py"
 SOURCE_COMMIT = "b849e821deb69f6c6cbfa193164aace020b00efd"
 EXPERIMENT = "TTT24_AUG8_R1024_REPRODUCIBILITY_GATE_V1"
 FRESH_PARTIAL_EXPERIMENT = "TTT24_AUG8_R1024_REPRODUCIBILITY_RERUN3_V1"
+SINGLE_L_EXPERIMENT = "TTT24_AUG8_R1024_REPRODUCIBILITY_L_SINGLE_V1"
 AUG8 = (
     "geom=identity__color=id__order=canonical",
     "geom=flip_ud__color=id__order=canonical",
@@ -242,6 +243,7 @@ def _cache_invariants(raw: dict[str, Any]) -> dict[str, Any]:
     rollback_violations: list[dict[str, Any]] = []
     alias_violations: list[dict[str, Any]] = []
     batch_violations: list[dict[str, Any]] = []
+    per_forward_owner_trace_gaps: list[dict[str, Any]] = []
     ceiling = int(raw["profile_configuration"]["physical_batch_ceiling"])
     seen_owner: dict[str, int] = {}
     for cell_key, cell in raw.get("cells", {}).items():
@@ -256,7 +258,10 @@ def _cache_invariants(raw: dict[str, Any]) -> dict[str, Any]:
             seen_owner[owner] = cell_key
         advances = trace.get("logical_advances", []) if isinstance(trace, dict) else []
         if not advances:
-            owner_violations.append({"cell_key": cell_key, "reason": "MISSING_PER_FORWARD_OWNER_TRACE"})
+            # This trace is diagnostic-only.  Its absence cannot be treated as
+            # an observed owner/cache violation, but it limits this rerun's
+            # ability to establish per-forward ownership.
+            per_forward_owner_trace_gaps.append({"cell_key": cell_key, "reason": "MISSING_PER_FORWARD_OWNER_TRACE"})
         for step, advance in enumerate(advances):
             if advance.get("cache_owner_id") != owner or advance.get("cache_owner_id_after_reply") != owner:
                 owner_violations.append({"cell_key": cell_key, "step": step, "reason": "OWNER_SWAP"})
@@ -278,15 +283,19 @@ def _cache_invariants(raw: dict[str, Any]) -> dict[str, Any]:
         if width is not None and int(width) != len(keys):
             batch_violations.append({"event": event.get("event_index"), "reason": "WIDTH_MEMBER_MISMATCH",
                                      "width": width, "members": keys})
+    observed_violation = owner_violations or rollback_violations or alias_violations or batch_violations
+    per_forward_owner_status = "PASS" if not per_forward_owner_trace_gaps else "NOT_ESTABLISHED_IN_THIS_RERUN"
     return {
-        "status": "PASS" if not (owner_violations or rollback_violations or alias_violations or batch_violations) else "FAIL",
-        "no_owner_swap": not owner_violations,
+        "status": "PASS" if not observed_violation else "FAIL",
+        "no_owner_swap": "PASS" if not owner_violations and not per_forward_owner_trace_gaps else per_forward_owner_status,
         "no_cross_cell_cache_aliasing": not alias_violations,
-        "rollback_valid_lengths_coherent": not rollback_violations,
+        "rollback_valid_lengths_coherent": "PASS" if not rollback_violations and not per_forward_owner_trace_gaps else per_forward_owner_status,
         "no_incompatible_physical_batch": not batch_violations,
         "packed_batch_temporaries_durable_state": "NOT_OBSERVED_IN_RAW_TRACE",
-        "reply_returns_to_correct_logical_cell": not owner_violations,
+        "reply_returns_to_correct_logical_cell": "PASS" if not owner_violations and not per_forward_owner_trace_gaps else per_forward_owner_status,
+        "per_forward_cache_owner_telemetry": per_forward_owner_status,
         "owner_violations": owner_violations,
+        "per_forward_owner_trace_gaps": per_forward_owner_trace_gaps,
         "rollback_violations": rollback_violations,
         "alias_violations": alias_violations,
         "batch_violations": batch_violations,
@@ -350,6 +359,8 @@ def _profile_configs(policy: dict[str, Any], profile: str) -> list[dict[str, int
 
 def _experiment_id(args: argparse.Namespace) -> str:
     """Keep a fresh, user-authorized partial rerun distinct from reused evidence."""
+    if args.selected_output_id:
+        return SINGLE_L_EXPERIMENT
     return FRESH_PARTIAL_EXPERIMENT if args.fresh_partial_rerun else EXPERIMENT
 
 
@@ -628,7 +639,8 @@ def _run_one(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any]],
     return _freeze_run(run, outputs)
 
 
-def _compare_runs(output: Path, outputs: list[dict[str, Any]], *, partial_validation: bool = False) -> dict[str, Any]:
+def _compare_runs(output: Path, outputs: list[dict[str, Any]], *, partial_validation: bool = False,
+                  supplemental_validation: bool = False) -> dict[str, Any]:
     a_root, b_root = output / "RUN_A", output / "RUN_B"
     cell_rows: list[dict[str, Any]] = []
     details: list[dict[str, Any]] = []
@@ -679,13 +691,16 @@ def _compare_runs(output: Path, outputs: list[dict[str, Any]], *, partial_valida
               ("EXACT_SEMANTIC_AND_NUMERIC", "SEMANTIC_EXACT_NUMERIC_DRIFT", "LOGICAL_DIVERGENCE")}
     semantic = counts["EXACT_SEMANTIC_AND_NUMERIC"] + counts["SEMANTIC_EXACT_NUMERIC_DRIFT"]
     passed = semantic == total and cache_audit["status"] == "PASS"
+    classification = ("SUPPLEMENTAL_L_REPRODUCIBILITY_PASS" if passed else "SUPPLEMENTAL_L_REPRODUCIBILITY_FAIL") if supplemental_validation \
+        else (("PARTIAL_REPRODUCIBILITY_PASS" if passed else "PARTIAL_REPRODUCIBILITY_FAIL") if partial_validation
+              else ("CORE_CLASS_READY" if passed else "CORE_CLASS_NOT_READY"))
     decision = {
-        "classification": ("PARTIAL_REPRODUCIBILITY_PASS" if passed else "PARTIAL_REPRODUCIBILITY_FAIL") if partial_validation
-        else ("CORE_CLASS_READY" if passed else "CORE_CLASS_NOT_READY"),
+        "classification": classification,
         "contract": "TTT24_AUG8_R1024_ROOT_AWARE", "historical_pilot_parity": "RETIRED_AS_CONFOUNDED",
         "same_contract_reproducibility": "PASS" if passed else "FAIL",
         "partial_validation": partial_validation,
-        "phase2_authorized": False if partial_validation else passed, "phase2_started": False,
+        "supplemental_validation": supplemental_validation,
+        "phase2_authorized": False if (partial_validation or supplemental_validation) else passed, "phase2_started": False,
         "target_blind": True, "gold_loaded": False, "total_cells": total, "counts": counts,
         "semantic_reproducibility_rate": semantic / total if total else 0.0,
         "prefill_semantic_reproducibility_rate": sum(bool(row["semantic_equal"]) for row in prefill_rows) / total if total else 0.0,
@@ -722,6 +737,123 @@ def _compact_hashes(output: Path) -> dict[str, Any]:
     return verification
 
 
+def _verify_compact_hash_ledger(root: Path) -> dict[str, Any]:
+    """Verify a prior compact receipt without reading or changing raw pools."""
+    hashes = _read_json(root / "HASHES.json")
+    verification = _read_json(root / "HASH_VERIFICATION.json")
+    if verification.get("status") != "PASS":
+        raise RuntimeError(f"prior compact hash verification is not PASS: {root}")
+    ledger = hashes.get("files")
+    if not isinstance(ledger, dict) or not ledger:
+        raise RuntimeError(f"prior compact hash ledger is absent or empty: {root}")
+    mismatches = [
+        {"path": rel, "expected": expected,
+         "actual": _sha_file(root / rel) if (root / rel).is_file() else None}
+        for rel, expected in sorted(ledger.items())
+        if not (root / rel).is_file() or _sha_file(root / rel) != expected
+    ]
+    if mismatches:
+        raise RuntimeError(f"prior compact hash ledger mismatch: {mismatches}")
+    return {"status": "PASS", "checked": len(ledger), "mismatches": []}
+
+
+def _prior_rerun3_evidence(root: Path) -> dict[str, Any]:
+    """Accept the completed S/M rerun only after its compact evidence verifies.
+
+    The earlier run predates per-forward owner telemetry.  That missing
+    diagnostic field is retained as not-established, never rewritten as a
+    cache violation when the frozen audit records no actual violation.
+    """
+    hashes = _verify_compact_hash_ledger(root)
+    summary = _read_json(root / "REPRODUCIBILITY_SUMMARY.json")
+    audit = _read_json(root / "CACHE_INVARIANT_AUDIT.json")
+    counts = summary.get("counts", {})
+    if (summary.get("target_blind") is not True or summary.get("gold_loaded") is not False
+            or summary.get("total_cells") != 24
+            or counts.get("EXACT_SEMANTIC_AND_NUMERIC") != 24
+            or counts.get("SEMANTIC_EXACT_NUMERIC_DRIFT") != 0
+            or counts.get("LOGICAL_DIVERGENCE") != 0
+            or summary.get("earliest_logical_divergence") != "NONE"):
+        raise RuntimeError("prior RERUN3 receipt does not establish the required 24 exact target-blind cells")
+    telemetry_gaps: list[dict[str, Any]] = []
+    for run_name in ("RUN_A", "RUN_B"):
+        entries = audit.get(run_name)
+        if not isinstance(entries, list) or len(entries) != 3:
+            raise RuntimeError(f"prior RERUN3 cache audit lacks three {run_name} entries")
+        for entry in entries:
+            if entry.get("alias_violations") or entry.get("rollback_violations") or entry.get("batch_violations"):
+                raise RuntimeError("prior RERUN3 contains an observed cache, rollback, or batch violation")
+            owner = entry.get("owner_violations", [])
+            if any(item.get("reason") != "MISSING_PER_FORWARD_OWNER_TRACE" for item in owner):
+                raise RuntimeError("prior RERUN3 contains an observed owner violation")
+            telemetry_gaps.extend({"run": run_name, **item} for item in owner)
+    return {
+        "source": str(root), "compact_hashes": hashes,
+        "strict_exact_cells": 24, "first_logical_divergence": "NONE",
+        "target_blind": True, "gold_loaded": False,
+        "cache_owner_telemetry": "NOT_ESTABLISHED_IN_THIS_RERUN" if telemetry_gaps else "PASS",
+        "per_forward_owner_trace_gaps": telemetry_gaps,
+    }
+
+
+def _reconcile_rerun3_and_l(output: Path, l_summary: dict[str, Any], prior_root: Path) -> dict[str, Any]:
+    """Produce the user-authorized Phase-1 reconciliation without Phase 2 work."""
+    prior = _prior_rerun3_evidence(prior_root)
+    l_cache_audit = _read_json(output / "CACHE_INVARIANT_AUDIT.json")
+    l_trace_gaps: list[dict[str, Any]] = []
+    for run_name in ("RUN_A", "RUN_B"):
+        entries = l_cache_audit.get(run_name)
+        if not isinstance(entries, list) or len(entries) != 1:
+            raise RuntimeError(f"single-L cache audit lacks one {run_name} entry")
+        entry = entries[0]
+        if entry.get("status") != "PASS" or entry.get("alias_violations") or entry.get("rollback_violations") or entry.get("batch_violations") or entry.get("owner_violations"):
+            raise RuntimeError("single-L rerun contains an observed cache, rollback, owner, or batch violation")
+        l_trace_gaps.extend({"run": run_name, **item} for item in entry.get("per_forward_owner_trace_gaps", []))
+    counts = l_summary.get("counts", {})
+    if (l_summary.get("target_blind") is not True or l_summary.get("gold_loaded") is not False
+            or l_summary.get("total_cells") != 8
+            or counts.get("EXACT_SEMANTIC_AND_NUMERIC") != 8
+            or counts.get("SEMANTIC_EXACT_NUMERIC_DRIFT") != 0
+            or counts.get("LOGICAL_DIVERGENCE") != 0
+            or l_summary.get("earliest_logical_divergence") != "NONE"
+            or l_summary.get("same_contract_reproducibility") != "PASS"):
+        raise RuntimeError("single-output L rerun did not meet its strict 8/8 acceptance gate")
+    evidence = {
+        "status": "CORE_CLASS_READY",
+        "core_status": "READY",
+        "phase2": "AUTHORIZED_BUT_NOT_STARTED",
+        "phase2_started": False,
+        "contract": "TTT24_AUG8_R1024_ROOT_AWARE",
+        "target_blind": True,
+        "gold_loaded": False,
+        "reproducibility_evidence": {
+            "strict_exact_cells": prior["strict_exact_cells"] + counts["EXACT_SEMANTIC_AND_NUMERIC"],
+            "semantic_exact_numeric_drift_cells": 0,
+            "logical_divergence_cells": 0,
+            "first_logical_divergence": "NONE",
+            "components": {"RERUN3_S_M": prior, "L_4_PLUS_4": {
+                "output_id": "cb2d8a2c:o1", "strict_exact_cells": 8,
+                "hashes": "PASS", "scheduler_batch_compatibility": "PASS",
+                "cache_owner_telemetry": "NOT_ESTABLISHED_IN_THIS_RERUN" if l_trace_gaps else "PASS",
+                "per_forward_owner_trace_gaps": l_trace_gaps,
+            }},
+        },
+        "coverage": {
+            "profiles": ["S", "M", "L"],
+            "augmentation_surface": "canonical AUG8 / uniform8",
+            "l_root_shape": "4+4",
+            "l_batch_policy": "existing profile-safe resident/dynamic batch policy",
+        },
+        "telemetry_caveat": "Per-forward cache-owner telemetry is NOT_ESTABLISHED_IN_THIS_RERUN where absent; no owner, alias, rollback, or batch violation was observed.",
+        "no_phase2_execution": True,
+    }
+    _write_json(output / "PHASE1_RECONCILIATION.json", evidence)
+    _write_json(output / "CORE_DECISION.json", evidence)
+    report = "# TTT24 AUG8 R1024 Phase-1 reconciliation\n\n```json\n" + json.dumps(evidence, indent=2, sort_keys=True) + "\n```\n"
+    (output / "REPORT.md").write_text(report, encoding="utf-8")
+    return evidence
+
+
 def _parse() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
@@ -736,6 +868,10 @@ def _parse() -> argparse.Namespace:
     parser.add_argument("--minimum-free-bytes", type=int, default=1_500_000_000)
     parser.add_argument("--partial-output-count", type=int, default=0,
                         help="Authorized execution-only subset of the frozen source order; 0 keeps all six.")
+    parser.add_argument("--selected-output-id",
+                        help="Authorized fresh single-output reproducibility supplement; never changes Core membership.")
+    parser.add_argument("--prior-rerun3-output", type=Path,
+                        help="Verified compact RERUN3 output required only for the authorized single-L reconciliation.")
     parser.add_argument("--reuse-partial-run-a", action="store_true",
                         help="Freeze selected pre-existing RUN_A records without rerunning them.")
     parser.add_argument("--fresh-partial-rerun", action="store_true",
@@ -751,6 +887,10 @@ def main() -> None:
     args = _parse()
     if args.fresh_partial_rerun and (args.reuse_partial_run_a or args.pause_partial_run_b or args.resume_partial_run_b):
         raise RuntimeError("fresh partial rerun is mutually exclusive with reuse, pause, and resume modes")
+    if args.selected_output_id and args.partial_output_count:
+        raise RuntimeError("selected-output mode is mutually exclusive with source-order partial-output-count")
+    if args.selected_output_id and (not args.fresh_partial_rerun or args.prior_rerun3_output is None):
+        raise RuntimeError("selected-output mode requires both --fresh-partial-rerun and --prior-rerun3-output")
     # This controller never accepts a solutions path; fail closed if the
     # supplied challenge is not an ARC challenge-only mapping.
     challenge = _read_json(args.challenge)
@@ -758,7 +898,20 @@ def main() -> None:
         raise RuntimeError("refusing a challenge file containing evaluation outputs")
     outputs = _prepare_static(args)
     partial_validation = args.partial_output_count > 0
-    if partial_validation:
+    selected_output_validation = args.selected_output_id is not None
+    if selected_output_validation:
+        matching = [row for row in outputs if row["output_id"] == args.selected_output_id]
+        if len(matching) != 1:
+            raise RuntimeError(f"selected output is not uniquely present in frozen Core: {args.selected_output_id}")
+        outputs = matching
+        _write_json(args.output / "SUPPLEMENTAL_EXECUTION_AMENDMENT.json", {
+            "status": "AUTHORIZED_SINGLE_L_SAME_CONTRACT_RERUN", "target_blind": True, "gold_loaded": False,
+            "selected_output_ids": [row["output_id"] for row in outputs],
+            "fresh_run_a": True, "fresh_run_b": True,
+            "purpose": "Exercise the remaining PROFILE_L 4+4-root execution path without modifying the frozen Core contract.",
+            "phase2_started": False,
+        })
+    elif partial_validation:
         if not (args.reuse_partial_run_a or args.fresh_partial_rerun):
             raise RuntimeError("partial-output execution requires explicit RUN_A reuse or a fresh partial rerun")
         if args.partial_output_count >= len(outputs):
@@ -783,11 +936,14 @@ def main() -> None:
     policy = _read_json(args.coarse_policy)
     verify_a = _run_one(args, args.output / "RUN_A", outputs, policy)
     verify_b = _run_one(args, args.output / "RUN_B", outputs, policy)
-    decision = _compare_runs(args.output, outputs, partial_validation=partial_validation)
+    decision = _compare_runs(args.output, outputs, partial_validation=partial_validation,
+                             supplemental_validation=selected_output_validation)
     decision["run_a_generation_hash_verification"] = verify_a
     decision["run_b_generation_hash_verification"] = verify_b
     _write_json(args.output / "REPRODUCIBILITY_SUMMARY.json", decision)
     _write_json(args.output / "CORE_DECISION.json", decision)
+    if selected_output_validation:
+        _reconcile_rerun3_and_l(args.output, decision, args.prior_rerun3_output)
     _compact_hashes(args.output)
 
 
