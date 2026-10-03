@@ -30,6 +30,7 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKER = ROOT / "scripts" / "run_eval60_budget_eos_pilot18_v1.py"
 SOURCE_COMMIT = "b849e821deb69f6c6cbfa193164aace020b00efd"
 EXPERIMENT = "TTT24_AUG8_R1024_REPRODUCIBILITY_GATE_V1"
+FRESH_PARTIAL_EXPERIMENT = "TTT24_AUG8_R1024_REPRODUCIBILITY_RERUN3_V1"
 AUG8 = (
     "geom=identity__color=id__order=canonical",
     "geom=flip_ud__color=id__order=canonical",
@@ -347,6 +348,11 @@ def _profile_configs(policy: dict[str, Any], profile: str) -> list[dict[str, int
     return values
 
 
+def _experiment_id(args: argparse.Namespace) -> str:
+    """Keep a fresh, user-authorized partial rerun distinct from reused evidence."""
+    return FRESH_PARTIAL_EXPERIMENT if args.fresh_partial_rerun else EXPERIMENT
+
+
 def _prepare_static(args: argparse.Namespace) -> list[dict[str, Any]]:
     output = args.output
     source_cohort = _read_json(args.source_core / "RUN_COHORT.json")
@@ -367,7 +373,7 @@ def _prepare_static(args: argparse.Namespace) -> list[dict[str, Any]]:
     }
     adapters = {item["output_id"]: item["adapter_identity"] for item in outputs}
     contract = {
-        "experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False,
+        "experiment": _experiment_id(args), "target_blind": True, "gold_loaded": False,
         "contract": "TTT24_AUG8_R1024_ROOT_AWARE", "ttt_depth": 24, "augmentation_ids": list(AUG8),
         "max_expanded_nodes": 1024, "decoder": "CUMULATIVE_REGRET_r=4.00", "max_new_tokens": 931,
         "max_completed_candidates": 32, "frontier_floor": 1, "eos": 15,
@@ -404,7 +410,7 @@ def _run_worker(args: argparse.Namespace, run: Path, output_row: dict[str, Any],
                "--aug16-ids", str(run / "AUG8_IDS.json"), "--adapter-stage", str(run / "ADAPTER_STAGE"),
                "--max-expanded-nodes", "1024", "--ttt-depth", "24", "--augmentation-label", "aug8",
                "--admission-policy", "root_aware", "--fairness-max-wait", "3", "--checkpoints", "512,1024",
-               "--diagnostic-trace", "--experiment", EXPERIMENT, "--device", str(args.device)]
+               "--diagnostic-trace", "--experiment", _experiment_id(args), "--device", str(args.device)]
     log = run / "WORKER_LOGS" / f"{_safe(str(output_row['output_id']))}_attempt{attempt}.log"
     log.parent.mkdir(parents=True, exist_ok=True)
     started = time.time()
@@ -732,6 +738,8 @@ def _parse() -> argparse.Namespace:
                         help="Authorized execution-only subset of the frozen source order; 0 keeps all six.")
     parser.add_argument("--reuse-partial-run-a", action="store_true",
                         help="Freeze selected pre-existing RUN_A records without rerunning them.")
+    parser.add_argument("--fresh-partial-rerun", action="store_true",
+                        help="Run both A and B afresh on the selected source-order prefix in a new output directory.")
     parser.add_argument("--pause-partial-run-b", action="store_true",
                         help="CPU-only: hash-freeze the completed RUN_B prefix without completing or comparing it.")
     parser.add_argument("--resume-partial-run-b", action="store_true",
@@ -741,6 +749,8 @@ def _parse() -> argparse.Namespace:
 
 def main() -> None:
     args = _parse()
+    if args.fresh_partial_rerun and (args.reuse_partial_run_a or args.pause_partial_run_b or args.resume_partial_run_b):
+        raise RuntimeError("fresh partial rerun is mutually exclusive with reuse, pause, and resume modes")
     # This controller never accepts a solutions path; fail closed if the
     # supplied challenge is not an ARC challenge-only mapping.
     challenge = _read_json(args.challenge)
@@ -749,16 +759,19 @@ def main() -> None:
     outputs = _prepare_static(args)
     partial_validation = args.partial_output_count > 0
     if partial_validation:
-        if not args.reuse_partial_run_a:
-            raise RuntimeError("partial-output execution requires explicit reuse of the stopped RUN_A evidence")
+        if not (args.reuse_partial_run_a or args.fresh_partial_rerun):
+            raise RuntimeError("partial-output execution requires explicit RUN_A reuse or a fresh partial rerun")
         if args.partial_output_count >= len(outputs):
             raise RuntimeError("partial-output count must select a strict subset of the frozen six-output Core")
         outputs = outputs[:args.partial_output_count]
         _write_json(args.output / "PARTIAL_EXECUTION_AMENDMENT.json", {
             "status": "AUTHORIZED_EXECUTION_AMENDMENT", "target_blind": True, "gold_loaded": False,
-            "reason": "RUN_A was user-terminated after independently frozen outputs; compare only frozen source-order prefix",
+            "reason": ("RUN_A was user-terminated after independently frozen outputs; compare only frozen source-order prefix"
+                       if args.reuse_partial_run_a else
+                       "User-authorized fresh A/B rerun on a source-order prefix; no historical raw evidence is reused"),
             "selected_output_count": len(outputs), "selected_output_ids": [row["output_id"] for row in outputs],
-            "run_a_reused": True, "run_a_not_rerun": True,
+            "run_a_reused": bool(args.reuse_partial_run_a), "run_a_not_rerun": bool(args.reuse_partial_run_a),
+            "fresh_partial_rerun": bool(args.fresh_partial_rerun),
             "full_six_output_core_gate_completed": False, "phase2_authorized": False, "phase2_started": False,
         })
     if args.pause_partial_run_b:
