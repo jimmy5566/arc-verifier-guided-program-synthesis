@@ -18,15 +18,41 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Clone official ARC-AGI-2
-        run: git clone --depth 1 https://github.com/arcprize/ARC-AGI-2.git /tmp/ARC-AGI-2
+      - name: Clone frozen Kaggle 2025 data mirror
+        run: git clone --depth 1 https://github.com/poetiq-ai/poetiq-arc-agi-solver.git /tmp/poetiq
+
+      - name: Resolve exact challenge and Gold snapshot by SHA256
+        id: gold
+        shell: bash
+        run: |
+          set -euo pipefail
+          WANT_CHALLENGE=e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8
+          WANT_SOLUTIONS=84be4f4f39d79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1
+          FOUND=""
+          while IFS= read -r challenge; do
+            got=$(sha256sum "$challenge" | awk '{print $1}')
+            echo "challenge $got $challenge"
+            if [ "$got" = "$WANT_CHALLENGE" ]; then
+              candidate="$(dirname "$challenge")/arc-agi_evaluation_solutions.json"
+              test -f "$candidate"
+              sol=$(sha256sum "$candidate" | awk '{print $1}')
+              echo "solutions $sol $candidate"
+              if [ "$sol" = "$WANT_SOLUTIONS" ]; then
+                FOUND="$candidate"
+                break
+              fi
+            fi
+          done < <(find /tmp/poetiq -name arc-agi_evaluation_challenges.json -type f | sort)
+          test -n "$FOUND"
+          echo "solutions=$FOUND" >> "$GITHUB_OUTPUT"
 
       - name: Run CPU-only scorer
         run: |
           python scripts/score_phase3_eval60_union_v1.py \
             --d24 artifacts/eval60_phase3_d24_aug8_r1024_archive_v1 \
             --d48 artifacts/eval60_phase3_d48_aug8_r1024_archive_v1 \
-            --gold-repo /tmp/ARC-AGI-2 \
+            --solutions-json "${{ steps.gold.outputs.solutions }}" \
+            --expected-solutions-sha256 84be4f4f39d79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1 \
             --output phase3_score_output
 
       - name: Show summary
