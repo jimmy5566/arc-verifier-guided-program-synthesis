@@ -208,6 +208,58 @@ def archive_top_level(source: Path, archive: Path, skip_roots: set[str]) -> dict
     return copied
 
 
+def finalize_archive_ledger(archive: Path) -> tuple[int, list[str]]:
+    """Hash the completed archive without mutating any scientific payload.
+
+    A hash ledger cannot contain a hash of itself.  The ledger, its verification
+    receipt, and the final human/machine receipt are consequently explicit
+    control receipts and are excluded from the payload ledger.
+    """
+    control_names = {
+        "ARCHIVE_FILE_MANIFEST.csv",
+        "ARCHIVE_HASHES.json",
+        "ARCHIVE_HASH_VERIFICATION.json",
+        "FINAL_FREEZE_RECEIPT.json",
+    }
+    payload_files = sorted(
+        path for path in archive.rglob("*")
+        if path.is_file() and path.name not in control_names
+    )
+    rows = [
+        {
+            "relative_path": str(path.relative_to(archive)).replace("\\", "/"),
+            "byte_size": path.stat().st_size,
+            "sha256": sha256_file(path),
+        }
+        for path in payload_files
+    ]
+    with (archive / "manifests" / "ARCHIVE_FILE_MANIFEST.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["relative_path", "byte_size", "sha256"])
+        writer.writeheader()
+        writer.writerows(rows)
+    payload_files = sorted(
+        path for path in archive.rglob("*")
+        if path.is_file() and path.name not in {"ARCHIVE_HASHES.json", "ARCHIVE_HASH_VERIFICATION.json", "FINAL_FREEZE_RECEIPT.json"}
+    )
+    hashes = {
+        str(path.relative_to(archive)).replace("\\", "/"): sha256_file(path)
+        for path in payload_files
+    }
+    json_dump(archive / "manifests" / "ARCHIVE_HASHES.json", {
+        "files": hashes,
+        "status": "PASS",
+        "excluded_control_receipts": ["ARCHIVE_HASHES.json", "ARCHIVE_HASH_VERIFICATION.json", "FINAL_FREEZE_RECEIPT.json"],
+    })
+    mismatches = [relative for relative, wanted in hashes.items() if sha256_file(archive / relative) != wanted]
+    json_dump(archive / "manifests" / "ARCHIVE_HASH_VERIFICATION.json", {
+        "checked": len(hashes),
+        "mismatches": mismatches,
+        "status": "PASS" if not mismatches else "FAIL",
+        "excluded_control_receipts": ["ARCHIVE_HASHES.json", "ARCHIVE_HASH_VERIFICATION.json", "FINAL_FREEZE_RECEIPT.json"],
+    })
+    return len(hashes), mismatches
+
+
 def safe_json(value: Any) -> Any:
     """Make JSONL robust to unusual but serializable source fields."""
     return value
@@ -254,6 +306,7 @@ def create_archive(source: Path, archive: Path, tools_dir: Path | None = None) -
 
     candidate_raw, candidate_gz = gzip_jsonl_writer(archive / "tables" / "CANDIDATE_INDEX.jsonl.gz")
     scheduler_raw, scheduler_gz = gzip_jsonl_writer(archive / "tables" / "SCHEDULER_EVENT_INDEX.jsonl.gz")
+    node_raw, node_gz = gzip_jsonl_writer(archive / "tables" / "NODE_INDEX.jsonl.gz")
     try:
         for number, source_raw in enumerate(raw_paths, 1):
             output_id = output_id_from_name(source_raw)
@@ -318,6 +371,23 @@ def create_archive(source: Path, archive: Path, tools_dir: Path | None = None) -
                             "canonical_grid": candidate.get("canonical_grid"), "candidate_pool_sha256": checkpoint.get("candidate_pool_sha256"),
                             "source_archive_file": str(destination.relative_to(archive)).replace("\\", "/"),
                         })
+                nodes = cell.get("nodes")
+                if isinstance(nodes, dict):
+                    nodes = [
+                        {"node_key": key, **value} if isinstance(value, dict) else {"node_key": key, "value": value}
+                        for key, value in nodes.items()
+                    ]
+                if isinstance(nodes, list):
+                    for node_index, node in enumerate(nodes):
+                        write_jsonl_line(node_gz, {
+                            "task_id": task_id,
+                            "output_id": output_id,
+                            "depth": depth,
+                            "augmentation_id": cell.get("augmentation_id"),
+                            "node_index": node_index,
+                            "node": safe_json(node),
+                            "source_archive_file": str(destination.relative_to(archive)).replace("\\", "/"),
+                        })
             meta = output_meta[output_id]
             scheduler = data.get("scheduler", {}) if isinstance(data.get("scheduler"), dict) else {}
             output_rows.append({
@@ -335,6 +405,7 @@ def create_archive(source: Path, archive: Path, tools_dir: Path | None = None) -
     finally:
         candidate_gz.close(); candidate_raw.close()
         scheduler_gz.close(); scheduler_raw.close()
+        node_gz.close(); node_raw.close()
 
     # Checkpoints, receipts, EOS files, and logs are preserved separately from raw.
     for source_dir, archive_dir, mode in (
@@ -474,7 +545,14 @@ def create_archive(source: Path, archive: Path, tools_dir: Path | None = None) -
     json_dump(archive / "manifests" / "ARCHIVE_HASH_VERIFICATION.json", {"checked": len(archive_hashes), "mismatches": mismatches, "status": "PASS" if not mismatches else "FAIL"})
     final = {"archive_id": archive.name, "depth": depth, "outputs": "89/89", "cells": "712/712", "source_run_path": str(source), "source_generation_identity": source_commit, "source_hash_verification": "PASS", "archive_hash_verification": "PASS" if not mismatches else "FAIL", "source_to_archive_parity": "PASS" if not parity_mismatches else "FAIL", "adapter_manifest_status": "PASS", "model_runtime_identity_status": "PARTIALLY_ESTABLISHED", "gold_accessed": False, "scientific_generation_rerun": False, "full_github_archive_status": "PENDING_GITHUB_TRANSFER", "timestamp_utc": datetime.now(timezone.utc).isoformat()}
     json_dump(archive / "FINAL_FREEZE_RECEIPT.json", final)
-    return {"archive": str(archive), "depth": depth, "audit": audit, "source_files": len(source_records), "archive_files": len(archive_hashes), "source_bytes": total_source, "archive_bytes": total_archive, "final": final}
+    # Rebuild the immutable payload ledger only after every archive payload,
+    # schema, table, and report exists.  Control receipts are explicitly
+    # excluded to avoid an impossible self-hash cycle.
+    final_checked, final_mismatches = finalize_archive_ledger(archive)
+    final["archive_hash_verification"] = "PASS" if not final_mismatches else "FAIL"
+    final["archive_payload_hashes_checked"] = final_checked
+    json_dump(archive / "FINAL_FREEZE_RECEIPT.json", final)
+    return {"archive": str(archive), "depth": depth, "audit": audit, "source_files": len(source_records), "archive_files": final_checked, "source_bytes": total_source, "archive_bytes": total_archive, "final": final}
 
 
 def main() -> None:
