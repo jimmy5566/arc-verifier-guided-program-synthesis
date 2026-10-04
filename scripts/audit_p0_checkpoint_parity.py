@@ -164,7 +164,14 @@ def main() -> None:
     rows: list[dict[str, Any]] = []
     for observed_path in sorted(args.p0_raw.glob("*.json")):
         observed = _read(observed_path)
-        output_id = str(observed["output_id"])
+        # Worker surfaces carry the output descriptor under ``output`` rather
+        # than a top-level ``output_id``.  Deriving it from the cell key keeps
+        # this audit compatible with both historical and current raw schemas.
+        cell_keys = list(observed.get("cells", {}))
+        output_ids = {key.split(":d24:", 1)[0] for key in cell_keys if ":d24:" in key}
+        if len(output_ids) != 1:
+            raise RuntimeError(f"could not determine one output id from {observed_path}")
+        output_id = output_ids.pop()
         historical_path = args.historical_raw / f"{output_id.replace(':', '_')}.json.gz"
         if not historical_path.is_file():
             raise FileNotFoundError(f"historical raw missing: {historical_path}")
