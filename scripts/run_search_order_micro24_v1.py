@@ -87,6 +87,35 @@ def _cohort_paths() -> dict[str, Path]:
     }
 
 
+def _frozen_input_identity(args: argparse.Namespace) -> dict[str, Any]:
+    """Fail closed on the frozen, target-blind E1 generation inputs.
+
+    The worker records its own local preflight, but the controller must also
+    bind the candidate pool and the canonical AUG8 object to the historical
+    Phase-3 archive before it starts a single GPU worker.
+    """
+    archive_preflight = _read(args.source_archive / "PREFLIGHT.json")
+    archive_aug8_path = args.source_archive / "AUG8_IDS.json"
+    archive_aug8 = _read(archive_aug8_path)
+    canonical_aug8 = {"subset": "CANONICAL_GEOMETRY_AUG8", "candidate_ids": list(AUG8)}
+    expected_pool = archive_preflight.get("candidate_pool_sha256")
+    expected_aug8 = archive_preflight.get("aug8_ids_sha256")
+    observed_pool = _sha_file(args.candidate_pool)
+    observed_aug8 = _sha_file(archive_aug8_path)
+    if archive_preflight.get("status") != "PASS":
+        raise RuntimeError("PHASE3_ARCHIVE_PREFLIGHT_NOT_PASS")
+    if observed_pool != expected_pool:
+        raise RuntimeError("CANDIDATE_POOL_IDENTITY_FAIL")
+    if observed_aug8 != expected_aug8 or archive_aug8 != canonical_aug8:
+        raise RuntimeError("CANONICAL_AUG8_IDENTITY_FAIL")
+    return {
+        "phase3_preflight": "PASS",
+        "candidate_pool_sha256": observed_pool,
+        "canonical_aug8_sha256": observed_aug8,
+        "canonical_aug8_identity": "PASS",
+    }
+
+
 def _prepare_root(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     cohort_path = args.output / "COHORT.json"
     audit_path = args.output / "ADAPTER_STATE_AUDIT.json"
@@ -118,6 +147,7 @@ def _prepare_root(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, A
     if policy.get("target_blind") is not True:
         raise RuntimeError("FROZEN_PROFILE_POLICY_NOT_TARGET_BLIND")
     runtime = _runtime_probe(args.worker_python)
+    input_identity = _frozen_input_identity(args)
     contract = {
         "experiment": EXPERIMENT,
         "source_commit": _head(),
@@ -127,6 +157,7 @@ def _prepare_root(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, A
         "cohort_sha256": cohort["cohort_sha256"],
         "adapter_state": audit["adapter_state"],
         "runtime": runtime,
+        "input_identity": input_identity,
         "frozen_core": {
             "ttt_depth": 24, "augmentation": "canonical_AUG8", "max_expanded_nodes": 1024,
             "decoder": "CUMULATIVE_REGRET_r=4.00", "max_new_tokens": 931, "candidate_cap": 32,
