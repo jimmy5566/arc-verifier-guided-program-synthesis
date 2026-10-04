@@ -51,7 +51,7 @@ class SearchOrderPolicy(Protocol):
 
     def pop(self) -> RetainedWorkItem | None: ...
 
-    def note_expansion(self, item: RetainedWorkItem) -> None: ...
+    def note_expansion(self, item: RetainedWorkItem) -> bool: ...
 
     def pending(self) -> tuple[RetainedWorkItem, ...]: ...
 
@@ -81,8 +81,9 @@ class CurrentDFS:
     def pop(self) -> RetainedWorkItem | None:
         return self._stack.pop() if self._stack else None
 
-    def note_expansion(self, item: RetainedWorkItem) -> None:
+    def note_expansion(self, item: RetainedWorkItem) -> bool:
         del item
+        return False
 
     def pending(self) -> tuple[RetainedWorkItem, ...]:
         return tuple(reversed(self._stack))
@@ -135,7 +136,7 @@ class _FairQueues:
         self.active_root = root
         return self.queues[root].pop()
 
-    def note_expansion(self, item: RetainedWorkItem) -> None:
+    def note_expansion(self, item: RetainedWorkItem) -> bool:
         if self.active_root != item.root_branch_id:
             raise RuntimeError("fair policy expansion did not match selected root")
         self.used_in_turn += 1
@@ -145,12 +146,14 @@ class _FairQueues:
             self._discard_empty_front()
             self.active_root = None
             self.used_in_turn = 0
-            return
-        if self.used_in_turn >= self.quantum:
+            return False
+        yielded = self.used_in_turn >= self.quantum and len(self.roots) > 1
+        if yielded:
             if self.roots and self.roots[0] == root:
                 self.roots.rotate(-1)
             self.active_root = None
             self.used_in_turn = 0
+        return yielded
 
     def pending(self) -> tuple[RetainedWorkItem, ...]:
         return tuple(item for root in self.roots for item in self.queues[root])
@@ -175,8 +178,8 @@ class FairDFS:
     def pop(self) -> RetainedWorkItem | None:
         return self._queues.pop()
 
-    def note_expansion(self, item: RetainedWorkItem) -> None:
-        self._queues.note_expansion(item)
+    def note_expansion(self, item: RetainedWorkItem) -> bool:
+        return self._queues.note_expansion(item)
 
     def pending(self) -> tuple[RetainedWorkItem, ...]:
         return self._queues.pending()
@@ -217,12 +220,13 @@ class RegretBandFairDFS:
         self._selected_band = None
         return None
 
-    def note_expansion(self, item: RetainedWorkItem) -> None:
+    def note_expansion(self, item: RetainedWorkItem) -> bool:
         band = item.regret_band
         if self._selected_band != band:
             raise RuntimeError("band policy expansion did not match selected band")
-        self._bands[band].note_expansion(item)
+        yielded = self._bands[band].note_expansion(item)
         self._selected_band = None
+        return yielded
 
     def pending(self) -> tuple[RetainedWorkItem, ...]:
         return tuple(item for band in range(4) for item in self._bands[band].pending())

@@ -145,6 +145,17 @@ def _safe_id(output_id: str) -> str:
     return output_id.replace(":", "_")
 
 
+def _checkpoint_values(value: str) -> tuple[int, ...]:
+    """Parse a frozen checkpoint schedule without changing decoder limits."""
+    try:
+        checkpoints = tuple(int(item) for item in str(value).split(",") if item)
+    except ValueError as error:
+        raise ValueError(f"invalid checkpoint schedule: {value}") from error
+    if not checkpoints or any(item <= 0 for item in checkpoints) or tuple(sorted(set(checkpoints))) != checkpoints:
+        raise ValueError(f"checkpoint schedule must be strictly increasing positive integers: {value}")
+    return checkpoints
+
+
 def _profile_name(assignment: dict[str, Any]) -> str:
     profile = str(assignment["profile"])
     maximum = int(assignment["root_length_max"])
@@ -388,6 +399,7 @@ def _worker(args: argparse.Namespace) -> int:
         frozen_ids = [str(row["candidate_id"]) for row in candidates]
         if len(frozen_ids) not in {8, 16} or len(frozen_ids) != len(set(frozen_ids)):
             raise RuntimeError("worker requires an exact, distinct frozen AUG8 or AUG16 surface")
+        checkpoint_schedule = _checkpoint_values(args.checkpoints)
         config = _config(int(args.max_expanded_nodes), diagnostic_trace=bool(args.diagnostic_trace))
         profile_cfg = {"resident_capacity": int(args.resident), "physical_batch_ceiling": int(args.ceiling)}
         roots: dict[str, int] = {}
@@ -448,9 +460,9 @@ def _worker(args: argparse.Namespace) -> int:
                     event["candidate_token_ids"] = list(_ancestry_tokens(nodes, int(terminal)))
             completion_events = [event for event in events if event.get("candidate_completed")]
             complete_by_checkpoint: dict[int, list[dict[str, Any]]] = {}
-            checkpoints: list[dict[str, Any]] = []
+            checkpoint_rows: list[dict[str, Any]] = []
             expanded = sum(1 for node in nodes if node.get("state") == "expanded")
-            for checkpoint in CHECKPOINTS:
+            for checkpoint in checkpoint_schedule:
                 completed = [event for event in completion_events if int(event["nodes_expanded_so_far"]) <= checkpoint]
                 records = []
                 for event in completed:
@@ -461,7 +473,7 @@ def _worker(args: argparse.Namespace) -> int:
                                     "nodes_expanded_so_far": event.get("nodes_expanded_so_far")})
                 complete_by_checkpoint[checkpoint] = records
                 terminal_early = expanded < checkpoint and result.termination_reason != "wall_time"
-                checkpoints.append({
+                checkpoint_rows.append({
                     "output_id": selected["output_id"], "profile": selected["profile"], "cell_key": cell_key,
                     "augmentation_id": candidate["candidate_id"], "checkpoint_requested": checkpoint,
                     "checkpoint_reached": expanded >= checkpoint,
@@ -483,7 +495,7 @@ def _worker(args: argparse.Namespace) -> int:
             pool, valid, invalid = _candidate_payload(cell, candidate)
             final_cells[cell_key] = {
                 "cell_key": cell_key, "augmentation_id": candidate["candidate_id"], "nodes": nodes,
-                "events": events, "checkpoints": checkpoints, "final_candidate_pool": pool,
+                "events": events, "checkpoints": checkpoint_rows, "final_candidate_pool": pool,
                 "final_candidate_pool_sha256": _json_sha(pool), "nodes_expanded": expanded,
                 "model_forwards": result.model_forwards, "tokens_advanced": result.tokens_advanced,
                 "completed_candidates": result.completed_candidates, "valid_candidates": valid, "invalid_candidates": invalid,
@@ -720,7 +732,8 @@ def _freeze_generation(args: argparse.Namespace, controller_receipts: list[dict[
     _phase_a_summary(args)
     manifest = {"experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False, "successful_output_count": 18,
                 "outputs": [path.name for path in sorted((args.output / "RAW_OUTPUTS").glob("*.json"))],
-                "eos_events": [path.name for path in sorted((args.output / "EOS_EVENTS").glob("*.gz"))], "checkpoints": list(CHECKPOINTS)}
+                "eos_events": [path.name for path in sorted((args.output / "EOS_EVENTS").glob("*.gz"))],
+                "checkpoints": list(_checkpoint_values(args.checkpoints))}
     _atomic_json(args.output / "GENERATION_MANIFEST.json", manifest)
     files = _generation_files(args.output)
     ledger = {"experiment": EXPERIMENT, "phase": "GENERATION", "files": {str(path.relative_to(args.output)): _sha_file(path) for path in files}}

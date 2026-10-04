@@ -126,6 +126,8 @@ def _worker(args: argparse.Namespace, run: Path, selected: dict[str, Any], attem
     # Phase-specific controllers may pin a previously validated interpreter.
     # Older Core callers retain their original sys.executable behavior.
     worker_python = str(getattr(args, "worker_python", None) or sys.executable)
+    search_order_policy = str(getattr(args, "search_order_policy", "legacy"))
+    checkpoints = str(getattr(args, "checkpoints", "512,1024"))
     command = [worker_python, str(base), "--mode", "worker", "--output", str(run), "--cohort-file", "RUN_COHORT.json",
                "--output-id", selected["output_id"], "--attempt", str(attempt), "--resident", str(config["resident_capacity"]),
                "--ceiling", str(config["physical_batch_ceiling"]), "--model-path", str(args.model_path), "--challenge", str(args.challenge),
@@ -133,6 +135,8 @@ def _worker(args: argparse.Namespace, run: Path, selected: dict[str, Any], attem
                "--aug16-ids", str(run / "AUG8_IDS.json"), "--adapter-stage", str(run / "ADAPTER_STAGE"), "--device", args.device,
                "--max-expanded-nodes", "1024", "--ttt-depth", str(depth), "--augmentation-label", "aug8",
                "--admission-policy", "root_aware", "--fairness-max-wait", "3", "--experiment", experiment, "--checkpoints", "512,1024"]
+    command[-1] = checkpoints
+    command.extend(["--search-order-policy", search_order_policy])
     started = time.time()
     process = subprocess.run(command, cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     log = run / "WORKER_LOGS" / f"{_safe(selected['output_id'])}_d{depth}_attempt{attempt}.log"

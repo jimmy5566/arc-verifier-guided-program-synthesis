@@ -325,7 +325,9 @@ def _order_generator(
                                   parent_node=node_id, prefix=frame.prefix, parent_work_item_id=item.work_item_id,
                                   root_branch_id=item.root_branch_id, is_root=False)
         add_successors(children, is_root=False)
-        policy.note_expansion(item)
+        if policy.note_expansion(item):
+            record["number_of_yields"] += 1
+            state["search_order"]["yielded_subtrees"] += 1
     pending = [row for row in state["search_order_work_items"] if row["status"] == "pending"]
     for row in pending:
         row["status"] = "still_pending_at_r1024" if state["budget_exhausted"] else "unexpanded_search_exhausted"
