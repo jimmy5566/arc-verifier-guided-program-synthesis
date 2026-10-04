@@ -330,6 +330,10 @@ def score_requests(provider: NVARCNativeProvider, requests: list[tuple[list[dict
 
 def score_task_depth(model: Any, provider: NVARCNativeProvider, task: Any, output_id: str, depth: int, rows: list[dict[str, Any]], adapter_path: Path, context_window: int, batch_size: int) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int]:
     _set_adapter(model, adapter_path)
+    # This identity was established during adapter preflight.  Keep a single
+    # source-local copy in the expensive evidence rows rather than rehashing a
+    # several-hundred-MiB adapter for every candidate and scoring view.
+    adapter_model_sha256 = sha256(adapter_path / "adapter_model.safetensors")
     _task, output_index = oid_parts(output_id)
     continuations = [serialize_grid(row["canonical_grid"]) for row in rows]
     identity_messages = native_messages(task, output_index)
@@ -347,7 +351,7 @@ def score_task_depth(model: Any, provider: NVARCNativeProvider, task: Any, outpu
             record = {"task_id": candidate["task_id"], "output_id": output_id, "depth": depth, "grid_key": candidate["grid_key"],
                       "scoring_view": view_name, "token_count": token_count, "sequence_log_likelihood": float(logprob) * token_count,
                       "sequence_negative_log_likelihood": -float(logprob) * token_count, "mean_token_nll": -float(logprob),
-                      "adapter_model_sha256": sha256(adapter_path / "adapter_model.safetensors")}
+                      "adapter_model_sha256": adapter_model_sha256}
             detail_rows.append(record); by_grid[candidate["grid_key"]].append(record)
     scored: list[dict[str, Any]] = []
     for candidate, original_score in zip(rows, original, strict=True):
