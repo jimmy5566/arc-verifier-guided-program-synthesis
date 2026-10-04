@@ -28,6 +28,11 @@ from statistics import fmean
 from typing import Any, Iterable
 
 
+# Match the established Eval60 launchers: serializing only the Inductor compile
+# pool avoids a 32-worker CPU oversubscription at the first long-context forward.
+# This influences compilation resource use only, never the frozen model or score.
+os.environ.setdefault("TORCHINDUCTOR_COMPILE_THREADS", "1")
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
