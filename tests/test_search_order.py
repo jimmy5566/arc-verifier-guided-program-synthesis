@@ -17,21 +17,18 @@ def take(policy, count: int) -> list[int]:
 
 def test_current_dfs_is_depth_first_with_low_nll_siblings_first() -> None:
     policy = make_search_order_policy("CURRENT_DFS")
-    policy.push(item(1, 1, 0.1, nll=0.1))
-    policy.push(item(2, 2, 0.1, nll=0.2))
+    policy.push_successors((item(1, 1, 0.1, nll=0.1), item(2, 2, 0.1, nll=0.2)))
     first = policy.pop(); assert first is not None and first.work_item_id == 1
     policy.note_expansion(first)
     # A descendant is later pushed and must run before the old root sibling.
-    policy.push(item(3, 1, 0.2, nll=0.01))
+    policy.push_successors((item(3, 1, 0.2, nll=0.01),))
     assert take(policy, 2) == [3, 2]
 
 
 def test_fair_q64_yields_to_a_retained_sibling() -> None:
     policy = FairDFS(quantum=2)
-    for identifier in range(1, 4):
-        policy.push(item(identifier, 10, 0.1))
-    for identifier in range(4, 7):
-        policy.push(item(identifier, 20, 0.1))
+    policy.push_successors(tuple(item(identifier, 10, 0.1) for identifier in range(1, 4)))
+    policy.push_successors(tuple(item(identifier, 20, 0.1) for identifier in range(4, 7)))
     assert take(policy, 6) == [1, 2, 4, 5, 3, 6]
 
 

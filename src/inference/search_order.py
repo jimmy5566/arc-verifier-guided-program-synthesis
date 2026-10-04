@@ -47,6 +47,8 @@ class SearchOrderPolicy(Protocol):
 
     def push(self, item: RetainedWorkItem) -> None: ...
 
+    def push_successors(self, items: tuple[RetainedWorkItem, ...]) -> None: ...
+
     def pop(self) -> RetainedWorkItem | None: ...
 
     def note_expansion(self, item: RetainedWorkItem) -> None: ...
@@ -67,13 +69,14 @@ class CurrentDFS:
         self._stack: list[RetainedWorkItem] = []
 
     def push(self, item: RetainedWorkItem) -> None:
-        # The legacy decoder sorts siblings low-NLL first, then recurses into
-        # the first sibling.  Reversing the sorted insertion makes a simple
-        # LIFO stack reproduce that depth-first selection.
-        index = 0
-        while index < len(self._stack) and _key(self._stack[index]) >= _key(item):
-            index += 1
-        self._stack.insert(index, item)
+        self._stack.append(item)
+
+    def push_successors(self, items: tuple[RetainedWorkItem, ...]) -> None:
+        # A legacy recursive frame sorts its own successors low-NLL first and
+        # descends immediately into the first.  Placing the same frame's
+        # successors in reverse order above the existing stack reproduces
+        # this exactly without globally re-sorting unrelated ancestors.
+        self._stack.extend(reversed(sorted(items, key=_key)))
 
     def pop(self) -> RetainedWorkItem | None:
         return self._stack.pop() if self._stack else None
@@ -103,13 +106,18 @@ class _FairQueues:
             queue = deque()
             self.queues[item.root_branch_id] = queue
             self.roots.append(item.root_branch_id)
-        # A root may reveal several retained siblings at a context.  Stable
-        # NLL/insertion ordering matches the frozen local sibling order.
-        if not queue or _key(queue[-1]) <= _key(item):
-            queue.append(item)
-        else:
-            ordered = sorted((*queue, item), key=_key)
-            queue.clear(); queue.extend(ordered)
+        queue.append(item)
+
+    def push_successors(self, items: tuple[RetainedWorkItem, ...]) -> None:
+        """Push one parent frame's successors while retaining local DFS order."""
+        by_root: dict[int, list[RetainedWorkItem]] = {}
+        for item in items:
+            by_root.setdefault(item.root_branch_id, []).append(item)
+        for root, group in by_root.items():
+            queue = self.queues.get(root)
+            if queue is None:
+                queue = deque(); self.queues[root] = queue; self.roots.append(root)
+            queue.extend(reversed(sorted(group, key=_key)))
 
     def _discard_empty_front(self) -> None:
         while self.roots and not self.queues[self.roots[0]]:
@@ -125,7 +133,7 @@ class _FairQueues:
             return None
         root = self.roots[0]
         self.active_root = root
-        return self.queues[root].popleft()
+        return self.queues[root].pop()
 
     def note_expansion(self, item: RetainedWorkItem) -> None:
         if self.active_root != item.root_branch_id:
@@ -161,6 +169,9 @@ class FairDFS:
     def push(self, item: RetainedWorkItem) -> None:
         self._queues.push(item)
 
+    def push_successors(self, items: tuple[RetainedWorkItem, ...]) -> None:
+        self._queues.push_successors(items)
+
     def pop(self) -> RetainedWorkItem | None:
         return self._queues.pop()
 
@@ -186,6 +197,13 @@ class RegretBandFairDFS:
 
     def push(self, item: RetainedWorkItem) -> None:
         self._bands[item.regret_band].push(item)
+
+    def push_successors(self, items: tuple[RetainedWorkItem, ...]) -> None:
+        by_band: dict[int, list[RetainedWorkItem]] = {}
+        for item in items:
+            by_band.setdefault(item.regret_band, []).append(item)
+        for band, group in by_band.items():
+            self._bands[band].push_successors(tuple(group))
 
     def pop(self) -> RetainedWorkItem | None:
         for offset in range(len(self.band_cycle)):

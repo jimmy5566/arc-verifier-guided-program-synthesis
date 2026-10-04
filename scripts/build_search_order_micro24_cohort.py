@@ -32,6 +32,21 @@ def _sha_value(value: Any) -> str:
     return hashlib.sha256(_canonical(value).encode("utf-8")).hexdigest()
 
 
+def _sha_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _repo_path(path: Path) -> str:
+    try:
+        return path.resolve().relative_to(ROOT.resolve()).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
 def _atomic_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
@@ -167,8 +182,10 @@ def build_cohort(*, cell_anatomy: Path, output_miss_anatomy: Path, score_table: 
         },
         "source": {
             "anatomy_commit": anatomy_commit, "phase3_commit": phase3_commit,
-            "cell_anatomy": str(cell_anatomy), "output_miss_anatomy": str(output_miss_anatomy),
-            "score_table": str(score_table), "phase3_cohort": str(phase3_cohort),
+            "cell_anatomy": {"path": _repo_path(cell_anatomy), "sha256": _sha_file(cell_anatomy)},
+            "output_miss_anatomy": {"path": _repo_path(output_miss_anatomy), "sha256": _sha_file(output_miss_anatomy)},
+            "score_table": {"path": _repo_path(score_table), "sha256": _sha_file(score_table)},
+            "phase3_cohort": {"path": _repo_path(phase3_cohort), "sha256": _sha_file(phase3_cohort)},
         },
         "category_counts": counts, "outputs": rows,
     }
