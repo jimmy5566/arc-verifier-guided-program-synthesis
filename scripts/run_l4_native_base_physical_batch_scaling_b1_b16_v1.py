@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import ctypes
 from dataclasses import dataclass
 import gc
 import hashlib
@@ -25,6 +26,7 @@ import multiprocessing as mp
 import os
 from pathlib import Path
 import random
+import signal
 import statistics
 import subprocess
 import sys
@@ -175,13 +177,42 @@ def _emit_worker_progress(args: argparse.Namespace, queue: Any, event: str, *, g
 
 
 def _close_queue(queue: Any) -> None:
-    for method in ("close", "join_thread"):
+    """Release a multiprocessing queue without a feeder-thread join.
+
+    ``Queue.join_thread`` has no timeout.  Calling it after a worker is
+    terminated can therefore retain the controller long after its watchdog
+    has declared the width failed.  The controller drains the messages it
+    needs before this function runs, so discarding any remaining feeder work
+    is the safe failure-cleanup behaviour.
+    """
+    for method in ("cancel_join_thread", "close"):
         callback = getattr(queue, method, None)
         if callable(callback):
             try:
                 callback()
             except Exception:
                 pass
+
+
+def _set_parent_death_signal() -> dict[str, Any]:
+    """Ask Linux to kill a spawned GPU worker if its controller dies.
+
+    This must run before importing torch or starting model loading.  Workers
+    intentionally remain in the controller's process group; this is an
+    additional orphan-protection layer, not a new session.
+    """
+    if os.name != "posix":
+        return {"status": "UNSUPPORTED", "reason": f"os.name={os.name}"}
+    pr_set_pdeathsig = 1
+    library = ctypes.CDLL(None, use_errno=True)
+    result = library.prctl(pr_set_pdeathsig, int(signal.SIGKILL), 0, 0, 0)
+    if result != 0:
+        error = ctypes.get_errno()
+        raise OSError(error, "prctl(PR_SET_PDEATHSIG, SIGKILL) failed")
+    # Avoid the tiny race where our parent died immediately before prctl.
+    if os.getppid() == 1:
+        os.kill(os.getpid(), signal.SIGKILL)
+    return {"status": "SET", "signal": "SIGKILL"}
 
 
 def _cleanup_workers(workers: list[Any]) -> None:
@@ -917,6 +948,7 @@ def _worker_entry(serialized_args: dict[str, Any], gpu_id: int, width: int, read
                   progress: Any) -> None:
     # Must precede the first torch import in this spawned child.
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+    parent_death_signal = _set_parent_death_signal()
     setup_accounting: dict[str, Any] = {
         "gpu_id": gpu_id, "width": width, "actual_template_prefills": 0,
         "expected_template_prefills": expected_template_prefills(width),
@@ -941,6 +973,7 @@ def _worker_entry(serialized_args: dict[str, Any], gpu_id: int, width: int, read
             "type": "READY", "gpu_id": gpu_id, "width": width, "gpu_uuid": thermal.get("gpu_uuid"),
             "model_mode": identity["benchmark_model_mode"], "base_model": context["base_model_identity"],
             "startup_milestone": "MODEL_READY_SENT",
+            "parent_death_signal": parent_death_signal,
             **_model_ready_fields(context["base_model_identity"]),
         })
         _emit_worker_progress(args, progress, "MODEL_READY_SENT", gpu_id=gpu_id, physical_batch=width)
@@ -1131,6 +1164,7 @@ def _run_width(args: argparse.Namespace, width: int, *, prior_identity: dict[str
 def _runtime_preflight_worker(serialized_args: dict[str, Any], gpu_id: int, result: Any, progress: Any) -> None:
     """Run one non-timed B4 DynamicCache adoption check on one fresh L4."""
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+    parent_death_signal = _set_parent_death_signal()
     setup_accounting: dict[str, Any] = {
         "gpu_id": gpu_id, "width": 4, "actual_template_prefills": 0,
         "expected_template_prefills": 4, "template_prefill_seconds_total": 0.0,
@@ -1221,6 +1255,7 @@ def _runtime_preflight_worker(serialized_args: dict[str, Any], gpu_id: int, resu
             "gpu_id": gpu_id, "physical_batch": 4, "timed": False, "checks": checks, "integrity": integrity,
             "telemetry": telemetry, "memory_before": memory_before, "memory_after": memory_after,
             "hardware": _nvidia_telemetry(gpu_id), **_model_ready_fields(context["base_model_identity"]),
+            "parent_death_signal": parent_death_signal,
             "root_template_parity": parity, "root_template_immutability": {"status": "PASS", "before": setup_audit["template_hashes_before"], "after": hashes_after},
             "root_template_memory_audit": root_template_memory_audit,
             "setup_cost_audit": setup_audit,
