@@ -278,7 +278,7 @@ def _load_model(model_path: Path, initial_adapter: Path, native_config: Path) ->
     from peft import PeftModel
     from transformers import AutoModelForCausalLM
     tokenizer, _ = checkpoint_native_tokenizer(model_path, native_config)
-    base = AutoModelForCausalLM.from_pretrained(str(model_path), local_files_only=True, trust_remote_code=False, dtype=torch.bfloat16, low_cpu_mem_usage=True).to("cuda:0").eval()
+    base = AutoModelForCausalLM.from_pretrained(str(model_path), local_files_only=True, trust_remote_code=False, torch_dtype=torch.bfloat16, low_cpu_mem_usage=True).to("cuda:0").eval()
     model = PeftModel.from_pretrained(base, str(initial_adapter), adapter_name="default", is_trainable=False).to("cuda:0").eval()
     provider = NVARCNativeProvider(model_path=model_path, tokenizer_config_dir=native_config, device="cuda:0")
     provider.model, provider.tokenizer = model, tokenizer
