@@ -182,7 +182,7 @@ def main() -> None:
     parser.add_argument("--cell-anatomy", type=Path, default=ROOT / "analysis" / "eval60_phase3_r1024_miss_anatomy_v1" / "CELL_GOLD_PATH_ANATOMY.csv")
     parser.add_argument("--output-miss-anatomy", type=Path, default=ROOT / "analysis" / "eval60_phase3_r1024_miss_anatomy_v1" / "OUTPUT_MISS_ANATOMY.csv")
     parser.add_argument("--score-table", type=Path, default=ROOT / "analysis" / "eval60_phase3_d24_d48_r1024_score_v1" / "OUTPUT_RESULTS.csv")
-    parser.add_argument("--phase3-cohort", type=Path, default=ROOT / "analysis" / "phase3a_eval60_d24_aug8_r1024_v1" / "generation_v2" / "RUN_COHORT.json")
+    parser.add_argument("--phase3-cohort", type=Path, default=ROOT / "artifacts" / "eval60_phase3_d24_aug8_r1024_archive_v1" / "RUN_COHORT.json")
     args = parser.parse_args()
     payload = build_cohort(cell_anatomy=args.cell_anatomy, output_miss_anatomy=args.output_miss_anatomy,
                            score_table=args.score_table, phase3_cohort=args.phase3_cohort)

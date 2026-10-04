@@ -12,7 +12,7 @@ def _payload() -> dict:
         cell_anatomy=ROOT / "analysis/eval60_phase3_r1024_miss_anatomy_v1/CELL_GOLD_PATH_ANATOMY.csv",
         output_miss_anatomy=ROOT / "analysis/eval60_phase3_r1024_miss_anatomy_v1/OUTPUT_MISS_ANATOMY.csv",
         score_table=ROOT / "analysis/eval60_phase3_d24_d48_r1024_score_v1/OUTPUT_RESULTS.csv",
-        phase3_cohort=ROOT / "analysis/phase3a_eval60_d24_aug8_r1024_v1/generation_v2/RUN_COHORT.json",
+        phase3_cohort=ROOT / "artifacts/eval60_phase3_d24_aug8_r1024_archive_v1/RUN_COHORT.json",
     )
 
 
