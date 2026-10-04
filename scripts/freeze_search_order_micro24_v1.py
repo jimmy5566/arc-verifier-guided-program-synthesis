@@ -79,8 +79,13 @@ def _verify_source(label: str, source: Path) -> dict[str, Any]:
         raise RuntimeError(f"{label}_RAW_COUNT_DRIFT:{raw_count}")
     if label in {"P1", "P2"} and raw_count != 24:
         raise RuntimeError(f"{label}_EXPECTED_24_OUTPUTS:{raw_count}")
-    if freeze.get("policy") != POLICIES[label]:
-        raise RuntimeError(f"{label}_POLICY_DRIFT:{freeze.get('policy')}")
+    # The controller's freeze receipt records the stable stage label (P0,
+    # P1, or P2); POLICY_CONFIG.json carries the corresponding policy name.
+    if freeze.get("policy") != label:
+        raise RuntimeError(f"{label}_FREEZE_LABEL_DRIFT:{freeze.get('policy')}")
+    policy_config = _read(source / "POLICY_CONFIG.json")
+    if policy_config.get("logical_search_order_policy") != POLICIES[label]:
+        raise RuntimeError(f"{label}_POLICY_DRIFT:{policy_config.get('logical_search_order_policy')}")
 
     result = {
         "label": label,
