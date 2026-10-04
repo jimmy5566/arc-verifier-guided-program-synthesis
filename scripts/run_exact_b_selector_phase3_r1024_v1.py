@@ -166,13 +166,18 @@ def source_score_cohort(score_csv: Path) -> tuple[list[dict[str, str]], dict[str
         "output_count": len(outputs),
         "task_count": len(tasks),
         "source_score_artifact_sha256": sha256(score_csv),
-        "source_score_commit": _git_head(),
+        "source_score_commit": _artifact_commit(score_csv.parent),
     }
 
 
-def _git_head() -> str:
+def _artifact_commit(path: Path) -> str:
     import subprocess
-    result = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True, capture_output=True, check=False)
+    result = subprocess.run(
+        ["git", "-C", str(ROOT), "log", "-1", "--format=%H", "--", str(path.relative_to(ROOT))],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
     return result.stdout.strip() if result.returncode == 0 else "UNKNOWN"
 
 
