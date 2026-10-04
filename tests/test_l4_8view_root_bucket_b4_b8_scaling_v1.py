@@ -222,6 +222,9 @@ class L48ViewRootBucketB4B8ScalingTests(unittest.TestCase):
         assert (staged / "dataset" / "ARC2" / "scripts" / RUNNER_PATH.name).is_file()
         assert (staged / "dataset" / "ARC2" / "scripts" / OLD_RUNNER_PATH.name).is_file()
         assert (staged / "dataset" / "ARC2" / "scripts" / PROCESS_GROUP_PATH.name).is_file()
+        identity = json.loads((staged / "dataset" / "ARC2" / "HARNESS_REVIEW_IDENTITY.json").read_text(encoding="utf-8"))
+        self.assertEqual(identity["experiment"], runner.EXPERIMENT)
+        self.assertEqual(identity["review_payload_schema"], 1)
         assert (staged / "dataset" / "ARC2" / "src" / "inference" / "d1_release_contract.py").is_file()
         assert not list(staged.rglob("*solution*.json"))
 

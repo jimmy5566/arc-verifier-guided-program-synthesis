@@ -100,6 +100,14 @@ def _archive_source(destination: Path, *, source_ref: str) -> None:
         target = destination / "scripts" / name
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(ROOT / "scripts" / name, target)
+    # Bind each newly built review payload to the exact reviewed harness
+    # revision.  This keeps a source archive from being mistaken for a prior
+    # review package merely because the curated scientific core is unchanged.
+    _write(destination / "HARNESS_REVIEW_IDENTITY.json", {
+        "harness_commit": source_ref,
+        "experiment": EXPERIMENT,
+        "review_payload_schema": 1,
+    })
     forbidden = [path for path in destination.rglob("*") if path.is_file() and path.suffix.lower() in {".json", ".csv", ".parquet"}
                  and "solution" in path.name.lower()]
     if forbidden:
