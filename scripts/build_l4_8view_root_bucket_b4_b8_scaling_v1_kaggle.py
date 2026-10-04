@@ -95,6 +95,7 @@ def _archive_source(destination: Path, *, source_ref: str) -> None:
     for name in (
         "run_l4_native_base_physical_batch_scaling_b1_b16_v1.py",
         "run_l4_8view_root_bucket_b4_b8_scaling_v1.py",
+        "l4_process_group_cleanup.py",
     ):
         target = destination / "scripts" / name
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -170,30 +171,14 @@ def _notebook_source(harness_commit: str) -> str:
         "        lines = path.read_text().splitlines()",
         "        return json.loads(lines[-1]) if lines else None",
         "    except Exception as exc: return {'progress_read_error': repr(exc)}",
-        "def pg_rows(pgid):",
-        "    try:",
-        "        lines = subprocess.check_output(['ps','-eo','pid=,pgid=,stat=,cmd='], text=True, timeout=10).splitlines()",
-        "        rows = []",
-        "        for line in lines:",
-        "            parts = line.split(None, 3)",
-        "            if len(parts) >= 3 and int(parts[1]) == pgid: rows.append({'pid':int(parts[0]), 'pgid':int(parts[1]), 'stat':parts[2], 'cmd':parts[3] if len(parts) > 3 else ''})",
-        "        return rows",
-        "    except Exception as exc: return [{'pid':None, 'pgid':pgid, 'ps_error':repr(exc)}]",
-        "def kill_group(process, phase, hard_limit):",
-        "    actions = []",
+        "sys.path.insert(0, str(source)) if 'source' in globals() else None",
+        "def kill_group(pgid, phase, hard_limit, *, reason='TIME_GATE_FAILURE'):",
+        "    from scripts.l4_process_group_cleanup import cleanup_process_group",
         "    snapshot = smi()",
-        "    try: os.killpg(process.pid, signal.SIGTERM); actions.append('SIGTERM_PROCESS_GROUP')",
-        "    except ProcessLookupError: actions.append('PROCESS_GROUP_ALREADY_GONE')",
-        "    try: process.wait(timeout=10)",
-        "    except subprocess.TimeoutExpired:",
-        "        try: os.killpg(process.pid, signal.SIGKILL); actions.append('SIGKILL_PROCESS_GROUP')",
-        "        except ProcessLookupError: actions.append('PROCESS_GROUP_ALREADY_GONE_AFTER_TERM')",
-        "        try: process.wait(timeout=10)",
-        "        except subprocess.TimeoutExpired: actions.append('PROCESS_GROUP_STILL_RUNNING_AFTER_BOUNDED_KILL_WAIT')",
-        "    survivors = pg_rows(process.pid)",
-        "    payload = {'experiment': contract['experiment'], 'phase': phase, 'width_bucket': None, 'elapsed_seconds': time.monotonic()-STARTED, 'hard_limit_seconds': hard_limit, 'last_progress_event': last_progress(), 'worker_pids': [], 'worker_status': [], 'nvidia_smi_snapshot': snapshot, 'termination_actions': actions, 'remaining_surviving_pids':[row.get('pid') for row in survivors if row.get('pid') is not None], 'remaining_surviving_processes':survivors}",
+        "    cleanup = cleanup_process_group(pgid)",
+        "    payload = {'experiment': contract['experiment'], 'phase': phase, 'width_bucket': None, 'elapsed_seconds': time.monotonic()-STARTED, 'hard_limit_seconds': hard_limit, 'last_progress_event': last_progress(), 'worker_pids': [], 'worker_status': [], 'nvidia_smi_snapshot': snapshot, 'reason': reason, **cleanup}",
         "    atomic_json(out / 'TIME_GATE_FAILURE.json', payload)",
-        "    print(json.dumps({'event':'TIME_GATE_FAILURE','phase':phase, **payload}, sort_keys=True), flush=True)",
+        "    print(json.dumps({'event':reason,'phase':phase, **payload}, sort_keys=True), flush=True)",
         "    return payload",
         "if os.environ.get('KAGGLE_KERNEL_INTERNET_ENABLED','').strip().lower() in {'1','true','yes'}: raise RuntimeError('Internet must be disabled')",
         "gpus = subprocess.check_output(['nvidia-smi','-L'], text=True).splitlines()",
@@ -209,6 +194,7 @@ def _notebook_source(harness_commit: str) -> str:
         "    if not path.is_file(): raise RuntimeError(f'attached source file missing: {relative}')",
         "    digest = hashlib.sha256(path.read_bytes()).hexdigest()",
         "    if digest != expected: raise RuntimeError(f'attached source hash mismatch: {relative}')",
+        "sys.path.insert(0, str(source))",
         "model = Path('/kaggle/input/models/sorokin/qwen3_4b_grids15_sft139/transformers/bfloat16/1')",
         "challenge = Path('/kaggle/input/competitions/arc-prize-2026-arc-agi-2/arc-agi_evaluation_challenges.json')",
         "native = source / 'configs' / 'nvarc_native_846d0198'",
@@ -225,18 +211,30 @@ def _notebook_source(harness_commit: str) -> str:
         "    command = [*common, '--phase', phase]",
         "    print(json.dumps({'event':'NOTEBOOK_PHASE_START','phase':phase,'command':command}, sort_keys=True), flush=True)",
         "    process = subprocess.Popen(command, env=env, start_new_session=True)",
+        "    pgid = os.getpgid(process.pid)",
+        "    if pgid != process.pid: raise RuntimeError(f'PROCESS_GROUP_SETUP_FAILED: leader={process.pid} pgid={pgid}')",
         "    try: returncode = process.wait(timeout=remaining)",
         "    except subprocess.TimeoutExpired:",
-        "        kill_group(process, phase, int(remaining))",
+        "        cleanup = kill_group(pgid, phase, int(remaining))",
+        "        if cleanup['remaining_surviving_pids']: raise RuntimeError(f'PROCESS_GROUP_SURVIVORS_AFTER_TIMEOUT:{cleanup}')",
         "        raise RuntimeError(f'TIME_GATE_EXCEEDED:{phase}')",
         "    if returncode:",
-        "        survivors = pg_rows(process.pid)",
-        "        if survivors: kill_group(process, phase, int(remaining))",
+        "        from scripts.l4_process_group_cleanup import pg_rows",
+        "        survivors = pg_rows(pgid)",
+        "        if survivors:",
+        "            cleanup = kill_group(pgid, phase, int(remaining), reason='PROCESS_GROUP_SURVIVOR_AFTER_FAILURE')",
+        "            if cleanup['remaining_surviving_pids']: raise RuntimeError(f'PROCESS_GROUP_SURVIVORS_AFTER_FAILURE:{cleanup}')",
         "        listing = sorted(path.name for path in out.iterdir()) if out.exists() else []",
         "        print(json.dumps({'event':'NOTEBOOK_PHASE_ERROR','phase':phase,'returncode':returncode,'output_listing':listing}, sort_keys=True), flush=True)",
         "        raise RuntimeError(f'benchmark child failed: phase={phase} returncode={returncode}')",
+        "    from scripts.l4_process_group_cleanup import assert_no_process_group_survivors",
+        "    try:",
+        "        assert_no_process_group_survivors(pgid)",
+        "    except RuntimeError:",
+        "        cleanup = kill_group(pgid, phase, int(remaining), reason='PROCESS_GROUP_SURVIVOR_AFTER_SUCCESS')",
+        "        raise RuntimeError(f'PROCESS_GROUP_SURVIVOR_AFTER_SUCCESS:{cleanup}')",
         "    print(json.dumps({'event':'NOTEBOOK_PHASE_DONE','phase':phase}, sort_keys=True), flush=True)",
-        "required = ['CONTRACT.json','SOURCE_IDENTITY.json','TIME_GATE_CONFIG.json','EIGHT_VIEW_ROOT_BUCKETS.json','PROCESS_CLEANUP_AUDIT.json','L4_8VIEW_ROOT_BUCKET_RAW.csv','L4_8VIEW_ROOT_BUCKET_AGGREGATE.csv','L4_8VIEW_ROOT_BUCKET_BOOTSTRAP.csv','DECISION.json','HASHES.json']",
+        "required = ['CONTRACT.json','SOURCE_IDENTITY.json','TIME_GATE_CONFIG.json','EIGHT_VIEW_ROOT_BUCKETS.json','PROCESS_CLEANUP_AUDIT.json','L4_8VIEW_ROOT_BUCKET_RAW.csv','L4_8VIEW_ROOT_BUCKET_PER_GPU.csv','L4_8VIEW_ROOT_BUCKET_AGGREGATE.csv','L4_8VIEW_ROOT_BUCKET_BOOTSTRAP.csv','DECISION.json','HASHES.json']",
         "missing_output = [name for name in required if not (out / name).is_file()]",
         "if missing_output: raise RuntimeError(f'benchmark output incomplete: {missing_output}')",
         "print(json.dumps({'event':'L4_8VIEW_ROOT_BUCKET_COMPLETE','artifacts':str(out),'submission_created':False}, sort_keys=True), flush=True)",
@@ -248,9 +246,9 @@ def _assert_notebook_contract(notebook: dict[str, Any]) -> None:
     forbidden = ("submission.json", "KAGGLE_IS_COMPETITION_RERUN", "FAST_COMMIT", "evaluation_solutions")
     if any(token in source for token in forbidden):
         raise RuntimeError("review notebook violates target-blind/no-submission contract")
-    required = ("subprocess.Popen", "start_new_session=True", "os.killpg", "SIGTERM_PROCESS_GROUP",
-                "SIGKILL_PROCESS_GROUP", "TIME_GATE_FAILURE.json", "GLOBAL_LIMIT = 1800", "MODEL_READY_LIMIT = 300",
-                "NO_PROGRESS_LIMIT = 180", "WIDTH_HARD_LIMIT = 600", "BASE_MODEL_ONLY")
+    required = ("subprocess.Popen", "start_new_session=True", "cleanup_process_group",
+                "assert_no_process_group_survivors", "TIME_GATE_FAILURE.json", "GLOBAL_LIMIT = 1800", "MODEL_READY_LIMIT = 300",
+                "NO_PROGRESS_LIMIT = 180", "WIDTH_HARD_LIMIT = 600", "BASE_MODEL_ONLY", "PROCESS_GROUP_SURVIVOR_AFTER_SUCCESS")
     if any(token not in source for token in required):
         raise RuntimeError("time-gated notebook contract incomplete")
 
@@ -282,9 +280,11 @@ def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str) -> d
                              "source": [line + "\n" for line in _notebook_source(harness_commit).splitlines()]}],
                 "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
                              "language_info": {"name": "python", "version": "3.12"},
-                             "kaggle": {"accelerator": "nvidiaL4", "isGpuEnabled": True, "isInternetEnabled": False,
+                             "kaggle": {"accelerator": "NvidiaL4", "isGpuEnabled": True, "isInternetEnabled": False,
                                         "language": "python", "sourceType": "notebook"}}, "nbformat": 4, "nbformat_minor": 4}
     _assert_notebook_contract(notebook)
+    if notebook["metadata"]["kaggle"]["accelerator"] != "NvidiaL4":
+        raise RuntimeError("notebook accelerator must be exactly NvidiaL4")
     _write(kernel / notebook_name, notebook)
     _write(kernel / "kernel-metadata.json", {"id": f"{owner}/{kernel_slug}", "title": "ARC2 L4 8View Root Bucket B4 B8 Scaling V1", "code_file": notebook_name,
                                                "language": "python", "kernel_type": "notebook", "is_private": True,
@@ -292,6 +292,8 @@ def build(*, output: Path, owner: str, dataset_slug: str, kernel_slug: str) -> d
                                                "keywords": ["gpu", "benchmark", "time-gated"], "dataset_sources": [f"{owner}/{dataset_slug}"],
                                                "competition_sources": ["arc-prize-2026-arc-agi-2"],
                                                "model_sources": ["sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1"], "machine_shape": "NvidiaL4"})
+    if json.loads((kernel / "kernel-metadata.json").read_text(encoding="utf-8"))["machine_shape"] != "NvidiaL4":
+        raise RuntimeError("kernel machine_shape must be exactly NvidiaL4")
     files = {str(path.relative_to(output)).replace("\\", "/"): _sha256(path) for path in sorted(output.rglob("*")) if path.is_file()}
     manifest = {"status": "PACKAGE_BUILT_NOT_PUSHED_NOT_LAUNCHED", "experiment": EXPERIMENT,
                 "authoritative_source_commit": AUTHORITATIVE_SOURCE_COMMIT, "harness_commit": harness_commit,

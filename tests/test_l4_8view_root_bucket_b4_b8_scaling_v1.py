@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RUNNER_PATH = ROOT / "scripts" / "run_l4_8view_root_bucket_b4_b8_scaling_v1.py"
 BUILDER_PATH = ROOT / "scripts" / "build_l4_8view_root_bucket_b4_b8_scaling_v1_kaggle.py"
 OLD_RUNNER_PATH = ROOT / "scripts" / "run_l4_native_base_physical_batch_scaling_b1_b16_v1.py"
+PROCESS_GROUP_PATH = ROOT / "scripts" / "l4_process_group_cleanup.py"
 
 
 def _load(path: Path, name: str):
@@ -27,6 +28,7 @@ def _load(path: Path, name: str):
 
 runner = _load(RUNNER_PATH, "l4_8view_root_bucket_runner")
 builder = _load(BUILDER_PATH, "l4_8view_root_bucket_builder")
+process_groups = _load(PROCESS_GROUP_PATH, "l4_8view_root_bucket_process_groups")
 
 
 class _Queue:
@@ -99,13 +101,94 @@ class L48ViewRootBucketB4B8ScalingTests(unittest.TestCase):
 
     def test_generated_notebook_has_bounded_process_group_popen(self) -> None:
         source = builder._notebook_source("review-sha")
-        for token in ("subprocess.Popen", "start_new_session=True", "os.killpg", "SIGTERM_PROCESS_GROUP",
-                      "SIGKILL_PROCESS_GROUP", "process.wait(timeout=10)", "TIME_GATE_FAILURE.json",
+        compile(source, "generated_l4_8view_root_bucket_b4_b8.ipynb", "exec")
+        for token in ("subprocess.Popen", "start_new_session=True", "cleanup_process_group",
+                      "assert_no_process_group_survivors", "PROCESS_GROUP_SURVIVOR_AFTER_SUCCESS", "TIME_GATE_FAILURE.json",
                       "GLOBAL_LIMIT = 1800", "MODEL_READY_LIMIT = 300", "NO_PROGRESS_LIMIT = 180",
                       "WIDTH_HARD_LIMIT = 600"):
             assert token in source
         assert "subprocess.run(command, env=env)" not in source
         assert "submission.json" not in source and "KAGGLE_IS_COMPETITION_RERUN" not in source
+
+    def test_exact_nvidia_l4_metadata_contract(self) -> None:
+        staged = Path(tempfile.mkdtemp()) / "stage"
+        self.addCleanup(lambda: shutil.rmtree(staged.parent, ignore_errors=True))
+        builder.build(output=staged, owner="private-owner", dataset_slug="private-source", kernel_slug="private-kernel")
+        notebook = json.loads((staged / "kernel" / "private-kernel.ipynb").read_text(encoding="utf-8"))
+        metadata = json.loads((staged / "kernel" / "kernel-metadata.json").read_text(encoding="utf-8"))
+        self.assertEqual(notebook["metadata"]["kaggle"]["accelerator"], "NvidiaL4")
+        self.assertEqual(metadata["machine_shape"], "NvidiaL4")
+
+    def test_controlled_leader_exit_with_descendant_is_group_killed(self) -> None:
+        state = {"rows": [{"pid": 4242, "pgid": 123, "stat": "S", "cmd": "descendant"}], "now": 0.0, "signals": []}
+
+        def rows(_: int):
+            return list(state["rows"])
+
+        def killpg(pgid: int, signum) -> None:
+            state["signals"].append((pgid, signum))
+            if signum == process_groups._SIGKILL:
+                state["rows"] = []
+
+        def monotonic() -> float:
+            return float(state["now"])
+
+        def sleep(seconds: float) -> None:
+            state["now"] += max(float(seconds), 0.01)
+
+        audit = process_groups.cleanup_process_group(
+            123, grace_seconds=0.02, kill_grace_seconds=0.02, poll_interval_seconds=0.01,
+            rows=rows, killpg=killpg, monotonic=monotonic, sleep=sleep,
+        )
+        self.assertEqual(state["signals"], [(123, process_groups._SIGTERM), (123, process_groups._SIGKILL)])
+        self.assertEqual(audit["remaining_surviving_pids"], [])
+        self.assertTrue(audit["cleanup_complete"])
+
+    def test_success_returncode_survivor_gate_fails_closed(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "PROCESS_GROUP_SURVIVOR_AFTER_SUCCESS"):
+            process_groups.assert_no_process_group_survivors(
+                77, rows=lambda _: [{"pid": 88, "pgid": 77, "stat": "S", "cmd": "worker"}]
+            )
+
+    def test_condition_no_progress_clock_is_defined_before_queue_events(self) -> None:
+        # This is the exact assignment used by the first condition loop before
+        # it drains either queue, so no empty first poll can reference an
+        # unbound local.
+        condition_started = 123.456
+        last_progress_at = runner._initial_condition_last_progress_at(condition_started)
+        self.assertEqual(last_progress_at, condition_started)
+        self.assertGreaterEqual(124.0 - last_progress_at, 0.0)
+
+    def test_hierarchical_bootstrap_and_aggregate_preserve_gpu_identity(self) -> None:
+        # GPU 0/1 double while GPU 2/3 do not.  Pooling all 48 samples would
+        # produce a materially different ratio than median per-GPU ratios.
+        b4 = {0: [100.0] * 12, 1: [100.0] * 12, 2: [1.0] * 12, 3: [1.0] * 12}
+        b8 = {0: [200.0] * 12, 1: [200.0] * 12, 2: [1.0] * 12, 3: [1.0] * 12}
+        evidence = runner._bootstrap_ratio(b4, b8)
+        self.assertEqual(evidence["median_ratio"], 1.5)
+        pooled = __import__("statistics").median(sum(b8.values(), [])) / __import__("statistics").median(sum(b4.values(), []))
+        self.assertNotEqual(evidence["median_ratio"], pooled)
+
+        output = Path(tempfile.mkdtemp())
+        self.addCleanup(lambda: shutil.rmtree(output, ignore_errors=True))
+        results = {}
+        for bucket in "AB":
+            for width, values in ((4, b4), (8, b8)):
+                workers = []
+                for gpu in range(4):
+                    workers.append({"samples": [{
+                        "gpu_id": gpu, "latency_ms": 10.0, "lanes_per_second": value,
+                        "peak_allocated_bytes": 2, "peak_reserved_bytes": 3, "free_before_bytes": 4,
+                    } for value in values[gpu]]})
+                results[f"{bucket}_B{width}"] = workers
+        runner._summarize(output, results, [{"benchmark_model_mode": "BASE_MODEL_ONLY"} for _ in range(4)])
+        aggregate = (output / "L4_8VIEW_ROOT_BUCKET_AGGREGATE.csv").read_text(encoding="utf-8")
+        per_gpu = (output / "L4_8VIEW_ROOT_BUCKET_PER_GPU.csv").read_text(encoding="utf-8")
+        bootstrap = (output / "L4_8VIEW_ROOT_BUCKET_BOOTSTRAP.csv").read_text(encoding="utf-8")
+        self.assertIn("median_of_gpu_medians", aggregate)
+        self.assertIn("per_gpu_median_lanes_b4", bootstrap)
+        self.assertIn("'0': 2.0", bootstrap)
+        self.assertEqual(per_gpu.count("\n"), 17)  # header + 2 buckets * 2 widths * 4 GPUs
 
     def test_runtime_bucket_artifact_includes_all_required_view_provenance(self) -> None:
         slots = runner.production_view_slots()
@@ -138,6 +221,7 @@ class L48ViewRootBucketB4B8ScalingTests(unittest.TestCase):
         assert "submission.json" not in source and "evaluation_solutions" not in source
         assert (staged / "dataset" / "ARC2" / "scripts" / RUNNER_PATH.name).is_file()
         assert (staged / "dataset" / "ARC2" / "scripts" / OLD_RUNNER_PATH.name).is_file()
+        assert (staged / "dataset" / "ARC2" / "scripts" / PROCESS_GROUP_PATH.name).is_file()
         assert (staged / "dataset" / "ARC2" / "src" / "inference" / "d1_release_contract.py").is_file()
         assert not list(staged.rglob("*solution*.json"))
 

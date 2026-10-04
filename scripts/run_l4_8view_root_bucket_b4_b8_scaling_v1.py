@@ -604,6 +604,11 @@ def _wait_ready(*, args: argparse.Namespace, workers: list[Any], ready: Any, res
     return ready_rows, None
 
 
+def _initial_condition_last_progress_at(condition_started: float) -> float:
+    """Return a defined, condition-local no-progress clock origin."""
+    return condition_started
+
+
 def _controller(args: argparse.Namespace) -> None:
     args.output.mkdir(parents=True, exist_ok=True)
     _atomic_json(args.output / "TIME_GATE_CONFIG.json", {"experiment": EXPERIMENT, **time_gate_config()})
@@ -653,6 +658,10 @@ def _controller(args: argparse.Namespace) -> None:
         for condition in conditions:
             active_condition = condition
             condition_started = time.monotonic()
+            # This is deliberately condition-local.  Model load and the
+            # preflight phase must never consume a condition's no-progress
+            # budget, and the first empty queue poll must be well-defined.
+            last_progress_at = _initial_condition_last_progress_at(condition_started)
             while len(results[condition]) < 4:
                 for event in _drain(progress):
                     last_progress = event; last_progress_at = time.monotonic()
@@ -757,54 +766,81 @@ def _quantile(values: list[float], probability: float) -> float:
     return values[low] if low == high else values[low] * (high - index) + values[high] * (index - low)
 
 
-def _bootstrap_ratio(b4: list[float], b8: list[float]) -> dict[str, float]:
+def _bootstrap_ratio(b4: dict[int, list[float]], b8: dict[int, list[float]]) -> dict[str, float]:
+    """GPU-hierarchical paired bootstrap; never pool four GPUs into n=48."""
+    if set(b4) != {0, 1, 2, 3} or set(b8) != {0, 1, 2, 3}:
+        raise RuntimeError("GPU_HIERARCHICAL_BOOTSTRAP_REQUIRES_FOUR_NONEMPTY_GPUS")
+    if any(not b4[gpu] or not b8[gpu] for gpu in range(4)):
+        raise RuntimeError("GPU_HIERARCHICAL_BOOTSTRAP_REQUIRES_FOUR_NONEMPTY_GPUS")
     generator = random.Random(BOOTSTRAP_SEED)
-    trials = [statistics.median([generator.choice(b8) for _ in b8]) /
-              statistics.median([generator.choice(b4) for _ in b4])
-              for _ in range(BOOTSTRAP_TRIALS)]
-    return {"median_ratio": statistics.median(b8) / statistics.median(b4),
+    trials: list[float] = []
+    for _ in range(BOOTSTRAP_TRIALS):
+        ratios = []
+        for gpu in range(4):
+            sampled_b4 = [generator.choice(b4[gpu]) for _ in b4[gpu]]
+            sampled_b8 = [generator.choice(b8[gpu]) for _ in b8[gpu]]
+            ratios.append(statistics.median(sampled_b8) / statistics.median(sampled_b4))
+        trials.append(statistics.median(ratios))
+    return {"median_ratio": statistics.median(trials),
             "ci95_low": _quantile(trials, 0.025), "ci95_high": _quantile(trials, 0.975),
-            "trials": BOOTSTRAP_TRIALS, "seed": BOOTSTRAP_SEED}
+            "trials": BOOTSTRAP_TRIALS, "seed": BOOTSTRAP_SEED,
+            "method": "hierarchical_within_gpu_resample_then_median_across_gpu_ratios"}
 
 
 def _summarize(output: Path, results: Mapping[str, list[dict[str, Any]]], ready_rows: list[dict[str, Any]]) -> None:
     raw = [sample for rows in results.values() for worker in rows for sample in worker["samples"]]
     _atomic_csv(output / "L4_8VIEW_ROOT_BUCKET_RAW.csv", raw, list(raw[0]) if raw else ["status"])
     aggregates: list[dict[str, Any]] = []
+    per_gpu_rows: list[dict[str, Any]] = []
     bootstrap_rows: list[dict[str, Any]] = []
     for bucket in "AB":
         per_width: dict[int, list[dict[str, Any]]] = {}
+        per_width_gpu: dict[int, dict[int, list[dict[str, Any]]]] = {}
         for width in TEST_WIDTHS:
             samples = [sample for worker in results[f"{bucket}_B{width}"] for sample in worker["samples"]]
             per_width[width] = samples
+            by_gpu = {gpu: [row for row in samples if int(row["gpu_id"]) == gpu] for gpu in range(4)}
+            if set(by_gpu) != {0, 1, 2, 3} or any(len(rows) != MEASUREMENT_FORWARDS for rows in by_gpu.values()):
+                raise RuntimeError(f"GPU_SAMPLE_COMPLETENESS_FAILED:{bucket}:B{width}")
+            per_width_gpu[width] = by_gpu
+            gpu_latency_medians = {gpu: statistics.median(row["latency_ms"] for row in rows) for gpu, rows in by_gpu.items()}
+            gpu_lane_medians = {gpu: statistics.median(row["lanes_per_second"] for row in rows) for gpu, rows in by_gpu.items()}
+            for gpu in range(4):
+                per_gpu_rows.append({"bucket_id": bucket, "physical_batch": width, "condition": f"{bucket}_B{width}",
+                                    "gpu_id": gpu, "sample_count": len(by_gpu[gpu]),
+                                    "median_latency_ms": gpu_latency_medians[gpu], "median_lanes_per_second": gpu_lane_medians[gpu]})
             aggregates.append({"bucket_id": bucket, "physical_batch": width,
                                "condition": f"{bucket}_B{width}", "compatibility_lane_hardware_scaling": width == 8,
-                               "median_latency_ms": statistics.median(row["latency_ms"] for row in samples),
-                               "median_lanes_per_second": statistics.median(row["lanes_per_second"] for row in samples),
+                               "aggregate_method": "median_of_gpu_medians",
+                               "median_of_gpu_medians_latency_ms": statistics.median(gpu_latency_medians.values()),
+                               "median_of_gpu_medians_lanes_per_second": statistics.median(gpu_lane_medians.values()),
                                "peak_allocated_bytes": max(row["peak_allocated_bytes"] for row in samples),
                                "peak_reserved_bytes": max(row["peak_reserved_bytes"] for row in samples),
                                "min_free_before_bytes": min(row["free_before_bytes"] for row in samples),
                                "sample_count": len(samples), "worker_count": len(results[f"{bucket}_B{width}"])})
-        b4 = [row["lanes_per_second"] for row in per_width[4]]
-        b8 = [row["lanes_per_second"] for row in per_width[8]]
+        b4 = {gpu: [row["lanes_per_second"] for row in per_width_gpu[4][gpu]] for gpu in range(4)}
+        b8 = {gpu: [row["lanes_per_second"] for row in per_width_gpu[8][gpu]] for gpu in range(4)}
         ratio = _bootstrap_ratio(b4, b8)
-        per_gpu = []
-        for gpu in range(4):
-            left = statistics.median(row["lanes_per_second"] for row in per_width[4] if row["gpu_id"] == gpu)
-            right = statistics.median(row["lanes_per_second"] for row in per_width[8] if row["gpu_id"] == gpu)
-            per_gpu.append(right / left)
+        per_gpu = {gpu: statistics.median(b8[gpu]) / statistics.median(b4[gpu]) for gpu in range(4)}
+        paired_ratio = statistics.median(per_gpu.values())
         bootstrap_rows.append({"bucket_id": bucket, "b8_over_b4_lanes_ratio": ratio["median_ratio"],
-                               "gain_percent": (ratio["median_ratio"] - 1.0) * 100.0,
+                               "primary_ratio_method": "median_of_paired_gpu_median_ratios",
+                               "paired_gpu_ratio_median": paired_ratio,
+                               "gain_percent": (paired_ratio - 1.0) * 100.0,
                                "ci95_low": ratio["ci95_low"], "ci95_high": ratio["ci95_high"],
-                               "positive_gpu_count": sum(value > 1.0 for value in per_gpu),
-                               "per_gpu_ratios": per_gpu,
-                               "supported_positive": ratio["median_ratio"] > 1.0 and sum(value > 1.0 for value in per_gpu) >= 3 and ratio["ci95_low"] > 1.0,
-                               "material_positive": ratio["median_ratio"] >= 1.10, **{key: ratio[key] for key in ("trials", "seed")}})
+                               "positive_gpu_count": sum(value > 1.0 for value in per_gpu.values()),
+                               "per_gpu_median_lanes_b4": {str(gpu): statistics.median(b4[gpu]) for gpu in range(4)},
+                               "per_gpu_median_lanes_b8": {str(gpu): statistics.median(b8[gpu]) for gpu in range(4)},
+                               "per_gpu_ratios": {str(gpu): per_gpu[gpu] for gpu in range(4)},
+                               "supported_positive": paired_ratio > 1.0 and sum(value > 1.0 for value in per_gpu.values()) >= 3 and ratio["ci95_low"] > 1.0,
+                               "material_positive": paired_ratio >= 1.10, **ratio})
     _atomic_csv(output / "L4_8VIEW_ROOT_BUCKET_AGGREGATE.csv", aggregates, list(aggregates[0]))
+    _atomic_csv(output / "L4_8VIEW_ROOT_BUCKET_PER_GPU.csv", per_gpu_rows, list(per_gpu_rows[0]))
     _atomic_csv(output / "L4_8VIEW_ROOT_BUCKET_BOOTSTRAP.csv", bootstrap_rows, list(bootstrap_rows[0]))
-    proxy = sum(row["median_latency_ms"] for row in aggregates if row["physical_batch"] == 4)
+    proxy = sum(row["median_of_gpu_medians_latency_ms"] for row in aggregates if row["physical_batch"] == 4)
     decision = {"experiment": EXPERIMENT, "status": "PASS", "actual_8view_two_sequential_b4_proxy_latency_ms": proxy,
                 "b8_interpretation": "COMPATIBLE_LANE_HARDWARE_SCALING_NOT_ONE_TASK_EIGHT_VIEW_BATCH",
+                "aggregate_method": "median_of_gpu_medians", "ratio_method": "median_of_paired_gpu_median_ratios",
                 "bucket_comparisons": bootstrap_rows, "ready_worker_count": len(ready_rows),
                 "all_gpu_worker_model_mode": sorted({row.get("benchmark_model_mode") for row in ready_rows})}
     _atomic_json(output / "DECISION.json", decision)
