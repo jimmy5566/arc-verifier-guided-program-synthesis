@@ -19,12 +19,11 @@ import hashlib
 import json
 import math
 import os
-import shutil
 import sys
 import tempfile
 from collections import defaultdict
 from pathlib import Path
-from statistics import fmean
+from statistics import fmean, median
 from typing import Any, Iterable
 
 
@@ -60,6 +59,7 @@ CANONICAL_AUG8 = (
 )
 EXPECTED_RUNTIME = {"torch": "2.8.0+cu128", "torch_cuda": "12.8", "transformers": "4.55.4", "peft": "0.17.1"}
 EXPECTED_GOLD_SHA256 = "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1"
+HISTORICAL_SCORING_CONTEXT_WINDOW = 16384
 NEW7 = ("20270e3b:o0", "332f06d7:o0", "7491f3cf:o0", "78332cb0:o0", "97d7923e:o0", "981571dc:o0", "de809cff:o0")
 
 
@@ -108,6 +108,24 @@ def write_jsonl_gz(path: Path, rows: Iterable[dict[str, Any]]) -> None:
         os.replace(temporary, path)
     finally:
         temporary.unlink(missing_ok=True)
+
+
+def write_json_gz(path: Path, value: Any) -> None:
+    """Atomically write one immutable scoring shard."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile("wb", dir=path.parent, delete=False, suffix=".tmp") as raw:
+        temporary = Path(raw.name)
+    try:
+        with gzip.open(temporary, "wt", encoding="utf-8") as handle:
+            handle.write(canonical(value) + "\n")
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def read_json_gz(path: Path) -> Any:
+    with gzip.open(path, "rt", encoding="utf-8") as handle:
+        return json.loads(handle.read())
 
 
 def write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str]) -> None:
@@ -312,20 +330,34 @@ def _set_adapter(model: Any, adapter_path: Path) -> None:
     model.eval()
 
 
-def _request_tokens(provider: NVARCNativeProvider, continuation: str) -> int:
-    assert provider.tokenizer is not None
-    return int(provider.tokenizer(continuation, add_special_tokens=False, return_tensors="pt")["input_ids"].shape[-1]) + 1
+def request_token_metadata(tokenizer: Any, messages: list[dict[str, str]], continuation: str) -> dict[str, int]:
+    """Token accounting using the identical native chat template as the scorer."""
+    prefix = tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True)["input_ids"]
+    continuation_ids = tokenizer(continuation, add_special_tokens=False, return_tensors="pt")["input_ids"]
+    prefix_tokens = int(prefix.shape[-1])
+    continuation_tokens = int(continuation_ids.shape[-1])
+    eos_tokens = 1
+    return {
+        "prefix_tokens": prefix_tokens,
+        "continuation_tokens": continuation_tokens,
+        "eos_tokens": eos_tokens,
+        "total_tokens": prefix_tokens + continuation_tokens + eos_tokens,
+    }
 
 
-def score_requests(provider: NVARCNativeProvider, requests: list[tuple[list[dict[str, str]], str]], context_window: int, batch_size: int) -> tuple[list[float], int]:
+def request_key(output_id: str, depth: int, grid_key: str, request_kind: str, scoring_view: str | None = None) -> tuple[str, int, str, str, str]:
+    return output_id, depth, grid_key, request_kind, scoring_view or ""
+
+
+def score_requests(provider: NVARCNativeProvider, requests: list[tuple[list[dict[str, str]], str]], context_window: int, batch_size: int) -> tuple[list[float], int, int]:
     """Exact existing mean-logprob scorer with deterministic OOM size fallback."""
     if not requests:
-        return [], 0
+        return [], 0, 0
     import torch
     current, fallback_count = min(batch_size, len(requests)), 0
     while True:
         try:
-            return provider.continuation_log_likelihood_many(requests, context_window=context_window, batch_size=current), fallback_count
+            return provider.continuation_log_likelihood_many(requests, context_window=context_window, batch_size=current), fallback_count, current
         except torch.OutOfMemoryError:
             torch.cuda.empty_cache()
             if current == 1:
@@ -334,39 +366,44 @@ def score_requests(provider: NVARCNativeProvider, requests: list[tuple[list[dict
             fallback_count += 1
 
 
-def score_task_depth(model: Any, provider: NVARCNativeProvider, task: Any, output_id: str, depth: int, rows: list[dict[str, Any]], adapter_path: Path, context_window: int, batch_size: int, model_identity: str | None, tokenizer_identity: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int]:
+def score_task_depth(model: Any, provider: NVARCNativeProvider, task: Any, output_id: str, depth: int, rows: list[dict[str, Any]], adapter_path: Path, adapter_model_sha256: str, context_window: int, batch_size: int, model_identity: str | None, tokenizer_identity: str, token_metadata: dict[tuple[str, int, str, str, str], dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int]:
     _set_adapter(model, adapter_path)
-    # This identity was established during adapter preflight.  Keep a single
-    # source-local copy in the expensive evidence rows rather than rehashing a
-    # several-hundred-MiB adapter for every candidate and scoring view.
-    adapter_model_sha256 = sha256(adapter_path / "adapter_model.safetensors")
+    # The byte hash was established before scoring in ADAPTER_PREFLIGHT.  Reuse
+    # that immutable identity rather than re-reading a large adapter for every
+    # source unit.
     _task, output_index = oid_parts(output_id)
     continuations = [serialize_grid(row["canonical_grid"]) for row in rows]
     identity_messages = native_messages(task, output_index)
-    original, fallback = score_requests(provider, [(identity_messages, continuation) for continuation in continuations], context_window, batch_size)
+    original, fallback, original_actual_batch = score_requests(provider, [(identity_messages, continuation) for continuation in continuations], context_window, batch_size)
     detail_rows: list[dict[str, Any]] = []
     by_grid: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for view_name in SCORING_VIEWS:
         view = NativeAugmentation(geometry=view_name)
         transformed_task = view.transform_task(task)
         transformed = [serialize_grid(view.transform_grid(row["canonical_grid"]).astype(int).tolist()) for row in rows]
-        scores, used = score_requests(provider, [(native_messages(transformed_task, output_index), continuation) for continuation in transformed], context_window, batch_size)
+        scores, used, actual_batch = score_requests(provider, [(native_messages(transformed_task, output_index), continuation) for continuation in transformed], context_window, batch_size)
         fallback += used
         for candidate, continuation, logprob in zip(rows, transformed, scores, strict=True):
-            token_count = _request_tokens(provider, continuation)
+            metadata = token_metadata[request_key(output_id, depth, candidate["grid_key"], "view", view_name)]
+            token_count = int(metadata["continuation_tokens"]) + int(metadata["eos_tokens"])
             record = {"task_id": candidate["task_id"], "output_id": output_id, "depth": depth, "grid_key": candidate["grid_key"],
                       "scoring_view": view_name, "token_count": token_count, "sequence_log_likelihood": float(logprob) * token_count,
                       "sequence_negative_log_likelihood": -float(logprob) * token_count, "mean_token_nll": -float(logprob),
                       "adapter_model_sha256": adapter_model_sha256, "model_identity": model_identity,
-                      "tokenizer_identity": tokenizer_identity}
+                      "tokenizer_identity": tokenizer_identity, "scoring_context_window": context_window,
+                      "actual_batch_size": actual_batch, **metadata}
             detail_rows.append(record); by_grid[candidate["grid_key"]].append(record)
     scored: list[dict[str, Any]] = []
     for candidate, original_score in zip(rows, original, strict=True):
         values = by_grid[candidate["grid_key"]]
         if [value["scoring_view"] for value in values] != list(SCORING_VIEWS):
             raise RuntimeError("SCORING_VIEW_COMPLETENESS_FAIL")
+        original_metadata = token_metadata[request_key(output_id, depth, candidate["grid_key"], "original")]
         scored.append({**candidate, "original_log_likelihood": float(original_score), "mean_view_nll": fmean(float(value["mean_token_nll"]) for value in values),
-                       "view_negative_log_likelihoods": [float(value["mean_token_nll"]) for value in values]})
+                       "view_negative_log_likelihoods": [float(value["mean_token_nll"]) for value in values],
+                       "original_request_token_metadata": original_metadata, "original_actual_batch_size": original_actual_batch,
+                       "scoring_context_window": context_window, "adapter_model_sha256": adapter_model_sha256,
+                       "model_identity": model_identity, "tokenizer_identity": tokenizer_identity})
     return scored, detail_rows, fallback
 
 
@@ -414,10 +451,122 @@ def verification(path: Path, ledger: dict[str, str]) -> dict[str, Any]:
     return {"status": "PASS" if observed == ledger else "FAIL", "expected": ledger, "observed": observed}
 
 
+def percentile(values: list[int], quantile: float) -> int | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    return ordered[min(len(ordered) - 1, max(0, math.ceil(len(ordered) * quantile) - 1))]
+
+
+def inventory_requests(tasks: dict[str, Any], candidates_by_source: dict[tuple[str, int], list[dict[str, Any]]], tokenizer: Any) -> tuple[list[dict[str, Any]], dict[tuple[str, int, str, str, str], dict[str, int]]]:
+    """Enumerate every teacher-forced request before any model is loaded."""
+    rows: list[dict[str, Any]] = []
+    metadata: dict[tuple[str, int, str, str, str], dict[str, int]] = {}
+    for (output_id, depth), candidates in sorted(candidates_by_source.items()):
+        task_id, output_index = oid_parts(output_id)
+        task = tasks[task_id]
+        original_messages = native_messages(task, output_index)
+        for candidate in candidates:
+            continuation = serialize_grid(candidate["canonical_grid"])
+            lengths = request_token_metadata(tokenizer, original_messages, continuation)
+            key = request_key(output_id, depth, candidate["grid_key"], "original")
+            metadata[key] = lengths
+            rows.append({"task_id": task_id, "output_id": output_id, "depth": depth, "grid_key": candidate["grid_key"],
+                         "request_kind": "original", "scoring_view": "", "candidate_index_sha256": candidate["candidate_index_sha256"],
+                         **lengths})
+        for view_name in SCORING_VIEWS:
+            view = NativeAugmentation(geometry=view_name)
+            messages = native_messages(view.transform_task(task), output_index)
+            for candidate in candidates:
+                continuation = serialize_grid(view.transform_grid(candidate["canonical_grid"]).astype(int).tolist())
+                lengths = request_token_metadata(tokenizer, messages, continuation)
+                key = request_key(output_id, depth, candidate["grid_key"], "view", view_name)
+                metadata[key] = lengths
+                rows.append({"task_id": task_id, "output_id": output_id, "depth": depth, "grid_key": candidate["grid_key"],
+                             "request_kind": "view", "scoring_view": view_name, "candidate_index_sha256": candidate["candidate_index_sha256"],
+                             **lengths})
+    return rows, metadata
+
+
+def context_preflight(inventory: list[dict[str, Any]], source_candidate_count: int, context_window: int) -> dict[str, Any]:
+    totals = [int(row["total_tokens"]) for row in inventory]
+    identities = [int(row["total_tokens"]) for row in inventory if row["request_kind"] == "view" and row["scoring_view"] == "identity"]
+    over_8192 = [row for row in inventory if int(row["total_tokens"]) > 8192]
+    over_context = [row for row in inventory if int(row["total_tokens"]) > context_window]
+    stats = {"min": min(totals) if totals else None, "median": median(totals) if totals else None,
+             "p90": percentile(totals, 0.90), "p95": percentile(totals, 0.95), "p99": percentile(totals, 0.99),
+             "max": max(totals) if totals else None, "max_identity": max(identities) if identities else None}
+    return {"status": "PASS" if not over_context else "FAIL", "historical_context_protocol_restored": context_window == HISTORICAL_SCORING_CONTEXT_WINDOW,
+            "scoring_context_window": context_window, "total_source_candidates": source_candidate_count,
+            "total_original_requests": source_candidate_count, "total_candidate_x_scoring_view_requests": source_candidate_count * len(SCORING_VIEWS),
+            "total_teacher_forced_requests": len(inventory), "token_stats_all_requests": stats,
+            "requests_over_8192": len(over_8192), "requests_over_16384": len([row for row in inventory if int(row["total_tokens"]) > HISTORICAL_SCORING_CONTEXT_WINDOW]),
+            "requests_over_context": len(over_context),
+            "offending_requests": over_context}
+
+
+def shard_paths(output: Path, output_id: str, depth: int) -> tuple[Path, Path]:
+    base = output / "SCORING_SHARDS" / f"{safe_id(output_id)}_d{depth}"
+    return base.with_suffix(".json.gz"), base.with_suffix(".sha256.json")
+
+
+def shard_payload_valid(payload: dict[str, Any], expected: dict[str, Any], shard_file: Path, sidecar: Path) -> bool:
+    payload_hash = payload.get("payload_sha256")
+    unsigned = {key: value for key, value in payload.items() if key != "payload_sha256"}
+    if payload_hash != sha_value(unsigned) or payload.get("status") != "COMPLETE":
+        return False
+    if any(payload.get(key) != value for key, value in expected.items()):
+        return False
+    if not sidecar.is_file():
+        return False
+    receipt = read_json(sidecar)
+    if receipt.get("status") != "PASS" or receipt.get("shard_file_sha256") != sha256(shard_file) or receipt.get("payload_sha256") != payload_hash:
+        return False
+    candidates = payload.get("source_candidates")
+    details = payload.get("view_likelihood_rows")
+    if not isinstance(candidates, list) or not isinstance(details, list) or len(details) != len(candidates) * len(SCORING_VIEWS):
+        return False
+    for candidate in candidates:
+        if not math.isfinite(float(candidate.get("original_log_likelihood", math.nan))) or not math.isfinite(float(candidate.get("mean_view_nll", math.nan))):
+            return False
+    return True
+
+
+def load_complete_shard(output: Path, output_id: str, depth: int, expected: dict[str, Any]) -> dict[str, Any] | None:
+    shard_file, sidecar = shard_paths(output, output_id, depth)
+    if not shard_file.is_file():
+        return None
+    try:
+        payload = read_json_gz(shard_file)
+    except (OSError, json.JSONDecodeError):
+        return None
+    return payload if shard_payload_valid(payload, expected, shard_file, sidecar) else None
+
+
+def write_complete_shard(output: Path, output_id: str, depth: int, expected: dict[str, Any], candidates: list[dict[str, Any]], details: list[dict[str, Any]], token_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    shard_file, sidecar = shard_paths(output, output_id, depth)
+    unsigned = {**expected, "status": "COMPLETE", "source_candidates": candidates,
+                "view_likelihood_rows": details, "request_token_lengths": token_rows}
+    payload = {**unsigned, "payload_sha256": sha_value(unsigned)}
+    write_json_gz(shard_file, payload)
+    receipt = {"status": "PASS", "shard_file": str(shard_file.relative_to(output)), "shard_file_sha256": sha256(shard_file),
+               "payload_sha256": payload["payload_sha256"], "provenance": {key: expected[key] for key in ("output_id", "depth", "candidate_set_sha256", "candidate_index_sha256", "adapter_model_sha256", "model_identity", "tokenizer_identity", "scoring_context_window", "scoring_views")}}
+    write_json(sidecar, receipt)
+    verified = load_complete_shard(output, output_id, depth, expected)
+    if verified is None:
+        raise RuntimeError(f"SCORING_SHARD_IMMEDIATE_HASH_VERIFY_FAIL:{output_id}:d{depth}")
+    return verified
+
+
+def recursive_ledger(output: Path, excluded: set[str]) -> dict[str, str]:
+    return {str(path.relative_to(output)).replace("\\", "/"): sha256(path) for path in sorted(output.rglob("*")) if path.is_file() and str(path.relative_to(output)).replace("\\", "/") not in excluded}
+
+
 def prepare(args: argparse.Namespace) -> None:
-    if args.output.exists():
-        raise FileExistsError(f"refusing to overwrite selector output: {args.output}")
-    output = args.output; output.mkdir(parents=True)
+    if args.context_window != HISTORICAL_SCORING_CONTEXT_WINDOW:
+        raise RuntimeError(f"HISTORICAL_B_SELECTOR_REQUIRES_CONTEXT_{HISTORICAL_SCORING_CONTEXT_WINDOW}")
+    output = args.output
+    output.mkdir(parents=True, exist_ok=True)
     source_rows, cohort = source_score_cohort(args.source_score_csv)
     output_ids = list(cohort["output_ids"]); task_ids = list(cohort["task_ids"])
     cohort["cohort_sha256"] = sha_value({"output_ids": output_ids, "task_ids": task_ids})
@@ -429,7 +578,8 @@ def prepare(args: argparse.Namespace) -> None:
     write_json(output / "MODEL_RUNTIME_IDENTITY.json", identity)
     tasks = load_dataset(args.challenge)
     all_candidates: list[dict[str, Any]] = []
-    audit_outputs: dict[str, Any] = {}; source_hashes: dict[tuple[str, int], str] = {}
+    candidates_by_source: dict[tuple[str, int], list[dict[str, Any]]] = {}
+    audit_outputs: dict[str, Any] = {}
     for output_id in output_ids:
         task_id, output_index = oid_parts(output_id)
         if task_id not in tasks or output_index >= len(tasks[task_id].test):
@@ -438,32 +588,71 @@ def prepare(args: argparse.Namespace) -> None:
         for depth, archive in ((24, args.d24), (48, args.d48)):
             candidates, metadata = build_source_candidates(archive, depth, output_id)
             all_candidates.extend(candidates); audit_outputs[output_id][f"d{depth}"] = metadata
-            source_hashes[(output_id, depth)] = metadata["candidate_index_sha256"]
+            candidates_by_source[(output_id, depth)] = candidates
     audit = {"status": "PASS", "checkpoint": 1024, "archives": archives, "candidate_generation_performed": False,
              "dfs_rerun": False, "output_count": len(output_ids), "source_local_unique_candidate_counts": {"d24": sum(v["d24"]["unique_grid_count"] for v in audit_outputs.values()), "d48": sum(v["d48"]["unique_grid_count"] for v in audit_outputs.values())},
              "outputs": audit_outputs, "canonical_aug8": list(CANONICAL_AUG8)}
     write_json(output / "SOURCE_POOL_AUDIT.json", audit)
-    # The first adapter is only used to construct the fixed PEFT wrapper.  All
-    # source states, including this one, are then loaded by exact SHA-bound path.
-    first_task = task_ids[0]; model, provider = _load_model(args.model_path, args.adapter_root / first_task / "depth_024", args.native_config)
+    # This full CPU-only inventory is deliberately ahead of model load.  V7
+    # established that an 8192 scoring window is not valid for this historical
+    # selector; scoring never starts unless every request fits the exact 16k
+    # historical release window.
+    tokenizer, inventory_tokenizer_identity = checkpoint_native_tokenizer(args.model_path, args.native_config)
+    if inventory_tokenizer_identity != identity["tokenizer_identity"]:
+        raise RuntimeError("SCORING_CONTEXT_TOKENIZER_IDENTITY_DRIFT")
+    inventory, token_metadata = inventory_requests(tasks, candidates_by_source, tokenizer)
+    inventory_fields = ["task_id", "output_id", "depth", "grid_key", "request_kind", "scoring_view", "candidate_index_sha256", "prefix_tokens", "continuation_tokens", "eos_tokens", "total_tokens"]
+    write_csv(output / "SCORING_CONTEXT_INVENTORY.csv", inventory, inventory_fields)
+    preflight = context_preflight(inventory, len(all_candidates), args.context_window)
+    write_json(output / "SCORING_CONTEXT_PREFLIGHT.json", preflight)
+    if preflight["status"] != "PASS":
+        raise RuntimeError("HISTORICAL_B_SELECTOR_CONTEXT_UNSUPPORTED")
+
+    # Lazily construct the PEFT wrapper only if a valid immutable shard is not
+    # already present.  This makes interrupted V8 scoring restartable without
+    # trusting mutable process state or recomputing verified source units.
+    model: Any | None = None
+    provider: NVARCNativeProvider | None = None
     scored_by_source: dict[tuple[str, int], list[dict[str, Any]]] = {}; likelihood_rows: list[dict[str, Any]] = []; fallback_count = 0
     try:
         for output_id in output_ids:
             task_id, _ = oid_parts(output_id)
             for depth in DEPTHS:
-                candidates = [row for row in all_candidates if row["output_id"] == output_id and row["depth"] == depth]
+                candidates = candidates_by_source[(output_id, depth)]
                 adapter = args.adapter_root / task_id / f"depth_{depth:03d}"
-                scored, details, fallbacks = score_task_depth(
-                    model, provider, tasks[task_id], output_id, depth, candidates, adapter,
-                    args.context_window, args.batch_size, identity["model_manifest_sha256"],
-                    sha_value(identity["tokenizer_identity"]),
-                )
-                scored_by_source[(output_id, depth)] = scored; likelihood_rows.extend(details); fallback_count += fallbacks
-                print(canonical({"event": "B_SOURCE_SCORED", "output_id": output_id, "depth": depth, "candidate_count": len(scored), "view_calls": len(details), "oom_batch_fallbacks": fallbacks}), flush=True)
+                expected = {"output_id": output_id, "depth": depth,
+                            "candidate_set_sha256": sha_value(candidates), "candidate_index_sha256": candidates[0]["candidate_index_sha256"],
+                            "adapter_model_sha256": adapters["tasks"][task_id][f"d{depth}"]["adapter_model_sha256_observed"],
+                            "model_identity": identity["model_manifest_sha256"], "tokenizer_identity": sha_value(identity["tokenizer_identity"]),
+                            "scoring_context_window": args.context_window, "scoring_views": list(SCORING_VIEWS)}
+                shard = load_complete_shard(output, output_id, depth, expected)
+                if shard is None:
+                    if model is None or provider is None:
+                        model, provider = _load_model(args.model_path, args.adapter_root / task_id / f"depth_{depth:03d}", args.native_config)
+                    scored, details, fallbacks = score_task_depth(
+                        model, provider, tasks[task_id], output_id, depth, candidates, adapter, expected["adapter_model_sha256"],
+                        args.context_window, args.batch_size, identity["model_manifest_sha256"],
+                        sha_value(identity["tokenizer_identity"]), token_metadata,
+                    )
+                    views_per_grid = {row["grid_key"]: [] for row in scored}
+                    for detail in details:
+                        views_per_grid[detail["grid_key"]].append(detail["scoring_view"])
+                    if any(values != list(SCORING_VIEWS) for values in views_per_grid.values()):
+                        raise RuntimeError(f"SCORING_VIEW_COMPLETENESS_FAIL:{output_id}:d{depth}")
+                    source_inventory = [row for row in inventory if row["output_id"] == output_id and int(row["depth"]) == depth]
+                    shard = write_complete_shard(output, output_id, depth, expected, scored, details, source_inventory)
+                    fallback_count += fallbacks
+                    event = "B_SOURCE_SCORED"
+                else:
+                    event = "B_SOURCE_SHARD_REUSED"
+                scored_by_source[(output_id, depth)] = list(shard["source_candidates"])
+                likelihood_rows.extend(shard["view_likelihood_rows"])
+                print(canonical({"event": event, "output_id": output_id, "depth": depth, "candidate_count": len(shard["source_candidates"]), "view_calls": len(shard["view_likelihood_rows"]), "oom_batch_fallbacks": fallback_count}), flush=True)
     finally:
-        import torch
-        del provider, model
-        torch.cuda.empty_cache()
+        if provider is not None or model is not None:
+            import torch
+            del provider, model
+            torch.cuda.empty_cache()
     source_candidates = [row for rows in scored_by_source.values() for row in rows]
     source_rankings, rrf_rankings, attempts = compose_rankings(scored_by_source)
     write_jsonl_gz(output / "B_VIEW_LIKELIHOOD.jsonl.gz", likelihood_rows)
@@ -479,10 +668,32 @@ def prepare(args: argparse.Namespace) -> None:
     write_csv(output / "B_SOURCE_RANKS.csv", source_rank_rows, list(source_rank_rows[0]))
     final_rank_rows = [{"output_id": oid, "grid_key": row["grid_key"], "final_b_rrf_rank": row["final_b_rrf_rank"], "b_rrf": row["b_rrf"], "sources": row["sources"]} for oid, rows in rrf_rankings.items() for row in rows]
     write_csv(output / "B_FINAL_RANKS.csv", final_rank_rows, list(final_rank_rows[0]))
-    freeze_files = ["B_SELECTOR_COHORT.json", "ADAPTER_PREFLIGHT.json", "MODEL_RUNTIME_IDENTITY.json", "SOURCE_POOL_AUDIT.json", "B_VIEW_LIKELIHOOD.jsonl.gz", "B_SOURCE_CANDIDATES.jsonl.gz", "B_SOURCE_RANKINGS.json", "B_RRF_RANKINGS.json", "B_ATTEMPTS_FROZEN.json", "B_CANDIDATE_EVIDENCE.csv.gz", "B_SOURCE_RANKS.csv", "B_FINAL_RANKS.csv"]
-    ledger = {name: sha256(output / name) for name in freeze_files}
+    shard_index = {"status": "PASS", "expected_source_units": len(output_ids) * len(DEPTHS), "complete_source_units": 0, "shards": []}
+    for output_id in output_ids:
+        for depth in DEPTHS:
+            candidates = candidates_by_source[(output_id, depth)]
+            task_id, _ = oid_parts(output_id)
+            expected = {"output_id": output_id, "depth": depth, "candidate_set_sha256": sha_value(candidates), "candidate_index_sha256": candidates[0]["candidate_index_sha256"],
+                        "adapter_model_sha256": adapters["tasks"][task_id][f"d{depth}"]["adapter_model_sha256_observed"], "model_identity": identity["model_manifest_sha256"],
+                        "tokenizer_identity": sha_value(identity["tokenizer_identity"]), "scoring_context_window": args.context_window, "scoring_views": list(SCORING_VIEWS)}
+            shard = load_complete_shard(output, output_id, depth, expected)
+            if shard is None:
+                raise RuntimeError(f"SCORING_SHARD_MISSING_OR_INVALID:{output_id}:d{depth}")
+            shard_file, sidecar = shard_paths(output, output_id, depth)
+            shard_index["complete_source_units"] += 1
+            shard_index["shards"].append({"output_id": output_id, "depth": depth, "shard": str(shard_file.relative_to(output)), "sidecar": str(sidecar.relative_to(output)), "payload_sha256": shard["payload_sha256"]})
+    write_json(output / "SCORING_SHARD_INDEX.json", shard_index)
+    if shard_index["complete_source_units"] != 70 or len(source_candidates) != len(all_candidates) or len(likelihood_rows) != len(all_candidates) * len(SCORING_VIEWS):
+        raise RuntimeError("SCORING_SHARD_COMPLETENESS_GATE_FAIL")
+    ledger = recursive_ledger(output, {"PRE_GOLD_HASHES.json", "PRE_GOLD_FREEZE.json", "HASHES.json"})
     write_json(output / "PRE_GOLD_HASHES.json", ledger)
-    receipt = {"status": "PASS", "candidate_generation_performed": False, "DFS_rerun": False, "candidate_pool_modified": False, "target_grid_loaded_before_freeze": False, "selector_uses_output_target": False, "B_attempts_frozen": True, "likelihood_calls": len(likelihood_rows), "candidate_count": len(source_candidates), "oom_batch_fallback_count": fallback_count, "hash_verification": verification(output, ledger)}
+    receipt = {"status": "PASS", "scoring_context_window": args.context_window, "historical_context_protocol_restored": True,
+               "candidate_generation_performed": False, "DFS_rerun": False, "candidate_pool_modified": False,
+               "long_candidates_truncated": False, "long_candidates_dropped": False, "target_grid_loaded_before_freeze": False,
+               "gold_loaded": False, "selector_uses_output_target": False, "B_attempts_frozen": True,
+               "source_units_complete": f"{shard_index['complete_source_units']}/70", "scoring_views_complete": "8/8",
+               "likelihood_calls": len(likelihood_rows), "candidate_count": len(source_candidates),
+               "oom_batch_fallback_count": fallback_count, "hash_verification": verification(output, ledger)}
     if receipt["hash_verification"]["status"] != "PASS":
         raise RuntimeError("PRE_GOLD_HASH_VERIFICATION_FAIL")
     write_json(output / "PRE_GOLD_FREEZE.json", receipt)
@@ -515,8 +726,14 @@ def historical_retained(greedy_cells: Path) -> set[str]:
 def evaluate(args: argparse.Namespace) -> None:
     output = args.output
     ledger = read_json(output / "PRE_GOLD_HASHES.json")
-    if verification(output, ledger)["status"] != "PASS" or read_json(output / "PRE_GOLD_FREEZE.json").get("status") != "PASS":
+    freeze = read_json(output / "PRE_GOLD_FREEZE.json")
+    preflight = read_json(output / "SCORING_CONTEXT_PREFLIGHT.json")
+    if verification(output, ledger)["status"] != "PASS" or freeze.get("status") != "PASS":
         raise RuntimeError("PRE_GOLD_FREEZE_NOT_VALID")
+    if preflight.get("status") != "PASS" or preflight.get("scoring_context_window") != HISTORICAL_SCORING_CONTEXT_WINDOW:
+        raise RuntimeError("HISTORICAL_B_SELECTOR_CONTEXT_PREFLIGHT_NOT_VALID")
+    if not freeze.get("historical_context_protocol_restored") or freeze.get("source_units_complete") != "70/70" or freeze.get("gold_loaded") is not False:
+        raise RuntimeError("HISTORICAL_B_SELECTOR_PRE_GOLD_CONTRACT_NOT_VALID")
     cohort = read_json(output / "B_SELECTOR_COHORT.json"); output_ids = list(cohort["output_ids"])
     source_candidates = read_jsonl_gz(output / "B_SOURCE_CANDIDATES.jsonl.gz")
     rankings, attempts = read_json(output / "B_RRF_RANKINGS.json"), read_json(output / "B_ATTEMPTS_FROZEN.json")
@@ -572,7 +789,7 @@ def evaluate(args: argparse.Namespace) -> None:
     write_json(output / "GOLD_PROVENANCE.json", {"status": "PASS", "solutions_sha256": sha256(args.solutions), "expected_solutions_sha256": EXPECTED_GOLD_SHA256, "historical_manifest": "artifacts/eval60_authoritative_greedy_v1/RUN_COMPLETION_MANIFEST.json", "historical_manifest_gold_sha256": manifest["gold"]["solution_sha256"], "gold_opened_after_pre_gold_freeze_only": True})
     report = ["# Exact historical B-selector on frozen Phase-3 R1024 pool", "", f"- Cohort: 35 ORC-hit outputs / 27 tasks.", f"- B Top-1 / Top-2: {top1}/35 / {top2}/35.", f"- Full Eval60 Top-2 equivalent: {top2}/89.", f"- Historical retained 28: {summary['HISTORICAL_28_B_TOP2_RETAINED']}; DFS-new 7: {summary['DFS_NEW7_B_TOP2']}.", f"- NLL baseline: 25/35; B fixes/harms/net: {len(fixes)}/{len(harms)}/{len(fixes)-len(harms)}.", f"- Classification: `{summary['classification']}`.", "", "## Measured", "- Frozen-pool B Top-2 conversion with exact historical adapter bytes.", "", "## Not established", "- Generalization outside this frozen Eval60 diagnostic cohort."]
     (output / "REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
-    files = {path.name: sha256(path) for path in sorted(output.iterdir()) if path.is_file() and path.name != "HASHES.json"}
+    files = recursive_ledger(output, {"HASHES.json"})
     write_json(output / "HASHES.json", files)
     final = verification(output, files)
     if final["status"] != "PASS": raise RuntimeError("FINAL_HASH_VERIFICATION_FAIL")
@@ -585,7 +802,7 @@ def main() -> None:
     prep = sub.add_parser("prepare")
     for name in ("d24", "d48", "source_score_csv", "challenge", "model_path", "native_config", "adapter_root", "output"):
         prep.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
-    prep.add_argument("--context-window", type=int, default=8192)
+    prep.add_argument("--context-window", type=int, default=HISTORICAL_SCORING_CONTEXT_WINDOW)
     prep.add_argument("--batch-size", type=int, default=4)
     evaluate_parser = sub.add_parser("evaluate")
     for name in ("output", "solutions", "source_score_csv", "greedy_cells"):
