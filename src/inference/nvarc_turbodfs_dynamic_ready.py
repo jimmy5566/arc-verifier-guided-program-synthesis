@@ -1462,7 +1462,7 @@ def run_ready_scheduler(
                 )
                 trace["completed_candidate_count"] = int(cell.state["completed_candidates"])
                 trace["termination_state"] = (
-                    None if cell.result is None else cell.result.termination_reason
+                    None if cell.result is None else ready_termination_state(cell)[1]
                 )
                 trace["cache_owner_id_after_reply"] = (
                     None if cell.cache_owner is None else id(cell.cache_owner)
@@ -1565,14 +1565,33 @@ def run_ready_scheduler(
             "mean_effective_batch": telemetry["mean_effective_batch"], "telemetry": telemetry}
 
 
+def ready_termination_state(cell: ReadyCell) -> tuple[bool, str]:
+    """Derive the terminal state from ReadyCell state, not its result payload.
+
+    A ReadyCell generator returns its retained candidates as a list; the
+    result wrapper is constructed later by :func:`ready_result`.  Diagnostic
+    traces may observe completion in between those two steps, so they must not
+    assume ``cell.result`` already exposes ``termination_reason``.
+    """
+    state = cell.state
+    elapsed_budget = (
+        cell.active_elapsed_seconds
+        if state["active_time_accounting"]
+        else time.time() - cell.started_unix
+    )
+    timed_out = elapsed_budget >= cell.config.local_time_limit_seconds or (
+        cell.config.absolute_end_time_unix is not None
+        and time.time() >= cell.config.absolute_end_time_unix
+    )
+    reason = "budget_exhausted" if state["budget_exhausted"] else "wall_time" if timed_out else "search_exhausted"
+    return timed_out, reason
+
+
 def ready_result(cell: ReadyCell) -> D1TurboDFSResult:
     if cell.result is None:
         raise RuntimeError("dynamic-ready cell has not completed")
     state = cell.state
-    elapsed_budget = cell.active_elapsed_seconds if state["active_time_accounting"] else time.time() - cell.started_unix
-    timed_out = elapsed_budget >= cell.config.local_time_limit_seconds or (
-        cell.config.absolute_end_time_unix is not None and time.time() >= cell.config.absolute_end_time_unix)
-    reason = "budget_exhausted" if state["budget_exhausted"] else "wall_time" if timed_out else "search_exhausted"
+    timed_out, reason = ready_termination_state(cell)
     return D1TurboDFSResult((tuple(sorted(cell.result, key=lambda item: item.cumulative_nll)),), tuple(state["nodes"]),
                              tuple(state["branch_probabilities"]), tuple(state["frontier_floor_events"]),
                              tuple(state["frontier_samples"]), tuple(state["search_trace"]),
