@@ -104,6 +104,11 @@ def _prepare_root(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, A
         raise RuntimeError("MICRO24_COHORT_HASH_FAIL")
     if audit_path.exists():
         audit = _read(audit_path)
+    elif args.existing_adapter_audit is not None:
+        audit = _read(args.existing_adapter_audit)
+        if audit.get("cohort_sha256") != cohort["cohort_sha256"]:
+            raise RuntimeError("REUSED_ADAPTER_AUDIT_COHORT_MISMATCH")
+        _atomic_json(audit_path, audit)
     else:
         audit = audit_adapter_state(cohort)
         _atomic_json(audit_path, audit)
@@ -344,6 +349,8 @@ def main() -> None:
     parser.add_argument("--coarse-policy", type=Path, required=True)
     parser.add_argument("--worker-python", type=Path, required=True)
     parser.add_argument("--source-archive", type=Path, default=ROOT / "artifacts" / "eval60_phase3_d24_aug8_r1024_archive_v1")
+    parser.add_argument("--existing-adapter-audit", type=Path,
+                        help="Previously completed identical-cohort CPU audit; copied only after cohort SHA verification.")
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--mode", choices=("p0-smoke", "generate"), default="generate")
     args = parser.parse_args()
