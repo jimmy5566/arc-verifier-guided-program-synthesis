@@ -32,6 +32,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
 from arc.io import load_dataset
+from inference.hf_peft_backend import load_hf_peft_inference
 from inference.nvarc_native import NVARCNativeProvider, checkpoint_native_tokenizer, native_messages, serialize_grid
 from inference.nvarc_native_augmentation import NativeAugmentation
 
@@ -274,12 +275,12 @@ def runtime_identity(model_path: Path, native_config: Path) -> dict[str, Any]:
 
 
 def _load_model(model_path: Path, initial_adapter: Path, native_config: Path) -> tuple[Any, NVARCNativeProvider]:
-    import torch
-    from peft import PeftModel
-    from transformers import AutoModelForCausalLM
-    tokenizer, _ = checkpoint_native_tokenizer(model_path, native_config)
-    base = AutoModelForCausalLM.from_pretrained(str(model_path), local_files_only=True, trust_remote_code=False, torch_dtype=torch.bfloat16, low_cpu_mem_usage=True).to("cuda:0").eval()
-    model = PeftModel.from_pretrained(base, str(initial_adapter), adapter_name="default", is_trainable=False).to("cuda:0").eval()
+    model, tokenizer, _identity = load_hf_peft_inference(
+        model_path=model_path,
+        adapter_path=initial_adapter,
+        device="cuda:0",
+        native_config_dir=native_config,
+    )
     provider = NVARCNativeProvider(model_path=model_path, tokenizer_config_dir=native_config, device="cuda:0")
     provider.model, provider.tokenizer = model, tokenizer
     return model, provider
