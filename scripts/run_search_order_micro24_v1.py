@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
 from scripts.audit_search_order_adapters import audit_adapter_state  # noqa: E402
+from scripts.audit_p0_checkpoint_parity import audit_p0_checkpoint_parity  # noqa: E402
 from scripts.build_search_order_micro24_cohort import build_cohort  # noqa: E402
 from scripts.run_ttt24_aug8_r1024_core_v1 import (  # noqa: E402
     AUG8,
@@ -116,6 +117,35 @@ def _frozen_input_identity(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+def _p0_reference_identity(reference: Path | None) -> dict[str, Any] | None:
+    """Bind an orders-only run to a hash-verified, semantic-P0 receipt."""
+    if reference is None:
+        return None
+    required = {
+        "generation_freeze": reference / "GENERATION_FREEZE.json",
+        "generation_hash_verification": reference / "GENERATION_HASH_VERIFICATION.json",
+        "semantic_parity": reference / "P0_SEMANTIC_PARITY.json",
+        "checkpoint_raw_diff": reference / "P0_CHECKPOINT_RAW_DIFF.json",
+    }
+    if any(not path.is_file() for path in required.values()):
+        raise RuntimeError("P0_REFERENCE_ARTIFACT_MISSING")
+    freeze = _read(required["generation_freeze"])
+    verification = _read(required["generation_hash_verification"])
+    semantic = _read(required["semantic_parity"])
+    if (freeze.get("status"), freeze.get("raw_count"), freeze.get("gold_loaded")) != ("FROZEN", 3, False):
+        raise RuntimeError("P0_REFERENCE_FREEZE_INVALID")
+    if verification.get("status") != "PASS":
+        raise RuntimeError("P0_REFERENCE_HASH_INVALID")
+    if semantic.get("P0_ENGINE_PARITY") != "PASS_SEMANTIC_24_OF_24" or semantic.get("gold_loaded") is not False:
+        raise RuntimeError("P0_REFERENCE_SEMANTIC_PARITY_INVALID")
+    return {
+        "status": "PASS",
+        "kind": "P0_SEMANTIC_REFERENCE",
+        "reference_path": str(reference),
+        "artifacts_sha256": {name: _sha_file(path) for name, path in required.items()},
+    }
+
+
 def _prepare_root(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     cohort_path = args.output / "COHORT.json"
     audit_path = args.output / "ADAPTER_STATE_AUDIT.json"
@@ -148,6 +178,7 @@ def _prepare_root(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, A
         raise RuntimeError("FROZEN_PROFILE_POLICY_NOT_TARGET_BLIND")
     runtime = _runtime_probe(args.worker_python)
     input_identity = _frozen_input_identity(args)
+    p0_reference = _p0_reference_identity(args.p0_reference) if args.mode == "orders-only" else None
     contract = {
         "experiment": EXPERIMENT,
         "source_commit": _head(),
@@ -158,6 +189,7 @@ def _prepare_root(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, A
         "adapter_state": audit["adapter_state"],
         "runtime": runtime,
         "input_identity": input_identity,
+        "p0_reference": p0_reference,
         "frozen_core": {
             "ttt_depth": 24, "augmentation": "canonical_AUG8", "max_expanded_nodes": 1024,
             "decoder": "CUMULATIVE_REGRET_r=4.00", "max_new_tokens": 931, "candidate_cap": 32,
@@ -345,25 +377,20 @@ def _run_policy(args: argparse.Namespace, cohort: dict[str, Any], coarse_policy:
 
 
 def _p0_parity(args: argparse.Namespace, cohort: dict[str, Any], run: Path) -> None:
-    rows: list[dict[str, Any]] = []
-    archive = args.source_archive / "raw"
-    for selected in _smoke_outputs(cohort):
-        new = _read(_output_paths(run, selected["output_id"])[0])
-        old_path = archive / f"{_safe(selected['output_id'])}.json.gz"
-        if not old_path.is_file():
-            raise RuntimeError(f"P0_HISTORICAL_RAW_MISSING:{old_path}")
-        old = _sha_gzip_json(old_path)
-        for cell_key, current in sorted(new["cells"].items()):
-            reference = old["cells"].get(cell_key)
-            fields = ("final_candidate_pool", "nodes", "events", "checkpoints", "termination_reason", "nodes_expanded", "completed_candidates")
-            exact = reference is not None and all(current.get(field) == reference.get(field) for field in fields)
-            rows.append({"output_id": selected["output_id"], "profile": selected["profile"], "cell_key": cell_key,
-                         "reference": str(old_path.relative_to(args.source_archive)), "exact": exact,
-                         "mismatched_fields": [] if exact else [field for field in fields if reference is None or current.get(field) != reference.get(field)]})
-    _atomic_csv(args.output / "P0" / "P0_PARITY.csv", rows, rows[0].keys())
-    result = {"status": "PASS" if rows and all(row["exact"] for row in rows) else "FAIL", "target_blind": True,
-              "gold_loaded": False, "smoke_outputs": [row["output_id"] for row in _smoke_outputs(cohort)],
-              "cells_checked": len(rows), "exact_cells": sum(bool(row["exact"]) for row in rows)}
+    raw_diff, semantic = audit_p0_checkpoint_parity(run / "RAW_OUTPUTS", args.source_archive / "raw", run)
+    rows = [{
+        "output_id": row["output_id"],
+        "cell_key": row["cell_key"],
+        "semantic_exact": row["semantic_exact"],
+        "semantic_difference_count": len(row["semantic_differences"]),
+        "approved_nonsemantic_telemetry_difference_count": len(row["approved_nonsemantic_telemetry_differences"]),
+    } for row in raw_diff["cells"]]
+    _atomic_csv(run / "P0_PARITY.csv", rows, rows[0].keys())
+    result = {"status": "PASS" if semantic["P0_ENGINE_PARITY"] == "PASS_SEMANTIC_24_OF_24" else "FAIL",
+              "target_blind": True, "gold_loaded": False,
+              "smoke_outputs": [row["output_id"] for row in _smoke_outputs(cohort)],
+              "cells_checked": semantic["cells_checked"], "exact_cells": semantic["semantic_exact_cells"],
+              "semantic_parity": semantic["P0_ENGINE_PARITY"]}
     _atomic_json(args.output / "P0" / "P0_PARITY.json", result)
     if result["status"] != "PASS":
         raise RuntimeError("P0_ENGINE_PARITY_FAIL")
@@ -383,18 +410,24 @@ def main() -> None:
     parser.add_argument("--existing-adapter-audit", type=Path,
                         help="Previously completed identical-cohort CPU audit; copied only after cohort SHA verification.")
     parser.add_argument("--device", default="cuda:0")
-    parser.add_argument("--mode", choices=("p0-smoke", "generate"), default="generate")
+    parser.add_argument("--mode", choices=("p0-smoke", "generate", "orders-only"), default="generate")
+    parser.add_argument("--p0-reference", type=Path,
+                        help="Hash-verified P0 directory required for orders-only P1/P2 generation.")
     args = parser.parse_args()
     cohort, _audit, coarse_policy = _prepare_root(args)
-    smoke = _smoke_outputs(cohort)
-    p0 = _run_policy(args, cohort, coarse_policy, "P0", smoke)
-    _p0_parity(args, cohort, p0)
+    if args.mode == "orders-only":
+        _atomic_json(args.output / "P0_REFERENCE.json", _read(args.output / "CONTRACT.json")["p0_reference"])
+    else:
+        smoke = _smoke_outputs(cohort)
+        p0 = _run_policy(args, cohort, coarse_policy, "P0", smoke)
+        _p0_parity(args, cohort, p0)
     if args.mode == "p0-smoke":
         return
     _run_policy(args, cohort, coarse_policy, "P1", cohort["outputs"])
     _run_policy(args, cohort, coarse_policy, "P2", cohort["outputs"])
     _atomic_json(args.output / "GENERATION_STATUS.json", {"experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False,
-                                                              "P0": "PARITY_PASS", "P1": "FROZEN", "P2": "FROZEN",
+                                                              "P0": "SEMANTIC_REFERENCE_PASS" if args.mode == "orders-only" else "PARITY_PASS",
+                                                              "P1": "FROZEN", "P2": "FROZEN",
                                                               "gold_scoring": "POST_FREEZE_SCORER_REQUIRED"})
 
 
