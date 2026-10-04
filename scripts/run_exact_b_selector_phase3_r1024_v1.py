@@ -32,6 +32,10 @@ from typing import Any, Iterable
 # pool avoids a 32-worker CPU oversubscription at the first long-context forward.
 # This influences compilation resource use only, never the frozen model or score.
 os.environ.setdefault("TORCHINDUCTOR_COMPILE_THREADS", "1")
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("MKL_NUM_THREADS", "1")
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+os.environ.setdefault("NUMEXPR_NUM_THREADS", "1")
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
