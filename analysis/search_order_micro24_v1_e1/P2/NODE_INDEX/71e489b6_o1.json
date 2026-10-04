@@ -1,0 +1,146 @@
+{
+  "artifact": "DERIVED_NODE_INDEX_V1",
+  "cells": [
+    {
+      "actual_nodes_reached": 422,
+      "candidate_pool_sha256": "b5a7de185e062b44674c8c686ae88b38456ed921db63fffc83c128b2ab64818f",
+      "cell_key": "71e489b6:o1:d24:aug8:geom=anti_transpose__color=id__order=canonical",
+      "classification": "TERMINAL_CARRY",
+      "completed_candidate_count": 3,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": [
+        {
+          "candidate_id": 0,
+          "nodes_expanded_so_far": 370,
+          "terminal_node_id": 4450,
+          "token_count": 361
+        },
+        {
+          "candidate_id": 1,
+          "nodes_expanded_so_far": 387,
+          "terminal_node_id": 4655,
+          "token_count": 361
+        },
+        {
+          "candidate_id": 2,
+          "nodes_expanded_so_far": 422,
+          "terminal_node_id": 5076,
+          "token_count": 361
+        }
+      ]
+    },
+    {
+      "actual_nodes_reached": 122,
+      "candidate_pool_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cell_key": "71e489b6:o1:d24:aug8:geom=flip_lr__color=id__order=canonical",
+      "classification": "WALL_CENSORED",
+      "completed_candidate_count": 0,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": []
+    },
+    {
+      "actual_nodes_reached": 359,
+      "candidate_pool_sha256": "5bb2da067b3f8dfb6b9ece033ab3a36dd31b2ec383bea50cf72ad8d9170a9959",
+      "cell_key": "71e489b6:o1:d24:aug8:geom=flip_ud__color=id__order=canonical",
+      "classification": "TERMINAL_CARRY",
+      "completed_candidate_count": 1,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": [
+        {
+          "candidate_id": 0,
+          "nodes_expanded_so_far": 359,
+          "terminal_node_id": 4320,
+          "token_count": 360
+        }
+      ]
+    },
+    {
+      "actual_nodes_reached": 383,
+      "candidate_pool_sha256": "d2b330b282e6f670785ecfe700d167623368f0d56cda4bd8aa993a9d467e0be5",
+      "cell_key": "71e489b6:o1:d24:aug8:geom=identity__color=id__order=canonical",
+      "classification": "WALL_CENSORED",
+      "completed_candidate_count": 1,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": [
+        {
+          "candidate_id": 0,
+          "nodes_expanded_so_far": 382,
+          "terminal_node_id": 4594,
+          "token_count": 360
+        }
+      ]
+    },
+    {
+      "actual_nodes_reached": 401,
+      "candidate_pool_sha256": "4e05dd187d791d471a73cead98eb9df26c2f438d9421a120c06898414d0ec704",
+      "cell_key": "71e489b6:o1:d24:aug8:geom=rot180__color=id__order=canonical",
+      "classification": "TERMINAL_CARRY",
+      "completed_candidate_count": 2,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": [
+        {
+          "candidate_id": 0,
+          "nodes_expanded_so_far": 369,
+          "terminal_node_id": 4439,
+          "token_count": 360
+        },
+        {
+          "candidate_id": 1,
+          "nodes_expanded_so_far": 401,
+          "terminal_node_id": 4824,
+          "token_count": 360
+        }
+      ]
+    },
+    {
+      "actual_nodes_reached": 143,
+      "candidate_pool_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cell_key": "71e489b6:o1:d24:aug8:geom=rot270__color=id__order=canonical",
+      "classification": "WALL_CENSORED",
+      "completed_candidate_count": 0,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": []
+    },
+    {
+      "actual_nodes_reached": 395,
+      "candidate_pool_sha256": "a39410b4e91996ed7468b64bd30ee7d10e74477be5f7d14369c9004cb650a443",
+      "cell_key": "71e489b6:o1:d24:aug8:geom=rot90__color=id__order=canonical",
+      "classification": "TERMINAL_CARRY",
+      "completed_candidate_count": 3,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": [
+        {
+          "candidate_id": 0,
+          "nodes_expanded_so_far": 360,
+          "terminal_node_id": 4330,
+          "token_count": 361
+        },
+        {
+          "candidate_id": 1,
+          "nodes_expanded_so_far": 377,
+          "terminal_node_id": 4535,
+          "token_count": 361
+        },
+        {
+          "candidate_id": 2,
+          "nodes_expanded_so_far": 395,
+          "terminal_node_id": 4752,
+          "token_count": 361
+        }
+      ]
+    },
+    {
+      "actual_nodes_reached": 130,
+      "candidate_pool_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cell_key": "71e489b6:o1:d24:aug8:geom=transpose__color=id__order=canonical",
+      "classification": "WALL_CENSORED",
+      "completed_candidate_count": 0,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": []
+    }
+  ],
+  "output_id": "71e489b6:o1",
+  "source_checkpoint": "OUTPUT_CHECKPOINTS/71e489b6_o1.json",
+  "source_checkpoint_sha256": "7efd5e666f184eebe402124b78e80a285dffcec9c481274e174620c4498e156b",
+  "stage": "P2"
+}

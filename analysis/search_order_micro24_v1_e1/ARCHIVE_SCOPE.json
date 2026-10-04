@@ -8,12 +8,22 @@
   "included": [
     "all top-level compact receipts",
     "OUTPUT_RECEIPTS",
-    "OUTPUT_CHECKPOINTS"
+    "OUTPUT_CHECKPOINTS",
+    "EOS_EVENTS",
+    "NODE_INDEX",
+    "CELL_TERMINATION.csv",
+    "SCHEDULER_SUMMARY.csv",
+    "PROVENANCE.json"
   ],
   "policies": {
     "P0": "CURRENT_DFS",
     "P1": "FAIR_DFS_Q64",
     "P2": "REGRET_BAND_FAIR_Q64"
+  },
+  "runtime_evidence_supplement": {
+    "artifact": "RUNTIME_EVIDENCE_SUPPLEMENT.json",
+    "derived_cpu_only": true,
+    "status": "PASS"
   },
   "source_runs": {
     "P0": {

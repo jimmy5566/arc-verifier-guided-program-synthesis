@@ -1,0 +1,59 @@
+{
+  "artifact": "DERIVED_RUNTIME_EVIDENCE_V1",
+  "derivation": "CPU-only from hash-verified frozen output checkpoints plus ledger-verified EOS event streams",
+  "derived_inputs_outputs": {
+    "checkpoint_hashes": {
+      "OUTPUT_CHECKPOINTS/1818057f_o0.json": "c573b15456092538a1a7260a35fb3355be384f7d705c8003db4237788115b56d",
+      "OUTPUT_CHECKPOINTS/6ffbe589_o0.json": "446a83932d70dd906b668f3143641a7254075a329b236d11612c3d136792ad7c",
+      "OUTPUT_CHECKPOINTS/a32d8b75_o0.json": "eeb16dc80095cbe0fb59cdf4e34fb67a8b579a52444b81e128a03af50d7da87a"
+    },
+    "node_index_hashes": {
+      "NODE_INDEX/1818057f_o0.json": "c739e824851f789c81c24e6e0155eb62b80129ddcbb996baf81e4c148480a928",
+      "NODE_INDEX/6ffbe589_o0.json": "2c939bb2624b4a33b96648247e4eb6836a07075ad3a313c8594f4696820b682a",
+      "NODE_INDEX/a32d8b75_o0.json": "27777eef71e492ed9408dd322679153e86ee675007846b3044a06312bb6580a3"
+    },
+    "scheduler_summary_sha256": "4aa85e23a865abcd0693a7b3f1b3232a98f23cb2c03032421eeb8ec271217f8d",
+    "summary": {
+      "cells": 24,
+      "classification": "SEMANTIC_PARITY_PASS",
+      "clean_outputs": 3,
+      "outputs": 3,
+      "r1024_reached": 10,
+      "reconciled": true,
+      "stage": "P0",
+      "terminal_carry": 14,
+      "wall_censored": 0
+    },
+    "termination_csv_sha256": "68458c59b33d9269ea4b3c5fa5789d057430e7f62136a8a91642c2fe78377995"
+  },
+  "eos_event_hashes": {
+    "EOS_EVENTS/1818057f_o0.jsonl.gz": "764ae674fb8c66d0e871fca4fac8ce2a9e5a30390a2d0f010af94cf9d3362004",
+    "EOS_EVENTS/6ffbe589_o0.jsonl.gz": "f85a7e751981cd39de3a7adda5ff91aa6fd7106e186a07167bb7a1e721137844",
+    "EOS_EVENTS/a32d8b75_o0.jsonl.gz": "efed449b4197914ca246b67e7eccc955f2da7e8300a15f2cc7dd37d5a996362e"
+  },
+  "experiment": "SEARCH_ORDER_MICRO24_V1_E1",
+  "gold_loaded": false,
+  "prior_archive": {
+    "checked": 142,
+    "ledger_sha256": "1cf3251e9e0485e2fdce07cabad893c35d7a913fefa25d4d1eb98b7fb85e0c6e",
+    "status": "PASS"
+  },
+  "source_generation": {
+    "eos_event_files": 3,
+    "freeze": {
+      "experiment": "SEARCH_ORDER_MICRO24_V1",
+      "gold_loaded": false,
+      "ledger_sha256": "71ef885e03e86b24c212b10c1438d8a09ebb09949174c268cb577142941adc34",
+      "policy": "P0",
+      "raw_count": 3,
+      "status": "FROZEN",
+      "target_blind": true
+    },
+    "generation_hash_status": "PASS",
+    "generation_hashes_checked": 26,
+    "generation_ledger_sha256": "fdb11869b6f4fd708d728c43b4d9896cdec4aeaefeb30443416aa22efe129710"
+  },
+  "stage": "P0",
+  "status": "PASS",
+  "target_blind": true
+}

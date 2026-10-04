@@ -1,0 +1,123 @@
+{
+  "artifact": "DERIVED_NODE_INDEX_V1",
+  "cells": [
+    {
+      "actual_nodes_reached": 897,
+      "candidate_pool_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cell_key": "36a08778:o1:d24:aug8:geom=anti_transpose__color=id__order=canonical",
+      "classification": "WALL_CENSORED",
+      "completed_candidate_count": 0,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": []
+    },
+    {
+      "actual_nodes_reached": 1024,
+      "candidate_pool_sha256": "0715e4fde3cb2d83084f4d2fbd28b8239e6a5316807e9e0ceea80d9361d8add2",
+      "cell_key": "36a08778:o1:d24:aug8:geom=flip_lr__color=id__order=canonical",
+      "classification": "R1024_REACHED",
+      "completed_candidate_count": 1,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": [
+        {
+          "candidate_id": 0,
+          "nodes_expanded_so_far": 929,
+          "terminal_node_id": 11156,
+          "token_count": 930
+        }
+      ]
+    },
+    {
+      "actual_nodes_reached": 1024,
+      "candidate_pool_sha256": "f8babc01a13cfe393700f11c482707337104620af2c421ea11d35dc0db818b34",
+      "cell_key": "36a08778:o1:d24:aug8:geom=flip_ud__color=id__order=canonical",
+      "classification": "R1024_REACHED",
+      "completed_candidate_count": 1,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": [
+        {
+          "candidate_id": 0,
+          "nodes_expanded_so_far": 929,
+          "terminal_node_id": 11152,
+          "token_count": 930
+        }
+      ]
+    },
+    {
+      "actual_nodes_reached": 1024,
+      "candidate_pool_sha256": "0c4045b0fad863a1a9af04a2a5813a8f384a1647bac9e2718ca975c30cad9038",
+      "cell_key": "36a08778:o1:d24:aug8:geom=identity__color=id__order=canonical",
+      "classification": "R1024_REACHED",
+      "completed_candidate_count": 1,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": [
+        {
+          "candidate_id": 0,
+          "nodes_expanded_so_far": 929,
+          "terminal_node_id": 11159,
+          "token_count": 930
+        }
+      ]
+    },
+    {
+      "actual_nodes_reached": 769,
+      "candidate_pool_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cell_key": "36a08778:o1:d24:aug8:geom=rot180__color=id__order=canonical",
+      "classification": "WALL_CENSORED",
+      "completed_candidate_count": 0,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": []
+    },
+    {
+      "actual_nodes_reached": 1024,
+      "candidate_pool_sha256": "fa68b2fb2129c7173532ea5150c2aeb02863cd456fc39b41f39953bb3c47feb0",
+      "cell_key": "36a08778:o1:d24:aug8:geom=rot270__color=id__order=canonical",
+      "classification": "R1024_REACHED",
+      "completed_candidate_count": 1,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": [
+        {
+          "candidate_id": 0,
+          "nodes_expanded_so_far": 929,
+          "terminal_node_id": 11145,
+          "token_count": 930
+        }
+      ]
+    },
+    {
+      "actual_nodes_reached": 1024,
+      "candidate_pool_sha256": "fb6f77197c6987f926c647d965b3e3b9534e45f37fd477ff05979e11a4b33a3b",
+      "cell_key": "36a08778:o1:d24:aug8:geom=rot90__color=id__order=canonical",
+      "classification": "R1024_REACHED",
+      "completed_candidate_count": 1,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": [
+        {
+          "candidate_id": 0,
+          "nodes_expanded_so_far": 929,
+          "terminal_node_id": 11156,
+          "token_count": 930
+        }
+      ]
+    },
+    {
+      "actual_nodes_reached": 1024,
+      "candidate_pool_sha256": "b9240720735a165d29a8034d904ae8213803eb5c7bf783cbaf3edc25fb709e3b",
+      "cell_key": "36a08778:o1:d24:aug8:geom=transpose__color=id__order=canonical",
+      "classification": "R1024_REACHED",
+      "completed_candidate_count": 1,
+      "final_checkpoint_requested": 1024,
+      "terminal_nodes": [
+        {
+          "candidate_id": 0,
+          "nodes_expanded_so_far": 929,
+          "terminal_node_id": 11156,
+          "token_count": 930
+        }
+      ]
+    }
+  ],
+  "output_id": "36a08778:o1",
+  "source_checkpoint": "OUTPUT_CHECKPOINTS/36a08778_o1.json",
+  "source_checkpoint_sha256": "73f9e42ebdc458b74cd78ea4da2d0ffb696c1f1c1b5700431f01ac1bf356fe69",
+  "stage": "P1"
+}

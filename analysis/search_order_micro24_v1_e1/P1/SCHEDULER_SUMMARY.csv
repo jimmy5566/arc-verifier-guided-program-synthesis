@@ -1,0 +1,2 @@
+stage,classification,outputs,cells,r1024_reached,terminal_carry,wall_censored,clean_outputs,reconciled
+P1,PARTIALLY_WALL_CENSORED,24,192,121,39,32,15,True

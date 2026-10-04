@@ -1,8 +1,13 @@
 {
-  "archive_hash_ledger_sha256": "1cf3251e9e0485e2fdce07cabad893c35d7a913fefa25d4d1eb98b7fb85e0c6e",
+  "archive_hash_ledger_sha256": "8b7746b5c573cc920824a659df641ca72b22766a39cc546fb4bb169b5e37bcb1",
   "archive_hash_status": "PASS",
   "experiment": "SEARCH_ORDER_MICRO24_V1_E1",
   "gold_loaded": false,
+  "runtime_evidence_supplement": {
+    "archive_hashes_checked": 254,
+    "artifact": "RUNTIME_EVIDENCE_SUPPLEMENT.json",
+    "status": "PASS"
+  },
   "source_generation_hashes": {
     "P0": "fdb11869b6f4fd708d728c43b4d9896cdec4aeaefeb30443416aa22efe129710",
     "P1": "993d68cea8a25a02fc2922f13710f8e21bdb7c09d488d1770dbc494dbf768d7d",
