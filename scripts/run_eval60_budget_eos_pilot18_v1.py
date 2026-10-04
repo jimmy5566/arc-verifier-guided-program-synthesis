@@ -35,6 +35,7 @@ from inference.chunked_kv_cache import ChunkedDynamicCache  # noqa: E402
 from inference.hf_peft_backend import load_hf_peft_inference  # noqa: E402
 from inference.nvarc_turbodfs_d1 import _prefix_hash  # noqa: E402
 from inference.nvarc_turbodfs_dynamic_ready import ready_result, start_ready_cell  # noqa: E402
+from inference.nvarc_turbodfs_search_order import start_search_order_cell  # noqa: E402
 from inference.rolling_resident_pool import run_rolling_resident_scheduler  # noqa: E402
 from inference.root_length_memory_profile import KV_BLOCK_TOKENS  # noqa: E402
 from scripts.run_chunked_kv_cache_r4096_v1 import _memory  # noqa: E402
@@ -419,9 +420,13 @@ def _worker(args: argparse.Namespace) -> int:
             def eos_sink(event: dict[str, Any], key: str = cell_key, augmentation: str = augmentation_id) -> None:
                 per_cell_events[key].append({"output_id": selected["output_id"], "task_id": selected["task_id"],
                                              "profile": selected["profile"], "augmentation_id": augmentation, **event})
-            cell = start_ready_cell(model=model, input_ids=prompt_ids.to(args.device), config=config, cell_key=cell_key,
-                                    normalize_root_cache=True, root_cache_transform=transform, cache_strategy="rollback",
-                                    release_prefill_temporaries=True, eos_event_sink=eos_sink)
+            common = dict(model=model, input_ids=prompt_ids.to(args.device), config=config, cell_key=cell_key,
+                          normalize_root_cache=True, root_cache_transform=transform,
+                          release_prefill_temporaries=True, eos_event_sink=eos_sink)
+            if args.search_order_policy == "legacy":
+                cell = start_ready_cell(**common, cache_strategy="rollback")
+            else:
+                cell = start_search_order_cell(**common, policy_name=args.search_order_policy)
             if cell.request is None or cell.cache_owner is None:
                 raise RuntimeError("admitted Pilot18 cell was not READY")
             return cell
@@ -486,6 +491,8 @@ def _worker(args: argparse.Namespace) -> int:
                 "model_forward_seconds": result.model_forward_seconds, "prefill_seconds": cell.prefill_seconds,
                 "active_elapsed_seconds": cell.active_elapsed_seconds, "max_frontier_size": result.max_frontier_size,
                 "prefix_reconstruction_failures": reconstruction_failures,
+                "search_order": cell.state.get("search_order"),
+                "search_order_work_items": cell.state.get("search_order_work_items", []),
             }
             if args.diagnostic_trace:
                 final_cells[cell_key]["diagnostic_trace"] = {
@@ -546,6 +553,7 @@ def _worker(args: argparse.Namespace) -> int:
                   "peak_reserved_bytes": int(torch.cuda.max_memory_reserved(device=args.device))}
         payload = {"experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False, "status": "COMPLETE",
                    "output": selected, "attempt_index": args.attempt, "runtime_identity": runtime_identity,
+                   "logical_search_order_policy": args.search_order_policy,
                    "profile_configuration": profile_cfg, "cells": final_cells,
                    "root_admission": {"policy": args.admission_policy, "root_lengths": roots,
                                       "frozen_pending_order": keys, "fairness_max_wait": int(args.fairness_max_wait)},
@@ -1008,6 +1016,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--augmentation-label", default="aug16")
     parser.add_argument("--admission-policy", choices=("fifo", "root_aware"), default="fifo")
     parser.add_argument("--fairness-max-wait", type=int, default=3)
+    parser.add_argument("--search-order-policy", choices=("legacy", "CURRENT_DFS", "FAIR_DFS_Q64", "REGRET_BAND_FAIR_Q64"), default="legacy")
     parser.add_argument("--experiment", default=EXPERIMENT)
     parser.add_argument("--checkpoints", default="512,1024,2048,4096")
     parser.add_argument("--diagnostic-trace", action="store_true",
