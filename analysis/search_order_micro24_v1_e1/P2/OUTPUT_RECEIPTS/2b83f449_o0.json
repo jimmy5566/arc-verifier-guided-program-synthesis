@@ -1,0 +1,17 @@
+{
+  "attempt_index": 0,
+  "checkpoint_output": "OUTPUT_CHECKPOINTS/2b83f449_o0.json",
+  "ended_unix": 1791112575.6514,
+  "eos_events": "EOS_EVENTS/2b83f449_o0.jsonl.gz",
+  "experiment": "SEARCH_ORDER_MICRO24_V1_P2",
+  "gold_loaded": false,
+  "output_id": "2b83f449:o0",
+  "profile_configuration": {
+    "physical_batch_ceiling": 7,
+    "resident_capacity": 8
+  },
+  "raw_output": "RAW_OUTPUTS/2b83f449_o0.json",
+  "status": "COMPLETE",
+  "target_blind": true,
+  "wall_seconds": 552.7874586358666
+}

@@ -1,0 +1,1750 @@
+{
+  "approved_nonsemantic_fields": [
+    "active_elapsed_seconds",
+    "elapsed_seconds",
+    "model_forward_seconds",
+    "prefill_seconds",
+    "replay_seconds",
+    "runtime_seconds",
+    "wall_seconds"
+  ],
+  "audit_kind": "P0_CHECKPOINT_RAW_DIFF",
+  "cells": [
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "6c9aa768477d253d48f74e79629632387baaffe49b49e10aaade80b2b231971a",
+          "reference_sha256": "df5135e33042a6ee56fefecae43b9f0e9aaf1dbd739032baf09338ed14341221",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "9fa699d59a007fdbfc78772459f1878b9adaa7d72527ab7fa0420d03de5c5039",
+          "reference_sha256": "12ab271b1903d3c3e818fad72607f5d11195efa9eb33276478b359933616909a",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "9fa699d59a007fdbfc78772459f1878b9adaa7d72527ab7fa0420d03de5c5039",
+          "reference_sha256": "12ab271b1903d3c3e818fad72607f5d11195efa9eb33276478b359933616909a",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "6c9aa768477d253d48f74e79629632387baaffe49b49e10aaade80b2b231971a",
+          "reference_sha256": "df5135e33042a6ee56fefecae43b9f0e9aaf1dbd739032baf09338ed14341221",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "6c9aa768477d253d48f74e79629632387baaffe49b49e10aaade80b2b231971a",
+          "reference_sha256": "df5135e33042a6ee56fefecae43b9f0e9aaf1dbd739032baf09338ed14341221",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "6c9aa768477d253d48f74e79629632387baaffe49b49e10aaade80b2b231971a",
+          "reference_sha256": "df5135e33042a6ee56fefecae43b9f0e9aaf1dbd739032baf09338ed14341221",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "6c9aa768477d253d48f74e79629632387baaffe49b49e10aaade80b2b231971a",
+          "reference_sha256": "df5135e33042a6ee56fefecae43b9f0e9aaf1dbd739032baf09338ed14341221",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "1818057f:o0:d24:aug8:geom=anti_transpose__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "1818057f:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "9c587078e02e38f94002bb92edf4d9e813293af51dc2c24f4ab2a2f0232dba80",
+          "reference_sha256": "5e31b0c2472bd28873f5c502631315762e680201b0dd77e3f15af5729957237e",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "93baa5270466b9958f159569f141c4edb193ba206155619f00d5c76cf440b8b7",
+          "reference_sha256": "1b4c6412361ccfd2f29e9834b670f7a5485cdc4a7f6f19d1595fd6a82f9dab5f",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "93baa5270466b9958f159569f141c4edb193ba206155619f00d5c76cf440b8b7",
+          "reference_sha256": "1b4c6412361ccfd2f29e9834b670f7a5485cdc4a7f6f19d1595fd6a82f9dab5f",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "9c587078e02e38f94002bb92edf4d9e813293af51dc2c24f4ab2a2f0232dba80",
+          "reference_sha256": "5e31b0c2472bd28873f5c502631315762e680201b0dd77e3f15af5729957237e",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "9c587078e02e38f94002bb92edf4d9e813293af51dc2c24f4ab2a2f0232dba80",
+          "reference_sha256": "5e31b0c2472bd28873f5c502631315762e680201b0dd77e3f15af5729957237e",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "9c587078e02e38f94002bb92edf4d9e813293af51dc2c24f4ab2a2f0232dba80",
+          "reference_sha256": "5e31b0c2472bd28873f5c502631315762e680201b0dd77e3f15af5729957237e",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "9c587078e02e38f94002bb92edf4d9e813293af51dc2c24f4ab2a2f0232dba80",
+          "reference_sha256": "5e31b0c2472bd28873f5c502631315762e680201b0dd77e3f15af5729957237e",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "1818057f:o0:d24:aug8:geom=flip_lr__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "1818057f:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "3e89bc6e709bf3e7175be5ada518637b8c51f8cab2e0f2ebfe94cb3cc7a59c80",
+          "reference_sha256": "e3fe487ad0132255d417f1404b2937cd26322264260d5dc842add40fca7a8f49",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "f92d647ee0ed15cf16b1ce73dc73ab68099ded8543380b78ba8563ad0d8959a2",
+          "reference_sha256": "73f2dd47e4693a18794104c0e27c0876a7972b8ca7fef34cf09d929423defd6a",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "f92d647ee0ed15cf16b1ce73dc73ab68099ded8543380b78ba8563ad0d8959a2",
+          "reference_sha256": "73f2dd47e4693a18794104c0e27c0876a7972b8ca7fef34cf09d929423defd6a",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "3e89bc6e709bf3e7175be5ada518637b8c51f8cab2e0f2ebfe94cb3cc7a59c80",
+          "reference_sha256": "e3fe487ad0132255d417f1404b2937cd26322264260d5dc842add40fca7a8f49",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "3e89bc6e709bf3e7175be5ada518637b8c51f8cab2e0f2ebfe94cb3cc7a59c80",
+          "reference_sha256": "e3fe487ad0132255d417f1404b2937cd26322264260d5dc842add40fca7a8f49",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "3e89bc6e709bf3e7175be5ada518637b8c51f8cab2e0f2ebfe94cb3cc7a59c80",
+          "reference_sha256": "e3fe487ad0132255d417f1404b2937cd26322264260d5dc842add40fca7a8f49",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "3e89bc6e709bf3e7175be5ada518637b8c51f8cab2e0f2ebfe94cb3cc7a59c80",
+          "reference_sha256": "e3fe487ad0132255d417f1404b2937cd26322264260d5dc842add40fca7a8f49",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "1818057f:o0:d24:aug8:geom=flip_ud__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "1818057f:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "68da8935a63d2dc6349af8ef1c303dd4720ec42df81d9811dbbf1acdabb93128",
+          "reference_sha256": "5ef909e8b7aa65074619c507e86155ad9d53d5be4237e11cf74bbe4d9442b263",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "aa454ab69c5e3dbd43c5d109d6eb9e689890bb1bf3d1bbb3bb05b6954793ede1",
+          "reference_sha256": "ea5cf46232b28cc1ce9358fbf0d6151d6fdf8e0b24ff51790018ffc4d59cccf9",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "aa454ab69c5e3dbd43c5d109d6eb9e689890bb1bf3d1bbb3bb05b6954793ede1",
+          "reference_sha256": "ea5cf46232b28cc1ce9358fbf0d6151d6fdf8e0b24ff51790018ffc4d59cccf9",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "68da8935a63d2dc6349af8ef1c303dd4720ec42df81d9811dbbf1acdabb93128",
+          "reference_sha256": "5ef909e8b7aa65074619c507e86155ad9d53d5be4237e11cf74bbe4d9442b263",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "68da8935a63d2dc6349af8ef1c303dd4720ec42df81d9811dbbf1acdabb93128",
+          "reference_sha256": "5ef909e8b7aa65074619c507e86155ad9d53d5be4237e11cf74bbe4d9442b263",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "68da8935a63d2dc6349af8ef1c303dd4720ec42df81d9811dbbf1acdabb93128",
+          "reference_sha256": "5ef909e8b7aa65074619c507e86155ad9d53d5be4237e11cf74bbe4d9442b263",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "68da8935a63d2dc6349af8ef1c303dd4720ec42df81d9811dbbf1acdabb93128",
+          "reference_sha256": "5ef909e8b7aa65074619c507e86155ad9d53d5be4237e11cf74bbe4d9442b263",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "1818057f:o0:d24:aug8:geom=identity__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "1818057f:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "688a09aa14f39d929cbabcbf2ceb52623dd915480e36efc4400a6864b21d978a",
+          "reference_sha256": "27f98fc0e3eac384acdada0e3e6fb4620e7d021b8bb40bb566668757fbecd468",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "55c569953c0fe1e5c138b6d4a3d2e60ee4807dab8223255a0a57c726a9344c5d",
+          "reference_sha256": "066e5e22113586cc19b1205538d9ba42f182fd90fc432381c68aed16b63487f3",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "55c569953c0fe1e5c138b6d4a3d2e60ee4807dab8223255a0a57c726a9344c5d",
+          "reference_sha256": "066e5e22113586cc19b1205538d9ba42f182fd90fc432381c68aed16b63487f3",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "688a09aa14f39d929cbabcbf2ceb52623dd915480e36efc4400a6864b21d978a",
+          "reference_sha256": "27f98fc0e3eac384acdada0e3e6fb4620e7d021b8bb40bb566668757fbecd468",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "688a09aa14f39d929cbabcbf2ceb52623dd915480e36efc4400a6864b21d978a",
+          "reference_sha256": "27f98fc0e3eac384acdada0e3e6fb4620e7d021b8bb40bb566668757fbecd468",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "688a09aa14f39d929cbabcbf2ceb52623dd915480e36efc4400a6864b21d978a",
+          "reference_sha256": "27f98fc0e3eac384acdada0e3e6fb4620e7d021b8bb40bb566668757fbecd468",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "688a09aa14f39d929cbabcbf2ceb52623dd915480e36efc4400a6864b21d978a",
+          "reference_sha256": "27f98fc0e3eac384acdada0e3e6fb4620e7d021b8bb40bb566668757fbecd468",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "1818057f:o0:d24:aug8:geom=rot180__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "1818057f:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "c8c12d939e3117654c2bc9bcf579c753a66af86dedc4af11b890296d98703b00",
+          "reference_sha256": "8569f446e40033e459e84ddd0ac1f8977d2f0a953d74cf6655f30c436a7653a9",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "ac75d492ab21a830da8e41dbf282e8dd28e53dac31b1e6176453539ac1420e8c",
+          "reference_sha256": "355cc44fbea30d4c11574d6e9efe63cb41f1376baf914746d84aa07a17704362",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "ac75d492ab21a830da8e41dbf282e8dd28e53dac31b1e6176453539ac1420e8c",
+          "reference_sha256": "355cc44fbea30d4c11574d6e9efe63cb41f1376baf914746d84aa07a17704362",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "c8c12d939e3117654c2bc9bcf579c753a66af86dedc4af11b890296d98703b00",
+          "reference_sha256": "8569f446e40033e459e84ddd0ac1f8977d2f0a953d74cf6655f30c436a7653a9",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "c8c12d939e3117654c2bc9bcf579c753a66af86dedc4af11b890296d98703b00",
+          "reference_sha256": "8569f446e40033e459e84ddd0ac1f8977d2f0a953d74cf6655f30c436a7653a9",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "c8c12d939e3117654c2bc9bcf579c753a66af86dedc4af11b890296d98703b00",
+          "reference_sha256": "8569f446e40033e459e84ddd0ac1f8977d2f0a953d74cf6655f30c436a7653a9",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "c8c12d939e3117654c2bc9bcf579c753a66af86dedc4af11b890296d98703b00",
+          "reference_sha256": "8569f446e40033e459e84ddd0ac1f8977d2f0a953d74cf6655f30c436a7653a9",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "1818057f:o0:d24:aug8:geom=rot270__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "1818057f:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "0bfb7d7a408db0d999fadc4c3e98bc63a245058c7d58ba05031a45b8a9328b16",
+          "reference_sha256": "d6492fa5b252e89857e1fb0957dd787b8561f3b704a6906526749a08a02e16d9",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "e69f8c206b28434010d0049cf4461104abc22aa90fb20386f03c5deff850e90a",
+          "reference_sha256": "ad8573eee976096d920500416f658ac6530c939adf7f54d91f7322e8b11289d4",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "e69f8c206b28434010d0049cf4461104abc22aa90fb20386f03c5deff850e90a",
+          "reference_sha256": "ad8573eee976096d920500416f658ac6530c939adf7f54d91f7322e8b11289d4",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "0bfb7d7a408db0d999fadc4c3e98bc63a245058c7d58ba05031a45b8a9328b16",
+          "reference_sha256": "d6492fa5b252e89857e1fb0957dd787b8561f3b704a6906526749a08a02e16d9",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "0bfb7d7a408db0d999fadc4c3e98bc63a245058c7d58ba05031a45b8a9328b16",
+          "reference_sha256": "d6492fa5b252e89857e1fb0957dd787b8561f3b704a6906526749a08a02e16d9",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "0bfb7d7a408db0d999fadc4c3e98bc63a245058c7d58ba05031a45b8a9328b16",
+          "reference_sha256": "d6492fa5b252e89857e1fb0957dd787b8561f3b704a6906526749a08a02e16d9",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "0bfb7d7a408db0d999fadc4c3e98bc63a245058c7d58ba05031a45b8a9328b16",
+          "reference_sha256": "d6492fa5b252e89857e1fb0957dd787b8561f3b704a6906526749a08a02e16d9",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "1818057f:o0:d24:aug8:geom=rot90__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "1818057f:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "7badee828ad7ff7a4108c90ff56ed511e578f8ea50f431c1270c541e5c5ac9a2",
+          "reference_sha256": "f09ada898f34ee3f6107ec222900912e8c4dd4576ede370c7951c84bc66dbe77",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "94d3743c7745ec477ec6cbef72f5c6e4df193cdf3c95e872c6828d011acacece",
+          "reference_sha256": "1a78a00a24596d90f95e9226455dee11dc82190db2f50e5d89c71e8c8d26b227",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "94d3743c7745ec477ec6cbef72f5c6e4df193cdf3c95e872c6828d011acacece",
+          "reference_sha256": "1a78a00a24596d90f95e9226455dee11dc82190db2f50e5d89c71e8c8d26b227",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "7badee828ad7ff7a4108c90ff56ed511e578f8ea50f431c1270c541e5c5ac9a2",
+          "reference_sha256": "f09ada898f34ee3f6107ec222900912e8c4dd4576ede370c7951c84bc66dbe77",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "7badee828ad7ff7a4108c90ff56ed511e578f8ea50f431c1270c541e5c5ac9a2",
+          "reference_sha256": "f09ada898f34ee3f6107ec222900912e8c4dd4576ede370c7951c84bc66dbe77",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "7badee828ad7ff7a4108c90ff56ed511e578f8ea50f431c1270c541e5c5ac9a2",
+          "reference_sha256": "f09ada898f34ee3f6107ec222900912e8c4dd4576ede370c7951c84bc66dbe77",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "7badee828ad7ff7a4108c90ff56ed511e578f8ea50f431c1270c541e5c5ac9a2",
+          "reference_sha256": "f09ada898f34ee3f6107ec222900912e8c4dd4576ede370c7951c84bc66dbe77",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "1818057f:o0:d24:aug8:geom=transpose__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "1818057f:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "ece563b56c09cbfd18aad2091ec5a869deba780c6147c9d6686e3eb3d2dc112b",
+          "reference_sha256": "dd87044f01a1e91c2cdba76025c715a7433c5036b511864d0b7fa539dad22370",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "067d43d5d6d162c8f6b16cd035efecbbe951ef2dff4f86dea3f81cda8cb4dce9",
+          "reference_sha256": "363b04e5e980abffd40dcd3d37617aee296e62cb4aa0ae2d8a4141646d941e0d",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "067d43d5d6d162c8f6b16cd035efecbbe951ef2dff4f86dea3f81cda8cb4dce9",
+          "reference_sha256": "363b04e5e980abffd40dcd3d37617aee296e62cb4aa0ae2d8a4141646d941e0d",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "ece563b56c09cbfd18aad2091ec5a869deba780c6147c9d6686e3eb3d2dc112b",
+          "reference_sha256": "dd87044f01a1e91c2cdba76025c715a7433c5036b511864d0b7fa539dad22370",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "ece563b56c09cbfd18aad2091ec5a869deba780c6147c9d6686e3eb3d2dc112b",
+          "reference_sha256": "dd87044f01a1e91c2cdba76025c715a7433c5036b511864d0b7fa539dad22370",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "ece563b56c09cbfd18aad2091ec5a869deba780c6147c9d6686e3eb3d2dc112b",
+          "reference_sha256": "dd87044f01a1e91c2cdba76025c715a7433c5036b511864d0b7fa539dad22370",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "ece563b56c09cbfd18aad2091ec5a869deba780c6147c9d6686e3eb3d2dc112b",
+          "reference_sha256": "dd87044f01a1e91c2cdba76025c715a7433c5036b511864d0b7fa539dad22370",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "6ffbe589:o0:d24:aug8:geom=anti_transpose__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "6ffbe589:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "0549ae99c5cae85db665fd2989d8660d9824e1d572bfb3e9fe8a1e306ac534cd",
+          "reference_sha256": "a19be2e16f60653d4d0ffacfe790a4f28bf0c05d7b41eac935dc7b7d71f6da63",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "41a0abd8e424ed143bea9fa930544b2763386224fd5cc232e7a0473017a5717b",
+          "reference_sha256": "458e9085c622572ccf1ae7a27c968ee831365ab8204c5d8c04d613f6b2d262c3",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "41a0abd8e424ed143bea9fa930544b2763386224fd5cc232e7a0473017a5717b",
+          "reference_sha256": "458e9085c622572ccf1ae7a27c968ee831365ab8204c5d8c04d613f6b2d262c3",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "0549ae99c5cae85db665fd2989d8660d9824e1d572bfb3e9fe8a1e306ac534cd",
+          "reference_sha256": "a19be2e16f60653d4d0ffacfe790a4f28bf0c05d7b41eac935dc7b7d71f6da63",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "0549ae99c5cae85db665fd2989d8660d9824e1d572bfb3e9fe8a1e306ac534cd",
+          "reference_sha256": "a19be2e16f60653d4d0ffacfe790a4f28bf0c05d7b41eac935dc7b7d71f6da63",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "0549ae99c5cae85db665fd2989d8660d9824e1d572bfb3e9fe8a1e306ac534cd",
+          "reference_sha256": "a19be2e16f60653d4d0ffacfe790a4f28bf0c05d7b41eac935dc7b7d71f6da63",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "0549ae99c5cae85db665fd2989d8660d9824e1d572bfb3e9fe8a1e306ac534cd",
+          "reference_sha256": "a19be2e16f60653d4d0ffacfe790a4f28bf0c05d7b41eac935dc7b7d71f6da63",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "6ffbe589:o0:d24:aug8:geom=flip_lr__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "6ffbe589:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "a61493332f73044a8e0456822d799a01d3b24c169d102c612f98e8f8240802fb",
+          "reference_sha256": "caa638001d1e25766a2ba324648adcc68276e31d7a6e3c25051d73e749e1e9cc",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "b9ad6fcd3c67103f0d18c6a7e1668a437af1388cd589d0b4abc1510672169980",
+          "reference_sha256": "3a1efb83596094d36903b8789a66362dcebb39c73bd92b57f6bc38c6e9f13b00",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "b9ad6fcd3c67103f0d18c6a7e1668a437af1388cd589d0b4abc1510672169980",
+          "reference_sha256": "3a1efb83596094d36903b8789a66362dcebb39c73bd92b57f6bc38c6e9f13b00",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "a61493332f73044a8e0456822d799a01d3b24c169d102c612f98e8f8240802fb",
+          "reference_sha256": "caa638001d1e25766a2ba324648adcc68276e31d7a6e3c25051d73e749e1e9cc",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "a61493332f73044a8e0456822d799a01d3b24c169d102c612f98e8f8240802fb",
+          "reference_sha256": "caa638001d1e25766a2ba324648adcc68276e31d7a6e3c25051d73e749e1e9cc",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "a61493332f73044a8e0456822d799a01d3b24c169d102c612f98e8f8240802fb",
+          "reference_sha256": "caa638001d1e25766a2ba324648adcc68276e31d7a6e3c25051d73e749e1e9cc",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "a61493332f73044a8e0456822d799a01d3b24c169d102c612f98e8f8240802fb",
+          "reference_sha256": "caa638001d1e25766a2ba324648adcc68276e31d7a6e3c25051d73e749e1e9cc",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "6ffbe589:o0:d24:aug8:geom=flip_ud__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "6ffbe589:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "de8a1fd4b32607b8ea072fb251842dc05021b1b1aaf58ac249df0af8e1863567",
+          "reference_sha256": "de8d39319170c5a8dd503d70e58cec00a36a171058c75b8cc3e2d85a47cad40a",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "fe363866de6b85b6658c1b6a2de5d4c8c5d3787a38e35be0adae042118cd1b74",
+          "reference_sha256": "bb78e24ecbed92099b9cb9b3f315819dbccaba809ef9273475de8cee40870b8a",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "fe363866de6b85b6658c1b6a2de5d4c8c5d3787a38e35be0adae042118cd1b74",
+          "reference_sha256": "bb78e24ecbed92099b9cb9b3f315819dbccaba809ef9273475de8cee40870b8a",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "de8a1fd4b32607b8ea072fb251842dc05021b1b1aaf58ac249df0af8e1863567",
+          "reference_sha256": "de8d39319170c5a8dd503d70e58cec00a36a171058c75b8cc3e2d85a47cad40a",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "de8a1fd4b32607b8ea072fb251842dc05021b1b1aaf58ac249df0af8e1863567",
+          "reference_sha256": "de8d39319170c5a8dd503d70e58cec00a36a171058c75b8cc3e2d85a47cad40a",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "de8a1fd4b32607b8ea072fb251842dc05021b1b1aaf58ac249df0af8e1863567",
+          "reference_sha256": "de8d39319170c5a8dd503d70e58cec00a36a171058c75b8cc3e2d85a47cad40a",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "de8a1fd4b32607b8ea072fb251842dc05021b1b1aaf58ac249df0af8e1863567",
+          "reference_sha256": "de8d39319170c5a8dd503d70e58cec00a36a171058c75b8cc3e2d85a47cad40a",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "6ffbe589:o0:d24:aug8:geom=identity__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "6ffbe589:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "e38db45ddd50b7c4ba4016c23b6ef81e8e088763302556ccee620db91afbf11b",
+          "reference_sha256": "95e833b4a235c3463371201f6d0af018e4f043b6fcc6ea9c243d2e51c9bfeac0",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "b59bd3d88a984970999236a1b54f169b79d19078eb0ea0b1e513e6e86ed99045",
+          "reference_sha256": "0cd11c9c163b262221067e992b051e37f9006ec2c787950ff32c0b0f15ef5ac5",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "b59bd3d88a984970999236a1b54f169b79d19078eb0ea0b1e513e6e86ed99045",
+          "reference_sha256": "0cd11c9c163b262221067e992b051e37f9006ec2c787950ff32c0b0f15ef5ac5",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "e38db45ddd50b7c4ba4016c23b6ef81e8e088763302556ccee620db91afbf11b",
+          "reference_sha256": "95e833b4a235c3463371201f6d0af018e4f043b6fcc6ea9c243d2e51c9bfeac0",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "e38db45ddd50b7c4ba4016c23b6ef81e8e088763302556ccee620db91afbf11b",
+          "reference_sha256": "95e833b4a235c3463371201f6d0af018e4f043b6fcc6ea9c243d2e51c9bfeac0",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "e38db45ddd50b7c4ba4016c23b6ef81e8e088763302556ccee620db91afbf11b",
+          "reference_sha256": "95e833b4a235c3463371201f6d0af018e4f043b6fcc6ea9c243d2e51c9bfeac0",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "e38db45ddd50b7c4ba4016c23b6ef81e8e088763302556ccee620db91afbf11b",
+          "reference_sha256": "95e833b4a235c3463371201f6d0af018e4f043b6fcc6ea9c243d2e51c9bfeac0",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "6ffbe589:o0:d24:aug8:geom=rot180__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "6ffbe589:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "5aaa75df8428f74015e3f80999aa483df6a5251cf42f12dbd69481350c3ce489",
+          "reference_sha256": "a05f2237fde0f5bac48217184fd8536a7b56b7ddf9197d0bfdd45361e97b9e80",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "5e930bbc46239cf6e1088167fe1c4cec651e4d2214e3ffde05c6957e0fd9e79e",
+          "reference_sha256": "907a1032073a141011574d962ddbbf3827d0019a4f112b6f2ed33f51b4119af6",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "5e930bbc46239cf6e1088167fe1c4cec651e4d2214e3ffde05c6957e0fd9e79e",
+          "reference_sha256": "907a1032073a141011574d962ddbbf3827d0019a4f112b6f2ed33f51b4119af6",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "5aaa75df8428f74015e3f80999aa483df6a5251cf42f12dbd69481350c3ce489",
+          "reference_sha256": "a05f2237fde0f5bac48217184fd8536a7b56b7ddf9197d0bfdd45361e97b9e80",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "5aaa75df8428f74015e3f80999aa483df6a5251cf42f12dbd69481350c3ce489",
+          "reference_sha256": "a05f2237fde0f5bac48217184fd8536a7b56b7ddf9197d0bfdd45361e97b9e80",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "5aaa75df8428f74015e3f80999aa483df6a5251cf42f12dbd69481350c3ce489",
+          "reference_sha256": "a05f2237fde0f5bac48217184fd8536a7b56b7ddf9197d0bfdd45361e97b9e80",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "5aaa75df8428f74015e3f80999aa483df6a5251cf42f12dbd69481350c3ce489",
+          "reference_sha256": "a05f2237fde0f5bac48217184fd8536a7b56b7ddf9197d0bfdd45361e97b9e80",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "6ffbe589:o0:d24:aug8:geom=rot270__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "6ffbe589:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "3ac1356f10655a32271ec5357e644c244c44b816e4e872b3394b7975e5cd2d6c",
+          "reference_sha256": "8e7d3d237e0b8bf30bf40d4cf7597c8d1e5a9bebe33e567ab7d0c467cedc11be",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "fb369684f7ca9de040c0a59b545b4f8ce00c467b9ac0c35b6779f9719b514129",
+          "reference_sha256": "9161b29ec3d6eb25da875001dc713e4435c2e43903a6f8476657db49c256db32",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "fb369684f7ca9de040c0a59b545b4f8ce00c467b9ac0c35b6779f9719b514129",
+          "reference_sha256": "9161b29ec3d6eb25da875001dc713e4435c2e43903a6f8476657db49c256db32",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "3ac1356f10655a32271ec5357e644c244c44b816e4e872b3394b7975e5cd2d6c",
+          "reference_sha256": "8e7d3d237e0b8bf30bf40d4cf7597c8d1e5a9bebe33e567ab7d0c467cedc11be",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "3ac1356f10655a32271ec5357e644c244c44b816e4e872b3394b7975e5cd2d6c",
+          "reference_sha256": "8e7d3d237e0b8bf30bf40d4cf7597c8d1e5a9bebe33e567ab7d0c467cedc11be",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "3ac1356f10655a32271ec5357e644c244c44b816e4e872b3394b7975e5cd2d6c",
+          "reference_sha256": "8e7d3d237e0b8bf30bf40d4cf7597c8d1e5a9bebe33e567ab7d0c467cedc11be",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "3ac1356f10655a32271ec5357e644c244c44b816e4e872b3394b7975e5cd2d6c",
+          "reference_sha256": "8e7d3d237e0b8bf30bf40d4cf7597c8d1e5a9bebe33e567ab7d0c467cedc11be",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "6ffbe589:o0:d24:aug8:geom=rot90__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "6ffbe589:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "61a3deadf2ee3bf4980d9325f018270db5e64b19707fbd939550dea7b03022fa",
+          "reference_sha256": "518c70ed940a6d130e2939c5f3977153e40b45f3ee0f8811273d6c9916eedcc6",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "24bb22f8c403fce63b7557c35d6ba1ee263bec88d47bb6e9ff3a2eff853dced0",
+          "reference_sha256": "2f7d82fd17a25153556265def1fef958b56b9cf2eea79115ff8eb83ec63def22",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "24bb22f8c403fce63b7557c35d6ba1ee263bec88d47bb6e9ff3a2eff853dced0",
+          "reference_sha256": "2f7d82fd17a25153556265def1fef958b56b9cf2eea79115ff8eb83ec63def22",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "61a3deadf2ee3bf4980d9325f018270db5e64b19707fbd939550dea7b03022fa",
+          "reference_sha256": "518c70ed940a6d130e2939c5f3977153e40b45f3ee0f8811273d6c9916eedcc6",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "61a3deadf2ee3bf4980d9325f018270db5e64b19707fbd939550dea7b03022fa",
+          "reference_sha256": "518c70ed940a6d130e2939c5f3977153e40b45f3ee0f8811273d6c9916eedcc6",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "61a3deadf2ee3bf4980d9325f018270db5e64b19707fbd939550dea7b03022fa",
+          "reference_sha256": "518c70ed940a6d130e2939c5f3977153e40b45f3ee0f8811273d6c9916eedcc6",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "61a3deadf2ee3bf4980d9325f018270db5e64b19707fbd939550dea7b03022fa",
+          "reference_sha256": "518c70ed940a6d130e2939c5f3977153e40b45f3ee0f8811273d6c9916eedcc6",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "6ffbe589:o0:d24:aug8:geom=transpose__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "6ffbe589:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "e450572926e5dc0a224ef96c3bd9a1e356fccd80ff653b32901f79bdb2cc1c91",
+          "reference_sha256": "ef4c224272746e9ab3b6a80cd8119f45891f354b5becb1d97f117523d8109f4b",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "9bdd060c88c85f08039d74ca59d7b58b24c023bfd63734fb51610eb31e93687d",
+          "reference_sha256": "ce870fd1239036d0ff934eb904287293a7ae556e62a2355dc6e694b3dd476a00",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "9bdd060c88c85f08039d74ca59d7b58b24c023bfd63734fb51610eb31e93687d",
+          "reference_sha256": "ce870fd1239036d0ff934eb904287293a7ae556e62a2355dc6e694b3dd476a00",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "e450572926e5dc0a224ef96c3bd9a1e356fccd80ff653b32901f79bdb2cc1c91",
+          "reference_sha256": "ef4c224272746e9ab3b6a80cd8119f45891f354b5becb1d97f117523d8109f4b",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "e450572926e5dc0a224ef96c3bd9a1e356fccd80ff653b32901f79bdb2cc1c91",
+          "reference_sha256": "ef4c224272746e9ab3b6a80cd8119f45891f354b5becb1d97f117523d8109f4b",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "e450572926e5dc0a224ef96c3bd9a1e356fccd80ff653b32901f79bdb2cc1c91",
+          "reference_sha256": "ef4c224272746e9ab3b6a80cd8119f45891f354b5becb1d97f117523d8109f4b",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "e450572926e5dc0a224ef96c3bd9a1e356fccd80ff653b32901f79bdb2cc1c91",
+          "reference_sha256": "ef4c224272746e9ab3b6a80cd8119f45891f354b5becb1d97f117523d8109f4b",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "a32d8b75:o0:d24:aug8:geom=anti_transpose__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "a32d8b75:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "0214417019c6a1b547e437caa75cea5d4c5a4c0a34747ecba2e1f1d38de5428e",
+          "reference_sha256": "ed8d94cf7e1d21b1486d56b39adef2fd59cea1154269e14221ab7ccaf676b7f8",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "bc84d126261587a8c0bcd98ab7dee7a42874bf5744ed8321d4190448ac2b7a22",
+          "reference_sha256": "fb8545e6e511f7ac0d27cf089034eac2bd52122720c74cd56429775ab07c99d8",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "bc84d126261587a8c0bcd98ab7dee7a42874bf5744ed8321d4190448ac2b7a22",
+          "reference_sha256": "fb8545e6e511f7ac0d27cf089034eac2bd52122720c74cd56429775ab07c99d8",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "0214417019c6a1b547e437caa75cea5d4c5a4c0a34747ecba2e1f1d38de5428e",
+          "reference_sha256": "ed8d94cf7e1d21b1486d56b39adef2fd59cea1154269e14221ab7ccaf676b7f8",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "0214417019c6a1b547e437caa75cea5d4c5a4c0a34747ecba2e1f1d38de5428e",
+          "reference_sha256": "ed8d94cf7e1d21b1486d56b39adef2fd59cea1154269e14221ab7ccaf676b7f8",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "0214417019c6a1b547e437caa75cea5d4c5a4c0a34747ecba2e1f1d38de5428e",
+          "reference_sha256": "ed8d94cf7e1d21b1486d56b39adef2fd59cea1154269e14221ab7ccaf676b7f8",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "0214417019c6a1b547e437caa75cea5d4c5a4c0a34747ecba2e1f1d38de5428e",
+          "reference_sha256": "ed8d94cf7e1d21b1486d56b39adef2fd59cea1154269e14221ab7ccaf676b7f8",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "a32d8b75:o0:d24:aug8:geom=flip_lr__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "a32d8b75:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "27cca5594f2f5aa67ac1faf32f8dc17ef6c6a885944ff66209327ac385208f36",
+          "reference_sha256": "b30b173ba00eb950f9d3360dd1b22ac6a16ab2f4cb3a09aec0d874a6b6864181",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "18634af6bef0c02e38f7e9a55f16e495f53a82cc1e68503627d0e9db7017d48d",
+          "reference_sha256": "8a4166170b969cda8acf660d92e85329950c4451ebbdfb85b293d8dc9409b975",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "18634af6bef0c02e38f7e9a55f16e495f53a82cc1e68503627d0e9db7017d48d",
+          "reference_sha256": "8a4166170b969cda8acf660d92e85329950c4451ebbdfb85b293d8dc9409b975",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "27cca5594f2f5aa67ac1faf32f8dc17ef6c6a885944ff66209327ac385208f36",
+          "reference_sha256": "b30b173ba00eb950f9d3360dd1b22ac6a16ab2f4cb3a09aec0d874a6b6864181",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "27cca5594f2f5aa67ac1faf32f8dc17ef6c6a885944ff66209327ac385208f36",
+          "reference_sha256": "b30b173ba00eb950f9d3360dd1b22ac6a16ab2f4cb3a09aec0d874a6b6864181",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "27cca5594f2f5aa67ac1faf32f8dc17ef6c6a885944ff66209327ac385208f36",
+          "reference_sha256": "b30b173ba00eb950f9d3360dd1b22ac6a16ab2f4cb3a09aec0d874a6b6864181",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "27cca5594f2f5aa67ac1faf32f8dc17ef6c6a885944ff66209327ac385208f36",
+          "reference_sha256": "b30b173ba00eb950f9d3360dd1b22ac6a16ab2f4cb3a09aec0d874a6b6864181",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "a32d8b75:o0:d24:aug8:geom=flip_ud__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "a32d8b75:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "f2445cc44b64e60a22f44c5b68f248275a9dd6e4bf571273c4a1fee3b053803f",
+          "reference_sha256": "867dcff631eeb02693d78a206c8ae826c64621679d0587ed7697b6d262e16e54",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "336f4f8bb7ddd57b333485db9f506269a8a2e9c742ee1068d303942932fd6429",
+          "reference_sha256": "4505c6dabc8fba2939aeac8659908f8caabf28892577a3b7a7da59613646e496",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "336f4f8bb7ddd57b333485db9f506269a8a2e9c742ee1068d303942932fd6429",
+          "reference_sha256": "4505c6dabc8fba2939aeac8659908f8caabf28892577a3b7a7da59613646e496",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "f2445cc44b64e60a22f44c5b68f248275a9dd6e4bf571273c4a1fee3b053803f",
+          "reference_sha256": "867dcff631eeb02693d78a206c8ae826c64621679d0587ed7697b6d262e16e54",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "f2445cc44b64e60a22f44c5b68f248275a9dd6e4bf571273c4a1fee3b053803f",
+          "reference_sha256": "867dcff631eeb02693d78a206c8ae826c64621679d0587ed7697b6d262e16e54",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "f2445cc44b64e60a22f44c5b68f248275a9dd6e4bf571273c4a1fee3b053803f",
+          "reference_sha256": "867dcff631eeb02693d78a206c8ae826c64621679d0587ed7697b6d262e16e54",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "f2445cc44b64e60a22f44c5b68f248275a9dd6e4bf571273c4a1fee3b053803f",
+          "reference_sha256": "867dcff631eeb02693d78a206c8ae826c64621679d0587ed7697b6d262e16e54",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "a32d8b75:o0:d24:aug8:geom=identity__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "a32d8b75:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "0fad11fe46a23f27852744ab06118858ca5ecce74c6074d3ef93c85a870d8769",
+          "reference_sha256": "4dbd42ac538bc95e91610f18b167dc2d4b3bff461f2098f038cd628b2bb1ad86",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "ca91a08eb222158965320640741b0be4e041463ed72d2c7bd942c9ba2a3da138",
+          "reference_sha256": "27c249f23508786dc030163cac7504a0de71606e02c22ebd23642aa696d70d0d",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "ca91a08eb222158965320640741b0be4e041463ed72d2c7bd942c9ba2a3da138",
+          "reference_sha256": "27c249f23508786dc030163cac7504a0de71606e02c22ebd23642aa696d70d0d",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "0fad11fe46a23f27852744ab06118858ca5ecce74c6074d3ef93c85a870d8769",
+          "reference_sha256": "4dbd42ac538bc95e91610f18b167dc2d4b3bff461f2098f038cd628b2bb1ad86",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "0fad11fe46a23f27852744ab06118858ca5ecce74c6074d3ef93c85a870d8769",
+          "reference_sha256": "4dbd42ac538bc95e91610f18b167dc2d4b3bff461f2098f038cd628b2bb1ad86",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "0fad11fe46a23f27852744ab06118858ca5ecce74c6074d3ef93c85a870d8769",
+          "reference_sha256": "4dbd42ac538bc95e91610f18b167dc2d4b3bff461f2098f038cd628b2bb1ad86",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "0fad11fe46a23f27852744ab06118858ca5ecce74c6074d3ef93c85a870d8769",
+          "reference_sha256": "4dbd42ac538bc95e91610f18b167dc2d4b3bff461f2098f038cd628b2bb1ad86",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "a32d8b75:o0:d24:aug8:geom=rot180__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "a32d8b75:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "7b8f7e0109cb45327dc3749190e3a7acc04f628729304cc98f87abd61abbbb33",
+          "reference_sha256": "8dfeb5704670aed4eb4dc2af8372d35c909c81a1ae4cf7457f45504daf59ed9b",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "9c00ee54a0ca07f29098a48579da9ce586bffd44c553b71357d72bcad7bacd77",
+          "reference_sha256": "aaa505e0f835f0ae0856288ff8ddaffb288c86b57a9d4675391a00dd76e1648f",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "9c00ee54a0ca07f29098a48579da9ce586bffd44c553b71357d72bcad7bacd77",
+          "reference_sha256": "aaa505e0f835f0ae0856288ff8ddaffb288c86b57a9d4675391a00dd76e1648f",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "7b8f7e0109cb45327dc3749190e3a7acc04f628729304cc98f87abd61abbbb33",
+          "reference_sha256": "8dfeb5704670aed4eb4dc2af8372d35c909c81a1ae4cf7457f45504daf59ed9b",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "7b8f7e0109cb45327dc3749190e3a7acc04f628729304cc98f87abd61abbbb33",
+          "reference_sha256": "8dfeb5704670aed4eb4dc2af8372d35c909c81a1ae4cf7457f45504daf59ed9b",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "7b8f7e0109cb45327dc3749190e3a7acc04f628729304cc98f87abd61abbbb33",
+          "reference_sha256": "8dfeb5704670aed4eb4dc2af8372d35c909c81a1ae4cf7457f45504daf59ed9b",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "7b8f7e0109cb45327dc3749190e3a7acc04f628729304cc98f87abd61abbbb33",
+          "reference_sha256": "8dfeb5704670aed4eb4dc2af8372d35c909c81a1ae4cf7457f45504daf59ed9b",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "a32d8b75:o0:d24:aug8:geom=rot270__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "a32d8b75:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "41746e76e1fafff5d83d7db124a87f75a9db80287a1d36a046edbf9adf9b1343",
+          "reference_sha256": "44673e15feca99cb0df6d4e49e7939b545c2faa693dcc81a8d94f50684b787ad",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "926fd92511cb9253fa51e52b6d7ffea824fcfc8fc8fab2b2dcfa8cccc1da9f8a",
+          "reference_sha256": "7fea5adeb3c565d4cea72ff35ec356562baa68e8c2938972f554ebd88680fad3",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "926fd92511cb9253fa51e52b6d7ffea824fcfc8fc8fab2b2dcfa8cccc1da9f8a",
+          "reference_sha256": "7fea5adeb3c565d4cea72ff35ec356562baa68e8c2938972f554ebd88680fad3",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "41746e76e1fafff5d83d7db124a87f75a9db80287a1d36a046edbf9adf9b1343",
+          "reference_sha256": "44673e15feca99cb0df6d4e49e7939b545c2faa693dcc81a8d94f50684b787ad",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "41746e76e1fafff5d83d7db124a87f75a9db80287a1d36a046edbf9adf9b1343",
+          "reference_sha256": "44673e15feca99cb0df6d4e49e7939b545c2faa693dcc81a8d94f50684b787ad",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "41746e76e1fafff5d83d7db124a87f75a9db80287a1d36a046edbf9adf9b1343",
+          "reference_sha256": "44673e15feca99cb0df6d4e49e7939b545c2faa693dcc81a8d94f50684b787ad",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "41746e76e1fafff5d83d7db124a87f75a9db80287a1d36a046edbf9adf9b1343",
+          "reference_sha256": "44673e15feca99cb0df6d4e49e7939b545c2faa693dcc81a8d94f50684b787ad",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "a32d8b75:o0:d24:aug8:geom=rot90__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "a32d8b75:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    },
+    {
+      "approved_nonsemantic_telemetry_differences": [
+        {
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "911843bf6c7117056de746f2f62bed8e5991db2ab61733d6f3d639af43e18729",
+          "reference_sha256": "8b3b038ce84ecf603986e46e22d3c9ec1ab7d236e136f0ad19ef7d117406dc2d",
+          "scope": "cell"
+        },
+        {
+          "field": "model_forward_seconds",
+          "observed_sha256": "9a4897e566f6fbf69957d4b2c929418434464ca131ea247fecce0fe50c8c8638",
+          "reference_sha256": "2ed75b1d9a8433bfb23ca01bbafea7660def41abfd337c7d1d2ed1d92f00bc51",
+          "scope": "cell"
+        },
+        {
+          "field": "prefill_seconds",
+          "observed_sha256": "9a4897e566f6fbf69957d4b2c929418434464ca131ea247fecce0fe50c8c8638",
+          "reference_sha256": "2ed75b1d9a8433bfb23ca01bbafea7660def41abfd337c7d1d2ed1d92f00bc51",
+          "scope": "cell"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "911843bf6c7117056de746f2f62bed8e5991db2ab61733d6f3d639af43e18729",
+          "reference_sha256": "8b3b038ce84ecf603986e46e22d3c9ec1ab7d236e136f0ad19ef7d117406dc2d",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 0,
+          "checkpoint_requested": 512,
+          "field": "elapsed_seconds",
+          "observed_sha256": "911843bf6c7117056de746f2f62bed8e5991db2ab61733d6f3d639af43e18729",
+          "reference_sha256": "8b3b038ce84ecf603986e46e22d3c9ec1ab7d236e136f0ad19ef7d117406dc2d",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "active_elapsed_seconds",
+          "observed_sha256": "911843bf6c7117056de746f2f62bed8e5991db2ab61733d6f3d639af43e18729",
+          "reference_sha256": "8b3b038ce84ecf603986e46e22d3c9ec1ab7d236e136f0ad19ef7d117406dc2d",
+          "scope": "checkpoint"
+        },
+        {
+          "checkpoint_index": 1,
+          "checkpoint_requested": 1024,
+          "field": "elapsed_seconds",
+          "observed_sha256": "911843bf6c7117056de746f2f62bed8e5991db2ab61733d6f3d639af43e18729",
+          "reference_sha256": "8b3b038ce84ecf603986e46e22d3c9ec1ab7d236e136f0ad19ef7d117406dc2d",
+          "scope": "checkpoint"
+        }
+      ],
+      "cell_key": "a32d8b75:o0:d24:aug8:geom=transpose__color=id__order=canonical",
+      "checkpoint_schedule_observed": [
+        512,
+        1024
+      ],
+      "checkpoint_schedule_reference": [
+        512,
+        1024
+      ],
+      "observed_only_schema_fields": [
+        "search_order",
+        "search_order_work_items"
+      ],
+      "output_id": "a32d8b75:o0",
+      "reference_only_schema_fields": [],
+      "semantic_differences": [],
+      "semantic_exact": true
+    }
+  ],
+  "cells_checked": 24,
+  "experiment": "SEARCH_ORDER_MICRO24_V1",
+  "gold_loaded": false,
+  "required_cell_fields": [
+    "final_candidate_pool",
+    "final_candidate_pool_sha256",
+    "nodes",
+    "events",
+    "completed_candidates",
+    "nodes_expanded",
+    "termination_reason",
+    "model_forwards",
+    "tokens_advanced"
+  ],
+  "required_checkpoint_fields": [
+    "candidate_pool_snapshot",
+    "candidate_pool_sha256",
+    "checkpoint_reached",
+    "nodes_expanded",
+    "completed_candidate_count",
+    "termination_reason",
+    "carried_forward_terminal",
+    "wall_time_censored",
+    "actual_nodes_reached",
+    "model_forwards",
+    "tokens_advanced",
+    "valid_kv_length",
+    "capacity_kv_length"
+  ],
+  "semantic_exact_cells": 24,
+  "semantic_mismatch_cells": 0,
+  "target_blind": true
+}

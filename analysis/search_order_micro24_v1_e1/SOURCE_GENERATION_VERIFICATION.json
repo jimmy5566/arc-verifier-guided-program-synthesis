@@ -1,0 +1,54 @@
+{
+  "experiment": "SEARCH_ORDER_MICRO24_V1_E1",
+  "gold_loaded": false,
+  "sources": {
+    "P0": {
+      "generation_hash_status": "PASS",
+      "generation_hashes_checked": 26,
+      "generation_ledger_sha256": "fdb11869b6f4fd708d728c43b4d9896cdec4aeaefeb30443416aa22efe129710",
+      "label": "P0",
+      "p0_semantic_parity": "PASS_SEMANTIC_24_OF_24",
+      "policy": "P0",
+      "raw_count": 3,
+      "raw_output_bytes": 442988485,
+      "source": "/root/arc-runtime-3090-v5/active_run/search_order_micro24_v1_e1/P0",
+      "stored_generation_hash_verification": {
+        "checked": 26,
+        "mismatches": [],
+        "status": "PASS"
+      }
+    },
+    "P1": {
+      "generation_hash_status": "PASS",
+      "generation_hashes_checked": 152,
+      "generation_ledger_sha256": "993d68cea8a25a02fc2922f13710f8e21bdb7c09d488d1770dbc494dbf768d7d",
+      "label": "P1",
+      "policy": "P1",
+      "raw_count": 24,
+      "raw_output_bytes": 4855046956,
+      "source": "/root/arc-runtime-3090-v5/active_run/search_order_micro24_v1_e1_orders_v1/P1",
+      "stored_generation_hash_verification": {
+        "checked": 152,
+        "mismatches": [],
+        "status": "PASS"
+      }
+    },
+    "P2": {
+      "generation_hash_status": "PASS",
+      "generation_hashes_checked": 152,
+      "generation_ledger_sha256": "617ad2c21ec5e2492892a5740d697d83fdccf682f5e43d5611f13f97a186b57d",
+      "label": "P2",
+      "policy": "P2",
+      "raw_count": 24,
+      "raw_output_bytes": 6385265941,
+      "source": "/root/arc-runtime-3090-v5/active_run/search_order_micro24_v1_e1_orders_v1/P2",
+      "stored_generation_hash_verification": {
+        "checked": 152,
+        "mismatches": [],
+        "status": "PASS"
+      }
+    }
+  },
+  "status": "PASS",
+  "target_blind": true
+}

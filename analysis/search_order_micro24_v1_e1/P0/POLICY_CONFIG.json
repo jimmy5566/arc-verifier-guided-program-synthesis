@@ -1,0 +1,1 @@
+{"adapter_state":"EXACT_HISTORICAL","checkpoints":[512,1024],"cohort_sha256":"25345687d3fdb1ae837cb05337294e1b0743a011c3cb290d008023f2c4d59990","experiment":"SEARCH_ORDER_MICRO24_V1","fairness_quantum":64,"gold_loaded":false,"logical_search_order_policy":"CURRENT_DFS","policy_label":"P0","target_blind_generation":true}

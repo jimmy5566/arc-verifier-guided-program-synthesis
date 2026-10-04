@@ -1,0 +1,17 @@
+{
+  "attempt_index": 0,
+  "checkpoint_output": "OUTPUT_CHECKPOINTS/cbebaa4b_o1.json",
+  "ended_unix": 1791127947.559587,
+  "eos_events": "EOS_EVENTS/cbebaa4b_o1.jsonl.gz",
+  "experiment": "SEARCH_ORDER_MICRO24_V1_P2",
+  "gold_loaded": false,
+  "output_id": "cbebaa4b:o1",
+  "profile_configuration": {
+    "physical_batch_ceiling": 4,
+    "resident_capacity": 4
+  },
+  "raw_output": "RAW_OUTPUTS/cbebaa4b_o1.json",
+  "status": "COMPLETE",
+  "target_blind": true,
+  "wall_seconds": 1092.1988133564591
+}

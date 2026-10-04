@@ -1,0 +1,15 @@
+{
+  "P0_ENGINE_PARITY": "PASS_SEMANTIC_24_OF_24",
+  "approved_nonsemantic_telemetry_difference_count": 168,
+  "cells_checked": 24,
+  "experiment": "SEARCH_ORDER_MICRO24_V1",
+  "gold_loaded": false,
+  "note": "Observed-only schema fields are recorded for provenance and do not replace any required semantic parity field.",
+  "observed_only_schema_fields": [
+    "search_order",
+    "search_order_work_items"
+  ],
+  "semantic_exact_cells": 24,
+  "semantic_mismatch_cells": 0,
+  "target_blind": true
+}

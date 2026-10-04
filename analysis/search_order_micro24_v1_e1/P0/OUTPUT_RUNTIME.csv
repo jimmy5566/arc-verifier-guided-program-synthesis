@@ -1,0 +1,4 @@
+output_id,category,profile,wall_seconds,logical_advances,logical_nodes_per_second,mean_effective_batch,physical_forwards,replayed_tokens,replay_model_forwards,useful_model_forwards,yielded_subtrees,pending_retained_work_at_r1024,fallback_used
+1818057f:o0,CONTROL,PROFILE_S,249.47921065799892,6171,24.73552799739926,2.0186457311089305,3057,0,0,0,0,0,False
+6ffbe589:o0,LOW,PROFILE_M,230.55964577943087,4516,19.587122389667073,1.4998339422118898,3011,0,0,0,0,0,False
+a32d8b75:o0,LOW,PROFILE_L_HIGH,324.02653642371297,8192,25.28187996703992,2.2254822059223036,3681,0,0,0,0,0,False

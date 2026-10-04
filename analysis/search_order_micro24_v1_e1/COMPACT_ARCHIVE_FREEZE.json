@@ -1,0 +1,13 @@
+{
+  "archive_hash_ledger_sha256": "1cf3251e9e0485e2fdce07cabad893c35d7a913fefa25d4d1eb98b7fb85e0c6e",
+  "archive_hash_status": "PASS",
+  "experiment": "SEARCH_ORDER_MICRO24_V1_E1",
+  "gold_loaded": false,
+  "source_generation_hashes": {
+    "P0": "fdb11869b6f4fd708d728c43b4d9896cdec4aeaefeb30443416aa22efe129710",
+    "P1": "993d68cea8a25a02fc2922f13710f8e21bdb7c09d488d1770dbc494dbf768d7d",
+    "P2": "617ad2c21ec5e2492892a5740d697d83fdccf682f5e43d5611f13f97a186b57d"
+  },
+  "status": "FROZEN",
+  "target_blind": true
+}

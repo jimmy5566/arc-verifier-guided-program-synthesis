@@ -1,0 +1,17 @@
+{
+  "attempt_index": 0,
+  "checkpoint_output": "OUTPUT_CHECKPOINTS/dd6b8c4b_o0.json",
+  "ended_unix": 1791107219.5600698,
+  "eos_events": "EOS_EVENTS/dd6b8c4b_o0.jsonl.gz",
+  "experiment": "SEARCH_ORDER_MICRO24_V1_P1",
+  "gold_loaded": false,
+  "output_id": "dd6b8c4b:o0",
+  "profile_configuration": {
+    "physical_batch_ceiling": 7,
+    "resident_capacity": 8
+  },
+  "raw_output": "RAW_OUTPUTS/dd6b8c4b_o0.json",
+  "status": "COMPLETE",
+  "target_blind": true,
+  "wall_seconds": 521.3526178896427
+}
