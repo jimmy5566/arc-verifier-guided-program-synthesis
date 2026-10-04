@@ -172,8 +172,9 @@ def source_score_cohort(score_csv: Path) -> tuple[list[dict[str, str]], dict[str
 
 def _artifact_commit(path: Path) -> str:
     import subprocess
+    relative_path = path.resolve().relative_to(ROOT.resolve())
     result = subprocess.run(
-        ["git", "-C", str(ROOT), "log", "-1", "--format=%H", "--", str(path.relative_to(ROOT))],
+        ["git", "-C", str(ROOT), "log", "-1", "--format=%H", "--", str(relative_path)],
         text=True,
         capture_output=True,
         check=False,
