@@ -30,6 +30,7 @@ from inference.nvarc_turbodfs_dynamic_ready import (
     _restore_cache_kind,
     cache_geometry,
     clone_legacy_cache,
+    start_ready_cell,
 )
 
 
@@ -339,11 +340,45 @@ def start_search_order_cell(
     release_prefill_temporaries: bool = False, prefill_output_references: list[Any] | None = None,
     eos_event_sink: Callable[[dict[str, Any]], None] | None = None,
 ) -> ReadyCell:
-    """Create one E1 ReadyCell; only its logical continuation order is new."""
+    """Create one E1 ReadyCell; only its logical continuation order is new.
+
+    ``CURRENT_DFS`` deliberately uses the established recursive ReadyCell
+    implementation.  That is the only way for P0 to retain its historical
+    forward indices, cache transitions, frontier samples, and result receipt
+    byte-for-byte.  The explicit retained-work scheduler is the shared core
+    for the two experimental orders, whose only intended difference is their
+    choice among the same retained continuations.
+    """
     import torch
 
     if input_ids.ndim != 2 or tuple(input_ids.shape[:1]) != (1,):
         raise ValueError("search-order cells require one prompt at a time")
+    if policy_name == "CURRENT_DFS":
+        cell = start_ready_cell(
+            model=model,
+            input_ids=input_ids,
+            config=config,
+            cell_key=cell_key,
+            normalize_root_cache=normalize_root_cache,
+            active_time_accounting=active_time_accounting,
+            root_cache_transform=root_cache_transform,
+            release_prefill_temporaries=release_prefill_temporaries,
+            prefill_output_references=prefill_output_references,
+            eos_event_sink=eos_event_sink,
+        )
+        cell.state["search_order"] = {
+            "policy": policy_name,
+            "quantum": 64,
+            "retention_changed": False,
+            "implementation": "established_recursive_ready_dfs",
+            "replayed_tokens": 0,
+            "replay_model_forwards": 0,
+            "useful_model_forwards": int(cell.state["tokens_advanced"]),
+            "yielded_subtrees": 0,
+            "pending_retained_work_at_r1024": 0,
+        }
+        cell.state["search_order_work_items"] = []
+        return cell
     state = _new_state(config); state["eos_event_sink"] = eos_event_sink
     state["active_time_accounting"] = active_time_accounting; state["per_forward_trace"] = []
     started_unix = time.time(); created_perf = time.perf_counter()
