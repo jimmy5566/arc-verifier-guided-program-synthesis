@@ -154,15 +154,14 @@ def _write(path: Path, value: Any) -> None:
     temporary.replace(path)
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--p0-raw", type=Path, required=True)
-    parser.add_argument("--historical-raw", type=Path, required=True)
-    parser.add_argument("--output", type=Path, required=True)
-    args = parser.parse_args()
-
+def audit_p0_checkpoint_parity(
+    p0_raw: Path,
+    historical_raw: Path,
+    output: Path,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Write and return compact raw and semantic P0 parity receipts."""
     rows: list[dict[str, Any]] = []
-    for observed_path in sorted(args.p0_raw.glob("*.json")):
+    for observed_path in sorted(p0_raw.glob("*.json")):
         observed = _read(observed_path)
         # Worker surfaces carry the output descriptor under ``output`` rather
         # than a top-level ``output_id``.  Deriving it from the cell key keeps
@@ -172,7 +171,7 @@ def main() -> None:
         if len(output_ids) != 1:
             raise RuntimeError(f"could not determine one output id from {observed_path}")
         output_id = output_ids.pop()
-        historical_path = args.historical_raw / f"{output_id.replace(':', '_')}.json.gz"
+        historical_path = historical_raw / f"{output_id.replace(':', '_')}.json.gz"
         if not historical_path.is_file():
             raise FileNotFoundError(f"historical raw missing: {historical_path}")
         reference = _read(historical_path)
@@ -220,9 +219,19 @@ def main() -> None:
         "observed_only_schema_fields": sorted({field for row in rows for field in row["observed_only_schema_fields"]}),
         "note": "Observed-only schema fields are recorded for provenance and do not replace any required semantic parity field.",
     }
-    args.output.mkdir(parents=True, exist_ok=True)
-    _write(args.output / "P0_CHECKPOINT_RAW_DIFF.json", raw_diff)
-    _write(args.output / "P0_SEMANTIC_PARITY.json", semantic_parity)
+    output.mkdir(parents=True, exist_ok=True)
+    _write(output / "P0_CHECKPOINT_RAW_DIFF.json", raw_diff)
+    _write(output / "P0_SEMANTIC_PARITY.json", semantic_parity)
+    return raw_diff, semantic_parity
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--p0-raw", type=Path, required=True)
+    parser.add_argument("--historical-raw", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    _raw_diff, semantic_parity = audit_p0_checkpoint_parity(args.p0_raw, args.historical_raw, args.output)
     print(json.dumps(semantic_parity, sort_keys=True))
 
 
