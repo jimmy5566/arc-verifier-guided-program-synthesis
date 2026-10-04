@@ -334,7 +334,7 @@ def score_requests(provider: NVARCNativeProvider, requests: list[tuple[list[dict
             fallback_count += 1
 
 
-def score_task_depth(model: Any, provider: NVARCNativeProvider, task: Any, output_id: str, depth: int, rows: list[dict[str, Any]], adapter_path: Path, context_window: int, batch_size: int) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int]:
+def score_task_depth(model: Any, provider: NVARCNativeProvider, task: Any, output_id: str, depth: int, rows: list[dict[str, Any]], adapter_path: Path, context_window: int, batch_size: int, model_identity: str | None, tokenizer_identity: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int]:
     _set_adapter(model, adapter_path)
     # This identity was established during adapter preflight.  Keep a single
     # source-local copy in the expensive evidence rows rather than rehashing a
@@ -357,7 +357,8 @@ def score_task_depth(model: Any, provider: NVARCNativeProvider, task: Any, outpu
             record = {"task_id": candidate["task_id"], "output_id": output_id, "depth": depth, "grid_key": candidate["grid_key"],
                       "scoring_view": view_name, "token_count": token_count, "sequence_log_likelihood": float(logprob) * token_count,
                       "sequence_negative_log_likelihood": -float(logprob) * token_count, "mean_token_nll": -float(logprob),
-                      "adapter_model_sha256": adapter_model_sha256}
+                      "adapter_model_sha256": adapter_model_sha256, "model_identity": model_identity,
+                      "tokenizer_identity": tokenizer_identity}
             detail_rows.append(record); by_grid[candidate["grid_key"]].append(record)
     scored: list[dict[str, Any]] = []
     for candidate, original_score in zip(rows, original, strict=True):
@@ -452,7 +453,11 @@ def prepare(args: argparse.Namespace) -> None:
             for depth in DEPTHS:
                 candidates = [row for row in all_candidates if row["output_id"] == output_id and row["depth"] == depth]
                 adapter = args.adapter_root / task_id / f"depth_{depth:03d}"
-                scored, details, fallbacks = score_task_depth(model, provider, tasks[task_id], output_id, depth, candidates, adapter, args.context_window, args.batch_size)
+                scored, details, fallbacks = score_task_depth(
+                    model, provider, tasks[task_id], output_id, depth, candidates, adapter,
+                    args.context_window, args.batch_size, identity["model_manifest_sha256"],
+                    sha_value(identity["tokenizer_identity"]),
+                )
                 scored_by_source[(output_id, depth)] = scored; likelihood_rows.extend(details); fallback_count += fallbacks
                 print(canonical({"event": "B_SOURCE_SCORED", "output_id": output_id, "depth": depth, "candidate_count": len(scored), "view_calls": len(details), "oom_batch_fallbacks": fallbacks}), flush=True)
     finally:
