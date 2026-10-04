@@ -1,0 +1,36 @@
+{
+  "best_prefix_fraction_bins": {
+    "0.25_to_0.50": 21,
+    "0.50_to_0.75": 12,
+    "ge_0.75": 6,
+    "lt_0.25": 15
+  },
+  "cells": 1424,
+  "encoding_candidates_checked": 11656,
+  "encoding_mismatches": 10,
+  "gold_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "hit_outputs": 35,
+  "mean_candidate_gain_512_1024_hit": 52.57142857142857,
+  "mean_candidate_gain_512_1024_miss": 80.51851851851852,
+  "method_note": "Final R1024 only; no backward attribution from later trajectory to earlier checkpoints.",
+  "miss_all16_budget_exhausted": 39,
+  "miss_all16_cumulative_regret_prune": 0,
+  "miss_any_candidate_cap": 0,
+  "miss_any_cumulative_regret_prune": 54,
+  "miss_any_max_new_tokens": 0,
+  "miss_any_retained_not_expanded": 54,
+  "miss_ge12_budget_exhausted": 49,
+  "miss_outputs": 54,
+  "miss_primary_measured_counts": {
+    "BUDGET_TRAVERSAL_OPPORTUNITY": 54
+  },
+  "miss_ttt_inference_counts": {
+    "MODEL_TTT_WEAKNESS_PLAUSIBLE": 7,
+    "MODEL_TTT_WEAKNESS_PLAUSIBLE_EARLY_PRUNE": 3,
+    "NOT_ESTABLISHED": 44
+  },
+  "orc_reproduction": "35/89",
+  "outputs": 89,
+  "scope": "FINAL_R1024_CAUSAL_GOLD_PATH_AUDIT",
+  "status": "PASS"
+}
