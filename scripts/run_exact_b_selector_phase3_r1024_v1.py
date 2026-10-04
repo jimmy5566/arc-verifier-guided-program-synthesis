@@ -241,12 +241,13 @@ def adapter_preflight(adapter_root: Path, d24_manifest: Path, d48_manifest: Path
                 raise RuntimeError(f"ADAPTER_MANIFEST_MISSING:{task_id}:d{depth}")
             path = adapter_root / task_id / f"depth_{depth:03d}"
             model, config = path / "adapter_model.safetensors", path / "adapter_config.json"
+            model_sha = sha256(model) if model.is_file() else None
+            config_sha = sha256(config) if config.is_file() else None
             state = {
-                "status": "EXACT_HISTORICAL_ADAPTER" if model.is_file() and config.is_file() and sha256(model) == expected["adapter_model_sha256"] and sha256(config) == expected["adapter_config_sha256"] else "MISSING_OR_MISMATCHED",
+                "status": "EXACT_HISTORICAL_ADAPTER" if model_sha == expected["adapter_model_sha256"] and config_sha == expected["adapter_config_sha256"] else "MISSING_OR_MISMATCHED",
                 "adapter_path": str(path), "adapter_model_sha256_expected": expected["adapter_model_sha256"],
                 "adapter_config_sha256_expected": expected["adapter_config_sha256"],
-                "adapter_model_sha256_observed": sha256(model) if model.is_file() else None,
-                "adapter_config_sha256_observed": sha256(config) if config.is_file() else None,
+                "adapter_model_sha256_observed": model_sha, "adapter_config_sha256_observed": config_sha,
                 "lora_rank": int(expected["lora_rank"]), "lora_alpha": int(expected["lora_alpha"]),
                 "target_modules": json.loads(expected["target_modules"]), "depth": depth,
             }
