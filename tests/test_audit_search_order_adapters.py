@@ -28,7 +28,6 @@ def test_adapter_audit_distinguishes_exact_and_mismatch() -> None:
         path = Path(temporary) / "adapter"
         expected = _adapter(path, b"exact weights")
         cohort = {"cohort_sha256": "cohort", "outputs": [{"task_id": "abc", "output_id": "abc:o0", "adapter_path": str(path), "adapter_identity": expected}]}
-        reader = lambda _path: expected
-        assert audit_adapter_state(cohort, identity_reader=reader)["adapter_state"] == "EXACT_HISTORICAL"
+        assert audit_adapter_state(cohort)["adapter_state"] == "EXACT_HISTORICAL"
         cohort["outputs"][0]["adapter_identity"] = {**expected, "adapter_sha256": "not-the-real-hash"}
-        assert audit_adapter_state(cohort, identity_reader=reader)["adapter_state"] == "MISSING_OR_MISMATCH"
+        assert audit_adapter_state(cohort)["adapter_state"] == "MISSING_OR_MISMATCH"

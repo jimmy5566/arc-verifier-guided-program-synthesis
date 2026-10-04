@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import argparse
+import ast
+import hashlib
 import json
 import os
 from collections import defaultdict
 from pathlib import Path
-from collections.abc import Callable
 from typing import Any
 
 
@@ -25,12 +26,39 @@ def _atomic_json(path: Path, value: Any) -> None:
     os.replace(temporary, path)
 
 
-def audit_adapter_state(cohort: dict[str, Any], *, identity_reader: Callable[[Path], dict[str, Any]] | None = None) -> dict[str, Any]:
-    """Hash every unique task adapter and compare to its frozen manifest."""
-    if identity_reader is None:
-        from scripts.run_non_s_rolling_resident_v1 import _adapter_identity
-        identity_reader = _adapter_identity
+def _sha_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
+
+def _adapter_identity(adapter: Path) -> dict[str, Any]:
+    model_file = adapter / "adapter_model.safetensors"
+    config_file = adapter / "adapter_config.json"
+    if not model_file.is_file() or not config_file.is_file():
+        raise FileNotFoundError(f"missing depth_024 adapter files: {adapter}")
+    config = json.loads(config_file.read_text(encoding="utf-8"))
+    targets = config.get("target_modules")
+    if isinstance(targets, str):
+        try:
+            targets = ast.literal_eval(targets)
+        except (SyntaxError, ValueError):
+            targets = ()
+    semantics = {
+        "peft_type": config.get("peft_type"), "task_type": config.get("task_type"), "r": config.get("r"),
+        "lora_alpha": config.get("lora_alpha"), "target_modules": sorted(map(str, targets)) if isinstance(targets, (list, tuple, set)) else [],
+    }
+    expected_targets = ["down_proj", "gate_proj", "k_proj", "o_proj", "q_proj", "up_proj", "v_proj"]
+    valid = semantics == {"peft_type": "LORA", "task_type": "CAUSAL_LM", "r": 256, "lora_alpha": 32, "target_modules": expected_targets}
+    return {"adapter_path": str(adapter), "adapter_sha256": _sha_file(model_file),
+            "adapter_config_sha256": _sha_file(config_file), "adapter_config_semantics": semantics,
+            "status": "PASS" if valid else "FAIL"}
+
+
+def audit_adapter_state(cohort: dict[str, Any]) -> dict[str, Any]:
+    """Hash every unique task adapter and compare to its frozen manifest."""
     by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in cohort["outputs"]:
         by_task[str(row["task_id"])].append(row)
@@ -38,7 +66,7 @@ def audit_adapter_state(cohort: dict[str, Any], *, identity_reader: Callable[[Pa
     for task_id, rows in sorted(by_task.items()):
         exemplar = rows[0]
         expected = exemplar["adapter_identity"]
-        actual = identity_reader(Path(exemplar["adapter_path"]))
+        actual = _adapter_identity(Path(exemplar["adapter_path"]))
         mismatches = {
             key: {"expected": expected.get(key), "actual": actual.get(key)}
             for key in ("adapter_sha256", "adapter_config_sha256", "adapter_config_semantics", "status")
