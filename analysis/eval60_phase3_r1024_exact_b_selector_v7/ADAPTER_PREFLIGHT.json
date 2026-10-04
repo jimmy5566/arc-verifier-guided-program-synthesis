@@ -1,0 +1,1144 @@
+{
+  "adapter_root": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints",
+  "manifest_sha256": {
+    "d24": "3e8159e3ec193e4758e47c4c8b42588ea20dc324cde00f0b0b89cdbead224928",
+    "d48": "247059131c61f24fbb38b250dce5704d33afb4342d20d7109504e3089cbc5336"
+  },
+  "status": "PASS",
+  "tasks": {
+    "142ca369": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "feb8534fc366d7c880e4b4d7bcd26caa6af3989c1588e20a7987e629524b7544",
+        "adapter_model_sha256_observed": "feb8534fc366d7c880e4b4d7bcd26caa6af3989c1588e20a7987e629524b7544",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/142ca369/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "9f676a525440e6b2a4ddb1d1efa97e4a270873925f58dc5dd99a2c65dc37bdeb",
+        "adapter_model_sha256_observed": "9f676a525440e6b2a4ddb1d1efa97e4a270873925f58dc5dd99a2c65dc37bdeb",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/142ca369/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "1818057f": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "81d8a1f34e5a81a437e709e3cc66a9de5a049c27a2ab25fbf46756ec60bb288f",
+        "adapter_model_sha256_observed": "81d8a1f34e5a81a437e709e3cc66a9de5a049c27a2ab25fbf46756ec60bb288f",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/1818057f/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "b5a97f2948f70d2f447289dbc1521791eab6eb64fd024954fbab0eb59ac6805f",
+        "adapter_model_sha256_observed": "b5a97f2948f70d2f447289dbc1521791eab6eb64fd024954fbab0eb59ac6805f",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/1818057f/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "20270e3b": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "017e8725b13d6df7689124d442aa42fb35e29de5b6a914cbf3c49090087037a0",
+        "adapter_model_sha256_observed": "017e8725b13d6df7689124d442aa42fb35e29de5b6a914cbf3c49090087037a0",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/20270e3b/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "711de72bbb0f613f3db5f9b3d28158a1465cc82122828a3207691251beb7506a",
+        "adapter_model_sha256_observed": "711de72bbb0f613f3db5f9b3d28158a1465cc82122828a3207691251beb7506a",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/20270e3b/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "2d0172a1": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "0e0b4249e1c60ba1bcbf88ced086422adbd8f779ddeff0188a8ede029daca613",
+        "adapter_model_sha256_observed": "0e0b4249e1c60ba1bcbf88ced086422adbd8f779ddeff0188a8ede029daca613",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/2d0172a1/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "0d1789e01569d9c9196bfd49129b58c03386feec5b666db9b81ef21d262ffcc8",
+        "adapter_model_sha256_observed": "0d1789e01569d9c9196bfd49129b58c03386feec5b666db9b81ef21d262ffcc8",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/2d0172a1/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "31f7f899": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "dbc2b8ea6c808e70c101bf838a60da03110e685d395a8816c1407ba609987bfb",
+        "adapter_model_sha256_observed": "dbc2b8ea6c808e70c101bf838a60da03110e685d395a8816c1407ba609987bfb",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/31f7f899/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "2bbe43ddf78c43c6aaa15fbd77422dbb1ed693c435fc63c25855db13824053ce",
+        "adapter_model_sha256_observed": "2bbe43ddf78c43c6aaa15fbd77422dbb1ed693c435fc63c25855db13824053ce",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/31f7f899/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "332f06d7": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "bea56d70b252732b229aaff9f1ca08b1f02208e8e04795b0341b1f3fb516f03c",
+        "adapter_model_sha256_observed": "bea56d70b252732b229aaff9f1ca08b1f02208e8e04795b0341b1f3fb516f03c",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/332f06d7/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "3a1996cc893b25f2243075ffb2e6f04cf24fd09c8d8d491725a19103ae2f0ee2",
+        "adapter_model_sha256_observed": "3a1996cc893b25f2243075ffb2e6f04cf24fd09c8d8d491725a19103ae2f0ee2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/332f06d7/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "36a08778": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "1b38bb917aac268035f15dac621b1c957b44561b60dce10c8d6a59546d0b24c5",
+        "adapter_model_sha256_observed": "1b38bb917aac268035f15dac621b1c957b44561b60dce10c8d6a59546d0b24c5",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/36a08778/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "975ec13c8013a26cb54e881974cb127d2e87dd67bbd2bb3be9a72a37d5dc9d6b",
+        "adapter_model_sha256_observed": "975ec13c8013a26cb54e881974cb127d2e87dd67bbd2bb3be9a72a37d5dc9d6b",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/36a08778/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "3a25b0d8": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "2c1884ceb786d54ec3dc8c596ff95122f73fc76b76d3c0f19279c95a1b6734c1",
+        "adapter_model_sha256_observed": "2c1884ceb786d54ec3dc8c596ff95122f73fc76b76d3c0f19279c95a1b6734c1",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/3a25b0d8/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "2d762d8200db44f4277710a7f414c8d413a1c1a7a227f947763d33da09653cc5",
+        "adapter_model_sha256_observed": "2d762d8200db44f4277710a7f414c8d413a1c1a7a227f947763d33da09653cc5",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/3a25b0d8/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "45a5af55": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "1b4c6ed7fdec5d764779f148a380e055ff06c290bf989299076f21b17480b13b",
+        "adapter_model_sha256_observed": "1b4c6ed7fdec5d764779f148a380e055ff06c290bf989299076f21b17480b13b",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/45a5af55/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "7e5b9c0694cc6b89feb57f1e421a5dc503011c739bf5dc8654f7c1c190c16179",
+        "adapter_model_sha256_observed": "7e5b9c0694cc6b89feb57f1e421a5dc503011c739bf5dc8654f7c1c190c16179",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/45a5af55/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "4a21e3da": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "7dc0550895068fb5c61e8840a83ed6c379c55d9142cec7a2cf6f465b99a0b8cd",
+        "adapter_model_sha256_observed": "7dc0550895068fb5c61e8840a83ed6c379c55d9142cec7a2cf6f465b99a0b8cd",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/4a21e3da/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "e2465a0ae88dff230d1178d90a5692d12b8c3445eba53c6a662734213698236b",
+        "adapter_model_sha256_observed": "e2465a0ae88dff230d1178d90a5692d12b8c3445eba53c6a662734213698236b",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/4a21e3da/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "4c3d4a41": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "69652d32a10febfa447ee9755acaab8e210feedc813ecceff9663d5432e0460d",
+        "adapter_model_sha256_observed": "69652d32a10febfa447ee9755acaab8e210feedc813ecceff9663d5432e0460d",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/4c3d4a41/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "1b53dce7723a300a96b655207f3e8d3d581ff8b86a628a71b41ba5ae1dd0425a",
+        "adapter_model_sha256_observed": "1b53dce7723a300a96b655207f3e8d3d581ff8b86a628a71b41ba5ae1dd0425a",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/4c3d4a41/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "53fb4810": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "443a90643fc44538eda0e744ff80294f74099ed02cb1a8f5de2bdcb2ec16bf48",
+        "adapter_model_sha256_observed": "443a90643fc44538eda0e744ff80294f74099ed02cb1a8f5de2bdcb2ec16bf48",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/53fb4810/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "89bd775e4f6e810b4cf3f37b534c6c1682ae2847f5e36c96f183d10f2d1f0928",
+        "adapter_model_sha256_observed": "89bd775e4f6e810b4cf3f37b534c6c1682ae2847f5e36c96f183d10f2d1f0928",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/53fb4810/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "58490d8a": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "32356c70b961a12287634f2a899e5463ddb802ca78255845d13ee07595f2f5a8",
+        "adapter_model_sha256_observed": "32356c70b961a12287634f2a899e5463ddb802ca78255845d13ee07595f2f5a8",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/58490d8a/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "e81ee5e7432363f8881b5ab1f330fd38adea80373f6501d2b06487b6240ebfa2",
+        "adapter_model_sha256_observed": "e81ee5e7432363f8881b5ab1f330fd38adea80373f6501d2b06487b6240ebfa2",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/58490d8a/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "71e489b6": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "ea6d2789afba9b5ae9ea47d40278a06ea9bb0f149c93e37e1cacfc2535344e3d",
+        "adapter_model_sha256_observed": "ea6d2789afba9b5ae9ea47d40278a06ea9bb0f149c93e37e1cacfc2535344e3d",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/71e489b6/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "e903aa6c4b2b204702562e5fd55196a3e443f4973568b2c2e9dd1cb7c41ebc3e",
+        "adapter_model_sha256_observed": "e903aa6c4b2b204702562e5fd55196a3e443f4973568b2c2e9dd1cb7c41ebc3e",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/71e489b6/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "7491f3cf": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "ba2ace1ca4a3b7cb02001751ba5c75a56740195e0488c62d384b757946f3f6ae",
+        "adapter_model_sha256_observed": "ba2ace1ca4a3b7cb02001751ba5c75a56740195e0488c62d384b757946f3f6ae",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/7491f3cf/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "3d313f59ee79b28a111b32b081e71c4878137a7845568cdf5adac0381f785c00",
+        "adapter_model_sha256_observed": "3d313f59ee79b28a111b32b081e71c4878137a7845568cdf5adac0381f785c00",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/7491f3cf/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "78332cb0": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "716d440d98bb96135c4332bb28e88bca1f66a361928805f26b609a8d913f65ba",
+        "adapter_model_sha256_observed": "716d440d98bb96135c4332bb28e88bca1f66a361928805f26b609a8d913f65ba",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/78332cb0/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "67903d1c90e12f008684e94a34ac139d0f7442b4d5a1d2739d71ec0c6b95f190",
+        "adapter_model_sha256_observed": "67903d1c90e12f008684e94a34ac139d0f7442b4d5a1d2739d71ec0c6b95f190",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/78332cb0/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "7b0280bc": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "39536934068c7dfb60a128f5f124b3f435b99132f2d8274e8d56a4c02fc9fc40",
+        "adapter_model_sha256_observed": "39536934068c7dfb60a128f5f124b3f435b99132f2d8274e8d56a4c02fc9fc40",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/7b0280bc/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "8250bbe692b5042f23ca77f3607ed7c9db39d40ce85e9dba85e5a2565a03114d",
+        "adapter_model_sha256_observed": "8250bbe692b5042f23ca77f3607ed7c9db39d40ce85e9dba85e5a2565a03114d",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/7b0280bc/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "7ed72f31": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "7f7956fde3958832a41a63fdbc260f39707fd8d4aaa2a18347a0d24383cc7474",
+        "adapter_model_sha256_observed": "7f7956fde3958832a41a63fdbc260f39707fd8d4aaa2a18347a0d24383cc7474",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/7ed72f31/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "371db9cbc965f22bbd1f8a1ac6b5ce98d9ad5649c910233fa56d2a1485bf3a8b",
+        "adapter_model_sha256_observed": "371db9cbc965f22bbd1f8a1ac6b5ce98d9ad5649c910233fa56d2a1485bf3a8b",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/7ed72f31/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "8e5c0c38": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "d454b65ffa852097f92089568c430f6702ea0375670395863c0c26a62b00f5dd",
+        "adapter_model_sha256_observed": "d454b65ffa852097f92089568c430f6702ea0375670395863c0c26a62b00f5dd",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/8e5c0c38/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "a7550c55a3b905704bdb0314b7dc2fa27bc79c25ea417fcc4aea9cce3db8abf1",
+        "adapter_model_sha256_observed": "a7550c55a3b905704bdb0314b7dc2fa27bc79c25ea417fcc4aea9cce3db8abf1",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/8e5c0c38/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "97d7923e": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "bd9acdb4e4ae7bc75662e4abf1c7493f1d7f2e93d4d7f460432722c408610971",
+        "adapter_model_sha256_observed": "bd9acdb4e4ae7bc75662e4abf1c7493f1d7f2e93d4d7f460432722c408610971",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/97d7923e/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "ddf91c9c04551944db3c2ff84e00d4f2d9e43a18f4c0679a259f025b8cefd2d8",
+        "adapter_model_sha256_observed": "ddf91c9c04551944db3c2ff84e00d4f2d9e43a18f4c0679a259f025b8cefd2d8",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/97d7923e/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "981571dc": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "fb3d177b31e736f132c72e823b2f19d308831e414441d5a1f0c9c2d1e9ab25bb",
+        "adapter_model_sha256_observed": "fb3d177b31e736f132c72e823b2f19d308831e414441d5a1f0c9c2d1e9ab25bb",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/981571dc/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "28c8aab7f0db4bf515caaa9a83e75a6a44f61544f7f5678199c7c7cfa75e0979",
+        "adapter_model_sha256_observed": "28c8aab7f0db4bf515caaa9a83e75a6a44f61544f7f5678199c7c7cfa75e0979",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/981571dc/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "aa4ec2a5": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "03aa11b9e5c2059ffcc8e999633ceab9c84cae2f56dcca617227dcafc16dc8aa",
+        "adapter_model_sha256_observed": "03aa11b9e5c2059ffcc8e999633ceab9c84cae2f56dcca617227dcafc16dc8aa",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/aa4ec2a5/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "72427cd611619cb8ba176c97b17843afe73153f7b4d6da76add6322ba354e01a",
+        "adapter_model_sha256_observed": "72427cd611619cb8ba176c97b17843afe73153f7b4d6da76add6322ba354e01a",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/aa4ec2a5/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "b5ca7ac4": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "0beb9685d50bbe9e2b1e9ccc3605367964fefcb5491d07b9d2f3b6030bf716a5",
+        "adapter_model_sha256_observed": "0beb9685d50bbe9e2b1e9ccc3605367964fefcb5491d07b9d2f3b6030bf716a5",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/b5ca7ac4/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "79409680761a32a0ba3c1e466a4fa18e28dcbcfcde2598e8601914c694061c68",
+        "adapter_model_sha256_observed": "79409680761a32a0ba3c1e466a4fa18e28dcbcfcde2598e8601914c694061c68",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/b5ca7ac4/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "b6f77b65": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "c74dc3647758a1d0b21e147938c7bd09d6c9ebce8249b82b8259bcfc5a727cdf",
+        "adapter_model_sha256_observed": "c74dc3647758a1d0b21e147938c7bd09d6c9ebce8249b82b8259bcfc5a727cdf",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/b6f77b65/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "4ce47194326dcbc3f561c90b5d5e7b0036d51a313078aa70d9a735fff7bb9386",
+        "adapter_model_sha256_observed": "4ce47194326dcbc3f561c90b5d5e7b0036d51a313078aa70d9a735fff7bb9386",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/b6f77b65/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "c7f57c3e": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "101dbf4de6c4edf15684befb0e65d5e4c2a39829e8410c6f9d123f898a296ea1",
+        "adapter_model_sha256_observed": "101dbf4de6c4edf15684befb0e65d5e4c2a39829e8410c6f9d123f898a296ea1",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/c7f57c3e/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "04866a5de91d790fc3157b354d36d52a52725d868898a0a8b5ea1b4a89373081",
+        "adapter_model_sha256_observed": "04866a5de91d790fc3157b354d36d52a52725d868898a0a8b5ea1b4a89373081",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/c7f57c3e/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "db0c5428": {
+      "d24": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "663333917eb9e2adcce8891622c1e5cb7cef7a7ece296e191fb8be5794ef17e1",
+        "adapter_model_sha256_observed": "663333917eb9e2adcce8891622c1e5cb7cef7a7ece296e191fb8be5794ef17e1",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/db0c5428/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_config_sha256_observed": "665de4dd3eafdc417ebe832b5edc3e86408436180a4fa832932997e3cf5f01a2",
+        "adapter_model_sha256_expected": "eb1b0a55464fe871841f3c4f200dd486c618d6a141b16d26afa121347230b775",
+        "adapter_model_sha256_observed": "eb1b0a55464fe871841f3c4f200dd486c618d6a141b16d26afa121347230b775",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/db0c5428/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    },
+    "de809cff": {
+      "d24": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "1455c34eb2a96435369485c911ad535dbeef2001a7627f7753e538bc134ec255",
+        "adapter_model_sha256_observed": "1455c34eb2a96435369485c911ad535dbeef2001a7627f7753e538bc134ec255",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/de809cff/depth_024",
+        "depth": 24,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      },
+      "d48": {
+        "adapter_config_sha256_expected": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_config_sha256_observed": "bbdb7b7fd78ed090d7e69cdb1b20de0b237fa7a66adce4f27af0adbbdef4c571",
+        "adapter_model_sha256_expected": "0f6ced997246c1190dca56d875966f65fe8e5a64f9f805c917b06ea332c42890",
+        "adapter_model_sha256_observed": "0f6ced997246c1190dca56d875966f65fe8e5a64f9f805c917b06ea332c42890",
+        "adapter_path": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints/de809cff/depth_048",
+        "depth": 48,
+        "lora_alpha": 32,
+        "lora_rank": 256,
+        "status": "EXACT_HISTORICAL_ADAPTER",
+        "target_modules": [
+          "down_proj",
+          "gate_proj",
+          "k_proj",
+          "o_proj",
+          "q_proj",
+          "up_proj",
+          "v_proj"
+        ]
+      }
+    }
+  }
+}

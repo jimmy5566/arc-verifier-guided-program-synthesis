@@ -1,0 +1,22 @@
+{
+  "historical_context_protocol_restored": true,
+  "offending_requests": [],
+  "requests_over_16384": 0,
+  "requests_over_8192": 45,
+  "requests_over_context": 0,
+  "scoring_context_window": 16384,
+  "status": "PASS",
+  "token_stats_all_requests": {
+    "max": 9330,
+    "max_identity": 9330,
+    "median": 1908,
+    "min": 623,
+    "p90": 2934,
+    "p95": 3054,
+    "p99": 4072
+  },
+  "total_candidate_x_scoring_view_requests": 25720,
+  "total_original_requests": 3215,
+  "total_source_candidates": 3215,
+  "total_teacher_forced_requests": 28935
+}

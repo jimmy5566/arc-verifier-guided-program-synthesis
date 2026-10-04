@@ -1,0 +1,26 @@
+{
+  "payload_sha256": "ba415b8a9c1d3aa60a79f4582d20913d06996f431917915910a9ba187d06117b",
+  "provenance": {
+    "adapter_model_sha256": "663333917eb9e2adcce8891622c1e5cb7cef7a7ece296e191fb8be5794ef17e1",
+    "candidate_index_sha256": "e490d1b52bd840fa6cb0493690e312ae8ac9a1eff1f74b766f6da8c5c5a7552e",
+    "candidate_set_sha256": "378395ae41495366119f4115d833125899b5802cd3d648dae002324fb75ab07f",
+    "depth": 24,
+    "model_identity": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7",
+    "output_id": "db0c5428:o0",
+    "scoring_context_window": 16384,
+    "scoring_views": [
+      "identity",
+      "rot90",
+      "rot180",
+      "rot270",
+      "flip_lr",
+      "flip_ud",
+      "transpose",
+      "anti_transpose"
+    ],
+    "tokenizer_identity": "f64e241ea65a9767df5feca0de906fc9f6fe6b227b7887b64fdd0b0489848465"
+  },
+  "shard_file": "SCORING_SHARDS/db0c5428_o0_d24.json.gz",
+  "shard_file_sha256": "d152c3f4c1add7e6d5c855f7d8ad60310a80ed37015a406bfeea76b2d8ce4217",
+  "status": "PASS"
+}

@@ -1,0 +1,8 @@
+{
+  "expected_solutions_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "gold_opened_after_pre_gold_freeze_only": true,
+  "historical_manifest": "artifacts/eval60_authoritative_greedy_v1/RUN_COMPLETION_MANIFEST.json",
+  "historical_manifest_gold_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "solutions_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "status": "PASS"
+}

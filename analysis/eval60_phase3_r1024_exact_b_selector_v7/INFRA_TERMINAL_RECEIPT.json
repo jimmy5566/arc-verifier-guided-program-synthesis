@@ -1,0 +1,12 @@
+{
+  "candidate_checkpoints_present": false,
+  "failure": "ValueError: native candidate score has 9330 tokens, exceeds frozen context 8192",
+  "gold_loaded": false,
+  "pre_gold_freeze_present": false,
+  "recovery": "V8 restores historical 16384 scoring context and rescoring from frozen candidate archives",
+  "scientific_generation_completed": false,
+  "status": "INFRA_SCORING_CONTEXT_TOO_SMALL",
+  "terminal": true,
+  "v7_scoring_context_window": 8192,
+  "valid_scored_candidates_present": false
+}\n

@@ -1,0 +1,19 @@
+{
+  "B_FIXES_VS_NLL": 3,
+  "B_HARMS_VS_NLL": 3,
+  "B_NET_GAIN_VS_NLL": 0,
+  "B_ORACLE_TO_TOP2_CONVERSION": 0.7142857142857143,
+  "B_TOP1_HITS": 19,
+  "B_TOP2_FULL89": "25/89",
+  "B_TOP2_HITS": 25,
+  "DFS_NEW7_B_TOP2": "3/7",
+  "HISTORICAL_28_B_TOP2_RETAINED": "22/28",
+  "NLL_TOP2_BASELINE": "25/35",
+  "adapter_status": "EXACT_HISTORICAL_ADAPTER",
+  "classification": "DFS_POOL_SELECTION_DISTRIBUTION_SHIFT",
+  "cohort_outputs": 35,
+  "cohort_tasks": 27,
+  "gold_accessed_only_after_selector_freeze": true,
+  "model_state_status": "BYTE_IDENTICAL_HISTORICAL_ADAPTERS",
+  "pool_gold_presence": "35/35"
+}
