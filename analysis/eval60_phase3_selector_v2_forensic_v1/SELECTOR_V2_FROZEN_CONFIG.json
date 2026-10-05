@@ -1,0 +1,76 @@
+{
+  "candidate_pool_changed": false,
+  "classification": "EXPOSED_DEVELOPMENT_SELECTOR_PROTOTYPE",
+  "dfs_calls": 0,
+  "gold_used_for_ranking": false,
+  "likelihood_recomputed": false,
+  "model_calls": 0,
+  "s0": {
+    "definition": "Frozen existing union NLL ordering; imported only after this selector freeze for exposed-development evaluation.",
+    "expected_top2": "25/35",
+    "name": "NLL_BASELINE"
+  },
+  "s1": {
+    "definition": "Frozen V8 B_SUPPORT=support_count-mean_view_nll and historical RRF fusion.",
+    "expected_top1": "19/35",
+    "expected_top2": "25/35",
+    "name": "HISTORICAL_B"
+  },
+  "s2": {
+    "cross_source_evidence_aggregation": "no score summation; best source rank only, agreement is a tie-level signal",
+    "cross_source_order": [
+      "best_source_rank ascending",
+      "source_count descending",
+      "second_source_rank ascending",
+      "best_source_evidence descending",
+      "V8 stable representative",
+      "grid_key"
+    ],
+    "forbidden": [
+      "weights",
+      "RRF constant",
+      "source-exclusive bonus",
+      "diversity penalty",
+      "router",
+      "task exception",
+      "hyperparameter search"
+    ],
+    "missing_source_rank": "infinity",
+    "name": "RANK_NORMALIZED_SOURCE_BALANCED_SELECTOR",
+    "source_local_evidence": "1/support_rank + 1/likelihood_rank",
+    "source_local_evidence_order": [
+      "evidence descending",
+      "support_rank ascending",
+      "likelihood_rank ascending",
+      "V8 stable representative",
+      "grid_key"
+    ],
+    "source_local_likelihood_order": [
+      "mean_view_nll ascending",
+      "support_count descending",
+      "original_log_likelihood descending",
+      "V8 stable representative",
+      "grid_key"
+    ],
+    "source_local_support_order": [
+      "support_count descending",
+      "mean_view_nll ascending",
+      "original_log_likelihood descending",
+      "V8 stable representative",
+      "grid_key"
+    ],
+    "top2_policy": "final ranks 1 and 2 exact distinct canonical grids"
+  },
+  "scope": "CPU_ONLY_POST_FREEZE_SELECTOR_FORENSIC",
+  "selector_rule_frozen": true,
+  "source_commit": "94d539e96c87686d886678ffa40c4241b191759a",
+  "source_evidence": "analysis/eval60_phase3_r1024_exact_b_selector_v8",
+  "ttt_calls": 0,
+  "v8_pregold_verification": {
+    "source": "analysis/eval60_phase3_r1024_exact_b_selector_v8",
+    "v8_pre_gold_hash_verification": "PASS",
+    "v8_scoring_views_complete": "8/8",
+    "v8_source_ledger_entries": 155,
+    "v8_source_units_complete": "70/70"
+  }
+}

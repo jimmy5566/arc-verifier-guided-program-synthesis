@@ -1,0 +1,40 @@
+{
+  "mean_view_nll_distribution": {
+    "count": 3215,
+    "max": 0.7398623060435057,
+    "mean": 0.1297663719194223,
+    "median": 0.10027045290917158,
+    "min": 9.107041861328158e-07,
+    "p25": 0.054322569631040096,
+    "p75": 0.1695186016149819
+  },
+  "source_local_candidate_records": 3215,
+  "spearman": {
+    "mean_view_nll_vs_historical_b_source_rank": 0.7750789860864219,
+    "mean_view_nll_vs_s2_evidence_rank": 0.7795288180607192,
+    "support_count_vs_historical_b_source_rank": -0.49256955984314654,
+    "support_count_vs_s2_evidence_rank": -0.4636667086800944
+  },
+  "support_count_distribution": {
+    "1": 2834,
+    "2": 246,
+    "3": 61,
+    "4": 35,
+    "5": 14,
+    "6": 9,
+    "7": 9,
+    "8": 7
+  },
+  "worse_support_better_likelihood_outranks_higher_support": {
+    "historical_b": {
+      "denominator": 2222,
+      "numerator": 0,
+      "rate": 0.0
+    },
+    "s2": {
+      "denominator": 2222,
+      "numerator": 706,
+      "rate": 0.3177317731773177
+    }
+  }
+}

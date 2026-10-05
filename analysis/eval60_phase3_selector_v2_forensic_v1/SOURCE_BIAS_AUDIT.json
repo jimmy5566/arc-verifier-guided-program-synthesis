@@ -1,0 +1,22 @@
+{
+  "historical_b": {
+    "top1_d24_only": 0,
+    "top1_d48_only": 2,
+    "top1_shared_fraction": 0.9428571428571428,
+    "top1_slots": 35,
+    "top2_d24_only": 6,
+    "top2_d48_only": 5,
+    "top2_shared_fraction": 0.8428571428571429,
+    "top2_slots": 70
+  },
+  "s2": {
+    "top1_d24_only": 0,
+    "top1_d48_only": 2,
+    "top1_shared_fraction": 0.9428571428571428,
+    "top1_slots": 35,
+    "top2_d24_only": 7,
+    "top2_d48_only": 6,
+    "top2_shared_fraction": 0.8142857142857143,
+    "top2_slots": 70
+  }
+}
