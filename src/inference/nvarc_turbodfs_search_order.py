@@ -87,6 +87,7 @@ def _order_generator(
         "policy": policy_name, "quantum": 64, "retention_changed": False,
         "replayed_tokens": 0, "replay_model_forwards": 0, "useful_model_forwards": 0,
         "yielded_subtrees": 0, "pending_retained_work_at_r1024": 0,
+        "discrepancy_definition": "unit_non_top1" if policy_name == "LDS_UNIT_DISCREPANCY_V1" else None,
     }
     state["search_order_work_items"] = []
 
@@ -97,6 +98,7 @@ def _order_generator(
             "root_branch_id": frame.item.root_branch_id, "prefix_length": len(frame.prefix),
             "cumulative_nll": frame.item.cumulative_nll, "cumulative_regret": frame.item.cumulative_regret,
             "regret_band": frame.item.regret_band, "insertion_order": frame.item.insertion_order,
+            "local_token_rank": frame.item.local_token_rank, "discrepancy_count": frame.item.discrepancy_count,
             "first_scheduled_node": None, "last_scheduled_node": None, "number_of_expansions": 0,
             "number_of_yields": 0, "wait_nodes_before_first_expansion": None, "max_wait_nodes": 0,
             "status": "pending",
@@ -110,6 +112,9 @@ def _order_generator(
         if not children:
             return
         if is_root:
+            if policy_name == "LDS_UNIT_DISCREPANCY_V1":
+                policy.push_successors(tuple(child.item for child in children))
+                return
             ordered = sorted(children, key=lambda child: (child.item.cumulative_nll, child.item.insertion_order, child.item.work_item_id))
             if policy_name == "CURRENT_DFS":
                 ordered = list(reversed(ordered))
@@ -120,7 +125,7 @@ def _order_generator(
 
     def process_logits(*, logits: Any, remaining: int, score: float, regret: float, position: int,
                        parent_node: int, prefix: tuple[int, ...], parent_work_item_id: int | None,
-                       root_branch_id: int | None, is_root: bool) -> list[_Frame]:
+                       root_branch_id: int | None, parent_discrepancy: int, is_root: bool) -> list[_Frame]:
         nonlocal next_work_item_id
         log_probs = logits.float().cpu().log_softmax(-1)[0]
         values = [(token, float(log_probs[token].item())) for token in config.arc_tokens]
@@ -240,8 +245,12 @@ def _order_generator(
                 continue
             work_id = next_work_item_id; next_work_item_id += 1
             root_id = work_id if is_root else int(root_branch_id)
-            item = RetainedWorkItem(work_id, root_id, parent_work_item_id, next_score, next_regret,
-                                    state["next_frontier_insert_order"])
+            discrepancy_increment = 0 if rank == 1 else 1
+            item = RetainedWorkItem(
+                work_id, root_id, parent_work_item_id, next_score, next_regret,
+                state["next_frontier_insert_order"], local_token_rank=rank,
+                discrepancy_count=parent_discrepancy + discrepancy_increment,
+            )
             state["next_frontier_insert_order"] += 1
             frame = _Frame(item, token, logprob, parent_node, prefix + (token,), position, restored, floor_rank)
             event = _trace(state, **{**common, "frontier_insert_order": item.insertion_order,
@@ -279,7 +288,7 @@ def _order_generator(
 
     roots = process_logits(logits=root_logits, remaining=max_new_tokens, score=0.0, regret=0.0,
                            position=root_position, parent_node=root_node_id, prefix=tuple(), parent_work_item_id=None,
-                           root_branch_id=None, is_root=True)
+                           root_branch_id=None, parent_discrepancy=0, is_root=True)
     add_successors(roots, is_root=True)
     while (not state["budget_exhausted"] and _elapsed_budget(state, started_unix) < config.local_time_limit_seconds and
            (config.absolute_end_time_unix is None or time.time() < config.absolute_end_time_unix)):
@@ -323,7 +332,8 @@ def _order_generator(
         children = process_logits(logits=outputs.logits[:, -1], remaining=max_new_tokens - len(frame.prefix),
                                   score=item.cumulative_nll, regret=item.cumulative_regret, position=frame.position + 1,
                                   parent_node=node_id, prefix=frame.prefix, parent_work_item_id=item.work_item_id,
-                                  root_branch_id=item.root_branch_id, is_root=False)
+                                  root_branch_id=item.root_branch_id, parent_discrepancy=item.discrepancy_count,
+                                  is_root=False)
         add_successors(children, is_root=False)
         if policy.note_expansion(item):
             record["number_of_yields"] += 1
