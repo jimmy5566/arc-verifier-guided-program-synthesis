@@ -1,0 +1,38 @@
+{
+  "absolute_features": [
+    "prefix_length",
+    "local_token_rank",
+    "token_logprob",
+    "top1_logprob",
+    "top2_logprob",
+    "margin",
+    "entropy",
+    "cumulative_nll",
+    "cumulative_regret",
+    "regret_increment",
+    "discrepancy_count",
+    "frontier_size_at_insert",
+    "inserted_at_expanded_nodes",
+    "inserted_at_model_forwards",
+    "completed_candidates_at_insert"
+  ],
+  "relative_base": [
+    "prefix_length",
+    "local_token_rank",
+    "token_logprob",
+    "top1_logprob",
+    "top2_logprob",
+    "margin",
+    "entropy",
+    "cumulative_nll",
+    "cumulative_regret",
+    "regret_increment",
+    "discrepancy_count",
+    "frontier_age"
+  ],
+  "relative_transforms": [
+    "within-frontier zscore",
+    "within-frontier percentile rank"
+  ],
+  "states": 64005
+}
