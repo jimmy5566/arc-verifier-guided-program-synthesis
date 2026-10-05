@@ -1,8 +1,25 @@
-from inference.search_order import FairDFS, RegretBandFairDFS, RetainedWorkItem, make_search_order_policy
+from inference.search_order import FairDFS, LDSUnitDiscrepancy, RegretBandFairDFS, RetainedWorkItem, make_search_order_policy
 
 
-def item(identifier: int, root: int, regret: float, *, nll: float | None = None) -> RetainedWorkItem:
-    return RetainedWorkItem(identifier, root, None, float(identifier) if nll is None else nll, regret, identifier)
+def item(
+    identifier: int,
+    root: int,
+    regret: float,
+    *,
+    nll: float | None = None,
+    rank: int = 1,
+    discrepancy: int = 0,
+) -> RetainedWorkItem:
+    return RetainedWorkItem(
+        identifier,
+        root,
+        None,
+        float(identifier) if nll is None else nll,
+        regret,
+        identifier,
+        local_token_rank=rank,
+        discrepancy_count=discrepancy,
+    )
 
 
 def take(policy, count: int) -> list[int]:
@@ -70,3 +87,44 @@ def test_regret_boundary_four_is_retained_band_three() -> None:
     assert item(3, 1, 2.0).regret_band == 2
     assert item(4, 1, 3.0).regret_band == 3
     assert item(5, 1, 4.0).regret_band == 3
+
+
+def test_lds_always_exhausts_lower_discrepancy_first() -> None:
+    policy = LDSUnitDiscrepancy()
+    policy.push(item(1, 1, 0.1, nll=0.3, discrepancy=1, rank=2))
+    policy.push(item(2, 2, 0.1, nll=0.2, discrepancy=0, rank=1))
+    policy.push(item(3, 3, 0.1, nll=0.1, discrepancy=2, rank=2))
+    assert take(policy, 3) == [2, 1, 3]
+
+
+def test_lds_is_depth_first_within_one_discrepancy_layer() -> None:
+    policy = LDSUnitDiscrepancy()
+    policy.push_successors((
+        item(1, 1, 0.1, nll=0.1, discrepancy=0),
+        item(2, 2, 0.1, nll=0.2, discrepancy=0),
+    ))
+    first = policy.pop()
+    assert first is not None and first.work_item_id == 1
+    policy.note_expansion(first)
+    policy.push_successors((item(3, 1, 0.2, nll=0.5, discrepancy=0),))
+    assert take(policy, 2) == [3, 2]
+
+
+def test_lds_keeps_every_retained_item_exactly_once() -> None:
+    values = (
+        item(1, 10, 0.1, discrepancy=0),
+        item(2, 10, 0.2, discrepancy=1, rank=2),
+        item(3, 20, 0.3, discrepancy=1, rank=3),
+        item(4, 20, 0.4, discrepancy=2, rank=2),
+    )
+    policy = LDSUnitDiscrepancy()
+    policy.push_successors(values)
+    observed = take(policy, len(values))
+    assert set(observed) == {value.work_item_id for value in values}
+    assert len(observed) == len(set(observed))
+    assert policy.pop() is None
+
+
+def test_lds_factory_uses_frozen_policy_name() -> None:
+    policy = make_search_order_policy("LDS_UNIT_DISCREPANCY_V1")
+    assert isinstance(policy, LDSUnitDiscrepancy)
