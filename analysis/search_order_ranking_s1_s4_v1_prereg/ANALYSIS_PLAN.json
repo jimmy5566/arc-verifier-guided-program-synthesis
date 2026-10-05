@@ -1,0 +1,112 @@
+{
+  "artifact": "SEARCH_ORDER_RANKING_S1_S4_PREREG_V1",
+  "base_postfreeze_commit": "2da4ef598cc8e792ddab5b9f9d85036e1b0792ce",
+  "scope": [
+    "S1_FOLD3_FORENSIC",
+    "S2_FRONTIER_RELATIVE_FEATURES",
+    "S3_PAIRWISE_LOGISTIC_RANKING",
+    "S4_TASK_GROUPED_AND_LOOTO_VALIDATION"
+  ],
+  "frozen_inputs": {
+    "labeled_dataset": "analysis/search_order_frontier_telemetry_micro12_v1/postfreeze_frontier_analysis_v1/FRONTIER_LABELED_DATASET.csv.gz",
+    "decision_states": "analysis/search_order_frontier_telemetry_micro12_v1/postfreeze_frontier_analysis_v1/DECISION_STATES.csv.gz",
+    "prior_per_task": "analysis/search_order_frontier_telemetry_micro12_v1/postfreeze_frontier_analysis_v1/PER_TASK_COMPARISON.csv",
+    "prior_fold_metrics": "analysis/search_order_frontier_telemetry_micro12_v1/postfreeze_frontier_analysis_v1/GROUPED_CV_FOLDS.csv"
+  },
+  "S1": {
+    "fold3_source": "original frozen 5-fold analysis; tasks whose prior fold == 3",
+    "diagnostics": [
+      "baseline-top1 lost by old learned ranker",
+      "baseline-top1 gained by old learned ranker",
+      "rank transition distribution",
+      "frontier-size distribution",
+      "positive prevalence and Gold-node feature shifts"
+    ],
+    "no_model_tuning": true
+  },
+  "S2": {
+    "relative_features": {
+      "continuous": [
+        "prefix_length",
+        "local_token_rank",
+        "token_logprob",
+        "top1_logprob",
+        "top2_logprob",
+        "margin",
+        "entropy",
+        "cumulative_nll",
+        "cumulative_regret",
+        "regret_increment",
+        "discrepancy_count",
+        "frontier_age"
+      ],
+      "transforms": [
+        "within-frontier zscore",
+        "within-frontier percentile rank"
+      ],
+      "binary": [
+        "frontier_floor_activated",
+        "frontier_floor_restore_rank_present"
+      ],
+      "categorical": [
+        "augmentation geometry one-hot"
+      ]
+    },
+    "forbidden": [
+      "task_id",
+      "output_id",
+      "cell_key",
+      "prefix_hash",
+      "parent_prefix_hash",
+      "selected_token_id",
+      "Gold-derived quantities",
+      "future outcomes"
+    ]
+  },
+  "S3": {
+    "models": [
+      {
+        "name": "PAIRWISE_ABSOLUTE_LOGISTIC",
+        "training_pair": "Gold-prefix candidate versus strongest non-Gold candidate under cumulative-NLL baseline in the same frontier state",
+        "symmetry": "include d=gold-negative label1 and -d label0",
+        "estimator": "StandardScaler + LogisticRegression(C=1,solver=lbfgs,max_iter=1000,random_state=0)"
+      },
+      {
+        "name": "PAIRWISE_RELATIVE_LOGISTIC",
+        "training_pair": "same hard pair, using frozen frontier-relative feature map",
+        "symmetry": "include d=gold-negative label1 and -d label0",
+        "estimator": "StandardScaler + LogisticRegression(C=1,solver=lbfgs,max_iter=1000,random_state=0)"
+      }
+    ],
+    "baseline": "CUMULATIVE_NLL",
+    "evaluation": "rank all simultaneously pending frontier candidates by learned linear utility"
+  },
+  "S4": {
+    "validation": [
+      "5-fold StratifiedGroupKFold(shuffle=true,random_state=0) grouped by task_id",
+      "12-way leave-one-task-out"
+    ],
+    "primary": [
+      "Top1",
+      "Top2",
+      "Top5",
+      "MRR",
+      "mean best-Gold rank"
+    ],
+    "bootstrap": {
+      "unit": "task_id",
+      "replicates": 10000,
+      "seed": 0,
+      "ci": "percentile 95%"
+    },
+    "success_gate": {
+      "model": "PAIRWISE_RELATIVE_LOGISTIC",
+      "pooled_top1_delta_gt": 0,
+      "pooled_mrr_delta_gt": 0,
+      "task_bootstrap_requirement": "95% CI for DeltaTop1 or DeltaMRR strictly positive; other pooled metric non-negative",
+      "catastrophic_task": "DeltaTop1 <= -0.05 AND DeltaMRR <= -0.05",
+      "catastrophic_tasks_allowed": 0
+    }
+  },
+  "note": "This analysis may recommend a P4 preregistration but must not implement or run P4."
+}
