@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from typing import Literal, Protocol
 
 
-SearchOrderName = Literal["CURRENT_DFS", "FAIR_DFS_Q64", "REGRET_BAND_FAIR_Q64"]
+SearchOrderName = Literal["CURRENT_DFS", "FAIR_DFS_Q64", "REGRET_BAND_FAIR_Q64", "LDS_UNIT_DISCREPANCY_V1"]
 
 
 @dataclass(frozen=True)
@@ -26,6 +26,8 @@ class RetainedWorkItem:
     cumulative_nll: float
     cumulative_regret: float
     insertion_order: int
+    local_token_rank: int = 1
+    discrepancy_count: int = 0
 
     @property
     def regret_band(self) -> int:
@@ -232,6 +234,51 @@ class RegretBandFairDFS:
         return tuple(item for band in range(4) for item in self._bands[band].pending())
 
 
+class LDSUnitDiscrepancy:
+    """Duplicate-free discrepancy-layered DFS over frozen retained work."""
+
+    name: SearchOrderName = "LDS_UNIT_DISCREPANCY_V1"
+
+    def __init__(self) -> None:
+        self._stacks: dict[int, list[RetainedWorkItem]] = {}
+
+    def push(self, item: RetainedWorkItem) -> None:
+        if item.discrepancy_count < 0:
+            raise ValueError("LDS discrepancy_count must be non-negative")
+        self._stacks.setdefault(int(item.discrepancy_count), []).append(item)
+
+    def push_successors(self, items: tuple[RetainedWorkItem, ...]) -> None:
+        by_discrepancy: dict[int, list[RetainedWorkItem]] = {}
+        for item in items:
+            if item.discrepancy_count < 0:
+                raise ValueError("LDS discrepancy_count must be non-negative")
+            by_discrepancy.setdefault(int(item.discrepancy_count), []).append(item)
+        for discrepancy, group in by_discrepancy.items():
+            stack = self._stacks.setdefault(discrepancy, [])
+            stack.extend(reversed(sorted(group, key=_key)))
+
+    def pop(self) -> RetainedWorkItem | None:
+        nonempty = [discrepancy for discrepancy, stack in self._stacks.items() if stack]
+        if not nonempty:
+            return None
+        discrepancy = min(nonempty)
+        stack = self._stacks[discrepancy]
+        item = stack.pop()
+        if not stack:
+            self._stacks.pop(discrepancy, None)
+        return item
+
+    def note_expansion(self, item: RetainedWorkItem) -> bool:
+        del item
+        return False
+
+    def pending(self) -> tuple[RetainedWorkItem, ...]:
+        result: list[RetainedWorkItem] = []
+        for discrepancy in sorted(self._stacks):
+            result.extend(reversed(self._stacks[discrepancy]))
+        return tuple(result)
+
+
 def make_search_order_policy(name: SearchOrderName, *, quantum: int = 64) -> SearchOrderPolicy:
     if name == "CURRENT_DFS":
         return CurrentDFS()
@@ -239,4 +286,6 @@ def make_search_order_policy(name: SearchOrderName, *, quantum: int = 64) -> Sea
         return FairDFS(quantum)
     if name == "REGRET_BAND_FAIR_Q64":
         return RegretBandFairDFS(quantum)
+    if name == "LDS_UNIT_DISCREPANCY_V1":
+        return LDSUnitDiscrepancy()
     raise ValueError(f"unknown search order policy: {name}")
