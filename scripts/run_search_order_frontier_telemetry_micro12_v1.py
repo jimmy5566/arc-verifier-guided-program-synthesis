@@ -390,6 +390,11 @@ def run_outputs(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any
     args.search_order_policy = POLICY
     args.checkpoints = CHECKPOINTS
     args.frontier_telemetry = True
+    receipt_path = run / "OOM_FALLBACK_RECEIPTS.csv"
+    prior_attempts: list[dict[str, Any]] = []
+    if receipt_path.is_file():
+        with receipt_path.open("r", encoding="utf-8", newline="") as handle:
+            prior_attempts = list(csv.DictReader(handle))
     attempts: list[dict[str, Any]] = []
     for selected in outputs:
         output_id = str(selected["output_id"])
@@ -400,7 +405,8 @@ def run_outputs(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any
             code, receipt = _worker(args, run, selected, attempt, profile_config, depth=24, experiment=EXPERIMENT)
             receipt["fallback_used"] = attempt > 0
             attempts.append(receipt)
-            _atomic_csv(run / "OOM_FALLBACK_RECEIPTS.csv", attempts, list(attempts[0]))
+            all_attempts = prior_attempts + attempts
+            _atomic_csv(receipt_path, all_attempts, list(all_attempts[0]))
             if code == 0:
                 freeze_output(run, output_id)
                 complete = True
@@ -409,7 +415,11 @@ def run_outputs(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any
                 raise RuntimeError(f"FRONTIER_TELEMETRY_WORKER_NON_OOM:{output_id}:{receipt['log']}")
         if not complete:
             raise RuntimeError(f"FRONTIER_TELEMETRY_FROZEN_OOM_FALLBACK_EXHAUSTED:{output_id}")
-    _atomic_csv(run / "OOM_FALLBACK_RECEIPTS.csv", attempts, list(attempts[0]) if attempts else ["output_id"])
+    if attempts:
+        all_attempts = prior_attempts + attempts
+        _atomic_csv(receipt_path, all_attempts, list(all_attempts[0]))
+    elif not receipt_path.exists():
+        _atomic_csv(receipt_path, [], ["output_id"])
     return materialize_runtime(run, outputs)
 
 
