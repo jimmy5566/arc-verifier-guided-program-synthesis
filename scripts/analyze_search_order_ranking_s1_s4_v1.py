@@ -56,46 +56,57 @@ def state_abs(row):
     return np.asarray(x,float)
 
 def build_states(labeled,decisions):
-    bycell=defaultdict(dict)
-    for r in labeled:bycell[r["cell_key"]][int(r["work_item_id"])]=r
+    rows_by_cell=defaultdict(list)
+    for r in labeled: rows_by_cell[r["cell_key"]].append(r)
+    decision_keys={(d["cell_key"],int(d["expansion_t"])):d for d in decisions}
     states=[]
-    for d in decisions:
-        ck=d["cell_key"];t=int(d["expansion_t"])
-        cand=[]
-        for r in bycell[ck].values():
-            ins=int(r["inserted_at_expanded_nodes"])
-            pop=r.get("popped_at_expanded_nodes")
-            pop=None if pop in ("",None) else int(float(pop))
-            if ins < t and (pop is None or pop>=t): cand.append(r)
-        pos=[r for r in cand if int(r["y_gold_prefix"])==1]
-        if len(cand)>=2 and len(pos)==1:
-            gold=pos[0]
-            non=[r for r in cand if int(r["y_gold_prefix"])==0]
-            hard=min(non,key=lambda r:(f(r["cumulative_nll"]),int(r["insertion_order"]),int(r["work_item_id"])))
-            states.append({"task_id":d["task_id"],"cell_key":ck,"t":t,"gold":gold,"hard":hard,"cand":cand})
+    for ck,rr in rows_by_cell.items():
+        inserts=defaultdict(list); pops={}
+        for r in rr:
+            inserts[int(r["inserted_at_expanded_nodes"])].append(r)
+            pv=r.get("popped_at_expanded_nodes")
+            if pv not in ("",None):
+                t=int(float(pv))
+                if t in pops: raise RuntimeError(f"duplicate pop {ck} t={t}")
+                pops[t]=r
+        active={int(r["work_item_id"]):r for r in inserts.get(0,[])}
+        for t in range(1,max(pops,default=0)+1):
+            d=decision_keys.get((ck,t))
+            if d is not None:
+                cand=list(active.values())
+                pos=[r for r in cand if int(r["y_gold_prefix"])==1]
+                if len(cand)<2 or len(pos)!=1: raise RuntimeError(f"decision reconstruction drift {ck} t={t}")
+                gold=pos[0]
+                non=[r for r in cand if int(r["y_gold_prefix"])==0]
+                hard=min(non,key=lambda r:(f(r["cumulative_nll"]),int(r["insertion_order"]),int(r["work_item_id"])))
+                states.append({"task_id":d["task_id"],"cell_key":ck,"t":t,"gold":gold,"hard":hard,"cand":cand})
+            sel=pops.get(t)
+            if sel is None: raise RuntimeError(f"missing pop {ck} t={t}")
+            active.pop(int(sel["work_item_id"]),None)
+            for r in inserts.get(t,[]): active[int(r["work_item_id"])]=r
+    if len(states)!=len(decisions): raise RuntimeError(f"state count drift {len(states)} != {len(decisions)}")
     return states
 
 def rel_features(cand,current_t):
-    vals={}
-    for k in REL_BASE:
-        arr=[]
-        for r in cand:
-            if k=="frontier_age":arr.append(current_t-int(r["inserted_at_expanded_nodes"]))
-            else:arr.append(f(r[k]))
-        vals[k]=np.asarray(arr,float)
-    out={}
     n=len(cand)
+    M=np.empty((n,len(REL_BASE)),dtype=float)
     for i,r in enumerate(cand):
-        z=[]
-        for k in REL_BASE:
-            arr=vals[k];mu=float(arr.mean());sd=float(arr.std()) or 1.0;v=float(arr[i])
-            order=np.argsort(np.argsort(arr,kind="stable"),kind="stable")
-            pct=float(order[i]/max(1,n-1))
-            z.extend([(v-mu)/sd,pct])
-        z += [1.0 if b(r["frontier_floor_activated"]) else 0.0,1.0 if r.get("frontier_floor_restore_rank") not in ("",None) else 0.0]
-        g=geom(r["augmentation_id"]);z += [1.0 if g==x else 0.0 for x in GEOMS[1:]]
-        out[int(r["work_item_id"])]=np.asarray(z,float)
-    return out
+        for j,k in enumerate(REL_BASE):
+            M[i,j]=current_t-int(r["inserted_at_expanded_nodes"]) if k=="frontier_age" else f(r[k])
+    mu=M.mean(axis=0); sd=M.std(axis=0); sd[sd==0]=1.0
+    Z=(M-mu)/sd
+    P=np.empty_like(M)
+    for j in range(M.shape[1]):
+        order=np.argsort(np.argsort(M[:,j],kind="stable"),kind="stable")
+        P[:,j]=order/max(1,n-1)
+    extra=np.empty((n,2+len(GEOMS)-1),dtype=float)
+    for i,r in enumerate(cand):
+        extra[i,0]=1.0 if b(r["frontier_floor_activated"]) else 0.0
+        extra[i,1]=1.0 if r.get("frontier_floor_restore_rank") not in ("",None) else 0.0
+        g=geom(r["augmentation_id"])
+        for j,x in enumerate(GEOMS[1:]): extra[i,2+j]=1.0 if g==x else 0.0
+    F=np.concatenate([Z,P,extra],axis=1)
+    return {int(r["work_item_id"]):F[i] for i,r in enumerate(cand)}
 
 def precompute_pair_diffs(states):
     for st in states:
