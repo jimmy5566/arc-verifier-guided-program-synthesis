@@ -1,0 +1,7 @@
+{
+  "artifact": "SEARCH_ORDER_RANKING_S1_S4_FOLD_ADDENDUM_V1",
+  "reason": "Pairwise frontier states all contain a Gold opportunity, so StratifiedGroupKFold has no meaningful state-level binary stratification target. To preserve direct comparability with the frozen v1 result, the 5-fold analysis reuses the existing task->fold assignment in PER_TASK_COMPARISON.csv. LOOTO remains 12-way leave-one-task-out.",
+  "timing": "FROZEN_BEFORE_RUNNING_S1_S4_MODELS",
+  "five_fold_source": "analysis/search_order_frontier_telemetry_micro12_v1/postfreeze_frontier_analysis_v1/PER_TASK_COMPARISON.csv",
+  "forbidden": "No fold changes after observing S1-S4 outcomes."
+}
