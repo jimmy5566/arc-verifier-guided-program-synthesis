@@ -213,7 +213,22 @@ def main():
                 parent_disc += 0 if int(gold_event["local_token_rank"])==1 else 1
                 current=int(child["node_id"])
 
-    if not rows:raise RuntimeError("no retained choice rows")
+    if not rows:
+        summary={"artifact":"SEARCH_ORDER_RETAINED_CHOICE_DATASET_V1","scope":"POST_FREEZE_NONBLIND_DEVELOPMENT",
+          "outputs":len(scores),"choice_groups":0,"choice_rows":0,
+          "gold_prefix_parents_examined":gold_parents,"retention_failures":retention_failures,
+          "cells_missing_required_diagnostic_trace":trace_missing,"gold_sha256":gold_sha,
+          "status":"NOT_RECONSTRUCTIBLE_FROM_FROZEN_D24",
+          "reason":"Historical Phase-3 d24 raw cells do not preserve diagnostic_trace.search_trace / branch_probabilities needed to recover blind features for retained-but-never-expanded successors."}
+        decision={"artifact":"SEARCH_ORDER_RETAINED_CHOICE_DECISION_V1","signal":"NOT_RECONSTRUCTIBLE",
+          "strong_gate_passed":False,"learned_value_search_authorized":False,
+          "next":"USE_EXPANDED_SIBLING_LEAKAGE_GUARD_AND_REQUIRE_FUTURE_RUNS_TO_PRESERVE_RETAINED-WORK TELEMETRY"}
+        def writej0(name,obj):(a.output/name).write_text(json.dumps(obj,indent=2,sort_keys=True)+"\n",encoding="utf-8")
+        writej0("DATASET_SUMMARY.json",summary);writej0("DECISION.json",decision)
+        (a.output/"REPORT.md").write_text("# Retained-choice separability v1\n\n**NOT_RECONSTRUCTIBLE** from the historical frozen d24 archive because retained-but-never-expanded successor telemetry was not preserved. No scientific ranking result was produced.\n",encoding="utf-8")
+        hashes={p.name:sha(p) for p in sorted(a.output.iterdir()) if p.is_file()};writej0("HASHES.json",{"files":hashes})
+        print(json.dumps({"summary":summary,"decision":decision},sort_keys=True))
+        return
     if trace_missing:raise RuntimeError(f"diagnostic trace missing in {trace_missing} cells")
     y,oof,folds=fit_predict_oof(rows)
     roc=float(roc_auc_score(y,oof));apv=float(average_precision_score(y,oof))
