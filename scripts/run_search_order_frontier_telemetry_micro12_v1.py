@@ -537,11 +537,34 @@ def validate_smoke(smoke_run: Path, outputs: list[dict[str, Any]], runtime: dict
     return result
 
 
-def finalize_generation(run: Path, cohort: dict[str, Any], preflight_receipt: dict[str, Any]) -> None:
-    smoke_parity = _read(run / "SMOKE_P3_PARITY.json")
-    smoke_audit = _read(run / "SMOKE_TELEMETRY_AUDIT.json")
-    if smoke_parity.get("status") != "PASS" or smoke_audit.get("status") != "PASS":
+def gate1_evidence(gate1_root: Path | None) -> dict[str, Any]:
+    """Bind a fresh Gate 2 directory to already-frozen Gate 1 evidence."""
+    if gate1_root is None:
+        raise RuntimeError("FRONTIER_TELEMETRY_GATE1_EVIDENCE_REQUIRED")
+    smoke_run = gate1_root / "GATE1_SMOKE"
+    required = {
+        "generation_hash_verification": smoke_run / "GENERATION_HASH_VERIFICATION.json",
+        "frontier_telemetry_hash_verification": smoke_run / "FRONTIER_TELEMETRY_HASH_VERIFICATION.json",
+        "telemetry_audit": gate1_root / "SMOKE_TELEMETRY_AUDIT.json",
+        "p3_semantic_parity": gate1_root / "SMOKE_P3_PARITY.json",
+    }
+    loaded = {name: _read(path) for name, path in required.items()}
+    if (loaded["generation_hash_verification"].get("status") != "PASS"
+            or loaded["frontier_telemetry_hash_verification"].get("status") != "PASS"
+            or loaded["telemetry_audit"].get("status") != "PASS"
+            or loaded["p3_semantic_parity"].get("status") != "PASS"):
         raise RuntimeError("FRONTIER_TELEMETRY_GATE1_NOT_PASSED")
+    return {
+        "path": str(gate1_root),
+        "files": {name: {"path": str(path), "sha256": sha_file(path)} for name, path in required.items()},
+        "generation_hash_verification": loaded["generation_hash_verification"],
+        "frontier_telemetry_hash_verification": loaded["frontier_telemetry_hash_verification"],
+        "telemetry_integrity": loaded["telemetry_audit"],
+        "p3_semantic_parity": loaded["p3_semantic_parity"],
+    }
+
+
+def finalize_generation(run: Path, cohort: dict[str, Any], preflight_receipt: dict[str, Any], gate1: dict[str, Any]) -> None:
     generation = ledger(run, "GENERATION_HASHES.json", include_raw=True)
     generation_verification = _verify(run, run / "GENERATION_HASHES.json")
     _atomic_json(run / "GENERATION_HASH_VERIFICATION.json", generation_verification)
@@ -563,12 +586,13 @@ def finalize_generation(run: Path, cohort: dict[str, Any], preflight_receipt: di
     _atomic_json(run / "PROVENANCE.json", {
         "experiment": EXPERIMENT, "source_commit": head(), "target_blind": True, "gold_loaded": False,
         "cohort_sha256": cohort["cohort_sha256"], "runtime": preflight_receipt["runtime"], "policy": POLICY,
+        "gate1_evidence": gate1,
     })
     _atomic_json(run / "PRE_GOLD_FREEZE.json", {
         "experiment": EXPERIMENT, "status": "FROZEN", "outputs": "12/12", "target_blind": True, "gold_loaded": False,
         "cohort_sha256": COHORT_SHA256, "scientific_policy": POLICY, "scientific_config_unchanged": True,
         "P3_semantic_parity_gate": "PASS", "frontier_telemetry_integrity": "PASS", "generation_hash_status": "PASS",
-        "frontier_telemetry_hash_status": "PASS",
+        "frontier_telemetry_hash_status": "PASS", "gate1_evidence_sha256": sha_value(gate1),
     })
     compact = ledger(run, "HASHES.json", include_raw=False)
     compact_verification = _verify(run, run / "HASHES.json")
@@ -587,6 +611,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--native-config-dir", type=Path, required=True); parser.add_argument("--candidate-pool", type=Path, required=True)
     parser.add_argument("--adapter-root", type=Path, required=True); parser.add_argument("--coarse-policy", type=Path, required=True)
     parser.add_argument("--worker-python", type=Path, required=True); parser.add_argument("--source-archive", type=Path, required=True)
+    parser.add_argument("--gate1-evidence", type=Path)
     parser.add_argument("--device", default="cuda:0")
     return parser.parse_args()
 
@@ -646,13 +671,10 @@ def main() -> None:
             return
         if (args.output / "RAW_OUTPUTS").exists():
             raise RuntimeError("FRONTIER_TELEMETRY_GENERATION_DIRECTORY_NOT_FRESH")
-        if _read(args.output / "SMOKE_TELEMETRY_AUDIT.json").get("status") != "PASS":
-            raise RuntimeError("FRONTIER_TELEMETRY_SMOKE_INTEGRITY_REQUIRED")
-        if _read(args.output / "SMOKE_P3_PARITY.json").get("status") != "PASS":
-            raise RuntimeError("FRONTIER_TELEMETRY_SMOKE_PARITY_REQUIRED")
+        gate1 = gate1_evidence(args.gate1_evidence)
         runtime = run_outputs(args, args.output, list(cohort["outputs"]), "GATE2_MICRO12")
         _atomic_json(args.output / "RUNTIME_SUMMARY.json", runtime)
-        finalize_generation(args.output, cohort, preflight_receipt)
+        finalize_generation(args.output, cohort, preflight_receipt, gate1)
     except BaseException as error:
         failure_receipt(args, error)
         raise
