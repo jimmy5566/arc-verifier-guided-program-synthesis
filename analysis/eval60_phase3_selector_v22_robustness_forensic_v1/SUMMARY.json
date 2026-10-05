@@ -1,0 +1,292 @@
+{
+  "DFS_calls": 0,
+  "GPU_used": false,
+  "TTT_calls": 0,
+  "candidate_pool_changed": false,
+  "candidate_records": 3215,
+  "classification": "ROBUSTNESS_SIGNAL_NOT_SUPPORTED",
+  "comparison_pairs": 169,
+  "d48_only_forensic": [
+    {
+      "gold_bad_view_count": "2",
+      "gold_better_ahead_fraction_bad_view_count": 0.0,
+      "gold_better_ahead_fraction_mean_view_nll": 0.0,
+      "gold_better_ahead_fraction_median_view_nll": 0.0,
+      "gold_better_ahead_fraction_q75_view_nll": 0.1111111111111111,
+      "gold_better_ahead_fraction_q90_view_nll": 0.0,
+      "gold_better_ahead_fraction_range_view_nll": 0.0,
+      "gold_better_ahead_fraction_std_view_nll": 0.0,
+      "gold_better_ahead_fraction_worst_view_nll": 0.0,
+      "gold_mean_view_nll": "0.06555979582481086",
+      "gold_median_view_nll": "0.07221099361777306",
+      "gold_q75_view_nll": "0.0846960786730051",
+      "gold_q90_view_nll": "0.10919316634535789",
+      "gold_range_view_nll": "0.10884232632815838",
+      "gold_s2_final_rank": "14",
+      "gold_source": "d48_only",
+      "gold_source_local_evidence_rank": "10",
+      "gold_source_local_likelihood_rank": "10",
+      "gold_source_local_support_rank": "10",
+      "gold_std_view_nll": "0.03608741516582592",
+      "gold_worst_view_nll": "0.1116483137011528",
+      "output_id": "142ca369:o0"
+    },
+    {
+      "gold_bad_view_count": "0",
+      "gold_better_ahead_fraction_bad_view_count": 0.0,
+      "gold_better_ahead_fraction_mean_view_nll": 0.0,
+      "gold_better_ahead_fraction_median_view_nll": 0.0,
+      "gold_better_ahead_fraction_q75_view_nll": 0.0,
+      "gold_better_ahead_fraction_q90_view_nll": 0.0,
+      "gold_better_ahead_fraction_range_view_nll": 0.0,
+      "gold_better_ahead_fraction_std_view_nll": 0.0,
+      "gold_better_ahead_fraction_worst_view_nll": 0.0,
+      "gold_mean_view_nll": "0.05089765234151855",
+      "gold_median_view_nll": "0.044690847396850586",
+      "gold_q75_view_nll": "0.05882587470114231",
+      "gold_q90_view_nll": "0.08899499177932739",
+      "gold_range_view_nll": "0.09686733735725284",
+      "gold_s2_final_rank": "8",
+      "gold_source": "d48_only",
+      "gold_source_local_evidence_rank": "5",
+      "gold_source_local_likelihood_rank": "5",
+      "gold_source_local_support_rank": "4",
+      "gold_std_view_nll": "0.027715281356518632",
+      "gold_worst_view_nll": "0.10064752399921417",
+      "output_id": "58490d8a:o0"
+    },
+    {
+      "gold_bad_view_count": "1",
+      "gold_better_ahead_fraction_bad_view_count": 0.10714285714285714,
+      "gold_better_ahead_fraction_mean_view_nll": 0.14285714285714285,
+      "gold_better_ahead_fraction_median_view_nll": 0.10714285714285714,
+      "gold_better_ahead_fraction_q75_view_nll": 0.2857142857142857,
+      "gold_better_ahead_fraction_q90_view_nll": 0.32142857142857145,
+      "gold_better_ahead_fraction_range_view_nll": 0.42857142857142855,
+      "gold_better_ahead_fraction_std_view_nll": 0.4642857142857143,
+      "gold_better_ahead_fraction_worst_view_nll": 0.2857142857142857,
+      "gold_mean_view_nll": "0.033450480084866285",
+      "gold_median_view_nll": "0.03497601859271526",
+      "gold_q75_view_nll": "0.03944560885429382",
+      "gold_q90_view_nll": "0.04737135209143162",
+      "gold_range_view_nll": "0.03868650831282139",
+      "gold_s2_final_rank": "42",
+      "gold_source": "d48_only",
+      "gold_source_local_evidence_rank": "29",
+      "gold_source_local_likelihood_rank": "25",
+      "gold_source_local_support_rank": "30",
+      "gold_std_view_nll": "0.012244544931997753",
+      "gold_worst_view_nll": "0.05583398789167404",
+      "output_id": "97d7923e:o0"
+    },
+    {
+      "gold_bad_view_count": "0",
+      "gold_better_ahead_fraction_bad_view_count": 0.0,
+      "gold_better_ahead_fraction_mean_view_nll": 0.0,
+      "gold_better_ahead_fraction_median_view_nll": 0.0,
+      "gold_better_ahead_fraction_q75_view_nll": 0.0,
+      "gold_better_ahead_fraction_q90_view_nll": 1.0,
+      "gold_better_ahead_fraction_range_view_nll": 1.0,
+      "gold_better_ahead_fraction_std_view_nll": 1.0,
+      "gold_better_ahead_fraction_worst_view_nll": 1.0,
+      "gold_mean_view_nll": "0.01179280957148876",
+      "gold_median_view_nll": "0.012623966671526432",
+      "gold_q75_view_nll": "0.01592957926914096",
+      "gold_q90_view_nll": "0.020382040366530418",
+      "gold_range_view_nll": "0.027567120967432857",
+      "gold_s2_final_rank": "4",
+      "gold_source": "d48_only",
+      "gold_source_local_evidence_rank": "2",
+      "gold_source_local_likelihood_rank": "2",
+      "gold_source_local_support_rank": "2",
+      "gold_std_view_nll": "0.008568513728343713",
+      "gold_worst_view_nll": "0.02812359668314457",
+      "output_id": "b5ca7ac4:o0"
+    }
+  ],
+  "feature_pair_diagnostics": {
+    "all_gold_source_pairs": {
+      "bad_view_count": {
+        "feature": "bad_view_count",
+        "gold_better": 4,
+        "gold_better_fraction": 0.023668639053254437,
+        "gold_worse": 97,
+        "pair_count": 169,
+        "ties": 68
+      },
+      "median_view_nll": {
+        "feature": "median_view_nll",
+        "gold_better": 48,
+        "gold_better_fraction": 0.28402366863905326,
+        "gold_worse": 121,
+        "pair_count": 169,
+        "ties": 0
+      },
+      "q75_view_nll": {
+        "feature": "q75_view_nll",
+        "gold_better": 29,
+        "gold_better_fraction": 0.17159763313609466,
+        "gold_worse": 140,
+        "pair_count": 169,
+        "ties": 0
+      },
+      "q90_view_nll": {
+        "feature": "q90_view_nll",
+        "gold_better": 27,
+        "gold_better_fraction": 0.15976331360946747,
+        "gold_worse": 142,
+        "pair_count": 169,
+        "ties": 0
+      },
+      "range_view_nll": {
+        "feature": "range_view_nll",
+        "gold_better": 31,
+        "gold_better_fraction": 0.1834319526627219,
+        "gold_worse": 138,
+        "pair_count": 169,
+        "ties": 0
+      },
+      "std_view_nll": {
+        "feature": "std_view_nll",
+        "gold_better": 41,
+        "gold_better_fraction": 0.24260355029585798,
+        "gold_worse": 128,
+        "pair_count": 169,
+        "ties": 0
+      },
+      "worst_view_nll": {
+        "feature": "worst_view_nll",
+        "gold_better": 18,
+        "gold_better_fraction": 0.10650887573964497,
+        "gold_worse": 151,
+        "pair_count": 169,
+        "ties": 0
+      }
+    },
+    "d48_only_gold_source_pairs": {
+      "bad_view_count": {
+        "feature": "bad_view_count",
+        "gold_better": 3,
+        "gold_better_fraction": 0.07142857142857142,
+        "gold_worse": 23,
+        "pair_count": 42,
+        "ties": 16
+      },
+      "median_view_nll": {
+        "feature": "median_view_nll",
+        "gold_better": 3,
+        "gold_better_fraction": 0.07142857142857142,
+        "gold_worse": 39,
+        "pair_count": 42,
+        "ties": 0
+      },
+      "q75_view_nll": {
+        "feature": "q75_view_nll",
+        "gold_better": 9,
+        "gold_better_fraction": 0.21428571428571427,
+        "gold_worse": 33,
+        "pair_count": 42,
+        "ties": 0
+      },
+      "q90_view_nll": {
+        "feature": "q90_view_nll",
+        "gold_better": 10,
+        "gold_better_fraction": 0.23809523809523808,
+        "gold_worse": 32,
+        "pair_count": 42,
+        "ties": 0
+      },
+      "range_view_nll": {
+        "feature": "range_view_nll",
+        "gold_better": 13,
+        "gold_better_fraction": 0.30952380952380953,
+        "gold_worse": 29,
+        "pair_count": 42,
+        "ties": 0
+      },
+      "std_view_nll": {
+        "feature": "std_view_nll",
+        "gold_better": 14,
+        "gold_better_fraction": 0.3333333333333333,
+        "gold_worse": 28,
+        "pair_count": 42,
+        "ties": 0
+      },
+      "worst_view_nll": {
+        "feature": "worst_view_nll",
+        "gold_better": 9,
+        "gold_better_fraction": 0.21428571428571427,
+        "gold_worse": 33,
+        "pair_count": 42,
+        "ties": 0
+      }
+    },
+    "s2_miss_gold_source_pairs": {
+      "bad_view_count": {
+        "feature": "bad_view_count",
+        "gold_better": 4,
+        "gold_better_fraction": 0.026143790849673203,
+        "gold_worse": 93,
+        "pair_count": 153,
+        "ties": 56
+      },
+      "median_view_nll": {
+        "feature": "median_view_nll",
+        "gold_better": 43,
+        "gold_better_fraction": 0.28104575163398693,
+        "gold_worse": 110,
+        "pair_count": 153,
+        "ties": 0
+      },
+      "q75_view_nll": {
+        "feature": "q75_view_nll",
+        "gold_better": 23,
+        "gold_better_fraction": 0.1503267973856209,
+        "gold_worse": 130,
+        "pair_count": 153,
+        "ties": 0
+      },
+      "q90_view_nll": {
+        "feature": "q90_view_nll",
+        "gold_better": 22,
+        "gold_better_fraction": 0.1437908496732026,
+        "gold_worse": 131,
+        "pair_count": 153,
+        "ties": 0
+      },
+      "range_view_nll": {
+        "feature": "range_view_nll",
+        "gold_better": 28,
+        "gold_better_fraction": 0.1830065359477124,
+        "gold_worse": 125,
+        "pair_count": 153,
+        "ties": 0
+      },
+      "std_view_nll": {
+        "feature": "std_view_nll",
+        "gold_better": 35,
+        "gold_better_fraction": 0.22875816993464052,
+        "gold_worse": 118,
+        "pair_count": 153,
+        "ties": 0
+      },
+      "worst_view_nll": {
+        "feature": "worst_view_nll",
+        "gold_better": 16,
+        "gold_better_fraction": 0.10457516339869281,
+        "gold_worse": 137,
+        "pair_count": 153,
+        "ties": 0
+      }
+    }
+  },
+  "gold_scored_after_feature_freeze": true,
+  "gold_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "gold_systematically_more_robust_than_ahead_candidates": false,
+  "likelihood_recomputed": false,
+  "model_calls": 0,
+  "s4_robust_rank_fusion_justified": false,
+  "strongest_feature_gold_better_fraction": 0.28104575163398693,
+  "strongest_robustness_feature_among_s2_miss_pairs": "median_view_nll",
+  "view_records": 25720
+}

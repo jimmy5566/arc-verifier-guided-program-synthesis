@@ -1,0 +1,11 @@
+{
+  "DFS_calls": 0,
+  "GPU_used": false,
+  "Gold_used_for_feature_construction": false,
+  "TTT_calls": 0,
+  "candidate_pool_changed": false,
+  "hash_verification": "PASS",
+  "likelihood_recomputed": false,
+  "model_calls": 0,
+  "status": "PASS"
+}

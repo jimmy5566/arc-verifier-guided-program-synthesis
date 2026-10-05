@@ -1,0 +1,49 @@
+{
+  "DFS_calls": 0,
+  "GPU_used": false,
+  "TTT_calls": 0,
+  "candidate_pool_changed": false,
+  "classification_rule": {
+    "not_supported": "otherwise",
+    "supported": "at least three robustness features have Gold-better fraction >=0.60 among S2 misses and at least two have >=0.55 among d48-only pairs",
+    "weak": "otherwise, at least one robustness feature has Gold-better fraction >=0.55 among S2 misses or d48-only pairs"
+  },
+  "classification_space": [
+    "ROBUSTNESS_SIGNAL_SUPPORTED",
+    "ROBUSTNESS_SIGNAL_WEAK",
+    "ROBUSTNESS_SIGNAL_NOT_SUPPORTED"
+  ],
+  "comparison": "Every Gold source-local candidate is paired with every candidate of lower frozen S2 evidence_rank in the same output/depth source.",
+  "features": {
+    "bad_view_count": "number of a candidate's eight view NLLs strictly above the source-local candidate-view q75 threshold",
+    "max": "worst-view NLL",
+    "mean": "arithmetic mean of frozen mean-token NLL across the eight canonical views",
+    "median": "median of the same eight values",
+    "min": "best-view NLL",
+    "q75_q90": "linear percentile over the sorted eight-value population",
+    "range": "max-min",
+    "std": "population standard deviation across the eight values"
+  },
+  "frozen_views": 8,
+  "inputs": {
+    "s2": {
+      "ledger_entries": 17,
+      "path": "analysis\\eval60_phase3_selector_v2_forensic_v1",
+      "status": "PASS"
+    },
+    "v21": {
+      "ledger_entries": 14,
+      "path": "analysis\\eval60_phase3_selector_v21_source_complementarity_v1",
+      "status": "PASS"
+    },
+    "v8": {
+      "ledger_entries": 164,
+      "path": "analysis\\eval60_phase3_r1024_exact_b_selector_v8",
+      "status": "PASS"
+    }
+  },
+  "likelihood_recomputed": false,
+  "model_calls": 0,
+  "scope": "CPU_ONLY_POST_FREEZE_ROBUSTNESS_FORENSIC",
+  "selector_modified": false
+}
