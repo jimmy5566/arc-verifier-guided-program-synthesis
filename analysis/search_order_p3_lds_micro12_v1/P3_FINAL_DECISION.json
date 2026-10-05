@@ -1,0 +1,29 @@
+{
+  "artifact": "SEARCH_ORDER_P3_LDS_FINAL_DECISION_V1",
+  "generation_freeze_commit": "d0f215f06e4509daddbc3c7ae627179c5243d89c",
+  "postfreeze_gold_report_commit": "018838c8d483668c6a03bf184fe9e39018b1eff3",
+  "policy": "LDS_UNIT_DISCREPANCY_V1",
+  "cohort": "SEARCH_ORDER_P3_LDS_MICRO12_V1",
+  "accuracy": {
+    "overall_exact_gold": "3/12",
+    "historical_d24_miss_rescue": "0/9",
+    "control_retention": "3/3",
+    "unknown_wall_censored": 0
+  },
+  "runtime": {
+    "wall_censored_cells": 0,
+    "oom_fallback_count": 0,
+    "total_gpu_wall_seconds": 4109.525870086625,
+    "replay_useful_ratio": 0.018732799599699774,
+    "p1_same_micro12_total_wall_seconds": 5357.131047816947,
+    "p1_same_micro12_replay_useful_ratio": 0.33718005295675196
+  },
+  "decision": {
+    "systems": "PASS",
+    "accuracy": "FAIL_NO_RESCUE_SIGNAL",
+    "expand_p3_to_micro24": false,
+    "tune_p3_after_gold": false,
+    "interpretation": "Classic unit-discrepancy LDS is materially cleaner and cheaper than P1 on the matched Micro12 cohort, but it does not improve exact-Gold recall."
+  },
+  "status": "FROZEN"
+}
