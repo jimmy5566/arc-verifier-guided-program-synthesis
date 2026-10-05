@@ -42,10 +42,24 @@ def test_current_dfs_generalized_core_matches_legacy_semantics() -> None:
     assert normalized_result_signature(actual) == normalized_result_signature(legacy)
 
 
-def test_fair_and_regret_band_keep_the_exact_node_budget_and_retention_contract() -> None:
-    for policy in ("FAIR_DFS_Q64", "REGRET_BAND_FAIR_Q64"):
+def test_experimental_orders_keep_the_exact_node_budget_and_retention_contract() -> None:
+    for policy in ("FAIR_DFS_Q64", "REGRET_BAND_FAIR_Q64", "LDS_UNIT_DISCREPANCY_V1"):
         cell, result = _run(policy)
         assert sum(node["state"] == "expanded" for node in result.nodes) <= 100
         assert cell.state["search_order"]["retention_changed"] is False
         ids = [row["work_item_id"] for row in cell.state["search_order_work_items"]]
         assert len(ids) == len(set(ids))
+
+
+def test_lds_records_mechanical_discrepancy_telemetry() -> None:
+    cell, _result = _run("LDS_UNIT_DISCREPANCY_V1")
+    rows = cell.state["search_order_work_items"]
+    assert rows
+    assert cell.state["search_order"]["discrepancy_definition"] == "unit_non_top1"
+    assert all(int(row["local_token_rank"]) >= 1 for row in rows)
+    assert all(int(row["discrepancy_count"]) >= 0 for row in rows)
+    assert any(int(row["discrepancy_count"]) == 0 for row in rows)
+    assert any(int(row["discrepancy_count"]) >= 1 for row in rows)
+    for row in rows:
+        if int(row["local_token_rank"]) == 1 and row["parent_work_item_id"] is None:
+            assert int(row["discrepancy_count"]) == 0
