@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import torch
 
-from inference.nvarc_turbodfs_d1 import D1TurboDFSConfig, inference_d1_turbo_dfs
+from inference.nvarc_turbodfs_d1 import D1TurboDFSConfig, _prefix_hash, inference_d1_turbo_dfs
 from inference.nvarc_turbodfs_dynamic_ready import normalized_result_signature, ready_result, run_ready_scheduler
 from inference.nvarc_turbodfs_search_order import start_search_order_cell
 
@@ -22,15 +22,20 @@ class CacheTransitionModel:
         return SimpleNamespace(logits=logits, past_key_values=cache)
 
 
-def _config() -> D1TurboDFSConfig:
+def _config(*, max_expanded_nodes: int = 100) -> D1TurboDFSConfig:
     return D1TurboDFSConfig("CUMULATIVE_REGRET_r=4.00", max_new_tokens=4, max_score=1.7,
-                            absolute_end_time_unix=None, max_expanded_nodes=100,
+                            absolute_end_time_unix=None, max_expanded_nodes=max_expanded_nodes,
                             max_completed_candidates=100, diagnostic_trace=True)
 
 
-def _run(policy: str):
-    cell = start_search_order_cell(model=CacheTransitionModel(), input_ids=torch.tensor([[2, 2]]), config=_config(),
-                                   cell_key=policy, policy_name=policy, normalize_root_cache=False)
+def _run(policy: str, *, telemetry: bool = False, max_expanded_nodes: int = 100):
+    context = None
+    if telemetry:
+        context = {"experiment": "TEST", "output_id": "test:o0", "task_id": "test", "augmentation_id": "identity", "ttt_depth": 24}
+    cell = start_search_order_cell(model=CacheTransitionModel(), input_ids=torch.tensor([[2, 2]]),
+                                   config=_config(max_expanded_nodes=max_expanded_nodes), cell_key=policy,
+                                   policy_name=policy, normalize_root_cache=False,
+                                   frontier_telemetry_context=context)
     run_ready_scheduler(model=CacheTransitionModel(), cells=[cell], dynamic_batch2=False)
     return cell, ready_result(cell)
 
@@ -73,3 +78,54 @@ def test_lds_records_mechanical_discrepancy_telemetry() -> None:
     assert sum(order["expanded_nodes_by_discrepancy_layer"].values()) == sum(
         row["status"] == "expanded" for row in rows
     )
+
+
+def test_frontier_telemetry_is_complete_reconstructible_and_passive() -> None:
+    baseline_cell, baseline_result = _run("LDS_UNIT_DISCREPANCY_V1", max_expanded_nodes=1)
+    cell, result = _run("LDS_UNIT_DISCREPANCY_V1", telemetry=True, max_expanded_nodes=1)
+
+    # The opt-in observer cannot alter retained work, pop order, or model work.
+    assert normalized_result_signature(result) == normalized_result_signature(baseline_result)
+    assert cell.state["search_order_work_items"] == baseline_cell.state["search_order_work_items"]
+    assert result.model_forwards == baseline_result.model_forwards
+
+    records = cell.state["frontier_telemetry"]["records"]
+    rows = cell.state["search_order_work_items"]
+    assert len(records) == len(rows)
+    assert records
+    by_id = {int(record["work_item_id"]): record for record in records}
+    assert len(by_id) == len(records)
+    assert all(record["frontier_size_at_insert"] is not None for record in records)
+    assert [record["insertion_order"] for record in records] == sorted(record["insertion_order"] for record in records)
+
+    for record in records:
+        parent = record["parent_work_item_id"]
+        if parent is None:
+            tokens = (int(record["selected_token_id"]),)
+            expected_discrepancy = 0
+        else:
+            parent_record = by_id[int(parent)]
+            assert parent_record["insertion_order"] < record["insertion_order"]
+            parent_tokens = tuple(parent_record["_test_prefix_tokens"])
+            tokens = parent_tokens + (int(record["selected_token_id"]),)
+            expected_discrepancy = int(parent_record["discrepancy_count"])
+        assert _prefix_hash(tokens) == record["prefix_hash"]
+        assert _prefix_hash(tokens[:-1]) == record["parent_prefix_hash"]
+        expected_discrepancy += 0 if int(record["local_token_rank"]) == 1 else 1
+        assert int(record["discrepancy_count"]) == expected_discrepancy
+        # The helper field exists only in this test's local reconstruction map.
+        record["_test_prefix_tokens"] = list(tokens)
+        assert int(record["local_token_rank"]) >= 1
+        assert float(record["top1_logprob"]) >= float(record["top2_logprob"])
+        assert record["margin"] == float(record["top1_logprob"]) - float(record["top2_logprob"])
+
+    expanded = [record for record in records if record["final_status"] == "EXPANDED"]
+    pending = [record for record in records if record["final_status"] != "EXPANDED"]
+    assert expanded and pending
+    assert all(record["popped_at_expanded_nodes"] is not None for record in expanded)
+    assert all(record["frontier_pop_order"] is not None for record in expanded)
+    assert all(record["popped_at_expanded_nodes"] is None for record in pending)
+    assert all(record["frontier_pop_order"] is None for record in pending)
+    assert {record["final_status"] for record in pending} <= {
+        "PENDING_AT_R1024", "PENDING_AT_SEARCH_EXHAUSTION", "PENDING_AT_TERMINAL_CARRY"
+    }

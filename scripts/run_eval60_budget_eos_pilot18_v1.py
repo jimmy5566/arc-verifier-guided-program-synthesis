@@ -438,7 +438,20 @@ def _worker(args: argparse.Namespace) -> int:
             if args.search_order_policy == "legacy":
                 cell = start_ready_cell(**common, cache_strategy="rollback")
             else:
-                cell = start_search_order_cell(**common, policy_name=args.search_order_policy)
+                telemetry_context = None
+                if args.frontier_telemetry:
+                    telemetry_context = {
+                        "experiment": str(args.experiment),
+                        "output_id": str(selected["output_id"]),
+                        "task_id": str(selected["task_id"]),
+                        "augmentation_id": str(augmentation_id),
+                        "ttt_depth": int(args.ttt_depth),
+                    }
+                cell = start_search_order_cell(
+                    **common,
+                    policy_name=args.search_order_policy,
+                    frontier_telemetry_context=telemetry_context,
+                )
             if cell.request is None or cell.cache_owner is None:
                 raise RuntimeError("admitted Pilot18 cell was not READY")
             return cell
@@ -506,6 +519,8 @@ def _worker(args: argparse.Namespace) -> int:
                 "search_order": cell.state.get("search_order"),
                 "search_order_work_items": cell.state.get("search_order_work_items", []),
             }
+            if args.frontier_telemetry:
+                final_cells[cell_key]["frontier_telemetry"] = cell.state.get("frontier_telemetry")
             if args.diagnostic_trace:
                 final_cells[cell_key]["diagnostic_trace"] = {
                     "prefill": cell.state.get("prefill_trace"),
@@ -1034,6 +1049,8 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--checkpoints", default="512,1024,2048,4096")
     parser.add_argument("--diagnostic-trace", action="store_true",
                         help="opt-in observational prefill/per-forward forensic trace; no decoder input")
+    parser.add_argument("--frontier-telemetry", action="store_true",
+                        help="passively preserve retained-frontier work-item telemetry; no decoder mutation")
     parser.add_argument("--device", default="cuda:0")
     return parser.parse_args()
 

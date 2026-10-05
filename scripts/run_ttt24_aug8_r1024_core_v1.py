@@ -137,6 +137,8 @@ def _worker(args: argparse.Namespace, run: Path, selected: dict[str, Any], attem
                "--admission-policy", "root_aware", "--fairness-max-wait", "3", "--experiment", experiment, "--checkpoints", "512,1024"]
     command[-1] = checkpoints
     command.extend(["--search-order-policy", search_order_policy])
+    if bool(getattr(args, "frontier_telemetry", False)):
+        command.append("--frontier-telemetry")
     started = time.time()
     process = subprocess.run(command, cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     log = run / "WORKER_LOGS" / f"{_safe(selected['output_id'])}_d{depth}_attempt{attempt}.log"

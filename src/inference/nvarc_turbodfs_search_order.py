@@ -97,8 +97,24 @@ def _order_generator(
             "completed_candidates_by_discrepancy_layer": {},
         })
     state["search_order_work_items"] = []
+    telemetry_context = state.get("frontier_telemetry_context")
+    telemetry_enabled = telemetry_context is not None
+    telemetry_by_id: dict[int, dict[str, Any]] = {}
+    if telemetry_enabled:
+        state["frontier_telemetry"] = {
+            "schema": "FRONTIER_WORK_ITEM_TELEMETRY_V1",
+            "records": [],
+            "next_frontier_pop_order": 0,
+        }
 
-    def record_item(frame: _Frame) -> dict[str, Any]:
+    def record_item(
+        frame: _Frame,
+        *,
+        top1_logprob: float,
+        top2_logprob: float,
+        entropy: float,
+        parent_prefix_hash: str,
+    ) -> dict[str, Any]:
         row = {
             "cell_key": cell_key, "work_item_id": frame.item.work_item_id,
             "parent_work_item_id": frame.item.parent_work_item_id,
@@ -113,6 +129,41 @@ def _order_generator(
             row["local_token_rank"] = frame.item.local_token_rank
             row["discrepancy_count"] = frame.item.discrepancy_count
         state["search_order_work_items"].append(row)
+        if telemetry_enabled:
+            record = {
+                **dict(telemetry_context),
+                "cell_key": cell_key,
+                "work_item_id": frame.item.work_item_id,
+                "parent_work_item_id": frame.item.parent_work_item_id,
+                "root_branch_id": frame.item.root_branch_id,
+                "prefix_length": len(frame.prefix),
+                "prefix_hash": _prefix_hash(frame.prefix),
+                "parent_prefix_hash": parent_prefix_hash,
+                "selected_token_id": frame.token_id,
+                "local_token_rank": frame.item.local_token_rank,
+                "token_logprob": frame.token_logprob,
+                "top1_logprob": top1_logprob,
+                "top2_logprob": top2_logprob,
+                "margin": top1_logprob - top2_logprob,
+                "entropy": entropy,
+                "cumulative_nll": frame.item.cumulative_nll,
+                "cumulative_regret": frame.item.cumulative_regret,
+                "regret_increment": top1_logprob - frame.token_logprob,
+                "discrepancy_count": frame.item.discrepancy_count,
+                "frontier_floor_activated": frame.restored,
+                "frontier_floor_restore_rank": frame.restore_rank,
+                "insertion_order": frame.item.insertion_order,
+                "inserted_at_expanded_nodes": int(state["expanded_nodes"]),
+                "inserted_at_model_forwards": int(state["model_forwards"]),
+                "completed_candidates_at_insert": int(state["completed_candidates"]),
+                "frontier_size_at_insert": None,
+                "popped_at_expanded_nodes": None,
+                "popped_at_model_forwards": None,
+                "frontier_pop_order": None,
+                "final_status": None,
+            }
+            state["frontier_telemetry"]["records"].append(record)
+            telemetry_by_id[frame.item.work_item_id] = record
         return row
 
     work_rows: dict[int, dict[str, Any]] = {}
@@ -131,6 +182,13 @@ def _order_generator(
                 policy.push(child.item)
         else:
             policy.push_successors(tuple(child.item for child in children))
+        if telemetry_enabled:
+            # Siblings are inserted as one existing scheduler transaction.  The
+            # post-transaction pending count is therefore the exact logical
+            # frontier size at every sibling's entry boundary.
+            frontier_size = len(policy.pending())
+            for child in children:
+                telemetry_by_id[child.item.work_item_id]["frontier_size_at_insert"] = frontier_size
 
     def process_logits(*, logits: Any, remaining: int, score: float, regret: float, position: int,
                        parent_node: int, prefix: tuple[int, ...], parent_work_item_id: int | None,
@@ -140,15 +198,18 @@ def _order_generator(
         values = [(token, float(log_probs[token].item())) for token in config.arc_tokens]
         ranked = sorted(values, key=lambda pair: (-pair[1], pair[0]))
         probabilities = [math.exp(logprob) for _token, logprob in values]
+        top1_logprob = ranked[0][1]
+        top2_logprob = ranked[1][1]
+        entropy = -sum(p * lp for p, (_token, lp) in zip(probabilities, values, strict=True))
         state["branch_probabilities"].append({
             "forward_index": state["model_forwards"], "lane": 0, "parent_node_id": parent_node,
             "token_position": position, "prefix_length": len(prefix), "cumulative_score_before": score,
             "cumulative_regret_before": regret,
             "full_arc_logprobs": [{"token_id": token, "logprob": logprob} for token, logprob in values],
-            "top1_token_id": ranked[0][0], "top1_logprob": ranked[0][1],
-            "top2_token_id": ranked[1][0], "top2_logprob": ranked[1][1],
-            "margin": ranked[0][1] - ranked[1][1],
-            "entropy": -sum(p * lp for p, (_token, lp) in zip(probabilities, values, strict=True)),
+            "top1_token_id": ranked[0][0], "top1_logprob": top1_logprob,
+            "top2_token_id": ranked[1][0], "top2_logprob": top2_logprob,
+            "margin": top1_logprob - top2_logprob,
+            "entropy": entropy,
             "batch_size": 1, "active_lane_count": 1, "active_mask": (True,), "decoder_policy": config.policy_id,
         })
         kept, prune_reason = _retained(config, ranked, score_before=score, regret_before=regret,
@@ -270,7 +331,13 @@ def _order_generator(
             if event is not None:
                 state["trace_pending"][work_id] = event
             frames[work_id] = frame
-            work_rows[work_id] = record_item(frame)
+            work_rows[work_id] = record_item(
+                frame,
+                top1_logprob=top1_logprob,
+                top2_logprob=top2_logprob,
+                entropy=entropy,
+                parent_prefix_hash=_prefix_hash(prefix),
+            )
             children.append(frame)
         pending_by_parent[parent_node] = len(children)
         _record_frontier(state, [children])
@@ -312,6 +379,14 @@ def _order_generator(
             break
         frame = frames[item.work_item_id]
         record = work_rows[item.work_item_id]
+        if telemetry_enabled:
+            telemetry_record = telemetry_by_id[item.work_item_id]
+            telemetry_record.update({
+                "popped_at_expanded_nodes": int(state["expanded_nodes"]) + 1,
+                "popped_at_model_forwards": int(state["model_forwards"]),
+                "frontier_pop_order": int(state["frontier_telemetry"]["next_frontier_pop_order"]),
+            })
+            state["frontier_telemetry"]["next_frontier_pop_order"] += 1
         wait = int(state["expanded_nodes"]) - int(item.insertion_order)
         record.update({"first_scheduled_node": int(state["expanded_nodes"]) + 1,
                        "wait_nodes_before_first_expansion": max(0, wait), "max_wait_nodes": max(0, wait)})
@@ -325,6 +400,8 @@ def _order_generator(
                         frontier_floor_activated=frame.restored, frontier_floor_restore_rank=frame.restore_rank)
         state["expanded_nodes"] += 1
         record.update({"last_scheduled_node": node_id, "number_of_expansions": 1, "status": "expanded"})
+        if telemetry_enabled:
+            telemetry_by_id[item.work_item_id]["final_status"] = "EXPANDED"
         if policy_name == "LDS_UNIT_DISCREPANCY_V1":
             by_layer = state["search_order"]["expanded_nodes_by_discrepancy_layer"]
             layer = str(item.discrepancy_count)
@@ -359,6 +436,13 @@ def _order_generator(
     pending = [row for row in state["search_order_work_items"] if row["status"] == "pending"]
     for row in pending:
         row["status"] = "still_pending_at_r1024" if state["budget_exhausted"] else "unexpanded_search_exhausted"
+        if telemetry_enabled:
+            final_status = (
+                "PENDING_AT_R1024"
+                if int(state["expanded_nodes"]) >= int(config.max_expanded_nodes)
+                else "PENDING_AT_TERMINAL_CARRY"
+            )
+            telemetry_by_id[int(row["work_item_id"])]["final_status"] = final_status
     state["search_order"]["pending_retained_work_at_r1024"] = len(pending) if state["budget_exhausted"] else 0
     if policy_name == "LDS_UNIT_DISCREPANCY_V1":
         by_layer: dict[str, int] = {}
@@ -375,6 +459,7 @@ def start_search_order_cell(
     root_cache_transform: Callable[[Any], Any] | None = None,
     release_prefill_temporaries: bool = False, prefill_output_references: list[Any] | None = None,
     eos_event_sink: Callable[[dict[str, Any]], None] | None = None,
+    frontier_telemetry_context: dict[str, Any] | None = None,
 ) -> ReadyCell:
     """Create one E1 ReadyCell; only its logical continuation order is new.
 
@@ -390,6 +475,8 @@ def start_search_order_cell(
     if input_ids.ndim != 2 or tuple(input_ids.shape[:1]) != (1,):
         raise ValueError("search-order cells require one prompt at a time")
     if policy_name == "CURRENT_DFS":
+        if frontier_telemetry_context is not None:
+            raise ValueError("frontier telemetry requires the explicit retained-work scheduler")
         cell = start_ready_cell(
             model=model,
             input_ids=input_ids,
@@ -416,6 +503,8 @@ def start_search_order_cell(
         cell.state["search_order_work_items"] = []
         return cell
     state = _new_state(config); state["eos_event_sink"] = eos_event_sink
+    if frontier_telemetry_context is not None:
+        state["frontier_telemetry_context"] = dict(frontier_telemetry_context)
     state["active_time_accounting"] = active_time_accounting; state["per_forward_trace"] = []
     started_unix = time.time(); created_perf = time.perf_counter()
     with torch.no_grad():
