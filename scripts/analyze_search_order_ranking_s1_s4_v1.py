@@ -97,16 +97,20 @@ def rel_features(cand,current_t):
         out[int(r["work_item_id"])]=np.asarray(z,float)
     return out
 
+def precompute_pair_diffs(states):
+    for st in states:
+        st["_pair_abs"]=state_abs(st["gold"])-state_abs(st["hard"])
+        rf=rel_features(st["cand"],st["t"])
+        st["_pair_rel"]=rf[int(st["gold"]["work_item_id"])]-rf[int(st["hard"]["work_item_id"])]
+
 def train_pairwise(states,train_tasks,mode):
-    X=[];y=[]
-    for s in states:
-        if s["task_id"] not in train_tasks:continue
-        if mode=="ABS":
-            pg=state_abs(s["gold"]);pn=state_abs(s["hard"])
-        else:
-            rf=rel_features(s["cand"],s["t"]);pg=rf[int(s["gold"]["work_item_id"])];pn=rf[int(s["hard"]["work_item_id"])]
-        d=pg-pn;X.append(d);y.append(1);X.append(-d);y.append(0)
-    X=np.asarray(X,float);y=np.asarray(y,int)
+    diffs=[]
+    key="_pair_abs" if mode=="ABS" else "_pair_rel"
+    for st in states:
+        if st["task_id"] in train_tasks: diffs.append(st[key])
+    D=np.asarray(diffs,float)
+    X=np.concatenate([D,-D],axis=0)
+    y=np.concatenate([np.ones(len(D),dtype=int),np.zeros(len(D),dtype=int)])
     sc=StandardScaler();Xt=sc.fit_transform(X)
     md=LogisticRegression(C=1.0,solver="lbfgs",max_iter=1000,random_state=0)
     md.fit(Xt,y)
@@ -177,6 +181,7 @@ def main():
     labeled=load_csv(a.root/"FRONTIER_LABELED_DATASET.csv.gz");decisions=load_csv(a.root/"DECISION_STATES.csv.gz")
     prior=load_csv(pf);foldmap={r["task_id"]:int(r["fold"]) for r in prior}
     states=build_states(labeled,decisions)
+    precompute_pair_diffs(states)
     # S1 forensic
     fold3={t for t,fv in foldmap.items() if fv==3}
     forensic=[]
