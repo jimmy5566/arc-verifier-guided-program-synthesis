@@ -1,0 +1,15 @@
+{
+  "artifact": "SEARCH_ORDER_NODE_SEPARABILITY_DATASET_V1",
+  "cells": 712,
+  "expanded_nodes": 656542,
+  "gold_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "label": "1 iff expanded retained node prefix exactly equals Gold prefix through that node; else 0",
+  "missing_parent_rows": 0,
+  "negative_expanded_nodes": 566147,
+  "outputs": 89,
+  "positive_gold_prefix_nodes": 90395,
+  "positive_rate": 0.13768349930392876,
+  "scope": "POST_FREEZE_NONBLIND_DEVELOPMENT",
+  "source": "frozen Phase-3 d24 raw search trees",
+  "tasks": 60
+}

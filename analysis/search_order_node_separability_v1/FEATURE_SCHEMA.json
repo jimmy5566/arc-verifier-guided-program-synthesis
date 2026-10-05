@@ -1,0 +1,53 @@
+{
+  "artifact": "SEARCH_ORDER_NODE_SEPARABILITY_FEATURE_SCHEMA_V1",
+  "available_at_test_time": true,
+  "cv": "5-fold GroupKFold grouped by task_id",
+  "decision_rule": {
+    "strong": {
+      "average_precision_gain_over_prevalence_min": 0.1,
+      "min_fold_roc_auc": 0.6,
+      "recall_at_top20_min": 0.4,
+      "roc_auc_min": 0.7
+    },
+    "weak": {
+      "average_precision_gain_over_prevalence_min": 0.05,
+      "recall_at_top20_min": 0.25,
+      "roc_auc_min": 0.6
+    }
+  },
+  "excluded_as_gold_derived": [
+    "Gold token/grid identity",
+    "Gold prefix fraction",
+    "first Gold divergence",
+    "Gold rank counters",
+    "Gold NLL/regret summaries",
+    "exact hit / future rescue"
+  ],
+  "excluded_for_identity_leakage": [
+    "task_id",
+    "output_id",
+    "cell_key",
+    "token prefix"
+  ],
+  "model": "StandardScaler + LogisticRegression(C=1,class_weight=balanced,lbfgs)",
+  "model_features": [
+    "branch_depth",
+    "cumulative_nll",
+    "cumulative_regret",
+    "token_logprob",
+    "regret_increment",
+    "is_top1",
+    "discrepancy_count",
+    "mean_nll_per_depth",
+    "mean_regret_per_depth",
+    "frontier_floor_activated",
+    "view=flip_lr",
+    "view=flip_ud",
+    "view=identity",
+    "view=rot180",
+    "view=rot270",
+    "view=rot90",
+    "view=transpose"
+  ],
+  "schema_note": "Historical raw trees do not expose branch_probabilities. local top1/non-top1 and cumulative discrepancy are reconstructed exactly from cumulative-regret increments between parent and child; exact rank, entropy and top1/top2 margin are intentionally not used."
+}

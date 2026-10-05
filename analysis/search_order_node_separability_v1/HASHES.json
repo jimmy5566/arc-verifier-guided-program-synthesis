@@ -1,0 +1,11 @@
+{
+  "files": {
+    "CELL_NODE_COUNTS.csv": "ce5c83e8fabe12fa71318c06f08ec33624be0ec4492c6662c84a4cff8dbec002",
+    "DATASET_SUMMARY.json": "c8fc0256a803858df5b1e822f7606365eaa2e6bb1eb458887b24f08c33bd220b",
+    "DECISION.json": "caf34446de63f79a1b27a57545ff2c2a339a42a68f151d53a5ced4cc0d68befa",
+    "FEATURE_SCHEMA.json": "e933b9791bfaec3ae8bc462dad2035b5c03731118b0f7e833713f4e7b000f67b",
+    "GROUPED_CV_FOLDS.csv": "0199c7c92eea60c0d36fb5359bfcc2ffe45cc9f5edc8fd233e8c1e908a7323e2",
+    "METRICS.json": "486ce72fefb7a46515a36c566f51b7f3266bbefccb169b11f948caab0681497a",
+    "REPORT.md": "a7f82486f6cff3a43b77f2620c2662ece86a3867ab281bfd61c76fac7ae1c674"
+  }
+}

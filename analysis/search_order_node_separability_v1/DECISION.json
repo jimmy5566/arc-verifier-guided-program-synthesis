@@ -1,0 +1,9 @@
+{
+  "artifact": "SEARCH_ORDER_NODE_SEPARABILITY_DECISION_V1",
+  "classic_lds_context": "P3 Micro12 had 0/9 historical-miss rescues; node audit tests whether richer blind state signals can rank Gold-prefix work better than unit discrepancy.",
+  "learned_node_value_live_search_authorized": true,
+  "next": "PREREGISTER_P4_VALUE_GUIDED_SEARCH",
+  "signal": "STRONG_NODE_VALUE_SIGNAL",
+  "strong_gate_passed": true,
+  "weak_gate_passed": true
+}
