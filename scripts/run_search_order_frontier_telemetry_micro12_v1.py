@@ -35,6 +35,10 @@ EXPERIMENT = "SEARCH_ORDER_FRONTIER_TELEMETRY_MICRO12_V1"
 POLICY = "LDS_UNIT_DISCREPANCY_V1"
 CHECKPOINTS = "256,512,768,1024"
 COHORT_SHA256 = "3852056112336e58559ceb0bb6f3171600ff36e0d6b02d1c9c03fc0da334443e"
+# The historical Phase-3 generation used this exact target-blind challenge
+# snapshot.  Bind the controller to the file itself so a directory or a
+# different public challenge release is rejected before worker launch.
+CHALLENGE_SHA256 = "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8"
 CONTROL_FILES = frozenset({
     "GENERATION_HASHES.json", "GENERATION_HASH_VERIFICATION.json", "HASHES.json", "HASH_VERIFICATION.json",
     "FRONTIER_TELEMETRY_HASHES.json", "FRONTIER_TELEMETRY_HASH_VERIFICATION.json",
@@ -176,6 +180,11 @@ def run_gate0(args: argparse.Namespace) -> None:
 
 
 def preflight(args: argparse.Namespace, cohort: dict[str, Any]) -> dict[str, Any]:
+    if not args.challenge.is_file():
+        raise RuntimeError("FRONTIER_TELEMETRY_CHALLENGE_INPUT_IDENTITY_FAIL")
+    challenge_sha256 = sha_file(args.challenge)
+    if challenge_sha256 != CHALLENGE_SHA256:
+        raise RuntimeError("FRONTIER_TELEMETRY_CHALLENGE_INPUT_IDENTITY_FAIL")
     runtime = _runtime_probe(args.worker_python)
     adapter = audit_adapter_state(cohort)
     identity = _frozen_input_identity(args)
@@ -190,6 +199,7 @@ def preflight(args: argparse.Namespace, cohort: dict[str, Any]) -> dict[str, Any
     payload = {
         "status": "PASS", "experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False,
         "runtime": runtime, "adapter": adapter, "input_identity": identity,
+        "challenge_input": {"sha256": challenge_sha256, "identity": "PASS"},
         "cohort_sha256": COHORT_SHA256,
         "config": {
             "ttt_depth": 24, "augmentation": "canonical_AUG8", "max_expanded_nodes": 1024,
@@ -566,10 +576,16 @@ def failure_receipt(args: argparse.Namespace, error: BaseException) -> None:
         return
     message = str(error)
     classification = "IMPLEMENTATION"
-    for name in ("INPUT_IDENTITY", "SEMANTIC_PARITY", "TELEMETRY_INCOMPLETE", "RUNTIME_PATHOLOGY", "OOM", "HASH"):
+    for name in ("INPUT_IDENTITY", "SEMANTIC_PARITY", "TELEMETRY_INCOMPLETE", "RUNTIME_PATHOLOGY", "HASH"):
         if name in message:
             classification = name
             break
+    else:
+        # The worker emits WORKER_NON_OOM for ordinary infrastructure faults;
+        # do not turn that receipt into an OOM merely because the token occurs
+        # inside the negated classifier name.
+        if "OOM" in message and "NON_OOM" not in message:
+            classification = "OOM"
     _atomic_json(args.output / "FAILURE_RECEIPT.json", {
         "experiment": EXPERIMENT, "classification": classification, "exception": message,
         "gpu_generation_occurred": (args.output / "RAW_OUTPUTS").exists() or (args.output / "GATE1_SMOKE" / "RAW_OUTPUTS").exists(),
