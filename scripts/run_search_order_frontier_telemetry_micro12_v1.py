@@ -621,6 +621,16 @@ def main() -> None:
             })
             run = args.output / "GATE1_SMOKE"
             runtime = run_outputs(args, run, smoke, "GATE1_SMOKE")
+            # Freeze the complete existing smoke run before any aggregate
+            # telemetry or historical-parity validation consumes its ledger.
+            # ``run_outputs`` skips independently frozen outputs, so recovery
+            # here never launches a worker for the three completed cells.
+            generation = ledger(run, "GENERATION_HASHES.json", include_raw=True)
+            generation_verification = _verify(run, run / "GENERATION_HASHES.json")
+            _atomic_json(run / "GENERATION_HASH_VERIFICATION.json", generation_verification)
+            if generation_verification.get("status") != "PASS":
+                raise RuntimeError("FRONTIER_TELEMETRY_SMOKE_GENERATION_HASH_FAIL")
+            frontier_ledger(run)
             validate_smoke(run, smoke, runtime)
             compare_smoke_to_p3(run, args.p3_reference, smoke)
             return
