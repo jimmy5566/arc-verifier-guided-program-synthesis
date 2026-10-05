@@ -1,0 +1,14 @@
+{
+  "artifact": "FRONTIER_DATASET_SUMMARY_V1",
+  "cells": 96,
+  "eligible_tasks_with_gold_opportunities": 12,
+  "expanded_work_items": 95928,
+  "gold_opportunity_frontier_states": 64005,
+  "never_expanded_work_items": 3696,
+  "outputs": 12,
+  "positive_gold_prefix_work_items": 13996,
+  "positive_prevalence": 0.14048823576648198,
+  "retained_work_items": 99624,
+  "scope": "POST_FREEZE_NONBLIND_DEVELOPMENT",
+  "tasks": 12
+}

@@ -1,0 +1,56 @@
+{
+  "artifact": "FRONTIER_GOLD_LABEL_AUDIT_V1",
+  "candidate_token_mismatches": 0,
+  "cells_with_never_expanded_gold_prefix": 58,
+  "duplicate_positive_prefix_lengths": 0,
+  "frontier_source_verification": {
+    "frontier_files_checked": 12,
+    "frontier_hash_mismatches": [],
+    "pre_gold_freeze": {
+      "P3_semantic_parity_gate": "PASS",
+      "cohort_sha256": "3852056112336e58559ceb0bb6f3171600ff36e0d6b02d1c9c03fc0da334443e",
+      "experiment": "SEARCH_ORDER_FRONTIER_TELEMETRY_MICRO12_V1",
+      "frontier_telemetry_hash_status": "PASS",
+      "frontier_telemetry_integrity": "PASS",
+      "gate1_evidence_sha256": "00b986f5c3b91159101904fb1234c2dff8ab0bbd0a95cb0feca5d3dd0f903c39",
+      "generation_hash_status": "PASS",
+      "gold_loaded": false,
+      "outputs": "12/12",
+      "scientific_config_unchanged": true,
+      "scientific_policy": "LDS_UNIT_DISCREPANCY_V1",
+      "status": "FROZEN",
+      "target_blind": true
+    },
+    "status": "PASS"
+  },
+  "gold_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "known_completed_gold_candidate_outputs_expected": [
+    "1818057f:o0",
+    "2d0172a1:o0",
+    "c7f57c3e:o0"
+  ],
+  "known_completed_gold_candidate_outputs_observed": [
+    "1818057f:o0",
+    "2d0172a1:o0",
+    "c7f57c3e:o0"
+  ],
+  "known_gold_candidates_token_checked": 15,
+  "never_expanded_gold_prefix_work_items": 58,
+  "outputs_with_never_expanded_gold_prefix": [
+    "2d0172a1:o0",
+    "36a08778:o1",
+    "4e34c42c:o0",
+    "6ffbe589:o0",
+    "7ed72f31:o1",
+    "80a900e0:o0",
+    "88bcf3b4:o1",
+    "898e7135:o0",
+    "8b7bacbf:o1",
+    "c7f57c3e:o0",
+    "dd6b8c4b:o0"
+  ],
+  "positive_child_lineage_checks": 13900,
+  "positive_gold_prefix_work_items": 13996,
+  "status": "PASS",
+  "telemetry_work_items": 99624
+}

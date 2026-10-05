@@ -1,0 +1,12 @@
+{
+  "artifact": "FRONTIER_RECONSTRUCTION_AUDIT_V1",
+  "boundary": "before pop/expansion t: inserted_at_expanded_nodes < t and (pop is null or pop >= t)",
+  "cells": 96,
+  "gold_opportunity_states": 64005,
+  "insertion_frontier_size_checks": 99624,
+  "max_frontier_size": 309,
+  "max_gold_prefix_items_simultaneously_pending": 1,
+  "p3_priority_reconstruction_mismatches": 0,
+  "scientific_pop_decisions": 95928,
+  "status": "PASS"
+}

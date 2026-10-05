@@ -1,0 +1,10 @@
+{
+  "analysis_code_commit": "54c3d30d409a9e4437ca3940b67290a8c0020066",
+  "analysis_plan_path": "analysis/search_order_frontier_telemetry_micro12_v1/postfreeze_frontier_analysis_v1_prereg/ANALYSIS_PLAN.json",
+  "analysis_plan_sha256": "d5a08d3849c1efa88f55804ec251658adbd4cbe39215c848794c200278e985db",
+  "artifact": "FRONTIER_POSTFREEZE_PROVENANCE_V1",
+  "generation_freeze_commit": "9b5109e16d4aa30ebb1f44521df276b99e35029e",
+  "gold_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "source_frontier_hash_status": "PASS",
+  "source_path": "analysis/search_order_frontier_telemetry_micro12_v1/gate2_generation_v8"
+}
