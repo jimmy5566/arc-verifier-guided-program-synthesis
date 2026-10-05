@@ -181,7 +181,11 @@ def preflight(args: argparse.Namespace, cohort: dict[str, Any]) -> dict[str, Any
     identity = _frozen_input_identity(args)
     if adapter.get("adapter_state") != "EXACT_HISTORICAL":
         raise RuntimeError("FRONTIER_TELEMETRY_ADAPTER_IDENTITY_FAIL")
-    if identity.get("augmentation", {}).get("subset") != "CANONICAL_GEOMETRY_AUG8":
+    # ``_frozen_input_identity`` binds the controller to the archived AUG8
+    # object and reports its result as an explicit PASS receipt, rather than
+    # returning the augmented object itself.  Keep the controller aligned with
+    # that established Phase-3 identity contract.
+    if identity.get("canonical_aug8_identity") != "PASS":
         raise RuntimeError("FRONTIER_TELEMETRY_AUG8_IDENTITY_FAIL")
     payload = {
         "status": "PASS", "experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False,
