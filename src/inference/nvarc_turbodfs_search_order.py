@@ -171,10 +171,9 @@ def _order_generator(
     def add_successors(children: list[_Frame], *, is_root: bool) -> None:
         if not children:
             return
-        if is_root:
-            if policy_name == "LDS_UNIT_DISCREPANCY_V1":
-                policy.push_successors(tuple(child.item for child in children))
-                return
+        if is_root and policy_name == "LDS_UNIT_DISCREPANCY_V1":
+            policy.push_successors(tuple(child.item for child in children))
+        elif is_root:
             ordered = sorted(children, key=lambda child: (child.item.cumulative_nll, child.item.insertion_order, child.item.work_item_id))
             if policy_name == "CURRENT_DFS":
                 ordered = list(reversed(ordered))
