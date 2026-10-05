@@ -1,0 +1,28 @@
+{
+  "artifact": "SEARCH_ORDER_MICRO24_V1_GOLD_PATH_DIAGNOSTIC_PROVENANCE_V1",
+  "source_freeze_commit": "f33ccc0d8bf655fa67ad35c8e2896fddf6ad202e",
+  "source_archive": "analysis/search_order_micro24_v1_e1",
+  "source_cohort": {
+    "path": "analysis/search_order_micro24_v1_e1/P1/RUN_COHORT.json",
+    "git_blob_sha": "f2a147a7ebbfe97e71f30bdefe51e26919373bce",
+    "filter": "historical_d24_orc == false"
+  },
+  "source_gold_path_anatomy": {
+    "path": "analysis/eval60_phase3_r1024_miss_anatomy_v1/CELL_GOLD_PATH_ANATOMY.csv",
+    "git_blob_sha": "8d268c97fd15f13ae22db5af45174a10a2ce8f36",
+    "filters": {
+      "depth": 24,
+      "augmentation": "canonical AUG8 only",
+      "outputs": "18 historical d24 misses from Micro24 cohort"
+    }
+  },
+  "p1_high_prefix_exact_gold_audit": {
+    "solver_ref": "f33ccc0d8bf655fa67ad35c8e2896fddf6ad202e",
+    "gold_repo": "arcprize/ARC-AGI-2",
+    "gold_ref": "f3283f727488ad98fe575ea6a5ac981e4a188e49",
+    "method": "Exact canonical-grid equality between frozen P1 candidate_pool_snapshot entries and official evaluation test outputs."
+  },
+  "important_limitation": "Current frozen text artifacts do not expose the per-token Gold rank sequence required to compute exact LDS discrepancy counts. first_divergence_token and cumulative_regret are observed, but discrepancy count must not be inferred from them.",
+  "gold_use": "POST-FREEZE DEVELOPMENT DIAGNOSTIC ONLY",
+  "status": "PASS"
+}
