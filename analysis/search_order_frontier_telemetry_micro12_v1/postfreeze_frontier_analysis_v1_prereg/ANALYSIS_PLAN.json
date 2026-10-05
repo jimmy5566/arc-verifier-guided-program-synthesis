@@ -1,0 +1,97 @@
+{
+  "artifact": "FRONTIER_POSTFREEZE_ANALYSIS_PLAN_V1",
+  "status": "FROZEN_BEFORE_THIS_DATASET_GOLD_LABELING",
+  "generation_freeze_commit": "9b5109e16d4aa30ebb1f44521df276b99e35029e",
+  "source": "analysis/search_order_frontier_telemetry_micro12_v1/gate2_generation_v8/FRONTIER_WORK_ITEMS",
+  "gold": {
+    "source": "poetiq-ai/poetiq-arc-agi-solver arc-prize-2025/arc-agi_evaluation_solutions.json",
+    "expected_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+    "label": "exact transformed-Gold non-EOS token-prefix SHA256 equality only"
+  },
+  "decision_boundary": {
+    "description": "frontier immediately before the pop that causes scientific expansion t",
+    "pending_rule": "inserted_at_expanded_nodes < t AND (popped_at_expanded_nodes is null OR popped_at_expanded_nodes >= t)",
+    "selected_rule": "popped_at_expanded_nodes == t",
+    "eligibility": "frontier_size >= 2 and >=1 y_gold_prefix positive item"
+  },
+  "model": {
+    "type": "StandardScaler + LogisticRegression",
+    "C": 1,
+    "class_weight": "balanced",
+    "solver": "lbfgs",
+    "max_iter": 1000,
+    "random_state": 0,
+    "cv": "5-fold StratifiedGroupKFold grouped by task_id; no task crosses folds",
+    "training_unit": "unique retained work item",
+    "ranking_unit": "reconstructed same-frontier choice state"
+  },
+  "model_features": [
+    "prefix_length",
+    "local_token_rank",
+    "token_logprob",
+    "top1_logprob",
+    "top2_logprob",
+    "margin",
+    "entropy",
+    "cumulative_nll",
+    "cumulative_regret",
+    "regret_increment",
+    "discrepancy_count",
+    "frontier_floor_activated",
+    "frontier_floor_restore_rank_filled",
+    "frontier_floor_restore_rank_present",
+    "frontier_size_at_insert",
+    "inserted_at_expanded_nodes",
+    "inserted_at_model_forwards",
+    "completed_candidates_at_insert",
+    "augmentation geometry one-hot"
+  ],
+  "forbidden_features": [
+    "task_id",
+    "output_id",
+    "cell_key",
+    "prefix_hash",
+    "parent_prefix_hash",
+    "selected_token_id",
+    "Gold identity",
+    "Gold rank",
+    "Gold prefix fraction",
+    "future expansion/candidate outcome",
+    "eventual correctness"
+  ],
+  "baselines": [
+    "actual frozen P3 LDS priority reconstructed from discrepancy layer + DFS stack transaction",
+    "cumulative_nll ascending",
+    "cumulative_regret ascending",
+    "unit_discrepancy ascending",
+    "token_logprob descending"
+  ],
+  "primary_metrics": [
+    "Top1 Gold-frontier accuracy",
+    "Top2 Gold-frontier recall",
+    "Top5 Gold-frontier recall",
+    "MRR",
+    "mean best-Gold rank",
+    "normalized best-Gold rank"
+  ],
+  "secondary_metrics": [
+    "global ROC-AUC",
+    "global average precision",
+    "frontier recall at top 5%/10%/20%"
+  ],
+  "bootstrap": {
+    "unit": "task_id",
+    "replicates": 10000,
+    "seed": 0,
+    "ci": "percentile 95%"
+  },
+  "p4_authorization": {
+    "pooled_top1_must_exceed_best_baseline": true,
+    "pooled_mrr_must_exceed_best_baseline": true,
+    "bootstrap": "95% CI for DeltaTop1 or DeltaMRR must be strictly >0",
+    "other_metric_point_delta_nonnegative": true,
+    "catastrophic_fold": "a held-out fold where both Top1 and MRR are >=0.05 absolute worse than the same best baseline",
+    "catastrophic_fold_allowed": false,
+    "p4_implementation": "FORBIDDEN_IN_THIS_ANALYSIS"
+  }
+}
