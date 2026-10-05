@@ -114,16 +114,21 @@ def audit_preregistration() -> dict[str, Any]:
     if any(not path.is_file() for path in (prereg_path, method_path, plan_path)):
         raise RuntimeError("P3_PREREGISTRATION_ARTIFACT_MISSING")
     prereg = _read(prereg_path)
-    method = prereg.get("method", {})
-    expected = {
-        "algorithm": POLICY,
-        "discrepancy_increment": {"local_rank_1": 0, "local_rank_gt_1": 1},
-        "priority": ["lowest discrepancy_count", "depth-first LIFO within layer", "historical sibling cumulative-NLL ordering"],
-    }
-    if {key: method.get(key) for key in expected} != expected or method.get("disallowed") != ["D_max", "Gold-derived threshold", "task-specific rule", "parameter tuning"]:
+    policy = prereg.get("policy", {})
+    increment = policy.get("discrepancy_increment", {})
+    expected_selection = [
+        "choose the smallest discrepancy_count with pending retained work",
+        "within that discrepancy layer use LIFO depth-first traversal",
+        "for siblings entering the same layer, preserve historical local ordering by cumulative_nll ascending, then insertion_order, then work_item_id",
+    ]
+    revision = prereg.get("cohort_revision", {})
+    if (policy.get("name") != POLICY or increment.get("local_token_rank_eq_1") != 0
+            or increment.get("local_token_rank_gt_1") != 1 or policy.get("hard_discrepancy_limit") is not None
+            or policy.get("selection_rule") != expected_selection or policy.get("retention_changed") is not False
+            or revision.get("experiment") != EXPERIMENT):
         raise RuntimeError("P3_PREREGISTRATION_METHOD_MISMATCH")
     source = (ROOT / "src" / "inference" / "search_order.py").read_text(encoding="utf-8")
-    required_source = ("class LDSUnitDiscrepancy", "rank1_plus0_rank_gt1_plus1", "reversed(sorted(siblings, key=_key))")
+    required_source = ("class LDSUnitDiscrepancy", "reversed(sorted(group, key=_key))", "min(nonempty)")
     if any(value not in source for value in required_source):
         raise RuntimeError("P3_IMPLEMENTATION_AUDIT_FAIL")
     return {

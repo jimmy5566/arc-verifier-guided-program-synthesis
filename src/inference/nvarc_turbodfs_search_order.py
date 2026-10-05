@@ -89,7 +89,13 @@ def _order_generator(
         "yielded_subtrees": 0, "pending_retained_work_at_r1024": 0,
     }
     if policy_name == "LDS_UNIT_DISCREPANCY_V1":
-        state["search_order"]["discrepancy_definition"] = "unit_non_top1"
+        state["search_order"].update({
+            "discrepancy_definition": "unit_non_top1",
+            "max_discrepancy_expanded": None,
+            "expanded_nodes_by_discrepancy_layer": {},
+            "pending_nodes_by_discrepancy_layer": {},
+            "completed_candidates_by_discrepancy_layer": {},
+        })
     state["search_order_work_items"] = []
 
     def record_item(frame: _Frame) -> dict[str, Any]:
@@ -212,6 +218,7 @@ def _order_generator(
         children: list[_Frame] = []
         for restore_rank, (next_score, next_regret, token, logprob) in enumerate(kept, start=1):
             rank = next(index for index, (ranked_token, _x) in enumerate(ranked, start=1) if ranked_token == token)
+            discrepancy = parent_discrepancy + (0 if rank == 1 else 1)
             common = {
                 "event_kind": "successor", "parent_node_id": parent_node, "lane": 0,
                 "prefix_length": len(prefix) + 1, "prefix_hash": _prefix_hash(prefix + (token,)), "last_token": token,
@@ -245,14 +252,16 @@ def _order_generator(
                          floor_rank=floor_rank, completed=True, candidate_id=candidate_id, prune=None, termination="eos",
                          terminal_node=node_id)
                 state["completed_candidates"] += 1
+                if policy_name == "LDS_UNIT_DISCREPANCY_V1":
+                    by_layer = state["search_order"]["completed_candidates_by_discrepancy_layer"]
+                    by_layer[str(discrepancy)] = int(by_layer.get(str(discrepancy), 0)) + 1
                 continue
             work_id = next_work_item_id; next_work_item_id += 1
             root_id = work_id if is_root else int(root_branch_id)
-            discrepancy_increment = 0 if rank == 1 else 1
             item = RetainedWorkItem(
                 work_id, root_id, parent_work_item_id, next_score, next_regret,
                 state["next_frontier_insert_order"], local_token_rank=rank,
-                discrepancy_count=parent_discrepancy + discrepancy_increment,
+                discrepancy_count=discrepancy,
             )
             state["next_frontier_insert_order"] += 1
             frame = _Frame(item, token, logprob, parent_node, prefix + (token,), position, restored, floor_rank)
@@ -316,6 +325,12 @@ def _order_generator(
                         frontier_floor_activated=frame.restored, frontier_floor_restore_rank=frame.restore_rank)
         state["expanded_nodes"] += 1
         record.update({"last_scheduled_node": node_id, "number_of_expansions": 1, "status": "expanded"})
+        if policy_name == "LDS_UNIT_DISCREPANCY_V1":
+            by_layer = state["search_order"]["expanded_nodes_by_discrepancy_layer"]
+            layer = str(item.discrepancy_count)
+            by_layer[layer] = int(by_layer.get(layer, 0)) + 1
+            maximum = state["search_order"]["max_discrepancy_expanded"]
+            state["search_order"]["max_discrepancy_expanded"] = item.discrepancy_count if maximum is None else max(int(maximum), item.discrepancy_count)
         event = state["trace_pending"].pop(item.work_item_id, None)
         if event is not None:
             remaining_siblings = max(0, pending_by_parent.get(frame.parent_node_id, 1) - 1)
@@ -345,6 +360,12 @@ def _order_generator(
     for row in pending:
         row["status"] = "still_pending_at_r1024" if state["budget_exhausted"] else "unexpanded_search_exhausted"
     state["search_order"]["pending_retained_work_at_r1024"] = len(pending) if state["budget_exhausted"] else 0
+    if policy_name == "LDS_UNIT_DISCREPANCY_V1":
+        by_layer: dict[str, int] = {}
+        for row in pending:
+            layer = str(int(row["discrepancy_count"]))
+            by_layer[layer] = int(by_layer.get(layer, 0)) + 1
+        state["search_order"]["pending_nodes_by_discrepancy_layer"] = by_layer
     return suffixes
 
 

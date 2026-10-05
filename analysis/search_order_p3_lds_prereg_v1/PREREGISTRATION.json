@@ -1,6 +1,15 @@
 {
   "artifact": "SEARCH_ORDER_P3_LDS_PREREG_V1",
   "status": "PRE_REGISTERED_BEFORE_IMPLEMENTATION",
+  "cohort_revision": {
+    "status": "AUTHORITATIVE_BEFORE_P3_GENERATION",
+    "supersedes": "the earlier full Micro24 P3 cohort only",
+    "experiment": "SEARCH_ORDER_P3_LDS_MICRO12_V1",
+    "parent": "SEARCH_ORDER_MICRO24_V1",
+    "selection": "within each frozen parent stratum, SHA256('P3_LDS_MICRO12_V1:' + output_id) ascending, first three",
+    "selection_uses_only": ["output_id", "frozen_parent_category"],
+    "forbidden_selection_inputs": ["Gold prefix fraction", "Gold-path anatomy", "retained-vs-pruned status", "P1 result", "P2 result", "candidate quality", "known rescue status"]
+  },
   "base_commit": "7083db68c04dcd442a5138ee095bca64288a95f7",
   "development_context": {
     "gold_diagnostic": "analysis/search_order_micro24_v1_gold_path_diagnostic_v1",
@@ -43,11 +52,13 @@
     "physical_scheduler": "existing profile-safe resident/batch policy"
   },
   "cohort": {
-    "name": "SEARCH_ORDER_MICRO24_V1 cohort",
-    "cohort_sha256": "25345687d3fdb1ae837cb05337294e1b0743a011c3cb290d008023f2c4d59990",
-    "outputs": 24,
-    "historical_d24_misses": 18,
-    "controls": 6,
+    "name": "SEARCH_ORDER_P3_LDS_MICRO12_V1",
+    "parent_name": "SEARCH_ORDER_MICRO24_V1 cohort",
+    "parent_cohort_sha256": "25345687d3fdb1ae837cb05337294e1b0743a011c3cb290d008023f2c4d59990",
+    "outputs": 12,
+    "category_counts": {"HIGH": 3, "MID": 3, "LOW": 3, "CONTROL": 3},
+    "historical_d24_misses": 9,
+    "controls": 3,
     "generation": "target-blind",
     "gold_scoring": "post-freeze only"
   },
@@ -55,7 +66,7 @@
     "no_gold_in_generation": true,
     "no_dmax_tuning": true,
     "no_task_specific_priority_rules": true,
-    "no_threshold_search_on_micro24_gold": true,
+    "no_threshold_search_on_micro12_gold": true,
     "implementation_must_match_this_contract_before_any_p3_gpu_generation": true
   }
 }

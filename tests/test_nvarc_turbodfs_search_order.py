@@ -63,3 +63,13 @@ def test_lds_records_mechanical_discrepancy_telemetry() -> None:
     for row in rows:
         if int(row["local_token_rank"]) == 1 and row["parent_work_item_id"] is None:
             assert int(row["discrepancy_count"]) == 0
+    by_id = {int(row["work_item_id"]): row for row in rows}
+    for row in rows:
+        parent = row["parent_work_item_id"]
+        expected = 0 if parent is None else int(by_id[int(parent)]["discrepancy_count"])
+        expected += 0 if int(row["local_token_rank"]) == 1 else 1
+        assert int(row["discrepancy_count"]) == expected
+    order = cell.state["search_order"]
+    assert sum(order["expanded_nodes_by_discrepancy_layer"].values()) == sum(
+        row["status"] == "expanded" for row in rows
+    )

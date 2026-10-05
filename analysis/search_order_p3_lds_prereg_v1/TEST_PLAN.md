@@ -37,11 +37,13 @@ PASS requires:
 - no OOM fallback;
 - discrepancy telemetry reconciles with work-item lineage.
 
-If Gate 1 fails, do not launch Micro24.
+If Gate 1 fails, do not launch Micro12.
 
-## Gate 2 — full Micro24 target-blind generation
+## Gate 2 — Micro12 target-blind generation
 
-Run P3 on all 24 frozen Micro24 outputs.
+Run P3 on exactly 12 frozen Micro12 outputs: three each from HIGH, MID, LOW,
+and CONTROL. The deterministic cohort is hash-selected from the frozen
+Micro24 strata and must be committed before GPU work.
 
 Freeze raw outputs, checkpoint curves, EOS events, work-item telemetry, discrepancy telemetry, runtime receipts and hashes before Gold access.
 
