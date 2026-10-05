@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "candidate_pool_changed": false,
+  "likelihood_recomputed": false,
+  "S2_modified": false,
+  "model_calls": 0,
+  "DFS_calls": 0,
+  "TTT_calls": 0,
+  "GPU_used": false,
+  "Gold_used_for_constraint_inference": false,
+  "Gold_used_for_candidate_scoring": false,
+  "output_count": 35,
+  "candidate_feature_rows": 2859,
+  "note": "Rules were frozen before opening the byte-identical historical solutions snapshot."
+}
