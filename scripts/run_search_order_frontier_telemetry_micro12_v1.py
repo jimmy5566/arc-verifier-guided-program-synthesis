@@ -39,6 +39,11 @@ COHORT_SHA256 = "3852056112336e58559ceb0bb6f3171600ff36e0d6b02d1c9c03fc0da334443
 # snapshot.  Bind the controller to the file itself so a directory or a
 # different public challenge release is rejected before worker launch.
 CHALLENGE_SHA256 = "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8"
+NATIVE_CONFIG_SHA256 = {
+    "chat_template.j2": "e5ed79284f346b7eadd874f6bdc376f722704808afd07ffd6190c6d8b97ddb5f",
+    "tokenizer.json": "b5ab94591796d3b7d26b55432285f9be7f3f7fb625f3cd1f4749ae2c74134123",
+    "tokenizer_config.json": "da462d924da5b37c3750d75a55e717d6967b11a0de38e6d19c5ac22686e3b543",
+}
 CONTROL_FILES = frozenset({
     "GENERATION_HASHES.json", "GENERATION_HASH_VERIFICATION.json", "HASHES.json", "HASH_VERIFICATION.json",
     "FRONTIER_TELEMETRY_HASHES.json", "FRONTIER_TELEMETRY_HASH_VERIFICATION.json",
@@ -185,6 +190,10 @@ def preflight(args: argparse.Namespace, cohort: dict[str, Any]) -> dict[str, Any
     challenge_sha256 = sha_file(args.challenge)
     if challenge_sha256 != CHALLENGE_SHA256:
         raise RuntimeError("FRONTIER_TELEMETRY_CHALLENGE_INPUT_IDENTITY_FAIL")
+    native_config = {name: sha_file(args.native_config_dir / name) if (args.native_config_dir / name).is_file() else None
+                     for name in NATIVE_CONFIG_SHA256}
+    if native_config != NATIVE_CONFIG_SHA256:
+        raise RuntimeError("FRONTIER_TELEMETRY_NATIVE_CONFIG_IDENTITY_FAIL")
     runtime = _runtime_probe(args.worker_python)
     adapter = audit_adapter_state(cohort)
     identity = _frozen_input_identity(args)
@@ -200,6 +209,7 @@ def preflight(args: argparse.Namespace, cohort: dict[str, Any]) -> dict[str, Any
         "status": "PASS", "experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False,
         "runtime": runtime, "adapter": adapter, "input_identity": identity,
         "challenge_input": {"sha256": challenge_sha256, "identity": "PASS"},
+        "native_config": {"files": native_config, "identity": "PASS"},
         "cohort_sha256": COHORT_SHA256,
         "config": {
             "ttt_depth": 24, "augmentation": "canonical_AUG8", "max_expanded_nodes": 1024,
