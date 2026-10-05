@@ -1,0 +1,56 @@
+name: Frontier telemetry post-freeze Gold analysis
+
+on:
+  push:
+    branches:
+      - transfer/turbodfs-opt-v2-repair
+    paths:
+      - '.github/workflows/frontier_postfreeze_analysis.yml'
+      - 'scripts/analyze_frontier_telemetry_postfreeze_v1.py'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install CPU analysis dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy==2.1.3 scikit-learn==1.5.2
+
+      - name: Clone exact Gold mirror
+        run: git clone --depth 1 https://github.com/poetiq-ai/poetiq-arc-agi-solver.git /tmp/poetiq
+
+      - name: Run post-freeze Gold labeling and frontier ranking
+        run: |
+          python scripts/analyze_frontier_telemetry_postfreeze_v1.py             --source analysis/search_order_frontier_telemetry_micro12_v1/gate2_generation_v8             --solutions /tmp/poetiq/data/arc-prize-2025/arc-agi_evaluation_solutions.json             --analysis-plan analysis/search_order_frontier_telemetry_micro12_v1/postfreeze_frontier_analysis_v1_prereg/ANALYSIS_PLAN.json             --p3-gold-results analysis/search_order_p3_lds_micro12_v1/postfreeze_gold_scoring_v1/P3_GOLD_RESULTS.csv             --output frontier_postfreeze_output
+
+      - name: Show result
+        run: |
+          cat frontier_postfreeze_output/GOLD_LABEL_AUDIT.json
+          cat frontier_postfreeze_output/FRONTIER_RECONSTRUCTION_AUDIT.json
+          cat frontier_postfreeze_output/DECISION.json
+          cat frontier_postfreeze_output/REPORT.md
+
+      - name: Commit additive post-freeze artifacts
+        run: |
+          DEST=analysis/search_order_frontier_telemetry_micro12_v1/postfreeze_frontier_analysis_v1
+          test ! -e "$DEST"
+          mkdir -p "$DEST"
+          cp -a frontier_postfreeze_output/. "$DEST/"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$DEST"
+          git commit -m "analysis: freeze frontier post-freeze Gold audit"
+          git push origin HEAD:transfer/turbodfs-opt-v2-repair
+
+      - name: Upload analysis artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontier-postfreeze-analysis-v1
+          path: frontier_postfreeze_output/
