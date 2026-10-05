@@ -1,0 +1,17 @@
+{
+  "attempt_index": 0,
+  "checkpoint_output": "OUTPUT_CHECKPOINTS/80a900e0_o0.json",
+  "ended_unix": 1791181832.5903265,
+  "eos_events": "EOS_EVENTS/80a900e0_o0.jsonl.gz",
+  "experiment": "SEARCH_ORDER_P3_LDS_MICRO12_V1_GATE2_MICRO12",
+  "gold_loaded": false,
+  "output_id": "80a900e0:o0",
+  "profile_configuration": {
+    "physical_batch_ceiling": 8,
+    "resident_capacity": 8
+  },
+  "raw_output": "RAW_OUTPUTS/80a900e0_o0.json",
+  "status": "COMPLETE",
+  "target_blind": true,
+  "wall_seconds": 355.44525578804314
+}

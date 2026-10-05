@@ -1,0 +1,17 @@
+{
+  "attempt_index": 0,
+  "checkpoint_output": "OUTPUT_CHECKPOINTS/6ffbe589_o0.json",
+  "ended_unix": 1791183372.472526,
+  "eos_events": "EOS_EVENTS/6ffbe589_o0.jsonl.gz",
+  "experiment": "SEARCH_ORDER_P3_LDS_MICRO12_V1_GATE2_MICRO12",
+  "gold_loaded": false,
+  "output_id": "6ffbe589:o0",
+  "profile_configuration": {
+    "physical_batch_ceiling": 8,
+    "resident_capacity": 8
+  },
+  "raw_output": "RAW_OUTPUTS/6ffbe589_o0.json",
+  "status": "COMPLETE",
+  "target_blind": true,
+  "wall_seconds": 470.4956312235445
+}
