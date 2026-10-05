@@ -1,0 +1,61 @@
+{
+  "artifact": "SEARCH_ORDER_P3_LDS_PREREG_V1",
+  "status": "PRE_REGISTERED_BEFORE_IMPLEMENTATION",
+  "base_commit": "7083db68c04dcd442a5138ee095bca64288a95f7",
+  "development_context": {
+    "gold_diagnostic": "analysis/search_order_micro24_v1_gold_path_diagnostic_v1",
+    "allowed_use_of_gold": "hypothesis-class selection only; no task-specific thresholds or LDS parameter fitting",
+    "observed_reason_for_test": "90/144 canonical d24 miss cells retained the Gold successor without expanding it; HIGH group 38/48"
+  },
+  "policy": {
+    "label": "P3",
+    "name": "LDS_UNIT_DISCREPANCY_V1",
+    "principle": "duplicate-free discrepancy-layered depth-first ordering over the frozen retained work set",
+    "discrepancy_increment": {
+      "local_token_rank_eq_1": 0,
+      "local_token_rank_gt_1": 1,
+      "rank_reference": "full legal ARC-token ranking from model logits before retention",
+      "frontier_floor_rule": "use original model local_token_rank, not frontier-floor restore rank"
+    },
+    "path_discrepancy": "sum of unit discrepancy increments over the non-EOS prefix",
+    "hard_discrepancy_limit": null,
+    "retention_changed": false,
+    "selection_rule": [
+      "choose the smallest discrepancy_count with pending retained work",
+      "within that discrepancy layer use LIFO depth-first traversal",
+      "for siblings entering the same layer, preserve historical local ordering by cumulative_nll ascending, then insertion_order, then work_item_id"
+    ],
+    "no_fairness_quantum": true,
+    "no_regret_band_scheduling": true,
+    "cumulative_regret_use": "retention/pruning only; not a P3 traversal priority"
+  },
+  "frozen_core": {
+    "ttt_depth": 24,
+    "augmentation": "canonical_AUG8",
+    "max_expanded_nodes": 1024,
+    "decoder": "CUMULATIVE_REGRET_r=4.00",
+    "max_new_tokens": 931,
+    "candidate_cap": 32,
+    "frontier_floor": 1,
+    "eos_token": 15,
+    "admission": "root_aware",
+    "adapter_state": "EXACT_HISTORICAL",
+    "physical_scheduler": "existing profile-safe resident/batch policy"
+  },
+  "cohort": {
+    "name": "SEARCH_ORDER_MICRO24_V1 cohort",
+    "cohort_sha256": "25345687d3fdb1ae837cb05337294e1b0743a011c3cb290d008023f2c4d59990",
+    "outputs": 24,
+    "historical_d24_misses": 18,
+    "controls": 6,
+    "generation": "target-blind",
+    "gold_scoring": "post-freeze only"
+  },
+  "anti_overfit": {
+    "no_gold_in_generation": true,
+    "no_dmax_tuning": true,
+    "no_task_specific_priority_rules": true,
+    "no_threshold_search_on_micro24_gold": true,
+    "implementation_must_match_this_contract_before_any_p3_gpu_generation": true
+  }
+}
