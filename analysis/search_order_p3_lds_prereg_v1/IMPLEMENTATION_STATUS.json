@@ -1,0 +1,35 @@
+{
+  "artifact": "SEARCH_ORDER_P3_LDS_IMPLEMENTATION_STATUS_V1",
+  "preregistration_commit": "c1ebfec154f1358fff10dc14376896eb1bf70a62",
+  "implementation_head": "4b971b5a30853bc9ba489ddcdcf3d39f96b793bb",
+  "policy": "LDS_UNIT_DISCREPANCY_V1",
+  "status": "IMPLEMENTED_NOT_RUNTIME_VALIDATED",
+  "changed_after_preregistration": [
+    "src/inference/search_order.py",
+    "src/inference/nvarc_turbodfs_search_order.py",
+    "scripts/run_eval60_budget_eos_pilot18_v1.py",
+    "tests/test_search_order.py",
+    "tests/test_nvarc_turbodfs_search_order.py"
+  ],
+  "mechanical_properties_implemented": [
+    "unit discrepancy: rank1 -> +0, non-top1 -> +1",
+    "minimum discrepancy layer selected first",
+    "LIFO depth-first traversal within a discrepancy layer",
+    "historical sibling NLL ordering preserved within a layer",
+    "no hard discrepancy cutoff",
+    "retention/pruning contract unchanged",
+    "P3-only discrepancy telemetry"
+  ],
+  "validation_state": {
+    "pytest_executed": false,
+    "github_ci_runs_observed": 0,
+    "gpu_generation_started": false,
+    "gold_loaded_for_generation": false
+  },
+  "gate": "BLOCK_GPU_UNTIL_LOCAL_TESTS_PASS",
+  "required_local_tests": [
+    "pytest -q tests/test_search_order.py",
+    "pytest -q tests/test_nvarc_turbodfs_search_order.py",
+    "pytest -q tests/test_audit_search_order_adapters.py tests/test_build_search_order_micro24_cohort.py"
+  ]
+}
