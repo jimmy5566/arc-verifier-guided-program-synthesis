@@ -1,0 +1,7 @@
+event,output_id,gold_source_provenance,S2_TOP1_HIT,S2_TOP2_HIT,S3A_TOP1_HIT,S3A_TOP2_HIT,S3B_TOP1_HIT,S3B_TOP2_HIT,gold_s2_final_rank,s2_attempt2_regime,replacement_attempt2_regime
+HARM,4c3d4a41:o0,shared,False,True,False,False,False,True,2,shared,d24_only
+HARM,4c3d4a41:o1,shared,False,True,False,False,False,True,2,shared,d48_only
+HARM,53fb4810:o0,shared,False,True,False,False,False,True,2,shared,d48_only
+FIX,58490d8a:o0,d48_only,False,False,False,True,False,False,8,shared,d48_only
+HARM,78332cb0:o1,shared,False,True,False,False,False,True,2,shared,d24_only
+HARM,8e5c0c38:o1,shared,False,True,False,False,False,True,2,shared,d24_only

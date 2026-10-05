@@ -1,0 +1,57 @@
+{
+  "DFS_calls": 0,
+  "Gold_used_for_selection": false,
+  "S2_modified": false,
+  "TTT_calls": 0,
+  "candidate_pool_changed": false,
+  "classification": "EXPOSED_DEVELOPMENT_SELECTOR_PROTOTYPE",
+  "forbidden": [
+    "pixel diversity",
+    "Hamming threshold",
+    "continuous weight",
+    "source bonus",
+    "router",
+    "task-specific exception",
+    "parameter search"
+  ],
+  "likelihood_recomputed": false,
+  "model_calls": 0,
+  "s2_control": "exact frozen S2 attempt1/attempt2 order",
+  "s3a": {
+    "attempt1": "S2 rank1",
+    "attempt2": "highest-quality source-exclusive candidate distinct from attempt1; fallback S2 rank2 if none",
+    "exclusive_quality_order": [
+      "best_source_evidence_rank ascending",
+      "source-local E_s descending",
+      "source-local likelihood_rank ascending",
+      "source-local support_rank ascending",
+      "stable representative",
+      "grid_key"
+    ]
+  },
+  "s3b": {
+    "attempt1": "S2 rank1",
+    "attempt2_options": [
+      "S2 global rank2",
+      "highest ranked d24-only candidate",
+      "highest ranked d48-only candidate"
+    ],
+    "distinct_from_attempt1": true,
+    "option_order": [
+      "best_source_evidence_rank ascending",
+      "source_count ascending",
+      "best_source E_s descending",
+      "best_source likelihood_rank ascending",
+      "stable representative",
+      "grid_key"
+    ]
+  },
+  "scope": "CPU_ONLY_POST_FREEZE_SOURCE_COMPLEMENTARITY_PROBE",
+  "source_selector_v2_commit": "ad5d791b91061f0f63ffa3c025ead1551f60e047",
+  "source_selector_v2_pregold": {
+    "ledger_entries": 4,
+    "s2_config_sha256": "904fadf8cb04b26ee250681e2ba98cb753cf32e04d3d1da8cbe6332221524a50",
+    "source": "analysis/eval60_phase3_selector_v2_forensic_v1",
+    "status": "PASS"
+  }
+}

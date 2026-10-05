@@ -1,0 +1,43 @@
+{
+  "S2": {
+    "attempt_1": {
+      "d48_only": 2,
+      "shared": 33
+    },
+    "attempt_2": {
+      "d24_only": 7,
+      "d48_only": 4,
+      "shared": 24
+    },
+    "d24_only_candidates_submitted": 7,
+    "d48_only_candidates_submitted": 6,
+    "outputs_with_different_source_regimes": 11
+  },
+  "S3A": {
+    "attempt_1": {
+      "d48_only": 2,
+      "shared": 33
+    },
+    "attempt_2": {
+      "d24_only": 16,
+      "d48_only": 19
+    },
+    "d24_only_candidates_submitted": 16,
+    "d48_only_candidates_submitted": 21,
+    "outputs_with_different_source_regimes": 35
+  },
+  "S3B": {
+    "attempt_1": {
+      "d48_only": 2,
+      "shared": 33
+    },
+    "attempt_2": {
+      "d24_only": 6,
+      "d48_only": 6,
+      "shared": 23
+    },
+    "d24_only_candidates_submitted": 6,
+    "d48_only_candidates_submitted": 8,
+    "outputs_with_different_source_regimes": 12
+  }
+}

@@ -1,0 +1,10 @@
+output_id,gold_source,gold_s2_final_rank,gold_source_local_evidence_rank,gold_source_local_support_rank,gold_source_local_likelihood_rank,gold_source_local_evidence_score,S2_attempt1_source_regime,S2_attempt2_source_regime,S3A_attempt2_source_regime,S3B_attempt2_source_regime,S2_TOP2_HIT,S3A_TOP2_HIT,S3B_TOP2_HIT,S3A_selected_gold,S3B_selected_gold,gold_best_source_depth
+142ca369:o0,d48_only,14,10,10,10,0.2,shared,shared,d48_only,shared,False,False,False,False,False,48
+20270e3b:o0,d24_only,129,65,65,64,0.031009615384615385,d48_only,d24_only,d24_only,d24_only,False,False,False,False,False,24
+20270e3b:o1,d24_only,2,2,3,2,0.8333333333333333,shared,d24_only,d24_only,d24_only,True,True,True,True,True,24
+58490d8a:o0,d48_only,8,5,4,5,0.45,shared,shared,d48_only,shared,False,True,False,True,False,48
+7491f3cf:o0,d24_only,32,21,21,19,0.10025062656641603,shared,shared,d24_only,shared,False,False,False,False,False,24
+97d7923e:o0,d48_only,42,29,30,25,0.07333333333333333,shared,d24_only,d24_only,d24_only,False,False,False,False,False,48
+b5ca7ac4:o0,d48_only,4,2,2,2,1.0,shared,d48_only,d48_only,d48_only,False,False,False,False,False,48
+c7f57c3e:o0,d24_only,2,1,1,1,2.0,shared,d24_only,d24_only,d24_only,True,True,True,True,True,24
+de809cff:o0,d24_only,2,1,1,1,2.0,d48_only,d24_only,d24_only,d24_only,True,True,True,True,True,24
