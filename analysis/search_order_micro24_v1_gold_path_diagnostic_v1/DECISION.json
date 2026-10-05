@@ -1,0 +1,47 @@
+{
+  "artifact": "SEARCH_ORDER_MICRO24_V1_GOLD_PATH_DIAGNOSTIC_DECISION_V1",
+  "cohort_outputs": 18,
+  "canonical_d24_cells": 144,
+  "gold_completed_cells": 0,
+  "gold_successor_retained_not_expanded_cells": 90,
+  "gold_path_pruned_cells": 54,
+  "retained_not_expanded_fraction": 0.625,
+  "pruned_fraction": 0.375,
+  "outputs_with_any_retained_not_expanded": 17,
+  "outputs_with_any_pruned": 17,
+  "outputs_with_retained_majority": 11,
+  "group_breakdown": {
+    "HIGH": {"outputs": 6, "cells": 48, "retained_not_expanded": 38, "pruned": 10},
+    "MID": {"outputs": 6, "cells": 48, "retained_not_expanded": 22, "pruned": 26},
+    "LOW": {"outputs": 6, "cells": 48, "retained_not_expanded": 30, "pruned": 18}
+  },
+  "high_prefix_cases": {
+    "36a08778:o1": {
+      "historical_best_prefix": 0.9817007534983854,
+      "retained_not_expanded_views": 7,
+      "pruned_views": 1,
+      "best_retained_prefix": 0.9817007534983854,
+      "p1_observed_exact_gold": false,
+      "p1_status": "UNKNOWN_WALL_CENSORED"
+    },
+    "8b7bacbf:o1": {
+      "historical_best_prefix": 0.8894472361809045,
+      "retained_not_expanded_views": 7,
+      "pruned_views": 1,
+      "best_retained_prefix": 0.5362563237774031,
+      "best_pruned_prefix": 0.8877721943048577,
+      "p1_observed_exact_gold": false,
+      "p1_status": "CONFIRMED_MISS"
+    }
+  },
+  "conclusions": {
+    "search_order_compute_allocation_failure": "SUPPORTED",
+    "pruning_failure_also_material": "SUPPORTED",
+    "simple_fairness_is_sufficient": "NOT_SUPPORTED",
+    "classic_lds_hypothesis": "PLAUSIBLE_BUT_NOT_PROVEN",
+    "exact_lds_discrepancy_count_observed": false
+  },
+  "next_policy_baseline": "P3_CLASSIC_LDS_PRE_REGISTERED",
+  "anti_overfit_rule": "Do not tune LDS rules to individual Gold cases. Freeze the generic LDS definition before live comparison.",
+  "status": "COMPLETE"
+}
