@@ -1,0 +1,28 @@
+{
+  "artifact": "SEARCH_ORDER_MICRO24_V1_POSTFREEZE_FREEZE_RECEIPT_V1",
+  "source_branch": "transfer/turbodfs-opt-v2-repair",
+  "source_commit": "f33ccc0d8bf655fa67ad35c8e2896fddf6ad202e",
+  "source_archive": "analysis/search_order_micro24_v1_e1",
+  "archive_hash_ledger_sha256": "8b7746b5c573cc920824a659df641ca72b22766a39cc546fb4bb169b5e37bcb1",
+  "archive_hashes_checked": 254,
+  "archive_hash_status": "PASS",
+  "source_generation_gold_loaded": false,
+  "source_generation_target_blind": true,
+  "policies": {
+    "P0": "CURRENT_DFS",
+    "P1": "FAIR_DFS_Q64",
+    "P2": "REGRET_BAND_FAIR_Q64"
+  },
+  "frozen_interpretation": {
+    "P0": "SEMANTIC_PARITY_PASS",
+    "P1": "PARTIALLY_WALL_CENSORED",
+    "P2": "HEAVILY_WALL_CENSORED"
+  },
+  "scientific_use": {
+    "P0": "authoritative semantic baseline",
+    "P1": "usable only with censor-aware analysis",
+    "P2": "not valid for full policy accuracy comparison because runtime censoring dominates"
+  },
+  "immutability_rule": "Do not modify analysis/search_order_micro24_v1_e1. All post-freeze Gold analyses must live outside the source archive.",
+  "status": "FROZEN"
+}
