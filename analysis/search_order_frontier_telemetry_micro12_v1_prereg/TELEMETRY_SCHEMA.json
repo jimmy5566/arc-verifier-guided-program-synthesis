@@ -1,0 +1,30 @@
+{
+  "schema_name": "FRONTIER_WORK_ITEM_TELEMETRY_V1",
+  "format": "one deterministic JSON object per retained non-EOS work item; per-output JSONL compressed with gzip after cell completion",
+  "prefix_hash": {
+    "algorithm": "sha256",
+    "canonical_bytes": "','.join(str(token) for token in prefix).encode('ascii')",
+    "purpose": "target-blind prefix provenance during generation and exact transformed-Gold prefix labeling after the pre-Gold freeze"
+  },
+  "record_key": ["cell_key", "work_item_id"],
+  "insertion_fields": {
+    "identifiers": ["experiment", "output_id", "task_id", "cell_key", "augmentation_id", "ttt_depth", "work_item_id", "parent_work_item_id", "root_branch_id"],
+    "prefix": ["prefix_length", "prefix_hash", "parent_prefix_hash", "selected_token_id", "local_token_rank"],
+    "model_distribution": ["token_logprob", "top1_logprob", "top2_logprob", "margin", "entropy"],
+    "search_state": ["cumulative_nll", "cumulative_regret", "regret_increment", "discrepancy_count", "frontier_floor_activated", "frontier_floor_restore_rank"],
+    "frontier_interval_start": ["insertion_order", "inserted_at_expanded_nodes", "inserted_at_model_forwards", "completed_candidates_at_insert", "frontier_size_at_insert"]
+  },
+  "finalization_fields": ["popped_at_expanded_nodes", "popped_at_model_forwards", "frontier_pop_order", "final_status"],
+  "final_statuses": ["EXPANDED", "PENDING_AT_R1024", "PENDING_AT_SEARCH_EXHAUSTION", "PENDING_AT_TERMINAL_CARRY"],
+  "invariants": [
+    "each retained non-EOS work item has one insertion record",
+    "work_item_id is unique within a cell",
+    "non-root parent_work_item_id references an inserted work item",
+    "child prefix hash equals the canonical hash of parent prefix plus selected token",
+    "local_token_rank is rank in the full legal pre-retention ARC-token distribution",
+    "an expanded work item has exactly one pop record",
+    "a never-expanded work item has null pop fields and a legal pending final status",
+    "telemetry never changes retention, scheduler policy order, model forwards, cache behavior, or search accounting"
+  ],
+  "reconstruction_boundary": "A record is pending immediately before expansion t when inserted_at_expanded_nodes <= t and (popped_at_expanded_nodes is null or popped_at_expanded_nodes > t). The implementation records a pop just before its matching scientific expansion."
+}

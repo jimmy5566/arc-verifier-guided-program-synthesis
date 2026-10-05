@@ -1,0 +1,78 @@
+{
+  "experiment": "SEARCH_ORDER_FRONTIER_TELEMETRY_MICRO12_V1",
+  "status": "PREREGISTERED_BEFORE_TELEMETRY_IMPLEMENTATION",
+  "starting_repository_sha": "79baa933e3d1adb3b1648aa383731c905acd1414",
+  "purpose": "Target-blind collection of complete retained-frontier telemetry followed only after generation freeze by Gold labeling and same-frontier separability analysis.",
+  "scientific_policy": "LDS_UNIT_DISCREPANCY_V1",
+  "scientific_search_semantics": "UNCHANGED_FROM_FROZEN_P3",
+  "cohort": {
+    "path": "analysis/search_order_p3_lds_micro12_v1/MICRO12_COHORT.json",
+    "sha256": "3852056112336e58559ceb0bb6f3171600ff36e0d6b02d1c9c03fc0da334443e",
+    "outputs": 12,
+    "composition": {
+      "HIGH": 3,
+      "MID": 3,
+      "LOW": 3,
+      "CONTROL": 3
+    },
+    "selection_rule": "REUSE_EXACT_FROZEN_MICRO12_NO_RESAMPLING"
+  },
+  "frozen_core": {
+    "ttt_depth": 24,
+    "augmentation": "canonical_AUG8",
+    "adapter_state": "EXACT_HISTORICAL",
+    "decoder_retention": "CUMULATIVE_REGRET_r=4.00",
+    "max_expanded_nodes": 1024,
+    "candidate_cap": 32,
+    "frontier_floor": 1,
+    "eos_token": 15,
+    "max_new_tokens": 931,
+    "admission": "root_aware",
+    "physical_scheduler": "same_validated_P3_scheduler",
+    "search_policy": "LDS_UNIT_DISCREPANCY_V1"
+  },
+  "target_blind_generation": {
+    "gold_loaded": false,
+    "gold_or_solution_access": "FORBIDDEN_UNTIL_PRE_GOLD_FREEZE_IS_HASH_VERIFIED_AND_COMMITTED",
+    "generation_outputs": "12 outputs x canonical AUG8 x d24 x R1024",
+    "fresh_output_directory": "/root/arc-runtime-3090-v5/active_run/search_order_frontier_telemetry_micro12_v1"
+  },
+  "allowed_change": "Passive telemetry only. It may observe retained work-item insertion, pop, and final pending status but must not influence execution.",
+  "forbidden_semantic_changes": [
+    "retained_membership",
+    "work_item_priority",
+    "push_or_pop_order",
+    "logits",
+    "cache_behavior",
+    "model_forwards",
+    "R1024_accounting",
+    "candidate_completion",
+    "EOS_semantics",
+    "frontier_floor_behavior",
+    "LDS_priority",
+    "regret_threshold",
+    "candidate_cap",
+    "node_budget"
+  ],
+  "gates": {
+    "gate_0": "tests plus source-diff semantic audit before GPU",
+    "gate_1": "three-output target-blind P3 semantic parity smoke with telemetry integrity and runtime guard",
+    "gate_2": "full frozen Micro12 only after Gates 0 and 1 pass",
+    "post_freeze": "Gold labeling and analysis only after complete generation freeze, verification, compact evidence commit, and push"
+  },
+  "post_freeze_analysis": {
+    "gold_solution_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+    "label": "exact transformed-Gold token-prefix hash equality only",
+    "model": "StandardScaler + LogisticRegression",
+    "cross_validation": "task-grouped",
+    "frozen_baselines": [
+      "actual_P3_LDS_order",
+      "cumulative_nll",
+      "cumulative_regret",
+      "unit_discrepancy",
+      "token_logprob"
+    ]
+  },
+  "p4": "FORBIDDEN_IN_THIS_EXPERIMENT",
+  "decision_rule": "Recommend only PREREGISTER_P4_VALUE_GUIDED_SEARCH if preregistered same-frontier Top-1, MRR, task-bootstrap, and fold-stability criteria pass; never implement P4 here."
+}
