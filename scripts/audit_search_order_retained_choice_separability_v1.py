@@ -224,7 +224,7 @@ def main():
           "strong_gate_passed":False,"learned_value_search_authorized":False,
           "next":"USE_EXPANDED_SIBLING_LEAKAGE_GUARD_AND_REQUIRE_FUTURE_RUNS_TO_PRESERVE_RETAINED-WORK TELEMETRY"}
         def writej0(name,obj):(a.output/name).write_text(json.dumps(obj,indent=2,sort_keys=True)+"\n",encoding="utf-8")
-        writej0("DATASET_SUMMARY.json",summary);writej0("DECISION.json",decision)
+        writej0("DATASET_SUMMARY.json",summary);writej0("METRICS.json",metrics);writej0("DECISION.json",decision)
         (a.output/"REPORT.md").write_text("# Retained-choice separability v1\n\n**NOT_RECONSTRUCTIBLE** from the historical frozen d24 archive because retained-but-never-expanded successor telemetry was not preserved. No scientific ranking result was produced.\n",encoding="utf-8")
         hashes={p.name:sha(p) for p in sorted(a.output.iterdir()) if p.is_file()};writej0("HASHES.json",{"files":hashes})
         print(json.dumps({"summary":summary,"decision":decision},sort_keys=True))
