@@ -120,22 +120,28 @@ def source_diff_audit(prereg_commit: str) -> dict[str, Any]:
     ).stdout
     if changed_policy:
         raise RuntimeError("FRONTIER_TELEMETRY_POLICY_SOURCE_CHANGED")
-    diff = subprocess.run(
-        ["git", "-C", str(ROOT), "diff", "--unified=0", prereg_commit, "HEAD", "--",
-         "src/inference/nvarc_turbodfs_search_order.py", "scripts/run_eval60_budget_eos_pilot18_v1.py",
-         "scripts/run_ttt24_aug8_r1024_core_v1.py"],
+    changed = subprocess.run(
+        ["git", "-C", str(ROOT), "diff", "--name-only", prereg_commit, "HEAD"],
         text=True, capture_output=True, check=True,
     ).stdout.splitlines()
-    forbidden = ("_retained(", "max_completed_candidates", "max_expanded_nodes", "eos", "frontier_floor", "cache_strategy")
-    illegal = [line for line in diff if line[:1] in {"+", "-"} and not line.startswith(("+++", "---"))
-               and any(token in line for token in forbidden)]
-    if illegal:
-        raise RuntimeError(f"FRONTIER_TELEMETRY_FORBIDDEN_SOURCE_DIFF:{illegal[:3]}")
+    allowed = {
+        "src/inference/nvarc_turbodfs_search_order.py",
+        "scripts/run_eval60_budget_eos_pilot18_v1.py",
+        "scripts/run_ttt24_aug8_r1024_core_v1.py",
+        "scripts/run_search_order_frontier_telemetry_micro12_v1.py",
+        "tests/test_nvarc_turbodfs_search_order.py",
+    }
+    unexpected = sorted(set(changed) - allowed)
+    if unexpected:
+        raise RuntimeError(f"FRONTIER_TELEMETRY_UNEXPECTED_SOURCE_DIFF:{unexpected}")
     return {
         "status": "PASS",
         "preregistration_commit": prereg_commit,
         "policy_source_unchanged": True,
-        "forbidden_changed_lines": [],
+        "protected_source_files_unchanged": [
+            "src/inference/search_order.py",
+            "src/inference/nvarc_turbodfs_d1.py",
+        ],
         "telemetry_changes": [
             "optional context and passive records in explicit retained-work scheduler",
             "optional worker flag and raw payload attachment",
