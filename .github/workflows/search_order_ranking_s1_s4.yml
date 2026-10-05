@@ -1,0 +1,50 @@
+name: Search-order ranking S1-S4
+
+on:
+  push:
+    branches:
+      - transfer/turbodfs-opt-v2-repair
+    paths:
+      - '.github/workflows/search_order_ranking_s1_s4.yml'
+      - 'scripts/analyze_search_order_ranking_s1_s4_v1.py'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install CPU dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy==2.1.3 scikit-learn==1.5.2
+
+      - name: Run frozen S1-S4 analysis
+        run: |
+          python scripts/analyze_search_order_ranking_s1_s4_v1.py             --root analysis/search_order_frontier_telemetry_micro12_v1/postfreeze_frontier_analysis_v1             --prereg analysis/search_order_ranking_s1_s4_v1_prereg/ANALYSIS_PLAN.json             --out search_order_ranking_s1_s4_output
+
+      - name: Show result
+        run: |
+          cat search_order_ranking_s1_s4_output/REPORT.md
+          cat search_order_ranking_s1_s4_output/DECISION.json
+
+      - name: Commit frozen results
+        run: |
+          DEST=analysis/search_order_ranking_s1_s4_v1
+          test ! -e "$DEST"
+          mkdir -p "$DEST"
+          cp -a search_order_ranking_s1_s4_output/. "$DEST/"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$DEST"
+          git commit -m "analysis: freeze S1-S4 search-order ranking"
+          git push origin HEAD:transfer/turbodfs-opt-v2-repair
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: search-order-ranking-s1-s4-v1
+          path: search_order_ranking_s1_s4_output/
