@@ -1,0 +1,31 @@
+{
+  "experiment": "EVAL60_PHASE3_SELECTOR_V23_TRAIN_CONSTRAINT_FORENSIC_V1",
+  "scope": "CPU_ONLY_POST_FREEZE_TRAIN_CONSTRAINT_FORENSIC",
+  "source_selector_v2_commit": "ad5d791b91061f0f63ffa3c025ead1551f60e047",
+  "source_s2_final_ranks_blob": "c26c1ae51abca6971e804f4f11c1c8e39f3a6c9a",
+  "historical_challenge_sha256": "e7c62a4bd211867c6b538f66b8013b81f299663c82ca062f49a52bf439d6e4e8",
+  "historical_solutions_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "candidate_pool_changed": false,
+  "likelihood_recomputed": false,
+  "S2_modified": false,
+  "model_calls": 0,
+  "DFS_calls": 0,
+  "TTT_calls": 0,
+  "GPU_used": false,
+  "primary_comparison": "Gold vs final unique-grid S2 candidates ranked ahead of Gold",
+  "primary_aggregation": "macro by output",
+  "constraint_families": [
+    "shape",
+    "palette",
+    "symmetry",
+    "nonzero_bbox",
+    "4_connected_components"
+  ],
+  "family_normalization": "one maximum violation per family",
+  "classification_rule": {
+    "supported": "N>=5 and WIN>=ceil(2*N/3) and pooled discordant Gold-better fraction>=0.60",
+    "weak": "N>=4 and WIN>LOSS and pooled discordant Gold-better fraction>=0.55",
+    "not_supported": "otherwise"
+  },
+  "evidence_language": "EXPOSED_DEVELOPMENT_ONLY"
+}
