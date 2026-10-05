@@ -219,8 +219,8 @@ def main():
             if active:
                 popdec+=1; maxfront=max(maxfront,len(active)); top=min(active.values(),key=p3key)
                 if int(top["work_item_id"])!=sid: p3bad+=1
-            np=sum(int(x["y_gold_prefix"]) for x in active.values()); maxpos=max(maxpos,np)
-            if len(active)>=2 and np>=1: goldstates+=1
+            n_positive=sum(int(x["y_gold_prefix"]) for x in active.values()); maxpos=max(maxpos,n_positive)
+            if len(active)>=2 and n_positive>=1: goldstates+=1
             active.pop(sid,None); add(t)
         pending={int(r["work_item_id"]) for r in rr if r["popped_at_expanded_nodes"] is None}
         if set(active)!=pending: rec_err.append(f"{ck}: final active mismatch")
