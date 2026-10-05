@@ -1,0 +1,12 @@
+{
+  "all_gold_prefix_parents": 91272,
+  "artifact": "SEARCH_ORDER_EXPANDED_SIBLING_DATASET_V1",
+  "choice_groups": 329,
+  "choice_rows": 674,
+  "gold_sha256": "84be4f4f39b79e82c36d565fc878830988b094917f052ee7069aef30b33ca8f1",
+  "label": "Within an exact Gold-prefix parent with >=2 expanded children, y=1 iff child token is next Gold token.",
+  "multi_expanded_gold_parent_groups": 329,
+  "outputs": 89,
+  "scope": "POST_FREEZE_NONBLIND_DEVELOPMENT",
+  "tasks": 31
+}

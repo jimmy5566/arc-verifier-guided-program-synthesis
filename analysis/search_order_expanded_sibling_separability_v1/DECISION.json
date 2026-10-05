@@ -1,0 +1,7 @@
+{
+  "artifact": "SEARCH_ORDER_EXPANDED_SIBLING_DECISION_V1",
+  "live_p4_authorized_by_this_guard": false,
+  "next": "DO_NOT_AUTHORIZE_P4_FROM_GLOBAL_AUC_ALONE",
+  "signal": "EXPANDED_SIBLING_SIGNAL_NOT_ESTABLISHED",
+  "strong_gate_passed": false
+}

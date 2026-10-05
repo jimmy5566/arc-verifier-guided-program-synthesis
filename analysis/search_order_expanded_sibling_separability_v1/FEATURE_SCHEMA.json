@@ -1,0 +1,38 @@
+{
+  "artifact": "SEARCH_ORDER_EXPANDED_SIBLING_FEATURE_SCHEMA_V1",
+  "cv": "5-fold GroupKFold by task_id",
+  "excluded": [
+    "task/output/cell/choice IDs as model inputs",
+    "token identity",
+    "Gold rank/prefix/future hit",
+    "candidate completion",
+    "future node state"
+  ],
+  "features": [
+    "token_logprob",
+    "cumulative_nll",
+    "cumulative_regret",
+    "regret_increment",
+    "is_top1",
+    "discrepancy_count",
+    "frontier_floor_activated",
+    "parent_nll",
+    "parent_regret",
+    "branch_depth",
+    "regret_x_depth",
+    "logprob_x_parent_regret",
+    "logprob_x_parent_nll",
+    "is_top1_x_parent_regret"
+  ],
+  "gate": {
+    "min_choice_groups": 500,
+    "min_fold_roc_auc": 0.6,
+    "min_tasks": 40,
+    "mrr_gain_over_best_baseline_min": 0.03,
+    "roc_auc_min": 0.7,
+    "top1_gain_over_best_baseline_min": 0.05
+  },
+  "interpretation": "Sibling groups share parent, depth, view and prefix; this is a leakage guard against the global node classifier succeeding only because Gold-prefix nodes are shallow.",
+  "limitation": "Only siblings that were actually expanded are reconstructible. Retained-but-never-expanded sibling features are absent from the historical d24 archive.",
+  "model": "StandardScaler + LogisticRegression(C=1,class_weight=balanced,lbfgs)"
+}

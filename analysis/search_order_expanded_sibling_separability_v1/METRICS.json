@@ -1,0 +1,46 @@
+{
+  "artifact": "SEARCH_ORDER_EXPANDED_SIBLING_METRICS_V1",
+  "average_precision": 0.6874575390459049,
+  "baselines": {
+    "CUMULATIVE_REGRET": {
+      "choice_groups": 329,
+      "mean_gold_rank": 1.2857142857142858,
+      "mrr": 0.8637284701114489,
+      "top1_accuracy": 0.7325227963525835,
+      "top2_accuracy": 0.9878419452887538
+    },
+    "CURRENT_DFS_NLL": {
+      "choice_groups": 329,
+      "mean_gold_rank": 1.2857142857142858,
+      "mrr": 0.8637284701114489,
+      "top1_accuracy": 0.7325227963525835,
+      "top2_accuracy": 0.9878419452887538
+    },
+    "LDS_UNIT_DISCREPANCY": {
+      "choice_groups": 329,
+      "mean_gold_rank": 1.2857142857142858,
+      "mrr": 0.8637284701114489,
+      "top1_accuracy": 0.7325227963525835,
+      "top2_accuracy": 0.9878419452887538
+    },
+    "TOKEN_LOGPROB": {
+      "choice_groups": 329,
+      "mean_gold_rank": 1.2857142857142858,
+      "mrr": 0.8637284701114489,
+      "top1_accuracy": 0.7325227963525835,
+      "top2_accuracy": 0.9878419452887538
+    }
+  },
+  "learned": {
+    "choice_groups": 329,
+    "mean_gold_rank": 1.2887537993920972,
+    "mrr": 0.8622087132725431,
+    "top1_accuracy": 0.729483282674772,
+    "top2_accuracy": 0.9878419452887538
+  },
+  "min_fold_roc_auc": 0.6137224326130541,
+  "mrr_gain_over_best_baseline": -0.001519756838905817,
+  "roc_auc": 0.7609268314171183,
+  "signal": "EXPANDED_SIBLING_SIGNAL_NOT_ESTABLISHED",
+  "top1_gain_over_best_baseline": -0.003039513677811523
+}
