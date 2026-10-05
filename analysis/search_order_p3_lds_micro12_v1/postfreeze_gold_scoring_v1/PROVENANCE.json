@@ -1,0 +1,14 @@
+{
+  "artifact": "SEARCH_ORDER_P3_LDS_MICRO12_POSTFREEZE_GOLD_PROVENANCE_V1",
+  "generation_freeze_commit": "d0f215f06e4509daddbc3c7ae627179c5243d89c",
+  "generation_freeze": "analysis/search_order_p3_lds_micro12_v1/generation_freeze/PRE_GOLD_FREEZE.json",
+  "checkpoint_blob_git_sha": "12e553e20ff53e2964276beaf86093073c4c9a6a",
+  "checkpoint_csv_sha256": "5a46d989d81c616ce5a4d440d1453f7c983ff0dad502a64b86375e8521317ec2",
+  "official_gold_repo": "arcprize/ARC-AGI-2",
+  "official_gold_ref": "f3283f727488ad98fe575ea6a5ac981e4a188e49",
+  "method": "Parse the frozen CHECKPOINT_CURVES candidate_pool_snapshot field and compare every canonical_grid exactly to the official evaluation test output for the frozen task/output index.",
+  "generation_gold_loaded": false,
+  "gold_access": "POST_FREEZE_ONLY",
+  "wall_censor_rule": "Gold absent is a confirmed miss only if no relevant cell is wall-censored.",
+  "status": "PASS"
+}
