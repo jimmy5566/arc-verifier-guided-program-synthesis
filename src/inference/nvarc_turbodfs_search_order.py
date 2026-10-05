@@ -87,8 +87,9 @@ def _order_generator(
         "policy": policy_name, "quantum": 64, "retention_changed": False,
         "replayed_tokens": 0, "replay_model_forwards": 0, "useful_model_forwards": 0,
         "yielded_subtrees": 0, "pending_retained_work_at_r1024": 0,
-        "discrepancy_definition": "unit_non_top1" if policy_name == "LDS_UNIT_DISCREPANCY_V1" else None,
     }
+    if policy_name == "LDS_UNIT_DISCREPANCY_V1":
+        state["search_order"]["discrepancy_definition"] = "unit_non_top1"
     state["search_order_work_items"] = []
 
     def record_item(frame: _Frame) -> dict[str, Any]:
@@ -98,11 +99,13 @@ def _order_generator(
             "root_branch_id": frame.item.root_branch_id, "prefix_length": len(frame.prefix),
             "cumulative_nll": frame.item.cumulative_nll, "cumulative_regret": frame.item.cumulative_regret,
             "regret_band": frame.item.regret_band, "insertion_order": frame.item.insertion_order,
-            "local_token_rank": frame.item.local_token_rank, "discrepancy_count": frame.item.discrepancy_count,
             "first_scheduled_node": None, "last_scheduled_node": None, "number_of_expansions": 0,
             "number_of_yields": 0, "wait_nodes_before_first_expansion": None, "max_wait_nodes": 0,
             "status": "pending",
         }
+        if policy_name == "LDS_UNIT_DISCREPANCY_V1":
+            row["local_token_rank"] = frame.item.local_token_rank
+            row["discrepancy_count"] = frame.item.discrepancy_count
         state["search_order_work_items"].append(row)
         return row
 
