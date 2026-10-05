@@ -1,0 +1,48 @@
+{
+  "artifact": "SEARCH_ORDER_P3_LDS_MICRO12_POSTFREEZE_GOLD_SUMMARY_V1",
+  "generation_freeze_commit": "d0f215f06e4509daddbc3c7ae627179c5243d89c",
+  "official_gold_repo": "arcprize/ARC-AGI-2",
+  "official_gold_ref": "f3283f727488ad98fe575ea6a5ac981e4a188e49",
+  "scoring": "exact canonical-grid equality against frozen candidate_pool_snapshot",
+  "overall": {
+    "outputs": 12,
+    "confirmed_hits": 3,
+    "confirmed_misses": 9,
+    "unknown_wall_censored": 0,
+    "exact_gold_any_of_aug8": 0.25
+  },
+  "historical_d24_misses": {
+    "outputs": 9,
+    "rescued": 0,
+    "rescue_rate": 0.0
+  },
+  "controls": {
+    "outputs": 3,
+    "retained": 3,
+    "retention_rate": 1.0
+  },
+  "by_category": {
+    "HIGH": {"n": 3, "hits": 0, "misses": 3, "unknown": 0},
+    "MID": {"n": 3, "hits": 0, "misses": 3, "unknown": 0},
+    "LOW": {"n": 3, "hits": 0, "misses": 3, "unknown": 0},
+    "CONTROL": {"n": 3, "hits": 3, "misses": 0, "unknown": 0}
+  },
+  "gold_hit_curve": {
+    "R256": {"overall": 1, "historical_miss": 0, "control": 1},
+    "R512": {"overall": 2, "historical_miss": 0, "control": 2},
+    "R768": {"overall": 2, "historical_miss": 0, "control": 2},
+    "R1024": {"overall": 3, "historical_miss": 0, "control": 3}
+  },
+  "runtime": {
+    "total_gpu_wall_seconds": 4109.525870086625,
+    "mean_wall_seconds_per_output": 342.46048917388543,
+    "replay_model_forwards": 1797,
+    "useful_model_forwards": 95928,
+    "replay_useful_ratio": 0.018732799599699774,
+    "wall_censored_cells": 0,
+    "r1024_cells": 88,
+    "terminal_carry_cells": 8,
+    "oom_fallback_count": 0
+  },
+  "scientific_decision": "P3_CLASSIC_LDS_NO_RESCUE_SIGNAL_ON_MICRO12"
+}
