@@ -1,0 +1,50 @@
+{
+  "status": "COMPLETE",
+  "classification": "TRAIN_CONSTRAINT_SIGNAL_NOT_SUPPORTED",
+  "scope": "EXPOSED_DEVELOPMENT_ONLY",
+  "integrity": {
+    "gold_rank_parity": "35/35",
+    "recomputed_s2_top2": "27/35",
+    "unique_final_rank_and_grid_outputs": "35/35",
+    "train_pair_order_invariance": "35/35"
+  },
+  "informative_outputs": 1,
+  "wins": 1,
+  "losses": 0,
+  "output_ties": 0,
+  "uninformative": 7,
+  "pooled_secondary": {
+    "gold_better": 1,
+    "gold_worse": 0,
+    "ties": 241,
+    "discordant_gold_better_fraction": 1
+  },
+  "family_diagnostics": {
+    "shape": {
+      "better": 0,
+      "worse": 0,
+      "tie": 107
+    },
+    "palette": {
+      "better": 1,
+      "worse": 0,
+      "tie": 241
+    },
+    "symmetry": {
+      "better": 0,
+      "worse": 0,
+      "tie": 0
+    },
+    "bbox": {
+      "better": 0,
+      "worse": 0,
+      "tie": 81
+    },
+    "components": {
+      "better": 0,
+      "worse": 0,
+      "tie": 209
+    }
+  },
+  "interpretation": "Simple train-derived structural invariants have almost no resolution among candidates already ranked ahead of Gold by S2. Do not build an S2+constraint selector from this evidence."
+}
