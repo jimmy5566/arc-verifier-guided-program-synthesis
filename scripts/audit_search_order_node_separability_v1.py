@@ -28,16 +28,13 @@ CONTINUOUS = (
     "branch_depth",
     "cumulative_nll",
     "cumulative_regret",
-    "local_token_rank",
-    "selected_logprob",
-    "top1_logprob",
-    "top2_logprob",
+    "token_logprob",
     "regret_increment",
-    "margin",
-    "entropy",
+    "is_top1",
     "discrepancy_count",
     "mean_nll_per_depth",
     "mean_regret_per_depth",
+    "frontier_floor_activated",
 )
 FEATURE_NAMES = CONTINUOUS + tuple(f"view={g}" for g in GEOMS[1:])
 DECISION_RULE = {
@@ -114,22 +111,6 @@ def load_csv(path: Path):
         return list(csv.DictReader(f))
 
 
-def local_distribution(bp: dict, selected_token: int):
-    values = [(int(x["token_id"]), float(x["logprob"])) for x in bp["full_arc_logprobs"]]
-    ranked = sorted(values, key=lambda pair: (-pair[1], pair[0]))
-    rank = next(i for i, (tok, _lp) in enumerate(ranked, start=1) if tok == selected_token)
-    selected_lp = next(lp for tok, lp in values if tok == selected_token)
-    return {
-        "local_token_rank": float(rank),
-        "selected_logprob": selected_lp,
-        "top1_logprob": float(bp["top1_logprob"]),
-        "top2_logprob": float(bp["top2_logprob"]),
-        "regret_increment": float(bp["top1_logprob"]) - selected_lp,
-        "margin": float(bp["margin"]),
-        "entropy": float(bp["entropy"]),
-    }
-
-
 def feature_vector(base: dict) -> list[float]:
     row = [float(base[name]) for name in CONTINUOUS]
     row.extend(1.0 if base["view"] == geom else 0.0 for geom in GEOMS[1:])
@@ -139,16 +120,16 @@ def feature_vector(base: dict) -> list[float]:
 def extract_output(raw: dict, task_id: str, output_id: str, gold_grid: list[list[int]]):
     rows = []
     cell_counts = []
-    missing_bp = 0
+    missing_parent = 0
     for cell_key, cell in raw["cells"].items():
         view = geom_from_aug(cell["augmentation_id"])
         target = grid_tokens(transform(gold_grid, view))
         nodes = sorted(cell["nodes"], key=lambda n: int(n["node_id"]))
+        node_by_id = {int(n["node_id"]): n for n in nodes}
         roots = [n for n in nodes if n.get("parent_node_id") is None and n.get("selected_token") is None and n.get("state") == "root"]
         if len(roots) != 1:
             raise RuntimeError(f"{output_id} {cell_key}: root cardinality {len(roots)}")
         root_id = int(roots[0]["node_id"])
-        bp_by_parent = {int(x["parent_node_id"]): x for x in cell.get("branch_probabilities", [])}
         match = {root_id: True}
         discrepancy = {root_id: 0}
         positive = negative = skipped = 0
@@ -157,23 +138,23 @@ def extract_output(raw: dict, task_id: str, output_id: str, gold_grid: list[list
                 continue
             node_id = int(node["node_id"])
             parent_id = int(node["parent_node_id"])
+            parent = node_by_id.get(parent_id)
+            if parent is None:
+                skipped += 1
+                missing_parent += 1
+                continue
             token = int(node["selected_token"])
             depth = int(node["branch_depth"])
-            bp = bp_by_parent.get(parent_id)
-            if bp is None:
-                skipped += 1
-                missing_bp += 1
-                match[node_id] = False
-                discrepancy[node_id] = discrepancy.get(parent_id, 0)
-                continue
-            dist = local_distribution(bp, token)
+            nll = float(node.get("cumulative_score", 0.0) or 0.0)
+            regret = float(node.get("cumulative_regret", 0.0) or 0.0)
+            parent_regret = float(parent.get("cumulative_regret", 0.0) or 0.0)
+            regret_increment = max(0.0, regret - parent_regret)
+            is_top1 = 1.0 if regret_increment <= 1e-6 else 0.0
+            disc = discrepancy.get(parent_id, 0) + (0 if is_top1 else 1)
+            discrepancy[node_id] = disc
             parent_match = bool(match.get(parent_id, False))
             is_positive = parent_match and depth <= len(target) and token == int(target[depth - 1])
             match[node_id] = is_positive
-            disc = discrepancy.get(parent_id, 0) + (0 if int(dist["local_token_rank"]) == 1 else 1)
-            discrepancy[node_id] = disc
-            nll = float(node.get("cumulative_score", 0.0) or 0.0)
-            regret = float(node.get("cumulative_regret", 0.0) or 0.0)
             base = {
                 "task_id": task_id,
                 "output_id": output_id,
@@ -183,10 +164,13 @@ def extract_output(raw: dict, task_id: str, output_id: str, gold_grid: list[list
                 "branch_depth": float(depth),
                 "cumulative_nll": nll,
                 "cumulative_regret": regret,
+                "token_logprob": float(node.get("token_logprob", 0.0) or 0.0),
+                "regret_increment": regret_increment,
+                "is_top1": is_top1,
                 "discrepancy_count": float(disc),
                 "mean_nll_per_depth": nll / max(1, depth),
                 "mean_regret_per_depth": regret / max(1, depth),
-                **dist,
+                "frontier_floor_activated": 1.0 if node.get("frontier_floor_activated") else 0.0,
             }
             rows.append(base)
             if is_positive:
@@ -200,9 +184,9 @@ def extract_output(raw: dict, task_id: str, output_id: str, gold_grid: list[list
             "view": view,
             "positive_nodes": positive,
             "negative_nodes": negative,
-            "skipped_missing_branch_probability": skipped,
+            "skipped_missing_parent": skipped,
         })
-    return rows, cell_counts, missing_bp
+    return rows, cell_counts, missing_parent
 
 
 def ranking_at_fraction(y: np.ndarray, score: np.ndarray, fraction: float):
@@ -258,7 +242,7 @@ def main():
 
     rows: list[dict] = []
     cell_counts: list[dict] = []
-    missing_bp = 0
+    missing_parent = 0
     output_count = 0
     for score_row in score_rows:
         output_id = score_row["output_id"]
@@ -273,7 +257,7 @@ def main():
         extracted, counts, missing = extract_output(raw, task_id, output_id, gold)
         rows.extend(extracted)
         cell_counts.extend(counts)
-        missing_bp += missing
+        missing_parent += missing
         output_count += 1
 
     if not rows:
@@ -345,7 +329,7 @@ def main():
         "positive_gold_prefix_nodes": int(y.sum()),
         "negative_expanded_nodes": int((1 - y).sum()),
         "positive_rate": prevalence,
-        "missing_branch_probability_rows": missing_bp,
+        "missing_parent_rows": missing_parent,
         "label": "1 iff expanded retained node prefix exactly equals Gold prefix through that node; else 0",
         "gold_sha256": observed_gold_sha,
     }
@@ -362,6 +346,7 @@ def main():
         ],
         "excluded_for_identity_leakage": ["task_id", "output_id", "cell_key", "token prefix"],
         "available_at_test_time": True,
+        "schema_note": "Historical raw trees do not expose branch_probabilities. local top1/non-top1 and cumulative discrepancy are reconstructed exactly from cumulative-regret increments between parent and child; exact rank, entropy and top1/top2 margin are intentionally not used.",
         "model": "StandardScaler + LogisticRegression(C=1,class_weight=balanced,lbfgs)",
         "cv": "5-fold GroupKFold grouped by task_id",
         "decision_rule": DECISION_RULE,
@@ -408,7 +393,7 @@ def main():
     write_csv(
         "CELL_NODE_COUNTS.csv",
         cell_counts,
-        ["task_id", "output_id", "cell_key", "view", "positive_nodes", "negative_nodes", "skipped_missing_branch_probability"],
+        ["task_id", "output_id", "cell_key", "view", "positive_nodes", "negative_nodes", "skipped_missing_parent"],
     )
     report = f"""# Search-order node separability v1
 
@@ -422,7 +407,7 @@ CPU-only post-freeze development audit over frozen Phase-3 d24 raw search trees.
 - Expanded retained nodes: {len(rows)}
 - Gold-prefix positive nodes: {int(y.sum())}
 - Positive prevalence: {prevalence:.4f}
-- Missing branch-probability feature rows: {missing_bp}
+- Missing-parent feature rows: {missing_parent}
 
 A positive node is an expanded retained node whose entire prefix exactly matches the transformed Gold prefix through that node.
 Gold is used for labels only.
