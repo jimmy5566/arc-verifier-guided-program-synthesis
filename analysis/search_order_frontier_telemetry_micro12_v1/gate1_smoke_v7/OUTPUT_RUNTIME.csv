@@ -1,0 +1,4 @@
+output_id,category,profile,wall_seconds,logical_advances,logical_nodes_per_second,mean_effective_batch,useful_model_forwards,replay_model_forwards,replay_useful_ratio,r1024_cells,terminal_carry_cells,wall_censored_cells,fallback_used,telemetry_rows,expanded_retained_work_items,never_expanded_retained_work_items,compressed_telemetry_bytes
+1818057f:o0,CONTROL,PROFILE_S,253.7182600852102,6171,24.322254133098248,1.9646609360076408,6171,0,0.0,2,6,0,False,6176,6171,5,670478
+80a900e0:o0,MID,PROFILE_M,363.15712692402303,8192,22.557728852486125,1.7949167397020158,8192,0,0.0,8,0,0,False,8421,8192,229,1039471
+36a08778:o1,HIGH,PROFILE_L_LOW,250.6731267310679,8192,32.68000884988643,3.1291061879297173,8192,0,0.0,8,0,0,False,8246,8192,54,845394

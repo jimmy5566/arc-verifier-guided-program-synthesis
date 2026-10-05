@@ -1,0 +1,4 @@
+output_id,depth,attempt,fresh_process,worker_python,configuration,returncode,started_unix,ended_unix,log,fallback_used
+1818057f:o0,24,0,True,/root/arc-runtime-3090-v5/env/3090-ampere-env-v2/bin/python,"{'resident_capacity': 8, 'physical_batch_ceiling': 7}",0,1791198028.358085,1791198330.3494835,WORKER_LOGS/1818057f__o0_d24_attempt0.log,False
+80a900e0:o0,24,0,True,/root/arc-runtime-3090-v5/env/3090-ampere-env-v2/bin/python,"{'resident_capacity': 8, 'physical_batch_ceiling': 8}",0,1791198332.3675036,1791198738.6888373,WORKER_LOGS/80a900e0__o0_d24_attempt0.log,False
+36a08778:o1,24,0,True,/root/arc-runtime-3090-v5/env/3090-ampere-env-v2/bin/python,"{'resident_capacity': 4, 'physical_batch_ceiling': 4}",0,1791198741.779207,1791199076.3292418,WORKER_LOGS/36a08778__o1_d24_attempt0.log,False

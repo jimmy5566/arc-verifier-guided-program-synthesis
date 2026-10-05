@@ -1,0 +1,17 @@
+{
+  "attempt_index": 0,
+  "checkpoint_output": "OUTPUT_CHECKPOINTS/7ed72f31_o1.json",
+  "ended_unix": 1791207841.2996895,
+  "eos_events": "EOS_EVENTS/7ed72f31_o1.jsonl.gz",
+  "experiment": "SEARCH_ORDER_FRONTIER_TELEMETRY_MICRO12_V1",
+  "gold_loaded": false,
+  "output_id": "7ed72f31:o1",
+  "profile_configuration": {
+    "physical_batch_ceiling": 8,
+    "resident_capacity": 8
+  },
+  "raw_output": "RAW_OUTPUTS/7ed72f31_o1.json",
+  "status": "COMPLETE",
+  "target_blind": true,
+  "wall_seconds": 234.5882009472698
+}
