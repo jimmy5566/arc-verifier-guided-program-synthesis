@@ -1,0 +1,40 @@
+{
+  "artifact": "SEARCH_ORDER_P3_VS_P1_MICRO12_COMPARISON_V1",
+  "cohort": "same frozen Micro12 outputs",
+  "accuracy": {
+    "P1_FAIR_DFS_Q64": {
+      "exact_gold_hits": 3,
+      "historical_miss_rescues": 0,
+      "control_hits": 3,
+      "unknown_wall_censored_outputs": 4
+    },
+    "P3_LDS_UNIT_DISCREPANCY_V1": {
+      "exact_gold_hits": 3,
+      "historical_miss_rescues": 0,
+      "control_hits": 3,
+      "unknown_wall_censored_outputs": 0
+    }
+  },
+  "runtime": {
+    "P1": {
+      "total_wall_seconds": 5357.131047816947,
+      "mean_wall_seconds_per_output": 446.4275873180789,
+      "replay_model_forwards": 30562,
+      "useful_model_forwards": 90640,
+      "replay_useful_ratio": 0.33718005295675196,
+      "mean_effective_batch": 2.0244025472674063
+    },
+    "P3": {
+      "total_wall_seconds": 4109.525870086625,
+      "mean_wall_seconds_per_output": 342.46048917388543,
+      "replay_model_forwards": 1797,
+      "useful_model_forwards": 95928,
+      "replay_useful_ratio": 0.018732799599699774,
+      "mean_effective_batch": 2.1770446273904125
+    },
+    "P3_wall_time_reduction_fraction": 0.232887,
+    "P3_speedup_vs_P1": 1.3036,
+    "P3_replay_useful_reduction_fraction": 0.94444
+  },
+  "interpretation": "P3 removes the P1 runtime/censoring confound and is materially more efficient, but does not improve exact-Gold recall on the frozen Micro12 cohort."
+}
