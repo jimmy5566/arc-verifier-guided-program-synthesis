@@ -1029,7 +1029,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--augmentation-label", default="aug16")
     parser.add_argument("--admission-policy", choices=("fifo", "root_aware"), default="fifo")
     parser.add_argument("--fairness-max-wait", type=int, default=3)
-    parser.add_argument("--search-order-policy", choices=("legacy", "CURRENT_DFS", "FAIR_DFS_Q64", "REGRET_BAND_FAIR_Q64"), default="legacy")
+    parser.add_argument("--search-order-policy", choices=("legacy", "CURRENT_DFS", "FAIR_DFS_Q64", "REGRET_BAND_FAIR_Q64", "LDS_UNIT_DISCREPANCY_V1"), default="legacy")
     parser.add_argument("--experiment", default=EXPERIMENT)
     parser.add_argument("--checkpoints", default="512,1024,2048,4096")
     parser.add_argument("--diagnostic-trace", action="store_true",
