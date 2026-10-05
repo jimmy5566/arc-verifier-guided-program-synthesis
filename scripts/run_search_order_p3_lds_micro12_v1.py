@@ -214,8 +214,15 @@ def output_metrics(raw: dict[str, Any], category: str, profile: str) -> tuple[di
     final = [item for item in checkpoints if int(item["checkpoint_requested"]) == 1024]
     if len(final) != len(AUG8):
         raise RuntimeError("P3_AUG8_FINAL_CHECKPOINT_COUNT_INVALID")
-    work = [item for cell in cells for item in cell.get("search_order_work_items", [])]
-    validate_lineage(work)
+    # Work-item IDs are scoped to an individual AUG cell.  Validate each
+    # lineage independently before aggregating its telemetry; otherwise the
+    # repeated root ID across the eight independent cells looks like a false
+    # duplicate expansion.
+    work: list[dict[str, Any]] = []
+    for cell in cells:
+        cell_work = list(cell.get("search_order_work_items", []))
+        validate_lineage(cell_work)
+        work.extend(cell_work)
     orders = [cell.get("search_order") or {} for cell in cells]
     layers = Counter()
     pending_layers = Counter()
