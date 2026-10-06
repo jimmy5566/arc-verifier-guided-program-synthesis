@@ -72,6 +72,9 @@ def _order_generator(
     cache_owner: CacheOwner, root_cache_length: int, root_legacy_snapshot: Any | None,
     config: D1TurboDFSConfig, started_unix: float, state: dict[str, Any], root_node_id: int,
     policy_name: SearchOrderName,
+    hidden_state_layers: tuple[int, ...] | None = None,
+    hidden_state_sink: Callable[[dict[str, Any], tuple[Any, ...]], None] | None = None,
+    root_hidden_states: tuple[Any, ...] | None = None,
 ) -> Generator[ReadyForwardRequest, Any, list[ReferenceTurboDFSCandidate]]:
     """Explicit retained-work event loop with a single cache owner per cell."""
     import torch
@@ -105,6 +108,17 @@ def _order_generator(
             "schema": "FRONTIER_WORK_ITEM_TELEMETRY_V1",
             "records": [],
             "next_frontier_pop_order": 0,
+        }
+    hidden_layers = tuple(int(layer) for layer in (hidden_state_layers or ()))
+    hidden_enabled = bool(hidden_layers) and hidden_state_sink is not None
+    hidden_parent_by_work_id: dict[int, tuple[Any, ...]] = {}
+    hidden_captured_work_ids: set[int] = set()
+    if hidden_enabled:
+        state["top5_hidden_state_capture"] = {
+            "schema": "TOP5_PARENT_HIDDEN_STATE_V1",
+            "layers_0_based": list(hidden_layers),
+            "capture_count": 0,
+            "extra_model_forwards": 0,
         }
 
     def record_item(
@@ -191,7 +205,8 @@ def _order_generator(
 
     def process_logits(*, logits: Any, remaining: int, score: float, regret: float, position: int,
                        parent_node: int, prefix: tuple[int, ...], parent_work_item_id: int | None,
-                       root_branch_id: int | None, parent_discrepancy: int, is_root: bool) -> list[_Frame]:
+                       root_branch_id: int | None, parent_discrepancy: int, is_root: bool,
+                       parent_hidden_states: tuple[Any, ...] | None = None) -> list[_Frame]:
         nonlocal next_work_item_id
         log_probs = logits.float().cpu().log_softmax(-1)[0]
         values = [(token, float(log_probs[token].item())) for token in config.arc_tokens]
@@ -330,6 +345,10 @@ def _order_generator(
             if event is not None:
                 state["trace_pending"][work_id] = event
             frames[work_id] = frame
+            if hidden_enabled:
+                if parent_hidden_states is None:
+                    raise RuntimeError("hidden-state capture enabled but retained child lacks parent hidden state")
+                hidden_parent_by_work_id[work_id] = parent_hidden_states
             work_rows[work_id] = record_item(
                 frame,
                 top1_logprob=top1_logprob,
@@ -341,6 +360,39 @@ def _order_generator(
         pending_by_parent[parent_node] = len(children)
         _record_frontier(state, [children])
         return children
+
+    def capture_current_nll_top5() -> None:
+        if not hidden_enabled:
+            return
+        pending = sorted(
+            policy.pending(),
+            key=lambda item: (float(item.cumulative_nll), int(item.insertion_order), int(item.work_item_id)),
+        )[:5]
+        for nll_rank, pending_item in enumerate(pending, start=1):
+            work_id = int(pending_item.work_item_id)
+            if work_id in hidden_captured_work_ids:
+                continue
+            hidden = hidden_parent_by_work_id.get(work_id)
+            frame = frames.get(work_id)
+            if hidden is None or frame is None:
+                raise RuntimeError(f"Top5 hidden-state candidate missing parent representation: {work_id}")
+            hidden_state_sink({
+                "cell_key": cell_key,
+                "work_item_id": work_id,
+                "parent_work_item_id": pending_item.parent_work_item_id,
+                "root_branch_id": pending_item.root_branch_id,
+                "nll_rank_at_first_capture": nll_rank,
+                "cumulative_nll": float(pending_item.cumulative_nll),
+                "prefix_length": len(frame.prefix),
+                "prefix_hash": _prefix_hash(frame.prefix),
+                "parent_prefix_hash": _prefix_hash(frame.prefix[:-1]),
+                "selected_token_id": int(frame.token_id),
+                "expanded_nodes_at_capture": int(state["expanded_nodes"]),
+                "model_forwards_at_capture": int(state["model_forwards"]),
+                "layers_0_based": list(hidden_layers),
+            }, hidden)
+            hidden_captured_work_ids.add(work_id)
+            state["top5_hidden_state_capture"]["capture_count"] += 1
 
     def crop_to_prefix(target: tuple[int, ...]) -> Generator[ReadyForwardRequest, Any, None]:
         nonlocal current_prefix, ordinal
@@ -366,17 +418,20 @@ def _order_generator(
 
     roots = process_logits(logits=root_logits, remaining=max_new_tokens, score=0.0, regret=0.0,
                            position=root_position, parent_node=root_node_id, prefix=tuple(), parent_work_item_id=None,
-                           root_branch_id=None, parent_discrepancy=0, is_root=True)
+                           root_branch_id=None, parent_discrepancy=0, is_root=True,
+                           parent_hidden_states=root_hidden_states)
     add_successors(roots, is_root=True)
     while (not state["budget_exhausted"] and _elapsed_budget(state, started_unix) < config.local_time_limit_seconds and
            (config.absolute_end_time_unix is None or time.time() < config.absolute_end_time_unix)):
         if state["expanded_nodes"] >= config.max_expanded_nodes:
             state["budget_exhausted"] = True
             break
+        capture_current_nll_top5()
         item = policy.pop()
         if item is None:
             break
         frame = frames[item.work_item_id]
+        hidden_parent_by_work_id.pop(int(item.work_item_id), None)
         record = work_rows[item.work_item_id]
         if telemetry_enabled:
             telemetry_record = telemetry_by_id[item.work_item_id]
@@ -427,7 +482,8 @@ def _order_generator(
                                   score=item.cumulative_nll, regret=item.cumulative_regret, position=frame.position + 1,
                                   parent_node=node_id, prefix=frame.prefix, parent_work_item_id=item.work_item_id,
                                   root_branch_id=item.root_branch_id, parent_discrepancy=item.discrepancy_count,
-                                  is_root=False)
+                                  is_root=False,
+                                  parent_hidden_states=getattr(outputs, "hidden_states_selected", None))
         add_successors(children, is_root=False)
         if policy.note_expansion(item):
             record["number_of_yields"] += 1
@@ -459,6 +515,8 @@ def start_search_order_cell(
     release_prefill_temporaries: bool = False, prefill_output_references: list[Any] | None = None,
     eos_event_sink: Callable[[dict[str, Any]], None] | None = None,
     frontier_telemetry_context: dict[str, Any] | None = None,
+    hidden_state_layers: tuple[int, ...] | None = None,
+    hidden_state_sink: Callable[[dict[str, Any], tuple[Any, ...]], None] | None = None,
 ) -> ReadyCell:
     """Create one E1 ReadyCell; only its logical continuation order is new.
 
@@ -476,6 +534,8 @@ def start_search_order_cell(
     if policy_name == "CURRENT_DFS":
         if frontier_telemetry_context is not None:
             raise ValueError("frontier telemetry requires the explicit retained-work scheduler")
+        if hidden_state_layers or hidden_state_sink is not None:
+            raise ValueError("Top5 hidden-state capture requires the explicit retained-work scheduler")
         cell = start_ready_cell(
             model=model,
             input_ids=input_ids,
@@ -507,7 +567,10 @@ def start_search_order_cell(
     state["active_time_accounting"] = active_time_accounting; state["per_forward_trace"] = []
     started_unix = time.time(); created_perf = time.perf_counter()
     with torch.no_grad():
-        started = time.perf_counter(); outputs = model(input_ids=input_ids, return_dict=True, use_cache=True)
+        started = time.perf_counter(); outputs = model(
+            input_ids=input_ids, return_dict=True, use_cache=True,
+            **({"output_hidden_states": True} if hidden_state_layers else {}),
+        )
         prefill_seconds = time.perf_counter() - started
     state["model_forward_seconds"] += prefill_seconds; state["active_elapsed_seconds"] += prefill_seconds; state["model_forwards"] = 1
     root_node = _node(state, parent_node_id=None, lane=0, token_position=int(input_ids.size(1)), branch_depth=0,
@@ -517,6 +580,20 @@ def start_search_order_cell(
     if root_cache_transform is not None:
         root_cache = root_cache_transform(root_cache)
     root_logits = outputs.logits[:, -1]
+    root_hidden_states = None
+    if hidden_state_layers:
+        states = getattr(outputs, "hidden_states", None)
+        if states is None:
+            raise RuntimeError("hidden-state capture requested but root prefill has no hidden_states")
+        selected: list[Any] = []
+        for layer in hidden_state_layers:
+            tuple_index = int(layer) + 1
+            if int(layer) < 0 or tuple_index >= len(states):
+                raise RuntimeError(
+                    f"hidden-state transformer layer out of range: {layer} / {len(states) - 1}"
+                )
+            selected.append(states[tuple_index][:, -1].detach().to("cpu"))
+        root_hidden_states = tuple(selected)
     if release_prefill_temporaries:
         root_logits = root_logits.clone()
         if prefill_output_references is not None:
@@ -531,7 +608,9 @@ def start_search_order_cell(
     generator = _order_generator(cell_key=cell_key, root_logits=root_logits, root_position=int(input_ids.size(1)),
                                  max_new_tokens=config.max_new_tokens, cache_owner=owner, root_cache_length=root_length,
                                  root_legacy_snapshot=snapshot, config=config, started_unix=started_unix,
-                                 state=state, root_node_id=root_node, policy_name=policy_name)
+                                 state=state, root_node_id=root_node, policy_name=policy_name,
+                                 hidden_state_layers=hidden_state_layers, hidden_state_sink=hidden_state_sink,
+                                 root_hidden_states=root_hidden_states)
     cell = ReadyCell(cell_key, config, state, started_unix, created_perf, generator, prefill_seconds=prefill_seconds,
                      active_elapsed_seconds=prefill_seconds, cache_owner=owner)
     _advance_cell(cell)
