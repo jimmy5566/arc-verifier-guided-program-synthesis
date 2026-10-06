@@ -1,0 +1,11 @@
+{
+  "classification": "IMPLEMENTATION_RUNTIME_CONTROL_PROTOCOL_MISMATCH",
+  "experiment": "TOP5_PASSIVE_HIDDEN_STATE_MICRO12_V1",
+  "gold_loaded": false,
+  "gpu_environment_preflight": "PASS",
+  "reason": "Gate1 smoke reuse and hard time gates were absent before any scientific worker launch.",
+  "scientific_GPU_generation_occurred": false,
+  "scientific_outputs_produced": false,
+  "starting_HEAD": "1465d572336959a64f5bce36fa83dfadc3a9d4a9",
+  "status": "TERMINAL_INFRASTRUCTURE_RECEIPT"
+}

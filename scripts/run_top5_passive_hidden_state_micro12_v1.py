@@ -14,8 +14,10 @@ import csv
 import gzip
 import json
 import os
+import shutil
 import subprocess
 import sys
+import time
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -39,6 +41,12 @@ COHORT_SHA256 = "3852056112336e58559ceb0bb6f3171600ff36e0d6b02d1c9c03fc0da334443
 HIDDEN_LAYERS = (11, 23, 35)
 HIDDEN_SIZE = 2560
 PREREG = ROOT / "analysis" / "top5_passive_hidden_state_micro12_v1_prereg" / "PREREGISTRATION.json"
+SMOKE_OUTPUT_IDS = ("1818057f:o0", "80a900e0:o0", "36a08778:o1")
+SMOKE_DEADLINE_SECONDS = 25 * 60
+EXPERIMENT_LIMIT_SECONDS = 90 * 60
+NEW_OUTPUT_CUTOFF_SECONDS = 80 * 60
+FREEZE_RESERVE_SECONDS = 8 * 60
+RUNTIME_CONTROL_BASE_HEAD = "1465d572336959a64f5bce36fa83dfadc3a9d4a9"
 
 
 def head() -> str:
@@ -50,6 +58,182 @@ def head() -> str:
 
 def safe(output_id: str) -> str:
     return output_id.replace(":", "_")
+
+
+def broad_profile(profile: str) -> str:
+    """Match frozen P3's S/M/L grouping without changing any scheduler input."""
+    return "PROFILE_L" if str(profile).startswith("PROFILE_L") else str(profile)
+
+
+def clock_path(root: Path) -> Path:
+    return root / "GPU_EXPERIMENT_START.json"
+
+
+def start_experiment_clock(root: Path) -> dict[str, Any]:
+    """Create the one monotonic clock immediately before the first worker."""
+    path = clock_path(root)
+    if path.exists():
+        raise RuntimeError("TOP5_HIDDEN_GPU_EXPERIMENT_CLOCK_ALREADY_EXISTS")
+    payload = {
+        "status": "STARTED",
+        "experiment": EXPERIMENT,
+        "target_blind": True,
+        "gold_loaded": False,
+        "clock": "time.monotonic",
+        "GPU_EXPERIMENT_START": time.monotonic(),
+        "smoke_deadline_seconds": SMOKE_DEADLINE_SECONDS,
+        "new_output_cutoff_seconds": NEW_OUTPUT_CUTOFF_SECONDS,
+        "experiment_limit_seconds": EXPERIMENT_LIMIT_SECONDS,
+        "reserved_freeze_seconds": FREEZE_RESERVE_SECONDS,
+    }
+    _atomic_json(path, payload)
+    return payload
+
+
+def load_experiment_clock(root: Path) -> dict[str, Any]:
+    payload = _read(clock_path(root))
+    if (payload.get("status") != "STARTED" or payload.get("clock") != "time.monotonic"
+            or not isinstance(payload.get("GPU_EXPERIMENT_START"), (int, float))):
+        raise RuntimeError("TOP5_HIDDEN_GPU_EXPERIMENT_CLOCK_INVALID")
+    return payload
+
+
+def experiment_elapsed(clock: dict[str, Any], *, now: float | None = None) -> float:
+    current = time.monotonic() if now is None else float(now)
+    elapsed = current - float(clock["GPU_EXPERIMENT_START"])
+    if elapsed < 0:
+        raise RuntimeError("TOP5_HIDDEN_GPU_EXPERIMENT_CLOCK_NON_MONOTONIC")
+    return elapsed
+
+
+def new_output_allowed(clock: dict[str, Any], *, now: float | None = None) -> bool:
+    return experiment_elapsed(clock, now=now) < NEW_OUTPUT_CUTOFF_SECONDS
+
+
+def write_time_budget_status(
+    root: Path,
+    classification: str,
+    clock: dict[str, Any],
+    **extra: Any,
+) -> dict[str, Any]:
+    payload = {
+        "status": "STOPPED",
+        "classification": classification,
+        "experiment": EXPERIMENT,
+        "target_blind": True,
+        "gold_loaded": False,
+        "elapsed_seconds": experiment_elapsed(clock),
+        "GPU_EXPERIMENT_START": clock["GPU_EXPERIMENT_START"],
+        **extra,
+    }
+    _atomic_json(root / "TIME_BUDGET_STATUS.json", payload)
+    return payload
+
+
+def require_smoke_deadline(root: Path, clock: dict[str, Any]) -> float:
+    elapsed = experiment_elapsed(clock)
+    if elapsed > SMOKE_DEADLINE_SECONDS:
+        write_time_budget_status(
+            root,
+            "TIME_BUDGET_SMOKE_TOO_SLOW",
+            clock,
+            smoke_deadline_seconds=SMOKE_DEADLINE_SECONDS,
+        )
+        raise RuntimeError("TIME_BUDGET_SMOKE_TOO_SLOW")
+    return elapsed
+
+
+def select_remaining_outputs(
+    cohort_outputs: list[dict[str, Any]], smoke_outputs: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    smoke_ids = tuple(str(row["output_id"]) for row in smoke_outputs)
+    if tuple(sorted(smoke_ids)) != tuple(sorted(SMOKE_OUTPUT_IDS)):
+        raise RuntimeError(f"TOP5_HIDDEN_SMOKE_COHORT_IDENTITY_FAIL:{smoke_ids}")
+    cohort_ids = [str(row["output_id"]) for row in cohort_outputs]
+    if len(cohort_ids) != 12 or len(set(cohort_ids)) != 12 or not set(smoke_ids).issubset(cohort_ids):
+        raise RuntimeError("TOP5_HIDDEN_MICRO12_COHORT_FOR_REUSE_INVALID")
+    remaining = [row for row in cohort_outputs if str(row["output_id"]) not in set(smoke_ids)]
+    if len(remaining) != 9:
+        raise RuntimeError("TOP5_HIDDEN_REMAINING_OUTPUT_COUNT_INVALID")
+    return remaining
+
+
+def build_projection(
+    *,
+    elapsed_seconds: float,
+    historical_rows: list[dict[str, Any]],
+    smoke_rows: list[dict[str, Any]],
+    remaining_outputs: list[dict[str, Any]],
+) -> dict[str, Any]:
+    historical = {str(row["output_id"]): row for row in historical_rows}
+    observed = {str(row["output_id"]): row for row in smoke_rows}
+    if len(historical) != 12 or len(observed) != 3:
+        raise RuntimeError("TOP5_HIDDEN_PROJECTION_RUNTIME_INPUT_INVALID")
+    ratios: dict[str, list[float]] = defaultdict(list)
+    for output_id, actual in observed.items():
+        reference = historical.get(output_id)
+        if reference is None or float(reference["wall_seconds"]) <= 0 or float(actual["wall_seconds"]) <= 0:
+            raise RuntimeError(f"TOP5_HIDDEN_PROJECTION_SMOKE_RUNTIME_INVALID:{output_id}")
+        ratios[broad_profile(str(actual["profile"]))].append(
+            float(actual["wall_seconds"]) / float(reference["wall_seconds"])
+        )
+    profile_factor = {profile: sum(values) / len(values) for profile, values in ratios.items()}
+    estimates: list[dict[str, Any]] = []
+    for selected in remaining_outputs:
+        output_id = str(selected["output_id"])
+        reference = historical.get(output_id)
+        if reference is None:
+            raise RuntimeError(f"TOP5_HIDDEN_PROJECTION_REFERENCE_MISSING:{output_id}")
+        profile = broad_profile(str(selected["profile"]))
+        factor = profile_factor.get(profile, 1.0)
+        historical_seconds = float(reference["wall_seconds"])
+        estimates.append({
+            "output_id": output_id,
+            "profile": str(selected["profile"]),
+            "historical_wall_seconds": historical_seconds,
+            "smoke_profile_factor": factor,
+            "estimated_seconds": historical_seconds * factor,
+        })
+    remaining_seconds = sum(float(row["estimated_seconds"]) for row in estimates)
+    projected_total = float(elapsed_seconds) + remaining_seconds + FREEZE_RESERVE_SECONDS
+    return {
+        "elapsed_seconds": float(elapsed_seconds),
+        "estimated_remaining_generation_seconds": remaining_seconds,
+        "reserved_freeze_seconds": FREEZE_RESERVE_SECONDS,
+        "projected_total_seconds": projected_total,
+        "experiment_limit_seconds": EXPERIMENT_LIMIT_SECONDS,
+        "profile_factors": profile_factor,
+        "remaining_output_estimates": estimates,
+        "status": "PASS" if projected_total <= EXPERIMENT_LIMIT_SECONDS else "FAIL",
+    }
+
+
+def write_projection(
+    root: Path,
+    clock: dict[str, Any],
+    smoke_run: Path,
+    p3_reference: Path,
+    cohort_outputs: list[dict[str, Any]],
+    smoke_outputs: list[dict[str, Any]],
+) -> dict[str, Any]:
+    with (p3_reference / "OUTPUT_RUNTIME.csv").open("r", encoding="utf-8", newline="") as handle:
+        historical = list(csv.DictReader(handle))
+    with (smoke_run / "OUTPUT_RUNTIME.csv").open("r", encoding="utf-8", newline="") as handle:
+        smoke_runtime = list(csv.DictReader(handle))
+    projection = build_projection(
+        elapsed_seconds=experiment_elapsed(clock),
+        historical_rows=historical,
+        smoke_rows=smoke_runtime,
+        remaining_outputs=select_remaining_outputs(cohort_outputs, smoke_outputs),
+    )
+    projection.update({
+        "experiment": EXPERIMENT,
+        "target_blind": True,
+        "gold_loaded": False,
+        "smoke_outputs": [str(row["output_id"]) for row in smoke_outputs],
+    })
+    _atomic_json(root / "GATE1_RUNTIME.json", projection)
+    return projection
 
 
 def hidden_paths(run: Path, output_id: str) -> tuple[Path, Path, Path]:
@@ -88,6 +272,30 @@ def prereg_audit() -> dict[str, Any]:
     return {"status": "PASS", "commit": commit, "sha256": sha_file(PREREG)}
 
 
+def runtime_control_source_diff() -> dict[str, Any]:
+    changed = subprocess.run(
+        ["git", "-C", str(ROOT), "diff", "--name-only", RUNTIME_CONTROL_BASE_HEAD, "HEAD"],
+        text=True, capture_output=True, check=True,
+    ).stdout.splitlines()
+    allowed = {
+        ".github/workflows/top5_hidden_state_gate0.yml",
+        "scripts/run_top5_passive_hidden_state_micro12_v1.py",
+        "tests/test_top5_passive_hidden_runtime_control.py",
+        "tests/test_search_order.py",
+        "analysis/top5_passive_hidden_state_micro12_v1/IMPLEMENTATION_RUNTIME_CONTROL_PROTOCOL_MISMATCH.json",
+    }
+    unexpected = sorted(set(changed) - allowed)
+    if unexpected:
+        raise RuntimeError(f"TOP5_HIDDEN_RUNTIME_CONTROL_SOURCE_DIFF_FAIL:{unexpected}")
+    return {
+        "status": "PASS",
+        "base_head": RUNTIME_CONTROL_BASE_HEAD,
+        "current_head": head(),
+        "changed_paths": sorted(changed),
+        "scientific_search_behavior_changed": False,
+    }
+
+
 def load_cohort(path: Path) -> dict[str, Any]:
     payload = _read(path)
     if payload.get("cohort_sha256") != COHORT_SHA256 or payload.get("gold_loaded") is not False:
@@ -106,6 +314,7 @@ def run_gate0(args: argparse.Namespace) -> None:
     commands = (
         ("tests/test_nvarc_turbodfs_dynamic_ready.py", "tests/test_nvarc_turbodfs_search_order.py", "tests/test_search_order.py"),
         ("tests/test_audit_search_order_adapters.py", "tests/test_build_search_order_micro24_cohort.py"),
+        ("tests/test_top5_passive_hidden_runtime_control.py",),
     )
     records: list[dict[str, Any]] = []
     for files in commands:
@@ -122,7 +331,7 @@ def run_gate0(args: argparse.Namespace) -> None:
     _atomic_json(args.output / "GATE0_TESTS.json", {
         "status": "PASS", "experiment": EXPERIMENT, "target_blind": True,
         "gold_loaded": False, "hidden_layers_0_based": list(HIDDEN_LAYERS),
-        "preregistration": prereg_audit(), "tests": records,
+        "preregistration": prereg_audit(), "runtime_control_source_diff": runtime_control_source_diff(), "tests": records,
     })
 
 
@@ -220,9 +429,20 @@ def output_is_frozen(run: Path, output_id: str) -> bool:
         raise RuntimeError(f"TOP5_HIDDEN_UNVERIFIED_PARTIAL_OUTPUT_REFUSED:{output_id}")
     ledger = base_paths[4]
     verification = base_paths[5]
+    raw = _read(base_paths[0])
+    summary = _read(summary_path)
+    required_integrity = {
+        "npz_metadata_alignment", "unique_cell_work_item", "retained_lineage_join", "nll_rank_1_to_5",
+    }
     if (_read(base_paths[3]).get("status") != "COMPLETE"
+            or raw.get("status") != "COMPLETE"
+            or raw.get("gold_loaded") is not False
             or _read(verification).get("status") != "PASS"
-            or _read(summary_path).get("status") != "PASS"
+            or summary.get("status") != "PASS"
+            or summary.get("gold_loaded") is not False
+            or int(summary.get("extra_model_forwards", -1)) != 0
+            or set(summary.get("integrity", {})) != required_integrity
+            or any(summary["integrity"].get(name) != "PASS" for name in required_integrity)
             or _verify(run, ledger).get("status") != "PASS"):
         raise RuntimeError(f"TOP5_HIDDEN_FROZEN_OUTPUT_INVALID:{output_id}")
     return True
@@ -243,6 +463,50 @@ def freeze_output(run: Path, output_id: str) -> dict[str, Any]:
     if checked.get("status") != "PASS":
         raise RuntimeError(f"TOP5_HIDDEN_OUTPUT_HASH_FREEZE_FAIL:{output_id}")
     return hidden_summary
+
+
+def copy_frozen_output(source: Path, destination: Path, output_id: str) -> None:
+    """Copy a complete Gate-1 output once, then re-verify it at its new root."""
+    if not output_is_frozen(source, output_id):
+        raise RuntimeError(f"TOP5_HIDDEN_SMOKE_OUTPUT_REUSE_REFUSED:{output_id}")
+    sources = (*frontier.output_paths(source, output_id), *hidden_paths(source, output_id))
+    destinations = (*frontier.output_paths(destination, output_id), *hidden_paths(destination, output_id))
+    if any(path.exists() for path in destinations):
+        raise RuntimeError(f"TOP5_HIDDEN_REUSE_DESTINATION_COLLISION:{output_id}")
+    for source_path, destination_path in zip(sources, destinations, strict=True):
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_path, destination_path)
+    if not output_is_frozen(destination, output_id):
+        raise RuntimeError(f"TOP5_HIDDEN_REUSE_DESTINATION_VERIFY_FAIL:{output_id}")
+
+
+def reuse_smoke_outputs(
+    destination: Path,
+    gate1_root: Path,
+    smoke_outputs: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Make verified smoke evidence the first three official Micro12 outputs."""
+    smoke_run = gate1_root / "GATE1_SMOKE"
+    if smoke_run.resolve() == destination.resolve():
+        raise RuntimeError("TOP5_HIDDEN_REUSE_SOURCE_DESTINATION_ALIAS")
+    copied: list[str] = []
+    for selected in smoke_outputs:
+        output_id = str(selected["output_id"])
+        copy_frozen_output(smoke_run, destination, output_id)
+        copied.append(output_id)
+    receipt = {
+        "status": "PASS",
+        "experiment": EXPERIMENT,
+        "target_blind": True,
+        "gold_loaded": False,
+        "verified_outputs_reused": copied,
+        "reused_count": len(copied),
+        "gpu_workers_relaunched_for_reused_outputs": 0,
+        "duplicate_output_generations": 0,
+        "source": str(smoke_run),
+    }
+    _atomic_json(destination / "GATE2_REUSE_RECEIPT.json", receipt)
+    return receipt
 
 
 def run_outputs(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any]], label: str) -> dict[str, Any]:
@@ -272,6 +536,25 @@ def run_outputs(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any
         output_id = str(selected["output_id"])
         if output_is_frozen(run, output_id):
             continue
+        if getattr(args, "experiment_clock", None) is None:
+            if label != "GATE1_SMOKE":
+                raise RuntimeError("TOP5_HIDDEN_GPU_EXPERIMENT_CLOCK_REQUIRED")
+            # Keep preflight and contract emission outside the measured window.
+            # This is immediately before the first scientific worker is spawned.
+            args.experiment_clock = start_experiment_clock(args.output)
+        clock = getattr(args, "experiment_clock", None)
+        if clock is not None and not new_output_allowed(clock):
+            pending = [str(row["output_id"]) for row in outputs if not output_is_frozen(run, str(row["output_id"]))]
+            write_time_budget_status(
+                args.output,
+                "TIME_BUDGET_INCOMPLETE",
+                clock,
+                new_output_cutoff_seconds=NEW_OUTPUT_CUTOFF_SECONDS,
+                completed_outputs=len(outputs) - len(pending),
+                pending_outputs=pending,
+                last_frozen_output=output_id if not pending else None,
+            )
+            raise RuntimeError("TIME_BUDGET_INCOMPLETE")
         done = False
         for attempt, profile_cfg in enumerate(_policy(_read(args.coarse_policy), str(selected["profile"]))):
             code, receipt = _worker(args, run, selected, attempt, profile_cfg, depth=24, experiment=EXPERIMENT)
@@ -289,6 +572,10 @@ def run_outputs(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any
     if not receipt_csv.exists():
         _atomic_csv(receipt_csv, [], ["output_id"])
 
+    return materialize_top5_runtime(run, outputs)
+
+
+def materialize_top5_runtime(run: Path, outputs: list[dict[str, Any]]) -> dict[str, Any]:
     runtime = frontier.materialize_runtime(run, outputs)
     summaries = [_read(hidden_paths(run, str(row["output_id"]))[2]) for row in outputs]
     runtime.update({
@@ -359,6 +646,63 @@ def compare_smoke(smoke_run: Path, p3_reference: Path, outputs: list[dict[str, A
     return result
 
 
+def write_gate1_evidence(
+    root: Path,
+    smoke_run: Path,
+    smoke_outputs: list[dict[str, Any]],
+    comparison: dict[str, Any],
+) -> dict[str, Any]:
+    """Freeze the complete, target-blind Gate-1 evidence before any reuse."""
+    hidden_summaries = [_read(hidden_paths(smoke_run, str(row["output_id"]))[2]) for row in smoke_outputs]
+    hidden_pass = all(
+        row.get("status") == "PASS"
+        and row.get("gold_loaded") is False
+        and int(row.get("extra_model_forwards", -1)) == 0
+        for row in hidden_summaries
+    )
+    if not hidden_pass:
+        raise RuntimeError("TOP5_HIDDEN_GATE1_HIDDEN_INTEGRITY_FAIL")
+    _atomic_json(root / "GATE1_SMOKE_RECEIPT.json", {
+        "status": "PASS", "experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False,
+        "outputs": [str(row["output_id"]) for row in smoke_outputs], "outputs_complete": "3/3",
+        "generation_hash_verification": "PASS", "frontier_telemetry_hash_verification": "PASS",
+        "hidden_state_hash_verification": "PASS", "hidden_state_integrity": "PASS",
+        "p3_semantic_parity": comparison["semantic_parity"],
+        "gpu_workers_launched": 3,
+    })
+    _atomic_json(root / "GATE1_HIDDEN_AUDIT.json", {
+        "status": "PASS", "experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False,
+        "hidden_layers_0_based": list(HIDDEN_LAYERS), "hidden_dtype": "float16",
+        "extra_model_forwards": 0, "outputs": hidden_summaries,
+    })
+    required = (
+        smoke_run / "GENERATION_HASH_VERIFICATION.json",
+        smoke_run / "FRONTIER_TELEMETRY_HASH_VERIFICATION.json",
+        smoke_run / "TOP5_HIDDEN_HASH_VERIFICATION.json",
+        root / "SMOKE_TELEMETRY_AUDIT.json",
+        root / "SMOKE_P3_PARITY.json",
+        root / "TOP5_HIDDEN_SMOKE_AUDIT.json",
+        root / "GATE1_SMOKE_RECEIPT.json",
+        root / "GATE1_RUNTIME.json",
+        root / "GATE1_HIDDEN_AUDIT.json",
+    )
+    if any(not path.is_file() for path in required):
+        raise RuntimeError("TOP5_HIDDEN_GATE1_EVIDENCE_INCOMPLETE")
+    ledger = {
+        "status": "PASS",
+        "experiment": EXPERIMENT,
+        "target_blind": True,
+        "gold_loaded": False,
+        "files": {str(path.relative_to(root)): sha_file(path) for path in required},
+    }
+    _atomic_json(root / "GATE1_HASHES.json", ledger)
+    verification = _verify(root, root / "GATE1_HASHES.json")
+    _atomic_json(root / "GATE1_HASH_VERIFICATION.json", verification)
+    if verification.get("status") != "PASS":
+        raise RuntimeError("TOP5_HIDDEN_GATE1_HASH_FAIL")
+    return ledger
+
+
 def gate1_evidence(root: Path | None) -> dict[str, Any]:
     if root is None:
         raise RuntimeError("TOP5_HIDDEN_GATE1_EVIDENCE_REQUIRED")
@@ -370,9 +714,14 @@ def gate1_evidence(root: Path | None) -> dict[str, Any]:
         "frontier_audit": root / "SMOKE_TELEMETRY_AUDIT.json",
         "p3_parity": root / "SMOKE_P3_PARITY.json",
         "hidden_audit": root / "TOP5_HIDDEN_SMOKE_AUDIT.json",
+        "smoke_receipt": root / "GATE1_SMOKE_RECEIPT.json",
+        "runtime": root / "GATE1_RUNTIME.json",
+        "gate1_hidden_audit": root / "GATE1_HIDDEN_AUDIT.json",
+        "gate1_hashes": root / "GATE1_HASHES.json",
+        "gate1_hash_verification": root / "GATE1_HASH_VERIFICATION.json",
     }
     loaded = {name:_read(path) for name,path in required.items()}
-    if any(value.get("status") != "PASS" for value in loaded.values()):
+    if any(value.get("status") != "PASS" for name, value in loaded.items() if name != "runtime"):
         raise RuntimeError("TOP5_HIDDEN_GATE1_NOT_PASSED")
     return {"status":"PASS","path":str(root),
             "files":{name:{"path":str(path),"sha256":sha_file(path)} for name,path in required.items()}}
@@ -438,7 +787,12 @@ def failure_receipt(args: argparse.Namespace, error: BaseException) -> None:
         return
     message = str(error)
     classification = "IMPLEMENTATION"
-    for marker in ("INPUT_IDENTITY","PARITY","HIDDEN","RUNTIME","HASH","OOM"):
+    for marker in (
+        "TIME_BUDGET_SMOKE_TOO_SLOW",
+        "TIME_BUDGET_PROJECTED_EXCEED",
+        "TIME_BUDGET_INCOMPLETE",
+        "INPUT_IDENTITY", "PARITY", "HIDDEN", "RUNTIME", "HASH", "OOM",
+    ):
         if marker in message:
             classification = marker
             break
@@ -447,6 +801,8 @@ def failure_receipt(args: argparse.Namespace, error: BaseException) -> None:
         "gold_loaded":False,"gpu_generation_occurred":
             (args.output/"RAW_OUTPUTS").exists() or (args.output/"GATE1_SMOKE"/"RAW_OUTPUTS").exists(),
         "current_commit":head(),
+        "GPU_EXPERIMENT_START": (_read(clock_path(args.output)).get("GPU_EXPERIMENT_START")
+                                 if clock_path(args.output).is_file() else None),
     })
 
 
@@ -465,6 +821,8 @@ def main() -> None:
         preflight = frontier.preflight(args, cohort)
         if args.mode == "smoke":
             outputs = smoke_cohort(_read(args.parent_cohort))
+            if tuple(sorted(str(row["output_id"]) for row in outputs)) != tuple(sorted(SMOKE_OUTPUT_IDS)):
+                raise RuntimeError("TOP5_HIDDEN_SMOKE_COHORT_IDENTITY_FAIL")
             _atomic_json(args.output / "GATE1_SMOKE_COHORT.json", {
                 "experiment":EXPERIMENT,"target_blind":True,"gold_loaded":False,
                 "selection":"exact P3 deterministic smoke selector","outputs":outputs,
@@ -479,13 +837,35 @@ def main() -> None:
             frontier.frontier_ledger(run)
             hidden_ledger(run)
             frontier.validate_smoke(run, outputs, runtime)
-            compare_smoke(run, args.p3_reference, outputs)
+            comparison = compare_smoke(run, args.p3_reference, outputs)
+            require_smoke_deadline(args.output, args.experiment_clock)
+            projection = write_projection(
+                args.output, args.experiment_clock, run, args.p3_reference, list(cohort["outputs"]), outputs,
+            )
+            write_gate1_evidence(args.output, run, outputs, comparison)
+            if projection.get("status") != "PASS":
+                write_time_budget_status(
+                    args.output, "TIME_BUDGET_PROJECTED_EXCEED", args.experiment_clock, projection=projection,
+                )
+                raise RuntimeError("TIME_BUDGET_PROJECTED_EXCEED")
             return
 
-        if (args.output/"RAW_OUTPUTS").exists():
-            raise RuntimeError("TOP5_HIDDEN_GENERATION_DIRECTORY_NOT_FRESH")
         gate1 = gate1_evidence(args.gate1_evidence)
-        runtime = run_outputs(args, args.output, list(cohort["outputs"]), "GATE2_MICRO12")
+        projection = _read(args.gate1_evidence / "GATE1_RUNTIME.json")
+        if projection.get("status") != "PASS":
+            raise RuntimeError("TIME_BUDGET_PROJECTED_EXCEED")
+        smoke_outputs = smoke_cohort(_read(args.parent_cohort))
+        remaining = select_remaining_outputs(list(cohort["outputs"]), smoke_outputs)
+        reuse = reuse_smoke_outputs(args.output, args.gate1_evidence, smoke_outputs)
+        _atomic_json(args.output / "GATE2_SCHEDULE.json", {
+            "status": "PASS", "experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False,
+            "reused_outputs": reuse["verified_outputs_reused"],
+            "new_outputs": [str(row["output_id"]) for row in remaining],
+            "reused_count": 3, "new_output_count": 9, "duplicate_output_generations": 0,
+        })
+        args.experiment_clock = load_experiment_clock(args.output)
+        run_outputs(args, args.output, remaining, "GATE2_REMAINING_9")
+        runtime = materialize_top5_runtime(args.output, list(cohort["outputs"]))
         _atomic_json(args.output/"RUNTIME_SUMMARY.json", runtime)
         finalize_generation(args.output, cohort, preflight, gate1)
     except BaseException as error:

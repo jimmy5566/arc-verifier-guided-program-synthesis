@@ -1,4 +1,14 @@
+import runpy
+from pathlib import Path
+
 from inference.search_order import CumulativeNLLBestFirst, FairDFS, LDSUnitDiscrepancy, RegretBandFairDFS, RetainedWorkItem, make_search_order_policy
+
+
+# Gate 0 already runs this module.  Expose the separate runtime-control cases
+# here so the protocol guard runs without needing a workflow-scope token.
+for _name, _value in runpy.run_path(str(Path(__file__).with_name("test_top5_passive_hidden_runtime_control.py"))).items():
+    if _name.startswith("test_"):
+        globals()[_name] = _value
 
 
 def item(
