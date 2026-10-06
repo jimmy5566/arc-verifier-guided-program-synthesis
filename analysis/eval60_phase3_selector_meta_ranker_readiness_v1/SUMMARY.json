@@ -1,0 +1,24 @@
+{
+  "status": "COMPLETE",
+  "classification": "META_RANKER_DATA_NOT_READY",
+  "current_dense_phase3_archive": {
+    "tasks": 60,
+    "outputs": 89,
+    "d24_complete": true,
+    "d48_complete": true
+  },
+  "current_oracle_hit_selector_cohort": {
+    "outputs": 35,
+    "tasks": 27,
+    "statement": "post-freeze Gold-derived oracle-hit diagnostic"
+  },
+  "reason": [
+    "The final-candidate learning problem requires groups containing a positive Gold candidate and wrong candidates from the same current dense candidate distribution.",
+    "Only 35/89 outputs currently have Gold in the frozen union candidate pool; these 35 outputs were selected post-Gold and are already exposed development.",
+    "The complete current S2 feature stack (support/likelihood ranks, eight-view likelihood evidence, provenance, S2 rank) is concentrated on that exposed 35-output cohort.",
+    "Other historical labeled datasets are distribution- or task-mismatched: old sparse native/greedy pools, TTT depth-view routing, or search-order node/frontier classification."
+  ],
+  "grouped_cv_mathematically_possible_on_exposed_35": true,
+  "grouped_cv_scientifically_sufficient_for_generalization": false,
+  "decision": "Do not train/report a selector meta-ranker as generalized evidence yet. Do not launch GPU work solely to create training data without a separate preregistered decision."
+}
