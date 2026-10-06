@@ -9,11 +9,12 @@ add or remove a retained successor.
 from __future__ import annotations
 
 from collections import deque
+import heapq
 from dataclasses import dataclass
 from typing import Literal, Protocol
 
 
-SearchOrderName = Literal["CURRENT_DFS", "FAIR_DFS_Q64", "REGRET_BAND_FAIR_Q64", "LDS_UNIT_DISCREPANCY_V1"]
+SearchOrderName = Literal["CURRENT_DFS", "FAIR_DFS_Q64", "REGRET_BAND_FAIR_Q64", "LDS_UNIT_DISCREPANCY_V1", "CUMULATIVE_NLL_BEST_FIRST_V1"]
 
 
 @dataclass(frozen=True)
@@ -279,6 +280,34 @@ class LDSUnitDiscrepancy:
         return tuple(result)
 
 
+class CumulativeNLLBestFirst:
+    """Global best-first ordering over the already-retained work frontier."""
+
+    name: SearchOrderName = "CUMULATIVE_NLL_BEST_FIRST_V1"
+
+    def __init__(self) -> None:
+        self._heap: list[tuple[tuple[float, int, int], RetainedWorkItem]] = []
+
+    def push(self, item: RetainedWorkItem) -> None:
+        heapq.heappush(self._heap, (_key(item), item))
+
+    def push_successors(self, items: tuple[RetainedWorkItem, ...]) -> None:
+        for item in items:
+            self.push(item)
+
+    def pop(self) -> RetainedWorkItem | None:
+        if not self._heap:
+            return None
+        return heapq.heappop(self._heap)[1]
+
+    def note_expansion(self, item: RetainedWorkItem) -> bool:
+        del item
+        return False
+
+    def pending(self) -> tuple[RetainedWorkItem, ...]:
+        return tuple(item for _key_value, item in sorted(self._heap, key=lambda pair: pair[0]))
+
+
 def make_search_order_policy(name: SearchOrderName, *, quantum: int = 64) -> SearchOrderPolicy:
     if name == "CURRENT_DFS":
         return CurrentDFS()
@@ -288,4 +317,6 @@ def make_search_order_policy(name: SearchOrderName, *, quantum: int = 64) -> Sea
         return RegretBandFairDFS(quantum)
     if name == "LDS_UNIT_DISCREPANCY_V1":
         return LDSUnitDiscrepancy()
+    if name == "CUMULATIVE_NLL_BEST_FIRST_V1":
+        return CumulativeNLLBestFirst()
     raise ValueError(f"unknown search order policy: {name}")
