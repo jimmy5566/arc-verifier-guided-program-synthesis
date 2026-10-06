@@ -6,6 +6,7 @@ from gpu_throughput_opt_3090_v1.benchmark import (
     CONFIG_C,
     CONFIG_D,
     TARGET_MODULES,
+    attention_mask_required,
     effective_episode_groups,
     loss_scaling_weights,
     runtime_extrapolation,
@@ -13,6 +14,12 @@ from gpu_throughput_opt_3090_v1.benchmark import (
     update_fairness,
     vram_classification,
 )
+
+
+def test_attention_mask_only_for_real_padding() -> None:
+    assert attention_mask_required([8704]) is False
+    assert attention_mask_required([8704, 8704]) is False
+    assert attention_mask_required([8704, 8192]) is True
 
 
 def test_same_effective_episode_batch_across_abc() -> None:

@@ -70,6 +70,13 @@ def loss_scaling_weights(supervised_counts: Sequence[int], micro_batch: int) -> 
     ]
 
 
+def attention_mask_required(lengths: Sequence[int]) -> bool:
+    """Return whether a padded microbatch needs an explicit attention mask."""
+    if not lengths:
+        raise ValueError("empty microbatch")
+    return any(length != lengths[0] for length in lengths[1:])
+
+
 def vram_classification(total_bytes: int, peak_reserved_bytes: int) -> dict[str, Any]:
     headroom = total_bytes - peak_reserved_bytes
     gib = headroom / 2**30

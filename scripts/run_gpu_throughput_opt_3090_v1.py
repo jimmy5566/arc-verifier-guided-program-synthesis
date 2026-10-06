@@ -40,6 +40,7 @@ from gpu_throughput_opt_3090_v1.benchmark import (
     SOURCE_COMMIT,
     TARGET_MODULES,
     RunConfig,
+    attention_mask_required,
     effective_episode_groups,
     runtime_extrapolation,
     select_fastest_safe,
@@ -213,12 +214,22 @@ def collate(examples: list[dict[str, Any]], device):
         input_ids.append(row["input_ids"] + [0] * padding)
         labels.append(row["labels"] + [-100] * padding)
         attention.append([1] * len(row["input_ids"]) + [0] * padding)
+    mask = torch.tensor(attention, dtype=torch.long, device=device) if attention_mask_required(
+        [len(row["input_ids"]) for row in examples]
+    ) else None
     return (
         torch.tensor(input_ids, dtype=torch.long, device=device),
         torch.tensor(labels, dtype=torch.long, device=device),
-        torch.tensor(attention, dtype=torch.long, device=device),
+        mask,
         width * len(examples),
     )
+
+
+def model_loss(model, input_ids, labels, mask):
+    kwargs = {"input_ids": input_ids, "labels": labels, "use_cache": False}
+    if mask is not None:
+        kwargs["attention_mask"] = mask
+    return model(**kwargs).loss
 
 
 def parameter_samples(model) -> tuple[list[str], list[list[int]], list[float]]:
@@ -293,7 +304,7 @@ def worker(args: argparse.Namespace) -> int:
         chunk = [prepared[index][1] for index in range(config.micro_batch)]
         input_ids, labels, mask, _ = collate(chunk, device)
         with torch.no_grad():
-            return float(model(input_ids=input_ids, labels=labels, attention_mask=mask, use_cache=False).loss.detach().float().cpu())
+            return float(model_loss(model, input_ids, labels, mask).detach().float().cpu())
 
     if args.mode == "reload":
         model.eval()
@@ -347,11 +358,10 @@ def worker(args: argparse.Namespace) -> int:
                 chunk_supervised = sum(row["shifted_supervised_tokens"] for row in chunk)
                 torch.cuda.synchronize()
                 started = time.perf_counter()
-                output = model(input_ids=input_ids, labels=labels, attention_mask=mask, use_cache=False)
+                loss = model_loss(model, input_ids, labels, mask)
                 torch.cuda.synchronize()
                 if measured:
                     forward_time += time.perf_counter() - started
-                loss = output.loss
                 if not bool(torch.isfinite(loss)):
                     raise BenchmarkGateError("NONFINITE_LOSS")
                 weight = chunk_supervised / total_group_supervised
