@@ -1,0 +1,125 @@
+{
+  "artifact": "TOP5_SELECTOR_HIDDEN_LOOKAHEAD_CPU_GATE_PREREG_V1",
+  "frozen_frontier_source_commit": "2da4ef598cc8e792ddab5b9f9d85036e1b0792ce",
+  "current_development_branch_base": "50a108213940dc19ec721996dfb76471d4b0acf9",
+  "common": {
+    "gold_scope": "post-freeze development only",
+    "validation": "12-way leave-one-task-out; no random node split",
+    "baseline": "CUMULATIVE_NLL",
+    "no_gpu_in_this_stage": true
+  },
+  "top5_telemetry_selector": {
+    "candidate_set": "frozen cumulative-NLL ranks 1..5 at each true Gold-opportunity frontier state",
+    "train_states": "states where Gold is inside NLL Top5; states with Gold outside Top5 remain in overall evaluation as unreachable by a Top5-only selector",
+    "continuous_features": [
+      "prefix_length",
+      "cumulative_nll",
+      "cumulative_nll/prefix_length",
+      "cumulative_regret",
+      "cumulative_regret/prefix_length",
+      "discrepancy_count",
+      "token_logprob",
+      "local_token_rank",
+      "margin",
+      "entropy",
+      "frontier_age",
+      "NLL_rank",
+      "NLL_gap_from_rank1"
+    ],
+    "transforms": [
+      "absolute value",
+      "within-Top5 z-score",
+      "within-Top5 percentile rank"
+    ],
+    "binary": [
+      "frontier_floor_activated",
+      "frontier_floor_restore_rank_present"
+    ],
+    "categorical": [
+      "augmentation geometry one-hot"
+    ],
+    "models": [
+      "Candidate Logistic: StandardScaler + LogisticRegression(C=1,class_weight=balanced,lbfgs,max_iter=1000,random_state=0)",
+      "Pairwise Logistic: Gold-vs-every-nonGold-in-Top5 symmetric feature differences, same estimator"
+    ],
+    "metrics": [
+      "overall Top1/Top2/Top5/MRR",
+      "conditional Top1/MRR given Gold in Top5",
+      "per-task deltas",
+      "task-bootstrap 95% CI"
+    ],
+    "gpu_gate": {
+      "require": [
+        "overall DeltaTop1 > 0",
+        "overall DeltaMRR >= 0",
+        "task-bootstrap 95% CI for DeltaTop1 strictly > 0",
+        "zero catastrophic tasks"
+      ],
+      "catastrophic_task": "DeltaTop1 <= -0.05 AND DeltaMRR <= -0.05"
+    }
+  },
+  "hidden_state_selector": {
+    "cpu_inventory_first": true,
+    "passive_primary": {
+      "representation": "parent-prefix hidden state because an unexpanded retained child has no child-prefix hidden state without an extra forward",
+      "layers_0_based": [
+        11,
+        23,
+        35
+      ],
+      "model_identity": "Qwen3-4B, 36 transformer layers; no layer selection after results",
+      "capture": "for every expanded parent keep selected-layer last-token states only while it has pending retained children; when any child first enters current NLL Top5, persist the parent states keyed by parent/work-item lineage; deduplicate",
+      "dtype": "BF16/FP16 on disk",
+      "extra_model_forwards": 0,
+      "selector_features": "concatenated parent hidden states plus frozen Top5 telemetry candidate features; selected token identity remains forbidden",
+      "probe": "training-only PCA to 64 components per layer followed by L2 logistic regression; secondary per-layer probes are diagnostics only",
+      "validation": "12-way LOOTO"
+    },
+    "active_child_secondary": {
+      "status": "NOT AUTHORIZED BEFORE PASSIVE PROBE RESULT",
+      "reason": "requires extra prefix forward for nodes that have never been expanded"
+    },
+    "gpu_smoke_gate": {
+      "cohort": "same deterministic 3-output smoke",
+      "requirements": [
+        "scientific candidate/checkpoint parity with P3 telemetry baseline",
+        "0 extra model forwards",
+        "0 OOM",
+        "0 wall censoring",
+        "hidden lineage/hash integrity PASS",
+        "wall-time overhead <= 15%"
+      ],
+      "only_then": "collect frozen Micro12 hidden-state dataset"
+    }
+  },
+  "shallow_lookahead": {
+    "cpu_counterfactual": {
+      "q_values": [
+        8,
+        16
+      ],
+      "source": "existing frozen retained-work lineage only",
+      "purpose": "measure observational coverage and blind descendant-feature separability; never claim causal rollout performance",
+      "report_required": [
+        "fraction of frontier states where all NLL Top5 candidates have >=q observed expanded descendants",
+        "selection-bias warning"
+      ]
+    },
+    "gpu_policy_gate": {
+      "policy_name": "TOP5_BUDGETED_LOOKAHEAD_V1",
+      "execution": "lookahead expansions count against the same scientific node budget; no hidden extra forward budget",
+      "q_primary": 8,
+      "q_secondary": 16,
+      "candidate_set": "current cumulative-NLL Top5",
+      "first_gpu_test": "3-output target-blind smoke only",
+      "runtime_requirements": [
+        "useful forwards counted in R budget",
+        "replay/useful reported",
+        "0 duplicate expansion",
+        "0 OOM",
+        "0 wall censoring"
+      ],
+      "progression": "Micro12 only if q=8 smoke has sane runtime and at least one completed candidate; q=16 is not run unless q=8 is runtime-safe"
+    }
+  }
+}
