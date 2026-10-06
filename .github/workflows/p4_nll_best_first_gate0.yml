@@ -9,6 +9,7 @@ on:
       - 'src/inference/search_order.py'
       - 'src/inference/nvarc_turbodfs_search_order.py'
       - 'scripts/run_eval60_budget_eos_pilot18_v1.py'
+      - 'scripts/run_search_order_p4_nll_best_first_micro12_v1.py'
       - 'tests/test_search_order.py'
       - 'tests/test_nvarc_turbodfs_search_order.py'
 
@@ -25,6 +26,13 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pytest==8.3.5 numpy==2.1.3
           python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - name: P4 controller compile/import check
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m py_compile scripts/run_search_order_p4_nll_best_first_micro12_v1.py
+          python scripts/run_search_order_p4_nll_best_first_micro12_v1.py --help >/dev/null
+
       - name: Search-order policy tests
         run: pytest -q tests/test_search_order.py
       - name: Shared-core contract tests
