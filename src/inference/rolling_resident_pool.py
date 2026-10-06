@@ -98,6 +98,7 @@ def run_rolling_resident_scheduler(
     fairness_max_wait: int = 3,
     cache_pack_observer: Callable[[str, dict[str, Any]], None] | None = None,
     release_batch_temporaries_for_audit: bool = False,
+    hidden_state_layers: tuple[int, ...] | None = None,
 ) -> dict[str, Any]:
     """Run a FIFO rolling pool through the common physical-forward path.
 
@@ -227,6 +228,7 @@ def run_rolling_resident_scheduler(
             streaming_split_and_adopt=True,
             cache_pack_observer=cache_pack_observer,
             release_batch_temporaries_for_audit=release_batch_temporaries_for_audit,
+            hidden_state_layers=hidden_state_layers,
         )
         for key in forward_timing:
             forward_timing[key] += float(telemetry.get(key, 0.0))
