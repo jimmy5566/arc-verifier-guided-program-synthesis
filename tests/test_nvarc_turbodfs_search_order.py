@@ -48,7 +48,7 @@ def test_current_dfs_generalized_core_matches_legacy_semantics() -> None:
 
 
 def test_experimental_orders_keep_the_exact_node_budget_and_retention_contract() -> None:
-    for policy in ("FAIR_DFS_Q64", "REGRET_BAND_FAIR_Q64", "LDS_UNIT_DISCREPANCY_V1"):
+    for policy in ("FAIR_DFS_Q64", "REGRET_BAND_FAIR_Q64", "LDS_UNIT_DISCREPANCY_V1", "CUMULATIVE_NLL_BEST_FIRST_V1"):
         cell, result = _run(policy)
         assert sum(node["state"] == "expanded" for node in result.nodes) <= 100
         assert cell.state["search_order"]["retention_changed"] is False
