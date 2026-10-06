@@ -144,7 +144,7 @@ def test_passive_top5_parent_hidden_capture_preserves_search_semantics_and_model
     config = _config(max_expanded_nodes=2)
 
     baseline = start_search_order_cell(
-        model=model, input_ids=prompt, config=config, cell_key="baseline-hidden-control",
+        model=model, input_ids=prompt, config=config, cell_key="hidden-parity",
         policy_name="LDS_UNIT_DISCREPANCY_V1", normalize_root_cache=False,
     )
     run_ready_scheduler(model=model, cells=[baseline], dynamic_batch2=False)
@@ -156,7 +156,7 @@ def test_passive_top5_parent_hidden_capture_preserves_search_semantics_and_model
         captured.append((dict(meta), hidden))
 
     observed = start_search_order_cell(
-        model=model, input_ids=prompt, config=config, cell_key="observed-hidden",
+        model=model, input_ids=prompt, config=config, cell_key="hidden-parity",
         policy_name="LDS_UNIT_DISCREPANCY_V1", normalize_root_cache=False,
         hidden_state_layers=(11, 23, 35), hidden_state_sink=sink,
     )
