@@ -1,0 +1,91 @@
+{
+  "artifact": "SEARCH_ORDER_NLL_OVERRIDE_V1_PREREG",
+  "frozen_data_commit": "2da4ef598cc8e792ddab5b9f9d85036e1b0792ce",
+  "purpose": "Test whether cumulative-NLL errors are predictable and whether a conservative local Top-5 override can improve same-frontier ranking without replacing NLL globally.",
+  "inputs": {
+    "labeled": "analysis/search_order_frontier_telemetry_micro12_v1/postfreeze_frontier_analysis_v1/FRONTIER_LABELED_DATASET.csv.gz",
+    "decisions": "analysis/search_order_frontier_telemetry_micro12_v1/postfreeze_frontier_analysis_v1/DECISION_STATES.csv.gz"
+  },
+  "S5_forensic": {
+    "baseline": "CUMULATIVE_NLL",
+    "outputs": [
+      "Gold rank distribution overall/per-task",
+      "conditional Gold rank distribution when NLL Top1 is wrong",
+      "Top1-error rate by frontier-size quartile",
+      "Top1-error rate by NLL-gap decile",
+      "oracle upper bounds for perfect TopK correction"
+    ]
+  },
+  "trust_classifier": {
+    "label": "1 iff cumulative-NLL Top1 is Gold; 0 otherwise",
+    "model": "StandardScaler + LogisticRegression(C=1,class_weight=balanced,solver=lbfgs,max_iter=1000,random_state=0)",
+    "validation": "12-way leave-one-task-out only",
+    "features": [
+      "log1p(frontier_size)",
+      "NLL-top1 prefix_length",
+      "NLL-top1 cumulative_nll",
+      "NLL-top1 mean_nll_per_token",
+      "NLL-top1 cumulative_regret",
+      "NLL-top1 discrepancy_count",
+      "NLL-top1 token_logprob",
+      "NLL-top1 local_token_rank",
+      "NLL-top1 margin",
+      "NLL-top1 entropy",
+      "NLL-top1 frontier_age",
+      "NLL rank2 minus rank1 gaps for cumulative_nll, mean_nll_per_token, cumulative_regret, discrepancy_count, token_logprob, prefix_length, frontier_age",
+      "NLL rank5 minus rank1 cumulative_nll gap",
+      "augmentation geometry one-hot"
+    ],
+    "forbidden": [
+      "task_id",
+      "output_id",
+      "cell_key",
+      "Gold-derived quantities",
+      "future outcomes",
+      "prefix/token identity"
+    ]
+  },
+  "top5_reranker": {
+    "scope": "Only states where Gold is within frozen cumulative-NLL Top5 during training; candidates restricted to frozen NLL ranks 1..5.",
+    "model": "Relative pairwise logistic regression",
+    "pairs": "Gold candidate versus every non-Gold candidate in NLL Top5; add symmetric negative pair.",
+    "candidate_features": [
+      "within-Top5 zscore and percentile of prefix_length, cumulative_nll, mean_nll_per_token, cumulative_regret, discrepancy_count, token_logprob, local_token_rank, margin, entropy, frontier_age",
+      "frontier_floor_activated",
+      "augmentation geometry one-hot"
+    ],
+    "validation": "12-way leave-one-task-out"
+  },
+  "hybrid_policy": {
+    "name": "NLL_CONSERVATIVE_OVERRIDE_V1",
+    "base_choice": "cumulative-NLL rank1",
+    "override_condition": "trust classifier predicts P(NLL Top1 correct) < 0.20",
+    "override_action": "choose highest reranker utility among cumulative-NLL ranks 2..5 only",
+    "threshold_fixed_before_results": 0.2,
+    "no_global_reordering": true
+  },
+  "primary_metrics": [
+    "Top1",
+    "Top2",
+    "Top5",
+    "MRR",
+    "mean Gold rank",
+    "override rate",
+    "override precision",
+    "harm count",
+    "fix count"
+  ],
+  "decision_gate": {
+    "comparison": "LOOTO hybrid vs cumulative-NLL baseline",
+    "require": [
+      "Delta Top1 > 0",
+      "Delta MRR >= 0",
+      "FIX > HARM",
+      "task-bootstrap 95% CI for DeltaTop1 strictly > 0",
+      "zero catastrophic tasks"
+    ],
+    "catastrophic_task": "task DeltaTop1 <= -0.05 AND DeltaMRR <= -0.05",
+    "gpu_authorization": "Only if all requirements pass"
+  },
+  "note": "All analyses are CPU/offline. Do not implement or run GPU search in this stage."
+}
