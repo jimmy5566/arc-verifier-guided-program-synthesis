@@ -1,0 +1,32 @@
+name: P4 NLL best-first Gate 0
+
+on:
+  push:
+    branches:
+      - transfer/turbodfs-opt-v2-repair
+    paths:
+      - '.github/workflows/p4_nll_best_first_gate0.yml'
+      - 'src/inference/search_order.py'
+      - 'src/inference/nvarc_turbodfs_search_order.py'
+      - 'scripts/run_eval60_budget_eos_pilot18_v1.py'
+      - 'tests/test_search_order.py'
+      - 'tests/test_nvarc_turbodfs_search_order.py'
+
+jobs:
+  gate0:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU test deps
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest==8.3.5 torch --index-url https://download.pytorch.org/whl/cpu
+      - name: Search-order policy tests
+        run: pytest -q tests/test_search_order.py
+      - name: Shared-core contract tests
+        run: pytest -q tests/test_nvarc_turbodfs_search_order.py
+      - name: Existing adapter/cohort guards
+        run: pytest -q tests/test_audit_search_order_adapters.py tests/test_build_search_order_micro24_cohort.py
