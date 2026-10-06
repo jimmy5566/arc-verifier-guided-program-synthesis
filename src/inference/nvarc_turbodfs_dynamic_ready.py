@@ -86,7 +86,10 @@ class ReadyCell:
     cache_owner: CacheOwner | None = None
 
 
-def ready_incremental_forward_kwargs(*, token_ids: list[int], position: int, cache: Any, device: Any) -> dict[str, Any]:
+def ready_incremental_forward_kwargs(
+    *, token_ids: list[int], position: int, cache: Any, device: Any,
+    output_hidden_states: bool = False,
+) -> dict[str, Any]:
     """Build the complete Qwen continuation contract for ready-cell forwards.
 
     ``position_ids`` controls RoPE positions, while ``cache_position`` controls
@@ -110,6 +113,7 @@ def ready_incremental_forward_kwargs(*, token_ids: list[int], position: int, cac
         "past_key_values": cache,
         "return_dict": True,
         "use_cache": True,
+        **({"output_hidden_states": True} if output_hidden_states else {}),
     }
 
 
@@ -982,6 +986,7 @@ def execute_ready_forward(
     cache_pack_observer: Callable[[str, dict[str, Any]], None] | None = None,
     release_batch_temporaries_for_audit: bool = False,
     streaming_split_and_adopt: bool = False,
+    hidden_state_layers: tuple[int, ...] | None = None,
 ) -> tuple[list[Any], dict[str, float]]:
     """Execute one real physical ready-cell forward for independent lanes.
 
@@ -1008,6 +1013,22 @@ def execute_ready_forward(
            for request in requests[1:]):
         raise RuntimeError("attempted physical batch with incompatible ready-cell requests")
 
+    hidden_layers = tuple(int(layer) for layer in (hidden_state_layers or ()))
+
+    def selected_hidden(outputs: Any, lane: int) -> tuple[Any, ...] | None:
+        if not hidden_layers:
+            return None
+        states = getattr(outputs, "hidden_states", None)
+        if states is None:
+            raise RuntimeError("hidden-state capture requested but model reply has no hidden_states")
+        selected: list[Any] = []
+        for layer in hidden_layers:
+            if layer < 0 or layer >= len(states):
+                raise RuntimeError(f"hidden-state layer out of range: {layer} / {len(states)}")
+            value = states[layer][lane:lane + 1, -1].detach().to("cpu")
+            selected.append(value)
+        return tuple(selected)
+
     started = time.perf_counter()
     cache_pack_seconds = 0.0
     cache_adoption_seconds = 0.0
@@ -1018,9 +1039,17 @@ def execute_ready_forward(
             outputs = model(**ready_incremental_forward_kwargs(
                 token_ids=[request.token_id], position=request.position,
                 cache=request.cache, device=model.device,
+                output_hidden_states=bool(hidden_layers),
             ))
             model_call_seconds = time.perf_counter() - model_started
-            outputs_by_cell = [outputs]
+            if hidden_layers:
+                outputs_by_cell = [type("Reply", (), {
+                    "logits": outputs.logits,
+                    "past_key_values": outputs.past_key_values,
+                    "hidden_states_selected": selected_hidden(outputs, 0),
+                })()]
+            else:
+                outputs_by_cell = [outputs]
         else:
             pack_started = time.perf_counter()
             merged_legacy = _cat_caches(
@@ -1038,6 +1067,7 @@ def execute_ready_forward(
             outputs = model(**ready_incremental_forward_kwargs(
                 token_ids=[request.token_id for request in requests], position=first.request.position,
                 cache=merged_cache, device=model.device,
+                output_hidden_states=bool(hidden_layers),
             ))
             model_call_seconds = time.perf_counter() - model_started
             if cache_pack_observer is not None:
@@ -1062,6 +1092,7 @@ def execute_ready_forward(
                     type("Reply", (), {
                         "logits": outputs.logits[lane:lane + 1],
                         "past_key_values": request.cache_owner.cache,
+                        "hidden_states_selected": selected_hidden(outputs, lane),
                     })()
                     for lane, request in enumerate(requests)
                 ]
@@ -1121,6 +1152,7 @@ def execute_ready_forward(
                     outputs_by_cell.append(type("Reply", (), {
                         "logits": outputs.logits[lane:lane + 1],
                         "past_key_values": request.cache_owner.cache,
+                        "hidden_states_selected": selected_hidden(outputs, lane),
                     })())
                 if cache_pack_observer is not None:
                     cache_pack_observer("after_split_adoption", {
