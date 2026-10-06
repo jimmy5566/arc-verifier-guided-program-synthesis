@@ -333,7 +333,7 @@ def worker(args: argparse.Namespace) -> int:
         _, _, input_ids, labels = batch(0)
         with torch.no_grad():
             result["checkpoint_reference_loss"] = float(model(input_ids=input_ids, labels=labels, use_cache=False).loss.detach().float().cpu())
-    else:
+    elif args.mode == "performance":
         result["telemetry"] = parse_telemetry(telemetry_path)
     atomic_json(args.result, result)
     del model, optimizer
@@ -424,7 +424,20 @@ def controller(args: argparse.Namespace) -> int:
         perf_cmd = [sys.executable, str(script), "--worker", "--mode", "performance", "--model-path", str(args.model_path), "--novel-root", str(args.novel_root), "--replay-shard", str(args.replay_shard), "--schedule", str(schedule_path), "--output", str(args.output), "--result", str(perf_path), "--adapter", str(adapter), "--max-length", str(length)]
         contexts[str(length)]["performance"] = run_subprocess(perf_cmd, perf_path)
         shutil.rmtree(adapter, ignore_errors=True)
-    atomic_json(args.output / "CHECKPOINT_RELOAD_AUDIT.json", {"status": "PASS" if len(reload_rows) == 2 and all(row["status"] == "PASS" for row in reload_rows) else "FAIL", "contexts": reload_rows})
+    expected_reload_lengths = [
+        length for length in (8192, 8704)
+        if contexts.get(str(length), {}).get("smoke", {}).get("status") == "PASS"
+    ]
+    reload_ok = (
+        len(reload_rows) == len(expected_reload_lengths)
+        and {row["max_seq_length"] for row in reload_rows} == set(expected_reload_lengths)
+        and all(row["status"] == "PASS" for row in reload_rows)
+    )
+    atomic_json(args.output / "CHECKPOINT_RELOAD_AUDIT.json", {
+        "status": "PASS" if reload_ok else "FAIL",
+        "expected_contexts": expected_reload_lengths,
+        "contexts": reload_rows,
+    })
     extrapolation = {}
     for length in (8192, 8704):
         perf = contexts.get(str(length), {}).get("performance")
@@ -434,10 +447,24 @@ def controller(args: argparse.Namespace) -> int:
     result_a = contexts.get("8192", {}).get("performance")
     result_b = contexts.get("8704", {}).get("performance")
     diagnostic = contexts.get("8512", {}).get("diagnostic")
+    smoke_failures = [
+        value.get("smoke", {}) for key, value in contexts.items()
+        if key in ("8192", "8704") and value.get("smoke", {}).get("status") == "FAIL"
+    ]
+    numerical_failure = any(
+        failure.get("failure_class") == "NUMERICAL"
+        or "NONFINITE" in str(failure.get("error", "")).upper()
+        for failure in smoke_failures
+    )
+    infrastructure_failure = any(
+        failure.get("failure_class") not in ("OOM", "NUMERICAL")
+        and "NONFINITE" not in str(failure.get("error", "")).upper()
+        for failure in smoke_failures
+    )
     checks = {
         "data_access_policy": access["novel_train_accessed"] and access["replay_train_accessed"] and not any(access[key] for key in ("novel_validation_accessed", "novel_holdout_accessed", "eval60_accessed")),
-        "infrastructure": True,
-        "numerical": all(value.get("smoke", {}).get("finite_losses", False) for key, value in contexts.items() if key in ("8192", "8704") and value.get("smoke", {}).get("status") == "PASS"),
+        "infrastructure": not infrastructure_failure,
+        "numerical": not numerical_failure and all(value.get("smoke", {}).get("finite_losses", False) for key, value in contexts.items() if key in ("8192", "8704") and value.get("smoke", {}).get("status") == "PASS"),
     }
     gate_status = derive_gate(checks, result_a, result_b, diagnostic)
     comparison = {"status": "COMPLETE", "contexts": contexts, "recommended_context": 8704 if gate_status == "PASS_8704_RECOMMENDED" else 8512 if gate_status == "PASS_8512_FULL_CONTENT_CANDIDATE" else 8192 if gate_status == "PASS_8192_ONLY" else None}
@@ -454,7 +481,7 @@ def controller(args: argparse.Namespace) -> int:
             "same_sample_schedule": True,
             "data_access_policy": checks["data_access_policy"],
             "smoke_forward_backward_optimizer": any(value.get("smoke", {}).get("status") == "PASS" for value in contexts.values()),
-            "checkpoint_reload": len(reload_rows) == 2 and all(row["status"] == "PASS" for row in reload_rows),
+            "checkpoint_reload": reload_ok,
             "finite_losses": checks["numerical"],
             "measured_benchmark_completed": bool(passed_performance),
             "throughput_measured": all(value.get("tokens_per_second", 0) > 0 for value in passed_performance),
@@ -491,11 +518,17 @@ def main() -> int:
     try:
         return worker(args) if args.worker else controller(args)
     except Exception as exc:
+        failure_class = type(exc).__name__
+        error_upper = str(exc).upper()
+        if failure_class == "OutOfMemoryError" or "OUT OF MEMORY" in error_upper:
+            failure_class = "OOM"
+        elif "NONFINITE" in error_upper:
+            failure_class = "NUMERICAL"
         if args.result:
-            atomic_json(args.result, {"status": "FAIL", "failure_class": type(exc).__name__, "error": str(exc)})
+            atomic_json(args.result, {"status": "FAIL", "failure_class": failure_class, "error": str(exc)})
         elif args.output:
             args.output.mkdir(parents=True, exist_ok=True)
-            atomic_json(args.output / "FAILURE.json", {"status": "FAIL", "failure_class": type(exc).__name__, "error": str(exc), "GPU_TRAINING_STARTED": False})
+            atomic_json(args.output / "FAILURE.json", {"status": "FAIL", "failure_class": failure_class, "error": str(exc), "GPU_TRAINING_STARTED": False})
         raise
 
 

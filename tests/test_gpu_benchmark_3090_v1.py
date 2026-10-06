@@ -83,3 +83,5 @@ def test_gate_derivation() -> None:
     assert derive_gate(checks, {"status": "PASS"}, {"status": "PASS", "vram_safety": "SAFE"}) == "PASS_8704_RECOMMENDED"
     assert derive_gate(checks, {"status": "PASS"}, {"status": "FAIL", "failure_class": "OOM"}) == "PASS_8192_ONLY"
     assert derive_gate({**checks, "data_access_policy": False}, None, None) == "FAIL_DATA_ACCESS_POLICY"
+    assert derive_gate({**checks, "infrastructure": False}, {"status": "PASS"}, None) == "FAIL_INFRASTRUCTURE"
+    assert derive_gate({**checks, "numerical": False}, {"status": "PASS"}, None) == "FAIL_NUMERICAL"
