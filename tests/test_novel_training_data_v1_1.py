@@ -8,6 +8,7 @@ from novel_training_data_v1_1.pipeline import (
     composition_signature,
     digest,
     family_probabilities,
+    official_systematicity_protocol_status,
     _context_plan,
     official_episode_key,
 )
@@ -90,3 +91,72 @@ def test_context_length_audit_never_silently_truncates() -> None:
     assert not plan["silent_truncation_allowed"]
     assert plan["configs"][0]["samples_affected"] == 99
     assert plan["configs"][1]["supervised_token_loss"] == 0
+
+
+def test_official_systematicity_allows_shared_validation_holdout_ood_templates() -> None:
+    systematicity = {
+        "higher_level_composition_signature_overlap": {
+            "train_validation": 0,
+            "train_holdout": 0,
+            "validation_holdout": 2,
+        },
+        "episode_identity_overlap": {
+            "train_validation": 0,
+            "train_holdout": 0,
+            "validation_holdout": 0,
+        },
+        "transformation_composition_templates": {
+            "train": ["train-a", "train-b"],
+            "validation": ["ood-a", "ood-b"],
+            "holdout": ["ood-a", "ood-b"],
+        },
+    }
+    result = official_systematicity_protocol_status(systematicity)
+    assert result["OFFICIAL_SYSTEMATICITY_PROTOCOL_READY"] is True
+    assert result["STRICT_THREE_WAY_FAMILY_ISOLATION"] is False
+    assert result["checks"]["validation_holdout_episode_identity_overlap_zero"] is True
+    assert result["checks"]["validation_holdout_high_level_composition_overlap"] == "UPSTREAM_EXPECTED_SHARED_OOD_TEMPLATES"
+
+
+def test_official_systematicity_rejects_train_ood_template_overlap() -> None:
+    systematicity = {
+        "higher_level_composition_signature_overlap": {
+            "train_validation": 1,
+            "train_holdout": 0,
+            "validation_holdout": 1,
+        },
+        "episode_identity_overlap": {
+            "train_validation": 0,
+            "train_holdout": 0,
+            "validation_holdout": 0,
+        },
+        "transformation_composition_templates": {
+            "train": ["train-a", "ood-a"],
+            "validation": ["ood-a"],
+            "holdout": ["ood-a"],
+        },
+    }
+    result = official_systematicity_protocol_status(systematicity)
+    assert result["OFFICIAL_SYSTEMATICITY_PROTOCOL_READY"] is False
+
+
+def test_official_systematicity_rejects_validation_holdout_episode_overlap() -> None:
+    systematicity = {
+        "higher_level_composition_signature_overlap": {
+            "train_validation": 0,
+            "train_holdout": 0,
+            "validation_holdout": 2,
+        },
+        "episode_identity_overlap": {
+            "train_validation": 0,
+            "train_holdout": 0,
+            "validation_holdout": 1,
+        },
+        "transformation_composition_templates": {
+            "train": ["train-a"],
+            "validation": ["ood-a", "ood-b"],
+            "holdout": ["ood-a", "ood-b"],
+        },
+    }
+    result = official_systematicity_protocol_status(systematicity)
+    assert result["OFFICIAL_SYSTEMATICITY_PROTOCOL_READY"] is False

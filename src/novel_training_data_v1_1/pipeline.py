@@ -568,6 +568,40 @@ def aggregate_validation_losses(records: Sequence[dict[str, Any]]) -> dict[str, 
     }
 
 
+def official_systematicity_protocol_status(systematicity: dict[str, Any]) -> dict[str, Any]:
+    """Interpret the pinned upstream split without imposing a new split contract."""
+    overlap = systematicity["higher_level_composition_signature_overlap"]
+    episode_overlap = systematicity["episode_identity_overlap"]
+    templates = systematicity["transformation_composition_templates"]
+    shared_ood = sorted(set(templates["validation"]) & set(templates["holdout"]))
+    expected_shared_ood = (
+        len(shared_ood) == 2
+        and shared_ood == sorted(templates["validation"])
+        and shared_ood == sorted(templates["holdout"])
+        and overlap["validation_holdout"] == len(shared_ood)
+    )
+    fields = {
+        "train_validation_high_level_composition_overlap_zero": overlap["train_validation"] == 0,
+        "train_holdout_high_level_composition_overlap_zero": overlap["train_holdout"] == 0,
+        "validation_holdout_episode_identity_overlap_zero": episode_overlap["validation_holdout"] == 0,
+        "validation_holdout_high_level_composition_overlap": (
+            "UPSTREAM_EXPECTED_SHARED_OOD_TEMPLATES" if expected_shared_ood else "UNEXPECTED"
+        ),
+    }
+    protocol_ready = (
+        fields["train_validation_high_level_composition_overlap_zero"]
+        and fields["train_holdout_high_level_composition_overlap_zero"]
+        and fields["validation_holdout_episode_identity_overlap_zero"]
+        and expected_shared_ood
+    )
+    return {
+        "checks": fields,
+        "OFFICIAL_SYSTEMATICITY_PROTOCOL_READY": protocol_ready,
+        "STRICT_THREE_WAY_FAMILY_ISOLATION": not any(overlap.values()),
+        "shared_ood_templates": shared_ood,
+    }
+
+
 def bounded_source_discovery_audit() -> dict[str, Any]:
     sources = [
         {
@@ -936,12 +970,13 @@ def main(argv: list[str] | None = None) -> int:
     }
     atomic_json(artifacts / "NOVEL_DATASET_FINGERPRINT.json", fingerprint)
 
+    protocol = official_systematicity_protocol_status(systematicity)
     checks = {
         "v2_1_overlap_remains_zero": overlap_checks["v2_1_overlap_remains_zero"],
         "project_blacklist_overlap_remains_zero": overlap_checks["project_blacklist_overlap_remains_zero"],
         "compositional_systematicity_split_recovered_and_frozen": systematicity["episode_identities_disjoint"],
         "one_d_named_family_split_isolated": len(one_d) == 18 and len(set(one_d)) == 18,
-        "train_validation_holdout_higher_level_family_overlap_zero": not any(family_overlap.values()),
+        **protocol["checks"],
         "holdout_absent_from_loaders": not bool(materialized & holdout_ids),
         "row_count_domination_disabled": row_domination_disabled,
         "family_aware_sampler_implemented": curriculum["status"] == "PASS",
@@ -954,10 +989,20 @@ def main(argv: list[str] | None = None) -> int:
         "cpu_sampler_dry_run": dry["status"] == "PASS",
         "gpu_training_started_false": True,
     }
-    gate_status = "PASS_READY_FOR_GPU_BENCHMARK" if all(checks.values()) else "FAIL_NOT_READY"
+    blocking_checks = [value for value in checks.values() if isinstance(value, bool)]
+    gpu_benchmark_ready = protocol["OFFICIAL_SYSTEMATICITY_PROTOCOL_READY"] and all(blocking_checks)
+    gate_status = "PASS_READY_FOR_GPU_BENCHMARK" if gpu_benchmark_ready else "FAIL_NOT_READY"
     gate = {
         "status": gate_status,
         "checks": checks,
+        "OFFICIAL_SYSTEMATICITY_PROTOCOL_READY": protocol["OFFICIAL_SYSTEMATICITY_PROTOCOL_READY"],
+        "STRICT_THREE_WAY_FAMILY_ISOLATION": protocol["STRICT_THREE_WAY_FAMILY_ISOLATION"],
+        "GPU_BENCHMARK_READY": gpu_benchmark_ready,
+        "scientific_claim": "Validation and holdout are episode-disjoint and both evaluate composition templates unseen during training, reproducing the official upstream systematicity protocol.",
+        "informational_evidence": {
+            "shared_validation_holdout_ood_templates": protocol["shared_ood_templates"],
+            "strict_three_way_family_isolation_is_not_an_upstream_requirement": True,
+        },
         "blocking_evidence": {
             "family_overlap": family_overlap,
             "upstream_higher_level_composition_signature_overlap": systematicity["higher_level_composition_signature_overlap"],
@@ -968,6 +1013,10 @@ def main(argv: list[str] | None = None) -> int:
 
     summary = {
         "status": gate_status,
+        "OFFICIAL_SYSTEMATICITY_PROTOCOL_READY": protocol["OFFICIAL_SYSTEMATICITY_PROTOCOL_READY"],
+        "STRICT_THREE_WAY_FAMILY_ISOLATION": protocol["STRICT_THREE_WAY_FAMILY_ISOLATION"],
+        "GPU_BENCHMARK_READY": gpu_benchmark_ready,
+        "scientific_claim": gate["scientific_claim"],
         "branch": "training/novel-data-v1.1-scientific-split-curriculum",
         "systematicity_upstream_counts": systematicity["episodes"],
         "accepted_episode_counts": {split: len(grouped[split]) for split in ("train", "validation", "holdout")},

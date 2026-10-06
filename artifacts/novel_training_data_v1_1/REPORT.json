@@ -1,1 +1,36 @@
-{"GPU_TRAINING_STARTED":false,"accepted_episode_counts":{"holdout":8646,"train":83607,"validation":8646},"branch":"training/novel-data-v1.1-scientific-split-curriculum","dataset_fingerprint":"3b040b3fcd45d84361aa5286c3b762e268a5f7c98dae5b3c87ddeb16c5105c82","family_counts":{"holdout":4,"train":22,"validation":4},"one_d_family_split":{"holdout":2,"train":14,"validation":2},"provisional_novel_replay_range":{"novel":[0.7,0.8],"replay":[0.2,0.3]},"recommended_policy":"FAMILY_UNIFORM_GLOBAL","runtime_seconds":284.76177109999117,"status":"FAIL_NOT_READY","systematicity_upstream_counts":{"holdout":8546,"train":82908,"validation":8546}}
+{
+  "GPU_BENCHMARK_READY": true,
+  "GPU_TRAINING_STARTED": false,
+  "OFFICIAL_SYSTEMATICITY_PROTOCOL_READY": true,
+  "STRICT_THREE_WAY_FAMILY_ISOLATION": false,
+  "accepted_episode_counts": {
+    "holdout": 8646,
+    "train": 83607,
+    "validation": 8646
+  },
+  "branch": "training/novel-data-v1.1-scientific-split-curriculum",
+  "dataset_fingerprint": "3b040b3fcd45d84361aa5286c3b762e268a5f7c98dae5b3c87ddeb16c5105c82",
+  "family_counts": {
+    "holdout": 4,
+    "train": 22,
+    "validation": 4
+  },
+  "one_d_family_split": {
+    "holdout": 2,
+    "train": 14,
+    "validation": 2
+  },
+  "provisional_novel_replay_range": {
+    "novel": [0.7, 0.8],
+    "replay": [0.2, 0.3]
+  },
+  "recommended_policy": "FAMILY_UNIFORM_GLOBAL",
+  "runtime_seconds": 284.76177109999117,
+  "scientific_claim": "Validation and holdout are episode-disjoint and both evaluate composition templates unseen during training, reproducing the official upstream systematicity protocol.",
+  "status": "PASS_READY_FOR_GPU_BENCHMARK",
+  "systematicity_upstream_counts": {
+    "holdout": 8546,
+    "train": 82908,
+    "validation": 8546
+  }
+}

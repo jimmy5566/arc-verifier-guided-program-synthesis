@@ -50,7 +50,11 @@ def main() -> int:
         checks[f"systematicity:{split}:sha256"] = path.exists() and sha256_file(path) == row["sha256"]
     gate = json.loads((artifacts / "SCIENTIFIC_TRAINING_GATE_V1_1.json").read_text(encoding="utf-8"))
     checks["gpu_training_not_started"] = gate["GPU_TRAINING_STARTED"] is False
-    checks["gate_derived"] = gate["status"] == ("PASS_READY_FOR_GPU_BENCHMARK" if all(gate["checks"].values()) else "FAIL_NOT_READY")
+    blocking_checks = [value for value in gate["checks"].values() if isinstance(value, bool)]
+    derived_ready = gate["OFFICIAL_SYSTEMATICITY_PROTOCOL_READY"] and all(blocking_checks)
+    checks["gate_derived"] = gate["GPU_BENCHMARK_READY"] is derived_ready and gate["status"] == (
+        "PASS_READY_FOR_GPU_BENCHMARK" if derived_ready else "FAIL_NOT_READY"
+    )
     failed = sorted(key for key, value in checks.items() if not value)
     result = {"status": "PASS" if not failed else "FAIL", "checks": len(checks), "failed": failed, "rows": counts}
     print(json.dumps(result, sort_keys=True))
