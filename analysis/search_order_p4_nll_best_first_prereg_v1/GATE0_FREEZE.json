@@ -1,0 +1,31 @@
+{
+  "artifact": "SEARCH_ORDER_P4_NLL_BEST_FIRST_GATE0_FREEZE_V1",
+  "validated_source_commit": "11956f80ca7a7cba242e830bfb86fd129f4ddf42",
+  "workflow_run_id": 37403058033,
+  "policy": "CUMULATIVE_NLL_BEST_FIRST_V1",
+  "status": "PASS",
+  "checks": {
+    "controller_compile_import": "PASS",
+    "search_order_policy_tests": "14/14 PASS",
+    "shared_core_contract_tests": "4/4 PASS",
+    "adapter_cohort_guards": "3/3 PASS"
+  },
+  "scientific_contract": {
+    "pop_key": [
+      "cumulative_nll ascending",
+      "insertion_order ascending",
+      "work_item_id ascending"
+    ],
+    "retention_changed": false,
+    "ttt_depth": 24,
+    "augmentation": "canonical_AUG8",
+    "retention": "CUMULATIVE_REGRET_r=4.00",
+    "max_expanded_nodes": 1024,
+    "candidate_cap": 32,
+    "frontier_floor": 1,
+    "admission": "root_aware"
+  },
+  "gpu_started": false,
+  "gold_loaded": false,
+  "next_gate": "RUNPOD_3090_GATE1_SMOKE"
+}
