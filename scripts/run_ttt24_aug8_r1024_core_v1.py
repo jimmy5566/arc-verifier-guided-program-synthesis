@@ -139,6 +139,11 @@ def _worker(args: argparse.Namespace, run: Path, selected: dict[str, Any], attem
     command.extend(["--search-order-policy", search_order_policy])
     if bool(getattr(args, "frontier_telemetry", False)):
         command.append("--frontier-telemetry")
+    hidden_layers = getattr(args, "hidden_state_layers", None)
+    if hidden_layers:
+        if isinstance(hidden_layers, (tuple, list)):
+            hidden_layers = ",".join(str(int(value)) for value in hidden_layers)
+        command.extend(["--top5-hidden-layers", str(hidden_layers)])
     started = time.time()
     process = subprocess.run(command, cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     log = run / "WORKER_LOGS" / f"{_safe(selected['output_id'])}_d{depth}_attempt{attempt}.log"
