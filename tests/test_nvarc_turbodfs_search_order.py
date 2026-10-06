@@ -19,7 +19,14 @@ class CacheTransitionModel:
         prior = 0 if past_key_values is None else int(past_key_values[0][0].shape[2])
         cache = ((torch.zeros((batch, 1, prior + int(input_ids.shape[1]), 1)),
                   torch.zeros((batch, 1, prior + int(input_ids.shape[1]), 1))),)
-        return SimpleNamespace(logits=logits, past_key_values=cache)
+        hidden_states = None
+        if _kwargs.get("output_hidden_states"):
+            seq = int(input_ids.shape[1])
+            hidden_states = tuple(
+                torch.full((batch, seq, 4), float(index), dtype=torch.float32)
+                for index in range(37)
+            )
+        return SimpleNamespace(logits=logits, past_key_values=cache, hidden_states=hidden_states)
 
 
 def _config(*, max_expanded_nodes: int = 100) -> D1TurboDFSConfig:
@@ -129,3 +136,55 @@ def test_frontier_telemetry_is_complete_reconstructible_and_passive() -> None:
     assert {record["final_status"] for record in pending} <= {
         "PENDING_AT_R1024", "PENDING_AT_SEARCH_EXHAUSTION", "PENDING_AT_TERMINAL_CARRY"
     }
+
+
+def test_passive_top5_parent_hidden_capture_preserves_search_semantics_and_model_work() -> None:
+    model = CacheTransitionModel()
+    prompt = torch.tensor([[2, 2]])
+    config = _config(max_expanded_nodes=2)
+
+    baseline = start_search_order_cell(
+        model=model, input_ids=prompt, config=config, cell_key="baseline-hidden-control",
+        policy_name="LDS_UNIT_DISCREPANCY_V1", normalize_root_cache=False,
+    )
+    run_ready_scheduler(model=model, cells=[baseline], dynamic_batch2=False)
+    baseline_result = ready_result(baseline)
+
+    captured: list[tuple[dict, tuple]] = []
+
+    def sink(meta, hidden):
+        captured.append((dict(meta), hidden))
+
+    observed = start_search_order_cell(
+        model=model, input_ids=prompt, config=config, cell_key="observed-hidden",
+        policy_name="LDS_UNIT_DISCREPANCY_V1", normalize_root_cache=False,
+        hidden_state_layers=(11, 23, 35), hidden_state_sink=sink,
+    )
+    run_ready_scheduler(
+        model=model, cells=[observed], dynamic_batch2=False,
+        hidden_state_layers=(11, 23, 35),
+    )
+    observed_result = ready_result(observed)
+
+    assert normalized_result_signature(observed_result) == normalized_result_signature(baseline_result)
+    assert observed.state["search_order_work_items"] == baseline.state["search_order_work_items"]
+    assert observed_result.model_forwards == baseline_result.model_forwards
+    assert observed.state["search_order"]["replay_model_forwards"] == baseline.state["search_order"]["replay_model_forwards"]
+    assert observed.state["search_order"]["useful_model_forwards"] == baseline.state["search_order"]["useful_model_forwards"]
+
+    summary = observed.state["top5_hidden_state_capture"]
+    assert summary["layers_0_based"] == [11, 23, 35]
+    assert summary["extra_model_forwards"] == 0
+    assert summary["capture_count"] == len(captured)
+    assert captured
+
+    work_ids = {int(row["work_item_id"]) for row in observed.state["search_order_work_items"]}
+    captured_ids = [int(meta["work_item_id"]) for meta, _hidden in captured]
+    assert len(captured_ids) == len(set(captured_ids))
+    assert set(captured_ids) <= work_ids
+    for meta, hidden in captured:
+        assert 1 <= int(meta["nll_rank_at_first_capture"]) <= 5
+        assert meta["layers_0_based"] == [11, 23, 35]
+        assert len(hidden) == 3
+        assert [tuple(value.shape) for value in hidden] == [(1, 4), (1, 4), (1, 4)]
+        assert [float(value[0, 0]) for value in hidden] == [12.0, 24.0, 36.0]
