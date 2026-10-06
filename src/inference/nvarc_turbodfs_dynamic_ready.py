@@ -1022,10 +1022,15 @@ def execute_ready_forward(
         if states is None:
             raise RuntimeError("hidden-state capture requested but model reply has no hidden_states")
         selected: list[Any] = []
+        # Transformers returns hidden_states as (embedding_output, layer0, ..., layerN-1).
+        # The public capture contract uses zero-based transformer-layer indices.
         for layer in hidden_layers:
-            if layer < 0 or layer >= len(states):
-                raise RuntimeError(f"hidden-state layer out of range: {layer} / {len(states)}")
-            value = states[layer][lane:lane + 1, -1].detach().to("cpu")
+            tuple_index = int(layer) + 1
+            if layer < 0 or tuple_index >= len(states):
+                raise RuntimeError(
+                    f"hidden-state transformer layer out of range: {layer} / {len(states) - 1}"
+                )
+            value = states[tuple_index][lane:lane + 1, -1].detach().to("cpu")
             selected.append(value)
         return tuple(selected)
 
