@@ -1,4 +1,4 @@
-from inference.search_order import FairDFS, LDSUnitDiscrepancy, RegretBandFairDFS, RetainedWorkItem, make_search_order_policy
+from inference.search_order import CumulativeNLLBestFirst, FairDFS, LDSUnitDiscrepancy, RegretBandFairDFS, RetainedWorkItem, make_search_order_policy
 
 
 def item(
@@ -128,3 +128,46 @@ def test_lds_keeps_every_retained_item_exactly_once() -> None:
 def test_lds_factory_uses_frozen_policy_name() -> None:
     policy = make_search_order_policy("LDS_UNIT_DISCREPANCY_V1")
     assert isinstance(policy, LDSUnitDiscrepancy)
+
+
+def test_nll_best_first_is_global_not_depth_first() -> None:
+    policy = CumulativeNLLBestFirst()
+    policy.push_successors((
+        item(1, 10, 0.1, nll=0.20),
+        item(2, 20, 0.1, nll=0.40),
+    ))
+    first = policy.pop()
+    assert first is not None and first.work_item_id == 1
+    policy.note_expansion(first)
+    # A descendant with worse cumulative NLL must wait behind an older,
+    # unrelated frontier item with lower cumulative NLL.
+    policy.push_successors((item(3, 10, 0.2, nll=0.50),))
+    assert take(policy, 2) == [2, 3]
+
+
+def test_nll_best_first_uses_frozen_deterministic_ties() -> None:
+    policy = CumulativeNLLBestFirst()
+    policy.push(item(3, 3, 0.1, nll=0.5))
+    policy.push(item(1, 1, 0.1, nll=0.5))
+    policy.push(item(2, 2, 0.1, nll=0.5))
+    assert take(policy, 3) == [1, 2, 3]
+
+
+def test_nll_best_first_keeps_every_retained_item_exactly_once() -> None:
+    values = (
+        item(1, 10, 0.1, nll=0.8),
+        item(2, 10, 1.1, nll=0.2),
+        item(3, 20, 2.1, nll=0.6),
+        item(4, 20, 3.1, nll=0.4),
+    )
+    policy = CumulativeNLLBestFirst()
+    policy.push_successors(values)
+    observed = take(policy, len(values))
+    assert observed == [2, 4, 3, 1]
+    assert len(observed) == len(set(observed))
+    assert policy.pop() is None
+
+
+def test_nll_best_first_factory_uses_frozen_policy_name() -> None:
+    policy = make_search_order_policy("CUMULATIVE_NLL_BEST_FIRST_V1")
+    assert isinstance(policy, CumulativeNLLBestFirst)
