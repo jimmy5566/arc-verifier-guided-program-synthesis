@@ -47,6 +47,7 @@ The official training config places `arc2_evaluation6` in **validation**, not th
 
 **Nemotron-RL-ARC-AGI-v1**
 - 10k released train problems sampled from roughly 66k eligible problems; full eligible pool roughly 73k.
+- Licensing metadata is internally inconsistent as of this audit: the HF header says `pending-legal-review`, while the card text references CC BY 4.0 plus upstream MIT/Apache licenses. Therefore we will use it as a lineage/difficulty index and obtain training grids from the original permissive sources.
 - Carries difficulty, lineage and augmentation metadata.
 - Public ARC-AGI-1/2 evaluation IDs are blacklisted from train.
 - Seed sources are ARC-AGI-2, NVARC Augmented Puzzles and arc-dataset-collection.
