@@ -1,0 +1,86 @@
+{
+  "artifact": "SEARCH_ORDER_P4_NLL_BEST_FIRST_PREREG_V1",
+  "status": "PRE_REGISTERED_BEFORE_IMPLEMENTATION",
+  "base_commit": "36d2d4e95a9e62c89db4fec7aaa8516ea489df13",
+  "policy": {
+    "label": "P4",
+    "name": "CUMULATIVE_NLL_BEST_FIRST_V1",
+    "scientific_change": "retained-node pop order only",
+    "pop_key": [
+      "cumulative_nll ascending",
+      "insertion_order ascending",
+      "work_item_id ascending"
+    ],
+    "duplicate_expansion_forbidden": true,
+    "retention_changed": false,
+    "learned_model": false
+  },
+  "rationale": {
+    "frozen_frontier_states": 64005,
+    "cumulative_nll_top1": 0.32905241777986094,
+    "cumulative_nll_top5": 0.8072338098586048,
+    "p3_lds_top1": 0.11727208811811578,
+    "learned_override_authorized": false,
+    "note": "Cumulative NLL is the strongest robust frozen same-frontier baseline after Fair/LDS/value/pairwise/override audits."
+  },
+  "frozen_core": {
+    "ttt_depth": 24,
+    "augmentation": "canonical_AUG8",
+    "adapter_state": "EXACT_HISTORICAL",
+    "max_expanded_nodes": 1024,
+    "decoder": "CUMULATIVE_REGRET_r=4.00",
+    "candidate_cap": 32,
+    "frontier_floor": 1,
+    "eos_token": 15,
+    "max_new_tokens": 931,
+    "admission": "root_aware",
+    "physical_scheduler": "existing validated profile-safe scheduler"
+  },
+  "cohort": {
+    "name": "SEARCH_ORDER_P3_LDS_MICRO12_V1",
+    "sha256": "3852056112336e58559ceb0bb6f3171600ff36e0d6b02d1c9c03fc0da334443e",
+    "outputs": 12
+  },
+  "gates": {
+    "gate0": [
+      "unit tests for global min-NLL pop order and deterministic tie-break",
+      "all existing P0/P1/P2/P3 search-order tests remain PASS",
+      "retention/pruning code unchanged"
+    ],
+    "gate1": {
+      "cohort": "existing deterministic 3-output smoke",
+      "gold_loaded": false,
+      "requirements": [
+        "0 wall-censored cells",
+        "0 OOM",
+        "0 duplicate expansion",
+        "retention_changed=false",
+        "hash verification PASS"
+      ],
+      "scientific_sanity": [
+        "candidate completion must occur on at least one smoke cell",
+        "if every smoke cell reaches R1024 with zero completed candidates classify SCIENTIFIC_SEARCH_PATHOLOGY and stop"
+      ]
+    },
+    "gate2": {
+      "cohort": "frozen Micro12",
+      "start_only_after_gate1": true,
+      "pre_gold_freeze_required": true
+    }
+  },
+  "postfreeze_primary": [
+    "exact-Gold historical-miss rescue on 9 miss outputs",
+    "control retention on 3 controls",
+    "Gold hit curve R256/R512/R768/R1024",
+    "candidate completion count",
+    "first Gold node where observed",
+    "wall time and replay/useful ratio"
+  ],
+  "anti_overfit": {
+    "no_gold_in_generation": true,
+    "no_nll_normalization_tuning": true,
+    "no_depth_penalty": true,
+    "no_task_specific_rule": true,
+    "no_change_after_smoke_except": "implementation/runtime bug fixes only, preserving the preregistered policy"
+  }
+}
