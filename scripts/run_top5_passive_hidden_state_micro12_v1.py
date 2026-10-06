@@ -319,7 +319,11 @@ def run_gate0(args: argparse.Namespace) -> None:
     records: list[dict[str, Any]] = []
     for files in commands:
         cmd = [str(args.worker_python), "-m", "pytest", "-q", *files]
-        env = dict(os.environ); env["PYTHONPATH"] = f"{ROOT}:{ROOT/'src'}"
+        env = dict(os.environ)
+        test_deps = env.get("TOP5_GATE0_TEST_DEPS", "")
+        env["PYTHONPATH"] = os.pathsep.join(
+            part for part in (test_deps, str(ROOT), str(ROOT / "src")) if part
+        )
         result = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True, env=env)
         record = {"command": cmd, "returncode": result.returncode,
                   "stdout": result.stdout[-6000:], "stderr": result.stderr[-6000:]}
