@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "pre_gold_consensus_sha256": "06dc00b58ae1a11fb87905a24043c9722d450c3d03fb2cf201c8949d7c21bf91",
+  "output_count": 35,
+  "produced_count": 34,
+  "no_repair_count": 1,
+  "consensus_equals_existing_candidate_count": 26,
+  "consensus_new_grid_count": 8,
+  "consensus_equals_s2_rank1_count": 11,
+  "Gold_loaded": false,
+  "candidate_pool_changed": false,
+  "model_calls": 0,
+  "DFS_calls": 0,
+  "TTT_calls": 0,
+  "GPU_used": false,
+  "S2_modified": false
+}
