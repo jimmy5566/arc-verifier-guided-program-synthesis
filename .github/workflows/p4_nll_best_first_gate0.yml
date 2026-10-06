@@ -30,4 +30,6 @@ jobs:
       - name: Shared-core contract tests
         run: pytest -q tests/test_nvarc_turbodfs_search_order.py
       - name: Existing adapter/cohort guards
+        env:
+          PYTHONPATH: .
         run: pytest -q tests/test_audit_search_order_adapters.py tests/test_build_search_order_micro24_cohort.py
