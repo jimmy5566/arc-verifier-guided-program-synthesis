@@ -98,7 +98,7 @@
     {
       "name": "NVIDIA Nemotron-RL-ARC-AGI-v1",
       "approx_tasks": 10000,
-      "license": "CC BY 4.0 dataset card; seed-license mix documented",
+      "license": "Hugging Face metadata currently says pending-legal-review; card body also mentions CC BY 4.0 and upstream MIT/Apache. Treat package license as unresolved and use original permissive sources for training.",
       "direct_grid_sft": true,
       "novelty_relative_to_sft139": "NOT_A_PRIMARY_NEW_SOURCE; sampler over ARC-AGI-2, NVARC, arc-dataset-collection",
       "overlap_risk": "VERY_HIGH unless lineage-filtered",
@@ -116,7 +116,7 @@
       "name": "NVIDIA Nemotron-SFT-ARC-AGI-v1",
       "approx_unique_problems": 72980,
       "successful_runs": 304491,
-      "license": "research/development dataset with seed and generating-model license notes",
+      "license": "Research/development release with legal-review notes; use as metadata/index rather than redistributing into the grid-training pool.",
       "direct_grid_sft": false,
       "novelty_relative_to_sft139": "SAME_SEED_POOL_AS_NEMOTRON_RL",
       "overlap_risk": "VERY_HIGH",
