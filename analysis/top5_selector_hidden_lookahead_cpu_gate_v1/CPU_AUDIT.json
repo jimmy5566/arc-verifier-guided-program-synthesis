@@ -1,0 +1,114 @@
+{
+  "artifact": "TOP5_SELECTOR_HIDDEN_LOOKAHEAD_CPU_AUDIT_V1",
+  "source_commit": "2da4ef598cc8e792ddab5b9f9d85036e1b0792ce",
+  "top5": {
+    "states": 64005,
+    "gold_in_top5_states": 51667,
+    "gold_in_top5_fraction": 0.8072338098586048,
+    "baseline": {
+      "n": 64005,
+      "top1": 0.32905241777986094,
+      "top2": 0.48425904226232325,
+      "top5": 0.8072338098586048,
+      "mrr": 0.520379176611292,
+      "mean_rank": 3.670135145691743
+    },
+    "models": {
+      "CANDIDATE": {
+        "n": 64005,
+        "top1": 0.32480274978517304,
+        "top2": 0.5512694320756191,
+        "top5": 0.8072338098586048,
+        "mrr": 0.533626579157968,
+        "mean_rank": 3.547941567065073,
+        "delta_top1": -0.0042496679946879,
+        "delta_mrr": 0.013247402546676001,
+        "bootstrap_delta_top1": {
+          "mean_task_delta": -0.01140206017790743,
+          "ci95_low": -0.08540768053153311,
+          "ci95_high": 0.05181585399862616,
+          "replicates": 10000,
+          "seed": 0
+        },
+        "bootstrap_delta_mrr": {
+          "mean_task_delta": 0.01086813174400389,
+          "ci95_low": -0.03982325586680268,
+          "ci95_high": 0.05290454231453523,
+          "replicates": 10000,
+          "seed": 0
+        },
+        "catastrophic_tasks": 1,
+        "gpu_gate_pass": false
+      },
+      "PAIRWISE": {
+        "n": 64005,
+        "top1": 0.3083665338645418,
+        "top2": 0.49005546441684245,
+        "top5": 0.8072338098586048,
+        "mrr": 0.5120821685650455,
+        "mean_rank": 3.6644480899929692,
+        "delta_top1": -0.020685883915319114,
+        "delta_mrr": -0.008297008046246446,
+        "bootstrap_delta_top1": {
+          "mean_task_delta": -0.031868140870098,
+          "ci95_low": -0.11241568640035655,
+          "ci95_high": 0.041260383166507375,
+          "replicates": 10000,
+          "seed": 0
+        },
+        "bootstrap_delta_mrr": {
+          "mean_task_delta": -0.011340251422403793,
+          "ci95_low": -0.06796552783174986,
+          "ci95_high": 0.03772128613234676,
+          "replicates": 10000,
+          "seed": 0
+        },
+        "catastrophic_tasks": 3,
+        "gpu_gate_pass": false
+      }
+    },
+    "decision": "NO_GPU_TOP5_TELEMETRY_SELECTOR"
+  },
+  "hidden": {
+    "existing_hidden_state_archive": false,
+    "unique_top5_work_items": 33203,
+    "unique_top5_parent_keys": 32680,
+    "max_simultaneous_active_parent_groups": 268,
+    "layers_0_based": [
+      11,
+      23,
+      35
+    ],
+    "hidden_size": 2560,
+    "estimated_full_bf16_mib": 478.7109375,
+    "max_active_cache_mib": 3.92578125,
+    "extra_model_forwards_required_for_passive_parent_state": 0,
+    "decision": "AUTHORIZE_CPU_GATE0_IMPLEMENTATION_FOR_GPU_SMOKE"
+  },
+  "lookahead": {
+    "q8": {
+      "q": 8,
+      "covered_states_all_top5": 5062,
+      "coverage_fraction": 0.07908757128349347,
+      "eligible_gold_top5_states": 4487,
+      "tasks": 3,
+      "selector_top1": 0.7254290171606864,
+      "baseline_top1_same_subset": 0.7289948740806775,
+      "selector_mrr": 0.8255218780179779,
+      "baseline_mrr_same_subset": 0.8310749572840055
+    },
+    "q16": {
+      "q": 16,
+      "covered_states_all_top5": 4839,
+      "coverage_fraction": 0.07560346847902508,
+      "eligible_gold_top5_states": 4280,
+      "tasks": 3,
+      "selector_top1": 0.736214953271028,
+      "baseline_top1_same_subset": 0.7411214953271028,
+      "selector_mrr": 0.8559813084112149,
+      "baseline_mrr_same_subset": 0.8368224299065419
+    },
+    "causal_warning": "Existing P3 tree observes all Top5 branches to q only in <8% of states and only 3 tasks; observational selector is selection-biased and not causal.",
+    "decision": "HOLD_ACCURACY_CLAIM; PREPARE_RUNTIME-SAFE_Q8_GATE0_ONLY"
+  }
+}
