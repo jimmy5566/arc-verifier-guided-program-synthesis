@@ -1,0 +1,26 @@
+name: Dots3 ARC specialist Gate 0
+on:
+  push:
+    branches: [model/dots3-arc-specialist-v1]
+    paths:
+      - 'scripts/model_training/**'
+      - 'experiments/model_training/dots3_arc_specialist_v1/**'
+      - 'tests/test_dots3_arc_specialist_gate0.py'
+      - '.github/workflows/dots3_arc_specialist_gate0.yml'
+  workflow_dispatch:
+jobs:
+  gate0:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -q pytest numpy openai
+      - name: Compile pipeline
+        run: |
+          python -m py_compile             scripts/model_training/generate_dots3_teacher_curriculum.py             scripts/model_training/verify_dots3_arc_programs.py             scripts/model_training/build_dots3_arc_dataset.py             scripts/model_training/train_arc_specialist_lora.py             scripts/model_training/eval_arc_specialist_gold_likelihood.py             scripts/model_training/compare_arc_specialist_m0_m1.py             scripts/model_training/merge_arc_specialist_adapter.py
+      - name: Run CPU contracts
+        env:
+          PYTHONPATH: .
+        run: pytest -q tests/test_dots3_arc_specialist_gate0.py
