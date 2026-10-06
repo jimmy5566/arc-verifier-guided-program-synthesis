@@ -1200,6 +1200,7 @@ def run_ready_scheduler(
     memory_stats_reader: Callable[[], dict[str, int]] | None = None,
     memory_peak_reset: Callable[[], None] | None = None,
     memory_synchronize: Callable[[], None] | None = None,
+    hidden_state_layers: tuple[int, ...] | None = None,
 ) -> dict[str, Any]:
     """Drive independent cells through one shared physical batching path.
 
@@ -1376,6 +1377,7 @@ def run_ready_scheduler(
             cache_pack_observer=cache_pack_observer,
             release_batch_temporaries_for_audit=release_b2_temporaries_for_audit,
             streaming_split_and_adopt=streaming_split_and_adopt,
+            hidden_state_layers=hidden_state_layers,
         )
         b16_stats: dict[str, int] | None = None
         if is_observed_b16:
