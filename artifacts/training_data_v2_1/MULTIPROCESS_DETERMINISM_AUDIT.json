@@ -1,0 +1,1 @@
+{"canonical_ids_hashes_sample_ids_episode_lineage_token_ids_labels_exact":true,"descriptor_count":8,"slice_sha256":"1dceeddfd6b0c377a3d41c806d68891cd235103f14f61f160ea8d6b5349e184e","sources":["conceptarc","miniarc","official_arc_agi_2","rearc"],"status":"PASS","workers":[12,20]}
