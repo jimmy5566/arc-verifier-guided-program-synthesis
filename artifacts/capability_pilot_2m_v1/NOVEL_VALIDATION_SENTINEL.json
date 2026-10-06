@@ -1,0 +1,1034 @@
+{
+  "episode_count": 128,
+  "episodes": [
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_0:native-source-episode-v1",
+      "sequence_length": 408,
+      "source": "1d_arc",
+      "supervised_token_count": 204,
+      "token_label_sha256": "52b67a5730da141b073029e2e07d790613031213c32cd1e776fabdea5801bdd1"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_11:native-source-episode-v1",
+      "sequence_length": 432,
+      "source": "1d_arc",
+      "supervised_token_count": 216,
+      "token_label_sha256": "4d03db7cdab5ff1b2bc1c22bb6208af1f96b6505e7c8254d5cae0a39c0cfb495"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_12:native-source-episode-v1",
+      "sequence_length": 624,
+      "source": "1d_arc",
+      "supervised_token_count": 312,
+      "token_label_sha256": "6bba6a08349652c147679ed67c148dbe7cba88b2c273685479874f6999b532d8"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_13:native-source-episode-v1",
+      "sequence_length": 600,
+      "source": "1d_arc",
+      "supervised_token_count": 300,
+      "token_label_sha256": "9e46a1e2827b34730a8ea69f2473eb1e91b2d4a1fadaa7b04899d6021d0c2894"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_14:native-source-episode-v1",
+      "sequence_length": 504,
+      "source": "1d_arc",
+      "supervised_token_count": 252,
+      "token_label_sha256": "dd7088b7c9afde8f40b6bfbe5ad13ab4dc358c672e6d7f3f35a67b945ac5cc46"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_15:native-source-episode-v1",
+      "sequence_length": 432,
+      "source": "1d_arc",
+      "supervised_token_count": 216,
+      "token_label_sha256": "8c30316da73fc9097b445b1ea52b5acea339f4bce65ecf2f27115ec014b1b5cc"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_16:native-source-episode-v1",
+      "sequence_length": 600,
+      "source": "1d_arc",
+      "supervised_token_count": 300,
+      "token_label_sha256": "42e436659ef94b1a1a668902fdb34f3d9d659bf01a7d3a9542319014063f587f"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_17:native-source-episode-v1",
+      "sequence_length": 408,
+      "source": "1d_arc",
+      "supervised_token_count": 204,
+      "token_label_sha256": "2857fec7ffd202ddc678345b735efc3d2631dde31d966b6c6df44a20c1768a4a"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_1:native-source-episode-v1",
+      "sequence_length": 600,
+      "source": "1d_arc",
+      "supervised_token_count": 300,
+      "token_label_sha256": "696097b2c6ea59f6669c9ed89e9722738b0ae15eb4c30caf222ed3b66445ce7a"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_20:native-source-episode-v1",
+      "sequence_length": 528,
+      "source": "1d_arc",
+      "supervised_token_count": 264,
+      "token_label_sha256": "9c39523ba1e1502fd6dc3c689dde20dec5bbeab916f2b548cf1ceb15992516a2"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_22:native-source-episode-v1",
+      "sequence_length": 528,
+      "source": "1d_arc",
+      "supervised_token_count": 264,
+      "token_label_sha256": "1099539ab9f618c0b72c2d5d124af88694a3eeead0eaa755c40cf345709a0a26"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_23:native-source-episode-v1",
+      "sequence_length": 312,
+      "source": "1d_arc",
+      "supervised_token_count": 156,
+      "token_label_sha256": "700806357bfb251dd82953e36da09058f83a660602fa6cda48aea1905f92d0f0"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_24:native-source-episode-v1",
+      "sequence_length": 552,
+      "source": "1d_arc",
+      "supervised_token_count": 276,
+      "token_label_sha256": "de9545c1248a30d8eb0586a99c9c4e807d1eb2a2809270128197010dcab45962"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_25:native-source-episode-v1",
+      "sequence_length": 216,
+      "source": "1d_arc",
+      "supervised_token_count": 108,
+      "token_label_sha256": "c642c03a8410fafd04e5db9bbd3d50ef5dd34fc0aa61c01f8f084132676ea62c"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_26:native-source-episode-v1",
+      "sequence_length": 768,
+      "source": "1d_arc",
+      "supervised_token_count": 384,
+      "token_label_sha256": "320d90832c817ee2a16b60cc5ebc69d9c96cc209d1e80a7563effe6e3ed99323"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_27:native-source-episode-v1",
+      "sequence_length": 552,
+      "source": "1d_arc",
+      "supervised_token_count": 276,
+      "token_label_sha256": "c3aaab3f8441a0bf1886099a3dfce997d1863213a0bcdb1355f2d21b1e71ea5e"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_29:native-source-episode-v1",
+      "sequence_length": 456,
+      "source": "1d_arc",
+      "supervised_token_count": 228,
+      "token_label_sha256": "92e7cde06aae614c66844275f0d5fd4819c7abdf1adffd5d38378fa2518494c6"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_33:native-source-episode-v1",
+      "sequence_length": 360,
+      "source": "1d_arc",
+      "supervised_token_count": 180,
+      "token_label_sha256": "5844812956c50d52d6237aadbd4061d962e8af5c00eef4583e50a43194e074f9"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_35:native-source-episode-v1",
+      "sequence_length": 744,
+      "source": "1d_arc",
+      "supervised_token_count": 372,
+      "token_label_sha256": "3c1f251b1943c5ca9b1e1891332d8102bd231c1eeaa817dfc9f9178ab4ef5b7b"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_36:native-source-episode-v1",
+      "sequence_length": 336,
+      "source": "1d_arc",
+      "supervised_token_count": 168,
+      "token_label_sha256": "12063e2655e0749e98908fa9257bb8c80d52d70eb9a80d69a9cf8068d5e9d2ba"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_37:native-source-episode-v1",
+      "sequence_length": 240,
+      "source": "1d_arc",
+      "supervised_token_count": 120,
+      "token_label_sha256": "537d9edbaf82953419a7b99805c7d87c56745b45c1ec0fe3c56c05244d0122b9"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_3:native-source-episode-v1",
+      "sequence_length": 768,
+      "source": "1d_arc",
+      "supervised_token_count": 384,
+      "token_label_sha256": "770d86b75721f968aa8f1d4f4f2d685a2dfa2844558ecf9852efd29e857e0e45"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_42:native-source-episode-v1",
+      "sequence_length": 264,
+      "source": "1d_arc",
+      "supervised_token_count": 132,
+      "token_label_sha256": "ced4209addf026e9fcb65c600123e2be31fe7aadb17b3e0bd0d93af7ca0a5037"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_43:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "22a501d8c8069698870b011c12589fa6988f14afe50b4eba82757bf1e16e3a40"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_44:native-source-episode-v1",
+      "sequence_length": 264,
+      "source": "1d_arc",
+      "supervised_token_count": 132,
+      "token_label_sha256": "12d363f5fa49de4050c4993a97c35a0e7d35b3a3f627c224d6eee1027990e2d4"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_45:native-source-episode-v1",
+      "sequence_length": 528,
+      "source": "1d_arc",
+      "supervised_token_count": 264,
+      "token_label_sha256": "c5ed413662e751afc84c0edc3335d9c4ade0f666d92e95ff444fad0d0246b898"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_46:native-source-episode-v1",
+      "sequence_length": 648,
+      "source": "1d_arc",
+      "supervised_token_count": 324,
+      "token_label_sha256": "a213fb3448bcaf631fbd3a434986fdcf8bda7d5b26ab3a2dc2503b076a067778"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_48:native-source-episode-v1",
+      "sequence_length": 552,
+      "source": "1d_arc",
+      "supervised_token_count": 276,
+      "token_label_sha256": "221486f221ecd0c03b4c273629c4a3179a4ae15c3c0a6712999a85d9efbd0301"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_4:native-source-episode-v1",
+      "sequence_length": 456,
+      "source": "1d_arc",
+      "supervised_token_count": 228,
+      "token_label_sha256": "7ef821d410baad9dac3e8ef9dfbd76b855b67aa563d330914eaec2050eb6b1ae"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_5:native-source-episode-v1",
+      "sequence_length": 384,
+      "source": "1d_arc",
+      "supervised_token_count": 192,
+      "token_label_sha256": "afc5d463aeaa039c9ad4680218b2633232a2fb680fe378220bf523471380ec0c"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_8:native-source-episode-v1",
+      "sequence_length": 576,
+      "source": "1d_arc",
+      "supervised_token_count": 288,
+      "token_label_sha256": "8dddc345f0d6a7f0a08ecfdc4b8d4b0ec01381600e23136e5b8cdeb8fae9af4d"
+    },
+    {
+      "family": "1d_arc:1d_padded_fill",
+      "sample_id": "1d_arc:1d_padded_fill_9:native-source-episode-v1",
+      "sequence_length": 456,
+      "source": "1d_arc",
+      "supervised_token_count": 228,
+      "token_label_sha256": "94c93b336f6b093c1663f62716085626efa8be1e0d95e4d2021a842a2f01bd63"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_10:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "4b9dca9eddc6c96408193bfc87ba24dc00f0c379b10105c15ad449af8f65ad66"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_11:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "023fedf7f30504f3191255cb36a66472243de75f0be700dcb96e80a2bdb54d5c"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_12:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "4ebb9a16e540f87fd184473ba6d245bbed9d3e99d1780bb251b0828e57162f0e"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_13:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "71d6b2f2ea418b16e8f31de8ca7ac5b705ed061ab39b622fc3090d27db4983fb"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_14:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "49ac6e55af56d266dcf4009eac121c359d442e609ee6e1ec63e84460b27d6872"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_15:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "a78c9ecadb920902c94fcdca1f1b2de1441c2998cc151a002598389b0e02f82b"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_17:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "1212f1d3f5133226f7f7760ce5d0484ca010393c758bd2c120c2b99ae7bc94b8"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_18:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "bea8d243586d1e74c89fc0a84441b23f2372c1ce9002d6dc7e43e91784407590"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_19:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "3142749b33505515c8f629063834705f04445ff48b8dda24d17a8a9656416b89"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_20:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "685917fc0c0d20319f74dc19c86d60d0b907bc8521cd4b61aee7cfbe108ec68d"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_21:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "68d35dab63ab1524c5b4153a13a28466f628e1219b86402bcd146e6d06ace1dd"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_24:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "c53466e5d86d6e8f5beaa44f26823b9c879269607f60191112b68ca1f070cf9d"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_26:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "a1ee095484b84cfb7fb125276f226f7d0d6e3189e9378c0f72c070a7f3e8c21f"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_28:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "b2375b2dfe09966a5b8bbaa4d597686cb30de46832b61abfede43515b8de7281"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_29:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "0464e02873b5703f15b73a75b2c171b64b9d87d66c338407ab3d4ee08eb8c154"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_2:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "80f5655c8cb2aa4420ba72cb151057d33521d153d5054d17d58bb7df7eb20fc8"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_30:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "34efa4fa6e3f871719329bfe1f137764a2631177b82d109f2f261db9403c05b1"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_32:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "28bf535308e5b305eb161d61de523365a2de8573c2358032cac58aacbbd3c149"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_34:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "90735697e0865bbf64bbee6b0e25b3f1212ada176b96c9d93b3eae202f3990e9"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_35:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "36beeb90933036718f84b5c6cb4977a3e418d9fad3ba2bf6b09cb988342329a7"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_37:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "001b05315057ca105c70b56c5f944e2a03143ac053acdfcf8f6d670741569cf6"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_38:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "58af0268ce2a22753c9232677e9d594153778828e6386a0929a987e8f6aecfeb"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_39:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "13ab8b38e39fa058a40bcc7f01ad0d8ec920f7d8d30e19b5afb64af38382dc39"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_3:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "19ee23a4ca7d6e49015c31d00cbf379d4577a1ed69830c28d386853e2ce2b15c"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_42:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "69c1d1770cf3e3e2c7538e9ab729424295b14c9c58882211aee9ad5eeb5cc23c"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_44:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "41212141ad8c2c1e580d58a3281f6e7e4a3af9f2a1c6d7b47b928f801c0285a6"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_45:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "fa5a5d938c273cbe3a290c18aa8edf1a9e877ce50d7cf99195ff25907a31aeda"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_46:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "c4bcef803cb562ba73e1e8f852ab7d9ed239adfbeace378aae6bb9ef1c606873"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_47:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "50f71418ad165fde14c6793c3c6c351eb09e11b32835e0e367b5a6f0584a0d56"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_49:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "f701b0b08e0010b0abdb79778cb7f859b680973e368b71f8a3e806616cf08a80"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_6:native-source-episode-v1",
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140,
+      "token_label_sha256": "136358d7722b1b24818a48e63c76da76aaad067efa47f9291976fba742864fd8"
+    },
+    {
+      "family": "1d_arc:1d_pcopy_mc",
+      "sample_id": "1d_arc:1d_pcopy_mc_8:native-source-episode-v1",
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144,
+      "token_label_sha256": "c604c1356bd0dc388b5eecb2219a9ba04429cc5991d75701ad537190376650be"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-003488:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "818eef39d87173fa5506b7a5b71e63be57456f5d7c5a9eeb63d1b3e77ca73416"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-005412:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "e6bf82512c89c062606ba84d98663c0e7e6844af7a314531bba784bb2b77f48b"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-005524:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "646cbccb1998674ae65e4ee01b78beced8b368ce55c8c24a84320ca0ffdd4ee5"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-005654:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "793a9ae94eb4d0028a3b26ef22ea1ffdbfa8d56cdfbb2ea207f00e932773f12f"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-006735:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "b247db2df0131e04809b4f262bb2ea26d488f6358885cbdf462e44d8e468546c"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-009660:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "3972673fb67331204ec0b507255aab8203229c2597d32c6a9ade3e109cc635a1"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-009721:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "0413246353fca3968f411a33931f4f0e0f06433ebf95abd587d4507d4c145513"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-011781:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "cef82aef46c3e9cf34a4559b510de1c5dcb844d1abb786a75710e39fc289c485"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-011798:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "00aee3c3e9897e950d80a0ad0582e06601a5dbf68f78ac47b2a0b09628e6c6ae"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-011877:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "8f09b69bd1bf43d7250fa7f2d20d21977a3d9c6d4b699ee6f6dcb6182bd9f965"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-012766:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "2fbc52feb0ca67dd94e9de31774e05843195dcecddaedf2945f62b1a11b3a9ef"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-013593:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "9730f1fe363367d151dbe7854a4b337951c8cef4384245e9dba4e6f392687228"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-013625:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "5965ea328148de91369455a0cf57436754d2fde7f85c435c32d401cce72ce8e2"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-013899:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "fd50dfc890e84ed85849b0da85633721bfb97fd2b5d85b9dcbe2d6227c86d0fd"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-015852:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "d1beeeca3cf55d07639e9a209d99c5f7f4653b277eb4c8b8e036b876e5be75f1"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-018252:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "a05da3ca798abf63d6bc0f81ad061768ca540fc3d9275f955729a407a78c4d91"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-021584:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "df1b2b42646d70d643464453dfb7d4508ab9f1de7bb64a921ac50dbf4523f02f"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-026122:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "e41404a82d0b6123d6574480d9c7d1ac115052b3966ea5558c729fc56341db30"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-029553:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "d580857f5283506553714cc92ec2d1663e4a59755c9f1b7fb30e730f0421d33a"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-030132:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "fd5c163f12e3b3b0e97e9a5929712fc901a338627c52d20e263f498152fe23d3"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-035676:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "96df78b36c9eb0c9d3289db98b3ca5a2945ac4b9aff808582bf8ea5efdb116ed"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-036682:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "7755abe1e5519c1d4991e337de5ea665a3efddac9ae9a7d9bdbd6b6e7c1a175d"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-038337:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "acbe8c47eb894e250d774b7fefbecd2f74c0fa3627df6eb79ca8dd2240db2a19"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-039169:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "74beff830beadd9309bc922b36c5910241c2ab2b040b08c949271c15d4372b7a"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-041147:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "26883be622d7cea8a2919f274db796e2b0cdbb2f8209efba7b6733813b11f37e"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-043662:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "12a17e38c8410eed921096ddf4cfe475c8706d47583297bab164cf2a7c7304b8"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-044240:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "da97383df94399ed634dc37f3f986d0deaacacc311aac74c3df021f031a282aa"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-044881:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "583fc56e5fefb798f8f392d28f642e76aa0b75426b7518a1278607369684cec4"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-044905:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "8449e403c63c7f821214941b6e38cbf72b87e5a1b14f01058110cf8b62be6034"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-046447:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "6ef3739bd50d9c18193e82ed228f338300a811d164214c7f0318c343de0002f9"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-047428:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "9b82bb407f59edd5d57709d5c3635c1049bad773298a8d369ecb86cb92badf33"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+mirror+translation",
+      "sample_id": "compositional_arc:episode-049315:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "9a547c4a78d573d7a7c345b531f9889f002c4902e793f3a69b1460d5057a59d5"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-000026:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "e624183a17a2a5dbbd216d0640ecd0e35beec6b236b175cd31880824c6f82537"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-000415:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "833418ab655df9566e88a16255e701c9ec1c4175bf24de8aa4be2915c90f0bba"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-003057:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "3ca387a82945fd7809964bbc8a72115087b1579045dde24944a6c3e0a8ff3dd8"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-003561:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "73e899c8c6ce936bbe10dd66aea31f595108fc63499065354ef0719812fbada2"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-004398:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "9b72052b6ac5ccb7b4cc928580d0cd21f4b5c38cb1d1b6fdb6f57e8879783125"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-005601:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "4dc51f434e99ab49c2f6cbad4d07528ac6ac38180c56ca77fbe0a58f9fa3249f"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-006128:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "846b34bb619cf5a3aebf06318722c08a5c76eb3eb4a814021b97c59ebaeb462b"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-007046:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "7f6d2d480291425412ff9e7f34c7a741d2f038ab6bb553bd992329a34fe263e7"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-007430:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "7555c1b2bdeb2acae6dc4c07e81c2bd26a7267e063736d12829c56d3daf93424"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-008905:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "542759f0e4ee325608f8f3cc27c1f459aa82a7586957075d245fb42f30cd0c8f"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-010283:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "eeeb9729413af0e4606cfa6c8f0495e0ff27a7f761cfcdf3db2ca86893ffe2ba"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-011204:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "677885140e17b2d902d9115c06fc56c93589ba03fd5b374988a05ac6c68ce4a6"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-013662:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "da85a21880065108cdd32f493696edd8c79194cc792d6fcae5aae2e0741754e9"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-019118:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "8895f4601d6c9d9fd9253f9a61162312be9431e44630f7eb956832208b20af20"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-019980:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "151cbeeda9cece3c68cc50e8b745b765beafa40d719fc5f0bb82467cb4a52809"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-020691:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "bd83d4ea843ae8e5fa4be1eb85c4c935e7d9078e9b98da0980a6c461de871cda"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-022518:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "68d6cb01fdb17eb1f004b26795e03bbe75fcd7b98bdeeeccdd33662c4acf6d09"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-022682:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "7922d6666a5a9a68335e2dc5c6922d8a8ac0e20a8a472df7b6d984e88ebca602"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-025116:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "fe5ebce5a3eca151b66213198189356a2eaa544c68b2e6a33d62f5bc7fb0326b"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-025617:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "b08a14431eba70d0c27d8403954de308dccca8a040befee3798948494dcf1fb1"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-026295:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "2c7daf3186e9cfc139b27273b839f472f5ae6bfd0241d354c4cff7f0a9c8fe75"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-027483:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "5f8fd3fab6dd98f69a778734871e5e9ad64d4ab2c676b035ac5d8a4398702cbe"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-028465:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "f3c73451306209028c94a935f40bc099344535373c9fe1e90c32c7db3098828e"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-030024:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "abf2e964aa1aac48aac7a70143c7eac28b46c013643aa6d0d76a407306a80f5f"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-030274:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "9ccb119c62e8b72a6aa0f966a8c17d76fb41b17b1f6db17b8cb27bc5451be662"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-032551:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "059933e0bb16a04735a35c276f7121134aa4504648f3c6d369b95a153a680068"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-033848:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "04e6bbd94bcc1d7bde19dd58da1aff2024eb2419e3da54fa3269d78b9331479e"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-036470:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "70fff36cefc2ee97de5cde6629d9f92acfb890287baa6f9efaaf20dd1ab45287"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-037143:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "825dc945bfba5af20ead49b89af9495f0b39ad4775cc6a60bb98ec682bab7ae4"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-037488:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "27d862770613de9906807f7ab28d7b3b6efb8a04f712dadf36b6794ea636dda5"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-045089:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "2da459bb5ef28f7eec5f5f64c041b2316c563934b7bb0a36ca6a7d0ec5b8469e"
+    },
+    {
+      "family": "compositional_arc:systematicity:grow+rotation+translation",
+      "sample_id": "compositional_arc:episode-048829:native-source-episode-v1",
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256,
+      "token_label_sha256": "6a1c8bfeca4ff572feb9b67926fe93f1ad54900ed7e2c98d740f23547542e597"
+    }
+  ],
+  "family_count": 4,
+  "seed": 2000031,
+  "selection_policy": "32 deterministic context-compatible episodes per Novel validation family",
+  "selection_sha256": "a7cb00583eca5f05db4b9dc92107285600b31d6ad3f0c30a199e0810cdd161f8",
+  "status": "FROZEN"
+}

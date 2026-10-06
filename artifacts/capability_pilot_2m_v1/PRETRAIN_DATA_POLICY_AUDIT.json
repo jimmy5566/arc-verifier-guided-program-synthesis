@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "hard_exclude_rows": 0,
+    "novel_holdout_rows": 0,
+    "novel_validation_rows": 0,
+    "quarantine_rows": 0,
+    "retention_sentinel_rows_in_schedule": 0,
+    "schedule_complete_optimizer_steps": true,
+    "token_budget_reached": true
+  },
+  "configured_paths": {
+    "novel_train": "data\\processed\\novel_training_data_v1_1\\train\\novel",
+    "novel_validation": "data\\processed\\novel_training_data_v1_1\\validation\\novel",
+    "replay": "data\\processed\\arc_training_v2_1\\train\\replay\\replay-00000.parquet"
+  },
+  "forbidden_paths_configurable": false,
+  "novel_train_rows_inspected": 83607,
+  "novel_validation_rows_inspected_for_sentinel_only": 8646,
+  "replay_rows_inspected": 62650,
+  "status": "PASS"
+}
