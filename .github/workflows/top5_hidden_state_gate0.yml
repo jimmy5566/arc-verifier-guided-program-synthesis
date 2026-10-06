@@ -11,6 +11,7 @@ on:
       - 'src/inference/rolling_resident_pool.py'
       - 'scripts/run_eval60_budget_eos_pilot18_v1.py'
       - 'scripts/run_ttt24_aug8_r1024_core_v1.py'
+      - 'scripts/run_top5_passive_hidden_state_micro12_v1.py'
       - 'tests/test_nvarc_turbodfs_dynamic_ready.py'
       - 'tests/test_nvarc_turbodfs_search_order.py'
 
@@ -29,7 +30,8 @@ jobs:
           python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
       - name: Compile modified runners
         run: |
-          python -m py_compile             src/inference/nvarc_turbodfs_dynamic_ready.py             src/inference/nvarc_turbodfs_search_order.py             src/inference/rolling_resident_pool.py             scripts/run_eval60_budget_eos_pilot18_v1.py             scripts/run_ttt24_aug8_r1024_core_v1.py
+          python -m py_compile             src/inference/nvarc_turbodfs_dynamic_ready.py             src/inference/nvarc_turbodfs_search_order.py             src/inference/rolling_resident_pool.py             scripts/run_eval60_budget_eos_pilot18_v1.py             scripts/run_ttt24_aug8_r1024_core_v1.py \
+            scripts/run_top5_passive_hidden_state_micro12_v1.py
       - name: Hidden-state and search-order contracts
         env:
           PYTHONPATH: .:src
