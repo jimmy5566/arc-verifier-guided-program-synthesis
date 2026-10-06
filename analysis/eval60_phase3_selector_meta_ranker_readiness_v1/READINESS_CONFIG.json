@@ -1,0 +1,20 @@
+{
+  "experiment": "EVAL60_PHASE3_SELECTOR_META_RANKER_READINESS_V1",
+  "scope": "CPU_ONLY_REPOSITORY_DATA_READINESS_AUDIT",
+  "target_model": "final-candidate supervised meta-ranker for current dense Phase-3 DFS/S2 distribution",
+  "required_conditions": [
+    "candidate-level features available",
+    "legitimate true target outputs available after freeze",
+    "multiple tasks",
+    "grouped task-level splitting possible",
+    "candidate generation sufficiently comparable to current dense DFS",
+    "enough positive Gold-candidate groups outside the exposed Gold-selected selector cohort to support held-out evaluation"
+  ],
+  "forbidden": [
+    "training only on the 35 exposed oracle-hit outputs and claiming CV generalization",
+    "mixing old sparse greedy/native candidate distributions as if equivalent",
+    "using search-order node/frontier labels as final-candidate correctness labels",
+    "launching new GPU generation automatically"
+  ],
+  "evidence_language": "EXPOSED_DEVELOPMENT / DATA_READINESS_ONLY"
+}
