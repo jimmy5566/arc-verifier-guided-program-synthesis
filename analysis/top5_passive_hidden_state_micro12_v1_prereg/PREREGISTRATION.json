@@ -1,0 +1,113 @@
+{
+  "artifact": "TOP5_PASSIVE_HIDDEN_STATE_MICRO12_PREREG_V1",
+  "status": "PRE_REGISTERED_BEFORE_GPU_GENERATION",
+  "purpose": "Collect passive parent-prefix hidden states for retained work items when they first enter the current cumulative-NLL Top5, without changing P3 search semantics or adding model forwards.",
+  "source_frontier_dataset_commit": "2da4ef598cc8e792ddab5b9f9d85036e1b0792ce",
+  "cpu_gate_artifact": "analysis/top5_selector_hidden_lookahead_cpu_gate_v1/CPU_AUDIT.json",
+  "scientific_baseline": {
+    "policy": "LDS_UNIT_DISCREPANCY_V1",
+    "ttt_depth": 24,
+    "augmentation": "canonical_AUG8",
+    "adapter_state": "EXACT_HISTORICAL",
+    "decoder": "CUMULATIVE_REGRET_r=4.00",
+    "max_expanded_nodes": 1024,
+    "candidate_cap": 32,
+    "frontier_floor": 1,
+    "eos_token": 15,
+    "max_new_tokens": 931,
+    "admission": "root_aware",
+    "cohort_sha256": "3852056112336e58559ceb0bb6f3171600ff36e0d6b02d1c9c03fc0da334443e",
+    "outputs": 12
+  },
+  "observational_change_only": {
+    "hidden_layers_0_based": [
+      11,
+      23,
+      35
+    ],
+    "representation": "last-token parent-prefix hidden state associated with each retained child when that child first enters global cumulative-NLL Top5",
+    "child_token_identity_forbidden_as_probe_feature": true,
+    "capture_once_per_work_item": true,
+    "output_dtype": "float16",
+    "extra_model_forwards": 0,
+    "search_order_changed": false,
+    "retention_changed": false,
+    "candidate_scoring_changed": false
+  },
+  "gate0": {
+    "requirements": [
+      "modified Python files compile",
+      "hidden capture opt-in only",
+      "zero-based transformer-layer mapping is tested",
+      "hidden capture and baseline normalized search results are identical",
+      "search_order_work_items identical",
+      "model_forwards identical",
+      "replay/useful counters identical",
+      "capture work_item_ids unique and subset of retained work",
+      "all captured first-entry NLL ranks are in 1..5",
+      "existing search-order/cohort/adapter tests remain PASS"
+    ]
+  },
+  "gate1_gpu_smoke": {
+    "cohort": "exact deterministic 3-output P3 smoke: one PROFILE_S, one PROFILE_M, one PROFILE_L",
+    "gold_loaded": false,
+    "target_blind": true,
+    "requirements": [
+      "3/3 COMPLETE",
+      "0 OOM",
+      "0 wall-censored cells",
+      "candidate_pool_snapshot/hash parity with frozen P3 reference at R256/R512/R768/R1024",
+      "completed_candidate_count parity",
+      "actual_nodes_reached and termination parity",
+      "model_forwards exactly identical to P3 reference per cell",
+      "useful/replay forward counts exactly identical to P3 reference per cell",
+      "retention_changed=false",
+      "hidden archive record count > 0",
+      "hidden metadata and NPZ work_item_id order exactly aligned",
+      "hidden tensor shape = [records,3,2560]",
+      "layers exactly [11,23,35]",
+      "unique work_item_id within each cell",
+      "prefix/parent lineage joins to retained telemetry",
+      "extra_model_forwards=0",
+      "hidden file SHA256 verification PASS",
+      "wall-time overhead <=15% versus same frozen P3 smoke outputs"
+    ],
+    "fail_closed": true
+  },
+  "gate2_gpu_collection": {
+    "start_only_if_gate1_pass": true,
+    "cohort": "exact frozen Micro12; no resampling",
+    "gold_loaded": false,
+    "target_blind": true,
+    "no_search_policy_change": true,
+    "pre_gold_freeze_required": true,
+    "archive_policy": "Hidden tensors may remain external if repository-size policy requires it, but path, byte size and SHA256 must be frozen. Metadata/receipts/hashes must be committed. Never claim remote raw archive unless actually present."
+  },
+  "postfreeze_probe": {
+    "gold_labels": "join only after Gate2 freeze using existing exact prefix-hash Gold labeling contract",
+    "candidate_set": "NLL Top5 states; Gold-outside-Top5 states count as selector-unreachable in overall metrics",
+    "representation": [
+      "training-only PCA to 64 components independently for each of layers 11,23,35",
+      "concatenate 192 PCA components",
+      "append frozen scalar Top5 telemetry features used in CPU audit"
+    ],
+    "model": "L2 LogisticRegression(C=1,class_weight=balanced)",
+    "validation": "12-way leave-one-task-out; PCA/scaler fitted on training tasks only",
+    "secondary_diagnostics": "single-layer probes for layers 11,23,35; not eligible for model selection",
+    "primary_metrics": [
+      "overall Top1",
+      "Top2",
+      "Top5",
+      "MRR",
+      "conditional Top1 given Gold in Top5",
+      "per-task deltas"
+    ],
+    "authorization_gate": [
+      "overall DeltaTop1 > 0 versus cumulative NLL",
+      "overall DeltaMRR >= 0",
+      "task-bootstrap 95% CI for DeltaTop1 strictly > 0",
+      "zero catastrophic tasks where DeltaTop1<=-0.05 and DeltaMRR<=-0.05"
+    ],
+    "live_hidden_guided_search": "FORBIDDEN_IN_THIS_EXPERIMENT"
+  }
+}
