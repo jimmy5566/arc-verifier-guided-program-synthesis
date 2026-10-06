@@ -1,0 +1,26 @@
+{
+  "artifact": "SEARCH_ORDER_NLL_OVERRIDE_V1_RESULT",
+  "baseline": {"mean_rank":3.670135145691743,"mrr":0.520379176611292,"n":64005,"top1":0.32905241777986094,"top2":0.48425904226232325,"top5":0.8072338098586048},
+  "hybrid": {"mean_rank":3.608311850636669,"mrr":0.511557990766436,"n":64005,"top1":0.2874931645965159,"top2":0.53470822591985,"top5":0.8072338098586048},
+  "delta_top1": -0.041559253183345024,
+  "delta_top2": 0.050449183657526764,
+  "delta_top5": 0.0,
+  "delta_mrr": -0.008821185844855917,
+  "overrides": 22793,
+  "override_rate": 0.35611280368721193,
+  "fix": 3651,
+  "harm": 6311,
+  "catastrophic_tasks": 1,
+  "trust_classifier": {
+    "correct_auc": 0.5791493380752426,
+    "correct_ap": 0.42763159268393813,
+    "correct_prevalence": 0.32905241777986094,
+    "error_rate_when_p_correct_below_0_20": 0.7231167463694994,
+    "error_recall_at_p_correct_below_0_20": 0.3838021609538003
+  },
+  "gold_rank_counts": {"rank1":21061,"rank2":9934,"rank3":10016,"rank4":6139,"rank5":4517,"rank_gt5":12338},
+  "bootstrap_delta_top1": {"mean_task_delta":-0.028329540810691282,"ci95_low":-0.13159970027278833,"ci95_high":0.03412170327441555,"replicates":10000,"seed":0},
+  "bootstrap_delta_mrr": {"mean_task_delta":-0.0028840147370449965,"ci95_low":-0.05743905162853432,"ci95_high":0.03312180994163671,"replicates":10000,"seed":0},
+  "gpu_authorized": false,
+  "decision": "DO_NOT_RUN_GPU_NLL_OVERRIDE"
+}
