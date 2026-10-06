@@ -1,0 +1,1 @@
+{"fixture_result":{"macro_family_average_loss":2.3333333333333335,"micro_average_loss":2.75,"source_macro_loss":2.25},"implementation":"novel_training_data_v1_1.pipeline.aggregate_validation_losses","metrics":["micro_average_loss","macro_family_average_loss","source_macro_loss"],"primary_scientific_model_selection_metric":"MACRO_FAMILY_VALIDATION_LOSS","status":"PASS"}

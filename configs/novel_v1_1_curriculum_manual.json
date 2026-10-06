@@ -1,0 +1,21 @@
+{
+  "schema_version": "novel-v1.1-manual-source-weights-v1",
+  "status": "CONFIGURABLE_NOT_FINAL",
+  "diagnostic_pool_weights": {
+    "POOL_NOVEL_V1_1": 0.75,
+    "POOL_REPLAY_V2_1": 0.25
+  },
+  "source_weights": {
+    "POOL_NOVEL_V1_1": {
+      "compositional_arc": 0.45,
+      "1d_arc": 0.55
+    },
+    "POOL_REPLAY_V2_1": {
+      "official_arc_agi_2": 0.25,
+      "conceptarc": 0.25,
+      "miniarc": 0.25,
+      "rearc": 0.25
+    }
+  },
+  "final_weights_frozen": false
+}
