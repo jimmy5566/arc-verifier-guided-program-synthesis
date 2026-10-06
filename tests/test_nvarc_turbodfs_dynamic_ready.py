@@ -10,6 +10,7 @@ from inference.nvarc_turbodfs_dynamic_ready import (
     _new_state,
     canonical_semantic_value,
     clone_legacy_cache,
+    execute_ready_forward,
     normalized_result_signature,
     ready_result,
     run_ready_scheduler,
@@ -26,6 +27,43 @@ def test_ready_incremental_forward_kwargs_explicitly_binds_cache_position() -> N
     assert kwargs["past_key_values"] == "cache"
 
 
+def test_ready_incremental_forward_kwargs_hidden_states_is_strictly_opt_in() -> None:
+    baseline = ready_incremental_forward_kwargs(
+        token_ids=[3], position=7, cache="cache", device="cpu"
+    )
+    observed = ready_incremental_forward_kwargs(
+        token_ids=[3], position=7, cache="cache", device="cpu",
+        output_hidden_states=True,
+    )
+    assert "output_hidden_states" not in baseline
+    assert observed["output_hidden_states"] is True
+
+
+def test_execute_ready_forward_captures_zero_based_transformer_layers_without_extra_forward() -> None:
+    prompt = torch.tensor([[2, 2]])
+    model = CacheTransitionModel()
+    cell = start_ready_cell(
+        model=model, input_ids=prompt, config=_config(),
+        cell_key="hidden", normalize_root_cache=False,
+    )
+    assert cell.request is not None
+    before = cell.request_count
+    replies, telemetry = execute_ready_forward(
+        model=model,
+        selected=[cell],
+        requests=[cell.request],
+        hidden_state_layers=(11, 23, 35),
+    )
+    assert len(replies) == 1
+    selected = replies[0].hidden_states_selected
+    assert selected is not None and len(selected) == 3
+    assert [tuple(value.shape) for value in selected] == [(1, 4), (1, 4), (1, 4)]
+    # hidden_states[0] is embeddings; transformer layer L maps to tuple index L+1.
+    assert [float(value[0, 0]) for value in selected] == [12.0, 24.0, 36.0]
+    assert cell.request_count == before
+    assert telemetry["model_call_seconds"] >= 0.0
+
+
 class CacheTransitionModel:
     """CPU-only deterministic model with a real splittable legacy KV tuple."""
 
@@ -40,7 +78,15 @@ class CacheTransitionModel:
         prior = 0 if past_key_values is None else int(past_key_values[0][0].shape[2])
         cache = ((torch.zeros((batch, 1, prior + int(input_ids.shape[1]), 1)),
                   torch.zeros((batch, 1, prior + int(input_ids.shape[1]), 1))),)
-        return SimpleNamespace(logits=logits, past_key_values=cache)
+        hidden_states = None
+        if _kwargs.get("output_hidden_states"):
+            seq = int(input_ids.shape[1])
+            # HF contract: embedding output at index 0, then transformer layers.
+            hidden_states = tuple(
+                torch.full((batch, seq, 4), float(index), dtype=torch.float32)
+                for index in range(37)
+            )
+        return SimpleNamespace(logits=logits, past_key_values=cache, hidden_states=hidden_states)
 
 
 def _config():
