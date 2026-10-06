@@ -1,0 +1,198 @@
+{
+  "artifact": "ARC_PUBLIC_DATA_AUDIT_V1",
+  "status": "SOURCE_LEVEL_AUDIT_COMPLETE__GRID_LEVEL_DEDUP_PENDING",
+  "base_model": "qwen3_4b_grids15_sft139",
+  "principles": [
+    "Do not count a downstream curated dataset as novel if its seed problems come from sources already seen by SFT139.",
+    "Never train on ARC-AGI / ARC-AGI-2 public evaluation tasks or direct derivatives when a clean generalization claim is desired.",
+    "Prefer executable or deterministic grid datasets with explicit lineage and permissive licensing.",
+    "Program/reasoning corpora are tagging and curriculum resources unless converted to verified grid episodes.",
+    "Whole-family holdout is required for model-selection evaluation."
+  ],
+  "original_sft139": {
+    "total_unique_puzzles": 104539,
+    "total_augmented_samples": 3255481,
+    "sources": [
+      {
+        "name": "MINI-ARC",
+        "unique_puzzles": 147,
+        "samples": 37632,
+        "role": "TRAIN",
+        "decision": "OLD_REPLAY_ONLY"
+      },
+      {
+        "name": "ConceptARC",
+        "unique_puzzles": 160,
+        "samples": 40960,
+        "role": "TRAIN",
+        "decision": "OLD_REPLAY_ONLY"
+      },
+      {
+        "name": "RE-ARC",
+        "unique_puzzles": 400,
+        "samples": 102392,
+        "role": "TRAIN",
+        "decision": "OLD_REPLAY_ONLY"
+      },
+      {
+        "name": "ARC-AGI-2 training (RE-ARC IDs excluded)",
+        "unique_puzzles": 609,
+        "samples": 155904,
+        "role": "TRAIN",
+        "decision": "OLD_REPLAY_ONLY"
+      },
+      {
+        "name": "NVARC training synthetic",
+        "unique_puzzles": 47337,
+        "samples": 1132633,
+        "role": "TRAIN",
+        "decision": "OLD_REPLAY_ONLY"
+      },
+      {
+        "name": "NVARC full synthetic",
+        "unique_puzzles": 55886,
+        "samples": 1785960,
+        "role": "TRAIN",
+        "decision": "OLD_REPLAY_ONLY"
+      }
+    ],
+    "train_share_nvarc_synthetic": 0.897,
+    "validation": {
+      "name": "arc2_evaluation6",
+      "role": "VALIDATION_CHECKPOINT_SELECTION",
+      "gradient_training": false,
+      "caveat": "build_datasets serializes train+test pairs, including public-evaluation test outputs; therefore this set is not an untouched generalization holdout."
+    }
+  },
+  "sources": [
+    {
+      "name": "ARC-Heavy / BARC synthetic",
+      "approx_tasks": 400000,
+      "license": "MIT",
+      "direct_grid_sft": true,
+      "novelty_relative_to_sft139": "POTENTIALLY_HIGH_BUT_LINEAGE_ADJACENT",
+      "overlap_risk": "HIGH_CONCEPTUAL; exact task/grid overlap unknown",
+      "priority": "P0",
+      "cpu_action": "FULL_MATERIALIZE_CANONICAL_DEDUP_TAG",
+      "gpu_action": "TRAIN_CANDIDATE_AFTER_FILTER"
+    },
+    {
+      "name": "arc-dataset-collection permissive novel subsets",
+      "approx_tasks": null,
+      "license": "MIXED: 12 MIT, 4 Apache-2.0, 1 DbCL, 3 unspecified across 20 community subsets per NVIDIA audit",
+      "direct_grid_sft": "SUBSET_DEPENDENT",
+      "novelty_relative_to_sft139": "HIGH_FOR_NON_NVARC_NON_REARC_NON_CONCEPT_NON_MINI_SUBSETS",
+      "overlap_risk": "MIXED",
+      "priority": "P0",
+      "cpu_action": "MATERIALIZE_ONLY_PERMISSIVE_SUBSETS__SCHEMA_VALIDATE__DEDUP__TAG",
+      "gpu_action": "TRAIN_CANDIDATE_AFTER_FILTER",
+      "exclusions": [
+        "ARC-AGI-1/2 evaluation",
+        "ConceptARC",
+        "Mini-ARC",
+        "RE-ARC",
+        "known SFT139-old lineages",
+        "DbCL/unspecified until separately approved"
+      ]
+    },
+    {
+      "name": "NVIDIA Nemotron-RL-ARC-AGI-v1",
+      "approx_tasks": 10000,
+      "license": "CC BY 4.0 dataset card; seed-license mix documented",
+      "direct_grid_sft": true,
+      "novelty_relative_to_sft139": "NOT_A_PRIMARY_NEW_SOURCE; sampler over ARC-AGI-2, NVARC, arc-dataset-collection",
+      "overlap_risk": "VERY_HIGH unless lineage-filtered",
+      "priority": "P0_METADATA",
+      "cpu_action": "USE_AS_LINEAGE_DIFFICULTY_INDEX__IMPORT_ONLY_NOVEL_PERMISSIVE_COMMUNITY_ROWS",
+      "gpu_action": "DO_NOT_TRAIN_WHOLE_DATASET",
+      "exclusions": [
+        "validation 514",
+        "dataset_name=nvarc",
+        "ARC-AGI-2 evaluation",
+        "SFT139-old task IDs"
+      ]
+    },
+    {
+      "name": "NVIDIA Nemotron-SFT-ARC-AGI-v1",
+      "approx_unique_problems": 72980,
+      "successful_runs": 304491,
+      "license": "research/development dataset with seed and generating-model license notes",
+      "direct_grid_sft": false,
+      "novelty_relative_to_sft139": "SAME_SEED_POOL_AS_NEMOTRON_RL",
+      "overlap_risk": "VERY_HIGH",
+      "priority": "P1_METADATA",
+      "cpu_action": "USE_FOR_DIFFICULTY_SUCCESS_AND_REASONING_METADATA; NOT_PRIMARY_GRID_CORPUS",
+      "gpu_action": "NO_DIRECT_SFT139_COT_TRAINING"
+    },
+    {
+      "name": "SOAR soar_arc_train_5M",
+      "approx_records": 5000000,
+      "license": "MIT",
+      "direct_grid_sft": false,
+      "novelty_relative_to_sft139": "HIGH_PROGRAM_DIVERSITY; original-task + hindsight-relabelled synthetic mix",
+      "overlap_risk": "ORIGINAL_ARC_TASK_LEAKAGE_POSSIBLE; lineage filtering required",
+      "priority": "P1_TAGGER",
+      "cpu_action": "PROGRAM_AST_RULE_TAGGING__FAMILY_MINING__OPTIONAL_VERIFIED_GRID_RECONSTRUCTION",
+      "gpu_action": "NOT_DIRECT_GRID_SFT_IN_PHASE1"
+    },
+    {
+      "name": "Trelis arc-agi-2-all-100",
+      "records": 102322,
+      "unique_tasks": 1027,
+      "license": "Apache-2.0",
+      "direct_grid_sft": false,
+      "novelty_relative_to_sft139": "LOW_AS_TASK_SOURCE; HIGH_AS_PROGRAM_ANNOTATION",
+      "overlap_risk": "HIGH_TASK_OVERLAP_WITH_OFFICIAL_ARC_TRAIN",
+      "priority": "P1_TAGGER",
+      "cpu_action": "PROGRAM_AST_RULE_TAGGING_AND_FAILURE_FAMILY_LABELS",
+      "gpu_action": "NO_DIRECT_TRAINING"
+    },
+    {
+      "name": "Fraser arc-agi-synthetic",
+      "tasks": 4940,
+      "license": "NO_EXPLICIT_LICENSE FOUND IN DATASET CARD DURING SOURCE AUDIT",
+      "direct_grid_sft": true,
+      "novelty_relative_to_sft139": "LIKELY_HIGH",
+      "overlap_risk": "CROSS_TASK_NEAR_DUPLICATES ACKNOWLEDGED BY AUTHOR; canonical dedup required",
+      "priority": "P1_HOLD",
+      "cpu_action": "TAG_AND_DEDUP_OK; HOLD_FROM_TRAIN_POOL_PENDING_LICENSE",
+      "gpu_action": "NO_TRAINING_UNTIL_LICENSE_CLEAR"
+    },
+    {
+      "name": "GIFARC",
+      "tasks_public_hf": 10000,
+      "review_repo_tasks": 1614,
+      "license": "MIT repository; source GIF/third-party provenance requires review",
+      "direct_grid_sft": true,
+      "novelty_relative_to_sft139": "LIKELY_HIGH_ANALOGY_DISTRIBUTION",
+      "overlap_risk": "LOW_GRID_OVERLAP_EXPECTED; provenance risk higher than overlap risk",
+      "priority": "P2_EXPERIMENTAL",
+      "cpu_action": "OPTIONAL_TAG_DEDUP_AFTER_P0",
+      "gpu_action": "NOT_PHASE1_CORE"
+    },
+    {
+      "name": "P-ARC",
+      "tasks": 50,
+      "license": "HF card says other",
+      "direct_grid_sft": true,
+      "novelty_relative_to_sft139": "HIGH_BUT_SMALL",
+      "overlap_risk": "LOW",
+      "priority": "HOLD",
+      "cpu_action": "OPTIONAL_DIAGNOSTIC_ONLY",
+      "gpu_action": "NO_TRAINING_PENDING_LICENSE"
+    },
+    {
+      "name": "ARC-AGI-2 solution/abstraction atlases",
+      "tasks": 1120,
+      "license": "SOURCE_SPECIFIC",
+      "direct_grid_sft": false,
+      "novelty_relative_to_sft139": "ANNOTATION_ONLY",
+      "overlap_risk": "CONTAINS_PUBLIC_EVALUATION",
+      "priority": "TAGGING_ONLY",
+      "cpu_action": "ALLOW_ONLY_FOR_TRAINING-TASK FAMILY ANNOTATION; STRICT EVAL ID BLACKLIST",
+      "gpu_action": "NEVER_TRAIN_ON_PUBLIC_EVAL SOLUTIONS"
+    }
+  ],
+  "phase1_train_pool_rule": "Only P0 direct-grid sources that survive license, schema, eval blacklist, old-lineage exclusion, exact canonical dedup, augmentation-equivalence dedup, and family tagging.",
+  "phase1_holdout_rule": "Whole source/family groups held out before augmentation. Public ARC-AGI-2 evaluation is not used for model selection."
+}
