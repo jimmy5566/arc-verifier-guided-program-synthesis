@@ -10,7 +10,7 @@ from sklearn.metrics import roc_auc_score, average_precision_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-ROOT=Path(__file__).resolve().parents[3]
+ROOT=Path(__file__).resolve().parents[2]
 BASE=ROOT/"analysis/top5_passive_hidden_state_micro12_v1/gate1_smoke_hidden_capture"
 FRONT=ROOT/"analysis/search_order_frontier_telemetry_micro12_v1/gate1_smoke_v7/FRONTIER_WORK_ITEMS"
 IDS=["1818057f_o0","36a08778_o1","80a900e0_o0"]
