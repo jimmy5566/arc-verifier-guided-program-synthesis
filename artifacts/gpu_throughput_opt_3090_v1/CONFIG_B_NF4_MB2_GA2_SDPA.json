@@ -1,0 +1,36 @@
+{
+  "run_config": {
+    "attention_backend": "sdpa",
+    "grad_accumulation": 2,
+    "gradient_checkpointing": true,
+    "micro_batch": 2,
+    "name": "B_NF4_MB2_GA2_SDPA",
+    "precision": "NF4",
+    "quantization": "NF4_DOUBLE_QUANT"
+  },
+  "scientific_contract": {
+    "attention_backend": "sdpa",
+    "context": 8704,
+    "effective_batch": 4,
+    "grad_accumulation": 2,
+    "gradient_checkpointing": true,
+    "learning_rate": 5e-05,
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "lora_rank": 64,
+    "micro_batch": 2,
+    "name": "B_NF4_MB2_GA2_SDPA",
+    "precision": "NF4",
+    "quantization": "NF4_DOUBLE_QUANT",
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ]
+  },
+  "status": "FROZEN"
+}

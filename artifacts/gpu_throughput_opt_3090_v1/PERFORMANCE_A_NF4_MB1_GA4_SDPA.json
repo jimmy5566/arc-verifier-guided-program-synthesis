@@ -1,0 +1,91 @@
+{
+  "actual_transformer_tokens": 130228,
+  "attention_backend": "sdpa",
+  "backward_seconds": 316.0360215557739,
+  "config": {
+    "attention_backend": "sdpa",
+    "context": 8704,
+    "effective_batch": 4,
+    "grad_accumulation": 4,
+    "gradient_checkpointing": true,
+    "learning_rate": 5e-05,
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "lora_rank": 64,
+    "micro_batch": 1,
+    "name": "A_NF4_MB1_GA4_SDPA",
+    "precision": "NF4",
+    "quantization": "NF4_DOUBLE_QUANT",
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ]
+  },
+  "dataloader_wait_seconds": 0.03797435387969017,
+  "final_loss": 0.5060160904705064,
+  "finite_losses": true,
+  "forward_seconds": 87.16209455113858,
+  "initial_loss": 0.6136211360691347,
+  "max_loss": 1.0651399848068992,
+  "mean_loss": 0.5878675900633608,
+  "microsteps": 40,
+  "min_loss": 0.3690404639986683,
+  "mode": "performance",
+  "optimizer_seconds": 0.5876301759853959,
+  "optimizer_steps": 10,
+  "parameter_partition": {
+    "base_trainable_parameters": 0,
+    "total_parameters": 1949056512,
+    "trainable_parameters": 132120576
+  },
+  "peak_vram_allocated_bytes": 9682959872,
+  "peak_vram_reserved_bytes": 11364466688,
+  "raw_episode_tokens": 130228,
+  "seconds_per_microstep": 10.096358781703747,
+  "seconds_per_optimizer_step": 40.38543512681499,
+  "status": "PASS",
+  "supervised_token_loss_rate": 0.0,
+  "supervised_tokens": 65195,
+  "supervised_tokens_per_second": 161.43196128822203,
+  "telemetry": {
+    "samples": 202,
+    "summary": {
+      "memory_used_mb": {
+        "max": 11442.0,
+        "mean": 11398.712871287129
+      },
+      "power_w": {
+        "max": 350.24,
+        "mean": 345.18113861386144
+      },
+      "temperature_c": {
+        "max": 71.0,
+        "mean": 69.67821782178218
+      },
+      "utilization_gpu_pct": {
+        "max": 100.0,
+        "mean": 99.12871287128714
+      },
+      "utilization_memory_pct": {
+        "max": 73.0,
+        "mean": 49.02970297029703
+      }
+    }
+  },
+  "tokens_per_second": 322.4627878616854,
+  "total_vram_bytes": 25295323136,
+  "transformer_tokens_per_second": 322.4627878616854,
+  "vram": {
+    "classification": "SAFE",
+    "headroom_bytes": 13930856448,
+    "headroom_gib": 12.97412109375,
+    "headroom_percentage": 55.07285427073186
+  },
+  "wall_seconds": 403.8543512681499,
+  "warmup_optimizer_steps": 3
+}

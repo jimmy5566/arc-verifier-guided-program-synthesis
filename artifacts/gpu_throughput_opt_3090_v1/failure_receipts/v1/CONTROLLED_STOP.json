@@ -1,0 +1,8 @@
+{
+  "classification": "IMPLEMENTATION_GRADIENT_CHECKPOINT_VARIANT_DRIFT",
+  "gold_or_forbidden_data_accessed": false,
+  "long_training_started": false,
+  "reason": "non-reentrant checkpoint path differed from frozen reentrant baseline and produced non-comparable OOM",
+  "scientific_result_valid": false,
+  "status": "CONTROLLED_STOP"
+}

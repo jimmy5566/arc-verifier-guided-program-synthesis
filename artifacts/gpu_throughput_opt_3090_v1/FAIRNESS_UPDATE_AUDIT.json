@@ -1,0 +1,23 @@
+{
+  "comparisons": {
+    "A_NF4_MB1_GA4_SDPA": {
+      "normalized_sample_update_difference": 0.0,
+      "same_initialization": true,
+      "status": "PASS"
+    },
+    "B_NF4_MB2_GA2_SDPA": {
+      "normalized_sample_update_difference": 0.09957884435032999,
+      "same_initialization": true,
+      "sample_update_norm_ratio": 1.0001242721294448,
+      "status": "PASS",
+      "threshold": 0.25
+    },
+    "C_NF4_MB4_GA1_SDPA": {
+      "reason": "OOM_AT_MB4",
+      "status": "NOT_RUN"
+    }
+  },
+  "reference": "A_NF4_MB1_GA4_SDPA",
+  "same_effective_episode_groups": true,
+  "status": "PASS"
+}

@@ -1,0 +1,5 @@
+{
+  "attention_backend": "sdpa",
+  "loss": 0.6769086718559265,
+  "status": "PASS"
+}

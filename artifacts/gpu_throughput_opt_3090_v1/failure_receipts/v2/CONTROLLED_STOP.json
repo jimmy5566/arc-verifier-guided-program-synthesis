@@ -1,0 +1,11 @@
+{
+  "classification": "IMPLEMENTATION_ATTENTION_MASK_PATH_DRIFT",
+  "gold_accessed": false,
+  "long_training_started": false,
+  "reason": "The throughput harness passed an explicit all-ones attention_mask for unpadded MB1 samples, unlike the frozen benchmark baseline. This selected a non-comparable SDPA memory path and caused ~21.82 GiB OOM behavior.",
+  "rerun_directory_reuse": false,
+  "scientific_configuration_changed": false,
+  "scientific_result_valid": false,
+  "status": "CONTROLLED_STOP",
+  "timestamp_unix": 1791304681.1918607
+}

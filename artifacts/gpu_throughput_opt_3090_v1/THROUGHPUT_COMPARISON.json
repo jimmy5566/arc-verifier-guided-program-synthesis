@@ -1,0 +1,143 @@
+{
+  "baseline_A_tokens_per_second": 322.4627878616854,
+  "baseline_previous_tokens_per_second": 326.53989841364546,
+  "best": "D_BF16_MB1_GA4_SDPA",
+  "configs": [
+    {
+      "actual_transformer_tokens_per_second": 322.4627878616854,
+      "attention_backend": "sdpa",
+      "checkpoint_reload_pass": true,
+      "config": "A_NF4_MB1_GA4_SDPA",
+      "data_access_policy_pass": true,
+      "effective_batch": 4,
+      "finite_losses": true,
+      "gpu_utilization": {
+        "max": 100.0,
+        "mean": 99.12871287128714
+      },
+      "gradient_accumulation": 4,
+      "gradient_checkpointing": true,
+      "gradient_semantics_pass": true,
+      "microbatch": 1,
+      "peak_vram_allocated_bytes": 9682959872,
+      "peak_vram_reserved_bytes": 11364466688,
+      "power": {
+        "max": 350.24,
+        "mean": 345.18113861386144
+      },
+      "precision": "NF4",
+      "quantization": "NF4_DOUBLE_QUANT",
+      "seconds_per_optimizer_step": 40.38543512681499,
+      "speedup_vs_A": 1.0,
+      "status": "PASS",
+      "supervised_token_loss_rate": 0.0,
+      "temperature": {
+        "max": 71.0,
+        "mean": 69.67821782178218
+      },
+      "tokens_per_second": 322.4627878616854,
+      "vram": {
+        "classification": "SAFE",
+        "headroom_bytes": 13930856448,
+        "headroom_gib": 12.97412109375,
+        "headroom_percentage": 55.07285427073186
+      }
+    },
+    {
+      "actual_transformer_tokens_per_second": 327.35917777370656,
+      "attention_backend": "sdpa",
+      "checkpoint_reload_pass": true,
+      "config": "B_NF4_MB2_GA2_SDPA",
+      "data_access_policy_pass": true,
+      "effective_batch": 4,
+      "finite_losses": true,
+      "gpu_utilization": {
+        "max": 100.0,
+        "mean": 99.90849673202614
+      },
+      "gradient_accumulation": 2,
+      "gradient_checkpointing": true,
+      "gradient_semantics_pass": true,
+      "microbatch": 2,
+      "peak_vram_allocated_bytes": 16364384768,
+      "peak_vram_reserved_bytes": 19618856960,
+      "power": {
+        "max": 350.98,
+        "mean": 345.55696078431356
+      },
+      "precision": "NF4",
+      "quantization": "NF4_DOUBLE_QUANT",
+      "seconds_per_optimizer_step": 61.10230400757864,
+      "speedup_vs_A": 0.660947828118002,
+      "status": "PASS",
+      "supervised_token_loss_rate": 0.0,
+      "temperature": {
+        "max": 72.0,
+        "mean": 70.48692810457516
+      },
+      "tokens_per_second": 213.13107928605697,
+      "vram": {
+        "classification": "SAFE",
+        "headroom_bytes": 5676466176,
+        "headroom_gib": 5.28662109375,
+        "headroom_percentage": 22.440773519597073
+      }
+    },
+    {
+      "config": "C_NF4_MB4_GA1_SDPA",
+      "status": "OOM_AT_MB4"
+    },
+    {
+      "actual_transformer_tokens_per_second": 538.5522728098276,
+      "attention_backend": "sdpa",
+      "checkpoint_reload_pass": true,
+      "config": "D_BF16_MB1_GA4_SDPA",
+      "data_access_policy_pass": true,
+      "effective_batch": 4,
+      "finite_losses": true,
+      "gpu_utilization": {
+        "max": 100.0,
+        "mean": 98.18181818181819
+      },
+      "gradient_accumulation": 4,
+      "gradient_checkpointing": true,
+      "gradient_semantics_pass": true,
+      "microbatch": 1,
+      "peak_vram_allocated_bytes": 12746331648,
+      "peak_vram_reserved_bytes": 14556332032,
+      "power": {
+        "max": 346.16,
+        "mean": 331.87867768595027
+      },
+      "precision": "BF16",
+      "quantization": "NONE",
+      "seconds_per_optimizer_step": 24.181125319655983,
+      "speedup_vs_A": 1.6701222376109641,
+      "status": "PASS",
+      "supervised_token_loss_rate": 0.0,
+      "temperature": {
+        "max": 71.0,
+        "mean": 68.79338842975207
+      },
+      "tokens_per_second": 538.5522728098276,
+      "vram": {
+        "classification": "SAFE",
+        "headroom_bytes": 10738991104,
+        "headroom_gib": 10.00146484375,
+        "headroom_percentage": 42.45445312661927
+      }
+    },
+    {
+      "config": "E_BEST_NF4_FLASH_ATTN2",
+      "status": "FLASH_ATTN_2_NOT_AVAILABLE_IN_FROZEN_ENVIRONMENT"
+    },
+    {
+      "config": "F_BEST_CONFIG_NO_GRADIENT_CHECKPOINTING",
+      "status": "OOM"
+    }
+  ],
+  "loss_not_used_for_selection": true,
+  "nf4_bf16_quality_comparison_not_established": true,
+  "selection_policy": "FASTEST_SAFE_STABLE_ZERO_TRUNCATION_NO_FORBIDDEN_ACCESS",
+  "status": "PASS"
+}

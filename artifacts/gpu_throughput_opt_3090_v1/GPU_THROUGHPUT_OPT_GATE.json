@@ -1,0 +1,8 @@
+{
+  "best": "D_BF16_MB1_GA4_SDPA",
+  "data_access_policy_pass": true,
+  "long_training_started": false,
+  "maximum_measured_optimizer_steps_allowed": 15,
+  "measured_optimizer_steps_per_successful_config": 10,
+  "status": "PASS"
+}
