@@ -1,0 +1,1 @@
+{"accepted_task_count":0,"blocking_reason":"NO_ELIGIBLE_TRAINING_TASKS_AFTER_PROJECT_WIDE_LEAKAGE_EXCLUSION","excluded_task_count":1000,"exclusion_report":"LEAKAGE_EXCLUSION_REPORT.json","gpu_training_started":false,"raw_task_count":1000,"status":"FAIL_NOT_READY"}
