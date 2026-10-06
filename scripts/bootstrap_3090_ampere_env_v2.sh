@@ -10,6 +10,7 @@ REPO_URL=${ARC2_REPO_URL:-https://github.com/jimmy5566/arc-verifier-guided-progr
 SOURCE_REF=${ARC2_SOURCE_REF:?Set ARC2_SOURCE_REF to an exact Git SHA}
 REQUIRED_GPUS=${ARC2_REQUIRED_GPUS:-1}
 ENV_ID=3090-ampere-env-v2
+PYTEST_VERSION=8.3.5
 WHEEL_TAR=$GLOBAL_ROOT/wheelhouse/wheelhouse-py311-cu128-v1.tar
 WHEEL_REQ=$GLOBAL_ROOT/wheelhouse/requirements-py311-cu128-v1.txt
 XFORMERS_WHEEL=$GLOBAL_ROOT/wheels/xformers-0.0.33+5d4b92a.d20260925-cp39-abi3-linux_x86_64.whl
@@ -59,6 +60,20 @@ if [[ ! -d "$MODEL" ]]; then
   mv "$stage" "$MODEL"
 fi
 [[ -x "$VENV/bin/python" ]] || fail local_venv_missing
+
+# Gate-0 and runtime-control validation are part of the initialized ARC2
+# environment. pytest is pinned because it is not included in the immutable
+# CUDA wheelhouse above; this install is deliberately outside the scientific
+# model/runtime dependency set.
+"$VENV/bin/python" -m pip install --disable-pip-version-check --no-input "pytest==$PYTEST_VERSION"
+"$VENV/bin/python" - "$PYTEST_VERSION" <<'PY'
+import importlib.metadata, sys
+expected = sys.argv[1]
+actual = importlib.metadata.version("pytest")
+if actual != expected:
+    raise SystemExit(f"PYTEST_VERSION_MISMATCH={actual}!={expected}")
+print(f"PYTEST_READY={actual}")
+PY
 
 "$VENV/bin/python" - "$MODEL/model_manifest.json" "$MODEL" <<'PY'
 import hashlib, json, sys

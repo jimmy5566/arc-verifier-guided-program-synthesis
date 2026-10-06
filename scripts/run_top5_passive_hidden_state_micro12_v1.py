@@ -279,6 +279,7 @@ def runtime_control_source_diff() -> dict[str, Any]:
     ).stdout.splitlines()
     allowed = {
         ".github/workflows/top5_hidden_state_gate0.yml",
+        "scripts/bootstrap_3090_ampere_env_v2.sh",
         "scripts/run_top5_passive_hidden_state_micro12_v1.py",
         "tests/test_top5_passive_hidden_runtime_control.py",
         "tests/test_search_order.py",
