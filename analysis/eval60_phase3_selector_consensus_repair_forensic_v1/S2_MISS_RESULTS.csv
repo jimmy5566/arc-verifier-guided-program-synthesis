@@ -1,0 +1,9 @@
+output_id,gold_s2_rank,candidate_count,c1_existing_rank,c1_exact_gold,hypothetical_delta
+142ca369:o0,14,53,2,False,UNCHANGED
+20270e3b:o0,129,374,1,False,UNCHANGED
+332f06d7:o0,10,41,1,False,UNCHANGED
+58490d8a:o0,8,202,5,False,UNCHANGED
+7491f3cf:o0,32,79,,False,UNCHANGED
+97d7923e:o0,42,81,1,False,UNCHANGED
+b5ca7ac4:o0,4,37,4,True,FIX
+b6f77b65:o0,11,252,5,False,UNCHANGED
