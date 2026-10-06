@@ -1,0 +1,8 @@
+{
+  "artifact": "SEARCH_ORDER_NLL_OVERRIDE_V1_PROVENANCE",
+  "frozen_data_commit": "2da4ef598cc8e792ddab5b9f9d85036e1b0792ce",
+  "preregistration_commit": "16c460d61c5130248e64060b44f91aa8e9f728df",
+  "analysis": "12-way LOOTO; fixed 0.20 trust threshold; relative pairwise Top-5 alternative selector",
+  "gold_use": "post-freeze development labels only",
+  "gpu_used": false
+}
