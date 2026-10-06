@@ -182,14 +182,14 @@ def build_model(model_path: Path, config: RunConfig, adapter_path: Path | None =
         model = prepare_model_for_kbit_training(
             model,
             use_gradient_checkpointing=config.gradient_checkpointing,
-            gradient_checkpointing_kwargs={"use_reentrant": False},
+            gradient_checkpointing_kwargs={"use_reentrant": True},
         )
     else:
         for parameter in model.parameters():
             parameter.requires_grad = False
         if config.gradient_checkpointing:
             model.enable_input_require_grads()
-            model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+            model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": True})
     if adapter_path is None:
         model = get_peft_model(model, LoraConfig(
             r=64,
