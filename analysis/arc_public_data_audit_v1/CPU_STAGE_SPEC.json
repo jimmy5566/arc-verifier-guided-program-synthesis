@@ -1,0 +1,83 @@
+{
+  "artifact": "ARC_CPU_DATA_STAGE_V1",
+  "status": "READY_FOR_IMPLEMENTATION",
+  "hardware_assumption": "single i9-12900H initially; later high-concurrency run may use all available CPU when user chooses",
+  "source_order": [
+    "ARC-Heavy",
+    "arc-dataset-collection permissive novel subsets",
+    "Nemotron-RL metadata/index",
+    "Trelis programs for tagging",
+    "SOAR programs for taxonomy expansion",
+    "Fraser tag-only until license resolved",
+    "GIFARC optional after P0"
+  ],
+  "passes": [
+    {
+      "id": "C0",
+      "name": "source_manifest",
+      "purpose": "download/version/license/provenance hashes; no grid work"
+    },
+    {
+      "id": "C1",
+      "name": "schema_normalization",
+      "purpose": "convert every eligible task to canonical ARC {train,test} grid schema and reject invalid grids"
+    },
+    {
+      "id": "C2",
+      "name": "eval_blacklist",
+      "purpose": "remove ARC-AGI-1/2 public evaluation IDs and known direct descendants where lineage is available"
+    },
+    {
+      "id": "C3",
+      "name": "old_lineage_filter",
+      "purpose": "remove SFT139-old sources and NVARC lineages before expensive dedup"
+    },
+    {
+      "id": "C4",
+      "name": "exact_task_hash",
+      "purpose": "deduplicate byte/canonical exact task duplicates"
+    },
+    {
+      "id": "C5",
+      "name": "augmentation_canonical_hash",
+      "purpose": "deduplicate D4, color-permutation, and train-pair-order equivalents"
+    },
+    {
+      "id": "C6",
+      "name": "program_family_tagging",
+      "purpose": "derive rule/family labels from source metadata and executable-program AST where available"
+    },
+    {
+      "id": "C7",
+      "name": "heuristic_grid_tags",
+      "purpose": "add object/count/topology/symmetry/resize/color/geometry features for tasks without programs"
+    },
+    {
+      "id": "C8",
+      "name": "family_split",
+      "purpose": "freeze whole-family train/val/test split before augmentation"
+    },
+    {
+      "id": "C9",
+      "name": "curriculum_manifest",
+      "purpose": "emit candidate new-data pool plus old-replay pool and per-family counts"
+    }
+  ],
+  "required_outputs": [
+    "SOURCE_MANIFEST.json",
+    "LICENSE_AUDIT.csv",
+    "NORMALIZED_TASKS.parquet",
+    "REJECTION_LEDGER.parquet",
+    "DEDUP_GROUPS.parquet",
+    "TASK_TAGS.parquet",
+    "FAMILY_COUNTS.csv",
+    "TRAIN_VAL_TEST_MANIFEST.json",
+    "HASHES.json",
+    "REPORT.md"
+  ],
+  "gpu_gate": {
+    "condition": "CPU stage complete and hashes PASS",
+    "initial_train_target": "QLoRA continued-SFT pilot on 5k-10k novel tasks after family balancing, with 20-30% old replay",
+    "first_gpu_job": "M0 clean family diagnostic before any training"
+  }
+}
