@@ -1,0 +1,851 @@
+{
+  "actual_pool_counts": {
+    "POOL_NOVEL_V1_1": 69,
+    "POOL_REPLAY_V2_1": 23
+  },
+  "dataset_fingerprint": "3b040b3fcd45d84361aa5286c3b762e268a5f7c98dae5b3c87ddeb16c5105c82",
+  "draws": 92,
+  "exclusion_counts": {
+    "HARD_EXCLUDE": 0,
+    "QUARANTINE": 0,
+    "holdout": 0,
+    "validation": 0
+  },
+  "pool_weights": {
+    "POOL_NOVEL_V1_1": 0.75,
+    "POOL_REPLAY_V2_1": 0.25
+  },
+  "sampler": "POOL_THEN_FAMILY_UNIFORM_THEN_EPISODE",
+  "schedule": [
+    {
+      "generator_family": "official_arc_agi_2:758abdf0",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:758abdf0:native-full-task-v2",
+      "schedule_index": 0,
+      "sequence_length": 844,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 422
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:mirror+rotation+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-056058:native-source-episode-v1",
+      "schedule_index": 1,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "1d_arc:1d_recolor_oe",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_recolor_oe_35:native-source-episode-v1",
+      "schedule_index": 2,
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144
+    },
+    {
+      "generator_family": "miniarc:parting_cross_l6acqil00ywf88hqnrpm",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "miniarc:parting_cross_l6acqil00ywf88hqnrpm:native-full-task-v2",
+      "schedule_index": 3,
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128
+    },
+    {
+      "generator_family": "1d_arc:1d_hollow",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_hollow_46:native-source-episode-v1",
+      "schedule_index": 4,
+      "sequence_length": 232,
+      "source": "1d_arc",
+      "supervised_token_count": 116
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:mirror+rotation+translation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-017367:native-source-episode-v1",
+      "schedule_index": 5,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "1d_arc:1d_recolor_cnt",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_recolor_cnt_1:native-source-episode-v1",
+      "schedule_index": 6,
+      "sequence_length": 256,
+      "source": "1d_arc",
+      "supervised_token_count": 128
+    },
+    {
+      "generator_family": "1d_arc:1d_move_2p_dp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_move_2p_dp_4:native-source-episode-v1",
+      "schedule_index": 7,
+      "sequence_length": 216,
+      "source": "1d_arc",
+      "supervised_token_count": 108
+    },
+    {
+      "generator_family": "1d_arc:1d_hollow",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_hollow_32:native-source-episode-v1",
+      "schedule_index": 8,
+      "sequence_length": 240,
+      "source": "1d_arc",
+      "supervised_token_count": 120
+    },
+    {
+      "generator_family": "conceptarc:CleanUp",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "conceptarc:CleanUp5:native-full-task-v2",
+      "schedule_index": 9,
+      "sequence_length": 1288,
+      "source": "conceptarc",
+      "supervised_token_count": 644
+    },
+    {
+      "generator_family": "1d_arc:1d_pcopy_1c",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_pcopy_1c_17:native-source-episode-v1",
+      "schedule_index": 10,
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140
+    },
+    {
+      "generator_family": "1d_arc:1d_denoising_mc",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_denoising_mc_46:native-source-episode-v1",
+      "schedule_index": 11,
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144
+    },
+    {
+      "generator_family": "1d_arc:1d_fill",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_fill_6:native-source-episode-v1",
+      "schedule_index": 12,
+      "sequence_length": 240,
+      "source": "1d_arc",
+      "supervised_token_count": 120
+    },
+    {
+      "generator_family": "1d_arc:1d_denoising_mc",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_denoising_mc_10:native-source-episode-v1",
+      "schedule_index": 13,
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:mirror+set_color+translation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-067914:native-source-episode-v1",
+      "schedule_index": 14,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+set_color+translation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-055149:native-source-episode-v1",
+      "schedule_index": 15,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "1d_arc:1d_flip",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_flip_30:native-source-episode-v1",
+      "schedule_index": 16,
+      "sequence_length": 184,
+      "source": "1d_arc",
+      "supervised_token_count": 92
+    },
+    {
+      "generator_family": "1d_arc:1d_denoising_1c",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_denoising_1c_7:native-source-episode-v1",
+      "schedule_index": 17,
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140
+    },
+    {
+      "generator_family": "rearc:9dfd6313",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "rearc:9dfd6313:pair-bank-episode-0020",
+      "schedule_index": 18,
+      "sequence_length": 1612,
+      "source": "rearc",
+      "supervised_token_count": 806
+    },
+    {
+      "generator_family": "official_arc_agi_2:694f12f3",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:694f12f3:native-full-task-v2",
+      "schedule_index": 19,
+      "sequence_length": 672,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 336
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+mirror+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-068807:native-source-episode-v1",
+      "schedule_index": 20,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+rotation+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-032776:native-source-episode-v1",
+      "schedule_index": 21,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:mirror+set_color+translation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-041804:native-source-episode-v1",
+      "schedule_index": 22,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "miniarc:hideandseek_l6af8co8cvsr8u1psxt",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "miniarc:hideandseek_l6af8co8cvsr8u1psxt:native-full-task-v2",
+      "schedule_index": 23,
+      "sequence_length": 320,
+      "source": "miniarc",
+      "supervised_token_count": 160
+    },
+    {
+      "generator_family": "1d_arc:1d_recolor_cnt",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_recolor_cnt_45:native-source-episode-v1",
+      "schedule_index": 24,
+      "sequence_length": 240,
+      "source": "1d_arc",
+      "supervised_token_count": 120
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:mirror+rotation+translation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-048408:native-source-episode-v1",
+      "schedule_index": 25,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+rotation+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-064124:native-source-episode-v1",
+      "schedule_index": 26,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "1d_arc:1d_scale_dp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_scale_dp_13:native-source-episode-v1",
+      "schedule_index": 27,
+      "sequence_length": 184,
+      "source": "1d_arc",
+      "supervised_token_count": 92
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+rotation+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-068582:native-source-episode-v1",
+      "schedule_index": 28,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "official_arc_agi_2:444801d8",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:444801d8:native-full-task-v2",
+      "schedule_index": 29,
+      "sequence_length": 896,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 448
+    },
+    {
+      "generator_family": "official_arc_agi_2:60c09cac",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:60c09cac:native-full-task-v2",
+      "schedule_index": 30,
+      "sequence_length": 298,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 230
+    },
+    {
+      "generator_family": "1d_arc:1d_scale_dp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_scale_dp_33:native-source-episode-v1",
+      "schedule_index": 31,
+      "sequence_length": 168,
+      "source": "1d_arc",
+      "supervised_token_count": 84
+    },
+    {
+      "generator_family": "1d_arc:1d_recolor_cmp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_recolor_cmp_14:native-source-episode-v1",
+      "schedule_index": 32,
+      "sequence_length": 264,
+      "source": "1d_arc",
+      "supervised_token_count": 132
+    },
+    {
+      "generator_family": "official_arc_agi_2:5e6bbc0b",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:5e6bbc0b:native-full-task-v2",
+      "schedule_index": 33,
+      "sequence_length": 358,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 179
+    },
+    {
+      "generator_family": "1d_arc:1d_hollow",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_hollow_28:native-source-episode-v1",
+      "schedule_index": 34,
+      "sequence_length": 96,
+      "source": "1d_arc",
+      "supervised_token_count": 48
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+mirror+rotation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-070189:native-source-episode-v1",
+      "schedule_index": 35,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:rotation+set_color+translation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-001085:native-source-episode-v1",
+      "schedule_index": 36,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "miniarc:Color_corners_of_the_rectangle_l6ab1kfb2tyukiwz069",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "miniarc:Color_corners_of_the_rectangle_l6ab1kfb2tyukiwz069:native-full-task-v2",
+      "schedule_index": 37,
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128
+    },
+    {
+      "generator_family": "official_arc_agi_2:896d5239",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:896d5239:native-full-task-v2",
+      "schedule_index": 38,
+      "sequence_length": 1824,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 912
+    },
+    {
+      "generator_family": "1d_arc:1d_move_2p_dp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_move_2p_dp_11:native-source-episode-v1",
+      "schedule_index": 39,
+      "sequence_length": 216,
+      "source": "1d_arc",
+      "supervised_token_count": 108
+    },
+    {
+      "generator_family": "1d_arc:1d_move_3p",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_move_3p_41:native-source-episode-v1",
+      "schedule_index": 40,
+      "sequence_length": 136,
+      "source": "1d_arc",
+      "supervised_token_count": 68
+    },
+    {
+      "generator_family": "1d_arc:1d_move_1p",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_move_1p_44:native-source-episode-v1",
+      "schedule_index": 41,
+      "sequence_length": 80,
+      "source": "1d_arc",
+      "supervised_token_count": 40
+    },
+    {
+      "generator_family": "1d_arc:1d_recolor_cmp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_recolor_cmp_19:native-source-episode-v1",
+      "schedule_index": 42,
+      "sequence_length": 240,
+      "source": "1d_arc",
+      "supervised_token_count": 120
+    },
+    {
+      "generator_family": "official_arc_agi_2:ad173014",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:ad173014:native-full-task-v2",
+      "schedule_index": 43,
+      "sequence_length": 4820,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 2410
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:mirror+rotation+translation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-048452:native-source-episode-v1",
+      "schedule_index": 44,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+rotation+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-090125:native-source-episode-v1",
+      "schedule_index": 45,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+mirror+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-034852:native-source-episode-v1",
+      "schedule_index": 46,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "1d_arc:1d_move_3p",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_move_3p_16:native-source-episode-v1",
+      "schedule_index": 47,
+      "sequence_length": 200,
+      "source": "1d_arc",
+      "supervised_token_count": 100
+    },
+    {
+      "generator_family": "1d_arc:1d_scale_dp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_scale_dp_36:native-source-episode-v1",
+      "schedule_index": 48,
+      "sequence_length": 144,
+      "source": "1d_arc",
+      "supervised_token_count": 72
+    },
+    {
+      "generator_family": "1d_arc:1d_scale_dp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_scale_dp_36:native-source-episode-v1",
+      "schedule_index": 49,
+      "sequence_length": 144,
+      "source": "1d_arc",
+      "supervised_token_count": 72
+    },
+    {
+      "generator_family": "1d_arc:1d_pcopy_1c",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_pcopy_1c_39:native-source-episode-v1",
+      "schedule_index": 50,
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140
+    },
+    {
+      "generator_family": "rearc:447fd412",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "rearc:447fd412:pair-bank-episode-0052",
+      "schedule_index": 51,
+      "sequence_length": 5140,
+      "source": "rearc",
+      "supervised_token_count": 2570
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:mirror+set_color+translation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-011102:native-source-episode-v1",
+      "schedule_index": 52,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "1d_arc:1d_denoising_1c",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_denoising_1c_16:native-source-episode-v1",
+      "schedule_index": 53,
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144
+    },
+    {
+      "generator_family": "1d_arc:1d_recolor_oe",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_recolor_oe_3:native-source-episode-v1",
+      "schedule_index": 54,
+      "sequence_length": 136,
+      "source": "1d_arc",
+      "supervised_token_count": 68
+    },
+    {
+      "generator_family": "1d_arc:1d_move_2p_dp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_move_2p_dp_11:native-source-episode-v1",
+      "schedule_index": 55,
+      "sequence_length": 216,
+      "source": "1d_arc",
+      "supervised_token_count": 108
+    },
+    {
+      "generator_family": "official_arc_agi_2:92e50de0",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:92e50de0:native-full-task-v2",
+      "schedule_index": 56,
+      "sequence_length": 5672,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 2836
+    },
+    {
+      "generator_family": "1d_arc:1d_recolor_oe",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_recolor_oe_21:native-source-episode-v1",
+      "schedule_index": 57,
+      "sequence_length": 192,
+      "source": "1d_arc",
+      "supervised_token_count": 96
+    },
+    {
+      "generator_family": "official_arc_agi_2:6a980be1",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:6a980be1:native-full-task-v2",
+      "schedule_index": 58,
+      "sequence_length": 2636,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 1318
+    },
+    {
+      "generator_family": "official_arc_agi_2:ba26e723",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:ba26e723:native-full-task-v2",
+      "schedule_index": 59,
+      "sequence_length": 516,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 258
+    },
+    {
+      "generator_family": "rearc:4522001f",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "rearc:4522001f:pair-bank-episode-0034",
+      "schedule_index": 60,
+      "sequence_length": 2414,
+      "source": "rearc",
+      "supervised_token_count": 2138
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:rotation+set_color+translation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-092894:native-source-episode-v1",
+      "schedule_index": 61,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:rotation+set_color+translation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-082647:native-source-episode-v1",
+      "schedule_index": 62,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+mirror+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-008767:native-source-episode-v1",
+      "schedule_index": 63,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "1d_arc:1d_flip",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_flip_25:native-source-episode-v1",
+      "schedule_index": 64,
+      "sequence_length": 184,
+      "source": "1d_arc",
+      "supervised_token_count": 92
+    },
+    {
+      "generator_family": "1d_arc:1d_move_dp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_move_dp_2:native-source-episode-v1",
+      "schedule_index": 65,
+      "sequence_length": 264,
+      "source": "1d_arc",
+      "supervised_token_count": 132
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+mirror+rotation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-033971:native-source-episode-v1",
+      "schedule_index": 66,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:mirror+rotation+translation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-048890:native-source-episode-v1",
+      "schedule_index": 67,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "rearc:f25ffba3",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "rearc:f25ffba3:pair-bank-episode-0025",
+      "schedule_index": 68,
+      "sequence_length": 3506,
+      "source": "rearc",
+      "supervised_token_count": 1753
+    },
+    {
+      "generator_family": "1d_arc:1d_denoising_mc",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_denoising_mc_29:native-source-episode-v1",
+      "schedule_index": 69,
+      "sequence_length": 288,
+      "source": "1d_arc",
+      "supervised_token_count": 144
+    },
+    {
+      "generator_family": "1d_arc:1d_fill",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_fill_10:native-source-episode-v1",
+      "schedule_index": 70,
+      "sequence_length": 224,
+      "source": "1d_arc",
+      "supervised_token_count": 112
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:mirror+set_color+translation",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-081909:native-source-episode-v1",
+      "schedule_index": 71,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "rearc:a3325580",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "rearc:a3325580:pair-bank-episode-0022",
+      "schedule_index": 72,
+      "sequence_length": 2983,
+      "source": "rearc",
+      "supervised_token_count": 225
+    },
+    {
+      "generator_family": "1d_arc:1d_move_2p_dp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_move_2p_dp_26:native-source-episode-v1",
+      "schedule_index": 73,
+      "sequence_length": 264,
+      "source": "1d_arc",
+      "supervised_token_count": 132
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:mirror+rotation+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-034041:native-source-episode-v1",
+      "schedule_index": 74,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "official_arc_agi_2:d255d7a7",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:d255d7a7:native-full-task-v2",
+      "schedule_index": 75,
+      "sequence_length": 1964,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 982
+    },
+    {
+      "generator_family": "1d_arc:1d_hollow",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_hollow_46:native-source-episode-v1",
+      "schedule_index": 76,
+      "sequence_length": 232,
+      "source": "1d_arc",
+      "supervised_token_count": 116
+    },
+    {
+      "generator_family": "1d_arc:1d_denoising_mc",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_denoising_mc_33:native-source-episode-v1",
+      "schedule_index": 77,
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+rotation+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-062658:native-source-episode-v1",
+      "schedule_index": 78,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "1d_arc:1d_fill",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_fill_18:native-source-episode-v1",
+      "schedule_index": 79,
+      "sequence_length": 256,
+      "source": "1d_arc",
+      "supervised_token_count": 128
+    },
+    {
+      "generator_family": "official_arc_agi_2:c3202e5a",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:c3202e5a:native-full-task-v2",
+      "schedule_index": 80,
+      "sequence_length": 2644,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 110
+    },
+    {
+      "generator_family": "1d_arc:1d_fill",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_fill_4:native-source-episode-v1",
+      "schedule_index": 81,
+      "sequence_length": 168,
+      "source": "1d_arc",
+      "supervised_token_count": 84
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+rotation+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-093084:native-source-episode-v1",
+      "schedule_index": 82,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "1d_arc:1d_denoising_mc",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_denoising_mc_2:native-source-episode-v1",
+      "schedule_index": 83,
+      "sequence_length": 280,
+      "source": "1d_arc",
+      "supervised_token_count": 140
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:mirror+rotation+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-078858:native-source-episode-v1",
+      "schedule_index": 84,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "miniarc:copy_3x3_and_see_only_middle_5x5_corrected_l6bl3df6blwyr74lj3d",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "miniarc:copy_3x3_and_see_only_middle_5x5_corrected_l6bl3df6blwyr74lj3d:native-full-task-v2",
+      "schedule_index": 85,
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128
+    },
+    {
+      "generator_family": "official_arc_agi_2:5587a8d0",
+      "pool": "POOL_REPLAY_V2_1",
+      "sample_id": "official_arc_agi_2:5587a8d0:native-full-task-v2",
+      "schedule_index": 86,
+      "sequence_length": 506,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 238
+    },
+    {
+      "generator_family": "compositional_arc:systematicity:grow+rotation+set_color",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "compositional_arc:episode-094819:native-source-episode-v1",
+      "schedule_index": 87,
+      "sequence_length": 8512,
+      "source": "compositional_arc",
+      "supervised_token_count": 4256
+    },
+    {
+      "generator_family": "1d_arc:1d_scale_dp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_scale_dp_9:native-source-episode-v1",
+      "schedule_index": 88,
+      "sequence_length": 224,
+      "source": "1d_arc",
+      "supervised_token_count": 112
+    },
+    {
+      "generator_family": "1d_arc:1d_move_dp",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_move_dp_49:native-source-episode-v1",
+      "schedule_index": 89,
+      "sequence_length": 256,
+      "source": "1d_arc",
+      "supervised_token_count": 128
+    },
+    {
+      "generator_family": "1d_arc:1d_hollow",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_hollow_17:native-source-episode-v1",
+      "schedule_index": 90,
+      "sequence_length": 152,
+      "source": "1d_arc",
+      "supervised_token_count": 76
+    },
+    {
+      "generator_family": "1d_arc:1d_hollow",
+      "pool": "POOL_NOVEL_V1_1",
+      "sample_id": "1d_arc:1d_hollow_28:native-source-episode-v1",
+      "schedule_index": 91,
+      "sequence_length": 96,
+      "source": "1d_arc",
+      "supervised_token_count": 48
+    }
+  ],
+  "seed": 31090,
+  "status": "FROZEN"
+}

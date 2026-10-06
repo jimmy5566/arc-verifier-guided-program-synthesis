@@ -1,0 +1,7 @@
+{
+  "GPU_TRAINING_STARTED": false,
+  "benchmark_only": true,
+  "dataset_fingerprint": "3b040b3fcd45d84361aa5286c3b762e268a5f7c98dae5b3c87ddeb16c5105c82",
+  "model_path": "/root/arc-runtime-3090-gpu-benchmark-v1/model-stage/qwen3_4b_grids15_sft139",
+  "source_commit": "a25c9b313bf0c1571857e149350f305d9e0a8f4c"
+}

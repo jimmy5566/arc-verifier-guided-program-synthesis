@@ -1,0 +1,8 @@
+{
+  "eval60_accessed": false,
+  "novel_holdout_accessed": false,
+  "novel_train_accessed": true,
+  "novel_validation_accessed": false,
+  "replay_train_accessed": true,
+  "status": "PASS"
+}

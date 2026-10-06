@@ -1,0 +1,23 @@
+{
+  "contexts": [
+    {
+      "absolute_tolerance": 0.001,
+      "max_seq_length": 8192,
+      "reference_loss": 0.6620781421661377,
+      "reloaded_loss": 0.6620781421661377,
+      "status": "PASS"
+    },
+    {
+      "absolute_tolerance": 0.001,
+      "max_seq_length": 8704,
+      "reference_loss": 0.6617316007614136,
+      "reloaded_loss": 0.6617316007614136,
+      "status": "PASS"
+    }
+  ],
+  "expected_contexts": [
+    8192,
+    8704
+  ],
+  "status": "PASS"
+}

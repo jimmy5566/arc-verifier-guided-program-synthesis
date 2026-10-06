@@ -1,0 +1,22 @@
+{
+  "LONG_GPU_TRAINING_STARTED": false,
+  "checks": {
+    "base_frozen_lora_trainable": true,
+    "checkpoint_reload": true,
+    "data_access_policy": true,
+    "exact_sft139_model_verified": true,
+    "family_aware_sampler_verified": true,
+    "finite_losses": true,
+    "long_training_not_started": true,
+    "measured_benchmark_completed": true,
+    "nf4_qlora_loaded": true,
+    "runtime_extrapolation_produced": true,
+    "same_sample_schedule": true,
+    "single_rtx3090_only": true,
+    "smoke_forward_backward_optimizer": true,
+    "telemetry_recorded": true,
+    "throughput_measured": true,
+    "vram_measured": true
+  },
+  "status": "PASS_8704_RECOMMENDED"
+}

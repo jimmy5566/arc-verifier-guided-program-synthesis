@@ -1,0 +1,322 @@
+{
+  "contexts": {
+    "8192": {
+      "performance": {
+        "attention_backend": "sdpa",
+        "backward_seconds": 580.2593120187521,
+        "dataloader_wait_seconds": 0.07296316884458065,
+        "final_loss": 2.783919095993042,
+        "finite_losses": true,
+        "forward_seconds": 160.59022017661482,
+        "gradient_accumulation_steps": 4,
+        "initial_loss": 2.7764816284179688,
+        "max_loss": 6.795948028564453,
+        "max_seq_length": 8192,
+        "mean_loss": 1.501660573389381,
+        "microsteps": 80,
+        "min_loss": 0.10355495661497116,
+        "mode": "performance",
+        "optimizer_seconds": 1.189129812642932,
+        "optimizer_steps": 20,
+        "parameter_partition": {
+          "base_trainable_parameters": 0,
+          "total_parameters": 1949056512,
+          "trainable_parameters": 132120576
+        },
+        "peak_vram_allocated_bytes": 9415416832,
+        "peak_vram_reserved_bytes": 11284774912,
+        "processed_tokens": 251469,
+        "qlora": {
+          "alpha": 32,
+          "compute_dtype": "bfloat16",
+          "double_quantization": true,
+          "dropout": 0.0,
+          "gradient_checkpointing": true,
+          "learning_rate": 5e-05,
+          "optimizer": "PagedAdamW8bit",
+          "quantization": "NF4",
+          "rank": 64,
+          "target_modules": [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj"
+          ]
+        },
+        "seconds_per_microstep": 9.28667334462516,
+        "seconds_per_optimizer_step": 37.14669337850064,
+        "status": "PASS",
+        "supervised_token_loss_rate": 0.04054486054907098,
+        "supervised_tokens": 123053,
+        "supervised_tokens_lost": 5200,
+        "supervised_tokens_per_second": 165.63116230315575,
+        "telemetry": {
+          "samples": 401,
+          "summary": {
+            "memory_used_mb": {
+              "max": 11619.0,
+              "mean": 11106.83042394015
+            },
+            "power_w": {
+              "max": 349.63,
+              "mean": 343.72182044887796
+            },
+            "temperature_c": {
+              "max": 71.0,
+              "mean": 69.11970074812967
+            },
+            "utilization_gpu_pct": {
+              "max": 100.0,
+              "mean": 97.9501246882793
+            },
+            "utilization_memory_pct": {
+              "max": 75.0,
+              "mean": 50.27930174563591
+            }
+          }
+        },
+        "tokens_per_second": 338.4810021146357,
+        "total_vram_bytes": 25295323136,
+        "truncated_microsteps": 25,
+        "vram": {
+          "classification": "SAFE",
+          "headroom_bytes": 14010548224,
+          "headroom_gib": 13.04833984375,
+          "headroom_percentage": 55.387899765788546
+        },
+        "vram_safety": "SAFE",
+        "wall_seconds": 742.9338675700128,
+        "warmup_optimizer_steps": 3
+      },
+      "smoke": {
+        "attention_backend": "sdpa",
+        "backward_seconds": 90.19558072183281,
+        "checkpoint_reference_loss": 0.6620781421661377,
+        "dataloader_wait_seconds": 0.01823750790208578,
+        "final_loss": 0.9128743410110474,
+        "finite_losses": true,
+        "forward_seconds": 25.571180538274348,
+        "gradient_accumulation_steps": 4,
+        "initial_loss": 0.6914479732513428,
+        "max_loss": 3.6187515258789062,
+        "max_seq_length": 8192,
+        "mean_loss": 1.940888437628746,
+        "microsteps": 20,
+        "min_loss": 0.6002907752990723,
+        "mode": "smoke",
+        "optimizer_seconds": 0.5259426869452,
+        "optimizer_steps": 5,
+        "parameter_partition": {
+          "base_trainable_parameters": 0,
+          "total_parameters": 1949056512,
+          "trainable_parameters": 132120576
+        },
+        "peak_vram_allocated_bytes": 9409905664,
+        "peak_vram_reserved_bytes": 10921967616,
+        "processed_tokens": 40224,
+        "qlora": {
+          "alpha": 32,
+          "compute_dtype": "bfloat16",
+          "double_quantization": true,
+          "dropout": 0.0,
+          "gradient_checkpointing": true,
+          "learning_rate": 5e-05,
+          "optimizer": "PagedAdamW8bit",
+          "quantization": "NF4",
+          "rank": 64,
+          "target_modules": [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj"
+          ]
+        },
+        "seconds_per_microstep": 5.8278974260669205,
+        "seconds_per_optimizer_step": 23.311589704267682,
+        "status": "PASS",
+        "supervised_token_loss_rate": 0.040092521202775636,
+        "supervised_tokens": 19920,
+        "supervised_tokens_lost": 832,
+        "supervised_tokens_per_second": 170.90211566612484,
+        "tokens_per_second": 345.09872994750026,
+        "total_vram_bytes": 25295323136,
+        "truncated_microsteps": 4,
+        "vram": {
+          "classification": "SAFE",
+          "headroom_bytes": 14373355520,
+          "headroom_gib": 13.38623046875,
+          "headroom_percentage": 56.82218583538873
+        },
+        "vram_safety": "SAFE",
+        "wall_seconds": 116.5579485213384,
+        "warmup_optimizer_steps": 0
+      }
+    },
+    "8704": {
+      "performance": {
+        "attention_backend": "sdpa",
+        "backward_seconds": 620.6354025853798,
+        "dataloader_wait_seconds": 0.07620354928076267,
+        "final_loss": 2.7850229740142822,
+        "finite_losses": true,
+        "forward_seconds": 171.7724299635738,
+        "gradient_accumulation_steps": 4,
+        "initial_loss": 2.776353120803833,
+        "max_loss": 6.804381370544434,
+        "max_seq_length": 8704,
+        "mean_loss": 1.4988384327851236,
+        "microsteps": 80,
+        "min_loss": 0.10358455032110214,
+        "mode": "performance",
+        "optimizer_seconds": 1.235297353938222,
+        "optimizer_steps": 20,
+        "parameter_partition": {
+          "base_trainable_parameters": 0,
+          "total_parameters": 1949056512,
+          "trainable_parameters": 132120576
+        },
+        "peak_vram_allocated_bytes": 9683504640,
+        "peak_vram_reserved_bytes": 11381243904,
+        "processed_tokens": 259469,
+        "qlora": {
+          "alpha": 32,
+          "compute_dtype": "bfloat16",
+          "double_quantization": true,
+          "dropout": 0.0,
+          "gradient_checkpointing": true,
+          "learning_rate": 5e-05,
+          "optimizer": "PagedAdamW8bit",
+          "quantization": "NF4",
+          "rank": 64,
+          "target_modules": [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj"
+          ]
+        },
+        "seconds_per_microstep": 9.932515186525416,
+        "seconds_per_optimizer_step": 39.730060746101664,
+        "status": "PASS",
+        "supervised_token_loss_rate": 0.0,
+        "supervised_tokens": 128253,
+        "supervised_tokens_lost": 0,
+        "supervised_tokens_per_second": 161.40549195181418,
+        "telemetry": {
+          "samples": 429,
+          "summary": {
+            "memory_used_mb": {
+              "max": 11675.0,
+              "mean": 11359.475524475525
+            },
+            "power_w": {
+              "max": 350.13,
+              "mean": 343.43076923076904
+            },
+            "temperature_c": {
+              "max": 71.0,
+              "mean": 69.62470862470863
+            },
+            "utilization_gpu_pct": {
+              "max": 100.0,
+              "mean": 97.92307692307692
+            },
+            "utilization_memory_pct": {
+              "max": 74.0,
+              "mean": 48.38228438228438
+            }
+          }
+        },
+        "tokens_per_second": 326.53989841364546,
+        "total_vram_bytes": 25295323136,
+        "truncated_microsteps": 0,
+        "vram": {
+          "classification": "SAFE",
+          "headroom_bytes": 13914079232,
+          "headroom_gib": 12.95849609375,
+          "headroom_percentage": 55.0065289033515
+        },
+        "vram_safety": "SAFE",
+        "wall_seconds": 794.6012149220333,
+        "warmup_optimizer_steps": 3
+      },
+      "smoke": {
+        "attention_backend": "sdpa",
+        "backward_seconds": 95.96505619119853,
+        "checkpoint_reference_loss": 0.6617316007614136,
+        "dataloader_wait_seconds": 0.013545622117817402,
+        "final_loss": 0.9120864868164062,
+        "finite_losses": true,
+        "forward_seconds": 27.05305498186499,
+        "gradient_accumulation_steps": 4,
+        "initial_loss": 0.6914479732513428,
+        "max_loss": 3.6180405616760254,
+        "max_seq_length": 8704,
+        "mean_loss": 1.9370251715183258,
+        "microsteps": 20,
+        "min_loss": 0.584635853767395,
+        "mode": "smoke",
+        "optimizer_seconds": 0.488996846601367,
+        "optimizer_steps": 5,
+        "parameter_partition": {
+          "base_trainable_parameters": 0,
+          "total_parameters": 1949056512,
+          "trainable_parameters": 132120576
+        },
+        "peak_vram_allocated_bytes": 9676072448,
+        "peak_vram_reserved_bytes": 11335106560,
+        "processed_tokens": 41504,
+        "qlora": {
+          "alpha": 32,
+          "compute_dtype": "bfloat16",
+          "double_quantization": true,
+          "dropout": 0.0,
+          "gradient_checkpointing": true,
+          "learning_rate": 5e-05,
+          "optimizer": "PagedAdamW8bit",
+          "quantization": "NF4",
+          "rank": 64,
+          "target_modules": [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj"
+          ]
+        },
+        "seconds_per_microstep": 6.1867185468319805,
+        "seconds_per_optimizer_step": 24.746874187327922,
+        "status": "PASS",
+        "supervised_token_loss_rate": 0.0,
+        "supervised_tokens": 20752,
+        "supervised_tokens_lost": 0,
+        "supervised_tokens_per_second": 167.71411082395556,
+        "tokens_per_second": 335.42822164791113,
+        "total_vram_bytes": 25295323136,
+        "truncated_microsteps": 0,
+        "vram": {
+          "classification": "SAFE",
+          "headroom_bytes": 13960216576,
+          "headroom_gib": 13.00146484375,
+          "headroom_percentage": 55.18892366364748
+        },
+        "vram_safety": "SAFE",
+        "wall_seconds": 123.7343709366396,
+        "warmup_optimizer_steps": 0
+      }
+    }
+  },
+  "recommended_context": 8704,
+  "status": "COMPLETE"
+}

@@ -1,0 +1,21 @@
+{
+  "CUDA_VISIBLE_DEVICES": "0",
+  "attention_backend_requested": "sdpa",
+  "bf16_supported": true,
+  "bitsandbytes": "0.50.2",
+  "cuda_capability": [
+    8,
+    6
+  ],
+  "cuda_runtime": "12.8",
+  "driver": "610.43.02",
+  "gpu_exact_name": "NVIDIA GeForce RTX 3090",
+  "peft": "0.17.1",
+  "platform": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
+  "python": "3.11.13",
+  "status": "PASS",
+  "torch": "2.8.0+cu128",
+  "total_vram_bytes": 25295323136,
+  "transformers": "4.55.4",
+  "visible_cuda_devices": 1
+}
