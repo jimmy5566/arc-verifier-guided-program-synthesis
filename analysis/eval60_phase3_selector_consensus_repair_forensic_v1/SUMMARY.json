@@ -1,0 +1,34 @@
+{
+  "status": "COMPLETE",
+  "classification": "CONSENSUS_REPAIR_SIGNAL_WEAK",
+  "scope": "EXPOSED_DEVELOPMENT_ONLY",
+  "s2_miss_outputs": 8,
+  "exact_repairs": 1,
+  "repaired_output_ids": [
+    "b5ca7ac4:o0"
+  ],
+  "note": "The repaired Gold was already present at frozen S2 rank 4; C1 selected an existing candidate rather than synthesizing a genuinely new Gold grid.",
+  "consensus_generation": {
+    "produced": 34,
+    "existing_candidate": 26,
+    "new_grid": 8,
+    "equals_rank1": 11
+  },
+  "hypothetical_distinct_slot2": {
+    "policy": "replace S2 slot2 with C1 only when C1 is produced and distinct from S2 slot1; otherwise retain S2 slot2",
+    "baseline_top2_hits": 27,
+    "new_top2_hits": 25,
+    "fixes": 1,
+    "harms": 3,
+    "net": -2,
+    "fix_output_ids": [
+      "b5ca7ac4:o0"
+    ],
+    "harm_output_ids": [
+      "20270e3b:o1",
+      "8e5c0c38:o1",
+      "78332cb0:o1"
+    ]
+  },
+  "decision": "Do not build an operational consensus-repair selector from C1."
+}
