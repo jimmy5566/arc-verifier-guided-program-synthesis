@@ -283,18 +283,43 @@ def validate_smoke(run: Path, outputs: list[dict[str,Any]], runtime: dict[str,An
     return result
 
 
-def finalize_generation(run: Path, cohort: dict[str,Any], preflight_receipt: dict[str,Any]) -> None:
+def gate1_evidence(root: Path | None) -> dict[str,Any]:
+    if root is None:
+        raise RuntimeError("P4_GATE1_EVIDENCE_REQUIRED")
+    result_path=root/"GATE1_SMOKE_RESULT.json"
+    verify_path=root/"GATE1_SMOKE"/"GENERATION_HASH_VERIFICATION.json"
+    freeze_path=root/"GATE1_SMOKE"/"GENERATION_FREEZE.json"
+    if any(not p.is_file() for p in (result_path,verify_path,freeze_path)):
+        raise RuntimeError("P4_GATE1_EVIDENCE_INCOMPLETE")
+    result=_read(result_path); verification=_read(verify_path); freeze=_read(freeze_path)
+    if result.get("status")!="PASS" or verification.get("status")!="PASS" or freeze.get("status")!="FROZEN":
+        raise RuntimeError("P4_GATE1_NOT_PASSED")
+    if result.get("gold_loaded") is not False or result.get("retention_changed") is not False:
+        raise RuntimeError("P4_GATE1_CONTRACT_INVALID")
+    return {
+        "path":str(root),
+        "result_sha256":sha_file(result_path),
+        "generation_hash_verification_sha256":sha_file(verify_path),
+        "generation_freeze_sha256":sha_file(freeze_path),
+        "status":"PASS",
+    }
+
+
+def finalize_generation(run: Path, cohort: dict[str,Any], preflight_receipt: dict[str,Any], gate1: dict[str,Any]) -> None:
     generation=ledger(run,"GENERATION_HASHES.json",include_raw=True)
     verification=_verify(run,run/"GENERATION_HASHES.json")
     _atomic_json(run/"GENERATION_HASH_VERIFICATION.json",verification)
     if verification.get("status")!="PASS":
         raise RuntimeError("P4_FINAL_GENERATION_HASH_FAIL")
     _atomic_json(run/"PROVENANCE.json",{"experiment":EXPERIMENT,"source_commit":head(),"target_blind":True,"gold_loaded":False,
-                                         "cohort_sha256":COHORT_SHA256,"runtime":preflight_receipt["runtime"],"policy":POLICY})
+                                         "cohort_sha256":COHORT_SHA256,"runtime":preflight_receipt["runtime"],"policy":POLICY,
+                                         "gate1_evidence":gate1})
     _atomic_json(run/"PRE_GOLD_FREEZE.json",{"experiment":EXPERIMENT,"status":"FROZEN","outputs":"12/12",
                                               "target_blind":True,"gold_loaded":False,"cohort_sha256":COHORT_SHA256,
                                               "scientific_policy":POLICY,"scientific_config_unchanged_except_policy":True,
-                                              "generation_hash_status":"PASS","postfreeze_gold_scoring_required":True})
+                                              "generation_hash_status":"PASS","gate1_status":"PASS",
+                                              "gate1_evidence_sha256":sha_value(gate1),
+                                              "postfreeze_gold_scoring_required":True})
     compact=ledger(run,"HASHES.json",include_raw=False)
     checked=_verify(run,run/"HASHES.json")
     _atomic_json(run/"HASH_VERIFICATION.json",checked)
@@ -318,6 +343,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--native-config-dir",type=Path,required=True);p.add_argument("--candidate-pool",type=Path,required=True)
     p.add_argument("--adapter-root",type=Path,required=True);p.add_argument("--coarse-policy",type=Path,required=True)
     p.add_argument("--worker-python",type=Path,required=True);p.add_argument("--source-archive",type=Path,required=True)
+    p.add_argument("--gate1-evidence",type=Path)
     p.add_argument("--device",default="cuda:0")
     return p.parse_args()
 
@@ -338,9 +364,10 @@ def main() -> None:
                 "selection":"reuse exact P3 deterministic S/M/L smoke selector","outputs":smoke})
             runtime=run_outputs(args,args.output/"GATE1_SMOKE",smoke,"GATE1_SMOKE")
             validate_smoke(args.output/"GATE1_SMOKE",smoke,runtime);return
+        gate1=gate1_evidence(args.gate1_evidence)
         runtime=run_outputs(args,args.output,list(cohort["outputs"]),"GATE2_MICRO12")
         _atomic_json(args.output/"RUNTIME_SUMMARY.json",runtime)
-        finalize_generation(args.output,cohort,pre)
+        finalize_generation(args.output,cohort,pre,gate1)
     except BaseException as error:
         failure_receipt(args,error);raise
 
