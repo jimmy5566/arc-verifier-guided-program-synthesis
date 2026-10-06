@@ -1,0 +1,112 @@
+{
+  "artifact": "DOTS3_ARC_SPECIALIST_V1_PREREG",
+  "status": "PRE_REGISTERED_BEFORE_DOTS3_TEACHER_GENERATION",
+  "objective": "Improve the ARC-specialized Qwen3-4B model's intrinsic Gold-path probability before TTT/search by continued LoRA SFT on program-verified Dots3-generated curricula.",
+  "base_model": {
+    "id": "qwen3_4b_grids15_sft139",
+    "architecture": "Qwen3-4B ARC-specialized 16-token grid model",
+    "unchanged": [
+      "tokenizer",
+      "chat template",
+      "grid serialization",
+      "inference vocabulary"
+    ]
+  },
+  "teacher": {
+    "model": "dots3-note-prev",
+    "role": "offline curriculum/program generator only",
+    "direct_test_time_use": false,
+    "prompt_inputs": "abstract concept-family specifications only; no ARC-AGI-2 evaluation grids, no Micro12 grids, no Kaggle test content",
+    "output": "JSON containing puzzle description plus pure-Python/numpy generate_input(seed) and transform(grid) functions",
+    "executable_verification_required": true
+  },
+  "contamination_guards": [
+    "Never include ARC-AGI-2 public evaluation grids or task IDs in teacher prompts or student training.",
+    "Never include Micro12 grids/task IDs in teacher prompts or student training.",
+    "Never use Kaggle test/hidden data.",
+    "Hold out complete synthetic concept families, not random rows.",
+    "A teacher draft cannot enter SFT until program execution, determinism, grid validity, diversity and deduplication all PASS."
+  ],
+  "phase_m1a": {
+    "name": "DOTS3_CURRICULUM_LORA_PILOT",
+    "target_accepted_programs": 256,
+    "seeds_per_program": 64,
+    "train_augmentations_per_program": 8,
+    "family_split": {
+      "train": 0.7,
+      "val": 0.15,
+      "test": 0.15,
+      "method": "sha256(family_id) deterministic"
+    },
+    "student_training": {
+      "method": "QLoRA continued SFT",
+      "lora_r": 64,
+      "lora_alpha": 128,
+      "lora_dropout": 0.05,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "learning_rate": 0.0001,
+      "weight_decay": 0.01,
+      "warmup_ratio": 0.03,
+      "epochs": 1,
+      "max_seq_length": 16384,
+      "micro_batch_size": 1,
+      "gradient_accumulation": 8,
+      "quantization": "4bit NF4",
+      "compute_dtype": "bfloat16",
+      "seed": 42
+    },
+    "primary_eval": {
+      "dataset": "family-held-out synthetic ARC episodes",
+      "metrics": [
+        "Gold next-token Top1 rate",
+        "Gold next-token Top5 rate",
+        "mean Gold-token NLL",
+        "greedy exact-grid accuracy"
+      ],
+      "compare": "M1a versus frozen M0 on byte-identical evaluation episodes"
+    },
+    "scale_gate": [
+      "Delta Gold-token Top1 >= +0.02",
+      "Delta mean Gold-token NLL < 0",
+      "greedy exact-grid accuracy does not regress",
+      "at least 2/3 held-out family buckets have non-negative Top1 delta"
+    ]
+  },
+  "phase_m1b": {
+    "start_only_if_m1a_scale_gate_passes": true,
+    "target_accepted_programs": 2000,
+    "train_augmentations_per_program": 16,
+    "decision_after_training": "Only then retrain task-specific TTT adapters and compare same frozen search/retention budgets against M0."
+  },
+  "search_reuse": {
+    "algorithms_reused": [
+      "AUG8",
+      "TTT procedure",
+      "retention r=4",
+      "LDS/NLL search implementations",
+      "frontier telemetry",
+      "exact scorer"
+    ],
+    "model_specific_assets_to_recompute": [
+      "task LoRA adapters",
+      "NLLs",
+      "frontiers",
+      "hidden states",
+      "candidate pools",
+      "runtime profiles"
+    ]
+  },
+  "stop_rules": [
+    "If M1a fails the frozen scale gate, do not spend GPU on M1b.",
+    "Do not tune on Micro12 Gold.",
+    "Do not alter the holdout family split after seeing results."
+  ]
+}
