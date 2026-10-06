@@ -1,0 +1,17 @@
+{
+  "artifact": "DOTS3_ARC_SPECIALIST_V1_GATE0",
+  "status": "PASS",
+  "workflow_run_id": 37432060505,
+  "head_sha": "58eac7a12f7bd46328f453d5aec6ab39c8624de9",
+  "branch": "model/dots3-arc-specialist-v1",
+  "gold_loaded": false,
+  "dots3_called": false,
+  "gpu_training_started": false,
+  "contracts": [
+    "pipeline py_compile",
+    "program sandbox unit test",
+    "deterministic program execution",
+    "family split determinism"
+  ],
+  "next_gate": "DOTS3 teacher generation + executable verification"
+}
