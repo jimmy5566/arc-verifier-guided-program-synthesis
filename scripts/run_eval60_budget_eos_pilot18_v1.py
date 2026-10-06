@@ -16,6 +16,7 @@ import hashlib
 import json
 import math
 import os
+import numpy as np
 from pathlib import Path
 import shutil
 import statistics
@@ -367,9 +368,18 @@ def _worker(args: argparse.Namespace) -> int:
     output_checkpoint = args.output / "OUTPUT_CHECKPOINTS" / f"{safe}.json"
     eos_path = args.output / "EOS_EVENTS" / f"{safe}.jsonl.gz"
     receipt_path = receipt_dir / f"{safe}.json"
+    hidden_layers = tuple(
+        int(value.strip()) for value in str(args.top5_hidden_layers or "").split(",") if value.strip()
+    )
+    hidden_path = args.output / "TOP5_HIDDEN_STATES" / f"{safe}.npz"
+    hidden_meta_path = args.output / "TOP5_HIDDEN_METADATA" / f"{safe}.jsonl.gz"
+    if hidden_layers and (len(set(hidden_layers)) != len(hidden_layers) or any(layer < 0 for layer in hidden_layers)):
+        raise RuntimeError("invalid --top5-hidden-layers")
     if output_raw.exists() and output_checkpoint.exists() and eos_path.exists() and receipt_path.exists():
         prior = _read(receipt_path)
         if prior.get("status") == "COMPLETE":
+            if hidden_layers and (not hidden_path.is_file() or not hidden_meta_path.is_file()):
+                raise RuntimeError("COMPLETE receipt exists but Top5 hidden-state artifacts are missing")
             return 0
         raise RuntimeError("existing output artifacts lack a COMPLETE receipt")
     stage = "BEFORE_MODEL_LOAD"
@@ -406,7 +416,23 @@ def _worker(args: argparse.Namespace) -> int:
         prepared_prompts: dict[str, tuple[Any, dict[str, Any]]] = {}
         per_cell_events: dict[str, list[dict[str, Any]]] = defaultdict(list)
         final_cells: dict[str, dict[str, Any]] = {}
+        hidden_metadata: list[dict[str, Any]] = []
+        hidden_vectors: list[Any] = []
         current_stage = "PREFILL"
+
+        def hidden_sink(meta: dict[str, Any], hidden: tuple[Any, ...]) -> None:
+            if not hidden_layers:
+                raise RuntimeError("hidden sink invoked without configured layers")
+            if len(hidden) != len(hidden_layers):
+                raise RuntimeError("hidden sink layer count mismatch")
+            stacked = np.stack([
+                value.squeeze(0).detach().to(dtype=torch.float16).cpu().numpy()
+                for value in hidden
+            ], axis=0)
+            if stacked.ndim != 2 or stacked.shape[0] != len(hidden_layers):
+                raise RuntimeError(f"unexpected hidden-state shape: {stacked.shape}")
+            hidden_metadata.append(dict(meta))
+            hidden_vectors.append(stacked)
 
         # Root-aware admission must be decided before any cell owns a cache.
         # Tokenization is CPU-only and is not a model forward or a decoder
@@ -451,6 +477,8 @@ def _worker(args: argparse.Namespace) -> int:
                     **common,
                     policy_name=args.search_order_policy,
                     frontier_telemetry_context=telemetry_context,
+                    hidden_state_layers=hidden_layers or None,
+                    hidden_state_sink=hidden_sink if hidden_layers else None,
                 )
             if cell.request is None or cell.cache_owner is None:
                 raise RuntimeError("admitted Pilot18 cell was not READY")
@@ -518,6 +546,7 @@ def _worker(args: argparse.Namespace) -> int:
                 "prefix_reconstruction_failures": reconstruction_failures,
                 "search_order": cell.state.get("search_order"),
                 "search_order_work_items": cell.state.get("search_order_work_items", []),
+                "top5_hidden_state_capture": cell.state.get("top5_hidden_state_capture"),
             }
             if args.frontier_telemetry:
                 final_cells[cell_key]["frontier_telemetry"] = cell.state.get("frontier_telemetry")
@@ -559,6 +588,7 @@ def _worker(args: argparse.Namespace) -> int:
             physical_batch_ceiling=profile_cfg["physical_batch_ceiling"], create_cell=create_cell,
             consume_result=consume_result, release_cell=release_cell,
             memory_snapshot=lambda: _memory(torch, args.device), admission_policy=args.admission_policy,
+            hidden_state_layers=hidden_layers or None,
             **scheduler_kwargs,
         )
         torch.cuda.synchronize(device=args.device)
@@ -566,6 +596,28 @@ def _worker(args: argparse.Namespace) -> int:
         if len(final_cells) != len(frozen_ids):
             raise RuntimeError(f"output completed {len(final_cells)}/{len(frozen_ids)} cells")
         stage = "RAW_OUTPUT_WRITE"
+        if hidden_layers:
+            if not hidden_metadata or len(hidden_metadata) != len(hidden_vectors):
+                raise RuntimeError("Top5 hidden-state capture produced no aligned records")
+            hidden_path.parent.mkdir(parents=True, exist_ok=True)
+            hidden_meta_path.parent.mkdir(parents=True, exist_ok=True)
+            hidden_tmp = hidden_path.with_suffix(hidden_path.suffix + ".tmp")
+            with hidden_tmp.open("wb") as handle:
+                np.savez_compressed(
+                    handle,
+                    hidden=np.stack(hidden_vectors, axis=0),
+                    layers_0_based=np.asarray(hidden_layers, dtype=np.int16),
+                    work_item_id=np.asarray([int(row["work_item_id"]) for row in hidden_metadata], dtype=np.int32),
+                    expanded_nodes_at_capture=np.asarray(
+                        [int(row["expanded_nodes_at_capture"]) for row in hidden_metadata], dtype=np.int32
+                    ),
+                )
+            os.replace(hidden_tmp, hidden_path)
+            meta_tmp = hidden_meta_path.with_suffix(hidden_meta_path.suffix + ".tmp")
+            with gzip.open(meta_tmp, "wt", encoding="utf-8", newline="\n") as handle:
+                for row in hidden_metadata:
+                    handle.write(_canonical(row) + "\n")
+            os.replace(meta_tmp, hidden_meta_path)
         flat_events = [event for key in sorted(per_cell_events) for event in per_cell_events[key]]
         eos_path.parent.mkdir(parents=True, exist_ok=True)
         temporary = eos_path.with_suffix(eos_path.suffix + ".tmp")
@@ -586,12 +638,28 @@ def _worker(args: argparse.Namespace) -> int:
                                       "frozen_pending_order": keys, "fairness_max_wait": int(args.fairness_max_wait)},
                    "scheduler": {key: value for key, value in scheduler.items() if key != "events"},
                    "scheduler_events": scheduler["events"], "wall_seconds": wall, "memory": memory,
-                   "eos_events_path": str(eos_path.relative_to(args.output)), "eos_event_count": len(flat_events)}
+                   "eos_events_path": str(eos_path.relative_to(args.output)), "eos_event_count": len(flat_events),
+                   "top5_hidden_state_capture": {
+                       "enabled": bool(hidden_layers),
+                       "layers_0_based": list(hidden_layers),
+                       "record_count": len(hidden_metadata),
+                       "state_path": str(hidden_path.relative_to(args.output)) if hidden_layers else None,
+                       "metadata_path": str(hidden_meta_path.relative_to(args.output)) if hidden_layers else None,
+                       "extra_model_forwards": 0,
+                   }}
         _atomic_json(output_raw, payload)
         _atomic_json(receipt_path, {"experiment": EXPERIMENT, "status": "COMPLETE", "target_blind": True, "gold_loaded": False,
                                     "output_id": args.output_id, "attempt_index": args.attempt, "profile_configuration": profile_cfg,
                                     "raw_output": str(output_raw.relative_to(args.output)), "checkpoint_output": str(output_checkpoint.relative_to(args.output)),
                                     "eos_events": str(eos_path.relative_to(args.output)), "wall_seconds": wall,
+                                    "top5_hidden_state_capture": {
+                                        "enabled": bool(hidden_layers),
+                                        "layers_0_based": list(hidden_layers),
+                                        "record_count": len(hidden_metadata),
+                                        "state_path": str(hidden_path.relative_to(args.output)) if hidden_layers else None,
+                                        "metadata_path": str(hidden_meta_path.relative_to(args.output)) if hidden_layers else None,
+                                        "extra_model_forwards": 0,
+                                    },
                                     "ended_unix": time.time()})
         return 0
     except torch.OutOfMemoryError as error:
@@ -1051,6 +1119,8 @@ def _parse_args() -> argparse.Namespace:
                         help="opt-in observational prefill/per-forward forensic trace; no decoder input")
     parser.add_argument("--frontier-telemetry", action="store_true",
                         help="passively preserve retained-frontier work-item telemetry; no decoder mutation")
+    parser.add_argument("--top5-hidden-layers", default="",
+                        help="comma-separated zero-based transformer layers for passive NLL-Top5 parent-state capture")
     parser.add_argument("--device", default="cuda:0")
     return parser.parse_args()
 
