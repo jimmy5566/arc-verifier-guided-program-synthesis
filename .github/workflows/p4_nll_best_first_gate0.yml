@@ -15,6 +15,7 @@ on:
 
 jobs:
   gate0:
+    # Validate controller and search-order contracts at the same current HEAD.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
