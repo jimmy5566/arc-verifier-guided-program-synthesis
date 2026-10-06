@@ -1,0 +1,8 @@
+dataset,scope,tasks,outputs_or_groups,positive_label_availability,feature_compatibility_with_current_S2,grouped_task_split_possible,decision
+Phase3_d24_archive,current_dense_DFS,60,89,Gold labels available post-freeze but many outputs have no Gold candidate,PARTIAL,YES,INSUFFICIENT_ALONE
+Phase3_d48_archive,current_dense_DFS,60,89,Gold labels available post-freeze but many outputs have no Gold candidate,PARTIAL,YES,INSUFFICIENT_ALONE
+V8_S2_oracle_hit_cohort,current_dense_DFS_oracle_hits,27,35,YES,FULL,YES,EXPOSED_GOLD_SELECTED_ONLY
+Nonblind_LOO_Transfer30,old_TTT_depth_view_distribution,30,41,YES,NO,YES,NOT_COMPARABLE
+Historical_native_ranker,old_sparse_native_candidate_distribution,NA,NA,YES,NO,YES,NOT_COMPARABLE
+Search_order_node_separability,search_tree_node_value,60,656542_nodes,YES,NO,YES,DIFFERENT_LEARNING_PROBLEM
+Expanded_sibling_separability,search_tree_choice_groups,31,329_groups,YES,NO,YES,DIFFERENT_LEARNING_PROBLEM
