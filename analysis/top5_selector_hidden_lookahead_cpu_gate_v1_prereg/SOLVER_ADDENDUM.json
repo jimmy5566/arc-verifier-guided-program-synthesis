@@ -1,0 +1,20 @@
+{
+  "artifact": "TOP5_SELECTOR_SOLVER_ADDENDUM_V1",
+  "parent_prereg_commit": "8b87cca9fced6294e4e90ea6ffe3570ebffe907a",
+  "timing": "FROZEN_BEFORE_ANY COMPLETE TOP5_SELECTOR_RESULT",
+  "reason": "Exact lbfgs LOOTO exceeded the local CPU execution window before producing any complete selector metric.",
+  "change": {
+    "screening_solver": "liblinear",
+    "objective": "same binary L2-regularized logistic regression with C=1 and class_weight=balanced",
+    "scientific_features": "unchanged",
+    "folds": "unchanged 12-way LOOTO",
+    "gate": "unchanged",
+    "confirmation": "If a liblinear selector passes the frozen GPU gate, rerun that selector with the originally preregistered lbfgs solver before any GPU selector experiment."
+  },
+  "prohibited": [
+    "feature changes",
+    "threshold tuning",
+    "task removal",
+    "using incomplete partial folds as evidence"
+  ]
+}
