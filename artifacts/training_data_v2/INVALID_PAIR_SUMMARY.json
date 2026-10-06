@@ -1,0 +1,1 @@
+{"invalid_pair_count":129,"nvarc_reject_equivalence":true,"raw_pair_count":400000,"reason_counts":{"input: grid height must be 1..30":129},"reconciliation":"valid_plus_invalid_equals_raw","source":"rearc","status":"PASS","valid_pair_count":399871}

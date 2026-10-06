@@ -1,0 +1,7 @@
+# CPU-only corpus construction and audit.  This file must not pull Torch/CUDA.
+numpy
+pyarrow
+transformers
+huggingface_hub
+kaggle
+pytest

@@ -1,0 +1,1 @@
+{"accelerator":"RTX 3090 24GB","base_model":"sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1","final_hyperparameters":"NOT_FROZEN_PENDING_CPU_SEQUENCE_STATISTICS","gpu_training_started":false,"provisional_qlora":{"quantization":"NF4","rank":64},"provisional_steps":"100-200","status":"PREPARED_NOT_RUN"}

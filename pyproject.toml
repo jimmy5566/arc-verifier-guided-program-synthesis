@@ -20,6 +20,9 @@ llm = ["torch", "transformers", "accelerate", "bitsandbytes", "sentencepiece"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
+markers = [
+    "integration: CPU-only tests requiring explicitly supplied untracked public assets",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

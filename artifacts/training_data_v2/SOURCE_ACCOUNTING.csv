@@ -1,0 +1,5 @@
+source,raw_source_objects,base_families,raw_pairs,valid_pairs,invalid_pairs,canonical_unique_families,duplicate_families,training_episodes,total_tokens,supervised_tokens,processed_logical_bytes
+conceptarc,160,160,907,907,0,160,0,160,207061,92140,75464
+miniarc,149,149,677,677,0,149,0,149,44682,22341,86239
+official_arc_agi_2,1120,1120,4834,4834,0,1120,0,1120,1968125,886185,547760
+rearc,400,400,400000,399871,129,400,0,61341,238276048,107638423,29521141

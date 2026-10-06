@@ -1,0 +1,1 @@
+{"base_model_replay_puzzles":1709,"base_model_replay_samples":62650,"novel_puzzles":0,"novel_samples":0,"official_evaluation_hard_excluded":120,"status":"PASS","unknown_or_quarantined_sources":["nvarc_source","nvarc_augmented_puzzles","nvarc_synthetic_puzzles","nvarc_artifacts_puzzles","h_arc","barc"]}

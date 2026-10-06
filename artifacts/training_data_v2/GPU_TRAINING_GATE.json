@@ -1,0 +1,1 @@
+{"DATA_ENGINEERING_READY":true,"PRIMARY_BLOCKER":"NO_DEFENSIBLE_NOVEL_TRAIN_AND_HOLDOUT_CORPUS","SCIENTIFIC_TRAINING_READY":false,"accepted_replay_rows":62650,"blockers":["NO_DEFENSIBLE_NOVEL_TRAIN_AND_HOLDOUT_CORPUS"],"explicit_gpu_training_started":false,"novel_rows":0,"quarantined_nvarc_large_datasets":"UNAVAILABLE_FOR_TRAINING_PROVENANCE_BLOCKED","status":"FAIL_NOT_READY"}
