@@ -1,0 +1,26 @@
+{
+  "experiment": "EVAL60_PHASE3_SELECTOR_CONSENSUS_REPAIR_FORENSIC_V1",
+  "scope": "CPU_ONLY_POST_FREEZE_CONSENSUS_REPAIR_FORENSIC",
+  "source_selector": "analysis/eval60_phase3_selector_v2_forensic_v1",
+  "source_s2_final_ranks_blob": "c26c1ae51abca6971e804f4f11c1c8e39f3a6c9a",
+  "candidate_pool_changed": false,
+  "model_calls": 0,
+  "DFS_calls": 0,
+  "TTT_calls": 0,
+  "GPU_used": false,
+  "S2_modified": false,
+  "C1": {
+    "name": "TOP5_S2_RANK1_SHAPE_CELLWISE_MODE",
+    "anchor_shape": "shape of frozen S2 final rank 1",
+    "K": 5,
+    "minimum_same_shape_candidates": 3,
+    "tie_break": "highest-ranked S2 candidate among tied colors at that cell"
+  },
+  "classification_rule": {
+    "supported": "at least 2 exact Gold repairs among the 8 S2 Top2 misses",
+    "weak": "exactly 1 exact Gold repair among the 8 S2 Top2 misses",
+    "not_supported": "0 exact Gold repairs"
+  },
+  "operational_selector_forbidden": true,
+  "evidence_language": "EXPOSED_DEVELOPMENT_ONLY"
+}
