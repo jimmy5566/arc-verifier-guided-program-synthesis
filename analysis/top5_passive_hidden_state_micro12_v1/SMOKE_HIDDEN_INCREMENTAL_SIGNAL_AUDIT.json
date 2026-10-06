@@ -1,0 +1,65 @@
+{
+  "artifact": "SMOKE_HIDDEN_INCREMENTAL_SIGNAL_AUDIT_V1_SUMMARY",
+  "source_hidden_commit": "4304c845fb04bf4c36c2615695e434cba151343d",
+  "audit_code_commit": "f15a1f137b5143b470363e10bf4a02bb9543d14d",
+  "github_actions_run_id": 37429457737,
+  "github_actions_artifact_id": 11395728027,
+  "gold_loaded": false,
+  "uses_gold": false,
+  "records_total": 16130,
+  "integrity": {
+    "1818057f_o0": {
+      "joined": 6174,
+      "join_fraction": 1
+    },
+    "36a08778_o1": {
+      "joined": 7710,
+      "join_fraction": 1
+    },
+    "80a900e0_o0": {
+      "joined": 2246,
+      "join_fraction": 1
+    }
+  },
+  "decision": "SMOKE_HIDDEN_INCREMENTAL_SIGNAL_NOT_ESTABLISHED",
+  "proxy_summary": {
+    "eventually_expanded": {
+      "mean_delta_auc": -0.000058945804847443384,
+      "mean_delta_ap": 0.0000011774764968238334
+    },
+    "expanded_within_64": {
+      "mean_delta_auc": 0,
+      "mean_delta_ap": 0
+    },
+    "desc_ge8": {
+      "mean_delta_auc": 0.018554409367087705,
+      "mean_delta_ap": 0.0011264630206406407,
+      "positive_auc_folds": 2,
+      "positive_ap_folds": 2
+    }
+  },
+  "notable_layer23_desc_ge8_delta_auc": {
+    "1818057f_o0": 0.041527635605528745,
+    "36a08778_o1": 0.018446237800052834,
+    "80a900e0_o0": 0.01585324680196576
+  },
+  "representation_effective_rank": {
+    "1818057f_o0": {
+      "11": 15.23044490814209,
+      "23": 36.76713562011719,
+      "35": 4.04624080657959
+    },
+    "36a08778_o1": {
+      "11": 15.755294799804688,
+      "23": 49.11780548095703,
+      "35": 6.451166152954102
+    },
+    "80a900e0_o0": {
+      "11": 13.638050079345703,
+      "23": 37.41141128540039,
+      "35": 6.298787593841553
+    }
+  },
+  "interpretation": "No stable overall incremental signal beyond scalar telemetry on the no-Gold smoke proxies. Layer 23 consistently improves the descendant-fertility proxy across all three held-out tasks, so branch-context information may exist, but this does not establish Gold discrimination or authorize hidden-guided search.",
+  "recommendation": "Do not use this smoke diagnostic to alter live search. Complete Gate2 only if the remaining GPU cost is acceptable and the goal is to obtain the preregistered Gold-facing scientific conclusion; otherwise this result is sufficient to deprioritize passive parent-hidden search and move the main research effort toward model/data training."
+}
