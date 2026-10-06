@@ -1,0 +1,18 @@
+{
+  "artifact": "TOP5_SELECTOR_NUMERICAL_SOLVER_ADDENDUM_V2",
+  "parent_addendum_commit": "e3b1dea517e71ffac30d8a6f54b17aa125d40c30",
+  "timing": "FROZEN_BEFORE_COMPLETE_12_TASK_RESULT",
+  "solver": "newton-cholesky",
+  "objective": "same C=1 L2 binary logistic regression and class_weight=balanced; only numerical optimizer changes",
+  "validation_before_adoption": {
+    "held_out_task": "1818057f",
+    "liblinear_candidate_top1": 1,
+    "newton_candidate_top1": 1,
+    "liblinear_pairwise_top1": 0.9975186104218362,
+    "newton_pairwise_top1": 0.9975186104218362,
+    "liblinear_pairwise_mrr": 0.9987593052109182,
+    "newton_pairwise_mrr": 0.9987593052109182,
+    "status": "METRIC_IDENTICAL"
+  },
+  "scientific_contract": "features, LOOTO folds, labels, C, class weighting, pair construction and GPU gate unchanged"
+}
