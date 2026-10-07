@@ -21,7 +21,7 @@ from run_foundation_v2_capability_diagnostic_v1 import (
 )
 
 
-BATCH_SIZES = (4, 8, 12, 16, 20, 24, 28, 32)
+BATCH_SIZES = (32, 28, 24, 20, 16, 12, 8, 4, 2)
 DUPLICATE_SIZES = (2, 4, 8, 16, 32)
 SENSITIVE = (
     "DIAGNOSTIC_V1_2:ff68d59469e5ba1fea3ce1d0",
@@ -196,19 +196,37 @@ def main() -> int:
         raise DiagnosticError("STOPPED_CALIBRATION_RECEIPT_INVALID")
     if any(key in previous for key in ("b1_outputs", "b1_generated_token_ids", "rows", "records")):
         raise DiagnosticError("REFERENCE_RECOVERY_EXCEPTION_NOT_PROVEN")
-    model = load_model(args, "foundation_v2")
-    # The prior receipt omitted all reference tokens. Reconstruct once under the explicit corruption exception and freeze immediately.
-    reference: dict[str, list[int]] = {}; b1_capture: dict[str, Any] = {}; b1_wall = 0.0
-    for index, row in enumerate(selected, 1):
-        generated, elapsed, captured, _width = generate(model, [row], set(SENSITIVE)); reference.update(generated); b1_capture.update(captured); b1_wall += elapsed
-        print(json.dumps({"event": "B1_REFERENCE_RECOVERY", "completed": index, "total": 64}), flush=True)
     old_hashes = {row["sample_id"]: row["b1_sha256"] for row in previous["token_exact_mismatches"]}
+    reference_path = args.output / "B1_REFERENCE_RECOVERY.json"
+    model = load_model(args, "foundation_v2")
+    b1_capture: dict[str, Any] = {}
+    if reference_path.is_file():
+        frozen = json.loads(reference_path.read_text(encoding="utf-8"))
+        if frozen.get("status") != "FROZEN" or frozen.get("record_count") != 64:
+            raise DiagnosticError("B1_REFERENCE_RECOVERY_INVALID")
+        reference = {row["sample_id"]: [int(value) for value in row["generated_token_ids"]] for row in frozen["records"]}
+        if set(reference) != set(ids): raise DiagnosticError("B1_REFERENCE_RECOVERY_COHORT_DRIFT")
+        b1_wall = float(frozen["wall_seconds"])
+        print(json.dumps({"event": "B1_REFERENCE_REUSED", "records": 64, "sha256": sha256_file(reference_path)}), flush=True)
+        # Only the five sensitive rows need a logits trace; require token parity with the frozen reference.
+        for index, sample_id in enumerate(SENSITIVE, 1):
+            generated, _elapsed, captured, _width = generate(model, [contexts[sample_id]], {sample_id})
+            if generated[sample_id] != reference[sample_id]: raise DiagnosticError(f"B1_SENSITIVE_TRACE_DRIFT={sample_id}")
+            b1_capture.update(captured)
+            print(json.dumps({"event": "B1_SENSITIVE_LOGITS", "completed": index, "total": 5}), flush=True)
+    else:
+        # The prior receipt omitted all reference tokens. Reconstruct once under the explicit corruption exception and freeze immediately.
+        reference = {}; b1_wall = 0.0
+        for index, row in enumerate(selected, 1):
+            generated, elapsed, captured, _width = generate(model, [row], set(SENSITIVE)); reference.update(generated); b1_capture.update(captured); b1_wall += elapsed
+            print(json.dumps({"event": "B1_REFERENCE_RECOVERY", "completed": index, "total": 64}), flush=True)
+        old_match = {sample_id: _tokens_hash(reference[sample_id]) == expected for sample_id, expected in old_hashes.items()}
+        if not all(old_match.values()): raise DiagnosticError(f"B1_REFERENCE_RECONSTRUCTION_DRIFT={old_match}")
+        atomic_json(reference_path, {"status": "FROZEN", "classification": "B1_REFERENCE_FREEZE_INCOMPLETE", "corruption_exception_invoked": True,
+                                     "record_count": 64, "prior_known_hashes_reproduced": old_match, "wall_seconds": b1_wall,
+                                     "records": [{"sample_id": sample_id, "generated_token_ids": reference[sample_id], "sha256": _tokens_hash(reference[sample_id])} for sample_id in ids]})
     old_match = {sample_id: _tokens_hash(reference[sample_id]) == expected for sample_id, expected in old_hashes.items()}
     if not all(old_match.values()): raise DiagnosticError(f"B1_REFERENCE_RECONSTRUCTION_DRIFT={old_match}")
-    reference_path = args.output / "B1_REFERENCE_RECOVERY.json"
-    atomic_json(reference_path, {"status": "FROZEN", "classification": "B1_REFERENCE_FREEZE_INCOMPLETE", "corruption_exception_invoked": True,
-                                 "record_count": 64, "prior_known_hashes_reproduced": old_match, "wall_seconds": b1_wall,
-                                 "records": [{"sample_id": sample_id, "generated_token_ids": reference[sample_id], "sha256": _tokens_hash(reference[sample_id])} for sample_id in ids]})
     duplicate = duplicate_self(model, contexts, reference)
     ladder: list[dict[str, Any]] = []; runs: dict[int, dict[str, Any]] = {}
     for size in BATCH_SIZES:
@@ -216,8 +234,12 @@ def main() -> int:
         runs[size] = run; parity = compare(reference, run["outputs"], ids)
         ladder.append({"max_batch": size, **{key: run[key] for key in ("wall_seconds", "examples_per_second", "generated_tokens_per_second", "peak_allocated_vram_bytes", "peak_reserved_vram_bytes", "oom", "actual_batch_sizes")}, **parity})
         print(json.dumps({"event": "BATCH_LADDER", "max_batch": size, "parity": parity["parity_count"], "wall_seconds": run["wall_seconds"]}), flush=True)
+        if parity["parity_count"] == 64 and not run["oom"]:
+            break
     b32 = runs[32]
     forensics = forensic(reference, b32, b1_capture, duplicate, contexts)
+    tested = {row["max_batch"] for row in ladder}
+    parity_table = ladder + [{"max_batch": size, "status": "NOT_RUN_AFTER_DESCENDING_PARITY_GATE"} for size in BATCH_SIZES if size not in tested]
     parity_options = [row for row in ladder if not row["oom"] and row["parity_count"] == 64]
     repeatability: dict[str, Any] | str = "NOT_REQUIRED_TOKEN_EXACT_B1_PARITY"
     order_invariance: dict[str, Any] | str = "NOT_REQUIRED_TOKEN_EXACT_B1_PARITY"
@@ -246,7 +268,7 @@ def main() -> int:
                                                 "gold_dependent_logic": False, "use_cache": True, "do_sample": False, "num_beams": 1},
                 "b1_reference_recovery": {"classification": "B1_REFERENCE_FREEZE_INCOMPLETE", "path": str(reference_path),
                                           "sha256": sha256_file(reference_path), "prior_five_hashes_reproduced": old_match},
-                "parity_table": ladder, "duplicate_self_results": duplicate, "repeatability": repeatability,
+                "parity_table": parity_table, "duplicate_self_results": duplicate, "repeatability": repeatability,
                 "order_invariance": order_invariance, "batch_peer_invariance": peer, "acceptance_route": route,
                 "protocol_statement": None if route == "TOKEN_EXACT_B1_PARITY" else "Batched BF16 greedy inference is treated as the frozen evaluation protocol; B1 is a calibration reference, not the normative inference definition.",
                 "selected_batch_protocol": {"max_batch": selected_size, "max_batched_prompt_tokens": args.max_batched_prompt_tokens, "prompt_length_bucketing": True},

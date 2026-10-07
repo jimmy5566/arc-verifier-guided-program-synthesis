@@ -35,6 +35,6 @@ def test_batch_contract_and_no_full_generation() -> None:
 
 def test_ladder_and_duplicate_sizes_are_frozen() -> None:
     loaded = module()
-    assert loaded.BATCH_SIZES == (4, 8, 12, 16, 20, 24, 28, 32)
+    assert loaded.BATCH_SIZES == (32, 28, 24, 20, 16, 12, 8, 4, 2)
     assert loaded.DUPLICATE_SIZES == (2, 4, 8, 16, 32)
     assert len(loaded.SENSITIVE) == 5
