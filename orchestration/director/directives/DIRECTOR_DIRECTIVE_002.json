@@ -1,0 +1,8 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_002",
+  "decision": "REQUIRE_INFRA_REPAIR",
+  "scope": "DUMMY_ESCALATION_ONLY",
+  "reason": "repeated controller infrastructure repair failure simulated",
+  "scientific_training_authorized": false,
+  "requires_controller_response": true
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "agent_type": "deterministic_python_non_llm",
+  "state_path": "orchestration/supervisor/state/SUPERVISOR_STATE.json",
+  "receipt_scan": "low-frequency metadata-only fallback",
+  "event_stream": "remote events.jsonl when transport is available",
+  "notification": "append-only controller notification JSON; receipt hash is the idempotency key",
+  "director_trigger": {
+    "normal": "every 2 accepted scientific rounds or 1000000 new training tokens",
+    "immediate": ["two_valid_no_gain_rounds", "broad_retention_failure", "capability_or_composition_regression", "protocol_mutation", "leakage_or_overlap", "taxonomy_or_baseline_mismatch", "early_final_audit", "two_controller_repairs_failed", "repeated_remote_failure", "budget_conflict"]
+  },
+  "director_decisions": ["CONTINUE", "CONTINUE_WITH_WARNING", "REQUIRE_CURRICULUM_REVIEW", "REQUIRE_DIAGNOSTIC_REVIEW", "REQUIRE_INFRA_REPAIR", "PAUSE_SCIENTIFIC_EXPERIMENT", "STOP_CURRENT_TRACK", "NEW_SUBPROTOCOL_REQUIRED", "EMERGENCY_RECOVERY"]
+}

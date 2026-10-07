@@ -1,0 +1,7 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_001",
+  "controller_role": "arc-controller",
+  "acknowledged": true,
+  "action": "DUMMY_SMOKE_ACKNOWLEDGED",
+  "scientific_training_started": false
+}

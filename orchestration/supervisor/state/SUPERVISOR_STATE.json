@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "rounds": {},
+  "accepted_rounds_since_director_review": 0,
+  "new_training_tokens_since_director_review": 0,
+  "director_review_required": false,
+  "director_notification_sent": false,
+  "director_directive_id": null
+}

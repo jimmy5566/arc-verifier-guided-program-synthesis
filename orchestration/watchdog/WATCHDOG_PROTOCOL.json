@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "role": "non-scientific process watchdog",
+  "watches": "arc2_supervisor.py only",
+  "restart_policy": "bounded exponential backoff; durable restart counter",
+  "forbidden": ["scientific decisions", "receipt interpretation", "model invocation", "GPU work"]
+}

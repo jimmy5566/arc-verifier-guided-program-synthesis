@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-10-08T06:31:00+10:30",
+  "ssh_endpoint": "9sg1mrcvt78cqt-64411eb5@ssh.runpod.io",
+  "ssh_transport": {
+    "connection_verified": true,
+    "requires_forced_pty": true,
+    "local_ssh_config_bypassed_for_probe": true,
+    "private_key_material_recorded": false
+  },
+  "hostname": "6664c62c8cb7",
+  "gpu": {
+    "count_observed": 1,
+    "name": "NVIDIA GeForce RTX 3090",
+    "uuid": "GPU-99a954f8-97f5-357d-4402-d3380c418bf4",
+    "driver_version": "610.43.02",
+    "compute_capability": "8.6"
+  },
+  "python_version": "3.12.3",
+  "persistent_storage": [
+    {"path": "/workspace", "reported_size": "1.0P", "reported_available": "1.0P"},
+    {"path": "/workspace/arc2", "kind": "ARC2 persistent root"}
+  ],
+  "observed_arc2_paths": ["/workspace/arc2", "/workspace/arc2/arc2", "/root/arc-runtime-3090-gpu-benchmark-v1/arc2"],
+  "scientific_training_started": false
+}

@@ -1,0 +1,8 @@
+{
+    "directive_id": "DIRECTOR_DIRECTIVE_001",
+    "decision": "CONTINUE",
+    "scope": "DUMMY_SMOKE_ONLY",
+    "reason": "two accepted dummy rounds simulated",
+    "scientific_training_authorized": false,
+    "requires_controller_response": true
+}

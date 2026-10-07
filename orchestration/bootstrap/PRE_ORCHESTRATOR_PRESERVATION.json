@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-08T06:31:00+10:30",
+  "scientific_parent": "b26e469d1bd8d757727d4f34aff0e967207d1e62",
+  "working_tree_clean_before_orchestration": true,
+  "no_stash_applied": true,
+  "no_scientific_training_started": true,
+  "stashes": [
+    {
+      "ordinal": 1,
+      "stash_selector_at_capture": "stash@{1}",
+      "stash_commit": "0426fbdf7d562a107dbb1cd2aa397a2dfe12bbdf",
+      "archive_ref": "refs/archive/arc2-pre-orchestrator-stash-01-20261008",
+      "archive_ref_commit": "0426fbdf7d562a107dbb1cd2aa397a2dfe12bbdf",
+      "created_at": "2026-10-08T06:23:34+10:30",
+      "creation_context": "research/grad-proposal-runtime-intervention",
+      "message": "On research/grad-proposal-runtime-intervention: pre-infra-arc2-dual-agent-runpod-orchestrator-v1-2026-10-08"
+    },
+    {
+      "ordinal": 2,
+      "stash_selector_at_capture": "stash@{0}",
+      "stash_commit": "000ca23bf7ff19c82da3b68ce88943cb7a531b2e",
+      "archive_ref": "refs/archive/arc2-pre-orchestrator-stash-02-20261008",
+      "archive_ref_commit": "000ca23bf7ff19c82da3b68ce88943cb7a531b2e",
+      "created_at": "2026-10-08T06:27:11+10:30",
+      "creation_context": "research/grad-proposal-runtime-intervention",
+      "message": "On research/grad-proposal-runtime-intervention: preserve legacy Smoke12 S2 approval package identity before Herdr workspace normalization"
+    }
+  ]
+}

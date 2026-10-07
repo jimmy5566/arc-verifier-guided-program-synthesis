@@ -1,0 +1,20 @@
+{
+  "accepted_rounds_since_director_review": 0,
+  "director_directive_id": null,
+  "director_notification_sent": false,
+  "director_review_required": false,
+  "new_training_tokens_since_director_review": 0,
+  "rounds": {
+    "901": {
+      "controller_notification_sent": true,
+      "terminal_receipt_hash": "9a657d0c91cef8be05ad09d349226549ccb9efe78cb04f61caf46d3e60f0b35b",
+      "terminal_status": "SUCCESS"
+    },
+    "902": {
+      "controller_notification_sent": true,
+      "terminal_receipt_hash": "81d9aeb86f76552568f2f9dfc3fe8a60966f858526d9fa25a7128872ab166db0",
+      "terminal_status": "TRAIN_FAILED"
+    }
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "branch": "infra/arc2-dual-agent-runpod-orchestrator-v1",
+  "scientific_parent": "b26e469d1bd8d757727d4f34aff0e967207d1e62",
+  "scope": "infrastructure only",
+  "scientific_training_started": false,
+  "remote_smoke": {
+    "status": "PASS",
+    "success_round": "901",
+    "failure_round": "902",
+    "model_loading": false,
+    "scientific_training_started": false
+  },
+  "local_supervisor_tests": {
+    "status": "PASS",
+    "pytest": "6 passed",
+    "first_reconcile_notifications": ["901", "902"],
+    "restart_reconcile_notifications": []
+  },
+  "director_protocol_smoke": {
+    "status": "PASS",
+    "milestone_directive": "DIRECTOR_DIRECTIVE_001",
+    "escalation_directive": "DIRECTOR_DIRECTIVE_002",
+    "scientific_training_authorized": false
+  },
+  "watchdog_smoke": {
+    "status": "PASS",
+    "restart_count": 1,
+    "terminal_status": "STOPPED_CLEANLY"
+  }
+}

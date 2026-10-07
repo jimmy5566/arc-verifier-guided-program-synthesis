@@ -1,0 +1,7 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_002",
+  "controller_role": "arc-controller",
+  "acknowledged": true,
+  "action": "INFRA_REPAIR_ESCALATION_ACKNOWLEDGED",
+  "scientific_training_started": false
+}

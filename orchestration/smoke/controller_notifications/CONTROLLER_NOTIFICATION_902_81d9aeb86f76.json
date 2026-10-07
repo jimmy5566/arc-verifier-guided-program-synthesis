@@ -1,0 +1,7 @@
+{
+  "round_id": "902",
+  "scientific_acceptance": "NOT_INFERRED_FROM_PROCESS_RECEIPT",
+  "terminal_receipt": "orchestration\\smoke\\remote_receipts\\ROUND_902\\ROUND_902_TERMINAL_RECEIPT.json",
+  "terminal_receipt_hash": "81d9aeb86f76552568f2f9dfc3fe8a60966f858526d9fa25a7128872ab166db0",
+  "terminal_status": "TRAIN_FAILED"
+}

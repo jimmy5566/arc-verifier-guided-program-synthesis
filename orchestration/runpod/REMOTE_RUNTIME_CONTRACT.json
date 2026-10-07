@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "remote_root": "/workspace/arc2/orchestration",
+  "job_wrapper": "orchestration/runpod/arc2_remote_job.sh",
+  "event_stream": "/workspace/arc2/orchestration/events.jsonl",
+  "receipt_glob": "/workspace/arc2/orchestration/rounds/ROUND_*/ROUND_*_TERMINAL_RECEIPT.json",
+  "terminal_states": ["SUCCESS", "TRAIN_FAILED", "OOM", "INFRA_FAILED", "INTERRUPTED"],
+  "scientific_interpretation": "A process terminal state never accepts a scientific checkpoint. Controller gates remain authoritative.",
+  "detachment": "The wrapper uses setsid/nohup semantics and writes receipts independent of SSH lifetime.",
+  "no_model_loading_in_smoke_tests": true
+}

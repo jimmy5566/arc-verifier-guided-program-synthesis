@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-10-08T06:31:00+10:30",
+  "inspection": {
+    "codex_cli_version": "0.161.0",
+    "evidence": "codex --help confirms explicit --model and -c configuration support; its local CLI does not expose a model catalog.",
+    "availability_rule": "Launch must fail closed if the requested model is rejected by the active Codex account/runtime."
+  },
+  "director": {
+    "role": "arc-director",
+    "requested_model": "gpt-5.6-sol",
+    "requested_reasoning_effort": "high",
+    "actual_launch": {
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high",
+      "verified_by": "Herdr agent-start argv"
+    },
+    "invocation_frequency": "low; milestones and explicit escalations only",
+    "write_authority": "directive and response protocol files only; normally read-only elsewhere"
+  },
+  "controller": {
+    "role": "arc-controller",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "medium",
+    "actual_launch": {
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "medium",
+      "verified_by": "Herdr agent-start argv"
+    },
+    "high_reasoning_allowed_for": ["difficult recovery", "scientific design"],
+    "availability_rule": "Use the strongest coding-capable model accepted by the active Codex runtime; record the actual launch value in a run receipt."
+  },
+  "non_llm_roles": ["arc-supervisor", "arc-watchdog", "arc-monitor"]
+}
