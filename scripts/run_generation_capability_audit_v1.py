@@ -52,6 +52,20 @@ def atomic_text(path: Path, value: str) -> None:
     temp.replace(path)
 
 
+def resolve_pre_generation_receipt(output: Path, artifact: Path, name: str) -> Path:
+    """Resolve a frozen pre-generation receipt without weakening its checks.
+
+    The preflight may be run directly into the compact artifact directory while
+    scientific generation uses a separate fresh runtime directory.  Finalize
+    accepts either location, preferring a receipt already materialized beside
+    the raw generation files.
+    """
+    for candidate in (output / name, artifact / name):
+        if candidate.is_file():
+            return candidate
+    raise GenerationAuditError(f"PRE_GENERATION_RECEIPT_MISSING={name}")
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -710,15 +724,31 @@ def finalize(args: argparse.Namespace) -> int:
     if artifact is None:
         raise GenerationAuditError("ARTIFACT_PATH_REQUIRED")
     artifact.mkdir(parents=True, exist_ok=True)
-    pre_identity = json.loads((args.output / "CHECKPOINT_IDENTITY_AUDIT.json").read_text(encoding="utf-8"))
+    receipt_names = (
+        "CHECKPOINT_IDENTITY_AUDIT.json",
+        "GENERATION_CONTEXT_AUDIT.json",
+        "GENERATION_CONFIG.json",
+        "NO_TRAINING_AUDIT.json",
+    )
+    receipt_sources = {
+        name: resolve_pre_generation_receipt(args.output, artifact, name)
+        for name in receipt_names
+    }
+    identity_source = receipt_sources["CHECKPOINT_IDENTITY_AUDIT.json"]
+    pre_identity = json.loads(identity_source.read_text(encoding="utf-8"))
     post_identity = checkpoint_identity(args)
     if pre_identity.get("base_files") != post_identity.get("base_files") or pre_identity.get("checkpoints") != post_identity.get("checkpoints"):
         raise GenerationAuditError("CHECKPOINT_IDENTITY_CHANGED_DURING_AUDIT")
     pre_identity["post_generation_identity_verification"] = "PASS"
+    pre_identity["pre_generation_receipt_source"] = (
+        "runtime_output" if identity_source.parent == args.output else "artifact_preflight"
+    )
     atomic_json(args.output / "CHECKPOINT_IDENTITY_AUDIT.json", pre_identity)
-    for name in ("CHECKPOINT_IDENTITY_AUDIT.json", "GENERATION_CONTEXT_AUDIT.json", "GENERATION_CONFIG.json", "NO_TRAINING_AUDIT.json"):
-        source = args.output / name
-        atomic_text(artifact / name, source.read_text(encoding="utf-8"))
+    atomic_json(artifact / "CHECKPOINT_IDENTITY_AUDIT.json", pre_identity)
+    for name in receipt_names[1:]:
+        receipt_text = receipt_sources[name].read_text(encoding="utf-8")
+        atomic_text(args.output / name, receipt_text)
+        atomic_text(artifact / name, receipt_text)
     atomic_json(artifact / "NOVEL_GENERATION_RESULTS.json", {"status": "PASS", "points": [{"checkpoint": row["checkpoint"], **row["novel"]} for row in points]})
     atomic_json(artifact / "REPLAY_GENERATION_RESULTS.json", {"status": "PASS", "points": [{"checkpoint": row["checkpoint"], **row["replay"]} for row in points]})
     atomic_json(artifact / "LOSS_VS_GENERATION_COMPARISON.json", {"status": "PASS", "points": comparison, "correlations": correlations})

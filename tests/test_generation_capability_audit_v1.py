@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib.util
 import json
 from pathlib import Path
 
@@ -18,6 +19,15 @@ from generation_capability_audit_v1.audit import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _runner_module():
+    path = ROOT / "scripts/run_generation_capability_audit_v1.py"
+    spec = importlib.util.spec_from_file_location("generation_capability_audit_v1_runner", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def _row(*, later: bool = False):
@@ -59,6 +69,24 @@ def test_generation_settings_are_deterministic_greedy_and_training_free() -> Non
     assert 'do_sample=False' in source and 'num_beams=1' in source
     assert 'optimizer_steps": 0' in source and 'backward_calls": 0' in source
     assert ".backward(" not in source and "torch.optim" not in source
+
+
+def test_finalize_receipt_resolution_prefers_output_then_falls_back_to_artifact(tmp_path: Path) -> None:
+    runner = _runner_module()
+    output = tmp_path / "runtime"
+    artifact = tmp_path / "artifact"
+    output.mkdir()
+    artifact.mkdir()
+    name = "CHECKPOINT_IDENTITY_AUDIT.json"
+
+    (artifact / name).write_text("artifact\n", encoding="utf-8")
+    assert runner.resolve_pre_generation_receipt(output, artifact, name) == artifact / name
+
+    (output / name).write_text("runtime\n", encoding="utf-8")
+    assert runner.resolve_pre_generation_receipt(output, artifact, name) == output / name
+
+    with pytest.raises(GenerationAuditError, match="PRE_GENERATION_RECEIPT_MISSING"):
+        runner.resolve_pre_generation_receipt(output, artifact, "missing.json")
 
 
 def test_strict_grid_parser_classifies_without_repairs() -> None:
