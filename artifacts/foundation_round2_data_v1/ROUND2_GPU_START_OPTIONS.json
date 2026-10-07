@@ -1,0 +1,1 @@
+{"decision":"DEFERRED_TO_GPU_BENCHMARK","options":{"A":"continue existing R64 adapter","B":"merge Foundation-V2 and attach fresh R64 adapter"},"status":"DOCUMENTATION_ONLY"}

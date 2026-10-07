@@ -1,0 +1,1 @@
+{"large_shards_gitignored":true,"shards":[{"logical_name":"r2_novel_train.parquet","rows":4096,"sha256":"08efe7620db28dfd13ab94cc31c2248ce39ef2363afbf4344de4bed38dcbc604","tokens":3612166},{"logical_name":"r2_novel_validation.parquet","rows":128,"sha256":"5a92c7b61922c48e01dca80b9f7c2e3ad3f9fe9df39410027ee3e27372e393ba","tokens":115125}],"status":"FROZEN"}

@@ -1,0 +1,1 @@
+{"batch_shape":[3,1188],"collator_padding_mask_correct":true,"cpu_only":true,"deterministic_seed":20261007,"family_balanced_sampling":true,"forbidden_roles_sampled":false,"holdout_rows_sampled":0,"labels_shape":[3,1188],"meta_holdout_rows_sampled":0,"status":"PASS","token_aware_scheduler":true}
