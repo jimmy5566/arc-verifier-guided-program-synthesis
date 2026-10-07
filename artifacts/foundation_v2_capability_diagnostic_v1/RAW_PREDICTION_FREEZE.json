@@ -1,0 +1,26 @@
+{
+  "ALL_RAW_HASHES_PASS": true,
+  "BASE_COMPLETE": true,
+  "FOUNDATION_V2_COMPLETE": true,
+  "GOLD_SCORING_STARTED": true,
+  "GOLD_SCORING_STARTED_AFTER_FREEZE": true,
+  "RAW_HASHES_VERIFIED": true,
+  "TOTAL_RAW_PREDICTIONS": 6000,
+  "freeze_core_sha256": "369dc94c9d3134630566f7589f9e6703bf494e4247e03c65f5da2d932d74a171",
+  "freeze_unix_time": 1791393861.707393,
+  "gold_scoring_started_unix_time": 1791393863.847538,
+  "protocol_id": "MAX_BATCH32_TOKEN_CAP21568",
+  "raw_files": {
+    "base": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/foundation_v2_capability_diagnostic_v1_production_v1/raw_predictions/base.jsonl.gz",
+      "rows": 3000,
+      "sha256": "3425497aecd25f1685635e46116280ca936b7067a341aa7a58432f7d4fc763e0"
+    },
+    "foundation_v2": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/foundation_v2_capability_diagnostic_v1_production_v1/raw_predictions/foundation_v2.jsonl.gz",
+      "rows": 3000,
+      "sha256": "b2e80ee46b8d11b4a3a379c974e64887990df83b3db4d6acfbb1331dcc801c71"
+    }
+  },
+  "status": "FROZEN"
+}

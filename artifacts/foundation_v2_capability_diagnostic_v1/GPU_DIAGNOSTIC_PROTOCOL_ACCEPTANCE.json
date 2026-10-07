@@ -1,0 +1,54 @@
+{
+  "B1_IS_NORMATIVE_PROTOCOL": false,
+  "B1_TOKEN_DIVERGENCE_SENTINEL": "5/64",
+  "B32_PROTOCOL_DETERMINISTIC": true,
+  "BATCHED_PROTOCOL_IS_NORMATIVE": true,
+  "Gold accessed": false,
+  "IMPLEMENTATION_DEFECT_ESTABLISHED": false,
+  "KNOWN_NUMERICAL_PROTOCOL_SENSITIVITY": true,
+  "adapter_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
+  "calibration_generation": "NOT_RUN_ACCEPTED_FROZEN_PROTOCOL",
+  "configuration": {
+    "attention_backend": "sdpa",
+    "context_window": 8704,
+    "do_sample": false,
+    "eos_token_id": 15,
+    "explicit_attention_mask": true,
+    "left_padding": true,
+    "max_batch": 32,
+    "max_batched_prompt_tokens": 21568,
+    "max_new_tokens": 932,
+    "num_beams": 1,
+    "pad_token_id": 13,
+    "prompt_length_bucketing": true,
+    "temperature": null,
+    "torch_dtype": "bfloat16",
+    "use_cache": true
+  },
+  "forensic_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/foundation_v2_capability_diagnostic_v1/B32_ROOT_CAUSE_FORENSIC.json",
+  "forensic_sha256": "ad1a8159c55a679c827f0673d3afb7da593c418b2aebe42a26ea71c0a922773c",
+  "input_identity": {
+    "cohorts": {
+      "capability": {
+        "episode_count": 2656,
+        "logical_name": "FOUNDATION_DIAGNOSTIC_BATTERY_V1_2.jsonl.gz",
+        "sha256": "10b84b70ae4b855f71e521333ef136af959c7e97798e8e06bfad733ffd5008c0"
+      },
+      "composition": {
+        "episode_count": 56,
+        "logical_name": "COMPOSITION_DIAGNOSTIC_DEV_V1_2.jsonl.gz",
+        "sha256": "1479e4b62d76ba8d909a38222707464d33442f0e8cd7dc3f783544839989da79"
+      },
+      "parameter": {
+        "episode_count": 288,
+        "logical_name": "PARAMETER_GENERALIZATION_DIAGNOSTIC_V1_2.jsonl.gz",
+        "sha256": "b36f2694b9e8e2892190f723cc7b99371b99a2fd2ae4fc4a96079e8e821b4b7b"
+      }
+    },
+    "source_commit": "9098a93d6d2c1234879b6576a2a0c29a5e35657f",
+    "status": "PASS",
+    "total_episodes": 3000
+  },
+  "protocol_id": "MAX_BATCH32_TOKEN_CAP21568",
+  "status": "PASS"
+}

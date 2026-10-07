@@ -1,0 +1,1449 @@
+{
+  "improved": [
+    {
+      "base": {
+        "capability": "encode quantity geometrically",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.25,
+          "dimension_exact_rate": 0.25,
+          "exact_accuracy": 0.25,
+          "exact_correct": 8,
+          "total": 32,
+          "valid_format_rate": 0.25
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": true,
+      "borderline_observation_width": 0.0625,
+      "capability": "encode quantity geometrically",
+      "delta": 0.375,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "encode quantity geometrically",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 6,
+        "contrast_success_rate": 0.375,
+        "individual_task": {
+          "cell_accuracy": 0.6875,
+          "dimension_exact_rate": 0.6875,
+          "exact_accuracy": 0.6875,
+          "exact_correct": 22,
+          "total": 32,
+          "valid_format_rate": 0.6875
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.375,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "difference",
+        "cell_accuracy": 0.9668367346938771,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.1875,
+        "exact_correct": 6,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.1875,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "difference",
+      "delta": 0.25,
+      "engineering_status": "PARTIAL",
+      "foundation_v2": {
+        "capability": "difference",
+        "cell_accuracy": 0.9770408163265303,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.4375,
+        "exact_correct": 14,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.4375,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "inside/contains",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9955555555555553,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "inside/contains",
+      "delta": 0.1875,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "inside/contains",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 4,
+        "contrast_success_rate": 0.25,
+        "individual_task": {
+          "cell_accuracy": 0.9961111111111107,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5625,
+          "exact_correct": 18,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "relation-conditioned selector",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9955555555555553,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "relation-conditioned selector",
+      "delta": 0.1875,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "relation-conditioned selector",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 4,
+        "contrast_success_rate": 0.25,
+        "individual_task": {
+          "cell_accuracy": 0.9966666666666664,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.625,
+          "exact_correct": 20,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "orientation",
+        "cell_accuracy": 0.9858940972222221,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "orientation",
+      "delta": 0.15625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "orientation",
+        "cell_accuracy": 0.9868706597222223,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.15625,
+        "exact_correct": 5,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.15625,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "width",
+        "cell_accuracy": 0.9928385416666663,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 8,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.25,
+      "borderline": true,
+      "borderline_observation_width": 0.03125,
+      "capability": "width",
+      "delta": 0.15625,
+      "engineering_status": "PARTIAL",
+      "foundation_v2": {
+        "capability": "width",
+        "cell_accuracy": 0.9934895833333329,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.40625,
+        "exact_correct": 13,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.40625,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "compare quantities",
+        "cell_accuracy": 0.9488201530612245,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.15625,
+        "exact_correct": 5,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.15625,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "compare quantities",
+      "delta": 0.09375,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "compare quantities",
+        "cell_accuracy": 0.954719387755102,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 8,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "height",
+        "cell_accuracy": 0.9902343749999997,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0625,
+        "exact_correct": 2,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "height",
+      "delta": 0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "height",
+        "cell_accuracy": 0.9908854166666663,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.125,
+        "exact_correct": 4,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.125,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "holes/enclosures",
+        "cell_accuracy": 0.801020408163265,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.1875,
+        "exact_correct": 6,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.1875,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "holes/enclosures",
+      "delta": 0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "holes/enclosures",
+        "cell_accuracy": 0.8163265306122447,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 8,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "count components",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 7,
+        "contrast_success_rate": 0.4375,
+        "individual_task": {
+          "cell_accuracy": 0.46875,
+          "dimension_exact_rate": 0.46875,
+          "exact_accuracy": 0.46875,
+          "exact_correct": 15,
+          "total": 32,
+          "valid_format_rate": 0.46875
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.4375,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "count components",
+      "delta": 0.0625,
+      "engineering_status": "PARTIAL",
+      "foundation_v2": {
+        "capability": "count components",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 8,
+        "contrast_success_rate": 0.5,
+        "individual_task": {
+          "cell_accuracy": 0.75,
+          "dimension_exact_rate": 0.75,
+          "exact_accuracy": 0.75,
+          "exact_correct": 24,
+          "total": 32,
+          "valid_format_rate": 0.75
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.5,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "iterative update",
+        "cell_accuracy": 0.9987086776859504,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.96875,
+        "exact_correct": 31,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.96875,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "iterative update",
+      "delta": 0.03125,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "iterative update",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    }
+  ],
+  "interpretation": "Raw diagnostic deltas; one-sample changes are not strong conclusions.",
+  "regressed": [
+    {
+      "base": {
+        "capability": "reflect diagonal",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "reflect diagonal",
+      "delta": -0.09375,
+      "engineering_status": "STRONG",
+      "foundation_v2": {
+        "capability": "reflect diagonal",
+        "cell_accuracy": 0.9988014150206652,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.90625,
+        "exact_correct": 29,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.90625,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "progression",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": true,
+      "borderline_observation_width": 0.03125,
+      "capability": "progression",
+      "delta": -0.0625,
+      "engineering_status": "STRONG",
+      "foundation_v2": {
+        "capability": "progression",
+        "cell_accuracy": 0.9964988425925926,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.9375,
+        "exact_correct": 30,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.9375,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "left/right",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 2,
+        "contrast_success_rate": 0.125,
+        "individual_task": {
+          "cell_accuracy": 0.9955555555555552,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.125,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "left/right",
+      "delta": -0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "left/right",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9949999999999997,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.4375,
+          "exact_correct": 14,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0625,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "nearest/farthest",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9952777777777775,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.40625,
+          "exact_correct": 13,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "nearest/farthest",
+      "delta": -0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "nearest/farthest",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9949999999999997,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.40625,
+          "exact_correct": 13,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    }
+  ],
+  "unchanged": [
+    {
+      "base": {
+        "capability": "alternation",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "alternation",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "alternation",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "color mapping",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "color mapping",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "color mapping",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "complete missing structure",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "complete missing structure",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "complete missing structure",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "copy",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "copy",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "copy",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "copy reference color",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "copy reference color",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "copy reference color",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "overlay",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "overlay",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "overlay",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "periodic pattern",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "periodic pattern",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "periodic pattern",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "propagation",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "propagation",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "propagation",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "reflect LR",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "reflect LR",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "reflect LR",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "reflect UD",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "reflect UD",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "reflect UD",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "rotate 180",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "rotate 180",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "rotate 180",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "rotate 270",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "rotate 270",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "rotate 270",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "rotate 90",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "rotate 90",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "rotate 90",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "scale",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "scale",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "scale",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "separators/subgrids",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "separators/subgrids",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "separators/subgrids",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "above/below",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 2,
+        "contrast_success_rate": 0.125,
+        "individual_task": {
+          "cell_accuracy": 0.9961111111111108,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5625,
+          "exact_correct": 18,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.125,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "above/below",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "above/below",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 2,
+        "contrast_success_rate": 0.125,
+        "individual_task": {
+          "cell_accuracy": 0.9961111111111108,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5625,
+          "exact_correct": 18,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.125,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "area",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.25,
+          "dimension_exact_rate": 0.25,
+          "exact_accuracy": 0.25,
+          "exact_correct": 8,
+          "total": 32,
+          "valid_format_rate": 0.25
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "area",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "area",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.28125,
+          "dimension_exact_rate": 0.28125,
+          "exact_accuracy": 0.28125,
+          "exact_correct": 9,
+          "total": 32,
+          "valid_format_rate": 0.28125
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "branch-balanced conditional tasks",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 3,
+        "contrast_success_rate": 0.1875,
+        "individual_task": {
+          "cell_accuracy": 0.9612603305785122,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.34375,
+          "exact_correct": 11,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.1875,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "branch-balanced conditional tasks",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "branch-balanced conditional tasks",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 3,
+        "contrast_success_rate": 0.1875,
+        "individual_task": {
+          "cell_accuracy": 0.9746900826446279,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.59375,
+          "exact_correct": 19,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.1875,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "connected components",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9699999999999999,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "connected components",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "connected components",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9699999999999999,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "if/else on attribute",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 3,
+        "contrast_success_rate": 0.1875,
+        "individual_task": {
+          "cell_accuracy": 0.9612603305785122,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.34375,
+          "exact_correct": 11,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.1875,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "if/else on attribute",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "if/else on attribute",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 3,
+        "contrast_success_rate": 0.1875,
+        "individual_task": {
+          "cell_accuracy": 0.9746900826446279,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.59375,
+          "exact_correct": 19,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.1875,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "if/else on count",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.959194214876033,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "if/else on count",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "if/else on count",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9535123966942147,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "if/else on relation",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9514462809917354,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.15625,
+          "exact_correct": 5,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "if/else on relation",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "if/else on relation",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.963326446280992,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.34375,
+          "exact_correct": 11,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "largest",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 16,
+        "contrast_success_rate": 1.0,
+        "individual_task": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 32,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 1.0,
+      "borderline": true,
+      "borderline_observation_width": 0.0625,
+      "capability": "largest",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "largest",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 16,
+        "contrast_success_rate": 1.0,
+        "individual_task": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 32,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "recolor",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 8,
+        "contrast_success_rate": 0.5,
+        "individual_task": {
+          "cell_accuracy": 0.9841666666666667,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.5,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "recolor",
+      "delta": 0.0,
+      "engineering_status": "PARTIAL",
+      "foundation_v2": {
+        "capability": "recolor",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 8,
+        "contrast_success_rate": 0.5,
+        "individual_task": {
+          "cell_accuracy": 0.9841666666666667,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.5,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "same color",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9958333333333331,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.53125,
+          "exact_correct": 17,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "same color",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "same color",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9958333333333331,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.53125,
+          "exact_correct": 17,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0625,
+      "measurement_type": "MINIMAL_CONTRAST"
+    }
+  ]
+}
