@@ -1,0 +1,1 @@
+{"GPU_EXECUTED":false,"P1":["perception","attributes","selectors","geometry"],"P2":["relations","movement","color/mask","construction"],"P3":["numeric","state/progression","conditionals"],"replay":"each stage replays prior basis plus legacy retention","status":"DOCUMENT_ONLY","terminal":"freeze FOUNDATION_BASIS"}

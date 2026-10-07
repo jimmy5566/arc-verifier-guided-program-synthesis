@@ -1,0 +1,1 @@
+{"atomic_programs":32,"explicit_contrast_checks":["count components vs colors","largest vs smallest","row vs column","touching conditional vs other relations","motion rules","selectors"],"pairwise_comparisons":496,"status":"PASS","unresolved_aliases":[]}

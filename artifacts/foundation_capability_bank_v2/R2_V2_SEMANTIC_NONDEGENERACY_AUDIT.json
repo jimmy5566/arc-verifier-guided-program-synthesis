@@ -1,0 +1,1 @@
+{"checks":["unique selector target","conditional branch coverage","relation instantiated","distractors","parameter exercised","input-dependent","color randomized","background randomized","no scan-order tie","no clipping","intended program fits"],"episodes":3936,"failures":[],"status":"PASS"}

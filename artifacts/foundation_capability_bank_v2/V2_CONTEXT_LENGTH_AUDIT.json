@@ -1,0 +1,1 @@
+{"context":8704,"sequence_length":{"max":2808,"min":810,"p50":1703,"p90":2262,"p99":2606},"status":"PASS","supervised_length":{"max":1406,"min":70,"p50":851,"p90":1130,"p99":1303},"target_truncations":0}
