@@ -474,11 +474,22 @@ def quadrant_analysis(task_matrix: Sequence[dict[str, Any]], oracle: Sequence[di
     for task in task_matrix:
         miss_heavy = misses[task["task_id"]] / totals[task["task_id"]] >= 0.5
         status = task["base_representation_status"]
-        if status in {"ONTOLOGY_GAP", "INSUFFICIENT_EVIDENCE"}: bucket = "Q4_INSUFFICIENT_OR_ONTOLOGY_GAP"
-        elif status in {"REPRESENTATION_GAP_EXPECTED", "REPRESENTATION_RISK_PARTIAL"}: bucket = "Q1_BASE_WEAK_OR_PARTIAL__ORC_MISS_HEAVY" if miss_heavy else "Q2_BASE_STRONG__ORC_HIGH"
-        else: bucket = "Q3_BASE_STRONG__ORC_MISS_HEAVY" if miss_heavy else "Q2_BASE_STRONG__ORC_HIGH"
+        if status in {"ONTOLOGY_GAP", "INSUFFICIENT_EVIDENCE"}:
+            bucket = "Q4_INSUFFICIENT_OR_ONTOLOGY_GAP"
+        elif status in {"REPRESENTATION_GAP_EXPECTED", "REPRESENTATION_RISK_PARTIAL"}:
+            # Keep weak/partial primitive supply out of the explicitly Base-strong
+            # quadrant even when the historical oracle happened to solve a task.
+            bucket = "Q1_BASE_WEAK_OR_PARTIAL__ORC_MISS_HEAVY"
+        else:
+            bucket = "Q3_BASE_STRONG__ORC_MISS_HEAVY" if miss_heavy else "Q2_BASE_STRONG__ORC_HIGH"
         buckets[bucket].append(task["task_id"])
-    return {"status": "COMPLETE_DESCRIPTIVE_ONLY", "quadrants": buckets, "causal_conclusion": "NOT_ESTABLISHED"}
+    return {
+        "status": "COMPLETE_DESCRIPTIVE_ONLY",
+        "quadrants": buckets,
+        "q1_name_is_descriptive_of_the_target_failure_pattern": True,
+        "q1_may_include_ORC_high_tasks_to_preserve_the_four-way_partition": True,
+        "causal_conclusion": "NOT_ESTABLISHED",
+    }
 
 
 def special_focus_summary(tasks: Sequence[dict[str, Any]], task_matrix: Sequence[dict[str, Any]], oracle: Sequence[dict[str, Any]], compositions: Sequence[dict[str, Any]]) -> dict[str, Any]:
@@ -552,6 +563,116 @@ def write_profile(out: Path, profile: Sequence[dict[str, Any]], axes: Sequence[d
     atomic_text(out / "BASE_CAPABILITY_PROFILE_V1.md", "\n".join(lines) + "\n")
 
 
+def write_alignment_report(out: Path, summary: dict[str, Any]) -> None:
+    """Render every preregistered summary field without adding causal claims."""
+    bands = summary["profile_band_counts"]
+    statuses = summary["task_status_counts"]
+    lines = [
+        "# Base x Eval60 Capability Alignment V1",
+        "",
+        summary["claim_boundary"],
+        "",
+        "## Frozen boundaries",
+        "",
+        f"- Full 6000 raw freeze established before diagnostic Gold access: {summary['full_6000_raw_freeze_established_before_gold']}",
+        f"- Base predictions scored: {summary['Base_predictions_scored']}/3000",
+        f"- Foundation-V2 results used: {summary['Foundation_V2_results_used']}",
+        f"- Eval60 taxonomy modified: {summary['Eval60_taxonomy_modified']}",
+        f"- Gold-path preference analysis started: {summary['Gold_preference_analysis_started']}",
+        "",
+        "## Base capability bands",
+        "",
+        f"- WEAK: {bands.get('WEAK', 0)}",
+        f"- PARTIAL: {bands.get('PARTIAL', 0)}",
+        f"- STRONG: {bands.get('STRONG', 0)}",
+        f"- SATURATED: {bands.get('SATURATED', 0)}",
+        f"- BORDERLINE: {summary['borderline_count']}",
+        "",
+        "## Eval60 task representation status",
+        "",
+    ]
+    for name in (
+        "REPRESENTATION_GAP_EXPECTED",
+        "REPRESENTATION_RISK_PARTIAL",
+        "PRIMITIVE_SUPPLY_STRONG",
+        "COMPOSITION_EVIDENCE_NEEDED",
+        "ONTOLOGY_GAP",
+        "INSUFFICIENT_EVIDENCE",
+    ):
+        lines.append(f"- {name}: {statuses.get(name, 0)}")
+
+    lines.extend([
+        "",
+        "## Highest-frequency Eval60 requirements",
+        "",
+        "| Capability | Eval60 outputs | Base measurement | Base score | Base band | ORC rate |",
+        "|---|---:|---|---:|---|---:|",
+    ])
+    for row in summary["highest_frequency_required_capabilities"]:
+        score = "NOT_MEASURED" if row["Base_score"] is None else f"{row['Base_score']:.4f}"
+        lines.append(
+            f"| {row['capability']} | {row['Eval60_output_count']} | "
+            f"{row['Base_measurement_type'] or 'NOT_DIRECTLY_MEASURED'} | {score} | "
+            f"{row['Base_band']} | {row['historical_ORC_rate']:.4f} |"
+        )
+
+    lines.extend([
+        "",
+        "## Special-focus groups",
+        "",
+        "| Group | Outputs | ORC rate | Required-capability bands | Task statuses | Composition evidence |",
+        "|---|---:|---:|---|---|---|",
+    ])
+    for name, row in summary["special_focus_groups"].items():
+        rate = "N/A" if row["historical_ORC_rate"] is None else f"{row['historical_ORC_rate']:.4f}"
+        comp = ", ".join(
+            f"{item['category']}={item['score']:.4f}({item['band']})"
+            for item in row["Base_composition_evidence"]
+        ) or "NO_CLEAR_COMPOSITION_MATCH"
+        lines.append(
+            f"| {name} | {row['output_count']} | {rate} | "
+            f"{canonical(row['Base_required_capability_strength_distribution'])} | "
+            f"{canonical(row['task_status_counts'])} | {comp} |"
+        )
+
+    lines.extend([
+        "",
+        "## Historical ORC miss alignment",
+        "",
+        f"- ORC misses with strong Base primitive supply: {summary['historical_ORC_misses_with_strong_Base_primitive_supply']}",
+        f"- ORC misses with strong primitives and strong matching composition evidence: {summary['historical_ORC_misses_with_strong_primitive_and_matching_composition_evidence']}",
+        f"- Interpretation case counts: {canonical(summary['interpretation_case_counts'])}",
+        f"- Ontology-gap tasks: {', '.join(summary['ontology_gap_tasks']) or 'NONE'}",
+        "",
+        "### Top surprising misses",
+        "",
+        "| Task | Output | Family | Representation status |",
+        "|---|---|---|---|",
+    ])
+    for row in summary["top_15_surprising_misses"]:
+        lines.append(f"| {row['task_id']} | {row['output_id']} | {row['primary_family']} | {row['base_representation_status']} |")
+
+    lines.extend([
+        "",
+        "### Top expected misses",
+        "",
+        "| Task | Output | Family | Representation status |",
+        "|---|---|---|---|",
+    ])
+    for row in summary["top_15_expected_misses"]:
+        lines.append(f"| {row['task_id']} | {row['output_id']} | {row['primary_family']} | {row['base_representation_status']} |")
+
+    lines.extend([
+        "",
+        "## Interpretation boundary",
+        "",
+        "Base diagnostic capability evidence does not measure whether the model prefers the Eval60 Gold trajectory.",
+        "Strong primitive evidence therefore weakens only a pure primitive-representation explanation; it does not establish task solvability.",
+        "",
+    ])
+    atomic_text(out / "BASE_EVAL60_ALIGNMENT_REPORT_V1.md", "\n".join(lines))
+
+
 def write_ledger(out: Path) -> None:
     entries = []
     for path in sorted(out.iterdir(), key=lambda value: value.name):
@@ -601,7 +722,7 @@ def run(*, taxonomy: Path, out: Path, freeze_path: Path | None, input_root: Path
     miss_summary = miss_interpretation_summary(tasks, task_matrix, oracle, compositions)
     summary = {"schema_version": "BASE_EVAL60_ALIGNMENT_SUMMARY_V1", "status": "COMPLETE", "full_6000_raw_freeze_established_before_gold": True, "Base_predictions_scored": 3000, "Foundation_V2_results_used": False, "Eval60_taxonomy_modified": False, "Gold_preference_analysis_started": False, "diagnostic_gold_accessed_after_freeze": True, "profile_band_counts": dict(profile_counts), "borderline_count": sum(row["BORDERLINE"] for row in profile), "task_status_counts": dict(status_counts), "parse_failure_counts": parse_counts, "historical_ORC": {"solved": 35, "total": 89}, "highest_frequency_required_capabilities": required[:15], "special_focus_groups": focus, **miss_summary, "claim_boundary": "Strong primitive evidence weakens a pure primitive-representation explanation but does not imply Eval60 task solvability or Gold-path preference."}
     atomic_json(out / "BASE_EVAL60_ALIGNMENT_SUMMARY_V1.json", summary)
-    atomic_text(out / "BASE_EVAL60_ALIGNMENT_REPORT_V1.md", "# Base × Eval60 Capability Alignment V1\n\n" + summary["claim_boundary"] + "\n\nGold-path preference analysis was not started. Foundation-V2 results were not used.\n")
+    write_alignment_report(out, summary)
     atomic_json(out / "BASE_EVAL60_ALIGNMENT_READINESS.json", {"schema_version": SCHEMA_VERSION, "status": READY, "full_6000_raw_freeze_established": True, "freeze_audit": freeze_audit, "taxonomy_audit": taxonomy_audit, "diagnostic_gold_accessed_after_freeze": True})
     atomic_json(out / "ALIGNMENT_OUTPUT_SCHEMAS_V1.json", schemas())
     atomic_json(out / "EVAL60_BASE_GOLD_PATH_PREFERENCE_PROTOCOL_V1.json", gold_preference_protocol())

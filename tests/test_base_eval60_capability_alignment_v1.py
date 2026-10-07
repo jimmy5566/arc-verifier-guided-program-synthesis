@@ -13,9 +13,11 @@ from base_eval60_capability_alignment_v1.pipeline import (
     build_task_matrices,
     freeze_status,
     gold_preference_protocol,
+    quadrant_analysis,
     schemas,
     task_status,
     verify_taxonomy,
+    write_alignment_report,
     write_waiting,
 )
 
@@ -83,3 +85,43 @@ def test_source_orders_freeze_gate_before_scoring() -> None:
     run_source = source[source.index("def run("):]
     assert run_source.index("freeze_status") < run_source.index("score_base")
     assert "This is the first operation that can load diagnostic Gold" in run_source
+
+
+def test_quadrants_never_label_weak_supply_as_base_strong() -> None:
+    tasks = [
+        {"task_id": "weak", "base_representation_status": "REPRESENTATION_RISK_PARTIAL"},
+        {"task_id": "strong", "base_representation_status": "PRIMITIVE_SUPPLY_STRONG"},
+    ]
+    oracle = [
+        {"task_id": "weak", "ORC_UNION": True},
+        {"task_id": "strong", "ORC_UNION": True},
+    ]
+    result = quadrant_analysis(tasks, oracle, [])
+    assert result["quadrants"]["Q1_BASE_WEAK_OR_PARTIAL__ORC_MISS_HEAVY"] == ["weak"]
+    assert result["quadrants"]["Q2_BASE_STRONG__ORC_HIGH"] == ["strong"]
+
+
+def test_final_report_contains_every_preregistered_summary_section(tmp_path: Path) -> None:
+    summary = {
+        "claim_boundary": "boundary",
+        "full_6000_raw_freeze_established_before_gold": True,
+        "Base_predictions_scored": 3000,
+        "Foundation_V2_results_used": False,
+        "Eval60_taxonomy_modified": False,
+        "Gold_preference_analysis_started": False,
+        "profile_band_counts": {"WEAK": 1, "PARTIAL": 2, "STRONG": 3, "SATURATED": 4},
+        "borderline_count": 5,
+        "task_status_counts": {},
+        "highest_frequency_required_capabilities": [{"capability": "copy", "Eval60_output_count": 10, "Base_measurement_type": "DIRECT_ATOMIC", "Base_score": 0.5, "Base_band": "PARTIAL", "historical_ORC_rate": 0.2}],
+        "special_focus_groups": {"MOTION": {"output_count": 6, "historical_ORC_rate": 1 / 3, "Base_required_capability_strength_distribution": {}, "task_status_counts": {}, "Base_composition_evidence": []}},
+        "historical_ORC_misses_with_strong_Base_primitive_supply": 7,
+        "historical_ORC_misses_with_strong_primitive_and_matching_composition_evidence": 2,
+        "interpretation_case_counts": {},
+        "ontology_gap_tasks": ["abc"],
+        "top_15_surprising_misses": [],
+        "top_15_expected_misses": [],
+    }
+    write_alignment_report(tmp_path, summary)
+    report = (tmp_path / "BASE_EVAL60_ALIGNMENT_REPORT_V1.md").read_text(encoding="utf-8")
+    for heading in ("Frozen boundaries", "Base capability bands", "Eval60 task representation status", "Highest-frequency Eval60 requirements", "Special-focus groups", "Historical ORC miss alignment", "Interpretation boundary"):
+        assert heading in report
