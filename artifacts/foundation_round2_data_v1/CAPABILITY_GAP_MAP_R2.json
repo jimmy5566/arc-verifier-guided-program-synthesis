@@ -1,0 +1,46 @@
+{
+  "artifact": "CAPABILITY_GAP_MAP_R2",
+  "status": "FROZEN_RESEARCH_PRIOR",
+  "source_scope": "already-exposed aggregate Round-1 results only",
+  "individual_round1_holdout_errors_inspected": false,
+  "not_a_claim_about_arc_hidden_tasks": true,
+  "round1_aggregate_evidence": {
+    "novel_validation_exact": {"base": 0.6484, "tokens_2000000": 0.8828},
+    "novel_holdout_exact": {"base": 0.80, "tokens_2000000": 0.87, "gain_pp": 7.0},
+    "novel_holdout_bootstrap_95_ci_pp": [3.0, 11.0],
+    "novel_holdout_mcnemar_exact_p": 0.0025768280029296875,
+    "validation_unseen_1d_exact": {"base": 0.61, "tokens_2000000": 0.74},
+    "one_d_mirror_exact": {"base": 0.84, "tokens_2000000": 0.82},
+    "one_d_move_2p_exact": {"base": 0.38, "tokens_2000000": 0.66},
+    "current_compositional_holdout_exact": {"base": 0.99, "tokens_2000000": 1.0}
+  },
+  "priority_groups": {
+    "HIGH": [
+      "parameterized movement / displacement",
+      "boundary-sensitive transformations",
+      "object selection by properties",
+      "multi-object spatial relations",
+      "conditional transformations",
+      "counting / comparison",
+      "state/progression transformations",
+      "multi-stage construction"
+    ],
+    "MEDIUM": [
+      "reflection/mirroring robustness",
+      "fill / padded-fill style transformations",
+      "object extraction / placement",
+      "relation-conditioned recoloring"
+    ],
+    "LOW_OR_CURRENTLY_SATURATED": [
+      "current Compositional-ARC OOD grow/mirror/rotation/translation templates",
+      "already-saturated simple pattern-copy families"
+    ]
+  },
+  "governance": {
+    "novel_v1_1_holdout_status": "RETIRED_AFTER_ROUND1_CONFIRMATION",
+    "exposed_confirmation_sentinel_pristine": false,
+    "round1_holdout_allowed_for_round2_training": false,
+    "round1_holdout_allowed_for_model_selection": false,
+    "meta_holdout_model_access_allowed": false
+  }
+}
