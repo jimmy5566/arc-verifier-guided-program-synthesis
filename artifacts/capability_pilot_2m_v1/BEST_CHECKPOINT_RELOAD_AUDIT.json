@@ -1,0 +1,32 @@
+{
+  "absolute_differences": {
+    "macro_family_average_loss": 0.0,
+    "micro_average_loss": 0.0,
+    "per_family:1d_arc:1d_padded_fill": 0.0,
+    "per_family:1d_arc:1d_pcopy_mc": 0.0,
+    "per_family:compositional_arc:systematicity:grow+mirror+translation": 0.0,
+    "per_family:compositional_arc:systematicity:grow+rotation+translation": 0.0,
+    "source_macro_loss": 0.0
+  },
+  "adapter_checkpoint": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/capability_pilot_2m_v1_checkpoints/tokens_2000000",
+  "base_model": "/root/arc-runtime-3090-gpu-benchmark-v1/model-stage/qwen3_4b_grids15_sft139",
+  "comparison_scope": "full frozen Novel Validation Sentinel including the fixed first batch",
+  "episode_count": 128,
+  "expected_original_checkpoint_evaluation": {
+    "macro_family_average_loss": 0.06164049707616188,
+    "micro_average_loss": 0.028484122282653235,
+    "source_macro_loss": 0.06164049707616188
+  },
+  "family_count": 4,
+  "fixed_first_batch_loss": 0.027188805863261223,
+  "fixed_first_novel_validation_sample_id": "1d_arc:1d_padded_fill_0:native-source-episode-v1",
+  "fresh_process": true,
+  "max_absolute_difference": 0.0,
+  "reloaded_checkpoint_evaluation": {
+    "macro_family_average_loss": 0.06164049707616188,
+    "micro_average_loss": 0.028484122282653235,
+    "source_macro_loss": 0.06164049707616188
+  },
+  "status": "PASS",
+  "tight_absolute_tolerance": 1e-06
+}

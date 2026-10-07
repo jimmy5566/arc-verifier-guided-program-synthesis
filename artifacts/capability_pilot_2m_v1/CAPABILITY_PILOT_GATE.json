@@ -1,0 +1,10 @@
+{
+  "NOVEL_CAPABILITY_RESULT": "STRONG_NOVEL_GAIN",
+  "REPLAY_RETENTION_RESULT": "RETENTION_WITHIN_5_PERCENT",
+  "interpretation_thresholds_are_diagnostic_not_significance_claims": true,
+  "long_training_beyond_2m_started": false,
+  "next_phase_recommendation": "A_EXTEND_SAME_CONFIG_TO_5M",
+  "novel_gain_relative": 0.9537405575601103,
+  "replay_loss_change": -0.9805393018657991,
+  "status": "STRONG_PROMISING"
+}

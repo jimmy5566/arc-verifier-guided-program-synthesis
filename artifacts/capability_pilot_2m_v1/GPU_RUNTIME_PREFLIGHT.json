@@ -1,0 +1,13 @@
+{
+  "bf16_supported": true,
+  "bitsandbytes": "0.50.2",
+  "cuda": "12.8",
+  "device_count": 1,
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "peft": "0.17.1",
+  "python": "3.11.13",
+  "status": "PASS",
+  "torch": "2.8.0+cu128",
+  "total_vram_bytes": 25295323136,
+  "transformers": "4.55.4"
+}

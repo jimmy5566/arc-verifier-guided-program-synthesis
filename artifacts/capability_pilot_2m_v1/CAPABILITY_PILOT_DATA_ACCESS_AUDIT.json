@@ -1,0 +1,10 @@
+{
+  "eval60_accessed": false,
+  "kaggle_gold_accessed": false,
+  "novel_holdout_accessed": false,
+  "novel_train_accessed": true,
+  "novel_validation_accessed": true,
+  "replay_retention_accessed": true,
+  "replay_train_accessed": true,
+  "status": "PASS"
+}

@@ -1,0 +1,75 @@
+{
+  "points": [
+    {
+      "novel_gain_relative": 0.0,
+      "novel_macro_family_loss": 1.332495460926895,
+      "novel_micro_loss": 0.6879750777251176,
+      "novel_source_macro_loss": 1.332495460926895,
+      "optimizer_steps": 0,
+      "replay_loss_change": 0.0,
+      "replay_macro_family_loss": 2.5560140730813146,
+      "replay_micro_loss": 0.6020801217974139,
+      "replay_source_macro_loss": 2.5560140730813146,
+      "tokens_per_sec": null,
+      "training_loss": null,
+      "training_tokens": 0
+    },
+    {
+      "novel_gain_relative": 0.9429138125632741,
+      "novel_macro_family_loss": 0.07606708564105921,
+      "novel_micro_loss": 0.03786015625369454,
+      "novel_source_macro_loss": 0.07606708564105921,
+      "optimizer_steps": 50,
+      "replay_loss_change": -0.9385266856366831,
+      "replay_macro_family_loss": 0.15712665663158987,
+      "replay_micro_loss": 0.03225763941651993,
+      "replay_source_macro_loss": 0.15712665663158987,
+      "tokens_per_sec": 539.7961802696459,
+      "training_loss": 0.04280399617271758,
+      "training_tokens": 504973
+    },
+    {
+      "novel_gain_relative": 0.9504452883588794,
+      "novel_macro_family_loss": 0.06603142832933451,
+      "novel_micro_loss": 0.03214015670558702,
+      "novel_source_macro_loss": 0.06603142832933451,
+      "optimizer_steps": 92,
+      "replay_loss_change": -0.9720008882990063,
+      "replay_macro_family_loss": 0.07156612354151548,
+      "replay_micro_loss": 0.013291216578120891,
+      "replay_source_macro_loss": 0.07156612354151548,
+      "tokens_per_sec": 858.2930338949834,
+      "training_loss": 0.032720106873107044,
+      "training_tokens": 1000340
+    },
+    {
+      "novel_gain_relative": 0.953314131543825,
+      "novel_macro_family_loss": 0.062208707807283214,
+      "novel_micro_loss": 0.030069937830773105,
+      "novel_source_macro_loss": 0.062208707807283214,
+      "optimizer_steps": 127,
+      "replay_loss_change": -0.9776107993749615,
+      "replay_macro_family_loss": 0.05722711188263929,
+      "replay_micro_loss": 0.011062679783368435,
+      "replay_source_macro_loss": 0.05722711188263929,
+      "tokens_per_sec": 540.880490526409,
+      "training_loss": 0.01802778891625685,
+      "training_tokens": 1507740
+    },
+    {
+      "novel_gain_relative": 0.9537405575601103,
+      "novel_macro_family_loss": 0.06164049707616188,
+      "novel_micro_loss": 0.028484122282653235,
+      "novel_source_macro_loss": 0.06164049707616188,
+      "optimizer_steps": 172,
+      "replay_loss_change": -0.9805393018657991,
+      "replay_macro_family_loss": 0.04974181830300495,
+      "replay_micro_loss": 0.009981033008344698,
+      "replay_source_macro_loss": 0.04974181830300495,
+      "tokens_per_sec": 542.1745524178076,
+      "training_loss": 0.018117438397114962,
+      "training_tokens": 2017545
+    }
+  ],
+  "status": "PASS"
+}
