@@ -21,6 +21,7 @@ ASSISTANT_PREFIX = (14, 10)
 EOS_TOKEN_ID = 15
 PAD_TOKEN_ID = 13
 ALLOWED_GRID_TOKEN_IDS = frozenset(range(11))  # colors 0..9 plus newline 10
+MAX_GRID_DIMENSION = 256  # Includes the frozen 1D-ARC long-row representation.
 
 
 class GenerationAuditError(RuntimeError):
@@ -78,10 +79,10 @@ def grid_from_native_tokens(tokens: Sequence[int]) -> tuple[tuple[int, ...], ...
             rows.append([])
         else:
             rows[-1].append(value)
-    if not rows[-1] or not 1 <= len(rows) <= 30:
+    if not rows[-1] or not 1 <= len(rows) <= MAX_GRID_DIMENSION:
         raise GenerationAuditError("GOLD_TARGET_INVALID_HEIGHT")
     width = len(rows[0])
-    if not 1 <= width <= 30 or any(len(row) != width for row in rows):
+    if not 1 <= width <= MAX_GRID_DIMENSION or any(len(row) != width for row in rows):
         raise GenerationAuditError("GOLD_TARGET_INVALID_WIDTH")
     return tuple(tuple(row) for row in rows)
 

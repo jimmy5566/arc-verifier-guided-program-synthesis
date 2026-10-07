@@ -67,6 +67,8 @@ def test_strict_grid_parser_classifies_without_repairs() -> None:
     assert parse_generated_tokens([4, 5, 15], gold, hit_max_new_tokens=False).classification == "INVALID_DIMENSIONS"
     assert parse_generated_tokens([4, 14, 5, 15], gold, hit_max_new_tokens=False).classification == "EXTRA_TEXT"
     assert parse_generated_tokens([4, 5], gold, hit_max_new_tokens=True).classification == "TRUNCATED"
+    long_1d = tuple([4] * 49)
+    assert parse_generated_tokens([4] * 49 + [15], (long_1d,), hit_max_new_tokens=False).classification == "VALID_GRID"
 
 
 def test_exact_grid_scorer_and_dimension_scoring() -> None:
