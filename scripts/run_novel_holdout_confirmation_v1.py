@@ -147,7 +147,6 @@ def _checkpoint_identity(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def prepare(args: argparse.Namespace) -> int:
-    import pyarrow.parquet as pq
     from transformers import AutoTokenizer
 
     if args.output.exists() and any(args.output.iterdir()):
@@ -167,21 +166,21 @@ def prepare(args: argparse.Namespace) -> int:
     if holdout.get("status") != "FROZEN" or int(holdout.get("base_puzzle_count", -1)) != 8646:
         raise HoldoutAuditError("HOLDOUT_FREEZE_MISMATCH")
     holdout_ids = set(holdout["base_puzzle_ids"])
-    table = pq.read_table(args.registry, columns=["source", "source_native_id", "base_puzzle_id", "source_line"])
-    registry = {str(row["base_puzzle_id"]): row for row in table.to_pylist() if row["base_puzzle_id"] in holdout_ids}
-    if set(registry) != holdout_ids:
-        raise HoldoutAuditError("HOLDOUT_REGISTRY_IDENTITY_MISMATCH")
-
     candidates: list[dict[str, Any]] = []
-    for base_id, row in registry.items():
-        if row["source"] == "1d_arc":
-            family = "1d_arc:" + str(row["source_native_id"]).rsplit("_", 1)[0]
+    comp_wanted: dict[int, str] = {}
+    for base_id in holdout_ids:
+        if base_id.startswith("1d_arc:"):
+            native_id = base_id.split(":", 1)[1]
+            family = "1d_arc:" + native_id.rsplit("_", 1)[0]
             candidates.append({
                 "sample_id": base_id + ":native-source-episode-v1", "base_puzzle_id": base_id,
-                "source": "1d_arc", "native_id": row["source_native_id"], "source_line": None,
+                "source": "1d_arc", "native_id": native_id, "source_line": None,
                 "family": family, "split": "holdout",
             })
-    comp_wanted = {int(row["source_line"]): base_id for base_id, row in registry.items() if row["source"] == "compositional_arc"}
+        elif base_id.startswith("compositional_arc:episode-"):
+            comp_wanted[int(base_id.rsplit("-", 1)[1])] = base_id
+        else:
+            raise HoldoutAuditError(f"UNKNOWN_FROZEN_HOLDOUT_ID={base_id}")
     with gzip.open(_comp_path(args.raw_root), "rt", encoding="utf-8") as handle:
         for index, line in enumerate(handle):
             if index not in comp_wanted:
@@ -512,7 +511,7 @@ NOVEL_V1_1_HOLDOUT_CONFIRMATION_SENTINEL = `EXPOSED_AFTER_CONFIRMATION`
 def controller(args: argparse.Namespace) -> int:
     common = [
         "--output", str(args.output), "--artifact", str(args.artifact), "--freeze", str(args.freeze),
-        "--registry", str(args.registry), "--raw-root", str(args.raw_root), "--model", str(args.model), "--adapter", str(args.adapter),
+        "--raw-root", str(args.raw_root), "--model", str(args.model), "--adapter", str(args.adapter),
     ]
     commands = [
         [sys.executable, __file__, "--mode", "prepare", *common],
@@ -534,7 +533,6 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--output", type=Path, required=True)
     value.add_argument("--artifact", type=Path, required=True)
     value.add_argument("--freeze", type=Path, required=True)
-    value.add_argument("--registry", type=Path, required=True)
     value.add_argument("--raw-root", type=Path, required=True)
     value.add_argument("--model", type=Path, required=True)
     value.add_argument("--adapter", type=Path, required=True)
