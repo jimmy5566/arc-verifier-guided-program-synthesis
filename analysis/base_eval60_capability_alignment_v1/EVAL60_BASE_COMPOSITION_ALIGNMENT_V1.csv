@@ -1,0 +1,41 @@
+task_id,primary_family,required_capabilities,composition_depth,mapped_composition_categories,base_composition_scores,base_composition_bands,mapping_confidence
+5dbc8537,OTHER_OR_UNCERTAIN,"[""separators/subgrids"",""crop"",""extract"",""position""]",3_PLUS,"[""SELECTOR_TO_ACTION""]",[0.25],"[""WEAK""]",MEDIUM
+cb2d8a2c,PATTERN_PROGRESSION,"[""lines"",""connected"",""aligned"",""propagation"",""until alignment""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY"",""STATE_PROGRESSION_TO_ACTION""]","[0.875,1.0]","[""STRONG"",""SATURATED""]",MEDIUM
+de809cff,MULTI_STAGE_COMPOSITION,"[""mask"",""color mapping"",""copy reference color"",""inside/contains"",""fill""]",3_PLUS,"[""MASK_SET_TO_CONSTRUCTION""]",[0.0],"[""WEAK""]",MEDIUM
+7b3084d4,MULTI_STAGE_COMPOSITION,"[""connected components"",""orientation"",""position"",""crop"",""copy"",""overlay""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY""]",[0.875],"[""STRONG""]",MEDIUM
+dfadab01,CONSTRUCTION,"[""frames"",""copy"",""complete missing structure"",""position"",""color mapping""]",3_PLUS,"[""NO_CLEAR_COMPOSITION_MATCH""]",[],[],LOW
+58490d8a,COUNTING_NUMERIC,"[""connected components"",""count components"",""color"",""encode quantity geometrically"",""crop""]",3_PLUS,"[""COUNTING_TO_CONSTRUCTION""]",[0.25],"[""WEAK""]",MEDIUM
+b5ca7ac4,MULTI_STAGE_COMPOSITION,"[""connected components"",""uniqueness"",""color"",""translate"",""aligned""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY"",""SELECTOR_TO_ACTION""]","[0.875,0.25]","[""STRONG"",""WEAK""]",MEDIUM
+80a900e0,PATTERN_PROGRESSION,"[""frames"",""color"",""extend line/ray"",""propagation"",""orientation""]",3_PLUS,"[""STATE_PROGRESSION_TO_ACTION""]",[1.0],"[""SATURATED""]",MEDIUM
+2d0172a1,OBJECT_SELECTION,"[""lines"",""frames"",""inside/contains"",""smallest"",""extract"",""crop""]",3_PLUS,"[""SELECTOR_TO_ACTION"",""RELATION_TO_SELECTOR_ACTION""]","[0.25,0.375]","[""WEAK"",""WEAK""]",MEDIUM
+13e47133,PATTERN_PROGRESSION,"[""separators/subgrids"",""inside/contains"",""fill"",""periodic pattern"",""color mapping""]",3_PLUS,"[""STATE_PROGRESSION_TO_ACTION""]",[1.0],"[""SATURATED""]",MEDIUM
+e3721c99,COLOR_MAPPING,"[""connected components"",""orientation"",""same color"",""color mapping"",""recolor""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY"",""SELECTOR_TO_ACTION""]","[0.875,0.25]","[""STRONG"",""WEAK""]",MEDIUM
+cbebaa4b,MULTI_STAGE_COMPOSITION,"[""connected components"",""adjacent/touching"",""translate"",""until touching"",""overlay""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY""]",[0.875],"[""STRONG""]",MEDIUM
+45a5af55,CONSTRUCTION,"[""lines"",""nth/order"",""periodic pattern"",""complete missing structure""]",3_PLUS,"[""STATE_PROGRESSION_TO_ACTION""]",[1.0],"[""SATURATED""]",MEDIUM
+c4d067a0,MULTI_STAGE_COMPOSITION,"[""copy"",""same row"",""same column"",""position"",""color mapping""]",3_PLUS,"[""NO_CLEAR_COMPOSITION_MATCH""]",[],[],LOW
+67e490f4,MULTI_STAGE_COMPOSITION,"[""frames"",""position"",""color mapping"",""copy"",""crop""]",3_PLUS,"[""NO_CLEAR_COMPOSITION_MATCH""]",[],[],LOW
+2c181942,MULTI_STAGE_COMPOSITION,"[""connected components"",""position"",""translate"",""aligned"",""overlay""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY""]",[0.875],"[""STRONG""]",MEDIUM
+6ffbe589,COLOR_MAPPING,"[""frames"",""crop"",""color mapping"",""copy reference color"",""mask""]",3_PLUS,"[""MASK_SET_TO_CONSTRUCTION""]",[0.0],"[""WEAK""]",MEDIUM
+4a21e3da,CONDITIONAL_CONTROL,"[""orientation"",""position"",""translate"",""inferred displacement"",""if/else on attribute""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY"",""CONDITIONAL_TO_ACTION""]","[0.875,0.0]","[""STRONG"",""WEAK""]",MEDIUM
+a32d8b75,MULTI_STAGE_COMPOSITION,"[""separators/subgrids"",""copy"",""overlay"",""color mapping"",""mask""]",3_PLUS,"[""NO_CLEAR_COMPOSITION_MATCH""]",[],[],LOW
+aa4ec2a5,CONSTRUCTION,"[""connected components"",""border"",""holes/enclosures"",""fill"",""recolor""]",3_PLUS,"[""NO_CLEAR_COMPOSITION_MATCH""]",[],[],LOW
+0934a4d8,OBJECT_SELECTION,"[""repeated motifs"",""unique"",""symmetry completion"",""extract"",""crop""]",3_PLUS,"[""SELECTOR_TO_ACTION""]",[0.25],"[""WEAK""]",MEDIUM
+b6f77b65,CONDITIONAL_CONTROL,"[""color"",""position"",""nth/order"",""translate"",""if/else on attribute""]",3_PLUS,"[""CONDITIONAL_TO_ACTION""]",[0.0],"[""WEAK""]",MEDIUM
+31f7f899,COUNTING_NUMERIC,"[""lines"",""height"",""compare quantities"",""nth/order"",""aligned""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY"",""RELATION_TO_SELECTOR_ACTION""]","[0.875,0.375]","[""STRONG"",""WEAK""]",MEDIUM
+898e7135,MULTI_STAGE_COMPOSITION,"[""connected components"",""crop"",""fill"",""copy reference color"",""mask""]",3_PLUS,"[""NO_CLEAR_COMPOSITION_MATCH""]",[],[],LOW
+d59b0160,OBJECT_SELECTION,"[""separators/subgrids"",""same color"",""relation-conditioned selector"",""mask"",""difference""]",3_PLUS,"[""SELECTOR_TO_ACTION"",""RELATION_TO_SELECTOR_ACTION""]","[0.25,0.375]","[""WEAK"",""WEAK""]",MEDIUM
+4c3d4a41,COUNTING_NUMERIC,"[""lines"",""height"",""nth/order"",""compare quantities"",""translate""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY"",""SELECTOR_TO_ACTION""]","[0.875,0.25]","[""STRONG"",""WEAK""]",MEDIUM
+332f06d7,MOTION,"[""connected"",""position"",""inferred displacement"",""translate"",""until boundary""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY""]",[0.875],"[""STRONG""]",MEDIUM
+7b0280bc,OTHER_OR_UNCERTAIN,"[""connected"",""same color"",""nearest/farthest"",""relation-conditioned selector"",""complete missing structure""]",3_PLUS,"[""RELATION_TO_SELECTOR_ACTION""]",[0.375],"[""WEAK""]",MEDIUM
+247ef758,MULTI_STAGE_COMPOSITION,"[""separators/subgrids"",""same color"",""same row"",""same column"",""copy""]",3_PLUS,"[""NO_CLEAR_COMPOSITION_MATCH""]",[],[],LOW
+16b78196,MULTI_STAGE_COMPOSITION,"[""separators/subgrids"",""inside/contains"",""translate"",""until alignment"",""overlay""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY""]",[0.875],"[""STRONG""]",MEDIUM
+edb79dae,COLOR_MAPPING,"[""separators/subgrids"",""position"",""color mapping"",""recolor"",""crop""]",3_PLUS,"[""NO_CLEAR_COMPOSITION_MATCH""]",[],[],LOW
+4e34c42c,MULTI_STAGE_COMPOSITION,"[""connected components"",""same color"",""nth/order"",""translate"",""overlay""]",3_PLUS,"[""RELATION_TO_SELECTOR_ACTION""]",[0.375],"[""WEAK""]",MEDIUM
+64efde09,CONSTRUCTION,"[""lines"",""color"",""extend line/ray"",""until boundary"",""repeat""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY"",""STATE_PROGRESSION_TO_ACTION""]","[0.875,1.0]","[""STRONG"",""SATURATED""]",MEDIUM
+dd6b8c4b,CONDITIONAL_CONTROL,"[""frames"",""inside/contains"",""color mapping"",""if/else on attribute"",""recolor""]",3_PLUS,"[""CONDITIONAL_TO_ACTION""]",[0.0],"[""WEAK""]",MEDIUM
+c7f57c3e,COLOR_MAPPING,"[""connected components"",""orientation"",""scale"",""color mapping"",""copy reference color""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY""]",[0.875],"[""STRONG""]",MEDIUM
+8b7bacbf,MULTI_STAGE_COMPOSITION,"[""connected"",""inside/contains"",""propagation"",""color mapping"",""fill""]",3_PLUS,"[""STATE_PROGRESSION_TO_ACTION""]",[1.0],"[""SATURATED""]",MEDIUM
+9385bd28,PATTERN_PROGRESSION,"[""connected components"",""color"",""propagation"",""fill"",""until boundary""]",3_PLUS,"[""STATE_PROGRESSION_TO_ACTION""]",[1.0],"[""SATURATED""]",MEDIUM
+2b83f449,PATTERN_PROGRESSION,"[""lines"",""same row"",""position"",""periodic pattern"",""propagation""]",3_PLUS,"[""STATE_PROGRESSION_TO_ACTION""]",[1.0],"[""SATURATED""]",MEDIUM
+7491f3cf,MASK_SET,"[""separators/subgrids"",""overlay"",""union"",""intersection"",""difference""]",3_PLUS,"[""NO_CLEAR_COMPOSITION_MATCH""]",[],[],LOW
+78332cb0,GEOMETRIC_TRANSFORM,"[""separators/subgrids"",""nth/order"",""rotate 90"",""copy"",""overlay""]",3_PLUS,"[""GEOMETRY_TO_GEOMETRY""]",[0.875],"[""STRONG""]",MEDIUM
