@@ -1,0 +1,13 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_003",
+  "controller_role": "arc-controller",
+  "acknowledged": true,
+  "action": "RC1_TO_RC4_FROZEN_RC1_BLOCKED_BY_MOUNTED_ADAPTER_ABSENCE",
+  "scientific_training_started": false,
+  "rc1": "BLOCKED_MOUNTED_ADAPTER_NOT_FOUND",
+  "rc2": "PASS_FROZEN_NUMERIC_GATES",
+  "rc3": "PASS_FROZEN_LINEAGE_PROTOCOL",
+  "rc4": "PASS_FROZEN_GPU_TIME_LEDGER",
+  "rc5": "PENDING_LOCAL_COMMIT_AND_EXPLICIT_PUSH_AUTHORIZATION",
+  "rc6": "NOT_RESUBMITTED_BECAUSE_RC1_FAILS"
+}

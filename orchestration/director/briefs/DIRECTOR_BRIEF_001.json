@@ -1,0 +1,70 @@
+{
+  "brief_id": "DIRECTOR_BRIEF_001",
+  "program": "TARGETED_CAPABILITY_REPAIR_V1",
+  "status": "PROTOCOL_FROZEN_PENDING_DIRECTOR",
+  "request": "Review protocol for authorization of Round 1 GPU training only. Return a new structured directive with decision, scope, reasons, required changes, and scientific_training_authorized.",
+  "frozen_parent": "b26e469d1bd8d757727d4f34aff0e967207d1e62",
+  "foundation_v2_start": {
+    "base": "qwen3_4b_grids15_sft139",
+    "adapter": "tokens_2000000 LoRA",
+    "adapter_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
+    "verified": true
+  },
+  "foundation_v2_profile": {
+    "weak": 30,
+    "partial": 17,
+    "strong": 5,
+    "saturated": 31,
+    "borderline": 7,
+    "eval60_representation_gap_expected": "20 -> 18",
+    "eval60_representation_risk_partial": "1 -> 3"
+  },
+  "composition_delta": {
+    "GEOMETRY_TO_GEOMETRY": "0.875 -> 0.875",
+    "SELECTOR_TO_ACTION": "0.250 -> 0.375",
+    "RELATION_TO_SELECTOR_ACTION": "0.375 -> 0.500",
+    "COUNTING_TO_CONSTRUCTION": "0.250 -> 0.250",
+    "MASK_SET_TO_CONSTRUCTION": "0.000 -> 0.000",
+    "STATE_PROGRESSION_TO_ACTION": "1.000 -> 1.000",
+    "CONDITIONAL_TO_ACTION": "0.000 -> 0.000"
+  },
+  "round_1": {
+    "atomic_targets": ["connected components", "orientation", "inside/contains", "same color", "difference", "width", "recolor", "selector prerequisites"],
+    "composition_targets": ["RELATION_TO_SELECTOR_ACTION", "SELECTOR_TO_ACTION", "MASK_SET_TO_CONSTRUCTION", "CONDITIONAL_TO_ACTION", "COUNTING_TO_CONSTRUCTION"],
+    "mix": {"atomic": 0.5, "composition": 0.3, "replay": 0.2},
+    "initial_training_tokens": 500000,
+    "evaluation_checkpoints_tokens": [250000, 500000],
+    "maximum_new_gpu_training_seconds": 28800
+  },
+  "evaluation_and_safety": {
+    "targeted_dev_episodes": 192,
+    "retention_sentinel_episodes": 96,
+    "final_audit_episodes_sealed": 132,
+    "final_audit_model_accessed": false,
+    "episode_and_exact_grid_split_overlap": false,
+    "eval60_gold_training": false,
+    "diagnostic_episodes_training": false,
+    "frozen_taxonomy_modified": false,
+    "gpu_training_started": false
+  },
+  "recipe": {
+    "base_weights": "frozen",
+    "precision": "BF16",
+    "lora_rank": 64,
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "optimizer_family": "PagedAdamW8bit",
+    "quantization": "NONE",
+    "context": 8704
+  },
+  "artifacts": {
+    "protocol": "experiments/targeted_capability_repair_v1/protocol/TARGETED_CAPABILITY_REPAIR_V1_PROTOCOL.json",
+    "priority_map": "experiments/targeted_capability_repair_v1/protocol/CAPABILITY_PRIORITY_MAP_V1.csv",
+    "composition_delta": "experiments/targeted_capability_repair_v1/protocol/BASE_V2_COMPOSITION_DELTA_V1.csv",
+    "data_policy": "experiments/targeted_capability_repair_v1/protocol/TARGET_DATA_POLICY_V1.json",
+    "targeted_eval": "experiments/targeted_capability_repair_v1/protocol/TARGETED_EVAL_PROTOCOL_V1.json",
+    "retention": "experiments/targeted_capability_repair_v1/protocol/RETENTION_SENTINEL_PROTOCOL_V1.json",
+    "gate": "experiments/targeted_capability_repair_v1/protocol/ROUND_GATE_PROTOCOL_V1.json",
+    "manifest": "experiments/targeted_capability_repair_v1/PREPARATION_MANIFEST.json"
+  }
+}

@@ -1,5 +1,7 @@
 param(
-    [Parameter(Mandatory = $true)][string]$SupervisorCommand,
+    [Parameter(Mandatory = $true, ParameterSetName = 'ShellCommand')][string]$SupervisorCommand,
+    [Parameter(Mandatory = $true, ParameterSetName = 'Direct')][string]$SupervisorFilePath,
+    [Parameter(ParameterSetName = 'Direct')][string]$SupervisorArguments = '',
     [Parameter(Mandatory = $true)][string]$StatePath,
     [int]$MaxRestarts = 3,
     [int]$PollSeconds = 2
@@ -17,7 +19,11 @@ function Save-WatchdogState([hashtable]$Value) {
 
 $state = @{ schema_version = 1; restart_count = 0; status = 'STARTING'; supervisor_pid = $null; persistent_failure = $false }
 while ($state.restart_count -le $MaxRestarts) {
-    $process = Start-Process -FilePath 'powershell.exe' -ArgumentList @('-NoProfile','-Command', $SupervisorCommand) -PassThru
+    if ($PSCmdlet.ParameterSetName -eq 'Direct') {
+        $process = Start-Process -FilePath $SupervisorFilePath -ArgumentList $SupervisorArguments -PassThru
+    } else {
+        $process = Start-Process -FilePath 'powershell.exe' -ArgumentList @('-NoProfile','-Command', $SupervisorCommand) -PassThru
+    }
     $state.supervisor_pid = $process.Id
     $state.status = 'RUNNING'
     Save-WatchdogState $state

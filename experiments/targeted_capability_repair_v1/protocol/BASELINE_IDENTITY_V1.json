@@ -1,0 +1,19 @@
+{
+  "foundation_start": {
+    "adapter": "tokens_2000000 LoRA",
+    "adapter_mutated": false,
+    "adapter_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
+    "base": "qwen3_4b_grids15_sft139",
+    "status": "FROZEN"
+  },
+  "frozen_parent": "b26e469d1bd8d757727d4f34aff0e967207d1e62",
+  "gold_training": false,
+  "inputs": {
+    "analysis\\base_eval60_capability_alignment_v1\\EVAL60_BASE_COMPOSITION_ALIGNMENT_V1.csv": "f577481938e48f91290a12b3bef427e734794f9ef7bbf4f6df77c6334d8d33a4",
+    "analysis\\eval60_capability_demand_map_v1\\EVAL60_CAPABILITY_DEMAND_MAP_V1.csv": "e7894a0b5aa041d34a8193029bb77ea3a1f55d4fd6ae3d2ae9c5bb890875b129",
+    "analysis\\foundation_v2_eval60_capability_alignment_v1\\EVAL60_FOUNDATION_V2_COMPOSITION_ALIGNMENT_V1.csv": "18dd7ab89c6a8058a0c21f4012b9358ca83f8ee328b93f4b849415caabf5dfa5",
+    "analysis\\foundation_v2_eval60_capability_alignment_v1\\FOUNDATION_V2_CAPABILITY_PROFILE_V1.json": "259c5eeef9e37ff8a5ee403c7c58f3cdf5a6c7e2f05f842473b4bb1810928db2",
+    "artifacts\\foundation_round2_data_v1\\FOUNDATION_V2_START_IDENTITY.json": "e877b21ffd8bf422d610b512d35641ffb574a49f6038a7735f6de1bbcc39549b"
+  },
+  "source_audit": "analysis/foundation_v2_eval60_capability_alignment_v1/SOURCE_AUDIT.json"
+}

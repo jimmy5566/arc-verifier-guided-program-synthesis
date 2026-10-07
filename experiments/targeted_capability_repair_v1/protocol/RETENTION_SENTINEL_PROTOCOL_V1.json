@@ -1,0 +1,14 @@
+{
+  "episodes": 96,
+  "families": [
+    "color mapping",
+    "overlay",
+    "propagation",
+    "complete missing structure",
+    "rotate",
+    "recolor"
+  ],
+  "gate": "convincing_broad_or_important_degradation_rejects",
+  "selection": "representative_multisection_not_trivially_easy",
+  "status": "FROZEN"
+}

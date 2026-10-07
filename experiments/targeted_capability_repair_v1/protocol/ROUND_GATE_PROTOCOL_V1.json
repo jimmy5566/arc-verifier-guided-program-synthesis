@@ -1,0 +1,22 @@
+{
+  "accept": [
+    "meaningful_high_priority_target_progress",
+    "retention_acceptable"
+  ],
+  "hard_stops": [
+    "baseline_identity_uncertain",
+    "split_contamination",
+    "eval60_gold_in_training",
+    "final_audit_opened_early",
+    "taxonomy_modified",
+    "checkpoint_identity_uncertain"
+  ],
+  "loss_only": "INSUFFICIENT",
+  "plateau": "two_valid_rounds_without_meaningful_gain_requires_curriculum_diagnosis",
+  "reject": [
+    "REJECTED_RETENTION",
+    "REJECTED_NO_TARGET_GAIN",
+    "REJECTED_DATA_VALIDITY"
+  ],
+  "status": "FROZEN"
+}

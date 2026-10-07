@@ -1,0 +1,69 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_003",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "TARGETED_CAPABILITY_REPAIR_V1",
+  "reasons": [
+    {
+      "area": "review_identity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_001 SHA256 matches BA5C99CA790BD9A99C436673D645005AB68C7F36A1D189B20F4BC4E4808E23C9, and every protocol, data-surface, and baseline-input hash declared by the frozen manifests matches the current bytes."
+    },
+    {
+      "area": "baseline_identity",
+      "status": "PASS_WITH_PRELAUNCH_CONDITION",
+      "finding": "The brief, protocol, BASELINE_IDENTITY_V1, and FOUNDATION_V2_START_IDENTITY agree on base qwen3_4b_grids15_sft139, adapter tokens_2000000 LoRA, and adapter SHA256 f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce. The frozen parent b26e469d1bd8d757727d4f34aff0e967207d1e62 exists and is an ancestor of the reviewed HEAD, but the mounted training-side adapter bytes have not been independently rehashed in this review."
+    },
+    {
+      "area": "no_gold_split_and_final_audit",
+      "status": "PASS",
+      "finding": "The frozen policy consistently forbids Eval60 Gold and diagnostic episodes in training, declares TRAIN, TARGET_DEV, RETENTION_SENTINEL, and FINAL_AUDIT disjoint by episode and exact-grid identity, uses distinct seed domains, and keeps the 132-episode FINAL_AUDIT sealed and model-unaccessed until final selection."
+    },
+    {
+      "area": "target_prioritization_and_mix",
+      "status": "PASS",
+      "finding": "Round 1 emphasizes the highest-demand independently supported upstream deficits and the five documented weak composition chains. The 50/30/20 atomic/composition/replay plan is prerequisite-aware and is represented by 2000/1200/804 frozen training episodes without uniformly training all weak capabilities."
+    },
+    {
+      "area": "retention_and_round_gates",
+      "status": "REQUIRES_CHANGE",
+      "finding": "The retention surface and hard-stop conditions are appropriate, but meaningful target progress, acceptable retention, and convincing degradation remain qualitative. No frozen numeric decision thresholds or deterministic adjudication rule prevent post-result reinterpretation."
+    },
+    {
+      "area": "recipe_preservation",
+      "status": "REQUIRES_CHANGE",
+      "finding": "The intended BF16 frozen-base LoRA recipe is recorded and hashed, but no launch identity binds the actual mounted base and adapter bytes, dataset hashes, exact recipe, resolved command/config, and output checkpoint lineage before GPU use. The reviewed brief and experiment package are also untracked at the current local HEAD e6ec3a1ddb847f99ab127f65c2b63aa5a2103e2f."
+    },
+    {
+      "area": "eight_hour_accounting",
+      "status": "REQUIRES_CHANGE",
+      "finding": "The protocol states a 28,800-second maximum for new GPU training, but it does not define a cumulative ledger, whether failed or interrupted attempts count, how resumes are charged, or an enforced stop that prevents aggregate training time from exceeding the cap."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "RC1_PRELAUNCH_IDENTITY_GATE",
+      "requirement": "Before any GPU training, produce a read-only prelaunch record that rehashes the mounted Foundation-V2 adapter using the same declared SHA256 method and binds the mounted base identity, all frozen dataset and protocol hashes, resolved training recipe, resolved command/config, and output run directory. Any mismatch is a hard stop."
+    },
+    {
+      "change_id": "RC2_FROZEN_NUMERIC_GATES",
+      "requirement": "Before opening any Round-1 result, freeze numeric target-progress and retention acceptance thresholds plus deterministic handling of mixed targeted gains, important-family regressions, and checkpoint ties. Preserve the existing hard stops and paired n01/n10 reporting."
+    },
+    {
+      "change_id": "RC3_RECIPE_AND_CHECKPOINT_LINEAGE",
+      "requirement": "Freeze a launch/checkpoint manifest that rejects drift from BF16, frozen base weights, LoRA rank 64, alpha 32, dropout 0.0, PagedAdamW8bit, no quantization, context 8704, and the declared target modules; hash every accepted checkpoint and record its exact parent and token count."
+    },
+    {
+      "change_id": "RC4_GPU_TIME_LEDGER",
+      "requirement": "Define and initialize an append-only cumulative new-GPU-training-seconds ledger. Charge all actual training execution, including failed, interrupted, and resumed segments without double-counting overlapping logged intervals; record monotonic start/stop timestamps and termination reason; enforce a hard stop before cumulative charged time can exceed 28,800 seconds. Evaluation and CPU-only preparation must be reported separately and must not obscure charged training time."
+    },
+    {
+      "change_id": "RC5_IMMUTABLE_PROVENANCE",
+      "requirement": "Place the reviewed brief, frozen protocol package, preparation manifest, and the new prelaunch controls under an immutable repository commit and verify the intended remote branch SHA before launch. Any push requires separate explicit user authorization."
+    },
+    {
+      "change_id": "RC6_CONTROLLER_RESUBMISSION",
+      "requirement": "Return a new Controller brief with hashes and PASS/FAIL evidence for RC1 through RC5. GPU training remains unauthorized until a subsequent Director directive explicitly returns CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true."
+    }
+  ],
+  "scientific_training_authorized": false
+}

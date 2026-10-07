@@ -7,8 +7,10 @@ import hashlib
 import json
 import os
 import base64
+import secrets
 import subprocess
 import tempfile
+import time
 from pathlib import Path
 from typing import Any
 
@@ -103,6 +105,90 @@ class Supervisor:
         self.state["director_review_reason"] = reason
         self.save()
 
+    def acknowledge_controller_cycles(self, acknowledgement_dir: Path) -> list[str]:
+        """Record matching Controller acknowledgements without interpreting science."""
+        acknowledged: list[str] = []
+        for round_id, record in self.state["rounds"].items():
+            acknowledgement = record.get("controller_ack_path")
+            if not acknowledgement or record.get("controller_cycle_complete"):
+                continue
+            path = Path(acknowledgement)
+            if not path.is_absolute():
+                path = acknowledgement_dir / path.name
+            if not path.exists():
+                continue
+            try:
+                value = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if (
+                str(value.get("round_id", "")) == round_id
+                and value.get("terminal_receipt_hash") == record.get("terminal_receipt_hash")
+                and value.get("controller_role") == "arc-controller"
+                and value.get("acknowledged") is True
+                and value.get("training_started") is False
+            ):
+                record["controller_acknowledged"] = True
+                record["controller_cycle_complete"] = True
+                acknowledged.append(round_id)
+        if acknowledged:
+            self.save()
+        return acknowledged
+
+    def wake_controller_once(
+        self,
+        round_ids: list[str],
+        controller_agent: str,
+        acknowledgement_dir: Path,
+        herdr_timeout_seconds: int,
+    ) -> list[str]:
+        """Reserve and submit one idempotent infrastructure-only Controller wake."""
+        woken: list[str] = []
+        acknowledgement_dir.mkdir(parents=True, exist_ok=True)
+        for round_id in round_ids:
+            record = self.state["rounds"][round_id]
+            if record.get("controller_wakeup_reserved"):
+                continue
+            digest = record["terminal_receipt_hash"]
+            notification = self.notification_dir / f"CONTROLLER_NOTIFICATION_{round_id}_{digest[:12]}.json"
+            acknowledgement = acknowledgement_dir / f"CONTROLLER_ACK_{round_id}_{digest[:12]}.json"
+
+            # Persist the reservation before external delivery. An ambiguous CLI
+            # failure therefore fails closed instead of risking a duplicate wake.
+            record["controller_wakeup_reserved"] = True
+            record["controller_wakeup_status"] = "RESERVED"
+            record["controller_wakeup_count"] = 0
+            record["controller_ack_path"] = str(acknowledgement.resolve())
+            self.save()
+
+            prompt = (
+                f"ARC2 infrastructure-only notification {digest}. "
+                f"Read {notification.resolve()}. Do not start training and do not invoke Director. "
+                f"Write one acknowledgement JSON to {acknowledgement.resolve()} with exactly these fields: "
+                f'{{"schema_version":1,"round_id":"{round_id}",'
+                f'"terminal_receipt_hash":"{digest}","controller_role":"arc-controller",'
+                f'"acknowledged":true,"action":"DUMMY_NOTIFICATION_ACK_ONLY",'
+                f'"training_started":false}}. '
+                "If that matching acknowledgement already exists, do not rewrite it."
+            )
+            completed = subprocess.run(
+                ["herdr", "agent", "prompt", controller_agent, prompt],
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=herdr_timeout_seconds,
+            )
+            record["controller_wakeup_cli_exit_code"] = completed.returncode
+            if completed.returncode == 0:
+                record["controller_wakeup_status"] = "SENT"
+                record["controller_wakeup_count"] = 1
+                woken.append(round_id)
+            else:
+                record["controller_wakeup_status"] = "DELIVERY_UNKNOWN_FAIL_CLOSED"
+                record["controller_wakeup_error"] = (completed.stderr or completed.stdout)[-1000:]
+            self.save()
+        return woken
+
 
 def remote_shell(target: str, script: str, identity_file: str | None = None) -> str:
     """Run a tiny metadata-only script through RunPod's forced-PTY SSH gateway.
@@ -114,16 +200,29 @@ def remote_shell(target: str, script: str, identity_file: str | None = None) -> 
     if identity_file:
         command.extend(["-i", identity_file])
     command.append(target)
-    encoded = base64.b64encode(script.encode("utf-8")).decode("ascii")
+    nonce = secrets.token_hex(16)
+    completion = json.dumps({"arc2_remote_nonce": nonce}, sort_keys=True)
+    encoded = base64.b64encode((script + f"\nprintf '%s\\n' '{completion}'\n").encode("utf-8")).decode("ascii")
     # RunPod exposes an interactive bash shell with bracketed paste enabled.
     # Paste one command, then submit it with CR; LF-only piped input is merely
     # echoed by that gateway.
     line = f"echo {encoded} | base64 -d | bash; printf '__ARC2_REMOTE_END__\\n'; exit"
     payload = f"\x1b[200~{line}\x1b[201~\r"
     completed = subprocess.run(command, input=payload, text=True, capture_output=True, check=False, timeout=45)
-    if completed.returncode != 0 or "__ARC2_REMOTE_END__" not in completed.stdout:
+    # A forced-PTY gateway can echo the bracketed-paste command verbatim.
+    # The marker must therefore arrive as its own output line, never merely as
+    # text embedded in the echoed command, before a metadata scan is trusted.
+    marker = "__ARC2_REMOTE_END__"
+    marker_lines = [line.strip() for line in completed.stdout.splitlines()]
+    # The completion JSON is base64-hidden inside the submitted command, so an
+    # echoed command cannot forge it.  Require both it and the terminal marker.
+    if completed.returncode != 0 or marker not in marker_lines or completion not in marker_lines:
         raise RuntimeError(f"remote metadata scan failed (exit={completed.returncode})")
-    return completed.stdout.split("__ARC2_REMOTE_END__", 1)[0]
+    # Split at the actual marker line, not the marker text embedded in the
+    # terminal's echo of the submitted command.
+    lines = completed.stdout.splitlines()
+    marker_index = max(index for index, line in enumerate(lines) if line.strip() == marker)
+    return "\n".join(lines[:marker_index])
 
 
 def fetch_remote_receipts(target: str, remote_root: str, cache_root: Path, identity_file: str | None = None) -> Path:
@@ -158,16 +257,48 @@ def main() -> int:
     parser.add_argument("--ssh-target")
     parser.add_argument("--remote-root")
     parser.add_argument("--identity-file")
+    parser.add_argument("--poll-seconds", type=float)
+    parser.add_argument("--controller-agent")
+    parser.add_argument("--controller-ack-dir", type=Path)
+    parser.add_argument("--herdr-timeout-seconds", type=int, default=15)
     args = parser.parse_args()
+    if args.poll_seconds is not None and args.poll_seconds <= 0:
+        parser.error("--poll-seconds must be greater than zero")
+    if bool(args.controller_agent) != bool(args.controller_ack_dir):
+        parser.error("--controller-agent and --controller-ack-dir must be supplied together")
     supervisor = Supervisor(args.state, args.notification_dir)
-    receipt_root = args.receipt_root
-    if args.ssh_target or args.remote_root:
-        if not (args.ssh_target and args.remote_root):
-            parser.error("--ssh-target and --remote-root must be supplied together")
-        receipt_root = fetch_remote_receipts(args.ssh_target, args.remote_root, args.receipt_root, args.identity_file)
-    notified = supervisor.reconcile(receipt_root)
-    print(json.dumps({"status": "OK", "controller_notifications": notified}, sort_keys=True))
-    return 0
+    if (args.ssh_target or args.remote_root) and not (args.ssh_target and args.remote_root):
+        parser.error("--ssh-target and --remote-root must be supplied together")
+
+    while True:
+        remote_status = "LOCAL_ONLY"
+        if args.ssh_target:
+            try:
+                fetch_remote_receipts(args.ssh_target, args.remote_root, args.receipt_root, args.identity_file)
+                remote_status = "LOW_FREQUENCY_RECONCILIATION_OK"
+            except Exception as error:  # Continue local reconciliation; retry next poll.
+                remote_status = f"LOW_FREQUENCY_RECONCILIATION_ERROR:{type(error).__name__}"
+        notified = supervisor.reconcile(args.receipt_root)
+        woken: list[str] = []
+        acknowledged: list[str] = []
+        if args.controller_agent:
+            woken = supervisor.wake_controller_once(
+                notified,
+                args.controller_agent,
+                args.controller_ack_dir,
+                args.herdr_timeout_seconds,
+            )
+            acknowledged = supervisor.acknowledge_controller_cycles(args.controller_ack_dir)
+        print(json.dumps({
+            "status": "OK",
+            "remote_status": remote_status,
+            "controller_notifications": notified,
+            "controller_wakeups": woken,
+            "controller_acknowledgements": acknowledged,
+        }, sort_keys=True), flush=True)
+        if args.poll_seconds is None:
+            return 0
+        time.sleep(args.poll_seconds)
 
 
 if __name__ == "__main__":

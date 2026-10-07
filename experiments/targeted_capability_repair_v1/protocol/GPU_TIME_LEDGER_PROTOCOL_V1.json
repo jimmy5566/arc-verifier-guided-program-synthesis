@@ -1,0 +1,10 @@
+{
+  "status": "FROZEN",
+  "cap_seconds": 28800,
+  "charge_rule": "Charge every actual GPU training interval, including failed, interrupted, and resumed segments; evaluation and CPU-only preparation are uncharged but separately logged.",
+  "interval_identity": "round_id + attempt_id + monotonic_start_ns + monotonic_stop_ns",
+  "overlap_rule": "Union overlapping intervals before cumulative charge; duplicate interval identity is rejected.",
+  "before_launch": "Reject launch if remaining charged budget is less than the declared safe training segment plus checkpoint reserve.",
+  "required_fields": ["round_id","attempt_id","monotonic_start_ns","monotonic_stop_ns","charged_training_seconds","termination_reason","remote_receipt_hash"],
+  "ledger_path": "experiments/targeted_capability_repair_v1/TARGETED_CAPABILITY_REPAIR_LEDGER.json"
+}

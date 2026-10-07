@@ -1,0 +1,61 @@
+{
+  "data_files": {
+    "data\\FINAL_AUDIT_SEALED.jsonl": "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd",
+    "data\\RETENTION_SENTINEL.jsonl": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+    "data\\TARGET_DEV.jsonl": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97",
+    "data\\TRAIN.jsonl": "97463689b4c47d912e20aa46fafe4c47b0e4ad538523ba8127145203f02acba1"
+  },
+  "protocol_files": {
+    "protocol\\BASELINE_IDENTITY_V1.json": "28433fcf3f082149e5bbaf3a712142ce159c0b2ccc89b11aa12821a0bc5bae82",
+    "protocol\\BASE_V2_COMPOSITION_DELTA_V1.csv": "e0b57fd6fe919f747114cb7997efa4d229c622a05d09ec0f09a93c2af65d28b9",
+    "protocol\\CAPABILITY_PRIORITY_MAP_V1.csv": "8fd8ce67f3a1633d739b566c11c5003bae65f329036f453b120cec448b40131e",
+    "protocol\\RETENTION_SENTINEL_PROTOCOL_V1.json": "3ced47ce35b257cd783913826b701a57998525179bccfdfc6c25834c024bc332",
+    "protocol\\ROUND_GATE_PROTOCOL_V1.json": "4e7580af05219fbc97710087d2cc352ff6baaf57ff1d82e787c00a42461d6fdb",
+    "protocol\\TARGETED_CAPABILITY_REPAIR_V1_PROTOCOL.json": "e7dddae1ee8f46f6371ed38426d8afa04392f949a6a279ca1b94157759bd4eaf",
+    "protocol\\TARGETED_CAPABILITY_REPAIR_V1_PROTOCOL.md": "6efa040425555a53bbac53a255d3b130622411adde149a66b296631231a26884",
+    "protocol\\TARGETED_EVAL_PROTOCOL_V1.json": "e74a4b8a5b41f93e7c42d31169edfeca108e671bc0df351b9ffa17594c493f42",
+    "protocol\\TARGET_DATA_POLICY_V1.json": "ee7c10abcbb677b2d75cc79c361c40743c091cf96e54f06255c0d0b979e70130"
+  },
+  "status": "PASS",
+  "surface": {
+    "checks": {
+      "diagnostic_episodes_used_as_training": false,
+      "episode_ids_disjoint": true,
+      "eval60_gold_used": false,
+      "exact_grid_identities_disjoint": true,
+      "final_audit_model_accessed": false,
+      "programmatic_labels_only": true
+    },
+    "schema_version": 1,
+    "status": "FROZEN_CPU_ONLY",
+    "surfaces": {
+      "FINAL_AUDIT": {
+        "episodes": 132,
+        "model_accessed": false,
+        "sealed": true,
+        "seed_domain": 707017
+      },
+      "RETENTION_SENTINEL": {
+        "episodes": 96,
+        "seed_domain": 606013
+      },
+      "TARGET_DEV": {
+        "episodes": 192,
+        "seed_domain": 404009
+      },
+      "TRAIN": {
+        "episodes": 4004,
+        "mix": {
+          "atomic": 2000,
+          "composition": 1200,
+          "replay": 804
+        },
+        "seed_domains": [
+          101001,
+          202003,
+          303007
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "status": "FROZEN",
+  "required_recipe": {"precision":"BF16","base_weights":"FROZEN","lora_rank":64,"lora_alpha":32,"lora_dropout":0.0,"optimizer_family":"PagedAdamW8bit","quantization":"NONE","context":8704,"target_modules":["q_proj","k_proj","v_proj","o_proj","gate_proj","up_proj","down_proj"]},
+  "before_launch": ["hash_mounted_base_identity", "hash_mounted_adapter", "hash_train_target_dev_retention_protocol_inputs", "record_resolved_command", "record_resolved_config", "record_output_run_directory"],
+  "per_checkpoint": ["sha256_checkpoint_bytes", "parent_checkpoint_sha256", "cumulative_training_tokens", "round_id", "recipe_hash"],
+  "drift_action": "HARD_STOP_NEW_SUBPROTOCOL_REQUIRED"
+}

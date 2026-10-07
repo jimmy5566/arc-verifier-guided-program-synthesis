@@ -1,0 +1,23 @@
+{
+  "status": "FROZEN",
+  "targeted_dev": {
+    "episodes": 192,
+    "accept_requires": {
+      "net_paired_target_fixes_min": 6,
+      "aggregate_exact_accuracy_delta_min": 0.03125,
+      "s_tier_independent_family_net_fixes_min": 2,
+      "s_tier_independent_family_count_with_nonnegative_delta_min": 3
+    },
+    "mixed_gain_rule": "REJECTED_NO_TARGET_GAIN unless every accept requirement holds; report n01 and n10 per family and aggregate."
+  },
+  "retention_sentinel": {
+    "episodes": 96,
+    "reject_if": {
+      "aggregate_net_harms_n10_minus_n01_gt": 4,
+      "any_retention_family_net_harms_gt": 2,
+      "important_family_exact_accuracy_delta_lte": -0.125
+    },
+    "checkpoint_tie_rule": "Choose highest targeted net paired fixes; then lowest retention net harms; then earliest checkpoint token count."
+  },
+  "hard_stops_preserved": ["baseline_identity_uncertain", "split_contamination", "eval60_gold_in_training", "final_audit_opened_early", "taxonomy_modified", "checkpoint_identity_uncertain"]
+}

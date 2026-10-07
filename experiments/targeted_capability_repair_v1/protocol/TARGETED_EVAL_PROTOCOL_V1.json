@@ -1,0 +1,13 @@
+{
+  "final_audit_access_before_final_selection": false,
+  "full_3000_diagnostic": "FINAL_OR_MAJOR_STAGE_ONLY",
+  "ordinary_checkpoint_generations": {
+    "retention": 96,
+    "targeted_dev": 192
+  },
+  "paired_transition_counts": [
+    "n01_baseline_wrong_candidate_correct",
+    "n10_baseline_correct_candidate_wrong"
+  ],
+  "status": "FROZEN"
+}

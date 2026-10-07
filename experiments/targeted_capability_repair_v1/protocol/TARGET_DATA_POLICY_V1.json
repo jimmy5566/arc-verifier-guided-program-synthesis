@@ -1,0 +1,60 @@
+{
+  "anti_shortcut_rules": [
+    "positive_negative_relation_cases",
+    "balanced_conditional_branches",
+    "selector_nonpositional",
+    "no_fixed_color_or_position"
+  ],
+  "checks": {
+    "diagnostic_episodes_used_as_training": false,
+    "episode_ids_disjoint": true,
+    "eval60_gold_used": false,
+    "exact_grid_identities_disjoint": true,
+    "final_audit_model_accessed": false,
+    "programmatic_labels_only": true
+  },
+  "randomized_axes": [
+    "foreground_colors",
+    "background_colors",
+    "color_permutation",
+    "grid_size",
+    "object_positions",
+    "object_count",
+    "object_size",
+    "orientation",
+    "distractor_count",
+    "irrelevant_objects",
+    "operator_parameters"
+  ],
+  "schema_version": 1,
+  "status": "FROZEN_CPU_ONLY",
+  "surfaces": {
+    "FINAL_AUDIT": {
+      "episodes": 132,
+      "model_accessed": false,
+      "sealed": true,
+      "seed_domain": 707017
+    },
+    "RETENTION_SENTINEL": {
+      "episodes": 96,
+      "seed_domain": 606013
+    },
+    "TARGET_DEV": {
+      "episodes": 192,
+      "seed_domain": 404009
+    },
+    "TRAIN": {
+      "episodes": 4004,
+      "mix": {
+        "atomic": 2000,
+        "composition": 1200,
+        "replay": 804
+      },
+      "seed_domains": [
+        101001,
+        202003,
+        303007
+      ]
+    }
+  }
+}

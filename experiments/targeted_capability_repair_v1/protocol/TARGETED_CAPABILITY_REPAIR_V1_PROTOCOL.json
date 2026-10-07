@@ -1,0 +1,113 @@
+{
+  "atomic_targets": [
+    "connected components",
+    "orientation",
+    "inside/contains",
+    "same color",
+    "difference",
+    "width",
+    "recolor",
+    "selector prerequisites"
+  ],
+  "baseline": {
+    "adapter": "tokens_2000000 LoRA",
+    "adapter_mutated": false,
+    "adapter_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
+    "base": "qwen3_4b_grids15_sft139",
+    "status": "FROZEN"
+  },
+  "budget": {
+    "evaluation_checkpoints_tokens": [
+      250000,
+      500000
+    ],
+    "initial_round_tokens": 500000,
+    "max_new_gpu_training_seconds": 28800
+  },
+  "composition_targets": [
+    "RELATION_TO_SELECTOR_ACTION",
+    "SELECTOR_TO_ACTION",
+    "MASK_SET_TO_CONSTRUCTION",
+    "CONDITIONAL_TO_ACTION",
+    "COUNTING_TO_CONSTRUCTION"
+  ],
+  "director_authorization_required": [
+    "CONTINUE",
+    "CONTINUE_WITH_WARNING"
+  ],
+  "gpu_training_started": false,
+  "objective": "repair_high_demand_upstream_primitives_then_critical_compositions_with_retention",
+  "prerequisite_rule": {
+    "0_40_to_0_60": "primitive_majority_light_composition",
+    "0_60_to_0_75": "balanced",
+    "gte_0_75": "composition_if_chain_weak",
+    "lt_0_40": "intensive_primitive"
+  },
+  "program": "TARGETED_CAPABILITY_REPAIR_V1",
+  "round1_mix": {
+    "atomic": 0.5,
+    "composition": 0.3,
+    "replay": 0.2
+  },
+  "status": "PROTOCOL_FROZEN_PENDING_DIRECTOR",
+  "surface_manifest": {
+    "checks": {
+      "diagnostic_episodes_used_as_training": false,
+      "episode_ids_disjoint": true,
+      "eval60_gold_used": false,
+      "exact_grid_identities_disjoint": true,
+      "final_audit_model_accessed": false,
+      "programmatic_labels_only": true
+    },
+    "schema_version": 1,
+    "status": "FROZEN_CPU_ONLY",
+    "surfaces": {
+      "FINAL_AUDIT": {
+        "episodes": 132,
+        "model_accessed": false,
+        "sealed": true,
+        "seed_domain": 707017
+      },
+      "RETENTION_SENTINEL": {
+        "episodes": 96,
+        "seed_domain": 606013
+      },
+      "TARGET_DEV": {
+        "episodes": 192,
+        "seed_domain": 404009
+      },
+      "TRAIN": {
+        "episodes": 4004,
+        "mix": {
+          "atomic": 2000,
+          "composition": 1200,
+          "replay": 804
+        },
+        "seed_domains": [
+          101001,
+          202003,
+          303007
+        ]
+      }
+    }
+  },
+  "training_recipe": {
+    "base_weights": "frozen",
+    "context": 8704,
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "lora_rank": 64,
+    "optimizer_family": "PagedAdamW8bit",
+    "precision": "BF16",
+    "quantization": "NONE",
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ]
+  }
+}
