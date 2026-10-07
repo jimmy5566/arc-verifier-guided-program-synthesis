@@ -1,0 +1,35 @@
+{
+  "both_states_complete_before_gold": true,
+  "files": {
+    "base": {
+      "bytes": 237447,
+      "row_count": 200,
+      "schema": [
+        "sample_id",
+        "model_state",
+        "generated_token_ids",
+        "termination_status",
+        "generated_length",
+        "prompt_sha256"
+      ],
+      "sha256": "41edeb08a5ac38c0355fd522da765eba53fa0d50d319f05160dd64fb34f79e5a",
+      "storage_path": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/novel_holdout_confirmation_v1_v1/RAW_PREDICTIONS/base.json"
+    },
+    "tokens_2000000": {
+      "bytes": 239522,
+      "row_count": 200,
+      "schema": [
+        "sample_id",
+        "model_state",
+        "generated_token_ids",
+        "termination_status",
+        "generated_length",
+        "prompt_sha256"
+      ],
+      "sha256": "697a9c385a87fe386a80a22dc7f04bf515f0e497eee358d5fc06240dabb50123",
+      "storage_path": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/novel_holdout_confirmation_v1_v1/RAW_PREDICTIONS/tokens_2000000.json"
+    }
+  },
+  "gold_loaded": false,
+  "status": "PASS"
+}

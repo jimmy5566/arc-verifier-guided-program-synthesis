@@ -1,0 +1,13 @@
+{
+  "actual_batch_size": 2,
+  "generated_rows": 2,
+  "longest_prompt_bucket": true,
+  "max_batched_prompt_tokens": 21568,
+  "oom_attempts": [],
+  "peak_vram_allocated_bytes": 12831971328,
+  "prompt_width": 8478,
+  "requested_batch_size": 32,
+  "selected_max_batch": 32,
+  "status": "PASS",
+  "wall_seconds": 12.964639176614583
+}

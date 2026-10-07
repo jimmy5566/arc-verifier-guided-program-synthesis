@@ -1,0 +1,17 @@
+{
+  "absolute_exact_grid_gain": 0.07000000000000006,
+  "mcnemar_exact_p": 0.0025768280029296875,
+  "n00": 23,
+  "n01": 17,
+  "n10": 3,
+  "n11": 157,
+  "paired_stratified_bootstrap": {
+    "percentile_95_ci": [
+      0.030000000000000002,
+      0.11
+    ],
+    "point_estimate": 0.07,
+    "resamples": 10000,
+    "seed": 2000031
+  }
+}

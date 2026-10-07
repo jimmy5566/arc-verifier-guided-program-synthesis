@@ -1,0 +1,20 @@
+{
+  "compositional_systematicity_holdout": {
+    "absolute_gain": 0.010000000000000009,
+    "base_exact": 0.99,
+    "families": [
+      "compositional_arc:systematicity:grow+mirror+translation",
+      "compositional_arc:systematicity:grow+rotation+translation"
+    ],
+    "tokens_2000000_exact": 1.0
+  },
+  "one_d_true_family_holdout": {
+    "absolute_gain": 0.13,
+    "base_exact": 0.61,
+    "families": [
+      "1d_arc:1d_mirror",
+      "1d_arc:1d_move_2p"
+    ],
+    "tokens_2000000_exact": 0.74
+  }
+}

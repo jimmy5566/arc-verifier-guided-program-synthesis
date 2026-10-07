@@ -1,0 +1,10 @@
+{
+  "arc_hidden_test_gold_accessed": false,
+  "eval60_accessed": false,
+  "future_meta_holdout_accessed": false,
+  "holdout_gold_access_started_only_after_both_prediction_hashes_passed": true,
+  "holdout_gold_accessed": true,
+  "kaggle_gold_accessed": false,
+  "novel_holdout_confirmation_sentinel": "EXPOSED_AFTER_CONFIRMATION",
+  "status": "PASS"
+}

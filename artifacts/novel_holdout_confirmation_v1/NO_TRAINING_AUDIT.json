@@ -1,0 +1,10 @@
+{
+  "TTT": false,
+  "backward_calls": 0,
+  "optimizer_state_created": false,
+  "optimizer_steps": 0,
+  "ranker": false,
+  "search": false,
+  "status": "PASS",
+  "verifier": false
+}

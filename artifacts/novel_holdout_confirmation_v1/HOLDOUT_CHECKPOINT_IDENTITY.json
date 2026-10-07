@@ -1,0 +1,25 @@
+{
+  "adapter": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/capability_pilot_2m_v1_checkpoints/tokens_2000000",
+  "adapter_config_sha256": "83099aa28f92e8e1eb8268a088cb79290baaf3023d5382eb74f129347a52668b",
+  "adapter_weight_file": "adapter_model.safetensors",
+  "adapter_weight_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
+  "base_model": "/root/arc-runtime-3090-gpu-benchmark-v1/model-stage/qwen3_4b_grids15_sft139",
+  "base_model_type": "qwen3",
+  "base_vocab_size": 16,
+  "lora": {
+    "alpha": 32,
+    "dropout": 0,
+    "r": 64,
+    "targets": [
+      "down_proj",
+      "gate_proj",
+      "k_proj",
+      "o_proj",
+      "q_proj",
+      "up_proj",
+      "v_proj"
+    ]
+  },
+  "status": "PASS",
+  "tokenizer_length": 16
+}

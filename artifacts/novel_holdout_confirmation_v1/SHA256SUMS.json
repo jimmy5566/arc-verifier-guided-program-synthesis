@@ -1,0 +1,61 @@
+{
+  "entries": {
+    "BATCH32_SMOKE.json": {
+      "bytes": 329,
+      "sha256": "2a99e2ed6f43a528231fbdd704108395a729f965c66d77d1da9ec443f924430b"
+    },
+    "HOLDOUT_CHECKPOINT_IDENTITY.json": {
+      "bytes": 766,
+      "sha256": "218441687aa3797977e0c1c5a9eeff94dd4515ab398f81e1f036e9221c19e59f"
+    },
+    "HOLDOUT_CONFIRMATION_GATE.json": {
+      "bytes": 264,
+      "sha256": "75949a308cc344c896109ef735da401cd6cb7ac02ed7a0093ca7fbcf37660785"
+    },
+    "HOLDOUT_CONFIRMATION_SENTINEL.json": {
+      "bytes": 99528,
+      "sha256": "d3b7bb38413cbe9a9286dbc182a5ecdbaf28d2d28131743ddbe59328bc333e71"
+    },
+    "HOLDOUT_DATA_ACCESS_AUDIT.json": {
+      "bytes": 351,
+      "sha256": "808c6b9367a2d8c4369ba7f9ff788085e84a76ccf23d1337530bb4276b1b84ea"
+    },
+    "HOLDOUT_GENERATION_CONFIG.json": {
+      "bytes": 480,
+      "sha256": "e6bd4ae61d76941dad4ddebccdcf2db1205ffc21099fd2d5eaeb02dedabed3d1"
+    },
+    "HOLDOUT_GENERATION_CONTEXT_AUDIT.json": {
+      "bytes": 398,
+      "sha256": "2f2ef55cfe3ad1932258bbff3fce4ec6b407dd24d906311f2a6030fca4c4b001"
+    },
+    "HOLDOUT_PREDICTION_HASHES.json": {
+      "bytes": 1068,
+      "sha256": "c3c80fe9781472a7dc1af7bbc7a180e58b7e716b818a4f9ca8bc24784a7dffad"
+    },
+    "HOLDOUT_PREFLIGHT.json": {
+      "bytes": 643,
+      "sha256": "3a89fcddc3ea0eff3ed5051d8c381f38a4ad692af1b3bfee4e43bb968a672378"
+    },
+    "HOLDOUT_RESULTS.json": {
+      "bytes": 1665,
+      "sha256": "6b2809e1713af38324d8a4ad157a00c15a487642ac783f1ea633e3d5dbd43910"
+    },
+    "HOLDOUT_SOURCE_BREAKDOWN.json": {
+      "bytes": 505,
+      "sha256": "763dea9ed94d78e1022d7915bbe9942fe422debfdf84e6196a1c89acc6f09505"
+    },
+    "NO_TRAINING_AUDIT.json": {
+      "bytes": 181,
+      "sha256": "cb74d8c69f45ed741d6794aac8f825b1668d9824b051b1496bdcb163487e7e62"
+    },
+    "PAIRED_TRANSFER_STATISTICS.json": {
+      "bytes": 334,
+      "sha256": "58463eacd723fd990194c124b2ee7e58dc7edbd6862e6b5547017515d7882437"
+    },
+    "REPORT.md": {
+      "bytes": 578,
+      "sha256": "5a8521c8e41d6231e9a7059b4e7f06aa33285f5ba921fd270fb9ae84b3e71b15"
+    }
+  },
+  "status": "PASS"
+}

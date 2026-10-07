@@ -1,0 +1,22 @@
+{
+  "branch": "evaluation/novel-holdout-confirmation-v1",
+  "dataset_fingerprint": "3b040b3fcd45d84361aa5286c3b762e268a5f7c98dae5b3c87ddeb16c5105c82",
+  "gold_loaded": false,
+  "holdout_episodes": 8646,
+  "holdout_families": [
+    "1d_arc:1d_mirror",
+    "1d_arc:1d_move_2p",
+    "compositional_arc:systematicity:grow+mirror+translation",
+    "compositional_arc:systematicity:grow+rotation+translation"
+  ],
+  "selection_source_fields": [
+    "sample_id",
+    "source",
+    "generator_family",
+    "split",
+    "sequence_length"
+  ],
+  "sentinel_count": 200,
+  "source_commit": "28e3aa8c300e93d3c3ad553199993781c3c0ef8f",
+  "status": "PASS"
+}

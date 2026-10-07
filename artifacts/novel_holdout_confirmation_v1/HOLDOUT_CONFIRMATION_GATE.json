@@ -1,0 +1,10 @@
+{
+  "classification": "TRANSFER_CONFIRMED",
+  "gold_leakage_audit": "PASS",
+  "holdout_status": "EXPOSED_AFTER_CONFIRMATION",
+  "optimizer_steps": 0,
+  "raw_prediction_hashes": "PASS",
+  "scientific_validity": "PASS",
+  "sentinel_count": 200,
+  "status": "PASS"
+}

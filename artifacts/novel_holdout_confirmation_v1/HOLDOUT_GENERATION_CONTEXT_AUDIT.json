@@ -1,0 +1,11 @@
+{
+  "gold_target_tokens_in_inference_input": false,
+  "max_prompt_plus_generation_tokens": 9410,
+  "max_prompt_tokens": 8478,
+  "metadata_only_selection": true,
+  "no_later_tokens": true,
+  "record_count": 200,
+  "status": "PASS",
+  "target_labels_passed_to_generation": false,
+  "target_policy": "complete demonstrations plus final target input and assistant prefix; final Gold output excluded"
+}

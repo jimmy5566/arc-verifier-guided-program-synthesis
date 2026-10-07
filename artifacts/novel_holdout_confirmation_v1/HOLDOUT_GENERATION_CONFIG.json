@@ -1,0 +1,24 @@
+{
+  "backward_calls": 0,
+  "batch": {
+    "bucketing": "prompt_length",
+    "max_batched_prompt_tokens": 21568,
+    "requested_max_batch": 32
+  },
+  "context_window": 8704,
+  "generation": {
+    "do_sample": false,
+    "eos_token_id": 15,
+    "max_new_tokens": 932,
+    "num_beams": 1,
+    "pad_token_id": 13,
+    "temperature": null
+  },
+  "model_states": [
+    "base",
+    "tokens_2000000"
+  ],
+  "optimizer_state_created": false,
+  "optimizer_steps": 0,
+  "status": "FROZEN"
+}

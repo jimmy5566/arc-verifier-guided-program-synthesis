@@ -1,0 +1,53 @@
+{
+  "classification": "TRANSFER_CONFIRMED",
+  "models": {
+    "base": {
+      "cell_accuracy": 0.9554654362337645,
+      "dimension_accuracy": 1.0,
+      "exact_grid_correct": 160,
+      "macro_family_exact_grid_accuracy": 0.7999999999999999,
+      "micro_exact_grid_accuracy": 0.8,
+      "parse_classification_counts": {
+        "VALID_GRID": 200
+      },
+      "per_family_exact_accuracy": {
+        "1d_arc:1d_mirror": 0.84,
+        "1d_arc:1d_move_2p": 0.38,
+        "compositional_arc:systematicity:grow+mirror+translation": 1.0,
+        "compositional_arc:systematicity:grow+rotation+translation": 0.98
+      },
+      "per_source_exact_accuracy": {
+        "1d_arc": 0.61,
+        "compositional_arc": 0.99
+      },
+      "source_macro_exact_grid_accuracy": 0.8,
+      "total": 200,
+      "valid_format_rate": 1.0
+    },
+    "tokens_2000000": {
+      "cell_accuracy": 0.9752668444049197,
+      "dimension_accuracy": 1.0,
+      "exact_grid_correct": 174,
+      "macro_family_exact_grid_accuracy": 0.87,
+      "micro_exact_grid_accuracy": 0.87,
+      "parse_classification_counts": {
+        "VALID_GRID": 200
+      },
+      "per_family_exact_accuracy": {
+        "1d_arc:1d_mirror": 0.82,
+        "1d_arc:1d_move_2p": 0.66,
+        "compositional_arc:systematicity:grow+mirror+translation": 1.0,
+        "compositional_arc:systematicity:grow+rotation+translation": 1.0
+      },
+      "per_source_exact_accuracy": {
+        "1d_arc": 0.74,
+        "compositional_arc": 1.0
+      },
+      "source_macro_exact_grid_accuracy": 0.87,
+      "total": 200,
+      "valid_format_rate": 1.0
+    }
+  },
+  "overall_absolute_gain": 0.07000000000000006,
+  "status": "PASS"
+}
