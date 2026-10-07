@@ -191,22 +191,65 @@ def normal_b32_protocol(model: Any, rows: list[dict[str, Any]], token_cap: int) 
     }
 
 
+def _normalize_capture(capture: list[dict[str, Any]], generated_tokens: list[int]) -> list[dict[str, Any]]:
+    result = []
+    for entry, selected_token_id in zip(capture, generated_tokens):
+        normalized = dict(entry)
+        ids = normalized["top5_token_ids"]
+        logits = normalized["top5_logits"]
+        if selected_token_id in ids:
+            selected_index = ids.index(selected_token_id)
+            alternatives = [(logit, token) for token, logit in zip(ids, logits) if token != selected_token_id]
+            top2_logit, top2_token_id = max(alternatives, key=lambda item: item[0])
+            normalized.update(
+                {
+                    "topk_rank1_token_id": normalized["top1_token_id"],
+                    "top1_token_id": selected_token_id,
+                    "top2_token_id": top2_token_id,
+                    "top1_top2_margin": float(logits[selected_index] - top2_logit),
+                    "top1_token_source": "GREEDY_GENERATED_TOKEN",
+                }
+            )
+        result.append(normalized)
+    return result
+
+
 def _condition_summary(run: dict[str, Any], sample_id: str, reference: list[int], capture_id: str | None = None) -> dict[str, Any]:
     summary = {key: value for key, value in run.items() if key not in {"outputs", "captures"}}
     if run["status"] != "PASS":
         return summary
     key = capture_id or sample_id
     candidate = run["outputs"][key]
+    capture = _normalize_capture(run["captures"].get(key, []), candidate)
     summary.update(
         {
             "token_sha256": _tokens_hash(candidate),
             "matches_b1": candidate == reference,
             "first_divergence": _first_divergence(reference, candidate),
             "generated_token_ids": candidate,
-            "capture": run["captures"].get(key, []),
+            "capture": capture,
         }
     )
     return summary
+
+
+def normalize_existing_report(report: dict[str, Any]) -> dict[str, Any]:
+    """Normalize tied top-k display fields from already-frozen generated tokens."""
+    for sample in report["samples"]:
+        summaries = [sample["B1_NATIVE"]]
+        for name, value in sample["conditions"].items():
+            summaries.extend(value if name == "BN_ORIGINAL_PEERS_REPEAT" else [value])
+        for summary in summaries:
+            if summary.get("status") == "PASS":
+                summary["capture"] = _normalize_capture(summary.get("capture", []), summary["generated_token_ids"])
+        sample["first_divergence_logit_comparisons"] = {
+            name: _logit_comparison(sample["B1_NATIVE"], value)
+            for name, value in sample["conditions"].items()
+            if name != "BN_ORIGINAL_PEERS_REPEAT"
+        }
+        sample["root_cause_classification"] = _labels(sample["conditions"], sample["B1_NATIVE"])
+    report["top1_token_semantics"] = "GREEDY_GENERATED_TOKEN; topk_rank1_token_id preserves torch.topk tie ordering"
+    return report
 
 
 def _logit_comparison(b1: dict[str, Any], condition: dict[str, Any]) -> dict[str, Any] | None:

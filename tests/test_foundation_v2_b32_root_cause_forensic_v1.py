@@ -60,3 +60,29 @@ def test_first_divergence() -> None:
     assert loaded._first_divergence([1, 2], [1, 3]) == 1
     assert loaded._first_divergence([1], [1]) is None
     assert loaded._first_divergence([1], [1, 2]) == 1
+
+
+def test_condition_summary_uses_greedy_token_for_tied_top1() -> None:
+    loaded = module()
+    run = {
+        "status": "PASS",
+        "outputs": {"x": [7]},
+        "captures": {
+            "x": [
+                {
+                    "top5_token_ids": [8, 7, 6, 5, 1],
+                    "top5_logits": [103.5, 103.5, 103.0, 102.5, 102.0],
+                    "top1_token_id": 8,
+                    "top2_token_id": 7,
+                    "top1_top2_margin": 0.0,
+                }
+            ]
+        },
+    }
+    summary = loaded._condition_summary(run, "x", [7])
+    capture = summary["capture"][0]
+    assert capture["topk_rank1_token_id"] == 8
+    assert capture["top1_token_id"] == 7
+    assert capture["top2_token_id"] == 8
+    assert capture["top1_top2_margin"] == 0.0
+    assert capture["top1_token_source"] == "GREEDY_GENERATED_TOKEN"
