@@ -770,6 +770,8 @@ def controller(args: argparse.Namespace) -> int:
             "--model-path", str(args.model_path), "--checkpoint-root", str(args.checkpoint_root),
             "--novel-validation-root", str(args.novel_validation_root), "--replay-shard", str(args.replay_shard),
             "--native-config-dir", str(args.native_config_dir),
+            "--batch-size", str(args.batch_size or 1),
+            "--max-batched-prompt-tokens", str(args.max_batched_prompt_tokens),
         ]
         completed = subprocess.run(command, check=False)
         if completed.returncode:
