@@ -1,0 +1,86 @@
+dimension,group,output_count,orc_union_solved_count,orc_union_solve_rate
+composition_depth,2,29,15,0.517241
+composition_depth,3_PLUS,57,19,0.333333
+composition_depth,UNKNOWN,3,1,0.333333
+ontology_coverage,FULLY_COVERED,50,19,0.38
+ontology_coverage,OUTSIDE_CURRENT_ONTOLOGY,6,2,0.333333
+ontology_coverage,PARTIALLY_COVERED,33,14,0.424242
+primary_family,COLOR_MAPPING,5,1,0.2
+primary_family,CONDITIONAL_CONTROL,7,3,0.428571
+primary_family,CONSTRUCTION,12,8,0.666667
+primary_family,COUNTING_NUMERIC,5,4,0.8
+primary_family,GEOMETRIC_TRANSFORM,4,3,0.75
+primary_family,MASK_SET,3,3,1.0
+primary_family,MOTION,6,2,0.333333
+primary_family,MULTI_STAGE_COMPOSITION,18,2,0.111111
+primary_family,OBJECT_SELECTION,9,5,0.555556
+primary_family,OTHER_OR_UNCERTAIN,6,2,0.333333
+primary_family,PATTERN_PROGRESSION,14,2,0.142857
+required_capability,adjacent/touching,2,0,0.0
+required_capability,aligned,10,3,0.3
+required_capability,area,2,0,0.0
+required_capability,border,4,3,0.75
+required_capability,color,11,4,0.363636
+required_capability,color mapping,19,2,0.105263
+required_capability,compare quantities,4,4,1.0
+required_capability,complete missing structure,11,7,0.636364
+required_capability,connected,8,3,0.375
+required_capability,connected components,25,9,0.36
+required_capability,copy,10,2,0.2
+required_capability,copy reference color,4,2,0.5
+required_capability,count components,1,1,1.0
+required_capability,crop,17,7,0.411765
+required_capability,difference,6,5,0.833333
+required_capability,encode quantity geometrically,1,1,1.0
+required_capability,extend line/ray,7,3,0.428571
+required_capability,extract,9,4,0.444444
+required_capability,fill,10,3,0.3
+required_capability,frames,8,2,0.25
+required_capability,height,5,4,0.8
+required_capability,holes/enclosures,3,3,1.0
+required_capability,if/else on attribute,7,3,0.428571
+required_capability,inferred displacement,7,3,0.428571
+required_capability,inside/contains,11,4,0.363636
+required_capability,intersection,1,1,1.0
+required_capability,largest,2,0,0.0
+required_capability,lines,21,11,0.52381
+required_capability,mask,9,4,0.444444
+required_capability,nearest/farthest,1,1,1.0
+required_capability,nth/order,13,9,0.692308
+required_capability,object vs color grouping,2,2,1.0
+required_capability,orientation,11,3,0.272727
+required_capability,overlay,14,3,0.214286
+required_capability,periodic pattern,6,2,0.333333
+required_capability,position,19,7,0.368421
+required_capability,propagation,13,2,0.153846
+required_capability,recolor,8,3,0.375
+required_capability,reflect LR,2,1,0.5
+required_capability,relation-conditioned selector,2,1,0.5
+required_capability,repeat,6,1,0.166667
+required_capability,repeated motifs,3,1,0.333333
+required_capability,rotate 90,4,3,0.75
+required_capability,same color,12,2,0.166667
+required_capability,same column,6,1,0.166667
+required_capability,same row,8,1,0.125
+required_capability,scale,1,1,1.0
+required_capability,separators/subgrids,18,5,0.277778
+required_capability,smallest,2,2,1.0
+required_capability,symmetry completion,5,4,0.8
+required_capability,translate,19,7,0.368421
+required_capability,union,1,1,1.0
+required_capability,unique,3,2,0.666667
+required_capability,uniqueness,3,3,1.0
+required_capability,until alignment,3,0,0.0
+required_capability,until boundary,6,1,0.166667
+required_capability,until touching,5,1,0.2
+required_capability,width,1,0,0.0
+requires_conditional_control,false,82,32,0.390244
+requires_conditional_control,true,7,3,0.428571
+requires_numeric_reasoning,false,84,30,0.357143
+requires_numeric_reasoning,true,5,5,1.0
+requires_relation,false,49,24,0.489796
+requires_relation,true,40,11,0.275
+requires_selector,false,67,21,0.313433
+requires_selector,true,22,14,0.636364
+requires_state_or_progression,false,68,31,0.455882
+requires_state_or_progression,true,21,4,0.190476
