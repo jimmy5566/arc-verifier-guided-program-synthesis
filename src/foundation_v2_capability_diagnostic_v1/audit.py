@@ -183,9 +183,12 @@ def pair_models(rows: list[dict[str, Any]], score_key: str, *, composite: bool =
     for capability in capabilities:
         base, fv2 = lookup[("base", capability)], lookup[("foundation_v2", capability)]
         bs, fs = float(base[score_key]), float(fv2[score_key])
+        observation = 1 / (16 if fv2["measurement_type"] == "MINIMAL_CONTRAST" else 32)
+        borderline = any(abs(fs - boundary) <= observation + 1e-12 for boundary in (0.40, 0.75, 0.95))
         result.append({"capability": capability, "measurement_type": fv2["measurement_type"],
                        "base_primary_score": bs, "foundation_v2_primary_score": fs, "delta": fs - bs,
                        "engineering_status": engineering_band(fs, composite=composite),
+                       "borderline": borderline, "borderline_observation_width": observation,
                        "base": base, "foundation_v2": fv2})
     return result
 
@@ -225,6 +228,7 @@ def stage_summary(profile: Sequence[dict[str, Any]]) -> dict[str, Any]:
         scores = sorted(float(row["foundation_v2_primary_score"]) for row in rows)
         counts = {band: sum(str(row["engineering_status"]).endswith(band) for row in rows) for band in ("WEAK", "PARTIAL", "STRONG", "SATURATED")}
         result[stage] = {"direct_or_minimal_capability_count": len(rows), **{f"{k.lower()}_count": v for k, v in counts.items()},
+                         "borderline_count": sum(bool(row.get("borderline")) for row in rows),
                          "median_primary_score": (scores[(len(scores)-1)//2] + scores[len(scores)//2]) / 2,
                          "mean_base_to_foundation_v2_delta": sum(float(row["delta"]) for row in rows) / len(rows),
                          "capabilities": [row["capability"] for row in rows]}
@@ -244,7 +248,7 @@ def priority_map(profile: Sequence[dict[str, Any]], parameters: Sequence[dict[st
         name = str(row["capability"])
         result.append({"capability": name, "measurement_type": row["measurement_type"], "priority": priority,
                        "foundation_v2_primary_score": row["foundation_v2_primary_score"], "delta": row["delta"],
-                       "flags": {"REGRESSION_VS_BASE": row["delta"] < 0,
+                       "flags": {"BORDERLINE": bool(row.get("borderline")), "REGRESSION_VS_BASE": row["delta"] < 0,
                                  "PARAMETER_GENERALIZATION_GAP": bool(weak_parameter) and any(token in name for token in ("color", "position", "count", "size", "orientation", "displacement")),
                                  "COMPOSITION_PREREQUISITE": any(name in cap for cap in weak_composites)}})
     return result
