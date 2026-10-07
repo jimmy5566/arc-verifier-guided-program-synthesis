@@ -542,7 +542,12 @@ def miss_interpretation_summary(tasks: Sequence[dict[str, Any]], task_matrix: Se
         return bool(names) and all(comp_lookup[name]["engineering_band"] in {"STRONG", "SATURATED"} for name in names)
 
     surprising = [row for row in misses if primitive_strong(row["task_id"])]
-    expected = [row for row in misses if tm[row["task_id"]]["any_required_cap_partial_or_weaker"]]
+    expected = [
+        row
+        for row in misses
+        if tm[row["task_id"]]["base_representation_status"]
+        in {"REPRESENTATION_GAP_EXPECTED", "REPRESENTATION_RISK_PARTIAL"}
+    ]
     return {
         "historical_ORC_misses_with_strong_Base_primitive_supply": len(surprising),
         "historical_ORC_misses_with_strong_primitive_and_matching_composition_evidence": sum(composition_strong(row["task_id"]) for row in surprising),

@@ -132,13 +132,15 @@ def test_surprising_misses_exclude_ontology_and_insufficient_evidence() -> None:
     task_matrix = [
         {"task_id": "strong", "base_representation_status": "PRIMITIVE_SUPPLY_STRONG", "all_independent_required_caps_strong_or_better": True, "any_required_cap_partial_or_weaker": False},
         {"task_id": "gap", "base_representation_status": "ONTOLOGY_GAP", "all_independent_required_caps_strong_or_better": True, "any_required_cap_partial_or_weaker": False},
-        {"task_id": "missing", "base_representation_status": "INSUFFICIENT_EVIDENCE", "all_independent_required_caps_strong_or_better": True, "any_required_cap_partial_or_weaker": False},
+        {"task_id": "missing", "base_representation_status": "INSUFFICIENT_EVIDENCE", "all_independent_required_caps_strong_or_better": False, "any_required_cap_partial_or_weaker": True},
+        {"task_id": "weak", "base_representation_status": "REPRESENTATION_GAP_EXPECTED", "all_independent_required_caps_strong_or_better": False, "any_required_cap_partial_or_weaker": True},
     ]
     tasks = [
         {"task_id": task_id, "primary_family": "PATTERN_PROGRESSION", "secondary_families": [], "requires_relation": False, "requires_selector": False, "requires_state_or_progression": False, "requires_conditional_control": False}
-        for task_id in ("strong", "gap", "missing")
+        for task_id in ("strong", "gap", "missing", "weak")
     ]
-    oracle = [{"task_id": task_id, "output_id": f"{task_id}:o0", "ORC_UNION": False} for task_id in ("strong", "gap", "missing")]
+    oracle = [{"task_id": task_id, "output_id": f"{task_id}:o0", "ORC_UNION": False} for task_id in ("strong", "gap", "missing", "weak")]
     result = miss_interpretation_summary(tasks, task_matrix, oracle, [])
     assert result["historical_ORC_misses_with_strong_Base_primitive_supply"] == 1
     assert [row["task_id"] for row in result["top_15_surprising_misses"]] == ["strong"]
+    assert [row["task_id"] for row in result["top_15_expected_misses"]] == ["weak"]
