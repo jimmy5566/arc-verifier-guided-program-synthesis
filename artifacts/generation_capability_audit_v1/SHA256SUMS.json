@@ -1,0 +1,61 @@
+{
+  "files": {
+    "BATCH1_VS_BATCH32_PARITY.json": {
+      "bytes": 642,
+      "sha256": "9d01275eeff57b37f789787e77b2a600e137aa4c40b453da310c708233cf0320"
+    },
+    "CALIBRATION_20.json": {
+      "bytes": 13255,
+      "sha256": "6454d78b68d974049e12f0a23f5d724d01bed229389a51fef1cd483aba13422e"
+    },
+    "CHECKPOINT_IDENTITY_AUDIT.json": {
+      "bytes": 10844,
+      "sha256": "103aa89065e478b91a84fa29c31021cfa0ebbcffc2ca5bed4d5facd821660175"
+    },
+    "GENERATION_CAPABILITY_GATE.json": {
+      "bytes": 951,
+      "sha256": "7ee4a7e5f104dc4e74f83896f9209ea0698a66d64b8129d3794b0d0e34cb5698"
+    },
+    "GENERATION_CONFIG.json": {
+      "bytes": 642,
+      "sha256": "99afd94c26c37b8d96c04783061f6b83518b40164c6d09a4d6ff738e9d5dc880"
+    },
+    "GENERATION_CONTEXT_AUDIT.json": {
+      "bytes": 155401,
+      "sha256": "1d91a8f12675dd5e905dc1007668c338c97a75a15071bbc2515fffc7cb8885a3"
+    },
+    "GENERATION_DATA_ACCESS_AUDIT.json": {
+      "bytes": 193,
+      "sha256": "ef0edef5fdb52e2de60655a70210a387c9ea6cc84beee164ad9adbadcdee543c"
+    },
+    "GENERATION_LEARNING_CURVE.csv": {
+      "bytes": 492,
+      "sha256": "134a9dcb6ad2929993a7304aa02996cdc6102fc936c75225c1e06d041871c9ee"
+    },
+    "GENERATION_PREDICTION_HASHES.json": {
+      "bytes": 779,
+      "sha256": "05192581532fe6c044174d85d0b40580fe90752721f8a594e1192abd9f428f23"
+    },
+    "LOSS_VS_GENERATION_COMPARISON.json": {
+      "bytes": 1612,
+      "sha256": "5ed7da6cef27034007f83e49cf957b0c2255e3c5caafa6424b85e6fcc18b4cc8"
+    },
+    "NOVEL_GENERATION_RESULTS.json": {
+      "bytes": 4416,
+      "sha256": "b9fbb9779817bc8852708326e55c0023db0a2c3420a0eb551279ebab952fbe4d"
+    },
+    "NO_TRAINING_AUDIT.json": {
+      "bytes": 106,
+      "sha256": "1efbbae3bc5dca0b198ec010160b2c4769c480ae820ab781728e86ac4ab9e589"
+    },
+    "REPLAY_GENERATION_RESULTS.json": {
+      "bytes": 18182,
+      "sha256": "b09c2670ec069183d6350ba0cb868c3e0dd7d0480325b457050a1f0bf7251100"
+    },
+    "REPORT.md": {
+      "bytes": 367,
+      "sha256": "ca2f341a59607fcf724408255c4466778de14faba41e980dcd38efe1f99a7d9e"
+    }
+  },
+  "status": "PASS"
+}

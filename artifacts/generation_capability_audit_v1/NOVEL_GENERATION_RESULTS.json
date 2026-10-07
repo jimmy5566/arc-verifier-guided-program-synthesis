@@ -1,0 +1,135 @@
+{
+  "points": [
+    {
+      "cell_accuracy": 0.8617045454545456,
+      "checkpoint": "base",
+      "dimension_accuracy": 0.875,
+      "exact_grid_correct": 83,
+      "macro_family_exact_grid_accuracy": 0.6484375,
+      "micro_exact_grid_accuracy": 0.6484375,
+      "parse_classification_counts": {
+        "INVALID_DIMENSIONS": 3,
+        "TRUNCATED": 13,
+        "VALID_GRID": 112
+      },
+      "per_family_exact_accuracy": {
+        "1d_arc:1d_padded_fill": 0.5,
+        "1d_arc:1d_pcopy_mc": 0.9375,
+        "compositional_arc:systematicity:grow+mirror+translation": 0.65625,
+        "compositional_arc:systematicity:grow+rotation+translation": 0.5
+      },
+      "per_source_exact_accuracy": {
+        "1d_arc": 0.71875,
+        "compositional_arc": 0.578125
+      },
+      "source_macro_exact_grid_accuracy": 0.6484375,
+      "total": 128,
+      "valid_format_rate": 0.875
+    },
+    {
+      "cell_accuracy": 0.8818507339015151,
+      "checkpoint": "tokens_500000",
+      "dimension_accuracy": 0.8828125,
+      "exact_grid_correct": 111,
+      "macro_family_exact_grid_accuracy": 0.8671875,
+      "micro_exact_grid_accuracy": 0.8671875,
+      "parse_classification_counts": {
+        "INVALID_DIMENSIONS": 11,
+        "TRUNCATED": 4,
+        "VALID_GRID": 113
+      },
+      "per_family_exact_accuracy": {
+        "1d_arc:1d_padded_fill": 0.53125,
+        "1d_arc:1d_pcopy_mc": 0.9375,
+        "compositional_arc:systematicity:grow+mirror+translation": 1.0,
+        "compositional_arc:systematicity:grow+rotation+translation": 1.0
+      },
+      "per_source_exact_accuracy": {
+        "1d_arc": 0.734375,
+        "compositional_arc": 1.0
+      },
+      "source_macro_exact_grid_accuracy": 0.8671875,
+      "total": 128,
+      "valid_format_rate": 0.8828125
+    },
+    {
+      "cell_accuracy": 0.8818507339015151,
+      "checkpoint": "tokens_1000000",
+      "dimension_accuracy": 0.8828125,
+      "exact_grid_correct": 111,
+      "macro_family_exact_grid_accuracy": 0.8671875,
+      "micro_exact_grid_accuracy": 0.8671875,
+      "parse_classification_counts": {
+        "INVALID_DIMENSIONS": 10,
+        "TRUNCATED": 5,
+        "VALID_GRID": 113
+      },
+      "per_family_exact_accuracy": {
+        "1d_arc:1d_padded_fill": 0.53125,
+        "1d_arc:1d_pcopy_mc": 0.9375,
+        "compositional_arc:systematicity:grow+mirror+translation": 1.0,
+        "compositional_arc:systematicity:grow+rotation+translation": 1.0
+      },
+      "per_source_exact_accuracy": {
+        "1d_arc": 0.734375,
+        "compositional_arc": 1.0
+      },
+      "source_macro_exact_grid_accuracy": 0.8671875,
+      "total": 128,
+      "valid_format_rate": 0.8828125
+    },
+    {
+      "cell_accuracy": 0.88232421875,
+      "checkpoint": "tokens_1500000",
+      "dimension_accuracy": 0.8828125,
+      "exact_grid_correct": 112,
+      "macro_family_exact_grid_accuracy": 0.875,
+      "micro_exact_grid_accuracy": 0.875,
+      "parse_classification_counts": {
+        "INVALID_DIMENSIONS": 8,
+        "TRUNCATED": 7,
+        "VALID_GRID": 113
+      },
+      "per_family_exact_accuracy": {
+        "1d_arc:1d_padded_fill": 0.53125,
+        "1d_arc:1d_pcopy_mc": 0.96875,
+        "compositional_arc:systematicity:grow+mirror+translation": 1.0,
+        "compositional_arc:systematicity:grow+rotation+translation": 1.0
+      },
+      "per_source_exact_accuracy": {
+        "1d_arc": 0.75,
+        "compositional_arc": 1.0
+      },
+      "source_macro_exact_grid_accuracy": 0.875,
+      "total": 128,
+      "valid_format_rate": 0.8828125
+    },
+    {
+      "cell_accuracy": 0.8828125,
+      "checkpoint": "tokens_2000000",
+      "dimension_accuracy": 0.8828125,
+      "exact_grid_correct": 113,
+      "macro_family_exact_grid_accuracy": 0.8828125,
+      "micro_exact_grid_accuracy": 0.8828125,
+      "parse_classification_counts": {
+        "INVALID_DIMENSIONS": 7,
+        "TRUNCATED": 8,
+        "VALID_GRID": 113
+      },
+      "per_family_exact_accuracy": {
+        "1d_arc:1d_padded_fill": 0.53125,
+        "1d_arc:1d_pcopy_mc": 1.0,
+        "compositional_arc:systematicity:grow+mirror+translation": 1.0,
+        "compositional_arc:systematicity:grow+rotation+translation": 1.0
+      },
+      "per_source_exact_accuracy": {
+        "1d_arc": 0.765625,
+        "compositional_arc": 1.0
+      },
+      "source_macro_exact_grid_accuracy": 0.8828125,
+      "total": 128,
+      "valid_format_rate": 0.8828125
+    }
+  ],
+  "status": "PASS"
+}

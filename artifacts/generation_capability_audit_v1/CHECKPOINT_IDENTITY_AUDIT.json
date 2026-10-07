@@ -298,6 +298,8 @@
       "path": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/capability_pilot_2m_v1_checkpoints/tokens_500000"
     }
   },
+  "post_generation_identity_verification": "PASS",
+  "pre_generation_receipt_source": "runtime_output",
   "source_commit": "18c2034799085de7d551f39571470f741baa17f9",
   "status": "PASS",
   "tokenizer_length": 16,

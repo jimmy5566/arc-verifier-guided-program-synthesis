@@ -1,0 +1,45 @@
+{
+  "correlations": {
+    "descriptive_only_no_causal_claim": true,
+    "novel_loss_vs_macro_exact_pearson": -0.9983538005853115,
+    "replay_loss_vs_macro_exact_pearson": -0.9695356799719675
+  },
+  "points": [
+    {
+      "checkpoint": "base",
+      "novel_exact_generation_accuracy": 0.6484375,
+      "novel_teacher_forced_macro_loss": 1.332495460926895,
+      "replay_exact_generation_accuracy": 0.171875,
+      "replay_teacher_forced_macro_loss": 2.5560140730813146
+    },
+    {
+      "checkpoint": "tokens_500000",
+      "novel_exact_generation_accuracy": 0.8671875,
+      "novel_teacher_forced_macro_loss": 0.07606708564105921,
+      "replay_exact_generation_accuracy": 0.640625,
+      "replay_teacher_forced_macro_loss": 0.15712665663158987
+    },
+    {
+      "checkpoint": "tokens_1000000",
+      "novel_exact_generation_accuracy": 0.8671875,
+      "novel_teacher_forced_macro_loss": 0.06603142832933451,
+      "replay_exact_generation_accuracy": 0.71875,
+      "replay_teacher_forced_macro_loss": 0.07156612354151548
+    },
+    {
+      "checkpoint": "tokens_1500000",
+      "novel_exact_generation_accuracy": 0.875,
+      "novel_teacher_forced_macro_loss": 0.062208707807283214,
+      "replay_exact_generation_accuracy": 0.765625,
+      "replay_teacher_forced_macro_loss": 0.05722711188263929
+    },
+    {
+      "checkpoint": "tokens_2000000",
+      "novel_exact_generation_accuracy": 0.8828125,
+      "novel_teacher_forced_macro_loss": 0.06164049707616188,
+      "replay_exact_generation_accuracy": 0.84375,
+      "replay_teacher_forced_macro_loss": 0.04974181830300495
+    }
+  ],
+  "status": "PASS"
+}

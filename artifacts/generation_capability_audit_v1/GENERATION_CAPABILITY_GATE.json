@@ -1,0 +1,32 @@
+{
+  "GENERATION_SATURATION_STATUS": "GENERATION_SATURATION_BEFORE_2M",
+  "NOVEL_GENERATION_RESULT": "STRONG_GENERATIVE_GAIN",
+  "REPLAY_GENERATION_RETENTION": "REPLAY_GENERATION_PRESERVED_OR_IMPROVED",
+  "best_generation_checkpoint": "tokens_2000000",
+  "diagnostic_thresholds_not_significance_claims": true,
+  "incremental_novel_macro_exact_gain": [
+    {
+      "from": "base",
+      "novel_macro_exact_delta": 0.21875,
+      "to": "tokens_500000"
+    },
+    {
+      "from": "tokens_500000",
+      "novel_macro_exact_delta": 0.0,
+      "to": "tokens_1000000"
+    },
+    {
+      "from": "tokens_1000000",
+      "novel_macro_exact_delta": 0.0078125,
+      "to": "tokens_1500000"
+    },
+    {
+      "from": "tokens_1500000",
+      "novel_macro_exact_delta": 0.0078125,
+      "to": "tokens_2000000"
+    }
+  ],
+  "next_phase_recommendation": "B_STOP_AT_2M_SATURATED",
+  "replay_macro_exact_delta_vs_base": 0.671875,
+  "status": "STRONG_GENERATIVE_GAIN"
+}

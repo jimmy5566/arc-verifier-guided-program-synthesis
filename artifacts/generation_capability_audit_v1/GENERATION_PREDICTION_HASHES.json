@@ -1,0 +1,26 @@
+{
+  "files": {
+    "base.json": {
+      "bytes": 1154500,
+      "sha256": "c7b7adc543d625b9259ed3eae0358e6328ddba4482b455404bb3e0937758231f"
+    },
+    "tokens_1000000.json": {
+      "bytes": 956686,
+      "sha256": "cd43b51acc7c4362a32d7f40d0d6bba5d56db7d201e3851743937dae852f5e54"
+    },
+    "tokens_1500000.json": {
+      "bytes": 970381,
+      "sha256": "e27e685d31569b24602f434c80f9f96b007a7a70466cf0648e6ab17f80f7a99e"
+    },
+    "tokens_2000000.json": {
+      "bytes": 979433,
+      "sha256": "0ca4a97810dad70ff9c850293c418ab231e1fd68ce8efb872b6f1eca9bf1805e"
+    },
+    "tokens_500000.json": {
+      "bytes": 960037,
+      "sha256": "3d0d35bd3616f8ac3ce93598ae95ab5b6781e5f124934fefe7364dae26dd7bdf"
+    }
+  },
+  "raw_predictions_git_ignored": true,
+  "status": "PASS"
+}
