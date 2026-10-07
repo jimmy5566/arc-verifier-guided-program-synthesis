@@ -661,6 +661,20 @@ def _pearson(xs: list[float], ys: list[float]) -> float | None:
     return None if denominator == 0 else numerator / denominator
 
 
+def incremental_novel_macro_exact_gains(points: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        {
+            "from": previous["checkpoint"],
+            "to": current["checkpoint"],
+            "novel_macro_exact_delta": (
+                current["novel"]["macro_family_exact_grid_accuracy"]
+                - previous["novel"]["macro_family_exact_grid_accuracy"]
+            ),
+        }
+        for previous, current in zip(points[:-1], points[1:], strict=True)
+    ]
+
+
 def _next_phase(novel_class: str, replay_delta: float, saturation: str, final_valid_rate: float) -> str:
     if novel_class == "REGRESSION":
         return "F_STOP_DUE_TO_REGRESSION"
@@ -761,9 +775,7 @@ def finalize(args: argparse.Namespace) -> int:
         "novel_holdout_accessed": False, "eval60_accessed": False, "kaggle_gold_accessed": False,
     })
     atomic_json(artifact / "GENERATION_PREDICTION_HASHES.json", {"status": "PASS", "raw_predictions_git_ignored": True, "files": raw_hashes})
-    incremental = []
-    for previous, current in zip(points, points[1:], strict=True):
-        incremental.append({"from": previous["checkpoint"], "to": current["checkpoint"], "novel_macro_exact_delta": current["novel"]["macro_family_exact_grid_accuracy"] - previous["novel"]["macro_family_exact_grid_accuracy"]})
+    incremental = incremental_novel_macro_exact_gains(points)
     gate = {
         "status": novel_class,
         "NOVEL_GENERATION_RESULT": novel_class,

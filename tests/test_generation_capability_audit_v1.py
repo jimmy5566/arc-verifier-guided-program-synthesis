@@ -89,6 +89,19 @@ def test_finalize_receipt_resolution_prefers_output_then_falls_back_to_artifact(
         runner.resolve_pre_generation_receipt(output, artifact, "missing.json")
 
 
+def test_incremental_checkpoint_deltas_compare_only_adjacent_states() -> None:
+    runner = _runner_module()
+    points = [
+        {"checkpoint": "base", "novel": {"macro_family_exact_grid_accuracy": 0.10}},
+        {"checkpoint": "0.5M", "novel": {"macro_family_exact_grid_accuracy": 0.25}},
+        {"checkpoint": "1M", "novel": {"macro_family_exact_grid_accuracy": 0.20}},
+    ]
+    assert runner.incremental_novel_macro_exact_gains(points) == [
+        {"from": "base", "to": "0.5M", "novel_macro_exact_delta": pytest.approx(0.15)},
+        {"from": "0.5M", "to": "1M", "novel_macro_exact_delta": pytest.approx(-0.05)},
+    ]
+
+
 def test_strict_grid_parser_classifies_without_repairs() -> None:
     gold = ((4, 5), (6, 7))
     assert parse_generated_tokens([4, 5, 10, 6, 7, 15], gold, hit_max_new_tokens=False).classification == "VALID_GRID"
