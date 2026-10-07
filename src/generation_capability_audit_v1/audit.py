@@ -257,3 +257,32 @@ def saturation_status(points: Sequence[dict[str, Any]]) -> str:
     if max(lookup["tokens_1000000"], lookup["tokens_1500000"]) >= final - 0.01:
         return "GENERATION_SATURATION_BEFORE_2M"
     return "NO_GENERATION_SATURATION_BEFORE_2M"
+
+
+def select_calibration_examples(novel: Sequence[GenerationExample], replay: Sequence[GenerationExample]) -> list[tuple[str, GenerationExample, str]]:
+    """Select a fixed 20-example length-stratified calibration cohort.
+
+    Novel contributes min/median/max prompt lengths for every one of its four
+    families (12). Replay contributes min/max for each of its four sources
+    (8). Ties are broken by sample ID.
+    """
+    result: list[tuple[str, GenerationExample, str]] = []
+    novel_groups: dict[str, list[GenerationExample]] = defaultdict(list)
+    replay_groups: dict[str, list[GenerationExample]] = defaultdict(list)
+    for item in novel:
+        novel_groups[item.family].append(item)
+    for item in replay:
+        replay_groups[item.source].append(item)
+    if len(novel_groups) != 4 or len(replay_groups) != 4:
+        raise GenerationAuditError("CALIBRATION_STRATA_MISMATCH")
+    for family, values in sorted(novel_groups.items()):
+        ordered = sorted(values, key=lambda item: (len(item.prompt_ids), item.sample_id))
+        for label, index in (("short", 0), ("median", len(ordered) // 2), ("long", len(ordered) - 1)):
+            result.append(("novel", ordered[index], f"family:{family}:{label}"))
+    for source, values in sorted(replay_groups.items()):
+        ordered = sorted(values, key=lambda item: (len(item.prompt_ids), item.sample_id))
+        for label, index in (("short", 0), ("long", len(ordered) - 1)):
+            result.append(("replay", ordered[index], f"source:{source}:{label}"))
+    if len(result) != 20 or len({item.sample_id for _cohort, item, _stratum in result}) != 20:
+        raise GenerationAuditError("CALIBRATION_SELECTION_NOT_20_UNIQUE")
+    return result

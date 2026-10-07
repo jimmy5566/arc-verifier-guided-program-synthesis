@@ -28,6 +28,7 @@ from generation_capability_audit_v1.audit import (
     parse_generated_tokens,
     saturation_status,
     score_record,
+    select_calibration_examples,
 )
 
 
@@ -283,6 +284,100 @@ def generate_state(args: argparse.Namespace) -> int:
     return 0
 
 
+def calibration(args: argparse.Namespace) -> int:
+    import torch
+    from transformers import LogitsProcessor, LogitsProcessorList
+
+    novel, replay, context = load_examples(args)
+    if context["status"] != "PASS":
+        raise GenerationAuditError("GENERATION_CONTEXT_AUDIT_FAIL")
+    selected = select_calibration_examples(novel, replay)
+
+    class FirstTokenTiming(LogitsProcessor):
+        def __init__(self, started: float) -> None:
+            self.started = started
+            self.first_call: float | None = None
+
+        def __call__(self, input_ids, scores):
+            if self.first_call is None:
+                self.first_call = time.perf_counter()
+            return scores
+
+    load_started = time.perf_counter()
+    model = load_model(args.model_path, args.checkpoint_root / "tokens_2000000")
+    model_load_seconds = time.perf_counter() - load_started
+    rows: list[dict[str, Any]] = []
+    for cohort, example, stratum in selected:
+        prompt = torch.tensor([example.prompt_ids], dtype=torch.long, device="cuda:0")
+        mask = torch.ones_like(prompt)
+        started = time.perf_counter()
+        timing = FirstTokenTiming(started)
+        with torch.inference_mode():
+            output = model.generate(
+                input_ids=prompt,
+                attention_mask=mask,
+                max_new_tokens=MAX_NEW_TOKENS,
+                do_sample=False,
+                num_beams=1,
+                eos_token_id=15,
+                pad_token_id=13,
+                use_cache=True,
+                logits_processor=LogitsProcessorList([timing]),
+            )
+        ended = time.perf_counter()
+        suffix = tuple(int(value) for value in output[0, prompt.shape[-1]:].detach().cpu().tolist())
+        if timing.first_call is None:
+            raise GenerationAuditError("CALIBRATION_TIMING_HOOK_NOT_CALLED")
+        prefill_seconds = timing.first_call - started
+        decode_seconds = ended - timing.first_call
+        decode_steps = max(0, len(suffix) - 1)
+        parsed = parse_generated_tokens(suffix, example.gold_grid, hit_max_new_tokens=len(suffix) >= MAX_NEW_TOKENS and 15 not in suffix)
+        rows.append({
+            "cohort": cohort,
+            "stratum": stratum,
+            "sample_id": example.sample_id,
+            "source": example.source,
+            "family": example.family,
+            "prompt_tokens": len(example.prompt_ids),
+            "generated_tokens": len(suffix),
+            "prefill_seconds": prefill_seconds,
+            "decode_seconds": decode_seconds,
+            "decode_steps_after_first_token": decode_steps,
+            "decode_tokens_per_second": None if decode_steps == 0 or decode_seconds <= 0 else decode_steps / decode_seconds,
+            "total_seconds": ended - started,
+            "parse_classification": parsed.classification,
+            "exact_grid": score_record(example, parsed)["exact_grid"],
+        })
+        print(json.dumps({"event": "CALIBRATION_PROGRESS", "completed": len(rows), "total": 20, **{key: rows[-1][key] for key in ("sample_id", "cohort", "stratum", "prompt_tokens", "generated_tokens", "total_seconds")}}), flush=True)
+        del output, prompt, mask
+    novel_mean = sum(row["total_seconds"] for row in rows if row["cohort"] == "novel") / 12
+    replay_mean = sum(row["total_seconds"] for row in rows if row["cohort"] == "replay") / 8
+    estimated_generation_seconds = 5 * (128 * novel_mean + 64 * replay_mean)
+    estimated_total_seconds = estimated_generation_seconds + 5 * model_load_seconds
+    payload = {
+        "status": "STOP_RUNTIME_EXCEEDS_6H" if estimated_total_seconds > 6 * 3600 else "PASS_FULL_AUDIT_AUTHORIZED",
+        "checkpoint": "tokens_2000000",
+        "selection_policy": "Novel min/median/max per family; Replay min/max per source",
+        "representative_generation_count": len(rows),
+        "novel_family_count": len({row["family"] for row in rows if row["cohort"] == "novel"}),
+        "replay_source_count": len({row["source"] for row in rows if row["cohort"] == "replay"}),
+        "model_load_seconds": model_load_seconds,
+        "mean_novel_seconds": novel_mean,
+        "mean_replay_seconds": replay_mean,
+        "mean_seconds_per_generation_unweighted": sum(row["total_seconds"] for row in rows) / len(rows),
+        "estimated_full_generation_seconds": estimated_generation_seconds,
+        "estimated_full_total_seconds": estimated_total_seconds,
+        "estimated_full_total_hours": estimated_total_seconds / 3600,
+        "stop_threshold_hours": 6,
+        "timing_definition": "prefill ends at first unchanged logits-processor call; decode counts steps after first-token logits",
+        "generation_semantics_unchanged": True,
+        "rows": rows,
+    }
+    atomic_json(args.output / "CALIBRATION_20.json", payload)
+    print(json.dumps({key: payload[key] for key in ("status", "estimated_full_total_seconds", "estimated_full_total_hours")}, sort_keys=True))
+    return 2 if payload["status"] == "STOP_RUNTIME_EXCEEDS_6H" else 0
+
+
 def _pearson(xs: list[float], ys: list[float]) -> float | None:
     if len(xs) != len(ys) or len(xs) < 2:
         return None
@@ -424,7 +519,7 @@ def controller(args: argparse.Namespace) -> int:
 
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser()
-    p.add_argument("--mode", choices=("preflight", "generate", "finalize", "controller"), required=True)
+    p.add_argument("--mode", choices=("preflight", "calibration", "generate", "finalize", "controller"), required=True)
     p.add_argument("--state")
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--artifact", type=Path)
@@ -443,6 +538,8 @@ def main() -> int:
         return preflight(args)
     if args.mode == "generate":
         return generate_state(args)
+    if args.mode == "calibration":
+        return calibration(args)
     if args.mode == "finalize":
         return finalize(args)
     return controller(args)

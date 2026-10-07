@@ -13,6 +13,7 @@ from generation_capability_audit_v1.audit import (
     context_audit_record,
     parse_generated_tokens,
     score_record,
+    select_calibration_examples,
 )
 
 
@@ -112,3 +113,15 @@ def test_data_policy_and_interpretation_bands_are_frozen() -> None:
     assert classify_novel_gain(0.10, 0.14) == "MODEST_GENERATIVE_GAIN"
     assert classify_novel_gain(0.10, 0.12) == "NO_CLEAR_GENERATIVE_GAIN"
     assert classify_novel_gain(0.10, 0.09) == "REGRESSION"
+
+
+def test_calibration_selects_exactly_20_and_covers_all_strata() -> None:
+    examples = [build_generation_example(_row(), _meta(f"n-{family}-{index}")) for family in range(4) for index in range(4)]
+    novel = [item.__class__(item.sample_id, "novel-source", f"novel-family-{index // 4}", item.prompt_ids + tuple([0] * (index % 4)), item.gold_ids, item.gold_grid, item.target_span_start, item.target_span_end, item.original_sequence_length) for index, item in enumerate(examples)]
+    replay_base = [build_generation_example(_row(), _meta(f"r-{source}-{index}")) for source in range(4) for index in range(3)]
+    replay = [item.__class__(item.sample_id, f"replay-source-{index // 3}", f"replay-family-{index}", item.prompt_ids + tuple([0] * (index % 3)), item.gold_ids, item.gold_grid, item.target_span_start, item.target_span_end, item.original_sequence_length) for index, item in enumerate(replay_base)]
+    selected = select_calibration_examples(novel, replay)
+    assert len(selected) == 20
+    assert {item.family for cohort, item, _ in selected if cohort == "novel"} == {f"novel-family-{i}" for i in range(4)}
+    assert {item.source for cohort, item, _ in selected if cohort == "replay"} == {f"replay-source-{i}" for i in range(4)}
+    assert {label.rsplit(":", 1)[-1] for _cohort, _item, label in selected} == {"short", "median", "long"}
