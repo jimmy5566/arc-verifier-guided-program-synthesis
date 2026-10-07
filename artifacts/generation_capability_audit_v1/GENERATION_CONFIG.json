@@ -1,0 +1,25 @@
+{
+  "backward_calls": 0,
+  "context_window": 8704,
+  "generation": {
+    "do_sample": false,
+    "max_new_tokens": 932,
+    "num_beams": 1,
+    "temperature": null
+  },
+  "model_states": [
+    "base",
+    "tokens_500000",
+    "tokens_1000000",
+    "tokens_1500000",
+    "tokens_2000000"
+  ],
+  "novel_count": 128,
+  "optimizer_state_created": false,
+  "optimizer_steps": 0,
+  "replay_count": 64,
+  "source_commit": "18c2034799085de7d551f39571470f741baa17f9",
+  "source_commit_is_ancestor": true,
+  "status": "FROZEN",
+  "target_policy": "final assistant turn; earlier complete turns retained; final Gold response and later tokens excluded"
+}

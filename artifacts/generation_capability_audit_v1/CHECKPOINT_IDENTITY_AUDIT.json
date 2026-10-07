@@ -1,0 +1,332 @@
+{
+  "base_files": {
+    "added_tokens.json": {
+      "bytes": 68,
+      "sha256": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce"
+    },
+    "config.json": {
+      "bytes": 1532,
+      "sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0"
+    },
+    "generation_config.json": {
+      "bytes": 113,
+      "sha256": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02"
+    },
+    "model-00001-of-00002.safetensors": {
+      "bytes": 4996836472,
+      "sha256": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529"
+    },
+    "model-00002-of-00002.safetensors": {
+      "bytes": 2270397024,
+      "sha256": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0"
+    },
+    "model.safetensors.index.json": {
+      "bytes": 32913,
+      "sha256": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4"
+    },
+    "model_manifest.json": {
+      "bytes": 1326,
+      "sha256": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7"
+    },
+    "special_tokens_map.json": {
+      "bytes": 367,
+      "sha256": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b"
+    },
+    "tokenizer.json": {
+      "bytes": 1731,
+      "sha256": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5"
+    },
+    "tokenizer_config.json": {
+      "bytes": 988,
+      "sha256": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90"
+    },
+    "vocab.json": {
+      "bytes": 94,
+      "sha256": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+    }
+  },
+  "base_model_path": "/root/arc-runtime-3090-gpu-benchmark-v1/model-stage/qwen3_4b_grids15_sft139",
+  "base_model_type": "qwen3",
+  "base_model_vocab_size": 16,
+  "checkpoints": {
+    "tokens_1000000": {
+      "adapter_config": {
+        "alpha_pattern": {},
+        "auto_mapping": null,
+        "base_model_name_or_path": "/root/arc-runtime-3090-gpu-benchmark-v1/model-stage/qwen3_4b_grids15_sft139",
+        "bias": "none",
+        "corda_config": null,
+        "eva_config": null,
+        "exclude_modules": null,
+        "fan_in_fan_out": false,
+        "inference_mode": true,
+        "init_lora_weights": true,
+        "layer_replication": null,
+        "layers_pattern": null,
+        "layers_to_transform": null,
+        "loftq_config": {},
+        "lora_alpha": 32,
+        "lora_bias": false,
+        "lora_dropout": 0.0,
+        "megatron_config": null,
+        "megatron_core": "megatron.core",
+        "modules_to_save": null,
+        "peft_type": "LORA",
+        "qalora_group_size": 16,
+        "r": 64,
+        "rank_pattern": {},
+        "revision": null,
+        "target_modules": [
+          "down_proj",
+          "o_proj",
+          "up_proj",
+          "k_proj",
+          "q_proj",
+          "gate_proj",
+          "v_proj"
+        ],
+        "target_parameters": null,
+        "task_type": "CAUSAL_LM",
+        "trainable_token_indices": null,
+        "use_dora": false,
+        "use_qalora": false,
+        "use_rslora": false
+      },
+      "files": {
+        "README.md": {
+          "bytes": 5304,
+          "mtime_ns": 1791333583597287012,
+          "sha256": "c0f1cb620eb95542b82e49f7953d3c62a4a16061eeee307447ee7fe0634a7116"
+        },
+        "adapter_config.json": {
+          "bytes": 986,
+          "mtime_ns": 1791333584253280564,
+          "sha256": "83099aa28f92e8e1eb8268a088cb79290baaf3023d5382eb74f129347a52668b"
+        },
+        "adapter_model.safetensors": {
+          "bytes": 528550256,
+          "mtime_ns": 1791333584198281105,
+          "sha256": "d767cc6a9bece5a8b48953435cd997eca78f901dff10ee828442745ead3abb18"
+        }
+      },
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/capability_pilot_2m_v1_checkpoints/tokens_1000000"
+    },
+    "tokens_1500000": {
+      "adapter_config": {
+        "alpha_pattern": {},
+        "auto_mapping": null,
+        "base_model_name_or_path": "/root/arc-runtime-3090-gpu-benchmark-v1/model-stage/qwen3_4b_grids15_sft139",
+        "bias": "none",
+        "corda_config": null,
+        "eva_config": null,
+        "exclude_modules": null,
+        "fan_in_fan_out": false,
+        "inference_mode": true,
+        "init_lora_weights": true,
+        "layer_replication": null,
+        "layers_pattern": null,
+        "layers_to_transform": null,
+        "loftq_config": {},
+        "lora_alpha": 32,
+        "lora_bias": false,
+        "lora_dropout": 0.0,
+        "megatron_config": null,
+        "megatron_core": "megatron.core",
+        "modules_to_save": null,
+        "peft_type": "LORA",
+        "qalora_group_size": 16,
+        "r": 64,
+        "rank_pattern": {},
+        "revision": null,
+        "target_modules": [
+          "down_proj",
+          "o_proj",
+          "up_proj",
+          "k_proj",
+          "q_proj",
+          "gate_proj",
+          "v_proj"
+        ],
+        "target_parameters": null,
+        "task_type": "CAUSAL_LM",
+        "trainable_token_indices": null,
+        "use_dora": false,
+        "use_qalora": false,
+        "use_rslora": false
+      },
+      "files": {
+        "README.md": {
+          "bytes": 5304,
+          "mtime_ns": 1791334726329393080,
+          "sha256": "c0f1cb620eb95542b82e49f7953d3c62a4a16061eeee307447ee7fe0634a7116"
+        },
+        "adapter_config.json": {
+          "bytes": 986,
+          "mtime_ns": 1791334727053384085,
+          "sha256": "83099aa28f92e8e1eb8268a088cb79290baaf3023d5382eb74f129347a52668b"
+        },
+        "adapter_model.safetensors": {
+          "bytes": 528550256,
+          "mtime_ns": 1791334727007384656,
+          "sha256": "04bb4899eacda220fa6743d3a62ae3e685e643896bbb00efc4337d92fd206823"
+        }
+      },
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/capability_pilot_2m_v1_checkpoints/tokens_1500000"
+    },
+    "tokens_2000000": {
+      "adapter_config": {
+        "alpha_pattern": {},
+        "auto_mapping": null,
+        "base_model_name_or_path": "/root/arc-runtime-3090-gpu-benchmark-v1/model-stage/qwen3_4b_grids15_sft139",
+        "bias": "none",
+        "corda_config": null,
+        "eva_config": null,
+        "exclude_modules": null,
+        "fan_in_fan_out": false,
+        "inference_mode": true,
+        "init_lora_weights": true,
+        "layer_replication": null,
+        "layers_pattern": null,
+        "layers_to_transform": null,
+        "loftq_config": {},
+        "lora_alpha": 32,
+        "lora_bias": false,
+        "lora_dropout": 0.0,
+        "megatron_config": null,
+        "megatron_core": "megatron.core",
+        "modules_to_save": null,
+        "peft_type": "LORA",
+        "qalora_group_size": 16,
+        "r": 64,
+        "rank_pattern": {},
+        "revision": null,
+        "target_modules": [
+          "down_proj",
+          "o_proj",
+          "up_proj",
+          "k_proj",
+          "q_proj",
+          "gate_proj",
+          "v_proj"
+        ],
+        "target_parameters": null,
+        "task_type": "CAUSAL_LM",
+        "trainable_token_indices": null,
+        "use_dora": false,
+        "use_qalora": false,
+        "use_rslora": false
+      },
+      "files": {
+        "README.md": {
+          "bytes": 5304,
+          "mtime_ns": 1791335884546572944,
+          "sha256": "c0f1cb620eb95542b82e49f7953d3c62a4a16061eeee307447ee7fe0634a7116"
+        },
+        "adapter_config.json": {
+          "bytes": 986,
+          "mtime_ns": 1791335885252562724,
+          "sha256": "83099aa28f92e8e1eb8268a088cb79290baaf3023d5382eb74f129347a52668b"
+        },
+        "adapter_model.safetensors": {
+          "bytes": 528550256,
+          "mtime_ns": 1791335885189563636,
+          "sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce"
+        }
+      },
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/capability_pilot_2m_v1_checkpoints/tokens_2000000"
+    },
+    "tokens_500000": {
+      "adapter_config": {
+        "alpha_pattern": {},
+        "auto_mapping": null,
+        "base_model_name_or_path": "/root/arc-runtime-3090-gpu-benchmark-v1/model-stage/qwen3_4b_grids15_sft139",
+        "bias": "none",
+        "corda_config": null,
+        "eva_config": null,
+        "exclude_modules": null,
+        "fan_in_fan_out": false,
+        "inference_mode": true,
+        "init_lora_weights": true,
+        "layer_replication": null,
+        "layers_pattern": null,
+        "layers_to_transform": null,
+        "loftq_config": {},
+        "lora_alpha": 32,
+        "lora_bias": false,
+        "lora_dropout": 0.0,
+        "megatron_config": null,
+        "megatron_core": "megatron.core",
+        "modules_to_save": null,
+        "peft_type": "LORA",
+        "qalora_group_size": 16,
+        "r": 64,
+        "rank_pattern": {},
+        "revision": null,
+        "target_modules": [
+          "down_proj",
+          "o_proj",
+          "up_proj",
+          "k_proj",
+          "q_proj",
+          "gate_proj",
+          "v_proj"
+        ],
+        "target_parameters": null,
+        "task_type": "CAUSAL_LM",
+        "trainable_token_indices": null,
+        "use_dora": false,
+        "use_qalora": false,
+        "use_rslora": false
+      },
+      "files": {
+        "README.md": {
+          "bytes": 5304,
+          "mtime_ns": 1791332466409210087,
+          "sha256": "c0f1cb620eb95542b82e49f7953d3c62a4a16061eeee307447ee7fe0634a7116"
+        },
+        "adapter_config.json": {
+          "bytes": 986,
+          "mtime_ns": 1791332467060204014,
+          "sha256": "83099aa28f92e8e1eb8268a088cb79290baaf3023d5382eb74f129347a52668b"
+        },
+        "adapter_model.safetensors": {
+          "bytes": 528550256,
+          "mtime_ns": 1791332467007204508,
+          "sha256": "e1c96550196d2ee9a394409a601a93d6f6b808f5d71777732ce5457e292044a3"
+        }
+      },
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/capability_pilot_2m_v1_checkpoints/tokens_500000"
+    }
+  },
+  "source_commit": "18c2034799085de7d551f39571470f741baa17f9",
+  "status": "PASS",
+  "tokenizer_length": 16,
+  "tokenizer_preflight": {
+    "chat_template_source": "nvarc_official_for_missing_checkpoint_template",
+    "config_vocab_size": 16,
+    "eos_token_id": 15,
+    "grid_roundtrip": true,
+    "pad_token_id": 13,
+    "synthetic_prompt_tokens": 30,
+    "synthetic_render": "<|im_start|>user\n01\n23<|im_end|><|im_start|>assistant\n32\n10<|im_end|><|im_start|>user\n45\n67<|im_end|><|im_start|>assistant\n",
+    "token_mapping": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "5": 5,
+      "6": 6,
+      "7": 7,
+      "8": 8,
+      "9": 9,
+      "<|endoftext|>": 13,
+      "<|im_end|>": 15,
+      "<|im_start|>": 14,
+      "assistant": 12,
+      "user": 11,
+      "\u010a": 10
+    },
+    "tokenizer_vocab_size": 16
+  }
+}
