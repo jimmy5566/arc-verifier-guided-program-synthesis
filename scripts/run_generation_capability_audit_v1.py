@@ -226,41 +226,90 @@ def generate_state(args: argparse.Namespace) -> int:
     model = load_model(args.model_path, adapter)
     torch.cuda.reset_peak_memory_stats(0)
     records: list[dict[str, Any]] = []
+    requested_batch_size = args.batch_size or 1
+    if requested_batch_size < 1:
+        raise GenerationAuditError("INVALID_GENERATION_BATCH_SIZE")
+    max_batched_prompt_tokens = args.max_batched_prompt_tokens
+    if max_batched_prompt_tokens < 1:
+        raise GenerationAuditError("INVALID_MAX_BATCHED_PROMPT_TOKENS")
+    oom_fallbacks: list[dict[str, Any]] = []
     started = time.perf_counter()
     for cohort, items in (("novel", novel), ("replay", replay)):
-        for index, example in enumerate(items):
-            prompt = torch.tensor([example.prompt_ids], dtype=torch.long, device="cuda:0")
-            mask = torch.ones_like(prompt)
-            one_started = time.perf_counter()
-            with torch.inference_mode():
-                output = model.generate(
-                    input_ids=prompt,
-                    attention_mask=mask,
-                    max_new_tokens=MAX_NEW_TOKENS,
-                    do_sample=False,
-                    num_beams=1,
-                    eos_token_id=15,
-                    pad_token_id=13,
-                    use_cache=True,
-                )
-            suffix = tuple(int(value) for value in output[0, prompt.shape[-1]:].detach().cpu().tolist())
-            parsed = parse_generated_tokens(suffix, example.gold_grid, hit_max_new_tokens=len(suffix) >= MAX_NEW_TOKENS and 15 not in suffix)
-            record = score_record(example, parsed) | {
-                "checkpoint": args.state,
-                "cohort": cohort,
-                "prompt_tokens": len(example.prompt_ids),
-                "generated_token_ids": list(suffix),
-                "generated_token_count": len(suffix),
-                "terminated_by_eos": parsed.terminated_by_eos,
-                "generation_seconds": time.perf_counter() - one_started,
-                "gold_grid": [list(row) for row in example.gold_grid],
-                "predicted_grid": None if parsed.grid is None else [list(row) for row in parsed.grid],
-            }
-            records.append(record)
+        pending = sorted(items, key=lambda example: (len(example.prompt_ids), example.sample_id))
+        cursor = 0
+        while cursor < len(pending):
+            batch_count = min(requested_batch_size, len(pending) - cursor)
+            while batch_count > 1:
+                width = max(len(example.prompt_ids) for example in pending[cursor:cursor + batch_count])
+                if width * batch_count <= max_batched_prompt_tokens:
+                    break
+                batch_count -= 1
+            batch = pending[cursor:cursor + batch_count]
+            while True:
+                width = max(len(example.prompt_ids) for example in batch)
+                prompt = torch.full((len(batch), width), 13, dtype=torch.long, device="cuda:0")
+                mask = torch.zeros_like(prompt)
+                for row_index, example in enumerate(batch):
+                    length = len(example.prompt_ids)
+                    prompt[row_index, width - length:] = torch.tensor(example.prompt_ids, dtype=torch.long, device="cuda:0")
+                    mask[row_index, width - length:] = 1
+                one_started = time.perf_counter()
+                try:
+                    with torch.inference_mode():
+                        output = model.generate(
+                            input_ids=prompt,
+                            attention_mask=mask,
+                            max_new_tokens=MAX_NEW_TOKENS,
+                            do_sample=False,
+                            num_beams=1,
+                            eos_token_id=15,
+                            pad_token_id=13,
+                            use_cache=True,
+                        )
+                    torch.cuda.synchronize(0)
+                    batch_seconds = time.perf_counter() - one_started
+                    break
+                except torch.cuda.OutOfMemoryError:
+                    failed_size = len(batch)
+                    del prompt, mask
+                    gc.collect()
+                    torch.cuda.empty_cache()
+                    if failed_size == 1:
+                        raise
+                    batch = batch[:max(1, failed_size // 2)]
+                    oom_fallbacks.append({
+                        "cohort": cohort,
+                        "cursor": cursor,
+                        "failed_batch_size": failed_size,
+                        "fallback_batch_size": len(batch),
+                    })
+            for row_index, example in enumerate(batch):
+                raw_suffix = tuple(int(value) for value in output[row_index, width:].detach().cpu().tolist())
+                if 15 in raw_suffix:
+                    suffix = raw_suffix[:raw_suffix.index(15) + 1]
+                else:
+                    suffix = raw_suffix
+                parsed = parse_generated_tokens(suffix, example.gold_grid, hit_max_new_tokens=len(suffix) >= MAX_NEW_TOKENS and 15 not in suffix)
+                record = score_record(example, parsed) | {
+                    "checkpoint": args.state,
+                    "cohort": cohort,
+                    "prompt_tokens": len(example.prompt_ids),
+                    "generated_token_ids": list(suffix),
+                    "generated_token_count": len(suffix),
+                    "terminated_by_eos": parsed.terminated_by_eos,
+                    "generation_seconds": batch_seconds,
+                    "requested_batch_size": requested_batch_size,
+                    "actual_batch_size": len(batch),
+                    "batch_prompt_width": width,
+                    "gold_grid": [list(row) for row in example.gold_grid],
+                    "predicted_grid": None if parsed.grid is None else [list(row) for row in parsed.grid],
+                }
+                records.append(record)
+                print(json.dumps({"event": "GENERATION_PROGRESS", "checkpoint": args.state, "cohort": cohort, "completed": len(records), "total": len(novel) + len(replay), "sample_id": example.sample_id, "classification": parsed.classification, "exact": record["exact_grid"], "actual_batch_size": len(batch)}), flush=True)
             atomic_json(args.output / f"{args.state}.partial.json", {
-                "status": "INCOMPLETE", "checkpoint": args.state, "completed": len(records), "total": len(novel) + len(replay), "records": records,
+                "status": "INCOMPLETE", "checkpoint": args.state, "completed": len(records), "total": len(novel) + len(replay), "requested_batch_size": requested_batch_size, "max_batched_prompt_tokens": max_batched_prompt_tokens, "oom_fallbacks": oom_fallbacks, "records": records,
             })
-            print(json.dumps({"event": "GENERATION_PROGRESS", "checkpoint": args.state, "cohort": cohort, "completed": len(records), "total": len(novel) + len(replay), "sample_id": example.sample_id, "classification": parsed.classification, "exact": record["exact_grid"]}), flush=True)
+            cursor += len(batch)
             del output, prompt, mask
     payload = {
         "status": "COMPLETE",
@@ -269,6 +318,9 @@ def generate_state(args: argparse.Namespace) -> int:
         "record_count": len(records),
         "wall_seconds": time.perf_counter() - started,
         "peak_vram_allocated_bytes": torch.cuda.max_memory_allocated(0),
+        "requested_batch_size": requested_batch_size,
+        "max_batched_prompt_tokens": max_batched_prompt_tokens,
+        "oom_fallbacks": oom_fallbacks,
         "optimizer_steps": 0,
         "backward_calls": 0,
         "optimizer_state_created": False,
@@ -472,6 +524,120 @@ def batch_capacity(args: argparse.Namespace) -> int:
     return 0
 
 
+def batch_parity(args: argparse.Namespace) -> int:
+    """Require token-exact parity before using batched scientific generation."""
+    import torch
+
+    novel, replay, context = load_examples(args)
+    if context["status"] != "PASS":
+        raise GenerationAuditError("GENERATION_CONTEXT_AUDIT_FAIL")
+    selected = [example for _, example, _ in select_calibration_examples(novel, replay)]
+    examples = {example.sample_id: example for example in novel + replay}
+    if args.sample_id not in examples:
+        raise GenerationAuditError(f"CAPACITY_SAMPLE_NOT_FOUND={args.sample_id}")
+    anchor = examples[args.sample_id]
+    model = load_model(args.model_path, args.checkpoint_root / "tokens_2000000")
+    args.output.mkdir(parents=True, exist_ok=True)
+
+    def generate_batch(batch: list[Any]) -> list[tuple[int, ...]]:
+        width = max(len(example.prompt_ids) for example in batch)
+        prompt = torch.full((len(batch), width), 13, dtype=torch.long, device="cuda:0")
+        mask = torch.zeros_like(prompt)
+        for row_index, example in enumerate(batch):
+            length = len(example.prompt_ids)
+            prompt[row_index, width - length:] = torch.tensor(example.prompt_ids, dtype=torch.long, device="cuda:0")
+            mask[row_index, width - length:] = 1
+        with torch.inference_mode():
+            output = model.generate(
+                input_ids=prompt,
+                attention_mask=mask,
+                max_new_tokens=MAX_NEW_TOKENS,
+                do_sample=False,
+                num_beams=1,
+                eos_token_id=15,
+                pad_token_id=13,
+                use_cache=True,
+            )
+        torch.cuda.synchronize(0)
+        suffixes = []
+        for row in output:
+            raw = tuple(int(value) for value in row[width:].detach().cpu().tolist())
+            suffixes.append(raw[:raw.index(15) + 1] if 15 in raw else raw)
+        del output, prompt, mask
+        return suffixes
+
+    def digest(tokens: tuple[int, ...]) -> str:
+        return hashlib.sha256(json.dumps(list(tokens), separators=(",", ":")).encode("utf-8")).hexdigest()
+
+    def mismatch(left: tuple[int, ...], right: tuple[int, ...]) -> dict[str, Any] | None:
+        if left == right:
+            return None
+        shared = min(len(left), len(right))
+        first = next((index for index in range(shared) if left[index] != right[index]), shared)
+        return {
+            "first_divergence": first,
+            "batch1_length": len(left),
+            "batched_length": len(right),
+            "batch1_sha256": digest(left),
+            "batched_sha256": digest(right),
+        }
+
+    singles: dict[str, tuple[int, ...]] = {}
+    for index, example in enumerate(selected, 1):
+        singles[example.sample_id] = generate_batch([example])[0]
+        print(json.dumps({"event": "PARITY_BATCH1_PROGRESS", "completed": index, "total": len(selected), "sample_id": example.sample_id}), flush=True)
+
+    anchor_batch32 = generate_batch([anchor] * 32)
+    anchor_mismatches = [mismatch(singles[anchor.sample_id], tokens) for tokens in anchor_batch32]
+    anchor_mismatches = [item for item in anchor_mismatches if item is not None]
+
+    batched: dict[str, tuple[int, ...]] = {}
+    actual_batch_sizes: list[int] = []
+    pending = sorted(selected, key=lambda example: (len(example.prompt_ids), example.sample_id))
+    cursor = 0
+    while cursor < len(pending):
+        count = min(32, len(pending) - cursor)
+        while count > 1:
+            width = max(len(example.prompt_ids) for example in pending[cursor:cursor + count])
+            if width * count <= args.max_batched_prompt_tokens:
+                break
+            count -= 1
+        batch = pending[cursor:cursor + count]
+        suffixes = generate_batch(batch)
+        actual_batch_sizes.append(len(batch))
+        for example, tokens in zip(batch, suffixes, strict=True):
+            batched[example.sample_id] = tokens
+        cursor += len(batch)
+
+    representative_mismatches = []
+    for example in selected:
+        detail = mismatch(singles[example.sample_id], batched[example.sample_id])
+        if detail is not None:
+            representative_mismatches.append({"sample_id": example.sample_id, **detail})
+    status = "PASS" if not anchor_mismatches and not representative_mismatches else "FAIL"
+    payload = {
+        "status": status,
+        "checkpoint": "tokens_2000000",
+        "comparison": "batch1_vs_max_batch32_token_exact",
+        "anchor_sample_id": anchor.sample_id,
+        "anchor_actual_batch_size": 32,
+        "anchor_comparisons": 32,
+        "anchor_mismatch_count": len(anchor_mismatches),
+        "anchor_mismatches": anchor_mismatches,
+        "representative_count": len(selected),
+        "representative_actual_batch_sizes": actual_batch_sizes,
+        "representative_mismatch_count": len(representative_mismatches),
+        "representative_mismatches": representative_mismatches,
+        "max_batched_prompt_tokens": args.max_batched_prompt_tokens,
+        "generation_semantics_unchanged": True,
+        "gold_used_for_generation_or_comparison": False,
+        "optimizer_steps": 0,
+    }
+    atomic_json(args.output / "BATCH1_VS_BATCH32_PARITY.json", payload)
+    print(json.dumps(payload, sort_keys=True))
+    return 0 if status == "PASS" else 4
+
+
 def _pearson(xs: list[float], ys: list[float]) -> float | None:
     if len(xs) != len(ys) or len(xs) < 2:
         return None
@@ -613,9 +779,10 @@ def controller(args: argparse.Namespace) -> int:
 
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser()
-    p.add_argument("--mode", choices=("preflight", "calibration", "batch-capacity", "generate", "finalize", "controller"), required=True)
+    p.add_argument("--mode", choices=("preflight", "calibration", "batch-capacity", "batch-parity", "generate", "finalize", "controller"), required=True)
     p.add_argument("--state")
     p.add_argument("--batch-size", type=int)
+    p.add_argument("--max-batched-prompt-tokens", type=int, default=21568)
     p.add_argument("--sample-id", default="1d_arc:1d_padded_fill_3:native-source-episode-v1")
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--artifact", type=Path)
@@ -638,6 +805,8 @@ def main() -> int:
         return calibration(args)
     if args.mode == "batch-capacity":
         return batch_capacity(args)
+    if args.mode == "batch-parity":
+        return batch_parity(args)
     if args.mode == "finalize":
         return finalize(args)
     return controller(args)
