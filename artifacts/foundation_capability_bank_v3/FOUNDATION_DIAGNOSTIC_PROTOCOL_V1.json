@@ -1,0 +1,1 @@
+{"all_capability_statuses":"UNTESTED","bands":{"PARTIAL":"40% <= exact < 75%","SATURATED":"exact >= 95%","STRONG":"75% <= exact < 95%","WEAK":"exact < 40%"},"exclusion_keys":["sample_id","episode_sha256","query_pair_sha256"],"no_model_inference":true,"status":"FROZEN"}
