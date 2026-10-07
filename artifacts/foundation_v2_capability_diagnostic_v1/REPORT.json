@@ -1,0 +1,3043 @@
+{
+  "B1_TOKEN_DIVERGENCE_SENTINEL": "5/64",
+  "BATCHED_PROTOCOL_DETERMINISTIC": true,
+  "KNOWN_NUMERICAL_PROTOCOL_SENSITIVITY": true,
+  "adapter_sha_unchanged": true,
+  "branch": "evaluation/foundation-v2-capability-diagnostic-v1-production",
+  "composite_reported_separately": [
+    {
+      "base": {
+        "capability": "adjacent/touching",
+        "cell_accuracy": 0.9757379834021872,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.3125,
+        "exact_correct": 10,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.3125,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "adjacent/touching",
+      "delta": 0.03125,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "adjacent/touching",
+        "cell_accuracy": 0.9779083467398298,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.34375,
+        "exact_correct": 11,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.34375,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "aligned",
+        "cell_accuracy": 0.9982142857142857,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.96875,
+        "exact_correct": 31,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.96875,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "aligned",
+      "delta": 0.03125,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "aligned",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "border",
+        "cell_accuracy": 0.86409554118906,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 8,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.25,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "border",
+      "delta": 0.21875,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "border",
+        "cell_accuracy": 0.9074227975723825,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.46875,
+        "exact_correct": 15,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.46875,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "bottom-most",
+        "cell_accuracy": 0.9836697048611108,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "bottom-most",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "bottom-most",
+        "cell_accuracy": 0.9845377604166664,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "color",
+        "cell_accuracy": 0.9948325297132137,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.4375,
+        "exact_correct": 14,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.4375,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "color",
+      "delta": 0.09375,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "color",
+        "cell_accuracy": 0.995590415588152,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.53125,
+        "exact_correct": 17,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.53125,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "connected",
+        "cell_accuracy": 0.9651230885109148,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.28125,
+        "exact_correct": 9,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.28125,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "connected",
+      "delta": 0.0625,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "connected",
+        "cell_accuracy": 0.9684523761554598,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.34375,
+        "exact_correct": 11,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.34375,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "count cells",
+        "cell_accuracy": 0.6458333333333334,
+        "dimension_exact_rate": 0.90625,
+        "exact_accuracy": 0.3125,
+        "exact_correct": 10,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 0.90625
+      },
+      "base_primary_score": 0.3125,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "count cells",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "count cells",
+        "cell_accuracy": 0.578125,
+        "dimension_exact_rate": 0.8125,
+        "exact_accuracy": 0.3125,
+        "exact_correct": 10,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 0.8125
+      },
+      "foundation_v2_primary_score": 0.3125,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "count colors",
+        "cell_accuracy": 0.7937499999999996,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.3125,
+        "exact_correct": 10,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.3125,
+      "borderline": true,
+      "borderline_observation_width": 0.03125,
+      "capability": "count colors",
+      "delta": 0.09375,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "count colors",
+        "cell_accuracy": 0.8218749999999997,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.40625,
+        "exact_correct": 13,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.40625,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "crop",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "crop",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "crop",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "extend line/ray",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "extend line/ray",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "extend line/ray",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "extract",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "extract",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "extract",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "fill",
+        "cell_accuracy": 0.6887191863925056,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.34375,
+        "exact_correct": 11,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.34375,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "fill",
+      "delta": -0.03125,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "fill",
+        "cell_accuracy": 0.6945624193631217,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.3125,
+        "exact_correct": 10,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.3125,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "fixed displacement",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "fixed displacement",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "fixed displacement",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "frames",
+        "cell_accuracy": 0.7178414040357267,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.40625,
+        "exact_correct": 13,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.40625,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "frames",
+      "delta": 0.09375,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "frames",
+        "cell_accuracy": 0.7471410306911227,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.5,
+        "exact_correct": 16,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.5,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "frequency",
+        "cell_accuracy": 0.9895603146954047,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.21875,
+        "exact_correct": 7,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.21875,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "frequency",
+      "delta": 0.21875,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "frequency",
+        "cell_accuracy": 0.9921639643283349,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.4375,
+        "exact_correct": 14,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.4375,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "inferred displacement",
+        "cell_accuracy": 0.9996875000000001,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.96875,
+        "exact_correct": 31,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.96875,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "inferred displacement",
+      "delta": 0.03125,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "inferred displacement",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "intersection",
+        "cell_accuracy": 0.9598214285714284,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.34375,
+        "exact_correct": 11,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.34375,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "intersection",
+      "delta": 0.15625,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "intersection",
+        "cell_accuracy": 0.9693877551020407,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.5,
+        "exact_correct": 16,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.5,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "least frequent",
+        "cell_accuracy": 0.9959309895833336,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.21875,
+        "exact_correct": 7,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.21875,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "least frequent",
+      "delta": 0.09375,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "least frequent",
+        "cell_accuracy": 0.9964192708333336,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.3125,
+        "exact_correct": 10,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.3125,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "left-most",
+        "cell_accuracy": 0.9914279513888886,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 8,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.25,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "left-most",
+      "delta": 0.03125,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "left-most",
+        "cell_accuracy": 0.9920247395833329,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.28125,
+        "exact_correct": 9,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.28125,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "lines",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "lines",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "lines",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "mask",
+        "cell_accuracy": 0.954081632653061,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 8,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.25,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "mask",
+      "delta": 0.28125,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "mask",
+        "cell_accuracy": 0.9713010204081631,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.53125,
+        "exact_correct": 17,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.53125,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "most frequent",
+        "cell_accuracy": 0.9894077930959737,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.1875,
+        "exact_correct": 6,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.1875,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "most frequent",
+      "delta": 0.0625,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "most frequent",
+        "cell_accuracy": 0.9902343640743094,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 8,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "nth/order",
+        "cell_accuracy": 0.9864366319444442,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "nth/order",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "nth/order",
+        "cell_accuracy": 0.9854600694444443,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "object vs color grouping",
+        "cell_accuracy": 0.9926032791945527,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.40625,
+        "exact_correct": 13,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.40625,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "object vs color grouping",
+      "delta": 0.03125,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "object vs color grouping",
+        "cell_accuracy": 0.992792792499875,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.4375,
+        "exact_correct": 14,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.4375,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "overlap/intersection",
+        "cell_accuracy": 0.9540816326530611,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 8,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.25,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "overlap/intersection",
+      "delta": 0.09375,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "overlap/intersection",
+        "cell_accuracy": 0.9598214285714285,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.34375,
+        "exact_correct": 11,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.34375,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "pad",
+        "cell_accuracy": 0.7169642857142857,
+        "dimension_exact_rate": 0.71875,
+        "exact_accuracy": 0.6875,
+        "exact_correct": 22,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 0.71875
+      },
+      "base_primary_score": 0.6875,
+      "borderline": true,
+      "borderline_observation_width": 0.03125,
+      "capability": "pad",
+      "delta": 0.03125,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "pad",
+        "cell_accuracy": 0.71875,
+        "dimension_exact_rate": 0.71875,
+        "exact_accuracy": 0.71875,
+        "exact_correct": 23,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 0.71875
+      },
+      "foundation_v2_primary_score": 0.71875,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "parity",
+        "cell_accuracy": 0.9923814237233355,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.90625,
+        "exact_correct": 29,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.90625,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "parity",
+      "delta": 0.09375,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "parity",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "position",
+        "cell_accuracy": 0.9944661458333333,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.5625,
+        "exact_correct": 18,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.5625,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "position",
+      "delta": 0.0625,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "position",
+        "cell_accuracy": 0.9954427083333331,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.625,
+        "exact_correct": 20,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.625,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "repeat",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "repeat",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "repeat",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "repeated motifs",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "repeated motifs",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "repeated motifs",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "right-most",
+        "cell_accuracy": 0.9829101562499996,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "right-most",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "right-most",
+        "cell_accuracy": 0.9857855902777775,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "same column",
+        "cell_accuracy": 0.9932210935844926,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.84375,
+        "exact_correct": 27,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.84375,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "same column",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_STRONG",
+      "foundation_v2": {
+        "capability": "same column",
+        "cell_accuracy": 0.9932210935844926,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.84375,
+        "exact_correct": 27,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.84375,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "same row",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "same row",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "same row",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "smallest",
+        "cell_accuracy": 0.9962189883639961,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.15625,
+        "exact_correct": 5,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.15625,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "smallest",
+      "delta": 0.03125,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "smallest",
+        "cell_accuracy": 0.9963584972925675,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.1875,
+        "exact_correct": 6,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.1875,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "symmetry completion",
+        "cell_accuracy": 0.9993764813617756,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.90625,
+        "exact_correct": 29,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.90625,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "symmetry completion",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_STRONG",
+      "foundation_v2": {
+        "capability": "symmetry completion",
+        "cell_accuracy": 0.9992451788407671,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.90625,
+        "exact_correct": 29,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.90625,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "top-most",
+        "cell_accuracy": 0.9870876736111108,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "top-most",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_WEAK",
+      "foundation_v2": {
+        "capability": "top-most",
+        "cell_accuracy": 0.9862196180555552,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "translate",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "translate",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "translate",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "union",
+        "cell_accuracy": 0.9989642251131222,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.9375,
+        "exact_correct": 30,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.9375,
+      "borderline": true,
+      "borderline_observation_width": 0.03125,
+      "capability": "union",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_STRONG",
+      "foundation_v2": {
+        "capability": "union",
+        "cell_accuracy": 0.9989642251131222,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.9375,
+        "exact_correct": 30,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.9375,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "unique",
+        "cell_accuracy": 0.9942709937771953,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.375,
+        "exact_correct": 12,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.375,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "unique",
+      "delta": 0.09375,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "unique",
+        "cell_accuracy": 0.9950265363788513,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.46875,
+        "exact_correct": 15,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.46875,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "uniqueness",
+        "cell_accuracy": 0.9931918053140264,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 8,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.25,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "uniqueness",
+      "delta": 0.25,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "uniqueness",
+        "cell_accuracy": 0.9955555744163419,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.5,
+        "exact_correct": 16,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.5,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "until alignment",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "until alignment",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "until alignment",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "until boundary",
+        "cell_accuracy": 0.972460161746274,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.34375,
+        "exact_correct": 11,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.34375,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "until boundary",
+      "delta": 0.09375,
+      "engineering_status": "COMPOSITE_CHAIN_PARTIAL",
+      "foundation_v2": {
+        "capability": "until boundary",
+        "cell_accuracy": 0.9759414525614168,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.4375,
+        "exact_correct": 14,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.4375,
+      "measurement_type": "COMPOSITE_ONLY"
+    },
+    {
+      "base": {
+        "capability": "until touching",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "until touching",
+      "delta": 0.0,
+      "engineering_status": "COMPOSITE_CHAIN_SATURATED",
+      "foundation_v2": {
+        "capability": "until touching",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "COMPOSITE_ONLY",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "COMPOSITE_ONLY"
+    }
+  ],
+  "composition_development": [
+    {
+      "base": {
+        "cell_accuracy": 0.9978991596638656,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.875,
+        "exact_correct": 7,
+        "total": 8,
+        "valid_format_rate": 1.0
+      },
+      "category": "GEOMETRY_TO_GEOMETRY",
+      "delta": 0.0,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 0.9978991596638656,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.875,
+        "exact_correct": 7,
+        "total": 8,
+        "valid_format_rate": 1.0
+      }
+    },
+    {
+      "base": {
+        "cell_accuracy": 0.987083198664081,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 2,
+        "total": 8,
+        "valid_format_rate": 1.0
+      },
+      "category": "SELECTOR_TO_ACTION",
+      "delta": 0.125,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 0.9890439829778065,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.375,
+        "exact_correct": 3,
+        "total": 8,
+        "valid_format_rate": 1.0
+      }
+    },
+    {
+      "base": {
+        "cell_accuracy": 0.9946581196581197,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.375,
+        "exact_correct": 3,
+        "total": 8,
+        "valid_format_rate": 1.0
+      },
+      "category": "RELATION_TO_SELECTOR_ACTION",
+      "delta": 0.125,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 0.9957264957264957,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.5,
+        "exact_correct": 4,
+        "total": 8,
+        "valid_format_rate": 1.0
+      }
+    },
+    {
+      "base": {
+        "cell_accuracy": 0.33928571428571425,
+        "dimension_exact_rate": 0.875,
+        "exact_accuracy": 0.25,
+        "exact_correct": 2,
+        "total": 8,
+        "valid_format_rate": 0.875
+      },
+      "category": "COUNTING_TO_CONSTRUCTION",
+      "delta": 0.0,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 0.3214285714285714,
+        "dimension_exact_rate": 0.75,
+        "exact_accuracy": 0.25,
+        "exact_correct": 2,
+        "total": 8,
+        "valid_format_rate": 0.75
+      }
+    },
+    {
+      "base": {
+        "cell_accuracy": 0.836734693877551,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "total": 8,
+        "valid_format_rate": 1.0
+      },
+      "category": "MASK_SET_TO_CONSTRUCTION",
+      "delta": 0.0,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 0.836734693877551,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "total": 8,
+        "valid_format_rate": 1.0
+      }
+    },
+    {
+      "base": {
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 8,
+        "total": 8,
+        "valid_format_rate": 1.0
+      },
+      "category": "STATE_PROGRESSION_TO_ACTION",
+      "delta": 0.0,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 8,
+        "total": 8,
+        "valid_format_rate": 1.0
+      }
+    },
+    {
+      "base": {
+        "cell_accuracy": 0.84375,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "total": 8,
+        "valid_format_rate": 1.0
+      },
+      "category": "CONDITIONAL_TO_ACTION",
+      "delta": 0.0,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 0.8311631944444444,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "total": 8,
+        "valid_format_rate": 1.0
+      }
+    }
+  ],
+  "curriculum_priority_summary": {
+    "HIGH": 17,
+    "LOW": 2,
+    "MEDIUM": 4,
+    "REPLAY_ONLY": 17
+  },
+  "data_access_audit": {
+    "ARC_HIDDEN_GOLD_ACCESSED": false,
+    "C1_DEV_ISOLATED_MODEL_ACCESSED": false,
+    "C2_DEV_ISOLATED_MODEL_ACCESSED": false,
+    "EVAL60_GOLD_ACCESSED": false,
+    "KAGGLE_GOLD_ACCESSED": false,
+    "META_HOLDOUT_MODEL_ACCESSED": false,
+    "ROUND1_HOLDOUT_ACCESSED": false,
+    "status": "PASS"
+  },
+  "direct_band_counts": {
+    "BORDERLINE": 2,
+    "PARTIAL": 2,
+    "SATURATED": 16,
+    "STRONG": 2,
+    "WEAK": 4
+  },
+  "generation_wall_seconds": 19287.193511837162,
+  "interpretation": "This diagnostic measures Foundation-V2 performance over the frozen engineered capability ontology and its controlled generalization surfaces.",
+  "minimal_band_counts": {
+    "BORDERLINE": 2,
+    "PARTIAL": 2,
+    "SATURATED": 1,
+    "STRONG": 0,
+    "WEAK": 13
+  },
+  "optimizer_steps": 0,
+  "parameter_generalization": [
+    {
+      "axis": "background_color",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "color_permutation",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 16,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 16,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 16,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 16,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "displacement_magnitude",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.996337890625,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.75,
+          "exact_correct": 12,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 8,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": -0.25
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 16,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.9970703125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.875,
+          "exact_correct": 14,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": -0.125
+      },
+      "foundation_v2_extrapolation_gain": 0.375
+    },
+    {
+      "axis": "distractor_count",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "grid_size",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.9671567952249771,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.9936909901131104,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.9671567952249771,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.9936909901131104,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "object_count",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "object_position",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "object_size",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.992431640625,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98046875,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.992431640625,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98046875,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "orientation",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    }
+  ],
+  "parse_classification_counts": {
+    "INVALID_DIMENSIONS": 136,
+    "VALID_GRID": 5864
+  },
+  "protocol_id": "MAX_BATCH32_TOKEN_CAP21568",
+  "regressions": [
+    {
+      "base": {
+        "capability": "reflect diagonal",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "reflect diagonal",
+      "delta": -0.09375,
+      "engineering_status": "STRONG",
+      "foundation_v2": {
+        "capability": "reflect diagonal",
+        "cell_accuracy": 0.9988014150206652,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.90625,
+        "exact_correct": 29,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.90625,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "progression",
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 32,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 1.0,
+      "borderline": true,
+      "borderline_observation_width": 0.03125,
+      "capability": "progression",
+      "delta": -0.0625,
+      "engineering_status": "STRONG",
+      "foundation_v2": {
+        "capability": "progression",
+        "cell_accuracy": 0.9964988425925926,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.9375,
+        "exact_correct": 30,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.9375,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "left/right",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 2,
+        "contrast_success_rate": 0.125,
+        "individual_task": {
+          "cell_accuracy": 0.9955555555555552,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.125,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "left/right",
+      "delta": -0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "left/right",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9949999999999997,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.4375,
+          "exact_correct": 14,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0625,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "nearest/farthest",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9952777777777775,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.40625,
+          "exact_correct": 13,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "nearest/farthest",
+      "delta": -0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "nearest/farthest",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9949999999999997,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.40625,
+          "exact_correct": 13,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    }
+  ],
+  "selected_batch_configuration": {
+    "max_batch": 32,
+    "max_batched_prompt_tokens": 21568,
+    "prompt_length_bucketing": true
+  },
+  "stage_summary": {
+    "P1": {
+      "borderline_count": 2,
+      "capabilities": [
+        "color mapping",
+        "copy",
+        "copy reference color",
+        "height",
+        "holes/enclosures",
+        "orientation",
+        "reflect LR",
+        "reflect UD",
+        "reflect diagonal",
+        "rotate 180",
+        "rotate 270",
+        "rotate 90",
+        "scale",
+        "separators/subgrids",
+        "width",
+        "above/below",
+        "area",
+        "inside/contains",
+        "largest",
+        "left/right",
+        "nearest/farthest",
+        "recolor",
+        "relation-conditioned selector",
+        "same color"
+      ],
+      "direct_or_minimal_capability_count": 24,
+      "mean_base_to_foundation_v2_delta": 0.024739583333333332,
+      "median_primary_score": 0.703125,
+      "partial_count": 2,
+      "saturated_count": 11,
+      "strong_count": 1,
+      "weak_count": 10
+    },
+    "P2": {
+      "borderline_count": 0,
+      "capabilities": [
+        "complete missing structure",
+        "difference",
+        "overlay",
+        "connected components"
+      ],
+      "direct_or_minimal_capability_count": 4,
+      "mean_base_to_foundation_v2_delta": 0.0625,
+      "median_primary_score": 0.71875,
+      "partial_count": 1,
+      "saturated_count": 2,
+      "strong_count": 0,
+      "weak_count": 1
+    },
+    "P3": {
+      "borderline_count": 2,
+      "capabilities": [
+        "alternation",
+        "compare quantities",
+        "iterative update",
+        "periodic pattern",
+        "progression",
+        "propagation",
+        "branch-balanced conditional tasks",
+        "count components",
+        "encode quantity geometrically",
+        "if/else on attribute",
+        "if/else on count",
+        "if/else on relation"
+      ],
+      "direct_or_minimal_capability_count": 12,
+      "mean_base_to_foundation_v2_delta": 0.041666666666666664,
+      "median_primary_score": 0.4375,
+      "partial_count": 1,
+      "saturated_count": 4,
+      "strong_count": 1,
+      "weak_count": 6
+    }
+  },
+  "state_generation_receipts": {
+    "base": {
+      "actual_batch_size_distribution": {
+        "1": 1,
+        "10": 41,
+        "11": 15,
+        "12": 7,
+        "13": 3,
+        "14": 1,
+        "15": 4,
+        "16": 4,
+        "17": 16,
+        "18": 1,
+        "19": 1,
+        "21": 1,
+        "22": 1,
+        "24": 1,
+        "25": 1,
+        "26": 7,
+        "28": 1,
+        "3": 111,
+        "30": 1,
+        "4": 1,
+        "5": 8,
+        "6": 5,
+        "8": 37,
+        "9": 91
+      },
+      "backward_calls": 0,
+      "examples_per_second": 0.39728254566508464,
+      "generated_tokens_per_second": 91.97435243686286,
+      "mean_generated_length": 231.50866666666667,
+      "median_generated_length": 234.0,
+      "model_state": "base",
+      "oom_count": 0,
+      "optimizer_state_created": false,
+      "optimizer_steps": 0,
+      "peak_allocated_vram_bytes": 12213072384,
+      "peak_reserved_vram_bytes": 17089691648,
+      "protocol_id": "MAX_BATCH32_TOKEN_CAP21568",
+      "raw_sha256": "3425497aecd25f1685635e46116280ca936b7067a341aa7a58432f7d4fc763e0",
+      "record_count": 3000,
+      "status": "COMPLETE",
+      "total_generated_tokens": 694526,
+      "wall_seconds": 7551.300787649117
+    },
+    "foundation_v2": {
+      "actual_batch_size_distribution": {
+        "1": 1,
+        "10": 41,
+        "11": 15,
+        "12": 7,
+        "13": 3,
+        "14": 1,
+        "15": 4,
+        "16": 4,
+        "17": 16,
+        "18": 1,
+        "19": 1,
+        "21": 1,
+        "22": 1,
+        "24": 1,
+        "25": 1,
+        "26": 7,
+        "28": 1,
+        "3": 111,
+        "30": 1,
+        "4": 1,
+        "5": 8,
+        "6": 5,
+        "8": 37,
+        "9": 91
+      },
+      "backward_calls": 0,
+      "examples_per_second": 0.2556260584946304,
+      "generated_tokens_per_second": 59.17351294194334,
+      "mean_generated_length": 231.48466666666667,
+      "median_generated_length": 234.0,
+      "model_state": "foundation_v2",
+      "oom_count": 0,
+      "optimizer_state_created": false,
+      "optimizer_steps": 0,
+      "peak_allocated_vram_bytes": 14233326080,
+      "peak_reserved_vram_bytes": 22001221632,
+      "protocol_id": "MAX_BATCH32_TOKEN_CAP21568",
+      "raw_sha256": "b2e80ee46b8d11b4a3a379c974e64887990df83b3db4d6acfbb1331dcc801c71",
+      "record_count": 3000,
+      "status": "COMPLETE",
+      "total_generated_tokens": 694454,
+      "wall_seconds": 11735.892724188045
+    }
+  },
+  "status": "COMPLETE",
+  "top_10_gains": [
+    {
+      "base": {
+        "capability": "encode quantity geometrically",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.25,
+          "dimension_exact_rate": 0.25,
+          "exact_accuracy": 0.25,
+          "exact_correct": 8,
+          "total": 32,
+          "valid_format_rate": 0.25
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": true,
+      "borderline_observation_width": 0.0625,
+      "capability": "encode quantity geometrically",
+      "delta": 0.375,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "encode quantity geometrically",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 6,
+        "contrast_success_rate": 0.375,
+        "individual_task": {
+          "cell_accuracy": 0.6875,
+          "dimension_exact_rate": 0.6875,
+          "exact_accuracy": 0.6875,
+          "exact_correct": 22,
+          "total": 32,
+          "valid_format_rate": 0.6875
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.375,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "difference",
+        "cell_accuracy": 0.9668367346938771,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.1875,
+        "exact_correct": 6,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.1875,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "difference",
+      "delta": 0.25,
+      "engineering_status": "PARTIAL",
+      "foundation_v2": {
+        "capability": "difference",
+        "cell_accuracy": 0.9770408163265303,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.4375,
+        "exact_correct": 14,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.4375,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "inside/contains",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9955555555555553,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "inside/contains",
+      "delta": 0.1875,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "inside/contains",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 4,
+        "contrast_success_rate": 0.25,
+        "individual_task": {
+          "cell_accuracy": 0.9961111111111107,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5625,
+          "exact_correct": 18,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "relation-conditioned selector",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9955555555555553,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "relation-conditioned selector",
+      "delta": 0.1875,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "relation-conditioned selector",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 4,
+        "contrast_success_rate": 0.25,
+        "individual_task": {
+          "cell_accuracy": 0.9966666666666664,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.625,
+          "exact_correct": 20,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "orientation",
+        "cell_accuracy": 0.9858940972222221,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "orientation",
+      "delta": 0.15625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "orientation",
+        "cell_accuracy": 0.9868706597222223,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.15625,
+        "exact_correct": 5,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.15625,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "width",
+        "cell_accuracy": 0.9928385416666663,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 8,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.25,
+      "borderline": true,
+      "borderline_observation_width": 0.03125,
+      "capability": "width",
+      "delta": 0.15625,
+      "engineering_status": "PARTIAL",
+      "foundation_v2": {
+        "capability": "width",
+        "cell_accuracy": 0.9934895833333329,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.40625,
+        "exact_correct": 13,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.40625,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "compare quantities",
+        "cell_accuracy": 0.9488201530612245,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.15625,
+        "exact_correct": 5,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.15625,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "compare quantities",
+      "delta": 0.09375,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "compare quantities",
+        "cell_accuracy": 0.954719387755102,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 8,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "count components",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 7,
+        "contrast_success_rate": 0.4375,
+        "individual_task": {
+          "cell_accuracy": 0.46875,
+          "dimension_exact_rate": 0.46875,
+          "exact_accuracy": 0.46875,
+          "exact_correct": 15,
+          "total": 32,
+          "valid_format_rate": 0.46875
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.4375,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "count components",
+      "delta": 0.0625,
+      "engineering_status": "PARTIAL",
+      "foundation_v2": {
+        "capability": "count components",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 8,
+        "contrast_success_rate": 0.5,
+        "individual_task": {
+          "cell_accuracy": 0.75,
+          "dimension_exact_rate": 0.75,
+          "exact_accuracy": 0.75,
+          "exact_correct": 24,
+          "total": 32,
+          "valid_format_rate": 0.75
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.5,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "height",
+        "cell_accuracy": 0.9902343749999997,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0625,
+        "exact_correct": 2,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "height",
+      "delta": 0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "height",
+        "cell_accuracy": 0.9908854166666663,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.125,
+        "exact_correct": 4,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.125,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "holes/enclosures",
+        "cell_accuracy": 0.801020408163265,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.1875,
+        "exact_correct": 6,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.1875,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "holes/enclosures",
+      "delta": 0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "holes/enclosures",
+        "cell_accuracy": 0.8163265306122447,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 8,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "DIRECT_ATOMIC"
+    }
+  ],
+  "top_10_weakest": [
+    {
+      "base": {
+        "capability": "area",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.25,
+          "dimension_exact_rate": 0.25,
+          "exact_accuracy": 0.25,
+          "exact_correct": 8,
+          "total": 32,
+          "valid_format_rate": 0.25
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "area",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "area",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.28125,
+          "dimension_exact_rate": 0.28125,
+          "exact_accuracy": 0.28125,
+          "exact_correct": 9,
+          "total": 32,
+          "valid_format_rate": 0.28125
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "connected components",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9699999999999999,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "connected components",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "connected components",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9699999999999999,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "if/else on count",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.959194214876033,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "if/else on count",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "if/else on count",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9535123966942147,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "if/else on relation",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9514462809917354,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.15625,
+          "exact_correct": 5,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "if/else on relation",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "if/else on relation",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.963326446280992,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.34375,
+          "exact_correct": 11,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "nearest/farthest",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9952777777777775,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.40625,
+          "exact_correct": 13,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "nearest/farthest",
+      "delta": -0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "nearest/farthest",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9949999999999997,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.40625,
+          "exact_correct": 13,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "left/right",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 2,
+        "contrast_success_rate": 0.125,
+        "individual_task": {
+          "cell_accuracy": 0.9955555555555552,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.125,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "left/right",
+      "delta": -0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "left/right",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9949999999999997,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.4375,
+          "exact_correct": 14,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0625,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "same color",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9958333333333331,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.53125,
+          "exact_correct": 17,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "same color",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "same color",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9958333333333331,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.53125,
+          "exact_correct": 17,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0625,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "above/below",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 2,
+        "contrast_success_rate": 0.125,
+        "individual_task": {
+          "cell_accuracy": 0.9961111111111108,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5625,
+          "exact_correct": 18,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.125,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "above/below",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "above/below",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 2,
+        "contrast_success_rate": 0.125,
+        "individual_task": {
+          "cell_accuracy": 0.9961111111111108,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5625,
+          "exact_correct": 18,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.125,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "height",
+        "cell_accuracy": 0.9902343749999997,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0625,
+        "exact_correct": 2,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "height",
+      "delta": 0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "height",
+        "cell_accuracy": 0.9908854166666663,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.125,
+        "exact_correct": 4,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.125,
+      "measurement_type": "DIRECT_ATOMIC"
+    },
+    {
+      "base": {
+        "capability": "orientation",
+        "cell_accuracy": 0.9858940972222221,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "base",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.03125,
+      "capability": "orientation",
+      "delta": 0.15625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "orientation",
+        "cell_accuracy": 0.9868706597222223,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.15625,
+        "exact_correct": 5,
+        "measurement_type": "DIRECT_ATOMIC",
+        "model_state": "foundation_v2",
+        "total": 32,
+        "valid_format_rate": 1.0
+      },
+      "foundation_v2_primary_score": 0.15625,
+      "measurement_type": "DIRECT_ATOMIC"
+    }
+  ],
+  "total_generations_completed": 6000
+}

@@ -1,0 +1,525 @@
+{
+  "capabilities": [
+    {
+      "capability": "alternation",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "color mapping",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": true,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "compare quantities",
+      "delta": 0.09375,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "complete missing structure",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "copy",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "copy reference color",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": true,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "difference",
+      "delta": 0.25,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.4375,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "MEDIUM"
+    },
+    {
+      "capability": "height",
+      "delta": 0.0625,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.125,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "holes/enclosures",
+      "delta": 0.0625,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "iterative update",
+      "delta": 0.03125,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "orientation",
+      "delta": 0.15625,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": true,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.15625,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "overlay",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "periodic pattern",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "progression",
+      "delta": -0.0625,
+      "flags": {
+        "BORDERLINE": true,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": true
+      },
+      "foundation_v2_primary_score": 0.9375,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "LOW"
+    },
+    {
+      "capability": "propagation",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "reflect LR",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "reflect UD",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "reflect diagonal",
+      "delta": -0.09375,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": true
+      },
+      "foundation_v2_primary_score": 0.90625,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "LOW"
+    },
+    {
+      "capability": "rotate 180",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "rotate 270",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "rotate 90",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "scale",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "separators/subgrids",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "width",
+      "delta": 0.15625,
+      "flags": {
+        "BORDERLINE": true,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.40625,
+      "measurement_type": "DIRECT_ATOMIC",
+      "priority": "MEDIUM"
+    },
+    {
+      "capability": "above/below",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.125,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "area",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "branch-balanced conditional tasks",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.1875,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "connected components",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "count components",
+      "delta": 0.0625,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": true,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.5,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "MEDIUM"
+    },
+    {
+      "capability": "encode quantity geometrically",
+      "delta": 0.375,
+      "flags": {
+        "BORDERLINE": true,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.375,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "if/else on attribute",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.1875,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "if/else on count",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": true,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "if/else on relation",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "inside/contains",
+      "delta": 0.1875,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "largest",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": true,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "REPLAY_ONLY"
+    },
+    {
+      "capability": "left/right",
+      "delta": -0.0625,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": true
+      },
+      "foundation_v2_primary_score": 0.0625,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "nearest/farthest",
+      "delta": -0.0625,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": true
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "recolor",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": true,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.5,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "MEDIUM"
+    },
+    {
+      "capability": "relation-conditioned selector",
+      "delta": 0.1875,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": false,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    },
+    {
+      "capability": "same color",
+      "delta": 0.0,
+      "flags": {
+        "BORDERLINE": false,
+        "COMPOSITION_PREREQUISITE": false,
+        "PARAMETER_GENERALIZATION_GAP": true,
+        "REGRESSION_VS_BASE": false
+      },
+      "foundation_v2_primary_score": 0.0625,
+      "measurement_type": "MINIMAL_CONTRAST",
+      "priority": "HIGH"
+    }
+  ],
+  "status": "DIAGNOSTIC_ONLY_NO_WEIGHTS"
+}

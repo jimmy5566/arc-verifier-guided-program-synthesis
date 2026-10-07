@@ -1,0 +1,153 @@
+{
+  "categories": [
+    {
+      "base": {
+        "cell_accuracy": 0.9978991596638656,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.875,
+        "exact_correct": 7,
+        "total": 8,
+        "valid_format_rate": 1.0
+      },
+      "category": "GEOMETRY_TO_GEOMETRY",
+      "delta": 0.0,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 0.9978991596638656,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.875,
+        "exact_correct": 7,
+        "total": 8,
+        "valid_format_rate": 1.0
+      }
+    },
+    {
+      "base": {
+        "cell_accuracy": 0.987083198664081,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.25,
+        "exact_correct": 2,
+        "total": 8,
+        "valid_format_rate": 1.0
+      },
+      "category": "SELECTOR_TO_ACTION",
+      "delta": 0.125,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 0.9890439829778065,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.375,
+        "exact_correct": 3,
+        "total": 8,
+        "valid_format_rate": 1.0
+      }
+    },
+    {
+      "base": {
+        "cell_accuracy": 0.9946581196581197,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.375,
+        "exact_correct": 3,
+        "total": 8,
+        "valid_format_rate": 1.0
+      },
+      "category": "RELATION_TO_SELECTOR_ACTION",
+      "delta": 0.125,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 0.9957264957264957,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.5,
+        "exact_correct": 4,
+        "total": 8,
+        "valid_format_rate": 1.0
+      }
+    },
+    {
+      "base": {
+        "cell_accuracy": 0.33928571428571425,
+        "dimension_exact_rate": 0.875,
+        "exact_accuracy": 0.25,
+        "exact_correct": 2,
+        "total": 8,
+        "valid_format_rate": 0.875
+      },
+      "category": "COUNTING_TO_CONSTRUCTION",
+      "delta": 0.0,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 0.3214285714285714,
+        "dimension_exact_rate": 0.75,
+        "exact_accuracy": 0.25,
+        "exact_correct": 2,
+        "total": 8,
+        "valid_format_rate": 0.75
+      }
+    },
+    {
+      "base": {
+        "cell_accuracy": 0.836734693877551,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "total": 8,
+        "valid_format_rate": 1.0
+      },
+      "category": "MASK_SET_TO_CONSTRUCTION",
+      "delta": 0.0,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 0.836734693877551,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "total": 8,
+        "valid_format_rate": 1.0
+      }
+    },
+    {
+      "base": {
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 8,
+        "total": 8,
+        "valid_format_rate": 1.0
+      },
+      "category": "STATE_PROGRESSION_TO_ACTION",
+      "delta": 0.0,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 1.0,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 1.0,
+        "exact_correct": 8,
+        "total": 8,
+        "valid_format_rate": 1.0
+      }
+    },
+    {
+      "base": {
+        "cell_accuracy": 0.84375,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "total": 8,
+        "valid_format_rate": 1.0
+      },
+      "category": "CONDITIONAL_TO_ACTION",
+      "delta": 0.0,
+      "development_exposed": true,
+      "foundation_v2": {
+        "cell_accuracy": 0.8311631944444444,
+        "dimension_exact_rate": 1.0,
+        "exact_accuracy": 0.0,
+        "exact_correct": 0,
+        "total": 8,
+        "valid_format_rate": 1.0
+      }
+    }
+  ],
+  "development_exposed": true,
+  "status": "COMPLETE"
+}

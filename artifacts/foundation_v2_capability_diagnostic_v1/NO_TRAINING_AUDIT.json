@@ -1,0 +1,10 @@
+{
+  "adapter_modified": false,
+  "backward_calls": 0,
+  "expected_adapter_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
+  "model_parameters_modified": false,
+  "optimizer_state_created": false,
+  "optimizer_steps": 0,
+  "post_eval_adapter_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
+  "status": "PASS"
+}

@@ -1,0 +1,678 @@
+{
+  "capabilities": [
+    {
+      "base": {
+        "capability": "above/below",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 2,
+        "contrast_success_rate": 0.125,
+        "individual_task": {
+          "cell_accuracy": 0.9961111111111108,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5625,
+          "exact_correct": 18,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.125,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "above/below",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "above/below",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 2,
+        "contrast_success_rate": 0.125,
+        "individual_task": {
+          "cell_accuracy": 0.9961111111111108,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5625,
+          "exact_correct": 18,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.125,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "area",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.25,
+          "dimension_exact_rate": 0.25,
+          "exact_accuracy": 0.25,
+          "exact_correct": 8,
+          "total": 32,
+          "valid_format_rate": 0.25
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "area",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "area",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.28125,
+          "dimension_exact_rate": 0.28125,
+          "exact_accuracy": 0.28125,
+          "exact_correct": 9,
+          "total": 32,
+          "valid_format_rate": 0.28125
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "branch-balanced conditional tasks",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 3,
+        "contrast_success_rate": 0.1875,
+        "individual_task": {
+          "cell_accuracy": 0.9612603305785122,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.34375,
+          "exact_correct": 11,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.1875,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "branch-balanced conditional tasks",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "branch-balanced conditional tasks",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 3,
+        "contrast_success_rate": 0.1875,
+        "individual_task": {
+          "cell_accuracy": 0.9746900826446279,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.59375,
+          "exact_correct": 19,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.1875,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "connected components",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9699999999999999,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "connected components",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "connected components",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9699999999999999,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "count components",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 7,
+        "contrast_success_rate": 0.4375,
+        "individual_task": {
+          "cell_accuracy": 0.46875,
+          "dimension_exact_rate": 0.46875,
+          "exact_accuracy": 0.46875,
+          "exact_correct": 15,
+          "total": 32,
+          "valid_format_rate": 0.46875
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.4375,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "count components",
+      "delta": 0.0625,
+      "engineering_status": "PARTIAL",
+      "foundation_v2": {
+        "capability": "count components",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 8,
+        "contrast_success_rate": 0.5,
+        "individual_task": {
+          "cell_accuracy": 0.75,
+          "dimension_exact_rate": 0.75,
+          "exact_accuracy": 0.75,
+          "exact_correct": 24,
+          "total": 32,
+          "valid_format_rate": 0.75
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.5,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "encode quantity geometrically",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.25,
+          "dimension_exact_rate": 0.25,
+          "exact_accuracy": 0.25,
+          "exact_correct": 8,
+          "total": 32,
+          "valid_format_rate": 0.25
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": true,
+      "borderline_observation_width": 0.0625,
+      "capability": "encode quantity geometrically",
+      "delta": 0.375,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "encode quantity geometrically",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 6,
+        "contrast_success_rate": 0.375,
+        "individual_task": {
+          "cell_accuracy": 0.6875,
+          "dimension_exact_rate": 0.6875,
+          "exact_accuracy": 0.6875,
+          "exact_correct": 22,
+          "total": 32,
+          "valid_format_rate": 0.6875
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.375,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "if/else on attribute",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 3,
+        "contrast_success_rate": 0.1875,
+        "individual_task": {
+          "cell_accuracy": 0.9612603305785122,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.34375,
+          "exact_correct": 11,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.1875,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "if/else on attribute",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "if/else on attribute",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 3,
+        "contrast_success_rate": 0.1875,
+        "individual_task": {
+          "cell_accuracy": 0.9746900826446279,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.59375,
+          "exact_correct": 19,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.1875,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "if/else on count",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.959194214876033,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "if/else on count",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "if/else on count",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9535123966942147,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "if/else on relation",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9514462809917354,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.15625,
+          "exact_correct": 5,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "if/else on relation",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "if/else on relation",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.963326446280992,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.34375,
+          "exact_correct": 11,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "inside/contains",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9955555555555553,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "inside/contains",
+      "delta": 0.1875,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "inside/contains",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 4,
+        "contrast_success_rate": 0.25,
+        "individual_task": {
+          "cell_accuracy": 0.9961111111111107,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5625,
+          "exact_correct": 18,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "largest",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 16,
+        "contrast_success_rate": 1.0,
+        "individual_task": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 32,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 1.0,
+      "borderline": true,
+      "borderline_observation_width": 0.0625,
+      "capability": "largest",
+      "delta": 0.0,
+      "engineering_status": "SATURATED",
+      "foundation_v2": {
+        "capability": "largest",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 16,
+        "contrast_success_rate": 1.0,
+        "individual_task": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 32,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 1.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "left/right",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 2,
+        "contrast_success_rate": 0.125,
+        "individual_task": {
+          "cell_accuracy": 0.9955555555555552,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.125,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "left/right",
+      "delta": -0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "left/right",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9949999999999997,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.4375,
+          "exact_correct": 14,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0625,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "nearest/farthest",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9952777777777775,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.40625,
+          "exact_correct": 13,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "nearest/farthest",
+      "delta": -0.0625,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "nearest/farthest",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 0,
+        "contrast_success_rate": 0.0,
+        "individual_task": {
+          "cell_accuracy": 0.9949999999999997,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.40625,
+          "exact_correct": 13,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "recolor",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 8,
+        "contrast_success_rate": 0.5,
+        "individual_task": {
+          "cell_accuracy": 0.9841666666666667,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.5,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "recolor",
+      "delta": 0.0,
+      "engineering_status": "PARTIAL",
+      "foundation_v2": {
+        "capability": "recolor",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 8,
+        "contrast_success_rate": 0.5,
+        "individual_task": {
+          "cell_accuracy": 0.9841666666666667,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.5,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "relation-conditioned selector",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9955555555555553,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 16,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "relation-conditioned selector",
+      "delta": 0.1875,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "relation-conditioned selector",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 4,
+        "contrast_success_rate": 0.25,
+        "individual_task": {
+          "cell_accuracy": 0.9966666666666664,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.625,
+          "exact_correct": 20,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.25,
+      "measurement_type": "MINIMAL_CONTRAST"
+    },
+    {
+      "base": {
+        "capability": "same color",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9958333333333331,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.53125,
+          "exact_correct": 17,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "base"
+      },
+      "base_primary_score": 0.0625,
+      "borderline": false,
+      "borderline_observation_width": 0.0625,
+      "capability": "same color",
+      "delta": 0.0,
+      "engineering_status": "WEAK",
+      "foundation_v2": {
+        "capability": "same color",
+        "contrast_pair_total": 16,
+        "contrast_pairs_correct": 1,
+        "contrast_success_rate": 0.0625,
+        "individual_task": {
+          "cell_accuracy": 0.9958333333333331,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.53125,
+          "exact_correct": 17,
+          "total": 32,
+          "valid_format_rate": 1.0
+        },
+        "measurement_type": "MINIMAL_CONTRAST",
+        "model_state": "foundation_v2"
+      },
+      "foundation_v2_primary_score": 0.0625,
+      "measurement_type": "MINIMAL_CONTRAST"
+    }
+  ],
+  "primary_metric": "CONTRAST_SUCCESS",
+  "status": "COMPLETE"
+}

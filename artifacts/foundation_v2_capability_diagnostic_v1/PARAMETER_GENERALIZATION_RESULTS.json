@@ -1,0 +1,383 @@
+{
+  "axes": [
+    {
+      "axis": "background_color",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "color_permutation",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 16,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 16,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 16,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 16,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "displacement_magnitude",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.996337890625,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.75,
+          "exact_correct": 12,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.5,
+          "exact_correct": 8,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": -0.25
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 1.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 1.0,
+          "exact_correct": 16,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.9970703125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.875,
+          "exact_correct": 14,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": -0.125
+      },
+      "foundation_v2_extrapolation_gain": 0.375
+    },
+    {
+      "axis": "distractor_count",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "grid_size",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.9671567952249771,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.9936909901131104,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.9671567952249771,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.9936909901131104,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "object_count",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.0,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "object_position",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "object_size",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.992431640625,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98046875,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.992431640625,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98046875,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    },
+    {
+      "axis": "orientation",
+      "base": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2": {
+        "base_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "extrapolation_domain": {
+          "cell_accuracy": 0.98828125,
+          "dimension_exact_rate": 1.0,
+          "exact_accuracy": 0.0,
+          "exact_correct": 0,
+          "total": 16,
+          "valid_format_rate": 1.0
+        },
+        "generalization_gap": 0.0
+      },
+      "foundation_v2_extrapolation_gain": 0.0
+    }
+  ],
+  "status": "COMPLETE"
+}

@@ -1,0 +1,68 @@
+{
+  "actual_batch_sizes": [
+    17,
+    10,
+    8,
+    8,
+    8,
+    6,
+    3,
+    3,
+    1
+  ],
+  "b1_wall_seconds": 1167.163758679293,
+  "batched_wall_seconds": 317.77527212537825,
+  "coverage": {
+    "composition_categories": 7,
+    "length_bands": [
+      "short",
+      "median",
+      "long"
+    ],
+    "measurement_types": 3,
+    "parameter_axes": 9
+  },
+  "decode_tokens_per_second": 43.54335032884689,
+  "examples_per_second": 0.20140018942301086,
+  "generation_semantics_unchanged": true,
+  "model_state": "foundation_v2",
+  "oom": false,
+  "peak_allocated_vram_bytes": 14203351552,
+  "peak_reserved_vram_bytes": 17081303040,
+  "representative_samples": 64,
+  "selected_configuration": {
+    "max_batch": 32,
+    "max_batched_prompt_tokens": 21568,
+    "prompt_length_bucketing": true
+  },
+  "status": "FAIL",
+  "token_exact_comparisons": 64,
+  "token_exact_mismatches": [
+    {
+      "b1_sha256": "ea7d495d4a88ff131f289b8a88fec95be2e364bd76723ee6ab1b6b0618e0063c",
+      "batch_sha256": "5e012428fdddbda70b54344e593bc2741af25e2df9cc66f85c01556aed806d0c",
+      "sample_id": "DIAGNOSTIC_V1_2:ff68d59469e5ba1fea3ce1d0"
+    },
+    {
+      "b1_sha256": "ecd8233b5ce4f7c0498a586c4f8bdbcc3dda49abe753a53dd557dbfae9e690f7",
+      "batch_sha256": "2d486f974895701b8c7ed3479b690285c1128df61476de6e014a8c371633da07",
+      "sample_id": "PARAM_SURFACE_V1_2:object_count:diagnostic:018"
+    },
+    {
+      "b1_sha256": "095640cfa373c2018eaf22be9f3bf2107b0293a7b990c0569be40bbb014ca293",
+      "batch_sha256": "7459e3233fec5c09d0426d7f18672025aa044c324b3ab730b35333e201f60ae6",
+      "sample_id": "PARAM_SURFACE_V1_2:object_position:diagnostic:031"
+    },
+    {
+      "b1_sha256": "e4d2f23816ed76831c4abc3a94d273c4931a7440d89e7c7cfaf2a72d23407ed7",
+      "batch_sha256": "9b51fc16a1758e2d9a892e487a2ca34b3018046cfa1b516bf3313f0faebed72e",
+      "sample_id": "COMPOSITION_DEV_V1_2:capv3:4b433153812ecc3d40:001"
+    },
+    {
+      "b1_sha256": "c9551a2126ccfcc42158ed0d353ba29b0550d776848056252a8be94d43c6419c",
+      "batch_sha256": "4019cc0f74a22c5ee9520caa93190798cc8a1be2a0caa344e48a09b001734a91",
+      "sample_id": "COMPOSITION_DEV_V1_2:capv3:dbdcca62cc0200da4e:004"
+    }
+  ],
+  "vram_headroom_bytes": 8214020096
+}
