@@ -282,8 +282,9 @@ SCHEMA=pa.schema([
 
 
 def _source_records() -> list[dict[str,Any]]:
+    generator_contract=digest([asdict(spec) for spec in family_specs()])
     return [
-      {"source":"repository_owned_round2_procedural","revision":"foundation_round2_data_v1","license":"INTERNAL_REPOSITORY_OWNED_NO_THIRD_PARTY_DATA","decision":"ACCEPT_NOVEL","reason":"source-independent deterministic executable oracles; no external grids, objects, caches, LLM Gold, or judges"},
+      {"source":"repository_owned_round2_procedural","revision":f"generator-contract-sha256:{generator_contract}","license":"INTERNAL_REPOSITORY_OWNED_NO_THIRD_PARTY_DATA","decision":"ACCEPT_NOVEL","reason":"source-independent deterministic executable oracles; no external grids, objects, caches, LLM Gold, or judges"},
       {"source":"frankaging/BabyARC","revision":"7357681a35c18dd2f9bfe7c76404e7ceed41ac6d","license":"MIT","decision":"QUARANTINE_LINEAGE","reason":"skip_load_pretrain_obj path exists, but default concept inventory includes arcShape and direct end-to-end source-independent runtime was not established; no BabyARC row admitted"},
       {"source":"MGWSimpson/AlphaARC","revision":"9066db137df240f6121c7b01c9e97f1b3f3a83d9","license":"BSD-3-Clause-Clear","decision":"QUARANTINE_LINEAGE","reason":"bounded audit could not establish independence from official-derived decompositions"},
       {"source":"ARC-TGI/Omega","revision":"NOT_UNAMBIGUOUSLY_LOCATED","license":"UNRESOLVED","decision":"QUARANTINE_LINEAGE","reason":"bounded discovery found no unambiguous pinned repository and lineage"},
