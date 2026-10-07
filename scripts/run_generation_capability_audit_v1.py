@@ -378,6 +378,100 @@ def calibration(args: argparse.Namespace) -> int:
     return 2 if payload["status"] == "STOP_RUNTIME_EXCEEDS_6H" else 0
 
 
+def batch_capacity(args: argparse.Namespace) -> int:
+    """Measure inference capacity without changing frozen generation semantics."""
+    import torch
+
+    if args.batch_size is None or args.batch_size < 1:
+        raise GenerationAuditError("BATCH_SIZE_REQUIRED")
+    novel, replay, context = load_examples(args)
+    if context["status"] != "PASS":
+        raise GenerationAuditError("GENERATION_CONTEXT_AUDIT_FAIL")
+    examples = {example.sample_id: example for example in novel + replay}
+    if args.sample_id not in examples:
+        raise GenerationAuditError(f"CAPACITY_SAMPLE_NOT_FOUND={args.sample_id}")
+    example = examples[args.sample_id]
+    adapter = args.checkpoint_root / "tokens_2000000"
+    args.output.mkdir(parents=True, exist_ok=True)
+    receipt_path = args.output / f"BATCH_{args.batch_size}_CAPACITY.json"
+
+    model = load_model(args.model_path, adapter)
+    prompt = torch.tensor(
+        [example.prompt_ids] * args.batch_size,
+        dtype=torch.long,
+        device="cuda:0",
+    )
+    mask = torch.ones_like(prompt)
+    torch.cuda.empty_cache()
+    torch.cuda.reset_peak_memory_stats(0)
+    started = time.perf_counter()
+    try:
+        with torch.inference_mode():
+            output = model.generate(
+                input_ids=prompt,
+                attention_mask=mask,
+                max_new_tokens=MAX_NEW_TOKENS,
+                do_sample=False,
+                num_beams=1,
+                eos_token_id=15,
+                pad_token_id=13,
+                use_cache=True,
+            )
+        torch.cuda.synchronize(0)
+        elapsed = time.perf_counter() - started
+        suffixes = [
+            tuple(int(value) for value in row[prompt.shape[-1]:].detach().cpu().tolist())
+            for row in output
+        ]
+        generated = [len(suffix) for suffix in suffixes]
+        payload = {
+            "status": "PASS",
+            "checkpoint": "tokens_2000000",
+            "batch_size": args.batch_size,
+            "sample_id": example.sample_id,
+            "selection": "frozen calibration lower-median prompt; replicated for hardware capacity only",
+            "prompt_tokens_per_sequence": len(example.prompt_ids),
+            "generated_tokens_per_sequence": generated,
+            "total_generated_tokens": sum(generated),
+            "elapsed_seconds": elapsed,
+            "generated_tokens_per_second": sum(generated) / elapsed,
+            "all_batch_outputs_identical": len(set(suffixes)) == 1,
+            "peak_vram_allocated_bytes": torch.cuda.max_memory_allocated(0),
+            "peak_vram_reserved_bytes": torch.cuda.max_memory_reserved(0),
+            "generation_semantics": {
+                "do_sample": False,
+                "num_beams": 1,
+                "max_new_tokens": MAX_NEW_TOKENS,
+                "eos_token_id": 15,
+                "pad_token_id": 13,
+                "use_cache": True,
+            },
+            "scientific_audit_metric": False,
+            "optimizer_steps": 0,
+            "gold_accessed": False,
+        }
+    except torch.cuda.OutOfMemoryError as exc:
+        elapsed = time.perf_counter() - started
+        payload = {
+            "status": "OOM",
+            "checkpoint": "tokens_2000000",
+            "batch_size": args.batch_size,
+            "sample_id": example.sample_id,
+            "prompt_tokens_per_sequence": len(example.prompt_ids),
+            "elapsed_seconds": elapsed,
+            "exception_type": type(exc).__name__,
+            "peak_vram_allocated_bytes": torch.cuda.max_memory_allocated(0),
+            "peak_vram_reserved_bytes": torch.cuda.max_memory_reserved(0),
+            "generation_semantics_unchanged": True,
+            "scientific_audit_metric": False,
+            "optimizer_steps": 0,
+            "gold_accessed": False,
+        }
+    atomic_json(receipt_path, payload)
+    print(json.dumps(payload, sort_keys=True))
+    return 0
+
+
 def _pearson(xs: list[float], ys: list[float]) -> float | None:
     if len(xs) != len(ys) or len(xs) < 2:
         return None
@@ -519,8 +613,10 @@ def controller(args: argparse.Namespace) -> int:
 
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser()
-    p.add_argument("--mode", choices=("preflight", "calibration", "generate", "finalize", "controller"), required=True)
+    p.add_argument("--mode", choices=("preflight", "calibration", "batch-capacity", "generate", "finalize", "controller"), required=True)
     p.add_argument("--state")
+    p.add_argument("--batch-size", type=int)
+    p.add_argument("--sample-id", default="1d_arc:1d_padded_fill_3:native-source-episode-v1")
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--artifact", type=Path)
     p.add_argument("--pilot-freeze", type=Path, required=True)
@@ -540,6 +636,8 @@ def main() -> int:
         return generate_state(args)
     if args.mode == "calibration":
         return calibration(args)
+    if args.mode == "batch-capacity":
+        return batch_capacity(args)
     if args.mode == "finalize":
         return finalize(args)
     return controller(args)
