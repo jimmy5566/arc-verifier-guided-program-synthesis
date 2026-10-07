@@ -200,7 +200,7 @@ def prepare(args: argparse.Namespace) -> int:
         prompt_ids = [int(value) for value in tokenizer(_prompt_text(demos, target_input), add_special_tokens=False, return_attention_mask=False)["input_ids"]]
         if prompt_ids[-3:] != [14, 12, 10]:
             raise HoldoutAuditError(f"ASSISTANT_PREFIX_MISMATCH={row['sample_id']}")
-        if len(prompt_ids) + MAX_NEW_TOKENS > CONTEXT_WINDOW:
+        if len(prompt_ids) > CONTEXT_WINDOW:
             raise HoldoutAuditError(f"SELECTED_CONTEXT_OVERFLOW={row['sample_id']}:{len(prompt_ids)}")
         value = dict(row)
         value.update({

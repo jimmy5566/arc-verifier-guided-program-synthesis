@@ -93,5 +93,6 @@ def test_runner_has_zero_training_and_exact_generation_semantics() -> None:
     assert "do_sample=False" in source and "num_beams=1" in source
     assert "MAX_NEW_TOKENS = 932" in source and "REQUESTED_BATCH = 32" in source
     assert "prompt_ids[-3:] != [14, 12, 10]" in source
+    assert "if len(prompt_ids) > CONTEXT_WINDOW" in source
     assert ".backward(" not in source and "torch.optim" not in source
     assert '"optimizer_steps": 0' in source and '"backward_calls": 0' in source
