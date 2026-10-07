@@ -13,6 +13,7 @@ from base_eval60_capability_alignment_v1.pipeline import (
     build_task_matrices,
     freeze_status,
     gold_preference_protocol,
+    miss_interpretation_summary,
     quadrant_analysis,
     schemas,
     task_status,
@@ -125,3 +126,19 @@ def test_final_report_contains_every_preregistered_summary_section(tmp_path: Pat
     report = (tmp_path / "BASE_EVAL60_ALIGNMENT_REPORT_V1.md").read_text(encoding="utf-8")
     for heading in ("Frozen boundaries", "Base capability bands", "Eval60 task representation status", "Highest-frequency Eval60 requirements", "Special-focus groups", "Historical ORC miss alignment", "Interpretation boundary"):
         assert heading in report
+
+
+def test_surprising_misses_exclude_ontology_and_insufficient_evidence() -> None:
+    task_matrix = [
+        {"task_id": "strong", "base_representation_status": "PRIMITIVE_SUPPLY_STRONG", "all_independent_required_caps_strong_or_better": True, "any_required_cap_partial_or_weaker": False},
+        {"task_id": "gap", "base_representation_status": "ONTOLOGY_GAP", "all_independent_required_caps_strong_or_better": True, "any_required_cap_partial_or_weaker": False},
+        {"task_id": "missing", "base_representation_status": "INSUFFICIENT_EVIDENCE", "all_independent_required_caps_strong_or_better": True, "any_required_cap_partial_or_weaker": False},
+    ]
+    tasks = [
+        {"task_id": task_id, "primary_family": "PATTERN_PROGRESSION", "secondary_families": [], "requires_relation": False, "requires_selector": False, "requires_state_or_progression": False, "requires_conditional_control": False}
+        for task_id in ("strong", "gap", "missing")
+    ]
+    oracle = [{"task_id": task_id, "output_id": f"{task_id}:o0", "ORC_UNION": False} for task_id in ("strong", "gap", "missing")]
+    result = miss_interpretation_summary(tasks, task_matrix, oracle, [])
+    assert result["historical_ORC_misses_with_strong_Base_primitive_supply"] == 1
+    assert [row["task_id"] for row in result["top_15_surprising_misses"]] == ["strong"]

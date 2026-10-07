@@ -530,7 +530,12 @@ def miss_interpretation_summary(tasks: Sequence[dict[str, Any]], task_matrix: Se
 
     def primitive_strong(task_id: str) -> bool:
         row = tm[task_id]
-        return row["all_independent_required_caps_strong_or_better"] and not row["any_required_cap_partial_or_weaker"]
+        return (
+            row["base_representation_status"]
+            in {"PRIMITIVE_SUPPLY_STRONG", "COMPOSITION_EVIDENCE_NEEDED"}
+            and row["all_independent_required_caps_strong_or_better"]
+            and not row["any_required_cap_partial_or_weaker"]
+        )
 
     def composition_strong(task_id: str) -> bool:
         names = composition_matches(source[task_id])
