@@ -1,0 +1,24 @@
+{
+  "anchor_actual_batch_size": 32,
+  "anchor_comparisons": 32,
+  "anchor_mismatch_count": 0,
+  "anchor_mismatches": [],
+  "anchor_sample_id": "1d_arc:1d_padded_fill_3:native-source-episode-v1",
+  "checkpoint": "tokens_2000000",
+  "comparison": "batch1_vs_max_batch32_token_exact",
+  "generation_semantics_unchanged": true,
+  "gold_used_for_generation_or_comparison": false,
+  "max_batched_prompt_tokens": 21568,
+  "optimizer_steps": 0,
+  "representative_actual_batch_sizes": [
+    11,
+    3,
+    2,
+    2,
+    2
+  ],
+  "representative_count": 20,
+  "representative_mismatch_count": 0,
+  "representative_mismatches": [],
+  "status": "PASS"
+}
