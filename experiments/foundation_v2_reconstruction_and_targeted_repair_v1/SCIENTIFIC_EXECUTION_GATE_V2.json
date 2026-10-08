@@ -1,5 +1,7 @@
 {
   "AUTO_SCIENTIFIC_EXECUTION_AUTHORIZED": true,
+  "GPU_BENCHMARK_READY": true,
+  "OFFICIAL_SYSTEMATICITY_PROTOCOL_READY": true,
   "authorization_authority": "SCIENTIFIC_EXECUTION_GATE",
   "conditions": {
     "budget_ledger_remaining_seconds": 28800,
@@ -18,7 +20,8 @@
   "gate_rules": [
     "Runtime launcher must reject if this gate is not PASS/authorized.",
     "Runtime preflight must recheck source HEAD and every bound identity before optimizer construction.",
-    "No Director directive is required for ordinary execution."
+    "No Director directive is required for ordinary execution.",
+    "CPU-only prepare must complete before training; it freezes schedule and target-blind sentinels."
   ],
   "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
   "runtime_asset_receipt": "RECONSTRUCTION_RUNTIME_ASSET_RECEIPT_V1.json",
