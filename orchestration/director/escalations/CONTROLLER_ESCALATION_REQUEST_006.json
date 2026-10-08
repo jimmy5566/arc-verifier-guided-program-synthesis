@@ -1,0 +1,19 @@
+{
+  "attempts_already_made": 1,
+  "blocker": [
+    "EXACT_SEALED_REFERENCE_AND_PROTECTED_BASELINE_PROVENANCE_MISSING"
+  ],
+  "directive_id": "DIRECTOR_DIRECTIVE_020",
+  "directive_sha256": "a352eb4d48d7affebee20e81f64eaeb666cfca6a06eea021a7c43579a4e91837",
+  "escalation_type": "BLOCKED_SCIENCE",
+  "evaluation_execution_started": false,
+  "evidence": {
+    "brief": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\orchestration\\director\\briefs\\DIRECTOR_BRIEF_021.json",
+    "stage_package": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\foundation_v2_reconstruction_and_targeted_repair_v2\\round_009_equivalence_evaluation\\RECONSTRUCTION_EQUIVALENCE_EVALUATION_STAGE_V1.json",
+    "stage_package_commit": "5d4db736e70662fa5bd791b5f85568cb0bb7256e"
+  },
+  "requested_decision": "STAGE_LEVEL_SEALED_REFERENCE_PROVENANCE_DECISION_REQUIRED",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "ESCALATION_REQUESTED"
+}

@@ -1,0 +1,28 @@
+{
+  "blocker": "EXACT_SEALED_REFERENCE_AND_PROTECTED_BASELINE_PROVENANCE_MISSING",
+  "brief_id": "DIRECTOR_BRIEF_021",
+  "completed_cpu_only_work": [
+    "target-blind manifests reused by hash",
+    "two phase output-isolation contracts frozen",
+    "metric semantics frozen",
+    "no-model preflight passed to fail-closed boundary"
+  ],
+  "directive_id": "DIRECTOR_DIRECTIVE_020",
+  "directive_sha256": "a352eb4d48d7affebee20e81f64eaeb666cfca6a06eea021a7c43579a4e91837",
+  "evaluation_execution_started": false,
+  "evidence_registry": {
+    "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/ARC2_FROZEN_EVIDENCE_REGISTRY_V1.json",
+    "sha256": "5bf575a415848e1f1f21332a79fc71a1b33fd861acd4976fbafe329947fc96cc"
+  },
+  "final_audit_accessed": false,
+  "model_loading_started": false,
+  "requested_decision": "Authorize this complete stage only if exact pre-existing sealed references, protected baseline, and major-regression definition are bound; otherwise provide the smallest scientifically valid replacement route.",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "stage_id": "RECONSTRUCTION_EQUIVALENCE_EVALUATION_STAGE_V1",
+  "stage_package": {
+    "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/RECONSTRUCTION_EQUIVALENCE_EVALUATION_STAGE_V1.json",
+    "sha256": "e8a637fa7bb3319ec785e2d919b271b33197f3321e6a1a4a68cd77e15bfba1e2"
+  },
+  "stage_package_commit": "5d4db736e70662fa5bd791b5f85568cb0bb7256e"
+}
