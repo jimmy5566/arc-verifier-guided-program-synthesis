@@ -1,0 +1,69 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_008",
+  "decision": "REQUIRE_INFRA_REPAIR",
+  "scope": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "reasons": [
+    {
+      "area": "brief_and_evidence_integrity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_008 has SHA256 6177e8dfbe9b57234b5a40e0f7357e717d6c31c28ff7515ad52b550b71ef59b0. All five brief-listed evidence files and all eight files in the updated reconstruction package match their declared SHA256 values."
+    },
+    {
+      "area": "directive_007_sentinel_transfer",
+      "status": "PASS",
+      "finding": "The exact 237,564-byte retention sentinel was transferred through a temporary envelope, remotely verified as SHA256 b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526, and atomically placed without transformation. No model load, optimizer construction, or training occurred."
+    },
+    {
+      "area": "reviewed_source_parity",
+      "status": "PASS_FOR_PREFLIGHT_BINDING_COMMIT",
+      "finding": "The immutable parity record shows local, fresh origin, and RunPod source equality at 0429dc396d6534e1bad4cfd0eab8ee661aeb2d6e for the reviewed preflight binding."
+    },
+    {
+      "area": "frozen_replay_shard",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The complete preflight rerun fails at /root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/arc_training_v2_1/train/replay/replay-00000.parquet. The required identity is SHA256 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc. The canonical local path is also absent, and the reviewed evidence identifies no accepted exact candidate."
+    },
+    {
+      "area": "preflight_completeness",
+      "status": "NOT_ESTABLISHED",
+      "finding": "The fail-closed preflight stops at the first missing required file. All later mounted inputs remain unverified for this cycle and cannot be inferred to pass."
+    },
+    {
+      "area": "directive_provenance",
+      "status": "REQUIRES_REPAIR",
+      "finding": "DIRECTOR_DIRECTIVE_007.json and DIRECTOR_RESPONSE_007.json are currently untracked in the local worktree and therefore are not preserved in the current remote commit 43338ff0351f549d3f13adcd8c238b29aa73d63e. The immutable remediation chain must include those exact directive and acknowledgement bytes."
+    },
+    {
+      "area": "training_state",
+      "status": "PASS_NO_TRAINING",
+      "finding": "The brief, transfer receipt, and preflight result consistently establish no model loading, no optimizer construction, and no GPU training."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "RECOVER_EXACT_REPLAY_SHARD",
+      "requirement": "This directive authorizes an infrastructure-only, bounded search of documented RunPod persistent roots, local preservation locations, and existing archives for a replay-00000.parquet candidate. Accept only bytes whose SHA256 is exactly 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc. Do not regenerate, reserialize, normalize, approximate, or substitute the shard, and do not inspect targets or use GPU/model execution during recovery."
+    },
+    {
+      "change_id": "PROVISION_ONLY_VERIFIED_BYTES",
+      "requirement": "If and only if an exact candidate is found, record its provenance, byte count, and source hash; transfer through a temporary remote staging path; verify the remote bytes and SHA256; and atomically place it at the launch binding's required path. If no exact candidate is found, preserve a terminal recovery-blocked artifact and return for Director review without changing the frozen recipe."
+    },
+    {
+      "change_id": "RERUN_COMPLETE_PREFLIGHT",
+      "requirement": "After exact provisioning, rerun the complete read-only preflight from the beginning. Verify every remaining required file, dataset manifest, source identity, command, output path, checkpoint path, and budget control. Preserve PASS or the exact next failure; never infer completion from advancing beyond this shard."
+    },
+    {
+      "change_id": "PRESERVE_DIRECTIVE_CHAIN_AND_SOURCE_PARITY",
+      "requirement": "Commit and push the exact Directive 007 and Response 007 bytes together with the Directive 008 remediation evidence on the existing non-main branch, then record fresh local, git ls-remote origin, and RunPod source SHA equality for the final reviewed launch commit. No force push or main-branch push is permitted."
+    },
+    {
+      "change_id": "PRESERVE_SCIENTIFIC_BOUNDARIES",
+      "requirement": "Do not modify the frozen replay content, data mix, training recipe, equivalence thresholds, capability subset, Gold exclusions, final-audit policy, or time budget. Recovery and preflight are infrastructure-only and do not authorize model loading or optimizer work."
+    },
+    {
+      "change_id": "CONTROLLER_RESUBMISSION",
+      "requirement": "Submit a new hashed Controller brief with replay recovery outcome, complete preflight result, immutable directive-chain provenance, and fresh three-way source parity. GPU reconstruction remains prohibited until a later Director directive explicitly returns CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true."
+    }
+  ],
+  "scientific_training_authorized": false
+}

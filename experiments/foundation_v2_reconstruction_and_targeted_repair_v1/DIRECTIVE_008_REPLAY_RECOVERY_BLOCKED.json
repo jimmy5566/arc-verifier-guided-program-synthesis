@@ -1,0 +1,64 @@
+{
+  "candidates_found": [],
+  "decision": "REQUIRE_INFRA_REPAIR",
+  "directive_id": "DIRECTOR_DIRECTIVE_008",
+  "expected_sha256": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc",
+  "frozen_required_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/arc_training_v2_1/train/replay/replay-00000.parquet",
+  "local_search": {
+    "archive_content_search": {
+      "archive_count": 24,
+      "archive_root": "C:/Users/asus/Desktop/py/kaggle/ARC2/.arc2-local/archive",
+      "entry_name": "replay-00000.parquet",
+      "matching_archive_entries": []
+    },
+    "canonical_and_preservation_roots": [
+      "C:/Users/asus/Desktop/py/kaggle/ARC2",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2/.arc2-local/archive",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2/legacy_workspace",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2/handoff",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2/preserved",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2/worktrees"
+    ],
+    "registered_worktrees": [
+      "C:/Users/asus/Desktop/py/kaggle/ARC2",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2-3090-eval60-runners",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2-audit",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2-d1-fixed-budget",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2-eval60-results",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2-exp-a",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2-exp-b",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2-governance-v1",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2-phase2-5090",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2-production",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2-research",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2-training-data-v1",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2-training-data-v2",
+      "C:/Users/asus/Desktop/py/kaggle/ARC2_v38_submission"
+    ],
+    "text_metadata_terms": [
+      "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc",
+      "replay-00000.parquet",
+      "arc_training_v2_1"
+    ]
+  },
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "outcome": "EXACT_FROZEN_REPLAY_SHARD_NOT_RECOVERED",
+  "remote_search": {
+    "candidate_name": "replay-00000.parquet",
+    "documented_persistent_roots": [
+      "/root/arc-runtime-3090-gpu-benchmark-v1",
+      "/root/arc2",
+      "/workspace",
+      "/workspace/arc2",
+      "/workspace/arc2/arc2",
+      "/workspace/arc-runtime-3090-gpu-benchmark-v1"
+    ],
+    "maximum_search_depth": 8,
+    "matching_paths": []
+  },
+  "schema_version": 1,
+  "status": "HARD_BLOCKED_PENDING_DIRECTOR_REVIEW",
+  "training_started": false,
+  "why_no_provisioning_occurred": "No candidate had the required exact SHA256; regeneration, substitution, normalization, or approximation is prohibited."
+}

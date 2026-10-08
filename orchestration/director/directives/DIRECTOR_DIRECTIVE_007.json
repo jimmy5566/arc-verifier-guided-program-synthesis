@@ -1,0 +1,60 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_007",
+  "decision": "REQUIRE_INFRA_REPAIR",
+  "scope": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "reasons": [
+    {
+      "area": "brief_and_package_integrity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_007 has SHA256 a8e6d8eb441675f95fa0b882bee5b10b8da20d2416ededf0ccb154de1b19c927. All four brief-listed evidence files and all eight files in RECONSTRUCTION_PROTOCOL_PACKAGE_MANIFEST_V2 match their declared SHA256 values."
+    },
+    {
+      "area": "directive_006_remediation",
+      "status": "PASS_WITH_MOUNTED_INPUT_BLOCK",
+      "finding": "Executable provenance, resolved launch binding, capability-direction subset, runtime budget controls, continuation state, and eight CPU/dummy tests are recorded as complete. The validation records exactly one Supervisor and watchdog, no GPU training, and no optimizer construction."
+    },
+    {
+      "area": "mounted_retention_sentinel",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The fail-closed preflight reports REQUIRED_FILE_MISSING at /root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/targeted_capability_repair_v1/data/RETENTION_SENTINEL.jsonl. The exact frozen source file is present locally with required SHA256 b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526, but it is not Git-tracked and therefore was not supplied by the RunPod checkout."
+    },
+    {
+      "area": "preflight_completeness",
+      "status": "NOT_ESTABLISHED",
+      "finding": "The preflight stopped at the first missing required file. Presence and identity of all later required files cannot be inferred from that controlled stop and must be checked by a complete rerun after the exact sentinel bytes are provisioned."
+    },
+    {
+      "area": "runpod_source_provenance",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The brief records runpod_commit as PENDING_FINAL_SYNC. Local HEAD and the fresh origin branch are 77b4d15026b19f96dd83e078b3e577d5b46263cf, but equality with the RunPod source SHA has not been established for this review cycle."
+    },
+    {
+      "area": "training_state",
+      "status": "PASS_NO_TRAINING",
+      "finding": "The brief and validation evidence consistently state that no GPU training, model loading, or optimizer construction occurred."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "PROVISION_EXACT_RETENTION_SENTINEL",
+      "requirement": "This directive authorizes infrastructure-only, byte-preserving transfer of the existing local RETENTION_SENTINEL.jsonl whose SHA256 is b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526 to the exact required RunPod path. Do not regenerate, edit, normalize, substitute, deserialize for transformation, or source the file from any other candidate. Transfer to a temporary file, verify its SHA256 and byte count remotely, then atomically place it at the required path. Any mismatch remains a hard stop."
+    },
+    {
+      "change_id": "COMPLETE_FAIL_CLOSED_PREFLIGHT",
+      "requirement": "Rerun the full mounted-input preflight from the beginning after provisioning. It must verify every required base, tokenizer, weight shard, data shard, sentinel, schedule, executable, directive, ledger, command, output, and checkpoint identity; do not treat progress past the prior missing file as a pass. Preserve a complete machine-readable PASS or exact next failure record."
+    },
+    {
+      "change_id": "ESTABLISH_CURRENT_SOURCE_PARITY",
+      "requirement": "Synchronize RunPod through the approved non-main-branch path and record fresh equality of local commit SHA, git ls-remote origin branch SHA, and RunPod checked-out/source SHA for the complete remediation commit. No force push and no main-branch push are permitted."
+    },
+    {
+      "change_id": "PRESERVE_SCIENTIFIC_BOUNDARIES",
+      "requirement": "Do not change the sentinel contents, frozen recipe, data mix, equivalence thresholds, capability subset, Gold exclusions, final-audit policy, or time budget. The authorized transfer and verification are infrastructure-only and do not authorize model loading or optimizer work."
+    },
+    {
+      "change_id": "CONTROLLER_RESUBMISSION",
+      "requirement": "Commit and push the immutable transfer receipt, complete preflight result, and fresh provenance-parity record, then submit a new hashed Controller brief. GPU reconstruction remains prohibited until a later Director directive explicitly returns CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true."
+    }
+  ],
+  "scientific_training_authorized": false
+}
