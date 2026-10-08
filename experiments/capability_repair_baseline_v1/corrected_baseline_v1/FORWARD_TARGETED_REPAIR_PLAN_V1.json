@@ -1,0 +1,55 @@
+{
+  "atomic_priority": {
+    "connected components": 0.235294,
+    "difference": 0.196078,
+    "inside/contains": 0.235294,
+    "orientation": 0.137255,
+    "width": 0.196078
+  },
+  "baseline_evidence": {
+    "atomic_profile_sha256": "230ebeb8e74eb5112ac83f27d1ed9f095e4230488059277a201a159f3d0acaf2",
+    "composition_profile_sha256": "ddfcddfa65b0f6132718f622367c0981664ee7fb0921f9199fc597ba788958ce",
+    "retention_profile_sha256": "51083a1a5737dee17d70c8b5fd4d11e29635485828f832cd6ae2defc68988979"
+  },
+  "basis": "Corrected V7 Batch32 baseline only; V6 measurement-invalid result excluded.",
+  "composition_priority": {
+    "conditional action": 0.338462,
+    "mask set": 0.338462,
+    "relation selector action": 0.323077
+  },
+  "curriculum_weights": {
+    "atomic_repair": 0.5,
+    "composition_repair": 0.3,
+    "retention_train": 0.2
+  },
+  "protocol_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1",
+  "retention_watchlist": {
+    "overlay": 0.461538,
+    "propagation": 0.538462
+  },
+  "schema_version": 1,
+  "scientific_boundaries": [
+    "no TARGET_DEV training",
+    "no RETENTION_SENTINEL training",
+    "no FINAL_AUDIT access",
+    "no Eval60 or diagnostic Gold"
+  ],
+  "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1",
+  "status": "READY_TO_FREEZE_TRAINING_CONFIG",
+  "strong_capabilities": [
+    "recolor",
+    "same color",
+    "selector prerequisites"
+  ],
+  "training_budget": {
+    "cap_seconds": 28800,
+    "historical_reconstruction_seconds": 3739.72,
+    "initial_round_reservation_seconds": 7200,
+    "remaining_seconds": 25060.28
+  },
+  "true_composition_bottlenecks": [
+    "conditional action",
+    "mask set",
+    "relation selector action"
+  ]
+}

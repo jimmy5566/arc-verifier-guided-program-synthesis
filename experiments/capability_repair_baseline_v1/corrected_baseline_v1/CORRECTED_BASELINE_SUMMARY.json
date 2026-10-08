@@ -1,0 +1,44 @@
+{
+  "batching": {
+    "batch_records": [
+      {
+        "actual_batch_size": 29,
+        "cursor": 0,
+        "event": "BATCH",
+        "label": "BATCH1_VS_BATCH32",
+        "long_prompt_downgrade": true,
+        "longest_prompt_tokens": 706,
+        "oom_fallback": false,
+        "padded_prompt_tokens": 20474
+      },
+      {
+        "actual_batch_size": 3,
+        "cursor": 29,
+        "event": "BATCH",
+        "label": "BATCH1_VS_BATCH32",
+        "long_prompt_downgrade": false,
+        "longest_prompt_tokens": 798,
+        "oom_fallback": false,
+        "padded_prompt_tokens": 2394
+      }
+    ],
+    "canonical_agreement": 0.9375,
+    "exact_grid_rate_delta": 0.0,
+    "parse_valid_rate_delta": 0.0,
+    "sample_count": 32,
+    "status": "PASS"
+  },
+  "completed_episode_count": 288,
+  "final_audit_accessed": false,
+  "profiles": {
+    "CAPABILITY_REPAIR_BASELINE_V1_COMPOSITION.json": "ddfcddfa65b0f6132718f622367c0981664ee7fb0921f9199fc597ba788958ce",
+    "CAPABILITY_REPAIR_BASELINE_V1_PROFILE.json": "230ebeb8e74eb5112ac83f27d1ed9f095e4230488059277a201a159f3d0acaf2",
+    "CAPABILITY_REPAIR_BASELINE_V1_RETENTION.json": "51083a1a5737dee17d70c8b5fd4d11e29635485828f832cd6ae2defc68988979"
+  },
+  "receipt_sha256": "15a7a751ee77e556c56f22ab3a377e49696be7aba235a17cbe4f1e18787956d7",
+  "result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5",
+  "round_id": "FORWARD_BASELINE_EVALUATION_V7_BATCH32",
+  "schema_version": 1,
+  "status": "COMPLETE_VALID_MEASUREMENT",
+  "v6_status": "MEASUREMENT_INVALID_NOT_USED"
+}
