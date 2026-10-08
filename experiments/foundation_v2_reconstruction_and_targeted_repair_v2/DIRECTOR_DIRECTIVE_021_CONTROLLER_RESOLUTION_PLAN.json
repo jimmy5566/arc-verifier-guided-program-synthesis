@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "directive_id": "DIRECTOR_DIRECTIVE_021",
+  "directive_sha256": "49b7ea3109bfcad210ab28064e65e6940c53a6f827cfa4f5295b55a463ab0d7c",
+  "root_cause": "The original equivalence endpoints have no recoverable exact sealed reference mappings, protected baseline, or major-regression definition, and the placeholder stage contracts did not bind actual cardinalities or executable identities.",
+  "why_current_path_is_invalid": "Executing or relabeling the prior stage would invent historical equivalence evidence and would not establish eligibility for targeted repair.",
+  "artifacts_or_conditions_that_must_remain_frozen": ["RECONSTRUCTION_EQUIVALENCE_EVALUATION_STAGE_V1 and its nonces/output roots", "Round 009 receipt, accounting, checkpoints, selected 2M adapter and teacher-forced metrics", "no-Gold/final-audit/targeted-data prohibitions"],
+  "required_resolution": "Close the unexecuted equivalence stage and create a distinct prospective post-hoc capability-characterization subprotocol with complete non-Gold population, two-phase execution, and provenance contracts.",
+  "controller_next_actions": ["freeze closure evidence", "freeze valid prospective populations and mappings", "bind or omit protected comparator claim", "freeze complete two-phase contracts and CPU tests", "commit, push, verify provenance, and submit a new brief without execution"],
+  "minimum_acceptance_evidence": ["immutable closure record", "correct population cardinalities and bijection", "reference isolation", "exact source/runtime/argv/nonce/receipt contracts", "CPU-only no-model preflight"],
+  "forbidden_actions": ["model loading", "generation", "scoring", "GPU inference", "reconstruction retraining", "optimizer construction", "targeted repair", "FINAL_AUDIT", "reuse of prior stage nonces or output roots"],
+  "fresh_round_id_required": false,
+  "fresh_protocol_id_required": true,
+  "fresh_gate_nonce_output_root_required": true
+}

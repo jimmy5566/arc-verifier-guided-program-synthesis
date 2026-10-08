@@ -1,0 +1,21 @@
+{
+  "actions_forbidden": [
+    "consume_old_nonces",
+    "populate_old_output_roots",
+    "relabel_old_stage_pass",
+    "mutate_round009",
+    "retrain",
+    "targeted_repair",
+    "FINAL_AUDIT"
+  ],
+  "closed_stage_id": "RECONSTRUCTION_EQUIVALENCE_EVALUATION_STAGE_V1",
+  "closed_stage_status": "UNEXECUTED_FAIL_CLOSED",
+  "closure_reason": "EXACT_SEALED_REFERENCE_AND_PROTECTED_BASELINE_PROVENANCE_MISSING",
+  "immutable_artifacts": [
+    "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/RECONSTRUCTION_EQUIVALENCE_EVALUATION_STAGE_V1.json",
+    "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/ROUND_009_SEALED_EQUIVALENCE_EVALUATION_V1_PROTOCOL.json",
+    "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/ROUND_009_SEALED_EQUIVALENCE_EVALUATION_V1_NONCES.json",
+    "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/ROUND_009_SEALED_REFERENCE_PROVENANCE_AUDIT.json"
+  ],
+  "schema_version": 1
+}

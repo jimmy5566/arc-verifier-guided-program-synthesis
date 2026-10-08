@@ -1,0 +1,26 @@
+{
+  "deterministic_decode_seed_required": true,
+  "execution_authorized": false,
+  "fresh_nonce_and_output_root_required": true,
+  "generator_identity_required_before_phase_a": true,
+  "mapping_bijection_required": true,
+  "no_model_preflight_status": "BLOCKED_PENDING_EXACT_NON_GOLD_REFERENCE_MAPPINGS",
+  "population_cardinality": {
+    "NOVEL": 128,
+    "PROTECTED": 64,
+    "REPLAY": 64
+  },
+  "protocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "receipt_completeness_required": true,
+  "reference_isolation_required": true,
+  "regression_tests_required": [
+    "item_count",
+    "mapping_bijection",
+    "reference_isolation",
+    "duplicate_missing_invalid_predictions",
+    "nonce_reuse",
+    "receipt_completeness"
+  ],
+  "schema_version": 1,
+  "scorer_identity_required_before_phase_b": true
+}

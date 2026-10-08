@@ -1,0 +1,58 @@
+{
+  "checkpoint": {
+    "adapter_config_sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+  },
+  "condition": "PROSPECTIVE_POST_HOC_CHARACTERIZATION_OF_FIXED_RECONSTRUCTED_CHECKPOINT",
+  "execution_authorized": false,
+  "forbidden": [
+    "Eval60 Gold",
+    "diagnostic Gold",
+    "exposed Novel holdout targets",
+    "FINAL_AUDIT",
+    "targeted-repair data",
+    "model loading",
+    "generation",
+    "scoring",
+    "GPU inference"
+  ],
+  "not_foundation_v2_recovery": true,
+  "not_original_equivalence_gate": true,
+  "not_targeted_repair_entry": true,
+  "populations": {
+    "NOVEL": {
+      "contains_targets": false,
+      "item_count": 128,
+      "reference_mapping_status": "UNRESOLVED_NO_PAYLOAD_OPENED",
+      "source_manifest": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/NOVEL_GENERATION_INPUT_MANIFEST.json",
+      "source_manifest_sha256": "50f156c1da6afb465f55a1d3420c6a65a2cf008b3391d3a317154d7055dc7b26",
+      "unique_item_ids": 128
+    },
+    "PROTECTED": {
+      "contains_targets": false,
+      "item_count": 64,
+      "reference_mapping_status": "UNRESOLVED_NO_PAYLOAD_OPENED",
+      "source_manifest": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/PROTECTED_CAPABILITY_INPUT_MANIFEST.json",
+      "source_manifest_sha256": "e8132701c5aa4b97e0b81941851731e40eccfd358c0ee9e2170e937bcea1633e",
+      "unique_item_ids": 64
+    },
+    "REPLAY": {
+      "contains_targets": false,
+      "item_count": 64,
+      "reference_mapping_status": "UNRESOLVED_NO_PAYLOAD_OPENED",
+      "source_manifest": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/REPLAY_GENERATION_INPUT_MANIFEST.json",
+      "source_manifest_sha256": "2c91a106655fd7e462933f001d3ed2bb1a034ade55cc636346c9068e27832211",
+      "unique_item_ids": 64
+    }
+  },
+  "protected_comparator_claim": "OMITTED_UNLESS_EXACT_PROSPECTIVE_COMPARATOR_IS_BOUND_BEFORE_EXECUTION",
+  "protocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "schema_version": 1,
+  "status": "PREPARATION_BLOCKED_EXACT_NON_GOLD_REFERENCE_MAPPINGS_UNRESOLVED",
+  "two_phase_requirements": [
+    "target_blind_phase_a",
+    "sealed_phase_b",
+    "no_feedback",
+    "no_checkpoint_or_curriculum_change"
+  ]
+}
