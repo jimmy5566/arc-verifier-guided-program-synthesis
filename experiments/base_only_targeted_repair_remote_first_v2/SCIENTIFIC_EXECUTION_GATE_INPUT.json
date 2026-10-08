@@ -10,14 +10,14 @@
       "status": "PASS"
     },
     "frozen_baseline_identity": {
-      "evidence": "experiments/base_only_targeted_repair_available_data_v1/NEW_SUBPROTOCOL_PREPARATION_BLOCKED.json",
-      "reason": "Historical replay shard SHA256 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc is unavailable; exact reconstruction must not substitute a dataset.",
-      "status": "BLOCKED"
+      "evidence": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/REPLAY_EXACT_BYTE_RECOVERY_V2.json",
+      "reason": "Exact V2.1 replay bytes recovered locally; preserved source is not modified",
+      "status": "PASS"
     },
     "model_runtime_identity": {
-      "evidence": "REMOTE_READ_ONLY_PREFLIGHT_V7.json",
-      "sha256": "b96b3f91f796f25cc15de8e31e920444f3df7975b34bc1269af9f7ee2f7ed24a",
-      "status": "PASS"
+      "evidence": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/REPLAY_EXACT_BYTE_RECOVERY_V2.json",
+      "reason": "Exact replay bytes are not yet published at the versioned RunPod reconstruction-data path; all bounded forced-PTY frames rejected before any chunk acknowledgement",
+      "status": "BLOCKED"
     },
     "no_diagnostic_gold_in_training_labels": {
       "evidence": "execution_contract_v7/BASE_REFERENCE_LAUNCH_BINDING_V3.json",

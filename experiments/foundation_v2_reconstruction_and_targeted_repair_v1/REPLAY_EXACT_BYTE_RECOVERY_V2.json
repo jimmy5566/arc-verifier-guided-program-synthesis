@@ -1,0 +1,68 @@
+{
+  "exact_candidates": [
+    {
+      "bytes": 119426594,
+      "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2-training-data-v2\\data\\processed\\arc_training_v2_1\\sample_registry.parquet",
+      "row_count_evidence": 62650,
+      "sha256": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc"
+    },
+    {
+      "bytes": 119426594,
+      "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2-training-data-v2\\data\\processed\\arc_training_v2_1\\train\\replay\\replay-00000.parquet",
+      "row_count_evidence": 62650,
+      "sha256": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc"
+    }
+  ],
+  "frozen_row_count_evidence": "C:/Users/asus/Desktop/py/kaggle/ARC2-training-data-v2/artifacts/training_data_v2_1/PORTABLE_DATASET_FINGERPRINT.json",
+  "logical_dataset_reconstruction": "NOT_REQUIRED_FOR_IDENTITY: exact bytes recovered locally; no regeneration performed",
+  "logical_training_shard": "train/replay/replay-00000.parquet",
+  "other_candidates": [
+    {
+      "bytes": 117693640,
+      "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2-training-data-v2\\data\\processed\\arc_training_v2\\sample_registry.parquet",
+      "row_count_evidence": "NOT_READ_LOCAL_PYARROW_UNAVAILABLE",
+      "sha256": "bc99c7f7fa943077ea2c1faa1ef0fcdcc09df45cf651abef7f44ff836f477a10"
+    },
+    {
+      "bytes": 117476561,
+      "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2-training-data-v2\\data\\processed\\arc_training_v2\\train\\replay\\replay-00000.parquet",
+      "row_count_evidence": "NOT_READ_LOCAL_PYARROW_UNAVAILABLE",
+      "sha256": "90dfbfa2b532aa4e9df7960472aab5a41a6fa70363d7325f7f82c8a29294a72d"
+    },
+    {
+      "bytes": 1145934,
+      "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2-training-data-v2\\data\\processed\\arc_training_v2_pre_rearc_adapter\\sample_registry.parquet",
+      "row_count_evidence": "NOT_READ_LOCAL_PYARROW_UNAVAILABLE",
+      "sha256": "928f0a314f17a4c9755fa3649ef4e033de42a7fe350fc91c516a5f1c3690058f"
+    },
+    {
+      "bytes": 953853,
+      "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2-training-data-v2\\data\\processed\\arc_training_v2_pre_rearc_adapter\\train\\replay\\replay-00000.parquet",
+      "row_count_evidence": "NOT_READ_LOCAL_PYARROW_UNAVAILABLE",
+      "sha256": "8a4d2f188b9503505eea3097f4ede4eb10c6541292a3c0ab13ea1860171a08b5"
+    }
+  ],
+  "remote_copy_attempts": [
+    {
+      "chunk_bytes": 262144,
+      "result": "REJECTED_INCORRECT_PADDING_BEFORE_CHUNK_ACK",
+      "transport": "forced PTY manifest-bound opaque transport"
+    },
+    {
+      "chunk_bytes": 65536,
+      "result": "REJECTED_INCORRECT_PADDING_BEFORE_CHUNK_ACK"
+    },
+    {
+      "chunk_bytes": 16384,
+      "result": "REJECTED_INCORRECT_PADDING_BEFORE_CHUNK_ACK"
+    }
+  ],
+  "remote_destination": "/workspace/arc2/reconstruction-data_v1/POOL_REPLAY_V2_1/replay-00000.parquet",
+  "remote_destination_published": false,
+  "remote_search": "No candidate under bounded persistent/workspace roots",
+  "required_rows": 62650,
+  "required_sha256": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "EXACT_BYTE_RECOVERY_LOCAL_PASS_REMOTE_PLACEMENT_BLOCKED"
+}
