@@ -1,0 +1,18 @@
+﻿{
+  "schema_version": 1,
+  "record_type": "RECONCILIATION_PRE_OPTIMIZER_FAILURE",
+  "entry_id": "RECONSTRUCTION_V1:failed_import:2026-10-08",
+  "gpu_optimizer_seconds": 0.0,
+  "wrapper_seconds": 0.114687685,
+  "reason": "FAILED_BEFORE_MODEL_LOAD_OR_OPTIMIZER_CONSTRUCTION",
+  "evidence": {
+    "raw_v5_ledger_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V5.jsonl",
+    "raw_v5_ledger_sha256": "4e123d3c2365c31eb26f285b23913ecbf74c40a03683004ff86a474d574aa953",
+    "terminal_receipt_path": "/workspace/arc2/orchestration/rounds/ROUND_RECONSTRUCTION_V1/ROUND_RECONSTRUCTION_V1_TERMINAL_RECEIPT.json",
+    "terminal_receipt_sha256": "1971c4b84fc5107a344519624d34d4803c0ead3b72e0036887917f5b36805703",
+    "observed_failure": "ModuleNotFoundError: No module named 'bitsandbytes'",
+    "model_loaded": false,
+    "optimizer_constructed": false,
+    "scientific_training_started": false
+  }
+}

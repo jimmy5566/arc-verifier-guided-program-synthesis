@@ -1,0 +1,12 @@
+{
+  "cap_seconds": 28800,
+  "entry_count": 1,
+  "ledger_sha256": "7e9430b5b36cc862efa890ad82721cbe1283811d7abfd46382afcba8941d43d8",
+  "ledger_tail_sha256": "e27601da3c3c1c638726941da37ad658f9c30ead3d0005f5584fb47822f241ac",
+  "ledger_version": "V6",
+  "remaining_seconds": 28800.0,
+  "schema_version": 1,
+  "scientific_gpu_training_seconds": 0.0,
+  "status": "PASS",
+  "wrapper_runtime_seconds": 0.114687685
+}
