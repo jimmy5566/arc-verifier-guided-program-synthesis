@@ -16,6 +16,11 @@ from pathlib import Path
 from typing import Any
 
 TERMINAL_STATES = {"SUCCESS", "TRAIN_FAILED", "OOM", "INFRA_FAILED", "INTERRUPTED"}
+ROUND_CLASS_SCIENTIFIC = "SCIENTIFIC"
+ROUND_CLASS_DUMMY = "DUMMY"
+ROUND_CLASS_SMOKE = "SMOKE"
+ROUND_CLASS_INFRASTRUCTURE = "INFRASTRUCTURE"
+SCIENTIFIC_PROTOCOLS = {"FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1", "TARGETED_CAPABILITY_REPAIR_V1", "TARGETED_CAPABILITY_REPAIR_V1R"}
 DIRECTOR_DECISIONS = {
     "CONTINUE", "CONTINUE_WITH_WARNING", "REQUIRE_CURRICULUM_REVIEW",
     "REQUIRE_DIAGNOSTIC_REVIEW", "REQUIRE_INFRA_REPAIR", "PAUSE_SCIENTIFIC_EXPERIMENT",
@@ -83,6 +88,20 @@ def utc_seconds() -> float:
     return time.time()
 
 
+def round_class_from_contract(round_id: str, receipt: dict[str, Any]) -> str:
+    """Classify the round contract independently of optimizer progress."""
+    if (
+        receipt.get("round_class") == ROUND_CLASS_SCIENTIFIC
+        or receipt.get("protocol_id") in SCIENTIFIC_PROTOCOLS
+        or round_id.startswith(("RECONSTRUCTED_FOUNDATION_V2_", "TARGETED_CAPABILITY_REPAIR_"))
+    ):
+        return ROUND_CLASS_SCIENTIFIC
+    declared = receipt.get("round_class")
+    if declared in {ROUND_CLASS_DUMMY, ROUND_CLASS_SMOKE, ROUND_CLASS_INFRASTRUCTURE}:
+        return declared
+    return ROUND_CLASS_INFRASTRUCTURE
+
+
 def default_state() -> dict[str, Any]:
     return {
         "schema_version": 1,
@@ -133,13 +152,13 @@ class Supervisor:
             # A scientific receipt can be emitted before the worker reaches an
             # optimizer step.  Round/protocol identity therefore controls routing;
             # ``scientific_training_started`` is evidence, never the classifier.
-            scientific_round = (
-                receipt.get("scientific_training_started") is True
-                or receipt.get("protocol_id") == "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1"
-                or round_id.startswith("RECONSTRUCTED_FOUNDATION_V2_V1_")
-            )
-            record["scientific_round"] = scientific_round
+            round_class = round_class_from_contract(round_id, receipt)
+            record["round_class"] = round_class
+            record["scientific_round"] = round_class == ROUND_CLASS_SCIENTIFIC
+            # This captures actual optimizer progress, not the round's contract.
             record["scientific_training_started"] = receipt.get("scientific_training_started") is True
+            record["protocol_id"] = receipt.get("protocol_id")
+            record["remote_receipt_path"] = str(path.resolve())
             if not record.get("controller_notification_sent"):
                 notification = self.notification_dir / f"CONTROLLER_NOTIFICATION_{round_id}_{digest[:12]}.json"
                 atomic_json(notification, {
@@ -147,6 +166,9 @@ class Supervisor:
                     "terminal_receipt": str(path),
                     "terminal_receipt_hash": digest,
                     "terminal_status": status,
+                    "round_class": round_class,
+                    "protocol_id": receipt.get("protocol_id"),
+                    "scientific_training_started": receipt.get("scientific_training_started") is True,
                     "scientific_acceptance": "NOT_INFERRED_FROM_PROCESS_RECEIPT",
                 })
                 record["controller_notification_sent"] = True
@@ -188,6 +210,14 @@ class Supervisor:
                 and value.get("training_started") is False
             ):
                 record["controller_acknowledged"] = True
+                # Receipt acknowledgement cannot terminate a scientific Controller
+                # cycle.  In particular, a legacy dummy acknowledgement is a
+                # conflict signal, never completion authority.
+                if record.get("round_class") == ROUND_CLASS_SCIENTIFIC:
+                    record["controller_cycle_complete"] = False
+                    if value.get("action") == "DUMMY_NOTIFICATION_ACK_ONLY":
+                        record["scientific_state_conflict_pending"] = True
+                    continue
                 record["controller_cycle_complete"] = True
                 acknowledged.append(round_id)
         if acknowledged:
@@ -220,7 +250,7 @@ class Supervisor:
             record["controller_ack_path"] = str(acknowledgement.resolve())
             self.save()
 
-            if record.get("scientific_round"):
+            if record.get("round_class") == ROUND_CLASS_SCIENTIFIC:
                 prompt = (
                     f"ARC2 scientific terminal receipt {digest}. Read {notification.resolve()} and its terminal receipt. "
                     f"Write one acknowledgement JSON to {acknowledgement.resolve()} with the receipt identity, then resume the durable scientific execution state. "
@@ -251,6 +281,129 @@ class Supervisor:
                 record["controller_wakeup_error"] = error
             self.save()
         return woken
+
+    def _round_contract_evidence(self, round_id: str, record: dict[str, Any], receipt: dict[str, Any]) -> tuple[str | None, str | None]:
+        """Return a declared contract path/hash without treating paths as identity."""
+        raw = receipt.get("round_contract_path") or record.get("round_contract_path")
+        candidates: list[Path] = [Path(raw)] if isinstance(raw, str) else []
+        repo_root = Path(__file__).resolve().parents[2]
+        candidates.append(repo_root / "experiments" / "foundation_v2_reconstruction_and_targeted_repair_v1" / f"{round_id}_LAUNCH.json")
+        for candidate in candidates:
+            if candidate.is_file():
+                return str(candidate.resolve()), canonical_hash(candidate)
+        return None, None
+
+    def detect_scientific_state_conflicts(
+        self, receipt_root: Path, acknowledgement_dir: Path, escalation_dir: Path,
+        director_agent: str, herdr_timeout_seconds: int,
+    ) -> list[str]:
+        """Fail closed and wake Director once for scientific/dummy contradictions.
+
+        Receipt contract identity is authoritative; ``scientific_training_started``
+        records optimizer progress only.  Existing receipts and acknowledgements are
+        never rewritten.
+        """
+        conflicts: list[str] = []
+        escalation_dir.mkdir(parents=True, exist_ok=True)
+        existing = sorted(escalation_dir.glob("CONTROLLER_ESCALATION_REQUEST_*.json"))
+        numbers = []
+        for prior in existing:
+            try:
+                numbers.append(int(prior.stem.rsplit("_", 1)[1]))
+            except ValueError:
+                continue
+        next_number = max(numbers, default=0) + 1
+        for path in sorted(receipt_root.glob("ROUND_*/ROUND_*_TERMINAL_RECEIPT.json")):
+            try:
+                receipt = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            round_id = str(receipt.get("round_id", ""))
+            if not round_id:
+                continue
+            record = self.state["rounds"].get(round_id)
+            if not record:
+                continue
+            expected = round_class_from_contract(round_id, receipt)
+            if expected != ROUND_CLASS_SCIENTIFIC or record.get("scientific_state_conflict_reserved"):
+                continue
+            digest = canonical_hash(path)
+            notification_path = self.notification_dir / f"CONTROLLER_NOTIFICATION_{round_id}_{digest[:12]}.json"
+            notification: dict[str, Any] = {}
+            if notification_path.is_file():
+                try:
+                    notification = json.loads(notification_path.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError):
+                    notification = {"parse_failure": True}
+            observed = notification.get("round_class", "UNKNOWN")
+            acknowledgement = Path(record.get("controller_ack_path", acknowledgement_dir / f"CONTROLLER_ACK_{round_id}_{digest[:12]}.json"))
+            acknowledgement_value: dict[str, Any] = {}
+            if acknowledgement.is_file():
+                try:
+                    acknowledgement_value = json.loads(acknowledgement.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError):
+                    acknowledgement_value = {"parse_failure": True}
+            if acknowledgement_value.get("action") == "DUMMY_NOTIFICATION_ACK_ONLY":
+                observed = "ACK_ONLY"
+            conflict = observed in {ROUND_CLASS_DUMMY, ROUND_CLASS_SMOKE, ROUND_CLASS_INFRASTRUCTURE, "ACK_ONLY"}
+            # A newly implemented notification can be SCIENTIFIC or UNKNOWN; UNKNOWN
+            # is not itself a contradiction so old receipts remain auditable.
+            if not conflict:
+                continue
+            contract_path, contract_hash = self._round_contract_evidence(round_id, record, receipt)
+            request = escalation_dir / f"CONTROLLER_ESCALATION_REQUEST_{next_number:03d}.json"
+            next_number += 1
+            controller_state = "CLOSED" if record.get("controller_cycle_complete") else "UNKNOWN"
+            payload = {
+                "schema_version": 1,
+                "status": "ESCALATION_REQUESTED",
+                "escalation_type": "SCIENTIFIC_STATE_CONFLICT",
+                "round_id": round_id,
+                "protocol_id": receipt.get("protocol_id") or record.get("protocol_id"),
+                "expected_round_class": expected,
+                "observed_round_class": observed,
+                "round_config_path": contract_path,
+                "round_config_sha256": contract_hash,
+                "remote_receipt_path": str(path.resolve()),
+                "remote_receipt_sha256": digest,
+                "supervisor_notification_path": str(notification_path.resolve()) if notification_path.exists() else None,
+                "supervisor_notification_sha256": canonical_hash(notification_path) if notification_path.is_file() else None,
+                "current_controller_state": controller_state,
+                "expected_controller_state": "WAITING_REMOTE_JOB_OR_SCIENTIFIC_CONTINUATION",
+                "optimizer_steps": receipt.get("optimizer_steps", 0),
+                "scientific_training_started": receipt.get("scientific_training_started") is True,
+                "gpu_seconds_charged": receipt.get("scientific_gpu_training_seconds", 0.0),
+                "exact_inconsistency": "SCIENTIFIC_ROUND_RECEIVED_DUMMY_OR_ACK_ONLY_CONTROLLER_PATH",
+                "requested_decision": "REQUIRE_INFRA_REPAIR_OR_SAFE_RETRY_DECISION",
+                "preserve_existing_round_identity": True,
+                "do_not_launch_gpu_job": True,
+            }
+            atomic_json(request, payload)
+            record.update({
+                "scientific_state_conflict_reserved": True,
+                "scientific_state_conflict_request_path": str(request.resolve()),
+                "scientific_state_conflict_round_class": {"expected": expected, "observed": observed},
+                "director_escalation_reserved": True,
+                "director_escalation_request_path": str(request.resolve()),
+                "director_escalation_reason": ["SCIENTIFIC_STATE_CONFLICT"],
+                "director_escalation_wakeup_count": 0,
+            })
+            self.save()
+            prompt = (
+                f"ARC2 SCIENTIFIC_STATE_CONFLICT for round {round_id}. Read {request.resolve()} and issue a structured Director directive. "
+                "Do not authorize a retry or launch until the conflict is resolved."
+            )
+            code, error = prompt_controller(["herdr", "agent", "prompt", director_agent, prompt], herdr_timeout_seconds)
+            record["director_escalation_cli_exit_code"] = code
+            if code == 0:
+                record["director_escalation_status"] = "SENT"
+                record["director_escalation_wakeup_count"] = 1
+                conflicts.append(round_id)
+            else:
+                record["director_escalation_status"] = "DELIVERY_UNKNOWN_FAIL_CLOSED"
+                record["director_escalation_error"] = error
+            self.save()
+        return conflicts
 
     @staticmethod
     def _valid_director_response(
@@ -672,6 +825,7 @@ def main() -> int:
         directive_acknowledgements: list[str] = []
         directive_resumes: list[str] = []
         controller_escalations: list[str] = []
+        scientific_state_conflicts: list[str] = []
         if args.controller_agent:
             woken = supervisor.wake_controller_once(
                 notified,
@@ -680,6 +834,11 @@ def main() -> int:
                 args.herdr_timeout_seconds,
             )
             acknowledged = supervisor.acknowledge_controller_cycles(args.controller_ack_dir)
+            if args.director_agent:
+                scientific_state_conflicts = supervisor.detect_scientific_state_conflicts(
+                    args.receipt_root, args.controller_ack_dir, args.controller_escalation_dir,
+                    args.director_agent, args.herdr_timeout_seconds,
+                )
             if args.directive_dir:
                 directive_notifications = supervisor.reconcile_directives(
                     args.directive_dir, args.director_response_dir,
@@ -706,6 +865,7 @@ def main() -> int:
             "director_acknowledgements": directive_acknowledgements,
             "director_resumes": directive_resumes,
             "controller_escalations": controller_escalations,
+            "scientific_state_conflicts": scientific_state_conflicts,
         }, sort_keys=True), flush=True)
         if args.poll_seconds is None:
             return 0

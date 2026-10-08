@@ -131,6 +131,57 @@ class ControllerDirectiveCycleTest(unittest.TestCase):
             record = Supervisor(state_path, note).state["directives"][directive_id]
             self.assertEqual(1, record["director_escalation_wakeup_count"])
 
+    def test_scientific_state_conflict_escalates_once_without_downgrading_round(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw); receipts = root / "receipts"; notes = root / "notes"; acks = root / "acks"; escalation = root / "escalations"
+            scientific = "RECONSTRUCTED_FOUNDATION_V2_V1_TEST"
+            contract = root / "ROUND_CONFIG.json"
+            write(contract, {"round_id": scientific, "round_class": "SCIENTIFIC", "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1"})
+            receipt = receipts / f"ROUND_{scientific}" / f"ROUND_{scientific}_TERMINAL_RECEIPT.json"
+            write(receipt, {"round_id": scientific, "status": "TRAIN_FAILED", "round_class": "SCIENTIFIC", "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1", "scientific_training_started": False, "optimizer_steps": 0, "scientific_gpu_training_seconds": 0.0, "round_contract_path": str(contract)})
+            supervisor = Supervisor(root / "state.json", notes)
+            self.assertEqual([scientific], supervisor.reconcile(receipts))
+            digest = hashlib.sha256(receipt.read_bytes()).hexdigest()
+            ack = acks / f"CONTROLLER_ACK_{scientific}_{digest[:12]}.json"
+            write(ack, {"round_id": scientific, "terminal_receipt_hash": digest, "controller_role": "arc-controller", "acknowledged": True, "training_started": False, "action": "DUMMY_NOTIFICATION_ACK_ONLY"})
+            supervisor.state["rounds"][scientific]["controller_ack_path"] = str(ack); supervisor.save()
+            self.assertEqual([], supervisor.acknowledge_controller_cycles(acks))
+            self.assertFalse(supervisor.state["rounds"][scientific]["controller_cycle_complete"])
+            with patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")) as prompt:
+                self.assertEqual([scientific], supervisor.detect_scientific_state_conflicts(receipts, acks, escalation, "arc-director", 1))
+                self.assertEqual([], supervisor.detect_scientific_state_conflicts(receipts, acks, escalation, "arc-director", 1))
+                self.assertEqual(1, prompt.call_count)
+            requests = list(escalation.glob("CONTROLLER_ESCALATION_REQUEST_*.json"))
+            self.assertEqual(1, len(requests))
+            conflict = json.loads(requests[0].read_text(encoding="utf-8"))
+            self.assertEqual("SCIENTIFIC_STATE_CONFLICT", conflict["escalation_type"])
+            self.assertEqual("SCIENTIFIC", conflict["expected_round_class"])
+            self.assertEqual("ACK_ONLY", conflict["observed_round_class"])
+            self.assertEqual(0.0, conflict["gpu_seconds_charged"])
+            restarted = Supervisor(root / "state.json", notes)
+            with patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")):
+                self.assertEqual([], restarted.detect_scientific_state_conflicts(receipts, acks, escalation, "arc-director", 1))
+            # A genuine smoke acknowledgement is still terminal and never wakes Director.
+            smoke = "INFRA_SMOKE_TEST"; smoke_receipt = receipts / f"ROUND_{smoke}" / f"ROUND_{smoke}_TERMINAL_RECEIPT.json"
+            write(smoke_receipt, {"round_id": smoke, "status": "SUCCESS", "round_class": "SMOKE", "protocol_id": "INFRA_SMOKE", "scientific_training_started": False})
+            restarted.reconcile(receipts)
+            smoke_digest = hashlib.sha256(smoke_receipt.read_bytes()).hexdigest()
+            smoke_ack = acks / f"CONTROLLER_ACK_{smoke}_{smoke_digest[:12]}.json"
+            write(smoke_ack, {"round_id": smoke, "terminal_receipt_hash": smoke_digest, "controller_role": "arc-controller", "acknowledged": True, "training_started": False, "action": "DUMMY_NOTIFICATION_ACK_ONLY"})
+            restarted.state["rounds"][smoke]["controller_ack_path"] = str(smoke_ack); restarted.save()
+            self.assertEqual([smoke], restarted.acknowledge_controller_cycles(acks))
+            with patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")):
+                self.assertEqual([], restarted.detect_scientific_state_conflicts(receipts, acks, escalation, "arc-director", 1))
+            # A normal scientific receipt remains a scientific continuation; it is
+            # neither converted to an ACK-only completion nor escalated.
+            normal = "RECONSTRUCTED_FOUNDATION_V2_V1_NORMAL"; normal_receipt = receipts / f"ROUND_{normal}" / f"ROUND_{normal}_TERMINAL_RECEIPT.json"
+            write(normal_receipt, {"round_id": normal, "status": "TRAIN_FAILED", "round_class": "SCIENTIFIC", "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1", "scientific_training_started": False})
+            restarted.reconcile(receipts)
+            self.assertEqual("SCIENTIFIC", restarted.state["rounds"][normal]["round_class"])
+            self.assertFalse(restarted.state["rounds"][normal].get("controller_cycle_complete", False))
+            with patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")):
+                self.assertEqual([], restarted.detect_scientific_state_conflicts(receipts, acks, escalation, "arc-director", 1))
+
     def test_scientific_terminal_receipt_is_not_routed_as_dummy_smoke(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw); receipts = root / "receipts"; notes = root / "notes"; acks = root / "acks"
