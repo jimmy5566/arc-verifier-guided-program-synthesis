@@ -1,0 +1,51 @@
+{
+  "brief_id": "TARGETED_REPAIR_R2_COMPLETION_REVIEW_V1",
+  "forbidden_actions": [
+    "do not start R3 automatically",
+    "do not alter R2 result or gates",
+    "do not open FINAL_AUDIT"
+  ],
+  "frozen_conditions": [
+    "R1-selected final parent, R2 0.45/0.30/0.25 mix, V7 evaluation surfaces, Batch32 adaptive decoder/scorer",
+    "RETENTION_SENTINEL remains evaluation-only",
+    "FINAL_AUDIT remains unopened"
+  ],
+  "frozen_results": {
+    "atomic": {
+      "R2": 39,
+      "V7": 45,
+      "net_paired_fixes": -6
+    },
+    "composition": {
+      "R2": 35,
+      "V7": 31,
+      "net_paired_fixes": 4
+    },
+    "retention": {
+      "R2": 68,
+      "V7": 70,
+      "net_paired_fixes": -2
+    },
+    "target_dev": {
+      "R2": 74,
+      "V7": 76,
+      "net_paired_fixes": -2
+    }
+  },
+  "gates": {
+    "composition_preservation": "PASS",
+    "retention_recovery": "FAIL"
+  },
+  "r2_gate_result": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_paired_evaluation_v1/R2_PAIRED_GATE_RESULT.json",
+    "sha256": "9e734b1469a2156984cedd808b3756dbfcb74040d88d8f4d31202dfe5c095de3"
+  },
+  "r2_summary": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_paired_evaluation_v1/R2_PAIRED_EVALUATION_SUMMARY_V1.json",
+    "sha256": "90d02227ab62516aab39ae3d1960144fe9f0ddfe94ac9503d74947fbde418208"
+  },
+  "requested_decision": "stage-level scientific disposition only",
+  "schema_version": 1,
+  "scientific_question": "R2 met the frozen composition-preservation gate but failed retention recovery and regressed atomic capability. What is the smallest scientifically valid next action: controlled stop, a materially revised R3 curriculum, or another specified action?",
+  "scope": "TARGETED_REPAIR_R2_TO_R3_MAJOR_STAGE_BOUNDARY"
+}

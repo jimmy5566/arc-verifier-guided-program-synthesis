@@ -1,0 +1,47 @@
+{
+  "deltas": {
+    "RETENTION_SENTINEL": {
+      "baseline_exact": 70,
+      "candidate_exact": 68,
+      "episodes": 96,
+      "net_paired_fixes": -2,
+      "paired_fixes_n01": 3,
+      "paired_harms_n10": 5
+    },
+    "TARGETED_COMPOSITION": {
+      "baseline_exact": 31,
+      "candidate_exact": 35,
+      "episodes": 96,
+      "net_paired_fixes": 4,
+      "paired_fixes_n01": 10,
+      "paired_harms_n10": 6
+    },
+    "TARGETED_EVALUATION": {
+      "baseline_exact": 45,
+      "candidate_exact": 39,
+      "episodes": 96,
+      "net_paired_fixes": -6,
+      "paired_fixes_n01": 5,
+      "paired_harms_n10": 11
+    }
+  },
+  "evaluation": {
+    "episodes": 288,
+    "gate_result_sha256": "9e734b1469a2156984cedd808b3756dbfcb74040d88d8f4d31202dfe5c095de3",
+    "result_sha256": "505841894ceb468b1623754c80cdae3fa359c66340c311e278d987749b219cb3",
+    "terminal_evidence_sha256": "1f67966ef5f81c2e0f942580348a84175332000e3d680f58e474eed067a7c497"
+  },
+  "failed_gate": "retention_recovery",
+  "final_audit_opened": false,
+  "interpretation": "R2 preserved composition improvement but failed the preregistered retention-recovery requirement and regressed independent atomic capability; no automatic R3 launch.",
+  "prospective_gate_status": "FAIL",
+  "round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_004",
+  "schema_version": 1,
+  "status": "COMPLETE_GATE_FAILED",
+  "training": {
+    "optimizer_steps": 191,
+    "processed_tokens": 501163,
+    "scientific_gpu_training_seconds": 514.223645461,
+    "terminal_receipt_sha256": "341ee2213abc0de3784aa1ca72c0817862abdf9d2964816d6bd8a1fcdfd63223"
+  }
+}

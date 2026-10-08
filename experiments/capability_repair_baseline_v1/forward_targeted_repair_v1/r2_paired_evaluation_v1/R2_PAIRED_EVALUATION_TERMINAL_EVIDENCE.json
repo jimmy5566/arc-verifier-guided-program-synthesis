@@ -1,0 +1,19 @@
+{
+  "baseline_inference_seconds": 672.3488147603348,
+  "batching_validation": {
+    "canonical_agreement": 0.78125,
+    "canonical_agreement_status": "AUDIT_ONLY",
+    "exact_grid_rate_delta": 0.03125,
+    "parse_valid_rate_delta": 0.0,
+    "status": "PASS"
+  },
+  "candidate_result_sha256": "505841894ceb468b1623754c80cdae3fa359c66340c311e278d987749b219cb3",
+  "completed_episode_count": 288,
+  "expected_episode_count": 288,
+  "final_audit_accessed": false,
+  "remote_terminal_receipt_path": "/workspace/arc2/forward_targeted_repair_v1_004_evaluation_batch32/TERMINAL_RECEIPT.json",
+  "schema_version": 2,
+  "scientific_training_started": false,
+  "source_commit": "6f58f6a85f196091510efd04e473a1046a1d1459",
+  "status": "COLLECTED_PASS"
+}

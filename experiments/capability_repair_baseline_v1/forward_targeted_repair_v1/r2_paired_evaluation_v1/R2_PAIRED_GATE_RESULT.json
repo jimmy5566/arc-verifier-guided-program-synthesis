@@ -1,0 +1,60 @@
+{
+  "baseline": {
+    "result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+  },
+  "candidate": {
+    "result_sha256": "505841894ceb468b1623754c80cdae3fa359c66340c311e278d987749b219cb3"
+  },
+  "final_audit_opened": false,
+  "paired_by_role": {
+    "RETENTION_SENTINEL": {
+      "baseline_exact": 70,
+      "candidate_exact": 68,
+      "episodes": 96,
+      "net_paired_fixes": -2,
+      "paired_fixes_n01": 3,
+      "paired_harms_n10": 5
+    },
+    "TARGETED_COMPOSITION": {
+      "baseline_exact": 31,
+      "candidate_exact": 35,
+      "episodes": 96,
+      "net_paired_fixes": 4,
+      "paired_fixes_n01": 10,
+      "paired_harms_n10": 6
+    },
+    "TARGETED_EVALUATION": {
+      "baseline_exact": 45,
+      "candidate_exact": 39,
+      "episodes": 96,
+      "net_paired_fixes": -6,
+      "paired_fixes_n01": 5,
+      "paired_harms_n10": 11
+    }
+  },
+  "paired_by_surface": {
+    "RETENTION_SENTINEL": {
+      "baseline_exact": 70,
+      "candidate_exact": 68,
+      "episodes": 96,
+      "net_paired_fixes": -2,
+      "paired_fixes_n01": 3,
+      "paired_harms_n10": 5
+    },
+    "TARGET_DEV": {
+      "baseline_exact": 76,
+      "candidate_exact": 74,
+      "episodes": 192,
+      "net_paired_fixes": -2,
+      "paired_fixes_n01": 15,
+      "paired_harms_n10": 17
+    }
+  },
+  "prospective_r2_gate_status": "FAIL",
+  "prospective_r2_gates": {
+    "composition_preservation": true,
+    "retention_recovery": false
+  },
+  "schema_version": 1,
+  "status": "COMPLETE"
+}
