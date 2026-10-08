@@ -1,0 +1,33 @@
+{
+  "binding_sha256": "8d1bb616acd4ade21c00f4eb730e551b5adce06053ad88a95371b8615eb26290",
+  "contract_sha256": "ce4e86956557ed218d4903adf78e3cb2da8135a4756a1ac97255f4f370bdaca0",
+  "directive_id": "DIRECTOR_DIRECTIVE_017",
+  "gate_sha256": "9b0661db946d61ec44b53e98399c9a4875ce7e5badf895694199b6d4effdfe3d",
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "remaining_required_before_dispatch": [
+    "future qualifying Director directive must bind new protocol, round, contract SHA, nonce, and exact launch source commit",
+    "repeat final preflight after that directive checkout; gate then remains atomic single-use"
+  ],
+  "remote_preflight": {
+    "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_001/preflight/FINAL_PREFLIGHT.json",
+    "sha256": "df3e30e489b029864c398932bbeaf7595fd43d604221b3238df3279f430c3fba",
+    "status": "PASS"
+  },
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_001",
+  "runtime_imports": {
+    "capability_pilot_2m_v1": "PASS_WITH_PYTHONPATH_/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src",
+    "torch_transformers_peft_bitsandbytes": "PASS"
+  },
+  "schema_version": 1,
+  "scientific_gpu_seconds": 0.0,
+  "scientific_training_started": false,
+  "source_parity": {
+    "local_head": "3904a90db779862d96b519028599d214c607a4b7",
+    "origin_head": "3904a90db779862d96b519028599d214c607a4b7",
+    "pass": true,
+    "runpod_head": "3904a90db779862d96b519028599d214c607a4b7"
+  },
+  "status": "PASS_READ_ONLY_PREAUTHORIZATION_PREFLIGHT"
+}
