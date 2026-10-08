@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_FORWARD_BASELINE_DECODER_CHARACTERIZATION_V2",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "TARGET_BLIND_DECODER_CHARACTERIZATION_12_ITEM_V1",
+  "brief_id": "FORWARD_BASELINE_DECODER_CHARACTERIZATION_REVIEW_V2",
+  "reviewed_brief_sha256": "3c19fc159bf072323f5f6bb3251d183860a8f276d411ae640ebd0d9734d0f325",
+  "root_cause": {
+    "code": "CHARACTERIZATION_PACKAGE_NOT_EXECUTABLE_AND_NOT_TARGET_BLIND",
+    "finding": "The token-level parser contract is coherent, but the submitted launch package is not a valid executable authorization package. Its command omits --launch-contract and --governor-review, while the bound collector rejects every non-mock invocation without --launch-contract. The package supplies only a nonce hash, with no nonce path or atomic consumption mechanism. TOKENIZER_PREFLIGHT_RECEIPT.json is malformed JSON because it ends with a literal backslash-n sequence. The collector also calls expected(record) and writes exact_grid_match for each selected episode, which reads held-out outputs during the purported target-blind characterization. Finally, the package binds worker commit 0a5e2b2ca63c71d31bd6737e8beb7e28c7121d1d while current local, upstream, and origin are 4523b65636c8eabe4b79cd35fac0ab153d0e951a, and no exact RunPod parity or immutable launch-contract receipt is supplied."
+  },
+  "smallest_repair": [
+    {
+      "step": 1,
+      "requirement": "Preserve the submitted V2 brief, launch package, malformed preflight receipt, binding audit, cohort manifest, and parser contract as rejected evidence. Do not edit them in place, reuse their nonce, or use their output root."
+    },
+    {
+      "step": 2,
+      "requirement": "Separate decoder characterization from correctness scoring. The 12-item characterization worker must never read held-out test outputs, call expected(record), compute exact_grid_match, or emit target-derived fields. It may emit only target-blind token and parsing evidence: episode identity, role, prompt hash, generated token IDs and length, termination status, EOS/pad observations, content-token IDs, parse reason, parse-valid flag, canonical prediction hash, model/checkpoint identity, parser-contract identity, and runtime metadata."
+    },
+    {
+      "step": 3,
+      "requirement": "Freeze one real immutable launch contract on the final source commit. Bind this reviewed brief hash, the 12-item cohort hash and deterministic selection proof, parser contract hash, complete base and adapter manifests, exact dataset hashes, worker and dependency hashes, interpreter, complete argv and environment, runtime cap, fresh nonce path and hash, fresh output and receipt paths, and an external Governor-review path."
+    },
+    {
+      "step": 4,
+      "requirement": "Make the exact frozen command use --launch-contract and --governor-review. Before model import, authenticate a CONTINUE_CONTROLLER review against every launch identity, recompute contract and manifest identities, enforce exact argv/environment/source/data/cohort/parser/checkpoint bindings, verify fresh outputs, and atomically consume the nonce exactly once. Emit a terminal failure receipt for any admitted launch failure."
+    },
+    {
+      "step": 5,
+      "requirement": "Regenerate the tokenizer preflight receipt as valid UTF-8 JSON with LF termination and bind its new SHA256. It must verify digit IDs 0..9, newline ID 10, EOS ID 15, PAD ID 13, tokenizer file hashes, parser and collector hashes, cohort cardinality and role balance, no target access, no model load, and the exact final source commit."
+    },
+    {
+      "step": 6,
+      "requirement": "Expand CPU-only tests beyond the three parser fixtures. Test exact CLI parseability, missing or mismatched Governor review, contract/manifest/source/argv/environment substitution, malformed preflight rejection, cohort hash and deterministic-selection mismatch, nonce replay, output collision, forbidden target access, absence of exact_grid_match, token-evidence completeness, and terminal failure receipts."
+    },
+    {
+      "step": 7,
+      "requirement": "Push the final additive package on the existing non-main branch, verify local=origin=RunPod at one exact commit, run a fresh PASS_NO_MODEL_IMPORT preflight against the exact contract, and submit a new hashed brief for another Governor review. Do not execute the 12-item characterization before that review."
+    }
+  ],
+  "frozen_conditions": {
+    "baseline_model_id": "CAPABILITY_REPAIR_BASELINE_V1",
+    "baseline_identity_sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+    "historical_foundation_v2_equivalence_required": false,
+    "v6_interpretation": "MEASUREMENT_INVALID_NOT_ESTABLISHED",
+    "cohort_id": "ARC2_DECODER_CHARACTERIZATION_COHORT_V1",
+    "cohort_items": 12,
+    "cohort_role_counts": {
+      "TARGETED_EVALUATION": 4,
+      "TARGETED_COMPOSITION": 4,
+      "RETENTION_SENTINEL": 4
+    },
+    "cohort_manifest_sha256": "b82e408cf0c98f7f31049046b5cb36f2d315bbfcfee46f17446b5bab5c950acf",
+    "parser_contract_id": "ARC2_TOKEN_GRID_EXTRACTION_V1",
+    "parser_contract_sha256": "07075a098dd26984213c39e9a18a5e7c42c13fab098f905d5946646541e864fa",
+    "target_dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97",
+    "retention_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+    "checkpoint_manifest_file_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "target_blind": true,
+    "no_gold_leakage": true,
+    "final_audit_opened": false,
+    "scientific_training_started": false,
+    "full_288_rerun_authorized": false
+  },
+  "forbidden_actions": [
+    "DO_NOT_EXECUTE_THE_SUBMITTED_COMMAND_TEMPLATE",
+    "DO_NOT_REUSE_THE_SUBMITTED_NONCE_OR_OUTPUT_ROOT",
+    "DO_NOT_TREAT_THE_MALFORMED_PREFLIGHT_RECEIPT_AS_VALID_EVIDENCE",
+    "DO_NOT_READ_HELD_OUT_OUTPUTS_OR_COMPUTE_EXACT_GRID_MATCH_DURING_CHARACTERIZATION",
+    "DO_NOT_SELECT_OR_TUNE_THE_PARSER_USING_TARGET_CORRECTNESS",
+    "DO_NOT_RERUN_ALL_288_EPISODES",
+    "DO_NOT_INTERPRET_THE_V6_ALL_ZERO_PROFILE_AS_MODEL_INCAPACITY",
+    "DO_NOT_OPEN_FINAL_AUDIT",
+    "DO_NOT_CONSTRUCT_AN_OPTIMIZER_TRAIN_OR_MUTATE_WEIGHTS",
+    "DO_NOT_START_TARGETED_REPAIR_OR_ANY_AUTOMATIC_FOLLOW_ON_STAGE",
+    "DO_NOT_LOAD_THE_MODEL_OR_START_GPU_INFERENCE_UNDER_THIS_REVIEW",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": true,
+  "review_trigger": "A new immutable brief binding a valid target-blind 12-item launch contract, corrected worker, valid tokenizer preflight, expanded CPU tests, fresh nonce and outputs, and exact local=origin=RunPod PASS_NO_MODEL_IMPORT evidence.",
+  "review_findings": [
+    {
+      "area": "brief_and_package_identity",
+      "status": "PASS",
+      "finding": "The brief matches the required SHA256 3c19fc159bf072323f5f6bb3251d183860a8f276d411ae640ebd0d9734d0f325. LAUNCH_PACKAGE.json and V1_RESPONSE_BINDING_AUDIT.json match their cited hashes, and the prior Governor response remains byte-identical."
+    },
+    {
+      "area": "token_parser",
+      "status": "PASS_CPU_ONLY",
+      "finding": "ARC2_TOKEN_GRID_EXTRACTION_V1 implements terminal-pad removal, exactly one terminal EOS removal, digit/newline-only content, and strict rectangular-grid parsing. Its three focused CPU unit tests pass."
+    },
+    {
+      "area": "preflight_integrity",
+      "status": "FAIL_HARD_STOP",
+      "finding": "TOKENIZER_PREFLIGHT_RECEIPT.json has the cited byte hash but is not valid JSON because of a literal trailing backslash-n. It cannot serve as a machine-readable preflight receipt."
+    },
+    {
+      "area": "launch_enforcement",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The exact submitted command lacks the launch contract and Governor review required by the worker and has no nonce path or consumption step. A direct invocation reproduces IMMUTABLE_LAUNCH_CONTRACT_REQUIRED before model import."
+    },
+    {
+      "area": "target_blindness",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The worker's output_row reads each held-out test output through expected(record) and computes exact_grid_match. This violates the approved target-blind characterization boundary even though cohort selection itself is target-blind."
+    },
+    {
+      "area": "source_provenance",
+      "status": "FAIL_NOT_FINAL",
+      "finding": "The package binds worker source commit 0a5e2b2ca63c71d31bd6737e8beb7e28c7121d1d, while current local, upstream, and origin are 4523b65636c8eabe4b79cd35fac0ab153d0e951a. No exact RunPod parity receipt for an executable final package was submitted."
+    }
+  ],
+  "reviewed_launch_package_sha256": "49d27e699bc141b7c0a0a71f34be61b72b15b7b188bad684ae3aa173433b775f",
+  "reviewed_binding_audit_sha256": "287c7d77c42f4226340a9359eadf7107f2c0d851b21516f1f608caf190cc0d72",
+  "reviewed_previous_response_sha256": "404060499670c5be0d65cb127c36cbfe6f55ac5fd65ea5492377eb375d270e57",
+  "cpu_only_remediation_authorized": true,
+  "decoder_characterization_execution_authorized": false,
+  "full_baseline_rerun_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "scientific_training_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false
+}
