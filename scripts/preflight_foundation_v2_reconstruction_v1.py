@@ -70,7 +70,7 @@ def main() -> int:
     binding = json.loads(raw.decode("utf-8"))
     if binding.get("schema_version") != 1 or binding.get("status") != "FROZEN_PENDING_PREFLIGHT":
         raise RuntimeError("INVALID_RECONSTRUCTION_LAUNCH_BINDING")
-    source = binding["source"]
+    source = binding["source_provenance"]
     if args.expected_source_sha:
         here = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
         if here != args.expected_source_sha:
