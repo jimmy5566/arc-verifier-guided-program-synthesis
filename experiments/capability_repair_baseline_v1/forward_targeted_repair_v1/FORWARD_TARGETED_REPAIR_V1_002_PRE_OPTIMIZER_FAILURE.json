@@ -1,0 +1,16 @@
+{
+  "cause": "reentrant gradient checkpointing lacked input-gradient bridge; backward graph was detached before first optimizer step",
+  "optimizer_steps": 0,
+  "preserved_remote_run_root": "/workspace/arc2/forward_targeted_repair_v1_002",
+  "processed_tokens": 0,
+  "remote_ledger_sha256": "3f640576fb9395fdf89ad57583322068bb16e672ee375b8d8a3916283bed1398",
+  "remote_terminal_receipt_path": "/workspace/arc2/forward_targeted_repair_v1_002/runtime/TERMINAL_RECEIPT.json",
+  "remote_terminal_receipt_sha256": "fbf50a5f561b0667ec7b7906139e9efe0914486815572b6701b7e9e4f24c77eb",
+  "reported_wrapper_gpu_seconds": 0.765467616,
+  "round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_002",
+  "schema_version": 1,
+  "scientific_condition_changed": false,
+  "scientific_gpu_training_seconds": 0.0,
+  "status": "INFRA_PRE_OPTIMIZER_FAILURE",
+  "successor_round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003"
+}

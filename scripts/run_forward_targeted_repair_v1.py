@@ -68,6 +68,10 @@ def main():
   model=AutoModelForCausalLM.from_pretrained(manifest['base_path'],local_files_only=True,torch_dtype=torch.bfloat16,attn_implementation='sdpa').to('cuda:0')
   model=PeftModel.from_pretrained(model,manifest['adapter_path'],is_trainable=True);params=[p for p in model.parameters() if p.requires_grad]
   if not params or any(p.requires_grad for n,p in model.named_parameters() if 'lora_' not in n):raise RuntimeError('LORA_PARTITION_FAIL')
+  # Re-entrant gradient checkpointing needs at least one input activation to
+  # require gradients.  The base is frozen, so explicitly enable this bridge
+  # before the first forward pass; otherwise every LoRA loss is detached.
+  model.enable_input_require_grads()
   model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={'use_reentrant':True});model.train();opt=bnb.optim.PagedAdamW8bit(params,lr=float(c['learning_rate']))
   start_ns=time.monotonic_ns();deadline=time.monotonic()+reserve;acc=int(c['gradient_accumulation']);steps=0;done=0;supervised=0;capped=False
   for offset in range(0,len(work),acc):
@@ -87,7 +91,11 @@ def main():
  except Exception as e:
   terminal.update({'status':'PRE_OPTIMIZER_FAILURE' if start_ns is None else 'EARLY_RUNTIME_FAILURE','error':f'{type(e).__name__}:{e}','traceback':traceback.format_exc(limit=4)})
  finally:
-  stop_ns=time.monotonic_ns();seconds=0.0 if start_ns is None else (stop_ns-start_ns)/1e9
+  stop_ns=time.monotonic_ns()
+  # A failed forward/backward before the first optimizer update is an
+  # infrastructure failure, not scientific training.  Keep elapsed wrapper
+  # time out of the cumulative scientific GPU ledger.
+  seconds=0.0 if start_ns is None or int(terminal.get('optimizer_steps',0))==0 else (stop_ns-start_ns)/1e9
   terminal['scientific_gpu_training_seconds']=seconds;atomic(runtime/'TERMINAL_RECEIPT.json',terminal)
   with ledger.open('a',encoding='utf8') as f:f.write(json.dumps({'schema_version':1,'record_type':'GPU_OPTIMIZER_INTERVAL','round_id':c['round_id'],'gpu_optimizer_seconds':seconds,'receipt_sha256':sha(runtime/'TERMINAL_RECEIPT.json')},sort_keys=True)+'\n')
   atomic(runtime/'GPU_LEDGER_SNAPSHOT.json',{'cap_seconds':cap,'historical_gpu_seconds':hist,'this_round_gpu_seconds':seconds,'cumulative_gpu_seconds':hist+seconds,'remaining_seconds':cap-hist-seconds})
