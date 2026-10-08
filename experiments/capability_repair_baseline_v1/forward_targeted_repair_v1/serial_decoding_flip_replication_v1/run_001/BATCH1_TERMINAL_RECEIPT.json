@@ -1,0 +1,12 @@
+{
+  "completed_models": [
+    "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_FINAL",
+    "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_004_FINAL"
+  ],
+  "elapsed_seconds": 2121.3273287527263,
+  "model_loaded": true,
+  "optimizer_constructed": false,
+  "scientific_training_started": false,
+  "status": "COLLECTED_PASS"
+}

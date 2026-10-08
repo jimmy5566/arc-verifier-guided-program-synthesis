@@ -1,0 +1,19 @@
+{
+  "artifact": "V7_R1_R2_SERIAL_DECODING_FLIP_REPLICATION_V1_RUN_001",
+  "execution_source_commit": "605d941750217bbbb812b230b10c85977b8cbed8",
+  "final_audit_opened": false,
+  "optimizer_constructed": false,
+  "remote_run_root": "/workspace/arc2/targeted_repair_postmortem_v1/V7_R1_R2_SERIAL_DECODING_FLIP_REPLICATION_V1/run_001",
+  "result": {
+    "bytes": 886969,
+    "path": "BATCH1_RESULT.json",
+    "sha256": "e3ffb9d57402c3d4c570acb213b8b84e5c686350a809fd9202fe3b86cdf81b8b"
+  },
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "terminal_receipt": {
+    "bytes": 350,
+    "path": "BATCH1_TERMINAL_RECEIPT.json",
+    "sha256": "1c1214cfd1ddfdcc62799e1a187fb6d3223906caa431bc9da9943b28ccb2871c"
+  }
+}
