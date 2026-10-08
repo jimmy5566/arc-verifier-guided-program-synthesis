@@ -20,6 +20,7 @@ DIRECTOR_DECISIONS = {
     "REQUIRE_DIAGNOSTIC_REVIEW", "REQUIRE_INFRA_REPAIR", "PAUSE_SCIENTIFIC_EXPERIMENT",
     "STOP_CURRENT_TRACK", "NEW_SUBPROTOCOL_REQUIRED", "EMERGENCY_RECOVERY",
 }
+CONTROLLER_CYCLE_TERMINAL = {"CLOSED", "AUTHORIZED", "PAUSED", "STOPPED", "HARD_BLOCKED"}
 
 
 def canonical_hash(path: Path) -> str:
@@ -60,6 +61,18 @@ def prompt_controller(command: list[str], timeout: int) -> tuple[int, str]:
     if not isinstance(payload, dict):
         return 1, "HERDR_STRUCTURED_JSON_NOT_OBJECT"
     return 0, ""
+
+
+def controller_idle(agent: str, timeout: int) -> bool:
+    """Read Herdr's status only; the Supervisor never interprets science."""
+    completed = subprocess.run(["herdr", "agent", "get", agent], capture_output=True, check=False, timeout=timeout)
+    if completed.returncode != 0:
+        return False
+    try:
+        payload = json.loads(decode_structured_utf8(completed.stdout, "HERDR_AGENT_STATUS"))
+        return payload["result"]["agent"]["agent_status"] == "idle"
+    except (KeyError, TypeError, RuntimeError, json.JSONDecodeError):
+        return False
 
 
 def default_state() -> dict[str, Any]:
@@ -348,6 +361,41 @@ class Supervisor:
             self.save()
         return acknowledged
 
+    def resume_nonterminal_directive_cycles(self, cycle_state_path: Path, controller_agent: str, herdr_timeout_seconds: int, max_retries: int = 3) -> list[str]:
+        """Wake an idle Controller once to resume each durable non-terminal cycle."""
+        if not cycle_state_path.exists() or not controller_idle(controller_agent, herdr_timeout_seconds):
+            return []
+        try:
+            cycles = json.loads(cycle_state_path.read_text(encoding="utf-8")).get("directives", {})
+        except (OSError, json.JSONDecodeError):
+            return []
+        resumed: list[str] = []
+        for directive_id, cycle in cycles.items():
+            status = str(cycle.get("state", ""))
+            if status in CONTROLLER_CYCLE_TERMINAL or not status:
+                continue
+            record = self.state["directives"].get(directive_id)
+            if not record or record.get("directive_sha256") != cycle.get("directive_sha256"):
+                continue
+            attempts = int(record.get("controller_resume_attempts", 0))
+            # We only enter after Herdr reports the Controller idle. A prior
+            # sent recovery may therefore be retried, but never concurrently.
+            if attempts >= max_retries:
+                if attempts >= max_retries: record["controller_cycle_escalation_required"] = True
+                continue
+            record.update({"controller_resume_reserved": True, "controller_resume_attempts": attempts + 1, "controller_resume_state": status})
+            self.save()
+            prompt = (f"ARC2 Controller recovery: resume existing directive cycle {directive_id} from durable state {status}. "
+                      f"Do not create another acknowledgement. Read {cycle_state_path} and continue only unfinished steps for {cycle.get('directive_path')}. "
+                      "Do not start training without an authorizing directive.")
+            code, error = prompt_controller(["herdr", "agent", "prompt", controller_agent, prompt], herdr_timeout_seconds)
+            record["controller_resume_reserved"] = False
+            record["controller_resume_status"] = "SENT" if code == 0 else "DELIVERY_UNKNOWN_FAIL_CLOSED"
+            if code != 0: record["controller_resume_error"] = error
+            if code == 0: resumed.append(directive_id)
+            self.save()
+        return resumed
+
 
 def remote_shell(target: str, script: str, identity_file: str | None = None) -> str:
     """Run a tiny metadata-only script through RunPod's forced-PTY SSH gateway.
@@ -422,6 +470,7 @@ def main() -> int:
     parser.add_argument("--controller-ack-dir", type=Path)
     parser.add_argument("--directive-dir", type=Path)
     parser.add_argument("--director-response-dir", type=Path)
+    parser.add_argument("--controller-cycle-state", type=Path)
     parser.add_argument("--herdr-timeout-seconds", type=int, default=15)
     args = parser.parse_args()
     if args.poll_seconds is not None and args.poll_seconds <= 0:
@@ -450,6 +499,7 @@ def main() -> int:
         directive_notifications: list[str] = []
         directive_wakeups: list[str] = []
         directive_acknowledgements: list[str] = []
+        directive_resumes: list[str] = []
         if args.controller_agent:
             woken = supervisor.wake_controller_once(
                 notified,
@@ -466,6 +516,8 @@ def main() -> int:
                     directive_notifications, args.controller_agent, args.herdr_timeout_seconds,
                 )
                 directive_acknowledgements = supervisor.acknowledge_directives(args.director_response_dir)
+                cycle_state = args.controller_cycle_state or (args.notification_dir.parent / "controller_state" / "DIRECTIVE_CYCLE_STATE.json")
+                directive_resumes = supervisor.resume_nonterminal_directive_cycles(cycle_state, args.controller_agent, args.herdr_timeout_seconds)
         print(json.dumps({
             "status": "OK",
             "remote_status": remote_status,
@@ -475,6 +527,7 @@ def main() -> int:
             "director_notifications": directive_notifications,
             "director_wakeups": directive_wakeups,
             "director_acknowledgements": directive_acknowledgements,
+            "director_resumes": directive_resumes,
         }, sort_keys=True), flush=True)
         if args.poll_seconds is None:
             return 0

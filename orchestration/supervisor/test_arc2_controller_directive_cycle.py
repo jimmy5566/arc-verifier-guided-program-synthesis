@@ -62,6 +62,23 @@ class ControllerDirectiveCycleTest(unittest.TestCase):
             self.assertEqual("AUTHORIZED", final["route"])
             self.assertEqual(digest, hashlib.sha256(first.read_bytes()).hexdigest())
 
+    def test_idle_recovery_resumes_same_nonterminal_cycle_once(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw); state_path = root / "supervisor.json"; cycles = root / "cycles.json"; note = root / "notes"
+            directive_id = "DIRECTOR_DIRECTIVE_RECOVERY"; digest = "a" * 64
+            supervisor = Supervisor(state_path, note)
+            supervisor.state["directives"][directive_id] = {"directive_sha256": digest, "directive_processed": True}
+            supervisor.save()
+            write(cycles, {"schema_version": 1, "directives": {directive_id: {"directive_sha256": digest, "state": "REMEDIATION", "directive_path": "dummy"}}})
+            with patch("orchestration.supervisor.arc2_supervisor.controller_idle", return_value=True), patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")):
+                self.assertEqual([directive_id], supervisor.resume_nonterminal_directive_cycles(cycles, "arc-controller", 1))
+            restarted = Supervisor(state_path, note)
+            self.assertEqual(1, restarted.state["directives"][directive_id]["controller_resume_attempts"])
+            # Terminal transition prevents all restart reconciliation work.
+            payload = json.loads(cycles.read_text(encoding="utf-8")); payload["directives"][directive_id]["state"] = "CLOSED"; write(cycles, payload)
+            with patch("orchestration.supervisor.arc2_supervisor.controller_idle", return_value=True), patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")):
+                self.assertEqual([], restarted.resume_nonterminal_directive_cycles(cycles, "arc-controller", 1))
+
 
 if __name__ == "__main__":
     unittest.main()
