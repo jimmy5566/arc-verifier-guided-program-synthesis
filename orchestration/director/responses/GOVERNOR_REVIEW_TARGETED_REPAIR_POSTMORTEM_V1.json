@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_TARGETED_REPAIR_POSTMORTEM_V1",
+  "scientific_outcome": "RUN_ONE_DIAGNOSTIC_BEFORE_DECIDING",
+  "scope": "TARGETED_REPAIR_CURRENT_PROTOCOL_POSTMORTEM",
+  "brief_id": "TARGETED_REPAIR_POSTMORTEM_REVIEW_V1",
+  "reviewed_brief_sha256": "d75f6539c2244c5a43dc5a291b8f3be39216456430ff49d1e8c130446f7da807",
+  "reason": "The frozen per-family evidence contains potentially actionable stable improvements and regressions, but it also contains widespread episode-level churn under a decoding path whose Batch1-versus-Batch32 canonical agreement was only 0.78125. A new R3 curriculum cannot be justified until one bounded diagnostic distinguishes reproducible model-state interference from batch-sensitive decoding variation.",
+  "diagnostic": {
+    "diagnostic_id": "V7_R1_R2_SERIAL_DECODING_FLIP_REPLICATION_V1",
+    "count": 1,
+    "scientific_question": "Do the decisive family-level gains and harms observed under frozen Batch32 decoding reproduce under deterministic Batch1 decoding for the same already-scored development episodes?",
+    "models": [
+      "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_FINAL",
+      "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_004_FINAL"
+    ],
+    "cohort_definition": "Before model loading, derive and freeze one manifest containing every TARGET_DEV or RETENTION_SENTINEL episode whose V7/R1/R2 exact-correctness transition is neither 000 nor 111 in the preserved paired results. Preserve episode IDs, roles, families, source-result SHA256 values, manifest SHA256, and expected count. Do not add or remove episodes after generation begins.",
+    "execution": "Run exactly one deterministic Batch1 inference pass for each of the three frozen checkpoints on the same frozen cohort, using the unchanged tokenizer, target-blind token parser, scorer, prompt contract, max-new-token policy, and model manifests. This is one cross-check diagnostic, not three independently tunable experiments.",
+    "outputs": [
+      "per-episode V7/R1/R2 Batch1 token IDs and exact-correctness transitions",
+      "per-checkpoint Batch1-versus-preserved-Batch32 canonical agreement",
+      "per-family Batch1 net paired fixes for R1-versus-V7 and R2-versus-V7",
+      "a machine-readable decision-rule result and terminal receipt"
+    ],
+    "decision_rule": {
+      "decisive_benefit_families": {
+        "conditional action": "R1-versus-V7 > 0 and R2-versus-V7 > 0",
+        "inside/contains": "R1-versus-V7 > 0 and R2-versus-V7 > 0"
+      },
+      "decisive_harm_families": {
+        "same color": "R1-versus-V7 < 0 and R2-versus-V7 < 0",
+        "difference": "R1-versus-V7 < 0 and R2-versus-V7 < 0",
+        "overlay": "R2-versus-V7 < 0"
+      },
+      "minimum_canonical_agreement_per_checkpoint": 0.9375,
+      "pass": "PASS only if all five decisive family sign conditions hold under Batch1 and each checkpoint has at least 0.9375 Batch1-versus-preserved-Batch32 canonical agreement on the frozen diagnostic cohort.",
+      "on_pass": "Return for a new Governor review with a distinct R3 protocol proposal; do not launch R3 automatically.",
+      "on_fail": "Stop the targeted-repair approach. Do not propose R3 from the current family-weight evidence.",
+      "no_indeterminate_override": "A partial run, missing checkpoint, missing episode, identity mismatch, or unscorable output is FAIL for this decision rule and cannot be repaired by changing thresholds or cohort membership after execution."
+    }
+  },
+  "scientific_binding": {
+    "paired_analysis_sha256": "6dc3ba24762484d6514a35f51d6297461aa44efdc32dded060b68e52563f5283",
+    "human_table_sha256": "36b2a2e40883e8f2444328348bf40da647cc889bcceb712859a60fb7a5f3973f",
+    "terminal_scope_interpretation_sha256": "1da7a781814db81bdc159391e9521ebe8ea0a5f2cfa1d8b960b76dcf62520ed0",
+    "v7_result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5",
+    "r1_result_sha256": "fee020b8ac8aa81df2e5862b9af8b6f84819cc2c237099f25a9c5067abd9c8a9",
+    "r2_result_sha256": "505841894ceb468b1623754c80cdae3fa359c66340c311e278d987749b219cb3"
+  },
+  "required_pre_execution_freeze": [
+    "Freeze the exact diagnostic cohort manifest and its deterministic derivation receipt before model loading.",
+    "Bind complete V7, R1-final, and R2-final base-and-adapter manifests; exact decoder, scorer, collector, prompt, argv, environment, runtime cap, source provenance, fresh nonce, output paths, and terminal receipt paths.",
+    "Verify local, origin, and RunPod source parity and all model, data, cohort, and executable hashes before model import.",
+    "Require fresh non-overwriting outputs, no duplicate live job, and one-shot nonce consumption.",
+    "Run CPU-only fail-closed tests for cohort derivation, sign-rule evaluation, threshold immutability, partial-run rejection, and terminal-receipt generation."
+  ],
+  "frozen_conditions": {
+    "current_protocol_status": "TERMINAL_CONTROLLED_STOP",
+    "entire_experiment_terminal": false,
+    "v7_r1_r2_evidence": "BYTE_PRESERVED",
+    "retention_sentinel_usage": "EVALUATION_ONLY_NOT_TRAINING_DATA",
+    "target_dev_usage": "EVALUATION_ONLY_NOT_TRAINING_DATA",
+    "final_audit_opened": false,
+    "r3_started": false,
+    "cumulative_scientific_gpu_seconds": 4778.014247704957,
+    "remaining_scientific_gpu_seconds": 24021.985752295044
+  },
+  "forbidden_actions": [
+    "DO_NOT_START_R3",
+    "DO_NOT_TRAIN_OR_CONSTRUCT_AN_OPTIMIZER",
+    "DO_NOT_MUTATE_V7_R1_OR_R2_WEIGHTS",
+    "DO_NOT_CHANGE_THE_DIAGNOSTIC_COHORT_OR_DECISION_RULE_AFTER_MODEL_LOADING_OR_SCORING",
+    "DO_NOT_RUN_ANY_SECOND_DIAGNOSTIC",
+    "DO_NOT_USE_TARGET_DEV_OR_RETENTION_SENTINEL_AS_TRAINING_DATA",
+    "DO_NOT_ACCESS_FINAL_AUDIT",
+    "DO_NOT_REINTERPRET_PARTIAL_OR_FAILED_OUTPUT_AS_EVIDENCE",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": true,
+  "review_trigger": "One immutable complete or failed V7/R1/R2 serial-decoding flip-replication diagnostic package with the frozen cohort manifest, raw token evidence, family sign results, canonical-agreement results, decision-rule output, source/model identities, and terminal receipt.",
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "one_diagnostic_scientifically_authorized": true,
+  "gpu_inference_authorized": true,
+  "model_loading_authorized": true,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "r3_authorized": false,
+  "final_audit_authorized": false
+}

@@ -27,6 +27,9 @@ def load(p):
     return x
 def sha256_file(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+def director_decision(response):
+    """Accept the normal decision field and bounded postmortem outcomes."""
+    return response.get('decision') or response.get('scientific_outcome')
 def log(state, text):
     lp=state.get('_governor_log_path') or str(Path('.arc2-local/orchestration/logs/arc2_governor.log').resolve())
     Path(lp).parent.mkdir(parents=True, exist_ok=True)
@@ -75,14 +78,14 @@ def matching_director_responses(state_path, brief_sha256):
             data=json.loads(candidate.read_text(encoding='utf-8-sig'))
         except (OSError, json.JSONDecodeError):
             continue
-        if data.get('reviewed_brief_sha256') == brief_sha256 and data.get('decision') in DIRECTOR_DECISIONS:
+        if data.get('reviewed_brief_sha256') == brief_sha256 and director_decision(data) in DIRECTOR_DECISIONS:
             found.append((candidate.resolve(), data, sha256_file(candidate)))
     return found
 def route_director_response(state, state_path, response_path, response, response_sha256):
     brief_sha256=sha256_file(state['review_brief'])
     if response.get('reviewed_brief_sha256') != brief_sha256:
         raise RuntimeError('DIRECTOR_RESPONSE_BRIEF_BINDING_MISMATCH')
-    decision=response.get('decision')
+    decision=director_decision(response)
     if decision not in DIRECTOR_DECISIONS:
         raise RuntimeError('DIRECTOR_RESPONSE_DECISION_INVALID')
     consumed=state.setdefault('consumed_director_responses', {})
