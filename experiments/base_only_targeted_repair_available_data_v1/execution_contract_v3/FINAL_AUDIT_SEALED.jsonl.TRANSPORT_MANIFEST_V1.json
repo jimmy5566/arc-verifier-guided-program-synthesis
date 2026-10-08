@@ -1,0 +1,16 @@
+{
+  "chunk_count": 1,
+  "chunk_size": 262144,
+  "chunks": [
+    {
+      "bytes": 25212,
+      "index": 0,
+      "sha256": "9fa1562f282afaa06dfda17560cc4093f2b737702f43975aec4f6ba004852ffa"
+    }
+  ],
+  "envelope_sha256": "9fa1562f282afaa06dfda17560cc4093f2b737702f43975aec4f6ba004852ffa",
+  "filename": "FINAL_AUDIT_SEALED.jsonl",
+  "schema_version": 1,
+  "uncompressed_bytes": 309234,
+  "uncompressed_sha256": "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd"
+}

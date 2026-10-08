@@ -1,0 +1,16 @@
+{
+  "chunk_count": 1,
+  "chunk_size": 262144,
+  "chunks": [
+    {
+      "bytes": 35917,
+      "index": 0,
+      "sha256": "a96c75b28f497e2e0f3b8a0b24aa089cfc7db5f1ba3e5456cde26651cb4453cb"
+    }
+  ],
+  "envelope_sha256": "a96c75b28f497e2e0f3b8a0b24aa089cfc7db5f1ba3e5456cde26651cb4453cb",
+  "filename": "TARGET_DEV.jsonl",
+  "schema_version": 1,
+  "uncompressed_bytes": 465946,
+  "uncompressed_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+}

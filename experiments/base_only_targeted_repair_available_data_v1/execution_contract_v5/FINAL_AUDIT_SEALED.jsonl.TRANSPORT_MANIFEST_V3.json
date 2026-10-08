@@ -1,0 +1,31 @@
+{
+  "chunk_count": 4,
+  "chunk_size": 8192,
+  "chunks": [
+    {
+      "bytes": 8192,
+      "index": 0,
+      "sha256": "f77caad939a113cd5fae5ddb0f920366656962c646b248019ce0e3a6aeb9970f"
+    },
+    {
+      "bytes": 8192,
+      "index": 1,
+      "sha256": "42ba40199d9fdbdb0c0bb073de37f6e2b639107abfc55a627a24b83d8d2a6246"
+    },
+    {
+      "bytes": 8192,
+      "index": 2,
+      "sha256": "62ea2f05565cdbcccfff1dd53d95d5f6f2a7bf372559f09a66293659950b0542"
+    },
+    {
+      "bytes": 636,
+      "index": 3,
+      "sha256": "e63be9e08311ac318d2855457bfeb4b4235b3cd5238280f5c5102228dd3ac3e5"
+    }
+  ],
+  "envelope_sha256": "9fa1562f282afaa06dfda17560cc4093f2b737702f43975aec4f6ba004852ffa",
+  "filename": "FINAL_AUDIT_SEALED.jsonl",
+  "schema_version": 1,
+  "uncompressed_bytes": 309234,
+  "uncompressed_sha256": "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd"
+}

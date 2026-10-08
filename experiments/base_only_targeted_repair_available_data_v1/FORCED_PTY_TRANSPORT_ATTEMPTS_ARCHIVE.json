@@ -1,0 +1,35 @@
+{
+  "attempts": [
+    {
+      "contract": "execution_contract_v3",
+      "mode": "direct forced-PTY 262144-byte frames",
+      "outcome": "COMMAND_SIZE_TIMEOUT_NO_DESTINATION_PUBLISHED"
+    },
+    {
+      "contract": "execution_contract_v4",
+      "mode": "direct forced-PTY 32768-byte frames",
+      "outcome": "COMMAND_SIZE_TIMEOUT_NO_DESTINATION_PUBLISHED"
+    },
+    {
+      "contract": "execution_contract_v5",
+      "mode": "persistent daemon 8192-byte frames",
+      "outcome": "PTY_FRAME_CORRUPTION_REJECTED_INCORRECT_PADDING"
+    },
+    {
+      "contract": "execution_contract_v6",
+      "mode": "persistent daemon 1024-byte frames plus chunked manifest",
+      "outcome": "EXACT_TARGET_DEV_AND_OPAQUE_FINAL_AUDIT_BYTES_PUBLISHED_BEFORE_FUSE_0444_REJECTION; TRAIN_NOT_TRANSFERRED; SUPERSEDED_BY_REMOTE_FIRST_POLICY"
+    }
+  ],
+  "directive_id": "DIRECTOR_DIRECTIVE_011",
+  "not_required_for_current_protocol": true,
+  "schema_version": 1,
+  "scientific_boundary": {
+    "data_content_deserialized": false,
+    "gpu_training_seconds": 0,
+    "model_accessed": false,
+    "optimizer_accessed": false
+  },
+  "source_utility": "orchestration/transport/FORCED_PTY_LARGE_FILE_TRANSPORT_UTILITY_V1.json",
+  "status": "FROZEN_OPTIONAL_UTILITY_HISTORY"
+}

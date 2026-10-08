@@ -1,0 +1,36 @@
+{
+  "chunk_count": 5,
+  "chunk_size": 8192,
+  "chunks": [
+    {
+      "bytes": 8192,
+      "index": 0,
+      "sha256": "2d3e736459b1d034cfbe600bdc5ff756900b5dbc91e4813c8b38cb35ba3b955f"
+    },
+    {
+      "bytes": 8192,
+      "index": 1,
+      "sha256": "1fbe74f499a3f2c1786eb69a255fb6e644034ae8ec79e24d840781492c13c482"
+    },
+    {
+      "bytes": 8192,
+      "index": 2,
+      "sha256": "f85d3698efe964a59d403a302739c684f91ff77e23b880387603f3089d610291"
+    },
+    {
+      "bytes": 8192,
+      "index": 3,
+      "sha256": "a238679fc4116f767240773d0552990c2edc04bb04f7c03feb790c10d524e449"
+    },
+    {
+      "bytes": 3149,
+      "index": 4,
+      "sha256": "c68934cca3b52871a6d0b0a8b3cb081487248806ee9b0e00ffba00283513f6cd"
+    }
+  ],
+  "envelope_sha256": "a96c75b28f497e2e0f3b8a0b24aa089cfc7db5f1ba3e5456cde26651cb4453cb",
+  "filename": "TARGET_DEV.jsonl",
+  "schema_version": 1,
+  "uncompressed_bytes": 465946,
+  "uncompressed_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+}

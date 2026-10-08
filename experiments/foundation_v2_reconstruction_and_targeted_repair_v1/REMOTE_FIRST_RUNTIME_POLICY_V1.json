@@ -1,0 +1,21 @@
+{
+  "budget_cap_new_gpu_training_seconds": 28800,
+  "checkpoints_and_adapters": "Remain remote for the experiment.",
+  "large_scientific_assets": "Remain on RunPod; no forced-PTY checkpoint or adapter transfer.",
+  "local_supervisor": "Retrieves only small machine-readable UTF-8 receipt/status artifacts.",
+  "monitoring_mode": "LOW_FREQUENCY_RECONCILIATION",
+  "policy_id": "REMOTE_FIRST_RUNTIME_POLICY_V1",
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "receipt_monitoring": "REMOTE_RECEIPT_MONITORING = PASS",
+  "schema_version": 1,
+  "scientific_boundary": {
+    "gpu_training_seconds": 0,
+    "model_accessed": false,
+    "optimizer_accessed": false,
+    "scientific_training_started": false
+  },
+  "source_protocol_small_manifests": "Synchronize through Git wherever possible.",
+  "status": "FROZEN_PENDING_DIRECTOR_AUTHORIZATION",
+  "training_datasets": "Generate and read remotely on RunPod when permitted by the frozen recipe and identity checks.",
+  "transport_classification": "FORCED_PTY_LARGE_FILE_TRANSPORT = NOT_REQUIRED_FOR_CURRENT_PROTOCOL"
+}

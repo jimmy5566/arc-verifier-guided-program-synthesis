@@ -1,0 +1,27 @@
+{
+  "current_protocol_policy": "Git synchronizes source, protocols, and small manifests. RunPod holds large datasets, model base, adapters, checkpoints, and training outputs. Local supervision reads only small UTF-8 JSON receipts through LOW_FREQUENCY_RECONCILIATION.",
+  "implementation": {
+    "path": "scripts/arc2_forced_pty_transport.py",
+    "sha256": "af55fe10cc69e2c8a85e320a2eb33538782ebdd8eda7341640bbf83b2ea73029",
+    "tests": "tests/test_arc2_forced_pty_transport.py",
+    "tests_sha256": "cf59f081d00b50d71b82cb5020e3a37b1127eb2a8f25d87ea63a56d594eea019"
+  },
+  "known_runtime_constraint": "RunPod /workspace is fuse.g and rejects chmod(0444); large scientific assets are therefore excluded from this current protocol rather than treated as a scientific blocker.",
+  "schema_version": 1,
+  "scientific_boundary": {
+    "data_content_deserialized": false,
+    "gpu_training_seconds": 0,
+    "model_accessed": false,
+    "optimizer_accessed": false
+  },
+  "scope": "optional infrastructure utility; never a scientific data or checkpoint requirement for FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "status": "NOT_REQUIRED_FOR_CURRENT_PROTOCOL",
+  "utility_id": "FORCED_PTY_LARGE_FILE_TRANSPORT_UTILITY_V1",
+  "validated_properties": [
+    "ASCII-only gzip/base64 envelope",
+    "ordered acknowledged frames",
+    "resume/idempotence",
+    "atomic destination publication",
+    "read-only final-audit enforcement where filesystem supports chmod"
+  ]
+}

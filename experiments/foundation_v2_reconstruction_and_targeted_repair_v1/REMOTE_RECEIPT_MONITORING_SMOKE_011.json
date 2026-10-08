@@ -1,0 +1,22 @@
+{
+  "controller_acknowledgement_sha256": "ef2f9df387c943332e0f43b934ec48c873378e8cad0ae00002fbfb3e667b84a4",
+  "controller_wakeup_count": 1,
+  "duplicate_wakeup_after_supervisor_restart": false,
+  "monitoring_mode": "LOW_FREQUENCY_RECONCILIATION",
+  "remote_job": "detached shell job wrote one atomically-renamed UTF-8 JSON receipt",
+  "remote_receipt_path": "/workspace/arc2/orchestration/rounds/ROUND_RECEIPT_MONITOR_SMOKE_011/ROUND_RECEIPT_MONITOR_SMOKE_011_TERMINAL_RECEIPT.json",
+  "schema_version": 1,
+  "scientific_boundary": {
+    "gpu_training_seconds": 0,
+    "model_accessed": false,
+    "optimizer_accessed": false,
+    "scientific_training_started": false
+  },
+  "ssh_disconnect_reconnect_tolerated": "PASS: Supervisor restart and its subsequent remote reconciliation retained one receipt identity",
+  "status": "PASS",
+  "supervisor_retrieved_and_parsed": true,
+  "terminal_receipt_bytes": 157,
+  "terminal_receipt_sha256": "12bdceba8e1c8d5295d0245a027af7faccd5f19d42b4ceac116906da7d7f0f7c",
+  "test_id": "REMOTE_RECEIPT_MONITORING_SMOKE_011",
+  "watchdog_restart_count": 1
+}

@@ -1,0 +1,21 @@
+{
+  "chunk_count": 2,
+  "chunk_size": 32768,
+  "chunks": [
+    {
+      "bytes": 32768,
+      "index": 0,
+      "sha256": "8e403d71377866a6fb4e94d122bffb224e771b84e53d2e3146a329b5653cd043"
+    },
+    {
+      "bytes": 3149,
+      "index": 1,
+      "sha256": "c68934cca3b52871a6d0b0a8b3cb081487248806ee9b0e00ffba00283513f6cd"
+    }
+  ],
+  "envelope_sha256": "a96c75b28f497e2e0f3b8a0b24aa089cfc7db5f1ba3e5456cde26651cb4453cb",
+  "filename": "TARGET_DEV.jsonl",
+  "schema_version": 1,
+  "uncompressed_bytes": 465946,
+  "uncompressed_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+}

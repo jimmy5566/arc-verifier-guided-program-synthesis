@@ -1,0 +1,45 @@
+﻿{
+    "schema_version":  1,
+    "directive_id":  "DIRECTOR_DIRECTIVE_011",
+    "revision":  "V6_1K_CHUNKS_AND_CHUNKED_MANIFEST_OVER_PERSISTENT_FORCED_PTY",
+    "transport":  "ASCII_SAFE_GZIP_BASE64_ORDERED_CHUNKS_PERSISTENT_PTY_DAEMON",
+    "source_hashes":  {
+                          "transport_script_sha256":  "dd21c46b9a250c05f12f955bb0591bd3146d02172e5f6017609c44cdfd31e207",
+                          "supervisor_sha256":  "611fcafebd18cb656ca7d0a533db6506388c81dcc9b9fe619faa8da132d9c0bf"
+                      },
+    "files":  [
+                  {
+                      "filename":  "FINAL_AUDIT_SEALED.jsonl",
+                      "manifest_sha256":  "2a6e4bee20ab85e27f85973dd2fdfdd6b3ff2ced4a3d2d11f50bab20dcf41573",
+                      "uncompressed_bytes":  309234,
+                      "uncompressed_sha256":  "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd",
+                      "envelope_sha256":  "9fa1562f282afaa06dfda17560cc4093f2b737702f43975aec4f6ba004852ffa",
+                      "chunk_size":  1024,
+                      "chunk_count":  25
+                  },
+                  {
+                      "filename":  "TARGET_DEV.jsonl",
+                      "manifest_sha256":  "588af73c5fe2c295a1e483e38b9140b0c5bb75cbded9068a26ca5417798073f4",
+                      "uncompressed_bytes":  465946,
+                      "uncompressed_sha256":  "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97",
+                      "envelope_sha256":  "a96c75b28f497e2e0f3b8a0b24aa089cfc7db5f1ba3e5456cde26651cb4453cb",
+                      "chunk_size":  1024,
+                      "chunk_count":  36
+                  },
+                  {
+                      "filename":  "TRAIN.jsonl",
+                      "manifest_sha256":  "6b1014dec4717ee90f5628165f1835684d1989bdb7ffef094f9f0ade35d0a520",
+                      "uncompressed_bytes":  9333559,
+                      "uncompressed_sha256":  "97463689b4c47d912e20aa46fafe4c47b0e4ad538523ba8127145203f02acba1",
+                      "envelope_sha256":  "8639a55a3c332c596f34ae0f025be41180215e22c3e4c84aea57c2210bf355f1",
+                      "chunk_size":  1024,
+                      "chunk_count":  670
+                  }
+              ],
+    "scientific_boundary":  {
+                                "model_accessed":  false,
+                                "optimizer_accessed":  false,
+                                "content_deserialized":  false,
+                                "gpu_training_seconds":  0
+                            }
+}

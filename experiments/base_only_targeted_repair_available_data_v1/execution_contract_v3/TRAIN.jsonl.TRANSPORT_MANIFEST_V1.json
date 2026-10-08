@@ -1,0 +1,26 @@
+{
+  "chunk_count": 3,
+  "chunk_size": 262144,
+  "chunks": [
+    {
+      "bytes": 262144,
+      "index": 0,
+      "sha256": "6c69e70493d74fff73fb557252f37bfd3bb4120fd43c25bf1ac8dbc174b4d1fd"
+    },
+    {
+      "bytes": 262144,
+      "index": 1,
+      "sha256": "582eb91dfb1ae5b4818c9d42155849197b79decf256d293208ec7ad4d3d85322"
+    },
+    {
+      "bytes": 160799,
+      "index": 2,
+      "sha256": "afbbbc089c8247875880a7fa31c0b5f4827829f848ca9f2fe0ed93a57bd64a98"
+    }
+  ],
+  "envelope_sha256": "8639a55a3c332c596f34ae0f025be41180215e22c3e4c84aea57c2210bf355f1",
+  "filename": "TRAIN.jsonl",
+  "schema_version": 1,
+  "uncompressed_bytes": 9333559,
+  "uncompressed_sha256": "97463689b4c47d912e20aa46fafe4c47b0e4ad538523ba8127145203f02acba1"
+}

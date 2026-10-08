@@ -1,0 +1,116 @@
+{
+  "chunk_count": 21,
+  "chunk_size": 32768,
+  "chunks": [
+    {
+      "bytes": 32768,
+      "index": 0,
+      "sha256": "dc64608721b235875ecdd416c027369c2876724b5617146e6380b0fab0a91102"
+    },
+    {
+      "bytes": 32768,
+      "index": 1,
+      "sha256": "21ba6517400da92a02cdbb21ac4baa48a826b907232cf7778f8e605699af3dd9"
+    },
+    {
+      "bytes": 32768,
+      "index": 2,
+      "sha256": "2ee2de2b58c6c92cae15ad20f292085900346a460e665cc8f5ca69678666e33a"
+    },
+    {
+      "bytes": 32768,
+      "index": 3,
+      "sha256": "1201a0a48fb2febc2ed8a7d7f85cec5ee4265440fda52276b06a609adfff893f"
+    },
+    {
+      "bytes": 32768,
+      "index": 4,
+      "sha256": "60b64de94a99cf3021c4d95b9b625d4df9ca4a541c2fa8aeaac0c3a7f9c09906"
+    },
+    {
+      "bytes": 32768,
+      "index": 5,
+      "sha256": "93625107ee2782c3c0b35effd7cb7b019fb6e01e495e1a7c702c70d04068eee8"
+    },
+    {
+      "bytes": 32768,
+      "index": 6,
+      "sha256": "cefe417b3266ee19a7b9233fefb1fbb59398ec74c64ba0a600298576d5f52e55"
+    },
+    {
+      "bytes": 32768,
+      "index": 7,
+      "sha256": "26471a8260037ebb896124defefa89c717812d684a623bced27cfa0f23ee65c3"
+    },
+    {
+      "bytes": 32768,
+      "index": 8,
+      "sha256": "b84641e1c70fedd2db191fc14b0878b9f43ce22b0aab21de8b55a1076e7443ba"
+    },
+    {
+      "bytes": 32768,
+      "index": 9,
+      "sha256": "cee61cecdd8281215ef041a40fbb7457aeae5400d84e3738b709bc1a6c1b3780"
+    },
+    {
+      "bytes": 32768,
+      "index": 10,
+      "sha256": "4b71ce51ee5d0fe5a66a164c8bef3b578a0c28216e866cf500c8110a8cb72cb1"
+    },
+    {
+      "bytes": 32768,
+      "index": 11,
+      "sha256": "c95885f97830561dab33ff3a1548f73adf61e9f9a09f927d2eb400c97faca163"
+    },
+    {
+      "bytes": 32768,
+      "index": 12,
+      "sha256": "ea1ff9a35d1fe0a04a5ff0a2c34f01d24418ca500562c64c8d8356b5414a967c"
+    },
+    {
+      "bytes": 32768,
+      "index": 13,
+      "sha256": "80df9d5e33d46eb2395cb96ef4fb811e3787f66a3b7b2261a0955ed95c004cc3"
+    },
+    {
+      "bytes": 32768,
+      "index": 14,
+      "sha256": "a8558a20d4b108448c6e4505909e534c3bd2f0eccca1bb16806dcbb6337a0583"
+    },
+    {
+      "bytes": 32768,
+      "index": 15,
+      "sha256": "1664f07952e1b84366dbaba627b30204badd3ddfe24ee24d19498ae1a24466fa"
+    },
+    {
+      "bytes": 32768,
+      "index": 16,
+      "sha256": "19855b67490c594c08ba657f330a35b11a6c9116dd7c226f48338a4f6d7a6d0c"
+    },
+    {
+      "bytes": 32768,
+      "index": 17,
+      "sha256": "33f9a55eb944dcbfb84ef86d9d11b767b7630fa05ee6767fb46ed5a5dfdb7b9f"
+    },
+    {
+      "bytes": 32768,
+      "index": 18,
+      "sha256": "697805c00e2d726c2d2380557a5979fc628ceb56ad58731e3c8035e2c9cc6261"
+    },
+    {
+      "bytes": 32768,
+      "index": 19,
+      "sha256": "8fc5a7b4a4412d61573838203c8b5f4e7893ae09146f10c4e8202becffc45b62"
+    },
+    {
+      "bytes": 29727,
+      "index": 20,
+      "sha256": "71fa9cd19902e82e8a950b77f8a8b7286548b33ea1313d3a24d8b75617cfbb7c"
+    }
+  ],
+  "envelope_sha256": "8639a55a3c332c596f34ae0f025be41180215e22c3e4c84aea57c2210bf355f1",
+  "filename": "TRAIN.jsonl",
+  "schema_version": 1,
+  "uncompressed_bytes": 9333559,
+  "uncompressed_sha256": "97463689b4c47d912e20aa46fafe4c47b0e4ad538523ba8127145203f02acba1"
+}

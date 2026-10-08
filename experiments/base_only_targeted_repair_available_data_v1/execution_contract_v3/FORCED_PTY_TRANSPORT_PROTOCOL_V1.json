@@ -1,0 +1,57 @@
+{
+  "chunk_contract": "contiguous next index only; exact idempotent replay only; conflicting duplicate/out of order fail closed",
+  "directive_id": "DIRECTOR_DIRECTIVE_011",
+  "files": {
+    "FINAL_AUDIT_SEALED.jsonl": {
+      "chunk_count": 1,
+      "destination": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_available_data_v1/FINAL_AUDIT_SEALED.jsonl",
+      "envelope_sha256": "9fa1562f282afaa06dfda17560cc4093f2b737702f43975aec4f6ba004852ffa",
+      "final_audit_opaque": true,
+      "manifest": "FINAL_AUDIT_SEALED.jsonl.TRANSPORT_MANIFEST_V1.json",
+      "manifest_sha256": "78f32b09b2b3eca5703e0a923b60b6fb3c3fc4dbb2cd777da396151fdaa253ed",
+      "uncompressed_bytes": 309234,
+      "uncompressed_sha256": "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd"
+    },
+    "TARGET_DEV.jsonl": {
+      "chunk_count": 1,
+      "destination": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_available_data_v1/TARGET_DEV.jsonl",
+      "envelope_sha256": "a96c75b28f497e2e0f3b8a0b24aa089cfc7db5f1ba3e5456cde26651cb4453cb",
+      "final_audit_opaque": false,
+      "manifest": "TARGET_DEV.jsonl.TRANSPORT_MANIFEST_V1.json",
+      "manifest_sha256": "3da024e312e670b9e7c384f92718fb743dba77158fb066ad4f162c6f2aae303b",
+      "uncompressed_bytes": 465946,
+      "uncompressed_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    },
+    "TRAIN.jsonl": {
+      "chunk_count": 3,
+      "destination": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_available_data_v1/TRAIN.jsonl",
+      "envelope_sha256": "8639a55a3c332c596f34ae0f025be41180215e22c3e4c84aea57c2210bf355f1",
+      "final_audit_opaque": false,
+      "manifest": "TRAIN.jsonl.TRANSPORT_MANIFEST_V1.json",
+      "manifest_sha256": "70977647e390d0d22bf1b40fb61c6ec5714d3b62a6c5cb622f89e04a4ad19920",
+      "uncompressed_bytes": 9333559,
+      "uncompressed_sha256": "97463689b4c47d912e20aa46fafe4c47b0e4ad538523ba8127145203f02acba1"
+    }
+  },
+  "final_audit_contract": {
+    "content_deserialized": false,
+    "model_accessed": false,
+    "opaque_bytes_only": true,
+    "optimizer_accessed": false,
+    "post_publish_mode": "0444"
+  },
+  "forbidden_routes": [
+    "SFTP",
+    "SCP",
+    "Git data transfer",
+    "public upload",
+    "external storage"
+  ],
+  "schema_version": 1,
+  "source_hashes": {
+    "orchestration/supervisor/arc2_supervisor.py": "611fcafebd18cb656ca7d0a533db6506388c81dcc9b9fe619faa8da132d9c0bf",
+    "scripts/arc2_forced_pty_transport.py": "dc1f3d4fb6b0df19c71135237164aab6cc525172a1bd0b9f64826410c1028d06"
+  },
+  "status": "FROZEN",
+  "transport": "FORCED_PTY_ASCII_GZIP_BASE64_ORDERED_ACK_V1"
+}

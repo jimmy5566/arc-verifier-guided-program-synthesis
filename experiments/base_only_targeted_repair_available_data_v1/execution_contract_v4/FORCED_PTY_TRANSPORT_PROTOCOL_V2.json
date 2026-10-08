@@ -1,0 +1,45 @@
+﻿{
+    "schema_version":  1,
+    "directive_id":  "DIRECTOR_DIRECTIVE_011",
+    "revision":  "V4_32K_CHUNKS_AFTER_V3_FORCED_PTY_COMMAND_SIZE_TIMEOUT",
+    "transport":  "ASCII_SAFE_GZIP_BASE64_ORDERED_CHUNKS",
+    "source_hashes":  {
+                          "transport_script_sha256":  "dc1f3d4fb6b0df19c71135237164aab6cc525172a1bd0b9f64826410c1028d06",
+                          "supervisor_sha256":  "611fcafebd18cb656ca7d0a533db6506388c81dcc9b9fe619faa8da132d9c0bf"
+                      },
+    "files":  [
+                  {
+                      "filename":  "FINAL_AUDIT_SEALED.jsonl",
+                      "manifest_sha256":  "3dfbcb4d108c76625d4f49246b7a7eaada7144dda88434929639db5ce9ab3c0f",
+                      "uncompressed_bytes":  309234,
+                      "uncompressed_sha256":  "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd",
+                      "envelope_sha256":  "9fa1562f282afaa06dfda17560cc4093f2b737702f43975aec4f6ba004852ffa",
+                      "chunk_size":  32768,
+                      "chunk_count":  1
+                  },
+                  {
+                      "filename":  "TARGET_DEV.jsonl",
+                      "manifest_sha256":  "0ea358547c91397ceb220dcf939ee359a32fde88759524958170f6f2890099b4",
+                      "uncompressed_bytes":  465946,
+                      "uncompressed_sha256":  "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97",
+                      "envelope_sha256":  "a96c75b28f497e2e0f3b8a0b24aa089cfc7db5f1ba3e5456cde26651cb4453cb",
+                      "chunk_size":  32768,
+                      "chunk_count":  2
+                  },
+                  {
+                      "filename":  "TRAIN.jsonl",
+                      "manifest_sha256":  "63dcfa41bf625b0a7ff9ccc602523373ed4ad6debc568e5e114fc8f84d17b300",
+                      "uncompressed_bytes":  9333559,
+                      "uncompressed_sha256":  "97463689b4c47d912e20aa46fafe4c47b0e4ad538523ba8127145203f02acba1",
+                      "envelope_sha256":  "8639a55a3c332c596f34ae0f025be41180215e22c3e4c84aea57c2210bf355f1",
+                      "chunk_size":  32768,
+                      "chunk_count":  21
+                  }
+              ],
+    "scientific_boundary":  {
+                                "model_accessed":  false,
+                                "optimizer_accessed":  false,
+                                "content_deserialized":  false,
+                                "gpu_training_seconds":  0
+                            }
+}
