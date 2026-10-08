@@ -158,10 +158,10 @@ def freeze(args: argparse.Namespace) -> int:
                         "sequence_length": item["sequence_length"], "assistant_token_count": item["assistant_token_count"],
                         "token_label_sha256": digest({"input_ids": item["input_ids"], "labels": item["labels"]})})
     data = {
-        "TRAIN": {"local_path": str(args.train.resolve()), "remote_path": args.remote_inputs / "TRAIN.jsonl", "bytes": args.train.stat().st_size, "sha256": sha(args.train)},
-        "TARGET_DEV": {"local_path": str(args.target_dev.resolve()), "remote_path": args.remote_inputs / "TARGET_DEV.jsonl", "bytes": args.target_dev.stat().st_size, "sha256": sha(args.target_dev)},
-        "RETENTION_SENTINEL": {"local_path": str(args.retention.resolve()), "remote_path": args.remote_inputs / "RETENTION_SENTINEL.jsonl", "bytes": args.retention.stat().st_size, "sha256": sha(args.retention)},
-        "FINAL_AUDIT_SEALED": {"local_path": str(args.final_audit.resolve()), "remote_path": args.remote_inputs / "FINAL_AUDIT_SEALED.jsonl", "bytes": args.final_audit.stat().st_size, "sha256": sha(args.final_audit), "model_accessed": False},
+        "TRAIN": {"local_path": str(args.train.resolve()), "remote_path": args.remote_inputs.rstrip("/") + "/TRAIN.jsonl", "bytes": args.train.stat().st_size, "sha256": sha(args.train)},
+        "TARGET_DEV": {"local_path": str(args.target_dev.resolve()), "remote_path": args.remote_inputs.rstrip("/") + "/TARGET_DEV.jsonl", "bytes": args.target_dev.stat().st_size, "sha256": sha(args.target_dev)},
+        "RETENTION_SENTINEL": {"local_path": str(args.retention.resolve()), "remote_path": args.remote_inputs.rstrip("/") + "/RETENTION_SENTINEL.jsonl", "bytes": args.retention.stat().st_size, "sha256": sha(args.retention)},
+        "FINAL_AUDIT_SEALED": {"local_path": str(args.final_audit.resolve()), "remote_path": args.remote_inputs.rstrip("/") + "/FINAL_AUDIT_SEALED.jsonl", "bytes": args.final_audit.stat().st_size, "sha256": sha(args.final_audit), "model_accessed": False},
     }
     serialization = {
         "schema_version": 1, "protocol_id": PROTOCOL, "status": "FROZEN", "transport": "NVARC_NATIVE_16_TOKEN",
@@ -188,7 +188,7 @@ def freeze(args: argparse.Namespace) -> int:
     binding = {"schema_version": 1, "protocol_id": PROTOCOL, "status": "FROZEN_PENDING_READ_ONLY_PREFLIGHT", "source_hashes": source_entries(),
                "base_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139", "base_files": BASE_FILES, "data": data,
                "serialization_contract_sha256": digest(serialization), "schedule_sha256": digest(schedule), "recipe_sha256": digest(recipe),
-               "base_reference_gate_sha256": digest(gate), "output": {"run_root": args.run_root, "runtime": args.run_root / "runtime", "checkpoints": args.run_root / "checkpoints", "reservation": args.run_root / "runtime" / "GPU_RESERVATION.json"},
+               "base_reference_gate_sha256": digest(gate), "output": {"run_root": args.run_root, "runtime": args.run_root.rstrip("/") + "/runtime", "checkpoints": args.run_root.rstrip("/") + "/checkpoints", "reservation": args.run_root.rstrip("/") + "/runtime/GPU_RESERVATION.json"},
                "shared_ledger": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/targeted_capability_repair_v1/TARGETED_CAPABILITY_REPAIR_GPU_TIME_LEDGER.jsonl",
                "forbidden": ["historical replay", "replay substitution", "Eval60 Gold", "diagnostic Gold", "TARGET_DEV training", "retention training", "FINAL_AUDIT access"]}
     write(out / "SERIALIZATION_CONTRACT_V1.json", serialization)
@@ -267,7 +267,7 @@ def launch(args: argparse.Namespace) -> int:
 
 def main() -> int:
     p = argparse.ArgumentParser(); sub = p.add_subparsers(dest="mode", required=True)
-    f = sub.add_parser("freeze"); f.add_argument("--train", type=Path, required=True); f.add_argument("--target-dev", type=Path, required=True); f.add_argument("--retention", type=Path, required=True); f.add_argument("--final-audit", type=Path, required=True); f.add_argument("--output", type=Path, required=True); f.add_argument("--remote-inputs", type=Path, required=True); f.add_argument("--run-root", type=Path, required=True)
+    f = sub.add_parser("freeze"); f.add_argument("--train", type=Path, required=True); f.add_argument("--target-dev", type=Path, required=True); f.add_argument("--retention", type=Path, required=True); f.add_argument("--final-audit", type=Path, required=True); f.add_argument("--output", type=Path, required=True); f.add_argument("--remote-inputs", type=str, required=True); f.add_argument("--run-root", type=str, required=True)
     q = sub.add_parser("preflight"); q.add_argument("--binding", type=Path, required=True); q.add_argument("--freeze", type=Path, required=True); q.add_argument("--source-root", type=Path, required=True); q.add_argument("--base", type=Path, required=True); q.add_argument("--inputs", type=Path, required=True); q.add_argument("--run-root", type=Path, required=True); q.add_argument("--ledger", type=Path, required=True); q.add_argument("--output", type=Path, required=True)
     l = sub.add_parser("launch"); l.add_argument("--preflight", type=Path, required=True); l.add_argument("--authorization", type=Path); l.add_argument("--dummy", action="store_true"); l.add_argument("--dummy-seconds", type=float, default=0.05); l.add_argument("--output", type=Path, required=True)
     args = p.parse_args()
