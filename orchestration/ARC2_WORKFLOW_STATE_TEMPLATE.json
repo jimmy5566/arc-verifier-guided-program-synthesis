@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "experiment_id": "ARC2",
+  "stage": "RECONSTRUCTION_CHARACTERIZATION_EVALUATION",
+  "status": "ACTIVE",
+  "current_round": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "active_remote_job": null,
+  "last_completed_action": "TARGET_FREE_REFERENCE_MAPPING_FROZEN",
+  "next_action": "COMPLETE_CPU_ONLY_PHASE_A_PHASE_B_LAUNCH_BINDINGS",
+  "director_review_in_progress": false,
+  "experiment_terminal": false
+}

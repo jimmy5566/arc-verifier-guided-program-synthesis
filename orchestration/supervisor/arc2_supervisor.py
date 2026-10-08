@@ -930,6 +930,8 @@ def main() -> int:
     parser.add_argument("--controller-escalation-dir", type=Path)
     parser.add_argument("--controller-stall-seconds", type=int, default=900)
     parser.add_argument("--herdr-timeout-seconds", type=int, default=15)
+    parser.add_argument("--legacy-directive-recovery", action="store_true",
+                        help="deprecated: enable historical directive-cycle transport/recovery")
     args = parser.parse_args()
     if args.poll_seconds is not None and args.poll_seconds <= 0:
         parser.error("--poll-seconds must be greater than zero")
@@ -983,7 +985,10 @@ def main() -> int:
                     args.receipt_root, args.controller_ack_dir, args.controller_escalation_dir,
                     args.director_agent, args.herdr_timeout_seconds,
                 )
-            if args.directive_dir:
+            # Ordinary Controller <-> Director work is synchronous and never
+            # enters this receipt monitor.  Keep the historical path only for
+            # forensic recovery of pre-V1 state files.
+            if args.directive_dir and args.legacy_directive_recovery:
                 directive_notifications = supervisor.reconcile_directives(
                     args.directive_dir, args.director_response_dir,
                 )

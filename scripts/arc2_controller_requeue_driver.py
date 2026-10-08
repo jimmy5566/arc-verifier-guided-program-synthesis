@@ -1,6 +1,9 @@
-"""Immediate, durable Controller continuation driver for ARC2.
+"""DEPRECATED historical immediate Controller continuation driver for ARC2.
 
 This is deliberately a small local state driver, not another reasoning agent.
+It is retained only for provenance/recovery of the former directive-cycle
+system.  New normal work uses Controller-owned stages and blocking Director
+reviews, so this program must not be launched for ordinary execution.
 It watches the Controller's durable directive-cycle state and asks the real
 Herdr Controller target for one continuation only after its prior turn has
 ended.  Initial acknowledgements, Director briefs, remediation, commits, and

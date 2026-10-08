@@ -1,7 +1,8 @@
-"""Durable Controller-side routing for immutable Director directives.
+"""DEPRECATED historical Controller-side routing for immutable Director directives.
 
-The Supervisor only transports a directive exactly once.  This program owns
-Controller lifecycle state and never starts GPU work by itself.
+This remains only to inspect or recover historical directive evidence.  New
+normal ARC2 work uses ``arc2_simple_workflow.py`` and synchronous Director
+review; it does not create directive-cycle states.
 """
 from __future__ import annotations
 

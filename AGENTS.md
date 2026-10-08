@@ -7,6 +7,11 @@
 - A single Codex may inspect and edit the current repository, run CPU tests
   and static checks, create experiment scripts, analyse frozen artifacts, and
   prepare Kaggle packages.
+- **Normal ARC2 orchestration is simple:** Controller owns the active stage;
+  Director is a synchronous stage-level reviewer; Supervisor only monitors
+  detached RunPod jobs; Watchdog only keeps one Supervisor alive. Historical
+  directive/acknowledgement state machines are provenance, not normal work
+  queues. See [`orchestration/SIMPLE_ORCHESTRATION_V1.md`](orchestration/SIMPLE_ORCHESTRATION_V1.md).
 
 ## Experiment discipline
 
