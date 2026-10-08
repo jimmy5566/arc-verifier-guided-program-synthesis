@@ -454,21 +454,26 @@ def remote_shell(target: str, script: str, identity_file: str | None = None) -> 
     line = f"echo {encoded} | base64 -d | bash; printf '__ARC2_REMOTE_END__\\n'; exit"
     payload = f"\x1b[200~{line}\x1b[201~\r"
     completed = subprocess.run(command, input=payload.encode("utf-8"), capture_output=True, check=False, timeout=45)
-    stdout = decode_structured_utf8(completed.stdout, "REMOTE_STRUCTURED_OUTPUT")
+    # The forced PTY echoes its submitted command as human terminal output.
+    # Long ASCII-safe transport envelopes can be visually corrupted by that
+    # terminal echo even when the remote command and its structured result are
+    # intact.  Keep protocol markers as raw bytes, and decode only the human
+    # portion with replacement.  Consumers of structured JSON still decode and
+    # parse their individual JSON record strictly.
+    raw_lines = completed.stdout.splitlines()
     # A forced-PTY gateway can echo the bracketed-paste command verbatim.
     # The marker must therefore arrive as its own output line, never merely as
     # text embedded in the echoed command, before a metadata scan is trusted.
     marker = "__ARC2_REMOTE_END__"
-    marker_lines = [line.strip() for line in stdout.splitlines()]
+    marker_lines = [line.strip() for line in raw_lines]
     # The completion JSON is base64-hidden inside the submitted command, so an
     # echoed command cannot forge it.  Require both it and the terminal marker.
-    if completed.returncode != 0 or marker not in marker_lines or completion not in marker_lines:
+    if completed.returncode != 0 or marker.encode("ascii") not in marker_lines or completion.encode("ascii") not in marker_lines:
         raise RuntimeError(f"remote metadata scan failed (exit={completed.returncode})")
     # Split at the actual marker line, not the marker text embedded in the
     # terminal's echo of the submitted command.
-    lines = stdout.splitlines()
-    marker_index = max(index for index, line in enumerate(lines) if line.strip() == marker)
-    return "\n".join(lines[:marker_index])
+    marker_index = max(index for index, line in enumerate(raw_lines) if line.strip() == marker.encode("ascii"))
+    return decode_human_utf8(b"\n".join(raw_lines[:marker_index]))
 
 
 def fetch_remote_receipts(target: str, remote_root: str, cache_root: Path, identity_file: str | None = None) -> Path:

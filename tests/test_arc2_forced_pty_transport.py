@@ -1,0 +1,43 @@
+from __future__ import annotations
+
+import importlib.util
+import json
+import tempfile
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]; SCRIPT = ROOT / "scripts" / "arc2_forced_pty_transport.py"
+
+def module():
+    spec = importlib.util.spec_from_file_location("forced_transport", SCRIPT); assert spec and spec.loader
+    value = importlib.util.module_from_spec(spec); spec.loader.exec_module(value); return value
+
+class ForcedPtyTransportTests(unittest.TestCase):
+    def test_binary_resume_idempotence_and_atomic_publish(self) -> None:
+        m = module()
+        with tempfile.TemporaryDirectory() as root:
+            root = Path(root); source = root / "canary.jsonl"; source.write_bytes(bytes(range(256)) + "UTF-8-控制".encode())
+            manifest = m.build(source, root / "manifest.json", root / "envelope.gz", 1024)
+            envelope = (root / "envelope.gz").read_bytes(); encoded = [__import__('base64').b64encode(envelope[i*1024:(i+1)*1024]).decode() for i in range(manifest['chunk_count'])]
+            stage = root / "stage"; self.assertEqual(m.receive(stage, manifest, 0, encoded[0])["status"], "ACK")
+            self.assertEqual(m.receive(stage, manifest, 0, encoded[0])["status"], "IDEMPOTENT_ACK")
+            for i in range(1, manifest['chunk_count']): m.receive(stage, manifest, i, encoded[i])
+            result = m.finalize(stage, root / "mounted" / source.name, manifest, False)
+            self.assertEqual(result["status"], "PUBLISHED"); self.assertEqual((root / "mounted" / source.name).read_bytes(), source.read_bytes())
+
+    def test_corrupt_and_out_of_order_chunks_fail_closed(self) -> None:
+        m = module()
+        with tempfile.TemporaryDirectory() as root:
+            root = Path(root); source = root / "canary.jsonl"; source.write_bytes(__import__('os').urandom(4096))
+            manifest = m.build(source, root / "m", root / "e", 1024); envelope = (root / "e").read_bytes(); chunk = __import__('base64').b64encode(envelope[:1024]).decode(); second = __import__('base64').b64encode(envelope[1024:2048]).decode()
+            with self.assertRaisesRegex(RuntimeError, "HASH_OR_SIZE"): m.receive(root / "s", manifest, 0, __import__('base64').b64encode(b"wrong").decode())
+            with self.assertRaisesRegex(RuntimeError, "OUT_OF_ORDER"): m.receive(root / "s", manifest, 1, second)
+
+    def test_incorrect_destination_is_never_overwritten(self) -> None:
+        m = module()
+        with tempfile.TemporaryDirectory() as root:
+            root = Path(root); source = root / "canary.jsonl"; source.write_bytes(b"correct")
+            manifest = m.build(source, root / "m", root / "e", 1024); chunk = __import__('base64').b64encode((root / "e").read_bytes()).decode(); stage = root / "s"; m.receive(stage, manifest, 0, chunk)
+            dest = root / "dest" / source.name; dest.parent.mkdir(); dest.write_bytes(b"wrong")
+            with self.assertRaisesRegex(RuntimeError, "DESTINATION_CONFLICT"): m.finalize(stage, dest, manifest, False)
+            self.assertEqual(dest.read_bytes(), b"wrong")

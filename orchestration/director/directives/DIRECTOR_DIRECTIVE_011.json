@@ -1,0 +1,45 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_011",
+  "decision": "REQUIRE_INFRA_REPAIR",
+  "scope": "BASE_ONLY_TARGETED_REPAIR_AVAILABLE_DATA_V1",
+  "reasons": [
+    "DIRECTOR_BRIEF_011 and its referenced immutable execution-contract artifacts establish that the serializer, training schedule, launcher binding, cumulative 28800-second budget cap, CPU-only dummy tests, and source-provenance parity are frozen.",
+    "The local source files match the frozen byte counts and SHA256 identities for TRAIN.jsonl, TARGET_DEV.jsonl, and FINAL_AUDIT_SEALED.jsonl, but the complete remote preflight correctly fails closed at MOUNTED_DATA_FILE_SET_MISMATCH because those three exact files are absent from the mounted input directory.",
+    "The forced-PTY RunPod gateway rejects SFTP/SCP, so the remaining condition is an infrastructure transport problem rather than authorization to initialize a model, construct an optimizer, or consume GPU training time.",
+    "FINAL_AUDIT_SEALED.jsonl remains a sealed evaluation artifact: transport and hash verification must not deserialize it or expose its contents to the model, optimizer, training dataset, or training control flow.",
+    "No model load, optimizer construction, or GPU training has occurred, and the failed read-only preflight does not satisfy the conditions for scientific training authorization."
+  ],
+  "required_changes": [
+    {
+      "id": "RC1_FORCED_PTY_BYTE_TRANSPORT",
+      "action": "Implement an infrastructure-only, byte-preserving transport over the existing forced-PTY SSH command channel using an ASCII-safe chunked gzip/base64 envelope. The manifest must bind each approved filename to its frozen uncompressed byte count and SHA256, the transport-envelope SHA256, ordered chunk count, and per-chunk SHA256. Use bounded independently acknowledged chunks and support deterministic resume without retransmitting or accepting an unverified chunk. Do not use SFTP/SCP, Git, public upload, or any unapproved external storage route for these data files.",
+      "acceptance": "Every received chunk, the complete envelope, and the reconstructed uncompressed file are verified against the frozen manifest. Any missing, duplicate-conflicting, corrupted, or out-of-order chunk; decode/decompression failure; byte-count mismatch; or SHA256 mismatch must fail visibly and must not publish a destination file."
+    },
+    {
+      "id": "RC2_TRANSPORT_FAIL_CLOSED_TESTS",
+      "action": "Before transferring scientific artifacts, test the exact transport routine with small CPU-only dummy UTF-8 and binary canaries, including reconnect/resume and idempotent replay. Add negative tests for corrupt, missing, duplicate-conflicting, and out-of-order chunks and for an incorrect pre-existing destination.",
+      "acceptance": "The valid canaries reproduce byte-for-byte and all negative cases fail closed. The tests initialize no model or optimizer and consume zero GPU training seconds."
+    },
+    {
+      "id": "RC3_PROVISION_EXACT_ALLOWED_FILE_SET",
+      "action": "Transfer only the three already frozen local files TRAIN.jsonl, TARGET_DEV.jsonl, and FINAL_AUDIT_SEALED.jsonl. Reconstruct each into a temporary file on the same remote filesystem as its destination, verify the exact frozen byte count and SHA256, flush it durably, and atomically rename it into place. Preserve an already-correct destination; refuse or quarantine an incorrect destination rather than silently overwriting it. Remove incomplete temporary material after failure.",
+      "acceptance": "The mounted directory contains exactly the allowed frozen file set, with TRAIN.jsonl SHA256 97463689b4c47d912e20aa46fafe4c47b0e4ad538523ba8127145203f02acba1 and 9333559 bytes, TARGET_DEV.jsonl SHA256 e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97 and 465946 bytes, and FINAL_AUDIT_SEALED.jsonl SHA256 b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd and 309234 bytes, together with the previously verified retention sentinel. No additional scientific file may be introduced."
+    },
+    {
+      "id": "RC4_PRESERVE_FINAL_AUDIT_SEAL",
+      "action": "Treat FINAL_AUDIT_SEALED.jsonl as opaque bytes throughout transfer. After exact-hash placement, make it read-only and record a receipt proving transport and hash verification only. The launcher and training code must remain unable to open, deserialize, tokenize, sample, or otherwise consume it; the read-only preflight may only stat and hash it.",
+      "acceptance": "Evidence records model_accessed=false, optimizer_accessed=false, content_deserialized=false, and the exact frozen byte count and SHA256."
+    },
+    {
+      "id": "RC5_REPEAT_COMPLETE_READ_ONLY_PREFLIGHT",
+      "action": "After provisioning, rerun the complete frozen read-only preflight from its first gate, not only the previously failing check. Verify the exact mounted file set and hashes, source and launch identity, serializer/schedule/launcher bindings, output isolation, and 28800-second cumulative budget reservation/cap. Preserve the exact next failure if any and stop there.",
+      "acceptance": "A new immutable preflight record reports PASS for every frozen pre-model gate, or reports a precise fail-closed condition. Passing this preflight still does not authorize model loading, base-reference collection, optimizer construction, or GPU training."
+    },
+    {
+      "id": "RC6_PROVENANCE_AND_RESUBMISSION",
+      "action": "Freeze the transport implementation, tests, transfer receipts, and new preflight evidence; commit and push them to the existing non-main experiment/infrastructure branch without force-push or history rewrite; then freshly verify local HEAD equals origin branch SHA equals the RunPod checked-out/source SHA and submit the next structured Director brief through the Supervisor Director-to-Controller path.",
+      "acceptance": "The resubmission records exact artifact hashes, fresh three-way source parity, zero model/optimizer initialization, zero charged GPU training seconds, and the final preflight result."
+    }
+  ],
+  "scientific_training_authorized": false
+}
