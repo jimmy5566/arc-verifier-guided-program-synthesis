@@ -1,0 +1,9 @@
+{
+  "failure": "RuntimeError:MOUNTED_DATA_FILE_SET_MISMATCH",
+  "launch_binding_sha256": "57a75a46552a71f9dea3c1a0ab4bf5a66cf9142d3f775679b176b0989f3132ce",
+  "no_model_loaded": true,
+  "no_optimizer_constructed": true,
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_AVAILABLE_DATA_V1",
+  "schema_version": 1,
+  "status": "FAIL_CLOSED"
+}

@@ -1,0 +1,40 @@
+{
+  "base_reference_status": "NOT_COLLECTED_MODEL_LOADING_OR_GPU_EXECUTION_NOT_AUTHORIZED_BY_DIRECTIVE_010",
+  "brief_id": "DIRECTOR_BRIEF_011",
+  "budget": {
+    "cap_seconds": 28800,
+    "charged_new_gpu_training_seconds": 0,
+    "initial_reservation_seconds": 7200
+  },
+  "completed_contracts": {
+    "BASE_REFERENCE_AND_GATE_IDENTITIES_V1.json": "7b61c6933d76b412f9545872a82cbe4056f9e1ced836ca07bb7ca1641fc1e91c",
+    "CPU_DUMMY_LAUNCH_TEST.json": "af15800ea9a7f0b49d19ec6627653d2813d568e86208b19d5fee9578f10fc6f2",
+    "CUMULATIVE_BUDGET_BINDING_V1.json": "96184e0d590f8a2a735e2572d3538534aa4ea22725ca1adae503d603cefed0f3",
+    "EXECUTION_CONFIG_ROUND_001.json": "6455fffa870f8f15094b3657cec584cb9ac5810b8bdc1ca9d23619ff2c618f43",
+    "LAUNCH_BINDING_V1.json": "57a75a46552a71f9dea3c1a0ab4bf5a66cf9142d3f775679b176b0989f3132ce",
+    "SERIALIZATION_CONTRACT_V1.json": "01aa371549830300b4c831ff6024d6740aef2da359cf2b1b9697929ff66ed9c3",
+    "SERIALIZATION_TEST_VECTORS_V1.json": "efc80b67f4325484c88054edb39f214bf7c79423ffd584dc273cf36d8d0cd5d4",
+    "TRAINING_SCHEDULE_ROUND_001.json": "06c8a746ce5292ac0462ddcbf6a701310030d3dc3178c3f54443de619f91e666"
+  },
+  "directive_response": "DIRECTOR_DIRECTIVE_010",
+  "no_gpu_training_started": true,
+  "preflight": {
+    "first_failure": "MOUNTED_DATA_FILE_SET_MISMATCH",
+    "model_loaded": false,
+    "optimizer_constructed": false,
+    "path": "experiments\\base_only_targeted_repair_available_data_v1\\execution_contract_v2\\REMOTE_PREFLIGHT_ATTEMPT_002.json",
+    "sha256": "918bdbde1484b2c3664dc0c2eba7804c140696dde1d8357666654d3bce34eb2d",
+    "status": "FAIL_CLOSED"
+  },
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_AVAILABLE_DATA_V1",
+  "provenance_at_preflight": {
+    "all_equal": true,
+    "fresh_origin_sha": "48dfc2e4c4278982c2d6b3b8f8cacb918c2f47ac",
+    "local_head": "48dfc2e4c4278982c2d6b3b8f8cacb918c2f47ac",
+    "runpod_source_sha": "48dfc2e4c4278982c2d6b3b8f8cacb918c2f47ac"
+  },
+  "request": "Authorize or provide an approved byte-preserving RunPod transport for the three exact missing allowed files, then permit a new read-only preflight. Do not authorize model loading, optimizer construction, or GPU training from this brief.",
+  "schema_version": 1,
+  "scientific_training_authorized": false,
+  "status": "REQUIRE_INFRA_TRANSPORT_REMEDIATION"
+}

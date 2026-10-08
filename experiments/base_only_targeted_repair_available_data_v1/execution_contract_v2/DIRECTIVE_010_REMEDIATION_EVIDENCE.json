@@ -1,0 +1,44 @@
+{
+  "blocked": {
+    "first_failure": "MOUNTED_DATA_FILE_SET_MISMATCH",
+    "missing_exact_files": [
+      "TRAIN.jsonl",
+      "TARGET_DEV.jsonl",
+      "FINAL_AUDIT_SEALED.jsonl"
+    ],
+    "no_substitution_or_regeneration": true,
+    "remote_preflight": "execution_contract_v2/REMOTE_PREFLIGHT_ATTEMPT_002.json",
+    "remote_preflight_sha256": "918bdbde1484b2c3664dc0c2eba7804c140696dde1d8357666654d3bce34eb2d",
+    "required_change": "MOUNT_EXACT_ALLOWED_BYTES_AND_RUN_PREFLIGHT",
+    "transport_evidence": [
+      "RunPod forced-PTY SSH gateway rejects SFTP/SCP subsystem request",
+      "bounded PTY byte-transfer attempt did not produce a valid mounted file"
+    ]
+  },
+  "completed": {
+    "base_reference_gate": "FROZEN_PENDING_SEPARATE_MODEL_AUTHORIZATION: 7b61c6933d76b412f9545872a82cbe4056f9e1ced836ca07bb7ca1641fc1e91c",
+    "budget_and_active_cap": "FROZEN_AND_DUMMY_TESTED: 96184e0d590f8a2a735e2572d3538534aa4ea22725ca1adae503d603cefed0f3",
+    "complete_training_schedule": "FROZEN: 06c8a746ce5292ac0462ddcbf6a701310030d3dc3178c3f54443de619f91e666",
+    "serialization_tokenization_contract": "FROZEN: 01aa371549830300b4c831ff6024d6740aef2da359cf2b1b9697929ff66ed9c3",
+    "stage_compatible_launcher": "FROZEN_CPU_TESTED: 856697c934d07e459b31ce3b11d34b3c8a7f5f5a6d06d31ad3765b2e264b5bd8"
+  },
+  "directive_id": "DIRECTOR_DIRECTIVE_010",
+  "directive_sha256": "587fb29d50f9a804946b5d089dc57745a8e9ee54cc68fe871123d7e137afa2bf",
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "provenance_at_preflight": {
+    "all_equal": true,
+    "fresh_origin_sha": "48dfc2e4c4278982c2d6b3b8f8cacb918c2f47ac",
+    "local_head": "48dfc2e4c4278982c2d6b3b8f8cacb918c2f47ac",
+    "runpod_source_sha": "48dfc2e4c4278982c2d6b3b8f8cacb918c2f47ac"
+  },
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "REMEDIATION_BLOCKED_MOUNTED_DATA_TRANSPORT",
+  "tests": {
+    "dummy_short_non_model_subprocess": "PASS_ZERO_GPU_SECONDS",
+    "python_compile": "PASS",
+    "remote_preflight": "FAIL_CLOSED_EXPECTED",
+    "unittest": "3 PASS"
+  }
+}
