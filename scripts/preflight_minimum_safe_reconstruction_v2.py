@@ -56,6 +56,9 @@ def main()->int:
   forbidden=b['scientific_boundaries']['forbidden_training_terms']; declared=[str(x['root']) for x in b['dataset_contracts']]+[b['replay_contract']['path']]
   if any(t in p.lower() for t in forbidden for p in declared):raise RuntimeError('GOLD_OR_FINAL_AUDIT_PATH')
   out['minimum_safe_gate_conditions']['B']='PASS';out['datasets']=sets;out['replay']=replay
+  expected_env=b['worker_binding']['environment']
+  for key,value in expected_env.items():
+   if os.environ.get(key)!=value:raise RuntimeError(f'LAUNCH_ENVIRONMENT_MISMATCH:{key}')
   import capability_pilot_2m_v1,torch,transformers,peft,bitsandbytes
   r=b['runtime_contract']; observed={'interpreter':sys.executable,'python':sys.version.split()[0],'torch':torch.__version__,'transformers':transformers.__version__,'peft':peft.__version__,'bitsandbytes':bitsandbytes.__version__,'cuda':torch.version.cuda,'cuda_available':torch.cuda.is_available(),'device_count':torch.cuda.device_count(),'bf16_supported':torch.cuda.is_bf16_supported() if torch.cuda.is_available() else False,'gpu':torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,'capability_pilot_import':True}
   for k in ('interpreter','python','torch','transformers','peft','bitsandbytes','cuda','gpu'):

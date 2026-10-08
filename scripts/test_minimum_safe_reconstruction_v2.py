@@ -27,6 +27,11 @@ class MinimumSafeLaunchTest(unittest.TestCase):
   text=(ROOT/'scripts'/'launch_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
   self.assertIn("prepare_log.parent.mkdir(parents=True,exist_ok=True)",text)
 
+ def test_preflight_requires_frozen_worker_environment(self):
+  text=(ROOT/'scripts'/'preflight_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
+  self.assertIn("expected_env=b['worker_binding']['environment']",text)
+  self.assertIn('LAUNCH_ENVIRONMENT_MISMATCH',text)
+
  def test_preflight_allows_only_its_control_plane_log(self):
   text=(ROOT/'scripts'/'preflight_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
   self.assertIn("'preflight.log'",text)
