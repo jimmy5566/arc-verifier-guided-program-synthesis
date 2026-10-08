@@ -1,0 +1,71 @@
+{
+  "brief_id": "DIRECTOR_BRIEF_002",
+  "program": "TARGETED_CAPABILITY_REPAIR_V1",
+  "status": "RESUBMISSION_HARD_STOPPED_PENDING_RC1_RC5",
+  "request": "Review RC1-RC5 evidence. Do not authorize GPU training unless a subsequent directive explicitly returns CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true.",
+  "prior_directive": {
+    "directive_id": "DIRECTOR_DIRECTIVE_003",
+    "sha256": "8de52b399dfd5a03f4028852d4cc7739c9561e2913ce9916984f818aab4e4ca3",
+    "decision": "REQUIRE_CHANGES"
+  },
+  "rc_evidence": {
+    "RC1_PRELAUNCH_IDENTITY_GATE": {
+      "status": "FAIL_HARD_STOP",
+      "record": "experiments/targeted_capability_repair_v1/prelaunch/PRELAUNCH_IDENTITY_RECORD_V1.json",
+      "record_sha256": "dd47b1498fc0b4e09db439156f171ef7ab495e908570990710be2001d10fb5f9",
+      "local_package_hashes_match": true,
+      "recipe_exact": true,
+      "scientific_boundaries_preserved": true,
+      "mounted_adapter": "NOT_SUPPLIED_OR_REHASHED",
+      "mounted_base": "NOT_SUPPLIED_OR_REHASHED",
+      "resolved_command_config_output": "NOT_SUPPLIED",
+      "action": "GPU_LAUNCH_HARD_STOP"
+    },
+    "RC2_FROZEN_NUMERIC_GATES": {
+      "status": "PASS",
+      "artifact": "experiments/targeted_capability_repair_v1/protocol/FROZEN_NUMERIC_GATES_V1.json",
+      "sha256": "a8253d30cb6f19c305962df2d78426007f41e98bc2d38878bc4870135a7bce05",
+      "coverage": ["target_n01_n10_thresholds", "mixed_gain_rejection", "retention_harm_thresholds", "deterministic_checkpoint_ties"]
+    },
+    "RC3_RECIPE_AND_CHECKPOINT_LINEAGE": {
+      "status": "PASS",
+      "artifact": "experiments/targeted_capability_repair_v1/protocol/CHECKPOINT_LINEAGE_PROTOCOL_V1.json",
+      "sha256": "d6911c69c8d8a53dfabe42ad8caaefbf4c1cdc4edc9a9723e26413407941f871",
+      "enforced_recipe": "BF16 frozen base, LoRA r64/a32/dropout0, PagedAdamW8bit, no quantization, context8704, frozen module set"
+    },
+    "RC4_GPU_TIME_LEDGER": {
+      "status": "PASS",
+      "append_only_ledger": "experiments/targeted_capability_repair_v1/TARGETED_CAPABILITY_REPAIR_GPU_TIME_LEDGER.jsonl",
+      "snapshot": "experiments/targeted_capability_repair_v1/GPU_TIME_LEDGER_SNAPSHOT_V1.json",
+      "snapshot_sha256": "8b9676a926ad061d2babf84a0e0c909f433f16b295a4cdc081f2e73898e666d2",
+      "charged_new_gpu_training_seconds": 0,
+      "remaining_seconds": 28800,
+      "enforcement": "SHA256-linked append-only records; failed/interrupted/resumed intervals charged; overlaps unioned; cap excess rejected"
+    },
+    "RC5_IMMUTABLE_PROVENANCE": {
+      "status": "PARTIAL_LOCAL_COMMIT_REMOTE_UNVERIFIED",
+      "local_commit": "bb3c13ded5f074bf207cd00d08cc5efa7caa4c14",
+      "package_manifest": "experiments/targeted_capability_repair_v1/PROTOCOL_PACKAGE_MANIFEST_V2.json",
+      "package_manifest_sha256": "21b4cf041764db506c82fd71e47576d1793fd90df6f7d9a9122abe6c3fb2e846",
+      "fresh_remote_branch_sha": "e6ec3a1ddb847f99ab127f65c2b63aa5a2103e2f",
+      "remote_matches_local_commit": false,
+      "push_performed": false,
+      "reason": "Director requires separate explicit user authorization for push."
+    }
+  },
+  "scientific_boundaries": {
+    "gpu_training_started": false,
+    "eval60_gold_training": false,
+    "diagnostic_episodes_training": false,
+    "final_audit_opened": false,
+    "frozen_taxonomy_modified": false
+  },
+  "directive_event_path_smoke": {
+    "directive": "DIRECTOR_DIRECTIVE_TEST",
+    "directive_sha256": "736432b2e46791d192dd7cc34638bb3f8672a18eb355738d16b2a232bb703dec",
+    "controller_wakeups": 1,
+    "controller_acknowledged": true,
+    "supervisor_restarted_by_watchdog": true,
+    "duplicate_wakeup_after_restart": false
+  }
+}
