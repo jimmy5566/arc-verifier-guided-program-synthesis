@@ -83,6 +83,8 @@ def main() -> int:
     parser.add_argument("--commit", dest="commit_sha")
     parser.add_argument("--brief", type=Path)
     parser.add_argument("--dummy-remediation", action="store_true")
+    parser.add_argument("--close-no-director", action="store_true",
+                        help="close a completed remediation under the single-controller policy")
     args = parser.parse_args()
     directive_bytes = args.directive.read_bytes()
     digest = hashlib.sha256(directive_bytes).hexdigest()
@@ -154,6 +156,11 @@ def main() -> int:
         if before(record, "RESUBMITTED"):
             transition(record, "RESUBMITTED", brief=str(args.brief.resolve()))
             transition(record, "WAITING_DIRECTOR", next_step="AWAIT_DIRECTOR_DIRECTIVE", controller_cycle_complete=False, waiting_reason="DIRECTOR_DECISION_REQUIRED")
+    if args.close_no_director:
+        if record.get("state") not in {"REMEDIATION_COMPLETE", "VALIDATED", "COMMITTED"}:
+            raise RuntimeError("CLOSE_NO_DIRECTOR_REQUIRES_COMPLETED_REMEDIATION")
+        transition(record, "CLOSED", route="SINGLE_PRIMARY_CONTROLLER", next_step="SCIENTIFIC_EXECUTION_GATE",
+                   controller_cycle_complete=True, closure_reason="DIRECTOR_EXCEPTION_ONLY_POLICY")
     atomic_json(args.state, state)
     print(json.dumps({"directive_id": directive_id, "decision": decision, "state": record["state"], "scientific_training_started": False}, sort_keys=True))
     return 0

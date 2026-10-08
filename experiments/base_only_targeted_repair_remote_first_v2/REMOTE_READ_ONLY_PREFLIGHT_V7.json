@@ -1,0 +1,17 @@
+{
+  "base_manifest_identity": "9f642a92e8e39c82630820c1c2d17a42f5b7bd6baddd12518cbc366663622c94",
+  "binding_sha256": "ca126980ebb97ea1879f964331224e20e7bfe92a0ddbb47c784a198666efed26",
+  "contract_sha256": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e",
+  "ledger_sha256": "7d19684fd198482d8862dbf2110711f183ed86b58d9d9dff2922cc9cb9b891cc",
+  "no_lora_constructed": true,
+  "no_model_imported": true,
+  "no_model_loaded": true,
+  "no_optimizer_constructed": true,
+  "remote_path": "/workspace/arc2/base_reference_v2/PREFLIGHT_a969e005.json",
+  "retention_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "source_commit": "a969e0052b5659fc26da7eed46973ea87914fb99",
+  "status": "PASS_READ_ONLY_BASE_REFERENCE_PREFLIGHT",
+  "target_dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+}

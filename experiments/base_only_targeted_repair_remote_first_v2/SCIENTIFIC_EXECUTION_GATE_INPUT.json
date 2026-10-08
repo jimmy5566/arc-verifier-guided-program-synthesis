@@ -1,0 +1,50 @@
+{
+  "conditions": {
+    "baseline_collector_target_blind": {
+      "collector_sha256": "f6f03fa0b3f22f0afaf9d23c8b9fd665f48e4c647d3b2e8c494fb685afda29ec",
+      "evidence": "execution_contract_v7/CPU_TEST_REPORT_V2.json",
+      "status": "PASS"
+    },
+    "final_audit_unopened": {
+      "evidence": "execution_contract_v7/BASE_REFERENCE_LAUNCH_BINDING_V3.json",
+      "status": "PASS"
+    },
+    "frozen_baseline_identity": {
+      "evidence": "experiments/base_only_targeted_repair_available_data_v1/NEW_SUBPROTOCOL_PREPARATION_BLOCKED.json",
+      "reason": "Historical replay shard SHA256 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc is unavailable; exact reconstruction must not substitute a dataset.",
+      "status": "BLOCKED"
+    },
+    "model_runtime_identity": {
+      "evidence": "REMOTE_READ_ONLY_PREFLIGHT_V7.json",
+      "sha256": "b96b3f91f796f25cc15de8e31e920444f3df7975b34bc1269af9f7ee2f7ed24a",
+      "status": "PASS"
+    },
+    "no_diagnostic_gold_in_training_labels": {
+      "evidence": "execution_contract_v7/BASE_REFERENCE_LAUNCH_BINDING_V3.json",
+      "status": "PASS"
+    },
+    "no_eval60_gold_in_training_path": {
+      "evidence": "execution_contract_v7/BASE_REFERENCE_LAUNCH_BINDING_V3.json",
+      "status": "PASS"
+    },
+    "provenance_clean": {
+      "local_commit": "a969e0052b5659fc26da7eed46973ea87914fb99",
+      "origin_commit": "a969e0052b5659fc26da7eed46973ea87914fb99",
+      "runpod_commit": "a969e0052b5659fc26da7eed46973ea87914fb99",
+      "status": "PASS"
+    },
+    "surface_isolation": {
+      "evidence": "execution_contract_v7/BASE_REFERENCE_LAUNCH_BINDING_V3.json",
+      "status": "PASS"
+    },
+    "training_budget_available": {
+      "cap_seconds": 28800,
+      "charged_seconds": 0,
+      "ledger": "orchestration/budget/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V5.jsonl",
+      "status": "PASS"
+    }
+  },
+  "execution_policy": "SINGLE_PRIMARY_SCIENTIFIC_CONTROLLER; Director exception-only",
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2",
+  "schema_version": 1
+}
