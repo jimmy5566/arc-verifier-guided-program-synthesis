@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "diagnostic_id": "V7_R1_R2_SERIAL_DECODING_FLIP_REPLICATION_V1",
+  "status": "FROZEN_PENDING_CPU_PREFLIGHT",
+  "purpose": "Distinguish Batch32 decoding sensitivity from reproducible model-state interference before any R3 proposal.",
+  "cohort": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/serial_decoding_flip_replication_v1/DIAGNOSTIC_COHORT.json",
+    "sha256": "771f0b1dab3b0f49d7db1c3af02112ce179483ad26a2b3aea84093be0b4897a3",
+    "episodes": 65,
+    "target_values_in_manifest": false
+  },
+  "models": [
+    {"id": "CAPABILITY_REPAIR_BASELINE_V1_V7", "manifest": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json", "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"},
+    {"id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_FINAL", "manifest": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r1_paired_evaluation_v1/R1_CHECKPOINT_MANIFEST.json", "manifest_sha256": "3698906eb87c82a4ef26594fae14ed672887dc4d09fba1468ab601a770ad340d"},
+    {"id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_004_FINAL", "manifest": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_paired_evaluation_v1/R2_CHECKPOINT_MANIFEST.json", "manifest_sha256": "f0a5ebdf28f16665ced9c19054217a7d8136e5a31e055fdcb334f7f8eca75052"}
+  ],
+  "datasets": {
+    "TARGET_DEV": {"path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl", "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97", "rows": 192},
+    "RETENTION_SENTINEL": {"path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl", "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526", "rows": 96}
+  },
+  "decoder_contract": {"path": "experiments/capability_repair_baseline_v1/DECODER_TOKEN_EXTRACTION_CONTRACT_V1.json", "sha256": "07075a098dd26984213c39e9a18a5e7c42c13fab098f905d5946646541e864fa"},
+  "execution": {"batch_size": 1, "deterministic": true, "optimizer_construction": false, "training": false, "runtime_cap_seconds": 7200, "fresh_output_root": "/workspace/arc2/targeted_repair_postmortem_v1/V7_R1_R2_SERIAL_DECODING_FLIP_REPLICATION_V1"},
+  "forbidden": ["DO_NOT_START_R3", "DO_NOT_TRAIN", "DO_NOT_CONSTRUCT_OPTIMIZER", "DO_NOT_CHANGE_COHORT_AFTER_MODEL_LOADING", "DO_NOT_ACCESS_FINAL_AUDIT"],
+  "decision_rule": {"pass": "all five Director-specified family signs hold under Batch1 and every checkpoint has canonical agreement >= 0.9375 against its preserved Batch32 predictions", "fail": "stop the targeted-repair approach; do not propose R3 from current family-weight evidence"},
+  "final_audit_opened": false
+}
