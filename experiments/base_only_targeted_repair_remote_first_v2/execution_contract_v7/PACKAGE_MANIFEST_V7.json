@@ -1,0 +1,12 @@
+{
+  "files": {
+    "BASELINE_INFERENCE_CONTRACT_V2.json": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e",
+    "BASE_REFERENCE_LAUNCH_BINDING_V3.json": "ca126980ebb97ea1879f964331224e20e7bfe92a0ddbb47c784a198666efed26",
+    "BASE_REFERENCE_OUTPUT_SCHEMA_V2.json": "21e70ace1ce7a170c4ae191fd33ef595e06b358697c729750e302b2e13772281",
+    "CANONICAL_LEDGER_V5_CONTRACT.json": "5ef3b9deb4ac65e37a674586eff6a845ce4764b41f0a71397dca71dba021c920",
+    "CPU_TEST_REPORT_V2.json": "dce87ed3672ab0b1afab6c741f45e418817d78ada4129c6fd09255c89623a3ad"
+  },
+  "policy": "SCIENTIFIC_EXECUTION_GATE replaces per-step Director authorization; no Director directive is part of the command authorization path.",
+  "schema_version": 1,
+  "status": "FROZEN_PENDING_REMOTE_READ_ONLY_PREFLIGHT"
+}

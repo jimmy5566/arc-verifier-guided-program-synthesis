@@ -100,7 +100,8 @@ def main() -> int:
         write(z.output, {"schema_version": 2, "protocol_id": PROTOCOL, "status": status, "model_loaded": False, "lora_constructed": False, "optimizer_constructed": False, "gpu_training_started": False, "inference_contract_identity": cid, "target_episode_order": [r["episode_id"] for r in target], "retention_episode_order": [r["episode_id"] for r in retention], "prompt_sha256": dig(ps), "completed_episode_count": 0 if z.cpu_mock_simulate_runtime_cap else len(ps)})
         write(z.receipt, receipt(status, started, model_loaded=False, model_released=True)); return 1 if z.cpu_mock_simulate_runtime_cap else 0
     auth = json.loads(z.authorization.read_text(encoding="utf-8")) if z.authorization else {}
-    if auth.get("base_reference_collection_authorized") is not True: raise RuntimeError("DIRECTOR_BASE_REFERENCE_AUTHORIZATION_REQUIRED")
+    if auth.get("AUTO_SCIENTIFIC_EXECUTION_AUTHORIZED") is not True or auth.get("baseline_reference_collection_authorized") is not True:
+        raise RuntimeError("SCIENTIFIC_EXECUTION_GATE_REQUIRED")
     if z.base is None: raise RuntimeError("BASE_PATH_REQUIRED")
     mid = verify_binding(b, z.base)  # Complete base identity before model-library import.
     deadline = time.monotonic() + z.runtime_limit_seconds; rows = []; model = None; status = "COLLECTED_PASS"; failure = None

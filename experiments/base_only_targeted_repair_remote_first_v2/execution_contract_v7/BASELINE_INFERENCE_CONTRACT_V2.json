@@ -1,0 +1,47 @@
+{
+  "contract_id": "ARC_NATIVE_OBSERVATION_ONLY_V1",
+  "invalid_output_policy": "parse_valid=false; exact_grid_match=false; canonical_prediction_sha256=SHA256(canonical {invalid_output:true})",
+  "output_extraction": "decode only generated token suffix after prompt length; preserve special tokens",
+  "parser": {
+    "policy": "only one rectangular newline-delimited digit grid 0..9; no prose, JSON, whitespace repair, or special-token repair",
+    "source": "src/inference/arc_native_io.py:ARCNativeOutputParser",
+    "source_sha256": "502a064f09743acc85643ebb8a9a95573832d8b3d6c51e79ccf94222dd4b89b3"
+  },
+  "prompt": {
+    "messages": "all train input/output pairs then test input only; add generation prompt",
+    "prefix": "",
+    "source": "configs/nvarc_native_846d0198/chat_template.j2",
+    "source_sha256": "e5ed79284f346b7eadd874f6bdc376f722704808afd07ffd6190c6d8b97ddb5f",
+    "suffix": "<|im_start|>assistant\n"
+  },
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2",
+  "runtime": {
+    "attention_backend": "sdpa",
+    "deterministic_generation": {
+      "do_sample": false,
+      "num_beams": 1,
+      "use_cache": true
+    },
+    "device": "cuda:0",
+    "eos_token_id": 15,
+    "max_new_tokens": 512,
+    "pad_token_id": 13,
+    "precision": "BF16",
+    "required_special_token": "<|im_start|>",
+    "required_special_token_id": 14
+  },
+  "schema_version": 1,
+  "status": "FROZEN_PENDING_DIRECTOR_BASE_REFERENCE_AUTHORIZATION",
+  "test_output_policy": "held-out test output is scoring-only and never included in observation, prompt, tokenization, or model input",
+  "tokenizer": {
+    "add_special_tokens": false,
+    "files": {
+      "special_tokens_map.json": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+      "tokenizer.json": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+      "tokenizer_config.json": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+      "vocab.json": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+    },
+    "required_special_token": "<|im_start|>",
+    "required_special_token_id": 14
+  }
+}

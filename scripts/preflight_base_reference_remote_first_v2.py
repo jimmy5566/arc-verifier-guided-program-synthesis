@@ -41,7 +41,7 @@ def main() -> int:
         out.update({"status": "PASS_READ_ONLY_BASE_REFERENCE_PREFLIGHT", "binding_sha256": sha(a.binding), "contract_sha256": sha(a.contract),
                     "base_manifest_identity": hashlib.sha256(json.dumps(binding["base_files"], sort_keys=True, separators=(",", ":")).encode()).hexdigest(),
                     "target_dev_sha256": data["TARGET_DEV"]["sha256"], "retention_sha256": data["RETENTION_SENTINEL"]["sha256"],
-                    "ledger_sha256": sha(a.ledger), "collector_launch_blocked_until_director_authorization": True})
+                    "ledger_sha256": sha(a.ledger), "collector_launch_blocked_until_scientific_execution_gate": True})
     except Exception as exc:
         out["failure"] = f"{type(exc).__name__}:{exc}"
     write(a.output, out); print(json.dumps({"status": out["status"]}, sort_keys=True))

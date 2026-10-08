@@ -1,0 +1,80 @@
+{
+  "base_files": {
+    "added_tokens.json": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce",
+    "config.json": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0",
+    "generation_config.json": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02",
+    "model-00001-of-00002.safetensors": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529",
+    "model-00002-of-00002.safetensors": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0",
+    "model.safetensors.index.json": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4",
+    "model_manifest.json": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7",
+    "special_tokens_map.json": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+    "tokenizer.json": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+    "tokenizer_config.json": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+    "vocab.json": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+  },
+  "base_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+  "baseline_runtime_cap_seconds": 7200,
+  "baseline_seconds_not_gpu_training_ledger": true,
+  "canonical_ledger": "orchestration/budget/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V5.jsonl",
+  "canonical_ledger_policy": "V5_ONLY; V2 and V4 are preserved historical files and are not launch-referenced",
+  "data": {
+    "RETENTION_SENTINEL": {
+      "bytes": 237564,
+      "local_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\base_only_targeted_repair_remote_first_v2\\remote_dataset_expected\\RETENTION_SENTINEL.jsonl",
+      "remote_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV": {
+      "bytes": 465946,
+      "local_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\base_only_targeted_repair_remote_first_v2\\remote_dataset_expected\\TARGET_DEV.jsonl",
+      "remote_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    }
+  },
+  "execution_contract_revision": "V7_GATE_CONTROLLED",
+  "inference_contract": "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
+  "inference_contract_sha256": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e",
+  "output_contract": {
+    "atomic_utf8_json": true,
+    "non_overwrite": true,
+    "receipt": "/workspace/arc2/base_reference_v2/BASE_REFERENCE_RECEIPT.json",
+    "result": "/workspace/arc2/base_reference_v2/BASE_REFERENCE.json"
+  },
+  "prohibitions": [
+    "TRAIN input",
+    "FINAL_AUDIT input",
+    "LoRA construction",
+    "optimizer construction",
+    "scientific training"
+  ],
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2",
+  "resolved_command": [
+    "python3",
+    "scripts/collect_base_reference_remote_first_v2.py",
+    "--target-dev",
+    "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+    "--retention",
+    "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+    "--binding",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASE_REFERENCE_LAUNCH_BINDING_V3.json",
+    "--contract",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
+    "--base",
+    "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "--output",
+    "/workspace/arc2/base_reference_v2/BASE_REFERENCE.json",
+    "--receipt",
+    "/workspace/arc2/base_reference_v2/BASE_REFERENCE_RECEIPT.json",
+    "--runtime-limit-seconds",
+    "7200"
+  ],
+  "schema_version": 1,
+  "scientific_execution_gate": "experiments/base_only_targeted_repair_remote_first_v2/SCIENTIFIC_EXECUTION_GATE.json",
+  "source_hashes": {
+    "configs/nvarc_native_846d0198/chat_template.j2": "e5ed79284f346b7eadd874f6bdc376f722704808afd07ffd6190c6d8b97ddb5f",
+    "scripts/collect_base_reference_remote_first_v2.py": "f6f03fa0b3f22f0afaf9d23c8b9fd665f48e4c647d3b2e8c494fb685afda29ec",
+    "scripts/preflight_base_reference_remote_first_v2.py": "b2e977d87db4fb2f48100a3ee95dfee1fd5c2cfc6f90efc897691e88a375ef3b",
+    "src/inference/arc_native_io.py": "502a064f09743acc85643ebb8a9a95573832d8b3d6c51e79ccf94222dd4b89b3"
+  },
+  "status": "FROZEN_PENDING_DIRECTOR_BASE_REFERENCE_AUTHORIZATION"
+}
