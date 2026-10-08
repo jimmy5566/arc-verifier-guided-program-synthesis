@@ -1,0 +1,86 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_017",
+  "decision": "NEW_SUBPROTOCOL_REQUIRED",
+  "scope": "RECONSTRUCTED_FOUNDATION_V2_V1_002",
+  "reasons": [
+    {
+      "area": "escalation_and_contract_identity",
+      "status": "PASS",
+      "finding": "CONTROLLER_ESCALATION_REQUEST_002.json has verified SHA256 98bfe24fded6eb1938a9f7e00d84377eb2253778da7714f5391f1df2cd7b7c50. The referenced proposed successor contract matches SHA256 322488b26e20c539f9c625adefda9ce997d28dc342f9922aab6e57a70904869a, and the Round 001 terminal closure matches SHA256 f70691d3511be0a681a336592cbfd9c00793500c4b1cd224314ba62bf5a41300."
+    },
+    {
+      "area": "round001_boundary",
+      "status": "PASS_TERMINAL_PRESERVED",
+      "finding": "RECONSTRUCTED_FOUNDATION_V2_V1_001 remains a terminal, zero-work infrastructure failure with zero optimizer steps, zero processed tokens, zero scientific GPU-training seconds, no checkpoints, and no final-audit access. Nothing in this directive reopens or reuses Round 001."
+    },
+    {
+      "area": "closed_protocol_reuse",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The proposed Round 002 contract retains protocol_id FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1 and explicitly proposes no scientific protocol change. Directive 016 determined that this replay-dependent protocol remains closed and that resolving the orchestration conflict creates no retry or successor entitlement under the same protocol identity."
+    },
+    {
+      "area": "machine_gate_identity",
+      "status": "FAIL_CRITICAL",
+      "finding": "The successor contract binds machine-gate template SHA256 f199ec13981b592867404ec2b58427878ae8d78191ac2478dfb644a42888b942. That preserved gate is internally contradictory: it asserts AUTO_SCIENTIFIC_EXECUTION_AUTHORIZED=true and GPU_GATE_READY=true while its decision is STOP_AT_GPU_GATE_PENDING_USER_LAUNCH_INSTRUCTION, and it contains no exact qualifying Director authorization binding or nonce-consumption record. Directive 015 specifically invalidated this gate class."
+    },
+    {
+      "area": "recipe_binding_and_output_isolation",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The contract points to RECONSTRUCTION_LAUNCH_BINDING_V2.json SHA256 73fecb89dd868e760b9da38a72b4c20ce266fb779fa6978d3eff4d7b381184a5. That binding still targets the shared Round 001-era run root /workspace/arc2/active_runs/reconstructed_foundation_v2_v1 and its runtime, freeze, checkpoint, ledger, and gate paths rather than the contract's declared fresh reconstructed_foundation_v2_v1_002 paths. It also preserves DIRECTOR_DIRECTIVE_005, whose decision is NEW_SUBPROTOCOL_REQUIRED and scientific_training_authorized=false, as a required file."
+    },
+    {
+      "area": "machine_preflight",
+      "status": "NOT_RUN_FOR_EXACT_SUCCESSOR_CONTRACT",
+      "finding": "The contract records a remote precheck and source parity but no new complete machine gate or read-only preflight bound to the exact successor contract SHA256, fresh round-specific paths, exact qualifying directive, and launch nonce. A precheck that no process or output directory exists is not a launch-readiness pass."
+    },
+    {
+      "area": "source_provenance",
+      "status": "PARTIAL",
+      "finding": "The contract records local-origin-RunPod equality at 93a7324b22b5812a197e3bed170629fbf9e3fd7b, while current local HEAD and fresh origin are equal at the additive authorization-request commit 08a134288f66d03b043f9bbefe350204a453c25e. No exact current RunPod parity or preflight is recorded for a corrected launch package."
+    },
+    {
+      "area": "current_execution_state",
+      "status": "PASS_NO_NEW_GPU_WORK",
+      "finding": "The authorization request itself performed no model loading, optimizer construction, GPU training, final-audit access, or scientific protocol change."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "REJECT_AND_REVOKE_CURRENT_SUCCESSOR_CONTRACT",
+      "requirement": "Do not launch RECONSTRUCTED_FOUNDATION_V2_V1_002 from proposed successor contract SHA256 322488b26e20c539f9c625adefda9ce997d28dc342f9922aab6e57a70904869a. Preserve it as rejected evidence and mark launch nonce 3a52d466-e8ec-4d51-96d2-505853df2c2c revoked and non-consumable. It must never be rebound to a later directive or contract."
+    },
+    {
+      "change_id": "KEEP_ROUND001_AND_CLOSED_PROTOCOL_TERMINAL",
+      "requirement": "Preserve Round 001 and FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1 exactly as terminal and non-dispatchable. Do not reuse their gate, launch binding, run root, freeze directory, runtime directory, checkpoint directory, authorization evidence, or round identity."
+    },
+    {
+      "change_id": "DEFINE_DISTINCT_SCIENTIFIC_SUBPROTOCOL",
+      "requirement": "If reconstruction is still proposed, define a separately named scientific condition and model identity. Explain the provenance and stage compatibility of every actually available training input, especially any replay bytes that were previously unavailable, and prohibit claims of continuity with the closed protocol unless the new review explicitly establishes them. No parameter or dataset identity may be inherited merely because the recipe is unchanged."
+    },
+    {
+      "change_id": "FREEZE_ROUND_SCOPED_CONTRACT_AND_PATHS",
+      "requirement": "Create a new contract with a new round ID and fresh nonce. Bind every command, source hash, base and tokenizer file, dataset and replay identity, recipe, schedule, environment, ledger, reservation, runtime, freeze, checkpoint, terminal receipt, and output path to that new condition only. All output and accounting paths must be isolated and must not already exist."
+    },
+    {
+      "change_id": "GENERATE_REPAIRED_MACHINE_GATE",
+      "requirement": "Use the repaired authorization schema, not SCIENTIFIC_EXECUTION_GATE.json SHA256 f199ec13981b592867404ec2b58427878ae8d78191ac2478dfb644a42888b942. The new gate must fail closed unless it binds an exact Director directive SHA256, matching protocol and round scope, CONTINUE or CONTINUE_WITH_WARNING, scientific_training_authorized=true, the exact new contract SHA256, and a fresh unconsumed nonce. Consumption must be atomic and exactly once."
+    },
+    {
+      "change_id": "RUN_COMPLETE_FINAL_COMMIT_PREFLIGHT",
+      "requirement": "On the exact final launch commit, run the complete read-only machine preflight before model import or loading. Verify every required model shard, tokenizer/config identity, training and evaluation data identity, no-Gold and sealed-final-audit boundary, source and environment, command, new output paths, repaired receipt writer, worker-exit propagation, cumulative 28800-second ledger, 7200-second reservation, and remaining budget. Preserve the exact first failure."
+    },
+    {
+      "change_id": "REFRESH_PROVENANCE_AND_REQUEST_NEW_REVIEW",
+      "requirement": "Commit and push the additive new-subprotocol package on the existing non-main branch without force-push or history rewrite; verify fresh local HEAD equals git ls-remote origin SHA equals RunPod checked-out/source SHA; then submit a new hashed authorization request containing the new contract SHA256 and nonce. No launch or retry is authorized until a later qualifying directive explicitly binds those exact identities."
+    }
+  ],
+  "reviewed_successor_contract_sha256": "322488b26e20c539f9c625adefda9ce997d28dc342f9922aab6e57a70904869a",
+  "reviewed_launch_nonce": "3a52d466-e8ec-4d51-96d2-505853df2c2c",
+  "reviewed_contract_approved": false,
+  "launch_nonce_authorized": false,
+  "retry_authorized": false,
+  "launch_authorized": false,
+  "model_loading_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false
+}

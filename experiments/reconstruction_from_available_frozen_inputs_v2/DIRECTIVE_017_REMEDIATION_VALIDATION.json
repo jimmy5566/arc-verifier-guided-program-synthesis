@@ -1,0 +1,68 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_017",
+  "directive_sha256": "2b03ef9e08e048c0d5f0400bd37ad58b3ff9b83d3c93baea4a35143e4fe15742",
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "requirements": {
+    "DEFINE_DISTINCT_SCIENTIFIC_SUBPROTOCOL": {
+      "evidence": "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2_PROTOCOL.json",
+      "model_identity": "RECONSTRUCTED_FROM_AVAILABLE_FROZEN_INPUTS_V2_001",
+      "protocol_id": "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2",
+      "sha256": "6bd5020c95bb2a41b88f07ac29b58f6438bbad08dda1e79dcd499de631b343e7",
+      "status": "PASS"
+    },
+    "FREEZE_ROUND_SCOPED_CONTRACT_AND_PATHS": {
+      "evidence": "RECONSTRUCTED_AVAILABLE_INPUTS_V2_001_CONTRACT.json",
+      "round_id": "RECONSTRUCTED_AVAILABLE_INPUTS_V2_001",
+      "sha256": "55936f9bec926516bf60610e2ae73c9865f1e7c61f495380887e1745953bbc7a",
+      "status": "PASS"
+    },
+    "GENERATE_REPAIRED_MACHINE_GATE": {
+      "atomic_nonce_test": "PASS",
+      "evidence": "SCIENTIFIC_EXECUTION_GATE_AVAILABLE_INPUTS_V2.json",
+      "sha256": "1bd28c293982be018a37f8c9bdbd50b31c2dabfa647b588876d1666ac2e4d43e",
+      "status": "PASS_PENDING_FUTURE_DIRECTIVE"
+    },
+    "KEEP_ROUND001_AND_CLOSED_PROTOCOL_TERMINAL": {
+      "evidence": "new contract closed_predecessors explicitly preserves terminal/rejected identities",
+      "status": "PASS"
+    },
+    "REFRESH_PROVENANCE_AND_REQUEST_NEW_REVIEW": {
+      "status": "PENDING_COMMIT_PUSH_RUNPOD_SYNC_AND_REQUEST"
+    },
+    "REJECT_AND_REVOKE_CURRENT_SUCCESSOR_CONTRACT": {
+      "evidence": "DIRECTIVE_017_SUCCESSOR_REVOCATION.json",
+      "sha256": "c792423abdbf1cbde36f8f5dee33bee5486f142e44cee5eae04bcd531a4db42a",
+      "status": "PASS"
+    },
+    "RUN_COMPLETE_FINAL_COMMIT_PREFLIGHT": {
+      "rule": "The new read-only preflight exists and will run only after the future qualifying directive pins exact source commit; no model import/load occurs.",
+      "status": "PENDING_FUTURE_AUTHORIZATION_COMMIT"
+    }
+  },
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "PASS_CPU_ONLY_PENDING_FUTURE_DIRECTOR_AUTHORIZATION",
+  "tests": [
+    {
+      "command": "py -3 scripts/test_reconstruction_available_inputs_v2_authorization.py",
+      "status": "PASS"
+    },
+    {
+      "command": "py -3 scripts/test_reconstruction_available_inputs_v2_contract.py",
+      "status": "PASS"
+    },
+    {
+      "command": "PYTHONPATH=<repo> py -3 orchestration/supervisor/test_arc2_controller_directive_cycle.py",
+      "status": "PASS"
+    },
+    {
+      "command": "py -3 scripts/test_reconstruction_launch_guard_v1.py",
+      "status": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASS"
+    }
+  ]
+}

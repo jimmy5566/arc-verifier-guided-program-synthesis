@@ -1,0 +1,19 @@
+{
+  "binding_sha256": "7db1755be2520428779ae142b284b86831f7e6fe58bc827cb784b075051d8de5",
+  "budget": {
+    "cap_seconds": 28800,
+    "charge_rule": "Only worker-declared optimizer intervals are scientific GPU time; pre-optimizer and wrapper time are separate.",
+    "reservation_seconds": 7200,
+    "scientific_seconds_before_launch": 0
+  },
+  "condition_statement": "A new reconstruction condition using independently frozen, currently available byte-identified inputs; it is not a continuation of the terminal V1 reconstruction protocol.",
+  "contract_sha256": "55936f9bec926516bf60610e2ae73c9865f1e7c61f495380887e1745953bbc7a",
+  "gate_sha256": "1bd28c293982be018a37f8c9bdbd50b31c2dabfa647b588876d1666ac2e4d43e",
+  "model_identity": "RECONSTRUCTED_FROM_AVAILABLE_FROZEN_INPUTS_V2_001",
+  "protocol_id": "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2",
+  "provenance_sha256": "e9df1945e5d66fc0ddbc64acd98a9f8c08e0b09d809ef6686b09bde8783094aa",
+  "schema_version": 1,
+  "scientific_condition_id": "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2_CONDITION_001",
+  "scientific_training_started": false,
+  "status": "FROZEN_PENDING_DIRECTOR_AUTHORIZATION"
+}

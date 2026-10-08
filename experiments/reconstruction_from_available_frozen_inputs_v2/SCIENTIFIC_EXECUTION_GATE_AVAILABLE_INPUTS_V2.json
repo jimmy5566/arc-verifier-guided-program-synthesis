@@ -1,0 +1,22 @@
+{
+  "AUTO_SCIENTIFIC_EXECUTION_AUTHORIZED": false,
+  "GPU_GATE_READY": false,
+  "authorization": {
+    "consumption": "ATOMIC_EXCLUSIVE_CREATE_ONLY_AFTER_QUALIFYING_DIRECTIVE",
+    "contract_sha256": "55936f9bec926516bf60610e2ae73c9865f1e7c61f495380887e1745953bbc7a",
+    "directive_sha256": null,
+    "launch_nonce": "26fdc83f-23b5-4ff6-9da3-4645542acd5d",
+    "protocol_id": "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2"
+  },
+  "contract_sha256": "55936f9bec926516bf60610e2ae73c9865f1e7c61f495380887e1745953bbc7a",
+  "fail_closed_reasons": [
+    "No qualifying directive has bound this new protocol, round, contract SHA, nonce, and exact source commit.",
+    "Final read-only preflight has not yet run on the exact final launch commit."
+  ],
+  "launch_nonce": "26fdc83f-23b5-4ff6-9da3-4645542acd5d",
+  "protocol_id": "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2",
+  "round_class": "SCIENTIFIC",
+  "round_id": "RECONSTRUCTED_AVAILABLE_INPUTS_V2_001",
+  "schema_version": 1,
+  "status": "PENDING_FUTURE_DIRECTOR_AUTHORIZATION"
+}

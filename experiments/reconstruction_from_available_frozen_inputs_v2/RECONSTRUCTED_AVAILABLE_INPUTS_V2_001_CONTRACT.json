@@ -1,0 +1,52 @@
+{
+  "authorization_required": {
+    "decision": [
+      "CONTINUE",
+      "CONTINUE_WITH_WARNING"
+    ],
+    "future_directive_must_bind": [
+      "protocol_id",
+      "round_id",
+      "contract_sha256",
+      "launch_nonce",
+      "exact_source_commit"
+    ],
+    "scientific_training_authorized": true
+  },
+  "closed_predecessors": [
+    {
+      "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+      "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+      "status": "TERMINAL_NON_DISPATCHABLE"
+    },
+    {
+      "nonce": "3a52d466-e8ec-4d51-96d2-505853df2c2c",
+      "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_002",
+      "status": "REJECTED_NON_CONSUMABLE"
+    }
+  ],
+  "final_audit_accessed": false,
+  "fresh_paths": {
+    "accounting_state": "/workspace/arc2/active_runs/reconstructed_available_inputs_v2_001/runtime/OPTIMIZER_ACCOUNTING_STATE.json",
+    "checkpoints": "/workspace/arc2/active_runs/reconstructed_available_inputs_v2_001/checkpoints",
+    "freeze": "/workspace/arc2/active_runs/reconstructed_available_inputs_v2_001/freeze",
+    "ledger": "/workspace/arc2/active_runs/reconstructed_available_inputs_v2_001/ledger/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V7.jsonl",
+    "ledger_snapshot": "/workspace/arc2/active_runs/reconstructed_available_inputs_v2_001/ledger/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V7_SNAPSHOT.json",
+    "nonce_consumption": "/workspace/arc2/active_runs/reconstructed_available_inputs_v2_001/authorization/nonce_consumption",
+    "preflight": "/workspace/arc2/active_runs/reconstructed_available_inputs_v2_001/preflight/FINAL_PREFLIGHT.json",
+    "run_root": "/workspace/arc2/active_runs/reconstructed_available_inputs_v2_001",
+    "runtime": "/workspace/arc2/active_runs/reconstructed_available_inputs_v2_001/runtime",
+    "terminal_receipt": "/workspace/arc2/orchestration/rounds/ROUND_RECONSTRUCTED_AVAILABLE_INPUTS_V2_001/RECONSTRUCTED_AVAILABLE_INPUTS_V2_001_TERMINAL_RECEIPT.json"
+  },
+  "launch_binding_path": "RECONSTRUCTION_AVAILABLE_INPUTS_V2_LAUNCH_BINDING.json",
+  "launch_binding_sha256": "7db1755be2520428779ae142b284b86831f7e6fe58bc827cb784b075051d8de5",
+  "launch_nonce": "26fdc83f-23b5-4ff6-9da3-4645542acd5d",
+  "new_model_identity": "RECONSTRUCTED_FROM_AVAILABLE_FROZEN_INPUTS_V2_001",
+  "protocol_id": "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2",
+  "round_class": "SCIENTIFIC",
+  "round_id": "RECONSTRUCTED_AVAILABLE_INPUTS_V2_001",
+  "schema_version": 1,
+  "scientific_condition_id": "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2_CONDITION_001",
+  "scientific_training_started": false,
+  "status": "PENDING_NEW_SUBPROTOCOL_AUTHORIZATION"
+}

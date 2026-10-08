@@ -1,0 +1,16 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_017",
+  "directive_sha256": "2b03ef9e08e048c0d5f0400bd37ad58b3ff9b83d3c93baea4a35143e4fe15742",
+  "rejected_contract_path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_FOUNDATION_V2_V1_002_PROPOSED_SUCCESSOR_CONTRACT.json",
+  "rejected_contract_sha256": "322488b26e20c539f9c625adefda9ce997d28dc342f9922aab6e57a70904869a",
+  "revoked_launch_nonce": "3a52d466-e8ec-4d51-96d2-505853df2c2c",
+  "rules": [
+    "Preserve the rejected contract without mutation.",
+    "Never bind its nonce to a later directive or contract.",
+    "Never reuse its protocol, gate, launch binding, paths, authorization, or round identity."
+  ],
+  "schema_version": 1,
+  "scientific_gpu_seconds_charged": 0.0,
+  "scientific_training_started": false,
+  "status": "REJECTED_NON_CONSUMABLE"
+}
