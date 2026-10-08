@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Read-only, fail-closed base-reference collector for V2. Additive correction; never trains."""
 from __future__ import annotations
-import argparse, hashlib, json, os, time
+import argparse, hashlib, json, os, sys, time
 from pathlib import Path
 from typing import Any
 
@@ -85,7 +85,7 @@ def receipt(status: str, started: float, **more: Any) -> dict[str, Any]:
 def main() -> int:
     a = argparse.ArgumentParser()
     for name in ("output", "receipt"): a.add_argument("--" + name, type=Path, required=True)
-    a.add_argument("--launch-contract", type=Path);
+    a.add_argument("--launch-contract", type=Path); a.add_argument("--governor-review", type=Path);
     for name in ("target-dev", "retention", "binding", "contract"): a.add_argument("--" + name, type=Path)
     a.add_argument("--base", type=Path); a.add_argument("--adapter", type=Path); a.add_argument("--authorization", type=Path); a.add_argument("--runtime-limit-seconds", type=float, default=7200); a.add_argument("--cpu-mock", action="store_true"); a.add_argument("--cpu-mock-simulate-runtime-cap", action="store_true")
     z = a.parse_args(); started = time.monotonic()
@@ -100,7 +100,11 @@ def main() -> int:
         v=V(); v.contract=str(z.launch_contract)
         verify_launch(v)  # verifies source, executable/dependencies, exact mounted model and data before imports.
         launch=json.loads(z.launch_contract.read_text(encoding="utf-8"))
-        if launch.get("authorization",{}).get("evaluation_authorized") is not True: raise RuntimeError("DIRECTOR_EVALUATION_AUTHORIZATION_REQUIRED")
+        if z.governor_review is None or not z.governor_review.is_file(): raise RuntimeError("GOVERNOR_REVIEW_REQUIRED")
+        review=json.loads(z.governor_review.read_text(encoding='utf-8'))
+        if review.get('decision') != 'CONTINUE_CONTROLLER': raise RuntimeError("GOVERNOR_REVIEW_NOT_AUTHORIZING")
+        if review.get('reviewed_brief_sha256') != launch.get('reviewed_brief_sha256') or review.get('launch_contract_file_sha256') != sha(z.launch_contract) or review.get('launch_contract_identity') != launch.get('contract_sha256') or review.get('baseline_identity_sha256') != launch.get('baseline_identity',{}).get('sha256'): raise RuntimeError("GOVERNOR_REVIEW_BINDING_MISMATCH")
+        if Path(sys.executable).resolve() != Path(launch['interpreter']).resolve(): raise RuntimeError("INTERPRETER_BINDING_MISMATCH")
         expected_out=Path(launch["output_root"]) / "CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json"
         if z.output.resolve()!=expected_out.resolve() or z.receipt.resolve()!=Path(launch["receipt_path"]).resolve(): raise RuntimeError("LAUNCH_OUTPUT_BINDING_MISMATCH")
         nonce=Path(launch["nonce_path"]); consumed=nonce.with_name(nonce.name+".consumed")

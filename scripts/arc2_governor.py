@@ -2,9 +2,9 @@
 """ARC2 Governor: one thin deterministic scheduler for Controller, Director, and remote jobs."""
 from __future__ import annotations
 import argparse, json, os, subprocess, sys, time
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from datetime import datetime, timezone
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 DISPOSITIONS={"CONTINUE_CONTROLLER","REVIEW_REQUIRED","WAIT_REMOTE","PAUSED","TERMINAL"}
 def now(): return datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
