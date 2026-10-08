@@ -133,6 +133,7 @@ def main() -> int:
         "runtime_contract": {
             **recipe["historical_execution_reference"]["environment"],
             "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+            "pythonpath": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src",
             "base_model_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
             "precision": "BF16",
             "quantization": "NONE",
@@ -142,6 +143,7 @@ def main() -> int:
         "fresh_paths": fresh_paths,
         "scientific_boundaries": {"forbidden_path_terms": ["eval60", "gold", "final_audit"], "final_audit_accessed": False, "targeted_repair_data_used": False, "no_model_load_or_optimizer_before_authorization": True},
         "worker_command": ["/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python", remote("scripts/run_capability_pilot_2m_v1.py"), "--mode", "train", "--model-path", "/workspace/arc2/models/qwen3_4b_grids15_sft139", "--novel-train-root", dataset_contracts[0]["root"], "--novel-validation-root", dataset_contracts[1]["root"], "--replay-shard", replay_contract["path"], "--freeze", fresh_paths["freeze"], "--runtime", fresh_paths["runtime"], "--checkpoints", fresh_paths["checkpoints"]],
+        "worker_environment": {"PYTHONPATH": f"{SOURCE_ROOT}/src"},
     }
     binding_sha = write(destination / "RECONSTRUCTION_AVAILABLE_INPUTS_V2_LAUNCH_BINDING.json", binding)
     contract = {

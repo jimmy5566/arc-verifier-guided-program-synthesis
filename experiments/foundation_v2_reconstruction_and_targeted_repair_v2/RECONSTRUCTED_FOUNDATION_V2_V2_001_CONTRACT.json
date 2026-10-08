@@ -39,7 +39,7 @@
     "terminal_receipt": "/workspace/arc2/orchestration/rounds/ROUND_RECONSTRUCTED_FOUNDATION_V2_V2_001/RECONSTRUCTED_FOUNDATION_V2_V2_001_TERMINAL_RECEIPT.json"
   },
   "launch_binding_path": "RECONSTRUCTION_AVAILABLE_INPUTS_V2_LAUNCH_BINDING.json",
-  "launch_binding_sha256": "ff9899bf9397fa22ba916d79115447fbc9438d19e4a9584c20bddd87017d6c60",
+  "launch_binding_sha256": "8d1bb616acd4ade21c00f4eb730e551b5adce06053ad88a95371b8615eb26290",
   "launch_nonce": "bc1f9e94-e336-447e-ab22-87decc706496",
   "new_model_identity": "RECONSTRUCTED_FOUNDATION_V2_V2_001",
   "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",

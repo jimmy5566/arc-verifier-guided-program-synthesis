@@ -228,6 +228,7 @@
     "peft": "0.17.1",
     "precision": "BF16",
     "python": "3.11.13",
+    "pythonpath": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src",
     "quantization": "NONE",
     "torch": "2.8.0+cu128",
     "transformers": "4.55.4"
@@ -298,5 +299,8 @@
     "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_001/runtime",
     "--checkpoints",
     "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_001/checkpoints"
-  ]
+  ],
+  "worker_environment": {
+    "PYTHONPATH": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src"
+  }
 }
