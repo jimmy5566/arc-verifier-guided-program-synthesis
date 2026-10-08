@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "checkpoint_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_TOKENS_250000",
+      "evaluation_status": "NOT_RUN",
+      "manifest_path": "experiments\\capability_repair_baseline_v1\\forward_targeted_repair_v1\\r1_checkpoint_selection_v1\\TOKENS_250000_CHECKPOINT_MANIFEST.json",
+      "manifest_sha256": "e75344a565879f2771eacc736b4efe3767149f8fd64ab9ef87b51b5ec37980f6"
+    },
+    {
+      "checkpoint_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_FINAL",
+      "evaluation_status": "POST_HOC_CHARACTERIZATION_FOR_R2_DESIGN",
+      "manifest_path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r1_paired_evaluation_v1/R1_CHECKPOINT_MANIFEST.json",
+      "manifest_sha256": "3698906eb87c82a4ef26594fae14ed672887dc4d09fba1468ab601a770ad340d"
+    }
+  ],
+  "contract_id": "R1_CHECKPOINT_SELECTION_CONTRACT_V1",
+  "evaluation_surfaces": {
+    "RETENTION_SENTINEL": {
+      "rows": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV": {
+      "rows": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    }
+  },
+  "final_audit_opened": false,
+  "schema_version": 1,
+  "selection_rule": [
+    "highest TARGET_DEV net paired fixes",
+    "then lowest retention net harms",
+    "then earliest checkpoint"
+  ],
+  "selection_status": "INCOMPLETE_PENDING_TOKENS_250000_EVALUATION"
+}

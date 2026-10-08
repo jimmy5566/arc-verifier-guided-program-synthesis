@@ -1,0 +1,50 @@
+{
+  "batch1_batch32_validation_count": 32,
+  "batch_consistency_contract": "Batch-32 with adaptive [32,16,8,4,1]; raw canonical agreement is preserved audit evidence; hard pass requires parse and exact-grid rate deltas <= 0.0625.",
+  "batch_size": 32,
+  "checkpoint_manifest_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r1_checkpoint_selection_v1/TOKENS_250000_CHECKPOINT_MANIFEST.json",
+  "checkpoint_manifest_sha256": "e75344a565879f2771eacc736b4efe3767149f8fd64ab9ef87b51b5ec37980f6",
+  "datasets": {
+    "RETENTION_SENTINEL": {
+      "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+      "rows": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV": {
+      "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+      "rows": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    }
+  },
+  "decoder_evidence_scope": "FROZEN_TOKENIZER_AND_TARGET_BLIND_PARSER; current adapter identity separately verified by R1 checkpoint manifest",
+  "decoder_validity_evidence_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_minimal_v1/DECODER_VALIDITY_EVIDENCE.json",
+  "decoder_validity_evidence_sha256": "76c9f5e4257235ed8995b539c3e0616e9300c6d921e7c4756161f5976dcbb14b",
+  "evaluation_contract": "PROSPECTIVE; same frozen 192 TARGET_DEV and 96 RETENTION_SENTINEL, same target-blind token parser/scorer, Batch32 adaptive [32,16,8,4,1], and raw token evidence preserved. No contract field changes after scoring.",
+  "final_audit_opened": false,
+  "hard_gate_check": {
+    "correct_checkpoint": "PASS",
+    "correct_dataset_and_denominator": "PASS",
+    "decoder_and_scoring_valid": "PASS",
+    "fresh_output": "PASS",
+    "no_duplicate_live_job": "PASS",
+    "no_leakage": "PASS"
+  },
+  "inference_contract_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
+  "long_prompt_fallback": [
+    32,
+    16,
+    8,
+    4,
+    1
+  ],
+  "output_root": "/workspace/arc2/forward_targeted_repair_v1_003_tokens_250000_evaluation_batch32",
+  "prior_attempt": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_EVALUATION_BATCH32 stopped before the 288-episode evaluation because its raw-token canonical-agreement threshold was over-constrained despite outcome-stable batch validation.",
+  "prior_final_checkpoint_interpretation": "POST_HOC_CHARACTERIZATION_FOR_R2_DESIGN; not independently confirmed checkpoint selection.",
+  "provenance_warning": true,
+  "provenance_warnings": [
+    "decoder-validity evidence is tokenizer/parser-scoped; this gate independently hashes every R1 base and adapter file before model import"
+  ],
+  "round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_TOKENS_250000_EVALUATION_BATCH32",
+  "schema_version": 3,
+  "stage_id": "R1_CHECKPOINT_SELECTION_EVALUATION_V1"
+}
