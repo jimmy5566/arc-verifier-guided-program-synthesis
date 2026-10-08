@@ -98,6 +98,18 @@ def main():
                 log(s,f"WAIT_REMOTE job={job.get('job_id')} class={job.get('kind')} check")
                 status,detail=remote_status(job)
                 log(s,f"WAIT_REMOTE receipt={'present' if status=='RECEIPT_PRESENT' else 'missing'} process={status}")
+                # A forced-PTY control query can occasionally yield a stale
+                # process observation.  A missing receipt therefore requires
+                # two independent remote PID-dead observations before waking
+                # an agent for an infrastructure failure.
+                if status == 'PROCESS_DEAD':
+                    time.sleep(2)
+                    confirmed, confirmed_detail = remote_status(job)
+                    if confirmed != 'PROCESS_DEAD':
+                        log(s, f"WAIT_REMOTE dead observation not confirmed; process={confirmed}")
+                        time.sleep(interval)
+                        continue
+                    detail = confirmed_detail
                 if status in {'RECEIPT_PRESENT','PROCESS_DEAD','INVALID_BINDING'}: consume_remote(s,a.state,status,detail); continue
             except Exception as exc:
                 log(s,f"WAIT_REMOTE exception={type(exc).__name__}:{exc}")
