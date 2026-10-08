@@ -2,7 +2,7 @@ import subprocess
 import unittest
 from unittest.mock import patch
 
-from orchestration.supervisor.arc2_supervisor import decode_structured_utf8, prompt_controller
+from orchestration.supervisor.arc2_supervisor import controller_idle, decode_structured_utf8, prompt_controller
 
 
 class Utf8SubprocessRegressionTest(unittest.TestCase):
@@ -23,6 +23,14 @@ class Utf8SubprocessRegressionTest(unittest.TestCase):
             code, error = prompt_controller(["herdr"], 1)
         self.assertEqual(1, code)
         self.assertIn("HERDR_STRUCTURED_JSON_PARSE_ERROR", error)
+
+    def test_controller_idle_requires_a_valid_idle_status(self):
+        idle = subprocess.CompletedProcess(["herdr"], 0, b'{"result":{"agent":{"agent_status":"idle"}}}', b"")
+        busy = subprocess.CompletedProcess(["herdr"], 0, b'{"result":{"agent":{"agent_status":"working"}}}', b"")
+        with patch("orchestration.supervisor.arc2_supervisor.subprocess.run", return_value=idle):
+            self.assertTrue(controller_idle("arc-controller", 1))
+        with patch("orchestration.supervisor.arc2_supervisor.subprocess.run", return_value=busy):
+            self.assertFalse(controller_idle("arc-controller", 1))
 
 
 if __name__ == "__main__":

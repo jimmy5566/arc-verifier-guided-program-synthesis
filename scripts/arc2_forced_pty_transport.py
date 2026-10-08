@@ -111,6 +111,8 @@ def receive(staging_root: Path, manifest: dict[str, Any], index: int, encoded_ch
 def finalize(staging_root: Path, destination: Path, manifest: dict[str, Any], final_audit: bool) -> dict[str, Any]:
     if destination.exists():
         if destination.is_file() and destination.stat().st_size == manifest["uncompressed_bytes"] and sha_file(destination) == manifest["uncompressed_sha256"]:
+            if final_audit and (destination.stat().st_mode & 0o777) != 0o444:
+                raise RuntimeError("TRANSPORT_FINAL_AUDIT_NOT_READ_ONLY")
             return {"status": "ALREADY_CORRECT", "filename": manifest["filename"], "content_deserialized": False}
         raise RuntimeError("TRANSPORT_DESTINATION_CONFLICT_REFUSE_OVERWRITE")
     stage = stage_dir(staging_root, manifest); chunks = stage / "chunks"
@@ -126,8 +128,13 @@ def finalize(staging_root: Path, destination: Path, manifest: dict[str, Any], fi
         with tempfile.NamedTemporaryFile("wb", dir=destination.parent, delete=False) as handle:
             handle.write(raw); handle.flush(); os.fsync(handle.fileno()); temporary = Path(handle.name)
         if sha_file(temporary) != manifest["uncompressed_sha256"]: raise RuntimeError("TRANSPORT_TEMP_DESTINATION_HASH_MISMATCH")
+        # Seal the temporary inode before the atomic rename.  A mount that
+        # cannot retain 0444 must fail before it ever receives FINAL_AUDIT.
+        if final_audit:
+            os.chmod(temporary, 0o444)
+            if (temporary.stat().st_mode & 0o777) != 0o444:
+                raise RuntimeError("TRANSPORT_FINAL_AUDIT_NOT_READ_ONLY")
         os.replace(temporary, destination); temporary = None
-        if final_audit: os.chmod(destination, 0o444)
         return {"status": "PUBLISHED", "filename": manifest["filename"], "bytes": manifest["uncompressed_bytes"], "sha256": manifest["uncompressed_sha256"], "model_accessed": False, "optimizer_accessed": False, "content_deserialized": False, "read_only": final_audit}
     finally:
         if temporary is not None: temporary.unlink(missing_ok=True)

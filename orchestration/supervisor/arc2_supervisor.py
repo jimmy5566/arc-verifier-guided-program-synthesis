@@ -70,15 +70,15 @@ def controller_idle(agent: str, timeout: int) -> bool:
     completed = subprocess.run(["herdr", "agent", "get", agent], capture_output=True, check=False, timeout=timeout)
     if completed.returncode != 0:
         return False
-
-
-def utc_seconds() -> float:
-    return time.time()
     try:
         payload = json.loads(decode_structured_utf8(completed.stdout, "HERDR_AGENT_STATUS"))
         return payload["result"]["agent"]["agent_status"] == "idle"
     except (KeyError, TypeError, RuntimeError, json.JSONDecodeError):
         return False
+
+
+def utc_seconds() -> float:
+    return time.time()
 
 
 def default_state() -> dict[str, Any]:

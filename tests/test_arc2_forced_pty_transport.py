@@ -43,6 +43,18 @@ class ForcedPtyTransportTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "DESTINATION_CONFLICT"): m.finalize(stage, dest, manifest, False)
             self.assertEqual(dest.read_bytes(), b"wrong")
 
+    def test_final_audit_requires_and_preserves_read_only_mode(self) -> None:
+        m = module()
+        with tempfile.TemporaryDirectory() as root:
+            root = Path(root); source = root / "audit.jsonl"; source.write_bytes(b"sealed")
+            manifest = m.build(source, root / "m", root / "e", 1024); stage = root / "stage"
+            m.receive(stage, manifest, 0, __import__('base64').b64encode((root / "e").read_bytes()).decode())
+            dest = root / "dest" / source.name; self.assertEqual(m.finalize(stage, dest, manifest, True)["status"], "PUBLISHED")
+            self.assertEqual(dest.stat().st_mode & 0o777, 0o444)
+            dest.chmod(0o666)
+            with self.assertRaisesRegex(RuntimeError, "FINAL_AUDIT_NOT_READ_ONLY"):
+                m.finalize(stage, dest, manifest, True)
+
     def test_persistent_ascii_frames_acknowledge_without_content_parsing(self) -> None:
         m = module()
         with tempfile.TemporaryDirectory() as root:
