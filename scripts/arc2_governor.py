@@ -68,10 +68,13 @@ def poll_seconds(job):
     if 'EVALUATION' in kind or 'INFERENCE' in kind: return 20
     return 60
 def remote_status(job):
-    receipt=job.get('expected_receipt') or job.get('remote_output'); target=job.get('ssh_target'); pid=job.get('remote_pid') or job.get('pid')
-    if not receipt or not target: return 'INVALID_BINDING', None
+    receipt=job.get('expected_receipt') or job.get('remote_output'); target=job.get('ssh_target')
+    primary=job.get('primary_process') or {}
+    if primary and primary.get('host') != 'RUNPOD': return 'INVALID_BINDING', 'PRIMARY_PROCESS_HOST_INVALID'
+    pid=primary.get('pid') or job.get('remote_pid') or job.get('pid')
+    if not receipt or not target or not pid: return 'INVALID_BINDING', None
     from orchestration.supervisor.arc2_supervisor import remote_shell
-    script=f"test -f {receipt!r} && echo RECEIPT_PRESENT || echo RECEIPT_MISSING\n" + (f"ps -p {int(pid)!r} -o pid= >/dev/null 2>&1 && echo PROCESS_ALIVE || echo PROCESS_DEAD" if pid else "echo PROCESS_UNKNOWN")
+    script=f"test -f {receipt!r} && echo RECEIPT_PRESENT || echo RECEIPT_MISSING\nps -p {int(pid)!r} -o pid= >/dev/null 2>&1 && echo PROCESS_ALIVE || echo PROCESS_DEAD"
     out=remote_shell(target,script)
     if 'RECEIPT_PRESENT' in out: return 'RECEIPT_PRESENT', out
     if 'PROCESS_ALIVE' in out: return 'PROCESS_ALIVE', out
@@ -95,7 +98,8 @@ def main():
         elif s['disposition']=='WAIT_REMOTE':
             job=s.get('remote_job') or s.get('active_remote_job') or {}; interval=poll_seconds(job)
             try:
-                log(s,f"WAIT_REMOTE job={job.get('job_id')} class={job.get('kind')} check")
+                primary=(job.get('primary_process') or {}).get('pid') or job.get('remote_pid')
+                log(s,f"WAIT_REMOTE job={job.get('job_id')} primary_remote_pid={primary} class={job.get('kind')} check")
                 status,detail=remote_status(job)
                 log(s,f"WAIT_REMOTE receipt={'present' if status=='RECEIPT_PRESENT' else 'missing'} process={status}")
                 # A forced-PTY control query can occasionally yield a stale
