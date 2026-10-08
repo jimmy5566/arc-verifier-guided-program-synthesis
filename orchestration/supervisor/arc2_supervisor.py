@@ -28,7 +28,7 @@ def canonical_hash(path: Path) -> str:
 
 def atomic_json(path: Path, value: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=path.parent, delete=False) as handle:
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", newline="\n", dir=path.parent, delete=False) as handle:
         json.dump(value, handle, indent=2, sort_keys=True)
         handle.write("\n")
         temporary = Path(handle.name)
@@ -39,6 +39,7 @@ def default_state() -> dict[str, Any]:
     return {
         "schema_version": 1,
         "rounds": {},
+        "directives": {},
         "accepted_rounds_since_director_review": 0,
         "new_training_tokens_since_director_review": 0,
         "director_review_required": False,
@@ -189,6 +190,146 @@ class Supervisor:
             self.save()
         return woken
 
+    @staticmethod
+    def _valid_director_response(
+        path: Path, directive_id: str, directive_hash: str,
+    ) -> bool:
+        """Recognize a Controller acknowledgement without interpreting its science."""
+        try:
+            response = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        if (
+            response.get("directive_id") != directive_id
+            or response.get("controller_role") != "arc-controller"
+            or response.get("acknowledged") is not True
+            or response.get("scientific_training_started") is not False
+        ):
+            return False
+        # DIRECTOR_RESPONSE_001--003 predate the event path.  Preserve their
+        # established acknowledgement schema while requiring a digest for all
+        # new directive-driven acknowledgements.
+        recorded = response.get("directive_sha256")
+        return recorded in (None, directive_hash)
+
+    def reconcile_directives(
+        self, directive_dir: Path, response_dir: Path,
+    ) -> list[str]:
+        """Discover each immutable Director directive and queue one Controller wake.
+
+        The directive SHA256 is the idempotency key.  State is saved before any
+        external prompt so a restart cannot generate a second wakeup.  A hash
+        conflict fails closed and is never delivered.
+        """
+        pending: list[str] = []
+        for path in sorted(directive_dir.glob("DIRECTOR_DIRECTIVE_*.json")):
+            try:
+                directive = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            directive_id = str(directive.get("directive_id", ""))
+            if not directive_id or directive_id != path.stem:
+                continue
+            digest = canonical_hash(path)
+            record = self.state["directives"].setdefault(directive_id, {})
+            prior = record.get("directive_sha256")
+            if prior not in (None, digest):
+                record["directive_identity_conflict"] = True
+                record["directive_processed"] = False
+                continue
+            record.update({
+                "directive_sha256": digest,
+                "directive_path": str(path.resolve()),
+                "decision": directive.get("decision"),
+            })
+            response = response_dir / path.name.replace("DIRECTIVE_", "RESPONSE_", 1)
+            record["controller_response_path"] = str(response.resolve())
+            if self._valid_director_response(response, directive_id, digest):
+                record["controller_acknowledged"] = True
+                record["directive_processed"] = True
+                continue
+            if not record.get("controller_wakeup_reserved"):
+                notification = self.notification_dir / f"CONTROLLER_DIRECTIVE_NOTIFICATION_{directive_id.removeprefix('DIRECTOR_DIRECTIVE_')}_{digest[:12]}.json"
+                atomic_json(notification, {
+                    "schema_version": 1,
+                    "directive_id": directive_id,
+                    "directive_sha256": digest,
+                    "directive": str(path.resolve()),
+                    "response": str(response.resolve()),
+                    "scientific_training_authorized": directive.get("scientific_training_authorized") is True,
+                })
+                record["controller_notification_path"] = str(notification.resolve())
+                pending.append(directive_id)
+        self.save()
+        return pending
+
+    def wake_controller_for_directives_once(
+        self,
+        directive_ids: list[str],
+        controller_agent: str,
+        herdr_timeout_seconds: int,
+    ) -> list[str]:
+        """Send exactly one prompt for each durable, unacknowledged directive."""
+        woken: list[str] = []
+        for directive_id in directive_ids:
+            record = self.state["directives"][directive_id]
+            if record.get("controller_wakeup_reserved") or record.get("directive_processed"):
+                continue
+            digest = record["directive_sha256"]
+            notification = Path(record["controller_notification_path"])
+            response = Path(record["controller_response_path"])
+            record["controller_wakeup_reserved"] = True
+            record["controller_wakeup_status"] = "RESERVED"
+            record["controller_wakeup_count"] = 0
+            self.save()
+            prompt = (
+                f"ARC2 Director directive notification {directive_id} ({digest}). "
+                f"Read {notification}. Do not start training and do not invoke Director. "
+                f"Write one acknowledgement JSON to {response} with exactly these fields: "
+                f'{{"schema_version":1,"directive_id":"{directive_id}",'
+                f'"directive_sha256":"{digest}","controller_role":"arc-controller",'
+                f'"acknowledged":true,"action":"DIRECTIVE_ACKNOWLEDGED_NO_TRAINING",'
+                f'"scientific_training_started":false}}. '
+                "If that matching acknowledgement already exists, do not rewrite it."
+            )
+            completed = subprocess.run(
+                ["herdr", "agent", "prompt", controller_agent, prompt],
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=herdr_timeout_seconds,
+            )
+            record["controller_wakeup_cli_exit_code"] = completed.returncode
+            if completed.returncode == 0:
+                record["controller_wakeup_status"] = "SENT"
+                record["controller_wakeup_count"] = 1
+                woken.append(directive_id)
+            else:
+                record["controller_wakeup_status"] = "DELIVERY_UNKNOWN_FAIL_CLOSED"
+                record["controller_wakeup_error"] = (completed.stderr or completed.stdout)[-1000:]
+            self.save()
+        return woken
+
+    def acknowledge_directives(self, response_dir: Path) -> list[str]:
+        """Mark acknowledged directives processed once, and only once."""
+        acknowledged: list[str] = []
+        for directive_id, record in self.state["directives"].items():
+            if record.get("directive_processed"):
+                continue
+            response = record.get("controller_response_path")
+            if not response:
+                continue
+            path = Path(response)
+            if not path.is_absolute():
+                path = response_dir / path.name
+            if self._valid_director_response(path, directive_id, record.get("directive_sha256", "")):
+                record["controller_acknowledged"] = True
+                record["directive_processed"] = True
+                acknowledged.append(directive_id)
+        if acknowledged:
+            self.save()
+        return acknowledged
+
 
 def remote_shell(target: str, script: str, identity_file: str | None = None) -> str:
     """Run a tiny metadata-only script through RunPod's forced-PTY SSH gateway.
@@ -260,12 +401,18 @@ def main() -> int:
     parser.add_argument("--poll-seconds", type=float)
     parser.add_argument("--controller-agent")
     parser.add_argument("--controller-ack-dir", type=Path)
+    parser.add_argument("--directive-dir", type=Path)
+    parser.add_argument("--director-response-dir", type=Path)
     parser.add_argument("--herdr-timeout-seconds", type=int, default=15)
     args = parser.parse_args()
     if args.poll_seconds is not None and args.poll_seconds <= 0:
         parser.error("--poll-seconds must be greater than zero")
     if bool(args.controller_agent) != bool(args.controller_ack_dir):
         parser.error("--controller-agent and --controller-ack-dir must be supplied together")
+    if bool(args.directive_dir) != bool(args.director_response_dir):
+        parser.error("--directive-dir and --director-response-dir must be supplied together")
+    if args.directive_dir and not args.controller_agent:
+        parser.error("--directive-dir requires --controller-agent")
     supervisor = Supervisor(args.state, args.notification_dir)
     if (args.ssh_target or args.remote_root) and not (args.ssh_target and args.remote_root):
         parser.error("--ssh-target and --remote-root must be supplied together")
@@ -281,6 +428,9 @@ def main() -> int:
         notified = supervisor.reconcile(args.receipt_root)
         woken: list[str] = []
         acknowledged: list[str] = []
+        directive_notifications: list[str] = []
+        directive_wakeups: list[str] = []
+        directive_acknowledgements: list[str] = []
         if args.controller_agent:
             woken = supervisor.wake_controller_once(
                 notified,
@@ -289,12 +439,23 @@ def main() -> int:
                 args.herdr_timeout_seconds,
             )
             acknowledged = supervisor.acknowledge_controller_cycles(args.controller_ack_dir)
+            if args.directive_dir:
+                directive_notifications = supervisor.reconcile_directives(
+                    args.directive_dir, args.director_response_dir,
+                )
+                directive_wakeups = supervisor.wake_controller_for_directives_once(
+                    directive_notifications, args.controller_agent, args.herdr_timeout_seconds,
+                )
+                directive_acknowledgements = supervisor.acknowledge_directives(args.director_response_dir)
         print(json.dumps({
             "status": "OK",
             "remote_status": remote_status,
             "controller_notifications": notified,
             "controller_wakeups": woken,
             "controller_acknowledgements": acknowledged,
+            "director_notifications": directive_notifications,
+            "director_wakeups": directive_wakeups,
+            "director_acknowledgements": directive_acknowledgements,
         }, sort_keys=True), flush=True)
         if args.poll_seconds is None:
             return 0

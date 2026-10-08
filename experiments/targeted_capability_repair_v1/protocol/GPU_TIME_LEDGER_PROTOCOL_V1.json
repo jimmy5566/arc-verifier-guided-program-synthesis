@@ -7,4 +7,6 @@
   "before_launch": "Reject launch if remaining charged budget is less than the declared safe training segment plus checkpoint reserve.",
   "required_fields": ["round_id","attempt_id","monotonic_start_ns","monotonic_stop_ns","charged_training_seconds","termination_reason","remote_receipt_hash"],
   "ledger_path": "experiments/targeted_capability_repair_v1/TARGETED_CAPABILITY_REPAIR_LEDGER.json"
+  ,"append_only_ledger_path": "experiments/targeted_capability_repair_v1/TARGETED_CAPABILITY_REPAIR_GPU_TIME_LEDGER.jsonl"
+  ,"enforcement_utility": "scripts/record_targeted_capability_repair_gpu_time.py"
 }

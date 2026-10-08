@@ -1,0 +1,61 @@
+{
+  "checks": {
+    "foundation_start_frozen": true,
+    "local_package_hashes": {
+      "experiments/targeted_capability_repair_v1/data/FINAL_AUDIT_SEALED.jsonl": "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd",
+      "experiments/targeted_capability_repair_v1/data/RETENTION_SENTINEL.jsonl": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+      "experiments/targeted_capability_repair_v1/data/TARGET_DEV.jsonl": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97",
+      "experiments/targeted_capability_repair_v1/data/TRAIN.jsonl": "97463689b4c47d912e20aa46fafe4c47b0e4ad538523ba8127145203f02acba1",
+      "experiments/targeted_capability_repair_v1/protocol/BASELINE_IDENTITY_V1.json": "28433fcf3f082149e5bbaf3a712142ce159c0b2ccc89b11aa12821a0bc5bae82",
+      "experiments/targeted_capability_repair_v1/protocol/BASE_V2_COMPOSITION_DELTA_V1.csv": "e0b57fd6fe919f747114cb7997efa4d229c622a05d09ec0f09a93c2af65d28b9",
+      "experiments/targeted_capability_repair_v1/protocol/CAPABILITY_PRIORITY_MAP_V1.csv": "8fd8ce67f3a1633d739b566c11c5003bae65f329036f453b120cec448b40131e",
+      "experiments/targeted_capability_repair_v1/protocol/CHECKPOINT_LINEAGE_PROTOCOL_V1.json": "d6911c69c8d8a53dfabe42ad8caaefbf4c1cdc4edc9a9723e26413407941f871",
+      "experiments/targeted_capability_repair_v1/protocol/FROZEN_NUMERIC_GATES_V1.json": "a8253d30cb6f19c305962df2d78426007f41e98bc2d38878bc4870135a7bce05",
+      "experiments/targeted_capability_repair_v1/protocol/GPU_TIME_LEDGER_PROTOCOL_V1.json": "fef77a699f0ac7834bc04ca5c2bce317071a197b1c38b066f655343e62515ce1",
+      "experiments/targeted_capability_repair_v1/protocol/PRELAUNCH_IDENTITY_GATE_V1.json": "1b0aade921c3857a55f7d32b07b3ce5f3fb29c245ce7aa3d79b780cff3ca88a3",
+      "experiments/targeted_capability_repair_v1/protocol/RETENTION_SENTINEL_PROTOCOL_V1.json": "3ced47ce35b257cd783913826b701a57998525179bccfdfc6c25834c024bc332",
+      "experiments/targeted_capability_repair_v1/protocol/ROUND_GATE_PROTOCOL_V1.json": "4e7580af05219fbc97710087d2cc352ff6baaf57ff1d82e787c00a42461d6fdb",
+      "experiments/targeted_capability_repair_v1/protocol/TARGETED_CAPABILITY_REPAIR_V1_PROTOCOL.json": "e7dddae1ee8f46f6371ed38426d8afa04392f949a6a279ca1b94157759bd4eaf",
+      "experiments/targeted_capability_repair_v1/protocol/TARGETED_CAPABILITY_REPAIR_V1_PROTOCOL.md": "6efa040425555a53bbac53a255d3b130622411adde149a66b296631231a26884",
+      "experiments/targeted_capability_repair_v1/protocol/TARGETED_EVAL_PROTOCOL_V1.json": "e74a4b8a5b41f93e7c42d31169edfeca108e671bc0df351b9ffa17594c493f42",
+      "experiments/targeted_capability_repair_v1/protocol/TARGET_DATA_POLICY_V1.json": "ee7c10abcbb677b2d75cc79c361c40743c091cf96e54f06255c0d0b979e70130"
+    },
+    "package_manifest_matches": true,
+    "recipe_exact": true,
+    "scientific_boundaries_preserved": true
+  },
+  "expected_foundation": {
+    "adapter": "tokens_2000000 LoRA",
+    "adapter_mutated": false,
+    "adapter_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
+    "base": "qwen3_4b_grids15_sft139",
+    "status": "FROZEN"
+  },
+  "failure_action": "HARD_STOP_NO_GPU_LAUNCH",
+  "gpu_training_started": false,
+  "launch_bindings": {
+    "output_run_dir": null,
+    "resolved_command": null,
+    "resolved_command_sha256": null,
+    "resolved_config": null,
+    "resolved_config_sha256": null
+  },
+  "mounted_adapter": {
+    "pass": false,
+    "reason": "MOUNTED_ADAPTER_PATH_NOT_SUPPLIED"
+  },
+  "mounted_base": {
+    "pass": false,
+    "reason": "MOUNTED_BASE_PATH_NOT_SUPPLIED"
+  },
+  "pass_required_before_gpu": [
+    "mounted_adapter",
+    "mounted_base",
+    "resolved_command",
+    "resolved_config",
+    "output_run_dir"
+  ],
+  "purpose": "READ_ONLY_PRELAUNCH_IDENTITY_GATE",
+  "schema_version": 1,
+  "status": "BLOCKED_HARD_STOP_BASELINE_OR_LAUNCH_IDENTITY_UNVERIFIED"
+}

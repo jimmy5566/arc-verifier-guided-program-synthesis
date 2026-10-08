@@ -5,6 +5,7 @@
   "receipt_scan": "low-frequency metadata-only fallback",
   "event_stream": "remote events.jsonl when transport is available",
   "notification": "append-only controller notification JSON; receipt hash is the idempotency key",
+  "director_directive_reconciliation": "lightweight local filesystem reconciliation; directive SHA256 is the persistent idempotency key; a matching Controller response marks the directive processed",
   "director_trigger": {
     "normal": "every 2 accepted scientific rounds or 1000000 new training tokens",
     "immediate": ["two_valid_no_gain_rounds", "broad_retention_failure", "capability_or_composition_regression", "protocol_mutation", "leakage_or_overlap", "taxonomy_or_baseline_mismatch", "early_final_audit", "two_controller_repairs_failed", "repeated_remote_failure", "budget_conflict"]

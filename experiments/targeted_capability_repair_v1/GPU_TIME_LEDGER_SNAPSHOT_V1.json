@@ -1,0 +1,11 @@
+{
+  "attempt_count": 0,
+  "cap_seconds": 28800,
+  "charged_new_gpu_training_seconds": 0,
+  "ledger_bytes_sha256": "7d19684fd198482d8862dbf2110711f183ed86b58d9d9dff2922cc9cb9b891cc",
+  "ledger_file": "experiments/targeted_capability_repair_v1/TARGETED_CAPABILITY_REPAIR_GPU_TIME_LEDGER.jsonl",
+  "ledger_tail_sha256": "e71202385a208551098e5a3db3138bfddbe08db67768482bf8cf426b4c096c0f",
+  "remaining_seconds": 28800,
+  "schema_version": 1,
+  "status": "FROZEN_ACCOUNTING_NO_GPU_TRAINING"
+}

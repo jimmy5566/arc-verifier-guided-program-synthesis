@@ -1,10 +1,10 @@
 {
-  "status": "BLOCKED_MOUNTED_ADAPTER_NOT_FOUND",
+  "status": "FROZEN_FAIL_CLOSED_PROCEDURE",
   "required_adapter_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
   "required_base": "qwen3_4b_grids15_sft139",
-  "remote_root_checked": "/workspace/arc2",
-  "remote_probe": "2026-10-08 forced-PTY metadata-only find returned no adapter_model.safetensors or adapter_config.json under remote_root depth 4",
-  "required_before_gpu": ["mounted_adapter_path", "mounted_adapter_sha256_match", "mounted_base_identity", "dataset_and_protocol_hashes", "resolved_recipe", "resolved_command", "output_run_directory"],
+  "verification_utility": "scripts/verify_targeted_capability_repair_prelaunch.py",
+  "remote_probe": "Read-only forced-PTY reconciliation found no adapter_model.safetensors matching the frozen Foundation-V2 SHA256 under documented mounted ARC2 roots.",
+  "required_before_gpu": ["mounted_adapter_path", "mounted_adapter_sha256_match", "mounted_base_identity", "dataset_and_protocol_hashes", "resolved_recipe", "resolved_command", "resolved_config", "output_run_directory"],
   "action": "HARD_STOP_BASELINE_IDENTITY_UNVERIFIED",
   "gpu_training_started": false
 }

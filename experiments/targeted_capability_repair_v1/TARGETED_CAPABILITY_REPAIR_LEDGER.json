@@ -4,5 +4,7 @@
   "cap_seconds": 28800,
   "charged_new_gpu_training_seconds": 0,
   "attempts": [],
-  "gpu_training_started": false
+  "gpu_training_started": false,
+  "append_only_gpu_time_ledger": "TARGETED_CAPABILITY_REPAIR_GPU_TIME_LEDGER.jsonl",
+  "accounting_enforcement": "scripts/record_targeted_capability_repair_gpu_time.py validates a SHA256-linked append-only chain, charges all actual training intervals, unions overlap, and rejects cumulative charge above 28800 seconds."
 }

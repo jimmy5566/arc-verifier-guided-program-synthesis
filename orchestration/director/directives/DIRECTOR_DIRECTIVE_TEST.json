@@ -1,0 +1,8 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_TEST",
+  "decision": "REQUIRE_INFRA_REPAIR",
+  "scope": "DIRECTIVE_EVENT_PATH_SMOKE_ONLY",
+  "reason": "infrastructure-only restart and idempotency test",
+  "scientific_training_authorized": false,
+  "requires_controller_response": true
+}
