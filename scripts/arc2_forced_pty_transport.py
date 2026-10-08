@@ -21,6 +21,14 @@ from typing import Any
 
 CHUNK_SIZE = 262_144
 SCHEMA = 1
+SCIENTIFIC_SUFFIXES = {".parquet", ".safetensors", ".bin", ".pt", ".pth", ".ckpt"}
+EMERGENCY_PURPOSE = "EMERGENCY_FALLBACK"
+
+
+def assert_payload_transport_allowed(source: Path, purpose: str) -> None:
+    """Reject normal-path scientific binary transport over forced PTY."""
+    if source.suffix.lower() in SCIENTIFIC_SUFFIXES and purpose != EMERGENCY_PURPOSE:
+        raise RuntimeError("PTY_PAYLOAD_TRANSPORT_FORBIDDEN")
 
 
 def sha_bytes(value: bytes) -> str:
@@ -60,7 +68,8 @@ def decode_manifest(encoded: str) -> dict[str, Any]:
     return value
 
 
-def build(source: Path, manifest_path: Path, envelope_path: Path, chunk_size: int = CHUNK_SIZE) -> dict[str, Any]:
+def build(source: Path, manifest_path: Path, envelope_path: Path, chunk_size: int = CHUNK_SIZE, *, purpose: str = "CONTROL") -> dict[str, Any]:
+    assert_payload_transport_allowed(source, purpose)
     if chunk_size < 1024 or chunk_size > 262_144:
         raise RuntimeError("TRANSPORT_CHUNK_SIZE_OUT_OF_BOUNDS")
     raw = source.read_bytes()
@@ -208,12 +217,12 @@ def serve(staging_root: Path, manifest_sha256: str | None = None, manifest_bytes
 
 def main() -> int:
     p = argparse.ArgumentParser(); sub = p.add_subparsers(dest="mode", required=True)
-    b = sub.add_parser("build"); b.add_argument("--source", type=Path, required=True); b.add_argument("--manifest", type=Path, required=True); b.add_argument("--envelope", type=Path, required=True); b.add_argument("--chunk-size", type=int, default=CHUNK_SIZE)
+    b = sub.add_parser("build"); b.add_argument("--source", type=Path, required=True); b.add_argument("--manifest", type=Path, required=True); b.add_argument("--envelope", type=Path, required=True); b.add_argument("--chunk-size", type=int, default=CHUNK_SIZE); b.add_argument("--purpose", default="CONTROL", choices=("CONTROL", EMERGENCY_PURPOSE))
     r = sub.add_parser("receive"); r.add_argument("--staging-root", type=Path, required=True); r.add_argument("--manifest-b64", required=True); r.add_argument("--index", type=int, required=True); r.add_argument("--chunk-b64", required=True)
     f = sub.add_parser("finalize"); f.add_argument("--staging-root", type=Path, required=True); f.add_argument("--destination", type=Path, required=True); f.add_argument("--manifest-b64", required=True); f.add_argument("--final-audit", action="store_true")
     s = sub.add_parser("serve"); s.add_argument("--staging-root", type=Path, required=True); s.add_argument("--manifest-sha256"); s.add_argument("--manifest-bytes", type=int); s.add_argument("--manifest-chunk-count", type=int)
     args = p.parse_args()
-    if args.mode == "build": value = build(args.source, args.manifest, args.envelope, args.chunk_size); print(json.dumps({"status":"BUILT", "manifest_sha256":sha_file(args.manifest), "chunk_count":value["chunk_count"]}, sort_keys=True)); return 0
+    if args.mode == "build": value = build(args.source, args.manifest, args.envelope, args.chunk_size, purpose=args.purpose); print(json.dumps({"status":"BUILT", "manifest_sha256":sha_file(args.manifest), "chunk_count":value["chunk_count"]}, sort_keys=True)); return 0
     if args.mode == "serve": return serve(args.staging_root, args.manifest_sha256, args.manifest_bytes, args.manifest_chunk_count)
     manifest = decode_manifest(args.manifest_b64)
     value = receive(args.staging_root, manifest, args.index, args.chunk_b64) if args.mode == "receive" else finalize(args.staging_root, args.destination, manifest, args.final_audit)

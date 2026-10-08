@@ -18,12 +18,14 @@ class ForcedPtyTransportTests(unittest.TestCase):
         m = module()
         with tempfile.TemporaryDirectory() as root:
             root = Path(root); source = root / "replay-00000.parquet"; source.write_bytes(b"opaque-parquet-canary")
-            manifest = m.build(source, root / "manifest", root / "envelope", 1024)
+            with self.assertRaisesRegex(RuntimeError, "PTY_PAYLOAD_TRANSPORT_FORBIDDEN"):
+                m.build(source, root / "manifest", root / "envelope", 1024)
+            manifest = m.build(source, root / "manifest", root / "envelope", 1024, purpose="EMERGENCY_FALLBACK")
             self.assertEqual(m.decode_manifest(__import__('base64').b64encode(json.dumps(manifest, sort_keys=True, separators=(',', ':')).encode()).decode())["filename"], source.name)
     def test_binary_resume_idempotence_and_atomic_publish(self) -> None:
         m = module()
         with tempfile.TemporaryDirectory() as root:
-            root = Path(root); source = root / "canary.jsonl"; source.write_bytes(bytes(range(256)) + "UTF-8-控制".encode())
+            root = Path(root); source = root / "canary.jsonl"; source.write_bytes(bytes(range(256)) + "UTF-8-鎺у埗".encode())
             manifest = m.build(source, root / "manifest.json", root / "envelope.gz", 1024)
             envelope = (root / "envelope.gz").read_bytes(); encoded = [__import__('base64').b64encode(envelope[i*1024:(i+1)*1024]).decode() for i in range(manifest['chunk_count'])]
             stage = root / "stage"; self.assertEqual(m.receive(stage, manifest, 0, encoded[0])["status"], "ACK")
