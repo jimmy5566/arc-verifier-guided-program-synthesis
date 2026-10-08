@@ -7,10 +7,10 @@
   },
   "cohort": {
     "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v2/COHORT_MANIFEST_V2.json",
-    "sha256": "b82e408cf0c98f7f31049046b5cb36f2d315bbfcfee46f17446b5bab5c950acf"
+    "sha256": "70e300e0d3c0fac4a1118b4f4b608c40ed757af988088c2b5d2f236718042e13"
   },
   "core_id": "ARC2_DECODER_CHARACTERIZATION_LAUNCH_CORE_V2",
-  "core_sha256": "2513262dba3d30b6fe144147d1d8255f0011ea6fc6054f74e7c3d77affe5f0b4",
+  "core_sha256": "3b5f941adebfa8c4a0689dc949c30ce75a7d2fab44bbd6fc507885609bffe0df",
   "datasets": {
     "retention_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
     "retention_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",

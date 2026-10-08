@@ -3,9 +3,9 @@
   "decision_requested": "AUTHORIZE_TARGET_BLIND_12_ITEM_DECODER_CHARACTERIZATION",
   "final_audit_opened": false,
   "launch_core": {
-    "core_sha256": "2513262dba3d30b6fe144147d1d8255f0011ea6fc6054f74e7c3d77affe5f0b4",
+    "core_sha256": "3b5f941adebfa8c4a0689dc949c30ce75a7d2fab44bbd6fc507885609bffe0df",
     "path": "experiments/capability_repair_baseline_v1/decoder_characterization_v2/LAUNCH_CORE_V2.json",
-    "sha256": "daf136377f6981de0e045380be13ad15ba23f482f137325955c51f64574e23db"
+    "sha256": "b9ede1b4be3353e79cb44321dd55d912602df377c9679eb3f01c0803458366c2"
   },
   "next_stage_only_if_authorized": "Run exact V2 command after PASS_NO_MODEL_IMPORT preflight and a response bound to final contract hash.",
   "preserved_rejected_evidence": [

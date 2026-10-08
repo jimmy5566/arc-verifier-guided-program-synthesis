@@ -20,10 +20,10 @@
   },
   "cohort": {
     "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v2/COHORT_MANIFEST_V2.json",
-    "sha256": "b82e408cf0c98f7f31049046b5cb36f2d315bbfcfee46f17446b5bab5c950acf"
+    "sha256": "70e300e0d3c0fac4a1118b4f4b608c40ed757af988088c2b5d2f236718042e13"
   },
   "contract_id": "ARC2_DECODER_CHARACTERIZATION_LAUNCH_V2",
-  "contract_sha256": "22367a271dc4264b8b6a563efe57241612714c4e25d62e4101bfac7f8f3c9e99",
+  "contract_sha256": "c55ba017e3025dce00213185c296e94d2b581c90bfc4b63b3a028b9425f610da",
   "datasets": {
     "retention_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
     "retention_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
@@ -47,7 +47,7 @@
     },
     "cohort": {
       "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v2/COHORT_MANIFEST_V2.json",
-      "sha256": "b82e408cf0c98f7f31049046b5cb36f2d315bbfcfee46f17446b5bab5c950acf"
+      "sha256": "70e300e0d3c0fac4a1118b4f4b608c40ed757af988088c2b5d2f236718042e13"
     },
     "collector_dependency": {
       "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/collect_capability_repair_baseline_v1.py",
@@ -79,7 +79,7 @@
     }
   },
   "inference_contract_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
-  "launch_core_sha256": "2513262dba3d30b6fe144147d1d8255f0011ea6fc6054f74e7c3d77affe5f0b4",
+  "launch_core_sha256": "3b5f941adebfa8c4a0689dc949c30ce75a7d2fab44bbd6fc507885609bffe0df",
   "nonce_consumed_path": "/workspace/arc2/decoder_characterization_v2_run_001/NONCE_V2.CONSUMED.json",
   "nonce_path": "/workspace/arc2/decoder_characterization_v2_run_001/NONCE_V2",
   "nonce_sha256": "7a17cb752a19cdb4885bb5d20efc75196c8bdca1a80276ee68e12c6852c5eeef",
@@ -100,7 +100,7 @@
   ],
   "preflight_receipt_path": "/workspace/arc2/decoder_characterization_v2_run_001/TOKENIZER_PREFLIGHT_RECEIPT.json",
   "receipt_path": "/workspace/arc2/decoder_characterization_v2_run_001/TERMINAL_RECEIPT.json",
-  "reviewed_brief_sha256": "67e42d5a940a0f47e0e6eacca4143a41a8eb570cd6943366270d0d6f0703d888",
+  "reviewed_brief_sha256": "bedf72b0ebdbb2980596ef6cf5e4cd191052bf92234a06c55ae1fac5c8de0de6",
   "runtime": {
     "attention_backend": "sdpa",
     "batch_size": 1,
