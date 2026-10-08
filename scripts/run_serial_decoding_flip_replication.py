@@ -66,10 +66,15 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--receipt", type=Path, required=True)
     parser.add_argument("--cpu-preflight", action="store_true")
+    parser.add_argument("--runtime-limit-seconds", type=float)
     args = parser.parse_args(); started = time.monotonic(); root = Path(__file__).resolve().parents[1]
     if args.output.exists() or args.receipt.exists():
         raise RuntimeError("OUTPUT_PATH_NON_OVERWRITE_REQUIRED")
     contract = load_contract(args.contract)
+    runtime_limit = float(args.runtime_limit_seconds or contract["execution"]["runtime_cap_seconds"])
+    if runtime_limit <= 0 or runtime_limit > float(contract["execution"]["runtime_cap_seconds"]):
+        raise RuntimeError("RUNTIME_CAP_BINDING_INVALID")
+    deadline = started + runtime_limit
     bound = preflight(contract, root)
     if args.cpu_preflight:
         write(args.output, {"status": "CPU_PREFLIGHT_PASS_NO_MODEL", "diagnostic_id": contract["diagnostic_id"], "cohort_episodes": len(bound["rows"]), "model_ids": [x["id"] for x in bound["manifests"]], "final_audit_opened": False})
@@ -84,6 +89,8 @@ def main() -> int:
     inference_contract = json.loads(source_contract.read_text(encoding="utf-8")); runtime = inference_contract["runtime"]
     all_models = []; device = torch.device("cuda:0")
     for item in bound["manifests"]:
+        if time.monotonic() >= deadline:
+            raise TimeoutError("RUNTIME_CAP_BEFORE_MODEL")
         manifest = item["manifest"]; verify_checkpoint_manifest(manifest)
         base, adapter = Path(manifest["base_path"]), Path(manifest["adapter_path"])
         tokenizer = AutoTokenizer.from_pretrained(base, local_files_only=True); tokenizer.padding_side = "left"; tokenizer.pad_token_id = runtime["pad_token_id"]
@@ -92,6 +99,8 @@ def main() -> int:
         model = PeftModel.from_pretrained(model, adapter, is_trainable=False).eval()
         predictions = []
         for row in bound["rows"]:
+            if time.monotonic() >= deadline:
+                raise TimeoutError("RUNTIME_CAP_BEFORE_EPISODE")
             text = prompt(row, inference_contract)
             encoded = tokenizer(text, return_tensors="pt", add_special_tokens=False)
             width = int(encoded["input_ids"].shape[-1]); encoded = {key: value.to(device) for key, value in encoded.items()}
