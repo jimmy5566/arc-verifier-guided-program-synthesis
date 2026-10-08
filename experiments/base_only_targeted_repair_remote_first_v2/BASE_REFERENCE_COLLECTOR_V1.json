@@ -1,0 +1,34 @@
+{
+  "canonical_ledger": "orchestration/budget/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V5.jsonl",
+  "collector": "scripts/collect_base_reference_remote_first_v1.py",
+  "collector_sha256": "974f96e1efb589514315ee76332e3aebc41b8bcecce58647bcb67eb4d8012be4",
+  "command": [
+    "python3",
+    "scripts/collect_base_reference_remote_first_v1.py",
+    "--target-dev",
+    "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+    "--retention",
+    "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+    "--binding",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v5/LAUNCH_BINDING_V1.json",
+    "--output",
+    "/workspace/arc2/base_reference/base_reference.json",
+    "--receipt",
+    "/workspace/arc2/base_reference/receipt.json"
+  ],
+  "cpu_mock": ".arc2-local/base_reference_mock.json",
+  "forbidden_inputs": [
+    "TRAIN.jsonl",
+    "FINAL_AUDIT_SEALED.jsonl"
+  ],
+  "no_lora": true,
+  "no_optimizer": true,
+  "only_allowed_inputs": [
+    "TARGET_DEV.jsonl",
+    "RETENTION_SENTINEL.jsonl"
+  ],
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2",
+  "runtime_limit_seconds": 7200,
+  "schema_version": 1,
+  "status": "FROZEN_PENDING_DIRECTOR_BASE_REFERENCE_AUTHORIZATION"
+}

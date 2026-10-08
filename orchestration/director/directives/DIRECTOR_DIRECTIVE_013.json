@@ -1,0 +1,89 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_013",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2",
+  "reasons": [
+    {
+      "area": "brief_and_package_integrity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_013 has verified SHA256 d5461b33c051e48f16d801cb8da907adefb922a12b1b41e08f106eeafea4dded. Its four declared evidence hashes match, and all 42 entries in PACKAGE_MANIFEST_V4.json exist and match their frozen SHA256 values."
+    },
+    {
+      "area": "new_condition_and_closed_protocol_boundary",
+      "status": "PASS",
+      "finding": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2 is a distinct base-only condition. It does not reopen FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1, does not use the unrecoverable historical replay shard, and prohibits Original Foundation-V2 or reconstruction-equivalence claims."
+    },
+    {
+      "area": "remote_data_identity_and_split_protection",
+      "status": "PASS",
+      "finding": "The actual remote TRAIN, TARGET_DEV, RETENTION_SENTINEL, and FINAL_AUDIT_SEALED byte counts and SHA256 values match the frozen expected identities. Episode and grid identities are recorded disjoint, labels are programmatic, TARGET_DEV and RETENTION_SENTINEL are evaluation-only, Eval60 and diagnostic Gold are prohibited, and FINAL_AUDIT remains sealed with no model access."
+    },
+    {
+      "area": "serialization_schedule_and_target_mix",
+      "status": "PASS",
+      "finding": "The deterministic serialization contract, test vectors, 500000-token stop rule, 193-step schedule, base-only LoRA recipe, checkpoint landmarks, and prerequisite-aware mixture are frozen. The schedule contains 369 atomic-repair, 236 composition-repair, and 167 retention-train episodes, including explicit selector-prerequisite coverage."
+    },
+    {
+      "area": "technical_read_only_preflight",
+      "status": "PASS_WITH_UNRESOLVED_SCIENTIFIC_GATE",
+      "finding": "The read-only preflight verifies frozen source files, all expected base files, the exact mounted data file set and hashes, remote data identity, serialization vectors, schedule rows, clean output path, and ledger header without loading a model or optimizer. Its terminal status is nevertheless PASS_TECHNICAL_BASE_REFERENCE_PENDING, not a launch-ready scientific pass."
+    },
+    {
+      "area": "base_reference_and_selection_gate",
+      "status": "FAIL_HARD_STOP",
+      "finding": "BASE_REFERENCE_AND_GATE_IDENTITIES_V1.json remains FROZEN_BASE_REFERENCE_PENDING_SEPARATE_AUTHORIZATION, with no frozen base predictions for TARGET_DEV or RETENTION_SENTINEL. The protected launcher explicitly rejects real training unless the preflight records base_reference_status=COLLECTED_PASS. No reviewed baseline-only executable, command, output identity, receipt, or model-access boundary is present in the submitted package."
+    },
+    {
+      "area": "budget_identity",
+      "status": "REQUIRES_RECONCILIATION",
+      "finding": "The protocol names ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V2.jsonl as canonical, while DIRECTOR_BRIEF_013, execution_contract_v4, and the launch binding name ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V4.jsonl. Both currently contain only the 28800-second initialization row, but a launch may have only one unambiguous append-only canonical ledger identity."
+    },
+    {
+      "area": "data_role_wording",
+      "status": "REQUIRES_CLARIFICATION",
+      "finding": "The protocol and schedule intentionally include a separate RETENTION_TRAIN role, but LAUNCH_BINDING_V1.json lists the ambiguous prohibition 'retention training'. The binding must state RETENTION_SENTINEL training is forbidden while the separately frozen RETENTION_TRAIN pool is allowed, or else remove RETENTION_TRAIN consistently."
+    },
+    {
+      "area": "source_provenance",
+      "status": "PARTIAL",
+      "finding": "Fresh local HEAD and origin are equal at 3ae25a220630ff41f473f38ced3f94a4a1df2f3a, consistent with the submitted local-origin-RunPod parity claim. However, REMOTE_READ_ONLY_PREFLIGHT_V3.json records source_commit 25ed68f2cc68910358f975b71b332fc0803564c1 rather than the exact reviewed parity commit, so the final launch preflight must be repeated and bound to the exact launch commit."
+    },
+    {
+      "area": "training_state",
+      "status": "PASS_NO_TRAINING",
+      "finding": "No model load, optimizer construction, final-audit model access, GPU training, or charged new GPU-training seconds occurred."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "FREEZE_BASE_REFERENCE_COLLECTOR",
+      "requirement": "Implement and freeze a baseline-only executable and resolved command that loads only the exact frozen base model, constructs no LoRA adapter or optimizer, reads only TARGET_DEV and RETENTION_SENTINEL, and cannot open TRAIN labels or FINAL_AUDIT_SEALED. Freeze all source hashes, decoding/inference settings, output directory, episode ordering, prediction serialization, metric implementation, failure receipt, and active runtime limit. Exercise the path with CPU mocks only in this cycle."
+    },
+    {
+      "change_id": "REQUEST_BASE_REFERENCE_EXECUTION_AUTHORIZATION",
+      "requirement": "Submit the frozen baseline-only package for Director review before any model loading or GPU execution. This directive does not authorize the baseline run, candidate training, optimizer construction, or any GPU-consuming action."
+    },
+    {
+      "change_id": "FREEZE_COLLECTED_BASE_REFERENCE_BEFORE_CANDIDATE_TRAINING",
+      "requirement": "After a later directive explicitly authorizes baseline collection, record immutable per-episode base prediction hashes and exact-grid outcomes for all frozen TARGET_DEV and RETENTION_SENTINEL identities, paired n01/n10 gate inputs, metric-source hash, model/base manifest identity, runtime receipt, and COLLECTED_PASS status before any candidate optimizer is constructed. FINAL_AUDIT must remain unopened."
+    },
+    {
+      "change_id": "RECONCILE_CANONICAL_LEDGER",
+      "requirement": "Freeze one canonical append-only cumulative GPU-training ledger path and identity across the protocol, brief, launch binding, preflight, reservation, cap enforcement, and final accounting. Preserve the 28800-second cap, zero current charge, 7200-second initial reservation, no-optimizer-after-cap rule, and checkpoint/save/finalize behavior. Do not merge or silently reinterpret V2 and V4 ledgers."
+    },
+    {
+      "change_id": "CLARIFY_RETENTION_DATA_ROLES",
+      "requirement": "Replace the ambiguous launch-binding prohibition with an exact distinction: RETENTION_SENTINEL is evaluation-only and forbidden for training; the separately generated and hash-identified RETENTION_TRAIN pool is permitted only if retained by the frozen recipe and schedule. Keep TARGET_DEV and FINAL_AUDIT excluded from training."
+    },
+    {
+      "change_id": "FREEZE_ADDITIVE_EXECUTION_CONTRACT_AND_RERUN_PREFLIGHT",
+      "requirement": "Create a new additive execution-contract revision containing the reconciled ledger, clarified data roles, frozen baseline collector, updated package manifest, and launch binding. Rerun the complete read-only preflight from the first gate on the exact final source commit and preserve explicit evidence for every base shard, tokenizer/config identity, mounted data identity, serialization vector, schedule, output path, environment, command, ledger, remaining budget, and forbidden-file boundary."
+    },
+    {
+      "change_id": "REFRESH_THREE_WAY_PROVENANCE_AND_RESUBMIT",
+      "requirement": "Commit and push the additive remediation on the existing non-main branch without force-push or frozen-history rewrite; verify fresh local HEAD equals git ls-remote origin SHA equals RunPod checked-out/source SHA; then submit a new hashed Director brief through the Supervisor path. No candidate training is authorized until a later directive returns CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true."
+    }
+  ],
+  "base_reference_collection_authorized": false,
+  "scientific_training_authorized": false
+}

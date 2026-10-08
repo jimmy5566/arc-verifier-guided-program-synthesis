@@ -1,0 +1,14 @@
+{
+  "base_reference_collection_authorized": false,
+  "changes": [
+    "BASE_REFERENCE_COLLECTOR_V1.json",
+    "execution_contract_v5",
+    "canonical ledger V5",
+    "explicit RETENTION_TRAIN role"
+  ],
+  "gpu_training_started": false,
+  "no_model_loaded": true,
+  "no_optimizer_constructed": true,
+  "schema_version": 1,
+  "status": "REMEDIATION_COMPLETE_PENDING_DIRECTOR_BASE_REFERENCE_AUTHORIZATION"
+}

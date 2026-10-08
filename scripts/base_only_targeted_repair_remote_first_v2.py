@@ -193,8 +193,9 @@ def freeze(args: argparse.Namespace) -> int:
                "remote_data_identity": {"remote_path": args.remote_inputs.rstrip("/") + "/REMOTE_DATA_IDENTITY_V1.json", "sha256": sha(remote_data_identity)},
                "serialization_contract_sha256": digest(serialization), "schedule_sha256": digest(schedule), "recipe_sha256": digest(recipe),
                "base_reference_gate_sha256": digest(gate), "output": {"run_root": args.run_root, "runtime": args.run_root.rstrip("/") + "/runtime", "checkpoints": args.run_root.rstrip("/") + "/checkpoints", "reservation": args.run_root.rstrip("/") + "/runtime/GPU_RESERVATION.json"},
-               "shared_ledger": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/orchestration/budget/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V4.jsonl",
-               "forbidden": ["historical replay", "replay substitution", "Eval60 Gold", "diagnostic Gold", "TARGET_DEV training", "retention training", "FINAL_AUDIT access"]}
+               "shared_ledger": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/orchestration/budget/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V5.jsonl",
+               "forbidden": ["historical replay", "replay substitution", "Eval60 Gold", "diagnostic Gold", "TARGET_DEV training", "RETENTION_SENTINEL training", "FINAL_AUDIT access"],
+               "allowed_training_role": "RETENTION_TRAIN_ONLY_WHEN_HASH_IDENTIFIED_IN_FROZEN_TRAIN_SCHEDULE"}
     write(out / "SERIALIZATION_CONTRACT_V1.json", serialization)
     write(out / "SERIALIZATION_TEST_VECTORS_V1.json", {"schema_version": 1, "status": "FROZEN", "vectors": vectors})
     write(out / "TRAINING_SCHEDULE_ROUND_001.json", schedule)

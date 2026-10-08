@@ -1,0 +1,45 @@
+{
+  "label_masking": "all user-turn and delimiters labels=-100; all assistant-turn tokens including delimiters labels=input_ids",
+  "padding": "none per microbatch=1",
+  "pair_order": "all task.train pairs then task.test pairs, each user input followed by assistant output",
+  "prompt_template": "<|im_start|>{role}\\n{grid}<|im_end|> repeated in task pair order; no generation prompt in supervised samples",
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2",
+  "schema_version": 1,
+  "sequence_packing": "forbidden",
+  "source_hashes": {
+    "configs/nvarc_native_846d0198/chat_template.j2": "e5ed79284f346b7eadd874f6bdc376f722704808afd07ffd6190c6d8b97ddb5f",
+    "scripts/base_only_targeted_repair_remote_first_v2.py": "8a2326b50aa0ca8d747068c6fcd03d33237a94496ccfa8bc5fb6af3174e1568b",
+    "scripts/record_targeted_capability_repair_gpu_time.py": "ad2251319f6e3cc0187fd3a17fe4b84900602ea76078bac6621a90ad542e67ea",
+    "src/inference/arc_native_io.py": "502a064f09743acc85643ebb8a9a95573832d8b3d6c51e79ccf94222dd4b89b3",
+    "src/training_data/pipeline.py": "3c2fa39cbc5ed51f7eceeb68b821962c451ea88b2f26ae8af508b15c6a8b3d3a"
+  },
+  "status": "FROZEN",
+  "token_ids": {
+    "0..9": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "assistant": 12,
+    "im_end_and_eos": 15,
+    "im_start": 14,
+    "newline": 10,
+    "pad": 13,
+    "user": 11
+  },
+  "tokenizer_files": {
+    "special_tokens_map.json": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+    "tokenizer.json": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+    "tokenizer_config.json": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+    "vocab.json": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+  },
+  "transport": "NVARC_NATIVE_16_TOKEN",
+  "truncation": "REJECT sequence_length > 8704; no truncation"
+}

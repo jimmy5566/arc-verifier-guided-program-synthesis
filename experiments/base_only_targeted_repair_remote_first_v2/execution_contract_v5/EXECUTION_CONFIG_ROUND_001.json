@@ -1,0 +1,33 @@
+{
+  "attention_backend": "sdpa",
+  "base_weights": "FROZEN",
+  "checkpoint_landmarks_transformer_tokens": [
+    250000,
+    500000
+  ],
+  "context_length": 8704,
+  "cumulative_gpu_cap_seconds": 28800,
+  "effective_episode_batch": 4,
+  "gradient_accumulation_steps": 4,
+  "gradient_checkpointing": true,
+  "initial_gpu_reservation_seconds": 7200,
+  "learning_rate": 5e-05,
+  "learning_rate_schedule": "linear_warmup_optimizer_steps_1_to_3_then_constant",
+  "lora_alpha": 32,
+  "lora_dropout": 0.0,
+  "lora_rank": 64,
+  "micro_batch_size": 1,
+  "optimizer": "bitsandbytes.optim.PagedAdamW8bit",
+  "precision": "BF16",
+  "quantization": "NONE",
+  "seed": 2000031,
+  "target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ]
+}
