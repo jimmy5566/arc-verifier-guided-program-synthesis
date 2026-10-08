@@ -16,6 +16,13 @@ REMEDIATION = {"REQUIRE_CURRICULUM_REVIEW", "REQUIRE_DIAGNOSTIC_REVIEW", "REQUIR
 KNOWN = REMEDIATION | {"CONTINUE", "CONTINUE_WITH_WARNING", "NEW_SUBPROTOCOL_REQUIRED", "PAUSE_SCIENTIFIC_EXPERIMENT", "STOP_CURRENT_TRACK", "TERMINAL_SCIENTIFIC_STOP", "EMERGENCY_RECOVERY"}
 STEP_ORDER = {"PROCESSING": 0, "REMEDIATION_COMPLETE": 1, "VALIDATED": 2, "COMMITTED": 3, "RESUBMITTED": 4, "WAITING_DIRECTOR": 5}
 RESOLUTION_REQUIRED = REMEDIATION | {"NEW_SUBPROTOCOL_REQUIRED", "EMERGENCY_RECOVERY"}
+ALLOWED_TURN_END_STATES = {"WAITING_REMOTE_JOB", "WAITING_DIRECTOR_ACTIVE", "AUTHORIZED_STAGE_COMPLETE", "HARD_BLOCKED", "PAUSED", "STOPPED", "TERMINAL"}
+ACTIVE_STATES = {"PROCESSING", "REMEDIATION", "VALIDATING", "COMMITTING", "RESUBMITTING", "NEXT_STEP_IDENTIFIED", "DIRECTOR_REMEDIATION", "STAGE_PREPARATION"}
+
+def controller_must_continue(record: dict[str, Any]) -> bool:
+    """A next step is work, never a valid Controller completion."""
+    return bool(record.get("next_step")) and record.get("state") not in ALLOWED_TURN_END_STATES
+
 RESOLUTION_KEYS = {"root_cause", "why_current_path_is_invalid", "artifacts_or_conditions_that_must_remain_frozen", "required_resolution", "controller_next_actions", "minimum_acceptance_evidence", "forbidden_actions", "fresh_round_id_required", "fresh_protocol_id_required", "fresh_gate_nonce_output_root_required"}
 
 
@@ -243,8 +250,11 @@ def main() -> int:
             raise RuntimeError("CLOSE_NO_DIRECTOR_REQUIRES_COMPLETED_REMEDIATION")
         transition(record, "CLOSED", route="SINGLE_PRIMARY_CONTROLLER", next_step="SCIENTIFIC_EXECUTION_GATE",
                    controller_cycle_complete=True, closure_reason="DIRECTOR_EXCEPTION_ONLY_POLICY")
+    if controller_must_continue(record):
+        record["controller_cycle_complete"] = False
+        record["continue_execution"] = True
     atomic_json(args.state, state)
-    print(json.dumps({"directive_id": directive_id, "decision": decision, "state": record["state"], "scientific_training_started": False}, sort_keys=True))
+    print(json.dumps({"directive_id": directive_id, "decision": decision, "state": record["state"], "scientific_training_started": False, "continue_execution": controller_must_continue(record)}, sort_keys=True))
     return 0
 
 

@@ -1,0 +1,35 @@
+{
+  "artifacts_or_conditions_that_must_remain_frozen": [
+    "Round 009 selected checkpoint bytes",
+    "sealed remote mapping SHA de1019910ce214b2be58f909c4f0f0bae2a5eb987f1803bcb38e0d0d5400a160",
+    "mapping receipt/validation",
+    "no-Gold/FINAL_AUDIT/training prohibitions"
+  ],
+  "controller_next_actions": [
+    "derive target-free mapping proof from sealed remote mapping",
+    "create launcher/preflight contracts with exact executable binding",
+    "add isolated workspace/permission checks and regression tests",
+    "validate then commit/push and resubmit synchronously"
+  ],
+  "forbidden_actions": [
+    "model loading",
+    "generation",
+    "scoring",
+    "GPU inference",
+    "training",
+    "targeted repair",
+    "FINAL_AUDIT"
+  ],
+  "fresh_gate_nonce_output_root_required": true,
+  "fresh_protocol_id_required": false,
+  "fresh_round_id_required": false,
+  "minimum_acceptance_evidence": [
+    "256-row target-free proof with full bijections",
+    "exact source/checkout provenance",
+    "phase A/B preflight and regression evidence",
+    "no-model preflight PASS"
+  ],
+  "required_resolution": "Add target-free per-item proof and complete phase A/B fail-closed command, nonce, provenance, and isolation contracts; run CPU-only tests and no-model preflight.",
+  "root_cause": "The stage package proved aggregate mapping validity but not a reviewable per-item mapping proof or executable phase isolation/binding.",
+  "why_current_path_is_invalid": "Evaluation could not yet prove exact mapping or prevent target-reference exposure and command substitution."
+}

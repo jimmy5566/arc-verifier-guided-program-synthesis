@@ -18,6 +18,13 @@ SPEC.loader.exec_module(sync_review)
 
 
 class SynchronousDirectorReviewTest(unittest.TestCase):
+    def test_active_next_step_never_completes_cycle(self) -> None:
+        import importlib.util
+        spec=importlib.util.spec_from_file_location("router", ROOT / "scripts" / "arc2_controller_directive_cycle.py"); router=importlib.util.module_from_spec(spec); spec.loader.exec_module(router)
+        self.assertTrue(router.controller_must_continue({"state":"PROCESSING","next_step":"REMEDIATION_2"}))
+        self.assertFalse(router.controller_must_continue({"state":"WAITING_REMOTE_JOB","next_step":"AWAIT_RECEIPT"}))
+        self.assertTrue(router.controller_must_continue({"state":"REMEDIATION","next_step":"ACTION_3"}))
+
     def test_direct_review_receives_directive_without_supervisor(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw); directive_dir = root / "directives"; directive_dir.mkdir()
