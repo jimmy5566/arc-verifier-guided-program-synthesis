@@ -133,28 +133,64 @@ def finalize(staging_root: Path, destination: Path, manifest: dict[str, Any], fi
         if temporary is not None: temporary.unlink(missing_ok=True)
 
 
-def serve(staging_root: Path) -> int:
+def serve(staging_root: Path, manifest_sha256: str | None = None, manifest_bytes: int | None = None,
+          manifest_chunk_count: int | None = None) -> int:
     """Process bounded ASCII frames on an already-established forced PTY.
 
     A frame is base64(JSON) so the terminal only receives ASCII.  The daemon
     does no content parsing; it delegates byte checks to ``receive`` and
     ``finalize`` and emits one JSON acknowledgement per frame.
     """
-    print(json.dumps({"status": "READY", "schema_version": SCHEMA}, sort_keys=True), flush=True)
+    bound_manifest: dict[str, Any] | None = None
+    manifest_stage: Path | None = None
+    if manifest_sha256 is not None:
+        if len(manifest_sha256) != 64 or manifest_bytes is None or manifest_bytes < 1 or manifest_chunk_count is None or manifest_chunk_count < 1:
+            raise RuntimeError("TRANSPORT_MANIFEST_SESSION_ARGUMENTS_INVALID")
+        manifest_stage = staging_root / ("manifest." + manifest_sha256[:16])
+    print(json.dumps({"status": "READY", "schema_version": SCHEMA, "manifest_bound": False}, sort_keys=True), flush=True)
     for raw_line in sys.stdin:
         try:
             frame = json.loads(base64.b64decode(raw_line.strip(), validate=True).decode("ascii", errors="strict"))
-            if not isinstance(frame, dict) or frame.get("op") not in {"receive", "finalize"}:
+            if not isinstance(frame, dict) or frame.get("op") not in {"manifest", "manifest_finalize", "receive", "finalize"}:
                 raise RuntimeError("TRANSPORT_FRAME_INVALID")
-            manifest = decode_manifest(str(frame["manifest_b64"]))
-            if frame["op"] == "receive":
-                if set(frame) != {"op", "manifest_b64", "index", "chunk_b64"}:
-                    raise RuntimeError("TRANSPORT_RECEIVE_FRAME_FIELDS_INVALID")
-                value = receive(staging_root, manifest, int(frame["index"]), str(frame["chunk_b64"]))
+            if frame["op"] == "manifest":
+                if manifest_stage is None or set(frame) != {"op", "index", "chunk_b64"}:
+                    raise RuntimeError("TRANSPORT_MANIFEST_FRAME_FIELDS_INVALID")
+                index, part = int(frame["index"]), base64.b64decode(str(frame["chunk_b64"]), validate=True)
+                if index < 0 or index >= manifest_chunk_count or len(part) < 1 or len(part) > 2048:
+                    raise RuntimeError("TRANSPORT_MANIFEST_FRAME_BOUNDS_INVALID")
+                parts = manifest_stage / "parts"; parts.mkdir(parents=True, exist_ok=True)
+                path = parts / f"{index:08d}.part"; expected = len(list(parts.glob("*.part")))
+                if index > expected: raise RuntimeError("TRANSPORT_MANIFEST_OUT_OF_ORDER")
+                if path.exists():
+                    if path.read_bytes() != part: raise RuntimeError("TRANSPORT_MANIFEST_DUPLICATE_CONFLICT")
+                    value = {"status": "MANIFEST_IDEMPOTENT_ACK", "index": index}
+                else:
+                    path.write_bytes(part); value = {"status": "MANIFEST_ACK", "index": index, "next_index": index + 1}
+            elif frame["op"] == "manifest_finalize":
+                if manifest_stage is None or set(frame) != {"op"}: raise RuntimeError("TRANSPORT_MANIFEST_FINALIZE_FIELDS_INVALID")
+                parts = manifest_stage / "parts"; expected = [parts / f"{i:08d}.part" for i in range(manifest_chunk_count)]
+                if set(parts.glob("*.part")) != set(expected): raise RuntimeError("TRANSPORT_MANIFEST_PART_SET_INVALID")
+                encoded = b"".join(path.read_bytes() for path in expected)
+                if len(encoded) != manifest_bytes or sha_bytes(encoded) != manifest_sha256: raise RuntimeError("TRANSPORT_MANIFEST_IDENTITY_MISMATCH")
+                bound_manifest = decode_manifest(base64.b64encode(encoded).decode("ascii"))
+                value = {"status": "MANIFEST_READY", "filename": bound_manifest["filename"], "manifest_sha256": manifest_sha256}
             else:
-                if set(frame) != {"op", "manifest_b64", "destination", "final_audit"}:
-                    raise RuntimeError("TRANSPORT_FINALIZE_FRAME_FIELDS_INVALID")
-                value = finalize(staging_root, Path(str(frame["destination"])), manifest, bool(frame["final_audit"]))
+                if bound_manifest is None:
+                    if set(frame) < {"op", "manifest_b64"}: raise RuntimeError("TRANSPORT_MANIFEST_NOT_BOUND")
+                    manifest = decode_manifest(str(frame["manifest_b64"]))
+                else:
+                    manifest = bound_manifest
+                if frame["op"] == "receive":
+                    required = {"op", "index", "chunk_b64"} if bound_manifest is not None else {"op", "manifest_b64", "index", "chunk_b64"}
+                    if set(frame) != required:
+                        raise RuntimeError("TRANSPORT_RECEIVE_FRAME_FIELDS_INVALID")
+                    value = receive(staging_root, manifest, int(frame["index"]), str(frame["chunk_b64"]))
+                else:
+                    required = {"op", "destination", "final_audit"} if bound_manifest is not None else {"op", "manifest_b64", "destination", "final_audit"}
+                    if set(frame) != required:
+                        raise RuntimeError("TRANSPORT_FINALIZE_FRAME_FIELDS_INVALID")
+                    value = finalize(staging_root, Path(str(frame["destination"])), manifest, bool(frame["final_audit"]))
         except Exception as exc:
             value = {"status": "REJECTED", "error": str(exc), "error_type": type(exc).__name__}
         print(json.dumps(value, sort_keys=True), flush=True)
@@ -166,10 +202,10 @@ def main() -> int:
     b = sub.add_parser("build"); b.add_argument("--source", type=Path, required=True); b.add_argument("--manifest", type=Path, required=True); b.add_argument("--envelope", type=Path, required=True); b.add_argument("--chunk-size", type=int, default=CHUNK_SIZE)
     r = sub.add_parser("receive"); r.add_argument("--staging-root", type=Path, required=True); r.add_argument("--manifest-b64", required=True); r.add_argument("--index", type=int, required=True); r.add_argument("--chunk-b64", required=True)
     f = sub.add_parser("finalize"); f.add_argument("--staging-root", type=Path, required=True); f.add_argument("--destination", type=Path, required=True); f.add_argument("--manifest-b64", required=True); f.add_argument("--final-audit", action="store_true")
-    s = sub.add_parser("serve"); s.add_argument("--staging-root", type=Path, required=True)
+    s = sub.add_parser("serve"); s.add_argument("--staging-root", type=Path, required=True); s.add_argument("--manifest-sha256"); s.add_argument("--manifest-bytes", type=int); s.add_argument("--manifest-chunk-count", type=int)
     args = p.parse_args()
     if args.mode == "build": value = build(args.source, args.manifest, args.envelope, args.chunk_size); print(json.dumps({"status":"BUILT", "manifest_sha256":sha_file(args.manifest), "chunk_count":value["chunk_count"]}, sort_keys=True)); return 0
-    if args.mode == "serve": return serve(args.staging_root)
+    if args.mode == "serve": return serve(args.staging_root, args.manifest_sha256, args.manifest_bytes, args.manifest_chunk_count)
     manifest = decode_manifest(args.manifest_b64)
     value = receive(args.staging_root, manifest, args.index, args.chunk_b64) if args.mode == "receive" else finalize(args.staging_root, args.destination, manifest, args.final_audit)
     print(json.dumps(value, sort_keys=True)); return 0

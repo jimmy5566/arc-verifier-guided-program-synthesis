@@ -63,3 +63,26 @@ class ForcedPtyTransportTests(unittest.TestCase):
             replies = [json.loads(line) for line in stdout.getvalue().splitlines()]
             self.assertEqual([reply["status"] for reply in replies], ["READY", "ACK", "PUBLISHED"])
             self.assertTrue(replies[-1]["read_only"]); self.assertFalse(replies[-1]["content_deserialized"])
+
+    def test_persistent_session_binds_a_chunked_manifest_before_data(self) -> None:
+        m = module()
+        with tempfile.TemporaryDirectory() as root:
+            root = Path(root); source = root / "canary.jsonl"; source.write_bytes(b"opaque" * 500)
+            manifest_path = root / "manifest"; envelope_path = root / "envelope"; manifest = m.build(source, manifest_path, envelope_path, 1024)
+            manifest_bytes = manifest_path.read_bytes(); manifest_hash = __import__('hashlib').sha256(manifest_bytes).hexdigest()
+            data = envelope_path.read_bytes(); chunks = [data[i:i + 1024] for i in range(0, len(data), 1024)]
+            manifest_parts = [manifest_bytes[i:i + 512] for i in range(0, len(manifest_bytes), 512)]
+            frames = ([{"op": "manifest", "index": i, "chunk_b64": __import__('base64').b64encode(part).decode()} for i, part in enumerate(manifest_parts)] +
+                      [{"op": "manifest_finalize"}] +
+                      [{"op": "receive", "index": i, "chunk_b64": __import__('base64').b64encode(part).decode()} for i, part in enumerate(chunks)] +
+                      [{"op": "finalize", "destination": str(root / "dest" / source.name), "final_audit": False}])
+            stdin, stdout = io.StringIO("".join(__import__('base64').b64encode(json.dumps(frame, sort_keys=True, separators=(',', ':')).encode()).decode() + "\n" for frame in frames)), io.StringIO()
+            original_in, original_out = m.sys.stdin, m.sys.stdout
+            try:
+                m.sys.stdin, m.sys.stdout = stdin, stdout
+                self.assertEqual(m.serve(root / "stage", manifest_hash, len(manifest_bytes), len(manifest_parts)), 0)
+            finally:
+                m.sys.stdin, m.sys.stdout = original_in, original_out
+            replies = [json.loads(line) for line in stdout.getvalue().splitlines()]
+            self.assertEqual(replies[0]["status"], "READY"); self.assertEqual(replies[-1]["status"], "PUBLISHED")
+            self.assertEqual((root / "dest" / source.name).read_bytes(), source.read_bytes())
