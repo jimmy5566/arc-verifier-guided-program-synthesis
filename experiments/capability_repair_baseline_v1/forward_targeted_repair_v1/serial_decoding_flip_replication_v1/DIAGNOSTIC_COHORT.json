@@ -1,0 +1,417 @@
+{
+  "cohort": [
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:overlay:000003",
+      "family": "overlay",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:overlay:000006",
+      "family": "overlay",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:overlay:000009",
+      "family": "overlay",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:overlay:000011",
+      "family": "overlay",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:overlay:000012",
+      "family": "overlay",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:overlay:000013",
+      "family": "overlay",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:overlay:000014",
+      "family": "overlay",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "110"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:overlay:000015",
+      "family": "overlay",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:propagation:000000",
+      "family": "propagation",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:propagation:000004",
+      "family": "propagation",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:propagation:000008",
+      "family": "propagation",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:propagation:000011",
+      "family": "propagation",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:propagation:000012",
+      "family": "propagation",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "101"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:propagation:000013",
+      "family": "propagation",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:propagation:000015",
+      "family": "propagation",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:rotate:000002",
+      "family": "rotate",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "101"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:rotate:000004",
+      "family": "rotate",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "101"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:rotate:000005",
+      "family": "rotate",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "101"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:rotate:000006",
+      "family": "rotate",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "101"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:rotate:000007",
+      "family": "rotate",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "101"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:rotate:000008",
+      "family": "rotate",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "101"
+    },
+    {
+      "episode_id": "TARGET_DEV:RETENTION_SENTINEL:rotate:000012",
+      "family": "rotate",
+      "role": "RETENTION_SENTINEL",
+      "transition_v7_r1_r2": "101"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000000",
+      "family": "conditional action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "011"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000006",
+      "family": "conditional action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000009",
+      "family": "conditional action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "110"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000010",
+      "family": "conditional action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000011",
+      "family": "conditional action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000016",
+      "family": "conditional action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000019",
+      "family": "conditional action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000005",
+      "family": "mask set",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000006",
+      "family": "mask set",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000008",
+      "family": "mask set",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000010",
+      "family": "mask set",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000011",
+      "family": "mask set",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000016",
+      "family": "mask set",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000017",
+      "family": "mask set",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000023",
+      "family": "mask set",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000001",
+      "family": "relation selector action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000004",
+      "family": "relation selector action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000009",
+      "family": "relation selector action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000011",
+      "family": "relation selector action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "011"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000017",
+      "family": "relation selector action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000022",
+      "family": "relation selector action",
+      "role": "TARGETED_COMPOSITION",
+      "transition_v7_r1_r2": "110"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000002",
+      "family": "connected components",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000006",
+      "family": "connected components",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000000",
+      "family": "difference",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000007",
+      "family": "difference",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000009",
+      "family": "difference",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000002",
+      "family": "inside/contains",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "011"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000006",
+      "family": "inside/contains",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000008",
+      "family": "inside/contains",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "011"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000009",
+      "family": "inside/contains",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000000",
+      "family": "orientation",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "110"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000002",
+      "family": "orientation",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "010"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000003",
+      "family": "orientation",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000009",
+      "family": "orientation",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "001"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000001",
+      "family": "same color",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000003",
+      "family": "same color",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "110"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000004",
+      "family": "same color",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "110"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000005",
+      "family": "same color",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "100"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000006",
+      "family": "same color",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "110"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000008",
+      "family": "same color",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "101"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000010",
+      "family": "same color",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "110"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000001",
+      "family": "width",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "101"
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000002",
+      "family": "width",
+      "role": "TARGETED_EVALUATION",
+      "transition_v7_r1_r2": "100"
+    }
+  ],
+  "diagnostic_id": "V7_R1_R2_SERIAL_DECODING_FLIP_REPLICATION_V1",
+  "episode_count": 65,
+  "episode_ids_sha256": "3d65876518b2ae4d9c3baa1432f73899a2cd9d8598e8c0fda912620e1e4c0500",
+  "final_audit_opened": false,
+  "schema_version": 1,
+  "selection_rule": "Include exactly frozen TARGET_DEV or RETENTION_SENTINEL episodes whose V7/R1/R2 exact-correctness transition is neither 000 nor 111.",
+  "source_results": {
+    "r1": {
+      "path": "/workspace/arc2/forward_targeted_repair_v1_003_evaluation_batch32_v2/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "sha256": "fee020b8ac8aa81df2e5862b9af8b6f84819cc2c237099f25a9c5067abd9c8a9"
+    },
+    "r2": {
+      "path": "/workspace/arc2/forward_targeted_repair_v1_004_evaluation_batch32/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "sha256": "505841894ceb468b1623754c80cdae3fa359c66340c311e278d987749b219cb3"
+    },
+    "v7": {
+      "path": "/workspace/arc2/forward_baseline_evaluation_v7_batch32/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+    }
+  },
+  "status": "FROZEN_PRE_MODEL_LOADING",
+  "target_blind_generation": true,
+  "target_values_in_manifest": false
+}
