@@ -68,14 +68,15 @@ def poll_seconds(job):
     if 'EVALUATION' in kind or 'INFERENCE' in kind: return 20
     return 60
 def remote_status(job):
-    receipt=job.get('expected_receipt') or job.get('remote_output'); target=job.get('ssh_target'); pid=job.get('pid')
+    receipt=job.get('expected_receipt') or job.get('remote_output'); target=job.get('ssh_target'); pid=job.get('remote_pid') or job.get('pid')
     if not receipt or not target: return 'INVALID_BINDING', None
     from orchestration.supervisor.arc2_supervisor import remote_shell
     script=f"test -f {receipt!r} && echo RECEIPT_PRESENT || echo RECEIPT_MISSING\n" + (f"ps -p {int(pid)!r} -o pid= >/dev/null 2>&1 && echo PROCESS_ALIVE || echo PROCESS_DEAD" if pid else "echo PROCESS_UNKNOWN")
     out=remote_shell(target,script)
     if 'RECEIPT_PRESENT' in out: return 'RECEIPT_PRESENT', out
     if 'PROCESS_ALIVE' in out: return 'PROCESS_ALIVE', out
-    return 'PROCESS_DEAD', out
+    if 'PROCESS_DEAD' in out: return 'PROCESS_DEAD', out
+    return 'REMOTE_CHECK_INCONCLUSIVE', out
 def consume_remote(state,path,status,detail):
     job=state.get('remote_job') or {}
     jobid=str(job.get('job_id','UNKNOWN'))
