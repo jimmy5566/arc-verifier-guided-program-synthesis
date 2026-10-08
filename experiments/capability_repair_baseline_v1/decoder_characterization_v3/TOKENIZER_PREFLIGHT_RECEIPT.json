@@ -1,0 +1,28 @@
+{
+  "cohort_sha256": "70e300e0d3c0fac4a1118b4f4b608c40ed757af988088c2b5d2f236718042e13",
+  "model_loaded": false,
+  "no_target_access": true,
+  "parser_sha256": "0716d6f2e043ea1993ba89891fd4b7146121d0abdb7ea5bffe69c6738c618689",
+  "schema_version": 1,
+  "source_commit": "d38b62f773c66d94be6e62227dbdfbddfe944f5b",
+  "status": "PASS_NO_MODEL_IMPORT",
+  "tokenizer_ids": {
+    "digits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "eos": 15,
+    "newline": 10,
+    "pad": 13
+  },
+  "worker_sha256": "202791543004d573bc2a7dc7bde5fa7ca6322e32e0b8d63a244d61c817b97772",
+  "worker_source_commit": "52c97079de068489ac62d09888307c73fea32b7c"
+}

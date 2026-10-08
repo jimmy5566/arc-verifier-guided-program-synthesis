@@ -1,0 +1,9 @@
+{
+  "gpu_inference_started": false,
+  "model_loaded": false,
+  "reason": "PRELIGHT_RECEIPT_WRITTEN_TO_TERMINAL_PATH_BY_REJECTED_V2_COMMAND_BINDING",
+  "receipt_sha256": "2945dc891574a0a72bec6c51a8443d3b413363c0e7ccbeefdac2367df48e526f",
+  "reuse_forbidden": true,
+  "schema_version": 1,
+  "status": "PRESERVED_PRE_MODEL_ADMISSION_FAILURE"
+}
