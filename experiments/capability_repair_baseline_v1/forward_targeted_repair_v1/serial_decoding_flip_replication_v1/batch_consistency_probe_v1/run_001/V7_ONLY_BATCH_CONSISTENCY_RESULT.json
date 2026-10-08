@@ -1,0 +1,38 @@
+{
+  "candidates": {
+    "16": {
+      "mismatch_count": 43,
+      "status": "COMPLETE",
+      "strictly_equal_to_batch1": false
+    },
+    "2": {
+      "mismatch_count": 22,
+      "status": "COMPLETE",
+      "strictly_equal_to_batch1": false
+    },
+    "32": {
+      "mismatch_count": 43,
+      "status": "COMPLETE",
+      "strictly_equal_to_batch1": false
+    },
+    "4": {
+      "mismatch_count": 34,
+      "status": "COMPLETE",
+      "strictly_equal_to_batch1": false
+    },
+    "8": {
+      "mismatch_count": 42,
+      "status": "COMPLETE",
+      "strictly_equal_to_batch1": false
+    }
+  },
+  "diagnostic_id": "V7_ONLY_BATCH_CONSISTENCY_RESULT_V1",
+  "final_audit_opened": false,
+  "largest_strictly_equal_batch_size": null,
+  "optimizer_constructed": false,
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "source_progress_sha256": "d50839356f4f0d61c3c508f9b0535a8d2ec83fc483f15bdd381297acc559fc31",
+  "source_terminal_receipt_sha256": "7183604d7b3002f4f63e53243982cece1b1505a6ff47d61329b76ef18e211836",
+  "status": "V7_ONLY_COMPLETE_AFTER_CONTROLLED_SCOPE_REDUCTION"
+}

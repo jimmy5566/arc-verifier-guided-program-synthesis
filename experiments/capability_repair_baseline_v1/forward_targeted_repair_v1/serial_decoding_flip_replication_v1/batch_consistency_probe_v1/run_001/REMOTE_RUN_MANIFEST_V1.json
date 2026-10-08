@@ -1,0 +1,28 @@
+{
+  "artifact": "V7_R1_R2_BATCH_CONSISTENCY_PROBE_V1_RUN_001_V7_ONLY",
+  "execution_source_commit": "3a3447eff467a1abf108999cbaa630a7b3af8a6a",
+  "files": [
+    {
+      "bytes": 2110965,
+      "path": "V7_ONLY_PROGRESS.json",
+      "sha256": "d50839356f4f0d61c3c508f9b0535a8d2ec83fc483f15bdd381297acc559fc31"
+    },
+    {
+      "bytes": 629,
+      "path": "CONTROLLED_STOP_TERMINAL_RECEIPT.json",
+      "sha256": "7183604d7b3002f4f63e53243982cece1b1505a6ff47d61329b76ef18e211836"
+    },
+    {
+      "bytes": 1093,
+      "path": "V7_ONLY_BATCH_CONSISTENCY_RESULT.json",
+      "sha256": "5c30fbfa3e7fc5d9d3e5a3632e8b737bf7bdad3a2fbe140ca50d2d5e180cafc6"
+    }
+  ],
+  "final_audit_opened": false,
+  "optimizer_constructed": false,
+  "remote_run_root": "/workspace/arc2/targeted_repair_postmortem_v1/V7_R1_R2_BATCH_CONSISTENCY_PROBE_V1/run_001",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "scope": "V7_ONLY",
+  "scope_reduction": "USER_DIRECTED_SCOPE_REDUCTION_TO_V7_ONLY"
+}

@@ -1,0 +1,19 @@
+{
+  "diagnostic_id": "V7_R1_R2_BATCH_CONSISTENCY_PROBE_V1",
+  "final_audit_opened": false,
+  "optimizer_constructed": false,
+  "progress_path": "/workspace/arc2/targeted_repair_postmortem_v1/V7_R1_R2_BATCH_CONSISTENCY_PROBE_V1/run_001/PROGRESS.json",
+  "progress_sha256": "d50839356f4f0d61c3c508f9b0535a8d2ec83fc483f15bdd381297acc559fc31",
+  "reason": "USER_DIRECTED_SCOPE_REDUCTION_TO_V7_ONLY",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "CONTROLLED_STOP_AFTER_V7_ONLY",
+  "stopped_pid": 46111,
+  "v7_candidate_model_results": {
+    "16": 1,
+    "2": 1,
+    "32": 1,
+    "4": 1,
+    "8": 1
+  }
+}
