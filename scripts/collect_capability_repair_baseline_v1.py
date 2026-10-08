@@ -116,7 +116,8 @@ def verify_governor_review(launch: dict[str, Any], review_path: Path) -> None:
 
 def verify_entrypoint(launch: dict[str, Any], args: argparse.Namespace) -> None:
     actual = [str(Path(sys.executable).resolve()), str(Path(sys.argv[0]).resolve()), *sys.argv[1:]]
-    if actual != launch["argv"]:
+    expected = [str(Path(launch["argv"][0]).resolve()), str(Path(launch["argv"][1]).resolve()), *launch["argv"][2:]]
+    if actual != expected:
         raise RuntimeError("ARGV_BINDING_MISMATCH")
     if args.runtime_limit_seconds != launch["runtime_cap_seconds"]:
         raise RuntimeError("RUNTIME_CAP_BINDING_MISMATCH")
