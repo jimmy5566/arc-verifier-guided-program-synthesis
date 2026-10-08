@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 """Read-only, fail-closed base-reference collector for V2. Additive correction; never trains."""
 from __future__ import annotations
-import argparse, hashlib, json, os, sys, time
+import argparse, gc, hashlib, json, os, sys, time
 from pathlib import Path
 from typing import Any
 
 PROTOCOL = "CAPABILITY_REPAIR_BASELINE_V1"
 CONTRACT_NAME = "ARC_NATIVE_OBSERVATION_ONLY_V1"
+DEFAULT_BATCH_SIZE = 32
+DEFAULT_MAX_BATCHED_PROMPT_TOKENS = 21_568
+DEFAULT_BATCH_FALLBACK_LADDER = (32, 16, 8, 4, 1)
+DEFAULT_BATCH_VALIDATION_COUNT = 32
+MIN_CANONICAL_AGREEMENT = 0.9375
+MAX_RATE_DELTA = 0.0625
 
 def canonical(v: Any) -> str: return json.dumps(v, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 def sha_bytes(b: bytes) -> str: return hashlib.sha256(b).hexdigest()
@@ -124,14 +130,39 @@ def verify_entrypoint(launch: dict[str, Any], args: argparse.Namespace) -> None:
     for key, value in launch["environment"].items():
         if os.environ.get(key) != value:
             raise RuntimeError(f"ENVIRONMENT_BINDING_MISMATCH:{key}")
+
+def is_oom(exc: BaseException) -> bool:
+    text = str(exc).lower()
+    return "out of memory" in text or "cuda error: out of memory" in text
+
+def fallback_size(failed: int, ladder: tuple[int, ...]) -> int | None:
+    for candidate in ladder:
+        if candidate < failed:
+            return candidate
+    return None
+
+def validation_subset(contexts: list[dict[str, Any]], count: int) -> list[dict[str, Any]]:
+    """Deterministic short/median/long coverage without reading held-out targets."""
+    ordered = sorted(contexts, key=lambda x: (x["prompt_tokens"], x["episode_id"]))
+    n = min(count, len(ordered))
+    if n <= 1: return ordered[:n]
+    if n == len(ordered): return ordered
+    positions = sorted({round(index * (len(ordered) - 1) / (n - 1)) for index in range(n)})
+    return [ordered[index] for index in positions]
 def main() -> int:
     a = argparse.ArgumentParser()
     for name in ("output", "receipt"): a.add_argument("--" + name, type=Path, required=True)
     a.add_argument("--launch-contract", type=Path); a.add_argument("--governor-review", type=Path);
     for name in ("target-dev", "retention", "binding", "contract"): a.add_argument("--" + name, type=Path)
     a.add_argument("--base", type=Path); a.add_argument("--adapter", type=Path); a.add_argument("--authorization", type=Path); a.add_argument("--runtime-limit-seconds", type=float, default=7200); a.add_argument("--cpu-mock", action="store_true"); a.add_argument("--cpu-mock-simulate-runtime-cap", action="store_true")
+    a.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE)
+    a.add_argument("--max-batched-prompt-tokens", type=int, default=DEFAULT_MAX_BATCHED_PROMPT_TOKENS)
+    a.add_argument("--batch-validation-count", type=int, default=DEFAULT_BATCH_VALIDATION_COUNT)
     z = a.parse_args(); started = time.monotonic()
     if z.runtime_limit_seconds <= 0: raise RuntimeError("RUNTIME_LIMIT_INVALID")
+    if z.batch_size != DEFAULT_BATCH_SIZE: raise RuntimeError("BATCH_SIZE_MUST_BE_32")
+    if z.max_batched_prompt_tokens != DEFAULT_MAX_BATCHED_PROMPT_TOKENS: raise RuntimeError("BATCH_TOKEN_CAP_DRIFT")
+    if z.batch_validation_count != DEFAULT_BATCH_VALIDATION_COUNT: raise RuntimeError("BATCH_VALIDATION_COUNT_DRIFT")
     # A real run consumes the recorded launch configuration.  Its scientific
     # admission checks are the model/data identities, split roles, and fresh
     # output paths below; review/nonce machinery is operational provenance.
@@ -139,6 +170,7 @@ def main() -> int:
     if not z.cpu_mock:
         if z.launch_contract is None: raise RuntimeError("IMMUTABLE_LAUNCH_CONTRACT_REQUIRED")
         launch=json.loads(z.launch_contract.read_text(encoding="utf-8"))
+        verify_entrypoint(launch, z)
         expected_out=Path(launch["output_root"]) / "CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json"
         if z.output.resolve()!=expected_out.resolve() or z.receipt.resolve()!=Path(launch["receipt_path"]).resolve(): raise RuntimeError("LAUNCH_OUTPUT_BINDING_MISMATCH")
         z.target_dev=Path(launch["datasets"]["TARGET_DEV"]["path"]); z.retention=Path(launch["datasets"]["RETENTION_SENTINEL"]["path"])
@@ -157,10 +189,11 @@ def main() -> int:
         m=json.loads(Path(launch["checkpoint_manifest_path"]).read_text(encoding="utf-8")); b={"base_path":m["base_path"],"base_files":{x["name"]:x["sha256"] for x in m["base_files"]}}
     elif z.binding is not None:
         b=json.loads(z.binding.read_text(encoding="utf-8"))
+    batching = {"requested_batch_size": z.batch_size, "max_batched_prompt_tokens": z.max_batched_prompt_tokens, "fallback_ladder": list(DEFAULT_BATCH_FALLBACK_LADDER), "validation_count": z.batch_validation_count, "min_canonical_agreement": MIN_CANONICAL_AGREEMENT, "max_rate_delta": MAX_RATE_DELTA, "prompt_length_bucketing": True, "left_padding": True}
     if z.cpu_mock:
         ps = [prompt(r, c) for r in target + retention]
         status = "PARTIAL_RUNTIME_CAP" if z.cpu_mock_simulate_runtime_cap else "CPU_MOCK_PASS_NO_MODEL"
-        write(z.output, {"schema_version": 2, "protocol_id": PROTOCOL, "status": status, "model_loaded": False, "lora_constructed": False, "optimizer_constructed": False, "gpu_training_started": False, "inference_contract_identity": cid, "target_episode_order": [r["episode_id"] for r in target], "retention_episode_order": [r["episode_id"] for r in retention], "prompt_sha256": dig(ps), "completed_episode_count": 0 if z.cpu_mock_simulate_runtime_cap else len(ps)})
+        write(z.output, {"schema_version": 3, "protocol_id": PROTOCOL, "status": status, "model_loaded": False, "lora_constructed": False, "optimizer_constructed": False, "gpu_training_started": False, "inference_contract_identity": cid, "target_episode_order": [r["episode_id"] for r in target], "retention_episode_order": [r["episode_id"] for r in retention], "prompt_sha256": dig(ps), "completed_episode_count": 0 if z.cpu_mock_simulate_runtime_cap else len(ps), "batching": batching})
         write(z.receipt, receipt(status, started, model_loaded=False, model_released=True)); return 1 if z.cpu_mock_simulate_runtime_cap else 0
     if z.base is None or z.adapter is None or not z.adapter.is_dir(): raise RuntimeError("BASE_OR_ADAPTER_PATH_REQUIRED")
     mid = verify_binding(b, z.base)  # Complete base identity before model-library import.
@@ -172,15 +205,81 @@ def main() -> int:
         if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported(): raise RuntimeError("CUDA_OR_BF16_UNAVAILABLE")
         device = torch.device("cuda:0"); rt = c["runtime"]; tok = AutoTokenizer.from_pretrained(z.base, local_files_only=True)
         if tok.get_vocab().get(rt["required_special_token"]) != rt["required_special_token_id"]: raise RuntimeError("TOKENIZER_SPECIAL_TOKEN_ID_MISMATCH")
+        tok.padding_side = "left"
+        tok.pad_token_id = rt["pad_token_id"]
         model = AutoModelForCausalLM.from_pretrained(z.base, local_files_only=True, torch_dtype=torch.bfloat16, attn_implementation=rt["attention_backend"]).to(device)
         model = PeftModel.from_pretrained(model, z.adapter, is_trainable=False).eval()
+        contexts: list[dict[str, Any]] = []
         for surface, records in (("TARGET_DEV", target), ("RETENTION_SENTINEL", retention)):
             for r in records:
-                if time.monotonic() >= deadline: status = "PARTIAL_RUNTIME_CAP"; raise TimeoutError("RUNTIME_CAP_BEFORE_EPISODE")
-                p = prompt(r, c); encoded = tok(p, return_tensors="pt", add_special_tokens=False); ins = {k: v.to(device) for k, v in encoded.items()}
-                with torch.inference_mode(): gen = model.generate(**ins, do_sample=False, max_new_tokens=rt["max_new_tokens"], use_cache=True, eos_token_id=rt["eos_token_id"], pad_token_id=rt["pad_token_id"])
-                text = tok.decode(gen[0][ins["input_ids"].shape[-1]:], skip_special_tokens=False); rows.append(output_row(surface, r, p, text, cid, mid))
-                if time.monotonic() >= deadline: status = "PARTIAL_RUNTIME_CAP"; raise TimeoutError("RUNTIME_CAP_AFTER_EPISODE")
+                p = prompt(r, c)
+                prompt_tokens = len(tok(p, add_special_tokens=False)["input_ids"])
+                contexts.append({"surface": surface, "record": r, "prompt": p, "episode_id": r["episode_id"], "prompt_tokens": prompt_tokens})
+        contexts.sort(key=lambda x: (x["prompt_tokens"], x["episode_id"]))
+
+        def generate_one_batch(batch: list[dict[str, Any]]) -> list[str]:
+            encoded = tok([x["prompt"] for x in batch], return_tensors="pt", padding=True, truncation=False, add_special_tokens=False)
+            ins = {key: value.to(device) for key, value in encoded.items()}
+            width = int(ins["input_ids"].shape[-1])
+            with torch.inference_mode():
+                generated = model.generate(**ins, do_sample=False, num_beams=1, max_new_tokens=rt["max_new_tokens"], use_cache=True, eos_token_id=rt["eos_token_id"], pad_token_id=rt["pad_token_id"])
+            return [tok.decode(generated[index][width:], skip_special_tokens=False) for index in range(len(batch))]
+
+        def generate_adaptive(items: list[dict[str, Any]], *, label: str, on_batch: Any = None) -> tuple[list[tuple[dict[str, Any], str, int]], list[dict[str, Any]]]:
+            produced: list[tuple[dict[str, Any], str, int]] = []; records: list[dict[str, Any]] = []; cursor = 0
+            while cursor < len(items):
+                if time.monotonic() >= deadline: raise TimeoutError("RUNTIME_CAP_BEFORE_BATCH")
+                count = min(z.batch_size, len(items) - cursor)
+                while count > 1 and max(x["prompt_tokens"] for x in items[cursor:cursor + count]) * count > z.max_batched_prompt_tokens:
+                    count -= 1
+                constrained_count = count
+                while True:
+                    batch = items[cursor:cursor + count]
+                    try:
+                        texts = generate_one_batch(batch)
+                        break
+                    except Exception as exc:
+                        if not is_oom(exc): raise
+                        next_count = fallback_size(count, DEFAULT_BATCH_FALLBACK_LADDER)
+                        if next_count is None: raise RuntimeError("OOM_AT_BATCH1") from exc
+                        records.append({"event": "OOM_FALLBACK", "label": label, "cursor": cursor, "failed_batch_size": count, "fallback_batch_size": next_count, "error": str(exc)[:300]})
+                        gc.collect(); torch.cuda.empty_cache(); count = next_count
+                batch_record = {"event": "BATCH", "label": label, "cursor": cursor, "actual_batch_size": len(batch), "longest_prompt_tokens": max(x["prompt_tokens"] for x in batch), "padded_prompt_tokens": max(x["prompt_tokens"] for x in batch) * len(batch), "long_prompt_downgrade": constrained_count != min(z.batch_size, len(items) - cursor), "oom_fallback": count != constrained_count}
+                records.append(batch_record)
+                produced.extend((context, text, len(batch)) for context, text in zip(batch, texts, strict=True))
+                cursor += len(batch)
+                if on_batch is not None: on_batch(produced, records)
+                print(json.dumps({"event": "BASELINE_BATCH_PROGRESS", "label": label, "completed": cursor, "total": len(items), "actual_batch_size": len(batch)}, sort_keys=True), flush=True)
+                if time.monotonic() >= deadline: raise TimeoutError("RUNTIME_CAP_AFTER_BATCH")
+            return produced, records
+
+        validation = validation_subset(contexts, z.batch_validation_count)
+        serial = [(context, generate_one_batch([context])[0]) for context in validation]
+        batched, validation_batches = generate_adaptive(validation, label="BATCH1_VS_BATCH32")
+        serial_by_id = {x[0]["episode_id"]: output_row(x[0]["surface"], x[0]["record"], x[0]["prompt"], x[1], cid, mid) for x in serial}
+        batched_by_id = {x[0]["episode_id"]: output_row(x[0]["surface"], x[0]["record"], x[0]["prompt"], x[1], cid, mid) for x in batched}
+        matched = sum(serial_by_id[key]["canonical_prediction_sha256"] == batched_by_id[key]["canonical_prediction_sha256"] for key in serial_by_id)
+        serial_parse = sum(x["parse_valid"] for x in serial_by_id.values()) / len(serial_by_id)
+        batched_parse = sum(x["parse_valid"] for x in batched_by_id.values()) / len(batched_by_id)
+        serial_exact = sum(x["exact_grid_match"] for x in serial_by_id.values()) / len(serial_by_id)
+        batched_exact = sum(x["exact_grid_match"] for x in batched_by_id.values()) / len(batched_by_id)
+        batching["validation"] = {"sample_count": len(validation), "canonical_agreement": matched / len(validation), "parse_valid_rate_delta": abs(serial_parse - batched_parse), "exact_grid_rate_delta": abs(serial_exact - batched_exact), "batch_records": validation_batches, "status": "PASS" if matched / len(validation) >= MIN_CANONICAL_AGREEMENT and abs(serial_parse - batched_parse) <= MAX_RATE_DELTA and abs(serial_exact - batched_exact) <= MAX_RATE_DELTA else "FAIL"}
+        if batching["validation"]["status"] != "PASS": raise RuntimeError("BATCH1_BATCH32_VALIDATION_FAILED")
+
+        progress = z.output.parent / "CAPABILITY_REPAIR_BASELINE_V1_PROGRESS.json"
+        def persist_progress(produced: list[tuple[dict[str, Any], str, int]], records: list[dict[str, Any]]) -> None:
+            partial_rows = []
+            for context, text, actual_batch_size in produced:
+                row = output_row(context["surface"], context["record"], context["prompt"], text, cid, mid)
+                row.update({"requested_batch_size": z.batch_size, "actual_batch_size": actual_batch_size, "prompt_tokens": context["prompt_tokens"]})
+                partial_rows.append(row)
+            write(progress, {"status": "INCOMPLETE", "completed_episode_count": len(partial_rows), "expected_episode_count": len(contexts), "batch_records": records, "batching": {key: value for key, value in batching.items() if key != "full_evaluation_batches"}, "predictions": partial_rows, "updated_at_monotonic_seconds": time.monotonic() - started})
+        generated, full_batches = generate_adaptive(contexts, label="FULL_EVALUATION", on_batch=persist_progress)
+        batching["full_evaluation_batches"] = full_batches
+        for context, text, actual_batch_size in generated:
+            row = output_row(context["surface"], context["record"], context["prompt"], text, cid, mid)
+            row.update({"requested_batch_size": z.batch_size, "actual_batch_size": actual_batch_size, "prompt_tokens": context["prompt_tokens"]})
+            rows.append(row)
     except Exception as exc:
         if status == "COLLECTED_PASS": status = "PARTIAL_FAILURE"
         failure = f"{type(exc).__name__}:{exc}"
@@ -192,7 +291,7 @@ def main() -> int:
             except Exception: pass
     n = len(target) + len(retention)
     if status == "COLLECTED_PASS" and len(rows) != n: status, failure = "PARTIAL_FAILURE", "INCOMPLETE_EPISODE_SET"
-    result = {"schema_version": 2, "protocol_id": PROTOCOL, "status": status, "inference_contract_identity": cid, "model_base_manifest_identity": mid, "predictions": rows, "aggregates": {"TARGET_DEV": aggregate([x for x in rows if x["surface"] == "TARGET_DEV"]), "RETENTION_SENTINEL": aggregate([x for x in rows if x["surface"] == "RETENTION_SENTINEL"])}, "expected_episode_count": n, "completed_episode_count": len(rows)}
-    write(z.output, result); write(z.receipt, receipt(status, started, model_loaded=True, adapter_loaded=True, lora_constructed=False, adapter_path=str(z.adapter), completed_episode_ids=[x["episode_id"] for x in rows], expected_episode_count=n, completed_episode_count=len(rows), model_base_manifest_identity=mid, inference_contract_identity=cid, failure=failure, runtime_cap_seconds=z.runtime_limit_seconds, model_released=True))
+    result = {"schema_version": 3, "protocol_id": PROTOCOL, "status": status, "inference_contract_identity": cid, "model_base_manifest_identity": mid, "predictions": rows, "aggregates": {"TARGET_DEV": aggregate([x for x in rows if x["surface"] == "TARGET_DEV"]), "RETENTION_SENTINEL": aggregate([x for x in rows if x["surface"] == "RETENTION_SENTINEL"])}, "expected_episode_count": n, "completed_episode_count": len(rows), "batching": batching}
+    write(z.output, result); write(z.receipt, receipt(status, started, model_loaded=True, adapter_loaded=True, lora_constructed=False, adapter_path=str(z.adapter), completed_episode_ids=[x["episode_id"] for x in rows], expected_episode_count=n, completed_episode_count=len(rows), model_base_manifest_identity=mid, inference_contract_identity=cid, failure=failure, runtime_cap_seconds=z.runtime_limit_seconds, model_released=True, batching=batching))
     return 0 if status == "COLLECTED_PASS" else 1
 if __name__ == "__main__": raise SystemExit(main())

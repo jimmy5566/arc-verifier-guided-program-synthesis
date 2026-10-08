@@ -20,6 +20,7 @@
 
 - Freeze scientific configuration before GPU inference. Prefer one variable at
   a time, reuse valid frozen artifacts, and keep smoke studies small.
+- Capability diagnostics and other independent inference workloads must first consider safe concurrency. Default to length-bucketed `batch_size=32` where model/runtime capacity permits. For long prompts or memory pressure, use a frozen, recorded fallback ladder (for example `32 -> 16 -> 8 -> 4 -> 1`), never an implicit change of scientific condition. Before relying on batched results, validate a fixed representative subset against `batch_size=1`; require parser/scorer/aggregate agreement within a predeclared light cross-GPU numerical-drift tolerance. Exact token-level identity across GPU types is not required, but material prediction or metric drift fails closed. Record requested and effective batch sizes, fallback reason, and validation evidence in each diagnostic receipt.
 - CPU-answerable questions must remain CPU-only. Freeze predictions and
   candidate pools before opening targets. Never expand an experiment
   automatically.
