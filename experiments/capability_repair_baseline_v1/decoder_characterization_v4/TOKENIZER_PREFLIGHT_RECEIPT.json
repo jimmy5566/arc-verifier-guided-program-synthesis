@@ -1,0 +1,29 @@
+{
+  "cohort_sha256": "70e300e0d3c0fac4a1118b4f4b608c40ed757af988088c2b5d2f236718042e13",
+  "launch_contract_sha256": "6a90e372f30461a4ac5ac65f4d0f8faa717c8b28c7532f0186a68661760c449d",
+  "model_loaded": false,
+  "no_target_access": true,
+  "parser_sha256": "0716d6f2e043ea1993ba89891fd4b7146121d0abdb7ea5bffe69c6738c618689",
+  "schema_version": 1,
+  "source_commit": "ee3943b183bc7bda6bf35cad2c76e8c36da8f0d2",
+  "status": "PASS_NO_MODEL_IMPORT",
+  "tokenizer_ids": {
+    "digits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "eos": 15,
+    "newline": 10,
+    "pad": 13
+  },
+  "worker_sha256": "d80b6d634bbe4d7aeb4b2ad4b30634025033a5867e0b13ab7dde92e05a5204b4",
+  "worker_source_commit": "0f01ea7304ede4636d7e184988988d3c89251b31"
+}

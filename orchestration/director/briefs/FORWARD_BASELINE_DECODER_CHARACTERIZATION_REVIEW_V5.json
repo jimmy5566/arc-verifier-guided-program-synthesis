@@ -1,0 +1,41 @@
+{
+  "brief_id": "FORWARD_BASELINE_DECODER_CHARACTERIZATION_REVIEW_V5",
+  "decision_requested": "AUTHORIZE_TARGET_BLIND_12_ITEM_DECODER_CHARACTERIZATION",
+  "frozen_conditions": {
+    "final_audit_opened": false,
+    "scientific_training_started": false,
+    "v6_interpretation": "measurement invalid; not established"
+  },
+  "launch_contract": {
+    "contract_sha256": "6a90e372f30461a4ac5ac65f4d0f8faa717c8b28c7532f0186a68661760c449d",
+    "file_sha256": "268cb2573fead01afd421e18faa5c49dc814f69c9a265073de16bc3f407be595",
+    "path": "experiments/capability_repair_baseline_v1/decoder_characterization_v4/LAUNCH_CONTRACT_V4.json"
+  },
+  "output_contract": {
+    "fresh_nonce_sha256": "9ba6990583847eccfc31b2cbaeb8325295bffa4ef777ad98875a4aadf7664237",
+    "receipt_path": "/workspace/arc2/decoder_characterization_v4_run_001/TERMINAL_RECEIPT.json",
+    "result_path": "/workspace/arc2/decoder_characterization_v4_run_001/DECODER_CHARACTERIZATION_RESULTS.json"
+  },
+  "preflight": {
+    "path": "experiments/capability_repair_baseline_v1/decoder_characterization_v4/TOKENIZER_PREFLIGHT_RECEIPT.json",
+    "remote_source_commit": "ee3943b183bc7bda6bf35cad2c76e8c36da8f0d2",
+    "sha256": "6ec0d5a9ed9b1a86a5bb61f69d47f25bdf4ed12bc51953ae2ec1db1a1c76228a",
+    "status": "PASS_NO_MODEL_IMPORT"
+  },
+  "provenance": {
+    "local_origin_remote_stage_commit": "ee3943b183bc7bda6bf35cad2c76e8c36da8f0d2",
+    "worker_source_commit": "0f01ea7304ede4636d7e184988988d3c89251b31"
+  },
+  "request": "Authorize exactly the frozen V4 target-blind 12-item decoder characterization after its PASS_NO_MODEL_IMPORT preflight. No correctness scoring, training, optimizer, full 288 rerun, or FINAL_AUDIT.",
+  "schema_version": 1,
+  "target_blind": {
+    "cohort_counts": {
+      "RETENTION_SENTINEL": 4,
+      "TARGETED_COMPOSITION": 4,
+      "TARGETED_EVALUATION": 4
+    },
+    "cohort_sha256": "70e300e0d3c0fac4a1118b4f4b608c40ed757af988088c2b5d2f236718042e13",
+    "no_exact_grid_match": true,
+    "no_target_access": true
+  }
+}
