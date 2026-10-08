@@ -1,0 +1,9 @@
+{
+  "actual_charges_only": true,
+  "cap_seconds": 28800,
+  "dummy_tests_charged_gpu_seconds": 0,
+  "initial_reservation_seconds": 7200,
+  "ledger": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/targeted_capability_repair_v1/TARGETED_CAPABILITY_REPAIR_GPU_TIME_LEDGER.jsonl",
+  "schema_version": 1,
+  "status": "FROZEN"
+}

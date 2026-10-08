@@ -1,0 +1,83 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_010",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "BASE_ONLY_TARGETED_REPAIR_AVAILABLE_DATA_V1",
+  "reasons": [
+    {
+      "area": "brief_and_package_integrity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_010 has SHA256 d0cf0a048d94ca917b32fed0cbfd78b5e60dbec766ca077454a351ea03930e7f. All six brief-listed files, including the four-file base-only package and the prior-protocol closure, match their declared SHA256 values."
+    },
+    {
+      "area": "old_protocol_closure",
+      "status": "PASS",
+      "finding": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1 is correctly frozen as BLOCKED_FROZEN_REPLAY_IDENTITY_UNRECOVERABLE. The successor condition does not claim Original Foundation-V2, reconstructed Foundation-V2, or historical replay-trajectory equivalence."
+    },
+    {
+      "area": "new_condition_identity_and_data_boundary",
+      "status": "PASS",
+      "finding": "The new protocol starts from the exact frozen base and permits only the hash-identified synthetic TRAIN surface. TARGET_DEV and the 96-episode retention sentinel are evaluation-only, FINAL_AUDIT remains sealed, and Eval60 Gold, diagnostic Gold, historical replay, and substitutes are prohibited."
+    },
+    {
+      "area": "training_serialization_and_schedule",
+      "status": "FAIL_HARD_STOP",
+      "finding": "No deterministic JSONL-to-model serialization, prompt construction, target-token masking, truncation policy, episode ordering, sampling schedule, batching schedule, or token-stop schedule is frozen. Different implementations could therefore create materially different training conditions from identical source bytes."
+    },
+    {
+      "area": "recipe_completeness",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The package freezes the base, LoRA module set, rank, alpha, dropout, optimizer family, precision, and quantization, but does not yet freeze learning rate, learning-rate schedule, context length, microbatch, gradient accumulation, effective batch, attention backend, gradient checkpointing, seed, nominal and actual token-stop rule, checkpoint landmarks, or initial round reservation."
+    },
+    {
+      "area": "executable_and_runtime_identity",
+      "status": "FAIL_HARD_STOP",
+      "finding": "No stage-compatible executable currently consumes the frozen JSONL surfaces, and no executable source hash, resolved command/config, output/checkpoint paths, runtime budget binding, or checkpoint-lineage implementation is frozen. The replay-dependent historical launcher is scientifically incompatible and cannot be reused."
+    },
+    {
+      "area": "selection_and_baseline_gate",
+      "status": "REQUIRES_CHANGE",
+      "finding": "The replacement gate correctly prohibits equivalence claims and uses TARGET_DEV plus retention, but the exact frozen-base reference predictions and paired comparison identities for these surfaces are not yet frozen. Gate interpretation must remain specific to this new base-only condition."
+    },
+    {
+      "area": "mounted_preflight_and_provenance",
+      "status": "NOT_RUN_FAIL_CLOSED",
+      "finding": "The selected TRAIN and evaluation bytes have not been mounted and hash-verified on RunPod, the complete preflight has not run, and current local-origin-RunPod launch-source parity is not established for an executable package."
+    },
+    {
+      "area": "training_state",
+      "status": "PASS_NO_TRAINING",
+      "finding": "No GPU work, model loading, optimizer construction, or training occurred."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "FREEZE_SERIALIZATION_AND_TOKENIZATION_CONTRACT",
+      "requirement": "Define and freeze the exact transformation from each TRAIN JSONL record to model input and supervised target tokens, including prompt template, tokenizer version and hashes, special tokens, label masking, truncation or rejection behavior, padding, sequence packing policy, and deterministic serialization test vectors with expected token IDs and labels. Do not inspect or use evaluation targets to design this contract."
+    },
+    {
+      "change_id": "FREEZE_COMPLETE_TRAINING_SCHEDULE",
+      "requirement": "Freeze the exact episode order and sampling policy, seed, batch construction, context length, microbatch, gradient accumulation, effective batch, learning rate and schedule, attention backend, gradient checkpointing, optimizer parameters, nominal token budget, actual step-completion token-stop rule, checkpoint landmarks, and initial GPU-time reservation. No parameter may be selected after candidate results exist."
+    },
+    {
+      "change_id": "IMPLEMENT_AND_FREEZE_STAGE_COMPATIBLE_EXECUTABLE",
+      "requirement": "Create a distinct base-only launcher that consumes only the allowed TRAIN JSONL bytes and cannot require or silently fall back to historical replay. Freeze every scientific source and dependency hash, resolved command/config, output and checkpoint directories, base-freeze assertion, LoRA parameter partition, checkpoint identity and parent lineage, and active cumulative-time enforcement. Exercise it only with CPU mocks and dummy short-duration non-model subprocesses before review."
+    },
+    {
+      "change_id": "FREEZE_BASE_REFERENCE_AND_GATE_IDENTITIES",
+      "requirement": "Before any candidate training, freeze the exact base-reference prediction or score identities, episode IDs, metric implementation hashes, and paired n01/n10 comparison contract for TARGET_DEV and retention. If collecting a missing base reference requires model loading or GPU execution, stop and request separate explicit authorization before that collection; this directive does not authorize it."
+    },
+    {
+      "change_id": "MOUNT_EXACT_ALLOWED_BYTES_AND_RUN_PREFLIGHT",
+      "requirement": "Provision only the already hash-identified TRAIN, TARGET_DEV, retention, and sealed FINAL_AUDIT bytes through byte-preserving transfer. Verify every mounted file, complete base and tokenizer identity, executable, serialization vectors, schedule, command, outputs, ledger, and checkpoint contract with a full read-only fail-closed preflight. Preserve the exact first failure if any."
+    },
+    {
+      "change_id": "ESTABLISH_IMMUTABLE_PROVENANCE",
+      "requirement": "Commit and push the additive execution package and evidence on the existing non-main branch, preserve all prior frozen artifacts unchanged, and record fresh equality of local commit SHA, git ls-remote origin SHA, and RunPod checked-out/source SHA."
+    },
+    {
+      "change_id": "CONTROLLER_RESUBMISSION",
+      "requirement": "Submit a new hashed Controller brief with all contract hashes, CPU/dummy tests, mounted preflight result, base-reference status, budget state, and three-way provenance. GPU/model/optimizer work remains unauthorized until a later Director directive explicitly returns CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true."
+    }
+  ],
+  "scientific_training_authorized": false
+}

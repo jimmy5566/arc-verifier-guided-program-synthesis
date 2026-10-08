@@ -1,0 +1,8 @@
+{
+  "charged_gpu_training_seconds": 0,
+  "elapsed_seconds": 0.14100000000325963,
+  "gpu_training_started": false,
+  "optimizer_constructed": false,
+  "reservation_seconds": 7200,
+  "status": "DUMMY_CPU_ONLY_PASS"
+}

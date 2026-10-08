@@ -1,0 +1,9 @@
+{
+  "acknowledged": true,
+  "action": "DIRECTIVE_ACKNOWLEDGED_NO_TRAINING",
+  "controller_role": "arc-controller",
+  "directive_id": "DIRECTOR_DIRECTIVE_010",
+  "directive_sha256": "587fb29d50f9a804946b5d089dc57745a8e9ee54cc68fe871123d7e137afa2bf",
+  "schema_version": 1,
+  "scientific_training_started": false
+}
