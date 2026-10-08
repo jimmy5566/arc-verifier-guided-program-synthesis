@@ -1,0 +1,13 @@
+{
+  "cause": "launcher created run root before worker freshness check",
+  "checkpoint_created": false,
+  "optimizer_steps": 0,
+  "preserved_remote_run_root": "/workspace/arc2/forward_targeted_repair_v1_001",
+  "processed_tokens": 0,
+  "round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_001",
+  "schema_version": 1,
+  "scientific_condition_changed": false,
+  "scientific_gpu_training_seconds": 0.0,
+  "status": "INFRA_PRE_OPTIMIZER_FAILURE",
+  "successor_round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_002"
+}
