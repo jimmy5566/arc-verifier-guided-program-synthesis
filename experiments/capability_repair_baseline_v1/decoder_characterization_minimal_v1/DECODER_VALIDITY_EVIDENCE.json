@@ -1,0 +1,21 @@
+{
+  "checkpoint_identity": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da",
+  "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "correctness_scoring_present": false,
+  "eos_observed": 12,
+  "final_audit_opened": false,
+  "items": 12,
+  "parse_valid": 12,
+  "raw_token_evidence": true,
+  "remote_result_path": "/workspace/arc2/decoder_characterization_minimal_v1_001/RESULT.json",
+  "remote_result_sha256": "30867279a690f3d225e661dd0218d33e500661d12700da05f0e640f80b800798",
+  "schema_version": 1,
+  "scope": "same verified checkpoint and mounted TARGET_DEV/RETENTION surfaces; valid unless either artifact changes",
+  "stage_id": "DECODER_CHARACTERIZATION_MINIMAL_V1",
+  "status": "VALID_MEASUREMENT_PASS",
+  "target_blind": true,
+  "termination_statuses": [
+    "EOS"
+  ],
+  "v6_interpretation": "PROCESS_COMPLETE; MEASUREMENT_INVALID; CAPABILITY_INTERPRETATION_NOT_ESTABLISHED"
+}

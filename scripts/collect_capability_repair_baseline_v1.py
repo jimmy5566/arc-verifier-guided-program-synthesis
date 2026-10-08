@@ -165,7 +165,7 @@ def validation_subset(contexts: list[dict[str, Any]], count: int) -> list[dict[s
 def main() -> int:
     a = argparse.ArgumentParser()
     for name in ("output", "receipt"): a.add_argument("--" + name, type=Path, required=True)
-    a.add_argument("--launch-contract", type=Path); a.add_argument("--governor-review", type=Path);
+    a.add_argument("--launch-contract", type=Path); a.add_argument("--minimal-gate", type=Path); a.add_argument("--governor-review", type=Path);
     for name in ("target-dev", "retention", "binding", "contract", "cohort-manifest"): a.add_argument("--" + name, type=Path)
     a.add_argument("--base", type=Path); a.add_argument("--adapter", type=Path); a.add_argument("--authorization", type=Path); a.add_argument("--runtime-limit-seconds", type=float, default=7200); a.add_argument("--cpu-mock", action="store_true"); a.add_argument("--cpu-mock-simulate-runtime-cap", action="store_true")
     a.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE)
@@ -179,18 +179,38 @@ def main() -> int:
     # A real run consumes the recorded launch configuration.  Its scientific
     # admission checks are the model/data identities, split roles, and fresh
     # output paths below; review/nonce machinery is operational provenance.
-    launch = None
+    launch = None; minimal_gate = None; preverified_model_identity = None
     if not z.cpu_mock:
-        if z.launch_contract is None: raise RuntimeError("IMMUTABLE_LAUNCH_CONTRACT_REQUIRED")
-        launch=json.loads(z.launch_contract.read_text(encoding="utf-8"))
-        verify_entrypoint(launch, z)
-        expected_out=Path(launch["output_root"]) / "CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json"
-        if z.output.resolve()!=expected_out.resolve() or z.receipt.resolve()!=Path(launch["receipt_path"]).resolve(): raise RuntimeError("LAUNCH_OUTPUT_BINDING_MISMATCH")
-        z.target_dev=Path(launch["datasets"]["TARGET_DEV"]["path"]); z.retention=Path(launch["datasets"]["RETENTION_SENTINEL"]["path"])
-        z.base=Path(json.loads(Path(launch["checkpoint_manifest_path"]).read_text(encoding="utf-8"))["base_path"])
-        z.adapter=Path(json.loads(Path(launch["checkpoint_manifest_path"]).read_text(encoding="utf-8"))["adapter_path"])
-        z.binding=None; z.contract=Path(launch["inference_contract"]["path"])
-        if launch.get("characterization_cohort_path"): z.cohort_manifest=Path(launch["characterization_cohort_path"])
+        if (z.launch_contract is None) == (z.minimal_gate is None): raise RuntimeError("CHOOSE_ONE_EXECUTION_GATE")
+        if z.minimal_gate is not None:
+            minimal_gate=json.loads(z.minimal_gate.read_text(encoding="utf-8"))
+            hard=minimal_gate.get("hard_gate_check", {})
+            if any(hard.get(k) != "PASS" for k in ("correct_checkpoint", "correct_dataset_and_denominator", "no_leakage", "decoder_and_scoring_valid", "fresh_output", "no_duplicate_live_job")):
+                raise RuntimeError("MINIMAL_SCIENTIFIC_GATE_FAIL")
+            if minimal_gate.get("final_audit_opened") is not False: raise RuntimeError("FINAL_AUDIT_FORBIDDEN")
+            evidence=Path(minimal_gate["decoder_validity_evidence_path"])
+            if sha(evidence) != minimal_gate["decoder_validity_evidence_sha256"]: raise RuntimeError("DECODER_VALIDITY_EVIDENCE_MISMATCH")
+            ev=json.loads(evidence.read_text(encoding="utf-8"))
+            if ev.get("status") != "VALID_MEASUREMENT_PASS" or ev.get("target_blind") is not True or ev.get("correctness_scoring_present") is not False:
+                raise RuntimeError("VALID_MEASUREMENT_GATE_FAIL")
+            manifest_path=Path(minimal_gate["checkpoint_manifest_path"])
+            if sha(manifest_path) != minimal_gate["checkpoint_manifest_sha256"]: raise RuntimeError("CHECKPOINT_MANIFEST_IDENTITY_FAIL")
+            manifest=json.loads(manifest_path.read_text(encoding="utf-8"))
+            if ev.get("checkpoint_manifest_sha256") != minimal_gate["checkpoint_manifest_sha256"]: raise RuntimeError("CHECKPOINT_EVIDENCE_SCOPE_FAIL")
+            z.target_dev=Path(minimal_gate["datasets"]["TARGET_DEV"]["path"]); z.retention=Path(minimal_gate["datasets"]["RETENTION_SENTINEL"]["path"])
+            verify_file(z.target_dev, minimal_gate["datasets"]["TARGET_DEV"]["sha256"]); verify_file(z.retention, minimal_gate["datasets"]["RETENTION_SENTINEL"]["sha256"])
+            z.base=Path(manifest["base_path"]); z.adapter=Path(manifest["adapter_path"]); z.binding=None; z.contract=Path(minimal_gate["inference_contract_path"])
+            preverified_model_identity=ev["checkpoint_identity"]
+        else:
+            launch=json.loads(z.launch_contract.read_text(encoding="utf-8"))
+            verify_entrypoint(launch, z)
+            expected_out=Path(launch["output_root"]) / "CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json"
+            if z.output.resolve()!=expected_out.resolve() or z.receipt.resolve()!=Path(launch["receipt_path"]).resolve(): raise RuntimeError("LAUNCH_OUTPUT_BINDING_MISMATCH")
+            z.target_dev=Path(launch["datasets"]["TARGET_DEV"]["path"]); z.retention=Path(launch["datasets"]["RETENTION_SENTINEL"]["path"])
+            z.base=Path(json.loads(Path(launch["checkpoint_manifest_path"]).read_text(encoding="utf-8"))["base_path"])
+            z.adapter=Path(json.loads(Path(launch["checkpoint_manifest_path"]).read_text(encoding="utf-8"))["adapter_path"])
+            z.binding=None; z.contract=Path(launch["inference_contract"]["path"])
+            if launch.get("characterization_cohort_path"): z.cohort_manifest=Path(launch["characterization_cohort_path"])
     if z.output.exists() or z.receipt.exists(): raise RuntimeError("OUTPUT_PATH_NON_OVERWRITE_REQUIRED")
     if z.target_dev is None or z.retention is None or z.contract is None: raise RuntimeError("EVALUATION_INPUTS_REQUIRED")
     target = read_rows(z.target_dev, {"TARGETED_EVALUATION", "TARGETED_COMPOSITION"}); retention = read_rows(z.retention, {"RETENTION_SENTINEL"})
@@ -223,7 +243,7 @@ def main() -> int:
         write(z.output, {"schema_version": 3, "protocol_id": PROTOCOL, "status": status, "model_loaded": False, "lora_constructed": False, "optimizer_constructed": False, "gpu_training_started": False, "inference_contract_identity": cid, "target_episode_order": [r["episode_id"] for r in target], "retention_episode_order": [r["episode_id"] for r in retention], "prompt_sha256": dig(ps), "completed_episode_count": 0 if z.cpu_mock_simulate_runtime_cap else len(ps), "batching": batching})
         write(z.receipt, receipt(status, started, model_loaded=False, model_released=True)); return 1 if z.cpu_mock_simulate_runtime_cap else 0
     if z.base is None or z.adapter is None or not z.adapter.is_dir(): raise RuntimeError("BASE_OR_ADAPTER_PATH_REQUIRED")
-    mid = verify_binding(b, z.base)  # Complete base identity before model-library import.
+    mid = preverified_model_identity or verify_binding(b, z.base)  # Reuse the immediately preceding, scope-bound model verification when unchanged.
     deadline = time.monotonic() + z.runtime_limit_seconds; rows = []; model = None; status = "COLLECTED_PASS"; failure = None
     try:
         import torch
