@@ -1,0 +1,34 @@
+{
+  "brief_id": "DIRECTOR_BRIEF_022",
+  "directive_id": "DIRECTOR_DIRECTIVE_021",
+  "directive_sha256": "49b7ea3109bfcad210ab28064e65e6940c53a6f827cfa4f5295b55a463ab0d7c",
+  "new_subprotocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "parent_protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "package_commit": "b4c7705ecd6f476b49dae4136829615d62523732",
+  "artifact_hashes": {
+    "POST_HOC_CHARACTERIZATION_EXECUTION_CONTRACT.json": "c3b6b21bf697074432e80f96129bf440309c5a17cc2754e8cea11329f46e213d",
+    "ROUND_009_EQUIVALENCE_STAGE_V1_CLOSURE.json": "a5fd6086b2e095a4dd1d4fad7693fa2a2b2acc8ecacb097f77adc59018f0bb92",
+    "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1_PROTOCOL.json": "36c18bc03db3ab286652b278c1f810cdb56a8c7f50a455997f80a97a8a8a17d3"
+  },
+  "preserved": [
+    "Round 009 receipt, accounting, checkpoint identities, selected 2M adapter, and teacher-forced metrics",
+    "RECONSTRUCTION_EQUIVALENCE_EVALUATION_STAGE_V1 byte-for-byte as unexecuted fail-closed"
+  ],
+  "population_binding": {
+    "novel": 128,
+    "replay": 64,
+    "protected": 64,
+    "reference_payloads_opened": false,
+    "reference_mapping_status": "UNRESOLVED"
+  },
+  "execution": {
+    "model_loading_started": false,
+    "generation_started": false,
+    "scoring_started": false,
+    "gpu_inference_started": false,
+    "scientific_training_started": false,
+    "final_audit_accessed": false
+  },
+  "status": "PREPARATION_BLOCKED_EXACT_NON_GOLD_REFERENCE_MAPPINGS_UNRESOLVED",
+  "requested_decision": "Bind exact prospective non-Gold reference mappings and, if desired, a prospective comparator, or confirm the characterization condition must remain unexecuted. No original-equivalence or targeted-repair claim is requested."
+}
