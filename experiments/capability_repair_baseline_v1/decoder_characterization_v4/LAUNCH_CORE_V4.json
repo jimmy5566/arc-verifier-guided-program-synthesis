@@ -1,0 +1,55 @@
+{
+  "checkpoint": {
+    "adapter_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+    "base_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "manifest_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  },
+  "cohort": {
+    "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v4/COHORT_MANIFEST_V2.json",
+    "sha256": "70e300e0d3c0fac4a1118b4f4b608c40ed757af988088c2b5d2f236718042e13"
+  },
+  "core_id": "ARC2_DECODER_CHARACTERIZATION_LAUNCH_CORE_V4",
+  "core_sha256": "30d3e230858147187af6a0a5a7f18877522671d3955f1539b1609e3fcb241c09",
+  "datasets": {
+    "retention_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+    "retention_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+    "target_dev_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+    "target_dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+  },
+  "forbidden": [
+    "training",
+    "optimizer",
+    "weight_mutation",
+    "FINAL_AUDIT",
+    "held_out_target_access",
+    "exact_grid_match",
+    "full_288_rerun"
+  ],
+  "nonce": {
+    "path": "/workspace/arc2/decoder_characterization_v4_run_001/NONCE_V4",
+    "sha256": "9ba6990583847eccfc31b2cbaeb8325295bffa4ef777ad98875a4aadf7664237"
+  },
+  "output": {
+    "preflight_receipt_path": "/workspace/arc2/decoder_characterization_v4_run_001/TOKENIZER_PREFLIGHT_RECEIPT.json",
+    "receipt_path": "/workspace/arc2/decoder_characterization_v4_run_001/TERMINAL_RECEIPT.json",
+    "result_path": "/workspace/arc2/decoder_characterization_v4_run_001/DECODER_CHARACTERIZATION_RESULTS.json",
+    "root": "/workspace/arc2/decoder_characterization_v4_run_001",
+    "terminal_failure_receipt_path": "/workspace/arc2/decoder_characterization_v4_run_001/ADMISSION_FAILURE_RECEIPT.json"
+  },
+  "parser_contract": {
+    "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v4/DECODER_TOKEN_EXTRACTION_CONTRACT_V2_TARGET_BLIND.json",
+    "sha256": "8275d9c436f141361400340e381ef011d9e95ba1db46e47aef869f912a670d72"
+  },
+  "runtime": {
+    "attention_backend": "sdpa",
+    "batch_size": 1,
+    "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "max_new_tokens": 512,
+    "runtime_cap_seconds": 1200
+  },
+  "schema_version": 1,
+  "source_root": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2",
+  "target_blind": true,
+  "worker_source_commit": "0f01ea7304ede4636d7e184988988d3c89251b31"
+}
