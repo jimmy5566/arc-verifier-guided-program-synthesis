@@ -1,0 +1,9 @@
+{
+  "GPU_BENCHMARK_READY": true,
+  "OFFICIAL_SYSTEMATICITY_PROTOCOL_READY": true,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "purpose": "required input to frozen prepare worker; not an authorization substitute",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "schema_version": 1,
+  "status": "FROZEN_FOR_PREPARE_ONLY"
+}
