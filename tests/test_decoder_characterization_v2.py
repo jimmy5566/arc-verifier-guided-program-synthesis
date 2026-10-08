@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 import hashlib, importlib.util, json, os, subprocess, sys, tempfile, unittest
 from pathlib import Path
 from unittest import mock
@@ -22,7 +22,7 @@ class DecoderCharacterizationV2Tests(unittest.TestCase):
         source = ROOT
         argv = [str(Path(sys.executable).resolve()), str((ROOT / "scripts" / "collect_decoder_characterization_v1.py").resolve()), "--launch-contract", str(root / "contract.json"), "--governor-review", str(root / "review.json"), "--output", str(root / "out.json"), "--receipt", str(root / "receipt.json")]
         preflight_argv = [*argv, "--preflight"]
-        c = {"contract_id": "ARC2_DECODER_CHARACTERIZATION_LAUNCH_V2", "source_root": str(source), "source_commit": subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip(), "argv": argv, "preflight_argv": preflight_argv, "environment": {"PYTHONHASHSEED": "0", "TOKENIZERS_PARALLELISM": "false", "CUDA_VISIBLE_DEVICES": "0"}, "cohort": {"path": str(cohort), "sha256": launch.sha(cohort)}, "immutable_files": {"worker": {"path": str(immutable), "sha256": launch.sha(immutable)}, "token_parser": {"path": str(immutable), "sha256": launch.sha(immutable)}, "checkpoint_manifest": {"path": str(immutable), "sha256": launch.sha(immutable)}}, "nonce_path": str(nonce), "nonce_sha256": launch.sha(nonce), "nonce_consumed_path": str(root / "consumed.json"), "governor_review_path": str(root / "review.json"), "reviewed_brief_sha256": "brief", "terminal_failure_receipt_path": str(root / "failure.json"), "preflight_receipt_path": str(root / "preflight.json")}
+        c = {"contract_id": "ARC2_DECODER_CHARACTERIZATION_LAUNCH_V2", "source_root": str(source), "worker_source_commit": subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip(), "argv": argv, "preflight_argv": preflight_argv, "environment": {"PYTHONHASHSEED": "0", "TOKENIZERS_PARALLELISM": "false", "CUDA_VISIBLE_DEVICES": "0"}, "cohort": {"path": str(cohort), "sha256": launch.sha(cohort)}, "immutable_files": {"worker": {"path": str(immutable), "sha256": launch.sha(immutable)}, "token_parser": {"path": str(immutable), "sha256": launch.sha(immutable)}, "checkpoint_manifest": {"path": str(immutable), "sha256": launch.sha(immutable)}}, "nonce_path": str(nonce), "nonce_sha256": launch.sha(nonce), "nonce_consumed_path": str(root / "consumed.json"), "governor_review_path": str(root / "review.json"), "reviewed_brief_sha256": "brief", "terminal_failure_receipt_path": str(root / "failure.json"), "preflight_receipt_path": str(root / "preflight.json")}
         c["contract_sha256"] = launch.contract_identity(c); contract = root / "contract.json"; write(contract, c)
         return contract, c
 
@@ -37,13 +37,13 @@ class DecoderCharacterizationV2Tests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "IDENTITY|HASH"):
                 launch.validate_contract(contract, argv=c["preflight_argv"], environment=env, require_review=None, consume_nonce=False)
             c = self.make_contract(root)[1]; contract = root / "contract.json"
-            review = {"decision": "CONTINUE_CONTROLLER", "reviewed_brief_sha256": "brief", "launch_contract_sha256": c["contract_sha256"], "source_commit": c["source_commit"], "cohort_sha256": c["cohort"]["sha256"]}; write(Path(c["governor_review_path"]), review)
+            review = {"decision": "CONTINUE_CONTROLLER", "reviewed_brief_sha256": "brief", "launch_contract_sha256": c["contract_sha256"], "worker_source_commit": c["worker_source_commit"], "cohort_sha256": c["cohort"]["sha256"]}; write(Path(c["governor_review_path"]), review)
             launch.validate_contract(contract, argv=c["argv"], environment=env, require_review=Path(c["governor_review_path"]), consume_nonce=True)
             with self.assertRaisesRegex(RuntimeError, "NONCE_ALREADY"):
                 launch.validate_contract(contract, argv=c["argv"], environment=env, require_review=Path(c["governor_review_path"]), consume_nonce=True)
             Path(c["preflight_receipt_path"]).write_bytes(b'{"status":"PASS"}\\n')
             with self.assertRaisesRegex(RuntimeError, "MALFORMED"):
-                launch.validate_preflight(c, source_commit=c["source_commit"])
+                launch.validate_preflight(c, source_commit=c["worker_source_commit"])
 
     def test_characterization_row_is_target_blind_and_complete(self) -> None:
         token_contract = parser.TokenGridContract(tuple(range(10)), 10, 15, 13)
