@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "BLOCKED_EXACT_ADAPTER_NOT_RECOVERED",
+  "expected_adapter_model_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
+  "remote_locations": [
+    {"path": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/capability_pilot_2m_v1_checkpoints/tokens_2000000", "result": "MISSING"},
+    {"path": "/workspace/arc2", "result": "bounded adapter/config inventory contained unrelated candidates only"},
+    {"path": "/root/arc-runtime-3090-gpu-benchmark-v1", "result": "bounded adapter/config inventory contained no exact historical checkpoint"}
+  ],
+  "local_preservation_locations": [
+    {"path": "C:/Users/asus/Desktop/py/kaggle/ARC2", "result": "metadata references found; no exact adapter binary"},
+    {"path": ".arc2-local/archive", "result": "no matching adapter binary or archive"},
+    {"path": "legacy_workspace", "result": "no matching adapter binary or archive"},
+    {"path": "handoff", "result": "not present"}
+  ],
+  "archive_search": "no relevant tar/zip/package checkpoint archive found in scoped repository preservation locations",
+  "accepted_candidates": [],
+  "why_recovery_failed": "The original checkpoint directory is absent and no scoped persistent, local preservation, or archive candidate hashes to the frozen expected adapter SHA256.",
+  "required_action": "TERMINAL_SCIENTIFIC_STOP_OR_NEW_SUBPROTOCOL_REQUIRED; do not retrain or approximate the adapter.",
+  "training_started": false
+}

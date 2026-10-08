@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "FROZEN_FROM_HISTORICAL_EVIDENCE",
+  "original_checkpoint_path": "/root/arc-runtime-3090-gpu-benchmark-v1/active_run/capability_pilot_2m_v1_checkpoints/tokens_2000000",
+  "expected_adapter_model_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
+  "expected_base": {
+    "historical_path": "/root/arc-runtime-3090-gpu-benchmark-v1/model-stage/qwen3_4b_grids15_sft139",
+    "model_identity": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1"
+  },
+  "adapter_config_semantics": {
+    "r": 64,
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  },
+  "adapter_config_sha256": "NOT_FROZEN_IN_AVAILABLE_EVIDENCE",
+  "sources": [
+    "artifacts/capability_pilot_2m_v1/BEST_CHECKPOINT_RELOAD_AUDIT.json",
+    "artifacts/capability_pilot_2m_v1/CHECKPOINT_SELECTION.json",
+    "scripts/run_foundation_v2_capability_diagnostic_v1.py"
+  ],
+  "training_started": false
+}
