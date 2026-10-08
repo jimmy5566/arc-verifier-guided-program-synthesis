@@ -1,0 +1,42 @@
+{
+  "cohort_id": "ARC2_DECODER_CHARACTERIZATION_COHORT_V1",
+  "episode_ids": [
+    "TARGET_DEV:TARGETED_EVALUATION:width:000005",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000007",
+    "TARGET_DEV:TARGETED_EVALUATION:recolor:000005",
+    "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000000",
+    "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000006",
+    "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000005",
+    "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000022",
+    "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000014",
+    "TARGET_DEV:RETENTION_SENTINEL:propagation:000011",
+    "TARGET_DEV:RETENTION_SENTINEL:recolor:000003",
+    "TARGET_DEV:RETENTION_SENTINEL:overlay:000007",
+    "TARGET_DEV:RETENTION_SENTINEL:recolor:000013"
+  ],
+  "forbidden": [
+    "No held-out output is used for selection",
+    "No target correctness is used to choose or modify the parser",
+    "FINAL_AUDIT is excluded"
+  ],
+  "role_counts": {
+    "RETENTION_SENTINEL": 4,
+    "TARGETED_COMPOSITION": 4,
+    "TARGETED_EVALUATION": 4
+  },
+  "schema_version": 1,
+  "selection_rule": "for each required role, choose the four smallest SHA256(ARC2_TOKEN_CHARACTERIZATION_V1:episode_id) values; selection uses episode IDs and roles only",
+  "source_surfaces": {
+    "RETENTION_SENTINEL": {
+      "path": "experiments/targeted_capability_repair_v1/data/RETENTION_SENTINEL.jsonl",
+      "rows": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV": {
+      "path": "experiments/targeted_capability_repair_v1/data/TARGET_DEV.jsonl",
+      "rows": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    }
+  },
+  "target_blind": true
+}

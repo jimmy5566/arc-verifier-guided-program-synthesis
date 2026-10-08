@@ -1,0 +1,11 @@
+{
+  "contract_file_sha256": "63d0115dce90ad57133c146c097da7b6e7ab949d3ea60f4bf8ed50e5e58e9cf8",
+  "contract_sha256": "2e0ebb7aa17694213f965bf553e01bd98d2f2f8202cec7397ca8fed128c9d0d6",
+  "fresh_output_root": "/workspace/arc2/decoder_characterization_v5_run_001",
+  "nonce_sha256": "fbf772332f9bc071c0bac087c0447b33b704ecc5d6e1239612dfb7e061559f9d",
+  "package_id": "ARC2_DECODER_CHARACTERIZATION_PACKAGE_V5",
+  "runtime_source_commit": "a20801bafbc4a66b4bce8c466265f8239a00f40d",
+  "runtime_source_root": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2_runtime_a20801ba",
+  "schema_version": 1,
+  "status": "FROZEN_PENDING_REMOTE_WORKTREE_AND_PREFLIGHT"
+}
