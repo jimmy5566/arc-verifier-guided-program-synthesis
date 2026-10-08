@@ -11,6 +11,7 @@ import secrets
 import subprocess
 import tempfile
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +24,7 @@ DIRECTOR_DECISIONS = {
 CONTROLLER_CYCLE_TERMINAL = {"CLOSED", "AUTHORIZED", "PAUSED", "STOPPED", "HARD_BLOCKED"}
 CONTROLLER_CYCLE_WAITING = {"WAITING_REMOTE_JOB", "WAITING_DIRECTOR"}
 CONTROLLER_CYCLE_ACTIVE = {"RECEIVED", "ACKNOWLEDGED", "PROCESSING", "REMEDIATION", "VALIDATING", "COMMITTING", "RESUBMITTING", "REMEDIATION_COMPLETE", "VALIDATED", "COMMITTED", "RESUBMITTED"}
+CONTROLLER_ESCALATION_STATES = {"BLOCKED_INFRA", "BLOCKED_SCIENCE", "HARD_BLOCKED", "NEEDS_HIGH_LEVEL_DECISION"}
 
 
 def canonical_hash(path: Path) -> str:
@@ -434,6 +436,105 @@ class Supervisor:
             self.save()
         return resumed
 
+    @staticmethod
+    def _seconds_since(timestamp: object) -> float | None:
+        if not isinstance(timestamp, str):
+            return None
+        try:
+            parsed = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+        return max(0.0, (datetime.now(timezone.utc) - parsed).total_seconds())
+
+    def escalate_controller_cycles(
+        self, cycle_state_path: Path, escalation_dir: Path, director_agent: str,
+        herdr_timeout_seconds: int, stall_seconds: int = 900,
+    ) -> list[str]:
+        """Escalate durable Controller impasses once, with Supervisor as transport.
+
+        Ordinary recoverable work stays with the Controller.  This method only
+        examines Controller-authored durable state and never decides science.
+        Its pre-delivery reservation makes an ambiguous Herdr result fail
+        closed rather than notifying the Director twice.
+        """
+        if not cycle_state_path.exists():
+            return []
+        try:
+            cycles = json.loads(cycle_state_path.read_text(encoding="utf-8")).get("directives", {})
+        except (OSError, json.JSONDecodeError):
+            return []
+        escalation_dir.mkdir(parents=True, exist_ok=True)
+        existing = sorted(escalation_dir.glob("CONTROLLER_ESCALATION_REQUEST_*.json"))
+        next_number = 1
+        if existing:
+            numbers = []
+            for path in existing:
+                try:
+                    numbers.append(int(path.stem.rsplit("_", 1)[1]))
+                except ValueError:
+                    continue
+            next_number = max(numbers, default=0) + 1
+        woken: list[str] = []
+        for directive_id, cycle in sorted(cycles.items()):
+            state = str(cycle.get("state", ""))
+            record = self.state["directives"].get(directive_id)
+            if not record or record.get("director_escalation_reserved"):
+                continue
+            reasons: list[str] = []
+            if state in CONTROLLER_ESCALATION_STATES:
+                reasons.append(state)
+            attempts = max(int(cycle.get("repair_attempt_count", 0)), int(record.get("failure_retry_count", 0)))
+            if attempts >= 2:
+                reasons.append("SAME_BLOCKER_SURVIVED_TWO_BOUNDED_REPAIRS")
+            if int(record.get("no_progress_wakeups", 0)) >= 2:
+                reasons.append("SUPERVISOR_TWO_WAKEUPS_WITHOUT_DURABLE_PROGRESS")
+            stale = self._seconds_since(cycle.get("last_progress_at"))
+            if state in CONTROLLER_CYCLE_ACTIVE and stale is not None and stale >= stall_seconds:
+                reasons.append("ACTIVE_CYCLE_PROGRESS_TIMEOUT")
+            if cycle.get("frozen_protocol_change_required") is True or cycle.get("requires_high_level_decision") is True:
+                reasons.append("FROZEN_SCIENTIFIC_BOUNDARY_CHANGE_REQUIRED")
+            if not reasons:
+                continue
+            request = escalation_dir / f"CONTROLLER_ESCALATION_REQUEST_{next_number:03d}.json"
+            next_number += 1
+            payload = {
+                "schema_version": 1,
+                "status": "ESCALATION_REQUESTED",
+                "directive_id": directive_id,
+                "directive_sha256": cycle.get("directive_sha256"),
+                "blocker": reasons,
+                "attempts_already_made": attempts,
+                "controller_state": state,
+                "last_completed_step": cycle.get("last_completed_step"),
+                "next_step": cycle.get("next_step"),
+                "evidence": {key: cycle.get(key) for key in ("evidence", "validation", "commit", "brief", "last_progress_at")},
+                "requested_decision": "STRUCTURED_DIRECTOR_DIRECTIVE_REQUIRED",
+                "scientific_training_started": False,
+            }
+            atomic_json(request, payload)
+            record.update({
+                "director_escalation_reserved": True,
+                "director_escalation_request_path": str(request.resolve()),
+                "director_escalation_reason": reasons,
+                "director_escalation_wakeup_count": 0,
+            })
+            self.save()
+            prompt = (
+                f"ARC2 Controller escalation request for {directive_id}. Read {request.resolve()} and issue a structured Director directive. "
+                "The Controller is blocked; do not start scientific training from this notification."
+            )
+            code, error = prompt_controller(["herdr", "agent", "prompt", director_agent, prompt], herdr_timeout_seconds)
+            record["director_escalation_cli_exit_code"] = code
+            if code == 0:
+                record["director_escalation_status"] = "SENT"
+                record["director_escalation_wakeup_count"] = 1
+                woken.append(directive_id)
+            else:
+                record["director_escalation_status"] = "DELIVERY_UNKNOWN_FAIL_CLOSED"
+                record["director_escalation_error"] = error
+            self.save()
+        return woken
+
 
 def remote_shell(target: str, script: str, identity_file: str | None = None) -> str:
     """Run a tiny metadata-only script through RunPod's forced-PTY SSH gateway.
@@ -514,6 +615,9 @@ def main() -> int:
     parser.add_argument("--directive-dir", type=Path)
     parser.add_argument("--director-response-dir", type=Path)
     parser.add_argument("--controller-cycle-state", type=Path)
+    parser.add_argument("--director-agent")
+    parser.add_argument("--controller-escalation-dir", type=Path)
+    parser.add_argument("--controller-stall-seconds", type=int, default=900)
     parser.add_argument("--herdr-timeout-seconds", type=int, default=15)
     args = parser.parse_args()
     if args.poll_seconds is not None and args.poll_seconds <= 0:
@@ -524,6 +628,12 @@ def main() -> int:
         parser.error("--directive-dir and --director-response-dir must be supplied together")
     if args.directive_dir and not args.controller_agent:
         parser.error("--directive-dir requires --controller-agent")
+    if bool(args.director_agent) != bool(args.controller_escalation_dir):
+        parser.error("--director-agent and --controller-escalation-dir must be supplied together")
+    if args.director_agent and not args.directive_dir:
+        parser.error("--director-agent requires --directive-dir")
+    if args.controller_stall_seconds <= 0:
+        parser.error("--controller-stall-seconds must be greater than zero")
     supervisor = Supervisor(args.state, args.notification_dir)
     if (args.ssh_target or args.remote_root) and not (args.ssh_target and args.remote_root):
         parser.error("--ssh-target and --remote-root must be supplied together")
@@ -543,6 +653,7 @@ def main() -> int:
         directive_wakeups: list[str] = []
         directive_acknowledgements: list[str] = []
         directive_resumes: list[str] = []
+        controller_escalations: list[str] = []
         if args.controller_agent:
             woken = supervisor.wake_controller_once(
                 notified,
@@ -561,6 +672,11 @@ def main() -> int:
                 directive_acknowledgements = supervisor.acknowledge_directives(args.director_response_dir)
                 cycle_state = args.controller_cycle_state or (args.notification_dir.parent / "controller_state" / "DIRECTIVE_CYCLE_STATE.json")
                 directive_resumes = supervisor.resume_nonterminal_directive_cycles(cycle_state, args.controller_agent, args.herdr_timeout_seconds)
+                if args.director_agent:
+                    controller_escalations = supervisor.escalate_controller_cycles(
+                        cycle_state, args.controller_escalation_dir, args.director_agent,
+                        args.herdr_timeout_seconds, args.controller_stall_seconds,
+                    )
         print(json.dumps({
             "status": "OK",
             "remote_status": remote_status,
@@ -571,6 +687,7 @@ def main() -> int:
             "director_wakeups": directive_wakeups,
             "director_acknowledgements": directive_acknowledgements,
             "director_resumes": directive_resumes,
+            "controller_escalations": controller_escalations,
         }, sort_keys=True), flush=True)
         if args.poll_seconds is None:
             return 0

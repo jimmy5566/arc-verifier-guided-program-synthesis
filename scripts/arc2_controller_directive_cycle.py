@@ -83,6 +83,10 @@ def main() -> int:
     parser.add_argument("--commit", dest="commit_sha")
     parser.add_argument("--brief", type=Path)
     parser.add_argument("--dummy-remediation", action="store_true")
+    parser.add_argument("--blocker-state", choices=["BLOCKED_INFRA", "BLOCKED_SCIENCE", "HARD_BLOCKED", "NEEDS_HIGH_LEVEL_DECISION"])
+    parser.add_argument("--blocker-evidence", type=Path)
+    parser.add_argument("--repair-attempt-count", type=int)
+    parser.add_argument("--frozen-protocol-change-required", action="store_true")
     parser.add_argument("--close-no-director", action="store_true",
                         help="close a completed remediation under the single-controller policy")
     args = parser.parse_args()
@@ -124,6 +128,21 @@ def main() -> int:
             transition(record, "PROCESSING", route="ISOLATED_RECOVERY")
         else:
             transition(record, "CLOSED", route="AUTHORIZED" if directive.get("scientific_training_authorized") is True else "UNAUTHORIZED_CONTINUE_FAIL_CLOSED")
+    if args.repair_attempt_count is not None:
+        if args.repair_attempt_count < 0:
+            raise RuntimeError("INVALID_REPAIR_ATTEMPT_COUNT")
+        record["repair_attempt_count"] = args.repair_attempt_count
+    if args.frozen_protocol_change_required:
+        record["frozen_protocol_change_required"] = True
+    if args.blocker_state:
+        if args.blocker_evidence and not args.blocker_evidence.is_file():
+            raise RuntimeError("MISSING_BLOCKER_EVIDENCE")
+        transition(record, args.blocker_state, next_step="DIRECTOR_ESCALATION_REQUIRED",
+                   controller_cycle_complete=False,
+                   blocker_evidence=str(args.blocker_evidence.resolve()) if args.blocker_evidence else None)
+        atomic_json(args.state, state)
+        print(json.dumps({"directive_id": directive_id, "decision": decision, "state": record["state"], "scientific_training_started": False}, sort_keys=True))
+        return 0
     if args.dummy_remediation:
         if decision not in REMEDIATION:
             raise RuntimeError("DUMMY_REMEDIATION_REQUIRES_REMEDIATION_DECISION")

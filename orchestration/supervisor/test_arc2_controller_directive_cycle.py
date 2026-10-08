@@ -107,6 +107,30 @@ class ControllerDirectiveCycleTest(unittest.TestCase):
                 self.assertEqual([], restarted.resume_nonterminal_directive_cycles(cycles, "arc-controller", 1))
             self.assertEqual("CONTROLLER_STALL", Supervisor(state_path, note).state["directives"][directive_id]["controller_cycle_escalation_reason"])
 
+    def test_repeated_controller_failure_escalates_director_once(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw); state_path = root / "supervisor.json"; cycles = root / "cycles.json"; note = root / "notes"; escalation = root / "escalations"
+            directive_id = "DIRECTOR_DIRECTIVE_DUMMY_REPEATED_FAILURE"; digest = "c" * 64
+            supervisor = Supervisor(state_path, note)
+            supervisor.state["directives"][directive_id] = {"directive_sha256": digest, "directive_processed": True, "failure_retry_count": 2}
+            supervisor.save()
+            write(cycles, {"schema_version": 1, "directives": {directive_id: {
+                "directive_sha256": digest, "state": "REMEDIATION", "directive_path": "dummy",
+                "repair_attempt_count": 2, "last_completed_step": "REPAIR_2", "next_step": "DIRECTOR_ESCALATION_REQUIRED",
+                "evidence": "dummy-failure-evidence", "last_progress_at": "2026-10-08T00:00:00Z",
+            }}})
+            with patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")) as prompt:
+                self.assertEqual([directive_id], supervisor.escalate_controller_cycles(cycles, escalation, "arc-director", 1, stall_seconds=999999))
+                self.assertEqual([], supervisor.escalate_controller_cycles(cycles, escalation, "arc-director", 1, stall_seconds=999999))
+                self.assertEqual(1, prompt.call_count)
+                self.assertEqual("arc-director", prompt.call_args.args[0][3])
+            requests = list(escalation.glob("CONTROLLER_ESCALATION_REQUEST_*.json"))
+            self.assertEqual(1, len(requests))
+            payload = json.loads(requests[0].read_text(encoding="utf-8"))
+            self.assertIn("SAME_BLOCKER_SURVIVED_TWO_BOUNDED_REPAIRS", payload["blocker"])
+            record = Supervisor(state_path, note).state["directives"][directive_id]
+            self.assertEqual(1, record["director_escalation_wakeup_count"])
+
 
 if __name__ == "__main__":
     unittest.main()
