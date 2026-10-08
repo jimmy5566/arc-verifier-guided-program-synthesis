@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Read-only, fail-closed base-reference collector for V2. Additive correction; never trains."""
 from __future__ import annotations
-import argparse, hashlib, json, time
+import argparse, hashlib, json, os, time
 from pathlib import Path
 from typing import Any
 
@@ -84,24 +84,49 @@ def receipt(status: str, started: float, **more: Any) -> dict[str, Any]:
     return {"schema_version": 2, "protocol_id": PROTOCOL, "collector": "collect_capability_repair_baseline_v1.py", "status": status, "baseline_inference_seconds": time.monotonic() - started, "scientific_training_started": False, "lora_constructed": False, "optimizer_constructed": False, **more}
 def main() -> int:
     a = argparse.ArgumentParser()
-    for name in ("target-dev", "retention", "binding", "contract", "output", "receipt"): a.add_argument("--" + name, type=Path, required=True)
+    for name in ("output", "receipt"): a.add_argument("--" + name, type=Path, required=True)
+    a.add_argument("--launch-contract", type=Path);
+    for name in ("target-dev", "retention", "binding", "contract"): a.add_argument("--" + name, type=Path)
     a.add_argument("--base", type=Path); a.add_argument("--adapter", type=Path); a.add_argument("--authorization", type=Path); a.add_argument("--runtime-limit-seconds", type=float, default=7200); a.add_argument("--cpu-mock", action="store_true"); a.add_argument("--cpu-mock-simulate-runtime-cap", action="store_true")
     z = a.parse_args(); started = time.monotonic()
     if z.runtime_limit_seconds <= 0: raise RuntimeError("RUNTIME_LIMIT_INVALID")
+    # A real run is only admitted through the immutable one-shot launch contract.
+    # CPU mock deliberately exercises prompt/scoring logic without a contract or model.
+    launch = None
+    if not z.cpu_mock:
+        if z.launch_contract is None: raise RuntimeError("IMMUTABLE_LAUNCH_CONTRACT_REQUIRED")
+        from freeze_forward_baseline_launch_v1 import verify as verify_launch
+        class V: pass
+        v=V(); v.contract=str(z.launch_contract)
+        verify_launch(v)  # verifies source, executable/dependencies, exact mounted model and data before imports.
+        launch=json.loads(z.launch_contract.read_text(encoding="utf-8"))
+        if launch.get("authorization",{}).get("evaluation_authorized") is not True: raise RuntimeError("DIRECTOR_EVALUATION_AUTHORIZATION_REQUIRED")
+        expected_out=Path(launch["output_root"]) / "CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json"
+        if z.output.resolve()!=expected_out.resolve() or z.receipt.resolve()!=Path(launch["receipt_path"]).resolve(): raise RuntimeError("LAUNCH_OUTPUT_BINDING_MISMATCH")
+        nonce=Path(launch["nonce_path"]); consumed=nonce.with_name(nonce.name+".consumed")
+        if consumed.exists(): raise RuntimeError("NONCE_ALREADY_CONSUMED")
+        os.replace(nonce, consumed)  # one successful compare-by-path consume; verification already checked its digest.
+        z.target_dev=Path(launch["datasets"]["TARGET_DEV"]["path"]); z.retention=Path(launch["datasets"]["RETENTION_SENTINEL"]["path"])
+        z.base=Path(json.loads(Path(launch["checkpoint_manifest_path"]).read_text(encoding="utf-8"))["base_path"])
+        z.adapter=Path(json.loads(Path(launch["checkpoint_manifest_path"]).read_text(encoding="utf-8"))["adapter_path"])
+        z.binding=None; z.contract=Path(launch["inference_contract"]["path"])
     if z.output.exists() or z.receipt.exists(): raise RuntimeError("OUTPUT_PATH_NON_OVERWRITE_REQUIRED")
+    if z.target_dev is None or z.retention is None or z.contract is None: raise RuntimeError("EVALUATION_INPUTS_REQUIRED")
     target = read_rows(z.target_dev, {"TARGETED_EVALUATION", "TARGETED_COMPOSITION"}); retention = read_rows(z.retention, {"RETENTION_SENTINEL"})
-    if len({r["episode_id"] for r in target + retention}) != len(target) + len(retention): raise RuntimeError("DUPLICATE_EPISODE_ACROSS_SURFACES")
-    b = json.loads(z.binding.read_text(encoding="utf-8")); craw = z.contract.read_bytes(); c = json.loads(craw.decode("utf-8"))
+    if len(target)!=192 or len(retention)!=96 or len({r["episode_id"] for r in target + retention}) != len(target) + len(retention): raise RuntimeError("EVALUATION_DENOMINATOR_OR_IDENTITY_INVALID")
+    craw = z.contract.read_bytes(); c = json.loads(craw.decode("utf-8"))
     if c.get("contract_id") != CONTRACT_NAME: raise RuntimeError("INFERENCE_CONTRACT_INVALID")
     cid = sha_bytes(craw)
+    b={"base_path":"/workspace/arc2/models/qwen3_4b_grids15_sft139","base_files":{}}
+    if launch is not None:
+        m=json.loads(Path(launch["checkpoint_manifest_path"]).read_text(encoding="utf-8")); b={"base_path":m["base_path"],"base_files":{x["name"]:x["sha256"] for x in m["base_files"]}}
+    elif z.binding is not None:
+        b=json.loads(z.binding.read_text(encoding="utf-8"))
     if z.cpu_mock:
         ps = [prompt(r, c) for r in target + retention]
         status = "PARTIAL_RUNTIME_CAP" if z.cpu_mock_simulate_runtime_cap else "CPU_MOCK_PASS_NO_MODEL"
         write(z.output, {"schema_version": 2, "protocol_id": PROTOCOL, "status": status, "model_loaded": False, "lora_constructed": False, "optimizer_constructed": False, "gpu_training_started": False, "inference_contract_identity": cid, "target_episode_order": [r["episode_id"] for r in target], "retention_episode_order": [r["episode_id"] for r in retention], "prompt_sha256": dig(ps), "completed_episode_count": 0 if z.cpu_mock_simulate_runtime_cap else len(ps)})
         write(z.receipt, receipt(status, started, model_loaded=False, model_released=True)); return 1 if z.cpu_mock_simulate_runtime_cap else 0
-    auth = json.loads(z.authorization.read_text(encoding="utf-8")) if z.authorization else {}
-    if auth.get("FORWARD_BASELINE_EVALUATION_AUTHORIZED") is not True:
-        raise RuntimeError("SCIENTIFIC_EXECUTION_GATE_REQUIRED")
     if z.base is None or z.adapter is None or not z.adapter.is_dir(): raise RuntimeError("BASE_OR_ADAPTER_PATH_REQUIRED")
     mid = verify_binding(b, z.base)  # Complete base identity before model-library import.
     deadline = time.monotonic() + z.runtime_limit_seconds; rows = []; model = None; status = "COLLECTED_PASS"; failure = None
