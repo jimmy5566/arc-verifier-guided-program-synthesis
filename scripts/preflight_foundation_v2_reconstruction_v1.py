@@ -74,7 +74,8 @@ def main() -> int:
             raise RuntimeError("INVALID_RECONSTRUCTION_LAUNCH_BINDING")
         source = binding["source_provenance"]
         if args.expected_source_sha:
-            here = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+            source_root = Path(source["checked_out_root"])
+            here = subprocess.check_output(["git", "-C", str(source_root), "rev-parse", "HEAD"], text=True).strip()
             if here != args.expected_source_sha:
                 raise RuntimeError("LOCAL_SOURCE_SHA_MISMATCH")
         verified = [checked_file(item) for item in binding["required_files"]]
