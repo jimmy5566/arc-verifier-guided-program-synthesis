@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "protocol_id": "TARGETED_CAPABILITY_REPAIR_V1",
+  "status": "BLOCKED_BASELINE_IDENTITY_UNRECOVERABLE",
+  "effective_directive": "orchestration/director/directives/DIRECTOR_DIRECTIVE_005.json",
+  "directive_decision": "NEW_SUBPROTOCOL_REQUIRED",
+  "scientific_training_started": false,
+  "closed_without_training": true,
+  "immutable_historical_reference": "Original Foundation-V2 adapter identity f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce was not recovered.",
+  "prohibitions": [
+    "Do not launch TARGETED_CAPABILITY_REPAIR_V1.",
+    "Do not retrain, approximate, or substitute the missing adapter under the V1 identity.",
+    "Do not modify frozen V1 protocol, data, recovery, or baseline artifacts."
+  ],
+  "successor_is_distinct_condition": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "successor_may_not_claim": [
+    "EXACT_FOUNDATION_V2_RECOVERED",
+    "bitwise identity with Original Foundation-V2",
+    "continuation from the missing original adapter"
+  ]
+}

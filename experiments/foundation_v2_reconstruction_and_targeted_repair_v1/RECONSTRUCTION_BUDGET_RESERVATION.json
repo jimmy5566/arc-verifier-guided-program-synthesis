@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "status": "FROZEN_NO_GPU_TRAINING_STARTED",
+  "cumulative_budget_cap_seconds": 28800,
+  "charged_seconds_at_freeze": 0,
+  "remaining_seconds_at_freeze": 28800,
+  "single_append_only_ledger": "experiments/targeted_capability_repair_v1/TARGETED_CAPABILITY_REPAIR_GPU_TIME_LEDGER.jsonl",
+  "ledger_initialization_sha256": "7d19684fd198482d8862dbf2110711f183ed86b58d9d9dff2922cc9cb9b891cc",
+  "reconstruction_reservation_seconds": 7200,
+  "targeted_repair_reservation_after_reconstruction_seconds": 21600,
+  "reservation_rules": [
+    "Reserve before any remote optimizer work.",
+    "Reject a reconstruction launch if remaining cumulative time or remaining reconstruction reservation is insufficient for its declared segment.",
+    "Charge only measured actual new GPU optimizer-training seconds, append one durable record per completed or interrupted segment, and never edit prior records.",
+    "At 7200 reconstruction seconds, stop optimizer work, checkpoint/save/finalize, then escalate to Director if the frozen 2M-token recipe has not completed.",
+    "At 28800 cumulative seconds, stop optimizer work, checkpoint/save/finalize; no post-cap optimizer step is permitted.",
+    "Evaluation and orchestration time are tracked separately and cannot be charged as training time or used to evade the cap."
+  ],
+  "training_authorization": "REQUIRED_DIRECTOR_CONTINUE_OR_CONTINUE_WITH_WARNING_AND_scientific_training_authorized_true"
+}

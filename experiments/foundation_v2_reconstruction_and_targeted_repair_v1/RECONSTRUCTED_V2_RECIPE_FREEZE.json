@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "reconstructed_model_name": "RECONSTRUCTED_FOUNDATION_V2_V1",
+  "identity_claim": "RECONSTRUCTED_FROM_FROZEN_RECIPE",
+  "not_claimed": [
+    "EXACT_FOUNDATION_V2_RECOVERED",
+    "adapter byte identity",
+    "original adapter SHA reproduction"
+  ],
+  "status": "FROZEN_PENDING_MOUNTED_IDENTITY_PREFLIGHT_AND_DIRECTOR_AUTHORIZATION",
+  "authoritative_sources": {
+    "training_config": "artifacts/capability_pilot_2m_v1/TRAINING_CONFIG.json",
+    "training_schedule": "artifacts/capability_pilot_2m_v1/TRAINING_SCHEDULE_2M.json",
+    "training_result": "artifacts/capability_pilot_2m_v1/TRAINING_RESULT.json",
+    "distribution_audit": "artifacts/capability_pilot_2m_v1/TRAINING_DISTRIBUTION_AUDIT.json",
+    "data_policy_audit": "artifacts/capability_pilot_2m_v1/PRETRAIN_DATA_POLICY_AUDIT.json",
+    "historical_model_identity": "artifacts/foundation_v2_capability_diagnostic_v1/MODEL_IDENTITY_AUDIT.json",
+    "historical_selection": "artifacts/capability_pilot_2m_v1/CHECKPOINT_SELECTION.json"
+  },
+  "base": {
+    "model_identifier": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1",
+    "historical_path": "/root/arc-runtime-3090-gpu-benchmark-v1/model-stage/qwen3_4b_grids15_sft139",
+    "required_mounted_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "base_files": {
+      "added_tokens.json": {"bytes": 68, "sha256": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce"},
+      "config.json": {"bytes": 1532, "sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0"},
+      "generation_config.json": {"bytes": 113, "sha256": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02"},
+      "model-00001-of-00002.safetensors": {"bytes": 4996836472, "sha256": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529"},
+      "model-00002-of-00002.safetensors": {"bytes": 2270397024, "sha256": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0"},
+      "model.safetensors.index.json": {"bytes": 32913, "sha256": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4"},
+      "model_manifest.json": {"bytes": 1326, "sha256": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7"},
+      "special_tokens_map.json": {"bytes": 367, "sha256": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b"},
+      "tokenizer.json": {"bytes": 1731, "sha256": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5"},
+      "tokenizer_config.json": {"bytes": 988, "sha256": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90"},
+      "vocab.json": {"bytes": 94, "sha256": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"}
+    },
+    "tokenizer_contract": {"vocab_size": 16, "pad_token_id": 13, "eos_token_id": 15, "chat_template_source": "nvarc_official_for_missing_checkpoint_template"}
+  },
+  "data": {
+    "novel_dataset_fingerprint": "3b040b3fcd45d84361aa5286c3b762e268a5f7c98dae5b3c87ddeb16c5105c82",
+    "novel_train_path": "data/processed/novel_training_data_v1_1/train/novel",
+    "replay_path": "data/processed/arc_training_v2_1/train/replay/replay-00000.parquet",
+    "replay_shard_sha256": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc",
+    "forbidden": ["Eval60 Gold", "diagnostic Gold", "Novel holdout", "retention sentinel", "final audit"]
+  },
+  "sampling_and_order": {
+    "seed": 2000031,
+    "sampling_hierarchy": "POOL_TO_FAMILY_TO_EPISODE",
+    "pool_weight_policy": "PILOT_V1_FROZEN",
+    "pool_draws_per_optimizer_step": {"POOL_NOVEL_V1_1": 3, "POOL_REPLAY_V2_1": 1},
+    "schedule_sha256": "d29fd1d6f61ecee67897a9ea786b6e05f9229bf119b539277cc1147a65843b0a",
+    "schedule_episode_count": 688,
+    "schedule_order_is_frozen": true,
+    "stop_rule": "first complete optimizer step whose cumulative actual transformer tokens reach or exceed budget"
+  },
+  "adaptation": {
+    "base_model_frozen": true,
+    "quantization": "NONE",
+    "precision": "BF16",
+    "lora_rank": 64,
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+    "optimizer": "bitsandbytes.optim.PagedAdamW8bit",
+    "learning_rate": 0.00005,
+    "lr_schedule": "linear warmup for optimizer steps 1-3, then constant",
+    "context_length": 8704,
+    "micro_batch_size": 1,
+    "gradient_accumulation_steps": 4,
+    "effective_episode_batch": 4,
+    "gradient_checkpointing": true,
+    "attention_backend": "sdpa"
+  },
+  "historical_execution_reference": {
+    "nominal_transformer_token_budget": 2000000,
+    "actual_transformer_tokens": 2017545,
+    "actual_supervised_tokens": 995995,
+    "optimizer_steps": 172,
+    "historical_training_wall_seconds": 3674.7991217318922,
+    "historical_source_commit": "d7b489e73835011230a6d2c4fd70e21f515ac152",
+    "environment": {"python": "3.11.13", "torch": "2.8.0+cu128", "transformers": "4.55.4", "peft": "0.17.1", "bitsandbytes": "0.50.2", "cuda": "12.8", "gpu": "NVIDIA GeForce RTX 3090"}
+  },
+  "prelaunch_fail_closed": [
+    "Hash every required mounted base file, tokenizer/config file, Novel dataset identity, replay shard, and frozen schedule before optimizer construction.",
+    "Reject missing, extra, mismatched, or unresolved identities and write a no-training receipt.",
+    "Reject any change to base, data, schedule, LoRA, optimizer, precision, context, batch, or token-stop contract."
+  ]
+}

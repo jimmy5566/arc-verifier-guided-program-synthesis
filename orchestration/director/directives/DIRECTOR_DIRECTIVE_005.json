@@ -1,0 +1,55 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_005",
+  "decision": "NEW_SUBPROTOCOL_REQUIRED",
+  "scope": "TARGETED_CAPABILITY_REPAIR_V1",
+  "reasons": [
+    {
+      "area": "evidence_identity",
+      "status": "PASS",
+      "finding": "The recovery evidence was read from commit f38d660a3a09cb2e408494b9a2766c8cda07ba30, and a fresh git ls-remote confirms that exact commit is the current tip of origin/infra/arc2-dual-agent-runpod-orchestrator-v1."
+    },
+    {
+      "area": "foundation_v2_adapter_recovery",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The historical tokens_2000000 checkpoint directory is absent. The bounded RunPod, local preservation, and archive searches found no accepted adapter candidate whose bytes match frozen SHA256 f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce."
+    },
+    {
+      "area": "adapter_configuration_identity",
+      "status": "FAIL_HARD_STOP",
+      "finding": "Historical evidence records LoRA semantics but does not contain a frozen adapter_config.json SHA256. The missing configuration identity cannot be reconstructed as an exact byte identity from the available evidence."
+    },
+    {
+      "area": "current_protocol_viability",
+      "status": "STOPPED",
+      "finding": "TARGETED_CAPABILITY_REPAIR_V1 requires the exact frozen Foundation-V2 adapter as its starting checkpoint. Retraining, substituting, or approximating that adapter would create a different scientific starting condition and cannot satisfy RC1."
+    },
+    {
+      "area": "decision_boundary",
+      "status": "NEW_SUBPROTOCOL_REQUIRED",
+      "finding": "The current V1 track cannot proceed, but the evidence does not establish that all future targeted-capability repair is scientifically impossible. A separately named and preregistered protocol may propose a different recoverable starting identity without claiming continuity with the missing Foundation-V2 checkpoint."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "CLOSE_V1_WITHOUT_TRAINING",
+      "requirement": "Freeze TARGETED_CAPABILITY_REPAIR_V1 as BLOCKED_BASELINE_IDENTITY_UNRECOVERABLE. Preserve its artifacts and recovery evidence unchanged, and do not launch, retrain, approximate, or substitute the missing Foundation-V2 adapter under the V1 identity."
+    },
+    {
+      "change_id": "DEFINE_DISTINCT_STARTING_IDENTITY",
+      "requirement": "Any continuation must use a newly named subprotocol with an actually present starting checkpoint. Before scientific authorization, freeze complete base, tokenizer, adapter or full-checkpoint, configuration, and every weight-shard byte hash from an independently trusted expected manifest."
+    },
+    {
+      "change_id": "NO_FALSE_CONTINUITY",
+      "requirement": "If Foundation-V2 is regenerated or another checkpoint is selected, treat it as a new scientific condition with new provenance and baseline evaluation. Do not describe it as recovery of, equivalence to, or continuation from the missing adapter unless exact byte identity is later independently established."
+    },
+    {
+      "change_id": "REVALIDATE_PROTOCOL_COMPATIBILITY",
+      "requirement": "For the new subprotocol, explicitly revalidate target prioritization, training-data stage compatibility, split isolation, no-Gold protection, sealed final-audit policy, retention gates, numeric decision gates, recipe identity, checkpoint lineage, and cumulative GPU budget before requesting authorization. Existing frozen artifacts may be reused only where provenance and stage compatibility are demonstrated."
+    },
+    {
+      "change_id": "NEW_DIRECTOR_REVIEW",
+      "requirement": "Submit a new hashed Controller brief for the distinct subprotocol. No GPU training is authorized unless a later Director directive explicitly returns CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true."
+    }
+  ],
+  "scientific_training_authorized": false
+}

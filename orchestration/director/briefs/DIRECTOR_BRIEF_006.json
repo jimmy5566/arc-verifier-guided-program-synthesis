@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "brief_id": "DIRECTOR_BRIEF_006",
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "request": "Review and authorize only the preregistered reconstruction phase, if scientifically valid. No GPU training has started.",
+  "supersedes": "TARGETED_CAPABILITY_REPAIR_V1, which is closed as BLOCKED_BASELINE_IDENTITY_UNRECOVERABLE.",
+  "director_basis": {
+    "directive_id": "DIRECTOR_DIRECTIVE_005",
+    "directive_sha256": "20d8adb9a45460eb7e5089fb5414b5a847b6d41cebab12c5c6968fbf4b7e055b",
+    "directive_decision": "NEW_SUBPROTOCOL_REQUIRED"
+  },
+  "identity_boundary": {
+    "historical_reference": "Original Foundation-V2 adapter f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce remains unrecovered and is not launchable.",
+    "new_adapter_name": "RECONSTRUCTED_FOUNDATION_V2_V1",
+    "only_allowed_identity_claim": "RECONSTRUCTED_FROM_FROZEN_RECIPE",
+    "forbidden_claims": ["exact recovered Foundation-V2", "bitwise reproduction", "continuation from the missing adapter"]
+  },
+  "frozen_recipe": {
+    "base": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1",
+    "full_base_and_tokenizer_hashes": "RECONSTRUCTED_V2_RECIPE_FREEZE.json",
+    "novel_dataset_fingerprint": "3b040b3fcd45d84361aa5286c3b762e268a5f7c98dae5b3c87ddeb16c5105c82",
+    "replay_shard_sha256": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc",
+    "seed": 2000031,
+    "sampling": "POOL_TO_FAMILY_TO_EPISODE; POOL_NOVEL_V1_1:3, POOL_REPLAY_V2_1:1",
+    "lora": "rank 64, alpha 32, dropout 0, q/k/v/o/gate/up/down projections",
+    "optimizer": "bitsandbytes.optim.PagedAdamW8bit at 5e-5; linear warmup steps 1-3 then constant",
+    "context_and_batch": "8704 context; microbatch 1; gradient accumulation 4; effective episode batch 4; gradient checkpointing; BF16; no quantization",
+    "historical_execution": "2,000,000 nominal token budget, 2,017,545 actual transformer tokens, 172 optimizer steps"
+  },
+  "equivalence_gate": {
+    "pre_result": true,
+    "surfaces": ["Novel validation", "Replay retention", "generation", "protected retention", "frozen capability-direction subset"],
+    "exclusions": ["Eval60 Gold", "diagnostic Gold", "FINAL_AUDIT", "exposed 200-episode Novel holdout"],
+    "outcomes": ["EQUIVALENCE_CONFIRMED", "EQUIVALENCE_PARTIAL", "EQUIVALENCE_FAILED"],
+    "targeted_repair_entry": "EQUIVALENCE_CONFIRMED only"
+  },
+  "budget": {
+    "cumulative_actual_new_gpu_cap_seconds": 28800,
+    "charged_seconds": 0,
+    "reconstruction_reservation_seconds": 7200,
+    "post_reconstruction_targeted_repair_reservation_seconds": 21600,
+    "ledger": "experiments/targeted_capability_repair_v1/TARGETED_CAPABILITY_REPAIR_GPU_TIME_LEDGER.jsonl",
+    "post_cap_behavior": "no optimizer work; checkpoint/save/finalize"
+  },
+  "validity_checks": {
+    "frozen_scientific_parent": "b26e469d1bd8d757727d4f34aff0e967207d1e62",
+    "frozen_parent_ancestor": "PASS",
+    "source_artifact_blob_identity": "PASS for TRAINING_CONFIG, TRAINING_SCHEDULE_2M, TRAINING_RESULT, and MODEL_IDENTITY_AUDIT",
+    "all_protocol_json_parsed": "PASS",
+    "gpu_training_started": false
+  },
+  "package_manifest": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTION_PROTOCOL_PACKAGE_MANIFEST.json",
+  "requested_directive": "CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true authorizes reconstruction only. Any other directive leaves all GPU work prohibited.",
+  "proposed_next_action_if_authorized": "Run mounted identity and budget preflight, then reconstruct under the frozen recipe; evaluate the preregistered gate; escalate on PARTIAL or FAILED."
+}

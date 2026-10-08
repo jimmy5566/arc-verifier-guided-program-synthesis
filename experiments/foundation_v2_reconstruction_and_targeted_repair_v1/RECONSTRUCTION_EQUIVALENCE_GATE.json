@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "gate_id": "RECONSTRUCTION_EQUIVALENCE_GATE_V1",
+  "status": "PREREGISTERED_BEFORE_RECONSTRUCTION_TRAINING",
+  "selection_prohibited_surfaces": ["Eval60 Gold", "diagnostic Gold", "FINAL_AUDIT", "artifacts/novel_holdout_confirmation_v1"],
+  "historical_reference_only": {
+    "identity": "Original Foundation-V2 historical frozen reference; missing adapter is not recovered.",
+    "novel_validation": {"episodes": 128, "families": 4, "macro_family_loss": 0.06164049707616188, "micro_loss": 0.028484122282653235},
+    "replay_retention": {"episodes": 64, "families": 64, "macro_family_loss": 0.04974181830300495, "micro_loss": 0.009981033008344698},
+    "generation": {"novel_macro_exact": 0.8828125, "replay_macro_exact": 0.84375},
+    "capability_profile": {"weak": 30, "partial": 17, "strong": 5, "saturated": 31, "borderline": 7, "improved_vs_base": 25, "unchanged_vs_base": 31, "declined_vs_base": 2}
+  },
+  "fixed_nonfinal_selection_surfaces": {
+    "novel_teacher_forced": "artifacts/capability_pilot_2m_v1/NOVEL_VALIDATION_SENTINEL.json",
+    "replay_teacher_forced": "artifacts/capability_pilot_2m_v1/REPLAY_RETENTION_SENTINEL.json",
+    "generation": "artifacts/generation_capability_audit_v1/{NOVEL_GENERATION_RESULTS,REPLAY_GENERATION_RESULTS,GENERATION_CONFIG}.json",
+    "protected_retention": "experiments/targeted_capability_repair_v1/data/RETENTION_SENTINEL.jsonl",
+    "capability_direction": "frozen subset of the existing Foundation-V2 capability diagnostic, with its episode IDs, generator seeds, and hashes frozen in the reconstruction launch manifest before model load"
+  },
+  "hard_preconditions": [
+    "Mounted input identity preflight passes every required base, tokenizer, dataset, replay, schedule, recipe, source-commit, and budget check.",
+    "All gate predictions and scores are generated before reading or reporting the exposed Novel holdout.",
+    "No gate tolerances, datasets, seeds, or selection rules change after training begins."
+  ],
+  "hard_metrics": {
+    "novel_teacher_forced": {
+      "require_all": [
+        "macro_family_loss <= 0.0800000000000000",
+        "micro_loss <= 0.0400000000000000",
+        "macro_family_loss < frozen base score on the identical sentinel"
+      ],
+      "rationale": "Requires a substantial recovery of the historical 0.0616404971 Novel validation loss without requiring byte-identical stochastic optimization."
+    },
+    "replay_teacher_forced": {
+      "require_all": [
+        "macro_family_loss <= 0.0750000000000000",
+        "micro_loss <= 0.0200000000000000",
+        "macro_family_loss < frozen base score on the identical sentinel"
+      ],
+      "rationale": "Requires strong replay retention against the historical 0.0497418183 macro loss."
+    },
+    "generation": {
+      "require_all": [
+        "novel_macro_exact >= 0.8203125",
+        "replay_macro_exact >= 0.7500000",
+        "both macro exact rates exceed the frozen base rate on their identical generation surface"
+      ],
+      "rationale": "Requires generation-level improvement consistent with, but not numerically identical to, historical 0.8828125 Novel and 0.84375 replay exact accuracy."
+    },
+    "protected_retention": {
+      "require_all": [
+        "paired_retention_n10_minus_n01 <= 6 across the 96-episode frozen sentinel",
+        "no protected family exact-rate decrease exceeds 0.125",
+        "no protected ontology section has an exact-rate decrease exceeding 0.10"
+      ],
+      "rationale": "Rejects broad or important degradation while treating isolated one-observation changes conservatively."
+    },
+    "capability_direction": {
+      "require_all": [
+        "at least 20 of the 25 frozen historically improved capabilities are non-declining versus Base on the fixed direction subset",
+        "no more than 2 capabilities decline by more than 0.125 versus Base on that subset",
+        "at least 28 of the frozen 36 STRONG-or-SATURATED capabilities remain at or above 0.75 on their fixed direction subset"
+      ],
+      "rationale": "Requires broadly compatible direction, not a claim of exact Foundation-V2 equivalence."
+    }
+  },
+  "checkpoint_evaluation_plan": {
+    "save_token_landmarks": [500000, 1000000, 1500000, 2000000],
+    "ordinary_checkpoint_surfaces": ["Novel teacher-forced", "Replay teacher-forced", "generation", "protected retention"],
+    "direction_subset_timing": "Run only for checkpoints that meet all other hard metrics; never use exposed holdout for selection.",
+    "selection_rule": "If tokens_2000000 meets every hard metric, select it. Otherwise, among checkpoints meeting every hard metric, select lowest Novel macro-family loss, break ties by lowest replay macro-family loss, then highest Novel generation macro exact."
+  },
+  "outcome_rules": {
+    "EQUIVALENCE_CONFIRMED": "A selected checkpoint meets every hard metric. It is a new RECONSTRUCTED_FOUNDATION_V2_V1 identity and may be considered for TARGETED_CAPABILITY_REPAIR_V1R.",
+    "EQUIVALENCE_PARTIAL": "Novel broad gain is recovered but one or more replay, generation, protected retention, or capability-direction hard metric fails. Preserve evidence and escalate; targeted repair is forbidden.",
+    "EQUIVALENCE_FAILED": "No checkpoint satisfies Novel recovery or identity/validity preconditions. Preserve evidence and escalate; targeted repair is forbidden."
+  },
+  "exposed_holdout_rule": "The 200-episode Novel holdout is report-only after a checkpoint has been selected through this gate. It never selects, rejects, tunes, or authorizes reconstruction or targeted repair."
+}

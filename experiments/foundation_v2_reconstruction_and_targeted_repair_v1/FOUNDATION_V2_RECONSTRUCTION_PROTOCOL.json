@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "status": "FROZEN_PENDING_DIRECTOR_AUTHORIZATION",
+  "scientific_training_authorized": false,
+  "starting_condition": {
+    "historical_reference": "Original Foundation-V2 is a frozen historical reference whose adapter bytes are unrecoverable.",
+    "new_condition": "RECONSTRUCTED_FOUNDATION_V2_V1 is a new LoRA adapter trained only from RECONSTRUCTED_V2_RECIPE_FREEZE.json after all mounted-input hashes pass.",
+    "prohibited_claims": ["original adapter recovered", "exact equivalence", "bitwise equality", "continuation from original missing adapter"]
+  },
+  "phase_0_cpu_preparation": [
+    "Freeze the V1 closure without modifying frozen V1 artifacts.",
+    "Freeze and independently verify the full mounted base, tokenizer, Novel V1.1 dataset, replay shard, schedule, environment, and source-commit identities.",
+    "Freeze the preregistered reconstruction equivalence gate and the 7,200-second reconstruction reservation.",
+    "Require Director CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true."
+  ],
+  "phase_1_reconstruction": {
+    "entry_condition": "Director authorization plus passed prelaunch identity and budget reservation checks.",
+    "recipe": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_V2_RECIPE_FREEZE.json",
+    "allowed_training_data": ["Novel V1.1 train", "frozen Replay V2.1 shard"],
+    "forbidden_training_data": ["Eval60 Gold", "diagnostic Gold", "Novel holdout", "retention sentinel", "final audit", "target-capability repair data"],
+    "checkpoints": [500000, 1000000, 1500000, 2000000],
+    "nominal_token_budget": 2000000,
+    "historical_actual_token_target": 2017545,
+    "stop_or_escalate": "At the 7,200-second reservation stop optimizer work, checkpoint/save/finalize, and escalate if the frozen 2M-token recipe is incomplete."
+  },
+  "phase_2_equivalence": {
+    "gate": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTION_EQUIVALENCE_GATE.json",
+    "required_artifact": "RECONSTRUCTED_FOUNDATION_V2_MODEL_IDENTITY.json",
+    "only_EQUIVALENCE_CONFIRMED_allows": "Targeted capability repair V1R from the newly hashed reconstructed adapter.",
+    "partial_or_failed": "Preserve all candidate checkpoints, prediction hashes, metrics, and receipts; escalate to Director; do not start targeted repair."
+  },
+  "phase_3_targeted_repair_v1r": {
+    "entry_condition": "EQUIVALENCE_CONFIRMED and remaining cumulative budget after reconstruction.",
+    "baseline": "The selected RECONSTRUCTED_FOUNDATION_V2_V1 checkpoint, explicitly distinct from Original Foundation-V2.",
+    "targets": {
+      "atomic": ["connected components", "orientation", "inside/contains", "same color", "high-demand spatial/relation primitives", "selector prerequisites"],
+      "composition": ["RELATION_TO_SELECTOR_ACTION", "SELECTOR_TO_ACTION", "MASK_SET_TO_CONSTRUCTION", "CONDITIONAL_TO_ACTION", "COUNTING_TO_CONSTRUCTION where evidence warrants"]
+    },
+    "data_and_evaluation": "Reuse prior V1 targeted data/evaluation materials only after a new stage-compatibility, split-isolation, provenance, no-Gold, and sealed-final-audit check records their hashes. The reconstruction model cannot inherit any original-adapter claim.",
+    "gates": "Retain targeted DEV, composition DEV, paired retention, prerequisite-aware sampling, adaptive curriculum, and round acceptance/rejection gates; no full diagnostic at every checkpoint.",
+    "budget": "The remaining portion of the single 28,800-second ledger only. Replay remains nonzero."
+  },
+  "hard_stops": [
+    "Any mounted identity mismatch or unresolved recipe component.",
+    "Any Gold, exposed holdout, retention sentinel, or final audit contamination of training labels.",
+    "Any final audit access before final model selection.",
+    "Any new GPU optimizer work without a qualifying Director directive.",
+    "Any cumulative actual new GPU-training time above 28,800 seconds.",
+    "Any attempt to call the reconstructed adapter the recovered Original Foundation-V2 adapter."
+  ],
+  "review_cadence": ["Director review before reconstruction", "Director escalation after EQUIVALENCE_PARTIAL or EQUIVALENCE_FAILED", "Director review before any V1R targeted repair authorization", "then every two accepted targeted rounds or approximately one million new tokens"]
+}

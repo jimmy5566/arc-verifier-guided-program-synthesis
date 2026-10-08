@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "purpose": "Byte references used to freeze the reconstruction recipe and preregistered gate before any new GPU work.",
+  "frozen_scientific_parent": "b26e469d1bd8d757727d4f34aff0e967207d1e62",
+  "frozen_parent_is_ancestor_of_preparation_head": true,
+  "artifacts": {
+    "artifacts/capability_pilot_2m_v1/TRAINING_CONFIG.json": "28a52e5c6be800f8b00ffbd79aca905e6aa1774870a0cf1a3f6d9132d53bfc6c",
+    "artifacts/capability_pilot_2m_v1/TRAINING_SCHEDULE_2M.json": "cd4f5e384a23eb99836c3418de121f0571e48c257f24016684761bae3fea1cc0",
+    "artifacts/capability_pilot_2m_v1/TRAINING_RESULT.json": "361026eee0ad6c630076875878cfc78b181967d79ba8502d68af76c6fa4fa924",
+    "artifacts/capability_pilot_2m_v1/TRAINING_DISTRIBUTION_AUDIT.json": "5cf037f8c3e96ecf9b85e8e84cadc3b2605b12ec65fb319004b8250b6bee7297",
+    "artifacts/capability_pilot_2m_v1/PRETRAIN_DATA_POLICY_AUDIT.json": "7b3b13ee13ecda6bb3eb4716ab139d4666e81cc2ad254cdbc5f5ad7b80f0bbd3",
+    "artifacts/capability_pilot_2m_v1/CHECKPOINT_SELECTION.json": "f837e636f28127ca5bb38f162ace3c4d8e8c4b7930203fa45f4fc4ec22e65ea2",
+    "artifacts/capability_pilot_2m_v1/BEST_CHECKPOINT_RELOAD_AUDIT.json": "f8343df53b27a75028851612b0c3ef770c4f3a8ad6cc65aa905c932debd5b4ae",
+    "artifacts/capability_pilot_2m_v1/NOVEL_VALIDATION_SENTINEL.json": "588596c6ea8bf57ba239d825ce72bfb72d1b4662f457074e9615ecd9ec46af01",
+    "artifacts/capability_pilot_2m_v1/REPLAY_RETENTION_SENTINEL.json": "23cd6e5095f8c5a9235aca1ab2697634e9a208739c9e3992260d6ca9c0b2b6de",
+    "artifacts/foundation_v2_capability_diagnostic_v1/MODEL_IDENTITY_AUDIT.json": "6c2b49fbfe40c1a001819063c67f477de8017a93ebd428b1b1bf02661b02685b",
+    "artifacts/foundation_v2_capability_diagnostic_v1/FOUNDATION_V2_CAPABILITY_PROFILE.json": "5f35a3ff96c681a9d316f852955dc51ec75fe667c0635da1533151e209944574",
+    "artifacts/generation_capability_audit_v1/GENERATION_CONFIG.json": "99afd94c26c37b8d96c04783061f6b83518b40164c6d09a4d6ff738e9d5dc880",
+    "artifacts/generation_capability_audit_v1/NOVEL_GENERATION_RESULTS.json": "b9fbb9779817bc8852708326e55c0023db0a2c3420a0eb551279ebab952fbe4d",
+    "artifacts/generation_capability_audit_v1/REPLAY_GENERATION_RESULTS.json": "b09c2670ec069183d6350ba0cb868c3e0dd7d0480325b457050a1f0bf7251100",
+    "experiments/targeted_capability_repair_v1/data/RETENTION_SENTINEL.jsonl": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+    "experiments/targeted_capability_repair_v1/TARGETED_CAPABILITY_REPAIR_GPU_TIME_LEDGER.jsonl": "7d19684fd198482d8862dbf2110711f183ed86b58d9d9dff2922cc9cb9b891cc",
+    "orchestration/director/directives/DIRECTOR_DIRECTIVE_005.json": "20d8adb9a45460eb7e5089fb5414b5a847b6d41cebab12c5c6968fbf4b7e055b"
+  },
+  "boundaries": {
+    "original_adapter_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
+    "original_adapter_status": "UNRECOVERABLE_HISTORICAL_REFERENCE_ONLY",
+    "exposed_holdout": "artifacts/novel_holdout_confirmation_v1 is excluded from selection and training"
+  }
+}

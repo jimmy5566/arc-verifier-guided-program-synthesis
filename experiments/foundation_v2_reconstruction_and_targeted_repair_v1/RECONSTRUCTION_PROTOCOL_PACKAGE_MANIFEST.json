@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "status": "FROZEN_PENDING_DIRECTOR_AUTHORIZATION",
+  "files": {
+    "FOUNDATION_V2_RECONSTRUCTION_PROTOCOL.json": "d265a25b6e25f2e25d00ce970b4b8f8caaabde9911a8c553c9d22ead03355b53",
+    "FOUNDATION_V2_RECONSTRUCTION_PROTOCOL.md": "3ea027402e7337a00b31c359c255adfa426d49f1ccef59b9cbb973e6d2afd42d",
+    "RECONSTRUCTED_V2_RECIPE_FREEZE.json": "67d5f70bdf4925efa2b3218184ab587f36cf93e6d43860570e4e7caecfa60e8b",
+    "RECONSTRUCTION_BUDGET_RESERVATION.json": "10404da899edf8100be5312aa16b14127b89c3f00390766c329ab22f72d99cf7",
+    "RECONSTRUCTION_EQUIVALENCE_GATE.json": "7417fe212e04af221bc3f496e6278958ec9746c51635278a366f3b681df27124",
+    "RECONSTRUCTION_SOURCE_ARTIFACT_HASHES.json": "a516d2eba7b9e91a11d2cedea80f305d578a929ef9fc8432c072cbe093d1291d"
+  },
+  "validity": {
+    "all_json_parsed": true,
+    "frozen_parent_ancestor_check": "PASS",
+    "frozen_recipe_artifact_git_blob_check": "PASS",
+    "original_adapter_recovery_status": "UNRECOVERABLE_HISTORICAL_REFERENCE_ONLY",
+    "gpu_training_started": false
+  },
+  "submission_requirement": "Director must explicitly return CONTINUE or CONTINUE_WITH_WARNING and scientific_training_authorized true before any reconstruction optimizer work."
+}
