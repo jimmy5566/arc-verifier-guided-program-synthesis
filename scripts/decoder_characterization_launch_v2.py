@@ -49,6 +49,10 @@ def validate_cohort(contract: dict[str, Any]) -> None:
     roles = cohort.get("role_counts")
     if not isinstance(ids, list) or len(ids) != 12 or len(set(ids)) != 12 or roles != {"TARGETED_EVALUATION": 4, "TARGETED_COMPOSITION": 4, "RETENTION_SENTINEL": 4}:
         raise RuntimeError("COHORT_SELECTION_MISMATCH")
+    if cohort.get("selection_rule") != "for each required role, choose the four smallest SHA256(ARC2_TOKEN_CHARACTERIZATION_V1:episode_id) values; selection uses episode IDs and roles only":
+        raise RuntimeError("COHORT_SELECTION_RULE_MISMATCH")
+    if not all(isinstance(item, str) and item for item in ids):
+        raise RuntimeError("COHORT_SELECTION_MISMATCH")
 
 def validate_datasets(contract: dict[str, Any]) -> None:
     """Verify bytes and row counts without parsing or inspecting test targets."""
@@ -61,12 +65,6 @@ def validate_datasets(contract: dict[str, Any]) -> None:
             count = sum(1 for line in handle if line.strip())
         if count != rows:
             raise RuntimeError("DATASET_ROW_COUNT_MISMATCH")
-    prefix = "ARC2_TOKEN_CHARACTERIZATION_V1:"
-    # The deterministic proof is checked from identifiers and roles only.
-    if cohort.get("selection_rule") != "for each required role, choose the four smallest SHA256(ARC2_TOKEN_CHARACTERIZATION_V1:episode_id) values; selection uses episode IDs and roles only":
-        raise RuntimeError("COHORT_SELECTION_RULE_MISMATCH")
-    if not all(isinstance(item, str) and item for item in ids) or not prefix:
-        raise RuntimeError("COHORT_SELECTION_MISMATCH")
 
 def validate_preflight(contract: dict[str, Any], *, source_commit: str) -> dict[str, Any]:
     receipt_path = Path(contract["preflight_receipt_path"])
