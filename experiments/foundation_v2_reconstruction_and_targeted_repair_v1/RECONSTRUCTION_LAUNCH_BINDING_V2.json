@@ -210,14 +210,14 @@
       },
       {
         "path": "scripts/preflight_foundation_v2_reconstruction_v1.py",
-        "sha256": "48fa8d0474ef64e388b21c886d22295d296156e0ea9954489ffd8f713792a016"
+        "sha256": "c4e8306810aa20970f0ab82ff21f38354db29806b065facf573fe0834da3a665"
       },
       {
         "path": "scripts/preflight_reconstruction_gpu_runtime_v1.py",
         "sha256": "7be436eac57cabc1020e21b422e066f84083876b096686604440fe3790c42997"
       }
     ],
-    "reviewed_executable_commit": "230330ad7876dd6c5976597e9a9ef5b08e5545e6",
+    "reviewed_executable_commit": "1fa9e564724d72d315c3d3cb62c4c89bba5efe0e",
     "verification": "Each named executable file must retain this exact SHA256; evidence/gate commits may advance HEAD without changing executable identity."
   },
   "status": "FROZEN_PENDING_GPU_RUNTIME_PREFLIGHT"
