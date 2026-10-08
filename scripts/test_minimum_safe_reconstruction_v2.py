@@ -27,6 +27,10 @@ class MinimumSafeLaunchTest(unittest.TestCase):
   text=(ROOT/'scripts'/'launch_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
   self.assertIn("prepare_log.parent.mkdir(parents=True,exist_ok=True)",text)
 
+ def test_prepare_binding_supplies_its_distinct_freeze_output(self):
+  text=(ROOT/'scripts'/'freeze_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
+  self.assertIn("['--mode','prepare','--output',paths['freeze']]",text)
+
  def test_preflight_requires_frozen_worker_environment(self):
   text=(ROOT/'scripts'/'preflight_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
   self.assertIn("expected_env=b['worker_binding']['environment']",text)
