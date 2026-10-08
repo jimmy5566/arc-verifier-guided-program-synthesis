@@ -327,7 +327,15 @@ class Supervisor:
             if not record:
                 continue
             expected = round_class_from_contract(round_id, receipt)
-            if expected != ROUND_CLASS_SCIENTIFIC or record.get("scientific_state_conflict_reserved"):
+            if expected != ROUND_CLASS_SCIENTIFIC:
+                continue
+            # A restart must preserve the fail-closed wait state without sending
+            # another Director prompt for the same immutable conflict.
+            if record.get("scientific_state_conflict_reserved"):
+                if record.get("controller_cycle_complete") or record.get("controller_lifecycle_state") != "SCIENTIFIC_STATE_CONFLICT_WAITING_DIRECTOR":
+                    record["controller_cycle_complete"] = False
+                    record["controller_lifecycle_state"] = "SCIENTIFIC_STATE_CONFLICT_WAITING_DIRECTOR"
+                    self.save()
                 continue
             digest = canonical_hash(path)
             notification_path = self.notification_dir / f"CONTROLLER_NOTIFICATION_{round_id}_{digest[:12]}.json"

@@ -162,8 +162,15 @@ class ControllerDirectiveCycleTest(unittest.TestCase):
             self.assertEqual(0.0, conflict["gpu_seconds_charged"])
             self.assertFalse(Supervisor(root / "state.json", notes).state["rounds"][scientific]["controller_cycle_complete"])
             restarted = Supervisor(root / "state.json", notes)
-            with patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")):
+            # Simulate an old state written before the lifecycle migration.
+            restarted.state["rounds"][scientific]["controller_cycle_complete"] = True
+            restarted.state["rounds"][scientific].pop("controller_lifecycle_state", None); restarted.save()
+            with patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")) as prompt:
                 self.assertEqual([], restarted.detect_scientific_state_conflicts(receipts, acks, escalation, "arc-director", 1))
+                self.assertEqual(0, prompt.call_count)
+            migrated = Supervisor(root / "state.json", notes).state["rounds"][scientific]
+            self.assertFalse(migrated["controller_cycle_complete"])
+            self.assertEqual("SCIENTIFIC_STATE_CONFLICT_WAITING_DIRECTOR", migrated["controller_lifecycle_state"])
             # A genuine smoke acknowledgement is still terminal and never wakes Director.
             smoke = "INFRA_SMOKE_TEST"; smoke_receipt = receipts / f"ROUND_{smoke}" / f"ROUND_{smoke}_TERMINAL_RECEIPT.json"
             write(smoke_receipt, {"round_id": smoke, "status": "SUCCESS", "round_class": "SMOKE", "protocol_id": "INFRA_SMOKE", "scientific_training_started": False})
