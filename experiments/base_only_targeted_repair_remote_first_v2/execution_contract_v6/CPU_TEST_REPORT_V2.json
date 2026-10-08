@@ -1,0 +1,19 @@
+{
+  "covered": [
+    "observation redaction",
+    "native prompt",
+    "parser valid invalid",
+    "duplicate rejection",
+    "bad identity rejection",
+    "nonoverwrite",
+    "authorization fail closed",
+    "forbidden TRAIN FINAL paths",
+    "runtime-cap partial receipt",
+    "deterministic input order"
+  ],
+  "mode": "CPU_ONLY_NO_MODEL_NO_GPU",
+  "schema_version": 1,
+  "status": "PASS",
+  "test_command": "py -3 -m unittest tests.test_base_reference_collector_v2 tests.test_base_only_remote_first_v2 tests.test_base_only_targeted_repair_v1 -v",
+  "test_output_sha256": "4eb3420b852ba0f922a1eb5899c90ee822a59325dd454e5bd7d31c0c9773aa34"
+}

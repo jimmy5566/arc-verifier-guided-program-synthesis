@@ -1,0 +1,9 @@
+{
+  "baseline_reference_accounting": "baseline inference seconds are separate receipt telemetry and never charged as GPU training seconds.",
+  "canonical_ledger": "orchestration/budget/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V5.jsonl",
+  "canonical_ledger_sha256": "7d19684fd198482d8862dbf2110711f183ed86b58d9d9dff2922cc9cb9b891cc",
+  "cap_seconds": 28800,
+  "launch_path_prohibition": "No V2 or V4 ledger path is valid in this V6 baseline-reference collector or future base-only launch binding.",
+  "schema_version": 1,
+  "status": "FROZEN"
+}

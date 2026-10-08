@@ -1,0 +1,90 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_014",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2_BASE_REFERENCE_COLLECTION",
+  "reasons": [
+    {
+      "area": "brief_and_declared_evidence_integrity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_014 has verified SHA256 e0b20169bbd39f747197d9309d8ce299dd69d680a306c3dc8950ac2197db13d3. All four declared evidence files match their stated SHA256 values, including collector source SHA256 974f96e1efb589514315ee76332e3aebc41b8bcecce58647bcb67eb4d8012be4 and the initialized V5 ledger."
+    },
+    {
+      "area": "request_scope",
+      "status": "PASS",
+      "finding": "The request is correctly limited to base-reference collection. It does not request candidate training, LoRA construction, optimizer construction, or modification of the frozen scientific selection gate."
+    },
+    {
+      "area": "ledger_and_retention_role_reconciliation",
+      "status": "PASS_FOR_PROPOSED_V5_CONTRACT",
+      "finding": "The V5 launch binding consistently references ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V5.jsonl, whose only row is the 28800-second initialization record. It also distinguishes the allowed hash-identified RETENTION_TRAIN pool from the evaluation-only RETENTION_SENTINEL."
+    },
+    {
+      "area": "evaluation_target_blindness",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The proposed collector builds each prompt with json.dumps(record['task']). The frozen synthetic evaluation records include task.test[*].output, so the command would place the exact held-out answer in the model prompt. This is direct evaluation-label leakage and invalidates any resulting baseline reference."
+    },
+    {
+      "area": "prompt_tokenization_and_decoding_contract",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The collector uses an unfrozen generic JSON prompt with AutoTokenizer rather than the frozen ARC-native observation-only serialization. It does not freeze special-token construction, generation terminators, output extraction, ARC grid parsing, invalid-output handling, or exact-grid scoring. Its own comment states exact output decoding is deferred to a later command record, so the executable is not scientifically complete."
+    },
+    {
+      "area": "baseline_output_sufficiency",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The proposed output preserves only a SHA256 of decoded text. It does not preserve a canonical prediction identity, parsed grid or invalid status, exact-grid outcome, per-surface aggregate, or the immutable base-side inputs required for later paired n01/n10 comparison. COLLECTED_PASS therefore would not establish the frozen selection baseline required by Directive 013."
+    },
+    {
+      "area": "runtime_and_device_enforcement",
+      "status": "FAIL_HARD_STOP",
+      "finding": "BASE_REFERENCE_COLLECTOR_V1.json declares a 7200-second limit, but the executable contains no active deadline or stop/finalize path. It checks that CUDA exists but does not explicitly place the model or token tensors on the selected GPU, and it does not freeze BF16 support, attention backend, device identity, memory policy, or deterministic runtime settings."
+    },
+    {
+      "area": "identity_preflight_and_provenance",
+      "status": "REQUIRES_COMPLETION",
+      "finding": "The collector checks only the base path string and does not independently hash every expected base, tokenizer, and config file before model loading. Local HEAD and fresh origin are equal at e6028723330f8d20fd3ad591f8e344627b25b2cb, but the brief provides no fresh RunPod equality or final read-only preflight for the exact collector launch commit."
+    },
+    {
+      "area": "current_execution_state",
+      "status": "PASS_NO_EXECUTION",
+      "finding": "Baseline collection has not started. No model, LoRA adapter, optimizer, GPU training, or candidate training has been initialized, and the final audit remains outside the proposed allowed input set."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "REMOVE_EVALUATION_LABELS_FROM_MODEL_INPUT",
+      "requirement": "Construct each model observation from training pairs with their outputs plus test inputs only. The collector must never place task.test outputs, expected grids, scoring fields, program labels, or any other held-out answer material into the tokenizer input. Add a regression test that fails if any test-output bytes or canonical grid representation appear in the prompt."
+    },
+    {
+      "change_id": "FREEZE_ARC_NATIVE_BASELINE_INFERENCE_CONTRACT",
+      "requirement": "Freeze the exact observation-only ARC-native prompt serializer, tokenizer/config hashes, special tokens, attention backend, deterministic generation settings, maximum output length, termination rule, output extraction, canonical ARC grid parser, and invalid-output policy. Reuse an already validated stage-compatible evaluator only if its exact source and configuration hashes are bound into the new package."
+    },
+    {
+      "change_id": "FREEZE_SUFFICIENT_BASE_REFERENCE_OUTPUTS",
+      "requirement": "For every frozen TARGET_DEV and RETENTION_SENTINEL episode, define an immutable output row containing episode identity, observation hash, canonical prediction hash, parse-valid status, exact-grid-match outcome, model/base manifest identity, and inference-contract identity. Freeze aggregate surface counts and the base-side outcomes needed for later paired n01/n10 comparison. Do not access FINAL_AUDIT."
+    },
+    {
+      "change_id": "IMPLEMENT_ACTIVE_BASELINE_RUNTIME_CAP",
+      "requirement": "Enforce the declared runtime limit with a monotonic deadline checked before each generation and after each completed episode. On the cap or any failure, atomically save a partial non-pass receipt, record completed episode identities, release the model, and stop. A partial or capped run must never emit COLLECTED_PASS. Baseline inference time must be recorded separately from the cumulative GPU-training ledger and must not be represented as optimizer training time."
+    },
+    {
+      "change_id": "BIND_EXACT_MODEL_AND_DEVICE_IDENTITY",
+      "requirement": "Before model loading, fail closed unless every expected base shard, index, tokenizer, config, and manifest file matches the V5 launch binding. Freeze the resolved GPU device, BF16 support requirement, explicit model and tensor device placement, no-LoRA/no-optimizer assertions, and a runtime receipt proving optimizer_constructed=false and scientific_training_started=false."
+    },
+    {
+      "change_id": "EXPAND_CPU_MOCK_AND_NEGATIVE_TESTS",
+      "requirement": "Run CPU-only tests covering observation redaction, prompt/token identities, deterministic episode order, parser-valid and parser-invalid outputs, duplicate or missing episode rejection, incorrect base or data hash rejection, output-path non-overwrite, runtime-cap partial receipt, forbidden TRAIN and FINAL_AUDIT path rejection, and authorization-field fail-closed behavior. Freeze the test report and hashes."
+    },
+    {
+      "change_id": "FREEZE_V6_BASELINE_PACKAGE_AND_PREFLIGHT",
+      "requirement": "Create an additive execution-contract revision with the corrected collector, resolved command, source hashes, output and receipt paths, inference contract, test evidence, V5 canonical ledger declaration, and complete read-only preflight. The preflight must run on the exact final commit and complete before any model import or load."
+    },
+    {
+      "change_id": "REFRESH_THREE_WAY_PARITY_AND_RESUBMIT",
+      "requirement": "Commit and push the additive remediation on the existing non-main branch without force-push or frozen-history rewrite, verify fresh local HEAD equals git ls-remote origin SHA equals RunPod checked-out/source SHA, and submit a new hashed brief requesting baseline-reference collection authorization only."
+    }
+  ],
+  "base_reference_collection_authorized": false,
+  "model_loading_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false
+}

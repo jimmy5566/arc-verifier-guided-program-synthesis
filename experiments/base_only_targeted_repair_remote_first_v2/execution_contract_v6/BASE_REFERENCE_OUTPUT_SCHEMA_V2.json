@@ -1,0 +1,19 @@
+{
+  "paired_comparison_support": "preserved base-side exact_grid_match by episode for future n01/n10 only",
+  "required_aggregates": [
+    "TARGET_DEV",
+    "RETENTION_SENTINEL"
+  ],
+  "required_prediction_fields": [
+    "surface",
+    "episode_id",
+    "observation_sha256",
+    "prompt_sha256",
+    "canonical_prediction_sha256",
+    "parse_valid",
+    "exact_grid_match",
+    "model_base_manifest_identity",
+    "inference_contract_identity"
+  ],
+  "schema_version": 1
+}
