@@ -1,0 +1,74 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_006",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "reasons": [
+    {
+      "area": "review_and_remote_identity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_006 and the reconstruction package were reviewed at commit 59b4929e557b188252d50c4a5249964cf13751e4. A fresh git ls-remote confirms that exact commit is the current tip of origin/infra/arc2-dual-agent-runpod-orchestrator-v1."
+    },
+    {
+      "area": "package_and_source_integrity",
+      "status": "PASS",
+      "finding": "All six files in RECONSTRUCTION_PROTOCOL_PACKAGE_MANIFEST match their declared SHA256 values, and all 17 frozen source artifacts in RECONSTRUCTION_SOURCE_ARTIFACT_HASHES match the current bytes."
+    },
+    {
+      "area": "scientific_identity_boundary",
+      "status": "PASS",
+      "finding": "The protocol correctly closes TARGETED_CAPABILITY_REPAIR_V1, treats Original Foundation-V2 as an unrecoverable historical reference, names the proposed adapter RECONSTRUCTED_FOUNDATION_V2_V1, and forbids claims of recovery, bitwise reproduction, or continuation from the missing adapter."
+    },
+    {
+      "area": "recipe_and_data_boundary",
+      "status": "PASS_WITH_PRELAUNCH_VERIFICATION_REQUIRED",
+      "finding": "The base and tokenizer file hashes, Novel and replay identities, schedule semantics, LoRA recipe, optimizer, precision, context, batch, seed, token stop, and forbidden training surfaces are preregistered. Their actual mounted bytes have not yet been verified against the frozen manifest."
+    },
+    {
+      "area": "equivalence_gate",
+      "status": "PASS_WITH_INCOMPLETE_FROZEN_SURFACE",
+      "finding": "The gate is pre-result, quantitative, excludes Eval60 Gold, diagnostic Gold, FINAL_AUDIT, and the exposed Novel holdout, and permits targeted repair only after EQUIVALENCE_CONFIRMED. However, the capability-direction subset episode IDs, generator seeds, and hashes are deferred to a future launch manifest and are not frozen in the reviewed package."
+    },
+    {
+      "area": "execution_source_identity",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The reviewed package does not freeze a reconstruction launcher, its dependency source hashes, a resolved command/config, or an output/checkpoint directory. The recipe records historical_source_commit d7b489e73835011230a6d2c4fd70e21f515ac152, but scripts/run_capability_pilot_2m_v1.py and src/capability_pilot_2m_v1 were first committed later at daed9564359879acf3c4be840ad5357d54bb21f2 and are absent from the recorded historical commit. The exact executable provenance therefore remains unresolved."
+    },
+    {
+      "area": "gpu_budget_enforcement",
+      "status": "PASS_PROTOCOL_ONLY_RUNTIME_UNVERIFIED",
+      "finding": "The 7,200-second reconstruction reservation and single 28,800-second cumulative ledger are correctly specified, including post-cap checkpoint/save/finalize behavior. The reviewed reconstruction package does not bind the actual reconstruction command to the active reservation, runtime stop, ledger append, and finalize controls, so enforcement for this launch is not yet demonstrated."
+    },
+    {
+      "area": "training_state",
+      "status": "PASS_NO_TRAINING",
+      "finding": "All reviewed records state that no reconstruction or targeted-repair GPU training has started."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "FREEZE_EXECUTABLE_RECONSTRUCTION_SOURCE",
+      "requirement": "Freeze the exact reconstruction launcher and every scientific dependency by repository path, Git blob SHA, file SHA256, and containing commit. Resolve the d7b489e7 versus daed9564 provenance discrepancy explicitly. The launch must use committed reviewed source and must not infer equivalence to uncommitted historical code."
+    },
+    {
+      "change_id": "FREEZE_RESOLVED_LAUNCH_IDENTITY",
+      "requirement": "Before optimizer construction, freeze a read-only launch manifest containing local, origin, and RunPod source SHA parity; exact mounted base, tokenizer, Novel, replay, schedule, environment, command, config, output directory, checkpoint directory, and recipe hashes. Every required base file and weight shard must match, and missing or unexpected contract-forbidden files must fail closed."
+    },
+    {
+      "change_id": "FREEZE_CAPABILITY_DIRECTION_SUBSET",
+      "requirement": "Freeze the capability-direction subset episode IDs, generator seeds, source hashes, scoring implementation hash, and Base reference values before model load and before any reconstruction result exists. Add these identities to the immutable package manifest."
+    },
+    {
+      "change_id": "BIND_AND_TEST_RUNTIME_BUDGET_CONTROL",
+      "requirement": "Bind the exact reconstruction launcher to a pre-round 7,200-second reservation, active monotonic runtime stop, append-only actual-training ledger, and checkpoint/save/finalize path. Demonstrate reservation rejection, active cap interruption, durable accounting after success/failure/interruption, and no post-cap optimizer work using dummy short-duration jobs only."
+    },
+    {
+      "change_id": "PRESERVE_CURRENT_SCIENCE",
+      "requirement": "Do not change the frozen data, sampling, recipe, equivalence thresholds, selection order, identity claims, Gold exclusions, or final-audit protections while addressing these execution and identity gaps. Any science change requires a new protocol revision."
+    },
+    {
+      "change_id": "CONTROLLER_RESUBMISSION",
+      "requirement": "Commit and push the completed immutable package on the existing non-main branch, verify fresh local-origin-RunPod SHA parity, and submit a new hashed Controller brief. Reconstruction optimizer work remains prohibited until a later Director directive explicitly returns CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true."
+    }
+  ],
+  "scientific_training_authorized": false
+}

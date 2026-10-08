@@ -307,13 +307,12 @@ class Supervisor:
             self.save()
             prompt = (
                 f"ARC2 Director directive notification {directive_id} ({digest}). "
-                f"Read {notification}. Do not start training and do not invoke Director. "
-                f"Write one acknowledgement JSON to {response} with exactly these fields: "
-                f'{{"schema_version":1,"directive_id":"{directive_id}",'
-                f'"directive_sha256":"{digest}","controller_role":"arc-controller",'
-                f'"acknowledged":true,"action":"DIRECTIVE_ACKNOWLEDGED_NO_TRAINING",'
-                f'"scientific_training_started":false}}. '
-                "If that matching acknowledgement already exists, do not rewrite it."
+                f"Read {notification} and execute the complete Controller directive cycle; acknowledgement is not terminal behavior. "
+                f"Use scripts/arc2_controller_directive_cycle.py with directive {record['directive_path']}, "
+                f"response {response}, and durable Controller state. Preserve any matching acknowledgement. "
+                "Route the Director decision exactly: remediation decisions require autonomous repair, validation, commit, brief, and resubmission; "
+                "NEW_SUBPROTOCOL_REQUIRED requires a new protocol; PAUSE/STOP halt science; unknown decisions fail closed. "
+                "Do not start training unless the directive itself is CONTINUE or CONTINUE_WITH_WARNING and scientific_training_authorized is true."
             )
             exit_code, error = prompt_controller(
                 ["herdr", "agent", "prompt", controller_agent, prompt], herdr_timeout_seconds,
