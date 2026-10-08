@@ -1,0 +1,9 @@
+{
+  "baseline_model_id": "CAPABILITY_REPAIR_BASELINE_V1",
+  "final_audit_accessed": false,
+  "model_loaded": false,
+  "not_historical_equivalence_evidence": true,
+  "schema_version": 1,
+  "status": "PENDING_FORWARD_BASELINE_EVALUATION",
+  "surface": "TARGETED_COMPOSITION_DEV"
+}

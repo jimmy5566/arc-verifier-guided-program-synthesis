@@ -20,6 +20,10 @@
 - CPU-answerable questions must remain CPU-only. Freeze predictions and
   candidate pools before opening targets. Never expand an experiment
   automatically.
+- Historical Foundation-V2 is a reference only. Forward capability repair uses
+  configuration-level reproducibility and the measured current checkpoint
+  profile; strict historical adapter/node/numerical equivalence is not a launch
+  blocker unless a new experiment explicitly studies reproducibility.
 - Explicit user authorization is required for GPU launch, a materially
   GPU-consuming Kaggle Save Version, push, destructive Git, production release,
   competition submission, or a release-time science change.

@@ -1,0 +1,29 @@
+{
+  "acceptance": "paired_target_delta_plus_composition_delta_plus_retention",
+  "baseline": "CAPABILITY_REPAIR_BASELINE_V1",
+  "budget": {
+    "accounting": "append_only_actual_optimizer_training_seconds",
+    "cap_seconds": 28800.0,
+    "historical_reconstruction_seconds": 3739.722329827957,
+    "remaining_targeted_repair_seconds": 25060.277670172043
+  },
+  "historical_equivalence_required": false,
+  "next_action": "RUN_FORWARD_BASELINE_TARGETED_DEV_AND_RETENTION",
+  "objective": "TRAIN_VALIDATE_DIAGNOSE_ADAPT_CURRICULUM_REPEAT",
+  "priority_atomic": [
+    "connected components",
+    "orientation",
+    "inside contains",
+    "same color",
+    "relation primitives",
+    "selector prerequisites"
+  ],
+  "priority_composition": [
+    "RELATION_TO_SELECTOR_ACTION",
+    "SELECTOR_TO_ACTION",
+    "MASK_SET_TO_CONSTRUCTION",
+    "CONDITIONAL_TO_ACTION",
+    "COUNTING_TO_CONSTRUCTION"
+  ],
+  "schema_version": 1
+}

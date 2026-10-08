@@ -1,0 +1,54 @@
+{
+  "budget": {
+    "accounting": "append_only_actual_optimizer_training_seconds",
+    "cap_seconds": 28800.0,
+    "historical_reconstruction_seconds": 3739.722329827957,
+    "remaining_targeted_repair_seconds": 25060.277670172043
+  },
+  "checkpoint_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+  "checkpoint_selection_source_sha256": "3eaf45c12d225a391ed5fb09c45ff24806861c27de9b907c894b2270010db927",
+  "claim": "RECONSTRUCTED_FROM_FROZEN_RECIPE_NEW_IDENTITY",
+  "dataset_identities": {
+    "FINAL_AUDIT_SEALED": {
+      "path": "experiments/targeted_capability_repair_v1/data/FINAL_AUDIT_SEALED.jsonl",
+      "sha256": "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd"
+    },
+    "RETENTION_SENTINEL": {
+      "path": "experiments/targeted_capability_repair_v1/data/RETENTION_SENTINEL.jsonl",
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV": {
+      "path": "experiments/targeted_capability_repair_v1/data/TARGET_DEV.jsonl",
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    }
+  },
+  "final_audit_accessed": false,
+  "gate_reference": {
+    "historical_equivalence_outcome": "EQUIVALENCE_PARTIAL",
+    "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_minimum_safe_launch/RECONSTRUCTED_FOUNDATION_V2_V2_009_EQUIVALENCE_GATE_RESULT.json",
+    "sha256": "50294d0693770598686345039bd4bd56a80f24061255ebb3e153fd5f5fbff9b4"
+  },
+  "model_id": "CAPABILITY_REPAIR_BASELINE_V1",
+  "not_claimed": [
+    "EXACT_HISTORICAL_FOUNDATION_V2",
+    "BITWISE_HISTORICAL_ADAPTER",
+    "NODE_LEVEL_REPRODUCTION"
+  ],
+  "optimizer_steps": 172,
+  "policy": {
+    "STRICT_HISTORICAL_FOUNDATION_V2_EQUIVALENCE_REQUIRED": false,
+    "baseline_profile_execution": "PENDING",
+    "final_audit_accessed": false,
+    "historical_foundation_v2": "REFERENCE_ONLY",
+    "no_diagnostic_gold_training": true,
+    "no_eval60_gold_training": true,
+    "reproducibility_level": "CONFIGURATION_LEVEL"
+  },
+  "processed_tokens": 2017545,
+  "schema_version": 1,
+  "scientific_gpu_training_seconds": 3739.722329827957,
+  "terminal_receipt": {
+    "path": ".arc2-local/orchestration/receipt_cache/ROUND_RECONSTRUCTED_FOUNDATION_V2_V2_009/RECONSTRUCTED_FOUNDATION_V2_V2_009_TERMINAL_RECEIPT.json",
+    "sha256": "4f558ece5665c8e7b859ceafa8ea806187380619292aa662f7743b3df3ec9ba0"
+  }
+}
