@@ -62,6 +62,17 @@ class ControllerDirectiveCycleTest(unittest.TestCase):
             self.assertEqual("AUTHORIZED", final["route"])
             self.assertEqual(digest, hashlib.sha256(first.read_bytes()).hexdigest())
 
+    def test_terminal_scientific_stop_is_durable_and_non_authorizing(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw); directive = root / "DIRECTOR_DIRECTIVE_TERMINAL.json"; response = root / "DIRECTOR_RESPONSE_TERMINAL.json"; state = root / "state.json"
+            write(directive, {"directive_id": directive.stem, "decision": "TERMINAL_SCIENTIFIC_STOP", "scientific_training_authorized": False})
+            run = subprocess.run([sys.executable, str(ROUTER), "--directive", str(directive), "--response", str(response), "--state", str(state)], capture_output=True, text=True, check=False)
+            self.assertEqual(0, run.returncode)
+            record = json.loads(state.read_text(encoding="utf-8"))["directives"][directive.stem]
+            self.assertEqual("STOPPED", record["state"])
+            self.assertEqual("TERMINAL_SCIENTIFIC_STOP", record["route"])
+            self.assertTrue(record["controller_cycle_complete"])
+
     def test_idle_recovery_resumes_same_nonterminal_cycle_once(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw); state_path = root / "supervisor.json"; cycles = root / "cycles.json"; note = root / "notes"

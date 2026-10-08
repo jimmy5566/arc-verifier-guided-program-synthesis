@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 REMEDIATION = {"REQUIRE_CURRICULUM_REVIEW", "REQUIRE_DIAGNOSTIC_REVIEW", "REQUIRE_INFRA_REPAIR", "REQUIRE_CHANGES"}
-KNOWN = REMEDIATION | {"CONTINUE", "CONTINUE_WITH_WARNING", "NEW_SUBPROTOCOL_REQUIRED", "PAUSE_SCIENTIFIC_EXPERIMENT", "STOP_CURRENT_TRACK", "EMERGENCY_RECOVERY"}
+KNOWN = REMEDIATION | {"CONTINUE", "CONTINUE_WITH_WARNING", "NEW_SUBPROTOCOL_REQUIRED", "PAUSE_SCIENTIFIC_EXPERIMENT", "STOP_CURRENT_TRACK", "TERMINAL_SCIENTIFIC_STOP", "EMERGENCY_RECOVERY"}
 STEP_ORDER = {"PROCESSING": 0, "REMEDIATION_COMPLETE": 1, "VALIDATED": 2, "COMMITTED": 3, "RESUBMITTED": 4, "WAITING_DIRECTOR": 5}
 
 
@@ -113,6 +113,10 @@ def main() -> int:
         raise RuntimeError("ACKNOWLEDGEMENT_INVALID")
     if not record.get("acknowledgement_sha256"):
         transition(record, "ACKNOWLEDGED", acknowledgement_sha256=hashlib.sha256(args.response.read_bytes()).hexdigest())
+    if decision == "TERMINAL_SCIENTIFIC_STOP" and record.get("reason") == "UNKNOWN_DIRECTOR_DECISION":
+        # Preserve the historical fail-closed transition in history, but do not
+        # leave it as the current terminal reason once this decision is known.
+        record.pop("reason", None)
     if not record.get("route"):
         if decision not in KNOWN:
             transition(record, "FAILED_CLOSED", reason="UNKNOWN_DIRECTOR_DECISION")
@@ -122,8 +126,9 @@ def main() -> int:
             transition(record, "PROCESSING", route="NEW_SUBPROTOCOL")
         elif decision == "PAUSE_SCIENTIFIC_EXPERIMENT":
             transition(record, "CLOSED", route="PAUSED_NO_GPU_LAUNCH")
-        elif decision == "STOP_CURRENT_TRACK":
-            transition(record, "CLOSED", route="TERMINAL_TRACK_STOP")
+        elif decision in {"STOP_CURRENT_TRACK", "TERMINAL_SCIENTIFIC_STOP"}:
+            transition(record, "STOPPED", route="TERMINAL_SCIENTIFIC_STOP", controller_cycle_complete=True,
+                       next_step="PRESERVE_TERMINAL_CLOSURE")
         elif decision == "EMERGENCY_RECOVERY":
             transition(record, "PROCESSING", route="ISOLATED_RECOVERY")
         else:

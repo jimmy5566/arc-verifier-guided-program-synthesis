@@ -1,0 +1,63 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_016",
+  "directive_sha256": "ea8461c71315da12e7d5e52088c18eb0760d038f10ef38b9427946bb6addf094",
+  "future_work_requires_distinct_review": true,
+  "launch_authorized": false,
+  "mandatory_infrastructure_gates": [
+    "exact_authorization_binding",
+    "complete_scientific_receipt_schema",
+    "worker_exit_propagation",
+    "scientific_notification_routing",
+    "hold_enforcement",
+    "exactly_once_conflict_escalation"
+  ],
+  "model_loading_authorized": false,
+  "optimizer_construction_authorized": false,
+  "preserved_identity_chain": [
+    {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001_LAUNCH.json",
+      "sha256": "034c700fb289b61b195d038fc926266e7ca92ba145ad4a74960bced5e564a580"
+    },
+    {
+      "path": ".arc2-local/orchestration/receipt_cache/ROUND_RECONSTRUCTED_FOUNDATION_V2_V1_001/ROUND_RECONSTRUCTED_FOUNDATION_V2_V1_001_TERMINAL_RECEIPT.json",
+      "sha256": "826a35d7139b3be84f1c5d1e912e77a502b62eebe782c74d339e8d9781ab41df"
+    },
+    {
+      "path": ".arc2-local/orchestration/controller_notifications/CONTROLLER_NOTIFICATION_RECONSTRUCTED_FOUNDATION_V2_V1_001_826a35d7139b.json",
+      "sha256": "67a5768103b14e4b245fecc2c0c7647b76398a341e9399aab25a107557d2b456"
+    },
+    {
+      "path": ".arc2-local/orchestration/controller_acknowledgements/CONTROLLER_ACK_RECONSTRUCTED_FOUNDATION_V2_V1_001_826a35d7139b.json",
+      "sha256": "abe4f6b0ca6a3c3621e8d3297b092c6e3bdc4b12ef3b6c7b472b85bb87c13589"
+    },
+    {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001_REMOTE_FORENSIC_BUNDLE.json",
+      "sha256": "39b48306265b18ddfd273a19ec2f01310a1e0c9c3190b486330dedf2c64aef04"
+    },
+    {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001_STATE_CONFLICT_RESOLUTION.json",
+      "sha256": "c171a0acad28888eefd1ca6e3243c6b57dd7b019fdaa57a9cf037df77568ba19"
+    },
+    {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001_TERMINAL_CLASSIFICATION_SUPERSEDING.json",
+      "sha256": "d799bcfff77d336fcda271bee0fc3315d8a8a0949e85bd72928128819745048a"
+    }
+  ],
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "retry_authorized": false,
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+  "schema_version": 1,
+  "scientific_completion_established": false,
+  "scientific_conclusion": "INFRASTRUCTURE_FAILURE_BEFORE_MODEL_LOAD_AND_OPTIMIZER_WORK_ONLY",
+  "scientific_evidence_excluded": true,
+  "scientific_training_authorized": false,
+  "status": "TERMINAL_SCIENTIFIC_STOP",
+  "terminal_accounting": {
+    "checkpoints_written": 0,
+    "final_audit_accessed": false,
+    "optimizer_steps": 0,
+    "processed_tokens": 0,
+    "scientific_gpu_training_seconds": 0.0,
+    "wrapper_runtime_seconds": 0.178864768
+  }
+}

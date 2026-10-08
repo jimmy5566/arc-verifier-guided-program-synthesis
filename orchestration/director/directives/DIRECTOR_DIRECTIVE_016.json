@@ -1,0 +1,89 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_016",
+  "decision": "TERMINAL_SCIENTIFIC_STOP",
+  "scope": "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+  "reasons": [
+    {
+      "area": "brief_and_artifact_integrity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_016 has verified SHA256 7e6d2463460fd3e4a3a1fc6adcfacc0c5bb726e2168ec83b13ad37201a3912f5. All five brief-listed remediation artifacts match their declared SHA256 values."
+    },
+    {
+      "area": "forensic_truth",
+      "status": "RESOLVED",
+      "finding": "The preserved remote evidence establishes that the wrapper and worker started, the worker exited with code 1 during import, and the wrapper also exited with code 1. No model was loaded, no optimizer was constructed, no optimizer step ran, no training token was processed, and no checkpoint was written."
+    },
+    {
+      "area": "original_terminal_receipt",
+      "status": "INVALID_FOR_SCIENTIFIC_COMPLETION",
+      "finding": "The original status=SUCCESS receipt is preserved byte-for-byte but conflicts with the worker log, ledger, missing accounting/progress/result artifacts, and zero checkpoints. The additive superseding classification INVALID_SUCCESS_RECEIPT_PRE_OPTIMIZER_FAILURE is accepted; the original receipt must never be interpreted as scientific completion or acceptance."
+    },
+    {
+      "area": "budget_accounting",
+      "status": "PASS_ZERO_SCIENTIFIC_TRAINING",
+      "finding": "The reconciled V6 ledger and snapshot record 0.0 scientific GPU optimizer-training seconds and preserve 0.178864768 wrapper runtime seconds separately. The 28800-second scientific training cap remains unconsumed by this failed attempt."
+    },
+    {
+      "area": "final_audit_and_scientific_outputs",
+      "status": "PASS_NO_ACCESS_NO_RESULT",
+      "finding": "FINAL_AUDIT was not accessed, and no model, adapter, checkpoint, prediction, metric, or training result from this round exists that may be used as scientific evidence."
+    },
+    {
+      "area": "authorization_receipt_and_notification_repairs",
+      "status": "PASS",
+      "finding": "The remediation binds scientific launch authorization to an exact qualifying Director directive, rejects nonqualifying or scope-mismatched directives and active holds, propagates worker failure, requires complete scientific SUCCESS evidence, prevents scientific rounds from using DUMMY_NOTIFICATION_ACK_ONLY, and preserves exactly-once conflict escalation across restart."
+    },
+    {
+      "area": "regression_tests",
+      "status": "PASS_REPRODUCED",
+      "finding": "The Director independently reran the CPU-only reconstruction launch-guard suite with 5 of 5 tests passing and the Supervisor directive-cycle suite with 7 of 7 tests passing. No model or GPU execution was used."
+    },
+    {
+      "area": "protocol_viability",
+      "status": "TERMINAL_FOR_THIS_ROUND_AND_PROTOCOL",
+      "finding": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1 remains a closed replay-dependent protocol. Resolving the orchestration truth conflict does not reopen the scientific protocol and does not create a safe-retry entitlement for RECONSTRUCTED_FOUNDATION_V2_V1_001."
+    },
+    {
+      "area": "provenance",
+      "status": "PASS_FOR_REMEDIATION_EVIDENCE",
+      "finding": "DIRECTIVE_015_VALIDATION.json records local, origin, and RunPod parity at remediation commit 4a01e5944003e012fee2eb0b71a2783b72452072. Current local HEAD and fresh origin are also equal at the additive brief commit 496da1559554fc425d9623c45b87cb700fcc31cd."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "PRESERVE_TERMINAL_HOLD_AND_ROUND_IDENTITY",
+      "requirement": "Keep RECONSTRUCTED_FOUNDATION_V2_V1_001 under its immutable SCIENTIFIC_STATE_CONFLICT_HOLD evidence chain and record this directive as its terminal scientific disposition. Do not rewrite the round ID, original receipt, launch record, notification, acknowledgement, forensic bundle, state resolution, or superseding classification."
+    },
+    {
+      "change_id": "NO_RETRY_OR_RELAUNCH",
+      "requirement": "Do not execute RECONSTRUCTED_FOUNDATION_V2_V1_001_RERUN_01 or any other retry, resume, relaunch, model load, optimizer construction, or GPU job under this round or closed protocol. Existing rerun plans and bindings are preserved only as unauthorized historical artifacts and must remain non-dispatchable."
+    },
+    {
+      "change_id": "PRESERVE_ZERO_WORK_ACCOUNTING",
+      "requirement": "Freeze optimizer_steps=0, processed_tokens=0, checkpoints_written=0, scientific_gpu_training_seconds=0.0, and final_audit_accessed=false as the terminal scientific accounting for this round. Preserve wrapper runtime separately and do not convert it into optimizer-training time."
+    },
+    {
+      "change_id": "EXCLUDE_ROUND_FROM_SCIENTIFIC_EVIDENCE",
+      "requirement": "Do not use the original SUCCESS receipt or this failed round as evidence of reconstruction, training completion, equivalence, capability change, retention, model selection, or checkpoint lineage. The only valid conclusion is infrastructure failure before model load and optimizer work."
+    },
+    {
+      "change_id": "KEEP_REPAIRED_GOVERNANCE_ACTIVE",
+      "requirement": "Retain the repaired exact authorization binding, complete scientific receipt schema, worker-exit propagation, scientific notification routing, hold enforcement, and exactly-once conflict escalation as mandatory infrastructure gates for any future scientific protocol."
+    },
+    {
+      "change_id": "FUTURE_WORK_REQUIRES_DISTINCT_REVIEW",
+      "requirement": "Any future ARC2 training must proceed under a scientifically viable, separately reviewed protocol with fresh preflight, data and model identities, budget binding, source parity, and a new qualifying Director directive. This terminal stop grants no authorization to BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2 or any other condition."
+    },
+    {
+      "change_id": "FREEZE_AND_PRESERVE_CLOSURE",
+      "requirement": "Commit and push this directive, its Controller acknowledgement, and an additive closure manifest on the existing non-main branch without force-push or history rewrite. Record fresh local-origin-RunPod parity for the preserved closure; no GPU action is required or authorized for that preservation."
+    }
+  ],
+  "scientific_state_conflict_resolution_accepted": true,
+  "scientific_completion_established": false,
+  "retry_authorized": false,
+  "launch_authorized": false,
+  "model_loading_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false
+}
