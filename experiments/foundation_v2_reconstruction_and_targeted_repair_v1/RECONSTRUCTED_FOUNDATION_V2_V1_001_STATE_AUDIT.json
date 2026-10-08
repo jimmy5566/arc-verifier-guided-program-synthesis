@@ -1,0 +1,29 @@
+{
+  "cause": "PYTHONPATH_MISSING_FOR_capability_pilot_2m_v1_IMPORT",
+  "checkpoints": [],
+  "classification": "INFRA_PRE_OPTIMIZER_FAILURE",
+  "current_scientific_gpu_training_seconds": 0.0,
+  "current_wrapper_runtime_seconds": 0.178864768,
+  "determination": "B_REAL_TRAINING_TERMINATED_BEFORE_OPTIMIZER_WORK",
+  "evidence": {
+    "accounting_state_exists": false,
+    "log": "RECONSTRUCTED_FOUNDATION_V2_V1_001.log",
+    "progress_exists": false,
+    "terminal_claim_conflicts_with_wrapper_failed_before_receipt": true,
+    "training_result_exists": false
+  },
+  "final_audit_accessed": false,
+  "gpu_observation": "0, 1, 24576",
+  "launch_receipt_sha256": "034c700fb289b61b195d038fc926266e7ca92ba145ad4a74960bced5e564a580",
+  "optimizer_steps": 0,
+  "processed_tokens": 0,
+  "receipt_path": "/workspace/arc2/orchestration/rounds/ROUND_RECONSTRUCTED_FOUNDATION_V2_V1_001/ROUND_RECONSTRUCTED_FOUNDATION_V2_V1_001_TERMINAL_RECEIPT.json",
+  "receipt_sha256": "826a35d7139b3be84f1c5d1e912e77a502b62eebe782c74d339e8d9781ab41df",
+  "remote_process_running": false,
+  "rerun_policy": "ONE_REPAIR_RERUN_SAME_SCIENTIFIC_CONDITION_REQUIRED_AFTER_LAUNCHER_FIX",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+  "schema_version": 1,
+  "scientific_condition_id": "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+  "scientific_training_started": false,
+  "terminal_status": "INVALID_SUCCESS_RECEIPT_PRE_OPTIMIZER_FAILURE"
+}

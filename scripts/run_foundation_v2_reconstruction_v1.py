@@ -66,4 +66,5 @@ def main():
  rec={'schema_version':1,'record_type':'GPU_OPTIMIZER_INTERVAL','entry_id':f'RECONSTRUCTION_V1:{a.attempt}:{start}','gpu_optimizer_seconds':gpu_seconds,'wrapper_seconds':wrapper_seconds,'reason':reason,'evidence':{'exit_code':exit_code,'preflight_launch_binding_sha256':preflight['launch_binding_sha256'],'accounting_state':str(a.accounting_state),'remote_receipt_hash':'DUMMY' if a.dummy else 'REQUIRED_REMOTE_RECEIPT'}}
  append(rec,a.ledger,a.snapshot,a.interval)
  print(json.dumps({'status':reason,'training_started':not a.dummy,'scientific_gpu_training_seconds':gpu_seconds,'wrapper_runtime_seconds':wrapper_seconds,'optimizer_after_cap':False if reason.startswith('ACTIVE_CAP') else None}))
-if __name__=='__main__': main()
+ return 0 if exit_code == 0 else 1
+if __name__=='__main__': raise SystemExit(main())

@@ -53,8 +53,8 @@ def main() -> int:
     }
     try:
         binding = json.loads(raw.decode("utf-8"))
-        require(binding.get("schema_version") == 2, "INVALID_BINDING_SCHEMA")
-        require(binding.get("status") == "FROZEN_PENDING_GPU_RUNTIME_PREFLIGHT", "INVALID_BINDING_STATUS")
+        require(binding.get("schema_version") in {2, 3}, "INVALID_BINDING_SCHEMA")
+        require(binding.get("status") in {"FROZEN_PENDING_GPU_RUNTIME_PREFLIGHT", "FROZEN_PENDING_REPAIR_RERUN_PREFLIGHT"}, "INVALID_BINDING_STATUS")
         runtime = binding["runtime_contract"]
         require(Path(runtime["interpreter"]).resolve() == Path(sys.executable).resolve(), "WRONG_PYTHON_INTERPRETER")
         import torch  # import/version/CUDA inspection only; never construct a model

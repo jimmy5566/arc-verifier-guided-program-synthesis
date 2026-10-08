@@ -130,6 +130,16 @@ class Supervisor:
                 continue
             record["terminal_receipt_hash"] = digest
             record["terminal_status"] = status
+            # A scientific receipt can be emitted before the worker reaches an
+            # optimizer step.  Round/protocol identity therefore controls routing;
+            # ``scientific_training_started`` is evidence, never the classifier.
+            scientific_round = (
+                receipt.get("scientific_training_started") is True
+                or receipt.get("protocol_id") == "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1"
+                or round_id.startswith("RECONSTRUCTED_FOUNDATION_V2_V1_")
+            )
+            record["scientific_round"] = scientific_round
+            record["scientific_training_started"] = receipt.get("scientific_training_started") is True
             if not record.get("controller_notification_sent"):
                 notification = self.notification_dir / f"CONTROLLER_NOTIFICATION_{round_id}_{digest[:12]}.json"
                 atomic_json(notification, {
@@ -210,16 +220,24 @@ class Supervisor:
             record["controller_ack_path"] = str(acknowledgement.resolve())
             self.save()
 
-            prompt = (
-                f"ARC2 infrastructure-only notification {digest}. "
-                f"Read {notification.resolve()}. Do not start training and do not invoke Director. "
-                f"Write one acknowledgement JSON to {acknowledgement.resolve()} with exactly these fields: "
-                f'{{"schema_version":1,"round_id":"{round_id}",'
-                f'"terminal_receipt_hash":"{digest}","controller_role":"arc-controller",'
-                f'"acknowledged":true,"action":"DUMMY_NOTIFICATION_ACK_ONLY",'
-                f'"training_started":false}}. '
-                "If that matching acknowledgement already exists, do not rewrite it."
-            )
+            if record.get("scientific_round"):
+                prompt = (
+                    f"ARC2 scientific terminal receipt {digest}. Read {notification.resolve()} and its terminal receipt. "
+                    f"Write one acknowledgement JSON to {acknowledgement.resolve()} with the receipt identity, then resume the durable scientific execution state. "
+                    "Apply only the preregistered reconstruction equivalence gate; preserve all evidence, do not open FINAL_AUDIT, and do not retry or launch unrelated training. "
+                    "If equivalence is confirmed, continue only under the frozen targeted-repair protocol and remaining budget; otherwise create a Director escalation request."
+                )
+            else:
+                prompt = (
+                    f"ARC2 infrastructure-only notification {digest}. "
+                    f"Read {notification.resolve()}. Do not start training and do not invoke Director. "
+                    f"Write one acknowledgement JSON to {acknowledgement.resolve()} with exactly these fields: "
+                    f'{{"schema_version":1,"round_id":"{round_id}",'
+                    f'"terminal_receipt_hash":"{digest}","controller_role":"arc-controller",'
+                    f'"acknowledged":true,"action":"DUMMY_NOTIFICATION_ACK_ONLY",'
+                    f'"training_started":false}}. '
+                    "If that matching acknowledgement already exists, do not rewrite it."
+                )
             exit_code, error = prompt_controller(
                 ["herdr", "agent", "prompt", controller_agent, prompt], herdr_timeout_seconds,
             )

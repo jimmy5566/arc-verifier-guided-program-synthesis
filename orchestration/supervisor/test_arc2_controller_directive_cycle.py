@@ -131,6 +131,26 @@ class ControllerDirectiveCycleTest(unittest.TestCase):
             record = Supervisor(state_path, note).state["directives"][directive_id]
             self.assertEqual(1, record["director_escalation_wakeup_count"])
 
+    def test_scientific_terminal_receipt_is_not_routed_as_dummy_smoke(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw); receipts = root / "receipts"; notes = root / "notes"; acks = root / "acks"
+            scientific = "RECONSTRUCTED_FOUNDATION_V2_V1_001_RERUN_01"; smoke = "RECEIPT_MONITOR_SMOKE"
+            # The scientific failure receipt deliberately reports False: it still
+            # must route as scientific by its frozen protocol/round identity.
+            for round_id, started, protocol in ((scientific, False, "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1"), (smoke, False, "INFRA_SMOKE")):
+                path = receipts / f"ROUND_{round_id}" / f"ROUND_{round_id}_TERMINAL_RECEIPT.json"
+                write(path, {"round_id": round_id, "status": "TRAIN_FAILED", "scientific_training_started": started,
+                             "protocol_id": protocol})
+            supervisor = Supervisor(root / "state.json", notes)
+            discovered = supervisor.reconcile(receipts)
+            self.assertEqual({scientific, smoke}, set(discovered))
+            with patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")) as prompt:
+                self.assertEqual(set(discovered), set(supervisor.wake_controller_once(discovered, "arc-controller", acks, 1)))
+            prompts = {round_id: call.args[0][-1] for round_id, call in zip(discovered, prompt.call_args_list)}
+            self.assertIn("scientific terminal receipt", prompts[scientific])
+            self.assertNotIn("DUMMY_NOTIFICATION_ACK_ONLY", prompts[scientific])
+            self.assertIn("DUMMY_NOTIFICATION_ACK_ONLY", prompts[smoke])
+
 
 if __name__ == "__main__":
     unittest.main()
