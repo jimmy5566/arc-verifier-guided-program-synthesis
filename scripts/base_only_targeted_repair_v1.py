@@ -262,14 +262,87 @@ def launch(args: argparse.Namespace) -> int:
         raise RuntimeError("DIRECTOR_AUTHORIZATION_REQUIRED")
     if pre.get("base_reference_status") != "COLLECTED_PASS":
         raise RuntimeError("FROZEN_BASE_REFERENCE_REQUIRED_BEFORE_TRAINING")
-    raise RuntimeError("TRAINING_IMPLEMENTATION_REQUIRES_SEPARATE_REVIEWED_TRAIN_COMMAND")
+    if not all((args.binding, args.freeze, args.inputs, args.ledger)):
+        raise RuntimeError("TRAIN_LAUNCH_ARGUMENTS_INCOMPLETE")
+    binding_bytes = args.binding.read_bytes(); binding = json.loads(binding_bytes.decode("utf-8"))
+    if hashlib.sha256(binding_bytes).hexdigest() != pre.get("launch_binding_sha256"):
+        raise RuntimeError("PREFLIGHT_BINDING_IDENTITY_MISMATCH")
+    run_root = Path(binding["output"]["run_root"])
+    if run_root.exists():
+        raise RuntimeError("RUN_OUTPUT_PATH_ALREADY_EXISTS")
+    ledger_rows = [json.loads(line) for line in args.ledger.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if not ledger_rows or ledger_rows[0].get("cap_seconds") != CAP_SECONDS:
+        raise RuntimeError("SHARED_LEDGER_INVALID")
+    charged = sum(float(row.get("charged_training_seconds", 0.0)) for row in ledger_rows[1:])
+    remaining = CAP_SECONDS - charged
+    if remaining < RESERVATION_SECONDS:
+        raise RuntimeError("CUMULATIVE_BUDGET_RESERVATION_REJECTED")
+    run_root.mkdir(parents=True, exist_ok=False)
+    runtime, checkpoints = run_root / "runtime", run_root / "checkpoints"
+    runtime.mkdir(); checkpoints.mkdir()
+    write(runtime / "GPU_RESERVATION.json", {"status": "ACTIVE", "reservation_seconds": RESERVATION_SECONDS, "remaining_seconds_before_start": remaining, "ledger": str(args.ledger), "preflight_launch_binding_sha256": pre["launch_binding_sha256"]})
+    # Imports are intentionally below every Director, preflight, identity, and
+    # reservation gate.  No model or optimizer exists before this point.
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"; os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    import bitsandbytes as bnb
+    import torch
+    from peft import LoraConfig, get_peft_model
+    from transformers import AutoModelForCausalLM
+    if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported():
+        raise RuntimeError("CUDA_OR_BF16_UNAVAILABLE")
+    model = AutoModelForCausalLM.from_pretrained(binding["base_path"], local_files_only=True, torch_dtype=torch.bfloat16, attn_implementation="sdpa")
+    for parameter in model.parameters(): parameter.requires_grad = False
+    recipe = json.loads(args.freeze.joinpath("EXECUTION_CONFIG_ROUND_001.json").read_text(encoding="utf-8"))
+    model = get_peft_model(model, LoraConfig(r=recipe["lora_rank"], lora_alpha=recipe["lora_alpha"], lora_dropout=recipe["lora_dropout"], target_modules=recipe["target_modules"], bias="none", task_type="CAUSAL_LM"))
+    names = [name for name, value in model.named_parameters() if value.requires_grad]
+    if not names or any("lora_" not in name for name in names) or any(parameter.requires_grad for name, parameter in model.named_parameters() if "lora_" not in name):
+        raise RuntimeError("LORA_PARAMETER_PARTITION_INVALID")
+    samples = training_samples(args.inputs / "TRAIN.jsonl")
+    schedule = json.loads(args.freeze.joinpath("TRAINING_SCHEDULE_ROUND_001.json").read_text(encoding="utf-8"))
+    params = [parameter for parameter in model.parameters() if parameter.requires_grad]
+    optimizer = bnb.optim.PagedAdamW8bit(params, lr=float(recipe["learning_rate"]))
+    model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": True}); model.train()
+    started_ns = time.monotonic_ns(); deadline = time.monotonic() + min(RESERVATION_SECONDS, remaining)
+    total = supervised = 0; steps = 0; capped = False
+    try:
+        for step in range(int(schedule["optimizer_steps"])):
+            if time.monotonic() >= deadline: capped = True; break
+            group = schedule["episodes"][step * ACCUMULATION:(step + 1) * ACCUMULATION]
+            optimizer.zero_grad(set_to_none=True)
+            counts = [int(row["supervised_token_count"]) for row in group]
+            if sum(counts) <= 0: raise RuntimeError("ZERO_SUPERVISED_GROUP")
+            lr = float(recipe["learning_rate"]) * min(1.0, (step + 1) / 3.0)
+            for param_group in optimizer.param_groups: param_group["lr"] = lr
+            for row, count in zip(group, counts):
+                raw = samples[row["sample_id"]]
+                ids = torch.tensor([raw["input_ids"]], device="cuda:0", dtype=torch.long)
+                labels = torch.tensor([raw["labels"]], device="cuda:0", dtype=torch.long)
+                loss = model(input_ids=ids, labels=labels, use_cache=False).loss
+                if not bool(torch.isfinite(loss)): raise RuntimeError("NONFINITE_LOSS")
+                (loss * (count / sum(counts))).backward(); total += int(row["sequence_length"]); supervised += count
+            # This second check is the active cap: no optimizer work can occur
+            # after the reservation/global deadline, even if backprop finished.
+            if time.monotonic() >= deadline: capped = True; break
+            optimizer.step(); steps += 1
+            if total >= 250000 and not (checkpoints / "tokens_250000").exists(): model.save_pretrained(checkpoints / "tokens_250000")
+            write(runtime / "TRAINING_PROGRESS.json", {"status": "RUNNING", "optimizer_steps": steps, "actual_transformer_tokens": total, "actual_supervised_tokens": supervised, "deadline_reached": False})
+    finally:
+        model.save_pretrained(checkpoints / ("cap_finalize" if capped else "final"))
+        stopped_ns = time.monotonic_ns()
+        receipt = {"schema_version": 1, "protocol_id": PROTOCOL, "status": "CAP_REACHED_CHECKPOINTED" if capped else "COMPLETED", "optimizer_steps": steps, "actual_transformer_tokens": total, "actual_supervised_tokens": supervised, "no_optimizer_after_cap": capped, "parent_lineage": {"base_path": binding["base_path"], "base_file_manifest_sha256": digest(binding["base_files"]), "launch_binding_sha256": pre["launch_binding_sha256"]}, "lora_partition": {"trainable_parameter_names": names, "base_weights_frozen": True}}
+        write(runtime / "TERMINAL_RECEIPT.json", receipt)
+        record = {"round_id": "BASE_ONLY_ROUND_001", "attempt_id": args.attempt, "monotonic_start_ns": started_ns, "monotonic_stop_ns": stopped_ns, "charged_training_seconds": (stopped_ns - started_ns) / 1e9, "termination_reason": receipt["status"], "remote_receipt_hash": sha(runtime / "TERMINAL_RECEIPT.json"), "preflight_launch_binding_sha256": pre["launch_binding_sha256"]}
+        interval = runtime / "GPU_INTERVAL.json"; write(interval, record)
+        subprocess.run([sys.executable, str(ROOT / "scripts" / "record_targeted_capability_repair_gpu_time.py"), "--append-json", str(interval), "--ledger", str(args.ledger), "--snapshot", str(runtime / "GPU_LEDGER_SNAPSHOT.json")], check=True)
+        write(runtime / "GPU_RESERVATION.json", {"status": "FINALIZED", "charged_training_seconds": record["charged_training_seconds"], "termination": receipt["status"]})
+    return 0
 
 
 def main() -> int:
     p = argparse.ArgumentParser(); sub = p.add_subparsers(dest="mode", required=True)
     f = sub.add_parser("freeze"); f.add_argument("--train", type=Path, required=True); f.add_argument("--target-dev", type=Path, required=True); f.add_argument("--retention", type=Path, required=True); f.add_argument("--final-audit", type=Path, required=True); f.add_argument("--output", type=Path, required=True); f.add_argument("--remote-inputs", type=str, required=True); f.add_argument("--run-root", type=str, required=True)
     q = sub.add_parser("preflight"); q.add_argument("--binding", type=Path, required=True); q.add_argument("--freeze", type=Path, required=True); q.add_argument("--source-root", type=Path, required=True); q.add_argument("--base", type=Path, required=True); q.add_argument("--inputs", type=Path, required=True); q.add_argument("--run-root", type=Path, required=True); q.add_argument("--ledger", type=Path, required=True); q.add_argument("--output", type=Path, required=True)
-    l = sub.add_parser("launch"); l.add_argument("--preflight", type=Path, required=True); l.add_argument("--authorization", type=Path); l.add_argument("--dummy", action="store_true"); l.add_argument("--dummy-seconds", type=float, default=0.05); l.add_argument("--output", type=Path, required=True)
+    l = sub.add_parser("launch"); l.add_argument("--preflight", type=Path, required=True); l.add_argument("--binding", type=Path); l.add_argument("--freeze", type=Path); l.add_argument("--inputs", type=Path); l.add_argument("--ledger", type=Path); l.add_argument("--attempt", default="UNSET"); l.add_argument("--authorization", type=Path); l.add_argument("--dummy", action="store_true"); l.add_argument("--dummy-seconds", type=float, default=0.05); l.add_argument("--output", type=Path, required=True)
     args = p.parse_args()
     return freeze(args) if args.mode == "freeze" else preflight(args) if args.mode == "preflight" else launch(args)
 
