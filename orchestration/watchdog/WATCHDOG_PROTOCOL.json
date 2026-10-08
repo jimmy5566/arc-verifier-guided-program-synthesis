@@ -2,6 +2,6 @@
   "schema_version": 1,
   "role": "non-scientific process watchdog",
   "watches": "arc2_supervisor.py only",
-  "restart_policy": "bounded exponential backoff; durable restart counter",
+  "restart_policy": "bounded exponential backoff; durable restart counter; exits quietly when the minimal workflow state is terminal",
   "forbidden": ["scientific decisions", "receipt interpretation", "model invocation", "GPU work"]
 }
