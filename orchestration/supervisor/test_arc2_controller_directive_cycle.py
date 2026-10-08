@@ -147,6 +147,7 @@ class ControllerDirectiveCycleTest(unittest.TestCase):
             supervisor.state["rounds"][scientific]["controller_ack_path"] = str(ack); supervisor.save()
             self.assertEqual([], supervisor.acknowledge_controller_cycles(acks))
             self.assertFalse(supervisor.state["rounds"][scientific]["controller_cycle_complete"])
+            self.assertFalse(Supervisor(root / "state.json", notes).state["rounds"][scientific]["controller_cycle_complete"])
             with patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")) as prompt:
                 self.assertEqual([scientific], supervisor.detect_scientific_state_conflicts(receipts, acks, escalation, "arc-director", 1))
                 self.assertEqual([], supervisor.detect_scientific_state_conflicts(receipts, acks, escalation, "arc-director", 1))
@@ -157,7 +158,9 @@ class ControllerDirectiveCycleTest(unittest.TestCase):
             self.assertEqual("SCIENTIFIC_STATE_CONFLICT", conflict["escalation_type"])
             self.assertEqual("SCIENTIFIC", conflict["expected_round_class"])
             self.assertEqual("ACK_ONLY", conflict["observed_round_class"])
+            self.assertEqual("DUMMY_NOTIFICATION_ACK_ONLY", conflict["controller_acknowledgement_action"])
             self.assertEqual(0.0, conflict["gpu_seconds_charged"])
+            self.assertFalse(Supervisor(root / "state.json", notes).state["rounds"][scientific]["controller_cycle_complete"])
             restarted = Supervisor(root / "state.json", notes)
             with patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")):
                 self.assertEqual([], restarted.detect_scientific_state_conflicts(receipts, acks, escalation, "arc-director", 1))

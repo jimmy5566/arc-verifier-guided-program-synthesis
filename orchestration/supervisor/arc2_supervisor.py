@@ -189,6 +189,7 @@ class Supervisor:
     def acknowledge_controller_cycles(self, acknowledgement_dir: Path) -> list[str]:
         """Record matching Controller acknowledgements without interpreting science."""
         acknowledged: list[str] = []
+        changed = False
         for round_id, record in self.state["rounds"].items():
             acknowledgement = record.get("controller_ack_path")
             if not acknowledgement or record.get("controller_cycle_complete"):
@@ -210,6 +211,7 @@ class Supervisor:
                 and value.get("training_started") is False
             ):
                 record["controller_acknowledged"] = True
+                changed = True
                 # Receipt acknowledgement cannot terminate a scientific Controller
                 # cycle.  In particular, a legacy dummy acknowledgement is a
                 # conflict signal, never completion authority.
@@ -220,7 +222,7 @@ class Supervisor:
                     continue
                 record["controller_cycle_complete"] = True
                 acknowledged.append(round_id)
-        if acknowledged:
+        if changed:
             self.save()
         return acknowledged
 
@@ -370,6 +372,9 @@ class Supervisor:
                 "supervisor_notification_sha256": canonical_hash(notification_path) if notification_path.is_file() else None,
                 "current_controller_state": controller_state,
                 "expected_controller_state": "WAITING_REMOTE_JOB_OR_SCIENTIFIC_CONTINUATION",
+                "controller_acknowledgement_path": str(acknowledgement.resolve()) if acknowledgement.exists() else None,
+                "controller_acknowledgement_sha256": canonical_hash(acknowledgement) if acknowledgement.is_file() else None,
+                "controller_acknowledgement_action": acknowledgement_value.get("action"),
                 "optimizer_steps": receipt.get("optimizer_steps", 0),
                 "scientific_training_started": receipt.get("scientific_training_started") is True,
                 "gpu_seconds_charged": receipt.get("scientific_gpu_training_seconds", 0.0),
@@ -383,6 +388,8 @@ class Supervisor:
                 "scientific_state_conflict_reserved": True,
                 "scientific_state_conflict_request_path": str(request.resolve()),
                 "scientific_state_conflict_round_class": {"expected": expected, "observed": observed},
+                "controller_cycle_complete": False,
+                "controller_lifecycle_state": "SCIENTIFIC_STATE_CONFLICT_WAITING_DIRECTOR",
                 "director_escalation_reserved": True,
                 "director_escalation_request_path": str(request.resolve()),
                 "director_escalation_reason": ["SCIENTIFIC_STATE_CONFLICT"],
