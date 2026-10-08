@@ -1,0 +1,22 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_006",
+  "gpu_training_started": false,
+  "preflight_fail_closed": {
+    "failure": "REQUIRED_FILE_MISSING:/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/targeted_capability_repair_v1/data/RETENTION_SENTINEL.jsonl",
+    "next_action": "Director review required; do not mount, substitute, or train without a reviewed resolution.",
+    "no_optimizer_constructed": true,
+    "status": "FAIL_CLOSED"
+  },
+  "remote_reconciliation_mode": "LOW_FREQUENCY_RECONCILIATION",
+  "schema_version": 1,
+  "status": "PASS_WITH_MOUNTED_INPUT_HARD_BLOCK",
+  "supervisor_count": 1,
+  "supervisor_restart_via_watchdog": "PASS",
+  "test_count": 8,
+  "tests": [
+    "orchestration.supervisor.test_arc2_controller_directive_cycle",
+    "orchestration.supervisor.test_arc2_supervisor_utf8",
+    "orchestration.supervisor.test_reconstruction_runtime_controls"
+  ],
+  "watchdog_count": 1
+}
