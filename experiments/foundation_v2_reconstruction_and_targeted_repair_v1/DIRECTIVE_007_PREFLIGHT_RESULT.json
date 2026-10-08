@@ -1,0 +1,7 @@
+{
+  "failure": "RuntimeError:REQUIRED_FILE_MISSING:/root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/arc_training_v2_1/train/replay/replay-00000.parquet",
+  "launch_binding_sha256": "64eea821452fee93e007c12ee5eb6c427195d004a3e4eeb0173b5efd37159619",
+  "no_optimizer_constructed": true,
+  "schema_version": 1,
+  "status": "FAIL_CLOSED"
+}

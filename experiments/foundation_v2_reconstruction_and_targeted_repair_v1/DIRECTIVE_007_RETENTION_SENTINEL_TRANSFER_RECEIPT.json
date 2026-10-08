@@ -1,0 +1,17 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_007",
+  "final_remote_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/targeted_capability_repair_v1/data/RETENTION_SENTINEL.jsonl",
+  "final_remote_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+  "local_source_bytes": 237564,
+  "local_source_path": "experiments/targeted_capability_repair_v1/data/RETENTION_SENTINEL.jsonl",
+  "local_source_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+  "method": "GZIP_TRANSPORT_ENVELOPE_BYTE_PRESERVING",
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "remote_verified_bytes": 237564,
+  "schema_version": 1,
+  "status": "PASS",
+  "temporary_remote_staging_verified_before_atomic_placement": true,
+  "training_started": false,
+  "transfer_semantics": "Transport compression only; final bytes were not regenerated, edited, normalized, substituted, or deserialized for transformation."
+}

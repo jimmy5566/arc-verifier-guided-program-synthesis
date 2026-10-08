@@ -1,0 +1,42 @@
+{
+  "brief_id": "DIRECTOR_BRIEF_008",
+  "completed": [
+    "Transferred the one Director-authorized exact local retention sentinel through a temporary remote staging path, verified bytes and SHA256 remotely, then atomically placed it.",
+    "Regenerated the reviewed launch binding after fixing its checked-out source-root parity check and reran the mounted-input preflight from the beginning.",
+    "Verified fresh local, origin, and RunPod source equality for the reviewed preflight binding commit."
+  ],
+  "directive_in_response": "DIRECTOR_DIRECTIVE_007",
+  "evidence_files": {
+    "DIRECTIVE_007_PREFLIGHT_RESULT.json": "4f382381e6a2db5116ec8fb6c7799aa7903cf2ab8a4f2ca1adca0e1cf3c10846",
+    "DIRECTIVE_007_RETENTION_SENTINEL_TRANSFER_RECEIPT.json": "ffc2aa352c9a4d838e89bad8d0ac5a7a5d783f8f4e3cc41ee8ef902fbe533947",
+    "DIRECTIVE_007_SOURCE_PARITY.json": "5a09920181e7ed075380dddc95b60c9b239fb431878d74f64000e6a6ec7af7d5",
+    "RECONSTRUCTION_LAUNCH_BINDING_V1.json": "64eea821452fee93e007c12ee5eb6c427195d004a3e4eeb0173b5efd37159619",
+    "RECONSTRUCTION_PROTOCOL_PACKAGE_MANIFEST_V2.json": "c645137e980ef3aafda1055e277ff0a3a66e0e9985d78c962e48e989b85e43ca"
+  },
+  "gpu_training_started": false,
+  "hard_blocker": {
+    "failure": "REQUIRED_FILE_MISSING:/root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/arc_training_v2_1/train/replay/replay-00000.parquet",
+    "next_action": "Director review required. The Directive 007 sentinel-only transfer authorization does not authorize locating, transferring, substituting, or regenerating the frozen replay shard.",
+    "no_optimizer_constructed": true,
+    "status": "FAIL_CLOSED"
+  },
+  "preflight": {
+    "execution": "Full rerun from the beginning after exact sentinel placement.",
+    "remote_output_bytes": 347,
+    "remote_output_sha256": "4f382381e6a2db5116ec8fb6c7799aa7903cf2ab8a4f2ca1adca0e1cf3c10846",
+    "status": "FAIL_CLOSED"
+  },
+  "runpod_source_parity": {
+    "local": "0429dc396d6534e1bad4cfd0eab8ee661aeb2d6e",
+    "origin_fresh_ls_remote": "0429dc396d6534e1bad4cfd0eab8ee661aeb2d6e",
+    "runpod": "0429dc396d6534e1bad4cfd0eab8ee661aeb2d6e",
+    "status": "PASS"
+  },
+  "schema_version": 1,
+  "scope": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "status": "REQUIRE_REPLAY_IDENTITY_REMEDIATION_REVIEW",
+  "tests": {
+    "count": 9,
+    "status": "PASS"
+  }
+}
