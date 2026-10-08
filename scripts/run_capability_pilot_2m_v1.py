@@ -343,8 +343,30 @@ def train_worker(args: argparse.Namespace) -> int:
     accounting_path = Path(accounting_raw) if accounting_raw else None
     accounting = {"schema_version": 1, "status": "READY", "completed_optimizer_training_seconds": 0.0, "last_completed_optimizer_step": 0, "active_optimizer_step_started_monotonic_ns": None}
     run_started = time.perf_counter()
+    # The launcher reserves a hard 7,200-second window.  This earlier soft
+    # deadline is checked before every new optimizer step so the worker can
+    # save a coherent checkpoint and exit before the wrapper must interrupt it.
+    deadline_raw = os.environ.get("ARC2_OPTIMIZER_SOFT_DEADLINE_MONOTONIC_NS")
+    optimizer_soft_deadline_ns = int(deadline_raw) if deadline_raw else None
     last_group_loss = None
     for step_index in range(schedule["optimizer_steps"]):
+        if optimizer_soft_deadline_ns is not None and time.monotonic_ns() >= optimizer_soft_deadline_ns:
+            checkpoint = args.checkpoints / f"cap_stop_tokens_{tokens}"
+            checkpoint.mkdir(parents=True, exist_ok=False)
+            model.save_pretrained(checkpoint)
+            result = {
+                "status": "CAP_STOPPED", "actual_transformer_tokens": tokens,
+                "actual_supervised_tokens": supervised_tokens, "optimizer_steps": step_index,
+                "training_wall_seconds": train_seconds, "total_wall_seconds": time.perf_counter() - run_started,
+                "cap_stop_checkpoint": str(checkpoint), "parameter_partition": partition,
+            }
+            atomic_json(args.runtime / "TRAINING_RESULT.json", result)
+            write_optimizer_accounting(accounting_path, {**accounting, "status": "CAP_STOPPED"})
+            atomic_json(args.runtime / "TRAINING_PROGRESS.json", {"status": "CAP_STOPPED", **{key: result[key] for key in ("actual_transformer_tokens", "actual_supervised_tokens", "optimizer_steps")}})
+            del model, optimizer
+            gc.collect()
+            torch.cuda.empty_cache()
+            return 0
         group_meta = schedule["episodes"][step_index * 4:(step_index + 1) * 4]
         group = []
         for meta in group_meta:
