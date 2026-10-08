@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Freeze and verify the one-shot forward-baseline evaluation launch contract.
 
 This utility is deliberately read-only with respect to models and datasets.  It
@@ -56,7 +56,8 @@ def create(a: argparse.Namespace) -> int:
     for p in (collector,prompt,parser,contract):
         if not p.is_file(): raise RuntimeError(f"REQUIRED_SOURCE_MISSING:{p}")
     root=Path(a.output_root)
-    if any(p.exists() for p in (root, Path(a.receipt), Path(a.nonce))): raise RuntimeError("FRESH_OUTPUT_NONCE_COLLISION")
+    if any(p.exists() for p in (root, Path(a.receipt))): raise RuntimeError("FRESH_OUTPUT_COLLISION")
+    if not Path(a.nonce).is_file(): raise RuntimeError("FRESH_NONCE_MISSING")
     payload={"schema_version":1,"contract_id":"FORWARD_BASELINE_EVALUATION_LAUNCH_V1","directive_id":"DIRECTOR_DIRECTIVE_028","directive_sha256":a.directive_sha256,"reviewed_brief_sha256":a.brief_sha256,"baseline_identity_sha256":BASELINE_SHA,"source_commit":git_head(source),"source_root":str(source),"checkpoint_manifest_path":str(mp),"checkpoint_manifest_sha256":digest(mp),"checkpoint_manifest_identity":manifest["manifest_sha256"],"datasets":{"TARGET_DEV":td,"RETENTION_SENTINEL":rt},"inference_contract":{"path":str(contract),"sha256":digest(contract),"expected_sha256":INFERENCE_SHA},"executable":{"path":str(collector),"sha256":digest(collector)},"dependencies":{"prompt_template":{"path":str(prompt),"sha256":digest(prompt)},"parser":{"path":str(parser),"sha256":digest(parser)}},"interpreter":a.interpreter,"argv":[a.interpreter,str(collector),"--launch-contract",str(Path(a.output).resolve()),"--output",str(root/"CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json"),"--receipt",str(Path(a.receipt).resolve())],"environment":{"PYTHONHASHSEED":"0","TOKENIZERS_PARALLELISM":"false","CUDA_VISIBLE_DEVICES":"0"},"runtime_cap_seconds":int(a.runtime_cap_seconds),"nonce_path":str(Path(a.nonce).resolve()),"nonce_sha256":a.nonce_sha256,"output_root":str(root.resolve()),"receipt_path":str(Path(a.receipt).resolve()),"forbidden":{"training":True,"optimizer":True,"lora_construction":True,"final_audit":True,"diagnostic_gold_training":True,"automatic_follow_on_training":True},"authorization":{"evaluation_authorized":False,"required_directive_decision":"CONTINUE_OR_CONTINUE_WITH_WARNING"},"expected":{"target_dev_rows":192,"retention_rows":96,"total_rows":288},"status":"FROZEN_PENDING_LAUNCH_AUTHORIZATION"}
     payload["contract_sha256"]=digest_bytes(canon({k:v for k,v in payload.items() if k!="contract_sha256"}))
     atomic(Path(a.output),payload); print(json.dumps({"status":"PASS","contract_sha256":payload["contract_sha256"]},sort_keys=True)); return 0
