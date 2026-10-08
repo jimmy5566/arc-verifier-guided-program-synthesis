@@ -37,9 +37,8 @@ def consume_once(path:Path,payload:dict)->None:
  with os.fdopen(fd,'w',encoding='utf8',newline='\n') as f:json.dump(payload,f,sort_keys=True);f.write('\n')
 def required(cond:bool,msg:str)->None:
  if not cond:raise RuntimeError(msg)
-def main()->int:
- a=argparse.ArgumentParser();a.add_argument('--binding',type=Path,required=True);a.add_argument('--contract',type=Path,required=True);a.add_argument('--gate',type=Path,required=True);a.add_argument('--preflight',type=Path,required=True);a.add_argument('--launch-receipt',type=Path,required=True);args=a.parse_args()
- b,bsha=read(a.binding);c,csha=read(a.contract);g,gsha=read(a.gate);p,psha=read(a.preflight); paths=b['fresh_paths']; bc=b['budget_contract']; rid=b['round_id']
+def launch(args: argparse.Namespace)->int:
+ b,bsha=read(args.binding);c,csha=read(args.contract);g,gsha=read(args.gate);p,psha=read(args.preflight); paths=b['fresh_paths']; bc=b['budget_contract']; rid=b['round_id']
  required(c['launch_binding_sha256']==bsha and g['contract_sha256']==csha,'CONTRACT_OR_GATE_BINDING_MISMATCH')
  required(g.get('GPU_GATE_READY') is True and g.get('AUTO_SCIENTIFIC_EXECUTION_AUTHORIZED') is True,'MINIMUM_SAFE_GATE_NOT_AUTHORIZED')
  required(g.get('preflight_sha256')==psha and p.get('status')=='PASS','STALE_OR_FAILED_PREFLIGHT')
@@ -73,4 +72,26 @@ def main()->int:
  success=proc.returncode==0 and result.get('status')=='PASS' and steps>0 and tokens>0 and gpu>0 and bool(checkpoints)
  status='SUCCESS' if success else ('INFRA_PRE_OPTIMIZER_FAILURE' if steps==0 else 'EARLY_RUNTIME_FAILURE')
  receipt={'schema_version':2,'round_id':rid,'protocol_id':b['protocol_id'],'round_class':'SCIENTIFIC','status':status,'worker_exit_code':proc.returncode,'wrapper_exit_code':0 if success else 1,'optimizer_steps':steps,'processed_tokens':tokens,'scientific_gpu_training_seconds':gpu,'wrapper_seconds':(stop-start_wall)/1e9,'ledger_snapshot_sha256':sha(snap),'ledger_sha256':sha(led),'checkpoint_identities':checkpoints,'training_result_sha256':sha(result_path) if result_path.is_file() else None,'progress_sha256':sha(progress_path) if progress_path.is_file() else None,'contract_sha256':csha,'binding_sha256':bsha,'launch_nonce':c['launch_nonce'],'preflight_sha256':psha,'final_audit_accessed':False,'scientific_training_started':steps>0,'cap_reason':cap_reason};atomic(Path(paths['terminal_receipt']),receipt);atomic(args.launch_receipt,{'schema_version':1,'status':'DETACHED_LAUNCH_WRAPPER_COMPLETE','round_id':rid,'terminal_receipt':paths['terminal_receipt'],'terminal_receipt_sha256':sha(Path(paths['terminal_receipt'])), 'scientific_training_started':steps>0});return 0 if success else 1
+def main() -> int:
+ parser=argparse.ArgumentParser()
+ parser.add_argument('--binding',type=Path,required=True);parser.add_argument('--contract',type=Path,required=True)
+ parser.add_argument('--gate',type=Path,required=True);parser.add_argument('--preflight',type=Path,required=True)
+ parser.add_argument('--launch-receipt',type=Path,required=True)
+ args=parser.parse_args()
+ try:
+  return launch(args)
+ except Exception as exc:
+  # A wrapper failure before worker dispatch is itself a terminal, zero-charge
+  # scientific round result. Never leave it indistinguishable from a running job.
+  try:
+   b,bsha=read(args.binding); c,csha=read(args.contract); paths=b['fresh_paths']
+   state=Path(paths['accounting_state']); gpu=interval_seconds(state,time.monotonic_ns())
+   receipt={'schema_version':2,'round_id':b['round_id'],'protocol_id':b['protocol_id'],'round_class':'SCIENTIFIC','status':'INFRA_PRE_OPTIMIZER_FAILURE' if gpu==0 else 'EARLY_RUNTIME_FAILURE','worker_exit_code':None,'wrapper_exit_code':1,'optimizer_steps':0,'processed_tokens':0,'scientific_gpu_training_seconds':gpu,'wrapper_error':f'{type(exc).__name__}:{exc}','contract_sha256':csha,'binding_sha256':bsha,'launch_nonce':c.get('launch_nonce'),'final_audit_accessed':False,'scientific_training_started':gpu>0}
+   terminal=Path(paths['terminal_receipt'])
+   if not terminal.exists(): atomic(terminal,receipt)
+   atomic(args.launch_receipt,{'schema_version':1,'status':'WRAPPER_FAILED_TERMINAL_RECEIPT_WRITTEN','round_id':b['round_id'],'terminal_receipt':str(terminal),'terminal_receipt_sha256':sha(terminal),'scientific_training_started':gpu>0})
+  except Exception:
+   pass
+  print(f'{type(exc).__name__}:{exc}',file=sys.stderr)
+  return 1
 if __name__=='__main__':raise SystemExit(main())

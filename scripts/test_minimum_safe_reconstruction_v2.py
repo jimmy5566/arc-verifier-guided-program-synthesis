@@ -19,4 +19,8 @@ class MinimumSafeLaunchTest(unittest.TestCase):
   self.assertNotIn("add_argument('command'",text)
   self.assertIn("b['worker_binding']['pipeline']['prepare_argv']",text)
   self.assertIn("b['worker_binding']['pipeline']['train_argv']",text)
+ def test_wrapper_uses_parsed_arguments_and_terminal_failure_path(self):
+  text=(ROOT/'scripts'/'launch_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
+  self.assertIn('read(args.binding)',text)
+  self.assertIn('WRAPPER_FAILED_TERMINAL_RECEIPT_WRITTEN',text)
 if __name__=='__main__':unittest.main()
