@@ -14,6 +14,7 @@ import gzip
 import hashlib
 import json
 import os
+import sys
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -132,13 +133,43 @@ def finalize(staging_root: Path, destination: Path, manifest: dict[str, Any], fi
         if temporary is not None: temporary.unlink(missing_ok=True)
 
 
+def serve(staging_root: Path) -> int:
+    """Process bounded ASCII frames on an already-established forced PTY.
+
+    A frame is base64(JSON) so the terminal only receives ASCII.  The daemon
+    does no content parsing; it delegates byte checks to ``receive`` and
+    ``finalize`` and emits one JSON acknowledgement per frame.
+    """
+    print(json.dumps({"status": "READY", "schema_version": SCHEMA}, sort_keys=True), flush=True)
+    for raw_line in sys.stdin:
+        try:
+            frame = json.loads(base64.b64decode(raw_line.strip(), validate=True).decode("ascii", errors="strict"))
+            if not isinstance(frame, dict) or frame.get("op") not in {"receive", "finalize"}:
+                raise RuntimeError("TRANSPORT_FRAME_INVALID")
+            manifest = decode_manifest(str(frame["manifest_b64"]))
+            if frame["op"] == "receive":
+                if set(frame) != {"op", "manifest_b64", "index", "chunk_b64"}:
+                    raise RuntimeError("TRANSPORT_RECEIVE_FRAME_FIELDS_INVALID")
+                value = receive(staging_root, manifest, int(frame["index"]), str(frame["chunk_b64"]))
+            else:
+                if set(frame) != {"op", "manifest_b64", "destination", "final_audit"}:
+                    raise RuntimeError("TRANSPORT_FINALIZE_FRAME_FIELDS_INVALID")
+                value = finalize(staging_root, Path(str(frame["destination"])), manifest, bool(frame["final_audit"]))
+        except Exception as exc:
+            value = {"status": "REJECTED", "error": str(exc), "error_type": type(exc).__name__}
+        print(json.dumps(value, sort_keys=True), flush=True)
+    return 0
+
+
 def main() -> int:
     p = argparse.ArgumentParser(); sub = p.add_subparsers(dest="mode", required=True)
     b = sub.add_parser("build"); b.add_argument("--source", type=Path, required=True); b.add_argument("--manifest", type=Path, required=True); b.add_argument("--envelope", type=Path, required=True); b.add_argument("--chunk-size", type=int, default=CHUNK_SIZE)
     r = sub.add_parser("receive"); r.add_argument("--staging-root", type=Path, required=True); r.add_argument("--manifest-b64", required=True); r.add_argument("--index", type=int, required=True); r.add_argument("--chunk-b64", required=True)
     f = sub.add_parser("finalize"); f.add_argument("--staging-root", type=Path, required=True); f.add_argument("--destination", type=Path, required=True); f.add_argument("--manifest-b64", required=True); f.add_argument("--final-audit", action="store_true")
+    s = sub.add_parser("serve"); s.add_argument("--staging-root", type=Path, required=True)
     args = p.parse_args()
     if args.mode == "build": value = build(args.source, args.manifest, args.envelope, args.chunk_size); print(json.dumps({"status":"BUILT", "manifest_sha256":sha_file(args.manifest), "chunk_count":value["chunk_count"]}, sort_keys=True)); return 0
+    if args.mode == "serve": return serve(args.staging_root)
     manifest = decode_manifest(args.manifest_b64)
     value = receive(args.staging_root, manifest, args.index, args.chunk_b64) if args.mode == "receive" else finalize(args.staging_root, args.destination, manifest, args.final_audit)
     print(json.dumps(value, sort_keys=True)); return 0

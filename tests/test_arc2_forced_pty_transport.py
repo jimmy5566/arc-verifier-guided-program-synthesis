@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import tempfile
 import unittest
@@ -41,3 +42,24 @@ class ForcedPtyTransportTests(unittest.TestCase):
             dest = root / "dest" / source.name; dest.parent.mkdir(); dest.write_bytes(b"wrong")
             with self.assertRaisesRegex(RuntimeError, "DESTINATION_CONFLICT"): m.finalize(stage, dest, manifest, False)
             self.assertEqual(dest.read_bytes(), b"wrong")
+
+    def test_persistent_ascii_frames_acknowledge_without_content_parsing(self) -> None:
+        m = module()
+        with tempfile.TemporaryDirectory() as root:
+            root = Path(root); source = root / "canary.jsonl"; source.write_bytes(b"opaque-bytes\x00UTF-8-\xe9\x8e\xba")
+            manifest_path = root / "manifest"; envelope_path = root / "envelope"; manifest = m.build(source, manifest_path, envelope_path, 1024)
+            manifest_b64 = __import__('base64').b64encode(manifest_path.read_bytes()).decode()
+            chunk_b64 = __import__('base64').b64encode(envelope_path.read_bytes()).decode()
+            frames = [
+                {"op": "receive", "manifest_b64": manifest_b64, "index": 0, "chunk_b64": chunk_b64},
+                {"op": "finalize", "manifest_b64": manifest_b64, "destination": str(root / "dest" / source.name), "final_audit": True},
+            ]
+            stdin, stdout = io.StringIO("".join(__import__('base64').b64encode(json.dumps(frame, sort_keys=True, separators=(',', ':')).encode()).decode() + "\n" for frame in frames)), io.StringIO()
+            original_in, original_out = m.sys.stdin, m.sys.stdout
+            try:
+                m.sys.stdin, m.sys.stdout = stdin, stdout; self.assertEqual(m.serve(root / "stage"), 0)
+            finally:
+                m.sys.stdin, m.sys.stdout = original_in, original_out
+            replies = [json.loads(line) for line in stdout.getvalue().splitlines()]
+            self.assertEqual([reply["status"] for reply in replies], ["READY", "ACK", "PUBLISHED"])
+            self.assertTrue(replies[-1]["read_only"]); self.assertFalse(replies[-1]["content_deserialized"])
