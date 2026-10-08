@@ -1,0 +1,43 @@
+{
+  "created_without_model_or_gpu_work": true,
+  "final_audit_accessed": false,
+  "launch_authorized": false,
+  "launch_nonce": "3a52d466-e8ec-4d51-96d2-505853df2c2c",
+  "machine_gate_template_path": "SCIENTIFIC_EXECUTION_GATE.json",
+  "machine_gate_template_sha256": "f199ec13981b592867404ec2b58427878ae8d78191ac2478dfb644a42888b942",
+  "new_runtime_paths": {
+    "checkpoints": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1_002/checkpoints",
+    "run_root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1_002",
+    "runtime": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1_002/runtime",
+    "terminal_receipt": "/workspace/arc2/orchestration/rounds/ROUND_RECONSTRUCTED_FOUNDATION_V2_V1_002/ROUND_RECONSTRUCTED_FOUNDATION_V2_V1_002_TERMINAL_RECEIPT.json"
+  },
+  "parent_round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+  "parent_round_reused": false,
+  "parent_round_terminal_closure_sha256": "f70691d3511be0a681a336592cbfd9c00793500c4b1cd224314ba62bf5a41300",
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "recipe_binding_path": "RECONSTRUCTION_LAUNCH_BINDING_V2.json",
+  "recipe_binding_sha256": "73fecb89dd868e760b9da38a72b4c20ce266fb779fa6978d3eff4d7b381184a5",
+  "remote_precheck": {
+    "gpu": "0, 1, 24576",
+    "round001_accounting_state_exists": false,
+    "round001_processes": [],
+    "round002_processes": [],
+    "round002_run_directory_exists": false,
+    "source_head": "93a7324b22b5812a197e3bed170629fbf9e3fd7b"
+  },
+  "requires_exact_successor_directive": true,
+  "reservation_seconds": 7200,
+  "round_class": "SCIENTIFIC",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_002",
+  "schema_version": 1,
+  "scientific_condition_id": "FOUNDATION_V2_RECONSTRUCTION_FROZEN_RECIPE",
+  "scientific_gpu_seconds_before_launch": 0.0,
+  "scientific_parameters_changed": false,
+  "source_parity": {
+    "local_head": "93a7324b22b5812a197e3bed170629fbf9e3fd7b",
+    "origin_head": "93a7324b22b5812a197e3bed170629fbf9e3fd7b",
+    "pass": true,
+    "runpod_head": "93a7324b22b5812a197e3bed170629fbf9e3fd7b"
+  },
+  "status": "PENDING_DIRECTOR_SUCCESSOR_AUTHORIZATION"
+}

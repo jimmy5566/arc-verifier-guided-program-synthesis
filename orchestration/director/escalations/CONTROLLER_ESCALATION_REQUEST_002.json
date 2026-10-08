@@ -1,0 +1,28 @@
+{
+  "directive_precedence": "DIRECTOR_DIRECTIVE_016_TERMINAL_STOP_FOR_ROUND_001_AND_CLOSED_PROTOCOL",
+  "escalation_type": "SUCCESSOR_ROUND_AUTHORIZATION_REQUEST",
+  "no_gpu_work_performed_for_request": true,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "requested_constraints": [
+    "bind exact successor contract SHA256",
+    "CONTINUE or CONTINUE_WITH_WARNING",
+    "scientific_training_authorized=true",
+    "fresh unconsumed launch nonce",
+    "no re-opening or reuse of round001"
+  ],
+  "requested_decision": "ISSUE_QUALIFYING_SUCCESSOR_DIRECTIVE_ONLY_IF_002_IS_SCIENTIFICALLY_VIABLE",
+  "requested_scope": "RECONSTRUCTED_FOUNDATION_V2_V1_002",
+  "round001_optimizer_steps": 0,
+  "round001_preserved": true,
+  "round001_processed_tokens": 0,
+  "round001_scientific_gpu_seconds": 0.0,
+  "round001_terminal_closure_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\foundation_v2_reconstruction_and_targeted_repair_v1\\RECONSTRUCTED_FOUNDATION_V2_V1_001_TERMINAL_CLOSURE_DIRECTOR_016.json",
+  "round001_terminal_closure_sha256": "f70691d3511be0a681a336592cbfd9c00793500c4b1cd224314ba62bf5a41300",
+  "round_class": "SCIENTIFIC",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_002",
+  "schema_version": 1,
+  "scientific_protocol_changes_proposed": false,
+  "status": "ESCALATION_REQUESTED",
+  "successor_contract_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\foundation_v2_reconstruction_and_targeted_repair_v1\\RECONSTRUCTED_FOUNDATION_V2_V1_002_PROPOSED_SUCCESSOR_CONTRACT.json",
+  "successor_contract_sha256": "322488b26e20c539f9c625adefda9ce997d28dc342f9922aab6e57a70904869a"
+}
