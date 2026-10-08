@@ -1,0 +1,43 @@
+{
+  "arms": [
+    "CONTROL",
+    "TREATMENT"
+  ],
+  "denominators": {
+    "retention_sentinel": 96,
+    "target_dev": 192,
+    "total": 288
+  },
+  "execution_order": [
+    "CONTROL",
+    "TREATMENT"
+  ],
+  "forbidden": [
+    "NO_FINAL_AUDIT",
+    "NO_TRAINING",
+    "NO_TARGET_DEPENDENT_PARSER_SELECTION",
+    "NO_DUPLICATE_LIVE_EVALUATION"
+  ],
+  "frozen_condition": {
+    "batch1_validation_count": 32,
+    "batch_size": 32,
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "same_decoder_scorer_contract": "BASELINE_INFERENCE_CONTRACT_V2"
+  },
+  "next_after_both": "COMPUTE_FROZEN_PAIRED_ATOMIC_COMPOSITION_RETENTION_AND_SAME_COLOR_ANALYSIS",
+  "no_concurrent_gpu_inference": true,
+  "output_contract": {
+    "raw_token_evidence_required": true,
+    "receipt": "BASELINE_CHARACTERIZATION_RECEIPT.json",
+    "results": "CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json"
+  },
+  "schema_version": 1,
+  "stage_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1_EVALUATION",
+  "status": "FROZEN_READY_TO_EXECUTE"
+}
