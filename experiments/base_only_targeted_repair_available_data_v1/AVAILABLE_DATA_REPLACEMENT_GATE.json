@@ -1,0 +1,17 @@
+{
+  "checkpoint_selection": "Use TARGET_DEV paired n01/n10 and retention sentinel only; choose highest targeted net paired fixes, then lowest retention net harms, then earliest checkpoint token count.",
+  "equivalence_claim": "PROHIBITED",
+  "final_audit": "SEALED_AND_UNOPENED_UNTIL_FINAL_SELECTION",
+  "gate": "NEW_CONDITION_REPLACEMENT_GATE",
+  "hard_stops": [
+    "base_identity_uncertain",
+    "data_hash_or_split_mismatch",
+    "Eval60_Gold_or_diagnostic_Gold_in_training",
+    "final_audit_opened_early",
+    "checkpoint_identity_uncertain"
+  ],
+  "numeric_rules_source": "experiments/targeted_capability_repair_v1/protocol/FROZEN_NUMERIC_GATES_V1.json",
+  "retention_coverage": "Use the frozen 96-episode representative multi-section retention sentinel as evaluation-only; it replaces neither the unavailable historical replay shard nor Original Foundation-V2 retention evidence.",
+  "schema_version": 1,
+  "status": "FROZEN_PENDING_EXECUTABLE_AND_PREFLIGHT"
+}

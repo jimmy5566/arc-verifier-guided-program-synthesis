@@ -1,0 +1,65 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_009",
+  "decision": "NEW_SUBPROTOCOL_REQUIRED",
+  "scope": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "reasons": [
+    {
+      "area": "brief_and_evidence_integrity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_009 has SHA256 e827f36d91f65e1a7a8340265a566a40f22b57a58238f0ceb80255a56284a38c. Every brief-listed Directive 008 recovery, source-parity, directive, and acknowledgement artifact matches its declared SHA256."
+    },
+    {
+      "area": "bounded_replay_recovery",
+      "status": "FAIL_TERMINAL_FOR_CURRENT_PROTOCOL",
+      "finding": "The authorized search covered documented RunPod persistent roots to bounded depth, the main local repository, preservation and handoff roots, 14 registered worktrees, and 24 scoped archives. It found no replay-00000.parquet candidate and no bytes matching frozen SHA256 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc."
+    },
+    {
+      "area": "provisioning_and_preflight",
+      "status": "CORRECTLY_NOT_RUN",
+      "finding": "No replay provisioning or subsequent preflight rerun occurred because no exact candidate existed. Regeneration, substitution, normalization, or approximation would have violated the frozen recovery contract."
+    },
+    {
+      "area": "immutable_directive_chain",
+      "status": "PASS",
+      "finding": "The exact Directive 007, Response 007, Directive 008, and Response 008 bytes are now committed and hash-verified. The reviewed evidence also records local, fresh origin, and RunPod equality at commit 0c8850bc9e49ee4792908dcd317c9fa9153f5cf2."
+    },
+    {
+      "area": "current_protocol_viability",
+      "status": "STOPPED",
+      "finding": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1 claims reconstruction from a frozen recipe whose exact replay shard is unavailable. Rebuilding or replacing that shard would create a different data trajectory and cannot satisfy this protocol's identity contract."
+    },
+    {
+      "area": "decision_boundary",
+      "status": "NEW_SUBPROTOCOL_REQUIRED",
+      "finding": "The missing replay bytes terminate the current protocol, but they do not establish that every future Foundation or targeted-repair experiment is scientifically impossible. Any continuation must be a separately named condition with newly frozen data provenance and no claim of reproducing the unavailable recipe."
+    },
+    {
+      "area": "training_state",
+      "status": "PASS_NO_TRAINING",
+      "finding": "No provisioning, model loading, optimizer construction, GPU optimizer work, or GPU training occurred during the recovery cycle."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "CLOSE_CURRENT_RECONSTRUCTION_PROTOCOL",
+      "requirement": "Freeze FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1 as BLOCKED_FROZEN_REPLAY_IDENTITY_UNRECOVERABLE. Preserve all protocol, search, transfer, preflight, parity, directive, and acknowledgement artifacts unchanged. Do not launch this protocol."
+    },
+    {
+      "change_id": "NO_REPLAY_SUBSTITUTION_WITHIN_V1",
+      "requirement": "Do not regenerate, reconstruct, reserialize, approximate, or substitute replay-00000.parquet under the current protocol, and do not describe any future shard or adapter as equivalent to the missing frozen replay trajectory."
+    },
+    {
+      "change_id": "DEFINE_DISTINCT_DATA_AND_MODEL_CONDITION",
+      "requirement": "Any continuation must use a newly named subprotocol. Before requesting GPU authorization, freeze the actually available base, tokenizer, full weight identity, all training and evaluation data bytes, replay generation procedure and inputs if replay is newly generated, schedule, executable source, environment, command, output paths, and cumulative budget. The resulting adapter must have a new identity and may not claim reconstruction of Original Foundation-V2 or of this blocked recipe."
+    },
+    {
+      "change_id": "REVALIDATE_SCIENTIFIC_DESIGN",
+      "requirement": "Reassess data mix, retention coverage, capability targets, equivalence or replacement gate, stage compatibility, no-Gold and split isolation, sealed final audit, numeric selection rules, and checkpoint lineage for the new condition. Existing artifacts may be reused only with explicit byte provenance and stage compatibility."
+    },
+    {
+      "change_id": "NEW_DIRECTOR_REVIEW",
+      "requirement": "Submit a new hashed Controller brief for the distinct subprotocol after immutable local-origin-RunPod provenance parity and complete read-only preflight are established. No GPU work is authorized unless a later Director directive explicitly returns CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true."
+    }
+  ],
+  "scientific_training_authorized": false
+}

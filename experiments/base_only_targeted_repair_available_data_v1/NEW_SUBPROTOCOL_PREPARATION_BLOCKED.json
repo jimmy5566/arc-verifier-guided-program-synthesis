@@ -1,0 +1,15 @@
+{
+  "blocking_requirements": [
+    "A deterministic task tokenization and serialization contract for the JSONL synthetic surfaces has not been frozen.",
+    "No stage-compatible training executable currently consumes those JSONL surfaces; the historical capability-pilot executable requires the unavailable historical replay parquet and cannot be reused.",
+    "The newly selected TRAIN and evaluation bytes have not been mounted and hash-verified on RunPod, so a complete remote preflight cannot truthfully pass."
+  ],
+  "directive": "orchestration/director/directives/DIRECTOR_DIRECTIVE_009.json",
+  "gpu_training_started": false,
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_AVAILABLE_DATA_V1",
+  "schema_version": 1,
+  "status": "HARD_BLOCKED_PENDING_DIRECTOR_EXECUTION_CONTRACT_REVIEW",
+  "why_no_gpu_or_data_substitution": "The new condition must freeze a real executable and mounted bytes before GPU authorization. Reusing the replay-dependent historical executable or inventing an unreviewed serializer would weaken the distinct-condition contract."
+}

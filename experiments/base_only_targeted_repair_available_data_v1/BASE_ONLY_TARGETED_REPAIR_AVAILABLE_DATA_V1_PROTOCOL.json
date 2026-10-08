@@ -1,0 +1,43 @@
+{
+  "base_identity": {
+    "canonical_mounted_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "full_weight_tokenizer_identity_source": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_V2_RECIPE_FREEZE.json",
+    "full_weight_tokenizer_identity_source_sha256": "67d5f70bdf4925efa2b3218184ab587f36cf93e6d43860570e4e7caecfa60e8b"
+  },
+  "budget": {
+    "cumulative_cap_seconds": 28800,
+    "prior_actual_new_gpu_training_seconds": 0,
+    "reservation_before_any_launch_required": true
+  },
+  "data_condition": "AVAILABLE_SYNTHETIC_TARGETED_SURFACES_ONLY_NO_HISTORICAL_REPLAY",
+  "gpu_training_started": false,
+  "identity_claim": "NEW_BASE_ONLY_TARGETED_REPAIR_CONDITION",
+  "model_identity": "BASE_ONLY_TARGETED_REPAIR_AVAILABLE_DATA_V1",
+  "not_claimed": [
+    "Original Foundation-V2",
+    "RECONSTRUCTED_FOUNDATION_V2_V1",
+    "reproduction of the missing 3-to-1 Novel-to-replay trajectory",
+    "equivalence to any missing adapter"
+  ],
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_AVAILABLE_DATA_V1",
+  "recipe": {
+    "base_weights": "FROZEN",
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "lora_rank": 64,
+    "optimizer_family": "PagedAdamW8bit",
+    "precision": "BF16",
+    "quantization": "NONE",
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  },
+  "required_before_director_gpu_authorization": [
+    "freeze a deterministic schedule and tokenization/serialization contract for the new data condition",
+    "freeze and hash the executable source and resolved command",
+    "mount and hash every allowed training and evaluation file on RunPod",
+    "run the complete read-only preflight",
+    "establish fresh local-origin-RunPod source parity"
+  ],
+  "schema_version": 1,
+  "status": "NEW_SUBPROTOCOL_PREPARATION_PENDING_EXECUTABLE_AND_MOUNTED_PREFLIGHT",
+  "training_authorization": "DIRECTOR_CONTINUE_OR_CONTINUE_WITH_WARNING_AND_scientific_training_authorized_true_ONLY"
+}

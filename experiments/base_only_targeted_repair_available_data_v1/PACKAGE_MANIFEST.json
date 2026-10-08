@@ -1,0 +1,13 @@
+{
+  "files": {
+    "AVAILABLE_DATA_POLICY.json": "ec52df3ab9af27d7c0692685ef20ae18924600f9b0b5d2499fbe366615c41fff",
+    "AVAILABLE_DATA_REPLACEMENT_GATE.json": "6811568476040de78ea4c16a2ec2931f069c656e79aac56cf440f2325f32c8f4",
+    "BASE_ONLY_TARGETED_REPAIR_AVAILABLE_DATA_V1_PROTOCOL.json": "185f4b0d7f98f916fd138e04d64c5addefd9dfb7c112226dc874e89b55b02850",
+    "NEW_SUBPROTOCOL_PREPARATION_BLOCKED.json": "686d187d07d0261dc51b742226898243d5bb3d54e9b917e246334825a17610c0"
+  },
+  "gpu_training_started": false,
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_AVAILABLE_DATA_V1",
+  "schema_version": 1,
+  "scientific_boundary": "This is a distinct base-only condition. It does not reconstruct or substitute Original Foundation-V2 or its unavailable replay trajectory.",
+  "status": "FROZEN_PREPARATION_BLOCKED_NO_GPU"
+}

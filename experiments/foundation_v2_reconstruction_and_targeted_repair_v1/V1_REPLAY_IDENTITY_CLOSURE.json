@@ -1,0 +1,16 @@
+{
+  "directive": "orchestration/director/directives/DIRECTOR_DIRECTIVE_009.json",
+  "directive_sha256": "25c607a10317c48a2aee5d25a5eb818bebfaff05eaed85d5684cbd29b5d3242e",
+  "gpu_training_started": false,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "reason": "The exact required replay-00000.parquet SHA256 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc is unrecoverable after the Director-authorized bounded search.",
+  "recovery_record": "DIRECTIVE_008_REPLAY_RECOVERY_BLOCKED.json",
+  "schema_version": 1,
+  "status": "BLOCKED_FROZEN_REPLAY_IDENTITY_UNRECOVERABLE",
+  "successor_condition": "BASE_ONLY_TARGETED_REPAIR_AVAILABLE_DATA_V1",
+  "training_prohibitions": [
+    "Do not launch this protocol.",
+    "Do not regenerate, reserialize, approximate, substitute, or describe another replay shard as its frozen replay input.",
+    "Do not describe any future adapter as Original Foundation-V2 or as reconstructed from this blocked recipe."
+  ]
+}

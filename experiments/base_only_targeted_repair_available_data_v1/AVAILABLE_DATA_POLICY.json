@@ -1,0 +1,40 @@
+{
+  "allowed_data": {
+    "final_audit_sealed_evaluation_only": {
+      "path": "experiments/targeted_capability_repair_v1/data/FINAL_AUDIT_SEALED.jsonl",
+      "sha256": "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd"
+    },
+    "retention_sentinel_evaluation_only": {
+      "path": "experiments/targeted_capability_repair_v1/data/RETENTION_SENTINEL.jsonl",
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "target_dev_evaluation_only": {
+      "path": "experiments/targeted_capability_repair_v1/data/TARGET_DEV.jsonl",
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    },
+    "train": {
+      "path": "experiments/targeted_capability_repair_v1/data/TRAIN.jsonl",
+      "sha256": "97463689b4c47d912e20aa46fafe4c47b0e4ad538523ba8127145203f02acba1"
+    }
+  },
+  "frozen_surface_provenance": {
+    "source_preparation_manifest": "experiments/targeted_capability_repair_v1/PREPARATION_MANIFEST.json",
+    "stage_compatibility": "Synthetic programmatically-labelled surfaces are input-compatible for a new targeted-repair condition, but model-comparison claims must be limited because the starting model changes from Foundation-V2 to the exact frozen base."
+  },
+  "prohibited": [
+    "Eval60 Gold",
+    "diagnostic Gold",
+    "historical replay-00000.parquet or a substitute",
+    "FINAL_AUDIT before final checkpoint selection",
+    "TARGET_DEV or RETENTION_SENTINEL training labels"
+  ],
+  "scientific_boundary_checks": {
+    "diagnostic_episodes_used_as_training": false,
+    "eval60_gold_used": false,
+    "final_audit_model_accessed": false,
+    "programmatic_labels_only": true,
+    "split_identity_contract_source": "experiments/targeted_capability_repair_v1/protocol/TARGET_DATA_POLICY_V1.json"
+  },
+  "schema_version": 1,
+  "status": "FROZEN_AVAILABLE_DATA_BYTES"
+}
