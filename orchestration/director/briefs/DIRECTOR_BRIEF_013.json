@@ -1,0 +1,65 @@
+{
+  "brief_id": "DIRECTOR_BRIEF_013",
+  "budget": {
+    "cap_seconds": 28800,
+    "charged_seconds": 0,
+    "ledger": "orchestration/budget/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V4.jsonl",
+    "reservation_seconds": 7200
+  },
+  "closed_protocol": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1 remains closed",
+  "evidence": {
+    "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2_PROTOCOL.json": "3342b22222025b4517fffd644f3dbfc678fbc417dd2338705abffeb839cf4c53",
+    "PACKAGE_MANIFEST_V4.json": "bd9f9f2179acbf4188a6185b6e1877f51202e032011579058f90f78381db8cb6",
+    "REMOTE_DATA_ACTUAL_IDENTITY_V1.json": "964ee5ba16900e18f602c21c7a395f6d22f6df37a85835e22466ea37fc58c905",
+    "REMOTE_READ_ONLY_PREFLIGHT_V3.json": "e1b3113e6e0afbb3b096da1343cf734e8d6866a848036be144912eb32e0d1edc"
+  },
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2",
+  "remote_preflight": {
+    "base_reference_status": "NOT_COLLECTED_MODEL_LOADING_OR_GPU_EXECUTION_NOT_AUTHORIZED_BY_DIRECTIVE_010",
+    "launch_binding_sha256": "a675a39ac149803a5c3b00b89b2f91b5040193e017ccba30b0c098a8ca3bd673",
+    "launch_blocked_until_base_reference_and_director_authorization": true,
+    "no_model_loaded": true,
+    "no_optimizer_constructed": true,
+    "protocol_id": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2",
+    "schedule_steps": 193,
+    "schedule_tokens": 501693,
+    "schema_version": 1,
+    "source_commit": "25ed68f2cc68910358f975b71b332fc0803564c1",
+    "status": "PASS_TECHNICAL_BASE_REFERENCE_PENDING",
+    "verified_mounted_files": [
+      {
+        "bytes": 309234,
+        "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/FINAL_AUDIT_SEALED.jsonl",
+        "sha256": "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd"
+      },
+      {
+        "bytes": 237564,
+        "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+        "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+      },
+      {
+        "bytes": 465946,
+        "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+        "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+      },
+      {
+        "bytes": 9331951,
+        "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TRAIN.jsonl",
+        "sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+      }
+    ]
+  },
+  "request": "Review new available-data remote-first condition. GPU work remains forbidden unless a later CONTINUE or CONTINUE_WITH_WARNING sets scientific_training_authorized true.",
+  "runtime": {
+    "FORCED_PTY_LARGE_FILE_TRANSPORT": "NOT_REQUIRED_FOR_CURRENT_PROTOCOL",
+    "LOW_FREQUENCY_RECONCILIATION": "ACCEPTED",
+    "REMOTE_RECEIPT_MONITORING": "PASS"
+  },
+  "scientific_boundary": {
+    "final_audit_model_accessed": false,
+    "gpu_training_started": false,
+    "model_loaded": false,
+    "optimizer_constructed": false
+  },
+  "scientific_training_authorized": false
+}\n
