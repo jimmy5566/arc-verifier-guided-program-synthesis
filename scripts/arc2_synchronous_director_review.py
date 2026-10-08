@@ -60,20 +60,23 @@ def main() -> int:
     review = record.setdefault("synchronous_review", {})
     if review.get("status") == "DIRECTIVE_RECEIVED":
         print(json.dumps({"status": "DIRECTIVE_ALREADY_RECEIVED", "directive": review.get("result_directive")}, sort_keys=True)); return 0
+    existing_wait = review.get("status") == "DIRECT_PROMPT_SENT" or (
+        review.get("status") == "DIRECT_PROMPT_FAILED" and "timed out waiting for agent status" in str(review.get("error", ""))
+    )
     started = time.time()
-    review.update({"status": "DIRECT_PROMPT_SENT", "brief": str(args.brief.resolve()), "brief_sha256": brief_hash, "started_at": now(), "fallback_after_seconds": 120})
-    atomic(args.cycle_state, state)
+    if not existing_wait:
+        review.update({"status": "DIRECT_PROMPT_SENT", "brief": str(args.brief.resolve()), "brief_sha256": brief_hash, "started_at": now(), "fallback_after_seconds": 120})
+        atomic(args.cycle_state, state)
     prompt = (f"ARC2 synchronous Director review. Read {args.brief.resolve()} and write one structured directive. "
               "The Controller is waiting in this same cycle; do not request Supervisor handoff. No scientific execution is authorized by this prompt.")
     # Herdr's --wait is the authoritative completion primitive.  Do not submit
     # a prompt and then return control to the Supervisor/file watcher: this
     # process owns the short Controller -> Director -> Controller handoff.
-    sent = subprocess.run(
-        ["herdr", "agent", "prompt", args.director_agent, prompt,
-         "--wait", "--until", "idle", "--until", "done", "--until", "blocked",
-         "--timeout", str(args.timeout_seconds * 1000)],
-        capture_output=True, text=True, check=False, timeout=args.timeout_seconds + 15,
-    )
+    command = (["herdr", "agent", "wait", args.director_agent] if existing_wait
+               else ["herdr", "agent", "prompt", args.director_agent, prompt])
+    command += ["--wait"] if command[2:3] != ["wait"] else []
+    command += ["--until", "idle", "--until", "done", "--until", "blocked", "--timeout", str(args.timeout_seconds * 1000)]
+    sent = subprocess.run(command, capture_output=True, text=True, check=False, timeout=args.timeout_seconds + 15)
     if sent.returncode:
         review.update({"status": "DIRECT_PROMPT_FAILED", "error": (sent.stderr or sent.stdout)[-1000:], "failed_at": now()}); atomic(args.cycle_state, state); return 1
     # The blocking Herdr call has returned.  Allow a short filesystem commit

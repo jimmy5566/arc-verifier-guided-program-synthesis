@@ -53,6 +53,18 @@ class SynchronousDirectorReviewTest(unittest.TestCase):
             self.assertEqual("PROCESSING", record["state"])
             self.assertEqual("PROCESS_DIRECTOR_DIRECTIVE", record["next_step"])
 
+    def test_timeout_resumes_existing_director_without_duplicate_prompt(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw); directory = root / "directives"; directory.mkdir(); brief = root / "brief.json"; brief.write_text("{}\n", encoding="utf-8")
+            digest = hashlib.sha256(brief.read_bytes()).hexdigest(); state = root / "state.json"
+            state.write_text(json.dumps({"schema_version":1,"directives":{"P":{"state":"WAITING_DIRECTOR_ACTIVE","synchronous_review":{"status":"DIRECT_PROMPT_FAILED","brief_sha256":digest,"error":"timed out waiting for agent status"}}}}), encoding="utf-8")
+            def wait_only(command, **_kwargs):
+                self.assertEqual(["herdr","agent","wait","arc-director"], command[:4])
+                (directory / "DIRECTOR_DIRECTIVE_RESULT.json").write_text(json.dumps({"directive_id":"DIRECTOR_DIRECTIVE_RESULT","decision":"REQUIRE_CHANGES","reviewed_brief_sha256":digest}), encoding="utf-8")
+                return SimpleNamespace(returncode=0,stdout="",stderr="")
+            argv=["review","--brief",str(brief),"--cycle-state",str(state),"--parent-directive-id","P","--directive-dir",str(directory),"--timeout-seconds","2"]
+            with patch.object(sys,"argv",argv),patch.object(sync_review.subprocess,"run",side_effect=wait_only): self.assertEqual(0,sync_review.main())
+
 
 if __name__ == "__main__":
     unittest.main()
