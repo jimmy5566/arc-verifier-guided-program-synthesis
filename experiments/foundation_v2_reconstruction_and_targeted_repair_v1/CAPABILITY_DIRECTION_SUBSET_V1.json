@@ -1,0 +1,241 @@
+{
+  "batteries": [
+    {
+      "path": "artifacts/foundation_diagnostic_v3_2_validity/FOUNDATION_DIAGNOSTIC_BATTERY_V1_2.jsonl.gz",
+      "sha256": "10b84b70ae4b855f71e521333ef136af959c7e97798e8e06bfad733ffd5008c0"
+    },
+    {
+      "path": "artifacts/foundation_diagnostic_v3_2_validity/COMPOSITION_DIAGNOSTIC_DEV_V1_2.jsonl.gz",
+      "sha256": "1479e4b62d76ba8d909a38222707464d33442f0e8cd7dc3f783544839989da79"
+    },
+    {
+      "path": "artifacts/foundation_diagnostic_v3_2_validity/PARAMETER_GENERALIZATION_DIAGNOSTIC_V1_2.jsonl.gz",
+      "sha256": "b36f2694b9e8e2892190f723cc7b99371b99a2fd2ae4fc4a96079e8e821b4b7b"
+    }
+  ],
+  "profile": "artifacts/foundation_v2_capability_diagnostic_v1/BASE_VS_FOUNDATION_V2_DELTA_MAP.json",
+  "profile_sha256": "1db431679149d68b9bcbc768f5f867d1240bfa4e5e6acb68a6a06cc468e7061b",
+  "samples": [
+    {
+      "base_reference_score": 1.0,
+      "capability": "alternation",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:fb63329d9005da9405",
+      "sample_id": "DIAGNOSTIC_V1_2:08a5e3aa157f5516644a9257"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "color mapping",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:e5024518400de8d19d",
+      "sample_id": "DIAGNOSTIC_V1_2:16364ab8a2bf1a19135932eb"
+    },
+    {
+      "base_reference_score": 0.15625,
+      "capability": "compare quantities",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:c1243e85f2c3baba26",
+      "sample_id": "DIAGNOSTIC_V1_2:00918acb76b57deffbab01b3"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "complete missing structure",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:3d41769c045fe5ccb5",
+      "sample_id": "DIAGNOSTIC_V1_2:0dced98f0c772c9b8ed858f3"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "copy",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:1c357d6022c3555e9e",
+      "sample_id": "DIAGNOSTIC_V1_2:04699d3f8289c3fbb73e962d"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "copy reference color",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:323fcd69e56e45dcca",
+      "sample_id": "DIAGNOSTIC_V1_2:09868675371a9908569cf3f9"
+    },
+    {
+      "base_reference_score": 0.4375,
+      "capability": "count components",
+      "measurement_type": "MINIMAL_CONTRAST",
+      "pair_id": "contrast_v1_2:b2d6481cbc5f289688c2",
+      "program_id": "capv3:01eb6b4fab3c51b913",
+      "sample_id": "DIAGNOSTIC_V1_2:018beb5d3ff354bdbb782e8b"
+    },
+    {
+      "base_reference_score": 0.1875,
+      "capability": "difference",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:17079a4274e50b0d5c",
+      "sample_id": "DIAGNOSTIC_V1_2:01b7625f1b81b56ee7994c44"
+    },
+    {
+      "base_reference_score": 0.0,
+      "capability": "encode quantity geometrically",
+      "measurement_type": "MINIMAL_CONTRAST",
+      "pair_id": "contrast_v1_2:a3b92d4ff3e5ed32168a",
+      "program_id": "capv3:01eb6b4fab3c51b913",
+      "sample_id": "DIAGNOSTIC_V1_2:08534ad0cd705e84580f3ed0"
+    },
+    {
+      "base_reference_score": 0.0625,
+      "capability": "height",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:9a636379f5b6b8ab1a",
+      "sample_id": "DIAGNOSTIC_V1_2:1721fb331304bac4a856c999"
+    },
+    {
+      "base_reference_score": 0.1875,
+      "capability": "holes/enclosures",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:95e9848d9283e71026",
+      "sample_id": "DIAGNOSTIC_V1_2:015b7457afe66af774cb7f09"
+    },
+    {
+      "base_reference_score": 0.0625,
+      "capability": "inside/contains",
+      "measurement_type": "MINIMAL_CONTRAST",
+      "pair_id": "contrast_v1_2:d54360d21f78b59bfec1",
+      "program_id": "capv3:d67bf72896641d5bb4",
+      "sample_id": "DIAGNOSTIC_V1_2:01200c755d4661a923c66ae3"
+    },
+    {
+      "base_reference_score": 0.96875,
+      "capability": "iterative update",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:fbe971361e9a54cf59",
+      "sample_id": "DIAGNOSTIC_V1_2:0a8505a40d9a603d79370f03"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "largest",
+      "measurement_type": "MINIMAL_CONTRAST",
+      "pair_id": "contrast_v1_2:e54fcc6c3912559361ff",
+      "program_id": "capv3:b4c2748844aaf368e1",
+      "sample_id": "DIAGNOSTIC_V1_2:0dca00878fab3fa71a6fed88"
+    },
+    {
+      "base_reference_score": 0.0,
+      "capability": "orientation",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:91fe68a7469a0fffd7",
+      "sample_id": "DIAGNOSTIC_V1_2:06b236ff01239675bb0541ce"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "overlay",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:80929f4aa841654e51",
+      "sample_id": "DIAGNOSTIC_V1_2:07a57da9eacb5d107495affb"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "periodic pattern",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:8d1de4c2b819ba6b46",
+      "sample_id": "DIAGNOSTIC_V1_2:03c03662bd85042b5c7958a4"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "propagation",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:b466915e18dce0730f",
+      "sample_id": "DIAGNOSTIC_V1_2:18c9e6d2def2cc4550ed1af1"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "reflect LR",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:3cb3d79db42c55d61d",
+      "sample_id": "DIAGNOSTIC_V1_2:017a954d8124b7dff3f2f824"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "reflect UD",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:eb80a9f8cdb138bf96",
+      "sample_id": "DIAGNOSTIC_V1_2:0b59b1359a40df46d33c2aed"
+    },
+    {
+      "base_reference_score": 0.0625,
+      "capability": "relation-conditioned selector",
+      "measurement_type": "MINIMAL_CONTRAST",
+      "pair_id": "contrast_v1_2:7a99fc3e801317dfc07e",
+      "program_id": "capv3:179b24751426351d27",
+      "sample_id": "DIAGNOSTIC_V1_2:0729e21bc4baf6fd43975d53"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "rotate 180",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:cbfaada684d9e3e1c7",
+      "sample_id": "DIAGNOSTIC_V1_2:01444348101c610d4f05acd5"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "rotate 270",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:a02c238bc43956993b",
+      "sample_id": "DIAGNOSTIC_V1_2:1aa393e1dd868c7a9b1c335d"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "rotate 90",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:95b2f15171cfa9e1aa",
+      "sample_id": "DIAGNOSTIC_V1_2:0c313d1f8cf995d714fb7dee"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "scale",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:4cf200e8d3b97916e4",
+      "sample_id": "DIAGNOSTIC_V1_2:14e987f2548e84c326c157ee"
+    },
+    {
+      "base_reference_score": 1.0,
+      "capability": "separators/subgrids",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:16ce697db06bfde36d",
+      "sample_id": "DIAGNOSTIC_V1_2:0821474d1a89e154d14d30c4"
+    },
+    {
+      "base_reference_score": 0.25,
+      "capability": "width",
+      "measurement_type": "DIRECT_ATOMIC",
+      "pair_id": null,
+      "program_id": "capv3:c79c150eb01863cdb0",
+      "sample_id": "DIAGNOSTIC_V1_2:002cafe5085cfd3f05eb7127"
+    }
+  ],
+  "schema_version": 1,
+  "scoring_implementation": "src/foundation_v2_capability_diagnostic_v1/audit.py",
+  "scoring_implementation_sha256": "2ae011bfea1dc6c0be4b62b398ac8c6bb95183b597bd846067132cf38c43fefc",
+  "selection": "lexicographically smallest sample_id per fixed historical-improved or STRONG/SATURATED capability",
+  "status": "FROZEN_PRE_RECONSTRUCTION"
+}
