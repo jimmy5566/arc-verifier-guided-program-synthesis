@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_TARGETED_REPAIR_SERIAL_DIAGNOSTIC_COMPLETION_V1",
+  "scientific_outcome": "STOP_TARGETED_REPAIR_APPROACH",
+  "scope": "TARGETED_REPAIR_CURRENT_PROTOCOL_POSTMORTEM",
+  "brief_id": "TARGETED_REPAIR_SERIAL_DIAGNOSTIC_COMPLETION_V1",
+  "reviewed_brief_sha256": "d46ccc1356e65185ad7d3f043572a020087fd176d5a4a8c059e67524d0438c55",
+  "reason": "The one previously authorized diagnostic completed, but its frozen conjunctive decision rule failed. All prespecified family-sign conditions reproduced under Batch1, while canonical agreement with the preserved Batch32 outputs was below the required 0.9375 for V7, R1-final, and R2-final. The frozen on-fail rule requires stopping the current targeted-repair approach and forbids deriving R3 from the current family-weight evidence. The additional V7-only probe found no Batch2, Batch4, Batch8, Batch16, or Batch32 condition strictly equal to Batch1, so it provides no basis to relax the threshold, reinterpret the failed rule, or authorize another diagnostic.",
+  "decision_basis": {
+    "authorized_diagnostic": "V7_R1_R2_SERIAL_DECODING_FLIP_REPLICATION_V1",
+    "diagnostic_status": "COMPLETE",
+    "family_signs_all_pass": true,
+    "canonical_agreement_required_minimum": 0.9375,
+    "canonical_agreement": {
+      "V7": {
+        "count": "60/65",
+        "ratio": 0.9230769230769231,
+        "pass": false
+      },
+      "R1_FINAL": {
+        "count": "52/65",
+        "ratio": 0.8,
+        "pass": false
+      },
+      "R2_FINAL": {
+        "count": "54/65",
+        "ratio": 0.8307692307692308,
+        "pass": false
+      }
+    },
+    "frozen_decision_rule_pass": false,
+    "v7_only_batch_consistency_probe": {
+      "largest_strictly_equal_batch_size": null,
+      "batch_2_strictly_equal_to_batch1": false,
+      "batch_4_strictly_equal_to_batch1": false,
+      "batch_8_strictly_equal_to_batch1": false,
+      "batch_16_strictly_equal_to_batch1": false,
+      "batch_32_strictly_equal_to_batch1": false
+    }
+  },
+  "reviewed_evidence": {
+    "prior_director_response_sha256": "89a4dab56556ea099c4de7cae468f1854078862dc6404e17f1e78cff259fd392",
+    "batch1_vs_batch32_analysis_sha256": "92419823e36743a18504486dfa184693c115c5c80ae5a80bae4c3b670d8911e3",
+    "batch1_result_sha256": "e3ffb9d57402c3d4c570acb213b8b84e5c686350a809fd9202fe3b86cdf81b8b",
+    "batch1_terminal_receipt_sha256": "1c1214cfd1ddfdcc62799e1a187fb6d3223906caa431bc9da9943b28ccb2871c",
+    "v7_only_batch_consistency_result_sha256": "5c30fbfa3e7fc5d9d3e5a3632e8b737bf7bdad3a2fbe140ca50d2d5e180cafc6",
+    "v7_only_controlled_stop_receipt_sha256": "7183604d7b3002f4f63e53243982cece1b1505a6ff47d61329b76ef18e211836"
+  },
+  "terminal_disposition": {
+    "current_targeted_repair_protocol": "STOPPED",
+    "current_family_weight_evidence_may_support_r3": false,
+    "distinct_successor_protocol_justified_by_this_review": false,
+    "one_further_diagnostic_necessary": false,
+    "v7_r1_r2_and_diagnostic_artifacts": "BYTE_PRESERVED",
+    "batch32_conclusions": "CONDITION_SPECIFIC_AND_NOT_STRICTLY_SERIAL_REPRODUCIBLE_ON_THE_FROZEN_DIAGNOSTIC_COHORT"
+  },
+  "required_closeout": [
+    "Preserve the completed diagnostic, V7-only probe, V7, R1, and R2 artifacts and their recorded SHA256 identities without mutation.",
+    "Record the current targeted-repair protocol as stopped under its frozen decision rule.",
+    "Retain Batch32 findings only as evidence from that frozen execution condition; do not promote them as strict Batch1-reproducible effects.",
+    "Keep TARGET_DEV and RETENTION_SENTINEL evaluation-only and keep FINAL_AUDIT sealed."
+  ],
+  "forbidden_actions": [
+    "DO_NOT_START_OR_APPROVE_R3",
+    "DO_NOT_TRAIN_OR_CONSTRUCT_AN_OPTIMIZER",
+    "DO_NOT_AUTHORIZE_ADDITIONAL_GPU_INFERENCE_OR_MODEL_LOADING_FROM_THIS_RESPONSE",
+    "DO_NOT_RUN_ANOTHER_DIAGNOSTIC_UNDER_THE_CURRENT_TARGETED_REPAIR_PROTOCOL",
+    "DO_NOT_RELAX_OR_REINTERPRET_THE_FROZEN_DECISION_RULE",
+    "DO_NOT_USE_TARGET_DEV_OR_RETENTION_SENTINEL_AS_TRAINING_DATA",
+    "DO_NOT_ACCESS_FINAL_AUDIT",
+    "DO_NOT_MUTATE_FROZEN_ARTIFACTS",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required_for_current_protocol": false,
+  "new_distinct_protocol_requires_separate_prospective_review": true,
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "r3_authorized": false,
+  "final_audit_authorized": false
+}

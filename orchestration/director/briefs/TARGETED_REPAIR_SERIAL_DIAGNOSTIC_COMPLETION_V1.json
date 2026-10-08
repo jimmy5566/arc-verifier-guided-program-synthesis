@@ -1,0 +1,90 @@
+{
+  "additional_v7_only_batch_consistency_probe": {
+    "controlled_stop_receipt": {
+      "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/serial_decoding_flip_replication_v1/batch_consistency_probe_v1/run_001/CONTROLLED_STOP_TERMINAL_RECEIPT.json",
+      "sha256": "7183604d7b3002f4f63e53243982cece1b1505a6ff47d61329b76ef18e211836"
+    },
+    "diagnostic_id": "V7_R1_R2_BATCH_CONSISTENCY_PROBE_V1",
+    "interpretation": "For strict raw-token and canonical-output identity on this V7 cohort, Batch1 is the only supported batch size. This does not by itself establish a model-quality claim.",
+    "largest_strictly_equal_batch_size": null,
+    "result": {
+      "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/serial_decoding_flip_replication_v1/batch_consistency_probe_v1/run_001/V7_ONLY_BATCH_CONSISTENCY_RESULT.json",
+      "sha256": "5c30fbfa3e7fc5d9d3e5a3632e8b737bf7bdad3a2fbe140ca50d2d5e180cafc6"
+    },
+    "scope_reduction": "USER_DIRECTED_V7_ONLY; R1/R2 candidate work was controlled-stopped before execution",
+    "strict_v7_batch1_equality": {
+      "batch_16": false,
+      "batch_2": false,
+      "batch_32": false,
+      "batch_4": false,
+      "batch_8": false
+    }
+  },
+  "brief_id": "TARGETED_REPAIR_SERIAL_DIAGNOSTIC_COMPLETION_V1",
+  "budget": {
+    "cumulative_scientific_gpu_seconds": 4778.014247704957,
+    "remaining_scientific_gpu_seconds": 24021.985752295044
+  },
+  "completed_authorized_diagnostic": {
+    "analysis": {
+      "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/serial_decoding_flip_replication_v1/run_001/BATCH1_VS_BATCH32_ANALYSIS.json",
+      "sha256": "92419823e36743a18504486dfa184693c115c5c80ae5a80bae4c3b670d8911e3"
+    },
+    "batch1_result": {
+      "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/serial_decoding_flip_replication_v1/run_001/BATCH1_RESULT.json",
+      "sha256": "e3ffb9d57402c3d4c570acb213b8b84e5c686350a809fd9202fe3b86cdf81b8b"
+    },
+    "canonical_agreement": {
+      "R1_FINAL": {
+        "count": "52/65",
+        "ratio": 0.8
+      },
+      "R2_FINAL": {
+        "count": "54/65",
+        "ratio": 0.8307692307692308
+      },
+      "V7": {
+        "count": "60/65",
+        "ratio": 0.9230769230769231
+      },
+      "all_pass": false,
+      "required_minimum": 0.9375
+    },
+    "cohort_episodes": 65,
+    "decision_rule_pass": false,
+    "diagnostic_id": "V7_R1_R2_SERIAL_DECODING_FLIP_REPLICATION_V1",
+    "family_signs_all_pass": true,
+    "terminal_receipt": {
+      "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/serial_decoding_flip_replication_v1/run_001/BATCH1_TERMINAL_RECEIPT.json",
+      "sha256": "1c1214cfd1ddfdcc62799e1a187fb6d3223906caa431bc9da9943b28ccb2871c"
+    }
+  },
+  "created_at": "2026-10-08T19:10:43.525624Z",
+  "director_question": "The one authorized V7/R1/R2 Batch1 flip-replication diagnostic is complete and its frozen decision rule fails only because Batch1-versus-preserved-Batch32 canonical agreement is below 0.9375 for all three checkpoints. Given this completed diagnostic and the V7-only Batch2/4/8/16/32 strict consistency probe, should the current targeted-repair approach be stopped under this protocol, or is one distinct successor scientific protocol justified? Do not authorize or launch R3 in this review.",
+  "forbidden_actions": [
+    "DO_NOT_START_R3",
+    "DO_NOT_TRAIN",
+    "DO_NOT_ACCESS_FINAL_AUDIT",
+    "DO_NOT_MUTATE_FROZEN_RESULTS"
+  ],
+  "frozen_conditions": [
+    "V7, R1, R2, Batch1 diagnostic, and V7-only probe artifacts are byte-preserved.",
+    "No optimizer was constructed and no training occurred in either diagnostic.",
+    "R3 remains unstarted and unauthorized.",
+    "TARGET_DEV and RETENTION_SENTINEL remain evaluation-only.",
+    "FINAL_AUDIT remains sealed and unopened.",
+    "No threshold, cohort, parser, scorer, or model setting was changed after scoring."
+  ],
+  "prior_director_response": {
+    "outcome": "RUN_ONE_DIAGNOSTIC_BEFORE_DECIDING",
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_TARGETED_REPAIR_POSTMORTEM_V1.json",
+    "sha256": "89a4dab56556ea099c4de7cae468f1854078862dc6404e17f1e78cff259fd392"
+  },
+  "requested_structured_outcomes": [
+    "STOP_TARGETED_REPAIR_APPROACH",
+    "NEW_DISTINCT_PROTOCOL_RECOMMENDED",
+    "RUN_ONE_DIAGNOSTIC_BEFORE_DECIDING"
+  ],
+  "schema_version": 1,
+  "scope": "TARGETED_REPAIR_CURRENT_PROTOCOL_POSTMORTEM"
+}
