@@ -2,8 +2,11 @@
 """One-shot Batch1 V7/R1/R2 flip-replication diagnostic; never trains."""
 from __future__ import annotations
 
-import argparse, hashlib, json, os, time
+import argparse, hashlib, json, os, sys, time
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
 from scripts.collect_capability_repair_baseline_v1 import (
     aggregate, observation, output_row, prompt, read_rows, sha, verify_checkpoint_manifest,
