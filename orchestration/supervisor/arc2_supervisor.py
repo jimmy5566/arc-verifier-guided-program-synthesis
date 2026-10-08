@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+LOW_FREQUENCY_RECONCILIATION_SECONDS = 300
 TERMINAL_STATES = {"SUCCESS", "TRAIN_FAILED", "OOM", "INFRA_FAILED", "INTERRUPTED"}
 ROUND_CLASS_SCIENTIFIC = "SCIENTIFIC"
 ROUND_CLASS_DUMMY = "DUMMY"
@@ -86,6 +87,80 @@ def controller_idle(agent: str, timeout: int) -> bool:
 
 def utc_seconds() -> float:
     return time.time()
+
+
+def local_log_timestamp(now: datetime | None = None) -> str:
+    """Return the local timestamp used by every Supervisor console line."""
+    value = now or datetime.now().astimezone()
+    if value.tzinfo is None:
+        value = value.astimezone()
+    return value.strftime("%Y-%m-%d %H:%M:%S")
+
+
+def heartbeat_value(value: Any) -> str:
+    """Keep a compact human log unambiguous when receipt fields are absent."""
+    return "null" if value is None else str(value)
+
+
+def read_controller_heartbeat_state(path: Path | None) -> tuple[str | None, str | None]:
+    """Read durable Controller state for observability only; never wake it."""
+    if path is None or not path.is_file():
+        return None, None
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+        directives = value.get("directives", {})
+        if not isinstance(directives, dict):
+            return None, None
+        # The latest durable entry is the active cycle in the append-only map.
+        for record in reversed(list(directives.values())):
+            if not isinstance(record, dict):
+                continue
+            state = record.get("state") or record.get("lifecycle_state")
+            round_id = record.get("round_id")
+            if state or round_id:
+                return str(round_id) if round_id else None, str(state) if state else None
+    except (OSError, TypeError, json.JSONDecodeError):
+        pass
+    return None, None
+
+
+def heartbeat_snapshot(
+    supervisor: "Supervisor", controller_cycle_state: Path | None,
+    remote_status: str, last_successful_remote_check: str | None,
+) -> dict[str, Any]:
+    """Build a read-only heartbeat from durable state and cached receipts."""
+    round_id, controller_state = read_controller_heartbeat_state(controller_cycle_state)
+    record = supervisor.state.get("rounds", {}).get(round_id or "", {})
+    terminal_status = record.get("terminal_status") if isinstance(record, dict) else None
+    return {
+        "supervisor_pid": os.getpid(),
+        "round_id": round_id,
+        "controller_state": controller_state,
+        "remote_receipt_status": terminal_status or "TERMINAL_RECEIPT_PENDING",
+        "optimizer_step": record.get("optimizer_steps") if isinstance(record, dict) else None,
+        "processed_tokens": record.get("processed_tokens") if isinstance(record, dict) else None,
+        "gpu_training_seconds": record.get("scientific_gpu_training_seconds") if isinstance(record, dict) else None,
+        "last_remote_check": last_successful_remote_check,
+        "remote_status": remote_status,
+    }
+
+
+def print_heartbeat(snapshot: dict[str, Any], now: datetime | None = None) -> None:
+    """Print one timestamped line; a heartbeat never triggers an agent wakeup."""
+    keys = (
+        "supervisor_pid", "round_id", "controller_state", "remote_receipt_status",
+        "optimizer_step", "processed_tokens", "gpu_training_seconds", "last_remote_check",
+        "remote_status",
+    )
+    fields = " ".join(f"{key}={heartbeat_value(snapshot.get(key))}" for key in keys)
+    print(f"[{local_log_timestamp(now)}] HEARTBEAT {fields}", flush=True)
+
+
+def print_actionable_event(events: dict[str, list[str]], now: datetime | None = None) -> None:
+    """Make agent wakeups visible without making heartbeat polling actionable."""
+    compact = " ".join(f"{key}={','.join(value)}" for key, value in events.items() if value)
+    if compact:
+        print(f"[{local_log_timestamp(now)}] ACTIONABLE_EVENT {compact}", flush=True)
 
 
 def scientific_terminal_receipt_issues(receipt: dict[str, Any], round_class: str) -> list[str]:
@@ -815,7 +890,10 @@ def main() -> int:
     parser.add_argument("--ssh-target")
     parser.add_argument("--remote-root")
     parser.add_argument("--identity-file")
-    parser.add_argument("--poll-seconds", type=float)
+    parser.add_argument(
+        "--poll-seconds", type=float,
+        help=f"ordinary LOW_FREQUENCY_RECONCILIATION cadence; service launch uses {LOW_FREQUENCY_RECONCILIATION_SECONDS} seconds",
+    )
     parser.add_argument("--controller-agent")
     parser.add_argument("--controller-ack-dir", type=Path)
     parser.add_argument("--directive-dir", type=Path)
@@ -844,12 +922,16 @@ def main() -> int:
     if (args.ssh_target or args.remote_root) and not (args.ssh_target and args.remote_root):
         parser.error("--ssh-target and --remote-root must be supplied together")
 
+    last_successful_remote_check = supervisor.state.get("last_successful_remote_check")
     while True:
+        cycle_now = datetime.now().astimezone()
         remote_status = "LOCAL_ONLY"
         if args.ssh_target:
             try:
                 fetch_remote_receipts(args.ssh_target, args.remote_root, args.receipt_root, args.identity_file)
                 remote_status = "LOW_FREQUENCY_RECONCILIATION_OK"
+                last_successful_remote_check = cycle_now.isoformat(timespec="seconds")
+                supervisor.state["last_successful_remote_check"] = last_successful_remote_check
             except Exception as error:  # Continue local reconciliation; retry next poll.
                 remote_status = f"LOW_FREQUENCY_RECONCILIATION_ERROR:{type(error).__name__}"
         notified = supervisor.reconcile(args.receipt_root)
@@ -889,19 +971,21 @@ def main() -> int:
                         cycle_state, args.controller_escalation_dir, args.director_agent,
                         args.herdr_timeout_seconds, args.controller_stall_seconds,
                     )
-        print(json.dumps({
-            "status": "OK",
-            "remote_status": remote_status,
-            "controller_notifications": notified,
+        cycle_state = args.controller_cycle_state or (args.notification_dir.parent / "controller_state" / "DIRECTIVE_CYCLE_STATE.json")
+        snapshot = heartbeat_snapshot(supervisor, cycle_state, remote_status, last_successful_remote_check)
+        supervisor.state["last_heartbeat"] = {
+            "at": cycle_now.isoformat(timespec="seconds"),
+            **snapshot,
+        }
+        supervisor.save()
+        print_heartbeat(snapshot, cycle_now)
+        print_actionable_event({
             "controller_wakeups": woken,
-            "controller_acknowledgements": acknowledged,
-            "director_notifications": directive_notifications,
+            "controller_notifications": notified,
             "director_wakeups": directive_wakeups,
-            "director_acknowledgements": directive_acknowledgements,
-            "director_resumes": directive_resumes,
             "controller_escalations": controller_escalations,
             "scientific_state_conflicts": scientific_state_conflicts,
-        }, sort_keys=True), flush=True)
+        }, cycle_now)
         if args.poll_seconds is None:
             return 0
         time.sleep(args.poll_seconds)

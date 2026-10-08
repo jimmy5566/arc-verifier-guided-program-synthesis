@@ -3,6 +3,8 @@
   "agent_type": "deterministic_python_non_llm",
   "state_path": "orchestration/supervisor/state/SUPERVISOR_STATE.json",
   "receipt_scan": "low-frequency metadata-only fallback",
+  "low_frequency_reconciliation_seconds": 300,
+  "heartbeat": "one timestamped local human-readable line per reconciliation; heartbeat-only checks never wake agents",
   "event_stream": "remote events.jsonl when transport is available",
   "notification": "append-only controller notification JSON; receipt hash is the idempotency key",
   "director_directive_reconciliation": "lightweight local filesystem reconciliation; directive SHA256 is the persistent idempotency key; a matching Controller response marks the directive processed",
