@@ -81,4 +81,13 @@ class DecoderCharacterizationV2Tests(unittest.TestCase):
             launch.terminal_failure({"terminal_failure_receipt_path": str(dest), "contract_sha256": "c"}, "TEST")
             self.assertEqual(json.loads(dest.read_text())["reason"], "TEST")
 
+    def test_manifest_extra_and_runtime_cap_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp); contract, c = self.make_contract(root); env = c["environment"]
+            manifest = json.loads(Path(c["checkpoint_manifest_path"]).read_text()); Path(manifest["base_path"], "unexpected.bin").write_bytes(b"x")
+            with self.assertRaisesRegex(RuntimeError, "BASE_MANIFEST_EXTRA"):
+                launch.validate_contract(contract, argv=c["preflight_argv"], environment=env, require_review=None, consume_nonce=False)
+        with self.assertRaisesRegex(TimeoutError, "RUNTIME_CAP_REACHED"):
+            worker.require_before_deadline(0.0)
+
 if __name__ == "__main__": unittest.main()
