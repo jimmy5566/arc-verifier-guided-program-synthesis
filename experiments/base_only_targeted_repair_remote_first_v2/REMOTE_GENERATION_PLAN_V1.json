@@ -1,0 +1,36 @@
+{
+  "command": [
+    "python3",
+    "scripts/prepare_base_only_remote_first_data_v2.py",
+    "--output",
+    "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2"
+  ],
+  "expected_file_identities": {
+    "FINAL_AUDIT_SEALED.jsonl": {
+      "bytes": 309234,
+      "records": 132,
+      "sha256": "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd"
+    },
+    "RETENTION_SENTINEL.jsonl": {
+      "bytes": 237564,
+      "records": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV.jsonl": {
+      "bytes": 465946,
+      "records": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    },
+    "TRAIN.jsonl": {
+      "bytes": 9331951,
+      "records": 4004,
+      "sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+    }
+  },
+  "no_gpu_training_started": true,
+  "no_model_loaded": true,
+  "no_optimizer_constructed": true,
+  "output_must_not_exist": true,
+  "schema_version": 1,
+  "status": "FROZEN_CPU_ONLY_REMOTE_EXECUTION_PENDING"
+}

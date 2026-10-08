@@ -1,0 +1,80 @@
+{
+  "budget": {
+    "actual_charged_seconds": 0,
+    "canonical_ledger": "orchestration/budget/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V2.jsonl",
+    "closed_reconstruction_charged_seconds": 0,
+    "cumulative_cap_seconds": 28800,
+    "reservation_seconds": 7200
+  },
+  "data": {
+    "expected_identity": "REMOTE_DATA_EXPECTED_IDENTITY_V1.json",
+    "identity": "NEW_SYNTHETIC_AVAILABLE_DATA_IDENTITY",
+    "remote_generation": "scripts/prepare_base_only_remote_first_data_v2.py",
+    "roles": {
+      "evaluation": [
+        "TARGET_DEV",
+        "RETENTION_SENTINEL"
+      ],
+      "final_audit": "SEALED_NO_MODEL_ACCESS",
+      "train": [
+        "ATOMIC_REPAIR",
+        "COMPOSITION_REPAIR",
+        "RETENTION_TRAIN"
+      ]
+    }
+  },
+  "identity_claim": "NEW_BASE_ONLY_REMOTE_FIRST_CONDITION",
+  "lineage": {
+    "base": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "closed_reconstruction_protocol": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1_NOT_REOPENED",
+    "original_foundation_v2": "HISTORICAL_REFERENCE_ONLY_NOT_USED",
+    "starting_adapter": "NONE"
+  },
+  "prohibitions": [
+    "historical Foundation-V2 adapter claim",
+    "reconstruction recipe equivalence claim",
+    "historical replay-00000.parquet or SHA substitution",
+    "Eval60 Gold",
+    "diagnostic Gold",
+    "final audit access before selection"
+  ],
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2",
+  "receipt": {
+    "controller_notification": "exactly_once",
+    "format": "UTF-8 JSON atomic write",
+    "remote_path": "/workspace/arc2/orchestration/rounds/ROUND_<ID>/ROUND_<ID>_TERMINAL_RECEIPT.json",
+    "schema_version": 1,
+    "transport": "LOW_FREQUENCY_RECONCILIATION"
+  },
+  "recipe": {
+    "base_weights": "FROZEN",
+    "context_length": 8704,
+    "gradient_accumulation_steps": 4,
+    "learning_rate": 5e-05,
+    "lora_alpha": 32,
+    "lora_dropout": 0,
+    "lora_rank": 64,
+    "micro_batch_size": 1,
+    "optimizer": "bitsandbytes.optim.PagedAdamW8bit",
+    "precision": "BF16",
+    "quantization": "NONE",
+    "seed": 2000031,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ]
+  },
+  "schema_version": 1,
+  "selection_gate": {
+    "TARGET_DEV": "paired n01/n10 exact-grid outcomes",
+    "final_audit": "unopened until final selection",
+    "retention": "paired sentinel no convincing broad degradation",
+    "tie_break": "highest target net fixes, then lowest retention harm, then earliest checkpoint"
+  },
+  "status": "FROZEN_PENDING_REMOTE_DATA_GENERATION_AND_READ_ONLY_PREFLIGHT"
+}

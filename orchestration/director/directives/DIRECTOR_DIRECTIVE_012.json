@@ -1,0 +1,73 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_012",
+  "decision": "NEW_SUBPROTOCOL_REQUIRED",
+  "scope": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "reasons": [
+    {
+      "area": "brief_and_evidence_integrity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_012 has verified SHA256 9e9c0fc67139b6c6bb7d5cea58ac5b5d1dee802f9acdde4a9fa27551def99086. All five brief-listed evidence files match their declared SHA256 values."
+    },
+    {
+      "area": "remote_first_runtime_and_receipt_monitoring",
+      "status": "PASS_INFRASTRUCTURE_ONLY",
+      "finding": "The frozen remote-first policy keeps large scientific assets on RunPod and limits local supervision to small UTF-8 status receipts. REMOTE_RECEIPT_MONITORING_SMOKE_011 records one Controller wakeup, no duplicate after one watchdog restart, successful receipt retrieval and parsing, and zero model, optimizer, or GPU activity. Forced-PTY large-file transport is therefore not a prerequisite for a future remote-first condition."
+    },
+    {
+      "area": "frozen_protocol_closure",
+      "status": "FAIL_HARD_STOP",
+      "finding": "V1_REPLAY_IDENTITY_CLOSURE.json remains immutable with status BLOCKED_FROZEN_REPLAY_IDENTITY_UNRECOVERABLE and explicitly prohibits launching FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1. DIRECTOR_DIRECTIVE_009 already required any continuation to be a separately named condition with no claim of reproducing the unavailable recipe. A runtime-policy revision cannot reopen that scientific closure."
+    },
+    {
+      "area": "replay_identity",
+      "status": "FAIL_HARD_STOP",
+      "finding": "FOUNDATION_V2_RECONSTRUCTION_PROTOCOL_V2 and RECONSTRUCTED_V2_RECIPE_FREEZE.json still require replay-00000.parquet with exact SHA256 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc. That exact shard was declared unrecoverable after the bounded Director-authorized search. Remote generation or substitution would create a different data trajectory and cannot satisfy this protocol's frozen identity contract."
+    },
+    {
+      "area": "mounted_prelaunch_identity",
+      "status": "NOT_ESTABLISHED",
+      "finding": "The submitted evidence contains no new complete read-only mounted preflight proving the required base, tokenizer, Novel V1.1 data, exact replay shard, schedule, environment, command, output paths, and budget reservation. The protocol itself requires those checks to pass before optimizer construction. Remote-first placement does not replace identity verification."
+    },
+    {
+      "area": "source_provenance",
+      "status": "REQUIRES_REFRESH",
+      "finding": "The brief records local, origin, and RunPod equality at 8e542e2fdac2f33c7684b5c15c9600edefdbf811, but the currently reviewed local HEAD and fresh origin branch are both 370c856f8533b3cf1991a82f981c706cd9664c06. Fresh RunPod equality for the exact current reviewed commit is not established."
+    },
+    {
+      "area": "training_state",
+      "status": "PASS_NO_TRAINING",
+      "finding": "The brief and immutable smoke evidence consistently record no model loading, optimizer construction, GPU work, final-audit access, or charged new GPU-training seconds."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "KEEP_CLOSED_PROTOCOL_CLOSED",
+      "requirement": "Do not launch, relabel, revise in place, or otherwise reopen FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1. Preserve V1_REPLAY_IDENTITY_CLOSURE.json, the replay recovery evidence, Directive 009, and all frozen V1 recipe and gate artifacts unchanged."
+    },
+    {
+      "change_id": "DEFINE_DISTINCT_REMOTE_FIRST_CONDITION",
+      "requirement": "Either bind the accepted remote-first runtime policy to the already distinct BASE_ONLY_TARGETED_REPAIR_AVAILABLE_DATA_V1 successor, or define another uniquely named available-data subprotocol. The new condition must have a new model identity and must not claim Original Foundation-V2 recovery, reconstruction from the closed frozen recipe, replay-trajectory equivalence, or exact equivalence to the unavailable adapter."
+    },
+    {
+      "change_id": "FREEZE_ACTUALLY_AVAILABLE_REMOTE_DATA",
+      "requirement": "For the selected new condition, freeze the exact RunPod-resident training and evaluation byte identities before authorization. If any replay is newly generated or substituted, freeze its generation procedure, inputs, seed, serialization, byte hash, sampling role, and stage compatibility as a new dataset identity; never present it as replay-00000.parquet SHA256 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc. Preserve no-Gold, split isolation, retention-only evaluation, and sealed-final-audit protections."
+    },
+    {
+      "change_id": "FREEZE_NEW_EXECUTION_AND_GATE_PACKAGE",
+      "requirement": "Freeze a complete stage-compatible recipe, deterministic serialization/tokenization contract, sampling and optimizer schedule, launcher and source hashes, output/checkpoint lineage, active 28800-second cumulative budget enforcement, preregistered selection/replacement gate, and remote terminal-receipt schema for the new condition. Existing utilities may be reused only with explicit provenance and compatibility."
+    },
+    {
+      "change_id": "RUN_COMPLETE_REMOTE_READ_ONLY_PREFLIGHT",
+      "requirement": "On RunPod, run the new condition's complete read-only preflight from the first gate and verify every expected base shard, tokenizer/config file, exact allowed data file, schedule, source, environment, resolved command and path, output isolation, budget reservation, and forbidden-file boundary before any model load or optimizer construction. Preserve the precise first failure and stop if any check fails."
+    },
+    {
+      "change_id": "REFRESH_EXACT_SOURCE_PARITY",
+      "requirement": "Commit and push the additive new-subprotocol package on the existing non-main branch without force-push or history rewrite, then record fresh equality of local HEAD, git ls-remote origin SHA, and RunPod checked-out/source SHA for the exact commit containing the submitted brief and frozen launch package."
+    },
+    {
+      "change_id": "CONTROLLER_RESUBMISSION",
+      "requirement": "Submit a new hashed Director brief for the distinctly named condition with all package hashes, remote mounted-preflight result, receipt-monitoring binding, budget state, scientific-boundary state, and fresh three-way source parity. No model loading, optimizer construction, or GPU reconstruction/training is authorized by this directive."
+    }
+  ],
+  "scientific_training_authorized": false
+}

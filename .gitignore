@@ -134,3 +134,6 @@ reports/*
 # Local temporary artifacts
 tmp/
 tmp_*/
+
+# RunPod-only synthetic assets for the remote-first condition.
+experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/
