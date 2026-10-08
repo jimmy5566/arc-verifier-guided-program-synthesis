@@ -144,7 +144,7 @@ class ControllerDirectiveCycleTest(unittest.TestCase):
             digest = hashlib.sha256(receipt.read_bytes()).hexdigest()
             ack = acks / f"CONTROLLER_ACK_{scientific}_{digest[:12]}.json"
             write(ack, {"round_id": scientific, "terminal_receipt_hash": digest, "controller_role": "arc-controller", "acknowledged": True, "training_started": False, "action": "DUMMY_NOTIFICATION_ACK_ONLY"})
-            supervisor.state["rounds"][scientific]["controller_ack_path"] = str(ack); supervisor.save()
+            supervisor.state["rounds"][scientific].update({"controller_ack_path": str(ack), "controller_cycle_complete": True}); supervisor.save()
             self.assertEqual([], supervisor.acknowledge_controller_cycles(acks))
             self.assertFalse(supervisor.state["rounds"][scientific]["controller_cycle_complete"])
             self.assertFalse(Supervisor(root / "state.json", notes).state["rounds"][scientific]["controller_cycle_complete"])

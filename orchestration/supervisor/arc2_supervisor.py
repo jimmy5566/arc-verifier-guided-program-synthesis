@@ -192,7 +192,7 @@ class Supervisor:
         changed = False
         for round_id, record in self.state["rounds"].items():
             acknowledgement = record.get("controller_ack_path")
-            if not acknowledgement or record.get("controller_cycle_complete"):
+            if not acknowledgement or (record.get("controller_cycle_complete") and record.get("round_class") != ROUND_CLASS_SCIENTIFIC):
                 continue
             path = Path(acknowledgement)
             if not path.is_absolute():
