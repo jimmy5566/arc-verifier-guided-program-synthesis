@@ -1,0 +1,30 @@
+{
+  "AUTO_SCIENTIFIC_EXECUTION_AUTHORIZED": false,
+  "GPU_GATE_READY": false,
+  "decision": "FAIL_CLOSED_UNTIL_RERUN_IDENTITY_AND_RUNTIME_PREFLIGHT_PASS",
+  "evidence": {
+    "launch_binding_sha256": "40317ba11c8ea182b697fa0f0ebbb5800bc9a899d44319904f664795b7d87f83",
+    "reviewed_executable_commit": "887db4e690344e969fdc6dbd91a7f8d8efc5a8e0"
+  },
+  "final_audit_accessed": false,
+  "no_model_loaded": true,
+  "no_optimizer_constructed": true,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "retry_identity": {
+    "attempt_id": "RECONSTRUCTED_FOUNDATION_V2_V1_001_RERUN_01",
+    "attempt_index": 2,
+    "classification": "INFRA_PRE_OPTIMIZER_FAILURE",
+    "launcher_repair": "REMOTE_DETACHED_ENV_SETS_PYTHONPATH_TO_CHECKED_OUT_SRC",
+    "one_rerun_only": true,
+    "prior_optimizer_steps": 0,
+    "prior_processed_tokens": 0,
+    "prior_scientific_gpu_seconds": 0.0,
+    "prior_terminal_receipt_sha256": "826a35d7139b3be84f1c5d1e912e77a502b62eebe782c74d339e8d9781ab41df",
+    "scientific_condition_changed": false,
+    "scientific_condition_id": "RECONSTRUCTED_FOUNDATION_V2_V1_001"
+  },
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "PENDING_REMOTE_RERUN_PREFLIGHT",
+  "training_launch_performed": false
+}
