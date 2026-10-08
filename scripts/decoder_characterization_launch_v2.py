@@ -69,7 +69,7 @@ def validate_datasets(contract: dict[str, Any]) -> None:
 def validate_preflight(contract: dict[str, Any], *, source_commit: str) -> dict[str, Any]:
     receipt_path = Path(contract["preflight_receipt_path"])
     receipt = read_json_utf8_lf(receipt_path)
-    required = {"status": "PASS_NO_MODEL_IMPORT", "worker_source_commit": source_commit, "no_target_access": True, "model_loaded": False}
+    required = {"status": "PASS_NO_MODEL_IMPORT", "worker_source_commit": source_commit, "launch_contract_sha256": contract["contract_sha256"], "no_target_access": True, "model_loaded": False}
     if any(receipt.get(k) != v for k, v in required.items()):
         raise RuntimeError("PREFLIGHT_BINDING_MISMATCH")
     return receipt
@@ -106,7 +106,7 @@ def validate_contract(contract_path: Path, *, argv: list[str], environment: dict
         if require_review.resolve() != Path(contract["governor_review_path"]).resolve():
             raise RuntimeError("GOVERNOR_REVIEW_PATH_BINDING_MISMATCH")
         review = read_json_utf8_lf(require_review)
-        required = {"decision": "CONTINUE_CONTROLLER", "reviewed_brief_sha256": contract["reviewed_brief_sha256"], "launch_contract_sha256": contract["contract_sha256"], "worker_source_commit": worker_commit, "cohort_sha256": contract["cohort"]["sha256"]}
+        required = {"decision": "CONTINUE_CONTROLLER", "launch_contract_sha256": contract["contract_sha256"], "worker_source_commit": worker_commit, "cohort_sha256": contract["cohort"]["sha256"]}
         if any(review.get(k) != v for k, v in required.items()):
             raise RuntimeError("GOVERNOR_REVIEW_BINDING_MISMATCH")
         # The actual model invocation must never overwrite an earlier run.

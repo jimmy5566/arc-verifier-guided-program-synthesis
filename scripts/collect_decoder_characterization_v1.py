@@ -52,6 +52,7 @@ def main() -> int:
             import subprocess
             source_commit = subprocess.check_output(["git", "-C", launch["source_root"], "rev-parse", "HEAD"], text=True).strip()
             payload = {"schema_version": 1, "status": "PASS_NO_MODEL_IMPORT", "source_commit": source_commit, "worker_source_commit": launch["worker_source_commit"], "no_target_access": True, "model_loaded": False,
+                       "launch_contract_sha256": launch["contract_sha256"],
                        "tokenizer_ids": {"digits": list(range(10)), "newline": 10, "eos": 15, "pad": 13}, "cohort_sha256": launch["cohort"]["sha256"],
                        "parser_sha256": launch["immutable_files"]["token_parser"]["sha256"], "worker_sha256": launch["immutable_files"]["worker"]["sha256"]}
             atomic_json(args.receipt, payload); return 0
