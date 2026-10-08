@@ -120,17 +120,19 @@ def director(s,p,timeout):
     response_path,response,response_sha256=available[-1]
     route_director_response(s,p,response_path,response,response_sha256)
 def poll_seconds(job):
-    kind=str(job.get('kind','')).upper()
+    kind=str(job.get('kind') or job.get('job_class') or '').upper()
     if 'PREFLIGHT' in kind or 'CPU' in kind: return 10
     if 'EVALUATION' in kind or 'INFERENCE' in kind: return 20
     return 60
 def remote_status(job):
-    receipt=job.get('expected_receipt') or job.get('remote_output'); target=job.get('ssh_target')
-    # A remote wait is bound to the Controller-declared *remote* worker, never
-    # to a local SSH/launcher process.  Do not fall back to legacy PID fields:
-    # without an explicit primary_process the Governor cannot safely decide
-    # that a job died and must not wake the Controller.
+    # Accept the compact current workflow schema as well as older preserved
+    # receipts.  Both spellings bind the same remote worker; no local process
+    # is ever used for liveness.
+    receipt=job.get('expected_receipt') or job.get('expected_terminal_receipt') or job.get('remote_output')
+    target=job.get('ssh_target') or job.get('remote_host')
     primary=job.get('primary_process')
+    if not isinstance(primary, dict) and job.get('remote_pid') is not None:
+        primary={'host':'RUNPOD','role':'worker','pid':job['remote_pid']}
     if not isinstance(primary, dict):
         return 'INVALID_BINDING', 'PRIMARY_PROCESS_REQUIRED'
     if primary.get('host') != 'RUNPOD':
@@ -154,7 +156,7 @@ def remote_status(job):
     return 'REMOTE_CHECK_INCONCLUSIVE', out
 def consume_remote(state,path,status,detail):
     job=state.get('remote_job') or {}
-    jobid=str(job.get('job_id','UNKNOWN'))
+    jobid=str(job.get('job_id') or job.get('round_id') or 'UNKNOWN')
     if status=='PROCESS_DEAD':
         failure=path.parent/'remote_failures'/f'{jobid}.json'; failure.parent.mkdir(parents=True,exist_ok=True)
         if not failure.exists(): atomic(failure,{'status':'REMOTE_PROCESS_DIED_WITHOUT_RECEIPT','job':job,'detail':detail,'at':now()})
@@ -170,8 +172,10 @@ def main():
         elif s['disposition']=='WAIT_REMOTE':
             job=s.get('remote_job') or s.get('active_remote_job') or {}; interval=poll_seconds(job)
             try:
-                primary=(job.get('primary_process') or {}).get('pid')
-                log(s,f"WAIT_REMOTE job={job.get('job_id')} primary_remote_pid={primary} class={job.get('kind')} check")
+                primary=(job.get('primary_process') or {}).get('pid') or job.get('remote_pid')
+                jobid=job.get('job_id') or job.get('round_id')
+                kind=job.get('kind') or job.get('job_class')
+                log(s,f"WAIT_REMOTE job={jobid} primary_remote_pid={primary} class={kind} check")
                 status,detail=remote_status(job)
                 log(s,f"WAIT_REMOTE receipt={'present' if status=='RECEIPT_PRESENT' else 'missing'} process={status}")
                 # A forced-PTY control query can occasionally yield a stale
