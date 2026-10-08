@@ -23,7 +23,7 @@
     "sha256": "b82e408cf0c98f7f31049046b5cb36f2d315bbfcfee46f17446b5bab5c950acf"
   },
   "contract_id": "ARC2_DECODER_CHARACTERIZATION_LAUNCH_V2",
-  "contract_sha256": "98682e626b55a082c6886b631ec97b38cb500f9fba3f3a6290638d7f67b285fc",
+  "contract_sha256": "6bb9ccb205d9cc8b8c5ac2e9c1927bfae2fe9ed2b61a1435f849324c6917fded",
   "datasets": {
     "retention_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
     "retention_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
@@ -59,7 +59,7 @@
     },
     "launch_validator": {
       "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/decoder_characterization_launch_v2.py",
-      "sha256": "b5585825666962d82315bcae4dec991e4255ac392951d0791a0c161407475766"
+      "sha256": "45253f8ec2e14d8e9bfe988250df10adc9691c9fb0b1d46a5ce9b30f5c19eab0"
     },
     "nonce_source": {
       "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v2/NONCE_V2",
@@ -79,7 +79,7 @@
     }
   },
   "inference_contract_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
-  "launch_core_sha256": "0edfb0dfa977a5045272ab38c863eb62a123f1e1f002561b97cf1b91206e363c",
+  "launch_core_sha256": "7a8772b0563084d46e5cac56bd660ccfb4e930b974c37f74ae162114728cf217",
   "nonce_consumed_path": "/workspace/arc2/decoder_characterization_v2_run_001/NONCE_V2.CONSUMED.json",
   "nonce_path": "/workspace/arc2/decoder_characterization_v2_run_001/NONCE_V2",
   "nonce_sha256": "7a17cb752a19cdb4885bb5d20efc75196c8bdca1a80276ee68e12c6852c5eeef",
@@ -100,7 +100,7 @@
   ],
   "preflight_receipt_path": "/workspace/arc2/decoder_characterization_v2_run_001/TOKENIZER_PREFLIGHT_RECEIPT.json",
   "receipt_path": "/workspace/arc2/decoder_characterization_v2_run_001/TERMINAL_RECEIPT.json",
-  "reviewed_brief_sha256": "7fea615fe83b02c0a9e92a713767eea91970689ed76155503250726ae9a1329a",
+  "reviewed_brief_sha256": "712b49b525c3c81c4f0c7ceddfaa8e0c17d384a331b163dce49e7a5c4c772624",
   "runtime": {
     "attention_backend": "sdpa",
     "batch_size": 1,
@@ -111,5 +111,5 @@
   "schema_version": 1,
   "source_root": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2",
   "terminal_failure_receipt_path": "/workspace/arc2/decoder_characterization_v2_run_001/ADMISSION_FAILURE_RECEIPT.json",
-  "worker_source_commit": "5b7a85707663ca7d3afb33a550b0faaef12c8689"
+  "worker_source_commit": "fe2a4590cf25b80c65e3e02b1cf4f534da06d7f2"
 }

@@ -6,13 +6,13 @@
     "fresh nonce/output",
     "no model import preflight"
   ],
-  "contract_identity": "98682e626b55a082c6886b631ec97b38cb500f9fba3f3a6290638d7f67b285fc",
-  "launch_contract_sha256": "55bec9a859917f94043df38c13f753abc1d6616c7de140e258ce30569c196896",
-  "launch_core_sha256": "0edfb0dfa977a5045272ab38c863eb62a123f1e1f002561b97cf1b91206e363c",
+  "contract_identity": "6bb9ccb205d9cc8b8c5ac2e9c1927bfae2fe9ed2b61a1435f849324c6917fded",
+  "launch_contract_sha256": "471b1a70fe526b71d653a8b642576eaf777f5a3013d35264d36d389b6f631288",
+  "launch_core_sha256": "7a8772b0563084d46e5cac56bd660ccfb4e930b974c37f74ae162114728cf217",
   "package_id": "ARC2_DECODER_CHARACTERIZATION_PACKAGE_V2",
   "rejected_v1_preserved": true,
-  "reviewed_brief_sha256": "7fea615fe83b02c0a9e92a713767eea91970689ed76155503250726ae9a1329a",
+  "reviewed_brief_sha256": "712b49b525c3c81c4f0c7ceddfaa8e0c17d384a331b163dce49e7a5c4c772624",
   "schema_version": 1,
   "status": "FROZEN_PENDING_NO_MODEL_PREFLIGHT",
-  "worker_source_commit": "5b7a85707663ca7d3afb33a550b0faaef12c8689"
+  "worker_source_commit": "fe2a4590cf25b80c65e3e02b1cf4f534da06d7f2"
 }

@@ -10,7 +10,7 @@
     "sha256": "b82e408cf0c98f7f31049046b5cb36f2d315bbfcfee46f17446b5bab5c950acf"
   },
   "core_id": "ARC2_DECODER_CHARACTERIZATION_LAUNCH_CORE_V2",
-  "core_sha256": "0edfb0dfa977a5045272ab38c863eb62a123f1e1f002561b97cf1b91206e363c",
+  "core_sha256": "7a8772b0563084d46e5cac56bd660ccfb4e930b974c37f74ae162114728cf217",
   "datasets": {
     "retention_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
     "retention_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
@@ -51,5 +51,5 @@
   "schema_version": 1,
   "source_root": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2",
   "target_blind": true,
-  "worker_source_commit": "5b7a85707663ca7d3afb33a550b0faaef12c8689"
+  "worker_source_commit": "fe2a4590cf25b80c65e3e02b1cf4f534da06d7f2"
 }
