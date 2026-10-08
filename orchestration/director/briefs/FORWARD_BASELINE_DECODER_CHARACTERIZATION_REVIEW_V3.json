@@ -1,0 +1,30 @@
+{
+  "brief_id": "FORWARD_BASELINE_DECODER_CHARACTERIZATION_REVIEW_V3",
+  "decision_requested": "AUTHORIZE_TARGET_BLIND_12_ITEM_DECODER_CHARACTERIZATION",
+  "final_audit_opened": false,
+  "launch_core": {
+    "core_sha256": "0edfb0dfa977a5045272ab38c863eb62a123f1e1f002561b97cf1b91206e363c",
+    "path": "experiments/capability_repair_baseline_v1/decoder_characterization_v2/LAUNCH_CORE_V2.json",
+    "sha256": "02d4474c86b83b3cbfc4fc3afc62a8b84d06d17109684ca29a73ed15ed4c6fc0"
+  },
+  "next_stage_only_if_authorized": "Run exact V2 command after PASS_NO_MODEL_IMPORT preflight and a response bound to final contract hash.",
+  "preserved_rejected_evidence": [
+    "decoder_characterization_v1/LAUNCH_PACKAGE.json",
+    "decoder_characterization_v1/TOKENIZER_PREFLIGHT_RECEIPT.json",
+    "decoder_characterization_v1/V1_RESPONSE_BINDING_AUDIT.json"
+  ],
+  "request": "Authorize only this fresh target-blind 12-item model characterization. No correctness scoring, training, optimizer, full 288 rerun, or FINAL_AUDIT.",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "target_blind": {
+    "cohort_items": 12,
+    "exact_grid_match_emitted": false,
+    "held_out_outputs_read": false,
+    "roles": {
+      "RETENTION_SENTINEL": 4,
+      "TARGETED_COMPOSITION": 4,
+      "TARGETED_EVALUATION": 4
+    }
+  },
+  "worker_source_commit": "5b7a85707663ca7d3afb33a550b0faaef12c8689"
+}

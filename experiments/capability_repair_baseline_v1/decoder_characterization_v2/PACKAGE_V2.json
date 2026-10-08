@@ -1,0 +1,18 @@
+{
+  "all_pre_model_requirements": [
+    "valid LF JSON contract",
+    "immutable source and data bindings",
+    "target-blind worker",
+    "fresh nonce/output",
+    "no model import preflight"
+  ],
+  "contract_identity": "98682e626b55a082c6886b631ec97b38cb500f9fba3f3a6290638d7f67b285fc",
+  "launch_contract_sha256": "55bec9a859917f94043df38c13f753abc1d6616c7de140e258ce30569c196896",
+  "launch_core_sha256": "0edfb0dfa977a5045272ab38c863eb62a123f1e1f002561b97cf1b91206e363c",
+  "package_id": "ARC2_DECODER_CHARACTERIZATION_PACKAGE_V2",
+  "rejected_v1_preserved": true,
+  "reviewed_brief_sha256": "7fea615fe83b02c0a9e92a713767eea91970689ed76155503250726ae9a1329a",
+  "schema_version": 1,
+  "status": "FROZEN_PENDING_NO_MODEL_PREFLIGHT",
+  "worker_source_commit": "5b7a85707663ca7d3afb33a550b0faaef12c8689"
+}
