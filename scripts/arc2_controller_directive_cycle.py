@@ -62,6 +62,9 @@ def transition(record: dict[str, Any], state: str, **values: Any) -> None:
         return
     record.update(values)
     record["state"] = state
+    record["last_progress_at"] = now()
+    if state in {"REMEDIATION_COMPLETE", "VALIDATED", "COMMITTED", "RESUBMITTED"}:
+        record["last_completed_step"] = state
     record.setdefault("history", []).append({"at": now(), "state": state, **values})
 
 
@@ -100,7 +103,7 @@ def main() -> int:
     if decision not in KNOWN:
         transition(record, "FAILED_CLOSED", reason="UNKNOWN_DIRECTOR_DECISION")
     elif decision in REMEDIATION:
-        transition(record, "PROCESSING", route="REMEDIATION")
+        transition(record, "PROCESSING", route="REMEDIATION", next_step="FIRST_UNFINISHED_DIRECTIVE_REQUIREMENT", controller_cycle_complete=False)
     elif decision == "NEW_SUBPROTOCOL_REQUIRED":
         transition(record, "PROCESSING", route="NEW_SUBPROTOCOL")
     elif decision == "PAUSE_SCIENTIFIC_EXPERIMENT":
@@ -125,14 +128,18 @@ def main() -> int:
     if args.complete_evidence:
         if not args.complete_evidence.is_file(): raise RuntimeError("MISSING_REMEDIATION_EVIDENCE")
         transition(record, "REMEDIATION_COMPLETE", evidence=str(args.complete_evidence.resolve()))
+        record["next_step"] = "VALIDATE"
     if args.validated_evidence:
         if not args.validated_evidence.is_file(): raise RuntimeError("MISSING_VALIDATION_EVIDENCE")
         transition(record, "VALIDATED", validation=str(args.validated_evidence.resolve()))
+        record["next_step"] = "COMMIT"
     if args.commit_sha:
         transition(record, "COMMITTED", commit=args.commit_sha)
+        record["next_step"] = "PREPARE_AND_SUBMIT_BRIEF"
     if args.brief:
         if not args.brief.is_file(): raise RuntimeError("MISSING_DIRECTOR_BRIEF")
         transition(record, "RESUBMITTED", brief=str(args.brief.resolve()))
+        record["next_step"] = "AWAIT_DIRECTOR_DIRECTIVE"
     atomic_json(args.state, state)
     print(json.dumps({"directive_id": directive_id, "decision": decision, "state": record["state"], "scientific_training_started": False}, sort_keys=True))
     return 0

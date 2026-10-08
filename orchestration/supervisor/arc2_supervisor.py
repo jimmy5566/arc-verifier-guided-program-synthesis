@@ -68,6 +68,10 @@ def controller_idle(agent: str, timeout: int) -> bool:
     completed = subprocess.run(["herdr", "agent", "get", agent], capture_output=True, check=False, timeout=timeout)
     if completed.returncode != 0:
         return False
+
+
+def utc_seconds() -> float:
+    return time.time()
     try:
         payload = json.loads(decode_structured_utf8(completed.stdout, "HERDR_AGENT_STATUS"))
         return payload["result"]["agent"]["agent_status"] == "idle"
@@ -361,7 +365,7 @@ class Supervisor:
             self.save()
         return acknowledged
 
-    def resume_nonterminal_directive_cycles(self, cycle_state_path: Path, controller_agent: str, herdr_timeout_seconds: int, max_retries: int = 3) -> list[str]:
+    def resume_nonterminal_directive_cycles(self, cycle_state_path: Path, controller_agent: str, herdr_timeout_seconds: int, max_retries: int = 3, lease_seconds: int = 900) -> list[str]:
         """Wake an idle Controller once to resume each durable non-terminal cycle."""
         if not cycle_state_path.exists() or not controller_idle(controller_agent, herdr_timeout_seconds):
             return []
@@ -377,21 +381,26 @@ class Supervisor:
             record = self.state["directives"].get(directive_id)
             if not record or record.get("directive_sha256") != cycle.get("directive_sha256"):
                 continue
-            attempts = int(record.get("controller_resume_attempts", 0))
-            # We only enter after Herdr reports the Controller idle. A prior
-            # sent recovery may therefore be retried, but never concurrently.
+            attempts = int(record.get("failure_retry_count", 0))
             if attempts >= max_retries:
-                if attempts >= max_retries: record["controller_cycle_escalation_required"] = True
+                record["controller_cycle_escalation_required"] = True
                 continue
-            record.update({"controller_resume_reserved": True, "controller_resume_attempts": attempts + 1, "controller_resume_state": status})
+            # Herdr is idle, so any prior lease has ended. This is a new
+            # continuation, not a duplicate initial notification or ACK.
+            record.update({"lifecycle_state": status, "active_controller_lease": True,
+                           "lease_started_at": utc_seconds(), "continuation_sequence": int(record.get("continuation_sequence", 0)) + 1,
+                           "last_progress_at": utc_seconds(), "next_step": cycle.get("next_step", "RESUME_UNFINISHED"),
+                           "controller_cycle_complete": False})
             self.save()
             prompt = (f"ARC2 Controller recovery: resume existing directive cycle {directive_id} from durable state {status}. "
                       f"Do not create another acknowledgement. Read {cycle_state_path} and continue only unfinished steps for {cycle.get('directive_path')}. "
                       "Do not start training without an authorizing directive.")
             code, error = prompt_controller(["herdr", "agent", "prompt", controller_agent, prompt], herdr_timeout_seconds)
-            record["controller_resume_reserved"] = False
+            record["active_controller_lease"] = code == 0
             record["controller_resume_status"] = "SENT" if code == 0 else "DELIVERY_UNKNOWN_FAIL_CLOSED"
-            if code != 0: record["controller_resume_error"] = error
+            if code != 0:
+                record["controller_resume_error"] = error
+                record["failure_retry_count"] = attempts + 1
             if code == 0: resumed.append(directive_id)
             self.save()
         return resumed
