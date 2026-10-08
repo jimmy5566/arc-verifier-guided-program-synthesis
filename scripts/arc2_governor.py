@@ -69,12 +69,27 @@ def poll_seconds(job):
     return 60
 def remote_status(job):
     receipt=job.get('expected_receipt') or job.get('remote_output'); target=job.get('ssh_target')
-    primary=job.get('primary_process') or {}
-    if primary and primary.get('host') != 'RUNPOD': return 'INVALID_BINDING', 'PRIMARY_PROCESS_HOST_INVALID'
-    pid=primary.get('pid') or job.get('remote_pid') or job.get('pid')
-    if not receipt or not target or not pid: return 'INVALID_BINDING', None
+    # A remote wait is bound to the Controller-declared *remote* worker, never
+    # to a local SSH/launcher process.  Do not fall back to legacy PID fields:
+    # without an explicit primary_process the Governor cannot safely decide
+    # that a job died and must not wake the Controller.
+    primary=job.get('primary_process')
+    if not isinstance(primary, dict):
+        return 'INVALID_BINDING', 'PRIMARY_PROCESS_REQUIRED'
+    if primary.get('host') != 'RUNPOD':
+        return 'INVALID_BINDING', 'PRIMARY_PROCESS_HOST_INVALID'
+    if not primary.get('role'):
+        return 'INVALID_BINDING', 'PRIMARY_PROCESS_ROLE_REQUIRED'
+    try:
+        pid=int(primary.get('pid'))
+    except (TypeError, ValueError):
+        return 'INVALID_BINDING', 'PRIMARY_PROCESS_PID_REQUIRED'
+    if pid <= 0:
+        return 'INVALID_BINDING', 'PRIMARY_PROCESS_PID_REQUIRED'
+    if not receipt or not target:
+        return 'INVALID_BINDING', 'REMOTE_RECEIPT_OR_TARGET_REQUIRED'
     from orchestration.supervisor.arc2_supervisor import remote_shell
-    script=f"test -f {receipt!r} && echo RECEIPT_PRESENT || echo RECEIPT_MISSING\nps -p {int(pid)!r} -o pid= >/dev/null 2>&1 && echo PROCESS_ALIVE || echo PROCESS_DEAD"
+    script=f"test -f {receipt!r} && echo RECEIPT_PRESENT || echo RECEIPT_MISSING\nps -p {pid!r} -o pid= >/dev/null 2>&1 && echo PROCESS_ALIVE || echo PROCESS_DEAD"
     out=remote_shell(target,script)
     if 'RECEIPT_PRESENT' in out: return 'RECEIPT_PRESENT', out
     if 'PROCESS_ALIVE' in out: return 'PROCESS_ALIVE', out
@@ -98,7 +113,7 @@ def main():
         elif s['disposition']=='WAIT_REMOTE':
             job=s.get('remote_job') or s.get('active_remote_job') or {}; interval=poll_seconds(job)
             try:
-                primary=(job.get('primary_process') or {}).get('pid') or job.get('remote_pid')
+                primary=(job.get('primary_process') or {}).get('pid')
                 log(s,f"WAIT_REMOTE job={job.get('job_id')} primary_remote_pid={primary} class={job.get('kind')} check")
                 status,detail=remote_status(job)
                 log(s,f"WAIT_REMOTE receipt={'present' if status=='RECEIPT_PRESENT' else 'missing'} process={status}")
@@ -114,7 +129,13 @@ def main():
                         time.sleep(interval)
                         continue
                     detail = confirmed_detail
-                if status in {'RECEIPT_PRESENT','PROCESS_DEAD','INVALID_BINDING'}: consume_remote(s,a.state,status,detail); continue
+                if status in {'RECEIPT_PRESENT','PROCESS_DEAD'}:
+                    consume_remote(s,a.state,status,detail); continue
+                if status == 'INVALID_BINDING':
+                    # Binding defects are not proof that the remote primary
+                    # process has exited.  Keep waiting rather than waking an
+                    # agent and risking a duplicate scientific action.
+                    log(s, f"WAIT_REMOTE binding invalid detail={detail}; retaining WAIT_REMOTE")
             except Exception as exc:
                 log(s,f"WAIT_REMOTE exception={type(exc).__name__}:{exc}")
             time.sleep(interval)
