@@ -1,0 +1,80 @@
+{
+  "checkpoint_identity": {
+    "adapter_config_sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+  },
+  "decoding_contract": {
+    "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/ROUND_009_SEALED_EQUIVALENCE_PHASE_A_CONTRACT.json",
+    "reused": false,
+    "sha256": "97a23899620f175ad1ce5144d52de1446d67bd1ec58032a0a82d0f30dd1c384c"
+  },
+  "equivalence_thresholds": {
+    "novel_generation_exact_min": 0.8,
+    "protected_capability_major_regressions_max": 0,
+    "replay_generation_exact_min": 0.78
+  },
+  "evaluation_dataset_identity": {
+    "NOVEL_GENERATION_INPUT_MANIFEST.json": {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/NOVEL_GENERATION_INPUT_MANIFEST.json",
+      "reused": true,
+      "sha256": "50f156c1da6afb465f55a1d3420c6a65a2cf008b3391d3a317154d7055dc7b26"
+    },
+    "PROTECTED_CAPABILITY_INPUT_MANIFEST.json": {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/PROTECTED_CAPABILITY_INPUT_MANIFEST.json",
+      "reused": true,
+      "sha256": "e8132701c5aa4b97e0b81941851731e40eccfd358c0ee9e2170e937bcea1633e"
+    },
+    "REPLAY_GENERATION_INPUT_MANIFEST.json": {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/REPLAY_GENERATION_INPUT_MANIFEST.json",
+      "reused": true,
+      "sha256": "2c91a106655fd7e462933f001d3ed2bb1a034ade55cc636346c9068e27832211"
+    }
+  },
+  "forbidden": [
+    "model_loading",
+    "generation",
+    "scoring",
+    "GPU_inference",
+    "targeted_repair",
+    "FINAL_AUDIT"
+  ],
+  "output_contract": {
+    "no_adaptive_feedback": true,
+    "phase_a_immutable_before_phase_b": true,
+    "phase_roots_distinct": true,
+    "terminal_receipts_required": true
+  },
+  "parent_protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "protected_capability_reference": {
+    "audit": {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/ROUND_009_SEALED_REFERENCE_PROVENANCE_AUDIT.json",
+      "reused": false,
+      "sha256": "f33670bf8e1065a204789d1deca4b4763e51d223d74f1c3e2b26db7abb1700ac"
+    },
+    "status": "MISSING"
+  },
+  "provenance": {
+    "evidence_registry": {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/ARC2_FROZEN_EVIDENCE_REGISTRY_V1.json",
+      "sha256": "5bf575a415848e1f1f21332a79fc71a1b33fd861acd4976fbafe329947fc96cc"
+    },
+    "source_commit": "dce13d29f09925aa1f9412d0195c6ef30ca0617d"
+  },
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "schema_version": 1,
+  "scorer_parser_identity": {
+    "metrics": {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/ROUND_009_SEALED_EQUIVALENCE_METRIC_SEMANTICS.json",
+      "reused": false,
+      "sha256": "c78deb6b6add4bc229f67f0908c3c8c4cbc91114667683258f91941b5f8f05a6"
+    },
+    "phase_b": {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/ROUND_009_SEALED_EQUIVALENCE_PHASE_B_SCORER_CONTRACT.json",
+      "reused": false,
+      "sha256": "3653e9cd094d14b34fe184b37775724d203a69a253d70ac7c179c13415103c26"
+    }
+  },
+  "stage_blocker": "EXACT_SEALED_REFERENCE_AND_PROTECTED_BASELINE_PROVENANCE_MISSING",
+  "stage_execution_authorization": "PENDING_DIRECTOR_STAGE_DECISION",
+  "stage_id": "RECONSTRUCTION_EQUIVALENCE_EVALUATION_STAGE_V1"
+}
