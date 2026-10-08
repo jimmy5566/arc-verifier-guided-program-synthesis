@@ -1,0 +1,28 @@
+{
+  "brief_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_RC3A_INFEASIBILITY_REVIEW_V1",
+  "created_at": "2026-10-08T19:41:51.078195Z",
+  "forbidden": [
+    "DO_NOT_SILENTLY_RELAX_RC3A",
+    "DO_NOT_LAUNCH_STAGE_A",
+    "DO_NOT_TRAIN",
+    "DO_NOT_ACCESS_FINAL_AUDIT"
+  ],
+  "frozen_unchanged": [
+    "quantitative causal rule",
+    "weak atomic and protection gates",
+    "common evaluation contract",
+    "budget and isolation"
+  ],
+  "infeasibility_proof": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/RC3A_PROPORTIONAL_MATCHED_REPLAY_INFEASIBILITY_V1.json",
+    "sha256": "c0711f1d45fdf24b302d35940f306c55c4579af8ac0151b9bcfe00015509af41"
+  },
+  "prior_response": {
+    "decision": "REQUIRE_CHANGES",
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_SAME_COLOR_PRESERVATION_CAUSAL_TEST_STAGE_A_V2.json",
+    "sha256": "3893657bb960b6468cbcd75469aa2d66c8b21bc24af12c7459d60fe8baef37b7"
+  },
+  "question": "The required proportional six-family control reduction plus sixteen same-color treatment rows cannot satisfy exact equality of both transformer and supervised token totals because the mandatory rotate control row has a positive sequence_length - 2*supervised_tokens invariant while every same-color treatment row has zero. What is the smallest scientifically valid resolution: revise the matching criterion, revise the proportion constraint, revise the support family set, or pause Stage A? Do not authorize a launch.",
+  "schema_version": 1,
+  "scope": "STAGE_A_RC3A_SCIENTIFIC_CONSTRAINT_RESOLUTION"
+}

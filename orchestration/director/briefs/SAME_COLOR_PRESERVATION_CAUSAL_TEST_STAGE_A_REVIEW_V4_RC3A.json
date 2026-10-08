@@ -1,0 +1,54 @@
+{
+  "RC3A_result": {
+    "control_reduction_counts": {
+      "color mapping": 1,
+      "complete missing structure": 1,
+      "overlay": 6,
+      "propagation": 6,
+      "recolor": 1,
+      "rotate": 1
+    },
+    "difference_ratio": 0.0009238021168491242,
+    "maximum_ratio": 0.001,
+    "minimum_transformer_token_difference": 234,
+    "optimizer_steps_per_arm": 100,
+    "replay_slots": 80,
+    "supervised_tokens_per_arm": 104423,
+    "treatment_same_color_slots": 16
+  },
+  "authorizations": {
+    "explicit_user_gpu_authorization_present": false,
+    "final_audit": false,
+    "gpu_inference": false,
+    "model_loading": false,
+    "optimizer": false,
+    "r3": false,
+    "training": false
+  },
+  "brief_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_STAGE_A_REVIEW_V4_RC3A",
+  "coverage_conclusion": "Frozen R1/R2 schedules selected no same-color train-only replay. Source has 250 same-color train-only rows. R2 recorded 214455 aggregate supervised tokens but per-family telemetry is unavailable. Insufficient protection is a testable hypothesis, not a causal claim.",
+  "created_at": "2026-10-09T00:15:00Z",
+  "evaluation": "Prospectively identical frozen decoding/evaluation condition for both arms: request B32 then recorded 32->16->8->4->1 fallback; fixed target-blind 32-example B1 crosscheck, canonical agreement >=0.9375 and aggregate absolute rate delta <=0.0625. No reinterpretation of failed historical V7/R1/R2 B1/B32 threshold.",
+  "final_package": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/STAGE_A_REVISED_PREEXECUTION_PACKAGE_V2_RC3A.json",
+    "sha256": "71b442c5e01d582694e359adce83258bfe9233c1301f848295a379832a6a7431"
+  },
+  "frozen_conditions": [
+    "V7 starting checkpoint",
+    "train identity",
+    "recipe/seed/role slots/steps",
+    "target-dev and retention evaluation-only",
+    "FINAL_AUDIT sealed",
+    "all V7/R1/R2 and serial evidence immutable",
+    "old targeted-repair protocol stopped; no R3"
+  ],
+  "new_roadmap": "Stage A protects strong capabilities while testing weak-atomic improvement; Stage B repairs connected components, inside/contains, difference, width, and orientation; Stage C increases composition emphasis only after prerequisites; Stage D tests separated ARC development transfer. Stage-A success is not same-color restoration alone.",
+  "prior_director_response": {
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_SAME_COLOR_PRESERVATION_CAUSAL_TEST_RC3A_INFEASIBILITY_V1.json",
+    "sha256": "b1e95fe0c9bd21e45c0fe3a875a55f11f605b6a14be47b588cd0b781096f036a"
+  },
+  "question": "Does the final RC3A bounded matching package preserve a scientifically interpretable Stage-A control-versus-treatment test, and what smallest change, if any, is required before a separately user-authorized launch?",
+  "requested_decision_scope": "scientific readiness of Stage A only; do not audit SHA ceremony, Git formatting, or provenance duplication",
+  "schema_version": 1,
+  "scope": "STAGE_A_ANTI_FORGETTING_INDEPENDENT_SUCCESSOR_PROTOCOL"
+}

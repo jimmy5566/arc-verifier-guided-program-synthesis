@@ -1,0 +1,58 @@
+{
+  "audit_id": "SAME_COLOR_PRESERVATION_COVERAGE_AUDIT_V2",
+  "available_train_only_source": {
+    "availability": "VERIFIED",
+    "encoded_supervised_tokens": "NOT_PRESENT_IN_SOURCE_JSONL; must be measured with the frozen tokenizer before any launch",
+    "path": "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl",
+    "records_total": 4004,
+    "same_color_program": "SELECT_SHARED_COLOR_CLASS",
+    "same_color_records": 250,
+    "same_color_role": "ATOMIC_REPAIR",
+    "sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945",
+    "split": "TRAIN"
+  },
+  "boundaries": [
+    "V7/R1/R2 artifacts immutable",
+    "TARGET_DEV and RETENTION_SENTINEL evaluation-only",
+    "FINAL_AUDIT sealed",
+    "no R3 under stopped V1 protocol"
+  ],
+  "causal_hypothesis": {
+    "statement": "Insufficient explicit same-color train-only protection may contribute to observed forgetting.",
+    "status": "NOT_ESTABLISHED",
+    "test": "A prospective V7-starting control/treatment comparison that changes only preservation/replay family allocation."
+  },
+  "created_at": "2026-10-08T19:29:26.192632Z",
+  "r1": {
+    "config_path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/FORWARD_TARGETED_REPAIR_CONFIG_V1_003.json",
+    "config_sha256": "720a79238ae6ef14efdfce1eec414ff625780e33db5f65b17b6854aed07a9400",
+    "per_family_supervised_tokens": "NOT_RECORDED",
+    "role_weights": {
+      "ATOMIC_REPAIR": 0.5,
+      "COMPOSITION_REPAIR": 0.3,
+      "RETENTION_TRAIN": 0.2
+    },
+    "same_color_selected_by_any_family_weight": false,
+    "total_supervised_tokens": "NOT_RECORDED_IN_FROZEN_TERMINAL_EVIDENCE"
+  },
+  "r2": {
+    "config_path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_stage_v1/FORWARD_TARGETED_REPAIR_CONFIG_V1_004.json",
+    "config_sha256": "a53d90ddd15c853c2c136bab59663b55edb0a098bba8d002156dc7d125fe5383",
+    "per_family_supervised_tokens": "NOT_RECORDED",
+    "role_weights": {
+      "ATOMIC_REPAIR": 0.45,
+      "COMPOSITION_REPAIR": 0.3,
+      "RETENTION_TRAIN": 0.25
+    },
+    "same_color_selected_by_any_family_weight": false,
+    "total_supervised_tokens": 214455
+  },
+  "schema_version": 1,
+  "scope": "FROZEN_R1_R2_SCHEDULES_AND_AVAILABLE_TRAIN_ONLY_SOURCE",
+  "shared_schedule_fact": {
+    "interpretation": "same color was not a repair priority at V7 but should be explicitly preserved in any distinct successor protocol.",
+    "same_color_explicit_train_only_replay_coverage": "NONE",
+    "same_color_meaningful_indirect_coverage": "UNKNOWN_NOT_ESTABLISHED"
+  },
+  "status": "COMPLETE_WITH_LIMITED_PER_FAMILY_TOKEN_TELEMETRY"
+}

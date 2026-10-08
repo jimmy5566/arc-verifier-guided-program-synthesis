@@ -1,0 +1,114 @@
+{
+  "checkpoint_manifest": {
+    "identity": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  },
+  "config_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1_MATCHED_SCHEDULE_CONFIG",
+  "control_replay_family_weights": {
+    "color mapping": 0.075,
+    "complete missing structure": 0.075,
+    "overlay": 0.35,
+    "propagation": 0.35,
+    "recolor": 0.075,
+    "rotate": 0.075
+  },
+  "created_at": "2026-10-08T19:33:02.091617Z",
+  "evaluation": {
+    "batch1_crosscheck": {
+      "aggregate_absolute_rate_delta_maximum": 0.0625,
+      "both_arms_same_effective_batch_required": true,
+      "prediction_canonical_agreement_minimum": 0.9375,
+      "subset_size": 32
+    },
+    "common_decoding_condition_required": true,
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "requested_batch_size": 32
+  },
+  "final_audit_authorized": false,
+  "intervention": {
+    "only_allowed_schedule_difference": "At designated replay slots, a same-color treatment row replaces an equal sequence-length and supervised-token-count control row sampled from the frozen non-same-color replay mixture. All other slots must be byte-identical at the schedule-record level.",
+    "treatment_same_color_replay_weight": 0.2
+  },
+  "isolation": {
+    "cross_arm_resume": false,
+    "final_audit_accessed": false,
+    "fresh_nonce_per_arm": true,
+    "fresh_output_per_arm": true,
+    "retention_sentinel_training": false,
+    "target_dev_training": false
+  },
+  "model_loading_authorized": false,
+  "protocol_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
+  "schema_version": 1,
+  "scientific_training_authorized": false,
+  "shared_training": {
+    "atomic_family_weights": {
+      "connected components": 0.235294,
+      "difference": 0.196078,
+      "inside/contains": 0.235294,
+      "orientation": 0.137255,
+      "width": 0.196078
+    },
+    "checkpoint_cadence_tokens": [
+      250000
+    ],
+    "composition_family_weights": {
+      "conditional action": 0.338462,
+      "mask set": 0.338462,
+      "relation selector action": 0.323077
+    },
+    "gradient_accumulation": 4,
+    "joint_runtime_cap_seconds": 7200.0,
+    "nominal_transformer_tokens_per_arm": 250000,
+    "per_arm_runtime_cap_seconds": 3600.0,
+    "role_cycle": [
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN"
+    ],
+    "role_weights": {
+      "ATOMIC_REPAIR": 0.5,
+      "COMPOSITION_REPAIR": 0.3,
+      "RETENTION_TRAIN": 0.2
+    },
+    "seed": 2000031
+  },
+  "status": "FROZEN_CPU_ONLY_PREEXECUTION",
+  "train": {
+    "path": "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl",
+    "sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+  },
+  "treatment_replay_family_weights": {
+    "color mapping": 0.06,
+    "complete missing structure": 0.06,
+    "overlay": 0.28,
+    "propagation": 0.28,
+    "recolor": 0.06,
+    "rotate": 0.06,
+    "same color": 0.2
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "batch1_crosscheck_cohort": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/STAGE_A_BATCH1_CROSSCHECK_COHORT_V1.json",
+    "sha256": "9a886d80939d1197e33f62cabc59fd48a52a61f82b7133224a1a9f65ab38ff34"
+  },
+  "budget": {
+    "per_arm_cap_seconds": 3600.0,
+    "stage_a_joint_reservation_seconds": 7200.0,
+    "total_remaining_seconds": 24021.985752295044,
+    "user_gpu_authorization_present": false
+  },
+  "checks": {
+    "V7_start_checkpoint_identical": true,
+    "control_supervised_tokens": 104423,
+    "final_audit_opened": false,
+    "intervention_fraction": 0.2,
+    "intervention_slots": 16,
+    "minimum_transformer_token_delta": 234,
+    "model_loaded": false,
+    "only_designated_replay_slots_differ": true,
+    "optimizer_constructed": false,
+    "optimizer_steps_identical": true,
+    "proportional_control_reduction_counts": {
+      "color mapping": 1,
+      "complete missing structure": 1,
+      "overlay": 6,
+      "propagation": 6,
+      "recolor": 1,
+      "rotate": 1
+    },
+    "replay_slots_identical": true,
+    "role_slots_identical": true,
+    "same_color_treatment_slots": 16,
+    "scientific_training_started": false,
+    "supervised_tokens_identical": true,
+    "transformer_delta_ratio": 0.0009238021168491242,
+    "transformer_delta_within_0_001": true,
+    "treatment_supervised_tokens": 104423
+  },
+  "control_schedule": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/schedule_freeze_v4_rc3a/CONTROL_TRAINING_SCHEDULE.json",
+    "sha256": "088050d81bf3d0d9b4d9782dd241f06dc41247eca094c8655aa1f05faf15afa2"
+  },
+  "coverage_audit": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/SAME_COLOR_PRESERVATION_COVERAGE_AUDIT_V2.json",
+    "sha256": "3279fe607e68f9f21d23ebfaa4a36ca0a66bdad4b2209ea6f3d1a01f8eab5a09"
+  },
+  "freeze_script": {
+    "path": "scripts/freeze_same_color_preservation_rc3a_v1.py",
+    "sha256": "f8ea19f86c223d167225fc4f7166c0f66eacea53f2d9a5b354374aa0284015f2"
+  },
+  "isolation": {
+    "control_treatment_cross_resume": false,
+    "final_audit_accessed": false,
+    "fresh_nonce_per_arm_required": true,
+    "fresh_output_per_arm_required": true,
+    "retention_sentinel_training": false,
+    "target_dev_training": false
+  },
+  "matched_schedule_config": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/STAGE_A_MATCHED_SCHEDULE_CONFIG_V3_RC3A.json",
+    "sha256": "84c8178d13521d2f5e719869f41298af09e3c933c0f1e8a3e2ac6ce8020e157f"
+  },
+  "multistage_plan": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/FORWARD_CAPABILITY_REPAIR_MULTISTAGE_PLAN_V1.json",
+    "sha256": "22acbd5b04ebff37d091f39081c07c0faf1af93d07b25af169949e383b30d1b3"
+  },
+  "next_required_decision": "ONE_STAGE_A_SCIENTIFIC_REVIEW_ONLY; no GPU launch is requested or authorized",
+  "package_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1_RC3A_REVISED_PREEXECUTION_PACKAGE_V2",
+  "preserved_evidence": {
+    "V7_R1_R2_and_serial_diagnostic": "immutable; not mutated",
+    "old_targeted_repair_protocol": "stopped; R3 forbidden"
+  },
+  "quantitative_rule": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/STAGE_A_QUANTITATIVE_DECISION_RULE_V1.json",
+    "sha256": "9608ae0e418880956e64c6cee7e52f314a1bbf74167c9d3ae40adbc38ec36262"
+  },
+  "rc3a_director_resolution": {
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_SAME_COLOR_PRESERVATION_CAUSAL_TEST_RC3A_INFEASIBILITY_V1.json",
+    "sha256": "b1e95fe0c9bd21e45c0fe3a875a55f11f605b6a14be47b588cd0b781096f036a"
+  },
+  "roadmap_scope": "PRESERVE_STRONG_CAPABILITIES_THEN_REPAIR_WEAK_ATOMICS_THEN_IMPROVE_COMPOSITION_THEN_TEST_SEPARATED_ARC_TRANSFER",
+  "schedule_binding": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/schedule_freeze_v4_rc3a/RC3A_MATCHED_SCHEDULE_BINDING_V1.json",
+    "sha256": "2a127008295cdbc7159590871538090b100fdeaa8384d87bc4b845b6b04aa35b"
+  },
+  "schema_version": 1,
+  "stage_a_not_a_same_color_only_success_claim": true,
+  "stage_a_scope": "ANTI_FORGETTING_CONTROLLED_V7_STARTING_INTERVENTION_ONLY",
+  "status": "CPU_PREPARATION_COMPLETE_PENDING_ONE_STAGE_A_DIRECTOR_REVIEW_AND_EXPLICIT_GPU_AUTHORIZATION",
+  "treatment_schedule": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/schedule_freeze_v4_rc3a/TREATMENT_TRAINING_SCHEDULE.json",
+    "sha256": "9f5311fbd1e5352b8092bc00bae18db9a52608cc05841ce74995a0b867698abb"
+  }
+}

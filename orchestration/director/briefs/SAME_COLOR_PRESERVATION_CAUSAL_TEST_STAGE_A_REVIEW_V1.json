@@ -1,0 +1,59 @@
+{
+  "brief_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_STAGE_A_REVIEW_V1",
+  "constraints": [
+    "V7/R1/R2 and diagnostics immutable",
+    "no R3/reuse of stopped V1 authority",
+    "no TARGET_DEV or RETENTION_SENTINEL training",
+    "FINAL_AUDIT sealed",
+    "no GPU launch is requested by this brief",
+    "future B/C/D only after Stage A evidence and major-boundary review"
+  ],
+  "created_at": "2026-10-08T19:30:01.742523Z",
+  "design_summary": {
+    "budget": "joint <=7200 seconds and <=3600 seconds per arm from 24021.985752 remaining",
+    "evaluation": "one prospectively frozen common decoding condition; atomic, composition and retention paired metrics",
+    "matched": "role weights, weak-atomic and composition allocations, data identity, LoRA, optimizer, LR, context, seed, token/runtime caps, decoder/scorer/cohort/output isolation",
+    "only_changed_factor": "within-replay preservation family allocation; treatment assigns 0.20 of replay role to verified train-only same color and proportionally reduces the frozen non-same-color mixture",
+    "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1_V7 for both arms",
+    "strong_protection": [
+      "same color",
+      "recolor",
+      "selector prerequisites"
+    ],
+    "weak_atomic_targets": [
+      "connected components",
+      "inside/contains",
+      "difference",
+      "width",
+      "orientation"
+    ]
+  },
+  "frozen_evidence": {
+    "plan": {
+      "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/FORWARD_CAPABILITY_REPAIR_MULTISTAGE_PLAN_V1.json",
+      "sha256": "22acbd5b04ebff37d091f39081c07c0faf1af93d07b25af169949e383b30d1b3"
+    },
+    "r1_r2_same_color_coverage_audit": {
+      "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/SAME_COLOR_PRESERVATION_COVERAGE_AUDIT_V2.json",
+      "sha256": "3279fe607e68f9f21d23ebfaa4a36ca0a66bdad4b2209ea6f3d1a01f8eab5a09"
+    },
+    "stage_a_protocol_draft": {
+      "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1.json",
+      "sha256": "ec5d000a2c8cd248a95a72d1f801500ed83a4822a8dbed7af03604f6dcf53410"
+    },
+    "stopped_protocol_closeout": {
+      "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_paired_evaluation_v1/TARGETED_REPAIR_CURRENT_PROTOCOL_CLOSEOUT_V1.json",
+      "sha256": "ef1f1d91de80f473d03ae987a40a241ebbc680b5f41e6defdde1e9d9428ce47a"
+    }
+  },
+  "question": "Is the proposed V7-starting matched control/treatment Stage-A design scientifically reasonable as the first independent successor experiment, and what smallest scientific change, if any, is needed before it may be launched?",
+  "requested_outcomes": [
+    "CONTINUE",
+    "CONTINUE_WITH_WARNING",
+    "REQUIRE_CHANGES",
+    "PAUSE",
+    "STOP"
+  ],
+  "schema_version": 1,
+  "scope": "STAGE_A_ANTI_FORGETTING_INDEPENDENT_SUCCESSOR_PROTOCOL"
+}

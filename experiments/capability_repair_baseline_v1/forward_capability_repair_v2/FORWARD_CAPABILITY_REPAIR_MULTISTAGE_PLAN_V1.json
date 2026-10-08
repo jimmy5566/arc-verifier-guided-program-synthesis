@@ -1,0 +1,71 @@
+{
+  "created_at": "2026-10-08T19:29:26.192632Z",
+  "director_review_boundaries": [
+    "Stage A prospective protocol",
+    "Stage B entry after Stage A result",
+    "Stage C entry after prerequisite evidence",
+    "Stage D/final-model selection"
+  ],
+  "non_goals": [
+    "Restoring same color alone is not success.",
+    "Do not reinterpret the failed V1 Batch1/Batch32 decision rule.",
+    "Do not use provenance-only requirements as scientific gates."
+  ],
+  "objective": "PRESERVE_STRONG_CAPABILITIES_THEN_REPAIR_WEAK_ATOMIC_PRIMITIVES_THEN_IMPROVE_COMPOSITION_THEN_TEST_ARC_TRANSFER",
+  "plan_id": "FORWARD_CAPABILITY_REPAIR_MULTISTAGE_PLAN_V1",
+  "schema_version": 1,
+  "stages": [
+    {
+      "budget": "Joint <=7200 GPU seconds; <=3600 per arm; no launch until distinct protocol authorization.",
+      "evaluation": "One prospectively frozen decoding/scoring condition for both arms; paired atomic, composition and retention deltas; FINAL_AUDIT sealed.",
+      "expected_capability_gain": "Preserve same color while measuring weak-atomic improvement under identical conditions.",
+      "intervention": "Matched control/treatment; only protection/replay family allocation differs through explicit train-only same-color coverage.",
+      "name": "ANTI_FORGETTING_MECHANISM",
+      "protocol_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
+      "retention_protection": "same color, recolor and selector prerequisites are measured as protected strong capabilities; TARGET_DEV and RETENTION_SENTINEL remain evaluation-only.",
+      "stage": "A",
+      "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1_V7"
+    },
+    {
+      "budget": "Allocated prospectively from remaining global cap after Stage A actual charge.",
+      "evaluation": "Same frozen development/retention protocol; use paired deltas; no FINAL_AUDIT.",
+      "expected_capability_gain": "Move independently measured weak primitives toward STRONG >=0.75 without unacceptable forgetting.",
+      "intervention": "Progressively target connected components, inside/contains, difference, width and orientation while retaining explicit preservation coverage for strong primitives.",
+      "name": "ATOMIC_PREREQUISITE_REPAIR",
+      "retention_protection": "Preservation coverage is explicit and reported for every strong baseline capability.",
+      "stage": "B",
+      "starting_checkpoint": "Selected valid Stage-A checkpoint only after review"
+    },
+    {
+      "budget": "Allocated prospectively; cumulative total never exceeds 28800 seconds.",
+      "evaluation": "Test atomic-to-composition transfer on frozen composition DEV; no FINAL_AUDIT.",
+      "expected_capability_gain": "Composition improves beyond what is explained by atomic changes alone.",
+      "intervention": "Increase relation-selector-action, conditional action, mask-set-construction and related chains only when prerequisite profile justifies it.",
+      "name": "COMPOSITION_TRAINING",
+      "retention_protection": "Keep explicit strong-capability replay and retention evaluation.",
+      "stage": "C",
+      "starting_checkpoint": "Best scientifically valid Stage-B checkpoint after review"
+    },
+    {
+      "budget": "Inference only unless a separately reviewed protocol changes it.",
+      "evaluation": "Pre-frozen transfer protocol; FINAL_AUDIT remains sealed until final model and protocol selection.",
+      "expected_capability_gain": "Demonstrate or falsify transfer beyond the synthetic repair surfaces.",
+      "intervention": "No training intervention; evaluate on an appropriately separated ARC development set.",
+      "name": "GENUINE_ARC_TRANSFER",
+      "retention_protection": "ARC development tasks remain separated from all train/DEV/retention/final roles.",
+      "stage": "D",
+      "starting_checkpoint": "Selected model only after prior stage selection is closed"
+    }
+  ],
+  "starting_evidence": {
+    "current_budget_remaining_seconds": 24021.985752295044,
+    "final_audit_opened": false,
+    "same_color_audit": {
+      "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/SAME_COLOR_PRESERVATION_COVERAGE_AUDIT_V2.json",
+      "sha256": "3279fe607e68f9f21d23ebfaa4a36ca0a66bdad4b2209ea6f3d1a01f8eab5a09"
+    },
+    "stopped_protocol_closeout": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_paired_evaluation_v1/TARGETED_REPAIR_CURRENT_PROTOCOL_CLOSEOUT_V1.json"
+  },
+  "status": "STAGE_A_PREPARED_PENDING_DISTINCT_PROTOCOL_REVIEW",
+  "success_definition": "Measured atomic improvement followed by composition improvement without unacceptable forgetting, then transfer evidence on separated ARC development tasks."
+}

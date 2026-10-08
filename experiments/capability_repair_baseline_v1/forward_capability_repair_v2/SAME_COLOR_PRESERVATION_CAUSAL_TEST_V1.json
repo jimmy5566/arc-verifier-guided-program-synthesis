@@ -1,0 +1,107 @@
+{
+  "budget": {
+    "per_arm_maximum_seconds": 3600.0,
+    "planned_token_cap_per_arm": 250000,
+    "remaining_cumulative_scientific_gpu_seconds": 24021.985752295044,
+    "stage_a_joint_maximum_seconds": 7200.0,
+    "training_authorized": false
+  },
+  "created_at": "2026-10-08T19:29:26.192632Z",
+  "data_constraints": {
+    "forbidden": [
+      "TARGET_DEV training",
+      "RETENTION_SENTINEL training",
+      "FINAL_AUDIT access",
+      "Eval60 Gold",
+      "diagnostic Gold"
+    ],
+    "prelaunch_required": "Bind actual encoded train-only supervised-token counts by family with frozen tokenizer; fail closed if same-color rows cannot be encoded or split isolation fails.",
+    "train_only_same_color_source_audit": {
+      "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/SAME_COLOR_PRESERVATION_COVERAGE_AUDIT_V2.json",
+      "sha256": "3279fe607e68f9f21d23ebfaa4a36ca0a66bdad4b2209ea6f3d1a01f8eab5a09"
+    }
+  },
+  "evaluation_contract": {
+    "final_audit": "SEALED_NOT_ACCESSED",
+    "metrics": [
+      "same-color exact accuracy",
+      "paired exact fixes/harms for weak atomic families",
+      "composition DEV exact accuracy",
+      "protected retention profile",
+      "control-versus-treatment deltas"
+    ],
+    "mode": "One prospectively frozen decoding condition applied identically to control and treatment. Default requested batch_size=32 with length buckets and fallback ladder 32->16->8->4->1 only for recorded capacity pressure. A fixed representative Batch1 cross-check uses the predeclared light drift tolerance from AGENTS.md. No comparison relaxes or reinterprets the failed historical Batch1/Batch32 threshold."
+  },
+  "failure_handling": "If data availability, isolation, or matched-condition binding fails, do not launch. If the causal comparison fails its frozen scientific criteria, preserve it and do not infer causality beyond the measured contrast.",
+  "final_audit_authorized": false,
+  "forbidden": [
+    "DO_NOT_START_R3",
+    "DO_NOT_REUSE_STOPPED_V1_LAUNCH_AUTHORITY",
+    "DO_NOT_TRAIN_BEFORE_DISTINCT_PROTOCOL_AUTHORIZATION",
+    "DO_NOT_MUTATE_V7_R1_R2",
+    "DO_NOT_OPEN_FINAL_AUDIT"
+  ],
+  "gpu_inference_authorized": false,
+  "matched_conditions": [
+    "identical V7 start",
+    "identical train data identity except sampler allocation",
+    "atomic role weight 0.50",
+    "composition role weight 0.30",
+    "protection/replay role weight 0.20",
+    "same LoRA, optimizer, LR, context, seed, token cap, runtime cap, decoder, scorer, evaluation cohort, output isolation and checkpoint cadence"
+  ],
+  "optimizer_construction_authorized": false,
+  "predecessor_status": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1 is stopped; this is not R3 and does not reuse its launch authority.",
+  "protected_strong_capabilities": [
+    "same color",
+    "recolor",
+    "selector prerequisites"
+  ],
+  "protocol_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
+  "question": "Does explicitly allocating part of train-only preservation/replay sampling to same color protect that strong capability while retaining or improving the specified weak atomic primitives, relative to a matched generic-preservation control?",
+  "schema_version": 1,
+  "scientific_role": "STAGE_A_ANTI_FORGETTING_MECHANISM_INDEPENDENT_SUCCESSOR_EXPERIMENT",
+  "scientific_training_authorized": false,
+  "single_changed_factor": {
+    "control": {
+      "non_same_color_preservation_weights": {
+        "color mapping": 0.075,
+        "complete missing structure": 0.075,
+        "overlay": 0.35,
+        "propagation": 0.35,
+        "recolor": 0.075,
+        "rotate": 0.075
+      },
+      "same_color_weight_within_preservation_replay": 0.0
+    },
+    "invariant": "The protection/replay role weight remains 0.20 in both arms; treatment shifts exactly 0.20 of that role from the predeclared non-same-color mixture to verified train-only same-color samples.",
+    "name": "preservation_replay_family_allocation",
+    "treatment": {
+      "non_same_color_preservation_weights": {
+        "color mapping": 0.06,
+        "complete missing structure": 0.06,
+        "overlay": 0.28,
+        "propagation": 0.28,
+        "recolor": 0.06,
+        "rotate": 0.06
+      },
+      "same_color_weight_within_preservation_replay": 0.2
+    }
+  },
+  "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+  "starting_checkpoint_policy": "Both arms start from the identical frozen V7 checkpoint.",
+  "status": "DRAFT_PENDING_ONE_STAGE_LEVEL_DIRECTOR_REVIEW",
+  "success_criteria_to_freeze_before_launch": [
+    "Treatment preserves same-color performance relative to its matched control and V7 under the one frozen evaluation condition.",
+    "At least the predeclared weak-atomic aggregate shows net paired improvement without an unacceptable loss in any protected strong capability.",
+    "Both arms retain valid data isolation and no FINAL_AUDIT access.",
+    "Any Stage B transition depends on observed results and one major-stage Director review, not automatic continuation."
+  ],
+  "targeted_improvement_families": [
+    "connected components",
+    "inside/contains",
+    "difference",
+    "width",
+    "orientation"
+  ]
+}

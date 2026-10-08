@@ -1,0 +1,132 @@
+{
+  "allowed_difference": "designated intervention_slot replay positions only; each replacement preserves sequence_length and supervised_token_count",
+  "checkpoint_manifest": {
+    "identity": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  },
+  "config_sha256": "17ed5eb24976570677f013690fdc97dcab925543be4f821b16fa97ef1e4b348f",
+  "control_schedule_sha256": "5fd1291bb3ba8c8e95871c6f6165d360dc2fcf68245faf6a0d158f3b1df6d6fd",
+  "control_totals": {
+    "by_family": {
+      "color mapping": 22,
+      "complete missing structure": 8,
+      "conditional action": 43,
+      "connected components": 49,
+      "difference": 31,
+      "inside/contains": 57,
+      "mask set": 45,
+      "orientation": 21,
+      "overlay": 21,
+      "propagation": 22,
+      "recolor": 2,
+      "relation selector action": 32,
+      "rotate": 5,
+      "width": 42
+    },
+    "by_role": {
+      "ATOMIC_REPAIR": 200,
+      "COMPOSITION_REPAIR": 120,
+      "RETENTION_TRAIN": 80
+    },
+    "episodes": 400,
+    "supervised_tokens": 109776,
+    "transformer_tokens": 260932
+  },
+  "cpu_only": true,
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "protocol_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "shape": {
+    "intervention_fraction": 0.2,
+    "intervention_slots": 16,
+    "optimizer_steps": 100,
+    "replay_slots": 80,
+    "slots": 400,
+    "token_total": 260932
+  },
+  "shared_training": {
+    "atomic_family_weights": {
+      "connected components": 0.235294,
+      "difference": 0.196078,
+      "inside/contains": 0.235294,
+      "orientation": 0.137255,
+      "width": 0.196078
+    },
+    "checkpoint_cadence_tokens": [
+      250000
+    ],
+    "composition_family_weights": {
+      "conditional action": 0.338462,
+      "mask set": 0.338462,
+      "relation selector action": 0.323077
+    },
+    "gradient_accumulation": 4,
+    "joint_runtime_cap_seconds": 7200.0,
+    "nominal_transformer_tokens_per_arm": 250000,
+    "optimizer_steps_per_arm": 100,
+    "per_arm_runtime_cap_seconds": 3600.0,
+    "role_cycle": [
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN"
+    ],
+    "role_weights": {
+      "ATOMIC_REPAIR": 0.5,
+      "COMPOSITION_REPAIR": 0.3,
+      "RETENTION_TRAIN": 0.2
+    },
+    "schedule_alignment_slots": 100,
+    "schedule_stop_policy": "At least nominal_transformer_tokens_per_arm, gradient accumulation aligned, and aligned to schedule_alignment_slots; actual planned token count is frozen in the binding.",
+    "seed": 2000031
+  },
+  "status": "FROZEN_CPU_ONLY_MATCHED_SCHEDULES",
+  "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945",
+  "treatment_schedule_sha256": "9f4488ab759648bc6a056a2de4fc874b68d886d50889a0ac4afc36c85593cc72",
+  "treatment_totals": {
+    "by_family": {
+      "color mapping": 7,
+      "complete missing structure": 7,
+      "conditional action": 43,
+      "connected components": 49,
+      "difference": 31,
+      "inside/contains": 57,
+      "mask set": 45,
+      "orientation": 21,
+      "overlay": 21,
+      "propagation": 22,
+      "recolor": 2,
+      "relation selector action": 32,
+      "rotate": 5,
+      "same color": 16,
+      "width": 42
+    },
+    "by_role": {
+      "ATOMIC_REPAIR": 200,
+      "COMPOSITION_REPAIR": 120,
+      "RETENTION_TRAIN": 80
+    },
+    "episodes": 400,
+    "supervised_tokens": 109776,
+    "transformer_tokens": 260932
+  }
+}

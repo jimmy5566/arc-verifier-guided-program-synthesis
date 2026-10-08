@@ -1,0 +1,56 @@
+{
+  "causal_support": {
+    "composition_net_paired_fixes_vs_v7_minimum_per_arm": -2,
+    "control_same_color_paired_harms_vs_v7_minimum": 1,
+    "recolor_paired_harms_vs_v7_maximum_per_arm": 0,
+    "retention_net_paired_fixes_vs_v7_minimum_per_arm": -2,
+    "selector_prerequisites_paired_harms_vs_v7_maximum_per_arm": 0,
+    "treatment_minus_control_same_color_net_paired_fixes_minimum": 1,
+    "treatment_same_color_exact_correct_required": 12,
+    "treatment_same_color_paired_harms_vs_v7_required": 0,
+    "treatment_weak_atomic_net_paired_fixes_vs_v7_minimum": 3,
+    "treatment_weak_atomic_per_family_net_paired_harm_floor": -1
+  },
+  "cohorts": {
+    "composition": "frozen TARGET_DEV composition, denominator 96",
+    "protected_strong": [
+      "same color",
+      "recolor",
+      "selector prerequisites"
+    ],
+    "retention": "frozen RETENTION_SENTINEL, denominator 96",
+    "same_color": "TARGET_DEV same color, denominator 12",
+    "weak_atomic": [
+      "connected components",
+      "inside/contains",
+      "difference",
+      "width",
+      "orientation"
+    ],
+    "weak_atomic_denominator": 60
+  },
+  "created_at": "2026-10-08T19:33:02.091617Z",
+  "fail": {
+    "any_identity_isolation_or_parser_failure": "FAIL",
+    "composition_net_paired_fixes_vs_v7_maximum_for_fail": -3,
+    "material_batch_drift": "FAIL",
+    "protected_recolor_or_selector_harm_minimum_for_fail": 1,
+    "retention_net_paired_fixes_vs_v7_maximum_for_fail": -3,
+    "treatment_same_color_paired_harms_vs_v7_minimum_for_fail": 1
+  },
+  "forbidden": [
+    "DO_NOT_COMPARE_TO_OR_RELAX_V1_BATCH_THRESHOLD",
+    "DO_NOT_ACCESS_FINAL_AUDIT",
+    "DO_NOT_USE_EVALUATION_ROWS_FOR_TRAINING"
+  ],
+  "inconclusive": [
+    "control has zero same-color paired harms versus V7",
+    "treatment protects same color but does not exceed control on the paired contrast",
+    "treatment meets protection but weak-atomic net paired fixes is below 3 without a FAIL condition",
+    "valid results that meet neither CAUSAL_SUPPORT nor FAIL"
+  ],
+  "interpretation": "Only CAUSAL_SUPPORT may justify a later Stage-B review. INCONCLUSIVE and FAIL do not authorize Stage B or any training continuation. No threshold may change after either arm begins evaluation.",
+  "rule_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1_QUANTITATIVE_DECISION_RULE",
+  "schema_version": 1,
+  "status": "FROZEN_CPU_ONLY_PREEXECUTION"
+}

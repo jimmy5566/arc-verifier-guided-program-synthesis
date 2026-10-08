@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_SAME_COLOR_PRESERVATION_CAUSAL_TEST_STAGE_A_V1",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "STAGE_A_ANTI_FORGETTING_INDEPENDENT_SUCCESSOR_PROTOCOL",
+  "brief_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_STAGE_A_REVIEW_V1",
+  "reviewed_brief_sha256": "90ad8df20b219f141f0d655170692d2fc81b2273d2a022c221d2565335d3aed0",
+  "scientific_assessment": "The V7-starting matched control/treatment design is scientifically reasonable as an independent Stage-A experiment. The two arms preserve a common starting checkpoint, repair allocations, training recipe, budget, evaluation condition, and isolation boundary; the treatment changes only the within-replay family allocation by assigning 0.20 of the replay role to verified train-only same-color examples and proportionally reducing the non-same-color replay mixture. Launch readiness is not established because the draft leaves the causal success rule, weak-atomic improvement rule, protected-capability loss limits, and Batch1 cross-check tolerance qualitative rather than prospectively numeric.",
+  "root_cause": "The intervention is sufficiently isolated, but the draft cannot yet distinguish causal support, causal failure, and an uninformative no-forgetting control because its success criteria are not a complete quantitative decision rule. It also does not yet bind exact arm schedules and numerical evaluation tolerances needed to prove that replay allocation is the only material arm difference.",
+  "smallest_scientific_change": "Replace the qualitative success criteria with one immutable quantitative Stage-A decision rule, frozen before model loading, that contains explicit CAUSAL_SUPPORT, FAIL, and INCONCLUSIVE outcomes. All remaining required work is binding and verification of the already proposed matched design, not an expansion of its scientific scope.",
+  "required_changes": [
+    {
+      "id": "RC1_QUANTITATIVE_CAUSAL_RULE",
+      "requirement": "Freeze exact integer paired-count and exact-accuracy criteria before execution. CAUSAL_SUPPORT must require the treatment to have zero same-color paired harms versus V7, retain V7 same-color exact performance, and outperform the matched control on the predeclared paired same-color contrast. If the control has zero same-color paired harms versus V7, classify the preservation contrast as INCONCLUSIVE rather than causal success. If treatment does not satisfy its same-color protection requirement, classify Stage A as FAIL. Do not change this rule after either arm is scored."
+    },
+    {
+      "id": "RC2_WEAK_ATOMIC_AND_PROTECTION_GATES",
+      "requirement": "Freeze a numeric weak-atomic aggregate rule for connected components, inside/contains, difference, width, and orientation, including the minimum treatment-versus-V7 net paired improvement and any per-family loss limit. Freeze zero or explicit numeric paired-harm limits for recolor and selector prerequisites in both arms and for same color in the treatment. Define numeric composition and retention non-inferiority limits so gains in one surface cannot silently compensate for an unacceptable protected-capability loss."
+    },
+    {
+      "id": "RC3_MATCHED_SCHEDULE_BINDING",
+      "requirement": "Before model loading, serialize and hash both complete schedules. Bind identical V7 checkpoint identity, data identity, tokenizer, serializer, optimizer, LoRA recipe, learning rate, seed, token cap, runtime cap, checkpoint cadence, optimizer-step count policy, and replay-slot positions. Permit differences only at the predeclared replay slots where same-color treatment samples replace the proportionally reduced control mixture. Record planned and actual processed tokens and supervised tokens by role and family for both arms; fail closed if an unplanned difference is present."
+    },
+    {
+      "id": "RC4_COMMON_PROSPECTIVE_EVALUATION",
+      "requirement": "Freeze one exact evaluation cohort, decoder, parser, scorer, requested batch size and fallback ladder for both arms. Bind the representative Batch1 cross-check subset and a numeric prediction/metric drift tolerance before inference; AGENTS.md does not itself supply a numeric tolerance. Apply identical fallback decisions and scoring to both arms, record requested and effective batch sizes, and fail closed on material drift."
+    },
+    {
+      "id": "RC5_ARM_AND_STAGE_ISOLATION",
+      "requirement": "Bind fresh distinct nonces, non-overwriting output and checkpoint roots, complete V7 and data manifests, no cross-arm resume or checkpoint reuse, and a joint append-only budget reservation of at most 7200 seconds with at most 3600 seconds per arm. Preserve TARGET_DEV and RETENTION_SENTINEL as evaluation-only, keep FINAL_AUDIT sealed, and prohibit automatic Stage-B continuation."
+    }
+  ],
+  "frozen_conditions": [
+    "V7, R1, R2, the stopped V1 protocol, and all prior diagnostics remain immutable.",
+    "Both proposed Stage-A arms start from the identical frozen CAPABILITY_REPAIR_BASELINE_V1_V7 checkpoint.",
+    "The only proposed scientific arm difference remains preservation_replay_family_allocation.",
+    "The protection/replay role weight remains 0.20 in both arms; treatment assigns 0.20 within that role to train-only same-color and proportionally reduces the frozen non-same-color mixture.",
+    "Weak-atomic and composition allocations remain identical between arms.",
+    "TARGET_DEV and RETENTION_SENTINEL remain evaluation-only and FINAL_AUDIT remains sealed.",
+    "Stage B, Stage C, Stage D, R3, and production or final-model selection remain outside this review."
+  ],
+  "reviewed_evidence": {
+    "multistage_plan_sha256": "22acbd5b04ebff37d091f39081c07c0faf1af93d07b25af169949e383b30d1b3",
+    "same_color_coverage_audit_sha256": "3279fe607e68f9f21d23ebfaa4a36ca0a66bdad4b2209ea6f3d1a01f8eab5a09",
+    "stage_a_protocol_draft_sha256": "ec5d000a2c8cd248a95a72d1f801500ed83a4822a8dbed7af03604f6dcf53410",
+    "stopped_protocol_closeout_sha256": "ef1f1d91de80f473d03ae987a40a241ebbc680b5f41e6defdde1e9d9428ce47a"
+  },
+  "forbidden_actions": [
+    "DO_NOT_APPROVE_OR_START_R3",
+    "DO_NOT_LAUNCH_STAGE_A_FROM_THIS_RESPONSE",
+    "DO_NOT_LOAD_A_MODEL_OR_RUN_GPU_INFERENCE",
+    "DO_NOT_CONSTRUCT_AN_OPTIMIZER_OR_TRAIN",
+    "DO_NOT_REUSE_STOPPED_V1_LAUNCH_AUTHORITY",
+    "DO_NOT_MUTATE_V7_R1_R2_OR_PRIOR_DIAGNOSTICS",
+    "DO_NOT_USE_TARGET_DEV_OR_RETENTION_SENTINEL_AS_TRAINING_DATA",
+    "DO_NOT_OPEN_FINAL_AUDIT",
+    "DO_NOT_AUTOMATICALLY_CONTINUE_TO_STAGE_B_C_OR_D"
+  ],
+  "another_stage_level_review_required": true,
+  "review_trigger": "One immutable revised Stage-A package containing the quantitative causal decision table, numeric weak-atomic and protection gates, exact matched arm schedules and hashes, numeric Batch1 cross-check tolerance and subset identity, complete arm isolation bindings, and fail-closed budget reservation.",
+  "preparation_authorized": true,
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "r3_authorized": false,
+  "final_audit_authorized": false
+}

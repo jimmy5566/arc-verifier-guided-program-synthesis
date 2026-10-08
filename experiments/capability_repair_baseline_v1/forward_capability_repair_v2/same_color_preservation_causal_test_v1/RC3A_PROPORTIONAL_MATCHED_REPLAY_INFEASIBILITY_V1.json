@@ -1,0 +1,73 @@
+{
+  "artifact_id": "RC3A_PROPORTIONAL_MATCHED_REPLAY_INFEASIBILITY_V1",
+  "conclusion": "No schedule can simultaneously use the required six-family proportional control reduction, sixteen same-color treatment replacements, and exact equality of both total transformer tokens and total supervised tokens.",
+  "derivation": "largest-remainder integerization of 16 * [0.075,0.075,0.35,0.35,0.075,0.075] gives [1,1,6,6,1,1]",
+  "final_audit_opened": false,
+  "forbidden": [
+    "DO_NOT_RELAX_RC3A_SILENTLY",
+    "DO_NOT_DROP_ROTATE_OR_CHANGE_PROPORTIONS_WITHOUT_NEW_DECISION",
+    "DO_NOT_LAUNCH_STAGE_A",
+    "DO_NOT_TRAIN",
+    "DO_NOT_ACCESS_FINAL_AUDIT"
+  ],
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "permitted_action": "PAUSE_AND_REQUEST_DIRECTOR_SCIENTIFIC_RESOLUTION",
+  "proof": "Every treatment intervention item must be same color, so its sequence_length minus 2*supervised_tokens is 0. The required proportional control block contains one rotate item, whose value is strictly positive. If total supervised tokens are equal across arms, equal transformer-token totals would require equal sums of this invariant, which is impossible.",
+  "required_integer_control_reduction_counts": {
+    "color mapping": 1,
+    "complete missing structure": 1,
+    "overlay": 6,
+    "propagation": 6,
+    "recolor": 1,
+    "rotate": 1
+  },
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "FAIL_CLOSED_SCHEDULE_INFEASIBLE",
+  "token_supervision_invariant": {
+    "non_rotate_control_family_deltas": {
+      "color mapping": [
+        0
+      ],
+      "complete missing structure": [
+        0
+      ],
+      "overlay": [
+        0
+      ],
+      "propagation": [
+        0
+      ],
+      "recolor": [
+        0
+      ]
+    },
+    "rotate_sequence_length_minus_2x_supervised_tokens": [
+      234,
+      254,
+      274,
+      276,
+      294,
+      296,
+      300,
+      316,
+      318,
+      320,
+      338,
+      340,
+      342,
+      360,
+      362,
+      366,
+      384,
+      386,
+      408
+    ],
+    "same_color_sequence_length_minus_2x_supervised_tokens": [
+      0
+    ]
+  },
+  "train_path": "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl",
+  "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+}

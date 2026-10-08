@@ -1,0 +1,4119 @@
+{
+  "arm": "CONTROL",
+  "checkpoint_manifest": {
+    "identity": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  },
+  "config_sha256": "17ed5eb24976570677f013690fdc97dcab925543be4f821b16fa97ef1e4b348f",
+  "cpu_only": true,
+  "episodes": [
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000000",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 822,
+      "slot": 0,
+      "supervised_token_count": 411,
+      "token_label_sha256": "7b40687eccddca22141cffae4595f5831d76db0eca2d35c7e64de279e2777253"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000000",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 455,
+      "slot": 1,
+      "supervised_token_count": 24,
+      "token_label_sha256": "6722fdc068fbf3e841413ad288f099f85541c85c41f598a6557db1da4cbacbc9"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000000",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 421,
+      "slot": 2,
+      "supervised_token_count": 34,
+      "token_label_sha256": "cc821e856121f5a8bf2f5d541294705e05495196fdbb19d1e587abfa34f87c60"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000001",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 389,
+      "slot": 3,
+      "supervised_token_count": 24,
+      "token_label_sha256": "fd5c894503193c8f40b80bfe08d70772efd12b0b31021146d830941c50cdd88e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000000",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 862,
+      "slot": 4,
+      "supervised_token_count": 431,
+      "token_label_sha256": "858f62112143da931719cf83d8174a2305a94c5b5f835f25f2108d5b366747ee"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000001",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 682,
+      "slot": 5,
+      "supervised_token_count": 341,
+      "token_label_sha256": "5b389a3d75373e7a7d065bf6c6f3e57c6f54bf2280265b8d26ae47623de60e90"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000002",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 411,
+      "slot": 6,
+      "supervised_token_count": 24,
+      "token_label_sha256": "7dfb4b669f9dab0a718c6672f34608f608002db2715c75d21482fbd67ce9a9e1"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000001",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 858,
+      "slot": 7,
+      "supervised_token_count": 429,
+      "token_label_sha256": "92d8344e041482d0c8b0c48a184da9141279c5767a4ae3132c2e95b8a28909e0"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000002",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 810,
+      "slot": 8,
+      "supervised_token_count": 405,
+      "token_label_sha256": "6afe0ccb15062124cac06ba9add0666743ee4c6396475a41ad8afec8ccc6ada1"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000003",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 814,
+      "slot": 9,
+      "supervised_token_count": 407,
+      "token_label_sha256": "fc23f48e3d2262df70969115bb7a44eea5ed7242bee4941798be0a21504cf68e"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000000",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 722,
+      "slot": 10,
+      "supervised_token_count": 361,
+      "token_label_sha256": "b241166d3d94c2b60a6b512ca3886a1155471d9a37da25170b25d66d721a9fa9"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000000",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 11,
+      "supervised_token_count": 341,
+      "token_label_sha256": "7e37d1cd006b05e8e9e06eb9d87bf27dc549d3be801c069fa6ceecffc0466b1b"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000001",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 690,
+      "slot": 12,
+      "supervised_token_count": 345,
+      "token_label_sha256": "f6c136c549064198a555edfe0349c008a86ffe12d6654586982e1d99d7aa5d3b"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000001",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 722,
+      "slot": 13,
+      "supervised_token_count": 361,
+      "token_label_sha256": "9e5c11cc0c4aefaea1b116c03ef90a6236c227bd4960f695d185f314b0baa995"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000002",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 14,
+      "supervised_token_count": 365,
+      "token_label_sha256": "ddacefe4da1a7f8d837550ec5fc1633e3f8734628c14d44d6a13977a7ff39cad"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000002",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 15,
+      "supervised_token_count": 341,
+      "token_label_sha256": "cd6acb82a1ec002065cf2f8a63a5d54e5dc127f18788c41522eebf2fd7c99e71"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000014",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000000",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 774,
+      "slot": 16,
+      "supervised_token_count": 387,
+      "token_label_sha256": "f4334584023196f9ea31f27839dc147df2efb8680ef939bc0c0d25fda169939e"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000000",
+      "family": "color mapping",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 862,
+      "slot": 17,
+      "supervised_token_count": 431,
+      "token_label_sha256": "abf2b579368c9fdd6ccee20fda26346843b09d14d235d37150f59a7e659193ac"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000000",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 598,
+      "slot": 18,
+      "supervised_token_count": 299,
+      "token_label_sha256": "0403ef396d0d2006bd0626f634284bb6b39e0b825cadf24c55c29c20fd8f0e79"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000001",
+      "family": "color mapping",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 858,
+      "slot": 19,
+      "supervised_token_count": 429,
+      "token_label_sha256": "406a0ca1580ee31155442335a6f9a7e019e216f81eb9cc6225449092d415b6cf"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000000",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 322,
+      "slot": 20,
+      "supervised_token_count": 23,
+      "token_label_sha256": "7a2efb94a215a695044ef7b25379e6f18363f9e0bc66169baed696431eca6a9d"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000002",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 862,
+      "slot": 21,
+      "supervised_token_count": 431,
+      "token_label_sha256": "18b6b2b50f9687bdb33ccab11994d16f6b9e5b12cde70b4bb51b6ed664d56b81"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000001",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 353,
+      "slot": 22,
+      "supervised_token_count": 34,
+      "token_label_sha256": "442b3804f3378faf18d596828e400a3d561f3b41b0ddc8dd9b2e6bfee68c31f8"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000004",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 682,
+      "slot": 23,
+      "supervised_token_count": 341,
+      "token_label_sha256": "d88eb38b857df59b6a5b999fb5cd9e3aa53d9ab56ba71d95f50934309872fe81"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000003",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 774,
+      "slot": 24,
+      "supervised_token_count": 387,
+      "token_label_sha256": "5f12763ea69e63f523d00204375c9fc0344d9ed4753de3358dde953e3c3c8de5"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000004",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 814,
+      "slot": 25,
+      "supervised_token_count": 407,
+      "token_label_sha256": "dba296e492c03b37c06d8c945013a89dcc1eafb5ef01fc06358ffec16045ecde"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000001",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 432,
+      "slot": 26,
+      "supervised_token_count": 21,
+      "token_label_sha256": "52b2991ed43ecb58573f4734f56fc9ee44236756c8bf895c969b13b884b4a00b"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000003",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 411,
+      "slot": 27,
+      "supervised_token_count": 24,
+      "token_label_sha256": "092d43261b1c036a45772fca6f19d06b52585478b2b8c1231e323fcf9dadcbd5"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000002",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 500,
+      "slot": 28,
+      "supervised_token_count": 23,
+      "token_label_sha256": "da6147d4a4671a6bc13b6caaa48d4e0cefac22d12534f11bef5804703b68ef93"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000004",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 343,
+      "slot": 29,
+      "supervised_token_count": 24,
+      "token_label_sha256": "62458c7d658a61b4a220f437ff27b265fcc615b14b9f2ab01400013e60738253"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000003",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 814,
+      "slot": 30,
+      "supervised_token_count": 407,
+      "token_label_sha256": "788a4dd503baa9ffd399d45fc32c4a9e1a64aea0062ed88e89827c853e114cba"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000003",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 31,
+      "supervised_token_count": 341,
+      "token_label_sha256": "a1ff7737e7e390e30b5026d999f731d0e75f0f5086833028bc7ce915c95c3967"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000000",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 32,
+      "supervised_token_count": 429,
+      "token_label_sha256": "63a5216b56ad42b088d8fc8029d43fb7f1654a6c85818c78e8b7e77b9fd87da8"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000004",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 33,
+      "supervised_token_count": 365,
+      "token_label_sha256": "7608b08c63451a1cce198f75198146b9bcdb053f2b392879dd23084fa3a08744"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000005",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 558,
+      "slot": 34,
+      "supervised_token_count": 279,
+      "token_label_sha256": "9e8f0f8066e94abb6727278321147419b85e690572df3345ef7f20d15c4c02db"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000004",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 35,
+      "supervised_token_count": 429,
+      "token_label_sha256": "2f9b86910a0727a2284fb1a2f66ae6bf440152e0dcc9ac8a6776515f9a0eeaea"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000001",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 690,
+      "slot": 36,
+      "supervised_token_count": 345,
+      "token_label_sha256": "aa9e488f77c43609d71941258be01e15490f61e321f2fb9c715966f0b3d4bfc1"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000014",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000001",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 774,
+      "slot": 37,
+      "supervised_token_count": 387,
+      "token_label_sha256": "f4334584023196f9ea31f27839dc147df2efb8680ef939bc0c0d25fda169939e"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000002",
+      "family": "color mapping",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 814,
+      "slot": 38,
+      "supervised_token_count": 407,
+      "token_label_sha256": "250daabefb800604ef81173756109dd8fc4b993f891d7af43fcefd9d1dbb981f"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000002",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 822,
+      "slot": 39,
+      "supervised_token_count": 411,
+      "token_label_sha256": "8ecd85cae58e8665bc689fb37c6f23bf14b4d2fbe29bba760521c2ca452b8108"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000005",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 407,
+      "slot": 40,
+      "supervised_token_count": 24,
+      "token_label_sha256": "822663820ab4405d405349ae1be5ca5e016f40884d8e20d63c662bdcec535844"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000005",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 730,
+      "slot": 41,
+      "supervised_token_count": 365,
+      "token_label_sha256": "948e1d230b64adf27d2446746f9b563c3b5cc71dd947c09e34a9e5932b25f671"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000002",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 463,
+      "slot": 42,
+      "supervised_token_count": 34,
+      "token_label_sha256": "a2d94e4a7d19f962da413b4cadc0f44420be3771c2a2e41d43c1c47fe526ac04"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000005",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 810,
+      "slot": 43,
+      "supervised_token_count": 405,
+      "token_label_sha256": "4ba5d69af6171c8656a51043c8cbb2299a8ec0cbce9be626c184fb78e0a138d2"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000006",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 690,
+      "slot": 44,
+      "supervised_token_count": 345,
+      "token_label_sha256": "6585db55376fa7bd57a734d05d909f0cc91c07d11e357b3622696b8b5c1bf094"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000003",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 422,
+      "slot": 45,
+      "supervised_token_count": 35,
+      "token_label_sha256": "ad785239a2efaa0c5a96a91f3c153bd3cd52f5930f5babe743dc1d6f9f9e060f"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000004",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 312,
+      "slot": 46,
+      "supervised_token_count": 33,
+      "token_label_sha256": "74c713ed934b17d6c7b2415190b9cb4ea50607d51dadde813b1b073b5cc482df"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000003",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 364,
+      "slot": 47,
+      "supervised_token_count": 23,
+      "token_label_sha256": "a2397b9be96aca33bd3621c0d50e472b9e52348721d82addba09cc55469e796e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000005",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 465,
+      "slot": 48,
+      "supervised_token_count": 34,
+      "token_label_sha256": "fc8cb81250edb84fc09aa7416ef0b94fc44e15803439b420f23203486265fd3d"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000006",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 682,
+      "slot": 49,
+      "supervised_token_count": 341,
+      "token_label_sha256": "0787c81e3cac6694d45be30ebb05c46af000084db36eb9f3510a69af80b8e89f"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000005",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 598,
+      "slot": 50,
+      "supervised_token_count": 299,
+      "token_label_sha256": "30d36b6f59058efe271f610855b71712d68b16b4050df9680f68a3a5a2d475ff"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000006",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 814,
+      "slot": 51,
+      "supervised_token_count": 407,
+      "token_label_sha256": "8bbda5a7ac719bcecc3ee4b38b7d27ae86d06d4b5e858045886b3b4784f9752d"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000001",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 774,
+      "slot": 52,
+      "supervised_token_count": 387,
+      "token_label_sha256": "99d1fea97b93b8f2c3b8d207a38903e9a0b0975f2d1983e23f5d1e54c11b3924"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000007",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 53,
+      "supervised_token_count": 341,
+      "token_label_sha256": "cdf145bc80b3682c566c61521027098f94fad4b2d7250f1a0fa31b76ff108c87"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000006",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 770,
+      "slot": 54,
+      "supervised_token_count": 385,
+      "token_label_sha256": "b5a699f701e62470816afbe54f39bdfb31ae548b5628dc2babcfac2af79c0425"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000007",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 726,
+      "slot": 55,
+      "supervised_token_count": 363,
+      "token_label_sha256": "835c912e1406188b11c5eea41816d03204ed9fab75000ffa100f4e8e9e3a5db0"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000003",
+      "family": "color mapping",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 770,
+      "slot": 56,
+      "supervised_token_count": 385,
+      "token_label_sha256": "5c7cc0fc6742fad442e5c3e8ce4311f67e30a24512a8e987443da8e94ce677eb"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000000",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 730,
+      "slot": 57,
+      "supervised_token_count": 365,
+      "token_label_sha256": "bc27559816c1bfabf11f4e2aafdc5e5e0b604d541dbf9e0e97abcfbc9a1bf46f"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000004",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000002",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 906,
+      "slot": 58,
+      "supervised_token_count": 453,
+      "token_label_sha256": "1baa1ff11e9c2dabb9b2b85b66b0639ece7cd4f389cf59a693c41ad0b4766cfa"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000001",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 906,
+      "slot": 59,
+      "supervised_token_count": 453,
+      "token_label_sha256": "afb4d978d13f9776cc08a2fe048023bb18909def7e8bd0717df95cd125d5c09d"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000006",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 443,
+      "slot": 60,
+      "supervised_token_count": 36,
+      "token_label_sha256": "cc8dfd16b6e3976f82b446c8ba900d80a453ab2a3150462be2cc77c76eab0b54"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000007",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 770,
+      "slot": 61,
+      "supervised_token_count": 385,
+      "token_label_sha256": "b6f7e2ee57131286304ee9d08038c09d8bf4c53f47ba474d9706f28931f41cbf"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000008",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 682,
+      "slot": 62,
+      "supervised_token_count": 341,
+      "token_label_sha256": "898d374d95dfd78124deefd46d5c63dad0282db2aae64e3c437a2bad0ce7abbb"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000006",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 477,
+      "slot": 63,
+      "supervised_token_count": 24,
+      "token_label_sha256": "0bbe0cc600a2fadaf2569dc39b35a9ea688709e40b64ed38ab573ba127c68903"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000004",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 453,
+      "slot": 64,
+      "supervised_token_count": 24,
+      "token_label_sha256": "1d2debd3a5651ec661c6f8cd6aaf9a09b64988420825d4d5f8fc1e557ab4d72f"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000009",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 814,
+      "slot": 65,
+      "supervised_token_count": 407,
+      "token_label_sha256": "c50fc3e11bf33c2d551279305befa62a2e8716c7eb064d481047c146e93395dc"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000005",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 364,
+      "slot": 66,
+      "supervised_token_count": 23,
+      "token_label_sha256": "e838e776372a6652e6d481c31987015b996aa68a7c208da0f48482eb86f92e02"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000010",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 814,
+      "slot": 67,
+      "supervised_token_count": 407,
+      "token_label_sha256": "fed742028198dfef97513ad9b97dccc0f0801fe3e55a1e849c98c2c56db06ea6"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000011",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 638,
+      "slot": 68,
+      "supervised_token_count": 319,
+      "token_label_sha256": "818d1aa3b4d9ae9d49de203f94db8f9bafb1404fc729fefbd84b40083149455b"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000012",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 682,
+      "slot": 69,
+      "supervised_token_count": 341,
+      "token_label_sha256": "b8247388e67a06bc6adf44ef0152fe0fb34f88f280b8453203faff4cc22d8a2d"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000008",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 770,
+      "slot": 70,
+      "supervised_token_count": 385,
+      "token_label_sha256": "31e7bd5fab726212e558ab3dad40fa49138a37244be80ff3147666968de7f8cf"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000008",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 71,
+      "supervised_token_count": 365,
+      "token_label_sha256": "2836c4529f20224ef78aaec75c6b92a7317f6305b419d24968b6cd14e55cb4d5"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000009",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 814,
+      "slot": 72,
+      "supervised_token_count": 407,
+      "token_label_sha256": "5be6e2006db4b40b2ecaeb6c65c409752c7224fafe5ce6f27a40a24f0156bd0d"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000002",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 766,
+      "slot": 73,
+      "supervised_token_count": 383,
+      "token_label_sha256": "86e24fc4685d9906f22d50f0b56825a0dac7be82e6503514e15942ae410dc19f"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000010",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 642,
+      "slot": 74,
+      "supervised_token_count": 321,
+      "token_label_sha256": "653ad764507c5edbe13f9c18f368b8e1be2ab80aa1c50a5c038a79d0f4f51a38"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000011",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 75,
+      "supervised_token_count": 429,
+      "token_label_sha256": "1860925cec0701a054c046a3f714936cab7dd4e1817adb9399b37ecce557bd41"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000003",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 814,
+      "slot": 76,
+      "supervised_token_count": 407,
+      "token_label_sha256": "36772b58f4b328bbe26ba4b31062586f10b0601a2634a212cfe59ca4c088f62d"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000004",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 678,
+      "slot": 77,
+      "supervised_token_count": 339,
+      "token_label_sha256": "297e57d2a4fcb48de873686e62613528d53addd47b33a9cad836148193877c5d"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000002",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 906,
+      "slot": 78,
+      "supervised_token_count": 453,
+      "token_label_sha256": "ee6be06fbf843769d4854dff19519a63cb7632082025df745027a9b3a6ba3f27"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000001",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000003",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 858,
+      "slot": 79,
+      "supervised_token_count": 429,
+      "token_label_sha256": "406a0ca1580ee31155442335a6f9a7e019e216f81eb9cc6225449092d415b6cf"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000013",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 774,
+      "slot": 80,
+      "supervised_token_count": 387,
+      "token_label_sha256": "018a9a569d5d823f155b77e2db963266cfc0c7a9f647fa51f06105153e9d95b7"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000007",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 862,
+      "slot": 81,
+      "supervised_token_count": 431,
+      "token_label_sha256": "2064543a555ab82c008951abf6211084e2b17a29445afb47b404f8c7af69bd14"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000008",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 690,
+      "slot": 82,
+      "supervised_token_count": 345,
+      "token_label_sha256": "cb26d74135a73855a1bc92755d32f8bec635e8a08f9f3b450c5f52f346da9507"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000009",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 822,
+      "slot": 83,
+      "supervised_token_count": 411,
+      "token_label_sha256": "44bd9fa63a2d9d29e9f8b955f034fe623e1c362e38fda1ae165f2460503ebeef"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000014",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 770,
+      "slot": 84,
+      "supervised_token_count": 385,
+      "token_label_sha256": "7d37b4ed0cf706c9b02d03c0011f86b6e38cf93c7fac9fa28ce2b2cfbb96bd71"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000015",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 722,
+      "slot": 85,
+      "supervised_token_count": 361,
+      "token_label_sha256": "0306c3456962ec19a5fb869f2770dc744f23985607f8511bef5b537e89f87d16"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000016",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 766,
+      "slot": 86,
+      "supervised_token_count": 383,
+      "token_label_sha256": "dac484acb73bf410ae6e9f195844dd4e6592d1f1f33323684d097e962adc263d"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000017",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 642,
+      "slot": 87,
+      "supervised_token_count": 321,
+      "token_label_sha256": "f59837c5baf32765947d5215ea364925c77b9190790288ff4fde3851bf08dc87"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000007",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 365,
+      "slot": 88,
+      "supervised_token_count": 24,
+      "token_label_sha256": "0678bdf1cd551a02eb250c7f14a433638bc747d8dd439c5cccb1d8144a0556b3"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000006",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 405,
+      "slot": 89,
+      "supervised_token_count": 22,
+      "token_label_sha256": "32fe516f7f8e8d2e9a3fe565bd59f3211c3095770aa5ea79da4d29fbb6ce8866"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000009",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 638,
+      "slot": 90,
+      "supervised_token_count": 319,
+      "token_label_sha256": "14d401c763fa52fcfe6abccde5a63e0a7c7c055624409caafc8c40eb66820afd"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000010",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 638,
+      "slot": 91,
+      "supervised_token_count": 319,
+      "token_label_sha256": "ad528796e1f200876619553f9a95ee742af1e95a5b1cac7e88b359da478d9b6a"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000011",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 598,
+      "slot": 92,
+      "supervised_token_count": 299,
+      "token_label_sha256": "f8c2d218cd98e00c23bf7e9582cb655d0435a4dbc6422a81fc4638e80264ff55"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000003",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 774,
+      "slot": 93,
+      "supervised_token_count": 387,
+      "token_label_sha256": "bced3b51cdfb47def5c1428373f175e326209f2b267bce139bf050fcd07daf2b"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000004",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 94,
+      "supervised_token_count": 429,
+      "token_label_sha256": "590e891de4277e0ae68806d34ce94af0502f328795395a1b0821e0686912abe9"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000012",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 774,
+      "slot": 95,
+      "supervised_token_count": 387,
+      "token_label_sha256": "521d947ec39d48da83ab67ccdb90fd73d8fab148c656d34de7b121e180e92754"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000003",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 730,
+      "slot": 96,
+      "supervised_token_count": 365,
+      "token_label_sha256": "31fec049e110d08ef96ba457f7207bb6312e7111b70610fb01ef2a401736d4a0"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000005",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 690,
+      "slot": 97,
+      "supervised_token_count": 345,
+      "token_label_sha256": "cd8da9cac8b1af32188b9551e62ae2df953ff6283105e77392fb8b8bbdd440b3"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000004",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 730,
+      "slot": 98,
+      "supervised_token_count": 365,
+      "token_label_sha256": "993e7d162a7bdeecdb110a001b15af8dd7f7ef12d9b7531a1bed74027d858ef3"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000005",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 690,
+      "slot": 99,
+      "supervised_token_count": 345,
+      "token_label_sha256": "15e938db8bed0ff12d9df10cf9edb9bc621e522636077f6e5fe7f4422af2c734"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000007",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 364,
+      "slot": 100,
+      "supervised_token_count": 23,
+      "token_label_sha256": "ea7952320e304bc47293fa72ad53fe36c8c73e797dd1220bc26e94081854c481"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000018",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 682,
+      "slot": 101,
+      "supervised_token_count": 341,
+      "token_label_sha256": "0fe4d03eaf30d053662eba82e843dd8e78a19fa61d90577951158d3bf6eee88a"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000019",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 814,
+      "slot": 102,
+      "supervised_token_count": 407,
+      "token_label_sha256": "cb76b64e0017ff82a9142d7f01c2a58f397cce5d2e7d49ba2672d34012817573"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000008",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 432,
+      "slot": 103,
+      "supervised_token_count": 21,
+      "token_label_sha256": "604c65782545eb95fc1bfb9d2cef2ef8ec443c7e338e2b082fe8e45c646da237"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000009",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 344,
+      "slot": 104,
+      "supervised_token_count": 23,
+      "token_label_sha256": "a5cc6daeec10977092df763d4af9b1b1f5d18e0a1a2dd521d56404f5821ccefe"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000010",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 722,
+      "slot": 105,
+      "supervised_token_count": 361,
+      "token_label_sha256": "172160f6f4b28907a56d715a747d55f1ce449b55fbb4f96eec7e5ee95e7b2702"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000020",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 682,
+      "slot": 106,
+      "supervised_token_count": 341,
+      "token_label_sha256": "45b8960498b3306b7c260ceed1288635a73d6b0ef71a77561a3564065c897052"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000007",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 464,
+      "slot": 107,
+      "supervised_token_count": 33,
+      "token_label_sha256": "e76dc7f5c01d5a1ae33c3aad83a4193e10ad45080181384744606248c557b427"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000021",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 774,
+      "slot": 108,
+      "supervised_token_count": 387,
+      "token_label_sha256": "573c3d65d56b8a6976aff35d3ab07561ca8d2cc64fb1fd3f0611a449a95a3c86"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000008",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 411,
+      "slot": 109,
+      "supervised_token_count": 24,
+      "token_label_sha256": "b07bbacb2360940a0822f082a552db84d926fa9d3b8834587c57d752db79edef"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000013",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 822,
+      "slot": 110,
+      "supervised_token_count": 411,
+      "token_label_sha256": "a022833c456be4ca90ba3e37170eef7be34c419f37738d27d7fc2c79a98c8c59"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000014",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 726,
+      "slot": 111,
+      "supervised_token_count": 363,
+      "token_label_sha256": "bdb888a8aa3e5942ba871650e5724f768cc457b482e1df25d003d781d5fbde4c"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000005",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 112,
+      "supervised_token_count": 429,
+      "token_label_sha256": "803a9c4da726755d6f76847a7fb619f07bf95acccb04538ea059230302d08699"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000015",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 766,
+      "slot": 113,
+      "supervised_token_count": 383,
+      "token_label_sha256": "77848111caebea024e786479a4c751833a56fab966506e894855084b74e4a20b"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000016",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 114,
+      "supervised_token_count": 341,
+      "token_label_sha256": "efa03e46a7c6141d0c4d377fb67bca85c5eb5df003d5c85b8aec8b893525e87a"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000012",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 678,
+      "slot": 115,
+      "supervised_token_count": 339,
+      "token_label_sha256": "17a56c061cd4e372a3edb5604e6207da41552e4610fd347cd03a0a2a0f909912"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000002",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000004",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 814,
+      "slot": 116,
+      "supervised_token_count": 407,
+      "token_label_sha256": "250daabefb800604ef81173756109dd8fc4b993f891d7af43fcefd9d1dbb981f"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000000",
+      "family": "rotate",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 456,
+      "slot": 117,
+      "supervised_token_count": 45,
+      "token_label_sha256": "7c0ef8cffc87b871f1218c86c9607d171513d727f14d5e12569a11278a2784df"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000006",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 822,
+      "slot": 118,
+      "supervised_token_count": 411,
+      "token_label_sha256": "f04c566904eb53d51f05ffde2fb2bb24ccb96bbc991f427d8eecc5bcbd449441"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000007",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 638,
+      "slot": 119,
+      "supervised_token_count": 319,
+      "token_label_sha256": "47e8a03767f2bb3c3751f43142e6f21da0322034dbf8da841fc5b4e9cf2941cd"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000022",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 814,
+      "slot": 120,
+      "supervised_token_count": 407,
+      "token_label_sha256": "495e52348195ac7262ef9be5a74d1c0f4e75404b41b2bcd7df78a9c0eba83c18"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000010",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 387,
+      "slot": 121,
+      "supervised_token_count": 26,
+      "token_label_sha256": "c4611dcc3e11d9b265a8a66423a35aad45ed1cf33fa16dbbae65a4cca336fc27"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000011",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 822,
+      "slot": 122,
+      "supervised_token_count": 411,
+      "token_label_sha256": "fa5b398aaf97682cacf8cccf287d46bd0606a894038dd059bc7587a73855063a"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000023",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 906,
+      "slot": 123,
+      "supervised_token_count": 453,
+      "token_label_sha256": "f0c91d8c2a9a98a3de379f4c6467ebc62452bd89e27bd32ce6c0a82e1bdcb673"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000024",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 722,
+      "slot": 124,
+      "supervised_token_count": 361,
+      "token_label_sha256": "e70e014290f03d08c31db29db196c6b118bb7da8f05f27c22c553849884a4963"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000025",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 814,
+      "slot": 125,
+      "supervised_token_count": 407,
+      "token_label_sha256": "8ac59e95c8b4b3859ed4e9e28a09e01d29ba5df095f53fbffaa53f2ca1edd8e3"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000011",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 453,
+      "slot": 126,
+      "supervised_token_count": 22,
+      "token_label_sha256": "13e50baea616e1ed2141356e9ebc442ca864655d7d4e44a8ef77a764a2ff17c5"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000026",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 642,
+      "slot": 127,
+      "supervised_token_count": 321,
+      "token_label_sha256": "e486204968d8e6ab7875d3ecba0cb2f3d0863f004bf4e6d58a199e55a01919c1"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000009",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 411,
+      "slot": 128,
+      "supervised_token_count": 24,
+      "token_label_sha256": "4215113cf5d20b6ec34ae9fb638ddc6bb6262077b2cf22d148fa726b85572317"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000027",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 774,
+      "slot": 129,
+      "supervised_token_count": 387,
+      "token_label_sha256": "3af344910e26e8c1c65384eebe1ed0bec08fd737308a8f17ea9773d17c6383c1"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000017",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 906,
+      "slot": 130,
+      "supervised_token_count": 453,
+      "token_label_sha256": "37803fd276e9d33ae229a52eaff82d9c032d11ac8591180834376b77179d93ca"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000006",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 131,
+      "supervised_token_count": 365,
+      "token_label_sha256": "e1357f4d16758a525c380e7c151fcbb11fd0ff3e9a3489d7527f25c17fd7996d"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000018",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 642,
+      "slot": 132,
+      "supervised_token_count": 321,
+      "token_label_sha256": "1b5319e158cf07a218c0523fefeba90240c650a1d6667f114a4e795b8c2b4f22"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000013",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 690,
+      "slot": 133,
+      "supervised_token_count": 345,
+      "token_label_sha256": "9f34510066978963c0d1b44c7c8b7d359825067c9c0238e0257ce0391ebff7d1"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000014",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 690,
+      "slot": 134,
+      "supervised_token_count": 345,
+      "token_label_sha256": "c20ee23ea487289a8da89c8b5e376ed8bb6712a79e5e5ead60bd7c45f98ae2d5"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000007",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 135,
+      "supervised_token_count": 429,
+      "token_label_sha256": "1b620a1e90191d1925a38dd61260243324d0ae61e81fa3bef12a569931633105"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000001",
+      "family": "rotate",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 476,
+      "slot": 136,
+      "supervised_token_count": 45,
+      "token_label_sha256": "0a86414471d0f34a2fb445d20c84f8d6722f78a49fcd6f60bd747c395ab36fc2"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000003",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000005",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 770,
+      "slot": 137,
+      "supervised_token_count": 385,
+      "token_label_sha256": "5c7cc0fc6742fad442e5c3e8ce4311f67e30a24512a8e987443da8e94ce677eb"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000000",
+      "family": "complete missing structure",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 774,
+      "slot": 138,
+      "supervised_token_count": 387,
+      "token_label_sha256": "8d446d116795fcb07c8f4f550ceb3ae78229dcab51b460f143fce7864c61591b"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000006",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 730,
+      "slot": 139,
+      "supervised_token_count": 365,
+      "token_label_sha256": "70f647f22779ab8722527cfd00be08368c57ca3a67f8f5cfa4deb64a9ed07fdb"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000028",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 730,
+      "slot": 140,
+      "supervised_token_count": 365,
+      "token_label_sha256": "bca6f8f2aba7daae63642e3fdd2f8ecedd25c6d30b62a22c92eaef2691b7d5d7"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000029",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 682,
+      "slot": 141,
+      "supervised_token_count": 341,
+      "token_label_sha256": "e348fe5d7b192e8e27fc20db52d29977b64828c4f20f94da569b330f0f9c8078"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000012",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 454,
+      "slot": 142,
+      "supervised_token_count": 23,
+      "token_label_sha256": "36a5a1e6e8dab5c120f9ceb2f2c1c50288cc782b40f266866d1b128f3da0d15b"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000010",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 411,
+      "slot": 143,
+      "supervised_token_count": 24,
+      "token_label_sha256": "9ddbe7d438623ae0887aecda3747082d4a88b778e13c0a3c5fdf3a7ce6d18095"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000030",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 722,
+      "slot": 144,
+      "supervised_token_count": 361,
+      "token_label_sha256": "d9b2bef3bcb858532e2f71d5baa06917f78515a7c5db1120b6bec7580890d613"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000031",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 822,
+      "slot": 145,
+      "supervised_token_count": 411,
+      "token_label_sha256": "b3fa292ae5c82686598d3f04ce36866a2078bfdac69a2590a0855c922d954154"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000012",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 682,
+      "slot": 146,
+      "supervised_token_count": 341,
+      "token_label_sha256": "16204eea69e136dcf84642b6c06518ef8464326b1c5aecd2a6a294831b0963cc"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000013",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 558,
+      "slot": 147,
+      "supervised_token_count": 279,
+      "token_label_sha256": "610135bdb171f8f9bbda332774b954818cf52e544bf5f1e92e009eb0246baf72"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000013",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 476,
+      "slot": 148,
+      "supervised_token_count": 23,
+      "token_label_sha256": "96e7ea617eb3250784a68a7ae7f8f796d1f918d32048b41b1a79aa815117740d"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000014",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 682,
+      "slot": 149,
+      "supervised_token_count": 341,
+      "token_label_sha256": "0263cc65b57efd94626b1ed40810d248fd5186f8d0425f3b31fc92318ecac928"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000015",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 766,
+      "slot": 150,
+      "supervised_token_count": 383,
+      "token_label_sha256": "48ccb76e6ae63e6a7a39eacc1006e1f337ce5c940008708935c5c8176630603c"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000019",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 558,
+      "slot": 151,
+      "supervised_token_count": 279,
+      "token_label_sha256": "e56cd6f145cf07567a7ef780423c91478271f6ab78cd0b37c7acd625ade9a974"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000016",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 558,
+      "slot": 152,
+      "supervised_token_count": 279,
+      "token_label_sha256": "3318e6118d7cf84a7c23f247e64805e848c8f76ef0e01df3b8be5a6ef4469039"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000008",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 814,
+      "slot": 153,
+      "supervised_token_count": 407,
+      "token_label_sha256": "bdf93aebda567b2aa6f25496b77e43e34b3055bf8a562628e200e713e733c3ac"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000017",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 154,
+      "supervised_token_count": 365,
+      "token_label_sha256": "e65622b566aaa321038c3219009191fb7234eb86146e32f606839dbeaec3f1e6"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000018",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 810,
+      "slot": 155,
+      "supervised_token_count": 405,
+      "token_label_sha256": "7f2e93fe6ad84141c26ca61f8cae805f02daba5127c8d13dbd8c75ef496c63b9"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000001",
+      "family": "complete missing structure",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 726,
+      "slot": 156,
+      "supervised_token_count": 363,
+      "token_label_sha256": "47ac22fc21cca727ac1a321403fe0f1d291fe788089a71451769c72e06014170"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000008",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 822,
+      "slot": 157,
+      "supervised_token_count": 411,
+      "token_label_sha256": "371f8dcc0a2955ca2253279bef266566cfba03d19e6600cd52fa77525415d15e"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000007",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000006",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 730,
+      "slot": 158,
+      "supervised_token_count": 365,
+      "token_label_sha256": "f1b2eba8010e8cc62d9e355ff2deee50ff11141d55c9c8dbedd9a4052bba6ebf"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000002",
+      "family": "rotate",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 390,
+      "slot": 159,
+      "supervised_token_count": 45,
+      "token_label_sha256": "a1657284afb4ef6222c02c5bc309a44d64b1f13b15b136343aac8f9b1ed17d45"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000014",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 412,
+      "slot": 160,
+      "supervised_token_count": 27,
+      "token_label_sha256": "7e228b5b1f6f270b9bab83f3806aa7de1a799b6d562ac2fba0821b7e78b52806"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000032",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 722,
+      "slot": 161,
+      "supervised_token_count": 361,
+      "token_label_sha256": "dc39d634e305850e36b0dec23fbb0dfbe1dde91a638c8cc5224d4f4ab3fa0911"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000011",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 389,
+      "slot": 162,
+      "supervised_token_count": 24,
+      "token_label_sha256": "762bd1d7f7c37373d2e1ecd1334a3c4e6346f58ef99577556c1a115300869549"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000015",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 384,
+      "slot": 163,
+      "supervised_token_count": 23,
+      "token_label_sha256": "273fb4dbeb00112aa4aaa11ecfb0dc54ee440b302f36292a0c4de779373508c9"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000012",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 477,
+      "slot": 164,
+      "supervised_token_count": 24,
+      "token_label_sha256": "c450b75a2f94562781a41a2624f02b38c219289db1c3d3015e01d47c5e891c6e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000015",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 814,
+      "slot": 165,
+      "supervised_token_count": 407,
+      "token_label_sha256": "96bc2ef4cd71e712713580e3ad5e9842ccd7d18a49bc80d058cd7b1ed0e2006e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000016",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 453,
+      "slot": 166,
+      "supervised_token_count": 24,
+      "token_label_sha256": "f7b041c578b902c77dddeaa725719b218cd8e4723f211d7f676be42a29c549a8"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000033",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 730,
+      "slot": 167,
+      "supervised_token_count": 365,
+      "token_label_sha256": "485bccc0990136c11885ec4c1beb0290fe54532740622b80c544d28bb7209d98"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000017",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 364,
+      "slot": 168,
+      "supervised_token_count": 23,
+      "token_label_sha256": "a3955850d92da21b5a42dc85dd587d9cb4d0ae825adbf4b3605f32ebafca16ea"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000018",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 407,
+      "slot": 169,
+      "supervised_token_count": 22,
+      "token_label_sha256": "f4603ab1a4c4caf46b75ccae94ac2d2573ef9cb9af54f3f3bb4d71c649354ecb"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000020",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 774,
+      "slot": 170,
+      "supervised_token_count": 387,
+      "token_label_sha256": "75a57afede9533b1fbbd2a89bea66b9549d9854337ddbebfcdadcb75a6b1ed5c"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000021",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 171,
+      "supervised_token_count": 341,
+      "token_label_sha256": "981efa9d0231a0e81e1f0b333936970a54414da7db994f03a09e46c78e5cdbaf"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000022",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 678,
+      "slot": 172,
+      "supervised_token_count": 339,
+      "token_label_sha256": "f5aebe6094c11d08f91b05d9683e52f62de6ba9189995912be02a8d0a2fb8d3e"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000009",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 173,
+      "supervised_token_count": 341,
+      "token_label_sha256": "a5b663922007b5dffeac66b42872c2f0786e433161bfdae99be8c7b0ace0e57d"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000023",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 726,
+      "slot": 174,
+      "supervised_token_count": 363,
+      "token_label_sha256": "a9a895fe42905241d78acecf034285fa9673c4ebd91b89273d20fcdf1364b99f"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000024",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 175,
+      "supervised_token_count": 341,
+      "token_label_sha256": "e223d304ec134184659154da87e831fa2465b7932832fe657e88e12c5da1300d"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000009",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 730,
+      "slot": 176,
+      "supervised_token_count": 365,
+      "token_label_sha256": "f555f0905d9dd2bcc8e5b6420406e4b38bac63d429f65d2855ffad4281dd4f0a"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000007",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 862,
+      "slot": 177,
+      "supervised_token_count": 431,
+      "token_label_sha256": "f1f5ed6023dc6fbbe81b6e1c3376e3f7936a7c0b418f543d8b1c807f25d159f9"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000010",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 726,
+      "slot": 178,
+      "supervised_token_count": 363,
+      "token_label_sha256": "2502cfda455ad3cc15bc3c500dd29f066300f7f3a27252d0037e550c805fa175"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000012",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000007",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 682,
+      "slot": 179,
+      "supervised_token_count": 341,
+      "token_label_sha256": "ed0fec78106aec45de767d142951c1a7fe020f61f7386e8741c8cc72a807ead8"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000034",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 814,
+      "slot": 180,
+      "supervised_token_count": 407,
+      "token_label_sha256": "68fa1b1c02e138c9ffe407bd5b7c94d2d07d4c416f834fc91d629bab18c5734e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000019",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 304,
+      "slot": 181,
+      "supervised_token_count": 25,
+      "token_label_sha256": "b29ba944f65b41103b4e16af65d5849f33d00a67b16deb68f62d9d137d27e7f1"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000016",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 774,
+      "slot": 182,
+      "supervised_token_count": 387,
+      "token_label_sha256": "d682d8021d3464cc146d3a86644c4d7a1cfb87a411d1f670a4427c5345d50d14"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000020",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 430,
+      "slot": 183,
+      "supervised_token_count": 23,
+      "token_label_sha256": "0734692dd2d872a6a5e104aee15359934c76f52128c271aef6dba037aa06cd97"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000013",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 501,
+      "slot": 184,
+      "supervised_token_count": 24,
+      "token_label_sha256": "bb9f882311248d984514e2f91754d6433e6aa16bc7fa4770bec3cd2d0dae071d"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000017",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 862,
+      "slot": 185,
+      "supervised_token_count": 431,
+      "token_label_sha256": "6b350bac4e0aca978e22caf7522704370339acf40d8aa74c40c8e2eea66cf630"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000014",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 365,
+      "slot": 186,
+      "supervised_token_count": 24,
+      "token_label_sha256": "215e85100485f08d76777982e4f748f969d6f0e9b5d266186f31cade407275d9"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000015",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 455,
+      "slot": 187,
+      "supervised_token_count": 24,
+      "token_label_sha256": "b0a282fbfe5b7888148e3d7cd4d3b7eda96b5bba4aaa68203f73408bf8900c96"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000018",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 766,
+      "slot": 188,
+      "supervised_token_count": 383,
+      "token_label_sha256": "10b4a3a4b487751a755320e7d151a896686640ba86b9c9aa53fedfdc1d306c71"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000035",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 954,
+      "slot": 189,
+      "supervised_token_count": 477,
+      "token_label_sha256": "4c758e7d28a85309ad8f292f750c9cb3a9a09983abfc2481251313978afc2c2e"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000010",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 190,
+      "supervised_token_count": 429,
+      "token_label_sha256": "80894ee99b5bda45ec77c1626c2b2eec5ba26462b14bbab38d551d2da5572fb4"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000019",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 191,
+      "supervised_token_count": 429,
+      "token_label_sha256": "b460aadb904b86da436c794041eba19e22dd4a90d191bc90a2429d0ed63aaa30"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000020",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 192,
+      "supervised_token_count": 429,
+      "token_label_sha256": "8ea83f68f8cc56f72b48174bf5ae9790a0ef78544def8f40680dc618f78c3106"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000025",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 193,
+      "supervised_token_count": 341,
+      "token_label_sha256": "8512155b3366dc5446e0eee8045b78e2fb77bf29902adbcab965ca1400ae94de"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000011",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 194,
+      "supervised_token_count": 429,
+      "token_label_sha256": "5ba558c45bff00fdad94b2efb0a5f514fce6797b78c000d90bc120bbdfe5de5b"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000012",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 690,
+      "slot": 195,
+      "supervised_token_count": 345,
+      "token_label_sha256": "3c0595ee079160a9d33af35c061fe64ec7e34d3cdb4435c1f5ba07db64cdf7e3"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000004",
+      "family": "color mapping",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 906,
+      "slot": 196,
+      "supervised_token_count": 453,
+      "token_label_sha256": "1baa1ff11e9c2dabb9b2b85b66b0639ece7cd4f389cf59a693c41ad0b4766cfa"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000008",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 822,
+      "slot": 197,
+      "supervised_token_count": 411,
+      "token_label_sha256": "75322ebe178bfbebc6a72e470a156329c730ea556af94df3701a5f061fe43845"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000009",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 642,
+      "slot": 198,
+      "supervised_token_count": 321,
+      "token_label_sha256": "d10ac77a8d9e71cad71761d36a091dcc6b2a911eaaa85a09f0f4ad67622feded"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000002",
+      "family": "complete missing structure",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 858,
+      "slot": 199,
+      "supervised_token_count": 429,
+      "token_label_sha256": "ccdb2df165b027c9b7261cf2b7f99b44be73f315448bc9506ef1a87a6763d62d"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000016",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 389,
+      "slot": 200,
+      "supervised_token_count": 24,
+      "token_label_sha256": "2dc23626837d00807448fbc52c9a152646977bdfb37b5e2fde9743ab136f31c2"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000017",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 345,
+      "slot": 201,
+      "supervised_token_count": 24,
+      "token_label_sha256": "756de1116303e68c7a4fd638541101c3613fded34fb6a21791224c167e5e6a3b"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000008",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 442,
+      "slot": 202,
+      "supervised_token_count": 35,
+      "token_label_sha256": "ae9b31611d33bca4611051cb8dadc6c26d7534b327c80cb0c16ace0deea9e62d"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000036",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 770,
+      "slot": 203,
+      "supervised_token_count": 385,
+      "token_label_sha256": "f5fead5ba41f4e1138aed016bea05e43b0afec5337458729e5f91f7863c545f0"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000019",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 690,
+      "slot": 204,
+      "supervised_token_count": 345,
+      "token_label_sha256": "294760b8398a85e0d3e7344f1c08d34c4dce11493dfd30214f6f06fdf6e8f58f"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000037",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 598,
+      "slot": 205,
+      "supervised_token_count": 299,
+      "token_label_sha256": "c9a6ec8118004189d4348bbe6220c2655422b7df0fe7d7c1e22494f65113bd61"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000018",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 453,
+      "slot": 206,
+      "supervised_token_count": 24,
+      "token_label_sha256": "5cf43851095bbdad125136631ea36f86b9e55191075e70bf97b6aba9d9e94156"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000020",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 730,
+      "slot": 207,
+      "supervised_token_count": 365,
+      "token_label_sha256": "c1b87c9627153e886e00104df146561217d469f9ff3727e419143564f28e819d"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000021",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 427,
+      "slot": 208,
+      "supervised_token_count": 20,
+      "token_label_sha256": "0dc737ee1d6d51238b16502c9a0a50a6054b50e299530c15606075cd19a90ac0"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000022",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 343,
+      "slot": 209,
+      "supervised_token_count": 22,
+      "token_label_sha256": "733107aad1bb40cece999f58767457a99164a3bb58be537793dd617f9ccc9961"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000013",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 210,
+      "supervised_token_count": 365,
+      "token_label_sha256": "d38aedf58196f62877ca81490c561c736bbb4a851eef34272dbcc0333e7ad730"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000026",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 774,
+      "slot": 211,
+      "supervised_token_count": 387,
+      "token_label_sha256": "8f812de1cb010abaec8c37100be760372d640fa258b20d56d9a1dcfa429c52f8"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000014",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 642,
+      "slot": 212,
+      "supervised_token_count": 321,
+      "token_label_sha256": "ccb7f22697f8fc2d386380cdd855c5f077e2e928f2aa00d060a20c65e78ac042"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000027",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 213,
+      "supervised_token_count": 365,
+      "token_label_sha256": "8cb7ee8643bafe8501c03dc6681c3191cd9161e309c9fac5ed8664546a35ac43"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000028",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 214,
+      "supervised_token_count": 341,
+      "token_label_sha256": "0fb3be3c98222442d6b5d5842f2e8e0be62560364475a3242e644d5a984d09ea"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000015",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 215,
+      "supervised_token_count": 365,
+      "token_label_sha256": "ae7bab06a0850f2c31e9ee62ca94d6c5aeb9020d7e5323321721691f3d8cccf0"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000033",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000008",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 722,
+      "slot": 216,
+      "supervised_token_count": 361,
+      "token_label_sha256": "60b344c604fa1c0b366a2f6394b4b813f19d69b48b9e30580c83e2fa3d17ab7d"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000011",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 814,
+      "slot": 217,
+      "supervised_token_count": 407,
+      "token_label_sha256": "0549e0a3a0ed27a251d10dd609dd1cc7ba4199a09ed6b29f71feccce773ba12d"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000010",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 638,
+      "slot": 218,
+      "supervised_token_count": 319,
+      "token_label_sha256": "6715ead614f8f69f9552e2e852a7e220decc2e43a99f26f810214049d940b95e"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000011",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 598,
+      "slot": 219,
+      "supervised_token_count": 299,
+      "token_label_sha256": "825f0ea24ab6197322ce2d49498bae35d7f6cf1a02875c502232053c7e63f98e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000023",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 383,
+      "slot": 220,
+      "supervised_token_count": 20,
+      "token_label_sha256": "b5dbb0a964753440330cb6916f1d025d4d028037c699897fe0604e31ca2175f3"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000021",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 770,
+      "slot": 221,
+      "supervised_token_count": 385,
+      "token_label_sha256": "cb006a93c0df5b149f82394e82f3fbe476523802ffef1b02927e4453f4f5fb7e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000019",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 323,
+      "slot": 222,
+      "supervised_token_count": 24,
+      "token_label_sha256": "9c393d81af3d8b81bed295ef20dc41e1a548d0038b9418c437b14278a023fe23"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000024",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 430,
+      "slot": 223,
+      "supervised_token_count": 23,
+      "token_label_sha256": "6822c77b70b72643753186b048733afc2d2f2f8efa039ff3983914ea1993d5f8"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000025",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 387,
+      "slot": 224,
+      "supervised_token_count": 26,
+      "token_label_sha256": "b09822c9a85068b35ea18931624bbad42c9b4cfb03d42113a30f2f2f5cc4f0c8"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000009",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 333,
+      "slot": 225,
+      "supervised_token_count": 34,
+      "token_label_sha256": "425c247ad008a76ea70fa57b7cc7e09ed352ddc26800443dcb77ffe2e79822a5"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000020",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 407,
+      "slot": 226,
+      "supervised_token_count": 24,
+      "token_label_sha256": "8b3354744f61496d77d7ec25653b73f8dada3530dfd0a4d132d0d3555b302dde"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000038",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 906,
+      "slot": 227,
+      "supervised_token_count": 453,
+      "token_label_sha256": "82084b0269020d0cb8aee223b6aec3b4aa8155262adffbf2153e57af35a90d30"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000021",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 303,
+      "slot": 228,
+      "supervised_token_count": 24,
+      "token_label_sha256": "28d868b7db3b0bbd73c42c7fcf16305fe1321abdf7c85705ab03624906032046"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000039",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 638,
+      "slot": 229,
+      "supervised_token_count": 319,
+      "token_label_sha256": "062e20b409cc082132be67a9407e8c9f7a6f388932e414bfd214a47fa8e6bf30"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000021",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 954,
+      "slot": 230,
+      "supervised_token_count": 477,
+      "token_label_sha256": "131e8181b9110952e6de25bd00d70f15eaa8a552d80fa81e2c5444bb804bc320"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000029",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 722,
+      "slot": 231,
+      "supervised_token_count": 361,
+      "token_label_sha256": "f1f7b74716f7dd514d285c2446ebe298b3fcdd97b7b88914a25e2ee8b30e9cb7"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000022",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 814,
+      "slot": 232,
+      "supervised_token_count": 407,
+      "token_label_sha256": "ee182519be2b3d06cc301dead60697aa36fbff9c79cea3550981abb2736e5fc6"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000016",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 862,
+      "slot": 233,
+      "supervised_token_count": 431,
+      "token_label_sha256": "d41f4a2166f18b0e8c45375c738afd91670f3c4e2ee3d78cdf1cc8b6516c501b"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000023",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 774,
+      "slot": 234,
+      "supervised_token_count": 387,
+      "token_label_sha256": "58da81bba83624a9f2288c558dfd66b329d9f122a88941936fb889ab6fab9a77"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000024",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 235,
+      "supervised_token_count": 341,
+      "token_label_sha256": "c4acc63c62498bdce38d8c77f4c30081fd2932d8c26e744b816608ac9aa36cea"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000012",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 862,
+      "slot": 236,
+      "supervised_token_count": 431,
+      "token_label_sha256": "d772c4372357e86a6402fe17d746904a4a68ae361ff21a59788ee851bb23f499"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000000",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000009",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 862,
+      "slot": 237,
+      "supervised_token_count": 431,
+      "token_label_sha256": "abf2b579368c9fdd6ccee20fda26346843b09d14d235d37150f59a7e659193ac"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000012",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 822,
+      "slot": 238,
+      "supervised_token_count": 411,
+      "token_label_sha256": "4dae2469b4b92e8a27057d832cdf49925f539ec710f43410e4c55ea15c983dc0"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000003",
+      "family": "complete missing structure",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 858,
+      "slot": 239,
+      "supervised_token_count": 429,
+      "token_label_sha256": "e3636a0cf73e4a9883c9f7799bc4c3ba6d8af7625db52709ead0320ad6bca4c2"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000026",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 365,
+      "slot": 240,
+      "supervised_token_count": 24,
+      "token_label_sha256": "2193dfbdfc22f6226faa1b14ade07d1d7a888794f966bbe65e755c5694d61657"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000027",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 455,
+      "slot": 241,
+      "supervised_token_count": 26,
+      "token_label_sha256": "a7862ee9fb816b1c4784feb497df818c3ef22faa32f1a9e16b0de972a63746f0"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000028",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 363,
+      "slot": 242,
+      "supervised_token_count": 22,
+      "token_label_sha256": "9bc74373c55be37ebe4e2ed95c24ee9bf5c62f394bd805105de5f8b54ae077cd"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000029",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 383,
+      "slot": 243,
+      "supervised_token_count": 20,
+      "token_label_sha256": "a263b175a311d53e53f696b21227946dbf208a7b97dd20071439498a6b7eb520"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000040",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 642,
+      "slot": 244,
+      "supervised_token_count": 321,
+      "token_label_sha256": "5679627b0e9370fc0de214bb2d9307204934aa4ef8fad271a5b0aef826bd180c"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000041",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 722,
+      "slot": 245,
+      "supervised_token_count": 361,
+      "token_label_sha256": "b1201f28d11c3fb145f5fbbe1e1a285957dc8b9a4752bd1cb2775ff10e88ea93"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000030",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 405,
+      "slot": 246,
+      "supervised_token_count": 20,
+      "token_label_sha256": "551d89c299fb4e94b44c3f52ecb2e9243cd0f936e04fdf429c2c32a51922410b"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000042",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 770,
+      "slot": 247,
+      "supervised_token_count": 385,
+      "token_label_sha256": "f7bf56d221f532320799fe6c6a2fbbbadd3423edb9442dfe9b8aed5c3cac811f"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000022",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 435,
+      "slot": 248,
+      "supervised_token_count": 24,
+      "token_label_sha256": "1cf90747f05d3f53e2ca024dc9f872fbcece57b9b18680dcada8576dc9f5122f"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000023",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 431,
+      "slot": 249,
+      "supervised_token_count": 24,
+      "token_label_sha256": "22d681a5529cde8e0513169145a4629b0d1ec4522b5fe3de44024fed38f304da"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000017",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 906,
+      "slot": 250,
+      "supervised_token_count": 453,
+      "token_label_sha256": "842b60a1941c605efd964d92353e7c8c4b482f19e013f34ea846f543e519a7f2"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000018",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 251,
+      "supervised_token_count": 341,
+      "token_label_sha256": "d61ac1a088bab2b2358d90d0ca58b0ae0f998563fcfba8da85611380d3a939c4"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000019",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 726,
+      "slot": 252,
+      "supervised_token_count": 363,
+      "token_label_sha256": "8727573c11477593c27e49d7b1bd9c3a0f0d4bc0bf2052084ce10c4d2b1b7228"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000025",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 598,
+      "slot": 253,
+      "supervised_token_count": 299,
+      "token_label_sha256": "34340514955feb3edf49d55d113d3255267631b8ba7e2320346ddb36cc79e569"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000026",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 254,
+      "supervised_token_count": 365,
+      "token_label_sha256": "8641efae9fdea367a07aec2cf66de4a4b5172a989adf1360fc5a217718cb5ead"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000020",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 638,
+      "slot": 255,
+      "supervised_token_count": 319,
+      "token_label_sha256": "71f57238ca6fffab1fe49002068f35eab12d5ef5bce9f30db154dcf9208790f4"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000013",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 858,
+      "slot": 256,
+      "supervised_token_count": 429,
+      "token_label_sha256": "3539ba8cee3da3b42c1b2394dc67d2ef1f18396c663f79b34c7f64a839941100"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000013",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 638,
+      "slot": 257,
+      "supervised_token_count": 319,
+      "token_label_sha256": "b9227e9b55f2154e9b47c0abf1618ed819acf9c39fac3f27e7ae34f7754ba8c8"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000005",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000010",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 726,
+      "slot": 258,
+      "supervised_token_count": 363,
+      "token_label_sha256": "4cf63c10f12ec436ab4a1a1abef4732bcb48b45741129689fbde855c69e8dbac"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000004",
+      "family": "complete missing structure",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 730,
+      "slot": 259,
+      "supervised_token_count": 365,
+      "token_label_sha256": "5903d971bc402cf78b9e2774c737660008c92fe2a1eb65c53f42f77a091f9317"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000031",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 410,
+      "slot": 260,
+      "supervised_token_count": 23,
+      "token_label_sha256": "c2e4d6311710dd7910fa470e82746fc0f251da086dd5184c210ee1e4661474ed"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000024",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 389,
+      "slot": 261,
+      "supervised_token_count": 24,
+      "token_label_sha256": "ff9f8e489b317c459659be506eca19221c0d62fc4c45f567fff22b23adb25af5"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000025",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 453,
+      "slot": 262,
+      "supervised_token_count": 24,
+      "token_label_sha256": "bb84a10696d0c4ca6affff5bc936157dd8df68958df3e595ee523f7300bea554"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000032",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 453,
+      "slot": 263,
+      "supervised_token_count": 22,
+      "token_label_sha256": "04a9baa3fe2094826aadcac6b3a7822d74304eb5de6d0c6d229e06a5e6eef6b7"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000026",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 453,
+      "slot": 264,
+      "supervised_token_count": 24,
+      "token_label_sha256": "f927ba7b91c1892119bae82162bb5ccfe0212a6a6e4f12ea497223de1216ad9a"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000033",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 389,
+      "slot": 265,
+      "supervised_token_count": 24,
+      "token_label_sha256": "fa59574f846066f37ac71234dd145ae05e5ce0cbefb1ed1814bb88c2d1103ee4"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000027",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 365,
+      "slot": 266,
+      "supervised_token_count": 24,
+      "token_label_sha256": "769711a808f72792079dd92ecbe03f9d658faad4f036f2562dcb0a56b62071f4"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000028",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 389,
+      "slot": 267,
+      "supervised_token_count": 24,
+      "token_label_sha256": "a03c3a49d1cd4b6341112bed8fb18f5e7f13497aa26b7a24d8fb5f3562365884"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000022",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 690,
+      "slot": 268,
+      "supervised_token_count": 345,
+      "token_label_sha256": "4cb8e4ef634ae02b63826540fc8617708ade7def7e97380cf5155e75ce66dc87"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000029",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 477,
+      "slot": 269,
+      "supervised_token_count": 24,
+      "token_label_sha256": "5dede58af5839f13783cfda8f50ce9598d34c87a149bed75458ca85e5ecf727b"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000030",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 642,
+      "slot": 270,
+      "supervised_token_count": 321,
+      "token_label_sha256": "1d12d0bbbdc316d68636ae5250f18d3fb6b52217bd5ab4243a4d907010b2493a"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000031",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 814,
+      "slot": 271,
+      "supervised_token_count": 407,
+      "token_label_sha256": "9a63efc1f90b6136443fde6d11442b5dd2293bbd6638456749c1d7f37817125a"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000027",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 638,
+      "slot": 272,
+      "supervised_token_count": 319,
+      "token_label_sha256": "8869247599e844b895f0c795259b2c7784cce1598a7d16887fa0f9e78db77d85"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000021",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 273,
+      "supervised_token_count": 429,
+      "token_label_sha256": "65685ccfd919f115826be360eab0ff14e0ac3ab11138843b08b3ea71a32c7fda"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000032",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 274,
+      "supervised_token_count": 429,
+      "token_label_sha256": "31d3a42037bcd7b3f663175978fd8784b5102972f9200177def6c4ef6ea52f5c"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000028",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 954,
+      "slot": 275,
+      "supervised_token_count": 477,
+      "token_label_sha256": "75db209af3e567e7f66073517aec85f9b9891c88ce49941fb12de3136e09a837"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000014",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 858,
+      "slot": 276,
+      "supervised_token_count": 429,
+      "token_label_sha256": "f06ba95200b784039a0ed2cdcaf7201af9fe8783e4171b7718d12262fdff5ce0"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000014",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 822,
+      "slot": 277,
+      "supervised_token_count": 411,
+      "token_label_sha256": "dc444ffccdb99d7bb0f5663eb440ac52400fa26947bc61a3e63b9a76d1bf55dc"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000003",
+      "family": "rotate",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 390,
+      "slot": 278,
+      "supervised_token_count": 45,
+      "token_label_sha256": "5248c0ab78712bb24ac634a7e868ef7a53f05dcd9db2e75a3b2d9ddf84a2bf4b"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000014",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000011",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 774,
+      "slot": 279,
+      "supervised_token_count": 387,
+      "token_label_sha256": "f4334584023196f9ea31f27839dc147df2efb8680ef939bc0c0d25fda169939e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000034",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 473,
+      "slot": 280,
+      "supervised_token_count": 20,
+      "token_label_sha256": "d5b6752adbb2d79f71ec35fb0aeed47fc1683b9cb150b24652a92532e9c508da"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000010",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 399,
+      "slot": 281,
+      "supervised_token_count": 34,
+      "token_label_sha256": "229bceef434f5a54157d04d838a4f4df6c1b8c12c519ce50142ab67fd60df571"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000043",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 774,
+      "slot": 282,
+      "supervised_token_count": 387,
+      "token_label_sha256": "b202d9f6410e23aee65bfc445e82ea2081acb99af7b363a2139aa9a5e4fdda7e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000030",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 431,
+      "slot": 283,
+      "supervised_token_count": 24,
+      "token_label_sha256": "4f58a0cf5cdb8cc803dcaaef62c34c0e1103d219cf34057d94d106d997373d68"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000044",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 690,
+      "slot": 284,
+      "supervised_token_count": 345,
+      "token_label_sha256": "b36bb08aed2964e81f0c92e0fb6440b7b612096685a66fa2ef32a3f3046c88d4"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000011",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 419,
+      "slot": 285,
+      "supervised_token_count": 34,
+      "token_label_sha256": "9def6af8e52e883db8d13475c952e01e9b3a254c774869391492e2b450b47ad7"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000045",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 730,
+      "slot": 286,
+      "supervised_token_count": 365,
+      "token_label_sha256": "99795d8e92174811d608b587d80bf5c1728e1ff996069266273bfa4616e340c9"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000046",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 822,
+      "slot": 287,
+      "supervised_token_count": 411,
+      "token_label_sha256": "b3157a5846488458c926b16dfd13a0bea6af866a096e14288c75a0107da9088b"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000023",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 726,
+      "slot": 288,
+      "supervised_token_count": 363,
+      "token_label_sha256": "3870238ad9e63ef7c55ec972eee04c09011fb38439e415fac7f235adb4f0815b"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000047",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 906,
+      "slot": 289,
+      "supervised_token_count": 453,
+      "token_label_sha256": "c3a051f765a6e0a582a3350cffc28a34549860ce1f96afdce15bc4579459f91d"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000029",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 814,
+      "slot": 290,
+      "supervised_token_count": 407,
+      "token_label_sha256": "bea9324a9f67e251b72ba13c680f1ee46b4b163e6f2928f6abc84ab51c796293"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000030",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 766,
+      "slot": 291,
+      "supervised_token_count": 383,
+      "token_label_sha256": "c50bfd5a3de6787a13afa2b595d16be0b0a3c44efeb74de90aec4ebe9c48ebbf"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000033",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 814,
+      "slot": 292,
+      "supervised_token_count": 407,
+      "token_label_sha256": "3134899c5d67669e01359351c2186c5759b0588f98365bbefc2e103cd34f2978"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000034",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 293,
+      "supervised_token_count": 365,
+      "token_label_sha256": "c83da84d982757bb484e39db4de90d3730c67fc7050e123db51f5d24bb5a3318"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000035",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 642,
+      "slot": 294,
+      "supervised_token_count": 321,
+      "token_label_sha256": "59bc0f6cbd976f664d50c8f3617454eb3788b94544728534b00c56141c6fed64"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000031",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 906,
+      "slot": 295,
+      "supervised_token_count": 453,
+      "token_label_sha256": "f1a21ff45d5d9cc04530560da1eca3be859ed53bd10705e73032e18d211f5c16"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000005",
+      "family": "complete missing structure",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 690,
+      "slot": 296,
+      "supervised_token_count": 345,
+      "token_label_sha256": "c0cb9422d292dd43415d95ac89d3300b9b0c2102b2e4e15ec9f78033f1454e2f"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000015",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 726,
+      "slot": 297,
+      "supervised_token_count": 363,
+      "token_label_sha256": "d25d3a30f2119d4d8ff5de8d6a5a71ded33fba51790bc65e1809fabd32a700c9"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000015",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 642,
+      "slot": 298,
+      "supervised_token_count": 321,
+      "token_label_sha256": "259f1b5088dfdc87a945a192bb1c284ef5519182668001bde3f062f854426662"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000005",
+      "family": "color mapping",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 726,
+      "slot": 299,
+      "supervised_token_count": 363,
+      "token_label_sha256": "4cf63c10f12ec436ab4a1a1abef4732bcb48b45741129689fbde855c69e8dbac"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000031",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 407,
+      "slot": 300,
+      "supervised_token_count": 24,
+      "token_label_sha256": "498d72877fc00c632b7507ef5d5ccf5f5ac3edd1d0925c784d92ab645aaabf77"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000024",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 730,
+      "slot": 301,
+      "supervised_token_count": 365,
+      "token_label_sha256": "086d769ea7ff49868763f9637a36aa78e8f4b054224ceafb3133d2a10527b995"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000025",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 822,
+      "slot": 302,
+      "supervised_token_count": 411,
+      "token_label_sha256": "de0637ec6e01d7d720c01ce3554aea3927697efd85845ac0e25f84836048c008"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000048",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 906,
+      "slot": 303,
+      "supervised_token_count": 453,
+      "token_label_sha256": "cb3e9d4a67ef200391840c2f598323c6bef5aee041a80f19ba2bf597f8641e1e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000049",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 810,
+      "slot": 304,
+      "supervised_token_count": 405,
+      "token_label_sha256": "cd32485fbd3724c9cc844f0205f2c15589c71663000d182a0110fc76b8ce8963"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000012",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 355,
+      "slot": 305,
+      "supervised_token_count": 34,
+      "token_label_sha256": "335068bcbb8775b9b79d1081814486c0608e7c52acb84777e1bd8f90a27f2fc6"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000032",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 365,
+      "slot": 306,
+      "supervised_token_count": 24,
+      "token_label_sha256": "f8f94ae4fc25ba35d124caa1f19636db1fb1acb19b6d6e8cdb7e7a569cd248d8"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000013",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 397,
+      "slot": 307,
+      "supervised_token_count": 36,
+      "token_label_sha256": "8cf86b94bddcd6ee8a609ce6dfca99278ac6091e59ba4361e53e52af7d7414ae"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000035",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 407,
+      "slot": 308,
+      "supervised_token_count": 20,
+      "token_label_sha256": "22a4ea523b12f8bc9311fc29089e6fd3504721f38d2124fa158aeeb6e055365c"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000036",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 369,
+      "slot": 309,
+      "supervised_token_count": 24,
+      "token_label_sha256": "87e9b140f873df64a9e72f5bbb42dd912e2d87099185b3c278c4331100aa7a34"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000036",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 310,
+      "supervised_token_count": 429,
+      "token_label_sha256": "925b3f6bd72c2ef63a0c91489af86b62491943504321a12d207ba4436c39d4b5"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000032",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 598,
+      "slot": 311,
+      "supervised_token_count": 299,
+      "token_label_sha256": "cb51d7ee95e7453ef39a6a8fd8cd548224140500c6b3640ddefc72f33f6ae293"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000033",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 312,
+      "supervised_token_count": 365,
+      "token_label_sha256": "d0f533dfdc4fb36eea10dfe23ea7b9d0927329b1ffa3a1aba56fdcb78d3c9fb5"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000022",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 774,
+      "slot": 313,
+      "supervised_token_count": 387,
+      "token_label_sha256": "7c2820ef869762a842c1fdc51da98e205358cec4bd750127184e73e73a6d779c"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000034",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 722,
+      "slot": 314,
+      "supervised_token_count": 361,
+      "token_label_sha256": "e96265224465723b3cfe4a249dd0c47c6b08e0b562f1ef0257d8b63ff66ded70"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000037",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 906,
+      "slot": 315,
+      "supervised_token_count": 453,
+      "token_label_sha256": "832e02b9cf69c6225f3a7d05abab91df65ee3d9fe91f23f80556824d6210b552"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000002",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000012",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 814,
+      "slot": 316,
+      "supervised_token_count": 407,
+      "token_label_sha256": "250daabefb800604ef81173756109dd8fc4b993f891d7af43fcefd9d1dbb981f"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000016",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 822,
+      "slot": 317,
+      "supervised_token_count": 411,
+      "token_label_sha256": "5afb5c471cf432c8ee761a40581cbb15b99a2b17eb8f89517a39f50751ba0aaf"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000017",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 678,
+      "slot": 318,
+      "supervised_token_count": 339,
+      "token_label_sha256": "2f3e2f56acd5f1d5a7bfac871c71e056b4e45f417eaa4bf5ffc16c8723aec07e"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000016",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 598,
+      "slot": 319,
+      "supervised_token_count": 299,
+      "token_label_sha256": "e3d45a053f79abe81779f7d6480769bd12bea2b72776934bb65add99bc5d594d"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000050",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 642,
+      "slot": 320,
+      "supervised_token_count": 321,
+      "token_label_sha256": "17d4d207d9deb953517091042d921e4cd63d59b60907697d6f89369b6dd0e059"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000014",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 440,
+      "slot": 321,
+      "supervised_token_count": 33,
+      "token_label_sha256": "95d739937d8b86917ecc28843963bf67c56f26c5473367def4c5524f8d126feb"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000033",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 435,
+      "slot": 322,
+      "supervised_token_count": 24,
+      "token_label_sha256": "af73d21423241a9e006ca734860a640f77d0088fe5453d31bb8d387f88ff2ce0"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000037",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 365,
+      "slot": 323,
+      "supervised_token_count": 24,
+      "token_label_sha256": "c5381b7346e6d3eaf585a7f0e347d280a434e66db36113f81e385a2b0ae282fd"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000038",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 410,
+      "slot": 324,
+      "supervised_token_count": 23,
+      "token_label_sha256": "74d63b7347f1ae7cc26c8666a84360c6ee0fbd130945d739cd36784509cbcbc1"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000026",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 822,
+      "slot": 325,
+      "supervised_token_count": 411,
+      "token_label_sha256": "8b20f59c0a9f6c39839236ac3e28b2e3261b56289bfae49f0b6d6e1830f8f17f"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000034",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 343,
+      "slot": 326,
+      "supervised_token_count": 24,
+      "token_label_sha256": "ccd5e662b3f9f59ef48bfd970117c5e3d2efb44b3b3032e43f5a9d6cd0cc63f2"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000015",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 401,
+      "slot": 327,
+      "supervised_token_count": 36,
+      "token_label_sha256": "9efa4ae15f9525710d54c7147f83bacb419b2995bc54e3d7804d70cca898d6af"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000039",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 411,
+      "slot": 328,
+      "supervised_token_count": 24,
+      "token_label_sha256": "87c8415c7544b6ab9036fb6a7e93b025634b843ca8be86534a4e3b52e44225a3"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000051",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 638,
+      "slot": 329,
+      "supervised_token_count": 319,
+      "token_label_sha256": "c3837a66d5e5c51b4f471fb5929e44f27083a1bd3eebdaa0d88ccdc5614115b6"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000035",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 766,
+      "slot": 330,
+      "supervised_token_count": 383,
+      "token_label_sha256": "0d4ee63b2a53310376726de34aa96e1bcffd1a82b7c93cb2325be020e70e699b"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000023",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 331,
+      "supervised_token_count": 365,
+      "token_label_sha256": "b67cf8faf4dffff03851b68ad9a0abd5c33f1fdb65e7fb14a474c769e13f984a"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000038",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 858,
+      "slot": 332,
+      "supervised_token_count": 429,
+      "token_label_sha256": "4157791ff1e7020b4c25fc0dfbac774ac19939f38414b25cb85cc174f5a7027f"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000024",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 774,
+      "slot": 333,
+      "supervised_token_count": 387,
+      "token_label_sha256": "425b191556cb6b8eaa41ff4598d89e4a90a0d86763a0ade6e5c90a12ca8c07b8"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000025",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 722,
+      "slot": 334,
+      "supervised_token_count": 361,
+      "token_label_sha256": "917dc0a40f35a0086c5a37c0beeb601a239f9e8eef0b102f93ae0cccadccea10"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000036",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 726,
+      "slot": 335,
+      "supervised_token_count": 363,
+      "token_label_sha256": "dbe1946dcb47e3977ba39ab7ae0c79b2750c7a788df0f3c6625166af65c1efd8"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:recolor:000000",
+      "family": "recolor",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 726,
+      "slot": 336,
+      "supervised_token_count": 363,
+      "token_label_sha256": "b39c571bf2faafbd293ae8edd75b1a2c7f3554a17352c609bc13e8889167b488"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000014",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000013",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 774,
+      "slot": 337,
+      "supervised_token_count": 387,
+      "token_label_sha256": "f4334584023196f9ea31f27839dc147df2efb8680ef939bc0c0d25fda169939e"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000018",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 814,
+      "slot": 338,
+      "supervised_token_count": 407,
+      "token_label_sha256": "626f3d0438ead6f7a2388e3fcc502f59609ef6b93c02d3563166b7126d60d68a"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000017",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 682,
+      "slot": 339,
+      "supervised_token_count": 341,
+      "token_label_sha256": "2bbdcecece7c39ab19eb5c9737f55d7c3d41b39c639ba601a39204fce410efed"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000035",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 409,
+      "slot": 340,
+      "supervised_token_count": 24,
+      "token_label_sha256": "efe48b1f6e65aa38dfa950acf20f9e12205769f05499cc64145ace7e7ec64786"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000040",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 477,
+      "slot": 341,
+      "supervised_token_count": 24,
+      "token_label_sha256": "cd235b7aef75937af101d8ef809569d865df3054e19319f017527bb608c989c0"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000016",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 394,
+      "slot": 342,
+      "supervised_token_count": 33,
+      "token_label_sha256": "c769c116c2ad4e184c125227f320658a8c3183c12ba9b920ca2e018b35ea5328"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000036",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 431,
+      "slot": 343,
+      "supervised_token_count": 24,
+      "token_label_sha256": "01e0a2293723c646ae3d8e599e8e082844dbc856231cc45cce77d9ca9425612a"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000017",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 422,
+      "slot": 344,
+      "supervised_token_count": 35,
+      "token_label_sha256": "4eef0c6fc6a6e98d653c69b907e798114bf3afda8ad8e73d6721730432770bd4"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000041",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 363,
+      "slot": 345,
+      "supervised_token_count": 22,
+      "token_label_sha256": "ea5448c63cc36494203a102c0853a4c0c571f5cf5bdd76ad4261f75adff1960a"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000027",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 810,
+      "slot": 346,
+      "supervised_token_count": 405,
+      "token_label_sha256": "2396a8704388032be1d255c5000171e5662d52a28d58a9f185a976d50cdc2227"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000042",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 322,
+      "slot": 347,
+      "supervised_token_count": 23,
+      "token_label_sha256": "5ff8e3f427cf90c54f1d5c45589948bc6999adaf15e88a82ae79fcc930406f9a"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000043",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 339,
+      "slot": 348,
+      "supervised_token_count": 20,
+      "token_label_sha256": "638f2cb3383bd73d084bdf85f4e7752459f5264309137429b470dead8e744e34"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000052",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 774,
+      "slot": 349,
+      "supervised_token_count": 387,
+      "token_label_sha256": "010e4deaf387171e20980f676c3d32268048a68c3014ceff41dcac8cd18fb8b6"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000026",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 350,
+      "supervised_token_count": 341,
+      "token_label_sha256": "dfdfbc8d9328173dc06b8fc036664e02b35aaa25083dc2d5cbde1f477ab030e7"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000027",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 814,
+      "slot": 351,
+      "supervised_token_count": 407,
+      "token_label_sha256": "08b5b0e1c4752d7717b755b8768999070f7e346771fce01b82c46961a3c15d00"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000039",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 352,
+      "supervised_token_count": 365,
+      "token_label_sha256": "6a8dcc5ccb369fc6937d673bccef389c8108c77f33d70c2003598a88c5d41a2e"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000040",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 766,
+      "slot": 353,
+      "supervised_token_count": 383,
+      "token_label_sha256": "87aa8816f372ca46945cbee9f7b80ee398dd653692ad6b0496aae99e3d3f4342"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000041",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 354,
+      "supervised_token_count": 341,
+      "token_label_sha256": "2bc8a6f69552aa5b0058e12435966e3495360f9726ccf6cadfea95e91b423ff1"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000037",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 822,
+      "slot": 355,
+      "supervised_token_count": 411,
+      "token_label_sha256": "5cbd148c7b630e9f627b74c3f3d8b0dbb1af8fb3e5a992bbefb0da8ca9eb7da6"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000018",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 774,
+      "slot": 356,
+      "supervised_token_count": 387,
+      "token_label_sha256": "f8b24d5f77440dd452283998cfe3981f507b06d9d1378b3594b3d08f3d614b1b"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000019",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 722,
+      "slot": 357,
+      "supervised_token_count": 361,
+      "token_label_sha256": "91c8fd56bcfce6990b0596a669e7ee7fad986b7e0edf121746a474433a2062ef"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000014",
+      "family": "color mapping",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000014",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 774,
+      "slot": 358,
+      "supervised_token_count": 387,
+      "token_label_sha256": "f4334584023196f9ea31f27839dc147df2efb8680ef939bc0c0d25fda169939e"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000004",
+      "family": "rotate",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 432,
+      "slot": 359,
+      "supervised_token_count": 45,
+      "token_label_sha256": "6a56c50716f35924a87e246309970343dcbe1b9a1961c39779af89355136c52f"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000044",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 433,
+      "slot": 360,
+      "supervised_token_count": 22,
+      "token_label_sha256": "1550b4d51aaad0d6577c9a7c32fcb74e441a791c832571e0fb4b794db6b77666"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000037",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 387,
+      "slot": 361,
+      "supervised_token_count": 24,
+      "token_label_sha256": "b54423e941b243ffab837727c1c87470f86370e1d7e47158b9d53a487d9772a3"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000018",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 421,
+      "slot": 362,
+      "supervised_token_count": 34,
+      "token_label_sha256": "21821980d78e5e00f44a778a381ebffe74f194f2f20637734d1ad9932cdabb4b"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000028",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 730,
+      "slot": 363,
+      "supervised_token_count": 365,
+      "token_label_sha256": "9d65c281520e476d58c1b3963c8dd84f861acba04458527c10b38bccb1efb243"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000045",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 476,
+      "slot": 364,
+      "supervised_token_count": 23,
+      "token_label_sha256": "71d29c1a5531aed8294b78d919910ed7d86996f9de883ba1b8fd6e754bdf4ca1"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000053",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 810,
+      "slot": 365,
+      "supervised_token_count": 405,
+      "token_label_sha256": "973dbe471a9440c556e23cc07adb9f74af8ad8f245b12eea5efe56ef6f97455b"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000038",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 477,
+      "slot": 366,
+      "supervised_token_count": 24,
+      "token_label_sha256": "33f2732692079bce57dec42355af5abad4c065b77577b17a7620bafed4c0fdd4"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000054",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 690,
+      "slot": 367,
+      "supervised_token_count": 345,
+      "token_label_sha256": "6ddb40a598a2826cf5cbe80131b1fa1ff5111b30589f7a537d01394892d4734e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000046",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 386,
+      "slot": 368,
+      "supervised_token_count": 23,
+      "token_label_sha256": "9bfa6b0ffa0b4a62a9da058c1668e0087a27d5d50cc905d4ac48041e67433215"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000055",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 774,
+      "slot": 369,
+      "supervised_token_count": 387,
+      "token_label_sha256": "0f2b94fc5570d4508bcdff4de91ebae4c740002c8afeac5b2875ab8a33700ccd"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000038",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 638,
+      "slot": 370,
+      "supervised_token_count": 319,
+      "token_label_sha256": "0c4099543f77cfd74dacc90f791c922b5d8ecfc29348c25b2b50dcfbe2b26933"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000039",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 906,
+      "slot": 371,
+      "supervised_token_count": 453,
+      "token_label_sha256": "1e36afb18411ac4b7ed5d0503697c8fc5281adc84bd945772bec6132a26b3120"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000042",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 730,
+      "slot": 372,
+      "supervised_token_count": 365,
+      "token_label_sha256": "f03282e36f066e8c62931c80bda773b6b23ba9d68612ffca8e07f5d937483a7e"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000043",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 774,
+      "slot": 373,
+      "supervised_token_count": 387,
+      "token_label_sha256": "377d6cba98b17c96b6691781de28e25a2e909c9b068edd23de4072464c0a8561"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000040",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 690,
+      "slot": 374,
+      "supervised_token_count": 345,
+      "token_label_sha256": "3b27facdb6df9f3117557f0fd3b38bc9e83ef3aa23fa548f7cae2854d6811e62"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000028",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 862,
+      "slot": 375,
+      "supervised_token_count": 431,
+      "token_label_sha256": "164f309a80fc813f6083e69a7ff955cf9a15812419aa74561468658191b4246b"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000019",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 730,
+      "slot": 376,
+      "supervised_token_count": 365,
+      "token_label_sha256": "7bc0c2130cd8c7b60571d859a0b2b0ce3b28f572a101088fd40aa2d7dd734f5f"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000020",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 774,
+      "slot": 377,
+      "supervised_token_count": 387,
+      "token_label_sha256": "1645ff4f23fce1d2bebcec6f6e7d77de18386f84b49f582023a3972381c9e16a"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:recolor:000001",
+      "family": "recolor",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 774,
+      "slot": 378,
+      "supervised_token_count": 387,
+      "token_label_sha256": "2b912c69932d69eea4189a2c77e501001146eca7259fea3a534e7a733cec846a"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000097",
+      "family": "complete missing structure",
+      "intervention_slot": true,
+      "paired_replacement_for": "TRAIN:ATOMIC_REPAIR:same color:000015",
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 558,
+      "slot": 379,
+      "supervised_token_count": 279,
+      "token_label_sha256": "7ddca1d26a9d7ffe02672a5d2d238c8d98372391c33d097c779eb90cb6b0717b"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000019",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 314,
+      "slot": 380,
+      "supervised_token_count": 35,
+      "token_label_sha256": "8cecb5b8bdd0c7601e51db9ebdc15134e63c9532aba3ed1db59407751f79f8f0"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000056",
+      "family": "inside/contains",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 814,
+      "slot": 381,
+      "supervised_token_count": 407,
+      "token_label_sha256": "7a5eafa97512b41591fa67cb1ec58659fa3b2b37db31d6250442473671c31b7b"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000047",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 384,
+      "slot": 382,
+      "supervised_token_count": 21,
+      "token_label_sha256": "b3b59e83448075b98b865bfdba614a8c6d90c2f22f717ec9b86fd890523bc9d5"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000048",
+      "family": "connected components",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 406,
+      "slot": 383,
+      "supervised_token_count": 19,
+      "token_label_sha256": "5c4780db6ad990de66958c03f6cdec5d073e3e2cc579c53066854e74e27f4c4c"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000020",
+      "family": "orientation",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 466,
+      "slot": 384,
+      "supervised_token_count": 35,
+      "token_label_sha256": "6ed7fc6d0a2c42d4cd82ef045878642641d02f79495f8ee0915280d6f5dcc91a"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000039",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 435,
+      "slot": 385,
+      "supervised_token_count": 24,
+      "token_label_sha256": "3391adf6f42044dcb5de322acf47f0322115491c03df7a96bc8270b60f1eb964"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000029",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 906,
+      "slot": 386,
+      "supervised_token_count": 453,
+      "token_label_sha256": "57cbbff84aa063f0842265514bac0efc4ad1b39c4470302934c953eb1770f857"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000030",
+      "family": "difference",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 822,
+      "slot": 387,
+      "supervised_token_count": 411,
+      "token_label_sha256": "d3b8d9690642c04c7919515b10ed8ce2876d78ca6dcda35a08cbb8acaca29372"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000040",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 369,
+      "slot": 388,
+      "supervised_token_count": 24,
+      "token_label_sha256": "e9c2d9656946332e9f022e6b101994936fa274898260fec9fb79c25d9d3abd40"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000041",
+      "family": "width",
+      "intervention_slot": false,
+      "role": "ATOMIC_REPAIR",
+      "sequence_length": 323,
+      "slot": 389,
+      "supervised_token_count": 24,
+      "token_label_sha256": "f384621b1e32abb15971910a6cd9851d29ebcb0da0dbb4d5ec65e804647f8de4"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000029",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 862,
+      "slot": 390,
+      "supervised_token_count": 431,
+      "token_label_sha256": "b369448ada7202d3a2e73cb8d65ac9ced1f0dbb8768bcee8767e65f7850dd2b5"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:mask set:000044",
+      "family": "mask set",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 862,
+      "slot": 391,
+      "supervised_token_count": 431,
+      "token_label_sha256": "fbe1720cf140d50e99ff76cace3c3984a5adf04223135ac963cf1e162d1c0c47"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000041",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 682,
+      "slot": 392,
+      "supervised_token_count": 341,
+      "token_label_sha256": "5efd97fe230fb02a04b6f4701b9f3726f52b25e293e658bbdc608756bf2986bd"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000030",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 558,
+      "slot": 393,
+      "supervised_token_count": 279,
+      "token_label_sha256": "14a81936ff894d62943af9701c4173e918c876a132158e8f8b5f1d227567191f"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000031",
+      "family": "relation selector action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 558,
+      "slot": 394,
+      "supervised_token_count": 279,
+      "token_label_sha256": "6942d9c7b7436ecacb85f984ee1e1715e13a8860a3e2646d22b964b981f8d131"
+    },
+    {
+      "episode_id": "TRAIN:COMPOSITION_REPAIR:conditional action:000042",
+      "family": "conditional action",
+      "intervention_slot": false,
+      "role": "COMPOSITION_REPAIR",
+      "sequence_length": 722,
+      "slot": 395,
+      "supervised_token_count": 361,
+      "token_label_sha256": "5b2eff5680eefb872a9c755c5af9ae1414bde6437db3c6070640e4ed62238f88"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000020",
+      "family": "overlay",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 638,
+      "slot": 396,
+      "supervised_token_count": 319,
+      "token_label_sha256": "cb020ffd1d79675c7ec0bae96c12265c2ba8d230d1ff4046a3fb82de178bc7dc"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000006",
+      "family": "complete missing structure",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 774,
+      "slot": 397,
+      "supervised_token_count": 387,
+      "token_label_sha256": "fc069f353cb1490bcd6e265bb0c7817d5f904a06d3651a709ee1d882fa6cdc0b"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000021",
+      "family": "propagation",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 862,
+      "slot": 398,
+      "supervised_token_count": 431,
+      "token_label_sha256": "9ad2772223e8ab087016df45f844486f954b2072c54752b0a830bad22b56201d"
+    },
+    {
+      "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000006",
+      "family": "color mapping",
+      "intervention_slot": false,
+      "role": "RETENTION_TRAIN",
+      "sequence_length": 638,
+      "slot": 399,
+      "supervised_token_count": 319,
+      "token_label_sha256": "99e856a60adcd6c87eb555d6ac9c1c44785996b4a4086c4143a31e6c9ed83fb6"
+    }
+  ],
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "protocol_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
+  "scientific_training_started": false,
+  "shape": {
+    "intervention_fraction": 0.2,
+    "intervention_slots": 16,
+    "optimizer_steps": 100,
+    "replay_slots": 80,
+    "slots": 400,
+    "token_total": 260932
+  },
+  "shared_training": {
+    "atomic_family_weights": {
+      "connected components": 0.235294,
+      "difference": 0.196078,
+      "inside/contains": 0.235294,
+      "orientation": 0.137255,
+      "width": 0.196078
+    },
+    "checkpoint_cadence_tokens": [
+      250000
+    ],
+    "composition_family_weights": {
+      "conditional action": 0.338462,
+      "mask set": 0.338462,
+      "relation selector action": 0.323077
+    },
+    "gradient_accumulation": 4,
+    "joint_runtime_cap_seconds": 7200.0,
+    "nominal_transformer_tokens_per_arm": 250000,
+    "optimizer_steps_per_arm": 100,
+    "per_arm_runtime_cap_seconds": 3600.0,
+    "role_cycle": [
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN"
+    ],
+    "role_weights": {
+      "ATOMIC_REPAIR": 0.5,
+      "COMPOSITION_REPAIR": 0.3,
+      "RETENTION_TRAIN": 0.2
+    },
+    "schedule_alignment_slots": 100,
+    "schedule_stop_policy": "At least nominal_transformer_tokens_per_arm, gradient accumulation aligned, and aligned to schedule_alignment_slots; actual planned token count is frozen in the binding.",
+    "seed": 2000031
+  },
+  "totals": {
+    "by_family": {
+      "color mapping": 22,
+      "complete missing structure": 8,
+      "conditional action": 43,
+      "connected components": 49,
+      "difference": 31,
+      "inside/contains": 57,
+      "mask set": 45,
+      "orientation": 21,
+      "overlay": 21,
+      "propagation": 22,
+      "recolor": 2,
+      "relation selector action": 32,
+      "rotate": 5,
+      "width": 42
+    },
+    "by_role": {
+      "ATOMIC_REPAIR": 200,
+      "COMPOSITION_REPAIR": 120,
+      "RETENTION_TRAIN": 80
+    },
+    "episodes": 400,
+    "supervised_tokens": 109776,
+    "transformer_tokens": 260932
+  },
+  "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+}

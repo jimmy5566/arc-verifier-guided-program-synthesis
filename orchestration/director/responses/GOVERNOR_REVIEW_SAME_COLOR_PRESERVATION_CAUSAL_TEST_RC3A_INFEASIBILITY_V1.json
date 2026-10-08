@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_SAME_COLOR_PRESERVATION_CAUSAL_TEST_RC3A_INFEASIBILITY_V1",
+  "decision": "REVISE_MATCHING_CRITERION",
+  "scope": "STAGE_A_RC3A_SCIENTIFIC_CONSTRAINT_RESOLUTION",
+  "brief_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_RC3A_INFEASIBILITY_REVIEW_V1",
+  "reviewed_brief_sha256": "14fbcc3968221aae81ee04cf15de7011a75413ec82feaf81a8985d5ca73c76de",
+  "preparation_disposition": "CONTINUE_PREPARATION_ONLY",
+  "resolution": "Retain the frozen proportional six-family control reduction and the sixteen same-color treatment replacements. Retain exact equality of supervised-token totals, optimizer steps, role slots, replay slots, intervention count, and every non-intervention schedule record. Replace exact equality of total transformer tokens with a prospective bounded-difference rule that permits only the minimum unavoidable transformer-token delta induced by the mandatory rotate control row.",
+  "scientific_reason": "Changing the proportional allocation or dropping rotate would alter the intended replay-allocation contrast and protection coverage. The transformer-token mismatch is instead a deterministic consequence of the family content: every same-color intervention row has sequence_length minus two times supervised_tokens equal to zero, while every available rotate control row has a strictly positive value. Supervised-token equality preserves the directly optimized target-token dose; equal optimizer steps and fixed slot structure preserve update count and ordering. A minimized sub-0.1-percent transformer-token difference is therefore the smallest explicit and scientifically bounded relaxation that preserves the original causal question.",
+  "reviewed_evidence": {
+    "infeasibility_proof_sha256": "c0711f1d45fdf24b302d35940f306c55c4579af8ac0151b9bcfe00015509af41",
+    "prior_response_sha256": "3893657bb960b6468cbcd75469aa2d66c8b21bc24af12c7459d60fe8baef37b7",
+    "required_proportional_reduction_counts": {
+      "color mapping": 1,
+      "complete missing structure": 1,
+      "overlay": 6,
+      "propagation": 6,
+      "recolor": 1,
+      "rotate": 1
+    },
+    "minimum_available_rotate_invariant": 234,
+    "same_color_invariant": 0
+  },
+  "revised_rc3a_constraint": {
+    "exactly_equal_between_arms": [
+      "total supervised tokens",
+      "optimizer steps",
+      "gradient-accumulation structure",
+      "role-slot sequence",
+      "replay-slot count",
+      "intervention-slot count",
+      "checkpoint cadence",
+      "V7 checkpoint identity",
+      "train-data identity",
+      "seed and training recipe",
+      "all non-intervention schedule records"
+    ],
+    "proportional_control_reduction_counts": {
+      "color mapping": 1,
+      "complete missing structure": 1,
+      "overlay": 6,
+      "propagation": 6,
+      "recolor": 1,
+      "rotate": 1
+    },
+    "transformer_token_rule": "Use a deterministic global solver to minimize the absolute arm-level transformer-token difference subject to all exact constraints. The frozen difference must be the minimum feasible value and must not exceed 0.001 of the smaller arm's total transformer-token count. Record the exact signed and absolute difference before any model loading.",
+    "content_integrity": "Do not pad, truncate, duplicate tokens within a sample, modify prompts or labels, or alter tokenizer output to manufacture equality.",
+    "fail_closed": "If exact supervised-token equality and all proportional family counts cannot be achieved, or if the minimum feasible transformer-token difference exceeds the 0.001 bound, pause Stage A and return for a new scientific review. No further matching relaxation is automatic."
+  },
+  "unchanged_conditions": [
+    "The quantitative causal decision rule remains unchanged.",
+    "Weak-atomic and protected-capability gates remain unchanged.",
+    "The common prospective evaluation and Batch1 cross-check contract remain unchanged.",
+    "The treatment assigns exactly sixteen of eighty replay slots to train-only same-color examples.",
+    "Both arms start from the identical frozen V7 checkpoint.",
+    "Budget and arm isolation remain unchanged.",
+    "TARGET_DEV and RETENTION_SENTINEL remain evaluation-only.",
+    "V7, R1, R2, the stopped V1 protocol, and prior diagnostics remain immutable.",
+    "FINAL_AUDIT remains sealed."
+  ],
+  "rejected_resolutions": {
+    "revise_proportion_constraint": "REJECTED_AS_LARGER_SCIENTIFIC_CHANGE",
+    "revise_support_family_set": "REJECTED_AS_LARGER_SCIENTIFIC_CHANGE",
+    "pause_stage_a_now": "NOT_REQUIRED_IF_THE_REVISED_BOUNDED_MATCHING_RULE_IS_FEASIBLE"
+  },
+  "required_next_artifact": "One immutable CPU-only RC3A schedule package containing the deterministic solver identity, exact proportional family counts, exact supervised-token equality, exact optimizer and slot equality, minimized transformer-token delta and ratio, complete schedule hashes, and unchanged RC1, RC2, RC4, and RC5 hashes.",
+  "another_stage_level_review_required": true,
+  "forbidden_actions": [
+    "DO_NOT_LAUNCH_STAGE_A_FROM_THIS_RESPONSE",
+    "DO_NOT_LOAD_A_MODEL_OR_RUN_GPU_INFERENCE",
+    "DO_NOT_CONSTRUCT_AN_OPTIMIZER_OR_TRAIN",
+    "DO_NOT_AUTHORIZE_OR_START_R3",
+    "DO_NOT_CHANGE_THE_PROPORTIONAL_FAMILY_COUNTS",
+    "DO_NOT_SILENTLY_RELAX_ANY_OTHER_MATCHING_OR_GATE_CONSTRAINT",
+    "DO_NOT_MUTATE_V7_R1_R2_OR_PRIOR_DIAGNOSTICS",
+    "DO_NOT_USE_TARGET_DEV_OR_RETENTION_SENTINEL_AS_TRAINING_DATA",
+    "DO_NOT_OPEN_FINAL_AUDIT",
+    "DO_NOT_CONTINUE_TO_STAGE_B_C_OR_D"
+  ],
+  "preparation_authorized": true,
+  "explicit_user_gpu_authorization_present": false,
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "r3_authorized": false,
+  "final_audit_authorized": false
+}

@@ -1,0 +1,150 @@
+{
+  "checkpoint_manifest": {
+    "identity": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  },
+  "config_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1_MATCHED_SCHEDULE_CONFIG_V3_RC3A",
+  "control_replay_family_weights": {
+    "color mapping": 0.075,
+    "complete missing structure": 0.075,
+    "overlay": 0.35,
+    "propagation": 0.35,
+    "recolor": 0.075,
+    "rotate": 0.075
+  },
+  "created_at": "2026-10-09T00:00:00Z",
+  "evaluation": {
+    "batch1_crosscheck": {
+      "aggregate_absolute_rate_delta_maximum": 0.0625,
+      "both_arms_same_effective_batch_required": true,
+      "prediction_canonical_agreement_minimum": 0.9375,
+      "subset_size": 32
+    },
+    "common_decoding_condition_required": true,
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "requested_batch_size": 32
+  },
+  "final_audit_authorized": false,
+  "intervention": {
+    "exact_replay_slot_count_policy": "Exactly one out of every five replay slots; alignment requires replay_slot_count divisible by five.",
+    "exact_replay_slot_fraction": 0.2,
+    "only_allowed_schedule_difference": "At the 16 designated replay slots, the treatment uses train-only same-color records and control uses exactly the Director-frozen proportional removal counts. The solver preserves exact supervised-token equality and all structural constraints; total transformer tokens may differ only by the globally minimized amount allowed by the RC3A response.",
+    "treatment_same_color_replay_weight": 0.2
+  },
+  "isolation": {
+    "cross_arm_resume": false,
+    "final_audit_accessed": false,
+    "fresh_nonce_per_arm": true,
+    "fresh_output_per_arm": true,
+    "retention_sentinel_training": false,
+    "target_dev_training": false
+  },
+  "matching_contract": {
+    "director_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_SAME_COLOR_PRESERVATION_CAUSAL_TEST_RC3A_INFEASIBILITY_V1.json",
+    "director_response_sha256": "b1e95fe0c9bd21e45c0fe3a875a55f11f605b6a14be47b588cd0b781096f036a",
+    "exact_equal_between_arms": [
+      "total supervised tokens",
+      "optimizer steps",
+      "gradient-accumulation structure",
+      "role-slot sequence",
+      "replay-slot count",
+      "intervention-slot count",
+      "checkpoint cadence",
+      "V7 checkpoint identity",
+      "train-data identity",
+      "seed and training recipe",
+      "all non-intervention schedule records"
+    ],
+    "proportional_control_reduction_counts": {
+      "color mapping": 1,
+      "complete missing structure": 1,
+      "overlay": 6,
+      "propagation": 6,
+      "recolor": 1,
+      "rotate": 1
+    },
+    "transformer_token_difference_rule": {
+      "maximum_fraction_of_smaller_arm_total": 0.001,
+      "no_content_modification": true,
+      "optimization": "deterministic global minimum absolute difference subject to every exact constraint"
+    }
+  },
+  "model_loading_authorized": false,
+  "protocol_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
+  "schema_version": 1,
+  "scientific_training_authorized": false,
+  "shared_training": {
+    "atomic_family_weights": {
+      "connected components": 0.235294,
+      "difference": 0.196078,
+      "inside/contains": 0.235294,
+      "orientation": 0.137255,
+      "width": 0.196078
+    },
+    "checkpoint_cadence_tokens": [
+      250000
+    ],
+    "composition_family_weights": {
+      "conditional action": 0.338462,
+      "mask set": 0.338462,
+      "relation selector action": 0.323077
+    },
+    "gradient_accumulation": 4,
+    "joint_runtime_cap_seconds": 7200.0,
+    "nominal_transformer_tokens_per_arm": 250000,
+    "optimizer_steps_per_arm": 100,
+    "per_arm_runtime_cap_seconds": 3600.0,
+    "role_cycle": [
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN"
+    ],
+    "role_weights": {
+      "ATOMIC_REPAIR": 0.5,
+      "COMPOSITION_REPAIR": 0.3,
+      "RETENTION_TRAIN": 0.2
+    },
+    "schedule_alignment_slots": 100,
+    "schedule_stop_policy": "At least nominal_transformer_tokens_per_arm, gradient accumulation aligned, and aligned to schedule_alignment_slots; actual planned token count is frozen in the binding.",
+    "seed": 2000031
+  },
+  "status": "FROZEN_CPU_ONLY_PREEXECUTION",
+  "supersedes": "STAGE_A_MATCHED_SCHEDULE_CONFIG_V2.json; RC3A permits only a deterministic minimum transformer-token delta while retaining exact supervised-token and structural equality.",
+  "train": {
+    "path": "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl",
+    "sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+  },
+  "treatment_replay_family_weights": {
+    "color mapping": 0.06,
+    "complete missing structure": 0.06,
+    "overlay": 0.28,
+    "propagation": 0.28,
+    "recolor": 0.06,
+    "rotate": 0.06,
+    "same color": 0.2
+  }
+}

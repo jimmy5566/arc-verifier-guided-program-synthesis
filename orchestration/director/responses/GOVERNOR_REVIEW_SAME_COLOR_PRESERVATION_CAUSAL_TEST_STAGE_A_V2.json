@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_SAME_COLOR_PRESERVATION_CAUSAL_TEST_STAGE_A_V2",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "STAGE_A_ANTI_FORGETTING_INDEPENDENT_SUCCESSOR_PROTOCOL",
+  "brief_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_STAGE_A_REVIEW_V2",
+  "reviewed_brief_sha256": "bb6199281d66fd081d01aff11b8fb19f3500ed887267f3df48030fb29de44916",
+  "scientific_preparation_status": "NOT_YET_READY",
+  "assessment": "RC1, RC2, RC4, and RC5 are scientifically adequate for preparation: the decision table has explicit CAUSAL_SUPPORT, FAIL, and INCONCLUSIVE outcomes; weak-atomic, protected-capability, composition, and retention limits are numeric; the common prospective evaluation condition and Batch1 cross-check thresholds are frozen; and the arm, budget, stage, and FINAL_AUDIT isolation boundaries remain closed. RC3 is not satisfied by the materialized schedules because the actual intervention does not proportionally reduce the frozen non-same-color replay mixture as declared.",
+  "root_cause": "All 16 treatment intervention slots are token- and supervision-matched, but the matching algorithm chooses controls only from equal-length candidates without enforcing the frozen replay-family reduction proportions. The resulting contrast replaces 15 color-mapping rows and 1 complete-missing-structure row with 16 same-color rows, while overlay, propagation, recolor, and rotate are unchanged. This confounds adding same-color replay with an almost complete removal of color-mapping replay from the affected slots and contradicts the declared proportional replay-allocation factor.",
+  "evidence": {
+    "revised_package_sha256": "f6b84eb339884c3315853073664eb9f4b1a6b51e51185c43c471b2e99b70f793",
+    "quantitative_rule_sha256": "9608ae0e418880956e64c6cee7e52f314a1bbf74167c9d3ae40adbc38ec36262",
+    "matched_schedule_config_sha256": "17ed5eb24976570677f013690fdc97dcab925543be4f821b16fa97ef1e4b348f",
+    "batch1_crosscheck_cohort_sha256": "9a886d80939d1197e33f62cabc59fd48a52a61f82b7133224a1a9f65ab38ff34",
+    "schedule_binding_sha256": "147ebd0be0e5d13433248e67f9b781eb23cdd3781570d69c524a7fa0c9af9e29",
+    "control_schedule_sha256": "5fd1291bb3ba8c8e95871c6f6165d360dc2fcf68245faf6a0d158f3b1df6d6fd",
+    "treatment_schedule_sha256": "9f4488ab759648bc6a056a2de4fc874b68d886d50889a0ac4afc36c85593cc72",
+    "intervention_slots": 16,
+    "actual_removed_control_families": {
+      "color mapping": 15,
+      "complete missing structure": 1,
+      "overlay": 0,
+      "propagation": 0,
+      "recolor": 0,
+      "rotate": 0
+    },
+    "declared_non_same_color_reduction": "PROPORTIONAL_ACROSS_THE_FROZEN_SIX_FAMILY_MIXTURE",
+    "declared_reduction_satisfied": false
+  },
+  "required_change": {
+    "id": "RC3A_PROPORTIONAL_MATCHED_REPLAY_REFREEZE",
+    "requirement": "Refreeze only the control and treatment schedules and their dependent hashes/package. The 16 same-color treatment replacements must be drawn against a deterministic integer allocation that proportionally reduces all six frozen non-same-color replay families, with the rounding rule frozen before schedule construction. Preserve identical arm-level transformer tokens, supervised tokens, optimizer steps, role slots, non-intervention records, V7 identity, seed, training recipe, checkpoint cadence, and budget caps. A global deterministic matching solver may balance tokens across the complete 16-slot intervention block rather than requiring each individual replacement to match, but both complete arms must remain exactly matched on total transformer tokens and supervised tokens. Fail closed if the declared proportional allocation and exact arm totals cannot both be achieved. Do not change the quantitative decision rule, evaluation cohort, batch thresholds, scientific question, or any other RC1, RC2, RC4, or RC5 condition."
+  },
+  "accepted_without_change": [
+    "RC1_QUANTITATIVE_CAUSAL_RULE",
+    "RC2_WEAK_ATOMIC_AND_PROTECTION_GATES",
+    "RC4_COMMON_PROSPECTIVE_EVALUATION",
+    "RC5_ARM_AND_STAGE_ISOLATION"
+  ],
+  "frozen_conditions": [
+    "Both arms remain V7-start matched arms.",
+    "The only scientific arm factor remains preservation_replay_family_allocation.",
+    "The treatment same-color fraction remains exactly 0.20 of the 80 replay slots.",
+    "Weak-atomic and composition schedules remain identical between arms.",
+    "The quantitative decision table and common prospective evaluation contract remain unchanged.",
+    "TARGET_DEV and RETENTION_SENTINEL remain evaluation-only.",
+    "V7, R1, R2, the stopped V1 protocol, and prior diagnostics remain immutable.",
+    "FINAL_AUDIT remains sealed."
+  ],
+  "forbidden_actions": [
+    "DO_NOT_LAUNCH_STAGE_A_FROM_THIS_RESPONSE",
+    "DO_NOT_AUTHORIZE_OR_START_R3",
+    "DO_NOT_LOAD_A_MODEL_OR_RUN_GPU_INFERENCE",
+    "DO_NOT_CONSTRUCT_AN_OPTIMIZER_OR_TRAIN",
+    "DO_NOT_REUSE_STOPPED_V1_AUTHORITY",
+    "DO_NOT_CHANGE_RC1_RC2_RC4_OR_RC5_WHILE_REPAIRING_RC3",
+    "DO_NOT_MUTATE_V7_R1_R2_OR_PRIOR_DIAGNOSTICS",
+    "DO_NOT_USE_TARGET_DEV_OR_RETENTION_SENTINEL_AS_TRAINING_DATA",
+    "DO_NOT_OPEN_FINAL_AUDIT",
+    "DO_NOT_CONTINUE_TO_STAGE_B_C_OR_D"
+  ],
+  "another_stage_level_review_required": true,
+  "review_trigger": "One immutable schedule-only RC3A remediation package with proportional six-family reduction counts, exact matched arm totals, new schedule and binding hashes, and unchanged RC1, RC2, RC4, and RC5 hashes.",
+  "preparation_authorized": true,
+  "explicit_user_gpu_authorization_present": false,
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "r3_authorized": false,
+  "final_audit_authorized": false
+}

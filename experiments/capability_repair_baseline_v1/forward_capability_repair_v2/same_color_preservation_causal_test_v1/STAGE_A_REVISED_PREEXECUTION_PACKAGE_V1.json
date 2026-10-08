@@ -1,0 +1,50 @@
+{
+  "batch1_crosscheck_cohort": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/STAGE_A_BATCH1_CROSSCHECK_COHORT_V1.json",
+    "sha256": "9a886d80939d1197e33f62cabc59fd48a52a61f82b7133224a1a9f65ab38ff34"
+  },
+  "checks": {
+    "control_treatment_roles_identical": true,
+    "final_audit_opened": false,
+    "intervention_fraction": 0.2,
+    "intervention_slots": 16,
+    "model_loaded": false,
+    "only_designated_replay_slots_differ": true,
+    "optimizer_constructed": false,
+    "optimizer_steps_per_arm": 100,
+    "replay_slots": 80,
+    "scientific_training_started": false,
+    "supervised_tokens_identical": true,
+    "transformer_tokens_identical": true
+  },
+  "control_schedule": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/schedule_freeze_v3/CONTROL_TRAINING_SCHEDULE.json",
+    "sha256": "5fd1291bb3ba8c8e95871c6f6165d360dc2fcf68245faf6a0d158f3b1df6d6fd"
+  },
+  "freeze_script": {
+    "path": "scripts/freeze_same_color_preservation_causal_test_v1.py",
+    "sha256": "3842d6552dd6200710a2689a7d1aa995f6b2161e29a8c6398503942f6af2c635"
+  },
+  "matched_schedule_config": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/STAGE_A_MATCHED_SCHEDULE_CONFIG_V2.json",
+    "sha256": "17ed5eb24976570677f013690fdc97dcab925543be4f821b16fa97ef1e4b348f"
+  },
+  "package_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1_REVISED_PREEXECUTION_PACKAGE",
+  "per_arm_reservation_seconds": 3600.0,
+  "quantitative_rule": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/STAGE_A_QUANTITATIVE_DECISION_RULE_V1.json",
+    "sha256": "9608ae0e418880956e64c6cee7e52f314a1bbf74167c9d3ae40adbc38ec36262"
+  },
+  "remaining_budget_seconds": 24021.985752295044,
+  "schedule_binding": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/schedule_freeze_v3/MATCHED_SCHEDULE_BINDING_V1.json",
+    "sha256": "147ebd0be0e5d13433248e67f9b781eb23cdd3781570d69c524a7fa0c9af9e29"
+  },
+  "schema_version": 1,
+  "stage_a_joint_reservation_seconds": 7200.0,
+  "status": "CPU_PREPARATION_COMPLETE_PENDING_DIRECTOR_REVIEW_AND_EXPLICIT_GPU_AUTHORIZATION",
+  "treatment_schedule": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/schedule_freeze_v3/TREATMENT_TRAINING_SCHEDULE.json",
+    "sha256": "9f4488ab759648bc6a056a2de4fc874b68d886d50889a0ac4afc36c85593cc72"
+  }
+}

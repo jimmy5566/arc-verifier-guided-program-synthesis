@@ -1,0 +1,129 @@
+{
+  "allowed_difference": "designated intervention_slot replay positions only; each replacement preserves sequence_length and supervised_token_count",
+  "checkpoint_manifest": {
+    "identity": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  },
+  "config_sha256": "dc72a8ff4c523c67ff4c51b5702d2ea74123126e519dfdd4f938d070296c6dfd",
+  "control_schedule_sha256": "3e3292a88080f7a01df5f2aaa261d57549e324976a28b35cf996ba19ade5e9f1",
+  "control_totals": {
+    "by_family": {
+      "color mapping": 21,
+      "complete missing structure": 7,
+      "conditional action": 41,
+      "connected components": 49,
+      "difference": 29,
+      "inside/contains": 57,
+      "mask set": 44,
+      "orientation": 20,
+      "overlay": 20,
+      "propagation": 21,
+      "recolor": 2,
+      "relation selector action": 29,
+      "rotate": 5,
+      "width": 39
+    },
+    "by_role": {
+      "ATOMIC_REPAIR": 194,
+      "COMPOSITION_REPAIR": 114,
+      "RETENTION_TRAIN": 76
+    },
+    "episodes": 384,
+    "supervised_tokens": 105227,
+    "transformer_tokens": 250455
+  },
+  "cpu_only": true,
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "protocol_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "shape": {
+    "intervention_fraction": 0.21052631578947367,
+    "intervention_slots": 16,
+    "optimizer_steps": 96,
+    "replay_slots": 76,
+    "slots": 384,
+    "token_total": 250455
+  },
+  "shared_training": {
+    "atomic_family_weights": {
+      "connected components": 0.235294,
+      "difference": 0.196078,
+      "inside/contains": 0.235294,
+      "orientation": 0.137255,
+      "width": 0.196078
+    },
+    "checkpoint_cadence_tokens": [
+      250000
+    ],
+    "composition_family_weights": {
+      "conditional action": 0.338462,
+      "mask set": 0.338462,
+      "relation selector action": 0.323077
+    },
+    "gradient_accumulation": 4,
+    "joint_runtime_cap_seconds": 7200.0,
+    "nominal_transformer_tokens_per_arm": 250000,
+    "per_arm_runtime_cap_seconds": 3600.0,
+    "role_cycle": [
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "ATOMIC_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "COMPOSITION_REPAIR",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN",
+      "RETENTION_TRAIN"
+    ],
+    "role_weights": {
+      "ATOMIC_REPAIR": 0.5,
+      "COMPOSITION_REPAIR": 0.3,
+      "RETENTION_TRAIN": 0.2
+    },
+    "seed": 2000031
+  },
+  "status": "FROZEN_CPU_ONLY_MATCHED_SCHEDULES",
+  "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945",
+  "treatment_schedule_sha256": "088318eca178dd06ce7bd5a5003165c948e0ebff9781059726ad82a6f4744936",
+  "treatment_totals": {
+    "by_family": {
+      "color mapping": 6,
+      "complete missing structure": 6,
+      "conditional action": 41,
+      "connected components": 49,
+      "difference": 29,
+      "inside/contains": 57,
+      "mask set": 44,
+      "orientation": 20,
+      "overlay": 20,
+      "propagation": 21,
+      "recolor": 2,
+      "relation selector action": 29,
+      "rotate": 5,
+      "same color": 16,
+      "width": 39
+    },
+    "by_role": {
+      "ATOMIC_REPAIR": 194,
+      "COMPOSITION_REPAIR": 114,
+      "RETENTION_TRAIN": 76
+    },
+    "episodes": 384,
+    "supervised_tokens": 105227,
+    "transformer_tokens": 250455
+  }
+}

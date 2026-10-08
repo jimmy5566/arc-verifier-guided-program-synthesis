@@ -1,0 +1,29 @@
+{
+  "brief_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_STAGE_A_REVIEW_V2",
+  "constraints": [
+    "No model was loaded.",
+    "No GPU inference, optimizer construction, or training occurred.",
+    "No R3, reuse of stopped V1 authority, Stage B/C/D continuation, or FINAL_AUDIT access.",
+    "A separate explicit user GPU-launch authorization remains necessary even if the scientific design is approved."
+  ],
+  "created_at": "2026-10-08T19:37:27.938926Z",
+  "implemented_changes": [
+    "RC1 exact CAUSAL_SUPPORT, FAIL, and INCONCLUSIVE table",
+    "RC2 numeric weak-atomic, strong-capability, composition and retention limits",
+    "RC3 matched 100-step schedules with equal 260932 transformer tokens and 109776 supervised tokens; only 16 of 80 replay slots differ",
+    "RC4 frozen 32-example target-blind Batch1 crosscheck subset, Batch32 request, fallback ladder, canonical agreement >=0.9375, rate delta <=0.0625",
+    "RC5 fresh-arm/budget/isolation constraints including <=7200 joint and <=3600 per arm"
+  ],
+  "prior_response": {
+    "decision": "REQUIRE_CHANGES",
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_SAME_COLOR_PRESERVATION_CAUSAL_TEST_STAGE_A_V1.json",
+    "sha256": "3bdc5ddf1f5877e22b9c1707567256d07004efe25fb2d703b9ea60bf88d01d7b"
+  },
+  "question": "Do the revised quantitative rule, exact matched schedules, common Batch32 evaluation binding, and isolation package satisfy the scientific preparation requirements for the distinct Stage-A experiment? This review is not a request to launch GPU work.",
+  "revised_package": {
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/STAGE_A_REVISED_PREEXECUTION_PACKAGE_V1.json",
+    "sha256": "f6b84eb339884c3315853073664eb9f4b1a6b51e51185c43c471b2e99b70f793"
+  },
+  "schema_version": 1,
+  "scope": "STAGE_A_ANTI_FORGETTING_INDEPENDENT_SUCCESSOR_PROTOCOL"
+}
