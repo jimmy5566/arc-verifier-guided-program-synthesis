@@ -9,6 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WRAPPER = ROOT / "scripts" / "run_foundation_v2_reconstruction_v1.py"
+RECEIPT_WRITER = ROOT / "scripts" / "write_reconstruction_terminal_receipt_v1.py"
 spec = importlib.util.spec_from_file_location("reconstruction_launcher", WRAPPER)
 launcher = importlib.util.module_from_spec(spec); assert spec.loader is not None; spec.loader.exec_module(launcher)
 
@@ -47,6 +48,17 @@ class ReconstructionLaunchGuardTest(unittest.TestCase):
             records = [json.loads(x) for x in ledger.read_text(encoding="utf-8").splitlines()]
             self.assertEqual(0.0, records[-1]["gpu_optimizer_seconds"])
             self.assertEqual(7, records[-1]["evidence"]["exit_code"])
+
+    def test_success_terminal_receipt_cannot_be_written_without_worker_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            d=Path(raw); snapshot=d/"snapshot.json"; result=d/"result.json"; checkpoint=d/"checkpoints"; output=d/"receipt.json"
+            snapshot.write_text("{}", encoding="utf-8"); checkpoint.mkdir()
+            base=[sys.executable,str(RECEIPT_WRITER),"--round-id","ROUND","--protocol-id","FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1","--worker-exit-code","0","--optimizer-steps","0","--processed-tokens","0","--scientific-gpu-seconds","0","--ledger-snapshot",str(snapshot),"--training-result",str(result),"--checkpoints",str(checkpoint),"--output",str(output)]
+            self.assertNotEqual(0, subprocess.run(base,capture_output=True,text=True,check=False).returncode)
+            result.write_text("{}",encoding="utf-8"); (checkpoint/"adapter.bin").write_bytes(b"x")
+            good=base.copy(); good[good.index("--optimizer-steps")+1]="1"; good[good.index("--processed-tokens")+1]="10"; good[good.index("--scientific-gpu-seconds")+1]="1.0"
+            self.assertEqual(0, subprocess.run(good,capture_output=True,text=True,check=False).returncode)
+            receipt=json.loads(output.read_text(encoding="utf-8")); self.assertEqual("SUCCESS",receipt["status"]); self.assertEqual(0,receipt["worker_exit_code"])
 
     def test_worker_accounting_state_charges_only_declared_optimizer_intervals(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
