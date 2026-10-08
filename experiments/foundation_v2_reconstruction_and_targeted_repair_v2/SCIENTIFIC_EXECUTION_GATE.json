@@ -3,12 +3,12 @@
   "GPU_GATE_READY": false,
   "authorization": {
     "consumption": "ATOMIC_EXCLUSIVE_CREATE_ONLY_AFTER_QUALIFYING_DIRECTIVE",
-    "contract_sha256": "a26af1734bb476f15a9a1da672797784c911559d10bcbbb315821ce49d39d009",
+    "contract_sha256": "9e685484d1e80d76071413198cee874d9b0e467cb0219284fec42a8d2284c7c8",
     "directive_sha256": null,
     "launch_nonce": "bc1f9e94-e336-447e-ab22-87decc706496",
     "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2"
   },
-  "contract_sha256": "a26af1734bb476f15a9a1da672797784c911559d10bcbbb315821ce49d39d009",
+  "contract_sha256": "9e685484d1e80d76071413198cee874d9b0e467cb0219284fec42a8d2284c7c8",
   "fail_closed_reasons": [
     "No qualifying directive has bound this new protocol, round, contract SHA, nonce, and exact source commit.",
     "Final read-only preflight has not yet run on the exact final launch commit."

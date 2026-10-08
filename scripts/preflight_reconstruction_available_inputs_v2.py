@@ -78,7 +78,7 @@ def main() -> int:
         "expected_source_commit": args.expected_source_commit,
     }
     try:
-        if binding.get("protocol_id") != "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2":
+        if binding.get("protocol_id") not in {"RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2", "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2"}:
             raise RuntimeError("PROTOCOL_ID_MISMATCH")
         source_root = Path(binding["source_provenance"]["checked_out_root"])
         head = subprocess.check_output(["git", "-C", str(source_root), "rev-parse", "HEAD"], text=True).strip()

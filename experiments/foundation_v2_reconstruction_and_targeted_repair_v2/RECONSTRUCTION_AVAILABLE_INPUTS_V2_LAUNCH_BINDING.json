@@ -261,7 +261,7 @@
       },
       {
         "path": "scripts/preflight_reconstruction_available_inputs_v2.py",
-        "sha256": "c862d83a87753f08296d634cbdc8443e0d11733b6d92f2518088ac3ee640956d"
+        "sha256": "fcbba405c5fbf75c212a214e4e812bcc7b4a93fcff78de36efdebfda3495ecf3"
       },
       {
         "path": "scripts/write_reconstruction_terminal_receipt_v1.py",
