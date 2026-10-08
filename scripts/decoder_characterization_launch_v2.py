@@ -98,6 +98,10 @@ def validate_contract(contract_path: Path, *, argv: list[str], environment: dict
         required = {"decision": "CONTINUE_CONTROLLER", "reviewed_brief_sha256": contract["reviewed_brief_sha256"], "launch_contract_sha256": contract["contract_sha256"], "worker_source_commit": worker_commit, "cohort_sha256": contract["cohort"]["sha256"]}
         if any(review.get(k) != v for k, v in required.items()):
             raise RuntimeError("GOVERNOR_REVIEW_BINDING_MISMATCH")
+        # The actual model invocation must never overwrite an earlier run.
+        for key in ("output_path", "receipt_path", "terminal_failure_receipt_path"):
+            if Path(contract[key]).exists():
+                raise RuntimeError("OUTPUT_PATH_NON_OVERWRITE_REQUIRED")
     if consume_nonce:
         nonce = Path(contract["nonce_path"])
         if not nonce.is_file() or sha(nonce) != contract["nonce_sha256"]:

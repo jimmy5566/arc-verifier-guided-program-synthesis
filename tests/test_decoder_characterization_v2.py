@@ -38,12 +38,27 @@ class DecoderCharacterizationV2Tests(unittest.TestCase):
                 launch.validate_contract(contract, argv=c["preflight_argv"], environment=env, require_review=None, consume_nonce=False)
             c = self.make_contract(root)[1]; contract = root / "contract.json"
             review = {"decision": "CONTINUE_CONTROLLER", "reviewed_brief_sha256": "brief", "launch_contract_sha256": c["contract_sha256"], "worker_source_commit": c["worker_source_commit"], "cohort_sha256": c["cohort"]["sha256"]}; write(Path(c["governor_review_path"]), review)
+            bad_review = dict(review); bad_review["cohort_sha256"] = "wrong"; write(Path(c["governor_review_path"]), bad_review)
+            with self.assertRaisesRegex(RuntimeError, "GOVERNOR_REVIEW"):
+                launch.validate_contract(contract, argv=c["argv"], environment=env, require_review=Path(c["governor_review_path"]), consume_nonce=False)
+            write(Path(c["governor_review_path"]), review)
             launch.validate_contract(contract, argv=c["argv"], environment=env, require_review=Path(c["governor_review_path"]), consume_nonce=True)
             with self.assertRaisesRegex(RuntimeError, "NONCE_ALREADY"):
                 launch.validate_contract(contract, argv=c["argv"], environment=env, require_review=Path(c["governor_review_path"]), consume_nonce=True)
             Path(c["preflight_receipt_path"]).write_bytes(b'{"status":"PASS"}\\n')
             with self.assertRaisesRegex(RuntimeError, "MALFORMED"):
                 launch.validate_preflight(c, source_commit=c["worker_source_commit"])
+
+    def test_cohort_selection_and_output_collisions_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp); contract, c = self.make_contract(root); env = c["environment"]
+            cohort = Path(c["cohort"]["path"]); bad = json.loads(cohort.read_text()); bad["role_counts"]["RETENTION_SENTINEL"] = 3; write(cohort, bad)
+            with self.assertRaisesRegex(RuntimeError, "COHORT_HASH|COHORT_SELECTION"):
+                launch.validate_contract(contract, argv=c["preflight_argv"], environment=env, require_review=None, consume_nonce=False)
+            contract, c = self.make_contract(root); review = {"decision": "CONTINUE_CONTROLLER", "reviewed_brief_sha256": "brief", "launch_contract_sha256": c["contract_sha256"], "worker_source_commit": c["worker_source_commit"], "cohort_sha256": c["cohort"]["sha256"]}; write(Path(c["governor_review_path"]), review)
+            Path(c["terminal_failure_receipt_path"]).write_text("old", encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "OUTPUT_PATH"):
+                launch.validate_contract(contract, argv=c["argv"], environment=env, require_review=Path(c["governor_review_path"]), consume_nonce=False)
 
     def test_characterization_row_is_target_blind_and_complete(self) -> None:
         token_contract = parser.TokenGridContract(tuple(range(10)), 10, 15, 13)
