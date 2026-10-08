@@ -31,6 +31,11 @@ class MinimumSafeLaunchTest(unittest.TestCase):
   text=(ROOT/'scripts'/'freeze_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
   self.assertIn("['--mode','prepare','--output',paths['freeze']]",text)
 
+ def test_prepare_binding_uses_frozen_novel_dataset_fingerprint(self):
+  text=(ROOT/'scripts'/'freeze_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
+  self.assertIn("artifacts/novel_training_data_v1_1/NOVEL_DATASET_FINGERPRINT.json",text)
+  self.assertIn("['--novel-fingerprint',novel_fingerprint",text)
+
  def test_preflight_requires_frozen_worker_environment(self):
   text=(ROOT/'scripts'/'preflight_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
   self.assertIn("expected_env=b['worker_binding']['environment']",text)
