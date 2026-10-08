@@ -1,0 +1,30 @@
+{
+  "arm": "TREATMENT",
+  "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+  "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "cumulative_cap_seconds": 28800.0,
+  "execution_authorization": "STANDING_USER_GPU_AUTHORIZATION_2026_10_09; DIRECTOR_STAGE_A_SCIENTIFICALLY_VALID_PREPARATION_COMPLETE",
+  "final_audit_opened": false,
+  "forbidden_training_inputs": [
+    "TARGET_DEV",
+    "RETENTION_SENTINEL",
+    "FINAL_AUDIT",
+    "Eval60 Gold",
+    "diagnostic Gold"
+  ],
+  "gradient_accumulation": 4,
+  "historical_cumulative_gpu_seconds": 4778.014247704957,
+  "isolated_output_required": true,
+  "learning_rate": 5e-05,
+  "no_parallel_scientific_job": true,
+  "optimizer_steps": 100,
+  "protocol_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
+  "reservation_seconds": 3600.0,
+  "round_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1_TREATMENT_001",
+  "schedule_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/schedule_freeze_v4_rc3a/TREATMENT_TRAINING_SCHEDULE.json",
+  "schedule_sha256": "9f5311fbd1e5352b8092bc00bae18db9a52608cc05841ce74995a0b867698abb",
+  "schema_version": 1,
+  "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+  "train_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TRAIN.jsonl",
+  "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+}
