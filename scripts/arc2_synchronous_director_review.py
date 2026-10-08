@@ -60,6 +60,15 @@ def main() -> int:
     review = record.setdefault("synchronous_review", {})
     if review.get("status") == "DIRECTIVE_RECEIVED":
         print(json.dumps({"status": "DIRECTIVE_ALREADY_RECEIVED", "directive": review.get("result_directive")}, sort_keys=True)); return 0
+    # A completed direct review can become visible just after Herdr reports the
+    # terminal agent state.  Reconcile it before any prompt so this race never
+    # creates a duplicate Director review.
+    for candidate in sorted(args.directive_dir.glob("DIRECTOR_DIRECTIVE_*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
+        if compatible_directive(candidate, 0, brief_hash):
+            review.update({"status": "DIRECTIVE_RECEIVED", "result_directive": str(candidate.resolve()), "result_directive_sha256": hashlib.sha256(candidate.read_bytes()).hexdigest(), "completed_at": now(), "reconciled_after_direct_wait": True})
+            record.update({"state": "PROCESSING", "lifecycle_state": "PROCESSING", "next_step": "PROCESS_DIRECTOR_DIRECTIVE", "controller_cycle_complete": False, "waiting_reason": None})
+            atomic(args.cycle_state, state)
+            print(json.dumps({"status": "DIRECTIVE_RECEIVED", "directive": str(candidate.resolve())}, sort_keys=True)); return 0
     existing_wait = review.get("status") == "DIRECT_PROMPT_SENT" or (
         review.get("status") == "DIRECT_PROMPT_FAILED" and "timed out waiting for agent status" in str(review.get("error", ""))
     )

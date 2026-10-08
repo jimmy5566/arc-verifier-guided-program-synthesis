@@ -1,0 +1,12 @@
+{
+  "root_cause": "The V2 package validated only metadata. It lacks executable Phase A generation, sealed Phase B scoring, atomic nonce/cap enforcement, and OS-enforced reference isolation.",
+  "why_current_path_is_invalid": "No current binding may launch because no reviewed worker implementation can safely execute the required stage.",
+  "artifacts_or_conditions_that_must_remain_frozen": ["Round 009 checkpoint", "target-free mapping proof", "sealed mapping", "all V1/V2 rejected nonces and outputs", "no-execution scientific boundary", "FINAL_AUDIT unopened"],
+  "required_resolution": "Implement the requested unexecuted Phase A worker, isolation boundary, Phase B scorer, fail-closed atomic launcher and no-model tests; issue fresh bindings only after code freeze and resubmit synchronously.",
+  "controller_next_actions": ["implement workers and launcher", "test dummy launcher to worker path", "freeze final package", "verify provenance", "resubmit synchronously"],
+  "minimum_acceptance_evidence": ["real worker code is present but unexecuted", "reference isolation is enforced", "nonce and cap tests pass", "final lock binds live code", "no model/GPU/science/final audit"],
+  "forbidden_actions": ["model loading", "generation", "scoring against scientific references", "GPU inference", "training", "targeted repair", "FINAL_AUDIT"],
+  "fresh_round_id_required": false,
+  "fresh_protocol_id_required": false,
+  "fresh_gate_nonce_output_root_required": true
+}

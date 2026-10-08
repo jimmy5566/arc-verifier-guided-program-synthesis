@@ -65,6 +65,14 @@ class SynchronousDirectorReviewTest(unittest.TestCase):
             argv=["review","--brief",str(brief),"--cycle-state",str(state),"--parent-directive-id","P","--directive-dir",str(directory),"--timeout-seconds","2"]
             with patch.object(sys,"argv",argv),patch.object(sync_review.subprocess,"run",side_effect=wait_only): self.assertEqual(0,sync_review.main())
 
+    def test_visible_matching_directive_is_reconciled_without_another_prompt(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root=Path(raw); directory=root/'d';directory.mkdir();brief=root/'b';brief.write_text('{}\n');digest=hashlib.sha256(brief.read_bytes()).hexdigest();state=root/'s'
+            state.write_text(json.dumps({'schema_version':1,'directives':{'P':{'state':'WAITING_DIRECTOR_ACTIVE','synchronous_review':{'status':'FALLBACK_REQUIRED'}}}}))
+            (directory/'DIRECTOR_DIRECTIVE_RESULT.json').write_text(json.dumps({'directive_id':'DIRECTOR_DIRECTIVE_RESULT','decision':'REQUIRE_CHANGES','reviewed_brief_sha256':digest}))
+            argv=['review','--brief',str(brief),'--cycle-state',str(state),'--parent-directive-id','P','--directive-dir',str(directory)]
+            with patch.object(sys,'argv',argv),patch.object(sync_review.subprocess,'run') as prompt: self.assertEqual(0,sync_review.main());prompt.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()
