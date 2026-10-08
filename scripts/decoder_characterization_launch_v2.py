@@ -66,10 +66,30 @@ def validate_datasets(contract: dict[str, Any]) -> None:
         if count != rows:
             raise RuntimeError("DATASET_ROW_COUNT_MISMATCH")
 
+def validate_checkpoint_manifest(contract: dict[str, Any]) -> None:
+    """Rehash every declared mounted model/adapter file before import."""
+    manifest_path = Path(contract["checkpoint_manifest_path"])
+    manifest = read_json_utf8_lf(manifest_path)
+    if sha(manifest_path) != contract["checkpoint_manifest_sha256"]:
+        raise RuntimeError("CHECKPOINT_MANIFEST_HASH_MISMATCH")
+    for kind, root_key, files_key in (("BASE", "base_path", "base_files"), ("ADAPTER", "adapter_path", "adapter_files")):
+        root = Path(manifest[root_key])
+        declared = manifest.get(files_key)
+        if not root.is_dir() or not isinstance(declared, list) or not declared:
+            raise RuntimeError(f"{kind}_MANIFEST_INVALID")
+        expected = {entry.get("name"): entry for entry in declared if isinstance(entry, dict) and isinstance(entry.get("name"), str)}
+        actual = {item.name: item for item in root.iterdir() if item.is_file()}
+        if set(expected) != set(actual):
+            raise RuntimeError(f"{kind}_MANIFEST_EXTRA_OR_MISSING_FILE")
+        for name, entry in expected.items():
+            item = actual[name]
+            if item.stat().st_size != entry.get("bytes") or sha(item) != entry.get("sha256"):
+                raise RuntimeError(f"{kind}_MANIFEST_CONTENT_MISMATCH")
+
 def validate_preflight(contract: dict[str, Any], *, source_commit: str) -> dict[str, Any]:
     receipt_path = Path(contract["preflight_receipt_path"])
     receipt = read_json_utf8_lf(receipt_path)
-    required = {"status": "PASS_NO_MODEL_IMPORT", "worker_source_commit": source_commit, "launch_contract_sha256": contract["contract_sha256"], "no_target_access": True, "model_loaded": False}
+    required = {"status": "PASS_NO_MODEL_IMPORT", "source_commit": contract["runtime_source_commit"], "worker_source_commit": source_commit, "launch_contract_sha256": contract["contract_sha256"], "no_target_access": True, "model_loaded": False}
     if any(receipt.get(k) != v for k, v in required.items()):
         raise RuntimeError("PREFLIGHT_BINDING_MISMATCH")
     return receipt
@@ -89,24 +109,21 @@ def validate_contract(contract_path: Path, *, argv: list[str], environment: dict
         require_file_hash(binding)
     validate_cohort(contract)
     validate_datasets(contract)
+    validate_checkpoint_manifest(contract)
     source = Path(contract["source_root"])
     head = (source / ".git").exists()
     if not head:
         raise RuntimeError("SOURCE_ROOT_INVALID")
     import subprocess
     live = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip()
-    # A contract is committed as one of the source files it binds, so binding
-    # its own final Git commit would be self-referential.  Bind the immutable
-    # worker commit plus every executable/dependency hash; the no-model receipt
-    # records the actual final checkout used at runtime.
     worker_commit = contract["worker_source_commit"]
-    if subprocess.run(["git", "-C", str(source), "merge-base", "--is-ancestor", worker_commit, live], check=False).returncode != 0:
-        raise RuntimeError("WORKER_SOURCE_COMMIT_NOT_ANCESTOR")
+    if live != contract["runtime_source_commit"]:
+        raise RuntimeError("RUNTIME_SOURCE_COMMIT_MISMATCH")
     if require_review is not None:
         if require_review.resolve() != Path(contract["governor_review_path"]).resolve():
             raise RuntimeError("GOVERNOR_REVIEW_PATH_BINDING_MISMATCH")
         review = read_json_utf8_lf(require_review)
-        required = {"decision": "CONTINUE_CONTROLLER", "launch_contract_sha256": contract["contract_sha256"], "worker_source_commit": worker_commit, "cohort_sha256": contract["cohort"]["sha256"]}
+        required = {"decision": "CONTINUE_CONTROLLER", "reviewed_brief_sha256": contract["reviewed_brief_sha256"], "authorization_request_sha256": contract["authorization_request_sha256"], "launch_contract_sha256": contract["contract_sha256"], "worker_source_commit": worker_commit, "cohort_sha256": contract["cohort"]["sha256"]}
         if any(review.get(k) != v for k, v in required.items()):
             raise RuntimeError("GOVERNOR_REVIEW_BINDING_MISMATCH")
         # The actual model invocation must never overwrite an earlier run.

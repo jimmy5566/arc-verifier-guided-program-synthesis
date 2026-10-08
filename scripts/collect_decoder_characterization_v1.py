@@ -14,6 +14,10 @@ from scripts.arc2_token_grid_parser import parse_generated_token_ids, tokenizer_
 from scripts.collect_capability_repair_baseline_v1 import observation, prompt, read_rows, sha, sha_bytes, dig
 from scripts.decoder_characterization_launch_v2 import atomic_json, terminal_failure, validate_contract, validate_preflight
 
+def require_before_deadline(deadline: float) -> None:
+    if time.monotonic() >= deadline:
+        raise TimeoutError("RUNTIME_CAP_REACHED")
+
 def character_row(surface: str, record: dict[str, Any], rendered_prompt: str, token_ids: list[int], contract: Any, model_identity: dict[str, Any]) -> dict[str, Any]:
     """Return parser evidence only; never inspect ``task.test[*].output``."""
     extracted = parse_generated_token_ids(token_ids, contract)
@@ -58,6 +62,8 @@ def main() -> int:
             atomic_json(args.receipt, payload); return 0
         validate_preflight(launch, source_commit=launch["worker_source_commit"])
         # All model imports occur only after immutable admission succeeds.
+        deadline = time.monotonic() + float(launch["runtime"]["runtime_cap_seconds"])
+        require_before_deadline(deadline)
         from transformers import AutoTokenizer, AutoModelForCausalLM
         from peft import PeftModel
         import torch
@@ -69,8 +75,10 @@ def main() -> int:
         model = PeftModel.from_pretrained(model, launch["checkpoint"]["adapter_path"], is_trainable=False).eval()
         rows = []
         for surface, record in selected_rows(Path(launch["datasets"]["target_dev_path"]), Path(launch["datasets"]["retention_path"]), Path(launch["cohort"]["path"])):
+            require_before_deadline(deadline)
             rendered = prompt(record, c); encoded = tokenizer(rendered, return_tensors="pt", add_special_tokens=False).to("cuda:0"); width = int(encoded["input_ids"].shape[-1])
             with torch.inference_mode(): generated = model.generate(**encoded, do_sample=False, num_beams=1, max_new_tokens=runtime["max_new_tokens"], eos_token_id=15, pad_token_id=13)
+            require_before_deadline(deadline)
             rows.append(character_row(surface, record, rendered, [int(x) for x in generated[0][width:].detach().cpu().tolist()], contract, launch["checkpoint"]))
         if any("exact_grid_match" in row for row in rows): raise RuntimeError("FORBIDDEN_TARGET_DERIVED_FIELD")
         atomic_json(args.output, {"schema_version": 1, "status": "COMPLETE_TARGET_BLIND", "rows": rows, "completed_episode_count": len(rows), "row_sha256": dig(rows)})
