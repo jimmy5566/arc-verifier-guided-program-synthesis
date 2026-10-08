@@ -1,0 +1,106 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_028",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "FORWARD_BASELINE_CHARACTERIZATION_V1",
+  "request_id": "FORWARD_BASELINE_STAGE_V1",
+  "baseline_model_id": "CAPABILITY_REPAIR_BASELINE_V1",
+  "delivery_mode": "SYNCHRONOUS_CONTROLLER_SAME_CYCLE",
+  "supervisor_handoff_requested": false,
+  "supersedes_directive_027_for_stage_governance": true,
+  "historical_foundation_v2_equivalence_required": false,
+  "reasons": [
+    {
+      "area": "brief_identity",
+      "status": "PASS",
+      "finding": "FORWARD_BASELINE_STAGE_REVIEW_V1.json has verified SHA256 6336f79f3fa44271bda2629fd273573e53059b7446df7f9d2772e9f77f9fcc19 and explicitly defines a forward-only baseline characterization stage with scientific_training_started=false."
+    },
+    {
+      "area": "stage_governance",
+      "status": "PASS_NEW_FORWARD_IDENTITY",
+      "finding": "Strict historical Foundation-V2 equivalence is retired as a blocker. CAPABILITY_REPAIR_BASELINE_V1 is governed as RECONSTRUCTED_FROM_FROZEN_RECIPE_NEW_IDENTITY at CONFIGURATION_LEVEL reproducibility. Directive 027 and the prior Round-009 post-hoc equivalence path remain preserved evidence but are not prerequisites for this forward characterization stage."
+    },
+    {
+      "area": "baseline_identity",
+      "status": "PARTIAL_LAUNCH_BLOCKER",
+      "finding": "CAPABILITY_REPAIR_BASELINE_V1_IDENTITY.json matches the brief's SHA256 d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b and identifies the selected 2M checkpoint, source selection, terminal receipt, and consumed budget. It does not contain a complete current base-model, tokenizer, adapter-config, and adapter-weight file manifest for the exact mounted checkpoint to be loaded."
+    },
+    {
+      "area": "evaluation_split_identity",
+      "status": "PASS_ARTIFACTS_PARTIAL_ENFORCEMENT",
+      "finding": "TARGET_DEV is 192 uniquely identified rows with only TARGETED_EVALUATION and TARGETED_COMPOSITION roles and SHA256 e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97. RETENTION_SENTINEL is 96 uniquely identified rows with only RETENTION_SENTINEL role and SHA256 b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526. The collector accepts caller-supplied paths but does not verify these bytes against the frozen identities before execution."
+    },
+    {
+      "area": "no_gold_and_final_audit_protection",
+      "status": "PARTIAL_FAIL_CLOSED",
+      "finding": "The collector excludes held-out test outputs from prompts, rejects paths containing TRAIN.JSONL or FINAL_AUDIT, and the identity records final_audit_accessed=false. A filename substring check and a boolean authorization field are not sufficient launch enforcement; the executable must allow only the two exact hashed evaluation files and must deny FINAL_AUDIT_SEALED and training data independently of caller naming."
+    },
+    {
+      "area": "scorer_decoder_identity",
+      "status": "PARTIAL_LAUNCH_BLOCKER",
+      "finding": "The available ARC_NATIVE_OBSERVATION_ONLY_V1 contract has SHA256 ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e and freezes deterministic decoding and strict grid parsing. The brief does not bind that contract, the collector SHA256 06f2086d3c5e6482d156735be57d0b7458cbeb8164e292b75ab57bfc154b054f, or the live parser and prompt-template bytes into an exact launch contract."
+    },
+    {
+      "area": "launch_contract",
+      "status": "FAIL_NOT_FROZEN",
+      "finding": "No reviewed artifact binds an exact command, environment, current checkpoint manifest, allowed dataset hashes, source commit, fresh nonce, fresh output and receipt paths, runtime cap, or one-shot authorization. The collector currently treats FORWARD_BASELINE_EVALUATION_AUTHORIZED=true as sufficient and only checks that the adapter path is a directory; this is not an adequate scientific launch gate."
+    },
+    {
+      "area": "source_provenance",
+      "status": "PARTIAL",
+      "finding": "Local HEAD, configured upstream, and fresh origin branch lookup equal bd1a20478b9e08ab665fe31451f8e59fa32287d0. No fresh reviewed RunPod checkout receipt binds that commit to the eventual launch, and the working tree is not clean."
+    },
+    {
+      "area": "verification",
+      "status": "PARTIAL",
+      "finding": "The collector parses as valid Python and the frozen dataset roles and counts are internally coherent. No focused test suite or complete no-model launch preflight for this forward-baseline collector was supplied by the brief."
+    },
+    {
+      "area": "scientific_boundary",
+      "status": "PASS_NO_EXECUTION",
+      "finding": "No forward-baseline model loading, GPU inference, optimizer construction, scientific training, or FINAL_AUDIT access occurred during this review."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "ADOPT_FORWARD_BASELINE_GOVERNANCE",
+      "requirement": "Record CAPABILITY_REPAIR_BASELINE_V1 as a distinct forward baseline. Do not require, retry, or claim strict historical Foundation-V2 equivalence. Preserve prior reconstruction and post-hoc artifacts as historical evidence only, and do not use Directive 027 as a blocker for this stage."
+    },
+    {
+      "change_id": "FREEZE_COMPLETE_CURRENT_CHECKPOINT_IDENTITY",
+      "requirement": "On the intended RunPod mount, enumerate and hash the exact base-model config, tokenizer files, every expected base-model weight shard and index, adapter config, adapter weights, and any generation configuration. Bind the selected checkpoint directory and reject missing, extra, substituted, unresolved, or mismatched files before model-library import."
+    },
+    {
+      "change_id": "FREEZE_ONE_SHOT_EVALUATION_LAUNCH_CONTRACT",
+      "requirement": "Create one immutable launch contract binding this directive and reviewed brief hash, baseline identity SHA256 d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b, complete checkpoint manifest, exact TARGET_DEV and RETENTION_SENTINEL paths and hashes, exact inference contract and executable hashes, exact interpreter and argv, deterministic environment, runtime cap, a fresh nonce, and absent fresh output and receipt paths. The contract must explicitly forbid training data and FINAL_AUDIT_SEALED."
+    },
+    {
+      "change_id": "STRENGTHEN_COLLECTOR_GATE",
+      "requirement": "Replace the boolean-only authorization check with exact directive and launch-contract verification. Before importing model libraries, verify the live source commit, executable and dependency hashes, full checkpoint identity, both allowed dataset hashes and roles, inference contract, prompt and parser identity, nonce freshness, output isolation, and absence of all forbidden inputs. Atomically consume the nonce and always emit a terminal receipt."
+    },
+    {
+      "change_id": "ENFORCE_CHARACTERIZATION_ONLY",
+      "requirement": "The authorized future run must evaluate exactly the frozen 192-row TARGET_DEV surface and 96-row RETENTION_SENTINEL once, with deterministic decoding and fixed denominators. It must not construct an optimizer or LoRA, mutate weights, adapt curriculum, access FINAL_AUDIT, train on diagnostic Gold, overwrite outputs, or automatically launch a follow-on repair round. Partial or capped output must be labeled PARTIAL and must not be interpreted as a complete profile."
+    },
+    {
+      "change_id": "ADD_CPU_ONLY_TESTS_AND_REMOTE_PREFLIGHT",
+      "requirement": "Add dummy CPU tests for exact data-hash enforcement, forbidden-data denial independent of filenames, model and adapter manifest mismatch, source or executable substitution, command and environment substitution, nonce replay, existing outputs, runtime cap, incomplete denominators, and complete success and failure receipts. Run a read-only RunPod preflight through the last step before model import and record local=origin=RunPod source parity."
+    },
+    {
+      "change_id": "RESUBMIT_SYNCHRONOUSLY",
+      "requirement": "Return a new hashed launch-readiness brief directly to the Director in this same Controller cycle with the frozen contract, tests, and fresh remote preflight evidence. Do not request Supervisor handoff. Do not load the model or begin GPU inference or training before a later explicit Director directive reviews and authorizes the exact package."
+    }
+  ],
+  "reviewed_brief_sha256": "6336f79f3fa44271bda2629fd273573e53059b7446df7f9d2772e9f77f9fcc19",
+  "reviewed_baseline_identity_sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+  "reviewed_target_dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97",
+  "reviewed_retention_sentinel_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+  "reviewed_inference_contract_sha256": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e",
+  "reviewed_collector_sha256": "06f2086d3c5e6482d156735be57d0b7458cbeb8164e292b75ab57bfc154b054f",
+  "cpu_only_remediation_authorized": true,
+  "forward_baseline_characterization_authorized": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "scientific_training_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false
+}

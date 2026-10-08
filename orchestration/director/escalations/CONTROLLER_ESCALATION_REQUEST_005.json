@@ -1,0 +1,22 @@
+{
+  "attempts_already_made": 0,
+  "blocker": [
+    "NEEDS_HIGH_LEVEL_DECISION"
+  ],
+  "controller_state": "NEEDS_HIGH_LEVEL_DECISION",
+  "directive_id": "DIRECTOR_DIRECTIVE_019",
+  "directive_sha256": "57c1b27cfa73919c04df80e457dc0fe57ae106afb4bb85c80d2cc4b137f35510",
+  "evidence": {
+    "brief": null,
+    "commit": null,
+    "evidence": null,
+    "last_progress_at": "2026-10-08T10:36:30.317201Z",
+    "validation": null
+  },
+  "last_completed_step": null,
+  "next_step": "DIRECTOR_ESCALATION_REQUIRED",
+  "requested_decision": "STRUCTURED_DIRECTOR_DIRECTIVE_REQUIRED",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "ESCALATION_REQUESTED"
+}

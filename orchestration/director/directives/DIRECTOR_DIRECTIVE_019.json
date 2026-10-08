@@ -1,0 +1,93 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_019",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "RECONSTRUCTED_FOUNDATION_V2_V2_009_EQUIVALENCE_EVALUATION",
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "reasons": [
+    {
+      "area": "escalation_identity",
+      "status": "PASS",
+      "finding": "CONTROLLER_ESCALATION_REQUEST_004.json has verified SHA256 1b91950576f4b51f9727044cc4e88eed19367ea4893a4f548418ac8556a3eaf4. Its referenced equivalence result and terminal receipt match SHA256 50294d0693770598686345039bd4bd56a80f24061255ebb3e153fd5f5fbff9b4 and 4f558ece5665c8e7b859ceafa8ea806187380619292aa662f7743b3df3ec9ba0 respectively."
+    },
+    {
+      "area": "reconstruction_terminal_receipt",
+      "status": "PASS_SUCCESS_PRESERVED",
+      "finding": "The terminal receipt records worker_exit_code=0, wrapper_exit_code=0, optimizer_steps=172, processed_tokens=2017545, scientific_gpu_training_seconds=3739.722329827957, complete checkpoint identities, and final_audit_accessed=false. This establishes successful completion of the reconstruction worker only; it does not establish equivalence."
+    },
+    {
+      "area": "teacher_forced_checkpoint_selection",
+      "status": "PASS_SELECTED_2M",
+      "finding": "The deterministic highest-token rule selects /workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000. Novel macro loss 0.06182755913313988 passes the 0.09 ceiling and replay macro loss 0.04880466477038681 passes the 0.075 ceiling. The selected adapter_model.safetensors SHA256 is 1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3 and adapter_config.json SHA256 is faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69."
+    },
+    {
+      "area": "equivalence_completion",
+      "status": "FAIL_STAGE_BLOCKER",
+      "finding": "Novel generation-exact, replay generation-exact, and protected-capability major-regression evidence are all NOT_RUN. Therefore EQUIVALENCE_OR_REPLACEMENT_CONFIRMED is not established, and neither targeted repair nor FINAL_AUDIT may begin."
+    },
+    {
+      "area": "evaluation_execution_contract",
+      "status": "FAIL_NOT_FROZEN",
+      "finding": "No reviewed artifact binds an exact evaluation command, evaluator source, runtime, decoding parameters, seeds, Novel and replay evaluation item identities, protected-capability subset identities, reference outputs, metric serialization, isolated output paths, or evaluation terminal receipt to the selected 2M checkpoint. Thresholds alone are insufficient authorization to execute model inference."
+    },
+    {
+      "area": "gate_scope_and_provenance",
+      "status": "FAIL_REQUIRES_ROUND_SCOPED_SUPERSESSION",
+      "finding": "V2_RECONSTRUCTION_SELECTION_AND_RETENTION_GATE.json has SHA256 c617b1b2628bc5bbdd05e220f3f0c0eb7f1e102e7c7b5fbdd63d0c3a6bdb3d30 but declares scope RECONSTRUCTED_FOUNDATION_V2_V2_002 rather than Round 009 and is not tracked at current HEAD 8dd88517ef4ed569e2b95c67dbbbb4329dc2dfe8. Its numeric thresholds must remain unchanged, but an additive Round-009-scoped evaluation gate and provenance record are required before execution."
+    },
+    {
+      "area": "scientific_boundaries",
+      "status": "PASS_FAIL_CLOSED",
+      "finding": "The evidence records no FINAL_AUDIT access and no targeted-repair data use. This directive preserves that boundary and does not authorize reconstruction retraining, optimizer work, targeted repair, Eval60 Gold access, diagnostic Gold access, or FINAL_AUDIT."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "PRESERVE_COMPLETED_ROUND_AND_SELECTED_CHECKPOINT",
+      "requirement": "Preserve Round 009, its SUCCESS receipt, ledger identities, equivalence result, all four checkpoint identities, and the deterministic 2M selection byte-for-byte. Do not retrain, resume, mutate, merge, prune, or overwrite the reconstruction checkpoints."
+    },
+    {
+      "change_id": "FREEZE_ROUND_SCOPED_EVALUATION_GATE",
+      "requirement": "Create an additive Round-009-scoped equivalence-evaluation gate that cites this directive, the terminal receipt, equivalence result, selected checkpoint files, and original gate SHA256. Preserve thresholds exactly: Novel generation exact >= 0.80, replay generation exact >= 0.78, and protected-capability major regressions <= 0. Do not reinterpret NOT_RUN as pass or weaken any threshold."
+    },
+    {
+      "change_id": "FREEZE_EXACT_TARGET_BLIND_EVALUATION_CONTRACT",
+      "requirement": "Before any model load, freeze the exact evaluation item manifests and hashes for Novel generation, replay generation, and the protected-capability subset; baseline or reference identities; prompt and serializer format; decoding mode and every parameter; random seeds; retry policy; evaluator source and file hashes; interpreter and package environment; exact argv and environment; isolated output paths; metric definitions; deterministic aggregation; and a fail-closed terminal receipt schema."
+    },
+    {
+      "change_id": "ENFORCE_NO_GOLD_AND_NO_FINAL_AUDIT",
+      "requirement": "The evaluation package and preflight must prove that Eval60 Gold, diagnostic Gold, exposed Novel holdout targets, FINAL_AUDIT targets, and targeted-repair data are absent from all prompts, manifests, mounted readable inputs, caches, commands, and outputs. Evaluation is target-blind and checkpoint-fixed."
+    },
+    {
+      "change_id": "FREEZE_SOURCE_AND_RUNTIME_PROVENANCE",
+      "requirement": "Commit and push the additive evaluation package on the existing non-main branch without force-push or history rewrite. Verify fresh local HEAD equals git ls-remote origin SHA equals RunPod checked-out/source SHA, and run a read-only preflight that binds the exact source commit, evaluator bytes, runtime identity, selected checkpoint hashes, data manifests, fresh output paths, and an evaluation-only nonce."
+    },
+    {
+      "change_id": "ACCOUNT_EVALUATION_SEPARATELY",
+      "requirement": "If later authorized, record evaluation inference runtime and GPU use separately from scientific optimizer-training seconds. The evaluation launcher must be incapable of optimizer construction, backward passes, parameter updates, checkpoint writes, or consuming a scientific-training reservation."
+    },
+    {
+      "change_id": "RESUBMIT_BEFORE_EVALUATION_EXECUTION",
+      "requirement": "Submit a new hashed Director brief containing the exact Round-009 evaluation contract SHA256, evaluation nonce, source commit, selected checkpoint hashes, gate SHA256, preflight evidence, and proof of no-Gold/final-audit isolation. No model loading or evaluation execution is authorized by this directive."
+    },
+    {
+      "change_id": "KEEP_DOWNSTREAM_STAGES_BLOCKED",
+      "requirement": "After any later-authorized evaluation, freeze raw outputs and compute all preregistered metrics without tuning. Return EQUIVALENCE_OR_REPLACEMENT_CONFIRMED only if every threshold passes. PARTIAL, FAILED, missing, or invalid evidence must escalate. Targeted repair and FINAL_AUDIT require a later explicit Director directive even after a complete pass."
+    }
+  ],
+  "reviewed_escalation_sha256": "1b91950576f4b51f9727044cc4e88eed19367ea4893a4f548418ac8556a3eaf4",
+  "reviewed_terminal_receipt_sha256": "4f558ece5665c8e7b859ceafa8ea806187380619292aa662f7743b3df3ec9ba0",
+  "reviewed_equivalence_gate_result_sha256": "50294d0693770598686345039bd4bd56a80f24061255ebb3e153fd5f5fbff9b4",
+  "reviewed_selection_gate_sha256": "c617b1b2628bc5bbdd05e220f3f0c0eb7f1e102e7c7b5fbdd63d0c3a6bdb3d30",
+  "selected_checkpoint_threshold": 2000000,
+  "selected_checkpoint_adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+  "equivalence_confirmed": false,
+  "cpu_only_evaluation_protocol_remediation_authorized": true,
+  "evaluation_execution_authorized": false,
+  "reconstruction_retraining_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false,
+  "model_loading_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false
+}

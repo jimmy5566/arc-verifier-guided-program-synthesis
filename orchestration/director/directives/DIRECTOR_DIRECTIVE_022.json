@@ -1,0 +1,92 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_022",
+  "decision": "CONTINUE_WITH_WARNING",
+  "scope": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1_REFERENCE_MAPPING_FREEZE_ONLY",
+  "protocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "parent_protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "reasons": [
+    {
+      "area": "brief_and_package_identity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_022 has verified SHA256 0a1f38c8a5ec7bd9ceeb2885af8a8e87c410150a10a23d607d027f7bf15f4362. Its protocol, execution contract, and prior-stage closure match SHA256 36c18bc03db3ab286652b278c1f810cdb56a8c7f50a455997f80a97a8a8a17d3, c3b6b21bf697074432e80f96129bf440309c5a17cc2754e8cea11329f46e213d, and a5fd6086b2e095a4dd1d4fad7693fa2a2b2acc8ecacb097f77adc59018f0bb92."
+    },
+    {
+      "area": "directive_021_remediation",
+      "status": "PASS_TO_MAPPING_BOUNDARY",
+      "finding": "The original equivalence stage is preserved as UNEXECUTED_FAIL_CLOSED; the replacement is distinctly named as prospective post-hoc characterization, explicitly disclaims Foundation-V2 recovery, original-gate equivalence, and targeted-repair entry, and correctly records Novel=128, replay=64, and protected=64 with unique item IDs."
+    },
+    {
+      "area": "reference_mapping_state",
+      "status": "BLOCKED_BUT_CPU_RECOVERABLE_PATH_EXISTS",
+      "finding": "Exact reference mappings remain UNRESOLVED_NO_PAYLOAD_OPENED. The frozen input provenance nevertheless identifies an exact non-Gold Novel validation pool through NOVEL_VAL_SHARD_MANIFEST.json and an exact replay shard SHA256 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc. Read-only CPU mapping from those already-frozen sources is scientifically permissible for the new prospective characterization condition only."
+    },
+    {
+      "area": "protected_capability_comparator",
+      "status": "CORRECTLY_OMITTED",
+      "finding": "No exact historical protected-capability comparator or major-regression definition was recovered. The new protocol correctly omits that claim unless a prospective comparator is frozen before execution. Therefore the 64 protected items may support absolute prospective characterization, but no major-regression count, original equivalence claim, or targeted-repair gate may be derived."
+    },
+    {
+      "area": "execution_and_scientific_boundaries",
+      "status": "PASS_NO_EXECUTION",
+      "finding": "No model loading, generation, scoring, GPU inference, new scientific training, targeted repair, or FINAL_AUDIT occurred. This directive authorizes only isolated CPU read-only reference mapping and contract preparation; it does not authorize Phase A or Phase B execution."
+    },
+    {
+      "area": "source_provenance",
+      "status": "PASS_LOCAL_ORIGIN_PACKAGE_ONLY",
+      "finding": "Package commit b4c7705ecd6f476b49dae4136829615d62523732 is an ancestor of the reviewed branch. At review, local HEAD, upstream, and fresh git ls-remote origin are equal at 536515a30ae14d6fb22a96a4df4bf00de8e4508b. RunPod parity and executable-stage preflight remain unestablished and are required before any later execution review."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "PRESERVE_EQUIVALENCE_STAGE_CLOSURE",
+      "requirement": "Keep RECONSTRUCTION_EQUIVALENCE_EVALUATION_STAGE_V1 and its nonces and output roots closed, unconsumed, and byte-preserved. This directive does not reopen that stage and does not convert prospective characterization into original equivalence evidence."
+    },
+    {
+      "change_id": "AUTHORIZE_BOUNDED_NON_GOLD_REFERENCE_OPENING",
+      "requirement": "In a CPU-only isolated mapping process with no model or generator access, read only the exact frozen Novel validation shards bound by artifacts/novel_training_data_v1_1/NOVEL_VAL_SHARD_MANIFEST.json and the exact replay shard /workspace/arc2/reconstruction-data_v1/POOL_REPLAY_V2_1/replay-00000.parquet SHA256 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc. Verify every mounted source file against its frozen shard hash before opening payloads. No training, Eval60 Gold, diagnostic Gold, exposed Novel holdout, FINAL_AUDIT, or targeted-repair source is allowed."
+    },
+    {
+      "change_id": "FREEZE_EXACT_BIJECTIVE_REFERENCE_MAPPINGS",
+      "requirement": "For every Novel, replay, and protected manifest item, freeze the manifest item ID, source repository and commit, source shard path and SHA256, row or episode key, canonical input-grid hash, canonical reference-output-grid hash, token-label hash, serializer version, and mapping proof. Require exact bijections of 128/128, 64/64, and 64/64 with no duplicate, missing, ambiguous, reordered, or extra items. The mapping artifact may contain references only in the sealed scorer workspace; the generation-side artifact must remain input-only and hash-bound."
+    },
+    {
+      "change_id": "VERIFY_REFERENCE_STAGE_COMPATIBILITY",
+      "requirement": "Prove that each recovered output is the canonical target for the exact prompt item rather than a teacher-forced token fragment, alternate augmentation, training neighbor, or family-level proxy. Recompute and compare the existing token_label_sha256 metadata where applicable. Any mismatch or unresolved item keeps the entire affected surface BLOCKED; do not shrink denominators after inspection."
+    },
+    {
+      "change_id": "KEEP_PROTECTED_RESULT_ABSOLUTE_ONLY",
+      "requirement": "Unless a separate prospective comparator contract is frozen and later reviewed before execution, score the 64 protected items only as absolute generation characterization. Do not emit protected-capability major-regression counts, claim retention against a historical baseline, reuse the original maximum-major-regressions threshold, or use the surface for targeted-repair eligibility."
+    },
+    {
+      "change_id": "COMPLETE_EXECUTION_CONTRACT_WITHOUT_RUNNING_IT",
+      "requirement": "After mappings pass, freeze exact base/tokenizer/checkpoint identities, generator and scorer source SHA256 values, deterministic decoding and seed, serializers and parsers, exact argv/environment/runtime, fresh Phase-A and Phase-B nonces and output roots, immutable prediction sealing, reference isolation, metric semantics, inference accounting, failure behavior, and complete receipts. All execution_authorized fields must remain false."
+    },
+    {
+      "change_id": "RUN_CPU_ONLY_TESTS_AND_PREFLIGHT",
+      "requirement": "Run CPU-only tests for cardinality, mapping bijection, source-hash mismatch, input/reference cross-contamination, duplicate/missing/invalid predictions, denominator stability, nonce reuse, phase ordering, output immutability, and receipt completeness. Run a no-model preflight and preserve its exact first failure or PASS-to-execution-gate result."
+    },
+    {
+      "change_id": "PROVENANCE_AND_RESUBMISSION",
+      "requirement": "Commit and push the additive mapping and completed preparation package on the existing non-main branch without force-push or history rewrite. Verify fresh local HEAD equals git ls-remote origin SHA equals RunPod checked-out/source SHA, then submit a new hashed Director brief binding all exact artifacts. No model loading, generation, scoring, GPU inference, targeted repair, or FINAL_AUDIT may occur before a later explicit directive."
+    }
+  ],
+  "reviewed_brief_sha256": "0a1f38c8a5ec7bd9ceeb2885af8a8e87c410150a10a23d607d027f7bf15f4362",
+  "reviewed_protocol_sha256": "36c18bc03db3ab286652b278c1f810cdb56a8c7f50a455997f80a97a8a8a17d3",
+  "reviewed_execution_contract_sha256": "c3b6b21bf697074432e80f96129bf440309c5a17cc2754e8cea11329f46e213d",
+  "reviewed_equivalence_stage_closure_sha256": "a5fd6086b2e095a4dd1d4fad7693fa2a2b2acc8ecacb097f77adc59018f0bb92",
+  "continuation_authorized_stage": "CPU_ONLY_EXACT_NON_GOLD_REFERENCE_MAPPING_AND_CONTRACT_FREEZE",
+  "cpu_only_reference_payload_opening_authorized": true,
+  "cpu_only_reference_mapping_authorized": true,
+  "prospective_absolute_characterization_preparation_authorized": true,
+  "protected_comparator_claim_authorized": false,
+  "model_loading_authorized": false,
+  "generation_authorized": false,
+  "scoring_authorized": false,
+  "gpu_inference_authorized": false,
+  "reconstruction_retraining_authorized": false,
+  "optimizer_construction_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false,
+  "scientific_training_authorized": false
+}

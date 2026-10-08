@@ -1,0 +1,66 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_025",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "ROUND_009_POST_HOC_CHARACTERIZATION_EVALUATION_STAGE_V1",
+  "protocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "stale_escalation_disposition": "SUPERSEDED_BY_DIRECTOR_DIRECTIVE_024",
+  "controlling_remediation_directive_id": "DIRECTOR_DIRECTIVE_024",
+  "controlling_remediation_directive_sha256": "0d0699233a59ab8a6a6ee9d718cf8b3d6bf5e29d9195685c1db1ad7f9f897c5a",
+  "reasons": [
+    {
+      "area": "escalation_identity",
+      "status": "PASS",
+      "finding": "CONTROLLER_ESCALATION_REQUEST_008.json has verified SHA256 4671d4566c57968c59fdf6ca1420ff0bdb0eb1270bd14915378e2baac1f12419 and correctly binds DIRECTOR_DIRECTIVE_023 SHA256 1e6c5bae096bf2d1e503492572a40496f4b64791bbdde23fc70a38b3f21bdcb6. It records scientific_training_started=false."
+    },
+    {
+      "area": "escalation_freshness",
+      "status": "STALE_SUPERSEDED",
+      "finding": "The escalation timed out while Directive 023 was at REMOTE_TARGET_FREE_MAPPING_PROOF_FROZEN and requested completion of Phase-A and Phase-B bindings. That work was subsequently submitted in DIRECTOR_BRIEF_024 and reviewed under DIRECTOR_DIRECTIVE_024. The escalation therefore no longer represents the current first unfinished requirement."
+    },
+    {
+      "area": "submitted_phase_bindings",
+      "status": "REVIEWED_REJECTED_FOR_EXECUTION",
+      "finding": "Directive 024 established that the submitted Phase-A command uses unsupported --adapter and omits mandatory CLI arguments, the Phase-B command requests nonexistent mode score-sealed, the reviewed bindings are absent from the claimed execution checkout, and the preflight tests do not exercise command parseability or launch enforcement."
+    },
+    {
+      "area": "current_controller_path",
+      "status": "CPU_ONLY_REMEDIATION_REQUIRED",
+      "finding": "The Controller must not resume the stale Directive-023 next step or consume its nonces. The only current path is the additive CPU-only remediation enumerated by Directive 024, followed by a new synchronous Director brief."
+    },
+    {
+      "area": "scientific_execution",
+      "status": "NOT_AUTHORIZED",
+      "finding": "This stale escalation provides no authority for model loading, generation, scoring, GPU inference, scientific training, reconstruction retry, targeted repair, or FINAL_AUDIT."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "PRESERVE_AND_CLOSE_STALE_ESCALATION",
+      "requirement": "Preserve CONTROLLER_ESCALATION_REQUEST_008.json and Directive 023 evidence byte-for-byte, record the escalation as resolved by supersession rather than scientific completion, and do not re-dispatch or resume its stale COMPLETE_PHASE_A_PHASE_B_FAIL_CLOSED_LAUNCH_BINDINGS step."
+    },
+    {
+      "change_id": "FOLLOW_DIRECTIVE_024_ONLY",
+      "requirement": "Treat every required_change in DIRECTOR_DIRECTIVE_024 SHA256 0d0699233a59ab8a6a6ee9d718cf8b3d6bf5e29d9195685c1db1ad7f9f897c5a as the controlling remediation plan: add the reviewable mapping proof; implement real Phase-A and Phase-B entrypoints and valid commands; bind one final execution checkout; implement the fail-closed launcher; enforce phase isolation and ordering; expand CPU tests and preflight; and resubmit synchronously without execution."
+    },
+    {
+      "change_id": "REVOKE_CURRENT_PHASE_BINDINGS_AND_NONCES",
+      "requirement": "Preserve the Phase-A and Phase-B bindings reviewed by Directive 024 as rejected, non-executable evidence. Their commands and checkout identity are invalid; their nonces must remain unconsumed and must not be reused or rebound. Generate fresh bindings, output roots, and nonces only after the corrected entrypoints and launcher are frozen."
+    },
+    {
+      "change_id": "KEEP_EXECUTION_FAIL_CLOSED",
+      "requirement": "Until a later explicit Director directive reviews and binds the corrected exact package, do not load the model, generate predictions, score references, use GPU inference, start scientific training, retry reconstruction, begin targeted repair, or access FINAL_AUDIT."
+    }
+  ],
+  "reviewed_escalation_sha256": "4671d4566c57968c59fdf6ca1420ff0bdb0eb1270bd14915378e2baac1f12419",
+  "reviewed_directive_023_sha256": "1e6c5bae096bf2d1e503492572a40496f4b64791bbdde23fc70a38b3f21bdcb6",
+  "cpu_only_remediation_authorized": true,
+  "evaluation_stage_authorized": false,
+  "model_loading_authorized": false,
+  "generation_authorized": false,
+  "scoring_authorized": false,
+  "gpu_inference_authorized": false,
+  "scientific_training_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false
+}

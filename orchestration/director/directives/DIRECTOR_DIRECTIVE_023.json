@@ -1,0 +1,107 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_023",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "ROUND_009_POST_HOC_CHARACTERIZATION_EVALUATION_STAGE_V1",
+  "protocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "parent_protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "delivery_mode": "SYNCHRONOUS_CONTROLLER_SAME_CYCLE",
+  "supervisor_handoff_requested": false,
+  "reasons": [
+    {
+      "area": "brief_and_artifact_identity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_023 has verified SHA256 63999a4e37e0333d68ac4e303e0bf993362154dbf919855ba2c7d3cd16f9aa18. The four brief-listed artifacts match their declared SHA256 values, and the generator, parser/scorer, and reference-mapper files match the code hashes recorded in POST_HOC_CHARACTERIZATION_EXECUTION_CONTRACT_V2.json."
+    },
+    {
+      "area": "reference_mapping_execution",
+      "status": "PASS_CPU_ONLY_RECEIPT",
+      "finding": "The mapping receipt records successful CPU-only processing of Novel=128, replay=64, and protected=64 against all nine frozen Novel validation shard hashes and replay shard SHA256 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc, with no model loading, generation, scoring, training, or FINAL_AUDIT access."
+    },
+    {
+      "area": "mapping_reviewability",
+      "status": "PARTIAL_HARD_STOP",
+      "finding": "The sealed mapping artifact SHA256 de1019910ce214b2be58f909c4f0f0bae2a5eb987f1803bcb38e0d0d5400a160 exists only at a remote path and is not included in the reviewed package. The validation record contains aggregate booleans and counts, not a target-free per-item bijection proof binding manifest ID, source row, canonical input hash, canonical reference hash, and token-label hash. The Director therefore cannot verify the claimed 128/64/64 semantic mappings from the submitted evidence."
+    },
+    {
+      "area": "execution_source_identity",
+      "status": "FAIL_AMBIGUOUS",
+      "finding": "The contract records runtime.source_commit=eb84b2cf0946214d9a1c7371b48927b88a187639, while the brief binds local, origin, and RunPod checkout to stage-preparation commit 8bdf1f92ad4cf8550dc6f2b1d0ba8497842c2c31. Both commits exist and the former is an ancestor of the latter, but the executable checkout identity is not defined unambiguously."
+    },
+    {
+      "area": "phase_a_launch_binding",
+      "status": "FAIL_INCOMPLETE",
+      "finding": "The contract binds checkpoint and code hashes but does not bind the complete base-model shard set, tokenizer/config identities, exact input-manifest arguments, exact argv, a numeric seed, parser arguments, terminal receipt schema, or a launcher that fail-closed verifies and atomically consumes the Phase-A nonce. seed_required=true is not a frozen seed."
+    },
+    {
+      "area": "phase_b_launch_binding",
+      "status": "FAIL_INCOMPLETE",
+      "finding": "The contract does not bind exact Phase-B scorer argv/environment, reference-mapping input bytes, prediction-manifest schema, metric output schema, receipt schema, nonce-consumption mechanism, or executable enforcement that Phase A is terminal and immutable before scorer access."
+    },
+    {
+      "area": "reference_isolation",
+      "status": "FAIL_NOT_MACHINE_ENFORCED",
+      "finding": "The generation and sealed-scorer paths are distinct by declaration, but both live below the same Round-009 run tree and no mount, permission, process-environment, or launcher enforcement proves that the model-generation process cannot read the sealed mapping or Phase-B workspace."
+    },
+    {
+      "area": "test_and_preflight_evidence",
+      "status": "PARTIAL",
+      "finding": "Mapping validation checks source hashes, counts, and CPU-only boundaries, but the brief does not bind regression-test outputs for nonce reuse, command substitution, phase ordering, output immutability, reference isolation, invalid predictions, receipt completeness, or an exact no-model final execution preflight."
+    },
+    {
+      "area": "scientific_scope",
+      "status": "PASS_FAIL_CLOSED",
+      "finding": "The request is prospective post-hoc characterization only. Protected results remain absolute-only, and no reconstruction retry, equivalence claim, historical retention claim, targeted-repair entry, scientific training, or FINAL_AUDIT access is requested or authorized."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "PRESERVE_MAPPING_STAGE_AND_CHECKPOINT",
+      "requirement": "Preserve the successful CPU-only mapping receipt, validation, sealed mapping SHA256, Round-009 receipt and accounting, and selected 2M checkpoint bytes. Do not rerun mapping, mutate the checkpoint, consume either evaluation nonce, or populate Phase-A or Phase-B output roots while remediation is in progress."
+    },
+    {
+      "change_id": "FREEZE_TARGET_FREE_PER_ITEM_MAPPING_PROOF",
+      "requirement": "Add a reviewable artifact containing no raw reference payloads but exactly one row per manifest item with surface, manifest item ID, source shard SHA256, source row or episode key, canonical input SHA256, canonical reference-output SHA256, token_label_sha256, serializer version, and mapping status. Prove uniqueness and full bijections of 128/128, 64/64, and 64/64; bind this proof to sealed mapping SHA256 de1019910ce214b2be58f909c4f0f0bae2a5eb987f1803bcb38e0d0d5400a160."
+    },
+    {
+      "change_id": "DISAMBIGUATE_SOURCE_AND_CHECKOUT_PROVENANCE",
+      "requirement": "Replace runtime.source_commit with explicit implementation_commit and execution_checkout_commit fields. Bind every executable file by Git blob SHA and file SHA256, require the launcher and preflight to verify live git HEAD equals the exact execution checkout, and establish fresh local=git ls-remote origin=RunPod parity for that same commit."
+    },
+    {
+      "change_id": "FREEZE_COMPLETE_PHASE_A_COMMAND",
+      "requirement": "Bind the complete base-model shard, index, config, generation config, and tokenizer identities; selected adapter identities; all input-only manifest hashes; exact interpreter, argv, environment, numeric seed, deterministic decoding parameters, prompt serializer and parser versions, fresh output root, nonce, prediction-manifest schema, failure rules, inference runtime cap/accounting, and terminal receipt schema. Reject any command or environment substitution before atomic nonce consumption."
+    },
+    {
+      "change_id": "FREEZE_COMPLETE_PHASE_B_COMMAND",
+      "requirement": "Bind the exact CPU scorer interpreter, argv, environment, scorer/parser bytes, immutable Phase-A prediction-manifest identity, sealed mapping identity, absolute-only protected semantics, denominators, invalid/missing/duplicate rules, fresh output root, nonce, logs, result schema, and terminal receipt schema. Phase B must fail closed unless Phase A is terminal, complete, hash-verified, and immutable."
+    },
+    {
+      "change_id": "MACHINE_ENFORCE_REFERENCE_ISOLATION",
+      "requirement": "Use separate generation and scorer workspaces and launch environments. The Phase-A process must have no readable path, mount, environment variable, file descriptor, cache, or command argument exposing sealed references or Phase-B outputs. Add a preflight denial test that attempts reference access from the exact Phase-A execution context and requires failure."
+    },
+    {
+      "change_id": "ADD_AND_BIND_CPU_ONLY_REGRESSION_EVIDENCE",
+      "requirement": "Run and freeze tests for per-item bijection, source-hash mismatch, reference isolation, command and environment substitution, nonce reuse, phase-order violation, existing output roots, prediction immutability, duplicate/missing/unparsable items, denominator stability, protected absolute-only reporting, worker failure propagation, and complete receipts."
+    },
+    {
+      "change_id": "RUN_FINAL_NO_MODEL_PREFLIGHT_AND_RESUBMIT_SYNCHRONOUSLY",
+      "requirement": "Commit and push the additive remediation package on the existing non-main branch without force-push or history rewrite, verify exact local-origin-RunPod parity, and run a complete no-model preflight on the exact execution checkout. Submit a new hashed brief in the same synchronous Controller-Director cycle. Do not request Supervisor handoff and do not start model loading, generation, scoring, GPU inference, targeted repair, or FINAL_AUDIT."
+    }
+  ],
+  "reviewed_brief_sha256": "63999a4e37e0333d68ac4e303e0bf993362154dbf919855ba2c7d3cd16f9aa18",
+  "reviewed_execution_contract_sha256": "9ec6e064b850e1d51f8cf19afbfd9e25f954673fbce57fe8a802dd5d9a2b5e31",
+  "reviewed_mapping_receipt_sha256": "747c77482c5c140895de623c63a2355eb7c0cc5cf9b983a5039d22ec5d003961",
+  "reviewed_mapping_validation_sha256": "8c1420137b7b339d903cdf904aef43063cf4c0c6d45382dd7556facc0fd2a3be",
+  "reviewed_mapping_stage_completion_sha256": "2685e7a3ea5345700e7d2990fa95d2ec6a645b4c3eaa109b567234360782d0b3",
+  "cpu_only_remediation_authorized": true,
+  "evaluation_stage_authorized": false,
+  "model_loading_authorized": false,
+  "generation_authorized": false,
+  "scoring_authorized": false,
+  "gpu_inference_authorized": false,
+  "reconstruction_retraining_authorized": false,
+  "optimizer_construction_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false,
+  "scientific_training_authorized": false
+}

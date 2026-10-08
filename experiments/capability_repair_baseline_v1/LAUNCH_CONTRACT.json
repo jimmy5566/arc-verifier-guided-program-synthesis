@@ -1,0 +1,95 @@
+{
+  "argv": [
+    "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/collect_capability_repair_baseline_v1.py",
+    "--launch-contract",
+    "/workspace/arc2/forward_baseline_v1_launch/LAUNCH_CONTRACT.json",
+    "--output",
+    "/workspace/arc2/forward_baseline_v1_launch/output/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+    "--receipt",
+    "/workspace/arc2/forward_baseline_v1_launch/TERMINAL_RECEIPT.json"
+  ],
+  "authorization": {
+    "evaluation_authorized": false,
+    "required_directive_decision": "CONTINUE_OR_CONTINUE_WITH_WARNING"
+  },
+  "baseline_identity_sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+  "checkpoint_manifest_identity": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da",
+  "checkpoint_manifest_path": "/workspace/arc2/forward_baseline_v1_preflight/CHECKPOINT_MANIFEST.json",
+  "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "contract_id": "FORWARD_BASELINE_EVALUATION_LAUNCH_V1",
+  "contract_sha256": "5ad470675f5013c5c945244f1df7251e254de8c92781fd470e196645c828cf19",
+  "datasets": {
+    "RETENTION_SENTINEL": {
+      "bytes": 237564,
+      "episode_ids_sha256": "43dca3fea8bc0b2150477a337395a95aed7a2e370905b6ca030c989752718083",
+      "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+      "roles": [
+        "RETENTION_SENTINEL"
+      ],
+      "rows": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV": {
+      "bytes": 465946,
+      "episode_ids_sha256": "207b448f7efe824f17b86ddcc9ee87ac5754eea4d4ec85c4a13f8cac32197d59",
+      "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+      "roles": [
+        "TARGETED_COMPOSITION",
+        "TARGETED_EVALUATION"
+      ],
+      "rows": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    }
+  },
+  "dependencies": {
+    "parser": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src/inference/arc_native_io.py",
+      "sha256": "502a064f09743acc85643ebb8a9a95573832d8b3d6c51e79ccf94222dd4b89b3"
+    },
+    "prompt_template": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/configs/nvarc_native_846d0198/chat_template.j2",
+      "sha256": "e5ed79284f346b7eadd874f6bdc376f722704808afd07ffd6190c6d8b97ddb5f"
+    }
+  },
+  "directive_id": "DIRECTOR_DIRECTIVE_028",
+  "directive_sha256": "92ed877f38e8c50831be5fc1dec9f72ad4782bd91dbd8cad6fa24c387180489e",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "PYTHONHASHSEED": "0",
+    "TOKENIZERS_PARALLELISM": "false"
+  },
+  "executable": {
+    "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/collect_capability_repair_baseline_v1.py",
+    "sha256": "7a7aa1604d1b12e3ad3034b6dff0974b29e3e06776aeeae816637a3173150f38"
+  },
+  "expected": {
+    "retention_rows": 96,
+    "target_dev_rows": 192,
+    "total_rows": 288
+  },
+  "forbidden": {
+    "automatic_follow_on_training": true,
+    "diagnostic_gold_training": true,
+    "final_audit": true,
+    "lora_construction": true,
+    "optimizer": true,
+    "training": true
+  },
+  "inference_contract": {
+    "expected_sha256": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e",
+    "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
+    "sha256": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e"
+  },
+  "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+  "nonce_path": "/workspace/arc2/forward_baseline_v1_launch/NONCE",
+  "nonce_sha256": "a44c23eced06b4099b284d1586246fc6cfac1c7e54da6b2b81ba8256109ecc34",
+  "output_root": "/workspace/arc2/forward_baseline_v1_launch/output",
+  "receipt_path": "/workspace/arc2/forward_baseline_v1_launch/TERMINAL_RECEIPT.json",
+  "reviewed_brief_sha256": "6336f79f3fa44271bda2629fd273573e53059b7446df7f9d2772e9f77f9fcc19",
+  "runtime_cap_seconds": 7200,
+  "schema_version": 1,
+  "source_commit": "5c98a7c65f5960d09610f5e001e42c44dc656f0c",
+  "source_root": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2",
+  "status": "FROZEN_PENDING_LAUNCH_AUTHORIZATION"
+}

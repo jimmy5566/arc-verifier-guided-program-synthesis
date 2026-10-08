@@ -1,0 +1,19 @@
+{
+  "baseline_identity_sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+  "baseline_model_id": "CAPABILITY_REPAIR_BASELINE_V1",
+  "checkpoint_manifest_file_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "checkpoint_manifest_identity": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da",
+  "expected_contract_path": "/workspace/arc2/forward_baseline_v2_launch/LAUNCH_CONTRACT.json",
+  "forbidden": [
+    "training",
+    "optimizer",
+    "weight mutation",
+    "FINAL_AUDIT",
+    "automatic follow-on"
+  ],
+  "request": "Authorize only one read-only deterministic 192+96 baseline evaluation using a fresh V2 contract and an external Governor review binding. No training or final audit.",
+  "review_type": "FORWARD_BASELINE_LAUNCH_V2",
+  "schema_version": 1,
+  "source_commit": "42d534dc3d9132f8805d51330bd8a8b8d39f94d3",
+  "supersedes_rejected_contract": "/workspace/arc2/forward_baseline_v1_launch/LAUNCH_CONTRACT.json"
+}

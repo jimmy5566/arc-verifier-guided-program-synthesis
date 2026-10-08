@@ -1,0 +1,210 @@
+{
+  "baseline_model_id": "CAPABILITY_REPAIR_BASELINE_V1",
+  "batching": {
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "full_evaluation_batches": [
+      {
+        "actual_batch_size": 32,
+        "cursor": 0,
+        "event": "BATCH",
+        "label": "FULL_EVALUATION",
+        "long_prompt_downgrade": false,
+        "longest_prompt_tokens": 416,
+        "oom_fallback": false,
+        "padded_prompt_tokens": 13312
+      },
+      {
+        "actual_batch_size": 32,
+        "cursor": 32,
+        "event": "BATCH",
+        "label": "FULL_EVALUATION",
+        "long_prompt_downgrade": false,
+        "longest_prompt_tokens": 508,
+        "oom_fallback": false,
+        "padded_prompt_tokens": 16256
+      },
+      {
+        "actual_batch_size": 32,
+        "cursor": 64,
+        "event": "BATCH",
+        "label": "FULL_EVALUATION",
+        "long_prompt_downgrade": false,
+        "longest_prompt_tokens": 552,
+        "oom_fallback": false,
+        "padded_prompt_tokens": 17664
+      },
+      {
+        "actual_batch_size": 32,
+        "cursor": 96,
+        "event": "BATCH",
+        "label": "FULL_EVALUATION",
+        "long_prompt_downgrade": false,
+        "longest_prompt_tokens": 592,
+        "oom_fallback": false,
+        "padded_prompt_tokens": 18944
+      },
+      {
+        "actual_batch_size": 32,
+        "cursor": 128,
+        "event": "BATCH",
+        "label": "FULL_EVALUATION",
+        "long_prompt_downgrade": false,
+        "longest_prompt_tokens": 618,
+        "oom_fallback": false,
+        "padded_prompt_tokens": 19776
+      },
+      {
+        "actual_batch_size": 32,
+        "cursor": 160,
+        "event": "BATCH",
+        "label": "FULL_EVALUATION",
+        "long_prompt_downgrade": false,
+        "longest_prompt_tokens": 640,
+        "oom_fallback": false,
+        "padded_prompt_tokens": 20480
+      },
+      {
+        "actual_batch_size": 32,
+        "cursor": 192,
+        "event": "BATCH",
+        "label": "FULL_EVALUATION",
+        "long_prompt_downgrade": false,
+        "longest_prompt_tokens": 666,
+        "oom_fallback": false,
+        "padded_prompt_tokens": 21312
+      },
+      {
+        "actual_batch_size": 30,
+        "cursor": 224,
+        "event": "BATCH",
+        "label": "FULL_EVALUATION",
+        "long_prompt_downgrade": true,
+        "longest_prompt_tokens": 704,
+        "oom_fallback": false,
+        "padded_prompt_tokens": 21120
+      },
+      {
+        "actual_batch_size": 27,
+        "cursor": 254,
+        "event": "BATCH",
+        "label": "FULL_EVALUATION",
+        "long_prompt_downgrade": true,
+        "longest_prompt_tokens": 774,
+        "oom_fallback": false,
+        "padded_prompt_tokens": 20898
+      },
+      {
+        "actual_batch_size": 7,
+        "cursor": 281,
+        "event": "BATCH",
+        "label": "FULL_EVALUATION",
+        "long_prompt_downgrade": false,
+        "longest_prompt_tokens": 798,
+        "oom_fallback": false,
+        "padded_prompt_tokens": 5586
+      }
+    ],
+    "left_padding": true,
+    "max_batched_prompt_tokens": 21568,
+    "max_rate_delta": 0.0625,
+    "min_canonical_agreement": 0.9375,
+    "prompt_length_bucketing": true,
+    "requested_batch_size": 32,
+    "validation": {
+      "batch_records": [
+        {
+          "actual_batch_size": 29,
+          "cursor": 0,
+          "event": "BATCH",
+          "label": "BATCH1_VS_BATCH32",
+          "long_prompt_downgrade": true,
+          "longest_prompt_tokens": 706,
+          "oom_fallback": false,
+          "padded_prompt_tokens": 20474
+        },
+        {
+          "actual_batch_size": 3,
+          "cursor": 29,
+          "event": "BATCH",
+          "label": "BATCH1_VS_BATCH32",
+          "long_prompt_downgrade": false,
+          "longest_prompt_tokens": 798,
+          "oom_fallback": false,
+          "padded_prompt_tokens": 2394
+        }
+      ],
+      "canonical_agreement": 1.0,
+      "exact_grid_rate_delta": 0.0,
+      "parse_valid_rate_delta": 0.0,
+      "sample_count": 32,
+      "status": "PASS"
+    },
+    "validation_count": 32
+  },
+  "completed_episode_count": 288,
+  "evaluation_round": "FORWARD_BASELINE_EVALUATION_V6_BATCH32",
+  "final_audit_opened": false,
+  "profiles": [
+    {
+      "capability": "color mapping",
+      "episodes": 16,
+      "exact_grid_matches": 0,
+      "exact_grid_score": 0.0,
+      "parse_valid": 0,
+      "parse_valid_score": 0.0
+    },
+    {
+      "capability": "complete missing structure",
+      "episodes": 16,
+      "exact_grid_matches": 0,
+      "exact_grid_score": 0.0,
+      "parse_valid": 0,
+      "parse_valid_score": 0.0
+    },
+    {
+      "capability": "overlay",
+      "episodes": 16,
+      "exact_grid_matches": 0,
+      "exact_grid_score": 0.0,
+      "parse_valid": 0,
+      "parse_valid_score": 0.0
+    },
+    {
+      "capability": "propagation",
+      "episodes": 16,
+      "exact_grid_matches": 0,
+      "exact_grid_score": 0.0,
+      "parse_valid": 0,
+      "parse_valid_score": 0.0
+    },
+    {
+      "capability": "recolor",
+      "episodes": 16,
+      "exact_grid_matches": 0,
+      "exact_grid_score": 0.0,
+      "parse_valid": 0,
+      "parse_valid_score": 0.0
+    },
+    {
+      "capability": "rotate",
+      "episodes": 16,
+      "exact_grid_matches": 0,
+      "exact_grid_score": 0.0,
+      "parse_valid": 0,
+      "parse_valid_score": 0.0
+    }
+  ],
+  "result_path": "/workspace/arc2/forward_baseline_v6_batch32_launch/output/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+  "result_sha256": "4e6f3ec9089eeaaecc910e46a30f8b0c383cc71ddc44dc56bfbe0cd7a249eebd",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "surface": "retention",
+  "terminal_receipt_path": "/workspace/arc2/forward_baseline_v6_batch32_launch/TERMINAL_RECEIPT.json",
+  "terminal_receipt_sha256": "9aa62e6178784136f9e621243f755ac67b49f520a8b9ee0396d9b8fba4ec728a"
+}

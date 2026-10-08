@@ -1,0 +1,102 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_024",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "ROUND_009_POST_HOC_CHARACTERIZATION_EVALUATION_STAGE_V1",
+  "protocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "delivery_mode": "SYNCHRONOUS_CONTROLLER_SAME_CYCLE",
+  "supervisor_handoff_requested": false,
+  "reasons": [
+    {
+      "area": "brief_and_artifact_identity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_024 has verified SHA256 6adf2551af6aeab6740b0340bf3d9036be75c3c55bcccaa9b1592308f5544620. The Phase-A binding, Phase-B binding, and binding-validation files match SHA256 0f9861c4dd9f1c427db77408d730d4047226bedf42289883c87161cbee1b8d73, c6f22bd1b722c2d33a158304117287d4c875e90d453c84dfd2775deb97c06308, and 2b339adaeccd31e9c3442d6a5d499b2a2b033c5ca6a19bc6c291176ebf5ce67f."
+    },
+    {
+      "area": "mapping_proof",
+      "status": "PARTIAL_HARD_STOP",
+      "finding": "The brief records a 256-row target-free mapping proof SHA256 e4c0a4e4a60a45bb5cd02be4229fff1d3e084bed4cb3dcc6b83a7fc390c37133, but no path or proof artifact is present in the reviewed package. The hash is referenced only by the brief and phase bindings, so per-item bijection and semantic mapping remain non-reviewable."
+    },
+    {
+      "area": "phase_a_command",
+      "status": "FAIL_NOT_EXECUTABLE",
+      "finding": "The frozen Phase-A argv invokes scripts/run_generation_capability_audit_v1.py with --mode generate and unsupported argument --adapter. That CLI does not define --adapter and requires --output, --pilot-freeze, --model-path, --checkpoint-root, --novel-validation-root, --replay-shard, and --native-config-dir, all absent from the binding. The exact frozen command cannot parse, let alone run."
+    },
+    {
+      "area": "phase_b_command",
+      "status": "FAIL_NOT_EXECUTABLE",
+      "finding": "The frozen Phase-B argv requests --mode score-sealed, but scripts/run_generation_capability_audit_v1.py accepts only preflight, calibration, batch-capacity, batch-parity, generate, finalize, or controller. No score-sealed mode or exact scorer input/output arguments exist in the reviewed executable."
+    },
+    {
+      "area": "execution_checkout_identity",
+      "status": "FAIL_BINDING_NOT_PRESENT_AT_CHECKOUT",
+      "finding": "The brief and both bindings specify execution checkout f688d2611184ba1c9f98aa2422a601ff976c2cab, while the reviewed final binding bytes were created by package commit f725a56ccb563250f7d06c960fc9695557f5c651. The latter is a child of f688d261; executing f688d261 cannot use the reviewed final binding bytes. At review, local and fresh origin point to f725a56c, not the claimed RunPod checkout f688d261."
+    },
+    {
+      "area": "no_model_preflight",
+      "status": "FAIL_FALSE_ASSURANCE",
+      "finding": "The reported PASS did not validate real CLI parseability or execute exact-command negative tests. The bound unit test checks only authorization booleans, distinct output roots, a seed value, one path substring, phase ordering flag, and denominator text; all 12 submitted CPU tests pass despite both frozen commands being syntactically unusable."
+    },
+    {
+      "area": "launch_enforcement",
+      "status": "FAIL_INCOMPLETE",
+      "finding": "No reviewed launcher atomically verifies directive, bindings, live checkout, model/tokenizer/checkpoint hashes, command and environment equality, reference denial, empty outputs, nonce freshness, phase ordering, inference cap, or receipt completeness before execution. Declarative JSON fields do not enforce these controls."
+    },
+    {
+      "area": "scientific_boundary",
+      "status": "PASS_NO_EXECUTION",
+      "finding": "No model loading, generation, scoring, GPU inference, scientific training, targeted repair, or FINAL_AUDIT occurred. The condition remains prospective post-hoc characterization with protected results absolute-only and no equivalence or historical-retention claim."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "PRESERVE_CURRENT_PREPARATION_EVIDENCE",
+      "requirement": "Preserve the mapping receipt, validation, sealed mapping hash, current bindings, validation result, and no-execution state as reviewed evidence. Do not consume the current Phase-A or Phase-B nonces or create their output roots."
+    },
+    {
+      "change_id": "ADD_REVIEWABLE_MAPPING_PROOF",
+      "requirement": "Add the exact 256-row target-free mapping-proof artifact to the package with path and SHA256. Validate its schema, per-surface cardinalities, unique manifest IDs, source-row uniqueness, canonical input and reference hashes, token-label hashes, mapping status, and binding to sealed mapping SHA256 de1019910ce214b2be58f909c4f0f0bae2a5eb987f1803bcb38e0d0d5400a160. Do not include raw reference payloads."
+    },
+    {
+      "change_id": "IMPLEMENT_REAL_PHASE_A_ENTRYPOINT_AND_COMMAND",
+      "requirement": "Either implement a dedicated post-hoc target-blind generation entrypoint or bind a fully valid existing CLI. Freeze the exact interpreter and complete argv including output, model, adapter/checkpoint, input manifests or exact data sources, native config, serializer, numeric seed, and all required paths. The model process must never receive the sealed mapping path or reference workspace."
+    },
+    {
+      "change_id": "IMPLEMENT_REAL_PHASE_B_ENTRYPOINT_AND_COMMAND",
+      "requirement": "Implement and freeze an actual CPU-only sealed-scoring mode or dedicated scorer. Bind exact prediction-manifest input, sealed mapping input, parser/normalizer version, denominators, absolute-only protected semantics, output root, nonce, logs, result, and terminal receipt. The exact command must parse and run against dummy fixtures without model loading."
+    },
+    {
+      "change_id": "BIND_ONE_FINAL_EXECUTION_CHECKOUT",
+      "requirement": "Create new Phase-A and Phase-B bindings and fresh nonces on a final execution commit that contains the exact reviewed entrypoints, tests, bindings, launcher, schemas, and target-free proof. Verify local HEAD, fresh git ls-remote origin, and RunPod checkout/source all equal that same commit. Do not bind execution to an ancestor that lacks the final artifacts."
+    },
+    {
+      "change_id": "IMPLEMENT_FAIL_CLOSED_STAGE_LAUNCHER",
+      "requirement": "Before nonce consumption, machine-verify the qualifying Director directive SHA, protocol and stage scope, live checkout, all base/tokenizer/adapter/data/code/binding hashes, exact argv/environment, reference denial from Phase A, output-root absence, inference cap and accounting, and phase-specific authorization. Atomically consume each nonce once and always emit complete success or failure receipts."
+    },
+    {
+      "change_id": "ENFORCE_PHASE_ISOLATION_AND_ORDER",
+      "requirement": "Run Phase A in a context where the sealed mapping and Phase-B workspace are unreadable and prove denial from the exact execution identity. Seal and hash all predictions before Phase B. Phase B must be CPU-only and refuse to start unless the complete Phase-A receipt and immutable prediction manifest verify exactly."
+    },
+    {
+      "change_id": "EXPAND_CPU_ONLY_TESTS_AND_PREFLIGHT",
+      "requirement": "Add tests that parse the exact frozen commands, reject unsupported or missing arguments, run Phase A and Phase B on dummy fixtures, detect command/environment substitution, verify live-checkout mismatch rejection, reference-access denial, nonce replay, existing output roots, phase-order violations, invalid or missing predictions, worker failure propagation, inference-cap behavior, and receipt completeness. The final no-model preflight must exercise the actual launcher through the last step before model import."
+    },
+    {
+      "change_id": "RESUBMIT_SYNCHRONOUSLY_WITHOUT_EXECUTION",
+      "requirement": "Commit and push the additive remediation package on the existing non-main branch without force-push or history rewrite, synchronize and verify the exact RunPod checkout, and submit a new hashed Director brief in this synchronous Controller-Director workflow. Do not request Supervisor handoff and do not start model loading, generation, scoring, GPU inference, scientific training, targeted repair, or FINAL_AUDIT."
+    }
+  ],
+  "reviewed_brief_sha256": "6adf2551af6aeab6740b0340bf3d9036be75c3c55bcccaa9b1592308f5544620",
+  "reviewed_phase_a_binding_sha256": "0f9861c4dd9f1c427db77408d730d4047226bedf42289883c87161cbee1b8d73",
+  "reviewed_phase_b_binding_sha256": "c6f22bd1b722c2d33a158304117287d4c875e90d453c84dfd2775deb97c06308",
+  "reviewed_binding_validation_sha256": "2b339adaeccd31e9c3442d6a5d499b2a2b033c5ca6a19bc6c291176ebf5ce67f",
+  "cpu_only_remediation_authorized": true,
+  "evaluation_stage_authorized": false,
+  "model_loading_authorized": false,
+  "generation_authorized": false,
+  "scoring_authorized": false,
+  "gpu_inference_authorized": false,
+  "scientific_training_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false
+}

@@ -1,0 +1,122 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_018",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "RECONSTRUCTED_FOUNDATION_V2_V2_001",
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "contract_sha256": "ce4e86956557ed218d4903adf78e3cb2da8135a4756a1ac97255f4f370bdaca0",
+  "launch_nonce": "bc1f9e94-e336-447e-ab22-87decc706496",
+  "exact_source_commit": "748838f6be68c8fd529f746327b5e5da64cf3ca8",
+  "reasons": [
+    {
+      "area": "brief_and_exact_identity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_018 has verified SHA256 16601ed0b1c502f87e77ed9651cde3ef308efd7bc2b04b8d31a41dead22c4e64. The reviewed V2 contract, gate, launch binding, preauthorization preflight, protocol, round, nonce, and source commit match the identities recorded in this directive."
+    },
+    {
+      "area": "distinct_subprotocol_boundary",
+      "status": "PASS",
+      "finding": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2 is a distinct scientific condition with a fresh round, model identity, nonce, paths, and available-input provenance. It preserves the terminal V1 predecessor and does not claim Original Foundation-V2 recovery, V1 continuity, or bitwise adapter reproduction."
+    },
+    {
+      "area": "input_and_model_identity",
+      "status": "PASS_WITH_PREFLIGHT_LIMITATIONS",
+      "finding": "The binding freezes the two base-model weight shards, tokenizer/config identities, exact replay shard SHA256 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc, Novel manifests, historical recipe evidence, and no-Gold/final-audit path boundary. The preauthorization record reports a read-only PASS with no model or optimizer work."
+    },
+    {
+      "area": "source_commit_authorization_binding",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The authorization validator does not read or compare exact_source_commit at all. The launcher checks only preflight status and binding SHA, not preflight source_head against the Directive, contract, gate, or current checkout. Therefore the requested source commit 748838f6be68c8fd529f746327b5e5da64cf3ca8 is documentary rather than fail-closed enforced."
+    },
+    {
+      "area": "preflight_freshness_and_immutability",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The preserved preauthorization preflight was executed at source commit 3904a90db779862d96b519028599d214c607a4b7, not the requested 748838f6be68c8fd529f746327b5e5da64cf3ca8. The contract requires a post-authorization final preflight, but the same FINAL_PREFLIGHT.json and run-root paths already exist; the current preflight rejects existing paths and then writes to its output path, so a repeat cannot be both immutable and successful under the present contract."
+    },
+    {
+      "area": "worker_command_binding",
+      "status": "FAIL_HARD_STOP",
+      "finding": "run_reconstruction_available_inputs_v2.py accepts any command supplied after '--' and never compares it with contract.worker_command or contract.worker_environment. A valid nonce could therefore authorize an unfrozen executable or argument set."
+    },
+    {
+      "area": "runtime_budget_enforcement",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The V2 budget contract declares a 7200-second reservation and 28800-second cumulative cap, but the actual launcher consumes the nonce and directly waits for the worker process. It performs no pre-launch reservation against a shared cumulative ledger, no active monotonic deadline, no no-optimizer-after-cap enforcement, no append-only scientific interval accounting, and no cap-triggered checkpoint/save/finalize path."
+    },
+    {
+      "area": "terminal_receipt_integration",
+      "status": "FAIL_HARD_STOP",
+      "finding": "Although receipt and accounting utilities are hash-listed, the frozen V2 worker command and launcher do not invoke them. Worker exit, optimizer steps, processed tokens, charged scientific seconds, checkpoint identities, and final-audit state are therefore not guaranteed to produce the repaired complete terminal receipt required after Directive 015."
+    },
+    {
+      "area": "scientific_selection_and_retention_gate",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The V2 package freezes a training recipe and validation inputs but does not freeze a V2-specific checkpoint evaluation schedule, quantitative reconstruction/replacement acceptance thresholds, retention rejection rule, deterministic checkpoint selection rule, or terminal classifications for partial and failed reconstruction. Those rules must exist before candidate results are generated."
+    },
+    {
+      "area": "preflight_completeness",
+      "status": "REQUIRES_CHANGE",
+      "finding": "The preflight verifies declared base files but does not enumerate and reject unexpected model weight shards, and it does not itself verify the declared GPU model, BF16 support, CUDA, torch, transformers, PEFT, bitsandbytes, or interpreter identities. Runtime-import PASS is summarized separately but is not bound into the launcher's consumed final-preflight identity."
+    },
+    {
+      "area": "test_coverage",
+      "status": "PARTIAL",
+      "finding": "The three authorization unit tests pass, confirming decision/contract checks and atomic nonce reuse rejection. They do not test source-commit mismatch, stale preflight replay, command substitution, environment substitution, active runtime cap, ledger reservation, terminal receipt completeness, or final-preflight overwrite protection."
+    },
+    {
+      "area": "current_execution_and_provenance",
+      "status": "PASS_NO_TRAINING_WITH_PARTIAL_PARITY",
+      "finding": "No model, optimizer, or GPU training has started. Current local HEAD and fresh origin are equal at 748838f6be68c8fd529f746327b5e5da64cf3ca8, but the submitted brief is untracked and the only recorded RunPod parity is the earlier preauthorization commit 3904a90db779862d96b519028599d214c607a4b7."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "REVOKE_REVIEWED_CONTRACT_AND_NONCE",
+      "requirement": "Preserve contract SHA256 ce4e86956557ed218d4903adf78e3cb2da8135a4756a1ac97255f4f370bdaca0 and nonce bc1f9e94-e336-447e-ab22-87decc706496 as rejected, non-consumable review evidence. Because the executable binding and contract must change, neither identity may be rebound to a later directive."
+    },
+    {
+      "change_id": "ENFORCE_EXACT_SOURCE_COMMIT",
+      "requirement": "Add exact_source_commit to the new contract and machine-gate authorization block. The validator and launcher must require equality among the qualifying Directive, contract, gate, post-authorization final-preflight source_head, and live git rev-parse HEAD. Add fail-closed tests for every mismatch and for stale preflight replay."
+    },
+    {
+      "change_id": "ENFORCE_EXACT_WORKER_COMMAND_AND_ENVIRONMENT",
+      "requirement": "The launcher must compare the requested worker argv and environment byte-for-byte with the frozen contract before nonce consumption. Reject additional, missing, reordered, or altered arguments; alternate interpreters; unexpected PYTHONPATH; shell wrapping; and unapproved environment overrides."
+    },
+    {
+      "change_id": "IMPLEMENT_ACTIVE_CUMULATIVE_BUDGET_WRAPPER",
+      "requirement": "Route the worker through a frozen wrapper that reserves 7200 seconds only if it fits the single append-only 28800-second cumulative scientific-training ledger, measures worker-declared optimizer intervals, enforces a monotonic active deadline before optimizer work, prohibits optimizer steps after the cap, and checkpoint/saves/finalizes on cap or controlled stop. Preserve wrapper time separately from scientific optimizer time."
+    },
+    {
+      "change_id": "INTEGRATE_COMPLETE_TERMINAL_RECEIPT",
+      "requirement": "The exact launch path must always atomically emit a repaired scientific terminal receipt containing worker and wrapper exit codes, model/optimizer state, optimizer steps, processed and supervised tokens, charged scientific seconds, ledger and snapshot hashes, checkpoint identities, result identity, source/contract/directive/nonce identities, and final-audit state. Missing fields or worker failure must never become SUCCESS."
+    },
+    {
+      "change_id": "FREEZE_V2_SELECTION_AND_RETENTION_GATE",
+      "requirement": "Before training, freeze the V2-specific evaluation checkpoints, exact Novel and replay/retention metrics, quantitative acceptance and degradation thresholds, deterministic checkpoint selection and tie-break rules, and EQUIVALENCE_OR_REPLACEMENT_CONFIRMED, PARTIAL, and FAILED terminal classifications. Targeted repair and FINAL_AUDIT must remain forbidden until a later Director review."
+    },
+    {
+      "change_id": "STRENGTHEN_FINAL_PREFLIGHT",
+      "requirement": "Enumerate the complete expected base-model shard set and reject missing or extra model shards. Verify the live interpreter, GPU identity, BF16 support, CUDA, torch, transformers, PEFT, bitsandbytes, repaired wrapper, receipt writer, budget recorder, authorization validator, exact worker command/environment, and all data shard sets and hashes. Bind all results to the new contract, gate, nonce, directive, and exact source commit."
+    },
+    {
+      "change_id": "SEPARATE_PREAUTHORIZATION_AND_FINAL_PREFLIGHT_ARTIFACTS",
+      "requirement": "Use distinct immutable paths for preauthorization evidence and the post-authorization final machine preflight. The final preflight must refuse overwrite, must not invalidate freshness merely by writing its own evidence directory, and must prove all worker output/checkpoint/runtime paths are otherwise absent immediately before atomic nonce consumption."
+    },
+    {
+      "change_id": "EXPAND_CPU_ONLY_REGRESSION_TESTS",
+      "requirement": "Add tests for exact source binding, command and environment substitution, extra or missing model shards, stale or overwritten preflight, output-path races, nonce consumption ordering and idempotency, insufficient budget rejection, active cap behavior with dummy subprocesses, worker-failure receipt propagation, and complete SUCCESS receipt requirements."
+    },
+    {
+      "change_id": "PRESERVE_AND_RESUBMIT",
+      "requirement": "Create a new contract and nonce, commit and push the complete additive package and tracked Director brief on the existing non-main branch without force-push or history rewrite, verify fresh local HEAD equals git ls-remote origin SHA equals RunPod checked-out/source SHA, run the new post-authorization-capable preflight in preauthorization mode, and submit a new structured authorization request. No launch is authorized until a later qualifying directive binds the new exact identities."
+    }
+  ],
+  "reviewed_gate_sha256": "9b0661db946d61ec44b53e98399c9a4875ce7e5badf895694199b6d4effdfe3d",
+  "reviewed_launch_binding_sha256": "8d1bb616acd4ade21c00f4eb730e551b5adce06053ad88a95371b8615eb26290",
+  "reviewed_preauthorization_preflight_sha256": "5c3593ff2299dc409d4e7cbdb4df362d71e862d45dd0a770b012051f645bc9ed",
+  "reviewed_contract_approved": false,
+  "launch_nonce_authorized": false,
+  "launch_authorized": false,
+  "model_loading_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false
+}

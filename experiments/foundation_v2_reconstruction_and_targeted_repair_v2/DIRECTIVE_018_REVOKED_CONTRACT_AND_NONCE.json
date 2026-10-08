@@ -1,0 +1,10 @@
+{
+  "contract_path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/RECONSTRUCTED_FOUNDATION_V2_V2_001_CONTRACT.json",
+  "contract_sha256": "ce4e86956557ed218d4903adf78e3cb2da8135a4756a1ac97255f4f370bdaca0",
+  "directive_id": "DIRECTOR_DIRECTIVE_018",
+  "directive_sha256": "325e55ebc8eadc2b3f5ff8842228e9896e25bf94b39126a0f48c5d9d477dfeb6",
+  "launch_nonce": "bc1f9e94-e336-447e-ab22-87decc706496",
+  "rule": "Never bind this reviewed contract or nonce to a later directive.",
+  "schema_version": 1,
+  "status": "REJECTED_NON_CONSUMABLE"
+}

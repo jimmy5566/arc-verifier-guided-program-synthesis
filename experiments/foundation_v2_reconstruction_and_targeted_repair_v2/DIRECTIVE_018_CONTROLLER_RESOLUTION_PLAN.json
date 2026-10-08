@@ -1,0 +1,41 @@
+{
+  "artifacts_or_conditions_that_must_remain_frozen": [
+    "V1 terminal closure",
+    "rejected V2 reviewed contract and nonce",
+    "base/replay/Novel identities",
+    "no-Gold/final-audit boundary",
+    "zero scientific GPU usage"
+  ],
+  "controller_next_actions": [
+    "REVOKE_REVIEWED_CONTRACT_AND_NONCE",
+    "ENFORCE_EXACT_SOURCE_COMMIT",
+    "ENFORCE_EXACT_WORKER_COMMAND_AND_ENVIRONMENT",
+    "IMPLEMENT_ACTIVE_CUMULATIVE_BUDGET_WRAPPER",
+    "INTEGRATE_COMPLETE_TERMINAL_RECEIPT",
+    "FREEZE_V2_SELECTION_AND_RETENTION_GATE",
+    "STRENGTHEN_FINAL_PREFLIGHT",
+    "SEPARATE_PREAUTHORIZATION_AND_FINAL_PREFLIGHT_ARTIFACTS",
+    "EXPAND_CPU_ONLY_REGRESSION_TESTS",
+    "PRESERVE_AND_RESUBMIT"
+  ],
+  "forbidden_actions": [
+    "launch GPU work",
+    "reuse reviewed V2 contract or nonce",
+    "load model or construct optimizer",
+    "open final audit"
+  ],
+  "fresh_gate_nonce_output_root_required": true,
+  "fresh_protocol_id_required": false,
+  "fresh_round_id_required": true,
+  "minimum_acceptance_evidence": [
+    "CPU regression tests required by Directive 018",
+    "fresh contract/gate/nonce/binding hashes",
+    "tracked brief and fresh source parity",
+    "post-authorization-capable preflight PASS in preauthorization mode"
+  ],
+  "required_resolution": "Implement all DIRECTOR_DIRECTIVE_018 required_changes under a new V2 successor contract and nonce.",
+  "root_cause": "The V2 reviewed contract bound documentary evidence but did not enforce all launch-critical identities and controls in executable code.",
+  "schema_version": 1,
+  "source": "DIRECTOR_DIRECTIVE_018.required_changes",
+  "why_current_path_is_invalid": "Its contract and nonce are expressly rejected and non-consumable until the listed hard-stop controls are implemented."
+}

@@ -1,0 +1,116 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_026",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "ROUND_009_POST_HOC_CHARACTERIZATION_EVALUATION_STAGE_V1",
+  "protocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "delivery_mode": "SYNCHRONOUS_CONTROLLER_SAME_CYCLE",
+  "supervisor_handoff_requested": false,
+  "reasons": [
+    {
+      "area": "brief_and_artifact_identity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_025 has verified SHA256 495372fd74422639fc6e7141622c36e6eba98cafcce0c83513bdd27632faa512. The CPU-only validation, Phase-A V2 binding, Phase-B V2 binding, and target-free mapping proof match SHA256 04406a0216cc3a09d6cae573267e0d0a5e4b9138117b3d09e4c655ba551f9b60, 91ae701360f5b8e3faae4eaf508ec2d4fac476b80f382ef5ae65422e656fba62, 694fb8e80d1ec4c9edab2a32e9a6cd484f45dc44b98c73588ec51b386eb6736b, and e4c0a4e4a60a45bb5cd02be4229fff1d3e084bed4cb3dcc6b83a7fc390c37133."
+    },
+    {
+      "area": "target_free_mapping_proof",
+      "status": "PASS_CPU_ONLY",
+      "finding": "The reviewed proof is present and machine-reviewable: it contains exactly 256 target-free rows with the frozen NOVEL=128, REPLAY=64, and PROTECTED=64 partition, unique manifest identities, per-row identity hashes, and no raw reference payloads."
+    },
+    {
+      "area": "source_provenance",
+      "status": "PARTIAL",
+      "finding": "Local HEAD, the configured upstream ref, and fresh origin branch lookup all equal ea2452dc7bac178aae4b4c455da5df80331afae0. The brief asserts the same RunPod checkout, but this review did not obtain an independent fresh RunPod receipt. The working tree also contains preserved modified and untracked orchestration evidence, so repository cleanliness is not established."
+    },
+    {
+      "area": "phase_a_execution",
+      "status": "FAIL_NON_EXECUTING_STUB",
+      "finding": "scripts/run_round009_posthoc_phase_a_v1.py parses and validates a binding only in preflight mode. Any --execute request, or any invocation without --preflight, raises MODEL_GENERATION_NOT_AUTHORIZED. It contains no model-loading or generation path and therefore cannot implement the frozen Phase-A command."
+    },
+    {
+      "area": "phase_b_execution",
+      "status": "FAIL_NON_EXECUTING_STUB",
+      "finding": "scripts/run_round009_posthoc_phase_b_v1.py parses and validates only --preflight. Every non-preflight invocation raises SEALED_SCORING_EXECUTION_NOT_AUTHORIZED, and no sealed prediction-to-reference join or scoring implementation exists. It therefore cannot implement the frozen Phase-B command."
+    },
+    {
+      "area": "stage_launcher",
+      "status": "FAIL_NON_EXECUTING_STUB",
+      "finding": "scripts/run_round009_posthoc_stage_launcher_v1.py validates selected metadata in dry-run mode but does not dispatch either worker. Outside dry-run it terminates with MODEL_OR_SCORER_WORKER_MUST_BE_EXPLICITLY_BOUND. It does not atomically consume nonces, bind exact worker argv and environment, enforce a runtime cap and accounting, or emit complete terminal worker receipts."
+    },
+    {
+      "area": "runtime_lock_and_code_identity",
+      "status": "FAIL_INCOMPLETE_ENFORCEMENT",
+      "finding": "The external runtime-lock freezer records checkout, binding, nonce, and entrypoint identities, but the stage launcher does not compare the lock's entrypoint identities with the binding and live file hashes. A lock can therefore pass without proving that the reviewed executable bytes are the bytes about to run."
+    },
+    {
+      "area": "reference_isolation_and_phase_order",
+      "status": "FAIL_DECLARATIVE_ONLY",
+      "finding": "Phase-A reference denial is represented by binding fields and an argv substring check, not by an enforced unreadable mount, ACL, isolated workspace, or equivalent runtime boundary. Phase B also accepts a Phase-A PREFLIGHT_PASS_NO_MODEL receipt as a predecessor and does not require an exact 256-row immutable prediction manifest joined one-to-one to the frozen mapping before scoring."
+    },
+    {
+      "area": "cpu_only_tests",
+      "status": "PASS_LIMITED_SCOPE",
+      "finding": "Seven focused CPU-only tests pass. They validate preflight metadata, checkout substitution rejection, binding separation, mapping-proof shape, and synchronous delivery behavior. They do not execute real generation or scoring workers and therefore cannot establish launch readiness."
+    },
+    {
+      "area": "scientific_boundary",
+      "status": "PASS_NO_EXECUTION",
+      "finding": "No model loading, generation, scoring, GPU inference, scientific training, targeted repair, or FINAL_AUDIT occurred or is authorized by this directive."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "PRESERVE_VALID_CPU_ONLY_EVIDENCE",
+      "requirement": "Preserve DIRECTOR_BRIEF_025, its four reviewed artifacts, the seven-test result, and the no-execution state as immutable evidence. Preserve the current bindings and nonces as rejected preparation evidence; do not consume or reuse them for scientific execution."
+    },
+    {
+      "change_id": "IMPLEMENT_REAL_PHASE_A_WORKER",
+      "requirement": "Implement and freeze a real Phase-A target-blind generation path using the exact reviewed model, tokenizer, adapter, serializer, data identities, seed, output schema, and cap. It must support the exact frozen argv, write a complete 256-row prediction manifest plus hashes and terminal receipt, and remain unexecuted during remediation."
+    },
+    {
+      "change_id": "ENFORCE_PHASE_A_REFERENCE_DENIAL",
+      "requirement": "Run Phase A under an enforceable boundary in which the sealed mapping, raw references, and Phase-B workspace are unreadable by the exact generation process identity. Add a no-model test that proves access is denied by the operating boundary, not merely omitted from argv or configuration."
+    },
+    {
+      "change_id": "IMPLEMENT_REAL_PHASE_B_SCORER",
+      "requirement": "Implement and freeze a real CPU-only sealed scorer. It must require a successful Phase-A terminal receipt, verify the exact immutable 256-row prediction manifest and one-to-one mapping identities, reject missing, extra, duplicate, or mismatched rows, apply the frozen parser and normalizer, preserve fixed denominators and absolute-only protected reporting, and emit complete result and terminal receipt artifacts. Do not run it on scientific references during remediation."
+    },
+    {
+      "change_id": "IMPLEMENT_EXECUTABLE_FAIL_CLOSED_LAUNCHER",
+      "requirement": "Make the stage launcher dispatch the bound Phase-A and Phase-B workers only after a future qualifying Director directive. Before execution, verify directive decision and scope, exact protocol and round, binding hashes, live checkout, runtime lock, live entrypoint and dependency hashes, exact argv and environment, all model, adapter, tokenizer, data, and mapping identities, output-root absence, fresh nonces, phase-specific authorization, and cap/accounting state. Propagate worker failures and always write complete terminal receipts."
+    },
+    {
+      "change_id": "ADD_ATOMIC_NONCE_AND_CAP_ENFORCEMENT",
+      "requirement": "Atomically consume each fresh phase nonce exactly once at launch, reject replay and partial prior state, and enforce the frozen inference-time reservation, active cap, append-only actual accounting, and checkpoint or finalize behavior. Dummy CPU processes may test these controls; no model execution is authorized."
+    },
+    {
+      "change_id": "EXPAND_NO_MODEL_TESTS",
+      "requirement": "Add dummy-fixture tests that exercise the actual launcher-to-worker path through the final boundary before model import. Cover live code-hash substitution, argv and environment substitution, runtime-lock mismatch, reference-access denial, nonce replay, output-root collision, missing or extra predictions, identity and denominator mismatch, invalid predecessor receipt, worker failure propagation, cap exhaustion, and complete success and failure receipts."
+    },
+    {
+      "change_id": "FREEZE_FINAL_EXECUTION_PACKAGE_AND_PROVENANCE",
+      "requirement": "After the executable code and tests are final, issue fresh bindings, output roots, and nonces on one final non-main-branch commit containing every reviewed artifact. Push without force or history rewrite, obtain fresh local, origin, and RunPod equality evidence, verify the intended package is clean and complete, and bind the runtime lock to the exact live code bytes."
+    },
+    {
+      "change_id": "RESUBMIT_SYNCHRONOUSLY_WITHOUT_EXECUTION",
+      "requirement": "Submit a new hashed Director brief directly in this same-cycle synchronous Controller-Director workflow. Do not request Supervisor handoff. Do not load a model, generate predictions, score scientific references, use GPU inference, train, begin targeted repair, or open FINAL_AUDIT before a later explicit Director authorization."
+    }
+  ],
+  "reviewed_brief_sha256": "495372fd74422639fc6e7141622c36e6eba98cafcce0c83513bdd27632faa512",
+  "reviewed_parent_directive_id": "DIRECTOR_DIRECTIVE_024",
+  "reviewed_parent_directive_sha256": "0d0699233a59ab8a6a6ee9d718cf8b3d6bf5e29d9195685c1db1ad7f9f897c5a",
+  "reviewed_cpu_validation_sha256": "04406a0216cc3a09d6cae573267e0d0a5e4b9138117b3d09e4c655ba551f9b60",
+  "reviewed_phase_a_binding_sha256": "91ae701360f5b8e3faae4eaf508ec2d4fac476b80f382ef5ae65422e656fba62",
+  "reviewed_phase_b_binding_sha256": "694fb8e80d1ec4c9edab2a32e9a6cd484f45dc44b98c73588ec51b386eb6736b",
+  "reviewed_target_free_mapping_proof_sha256": "e4c0a4e4a60a45bb5cd02be4229fff1d3e084bed4cb3dcc6b83a7fc390c37133",
+  "reviewed_local_origin_commit": "ea2452dc7bac178aae4b4c455da5df80331afae0",
+  "cpu_only_remediation_authorized": true,
+  "evaluation_stage_authorized": false,
+  "model_loading_authorized": false,
+  "generation_authorized": false,
+  "scoring_authorized": false,
+  "gpu_inference_authorized": false,
+  "scientific_training_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false
+}

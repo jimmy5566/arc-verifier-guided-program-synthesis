@@ -1,0 +1,27 @@
+{
+    "schema_version":  1,
+    "review_type":  "FORWARD_BASELINE_STAGE_REVIEW",
+    "request_id":  "FORWARD_BASELINE_STAGE_V1",
+    "supersedes_directive_027_for_stage_governance":  true,
+    "strict_historical_equivalence_required":  false,
+    "baseline_model_id":  "CAPABILITY_REPAIR_BASELINE_V1",
+    "baseline_identity_sha256":  "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+    "reproducibility_level":  "CONFIGURATION_LEVEL",
+    "objective":  "TRAIN_VALIDATE_DIAGNOSE_ADAPT_CURRICULUM_REPEAT",
+    "next_stage":  "FORWARD_BASELINE_CHARACTERIZATION",
+    "requested_decision":  "smallest scientifically valid requirements to launch target_dev plus retention evaluation now",
+    "requirements":  [
+                         "current checkpoint identity",
+                         "evaluation split identity",
+                         "no Gold leakage",
+                         "scorer decoder identity",
+                         "fresh output isolation",
+                         "pinned source commit"
+                     ],
+    "forbidden":  [
+                      "historical equivalence recovery",
+                      "FINAL_AUDIT",
+                      "training before profile"
+                  ],
+    "scientific_training_started":  false
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_FORWARD_BASELINE_LAUNCH_V4",
+  "decision": "CONTINUE_CONTROLLER",
+  "scope": "FORWARD_BASELINE_CHARACTERIZATION_V1",
+  "request_id": "FORWARD_BASELINE_LAUNCH_V4",
+  "baseline_model_id": "CAPABILITY_REPAIR_BASELINE_V1",
+  "authorization_request_sha256": "2bcca713ffdd083a7f73a4d0b706b00ed33f41b9156fb4d5921e90471509ebb7",
+  "reviewed_brief_sha256": "ac0d91ed91213eefba32e6c65e5cefa16deffddcdef45576e9d90627c7c824de",
+  "launch_contract_file_sha256": "aaf54455a2e0cbb17ecb4152fbf92b68554eb23d0f046cbf75979271f08ff423",
+  "launch_contract_identity": "c3e1aa630fc961288685377f997d13b7d67bd53b14e9342dd2daa692f0953946",
+  "baseline_identity_sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+  "checkpoint_manifest_file_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "checkpoint_manifest_identity": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da",
+  "target_dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97",
+  "target_dev_rows": 192,
+  "retention_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+  "retention_rows": 96,
+  "source_commit": "33fdd895b31ba58c440c7c10c5ae15634b0c7376",
+  "executable_sha256": "bf7751b3f4f1414ab9e574f7faeb7aec6f69ee10bc85b05a40edac6c171e6033",
+  "nonce_sha256": "f45e2ac55891c889192446f8c971aeaee7cbab85ab19fcffc64deb73549c5ea5",
+  "output_root": "/workspace/arc2/forward_baseline_v4_launch/output",
+  "receipt_path": "/workspace/arc2/forward_baseline_v4_launch/TERMINAL_RECEIPT.json",
+  "runtime_cap_seconds": 7200,
+  "review_findings": [
+    {
+      "area": "identity_and_provenance",
+      "status": "PASS",
+      "finding": "Local HEAD, configured upstream, fresh origin, and live RunPod source all equal 33fdd895b31ba58c440c7c10c5ae15634b0c7376. The live executable matches the reviewed SHA256."
+    },
+    {
+      "area": "immutable_launch_contract",
+      "status": "PASS",
+      "finding": "The live V4 contract file and internal identity match the reviewed values. It binds the exact interpreter, argv, external Governor-review path, environment, 7200-second cap, checkpoint manifest, datasets, dependencies, nonce, output root, and receipt path."
+    },
+    {
+      "area": "checkpoint_and_data",
+      "status": "PASS",
+      "finding": "The complete base and adapter manifest identities are frozen. TARGET_DEV is fixed at 192 rows and RETENTION_SENTINEL at 96 rows with the reviewed hashes. FINAL_AUDIT is not part of the launch contract."
+    },
+    {
+      "area": "authorization_enforcement",
+      "status": "PASS",
+      "finding": "The collector requires this external CONTINUE_CONTROLLER review and verifies every launch identity represented by this artifact before nonce consumption and model import. Exact argv, environment, runtime cap, and interpreter substitution are rejected."
+    },
+    {
+      "area": "preflight_and_freshness",
+      "status": "PASS",
+      "finding": "The live RunPod preflight receipt has status PASS_NO_MODEL_IMPORT, contract identity c3e1aa630fc961288685377f997d13b7d67bd53b14e9342dd2daa692f0953946, source commit 33fdd895b31ba58c440c7c10c5ae15634b0c7376, and SHA256 c8a60127c1c113a38b02a427729b46a9f5223539c8ed374a898df1d52e62add9. The nonce is present with the reviewed hash; output root and terminal receipt are absent."
+    },
+    {
+      "area": "scientific_scope",
+      "status": "PASS_NARROW_AUTHORIZATION",
+      "finding": "Authorization is limited to one deterministic read-only baseline characterization over the exact 192+96 frozen examples. It is not historical Foundation-V2 equivalence evidence and does not authorize training, adaptation, FINAL_AUDIT, or a follow-on stage."
+    }
+  ],
+  "authorized_action": {
+    "kind": "ONE_SHOT_READ_ONLY_FORWARD_BASELINE_EVALUATION",
+    "contract_id": "FORWARD_BASELINE_EVALUATION_LAUNCH_V4",
+    "contract_path": "/workspace/arc2/forward_baseline_v4_launch/LAUNCH_CONTRACT.json",
+    "governor_review_path": "/workspace/arc2/forward_baseline_v4_launch/GOVERNOR_REVIEW.json",
+    "expected_total_rows": 288,
+    "deterministic_decoding": true,
+    "weights_read_only": true,
+    "nonce_single_use": true
+  },
+  "launch_conditions": [
+    "COPY_THIS_EXACT_REVIEW_ARTIFACT_TO_THE_CONTRACT_BOUND_GOVERNOR_REVIEW_PATH",
+    "RERUN_PASS_NO_MODEL_IMPORT_IMMEDIATELY_BEFORE_LAUNCH",
+    "REQUIRE_LOCAL_ORIGIN_RUNPOD_SOURCE_COMMIT_EQUALITY",
+    "REQUIRE_EXACT_CONTRACT_CHECKPOINT_DATA_EXECUTABLE_DEPENDENCY_ARGV_ENVIRONMENT_AND_NONCE_IDENTITIES",
+    "REQUIRE_OUTPUT_ROOT_AND_TERMINAL_RECEIPT_TO_REMAIN_ABSENT_BEFORE_NONCE_CONSUMPTION",
+    "STOP_FAIL_CLOSED_ON_ANY_MISMATCH"
+  ],
+  "forbidden_actions": [
+    "NO_TRAINING",
+    "NO_OPTIMIZER_CONSTRUCTION",
+    "NO_LORA_CONSTRUCTION_OR_WEIGHT_MUTATION",
+    "NO_FINAL_AUDIT_ACCESS",
+    "NO_DIAGNOSTIC_GOLD_TRAINING",
+    "NO_CONTRACT_NONCE_COMMAND_ENVIRONMENT_OR_DATA_SUBSTITUTION",
+    "NO_AUTOMATIC_TARGETED_REPAIR_OR_FOLLOW_ON_STAGE",
+    "NO_INTERPRETATION_OF_PARTIAL_OR_RUNTIME_CAPPED_OUTPUT_AS_A_COMPLETE_PROFILE",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "post_execution_requirement": "Stop after the terminal receipt. Preserve and hash the complete or partial outputs, report model and adapter identity plus exact denominators, and require a new Governor review before diagnosis-driven training, targeted repair, FINAL_AUDIT, or any follow-on scientific execution.",
+  "another_review_required_before_follow_on": true,
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": true,
+  "gpu_inference_authorized": true,
+  "scientific_training_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false
+}

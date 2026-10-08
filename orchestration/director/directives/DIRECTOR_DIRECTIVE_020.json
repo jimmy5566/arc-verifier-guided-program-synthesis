@@ -1,0 +1,94 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_020",
+  "decision": "CONTINUE_WITH_WARNING",
+  "scope": "ROUND_009_SEALED_EQUIVALENCE_EVALUATION_V1_PROTOCOL_FREEZE_ONLY",
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "supersedes_for_next_action": "DIRECTOR_DIRECTIVE_019",
+  "reasons": [
+    {
+      "area": "controller_escalation_identity",
+      "status": "PASS",
+      "finding": "CONTROLLER_ESCALATION_REQUEST_005.json has verified SHA256 064be20edfd63eedcf444b2af7527b8b27bed06a05d61eb63447a8a346c3f86c and binds DIRECTOR_DIRECTIVE_019 SHA256 57c1b27cfa73919c04df80e457dc0fe57ae106afb4bb85c80d2cc4b137f35510. The escalation reports NEEDS_HIGH_LEVEL_DECISION, zero remediation attempts, no new evidence, and scientific_training_started=false."
+    },
+    {
+      "area": "directive_019_remediation_package",
+      "status": "PASS_TO_FAIL_CLOSED_BOUNDARY",
+      "finding": "DIRECTOR_BRIEF_020 has verified SHA256 ece1c186a4e0e0f23e91e87979a514ddd6f76f33e455ed18b722a6837dac3494. Its six listed artifact hashes match the committed package, the selected 2M checkpoint remains byte-bound, numeric thresholds are unchanged, the three input manifests exclude target payloads, and the CPU-only preflight correctly stops before model loading or evaluation execution."
+    },
+    {
+      "area": "source_provenance",
+      "status": "PASS_LOCAL_ORIGIN_FOR_PACKAGE_ONLY",
+      "finding": "The evaluation package commit 6de7b2a347b68ce2934aff7a429375ec6beaa7dc and brief commit are ancestors of current local HEAD. At review, local HEAD, upstream, and fresh git ls-remote origin are equal at 167a418dc7a6cd8e42e97695692446b1d9dfb6bb. No RunPod parity or executable evaluation preflight is established, so this is package provenance only and not execution authorization."
+    },
+    {
+      "area": "sealed_reference_blocker",
+      "status": "CONFIRMED_HIGH_LEVEL_BOUNDARY",
+      "finding": "Generation-exact and protected-capability scoring require reference outputs and a baseline definition that must remain unavailable to the model-generation process. The current contract has no established sealed reference-output identity, protected baseline identity, scorer source, or scorer receipt. Inventing any of them would change the scientific validity boundary."
+    },
+    {
+      "area": "approved_resolution_route",
+      "status": "APPROVED_FOR_CPU_ONLY_FREEZE",
+      "finding": "The smallest valid route is a new two-phase evaluation subprotocol: Phase A generates and immutably freezes target-blind predictions from the already-selected 2M checkpoint; Phase B is a separate sealed CPU-only scorer that can read the frozen predictions and exact pre-existing reference artifacts only after Phase A is terminal. No targets may enter the model process or generation workspace."
+    },
+    {
+      "area": "downstream_scientific_state",
+      "status": "BLOCKED",
+      "finding": "Equivalence remains unconfirmed because Novel generation exact, replay generation exact, and protected-capability regression evidence remain NOT_RUN. This directive does not authorize model loading, inference execution, reconstruction retraining, optimizer construction, targeted repair, Eval60 Gold, diagnostic Gold, or FINAL_AUDIT."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "DEFINE_DISTINCT_EVALUATION_SUBPROTOCOL",
+      "requirement": "Freeze the additive subprotocol identity ROUND_009_SEALED_EQUIVALENCE_EVALUATION_V1. It must cite Round 009, the valid terminal receipt, the selected 2M checkpoint hashes, Directive 019, Directive 020, all three target-blind input manifests, and the unchanged Round-009 thresholds. It is an evaluation substage only and creates no new model or reconstruction identity."
+    },
+    {
+      "change_id": "RECOVER_ONLY_PRE_EXISTING_REFERENCE_PROVENANCE",
+      "requirement": "Using read-only CPU operations, identify the exact pre-existing reference source for every Novel, replay, and protected-capability manifest item and the exact pre-existing baseline required to count protected-capability major regressions. Record paths, dataset versions, item keys, file SHA256 values, canonical reference-output hashes, reference-manifest hash, baseline-output hashes, and the historical or frozen artifact that establishes the major-regression definition. Do not use Eval60 Gold, diagnostic Gold, exposed Novel holdout targets, FINAL_AUDIT, targeted-repair data, newly generated answers, or an invented baseline."
+    },
+    {
+      "change_id": "FAIL_CLOSED_IF_REFERENCE_IDENTITY_IS_UNAVAILABLE",
+      "requirement": "If any required reference output, item mapping, protected baseline, or major-regression definition lacks exact stage-compatible provenance, preserve it as MISSING or UNKNOWN and return a new escalation. Do not relax thresholds, substitute teacher-forced labels for generation references without an already established canonical mapping, redefine protected capability, or execute generation speculatively."
+    },
+    {
+      "change_id": "FREEZE_PHASE_A_TARGET_BLIND_GENERATION",
+      "requirement": "Freeze an exact Phase-A contract binding the selected checkpoint files, base/tokenizer identities, input-only manifests, prompt serializer, deterministic decoding parameters, seeds, retry and parse policy, evaluator code, interpreter and environment, exact argv, fresh isolated output paths, evaluation-only nonce, and a terminal receipt. Phase A must write immutable raw predictions, parse records, item-order manifest, and aggregate-free prediction hashes before any scorer can access reference outputs."
+    },
+    {
+      "change_id": "FREEZE_PHASE_B_SEALED_CPU_SCORER",
+      "requirement": "Freeze a separate CPU-only scorer with distinct argv, source hashes, input contract, nonce, working directory, and receipt. It may start only after Phase A has a terminal immutable prediction manifest. It may read only that manifest plus the exact recovered reference and protected-baseline manifests; it must not load the model, write into Phase-A outputs, expose reference payloads to the generation environment, or emit adaptive feedback before the complete one-shot score is sealed."
+    },
+    {
+      "change_id": "FREEZE_METRIC_AND_OUTPUT_SEMANTICS",
+      "requirement": "Define canonical output parsing and exact-match normalization before execution. The sealed result must report denominators, exact-match counts and rates for Novel and replay, protected-capability major-regression count under the already established definition, invalid or missing prediction counts, per-surface pass/fail against 0.80, 0.78, and 0 respectively, and hashes of raw predictions, references, scorer bytes, logs, and result. Missing, duplicate, unparsable, or unmapped items fail closed."
+    },
+    {
+      "change_id": "PREFLIGHT_AND_PROVENANCE",
+      "requirement": "Commit and push the complete additive subprotocol on the existing non-main branch without force-push or history rewrite. Verify fresh local HEAD equals git ls-remote origin SHA equals RunPod checked-out/source SHA. Run CPU-only structural tests and a no-model preflight that verifies all identities, strict Phase-A/Phase-B filesystem separation, sealed reference access, no-Gold/final-audit exclusions, fresh output paths, and nonces."
+    },
+    {
+      "change_id": "RESUBMIT_BEFORE_ANY_EXECUTION",
+      "requirement": "Submit a new hashed Director brief containing the exact subprotocol, Phase-A contract, Phase-B scorer contract, reference and baseline manifests, source commit, nonces, tests, and preflight identities. No model loading, generation, scoring, inference GPU use, or evaluation execution is authorized until a later directive explicitly binds those exact artifacts."
+    },
+    {
+      "change_id": "KEEP_TARGETED_REPAIR_AND_FINAL_AUDIT_BLOCKED",
+      "requirement": "Preserve EQUIVALENCE_OR_REPLACEMENT_PARTIAL until all three missing surfaces have valid one-shot results. Even a later complete pass does not automatically authorize targeted repair or FINAL_AUDIT; both require a subsequent explicit Director review and directive."
+    }
+  ],
+  "reviewed_escalation_sha256": "064be20edfd63eedcf444b2af7527b8b27bed06a05d61eb63447a8a346c3f86c",
+  "reviewed_directive_019_sha256": "57c1b27cfa73919c04df80e457dc0fe57ae106afb4bb85c80d2cc4b137f35510",
+  "reviewed_brief_020_sha256": "ece1c186a4e0e0f23e91e87979a514ddd6f76f33e455ed18b722a6837dac3494",
+  "reviewed_evaluation_contract_sha256": "b48af89e13d10801d18a6c529f3f3edaefea95f8e2423abbff18fe19dc0203b6",
+  "selected_checkpoint_adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+  "continuation_authorized_stage": "CPU_ONLY_SEALED_SCORER_AND_EVALUATION_SUBPROTOCOL_FREEZE",
+  "new_evaluation_subprotocol_authorized": true,
+  "sealed_reference_provenance_recovery_authorized": true,
+  "evaluation_execution_authorized": false,
+  "model_loading_authorized": false,
+  "inference_gpu_use_authorized": false,
+  "reconstruction_retraining_authorized": false,
+  "optimizer_construction_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false,
+  "scientific_training_authorized": false
+}

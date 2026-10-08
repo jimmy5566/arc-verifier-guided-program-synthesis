@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_FORWARD_BASELINE_LAUNCH_READINESS_V1",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "FORWARD_BASELINE_CHARACTERIZATION_V1",
+  "request_id": "FORWARD_BASELINE_LAUNCH_V1",
+  "baseline_model_id": "CAPABILITY_REPAIR_BASELINE_V1",
+  "reviewed_brief_sha256": "87a6991b3eeda4a3ad546a52af85220cb523a29a3b97d979409049465809ed2d",
+  "root_cause": {
+    "code": "AUTHORIZATION_NOT_SEPARATELY_CONSUMABLE_OR_AUTHENTICATED",
+    "finding": "The frozen launch contract contains authorization.evaluation_authorized=false, while the collector permits a real run only when that same embedded field is true. The frozen argv has no Governor-review argument and the collector has no verifier for an external Governor decision. CONTINUE_CONTROLLER therefore cannot authorize the reviewed bytes without mutating the launch contract. In addition, the launch verifier does not recompute the contract's internal contract_sha256, bind and verify the baseline-identity file, authenticate a Governor review, or enforce the exact interpreter, argv, environment, and runtime cap at process entry."
+  },
+  "smallest_repair": [
+    {
+      "step": 1,
+      "requirement": "Preserve the current launch contract, nonce, output root, and receipt path as rejected unconsumed evidence. Do not flip evaluation_authorized in place."
+    },
+    {
+      "step": 2,
+      "requirement": "Add one explicit --governor-review input to the collector and verifier. Require a review with decision CONTINUE_CONTROLLER that binds the exact reviewed brief SHA256, launch-contract file SHA256 and internal contract SHA256, baseline identity SHA256, checkpoint-manifest file and internal identities, dataset hashes and denominators, source commit, executable hash, and a fresh nonce."
+    },
+    {
+      "step": 3,
+      "requirement": "Before model-library import, recompute and compare the launch contract and checkpoint manifest internal identities; verify the baseline-identity artifact; enforce exact interpreter, argv, environment, runtime cap, source parity, output isolation, and one-shot nonce consumption. Treat any mismatch as terminal launch failure and emit a failure receipt without model loading."
+    },
+    {
+      "step": 4,
+      "requirement": "Correct receipt semantics so loading the frozen adapter is recorded as adapter_loaded=true and lora_constructed=false. Add focused CPU-only tests for missing or non-CONTINUE Governor review, review-binding mismatch, contract or manifest tampering, command and environment substitution, nonce replay, forbidden inputs, output collision, runtime-cap behavior, and pre-import failure receipts."
+    },
+    {
+      "step": 5,
+      "requirement": "Freeze a V2 launch contract with a fresh nonce and fresh output paths on the final repaired source commit, obtain local=origin=RunPod parity and PASS_NO_MODEL_IMPORT, and submit a new launch-readiness brief for Governor review."
+    }
+  ],
+  "frozen_conditions": {
+    "historical_foundation_v2_equivalence_required": false,
+    "baseline_identity_sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+    "baseline_claim": "RECONSTRUCTED_FROM_FROZEN_RECIPE_NEW_IDENTITY",
+    "checkpoint_manifest_file_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "checkpoint_manifest_identity": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da",
+    "target_dev": {
+      "rows": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    },
+    "retention_sentinel": {
+      "rows": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "inference_contract_sha256": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e",
+    "decoding": "DETERMINISTIC_READ_ONLY",
+    "runtime_cap_seconds": 7200,
+    "expected_total_rows": 288,
+    "complete_profile_required_for_interpretation": true,
+    "final_audit_accessed": false,
+    "training_started": false
+  },
+  "forbidden_actions": [
+    "DO_NOT_LOAD_MODEL_OR_START_GPU_INFERENCE",
+    "DO_NOT_MUTATE_THE_REVIEWED_LAUNCH_CONTRACT",
+    "DO_NOT_CONSUM_OR_REUSE_THE_REVIEWED_NONCE",
+    "DO_NOT_WRITE_TO_THE_REVIEWED_OUTPUT_OR_RECEIPT_PATHS",
+    "DO_NOT_ACCESS_FINAL_AUDIT",
+    "DO_NOT_USE_DIAGNOSTIC_GOLD_FOR_TRAINING",
+    "DO_NOT_CONSTRUCT_AN_OPTIMIZER_OR_TRAIN_OR_MUTATE_WEIGHTS",
+    "DO_NOT_START_TARGETED_REPAIR_OR_ANY_AUTOMATIC_FOLLOW_ON_STAGE",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": true,
+  "review_trigger": "A new immutable V2 launch-readiness brief binding the repaired authorization path, final source commit, fresh nonce and outputs, focused CPU tests, and fresh local=origin=RunPod PASS_NO_MODEL_IMPORT evidence.",
+  "reviewed_artifacts": {
+    "launch_contract_file_sha256": "274ac39b67f642b70e7494592fdc68948fda2ea631a2f2843633f11d2f64b981",
+    "launch_contract_identity": "5ad470675f5013c5c945244f1df7251e254de8c92781fd470e196645c828cf19",
+    "remote_preflight_receipt_sha256": "2a3027cc46bbea5a76e4dcb7294fd30747140fac69b8d9c59a7e906bec9e024d",
+    "source_commit": "5c98a7c65f5960d09610f5e001e42c44dc656f0c",
+    "source_parity": "LOCAL_ORIGIN_RUNPOD_CLAIMED_EQUAL"
+  },
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "scientific_training_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false
+}

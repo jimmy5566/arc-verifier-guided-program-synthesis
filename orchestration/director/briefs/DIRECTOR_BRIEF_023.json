@@ -1,0 +1,65 @@
+{
+  "artifact_hashes": {
+    "POST_HOC_CHARACTERIZATION_EXECUTION_CONTRACT_V2.json": "9ec6e064b850e1d51f8cf19afbfd9e25f954673fbce57fe8a802dd5d9a2b5e31",
+    "ROUND_009_POST_HOC_MAPPING_STAGE_COMPLETION.json": "2685e7a3ea5345700e7d2990fa95d2ec6a645b4c3eaa109b567234360782d0b3",
+    "ROUND_009_POST_HOC_REFERENCE_MAPPING_RECEIPT.json": "747c77482c5c140895de623c63a2355eb7c0cc5cf9b983a5039d22ec5d003961",
+    "ROUND_009_POST_HOC_REFERENCE_MAPPING_VALIDATION.json": "8c1420137b7b339d903cdf904aef43063cf4c0c6d45382dd7556facc0fd2a3be"
+  },
+  "boundaries": {
+    "final_audit_opened": false,
+    "gold_in_training": false,
+    "scientific_training_started": false,
+    "targeted_repair_entry_requested": false
+  },
+  "brief_id": "DIRECTOR_BRIEF_023",
+  "directive_022_blockers": {
+    "AUTHORIZE_BOUNDED_NON_GOLD_REFERENCE_OPENING": "RESOLVED_REMOTE_NATIVE_CPU_ONLY",
+    "COMPLETE_EXECUTION_CONTRACT_WITHOUT_RUNNING_IT": "RESOLVED_EXECUTION_DISABLED",
+    "FREEZE_EXACT_BIJECTIVE_REFERENCE_MAPPINGS": "RESOLVED_128_64_64",
+    "KEEP_PROTECTED_RESULT_ABSOLUTE_ONLY": "RESOLVED_BOUNDARY_RETAINED",
+    "PRESERVE_EQUIVALENCE_STAGE_CLOSURE": "RESOLVED_PRESERVED",
+    "PROVENANCE_AND_RESUBMISSION": "RESOLVED_CODE_PACKAGE_PUSHED_RUNPOD_SYNCED",
+    "RUN_CPU_ONLY_TESTS_AND_PREFLIGHT": "RESOLVED_CPU_POLICY_AND_MAPPING_VALIDATION",
+    "VERIFY_REFERENCE_STAGE_COMPATIBILITY": "RESOLVED_TOKEN_LABEL_AND_PROMPT_TARGET_PROOFS"
+  },
+  "execution_request": {
+    "final_audit": false,
+    "generation": true,
+    "gpu_inference": true,
+    "model_loading": true,
+    "protected_results": "absolute_only_no_historical_retention_claim",
+    "requested_stage": "PROSPECTIVE_POST_HOC_CHARACTERIZATION_EVALUATION_ONLY",
+    "sealed_scoring": true,
+    "targeted_repair": false,
+    "training": false
+  },
+  "parent_directive_id": "DIRECTOR_DIRECTIVE_022",
+  "parent_directive_sha256": "22741dfd18c5e64572549230cf7e16bfb570e94bf626f3d993f251e0e9529e81",
+  "prepared_at": "2026-10-08T11:17:55.727199Z",
+  "protocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "provenance": {
+    "local_head": "8bdf1f92ad4cf8550dc6f2b1d0ba8497842c2c31",
+    "origin_ref": "8bdf1f92ad4cf8550dc6f2b1d0ba8497842c2c31",
+    "runpod_checkout": "8bdf1f92ad4cf8550dc6f2b1d0ba8497842c2c31"
+  },
+  "reconstructed_checkpoint_identity": {
+    "adapter_config_sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000"
+  },
+  "reference_mapping": {
+    "counts": {
+      "NOVEL": 128,
+      "PROTECTED": 64,
+      "REPLAY": 64
+    },
+    "receipt_sha256": "747c77482c5c140895de623c63a2355eb7c0cc5cf9b983a5039d22ec5d003961",
+    "remote_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/post_hoc_characterization_v1/sealed_scorer/ROUND_009_POST_HOC_SEALED_REFERENCE_MAPPING.json",
+    "sha256": "de1019910ce214b2be58f909c4f0f0bae2a5eb987f1803bcb38e0d0d5400a160"
+  },
+  "requested_decision": "Authorize or remediate the complete prospective post-hoc characterization evaluation stage. No reconstruction retry, new training, targeted repair, or FINAL_AUDIT access is requested.",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "schema_version": 1,
+  "stage_id": "ROUND_009_POST_HOC_CHARACTERIZATION_EVALUATION_STAGE_V1",
+  "stage_preparation_commit": "8bdf1f92ad4cf8550dc6f2b1d0ba8497842c2c31"
+}

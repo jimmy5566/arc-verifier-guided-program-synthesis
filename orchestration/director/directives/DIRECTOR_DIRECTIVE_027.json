@@ -1,0 +1,76 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_027",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "ROUND_009_POST_HOC_CHARACTERIZATION_EVALUATION_STAGE_V1",
+  "protocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "delivery_mode": "DIRECT_TO_CONTROLLER_SAME_CYCLE",
+  "supervisor_handoff_requested": false,
+  "parent_directive_id": "DIRECTOR_DIRECTIVE_026",
+  "parent_directive_sha256": "60809f5c059135ee46ba6d9b984f45ab631ac9938e7e79ddc65cf95a8b3deb91",
+  "escalation_disposition": "TIMEOUT_ONLY_CPU_REMEDIATION_MUST_RESUME",
+  "reasons": [
+    {
+      "area": "escalation_identity",
+      "status": "PASS",
+      "finding": "CONTROLLER_ESCALATION_REQUEST_010.json has verified SHA256 2a7ff01ded38a0a043d8f22da182462d0a3dd712310e5d942a7c0a1ab53b237b and correctly binds DIRECTOR_DIRECTIVE_026 SHA256 60809f5c059135ee46ba6d9b984f45ab631ac9938e7e79ddc65cf95a8b3deb91."
+    },
+    {
+      "area": "reported_blocker",
+      "status": "NO_TECHNICAL_HARD_BLOCKER_ESTABLISHED",
+      "finding": "The escalation reports ACTIVE_CYCLE_PROGRESS_TIMEOUT with attempts_already_made=0, last_completed_step=null, and no brief, commit, validation, or remediation evidence. This establishes an orchestration timeout, not an impossibility or a scientific boundary conflict."
+    },
+    {
+      "area": "controlling_review",
+      "status": "DIRECTIVE_026_REMAINS_CONTROLLING",
+      "finding": "Directive 026 remains applicable and fail-closed. Its reviewed mapping and CPU-only preparation evidence may be preserved, but the Phase-A worker, Phase-B scorer, stage launcher, runtime-lock enforcement, reference isolation, nonce and cap enforcement, and executable-path tests remain incomplete."
+    },
+    {
+      "area": "first_unfinished_requirement",
+      "status": "IDENTIFIED",
+      "finding": "The Controller must first preserve and inventory the valid Directive-026 evidence and mark the reviewed Phase-A and Phase-B V2 bindings and their nonces as rejected and non-executable. It must then implement the real Phase-A worker without running it."
+    },
+    {
+      "area": "scientific_execution",
+      "status": "NOT_AUTHORIZED",
+      "finding": "The escalation records scientific_training_started=false. Neither the escalation nor this directive authorizes model loading, generation, scoring against scientific references, GPU inference, scientific training, targeted repair, reconstruction retry, or FINAL_AUDIT."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "ACKNOWLEDGE_AND_RESUME_DIRECTIVE_026",
+      "requirement": "Record CONTROLLER_ESCALATION_REQUEST_010 as a timeout-only escalation resolved by this directive. Resume the additive CPU-only remediation in DIRECTOR_DIRECTIVE_026; do not treat the timeout as completion, waiver, or permission to skip any requirement."
+    },
+    {
+      "change_id": "COMPLETE_FIRST_UNFINISHED_REQUIREMENT",
+      "requirement": "Create a small machine-readable remediation inventory that hashes DIRECTOR_BRIEF_025 and the four reviewed artifacts, records the seven-test result and zero-execution state, and explicitly marks both reviewed V2 bindings, output roots, and nonces REJECTED_NOT_EXECUTABLE and forbidden from reuse. This is preservation metadata only and must not alter the reviewed artifacts."
+    },
+    {
+      "change_id": "IMPLEMENT_PHASE_A_BEFORE_LATER_WORK",
+      "requirement": "Next implement and CPU-test the real Phase-A target-blind generation worker and its dummy-fixture path exactly as required by Directive 026. Do not load the scientific model or generate scientific predictions. Do not begin Phase-B implementation until the Phase-A CLI, output schema, terminal receipt, reference-denial boundary, and failure behavior pass focused no-model tests."
+    },
+    {
+      "change_id": "CONTINUE_ORDERED_CPU_ONLY_REMEDIATION",
+      "requirement": "After Phase A passes, complete the remaining Directive-026 work in order: real CPU-only Phase-B scorer, executable fail-closed launcher, atomic nonce and cap enforcement, expanded no-model tests, then final package and provenance freezing. Each step must fail closed and preserve exact hashes and terminal receipts."
+    },
+    {
+      "change_id": "ESCALATE_ONLY_WITH_CONCRETE_EVIDENCE",
+      "requirement": "If remediation encounters a genuine blocker, submit a new escalation containing the exact attempted command or action, deterministic error, affected path or artifact hashes, tests run, last completed requirement, and the narrow Director decision needed. A progress timeout with zero attempts is not sufficient to revise the scientific protocol or execution boundary."
+    },
+    {
+      "change_id": "RESUBMIT_DIRECTLY_WITHOUT_EXECUTION",
+      "requirement": "When all Directive-026 remediation is complete, submit a new hashed brief directly to the Director in the same-cycle workflow. Do not request Supervisor handoff and do not start any scientific execution before a later explicit Director authorization."
+    }
+  ],
+  "reviewed_escalation_sha256": "2a7ff01ded38a0a043d8f22da182462d0a3dd712310e5d942a7c0a1ab53b237b",
+  "cpu_only_remediation_authorized": true,
+  "evaluation_stage_authorized": false,
+  "model_loading_authorized": false,
+  "generation_authorized": false,
+  "scoring_authorized": false,
+  "gpu_inference_authorized": false,
+  "scientific_training_authorized": false,
+  "targeted_repair_authorized": false,
+  "reconstruction_retry_authorized": false,
+  "final_audit_authorized": false
+}

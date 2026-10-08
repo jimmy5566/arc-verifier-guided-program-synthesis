@@ -1,0 +1,44 @@
+{
+  "baseline_identity_sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+  "baseline_model_id": "CAPABILITY_REPAIR_BASELINE_V1",
+  "checkpoint_manifest": {
+    "local_path": "experiments\\capability_repair_baseline_v1\\CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "remote_path": "/workspace/arc2/forward_baseline_v1_preflight/CHECKPOINT_MANIFEST.json",
+    "sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  },
+  "datasets": {
+    "RETENTION_SENTINEL": {
+      "rows": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV": {
+      "rows": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    }
+  },
+  "directive_id": "DIRECTOR_DIRECTIVE_028",
+  "directive_sha256": "92ed877f38e8c50831be5fc1dec9f72ad4782bd91dbd8cad6fa24c387180489e",
+  "final_audit_accessed": false,
+  "launch_contract": {
+    "contract_sha256": "5ad470675f5013c5c945244f1df7251e254de8c92781fd470e196645c828cf19",
+    "file_sha256": "274ac39b67f642b70e7494592fdc68948fda2ea631a2f2843633f11d2f64b981",
+    "local_path": "experiments\\capability_repair_baseline_v1\\LAUNCH_CONTRACT.json",
+    "remote_path": "/workspace/arc2/forward_baseline_v1_launch/LAUNCH_CONTRACT.json"
+  },
+  "remote_preflight": {
+    "local_path": "experiments\\capability_repair_baseline_v1\\VERIFY_RECEIPT.json",
+    "sha256": "2a3027cc46bbea5a76e4dcb7294fd30747140fac69b8d9c59a7e906bec9e024d",
+    "status": "PASS_NO_MODEL_IMPORT"
+  },
+  "request_decision": "CONTINUE_CONTROLLER only if exact package is authorized for model inference",
+  "request_id": "FORWARD_BASELINE_LAUNCH_V1",
+  "requested_execution": "one deterministic read-only 192 TARGET_DEV plus 96 RETENTION_SENTINEL forward-baseline evaluation; no training, optimizer, weight mutation, follow-on repair, or FINAL_AUDIT",
+  "review_type": "FORWARD_BASELINE_LAUNCH_READINESS",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "source_parity": {
+    "local": "5c98a7c65f5960d09610f5e001e42c44dc656f0c",
+    "origin": "5c98a7c65f5960d09610f5e001e42c44dc656f0c",
+    "runpod": "5c98a7c65f5960d09610f5e001e42c44dc656f0c"
+  }
+}

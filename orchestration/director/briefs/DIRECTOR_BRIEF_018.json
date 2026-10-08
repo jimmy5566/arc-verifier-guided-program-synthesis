@@ -1,0 +1,30 @@
+{
+  "brief_id": "DIRECTOR_BRIEF_018",
+  "commit": "748838f6be68c8fd529f746327b5e5da64cf3ca8",
+  "contract_path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/RECONSTRUCTED_FOUNDATION_V2_V2_001_CONTRACT.json",
+  "contract_sha256": "ce4e86956557ed218d4903adf78e3cb2da8135a4756a1ac97255f4f370bdaca0",
+  "directive_id": "DIRECTOR_DIRECTIVE_017",
+  "gate_sha256": "9b0661db946d61ec44b53e98399c9a4875ce7e5badf895694199b6d4effdfe3d",
+  "launch_binding_sha256": "8d1bb616acd4ade21c00f4eb730e551b5adce06053ad88a95371b8615eb26290",
+  "launch_nonce": "bc1f9e94-e336-447e-ab22-87decc706496",
+  "optimizer_constructed": false,
+  "preauthorization_preflight_sha256": "5c3593ff2299dc409d4e7cbdb4df362d71e862d45dd0a770b012051f645bc9ed",
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "request": "Issue a qualifying CONTINUE or CONTINUE_WITH_WARNING directive only if authorizing this exact V2 contract, nonce, and source commit after final preflight.",
+  "request_type": "NEW_SUBPROTOCOL_AUTHORIZATION",
+  "required_directive_fields": [
+    "decision CONTINUE or CONTINUE_WITH_WARNING",
+    "scientific_training_authorized true",
+    "protocol_id FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+    "scope or allowed_round_ids includes RECONSTRUCTED_FOUNDATION_V2_V2_001",
+    "contract_sha256 exact",
+    "launch_nonce exact",
+    "exact_source_commit after final source synchronization"
+  ],
+  "round001_preserved_terminal": true,
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_001",
+  "schema_version": 1,
+  "scientific_gpu_seconds": 0.0,
+  "scientific_training_started": false,
+  "v1_protocol_reused": false
+}

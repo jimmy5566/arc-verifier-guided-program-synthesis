@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_FORWARD_BASELINE_LAUNCH_V2",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "FORWARD_BASELINE_CHARACTERIZATION_V1",
+  "request_id": "FORWARD_BASELINE_LAUNCH_V2",
+  "baseline_model_id": "CAPABILITY_REPAIR_BASELINE_V1",
+  "reviewed_brief_sha256": "c574642b547b9f300e3c35c3d17c7c2dc99871d14dba177e62955f11047faa7d",
+  "root_cause": {
+    "code": "V2_LAUNCH_PACKAGE_NOT_REVIEWABLE_OR_EXACTLY_ENFORCED",
+    "finding": "The brief names an expected remote V2 contract path but provides no V2 contract file or file SHA256, internal contract identity, fresh nonce identity, fresh output and receipt bindings, Governor-review schema/path, or V2 PASS_NO_MODEL_IMPORT receipt. The contract builder's frozen argv omits --governor-review, while the collector requires that argument for execution. The collector verifies the interpreter but does not enforce the complete argv, environment, or contract runtime cap at process entry, and its terminal receipt still records lora_constructed=true after loading an existing frozen adapter. No focused V2 authorization-path tests are present."
+  },
+  "smallest_repair": [
+    {
+      "step": 1,
+      "requirement": "Freeze one complete V2 contract locally and remotely. Include its file SHA256 and internal contract identity, exact source commit, baseline and checkpoint identities, dataset hashes and denominators, executable and dependency hashes, inference contract, fresh nonce hash, fresh absent output and receipt paths, 7200-second cap, and a fixed external Governor-review path."
+    },
+    {
+      "step": 2,
+      "requirement": "Make the frozen argv include --governor-review at that fixed path. Before nonce consumption or model import, enforce equality of the running interpreter, complete argv, required environment, source commit, executable and dependency bytes, contract internal identity, baseline identity, checkpoint manifest file and internal identities, mounted checkpoint contents, both dataset identities, runtime cap, and fresh output state."
+    },
+    {
+      "step": 3,
+      "requirement": "Define and test the external review schema so only CONTINUE_CONTROLLER can authorize execution and the review must bind the exact V2 brief SHA256, contract file SHA256 and internal identity, baseline identity, checkpoint identities, dataset identities, source commit, executable SHA256, nonce SHA256, output paths, and runtime cap. Reject missing, stale, REQUIRE_CHANGES, PAUSED, TERMINAL, or mismatched reviews."
+    },
+    {
+      "step": 4,
+      "requirement": "Correct receipt semantics to adapter_loaded=true and lora_constructed=false. Emit a complete failure receipt for every admitted launch failure, including failures before model import and after nonce consumption; preserve partial or capped results as PARTIAL and never interpret them as a complete 288-row profile."
+    },
+    {
+      "step": 5,
+      "requirement": "Add focused CPU-only tests covering exact review binding, omitted or substituted review, argv/environment/runtime substitution, contract and manifest tampering, source mismatch, checkpoint and dataset mismatch, nonce replay, output collision, forbidden-input denial, receipt semantics, and failure-receipt completeness. Then produce a fresh remote PASS_NO_MODEL_IMPORT receipt and a new brief that hashes every V2 artifact."
+    }
+  ],
+  "frozen_conditions": {
+    "historical_foundation_v2_equivalence_required": false,
+    "baseline_identity_sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+    "baseline_claim": "RECONSTRUCTED_FROM_FROZEN_RECIPE_NEW_IDENTITY",
+    "checkpoint_manifest_file_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "checkpoint_manifest_identity": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da",
+    "target_dev": {
+      "rows": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    },
+    "retention_sentinel": {
+      "rows": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "inference_contract_sha256": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e",
+    "requested_execution": "ONE_DETERMINISTIC_READ_ONLY_192_PLUS_96_BASELINE_EVALUATION",
+    "runtime_cap_seconds": 7200,
+    "complete_profile_required_for_interpretation": true,
+    "final_audit_accessed": false,
+    "training_started": false,
+    "rejected_v1_contract_must_not_be_reused": true
+  },
+  "forbidden_actions": [
+    "DO_NOT_LOAD_MODEL_OR_START_GPU_INFERENCE",
+    "DO_NOT_CREATE_OR_CONSUME_AN_AUTHORIZING_REVIEW_FROM_THIS_REQUIRE_CHANGES_ARTIFACT",
+    "DO_NOT_REUSE_THE_REJECTED_V1_CONTRACT_NONCE_OR_OUTPUT_PATHS",
+    "DO_NOT_CONSUME_ANY_V2_NONCE_BEFORE_A_CONTINUE_CONTROLLER_REVIEW",
+    "DO_NOT_ACCESS_FINAL_AUDIT",
+    "DO_NOT_USE_DIAGNOSTIC_GOLD_FOR_TRAINING",
+    "DO_NOT_CONSTRUCT_AN_OPTIMIZER_OR_TRAIN_OR_MUTATE_WEIGHTS",
+    "DO_NOT_START_TARGETED_REPAIR_OR_ANY_AUTOMATIC_FOLLOW_ON_STAGE",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": true,
+  "review_trigger": "A new launch-readiness brief containing hashes for the exact local and remote V2 contract, authorization schema, final source commit, fresh nonce and outputs, focused CPU test evidence, and fresh local=origin=RunPod PASS_NO_MODEL_IMPORT evidence.",
+  "reviewed_source_commit": "42d534dc3d9132f8805d51330bd8a8b8d39f94d3",
+  "source_parity_observed": {
+    "local": "42d534dc3d9132f8805d51330bd8a8b8d39f94d3",
+    "upstream": "42d534dc3d9132f8805d51330bd8a8b8d39f94d3",
+    "origin": "42d534dc3d9132f8805d51330bd8a8b8d39f94d3",
+    "runpod": "NOT_EVIDENCED_BY_REVIEWED_BRIEF"
+  },
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "scientific_training_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false
+}

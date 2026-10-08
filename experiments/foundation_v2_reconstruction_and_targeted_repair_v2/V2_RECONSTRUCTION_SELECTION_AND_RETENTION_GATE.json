@@ -1,0 +1,28 @@
+{
+  "acceptance": {
+    "novel_generation_exact_min": 0.8,
+    "novel_macro_loss_max": 0.09,
+    "protected_capability_major_regressions_max": 0,
+    "replay_generation_exact_min": 0.78,
+    "replay_macro_loss_max": 0.075
+  },
+  "checkpoints_tokens": [
+    500000,
+    1000000,
+    1500000,
+    2000000
+  ],
+  "final_audit_forbidden": true,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "schema_version": 1,
+  "scope": "RECONSTRUCTED_FOUNDATION_V2_V2_002",
+  "selection_rule": "Choose the highest-token checkpoint passing all thresholds; tie-break by lower Novel macro loss, then lower replay macro loss, then earlier checkpoint.",
+  "selection_surface": "Novel validation + replay retention only; no Eval60 Gold or FINAL_AUDIT",
+  "status": "FROZEN_PRETRAIN_SELECTION_AND_RETENTION_GATE",
+  "targeted_repair_forbidden_until_later_review": true,
+  "terminal_classifications": {
+    "EQUIVALENCE_OR_REPLACEMENT_CONFIRMED": "all thresholds pass",
+    "EQUIVALENCE_OR_REPLACEMENT_FAILED": "novel gain, replay, or protected capability requirements fail",
+    "EQUIVALENCE_OR_REPLACEMENT_PARTIAL": "broad gain but one noncritical threshold fails"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "attempts_already_made": 0,
+  "blocker": [
+    "ACTIVE_CYCLE_PROGRESS_TIMEOUT"
+  ],
+  "controller_state": "PROCESSING",
+  "directive_id": "DIRECTOR_DIRECTIVE_023",
+  "directive_sha256": "1e6c5bae096bf2d1e503492572a40496f4b64791bbdde23fc70a38b3f21bdcb6",
+  "evidence": {
+    "brief": null,
+    "commit": null,
+    "evidence": null,
+    "last_progress_at": "2026-10-08T11:20:14.261920Z",
+    "validation": null
+  },
+  "last_completed_step": "REMOTE_TARGET_FREE_MAPPING_PROOF_FROZEN",
+  "next_step": "COMPLETE_PHASE_A_PHASE_B_FAIL_CLOSED_LAUNCH_BINDINGS",
+  "requested_decision": "STRUCTURED_DIRECTOR_DIRECTIVE_REQUIRED",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "ESCALATION_REQUESTED"
+}

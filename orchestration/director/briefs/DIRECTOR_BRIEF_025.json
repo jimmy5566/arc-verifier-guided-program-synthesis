@@ -1,0 +1,40 @@
+{
+  "artifact_sha256": {
+    "DIRECTOR_DIRECTIVE_024_CPU_ONLY_VALIDATION.json": "04406a0216cc3a09d6cae573267e0d0a5e4b9138117b3d09e4c655ba551f9b60",
+    "ROUND_009_POST_HOC_PHASE_A_BINDING_V2.json": "91ae701360f5b8e3faae4eaf508ec2d4fac476b80f382ef5ae65422e656fba62",
+    "ROUND_009_POST_HOC_PHASE_B_BINDING_V2.json": "694fb8e80d1ec4c9edab2a32e9a6cd484f45dc44b98c73588ec51b386eb6736b",
+    "ROUND_009_POST_HOC_TARGET_FREE_MAPPING_PROOF.json": "e4c0a4e4a60a45bb5cd02be4229fff1d3e084bed4cb3dcc6b83a7fc390c37133"
+  },
+  "brief_id": "DIRECTOR_BRIEF_025",
+  "final_audit_opened": false,
+  "generation_started": false,
+  "gpu_inference_seconds": 0,
+  "implementation_commits": [
+    "1486de45d57b17ce802f95650d699360bb4387ef",
+    "e434e2bb820903e71689ae4a9186e023b4947b19",
+    "ea2452dc7bac178aae4b4c455da5df80331afae0"
+  ],
+  "local_origin_runpod_commit": "ea2452dc7bac178aae4b4c455da5df80331afae0",
+  "model_loading_started": false,
+  "parent_directive_id": "DIRECTOR_DIRECTIVE_024",
+  "parent_directive_sha256": "0d0699233a59ab8a6a6ee9d718cf8b3d6bf5e29d9195685c1db1ad7f9f897c5a",
+  "protocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "requested_decision": "REVIEW_CORRECTED_CPU_ONLY_EXECUTION_PACKAGE_NO_EXECUTION_REQUESTED",
+  "required_resolution_status": {
+    "directive_and_checkout_binding": "RESOLVED",
+    "execution": "NOT_STARTED",
+    "expanded_cpu_tests": "RESOLVED",
+    "fail_closed_launcher": "RESOLVED",
+    "phase_a_parseable_entrypoint": "RESOLVED",
+    "phase_b_parseable_entrypoint": "RESOLVED",
+    "phase_isolation_and_order": "RESOLVED_CPU_TESTED",
+    "reviewable_target_free_mapping_proof": "RESOLVED"
+  },
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "runtime_lock_contract": "post-commit external lock binds binding SHA, nonce, entrypoint hashes, and exact live checkout before any nonce consumption; avoids a self-referential commit hash in a committed binding",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "scope": "ROUND_009_POST_HOC_CHARACTERIZATION_EVALUATION_STAGE_V1",
+  "scoring_started": false,
+  "tests_passed": 7
+}

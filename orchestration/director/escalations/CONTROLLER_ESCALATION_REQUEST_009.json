@@ -1,0 +1,22 @@
+{
+  "attempts_already_made": 0,
+  "blocker": [
+    "ACTIVE_CYCLE_PROGRESS_TIMEOUT"
+  ],
+  "controller_state": "PROCESSING",
+  "directive_id": "DIRECTOR_DIRECTIVE_024",
+  "directive_sha256": "0d0699233a59ab8a6a6ee9d718cf8b3d6bf5e29d9195685c1db1ad7f9f897c5a",
+  "evidence": {
+    "brief": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\orchestration\\director\\briefs\\DIRECTOR_BRIEF_025.json",
+    "commit": "ea2452dc7bac178aae4b4c455da5df80331afae0",
+    "evidence": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\foundation_v2_reconstruction_and_targeted_repair_v2\\round_009_post_hoc_capability_characterization\\DIRECTOR_DIRECTIVE_024_CPU_ONLY_VALIDATION.json",
+    "last_progress_at": "2026-10-08T11:42:28.286228Z",
+    "validation": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\foundation_v2_reconstruction_and_targeted_repair_v2\\round_009_post_hoc_capability_characterization\\DIRECTOR_DIRECTIVE_024_CPU_ONLY_VALIDATION.json"
+  },
+  "last_completed_step": "RESUBMITTED",
+  "next_step": "PROCESS_DIRECTOR_DIRECTIVE",
+  "requested_decision": "STRUCTURED_DIRECTOR_DIRECTIVE_REQUIRED",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "ESCALATION_REQUESTED"
+}

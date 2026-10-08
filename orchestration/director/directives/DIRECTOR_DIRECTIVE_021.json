@@ -1,0 +1,105 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_021",
+  "decision": "NEW_SUBPROTOCOL_REQUIRED",
+  "stage_decision": "REJECT_CURRENT_STAGE_EXECUTION_AND_DEFINE_POST_HOC_CHARACTERIZATION",
+  "scope": "RECONSTRUCTION_EQUIVALENCE_EVALUATION_STAGE_V1",
+  "parent_protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "reasons": [
+    {
+      "area": "brief_and_package_identity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_021 has verified SHA256 ea59853f77bccdb463a0d4c292220263e8d74fbb075f6c1484d27c5d0b57d8e9. The stage package and evidence registry match SHA256 e8a637fa7bb3319ec785e2d919b271b33197f3321e6a1a4a68cd77e15bfba1e2 and 5bf575a415848e1f1f21332a79fc71a1b33fd861acd4976fbafe329947fc96cc, and all six registry-listed new-artifact hashes were reproduced."
+    },
+    {
+      "area": "execution_state",
+      "status": "PASS_NO_STAGE_EXECUTION",
+      "finding": "The package and CPU preflight consistently record no model loading, generation, scoring, GPU inference, or FINAL_AUDIT access for this stage. The prior completed reconstruction round remains separate from this unexecuted evaluation stage."
+    },
+    {
+      "area": "stage_provenance",
+      "status": "PASS_LOCAL_ORIGIN_PACKAGE_ONLY",
+      "finding": "Stage package commit 5d4db736e70662fa5bd791b5f85568cb0bb7256e and provenance commit dce13d29f09925aa1f9412d0195c6ef30ca0617d are ancestors of the reviewed branch. At review, local HEAD, upstream, and fresh git ls-remote origin are equal at e5c55db26e062025c5a885468916383c0d2e29ea. RunPod parity and an executable-stage preflight are not established, so this does not authorize execution."
+    },
+    {
+      "area": "sealed_reference_and_protected_baseline",
+      "status": "FAIL_HARD_STOP",
+      "finding": "Canonical Novel, replay, and protected-capability reference mappings are MISSING; canonical baseline outputs are MISSING; and the protected-capability major-regression definition is MISSING. The provenance audit opened zero candidate reference payloads. These identities cannot be invented after reconstruction and then represented as evidence for the frozen equivalence gate."
+    },
+    {
+      "area": "manifest_cardinality_binding",
+      "status": "FAIL_CONTRACT_MISMATCH",
+      "finding": "The frozen manifests contain 128 Novel items, 64 replay items, and 64 protected-capability items, but the protocol, Phase-A contract, and provenance audit record item_count=0 for all three. Metric semantics separately declare Novel denominator 128 and replay denominator 64. The execution contract therefore does not bind the actual evaluation population consistently."
+    },
+    {
+      "area": "phase_a_executable_identity",
+      "status": "FAIL_INCOMPLETE",
+      "finding": "Phase A defers deterministic decode parameters and seed to a later directive, inherits base/tokenizer identity by an unresolved string, and contains no exact generator source, argv, environment, parser, runtime identity, or complete receipt schema. It is a placeholder contract rather than an executable frozen generation contract."
+    },
+    {
+      "area": "phase_b_executable_identity",
+      "status": "FAIL_INCOMPLETE",
+      "finding": "Phase B correctly fails closed but binds no reference manifest, protected baseline manifest, major-regression algorithm, scorer source SHA256, exact argv/environment, item mapping, or complete one-shot receipt. Scoring cannot be authorized."
+    },
+    {
+      "area": "equivalence_claim",
+      "status": "NOT_ESTABLISHED",
+      "finding": "Round 009 remains EQUIVALENCE_OR_REPLACEMENT_PARTIAL. Its valid SUCCESS receipt and teacher-forced 2M checkpoint selection establish reconstruction completion and teacher-forced thresholds only; they do not establish generation equivalence, protected-capability retention, or eligibility for targeted repair."
+    },
+    {
+      "area": "smallest_scientifically_valid_replacement",
+      "status": "NEW_DISTINCT_CONDITION_REQUIRED",
+      "finding": "Because the preregistered equivalence endpoints lack recoverable exact reference and comparator provenance, any future evaluation must be labeled prospective post-hoc capability characterization of the fixed 2M checkpoint. It may not be used to retroactively satisfy the original equivalence gate or claim continuity with the unavailable Foundation-V2 adapter."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "CLOSE_CURRENT_EQUIVALENCE_STAGE_UNEXECUTED",
+      "requirement": "Preserve RECONSTRUCTION_EQUIVALENCE_EVALUATION_STAGE_V1 and all of its artifacts byte-for-byte as a fail-closed, unexecuted stage with EXACT_SEALED_REFERENCE_AND_PROTECTED_BASELINE_PROVENANCE_MISSING. Do not consume its nonces, populate its output roots, or relabel it PASS."
+    },
+    {
+      "change_id": "PRESERVE_ROUND009_AND_LIMIT_CLAIMS",
+      "requirement": "Preserve the Round-009 SUCCESS receipt, accounting, four checkpoint identities, selected 2M checkpoint, and teacher-forced metrics. The only supported conclusion is successful reconstruction worker completion with teacher-forced selection and incomplete equivalence evidence. Do not retrain, mutate, merge, overwrite, or call the checkpoint equivalent or a recovered Foundation-V2."
+    },
+    {
+      "change_id": "DEFINE_DISTINCT_POST_HOC_CHARACTERIZATION_SUBPROTOCOL",
+      "requirement": "If evaluation remains desired, create a separately named condition such as ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1. State explicitly that it is prospective characterization of a fixed reconstructed checkpoint, not completion of RECONSTRUCTION_EQUIVALENCE_EVALUATION_STAGE_V1, not evidence for the original frozen equivalence gate, and not automatic entry to targeted repair."
+    },
+    {
+      "change_id": "FREEZE_VALID_EVALUATION_POPULATIONS",
+      "requirement": "Before any model load, freeze exact non-Gold evaluation sources, canonical item mappings, target/reference payload hashes, prompt-only manifests, and true cardinalities. Correctly bind Novel=128, replay=64, and protected=64 only if those exact populations remain scientifically valid; otherwise use a new population identity and explain every exclusion. Never expose reference payloads to the generation process."
+    },
+    {
+      "change_id": "DEFINE_PROSPECTIVE_COMPARATOR_OR_DROP_REGRESSION_CLAIM",
+      "requirement": "Either bind an exact pre-existing, stage-compatible protected-capability comparator and preregister a major-regression definition before generation, or omit the protected-regression acceptance claim from the new condition. A comparator selected now may support prospective paired characterization only and must not be presented as the missing historical baseline."
+    },
+    {
+      "change_id": "FREEZE_COMPLETE_TWO_PHASE_EXECUTION",
+      "requirement": "Freeze exact base/tokenizer/checkpoint identities, generator and scorer source hashes, deterministic decoding and seeds, serializers and parsers, exact argv/environment/runtime, fresh output roots and nonces, immutable Phase-A prediction sealing, Phase-B reference isolation, metric aggregation, separate inference accounting, failure semantics, and complete terminal receipts. Add CPU-only regression tests for item counts, mapping bijection, reference isolation, duplicate/missing/invalid predictions, nonce reuse, and receipt completeness."
+    },
+    {
+      "change_id": "PRESERVE_NO_GOLD_AND_STAGE_SEPARATION",
+      "requirement": "Eval60 Gold, diagnostic Gold, exposed Novel holdout targets, FINAL_AUDIT, and targeted-repair data remain forbidden. The new characterization must not alter the selected checkpoint or feed scores back into decoding, checkpoint choice, thresholds, data selection, or curriculum."
+    },
+    {
+      "change_id": "PROVENANCE_AND_NEW_REVIEW",
+      "requirement": "Commit and push the additive new-subprotocol package on the existing non-main branch without force-push or history rewrite. Verify fresh local HEAD equals git ls-remote origin SHA equals RunPod checked-out/source SHA, run a complete no-model preflight, and submit a new hashed Director brief. No model loading, generation, scoring, GPU inference, targeted repair, or FINAL_AUDIT is authorized until a later directive explicitly binds the new exact stage identities."
+    }
+  ],
+  "reviewed_brief_sha256": "ea59853f77bccdb463a0d4c292220263e8d74fbb075f6c1484d27c5d0b57d8e9",
+  "reviewed_stage_package_sha256": "e8a637fa7bb3319ec785e2d919b271b33197f3321e6a1a4a68cd77e15bfba1e2",
+  "reviewed_evidence_registry_sha256": "5bf575a415848e1f1f21332a79fc71a1b33fd861acd4976fbafe329947fc96cc",
+  "reviewed_stage_package_approved": false,
+  "equivalence_confirmed": false,
+  "current_stage_execution_authorized": false,
+  "replacement_subprotocol_preparation_authorized": true,
+  "model_loading_authorized": false,
+  "generation_authorized": false,
+  "scoring_authorized": false,
+  "gpu_inference_authorized": false,
+  "reconstruction_retraining_authorized": false,
+  "optimizer_construction_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false,
+  "scientific_training_authorized": false
+}
