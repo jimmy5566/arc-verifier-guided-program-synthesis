@@ -64,9 +64,11 @@ def main()->int:
   out['minimum_safe_gate_conditions']['C']='PASS';out['minimum_safe_gate_conditions']['G']='PASS';out['runtime']=observed
   fresh=b['fresh_paths']; run=Path(fresh['run_root'])
   if run.exists():
-   allowed=Path(fresh['preflight']).resolve()
-   contents=[x.resolve() for x in run.rglob('*') if x.is_file()]
-   if contents and contents!=[allowed]:raise RuntimeError(f'OUTPUT_COLLISION:{run}')
+   # The detached preflight log is control-plane evidence, not a worker output.
+   # Nothing else may preexist with the final preflight artifact.
+   allowed={Path(fresh['preflight']).resolve(), Path(fresh['preflight']).resolve().parent / 'preflight.log'}
+   contents={x.resolve() for x in run.rglob('*') if x.is_file()}
+   if not contents.issubset(allowed):raise RuntimeError(f'OUTPUT_COLLISION:{run}')
   if any(Path(fresh[k]).exists() for k in ('freeze','runtime','checkpoints','reservation','nonce_consumption','terminal_receipt')):raise RuntimeError('FRESH_OUTPUT_PATH_COLLISION')
   if b['scientific_boundaries'].get('final_audit_accessed') is not False:raise RuntimeError('FINAL_AUDIT_ALREADY_OPEN')
   out['minimum_safe_gate_conditions']['E']='PASS';out['output_isolation']=fresh
