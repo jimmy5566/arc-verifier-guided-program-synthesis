@@ -1,0 +1,35 @@
+{
+  "artifact_sha256": {
+    "DIRECTOR_DIRECTIVE_024_CONTROLLER_RESOLUTION_PLAN.json": "3e53097f7a6feb3fb52235946bd4f498ae7ba0defde59a29b6abc18698ad18ce",
+    "ROUND_009_POST_HOC_PHASE_A_BINDING_V2.json": "6608c3617ef038347709c8bf929f780d9a5b2d06c84833032ff434c0da89105e",
+    "ROUND_009_POST_HOC_PHASE_B_BINDING_V2.json": "78416d0af4108a78deefca3f21d926d80e1857709c3ee3bab61b4bc4243b8f0e",
+    "ROUND_009_POST_HOC_TARGET_FREE_MAPPING_PROOF.json": "e4c0a4e4a60a45bb5cd02be4229fff1d3e084bed4cb3dcc6b83a7fc390c37133"
+  },
+  "checks": {
+    "checkout_substitution_rejected": true,
+    "final_audit_opened": false,
+    "no_model_or_gpu_execution": true,
+    "output_root_reuse_rejected": true,
+    "phase_a_command_parseable": true,
+    "phase_b_command_parseable": true,
+    "phase_b_requires_phase_a_receipt": true,
+    "reference_access_denied_from_phase_a": true,
+    "runtime_launch_lock_required": true,
+    "target_free_mapping_proof_reviewable": true
+  },
+  "directive_id": "DIRECTOR_DIRECTIVE_024",
+  "directive_sha256": "0d0699233a59ab8a6a6ee9d718cf8b3d6bf5e29d9195685c1db1ad7f9f897c5a",
+  "generation_started": false,
+  "gpu_inference_seconds": 0,
+  "implementation_commit": "1486de45d57b17ce802f95650d699360bb4387ef",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "scoring_started": false,
+  "status": "CPU_ONLY_REMEDIATION_VALIDATED",
+  "tests": [
+    "scripts.test_arc2_synchronous_director_review",
+    "tests.test_round009_posthoc_stage_launcher",
+    "tests.test_round009_posthoc_phase_bindings",
+    "tests.test_round009_target_free_mapping_proof"
+  ]
+}
