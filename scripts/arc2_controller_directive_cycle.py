@@ -139,7 +139,7 @@ def main() -> int:
     if args.brief:
         if not args.brief.is_file(): raise RuntimeError("MISSING_DIRECTOR_BRIEF")
         transition(record, "RESUBMITTED", brief=str(args.brief.resolve()))
-        record["next_step"] = "AWAIT_DIRECTOR_DIRECTIVE"
+        transition(record, "WAITING_DIRECTOR", next_step="AWAIT_DIRECTOR_DIRECTIVE", controller_cycle_complete=False, waiting_reason="DIRECTOR_DECISION_REQUIRED")
     atomic_json(args.state, state)
     print(json.dumps({"directive_id": directive_id, "decision": decision, "state": record["state"], "scientific_training_started": False}, sort_keys=True))
     return 0

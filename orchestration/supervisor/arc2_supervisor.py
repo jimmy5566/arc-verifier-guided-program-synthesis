@@ -21,6 +21,8 @@ DIRECTOR_DECISIONS = {
     "STOP_CURRENT_TRACK", "NEW_SUBPROTOCOL_REQUIRED", "EMERGENCY_RECOVERY",
 }
 CONTROLLER_CYCLE_TERMINAL = {"CLOSED", "AUTHORIZED", "PAUSED", "STOPPED", "HARD_BLOCKED"}
+CONTROLLER_CYCLE_WAITING = {"WAITING_REMOTE_JOB", "WAITING_DIRECTOR"}
+CONTROLLER_CYCLE_ACTIVE = {"RECEIVED", "ACKNOWLEDGED", "PROCESSING", "REMEDIATION", "VALIDATING", "COMMITTING", "RESUBMITTING", "REMEDIATION_COMPLETE", "VALIDATED", "COMMITTED", "RESUBMITTED"}
 
 
 def canonical_hash(path: Path) -> str:
@@ -366,7 +368,14 @@ class Supervisor:
         return acknowledged
 
     def resume_nonterminal_directive_cycles(self, cycle_state_path: Path, controller_agent: str, herdr_timeout_seconds: int, max_retries: int = 3, lease_seconds: int = 900) -> list[str]:
-        """Wake an idle Controller once to resume each durable non-terminal cycle."""
+        """Lease continuation turns; initial delivery remains a distinct one-shot event.
+
+        An accepted Herdr prompt is not proof of completion.  When the agent is
+        idle again, the old lease is over and a further continuation is allowed
+        only while the durable Controller cycle remains active.  Two successive
+        wakeups with an unchanged durable progress marker are escalated instead
+        of producing an infinite loop.
+        """
         if not cycle_state_path.exists() or not controller_idle(controller_agent, herdr_timeout_seconds):
             return []
         try:
@@ -376,7 +385,9 @@ class Supervisor:
         resumed: list[str] = []
         for directive_id, cycle in cycles.items():
             status = str(cycle.get("state", ""))
-            if status in CONTROLLER_CYCLE_TERMINAL or not status:
+            if status in CONTROLLER_CYCLE_TERMINAL or status in CONTROLLER_CYCLE_WAITING or not status:
+                continue
+            if status not in CONTROLLER_CYCLE_ACTIVE:
                 continue
             record = self.state["directives"].get(directive_id)
             if not record or record.get("directive_sha256") != cycle.get("directive_sha256"):
@@ -385,18 +396,36 @@ class Supervisor:
             if attempts >= max_retries:
                 record["controller_cycle_escalation_required"] = True
                 continue
+            marker_fields = {key: cycle.get(key) for key in ("state", "last_completed_step", "next_step", "last_progress_at", "commit", "brief", "evidence", "validation")}
+            marker = hashlib.sha256(json.dumps(marker_fields, sort_keys=True).encode("utf-8")).hexdigest()
+            previous = record.get("dispatched_progress_marker")
+            no_progress = int(record.get("no_progress_wakeups", 0)) + (1 if previous == marker else 0)
+            if previous != marker:
+                no_progress = 0
+            if no_progress >= 2:
+                record.update({"controller_cycle_escalation_required": True, "controller_cycle_escalation_reason": "CONTROLLER_STALL", "no_progress_wakeups": no_progress, "last_observed_progress_marker": marker})
+                self.save()
+                continue
+            sequence = int(record.get("continuation_sequence", 0)) + 1
+            invocation = f"{directive_id}:continuation:{sequence}"
             # Herdr is idle, so any prior lease has ended. This is a new
             # continuation, not a duplicate initial notification or ACK.
             record.update({"lifecycle_state": status, "active_controller_lease": True,
-                           "lease_started_at": utc_seconds(), "continuation_sequence": int(record.get("continuation_sequence", 0)) + 1,
-                           "last_progress_at": utc_seconds(), "next_step": cycle.get("next_step", "RESUME_UNFINISHED"),
+                           "lease_started_at": utc_seconds(), "continuation_sequence": sequence,
+                           "invocation_id": invocation, "state_before": status,
+                           "wakeup_time": utc_seconds(), "last_observed_progress_marker": marker,
+                           "dispatched_progress_marker": marker, "no_progress_wakeups": no_progress,
+                           "next_step": cycle.get("next_step", "RESUME_UNFINISHED"),
                            "controller_cycle_complete": False})
             self.save()
-            prompt = (f"ARC2 Controller recovery: resume existing directive cycle {directive_id} from durable state {status}. "
+            prompt = (f"ARC2 Controller recovery invocation {invocation}: resume existing directive cycle {directive_id} from durable state {status}. "
                       f"Do not create another acknowledgement. Read {cycle_state_path} and continue only unfinished steps for {cycle.get('directive_path')}. "
+                      "Execute the next unfinished requirement. Do not stop after identifying or describing it. Continue until a valid WAITING or terminal state. "
                       "Do not start training without an authorizing directive.")
             code, error = prompt_controller(["herdr", "agent", "prompt", controller_agent, prompt], herdr_timeout_seconds)
             record["active_controller_lease"] = code == 0
+            record["completion_time"] = utc_seconds() if code != 0 else None
+            record["state_after"] = cycle.get("state")
             record["controller_resume_status"] = "SENT" if code == 0 else "DELIVERY_UNKNOWN_FAIL_CLOSED"
             if code != 0:
                 record["controller_resume_error"] = error

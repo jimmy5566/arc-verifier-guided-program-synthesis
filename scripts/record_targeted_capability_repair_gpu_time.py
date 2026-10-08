@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LEDGER = ROOT / "experiments" / "targeted_capability_repair_v1" / "TARGETED_CAPABILITY_REPAIR_GPU_TIME_LEDGER.jsonl"
 SNAPSHOT = ROOT / "experiments" / "targeted_capability_repair_v1" / "GPU_TIME_LEDGER_SNAPSHOT_V1.json"
 CAP_SECONDS = 28_800
-REQUIRED = {"round_id", "attempt_id", "monotonic_start_ns", "monotonic_stop_ns", "charged_training_seconds", "termination_reason", "remote_receipt_hash", "interval_id", "previous_record_sha256"}
+REQUIRED = {"round_id", "attempt_id", "monotonic_start_ns", "monotonic_stop_ns", "charged_training_seconds", "termination_reason", "remote_receipt_hash", "preflight_launch_binding_sha256", "interval_id", "previous_record_sha256"}
 
 
 def canonical(value: Any) -> bytes:
@@ -54,28 +54,32 @@ def validate(rows: list[dict[str, Any]]) -> dict[str, Any]:
     return {"attempt_count": len(intervals), "charged_new_gpu_training_seconds": charged, "remaining_seconds": CAP_SECONDS - charged, "ledger_tail_sha256": previous}
 
 
-def write_snapshot(summary: dict[str, Any]) -> None:
-    value = {"schema_version": 1, "status": "FROZEN_ACCOUNTING_NO_GPU_TRAINING" if summary["attempt_count"] == 0 else "ACTIVE_ACCOUNTING", "cap_seconds": CAP_SECONDS, **summary, "ledger_file": str(LEDGER.relative_to(ROOT)).replace("\\", "/"), "ledger_bytes_sha256": hashlib.sha256(LEDGER.read_bytes()).hexdigest()}
-    SNAPSHOT.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
+def write_snapshot(summary: dict[str, Any], ledger: Path, snapshot: Path) -> None:
+    value = {"schema_version": 1, "status": "FROZEN_ACCOUNTING_NO_GPU_TRAINING" if summary["attempt_count"] == 0 else "ACTIVE_ACCOUNTING", "cap_seconds": CAP_SECONDS, **summary, "ledger_file": str(ledger), "ledger_bytes_sha256": hashlib.sha256(ledger.read_bytes()).hexdigest()}
+    snapshot.parent.mkdir(parents=True, exist_ok=True)
+    snapshot.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--append-json", type=Path)
+    parser.add_argument("--ledger", type=Path, default=LEDGER)
+    parser.add_argument("--snapshot", type=Path, default=SNAPSHOT)
     args = parser.parse_args()
-    rows = load(LEDGER)
+    ledger, snapshot = args.ledger.resolve(), args.snapshot.resolve()
+    rows = load(ledger)
     if args.append_json:
         candidate = json.loads(args.append_json.read_text(encoding="utf-8"))
         candidate["interval_id"] = f"{candidate.get('round_id')}:{candidate.get('attempt_id')}:{candidate.get('monotonic_start_ns')}:{candidate.get('monotonic_stop_ns')}"
         candidate["previous_record_sha256"] = digest(rows[-1])
         prospective = rows + [candidate]
         validate(prospective)
-        with LEDGER.open("a", encoding="utf-8", newline="\n") as handle:
+        with ledger.open("a", encoding="utf-8", newline="\n") as handle:
             handle.write(json.dumps(candidate, sort_keys=True, separators=(",", ":")) + "\n")
             handle.flush(); os.fsync(handle.fileno())
         rows = prospective
     summary = validate(rows)
-    write_snapshot(summary)
+    write_snapshot(summary, ledger, snapshot)
     print(json.dumps(summary, sort_keys=True))
     return 0
 
