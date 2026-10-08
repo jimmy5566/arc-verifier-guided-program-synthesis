@@ -1,0 +1,46 @@
+{
+  "datasets": {
+    "RETENTION_SENTINEL": {
+      "bytes": 237564,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV": {
+      "bytes": 465946,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    }
+  },
+  "gpu_inference_started": false,
+  "model_loaded": false,
+  "python": "3.11.13",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "source_commit": "0a5e2b2ca63c71d31bd6737e8beb7e28c7121d1d",
+  "status": "PASS_NO_MODEL_LOAD",
+  "token_contract": {
+    "digit_token_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "eos_token_id": 15,
+    "newline_token_id": 10,
+    "pad_token_id": 13
+  },
+  "tokenizer_files": {
+    "special_tokens_map.json": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+    "tokenizer.json": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+    "tokenizer_config.json": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+    "vocab.json": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+  },
+  "worker_files": {
+    "scripts/arc2_token_grid_parser.py": "0716d6f2e043ea1993ba89891fd4b7146121d0abdb7ea5bffe69c6738c618689",
+    "scripts/collect_capability_repair_baseline_v1.py": "953bdc13720d4d64d4bfbaf24a2c32b8917ab80bbe3dde4737813d3389f388ee"
+  }
+}\n

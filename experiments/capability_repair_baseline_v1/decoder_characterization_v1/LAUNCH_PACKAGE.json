@@ -1,0 +1,83 @@
+{
+  "checkpoint": {
+    "identity_path": "experiments/capability_repair_baseline_v1/CAPABILITY_REPAIR_BASELINE_V1_IDENTITY.json",
+    "identity_sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+    "remote_adapter_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+    "remote_base_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139"
+  },
+  "command_template": [
+    "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/collect_capability_repair_baseline_v1.py",
+    "--output",
+    "/workspace/arc2/decoder_characterization_v1_run_001/output/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+    "--receipt",
+    "/workspace/arc2/decoder_characterization_v1_run_001/TERMINAL_RECEIPT.json",
+    "--target-dev",
+    "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+    "--retention",
+    "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+    "--contract",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
+    "--base",
+    "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "--adapter",
+    "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+    "--binding",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v1/BASE_BINDING.json",
+    "--cohort-manifest",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v1/COHORT_MANIFEST.json"
+  ],
+  "forbidden": [
+    "training",
+    "optimizer",
+    "weight mutation",
+    "FINAL_AUDIT",
+    "target-dependent parser selection"
+  ],
+  "fresh_output_root": "/workspace/arc2/decoder_characterization_v1_run_001",
+  "inputs": {
+    "cohort_manifest": {
+      "items": 12,
+      "path": "experiments/capability_repair_baseline_v1/decoder_characterization_v1/COHORT_MANIFEST.json",
+      "sha256": "b82e408cf0c98f7f31049046b5cb36f2d315bbfcfee46f17446b5bab5c950acf"
+    },
+    "parser_contract": {
+      "path": "experiments/capability_repair_baseline_v1/DECODER_TOKEN_EXTRACTION_CONTRACT_V1.json",
+      "sha256": "07075a098dd26984213c39e9a18a5e7c42c13fab098f905d5946646541e864fa"
+    },
+    "retention": {
+      "rows": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "target_dev": {
+      "rows": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    }
+  },
+  "launch_nonce_sha256": "3a1711cfdb6fec7b597a1dcd99712341f880d135c832c6ff9d5b82b2577eca02",
+  "package_id": "ARC2_DECODER_CHARACTERIZATION_LAUNCH_V1",
+  "required_output_evidence": [
+    "generated_token_ids",
+    "generated_length",
+    "termination_status",
+    "eos_observed",
+    "trailing_pad_count",
+    "prompt_sha256",
+    "parse_valid",
+    "canonical_prediction_sha256",
+    "exact_grid_match"
+  ],
+  "runtime_preflight": {
+    "path": "experiments/capability_repair_baseline_v1/decoder_characterization_v1/TOKENIZER_PREFLIGHT_RECEIPT.json",
+    "sha256": "f7e47a3af09d739d414353beec88d26790e18a6af50afca6a1e645261552fec9",
+    "status": "PASS_NO_MODEL_LOAD"
+  },
+  "schema_version": 1,
+  "status": "FROZEN_PENDING_STAGE_REVIEW",
+  "target_blind": true,
+  "worker_files": {
+    "collector": "953bdc13720d4d64d4bfbaf24a2c32b8917ab80bbe3dde4737813d3389f388ee",
+    "token_parser": "0716d6f2e043ea1993ba89891fd4b7146121d0abdb7ea5bffe69c6738c618689"
+  },
+  "worker_source_commit": "0a5e2b2ca63c71d31bd6737e8beb7e28c7121d1d"
+}

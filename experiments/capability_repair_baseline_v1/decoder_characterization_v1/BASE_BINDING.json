@@ -1,0 +1,20 @@
+{
+  "adapter_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+  "base_files": {
+    ".gitattributes": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+    "README.md": "3e0e15fa0c5cc81675bd69af8eb469d128a725c1a7bfc71f03b7877b7b650567",
+    "added_tokens.json": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce",
+    "config.json": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0",
+    "generation_config.json": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02",
+    "model-00001-of-00002.safetensors": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529",
+    "model-00002-of-00002.safetensors": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0",
+    "model.safetensors.index.json": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4",
+    "model_manifest.json": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7",
+    "special_tokens_map.json": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+    "tokenizer.json": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+    "tokenizer_config.json": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+    "vocab.json": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+  },
+  "base_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+  "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+}

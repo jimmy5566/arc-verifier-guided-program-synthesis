@@ -1,0 +1,27 @@
+{
+  "brief_id": "FORWARD_BASELINE_DECODER_CHARACTERIZATION_REVIEW_V2",
+  "decision_requested": "AUTHORIZE_TARGET_BLIND_12_ITEM_DECODER_CHARACTERIZATION",
+  "followup": "If this succeeds, authorize one fresh 288-row corrected baseline under the same parser contract.",
+  "frozen_conditions": {
+    "final_audit_opened": false,
+    "no_gold_leakage": true,
+    "scientific_training_started": false,
+    "target_blind": true,
+    "v6_interpretation": "measurement invalid; not established"
+  },
+  "package": {
+    "path": "experiments/capability_repair_baseline_v1/decoder_characterization_v1/LAUNCH_PACKAGE.json",
+    "sha256": "49d27e699bc141b7c0a0a71f34be61b72b15b7b188bad684ae3aa173433b775f"
+  },
+  "previous_response": {
+    "binding_audit": {
+      "path": "experiments/capability_repair_baseline_v1/decoder_characterization_v1/V1_RESPONSE_BINDING_AUDIT.json",
+      "sha256": "287c7d77c42f4226340a9359eadf7107f2c0d851b21516f1f608caf190cc0d72"
+    },
+    "decision": "REQUIRE_CHANGES",
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_FORWARD_BASELINE_DECODER_VALIDITY_V1.json",
+    "sha256": "404060499670c5be0d65cb127c36cbfe6f55ac5fd65ea5492377eb375d270e57"
+  },
+  "request": "Authorize only the fixed 12-item target-blind decoder characterization. No training, optimizer, model mutation, full 288 rerun, or FINAL_AUDIT.",
+  "schema_version": 1
+}

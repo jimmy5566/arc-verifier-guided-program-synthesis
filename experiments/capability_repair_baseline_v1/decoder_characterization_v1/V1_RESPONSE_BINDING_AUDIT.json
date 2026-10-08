@@ -1,0 +1,8 @@
+{
+  "cause": "The V1 brief was CRLF when reviewed; subsequent newline normalization changed its bytes to LF. Reconstructing CRLF bytes from unchanged content reproduces the response binding hash. Neither V1 artifact is overwritten.",
+  "required_followup": "New V2 immutable brief bound to current bytes and new launch package.",
+  "response_reviewed_brief_sha256": "3b6a4f8b5440ca7960d8acd553b90bd538c9709e16d6dbdb05efdbf7ab154203",
+  "schema_version": 1,
+  "status": "BRIEF_BYTES_CHANGED_AFTER_REVIEW",
+  "v1_brief_current_sha256": "5f89a5ef918f251d41db69b92cf732c9fc685809c35fafa4d166c44135229816"
+}
