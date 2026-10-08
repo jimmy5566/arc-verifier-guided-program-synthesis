@@ -7,7 +7,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 DISPOSITIONS={"CONTINUE_CONTROLLER","REVIEW_REQUIRED","WAIT_REMOTE","PAUSED","TERMINAL"}
-DIRECTOR_DECISIONS={"CONTINUE_CONTROLLER","REQUIRE_CHANGES","PAUSED","TERMINAL"}
+DIRECTOR_DECISIONS={
+    "CONTINUE_CONTROLLER", "REQUIRE_CHANGES", "PAUSED", "TERMINAL",
+    # A postmortem may request a bounded scientific disposition rather than
+    # an experiment-wide stop.  These choices never authorize a GPU launch.
+    "NEW_R3_PROTOCOL_RECOMMENDED", "STOP_TARGETED_REPAIR_APPROACH",
+    "RUN_ONE_DIAGNOSTIC_BEFORE_DECIDING",
+}
 def now(): return datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
 def atomic(p,x):
     t=p.with_suffix('.tmp'); t.write_text(json.dumps(x,sort_keys=True,indent=2)+'\n',encoding='utf-8'); os.replace(t,p)
@@ -96,6 +102,18 @@ def route_director_response(state, state_path, response_path, response, response
                       'director_remediation':response.get('smallest_repair') or response.get('controller_resolution_plan')})
     elif decision == 'PAUSED':
         state.update({'disposition':'PAUSED', 'next_action':'PAUSED_BY_DIRECTOR', 'remediation_required':False})
+    elif decision == 'NEW_R3_PROTOCOL_RECOMMENDED':
+        # The Controller may formulate and validate a successor protocol, but
+        # a recommendation is deliberately not a training authorization.
+        state.update({'disposition':'CONTINUE_CONTROLLER', 'next_action':'PREPARE_NEW_R3_PROTOCOL_FROM_DIRECTOR_RECOMMENDATION', 'remediation_required':False,
+                      'scientific_training_authorized':False, 'r3_authorized':False})
+    elif decision == 'RUN_ONE_DIAGNOSTIC_BEFORE_DECIDING':
+        state.update({'disposition':'CONTINUE_CONTROLLER', 'next_action':'RUN_DIRECTOR_SPECIFIED_DIAGNOSTIC', 'remediation_required':False,
+                      'scientific_training_authorized':False, 'r3_authorized':False})
+    elif decision == 'STOP_TARGETED_REPAIR_APPROACH':
+        # This stops this approach, not the entire ARC2 program.
+        state.update({'disposition':'PAUSED', 'next_action':'TARGETED_REPAIR_APPROACH_STOPPED_BY_DIRECTOR', 'remediation_required':False,
+                      'terminal':False, 'experiment_terminal':False, 'terminal_scope':'CURRENT_PROTOCOL'})
     else:
         state.update({'disposition':'TERMINAL', 'next_action':'TERMINAL_BY_DIRECTOR', 'remediation_required':False, 'terminal':True, 'experiment_terminal':True})
     atomic(state_path,state); log(state,f'director response consumed decision={decision} response={response_path.name}')
@@ -112,7 +130,17 @@ def director(s,p,timeout):
     if matches:
         raise RuntimeError('REVIEW_BRIEF_ALREADY_CONSUMED')
     s.update({'director_review_in_progress':True,'updated_at':now()}); atomic(p,s)
-    if not prompt('arc-director',f'ARC2 Governor review. Read {brief}. Write one structured review artifact bound to reviewed_brief_sha256={brief_sha256}: CONTINUE_CONTROLLER, REQUIRE_CHANGES, PAUSED, or TERMINAL. REQUIRE_CHANGES must state root cause, smallest repair, frozen conditions, forbidden actions, and whether another review is required. Do not schedule or prompt Controller.',timeout,s):
+    brief_data=json.loads(Path(brief).read_text(encoding='utf-8-sig'))
+    requested=brief_data.get('allowed_director_outcomes')
+    if isinstance(requested, list) and requested:
+        decisions=', '.join(str(x) for x in requested)
+        directive=(f'Choose exactly one requested scientific outcome: {decisions}. '
+                   'For NEW_R3_PROTOCOL_RECOMMENDED, specify every field required by the brief. '
+                   'For RUN_ONE_DIAGNOSTIC_BEFORE_DECIDING, specify exactly one diagnostic and its decision rule. ')
+    else:
+        directive=('Choose one of CONTINUE_CONTROLLER, REQUIRE_CHANGES, PAUSED, or TERMINAL. '
+                   'REQUIRE_CHANGES must state root cause, smallest repair, frozen conditions, forbidden actions, and whether another review is required. ')
+    if not prompt('arc-director',f'ARC2 Governor review. Read {brief}. Write one structured review artifact bound to reviewed_brief_sha256={brief_sha256}. {directive}Do not schedule or prompt Controller.',timeout,s):
         return
     available=[item for item in matching_director_responses(p,brief_sha256) if item[2] not in consumed]
     if not available:
