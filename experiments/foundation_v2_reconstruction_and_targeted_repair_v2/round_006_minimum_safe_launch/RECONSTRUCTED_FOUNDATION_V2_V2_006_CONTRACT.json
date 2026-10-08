@@ -1,0 +1,33 @@
+{
+  "authorization_policy": "EXPLICIT_USER_MINIMUM_SAFE_LAUNCH_2026-10-08_AFTER_A_THROUGH_G_PASS",
+  "final_audit_accessed": false,
+  "fresh_paths": {
+    "accounting_state": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_006/runtime/OPTIMIZER_ACCOUNTING_STATE.json",
+    "checkpoints": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_006/checkpoints",
+    "freeze": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_006/freeze",
+    "ledger": "/workspace/arc2/scientific_ledgers/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V7.jsonl",
+    "ledger_snapshot": "/workspace/arc2/scientific_ledgers/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V7_SNAPSHOT.json",
+    "logs": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_006/logs",
+    "nonce_consumption": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_006/authorization/nonce_consumption",
+    "preflight": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_006/preflight/MINIMUM_SAFE_PREFLIGHT.json",
+    "reservation": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_006/authorization/GPU_RESERVATION.json",
+    "run_root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_006",
+    "runtime": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_006/runtime",
+    "terminal_receipt": "/workspace/arc2/orchestration/rounds/ROUND_RECONSTRUCTED_FOUNDATION_V2_V2_006/RECONSTRUCTED_FOUNDATION_V2_V2_006_TERMINAL_RECEIPT.json"
+  },
+  "launch_binding_path": "MINIMUM_SAFE_LAUNCH_BINDING.json",
+  "launch_binding_sha256": "c67e681a1160ec7069004772e0f4af776c31c470f85d30e38685a7bfdd19bbcf",
+  "launch_nonce": "e573c8e9-ec09-43a7-8e3d-0a032af245ec",
+  "predecessors_preserved": [
+    "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+    "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+    "RECONSTRUCTED_FOUNDATION_V2_V1_002",
+    "RECONSTRUCTED_FOUNDATION_V2_V2_001"
+  ],
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "round_class": "SCIENTIFIC",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_006",
+  "schema_version": 2,
+  "scientific_training_started": false,
+  "status": "FROZEN_PENDING_MINIMUM_SAFE_GATE"
+}

@@ -1,0 +1,32 @@
+{
+  "AUTO_SCIENTIFIC_EXECUTION_AUTHORIZED": false,
+  "GPU_GATE_READY": false,
+  "authorization": {
+    "all_conditions_required": [
+      "A_BASE_IDENTITY",
+      "B_TRAINING_DATA_IDENTITY",
+      "C_RUNTIME_IDENTITY",
+      "D_LAUNCH_PROVENANCE",
+      "E_OUTPUT_ISOLATION",
+      "F_ACTIVE_GPU_BUDGET_CAP",
+      "G_PRE_OPTIMIZER_IMPORT_SMOKE"
+    ],
+    "type": "EXPLICIT_USER_MINIMUM_SAFE_LAUNCH_2026-10-08"
+  },
+  "contract_sha256": "5931253e5a966585960eaed37296c695c5142d61b4550aaaf3f03a3945aee14f",
+  "launch_nonce": "e573c8e9-ec09-43a7-8e3d-0a032af245ec",
+  "not_launch_blocking_yet": [
+    "checkpoint_selection",
+    "reconstruction_equivalence_scoring",
+    "targeted_curriculum",
+    "final_3000_audit",
+    "final_report",
+    "eval60_alignment",
+    "final_model_selection"
+  ],
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "round_class": "SCIENTIFIC",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_006",
+  "schema_version": 2,
+  "status": "PENDING_MINIMUM_SAFE_PREFLIGHT"
+}
