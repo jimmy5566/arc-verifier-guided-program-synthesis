@@ -123,21 +123,34 @@ def score_batch(
 
 def main() -> int:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--probe-contract", type=Path, required=True)
     parser.add_argument("--contract", type=Path, required=True)
     parser.add_argument("--batch1-reference", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--receipt", type=Path, required=True)
     parser.add_argument("--progress", type=Path, required=True)
-    parser.add_argument("--candidates", default="2,4,8,16,32")
     parser.add_argument("--runtime-limit-seconds", type=float, default=7200)
     args = parser.parse_args()
     if args.output.exists() or args.receipt.exists():
         raise RuntimeError("OUTPUT_PATH_NON_OVERWRITE_REQUIRED")
     if args.runtime_limit_seconds <= 0 or args.runtime_limit_seconds > 7200:
         raise RuntimeError("RUNTIME_CAP_BINDING_INVALID")
-    candidates = parse_candidates(args.candidates)
     started = time.monotonic(); deadline = started + args.runtime_limit_seconds
     root = Path(__file__).resolve().parents[1]
+    probe = json.loads(args.probe_contract.read_text(encoding="utf-8"))
+    if probe.get("diagnostic_id") != "V7_R1_R2_BATCH_CONSISTENCY_PROBE_V1":
+        raise RuntimeError("BATCH_PROBE_CONTRACT_INVALID")
+    if probe.get("scientific_training_started") is not False or probe.get("final_audit_opened") is not False:
+        raise RuntimeError("BATCH_PROBE_SAFETY_INVALID")
+    if probe.get("comparison") != "EXACT_PER_EPISODE_RAW_TOKEN_AND_CANONICAL_OUTPUT_EQUALITY_TO_FROZEN_BATCH1":
+        raise RuntimeError("BATCH_PROBE_COMPARISON_INVALID")
+    candidates = parse_candidates(",".join(str(item) for item in probe.get("candidates", [])))
+    expected_serial = root / probe.get("serial_contract_path", "")
+    if args.contract.resolve() != expected_serial.resolve() or sha(args.contract) != probe.get("serial_contract_sha256"):
+        raise RuntimeError("SERIAL_CONTRACT_BINDING_INVALID")
+    expected_reference = root / probe.get("batch1_reference_path", "")
+    if args.batch1_reference.resolve() != expected_reference.resolve() or sha(args.batch1_reference) != probe.get("batch1_reference_sha256"):
+        raise RuntimeError("BATCH1_REFERENCE_BINDING_INVALID")
     contract = load_contract(args.contract)
     bound = preflight(contract, root)
     reference = json.loads(args.batch1_reference.read_text(encoding="utf-8"))

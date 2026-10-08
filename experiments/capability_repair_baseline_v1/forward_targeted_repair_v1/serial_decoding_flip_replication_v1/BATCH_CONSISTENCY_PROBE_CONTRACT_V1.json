@@ -1,0 +1,30 @@
+{
+  "batch1_reference_path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/serial_decoding_flip_replication_v1/run_001/BATCH1_RESULT.json",
+  "batch1_reference_sha256": "e3ffb9d57402c3d4c570acb213b8b84e5c686350a809fd9202fe3b86cdf81b8b",
+  "candidates": [
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "cohort_path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/serial_decoding_flip_replication_v1/DIAGNOSTIC_COHORT.json",
+  "cohort_sha256": "771f0b1dab3b0f49d7db1c3af02112ce179483ad26a2b3aea84093be0b4897a3",
+  "comparison": "EXACT_PER_EPISODE_RAW_TOKEN_AND_CANONICAL_OUTPUT_EQUALITY_TO_FROZEN_BATCH1",
+  "diagnostic_id": "V7_R1_R2_BATCH_CONSISTENCY_PROBE_V1",
+  "final_audit_opened": false,
+  "forbidden": [
+    "DO_NOT_TRAIN",
+    "DO_NOT_CONSTRUCT_OPTIMIZER",
+    "DO_NOT_START_R3",
+    "DO_NOT_ACCESS_FINAL_AUDIT",
+    "DO_NOT_MODIFY_FROZEN_V7_R1_R2_OR_BATCH1"
+  ],
+  "optimizer_constructed": false,
+  "purpose": "Determine the largest prevalidated Batch32-or-smaller physical batch whose per-episode raw token evidence and scored output are exactly equal to frozen Batch1; this does not alter R1/R2 or authorize R3.",
+  "runtime_cap_seconds": 7200,
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "serial_contract_path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/serial_decoding_flip_replication_v1/SERIAL_DECODING_FLIP_REPLICATION_CONTRACT_V1.json",
+  "serial_contract_sha256": "90b9f86b2d75d14ec17cacc31adcb1eed4ac9bd0547372726e6ebad9f6931e70"
+}
