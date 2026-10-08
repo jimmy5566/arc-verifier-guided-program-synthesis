@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_TARGETED_REPAIR_R1_STAGE_MILESTONE_V1",
+  "decision": "CONTINUE_CONTROLLER",
+  "scope": "TARGETED_REPAIR_R1_DESIGN_MILESTONE_CPU_ONLY",
+  "brief_id": "TARGETED_REPAIR_R1_STAGE_MILESTONE_V1",
+  "reviewed_brief_sha256": "0b3493467c81445629231eb401e2c0fd85d7176b0e9d5a607eddb2e87128f481",
+  "scientific_assessment": "The V7-derived R1 design is scientifically reasonable as a design milestone. The measured deficits support concentrating atomic repair on connected components, inside/contains, difference, width, and orientation, while the composition allocation targets conditional action, mask set, and relation-selector action. The 50/30/20 atomic/composition/replay split preserves the previously frozen prerequisite-aware program structure, and RETENTION_SENTINEL remains evaluation-only rather than training data.",
+  "reasons": [
+    {
+      "area": "baseline_validity",
+      "status": "PASS",
+      "finding": "FORWARD_BASELINE_EVALUATION_V7_BATCH32 is a complete 288-item valid measurement with 288/288 parse-valid outputs, 76/192 TARGET_DEV exact matches, and 70/96 retention exact matches. V6 remains excluded as measurement-invalid."
+    },
+    {
+      "area": "target_prioritization",
+      "status": "PASS",
+      "finding": "The atomic and composition priorities are directly supported by the frozen V7 per-capability profiles. Strong capabilities such as recolor, same color, and selector prerequisites are not promoted as primary repair targets."
+    },
+    {
+      "area": "prerequisite_aware_mix",
+      "status": "PASS",
+      "finding": "The proposed 0.5 atomic, 0.3 composition, and 0.2 replay allocation matches the established prerequisite-aware round-one structure. The composition targets are paired with upstream primitive repair rather than treated as an isolated composition-only intervention."
+    },
+    {
+      "area": "retention_and_no_gold_boundary",
+      "status": "PASS",
+      "finding": "Replay is explicitly retention-preserving TRAIN data, while RETENTION_SENTINEL is evaluation-only. TARGET_DEV, RETENTION_SENTINEL, FINAL_AUDIT, Eval60, and diagnostic Gold remain forbidden as training inputs."
+    },
+    {
+      "area": "budget",
+      "status": "PASS",
+      "finding": "The 7200-second R1 maximum fits within the recorded 25060.278 seconds remaining under the cumulative 28800-second optimizer-training cap after 3739.722 historical reconstruction seconds."
+    },
+    {
+      "area": "evaluation_plan",
+      "status": "PASS_DESIGN_LEVEL",
+      "finding": "Comparing R1 checkpoints against the same frozen V7 S0 atomic DEV, composition DEV, and retention sentinel is the correct paired design. Exact checkpoint identities, gates, and selection rules must be frozen in the launch package before execution."
+    }
+  ],
+  "smallest_change_before_r1": {
+    "scientific_mix_change_required": false,
+    "requirement": "Before any R1 launch, freeze one exact additive execution package that binds the V7 S0 reference hashes, the train-only replay source and family weights, deterministic schedule, preserved LoRA recipe, checkpoint landmarks, paired target and retention gates, checkpoint-selection rule, 7200-second reservation and active cumulative cap, complete starting-checkpoint manifest, exact source commit, fresh nonce, and fresh output paths. Submit that package for a separate launch-readiness review."
+  },
+  "authorized_continuation": [
+    "CPU_ONLY_FREEZE_R1_RESOLVED_CONFIG",
+    "CPU_ONLY_BUILD_AND_TEST_DETERMINISTIC_TRAINING_SCHEDULE",
+    "CPU_ONLY_FREEZE_PAIRED_TARGET_AND_RETENTION_GATES",
+    "CPU_ONLY_PREPARE_FAIL_CLOSED_LAUNCH_PACKAGE",
+    "SUBMIT_SEPARATE_R1_LAUNCH_READINESS_BRIEF"
+  ],
+  "frozen_conditions": {
+    "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1",
+    "baseline_identity_sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+    "corrected_baseline_round_id": "FORWARD_BASELINE_EVALUATION_V7_BATCH32",
+    "corrected_baseline_summary_sha256": "fff64a4d4b15fcb97b5bb355027a5dcc85a7f5c2d637a97600c8786c1eaf8956",
+    "baseline_characterization_receipt_sha256": "15a7a751ee77e556c56f22ab3a377e49696be7aba235a17cbe4f1e18787956d7",
+    "atomic_profile_sha256": "230ebeb8e74eb5112ac83f27d1ed9f095e4230488059277a201a159f3d0acaf2",
+    "composition_profile_sha256": "ddfcddfa65b0f6132718f622367c0981664ee7fb0921f9199fc597ba788958ce",
+    "retention_profile_sha256": "51083a1a5737dee17d70c8b5fd4d11e29635485828f832cd6ae2defc68988979",
+    "forward_targeted_repair_plan_sha256": "b09d7461726e22b71923598750544c2c1bce40fa76ed55e773e646f2c6eec8e0",
+    "role_mix": {
+      "atomic_repair": 0.5,
+      "composition_repair": 0.3,
+      "replay_retention_preserving_train_data": 0.2
+    },
+    "retention_sentinel_usage": "EVALUATION_ONLY_NOT_TRAINING_DATA",
+    "cumulative_optimizer_training_cap_seconds": 28800,
+    "historical_reconstruction_seconds": 3739.722,
+    "remaining_cumulative_seconds": 25060.278,
+    "r1_maximum_seconds": 7200,
+    "final_audit_opened": false,
+    "scientific_training_started_for_r1": false
+  },
+  "forbidden_actions": [
+    "DO_NOT_USE_TARGET_DEV_AS_TRAINING_DATA",
+    "DO_NOT_USE_RETENTION_SENTINEL_AS_TRAINING_DATA",
+    "DO_NOT_ACCESS_FINAL_AUDIT",
+    "DO_NOT_USE_EVAL60_OR_DIAGNOSTIC_GOLD_FOR_TRAINING_OR_TUNING",
+    "DO_NOT_CHANGE_THE_50_30_20_ROLE_MIX_WITHOUT_A_NEW_SCIENTIFIC_REVIEW",
+    "DO_NOT_TUNE_AFTER_SCORING",
+    "DO_NOT_LOAD_THE_MODEL_OR_CONSTRUCT_AN_OPTIMIZER_UNDER_THIS_MILESTONE_REVIEW",
+    "DO_NOT_START_GPU_TRAINING_UNDER_THIS_MILESTONE_REVIEW",
+    "DO_NOT_AUTOMATICALLY_EXPAND_BEYOND_R1",
+    "DO_NOT_OPEN_FINAL_AUDIT_AFTER_R1_WITHOUT_A_SEPARATE_GATE_DECISION",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": true,
+  "review_trigger": "A frozen R1 launch-readiness brief containing the exact resolved config, schedule, train-data identities, starting-checkpoint manifest, evaluation gates, budget enforcement, source provenance, nonce, output paths, and CPU-only fail-closed test evidence.",
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "targeted_repair_r1_launch_authorized": false,
+  "final_audit_authorized": false
+}

@@ -1,0 +1,46 @@
+{
+  "batch1_batch32_validation_count": 32,
+  "batch_size": 32,
+  "checkpoint_manifest_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r1_paired_evaluation_v1/R1_CHECKPOINT_MANIFEST.json",
+  "checkpoint_manifest_sha256": "3698906eb87c82a4ef26594fae14ed672887dc4d09fba1468ab601a770ad340d",
+  "datasets": {
+    "RETENTION_SENTINEL": {
+      "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+      "rows": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV": {
+      "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+      "rows": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    }
+  },
+  "decoder_evidence_scope": "FROZEN_TOKENIZER_AND_TARGET_BLIND_PARSER; current adapter identity separately verified by R1 checkpoint manifest",
+  "decoder_validity_evidence_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_minimal_v1/DECODER_VALIDITY_EVIDENCE.json",
+  "decoder_validity_evidence_sha256": "76c9f5e4257235ed8995b539c3e0616e9300c6d921e7c4756161f5976dcbb14b",
+  "final_audit_opened": false,
+  "hard_gate_check": {
+    "correct_checkpoint": "PASS",
+    "correct_dataset_and_denominator": "PASS",
+    "decoder_and_scoring_valid": "PASS",
+    "fresh_output": "PASS",
+    "no_duplicate_live_job": "PASS",
+    "no_leakage": "PASS"
+  },
+  "inference_contract_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
+  "long_prompt_fallback": [
+    32,
+    16,
+    8,
+    4,
+    1
+  ],
+  "output_root": "/workspace/arc2/forward_targeted_repair_v1_003_evaluation_batch32",
+  "provenance_warning": true,
+  "provenance_warnings": [
+    "decoder-validity evidence is tokenizer/parser-scoped; this gate independently hashes every R1 base and adapter file before model import"
+  ],
+  "round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_EVALUATION_BATCH32",
+  "schema_version": 2,
+  "stage_id": "TARGETED_REPAIR_R1_PAIRED_EVALUATION_V1"
+}

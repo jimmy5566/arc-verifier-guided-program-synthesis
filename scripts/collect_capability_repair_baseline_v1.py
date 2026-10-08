@@ -71,8 +71,9 @@ def parse_grid(s: str) -> list[list[int]] | None:
     width = len(rows[0])
     if any(len(row) != width for row in rows): return None
     return [[int(char) for char in row] for row in rows]
-def verify_file(p: Path, want: str) -> None:
+def verify_file(p: Path, want: str, expected_bytes: int | None = None) -> None:
     if not p.is_file(): raise RuntimeError(f"REQUIRED_FILE_MISSING:{p}")
+    if expected_bytes is not None and p.stat().st_size != expected_bytes: raise RuntimeError(f"REQUIRED_FILE_SIZE_MISMATCH:{p}")
     if sha(p) != want: raise RuntimeError(f"REQUIRED_FILE_HASH_MISMATCH:{p}")
 def verify_binding(b: dict[str, Any], base: Path) -> str:
     if b.get("base_path") != "/workspace/arc2/models/qwen3_4b_grids15_sft139": raise RuntimeError("BASE_PATH_IDENTITY_INVALID")
@@ -80,6 +81,28 @@ def verify_binding(b: dict[str, Any], base: Path) -> str:
     if not isinstance(files, dict) or not files: raise RuntimeError("BASE_MANIFEST_INVALID")
     for name, want in sorted(files.items()): verify_file(base / name, want)
     return dig(files)
+def verify_checkpoint_manifest(manifest: dict[str, Any]) -> str:
+    """Verify the exact current base and adapter before model import."""
+    base = Path(manifest.get("base_path", "")); adapter = Path(manifest.get("adapter_path", ""))
+    if str(base) != "/workspace/arc2/models/qwen3_4b_grids15_sft139": raise RuntimeError("BASE_PATH_IDENTITY_INVALID")
+    for label, root, entries in (("BASE", base, manifest.get("base_files")), ("ADAPTER", adapter, manifest.get("adapter_files"))):
+        if not isinstance(entries, list) or not entries: raise RuntimeError(f"{label}_MANIFEST_INVALID")
+        names = []
+        for entry in entries:
+            if not isinstance(entry, dict) or not isinstance(entry.get("name"), str) or "/" in entry["name"] or "\\" in entry["name"]:
+                raise RuntimeError(f"{label}_MANIFEST_ENTRY_INVALID")
+            if not isinstance(entry.get("bytes"), int) or not isinstance(entry.get("sha256"), str): raise RuntimeError(f"{label}_MANIFEST_ENTRY_INVALID")
+            names.append(entry["name"]); verify_file(root / entry["name"], entry["sha256"], entry["bytes"])
+        if len(names) != len(set(names)): raise RuntimeError(f"{label}_MANIFEST_DUPLICATE_ENTRY")
+    identity = manifest.get("manifest_sha256")
+    return str(identity) if isinstance(identity, str) and identity else dig(manifest)
+def verify_decoder_validity_evidence(evidence: Path, expected_sha256: str) -> dict[str, Any]:
+    """The parser contract is scoped to frozen tokenizer/parser semantics, not an adapter SHA."""
+    if sha(evidence) != expected_sha256: raise RuntimeError("DECODER_VALIDITY_EVIDENCE_MISMATCH")
+    ev=json.loads(evidence.read_text(encoding="utf-8"))
+    if ev.get("status") != "VALID_MEASUREMENT_PASS" or ev.get("target_blind") is not True or ev.get("correctness_scoring_present") is not False or ev.get("raw_token_evidence") is not True:
+        raise RuntimeError("VALID_MEASUREMENT_GATE_FAIL")
+    return ev
 def expected(r: dict[str, Any]) -> list[list[int]]:
     test = r["task"]["test"]
     if len(test) != 1 or "output" not in test[0]: raise RuntimeError("BASE_REFERENCE_REQUIRES_SINGLE_HELDOUT_SCORING_OUTPUT")
@@ -189,18 +212,16 @@ def main() -> int:
                 raise RuntimeError("MINIMAL_SCIENTIFIC_GATE_FAIL")
             if minimal_gate.get("final_audit_opened") is not False: raise RuntimeError("FINAL_AUDIT_FORBIDDEN")
             evidence=Path(minimal_gate["decoder_validity_evidence_path"])
-            if sha(evidence) != minimal_gate["decoder_validity_evidence_sha256"]: raise RuntimeError("DECODER_VALIDITY_EVIDENCE_MISMATCH")
-            ev=json.loads(evidence.read_text(encoding="utf-8"))
-            if ev.get("status") != "VALID_MEASUREMENT_PASS" or ev.get("target_blind") is not True or ev.get("correctness_scoring_present") is not False:
-                raise RuntimeError("VALID_MEASUREMENT_GATE_FAIL")
+            verify_decoder_validity_evidence(evidence, minimal_gate["decoder_validity_evidence_sha256"])
             manifest_path=Path(minimal_gate["checkpoint_manifest_path"])
             if sha(manifest_path) != minimal_gate["checkpoint_manifest_sha256"]: raise RuntimeError("CHECKPOINT_MANIFEST_IDENTITY_FAIL")
             manifest=json.loads(manifest_path.read_text(encoding="utf-8"))
-            if ev.get("checkpoint_manifest_sha256") != minimal_gate["checkpoint_manifest_sha256"]: raise RuntimeError("CHECKPOINT_EVIDENCE_SCOPE_FAIL")
             z.target_dev=Path(minimal_gate["datasets"]["TARGET_DEV"]["path"]); z.retention=Path(minimal_gate["datasets"]["RETENTION_SENTINEL"]["path"])
             verify_file(z.target_dev, minimal_gate["datasets"]["TARGET_DEV"]["sha256"]); verify_file(z.retention, minimal_gate["datasets"]["RETENTION_SENTINEL"]["sha256"])
             z.base=Path(manifest["base_path"]); z.adapter=Path(manifest["adapter_path"]); z.binding=None; z.contract=Path(minimal_gate["inference_contract_path"])
-            preverified_model_identity=ev["checkpoint_identity"]
+            # The decoder contract is tokenizer/parser-scoped; the current model
+            # identity is independently verified from this round's manifest below.
+            preverified_model_identity=verify_checkpoint_manifest(manifest)
         else:
             launch=json.loads(z.launch_contract.read_text(encoding="utf-8"))
             verify_entrypoint(launch, z)
@@ -339,7 +360,7 @@ def main() -> int:
             except Exception: pass
     n = len(target) + len(retention)
     if status == "COLLECTED_PASS" and len(rows) != n: status, failure = "PARTIAL_FAILURE", "INCOMPLETE_EPISODE_SET"
-    result = {"schema_version": 4, "protocol_id": PROTOCOL, "status": status, "inference_contract_identity": cid, "model_base_manifest_identity": mid, "predictions": rows, "aggregates": {"TARGET_DEV": aggregate([x for x in rows if x["surface"] == "TARGET_DEV"]), "RETENTION_SENTINEL": aggregate([x for x in rows if x["surface"] == "RETENTION_SENTINEL"])}, "expected_episode_count": n, "completed_episode_count": len(rows), "batching": batching, "token_evidence_preserved": True, "token_grid_contract": token_contract.as_dict() if "token_contract" in locals() else None}
-    write(z.output, result); write(z.receipt, receipt(status, started, model_loaded=True, adapter_loaded=True, lora_constructed=False, adapter_path=str(z.adapter), completed_episode_ids=[x["episode_id"] for x in rows], expected_episode_count=n, completed_episode_count=len(rows), model_base_manifest_identity=mid, inference_contract_identity=cid, failure=failure, runtime_cap_seconds=z.runtime_limit_seconds, model_released=True, batching=batching))
+    result = {"schema_version": 4, "protocol_id": PROTOCOL, "status": status, "source_commit": os.environ.get("ARC2_SOURCE_COMMIT"), "checkpoint_manifest_file_sha256": minimal_gate.get("checkpoint_manifest_sha256") if minimal_gate else None, "inference_contract_identity": cid, "model_base_manifest_identity": mid, "predictions": rows, "aggregates": {"TARGET_DEV": aggregate([x for x in rows if x["surface"] == "TARGET_DEV"]), "RETENTION_SENTINEL": aggregate([x for x in rows if x["surface"] == "RETENTION_SENTINEL"])}, "expected_episode_count": n, "completed_episode_count": len(rows), "batching": batching, "token_evidence_preserved": True, "token_grid_contract": token_contract.as_dict() if "token_contract" in locals() else None}
+    write(z.output, result); write(z.receipt, receipt(status, started, model_loaded=True, adapter_loaded=True, lora_constructed=False, source_commit=os.environ.get("ARC2_SOURCE_COMMIT"), checkpoint_manifest_file_sha256=minimal_gate.get("checkpoint_manifest_sha256") if minimal_gate else None, adapter_path=str(z.adapter), completed_episode_ids=[x["episode_id"] for x in rows], expected_episode_count=n, completed_episode_count=len(rows), model_base_manifest_identity=mid, inference_contract_identity=cid, failure=failure, runtime_cap_seconds=z.runtime_limit_seconds, model_released=True, batching=batching))
     return 0 if status == "COLLECTED_PASS" else 1
 if __name__ == "__main__": raise SystemExit(main())

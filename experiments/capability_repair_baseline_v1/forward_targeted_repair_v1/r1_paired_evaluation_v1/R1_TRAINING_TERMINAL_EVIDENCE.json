@@ -1,0 +1,14 @@
+{
+  "cumulative_gpu_seconds": 4263.7906022439565,
+  "final_audit_opened": false,
+  "optimizer_steps": 192,
+  "processed_tokens": 501124,
+  "remaining_gpu_seconds": 24536.209397756043,
+  "remote_terminal_receipt_path": "/workspace/arc2/forward_targeted_repair_v1_003/runtime/TERMINAL_RECEIPT.json",
+  "remote_terminal_receipt_sha256": "42b55cf980e24082c61b56ee6467daaf58597715b71ccd8492fa05fb57312e1c",
+  "round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003",
+  "schema_version": 1,
+  "scientific_gpu_training_seconds": 524.068272416,
+  "scientific_training_started": true,
+  "status": "COMPLETED"
+}
