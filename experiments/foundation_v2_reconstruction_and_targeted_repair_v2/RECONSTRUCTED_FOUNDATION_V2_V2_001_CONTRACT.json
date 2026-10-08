@@ -1,0 +1,52 @@
+{
+  "authorization_required": {
+    "decision": [
+      "CONTINUE",
+      "CONTINUE_WITH_WARNING"
+    ],
+    "future_directive_must_bind": [
+      "protocol_id",
+      "round_id",
+      "contract_sha256",
+      "launch_nonce",
+      "exact_source_commit"
+    ],
+    "scientific_training_authorized": true
+  },
+  "closed_predecessors": [
+    {
+      "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+      "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+      "status": "TERMINAL_NON_DISPATCHABLE"
+    },
+    {
+      "nonce": "3a52d466-e8ec-4d51-96d2-505853df2c2c",
+      "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_002",
+      "status": "REJECTED_NON_CONSUMABLE"
+    }
+  ],
+  "final_audit_accessed": false,
+  "fresh_paths": {
+    "accounting_state": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_001/runtime/OPTIMIZER_ACCOUNTING_STATE.json",
+    "checkpoints": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_001/checkpoints",
+    "freeze": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_001/freeze",
+    "ledger": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_001/ledger/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V7.jsonl",
+    "ledger_snapshot": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_001/ledger/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V7_SNAPSHOT.json",
+    "nonce_consumption": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_001/authorization/nonce_consumption",
+    "preflight": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_001/preflight/FINAL_PREFLIGHT.json",
+    "run_root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_001",
+    "runtime": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_001/runtime",
+    "terminal_receipt": "/workspace/arc2/orchestration/rounds/ROUND_RECONSTRUCTED_FOUNDATION_V2_V2_001/RECONSTRUCTED_FOUNDATION_V2_V2_001_TERMINAL_RECEIPT.json"
+  },
+  "launch_binding_path": "RECONSTRUCTION_AVAILABLE_INPUTS_V2_LAUNCH_BINDING.json",
+  "launch_binding_sha256": "afde3661e026a583060d2cdfd704e9924809bb8e5262cd583b633c863bebe5b5",
+  "launch_nonce": "bc1f9e94-e336-447e-ab22-87decc706496",
+  "new_model_identity": "RECONSTRUCTED_FOUNDATION_V2_V2_001",
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "round_class": "SCIENTIFIC",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_001",
+  "schema_version": 1,
+  "scientific_condition_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2_CONDITION_001",
+  "scientific_training_started": false,
+  "status": "PENDING_NEW_SUBPROTOCOL_AUTHORIZATION"
+}

@@ -15,6 +15,8 @@ from typing import Any
 REMEDIATION = {"REQUIRE_CURRICULUM_REVIEW", "REQUIRE_DIAGNOSTIC_REVIEW", "REQUIRE_INFRA_REPAIR", "REQUIRE_CHANGES"}
 KNOWN = REMEDIATION | {"CONTINUE", "CONTINUE_WITH_WARNING", "NEW_SUBPROTOCOL_REQUIRED", "PAUSE_SCIENTIFIC_EXPERIMENT", "STOP_CURRENT_TRACK", "TERMINAL_SCIENTIFIC_STOP", "EMERGENCY_RECOVERY"}
 STEP_ORDER = {"PROCESSING": 0, "REMEDIATION_COMPLETE": 1, "VALIDATED": 2, "COMMITTED": 3, "RESUBMITTED": 4, "WAITING_DIRECTOR": 5}
+RESOLUTION_REQUIRED = REMEDIATION | {"NEW_SUBPROTOCOL_REQUIRED", "EMERGENCY_RECOVERY"}
+RESOLUTION_KEYS = {"root_cause", "why_current_path_is_invalid", "artifacts_or_conditions_that_must_remain_frozen", "required_resolution", "controller_next_actions", "minimum_acceptance_evidence", "forbidden_actions", "fresh_round_id_required", "fresh_protocol_id_required", "fresh_gate_nonce_output_root_required"}
 
 
 def now() -> str:
@@ -58,6 +60,10 @@ def valid_response(path: Path, directive: dict[str, Any], digest: str) -> bool:
     return all(value.get(key) == item for key, item in expected.items())
 
 
+def valid_resolution_plan(value: Any) -> bool:
+    return isinstance(value, dict) and RESOLUTION_KEYS.issubset(value)
+
+
 def transition(record: dict[str, Any], state: str, **values: Any) -> None:
     if record.get("state") == state and all(record.get(k) == v for k, v in values.items()):
         return
@@ -89,6 +95,8 @@ def main() -> int:
     parser.add_argument("--frozen-protocol-change-required", action="store_true")
     parser.add_argument("--close-no-director", action="store_true",
                         help="close a completed remediation under the single-controller policy")
+    parser.add_argument("--resolution-plan", type=Path,
+                        help="legacy bridge only; future Director directives carry controller_resolution_plan")
     args = parser.parse_args()
     directive_bytes = args.directive.read_bytes()
     digest = hashlib.sha256(directive_bytes).hexdigest()
@@ -133,6 +141,26 @@ def main() -> int:
             transition(record, "PROCESSING", route="ISOLATED_RECOVERY")
         else:
             transition(record, "CLOSED", route="AUTHORIZED" if directive.get("scientific_training_authorized") is True else "UNAUTHORIZED_CONTINUE_FAIL_CLOSED")
+    if decision in RESOLUTION_REQUIRED and not record.get("resolution_plan_sha256"):
+        plan = directive.get("controller_resolution_plan")
+        if plan is None and args.resolution_plan:
+            if not args.resolution_plan.is_file():
+                raise RuntimeError("MISSING_LEGACY_RESOLUTION_PLAN")
+            plan_bytes = args.resolution_plan.read_bytes()
+            plan = json.loads(plan_bytes.decode("utf-8"))
+        elif plan is not None:
+            plan_bytes = json.dumps(plan, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        else:
+            transition(record, "FAILED_CLOSED", reason="DIRECTOR_RESOLUTION_PLAN_MISSING")
+            atomic_json(args.state, state)
+            raise RuntimeError("DIRECTOR_RESOLUTION_PLAN_MISSING")
+        if not valid_resolution_plan(plan):
+            transition(record, "FAILED_CLOSED", reason="DIRECTOR_RESOLUTION_PLAN_INVALID")
+            atomic_json(args.state, state)
+            raise RuntimeError("DIRECTOR_RESOLUTION_PLAN_INVALID")
+        record["resolution_plan_sha256"] = hashlib.sha256(plan_bytes).hexdigest()
+        record["resolution_plan_source"] = str(args.resolution_plan.resolve()) if args.resolution_plan else "DIRECTIVE_EMBEDDED"
+        record["last_progress_at"] = now()
     if args.repair_attempt_count is not None:
         if args.repair_attempt_count < 0:
             raise RuntimeError("INVALID_REPAIR_ATTEMPT_COUNT")

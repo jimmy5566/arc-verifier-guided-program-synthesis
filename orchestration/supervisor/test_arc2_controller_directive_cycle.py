@@ -25,7 +25,7 @@ class ControllerDirectiveCycleTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw); directives = root / "directives"; responses = root / "responses"; notifications = root / "notifications"
             first = directives / "DIRECTOR_DIRECTIVE_DUMMY_REMEDIATION.json"
-            write(first, {"directive_id": first.stem, "decision": "REQUIRE_CHANGES", "scientific_training_authorized": False})
+            write(first, {"directive_id": first.stem, "decision": "REQUIRE_CHANGES", "scientific_training_authorized": False, "controller_resolution_plan": {"root_cause": "dummy", "why_current_path_is_invalid": "dummy", "artifacts_or_conditions_that_must_remain_frozen": [], "required_resolution": "dummy", "controller_next_actions": [], "minimum_acceptance_evidence": [], "forbidden_actions": [], "fresh_round_id_required": False, "fresh_protocol_id_required": False, "fresh_gate_nonce_output_root_required": False}})
             digest = hashlib.sha256(first.read_bytes()).hexdigest()
             supervisor = Supervisor(root / "supervisor.json", notifications)
             with patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")):

@@ -1,0 +1,19 @@
+{
+  "binding_sha256": "afde3661e026a583060d2cdfd704e9924809bb8e5262cd583b633c863bebe5b5",
+  "checks": [
+    "fresh V2 protocol/round/nonce/output paths",
+    "fresh gate is false pending final preflight",
+    "base/replay/Novel identity bindings",
+    "0 of 28800 scientific seconds and 7200 reservation",
+    "no Gold/final-audit named training inputs",
+    "closed V1 identities isolated"
+  ],
+  "contract_sha256": "a26af1734bb476f15a9a1da672797784c911559d10bcbbb315821ce49d39d009",
+  "directive_id": "DIRECTOR_DIRECTIVE_017",
+  "gate_sha256": "c8e7220fb28ee14935abed0f1c0c5f923151c2ff3618a084f18d4df142de65b2",
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_001",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "PASS_CPU_ONLY_PENDING_FINAL_READ_ONLY_PREFLIGHT"
+}

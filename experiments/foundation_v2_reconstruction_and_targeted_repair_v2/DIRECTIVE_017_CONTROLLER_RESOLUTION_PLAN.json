@@ -1,0 +1,38 @@
+{
+  "applies_to_directive_id": "DIRECTOR_DIRECTIVE_017",
+  "artifacts_or_conditions_that_must_remain_frozen": [
+    "Round 001 terminal closure",
+    "V1 protocol terminal state",
+    "exact base/replay/Novel/runtime identities",
+    "28,800-second total scientific budget at zero usage",
+    "final-audit and Gold boundaries"
+  ],
+  "controller_next_actions": [
+    "freeze V2 package",
+    "run minimum CPU tests",
+    "run fresh read-only final preflight after exact source sync",
+    "only dispatch after its fresh gate and authorization are valid"
+  ],
+  "forbidden_actions": [
+    "revive Round 001",
+    "reuse V1 gate/nonce/binding/authorization",
+    "open final audit",
+    "start GPU during this contract repair"
+  ],
+  "fresh_gate_nonce_output_root_required": true,
+  "fresh_protocol_id_required": true,
+  "fresh_round_id_required": true,
+  "minimum_acceptance_evidence": [
+    "new protocol/round/nonce/binding/gate/output identity",
+    "fresh source parity",
+    "runtime imports",
+    "all byte hashes and boundary checks",
+    "no stale process/path",
+    "budget 0/28800"
+  ],
+  "required_resolution": "Build V2 as the smallest new scientific condition, independently bind valid assets, and use fresh execution identities.",
+  "root_cause": "The rejected successor reused a closed V1 protocol identity, gate, nonce, binding, and path scope.",
+  "schema_version": 1,
+  "source": "USER_CONTROLLER_RESPONSIBILITY_CONTRACT_2026-10-08",
+  "why_current_path_is_invalid": "Directive 017 preserved V1 as terminal and rejected the V1 round-002 contract."
+}

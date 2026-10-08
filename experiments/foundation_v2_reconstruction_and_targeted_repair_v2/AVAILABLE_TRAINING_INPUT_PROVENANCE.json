@@ -1,0 +1,124 @@
+{
+  "base_and_tokenizer": {
+    "files": [
+      {
+        "bytes": 68,
+        "identity_role": "BASE_OR_TOKENIZER",
+        "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/added_tokens.json",
+        "sha256": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce"
+      },
+      {
+        "bytes": 1532,
+        "identity_role": "BASE_OR_TOKENIZER",
+        "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/config.json",
+        "sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0"
+      },
+      {
+        "bytes": 113,
+        "identity_role": "BASE_OR_TOKENIZER",
+        "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/generation_config.json",
+        "sha256": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02"
+      },
+      {
+        "bytes": 4996836472,
+        "identity_role": "BASE_OR_TOKENIZER",
+        "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model-00001-of-00002.safetensors",
+        "sha256": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529"
+      },
+      {
+        "bytes": 2270397024,
+        "identity_role": "BASE_OR_TOKENIZER",
+        "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model-00002-of-00002.safetensors",
+        "sha256": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0"
+      },
+      {
+        "bytes": 32913,
+        "identity_role": "BASE_OR_TOKENIZER",
+        "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model.safetensors.index.json",
+        "sha256": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4"
+      },
+      {
+        "bytes": 1326,
+        "identity_role": "BASE_OR_TOKENIZER",
+        "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model_manifest.json",
+        "sha256": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7"
+      },
+      {
+        "bytes": 367,
+        "identity_role": "BASE_OR_TOKENIZER",
+        "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/special_tokens_map.json",
+        "sha256": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b"
+      },
+      {
+        "bytes": 1731,
+        "identity_role": "BASE_OR_TOKENIZER",
+        "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/tokenizer.json",
+        "sha256": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5"
+      },
+      {
+        "bytes": 988,
+        "identity_role": "BASE_OR_TOKENIZER",
+        "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/tokenizer_config.json",
+        "sha256": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90"
+      },
+      {
+        "bytes": 94,
+        "identity_role": "BASE_OR_TOKENIZER",
+        "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/vocab.json",
+        "sha256": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+      }
+    ],
+    "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139"
+  },
+  "condition_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2_CONDITION_001",
+  "forbidden_reuse": [
+    {
+      "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+      "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+      "status": "TERMINAL_NON_DISPATCHABLE"
+    },
+    {
+      "nonce": "3a52d466-e8ec-4d51-96d2-505853df2c2c",
+      "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_002",
+      "status": "REJECTED_NON_CONSUMABLE"
+    }
+  ],
+  "historical_recipe_evidence": {
+    "path": "../foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_V2_RECIPE_FREEZE.json",
+    "sha256": "67d5f70bdf4925efa2b3218184ab587f36cf93e6d43860570e4e7caecfa60e8b"
+  },
+  "novel": [
+    {
+      "artifact_commit": "09b6dc54891f42dca9c1ac51f821d0c9b8516964",
+      "artifact_repository": "jimmy5566/arc2-private-reconstruction-artifacts",
+      "manifest": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/novel_training_data_v1_1/NOVEL_TRAIN_SHARD_MANIFEST.json",
+      "manifest_content_sha256": "0c4e075c8609b9ff5f79915bb1e3e21e0fc8afe40d9b3146aeb4beded058d617",
+      "manifest_key": "shards",
+      "pool": "POOL_NOVEL_V1_1",
+      "root": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel"
+    },
+    {
+      "artifact_commit": "09b6dc54891f42dca9c1ac51f821d0c9b8516964",
+      "artifact_repository": "jimmy5566/arc2-private-reconstruction-artifacts",
+      "manifest": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/novel_training_data_v1_1/NOVEL_VAL_SHARD_MANIFEST.json",
+      "manifest_content_sha256": "72702c5c1544613a7755ee93809ca3a535a585b441710eaf6c23b6fc09e56311",
+      "manifest_key": "shards",
+      "pool": "POOL_NOVEL_V1_1_VALIDATION_ONLY",
+      "root": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel"
+    }
+  ],
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "replay": {
+    "artifact_commit": "f5483c7882cd95fefc9ec0a0caab26cc0ad23473",
+    "artifact_repository": "jimmy5566/arc2-private-reconstruction-artifacts",
+    "bytes": 119426594,
+    "logical_training_shard": "train/replay/replay-00000.parquet",
+    "path": "/workspace/arc2/reconstruction-data_v1/POOL_REPLAY_V2_1/replay-00000.parquet",
+    "pool": "POOL_REPLAY_V2_1",
+    "row_count": 62650,
+    "sha256": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc"
+  },
+  "schema_version": 1,
+  "stage_compatibility_claim": "NOT_ASSUMED_FROM_CLOSED_PROTOCOL: this new condition independently requires exact byte preflight of all listed inputs before authorization consumption.",
+  "status": "AVAILABLE_INPUTS_FROZEN_PENDING_FINAL_PREFLIGHT"
+}

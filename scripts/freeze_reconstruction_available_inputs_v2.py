@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import uuid
+import argparse
 from pathlib import Path
 from typing import Any
 
@@ -17,9 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / "experiments" / "reconstruction_from_available_frozen_inputs_v2"
 OLD = ROOT / "experiments" / "foundation_v2_reconstruction_and_targeted_repair_v1"
 SOURCE_ROOT = "/root/arc-runtime-3090-gpu-benchmark-v1/arc2"
-PROTOCOL = "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2"
-ROUND = "RECONSTRUCTED_AVAILABLE_INPUTS_V2_001"
-RUN_ROOT = "/workspace/arc2/active_runs/reconstructed_available_inputs_v2_001"
+DEFAULT_PROTOCOL = "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2"
+DEFAULT_ROUND = "RECONSTRUCTED_AVAILABLE_INPUTS_V2_001"
 
 
 def sha(path: Path) -> str:
@@ -45,11 +45,24 @@ def remote(relative: str) -> str:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--destination", type=Path, default=DEST)
+    parser.add_argument("--protocol-id", default=DEFAULT_PROTOCOL)
+    parser.add_argument("--round-id", default=DEFAULT_ROUND)
+    parser.add_argument("--condition-id")
+    parser.add_argument("--model-identity")
+    args = parser.parse_args()
+    destination = args.destination.resolve()
+    protocol_id = args.protocol_id
+    round_id = args.round_id
+    condition_id = args.condition_id or f"{protocol_id}_CONDITION_001"
+    model_identity = args.model_identity or f"RECONSTRUCTED_FROM_AVAILABLE_FROZEN_INPUTS_{round_id}"
+    run_root = f"/workspace/arc2/active_runs/{round_id.lower()}"
     recipe = load(OLD / "RECONSTRUCTED_V2_RECIPE_FREEZE.json")
     assets = load(OLD / "RECONSTRUCTION_RUNTIME_ASSET_RECEIPT_V1.json")
     if assets["pool_bindings"]["POOL_REPLAY_V2_1"]["sha256"] != recipe["data"]["replay_shard_sha256"]:
         raise RuntimeError("REPLAY_EVIDENCE_IDENTITY_CONFLICT")
-    nonce_path = DEST / "LAUNCH_NONCE.txt"
+    nonce_path = destination / "LAUNCH_NONCE.txt"
     if nonce_path.exists():
         nonce = nonce_path.read_text(encoding="ascii").strip()
     else:
@@ -92,24 +105,24 @@ def main() -> int:
     replay = assets["pool_bindings"]["POOL_REPLAY_V2_1"]
     replay_contract = {"pool": "POOL_REPLAY_V2_1", "path": replay["remote_path"], "sha256": replay["sha256"], "bytes": replay["bytes"], "row_count": replay["rows"], "artifact_repository": replay["artifact_repository"], "artifact_commit": replay["artifact_commit"], "logical_training_shard": "train/replay/replay-00000.parquet"}
     fresh_paths = {
-        "run_root": RUN_ROOT,
-        "freeze": f"{RUN_ROOT}/freeze",
-        "runtime": f"{RUN_ROOT}/runtime",
-        "checkpoints": f"{RUN_ROOT}/checkpoints",
-        "preflight": f"{RUN_ROOT}/preflight/FINAL_PREFLIGHT.json",
-        "ledger": f"{RUN_ROOT}/ledger/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V7.jsonl",
-        "ledger_snapshot": f"{RUN_ROOT}/ledger/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V7_SNAPSHOT.json",
-        "accounting_state": f"{RUN_ROOT}/runtime/OPTIMIZER_ACCOUNTING_STATE.json",
-        "nonce_consumption": f"{RUN_ROOT}/authorization/nonce_consumption",
-        "terminal_receipt": f"/workspace/arc2/orchestration/rounds/ROUND_{ROUND}/{ROUND}_TERMINAL_RECEIPT.json",
+        "run_root": run_root,
+        "freeze": f"{run_root}/freeze",
+        "runtime": f"{run_root}/runtime",
+        "checkpoints": f"{run_root}/checkpoints",
+        "preflight": f"{run_root}/preflight/FINAL_PREFLIGHT.json",
+        "ledger": f"{run_root}/ledger/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V7.jsonl",
+        "ledger_snapshot": f"{run_root}/ledger/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V7_SNAPSHOT.json",
+        "accounting_state": f"{run_root}/runtime/OPTIMIZER_ACCOUNTING_STATE.json",
+        "nonce_consumption": f"{run_root}/authorization/nonce_consumption",
+        "terminal_receipt": f"/workspace/arc2/orchestration/rounds/ROUND_{round_id}/{round_id}_TERMINAL_RECEIPT.json",
     }
     binding = {
         "schema_version": 1,
         "status": "FROZEN_PENDING_EXACT_DIRECTOR_AUTHORIZATION_AND_FINAL_PREFLIGHT",
-        "protocol_id": PROTOCOL,
-        "round_id": ROUND,
-        "scientific_condition_id": "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2_CONDITION_001",
-        "model_identity": "RECONSTRUCTED_FROM_AVAILABLE_FROZEN_INPUTS_V2_001",
+        "protocol_id": protocol_id,
+        "round_id": round_id,
+        "scientific_condition_id": condition_id,
+        "model_identity": model_identity,
         "identity_claim": "NEW_ADAPTER_FROM_INDEPENDENTLY_FROZEN_AVAILABLE_INPUTS",
         "not_claimed": ["ORIGINAL_FOUNDATION_V2_ADAPTER_RECOVERED", "CONTINUITY_WITH_CLOSED_FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1", "BITWISE_ADAPTER_REPRODUCTION"],
         "source_provenance": {"checked_out_root": SOURCE_ROOT, "executable_files": executable_files, "final_launch_commit_rule": "A later qualifying directive must bind the exact source commit; the final preflight verifies it after RunPod checkout."},
@@ -130,12 +143,12 @@ def main() -> int:
         "scientific_boundaries": {"forbidden_path_terms": ["eval60", "gold", "final_audit"], "final_audit_accessed": False, "targeted_repair_data_used": False, "no_model_load_or_optimizer_before_authorization": True},
         "worker_command": ["/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python", remote("scripts/run_capability_pilot_2m_v1.py"), "--mode", "train", "--model-path", "/workspace/arc2/models/qwen3_4b_grids15_sft139", "--novel-train-root", dataset_contracts[0]["root"], "--novel-validation-root", dataset_contracts[1]["root"], "--replay-shard", replay_contract["path"], "--freeze", fresh_paths["freeze"], "--runtime", fresh_paths["runtime"], "--checkpoints", fresh_paths["checkpoints"]],
     }
-    binding_sha = write(DEST / "RECONSTRUCTION_AVAILABLE_INPUTS_V2_LAUNCH_BINDING.json", binding)
+    binding_sha = write(destination / "RECONSTRUCTION_AVAILABLE_INPUTS_V2_LAUNCH_BINDING.json", binding)
     contract = {
         "schema_version": 1,
         "status": "PENDING_NEW_SUBPROTOCOL_AUTHORIZATION",
-        "protocol_id": PROTOCOL,
-        "round_id": ROUND,
+        "protocol_id": protocol_id,
+        "round_id": round_id,
         "round_class": "SCIENTIFIC",
         "scientific_condition_id": binding["scientific_condition_id"],
         "new_model_identity": binding["model_identity"],
@@ -148,13 +161,13 @@ def main() -> int:
         "scientific_training_started": False,
         "final_audit_accessed": False,
     }
-    contract_sha = write(DEST / f"{ROUND}_CONTRACT.json", contract)
-    gate = {"schema_version": 1, "protocol_id": PROTOCOL, "round_id": ROUND, "round_class": "SCIENTIFIC", "contract_sha256": contract_sha, "launch_nonce": nonce, "status": "PENDING_FUTURE_DIRECTOR_AUTHORIZATION", "GPU_GATE_READY": False, "AUTO_SCIENTIFIC_EXECUTION_AUTHORIZED": False, "authorization": {"directive_sha256": None, "protocol_id": PROTOCOL, "contract_sha256": contract_sha, "launch_nonce": nonce, "consumption": "ATOMIC_EXCLUSIVE_CREATE_ONLY_AFTER_QUALIFYING_DIRECTIVE"}, "fail_closed_reasons": ["No qualifying directive has bound this new protocol, round, contract SHA, nonce, and exact source commit.", "Final read-only preflight has not yet run on the exact final launch commit."]}
-    gate_sha = write(DEST / "SCIENTIFIC_EXECUTION_GATE_AVAILABLE_INPUTS_V2.json", gate)
-    provenance = {"schema_version": 1, "protocol_id": PROTOCOL, "condition_id": binding["scientific_condition_id"], "status": "AVAILABLE_INPUTS_FROZEN_PENDING_FINAL_PREFLIGHT", "replay": replay_contract, "novel": dataset_contracts, "base_and_tokenizer": {"path": "/workspace/arc2/models/qwen3_4b_grids15_sft139", "files": base_files}, "historical_recipe_evidence": {"path": "../foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_V2_RECIPE_FREEZE.json", "sha256": binding["recipe"]["source_recipe_sha256"]}, "stage_compatibility_claim": "NOT_ASSUMED_FROM_CLOSED_PROTOCOL: this new condition independently requires exact byte preflight of all listed inputs before authorization consumption.", "forbidden_reuse": contract["closed_predecessors"]}
-    provenance_sha = write(DEST / "AVAILABLE_TRAINING_INPUT_PROVENANCE.json", provenance)
-    protocol = {"schema_version": 1, "protocol_id": PROTOCOL, "scientific_condition_id": binding["scientific_condition_id"], "model_identity": binding["model_identity"], "status": "FROZEN_PENDING_DIRECTOR_AUTHORIZATION", "condition_statement": "A new reconstruction condition using independently frozen, currently available byte-identified inputs; it is not a continuation of the terminal V1 reconstruction protocol.", "binding_sha256": binding_sha, "contract_sha256": contract_sha, "gate_sha256": gate_sha, "provenance_sha256": provenance_sha, "budget": binding["budget_contract"], "scientific_training_started": False}
-    write(DEST / "RECONSTRUCTION_FROM_AVAILABLE_FROZEN_INPUTS_V2_PROTOCOL.json", protocol)
+    contract_sha = write(destination / f"{round_id}_CONTRACT.json", contract)
+    gate = {"schema_version": 1, "protocol_id": protocol_id, "round_id": round_id, "round_class": "SCIENTIFIC", "contract_sha256": contract_sha, "launch_nonce": nonce, "status": "PENDING_FUTURE_DIRECTOR_AUTHORIZATION", "GPU_GATE_READY": False, "AUTO_SCIENTIFIC_EXECUTION_AUTHORIZED": False, "authorization": {"directive_sha256": None, "protocol_id": protocol_id, "contract_sha256": contract_sha, "launch_nonce": nonce, "consumption": "ATOMIC_EXCLUSIVE_CREATE_ONLY_AFTER_QUALIFYING_DIRECTIVE"}, "fail_closed_reasons": ["No qualifying directive has bound this new protocol, round, contract SHA, nonce, and exact source commit.", "Final read-only preflight has not yet run on the exact final launch commit."]}
+    gate_sha = write(destination / "SCIENTIFIC_EXECUTION_GATE.json", gate)
+    provenance = {"schema_version": 1, "protocol_id": protocol_id, "condition_id": binding["scientific_condition_id"], "status": "AVAILABLE_INPUTS_FROZEN_PENDING_FINAL_PREFLIGHT", "replay": replay_contract, "novel": dataset_contracts, "base_and_tokenizer": {"path": "/workspace/arc2/models/qwen3_4b_grids15_sft139", "files": base_files}, "historical_recipe_evidence": {"path": "../foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_V2_RECIPE_FREEZE.json", "sha256": binding["recipe"]["source_recipe_sha256"]}, "stage_compatibility_claim": "NOT_ASSUMED_FROM_CLOSED_PROTOCOL: this new condition independently requires exact byte preflight of all listed inputs before authorization consumption.", "forbidden_reuse": contract["closed_predecessors"]}
+    provenance_sha = write(destination / "AVAILABLE_TRAINING_INPUT_PROVENANCE.json", provenance)
+    protocol = {"schema_version": 1, "protocol_id": protocol_id, "scientific_condition_id": binding["scientific_condition_id"], "model_identity": binding["model_identity"], "status": "FROZEN_PENDING_DIRECTOR_AUTHORIZATION", "condition_statement": "A new reconstruction condition using independently frozen, currently available byte-identified inputs; it is not a continuation of the terminal V1 reconstruction protocol.", "binding_sha256": binding_sha, "contract_sha256": contract_sha, "gate_sha256": gate_sha, "provenance_sha256": provenance_sha, "budget": binding["budget_contract"], "scientific_training_started": False}
+    write(destination / f"{protocol_id}_PROTOCOL.json", protocol)
     return 0
 
 
