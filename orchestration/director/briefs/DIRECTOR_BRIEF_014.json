@@ -1,0 +1,22 @@
+{
+  "baseline_collection_started": false,
+  "brief_id": "DIRECTOR_BRIEF_014",
+  "directive_013_requirements": {
+    "CLARIFY_RETENTION_DATA_ROLES": "RESOLVED",
+    "FREEZE_ADDITIVE_EXECUTION_CONTRACT_AND_RERUN_PREFLIGHT": "BLOCKED_REMOTE_PREFLIGHT_MUST_RUN_ON_FINAL_COMMIT",
+    "FREEZE_BASE_REFERENCE_COLLECTOR": "RESOLVED_CPU_MOCK_ONLY",
+    "FREEZE_COLLECTED_BASE_REFERENCE_BEFORE_CANDIDATE_TRAINING": "BLOCKED_PENDING_FUTURE_DIRECTOR_AUTHORIZATION",
+    "RECONCILE_CANONICAL_LEDGER": "RESOLVED_V5_ONLY",
+    "REFRESH_THREE_WAY_PROVENANCE_AND_RESUBMIT": "BLOCKED_PENDING_FINAL_COMMIT_SYNC",
+    "REQUEST_BASE_REFERENCE_EXECUTION_AUTHORIZATION": "RESOLVED_BY_THIS_BRIEF"
+  },
+  "evidence": {
+    "experiments/base_only_targeted_repair_remote_first_v2/BASE_REFERENCE_COLLECTOR_V1.json": "cf5e84c5e85878f167fe6501bab501ec437cf9b1b65a9b3258255e86313d3f13",
+    "experiments/base_only_targeted_repair_remote_first_v2/DIRECTIVE_013_REQUIREMENT_AUDIT_V1.json": "fcb3384868a63ce2b186d4f130f402bab08f6f813bd4e01d0f1ee173d75747b4",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v5/LAUNCH_BINDING_V1.json": "65de403cb8c5b9eb5992e716aea564d0b6b972ca0f675bbbc4a2af04caf0e8d6",
+    "orchestration/budget/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V5.jsonl": "7d19684fd198482d8862dbf2110711f183ed86b58d9d9dff2922cc9cb9b891cc"
+  },
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2",
+  "request": "Review and authorize only the frozen baseline-reference collection, if satisfied. Candidate training remains unauthorized.",
+  "scientific_training_started": false
+}
