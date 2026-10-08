@@ -68,7 +68,7 @@ def main() -> int:
     args = p.parse_args()
     raw = args.binding.read_bytes()
     binding = json.loads(raw.decode("utf-8"))
-    output = {"schema_version": 1, "status": "FAIL_CLOSED", "launch_binding_sha256": hashlib.sha256(raw).hexdigest(), "no_optimizer_constructed": True}
+    output = {"schema_version": 1, "status": "FAIL_CLOSED", "launch_binding_sha256": hashlib.sha256(raw).hexdigest(), "binding_path": str(args.binding.resolve()), "no_optimizer_constructed": True}
     try:
         if binding.get("schema_version") not in {1, 2, 3} or binding.get("status") not in {"FROZEN_PENDING_PREFLIGHT", "FROZEN_PENDING_GPU_RUNTIME_PREFLIGHT", "FROZEN_PENDING_REPAIR_RERUN_PREFLIGHT"}:
             raise RuntimeError("INVALID_RECONSTRUCTION_LAUNCH_BINDING")

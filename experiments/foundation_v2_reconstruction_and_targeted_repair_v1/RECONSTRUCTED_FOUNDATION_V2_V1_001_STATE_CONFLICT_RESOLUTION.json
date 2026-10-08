@@ -1,0 +1,154 @@
+{
+  "classification": "INVALID_SUCCESS_RECEIPT_PRE_OPTIMIZER_FAILURE",
+  "fields": {
+    "checkpoints_written": {
+      "classification": "CONFIRMED_FALSE",
+      "evidence": [
+        {
+          "path": "RECONSTRUCTED_FOUNDATION_V2_V1_001_REMOTE_FORENSIC_BUNDLE.json",
+          "sha256": "39b48306265b18ddfd273a19ec2f01310a1e0c9c3190b486330dedf2c64aef04"
+        }
+      ],
+      "value": 0
+    },
+    "final_audit_accessed": {
+      "classification": "CONFIRMED_FALSE",
+      "evidence": [
+        {
+          "path": ".arc2-local/orchestration/receipt_cache/ROUND_RECONSTRUCTED_FOUNDATION_V2_V1_001/ROUND_RECONSTRUCTED_FOUNDATION_V2_V1_001_TERMINAL_RECEIPT.json",
+          "sha256": "826a35d7139b3be84f1c5d1e912e77a502b62eebe782c74d339e8d9781ab41df"
+        }
+      ],
+      "value": false
+    },
+    "launch_requested": {
+      "classification": "CONFIRMED_TRUE",
+      "evidence": [
+        {
+          "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001_LAUNCH.json",
+          "sha256": "034c700fb289b61b195d038fc926266e7ca92ba145ad4a74960bced5e564a580"
+        }
+      ]
+    },
+    "model_loaded": {
+      "classification": "CONFIRMED_FALSE",
+      "evidence": [
+        {
+          "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001.log",
+          "sha256": "4ec50687a04c83359a09ad38af3420528257f6fa4ddca291f3ea03c10bf36f21"
+        }
+      ],
+      "reason": "import failure before model construction"
+    },
+    "optimizer_constructed": {
+      "classification": "CONFIRMED_FALSE",
+      "evidence": [
+        {
+          "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001.log",
+          "sha256": "4ec50687a04c83359a09ad38af3420528257f6fa4ddca291f3ea03c10bf36f21"
+        }
+      ]
+    },
+    "optimizer_steps": {
+      "classification": "CONFIRMED_FALSE",
+      "evidence": [
+        {
+          "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001_STATE_AUDIT.json",
+          "sha256": "e28e24fa6dd9c2774761eeca38dfb8d56d777df5d6be3668a64a71449b798b24"
+        },
+        {
+          "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V6_SNAPSHOT.json",
+          "sha256": "a1cd42c65df60fb15bbf70e8272c18ce4336e4ad667e6022d5ca44f49ff5913c"
+        }
+      ],
+      "value": 0
+    },
+    "processed_tokens": {
+      "classification": "CONFIRMED_FALSE",
+      "evidence": [
+        {
+          "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001_STATE_AUDIT.json",
+          "sha256": "e28e24fa6dd9c2774761eeca38dfb8d56d777df5d6be3668a64a71449b798b24"
+        }
+      ],
+      "value": 0
+    },
+    "scientific_gpu_training_seconds": {
+      "classification": "CONFIRMED_FALSE",
+      "evidence": [
+        {
+          "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V6.jsonl",
+          "sha256": "1126ba0afa4587fa5e5d7df6aa9b5f7513919277a530a89d50c9f2484ce64ff0"
+        },
+        {
+          "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V6_SNAPSHOT.json",
+          "sha256": "a1cd42c65df60fb15bbf70e8272c18ce4336e4ad667e6022d5ca44f49ff5913c"
+        }
+      ],
+      "value": 0.0
+    },
+    "worker_exit_code": {
+      "classification": "CONFIRMED_TRUE",
+      "evidence": [
+        {
+          "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V6.jsonl",
+          "sha256": "1126ba0afa4587fa5e5d7df6aa9b5f7513919277a530a89d50c9f2484ce64ff0"
+        },
+        {
+          "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001.log",
+          "sha256": "4ec50687a04c83359a09ad38af3420528257f6fa4ddca291f3ea03c10bf36f21"
+        }
+      ],
+      "value": 1
+    },
+    "worker_started": {
+      "classification": "CONFIRMED_TRUE",
+      "evidence": [
+        {
+          "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001.log",
+          "sha256": "4ec50687a04c83359a09ad38af3420528257f6fa4ddca291f3ea03c10bf36f21"
+        }
+      ]
+    },
+    "wrapper_exit_code": {
+      "classification": "CONFIRMED_TRUE",
+      "evidence": [
+        {
+          "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V6.jsonl",
+          "sha256": "1126ba0afa4587fa5e5d7df6aa9b5f7513919277a530a89d50c9f2484ce64ff0"
+        },
+        {
+          "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001.log",
+          "sha256": "4ec50687a04c83359a09ad38af3420528257f6fa4ddca291f3ea03c10bf36f21"
+        }
+      ],
+      "value": 1
+    },
+    "wrapper_started": {
+      "classification": "CONFIRMED_TRUE",
+      "evidence": [
+        {
+          "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001.log",
+          "sha256": "4ec50687a04c83359a09ad38af3420528257f6fa4ddca291f3ea03c10bf36f21"
+        }
+      ]
+    }
+  },
+  "final_audit_accessed": false,
+  "original_receipt_claim_conflicts_with_forensic_evidence": true,
+  "original_terminal_receipt": {
+    "path": ".arc2-local/orchestration/receipt_cache/ROUND_RECONSTRUCTED_FOUNDATION_V2_V1_001/ROUND_RECONSTRUCTED_FOUNDATION_V2_V1_001_TERMINAL_RECEIPT.json",
+    "preserved_byte_for_byte": true,
+    "sha256": "826a35d7139b3be84f1c5d1e912e77a502b62eebe782c74d339e8d9781ab41df"
+  },
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "remote_forensic_bundle": {
+    "path": "RECONSTRUCTED_FOUNDATION_V2_V1_001_REMOTE_FORENSIC_BUNDLE.json",
+    "sha256": "39b48306265b18ddfd273a19ec2f01310a1e0c9c3190b486330dedf2c64aef04"
+  },
+  "retry_authorized": false,
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+  "schema_version": 1,
+  "scientific_training_authorized": false,
+  "status": "SCIENTIFIC_STATE_CONFLICT_HOLD"
+}

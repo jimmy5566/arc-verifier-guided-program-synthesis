@@ -1,0 +1,89 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_015",
+  "decision": "REQUIRE_INFRA_REPAIR",
+  "scope": "SCIENTIFIC_STATE_CONFLICT_RECONSTRUCTED_FOUNDATION_V2_V1_001",
+  "reasons": [
+    {
+      "area": "escalation_and_referenced_identity",
+      "status": "PASS",
+      "finding": "CONTROLLER_ESCALATION_REQUEST_001.json has verified SHA256 f5f3f98aef7fd80be8941a4ffcfb471e661e0754c5d612f40c63ba9b403911df. The referenced launch configuration, terminal receipt, Supervisor notification, and Controller acknowledgement match their recorded SHA256 identities."
+    },
+    {
+      "area": "authorization_provenance",
+      "status": "FAIL_CRITICAL",
+      "finding": "SCIENTIFIC_EXECUTION_GATE.json asserts AUTO_SCIENTIFIC_EXECUTION_AUTHORIZED=true even though its decision is STOP_AT_GPU_GATE_PENDING_USER_LAUNCH_INSTRUCTION. The reconstruction binding includes DIRECTOR_DIRECTIVE_005 as required evidence, but Directive 005 is NEW_SUBPROTOCOL_REQUIRED with scientific_training_authorized=false. No qualifying CONTINUE or CONTINUE_WITH_WARNING directive with scientific_training_authorized=true authorized this closed reconstruction protocol or round."
+    },
+    {
+      "area": "closed_protocol_boundary",
+      "status": "FAIL_CRITICAL",
+      "finding": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1 was already closed because its exact frozen replay identity was unrecoverable. The round command nevertheless targets that protocol and the prohibited replay-dependent launcher. Runtime availability of a file or a later infrastructure artifact cannot silently reopen the frozen scientific condition."
+    },
+    {
+      "area": "terminal_receipt_truthfulness",
+      "status": "FAIL_CRITICAL",
+      "finding": "The remote terminal receipt reports status=SUCCESS, exit_code=0, and scientific_training_started=true but contains no optimizer steps, processed tokens, charged seconds, worker result, or checkpoint identity. The preserved state audit instead classifies the attempt as an infrastructure pre-optimizer failure caused by a missing PYTHONPATH import path, with zero optimizer steps and zero charged training seconds. A wrapper-level success receipt is not valid scientific completion evidence."
+    },
+    {
+      "area": "controller_and_supervisor_state_machine",
+      "status": "FAIL_CRITICAL",
+      "finding": "The scientific round was delivered to a Controller acknowledgement whose action is DUMMY_NOTIFICATION_ACK_ONLY and training_started=false. Supervisor state simultaneously records the round as SCIENTIFIC, scientific_training_started=true, terminal SUCCESS, and controller_cycle_complete=true. Those states are mutually inconsistent and must not resolve to CLOSED or successful scientific continuation."
+    },
+    {
+      "area": "observed_optimizer_work",
+      "status": "NOT_ESTABLISHED_BUT_CURRENT_EVIDENCE_SUPPORTS_ZERO",
+      "finding": "The current inspection records no live process, no accounting state, no progress file, no training result, no checkpoints, zero ledger GPU seconds, zero optimizer steps, and zero processed tokens. This supports a pre-optimizer failure classification, but the raw remote log, wrapper and worker exit propagation, and complete ledger bytes must be frozen before zero scientific work is accepted as final truth."
+    },
+    {
+      "area": "retry_safety",
+      "status": "FAIL_HARD_STOP",
+      "finding": "SCIENTIFIC_EXECUTION_GATE_RERUN_01.json and RECONSTRUCTION_LAUNCH_BINDING_V3.json preregister a one-repair rerun, but that rerun is not authorized while the original receipt, authorization provenance, closed-protocol status, Controller classification, and accounting truth remain conflicted."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "IMMEDIATE_SCIENTIFIC_HOLD",
+      "requirement": "Place RECONSTRUCTED_FOUNDATION_V2_V1_001 and FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1 into a fail-closed scientific hold. Do not start, retry, resume, attach to, or relaunch any model, worker, optimizer, or GPU job for this round or protocol. Disable any automatic dispatch path that could consume SCIENTIFIC_EXECUTION_GATE.json or SCIENTIFIC_EXECUTION_GATE_RERUN_01.json. Read-only remote inspection is permitted."
+    },
+    {
+      "change_id": "PRESERVE_ORIGINAL_IDENTITIES",
+      "requirement": "Preserve the existing round ID, launch configuration, terminal receipt, notification, acknowledgement, logs, ledgers, state files, and timestamps byte-for-byte. Do not rewrite, delete, overwrite, or relabel the original artifacts. Any correction must be an additive superseding artifact that cites the original SHA256 values."
+    },
+    {
+      "change_id": "FREEZE_COMPLETE_REMOTE_FORENSIC_BUNDLE",
+      "requirement": "Collect read-only hashes, sizes, timestamps, and contents or explicit MISSING status for the detached wrapper command and environment, raw stdout/stderr log, wrapper exit, worker exit, PID/job state, process listing, launch receipt, terminal receipt, ledger and snapshot, optimizer accounting state, progress, training result, reservation, interval records, checkpoint directory listing and file hashes, GPU observation, checked-out commit, and source hashes. Do not infer absent evidence as PASS."
+    },
+    {
+      "change_id": "RECONCILE_SCIENTIFIC_TRUTH_STATE",
+      "requirement": "Create an additive state-conflict resolution record with separate fields for launch_requested, wrapper_started, worker_started, model_loaded, optimizer_constructed, optimizer_steps, processed_tokens, scientific_gpu_training_seconds, checkpoints_written, worker_exit_code, wrapper_exit_code, and final_audit_accessed. Classify each as CONFIRMED_TRUE, CONFIRMED_FALSE, or UNKNOWN with evidence hashes. Do not use a single scientific_training_started flag as a substitute for these states."
+    },
+    {
+      "change_id": "SUPERSEDE_INVALID_SUCCESS_WITHOUT_REWRITING",
+      "requirement": "If the preserved raw evidence confirms the current pre-optimizer failure account, add a superseding terminal classification such as INVALID_SUCCESS_RECEIPT_PRE_OPTIMIZER_FAILURE and set the orchestration round to SCIENTIFIC_STATE_CONFLICT_HOLD, not SUCCESS or CLOSED. If any optimizer work is discovered, preserve and charge its exact interval before further review."
+    },
+    {
+      "change_id": "REPAIR_AUTHORIZATION_GATE",
+      "requirement": "Require every scientific launch gate to bind the exact Director directive bytes and SHA256, matching protocol and scope, decision CONTINUE or CONTINUE_WITH_WARNING, scientific_training_authorized=true, exact round or allowed condition identity, and an unconsumed authorization nonce or launch identity. Reject dummy-smoke directives, NEW_SUBPROTOCOL_REQUIRED, REQUIRE_CHANGES, REQUIRE_INFRA_REPAIR, stale directives, scope mismatches, closed protocols, and internally contradictory gates."
+    },
+    {
+      "change_id": "REPAIR_WRAPPER_AND_RECEIPT_SEMANTICS",
+      "requirement": "Propagate the real worker exit code and failure into the terminal receipt. A scientific SUCCESS receipt must include verified worker completion, optimizer and token counts, charged seconds, ledger snapshot hash, result hash, checkpoint identities, and final-audit state. Missing required scientific fields, wrapper-only success, import failure, or absent worker result must produce a fail-closed non-success receipt."
+    },
+    {
+      "change_id": "REPAIR_SCIENTIFIC_NOTIFICATION_CLASSIFICATION",
+      "requirement": "A round classified SCIENTIFIC must never be acknowledged through DUMMY_NOTIFICATION_ACK_ONLY. Bind notifications and acknowledgements to round_class, protocol_id, receipt schema, and terminal evidence; on mismatch, keep the Controller in SCIENTIFIC_STATE_CONFLICT and escalate exactly once without marking the cycle complete."
+    },
+    {
+      "change_id": "ADD_REGRESSION_TESTS",
+      "requirement": "Add CPU-only regression tests covering unauthorized scientific gate rejection, closed-protocol rejection, contradictory gate rejection, wrapper-success/worker-failure propagation, missing scientific receipt fields, scientific-round dummy-ack rejection, exactly-once escalation across watchdog restart, zero-work accounting, discovered-work charging, and preservation of the original round identity."
+    },
+    {
+      "change_id": "PROVENANCE_AND_DIRECTOR_RESUBMISSION",
+      "requirement": "Freeze the forensic resolution and infrastructure repairs, commit and push them on the existing non-main branch without force-push or history rewrite, verify fresh local HEAD equals git ls-remote origin SHA equals RunPod checked-out/source SHA, and submit a new hashed Director brief. The brief must request review of the resolved state only; it must not treat the preregistered rerun as authorized."
+    }
+  ],
+  "retry_authorized": false,
+  "launch_authorized": false,
+  "model_loading_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false
+}

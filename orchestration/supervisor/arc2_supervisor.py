@@ -88,6 +88,18 @@ def utc_seconds() -> float:
     return time.time()
 
 
+def scientific_terminal_receipt_issues(receipt: dict[str, Any], round_class: str) -> list[str]:
+    """A SUCCESS receipt is scientific evidence only when its full contract exists."""
+    if round_class != ROUND_CLASS_SCIENTIFIC or receipt.get("status") != "SUCCESS":
+        return []
+    required = (
+        "worker_exit_code", "optimizer_steps", "processed_tokens",
+        "scientific_gpu_training_seconds", "ledger_snapshot_sha256",
+        "training_result_sha256", "checkpoint_identities", "final_audit_accessed",
+    )
+    return [key for key in required if key not in receipt]
+
+
 def round_class_from_contract(round_id: str, receipt: dict[str, Any]) -> str:
     """Classify the round contract independently of optimizer progress."""
     if (
@@ -158,6 +170,10 @@ class Supervisor:
             # This captures actual optimizer progress, not the round's contract.
             record["scientific_training_started"] = receipt.get("scientific_training_started") is True
             record["protocol_id"] = receipt.get("protocol_id")
+            receipt_issues = scientific_terminal_receipt_issues(receipt, round_class)
+            record["terminal_evidence_valid"] = not receipt_issues
+            if receipt_issues:
+                record["terminal_evidence_issues"] = receipt_issues
             record["remote_receipt_path"] = str(path.resolve())
             if not record.get("controller_notification_sent"):
                 notification = self.notification_dir / f"CONTROLLER_NOTIFICATION_{round_id}_{digest[:12]}.json"
@@ -355,7 +371,10 @@ class Supervisor:
                     acknowledgement_value = {"parse_failure": True}
             if acknowledgement_value.get("action") == "DUMMY_NOTIFICATION_ACK_ONLY":
                 observed = "ACK_ONLY"
-            conflict = observed in {ROUND_CLASS_DUMMY, ROUND_CLASS_SMOKE, ROUND_CLASS_INFRASTRUCTURE, "ACK_ONLY"}
+            invalid_success = bool(scientific_terminal_receipt_issues(receipt, expected))
+            if invalid_success:
+                observed = "INVALID_SCIENTIFIC_TERMINAL_RECEIPT"
+            conflict = observed in {ROUND_CLASS_DUMMY, ROUND_CLASS_SMOKE, ROUND_CLASS_INFRASTRUCTURE, "ACK_ONLY", "INVALID_SCIENTIFIC_TERMINAL_RECEIPT"}
             # A newly implemented notification can be SCIENTIFIC or UNKNOWN; UNKNOWN
             # is not itself a contradiction so old receipts remain auditable.
             if not conflict:
@@ -386,7 +405,8 @@ class Supervisor:
                 "optimizer_steps": receipt.get("optimizer_steps", 0),
                 "scientific_training_started": receipt.get("scientific_training_started") is True,
                 "gpu_seconds_charged": receipt.get("scientific_gpu_training_seconds", 0.0),
-                "exact_inconsistency": "SCIENTIFIC_ROUND_RECEIVED_DUMMY_OR_ACK_ONLY_CONTROLLER_PATH",
+                "exact_inconsistency": "SCIENTIFIC_SUCCESS_RECEIPT_MISSING_REQUIRED_EVIDENCE" if invalid_success else "SCIENTIFIC_ROUND_RECEIVED_DUMMY_OR_ACK_ONLY_CONTROLLER_PATH",
+                "terminal_receipt_validation_issues": scientific_terminal_receipt_issues(receipt, expected),
                 "requested_decision": "REQUIRE_INFRA_REPAIR_OR_SAFE_RETRY_DECISION",
                 "preserve_existing_round_identity": True,
                 "do_not_launch_gpu_job": True,

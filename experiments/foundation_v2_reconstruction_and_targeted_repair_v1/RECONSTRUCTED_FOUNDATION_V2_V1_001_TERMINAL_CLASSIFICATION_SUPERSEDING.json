@@ -1,0 +1,15 @@
+{
+  "final_audit_accessed": false,
+  "optimizer_steps": 0,
+  "original_terminal_receipt_preserved": true,
+  "original_terminal_receipt_sha256": "826a35d7139b3be84f1c5d1e912e77a502b62eebe782c74d339e8d9781ab41df",
+  "processed_tokens": 0,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "retry_authorized": false,
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+  "schema_version": 1,
+  "scientific_gpu_training_seconds": 0.0,
+  "state_conflict_resolution_sha256": "c171a0acad28888eefd1ca6e3243c6b57dd7b019fdaa57a9cf037df77568ba19",
+  "status": "INVALID_SUCCESS_RECEIPT_PRE_OPTIMIZER_FAILURE",
+  "supersedes_interpretation_only": true
+}

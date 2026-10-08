@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from orchestration.supervisor.arc2_supervisor import Supervisor
+from orchestration.supervisor.arc2_supervisor import Supervisor, scientific_terminal_receipt_issues
 
 ROOT = Path(__file__).resolve().parents[2]
 ROUTER = ROOT / "scripts" / "arc2_controller_directive_cycle.py"
@@ -130,6 +130,14 @@ class ControllerDirectiveCycleTest(unittest.TestCase):
             self.assertIn("SAME_BLOCKER_SURVIVED_TWO_BOUNDED_REPAIRS", payload["blocker"])
             record = Supervisor(state_path, note).state["directives"][directive_id]
             self.assertEqual(1, record["director_escalation_wakeup_count"])
+
+    def test_scientific_success_receipt_requires_worker_and_accounting_evidence(self) -> None:
+        receipt = {"round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_SUCCESS", "status": "SUCCESS", "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1"}
+        issues = scientific_terminal_receipt_issues(receipt, "SCIENTIFIC")
+        self.assertIn("worker_exit_code", issues)
+        self.assertIn("checkpoint_identities", issues)
+        receipt.update({"worker_exit_code": 0, "optimizer_steps": 1, "processed_tokens": 10, "scientific_gpu_training_seconds": 1.0, "ledger_snapshot_sha256": "a" * 64, "training_result_sha256": "b" * 64, "checkpoint_identities": ["c" * 64], "final_audit_accessed": False})
+        self.assertEqual([], scientific_terminal_receipt_issues(receipt, "SCIENTIFIC"))
 
     def test_scientific_state_conflict_escalates_once_without_downgrading_round(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
