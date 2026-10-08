@@ -1,0 +1,40 @@
+{
+  "checkpoint_manifest_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+  "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "cohort_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_minimal_v1/COHORT_MANIFEST.json",
+  "cohort_sha256": "b82e408cf0c98f7f31049046b5cb36f2d315bbfcfee46f17446b5bab5c950acf",
+  "datasets": {
+    "retention": {
+      "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+      "rows": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "target_dev": {
+      "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+      "rows": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    }
+  },
+  "final_audit_opened": false,
+  "hard_scientific_gates": [
+    "CORRECT_MODEL",
+    "CORRECT_DATA",
+    "NO_LEAKAGE",
+    "VALID_MEASUREMENT",
+    "OUTPUT_SAFETY"
+  ],
+  "inference_contract_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
+  "provenance_warnings_nonblocking": [
+    "reviewed_brief_sha256",
+    "authorization_request_sha256",
+    "response_file_sha256",
+    "historical_node_identity"
+  ],
+  "purpose": "Target-blind operational validation of frozen token-level decoder; no correctness scoring.",
+  "round_id": "DECODER_CHARACTERIZATION_MINIMAL_V1_001",
+  "runtime_cap_seconds": 1200,
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "stage_id": "DECODER_CHARACTERIZATION_MINIMAL_V1",
+  "target_blind": true
+}
