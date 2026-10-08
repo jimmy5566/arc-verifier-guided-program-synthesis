@@ -2,6 +2,11 @@
 
 ## Normal path
 
+`scripts/arc2_runner.py` is the sole persistent outer loop.  It recognizes only
+`ACTIVE`, `WAITING_REMOTE_JOB`, `PAUSED`, and `TERMINAL`.  For `ACTIVE` it uses
+Herdr's blocking prompt/wait command, rereads the durable state, and immediately
+starts another Controller turn only if it remains `ACTIVE`.
+
 `arc-controller` owns one active scientific stage from its first action until a
 real terminal condition or a detached RunPod job.  Detailed progress belongs in
 committed artifacts and Git history; [`ARC2_WORKFLOW_STATE_TEMPLATE.json`](ARC2_WORKFLOW_STATE_TEMPLATE.json)

@@ -12,6 +12,9 @@
   detached RunPod jobs; Watchdog only keeps one Supervisor alive. Historical
   directive/acknowledgement state machines are provenance, not normal work
   queues. See [`orchestration/SIMPLE_ORCHESTRATION_V1.md`](orchestration/SIMPLE_ORCHESTRATION_V1.md).
+- `scripts/arc2_runner.py` is the only persistent outer loop. It schedules only
+  `ACTIVE`, `WAITING_REMOTE_JOB`, `PAUSED`, and `TERMINAL`; it does not interpret
+  scientific results or replace the Controller's synchronous Director review.
 
 ## Experiment discipline
 
