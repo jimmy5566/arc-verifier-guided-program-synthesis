@@ -10,4 +10,10 @@ class PhaseBindingTests(unittest.TestCase):
   self.assertNotEqual(a['output_root'],b['output_root']); self.assertTrue(a['sealed_mapping_must_be_unreadable'])
   self.assertNotIn('sealed_scorer',' '.join(a['argv'])); self.assertTrue(b['requires_phase_a_terminal_immutable'])
   self.assertEqual(2000031,a['decode']['seed']); self.assertEqual('EXACT_128_64_64_NO_SHRINKING',b['denominator_rules'])
+ def test_v2_bindings_have_parseable_dedicated_entrypoints_and_fresh_nonces(self):
+  a=json.loads((D/'ROUND_009_POST_HOC_PHASE_A_BINDING_V2.json').read_text()); b=json.loads((D/'ROUND_009_POST_HOC_PHASE_B_BINDING_V2.json').read_text())
+  self.assertTrue(a['runtime_launch_lock_required']); self.assertTrue(b['runtime_launch_lock_required'])
+  self.assertIsNone(a['execution_checkout_commit']); self.assertIsNone(b['execution_checkout_commit'])
+  self.assertNotEqual(a['nonce'],b['nonce']); self.assertIn('run_round009_posthoc_phase_a_v1.py',a['argv'][0]); self.assertIn('run_round009_posthoc_phase_b_v1.py',b['argv'][0])
+  self.assertNotIn('sealed_scorer',' '.join(a['argv'])); self.assertTrue(b['requires_phase_a_terminal_immutable'])
 if __name__=='__main__': unittest.main()

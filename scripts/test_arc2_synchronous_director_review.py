@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import hashlib
 import sys
 import tempfile
 import unittest
@@ -24,6 +25,7 @@ class SynchronousDirectorReviewTest(unittest.TestCase):
         self.assertTrue(router.controller_must_continue({"state":"PROCESSING","next_step":"REMEDIATION_2"}))
         self.assertFalse(router.controller_must_continue({"state":"WAITING_REMOTE_JOB","next_step":"AWAIT_RECEIPT"}))
         self.assertTrue(router.controller_must_continue({"state":"REMEDIATION","next_step":"ACTION_3"}))
+        self.assertTrue(router.controller_must_continue({"state":"WAITING_DIRECTOR_ACTIVE","next_step":"AWAIT_DIRECTOR"}))
 
     def test_direct_review_receives_directive_without_supervisor(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
@@ -31,8 +33,15 @@ class SynchronousDirectorReviewTest(unittest.TestCase):
             brief = root / "brief.json"; brief.write_text("{}\n", encoding="utf-8")
             state = root / "state.json"
             state.write_text(json.dumps({"schema_version": 1, "directives": {"DIRECTOR_DIRECTIVE_PARENT": {"directive_id": "DIRECTOR_DIRECTIVE_PARENT", "state": "WAITING_DIRECTOR"}}}), encoding="utf-8")
-            def direct_prompt(*_args, **_kwargs):
-                (directive_dir / "DIRECTOR_DIRECTIVE_RESULT.json").write_text(json.dumps({"directive_id": "DIRECTOR_DIRECTIVE_RESULT", "decision": "REQUIRE_CHANGES", "scientific_training_authorized": False}), encoding="utf-8")
+            brief_hash = hashlib.sha256(brief.read_bytes()).hexdigest()
+            def direct_prompt(command, **_kwargs):
+                self.assertIn("--wait", command)
+                self.assertIn("--until", command)
+                self.assertIn("idle", command)
+                self.assertIn("done", command)
+                self.assertIn("blocked", command)
+                self.assertIn("--timeout", command)
+                (directive_dir / "DIRECTOR_DIRECTIVE_RESULT.json").write_text(json.dumps({"directive_id": "DIRECTOR_DIRECTIVE_RESULT", "decision": "REQUIRE_CHANGES", "reviewed_brief_sha256": brief_hash, "scientific_training_authorized": False}), encoding="utf-8")
                 return SimpleNamespace(returncode=0, stdout="", stderr="")
             argv = ["review", "--brief", str(brief), "--cycle-state", str(state), "--parent-directive-id", "DIRECTOR_DIRECTIVE_PARENT", "--directive-dir", str(directive_dir), "--timeout-seconds", "2"]
             with patch.object(sys, "argv", argv), patch.object(sync_review.subprocess, "run", side_effect=direct_prompt):
@@ -40,6 +49,9 @@ class SynchronousDirectorReviewTest(unittest.TestCase):
             review = json.loads(state.read_text(encoding="utf-8"))["directives"]["DIRECTOR_DIRECTIVE_PARENT"]["synchronous_review"]
             self.assertEqual("DIRECTIVE_RECEIVED", review["status"])
             self.assertTrue(review["result_directive"].endswith("DIRECTOR_DIRECTIVE_RESULT.json"))
+            record = json.loads(state.read_text(encoding="utf-8"))["directives"]["DIRECTOR_DIRECTIVE_PARENT"]
+            self.assertEqual("PROCESSING", record["state"])
+            self.assertEqual("PROCESS_DIRECTOR_DIRECTIVE", record["next_step"])
 
 
 if __name__ == "__main__":

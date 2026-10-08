@@ -1,0 +1,12 @@
+{
+  "root_cause": "The reviewed V1 Phase A/B bindings named a non-parseable generation command, a nonexistent scorer mode, and an execution checkout that did not contain the reviewed artifacts.",
+  "why_current_path_is_invalid": "The V1 bindings cannot be used for any evaluation and their nonces/output roots are permanently preserved but unconsumed.",
+  "artifacts_or_conditions_that_must_remain_frozen": ["Round 009 checkpoint identity", "sealed mapping SHA256 de1019910ce214b2be58f909c4f0f0bae2a5eb987f1803bcb38e0d0d5400a160", "target-free proof SHA256 e4c0a4e4a60a45bb5cd02be4229fff1d3e084bed4cb3dcc6b83a7fc390c37133", "V1 rejected bindings and nonces", "FINAL_AUDIT unopened"],
+  "required_resolution": "Create additive V2 phase entrypoints, parseable commands, a fail-closed launcher, target-free proof validation, fresh nonces/output roots, and an exact post-commit runtime launch lock; validate CPU-only then resubmit synchronously without execution.",
+  "controller_next_actions": ["preserve V1", "commit V2 implementation", "pin runtime launch lock after commit", "verify remote source parity and no-model preflight", "submit a new brief synchronously"],
+  "minimum_acceptance_evidence": ["all V2 CPU tests pass", "target-free proof is reviewable", "launcher rejects checkout or asset substitution", "no model loading/generation/scoring/GPU training/FINAL_AUDIT"],
+  "forbidden_actions": ["consume V1 or V2 nonce", "model loading", "generation", "scoring", "GPU inference", "scientific training", "FINAL_AUDIT"],
+  "fresh_round_id_required": false,
+  "fresh_protocol_id_required": false,
+  "fresh_gate_nonce_output_root_required": true
+}

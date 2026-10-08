@@ -1,0 +1,131 @@
+{
+  "argv": [
+    "scripts/run_round009_posthoc_phase_a_v1.py",
+    "--binding",
+    "{BINDING_PATH}",
+    "--output",
+    "{OUTPUT_ROOT}",
+    "--receipt",
+    "{TERMINAL_RECEIPT_PATH}",
+    "--execute"
+  ],
+  "asset_identities": [
+    {
+      "bytes": 68,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/added_tokens.json",
+      "sha256": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce"
+    },
+    {
+      "bytes": 1532,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/config.json",
+      "sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0"
+    },
+    {
+      "bytes": 113,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/generation_config.json",
+      "sha256": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02"
+    },
+    {
+      "bytes": 4996836472,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model-00001-of-00002.safetensors",
+      "sha256": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529"
+    },
+    {
+      "bytes": 2270397024,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model-00002-of-00002.safetensors",
+      "sha256": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0"
+    },
+    {
+      "bytes": 32913,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model.safetensors.index.json",
+      "sha256": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4"
+    },
+    {
+      "bytes": 1326,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model_manifest.json",
+      "sha256": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7"
+    },
+    {
+      "bytes": 367,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/special_tokens_map.json",
+      "sha256": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b"
+    },
+    {
+      "bytes": 1731,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/tokenizer.json",
+      "sha256": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5"
+    },
+    {
+      "bytes": 988,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/tokenizer_config.json",
+      "sha256": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90"
+    },
+    {
+      "bytes": 94,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/vocab.json",
+      "sha256": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+    },
+    {
+      "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000/adapter_model.safetensors",
+      "sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+    },
+    {
+      "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000/adapter_config.json",
+      "sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69"
+    }
+  ],
+  "binding_template_not_self_referential": true,
+  "checkpoint": {
+    "adapter_config_sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000"
+  },
+  "entrypoint_identities": {
+    "run_round009_posthoc_phase_a_v1.py": "99852aec699f70c986b4e103fee92ed985d4f8d755177978a5a1eed5752caa05",
+    "run_round009_posthoc_phase_b_v1.py": "62bb4d6741551394e6e18b4b7afaee6ce33abf2b186e30278891ea74bda9a2c5",
+    "run_round009_posthoc_stage_launcher_v1.py": "d289b80a22199bac5dfa9b588366f84c169998ce7ae7fe539560d0a4e881a2ea"
+  },
+  "execution_authorized": false,
+  "execution_checkout_commit": null,
+  "failure": "FAIL_CLOSED_NO_NONCE_CONSUMPTION_ON_PRECHECK_FAILURE",
+  "final_audit_authorized": false,
+  "input_manifests": {
+    "NOVEL": "50f156c1da6afb465f55a1d3420c6a65a2cf008b3391d3a317154d7055dc7b26",
+    "PROTECTED": "e8132701c5aa4b97e0b81941851731e40eccfd358c0ee9e2170e937bcea1633e",
+    "REPLAY": "2c91a106655fd7e462933f001d3ed2bb1a034ade55cc636346c9068e27832211"
+  },
+  "nonce": "phase-a-v2-603d45fdc3d431815e2056a7611eb42d0471f058c42e8bdc",
+  "output_root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/post_hoc_characterization_v1/phase_a_predictions_v2_603d45fdc3d431815e2056a7611eb42d0471f058c42e8bdc",
+  "phase": "A_GENERATION",
+  "protocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "required_environment": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "PYTHONPATH": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src",
+    "TOKENIZERS_PARALLELISM": "false"
+  },
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "runtime": {
+    "environment": {
+      "CUDA_VISIBLE_DEVICES": "0",
+      "PYTHONPATH": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src",
+      "TOKENIZERS_PARALLELISM": "false"
+    },
+    "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python"
+  },
+  "runtime_launch_lock_required": true,
+  "schema_version": 2,
+  "sealed_mapping_must_be_unreadable": true,
+  "terminal_receipt_path": "{OUTPUT_ROOT}/PHASE_A_TERMINAL_RECEIPT.json",
+  "training_authorized": false
+}
