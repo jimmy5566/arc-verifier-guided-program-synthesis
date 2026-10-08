@@ -91,11 +91,15 @@ appropriate for the repository.
 
 ### Authentication
 
-The runtime may provide `GH_TOKEN` and `HF_TOKEN`. Tools may consume these
-environment variables directly when authentication is required. Never print,
-echo, log, hash, serialize, commit, put in remotes, paste into prompts, or copy
-their values into RunPod receipts. Artifacts may record only
-`GH_TOKEN_PRESENT = true/false` and `HF_TOKEN_PRESENT = true/false`.
+Authentication is environment-specific. The local Windows/Herdr environment
+and the RunPod runtime may have different `GH_TOKEN` and `HF_TOKEN` presence.
+Check the boolean only in the environment that performs the operation; a local
+false result does not establish that RunPod authentication is absent. RunPod
+may consume its own environment variables directly, but never transfer a token
+between environments. Never print, echo, log, hash, serialize, commit, put in
+remotes, paste into prompts, or copy token values into RunPod receipts.
+Artifacts may record only `GH_TOKEN_PRESENT = true/false` and
+`HF_TOKEN_PRESENT = true/false`, together with the environment they describe.
 
 If GitHub or Hugging Face authentication is missing or invalid, report
 `AUTH_MISSING_GITHUB` or `AUTH_MISSING_HUGGINGFACE` and identify the blocked
