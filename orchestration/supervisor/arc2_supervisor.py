@@ -37,6 +37,16 @@ def canonical_hash(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def terminal_receipt_paths(receipt_root: Path) -> list[Path]:
+    """Find terminal receipts by their containing round directory, not filename prefix.
+
+    Scientific contracts use ``ROUND_<id>`` as the durable directory but may
+    deliberately use a model identity as the receipt filename.  Reconciliation
+    must preserve that valid distinction.
+    """
+    return sorted(receipt_root.glob("ROUND_*/*_TERMINAL_RECEIPT.json"))
+
+
 def atomic_json(path: Path, value: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile("w", encoding="utf-8", newline="\n", dir=path.parent, delete=False) as handle:
@@ -222,7 +232,7 @@ class Supervisor:
     def reconcile(self, receipt_root: Path) -> list[str]:
         """Reconcile receipt metadata and emit each Controller notification once."""
         notifications: list[str] = []
-        for path in sorted(receipt_root.glob("ROUND_*/ROUND_*_TERMINAL_RECEIPT.json")):
+        for path in terminal_receipt_paths(receipt_root):
             receipt = json.loads(path.read_text(encoding="utf-8"))
             status = receipt.get("status")
             round_id = str(receipt.get("round_id", ""))
@@ -406,7 +416,7 @@ class Supervisor:
             except ValueError:
                 continue
         next_number = max(numbers, default=0) + 1
-        for path in sorted(receipt_root.glob("ROUND_*/ROUND_*_TERMINAL_RECEIPT.json")):
+        for path in terminal_receipt_paths(receipt_root):
             try:
                 receipt = json.loads(path.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError):
@@ -862,7 +872,7 @@ def fetch_remote_receipts(target: str, remote_root: str, cache_root: Path, ident
     """Copy only JSON terminal-receipt metadata into a local ephemeral cache."""
     script = f'''python3 - <<'PY'
 import base64, glob, json, os
-for path in sorted(glob.glob({remote_root!r} + "/rounds/ROUND_*/ROUND_*_TERMINAL_RECEIPT.json")):
+for path in sorted(glob.glob({remote_root!r} + "/rounds/ROUND_*/*_TERMINAL_RECEIPT.json")):
     with open(path, "rb") as handle:
         print(json.dumps({{"path": path, "content_b64": base64.b64encode(handle.read()).decode("ascii")}}, sort_keys=True))
 PY'''
@@ -873,8 +883,9 @@ PY'''
             continue
         try:
             item = json.loads(line)
-            relative = Path(item["path"]).name
-            round_dir = cache_root / relative.split("_TERMINAL_RECEIPT", 1)[0].replace("ROUND_", "ROUND_")
+            remote_path = Path(item["path"])
+            relative = remote_path.name
+            round_dir = cache_root / remote_path.parent.name
             round_dir.mkdir(parents=True, exist_ok=True)
             (round_dir / relative).write_bytes(base64.b64decode(item["content_b64"]))
         except (KeyError, ValueError, TypeError):

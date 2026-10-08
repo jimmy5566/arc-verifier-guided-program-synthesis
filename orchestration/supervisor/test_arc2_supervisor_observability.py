@@ -1,5 +1,6 @@
 ﻿from __future__ import annotations
 
+import base64
 import contextlib
 import io
 import json
@@ -56,6 +57,39 @@ class SupervisorObservabilityTest(unittest.TestCase):
             self.assertEqual("LOW_FREQUENCY_RECONCILIATION_OK", restarted.state["last_heartbeat"]["remote_status"])
             self.assertEqual([], restarted.reconcile(receipts))
             self.assertEqual(1, len(list(notes.glob("*.json"))))
+
+
+    def test_model_named_scientific_receipt_fetches_and_wakes_exactly_once(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            receipt = {
+                "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+                "round_class": "SCIENTIFIC",
+                "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+                "status": "SUCCESS",
+                "scientific_training_started": True,
+                "worker_exit_code": 0,
+                "optimizer_steps": 172,
+                "processed_tokens": 2017545,
+                "scientific_gpu_training_seconds": 3739.0,
+                "ledger_snapshot_sha256": "a" * 64,
+                "training_result_sha256": "b" * 64,
+                "checkpoint_identities": [],
+                "final_audit_accessed": False,
+            }
+            remote_path = "/workspace/arc2/orchestration/rounds/ROUND_RECONSTRUCTED_FOUNDATION_V2_V2_009/RECONSTRUCTED_FOUNDATION_V2_V2_009_TERMINAL_RECEIPT.json"
+            payload = json.dumps({"path": remote_path, "content_b64": base64.b64encode(json.dumps(receipt).encode("utf-8")).decode("ascii")})
+            with patch.object(supervisor_module, "remote_shell", return_value=payload):
+                cache = supervisor_module.fetch_remote_receipts("unused", "/workspace/arc2/orchestration", base / "cache")
+            cached = cache / "ROUND_RECONSTRUCTED_FOUNDATION_V2_V2_009" / "RECONSTRUCTED_FOUNDATION_V2_V2_009_TERMINAL_RECEIPT.json"
+            self.assertTrue(cached.is_file())
+            service = supervisor_module.Supervisor(base / "state.json", base / "notes")
+            notified = service.reconcile(cache)
+            self.assertEqual(["RECONSTRUCTED_FOUNDATION_V2_V2_009"], notified)
+            with patch.object(supervisor_module, "prompt_controller", return_value=(0, "")) as prompt:
+                self.assertEqual(["RECONSTRUCTED_FOUNDATION_V2_V2_009"], service.wake_controller_once(notified, "arc-controller", base / "acks", 1))
+                self.assertEqual([], service.wake_controller_once(notified, "arc-controller", base / "acks", 1))
+                self.assertEqual(1, prompt.call_count)
 
 
 if __name__ == "__main__":
