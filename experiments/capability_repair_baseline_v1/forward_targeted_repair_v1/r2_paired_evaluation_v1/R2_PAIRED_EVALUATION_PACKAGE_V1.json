@@ -1,0 +1,24 @@
+{
+  "batching": "Batch32 adaptive [32,16,8,4,1], B1-vs-B32 validation; raw agreement audit-only",
+  "checkpoint_manifest": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_paired_evaluation_v1/R2_CHECKPOINT_MANIFEST.json",
+    "sha256": "f0a5ebdf28f16665ced9c19054217a7d8136e5a31e055fdcb334f7f8eca75052"
+  },
+  "evaluation_surfaces": {
+    "RETENTION_SENTINEL": 96,
+    "TARGET_DEV": 192
+  },
+  "final_audit_opened": false,
+  "minimal_gate": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_paired_evaluation_v1/R2_PAIRED_EVALUATION_MINIMAL_GATE_V1.json",
+    "sha256": "284cf93fb7c41146087289646bc3c7981a44990d5233945809ae84fa6ad78f55"
+  },
+  "package_id": "R2_PAIRED_EVALUATION_PACKAGE_V1",
+  "r2_training_terminal_evidence": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_stage_v1/R2_TRAINING_TERMINAL_EVIDENCE.json",
+    "sha256": "510fe9988eefc06662197e72c6b0a748188963ece91a9f8940ebd3e8cc49c5dc"
+  },
+  "schema_version": 1,
+  "scientific_training_started_for_evaluation": false,
+  "status": "FROZEN_READY_TO_LAUNCH"
+}

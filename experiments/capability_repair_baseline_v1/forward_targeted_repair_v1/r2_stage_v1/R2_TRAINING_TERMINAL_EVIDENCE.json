@@ -1,0 +1,19 @@
+{
+  "checkpoint_directories": [
+    "tokens_250000",
+    "final"
+  ],
+  "final_audit_accessed": false,
+  "next_stage": "FROZEN_R2_PAIRED_EVALUATION",
+  "optimizer_steps": 191,
+  "processed_tokens": 501163,
+  "remote_terminal_receipt_path": "/workspace/arc2/forward_targeted_repair_v1_004/runtime/TERMINAL_RECEIPT.json",
+  "remote_terminal_receipt_sha256": "341ee2213abc0de3784aa1ca72c0817862abdf9d2964816d6bd8a1fcdfd63223",
+  "round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_004",
+  "schema_version": 1,
+  "scientific_gpu_training_seconds": 514.223645461,
+  "scientific_training_started": true,
+  "source_commit": "e222af5b5e9536f688f42c23dc2777c16451254f",
+  "status": "COMPLETED",
+  "supervised_tokens": 214455
+}
