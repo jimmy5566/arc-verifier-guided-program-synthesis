@@ -1,0 +1,50 @@
+{
+  "checks": {
+    "all_novel_hashes": true,
+    "cpu_only": true,
+    "exact_cardinality": true,
+    "receipt_exit_success": true,
+    "remote_receipt_hash_verified": true,
+    "replay_hash": true,
+    "sealed_remote_mapping_path": true
+  },
+  "directive_id": "DIRECTOR_DIRECTIVE_022",
+  "input_manifest_hashes": {
+    "NOVEL": "50f156c1da6afb465f55a1d3420c6a65a2cf008b3391d3a317154d7055dc7b26",
+    "PROTECTED": "e8132701c5aa4b97e0b81941851731e40eccfd358c0ee9e2170e937bcea1633e",
+    "REPLAY": "2c91a106655fd7e462933f001d3ed2bb1a034ade55cc636346c9068e27832211"
+  },
+  "mapping_artifact_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/post_hoc_characterization_v1/sealed_scorer/ROUND_009_POST_HOC_SEALED_REFERENCE_MAPPING.json",
+  "mapping_artifact_sha256": "de1019910ce214b2be58f909c4f0f0bae2a5eb987f1803bcb38e0d0d5400a160",
+  "remote_receipt_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/post_hoc_characterization_v1/sealed_scorer/ROUND_009_POST_HOC_REFERENCE_MAPPING_RECEIPT.json",
+  "remote_receipt_sha256": "747c77482c5c140895de623c63a2355eb7c0cc5cf9b983a5039d22ec5d003961",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "row_item_counts": {
+    "NOVEL": 128,
+    "PROTECTED": 64,
+    "REPLAY": 64
+  },
+  "schema_version": 1,
+  "scientific_boundaries": {
+    "final_audit_opened": false,
+    "generation_started": false,
+    "model_loaded": false,
+    "scientific_training_started": false,
+    "scoring_started": false
+  },
+  "source_hashes": {
+    "novel_shards": {
+      "validation/novel/novel-00000.parquet": "233e0a4cca56b696e3ecff7461b5af4f7716e044a75fda4111bbc4c3229e79ef",
+      "validation/novel/novel-00001.parquet": "d4ad05edcafa77449694c22bb410322d49124d1f34c3936f16c79536dc3fb69d",
+      "validation/novel/novel-00002.parquet": "1ac79f34c73143bbed792a74004eb8d1a04156fee3605be52fb104b02f2faf31",
+      "validation/novel/novel-00003.parquet": "88b347f8f9f1902c68a7744c36de80d44784f2485ad67a6f5015f67ad0cfe6d0",
+      "validation/novel/novel-00004.parquet": "27fe2d9e23fd8ad1ae26cf58b7ca6065a0e8186300899fe988b36998f3f27420",
+      "validation/novel/novel-00005.parquet": "32857d2b390a3713897dac02dcd1c345d2db2991836b134e8cef09e8b62ee648",
+      "validation/novel/novel-00006.parquet": "6050e15d2c9c9a0e5572099e02ddba38cef2edeb8723d3c5930c257a421d4aec",
+      "validation/novel/novel-00007.parquet": "eab8c0c45164b2fdea6b1c91dd7b11be73362affb6446e7a0968d2b8083b510c",
+      "validation/novel/novel-00008.parquet": "a338cdd0ea87f2cf5ffd630901cae9114ca0382f3556d105475fbe92af046451"
+    },
+    "replay": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc"
+  },
+  "validation_status": "PASS"
+}

@@ -1,0 +1,11 @@
+{
+  "attempt": "CPU_ONLY_REMOTE_SEALED_MAPPING_001",
+  "directive_id": "DIRECTOR_DIRECTIVE_022",
+  "failure": "REMOTE_MAPPING_RECEIPT_NOT_PRODUCED_WITHIN_BOUNDED_FORCED_PTY_ATTEMPT",
+  "model_loading_started": false,
+  "generation_started": false,
+  "gpu_inference_started": false,
+  "payloads_written_to_generation_workspace": false,
+  "replay_sha256_verified_before_mapping_attempt": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc",
+  "status": "FAIL_CLOSED_REFERENCE_MAPPING_NOT_ESTABLISHED"
+}

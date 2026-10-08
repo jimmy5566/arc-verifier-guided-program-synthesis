@@ -1,0 +1,91 @@
+{
+  "checkpoint": {
+    "adapter_config_sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000"
+  },
+  "code_identities": {
+    "generator_script": {
+      "path": "scripts/run_generation_capability_audit_v1.py",
+      "sha256": "4b7651e04b99611df9d864581f12432cbcc62e01f04b85995fb0ca1bb927ab76"
+    },
+    "parser_scorer": {
+      "path": "src/generation_capability_audit_v1/audit.py",
+      "sha256": "94f791e583f6fe6d0cf77a173aa6ea324459c2e5eafe7c8422e55891baa53984"
+    },
+    "reference_mapper": {
+      "path": "scripts/run_round009_posthoc_reference_mapping_v1.py",
+      "sha256": "3b199422753626532fcc798de4f8e065408d4138833e646f21742f4515631bae"
+    }
+  },
+  "decode_contract": {
+    "context_window": 8704,
+    "do_sample": false,
+    "max_new_tokens": 932,
+    "num_beams": 1,
+    "seed_required": true,
+    "serializer_version": "generation_capability_audit_v1.audit:build_generation_example@18c2034799085de7d551f39571470f741baa17f9",
+    "temperature": null
+  },
+  "directive_id": "DIRECTOR_DIRECTIVE_022",
+  "execution_authorized": false,
+  "failure_behavior": "FAIL_CLOSED_PRESERVE_OUTPUTS_NO_DENOMINATOR_SHRINKING_NO_RETRY_WITHOUT_LATER_STAGE_AUTHORIZATION",
+  "final_audit_authorized": false,
+  "generation_authorized": false,
+  "gpu_inference_authorized": false,
+  "invariants": [
+    "no Eval60 Gold",
+    "no diagnostic Gold",
+    "no exposed Novel holdout",
+    "no FINAL_AUDIT",
+    "no targeted-repair data",
+    "no target in model prompt",
+    "no checkpoint/curriculum mutation",
+    "predictions sealed before scorer access"
+  ],
+  "model_loading_authorized": false,
+  "phase_contract": {
+    "phase_a": {
+      "inputs": "generation-side input-only manifests; no references",
+      "must_be_absent_before_execution": true,
+      "nonce": "ROUND009_POSTHOC_PHASE_A_5fa6faef1fae43df9fca168e41bc374b",
+      "remote_output_root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/post_hoc_characterization_v1/phase_a_predictions"
+    },
+    "phase_b": {
+      "inputs": "immutable Phase-A predictions plus sealed reference mapping only",
+      "must_be_absent_before_execution": true,
+      "nonce": "ROUND009_POSTHOC_PHASE_B_184b6c23dcdb4567b9e8a4c646fef61c",
+      "remote_output_root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/post_hoc_characterization_v1/sealed_scorer/phase_b_scores"
+    }
+  },
+  "protocol_id": "ROUND_009_POST_HOC_CAPABILITY_CHARACTERIZATION_V1",
+  "reference_mapping": {
+    "cardinality": {
+      "NOVEL": 128,
+      "PROTECTED": 64,
+      "REPLAY": 64
+    },
+    "generation_side_contains_references": false,
+    "local_receipt_path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_post_hoc_capability_characterization/ROUND_009_POST_HOC_REFERENCE_MAPPING_RECEIPT.json",
+    "local_receipt_sha256": "747c77482c5c140895de623c63a2355eb7c0cc5cf9b983a5039d22ec5d003961",
+    "protected_result_absolute_only": true,
+    "sealed_remote_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/post_hoc_characterization_v1/sealed_scorer/ROUND_009_POST_HOC_SEALED_REFERENCE_MAPPING.json",
+    "sealed_remote_sha256": "de1019910ce214b2be58f909c4f0f0bae2a5eb987f1803bcb38e0d0d5400a160",
+    "validation_path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_post_hoc_capability_characterization/ROUND_009_POST_HOC_REFERENCE_MAPPING_VALIDATION.json",
+    "validation_sha256": "8c1420137b7b339d903cdf904aef43063cf4c0c6d45382dd7556facc0fd2a3be"
+  },
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "runtime": {
+    "environment": {
+      "CUDA_VISIBLE_DEVICES": "0",
+      "PYTHONPATH": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src",
+      "TOKENIZERS_PARALLELISM": "false"
+    },
+    "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "source_commit": "eb84b2cf0946214d9a1c7371b48927b88a187639"
+  },
+  "schema_version": 1,
+  "scientific_training_authorized": false,
+  "scoring_authorized": false,
+  "status": "FROZEN_PRE_EXECUTION_CONTRACT_REFERENCE_MAPPING_PASS"
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "directive_id": "DIRECTOR_DIRECTIVE_022",
+  "directive_sha256": "22741dfd18c5e64572549230cf7e16bfb570e94bf626f3d993f251e0e9529e81",
+  "root_cause": "The prospective characterization has correct input cardinalities but lacks exact non-Gold item-to-reference mappings and a complete non-executable execution contract.",
+  "why_current_path_is_invalid": "Without source-hash-verified bijective mappings, generation results could be scored against a fragment, augmentation, neighbor, or proxy rather than the exact prompt target.",
+  "artifacts_or_conditions_that_must_remain_frozen": ["prior equivalence-stage closure/nonces/output roots", "Round 009 checkpoint and teacher-forced records", "no-Gold/final-audit/targeted-repair prohibitions", "protected result absolute-only rule"],
+  "required_resolution": "Perform isolated CPU-only mapping from the frozen Novel validation and exact replay sources, freeze sealed and input-only artifacts, complete non-executable contracts, validate, and resubmit.",
+  "controller_next_actions": ["verify mounted source hashes before payload reads", "map all required items bijectively", "verify canonical prompt/output/token-label compatibility", "freeze contracts/tests/preflight", "commit/push/provenance and brief"],
+  "minimum_acceptance_evidence": ["128/128 Novel, 64/64 replay, 64/64 protected mappings", "source and row identities with input/output hashes", "sealed scorer/reference isolation", "CPU-only test and no-model preflight"],
+  "forbidden_actions": ["model loading", "generation", "scoring", "GPU inference", "training", "targeted repair", "FINAL_AUDIT", "protected major-regression or retention claim"],
+  "fresh_round_id_required": false,
+  "fresh_protocol_id_required": false,
+  "fresh_gate_nonce_output_root_required": true
+}

@@ -1,0 +1,25 @@
+{
+  "artifacts": {
+    "POST_HOC_CHARACTERIZATION_EXECUTION_CONTRACT_V2.json": "9ec6e064b850e1d51f8cf19afbfd9e25f954673fbce57fe8a802dd5d9a2b5e31",
+    "ROUND_009_POST_HOC_REFERENCE_MAPPING_FAILURE.json": "f6063e942945852dba084cefbdb8280c650c69cf2fb6bea5c918633ab45950e0",
+    "ROUND_009_POST_HOC_REFERENCE_MAPPING_RECEIPT.json": "747c77482c5c140895de623c63a2355eb7c0cc5cf9b983a5039d22ec5d003961",
+    "ROUND_009_POST_HOC_REFERENCE_MAPPING_VALIDATION.json": "8c1420137b7b339d903cdf904aef43063cf4c0c6d45382dd7556facc0fd2a3be"
+  },
+  "boundaries": {
+    "cpu_only": true,
+    "final_audit_opened": false,
+    "generation_started": false,
+    "model_loaded": false,
+    "scientific_training_started": false,
+    "scoring_started": false
+  },
+  "completed_at": "2026-10-08T11:10:30.828599Z",
+  "directive_id": "DIRECTOR_DIRECTIVE_022",
+  "next_allowed_action": "WAIT_FOR_LATER_EXPLICIT_STAGE_AUTHORIZATION",
+  "remote_mapping_artifact_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/post_hoc_characterization_v1/sealed_scorer/ROUND_009_POST_HOC_SEALED_REFERENCE_MAPPING.json",
+  "remote_mapping_artifact_sha256": "de1019910ce214b2be58f909c4f0f0bae2a5eb987f1803bcb38e0d0d5400a160",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "schema_version": 1,
+  "stage": "CPU_ONLY_EXACT_NON_GOLD_REFERENCE_MAPPING_AND_CONTRACT_FREEZE",
+  "status": "COMPLETE_PENDING_LATER_EXPLICIT_EXECUTION_AUTHORIZATION"
+}
