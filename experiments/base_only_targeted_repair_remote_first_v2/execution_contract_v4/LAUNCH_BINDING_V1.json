@@ -1,0 +1,77 @@
+{
+  "base_files": {
+    "added_tokens.json": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce",
+    "config.json": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0",
+    "generation_config.json": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02",
+    "model-00001-of-00002.safetensors": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529",
+    "model-00002-of-00002.safetensors": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0",
+    "model.safetensors.index.json": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4",
+    "model_manifest.json": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7",
+    "special_tokens_map.json": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+    "tokenizer.json": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+    "tokenizer_config.json": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+    "vocab.json": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+  },
+  "base_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+  "base_reference_gate_sha256": "ab1b8eccd9d076867de6ef3082ff11c715d666d71806408517f70839830247c7",
+  "data": {
+    "FINAL_AUDIT_SEALED": {
+      "bytes": 309234,
+      "local_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\base_only_targeted_repair_remote_first_v2\\remote_dataset_expected\\FINAL_AUDIT_SEALED.jsonl",
+      "model_accessed": false,
+      "remote_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/FINAL_AUDIT_SEALED.jsonl",
+      "sha256": "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd"
+    },
+    "RETENTION_SENTINEL": {
+      "bytes": 237564,
+      "local_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\base_only_targeted_repair_remote_first_v2\\remote_dataset_expected\\RETENTION_SENTINEL.jsonl",
+      "remote_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV": {
+      "bytes": 465946,
+      "local_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\base_only_targeted_repair_remote_first_v2\\remote_dataset_expected\\TARGET_DEV.jsonl",
+      "remote_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    },
+    "TRAIN": {
+      "bytes": 9331951,
+      "local_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\base_only_targeted_repair_remote_first_v2\\remote_dataset_expected\\TRAIN.jsonl",
+      "remote_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TRAIN.jsonl",
+      "sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+    }
+  },
+  "forbidden": [
+    "historical replay",
+    "replay substitution",
+    "Eval60 Gold",
+    "diagnostic Gold",
+    "TARGET_DEV training",
+    "retention training",
+    "FINAL_AUDIT access"
+  ],
+  "output": {
+    "checkpoints": "/workspace/arc2/active_runs/base_only_targeted_repair_remote_first_v2/checkpoints",
+    "reservation": "/workspace/arc2/active_runs/base_only_targeted_repair_remote_first_v2/runtime/GPU_RESERVATION.json",
+    "run_root": "/workspace/arc2/active_runs/base_only_targeted_repair_remote_first_v2",
+    "runtime": "/workspace/arc2/active_runs/base_only_targeted_repair_remote_first_v2/runtime"
+  },
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2",
+  "recipe_sha256": "b383feda4ed509987c444e54ca54243a50aea8e424f98aa8c9e3e0f8cfda0563",
+  "remote_data_identity": {
+    "remote_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/REMOTE_DATA_IDENTITY_V1.json",
+    "sha256": "964ee5ba16900e18f602c21c7a395f6d22f6df37a85835e22466ea37fc58c905"
+  },
+  "schedule_sha256": "e89b5251a3f74bdb004e0ac67384847a3abb90d45d5099ba980b18189352aa7d",
+  "schema_version": 1,
+  "serialization_contract_sha256": "3b0f15a6d9cdac19a17f311ddb55291abc98d119a567a1f00307f4633e2ae714",
+  "shared_ledger": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/orchestration/budget/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V4.jsonl",
+  "source_hashes": {
+    "configs/nvarc_native_846d0198/chat_template.j2": "e5ed79284f346b7eadd874f6bdc376f722704808afd07ffd6190c6d8b97ddb5f",
+    "scripts/base_only_targeted_repair_remote_first_v2.py": "2b1d8148e10ddd1d2537227a661c00bde3c807c88cc445c81f6b4cc3469687a8",
+    "scripts/record_targeted_capability_repair_gpu_time.py": "ad2251319f6e3cc0187fd3a17fe4b84900602ea76078bac6621a90ad542e67ea",
+    "src/inference/arc_native_io.py": "502a064f09743acc85643ebb8a9a95573832d8b3d6c51e79ccf94222dd4b89b3",
+    "src/training_data/pipeline.py": "3c2fa39cbc5ed51f7eceeb68b821962c451ea88b2f26ae8af508b15c6a8b3d3a"
+  },
+  "status": "FROZEN_PENDING_READ_ONLY_PREFLIGHT"
+}

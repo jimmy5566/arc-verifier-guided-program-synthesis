@@ -5,7 +5,7 @@
   "no_model_loaded": true,
   "no_optimizer_constructed": true,
   "phase": "REMOTE_READ_ONLY_PREFLIGHT",
-  "remediation": "New BOM-free V3 canonical ledger and V3 execution contract; V2 remains preserved.",
+  "remediation": "Subsequent V3 malformed-escape failure is also preserved; V4 uses a literal UTF-8 JSON ledger.",
   "schema_version": 1,
   "status": "FAIL_CLOSED_PRESERVED"
 }

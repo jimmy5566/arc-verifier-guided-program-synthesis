@@ -1,0 +1,9 @@
+{
+  "actual_charges_only": true,
+  "cap_seconds": 28800,
+  "dummy_tests_charged_gpu_seconds": 0,
+  "initial_reservation_seconds": 7200,
+  "ledger": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/orchestration/budget/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V4.jsonl",
+  "schema_version": 1,
+  "status": "FROZEN"
+}

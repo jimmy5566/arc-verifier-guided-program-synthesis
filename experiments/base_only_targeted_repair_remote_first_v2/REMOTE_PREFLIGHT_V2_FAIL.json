@@ -1,0 +1,9 @@
+{
+  "cause": "Malformed V3 ledger bytes",
+  "failure": "JSONDecodeError:Invalid escape",
+  "gpu_training_started": false,
+  "no_model_loaded": true,
+  "no_optimizer_constructed": true,
+  "schema_version": 1,
+  "status": "FAIL_CLOSED_PRESERVED"
+}
