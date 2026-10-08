@@ -1,0 +1,55 @@
+{
+  "contract_id": "ARC2_TOKEN_GRID_EXTRACTION_V1",
+  "evidence_fields": [
+    "episode_id",
+    "generated_token_ids",
+    "generated_length",
+    "termination_status",
+    "eos_observed",
+    "trailing_pad_count",
+    "prompt_sha256",
+    "parse_valid",
+    "canonical_prediction_sha256",
+    "exact_grid_match"
+  ],
+  "extraction": [
+    "isolate generated suffix token IDs after padded prompt width",
+    "remove trailing pad_token_id values",
+    "remove exactly one EOS only if it is terminal after pad removal",
+    "require all remaining IDs to be verified digits or verified newline",
+    "require one non-empty rectangular ARC grid"
+  ],
+  "reject": [
+    "leading EOS",
+    "internal EOS",
+    "multiple EOS",
+    "other special tokens",
+    "prose",
+    "JSON",
+    "ragged grid",
+    "arbitrary whitespace normalization",
+    "target-dependent repair"
+  ],
+  "required_runtime_ids": {
+    "digit_tokens": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "eos_token_id": 15,
+    "newline_token": "\\n",
+    "pad_token_id": 13
+  },
+  "schema_version": 1,
+  "source_contract": "ARC_NATIVE_OBSERVATION_ONLY_V1",
+  "source_contract_sha256": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e",
+  "target_blind": true,
+  "tokenizer_verification": "Runtime must prove digit, newline, EOS and PAD token IDs from the frozen tokenizer before any generation."
+}

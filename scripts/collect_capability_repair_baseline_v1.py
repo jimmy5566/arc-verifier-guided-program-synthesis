@@ -4,6 +4,9 @@ from __future__ import annotations
 import argparse, gc, hashlib, json, os, sys, time
 from pathlib import Path
 from typing import Any
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from scripts.arc2_token_grid_parser import TokenGridContract, parse_generated_token_ids, tokenizer_token_contract
 
 PROTOCOL = "CAPABILITY_REPAIR_BASELINE_V1"
 CONTRACT_NAME = "ARC_NATIVE_OBSERVATION_ONLY_V1"
@@ -81,9 +84,19 @@ def expected(r: dict[str, Any]) -> list[list[int]]:
     test = r["task"]["test"]
     if len(test) != 1 or "output" not in test[0]: raise RuntimeError("BASE_REFERENCE_REQUIRES_SINGLE_HELDOUT_SCORING_OUTPUT")
     return test[0]["output"]
-def output_row(surface: str, r: dict[str, Any], p: str, text: str, cid: str, mid: str) -> dict[str, Any]:
-    grid = parse_grid(text)
-    return {"surface": surface, "episode_id": r["episode_id"], "observation_sha256": dig(observation(r)), "prompt_sha256": sha_bytes(p.encode("utf-8")), "canonical_prediction_sha256": dig({"grid": grid} if grid is not None else {"invalid_output": True}), "parse_valid": grid is not None, "exact_grid_match": bool(grid == expected(r)) if grid is not None else False, "model_base_manifest_identity": mid, "inference_contract_identity": cid}
+def output_row(surface: str, r: dict[str, Any], p: str, token_ids: list[int], cid: str, mid: str, token_contract: TokenGridContract) -> dict[str, Any]:
+    extracted = parse_generated_token_ids(token_ids, token_contract)
+    grid = extracted.grid
+    return {
+        "surface": surface, "episode_id": r["episode_id"], "observation_sha256": dig(observation(r)),
+        "prompt_sha256": sha_bytes(p.encode("utf-8")), "generated_token_ids": extracted.generated_token_ids,
+        "generated_length": extracted.generated_length, "termination_status": extracted.termination_status,
+        "eos_observed": extracted.eos_observed, "trailing_pad_count": extracted.trailing_pad_count,
+        "content_token_ids": extracted.content_token_ids, "parse_reason": extracted.parse_reason,
+        "canonical_prediction_sha256": dig({"grid": grid} if grid is not None else {"invalid_output": True}),
+        "parse_valid": grid is not None, "exact_grid_match": bool(grid == expected(r)) if grid is not None else False,
+        "model_base_manifest_identity": mid, "inference_contract_identity": cid, "token_grid_contract": token_contract.as_dict(),
+    }
 def aggregate(rows: list[dict[str, Any]]) -> dict[str, Any]:
     return {"episodes": len(rows), "parse_valid": sum(bool(x["parse_valid"]) for x in rows), "exact_grid_match": sum(bool(x["exact_grid_match"]) for x in rows), "episode_ids_sha256": dig([x["episode_id"] for x in rows]), "outcome_rows_sha256": dig(rows)}
 def receipt(status: str, started: float, **more: Any) -> dict[str, Any]:
@@ -153,7 +166,7 @@ def main() -> int:
     a = argparse.ArgumentParser()
     for name in ("output", "receipt"): a.add_argument("--" + name, type=Path, required=True)
     a.add_argument("--launch-contract", type=Path); a.add_argument("--governor-review", type=Path);
-    for name in ("target-dev", "retention", "binding", "contract"): a.add_argument("--" + name, type=Path)
+    for name in ("target-dev", "retention", "binding", "contract", "cohort-manifest"): a.add_argument("--" + name, type=Path)
     a.add_argument("--base", type=Path); a.add_argument("--adapter", type=Path); a.add_argument("--authorization", type=Path); a.add_argument("--runtime-limit-seconds", type=float, default=7200); a.add_argument("--cpu-mock", action="store_true"); a.add_argument("--cpu-mock-simulate-runtime-cap", action="store_true")
     a.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE)
     a.add_argument("--max-batched-prompt-tokens", type=int, default=DEFAULT_MAX_BATCHED_PROMPT_TOKENS)
@@ -177,10 +190,24 @@ def main() -> int:
         z.base=Path(json.loads(Path(launch["checkpoint_manifest_path"]).read_text(encoding="utf-8"))["base_path"])
         z.adapter=Path(json.loads(Path(launch["checkpoint_manifest_path"]).read_text(encoding="utf-8"))["adapter_path"])
         z.binding=None; z.contract=Path(launch["inference_contract"]["path"])
+        if launch.get("characterization_cohort_path"): z.cohort_manifest=Path(launch["characterization_cohort_path"])
     if z.output.exists() or z.receipt.exists(): raise RuntimeError("OUTPUT_PATH_NON_OVERWRITE_REQUIRED")
     if z.target_dev is None or z.retention is None or z.contract is None: raise RuntimeError("EVALUATION_INPUTS_REQUIRED")
     target = read_rows(z.target_dev, {"TARGETED_EVALUATION", "TARGETED_COMPOSITION"}); retention = read_rows(z.retention, {"RETENTION_SENTINEL"})
-    if len(target)!=192 or len(retention)!=96 or len({r["episode_id"] for r in target + retention}) != len(target) + len(retention): raise RuntimeError("EVALUATION_DENOMINATOR_OR_IDENTITY_INVALID")
+    if z.cohort_manifest is not None:
+        cohort=json.loads(z.cohort_manifest.read_text(encoding="utf-8"))
+        selected=cohort.get("episode_ids")
+        if not isinstance(selected,list) or len(selected)!=12 or len(selected)!=len(set(selected)): raise RuntimeError("CHARACTERIZATION_COHORT_INVALID")
+        available={r["episode_id"]:r for r in target+retention}
+        if set(selected) - set(available): raise RuntimeError("CHARACTERIZATION_COHORT_EPISODE_MISSING")
+        roles={available[item]["role"] for item in selected}
+        if roles != {"TARGETED_EVALUATION","TARGETED_COMPOSITION","RETENTION_SENTINEL"}: raise RuntimeError("CHARACTERIZATION_COHORT_ROLE_INVALID")
+        if any(sum(available[item]["role"]==role for item in selected)!=4 for role in roles): raise RuntimeError("CHARACTERIZATION_COHORT_BALANCE_INVALID")
+        target=[available[item] for item in selected if available[item]["role"] in {"TARGETED_EVALUATION","TARGETED_COMPOSITION"}]
+        retention=[available[item] for item in selected if available[item]["role"]=="RETENTION_SENTINEL"]
+    elif len(target)!=192 or len(retention)!=96:
+        raise RuntimeError("EVALUATION_DENOMINATOR_OR_IDENTITY_INVALID")
+    if len({r["episode_id"] for r in target + retention}) != len(target) + len(retention): raise RuntimeError("EVALUATION_DENOMINATOR_OR_IDENTITY_INVALID")
     craw = z.contract.read_bytes(); c = json.loads(craw.decode("utf-8"))
     if c.get("contract_id") != CONTRACT_NAME: raise RuntimeError("INFERENCE_CONTRACT_INVALID")
     cid = sha_bytes(craw)
@@ -207,6 +234,7 @@ def main() -> int:
         if tok.get_vocab().get(rt["required_special_token"]) != rt["required_special_token_id"]: raise RuntimeError("TOKENIZER_SPECIAL_TOKEN_ID_MISMATCH")
         tok.padding_side = "left"
         tok.pad_token_id = rt["pad_token_id"]
+        token_contract = tokenizer_token_contract(tok, eos_token_id=rt["eos_token_id"], pad_token_id=rt["pad_token_id"])
         model = AutoModelForCausalLM.from_pretrained(z.base, local_files_only=True, torch_dtype=torch.bfloat16, attn_implementation=rt["attention_backend"]).to(device)
         model = PeftModel.from_pretrained(model, z.adapter, is_trainable=False).eval()
         contexts: list[dict[str, Any]] = []
@@ -217,16 +245,16 @@ def main() -> int:
                 contexts.append({"surface": surface, "record": r, "prompt": p, "episode_id": r["episode_id"], "prompt_tokens": prompt_tokens})
         contexts.sort(key=lambda x: (x["prompt_tokens"], x["episode_id"]))
 
-        def generate_one_batch(batch: list[dict[str, Any]]) -> list[str]:
+        def generate_one_batch(batch: list[dict[str, Any]]) -> list[list[int]]:
             encoded = tok([x["prompt"] for x in batch], return_tensors="pt", padding=True, truncation=False, add_special_tokens=False)
             ins = {key: value.to(device) for key, value in encoded.items()}
             width = int(ins["input_ids"].shape[-1])
             with torch.inference_mode():
                 generated = model.generate(**ins, do_sample=False, num_beams=1, max_new_tokens=rt["max_new_tokens"], use_cache=True, eos_token_id=rt["eos_token_id"], pad_token_id=rt["pad_token_id"])
-            return [tok.decode(generated[index][width:], skip_special_tokens=False) for index in range(len(batch))]
+            return [[int(value) for value in generated[index][width:].detach().cpu().tolist()] for index in range(len(batch))]
 
-        def generate_adaptive(items: list[dict[str, Any]], *, label: str, on_batch: Any = None) -> tuple[list[tuple[dict[str, Any], str, int]], list[dict[str, Any]]]:
-            produced: list[tuple[dict[str, Any], str, int]] = []; records: list[dict[str, Any]] = []; cursor = 0
+        def generate_adaptive(items: list[dict[str, Any]], *, label: str, on_batch: Any = None) -> tuple[list[tuple[dict[str, Any], list[int], int]], list[dict[str, Any]]]:
+            produced: list[tuple[dict[str, Any], list[int], int]] = []; records: list[dict[str, Any]] = []; cursor = 0
             while cursor < len(items):
                 if time.monotonic() >= deadline: raise TimeoutError("RUNTIME_CAP_BEFORE_BATCH")
                 count = min(z.batch_size, len(items) - cursor)
@@ -256,8 +284,8 @@ def main() -> int:
         validation = validation_subset(contexts, z.batch_validation_count)
         serial = [(context, generate_one_batch([context])[0]) for context in validation]
         batched, validation_batches = generate_adaptive(validation, label="BATCH1_VS_BATCH32")
-        serial_by_id = {x[0]["episode_id"]: output_row(x[0]["surface"], x[0]["record"], x[0]["prompt"], x[1], cid, mid) for x in serial}
-        batched_by_id = {x[0]["episode_id"]: output_row(x[0]["surface"], x[0]["record"], x[0]["prompt"], x[1], cid, mid) for x in batched}
+        serial_by_id = {x[0]["episode_id"]: output_row(x[0]["surface"], x[0]["record"], x[0]["prompt"], x[1], cid, mid, token_contract) for x in serial}
+        batched_by_id = {x[0]["episode_id"]: output_row(x[0]["surface"], x[0]["record"], x[0]["prompt"], x[1], cid, mid, token_contract) for x in batched}
         matched = sum(serial_by_id[key]["canonical_prediction_sha256"] == batched_by_id[key]["canonical_prediction_sha256"] for key in serial_by_id)
         serial_parse = sum(x["parse_valid"] for x in serial_by_id.values()) / len(serial_by_id)
         batched_parse = sum(x["parse_valid"] for x in batched_by_id.values()) / len(batched_by_id)
@@ -269,15 +297,15 @@ def main() -> int:
         progress = z.output.parent / "CAPABILITY_REPAIR_BASELINE_V1_PROGRESS.json"
         def persist_progress(produced: list[tuple[dict[str, Any], str, int]], records: list[dict[str, Any]]) -> None:
             partial_rows = []
-            for context, text, actual_batch_size in produced:
-                row = output_row(context["surface"], context["record"], context["prompt"], text, cid, mid)
+            for context, token_ids, actual_batch_size in produced:
+                row = output_row(context["surface"], context["record"], context["prompt"], token_ids, cid, mid, token_contract)
                 row.update({"requested_batch_size": z.batch_size, "actual_batch_size": actual_batch_size, "prompt_tokens": context["prompt_tokens"]})
                 partial_rows.append(row)
             write(progress, {"status": "INCOMPLETE", "completed_episode_count": len(partial_rows), "expected_episode_count": len(contexts), "batch_records": records, "batching": {key: value for key, value in batching.items() if key != "full_evaluation_batches"}, "predictions": partial_rows, "updated_at_monotonic_seconds": time.monotonic() - started})
         generated, full_batches = generate_adaptive(contexts, label="FULL_EVALUATION", on_batch=persist_progress)
         batching["full_evaluation_batches"] = full_batches
-        for context, text, actual_batch_size in generated:
-            row = output_row(context["surface"], context["record"], context["prompt"], text, cid, mid)
+        for context, token_ids, actual_batch_size in generated:
+            row = output_row(context["surface"], context["record"], context["prompt"], token_ids, cid, mid, token_contract)
             row.update({"requested_batch_size": z.batch_size, "actual_batch_size": actual_batch_size, "prompt_tokens": context["prompt_tokens"]})
             rows.append(row)
     except Exception as exc:
@@ -291,7 +319,7 @@ def main() -> int:
             except Exception: pass
     n = len(target) + len(retention)
     if status == "COLLECTED_PASS" and len(rows) != n: status, failure = "PARTIAL_FAILURE", "INCOMPLETE_EPISODE_SET"
-    result = {"schema_version": 3, "protocol_id": PROTOCOL, "status": status, "inference_contract_identity": cid, "model_base_manifest_identity": mid, "predictions": rows, "aggregates": {"TARGET_DEV": aggregate([x for x in rows if x["surface"] == "TARGET_DEV"]), "RETENTION_SENTINEL": aggregate([x for x in rows if x["surface"] == "RETENTION_SENTINEL"])}, "expected_episode_count": n, "completed_episode_count": len(rows), "batching": batching}
+    result = {"schema_version": 4, "protocol_id": PROTOCOL, "status": status, "inference_contract_identity": cid, "model_base_manifest_identity": mid, "predictions": rows, "aggregates": {"TARGET_DEV": aggregate([x for x in rows if x["surface"] == "TARGET_DEV"]), "RETENTION_SENTINEL": aggregate([x for x in rows if x["surface"] == "RETENTION_SENTINEL"])}, "expected_episode_count": n, "completed_episode_count": len(rows), "batching": batching, "token_evidence_preserved": True, "token_grid_contract": token_contract.as_dict() if "token_contract" in locals() else None}
     write(z.output, result); write(z.receipt, receipt(status, started, model_loaded=True, adapter_loaded=True, lora_constructed=False, adapter_path=str(z.adapter), completed_episode_ids=[x["episode_id"] for x in rows], expected_episode_count=n, completed_episode_count=len(rows), model_base_manifest_identity=mid, inference_contract_identity=cid, failure=failure, runtime_cap_seconds=z.runtime_limit_seconds, model_released=True, batching=batching))
     return 0 if status == "COLLECTED_PASS" else 1
 if __name__ == "__main__": raise SystemExit(main())

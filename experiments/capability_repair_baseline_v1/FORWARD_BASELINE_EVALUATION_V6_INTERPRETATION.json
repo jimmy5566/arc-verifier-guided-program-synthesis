@@ -1,0 +1,35 @@
+{
+  "batching_status": "VALID",
+  "capability_interpretation": "NOT_ESTABLISHED",
+  "decoder_measurement_status": "INVALID",
+  "execution_status": "COMPLETE",
+  "final_audit_opened": false,
+  "forbidden_uses": [
+    "capability diagnosis",
+    "curriculum weighting",
+    "targeted repair decisions",
+    "model quality claims"
+  ],
+  "preservation": "V6 source artifacts remain immutable and are not rescored because raw generated token IDs were not retained.",
+  "preserved_artifacts": {
+    "atomic_profile": {
+      "path": ".arc2-local/orchestration/remote_receipts/FORWARD_BASELINE_EVALUATION_V6_BATCH32/CAPABILITY_REPAIR_BASELINE_V1_PROFILE.json",
+      "sha256": "a00a587b2f179c7d16a0199793fd2ffd7cf74797fe5926fefce06e31d5db9887"
+    },
+    "composition_profile": {
+      "path": ".arc2-local/orchestration/remote_receipts/FORWARD_BASELINE_EVALUATION_V6_BATCH32/CAPABILITY_REPAIR_BASELINE_V1_COMPOSITION.json",
+      "sha256": "b5db71a21c56655f083252862c1e588d83d0a3c94dea979cd21ca6bb10077686"
+    },
+    "receipt": {
+      "path": ".arc2-local/orchestration/remote_receipts/FORWARD_BASELINE_EVALUATION_V6_BATCH32/BASELINE_CHARACTERIZATION_RECEIPT.json",
+      "sha256": "b6640d3ce4c466e4f4fdae8e7fc5484b5e04e97816c4ab63a490d7f4562cd287"
+    },
+    "retention_profile": {
+      "path": ".arc2-local/orchestration/remote_receipts/FORWARD_BASELINE_EVALUATION_V6_BATCH32/CAPABILITY_REPAIR_BASELINE_V1_RETENTION.json",
+      "sha256": "68a1c72166210b0bdb42feb0971bfdd28d15ad786535d7f42f3c1bcbaafa0faf"
+    }
+  },
+  "round_id": "FORWARD_BASELINE_EVALUATION_V6_BATCH32",
+  "schema_version": 1,
+  "scientific_training_started": false
+}

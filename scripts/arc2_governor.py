@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """ARC2 Governor: one thin deterministic scheduler for Controller, Director, and remote jobs."""
 from __future__ import annotations
-import argparse, json, os, subprocess, sys, time
+import argparse, hashlib, json, os, subprocess, sys, time
 from datetime import datetime, timezone
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 DISPOSITIONS={"CONTINUE_CONTROLLER","REVIEW_REQUIRED","WAIT_REMOTE","PAUSED","TERMINAL"}
+DIRECTOR_DECISIONS={"CONTINUE_CONTROLLER","REQUIRE_CHANGES","PAUSED","TERMINAL"}
 def now(): return datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
 def atomic(p,x):
     t=p.with_suffix('.tmp'); t.write_text(json.dumps(x,sort_keys=True,indent=2)+'\n',encoding='utf-8'); os.replace(t,p)
@@ -18,6 +19,8 @@ def load(p):
         old=x.pop('status','ACTIVE'); x['disposition']={'ACTIVE':'CONTINUE_CONTROLLER','WAITING_REMOTE_JOB':'WAIT_REMOTE','PAUSED':'PAUSED','TERMINAL':'TERMINAL'}.get(old,'PAUSED')
     if x['disposition'] not in DISPOSITIONS: raise RuntimeError('INVALID_GOVERNOR_DISPOSITION')
     return x
+def sha256_file(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def log(state, text):
     lp=state.get('_governor_log_path') or str(Path('.arc2-local/orchestration/logs/arc2_governor.log').resolve())
     Path(lp).parent.mkdir(parents=True, exist_ok=True)
@@ -57,11 +60,65 @@ def controller(s,p,timeout):
     s.update({'last_actor':'governor','updated_at':now()}); atomic(p,s)
     target=resolve_controller_target(s,p)
     prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}. Execute next_action as far as scientifically valid. Before returning atomically write exactly one disposition in ARC2_WORKFLOW_STATE.json: CONTINUE_CONTROLLER, REVIEW_REQUIRED, WAIT_REMOTE, PAUSED, or TERMINAL. REVIEW_REQUIRED requires review_brief and review_reason. WAIT_REMOTE only after detached job with remote_job. Do not use legacy workflow states.',timeout,s)
+def response_directory(state_path):
+    return state_path.resolve().parents[2] / 'orchestration' / 'director' / 'responses'
+def matching_director_responses(state_path, brief_sha256):
+    found=[]
+    for candidate in sorted(response_directory(state_path).glob('*.json')):
+        try:
+            data=json.loads(candidate.read_text(encoding='utf-8-sig'))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if data.get('reviewed_brief_sha256') == brief_sha256 and data.get('decision') in DIRECTOR_DECISIONS:
+            found.append((candidate.resolve(), data, sha256_file(candidate)))
+    return found
+def route_director_response(state, state_path, response_path, response, response_sha256):
+    brief_sha256=sha256_file(state['review_brief'])
+    if response.get('reviewed_brief_sha256') != brief_sha256:
+        raise RuntimeError('DIRECTOR_RESPONSE_BRIEF_BINDING_MISMATCH')
+    decision=response.get('decision')
+    if decision not in DIRECTOR_DECISIONS:
+        raise RuntimeError('DIRECTOR_RESPONSE_DECISION_INVALID')
+    consumed=state.setdefault('consumed_director_responses', {})
+    if response_sha256 in consumed:
+        raise RuntimeError('DIRECTOR_RESPONSE_ALREADY_CONSUMED')
+    state.update({'director_response_path':str(response_path), 'director_response_sha256':response_sha256,
+                  'director_decision':decision, 'last_actor':'director', 'director_review_in_progress':False,
+                  'last_review_brief':state['review_brief'], 'last_review_brief_sha256':brief_sha256,
+                  'updated_at':now()})
+    consumed[response_sha256]={'brief_sha256':brief_sha256,'decision':decision,'consumed_at':now()}
+    # A consumed review brief is immutable historical evidence; never route it back into REVIEW_REQUIRED.
+    state['review_brief']=None; state['review_reason']=None
+    if decision == 'CONTINUE_CONTROLLER':
+        state.update({'disposition':'CONTINUE_CONTROLLER', 'next_action':state.get('authorized_continuation') or 'CONTINUE_AFTER_DIRECTOR_REVIEW', 'remediation_required':False})
+    elif decision == 'REQUIRE_CHANGES':
+        state.update({'disposition':'CONTINUE_CONTROLLER', 'next_action':'APPLY_DIRECTOR_REMEDIATION', 'remediation_required':True,
+                      'director_remediation':response.get('smallest_repair') or response.get('controller_resolution_plan')})
+    elif decision == 'PAUSED':
+        state.update({'disposition':'PAUSED', 'next_action':'PAUSED_BY_DIRECTOR', 'remediation_required':False})
+    else:
+        state.update({'disposition':'TERMINAL', 'next_action':'TERMINAL_BY_DIRECTOR', 'remediation_required':False, 'terminal':True, 'experiment_terminal':True})
+    atomic(state_path,state); log(state,f'director response consumed decision={decision} response={response_path.name}')
 def director(s,p,timeout):
     brief=s.get('review_brief')
     if not brief or not Path(brief).is_file(): raise RuntimeError('REVIEW_BRIEF_MISSING')
-    prompt('arc-director',f'ARC2 Governor review. Read {brief}. Write one structured review artifact: CONTINUE_CONTROLLER, REQUIRE_CHANGES, PAUSED, or TERMINAL. REQUIRE_CHANGES must state root cause, smallest repair, frozen conditions, forbidden actions, and whether another review is required. Do not schedule or prompt Controller.',timeout,s)
-    s.update({'disposition':'CONTINUE_CONTROLLER','last_actor':'director','director_review_in_progress':False,'updated_at':now()}); atomic(p,s)
+    brief_sha256=sha256_file(brief)
+    matches=matching_director_responses(p,brief_sha256)
+    consumed=set((s.get('consumed_director_responses') or {}).keys())
+    available=[item for item in matches if item[2] not in consumed]
+    if available:
+        response_path,response,response_sha256=available[-1]
+        route_director_response(s,p,response_path,response,response_sha256); return
+    if matches:
+        raise RuntimeError('REVIEW_BRIEF_ALREADY_CONSUMED')
+    s.update({'director_review_in_progress':True,'updated_at':now()}); atomic(p,s)
+    if not prompt('arc-director',f'ARC2 Governor review. Read {brief}. Write one structured review artifact bound to reviewed_brief_sha256={brief_sha256}: CONTINUE_CONTROLLER, REQUIRE_CHANGES, PAUSED, or TERMINAL. REQUIRE_CHANGES must state root cause, smallest repair, frozen conditions, forbidden actions, and whether another review is required. Do not schedule or prompt Controller.',timeout,s):
+        return
+    available=[item for item in matching_director_responses(p,brief_sha256) if item[2] not in consumed]
+    if not available:
+        raise RuntimeError('DIRECTOR_RESPONSE_MISSING_OR_UNBOUND')
+    response_path,response,response_sha256=available[-1]
+    route_director_response(s,p,response_path,response,response_sha256)
 def poll_seconds(job):
     kind=str(job.get('kind','')).upper()
     if 'PREFLIGHT' in kind or 'CPU' in kind: return 10
