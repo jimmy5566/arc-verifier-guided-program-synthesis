@@ -90,6 +90,23 @@ class ControllerDirectiveCycleTest(unittest.TestCase):
             with patch("orchestration.supervisor.arc2_supervisor.controller_idle", return_value=True), patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")):
                 self.assertEqual([], restarted.resume_nonterminal_directive_cycles(cycles, "arc-controller", 1))
 
+    def test_synchronous_director_wait_does_not_use_supervisor_until_fallback(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw); state_path = root / "supervisor.json"; cycles = root / "cycles.json"; note = root / "notes"
+            directive_id = "DIRECTOR_DIRECTIVE_SYNC"; digest = "s" * 64
+            supervisor = Supervisor(state_path, note)
+            supervisor.state["directives"][directive_id] = {"directive_sha256": digest, "directive_processed": True}
+            supervisor.save()
+            cycle = {"directive_sha256": digest, "state": "WAITING_DIRECTOR", "directive_path": "dummy", "next_step": "AWAIT_DIRECTOR_DIRECTIVE", "synchronous_review": {"status": "DIRECT_PROMPT_SENT", "started_at": "2026-10-08T00:00:00Z", "fallback_after_seconds": 999999}}
+            write(cycles, {"schema_version": 1, "directives": {directive_id: cycle}})
+            with patch("orchestration.supervisor.arc2_supervisor.controller_idle", return_value=True), patch("orchestration.supervisor.arc2_supervisor.prompt_controller", return_value=(0, "")) as prompt:
+                self.assertEqual([], supervisor.resume_nonterminal_directive_cycles(cycles, "arc-controller", 1))
+                self.assertEqual(0, prompt.call_count)
+                cycle["synchronous_review"] = {"status": "FALLBACK_REQUIRED", "started_at": "2026-10-08T00:00:00Z", "fallback_after_seconds": 999999}
+                write(cycles, {"schema_version": 1, "directives": {directive_id: cycle}})
+                self.assertEqual([directive_id], supervisor.resume_nonterminal_directive_cycles(cycles, "arc-controller", 1))
+                self.assertEqual(1, prompt.call_count)
+
     def test_three_turn_continuation_and_stall_are_distinct_from_initial_ack(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw); state_path = root / "supervisor.json"; cycles = root / "cycles.json"; note = root / "notes"

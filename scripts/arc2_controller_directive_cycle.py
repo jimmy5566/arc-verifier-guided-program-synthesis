@@ -235,7 +235,9 @@ def main() -> int:
         if not args.brief.is_file(): raise RuntimeError("MISSING_DIRECTOR_BRIEF")
         if before(record, "RESUBMITTED"):
             transition(record, "RESUBMITTED", brief=str(args.brief.resolve()))
-            transition(record, "WAITING_DIRECTOR", next_step="AWAIT_DIRECTOR_DIRECTIVE", controller_cycle_complete=False, waiting_reason="DIRECTOR_DECISION_REQUIRED")
+            transition(record, "WAITING_DIRECTOR", next_step="AWAIT_DIRECTOR_DIRECTIVE", controller_cycle_complete=False,
+                       waiting_reason="SYNCHRONOUS_DIRECTOR_REVIEW_REQUIRED",
+                       synchronous_review={"status": "PENDING_DIRECT_PROMPT", "fallback_after_seconds": 120})
     if args.close_no_director:
         if record.get("state") not in {"REMEDIATION_COMPLETE", "VALIDATED", "COMMITTED"}:
             raise RuntimeError("CLOSE_NO_DIRECTOR_REQUIRES_COMPLETED_REMEDIATION")

@@ -678,10 +678,26 @@ class Supervisor:
         resumed: list[str] = []
         for directive_id, cycle in cycles.items():
             status = str(cycle.get("state", ""))
-            if status in CONTROLLER_CYCLE_TERMINAL or status in CONTROLLER_CYCLE_WAITING or not status:
+            if status in CONTROLLER_CYCLE_TERMINAL or not status:
                 continue
+            # Normal Director reviews are Controller-owned and synchronous.
+            # Only recover a WAITING_DIRECTOR cycle after its durable direct
+            # handoff records failure or its bounded fallback deadline passes.
+            if status in CONTROLLER_CYCLE_WAITING:
+                if status != "WAITING_DIRECTOR":
+                    continue
+                review = cycle.get("synchronous_review")
+                if not isinstance(review, dict):
+                    continue
+                fallback_seconds = int(review.get("fallback_after_seconds", 120))
+                marker_time = review.get("completed_at") or review.get("started_at")
+                age = self._seconds_since(marker_time)
+                failed = review.get("status") in {"DIRECT_PROMPT_FAILED", "FALLBACK_REQUIRED"}
+                if not failed and (age is None or age < fallback_seconds):
+                    continue
             if status not in CONTROLLER_CYCLE_ACTIVE:
-                continue
+                if status != "WAITING_DIRECTOR":
+                    continue
             record = self.state["directives"].get(directive_id)
             if not record or record.get("directive_sha256") != cycle.get("directive_sha256"):
                 continue
