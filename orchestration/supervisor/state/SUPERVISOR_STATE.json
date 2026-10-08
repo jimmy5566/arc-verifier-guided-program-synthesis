@@ -1,5 +1,57 @@
 {
   "accepted_rounds_since_director_review": 0,
+  "directives": {
+    "DIRECTOR_DIRECTIVE_001": {
+      "controller_acknowledged": true,
+      "controller_response_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\orchestration\\director\\responses\\DIRECTOR_RESPONSE_001.json",
+      "decision": "CONTINUE",
+      "directive_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\orchestration\\director\\directives\\DIRECTOR_DIRECTIVE_001.json",
+      "directive_processed": true,
+      "directive_sha256": "53652a7de43361c9a2055c1cac36d82aa0e6197b0efa17f303b40e57cb536c89"
+    },
+    "DIRECTOR_DIRECTIVE_002": {
+      "controller_acknowledged": true,
+      "controller_response_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\orchestration\\director\\responses\\DIRECTOR_RESPONSE_002.json",
+      "decision": "REQUIRE_INFRA_REPAIR",
+      "directive_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\orchestration\\director\\directives\\DIRECTOR_DIRECTIVE_002.json",
+      "directive_processed": true,
+      "directive_sha256": "8cedbd756281622c83c448904c666e583bc0892734e225e0f326855201039c6b"
+    },
+    "DIRECTOR_DIRECTIVE_003": {
+      "controller_acknowledged": true,
+      "controller_response_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\orchestration\\director\\responses\\DIRECTOR_RESPONSE_003.json",
+      "decision": "REQUIRE_CHANGES",
+      "directive_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\orchestration\\director\\directives\\DIRECTOR_DIRECTIVE_003.json",
+      "directive_processed": true,
+      "directive_sha256": "8de52b399dfd5a03f4028852d4cc7739c9561e2913ce9916984f818aab4e4ca3"
+    },
+    "DIRECTOR_DIRECTIVE_004": {
+      "controller_acknowledged": true,
+      "controller_notification_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\.arc2-local\\orchestration\\controller_notifications\\CONTROLLER_DIRECTIVE_NOTIFICATION_004_03882b4cf403.json",
+      "controller_response_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\orchestration\\director\\responses\\DIRECTOR_RESPONSE_004.json",
+      "controller_wakeup_cli_exit_code": 0,
+      "controller_wakeup_count": 1,
+      "controller_wakeup_reserved": true,
+      "controller_wakeup_status": "SENT",
+      "decision": "REQUIRE_CHANGES",
+      "directive_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\orchestration\\director\\directives\\DIRECTOR_DIRECTIVE_004.json",
+      "directive_processed": true,
+      "directive_sha256": "03882b4cf4036ec1dbf512d11d97c9d6a61f9fd2d3d5d0a6633835b9ab448731"
+    },
+    "DIRECTOR_DIRECTIVE_TEST": {
+      "controller_acknowledged": true,
+      "controller_notification_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\.arc2-local\\orchestration\\controller_notifications\\CONTROLLER_DIRECTIVE_NOTIFICATION_TEST_736432b2e467.json",
+      "controller_response_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\orchestration\\director\\responses\\DIRECTOR_RESPONSE_TEST.json",
+      "controller_wakeup_cli_exit_code": 0,
+      "controller_wakeup_count": 1,
+      "controller_wakeup_reserved": true,
+      "controller_wakeup_status": "SENT",
+      "decision": "REQUIRE_INFRA_REPAIR",
+      "directive_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\orchestration\\director\\directives\\DIRECTOR_DIRECTIVE_TEST.json",
+      "directive_processed": true,
+      "directive_sha256": "736432b2e46791d192dd7cc34638bb3f8672a18eb355738d16b2a232bb703dec"
+    }
+  },
   "director_directive_id": null,
   "director_notification_sent": false,
   "director_review_required": false,
@@ -7,6 +59,8 @@
   "rounds": {
     "901": {
       "controller_ack_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\.arc2-local\\orchestration\\controller_acknowledgements\\CONTROLLER_ACK_901_9a657d0c91ce.json",
+      "controller_acknowledged": true,
+      "controller_cycle_complete": true,
       "controller_notification_sent": true,
       "controller_wakeup_cli_exit_code": 0,
       "controller_wakeup_count": 1,
@@ -17,6 +71,8 @@
     },
     "902": {
       "controller_ack_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\.arc2-local\\orchestration\\controller_acknowledgements\\CONTROLLER_ACK_902_81d9aeb86f76.json",
+      "controller_acknowledged": true,
+      "controller_cycle_complete": true,
       "controller_notification_sent": true,
       "controller_wakeup_cli_exit_code": 0,
       "controller_wakeup_count": 1,
