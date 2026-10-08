@@ -1,0 +1,10 @@
+{
+  "branch": "infra/arc2-dual-agent-runpod-orchestrator-v1",
+  "evidence_commit": "0c8850bc9e49ee4792908dcd317c9fa9153f5cf2",
+  "local_head": "0c8850bc9e49ee4792908dcd317c9fa9153f5cf2",
+  "origin_fresh_ls_remote": "0c8850bc9e49ee4792908dcd317c9fa9153f5cf2",
+  "runpod_checked_out_source": "0c8850bc9e49ee4792908dcd317c9fa9153f5cf2",
+  "runpod_source_root": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2",
+  "schema_version": 1,
+  "status": "PASS"
+}

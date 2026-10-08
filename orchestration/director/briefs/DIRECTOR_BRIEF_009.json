@@ -1,0 +1,40 @@
+{
+  "brief_id": "DIRECTOR_BRIEF_009",
+  "directive_in_response": "DIRECTOR_DIRECTIVE_008",
+  "evidence_files": {
+    "DIRECTIVE_008_REPLAY_RECOVERY_BLOCKED.json": "e839c8afaabd767622764a25b2256326ad4c0bd5d138286b566450652eb4a924",
+    "DIRECTIVE_008_SOURCE_PARITY.json": "bf06d6223d34cbcf3454b71ecb55087be80771c12cd4ca5a5e3b79ddacbc1102",
+    "DIRECTOR_DIRECTIVE_007.json": "bbbba0cd976c3e487560ce8f64c3b3af24144b159e770e81f06cf9bfcc01347e",
+    "DIRECTOR_DIRECTIVE_008.json": "6d558358d901dc10025dff42179739bcbb3f21f68f1de240ed000d0b9d7e78e4",
+    "DIRECTOR_RESPONSE_007.json": "55b274d2533cb3f6b7f344ff58c7b802ff5b7bec48b80b9f40ab30622a1035c7",
+    "DIRECTOR_RESPONSE_008.json": "d91aabbde226c12ff419d69d7e12d2889e832ba76eb4cef9417ed7d65b399ce3"
+  },
+  "gpu_training_started": false,
+  "immutable_directive_chain": {
+    "directive_007_and_response_007_committed": true,
+    "directive_008_and_response_008_committed": true,
+    "remote_verified_directive_007_sha256": "bbbba0cd976c3e487560ce8f64c3b3af24144b159e770e81f06cf9bfcc01347e",
+    "remote_verified_response_007_sha256": "55b274d2533cb3f6b7f344ff58c7b802ff5b7bec48b80b9f40ab30622a1035c7"
+  },
+  "preflight": {
+    "rerun_after_replay_provisioning": "NOT_RUN",
+    "reason": "No exact replay candidate was recovered, so provisioning and a further preflight would violate the fail-closed recovery contract.",
+    "previous_fail_closed_result": "DIRECTIVE_007_PREFLIGHT_RESULT.json"
+  },
+  "replay_recovery": {
+    "expected_sha256": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc",
+    "outcome": "EXACT_FROZEN_REPLAY_SHARD_NOT_RECOVERED",
+    "status": "HARD_BLOCKED_PENDING_DIRECTOR_REVIEW"
+  },
+  "runpod_source_parity": {
+    "commit": "0c8850bc9e49ee4792908dcd317c9fa9153f5cf2",
+    "local_origin_runpod_equal": true,
+    "status": "PASS"
+  },
+  "schema_version": 1,
+  "scope": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "status": "REQUIRE_FROZEN_REPLAY_RECOVERY_OR_NEW_SUBPROTOCOL",
+  "tests": {
+    "status": "NOT_RUN_NO_IMPLEMENTATION_CHANGE"
+  }
+}
