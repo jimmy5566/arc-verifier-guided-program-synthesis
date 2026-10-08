@@ -18,7 +18,7 @@ class ReconstructionRuntimeControlsTest(unittest.TestCase):
         payload = root / "payload.txt"; payload.write_text("frozen", encoding="utf-8")
         import hashlib
         binding = root / "binding.json"
-        binding.write_text(json.dumps({"schema_version": 1, "status": "FROZEN_PENDING_PREFLIGHT", "source": {"commit": "dummy"}, "required_files": [{"path": str(payload), "sha256": hashlib.sha256(payload.read_bytes()).hexdigest()}], "command": ["dummy"], "output": {"parent": str(root)}, "dataset_contracts": []}), encoding="utf-8")
+        binding.write_text(json.dumps({"schema_version": 1, "status": "FROZEN_PENDING_PREFLIGHT", "source_provenance": {"commit": "dummy"}, "required_files": [{"path": str(payload), "sha256": hashlib.sha256(payload.read_bytes()).hexdigest()}], "command": ["dummy"], "output": {"parent": str(root)}, "dataset_contracts": []}), encoding="utf-8")
         preflight = root / "preflight.json"
         self.assertEqual(0, subprocess.run([sys.executable, str(PREFLIGHT), "--binding", str(binding), "--output", str(preflight)], capture_output=True).returncode)
         ledger = root / "ledger.jsonl"; snapshot = root / "snapshot.json"
