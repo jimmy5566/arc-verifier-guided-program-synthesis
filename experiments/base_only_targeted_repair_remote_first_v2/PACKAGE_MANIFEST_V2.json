@@ -1,0 +1,29 @@
+{
+  "files": {
+    "experiments/base_only_targeted_repair_remote_first_v2/BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2_PROTOCOL.json": "3342b22222025b4517fffd644f3dbfc678fbc417dd2338705abffeb839cf4c53",
+    "experiments/base_only_targeted_repair_remote_first_v2/BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2_PROTOCOL.md": "ab0eeffafef968eced3dfa7f8c4e2f27ef5bf31336707bd5fbd871790efbba26",
+    "experiments/base_only_targeted_repair_remote_first_v2/PACKAGE_MANIFEST_V1.json": "1bd6686dd74b5e428c492cc9d0d5065f64baa2f446875000c3775062531437b0",
+    "experiments/base_only_targeted_repair_remote_first_v2/REMOTE_DATA_ACTUAL_IDENTITY_V1.json": "964ee5ba16900e18f602c21c7a395f6d22f6df37a85835e22466ea37fc58c905",
+    "experiments/base_only_targeted_repair_remote_first_v2/REMOTE_DATA_EXPECTED_IDENTITY_V1.json": "56ec56167ae008f3645701b885a2e2480db9b21ee4ce3c8c4af6e4703546d41d",
+    "experiments/base_only_targeted_repair_remote_first_v2/REMOTE_GENERATION_PLAN_V1.json": "f29b816ccbdce8b831ede46f00eeb2fe341114e6438adb75ca6f4341e1c4b494",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v1/BASE_REFERENCE_AND_GATE_IDENTITIES_V1.json": "a8614f867000516ed7a82e9e36ab938e8bb2906cadf4e1ac1a9f1b12d65f57d7",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v1/CUMULATIVE_BUDGET_BINDING_V1.json": "411ba18bcd78a4909ac7be027be01a6a3859e2f21eb8f63b7107aa8c9042ad82",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v1/EXECUTION_CONFIG_ROUND_001.json": "6455fffa870f8f15094b3657cec584cb9ac5810b8bdc1ca9d23619ff2c618f43",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v1/LAUNCH_BINDING_V1.json": "8cab3c34e65edc036941b9903717c243def26597ce3ff191b219cec2b68eaf2e",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v1/SERIALIZATION_CONTRACT_V1.json": "fb4903df2cab7eaa7fff3849b807e2b641d4cbc62006dd7238b8747ad237d836",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v1/SERIALIZATION_TEST_VECTORS_V1.json": "efc80b67f4325484c88054edb39f214bf7c79423ffd584dc273cf36d8d0cd5d4",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v1/TRAINING_SCHEDULE_ROUND_001.json": "1a5b3452360b35203d64856517bca6b1801cc86a9b6b036412418c7e41c64b7e",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v2/BASE_REFERENCE_AND_GATE_IDENTITIES_V1.json": "a14d2b900c53d14e6946905568054e161a6d6a6e0f94c547ef8db0a3ac764a5d",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v2/CUMULATIVE_BUDGET_BINDING_V1.json": "411ba18bcd78a4909ac7be027be01a6a3859e2f21eb8f63b7107aa8c9042ad82",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v2/EXECUTION_CONFIG_ROUND_001.json": "6455fffa870f8f15094b3657cec584cb9ac5810b8bdc1ca9d23619ff2c618f43",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v2/LAUNCH_BINDING_V1.json": "02bb63e083a1936ac48bab4560e7a97ea72f1c71c724ac309ab0be2e8725ac98",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v2/SERIALIZATION_CONTRACT_V1.json": "82ca3586f7330c8130314c5d50f1d96054ee9b8c8090d191c00d5ba881849dd6",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v2/SERIALIZATION_TEST_VECTORS_V1.json": "efc80b67f4325484c88054edb39f214bf7c79423ffd584dc273cf36d8d0cd5d4",
+    "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v2/TRAINING_SCHEDULE_ROUND_001.json": "1a5b3452360b35203d64856517bca6b1801cc86a9b6b036412418c7e41c64b7e"
+  },
+  "large_assets_remote_only": true,
+  "remote_data_identity_match": true,
+  "remote_data_manifest_sha256": "964ee5ba16900e18f602c21c7a395f6d22f6df37a85835e22466ea37fc58c905",
+  "schema_version": 1,
+  "status": "REMOTE_DATA_VERIFIED_PENDING_READ_ONLY_PREFLIGHT"
+}

@@ -163,6 +163,9 @@ def freeze(args: argparse.Namespace) -> int:
         "RETENTION_SENTINEL": {"local_path": str(args.retention.resolve()), "remote_path": args.remote_inputs.rstrip("/") + "/RETENTION_SENTINEL.jsonl", "bytes": args.retention.stat().st_size, "sha256": sha(args.retention)},
         "FINAL_AUDIT_SEALED": {"local_path": str(args.final_audit.resolve()), "remote_path": args.remote_inputs.rstrip("/") + "/FINAL_AUDIT_SEALED.jsonl", "bytes": args.final_audit.stat().st_size, "sha256": sha(args.final_audit), "model_accessed": False},
     }
+    remote_data_identity = args.train.parent / "REMOTE_DATA_IDENTITY_V1.json"
+    if not remote_data_identity.is_file():
+        raise RuntimeError("REMOTE_DATA_IDENTITY_MANIFEST_MISSING")
     serialization = {
         "schema_version": 1, "protocol_id": PROTOCOL, "status": "FROZEN", "transport": "NVARC_NATIVE_16_TOKEN",
         "prompt_template": "<|im_start|>{role}\\n{grid}<|im_end|> repeated in task pair order; no generation prompt in supervised samples",
@@ -187,6 +190,7 @@ def freeze(args: argparse.Namespace) -> int:
             "selection": "highest TARGET_DEV net paired fixes; then lowest retention net harms; then earliest checkpoint token count", "final_audit": "SEALED_UNOPENED"}
     binding = {"schema_version": 1, "protocol_id": PROTOCOL, "status": "FROZEN_PENDING_READ_ONLY_PREFLIGHT", "source_hashes": source_entries(),
                "base_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139", "base_files": BASE_FILES, "data": data,
+               "remote_data_identity": {"remote_path": args.remote_inputs.rstrip("/") + "/REMOTE_DATA_IDENTITY_V1.json", "sha256": sha(remote_data_identity)},
                "serialization_contract_sha256": digest(serialization), "schedule_sha256": digest(schedule), "recipe_sha256": digest(recipe),
                "base_reference_gate_sha256": digest(gate), "output": {"run_root": args.run_root, "runtime": args.run_root.rstrip("/") + "/runtime", "checkpoints": args.run_root.rstrip("/") + "/checkpoints", "reservation": args.run_root.rstrip("/") + "/runtime/GPU_RESERVATION.json"},
                "shared_ledger": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/orchestration/budget/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V2.jsonl",
@@ -219,8 +223,10 @@ def preflight(args: argparse.Namespace) -> int:
         for rel, expected in binding["source_hashes"].items(): verify_file(source_root / rel, expected)
         for name, expected in binding["base_files"].items(): verify_file(args.base / name, expected)
         expected_inputs = {str(spec["remote_path"]): spec for spec in binding["data"].values()}
-        actual_inputs = {str(path): path for path in args.inputs.iterdir() if path.is_file()}
+        actual_inputs = {str(path): path for path in args.inputs.iterdir() if path.is_file() and path.suffix == ".jsonl"}
         if set(actual_inputs) != set(expected_inputs): raise RuntimeError("MOUNTED_DATA_FILE_SET_MISMATCH")
+        remote_identity = args.inputs / "REMOTE_DATA_IDENTITY_V1.json"
+        verify_file(remote_identity, binding["remote_data_identity"]["sha256"])
         mounted = []
         for path_text, spec in sorted(expected_inputs.items()):
             path = Path(path_text); verify_file(path, spec["sha256"])

@@ -1,0 +1,60 @@
+{
+  "files": {
+    "FINAL_AUDIT_SEALED.jsonl": {
+      "bytes": 309234,
+      "records": 132,
+      "sha256": "b01aabae5b7103efafe754d01b4af36a7b3fe21015adde63dedeef6d06411ddd"
+    },
+    "RETENTION_SENTINEL.jsonl": {
+      "bytes": 237564,
+      "records": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV.jsonl": {
+      "bytes": 465946,
+      "records": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    },
+    "TRAIN.jsonl": {
+      "bytes": 9331951,
+      "records": 4004,
+      "sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+    }
+  },
+  "generator": {
+    "path": "scripts/prepare_base_only_remote_first_data_v2.py",
+    "reused_grid_generator": {
+      "path": "scripts/prepare_targeted_capability_repair_v1.py",
+      "sha256": "6ef2e7fb8c9d87dbadc67d36f04a482f8f89512dd2e2c78e209972d2579dc44b"
+    },
+    "sha256": "1b79959527dff491c80b5ff66e24f74adb260d339d9a881ddd67551fc23a1719"
+  },
+  "identity_claim": "NEW_SYNTHETIC_AVAILABLE_DATA_IDENTITY",
+  "prohibitions": [
+    "historical replay-00000.parquet",
+    "historical replay sha256 32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc",
+    "Eval60 Gold",
+    "diagnostic Gold",
+    "TARGET_DEV training labels",
+    "RETENTION_SENTINEL training labels",
+    "FINAL_AUDIT model access"
+  ],
+  "protocol_id": "BASE_ONLY_TARGETED_REPAIR_REMOTE_FIRST_V2",
+  "schema_version": 1,
+  "seed_domains": {
+    "atomic": 101001,
+    "composition": 202003,
+    "final_audit_sealed": 707017,
+    "retention_sentinel": 606013,
+    "retention_train": 303007,
+    "target_composition": 505011,
+    "target_dev": 404009
+  },
+  "split_checks": {
+    "episode_ids_disjoint": true,
+    "final_audit_model_accessed": false,
+    "grid_identities_disjoint": true,
+    "programmatic_labels_only": true
+  },
+  "status": "REMOTE_SYNTHETIC_DATA_FROZEN_NO_MODEL_NO_GPU"
+}
