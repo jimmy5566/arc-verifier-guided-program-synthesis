@@ -1,0 +1,47 @@
+{
+  "binding_sha256": "73fecb89dd868e760b9da38a72b4c20ce266fb779fa6978d3eff4d7b381184a5",
+  "data_policy_audit_sha256": "19433d7e78cd0a59687965e76114ac9f491fbc06db3aa4ff741721b097c08cf9",
+  "final_audit_accessed": false,
+  "identity_preflight_sha256": "bedb535f43468b0a3c53fad3c02feae974aa8a993bd261499d4500692ff3c719",
+  "ledger_snapshot_sha256": "1f85c04f1623864a92405349c7d92670dc93783bb5cb49e2ce27434da7d3d4b6",
+  "no_model_loaded": true,
+  "no_optimizer_constructed": true,
+  "output": {
+    "checkpoints": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/checkpoints",
+    "freeze": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/freeze",
+    "parent": "/workspace/arc2/active_runs",
+    "run_root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1",
+    "runtime": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/runtime"
+  },
+  "reservation_seconds": 7200,
+  "reviewed_executable_commit": "1fa9e564724d72d315c3d3cb62c4c89bba5efe0e",
+  "runtime": {
+    "bf16_supported": true,
+    "bitsandbytes": "0.50.2",
+    "cuda": "12.8",
+    "cuda_available": true,
+    "device_count": 1,
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "peft": "0.17.1",
+    "python": "3.11.13",
+    "torch": "2.8.0+cu128",
+    "transformers": "4.55.4"
+  },
+  "runtime_contract": {
+    "bf16_supported": true,
+    "bitsandbytes": "0.50.2",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "peft": "0.17.1",
+    "python": "3.11.13",
+    "source": "artifacts/capability_pilot_2m_v1/GPU_RUNTIME_PREFLIGHT.json",
+    "torch": "2.8.0+cu128",
+    "transformers": "4.55.4"
+  },
+  "schema_version": 1,
+  "scientific_gpu_training_seconds": 0.0,
+  "source_head": "95992db9b55d5f13cbdcb1ea1dbc49404511c0ce",
+  "status": "PASS"
+}

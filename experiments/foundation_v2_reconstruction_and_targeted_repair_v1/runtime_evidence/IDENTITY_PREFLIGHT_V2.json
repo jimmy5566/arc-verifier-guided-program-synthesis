@@ -1,0 +1,574 @@
+{
+  "command": [
+    "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_capability_pilot_2m_v1.py",
+    "--mode",
+    "train",
+    "--model-path",
+    "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "--novel-train-root",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/novel_training_data_v1_1/train/novel",
+    "--novel-validation-root",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/novel_training_data_v1_1/validation/novel",
+    "--replay-shard",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/arc_training_v2_1/train/replay/replay-00000.parquet",
+    "--freeze",
+    "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/freeze",
+    "--runtime",
+    "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/runtime",
+    "--checkpoints",
+    "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/checkpoints",
+    "--scientific-gate",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/foundation_v2_reconstruction_and_targeted_repair_v1/SCIENTIFIC_EXECUTION_GATE.json"
+  ],
+  "launch_binding_sha256": "73fecb89dd868e760b9da38a72b4c20ce266fb779fa6978d3eff4d7b381184a5",
+  "no_optimizer_constructed": true,
+  "output": {
+    "checkpoints": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/checkpoints",
+    "freeze": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/freeze",
+    "parent": "/workspace/arc2/active_runs",
+    "run_root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1",
+    "runtime": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/runtime"
+  },
+  "schema_version": 1,
+  "source": {
+    "checked_out_root": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2",
+    "files": [
+      {
+        "path": "scripts/run_capability_pilot_2m_v1.py",
+        "sha256": "cd5a2106ecad4151102609b0cb8253c7a2fe51f3945e1736b3d1261e9dc07893"
+      },
+      {
+        "path": "scripts/run_foundation_v2_reconstruction_v1.py",
+        "sha256": "3631d6d798a2c9741b27fd51730c2a67e2b561444517377f62f28c9f92085077"
+      },
+      {
+        "path": "scripts/record_reconstruction_gpu_time_v6.py",
+        "sha256": "1dc2d6eee6b6dbb37e7b64b0a27e0421952a6a29da3138952ee23024cc52d9de"
+      },
+      {
+        "path": "scripts/preflight_foundation_v2_reconstruction_v1.py",
+        "sha256": "c4e8306810aa20970f0ab82ff21f38354db29806b065facf573fe0834da3a665"
+      },
+      {
+        "path": "scripts/preflight_reconstruction_gpu_runtime_v1.py",
+        "sha256": "7be436eac57cabc1020e21b422e066f84083876b096686604440fe3790c42997"
+      }
+    ],
+    "reviewed_executable_commit": "1fa9e564724d72d315c3d3cb62c4c89bba5efe0e",
+    "verification": "Each named executable file must retain this exact SHA256; evidence/gate commits may advance HEAD without changing executable identity."
+  },
+  "status": "PASS",
+  "verified_datasets": [
+    {
+      "manifest": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/novel_training_data_v1_1/NOVEL_TRAIN_SHARD_MANIFEST.json",
+      "root": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel",
+      "shards": [
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00000.parquet",
+          "sha256": "3205f7ea7a92774537966b2f7934a16c7c0127395bbbc9aa9ae7f68160e00f2b"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00001.parquet",
+          "sha256": "7e666e038bb8aa8490643d1dd54645d55616e7714c0bd85b1f318b0b77d501bf"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00002.parquet",
+          "sha256": "7d131f399d5fd6f7a80d38a545b9d65ae891a2b0a79b3f66535234a49f552abc"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00003.parquet",
+          "sha256": "21416c5c8952c7f8a65d46ff7863595d669eb4c28539aeb778a50ff7a491ad34"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00004.parquet",
+          "sha256": "d8043f9a326c34c97bc100a59ec6588386c90ca333c15afe47e727f8fc04f956"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00005.parquet",
+          "sha256": "0831e79079c0d1517be227c241e204997fa5dcec02ea3994e9bf4437e175d3f9"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00006.parquet",
+          "sha256": "d447518541a48728f8daf1de14e278225995b949b4d96c63e4913642d5f2ba1c"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00007.parquet",
+          "sha256": "ce9bbc5613683a1c1b4befe55949764e2d98c6427ec9f0216f50b827ed730c0b"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00008.parquet",
+          "sha256": "d3416ea629173c05d265cc7265aaf230dcff7c3ee33b0c4bdd29d2a6714c858a"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00009.parquet",
+          "sha256": "e306183042db89af876fdf5749c65b8cc21deb4427bd347eb57914700d0db1f5"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00010.parquet",
+          "sha256": "9acd009c135e11eb3eabc7d73b82d1cfb4252e28634579de73e542bc4461f047"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00011.parquet",
+          "sha256": "77263d89d21953e04221ea1eb0d5471f7eb41669f89e9304cbe67b92c0873cba"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00012.parquet",
+          "sha256": "daaf1628fe7a749136bd280e9e7fdb1ef4b8f11409448c65e81b07b6779cbb2c"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00013.parquet",
+          "sha256": "4f72bdad5c1c842079bd67347fe545d102fd5c75831cb6940c29f36dfbd5d084"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00014.parquet",
+          "sha256": "40fb4541b962251242eece8aa63d0c75038a7b2f81cc5b592f57ce800695ce42"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00015.parquet",
+          "sha256": "0b62d7879f6c9381ae86ea618d9ee579b5b466e6ce95b06c5e4981e8d3e57e13"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00016.parquet",
+          "sha256": "d2d906439edb9cbdc4110ea01403c4fc0085e4b1d80b386db107789422ef42a8"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00017.parquet",
+          "sha256": "897b88844d6c2f5172e8118c4abe4bf4890bb94f17cb41da1c19f490b2980f2e"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00018.parquet",
+          "sha256": "d2e9a11d74a3a3dff1c18e13a154b5714d09ed277ae9d5bd644bdbd9941a6bc1"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00019.parquet",
+          "sha256": "ac2a1907b2ec90d8a0253d13d7ef118ddc07ca7a4a08a8fa0d990891aeb861b9"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00020.parquet",
+          "sha256": "889e6f07d4c07704954d23e17e401831c26c1d06c8212624e27bf8154667c817"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00021.parquet",
+          "sha256": "388dcb04b0da118bd172f5b8defc9fcb823378e05a8755fed08f327e83c0bc35"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00022.parquet",
+          "sha256": "766f888b3bfaaa7b8457d846457f052ccacb0b483def67f18f9ae9c5ea3da515"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00023.parquet",
+          "sha256": "6c58ec7889ae51be869d13c9fdaaea8308edb70d20475b3886120b67d37e1691"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00024.parquet",
+          "sha256": "7c971852a74c7bc544a3d42aea6da97e86c437054c70ff3a4eac53613410583c"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00025.parquet",
+          "sha256": "50f474663ce996d6798cebcfb3fe64e3236835c783a17bed65d86a910c8ca66b"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00026.parquet",
+          "sha256": "1c648bd5d978a0e112d439aa43d8ee654cad234f6d58992cacedc2f3c697c703"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00027.parquet",
+          "sha256": "fb117ac467c29976d61bc3c79183db871df944f76abed38ceb38ba74f1b406b0"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00028.parquet",
+          "sha256": "83b6d20c4b5fa3eec3d88c54e1c4e7d0ed8a4071e602853ebb24a1b44902ab79"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00029.parquet",
+          "sha256": "497eb25c66b1869b04743049392ee380b19ea9019605cda2d0094ca2aa3e39f0"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00030.parquet",
+          "sha256": "420b3aa0fe3db069c280429aa1fec14bf1a8016490f3fa7c1ed557bd7f54e516"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00031.parquet",
+          "sha256": "f3b209683ce3eff95e40fa3c20caa1c7d654a8b863a48b5bd8f9c86e415d5ca9"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00032.parquet",
+          "sha256": "9d22ed0e0a401bab25a84dcbe244949ec0e2b699c535a5d4df38356cf22b5ad9"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00033.parquet",
+          "sha256": "cd65c442be9c6fa8da951328f1c08b6cb8ac6db454b277646e0bb1585ea4df76"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00034.parquet",
+          "sha256": "8dddb9f23d47e4d639f3d4109a97586760df7fb6e4ea3faa4d7ed50d87ebf901"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00035.parquet",
+          "sha256": "ef529cf5374563a508e3112223c70dd21716a1ceac9502d7f6b862f01835ded9"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00036.parquet",
+          "sha256": "be2df5d53397296c689df623f9918ff84650a6fd952eda773af2623fae338800"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00037.parquet",
+          "sha256": "2f86fa3d8749edd2a270ff706f0b4d89ff998260b75d35c4a090b65491ffcfdb"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00038.parquet",
+          "sha256": "c6be51f31d553170b0d19f587f2f9d714b6e4d3f43927921d4393a201f6aadad"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00039.parquet",
+          "sha256": "a082e01a963faa2209e582e239e3c8edfdafad170e5c9ba6cf64393942d80267"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00040.parquet",
+          "sha256": "ee2b160b7709ea818cd9114c20fa00d6109c8e7f62fb1777e079de0c4a79c2ca"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00041.parquet",
+          "sha256": "daf63c608b4233ba9efae35e0318ccc1189d993359add8629aef3398e83d5adf"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00042.parquet",
+          "sha256": "add98687726532c5d41cb3fe4a273c1c7ae9848f457e6dc3e19620e58f891cea"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00043.parquet",
+          "sha256": "f37aa6a2f65b9357d88fa06a895151e4d8a055b628ae656e38be81930cfdf051"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00044.parquet",
+          "sha256": "fd4baf5a0e54cb2ae7fa310de8a38bbb03e282ec173839b81c110680f698cb58"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00045.parquet",
+          "sha256": "1469a0924f2bfe01674be14a703e5cf41e50b75f1d61651ce8a1a26860cb43fc"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00046.parquet",
+          "sha256": "0b6f5c7c9234808edd7120294239ce1006ba8242ce0ce2f38a99605c3341200c"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00047.parquet",
+          "sha256": "0dc8ded60b0eff9a61b79ed9ce8ccb0c46300d520d50f990d6531579835c7892"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00048.parquet",
+          "sha256": "137b842c542d259d0aa78fe07944ad3387609bfbc0d421e3338a872c7cbd1441"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00049.parquet",
+          "sha256": "bea43e1f7aed8fd8c46494acf0f37f9700330351a5c18da184a594f3a7126be7"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00050.parquet",
+          "sha256": "d06595943c8cc39575139078505deb7764a432d973e52b6afbbd10d909841962"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00051.parquet",
+          "sha256": "639007f16793086fe5f76c5e8de2b51cd01bf8f1003de3feba05dab90e5ea5db"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00052.parquet",
+          "sha256": "9e69d41a3f7548c9967870b62b8aa81fbf53ad443ec9accab62253a5e444ac91"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00053.parquet",
+          "sha256": "fc66382e6c56b7a20e244a1d516c896ce184e7f2275db62443f7baa10b6d0b96"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00054.parquet",
+          "sha256": "69695fbb5f3ba1b14502cc8639d79240e956cd12be6f804345de8fe3d69c531d"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00055.parquet",
+          "sha256": "8c83e0d8a1c17e06acad30512b269754be0898b96f8439dcf87b9293b55fa482"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00056.parquet",
+          "sha256": "070a230a8d4ef99f3c4ab026c71b44cb4c7f1d032e3cb4886cad6a4641fa232e"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00057.parquet",
+          "sha256": "2903da405da76c8ced9c6f7658f249fae5e6cd5bf4a5318649215b9e86f4701d"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00058.parquet",
+          "sha256": "e43ea5db533acbe212a5591df4108f75961633dc24ea8064b5bcdbf115a1463c"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00059.parquet",
+          "sha256": "95e1117cba5f54e79b49bfe5bd24720289836e89e67a6910c15e83394546ee08"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00060.parquet",
+          "sha256": "a971c803b49f7e00e9826cba4f96f9ed7ee9b9de426dc5d1bfb3ccd7900263e1"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00061.parquet",
+          "sha256": "cf8b1b76fedacb923ec23808be01b2aba8858f69dc80172e5f2ebbabeadbca56"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00062.parquet",
+          "sha256": "72bea162a25ed6f89a518c02cee7d9a55126643977bd1895dc625e99122a1e72"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00063.parquet",
+          "sha256": "8a976ea7158802baa8fec8026f91dd0baa4ab220765497a26a931c23828a14ee"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00064.parquet",
+          "sha256": "c87c35c9913e996a75bb7d72fb5cd09667ddd4baeacf5bfb97a51a42747338dc"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00065.parquet",
+          "sha256": "efff4acaa7cfe6182438256fcfa1a549f8c370b1320d04bad475ce3a59b2e8bb"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00066.parquet",
+          "sha256": "58e5009b7382d510488d82bb24763c70e6b717b960231f6225bae7011db90227"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00067.parquet",
+          "sha256": "271dc476e93a82b980ee336d57be04b81a890842cd71139f3b71f6d75a726d48"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00068.parquet",
+          "sha256": "0fe05e87af4aa212a26c0e7cd0c0954b6a2d97a2af43722281fab0079818c1c1"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00069.parquet",
+          "sha256": "3516c8c5b9bce1214f22de0180063b629a234a40c2ec894513c743ac6bef9d7e"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00070.parquet",
+          "sha256": "637e96cede5bd2667008db05262d5e5106555591eafb58b3fb590dd6d21f2f01"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00071.parquet",
+          "sha256": "4a38e3c49221d097b490a2116c2485b4aaa3de964f2f679f09071ea79212c0d2"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00072.parquet",
+          "sha256": "f48cf1ed13785e7d9398a2ccab436764cc4cb960f368ef8459851b6a7272674e"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00073.parquet",
+          "sha256": "7167a41fa7a96efc2da26aa04cfe61991425075fc6549733008a97c6302bfb56"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00074.parquet",
+          "sha256": "c8ca4126777255f288266315d8d4170742a2cb0001b78e4359b65c1fece80811"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00075.parquet",
+          "sha256": "86c0a09ece8b67b40977b41e2b25d3d3c3b6c1686df24d0c7c8b55afec217a17"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00076.parquet",
+          "sha256": "b0b9dd095dea42bf4fb9c430a28081750050e21c107a0e11916cb2785a414ba4"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00077.parquet",
+          "sha256": "b06bb0b28bb94841b6d867772eab466070dcf9d75e990941b1a694a40f0b2819"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00078.parquet",
+          "sha256": "d3aabaf63b96527af31971f841b699489ac14750b5af0d4497b8a58a2cc5140e"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00079.parquet",
+          "sha256": "c30a65f98ca8fd8da852f91a7fbdc4f7c70947268430b9c7c2c22580b36ea63e"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00080.parquet",
+          "sha256": "6ac7fd9074838fef6371aaf6fd754a7037670b5af6b6eaba345ce46a21ac4577"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00081.parquet",
+          "sha256": "cfb3feb3e58306733c6f075e7e583d82de5353ff9e7b8610de9e06e62831402c"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00082.parquet",
+          "sha256": "2e8d0599e2a7133b694b6466efc51a5015b0e1e047081a8d22eb191995f9f022"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel/novel-00083.parquet",
+          "sha256": "78f0a5ae12be6fd69997ce28895da6a311e575c0d95d4ae532ceb5d59fae2331"
+        }
+      ]
+    },
+    {
+      "manifest": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/novel_training_data_v1_1/NOVEL_VAL_SHARD_MANIFEST.json",
+      "root": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel",
+      "shards": [
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel/novel-00000.parquet",
+          "sha256": "233e0a4cca56b696e3ecff7461b5af4f7716e044a75fda4111bbc4c3229e79ef"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel/novel-00001.parquet",
+          "sha256": "d4ad05edcafa77449694c22bb410322d49124d1f34c3936f16c79536dc3fb69d"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel/novel-00002.parquet",
+          "sha256": "1ac79f34c73143bbed792a74004eb8d1a04156fee3605be52fb104b02f2faf31"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel/novel-00003.parquet",
+          "sha256": "88b347f8f9f1902c68a7744c36de80d44784f2485ad67a6f5015f67ad0cfe6d0"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel/novel-00004.parquet",
+          "sha256": "27fe2d9e23fd8ad1ae26cf58b7ca6065a0e8186300899fe988b36998f3f27420"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel/novel-00005.parquet",
+          "sha256": "32857d2b390a3713897dac02dcd1c345d2db2991836b134e8cef09e8b62ee648"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel/novel-00006.parquet",
+          "sha256": "6050e15d2c9c9a0e5572099e02ddba38cef2edeb8723d3c5930c257a421d4aec"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel/novel-00007.parquet",
+          "sha256": "eab8c0c45164b2fdea6b1c91dd7b11be73362affb6446e7a0968d2b8083b510c"
+        },
+        {
+          "path": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel/novel-00008.parquet",
+          "sha256": "a338cdd0ea87f2cf5ffd630901cae9114ca0382f3556d105475fbe92af046451"
+        }
+      ]
+    }
+  ],
+  "verified_files": [
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/added_tokens.json",
+      "sha256": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/config.json",
+      "sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/generation_config.json",
+      "sha256": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model-00001-of-00002.safetensors",
+      "sha256": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model-00002-of-00002.safetensors",
+      "sha256": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model.safetensors.index.json",
+      "sha256": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model_manifest.json",
+      "sha256": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/special_tokens_map.json",
+      "sha256": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/tokenizer.json",
+      "sha256": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/tokenizer_config.json",
+      "sha256": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/vocab.json",
+      "sha256": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/BEST_CHECKPOINT_RELOAD_AUDIT.json",
+      "sha256": "f8343df53b27a75028851612b0c3ef770c4f3a8ad6cc65aa905c932debd5b4ae"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/CHECKPOINT_SELECTION.json",
+      "sha256": "f837e636f28127ca5bb38f162ace3c4d8e8c4b7930203fa45f4fc4ec22e65ea2"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/NOVEL_VALIDATION_SENTINEL.json",
+      "sha256": "588596c6ea8bf57ba239d825ce72bfb72d1b4662f457074e9615ecd9ec46af01"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/PRETRAIN_DATA_POLICY_AUDIT.json",
+      "sha256": "7b3b13ee13ecda6bb3eb4716ab139d4666e81cc2ad254cdbc5f5ad7b80f0bbd3"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/REPLAY_RETENTION_SENTINEL.json",
+      "sha256": "23cd6e5095f8c5a9235aca1ab2697634e9a208739c9e3992260d6ca9c0b2b6de"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/TRAINING_CONFIG.json",
+      "sha256": "28a52e5c6be800f8b00ffbd79aca905e6aa1774870a0cf1a3f6d9132d53bfc6c"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/TRAINING_DISTRIBUTION_AUDIT.json",
+      "sha256": "5cf037f8c3e96ecf9b85e8e84cadc3b2605b12ec65fb319004b8250b6bee7297"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/TRAINING_RESULT.json",
+      "sha256": "361026eee0ad6c630076875878cfc78b181967d79ba8502d68af76c6fa4fa924"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/TRAINING_SCHEDULE_2M.json",
+      "sha256": "cd4f5e384a23eb99836c3418de121f0571e48c257f24016684761bae3fea1cc0"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/foundation_v2_capability_diagnostic_v1/FOUNDATION_V2_CAPABILITY_PROFILE.json",
+      "sha256": "5f35a3ff96c681a9d316f852955dc51ec75fe667c0635da1533151e209944574"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/foundation_v2_capability_diagnostic_v1/MODEL_IDENTITY_AUDIT.json",
+      "sha256": "6c2b49fbfe40c1a001819063c67f477de8017a93ebd428b1b1bf02661b02685b"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/generation_capability_audit_v1/GENERATION_CONFIG.json",
+      "sha256": "99afd94c26c37b8d96c04783061f6b83518b40164c6d09a4d6ff738e9d5dc880"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/generation_capability_audit_v1/NOVEL_GENERATION_RESULTS.json",
+      "sha256": "b9fbb9779817bc8852708326e55c0023db0a2c3420a0eb551279ebab952fbe4d"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/generation_capability_audit_v1/REPLAY_GENERATION_RESULTS.json",
+      "sha256": "b09c2670ec069183d6350ba0cb868c3e0dd7d0480325b457050a1f0bf7251100"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/targeted_capability_repair_v1/TARGETED_CAPABILITY_REPAIR_GPU_TIME_LEDGER.jsonl",
+      "sha256": "7d19684fd198482d8862dbf2110711f183ed86b58d9d9dff2922cc9cb9b891cc"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/targeted_capability_repair_v1/data/RETENTION_SENTINEL.jsonl",
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/orchestration/director/directives/DIRECTOR_DIRECTIVE_005.json",
+      "sha256": "20d8adb9a45460eb7e5089fb5414b5a847b6d41cebab12c5c6968fbf4b7e055b"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src/capability_pilot_2m_v1/pilot.py",
+      "sha256": "a88a5e358c22f9c9f39768390fd7d3bafe31ff8a4239e553f20271eaf5d11224"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src/capability_pilot_2m_v1/__init__.py",
+      "sha256": "4278aefb607c456c3fd6895166820387b2b9bcd0f5be467dfc919b2c40a6540b"
+    },
+    {
+      "path": "/workspace/arc2/reconstruction-data_v1/POOL_REPLAY_V2_1/replay-00000.parquet",
+      "sha256": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc"
+    }
+  ]
+}
