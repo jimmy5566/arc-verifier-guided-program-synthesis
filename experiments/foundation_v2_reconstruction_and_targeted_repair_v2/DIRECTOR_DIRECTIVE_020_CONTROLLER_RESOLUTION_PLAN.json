@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "directive_id": "DIRECTOR_DIRECTIVE_020",
+  "directive_sha256": "a352eb4d48d7affebee20e81f64eaeb666cfca6a06eea021a7c43579a4e91837",
+  "root_cause": "The preregistered Round 009 equivalence result is partial because sealed generation-exact references, protected-capability baseline identity, scorer source, and scorer receipt are not bound.",
+  "why_current_path_is_invalid": "Executing generation or scoring without exact stage-compatible reference and baseline provenance would expose targets or invent a scientific validity boundary.",
+  "artifacts_or_conditions_that_must_remain_frozen": [
+    "Round RECONSTRUCTED_FOUNDATION_V2_V2_009 terminal receipt and selected 2M checkpoint identities",
+    "Round 009 thresholds: Novel >= 0.80, replay >= 0.78, protected major regressions = 0",
+    "all three target-blind input manifests",
+    "no Eval60 Gold, diagnostic Gold, FINAL_AUDIT, exposed holdout targets, targeted-repair data, model loading, inference, optimizer, or training"
+  ],
+  "required_resolution": "Freeze the additive ROUND_009_SEALED_EQUIVALENCE_EVALUATION_V1 two-phase protocol, recover only exact pre-existing sealed references and protected baseline provenance, and fail closed if any identity is unavailable.",
+  "controller_next_actions": [
+    "perform read-only CPU reference and baseline provenance recovery",
+    "freeze Phase A target-blind prediction contract and Phase B sealed CPU-only scorer contract",
+    "freeze output parsing, metric semantics, identities, nonces, and isolation rules",
+    "run structural CPU-only checks",
+    "commit and push the additive package, verify source parity where executable evaluation is later authorized, and resubmit a hashed brief before any execution"
+  ],
+  "minimum_acceptance_evidence": [
+    "exact item-to-reference mapping and canonical hashes for every manifest item",
+    "exact protected baseline and historical major-regression definition",
+    "distinct Phase A and Phase B nonces, roots, argv, and access controls",
+    "CPU-only structural tests proving target blindness, no Gold/final-audit access, and strict phase separation"
+  ],
+  "forbidden_actions": [
+    "model loading", "generation", "scoring execution", "GPU inference", "reconstruction retraining", "optimizer construction", "targeted repair", "FINAL_AUDIT", "threshold relaxation", "teacher-forced substitution without canonical mapping", "invented baseline"
+  ],
+  "fresh_round_id_required": false,
+  "fresh_protocol_id_required": true,
+  "fresh_gate_nonce_output_root_required": true
+}

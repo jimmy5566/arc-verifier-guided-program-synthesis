@@ -1,0 +1,33 @@
+{
+  "canonical_parse": "ONE_GRID_PER_UNIQUE_MANIFEST_ITEM; MISSING_DUPLICATE_OR_UNPARSABLE_FAIL_CLOSED",
+  "normalization": "ARC_NATIVE_GRID_CANONICAL_JSON_EXACT_MATCH",
+  "protocol_id": "ROUND_009_SEALED_EQUIVALENCE_EVALUATION_V1",
+  "required_result_fields": [
+    "denominator",
+    "exact_count",
+    "exact_rate",
+    "missing_count",
+    "invalid_count",
+    "pass",
+    "raw_predictions_sha256",
+    "reference_manifest_sha256",
+    "scorer_sha256",
+    "logs_sha256",
+    "result_sha256"
+  ],
+  "schema_version": 1,
+  "status": "FROZEN_PENDING_CANONICAL_REFERENCE_AND_BASELINE_IDENTITY",
+  "surfaces": {
+    "NOVEL": {
+      "denominator": 128,
+      "minimum_exact_rate": 0.8
+    },
+    "PROTECTED_CAPABILITY": {
+      "maximum_major_regressions": 0
+    },
+    "REPLAY": {
+      "denominator": 64,
+      "minimum_exact_rate": 0.78
+    }
+  }
+}

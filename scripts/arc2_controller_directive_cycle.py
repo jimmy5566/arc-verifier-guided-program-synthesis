@@ -19,6 +19,21 @@ RESOLUTION_REQUIRED = REMEDIATION | {"NEW_SUBPROTOCOL_REQUIRED", "EMERGENCY_RECO
 RESOLUTION_KEYS = {"root_cause", "why_current_path_is_invalid", "artifacts_or_conditions_that_must_remain_frozen", "required_resolution", "controller_next_actions", "minimum_acceptance_evidence", "forbidden_actions", "fresh_round_id_required", "fresh_protocol_id_required", "fresh_gate_nonce_output_root_required"}
 
 
+def cpu_only_continuation(directive: dict[str, Any], decision: str) -> bool:
+    """Return true for a Director-approved, non-scientific work substage.
+
+    A CONTINUE_WITH_WARNING decision can authorize bounded CPU work while
+    deliberately withholding model-loading and scientific-training authority.
+    Required changes in that case are work, not a terminal acknowledgement.
+    """
+    return (
+        decision in {"CONTINUE", "CONTINUE_WITH_WARNING"}
+        and directive.get("scientific_training_authorized") is not True
+        and bool(directive.get("continuation_authorized_stage"))
+        and bool(directive.get("required_changes"))
+    )
+
+
 def now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
@@ -103,6 +118,7 @@ def main() -> int:
     directive = json.loads(directive_bytes.decode("utf-8"))
     directive_id = str(directive.get("directive_id", ""))
     decision = str(directive.get("decision", ""))
+    is_cpu_only_continuation = cpu_only_continuation(directive, decision)
     if not directive_id or directive_id != args.directive.stem:
         raise RuntimeError("DIRECTIVE_IDENTITY_INVALID")
     state = load_state(args.state)
@@ -125,7 +141,15 @@ def main() -> int:
         # Preserve the historical fail-closed transition in history, but do not
         # leave it as the current terminal reason once this decision is known.
         record.pop("reason", None)
-    if not record.get("route"):
+    # Repair only the legacy acknowledgement-only closure for a non-scientific
+    # continuation.  Other terminal states remain immutable.
+    if (is_cpu_only_continuation and record.get("state") == "CLOSED"
+            and record.get("route") == "UNAUTHORIZED_CONTINUE_FAIL_CLOSED"):
+        transition(record, "PROCESSING", route="CPU_ONLY_CONTINUATION",
+                   next_step="FIRST_UNFINISHED_DIRECTIVE_REQUIREMENT",
+                   controller_cycle_complete=False,
+                   recovery="CONTINUE_WITH_WARNING_CPU_ONLY_SUBSTAGE")
+    elif not record.get("route"):
         if decision not in KNOWN:
             transition(record, "FAILED_CLOSED", reason="UNKNOWN_DIRECTOR_DECISION")
         elif decision in REMEDIATION:
@@ -139,9 +163,13 @@ def main() -> int:
                        next_step="PRESERVE_TERMINAL_CLOSURE")
         elif decision == "EMERGENCY_RECOVERY":
             transition(record, "PROCESSING", route="ISOLATED_RECOVERY")
+        elif is_cpu_only_continuation:
+            transition(record, "PROCESSING", route="CPU_ONLY_CONTINUATION",
+                       next_step="FIRST_UNFINISHED_DIRECTIVE_REQUIREMENT",
+                       controller_cycle_complete=False)
         else:
             transition(record, "CLOSED", route="AUTHORIZED" if directive.get("scientific_training_authorized") is True else "UNAUTHORIZED_CONTINUE_FAIL_CLOSED")
-    if decision in RESOLUTION_REQUIRED and not record.get("resolution_plan_sha256"):
+    if (decision in RESOLUTION_REQUIRED or is_cpu_only_continuation) and not record.get("resolution_plan_sha256"):
         plan = directive.get("controller_resolution_plan")
         if plan is None and args.resolution_plan:
             if not args.resolution_plan.is_file():

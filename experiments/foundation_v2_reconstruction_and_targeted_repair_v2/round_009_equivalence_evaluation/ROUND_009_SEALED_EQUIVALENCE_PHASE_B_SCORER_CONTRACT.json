@@ -1,0 +1,19 @@
+{
+  "adaptive_feedback_forbidden": true,
+  "execution_authorized": false,
+  "inputs_allowed": [
+    "phase_a_prediction_manifest",
+    "exact_reference_manifest",
+    "exact_protected_baseline_manifest"
+  ],
+  "model_loading_forbidden": true,
+  "nonce": "cb950dedf2c4dcaa265ce9284d6da15d358751b4868667ac",
+  "output_root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/sealed_equivalence_phase_b_cb950dedf2c4dcaa265ce9284d6da15d358751b4868667ac",
+  "phase": "B_SEALED_CPU_SCORER",
+  "phase_a_write_forbidden": true,
+  "protocol_id": "ROUND_009_SEALED_EQUIVALENCE_EVALUATION_V1",
+  "reference_provenance_status": "FAIL_CLOSED_REFERENCE_PROVENANCE_UNAVAILABLE",
+  "schema_version": 1,
+  "starts_only_after": "PHASE_A_TERMINAL_IMMUTABLE_PREDICTION_MANIFEST",
+  "status": "FROZEN_BLOCKED_BY_MISSING_REFERENCE_AND_BASELINE_IDENTITIES"
+}

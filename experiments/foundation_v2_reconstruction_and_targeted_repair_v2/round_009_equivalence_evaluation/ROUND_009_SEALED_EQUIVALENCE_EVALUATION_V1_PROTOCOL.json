@@ -1,0 +1,50 @@
+{
+  "directive_sha256": {
+    "DIRECTOR_DIRECTIVE_019": "57c1b27cfa73919c04df80e457dc0fe57ae106afb4bb85c80d2cc4b137f35510",
+    "DIRECTOR_DIRECTIVE_020": "a352eb4d48d7affebee20e81f64eaeb666cfca6a06eea021a7c43579a4e91837"
+  },
+  "execution_authorization": {
+    "final_audit": false,
+    "generation": false,
+    "gpu_inference": false,
+    "model_loading": false,
+    "scientific_training": false,
+    "scoring": false
+  },
+  "input_manifests": {
+    "NOVEL_GENERATION_INPUT_MANIFEST.json": {
+      "item_count": 0,
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/NOVEL_GENERATION_INPUT_MANIFEST.json",
+      "sha256": "50f156c1da6afb465f55a1d3420c6a65a2cf008b3391d3a317154d7055dc7b26",
+      "target_payloads_present": false
+    },
+    "PROTECTED_CAPABILITY_INPUT_MANIFEST.json": {
+      "item_count": 0,
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/PROTECTED_CAPABILITY_INPUT_MANIFEST.json",
+      "sha256": "e8132701c5aa4b97e0b81941851731e40eccfd358c0ee9e2170e937bcea1633e",
+      "target_payloads_present": false
+    },
+    "REPLAY_GENERATION_INPUT_MANIFEST.json": {
+      "item_count": 0,
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/REPLAY_GENERATION_INPUT_MANIFEST.json",
+      "sha256": "2c91a106655fd7e462933f001d3ed2bb1a034ade55cc636346c9068e27832211",
+      "target_payloads_present": false
+    }
+  },
+  "kind": "ADDITIVE_EVALUATION_SUBSTAGE_ONLY",
+  "protocol_id": "ROUND_009_SEALED_EQUIVALENCE_EVALUATION_V1",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "round_terminal_receipt_sha256": "4f558ece5665c8e7b859ceafa8ea806187380619292aa662f7743b3df3ec9ba0",
+  "schema_version": 1,
+  "selected_checkpoint": {
+    "adapter_config_sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000"
+  },
+  "status": "FROZEN_PENDING_SEALED_REFERENCE_PROVENANCE_AND_LATER_EXECUTION_DIRECTIVE",
+  "thresholds": {
+    "novel_generation_exact_min": 0.8,
+    "protected_capability_major_regressions_max": 0,
+    "replay_generation_exact_min": 0.78
+  }
+}

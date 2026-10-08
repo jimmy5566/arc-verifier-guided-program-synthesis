@@ -1,0 +1,64 @@
+{
+  "candidate_reference_payloads_opened": 0,
+  "canonical_baseline_outputs": "MISSING",
+  "canonical_reference_mapping": {
+    "NOVEL": "MISSING",
+    "PROTECTED_CAPABILITY": "MISSING",
+    "REPLAY": "MISSING"
+  },
+  "conclusion": "FAIL_CLOSED_REFERENCE_PROVENANCE_UNAVAILABLE",
+  "forbidden_inputs_not_opened": [
+    "Eval60 Gold",
+    "diagnostic Gold",
+    "FINAL_AUDIT",
+    "exposed Novel holdout targets",
+    "targeted-repair data"
+  ],
+  "known_target_blind_sources": [
+    {
+      "contains_canonical_generation_outputs": false,
+      "episode_count": 128,
+      "path": "artifacts/capability_pilot_2m_v1/NOVEL_VALIDATION_SENTINEL.json",
+      "sha256": "588596c6ea8bf57ba239d825ce72bfb72d1b4662f457074e9615ecd9ec46af01",
+      "surface": "NOVEL"
+    },
+    {
+      "contains_canonical_generation_outputs": false,
+      "episode_count": 64,
+      "path": "artifacts/capability_pilot_2m_v1/REPLAY_RETENTION_SENTINEL.json",
+      "sha256": "23cd6e5095f8c5a9235aca1ab2697634e9a208739c9e3992260d6ca9c0b2b6de",
+      "surface": "REPLAY"
+    }
+  ],
+  "major_regression_definition": "MISSING",
+  "manifest_bindings": {
+    "NOVEL_GENERATION_INPUT_MANIFEST.json": {
+      "item_count": 0,
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/NOVEL_GENERATION_INPUT_MANIFEST.json",
+      "sha256": "50f156c1da6afb465f55a1d3420c6a65a2cf008b3391d3a317154d7055dc7b26",
+      "target_payloads_present": false
+    },
+    "PROTECTED_CAPABILITY_INPUT_MANIFEST.json": {
+      "item_count": 0,
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/PROTECTED_CAPABILITY_INPUT_MANIFEST.json",
+      "sha256": "e8132701c5aa4b97e0b81941851731e40eccfd358c0ee9e2170e937bcea1633e",
+      "target_payloads_present": false
+    },
+    "REPLAY_GENERATION_INPUT_MANIFEST.json": {
+      "item_count": 0,
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/REPLAY_GENERATION_INPUT_MANIFEST.json",
+      "sha256": "2c91a106655fd7e462933f001d3ed2bb1a034ade55cc636346c9068e27832211",
+      "target_payloads_present": false
+    }
+  },
+  "method": "READ_ONLY_CPU_METADATA_AND_FILENAME_DISCOVERY",
+  "next_action": "DIRECTOR_ESCALATION_REQUIRED_BEFORE_ANY_PHASE_A_OR_PHASE_B_EXECUTION",
+  "protocol_id": "ROUND_009_SEALED_EQUIVALENCE_EVALUATION_V1",
+  "schema_version": 1,
+  "searched_roots": [
+    "artifacts/capability_pilot_2m_v1",
+    "artifacts/novel_training_data_v1_1",
+    "artifacts/foundation_v2_capability_diagnostic_v1",
+    "experiments/foundation_v2_reconstruction_and_targeted_repair_v2"
+  ]
+}

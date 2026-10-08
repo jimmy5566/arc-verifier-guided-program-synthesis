@@ -1,0 +1,19 @@
+{
+  "artifact_sha256": {
+    "ROUND_009_SEALED_EQUIVALENCE_EVALUATION_V1_PROTOCOL.json": "d33fb89eb722d3ee74ab0c8d0e9e9fb1e74647c80767d2f43e2bbf233d4b2e50",
+    "ROUND_009_SEALED_EQUIVALENCE_METRIC_SEMANTICS.json": "c78deb6b6add4bc229f67f0908c3c8c4cbc91114667683258f91941b5f8f05a6",
+    "ROUND_009_SEALED_EQUIVALENCE_PHASE_A_CONTRACT.json": "97a23899620f175ad1ce5144d52de1446d67bd1ec58032a0a82d0f30dd1c384c",
+    "ROUND_009_SEALED_EQUIVALENCE_PHASE_B_SCORER_CONTRACT.json": "3653e9cd094d14b34fe184b37775724d203a69a253d70ac7c179c13415103c26",
+    "ROUND_009_SEALED_REFERENCE_PROVENANCE_AUDIT.json": "f33670bf8e1065a204789d1deca4b4763e51d223d74f1c3e2b26db7abb1700ac"
+  },
+  "execution_authorized": false,
+  "final_audit_accessed": false,
+  "generation_performed": false,
+  "gpu_inference_performed": false,
+  "model_loading_performed": false,
+  "protocol_id": "ROUND_009_SEALED_EQUIVALENCE_EVALUATION_V1",
+  "reference_provenance": "MISSING",
+  "schema_version": 1,
+  "scoring_performed": false,
+  "status": "PASS_TO_FAIL_CLOSED_BOUNDARY"
+}

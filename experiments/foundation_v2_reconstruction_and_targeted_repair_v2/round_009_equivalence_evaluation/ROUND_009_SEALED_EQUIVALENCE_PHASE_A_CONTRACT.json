@@ -1,0 +1,51 @@
+{
+  "base_and_tokenizer_binding": "INHERIT_EXACT_FROZEN_ROUND_009_RUNTIME_IDENTITY_ONLY",
+  "decode": "DETERMINISTIC_PARAMETERS_AND_SEED_MUST_BE_BOUND_BY_A_LATER_EXECUTION_DIRECTIVE",
+  "execution_authorized": false,
+  "inputs": {
+    "NOVEL_GENERATION_INPUT_MANIFEST.json": {
+      "item_count": 0,
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/NOVEL_GENERATION_INPUT_MANIFEST.json",
+      "sha256": "50f156c1da6afb465f55a1d3420c6a65a2cf008b3391d3a317154d7055dc7b26",
+      "target_payloads_present": false
+    },
+    "PROTECTED_CAPABILITY_INPUT_MANIFEST.json": {
+      "item_count": 0,
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/PROTECTED_CAPABILITY_INPUT_MANIFEST.json",
+      "sha256": "e8132701c5aa4b97e0b81941851731e40eccfd358c0ee9e2170e937bcea1633e",
+      "target_payloads_present": false
+    },
+    "REPLAY_GENERATION_INPUT_MANIFEST.json": {
+      "item_count": 0,
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/REPLAY_GENERATION_INPUT_MANIFEST.json",
+      "sha256": "2c91a106655fd7e462933f001d3ed2bb1a034ade55cc636346c9068e27832211",
+      "target_payloads_present": false
+    }
+  },
+  "model_binding": {
+    "adapter_config_sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000"
+  },
+  "nonce": "9a7d2ce0364a30ef95300afab1f61b5a69691b5e3cb12fa3",
+  "output_root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/sealed_equivalence_phase_a_9a7d2ce0364a30ef95300afab1f61b5a69691b5e3cb12fa3",
+  "phase": "A_TARGET_BLIND_PREDICTION",
+  "prohibitions": [
+    "reference payload access",
+    "scorer launch",
+    "optimizer",
+    "checkpoint writes",
+    "adaptive feedback"
+  ],
+  "prompts": "INPUT_GRIDS_ONLY; NO_TARGET_OR_REFERENCE_ACCESS",
+  "protocol_id": "ROUND_009_SEALED_EQUIVALENCE_EVALUATION_V1",
+  "required_outputs_before_scoring": [
+    "raw_predictions.jsonl",
+    "parse_records.jsonl",
+    "item_order_manifest.json",
+    "prediction_hashes.json",
+    "terminal_receipt.json"
+  ],
+  "schema_version": 1,
+  "status": "FROZEN_BLOCKED_BY_MISSING_SEALED_REFERENCE_PROVENANCE_AND_EXECUTION_AUTHORIZATION"
+}
