@@ -1,0 +1,8 @@
+{
+  "status": "FROZEN_FAIL_CLOSED_PENDING_TRUSTED_EXPECTED_BASE_MANIFEST",
+  "base_verifier": "scripts/verify_targeted_capability_repair_base_v2.py",
+  "requirement": "Hash every file in the mounted base, including config, tokenizer assets, all indexes, and all weight shards; require exact equality to an independently predeclared expected manifest.",
+  "expected_base_manifest": "NOT_AVAILABLE_FROM_FROZEN_LOCAL_ARTIFACTS",
+  "action_if_missing_or_mismatch": "HARD_STOP_NO_GPU_LAUNCH",
+  "gpu_training_started": false
+}

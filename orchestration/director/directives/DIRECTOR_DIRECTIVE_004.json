@@ -1,0 +1,70 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_004",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "TARGETED_CAPABILITY_REPAIR_V1",
+  "reasons": [
+    {
+      "area": "resubmission_identity_and_integrity",
+      "status": "PASS",
+      "finding": "DIRECTOR_BRIEF_002 has SHA256 d31f185f3be5b0a0884c2bb0f2bc2dbbbdd6f45a31a63fd430e2fe4b40393877, its cited DIRECTOR_DIRECTIVE_003 hash matches, and all 23 files in PROTOCOL_PACKAGE_MANIFEST_V2 match their declared SHA256 values."
+    },
+    {
+      "area": "RC1_PRELAUNCH_IDENTITY_GATE",
+      "status": "FAIL_HARD_STOP",
+      "finding": "PRELAUNCH_IDENTITY_RECORD_V1 is correctly fail-closed: the mounted adapter and mounted base were not supplied or rehashed, and resolved command, resolved config, and output run directory are null. Its status is BLOCKED_HARD_STOP_BASELINE_OR_LAUNCH_IDENTITY_UNVERIFIED, so baseline and launch identity are not established."
+    },
+    {
+      "area": "RC1_BASE_VERIFIER_COMPLETENESS",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The current prelaunch verifier treats a mounted base as passing after hashing config.json and only one index or weight descriptor. When an index is present it does not hash every referenced weight shard, and it does not compare a complete mounted-base digest against a predeclared frozen expected digest. Merely recording the expected base label does not establish weight identity."
+    },
+    {
+      "area": "RC2_FROZEN_NUMERIC_GATES",
+      "status": "PASS",
+      "finding": "The frozen gate defines pre-result numeric target-progress thresholds, retention rejection thresholds, mixed-gain rejection, paired n01/n10 reporting, deterministic checkpoint tie-breaking, and preserves the original hard stops."
+    },
+    {
+      "area": "RC3_RECIPE_AND_CHECKPOINT_LINEAGE",
+      "status": "PASS_PROTOCOL_PENDING_RC1_RUNTIME_BINDING",
+      "finding": "The frozen lineage protocol preserves the exact BF16 frozen-base LoRA recipe and requires checkpoint hashes, parent hashes, token counts, round identity, and recipe hash. Runtime compliance cannot be established until RC1 binds an actual resolved launch."
+    },
+    {
+      "area": "RC4_GPU_TIME_LEDGER",
+      "status": "PARTIAL_REQUIRES_CHANGE",
+      "finding": "The initialized ledger and snapshot consistently report zero charged seconds and the utility validates a SHA256-linked interval chain, unions overlaps, and rejects a ledger total above 28,800 seconds. However, the implementation only validates after an interval is presented for append; it does not implement the frozen protocol's pre-launch safe-segment plus checkpoint-reserve check or an active fail-closed stop before aggregate execution can exceed the cap."
+    },
+    {
+      "area": "RC5_IMMUTABLE_PROVENANCE",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The cited local commit bb3c13ded5f074bf207cd00d08cc5efa7caa4c14 exists, but current local HEAD is 324bd41a97eaa66e8620f4921dae25d3a2f44e64 while a fresh git ls-remote shows the intended branch still at e6ec3a1ddb847f99ab127f65c2b63aa5a2103e2f. The remote therefore does not preserve the reviewed resubmission identity."
+    },
+    {
+      "area": "scientific_boundaries",
+      "status": "PASS_NO_TRAINING",
+      "finding": "The evidence consistently records no GPU training, no Eval60 Gold or diagnostic training use, no final-audit opening, and no taxonomy modification. No result-dependent scientific decision has been authorized."
+    }
+  ],
+  "required_changes": [
+    {
+      "change_id": "RC1A_COMPLETE_MOUNTED_IDENTITY",
+      "requirement": "On the actual intended training host, supply and hash the mounted Foundation-V2 adapter and complete mounted base, bind the resolved command file, resolved config file, and unique output run directory, and produce a new prelaunch identity record whose overall status is PASS. Any absent or mismatched value remains a hard stop."
+    },
+    {
+      "change_id": "RC1B_COMPLETE_BASE_BYTE_VERIFICATION",
+      "requirement": "Create a new frozen verifier revision and expected base manifest that hash every mounted base configuration, tokenizer asset required by the launch, weight index, and every referenced weight shard, then compare the complete manifest to predeclared expected hashes. Do not mutate the existing frozen verifier or protocol files in place."
+    },
+    {
+      "change_id": "RC4_ENFORCE_CAP_BEFORE_AND_DURING_EXECUTION",
+      "requirement": "Add a fail-closed launch wrapper or equivalent frozen control that rejects a segment unless remaining charged time covers its declared maximum plus checkpoint reserve, actively terminates training before cumulative charged execution can exceed 28,800 seconds, and records failed, interrupted, and resumed intervals to the append-only ledger. Preserve the existing zero-time ledger as prior history."
+    },
+    {
+      "change_id": "RC5_VERIFY_REMOTE_IMMUTABILITY",
+      "requirement": "After obtaining explicit user authorization for push, preserve the complete reviewed package, briefs, controls, and directives in one identified commit, push the intended branch, and verify with a fresh git ls-remote that the remote branch SHA exactly equals the declared local commit. Cached origin state is insufficient."
+    },
+    {
+      "change_id": "CONTROLLER_RESUBMISSION",
+      "requirement": "Submit a new hashed Controller brief with PASS/FAIL evidence for the revised RC1, RC4, and RC5 controls while leaving RC2 and RC3 frozen. GPU training remains unauthorized until a later Director directive explicitly returns CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true."
+    }
+  ],
+  "scientific_training_authorized": false
+}

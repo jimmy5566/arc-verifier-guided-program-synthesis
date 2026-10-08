@@ -1,0 +1,8 @@
+{
+  "status": "FROZEN",
+  "runner": "scripts/run_targeted_capability_repair_segment_v1.py",
+  "before_start": "Reject unless remaining charged budget covers maximum segment seconds plus checkpoint reserve.",
+  "during_execution": "Terminate the child at declared maximum training seconds and append the measured monotonic interval before any next segment.",
+  "cap_seconds": 28800,
+  "gpu_training_started": false
+}
