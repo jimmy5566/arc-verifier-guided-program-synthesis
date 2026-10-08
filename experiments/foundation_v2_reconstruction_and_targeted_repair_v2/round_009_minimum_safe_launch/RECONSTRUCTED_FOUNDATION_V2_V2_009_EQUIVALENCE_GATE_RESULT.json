@@ -1,0 +1,99 @@
+{
+  "created_at_utc": "2026-10-08T10:31:26.380813Z",
+  "deterministic_teacher_forced_selection": {
+    "checkpoint_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+    "checkpoint_threshold": 2000000,
+    "novel_macro_loss": 0.06182755913313988,
+    "novel_macro_loss_pass": true,
+    "optimizer_steps": 172,
+    "replay_macro_loss": 0.04880466477038681,
+    "replay_macro_loss_pass": true,
+    "source_sha256": "3eaf45c12d225a391ed5fb09c45ff24806861c27de9b907c894b2270010db927",
+    "teacher_forced_pass": true,
+    "training_tokens": 2017545
+  },
+  "final_audit_accessed": false,
+  "gate_path": "V2_RECONSTRUCTION_SELECTION_AND_RETENTION_GATE.json",
+  "gate_requirements": {
+    "novel_generation_exact_min": {
+      "observed": "NOT_RUN",
+      "pass": false,
+      "threshold": 0.8
+    },
+    "protected_capability_major_regressions_max": {
+      "observed": "NOT_RUN",
+      "pass": false,
+      "threshold": 0
+    },
+    "replay_generation_exact_min": {
+      "observed": "NOT_RUN",
+      "pass": false,
+      "threshold": 0.78
+    }
+  },
+  "gate_sha256": "c617b1b2628bc5bbdd05e220f3f0c0eb7f1e102e7c7b5fbdd63d0c3a6bdb3d30",
+  "model_identity": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "next_action": "DIRECTOR_ESCALATION_REQUIRED",
+  "optimizer_steps": 172,
+  "outcome": "EQUIVALENCE_PARTIAL",
+  "outcome_reason": "Teacher-forced Novel/replay thresholds pass at the deterministic 2M selection, but required generation-exact and protected-capability evidence is absent. Confirmation is forbidden; targeted repair remains blocked.",
+  "processed_tokens": 2017545,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "schema_version": 1,
+  "scientific_gpu_training_seconds": 3739.722329827957,
+  "targeted_repair_authorized": false,
+  "teacher_forced_checkpoint_evaluations": [
+    {
+      "checkpoint_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_500000",
+      "checkpoint_threshold": 500000,
+      "novel_macro_loss": 0.07594364791088522,
+      "novel_macro_loss_pass": true,
+      "optimizer_steps": 50,
+      "replay_macro_loss": 0.1518109051612555,
+      "replay_macro_loss_pass": false,
+      "source_sha256": "96b45e6e6ae57337f036e9209ab5508e1ee401bf1a5de2454d0e9e6b8ac32c9d",
+      "teacher_forced_pass": false,
+      "training_tokens": 504973
+    },
+    {
+      "checkpoint_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_1000000",
+      "checkpoint_threshold": 1000000,
+      "novel_macro_loss": 0.06579622502034684,
+      "novel_macro_loss_pass": true,
+      "optimizer_steps": 92,
+      "replay_macro_loss": 0.07040691879592487,
+      "replay_macro_loss_pass": true,
+      "source_sha256": "cf41b075497d43b9e047eae98c09d7e943c1c1d149f7ee23c05cbe0299bde7f4",
+      "teacher_forced_pass": true,
+      "training_tokens": 1000340
+    },
+    {
+      "checkpoint_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_1500000",
+      "checkpoint_threshold": 1500000,
+      "novel_macro_loss": 0.06174647068613009,
+      "novel_macro_loss_pass": true,
+      "optimizer_steps": 127,
+      "replay_macro_loss": 0.056307616553795015,
+      "replay_macro_loss_pass": true,
+      "source_sha256": "893b2683ac0933ecb35d3e565640fc612872fe7c99bfd7e83de36415acfc782e",
+      "teacher_forced_pass": true,
+      "training_tokens": 1507740
+    },
+    {
+      "checkpoint_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+      "checkpoint_threshold": 2000000,
+      "novel_macro_loss": 0.06182755913313988,
+      "novel_macro_loss_pass": true,
+      "optimizer_steps": 172,
+      "replay_macro_loss": 0.04880466477038681,
+      "replay_macro_loss_pass": true,
+      "source_sha256": "3eaf45c12d225a391ed5fb09c45ff24806861c27de9b907c894b2270010db927",
+      "teacher_forced_pass": true,
+      "training_tokens": 2017545
+    }
+  ],
+  "terminal_receipt_path": ".arc2-local/orchestration/receipt_cache/ROUND_RECONSTRUCTED_FOUNDATION_V2_V2_009/RECONSTRUCTED_FOUNDATION_V2_V2_009_TERMINAL_RECEIPT.json",
+  "terminal_receipt_sha256": "4f558ece5665c8e7b859ceafa8ea806187380619292aa662f7743b3df3ec9ba0",
+  "terminal_status": "SUCCESS"
+}

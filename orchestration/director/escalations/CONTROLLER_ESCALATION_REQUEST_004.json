@@ -1,0 +1,33 @@
+{
+  "blocker": "Required preregistered generation-exact and protected-capability gate evidence was not produced by the completed reconstruction worker.",
+  "escalation_type": "RECONSTRUCTION_EQUIVALENCE_PARTIAL",
+  "evidence": {
+    "equivalence_gate_result_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\foundation_v2_reconstruction_and_targeted_repair_v2\\round_009_minimum_safe_launch\\RECONSTRUCTED_FOUNDATION_V2_V2_009_EQUIVALENCE_GATE_RESULT.json",
+    "equivalence_gate_result_sha256": "c0af13d9755fdee4e2edd04455250241caa65b6949e3417e99e24c3789721e33",
+    "scientific_gpu_training_seconds": 3739.722329827957,
+    "selected_checkpoint": {
+      "checkpoint_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+      "checkpoint_threshold": 2000000,
+      "novel_macro_loss": 0.06182755913313988,
+      "novel_macro_loss_pass": true,
+      "optimizer_steps": 172,
+      "replay_macro_loss": 0.04880466477038681,
+      "replay_macro_loss_pass": true,
+      "source_sha256": "3eaf45c12d225a391ed5fb09c45ff24806861c27de9b907c894b2270010db927",
+      "teacher_forced_pass": true,
+      "training_tokens": 2017545
+    },
+    "terminal_receipt_sha256": "4f558ece5665c8e7b859ceafa8ea806187380619292aa662f7743b3df3ec9ba0"
+  },
+  "forbidden_actions": [
+    "do_not_retrain_reconstruction",
+    "do_not_start_targeted_repair",
+    "do_not_open_final_audit"
+  ],
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "requested_decision": "Whether to authorize a target-blind generation/protected-capability evaluation substage for the already-selected 2M checkpoint; targeted repair remains forbidden until equivalence is confirmed.",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "schema_version": 1,
+  "scientific_training_started": true,
+  "status": "ESCALATION_REQUESTED"
+}
