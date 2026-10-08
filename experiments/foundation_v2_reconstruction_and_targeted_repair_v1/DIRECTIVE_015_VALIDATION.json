@@ -1,0 +1,56 @@
+{
+  "artifacts": [
+    {
+      "path": "SCIENTIFIC_HOLD_DIRECTOR_015.json",
+      "sha256": "1fe4adbebf70908d6f4c63faee814bd0f7d2f081858066b08b9f066f5cc43d6d"
+    },
+    {
+      "path": "RECONSTRUCTED_FOUNDATION_V2_V1_001_REMOTE_FORENSIC_BUNDLE.json",
+      "sha256": "39b48306265b18ddfd273a19ec2f01310a1e0c9c3190b486330dedf2c64aef04"
+    },
+    {
+      "path": "RECONSTRUCTED_FOUNDATION_V2_V1_001_STATE_CONFLICT_RESOLUTION.json",
+      "sha256": "c171a0acad28888eefd1ca6e3243c6b57dd7b019fdaa57a9cf037df77568ba19"
+    },
+    {
+      "path": "RECONSTRUCTED_FOUNDATION_V2_V1_001_TERMINAL_CLASSIFICATION_SUPERSEDING.json",
+      "sha256": "d799bcfff77d336fcda271bee0fc3315d8a8a0949e85bd72928128819745048a"
+    }
+  ],
+  "directive_id": "DIRECTOR_DIRECTIVE_015",
+  "final_audit_accessed": false,
+  "ledger": {
+    "cap_seconds": 28800.0,
+    "scientific_gpu_training_seconds": 0.0,
+    "source": "REMOTE_FORENSIC_BUNDLE",
+    "wrapper_seconds": 0.178864768
+  },
+  "model_loading_started": false,
+  "next_state": "WAITING_DIRECTOR",
+  "optimizer_constructed": false,
+  "provenance": {
+    "local_head": "4a01e5944003e012fee2eb0b71a2783b72452072",
+    "origin_ref": "4a01e5944003e012fee2eb0b71a2783b72452072",
+    "parity": "PASS",
+    "runpod_source_head": "4a01e5944003e012fee2eb0b71a2783b72452072"
+  },
+  "requirements": {
+    "ADD_REGRESSION_TESTS": "PASS",
+    "FREEZE_COMPLETE_REMOTE_FORENSIC_BUNDLE": "PASS",
+    "IMMEDIATE_SCIENTIFIC_HOLD": "PASS",
+    "PRESERVE_ORIGINAL_IDENTITIES": "PASS",
+    "PROVENANCE_AND_DIRECTOR_RESUBMISSION": "PENDING_BRIEF",
+    "RECONCILE_SCIENTIFIC_TRUTH_STATE": "PASS",
+    "REPAIR_AUTHORIZATION_GATE": "PASS",
+    "REPAIR_SCIENTIFIC_NOTIFICATION_CLASSIFICATION": "PASS",
+    "REPAIR_WRAPPER_AND_RECEIPT_SEMANTICS": "PASS",
+    "SUPERSEDE_INVALID_SUCCESS_WITHOUT_REWRITING": "PASS"
+  },
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "PASS_NO_GPU_REMEDIATION",
+  "tests": {
+    "reconstruction_guard": "PASS_5",
+    "supervisor_cycle": "PASS_7"
+  }
+}

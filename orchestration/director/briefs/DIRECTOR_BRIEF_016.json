@@ -1,0 +1,42 @@
+{
+  "artifacts": [
+    {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/SCIENTIFIC_HOLD_DIRECTOR_015.json",
+      "sha256": "1fe4adbebf70908d6f4c63faee814bd0f7d2f081858066b08b9f066f5cc43d6d"
+    },
+    {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001_REMOTE_FORENSIC_BUNDLE.json",
+      "sha256": "39b48306265b18ddfd273a19ec2f01310a1e0c9c3190b486330dedf2c64aef04"
+    },
+    {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001_STATE_CONFLICT_RESOLUTION.json",
+      "sha256": "c171a0acad28888eefd1ca6e3243c6b57dd7b019fdaa57a9cf037df77568ba19"
+    },
+    {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/RECONSTRUCTED_FOUNDATION_V2_V1_001_TERMINAL_CLASSIFICATION_SUPERSEDING.json",
+      "sha256": "d799bcfff77d336fcda271bee0fc3315d8a8a0949e85bd72928128819745048a"
+    },
+    {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/DIRECTIVE_015_VALIDATION.json",
+      "sha256": "e79fb910e195666804118ed17e9a12768467b7fff058b168742675bd0ff06721"
+    }
+  ],
+  "brief_id": "DIRECTOR_BRIEF_016",
+  "decision_requested": "REVIEW_RESOLVED_SCIENTIFIC_STATE_CONFLICT_ONLY",
+  "directive_id": "DIRECTOR_DIRECTIVE_015",
+  "final_audit_accessed": false,
+  "launch_authorized": false,
+  "model_loading_started": false,
+  "optimizer_steps": 0,
+  "processed_tokens": 0,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "remediation_commit": "4a01e5944003e012fee2eb0b71a2783b72452072",
+  "request": "Review the forensic truth and hold. Do not interpret the prior success receipt as scientific completion and do not authorize a rerun unless a new structured directive explicitly satisfies the repaired exact authorization binding.",
+  "requirements_resolved": "See DIRECTIVE_015_VALIDATION.json; all technical remediation PASS, Director resubmission pending this brief.",
+  "retry_authorized": false,
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+  "round_status": "SCIENTIFIC_STATE_CONFLICT_HOLD",
+  "schema_version": 1,
+  "scientific_gpu_training_seconds": 0.0,
+  "scientific_training_started": false
+}
