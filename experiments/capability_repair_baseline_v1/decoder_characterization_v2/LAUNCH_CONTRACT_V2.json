@@ -23,7 +23,7 @@
     "sha256": "b82e408cf0c98f7f31049046b5cb36f2d315bbfcfee46f17446b5bab5c950acf"
   },
   "contract_id": "ARC2_DECODER_CHARACTERIZATION_LAUNCH_V2",
-  "contract_sha256": "614163c755a151828787e6933187c8c4fa2bd16391bb0a4ccbc77cf95c8f40d1",
+  "contract_sha256": "22367a271dc4264b8b6a563efe57241612714c4e25d62e4101bfac7f8f3c9e99",
   "datasets": {
     "retention_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
     "retention_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
@@ -75,11 +75,11 @@
     },
     "worker": {
       "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/collect_decoder_characterization_v1.py",
-      "sha256": "6cc906ef7be679efad3f713eb01c33894191a8bba2ddadfbf7ebcf4f7b57c935"
+      "sha256": "202791543004d573bc2a7dc7bde5fa7ca6322e32e0b8d63a244d61c817b97772"
     }
   },
   "inference_contract_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
-  "launch_core_sha256": "b30fc45edfc06e6625167c8efca3f47945f3aeac6aca31671d710c9bbb528f77",
+  "launch_core_sha256": "2513262dba3d30b6fe144147d1d8255f0011ea6fc6054f74e7c3d77affe5f0b4",
   "nonce_consumed_path": "/workspace/arc2/decoder_characterization_v2_run_001/NONCE_V2.CONSUMED.json",
   "nonce_path": "/workspace/arc2/decoder_characterization_v2_run_001/NONCE_V2",
   "nonce_sha256": "7a17cb752a19cdb4885bb5d20efc75196c8bdca1a80276ee68e12c6852c5eeef",
@@ -100,7 +100,7 @@
   ],
   "preflight_receipt_path": "/workspace/arc2/decoder_characterization_v2_run_001/TOKENIZER_PREFLIGHT_RECEIPT.json",
   "receipt_path": "/workspace/arc2/decoder_characterization_v2_run_001/TERMINAL_RECEIPT.json",
-  "reviewed_brief_sha256": "72f1a7971c47787bea619e1c1d332c78df9622a1aa353e9f669210b351f218c7",
+  "reviewed_brief_sha256": "67e42d5a940a0f47e0e6eacca4143a41a8eb570cd6943366270d0d6f0703d888",
   "runtime": {
     "attention_backend": "sdpa",
     "batch_size": 1,
@@ -111,5 +111,5 @@
   "schema_version": 1,
   "source_root": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2",
   "terminal_failure_receipt_path": "/workspace/arc2/decoder_characterization_v2_run_001/ADMISSION_FAILURE_RECEIPT.json",
-  "worker_source_commit": "85cf78b60a2bb647b9156496513b1787fab00295"
+  "worker_source_commit": "52c97079de068489ac62d09888307c73fea32b7c"
 }

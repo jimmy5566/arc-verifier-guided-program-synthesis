@@ -3,9 +3,9 @@
   "decision_requested": "AUTHORIZE_TARGET_BLIND_12_ITEM_DECODER_CHARACTERIZATION",
   "final_audit_opened": false,
   "launch_core": {
-    "core_sha256": "b30fc45edfc06e6625167c8efca3f47945f3aeac6aca31671d710c9bbb528f77",
+    "core_sha256": "2513262dba3d30b6fe144147d1d8255f0011ea6fc6054f74e7c3d77affe5f0b4",
     "path": "experiments/capability_repair_baseline_v1/decoder_characterization_v2/LAUNCH_CORE_V2.json",
-    "sha256": "f5909a9868bf213dd4f93662089e3b1a0ca4fabf8bc46e6c3471be8c2843a0e0"
+    "sha256": "daf136377f6981de0e045380be13ad15ba23f482f137325955c51f64574e23db"
   },
   "next_stage_only_if_authorized": "Run exact V2 command after PASS_NO_MODEL_IMPORT preflight and a response bound to final contract hash.",
   "preserved_rejected_evidence": [
@@ -26,5 +26,5 @@
       "TARGETED_EVALUATION": 4
     }
   },
-  "worker_source_commit": "85cf78b60a2bb647b9156496513b1787fab00295"
+  "worker_source_commit": "52c97079de068489ac62d09888307c73fea32b7c"
 }
