@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_FORWARD_BASELINE_DECODER_CHARACTERIZATION_V5",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "TARGET_BLIND_DECODER_CHARACTERIZATION_12_ITEM_V4",
+  "brief_id": "FORWARD_BASELINE_DECODER_CHARACTERIZATION_REVIEW_V5",
+  "reviewed_brief_sha256": "062f286b0fd465bb889a340c276b65a70923cf0600b7eed1553b505f005ae3a3",
+  "root_cause": {
+    "code": "ADMISSION_BINDINGS_AND_RUNTIME_CAP_NOT_FAIL_CLOSED",
+    "finding": "The submitted V4 package resolves the prior malformed-receipt, executable-command, target-access, fresh-nonce, and output-collision defects, but four launch-critical conditions remain documentary rather than enforced. First, LAUNCH_CONTRACT_V4.json does not bind reviewed_brief_sha256 and the launch validator does not authenticate reviewed_brief_sha256 or authorization_request_sha256 from the Governor review. Second, the preflight records the live source_commit, but the launch validator validates only worker_source_commit ancestry and does not require the launch checkout or preflight source_commit to equal the reviewed stage commit ee3943b183bc7bda6bf35cad2c76e8c36da8f0d2. Third, the validator hashes the checkpoint-manifest JSON file but never enumerates and verifies the manifest's base_files and adapter_files against the mounted base and adapter directories before model import, so the claimed checkpoint identity is not fail-closed. Fourth, runtime_cap_seconds=1200 is present in the contract but is not enforced by collect_decoder_characterization_v1.py or an immutable wrapper, so it is not an active runtime cap. These omissions prevent authorization even though the submitted PASS_NO_MODEL_IMPORT receipt is valid and the focused CPU tests pass."
+  },
+  "smallest_repair": [
+    {
+      "step": 1,
+      "requirement": "Preserve this V4 package, its PASS_NO_MODEL_IMPORT receipt, nonce, and output root as rejected pre-execution evidence. Do not execute it, edit it in place, consume its nonce, or reuse its output root."
+    },
+    {
+      "step": 2,
+      "requirement": "Freeze a successor launch contract and validator that bind and authenticate the exact reviewed brief SHA256 062f286b0fd465bb889a340c276b65a70923cf0600b7eed1553b505f005ae3a3 or the SHA256 of its successor brief, the authorization-request SHA256, the launch-contract identity, the cohort SHA256, and the fresh Governor-review path. A wrong or missing brief/request binding must fail before nonce consumption or model import."
+    },
+    {
+      "step": 3,
+      "requirement": "Bind one exact runtime source commit and require live HEAD equality, not ancestry. Require the no-model preflight receipt's source_commit to equal that same reviewed runtime commit. Preserve immutable executable and dependency hashes as additional checks."
+    },
+    {
+      "step": 4,
+      "requirement": "Before tokenizer or model import, parse the bound checkpoint manifest and enumerate every expected base_files and adapter_files entry at the exact mounted paths. Verify relative name, byte length, and SHA256 for every entry; reject missing files, hash or size mismatches, path substitution, and unexpected model or adapter identity files according to an explicit allowlist policy."
+    },
+    {
+      "step": 5,
+      "requirement": "Implement an active 1200-second wall-clock cap in the immutable execution route. On cap or failure, stop further generation, avoid a success receipt, release model resources when possible, and atomically write a terminal capped/failure receipt. Prove the mechanism with a CPU-only dummy short-duration test."
+    },
+    {
+      "step": 6,
+      "requirement": "Add CPU-only regression tests showing rejection of a wrong reviewed-brief hash, wrong authorization-request hash, descendant-but-not-equal source commit, mismatched preflight source_commit, missing/extra/modified base or adapter manifest entries, and runtime-cap expiry. Retain the existing target-blindness, nonce-replay, output-collision, malformed-receipt, argv, environment, and immutable-file tests."
+    },
+    {
+      "step": 7,
+      "requirement": "Freeze a fresh additive package with a new nonce and output root, push it on the existing non-main branch, verify exact local=origin=RunPod provenance for the reviewed runtime commit, run a fresh PASS_NO_MODEL_IMPORT preflight, and submit a new hashed brief for another Governor review."
+    }
+  ],
+  "frozen_conditions": {
+    "baseline_model_id": "CAPABILITY_REPAIR_BASELINE_V1",
+    "baseline_identity_sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+    "checkpoint_manifest_file_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "checkpoint_manifest_identity": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da",
+    "target_dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97",
+    "retention_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+    "cohort_id": "ARC2_DECODER_CHARACTERIZATION_COHORT_V1",
+    "cohort_manifest_sha256": "70e300e0d3c0fac4a1118b4f4b608c40ed757af988088c2b5d2f236718042e13",
+    "cohort_items": 12,
+    "cohort_role_counts": {
+      "TARGETED_EVALUATION": 4,
+      "TARGETED_COMPOSITION": 4,
+      "RETENTION_SENTINEL": 4
+    },
+    "parser_contract_id": "ARC2_TOKEN_GRID_EXTRACTION_V2_TARGET_BLIND",
+    "parser_contract_sha256": "8275d9c436f141361400340e381ef011d9e95ba1db46e47aef869f912a670d72",
+    "target_blind": true,
+    "no_gold_leakage": true,
+    "historical_foundation_v2_equivalence_required": false,
+    "v6_interpretation": "MEASUREMENT_INVALID_NOT_ESTABLISHED",
+    "final_audit_opened": false,
+    "scientific_training_started": false,
+    "full_288_rerun_authorized": false
+  },
+  "forbidden_actions": [
+    "DO_NOT_EXECUTE_LAUNCH_CONTRACT_V4",
+    "DO_NOT_CONSUME_OR_REUSE_NONCE_V4",
+    "DO_NOT_REUSE_DECODER_CHARACTERIZATION_V4_RUN_001_OUTPUT_ROOT",
+    "DO_NOT_TREAT_PASS_NO_MODEL_IMPORT_AS_EXECUTION_AUTHORIZATION",
+    "DO_NOT_LOAD_THE_MODEL_OR_START_GPU_INFERENCE_UNDER_THIS_REVIEW",
+    "DO_NOT_READ_HELD_OUT_OUTPUTS_OR_COMPUTE_EXACT_GRID_MATCH_DURING_CHARACTERIZATION",
+    "DO_NOT_RERUN_ALL_288_EPISODES",
+    "DO_NOT_OPEN_FINAL_AUDIT",
+    "DO_NOT_CONSTRUCT_AN_OPTIMIZER_TRAIN_OR_MUTATE_WEIGHTS",
+    "DO_NOT_START_TARGETED_REPAIR_OR_ANY_AUTOMATIC_FOLLOW_ON_STAGE",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": true,
+  "review_trigger": "A new immutable brief binding a successor contract with authenticated brief/request/source identities, complete mounted checkpoint-manifest verification, an active tested runtime cap, fresh nonce and outputs, exact provenance parity, and a fresh PASS_NO_MODEL_IMPORT receipt.",
+  "review_findings": [
+    {
+      "area": "brief_identity",
+      "status": "PASS",
+      "finding": "The reviewed brief byte SHA256 is exactly 062f286b0fd465bb889a340c276b65a70923cf0600b7eed1553b505f005ae3a3."
+    },
+    {
+      "area": "prior_defect_remediation",
+      "status": "PASS_PARTIAL",
+      "finding": "The V4 worker is target-blind, omits exact_grid_match, has a parseable bound command, validates a fresh nonce and output collisions, and the submitted tokenizer preflight is valid UTF-8 JSON with PASS_NO_MODEL_IMPORT."
+    },
+    {
+      "area": "governor_authorization_binding",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The launch contract has no reviewed_brief_sha256 field and the validator accepts CONTINUE_CONTROLLER without checking reviewed_brief_sha256 or authorization_request_sha256."
+    },
+    {
+      "area": "runtime_source_provenance",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The validator accepts any live source commit for which worker_source_commit is an ancestor, and validate_preflight ignores the receipt's source_commit. Exact reviewed stage-commit equality is therefore not enforced at launch."
+    },
+    {
+      "area": "checkpoint_identity",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The checkpoint-manifest file hash is bound, but the mounted base and adapter files listed inside it are not enumerated or hashed before model import."
+    },
+    {
+      "area": "runtime_cap",
+      "status": "FAIL_HARD_STOP",
+      "finding": "The declared 1200-second cap is not consumed by the worker or enforced by a bound launcher, and no cap-expiry regression test exists."
+    },
+    {
+      "area": "focused_cpu_tests",
+      "status": "PASS_INCOMPLETE",
+      "finding": "tests.test_decoder_characterization_v2 passes 4 of 4 tests, but the suite does not test the four hard-stop conditions identified in this review."
+    }
+  ],
+  "reviewed_launch_contract_identity": "6a90e372f30461a4ac5ac65f4d0f8faa717c8b28c7532f0186a68661760c449d",
+  "reviewed_launch_contract_file_sha256": "268cb2573fead01afd421e18faa5c49dc814f69c9a265073de16bc3f407be595",
+  "reviewed_authorization_request_sha256": "2c49607d8704ebe41f75006d474d52b979e517b148e27976832a8cd7cf0e3a94",
+  "reviewed_preflight_receipt_sha256": "6ec0d5a9ed9b1a86a5bb61f69d47f25bdf4ed12bc51953ae2ec1db1a1c76228a",
+  "reviewed_stage_commit": "ee3943b183bc7bda6bf35cad2c76e8c36da8f0d2",
+  "cpu_only_remediation_authorized": true,
+  "decoder_characterization_execution_authorized": false,
+  "full_baseline_rerun_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "scientific_training_authorized": false,
+  "targeted_repair_authorized": false,
+  "final_audit_authorized": false
+}
