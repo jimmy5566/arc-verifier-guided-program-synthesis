@@ -58,6 +58,17 @@ def atomic_text(path: Path, value: str) -> None:
     temp.replace(path)
 
 
+def write_optimizer_accounting(path: Path | None, value: dict[str, Any]) -> None:
+    """Publish durable optimizer-only accounting for the launcher.
+
+    This path is unset for historical/replay execution.  It is deliberately
+    written only when an optimizer step is active or complete, so imports,
+    model loading, validation, and wrapper work cannot become GPU charges.
+    """
+    if path is not None:
+        atomic_json(path, value)
+
+
 def load_metadata(paths: list[Path]) -> list[dict[str, Any]]:
     import pyarrow.parquet as pq
     columns = ["sample_id", "generator_family", "source", "split", "final_training_role", "sequence_length", "supervised_token_count"]
@@ -328,6 +339,9 @@ def train_worker(args: argparse.Namespace) -> int:
     trace: list[dict[str, Any]] = []
     tokens = supervised_tokens = 0
     train_seconds = 0.0
+    accounting_raw = os.environ.get("ARC2_GPU_ACCOUNTING_STATE")
+    accounting_path = Path(accounting_raw) if accounting_raw else None
+    accounting = {"schema_version": 1, "status": "READY", "completed_optimizer_training_seconds": 0.0, "last_completed_optimizer_step": 0, "active_optimizer_step_started_monotonic_ns": None}
     run_started = time.perf_counter()
     last_group_loss = None
     for step_index in range(schedule["optimizer_steps"]):
@@ -345,6 +359,9 @@ def train_worker(args: argparse.Namespace) -> int:
             param_group["lr"] = lr
         optimizer.zero_grad(set_to_none=True)
         step_started = time.perf_counter()
+        step_monotonic_started = time.monotonic_ns()
+        accounting.update({"status": "ACTIVE_OPTIMIZER_STEP", "active_optimizer_step_started_monotonic_ns": step_monotonic_started})
+        write_optimizer_accounting(accounting_path, accounting)
         group_loss = 0.0
         previous_tokens = tokens
         for (meta, raw), count in zip(group, group_supervised):
@@ -362,6 +379,8 @@ def train_worker(args: argparse.Namespace) -> int:
         torch.cuda.synchronize()
         step_seconds = time.perf_counter() - step_started
         train_seconds += step_seconds
+        accounting.update({"status": "READY", "completed_optimizer_training_seconds": train_seconds, "last_completed_optimizer_step": step_index + 1, "active_optimizer_step_started_monotonic_ns": None})
+        write_optimizer_accounting(accounting_path, accounting)
         last_group_loss = group_loss
         trace.append({
             "optimizer_step": step_index + 1, "processed_tokens": tokens,
@@ -403,6 +422,7 @@ def train_worker(args: argparse.Namespace) -> int:
         "points": points, "trace": trace, "parameter_partition": partition,
     }
     atomic_json(args.runtime / "TRAINING_RESULT.json", result)
+    write_optimizer_accounting(accounting_path, {**accounting, "status": "COMPLETE"})
     atomic_json(args.runtime / "TRAINING_PROGRESS.json", {"status": "COMPLETE", **{key: result[key] for key in ("actual_transformer_tokens", "actual_supervised_tokens", "optimizer_steps")}})
     del model, optimizer
     gc.collect()
