@@ -1,0 +1,167 @@
+{
+  "batch1_family_exact_counts": [
+    {
+      "episodes": 7,
+      "family": "conditional action",
+      "r1_exact_correct": 4,
+      "r1_minus_v7": 3,
+      "r2_exact_correct": 4,
+      "r2_minus_v7": 3,
+      "v7_exact_correct": 1
+    },
+    {
+      "episodes": 2,
+      "family": "connected components",
+      "r1_exact_correct": 1,
+      "r1_minus_v7": 1,
+      "r2_exact_correct": 1,
+      "r2_minus_v7": 1,
+      "v7_exact_correct": 0
+    },
+    {
+      "episodes": 3,
+      "family": "difference",
+      "r1_exact_correct": 1,
+      "r1_minus_v7": -1,
+      "r2_exact_correct": 0,
+      "r2_minus_v7": -2,
+      "v7_exact_correct": 2
+    },
+    {
+      "episodes": 4,
+      "family": "inside/contains",
+      "r1_exact_correct": 3,
+      "r1_minus_v7": 3,
+      "r2_exact_correct": 3,
+      "r2_minus_v7": 3,
+      "v7_exact_correct": 0
+    },
+    {
+      "episodes": 8,
+      "family": "mask set",
+      "r1_exact_correct": 2,
+      "r1_minus_v7": 0,
+      "r2_exact_correct": 3,
+      "r2_minus_v7": 1,
+      "v7_exact_correct": 2
+    },
+    {
+      "episodes": 4,
+      "family": "orientation",
+      "r1_exact_correct": 1,
+      "r1_minus_v7": -1,
+      "r2_exact_correct": 1,
+      "r2_minus_v7": -1,
+      "v7_exact_correct": 2
+    },
+    {
+      "episodes": 8,
+      "family": "overlay",
+      "r1_exact_correct": 5,
+      "r1_minus_v7": 1,
+      "r2_exact_correct": 1,
+      "r2_minus_v7": -3,
+      "v7_exact_correct": 4
+    },
+    {
+      "episodes": 7,
+      "family": "propagation",
+      "r1_exact_correct": 4,
+      "r1_minus_v7": 3,
+      "r2_exact_correct": 2,
+      "r2_minus_v7": 1,
+      "v7_exact_correct": 1
+    },
+    {
+      "episodes": 6,
+      "family": "relation selector action",
+      "r1_exact_correct": 1,
+      "r1_minus_v7": -2,
+      "r2_exact_correct": 1,
+      "r2_minus_v7": -2,
+      "v7_exact_correct": 3
+    },
+    {
+      "episodes": 7,
+      "family": "rotate",
+      "r1_exact_correct": 0,
+      "r1_minus_v7": -7,
+      "r2_exact_correct": 7,
+      "r2_minus_v7": 0,
+      "v7_exact_correct": 7
+    },
+    {
+      "episodes": 7,
+      "family": "same color",
+      "r1_exact_correct": 4,
+      "r1_minus_v7": -3,
+      "r2_exact_correct": 1,
+      "r2_minus_v7": -6,
+      "v7_exact_correct": 7
+    },
+    {
+      "episodes": 2,
+      "family": "width",
+      "r1_exact_correct": 0,
+      "r1_minus_v7": -2,
+      "r2_exact_correct": 0,
+      "r2_minus_v7": -2,
+      "v7_exact_correct": 2
+    }
+  ],
+  "batch1_result_path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/serial_decoding_flip_replication_v1/run_001/BATCH1_RESULT.json",
+  "batch1_result_sha256": "e3ffb9d57402c3d4c570acb213b8b84e5c686350a809fd9202fe3b86cdf81b8b",
+  "batch1_vs_batch32": {
+    "CAPABILITY_REPAIR_BASELINE_V1_V7": {
+      "batch32_source": "/workspace/arc2/forward_baseline_evaluation_v7_batch32/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "batch32_source_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5",
+      "canonical_agreement": 0.9230769230769231,
+      "canonical_agreement_count": 60,
+      "canonical_agreement_pass": false,
+      "canonical_agreement_threshold": 0.9375,
+      "cohort_episodes": 65
+    },
+    "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_FINAL": {
+      "batch32_source": "/workspace/arc2/forward_targeted_repair_v1_003_evaluation_batch32_v2/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "batch32_source_sha256": "fee020b8ac8aa81df2e5862b9af8b6f84819cc2c237099f25a9c5067abd9c8a9",
+      "canonical_agreement": 0.8,
+      "canonical_agreement_count": 52,
+      "canonical_agreement_pass": false,
+      "canonical_agreement_threshold": 0.9375,
+      "cohort_episodes": 65
+    },
+    "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_004_FINAL": {
+      "batch32_source": "/workspace/arc2/forward_targeted_repair_v1_004_evaluation_batch32/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "batch32_source_sha256": "505841894ceb468b1623754c80cdae3fa359c66340c311e278d987749b219cb3",
+      "canonical_agreement": 0.8307692307692308,
+      "canonical_agreement_count": 54,
+      "canonical_agreement_pass": false,
+      "canonical_agreement_threshold": 0.9375,
+      "cohort_episodes": 65
+    }
+  },
+  "cohort_path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/serial_decoding_flip_replication_v1/DIAGNOSTIC_COHORT.json",
+  "cohort_sha256": "771f0b1dab3b0f49d7db1c3af02112ce179483ad26a2b3aea84093be0b4897a3",
+  "diagnostic_id": "V7_R1_R2_SERIAL_DECODING_FLIP_REPLICATION_V1",
+  "director_required_signs": {
+    "conditional_action_r1_positive": true,
+    "conditional_action_r2_positive": true,
+    "difference_r1_negative": true,
+    "difference_r2_negative": true,
+    "inside_contains_r1_positive": true,
+    "inside_contains_r2_positive": true,
+    "overlay_r2_negative": true,
+    "same_color_r1_negative": true,
+    "same_color_r2_negative": true
+  },
+  "director_rule_components": {
+    "all_canonical_agreements_pass": false,
+    "all_family_signs_pass": true
+  },
+  "director_rule_pass": false,
+  "final_audit_opened": false,
+  "optimizer_constructed": false,
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "ANALYZED"
+}
