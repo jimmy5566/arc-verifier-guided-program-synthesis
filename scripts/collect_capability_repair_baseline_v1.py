@@ -81,7 +81,47 @@ def output_row(surface: str, r: dict[str, Any], p: str, text: str, cid: str, mid
 def aggregate(rows: list[dict[str, Any]]) -> dict[str, Any]:
     return {"episodes": len(rows), "parse_valid": sum(bool(x["parse_valid"]) for x in rows), "exact_grid_match": sum(bool(x["exact_grid_match"]) for x in rows), "episode_ids_sha256": dig([x["episode_id"] for x in rows]), "outcome_rows_sha256": dig(rows)}
 def receipt(status: str, started: float, **more: Any) -> dict[str, Any]:
-    return {"schema_version": 2, "protocol_id": PROTOCOL, "collector": "collect_capability_repair_baseline_v1.py", "status": status, "baseline_inference_seconds": time.monotonic() - started, "scientific_training_started": False, "lora_constructed": False, "optimizer_constructed": False, **more}
+    return {"schema_version": 2, "protocol_id": PROTOCOL, "collector": "collect_capability_repair_baseline_v1.py", "status": status, "baseline_inference_seconds": time.monotonic() - started, "scientific_training_started": False, "adapter_loaded": False, "lora_constructed": False, "optimizer_constructed": False, **more}
+
+def verify_governor_review(launch: dict[str, Any], review_path: Path) -> None:
+    """Bind the external stage approval to exactly this immutable launch."""
+    if review_path.resolve() != Path(launch["governor_review_path"]).resolve():
+        raise RuntimeError("GOVERNOR_REVIEW_PATH_BINDING_MISMATCH")
+    if not review_path.is_file():
+        raise RuntimeError("GOVERNOR_REVIEW_REQUIRED")
+    review = json.loads(review_path.read_text(encoding="utf-8"))
+    if review.get("decision") != "CONTINUE_CONTROLLER":
+        raise RuntimeError("GOVERNOR_REVIEW_NOT_AUTHORIZING")
+    expected = {
+        "reviewed_brief_sha256": launch["reviewed_brief_sha256"],
+        "launch_contract_file_sha256": sha(Path(launch["contract_path"])),
+        "launch_contract_identity": launch["contract_sha256"],
+        "baseline_identity_sha256": launch["baseline_identity"]["sha256"],
+        "checkpoint_manifest_file_sha256": launch["checkpoint_manifest_sha256"],
+        "checkpoint_manifest_identity": launch["checkpoint_manifest_identity"],
+        "target_dev_sha256": launch["datasets"]["TARGET_DEV"]["sha256"],
+        "target_dev_rows": launch["datasets"]["TARGET_DEV"]["rows"],
+        "retention_sha256": launch["datasets"]["RETENTION_SENTINEL"]["sha256"],
+        "retention_rows": launch["datasets"]["RETENTION_SENTINEL"]["rows"],
+        "source_commit": launch["source_commit"],
+        "executable_sha256": launch["executable"]["sha256"],
+        "nonce_sha256": launch["nonce_sha256"],
+        "output_root": launch["output_root"],
+        "receipt_path": launch["receipt_path"],
+        "runtime_cap_seconds": launch["runtime_cap_seconds"],
+    }
+    if any(review.get(k) != v for k, v in expected.items()):
+        raise RuntimeError("GOVERNOR_REVIEW_BINDING_MISMATCH")
+
+def verify_entrypoint(launch: dict[str, Any], args: argparse.Namespace) -> None:
+    actual = [str(Path(sys.executable).resolve()), str(Path(sys.argv[0]).resolve()), *sys.argv[1:]]
+    if actual != launch["argv"]:
+        raise RuntimeError("ARGV_BINDING_MISMATCH")
+    if args.runtime_limit_seconds != launch["runtime_cap_seconds"]:
+        raise RuntimeError("RUNTIME_CAP_BINDING_MISMATCH")
+    for key, value in launch["environment"].items():
+        if os.environ.get(key) != value:
+            raise RuntimeError(f"ENVIRONMENT_BINDING_MISMATCH:{key}")
 def main() -> int:
     a = argparse.ArgumentParser()
     for name in ("output", "receipt"): a.add_argument("--" + name, type=Path, required=True)
@@ -100,11 +140,9 @@ def main() -> int:
         v=V(); v.contract=str(z.launch_contract)
         verify_launch(v)  # verifies source, executable/dependencies, exact mounted model and data before imports.
         launch=json.loads(z.launch_contract.read_text(encoding="utf-8"))
-        if z.governor_review is None or not z.governor_review.is_file(): raise RuntimeError("GOVERNOR_REVIEW_REQUIRED")
-        review=json.loads(z.governor_review.read_text(encoding='utf-8'))
-        if review.get('decision') != 'CONTINUE_CONTROLLER': raise RuntimeError("GOVERNOR_REVIEW_NOT_AUTHORIZING")
-        if review.get('reviewed_brief_sha256') != launch.get('reviewed_brief_sha256') or review.get('launch_contract_file_sha256') != sha(z.launch_contract) or review.get('launch_contract_identity') != launch.get('contract_sha256') or review.get('baseline_identity_sha256') != launch.get('baseline_identity',{}).get('sha256'): raise RuntimeError("GOVERNOR_REVIEW_BINDING_MISMATCH")
-        if Path(sys.executable).resolve() != Path(launch['interpreter']).resolve(): raise RuntimeError("INTERPRETER_BINDING_MISMATCH")
+        if z.governor_review is None: raise RuntimeError("GOVERNOR_REVIEW_REQUIRED")
+        verify_governor_review(launch, z.governor_review)
+        verify_entrypoint(launch, z)
         expected_out=Path(launch["output_root"]) / "CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json"
         if z.output.resolve()!=expected_out.resolve() or z.receipt.resolve()!=Path(launch["receipt_path"]).resolve(): raise RuntimeError("LAUNCH_OUTPUT_BINDING_MISMATCH")
         nonce=Path(launch["nonce_path"]); consumed=nonce.with_name(nonce.name+".consumed")
@@ -162,6 +200,6 @@ def main() -> int:
     n = len(target) + len(retention)
     if status == "COLLECTED_PASS" and len(rows) != n: status, failure = "PARTIAL_FAILURE", "INCOMPLETE_EPISODE_SET"
     result = {"schema_version": 2, "protocol_id": PROTOCOL, "status": status, "inference_contract_identity": cid, "model_base_manifest_identity": mid, "predictions": rows, "aggregates": {"TARGET_DEV": aggregate([x for x in rows if x["surface"] == "TARGET_DEV"]), "RETENTION_SENTINEL": aggregate([x for x in rows if x["surface"] == "RETENTION_SENTINEL"])}, "expected_episode_count": n, "completed_episode_count": len(rows)}
-    write(z.output, result); write(z.receipt, receipt(status, started, model_loaded=True, lora_constructed=True, adapter_path=str(z.adapter), completed_episode_ids=[x["episode_id"] for x in rows], expected_episode_count=n, completed_episode_count=len(rows), model_base_manifest_identity=mid, inference_contract_identity=cid, failure=failure, runtime_cap_seconds=z.runtime_limit_seconds, model_released=True))
+    write(z.output, result); write(z.receipt, receipt(status, started, model_loaded=True, adapter_loaded=True, lora_constructed=False, adapter_path=str(z.adapter), completed_episode_ids=[x["episode_id"] for x in rows], expected_episode_count=n, completed_episode_count=len(rows), model_base_manifest_identity=mid, inference_contract_identity=cid, failure=failure, runtime_cap_seconds=z.runtime_limit_seconds, model_released=True))
     return 0 if status == "COLLECTED_PASS" else 1
 if __name__ == "__main__": raise SystemExit(main())
