@@ -1,0 +1,55 @@
+{
+  "brief_id": "DIRECTOR_BRIEF_012",
+  "budget": {
+    "cap_new_gpu_training_seconds": 28800,
+    "charged_new_gpu_training_seconds": 0,
+    "reconstruction_reservation_seconds": 7200
+  },
+  "directive_context": "DIRECTOR_DIRECTIVE_011 transport work is preserved as optional infrastructure utility; the user-authorized remote-first policy removes it as a prerequisite for this reconstruction protocol.",
+  "evidence": {
+    "attempt_archive": {
+      "path": "experiments/base_only_targeted_repair_available_data_v1/FORCED_PTY_TRANSPORT_ATTEMPTS_ARCHIVE.json",
+      "sha256": "1addbe96befd9a08d709ee1d9b1dee729d580fca81633282c6f6640e5edf918b"
+    },
+    "receipt_smoke": {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/REMOTE_RECEIPT_MONITORING_SMOKE_011.json",
+      "sha256": "00cc1809c69129355a16b9481b8bf962203b13ce43651afd8dbdd2d89201120e"
+    },
+    "reconstruction_protocol_v2": {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/FOUNDATION_V2_RECONSTRUCTION_PROTOCOL_V2.json",
+      "sha256": "385ed64244f8fe3f5fad0a84ecd8e6d2cb2befe7e15706a41413b44b86eb20c0"
+    },
+    "remote_first_policy": {
+      "path": "experiments/foundation_v2_reconstruction_and_targeted_repair_v1/REMOTE_FIRST_RUNTIME_POLICY_V1.json",
+      "sha256": "e408568a43e6b71a528d1e9ee69548e7d6f83b6bc3de5f28e4e779756d63ee5c"
+    },
+    "transport_utility": {
+      "path": "orchestration/transport/FORCED_PTY_LARGE_FILE_TRANSPORT_UTILITY_V1.json",
+      "sha256": "4a466b066470c06dc2bfb056ba36a9b108078581b5e57de50b6569e174dccd5a"
+    }
+  },
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "request": "Review and, if satisfied, authorize FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1. Only CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized=true may permit reconstruction GPU work.",
+  "runtime_policy": {
+    "FORCED_PTY_LARGE_FILE_TRANSPORT": "NOT_REQUIRED_FOR_CURRENT_PROTOCOL",
+    "LOW_FREQUENCY_RECONCILIATION": "ACCEPTED",
+    "REMOTE_RECEIPT_MONITORING": "PASS",
+    "large_assets": "RunPod-resident; no checkpoint/adapter transfer over forced PTY",
+    "source_protocols_small_manifests": "Git synchronized"
+  },
+  "schema_version": 1,
+  "scientific_boundary": {
+    "final_audit_deserialized": false,
+    "gpu_training_started": false,
+    "model_loaded": false,
+    "optimizer_constructed": false
+  },
+  "scientific_training_authorized": false,
+  "source_parity": {
+    "all_equal": true,
+    "fresh_origin_sha": "8e542e2fdac2f33c7684b5c15c9600edefdbf811",
+    "local_head": "8e542e2fdac2f33c7684b5c15c9600edefdbf811",
+    "runpod_source_sha": "8e542e2fdac2f33c7684b5c15c9600edefdbf811"
+  },
+  "status": "REMOTE_FIRST_RUNTIME_POLICY_READY_FOR_REVIEW"
+}
