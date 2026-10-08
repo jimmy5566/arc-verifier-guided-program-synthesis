@@ -1,0 +1,60 @@
+{
+  "checkpoint_manifest_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r1_paired_evaluation_v1/R1_CHECKPOINT_MANIFEST.json",
+  "checkpoint_manifest_sha256": "3698906eb87c82a4ef26594fae14ed672887dc4d09fba1468ab601a770ad340d",
+  "cumulative_cap_seconds": 28800.0,
+  "family_weights": {
+    "ATOMIC_REPAIR": {
+      "connected components": 0.235294,
+      "difference": 0.196078,
+      "inside/contains": 0.235294,
+      "orientation": 0.137255,
+      "width": 0.196078
+    },
+    "COMPOSITION_REPAIR": {
+      "conditional action": 0.338462,
+      "mask set": 0.338462,
+      "relation selector action": 0.323077
+    },
+    "RETENTION_TRAIN": {
+      "color mapping": 0.075,
+      "complete missing structure": 0.075,
+      "overlay": 0.35,
+      "propagation": 0.35,
+      "recolor": 0.075,
+      "rotate": 0.075
+    }
+  },
+  "final_audit_opened": false,
+  "forbidden_inputs": [
+    "TARGET_DEV",
+    "RETENTION_SENTINEL",
+    "FINAL_AUDIT",
+    "Eval60",
+    "diagnostic Gold"
+  ],
+  "gradient_accumulation": 4,
+  "historical_gpu_seconds": 3739.722329827957,
+  "historical_receipt_sha256": "4f558ece5665c8e7b859ceafa8ea806187380619292aa662f7743b3df3ec9ba0",
+  "learning_rate": 5e-05,
+  "nominal_tokens": 500000,
+  "output_root": "/workspace/arc2/forward_targeted_repair_v1_004",
+  "prior_cumulative_gpu_seconds": 4263.7906022439565,
+  "prior_gpu_ledger_sha256": "ff23b92b3bcb8de5cfeee8163a3a5abfa243c830f0b781c51ef69afb0cb80aac",
+  "protocol_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1",
+  "reservation_seconds": 7200.0,
+  "retention_sentinel_usage": "EVALUATION_ONLY_NOT_TRAINING_DATA",
+  "role_weights": {
+    "ATOMIC_REPAIR": 0.45,
+    "COMPOSITION_REPAIR": 0.3,
+    "RETENTION_TRAIN": 0.25
+  },
+  "round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_004",
+  "schema_version": 1,
+  "scientific_condition": "R1_FINAL_SELECTED_BY_FROZEN_TWO_CHECKPOINT_RULE",
+  "seed": 2000031,
+  "stage": "TARGETED_CAPABILITY_REPAIR_R2",
+  "stage_authorization_required": true,
+  "starting_checkpoint": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_FINAL",
+  "train_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TRAIN.jsonl",
+  "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+}

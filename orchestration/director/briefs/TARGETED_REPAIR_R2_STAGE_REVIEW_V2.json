@@ -1,0 +1,50 @@
+{
+  "brief_id": "TARGETED_REPAIR_R2_STAGE_REVIEW_V2",
+  "final_audit_opened": false,
+  "frozen_conditions": [
+    "base model, LoRA configuration, optimizer, learning rate, token target, decoder, scorer, TARGET_DEV and RETENTION_SENTINEL surfaces",
+    "RETENTION_SENTINEL is evaluation-only and is not training data",
+    "FINAL_AUDIT remains unopened",
+    "cumulative cap 28800 seconds; R2 reservation 7200 seconds"
+  ],
+  "proposed_r2_mix": {
+    "ATOMIC_REPAIR": 0.45,
+    "COMPOSITION_REPAIR": 0.3,
+    "RETENTION_TRAIN": 0.25
+  },
+  "r1_paired_deltas": {
+    "final_vs_v7": {
+      "composition_exact_delta": 3,
+      "retention_net_paired_fixes": -6,
+      "target_dev_net_paired_fixes": 1
+    },
+    "tokens_250000_vs_v7": {
+      "retention_net_paired_fixes": -2,
+      "target_dev_net_paired_fixes": -6
+    }
+  },
+  "requested_action": "stage-level scientific decision only; do not review SHA completeness, nonce ceremony, Git formatting, or routine launcher implementation",
+  "schema_version": 1,
+  "scientific_question": "Given the frozen two-checkpoint R1 selection, is final-parent R2 with atomic/composition/train-only-retention weights 0.45/0.30/0.25 and the prospective retention/composition gates scientifically reasonable? What is the smallest change, if any, required before R2?",
+  "scope": "TARGETED_REPAIR_R1_TO_R2_MAJOR_STAGE_BOUNDARY",
+  "selected_parent": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_FINAL",
+  "selection_summary": [
+    {
+      "candidate": "final",
+      "retention_paired_harms": 12,
+      "target_net_paired_fixes": 1,
+      "token_count": 501124
+    },
+    {
+      "candidate": "tokens_250000",
+      "retention_paired_harms": 4,
+      "target_net_paired_fixes": -6,
+      "token_count": 250000
+    }
+  ],
+  "stage_package": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_stage_v1/R2_STAGE_PACKAGE_V1.json",
+    "sha256": "2fa9952972b106cae764914e533f9fa5563b216fb9b44470999d2ef5f8b9a253"
+  },
+  "training_requested": true
+}

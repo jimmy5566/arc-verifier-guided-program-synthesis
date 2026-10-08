@@ -1,0 +1,11 @@
+{
+  "charge_rule": "optimizer-training interval only; pre-optimizer failures charge 0",
+  "cumulative_cap_seconds": 28800.0,
+  "prior_cumulative_scientific_gpu_seconds": 4263.7906022439565,
+  "remaining_after_reservation_seconds": 17336.209397756043,
+  "remaining_before_reservation_seconds": 24536.209397756043,
+  "reservation_id": "R2_TRAINING_BUDGET_RESERVATION_V1",
+  "reserved_r2_seconds": 7200.0,
+  "schema_version": 1,
+  "status": "RESERVED_PENDING_STAGE_REVIEW"
+}

@@ -37,9 +37,10 @@ def schedule(pool,c):
   for v in families.values():v.sort(key=lambda x:x['episode_id'])
  if any(not v for v in by.values()):raise RuntimeError('CURRICULUM_POOL_EMPTY')
  rng=random.Random(int(c['seed'])); cursor={(r,f):0 for r,fs in by.items() for f in fs}; out=[];total=0;i=0
+ role_units=20
  roles=[]
- for r,w in c['role_weights'].items(): roles += [r]*int(round(float(w)*10))
- if sorted(roles)!=sorted(['ATOMIC_REPAIR']*5+['COMPOSITION_REPAIR']*3+['RETENTION_TRAIN']*2):raise RuntimeError('ROLE_WEIGHTS_MUST_BE_50_30_20')
+ for r,w in c['role_weights'].items(): roles += [r]*int(round(float(w)*role_units))
+ if (len(roles)!=role_units or set(roles)!=set(c['role_weights']) or abs(sum(float(v) for v in c['role_weights'].values())-1.0)>1e-9):raise RuntimeError('ROLE_WEIGHTS_INVALID')
  while total < int(c['nominal_tokens']) or len(out)%int(c['gradient_accumulation']):
   role=roles[i%len(roles)]; weights=c['family_weights'][role]; fams=list(weights); weights_v=[float(weights[f]) for f in fams]; family=rng.choices(fams,weights_v,k=1)[0]; choices=by[role].get(family)
   if not choices: raise RuntimeError('CURRICULUM_FAMILY_UNAVAILABLE:'+family)
@@ -53,9 +54,9 @@ def main():
  if sha(c['checkpoint_manifest_path'])!=c['checkpoint_manifest_sha256']:raise RuntimeError('CHECKPOINT_MANIFEST_FAIL')
  manifest=json.loads(Path(c['checkpoint_manifest_path']).read_text(encoding='utf8'))
  run.mkdir(parents=True);runtime=run/'runtime';ckpts=run/'checkpoints';runtime.mkdir();ckpts.mkdir()
- ledger=run/'ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER.jsonl';hist=float(c['historical_gpu_seconds']);cap=float(c['cumulative_cap_seconds']);reserve=float(c['reservation_seconds'])
+ ledger=run/'ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER.jsonl';hist=float(c.get('prior_cumulative_gpu_seconds',c['historical_gpu_seconds']));cap=float(c['cumulative_cap_seconds']);reserve=float(c['reservation_seconds'])
  if hist+reserve>cap:raise RuntimeError('BUDGET_RESERVATION_REJECTED')
- ledger.write_text(json.dumps({'schema_version':1,'record_type':'HISTORICAL_RECONSTRUCTION','gpu_optimizer_seconds':hist,'round_id':'RECONSTRUCTED_FOUNDATION_V2_V2_009','receipt_sha256':c['historical_receipt_sha256']},sort_keys=True)+'\n',encoding='utf8')
+ ledger.write_text(json.dumps({'schema_version':1,'record_type':'PRIOR_CUMULATIVE_GPU_TRAINING','gpu_optimizer_seconds':hist,'round_id':'PRIOR_CUMULATIVE_ROUNDS','receipt_sha256':c.get('prior_gpu_ledger_sha256',c['historical_receipt_sha256'])},sort_keys=True)+'\n',encoding='utf8')
  terminal={'schema_version':1,'protocol_id':c['protocol_id'],'round_id':c['round_id'],'scientific_training_started':False,'optimizer_steps':0,'processed_tokens':0,'final_audit_accessed':False}
  model=None;start_ns=None
  try:
@@ -98,7 +99,7 @@ def main():
   seconds=0.0 if start_ns is None or int(terminal.get('optimizer_steps',0))==0 else (stop_ns-start_ns)/1e9
   terminal['scientific_gpu_training_seconds']=seconds;atomic(runtime/'TERMINAL_RECEIPT.json',terminal)
   with ledger.open('a',encoding='utf8') as f:f.write(json.dumps({'schema_version':1,'record_type':'GPU_OPTIMIZER_INTERVAL','round_id':c['round_id'],'gpu_optimizer_seconds':seconds,'receipt_sha256':sha(runtime/'TERMINAL_RECEIPT.json')},sort_keys=True)+'\n')
-  atomic(runtime/'GPU_LEDGER_SNAPSHOT.json',{'cap_seconds':cap,'historical_gpu_seconds':hist,'this_round_gpu_seconds':seconds,'cumulative_gpu_seconds':hist+seconds,'remaining_seconds':cap-hist-seconds})
+  atomic(runtime/'GPU_LEDGER_SNAPSHOT.json',{'cap_seconds':cap,'prior_cumulative_gpu_seconds':hist,'this_round_gpu_seconds':seconds,'cumulative_gpu_seconds':hist+seconds,'remaining_seconds':cap-hist-seconds})
   if model is not None:
    try:
     import torch;del model;torch.cuda.empty_cache()

@@ -1,0 +1,370 @@
+{
+  "baseline": {
+    "result_path": "/workspace/arc2/forward_baseline_evaluation_v7_batch32/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+    "result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+  },
+  "candidates": {
+    "final": {
+      "aggregate": {
+        "RETENTION_SENTINEL": {
+          "episode_ids_sha256": "3f37756003cd61758785763760ac8317f1ed85dc49bf8dcf242da73b31605138",
+          "episodes": 96,
+          "exact_grid_match": 64,
+          "outcome_rows_sha256": "91cd8b90d8cb91cfd90604d6da8814f1d75f556d3da1ab151e31420833a44e13",
+          "parse_valid": 96
+        },
+        "TARGET_DEV": {
+          "episode_ids_sha256": "9f2a6b0c5b47795dc0c3bd36916a025dc190f92ee843d0b0e39494779c1acac7",
+          "episodes": 192,
+          "exact_grid_match": 77,
+          "outcome_rows_sha256": "0cd5c44181b6ea4c3b764e3e9e08ecdca155f3bcba6d8285160e37f7bcd7768d",
+          "parse_valid": 192
+        }
+      },
+      "paired_by_family": {
+        "color mapping": {
+          "baseline_exact": 16,
+          "candidate_exact": 16,
+          "episodes": 16,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 0
+        },
+        "complete missing structure": {
+          "baseline_exact": 16,
+          "candidate_exact": 16,
+          "episodes": 16,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 0
+        },
+        "conditional action": {
+          "baseline_exact": 2,
+          "candidate_exact": 5,
+          "episodes": 24,
+          "net_paired_fixes": 3,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 0
+        },
+        "connected components": {
+          "baseline_exact": 0,
+          "candidate_exact": 1,
+          "episodes": 12,
+          "net_paired_fixes": 1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 0
+        },
+        "difference": {
+          "baseline_exact": 2,
+          "candidate_exact": 1,
+          "episodes": 12,
+          "net_paired_fixes": -1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 2
+        },
+        "inside/contains": {
+          "baseline_exact": 0,
+          "candidate_exact": 3,
+          "episodes": 12,
+          "net_paired_fixes": 3,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 0
+        },
+        "mask set": {
+          "baseline_exact": 2,
+          "candidate_exact": 2,
+          "episodes": 24,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 2,
+          "paired_harms_n10": 2
+        },
+        "orientation": {
+          "baseline_exact": 5,
+          "candidate_exact": 5,
+          "episodes": 12,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 1
+        },
+        "overlay": {
+          "baseline_exact": 4,
+          "candidate_exact": 4,
+          "episodes": 16,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 3
+        },
+        "propagation": {
+          "baseline_exact": 2,
+          "candidate_exact": 3,
+          "episodes": 16,
+          "net_paired_fixes": 1,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 2
+        },
+        "recolor": {
+          "baseline_exact": 28,
+          "candidate_exact": 28,
+          "episodes": 28,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 0
+        },
+        "relation selector action": {
+          "baseline_exact": 3,
+          "candidate_exact": 3,
+          "episodes": 24,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 2,
+          "paired_harms_n10": 2
+        },
+        "rotate": {
+          "baseline_exact": 16,
+          "candidate_exact": 9,
+          "episodes": 16,
+          "net_paired_fixes": -7,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 7
+        },
+        "same color": {
+          "baseline_exact": 12,
+          "candidate_exact": 9,
+          "episodes": 12,
+          "net_paired_fixes": -3,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 3
+        },
+        "selector prerequisites": {
+          "baseline_exact": 36,
+          "candidate_exact": 36,
+          "episodes": 36,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 0
+        },
+        "width": {
+          "baseline_exact": 2,
+          "candidate_exact": 0,
+          "episodes": 12,
+          "net_paired_fixes": -2,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 2
+        }
+      },
+      "paired_by_surface": {
+        "RETENTION_SENTINEL": {
+          "baseline_exact": 70,
+          "candidate_exact": 64,
+          "episodes": 96,
+          "net_paired_fixes": -6,
+          "paired_fixes_n01": 6,
+          "paired_harms_n10": 12
+        },
+        "TARGET_DEV": {
+          "baseline_exact": 76,
+          "candidate_exact": 77,
+          "episodes": 192,
+          "net_paired_fixes": 1,
+          "paired_fixes_n01": 13,
+          "paired_harms_n10": 12
+        }
+      },
+      "result_path": "/workspace/arc2/forward_targeted_repair_v1_003_evaluation_batch32_v2/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "result_sha256": "fee020b8ac8aa81df2e5862b9af8b6f84819cc2c237099f25a9c5067abd9c8a9"
+    },
+    "tokens_250000": {
+      "aggregate": {
+        "RETENTION_SENTINEL": {
+          "episode_ids_sha256": "3f37756003cd61758785763760ac8317f1ed85dc49bf8dcf242da73b31605138",
+          "episodes": 96,
+          "exact_grid_match": 68,
+          "outcome_rows_sha256": "2cf81145b58cfa60f133520d7f80bfdcc696acb78d84b719126c995c265605fe",
+          "parse_valid": 96
+        },
+        "TARGET_DEV": {
+          "episode_ids_sha256": "9f2a6b0c5b47795dc0c3bd36916a025dc190f92ee843d0b0e39494779c1acac7",
+          "episodes": 192,
+          "exact_grid_match": 70,
+          "outcome_rows_sha256": "f84bdc80e4f3862c63bc6fd9a9ffa322ed95a14b1f9cfff7cc62e5752ec74dde",
+          "parse_valid": 192
+        }
+      },
+      "paired_by_family": {
+        "color mapping": {
+          "baseline_exact": 16,
+          "candidate_exact": 16,
+          "episodes": 16,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 0
+        },
+        "complete missing structure": {
+          "baseline_exact": 16,
+          "candidate_exact": 16,
+          "episodes": 16,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 0
+        },
+        "conditional action": {
+          "baseline_exact": 2,
+          "candidate_exact": 3,
+          "episodes": 24,
+          "net_paired_fixes": 1,
+          "paired_fixes_n01": 2,
+          "paired_harms_n10": 1
+        },
+        "connected components": {
+          "baseline_exact": 0,
+          "candidate_exact": 1,
+          "episodes": 12,
+          "net_paired_fixes": 1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 0
+        },
+        "difference": {
+          "baseline_exact": 2,
+          "candidate_exact": 1,
+          "episodes": 12,
+          "net_paired_fixes": -1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 2
+        },
+        "inside/contains": {
+          "baseline_exact": 0,
+          "candidate_exact": 0,
+          "episodes": 12,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 0
+        },
+        "mask set": {
+          "baseline_exact": 2,
+          "candidate_exact": 2,
+          "episodes": 24,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 2,
+          "paired_harms_n10": 2
+        },
+        "orientation": {
+          "baseline_exact": 5,
+          "candidate_exact": 3,
+          "episodes": 12,
+          "net_paired_fixes": -2,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 2
+        },
+        "overlay": {
+          "baseline_exact": 4,
+          "candidate_exact": 4,
+          "episodes": 16,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 2,
+          "paired_harms_n10": 2
+        },
+        "propagation": {
+          "baseline_exact": 2,
+          "candidate_exact": 0,
+          "episodes": 16,
+          "net_paired_fixes": -2,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 2
+        },
+        "recolor": {
+          "baseline_exact": 28,
+          "candidate_exact": 28,
+          "episodes": 28,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 0
+        },
+        "relation selector action": {
+          "baseline_exact": 3,
+          "candidate_exact": 1,
+          "episodes": 24,
+          "net_paired_fixes": -2,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 3
+        },
+        "rotate": {
+          "baseline_exact": 16,
+          "candidate_exact": 16,
+          "episodes": 16,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 0
+        },
+        "same color": {
+          "baseline_exact": 12,
+          "candidate_exact": 10,
+          "episodes": 12,
+          "net_paired_fixes": -2,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 2
+        },
+        "selector prerequisites": {
+          "baseline_exact": 36,
+          "candidate_exact": 36,
+          "episodes": 36,
+          "net_paired_fixes": 0,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 0
+        },
+        "width": {
+          "baseline_exact": 2,
+          "candidate_exact": 1,
+          "episodes": 12,
+          "net_paired_fixes": -1,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 1
+        }
+      },
+      "paired_by_surface": {
+        "RETENTION_SENTINEL": {
+          "baseline_exact": 70,
+          "candidate_exact": 68,
+          "episodes": 96,
+          "net_paired_fixes": -2,
+          "paired_fixes_n01": 2,
+          "paired_harms_n10": 4
+        },
+        "TARGET_DEV": {
+          "baseline_exact": 76,
+          "candidate_exact": 70,
+          "episodes": 192,
+          "net_paired_fixes": -6,
+          "paired_fixes_n01": 7,
+          "paired_harms_n10": 13
+        }
+      },
+      "result_path": "/workspace/arc2/forward_targeted_repair_v1_003_tokens_250000_evaluation_batch32/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "result_sha256": "3e573a91e575216f676b96ced348ef462b2863e9145960938cc370fa8d5a5ed0"
+    }
+  },
+  "contract_id": "R1_CHECKPOINT_SELECTION_CONTRACT_V1",
+  "final_audit_opened": false,
+  "ranking": [
+    {
+      "candidate": "final",
+      "retention_paired_harms": 12,
+      "target_net_paired_fixes": 1,
+      "token_count": 501124
+    },
+    {
+      "candidate": "tokens_250000",
+      "retention_paired_harms": 4,
+      "target_net_paired_fixes": -6,
+      "token_count": 250000
+    }
+  ],
+  "retention_sentinel_usage": "EVALUATION_ONLY_NOT_TRAINING_DATA",
+  "schema_version": 1,
+  "selected_checkpoint_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_FINAL",
+  "selected_parent": "final",
+  "selection_rule": [
+    "highest TARGET_DEV net paired fixes",
+    "then lowest retention net harms",
+    "then earliest checkpoint"
+  ],
+  "status": "COMPLETE_VALID_SELECTION"
+}

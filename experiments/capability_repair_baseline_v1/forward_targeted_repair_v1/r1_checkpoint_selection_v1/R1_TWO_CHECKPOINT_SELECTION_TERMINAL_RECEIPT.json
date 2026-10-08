@@ -1,0 +1,7 @@
+{
+  "failure": null,
+  "output_path": "/workspace/arc2/forward_targeted_repair_v1_003_tokens_250000_evaluation_batch32/R1_TWO_CHECKPOINT_SELECTION_RESULT.json",
+  "output_sha256": "21d6e23bdec9373653a3287050b998e19e8562af4052d36c5b0e264744694dc1",
+  "schema_version": 1,
+  "status": "COMPLETE_VALID_SELECTION"
+}

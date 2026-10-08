@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_TARGETED_REPAIR_R2_STAGE_MILESTONE_V1",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "TARGETED_REPAIR_R2_STAGE_MILESTONE",
+  "brief_id": "TARGETED_REPAIR_R2_STAGE_MILESTONE_V1",
+  "reviewed_brief_sha256": "9dc517027f272440469f7d4d34c6fc0d76dd77ec597800547dd6f911ee29350a",
+  "root_cause": {
+    "code": "R1_CHECKPOINT_SELECTION_INCOMPLETE_AND_BATCH_GATE_CHANGED_POST_HOC",
+    "finding": "The R1 final-checkpoint evaluation is preserved and internally consistent with its submitted V2 gate, but it is not sufficient to choose an R2 parent or freeze an R2 curriculum. The frozen protocol requires evaluation at approximately 250000 and 500000 transformer tokens followed by selection using highest TARGET_DEV net paired fixes, then lowest retention net harms, then earliest checkpoint. Only the 501124-token final checkpoint is represented by a complete manifest and paired evaluation. In addition, the initial evaluation stopped after batch validation, after which raw canonical agreement was changed from a hard condition to AUDIT_ONLY; the accepted rerun reports canonical agreement 0.78125 and exact-grid-rate delta 0.03125. The claimed TARGET_DEV gain is only 1/192, so it is not strong enough to support a confirmatory gain claim against the observed batch-sensitivity evidence. The final-checkpoint result remains useful post-hoc characterization, including the +3 composition and -6 retention counts, but it cannot by itself justify an R2 launch."
+  },
+  "smallest_repair": [
+    {
+      "step": 1,
+      "requirement": "Preserve the R1 training round, both evaluation attempts, the V2 summary, checkpoint bytes, receipts, and batch-validation evidence unchanged. Reclassify the accepted final-checkpoint result as POST_HOC_CHARACTERIZATION_FOR_R2_DESIGN rather than an independently confirmed checkpoint-selection result."
+    },
+    {
+      "step": 2,
+      "requirement": "Recover and freeze the already-produced tokens_250000 checkpoint from R1. Create a complete base-and-adapter manifest with every file name, byte length, and SHA256. If that checkpoint is absent or fails identity verification, report CHECKPOINT_SELECTION_INCOMPLETE and do not substitute or retrain it."
+    },
+    {
+      "step": 3,
+      "requirement": "Before inspecting any tokens_250000 predictions, freeze one exact evaluation contract using the same 192 TARGET_DEV and 96 RETENTION_SENTINEL surfaces, the same decoder and scorer, one fixed batching condition, fresh output paths, and explicit interpretation of batch sensitivity. Do not relax that contract after scoring. Prepare a separate launch-readiness review before any required GPU inference."
+    },
+    {
+      "step": 4,
+      "requirement": "Evaluate the 250000-token checkpoint once under the prospectively frozen contract, then apply the already-frozen checkpoint rule across tokens_250000 and the preserved final checkpoint: highest TARGET_DEV net paired fixes, then lowest retention net harms, then earliest checkpoint. Freeze the selected R1 parent identity and the full paired atomic, composition, retention, and family-level deltas."
+    },
+    {
+      "step": 5,
+      "requirement": "Derive R2 only from the selected R1 parent. If the final checkpoint remains selected and its -6/96 retention regression remains the governing evidence, make the smallest role-level curriculum change: keep composition at 0.30, move 0.05 from atomic repair to train-only retention replay, yielding atomic/composition/replay = 0.45/0.30/0.25, and keep intra-role family weights, optimizer, learning rate, token target, LoRA recipe, decoder, scorer, and evaluation surfaces unchanged. If tokens_250000 is selected, recompute the one-variable adjustment from its frozen paired evidence instead of inheriting the final-checkpoint mix automatically."
+    },
+    {
+      "step": 6,
+      "requirement": "Freeze prospective R2 gates that separately require retention recovery and preservation of the observed composition improvement, while reporting atomic and total TARGET_DEV deltas without converting the current +1/192 target count into an established gain. Bind the cumulative budget ledger and reserve R2 time before launch."
+    },
+    {
+      "step": 7,
+      "requirement": "Submit a new hashed stage brief containing the selected parent checkpoint, complete checkpoint-selection evidence, exact R2 mix, gates, budget reservation, immutable launch identities, and CPU-only fail-closed tests for another Governor review."
+    }
+  ],
+  "frozen_conditions": {
+    "starting_lineage": "CAPABILITY_REPAIR_BASELINE_V1",
+    "v7_baseline_result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5",
+    "r1_round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003",
+    "r1_training_status": "COMPLETED",
+    "r1_optimizer_steps": 192,
+    "r1_processed_tokens": 501124,
+    "r1_scientific_gpu_training_seconds": 524.068272416,
+    "r1_training_terminal_evidence_sha256": "3e5181ab3b041127064b8a721d05894ec272bb376e3c238bc260823c4bfb94e7",
+    "r1_final_checkpoint_manifest_file_sha256": "3698906eb87c82a4ef26594fae14ed672887dc4d09fba1468ab601a770ad340d",
+    "r1_final_checkpoint_manifest_identity": "9590532ad74daf87bf0ea5572c12ce781ef0b14699a53728bb4641f50a8eecd1",
+    "r1_paired_evaluation_summary_sha256": "43dbb0e657fae4a862b6f32ce1ef3b3242b8ec0c77a38b9a719765fa2c9befd1",
+    "r1_final_observed_deltas": {
+      "atomic": -2,
+      "composition": 3,
+      "retention": -6,
+      "target_dev": 1
+    },
+    "r1_final_interpretation": "POST_HOC_CHARACTERIZATION_PENDING_FROZEN_CHECKPOINT_SELECTION",
+    "required_checkpoint_landmarks_tokens": [
+      250000,
+      500000
+    ],
+    "checkpoint_selection_rule": "highest TARGET_DEV net paired fixes; then lowest retention net harms; then earliest checkpoint token count",
+    "target_dev_rows": 192,
+    "retention_sentinel_rows": 96,
+    "retention_sentinel_usage": "EVALUATION_ONLY_NOT_TRAINING_DATA",
+    "final_audit_opened": false,
+    "cumulative_scientific_gpu_cap_seconds": 28800,
+    "cumulative_scientific_gpu_seconds": 4263.7906022439565,
+    "remaining_scientific_gpu_seconds": 24536.209397756043
+  },
+  "forbidden_actions": [
+    "DO_NOT_LAUNCH_R2_UNDER_THIS_REVIEW",
+    "DO_NOT_LOAD_A_MODEL_OR_START_GPU_INFERENCE_UNDER_THIS_REVIEW",
+    "DO_NOT_CONSTRUCT_AN_OPTIMIZER_OR_START_GPU_TRAINING_UNDER_THIS_REVIEW",
+    "DO_NOT_OVERWRITE_OR_MUTATE_R1_CHECKPOINTS_RECEIPTS_OR_EVALUATION_OUTPUTS",
+    "DO_NOT_SKIP_THE_250000_TOKEN_CHECKPOINT_OR_SUBSTITUTE_A_RETRAINED_CHECKPOINT",
+    "DO_NOT_SELECT_THE_R1_PARENT_BEFORE_APPLYING_THE_FROZEN_TWO_CHECKPOINT_RULE",
+    "DO_NOT_RELAX_BATCH_DECODER_SCORER_OR_GATE_CONDITIONS_AFTER_SCORING",
+    "DO_NOT_REPORT_THE_PLUS_1_OVER_192_TARGET_COUNT_AS_AN_ESTABLISHED_GAIN",
+    "DO_NOT_USE_TARGET_DEV_OR_RETENTION_SENTINEL_AS_TRAINING_DATA",
+    "DO_NOT_ACCESS_FINAL_AUDIT",
+    "DO_NOT_REINTERPRET_THE_V6_INVALID_MEASUREMENT",
+    "DO_NOT_CHANGE_MODEL_IDENTITY_DECODER_OR_SCORER_WITHOUT_NEW_SCIENTIFIC_JUSTIFICATION",
+    "DO_NOT_AUTOMATICALLY_EXPAND_BEYOND_R2",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": true,
+  "review_trigger": "A new immutable brief with a verified tokens_250000 manifest and prospective evaluation contract, completed two-checkpoint selection, selected R1 parent identity, exact one-variable R2 curriculum adjustment, frozen paired gates, cumulative-budget reservation, provenance bindings, and no-Gold/final-audit protections.",
+  "review_findings": [
+    {
+      "area": "brief_and_summary_identity",
+      "status": "PASS",
+      "finding": "The brief SHA256 and referenced R1_PAIRED_EVALUATION_V2_SUMMARY.json SHA256 match exactly."
+    },
+    {
+      "area": "r1_training_terminal_state",
+      "status": "PASS",
+      "finding": "R1 completed 192 optimizer steps and 501124 processed tokens with 524.068272416 charged scientific GPU seconds; FINAL_AUDIT remained unopened."
+    },
+    {
+      "area": "r1_final_checkpoint_identity",
+      "status": "PASS",
+      "finding": "The evaluated final adapter has a complete frozen file manifest and is bound to the preserved R1 terminal receipt and parent checkpoint identity."
+    },
+    {
+      "area": "checkpoint_selection",
+      "status": "FAIL_HARD_STOP",
+      "finding": "No complete manifest or paired evaluation for the frozen tokens_250000 landmark is submitted, so the predefined two-checkpoint selection rule cannot be applied."
+    },
+    {
+      "area": "batch_consistency_and_interpretation",
+      "status": "FAIL_FOR_CONFIRMATORY_CLAIM",
+      "finding": "The accepted rerun made canonical agreement audit-only after the first attempt stopped, and the resulting 0.78125 agreement with 0.03125 exact-rate delta is larger in practical scale than the reported +1/192 total target gain. The evidence is usable for post-hoc characterization but not for an established target-gain claim."
+    },
+    {
+      "area": "retention_signal",
+      "status": "ACTIONABLE_AFTER_PARENT_SELECTION",
+      "finding": "The final-checkpoint -6/96 retention count justifies increasing train-only replay emphasis if that checkpoint is selected, while holding the composition allocation fixed to protect the observed +3/96 composition count."
+    },
+    {
+      "area": "budget",
+      "status": "PASS_NOT_RESERVED_FOR_R2",
+      "finding": "24536.209397756043 seconds remain under the cumulative cap, but no R2 reservation or executable cap binding is authorized by this milestone."
+    }
+  ],
+  "cpu_only_remediation_authorized": true,
+  "r1_checkpoint_evaluation_authorized": false,
+  "r2_launch_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "final_audit_authorized": false
+}

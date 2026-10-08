@@ -1,0 +1,42 @@
+{
+  "budget_reservation": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_stage_v1/R2_TRAINING_BUDGET_RESERVATION_V1.json",
+    "sha256": "bdbbeeb3f392fbc9676e13f73e580baebfebaf6357d5f081314f33d67579f7d8"
+  },
+  "final_audit_opened": false,
+  "gpu_training_authorized": false,
+  "package_id": "TARGETED_REPAIR_R2_STAGE_PACKAGE_V1",
+  "prospective_gates": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_stage_v1/R2_PROSPECTIVE_EVALUATION_GATES_V1.json",
+    "sha256": "8e9a8d1bb7e8e098450d010dfaa9c3bd552450d12e94141624447b1953d5451f"
+  },
+  "r1_checkpoint_manifest": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r1_paired_evaluation_v1/R1_CHECKPOINT_MANIFEST.json",
+    "sha256": "3698906eb87c82a4ef26594fae14ed672887dc4d09fba1468ab601a770ad340d"
+  },
+  "r2_config": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_stage_v1/FORWARD_TARGETED_REPAIR_CONFIG_V1_004.json",
+    "sha256": "a53d90ddd15c853c2c136bab59663b55edb0a098bba8d002156dc7d125fe5383"
+  },
+  "retention_sentinel_usage": "EVALUATION_ONLY_NOT_TRAINING_DATA",
+  "schema_version": 1,
+  "selected_parent": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_FINAL",
+  "selection_result": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r1_checkpoint_selection_v1/R1_TWO_CHECKPOINT_SELECTION_RESULT.json",
+    "sha256": "21d6e23bdec9373653a3287050b998e19e8562af4052d36c5b0e264744694dc1"
+  },
+  "selection_rule": [
+    "highest TARGET_DEV net paired fixes",
+    "then lowest retention net harms",
+    "then earliest checkpoint"
+  ],
+  "selection_terminal_receipt": {
+    "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r1_checkpoint_selection_v1/R1_TWO_CHECKPOINT_SELECTION_TERMINAL_RECEIPT.json",
+    "sha256": "ff23b92b3bcb8de5cfeee8163a3a5abfa243c830f0b781c51ef69afb0cb80aac"
+  },
+  "status": "READY_FOR_STAGE_REVIEW",
+  "worker_source": {
+    "path": "scripts/run_forward_targeted_repair_v1.py",
+    "sha256": "df5fc2189f6cd2dcd3654581dc1044af60ae725bba93b5968de2720d6b82356c"
+  }
+}

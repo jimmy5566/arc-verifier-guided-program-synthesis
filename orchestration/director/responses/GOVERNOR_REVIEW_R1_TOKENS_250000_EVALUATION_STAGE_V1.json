@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_R1_TOKENS_250000_EVALUATION_STAGE_V1",
+  "decision": "CONTINUE_CONTROLLER",
+  "scope": "ONE_READ_ONLY_R1_TOKENS_250000_PAIRED_GPU_EVALUATION",
+  "brief_id": "R1_TOKENS_250000_EVALUATION_STAGE_REVIEW_V1",
+  "reviewed_brief_sha256": "a8c7488d08e6a1f261e8d3bd07a03f17a8cdab565b89bc03ff556cbebb7b4c9a",
+  "scientific_assessment": "The prospectively frozen single evaluation of the already-produced tokens_250000 checkpoint is sufficient and scientifically valid to complete the previously required two-checkpoint R1 selection, provided every machine admission condition below passes before model import. The evaluation is read-only and uses the same frozen Batch32 adaptive condition, decoder, scorer, TARGET_DEV, and RETENTION_SENTINEL as the preserved final-checkpoint characterization.",
+  "reasons": [
+    {
+      "area": "checkpoint_identity",
+      "status": "PASS",
+      "finding": "The tokens_250000 checkpoint has a complete frozen base-and-adapter manifest bound to the preserved R1 terminal receipt and the same parent checkpoint identity as the final checkpoint."
+    },
+    {
+      "area": "prospective_evaluation_contract",
+      "status": "PASS",
+      "finding": "The 250k predictions are NOT_RUN and the evaluation contract was frozen before scoring. It binds the same 192 TARGET_DEV and 96 RETENTION_SENTINEL rows, target-blind token decoder and scorer, Batch32 adaptive policy, raw-token preservation, and fresh output root."
+    },
+    {
+      "area": "checkpoint_selection",
+      "status": "PASS_PENDING_EXECUTION",
+      "finding": "The candidate set and selection rule are frozen before the 250k evaluation: highest TARGET_DEV net paired fixes, then lowest retention net harms, then earliest checkpoint. One valid 250k evaluation is the only missing scientific observation."
+    },
+    {
+      "area": "no_gold_and_retention_boundary",
+      "status": "PASS",
+      "finding": "TARGET_DEV and RETENTION_SENTINEL are evaluation-only, FINAL_AUDIT remains unopened, and no training or post-scoring contract change is permitted."
+    },
+    {
+      "area": "focused_cpu_tests",
+      "status": "PASS",
+      "finding": "The focused minimal-gate suite passes 3 of 3 tests for prospective batch semantics, adapter-independent target-blind decoding, and raw-token auditability."
+    }
+  ],
+  "authorization_binding": {
+    "checkpoint_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_TOKENS_250000",
+    "checkpoint_manifest_file_sha256": "e75344a565879f2771eacc736b4efe3767149f8fd64ab9ef87b51b5ec37980f6",
+    "checkpoint_manifest_identity": "228d53acf9b97b7e2ce0b445b37c7bae742bc0df66d1a973067d2d2f3b238fde",
+    "adapter_model_sha256": "80fc58fcd1b5d3fa9a626aef57030054ee1f82923a1a71fef491c8bb37c3be12",
+    "evaluation_gate_sha256": "95ec300020636912ae2703544148f0d9f5847a96702aca496335e90ab97f547c",
+    "selection_contract_sha256": "bfaf40b44e915d6fbd0fe75e2a755640369e3e68906caa561999401dc1070ba1",
+    "collector_sha256": "ffa16dc2879c789a8365a15b241b98282a1ab9c9267b5a39857603c0202b888a",
+    "token_parser_sha256": "0716d6f2e043ea1993ba89891fd4b7146121d0abdb7ea5bffe69c6738c618689",
+    "inference_contract_sha256": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e",
+    "decoder_validity_evidence_sha256": "76c9f5e4257235ed8995b539c3e0616e9300c6d921e7c4756161f5976dcbb14b",
+    "target_dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97",
+    "retention_sentinel_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+    "output_root": "/workspace/arc2/forward_targeted_repair_v1_003_tokens_250000_evaluation_batch32",
+    "result_path": "/workspace/arc2/forward_targeted_repair_v1_003_tokens_250000_evaluation_batch32/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+    "terminal_receipt_path": "/workspace/arc2/forward_targeted_repair_v1_003_tokens_250000_evaluation_batch32/TERMINAL_RECEIPT.json",
+    "maximum_runtime_seconds": 7200,
+    "maximum_execution_count": 1
+  },
+  "required_machine_admission": [
+    "Verify the exact reviewed checkpoint-manifest, evaluation-gate, selection-contract, collector, parser, inference-contract, decoder-evidence, and dataset hashes before model import.",
+    "Enumerate every base and adapter file and compare file name, byte length, and SHA256 against TOKENS_250000_CHECKPOINT_MANIFEST.json before model import.",
+    "Verify the launch checkout is the exact pushed non-main source commit intended for this evaluation, with local, origin, and RunPod parity, and record that commit in the terminal receipt.",
+    "Require the exact frozen Batch32 adaptive policy [32,16,8,4,1], batch-validation count 32, unchanged decoder/scorer, and raw-token evidence preservation.",
+    "Verify the result path, terminal receipt path, and output root are absent and fresh; reject overwrite, resume, nonce reuse, or a duplicate live job.",
+    "Enforce an active 7200-second inference runtime cap and emit a truthful terminal receipt for success, partial completion, admission failure, or runtime cap.",
+    "Fail closed before model import if any identity, provenance, output-freshness, duplicate-job, no-leakage, or authorization condition is not satisfied."
+  ],
+  "post_execution_requirements": [
+    "Freeze raw token evidence, per-episode predictions, aggregate atomic, composition, retention, and TARGET_DEV counts, batch-validation evidence, result SHA256, and terminal receipt SHA256.",
+    "Apply R1_CHECKPOINT_SELECTION_CONTRACT_V1 exactly once without changing its rule after scoring.",
+    "Preserve the final-checkpoint result as POST_HOC_CHARACTERIZATION_FOR_R2_DESIGN and label the 250k result according to its actual terminal state.",
+    "Freeze the selected R1 parent checkpoint identity and submit a new stage brief before any R2 optimizer work."
+  ],
+  "frozen_conditions": {
+    "candidate_checkpoint_count": 2,
+    "tokens_250000_evaluation_status_at_review": "NOT_RUN",
+    "final_checkpoint_evaluation_status": "POST_HOC_CHARACTERIZATION_FOR_R2_DESIGN",
+    "selection_rule": [
+      "highest TARGET_DEV net paired fixes",
+      "then lowest retention net harms",
+      "then earliest checkpoint"
+    ],
+    "batch_size": 32,
+    "adaptive_batch_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "target_dev_rows": 192,
+    "retention_sentinel_rows": 96,
+    "retention_sentinel_usage": "EVALUATION_ONLY_NOT_TRAINING_DATA",
+    "final_audit_opened": false,
+    "r1_final_checkpoint_interpretation": "POST_HOC_CHARACTERIZATION_FOR_R2_DESIGN",
+    "scientific_training_authorized": false
+  },
+  "forbidden_actions": [
+    "DO_NOT_RUN_MORE_THAN_ONE_TOKENS_250000_EVALUATION",
+    "DO_NOT_TRAIN_OR_CONSTRUCT_AN_OPTIMIZER",
+    "DO_NOT_MUTATE_MODEL_WEIGHTS",
+    "DO_NOT_USE_TARGET_DEV_OR_RETENTION_SENTINEL_AS_TRAINING_DATA",
+    "DO_NOT_ACCESS_FINAL_AUDIT",
+    "DO_NOT_CHANGE_THE_DECODER_SCORER_BATCH_POLICY_SELECTION_RULE_OR_GATE_AFTER_SCORING",
+    "DO_NOT_OVERWRITE_OR_RESUME_AN_EXISTING_OUTPUT_ROOT",
+    "DO_NOT_REEVALUATE_THE_FINAL_CHECKPOINT_UNDER_A_NEW_CONTRACT",
+    "DO_NOT_START_R2_OR_AUTOMATICALLY_EXPAND_THIS_EVALUATION",
+    "DO_NOT_REPORT_A_PARTIAL_OR_FAILED_RUN_AS_COMPLETE",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": true,
+  "review_trigger": "Completion or controlled stop of the single authorized 250k evaluation, followed by immutable result and receipt hashes, exact application of the two-checkpoint selection rule, selected-parent identity, full paired deltas, and a proposed one-variable R2 curriculum adjustment.",
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "r1_tokens_250000_evaluation_authorized": true,
+  "model_loading_authorized": true,
+  "gpu_inference_authorized": true,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "r2_launch_authorized": false,
+  "final_audit_authorized": false
+}

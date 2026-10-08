@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_TARGETED_REPAIR_R2_STAGE_V2",
+  "decision": "CONTINUE_CONTROLLER",
+  "scope": "TARGETED_REPAIR_R2_EXACT_SCIENTIFIC_CONDITION",
+  "brief_id": "TARGETED_REPAIR_R2_STAGE_REVIEW_V2",
+  "reviewed_brief_sha256": "c87485b939280cd9f5ad29db3f5162a293158f8efb2a892aed37af38cca255c2",
+  "scientific_assessment": "The selected-parent R2 condition is scientifically reasonable and implements the smallest previously required one-variable curriculum adjustment. The final R1 checkpoint was selected by the frozen two-checkpoint rule because its TARGET_DEV net paired fixes exceed the tokens_250000 candidate before retention is used as the tie-breaker. R2 preserves the composition allocation at 0.30 and shifts only 0.05 from atomic repair to train-only retention replay, yielding 0.45/0.30/0.25. The prospective gates require recovery to the V7 retention baseline while preserving the observed R1 composition gain.",
+  "reasons": [
+    {
+      "area": "r1_checkpoint_selection",
+      "status": "PASS",
+      "finding": "The two-checkpoint selection is complete and applies the frozen ordering exactly: final has TARGET_DEV net paired fixes +1 versus -6 for tokens_250000, so final wins before the retention tie-breaker."
+    },
+    {
+      "area": "r2_curriculum_change",
+      "status": "PASS",
+      "finding": "The role-level change from 0.50/0.30/0.20 to 0.45/0.30/0.25 is minimal, preserves the composition allocation, increases train-only retention replay, and leaves intra-role family weights unchanged."
+    },
+    {
+      "area": "prospective_gates",
+      "status": "PASS",
+      "finding": "Before R2 training, the package freezes retention recovery at at least 70/96 with no net paired harm versus V7 and composition preservation at at least 34/96 with net paired fixes of at least +3 versus V7. Atomic and total TARGET_DEV deltas remain mandatory reports and the R1 +1/192 total count is not promoted to an established gain."
+    },
+    {
+      "area": "recipe_preservation",
+      "status": "PASS",
+      "finding": "The base model, LoRA configuration, optimizer family, learning rate, nominal 500000-token target, decoder, scorer, evaluation surfaces, seed, and intra-role family weights remain fixed."
+    },
+    {
+      "area": "no_gold_and_final_audit",
+      "status": "PASS",
+      "finding": "TARGET_DEV and RETENTION_SENTINEL remain evaluation-only, FINAL_AUDIT stays unopened, and Eval60 and diagnostic Gold remain forbidden training inputs."
+    },
+    {
+      "area": "budget",
+      "status": "PASS",
+      "finding": "The 7200-second R2 reservation fits within the recorded 24536.209397756043 seconds remaining under the cumulative 28800-second optimizer-training cap."
+    }
+  ],
+  "smallest_change_before_r2": {
+    "scientific_change_required": false,
+    "finding": "No further scientific mix, gate, parent-checkpoint, recipe, decoder, scorer, or evaluation-surface change is required before R2. Routine fail-closed launcher implementation and machine admission must preserve these exact frozen identities and are not a license to alter the scientific condition."
+  },
+  "authorization_binding": {
+    "stage_package_sha256": "2fa9952972b106cae764914e533f9fa5563b216fb9b44470999d2ef5f8b9a253",
+    "selected_parent": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_FINAL",
+    "selected_parent_manifest_file_sha256": "3698906eb87c82a4ef26594fae14ed672887dc4d09fba1468ab601a770ad340d",
+    "selection_result_sha256": "21d6e23bdec9373653a3287050b998e19e8562af4052d36c5b0e264744694dc1",
+    "selection_terminal_receipt_sha256": "ff23b92b3bcb8de5cfeee8163a3a5abfa243c830f0b781c51ef69afb0cb80aac",
+    "r2_config_sha256": "a53d90ddd15c853c2c136bab59663b55edb0a098bba8d002156dc7d125fe5383",
+    "prospective_gates_sha256": "8e9a8d1bb7e8e098450d010dfaa9c3bd552450d12e94141624447b1953d5451f",
+    "budget_reservation_sha256": "bdbbeeb3f392fbc9676e13f73e580baebfebaf6357d5f081314f33d67579f7d8",
+    "worker_source_sha256": "df5fc2189f6cd2dcd3654581dc1044af60ae725bba93b5968de2720d6b82356c",
+    "round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_004",
+    "output_root": "/workspace/arc2/forward_targeted_repair_v1_004",
+    "nominal_tokens": 500000,
+    "maximum_reserved_optimizer_training_seconds": 7200,
+    "role_weights": {
+      "ATOMIC_REPAIR": 0.45,
+      "COMPOSITION_REPAIR": 0.3,
+      "RETENTION_TRAIN": 0.25
+    }
+  },
+  "required_launch_conditions": [
+    "The Controller must preserve the exact stage package, selected-parent manifest, selection result, R2 config, prospective gates, budget reservation, and worker bytes bound by this review.",
+    "Machine admission must verify the complete selected-parent base and adapter identity, exact TRAIN hash, forbidden-input boundary, fresh output root, no duplicate live job, exact pushed source provenance, and sufficient remaining cumulative budget before model load or optimizer construction.",
+    "The 7200-second reservation and active cumulative 28800-second optimizer-training cap must be enforced; no optimizer step may occur after the cap, and terminal checkpoint/save/finalize behavior must remain fail-closed.",
+    "Any scientific-condition drift, identity mismatch, missing artifact, output collision, duplicate job, budget failure, or final-audit access must stop before optimizer work and return for review if it cannot be repaired without changing frozen science."
+  ],
+  "frozen_conditions": {
+    "starting_checkpoint": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_FINAL",
+    "starting_checkpoint_claim": "R1_FINAL_SELECTED_BY_FROZEN_TWO_CHECKPOINT_RULE",
+    "base_model_and_lora_recipe": "UNCHANGED",
+    "optimizer": "bitsandbytes.optim.PagedAdamW8bit",
+    "learning_rate": 0.00005,
+    "nominal_tokens": 500000,
+    "seed": 2000031,
+    "role_weights": {
+      "ATOMIC_REPAIR": 0.45,
+      "COMPOSITION_REPAIR": 0.3,
+      "RETENTION_TRAIN": 0.25
+    },
+    "intra_role_family_weights": "UNCHANGED_FROM_R1",
+    "target_dev_rows": 192,
+    "retention_sentinel_rows": 96,
+    "retention_sentinel_usage": "EVALUATION_ONLY_NOT_TRAINING_DATA",
+    "retention_gate": "exact_grid_match >= 70/96 and paired net harms versus V7 <= 0",
+    "composition_gate": "exact_grid_match >= 34/96 and paired net fixes versus V7 >= 3",
+    "atomic_and_total_policy": "REPORT; do not treat R1 +1/192 as an established gain",
+    "cumulative_optimizer_training_cap_seconds": 28800,
+    "prior_cumulative_scientific_gpu_seconds": 4263.7906022439565,
+    "r2_reservation_seconds": 7200,
+    "remaining_after_reservation_seconds": 17336.209397756043,
+    "final_audit_opened": false
+  },
+  "forbidden_actions": [
+    "DO_NOT_CHANGE_THE_0_45_0_30_0_25_ROLE_MIX",
+    "DO_NOT_CHANGE_THE_SELECTED_R1_FINAL_PARENT",
+    "DO_NOT_CHANGE_INTRA_ROLE_FAMILY_WEIGHTS_OPTIMIZER_LEARNING_RATE_TOKEN_TARGET_LORA_RECIPE_DECODER_OR_SCORER",
+    "DO_NOT_USE_TARGET_DEV_OR_RETENTION_SENTINEL_AS_TRAINING_DATA",
+    "DO_NOT_USE_EVAL60_OR_DIAGNOSTIC_GOLD_FOR_TRAINING_OR_TUNING",
+    "DO_NOT_ACCESS_FINAL_AUDIT",
+    "DO_NOT_RELAX_OR_REWRITE_THE_PROSPECTIVE_R2_GATES_AFTER_TRAINING_OR_SCORING",
+    "DO_NOT_TUNE_AFTER_SCORING",
+    "DO_NOT_EXCEED_THE_R2_RESERVATION_OR_CUMULATIVE_GPU_TRAINING_CAP",
+    "DO_NOT_RETRY_WITH_CHANGED_SCIENCE_AFTER_A_FAILURE",
+    "DO_NOT_AUTOMATICALLY_START_R3_OR_OPEN_FINAL_AUDIT",
+    "DO_NOT_REPORT_A_PARTIAL_FAILED_OR_CAP_REACHED_RUN_AS_COMPLETE",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": true,
+  "review_trigger": "R2 completion or controlled stop followed by immutable training receipt, actual optimizer-training seconds, checkpoint manifest, paired evaluation on the frozen TARGET_DEV and RETENTION_SENTINEL surfaces, prospective-gate result, and an explicit proposal for stop, R3, or final-audit disposition.",
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "r2_scientific_condition_authorized": true,
+  "r2_gpu_training_authorized": true,
+  "model_loading_authorized": true,
+  "optimizer_construction_authorized": true,
+  "scientific_training_authorized": true,
+  "automatic_r3_authorized": false,
+  "final_audit_authorized": false
+}

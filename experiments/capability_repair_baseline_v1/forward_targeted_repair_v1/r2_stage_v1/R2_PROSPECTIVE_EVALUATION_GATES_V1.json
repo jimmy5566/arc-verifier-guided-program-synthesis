@@ -1,0 +1,33 @@
+{
+  "acceptance_rules": {
+    "atomic_and_total_reporting": "report paired atomic and total TARGET_DEV deltas; do not treat +1/192 R1 total target count as an established gain",
+    "composition_preservation": "TARGET_DEV composition exact_grid_match >= 34/96 and paired net fixes versus V7 >= 3",
+    "retention_recovery": "RETENTION_SENTINEL exact_grid_match >= 70/96 and paired net harms versus V7 <= 0"
+  },
+  "baseline_result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5",
+  "batching_contract": {
+    "adaptive_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "batch1_vs_batch32_validation_required": true,
+    "exact_grid_rate_delta_max": 0.0625,
+    "parse_valid_delta_max": 0,
+    "primary_batch_size": 32,
+    "raw_token_agreement": "AUDIT_ONLY"
+  },
+  "evaluation_contract": "reuse corrected V7 target-blind decoder, scorer, 192 TARGET_DEV and 96 RETENTION_SENTINEL; retention sentinel is evaluation-only",
+  "evaluation_surfaces": {
+    "RETENTION_SENTINEL": 96,
+    "TARGET_DEV": 192
+  },
+  "final_audit_opened": false,
+  "gate_id": "R2_PROSPECTIVE_EVALUATION_GATES_V1",
+  "no_selection_using_final_audit": true,
+  "round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_004",
+  "schema_version": 1,
+  "status": "FROZEN_PROSPECTIVE_BEFORE_R2_TRAINING"
+}
