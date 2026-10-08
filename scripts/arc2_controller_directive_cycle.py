@@ -14,6 +14,7 @@ from typing import Any
 
 REMEDIATION = {"REQUIRE_CURRICULUM_REVIEW", "REQUIRE_DIAGNOSTIC_REVIEW", "REQUIRE_INFRA_REPAIR", "REQUIRE_CHANGES"}
 KNOWN = REMEDIATION | {"CONTINUE", "CONTINUE_WITH_WARNING", "NEW_SUBPROTOCOL_REQUIRED", "PAUSE_SCIENTIFIC_EXPERIMENT", "STOP_CURRENT_TRACK", "EMERGENCY_RECOVERY"}
+STEP_ORDER = {"PROCESSING": 0, "REMEDIATION_COMPLETE": 1, "VALIDATED": 2, "COMMITTED": 3, "RESUBMITTED": 4, "WAITING_DIRECTOR": 5}
 
 
 def now() -> str:
@@ -68,6 +69,10 @@ def transition(record: dict[str, Any], state: str, **values: Any) -> None:
     record.setdefault("history", []).append({"at": now(), "state": state, **values})
 
 
+def before(record: dict[str, Any], state: str) -> bool:
+    return STEP_ORDER.get(record.get("state", ""), -1) < STEP_ORDER[state]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--directive", type=Path, required=True)
@@ -92,54 +97,63 @@ def main() -> int:
         transition(record, "FAILED_CLOSED", reason="DIRECTIVE_HASH_CONFLICT")
         atomic_json(args.state, state)
         raise RuntimeError("DIRECTIVE_HASH_CONFLICT")
-    transition(record, "RECEIVED", decision=decision, directive_path=str(args.directive.resolve()), response_path=str(args.response.resolve()))
+    if not record.get("state"):
+        transition(record, "RECEIVED", decision=decision, directive_path=str(args.directive.resolve()), response_path=str(args.response.resolve()))
     if not args.response.exists():
         atomic_json(args.response, response_payload(directive, digest))
     if not valid_response(args.response, directive, digest):
         transition(record, "FAILED_CLOSED", reason="ACKNOWLEDGEMENT_INVALID")
         atomic_json(args.state, state)
         raise RuntimeError("ACKNOWLEDGEMENT_INVALID")
-    transition(record, "ACKNOWLEDGED", acknowledgement_sha256=hashlib.sha256(args.response.read_bytes()).hexdigest())
-    if decision not in KNOWN:
-        transition(record, "FAILED_CLOSED", reason="UNKNOWN_DIRECTOR_DECISION")
-    elif decision in REMEDIATION:
-        transition(record, "PROCESSING", route="REMEDIATION", next_step="FIRST_UNFINISHED_DIRECTIVE_REQUIREMENT", controller_cycle_complete=False)
-    elif decision == "NEW_SUBPROTOCOL_REQUIRED":
-        transition(record, "PROCESSING", route="NEW_SUBPROTOCOL")
-    elif decision == "PAUSE_SCIENTIFIC_EXPERIMENT":
-        transition(record, "CLOSED", route="PAUSED_NO_GPU_LAUNCH")
-    elif decision == "STOP_CURRENT_TRACK":
-        transition(record, "CLOSED", route="TERMINAL_TRACK_STOP")
-    elif decision == "EMERGENCY_RECOVERY":
-        transition(record, "PROCESSING", route="ISOLATED_RECOVERY")
-    else:
-        transition(record, "CLOSED", route="AUTHORIZED" if directive.get("scientific_training_authorized") is True else "UNAUTHORIZED_CONTINUE_FAIL_CLOSED")
+    if not record.get("acknowledgement_sha256"):
+        transition(record, "ACKNOWLEDGED", acknowledgement_sha256=hashlib.sha256(args.response.read_bytes()).hexdigest())
+    if not record.get("route"):
+        if decision not in KNOWN:
+            transition(record, "FAILED_CLOSED", reason="UNKNOWN_DIRECTOR_DECISION")
+        elif decision in REMEDIATION:
+            transition(record, "PROCESSING", route="REMEDIATION", next_step="FIRST_UNFINISHED_DIRECTIVE_REQUIREMENT", controller_cycle_complete=False)
+        elif decision == "NEW_SUBPROTOCOL_REQUIRED":
+            transition(record, "PROCESSING", route="NEW_SUBPROTOCOL")
+        elif decision == "PAUSE_SCIENTIFIC_EXPERIMENT":
+            transition(record, "CLOSED", route="PAUSED_NO_GPU_LAUNCH")
+        elif decision == "STOP_CURRENT_TRACK":
+            transition(record, "CLOSED", route="TERMINAL_TRACK_STOP")
+        elif decision == "EMERGENCY_RECOVERY":
+            transition(record, "PROCESSING", route="ISOLATED_RECOVERY")
+        else:
+            transition(record, "CLOSED", route="AUTHORIZED" if directive.get("scientific_training_authorized") is True else "UNAUTHORIZED_CONTINUE_FAIL_CLOSED")
     if args.dummy_remediation:
         if decision not in REMEDIATION:
             raise RuntimeError("DUMMY_REMEDIATION_REQUIRES_REMEDIATION_DECISION")
         dummy = args.state.parent / f"{directive_id}_DUMMY_REMEDIATION.json"
-        atomic_json(dummy, {"directive_id": directive_id, "status": "DUMMY_REMEDIATION_COMPLETE", "gpu_training_started": False})
-        transition(record, "REMEDIATION_COMPLETE", evidence=str(dummy.resolve()))
-        transition(record, "VALIDATED", validation="DUMMY_PASS")
-        transition(record, "COMMITTED", commit="DUMMY_NO_GIT")
+        if before(record, "REMEDIATION_COMPLETE"):
+            atomic_json(dummy, {"directive_id": directive_id, "status": "DUMMY_REMEDIATION_COMPLETE", "gpu_training_started": False})
+            transition(record, "REMEDIATION_COMPLETE", evidence=str(dummy.resolve()))
+        if before(record, "VALIDATED"): transition(record, "VALIDATED", validation="DUMMY_PASS")
+        if before(record, "COMMITTED"): transition(record, "COMMITTED", commit="DUMMY_NO_GIT")
         brief = args.state.parent / f"{directive_id}_DUMMY_BRIEF.json"
-        atomic_json(brief, {"directive_id": directive_id, "status": "DUMMY_RESUBMITTED", "gpu_training_started": False})
-        transition(record, "RESUBMITTED", brief=str(brief.resolve()))
+        if before(record, "RESUBMITTED"):
+            atomic_json(brief, {"directive_id": directive_id, "status": "DUMMY_RESUBMITTED", "gpu_training_started": False})
+            transition(record, "RESUBMITTED", brief=str(brief.resolve()))
     if args.complete_evidence:
         if not args.complete_evidence.is_file(): raise RuntimeError("MISSING_REMEDIATION_EVIDENCE")
-        transition(record, "REMEDIATION_COMPLETE", evidence=str(args.complete_evidence.resolve()))
-        record["next_step"] = "VALIDATE"
+        if before(record, "REMEDIATION_COMPLETE"):
+            transition(record, "REMEDIATION_COMPLETE", evidence=str(args.complete_evidence.resolve()))
+            record["next_step"] = "VALIDATE"
     if args.validated_evidence:
         if not args.validated_evidence.is_file(): raise RuntimeError("MISSING_VALIDATION_EVIDENCE")
-        transition(record, "VALIDATED", validation=str(args.validated_evidence.resolve()))
-        record["next_step"] = "COMMIT"
+        if before(record, "VALIDATED"):
+            transition(record, "VALIDATED", validation=str(args.validated_evidence.resolve()))
+            record["next_step"] = "COMMIT"
     if args.commit_sha:
-        transition(record, "COMMITTED", commit=args.commit_sha)
-        record["next_step"] = "PREPARE_AND_SUBMIT_BRIEF"
+        if before(record, "COMMITTED"):
+            transition(record, "COMMITTED", commit=args.commit_sha)
+            record["next_step"] = "PREPARE_AND_SUBMIT_BRIEF"
     if args.brief:
         if not args.brief.is_file(): raise RuntimeError("MISSING_DIRECTOR_BRIEF")
-        transition(record, "RESUBMITTED", brief=str(args.brief.resolve()))
-        transition(record, "WAITING_DIRECTOR", next_step="AWAIT_DIRECTOR_DIRECTIVE", controller_cycle_complete=False, waiting_reason="DIRECTOR_DECISION_REQUIRED")
+        if before(record, "RESUBMITTED"):
+            transition(record, "RESUBMITTED", brief=str(args.brief.resolve()))
+            transition(record, "WAITING_DIRECTOR", next_step="AWAIT_DIRECTOR_DIRECTIVE", controller_cycle_complete=False, waiting_reason="DIRECTOR_DECISION_REQUIRED")
     atomic_json(args.state, state)
     print(json.dumps({"directive_id": directive_id, "decision": decision, "state": record["state"], "scientific_training_started": False}, sort_keys=True))
     return 0
