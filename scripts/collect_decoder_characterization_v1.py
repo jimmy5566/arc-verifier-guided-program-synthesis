@@ -42,7 +42,9 @@ def main() -> int:
     parser.add_argument("--preflight", action="store_true"); parser.add_argument("--output", type=Path, required=True); parser.add_argument("--receipt", type=Path, required=True)
     args = parser.parse_args(); launch: dict[str, Any] | None = None
     try:
-        actual = [str(Path(sys.executable).resolve()), str(Path(sys.argv[0]).resolve()), *sys.argv[1:]]
+        # Bind the invoked interpreter path itself.  Resolving it would erase
+        # the frozen venv identity when Python is a symlink to a system binary.
+        actual = [sys.executable, str(Path(sys.argv[0]).resolve()), *sys.argv[1:]]
         environment = {key: os.environ.get(key, "") for key in ("PYTHONHASHSEED", "TOKENIZERS_PARALLELISM", "CUDA_VISIBLE_DEVICES")}
         # Preflight proves binding without consuming the launch nonce or loading a model.
         launch = validate_contract(args.launch_contract, argv=actual, environment=environment, require_review=None if args.preflight else args.governor_review, consume_nonce=not args.preflight)
