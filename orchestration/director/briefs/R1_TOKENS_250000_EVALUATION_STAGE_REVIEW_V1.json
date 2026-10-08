@@ -1,0 +1,43 @@
+{
+  "artifacts": {
+    "checkpoint_manifest": {
+      "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\capability_repair_baseline_v1\\forward_targeted_repair_v1\\r1_checkpoint_selection_v1\\TOKENS_250000_CHECKPOINT_MANIFEST.json",
+      "sha256": "e75344a565879f2771eacc736b4efe3767149f8fd64ab9ef87b51b5ec37980f6"
+    },
+    "evaluation_gate": {
+      "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\capability_repair_baseline_v1\\forward_targeted_repair_v1\\r1_checkpoint_selection_v1\\TOKENS_250000_PAIRED_EVALUATION_GATE.json",
+      "sha256": "95ec300020636912ae2703544148f0d9f5847a96702aca496335e90ab97f547c"
+    },
+    "selection_contract": {
+      "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\capability_repair_baseline_v1\\forward_targeted_repair_v1\\r1_checkpoint_selection_v1\\R1_CHECKPOINT_SELECTION_CONTRACT_V1.json",
+      "sha256": "bfaf40b44e915d6fbd0fe75e2a755640369e3e68906caa561999401dc1070ba1"
+    }
+  },
+  "brief_id": "R1_TOKENS_250000_EVALUATION_STAGE_REVIEW_V1",
+  "decision_requested": "CONTINUE_CONTROLLER_OR_REQUIRE_CHANGES",
+  "execution_requested": "one read-only GPU inference evaluation of the 250k checkpoint on the same frozen 192 TARGET_DEV and 96 RETENTION_SENTINEL surfaces; no training; no FINAL_AUDIT.",
+  "forbidden_actions": [
+    "no training",
+    "no use of TARGET_DEV or RETENTION_SENTINEL as training data",
+    "no FINAL_AUDIT",
+    "no post-scoring contract changes"
+  ],
+  "frozen_conditions": [
+    "same target-blind token decoder and scorer",
+    "same batch32 adaptive inference policy",
+    "RETENTION_SENTINEL evaluation-only",
+    "FINAL_AUDIT unopened",
+    "R1 final checkpoint remains post-hoc characterization until prospective 250k evaluation completes"
+  ],
+  "hard_scientific_gates": {
+    "correct_checkpoint": "PASS",
+    "correct_dataset_and_denominator": "PASS",
+    "decoder_and_scoring_contract": "PASS",
+    "fresh_output": "PASS",
+    "no_duplicate_live_job": "PASS",
+    "no_leakage": "PASS"
+  },
+  "schema_version": 1,
+  "scientific_question": "Is the frozen single 250k-checkpoint paired evaluation sufficient and scientifically valid to complete the already-required R1 checkpoint selection?",
+  "stage": "R1_CHECKPOINT_SELECTION"
+}
