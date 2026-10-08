@@ -1,0 +1,21 @@
+{
+  "baseline_identity_sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b",
+  "baseline_model_id": "CAPABILITY_REPAIR_BASELINE_V1",
+  "checkpoint_manifest_file_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "checkpoint_manifest_identity": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da",
+  "forbidden": ["training", "optimizer", "weight_mutation", "FINAL_AUDIT", "automatic_follow_on"],
+  "inference_contract_sha256": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e",
+  "remote_contract_path": "/workspace/arc2/forward_baseline_v3_launch/LAUNCH_CONTRACT.json",
+  "remote_nonce_path": "/workspace/arc2/forward_baseline_v3_launch/NONCE",
+  "remote_nonce_sha256": "f30bba7437f319eb58b386c4b9aa42492b0d75cc2754074048ef99d6721d9745",
+  "remote_output_root": "/workspace/arc2/forward_baseline_v3_launch/output",
+  "remote_receipt_path": "/workspace/arc2/forward_baseline_v3_launch/TERMINAL_RECEIPT.json",
+  "remote_review_path": "/workspace/arc2/forward_baseline_v3_launch/GOVERNOR_REVIEW.json",
+  "requested_execution": "ONE_DETERMINISTIC_READ_ONLY_192_PLUS_96_BASELINE_EVALUATION",
+  "retention_sentinel": {"rows": 96, "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"},
+  "review_type": "FORWARD_BASELINE_LAUNCH_V3",
+  "runtime_cap_seconds": 7200,
+  "schema_version": 1,
+  "source_commit": "e7c17acc44d7b1a5d14b7ee735d5cecce24de450",
+  "target_dev": {"rows": 192, "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"}
+}

@@ -93,7 +93,8 @@ def verify_governor_review(launch: dict[str, Any], review_path: Path) -> None:
     if review.get("decision") != "CONTINUE_CONTROLLER":
         raise RuntimeError("GOVERNOR_REVIEW_NOT_AUTHORIZING")
     expected = {
-        "reviewed_brief_sha256": launch["reviewed_brief_sha256"],
+        "authorization_request_sha256": launch["authorization_request_sha256"],
+        "reviewed_brief_sha256": sha(Path(launch["review_brief_path"])),
         "launch_contract_file_sha256": sha(Path(launch["contract_path"])),
         "launch_contract_identity": launch["contract_sha256"],
         "baseline_identity_sha256": launch["baseline_identity"]["sha256"],

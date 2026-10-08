@@ -18,18 +18,19 @@ collector = importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(colle
 class ForwardLaunchV3Tests(unittest.TestCase):
     def test_review_must_bind_every_launch_identity(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp); contract = root / "contract.json"; review = root / "review.json"
+            root = Path(tmp); contract = root / "contract.json"; brief = root / "brief.json"; review = root / "review.json"
             contract.write_text("{}", encoding="utf-8")
+            brief.write_text("{}", encoding="utf-8")
             launch = {
                 "governor_review_path": str(review), "contract_path": str(contract), "contract_sha256": "contract",
-                "reviewed_brief_sha256": "brief", "baseline_identity": {"sha256": "baseline"},
+                "authorization_request_sha256": "request", "review_brief_path": str(brief), "baseline_identity": {"sha256": "baseline"},
                 "checkpoint_manifest_sha256": "manifest-file", "checkpoint_manifest_identity": "manifest",
                 "datasets": {"TARGET_DEV": {"sha256": "target", "rows": 192}, "RETENTION_SENTINEL": {"sha256": "retention", "rows": 96}},
                 "source_commit": "source", "executable": {"sha256": "executable"}, "nonce_sha256": "nonce",
                 "output_root": "/fresh/output", "receipt_path": "/fresh/receipt", "runtime_cap_seconds": 7200,
             }
             expected = {
-                "decision": "CONTINUE_CONTROLLER", "reviewed_brief_sha256": "brief", "launch_contract_file_sha256": collector.sha(contract),
+                "decision": "CONTINUE_CONTROLLER", "authorization_request_sha256": "request", "reviewed_brief_sha256": collector.sha(brief), "launch_contract_file_sha256": collector.sha(contract),
                 "launch_contract_identity": "contract", "baseline_identity_sha256": "baseline", "checkpoint_manifest_file_sha256": "manifest-file",
                 "checkpoint_manifest_identity": "manifest", "target_dev_sha256": "target", "target_dev_rows": 192,
                 "retention_sha256": "retention", "retention_rows": 96, "source_commit": "source", "executable_sha256": "executable",
