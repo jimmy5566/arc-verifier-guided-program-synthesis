@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_TARGETED_REPAIR_R2_COMPLETION_V1",
+  "decision": "TERMINAL",
+  "scope": "CONTROLLED_STOP_FORWARD_TARGETED_CAPABILITY_REPAIR_V1",
+  "brief_id": "TARGETED_REPAIR_R2_COMPLETION_REVIEW_V1",
+  "reviewed_brief_sha256": "e59750ae6145295396957371101f72af5fcfbecf1e72ee7592d5edc58c4ba8de",
+  "terminal_disposition": {
+    "protocol": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1",
+    "status": "TERMINAL_CONTROLLED_STOP_PROSPECTIVE_GATE_FAILED",
+    "selected_reference": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "r1_promotion_status": "NOT_PROMOTED",
+    "r2_promotion_status": "NOT_PROMOTED",
+    "r3_status": "NOT_AUTHORIZED",
+    "final_audit_status": "SEALED_UNOPENED"
+  },
+  "reasons": [
+    {
+      "area": "r2_terminal_integrity",
+      "status": "PASS",
+      "finding": "R2 completed 191 optimizer steps and 501163 processed tokens with 514.223645461 scientific GPU-training seconds. Its final checkpoint, 288-item paired evaluation, terminal evidence, and gate result are frozen and complete."
+    },
+    {
+      "area": "composition_preservation",
+      "status": "PASS",
+      "finding": "R2 achieved 35/96 composition exact matches versus 31/96 for V7, with paired net fixes of +4, satisfying the preregistered composition-preservation gate."
+    },
+    {
+      "area": "retention_recovery",
+      "status": "FAIL_HARD_GATE",
+      "finding": "R2 achieved 68/96 retention exact matches versus 70/96 for V7, with paired net fixes of -2 and five paired harms, failing the preregistered requirement of at least 70/96 and no net paired harm."
+    },
+    {
+      "area": "atomic_capability",
+      "status": "REGRESSED",
+      "finding": "R2 achieved 39/96 atomic exact matches versus 45/96 for V7, with paired net fixes of -6. This is a larger atomic regression than R1 and offsets the composition improvement in total TARGET_DEV."
+    },
+    {
+      "area": "total_target_dev",
+      "status": "REGRESSED",
+      "finding": "R2 achieved 74/192 TARGET_DEV exact matches versus 76/192 for V7, with paired net fixes of -2. It does not replace V7 as the forward baseline."
+    },
+    {
+      "area": "cross_round_assessment",
+      "status": "NO_ACCEPTABLE_CANDIDATE",
+      "finding": "R1 provided a small composition and total-target increase with a six-item retention regression; R2 partially recovered retention and preserved composition but further regressed atomic and total TARGET_DEV. Neither round satisfies the protected multi-objective condition."
+    },
+    {
+      "area": "r3_justification",
+      "status": "NOT_ESTABLISHED",
+      "finding": "A further round would require more than the frozen one-variable curriculum adjustment and would constitute a materially new scientific condition. The submitted evidence does not identify a sufficiently isolated R3 change that can be authorized as routine continuation."
+    }
+  ],
+  "frozen_evidence": {
+    "r2_config_sha256": "a53d90ddd15c853c2c136bab59663b55edb0a098bba8d002156dc7d125fe5383",
+    "r2_prospective_gates_sha256": "8e9a8d1bb7e8e098450d010dfaa9c3bd552450d12e94141624447b1953d5451f",
+    "r2_stage_package_sha256": "2fa9952972b106cae764914e533f9fa5563b216fb9b44470999d2ef5f8b9a253",
+    "r2_training_terminal_evidence_sha256": "510fe9988eefc06662197e72c6b0a748188963ece91a9f8940ebd3e8cc49c5dc",
+    "r2_checkpoint_manifest_file_sha256": "f0a5ebdf28f16665ced9c19054217a7d8136e5a31e055fdcb334f7f8eca75052",
+    "r2_checkpoint_manifest_identity": "a83e30d0d8ea1c89073dfd2556b5591b9e05b1b70f62189bbe809fbc6242a087",
+    "r2_evaluation_terminal_evidence_sha256": "1f67966ef5f81c2e0f942580348a84175332000e3d680f58e474eed067a7c497",
+    "r2_candidate_result_sha256": "505841894ceb468b1623754c80cdae3fa359c66340c311e278d987749b219cb3",
+    "r2_paired_gate_result_sha256": "9e734b1469a2156984cedd808b3756dbfcb74040d88d8f4d31202dfe5c095de3",
+    "r2_paired_evaluation_summary_sha256": "90d02227ab62516aab39ae3d1960144fe9f0ddfe94ac9503d74947fbde418208",
+    "v7_baseline_result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+  },
+  "frozen_results": {
+    "V7": {
+      "atomic": 45,
+      "composition": 31,
+      "retention": 70,
+      "target_dev": 76
+    },
+    "R1": {
+      "atomic": 43,
+      "composition": 34,
+      "retention": 64,
+      "target_dev": 77,
+      "promotion_status": "NOT_PROMOTED"
+    },
+    "R2": {
+      "atomic": 39,
+      "composition": 35,
+      "retention": 68,
+      "target_dev": 74,
+      "paired_delta_vs_V7": {
+        "atomic": -6,
+        "composition": 4,
+        "retention": -2,
+        "target_dev": -2
+      },
+      "prospective_gate_status": "FAIL",
+      "promotion_status": "NOT_PROMOTED"
+    }
+  },
+  "frozen_conditions": {
+    "reference_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "r1_and_r2_artifacts": "IMMUTABLE_PRESERVED_EVIDENCE",
+    "retention_sentinel_usage": "EVALUATION_ONLY_NOT_TRAINING_DATA",
+    "target_dev_usage": "EVALUATION_ONLY_NOT_TRAINING_DATA",
+    "final_audit_opened": false,
+    "cumulative_optimizer_training_cap_seconds": 28800,
+    "historical_plus_r1_scientific_gpu_seconds": 4263.7906022439565,
+    "r2_scientific_gpu_seconds": 514.223645461,
+    "cumulative_scientific_gpu_seconds": 4778.014247704957,
+    "remaining_scientific_gpu_seconds": 24021.985752295043
+  },
+  "required_closeout": [
+    "Preserve R1 and R2 configs, checkpoints, manifests, receipts, paired predictions, summaries, gate results, and actual GPU-time accounting without reinterpretation or mutation.",
+    "Record V7 as the unchanged reference baseline and R1/R2 as completed non-promoted development evidence.",
+    "Keep FINAL_AUDIT sealed and do not use it to rescue, rank, or reinterpret the failed targeted-repair line.",
+    "Any future optimizer work must begin as a distinct new subprotocol with a new mechanistic hypothesis, prospective gates, exact budget reservation, and a new Governor review; it is not R3 continuation under this authorization."
+  ],
+  "forbidden_actions": [
+    "DO_NOT_START_R3",
+    "DO_NOT_RETRY_R2",
+    "DO_NOT_PROMOTE_R1_OR_R2_OVER_V7",
+    "DO_NOT_ALTER_R1_OR_R2_RESULTS_CONFIGS_GATES_CHECKPOINTS_OR_RECEIPTS",
+    "DO_NOT_RELAX_THE_FAILED_RETENTION_GATE",
+    "DO_NOT_TREAT_COMPOSITION_GAIN_AS_OVERALL_SUCCESS",
+    "DO_NOT_USE_TARGET_DEV_OR_RETENTION_SENTINEL_AS_TRAINING_DATA",
+    "DO_NOT_ACCESS_FINAL_AUDIT",
+    "DO_NOT_USE_EVAL60_OR_DIAGNOSTIC_GOLD_FOR_TRAINING_TUNING_OR_RESCORING",
+    "DO_NOT_SPEND_REMAINING_GPU_BUDGET_AUTOMATICALLY",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": false,
+  "future_subprotocol_review_required": true,
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "r3_authorized": false,
+  "final_audit_authorized": false
+}

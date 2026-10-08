@@ -1,0 +1,105 @@
+{
+  "allowed_director_outcomes": [
+    "NEW_R3_PROTOCOL_RECOMMENDED",
+    "STOP_TARGETED_REPAIR_APPROACH",
+    "RUN_ONE_DIAGNOSTIC_BEFORE_DECIDING"
+  ],
+  "brief_id": "TARGETED_REPAIR_POSTMORTEM_REVIEW_V1",
+  "budget": {
+    "cumulative_scientific_gpu_seconds": 4778.014247704957,
+    "r3_started": false,
+    "remaining_scientific_gpu_seconds": 24021.985752295044
+  },
+  "director_question": "Given the per-family paired fixes/harms across V7 -> R1 -> R2, is there a materially different R3 curriculum that is scientifically justified, or should this targeted-repair approach be stopped?",
+  "final_audit_opened": false,
+  "frozen_conditions": [
+    "V7, R1, R2, current R2 gate outcome, and all existing receipts remain byte-preserved.",
+    "RETENTION_SENTINEL and TARGET_DEV remain evaluation-only and are not training data.",
+    "FINAL_AUDIT remains sealed and unopened.",
+    "No automatic R3 is authorized by this postmortem request."
+  ],
+  "frozen_evidence": {
+    "human_table": {
+      "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_paired_evaluation_v1/R1_R2_PER_FAMILY_PAIRED_ANALYSIS.md",
+      "sha256": "36b2a2e40883e8f2444328348bf40da647cc889bcceb712859a60fb7a5f3973f"
+    },
+    "paired_analysis": {
+      "path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_paired_evaluation_v1/R1_R2_PER_FAMILY_PAIRED_ANALYSIS.json",
+      "sha256": "6dc3ba24762484d6514a35f51d6297461aa44efdc32dded060b68e52563f5283"
+    },
+    "r1_results": {
+      "atomic": 43,
+      "composition": 34,
+      "retention": 64,
+      "target_dev": 77
+    },
+    "r2_results": {
+      "atomic": 39,
+      "composition": 35,
+      "retention": 68,
+      "target_dev": 74
+    },
+    "reference_baseline": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "v7_results": {
+      "atomic": 45,
+      "composition": 31,
+      "retention": 70,
+      "target_dev": 76
+    }
+  },
+  "required_content_if_new_r3_protocol_recommended": [
+    "families to upweight",
+    "families to downweight or remove",
+    "atomic/composition/replay mix",
+    "whether learning rate or token budget changes",
+    "starting checkpoint: V7, R1-final, or R2",
+    "explicit expected benefit",
+    "explicit failure condition"
+  ],
+  "required_content_if_one_diagnostic": "Specify exactly one diagnostic and its decision rule.",
+  "schema_version": 1,
+  "scientific_interpretation": {
+    "r1_atomic_harm_families": [
+      "difference",
+      "same color",
+      "width"
+    ],
+    "r1_composition_gain_families": [
+      "conditional action"
+    ],
+    "r2_atomic_further_harm_families": [
+      "difference",
+      "orientation",
+      "same color"
+    ],
+    "repeated_flip_families": [
+      "overlay",
+      "propagation",
+      "rotate",
+      "conditional action",
+      "mask set",
+      "relation selector action",
+      "connected components",
+      "difference",
+      "inside/contains",
+      "orientation",
+      "same color",
+      "width"
+    ],
+    "retention_below_v7_after_r2": [
+      "overlay"
+    ],
+    "retention_recovered_r1_to_r2": [
+      "rotate"
+    ]
+  },
+  "scientific_training_requested": false,
+  "scope": "TARGETED_REPAIR_CURRENT_PROTOCOL_POSTMORTEM",
+  "terminal_scope_interpretation": {
+    "entire_experiment_terminal": false,
+    "meaning": "STOP_AUTOMATIC_R3_UNDER_THE_CURRENT_R1_R2_CURRICULUM_ROUTE",
+    "scope_artifact": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_paired_evaluation_v1/CURRENT_PROTOCOL_TERMINAL_SCOPE_INTERPRETATION_V1.json",
+    "scope_artifact_sha256": "1da7a781814db81bdc159391e9521ebe8ea0a5f2cfa1d8b960b76dcf62520ed0",
+    "terminal_scope": "CURRENT_PROTOCOL"
+  }
+}

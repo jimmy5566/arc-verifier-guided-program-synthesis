@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-08T17:56:20.344116+00:00",
+  "entire_experiment_terminal": false,
+  "final_audit_opened": false,
+  "forbidden_actions": [
+    "DO_NOT_LAUNCH_R3_AUTOMATICALLY",
+    "DO_NOT_MUTATE_V7_R1_R2_OR_EXISTING_GATES",
+    "DO_NOT_OPEN_FINAL_AUDIT",
+    "DO_NOT_USE_TARGET_DEV_OR_RETENTION_SENTINEL_AS_TRAINING_DATA"
+  ],
+  "historical_director_decision": "TERMINAL",
+  "historical_director_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_TARGETED_REPAIR_R2_COMPLETION_V1.json",
+  "meaning": "STOP_AUTOMATIC_R3_UNDER_THE_CURRENT_R1_R2_CURRICULUM_ROUTE",
+  "permitted_next_action": "CPU_ONLY_PER_FAMILY_POSTMORTEM_AND_ONE_DIRECTOR_SCIENTIFIC_REVIEW",
+  "protocol_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1",
+  "schema_version": 1,
+  "status": "CURRENT_PROTOCOL_CONTROLLED_STOP_INTERPRETATION",
+  "terminal_scope": "CURRENT_PROTOCOL"
+}

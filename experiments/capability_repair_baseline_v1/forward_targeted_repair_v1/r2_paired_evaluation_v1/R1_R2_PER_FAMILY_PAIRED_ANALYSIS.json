@@ -1,0 +1,1380 @@
+{
+  "classification_rule": "See classifier: stable improvement requires positive V7-R1 and V7-R2 with nonnegative R1-R2; recovery requires negative V7-R1, positive R1-R2, nonnegative V7-R2; otherwise use churn or stable regression rules.",
+  "families": {
+    "TARGET_DEV|RETENTION_SENTINEL|color mapping": {
+      "baseline_exact": 16,
+      "classification": "UNCHANGED",
+      "episodes": 16,
+      "family": "color mapping",
+      "r1_exact": 16,
+      "r1_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "r2_exact": 16,
+      "r2_vs_r1": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "r2_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 0
+      },
+      "role": "RETENTION_SENTINEL",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "111": 16
+      }
+    },
+    "TARGET_DEV|RETENTION_SENTINEL|complete missing structure": {
+      "baseline_exact": 16,
+      "classification": "UNCHANGED",
+      "episodes": 16,
+      "family": "complete missing structure",
+      "r1_exact": 16,
+      "r1_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "r2_exact": 16,
+      "r2_vs_r1": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "r2_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 0
+      },
+      "role": "RETENTION_SENTINEL",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "111": 16
+      }
+    },
+    "TARGET_DEV|RETENTION_SENTINEL|overlay": {
+      "baseline_exact": 4,
+      "classification": "REGRESSED_STABLY",
+      "episodes": 16,
+      "family": "overlay",
+      "r1_exact": 4,
+      "r1_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 3,
+        "paired_harms_n10": 3
+      },
+      "r2_exact": 1,
+      "r2_vs_r1": {
+        "net_fixes": -3,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 4
+      },
+      "r2_vs_v7": {
+        "net_fixes": -3,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 4
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 3
+      },
+      "role": "RETENTION_SENTINEL",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "000": 8,
+        "001": 1,
+        "010": 3,
+        "100": 3,
+        "110": 1
+      }
+    },
+    "TARGET_DEV|RETENTION_SENTINEL|propagation": {
+      "baseline_exact": 2,
+      "classification": "IMPROVED_STABLY",
+      "episodes": 16,
+      "family": "propagation",
+      "r1_exact": 3,
+      "r1_vs_v7": {
+        "net_fixes": 1,
+        "paired_fixes_n01": 3,
+        "paired_harms_n10": 2
+      },
+      "r2_exact": 3,
+      "r2_vs_r1": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 3,
+        "paired_harms_n10": 3
+      },
+      "r2_vs_v7": {
+        "net_fixes": 1,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 1
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 1,
+        "improved_r1_then_regressed_r2": 3
+      },
+      "role": "RETENTION_SENTINEL",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "000": 9,
+        "001": 2,
+        "010": 3,
+        "100": 1,
+        "101": 1
+      }
+    },
+    "TARGET_DEV|RETENTION_SENTINEL|recolor": {
+      "baseline_exact": 16,
+      "classification": "UNCHANGED",
+      "episodes": 16,
+      "family": "recolor",
+      "r1_exact": 16,
+      "r1_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "r2_exact": 16,
+      "r2_vs_r1": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "r2_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 0
+      },
+      "role": "RETENTION_SENTINEL",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "111": 16
+      }
+    },
+    "TARGET_DEV|RETENTION_SENTINEL|rotate": {
+      "baseline_exact": 16,
+      "classification": "RECOVERED_IN_R2",
+      "episodes": 16,
+      "family": "rotate",
+      "r1_exact": 9,
+      "r1_vs_v7": {
+        "net_fixes": -7,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 7
+      },
+      "r2_exact": 16,
+      "r2_vs_r1": {
+        "net_fixes": 7,
+        "paired_fixes_n01": 7,
+        "paired_harms_n10": 0
+      },
+      "r2_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 7,
+        "improved_r1_then_regressed_r2": 0
+      },
+      "role": "RETENTION_SENTINEL",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "101": 7,
+        "111": 9
+      }
+    },
+    "TARGET_DEV|TARGETED_COMPOSITION|conditional action": {
+      "baseline_exact": 2,
+      "classification": "IMPROVED_STABLY",
+      "episodes": 24,
+      "family": "conditional action",
+      "r1_exact": 5,
+      "r1_vs_v7": {
+        "net_fixes": 3,
+        "paired_fixes_n01": 3,
+        "paired_harms_n10": 0
+      },
+      "r2_exact": 5,
+      "r2_vs_r1": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 3,
+        "paired_harms_n10": 3
+      },
+      "r2_vs_v7": {
+        "net_fixes": 3,
+        "paired_fixes_n01": 4,
+        "paired_harms_n10": 1
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 2
+      },
+      "role": "TARGETED_COMPOSITION",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "000": 16,
+        "001": 3,
+        "010": 2,
+        "011": 1,
+        "110": 1,
+        "111": 1
+      }
+    },
+    "TARGET_DEV|TARGETED_COMPOSITION|mask set": {
+      "baseline_exact": 2,
+      "classification": "MIXED_HIGH_CHURN",
+      "episodes": 24,
+      "family": "mask set",
+      "r1_exact": 2,
+      "r1_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 2
+      },
+      "r2_exact": 4,
+      "r2_vs_r1": {
+        "net_fixes": 2,
+        "paired_fixes_n01": 4,
+        "paired_harms_n10": 2
+      },
+      "r2_vs_v7": {
+        "net_fixes": 2,
+        "paired_fixes_n01": 4,
+        "paired_harms_n10": 2
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 2
+      },
+      "role": "TARGETED_COMPOSITION",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "000": 16,
+        "001": 4,
+        "010": 2,
+        "100": 2
+      }
+    },
+    "TARGET_DEV|TARGETED_COMPOSITION|relation selector action": {
+      "baseline_exact": 3,
+      "classification": "REGRESSED_STABLY",
+      "episodes": 24,
+      "family": "relation selector action",
+      "r1_exact": 3,
+      "r1_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 2
+      },
+      "r2_exact": 2,
+      "r2_vs_r1": {
+        "net_fixes": -1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 2
+      },
+      "r2_vs_v7": {
+        "net_fixes": -1,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 3
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 1
+      },
+      "role": "TARGETED_COMPOSITION",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "000": 18,
+        "001": 1,
+        "010": 1,
+        "011": 1,
+        "100": 2,
+        "110": 1
+      }
+    },
+    "TARGET_DEV|TARGETED_COMPOSITION|selector prerequisites": {
+      "baseline_exact": 24,
+      "classification": "UNCHANGED",
+      "episodes": 24,
+      "family": "selector prerequisites",
+      "r1_exact": 24,
+      "r1_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "r2_exact": 24,
+      "r2_vs_r1": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "r2_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 0
+      },
+      "role": "TARGETED_COMPOSITION",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "111": 24
+      }
+    },
+    "TARGET_DEV|TARGETED_EVALUATION|connected components": {
+      "baseline_exact": 0,
+      "classification": "IMPROVED_STABLY",
+      "episodes": 12,
+      "family": "connected components",
+      "r1_exact": 1,
+      "r1_vs_v7": {
+        "net_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0
+      },
+      "r2_exact": 1,
+      "r2_vs_r1": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1
+      },
+      "r2_vs_v7": {
+        "net_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 1
+      },
+      "role": "TARGETED_EVALUATION",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "000": 10,
+        "001": 1,
+        "010": 1
+      }
+    },
+    "TARGET_DEV|TARGETED_EVALUATION|difference": {
+      "baseline_exact": 2,
+      "classification": "REGRESSED_STABLY",
+      "episodes": 12,
+      "family": "difference",
+      "r1_exact": 1,
+      "r1_vs_v7": {
+        "net_fixes": -1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 2
+      },
+      "r2_exact": 0,
+      "r2_vs_r1": {
+        "net_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      },
+      "r2_vs_v7": {
+        "net_fixes": -2,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 2
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 1
+      },
+      "role": "TARGETED_EVALUATION",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "000": 9,
+        "010": 1,
+        "100": 2
+      }
+    },
+    "TARGET_DEV|TARGETED_EVALUATION|inside/contains": {
+      "baseline_exact": 0,
+      "classification": "IMPROVED_STABLY",
+      "episodes": 12,
+      "family": "inside/contains",
+      "r1_exact": 3,
+      "r1_vs_v7": {
+        "net_fixes": 3,
+        "paired_fixes_n01": 3,
+        "paired_harms_n10": 0
+      },
+      "r2_exact": 3,
+      "r2_vs_r1": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1
+      },
+      "r2_vs_v7": {
+        "net_fixes": 3,
+        "paired_fixes_n01": 3,
+        "paired_harms_n10": 0
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 1
+      },
+      "role": "TARGETED_EVALUATION",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "000": 8,
+        "001": 1,
+        "010": 1,
+        "011": 2
+      }
+    },
+    "TARGET_DEV|TARGETED_EVALUATION|orientation": {
+      "baseline_exact": 5,
+      "classification": "REGRESSED_STABLY",
+      "episodes": 12,
+      "family": "orientation",
+      "r1_exact": 5,
+      "r1_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1
+      },
+      "r2_exact": 4,
+      "r2_vs_r1": {
+        "net_fixes": -1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 2
+      },
+      "r2_vs_v7": {
+        "net_fixes": -1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 2
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 1
+      },
+      "role": "TARGETED_EVALUATION",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "000": 5,
+        "001": 1,
+        "010": 1,
+        "100": 1,
+        "110": 1,
+        "111": 3
+      }
+    },
+    "TARGET_DEV|TARGETED_EVALUATION|recolor": {
+      "baseline_exact": 12,
+      "classification": "UNCHANGED",
+      "episodes": 12,
+      "family": "recolor",
+      "r1_exact": 12,
+      "r1_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "r2_exact": 12,
+      "r2_vs_r1": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "r2_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 0
+      },
+      "role": "TARGETED_EVALUATION",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "111": 12
+      }
+    },
+    "TARGET_DEV|TARGETED_EVALUATION|same color": {
+      "baseline_exact": 12,
+      "classification": "REGRESSED_STABLY",
+      "episodes": 12,
+      "family": "same color",
+      "r1_exact": 9,
+      "r1_vs_v7": {
+        "net_fixes": -3,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 3
+      },
+      "r2_exact": 6,
+      "r2_vs_r1": {
+        "net_fixes": -3,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 4
+      },
+      "r2_vs_v7": {
+        "net_fixes": -6,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 6
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 1,
+        "improved_r1_then_regressed_r2": 0
+      },
+      "role": "TARGETED_EVALUATION",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "100": 2,
+        "101": 1,
+        "110": 4,
+        "111": 5
+      }
+    },
+    "TARGET_DEV|TARGETED_EVALUATION|selector prerequisites": {
+      "baseline_exact": 12,
+      "classification": "UNCHANGED",
+      "episodes": 12,
+      "family": "selector prerequisites",
+      "r1_exact": 12,
+      "r1_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "r2_exact": 12,
+      "r2_vs_r1": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "r2_vs_v7": {
+        "net_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 0,
+        "improved_r1_then_regressed_r2": 0
+      },
+      "role": "TARGETED_EVALUATION",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "111": 12
+      }
+    },
+    "TARGET_DEV|TARGETED_EVALUATION|width": {
+      "baseline_exact": 2,
+      "classification": "MIXED_HIGH_CHURN",
+      "episodes": 12,
+      "family": "width",
+      "r1_exact": 0,
+      "r1_vs_v7": {
+        "net_fixes": -2,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 2
+      },
+      "r2_exact": 1,
+      "r2_vs_r1": {
+        "net_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0
+      },
+      "r2_vs_v7": {
+        "net_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      },
+      "repeated_flip_examples": {
+        "harmed_r1_then_recovered_r2": 1,
+        "improved_r1_then_regressed_r2": 0
+      },
+      "role": "TARGETED_EVALUATION",
+      "surface": "TARGET_DEV",
+      "transition_counts": {
+        "000": 10,
+        "100": 1,
+        "101": 1
+      }
+    }
+  },
+  "final_audit_opened": false,
+  "interference_summary": {
+    "r1_atomic_harm_families": [
+      {
+        "baseline_exact": 2,
+        "classification": "REGRESSED_STABLY",
+        "episodes": 12,
+        "family": "difference",
+        "r1_exact": 1,
+        "r1_vs_v7": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 2
+        },
+        "r2_exact": 0,
+        "r2_vs_r1": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 1
+        },
+        "r2_vs_v7": {
+          "net_fixes": -2,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 2
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 1
+        },
+        "role": "TARGETED_EVALUATION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 9,
+          "010": 1,
+          "100": 2
+        }
+      },
+      {
+        "baseline_exact": 12,
+        "classification": "REGRESSED_STABLY",
+        "episodes": 12,
+        "family": "same color",
+        "r1_exact": 9,
+        "r1_vs_v7": {
+          "net_fixes": -3,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 3
+        },
+        "r2_exact": 6,
+        "r2_vs_r1": {
+          "net_fixes": -3,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 4
+        },
+        "r2_vs_v7": {
+          "net_fixes": -6,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 6
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 1,
+          "improved_r1_then_regressed_r2": 0
+        },
+        "role": "TARGETED_EVALUATION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "100": 2,
+          "101": 1,
+          "110": 4,
+          "111": 5
+        }
+      },
+      {
+        "baseline_exact": 2,
+        "classification": "MIXED_HIGH_CHURN",
+        "episodes": 12,
+        "family": "width",
+        "r1_exact": 0,
+        "r1_vs_v7": {
+          "net_fixes": -2,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 2
+        },
+        "r2_exact": 1,
+        "r2_vs_r1": {
+          "net_fixes": 1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 0
+        },
+        "r2_vs_v7": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 1
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 1,
+          "improved_r1_then_regressed_r2": 0
+        },
+        "role": "TARGETED_EVALUATION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 10,
+          "100": 1,
+          "101": 1
+        }
+      }
+    ],
+    "r1_composition_gain_families": [
+      {
+        "baseline_exact": 2,
+        "classification": "IMPROVED_STABLY",
+        "episodes": 24,
+        "family": "conditional action",
+        "r1_exact": 5,
+        "r1_vs_v7": {
+          "net_fixes": 3,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 0
+        },
+        "r2_exact": 5,
+        "r2_vs_r1": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 3
+        },
+        "r2_vs_v7": {
+          "net_fixes": 3,
+          "paired_fixes_n01": 4,
+          "paired_harms_n10": 1
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 2
+        },
+        "role": "TARGETED_COMPOSITION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 16,
+          "001": 3,
+          "010": 2,
+          "011": 1,
+          "110": 1,
+          "111": 1
+        }
+      }
+    ],
+    "r2_atomic_further_harm_families": [
+      {
+        "baseline_exact": 2,
+        "classification": "REGRESSED_STABLY",
+        "episodes": 12,
+        "family": "difference",
+        "r1_exact": 1,
+        "r1_vs_v7": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 2
+        },
+        "r2_exact": 0,
+        "r2_vs_r1": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 1
+        },
+        "r2_vs_v7": {
+          "net_fixes": -2,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 2
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 1
+        },
+        "role": "TARGETED_EVALUATION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 9,
+          "010": 1,
+          "100": 2
+        }
+      },
+      {
+        "baseline_exact": 5,
+        "classification": "REGRESSED_STABLY",
+        "episodes": 12,
+        "family": "orientation",
+        "r1_exact": 5,
+        "r1_vs_v7": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 1
+        },
+        "r2_exact": 4,
+        "r2_vs_r1": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 2
+        },
+        "r2_vs_v7": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 2
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 1
+        },
+        "role": "TARGETED_EVALUATION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 5,
+          "001": 1,
+          "010": 1,
+          "100": 1,
+          "110": 1,
+          "111": 3
+        }
+      },
+      {
+        "baseline_exact": 12,
+        "classification": "REGRESSED_STABLY",
+        "episodes": 12,
+        "family": "same color",
+        "r1_exact": 9,
+        "r1_vs_v7": {
+          "net_fixes": -3,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 3
+        },
+        "r2_exact": 6,
+        "r2_vs_r1": {
+          "net_fixes": -3,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 4
+        },
+        "r2_vs_v7": {
+          "net_fixes": -6,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 6
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 1,
+          "improved_r1_then_regressed_r2": 0
+        },
+        "role": "TARGETED_EVALUATION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "100": 2,
+          "101": 1,
+          "110": 4,
+          "111": 5
+        }
+      }
+    ],
+    "repeated_flip_families": [
+      {
+        "baseline_exact": 4,
+        "classification": "REGRESSED_STABLY",
+        "episodes": 16,
+        "family": "overlay",
+        "r1_exact": 4,
+        "r1_vs_v7": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 3
+        },
+        "r2_exact": 1,
+        "r2_vs_r1": {
+          "net_fixes": -3,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 4
+        },
+        "r2_vs_v7": {
+          "net_fixes": -3,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 4
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 3
+        },
+        "role": "RETENTION_SENTINEL",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 8,
+          "001": 1,
+          "010": 3,
+          "100": 3,
+          "110": 1
+        }
+      },
+      {
+        "baseline_exact": 2,
+        "classification": "IMPROVED_STABLY",
+        "episodes": 16,
+        "family": "propagation",
+        "r1_exact": 3,
+        "r1_vs_v7": {
+          "net_fixes": 1,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 2
+        },
+        "r2_exact": 3,
+        "r2_vs_r1": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 3
+        },
+        "r2_vs_v7": {
+          "net_fixes": 1,
+          "paired_fixes_n01": 2,
+          "paired_harms_n10": 1
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 1,
+          "improved_r1_then_regressed_r2": 3
+        },
+        "role": "RETENTION_SENTINEL",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 9,
+          "001": 2,
+          "010": 3,
+          "100": 1,
+          "101": 1
+        }
+      },
+      {
+        "baseline_exact": 16,
+        "classification": "RECOVERED_IN_R2",
+        "episodes": 16,
+        "family": "rotate",
+        "r1_exact": 9,
+        "r1_vs_v7": {
+          "net_fixes": -7,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 7
+        },
+        "r2_exact": 16,
+        "r2_vs_r1": {
+          "net_fixes": 7,
+          "paired_fixes_n01": 7,
+          "paired_harms_n10": 0
+        },
+        "r2_vs_v7": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 0
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 7,
+          "improved_r1_then_regressed_r2": 0
+        },
+        "role": "RETENTION_SENTINEL",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "101": 7,
+          "111": 9
+        }
+      },
+      {
+        "baseline_exact": 2,
+        "classification": "IMPROVED_STABLY",
+        "episodes": 24,
+        "family": "conditional action",
+        "r1_exact": 5,
+        "r1_vs_v7": {
+          "net_fixes": 3,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 0
+        },
+        "r2_exact": 5,
+        "r2_vs_r1": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 3
+        },
+        "r2_vs_v7": {
+          "net_fixes": 3,
+          "paired_fixes_n01": 4,
+          "paired_harms_n10": 1
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 2
+        },
+        "role": "TARGETED_COMPOSITION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 16,
+          "001": 3,
+          "010": 2,
+          "011": 1,
+          "110": 1,
+          "111": 1
+        }
+      },
+      {
+        "baseline_exact": 2,
+        "classification": "MIXED_HIGH_CHURN",
+        "episodes": 24,
+        "family": "mask set",
+        "r1_exact": 2,
+        "r1_vs_v7": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 2,
+          "paired_harms_n10": 2
+        },
+        "r2_exact": 4,
+        "r2_vs_r1": {
+          "net_fixes": 2,
+          "paired_fixes_n01": 4,
+          "paired_harms_n10": 2
+        },
+        "r2_vs_v7": {
+          "net_fixes": 2,
+          "paired_fixes_n01": 4,
+          "paired_harms_n10": 2
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 2
+        },
+        "role": "TARGETED_COMPOSITION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 16,
+          "001": 4,
+          "010": 2,
+          "100": 2
+        }
+      },
+      {
+        "baseline_exact": 3,
+        "classification": "REGRESSED_STABLY",
+        "episodes": 24,
+        "family": "relation selector action",
+        "r1_exact": 3,
+        "r1_vs_v7": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 2,
+          "paired_harms_n10": 2
+        },
+        "r2_exact": 2,
+        "r2_vs_r1": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 2
+        },
+        "r2_vs_v7": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 2,
+          "paired_harms_n10": 3
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 1
+        },
+        "role": "TARGETED_COMPOSITION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 18,
+          "001": 1,
+          "010": 1,
+          "011": 1,
+          "100": 2,
+          "110": 1
+        }
+      },
+      {
+        "baseline_exact": 0,
+        "classification": "IMPROVED_STABLY",
+        "episodes": 12,
+        "family": "connected components",
+        "r1_exact": 1,
+        "r1_vs_v7": {
+          "net_fixes": 1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 0
+        },
+        "r2_exact": 1,
+        "r2_vs_r1": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 1
+        },
+        "r2_vs_v7": {
+          "net_fixes": 1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 0
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 1
+        },
+        "role": "TARGETED_EVALUATION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 10,
+          "001": 1,
+          "010": 1
+        }
+      },
+      {
+        "baseline_exact": 2,
+        "classification": "REGRESSED_STABLY",
+        "episodes": 12,
+        "family": "difference",
+        "r1_exact": 1,
+        "r1_vs_v7": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 2
+        },
+        "r2_exact": 0,
+        "r2_vs_r1": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 1
+        },
+        "r2_vs_v7": {
+          "net_fixes": -2,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 2
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 1
+        },
+        "role": "TARGETED_EVALUATION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 9,
+          "010": 1,
+          "100": 2
+        }
+      },
+      {
+        "baseline_exact": 0,
+        "classification": "IMPROVED_STABLY",
+        "episodes": 12,
+        "family": "inside/contains",
+        "r1_exact": 3,
+        "r1_vs_v7": {
+          "net_fixes": 3,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 0
+        },
+        "r2_exact": 3,
+        "r2_vs_r1": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 1
+        },
+        "r2_vs_v7": {
+          "net_fixes": 3,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 0
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 1
+        },
+        "role": "TARGETED_EVALUATION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 8,
+          "001": 1,
+          "010": 1,
+          "011": 2
+        }
+      },
+      {
+        "baseline_exact": 5,
+        "classification": "REGRESSED_STABLY",
+        "episodes": 12,
+        "family": "orientation",
+        "r1_exact": 5,
+        "r1_vs_v7": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 1
+        },
+        "r2_exact": 4,
+        "r2_vs_r1": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 2
+        },
+        "r2_vs_v7": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 2
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 1
+        },
+        "role": "TARGETED_EVALUATION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 5,
+          "001": 1,
+          "010": 1,
+          "100": 1,
+          "110": 1,
+          "111": 3
+        }
+      },
+      {
+        "baseline_exact": 12,
+        "classification": "REGRESSED_STABLY",
+        "episodes": 12,
+        "family": "same color",
+        "r1_exact": 9,
+        "r1_vs_v7": {
+          "net_fixes": -3,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 3
+        },
+        "r2_exact": 6,
+        "r2_vs_r1": {
+          "net_fixes": -3,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 4
+        },
+        "r2_vs_v7": {
+          "net_fixes": -6,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 6
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 1,
+          "improved_r1_then_regressed_r2": 0
+        },
+        "role": "TARGETED_EVALUATION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "100": 2,
+          "101": 1,
+          "110": 4,
+          "111": 5
+        }
+      },
+      {
+        "baseline_exact": 2,
+        "classification": "MIXED_HIGH_CHURN",
+        "episodes": 12,
+        "family": "width",
+        "r1_exact": 0,
+        "r1_vs_v7": {
+          "net_fixes": -2,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 2
+        },
+        "r2_exact": 1,
+        "r2_vs_r1": {
+          "net_fixes": 1,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 0
+        },
+        "r2_vs_v7": {
+          "net_fixes": -1,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 1
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 1,
+          "improved_r1_then_regressed_r2": 0
+        },
+        "role": "TARGETED_EVALUATION",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 10,
+          "100": 1,
+          "101": 1
+        }
+      }
+    ],
+    "retention_below_v7_after_r2": [
+      {
+        "baseline_exact": 4,
+        "classification": "REGRESSED_STABLY",
+        "episodes": 16,
+        "family": "overlay",
+        "r1_exact": 4,
+        "r1_vs_v7": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 3,
+          "paired_harms_n10": 3
+        },
+        "r2_exact": 1,
+        "r2_vs_r1": {
+          "net_fixes": -3,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 4
+        },
+        "r2_vs_v7": {
+          "net_fixes": -3,
+          "paired_fixes_n01": 1,
+          "paired_harms_n10": 4
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 0,
+          "improved_r1_then_regressed_r2": 3
+        },
+        "role": "RETENTION_SENTINEL",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "000": 8,
+          "001": 1,
+          "010": 3,
+          "100": 3,
+          "110": 1
+        }
+      }
+    ],
+    "retention_recovered_r1_to_r2": [
+      {
+        "baseline_exact": 16,
+        "classification": "RECOVERED_IN_R2",
+        "episodes": 16,
+        "family": "rotate",
+        "r1_exact": 9,
+        "r1_vs_v7": {
+          "net_fixes": -7,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 7
+        },
+        "r2_exact": 16,
+        "r2_vs_r1": {
+          "net_fixes": 7,
+          "paired_fixes_n01": 7,
+          "paired_harms_n10": 0
+        },
+        "r2_vs_v7": {
+          "net_fixes": 0,
+          "paired_fixes_n01": 0,
+          "paired_harms_n10": 0
+        },
+        "repeated_flip_examples": {
+          "harmed_r1_then_recovered_r2": 7,
+          "improved_r1_then_regressed_r2": 0
+        },
+        "role": "RETENTION_SENTINEL",
+        "surface": "TARGET_DEV",
+        "transition_counts": {
+          "101": 7,
+          "111": 9
+        }
+      }
+    ]
+  },
+  "result_sha256s": {
+    "r1": "fee020b8ac8aa81df2e5862b9af8b6f84819cc2c237099f25a9c5067abd9c8a9",
+    "r2": "505841894ceb468b1623754c80cdae3fa359c66340c311e278d987749b219cb3",
+    "v7": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+  },
+  "schema_version": 1,
+  "status": "COMPLETE"
+}
