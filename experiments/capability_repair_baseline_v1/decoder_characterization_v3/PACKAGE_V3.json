@@ -1,0 +1,13 @@
+{
+  "contract_identity": "cb21cafb41a843391b836828e41653c9870f3d74d2bbe618dcfdc202302334f5",
+  "fresh_nonce_sha256": "10ec4fa3c03c66885824b40307a4f3f989c34f89400dc0b3a64e1ac01fdd90da",
+  "fresh_output_root": "/workspace/arc2/decoder_characterization_v3_run_001",
+  "launch_contract_sha256": "124e49f9415047cd94bc41b3dc8da3623e6b85ed47eccba00f110bd2f4b73b84",
+  "launch_core_sha256": "e190a003dc1ae7c6ddfa108765068223888612a78b2ec4604be683989ae5e8f4",
+  "package_id": "ARC2_DECODER_CHARACTERIZATION_PACKAGE_V3",
+  "reviewed_brief_sha256": "f6393787d34b25eeb2602b64c1ad82ab116d7843d601ab688cb31d6f63d6465b",
+  "schema_version": 1,
+  "status": "FROZEN_PENDING_NO_MODEL_PREFLIGHT",
+  "v2_preserved_as_rejected_pre_model_evidence": true,
+  "worker_source_commit": "52c97079de068489ac62d09888307c73fea32b7c"
+}

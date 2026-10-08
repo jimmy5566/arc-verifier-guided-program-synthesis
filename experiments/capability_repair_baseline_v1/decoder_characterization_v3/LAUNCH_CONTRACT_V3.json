@@ -1,0 +1,115 @@
+{
+  "argv": [
+    "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/collect_decoder_characterization_v1.py",
+    "--launch-contract",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v3/LAUNCH_CONTRACT_V3.json",
+    "--governor-review",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/orchestration/director/responses/GOVERNOR_REVIEW_FORWARD_BASELINE_DECODER_CHARACTERIZATION_V4.json",
+    "--output",
+    "/workspace/arc2/decoder_characterization_v3_run_001/DECODER_CHARACTERIZATION_RESULTS.json",
+    "--receipt",
+    "/workspace/arc2/decoder_characterization_v3_run_001/TERMINAL_RECEIPT.json"
+  ],
+  "authorization_request_sha256": "2c49607d8704ebe41f75006d474d52b979e517b148e27976832a8cd7cf0e3a94",
+  "checkpoint": {
+    "adapter_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+    "base_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "manifest_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  },
+  "cohort": {
+    "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v3/COHORT_MANIFEST_V2.json",
+    "sha256": "70e300e0d3c0fac4a1118b4f4b608c40ed757af988088c2b5d2f236718042e13"
+  },
+  "contract_id": "ARC2_DECODER_CHARACTERIZATION_LAUNCH_V2",
+  "contract_sha256": "cb21cafb41a843391b836828e41653c9870f3d74d2bbe618dcfdc202302334f5",
+  "datasets": {
+    "retention_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+    "retention_sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526",
+    "target_dev_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+    "target_dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+  },
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "PYTHONHASHSEED": "0",
+    "TOKENIZERS_PARALLELISM": "false"
+  },
+  "governor_review_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/orchestration/director/responses/GOVERNOR_REVIEW_FORWARD_BASELINE_DECODER_CHARACTERIZATION_V4.json",
+  "immutable_files": {
+    "baseline_identity": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/CAPABILITY_REPAIR_BASELINE_V1_IDENTITY.json",
+      "sha256": "d1ca26d0a5f1651d2987e4a0555a4751caa1ca1785f5d46e77ab83fc3dacaf3b"
+    },
+    "checkpoint_manifest": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+      "sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+    },
+    "cohort": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v3/COHORT_MANIFEST_V2.json",
+      "sha256": "70e300e0d3c0fac4a1118b4f4b608c40ed757af988088c2b5d2f236718042e13"
+    },
+    "collector_dependency": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/collect_capability_repair_baseline_v1.py",
+      "sha256": "953bdc13720d4d64d4bfbaf24a2c32b8917ab80bbe3dde4737813d3389f388ee"
+    },
+    "inference_contract": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
+      "sha256": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e"
+    },
+    "launch_validator": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/decoder_characterization_launch_v2.py",
+      "sha256": "0029ddc33fe09c85d67eade279b98e9db0564286e06c4f8b35e6dcdc363e3d39"
+    },
+    "nonce_source": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v3/NONCE_V3",
+      "sha256": "10ec4fa3c03c66885824b40307a4f3f989c34f89400dc0b3a64e1ac01fdd90da"
+    },
+    "parser_contract": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v3/DECODER_TOKEN_EXTRACTION_CONTRACT_V2_TARGET_BLIND.json",
+      "sha256": "8275d9c436f141361400340e381ef011d9e95ba1db46e47aef869f912a670d72"
+    },
+    "token_parser": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/arc2_token_grid_parser.py",
+      "sha256": "0716d6f2e043ea1993ba89891fd4b7146121d0abdb7ea5bffe69c6738c618689"
+    },
+    "worker": {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/collect_decoder_characterization_v1.py",
+      "sha256": "202791543004d573bc2a7dc7bde5fa7ca6322e32e0b8d63a244d61c817b97772"
+    }
+  },
+  "inference_contract_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
+  "launch_core_sha256": "e190a003dc1ae7c6ddfa108765068223888612a78b2ec4604be683989ae5e8f4",
+  "nonce_consumed_path": "/workspace/arc2/decoder_characterization_v3_run_001/NONCE_V3.CONSUMED.json",
+  "nonce_path": "/workspace/arc2/decoder_characterization_v3_run_001/NONCE_V3",
+  "nonce_sha256": "10ec4fa3c03c66885824b40307a4f3f989c34f89400dc0b3a64e1ac01fdd90da",
+  "output_path": "/workspace/arc2/decoder_characterization_v3_run_001/DECODER_CHARACTERIZATION_RESULTS.json",
+  "output_root": "/workspace/arc2/decoder_characterization_v3_run_001",
+  "preflight_argv": [
+    "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/collect_decoder_characterization_v1.py",
+    "--launch-contract",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_v3/LAUNCH_CONTRACT_V3.json",
+    "--governor-review",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/orchestration/director/responses/GOVERNOR_REVIEW_FORWARD_BASELINE_DECODER_CHARACTERIZATION_V4.json",
+    "--output",
+    "/workspace/arc2/decoder_characterization_v3_run_001/DECODER_CHARACTERIZATION_RESULTS.json",
+    "--receipt",
+    "/workspace/arc2/decoder_characterization_v3_run_001/TOKENIZER_PREFLIGHT_RECEIPT.json",
+    "--preflight"
+  ],
+  "preflight_receipt_path": "/workspace/arc2/decoder_characterization_v3_run_001/TOKENIZER_PREFLIGHT_RECEIPT.json",
+  "receipt_path": "/workspace/arc2/decoder_characterization_v3_run_001/TERMINAL_RECEIPT.json",
+  "reviewed_brief_sha256": "f6393787d34b25eeb2602b64c1ad82ab116d7843d601ab688cb31d6f63d6465b",
+  "runtime": {
+    "attention_backend": "sdpa",
+    "batch_size": 1,
+    "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "max_new_tokens": 512,
+    "runtime_cap_seconds": 1200
+  },
+  "schema_version": 1,
+  "source_root": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2",
+  "terminal_failure_receipt_path": "/workspace/arc2/decoder_characterization_v3_run_001/ADMISSION_FAILURE_RECEIPT.json",
+  "worker_source_commit": "52c97079de068489ac62d09888307c73fea32b7c"
+}

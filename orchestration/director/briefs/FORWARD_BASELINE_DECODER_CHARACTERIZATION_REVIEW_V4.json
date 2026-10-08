@@ -1,0 +1,30 @@
+{
+  "brief_id": "FORWARD_BASELINE_DECODER_CHARACTERIZATION_REVIEW_V4",
+  "decision_requested": "AUTHORIZE_TARGET_BLIND_12_ITEM_DECODER_CHARACTERIZATION",
+  "final_audit_opened": false,
+  "launch_core": {
+    "core_sha256": "e190a003dc1ae7c6ddfa108765068223888612a78b2ec4604be683989ae5e8f4",
+    "path": "experiments/capability_repair_baseline_v1/decoder_characterization_v3/LAUNCH_CORE_V3.json",
+    "sha256": "792280878e5486fd9b5efa6b4261974f968efef62b69456f306771945f4eef51"
+  },
+  "prior_v2_preflight_failure": {
+    "classification": "PRE_MODEL_ADMISSION_PATH_MISMATCH",
+    "no_gpu_inference": true,
+    "no_model_load": true,
+    "preserved_output_root": "/workspace/arc2/decoder_characterization_v2_run_001"
+  },
+  "request": "Authorize only a fresh target-blind 12-item decoder characterization. No correctness scoring, training, optimizer, full 288 rerun, or FINAL_AUDIT.",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "target_blind": {
+    "cohort_items": 12,
+    "exact_grid_match_emitted": false,
+    "held_out_outputs_read": false,
+    "roles": {
+      "RETENTION_SENTINEL": 4,
+      "TARGETED_COMPOSITION": 4,
+      "TARGETED_EVALUATION": 4
+    }
+  },
+  "worker_source_commit": "52c97079de068489ac62d09888307c73fea32b7c"
+}
