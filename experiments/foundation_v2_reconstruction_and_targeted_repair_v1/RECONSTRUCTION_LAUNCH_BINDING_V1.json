@@ -1,0 +1,233 @@
+{
+  "command": [
+    "python3",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_capability_pilot_2m_v1.py",
+    "--mode",
+    "train",
+    "--model-path",
+    "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "--novel-train-root",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/novel_training_data_v1_1/train/novel",
+    "--novel-validation-root",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/novel_training_data_v1_1/validation/novel",
+    "--replay-shard",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/arc_training_v2_1/train/replay/replay-00000.parquet",
+    "--freeze",
+    "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/freeze",
+    "--runtime",
+    "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/runtime",
+    "--checkpoints",
+    "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/checkpoints"
+  ],
+  "cumulative_cap_seconds": 28800,
+  "dataset_contracts": [
+    {
+      "manifest": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/novel_training_data_v1_1/NOVEL_TRAIN_SHARD_MANIFEST.json",
+      "manifest_content_sha256": "0c4e075c8609b9ff5f79915bb1e3e21e0fc8afe40d9b3146aeb4beded058d617",
+      "manifest_key": "shards",
+      "root": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/novel_training_data_v1_1/train/novel"
+    },
+    {
+      "manifest": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/novel_training_data_v1_1/NOVEL_VAL_SHARD_MANIFEST.json",
+      "manifest_content_sha256": "72702c5c1544613a7755ee93809ca3a535a585b441710eaf6c23b6fc09e56311",
+      "manifest_key": "shards",
+      "root": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/novel_training_data_v1_1/validation/novel"
+    }
+  ],
+  "no_gpu_training_started": true,
+  "output": {
+    "checkpoints": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/checkpoints",
+    "freeze": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/freeze",
+    "parent": "/workspace/arc2/active_runs",
+    "run_root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1",
+    "runtime": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/runtime"
+  },
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "required_files": [
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/added_tokens.json",
+      "sha256": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/config.json",
+      "sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/generation_config.json",
+      "sha256": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model-00001-of-00002.safetensors",
+      "sha256": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model-00002-of-00002.safetensors",
+      "sha256": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model.safetensors.index.json",
+      "sha256": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model_manifest.json",
+      "sha256": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/special_tokens_map.json",
+      "sha256": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/tokenizer.json",
+      "sha256": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/tokenizer_config.json",
+      "sha256": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90"
+    },
+    {
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/vocab.json",
+      "sha256": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/BEST_CHECKPOINT_RELOAD_AUDIT.json",
+      "sha256": "f8343df53b27a75028851612b0c3ef770c4f3a8ad6cc65aa905c932debd5b4ae"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/CHECKPOINT_SELECTION.json",
+      "sha256": "f837e636f28127ca5bb38f162ace3c4d8e8c4b7930203fa45f4fc4ec22e65ea2"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/NOVEL_VALIDATION_SENTINEL.json",
+      "sha256": "588596c6ea8bf57ba239d825ce72bfb72d1b4662f457074e9615ecd9ec46af01"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/PRETRAIN_DATA_POLICY_AUDIT.json",
+      "sha256": "7b3b13ee13ecda6bb3eb4716ab139d4666e81cc2ad254cdbc5f5ad7b80f0bbd3"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/REPLAY_RETENTION_SENTINEL.json",
+      "sha256": "23cd6e5095f8c5a9235aca1ab2697634e9a208739c9e3992260d6ca9c0b2b6de"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/TRAINING_CONFIG.json",
+      "sha256": "28a52e5c6be800f8b00ffbd79aca905e6aa1774870a0cf1a3f6d9132d53bfc6c"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/TRAINING_DISTRIBUTION_AUDIT.json",
+      "sha256": "5cf037f8c3e96ecf9b85e8e84cadc3b2605b12ec65fb319004b8250b6bee7297"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/TRAINING_RESULT.json",
+      "sha256": "361026eee0ad6c630076875878cfc78b181967d79ba8502d68af76c6fa4fa924"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/TRAINING_SCHEDULE_2M.json",
+      "sha256": "cd4f5e384a23eb99836c3418de121f0571e48c257f24016684761bae3fea1cc0"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/foundation_v2_capability_diagnostic_v1/FOUNDATION_V2_CAPABILITY_PROFILE.json",
+      "sha256": "5f35a3ff96c681a9d316f852955dc51ec75fe667c0635da1533151e209944574"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/foundation_v2_capability_diagnostic_v1/MODEL_IDENTITY_AUDIT.json",
+      "sha256": "6c2b49fbfe40c1a001819063c67f477de8017a93ebd428b1b1bf02661b02685b"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/generation_capability_audit_v1/GENERATION_CONFIG.json",
+      "sha256": "99afd94c26c37b8d96c04783061f6b83518b40164c6d09a4d6ff738e9d5dc880"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/generation_capability_audit_v1/NOVEL_GENERATION_RESULTS.json",
+      "sha256": "b9fbb9779817bc8852708326e55c0023db0a2c3420a0eb551279ebab952fbe4d"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/generation_capability_audit_v1/REPLAY_GENERATION_RESULTS.json",
+      "sha256": "b09c2670ec069183d6350ba0cb868c3e0dd7d0480325b457050a1f0bf7251100"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/targeted_capability_repair_v1/TARGETED_CAPABILITY_REPAIR_GPU_TIME_LEDGER.jsonl",
+      "sha256": "7d19684fd198482d8862dbf2110711f183ed86b58d9d9dff2922cc9cb9b891cc"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/targeted_capability_repair_v1/data/RETENTION_SENTINEL.jsonl",
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/orchestration/director/directives/DIRECTOR_DIRECTIVE_005.json",
+      "sha256": "20d8adb9a45460eb7e5089fb5414b5a847b6d41cebab12c5c6968fbf4b7e055b"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_capability_pilot_2m_v1.py",
+      "sha256": "7e83af1ab89b5a7ab84f88c15eeb89a26b95dee54cb9c25d9b138af2325264e6"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src/capability_pilot_2m_v1/pilot.py",
+      "sha256": "a88a5e358c22f9c9f39768390fd7d3bafe31ff8a4239e553f20271eaf5d11224"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src/capability_pilot_2m_v1/__init__.py",
+      "sha256": "4278aefb607c456c3fd6895166820387b2b9bcd0f5be467dfc919b2c40a6540b"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/preflight_foundation_v2_reconstruction_v1.py",
+      "sha256": "d3d64f2963d3a0160e70845560e00fcc7bd308a4212112712f65b3918cee1bda"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_foundation_v2_reconstruction_v1.py",
+      "sha256": "6e8aa8fd2569757a938ae495fbd234cf1a2e5539354a4d6983d4ae78cf846bce"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/record_targeted_capability_repair_gpu_time.py",
+      "sha256": "ad2251319f6e3cc0187fd3a17fe4b84900602ea76078bac6621a90ad542e67ea"
+    },
+    {
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/data/processed/arc_training_v2_1/train/replay/replay-00000.parquet",
+      "sha256": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc"
+    }
+  ],
+  "reservation_seconds": 7200,
+  "schema_version": 1,
+  "source_provenance": {
+    "entries": [
+      {
+        "containing_commit": "e6730020703215908d64b484b192cf054768f3c5",
+        "file_sha256": "7e83af1ab89b5a7ab84f88c15eeb89a26b95dee54cb9c25d9b138af2325264e6",
+        "git_blob_sha": "9e08cf466fe5ea977431e172a83ff7b58e96008c",
+        "path": "scripts/run_capability_pilot_2m_v1.py"
+      },
+      {
+        "containing_commit": "e6730020703215908d64b484b192cf054768f3c5",
+        "file_sha256": "a88a5e358c22f9c9f39768390fd7d3bafe31ff8a4239e553f20271eaf5d11224",
+        "git_blob_sha": "db292590fa575af1e003a7efc3fd3dc3be9250a8",
+        "path": "src/capability_pilot_2m_v1/pilot.py"
+      },
+      {
+        "containing_commit": "e6730020703215908d64b484b192cf054768f3c5",
+        "file_sha256": "4278aefb607c456c3fd6895166820387b2b9bcd0f5be467dfc919b2c40a6540b",
+        "git_blob_sha": "b3d5be5d3c5609b62c4364c866c494f06a675f32",
+        "path": "src/capability_pilot_2m_v1/__init__.py"
+      },
+      {
+        "containing_commit": "e6730020703215908d64b484b192cf054768f3c5",
+        "file_sha256": "d3d64f2963d3a0160e70845560e00fcc7bd308a4212112712f65b3918cee1bda",
+        "git_blob_sha": "e7d70a022b7c1206135c862ee7a3b60f12a24023",
+        "path": "scripts/preflight_foundation_v2_reconstruction_v1.py"
+      },
+      {
+        "containing_commit": "e6730020703215908d64b484b192cf054768f3c5",
+        "file_sha256": "6e8aa8fd2569757a938ae495fbd234cf1a2e5539354a4d6983d4ae78cf846bce",
+        "git_blob_sha": "a2749de2496faf3fb91a263c60212bedbbd204e5",
+        "path": "scripts/run_foundation_v2_reconstruction_v1.py"
+      },
+      {
+        "containing_commit": "e6730020703215908d64b484b192cf054768f3c5",
+        "file_sha256": "ad2251319f6e3cc0187fd3a17fe4b84900602ea76078bac6621a90ad542e67ea",
+        "git_blob_sha": "729f84613d5c19b38c7bf3eef19286c363b1464e",
+        "path": "scripts/record_targeted_capability_repair_gpu_time.py"
+      }
+    ],
+    "historical_d7b489e7": "artifact provenance only; executable did not exist there",
+    "reviewed_executable_commit": "e6730020703215908d64b484b192cf054768f3c5"
+  },
+  "status": "FROZEN_PENDING_PREFLIGHT"
+}

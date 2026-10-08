@@ -1,0 +1,18 @@
+{
+  "files": {
+    "CAPABILITY_DIRECTION_SUBSET_V1.json": "3d0b8d203ef33d494b3bfbdc697b49df067dcdde098c5da51305f87e1bb2be69",
+    "FOUNDATION_V2_RECONSTRUCTION_PROTOCOL.json": "d265a25b6e25f2e25d00ce970b4b8f8caaabde9911a8c553c9d22ead03355b53",
+    "FOUNDATION_V2_RECONSTRUCTION_PROTOCOL.md": "3ea027402e7337a00b31c359c255adfa426d49f1ccef59b9cbb973e6d2afd42d",
+    "RECONSTRUCTED_V2_RECIPE_FREEZE.json": "67d5f70bdf4925efa2b3218184ab587f36cf93e6d43860570e4e7caecfa60e8b",
+    "RECONSTRUCTION_BUDGET_RESERVATION.json": "10404da899edf8100be5312aa16b14127b89c3f00390766c329ab22f72d99cf7",
+    "RECONSTRUCTION_EQUIVALENCE_GATE.json": "7417fe212e04af221bc3f496e6278958ec9746c51635278a366f3b681df27124",
+    "RECONSTRUCTION_LAUNCH_BINDING_V1.json": "ca325adde300703a4e34b7a99c25c2d414c9b034410be17b11320e4022e756ff",
+    "RECONSTRUCTION_SOURCE_ARTIFACT_HASHES.json": "a516d2eba7b9e91a11d2cedea80f305d578a929ef9fc8432c072cbe093d1291d"
+  },
+  "gpu_training_started": false,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "revision": "ADDITIVE_V2_DOES_NOT_REWRITE_V1",
+  "schema_version": 2,
+  "scientific_boundary": "No frozen data, recipe, gate threshold, Gold exclusion, or final-audit rule is modified. The launch binding freezes executable provenance and runtime controls only.",
+  "status": "FROZEN_PENDING_MOUNTED_PREFLIGHT_AND_DIRECTOR_AUTHORIZATION"
+}
