@@ -170,7 +170,7 @@
     },
     {
       "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/preflight_foundation_v2_reconstruction_v1.py",
-      "sha256": "e6071a077dfc15f57cd0adcc0549aa9b84e22e948d9e9d6643b21ba71bf04ef0"
+      "sha256": "f312a69a9044f0547dd6ccfb80dc188d52eb94847933a93e67e85eb7132ead0a"
     },
     {
       "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_foundation_v2_reconstruction_v1.py",
@@ -190,44 +190,44 @@
   "source_provenance": {
     "entries": [
       {
-        "containing_commit": "7121bee2becf280c955e7210307a23cd6c23ba73",
+        "containing_commit": "c495646a2e26711f7e64b35b59dcf7b451ae90ca",
         "file_sha256": "7e83af1ab89b5a7ab84f88c15eeb89a26b95dee54cb9c25d9b138af2325264e6",
         "git_blob_sha": "9e08cf466fe5ea977431e172a83ff7b58e96008c",
         "path": "scripts/run_capability_pilot_2m_v1.py"
       },
       {
-        "containing_commit": "7121bee2becf280c955e7210307a23cd6c23ba73",
+        "containing_commit": "c495646a2e26711f7e64b35b59dcf7b451ae90ca",
         "file_sha256": "a88a5e358c22f9c9f39768390fd7d3bafe31ff8a4239e553f20271eaf5d11224",
         "git_blob_sha": "db292590fa575af1e003a7efc3fd3dc3be9250a8",
         "path": "src/capability_pilot_2m_v1/pilot.py"
       },
       {
-        "containing_commit": "7121bee2becf280c955e7210307a23cd6c23ba73",
+        "containing_commit": "c495646a2e26711f7e64b35b59dcf7b451ae90ca",
         "file_sha256": "4278aefb607c456c3fd6895166820387b2b9bcd0f5be467dfc919b2c40a6540b",
         "git_blob_sha": "b3d5be5d3c5609b62c4364c866c494f06a675f32",
         "path": "src/capability_pilot_2m_v1/__init__.py"
       },
       {
-        "containing_commit": "7121bee2becf280c955e7210307a23cd6c23ba73",
-        "file_sha256": "e6071a077dfc15f57cd0adcc0549aa9b84e22e948d9e9d6643b21ba71bf04ef0",
-        "git_blob_sha": "96ed5469fc9e4fa4da5c50b057acc89cc3e6d82e",
+        "containing_commit": "c495646a2e26711f7e64b35b59dcf7b451ae90ca",
+        "file_sha256": "f312a69a9044f0547dd6ccfb80dc188d52eb94847933a93e67e85eb7132ead0a",
+        "git_blob_sha": "181868d124e7ef28e64991f6cf2ccbd7fc6407bd",
         "path": "scripts/preflight_foundation_v2_reconstruction_v1.py"
       },
       {
-        "containing_commit": "7121bee2becf280c955e7210307a23cd6c23ba73",
+        "containing_commit": "c495646a2e26711f7e64b35b59dcf7b451ae90ca",
         "file_sha256": "6e8aa8fd2569757a938ae495fbd234cf1a2e5539354a4d6983d4ae78cf846bce",
         "git_blob_sha": "a2749de2496faf3fb91a263c60212bedbbd204e5",
         "path": "scripts/run_foundation_v2_reconstruction_v1.py"
       },
       {
-        "containing_commit": "7121bee2becf280c955e7210307a23cd6c23ba73",
+        "containing_commit": "c495646a2e26711f7e64b35b59dcf7b451ae90ca",
         "file_sha256": "ad2251319f6e3cc0187fd3a17fe4b84900602ea76078bac6621a90ad542e67ea",
         "git_blob_sha": "729f84613d5c19b38c7bf3eef19286c363b1464e",
         "path": "scripts/record_targeted_capability_repair_gpu_time.py"
       }
     ],
     "historical_d7b489e7": "artifact provenance only; executable did not exist there",
-    "reviewed_executable_commit": "7121bee2becf280c955e7210307a23cd6c23ba73"
+    "reviewed_executable_commit": "c495646a2e26711f7e64b35b59dcf7b451ae90ca"
   },
   "status": "FROZEN_PENDING_PREFLIGHT"
 }
