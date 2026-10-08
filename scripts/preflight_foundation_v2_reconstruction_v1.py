@@ -70,7 +70,7 @@ def main() -> int:
     binding = json.loads(raw.decode("utf-8"))
     output = {"schema_version": 1, "status": "FAIL_CLOSED", "launch_binding_sha256": hashlib.sha256(raw).hexdigest(), "no_optimizer_constructed": True}
     try:
-        if binding.get("schema_version") != 1 or binding.get("status") != "FROZEN_PENDING_PREFLIGHT":
+        if binding.get("schema_version") not in {1, 2} or binding.get("status") not in {"FROZEN_PENDING_PREFLIGHT", "FROZEN_PENDING_GPU_RUNTIME_PREFLIGHT"}:
             raise RuntimeError("INVALID_RECONSTRUCTION_LAUNCH_BINDING")
         source = binding["source_provenance"]
         if args.expected_source_sha:
