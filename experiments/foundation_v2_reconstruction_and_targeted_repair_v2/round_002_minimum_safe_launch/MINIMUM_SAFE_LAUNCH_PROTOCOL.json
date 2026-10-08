@@ -1,0 +1,10 @@
+{
+  "binding_sha256": "81c7285902a53a6175af1de09a754f505688c169c7dbc2baf520fd057c9af0d6",
+  "contract_sha256": "35b6524b512c418f172a11e4aae3109207e2ff3244fdf70ad9fd1ffa56a55f6f",
+  "minimum_safe_launch_gate": "A-G only; later-stage controls remain required immediately before their first use.",
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_002",
+  "schema_version": 2,
+  "scientific_training_started": false,
+  "status": "FROZEN_MINIMUM_SAFE_LAUNCH_POLICY"
+}
