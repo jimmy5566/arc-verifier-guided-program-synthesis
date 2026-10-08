@@ -15,6 +15,7 @@ def main()->int:
  want='A_GENERATION' if a.phase=='a' else 'B_SEALED_SCORING'
  if b.get('phase')!=want: fail('PHASE_BINDING_MISMATCH')
  if b.get('protocol_id')!=d.get('protocol_id') or b.get('round_id')!=d.get('round_id'): fail('DIRECTIVE_BINDING_SCOPE_MISMATCH')
+ if b.get('authorization_directive_sha256') != sha(a.directive) or b.get('authorization_directive_id') != d.get('directive_id'): fail('DIRECTIVE_IDENTITY_MISMATCH')
  actual=subprocess.check_output(['git','-C',str(a.source_root),'rev-parse','HEAD'],text=True).strip()
  lock=json.loads(a.runtime_lock.read_text(encoding='utf-8-sig'))
  if lock.get('binding_sha256') != sha(a.binding) or lock.get('phase') != want or lock.get('nonce') != b.get('nonce'): fail('RUNTIME_LOCK_BINDING_MISMATCH')
