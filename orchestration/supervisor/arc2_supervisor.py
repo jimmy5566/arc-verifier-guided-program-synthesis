@@ -35,6 +35,33 @@ def atomic_json(path: Path, value: dict[str, Any]) -> None:
     os.replace(temporary, path)
 
 
+def decode_structured_utf8(value: bytes, source: str) -> str:
+    """Decode protocol output strictly; malformed bytes are a visible failure."""
+    try:
+        return value.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as error:
+        raise RuntimeError(f"{source}_UTF8_DECODE_ERROR:{error.start}:{error.end}") from error
+
+
+def decode_human_utf8(value: bytes) -> str:
+    """Human diagnostics may be lossy, but never crash a reader thread."""
+    return value.decode("utf-8", errors="replace")
+
+
+def prompt_controller(command: list[str], timeout: int) -> tuple[int, str]:
+    """Submit a Herdr prompt and fail closed on non-UTF-8 or malformed JSON."""
+    completed = subprocess.run(command, capture_output=True, check=False, timeout=timeout)
+    if completed.returncode != 0:
+        return completed.returncode, decode_human_utf8(completed.stderr or completed.stdout)[-1000:]
+    try:
+        payload = json.loads(decode_structured_utf8(completed.stdout, "HERDR_STRUCTURED_OUTPUT"))
+    except (RuntimeError, json.JSONDecodeError) as error:
+        return 1, f"HERDR_STRUCTURED_JSON_PARSE_ERROR:{error}"[-1000:]
+    if not isinstance(payload, dict):
+        return 1, "HERDR_STRUCTURED_JSON_NOT_OBJECT"
+    return 0, ""
+
+
 def default_state() -> dict[str, Any]:
     return {
         "schema_version": 1,
@@ -172,21 +199,17 @@ class Supervisor:
                 f'"training_started":false}}. '
                 "If that matching acknowledgement already exists, do not rewrite it."
             )
-            completed = subprocess.run(
-                ["herdr", "agent", "prompt", controller_agent, prompt],
-                text=True,
-                capture_output=True,
-                check=False,
-                timeout=herdr_timeout_seconds,
+            exit_code, error = prompt_controller(
+                ["herdr", "agent", "prompt", controller_agent, prompt], herdr_timeout_seconds,
             )
-            record["controller_wakeup_cli_exit_code"] = completed.returncode
-            if completed.returncode == 0:
+            record["controller_wakeup_cli_exit_code"] = exit_code
+            if exit_code == 0:
                 record["controller_wakeup_status"] = "SENT"
                 record["controller_wakeup_count"] = 1
                 woken.append(round_id)
             else:
                 record["controller_wakeup_status"] = "DELIVERY_UNKNOWN_FAIL_CLOSED"
-                record["controller_wakeup_error"] = (completed.stderr or completed.stdout)[-1000:]
+                record["controller_wakeup_error"] = error
             self.save()
         return woken
 
@@ -292,21 +315,17 @@ class Supervisor:
                 f'"scientific_training_started":false}}. '
                 "If that matching acknowledgement already exists, do not rewrite it."
             )
-            completed = subprocess.run(
-                ["herdr", "agent", "prompt", controller_agent, prompt],
-                text=True,
-                capture_output=True,
-                check=False,
-                timeout=herdr_timeout_seconds,
+            exit_code, error = prompt_controller(
+                ["herdr", "agent", "prompt", controller_agent, prompt], herdr_timeout_seconds,
             )
-            record["controller_wakeup_cli_exit_code"] = completed.returncode
-            if completed.returncode == 0:
+            record["controller_wakeup_cli_exit_code"] = exit_code
+            if exit_code == 0:
                 record["controller_wakeup_status"] = "SENT"
                 record["controller_wakeup_count"] = 1
                 woken.append(directive_id)
             else:
                 record["controller_wakeup_status"] = "DELIVERY_UNKNOWN_FAIL_CLOSED"
-                record["controller_wakeup_error"] = (completed.stderr or completed.stdout)[-1000:]
+                record["controller_wakeup_error"] = error
             self.save()
         return woken
 
@@ -349,19 +368,20 @@ def remote_shell(target: str, script: str, identity_file: str | None = None) -> 
     # echoed by that gateway.
     line = f"echo {encoded} | base64 -d | bash; printf '__ARC2_REMOTE_END__\\n'; exit"
     payload = f"\x1b[200~{line}\x1b[201~\r"
-    completed = subprocess.run(command, input=payload, text=True, capture_output=True, check=False, timeout=45)
+    completed = subprocess.run(command, input=payload.encode("utf-8"), capture_output=True, check=False, timeout=45)
+    stdout = decode_structured_utf8(completed.stdout, "REMOTE_STRUCTURED_OUTPUT")
     # A forced-PTY gateway can echo the bracketed-paste command verbatim.
     # The marker must therefore arrive as its own output line, never merely as
     # text embedded in the echoed command, before a metadata scan is trusted.
     marker = "__ARC2_REMOTE_END__"
-    marker_lines = [line.strip() for line in completed.stdout.splitlines()]
+    marker_lines = [line.strip() for line in stdout.splitlines()]
     # The completion JSON is base64-hidden inside the submitted command, so an
     # echoed command cannot forge it.  Require both it and the terminal marker.
     if completed.returncode != 0 or marker not in marker_lines or completion not in marker_lines:
         raise RuntimeError(f"remote metadata scan failed (exit={completed.returncode})")
     # Split at the actual marker line, not the marker text embedded in the
     # terminal's echo of the submitted command.
-    lines = completed.stdout.splitlines()
+    lines = stdout.splitlines()
     marker_index = max(index for index, line in enumerate(lines) if line.strip() == marker)
     return "\n".join(lines[:marker_index])
 
