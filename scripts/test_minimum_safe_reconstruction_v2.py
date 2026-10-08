@@ -23,6 +23,10 @@ class MinimumSafeLaunchTest(unittest.TestCase):
   text=(ROOT/'scripts'/'launch_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
   self.assertIn('read(args.binding)',text)
   self.assertIn('WRAPPER_FAILED_TERMINAL_RECEIPT_WRITTEN',text)
+ def test_launcher_allows_dispatch_owned_log_directory(self):
+  text=(ROOT/'scripts'/'launch_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
+  self.assertIn("prepare_log.parent.mkdir(parents=True,exist_ok=True)",text)
+
  def test_preflight_allows_only_its_control_plane_log(self):
   text=(ROOT/'scripts'/'preflight_minimum_safe_reconstruction_v2.py').read_text(encoding='utf8')
   self.assertIn("'preflight.log'",text)
