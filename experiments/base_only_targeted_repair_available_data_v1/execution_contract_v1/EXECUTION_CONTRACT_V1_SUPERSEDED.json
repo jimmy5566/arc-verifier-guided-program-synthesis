@@ -1,0 +1,7 @@
+{
+  "gpu_training_started": false,
+  "reason": "input_mount_path_was_inside_declared_fresh_run_root",
+  "schema_version": 1,
+  "status": "SUPERSEDED_NOT_LAUNCHABLE",
+  "successor": "../execution_contract_v2/LAUNCH_BINDING_V1.json"
+}\n
