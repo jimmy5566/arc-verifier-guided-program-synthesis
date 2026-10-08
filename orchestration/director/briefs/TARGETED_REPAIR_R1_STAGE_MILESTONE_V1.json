@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "stage": "BASELINE_CHARACTERIZATION_TO_TARGETED_CAPABILITY_REPAIR",
+  "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1",
+  "corrected_baseline": {
+    "round_id": "FORWARD_BASELINE_EVALUATION_V7_BATCH32",
+    "target_dev": "76/192 = 39.58%",
+    "atomic": "45/96 = 46.88%",
+    "composition": "31/96 = 32.29%",
+    "retention": "70/96 = 72.92%",
+    "parse_valid": "288/288",
+    "summary_sha256": "fff64a4d4b15fcb97b5bb355027a5dcc85a7f5c2d637a97600c8786c1eaf8956"
+  },
+  "primary_atomic_deficits": [
+    "connected components",
+    "inside/contains",
+    "difference",
+    "width",
+    "orientation"
+  ],
+  "primary_composition_deficits": [
+    "conditional action",
+    "mask set",
+    "relation-selector action"
+  ],
+  "proposed_training_mix": {
+    "atomic_repair": 0.5,
+    "composition_repair": 0.3,
+    "replay_retention_preserving_train_data": 0.2,
+    "retention_sentinel": "EVALUATION_ONLY_NOT_TRAINING_DATA"
+  },
+  "budget_seconds": {
+    "historical_reconstruction": 3739.722,
+    "remaining_cumulative": 25060.278,
+    "r1_maximum": 7200
+  },
+  "r1_evaluation_plan": "Compare corrected V7 S0 against R1 checkpoints on the same frozen atomic DEV, composition DEV, and retention sentinel.",
+  "final_audit_opened": false,
+  "question": "Is this V7-derived targeted-repair R1 design scientifically reasonable, and what is the smallest change, if any, required before R1?"
+}
