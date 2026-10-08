@@ -35,6 +35,28 @@ class ReconstructionRuntimeControlsTest(unittest.TestCase):
             self.assertEqual(2,len(ledger.read_text(encoding="utf-8").splitlines()))
             self.assertGreater(json.loads(snapshot.read_text(encoding="utf-8"))["charged_new_gpu_training_seconds"],0)
 
+    def test_preflight_failure_writes_machine_readable_receipt(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            missing = root / "missing.txt"
+            binding = root / "binding.json"
+            binding.write_text(json.dumps({
+                "schema_version": 1,
+                "status": "FROZEN_PENDING_PREFLIGHT",
+                "source_provenance": {"commit": "dummy"},
+                "required_files": [{"path": str(missing), "sha256": "0" * 64}],
+                "command": ["dummy"],
+                "output": {"parent": str(root)},
+                "dataset_contracts": [],
+            }), encoding="utf-8")
+            receipt = root / "failed-preflight.json"
+            run = subprocess.run([sys.executable, str(PREFLIGHT), "--binding", str(binding), "--output", str(receipt)], capture_output=True, text=True)
+            self.assertNotEqual(0, run.returncode)
+            payload = json.loads(receipt.read_text(encoding="utf-8"))
+            self.assertEqual("FAIL_CLOSED", payload["status"])
+            self.assertTrue(payload["no_optimizer_constructed"])
+            self.assertTrue(payload["failure"].startswith("RuntimeError:REQUIRED_FILE_MISSING:"))
+
     def test_dummy_active_cap_interrupts_and_finalizes(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
             root=Path(raw); _, preflight, ledger, snapshot=self.fixture(root)

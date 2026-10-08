@@ -68,33 +68,27 @@ def main() -> int:
     args = p.parse_args()
     raw = args.binding.read_bytes()
     binding = json.loads(raw.decode("utf-8"))
-    if binding.get("schema_version") != 1 or binding.get("status") != "FROZEN_PENDING_PREFLIGHT":
-        raise RuntimeError("INVALID_RECONSTRUCTION_LAUNCH_BINDING")
-    source = binding["source_provenance"]
-    if args.expected_source_sha:
-        here = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
-        if here != args.expected_source_sha:
-            raise RuntimeError("LOCAL_SOURCE_SHA_MISMATCH")
-    verified = [checked_file(item) for item in binding["required_files"]]
-    datasets = [checked_dataset(item) for item in binding.get("dataset_contracts", [])]
-    output_parent = Path(binding["output"]["parent"])
-    if not output_parent.is_dir():
-        raise RuntimeError(f"OUTPUT_PARENT_MISSING:{output_parent}")
-    output = {
-        "schema_version": 1,
-        "status": "PASS",
-        "launch_binding_sha256": hashlib.sha256(raw).hexdigest(),
-        "source": source,
-        "verified_files": verified,
-        "verified_datasets": datasets,
-        "command": binding["command"],
-        "output": binding["output"],
-        "no_optimizer_constructed": True,
-    }
+    output = {"schema_version": 1, "status": "FAIL_CLOSED", "launch_binding_sha256": hashlib.sha256(raw).hexdigest(), "no_optimizer_constructed": True}
+    try:
+        if binding.get("schema_version") != 1 or binding.get("status") != "FROZEN_PENDING_PREFLIGHT":
+            raise RuntimeError("INVALID_RECONSTRUCTION_LAUNCH_BINDING")
+        source = binding["source_provenance"]
+        if args.expected_source_sha:
+            here = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+            if here != args.expected_source_sha:
+                raise RuntimeError("LOCAL_SOURCE_SHA_MISMATCH")
+        verified = [checked_file(item) for item in binding["required_files"]]
+        datasets = [checked_dataset(item) for item in binding.get("dataset_contracts", [])]
+        output_parent = Path(binding["output"]["parent"])
+        if not output_parent.is_dir():
+            raise RuntimeError(f"OUTPUT_PARENT_MISSING:{output_parent}")
+        output.update({"status": "PASS", "source": source, "verified_files": verified, "verified_datasets": datasets, "command": binding["command"], "output": binding["output"]})
+    except Exception as error:
+        output["failure"] = f"{type(error).__name__}:{error}"
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(output, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
-    print(json.dumps({"status": "PASS", "launch_binding_sha256": output["launch_binding_sha256"]}, sort_keys=True))
-    return 0
+    print(json.dumps({"status": output["status"], "launch_binding_sha256": output["launch_binding_sha256"]}, sort_keys=True))
+    return 0 if output["status"] == "PASS" else 1
 
 
 if __name__ == "__main__":
