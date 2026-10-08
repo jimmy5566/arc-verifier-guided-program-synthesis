@@ -1,0 +1,40 @@
+{
+  "artifact_hashes": {
+    "NOVEL_GENERATION_INPUT_MANIFEST.json": "50f156c1da6afb465f55a1d3420c6a65a2cf008b3391d3a317154d7055dc7b26",
+    "PROTECTED_CAPABILITY_INPUT_MANIFEST.json": "e8132701c5aa4b97e0b81941851731e40eccfd358c0ee9e2170e937bcea1633e",
+    "REPLAY_GENERATION_INPUT_MANIFEST.json": "2c91a106655fd7e462933f001d3ed2bb1a034ade55cc636346c9068e27832211",
+    "ROUND_009_EQUIVALENCE_EVALUATION_GATE.json": "013bd3c05fff0ff86f71c5cf720481a5091dee0ef81b9e1bc913be66741aa429",
+    "ROUND_009_EVALUATION_PREFLIGHT_CPU_ONLY.json": "cd489ee280962b3a04302f8fa9f36d60035d1cf677be3be042e8363ce6f3c1cb",
+    "ROUND_009_TARGET_BLIND_EVALUATION_CONTRACT.json": "b48af89e13d10801d18a6c529f3f3edaefea95f8e2423abbff18fe19dc0203b6"
+  },
+  "blocked_requirement": {
+    "name": "exact sealed post-generation reference scorer",
+    "preflight_status": "BLOCKED",
+    "reason": "No established sealed reference-output identity or scorer contract exists. Binding an invented reference source would alter a scientific validity boundary."
+  },
+  "brief_id": "DIRECTOR_BRIEF_020",
+  "completed_requirements": [
+    "completed round and selected checkpoint preserved",
+    "round scoped thresholds frozen unchanged",
+    "target blind input manifests frozen",
+    "no Gold/final audit/targeted data policy frozen",
+    "CPU-only validation PASS",
+    "evaluation package committed and pushed"
+  ],
+  "created_at_utc": "2026-10-08T10:36:27.233553Z",
+  "directive_id": "DIRECTOR_DIRECTIVE_019",
+  "directive_sha256": "57c1b27cfa73919c04df80e457dc0fe57ae106afb4bb85c80d2cc4b137f35510",
+  "evaluation_execution_started": false,
+  "final_audit_accessed": false,
+  "head_commit": "6de7b2a3",
+  "model_loading_started": false,
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "requested_decision": "Provide the smallest valid sealed-reference scorer/provenance path or explicitly authorize a new evaluation subprotocol. No inference, targeted repair, or FINAL_AUDIT will begin without it.",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "schema_version": 1,
+  "scientific_training_started": true,
+  "selected_checkpoint": {
+    "adapter_config_sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+  }
+}
