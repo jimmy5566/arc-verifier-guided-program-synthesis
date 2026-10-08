@@ -1,0 +1,340 @@
+{
+  "budget_contract": {
+    "active_cap_policy": "worker refuses new optimizer steps at soft deadline; wrapper hard-stops at reservation; only worker-declared optimizer intervals are charged.",
+    "cap_seconds": 28800,
+    "pre_optimizer_failure_charge_seconds": 0.0,
+    "reservation_seconds": 7200,
+    "scientific_seconds_before_launch": 0.0
+  },
+  "dataset_contracts": [
+    {
+      "manifest": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/novel_training_data_v1_1/NOVEL_TRAIN_SHARD_MANIFEST.json",
+      "manifest_content_sha256": "0c4e075c8609b9ff5f79915bb1e3e21e0fc8afe40d9b3146aeb4beded058d617",
+      "manifest_key": "shards",
+      "pool": "POOL_NOVEL_V1_1",
+      "root": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel"
+    },
+    {
+      "manifest": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/novel_training_data_v1_1/NOVEL_VAL_SHARD_MANIFEST.json",
+      "manifest_content_sha256": "72702c5c1544613a7755ee93809ca3a535a585b441710eaf6c23b6fc09e56311",
+      "manifest_key": "shards",
+      "pool": "POOL_NOVEL_V1_1_VALIDATION_ONLY",
+      "root": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel"
+    }
+  ],
+  "fresh_paths": {
+    "accounting_state": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/runtime/OPTIMIZER_ACCOUNTING_STATE.json",
+    "checkpoints": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/checkpoints",
+    "freeze": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/freeze",
+    "ledger": "/workspace/arc2/scientific_ledgers/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V7.jsonl",
+    "ledger_snapshot": "/workspace/arc2/scientific_ledgers/ARC2_CUMULATIVE_NEW_GPU_TRAINING_LEDGER_V7_SNAPSHOT.json",
+    "logs": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/logs",
+    "nonce_consumption": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/authorization/nonce_consumption",
+    "preflight": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/preflight/MINIMUM_SAFE_PREFLIGHT.json",
+    "reservation": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/authorization/GPU_RESERVATION.json",
+    "run_root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005",
+    "runtime": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/runtime",
+    "terminal_receipt": "/workspace/arc2/orchestration/rounds/ROUND_RECONSTRUCTED_FOUNDATION_V2_V2_005/RECONSTRUCTED_FOUNDATION_V2_V2_005_TERMINAL_RECEIPT.json"
+  },
+  "identity_claim": "RECONSTRUCTED_FROM_FROZEN_RECIPE_NEW_ADAPTER",
+  "model_identity": "RECONSTRUCTED_FOUNDATION_V2_V2_005",
+  "not_claimed": [
+    "ORIGINAL_FOUNDATION_V2_ADAPTER_RECOVERED",
+    "BITWISE_ADAPTER_REPRODUCTION",
+    "REUSE_OF_CLOSED_V1_ROUND_OR_PROTOCOL"
+  ],
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V2",
+  "recipe": {
+    "adaptation": {
+      "attention_backend": "sdpa",
+      "base_model_frozen": true,
+      "context_length": 8704,
+      "effective_episode_batch": 4,
+      "gradient_accumulation_steps": 4,
+      "gradient_checkpointing": true,
+      "learning_rate": 5e-05,
+      "lora_alpha": 32,
+      "lora_dropout": 0.0,
+      "lora_rank": 64,
+      "lr_schedule": "linear warmup for optimizer steps 1-3, then constant",
+      "micro_batch_size": 1,
+      "optimizer": "bitsandbytes.optim.PagedAdamW8bit",
+      "precision": "BF16",
+      "quantization": "NONE",
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ]
+    },
+    "historical_execution_reference": {
+      "actual_supervised_tokens": 995995,
+      "actual_transformer_tokens": 2017545,
+      "environment": {
+        "bitsandbytes": "0.50.2",
+        "cuda": "12.8",
+        "gpu": "NVIDIA GeForce RTX 3090",
+        "peft": "0.17.1",
+        "python": "3.11.13",
+        "torch": "2.8.0+cu128",
+        "transformers": "4.55.4"
+      },
+      "historical_source_commit": "d7b489e73835011230a6d2c4fd70e21f515ac152",
+      "historical_training_wall_seconds": 3674.7991217318922,
+      "nominal_transformer_token_budget": 2000000,
+      "optimizer_steps": 172
+    },
+    "sampling_and_order": {
+      "pool_draws_per_optimizer_step": {
+        "POOL_NOVEL_V1_1": 3,
+        "POOL_REPLAY_V2_1": 1
+      },
+      "pool_weight_policy": "PILOT_V1_FROZEN",
+      "sampling_hierarchy": "POOL_TO_FAMILY_TO_EPISODE",
+      "schedule_episode_count": 688,
+      "schedule_order_is_frozen": true,
+      "schedule_sha256": "d29fd1d6f61ecee67897a9ea786b6e05f9229bf119b539277cc1147a65843b0a",
+      "seed": 2000031,
+      "stop_rule": "first complete optimizer step whose cumulative actual transformer tokens reach or exceed budget"
+    },
+    "source_recipe_sha256": "67d5f70bdf4925efa2b3218184ab587f36cf93e6d43860570e4e7caecfa60e8b"
+  },
+  "replay_contract": {
+    "bytes": 119426594,
+    "logical_training_shard": "train/replay/replay-00000.parquet",
+    "path": "/workspace/arc2/reconstruction-data_v1/POOL_REPLAY_V2_1/replay-00000.parquet",
+    "pool": "POOL_REPLAY_V2_1",
+    "row_count": 62650,
+    "sha256": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc"
+  },
+  "required_files": [
+    {
+      "bytes": 68,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/added_tokens.json",
+      "sha256": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce"
+    },
+    {
+      "bytes": 1532,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/config.json",
+      "sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0"
+    },
+    {
+      "bytes": 113,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/generation_config.json",
+      "sha256": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02"
+    },
+    {
+      "bytes": 4996836472,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model-00001-of-00002.safetensors",
+      "sha256": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529"
+    },
+    {
+      "bytes": 2270397024,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model-00002-of-00002.safetensors",
+      "sha256": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0"
+    },
+    {
+      "bytes": 32913,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model.safetensors.index.json",
+      "sha256": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4"
+    },
+    {
+      "bytes": 1326,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/model_manifest.json",
+      "sha256": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7"
+    },
+    {
+      "bytes": 367,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/special_tokens_map.json",
+      "sha256": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b"
+    },
+    {
+      "bytes": 1731,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/tokenizer.json",
+      "sha256": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5"
+    },
+    {
+      "bytes": 988,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/tokenizer_config.json",
+      "sha256": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90"
+    },
+    {
+      "bytes": 94,
+      "identity_role": "BASE_OR_TOKENIZER",
+      "path": "/workspace/arc2/models/qwen3_4b_grids15_sft139/vocab.json",
+      "sha256": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+    },
+    {
+      "identity_role": "FROZEN_RECIPE_EVIDENCE",
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/TRAINING_CONFIG.json",
+      "sha256": "28a52e5c6be800f8b00ffbd79aca905e6aa1774870a0cf1a3f6d9132d53bfc6c"
+    },
+    {
+      "identity_role": "FROZEN_RECIPE_EVIDENCE",
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/TRAINING_SCHEDULE_2M.json",
+      "sha256": "cd4f5e384a23eb99836c3418de121f0571e48c257f24016684761bae3fea1cc0"
+    },
+    {
+      "identity_role": "FROZEN_RECIPE_EVIDENCE",
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/TRAINING_DISTRIBUTION_AUDIT.json",
+      "sha256": "5cf037f8c3e96ecf9b85e8e84cadc3b2605b12ec65fb319004b8250b6bee7297"
+    },
+    {
+      "identity_role": "FROZEN_RECIPE_EVIDENCE",
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/PRETRAIN_DATA_POLICY_AUDIT.json",
+      "sha256": "7b3b13ee13ecda6bb3eb4716ab139d4666e81cc2ad254cdbc5f5ad7b80f0bbd3"
+    },
+    {
+      "identity_role": "FROZEN_RECIPE_EVIDENCE",
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/NOVEL_VALIDATION_SENTINEL.json",
+      "sha256": "588596c6ea8bf57ba239d825ce72bfb72d1b4662f457074e9615ecd9ec46af01"
+    },
+    {
+      "identity_role": "FROZEN_RECIPE_EVIDENCE",
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/capability_pilot_2m_v1/REPLAY_RETENTION_SENTINEL.json",
+      "sha256": "23cd6e5095f8c5a9235aca1ab2697634e9a208739c9e3992260d6ca9c0b2b6de"
+    },
+    {
+      "identity_role": "FROZEN_RECIPE_EVIDENCE",
+      "path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/foundation_v2_capability_diagnostic_v1/MODEL_IDENTITY_AUDIT.json",
+      "sha256": "6c2b49fbfe40c1a001819063c67f477de8017a93ebd428b1b1bf02661b02685b"
+    }
+  ],
+  "round_class": "SCIENTIFIC",
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_005",
+  "runtime_contract": {
+    "base_model_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "base_weights_frozen": true,
+    "bitsandbytes": "0.50.2",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "peft": "0.17.1",
+    "precision": "BF16",
+    "python": "3.11.13",
+    "pythonpath": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src",
+    "quantization": "NONE",
+    "torch": "2.8.0+cu128",
+    "transformers": "4.55.4"
+  },
+  "schema_version": 2,
+  "scientific_boundaries": {
+    "closed_predecessors": [
+      "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+      "RECONSTRUCTED_FOUNDATION_V2_V1_001",
+      "RECONSTRUCTED_FOUNDATION_V2_V1_002",
+      "RECONSTRUCTED_FOUNDATION_V2_V2_001"
+    ],
+    "final_audit_accessed": false,
+    "forbidden_training_terms": [
+      "eval60",
+      "gold",
+      "final_audit"
+    ],
+    "targeted_repair_data_used": false
+  },
+  "source_provenance": {
+    "code_files": [
+      {
+        "path": "scripts/freeze_minimum_safe_reconstruction_v2.py",
+        "sha256": "6cf2d44ce0716825e98452c35ef24478486fb0ffee21c5d5df0643dbee227435"
+      },
+      {
+        "path": "scripts/preflight_minimum_safe_reconstruction_v2.py",
+        "sha256": "0b8940ecd33682a0f4e5d727c8606ba52b92fc62a63649eb3fe5ac6058288bce"
+      },
+      {
+        "path": "scripts/launch_minimum_safe_reconstruction_v2.py",
+        "sha256": "24a16df04a1c61baad1414b954ab32beb6fd38e6236d3d1ec8663d81691a6b5f"
+      },
+      {
+        "path": "scripts/run_capability_pilot_2m_v1.py",
+        "sha256": "5ecdddcd3814f1c700a826951a580d3211242c77c959c2f4e62d57c62fd6835d"
+      },
+      {
+        "path": "scripts/record_reconstruction_gpu_time_v6.py",
+        "sha256": "1dc2d6eee6b6dbb37e7b64b0a27e0421952a6a29da3138952ee23024cc52d9de"
+      },
+      {
+        "path": "src/capability_pilot_2m_v1/pilot.py",
+        "sha256": "a88a5e358c22f9c9f39768390fd7d3bafe31ff8a4239e553f20271eaf5d11224"
+      },
+      {
+        "path": "src/capability_pilot_2m_v1/__init__.py",
+        "sha256": "4278aefb607c456c3fd6895166820387b2b9bcd0f5be467dfc919b2c40a6540b"
+      }
+    ],
+    "execution_checkout_rule": "RunPod executes one pinned Git commit with local=origin=RunPod parity; worker code is additionally byte-pinned above.",
+    "source_code_commit": "fe902c6e8b6517fe1afc574c41488cbf9a1137ae",
+    "source_root": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2"
+  },
+  "status": "FROZEN_MINIMUM_SAFE_LAUNCH_PENDING_PREFLIGHT",
+  "worker_binding": {
+    "environment": {
+      "CUDA_VISIBLE_DEVICES": "0",
+      "PYTHONPATH": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src",
+      "TOKENIZERS_PARALLELISM": "false"
+    },
+    "pipeline": {
+      "prepare_argv": [
+        "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+        "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_capability_pilot_2m_v1.py",
+        "--mode",
+        "prepare",
+        "--model-path",
+        "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+        "--novel-train-root",
+        "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel",
+        "--novel-validation-root",
+        "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel",
+        "--replay-shard",
+        "/workspace/arc2/reconstruction-data_v1/POOL_REPLAY_V2_1/replay-00000.parquet",
+        "--freeze",
+        "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/freeze",
+        "--runtime",
+        "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/runtime",
+        "--checkpoints",
+        "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/checkpoints",
+        "--novel-fingerprint",
+        "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/artifacts/novel_training_data_v1_1/NOVEL_TRAIN_SHARD_MANIFEST.json",
+        "--scientific-gate",
+        "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_005_minimum_safe_launch/WORKER_PREPARE_GATE.json"
+      ],
+      "train_argv": [
+        "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+        "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_capability_pilot_2m_v1.py",
+        "--mode",
+        "train",
+        "--model-path",
+        "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+        "--novel-train-root",
+        "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/train/novel",
+        "--novel-validation-root",
+        "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1/validation/novel",
+        "--replay-shard",
+        "/workspace/arc2/reconstruction-data_v1/POOL_REPLAY_V2_1/replay-00000.parquet",
+        "--freeze",
+        "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/freeze",
+        "--runtime",
+        "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/runtime",
+        "--checkpoints",
+        "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_005/checkpoints"
+      ]
+    },
+    "worker_prepare_gate_sha256": "8234a48b40f1f4734cc5250b40e0ef79b505f310c4a97a5d6e8955a9be9da458"
+  }
+}
