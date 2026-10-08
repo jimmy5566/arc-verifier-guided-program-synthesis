@@ -1,0 +1,658 @@
+{
+  "episode_denominator": 288,
+  "final_audit_accessed": false,
+  "forbidden": [
+    "NO_FINAL_AUDIT",
+    "NO_TARGET_DEPENDENT_PARSER_SELECTION",
+    "NO_R3_AUTOMATIC_LAUNCH"
+  ],
+  "frozen_quantitative_outcome": "INCONCLUSIVE_OR_FAIL",
+  "groups": {
+    "family:RETENTION_SENTINEL:color mapping": {
+      "control_vs_v7": {
+        "baseline_correct": 16,
+        "candidate_correct": 16,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 16,
+        "candidate_correct": 16,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 16,
+        "candidate_correct": 16,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:RETENTION_SENTINEL:complete missing structure": {
+      "control_vs_v7": {
+        "baseline_correct": 16,
+        "candidate_correct": 16,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 16,
+        "candidate_correct": 16,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 16,
+        "candidate_correct": 16,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:RETENTION_SENTINEL:overlay": {
+      "control_vs_v7": {
+        "baseline_correct": 4,
+        "candidate_correct": 5,
+        "episodes": 16,
+        "net_paired_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 5,
+        "candidate_correct": 5,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 4,
+        "candidate_correct": 5,
+        "episodes": 16,
+        "net_paired_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:RETENTION_SENTINEL:propagation": {
+      "control_vs_v7": {
+        "baseline_correct": 2,
+        "candidate_correct": 1,
+        "episodes": 16,
+        "net_paired_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 1,
+        "candidate_correct": 1,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 2,
+        "candidate_correct": 1,
+        "episodes": 16,
+        "net_paired_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      }
+    },
+    "family:RETENTION_SENTINEL:recolor": {
+      "control_vs_v7": {
+        "baseline_correct": 16,
+        "candidate_correct": 16,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 16,
+        "candidate_correct": 16,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 16,
+        "candidate_correct": 16,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:RETENTION_SENTINEL:rotate": {
+      "control_vs_v7": {
+        "baseline_correct": 16,
+        "candidate_correct": 16,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 16,
+        "candidate_correct": 16,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 16,
+        "candidate_correct": 16,
+        "episodes": 16,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:TARGET_DEV:conditional action": {
+      "control_vs_v7": {
+        "baseline_correct": 2,
+        "candidate_correct": 2,
+        "episodes": 24,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 2,
+        "candidate_correct": 1,
+        "episodes": 24,
+        "net_paired_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 2,
+        "candidate_correct": 1,
+        "episodes": 24,
+        "net_paired_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      }
+    },
+    "family:TARGET_DEV:connected components": {
+      "control_vs_v7": {
+        "baseline_correct": 0,
+        "candidate_correct": 0,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 0,
+        "candidate_correct": 0,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 0,
+        "candidate_correct": 0,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:TARGET_DEV:difference": {
+      "control_vs_v7": {
+        "baseline_correct": 2,
+        "candidate_correct": 2,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 2,
+        "candidate_correct": 2,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 2,
+        "candidate_correct": 2,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:TARGET_DEV:inside/contains": {
+      "control_vs_v7": {
+        "baseline_correct": 0,
+        "candidate_correct": 0,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 0,
+        "candidate_correct": 0,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 0,
+        "candidate_correct": 0,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:TARGET_DEV:mask set": {
+      "control_vs_v7": {
+        "baseline_correct": 2,
+        "candidate_correct": 3,
+        "episodes": 24,
+        "net_paired_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 3,
+        "candidate_correct": 4,
+        "episodes": 24,
+        "net_paired_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 2,
+        "candidate_correct": 4,
+        "episodes": 24,
+        "net_paired_fixes": 2,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:TARGET_DEV:orientation": {
+      "control_vs_v7": {
+        "baseline_correct": 5,
+        "candidate_correct": 3,
+        "episodes": 12,
+        "net_paired_fixes": -2,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 2
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 3,
+        "candidate_correct": 5,
+        "episodes": 12,
+        "net_paired_fixes": 2,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 5,
+        "candidate_correct": 5,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:TARGET_DEV:recolor": {
+      "control_vs_v7": {
+        "baseline_correct": 12,
+        "candidate_correct": 12,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 12,
+        "candidate_correct": 12,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 12,
+        "candidate_correct": 12,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:TARGET_DEV:relation selector action": {
+      "control_vs_v7": {
+        "baseline_correct": 3,
+        "candidate_correct": 2,
+        "episodes": 24,
+        "net_paired_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 2,
+        "candidate_correct": 2,
+        "episodes": 24,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 3,
+        "candidate_correct": 2,
+        "episodes": 24,
+        "net_paired_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      }
+    },
+    "family:TARGET_DEV:same color": {
+      "control_vs_v7": {
+        "baseline_correct": 12,
+        "candidate_correct": 11,
+        "episodes": 12,
+        "net_paired_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 11,
+        "candidate_correct": 12,
+        "episodes": 12,
+        "net_paired_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 12,
+        "candidate_correct": 12,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:TARGET_DEV:selector prerequisites": {
+      "control_vs_v7": {
+        "baseline_correct": 36,
+        "candidate_correct": 36,
+        "episodes": 36,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 36,
+        "candidate_correct": 36,
+        "episodes": 36,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 36,
+        "candidate_correct": 36,
+        "episodes": 36,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "family:TARGET_DEV:width": {
+      "control_vs_v7": {
+        "baseline_correct": 2,
+        "candidate_correct": 2,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 2,
+        "candidate_correct": 2,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 2,
+        "candidate_correct": 2,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "summary:composition": {
+      "control_vs_v7": {
+        "baseline_correct": 43,
+        "candidate_correct": 43,
+        "episodes": 108,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 2
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 43,
+        "candidate_correct": 43,
+        "episodes": 108,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 43,
+        "candidate_correct": 43,
+        "episodes": 108,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 2
+      }
+    },
+    "summary:protected_strong": {
+      "control_vs_v7": {
+        "baseline_correct": 60,
+        "candidate_correct": 59,
+        "episodes": 60,
+        "net_paired_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 59,
+        "candidate_correct": 60,
+        "episodes": 60,
+        "net_paired_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 60,
+        "candidate_correct": 60,
+        "episodes": 60,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "summary:retention": {
+      "control_vs_v7": {
+        "baseline_correct": 70,
+        "candidate_correct": 70,
+        "episodes": 96,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 70,
+        "candidate_correct": 70,
+        "episodes": 96,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 70,
+        "candidate_correct": 70,
+        "episodes": 96,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1
+      }
+    },
+    "summary:same_color": {
+      "control_vs_v7": {
+        "baseline_correct": 12,
+        "candidate_correct": 11,
+        "episodes": 12,
+        "net_paired_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 11,
+        "candidate_correct": 12,
+        "episodes": 12,
+        "net_paired_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 12,
+        "candidate_correct": 12,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "summary:weak_atomic": {
+      "control_vs_v7": {
+        "baseline_correct": 9,
+        "candidate_correct": 7,
+        "episodes": 60,
+        "net_paired_fixes": -2,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 2
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 7,
+        "candidate_correct": 9,
+        "episodes": 60,
+        "net_paired_fixes": 2,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 9,
+        "candidate_correct": 9,
+        "episodes": 60,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "surface:RETENTION_SENTINEL": {
+      "control_vs_v7": {
+        "baseline_correct": 70,
+        "candidate_correct": 70,
+        "episodes": 96,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 70,
+        "candidate_correct": 70,
+        "episodes": 96,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 70,
+        "candidate_correct": 70,
+        "episodes": 96,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1
+      }
+    },
+    "surface:TARGET_DEV": {
+      "control_vs_v7": {
+        "baseline_correct": 76,
+        "candidate_correct": 73,
+        "episodes": 192,
+        "net_paired_fixes": -3,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 5
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 73,
+        "candidate_correct": 76,
+        "episodes": 192,
+        "net_paired_fixes": 3,
+        "paired_fixes_n01": 4,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 76,
+        "candidate_correct": 76,
+        "episodes": 192,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 2
+      }
+    }
+  },
+  "interpretation": "Paired fixes/harms are descriptive under the frozen Stage-A rule; no causal claim is made unless CAUSAL_SUPPORT holds.",
+  "protocol_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
+  "schema_version": 1,
+  "sources": {
+    "CONTROL": {
+      "outcome_rows_sha256": "5a8519569a7e906ef148e9574c56ebd68018f6836969b53e628f6f7a20674fd0",
+      "path": "/workspace/arc2/stage_a_same_color_preservation_v1/evaluation_control_001/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "sha256": "ee72e461c52f63ae434cd8ca2b846aadf6c7d9712c6fa50a37b1e760c5d886ea"
+    },
+    "TREATMENT": {
+      "outcome_rows_sha256": "ef4b37dbd5ba1647743cfa64b96c6c674dc60cbaf90eb50f90de676feda0fe21",
+      "path": "/workspace/arc2/stage_a_same_color_preservation_v1/evaluation_treatment_001/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "sha256": "4f97e1cd1363d223435f06eb8feff05950e9901695514086ed8f0a7ef257d6b7"
+    },
+    "V7": {
+      "outcome_rows_sha256": "645fda698f189d4f8404340070a45eab38eff580c049be145601dbace4dbdd01",
+      "path": "/workspace/arc2/forward_baseline_evaluation_v7_batch32/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+    }
+  },
+  "status": "PAIRED_ANALYSIS_COMPLETE",
+  "target_blind": true
+}

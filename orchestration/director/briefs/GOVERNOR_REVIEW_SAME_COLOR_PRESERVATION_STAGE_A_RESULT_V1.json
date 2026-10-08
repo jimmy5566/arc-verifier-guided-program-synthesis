@@ -1,0 +1,36 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_SAME_COLOR_PRESERVATION_STAGE_A_RESULT_V1",
+  "forbidden_actions": [
+    "DO_NOT_LAUNCH_R3",
+    "DO_NOT_RETUNE_STAGE_A_THRESHOLDS",
+    "DO_NOT_OPEN_FINAL_AUDIT"
+  ],
+  "frozen_evidence": {
+    "control_eval_result_sha256": "ee72e461c52f63ae434cd8ca2b846aadf6c7d9712c6fa50a37b1e760c5d886ea",
+    "control_training_receipt_sha256": "7939e6c857dbd439e56865c75fc1a90fcad0cd449459fd07d0c330a2b506322c",
+    "treatment_eval_result_sha256": "4f97e1cd1363d223435f06eb8feff05950e9901695514086ed8f0a7ef257d6b7",
+    "treatment_training_receipt_sha256": "a216132df0c0f95dd30533a5e5113bb2be645e1b65df61fb2e97756c076da99a",
+    "v7_eval_result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+  },
+  "must_remain_frozen": [
+    "V7/R1/R2 historical evidence",
+    "Stage A schedules, thresholds, decoder/scorer condition",
+    "FINAL_AUDIT sealed",
+    "no automatic R3"
+  ],
+  "paired_analysis_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/stage_a_results_v1/STAGE_A_PAIRED_ANALYSIS.json",
+  "paired_analysis_sha256": "6800fea9e5d8e43ea22dd1a16169c656de2ba43e8cbf5efe9967e276c50a7266",
+  "protocol_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
+  "requested_decision": [
+    "CONTINUE_CONTROLLER_WITH_NEW_STAGE_B_PROTOCOL",
+    "RUN_ONE_DIAGNOSTIC_BEFORE_DECIDING",
+    "STOP_STAGE_A_ROUTE"
+  ],
+  "result": "INCONCLUSIVE: Treatment restored same color to V7 (12/12) and recovered Control?s one paired same-color harm, but weak atomic net paired gain versus V7 was 0, below the preregistered +3 threshold. Composition and retention were neutral versus V7.",
+  "result_summary_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/stage_a_results_v1/STAGE_A_RESULT_SUMMARY.json",
+  "result_summary_sha256": "3636916efe424f7a75bda06668b795004d004720140a9645ef6edfe835ebd33b",
+  "review_reason": "Stage A has completed under the frozen matched control/treatment design; decide the smallest scientifically justified next step without launching R3 automatically.",
+  "review_type": "MAJOR_SCIENTIFIC_STAGE_RESULT",
+  "schema_version": 1,
+  "scientific_question": "Given the frozen paired result, should the roadmap proceed to a new Stage-B atomic-repair protocol, run one bounded diagnostic, or stop this anti-forgetting intervention route?"
+}

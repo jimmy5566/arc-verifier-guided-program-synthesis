@@ -1,0 +1,169 @@
+{
+  "evaluation": {
+    "V7_result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5",
+    "control_result_sha256": "ee72e461c52f63ae434cd8ca2b846aadf6c7d9712c6fa50a37b1e760c5d886ea",
+    "denominator": 288,
+    "paired_analysis_sha256": "6800fea9e5d8e43ea22dd1a16169c656de2ba43e8cbf5efe9967e276c50a7266",
+    "same_frozen_decoder_scorer": "BASELINE_INFERENCE_CONTRACT_V2",
+    "treatment_result_sha256": "4f97e1cd1363d223435f06eb8feff05950e9901695514086ed8f0a7ef257d6b7"
+  },
+  "final_audit_accessed": false,
+  "forbidden": [
+    "NO_R3_AUTOMATIC_LAUNCH",
+    "NO_FINAL_AUDIT",
+    "NO_POST_HOC_THRESHOLD_CHANGE"
+  ],
+  "frozen_quantitative_rule_outcome": "INCONCLUSIVE",
+  "next_boundary": "DIRECTOR_STAGE_A_RESULT_REVIEW",
+  "protocol_id": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
+  "schema_version": 1,
+  "scientific_conclusion": "Treatment preserved same color relative to V7 and recovered the one Control same-color harm, but did not deliver the preregistered weak-atomic improvement threshold. This supports neither a causal efficacy claim nor automatic Stage-B training.",
+  "stage": "STAGE_A_ANTI_FORGETTING_MECHANISM",
+  "status": "COMPLETE_INCONCLUSIVE",
+  "summary": {
+    "summary:composition": {
+      "control_vs_v7": {
+        "baseline_correct": 43,
+        "candidate_correct": 43,
+        "episodes": 108,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 2
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 43,
+        "candidate_correct": 43,
+        "episodes": 108,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 43,
+        "candidate_correct": 43,
+        "episodes": 108,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 2
+      }
+    },
+    "summary:protected_strong": {
+      "control_vs_v7": {
+        "baseline_correct": 60,
+        "candidate_correct": 59,
+        "episodes": 60,
+        "net_paired_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 59,
+        "candidate_correct": 60,
+        "episodes": 60,
+        "net_paired_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 60,
+        "candidate_correct": 60,
+        "episodes": 60,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "summary:retention": {
+      "control_vs_v7": {
+        "baseline_correct": 70,
+        "candidate_correct": 70,
+        "episodes": 96,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 70,
+        "candidate_correct": 70,
+        "episodes": 96,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 70,
+        "candidate_correct": 70,
+        "episodes": 96,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1
+      }
+    },
+    "summary:same_color": {
+      "control_vs_v7": {
+        "baseline_correct": 12,
+        "candidate_correct": 11,
+        "episodes": 12,
+        "net_paired_fixes": -1,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 1
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 11,
+        "candidate_correct": 12,
+        "episodes": 12,
+        "net_paired_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 12,
+        "candidate_correct": 12,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    },
+    "summary:weak_atomic": {
+      "control_vs_v7": {
+        "baseline_correct": 9,
+        "candidate_correct": 7,
+        "episodes": 60,
+        "net_paired_fixes": -2,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 2
+      },
+      "treatment_vs_control": {
+        "baseline_correct": 7,
+        "candidate_correct": 9,
+        "episodes": 60,
+        "net_paired_fixes": 2,
+        "paired_fixes_n01": 2,
+        "paired_harms_n10": 0
+      },
+      "treatment_vs_v7": {
+        "baseline_correct": 9,
+        "candidate_correct": 9,
+        "episodes": 60,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 0
+      }
+    }
+  },
+  "training": {
+    "control": {
+      "optimizer_steps": 100,
+      "processed_tokens": 253535,
+      "scientific_gpu_training_seconds": 264.104492441,
+      "terminal_receipt_sha256": "7939e6c857dbd439e56865c75fc1a90fcad0cd449459fd07d0c330a2b506322c"
+    },
+    "treatment": {
+      "optimizer_steps": 100,
+      "processed_tokens": 253301,
+      "scientific_gpu_training_seconds": 265.813762245,
+      "terminal_receipt_sha256": "a216132df0c0f95dd30533a5e5113bb2be645e1b65df61fb2e97756c076da99a"
+    }
+  }
+}
