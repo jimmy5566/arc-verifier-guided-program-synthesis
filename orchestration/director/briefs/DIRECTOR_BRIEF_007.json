@@ -7,7 +7,12 @@
     "7200-second reservation and 28800-second append-only cap bound and dummy-tested",
     "controller continuation leases, progress markers, three-turn restart-safe test, and stall escalation tested"
   ],
-  "controller_commit": "f84e4e4cbe5110c985587511f65cb5a131d68369",
+  "controller_commit": "9582f149a99a3838add678ecc66ab130aebbb344",
+  "controller_cycle_state": "WAITING_DIRECTOR after commit and submission",
+  "controller_tests": {
+    "count": 8,
+    "status": "PASS"
+  },
   "directive_in_response": "DIRECTOR_DIRECTIVE_006",
   "gpu_training_started": false,
   "hard_blocker": {
@@ -16,7 +21,7 @@
     "no_optimizer_constructed": true,
     "status": "FAIL_CLOSED"
   },
-  "origin_commit": "f84e4e4cbe5110c985587511f65cb5a131d68369",
+  "origin_commit": "9582f149a99a3838add678ecc66ab130aebbb344",
   "package_files": {
     "DIRECTIVE_006_REMEDIATION_EVIDENCE.json": "8525978e37bf6c79180c49fe82137bd72461c40b92ecd19b9e1a43fc6d8e8caa",
     "DIRECTIVE_006_VALIDATION.json": "4ffb006a56ec1f299b3c15bef95de97e8ee6bc3f7b9d5603609bd61569f6d861",
@@ -24,7 +29,7 @@
     "RECONSTRUCTION_PROTOCOL_PACKAGE_MANIFEST_V2.json": "426fb503fe8c37ca1b44774d5eb2aa1e0d08ed7ce51392683373e95b7561275c"
   },
   "request": "Review the fail-closed mounted-input result. No optimizer work occurred; authorize no training unless a later directive explicitly resolves the missing required input and returns CONTINUE or CONTINUE_WITH_WARNING with scientific_training_authorized true.",
-  "runpod_commit": "f84e4e4cbe5110c985587511f65cb5a131d68369",
+  "runpod_commit": "PENDING_FINAL_SYNC",
   "schema_version": 1,
   "scope": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
   "status": "REQUIRE_MOUNTED_INPUT_REMEDIATION_REVIEW"
