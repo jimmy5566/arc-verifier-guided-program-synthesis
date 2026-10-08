@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "COMPLETE_SCHEDULE_AUDIT",
+  "scope": "R1_R2_FROZEN_TRAINING_SCHEDULES_ONLY",
+  "observed_scores": {"V7": "12/12", "R1": "9/12", "R2": "6/12"},
+  "schedule_evidence": {
+    "R1_config": "FORWARD_TARGETED_REPAIR_CONFIG_V1_003.json",
+    "R2_config": "r2_stage_v1/FORWARD_TARGETED_REPAIR_CONFIG_V1_004.json",
+    "same_color_in_atomic_repair_weights": false,
+    "same_color_in_train_only_retention_weights": false,
+    "same_color_explicit_train_only_replay_coverage": "NONE",
+    "same_color_meaningful_indirect_coverage": "UNKNOWN_NOT_ESTABLISHED"
+  },
+  "scientific_distinction": {
+    "repair_priority": "NOT_A_REPAIR_PRIORITY_AT_V7_BECAUSE_BASELINE_WAS_12_OF_12",
+    "preservation_requirement": "MUST_BE_PROTECTED_AGAINST_FORGETTING_IN_ANY_SUCCESSOR_TARGETED_TRAINING_PROTOCOL"
+  },
+  "testable_hypothesis": {
+    "statement": "Insufficient explicit same-color train-only protection may contribute to the observed R1/R2 same-color forgetting.",
+    "causal_status": "NOT_ESTABLISHED",
+    "evidence_needed": "A distinct prospective protocol holding all other selected factors fixed while adding same-color train-only replay."
+  },
+  "future_review_requirement": "At each major targeted-training protocol review, report explicit train-only preservation coverage for every strong baseline capability; lack of coverage is a scientific risk to record, not a provenance gate.",
+  "forbidden_actions": ["DO_NOT_MUTATE_V7_R1_R2", "DO_NOT_START_R3", "DO_NOT_OPEN_FINAL_AUDIT"],
+  "final_audit_opened": false
+}
