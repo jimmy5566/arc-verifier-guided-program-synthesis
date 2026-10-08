@@ -1,0 +1,77 @@
+{
+  "brief_id": "TARGETED_REPAIR_R2_STAGE_MILESTONE_V1",
+  "decision_requested": "CONTINUE_CONTROLLER_OR_REQUIRE_CHANGES",
+  "evidence_summary_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\capability_repair_baseline_v1\\forward_targeted_repair_v1\\r1_paired_evaluation_v1\\R1_PAIRED_EVALUATION_V2_SUMMARY.json",
+  "evidence_summary_sha256": "43dbb0e657fae4a862b6f32ce1ef3b3242b8ec0c77a38b9a719765fa2c9befd1",
+  "forbidden_actions": [
+    "do not open FINAL_AUDIT",
+    "do not use RETENTION_SENTINEL for training",
+    "do not reinterpret V6 invalid measurement",
+    "do not alter model identity or decoder/scorer contract without a new scientific justification"
+  ],
+  "frozen_conditions": [
+    "CAPABILITY_REPAIR_BASELINE_V1 starting checkpoint lineage",
+    "same 192 TARGET_DEV and 96 RETENTION_SENTINEL evaluation surfaces",
+    "RETENTION_SENTINEL remains evaluation-only",
+    "FINAL_AUDIT unopened",
+    "cumulative scientific GPU budget 28800 seconds"
+  ],
+  "paired_delta_exact_count": {
+    "atomic": -2,
+    "composition": 3,
+    "retention": -6,
+    "target_dev": 1
+  },
+  "proposed_controller_action": "Do not launch R2 until this milestone decision. Keep the R1 adapter and all receipts immutable. If continued, increase retention-preserving training emphasis only as directed and evaluate the same frozen surfaces.",
+  "question": "Given the paired R1 results, what is the smallest scientifically valid R2 curriculum adjustment, if any, needed to address the retention regression while preserving the observed composition gain?",
+  "r1_results": {
+    "atomic": [
+      43,
+      96
+    ],
+    "batch_validation": {
+      "canonical_agreement": 0.78125,
+      "canonical_agreement_status": "AUDIT_ONLY",
+      "exact_grid_rate_delta": 0.03125,
+      "parse_valid_rate_delta": 0.0,
+      "status": "PASS"
+    },
+    "composition": [
+      34,
+      96
+    ],
+    "parse_valid": [
+      288,
+      288
+    ],
+    "retention": [
+      64,
+      96
+    ],
+    "target_dev": [
+      77,
+      192
+    ]
+  },
+  "schema_version": 1,
+  "stage": "TARGETED_CAPABILITY_REPAIR",
+  "v7_baseline": {
+    "atomic": [
+      45,
+      96
+    ],
+    "composition": [
+      31,
+      96
+    ],
+    "result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5",
+    "retention": [
+      70,
+      96
+    ],
+    "target_dev": [
+      76,
+      192
+    ]
+  }
+}

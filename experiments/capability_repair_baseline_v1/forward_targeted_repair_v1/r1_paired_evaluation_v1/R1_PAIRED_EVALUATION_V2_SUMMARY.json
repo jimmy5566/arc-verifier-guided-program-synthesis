@@ -1,0 +1,73 @@
+{
+  "final_audit_opened": false,
+  "paired_delta_exact_count": {
+    "atomic": -2,
+    "composition": 3,
+    "retention": -6,
+    "target_dev": 1
+  },
+  "r1": {
+    "atomic": [
+      43,
+      96
+    ],
+    "batch_validation": {
+      "canonical_agreement": 0.78125,
+      "canonical_agreement_status": "AUDIT_ONLY",
+      "exact_grid_rate_delta": 0.03125,
+      "parse_valid_rate_delta": 0.0,
+      "status": "PASS"
+    },
+    "composition": [
+      34,
+      96
+    ],
+    "parse_valid": [
+      288,
+      288
+    ],
+    "retention": [
+      64,
+      96
+    ],
+    "target_dev": [
+      77,
+      192
+    ]
+  },
+  "r1_remote": {
+    "profile_sha256": "0e2288b449ff6c2f90ad91341236ca168e63f9cf35c17e2ff27f7b22055a920d",
+    "receipt_sha256": "44c753f159d4f1fe6b6b10a3616a55c9fb704d0ec2c93156101c89432e7f962f",
+    "result_path": "/workspace/arc2/forward_targeted_repair_v1_003_evaluation_batch32_v2/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+    "result_sha256": "fee020b8ac8aa81df2e5862b9af8b6f84819cc2c237099f25a9c5067abd9c8a9",
+    "source_commit": "97312c7de442119d7d058d88c26d80f9dcb65738"
+  },
+  "round_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_EVALUATION_BATCH32_V2",
+  "schema_version": 1,
+  "scientific_interpretation": "R1 has modest net target gain and composition gain, but atomic regression and a 6/96 retention regression; R2 curriculum requires stage-level scientific review before launch.",
+  "stage": "TARGETED_CAPABILITY_REPAIR_R1",
+  "status": "COMPLETE_VALID_MEASUREMENT",
+  "training_budget": {
+    "cumulative_scientific_gpu_seconds": 4263.7906022439565,
+    "remaining_scientific_gpu_seconds": 24536.209397756043
+  },
+  "v7_baseline": {
+    "atomic": [
+      45,
+      96
+    ],
+    "composition": [
+      31,
+      96
+    ],
+    "result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5",
+    "retention": [
+      70,
+      96
+    ],
+    "target_dev": [
+      76,
+      192
+    ]
+  }
+}
