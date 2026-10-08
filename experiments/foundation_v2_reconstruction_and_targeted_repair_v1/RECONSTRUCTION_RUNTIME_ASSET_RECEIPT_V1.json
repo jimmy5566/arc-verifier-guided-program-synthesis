@@ -1,0 +1,29 @@
+{
+  "pool_bindings": {
+    "POOL_NOVEL_V1_1": {
+      "artifact_commit": "09b6dc54891f42dca9c1ac51f821d0c9b8516964",
+      "artifact_repository": "jimmy5566/arc2-private-reconstruction-artifacts",
+      "manifest_validation": "PASS",
+      "remote_root": "/workspace/arc2/reconstruction-data_v1/POOL_NOVEL_V1_1",
+      "train_shards": 84,
+      "validation_shards": 9
+    },
+    "POOL_REPLAY_V2_1": {
+      "artifact_commit": "f5483c7882cd95fefc9ec0a0caab26cc0ad23473",
+      "artifact_repository": "jimmy5566/arc2-private-reconstruction-artifacts",
+      "bytes": 119426594,
+      "remote_path": "/workspace/arc2/reconstruction-data_v1/POOL_REPLAY_V2_1/replay-00000.parquet",
+      "rows": 62650,
+      "sha256": "32823bea01d69bead992abe5bd7c88ce463e4b82e32dc60f237343b7b8c854dc"
+    }
+  },
+  "preflight": {
+    "no_optimizer_constructed": true,
+    "remote_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v1/preflight/PREFLIGHT.json",
+    "sha256": "de4b1ebd5a44ff9fb7592208938e2c49fb80f6ff12bf7e9617abe3dce1a05021",
+    "status": "PASS"
+  },
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "status": "PASS"
+}

@@ -1,0 +1,30 @@
+{
+  "AUTO_SCIENTIFIC_EXECUTION_AUTHORIZED": true,
+  "authorization_authority": "SCIENTIFIC_EXECUTION_GATE",
+  "conditions": {
+    "budget_ledger_remaining_seconds": 28800,
+    "exact_replay_identity": "PASS",
+    "final_audit_unopened": "PASS",
+    "frozen_base_tokenizer_and_recipe_identity": "PASS",
+    "no_eval60_or_diagnostic_gold_training_labels": "PASS",
+    "novel_dataset_identity": "PASS",
+    "preflight": "PASS",
+    "provenance_invariant": "RECHECK_AT_REMOTE_LAUNCH",
+    "runtime_output_bindings": "PASS",
+    "target_blind_evaluation_paths": "PASS",
+    "train_dev_final_audit_separation": "PASS"
+  },
+  "decision": "CONTINUE",
+  "gate_rules": [
+    "Runtime launcher must reject if this gate is not PASS/authorized.",
+    "Runtime preflight must recheck source HEAD and every bound identity before optimizer construction.",
+    "No Director directive is required for ordinary execution."
+  ],
+  "protocol_id": "FOUNDATION_V2_RECONSTRUCTION_AND_TARGETED_REPAIR_V1",
+  "runtime_asset_receipt": "RECONSTRUCTION_RUNTIME_ASSET_RECEIPT_V1.json",
+  "runtime_preflight_sha256": "de4b1ebd5a44ff9fb7592208938e2c49fb80f6ff12bf7e9617abe3dce1a05021",
+  "schema_version": 1,
+  "scientific_training_authorized": true,
+  "scientific_training_started": false,
+  "status": "PASS"
+}
