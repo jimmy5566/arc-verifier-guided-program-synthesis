@@ -1,0 +1,59 @@
+{
+  "backward_pass_forbidden": true,
+  "checkpoint_write_forbidden": true,
+  "evaluation_execution_authorized": false,
+  "evaluation_gpu_seconds_separate": true,
+  "evaluation_nonce": "NOT_CREATED_EVALUATION_NOT_AUTHORIZED",
+  "input_manifests": [
+    {
+      "path": "NOVEL_GENERATION_INPUT_MANIFEST.json",
+      "sha256": "50f156c1da6afb465f55a1d3420c6a65a2cf008b3391d3a317154d7055dc7b26"
+    },
+    {
+      "path": "REPLAY_GENERATION_INPUT_MANIFEST.json",
+      "sha256": "2c91a106655fd7e462933f001d3ed2bb1a034ade55cc636346c9068e27832211"
+    },
+    {
+      "path": "PROTECTED_CAPABILITY_INPUT_MANIFEST.json",
+      "sha256": "e8132701c5aa4b97e0b81941851731e40eccfd358c0ee9e2170e937bcea1633e"
+    }
+  ],
+  "model_load_authorized": false,
+  "optimizer_construction_forbidden": true,
+  "output_paths": {
+    "must_be_absent_before_execution": true,
+    "root": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/equivalence_evaluation_001"
+  },
+  "reference_outputs": {
+    "requirement": "A later contract must bind a sealed post-generation scorer that receives frozen output files after generation and never exposes targets to the model process.",
+    "status": "BLOCKED_SEALED_REFERENCE_SCORER_NOT_YET_BOUND"
+  },
+  "round_id": "RECONSTRUCTED_FOUNDATION_V2_V2_009",
+  "runtime_contract": {
+    "environment": {
+      "CUDA_VISIBLE_DEVICES": "0",
+      "PYTHONPATH": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/src",
+      "TOKENIZERS_PARALLELISM": "false"
+    },
+    "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "source_commit": "TO_BE_PINNED_AFTER_PACKAGE_COMMIT"
+  },
+  "schema_version": 1,
+  "scientific_gpu_budget_charge_seconds": 0,
+  "selected_checkpoint": {
+    "adapter_config_sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000"
+  },
+  "stage_id": "ROUND_009_EQUIVALENCE_EVALUATION",
+  "status": "FROZEN_CPU_ONLY_CONTRACT_WITH_SEALED_SCORER_BLOCKER",
+  "target_blind_policy": {
+    "diagnostic_gold_access": false,
+    "eval60_gold_access": false,
+    "final_audit_access": false,
+    "model_prompts": "input grids only",
+    "targeted_repair_data_access": false,
+    "targets_in_prompts": false,
+    "targets_in_training": false
+  }
+}

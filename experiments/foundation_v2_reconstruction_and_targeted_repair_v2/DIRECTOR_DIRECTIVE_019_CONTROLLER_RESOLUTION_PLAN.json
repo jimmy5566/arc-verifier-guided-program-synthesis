@@ -1,0 +1,43 @@
+{
+  "artifacts_or_conditions_that_must_remain_frozen": [
+    "Round 009 SUCCESS receipt and ledger",
+    "all Round 009 checkpoint bytes including selected 2M adapter",
+    "numeric equivalence thresholds",
+    "no Gold/final-audit/targeted-repair boundaries",
+    "current 28,800-second optimizer budget ledger"
+  ],
+  "controller_next_actions": [
+    "Preserve Round 009, its SUCCESS receipt, ledger identities, equivalence result, all four checkpoint identities, and the deterministic 2M selection byte-for-byte. Do not retrain, resume, mutate, merge, prune, or overwrite the reconstruction checkpoints.",
+    "Create an additive Round-009-scoped equivalence-evaluation gate that cites this directive, the terminal receipt, equivalence result, selected checkpoint files, and original gate SHA256. Preserve thresholds exactly: Novel generation exact >= 0.80, replay generation exact >= 0.78, and protected-capability major regressions <= 0. Do not reinterpret NOT_RUN as pass or weaken any threshold.",
+    "Before any model load, freeze the exact evaluation item manifests and hashes for Novel generation, replay generation, and the protected-capability subset; baseline or reference identities; prompt and serializer format; decoding mode and every parameter; random seeds; retry policy; evaluator source and file hashes; interpreter and package environment; exact argv and environment; isolated output paths; metric definitions; deterministic aggregation; and a fail-closed terminal receipt schema.",
+    "The evaluation package and preflight must prove that Eval60 Gold, diagnostic Gold, exposed Novel holdout targets, FINAL_AUDIT targets, and targeted-repair data are absent from all prompts, manifests, mounted readable inputs, caches, commands, and outputs. Evaluation is target-blind and checkpoint-fixed.",
+    "Commit and push the additive evaluation package on the existing non-main branch without force-push or history rewrite. Verify fresh local HEAD equals git ls-remote origin SHA equals RunPod checked-out/source SHA, and run a read-only preflight that binds the exact source commit, evaluator bytes, runtime identity, selected checkpoint hashes, data manifests, fresh output paths, and an evaluation-only nonce.",
+    "If later authorized, record evaluation inference runtime and GPU use separately from scientific optimizer-training seconds. The evaluation launcher must be incapable of optimizer construction, backward passes, parameter updates, checkpoint writes, or consuming a scientific-training reservation.",
+    "Submit a new hashed Director brief containing the exact Round-009 evaluation contract SHA256, evaluation nonce, source commit, selected checkpoint hashes, gate SHA256, preflight evidence, and proof of no-Gold/final-audit isolation. No model loading or evaluation execution is authorized by this directive.",
+    "After any later-authorized evaluation, freeze raw outputs and compute all preregistered metrics without tuning. Return EQUIVALENCE_OR_REPLACEMENT_CONFIRMED only if every threshold passes. PARTIAL, FAILED, missing, or invalid evidence must escalate. Targeted repair and FINAL_AUDIT require a later explicit Director directive even after a complete pass."
+  ],
+  "forbidden_actions": [
+    "reconstruction retraining",
+    "optimizer construction",
+    "targeted repair",
+    "Eval60 Gold",
+    "diagnostic Gold",
+    "FINAL_AUDIT",
+    "model load or evaluation execution before a later authorizing directive"
+  ],
+  "fresh_gate_nonce_output_root_required": true,
+  "fresh_protocol_id_required": false,
+  "fresh_round_id_required": false,
+  "minimum_acceptance_evidence": [
+    "round-scoped gate with unchanged thresholds",
+    "exact target-blind evaluator and data identities",
+    "pinned source/runtime/argv/environment",
+    "read-only preflight PASS",
+    "evaluation-only nonce and isolated paths",
+    "CPU-only regression tests",
+    "committed/pushed package and resubmission brief"
+  ],
+  "required_resolution": "Freeze a round-scoped, target-blind, evaluation-only contract and preflight package. Do not execute it until a later directive authorizes evaluation.",
+  "root_cause": "The completed Round 009 worker wrote complete teacher-forced metrics and a valid terminal receipt, but did not produce the preregistered generation-exact or protected-capability evidence required for equivalence confirmation.",
+  "why_current_path_is_invalid": "Thresholds alone do not authorize model inference. The existing selection gate is scoped to Round 002 and no immutable Round-009 evaluation command, manifest, runtime, output, or receipt contract exists."
+}

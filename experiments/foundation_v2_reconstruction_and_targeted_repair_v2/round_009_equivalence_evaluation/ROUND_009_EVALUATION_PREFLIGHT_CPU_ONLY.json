@@ -1,0 +1,13 @@
+{
+  "checks": {
+    "evaluation_argv_and_nonce": "BLOCKED",
+    "gate_thresholds_unchanged": "PASS",
+    "input_manifests_target_blind": "PASS",
+    "no_gold_final_audit_targeted_data": "PASS",
+    "sealed_reference_scorer_bound": "BLOCKED",
+    "selected_checkpoint_identity": "PASS"
+  },
+  "conclusion": "No model load or evaluation execution can occur. The remaining blocker is an exact sealed reference scorer and its post-generation metric contract.",
+  "schema_version": 1,
+  "status": "BLOCKED"
+}

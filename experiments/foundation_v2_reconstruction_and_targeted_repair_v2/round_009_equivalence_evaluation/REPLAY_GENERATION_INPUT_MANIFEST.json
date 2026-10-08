@@ -1,0 +1,523 @@
+{
+  "contains_targets": false,
+  "episode_count": 64,
+  "items": [
+    {
+      "family": "official_arc_agi_2:3c9b0459",
+      "sample_id": "official_arc_agi_2:3c9b0459:native-full-task-v2",
+      "sequence_length": 140,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 70,
+      "token_label_sha256": "70723577a7f4f1ee71d496fe9b15d635e0e0b55a5f987aeeb304559fc0757dda"
+    },
+    {
+      "family": "official_arc_agi_2:42a15761",
+      "sample_id": "official_arc_agi_2:42a15761:native-full-task-v2",
+      "sequence_length": 1200,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 600,
+      "token_label_sha256": "24b79967fdcf3bd69ad2668707160629e3799fb5031164c98f29c9433dd9ce00"
+    },
+    {
+      "family": "official_arc_agi_2:6c434453",
+      "sample_id": "official_arc_agi_2:6c434453:native-full-task-v2",
+      "sequence_length": 672,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 336,
+      "token_label_sha256": "18daacc8259c0020f2022f0c1304f43e98c2ba5fc34c75d2aa2d051833aead3f"
+    },
+    {
+      "family": "official_arc_agi_2:81c0276b",
+      "sample_id": "official_arc_agi_2:81c0276b:native-full-task-v2",
+      "sequence_length": 1331,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 63,
+      "token_label_sha256": "7f4ce6fc7fea1d60ac2d17a9c85b52ca380a9fef9172a58b7ff96bff468a7669"
+    },
+    {
+      "family": "official_arc_agi_2:896d5239",
+      "sample_id": "official_arc_agi_2:896d5239:native-full-task-v2",
+      "sequence_length": 1824,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 912,
+      "token_label_sha256": "53d84a1a2f348b2316a444d45ceb156c3df84833b8681f128936e150c36186cd"
+    },
+    {
+      "family": "official_arc_agi_2:95990924",
+      "sample_id": "official_arc_agi_2:95990924:native-full-task-v2",
+      "sequence_length": 1416,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 708,
+      "token_label_sha256": "d6f0063cd1b290a978814a94afcbbbfce5f7df3273f35800d3b41506da14772e"
+    },
+    {
+      "family": "official_arc_agi_2:963e52fc",
+      "sample_id": "official_arc_agi_2:963e52fc:native-full-task-v2",
+      "sequence_length": 506,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 328,
+      "token_label_sha256": "80c0c742daca847606f630c8830219260f5c2bbcd7a914950c4e60e2f21c6cd2"
+    },
+    {
+      "family": "official_arc_agi_2:97a05b5b",
+      "sample_id": "official_arc_agi_2:97a05b5b:native-full-task-v2",
+      "sequence_length": 1664,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 444,
+      "token_label_sha256": "b5633658521cbc64a4c8a029a546eb394e5b87dd2b7169baf396cad261cfae1e"
+    },
+    {
+      "family": "official_arc_agi_2:98c475bf",
+      "sample_id": "official_arc_agi_2:98c475bf:native-full-task-v2",
+      "sequence_length": 4220,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 2110,
+      "token_label_sha256": "c50e97cf0f2ec2f33d537ab183d1e49ac298e776bdd9b951c63afb5d4a447be5"
+    },
+    {
+      "family": "official_arc_agi_2:9caf5b84",
+      "sample_id": "official_arc_agi_2:9caf5b84:native-full-task-v2",
+      "sequence_length": 344,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 172,
+      "token_label_sha256": "0255fe0b93102260fe3c171540147dbe93c7ebf51c904b09d8d0509174330aa5"
+    },
+    {
+      "family": "official_arc_agi_2:bf89d739",
+      "sample_id": "official_arc_agi_2:bf89d739:native-full-task-v2",
+      "sequence_length": 2228,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 1114,
+      "token_label_sha256": "de76095a29948a90fa549ac1060673cf6b7aed484025a0bc78436bcc1d1e5664"
+    },
+    {
+      "family": "official_arc_agi_2:d364b489",
+      "sample_id": "official_arc_agi_2:d364b489:native-full-task-v2",
+      "sequence_length": 672,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 336,
+      "token_label_sha256": "5419fb70ad7686e039e6fba85cae3b949aedda33587fffecb2d42a5909bf89e0"
+    },
+    {
+      "family": "official_arc_agi_2:d631b094",
+      "sample_id": "official_arc_agi_2:d631b094:native-full-task-v2",
+      "sequence_length": 100,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 30,
+      "token_label_sha256": "7f891de1aa853315c13b2736313ab7b4e403d46154b9c8f02580f5e40fac1a61"
+    },
+    {
+      "family": "official_arc_agi_2:e21d9049",
+      "sample_id": "official_arc_agi_2:e21d9049:native-full-task-v2",
+      "sequence_length": 1590,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 795,
+      "token_label_sha256": "58869695ecf4ca110cd31876ba44017a4fb1b4830e49271e62268cf5e041e5e2"
+    },
+    {
+      "family": "official_arc_agi_2:f3e14006",
+      "sample_id": "official_arc_agi_2:f3e14006:native-full-task-v2",
+      "sequence_length": 2368,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 1184,
+      "token_label_sha256": "10d65d75d8fd18ff370dea0b464374594da9670b08878145d2141d2232996f18"
+    },
+    {
+      "family": "official_arc_agi_2:ff2825db",
+      "sample_id": "official_arc_agi_2:ff2825db:native-full-task-v2",
+      "sequence_length": 1120,
+      "source": "official_arc_agi_2",
+      "supervised_token_count": 560,
+      "token_label_sha256": "2266b3419976340359fae940097e432a4316272a73cb88a1a46f0a016c7b7b13"
+    },
+    {
+      "family": "miniarc:2x2_grid_at_the_bottom-right_indicates_the_rotation_for_the_3x3_grid_on_the_upper-left_l6aajdd8e987ucg7wmp",
+      "sample_id": "miniarc:2x2_grid_at_the_bottom-right_indicates_the_rotation_for_the_3x3_grid_on_the_upper-left_l6aajdd8e987ucg7wmp:native-full-task-v2",
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128,
+      "token_label_sha256": "c23cf8bb3664fbe6dc95c32f9f5cf76980ac9cd2f77005d147b095463162a68a"
+    },
+    {
+      "family": "miniarc:3_s_l6bksw4pewbthhupnrn",
+      "sample_id": "miniarc:3_s_l6bksw4pewbthhupnrn:native-full-task-v2",
+      "sequence_length": 320,
+      "source": "miniarc",
+      "supervised_token_count": 160,
+      "token_label_sha256": "df08e0075910acc502effa923d235850181f1fc340f03b60b138bb2f1f040353"
+    },
+    {
+      "family": "miniarc:Biggest_one_attracts_everything_l6acvgoub4310yvwun",
+      "sample_id": "miniarc:Biggest_one_attracts_everything_l6acvgoub4310yvwun:native-full-task-v2",
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128,
+      "token_label_sha256": "0fa61816bc622dead13c0a6289d5dff43c64965dbbd0385242ba0e9f39c48d92"
+    },
+    {
+      "family": "miniarc:Difference_of_red_and_green_l6ac81cwe3xlqnl0vtj",
+      "sample_id": "miniarc:Difference_of_red_and_green_l6ac81cwe3xlqnl0vtj:native-full-task-v2",
+      "sequence_length": 320,
+      "source": "miniarc",
+      "supervised_token_count": 160,
+      "token_label_sha256": "53b089436974993fc0509030f5d4456c976c1088ce2e37142ddbc62666634424"
+    },
+    {
+      "family": "miniarc:Simple_Box_Moving_l6aapas5si5cuue2txa",
+      "sample_id": "miniarc:Simple_Box_Moving_l6aapas5si5cuue2txa:native-full-task-v2",
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128,
+      "token_label_sha256": "ed9c5ab9d3825796aeefd0ad4f37bc1beb8f36c8b9469314eec1b508a26d6523"
+    },
+    {
+      "family": "miniarc:Simple_Minima_Finding_l6ab9ddt2pph5409c92",
+      "sample_id": "miniarc:Simple_Minima_Finding_l6ab9ddt2pph5409c92:native-full-task-v2",
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128,
+      "token_label_sha256": "031aff8be094324be67462c3ca555b261c192932d23da3342567069125498b0c"
+    },
+    {
+      "family": "miniarc:Winner_takes_over_the_row_l6bklvocnai9xscz4h",
+      "sample_id": "miniarc:Winner_takes_over_the_row_l6bklvocnai9xscz4h:native-full-task-v2",
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128,
+      "token_label_sha256": "d2eead167f33e2b3bdd6cb3d2c09746ab97bc2b30686c260556335c8dc09a5e4"
+    },
+    {
+      "family": "miniarc:clockwise_123_l6aby702l60zwducki",
+      "sample_id": "miniarc:clockwise_123_l6aby702l60zwducki:native-full-task-v2",
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128,
+      "token_label_sha256": "fbbcedd126e542065e757c2944e4c7a89d8a956a2c093e5bdb10a627e75b755c"
+    },
+    {
+      "family": "miniarc:diagonal_symmetry_l6abqjzurzoglalkz39",
+      "sample_id": "miniarc:diagonal_symmetry_l6abqjzurzoglalkz39:native-full-task-v2",
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128,
+      "token_label_sha256": "78a9a55b54ee4356b5db8f17da5cb898a0648ffd92dd538a59ee29b51cecc48e"
+    },
+    {
+      "family": "miniarc:drag_down_and_trace_left_l6bkx5mn43u3kviefly",
+      "sample_id": "miniarc:drag_down_and_trace_left_l6bkx5mn43u3kviefly:native-full-task-v2",
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128,
+      "token_label_sha256": "5c63a09c92fd52740aa15c059068c38d1469b8c0ea81dbcb81976e7e63ae9d1c"
+    },
+    {
+      "family": "miniarc:fill_the_other_side_of_the_border_with_the_other_side_color_l6afhmhecdx8z6m544g",
+      "sample_id": "miniarc:fill_the_other_side_of_the_border_with_the_other_side_color_l6afhmhecdx8z6m544g:native-full-task-v2",
+      "sequence_length": 320,
+      "source": "miniarc",
+      "supervised_token_count": 160,
+      "token_label_sha256": "b186af86485ab9777d98b8a936a1f3e82069f1f96ea09705535556c1e55c8241"
+    },
+    {
+      "family": "miniarc:going_up_l6acmlt1nkjxwh68ah",
+      "sample_id": "miniarc:going_up_l6acmlt1nkjxwh68ah:native-full-task-v2",
+      "sequence_length": 320,
+      "source": "miniarc",
+      "supervised_token_count": 160,
+      "token_label_sha256": "9dd6827464cf60dae71ccd43defb2cdc03cc999ffb09036b0e89b5c2912ee1e2"
+    },
+    {
+      "family": "miniarc:inter_and_outer_blue_square_l6ac6z4bda5su9nopah",
+      "sample_id": "miniarc:inter_and_outer_blue_square_l6ac6z4bda5su9nopah:native-full-task-v2",
+      "sequence_length": 384,
+      "source": "miniarc",
+      "supervised_token_count": 192,
+      "token_label_sha256": "9d33664f1b8c644e817ff2eb0d989de750a4d6c15d990793b40e3f5adbf2cf0a"
+    },
+    {
+      "family": "miniarc:make_the_rectangle_larger_l6aagjtrvgu9vxwb92d",
+      "sample_id": "miniarc:make_the_rectangle_larger_l6aagjtrvgu9vxwb92d:native-full-task-v2",
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128,
+      "token_label_sha256": "88a789736b9fd2ff895a692aa3a8497eb660b13f693de7e5be70fda7649c1a3d"
+    },
+    {
+      "family": "miniarc:parting_cross_l6acqil00ywf88hqnrpm",
+      "sample_id": "miniarc:parting_cross_l6acqil00ywf88hqnrpm:native-full-task-v2",
+      "sequence_length": 256,
+      "source": "miniarc",
+      "supervised_token_count": 128,
+      "token_label_sha256": "ecb4b0bcafcc0a814e1978fd362c628a2ca25ce365f252924d71921da6a326f2"
+    },
+    {
+      "family": "miniarc:rotating_colors_l6acdi323jol47enccp",
+      "sample_id": "miniarc:rotating_colors_l6acdi323jol47enccp:native-full-task-v2",
+      "sequence_length": 384,
+      "source": "miniarc",
+      "supervised_token_count": 192,
+      "token_label_sha256": "f1e41cd0dc76c4c1b57688a2b94ebf31be8071f8f5fe5c13f716a3d131b31d5b"
+    },
+    {
+      "family": "conceptarc:AboveBelow",
+      "sample_id": "conceptarc:AboveBelow10:native-full-task-v2",
+      "sequence_length": 1080,
+      "source": "conceptarc",
+      "supervised_token_count": 540,
+      "token_label_sha256": "b4cbf3205670cfce6ff8f8636f28ff769bae822b875741911bf1e73b85ca2eab"
+    },
+    {
+      "family": "conceptarc:Center",
+      "sample_id": "conceptarc:Center7:native-full-task-v2",
+      "sequence_length": 300,
+      "source": "conceptarc",
+      "supervised_token_count": 39,
+      "token_label_sha256": "97365a219e4744023d2aab4f8a22151f45b281b937c567a1050be08d4d2f4f7d"
+    },
+    {
+      "family": "conceptarc:CleanUp",
+      "sample_id": "conceptarc:CleanUp8:native-full-task-v2",
+      "sequence_length": 1412,
+      "source": "conceptarc",
+      "supervised_token_count": 706,
+      "token_label_sha256": "fef5cd44d1c42dfaad6951540f9b6e48117833e0bf9a0503a2ef93f79482cca2"
+    },
+    {
+      "family": "conceptarc:CompleteShape",
+      "sample_id": "conceptarc:CompleteShape10:native-full-task-v2",
+      "sequence_length": 2422,
+      "source": "conceptarc",
+      "supervised_token_count": 1211,
+      "token_label_sha256": "9d251f4f8954e662696658932d4452b880a22a22fd1641deb940bd7927a381d8"
+    },
+    {
+      "family": "conceptarc:Copy",
+      "sample_id": "conceptarc:Copy1:native-full-task-v2",
+      "sequence_length": 383,
+      "source": "conceptarc",
+      "supervised_token_count": 243,
+      "token_label_sha256": "1202982122322a6b0ae60851178b8d175c70284dcd6d2f7d48c750ee8e60bab2"
+    },
+    {
+      "family": "conceptarc:Count",
+      "sample_id": "conceptarc:Count1:native-full-task-v2",
+      "sequence_length": 613,
+      "source": "conceptarc",
+      "supervised_token_count": 54,
+      "token_label_sha256": "123aec649e79909927054caa1b3588c592ea1e67eb08744633dbed437689b2f5"
+    },
+    {
+      "family": "conceptarc:ExtendToBoundary",
+      "sample_id": "conceptarc:ExtendToBoundary4:native-full-task-v2",
+      "sequence_length": 616,
+      "source": "conceptarc",
+      "supervised_token_count": 308,
+      "token_label_sha256": "9abf6520324ac134bab4ab96f83e5bf63b8fef76f0c1c636d2d787619f687464"
+    },
+    {
+      "family": "conceptarc:ExtractObjects",
+      "sample_id": "conceptarc:ExtractObjects7:native-full-task-v2",
+      "sequence_length": 704,
+      "source": "conceptarc",
+      "supervised_token_count": 203,
+      "token_label_sha256": "2439aedd2b9882cb0abc1aca57874ee13713d8a6b097a6af9ade390cd08e0d88"
+    },
+    {
+      "family": "conceptarc:FilledNotFilled",
+      "sample_id": "conceptarc:FilledNotFilled1:native-full-task-v2",
+      "sequence_length": 901,
+      "source": "conceptarc",
+      "supervised_token_count": 24,
+      "token_label_sha256": "decd02b8d07e406a34230070b1ff9aa8089f6c531a994d8a20c69f1d927f64db"
+    },
+    {
+      "family": "conceptarc:HorizontalVertical",
+      "sample_id": "conceptarc:HorizontalVertical7:native-full-task-v2",
+      "sequence_length": 1344,
+      "source": "conceptarc",
+      "supervised_token_count": 672,
+      "token_label_sha256": "786f80809e5a5206b76632e13184d49f75a2b3580aae342ecc80e692606b6dc4"
+    },
+    {
+      "family": "conceptarc:InsideOutside",
+      "sample_id": "conceptarc:InsideOutside8:native-full-task-v2",
+      "sequence_length": 1424,
+      "source": "conceptarc",
+      "supervised_token_count": 712,
+      "token_label_sha256": "d7a32eddf70baf7fd82aaadab03955fd67b5793481243a40a5ff77d30102ffb7"
+    },
+    {
+      "family": "conceptarc:MoveToBoundary",
+      "sample_id": "conceptarc:MoveToBoundary6:native-full-task-v2",
+      "sequence_length": 616,
+      "source": "conceptarc",
+      "supervised_token_count": 308,
+      "token_label_sha256": "f202ed3b5c457b4d047b7820be6c2eef61e562c5c6bb6c7e3fbe3fb673a92474"
+    },
+    {
+      "family": "conceptarc:Order",
+      "sample_id": "conceptarc:Order8:native-full-task-v2",
+      "sequence_length": 568,
+      "source": "conceptarc",
+      "supervised_token_count": 39,
+      "token_label_sha256": "e795904444c89a6ee0880d078d9e3bfad34bcdf59434d4965c5bd12ba0f3ca28"
+    },
+    {
+      "family": "conceptarc:SameDifferent",
+      "sample_id": "conceptarc:SameDifferent1:native-full-task-v2",
+      "sequence_length": 1196,
+      "source": "conceptarc",
+      "supervised_token_count": 598,
+      "token_label_sha256": "fcb921c05846fa3a0e595228ff74a62a389cc3952492698b43855b91cc5b865b"
+    },
+    {
+      "family": "conceptarc:TopBottom2D",
+      "sample_id": "conceptarc:TopBottom2D8:native-full-task-v2",
+      "sequence_length": 1344,
+      "source": "conceptarc",
+      "supervised_token_count": 672,
+      "token_label_sha256": "9abdbe18f7c910ac711c732ba291e7ad8aff25455efd627be16ad273031890f1"
+    },
+    {
+      "family": "conceptarc:TopBottom3D",
+      "sample_id": "conceptarc:TopBottom3D6:native-full-task-v2",
+      "sequence_length": 355,
+      "source": "conceptarc",
+      "supervised_token_count": 103,
+      "token_label_sha256": "26d8f5d2d150132af741b83cd5aa7348a785efb9f4d91cc6820bd8f2a74de684"
+    },
+    {
+      "family": "rearc:11852cab",
+      "sample_id": "rearc:11852cab:pair-bank-episode-0065",
+      "sequence_length": 6138,
+      "source": "rearc",
+      "supervised_token_count": 3069,
+      "token_label_sha256": "0601faf697cb5be938ea50dc09bc0f5a75e25c2b8d6c69e41e66ea9267d07a85"
+    },
+    {
+      "family": "rearc:3bd67248",
+      "sample_id": "rearc:3bd67248:pair-bank-episode-0086",
+      "sequence_length": 3760,
+      "source": "rearc",
+      "supervised_token_count": 1880,
+      "token_label_sha256": "fd02227a71b4dc235555976188615984a883504d5cfd87b320b42215366343b5"
+    },
+    {
+      "family": "rearc:50846271",
+      "sample_id": "rearc:50846271:pair-bank-episode-0110",
+      "sequence_length": 5204,
+      "source": "rearc",
+      "supervised_token_count": 2602,
+      "token_label_sha256": "0bbfce49aaf0c63237ae5a4776e40f2836e524237ba10e29b587500b834e9737"
+    },
+    {
+      "family": "rearc:5582e5ca",
+      "sample_id": "rearc:5582e5ca:pair-bank-episode-0016",
+      "sequence_length": 2800,
+      "source": "rearc",
+      "supervised_token_count": 1400,
+      "token_label_sha256": "99962fc7a1b990e1c3a06b66fec41a2bc594f24deba6d56fbcf12ab94c44e81e"
+    },
+    {
+      "family": "rearc:6e02f1e3",
+      "sample_id": "rearc:6e02f1e3:pair-bank-episode-0131",
+      "sequence_length": 5240,
+      "source": "rearc",
+      "supervised_token_count": 2620,
+      "token_label_sha256": "63059efcba55779901846ad528479836e54eeedc7e90f5e4d8c40e6fadd68f88"
+    },
+    {
+      "family": "rearc:7447852a",
+      "sample_id": "rearc:7447852a:pair-bank-episode-0000",
+      "sequence_length": 1148,
+      "source": "rearc",
+      "supervised_token_count": 574,
+      "token_label_sha256": "e2dd29c6e81c2e1a3c68c4678de6f543513f0f415d2352ee35cd711d767c03c5"
+    },
+    {
+      "family": "rearc:7b7f7511",
+      "sample_id": "rearc:7b7f7511:pair-bank-episode-0055",
+      "sequence_length": 3012,
+      "source": "rearc",
+      "supervised_token_count": 1029,
+      "token_label_sha256": "09026a6a3714958e6ef3e4fafe8db49842af5ed2f43760880ad22b25b5e59c44"
+    },
+    {
+      "family": "rearc:890034e9",
+      "sample_id": "rearc:890034e9:pair-bank-episode-0053",
+      "sequence_length": 5644,
+      "source": "rearc",
+      "supervised_token_count": 2822,
+      "token_label_sha256": "a4a344915721377ecdd05c543a8d6ebb4ef96d1a3e579eec96ee6ed72a45b98a"
+    },
+    {
+      "family": "rearc:8d5021e8",
+      "sample_id": "rearc:8d5021e8:pair-bank-episode-0099",
+      "sequence_length": 1795,
+      "source": "rearc",
+      "supervised_token_count": 1514,
+      "token_label_sha256": "42fdcce0aee6faa28b5f938d02595ee3c82cae17eeba46af8b89a3c4c855f218"
+    },
+    {
+      "family": "rearc:95990924",
+      "sample_id": "rearc:95990924:pair-bank-episode-0068",
+      "sequence_length": 5532,
+      "source": "rearc",
+      "supervised_token_count": 2766,
+      "token_label_sha256": "63a26ab4597b10768168ffa3bf40a534db82775ec06a1a57cad9f28cc0e959d3"
+    },
+    {
+      "family": "rearc:c9e6f938",
+      "sample_id": "rearc:c9e6f938:pair-bank-episode-0098",
+      "sequence_length": 1897,
+      "source": "rearc",
+      "supervised_token_count": 1230,
+      "token_label_sha256": "5595dd14971f15fd233f1d52c9ebdade8eba04833a568d0f4501f3fad413dc90"
+    },
+    {
+      "family": "rearc:d6ad076f",
+      "sample_id": "rearc:d6ad076f:pair-bank-episode-0136",
+      "sequence_length": 3432,
+      "source": "rearc",
+      "supervised_token_count": 1716,
+      "token_label_sha256": "efb71bccd52715cd2ddaf8abedf9d37211f630f0c7cbbf33051618e6dd6cba91"
+    },
+    {
+      "family": "rearc:dbc1a6ce",
+      "sample_id": "rearc:dbc1a6ce:pair-bank-episode-0113",
+      "sequence_length": 4696,
+      "source": "rearc",
+      "supervised_token_count": 2348,
+      "token_label_sha256": "1d614d901f2babd13a3941db39a102876d27c562211bccd27881236c1599d6ff"
+    },
+    {
+      "family": "rearc:e73095fd",
+      "sample_id": "rearc:e73095fd:pair-bank-episode-0123",
+      "sequence_length": 6200,
+      "source": "rearc",
+      "supervised_token_count": 3100,
+      "token_label_sha256": "14b6aed92d86905b68cc4f27a030838bbb7f73a97bafd1dfa756da4200876306"
+    },
+    {
+      "family": "rearc:eb5a1d5d",
+      "sample_id": "rearc:eb5a1d5d:pair-bank-episode-0034",
+      "sequence_length": 5475,
+      "source": "rearc",
+      "supervised_token_count": 1558,
+      "token_label_sha256": "1bf1ab35db32137b5742b350adc668c16cdac2cfb2741ee062f580bb4def7495"
+    },
+    {
+      "family": "rearc:f25fbde4",
+      "sample_id": "rearc:f25fbde4:pair-bank-episode-0067",
+      "sequence_length": 2594,
+      "source": "rearc",
+      "supervised_token_count": 1616,
+      "token_label_sha256": "fe3c704061230c593d6819c08de1712c4ba275e275981323ea6e44b6cca9d6d8"
+    }
+  ],
+  "kind": "REPLAY_GENERATION",
+  "prompt_contract": "Inputs only; token_label_sha256 is identity metadata and no target grid/token sequence is included.",
+  "schema_version": 1,
+  "source_path": "artifacts/capability_pilot_2m_v1/REPLAY_RETENTION_SENTINEL.json",
+  "source_sha256": "23cd6e5095f8c5a9235aca1ab2697634e9a208739c9e3992260d6ca9c0b2b6de"
+}
