@@ -14,6 +14,12 @@ def module():
     value = importlib.util.module_from_spec(spec); spec.loader.exec_module(value); return value
 
 class ForcedPtyTransportTests(unittest.TestCase):
+    def test_exact_replay_parquet_filename_is_allowed(self) -> None:
+        m = module()
+        with tempfile.TemporaryDirectory() as root:
+            root = Path(root); source = root / "replay-00000.parquet"; source.write_bytes(b"opaque-parquet-canary")
+            manifest = m.build(source, root / "manifest", root / "envelope", 1024)
+            self.assertEqual(m.decode_manifest(__import__('base64').b64encode(json.dumps(manifest, sort_keys=True, separators=(',', ':')).encode()).decode())["filename"], source.name)
     def test_binary_resume_idempotence_and_atomic_publish(self) -> None:
         m = module()
         with tempfile.TemporaryDirectory() as root:

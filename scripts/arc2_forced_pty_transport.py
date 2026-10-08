@@ -47,7 +47,9 @@ def decode_manifest(encoded: str) -> dict[str, Any]:
     required = {"schema_version", "filename", "uncompressed_bytes", "uncompressed_sha256", "envelope_sha256", "chunk_size", "chunk_count", "chunks"}
     if set(value) != required or value["schema_version"] != SCHEMA:
         raise RuntimeError("TRANSPORT_MANIFEST_FIELDS_INVALID")
-    if Path(str(value["filename"])).name != value["filename"] or not str(value["filename"]).endswith(".jsonl"):
+    allowed_names = {"replay-00000.parquet", "sample_registry.parquet"}
+    if (Path(str(value["filename"])).name != value["filename"] or
+            (not str(value["filename"]).endswith(".jsonl") and value["filename"] not in allowed_names)):
         raise RuntimeError("TRANSPORT_FILENAME_INVALID")
     chunks = value["chunks"]
     if not isinstance(chunks, list) or len(chunks) != value["chunk_count"] or value["chunk_count"] < 1:
