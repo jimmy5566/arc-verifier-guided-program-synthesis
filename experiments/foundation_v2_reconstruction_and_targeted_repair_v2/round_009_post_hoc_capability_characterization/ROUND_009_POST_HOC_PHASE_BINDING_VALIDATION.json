@@ -1,0 +1,18 @@
+{
+  "directive_id": "DIRECTOR_DIRECTIVE_023",
+  "execution_checkout_commit": "f688d2611184ba1c9f98aa2422a601ff976c2cab",
+  "final_audit_opened": false,
+  "generation_started": false,
+  "model_loaded": false,
+  "phase_a_sha256": "0f9861c4dd9f1c427db77408d730d4047226bedf42289883c87161cbee1b8d73",
+  "phase_b_sha256": "c6f22bd1b722c2d33a158304117287d4c875e90d453c84dfd2775deb97c06308",
+  "schema_version": 1,
+  "scientific_training_started": false,
+  "scoring_started": false,
+  "status": "CPU_ONLY_BINDING_VALIDATION_PASS",
+  "tests": [
+    "test_round009_posthoc_phase_bindings",
+    "test_arc2_synchronous_director_review",
+    "test_arc2_controller_directive_cycle"
+  ]
+}

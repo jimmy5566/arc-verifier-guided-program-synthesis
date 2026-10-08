@@ -79,10 +79,10 @@
   },
   "denominator_rules": "EXACT_128_64_64_NO_SHRINKING",
   "execution_authorized": false,
-  "execution_checkout_commit": "PENDING_PACKAGE_COMMIT_MUST_BE_EXACTLY_VERIFIED_BY_PREFLIGHT",
+  "execution_checkout_commit": "f688d2611184ba1c9f98aa2422a601ff976c2cab",
   "failure": "FAIL_CLOSED_IF_PHASE_A_NOT_TERMINAL_HASH_VERIFIED_IMMUTABLE",
   "final_audit_authorized": false,
-  "implementation_commit": "8bdf1f92ad4cf8550dc6f2b1d0ba8497842c2c31",
+  "implementation_commit": "f688d2611184ba1c9f98aa2422a601ff976c2cab",
   "input_manifests": {
     "NOVEL": "50f156c1da6afb465f55a1d3420c6a65a2cf008b3391d3a317154d7055dc7b26",
     "PROTECTED": "e8132701c5aa4b97e0b81941851731e40eccfd358c0ee9e2170e937bcea1633e",
