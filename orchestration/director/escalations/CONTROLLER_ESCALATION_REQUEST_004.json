@@ -3,7 +3,7 @@
   "escalation_type": "RECONSTRUCTION_EQUIVALENCE_PARTIAL",
   "evidence": {
     "equivalence_gate_result_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\foundation_v2_reconstruction_and_targeted_repair_v2\\round_009_minimum_safe_launch\\RECONSTRUCTED_FOUNDATION_V2_V2_009_EQUIVALENCE_GATE_RESULT.json",
-    "equivalence_gate_result_sha256": "c0af13d9755fdee4e2edd04455250241caa65b6949e3417e99e24c3789721e33",
+    "equivalence_gate_result_sha256": "50294d0693770598686345039bd4bd56a80f24061255ebb3e153fd5f5fbff9b4",
     "scientific_gpu_training_seconds": 3739.722329827957,
     "selected_checkpoint": {
       "checkpoint_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
