@@ -1,0 +1,28 @@
+{
+  "adapter_files_verified_by_condition": {
+    "ATOMIC_R1": 3,
+    "FAMILY_BALANCED": 3,
+    "RECONSTRUCTED_FOUNDATION_V2_V7": 3,
+    "TARGETED_R1": 3,
+    "TARGETED_R2": 3
+  },
+  "base_files_verified_once": 13,
+  "checkpoint_discovery_sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654",
+  "conditions": [
+    "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "TARGETED_R1",
+    "TARGETED_R2",
+    "ATOMIC_R1",
+    "FAMILY_BALANCED"
+  ],
+  "config_sha256": "33ae65e8361572442b5021d04fb8f705099577a0c307f4460f889e0d2f78c6c5",
+  "expected_source_commit": "c18aa60c6c52734f7f89db973cad443cf5c130c6",
+  "final_audit_opened": false,
+  "gpu_used": false,
+  "input_manifest_sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+  "launcher_sha256": "74c1ffc9dc78fa6df9f3be2ea850aa14434e65f5a533ba279b5c6b7621dca132",
+  "model_imported": false,
+  "optimizer_steps": 0,
+  "status": "PASS_NO_MODEL_IMPORT",
+  "worker_sha256": "d308fe4e8d7bddedf48d644ddf197fcb95deaa01061cc4f9d43bbfbea4c472dc"
+}
