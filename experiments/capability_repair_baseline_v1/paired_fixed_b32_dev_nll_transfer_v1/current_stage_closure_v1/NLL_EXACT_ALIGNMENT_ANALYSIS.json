@@ -1,0 +1,979 @@
+{
+  "analysis_id": "CPU_ONLY_CURRENT_STAGE_NLL_EXACT_ALIGNMENT_CLOSURE_V1",
+  "by_family": {
+    "connected components": {
+      "baseline_exact": 0,
+      "candidate_exact": 1,
+      "episodes": 12,
+      "exact_grid_transition_counts": {
+        "FIX": 1,
+        "HARM": 0,
+        "STABLE_CORRECT": 0,
+        "STABLE_WRONG": 11
+      },
+      "nll_delta_by_exact_grid_transition": {
+        "FIX": {
+          "episodes": 1,
+          "mean_delta": -5.8149284781472055,
+          "median_delta": -5.8149284781472055
+        },
+        "HARM": {
+          "episodes": 0,
+          "mean_delta": null,
+          "median_delta": null
+        },
+        "STABLE_CORRECT": {
+          "episodes": 0,
+          "mean_delta": null,
+          "median_delta": null
+        },
+        "STABLE_WRONG": {
+          "episodes": 11,
+          "mean_delta": -6.6654537262250235,
+          "median_delta": -6.4559210868720465
+        }
+      },
+      "per_token_nll_delta_candidate_minus_v7": {
+        "aggregation": "unweighted descriptive distribution over per-episode deltas",
+        "exact_zero_count": 0,
+        "improved_negative_count": 12,
+        "maximum": -5.690474375878088,
+        "mean": -6.594576622218539,
+        "median": -6.353040626113685,
+        "minimum": -7.946782990715292,
+        "worsened_positive_count": 0
+      },
+      "pooled_token_weighted_nll": {
+        "delta_candidate_minus_v7": -6.553918259124002,
+        "family_balanced": 0.44441313114732167,
+        "supervised_tokens": 262,
+        "v7": 6.998331390271323
+      }
+    },
+    "difference": {
+      "baseline_exact": 2,
+      "candidate_exact": 2,
+      "episodes": 12,
+      "exact_grid_transition_counts": {
+        "FIX": 0,
+        "HARM": 0,
+        "STABLE_CORRECT": 2,
+        "STABLE_WRONG": 10
+      },
+      "nll_delta_by_exact_grid_transition": {
+        "FIX": {
+          "episodes": 0,
+          "mean_delta": null,
+          "median_delta": null
+        },
+        "HARM": {
+          "episodes": 0,
+          "mean_delta": null,
+          "median_delta": null
+        },
+        "STABLE_CORRECT": {
+          "episodes": 2,
+          "mean_delta": -0.3985058105509791,
+          "median_delta": -0.3985058105509791
+        },
+        "STABLE_WRONG": {
+          "episodes": 10,
+          "mean_delta": -0.40999543314074743,
+          "median_delta": -0.3990165016909949
+        }
+      },
+      "per_token_nll_delta_candidate_minus_v7": {
+        "aggregation": "unweighted descriptive distribution over per-episode deltas",
+        "exact_zero_count": 0,
+        "improved_negative_count": 12,
+        "maximum": -0.34001655608720704,
+        "mean": -0.4080804960424527,
+        "median": -0.3990165016909949,
+        "minimum": -0.5490218063781115,
+        "worsened_positive_count": 0
+      },
+      "pooled_token_weighted_nll": {
+        "delta_candidate_minus_v7": -0.40313081232261866,
+        "family_balanced": 0.04400620310077027,
+        "supervised_tokens": 4280,
+        "v7": 0.4471370154233889
+      }
+    },
+    "inside/contains": {
+      "baseline_exact": 0,
+      "candidate_exact": 0,
+      "episodes": 12,
+      "exact_grid_transition_counts": {
+        "FIX": 0,
+        "HARM": 0,
+        "STABLE_CORRECT": 0,
+        "STABLE_WRONG": 12
+      },
+      "nll_delta_by_exact_grid_transition": {
+        "FIX": {
+          "episodes": 0,
+          "mean_delta": null,
+          "median_delta": null
+        },
+        "HARM": {
+          "episodes": 0,
+          "mean_delta": null,
+          "median_delta": null
+        },
+        "STABLE_CORRECT": {
+          "episodes": 0,
+          "mean_delta": null,
+          "median_delta": null
+        },
+        "STABLE_WRONG": {
+          "episodes": 12,
+          "mean_delta": -0.3478160447393338,
+          "median_delta": -0.34949194529832645
+        }
+      },
+      "per_token_nll_delta_candidate_minus_v7": {
+        "aggregation": "unweighted descriptive distribution over per-episode deltas",
+        "exact_zero_count": 0,
+        "improved_negative_count": 12,
+        "maximum": -0.2373483505198784,
+        "mean": -0.3478160447393338,
+        "median": -0.34949194529832645,
+        "minimum": -0.41304133780038405,
+        "worsened_positive_count": 0
+      },
+      "pooled_token_weighted_nll": {
+        "delta_candidate_minus_v7": -0.3420351633522664,
+        "family_balanced": 0.056462395318855364,
+        "supervised_tokens": 4422,
+        "v7": 0.3984975586711218
+      }
+    },
+    "orientation": {
+      "baseline_exact": 5,
+      "candidate_exact": 4,
+      "episodes": 12,
+      "exact_grid_transition_counts": {
+        "FIX": 1,
+        "HARM": 2,
+        "STABLE_CORRECT": 3,
+        "STABLE_WRONG": 6
+      },
+      "nll_delta_by_exact_grid_transition": {
+        "FIX": {
+          "episodes": 1,
+          "mean_delta": -4.553195415602365,
+          "median_delta": -4.553195415602365
+        },
+        "HARM": {
+          "episodes": 2,
+          "mean_delta": -4.343786963716911,
+          "median_delta": -4.343786963716911
+        },
+        "STABLE_CORRECT": {
+          "episodes": 3,
+          "mean_delta": -4.2877077230466245,
+          "median_delta": -4.2904418569733025
+        },
+        "STABLE_WRONG": {
+          "episodes": 6,
+          "mean_delta": -4.432912438946478,
+          "median_delta": -4.394229635373577
+        }
+      },
+      "per_token_nll_delta_candidate_minus_v7": {
+        "aggregation": "unweighted descriptive distribution over per-episode deltas",
+        "exact_zero_count": 0,
+        "improved_negative_count": 12,
+        "maximum": -4.037095041539475,
+        "mean": -4.391780595487911,
+        "median": -4.376544587505746,
+        "minimum": -4.649035043166103,
+        "worsened_positive_count": 0
+      },
+      "pooled_token_weighted_nll": {
+        "delta_candidate_minus_v7": -4.391245580680596,
+        "family_balanced": 0.27573032292824007,
+        "supervised_tokens": 416,
+        "v7": 4.666975903608836
+      }
+    },
+    "width": {
+      "baseline_exact": 2,
+      "candidate_exact": 0,
+      "episodes": 12,
+      "exact_grid_transition_counts": {
+        "FIX": 0,
+        "HARM": 2,
+        "STABLE_CORRECT": 0,
+        "STABLE_WRONG": 10
+      },
+      "nll_delta_by_exact_grid_transition": {
+        "FIX": {
+          "episodes": 0,
+          "mean_delta": null,
+          "median_delta": null
+        },
+        "HARM": {
+          "episodes": 2,
+          "mean_delta": -4.807901424642902,
+          "median_delta": -4.807901424642902
+        },
+        "STABLE_CORRECT": {
+          "episodes": 0,
+          "mean_delta": null,
+          "median_delta": null
+        },
+        "STABLE_WRONG": {
+          "episodes": 10,
+          "mean_delta": -4.878908936345374,
+          "median_delta": -4.986186502325836
+        }
+      },
+      "per_token_nll_delta_candidate_minus_v7": {
+        "aggregation": "unweighted descriptive distribution over per-episode deltas",
+        "exact_zero_count": 0,
+        "improved_negative_count": 12,
+        "maximum": -4.128319351292399,
+        "mean": -4.867074351061628,
+        "median": -4.979320193612239,
+        "minimum": -5.42108006916836,
+        "worsened_positive_count": 0
+      },
+      "pooled_token_weighted_nll": {
+        "delta_candidate_minus_v7": -4.867074351061628,
+        "family_balanced": 0.3094519715063989,
+        "supervised_tokens": 288,
+        "v7": 5.176526322568027
+      }
+    }
+  },
+  "final_audit_opened": false,
+  "input_sha256": {
+    "dev_manifest": "e531d07129dbbef5dd36b14ebc9e2430ca1dd2bd300aeb069e4f9e248dd9c786",
+    "dev_raw": "3a2954636b31cb7c9fb27f8935f6cffd262e923190afdb2bd433c1acf1ada473",
+    "family_balanced_result": "cc97e376e2a4703c0d73e4a79f0bbf528ac71c8750b9b5972a85f9099cb40216",
+    "v7_result": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+  },
+  "interpretation_boundaries": [
+    "This is paired descriptive development-set evidence, not causal identification.",
+    "The 12 examples per family do not establish broad ARC generalization.",
+    "Lower teacher-forced NLL does not by itself establish improved autoregressive exact-grid reasoning.",
+    "The frozen DEV cohort is development evidence and must not be represented as an untouched holdout."
+  ],
+  "nll_definition": "sum teacher-forced token cross-entropy divided by supervised token count",
+  "nll_delta_sign": "negative means Family-Balanced has lower NLL than V7",
+  "overall": {
+    "baseline_exact": 9,
+    "candidate_exact": 7,
+    "episodes": 60,
+    "exact_grid_transition_counts": {
+      "FIX": 2,
+      "HARM": 4,
+      "STABLE_CORRECT": 5,
+      "STABLE_WRONG": 49
+    },
+    "nll_delta_by_exact_grid_transition": {
+      "FIX": {
+        "episodes": 2,
+        "mean_delta": -5.184061946874785,
+        "median_delta": -5.184061946874785
+      },
+      "HARM": {
+        "episodes": 4,
+        "mean_delta": -4.575844194179907,
+        "median_delta": -4.503024569389674
+      },
+      "STABLE_CORRECT": {
+        "episodes": 5,
+        "mean_delta": -2.7320269580483667,
+        "median_delta": -4.037095041539475
+      },
+      "STABLE_WRONG": {
+        "episodes": 49,
+        "mean_delta": -3.2036796296711705,
+        "median_delta": -4.3271163396789465
+      }
+    },
+    "per_token_nll_delta_candidate_minus_v7": {
+      "aggregation": "unweighted descriptive distribution over per-episode deltas",
+      "exact_zero_count": 0,
+      "improved_negative_count": 60,
+      "maximum": -0.2373483505198784,
+      "mean": -3.321865621909973,
+      "median": -4.330963357654928,
+      "minimum": -7.946782990715292,
+      "worsened_positive_count": 0
+    },
+    "pooled_token_weighted_nll": {
+      "delta_candidate_minus_v7": -0.8464503028179453,
+      "family_balanced": 0.0784325076400356,
+      "supervised_tokens": 9668,
+      "v7": 0.9248828104579809
+    }
+  },
+  "per_episode": [
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000000",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "connected components",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.4778271771792788,
+      "per_token_nll_delta_candidate_minus_v7": -6.040759246240625,
+      "supervised_token_count": 21,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 6.518586423419904
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000001",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "connected components",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.3800248870687938,
+      "per_token_nll_delta_candidate_minus_v7": -7.9146732064949905,
+      "supervised_token_count": 20,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 8.294698093563785
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000002",
+      "exact_grid_transition": "FIX",
+      "family": "connected components",
+      "family_balanced_exact_grid_match": true,
+      "family_balanced_per_token_nll": 0.4161430381649473,
+      "per_token_nll_delta_candidate_minus_v7": -5.8149284781472055,
+      "supervised_token_count": 23,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 6.231071516312153
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000003",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "connected components",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.4248332604005224,
+      "per_token_nll_delta_candidate_minus_v7": -6.250160165355324,
+      "supervised_token_count": 22,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 6.674993425755846
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000004",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "connected components",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.4233239813656046,
+      "per_token_nll_delta_candidate_minus_v7": -6.4559210868720465,
+      "supervised_token_count": 23,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 6.879245068237651
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000005",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "connected components",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.534133312892189,
+      "per_token_nll_delta_candidate_minus_v7": -6.07409780778993,
+      "supervised_token_count": 23,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 6.608231120682119
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000006",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "connected components",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.403413083502528,
+      "per_token_nll_delta_candidate_minus_v7": -6.545368432062242,
+      "supervised_token_count": 20,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 6.94878151556477
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000007",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "connected components",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.4260049363450283,
+      "per_token_nll_delta_candidate_minus_v7": -5.690474375878088,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 6.116479312223116
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000008",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "connected components",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.5348988500929408,
+      "per_token_nll_delta_candidate_minus_v7": -7.278790368554837,
+      "supervised_token_count": 20,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 7.813689218647778
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000009",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "connected components",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.48789111209771363,
+      "per_token_nll_delta_candidate_minus_v7": -7.946782990715292,
+      "supervised_token_count": 20,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 8.434674102813005
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000010",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "connected components",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.44373686351103797,
+      "per_token_nll_delta_candidate_minus_v7": -6.8811102958529125,
+      "supervised_token_count": 21,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 7.324847159363951
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000011",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "connected components",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.3918231601618754,
+      "per_token_nll_delta_candidate_minus_v7": -6.241853012658976,
+      "supervised_token_count": 25,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 6.633676172820851
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000000",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "difference",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.03463857620398898,
+      "per_token_nll_delta_candidate_minus_v7": -0.393328135719279,
+      "supervised_token_count": 387,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.42796671192326796
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000001",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "difference",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.06184598811372204,
+      "per_token_nll_delta_candidate_minus_v7": -0.5490218063781115,
+      "supervised_token_count": 279,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.6108677944918335
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000002",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "difference",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.05099700114136808,
+      "per_token_nll_delta_candidate_minus_v7": -0.4381529019709813,
+      "supervised_token_count": 341,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.48914990311234935
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000003",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "difference",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.05029806418793711,
+      "per_token_nll_delta_candidate_minus_v7": -0.40470486766271085,
+      "supervised_token_count": 339,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.45500293185064794
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000004",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "difference",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.05361918938852153,
+      "per_token_nll_delta_candidate_minus_v7": -0.42770618487171963,
+      "supervised_token_count": 319,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.4813253742602412
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000005",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "difference",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.03429022871459016,
+      "per_token_nll_delta_candidate_minus_v7": -0.3548483081251674,
+      "supervised_token_count": 385,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.3891385368397575
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000006",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "difference",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.04890873668813424,
+      "per_token_nll_delta_candidate_minus_v7": -0.45472025474377564,
+      "supervised_token_count": 345,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.5036289914319099
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000007",
+      "exact_grid_transition": "STABLE_CORRECT",
+      "family": "difference",
+      "family_balanced_exact_grid_match": true,
+      "family_balanced_per_token_nll": 0.04935573627288708,
+      "per_token_nll_delta_candidate_minus_v7": -0.4364756375395724,
+      "supervised_token_count": 341,
+      "v7_exact_grid_match": true,
+      "v7_per_token_nll": 0.4858313738124595
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000008",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "difference",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.037031521959293705,
+      "per_token_nll_delta_candidate_minus_v7": -0.36274685444012583,
+      "supervised_token_count": 387,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.39977837639941954
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000009",
+      "exact_grid_transition": "STABLE_CORRECT",
+      "family": "difference",
+      "family_balanced_exact_grid_match": true,
+      "family_balanced_per_token_nll": 0.03644200532565421,
+      "per_token_nll_delta_candidate_minus_v7": -0.3605359835623858,
+      "supervised_token_count": 365,
+      "v7_exact_grid_match": true,
+      "v7_per_token_nll": 0.39697798888804003
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000010",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "difference",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.04557082045649473,
+      "per_token_nll_delta_candidate_minus_v7": -0.37470846140839636,
+      "supervised_token_count": 385,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.4202792818648911
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000011",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "difference",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.034540520720712654,
+      "per_token_nll_delta_candidate_minus_v7": -0.34001655608720704,
+      "supervised_token_count": 407,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.3745570768079197
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000000",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "inside/contains",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.05876411758882352,
+      "per_token_nll_delta_candidate_minus_v7": -0.36687367791469094,
+      "supervised_token_count": 365,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.42563779550351444
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000001",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "inside/contains",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.06204336376116824,
+      "per_token_nll_delta_candidate_minus_v7": -0.34001821163455076,
+      "supervised_token_count": 345,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.402061575395719
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000002",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "inside/contains",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.050058963651315555,
+      "per_token_nll_delta_candidate_minus_v7": -0.31869603190953766,
+      "supervised_token_count": 411,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.3687549955608532
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000003",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "inside/contains",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.052466439205326,
+      "per_token_nll_delta_candidate_minus_v7": -0.34420554256208175,
+      "supervised_token_count": 365,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.39667198176740776
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000004",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "inside/contains",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.059216564741038424,
+      "per_token_nll_delta_candidate_minus_v7": -0.36219923008133487,
+      "supervised_token_count": 365,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.4214157948223733
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000005",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "inside/contains",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.048174665375246284,
+      "per_token_nll_delta_candidate_minus_v7": -0.2373483505198784,
+      "supervised_token_count": 477,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.2855230158951247
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000006",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "inside/contains",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.04453933811249134,
+      "per_token_nll_delta_candidate_minus_v7": -0.3005600167982127,
+      "supervised_token_count": 429,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.34509935491070404
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000007",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "inside/contains",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.06817408762870064,
+      "per_token_nll_delta_candidate_minus_v7": -0.39639709710515214,
+      "supervised_token_count": 319,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.4645711847338528
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000008",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "inside/contains",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.057772166750285264,
+      "per_token_nll_delta_candidate_minus_v7": -0.4044899912827711,
+      "supervised_token_count": 321,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.4622621580330563
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000009",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "inside/contains",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.06486596670342044,
+      "per_token_nll_delta_candidate_minus_v7": -0.35477834803457114,
+      "supervised_token_count": 365,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.4196443147379916
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000010",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "inside/contains",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.05971671931673454,
+      "per_token_nll_delta_candidate_minus_v7": -0.33518470122884,
+      "supervised_token_count": 361,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.39490142054557453
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000011",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "inside/contains",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.059770614537134246,
+      "per_token_nll_delta_candidate_minus_v7": -0.41304133780038405,
+      "supervised_token_count": 299,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 0.47281195233751827
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000000",
+      "exact_grid_transition": "HARM",
+      "family": "orientation",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.300496132639507,
+      "per_token_nll_delta_candidate_minus_v7": -4.387028885759043,
+      "supervised_token_count": 35,
+      "v7_exact_grid_match": true,
+      "v7_per_token_nll": 4.68752501839855
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000001",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "orientation",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.19163893710848234,
+      "per_token_nll_delta_candidate_minus_v7": -4.498053604455758,
+      "supervised_token_count": 34,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 4.6896925415642405
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000002",
+      "exact_grid_transition": "FIX",
+      "family": "orientation",
+      "family_balanced_exact_grid_match": true,
+      "family_balanced_per_token_nll": 0.41504898148591834,
+      "per_token_nll_delta_candidate_minus_v7": -4.553195415602365,
+      "supervised_token_count": 34,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 4.968244397088283
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000003",
+      "exact_grid_transition": "HARM",
+      "family": "orientation",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.37461659872646386,
+      "per_token_nll_delta_candidate_minus_v7": -4.30054504167478,
+      "supervised_token_count": 35,
+      "v7_exact_grid_match": true,
+      "v7_per_token_nll": 4.675161640401243
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000004",
+      "exact_grid_transition": "STABLE_CORRECT",
+      "family": "orientation",
+      "family_balanced_exact_grid_match": true,
+      "family_balanced_per_token_nll": 0.22661202634948754,
+      "per_token_nll_delta_candidate_minus_v7": -4.037095041539475,
+      "supervised_token_count": 35,
+      "v7_exact_grid_match": true,
+      "v7_per_token_nll": 4.263707067888962
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000005",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "orientation",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.40121457746136,
+      "per_token_nll_delta_candidate_minus_v7": -4.36606028925245,
+      "supervised_token_count": 35,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 4.76727486671381
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000006",
+      "exact_grid_transition": "STABLE_CORRECT",
+      "family": "orientation",
+      "family_balanced_exact_grid_match": true,
+      "family_balanced_per_token_nll": 0.11355633977489239,
+      "per_token_nll_delta_candidate_minus_v7": -4.2904418569733025,
+      "supervised_token_count": 34,
+      "v7_exact_grid_match": true,
+      "v7_per_token_nll": 4.403998196748195
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000007",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "orientation",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.33185082402298055,
+      "per_token_nll_delta_candidate_minus_v7": -4.649035043166103,
+      "supervised_token_count": 35,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 4.980885867189084
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000008",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "orientation",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.2857553839603497,
+      "per_token_nll_delta_candidate_minus_v7": -4.4223989814947045,
+      "supervised_token_count": 36,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 4.708154365455054
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000009",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "orientation",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.15290394580909572,
+      "per_token_nll_delta_candidate_minus_v7": -4.3271163396789465,
+      "supervised_token_count": 35,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 4.480020285488042
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000010",
+      "exact_grid_transition": "STABLE_CORRECT",
+      "family": "orientation",
+      "family_balanced_exact_grid_match": true,
+      "family_balanced_per_token_nll": 0.1244132376637561,
+      "per_token_nll_delta_candidate_minus_v7": -4.535586270627097,
+      "supervised_token_count": 34,
+      "v7_exact_grid_match": true,
+      "v7_per_token_nll": 4.659999508290853
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000011",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "orientation",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.38614623456295005,
+      "per_token_nll_delta_candidate_minus_v7": -4.334810375630909,
+      "supervised_token_count": 34,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 4.720956610193859
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000000",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "width",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.34808594618304295,
+      "per_token_nll_delta_candidate_minus_v7": -5.049174735050352,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 5.397260681233395
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000001",
+      "exact_grid_transition": "HARM",
+      "family": "width",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.336200392380609,
+      "per_token_nll_delta_candidate_minus_v7": -4.9967825962655,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": true,
+      "v7_per_token_nll": 5.332982988646108
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000002",
+      "exact_grid_transition": "HARM",
+      "family": "width",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.2548779923799884,
+      "per_token_nll_delta_candidate_minus_v7": -4.619020253020305,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": true,
+      "v7_per_token_nll": 4.8738982454002935
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000003",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "width",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.3154103354430238,
+      "per_token_nll_delta_candidate_minus_v7": -5.316935537916228,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 5.6323458733592515
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000004",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "width",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.2630920505773702,
+      "per_token_nll_delta_candidate_minus_v7": -4.901600057268979,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 5.164692107846349
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000005",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "width",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.3380420037271203,
+      "per_token_nll_delta_candidate_minus_v7": -4.504573497788442,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 4.842615501515563
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000006",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "width",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.3003739000738885,
+      "per_token_nll_delta_candidate_minus_v7": -4.961857790958978,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 5.262231691032866
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000007",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "width",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.28339380666799724,
+      "per_token_nll_delta_candidate_minus_v7": -5.187107782955991,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 5.470501589623988
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000008",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "width",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.2563943664519381,
+      "per_token_nll_delta_candidate_minus_v7": -4.307925327361318,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 4.564319693813256
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000009",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "width",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.4122188124886937,
+      "per_token_nll_delta_candidate_minus_v7": -5.42108006916836,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 5.833298881657053
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000010",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "width",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.2754268852064949,
+      "per_token_nll_delta_candidate_minus_v7": -4.128319351292399,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 4.403746236498894
+    },
+    {
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000011",
+      "exact_grid_transition": "STABLE_WRONG",
+      "family": "width",
+      "family_balanced_exact_grid_match": false,
+      "family_balanced_per_token_nll": 0.32990716649662016,
+      "per_token_nll_delta_candidate_minus_v7": -5.010515213692694,
+      "supervised_token_count": 24,
+      "v7_exact_grid_match": false,
+      "v7_per_token_nll": 5.340422380189314
+    }
+  ],
+  "schema_version": 1,
+  "scope": "FROZEN_60_EPISODE_TARGET_DEV_WEAK_FAMILY_COHORT",
+  "status": "COMPLETE_DESCRIPTIVE_PAIRED_ANALYSIS"
+}

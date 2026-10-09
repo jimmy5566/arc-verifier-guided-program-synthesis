@@ -1,0 +1,49 @@
+{
+  "artifact_archive": {
+    "manifest_sha256": "95f0e4a7597440c28a6a45d2969ce02df41f0d0984de26aa22ce76b41ef66265",
+    "status": "ARCHIVED_VERSIONED_PRIVATE_ARTIFACT_VERIFIED"
+  },
+  "atomic_posthoc": {
+    "frozen_classifier_outcome": "INCONCLUSIVE_MISSING_FAMILY_DEV_EVIDENCE",
+    "frozen_classifier_outcome_changed": false,
+    "identity_compatible": true,
+    "sha256": "a9ee5842d1c8f84fc3cbe6c2f595b2eb61ad619703e11207fda9d0d6d4b6d071",
+    "status": "COMPATIBLE_POST_HOC_SUPPLEMENTAL_EVIDENCE"
+  },
+  "closure_id": "CPU_ONLY_CURRENT_STAGE_NLL_EXACT_ALIGNMENT_CLOSURE_V1",
+  "execution_audit": {
+    "sha256": "59e0d67912a8ffe3b4e71c4b803ca15e40987c8f8087d14810ebec5e95bf27ed",
+    "status": "COMPLETE_WITH_EXPLICIT_UNVERIFIED_GUARDS"
+  },
+  "final_audit_opened": false,
+  "gpu_used": false,
+  "model_loaded": false,
+  "nll_exact_alignment": {
+    "episodes": 60,
+    "exact_grid_transition_counts": {
+      "FIX": 2,
+      "HARM": 4,
+      "STABLE_CORRECT": 5,
+      "STABLE_WRONG": 49
+    },
+    "family_pooled_token_weighted_nll_delta_candidate_minus_v7": {
+      "connected components": -6.553918259124002,
+      "difference": -0.40313081232261866,
+      "inside/contains": -0.3420351633522664,
+      "orientation": -4.391245580680596,
+      "width": -4.867074351061628
+    },
+    "nll_improved_episode_count": 60,
+    "sha256": "47d557d88e44af22216eee9a17fba3c521459ffc364a21d3531e59d147a0a2fd",
+    "status": "COMPLETE_DESCRIPTIVE_PAIRED_ANALYSIS"
+  },
+  "parent_preservation_commit": "05bdcc5469890b80abb72402e197f8b9f0a142f8",
+  "scientific_interpretation_boundary": "The frozen cohort shows pervasive teacher-forced DEV likelihood improvement without consistent exact-grid improvement. This is descriptive evidence of an NLL-to-exact-output gap, not causal identification of objective mismatch, decoding failure, representation failure, or compositional failure.",
+  "schema_version": 1,
+  "source": {
+    "analysis_script_sha256": "d481e188ecc3b6da35b2ca0643b87e1c728b717e49392704cb7c1b50fbc49326",
+    "test_file_sha256": "8a7bbece9860eb619b516fa3a44a332260ff789ffa3a94a396b24ad145ba6c0a",
+    "test_receipt_sha256": "63c5a81cc84b79e337b71abaa345f3e8ec314c2b688bc6c787651ce68d736b92"
+  },
+  "status": "READY_FOR_DIRECTOR_STAGE_REVIEW"
+}

@@ -1,0 +1,36 @@
+{
+  "archive_id": "PAIRED_FIXED_B32_FIT_TRANSFER_V1_RUN_001_RAW_ARCHIVE_V1",
+  "archived_at": "2026-10-09T07:02:51Z",
+  "fallback_reason": {
+    "huggingface_local": "AUTH_MISSING_HUGGINGFACE",
+    "huggingface_runpod": "AUTH_MISSING_HUGGINGFACE",
+    "runpod_original_raw_present": false,
+    "selected_route": "PRIVATE_GITHUB_RELEASE_AS_VERSIONED_ARTIFACT_STORAGE"
+  },
+  "original": {
+    "bytes": 22157379,
+    "filename": "RAW_PER_ROW_NLL.jsonl",
+    "sha256": "c0ef6814bfb8c601e58a2bf5a264806d240c88494c333c35040b3097ac1315a3"
+  },
+  "stored_asset": {
+    "api_asset_id": 624182631,
+    "bytes": 4904992,
+    "filename": "RAW_PER_ROW_NLL.jsonl.gz",
+    "sha256": "b45c98bf311fc26d86972c0bd473565ce8195605d2207bf4b44bfbb96fb72950"
+  },
+  "storage": {
+    "asset_url": "https://github.com/jimmy5566/arc2-scientific-artifacts/releases/download/paired-fixed-b32-fit-transfer-v1-run-001-raw-v1/RAW_PER_ROW_NLL.jsonl.gz",
+    "repository": "jimmy5566/arc2-scientific-artifacts",
+    "repository_visibility_verified": "PRIVATE",
+    "release_tag": "paired-fixed-b32-fit-transfer-v1-run-001-raw-v1",
+    "release_url": "https://github.com/jimmy5566/arc2-scientific-artifacts/releases/tag/paired-fixed-b32-fit-transfer-v1-run-001-raw-v1",
+    "target_commit": "a20b8e3fc86800632e16147f25de903bdbcf497c"
+  },
+  "verification": {
+    "downloaded_asset_sha256_match": true,
+    "downloaded_gzip_decompressed_sha256": "c0ef6814bfb8c601e58a2bf5a264806d240c88494c333c35040b3097ac1315a3",
+    "downloaded_gzip_decompressed_sha256_match": true,
+    "source_sha256_match": true
+  },
+  "status": "ARCHIVED_VERSIONED_PRIVATE_ARTIFACT_VERIFIED"
+}

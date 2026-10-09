@@ -1,0 +1,24 @@
+{
+  "commands": [
+    {
+      "command": "py -3 -m unittest tests.test_cpu_current_stage_nll_exact_alignment_closure_v1 -v",
+      "exit_code": 0,
+      "tests": 3
+    },
+    {
+      "command": "py -3 -m unittest tests.test_paired_fixed_b32_fit_transfer_v1 -v",
+      "exit_code": 0,
+      "tests": 2
+    },
+    {
+      "command": "py -3 -m py_compile scripts/analyze_cpu_current_stage_nll_exact_alignment_closure_v1.py tests/test_cpu_current_stage_nll_exact_alignment_closure_v1.py plus JSON parsing of all closure artifacts",
+      "exit_code": 0,
+      "status": "PASS"
+    }
+  ],
+  "exit_code": 0,
+  "gpu_used": false,
+  "model_loaded": false,
+  "status": "PASS",
+  "tests": 5
+}

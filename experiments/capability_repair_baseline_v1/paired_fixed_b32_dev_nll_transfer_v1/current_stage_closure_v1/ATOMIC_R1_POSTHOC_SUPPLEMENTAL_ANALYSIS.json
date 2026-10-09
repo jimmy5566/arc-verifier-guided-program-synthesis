@@ -1,0 +1,80 @@
+{
+  "analysis_id": "ATOMIC_R1_POSTHOC_SUPPLEMENTAL_NLL_EXACT_ALIGNMENT_V1",
+  "families": {
+    "connected components": {
+      "historical_exact_grid": {
+        "atomic_r1_exact": 1,
+        "episodes": 12,
+        "net_paired_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0,
+        "v7_exact": 0
+      },
+      "train_full_b32_per_token_nll_delta_candidate_minus_v7": -5.964707659565951
+    },
+    "difference": {
+      "historical_exact_grid": {
+        "atomic_r1_exact": 0,
+        "episodes": 12,
+        "net_paired_fixes": -2,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 2,
+        "v7_exact": 2
+      },
+      "train_full_b32_per_token_nll_delta_candidate_minus_v7": -0.41386589410886443
+    },
+    "inside/contains": {
+      "historical_exact_grid": {
+        "atomic_r1_exact": 1,
+        "episodes": 12,
+        "net_paired_fixes": 1,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 0,
+        "v7_exact": 0
+      },
+      "train_full_b32_per_token_nll_delta_candidate_minus_v7": -0.3731112742870386
+    },
+    "orientation": {
+      "historical_exact_grid": {
+        "atomic_r1_exact": 5,
+        "episodes": 12,
+        "net_paired_fixes": 0,
+        "paired_fixes_n01": 1,
+        "paired_harms_n10": 1,
+        "v7_exact": 5
+      },
+      "train_full_b32_per_token_nll_delta_candidate_minus_v7": -4.457557714881892
+    },
+    "width": {
+      "historical_exact_grid": {
+        "atomic_r1_exact": 0,
+        "episodes": 12,
+        "net_paired_fixes": -2,
+        "paired_fixes_n01": 0,
+        "paired_harms_n10": 2,
+        "v7_exact": 2
+      },
+      "train_full_b32_per_token_nll_delta_candidate_minus_v7": -5.084598085344575
+    }
+  },
+  "final_audit_opened": false,
+  "frozen_classifier_outcome": "INCONCLUSIVE_MISSING_FAMILY_DEV_EVIDENCE",
+  "frozen_classifier_outcome_changed": false,
+  "identity_match": {
+    "atomic_adapter_sha256": "7f5e90f611a2bfcc993e96e1dfcd37b5d08ce14e88244c69cca231178edac2d2",
+    "atomic_checkpoint_declared_identity": "68f3ba7426203e1f432931ff8134f8ec474ba7ea592fec2abd17d7793b4c9cc5",
+    "atomic_checkpoint_manifest_file_sha256": "0586201a3eec4ac1c56a1de42a5b20c9ff74f52069fbe92a55691ece28ed7ddd",
+    "atomic_result_sha256": "fc7360b922404f96645e4cf2efea849f7fa9527282e32124bb9342ca3906c01b",
+    "v7_result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+  },
+  "input_sha256": {
+    "atomic_checkpoint_manifest": "0586201a3eec4ac1c56a1de42a5b20c9ff74f52069fbe92a55691ece28ed7ddd",
+    "atomic_gate": "fd14962203c4f4631c6712214758bca1b228da97879814d2f4656454a4b08671",
+    "train_execution_package": "930e1ebd15caa5312eac9eb8655a86fc16e2dab4d5610a1e5ff8ec299930622d",
+    "train_result_package": "56ac80f2de646180e630ffad8d97d83df1aecc548d131f3c4f849b43d7c9bc7f"
+  },
+  "interpretation": "Exact matching result identities make the historical family-level paired correctness evidence scientifically compatible as a separately labelled post-hoc supplement. It does not amend the frozen classifier or establish a prospective causal result.",
+  "prospective_claim": false,
+  "schema_version": 1,
+  "status": "COMPATIBLE_POST_HOC_SUPPLEMENTAL_EVIDENCE"
+}

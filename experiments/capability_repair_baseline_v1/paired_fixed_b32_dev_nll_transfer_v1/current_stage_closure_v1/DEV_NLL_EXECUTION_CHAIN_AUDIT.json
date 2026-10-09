@@ -1,0 +1,82 @@
+{
+  "audit_id": "PAIRED_FIXED_B32_DEV_NLL_TRANSFER_V1_RUN_001_EXECUTION_CHAIN_AUDIT_V1",
+  "audited_at": "2026-10-09T07:02:51Z",
+  "final_audit_opened": false,
+  "findings": {
+    "approved_package_and_source_commit_binding": {
+      "evidence": {
+        "execution_package_commit": "7e804d906849a665fb7dee345251e297366d486e",
+        "execution_package_sha256": "0caa6472f45f342763ca307e21516947eec797a2935c67b4290815d5fb37ca31",
+        "origin_branch_contains_commit": true,
+        "worker_sha256": "e5b4b236a77857d4a240af558c7d5e6143451f9bdee1c4bbb53925f5bdd08e8c"
+      },
+      "limitation": "The terminal and cap receipts do not record the RunPod checkout SHA or re-report the runtime worker/package hashes.",
+      "status": "PARTIAL_LOCAL_ORIGIN_BINDING_RUNPOD_CHECKOUT_UNVERIFIED"
+    },
+    "dataset_identity": {
+      "evidence": {
+        "declared_target_dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97",
+        "local_target_dev_sha256_match": true,
+        "manifest_sha256": "e531d07129dbbef5dd36b14ebc9e2430ca1dd2bd300aeb069e4f9e248dd9c786"
+      },
+      "limitation": "The worker consumes the supplied DEV path but does not hash it at runtime; no outer runtime hash receipt was preserved.",
+      "status": "LOCAL_IDENTITY_CONFIRMED_RUNTIME_INPUT_BYTES_UNVERIFIED"
+    },
+    "checkpoint_and_adapter_identity": {
+      "evidence": {
+        "family_balanced_adapter_sha256": "c7b275587796b0d9b07d45e933371d5ae26e9aa76df7a895104d7c4e35117780",
+        "family_balanced_checkpoint_manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9",
+        "v7_adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+        "v7_checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+      },
+      "limitation": "The worker reads manifest paths but does not independently hash every runtime base and adapter file; no outer runtime identity receipt was preserved.",
+      "status": "MANIFEST_IDENTITIES_FROZEN_RUNTIME_FILES_UNVERIFIED"
+    },
+    "dev_label_separation": {
+      "evidence": [
+        "torch.no_grad",
+        "model.eval",
+        "PeftModel is_trainable=false",
+        "optimizer_steps=0",
+        "generation_performed=false",
+        "DEV labels used only for teacher-forced scoring"
+      ],
+      "status": "CONFIRMED_EVALUATION_ONLY"
+    },
+    "fresh_output_and_duplicate_job_guards": {
+      "evidence": "The worker rejects an existing output path and the run used one nonce-specific output root.",
+      "limitation": "No preserved global single-job lock proves that a second nonce could not have been launched concurrently.",
+      "status": "FRESH_OUTPUT_CONFIRMED_GLOBAL_DUPLICATE_GUARD_UNVERIFIED"
+    },
+    "runtime_cap": {
+      "evidence": {
+        "cap_seconds": 900,
+        "cap_receipt_sha256": "afe6a86a33aebc02fb62a4b74f53d22b502e1a5ef315c9adc395ab3271b83641",
+        "observed_wall_seconds": 375.10790676716715,
+        "result_within_cap": true
+      },
+      "limitation": "The worker deadline begins before model loading but is checked only between scoring groups. The preserved outer receipt records the cap and elapsed wall time, but not the immutable stop mechanism implementation.",
+      "status": "WITHIN_CAP_CONFIRMED_ACTIVE_STOP_IMPLEMENTATION_UNVERIFIED"
+    },
+    "terminal_receipts": {
+      "evidence": {
+        "success_terminal_receipt_atomic_write": true,
+        "terminal_receipt_sha256": "3b26c41517a73c68620776f9e9dab26baf5f0292167377f37a7695c8ae23e819"
+      },
+      "limitation": "The worker has no failure/timeout exception path that atomically emits a terminal scientific receipt; no outer failure receipt behavior was exercised by this successful run.",
+      "status": "SUCCESS_CONFIRMED_FAILURE_AND_TIMEOUT_PATH_UNVERIFIED"
+    },
+    "partial_evidence_preservation": {
+      "limitation": "RAW.jsonl is written only after both checkpoints finish. A mid-run failure would not preserve completed rows through this worker path.",
+      "status": "NOT_IMPLEMENTED_IN_WORKER_OUTER_RECOVERY_UNVERIFIED"
+    },
+    "supervisor_or_watchdog_monitoring": {
+      "evidence": "The completed receipt was reconciled into local workflow state and active_remote_job is null.",
+      "limitation": "The result package does not contain a launch-time Supervisor/watchdog binding receipt for this job.",
+      "status": "TERMINAL_RECONCILIATION_CONFIRMED_LAUNCH_MONITOR_BINDING_UNVERIFIED"
+    }
+  },
+  "prospective_remediation_only": true,
+  "scientific_result_retroactively_modified": false,
+  "status": "COMPLETE_WITH_EXPLICIT_UNVERIFIED_GUARDS"
+}
