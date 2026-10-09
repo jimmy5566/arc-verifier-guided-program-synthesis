@@ -1,0 +1,59 @@
+{
+  "binding_path": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1_BINDING.json",
+  "binding_sha256": "97bd68d6fac1fe0181af9c722c45ac0aff0826bf406846491c73b19d33574746",
+  "conditions": {
+    "FAMILY_BALANCED_R1": {
+      "adapter_sha256": "c7b275587796b0d9b07d45e933371d5ae26e9aa76df7a895104d7c4e35117780",
+      "manifest_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json",
+      "manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9",
+      "result_path": "/workspace/arc2/atomic_prerequisite_family_balanced_loss_control_v1/round_001/evaluation_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "result_sha256": "cc97e376e2a4703c0d73e4a79f0bbf528ac71c8750b9b5972a85f9099cb40216"
+    },
+    "REJECTED_R1": {
+      "adapter_sha256": "7f5e90f611a2bfcc993e96e1dfcd37b5d08ce14e88244c69cca231178edac2d2",
+      "manifest_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_001_FINAL_CHECKPOINT_MANIFEST.json",
+      "manifest_sha256": "0586201a3eec4ac1c56a1de42a5b20c9ff74f52069fbe92a55691ece28ed7ddd",
+      "result_path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/evaluation_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "result_sha256": "fc7360b922404f96645e4cf2efea849f7fa9527282e32124bb9342ca3906c01b"
+    },
+    "V7": {
+      "adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+      "manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+      "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+      "result_path": "/workspace/arc2/forward_baseline_evaluation_v7_batch32/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+    }
+  },
+  "drift_tolerance": 0.001,
+  "fallback_ladder": [32, 16, 8, 4, 1],
+  "fit_threshold": 0.01,
+  "forbidden": ["NO_OPTIMIZER", "NO_GENERATION", "NO_CHECKPOINT_MUTATION", "NO_TARGET_DEV_OR_RETENTION_LABELS_IN_NLL", "NO_FINAL_AUDIT"],
+  "frozen_dev_paired_net_fixes": {
+    "FAMILY_BALANCED_R1": {"connected components": 1, "difference": 0, "inside/contains": 0, "orientation": -1, "width": -2},
+    "REJECTED_R1": {"connected components": 1, "difference": -2, "inside/contains": 1, "orientation": 0, "width": -2}
+  },
+  "remote_train_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TRAIN.jsonl",
+  "requested_batch_size": 32,
+  "retry": {
+    "attempt": 2,
+    "predecessor_output_root": "/workspace/arc2/atomic_prerequisite_fit_generalization_diagnostic_v1/run_001",
+    "predecessor_terminal_status": "PRE_MODEL_FAILURE",
+    "predecessor_error": "ModuleNotFoundError:No module named 'transformers'",
+    "scientific_gpu_training_seconds_charged": 0.0,
+    "reason": "Bind the verified frozen RunPod runtime; no model result was produced by attempt 1."
+  },
+  "runtime": {
+    "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "torch": "2.8.0+cu128",
+    "transformers": "4.55.4",
+    "peft": "0.17.1",
+    "precision": "BF16"
+  },
+  "schedule_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json",
+  "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6",
+  "schema_version": 1,
+  "stage_id": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1",
+  "train_path": "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl",
+  "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945",
+  "worker_source_commit": "6d02fe2dbf7be94388bac32cd5c01c46970362b7"
+}
