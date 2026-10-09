@@ -1,0 +1,35 @@
+{
+  "protocol_id": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1",
+  "brief_kind": "SCIENTIFIC_PRELAUNCH_REVIEW",
+  "review_reason": "This new immutable V3 brief addresses every RC1-RC6 item in the consumed V2 REQUIRE_CHANGES response. The scientific question and all frozen conditions are unchanged.",
+  "reviewed_prior_response_sha256": "75f8033687cd07a74a200b99967cb1796c17c4ad003952c34624a2b9a72a7259",
+  "immutable_run_binding": {
+    "path": "experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_RUN_001_LAUNCH_BINDING_V3.json",
+    "sha256": "87e933885734a4a633c97d4ddfebb26f6b66e36e61864babe1b61e860fad84c7",
+    "nonce": "8f4c0e6b36bc4e8f9e8931b8f0d933a2",
+    "fixed_output": "/workspace/arc2/experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/run_001_8f4c0e6b36bc4e8f9e8931b8f0d933a2",
+    "cap_seconds": 900
+  },
+  "frozen_scientific_conditions": {
+    "comparators": ["RECONSTRUCTED_FOUNDATION_V2_V7", "FAMILY_BALANCED"],
+    "cohort": "same 60 reused synthetic DEV episodes, five families x 12",
+    "primary": "length-bucketed B32 teacher-forced GRID_CONTENT equal-family macro",
+    "sensitivity": "same fixed target-blind 12-episode B1 subset",
+    "bootstrap": "10000 family-stratified paired replicates, seed 20261010",
+    "forbidden": ["generation", "training", "optimizer", "backward", "Gold", "dGold", "FINAL_AUDIT"]
+  },
+  "remediation": {
+    "RC1": "Selected causal target positions remain on GPU and are promoted to FP32 there. Correct-token gather, strict-greater rank, masked max-incorrect margin, and only scalar aggregates transfer to CPU; no BxSxV CPU list conversion remains.",
+    "RC2": "First-free-running-error reads the condition-specific frozen continuation. It persists only error index, component, rank, margin, and parser status. CPU coverage includes V7 exact versus Family-Balanced error.",
+    "RC3": "Outer launcher uses a process-group deadline spanning worker execution; timeout terminates the worker, preserves partial evidence, writes TIMEOUT_NO_UPDATE, and forbids retry. The worker keeps its internal deadline.",
+    "RC4": "Binding/config fix nonce, output and receipt, B1 IDs, source code hash set, input/checkpoint hashes and sidecar SHA. Launcher requires clean tracked checkout and LOCAL_HEAD=ORIGIN_REF=RunPod checkout before import; source hashes independently protect functional code identity.",
+    "RC5": "Postprocessor now emits equal-family points and CIs, five family cells, pooled token micro, GRID/ROW_SEPARATOR/EOS results, first-error summaries, descriptive exact groups, and protected-family harm override.",
+    "RC6": "CPU tests cover condition-specific first error, no-model identity failure, timeout termination, immutable source/hash binding, complete result schema, protected-family harm override, partition/causal alignment, pairing, sensitivity and bootstrap."
+  },
+  "interpretation": "All results remain development evidence on an already exposed synthetic cohort. They cannot establish independent ARC transfer, causal gradient interference, or model capability improvement by themselves.",
+  "cpu_validation": {
+    "command": "py -3 -m unittest -v tests.test_launch_paired_v7_family_balanced_rank_margin_v1 tests.test_postprocess_paired_v7_family_balanced_rank_margin_v1 tests.test_paired_v7_family_balanced_rank_margin_contract tests.test_paired_rank_margin_runtime_contract tests.test_paired_rank_margin_launch_contract tests.test_run_paired_v7_family_balanced_rank_margin_v1",
+    "result": "PASS_22"
+  },
+  "director_question": "Are the RC1-RC6 repairs and this exact immutable RUN_001 binding sufficient to authorize exactly one no-update, 900-second GPU measurement under the unchanged frozen protocol?"
+}
