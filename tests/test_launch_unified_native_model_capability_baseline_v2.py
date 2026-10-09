@@ -22,6 +22,7 @@ class NativeLauncherV2Tests(unittest.TestCase):
     def test_command_has_only_no_update_worker_arguments(self):
         binding = {"worker_path": "scripts/run_unified_native_model_capability_baseline_v2.py", "manifest_path": "m.json", "discovery_path": "d.json"}
         command = mod.worker_command(binding, Path("/fresh"))
+        self.assertEqual(command[1:3], ["-m", "scripts.run_unified_native_model_capability_baseline_v2"])
         self.assertIn("--runtime-seconds", command); self.assertIn("9000", command)
         self.assertNotIn("--train", command); self.assertNotIn("--optimizer", command)
 
@@ -32,14 +33,14 @@ class NativeLauncherV2Tests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "LAUNCH_BINDING_INVALID"):
                 mod.load_binding(path)
 
-    def test_actual_frozen_v5_binding_resolves_to_worker_command(self):
+    def test_actual_frozen_binding_resolves_to_module_worker_command(self):
         binding_path = self.active_binding_path()
         binding = mod.load_binding(binding_path)
         command = mod.worker_command(binding, Path("/fresh"))
         self.assertEqual(binding["runtime_cap_seconds"], 9000)
-        self.assertIn(str(ROOT / binding["worker_path"]), command)
+        self.assertIn("scripts.run_unified_native_model_capability_baseline_v2", command)
 
-    def test_main_with_actual_v5_binding_writes_success_and_failure_and_cleans_lock(self):
+    def test_main_with_actual_binding_writes_success_and_failure_and_cleans_lock(self):
         binding_path = self.active_binding_path()
         original_load = mod.load_binding
         class Child:

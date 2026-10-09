@@ -62,7 +62,11 @@ def load_binding(path: Path, *, expected_checkout: str | None = None) -> dict:
 
 
 def worker_command(binding: dict, root: Path) -> list[str]:
-    return [sys.executable, str(ROOT / binding["worker_path"]), "--manifest", str(ROOT / binding["manifest_path"]),
+    # Execute the worker as a repository module.  Invoking its file directly
+    # puts ``scripts/`` rather than the checkout root on sys.path, which makes
+    # its sibling imports unavailable on the remote worker.
+    module = Path(binding["worker_path"]).with_suffix("").as_posix().replace("/", ".")
+    return [sys.executable, "-m", module, "--manifest", str(ROOT / binding["manifest_path"]),
             "--discovery", str(ROOT / binding["discovery_path"]), "--output", str(root / "RAW_UNSCORED.jsonl"),
             "--receipt", str(root / "WORKER_RECEIPT.json"), "--runtime-seconds", str(CAP_SECONDS)]
 
