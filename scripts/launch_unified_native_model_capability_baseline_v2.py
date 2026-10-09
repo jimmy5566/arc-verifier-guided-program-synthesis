@@ -34,15 +34,30 @@ def atomic(path: Path, value: dict) -> None:
     os.replace(temporary, path)
 
 
-def load_binding(path: Path) -> dict:
+def git_head() -> str:
+    return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+
+
+def load_binding(path: Path, *, expected_checkout: str | None = None) -> dict:
     value = json.loads(path.read_text(encoding="utf-8-sig"))
-    required = {"nonce", "output_root", "worker_path", "worker_sha256", "manifest_path", "discovery_path", "runtime_cap_seconds", "expected_source_commit"}
+    required = {"nonce", "output_root", "worker", "launcher", "input_manifest", "checkpoint_discovery", "runtime_cap_seconds", "worker_source_commit"}
     if required - set(value) or value["runtime_cap_seconds"] != CAP_SECONDS:
         raise RuntimeError("LAUNCH_BINDING_INVALID")
-    worker = ROOT / value["worker_path"]
-    if not worker.is_file() or sha(worker) != value["worker_sha256"]:
-        raise RuntimeError("WORKER_SOURCE_IDENTITY_MISMATCH")
-    return value
+    resolved = {"nonce": value["nonce"], "output_root": value["output_root"], "runtime_cap_seconds": value["runtime_cap_seconds"],
+                "worker_path": value["worker"].get("path"), "worker_sha256": value["worker"].get("sha256"),
+                "launcher_path": value["launcher"].get("path"), "launcher_sha256": value["launcher"].get("sha256"),
+                "manifest_path": value["input_manifest"].get("path"), "manifest_sha256": value["input_manifest"].get("sha256"),
+                "discovery_path": value["checkpoint_discovery"].get("path"), "discovery_sha256": value["checkpoint_discovery"].get("sha256"),
+                "worker_source_commit": value["worker_source_commit"]}
+    if any(not isinstance(resolved[key], str) or not resolved[key] for key in ("nonce", "output_root", "worker_path", "worker_sha256", "launcher_path", "launcher_sha256", "manifest_path", "manifest_sha256", "discovery_path", "discovery_sha256", "worker_source_commit")):
+        raise RuntimeError("LAUNCH_BINDING_INVALID")
+    for relative, expected, label in ((resolved["worker_path"], resolved["worker_sha256"], "WORKER"), (resolved["launcher_path"], resolved["launcher_sha256"], "LAUNCHER"), (resolved["manifest_path"], resolved["manifest_sha256"], "MANIFEST"), (resolved["discovery_path"], resolved["discovery_sha256"], "DISCOVERY")):
+        candidate = ROOT / relative
+        if not candidate.is_file() or sha(candidate) != expected:
+            raise RuntimeError(f"{label}_SOURCE_IDENTITY_MISMATCH")
+    if expected_checkout is not None and git_head() != expected_checkout:
+        raise RuntimeError("EXACT_CHECKED_OUT_SOURCE_MISMATCH")
+    return resolved
 
 
 def worker_command(binding: dict, root: Path) -> list[str]:
@@ -56,8 +71,8 @@ def artifact_summary(path: Path) -> dict:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(); parser.add_argument("--binding", type=Path, required=True)
-    args = parser.parse_args(); binding = load_binding(args.binding)
+    parser = argparse.ArgumentParser(); parser.add_argument("--binding", type=Path, required=True); parser.add_argument("--expected-source-commit", required=True)
+    args = parser.parse_args(); binding = load_binding(args.binding, expected_checkout=args.expected_source_commit)
     root = Path(binding["output_root"]); lock = root.parent / ("." + root.name + ".lock")
     if root.exists():
         raise RuntimeError("FRESH_OUTPUT_ROOT_REQUIRED")
