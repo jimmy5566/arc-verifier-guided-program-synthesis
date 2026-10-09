@@ -26,6 +26,13 @@ class NativeLauncherV2Tests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "LAUNCH_BINDING_INVALID"):
                 mod.load_binding(path)
 
+    def test_actual_frozen_v4_binding_resolves_to_worker_command(self):
+        binding_path = ROOT / "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/LAUNCH_BINDING_V4.json"
+        binding = mod.load_binding(binding_path)
+        command = mod.worker_command(binding, Path("/fresh"))
+        self.assertEqual(binding["runtime_cap_seconds"], 9000)
+        self.assertIn(str(ROOT / binding["worker_path"]), command)
+
     def test_launcher_module_is_cpu_only(self):
         source = (ROOT / "scripts" / "launch_unified_native_model_capability_baseline_v2.py").read_text(encoding="utf-8")
         self.assertNotRegex(source, r"(?m)^\\s*(from|import)\\s+(torch|transformers|peft)\\b")
