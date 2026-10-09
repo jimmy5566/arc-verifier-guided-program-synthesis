@@ -1,0 +1,75 @@
+{
+  "batching": {
+    "batch1_batch16_semantic_gate": {
+      "all_pass": true,
+      "conditions": 6,
+      "episodes_per_condition": 12,
+      "mismatch_count": 0
+    },
+    "effective_batch_sizes": [
+      12,
+      16
+    ],
+    "requested_batch_sizes": [
+      16
+    ]
+  },
+  "checkpoint_rows": {
+    "ATOMIC_R1": 60,
+    "FAMILY_BALANCED": 60,
+    "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED": 60,
+    "RECONSTRUCTED_FOUNDATION_V2_V7": 60,
+    "TARGETED_R1": 60,
+    "TARGETED_R2": 60
+  },
+  "elapsed_seconds": 2402.376140123233,
+  "evidence": {
+    "RAW_UNSCORED_BATCH16.jsonl": {
+      "bytes": 3283364,
+      "sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e"
+    },
+    "TERMINAL_RECEIPT.json": {
+      "bytes": 1004,
+      "sha256": "05526ac3dedb7a6c0d3e217c3fb60ee3d74a9f13179cd00242f483e7e20661b6"
+    },
+    "WORKER_RECEIPT.json": {
+      "bytes": 44833,
+      "sha256": "039b9bd09b99175ac1dfc7ede6724ecf3e5881938a54ac4a23e120b47ea28114"
+    },
+    "launch.log": {
+      "bytes": 22,
+      "sha256": "0ea7cf1d885ad4976e0150df9dce6ffc37f00cf7db07e24b2b2e886ad0493c46"
+    },
+    "worker.stderr.log": {
+      "bytes": 2060,
+      "sha256": "f7a6bca567f984f1db3391f47931d7985a9543df892d8ac353f4f109e3a31663"
+    }
+  },
+  "execution_status": "SUCCESS",
+  "hard_boundaries_observed": {
+    "backward": false,
+    "final_audit_opened": false,
+    "optimizer_steps": 0,
+    "training": false
+  },
+  "next_scientific_boundary": "SEALED_TARGET_SIDECAR_ACCESS_OR_TARGET_ALIGNED_SCORING_REQUIRES_NEW_DIRECTOR_DECISION",
+  "nonce": "5e46a8ba7794cbec09d838c84d26a32a",
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V3_BATCH16",
+  "raw_row_count": 360,
+  "run_id": "RUN_001_5e46a8ba7794cbec09d838c84d26a32a",
+  "schema_version": 1,
+  "scientific_interpretation": "NOT_ESTABLISHED_TARGET_BLIND_UNSCORED_EVIDENCE_ONLY",
+  "scoring": "NOT_RUN",
+  "source_commit": "d8c48009bc43db071960af6263ff8834a439d4a6",
+  "target_isolation": {
+    "forbidden_record_fields": [
+      "dGold",
+      "final_audit",
+      "gold",
+      "output",
+      "target"
+    ],
+    "observed_forbidden_fields": [],
+    "sealed_target_sidecar_accessed": false
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "batching": {
+    "batch1_batch16_semantic_gate": {
+      "all_pass": true,
+      "conditions": 6,
+      "episodes_per_condition": 12,
+      "mismatch_count": 0
+    },
+    "effective_batch_sizes": [
+      12,
+      16
+    ],
+    "requested_batch_sizes": [
+      16
+    ]
+  },
+  "execution": {
+    "backward": false,
+    "elapsed_seconds": 2402.376140123233,
+    "final_audit_opened": false,
+    "nonce": "5e46a8ba7794cbec09d838c84d26a32a",
+    "optimizer_steps": 0,
+    "raw_rows": 360,
+    "source_commit": "d8c48009bc43db071960af6263ff8834a439d4a6",
+    "status": "SUCCESS",
+    "training": false
+  },
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V3_BATCH16",
+  "question": "Does the complete frozen target-blind Batch16 evidence authorize the next bounded sealed-target scoring step, or is a scientific change required? No additional generation is proposed.",
+  "raw_evidence_sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e",
+  "request": "Return CONTINUE_CONTROLLER only if the frozen target-aligned scoring boundary is scientifically approved; otherwise REQUIRE_CHANGES with the smallest scientific repair. Do not request rerun, retune generation, or open FINAL_AUDIT.",
+  "result_summary_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a/RESULT_SUMMARY.json",
+  "result_summary_sha256": "50af6fefa248ac4187c95935e9f447b1816fdc3596fe695a6144402dfc4ce7e2",
+  "review_type": "RESULT_BOUNDARY_SEALED_SCORING_AUTHORIZATION",
+  "schema_version": 1,
+  "scientific_interpretation": "PROCESS_COMPLETE_BUT_CAPABILITY_INTERPRETATION_NOT_ESTABLISHED_BECAUSE_SEALED_TARGET_SCORING_HAS_NOT_RUN",
+  "target_isolation": {
+    "forbidden_record_fields": [
+      "dGold",
+      "final_audit",
+      "gold",
+      "output",
+      "target"
+    ],
+    "observed_forbidden_fields": [],
+    "sealed_target_sidecar_accessed": false
+  },
+  "terminal_receipt_sha256": "05526ac3dedb7a6c0d3e217c3fb60ee3d74a9f13179cd00242f483e7e20661b6",
+  "worker_receipt_sha256": "039b9bd09b99175ac1dfc7ede6724ecf3e5881938a54ac4a23e120b47ea28114"
+}

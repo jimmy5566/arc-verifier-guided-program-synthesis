@@ -1,0 +1,25 @@
+{
+  "backward": false,
+  "elapsed_seconds": 2402.376140123233,
+  "expected_source_commit": "d8c48009bc43db071960af6263ff8834a439d4a6",
+  "final_audit_opened": false,
+  "nonce": "5e46a8ba7794cbec09d838c84d26a32a",
+  "optimizer_steps": 0,
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V3_BATCH16",
+  "raw_evidence": {
+    "bytes": 3283364,
+    "path": "/workspace/arc2/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a/RAW_UNSCORED_BATCH16.jsonl",
+    "present": true,
+    "sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e"
+  },
+  "runtime_cap_seconds": 9000,
+  "status": "SUCCESS",
+  "training": false,
+  "worker_receipt": {
+    "bytes": 44833,
+    "path": "/workspace/arc2/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a/WORKER_RECEIPT.json",
+    "present": true,
+    "sha256": "039b9bd09b99175ac1dfc7ede6724ecf3e5881938a54ac4a23e120b47ea28114"
+  },
+  "worker_returncode": 0
+}
