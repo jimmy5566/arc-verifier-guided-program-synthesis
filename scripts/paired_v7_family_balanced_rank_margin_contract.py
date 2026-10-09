@@ -74,11 +74,45 @@ def require_layout(layout: TargetContinuationLayout, contract: TokenGridContract
         raise RuntimeError("TARGET_LAYOUT_EOS_INVALID")
 
 
+def require_two_checkpoint_prompt_pairing(rows: Iterable[dict]) -> dict[str, str]:
+    """Validate the frozen V7/Family-Balanced raw-prediction pairing.
+
+    This is deliberately target-blind: it checks only condition labels,
+    episode identities, and prompt hashes.  A duplicated episode, a missing
+    condition, or different prompts would invalidate the B1 sensitivity set.
+    """
+    expected = {"RECONSTRUCTED_FOUNDATION_V2_V7", "FAMILY_BALANCED"}
+    grouped: dict[str, list[dict]] = {}
+    materialized = list(rows)
+    if len(materialized) != 120:
+        raise RuntimeError("PAIRED_RAW_ROW_COUNT_INVALID")
+    for row in materialized:
+        episode_id = row.get("episode_id")
+        condition = row.get("checkpoint_condition")
+        prompt_sha256 = row.get("prompt_sha256")
+        if not isinstance(episode_id, str) or not episode_id or condition not in expected:
+            raise RuntimeError("PAIRED_RAW_IDENTITY_INVALID")
+        if not isinstance(prompt_sha256, str) or not prompt_sha256:
+            raise RuntimeError("PAIRED_RAW_PROMPT_HASH_INVALID")
+        grouped.setdefault(episode_id, []).append(row)
+    if len(grouped) != 60:
+        raise RuntimeError("PAIRED_RAW_EPISODE_COUNT_INVALID")
+    mapping: dict[str, str] = {}
+    for episode_id, pair in grouped.items():
+        if len(pair) != 2 or {row["checkpoint_condition"] for row in pair} != expected:
+            raise RuntimeError("PAIRED_RAW_CONDITION_PAIR_INVALID")
+        hashes = {row["prompt_sha256"] for row in pair}
+        if len(hashes) != 1:
+            raise RuntimeError("PAIRED_RAW_PROMPT_HASH_MISMATCH")
+        mapping[episode_id] = hashes.pop()
+    return mapping
+
+
 def fixed_batch1_subset(rows: Iterable[dict], count: int = 12) -> list[str]:
-    """Pick a fixed target-blind representative set from already frozen rows."""
-    mapping = {str(row.get("episode_id")): str(row.get("prompt_sha256")) for row in rows}
-    if len(mapping) != 60 or count != 12 or any(not key or not value for key, value in mapping.items()):
-        raise RuntimeError("FIXED_BATCH1_SUBSET_INPUT_INVALID")
+    """Pick a fixed target-blind representative set after exact pairing."""
+    mapping = require_two_checkpoint_prompt_pairing(rows)
+    if count != 12:
+        raise RuntimeError("FIXED_BATCH1_SUBSET_COUNT_INVALID")
     ordered = sorted(mapping, key=lambda episode_id: (mapping[episode_id], episode_id))
     positions = tuple(round(index * (len(ordered) - 1) / (count - 1)) for index in range(count))
     if len(set(positions)) != count:
@@ -93,7 +127,10 @@ def sensitivity_gate(primary: dict[str, dict], batch1: dict[str, dict]) -> dict:
     mismatches = []
     for episode_id in sorted(primary):
         left, right = primary[episode_id], batch1[episode_id]
-        for field in ("grid_content_correct_top1_rate", "grid_content_correct_top2_rate", "grid_content_mean_margin", "first_error_rank", "first_error_margin"):
+        # Discrete conclusion-stability fields are exact.  Continuous margins
+        # are assessed separately through paired_margin_sensitivity_u(), as
+        # required by the frozen Director remediation.
+        for field in ("grid_content_correct_top1_rate", "grid_content_correct_top2_rate", "first_error_rank", "first_error_parser_status"):
             if field not in left or field not in right:
                 raise RuntimeError("BATCH_SENSITIVITY_METRIC_MISSING")
             if left[field] != right[field]:

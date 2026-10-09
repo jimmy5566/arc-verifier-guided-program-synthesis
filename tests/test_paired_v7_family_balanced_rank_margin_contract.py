@@ -22,16 +22,37 @@ class RankMarginContractTests(unittest.TestCase):
             module.serialize_native_grid_target([[10]], CONTRACT)
 
     def test_fixed_batch1_subset_is_target_blind_deterministic(self):
-        rows = [{"episode_id": f"e{i:02d}", "prompt_sha256": f"{59-i:064x}"} for i in range(60)]
+        rows = [
+            {"episode_id": f"e{i:02d}", "checkpoint_condition": condition, "prompt_sha256": f"{59-i:064x}"}
+            for i in range(60)
+            for condition in ("RECONSTRUCTED_FOUNDATION_V2_V7", "FAMILY_BALANCED")
+        ]
         subset = module.fixed_batch1_subset(rows)
         self.assertEqual(len(subset), 12)
         self.assertEqual(subset, module.fixed_batch1_subset(list(reversed(rows))))
 
-    def test_sensitivity_gate_rejects_rank_or_margin_change(self):
-        base = {"e": {"grid_content_correct_top1_rate": 1.0, "grid_content_correct_top2_rate": 1.0, "grid_content_mean_margin": 1.0, "first_error_rank": None, "first_error_margin": None}}
+    def test_pairing_rejects_missing_condition_or_prompt_mismatch(self):
+        rows = [
+            {"episode_id": f"e{i:02d}", "checkpoint_condition": condition, "prompt_sha256": f"{i:064x}"}
+            for i in range(60)
+            for condition in ("RECONSTRUCTED_FOUNDATION_V2_V7", "FAMILY_BALANCED")
+        ]
+        self.assertEqual(len(module.require_two_checkpoint_prompt_pairing(rows)), 60)
+        mismatched = [dict(row) for row in rows]
+        mismatched[1]["prompt_sha256"] = "f" * 64
+        with self.assertRaisesRegex(RuntimeError, "PROMPT_HASH_MISMATCH"):
+            module.require_two_checkpoint_prompt_pairing(mismatched)
+        missing = rows[:-1] + [dict(rows[-2])]
+        with self.assertRaisesRegex(RuntimeError, "CONDITION_PAIR_INVALID"):
+            module.require_two_checkpoint_prompt_pairing(missing)
+
+    def test_sensitivity_gate_rejects_discrete_but_not_margin_change(self):
+        base = {"e": {"grid_content_correct_top1_rate": 1.0, "grid_content_correct_top2_rate": 1.0, "grid_content_mean_margin": 1.0, "first_error_rank": None, "first_error_parser_status": "VALID"}}
         self.assertEqual(module.sensitivity_gate(base, base)["status"], "PASS")
         changed = {"e": {**base["e"], "grid_content_mean_margin": 0.5}}
-        self.assertEqual(module.sensitivity_gate(base, changed)["status"], "FAIL_MATERIAL_RANK_OR_METRIC_DRIFT")
+        self.assertEqual(module.sensitivity_gate(base, changed)["status"], "PASS")
+        discrete_changed = {"e": {**base["e"], "grid_content_correct_top1_rate": 0.0}}
+        self.assertEqual(module.sensitivity_gate(base, discrete_changed)["status"], "FAIL_MATERIAL_RANK_OR_METRIC_DRIFT")
 
     def test_margin_u_and_interval_are_not_exact_float_equality(self):
         b32 = {"e": {"v7_grid_margin": 1.0, "family_balanced_grid_margin": 1.5}}
