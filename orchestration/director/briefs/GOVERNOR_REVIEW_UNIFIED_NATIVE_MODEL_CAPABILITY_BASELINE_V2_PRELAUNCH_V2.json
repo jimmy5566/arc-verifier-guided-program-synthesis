@@ -1,0 +1,46 @@
+{
+  "forbidden": [
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint mutation",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external selector",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target-dependent candidate selection"
+  ],
+  "frozen_scientific_conditions": {
+    "checkpoint_discovery_sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654",
+    "manifest_sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+    "primary": "deterministic length-bucketed Batch32 Greedy; fixed 12 episode Batch1 sensitivity subset; ladder 32,16,8,4,1",
+    "runtime_cap_seconds": 9000,
+    "targets": "sealed until raw target-blind evidence is frozen"
+  },
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V2",
+  "question": "Do RC1-RC4 now establish a valid single bounded target-blind Batch32 generation launch under the unchanged cohort, checkpoint conditions, candidate rule, and cap?",
+  "repaired_execution_chain": {
+    "RC1": "Physical tokens remain preserved; only trailing pads after EOS are removed from the comparable trajectory. B32/B1 compares trajectory, EOS/termination, parser, canonical hash, and aggregates.",
+    "RC2": "The rank-2 continuation starts from the exact saved Batch32 primary prefix and saved trace. Full-cohort Batch1 Greedy is removed; only the fixed 12-row sensitivity check remains.",
+    "RC3": "Left-padding plus attention mask are frozen. The outer launcher covers process start through terminal receipt at 9000 seconds, requires fresh output root and exclusive lock, and preserves raw/worker receipt hashes on SUCCESS, FAILURE, or TIMEOUT.",
+    "RC4": "20 focused CPU tests passed; V3 binding uses a fresh nonce/root; RunPod ran the revised no-model runtime identity preflight at the exact binding source commit."
+  },
+  "requested_decision": "CONTINUE_CONTROLLER authorizing only one unchanged no-update Batch32 target-blind generation launch, or REQUIRE_CHANGES identifying one remaining concrete scientific-validity defect.",
+  "review_type": "SCIENTIFIC_PRELAUNCH_REVIEW",
+  "runtime_evidence": {
+    "binding_nonce": "ff0d23b16c304b11b9769b1d16a7896c",
+    "binding_output_root": "/workspace/arc2/unified_native_model_capability_baseline_v2/run_002_ff0d23b16c304b11b9769b1d16a7896c",
+    "binding_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/LAUNCH_BINDING_V3.json",
+    "binding_sha256": "59a71902d7ccee2782fa9d864943b80d7d9a622a5cbf2944035ed745a0da43d4",
+    "cpu_tests": "PASS_20",
+    "launcher_sha256": "f56aad38bd2b5f7545c43dee3a764b643c77e1af1cf5ae81272e0839f58a91ec",
+    "remote_preflight_observation_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/RUNTIME_IDENTITY_PREFLIGHT_V3_REMOTE_OBSERVATION.json",
+    "remote_preflight_observation_sha256": "7fa4f3b00e41a13e88d3e0b7abc95d5d36f52c155f1ea45fb0c525cb3458d544",
+    "worker_sha256": "932a3c66f68c4bddb07bd3bc2cc0325f05075f14d0f4f0f4e639c85e0a678ad1"
+  },
+  "schema_version": 1
+}

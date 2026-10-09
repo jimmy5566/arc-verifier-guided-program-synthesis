@@ -1,0 +1,25 @@
+{
+  "fields_observed": {
+    "adapter_files_verified_by_condition": {
+      "ATOMIC_R1": 3,
+      "FAMILY_BALANCED": 3,
+      "RECONSTRUCTED_FOUNDATION_V2_V7": 3,
+      "TARGETED_R1": 3,
+      "TARGETED_R2": 3
+    },
+    "base_files_verified_once": 13,
+    "expected_source_commit": "6a1c994b75f7716aa4d5462a1b708610602e3908",
+    "final_audit_opened": false,
+    "gpu_used": false,
+    "model_imported": false,
+    "optimizer_steps": 0,
+    "worker_sha256": "932a3c66f68c4bbddb07bd3bc2cc0325f05075f14d0f4f0f4e639c85e0a678ad1"
+  },
+  "kind": "RUNPOD_SMALL_RECEIPT_OBSERVATION",
+  "local_byte_copy": "NOT_CREATED; remote receipt SHA is authoritative",
+  "remote_receipt_path": "/workspace/arc2/unified_native_model_capability_baseline_v2/runtime_preflight/6A1C994B_RUNTIME_IDENTITY.json",
+  "remote_receipt_sha256_observed": "1bb61990cca21a44da39c1c68263b77732e7aefac6315dfef8516f65634ab6e6",
+  "schema_version": 1,
+  "status": "PASS_NO_MODEL_IMPORT",
+  "transport": "PTY_SMALL_RECEIPT_QUERY"
+}
