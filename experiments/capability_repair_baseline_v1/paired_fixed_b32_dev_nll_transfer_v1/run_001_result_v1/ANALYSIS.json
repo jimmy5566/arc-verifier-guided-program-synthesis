@@ -1,0 +1,19 @@
+{
+  "batch1_delta": {
+    "connected components": -6.552050196746561,
+    "difference": -0.44969352190326417,
+    "inside/contains": -0.37379676384044536,
+    "orientation": -4.39036625984891,
+    "width": -4.7590288831638645
+  },
+  "crosscheck_complete": true,
+  "primary_delta": {
+    "connected components": -6.553918259124002,
+    "difference": -0.40313081232261866,
+    "inside/contains": -0.3420351633522664,
+    "orientation": -4.391245580680596,
+    "width": -4.867074351061628
+  },
+  "raw_rows": 184,
+  "status": "COMPLETE_CPU_POSTPROCESS"
+}

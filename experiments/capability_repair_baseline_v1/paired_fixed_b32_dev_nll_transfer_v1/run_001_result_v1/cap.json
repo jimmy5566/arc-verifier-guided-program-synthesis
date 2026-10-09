@@ -1,0 +1,17 @@
+{
+  "cap_seconds": 900,
+  "command": [
+    "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "scripts/run_paired_fixed_b32_dev_nll_transfer_v1.py",
+    "--config",
+    "experiments/capability_repair_baseline_v1/paired_fixed_b32_dev_nll_transfer_v1/EXECUTION_PACKAGE.json",
+    "--dev",
+    "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+    "--out",
+    "/workspace/arc2/paired_fixed_b32_dev_nll_transfer_v1/run_001_a2b7d4f19c3e5a8b"
+  ],
+  "exit_code": 0,
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "wall_seconds": 375.10790676716715
+}

@@ -1,0 +1,22 @@
+{
+  "RAW.jsonl": {
+    "bytes": 46222,
+    "remote_path": "/workspace/arc2/paired_fixed_b32_dev_nll_transfer_v1/run_001_a2b7d4f19c3e5a8b/RAW.jsonl",
+    "sha256": "3a2954636b31cb7c9fb27f8935f6cffd262e923190afdb2bd433c1acf1ada473"
+  },
+  "TERMINAL_RECEIPT.json": {
+    "bytes": 228,
+    "remote_path": "/workspace/arc2/paired_fixed_b32_dev_nll_transfer_v1/run_001_a2b7d4f19c3e5a8b/TERMINAL_RECEIPT.json",
+    "sha256": "3b26c41517a73c68620776f9e9dab26baf5f0292167377f37a7695c8ae23e819"
+  },
+  "cap.json": {
+    "bytes": 620,
+    "remote_path": "/workspace/arc2/paired_fixed_b32_dev_nll_transfer_v1/run_001_a2b7d4f19c3e5a8b_cap.json",
+    "sha256": "afe6a86a33aebc02fb62a4b74f53d22b502e1a5ef315c9adc395ab3271b83641"
+  },
+  "launcher.log": {
+    "bytes": 862,
+    "remote_path": "/workspace/arc2/paired_fixed_b32_dev_nll_transfer_v1/run_001_a2b7d4f19c3e5a8b.log",
+    "sha256": "b313ef045b6f5f6411149d70166a62dc0b924fce829ee70cdc41305985095596"
+  }
+}
