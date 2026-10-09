@@ -1,0 +1,44 @@
+{
+  "contract_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_GOVERNOR_REVIEW_CONTRACT_V1",
+  "fail_closed": [
+    "missing review",
+    "malformed review",
+    "non-CONTINUE_CONTROLLER decision",
+    "missing binding field",
+    "brief/config/protocol/worker/ledger/schedule/TRAIN/manifest/output-root/reservation/source-commit mismatch",
+    "standing user GPU authorization absent",
+    "reused output root"
+  ],
+  "invariants": {
+    "external_governor_review_required": true,
+    "final_audit_opened": false,
+    "no_nonce_consumption_or_output_creation_before_authenticated_review": true,
+    "reviewed_config_execution_authorized": false
+  },
+  "required_decision": "CONTINUE_CONTROLLER",
+  "required_launch_binding_keys": [
+    "reviewed_brief_sha256",
+    "protocol_id",
+    "round_id",
+    "config_sha256",
+    "protocol_sha256",
+    "worker_sha256",
+    "coefficient_ledger_sha256",
+    "schedule_sha256",
+    "train_sha256",
+    "checkpoint_manifest_sha256",
+    "output_root",
+    "reservation_seconds",
+    "source_commit",
+    "standing_user_gpu_authorization"
+  ],
+  "schema_version": 1,
+  "status": "CPU_TESTED_PENDING_DIRECTOR_REVIEW",
+  "validation_order": [
+    "CLI output root equality",
+    "real pre-model model/data/ledger checks",
+    "fresh output root",
+    "external review structural and identity binding",
+    "only then model import and optimizer construction"
+  ]
+}

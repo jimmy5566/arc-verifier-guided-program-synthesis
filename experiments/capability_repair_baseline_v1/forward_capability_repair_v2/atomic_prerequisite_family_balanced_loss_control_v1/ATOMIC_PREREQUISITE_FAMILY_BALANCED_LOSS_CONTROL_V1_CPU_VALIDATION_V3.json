@@ -1,0 +1,24 @@
+{
+  "config_sha256": "6078afe70dd15c656906487d732d448ae3ed4784f1b3f1da962302cc3e8c2d9f",
+  "contract_sha256": "c725b1b69aa325d7513ea4f867b4de5ec95940326e8e735f18db3ebdbf71f906",
+  "final_audit_opened": false,
+  "gpu_used": false,
+  "model_loaded": false,
+  "nonce_consumed": false,
+  "optimizer_constructed": false,
+  "output_created": false,
+  "protocol_v3_sha256": "8c57e1b1e88059722b6cdb5d2577c03d721152e34b9ce7cf8061e92fa88fc501",
+  "schema_version": 1,
+  "scientific_condition_changed": false,
+  "status": "CPU_AUTHORIZATION_INTERFACE_TEST_PASS",
+  "tests": {
+    "all_rejections_before_model_optimizer_gpu_output_or_nonce": true,
+    "exact_continue_binding_accepted": true,
+    "malformed_review_rejected": true,
+    "missing_review_rejected": true,
+    "require_changes_rejected": true,
+    "source_commit_mismatch_rejected": true
+  },
+  "validation_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_CPU_VALIDATION_V3",
+  "worker_sha256": "32c48345d589f38871fdc62e315048d914393fadc26b272303721010fbdd1f36"
+}

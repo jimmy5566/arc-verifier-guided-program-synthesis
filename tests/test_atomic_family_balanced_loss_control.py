@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -77,6 +78,46 @@ class FamilyBalancedLossControlTests(unittest.TestCase):
         config.pop("train_sha256")
         with self.assertRaisesRegex(RuntimeError, "REQUIRED_CONFIG_KEY_MISSING:train_sha256"):
             worker.validate_pre_model_config(config, config["output_root"])
+
+    def _authenticated_review_paths(self, directory: Path) -> tuple[dict, Path, Path, Path, Path]:
+        config = json.loads((BASE / "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_REMOTE_RUN_CONFIG_DRAFT.json").read_text(encoding="utf-8"))
+        config_path = directory / "config.json"
+        protocol_path = directory / "protocol.json"
+        brief_path = directory / "brief.json"
+        review_path = directory / "review.json"
+        config_path.write_text(json.dumps(config, sort_keys=True), encoding="utf-8")
+        protocol_path.write_text('{"protocol": "test"}', encoding="utf-8")
+        brief_path.write_text('{"brief": "test"}', encoding="utf-8")
+        binding = worker.launch_identity(config, config_path, protocol_path, brief_path)
+        review_path.write_text(json.dumps({"decision": "CONTINUE_CONTROLLER", "launch_binding": binding}, sort_keys=True), encoding="utf-8")
+        return config, config_path, protocol_path, brief_path, review_path
+
+    def test_exact_governor_review_is_required_and_accepted_without_side_effects(self) -> None:
+        with tempfile.TemporaryDirectory() as root:
+            config, config_path, protocol_path, brief_path, review_path = self._authenticated_review_paths(Path(root))
+            result = worker.authenticate_governor_review(config, config_path, protocol_path, brief_path, review_path)
+            self.assertEqual(result["status"], "GOVERNOR_REVIEW_AUTHENTICATED")
+            self.assertFalse((Path(root) / "output").exists())
+
+    def test_noncontinue_malformed_and_identity_mismatch_reviews_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as root:
+            config, config_path, protocol_path, brief_path, review_path = self._authenticated_review_paths(Path(root))
+            with self.assertRaisesRegex(RuntimeError, "GOVERNOR_REVIEW_MISSING"):
+                worker.authenticate_governor_review(config, config_path, protocol_path, brief_path, Path(root) / "missing.json")
+            review = json.loads(review_path.read_text(encoding="utf-8"))
+            review["decision"] = "REQUIRE_CHANGES"
+            review_path.write_text(json.dumps(review), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "GOVERNOR_REVIEW_DECISION_NOT_CONTINUE"):
+                worker.authenticate_governor_review(config, config_path, protocol_path, brief_path, review_path)
+            review_path.write_text("not-json", encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "GOVERNOR_REVIEW_MALFORMED"):
+                worker.authenticate_governor_review(config, config_path, protocol_path, brief_path, review_path)
+            _, _, _, _, review_path = self._authenticated_review_paths(Path(root))
+            review = json.loads(review_path.read_text(encoding="utf-8"))
+            review["launch_binding"]["source_commit"] = "0" * 40
+            review_path.write_text(json.dumps(review), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "GOVERNOR_REVIEW_BINDING_MISMATCH:source_commit"):
+                worker.authenticate_governor_review(config, config_path, protocol_path, brief_path, review_path)
 
 
 if __name__ == "__main__":

@@ -90,6 +90,65 @@ REQUIRED_PRE_MODEL_CONFIG_KEYS = (
 )
 
 
+GOVERNOR_REVIEW_BINDING_KEYS = (
+    "reviewed_brief_sha256", "protocol_id", "round_id", "config_sha256",
+    "protocol_sha256", "worker_sha256", "coefficient_ledger_sha256",
+    "schedule_sha256", "train_sha256", "checkpoint_manifest_sha256",
+    "output_root", "reservation_seconds", "source_commit",
+    "standing_user_gpu_authorization",
+)
+
+
+def git_head() -> str:
+    return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+
+
+def launch_identity(config: dict, config_path: Path, protocol_path: Path, reviewed_brief: Path) -> dict:
+    return {
+        "reviewed_brief_sha256": sha(reviewed_brief),
+        "protocol_id": config["protocol_id"],
+        "round_id": config["round_id"],
+        "config_sha256": sha(config_path),
+        "protocol_sha256": sha(protocol_path),
+        "worker_sha256": sha(Path(__file__).resolve()),
+        "coefficient_ledger_sha256": config["loss_coefficient_ledger_sha256"],
+        "schedule_sha256": config["schedule_sha256"],
+        "train_sha256": config["train_sha256"],
+        "checkpoint_manifest_sha256": config["checkpoint_manifest_sha256"],
+        "output_root": config["output_root"],
+        "reservation_seconds": float(config["reservation_seconds"]),
+        "source_commit": git_head(),
+        "standing_user_gpu_authorization": True,
+    }
+
+
+def authenticate_governor_review(config: dict, config_path: Path, protocol_path: Path, reviewed_brief: Path, review_path: Path) -> dict:
+    """Fail closed unless an external Director CONTINUE binds this exact launch."""
+    if config.get("execution_authorized") is not False or config.get("external_governor_review_required") is not True:
+        raise RuntimeError("MUTABLE_CONFIG_AUTHORIZATION_FORBIDDEN")
+    if not review_path.is_file():
+        raise RuntimeError("GOVERNOR_REVIEW_MISSING")
+    try:
+        review = json.loads(review_path.read_text(encoding="utf8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeError("GOVERNOR_REVIEW_MALFORMED") from exc
+    if review.get("decision") != "CONTINUE_CONTROLLER":
+        raise RuntimeError("GOVERNOR_REVIEW_DECISION_NOT_CONTINUE")
+    binding = review.get("launch_binding")
+    if not isinstance(binding, dict) or any(key not in binding for key in GOVERNOR_REVIEW_BINDING_KEYS):
+        raise RuntimeError("GOVERNOR_REVIEW_BINDING_INCOMPLETE")
+    expected = launch_identity(config, config_path, protocol_path, reviewed_brief)
+    for key, value in expected.items():
+        if binding.get(key) != value:
+            raise RuntimeError(f"GOVERNOR_REVIEW_BINDING_MISMATCH:{key}")
+    return {
+        "review_sha256": sha(review_path),
+        "reviewed_brief_sha256": expected["reviewed_brief_sha256"],
+        "source_commit": expected["source_commit"],
+        "status": "GOVERNOR_REVIEW_AUTHENTICATED",
+    }
+
+
 def validate_pre_model_config(config: dict, run_root_raw: str) -> dict:
     """Run every bound CPU identity check before importing model libraries."""
     missing = [key for key in REQUIRED_PRE_MODEL_CONFIG_KEYS if key not in config]
@@ -169,26 +228,35 @@ def main() -> int:
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--run-root", required=True)
     parser.add_argument("--validate-pre-model", action="store_true")
+    parser.add_argument("--governor-review", type=Path)
+    parser.add_argument("--reviewed-brief", type=Path)
+    parser.add_argument("--protocol", type=Path)
     args = parser.parse_args()
     config = json.loads(args.config.read_text(encoding="utf8"))
     pre_model = validate_pre_model_config(config, args.run_root)
     if args.validate_pre_model:
         print(json.dumps(pre_model, sort_keys=True))
         return 0
-    if config.get("execution_authorized") is not True:
-        raise RuntimeError("SCIENTIFIC_TRAINING_NOT_AUTHORIZED")
     run = Path(args.run_root)
     if run.exists():
         raise RuntimeError("FRESH_OUTPUT_REQUIRED")
+    if config.get("external_governor_review_required") is True:
+        if not args.governor_review or not args.reviewed_brief or not args.protocol:
+            raise RuntimeError("GOVERNOR_REVIEW_REQUIRED")
+        authorization = authenticate_governor_review(config, args.config, args.protocol, args.reviewed_brief, args.governor_review)
+    elif config.get("execution_authorized") is not True:
+        raise RuntimeError("SCIENTIFIC_TRAINING_NOT_AUTHORIZED")
+    else:
+        authorization = {"status": "LEGACY_CONFIG_AUTHORIZATION"}
     manifest_path = resolve(ROOT, config["checkpoint_manifest_path"])
     work = load_work(config)
     loss_coefficients = load_loss_coefficients(config, work)
     run.mkdir(parents=True)
     runtime, checkpoints = run / "runtime", run / "checkpoints"
     runtime.mkdir(); checkpoints.mkdir()
-    source_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    source_commit = git_head()
     terminal = {"schema_version": 1, "protocol_id": config["protocol_id"], "round_id": config["round_id"], "arm": config["arm"], "scientific_training_started": False, "optimizer_steps": 0, "processed_tokens": 0, "final_audit_accessed": False, "source_commit": source_commit}
-    atomic(runtime / "FROZEN_RUN_BINDING.json", {"config_sha256": sha(args.config), "schedule_sha256": config["schedule_sha256"], "checkpoint_manifest_sha256": config["checkpoint_manifest_sha256"], "run_root": str(run), "cpu_schedule_verified": True})
+    atomic(runtime / "FROZEN_RUN_BINDING.json", {"config_sha256": sha(args.config), "schedule_sha256": config["schedule_sha256"], "checkpoint_manifest_sha256": config["checkpoint_manifest_sha256"], "run_root": str(run), "cpu_schedule_verified": True, "governor_review": authorization})
     model = None
     start_ns = None
     try:

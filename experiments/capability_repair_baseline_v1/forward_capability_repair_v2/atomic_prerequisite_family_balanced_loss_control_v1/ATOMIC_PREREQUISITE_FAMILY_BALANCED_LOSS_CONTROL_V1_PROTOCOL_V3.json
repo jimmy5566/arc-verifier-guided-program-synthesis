@@ -1,0 +1,32 @@
+{
+  "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "execution_authorized": false,
+  "final_audit_opened": false,
+  "forbidden": [
+    "NO_CONFIG_AUTHORIZATION_FLIP",
+    "NO_MODEL_GPU_OPTIMIZER_OR_TRAIN_UNTIL_AUTHENTICATED_CONTINUE_REVIEW",
+    "NO_SCHEDULE_LEDGER_DATA_RECIPE_EVALUATION_THRESHOLD_OR_CAUSAL_CONTRAST_CHANGE",
+    "NO_R1_RESUME",
+    "NO_R3",
+    "NO_FINAL_AUDIT"
+  ],
+  "governor_review_contract_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_GOVERNOR_REVIEW_CONTRACT_V1.json",
+  "governor_review_contract_sha256": "c725b1b69aa325d7513ea4f867b4de5ec95940326e8e735f18db3ebdbf71f906",
+  "loss_coefficient_ledger_sha256": "4eb7b058468257246025b459aec1258f3e9bfa9f8b6c764edad675e2e62ebf0b",
+  "output_root": "/workspace/arc2/atomic_prerequisite_family_balanced_loss_control_v1/round_001",
+  "protocol_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1",
+  "protocol_revision": "V3_EXTERNAL_GOVERNOR_REVIEW_AUTHORIZATION_BINDING",
+  "reservation_seconds": 3600.0,
+  "run_config_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_REMOTE_RUN_CONFIG_DRAFT.json",
+  "run_config_sha256": "6078afe70dd15c656906487d732d448ae3ed4784f1b3f1da962302cc3e8c2d9f",
+  "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6",
+  "schema_version": 1,
+  "scientific_invariants_unchanged": true,
+  "single_changed_factor": "SCALAR_LOSS_AGGREGATION_BY_FAMILY",
+  "status": "CPU_AUTHORIZATION_INTERFACE_TESTED_PENDING_STAGE_REVIEW",
+  "supersedes_protocol_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_PROTOCOL_V2.json",
+  "supersedes_protocol_sha256": "236276c85b28b88c8bf8d2b2860ab66287c73d867a3f12cbb7c8c632fa57dae2",
+  "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945",
+  "worker_path": "scripts/run_same_color_preservation_stage_a_v1.py",
+  "worker_sha256": "32c48345d589f38871fdc62e315048d914393fadc26b272303721010fbdd1f36"
+}
