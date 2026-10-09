@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "reviewed_brief": "orchestration/director/briefs/GOVERNOR_REVIEW_PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_PRELAUNCH_V4.json",
+  "reviewed_brief_sha256": "f04fd874d3cc50765cea488fa550d952a0a1debd905e9358b9015a3cd25e81cc",
+  "decision": "REQUIRE_CHANGES",
+  "scientific_assessment": "V4 correctly repairs RC7-RC10 at the design level: all 60 native prompts now reconstruct to the frozen hashes, the stable experiment parent is accepted while exact output and live-lock duplication fail closed, execution consumes an existing hash-reviewed binding from the exact runtime checkout, and compact batch journals preserve non-target partial evidence. The exact bound success path is nevertheless not executable to a scientifically complete result because RAW_RANK_MARGIN.jsonl is written with a literal backslash-n separator and an illegal literal backslash-n newline argument. Python raises ValueError after measurement rather than producing parseable JSONL. This is a result-preservation blocker, not a cosmetic defect.",
+  "root_cause": [
+    {
+      "id": "RC11_SUCCESS_ARTIFACT_JSONL_SERIALIZATION_INVALID",
+      "finding": "In the bound worker SHA256 8d08d89808700704a4f8dd4cb2f7c1c3440c874bc36717ef35dd7a36ce525726, the final RAW_RANK_MARGIN.jsonl write uses json.dumps(row) + \\\"\\\\n\\\" and newline=\\\"\\\\n\\\". These are two-character backslash-n strings, not LF. Path.write_text rejects the newline argument with ValueError: illegal newline value before a complete raw artifact can be preserved.",
+      "impact": "A GPU run can complete every forward measurement and journal yet terminate FAILED_NO_UPDATE at finalization. The declared complete raw evidence and downstream postprocessor input cannot be produced, so the scientific stage cannot complete under the reviewed binding."
+    },
+    {
+      "id": "RC12_RELEVANT_CPU_SUITE_NOT_GREEN",
+      "finding": "The six-module relevant CPU suite currently runs 28 tests with one error: tests.test_launch_paired_v7_family_balanced_rank_margin_v1 still calls execute_bounded without the now-required partial_evidence and live_lock arguments. Existing mocked completion checks only receipt preservation and does not round-trip the worker's final JSONL into the postprocessor.",
+      "impact": "The brief's execution-safety validation is incomplete and did not detect the fatal success-artifact serialization defect."
+    }
+  ],
+  "smallest_repair": [
+    "Change only the final raw-artifact serialization to emit one JSON object per actual LF-terminated line, using an actual newline character and a valid newline setting or omitting newline translation. Do not change any measured row, estimand, checkpoint, cohort, batching, or decision rule.",
+    "Add one CPU round-trip test that writes the full expected 144 compact rows through the production raw writer, reads them with the production postprocessor's JSONL path, verifies exactly 144 independently parseable records, and completes the frozen postprocessing schema. This test must fail for literal backslash-n output.",
+    "Update the stale timeout test to the current execute_bounded signature and run the complete relevant suite successfully. Preserve the already passing prompt-byte, fresh-parent, duplicate-lock, exact-binding, journal-privacy, timeout, pairing, sensitivity, bootstrap, and postprocessing tests.",
+    "Because correcting the worker changes its SHA256, preserve V4 and its RUN_002 binding as rejected-not-executed. Freeze one new immutable replacement binding and config with the corrected worker hash, fixed fresh nonce/output/receipt, exact source and artifact commits, and otherwise identical scientific conditions. Return only that exact replacement identity for one final narrow prelaunch review."
+  ],
+  "frozen_conditions": [
+    "Keep the exact V7 and FAMILY_BALANCED checkpoint identities, the frozen reused 60-episode synthetic DEV cohort, five families of 12, raw predictions, sidecar, prompts, target serialization, and existing exact-grid evidence unchanged.",
+    "Keep length-bucketed Batch32 primary measurement, the same target-blind 12-episode Batch1 subset, GRID_CONTENT equal-family macro Top-1, Top-2 and margin estimands, pooled token-micro results, five family cells, ROW_SEPARATOR and EOS_END results, first-error summaries, and descriptive exact-outcome groups unchanged.",
+    "Keep 10000 family-stratified paired bootstrap replicates with seed 20261010, exact discrete B32/B1 agreement, separate continuous margin sensitivity U, and the protected-family harm override unchanged.",
+    "Keep one detached no-update run under the 900-second total hard cap and retain the interpretation as reused synthetic development evidence only, not independent ARC transfer or causal gradient evidence."
+  ],
+  "forbidden_actions": [
+    "Do not load a model or launch GPU inference from this response.",
+    "Do not reuse or edit the immutable V4 RUN_002 binding after changing the worker; do not launch with a hash mismatch or generate an unreviewed binding at execution time.",
+    "Do not change checkpoints, cohort, B1 subset, prompts, target bytes, categories, estimands, bootstrap, sensitivity rule, protected-family rule, runtime cap, or post-hoc classification thresholds.",
+    "Do not generate candidates, train, construct an optimizer, run backward, mutate checkpoints, persist target grids or target token IDs, or access Gold, dGold, or FINAL_AUDIT."
+  ],
+  "another_review_required": true,
+  "next_review_scope": "One final narrow prelaunch review of the corrected production JSONL round trip, green relevant CPU suite, and exact replacement binding is required. No scientific redesign or additional diagnostic is requested.",
+  "gpu_inference_authorized": false,
+  "model_loading_authorized": false,
+  "scientific_training_authorized": false
+}

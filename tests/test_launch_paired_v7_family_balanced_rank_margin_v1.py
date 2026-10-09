@@ -29,10 +29,10 @@ class LauncherTests(unittest.TestCase):
 
     def test_timeout_kills_worker_and_preserves_timeout_receipt(self):
         with tempfile.TemporaryDirectory() as temporary:
-            receipt = Path(temporary) / "receipt.json"
+            root = Path(temporary); receipt = root / "receipt.json"; partial = root / "partial"; lock = root / "lock"
             process = Mock(); process.pid = 123; process.wait.side_effect = [subprocess.TimeoutExpired(["worker"], 900), None]
             with patch("scripts.launch_paired_v7_family_balanced_rank_margin_v1.subprocess.Popen", return_value=process), patch("scripts.launch_paired_v7_family_balanced_rank_margin_v1.os.killpg", create=True) as kill:
-                self.assertEqual(execute_bounded(["worker"], receipt=receipt, cap_seconds=900), 124)
+                self.assertEqual(execute_bounded(["worker"], receipt=receipt, cap_seconds=900, partial_evidence=partial, live_lock=lock), 124)
             kill.assert_called_once()
             self.assertEqual(__import__("json").loads(receipt.read_text())["status"], "TIMEOUT_NO_UPDATE")
 

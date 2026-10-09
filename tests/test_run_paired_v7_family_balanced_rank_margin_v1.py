@@ -1,7 +1,8 @@
 from __future__ import annotations
 import hashlib,json,subprocess,sys,tempfile,unittest
 from pathlib import Path
-from scripts.run_paired_v7_family_balanced_rank_margin_v1 import first_free_running_error, journal_completed_batch, select_raw_pairs, validate_prompt_reconstruction
+from scripts.postprocess_paired_v7_family_balanced_rank_margin_v1 import postprocess
+from scripts.run_paired_v7_family_balanced_rank_margin_v1 import first_free_running_error, journal_completed_batch, select_raw_pairs, validate_prompt_reconstruction, write_raw_rank_margin
 class WorkerEntryTests(unittest.TestCase):
  def test_missing_binding_fails_before_model_import(self):
   with tempfile.TemporaryDirectory() as d:
@@ -37,4 +38,18 @@ class WorkerEntryTests(unittest.TestCase):
    journal_completed_batch(directory,condition='V7',mode_id='PRIMARY_B32',batch_index=0,rows=[row])
    saved=json.loads((directory/'V7_PRIMARY_B32_0000.json').read_text());self.assertEqual(saved['completed_rows'][0]['episode_id'],'e');self.assertNotIn('target_ids',json.dumps(saved))
    with self.assertRaisesRegex(RuntimeError,'PRIVACY'):journal_completed_batch(directory,condition='V7',mode_id='PRIMARY_B32',batch_index=1,rows=[row|{'target_ids':[1]}])
+ def test_production_raw_writer_round_trips_144_rows_into_postprocessor(self):
+  def row(condition,mode,family,episode,offset):
+   return {'checkpoint_condition':condition,'mode_id':mode,'episode_id':f'{family}-{episode}','family':str(family),'target_token_ids_persisted':False,'components':{'GRID_CONTENT':{'token_count':2,'correct_top1_count':1 if offset==0 else 2,'correct_top2_count':2,'margin_sum':2.0+offset},'ROW_SEPARATOR':{'token_count':1,'correct_top1_count':1,'correct_top2_count':1,'margin_sum':1.0},'EOS_END':{'token_count':1,'correct_top1_count':1,'correct_top2_count':1,'margin_sum':1.0}},'first_free_running_error':None}
+  primary=[]
+  for family in range(5):
+   for episode in range(12):
+    primary.extend((row('RECONSTRUCTED_FOUNDATION_V2_V7','PRIMARY_B32',family,episode,0.0),row('FAMILY_BALANCED','PRIMARY_B32',family,episode,0.1)))
+  b1=[{**entry,'mode_id':'SENSITIVITY_B1'} for entry in primary[:24]]; rows=primary+b1
+  self.assertEqual(len(rows),144)
+  with tempfile.TemporaryDirectory() as d:
+   path=Path(d)/'RAW_RANK_MARGIN.jsonl';write_raw_rank_margin(path,rows)
+   self.assertEqual(path.read_bytes().count(b'\n'),144);self.assertNotIn(b'\\n',path.read_bytes())
+   loaded=[json.loads(line) for line in path.read_text(encoding='utf8').splitlines()]
+  result=postprocess(loaded,protected_families={'0'});self.assertEqual(result['raw_rows'],144);self.assertFalse(result['target_token_ids_persisted'])
 if __name__=='__main__':unittest.main()

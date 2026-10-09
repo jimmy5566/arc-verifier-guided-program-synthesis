@@ -157,6 +157,13 @@ def journal_completed_batch(directory: Path, *, condition: str, mode_id: str, ba
     })
 
 
+def write_raw_rank_margin(path: Path, rows: list[dict]) -> None:
+    """Write independently parseable LF-delimited compact result rows."""
+    if len(rows) != 144 or any("target_ids" in row or row.get("target_token_ids_persisted") is not False for row in rows):
+        raise RuntimeError("RAW_RESULT_PRIVACY_OR_COMPLETENESS_INVALID")
+    path.write_bytes(b"".join(json.dumps(row, sort_keys=True, separators=(",", ":")).encode("utf-8") + b"\n" for row in rows))
+
+
 def score_batches(model, rows: list[dict], torch, condition: str, mode_id: str, deadline: float, journal_directory: Path) -> list[dict]:
     batch_size, results = (32 if mode_id == "PRIMARY_B32" else 1), []
     with torch.inference_mode():
@@ -249,7 +256,7 @@ def main() -> int:
         if len([row for row in results if row["mode_id"] == "SENSITIVITY_B1"]) != 24:
             raise RuntimeError("BATCH1_RESULT_COMPLETENESS_INVALID")
         raw_path = args.output / "RAW_RANK_MARGIN.jsonl"
-        raw_path.write_text("".join(json.dumps(row, sort_keys=True) + "\\n" for row in results), encoding="utf-8", newline="\\n")
+        write_raw_rank_margin(raw_path, results)
         atomic(args.receipt, {"protocol_id": PROTOCOL, "status": "COMPLETE_NO_UPDATE", "raw_sha256": sha(raw_path), "raw_rows": len(results), "runtime_seconds": time.monotonic() - started, "optimizer_steps": 0, "training": False, "backward": False, "generation": False, "final_audit_opened": False, "target_token_ids_persisted": False})
         return 0
     except Exception as exc:
