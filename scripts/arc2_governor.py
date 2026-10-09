@@ -292,10 +292,17 @@ def remote_status(job):
     encoded=base64.b64encode((script+'\nexit\n').encode('utf-8')).decode('ascii')
     command=['ssh','-F','NUL','-tt','-o','BatchMode=yes','-o','ConnectTimeout=20',target]
     proc=subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    time.sleep(2)
-    payload=(f"\x1b[200~echo {encoded} | base64 -d | bash; exit\x1b[201~\r").encode('utf-8')
+    # RunPod's forced PTY displays bracketed-paste payloads without executing
+    # them.  A prompt-ready ordinary newline has been verified as the bounded
+    # command/control channel for status queries.
+    time.sleep(4)
+    proc.stdin.write((f"echo {encoded} | base64 -d | bash\n").encode('utf-8'))
+    proc.stdin.flush()
+    time.sleep(1)
+    proc.stdin.write(b"exit\n")
+    proc.stdin.flush()
     try:
-        out_bytes, err_bytes=proc.communicate(payload, timeout=45)
+        out_bytes, err_bytes=proc.communicate(timeout=45)
     except subprocess.TimeoutExpired:
         proc.kill(); out_bytes, err_bytes=proc.communicate()
         raise RuntimeError('REMOTE_CONTROL_TIMEOUT')
