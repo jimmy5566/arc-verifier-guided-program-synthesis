@@ -13,7 +13,10 @@ def load(config):
         Path("/workspace/arc2/mounted_inputs/base_only_targeted_repair_available_data_v1/TARGET_DEV.jsonl"),
         Path("/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl")]
     matching = [path for path in candidates if path.is_file() and sha(path) == config["inputs"]["target_dev_sha256"]]
-    if len(matching) != 1:
+    # Multiple mounted aliases are acceptable only because each byte-verifies to
+    # the frozen digest; use the declared priority order and record no semantic
+    # distinction between byte-identical inputs.
+    if not matching:
         raise RuntimeError("TARGET_DEV_EXACT_IDENTITY_RESOLUTION_FAIL")
     dev, manifest_path = matching[0], ROOT / config["inputs"]["manifest_path"]
     if sha(manifest_path) != config["inputs"]["manifest_sha256"]:

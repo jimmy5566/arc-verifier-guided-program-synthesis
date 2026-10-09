@@ -48,6 +48,6 @@
   "source_sha256": {
     "mask_contract": "ff1906849aa44969caa4913e538cbed363cc8961cfa0bba3cb776ec3ae44688d",
     "postprocessor": "fdc8539841b7c639db6aed6044ba14609d8b0c62da2a7e97146a438b39f04063",
-    "worker": "8a6cc507dca1f484b11efeda6a188fe237ea9a18941085a613377627a100028d"
+    "worker": "8bc498042a2d70880c68bbebbc52b9d823f1b0eb629ae7c832e677a2b4e5d9e4"
   }
 }
