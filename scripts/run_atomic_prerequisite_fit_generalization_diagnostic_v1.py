@@ -62,8 +62,11 @@ def decision(classes,dev):
   no=sum(fs[f]=='FIT_IMPROVED' and dev[name][f]<=0 for f in WEAK); yes=sum(fs[f]=='FIT_IMPROVED' and dev[name][f]>=1 for f in WEAK)
   if no>=3 and yes==0:return 'H3_SUPPORTED'
  return 'INCONCLUSIVE'
+def train_file(cfg):
+ remote=Path(cfg.get('remote_train_path',''))
+ return remote if remote.is_file() else Path(cfg['train_path'])
 def self_test(cfg):
- schedule=json.loads(Path(cfg['schedule_path']).read_text()); rows=load_rows(cfg['train_path'],schedule)
+ schedule=json.loads(Path(cfg['schedule_path']).read_text()); rows=load_rows(train_file(cfg),schedule)
  assert len(rows)==400 and all(sum(x['family']==f for x in rows)==48 for f in WEAK)
  fake={f:{'token_micro_mean_nll':1.0} for f in WEAK}; worse={f:{'token_micro_mean_nll':1.0} for f in WEAK}; improved={f:{'token_micro_mean_nll':.98} for f in WEAK}; dev0={f:0 for f in WEAK}; dev1={f:1 for f in WEAK}
  assert decision(classify(fake,{'a':worse,'b':worse},.01),{'a':dev0,'b':dev0})=='H1_SUPPORTED'
@@ -72,14 +75,15 @@ def self_test(cfg):
  return {'status':'PASS','schedule_rows':len(rows),'weak_family_counts':{f:sum(x['family']==f for x in rows) for f in WEAK}}
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--config',type=Path,required=True);ap.add_argument('--out',type=Path);ap.add_argument('--self-test',action='store_true');a=ap.parse_args();cfg=json.loads(a.config.read_text())
- for path,key in [('binding_path','binding_sha256'),('train_path','train_sha256'),('schedule_path','schedule_sha256')]:
+ for path,key in [('binding_path','binding_sha256'),('schedule_path','schedule_sha256')]:
   if sha(cfg[path])!=cfg[key]: raise RuntimeError('IDENTITY_FAIL:'+path)
+ if sha(train_file(cfg))!=cfg['train_sha256']: raise RuntimeError('IDENTITY_FAIL:train_path')
  if a.self_test: print(json.dumps(self_test(cfg),sort_keys=True));return
  if not a.out: raise RuntimeError('OUT_REQUIRED')
  if a.out.exists():raise RuntimeError('FRESH_OUTPUT_REQUIRED')
  terminal={'schema_version':1,'stage_id':cfg['stage_id'],'status':'PRE_MODEL_FAILURE','optimizer_steps':0,'generation_performed':False,'checkpoint_mutated':False,'final_audit_opened':False,'scientific_gpu_training_seconds':0.0}
  try:
-  binding=json.loads(Path(cfg['binding_path']).read_text());schedule=json.loads(Path(cfg['schedule_path']).read_text()); rows=load_rows(cfg['train_path'],schedule)
+  binding=json.loads(Path(cfg['binding_path']).read_text());schedule=json.loads(Path(cfg['schedule_path']).read_text()); rows=load_rows(train_file(cfg),schedule)
   import torch, torch.nn.functional as F
   from transformers import AutoModelForCausalLM
   from peft import PeftModel
@@ -107,3 +111,4 @@ def main():
   atomic(a.out/'TERMINAL_RECEIPT.json',terminal)
  if terminal['status']!='COMPLETE':raise SystemExit(1)
 if __name__=='__main__':main()
+
