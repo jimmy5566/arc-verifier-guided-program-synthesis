@@ -1,0 +1,84 @@
+{
+  "batch_modes": [
+    32,
+    16,
+    8,
+    4,
+    1
+  ],
+  "checkpoint_discovery": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/CHECKPOINT_PROVENANCE_DISCOVERY_V1.json",
+    "sha256": null
+  },
+  "comparison_fields": [
+    "generated_token_ids",
+    "physical_generated_token_ids",
+    "framework_trailing_pad_count",
+    "nonterminal_trailing_pad_count",
+    "eos_terminated_before_padding",
+    "termination_status",
+    "eos_observed",
+    "trailing_pad_count",
+    "parse_valid",
+    "canonical_prediction_sha256"
+  ],
+  "conditions": [
+    "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED",
+    "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "TARGETED_R1",
+    "TARGETED_R2",
+    "ATOMIC_R1",
+    "FAMILY_BALANCED"
+  ],
+  "contract": {
+    "path": "scripts/unified_native_batch_sensitivity_localization_contract.py",
+    "sha256": null
+  },
+  "decision_rule": {
+    "identical_mode_disagreement": "RUNTIME_NONDETERMINISTIC_PAUSE",
+    "largest_common_batch_gt_1": "exact agreement with Batch1 across all six conditions and all frozen fields",
+    "no_batch_gt_1": "ONLY_BATCH1_VALID"
+  },
+  "forbidden": [
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target sidecar",
+    "target-aligned scoring",
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint mutation",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external selector"
+  ],
+  "input_manifest": {
+    "episodes": 60,
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/SYNTHETIC_BENCHMARK_INPUT_MANIFEST_V1.json",
+    "sha256": null,
+    "targets": "SEALED_SIDECAR_ONLY"
+  },
+  "primary_batch_mode": 32,
+  "protocol_id": "UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1",
+  "repeatability": "each condition/mode is repeated in identical mode before classification",
+  "runtime_cap_seconds": 9000,
+  "schema_version": 1,
+  "source_commit": "9c7bde8af699260a762395d269d54584464dda7a",
+  "status": "CPU_FROZEN_PENDING_PRELAUNCH_REVIEW",
+  "test": {
+    "path": "tests/test_unified_native_batch_sensitivity_localization_contract.py",
+    "sha256": null
+  },
+  "validation_subset": {
+    "count": 12,
+    "selection": "existing fixed_validation_subset over frozen prompt-token ordering",
+    "selection_contract_sha256": null
+  },
+  "worker": {
+    "path": "scripts/run_unified_native_batch_sensitivity_localization_v1.py",
+    "sha256": null
+  }
+}
