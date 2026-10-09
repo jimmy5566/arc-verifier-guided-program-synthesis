@@ -1,0 +1,57 @@
+{
+  "config": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1_CONFIG_V2.json",
+    "sha256": "79252ca203f6f466cc2a9a704e02f49665665eb14fcbfb1cfab94d37e479d3f7"
+  },
+  "established_context": [
+    "RUN_007 remains a controlled failure under its frozen B1/B32 gate; no capability evidence exists.",
+    "The V1 CPU configuration artifact is preserved but invalid for launch because its hashes were null; this V2 artifact binds the same scientific conditions with verified identities.",
+    "The successor preserves cohort, checkpoint identities, prompts, left-padding, greedy decode and fixed validation subset while recording mismatch detail before classification."
+  ],
+  "execution_contract": {
+    "batch_modes": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "conditions": [
+      "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED",
+      "RECONSTRUCTED_FOUNDATION_V2_V7",
+      "TARGETED_R1",
+      "TARGETED_R2",
+      "ATOMIC_R1",
+      "FAMILY_BALANCED"
+    ],
+    "decision_rule": {
+      "identical_mode_disagreement": "RUNTIME_NONDETERMINISTIC_PAUSE",
+      "largest_common_batch_gt_1": "exact agreement with Batch1 across all six conditions and all frozen fields",
+      "no_batch_gt_1": "ONLY_BATCH1_VALID"
+    },
+    "evidence": "per-condition/per-episode target-blind physical and normalized tokens, padding, termination, parser, canonical hash, repeatability and exact mismatch fields",
+    "runtime_cap_seconds": 9000,
+    "validation_subset_count": 12
+  },
+  "forbidden": [
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target sidecar",
+    "target-aligned scoring",
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint mutation",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external selector"
+  ],
+  "protocol_id": "UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1",
+  "question": "May one bounded, target-blind, no-update localization execution measure the frozen batch-size factor under this immutable V2 configuration?",
+  "requested_decision": "CONTINUE_CONTROLLER authorizing exactly one detached no-update diagnostic after source/runtime/nonce/fresh-output gates, or REQUIRE_CHANGES for a concrete scientific-validity defect. No target-sidecar access or capability benchmark resumption is requested.",
+  "review_type": "SCIENTIFIC_PRELAUNCH_REVIEW",
+  "schema_version": 1
+}
