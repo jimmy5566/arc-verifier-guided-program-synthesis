@@ -1,0 +1,92 @@
+{
+  "candidate_freeze": {
+    "before_scoring": true,
+    "required_fields": [
+      "episode_id",
+      "family",
+      "checkpoint_id",
+      "prompt_sha256",
+      "observation_sha256",
+      "rank",
+      "sequence_score",
+      "generated_token_ids",
+      "generated_sha256",
+      "parser_status",
+      "canonical_prediction_sha256"
+    ],
+    "target_blind": true
+  },
+  "cap_seconds": 3600,
+  "cohort": {
+    "families": [
+      "connected components",
+      "inside/contains",
+      "difference",
+      "width",
+      "orientation"
+    ],
+    "family_counts": {
+      "connected components": 12,
+      "difference": 12,
+      "inside/contains": 12,
+      "orientation": 12,
+      "width": 12
+    },
+    "rows": 60,
+    "source_manifest_path": "experiments/capability_repair_baseline_v1/paired_final_query_loss_decomposition_v1/TARGET_DEV_60_FINAL_QUERY_MANIFEST.json",
+    "source_manifest_sha256": "36ee0843ef27280d7a7baacc857105400053f3b8d9eda67d863c4d88894b658f"
+  },
+  "decode": {
+    "attention_backend": "sdpa",
+    "batch_size": 1,
+    "do_sample": false,
+    "early_stopping": true,
+    "eos_token_id": 15,
+    "max_new_tokens": 512,
+    "num_beams": 4,
+    "num_return_sequences": 4,
+    "pad_token_id": 13,
+    "use_cache": true
+  },
+  "director_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_CPU_ONLY_PAIRED_GENERATION_ERROR_MORPHOLOGY_V1_RESULT_RESPONSE.json",
+  "director_response_sha256": "1802c0f4cc424edda40210853f5c25a85ee1e1f944ea5fe1cd1fd82b1519e9f4",
+  "forbidden": [
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint_mutation",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target_use_during_generation",
+    "adaptive_decode_extension"
+  ],
+  "inputs": {
+    "conditions": {
+      "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL": {
+        "manifest": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json",
+        "manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9"
+      },
+      "CAPABILITY_REPAIR_BASELINE_V1_V7": {
+        "manifest": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+        "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+      }
+    },
+    "target_dev_path": "experiments/targeted_capability_repair_v1/data/TARGET_DEV.jsonl",
+    "target_dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+  },
+  "protocol_id": "PAIRED_TARGET_BLIND_BEAM4_CANDIDATE_RECALL_V1",
+  "schema_version": 1,
+  "scoring": {
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261009,
+    "primary_estimand": "family_equal_mean(FB_minus_V7_oracle_recall_at_4)",
+    "stratified_within_family": true,
+    "target_access": "CPU_POSTPROCESS_ONLY_AFTER_CANDIDATE_FREEZE"
+  },
+  "source_sha256": {
+    "analyzer": "3a295142592970d57a505c6f7a6d96d42462ab1494f7c379d946beffb08527a6",
+    "runtime_identity_verifier": "ff131afb6dfe97a85f952e036c68978101ab412a1557aec7b3803dbb049e7998",
+    "worker": "986de6a11d4d9a3e9f7744990bbb0fbf6a0afb1d473a6a290df35ea3f816f97e"
+  }
+}
