@@ -33,6 +33,17 @@ class RankMarginContractTests(unittest.TestCase):
         changed = {"e": {**base["e"], "grid_content_mean_margin": 0.5}}
         self.assertEqual(module.sensitivity_gate(base, changed)["status"], "FAIL_MATERIAL_RANK_OR_METRIC_DRIFT")
 
+    def test_margin_u_and_interval_are_not_exact_float_equality(self):
+        b32 = {"e": {"v7_grid_margin": 1.0, "family_balanced_grid_margin": 1.5}}
+        b1 = {"e": {"v7_grid_margin": 1.01, "family_balanced_grid_margin": 1.49}}
+        self.assertAlmostEqual(module.paired_margin_sensitivity_u(b32, b1), 0.02)
+        self.assertEqual(module.adjusted_interval((0.1, 0.3), 0.02), (0.08, 0.32))
+
+    def test_family_bootstrap_is_seed_deterministic(self):
+        rows = [{"family": f"f{family}", "family_balanced_minus_v7": episode - 6} for family in range(5) for episode in range(12)]
+        first = module.family_stratified_bootstrap_deltas(rows, replicates=20)
+        self.assertEqual(first, module.family_stratified_bootstrap_deltas(rows, replicates=20))
+
 
 if __name__ == "__main__":
     unittest.main()

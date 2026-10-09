@@ -7,6 +7,7 @@ preflight and the target-blind aggregation/sensitivity checks.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import random
 from typing import Iterable
 
 from scripts.arc2_token_grid_parser import TokenGridContract, parse_generated_token_ids
@@ -98,3 +99,38 @@ def sensitivity_gate(primary: dict[str, dict], batch1: dict[str, dict]) -> dict:
             if left[field] != right[field]:
                 mismatches.append({"episode_id": episode_id, "field": field})
     return {"status": "PASS" if not mismatches else "FAIL_MATERIAL_RANK_OR_METRIC_DRIFT", "sample_count": len(primary), "mismatches": mismatches}
+
+
+def paired_margin_sensitivity_u(primary: dict[str, dict], batch1: dict[str, dict]) -> float:
+    """Maximum B32/B1 change in the paired FB-minus-V7 margin delta."""
+    if set(primary) != set(batch1) or not primary:
+        raise RuntimeError("MARGIN_SENSITIVITY_EPISODE_MAPPING_INVALID")
+    values = []
+    for episode_id in primary:
+        for payload in (primary[episode_id], batch1[episode_id]):
+            if not all(key in payload for key in ("v7_grid_margin", "family_balanced_grid_margin")):
+                raise RuntimeError("MARGIN_SENSITIVITY_METRIC_MISSING")
+        left = primary[episode_id]["family_balanced_grid_margin"] - primary[episode_id]["v7_grid_margin"]
+        right = batch1[episode_id]["family_balanced_grid_margin"] - batch1[episode_id]["v7_grid_margin"]
+        values.append(abs(left - right))
+    return max(values)
+
+
+def adjusted_interval(interval: tuple[float, float], u: float) -> tuple[float, float]:
+    if len(interval) != 2 or interval[0] > interval[1] or u < 0:
+        raise RuntimeError("SENSITIVITY_INTERVAL_INVALID")
+    return (interval[0] - u, interval[1] + u)
+
+
+def family_stratified_bootstrap_deltas(rows: list[dict], *, seed: int = 20261010, replicates: int = 10000) -> list[float]:
+    """Bootstrap equal-family macro paired effects, retaining 12 rows/family."""
+    families: dict[str, list[float]] = {}
+    for row in rows:
+        family = str(row.get("family")); delta = row.get("family_balanced_minus_v7")
+        if not family or not isinstance(delta, (int, float)):
+            raise RuntimeError("BOOTSTRAP_ROW_INVALID")
+        families.setdefault(family, []).append(float(delta))
+    if len(families) != 5 or any(len(values) != 12 for values in families.values()) or replicates < 1:
+        raise RuntimeError("BOOTSTRAP_STRATA_INVALID")
+    rng = random.Random(seed); ordered = [families[key] for key in sorted(families)]
+    return [sum(sum(rng.choice(values) for _ in values) / len(values) for values in ordered) / len(ordered) for _ in range(replicates)]
