@@ -1,0 +1,35 @@
+{
+  "implemented_RC11_RC12": {
+    "RC11": "Production writer now emits UTF-8 bytes with an actual LF after each compact JSON object. It rejects non-144 or target-token-containing result collections before receipt finalization.",
+    "RC12": "Current six-module relevant CPU suite is green. New production round-trip test writes all 144 compact rows through the production writer, proves 144 parseable LF JSON lines with no literal backslash-n separators, and completes the production postprocessor schema. Timeout test now uses the current outer-cap signature."
+  },
+  "previous_director_response": {
+    "decision": "REQUIRE_CHANGES",
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_PRELAUNCH_V4_RESPONSE.json",
+    "sha256": "d4abf32a8dddfee442d643d92001bec25856436791619fa42b266d8e6bbcc4f1"
+  },
+  "protocol_id": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1",
+  "replacement_identity": {
+    "binding_path": "experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_RUN_003_LAUNCH_BINDING_V5.json",
+    "binding_sha256": "04e66d95856dbdbce58da04a333f2d00f9eb0b9fc6baeffe53dc9f1e0171f34d",
+    "config_path": "experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V5_CONFIG.json",
+    "config_sha256": "0bc78280f1bc7e016292169b0b2a7b476d131e5aedfefe43cff31e25d49e9e28",
+    "immutable_artifact_commit": "64353d1e66417dee96c5c1b334572e7e9c4e8c95",
+    "runtime_rule": "At execution LOCAL_HEAD = ORIGIN_REF = RUNPOD_CHECKOUT = one exact immutable commit containing the reviewed binding bytes; source code commit must be reachable and every bound hash must match before model import.",
+    "source_code_commit": "98e393625d50d86d5b095265ace9349175193a5b"
+  },
+  "request": "Authorize exactly one detached no-update measurement under this V5 binding only if all machine gates pass. Return CONTINUE_CONTROLLER only for that exact run; otherwise REQUIRE_CHANGES only for a remaining concrete result-validity defect. No scientific redesign, changed condition, or GPU work beyond this one run is requested.",
+  "review_reason": "Final narrow prelaunch review requested by the consumed V4 REQUIRE_CHANGES response. Only production JSONL preservation and its test coverage changed; the scientific protocol is unchanged.",
+  "stage": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_PRELAUNCH_REVIEW_V5",
+  "unchanged_scientific_conditions": {
+    "batching": "same length-bucketed Batch32 primary and fixed target-blind 12-episode Batch1 sensitivity subset",
+    "bootstrap": "same 10000 family-stratified paired replicates seed 20261010",
+    "checkpoint_pair": [
+      "RECONSTRUCTED_FOUNDATION_V2_V7",
+      "FAMILY_BALANCED"
+    ],
+    "cohort": "same frozen reused 60-episode synthetic DEV cohort; descriptive only",
+    "metrics": "same GRID_CONTENT equal-family macro Top-1 Top-2 margin, pooled token-micro, family cells, ROW_SEPARATOR, EOS_END, first-error summaries and protected-family rule",
+    "runtime": "one detached no-update run, 900-second total cap, no training/optimizer/backward/generation/Gold/dGold/FINAL_AUDIT"
+  }
+}
