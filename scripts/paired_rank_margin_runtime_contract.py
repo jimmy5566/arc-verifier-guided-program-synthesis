@@ -32,3 +32,10 @@ def extract_target_logit_indices(boundary: dict) -> list[int]:
     if not isinstance(start,int) or not isinstance(length,int) or not isinstance(width,int) or start < 0 or length < 1 or start+length > width:
         raise RuntimeError("CAUSAL_ALIGNMENT_INVALID")
     return list(range(start,start+length))
+
+def correct_token_metrics(logits:list[float], target:int)->dict:
+    """Tie-safe rank and margin from one causal logit vector (FP32 caller)."""
+    if not logits or not isinstance(target,int) or target<0 or target>=len(logits):raise RuntimeError('TARGET_LOGIT_INVALID')
+    value=float(logits[target]); rank=1+sum(float(x)>value for x in logits)
+    other=max(float(x) for i,x in enumerate(logits) if i!=target) if len(logits)>1 else float('-inf')
+    return {'rank':rank,'top1':rank==1,'top2':rank<=2,'margin':value-other}

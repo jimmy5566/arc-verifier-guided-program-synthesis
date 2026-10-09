@@ -1,6 +1,6 @@
 from __future__ import annotations
 import unittest
-from scripts.paired_rank_margin_runtime_contract import extract_target_logit_indices,left_pad_teacher_forced
+from scripts.paired_rank_margin_runtime_contract import correct_token_metrics,extract_target_logit_indices,left_pad_teacher_forced
 
 class RuntimeContractTests(unittest.TestCase):
  def test_left_padding_keeps_per_row_causal_target_boundary(self):
@@ -12,4 +12,6 @@ class RuntimeContractTests(unittest.TestCase):
  def test_invalid_alignment_fails_closed(self):
   with self.assertRaisesRegex(RuntimeError,'CAUSAL_ALIGNMENT'):
    extract_target_logit_indices({'target_logit_start':4,'target_length':2,'sequence_width':5})
+ def test_correct_token_metrics_are_tie_safe(self):
+  m=correct_token_metrics([1.0,1.0,0.0],1);self.assertEqual(m['rank'],1);self.assertTrue(m['top1']);self.assertEqual(m['margin'],0.0)
 if __name__=='__main__':unittest.main()
