@@ -1,0 +1,42 @@
+{
+  "allowed_director_outcomes": ["CONTINUE_CONTROLLER", "PAUSED", "TERMINAL"],
+  "director_question": "Given the preserved six-condition exact-grid development evidence, what is the smallest scientifically valid next action? Do not authorize or launch GPU work in this review; state whether the deferred correct-token ranking/margin question merits a separately designed future stage.",
+  "frozen_result": {
+    "analysis_summary_sha256": "15cc05c8667cfb889dd4fd12dd18bda78a572446fdafc6067a9f589a4d5612c6",
+    "raw_evidence_sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e",
+    "result_package_sha256": "48bcfaf03cea2bee8646ed0abf2bd6acd29a8f8f3c42f585bc4fe7b70ba271ea",
+    "result_sha256": "09165bdf18f4bde9c5493e4a7bf74b92405610cf546a9f44a47ae0b6ad891440",
+    "source_commit": "21d54484055f4a8d46a7f9e3ae0b16dac0f916f7",
+    "terminal_receipt_sha256": "e175abf95d129d4a5fa9958b6ddda573151e872ef7d380c60d2017bff06fb9f2"
+  },
+  "key_exact_grid_results": {
+    "all_counts_have_denominator": 60,
+    "frozen_branch_top2_is_not_exhaustive_beam2": true,
+    "per_checkpoint": {
+      "ATOMIC_R1": {"greedy_top1": 48, "top2": 48},
+      "FAMILY_BALANCED": {"greedy_top1": 45, "top2": 49},
+      "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED": {"greedy_top1": 44, "top2": 45},
+      "RECONSTRUCTED_FOUNDATION_V2_V7": {"greedy_top1": 49, "top2": 51},
+      "TARGETED_R1": {"greedy_top1": 41, "top2": 44},
+      "TARGETED_R2": {"greedy_top1": 29, "top2": 30}
+    },
+    "notable_fixed_cells": {
+      "V7_protected_same_color": "12/12 greedy and 12/12 frozen-branch Top-2",
+      "TARGETED_R2_protected_same_color": "1/12 greedy and 1/12 frozen-branch Top-2",
+      "all_conditions_composition_recolor_translate": "12/12 greedy"
+    }
+  },
+  "established_execution_facts": [
+    "360 frozen rows, six conditions by sixty episodes, passed all identity and mapping checks.",
+    "The immutable sidecar was read locally only after SHA verification; its grids were not emitted to result, receipt, Git, or this brief.",
+    "CPU tests passed 14/14. No model was loaded; GPU, generation, training, backward, Gold, dGold, and FINAL_AUDIT were all false.",
+    "The prior direct-script command failed before worker main and before any input was opened; the approved worker then ran exactly once through python -m."
+  ],
+  "limits": [
+    "This reuses the previously exposed synthetic development cohort and is descriptive development evidence, not independent ARC generalization.",
+    "It cannot establish target-token rank, margins, likelihood, or causal training mechanisms.",
+    "GPU-dependent correct-token ranking and margin measurements are NOT_RUN, are explicitly separate, and require a new scientific decision before execution."
+  ],
+  "reviewed_stage": "NATIVE_SIX_MODEL_LOCAL_EXACT_GRID_SCORING_RESULT",
+  "schema_version": 1
+}
