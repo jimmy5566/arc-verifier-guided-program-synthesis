@@ -252,7 +252,7 @@ def remote_status(job):
     command=['ssh','-F','NUL','-tt','-o','BatchMode=yes','-o','ConnectTimeout=20',target]
     proc=subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     time.sleep(2)
-    payload=(f"\x1b[200~echo {encoded} | base64 -d | bash\x1b[201~\r").encode('utf-8')
+    payload=(f"\x1b[200~echo {encoded} | base64 -d | bash; exit\x1b[201~\r").encode('utf-8')
     try:
         out_bytes, err_bytes=proc.communicate(payload, timeout=45)
     except subprocess.TimeoutExpired:
