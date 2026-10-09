@@ -81,6 +81,57 @@ def matching_director_responses(state_path, brief_sha256):
         if data.get('reviewed_brief_sha256') == brief_sha256 and director_decision(data) in DIRECTOR_DECISIONS:
             found.append((candidate.resolve(), data, sha256_file(candidate)))
     return found
+def terminal_scope(response):
+    """Return the explicitly declared terminal scope; never infer program-wide stop."""
+    scope=response.get('terminal_scope')
+    if scope == 'ENTIRE_EXPERIMENT':
+        return 'ENTIRE_EXPERIMENT'
+    if scope == 'CURRENT_PROTOCOL':
+        return 'CURRENT_PROTOCOL'
+    if isinstance(scope, dict):
+        entire=str(scope.get('entire_arc2_research_program', '')).upper()
+        if entire in {'TERMINAL', 'CLOSED', 'ENTIRE_EXPERIMENT'}:
+            return 'ENTIRE_EXPERIMENT'
+        if entire in {'NOT_DECLARED_TERMINAL', 'NOT_TERMINAL', 'OPEN'}:
+            return 'CURRENT_PROTOCOL'
+        if any(str(value).upper() in {'CLOSED', 'CURRENT_PROTOCOL', 'STOPPED'} for value in scope.values()):
+            return 'CURRENT_PROTOCOL'
+    return 'UNSPECIFIED'
+
+def route_stage_scoped_stop(state, response):
+    """Close only the reviewed route and permit CPU-only successor preparation."""
+    state.update({'disposition':'CONTINUE_CONTROLLER',
+                  'stage':'POST_STAGE_A_SUCCESSOR_PROTOCOL_PREPARATION',
+                  'next_action':'PREPARE_NEW_ATOMIC_PREREQUISITE_RESEARCH_PROPOSAL_CPU_ONLY',
+                  'remediation_required':False,
+                  'terminal':False, 'experiment_terminal':False,
+                  'terminal_scope':'CURRENT_PROTOCOL',
+                  'terminal_meaning':response.get('scientific_outcome') or 'CURRENT_PROTOCOL_STOPPED',
+                  'scientific_training_authorized':False,
+                  'stage_b_authorized':False, 'r3_authorized':False,
+                  'stopped_route':response.get('scope') or response.get('scientific_outcome')})
+
+def reconcile_consumed_stage_terminal(state, state_path):
+    """One-time repair for an old Governor that widened a consumed stage stop."""
+    if state.get('director_decision') != 'TERMINAL' or not state.get('experiment_terminal'):
+        return False
+    raw=state.get('director_response_path')
+    if not raw or not Path(raw).is_file():
+        return False
+    response_path=Path(raw)
+    if state.get('director_response_sha256') != sha256_file(response_path):
+        raise RuntimeError('CONSUMED_DIRECTOR_RESPONSE_HASH_MISMATCH')
+    response=json.loads(response_path.read_text(encoding='utf-8-sig'))
+    if terminal_scope(response) != 'CURRENT_PROTOCOL':
+        return False
+    # The response remains in consumed_director_responses.  This only corrects
+    # the old scheduler state and never prompts Director or consumes it again.
+    route_stage_scoped_stop(state,response)
+    state.update({'last_actor':'governor','stage_terminal_scope_reconciled':True,'updated_at':now()})
+    atomic(state_path,state)
+    log(state, f'consumed stage-scoped terminal reconciled response={response_path.name}')
+    return True
+
 def route_director_response(state, state_path, response_path, response, response_sha256):
     brief_sha256=sha256_file(state['review_brief'])
     if response.get('reviewed_brief_sha256') != brief_sha256:
@@ -118,7 +169,15 @@ def route_director_response(state, state_path, response_path, response, response
         state.update({'disposition':'PAUSED', 'next_action':'TARGETED_REPAIR_APPROACH_STOPPED_BY_DIRECTOR', 'remediation_required':False,
                       'terminal':False, 'experiment_terminal':False, 'terminal_scope':'CURRENT_PROTOCOL'})
     else:
-        state.update({'disposition':'TERMINAL', 'next_action':'TERMINAL_BY_DIRECTOR', 'remediation_required':False, 'terminal':True, 'experiment_terminal':True})
+        scope=terminal_scope(response)
+        if scope == 'CURRENT_PROTOCOL':
+            route_stage_scoped_stop(state,response)
+        elif scope == 'ENTIRE_EXPERIMENT':
+            state.update({'disposition':'TERMINAL', 'next_action':'TERMINAL_BY_DIRECTOR', 'remediation_required':False, 'terminal':True, 'experiment_terminal':True, 'terminal_scope':'ENTIRE_EXPERIMENT'})
+        else:
+            # A terminal response without an explicit scope cannot end the
+            # research program; hold it for human/scientific clarification.
+            state.update({'disposition':'PAUSED', 'next_action':'TERMINAL_SCOPE_UNSPECIFIED', 'remediation_required':False, 'terminal':False, 'experiment_terminal':False, 'terminal_scope':'UNSPECIFIED'})
     atomic(state_path,state); log(state,f'director response consumed decision={decision} response={response_path.name}')
 def director(s,p,timeout):
     brief=s.get('review_brief')
@@ -198,6 +257,11 @@ def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--state',type=Path,required=True); ap.add_argument('--once',action='store_true'); ap.add_argument('--poll-seconds',type=int,default=300); ap.add_argument('--agent-timeout-seconds',type=int,default=180); a=ap.parse_args()
     while True:
         s=load(a.state)
+        # Compatibility repair for a historical live state written before
+        # stage-scoped terminal routing existed.
+        if reconcile_consumed_stage_terminal(s,a.state):
+            if a.once: return 0
+            continue
         if s['disposition']=='CONTINUE_CONTROLLER': controller(s,a.state,a.agent_timeout_seconds)
         elif s['disposition']=='REVIEW_REQUIRED': director(s,a.state,a.agent_timeout_seconds)
         elif s['disposition']=='WAIT_REMOTE':
