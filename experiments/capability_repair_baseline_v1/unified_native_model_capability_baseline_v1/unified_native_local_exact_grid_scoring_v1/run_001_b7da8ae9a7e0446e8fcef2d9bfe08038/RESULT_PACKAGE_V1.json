@@ -1,0 +1,31 @@
+{
+  "analysis_summary_sha256": "15cc05c8667cfb889dd4fd12dd18bda78a572446fdafc6067a9f589a4d5612c6",
+  "cpu_tests": "PASS_14",
+  "deferred_work": "GPU_DEPENDENT_CORRECT_TOKEN_RANKING_AND_MARGIN_MEASUREMENT_NOT_RUN",
+  "director_response_sha256": "b95bbf0c6a05a37614d6191645341aabcb93b58f0bfb390db53dbfeb45700efe",
+  "execution_authority": "GOVERNOR_REVIEW_UNIFIED_NATIVE_LOCAL_EXACT_GRID_SCORING_V1_RESPONSE",
+  "pre_execution_command_event": {
+    "class": "WINDOWS_DIRECT_SCRIPT_IMPORT_PATH",
+    "remediation": "EXECUTED_SAME_FROZEN_WORKER_VIA_PYTHON_MODULE_ENTRYPOINT",
+    "scientific_interpretation": "NO_EFFECT_ON_SCIENTIFIC_EXECUTION",
+    "status": "NOT_STARTED_NO_INPUT_OPENED"
+  },
+  "protocol_id": "UNIFIED_NATIVE_LOCAL_EXACT_GRID_SCORING_V1",
+  "raw_evidence_sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e",
+  "records": 360,
+  "result_sha256": "09165bdf18f4bde9c5493e4a7bf74b92405610cf546a9f44a47ae0b6ad891440",
+  "runtime_flags": {
+    "backward": false,
+    "dgold_accessed": false,
+    "final_audit_opened": false,
+    "generation": false,
+    "gold_accessed": false,
+    "gpu_used": false,
+    "model_loaded": false,
+    "training": false
+  },
+  "scientific_scope": "DEVELOPMENT_EVIDENCE_REUSED_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION",
+  "sidecar_sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e",
+  "status": "COMPLETE_CPU_NO_MODEL_NO_GENERATION",
+  "terminal_receipt_sha256": "e175abf95d129d4a5fa9958b6ddda573151e872ef7d380c60d2017bff06fb9f2"
+}

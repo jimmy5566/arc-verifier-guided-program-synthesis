@@ -1,0 +1,14 @@
+{
+  "backward": false,
+  "final_audit_opened": false,
+  "generation": false,
+  "gpu_used": false,
+  "model_loaded": false,
+  "protocol_id": "UNIFIED_NATIVE_LOCAL_EXACT_GRID_SCORING_V1",
+  "raw_evidence_sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e",
+  "raw_rows": 360,
+  "result_sha256": "09165bdf18f4bde9c5493e4a7bf74b92405610cf546a9f44a47ae0b6ad891440",
+  "sidecar_sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e",
+  "status": "COMPLETE_CPU_NO_MODEL_NO_GENERATION",
+  "training": false
+}

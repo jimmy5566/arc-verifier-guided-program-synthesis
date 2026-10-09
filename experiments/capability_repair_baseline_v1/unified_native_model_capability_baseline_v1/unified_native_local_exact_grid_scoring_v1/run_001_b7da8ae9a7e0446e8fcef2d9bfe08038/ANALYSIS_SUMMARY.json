@@ -1,0 +1,354 @@
+{
+  "no_target_grids_emitted": true,
+  "protocol_id": "UNIFIED_NATIVE_LOCAL_EXACT_GRID_SCORING_V1",
+  "scientific_scope": "DEVELOPMENT_EVIDENCE_REUSED_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION",
+  "source_result_sha256": "09165bdf18f4bde9c5493e4a7bf74b92405610cf546a9f44a47ae0b6ad891440",
+  "summary": {
+    "by_condition": {
+      "ATOMIC_R1": {
+        "compositional_aggregate": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 19,
+          "denominator": 24,
+          "greedy_top1_exact": 19
+        },
+        "equal_family_macro_rate": {
+          "alternate_only_exact": 0.0,
+          "complete_output_top2_coverage": 0.8,
+          "greedy_top1_exact": 0.8
+        },
+        "pooled": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 48,
+          "denominator": 60,
+          "greedy_top1_exact": 48
+        },
+        "protected_same_color_retention": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        }
+      },
+      "FAMILY_BALANCED": {
+        "compositional_aggregate": {
+          "alternate_only_exact": 1,
+          "complete_output_top2_coverage": 21,
+          "denominator": 24,
+          "greedy_top1_exact": 20
+        },
+        "equal_family_macro_rate": {
+          "alternate_only_exact": 0.06666666666666667,
+          "complete_output_top2_coverage": 0.8166666666666667,
+          "greedy_top1_exact": 0.75
+        },
+        "pooled": {
+          "alternate_only_exact": 4,
+          "complete_output_top2_coverage": 49,
+          "denominator": 60,
+          "greedy_top1_exact": 45
+        },
+        "protected_same_color_retention": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        }
+      },
+      "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED": {
+        "compositional_aggregate": {
+          "alternate_only_exact": 1,
+          "complete_output_top2_coverage": 19,
+          "denominator": 24,
+          "greedy_top1_exact": 18
+        },
+        "equal_family_macro_rate": {
+          "alternate_only_exact": 0.016666666666666666,
+          "complete_output_top2_coverage": 0.75,
+          "greedy_top1_exact": 0.7333333333333333
+        },
+        "pooled": {
+          "alternate_only_exact": 1,
+          "complete_output_top2_coverage": 45,
+          "denominator": 60,
+          "greedy_top1_exact": 44
+        },
+        "protected_same_color_retention": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        }
+      },
+      "RECONSTRUCTED_FOUNDATION_V2_V7": {
+        "compositional_aggregate": {
+          "alternate_only_exact": 1,
+          "complete_output_top2_coverage": 21,
+          "denominator": 24,
+          "greedy_top1_exact": 20
+        },
+        "equal_family_macro_rate": {
+          "alternate_only_exact": 0.03333333333333333,
+          "complete_output_top2_coverage": 0.85,
+          "greedy_top1_exact": 0.8166666666666667
+        },
+        "pooled": {
+          "alternate_only_exact": 2,
+          "complete_output_top2_coverage": 51,
+          "denominator": 60,
+          "greedy_top1_exact": 49
+        },
+        "protected_same_color_retention": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        }
+      },
+      "TARGETED_R1": {
+        "compositional_aggregate": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 19,
+          "denominator": 24,
+          "greedy_top1_exact": 19
+        },
+        "equal_family_macro_rate": {
+          "alternate_only_exact": 0.05,
+          "complete_output_top2_coverage": 0.7333333333333334,
+          "greedy_top1_exact": 0.6833333333333333
+        },
+        "pooled": {
+          "alternate_only_exact": 3,
+          "complete_output_top2_coverage": 44,
+          "denominator": 60,
+          "greedy_top1_exact": 41
+        },
+        "protected_same_color_retention": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        }
+      },
+      "TARGETED_R2": {
+        "compositional_aggregate": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 15,
+          "denominator": 24,
+          "greedy_top1_exact": 15
+        },
+        "equal_family_macro_rate": {
+          "alternate_only_exact": 0.016666666666666666,
+          "complete_output_top2_coverage": 0.5,
+          "greedy_top1_exact": 0.4833333333333333
+        },
+        "pooled": {
+          "alternate_only_exact": 1,
+          "complete_output_top2_coverage": 30,
+          "denominator": 60,
+          "greedy_top1_exact": 29
+        },
+        "protected_same_color_retention": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 1,
+          "denominator": 12,
+          "greedy_top1_exact": 1
+        }
+      }
+    },
+    "checkpoint_by_family": {
+      "ATOMIC_R1": {
+        "COMPOSITION_RECOLOR_TRANSLATE": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        },
+        "COMPOSITION_REFLECT_RECOLOR": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 7,
+          "denominator": 12,
+          "greedy_top1_exact": 7
+        },
+        "PROTECTED_SAME_COLOR": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        },
+        "STRUCTURAL_REFLECTION": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 5,
+          "denominator": 12,
+          "greedy_top1_exact": 5
+        },
+        "STRUCTURAL_TRANSLATION": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        }
+      },
+      "FAMILY_BALANCED": {
+        "COMPOSITION_RECOLOR_TRANSLATE": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        },
+        "COMPOSITION_REFLECT_RECOLOR": {
+          "alternate_only_exact": 1,
+          "complete_output_top2_coverage": 9,
+          "denominator": 12,
+          "greedy_top1_exact": 8
+        },
+        "PROTECTED_SAME_COLOR": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        },
+        "STRUCTURAL_REFLECTION": {
+          "alternate_only_exact": 1,
+          "complete_output_top2_coverage": 5,
+          "denominator": 12,
+          "greedy_top1_exact": 4
+        },
+        "STRUCTURAL_TRANSLATION": {
+          "alternate_only_exact": 2,
+          "complete_output_top2_coverage": 11,
+          "denominator": 12,
+          "greedy_top1_exact": 9
+        }
+      },
+      "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED": {
+        "COMPOSITION_RECOLOR_TRANSLATE": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        },
+        "COMPOSITION_REFLECT_RECOLOR": {
+          "alternate_only_exact": 1,
+          "complete_output_top2_coverage": 7,
+          "denominator": 12,
+          "greedy_top1_exact": 6
+        },
+        "PROTECTED_SAME_COLOR": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        },
+        "STRUCTURAL_REFLECTION": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 2,
+          "denominator": 12,
+          "greedy_top1_exact": 2
+        },
+        "STRUCTURAL_TRANSLATION": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        }
+      },
+      "RECONSTRUCTED_FOUNDATION_V2_V7": {
+        "COMPOSITION_RECOLOR_TRANSLATE": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        },
+        "COMPOSITION_REFLECT_RECOLOR": {
+          "alternate_only_exact": 1,
+          "complete_output_top2_coverage": 9,
+          "denominator": 12,
+          "greedy_top1_exact": 8
+        },
+        "PROTECTED_SAME_COLOR": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        },
+        "STRUCTURAL_REFLECTION": {
+          "alternate_only_exact": 1,
+          "complete_output_top2_coverage": 6,
+          "denominator": 12,
+          "greedy_top1_exact": 5
+        },
+        "STRUCTURAL_TRANSLATION": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        }
+      },
+      "TARGETED_R1": {
+        "COMPOSITION_RECOLOR_TRANSLATE": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        },
+        "COMPOSITION_REFLECT_RECOLOR": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 7,
+          "denominator": 12,
+          "greedy_top1_exact": 7
+        },
+        "PROTECTED_SAME_COLOR": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        },
+        "STRUCTURAL_REFLECTION": {
+          "alternate_only_exact": 1,
+          "complete_output_top2_coverage": 3,
+          "denominator": 12,
+          "greedy_top1_exact": 2
+        },
+        "STRUCTURAL_TRANSLATION": {
+          "alternate_only_exact": 2,
+          "complete_output_top2_coverage": 10,
+          "denominator": 12,
+          "greedy_top1_exact": 8
+        }
+      },
+      "TARGETED_R2": {
+        "COMPOSITION_RECOLOR_TRANSLATE": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 12,
+          "denominator": 12,
+          "greedy_top1_exact": 12
+        },
+        "COMPOSITION_REFLECT_RECOLOR": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 3,
+          "denominator": 12,
+          "greedy_top1_exact": 3
+        },
+        "PROTECTED_SAME_COLOR": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 1,
+          "denominator": 12,
+          "greedy_top1_exact": 1
+        },
+        "STRUCTURAL_REFLECTION": {
+          "alternate_only_exact": 0,
+          "complete_output_top2_coverage": 5,
+          "denominator": 12,
+          "greedy_top1_exact": 5
+        },
+        "STRUCTURAL_TRANSLATION": {
+          "alternate_only_exact": 1,
+          "complete_output_top2_coverage": 9,
+          "denominator": 12,
+          "greedy_top1_exact": 8
+        }
+      }
+    }
+  }
+}

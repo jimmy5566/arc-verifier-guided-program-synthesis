@@ -1,0 +1,8 @@
+{
+  "class": "WINDOWS_DIRECT_SCRIPT_IMPORT_PATH",
+  "direct_invocation_error": "ModuleNotFoundError before worker main; no result directory or target sidecar was opened",
+  "protocol_id": "UNIFIED_NATIVE_LOCAL_EXACT_GRID_SCORING_V1",
+  "resolution": "Same approved worker executed once through python -m from repository root",
+  "scientific_interpretation": "NO_EFFECT_ON_SCIENTIFIC_EXECUTION",
+  "status": "NOT_STARTED_NO_INPUT_OPENED"
+}

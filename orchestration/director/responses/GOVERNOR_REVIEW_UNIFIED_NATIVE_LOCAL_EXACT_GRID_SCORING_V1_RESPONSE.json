@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "reviewed_brief": "orchestration/director/briefs/GOVERNOR_REVIEW_UNIFIED_NATIVE_LOCAL_EXACT_GRID_SCORING_V1.json",
+  "reviewed_brief_sha256": "272a6037bd5c9a8f7cb8d14cd4533749cb2e36d1767cdc0ec1fe845e76604f52",
+  "decision": "CONTINUE_CONTROLLER",
+  "scientific_outcome": "AUTHORIZE_EXACTLY_ONE_CPU_ONLY_LOCAL_EXACT_GRID_SCORING_RUN",
+  "scientific_assessment": {
+    "established": [
+      "The immutable sidecar stores 60 rectangular digit grids under the top-level targets field, so the prior target_token_ids_by_episode interface was incompatible with the actual frozen asset and could not support teacher-forced token scoring.",
+      "The proposed local scorer correctly narrows the stage to exact-grid scoring of the already frozen 360 prediction rows and requires exact raw-evidence and sidecar SHA256 identities before scoring.",
+      "Every frozen Greedy record must reconstruct to its saved canonical prediction SHA256 under the already verified native grid token contract. The single frozen alternate is parsed without target-guided repair, and an invalid alternate is counted as incorrect.",
+      "Greedy Top-1 is exact-grid equality of the frozen Greedy output. Frozen-branch Top-2 coverage is exact-grid success by either Greedy or the single previously frozen target-blind alternate; alternate-only recovery is retained separately.",
+      "The scorer writes booleans and canonical hashes rather than target grids, performs no model load, GPU operation, generation, training, backward pass, optimizer step, or candidate selection, and keeps Gold, dGold, and FINAL_AUDIT closed."
+    ],
+    "limits": [
+      "This is reused synthetic development-cohort evidence, not independent ARC generalization confirmation.",
+      "The frozen-branch Top-2 metric covers one specifically frozen target-blind alternate and must not be represented as exhaustive model Top-2 or Beam-2 performance.",
+      "Exact-grid outcomes do not establish correct-token rank, target-token margin, likelihood, or a causal training mechanism. Those GPU-dependent measurements remain NOT_RUN and outside this authorization."
+    ],
+    "interpretation": "The CPU-only correction is scientifically valid and has higher immediate information value than attempting to force the grid sidecar through the incompatible token-continuation interface."
+  },
+  "next_stage": "EXECUTE_UNIFIED_NATIVE_LOCAL_EXACT_GRID_SCORING_V1_RUN_001",
+  "next_action": "Controller may execute exactly one local CPU-only scoring run at source commit 931f555d1f5b992d32426672ecaf8454064f019f using UNIFIED_NATIVE_LOCAL_EXACT_GRID_SCORING_V1_CONFIG.json at SHA256 f515ef7d2271f5ea4237c359b6b7fba0e83030f8acdb772eb484029022b8931a, contract SHA256 25c855c8170bcc01f0c97110fe9382935edbc00e2d7bd20158522e4595addc3f, worker SHA256 3d0184c8d3163988b64b87f8660fe6d3bea50ab7c95b96668cffe72757af69a9, test SHA256 3ae5d066af018cfb7e1ff1c63c0705c2ff05709015b66809d27414459b63ea19, raw evidence SHA256 4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e, sidecar SHA256 a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e, nonce b7da8ae9a7e0446e8fcef2d9bfe08038, and the configured fresh output root. Before execution, verify local and origin source parity, all bound hashes, the exact 360=6x60 row structure, exact 60-ID sidecar mapping, and output/receipt nonexistence. Run the four frozen CPU tests, then execute the scorer once. Preserve the result and receipt atomically. From the frozen scored records, deterministically report each checkpoint's pooled Top-1 and frozen-branch Top-2, the complete six-checkpoint by five-family table, each checkpoint's equal-family macro, the two compositional families separately and as a two-family aggregate, and PROTECTED_SAME_COLOR separately. This summary completion is CPU-only, may not reopen or emit target grids, and may not change any prediction, candidate, definition, denominator, or threshold. Return one result brief for Director interpretation; do not initiate the deferred GPU token-ranking stage.",
+  "authorized_configuration": {
+    "execution_source_commit": "931f555d1f5b992d32426672ecaf8454064f019f",
+    "config_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/UNIFIED_NATIVE_LOCAL_EXACT_GRID_SCORING_V1_CONFIG.json",
+    "config_sha256": "f515ef7d2271f5ea4237c359b6b7fba0e83030f8acdb772eb484029022b8931a",
+    "contract_path": "scripts/unified_native_exact_grid_cpu_contract.py",
+    "contract_sha256": "25c855c8170bcc01f0c97110fe9382935edbc00e2d7bd20158522e4595addc3f",
+    "worker_path": "scripts/score_unified_native_exact_grid_cpu_v1.py",
+    "worker_sha256": "3d0184c8d3163988b64b87f8660fe6d3bea50ab7c95b96668cffe72757af69a9",
+    "test_path": "tests/test_unified_native_exact_grid_cpu_contract.py",
+    "test_sha256": "3ae5d066af018cfb7e1ff1c63c0705c2ff05709015b66809d27414459b63ea19",
+    "raw_predictions_sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e",
+    "sealed_sidecar_sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e",
+    "nonce": "b7da8ae9a7e0446e8fcef2d9bfe08038",
+    "output_root": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/unified_native_local_exact_grid_scoring_v1/run_001_b7da8ae9a7e0446e8fcef2d9bfe08038"
+  },
+  "frozen_conditions": [
+    "Use exactly the existing 360 rows comprising six checkpoint conditions by the same 60 episodes; no prediction or alternate may be regenerated, replaced, reordered, selected, or repaired.",
+    "Use only the exact local sealed sidecar at the frozen SHA256 and exact 60-ID mapping; do not copy target grids into result, receipt, logs, Git, or prompts.",
+    "Greedy Top-1, alternate-only recovery, and Greedy-or-alternate frozen-branch Top-2 definitions remain fixed before scoring.",
+    "Invalid alternate parsing counts as incorrect and cannot trigger fallback generation or target-informed correction.",
+    "All checkpoint, family, compositional, and protected-retention summaries are descriptive development evidence using fixed denominators."
+  ],
+  "forbidden_actions": [
+    "Do not load a model, use GPU, generate outputs, train, construct an optimizer, run backward, or mutate checkpoints.",
+    "Do not derive tokenizer continuations, correct-token ranks, margins, likelihoods, or free-running token diagnostics in this stage.",
+    "Do not use targets to select or modify candidates, checkpoints, metrics, families, denominators, or thresholds.",
+    "Do not access Gold, dGold, or FINAL_AUDIT and do not claim independent ARC generalization."
+  ],
+  "result_review_required": true,
+  "gpu_inference_authorized": false,
+  "model_loading_authorized": false,
+  "scientific_training_authorized": false
+}
