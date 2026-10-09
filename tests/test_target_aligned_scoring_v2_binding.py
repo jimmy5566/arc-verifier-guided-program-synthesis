@@ -9,6 +9,11 @@ class FrozenBindingTests(unittest.TestCase):
   self.assertEqual(b['runtime_cap_seconds'],9000);self.assertEqual(b['raw']['sha256'],'4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e')
   self.assertEqual(sha(ROOT/b['worker']['path']),b['worker']['sha256']);self.assertEqual(sha(ROOT/b['launcher']['path']),b['launcher']['sha256']);self.assertEqual(len(b['nonce']),32)
   self.assertIn('generation',b['forbidden']);self.assertIn('backward',b['forbidden'])
+ def test_exact_source_and_binding_rejection(self):
+  import importlib.util
+  spec=importlib.util.spec_from_file_location('launcher',ROOT/'scripts/launch_unified_native_target_aligned_scoring_v2_batch16.py');mod=importlib.util.module_from_spec(spec);assert spec.loader;spec.loader.exec_module(mod)
+  binding=BASE/'TARGET_ALIGNED_SCORING_V2_BATCH16_LAUNCH_BINDING_V2.json'
+  with self.assertRaisesRegex(RuntimeError,'EXACT_CHECKED_OUT_SOURCE_MISMATCH'):mod.load_binding(binding,'0'*40)
  def test_worker_entrypoint_and_no_generation(self):
   worker=ROOT/'scripts/run_unified_native_target_aligned_scoring_v2_batch16.py';source=worker.read_text(encoding='utf8');self.assertNotIn('.generate(',source)
   p=subprocess.run([sys.executable,'-m','scripts.run_unified_native_target_aligned_scoring_v2_batch16','--help'],cwd=ROOT,capture_output=True,text=True)

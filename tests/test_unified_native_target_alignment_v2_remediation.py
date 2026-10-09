@@ -18,7 +18,9 @@ class RemediationTests(unittest.TestCase):
    p=Path(d)/'manifest.json';p.write_text('{}');self.assertEqual(m.require_manifest_identity(p,m.sha(p)),{})
    with self.assertRaisesRegex(RuntimeError,'MANIFEST_SHA'):m.require_manifest_identity(p,'0'*64)
    with self.assertRaisesRegex(RuntimeError,'FRESH_OUTPUT'):m.require_fresh_output(Path(d))
- def test_atomic_write_contract(self):
+ def test_atomic_failure_receipt_write(self):
+  import importlib.util
+  spec=importlib.util.spec_from_file_location('launcher',ROOT/'scripts/launch_unified_native_target_aligned_scoring_v2_batch16.py');mod=importlib.util.module_from_spec(spec);assert spec.loader;spec.loader.exec_module(mod)
   with tempfile.TemporaryDirectory() as d:
-   p=Path(d)/'receipt.json';p.write_text(json.dumps({'status':'FAILURE'}));self.assertEqual(json.loads(p.read_text())['status'],'FAILURE');self.assertFalse((Path(d)/'receipt.json.tmp').exists())
+   p=Path(d)/'receipt.json';mod.atomic(p,{'status':'FAILURE'});self.assertEqual(json.loads(p.read_text())['status'],'FAILURE');self.assertFalse((Path(d)/'receipt.json.tmp').exists())
 if __name__=='__main__':unittest.main()
