@@ -91,7 +91,7 @@ def main():
   check(torch.cuda.is_available() and torch.cuda.is_bf16_supported(),'CUDA_BF16_UNAVAILABLE'); torch.manual_seed(20261009);torch.backends.cudnn.deterministic=True;torch.backends.cudnn.benchmark=False;torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False; os.environ['CUBLAS_WORKSPACE_CONFIG']=':4096:8'; os.environ['TOKENIZERS_PARALLELISM']='false'
   allm={}; raw=[]; selected=None; started=time.monotonic()
   for name,cond in cfg['inputs']['conditions'].items():
-   mp=rp(cond['checkpoint_manifest_path']); check(sha(mp)==cond['checkpoint_manifest_sha256'],'MANIFEST_SHA_MISMATCH:'+name); manifest=loadj(mp); adapter=Path(manifest['adapter_path'])/'adapter_model.safetensors'; check(sha(adapter)==cond['adapter_sha256'],'ADAPTER_SHA_MISMATCH:'+name)
+   mp=rp(cond['checkpoint_manifest_path']); check(sha(mp)==cond['checkpoint_manifest_sha256'],'MANIFEST_SHA_MISMATCH:'+name); result_path=rp(cond['result_path']); check(sha(result_path)==cond['result_sha256'],'RESULT_SHA_MISMATCH:'+name); manifest=loadj(mp); adapter=Path(manifest['adapter_path'])/'adapter_model.safetensors'; check(sha(adapter)==cond['adapter_sha256'],'ADAPTER_SHA_MISMATCH:'+name)
    model=AutoModelForCausalLM.from_pretrained(manifest['base_path'],local_files_only=True,torch_dtype=torch.bfloat16,attn_implementation='sdpa').to('cuda:0'); model=PeftModel.from_pretrained(model,manifest['adapter_path'],is_trainable=False);model.eval(); modes={}
    if name=='CAPABILITY_REPAIR_BASELINE_V1_V7':
     for candidate in [32,16,8,4,2]:
