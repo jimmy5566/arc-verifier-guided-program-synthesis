@@ -1,0 +1,29 @@
+{
+  "artifact_id": "MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_V4_CPU_STATIC_VALIDATION",
+  "checks": {
+    "batched_explicit_uses_same_bound_size": true,
+    "cohort_unchanged": true,
+    "common_effective_batch_must_be_gt_one": true,
+    "exact_four_modes_preserved": true,
+    "fallback_excludes_one": true,
+    "four_mode_reload_policy_corrected": true,
+    "no_execution_authorized": true,
+    "no_training_scope": true,
+    "repeat_count_unchanged": true,
+    "superseded_v3_hash_matches": true,
+    "threshold_unchanged": true
+  },
+  "config_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_EXECUTION_PACKAGE_V4.json",
+  "config_sha256": "81dd14c62df0369a74c8116583a49a01732ed58715389086d97129f7ad2cf0dd",
+  "created_at": "2026-10-09T04:26:44.976056Z",
+  "forbidden_actions_observed": [
+    "no model load",
+    "no GPU inference",
+    "no optimizer construction",
+    "no generation",
+    "no checkpoint mutation",
+    "no FINAL_AUDIT"
+  ],
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY_NO_MODEL_LOAD"
+}

@@ -1,0 +1,25 @@
+{
+  "created_at": "2026-10-09T04:20:09.234190Z",
+  "frozen_constraints": [
+    "GPU training",
+    "optimizer construction",
+    "generation",
+    "DEV or retention labels in NLL",
+    "FINAL_AUDIT access",
+    "reopening the closed FIT_GENERALIZATION_DIAGNOSTIC_V1 branch",
+    "post-hoc tolerance relaxation"
+  ],
+  "no_execution_authorized_by_this_brief": true,
+  "observed_context": {
+    "closed_branch": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1",
+    "closure": "INCONCLUSIVE because the frozen 0.001 Batch1/effective-batch/repeat NLL stability rule was exceeded.",
+    "scope_preserved": "The prior branch remains closed. V7, rejected Atomic R1, Family-Balanced R1, and all frozen results remain unchanged."
+  },
+  "proposal_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_DRAFT.json",
+  "proposal_sha256": "aa0863360d32da6139529285850a32fed367503b9904402fce05ce459e3d2006",
+  "question": "Is this bounded no-update measurement-foundations protocol the smallest scientifically valid next study after the closed inconclusive NLL branch?",
+  "requested_decision": "CONTINUE_CONTROLLER only for implementation/execution preparation of the proposed distinct measurement study, REQUIRE_CHANGES for a material scientific defect, PAUSED if no defensible study exists, or TERMINAL with explicit scope.",
+  "review_id": "GOVERNOR_REVIEW_MEASUREMENT_FOUNDATIONS_PROTOCOL_V1",
+  "review_type": "MAJOR_SCIENTIFIC_STAGE_ENTRY",
+  "schema_version": 1
+}

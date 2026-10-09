@@ -1,0 +1,23 @@
+{
+  "cpu_static_validation_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_V4_CPU_STATIC_VALIDATION.json",
+  "cpu_static_validation_sha256": "2fac2338db2122364a4cb1061cf9aeab5ee863dbf53237933ca739e54c963f38",
+  "created_at": "2026-10-09T04:26:44.986745Z",
+  "execution_package_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_EXECUTION_PACKAGE_V4.json",
+  "execution_package_sha256": "81dd14c62df0369a74c8116583a49a01732ed58715389086d97129f7ad2cf0dd",
+  "frozen_unchanged": [
+    "V3 cohort/checkpoints/modes/position control/threshold/repeats/forward numerics/comparisons/decision mapping except required batch=1 INCONCLUSIVE guard",
+    "no optimizer/training/generation/checkpoint mutation/DEV-retention labels/FINAL_AUDIT"
+  ],
+  "only_material_changes": [
+    "batch=1 excluded from batched ladder",
+    "common batched effective size >1 required and bound across modes/checkpoints",
+    "reload policy corrected from three to four modes"
+  ],
+  "requested_decision": "Authorize only bounded no-update measurement execution, request one material correction, PAUSED, or scoped TERMINAL. No training or successor scientific route is requested.",
+  "review_id": "GOVERNOR_REVIEW_MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_V4",
+  "review_reason": "V3 review required a nontrivial batch contrast. V4 changes only the admissible batched fallback from [32,16,8,4,1] to [32,16,8,4,2], fixes four-mode reload wording, and binds one common effective size >1 across every batched condition.",
+  "review_type": "MAJOR_SCIENTIFIC_STAGE_ENTRY",
+  "schema_version": 1,
+  "scientific_question": "Is this V4 package now sufficient to authorize only its bounded no-update measurement execution?",
+  "supersedes_review_id": "GOVERNOR_REVIEW_MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_V3"
+}

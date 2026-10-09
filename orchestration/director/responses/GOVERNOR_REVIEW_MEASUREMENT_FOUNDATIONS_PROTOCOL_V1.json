@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_MEASUREMENT_FOUNDATIONS_PROTOCOL_V1",
+  "decision": "REQUIRE_CHANGES",
+  "decision_scope": "MEASUREMENT_FOUNDATIONS_PROTOCOL_SCIENTIFIC_FREEZE",
+  "brief_id": "GOVERNOR_REVIEW_MEASUREMENT_FOUNDATIONS_PROTOCOL_V1",
+  "reviewed_brief_sha256": "418a5351894b76ce2bdbb7e7a4a4a0460b35b03c5475dc6d31e647c9a50daea3",
+  "scientific_assessment": "A distinct no-update measurement-foundations study is scientifically defensible and is the smallest useful direction after the closed INCONCLUSIVE NLL branch. However, the current draft is not prospectively executable: it leaves the row subset, repeat count, optional third forward control, numerical acceptance threshold, and exact positive/negative/inconclusive mapping unresolved. Those choices can materially change whether a mode appears stable and must be frozen before any model loading.",
+  "root_cause": "The draft defines a research question but not a single preregistered experiment. It proposes a newly selected family-stratified subset without its exact membership, uses an unspecified fixed number of repeats, permits a precision or padding/position control to be chosen only after static inspection, and refers to an acceptance rule that has no numeric threshold. It also allows several implementation dimensions—precision, padding side, position IDs, attention masking, token shift, and aggregation—without selecting exactly one causal factor. The three outcome branches therefore cannot yet be evaluated deterministically and retain post-hoc researcher degrees of freedom.",
+  "smallest_repair": {
+    "scope": "FREEZE_ONE_BOUNDED_FORWARD_CONFIGURATION_STUDY",
+    "required_changes": [
+      "Reuse the already frozen 30-row cross-check cohort from the closed diagnostic: the first six scheduled rows of each of the five weak families in frozen schedule order. Do not choose a new subset after inspecting NLL values.",
+      "Bind the exact V7, rejected atomic-prerequisite R1, and family-balanced R1 checkpoint manifests and adapter SHA256 values already used by the closed diagnostic; do not add checkpoints.",
+      "Complete CPU-only static inspection before protocol freeze and select exactly one implementation distinction to test in addition to the reference Batch1 and frozen batched modes. Name its exact precision, padding side, attention-mask construction, position-ID construction, causal-label shift, aggregation dtype, and tensor layout. If no single justified distinction is identified, omit the third control rather than search adaptively during execution.",
+      "Freeze the exact number of repeated forwards per checkpoint, row, and mode, the execution order, random and deterministic settings, requested and effective batch sizes, fallback behavior, and whether model reloads occur between modes.",
+      "Define one primary comparison at token-micro NLL and preserve per-row values so drift cannot be concealed by family averaging. Row-macro and family aggregates may remain secondary only.",
+      "Predeclare a numeric stability threshold before execution, with a rationale independent of the observed run_002 NLL values. This new study may validate a new measurement procedure, but it may not relax or reinterpret the closed branch's 0.001 rule or retrospectively classify H1/H3.",
+      "Freeze one deterministic decision mapping: MEASUREMENT_VALID only if every required checkpoint and comparison passes the threshold; CONTROLLABLE_IMPLEMENTATION_DEFECT only if the single preregistered control uniquely converts all required failures to passes; NO_STABLE_MODE if complete valid execution fails those conditions; INCONCLUSIVE only for missing, partial, identity-invalid, nonfinite, or execution-invalid evidence.",
+      "State the consequence of each branch prospectively: MEASUREMENT_VALID permits a separate mechanism-study proposal; CONTROLLABLE_IMPLEMENTATION_DEFECT permits only a repair proposal and fresh review; NO_STABLE_MODE closes token-NLL mechanism work under the current runtime; INCONCLUSIVE authorizes nothing automatically.",
+      "Freeze a fresh isolated output root, runtime cap, raw per-token evidence schema, terminal receipt, and fail-closed identity checks for the selected modes before requesting execution authorization."
+    ]
+  },
+  "accepted_scientific_boundaries": {
+    "distinct_from_closed_fit_generalization_branch": true,
+    "purpose": "VALIDATE_A_MEASUREMENT_PROCEDURE_ONLY",
+    "optimizer_steps": 0,
+    "scientific_gpu_training_seconds": 0,
+    "generation": false,
+    "checkpoint_mutation": false,
+    "dev_or_retention_labels_in_nll": false,
+    "gradient_mechanism_claim": false,
+    "automatic_reinterpretation_of_run_002": false
+  },
+  "frozen_conditions": [
+    "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1 remains CLOSED_INCONCLUSIVE under its original 0.001 rule and may not be reopened or relabeled.",
+    "V7, rejected atomic-prerequisite R1, family-balanced R1, their checkpoint and result bytes, and all closed-route artifacts remain immutable.",
+    "The run_002 raw NLL values and batch-drift observations remain descriptive evidence only and may not be used to choose a more permissive threshold.",
+    "The 400-row TRAIN schedule and the existing 30-row weak-family cross-check subset remain immutable.",
+    "TARGET_DEV and RETENTION_SENTINEL labels remain excluded from NLL measurement.",
+    "No optimizer construction, training, generation, checkpoint mutation, R3, or composition work is in scope.",
+    "FINAL_AUDIT remains sealed."
+  ],
+  "forbidden_actions": [
+    "DO_NOT_LOAD_A_MODEL_OR_RUN_GPU_INFERENCE_FROM_THIS_REVIEW",
+    "DO_NOT_SELECT_ROWS_MODES_CONTROLS_REPEAT_COUNTS_OR_THRESHOLDS_AFTER_OBSERVING_NEW_OUTPUTS",
+    "DO_NOT_TEST_MULTIPLE_IMPLEMENTATION_CONTROLS_AND_KEEP_ONLY_THE_ONE_THAT_PASSES",
+    "DO_NOT_RELAX_OR_REINTERPRET_THE_CLOSED_BRANCH_0_001_RULE",
+    "DO_NOT_USE_THIS_STUDY_TO_CLASSIFY_H1_H2_OR_H3",
+    "DO_NOT_USE_TARGET_DEV_RETENTION_SENTINEL_OR_FINAL_AUDIT_LABELS_IN_NLL",
+    "DO_NOT_CONSTRUCT_AN_OPTIMIZER_TRAIN_GENERATE_OR_MUTATE_A_CHECKPOINT",
+    "DO_NOT_REOPEN_THE_CLOSED_ATOMIC_REPAIR_OR_FIT_GENERALIZATION_BRANCHES",
+    "DO_NOT_BEGIN_COMPOSITION_TRAINING_OR_R3",
+    "DO_NOT_OPEN_FINAL_AUDIT",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": true,
+  "review_trigger": "One immutable measurement-foundations execution package with the exact 30-row cohort, three checkpoint identities, fully specified reference and batched modes, at most one preregistered implementation control, fixed repeats and ordering, numeric stability threshold, deterministic four-way decision rule, raw-evidence schema, isolation, runtime cap, and explicit execution-authorization status.",
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "generation_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "composition_training_authorized": false,
+  "r3_authorized": false,
+  "final_audit_authorized": false
+}

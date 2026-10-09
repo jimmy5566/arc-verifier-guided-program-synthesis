@@ -1,0 +1,33 @@
+{
+  "artifact_id": "MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_CPU_STATIC_VALIDATION",
+  "checks": {
+    "all_rows_exact_schedule_bindings": true,
+    "binding_sha256": true,
+    "cohort_sha256": true,
+    "fresh_remote_output_root_declared": true,
+    "no_model_or_gpu_execution_authorized": true,
+    "no_training_scope": true,
+    "numeric_threshold_fixed": true,
+    "row_count_30": true,
+    "schedule_sha256": true,
+    "single_control_is_explicit_position_only": true,
+    "six_per_weak_family": true,
+    "three_bound_conditions": true,
+    "three_modes_exactly": true
+  },
+  "cohort_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_V1_FIXED_CROSSCHECK_30.json",
+  "cohort_sha256": "543b1101ae257e948996db41c447ae9f2188c7bf6c50850091959720225ac940",
+  "config_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_EXECUTION_PACKAGE_V2.json",
+  "config_sha256": "1a7394698299f167f9ad05c190bccef9fdb274549d455bba01fbf4d9aaed4962",
+  "created_at": "2026-10-09T04:22:48.243584Z",
+  "forbidden_actions_observed": [
+    "no model load",
+    "no GPU inference",
+    "no optimizer construction",
+    "no generation",
+    "no checkpoint mutation",
+    "no FINAL_AUDIT"
+  ],
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY_NO_MODEL_LOAD"
+}

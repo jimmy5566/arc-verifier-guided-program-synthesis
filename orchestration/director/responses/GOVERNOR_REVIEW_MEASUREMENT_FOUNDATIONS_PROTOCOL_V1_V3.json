@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_V3",
+  "decision": "REQUIRE_CHANGES",
+  "decision_scope": "MEASUREMENT_FOUNDATIONS_BATCH_FACTOR_PRESERVATION",
+  "brief_id": "GOVERNOR_REVIEW_MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_V3",
+  "reviewed_brief_sha256": "286ad4ad8dd21f3af5c21fdcdc7e92166c39762af964c81f10aa7c9c2fddcfc4",
+  "scientific_assessment": "V3 correctly adds the single matched REFERENCE_B1_EXPLICIT_POSITION_CONTROL requested by the V2 review. The exact cohort, three checkpoints, four modes, three repeats, 0.0005 threshold, forward numerics, required matched comparisons, deterministic outcome mapping, isolation, and no-update scope are otherwise prospectively specified. The response-only cohort citation is transparently corrected to the actual V2-bound artifact without changing the cohort. One remaining fail-closed defect prevents execution authorization: the frozen batched fallback ladder includes batch size 1, so the experimental batching factor can disappear while the current decision mapping can still report MEASUREMENT_VALID. The model-reload policy also retains a stale three-mode statement despite the four-mode contract.",
+  "root_cause": "The execution contract does not require the effective batched size to remain greater than one. Under fallback to 1, REFERENCE_B1_IMPLICIT_POSITION and BATCHED_IMPLICIT_POSITION cease to be distinct batching conditions, so a passing comparison supplies no evidence that batched measurement is stable. The same loss of causal contrast affects the matched explicit comparison. In addition, 'do not reload between its three modes' is inconsistent with the enumerated four modes and leaves execution semantics textually ambiguous.",
+  "smallest_repair": {
+    "scope": "PRESERVE_A_NONTRIVIAL_BATCH_CONTRAST_AND_CORRECT_MODE_COUNT",
+    "required_changes": [
+      "Change the frozen batched fallback ladder so that every scientifically admissible effective batched size is greater than one, for example 32 -> 16 -> 8 -> 4 -> 2. If no size greater than one succeeds within the runtime cap, terminate as INCONCLUSIVE and do not evaluate MEASUREMENT_VALID, CONTROLLABLE_IMPLEMENTATION_DEFECT, or NO_STABLE_MODE.",
+      "State that the common effective batched size is selected once using the V7 BATCHED_IMPLICIT_POSITION initialization, then bound unchanged across both batched modes and all three checkpoints. Any later fallback, size substitution, or inability to use that bound size is INCONCLUSIVE.",
+      "Correct the model-reload policy from 'three modes' to 'four modes' and explicitly apply one unchanged loaded model instance to all four ordered modes within each checkpoint before release between checkpoints.",
+      "Update only the execution package, dependent CPU static validation, and immutable hash bindings required by these two corrections; retain every other V3 scientific condition unchanged.",
+      "Return the corrected immutable package for one further Governor review before any model loading or GPU inference authorization."
+    ]
+  },
+  "accepted_frozen_elements": {
+    "cohort_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_V1_FIXED_CROSSCHECK_30.json",
+    "cohort_sha256": "543b1101ae257e948996db41c447ae9f2188c7bf6c50850091959720225ac940",
+    "row_count": 30,
+    "checkpoint_count": 3,
+    "mode_count": 4,
+    "repeat_count_per_checkpoint_row_mode": 3,
+    "absolute_token_micro_nll_drift_threshold": 0.0005,
+    "single_causal_factor": "POSITION_ID_CONSTRUCTION",
+    "matched_batch1_explicit_reference_accepted": true,
+    "response_reference_correction_accepted": true,
+    "optimizer_steps": 0,
+    "scientific_gpu_training_seconds": 0,
+    "generation": false,
+    "checkpoint_mutation": false
+  },
+  "frozen_conditions": [
+    "The exact 30-row cohort, row order, token-label identities, and five-family allocation remain unchanged at cohort SHA256 543b1101ae257e948996db41c447ae9f2188c7bf6c50850091959720225ac940.",
+    "The exact V7, rejected atomic-prerequisite R1, and family-balanced R1 checkpoint manifests and adapter SHA256 identities remain unchanged; no checkpoint may be added or substituted.",
+    "The four modes remain REFERENCE_B1_IMPLICIT_POSITION, REFERENCE_B1_EXPLICIT_POSITION_CONTROL, BATCHED_IMPLICIT_POSITION, and BATCHED_EXPLICIT_POSITION_CONTROL in the frozen order.",
+    "The explicit position-ID construction remains attention_mask.long().cumsum(-1)-1 with masked positions set to zero; position-ID construction remains the only implementation factor under test.",
+    "The fixed right padding, attention mask, BF16 model weights, SDPA attention, FP32 logits and cross-entropy, causal-label shift, token-micro estimator, deterministic settings, raw evidence schema, and checkpoint order remain unchanged.",
+    "Exactly three forwards per checkpoint, row, and mode remain required, and the absolute token-micro NLL drift threshold remains 0.0005.",
+    "The V3 required comparisons and four-way decision mapping remain unchanged except for the explicit fail-closed rule that no effective batched size greater than one yields INCONCLUSIVE.",
+    "Closed run_002 and its original 0.001 rule remain immutable, descriptive only, and unavailable for retrospective reclassification.",
+    "TARGET_DEV and RETENTION_SENTINEL labels remain excluded, and FINAL_AUDIT remains sealed.",
+    "No optimizer construction, training, generation, checkpoint mutation, R3, composition work, or expansion of the measurement study is in scope."
+  ],
+  "forbidden_actions": [
+    "DO_NOT_LOAD_A_MODEL_OR_RUN_GPU_INFERENCE_FROM_THIS_REVIEW",
+    "DO_NOT_TREAT_EFFECTIVE_BATCH_SIZE_1_AS_A_BATCHED_CONDITION",
+    "DO_NOT_CHANGE_THE_BOUND_EFFECTIVE_BATCH_SIZE_ACROSS_MODES_OR_CHECKPOINTS",
+    "DO_NOT_ADD_MODES_CHECKPOINTS_ROWS_CONTROLS_OR_COMPARISONS",
+    "DO_NOT_CHANGE_THE_THRESHOLD_REPEAT_COUNT_EXECUTION_ORDER_OR_FORWARD_NUMERICS",
+    "DO_NOT_SELECT_OR_RELAX_ANY RULE_AFTER_OBSERVING_NEW_OUTPUTS",
+    "DO_NOT_REINTERPRET_OR_RELABEL_CLOSED_RUN_002",
+    "DO_NOT_USE_TARGET_DEV_RETENTION_SENTINEL_OR_FINAL_AUDIT_LABELS",
+    "DO_NOT_CONSTRUCT_AN_OPTIMIZER_TRAIN_GENERATE_OR_MUTATE_A_CHECKPOINT",
+    "DO_NOT_BEGIN_R3_COMPOSITION_TRAINING_OR_FINAL_AUDIT",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": true,
+  "review_trigger": "One corrected immutable V3 execution package that excludes batch size 1 from admissible batched execution, binds one common effective size greater than one across both batched modes and all checkpoints, corrects the reload policy to four modes, updates CPU-only validation and hashes, and makes no other scientific change.",
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "generation_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "composition_training_authorized": false,
+  "r3_authorized": false,
+  "final_audit_authorized": false
+}

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_V2",
+  "decision": "REQUIRE_CHANGES",
+  "decision_scope": "MEASUREMENT_FOUNDATIONS_POSITION_CONTROL_CAUSAL_ISOLATION",
+  "brief_id": "GOVERNOR_REVIEW_MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_V2",
+  "reviewed_brief_sha256": "ff08b22c1231a086e24620553f166d9db124c7bb5cbf92d6cea1815faffc6dff",
+  "scientific_assessment": "V2 prospectively freezes the exact 30-row cohort, three checkpoint identities, fixed forward contract, three repeats, execution order, numeric threshold, raw evidence, isolation, runtime cap, and four-way outcome structure. The remaining defect is narrow but material: the proposed controllable-implementation-defect conclusion compares Batch1 with implicit position IDs against batched execution with explicit position IDs. Because batch size and position-ID construction change together, that comparison cannot uniquely attribute restored agreement to position-ID handling.",
+  "root_cause": "The package lacks a matched Batch1 explicit-position reference. REFERENCE_B1_IMPLICIT_POSITION versus BATCHED_EXPLICIT_POSITION_CONTROL changes two factors simultaneously: batching and position-ID construction. A passing cross-mode comparison could therefore reflect cancellation or a reference-semantic shift rather than correction of a batch-dependent position-ID defect.",
+  "smallest_repair": {
+    "scope": "ADD_MATCHED_B1_EXPLICIT_POSITION_REFERENCE_ONLY",
+    "required_changes": [
+      "Add exactly one mode named REFERENCE_B1_EXPLICIT_POSITION_CONTROL using batch size 1 and the identical explicit position-ID construction already frozen for the batched explicit control: attention_mask.cumsum(-1)-1 with padded positions set to zero.",
+      "Hold every other forward-contract field identical to the corresponding reference and batched modes, including right padding, attention-mask construction, causal-label shift, FP32 logits and cross-entropy, BF16 model weights, SDPA attention, no-grad execution, token-micro aggregation, row order, repeat count, and checkpoint reload policy.",
+      "Preserve the primary implicit comparison as REFERENCE_B1_IMPLICIT_POSITION versus BATCHED_IMPLICIT_POSITION for every checkpoint and family.",
+      "For the explicit control, compare REFERENCE_B1_EXPLICIT_POSITION_CONTROL versus BATCHED_EXPLICIT_POSITION_CONTROL for every checkpoint and family, and also require REFERENCE_B1_EXPLICIT_POSITION_CONTROL versus REFERENCE_B1_IMPLICIT_POSITION to remain within the same frozen absolute token-micro NLL drift threshold for every checkpoint and family.",
+      "Set CONTROLLABLE_IMPLEMENTATION_DEFECT only when at least one required implicit comparison fails, every matched explicit Batch1-versus-batched comparison passes, every Batch1 explicit-versus-implicit semantic-preservation comparison passes, and all repeat-stability and identity gates pass.",
+      "Keep MEASUREMENT_VALID for the case where every required implicit Batch1-versus-batched comparison passes. On a complete valid run, map all other scientifically complete patterns to NO_STABLE_MODE; reserve INCONCLUSIVE for missing, partial, identity-invalid, nonfinite, or execution-invalid evidence.",
+      "Update the CPU-only static validation and immutable package bindings for this single added mode, then return the corrected package for one further Governor review before execution authorization is requested."
+    ]
+  },
+  "accepted_frozen_elements": {
+    "cohort_path": "experiments/atomic_prerequisite_mechanism_diagnostic_v1/protocol/MEASUREMENT_FOUNDATIONS_V1_FIXED_CROSSCHECK_30.json",
+    "cohort_sha256": "543b771bc7f47d70cf5fba6654d80b8ed7950955c86e2f5f22a9d4579192bd67",
+    "row_count": 30,
+    "checkpoint_count": 3,
+    "repeat_count_per_checkpoint_row_mode": 3,
+    "absolute_token_micro_nll_drift_threshold": 0.0005,
+    "single_causal_factor": "POSITION_ID_CONSTRUCTION",
+    "optimizer_steps": 0,
+    "scientific_gpu_training_seconds": 0,
+    "generation": false,
+    "checkpoint_mutation": false
+  },
+  "frozen_conditions": [
+    "The exact 30-row cohort, frozen row order, token-label identities, and five-family allocation remain unchanged.",
+    "The exact V7, rejected atomic-prerequisite R1, and family-balanced R1 checkpoint manifests and adapter SHA256 identities remain unchanged; no checkpoint may be added or substituted.",
+    "The absolute token-micro NLL drift threshold remains 0.0005 and may not be tuned from observed outputs.",
+    "Exactly three repeated forwards per checkpoint, row, and mode remain required, with the frozen execution order and deterministic settings.",
+    "Position-ID construction remains the only causal factor under test; the added Batch1 explicit mode is the matched reference for that same factor, not a second implementation control.",
+    "The closed run_002 evidence and its original 0.001 rule remain immutable, descriptive only, and unavailable for retrospective reclassification.",
+    "TARGET_DEV and RETENTION_SENTINEL labels remain excluded, and FINAL_AUDIT remains sealed.",
+    "No optimizer construction, training, generation, checkpoint mutation, R3, or composition work is in scope."
+  ],
+  "forbidden_actions": [
+    "DO_NOT_LOAD_A_MODEL_OR_RUN_GPU_INFERENCE_FROM_THIS_REVIEW",
+    "DO_NOT_ADD_A_SECOND_IMPLEMENTATION_CONTROL_OR_TEST_MULTIPLE_CONTROLS_ADAPTIVELY",
+    "DO_NOT_CHANGE_THE_COHORT_CHECKPOINTS_THRESHOLD_REPEAT_COUNT_EXECUTION_ORDER_OR_FORWARD_NUMERICS",
+    "DO_NOT_SELECT_OR_RELAX_ANY RULE_AFTER_OBSERVING_NEW_OUTPUTS",
+    "DO_NOT_REINTERPRET_OR_RELABEL_CLOSED_RUN_002",
+    "DO_NOT_USE_TARGET_DEV_RETENTION_SENTINEL_OR_FINAL_AUDIT_LABELS",
+    "DO_NOT_CONSTRUCT_AN_OPTIMIZER_TRAIN_GENERATE_OR_MUTATE_A_CHECKPOINT",
+    "DO_NOT_BEGIN_R3_COMPOSITION_TRAINING_OR_FINAL_AUDIT",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required": true,
+  "review_trigger": "One corrected immutable measurement-foundations package containing the matched REFERENCE_B1_EXPLICIT_POSITION_CONTROL mode, updated CPU-only static validation, exact artifact bindings, and the revised deterministic decision mapping, with no other scientific change.",
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "generation_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "composition_training_authorized": false,
+  "r3_authorized": false,
+  "final_audit_authorized": false
+}

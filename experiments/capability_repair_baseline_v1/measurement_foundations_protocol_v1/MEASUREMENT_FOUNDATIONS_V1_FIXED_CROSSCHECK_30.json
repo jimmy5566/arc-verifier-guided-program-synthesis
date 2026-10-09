@@ -1,0 +1,234 @@
+{
+  "cohort_id": "MEASUREMENT_FOUNDATIONS_V1_FIXED_CROSSCHECK_30",
+  "families": [
+    "connected components",
+    "inside/contains",
+    "difference",
+    "width",
+    "orientation"
+  ],
+  "family_counts": {
+    "connected components": 6,
+    "difference": 6,
+    "inside/contains": 6,
+    "orientation": 6,
+    "width": 6
+  },
+  "row_count": 30,
+  "rows": [
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000000",
+      "family": "connected components",
+      "slot": 0,
+      "supervised_token_count": 23,
+      "token_label_sha256": "7a2efb94a215a695044ef7b25379e6f18363f9e0bc66169baed696431eca6a9d"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000001",
+      "family": "connected components",
+      "slot": 5,
+      "supervised_token_count": 21,
+      "token_label_sha256": "52b2991ed43ecb58573f4734f56fc9ee44236756c8bf895c969b13b884b4a00b"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000002",
+      "family": "connected components",
+      "slot": 10,
+      "supervised_token_count": 23,
+      "token_label_sha256": "da6147d4a4671a6bc13b6caaa48d4e0cefac22d12534f11bef5804703b68ef93"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000003",
+      "family": "connected components",
+      "slot": 25,
+      "supervised_token_count": 23,
+      "token_label_sha256": "a2397b9be96aca33bd3621c0d50e472b9e52348721d82addba09cc55469e796e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000004",
+      "family": "connected components",
+      "slot": 30,
+      "supervised_token_count": 24,
+      "token_label_sha256": "1d2debd3a5651ec661c6f8cd6aaf9a09b64988420825d4d5f8fc1e557ab4d72f"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000005",
+      "family": "connected components",
+      "slot": 35,
+      "supervised_token_count": 23,
+      "token_label_sha256": "e838e776372a6652e6d481c31987015b996aa68a7c208da0f48482eb86f92e02"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000000",
+      "family": "inside/contains",
+      "slot": 1,
+      "supervised_token_count": 411,
+      "token_label_sha256": "7b40687eccddca22141cffae4595f5831d76db0eca2d35c7e64de279e2777253"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000001",
+      "family": "inside/contains",
+      "slot": 6,
+      "supervised_token_count": 429,
+      "token_label_sha256": "92d8344e041482d0c8b0c48a184da9141279c5767a4ae3132c2e95b8a28909e0"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000002",
+      "family": "inside/contains",
+      "slot": 11,
+      "supervised_token_count": 405,
+      "token_label_sha256": "6afe0ccb15062124cac06ba9add0666743ee4c6396475a41ad8afec8ccc6ada1"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000003",
+      "family": "inside/contains",
+      "slot": 26,
+      "supervised_token_count": 407,
+      "token_label_sha256": "fc23f48e3d2262df70969115bb7a44eea5ed7242bee4941798be0a21504cf68e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000004",
+      "family": "inside/contains",
+      "slot": 31,
+      "supervised_token_count": 341,
+      "token_label_sha256": "d88eb38b857df59b6a5b999fb5cd9e3aa53d9ab56ba71d95f50934309872fe81"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000005",
+      "family": "inside/contains",
+      "slot": 36,
+      "supervised_token_count": 365,
+      "token_label_sha256": "948e1d230b64adf27d2446746f9b563c3b5cc71dd947c09e34a9e5932b25f671"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000000",
+      "family": "difference",
+      "slot": 2,
+      "supervised_token_count": 431,
+      "token_label_sha256": "858f62112143da931719cf83d8174a2305a94c5b5f835f25f2108d5b366747ee"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000001",
+      "family": "difference",
+      "slot": 7,
+      "supervised_token_count": 341,
+      "token_label_sha256": "5b389a3d75373e7a7d065bf6c6f3e57c6f54bf2280265b8d26ae47623de60e90"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000002",
+      "family": "difference",
+      "slot": 12,
+      "supervised_token_count": 431,
+      "token_label_sha256": "18b6b2b50f9687bdb33ccab11994d16f6b9e5b12cde70b4bb51b6ed664d56b81"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000003",
+      "family": "difference",
+      "slot": 27,
+      "supervised_token_count": 387,
+      "token_label_sha256": "5f12763ea69e63f523d00204375c9fc0344d9ed4753de3358dde953e3c3c8de5"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000004",
+      "family": "difference",
+      "slot": 32,
+      "supervised_token_count": 407,
+      "token_label_sha256": "dba296e492c03b37c06d8c945013a89dcc1eafb5ef01fc06358ffec16045ecde"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000005",
+      "family": "difference",
+      "slot": 37,
+      "supervised_token_count": 405,
+      "token_label_sha256": "4ba5d69af6171c8656a51043c8cbb2299a8ec0cbce9be626c184fb78e0a138d2"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000000",
+      "family": "width",
+      "slot": 3,
+      "supervised_token_count": 24,
+      "token_label_sha256": "6722fdc068fbf3e841413ad288f099f85541c85c41f598a6557db1da4cbacbc9"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000001",
+      "family": "width",
+      "slot": 8,
+      "supervised_token_count": 24,
+      "token_label_sha256": "fd5c894503193c8f40b80bfe08d70772efd12b0b31021146d830941c50cdd88e"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000002",
+      "family": "width",
+      "slot": 13,
+      "supervised_token_count": 24,
+      "token_label_sha256": "7dfb4b669f9dab0a718c6672f34608f608002db2715c75d21482fbd67ce9a9e1"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000003",
+      "family": "width",
+      "slot": 28,
+      "supervised_token_count": 24,
+      "token_label_sha256": "092d43261b1c036a45772fca6f19d06b52585478b2b8c1231e323fcf9dadcbd5"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000004",
+      "family": "width",
+      "slot": 33,
+      "supervised_token_count": 24,
+      "token_label_sha256": "62458c7d658a61b4a220f437ff27b265fcc615b14b9f2ab01400013e60738253"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:width:000005",
+      "family": "width",
+      "slot": 38,
+      "supervised_token_count": 24,
+      "token_label_sha256": "822663820ab4405d405349ae1be5ca5e016f40884d8e20d63c662bdcec535844"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000000",
+      "family": "orientation",
+      "slot": 4,
+      "supervised_token_count": 34,
+      "token_label_sha256": "cc821e856121f5a8bf2f5d541294705e05495196fdbb19d1e587abfa34f87c60"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000001",
+      "family": "orientation",
+      "slot": 9,
+      "supervised_token_count": 34,
+      "token_label_sha256": "442b3804f3378faf18d596828e400a3d561f3b41b0ddc8dd9b2e6bfee68c31f8"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000002",
+      "family": "orientation",
+      "slot": 14,
+      "supervised_token_count": 34,
+      "token_label_sha256": "a2d94e4a7d19f962da413b4cadc0f44420be3771c2a2e41d43c1c47fe526ac04"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000003",
+      "family": "orientation",
+      "slot": 29,
+      "supervised_token_count": 35,
+      "token_label_sha256": "ad785239a2efaa0c5a96a91f3c153bd3cd52f5930f5babe743dc1d6f9f9e060f"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000004",
+      "family": "orientation",
+      "slot": 34,
+      "supervised_token_count": 33,
+      "token_label_sha256": "74c713ed934b17d6c7b2415190b9cb4ea50607d51dadde813b1b073b5cc482df"
+    },
+    {
+      "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000005",
+      "family": "orientation",
+      "slot": 39,
+      "supervised_token_count": 34,
+      "token_label_sha256": "fc8cb81250edb84fc09aa7416ef0b94fc44e15803439b420f23203486265fd3d"
+    }
+  ],
+  "schedule_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json",
+  "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6",
+  "schema_version": 1,
+  "selection_rule": "First six scheduled rows in exact frozen schedule order for each weak family; preserve this listed order for Batch1 and group the listed rows without reordering for batched modes."
+}

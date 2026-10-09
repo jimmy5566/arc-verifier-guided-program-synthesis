@@ -1,0 +1,39 @@
+{
+  "artifact_id": "MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_V3_CPU_STATIC_VALIDATION",
+  "checks": {
+    "actual_cohort_exists_and_hash_matches": true,
+    "execution_still_not_authorized": true,
+    "four_modes_exactly": true,
+    "four_way_decision_mapping": true,
+    "matched_batch1_explicit_mode_present": true,
+    "matched_explicit_and_semantic_comparisons_present": true,
+    "no_training_scope": true,
+    "only_position_control_added": true,
+    "repeat_count_unchanged": true,
+    "response_path_mismatch_recorded": true,
+    "threshold_unchanged": true
+  },
+  "cohort_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_V1_FIXED_CROSSCHECK_30.json",
+  "cohort_sha256": "543b1101ae257e948996db41c447ae9f2188c7bf6c50850091959720225ac940",
+  "config_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_EXECUTION_PACKAGE_V3.json",
+  "config_sha256": "237a16285f1983c995f2903131ef3e2da5c1ef51c8fefbfe2ceb1230da79fbec",
+  "created_at": "2026-10-09T04:25:13.089151Z",
+  "forbidden_actions_observed": [
+    "no model load",
+    "no GPU inference",
+    "no optimizer construction",
+    "no generation",
+    "no checkpoint mutation",
+    "no FINAL_AUDIT"
+  ],
+  "response_reference_correction": {
+    "actual_cohort_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_V1_FIXED_CROSSCHECK_30.json",
+    "actual_cohort_sha256": "543b1101ae257e948996db41c447ae9f2188c7bf6c50850091959720225ac940",
+    "effect": "No cohort row, order, token-label identity, family allocation, or scientific condition changed.",
+    "response_accepted_path": "experiments/atomic_prerequisite_mechanism_diagnostic_v1/protocol/MEASUREMENT_FOUNDATIONS_V1_FIXED_CROSSCHECK_30.json",
+    "response_accepted_sha256": "543b771bc7f47d70cf5fba6654d80b8ed7950955c86e2f5f22a9d4579192bd67",
+    "status": "RESPONSE_REFERENCE_NONEXISTENT_ACTUAL_V2_BRIEF_BINDING_RETAINED"
+  },
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY_NO_MODEL_LOAD"
+}

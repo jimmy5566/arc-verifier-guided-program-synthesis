@@ -1,0 +1,76 @@
+{
+  "causal_contrast": "Same checkpoint and exact tokenized rows, varying only the preregistered forward configuration.",
+  "competing_hypotheses": [
+    "The observed drift is ordinary BF16, padding, or batching sensitivity and no stable NLL mode is available under the current runtime.",
+    "The drift is caused by a controllable implementation detail such as padding side, position IDs, attention masking, token shift, or aggregation.",
+    "A stable token-level NLL mode exists but remains scientifically insufficient to predict exact-grid DEV generalization."
+  ],
+  "conditions": {
+    "aggregation": "Primary token-micro mean NLL over non-ignored causal target tokens; row-macro NLL is secondary and cannot replace the primary metric.",
+    "checkpoints": "Reuse only the three immutable conditions already bound by the closed branch; no checkpoint mutation or optimizer construction.",
+    "forward_modes": [
+      "BF16 Batch1, repeated fixed number of forwards",
+      "BF16 length-bucketed Batch32 with the frozen fallback ladder, repeated fixed number of forwards",
+      "One independently specified precision or padding/position control only if static inspection identifies a concrete implementation distinction"
+    ],
+    "rows": "A newly frozen, deterministic, family-stratified subset of the existing TRAIN rows only. No DEV, retention, diagnostic Gold, or FINAL_AUDIT labels are loaded."
+  },
+  "controls": [
+    "identical token IDs and labels",
+    "eval mode and no_grad",
+    "recorded dtype, padding side, attention mask, position IDs, and causal shift",
+    "no generation",
+    "no optimizer",
+    "no checkpoint mutation"
+  ],
+  "created_at": "2026-10-09T04:20:09.215799Z",
+  "estimated_cost": {
+    "cpu_preparation": "small",
+    "gpu_execution_if_later_approved": "small bounded no-update forwards only",
+    "training_gpu_seconds": 0
+  },
+  "experimental_unit": "One frozen, target-blind TRAIN row under one frozen checkpoint and one specified forward configuration.",
+  "forbidden": [
+    "GPU training",
+    "optimizer construction",
+    "generation",
+    "DEV or retention labels in NLL",
+    "FINAL_AUDIT access",
+    "reopening the closed FIT_GENERALIZATION_DIAGNOSTIC_V1 branch",
+    "post-hoc tolerance relaxation"
+  ],
+  "metrics": {
+    "primary": [
+      "within_mode repeated-forward maximum absolute token-micro NLL drift",
+      "Batch1-versus-batched absolute token-micro NLL drift"
+    ],
+    "secondary": [
+      "per-row NLL drift",
+      "per-family aggregate drift",
+      "token-count parity",
+      "logit/position/mask invariants where inspectable"
+    ]
+  },
+  "positive_negative_inconclusive_branches": {
+    "inconclusive": "Fix only the identified measurement implementation defect, then require a fresh review before any rerun.",
+    "negative": "No stable mode establishes that token-NLL mechanism claims are not currently supportable; prefer another research route.",
+    "positive": "A valid stable reference NLL mode permits a separate mechanism study proposal; it does not establish fitting or generalization."
+  },
+  "primary_hypothesis": "A fixed forward configuration can be identified whose repeated-forward and Batch1-versus-batched variation is bounded tightly enough to support later checkpoint comparisons.",
+  "prospective_decision_rule": {
+    "measurement_invalid": "If the same raw rows and model exhibit unresolved configuration-dependent NLL drift beyond the prospective rule, record INCONCLUSIVE_MEASUREMENT and do not classify H1, H2, or H3.",
+    "measurement_valid": "Only if the preregistered reference mode is repeatable and its fixed Batch1/batched comparison meets the acceptance rule established before checkpoint-comparison interpretation.",
+    "scope": "This study validates a measurement procedure only. It does not authorize training, R3, composition training, or a causal claim about generalization."
+  },
+  "protocol_id": "MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_DRAFT",
+  "research_question": "Can a prospectively specified no-update NLL measurement mode distinguish genuine checkpoint-level fit differences from numerical or batch-composition artifacts?",
+  "reusable_frozen_evidence": {
+    "closed_branch_decision": "orchestration/director/responses/GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_RESULT_V1.json",
+    "closed_branch_result": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/run_002/ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_RESULT.json",
+    "family_balanced_result_sha256": "cc97e376e2a4703c0d73e4a79f0bbf528ac71c8750b9b5972a85f9099cb40216",
+    "rejected_atomic_r1_result_sha256": "fc7360b922404f96645e4cf2efea849f7fa9527282e32124bb9342ca3906c01b",
+    "v7_result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+  },
+  "schema_version": 1,
+  "status": "DRAFT_REQUIRES_STAGE_LEVEL_SCIENTIFIC_REVIEW_BEFORE_EXECUTION"
+}

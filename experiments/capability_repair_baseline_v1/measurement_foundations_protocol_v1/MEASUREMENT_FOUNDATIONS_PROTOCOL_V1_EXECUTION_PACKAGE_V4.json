@@ -1,0 +1,204 @@
+{
+  "closed_branch_preserved": {
+    "original_numeric_rule": "0.001 immutable and not reinterpreted",
+    "stage": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1",
+    "status": "CLOSED_INCONCLUSIVE"
+  },
+  "cohort_binding_correction": {
+    "actual_cohort_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_V1_FIXED_CROSSCHECK_30.json",
+    "actual_cohort_sha256": "543b1101ae257e948996db41c447ae9f2188c7bf6c50850091959720225ac940",
+    "effect": "No cohort row, order, token-label identity, family allocation, or scientific condition changed.",
+    "response_accepted_path": "experiments/atomic_prerequisite_mechanism_diagnostic_v1/protocol/MEASUREMENT_FOUNDATIONS_V1_FIXED_CROSSCHECK_30.json",
+    "response_accepted_sha256": "543b771bc7f47d70cf5fba6654d80b8ed7950955c86e2f5f22a9d4579192bd67",
+    "status": "RESPONSE_REFERENCE_NONEXISTENT_ACTUAL_V2_BRIEF_BINDING_RETAINED"
+  },
+  "created_at": "2026-10-09T04:22:27.522259Z",
+  "decision_mapping": {
+    "CONTROLLABLE_IMPLEMENTATION_DEFECT": "At least one identity-valid implicit Batch1-versus-batched comparison fails; every matched explicit Batch1-versus-batched comparison passes; every Batch1 explicit-versus-implicit semantic-preservation comparison passes; and every required repeat-stability check passes. This permits only a position-ID repair proposal and fresh review.",
+    "INCONCLUSIVE": "Any missing, partial, nonfinite, identity-invalid, runtime-cap-exceeded, contract-deviating evidence, no common effective batched size >1, or any later batch-size substitution. No automatic follow-on is authorized.",
+    "MEASUREMENT_VALID": "Every required identity, finiteness, and repeat-stability check passes and every checkpoint-family REFERENCE_B1_IMPLICIT_POSITION versus BATCHED_IMPLICIT_POSITION comparison is <= 0.0005. The explicit pair remains recorded as the preregistered causal control.",
+    "NO_STABLE_MODE": "Complete, identity-valid, finite execution that satisfies neither previous rule."
+  },
+  "execution_authorization": "PENDING_STAGE_LEVEL_DIRECTOR_REVIEW",
+  "execution_order": {
+    "checkpoint_order": [
+      "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "ATOMIC_PREREQUISITE_REPAIR_V1_001_REJECTED",
+      "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001"
+    ],
+    "fallback_policy": "Only V7 BATCHED_IMPLICIT_POSITION may initialize the immutable ladder [32,16,8,4,2]. A common effective batch size >1 is mandatory. If no size >1 succeeds within the runtime cap, or any later condition cannot use the common bound size, terminate INCONCLUSIVE without evaluating other decision outcomes.",
+    "mode_order": [
+      "REFERENCE_B1_IMPLICIT_POSITION",
+      "REFERENCE_B1_EXPLICIT_POSITION_CONTROL",
+      "BATCHED_IMPLICIT_POSITION",
+      "BATCHED_EXPLICIT_POSITION_CONTROL"
+    ],
+    "model_reload_policy": "Load once per checkpoint; apply one unchanged loaded model instance to all four ordered modes, each with three repeats; do not reload between modes; release model and clear CUDA allocator only between checkpoints.",
+    "repeat_count_per_checkpoint_row_mode": 3,
+    "row_order": "exact listed cohort order; no length sorting or reshuffling"
+  },
+  "fixed_forward_contract": {
+    "aggregation_dtype": "float32 logits followed by float32 per-token cross entropy; token-micro mean over nonignored shifted labels.",
+    "attention_mask": "1 for original tokens and 0 for trailing pad tokens; passed to every forward.",
+    "causal_label_shift": "logits[:, :-1, :] versus labels[:, 1:]; labels equal -100 are ignored.",
+    "pad_token_id": 13,
+    "padding_side": "right",
+    "primary_estimator": "TOKEN_MICRO_MEAN_NLL",
+    "raw_evidence_schema": [
+      "checkpoint_id",
+      "mode_id",
+      "repeat_index",
+      "episode_id",
+      "family",
+      "token_label_sha256",
+      "supervised_token_count",
+      "per_token_negative_log_likelihood",
+      "row_nll_sum",
+      "row_token_micro_mean_nll",
+      "mode_metadata"
+    ],
+    "secondary_estimators": [
+      "per_row_token_micro_mean_nll",
+      "row_macro_mean_nll",
+      "family_token_micro_mean_nll"
+    ],
+    "tensor_layout": "[batch, max_sequence_length] right-padded"
+  },
+  "forbidden": [
+    "no optimizer construction",
+    "no training",
+    "no generation",
+    "no checkpoint mutation",
+    "no DEV or retention labels in NLL",
+    "no FINAL_AUDIT",
+    "no R3 or composition training",
+    "no post-hoc mode/control/threshold selection",
+    "no reinterpretation of closed run_002"
+  ],
+  "inputs": {
+    "cohort_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_V1_FIXED_CROSSCHECK_30.json",
+    "cohort_sha256": "543b1101ae257e948996db41c447ae9f2188c7bf6c50850091959720225ac940",
+    "conditions": {
+      "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001": {
+        "adapter_sha256": "c7b275587796b0d9b07d45e933371d5ae26e9aa76df7a895104d7c4e35117780",
+        "checkpoint_manifest_declared_identity": null,
+        "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json",
+        "checkpoint_manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9",
+        "result_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+        "result_sha256": "cc97e376e2a4703c0d73e4a79f0bbf528ac71c8750b9b5972a85f9099cb40216",
+        "status": "COMPLETE_REJECTED"
+      },
+      "ATOMIC_PREREQUISITE_REPAIR_V1_001_REJECTED": {
+        "adapter_sha256": "7f5e90f611a2bfcc993e96e1dfcd37b5d08ce14e88244c69cca231178edac2d2",
+        "checkpoint_manifest_declared_identity": "68f3ba7426203e1f432931ff8134f8ec474ba7ea592fec2abd17d7793b4c9cc5",
+        "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_001_FINAL_CHECKPOINT_MANIFEST.json",
+        "checkpoint_manifest_sha256": "0586201a3eec4ac1c56a1de42a5b20c9ff74f52069fbe92a55691ece28ed7ddd",
+        "result_path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/evaluation_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+        "result_sha256": "fc7360b922404f96645e4cf2efea849f7fa9527282e32124bb9342ca3906c01b",
+        "status": "COMPLETE_REJECTED"
+      },
+      "CAPABILITY_REPAIR_BASELINE_V1_V7": {
+        "adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+        "checkpoint_manifest_declared_identity": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da",
+        "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+        "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+        "result_path": "experiments/capability_repair_baseline_v1/corrected_baseline_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+        "result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+      }
+    },
+    "old_binding_path": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1_BINDING.json",
+    "old_binding_sha256": "97bd68d6fac1fe0181af9c722c45ac0aff0826bf406846491c73b19d33574746",
+    "train_path": "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl",
+    "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+  },
+  "modes": [
+    {
+      "all_other_forward_fields": "fixed_forward_contract",
+      "effective_batch_size": 1,
+      "mode_id": "REFERENCE_B1_IMPLICIT_POSITION",
+      "position_ids": "omitted; model default",
+      "requested_batch_size": 1
+    },
+    {
+      "effective_batch_size": 1,
+      "mode_id": "REFERENCE_B1_EXPLICIT_POSITION_CONTROL",
+      "position_ids": "attention_mask.long().cumsum(-1)-1, then positions at mask==0 set to 0; passed explicitly to model",
+      "requested_batch_size": 1,
+      "single_preregistered_distinction": "position-ID construction only; all inputs, right padding, attention mask, dtype, logits cast, causal shift, aggregation, model instance, and order are unchanged."
+    },
+    {
+      "all_other_forward_fields": "fixed_forward_contract",
+      "effective_batch_selection": "Use first successful value from immutable ladder [32,16,8,4,2] during V7 BATCHED_IMPLICIT_POSITION initialization. The selected common effective size MUST be >1, then binds unchanged across both batched modes and all three checkpoints. Any later fallback, size substitution, or inability to use the bound size is INCONCLUSIVE.",
+      "mode_id": "BATCHED_IMPLICIT_POSITION",
+      "position_ids": "omitted; model default",
+      "requested_batch_size": 32
+    },
+    {
+      "mode_id": "BATCHED_EXPLICIT_POSITION_CONTROL",
+      "position_ids": "attention_mask.long().cumsum(-1)-1, then positions at mask==0 set to 0; passed explicitly to model",
+      "requested_batch_size": "same common effective batch >1 as BATCHED_IMPLICIT_POSITION; no fallback permitted after binding",
+      "single_preregistered_distinction": "position-ID construction only; all inputs, padding, attention mask, dtype, logits cast, causal shift, aggregation, model instance, and order are unchanged."
+    }
+  ],
+  "numeric_acceptance": {
+    "absolute_token_micro_nll_stability_threshold": 0.0005,
+    "admissible_batched_effective_sizes": [
+      32,
+      16,
+      8,
+      4,
+      2
+    ],
+    "batch_contrast_gate": "An effective batched size <=1 is a contract violation / INCONCLUSIVE, never MEASUREMENT_VALID, CONTROLLABLE_IMPLEMENTATION_DEFECT, or NO_STABLE_MODE.",
+    "comparison_unit": "per checkpoint and per weak family token-micro NLL; all required units must pass.",
+    "rationale": "This is 5 percent of the independently frozen 0.01 nats/token fit-effect threshold: a valid measurement mode must make numerical variation at least twenty-fold smaller than a future material-fit contrast. It is prospectively stricter than, and does not modify, the closed branch 0.001 rule.",
+    "required_comparisons_per_checkpoint_and_family": [
+      "max pairwise drift among 3 REFERENCE_B1_IMPLICIT_POSITION repeats",
+      "max pairwise drift among 3 REFERENCE_B1_EXPLICIT_POSITION_CONTROL repeats",
+      "max pairwise drift among 3 BATCHED_IMPLICIT_POSITION repeats",
+      "max pairwise drift among 3 BATCHED_EXPLICIT_POSITION_CONTROL repeats",
+      "absolute mean difference: REFERENCE_B1_IMPLICIT_POSITION versus BATCHED_IMPLICIT_POSITION",
+      "absolute mean difference: REFERENCE_B1_EXPLICIT_POSITION_CONTROL versus BATCHED_EXPLICIT_POSITION_CONTROL",
+      "absolute mean difference: REFERENCE_B1_EXPLICIT_POSITION_CONTROL versus REFERENCE_B1_IMPLICIT_POSITION"
+    ]
+  },
+  "output_contract": {
+    "checkpoint_mutated": false,
+    "fresh_output_required": true,
+    "generation_performed": false,
+    "optimizer_steps": 0,
+    "output_root": "/workspace/arc2/measurement_foundations_protocol_v1/run_001",
+    "raw_evidence": "RAW_PER_TOKEN_NLL_EVIDENCE.jsonl",
+    "result": "MEASUREMENT_FOUNDATIONS_RESULT.json",
+    "runtime_cap_seconds": 900,
+    "scientific_gpu_training_seconds": 0.0,
+    "terminal_receipt": "TERMINAL_RECEIPT.json"
+  },
+  "package_version": "V4_NONTRIVIAL_BATCH_CONTRAST_PENDING_REVIEW",
+  "protocol_id": "MEASUREMENT_FOUNDATIONS_PROTOCOL_V1",
+  "purpose": "Validate one fixed teacher-forced NLL measurement procedure only; it cannot classify fitting, generalization, or gradient mechanisms.",
+  "review_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_V3.json",
+  "review_response_sha256": "2c8be2765f7ad6a919babdd3bb7aa339f950181e9470294bfcdcc5719beabfa8",
+  "reviewed_brief_sha256": "286ad4ad8dd21f3af5c21fdcdc7e92166c39762af964c81f10aa7c9c2fddcfc4",
+  "runtime": {
+    "attn_implementation": "sdpa",
+    "determinism": {
+      "allow_tf32": false,
+      "cublas_workspace_config": ":4096:8",
+      "cudnn_benchmark": false,
+      "cudnn_deterministic": true,
+      "seed": 20261009
+    },
+    "device": "cuda:0",
+    "eval_mode": true,
+    "gradient_mode": "torch.no_grad",
+    "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "model_dtype": "bfloat16",
+    "peft": "0.17.1",
+    "tokenizers_parallelism": false,
+    "torch": "2.8.0+cu128",
+    "transformers": "4.55.4"
+  },
+  "schema_version": 1,
+  "supersedes_package_sha256": "237a16285f1983c995f2903131ef3e2da5c1ef51c8fefbfe2ceb1230da79fbec"
+}

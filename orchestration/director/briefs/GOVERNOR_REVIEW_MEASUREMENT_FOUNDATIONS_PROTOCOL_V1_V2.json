@@ -1,0 +1,30 @@
+{
+  "cohort_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_V1_FIXED_CROSSCHECK_30.json",
+  "cohort_sha256": "543b1101ae257e948996db41c447ae9f2188c7bf6c50850091959720225ac940",
+  "constraints": [
+    "No model/GPU execution is authorized by this brief.",
+    "No optimizer, training, generation, checkpoint mutation, DEV/retention labels in NLL, FINAL_AUDIT, R3, or composition training.",
+    "The closed 0.001 branch and its run_002 values remain immutable and uninterpreted for H1/H3."
+  ],
+  "cpu_static_validation_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_CPU_STATIC_VALIDATION.json",
+  "cpu_static_validation_sha256": "56afbeeb27b4ee1dd589170d9c219fc21b7cab2144bb03d93a44a649c04634bb",
+  "created_at": "2026-10-09T04:22:48.256918Z",
+  "execution_package_path": "experiments/capability_repair_baseline_v1/measurement_foundations_protocol_v1/MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_EXECUTION_PACKAGE_V2.json",
+  "execution_package_sha256": "1a7394698299f167f9ad05c190bccef9fdb274549d455bba01fbf4d9aaed4962",
+  "frozen_design": {
+    "cohort": "exact existing 30 rows: first six scheduled rows in exact order of each of five weak families",
+    "conditions": "V7, exact rejected Atomic R1, Family-Balanced R1 only",
+    "modes": "B1 implicit position; batched implicit position; batched explicit position control only",
+    "outcome_mapping": "MEASUREMENT_VALID, CONTROLLABLE_IMPLEMENTATION_DEFECT, NO_STABLE_MODE, or INCONCLUSIVE exactly as package defines",
+    "primary_metric": "per checkpoint-family token-micro NLL, preserving per-token and per-row values",
+    "repeats": "3 per checkpoint-row-mode",
+    "threshold": "absolute drift <= 0.0005 nats/token for every required unit"
+  },
+  "requested_decision": "Is the V2 package sufficiently scientifically specified to authorize only its bounded no-update measurement execution, or is one material scientific correction still required?",
+  "review_id": "GOVERNOR_REVIEW_MEASUREMENT_FOUNDATIONS_PROTOCOL_V1_V2",
+  "review_reason": "The prior response required a fully preregistered bounded forward-configuration study. This V2 resolves each listed scientific degree of freedom without changing any frozen historical result.",
+  "review_type": "MAJOR_SCIENTIFIC_STAGE_ENTRY",
+  "schema_version": 1,
+  "scientific_question": "Does the fixed NLL forward configuration meet its prospective stability rule, or does explicit position-ID construction uniquely control the observed batch dependence?",
+  "supersedes_review_id": "GOVERNOR_REVIEW_MEASUREMENT_FOUNDATIONS_PROTOCOL_V1"
+}
