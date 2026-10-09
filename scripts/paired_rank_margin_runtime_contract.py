@@ -44,3 +44,12 @@ def require_complete_paired_rows(rows:list[dict])->None:
  keys={(r.get('checkpoint_condition'),r.get('episode_id')) for r in rows}
  if len(rows)!=120 or len(keys)!=120:raise RuntimeError('PAIRED_RESULT_COMPLETENESS_INVALID')
  if {r.get('checkpoint_condition') for r in rows}!={'RECONSTRUCTED_FOUNDATION_V2_V7','FAMILY_BALANCED'}:raise RuntimeError('PAIRED_RESULT_CONDITION_INVALID')
+
+def slice_teacher_forced_logits(batch_logits:list, boundaries:list[dict])->list[list]:
+ if len(batch_logits)!=len(boundaries):raise RuntimeError('LOGIT_BATCH_BOUNDARY_MISMATCH')
+ out=[]
+ for logits,boundary in zip(batch_logits,boundaries):
+  indices=extract_target_logit_indices(boundary)
+  if any(i>=len(logits) for i in indices):raise RuntimeError('LOGIT_CAUSAL_SLICE_OUT_OF_RANGE')
+  out.append([logits[i] for i in indices])
+ return out
