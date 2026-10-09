@@ -1,0 +1,19 @@
+{
+  "cap_seconds": 1800,
+  "command": [
+    "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_paired_fixed_b32_fit_transfer_v1.py",
+    "--config",
+    "experiments/capability_repair_baseline_v1/paired_fixed_b32_fit_transfer_v1/PAIRED_FIXED_B32_FIT_TRANSFER_V1_EXECUTION_PACKAGE_V11.json",
+    "--authorization",
+    "/workspace/arc2/orchestration/authorizations/PAIRED_FIXED_B32_FIT_TRANSFER_V1_RUN_001_9e18e83d9f04e05f57a20c64e8c4b0d2.json",
+    "--train",
+    "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TRAIN.jsonl",
+    "--out",
+    "/workspace/arc2/paired_fixed_b32_fit_transfer_v1/run_001_9e18e83d9f04e05f57a20c64e8c4b0d2"
+  ],
+  "exit_code": 0,
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "wall_seconds": 1095.1600133944303
+}

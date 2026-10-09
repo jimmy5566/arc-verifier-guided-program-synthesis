@@ -1,0 +1,94 @@
+{
+  "created_at": "2026-10-09T06:28:46.114625Z",
+  "evidence": {
+    "analysis_canonical_json_equal": true,
+    "launcher_log_sha256": "1686e953a56c4a172411fb55f3e04c177c33171c6fc7bb9d3cd4e7fa9e150633",
+    "raw_bytes": 22157379,
+    "raw_evidence_sha256": "c0ef6814bfb8c601e58a2bf5a264806d240c88494c333c35040b3097ac1315a3",
+    "raw_retention": "local durable recovery cache only; excluded from Git because it is a large scientific artifact",
+    "raw_rows": 4176,
+    "recomputed_analysis_sha256": "e0d04a371500f09e5a6b00f3d59638b9e5079bb467d49a9e32712bc5a765ff3f",
+    "remote_analysis_sha256": "cdad98376a4b92c6081ed0f3f61bc3814d815260fff3b370bbadfd0137369826",
+    "transport": "EMERGENCY_PTY_BYTE_PRESERVING_FALLBACK_FOR_OWNER_REQUESTED_EXACT_RESULT_RECOVERY"
+  },
+  "identity": {
+    "authorization_sha256": "ced342b7dd05029e2605d3f567fae305d6edef3d0ad7ebab4b426c9320b7faa4",
+    "package_sha256": "930e1ebd15caa5312eac9eb8655a86fc16e2dab4d5610a1e5ff8ec299930622d",
+    "source_commit": "35be60682963b7ca741ae7969bbec924862ec817",
+    "worker_sha256": "0c9220e4537b09c56674df2776c4813ceeecde62b5e79ebc5d793567b6d4999e"
+  },
+  "process_evidence": {
+    "cap_seconds": 1800,
+    "cap_status": "COMPLETE",
+    "cap_wall_seconds": 1095.1600133944303,
+    "checkpoint_mutated": false,
+    "final_audit_opened": false,
+    "generation_performed": false,
+    "optimizer_steps": 0,
+    "terminal_receipt_sha256": "27c383e9cad78bc5da7ac961d274d1d263c56db5db222d4b3c8a32eb78f5e7a1",
+    "terminal_status": "COMPLETE_NO_UPDATE"
+  },
+  "protocol_id": "PAIRED_FIXED_B32_FIT_TRANSFER_V1",
+  "result_id": "PAIRED_FIXED_B32_FIT_TRANSFER_V1_RUN_001_RESULT_V1",
+  "schema_version": 1,
+  "scientific_summary": {
+    "family_balanced_loss_control": {
+      "cross_b1_delta": {
+        "connected components": -5.964992892108947,
+        "difference": -0.3998946704221613,
+        "inside/contains": -0.3272777956359528,
+        "orientation": -4.513064624428971,
+        "width": -4.911948054975192
+      },
+      "cross_b32_delta": {
+        "connected components": -5.9305779217288,
+        "difference": -0.3988384889954727,
+        "inside/contains": -0.32767661894851263,
+        "orientation": -4.509170777746147,
+        "width": -4.9119320913904465
+      },
+      "decision": "INCONCLUSIVE",
+      "family_dev_exact_delta": {
+        "connected components": 1,
+        "difference": 0,
+        "inside/contains": 0,
+        "orientation": -1,
+        "width": -2
+      },
+      "full_b32_delta": {
+        "connected components": -6.006895845874978,
+        "difference": -0.3911932504211921,
+        "inside/contains": -0.33717289884502005,
+        "orientation": -4.50532979819526,
+        "width": -5.089113857923661
+      }
+    },
+    "interpretation": "COMPLETE_NO_UPDATE establishes completed process only. Results are preserved for Director review; no causal conclusion is asserted here.",
+    "rejected_atomic_repair": {
+      "cross_b1_delta": {
+        "connected components": -5.923747051607376,
+        "difference": -0.42582864512199403,
+        "inside/contains": -0.3615451305964834,
+        "orientation": -4.492607572400105,
+        "width": -4.903994966500587
+      },
+      "cross_b32_delta": {
+        "connected components": -5.887614473440218,
+        "difference": -0.42523335059357964,
+        "inside/contains": -0.36124930819875417,
+        "orientation": -4.483107990938332,
+        "width": -4.907784579573991
+      },
+      "decision": "INCONCLUSIVE_MISSING_FAMILY_DEV_EVIDENCE",
+      "family_dev_exact_delta": null,
+      "full_b32_delta": {
+        "connected components": -5.964707659565951,
+        "difference": -0.41386589410886443,
+        "inside/contains": -0.3731112742870386,
+        "orientation": -4.457557714881892,
+        "width": -5.084598085344575
+      }
+    }
+  },
+  "status": "PRESERVED_PENDING_DIRECTOR_SCIENTIFIC_INTERPRETATION"
+}

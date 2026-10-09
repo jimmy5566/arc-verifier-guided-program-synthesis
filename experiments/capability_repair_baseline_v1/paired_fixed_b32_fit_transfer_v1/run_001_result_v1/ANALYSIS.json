@@ -1,0 +1,63 @@
+{
+  "raw_rows": 4176,
+  "results": {
+    "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001": {
+      "cross_b1_delta": {
+        "connected components": -5.964992892108947,
+        "difference": -0.3998946704221613,
+        "inside/contains": -0.3272777956359528,
+        "orientation": -4.513064624428971,
+        "width": -4.911948054975192
+      },
+      "cross_b32_delta": {
+        "connected components": -5.9305779217288,
+        "difference": -0.3988384889954727,
+        "inside/contains": -0.32767661894851263,
+        "orientation": -4.509170777746147,
+        "width": -4.9119320913904465
+      },
+      "decision": "INCONCLUSIVE",
+      "family_dev_exact_delta": {
+        "connected components": 1,
+        "difference": 0,
+        "inside/contains": 0,
+        "orientation": -1,
+        "width": -2
+      },
+      "full_b32_delta": {
+        "connected components": -6.006895845874978,
+        "difference": -0.3911932504211921,
+        "inside/contains": -0.33717289884502005,
+        "orientation": -4.50532979819526,
+        "width": -5.089113857923661
+      }
+    },
+    "ATOMIC_PREREQUISITE_REPAIR_V1_001_REJECTED": {
+      "cross_b1_delta": {
+        "connected components": -5.923747051607376,
+        "difference": -0.42582864512199403,
+        "inside/contains": -0.3615451305964834,
+        "orientation": -4.492607572400105,
+        "width": -4.903994966500587
+      },
+      "cross_b32_delta": {
+        "connected components": -5.887614473440218,
+        "difference": -0.42523335059357964,
+        "inside/contains": -0.36124930819875417,
+        "orientation": -4.483107990938332,
+        "width": -4.907784579573991
+      },
+      "decision": "INCONCLUSIVE_MISSING_FAMILY_DEV_EVIDENCE",
+      "family_dev_exact_delta": null,
+      "full_b32_delta": {
+        "connected components": -5.964707659565951,
+        "difference": -0.41386589410886443,
+        "inside/contains": -0.3731112742870386,
+        "orientation": -4.457557714881892,
+        "width": -5.084598085344575
+      }
+    }
+  },
+  "schema_version": 1,
+  "status": "COMPLETE_CPU_POSTPROCESS"
+}

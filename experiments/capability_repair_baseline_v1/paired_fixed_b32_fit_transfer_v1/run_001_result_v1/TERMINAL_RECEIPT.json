@@ -1,0 +1,12 @@
+{
+  "authorization_sha256": "ced342b7dd05029e2605d3f567fae305d6edef3d0ad7ebab4b426c9320b7faa4",
+  "checkpoint_mutated": false,
+  "final_audit_opened": false,
+  "generation_performed": false,
+  "optimizer_steps": 0,
+  "protocol_id": "PAIRED_FIXED_B32_FIT_TRANSFER_V1",
+  "raw_evidence_sha256": "c0ef6814bfb8c601e58a2bf5a264806d240c88494c333c35040b3097ac1315a3",
+  "raw_rows": 4176,
+  "schema_version": 1,
+  "status": "COMPLETE_NO_UPDATE"
+}

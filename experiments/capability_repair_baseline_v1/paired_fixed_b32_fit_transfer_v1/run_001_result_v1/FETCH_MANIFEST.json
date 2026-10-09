@@ -1,0 +1,43 @@
+{
+  "files": {
+    "ANALYSIS.json": {
+      "bytes": 2096,
+      "local_sha256": "cdad98376a4b92c6081ed0f3f61bc3814d815260fff3b370bbadfd0137369826",
+      "remote_path": "/workspace/arc2/paired_fixed_b32_fit_transfer_v1/run_001_9e18e83d9f04e05f57a20c64e8c4b0d2/ANALYSIS.json",
+      "transport": "EMERGENCY_PTY_BYTE_PRESERVING_FALLBACK"
+    },
+    "LAUNCH_CAP_RECEIPT.json": {
+      "bytes": 858,
+      "local_sha256": "a9e02e577b02bb522f05e8e6065ad3c23856c37b2908a1150e5556979bcd2c4d",
+      "remote_path": "/workspace/arc2/paired_fixed_b32_fit_transfer_v1/run_001_9e18e83d9f04e05f57a20c64e8c4b0d2/LAUNCH_CAP_RECEIPT.json",
+      "transport": "EMERGENCY_PTY_BYTE_PRESERVING_FALLBACK"
+    },
+    "RAW_PER_ROW_NLL.jsonl": {
+      "bytes": 22157379,
+      "local_sha256": "c0ef6814bfb8c601e58a2bf5a264806d240c88494c333c35040b3097ac1315a3",
+      "remote_path": "/workspace/arc2/paired_fixed_b32_fit_transfer_v1/run_001_9e18e83d9f04e05f57a20c64e8c4b0d2/RAW_PER_ROW_NLL.jsonl",
+      "transport": "EMERGENCY_PTY_BYTE_PRESERVING_FALLBACK_GZIP_WRAPPED"
+    },
+    "RAW_PER_ROW_NLL.jsonl.gz": {
+      "bytes": 4904992,
+      "local_sha256": "b45c98bf311fc26d86972c0bd473565ce8195605d2207bf4b44bfbb96fb72950",
+      "remote_path": "/workspace/arc2/paired_fixed_b32_fit_transfer_v1/run_001_9e18e83d9f04e05f57a20c64e8c4b0d2/RAW_PER_ROW_NLL.jsonl",
+      "transport": "EMERGENCY_PTY_BYTE_PRESERVING_FALLBACK"
+    },
+    "TERMINAL_RECEIPT.json": {
+      "bytes": 439,
+      "local_sha256": "27c383e9cad78bc5da7ac961d274d1d263c56db5db222d4b3c8a32eb78f5e7a1",
+      "remote_path": "/workspace/arc2/paired_fixed_b32_fit_transfer_v1/run_001_9e18e83d9f04e05f57a20c64e8c4b0d2/TERMINAL_RECEIPT.json",
+      "transport": "EMERGENCY_PTY_BYTE_PRESERVING_FALLBACK"
+    },
+    "launcher.log": {
+      "bytes": 1347,
+      "local_sha256": "1686e953a56c4a172411fb55f3e04c177c33171c6fc7bb9d3cd4e7fa9e150633",
+      "remote_path": "/workspace/arc2/paired_fixed_b32_fit_transfer_v1/run_001_9e18e83d9f04e05f57a20c64e8c4b0d2.launcher.log",
+      "transport": "EMERGENCY_PTY_BYTE_PRESERVING_FALLBACK"
+    }
+  },
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "transport_reason": "RunPod forced-PTY gateway rejects SFTP; owner requested exact remote raw-evidence retrieval."
+}
