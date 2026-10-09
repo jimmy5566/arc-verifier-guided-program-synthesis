@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_RESULT_V1",
+  "decision": "TERMINAL",
+  "decision_scope": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_BRANCH",
+  "brief_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_RESULT_V1",
+  "reviewed_brief_sha256": "1f4b9d1d43795d928fd5e5d676be45b63a5ef5823af3cc8cf42aac9280299b87",
+  "scientific_outcome": "CLOSE_DIAGNOSTIC_BRANCH_INCONCLUSIVE",
+  "reason": "The authorized one-time no-update diagnostic completed safely, but every checkpoint condition violated the prospectively frozen 0.001 absolute per-family token-micro NLL drift tolerance. Maximum observed drift was 0.026101550916685312 for V7, 0.01009308334684722 for rejected atomic-prerequisite R1, and 0.009770774179034769 for family-balanced R1. The frozen decision mapping explicitly classifies any numerical-drift failure as INCONCLUSIVE and forbids interpreting fit classes. Therefore neither H1 nor H3 is established, H2 remains UNKNOWN, and this diagnostic branch closes without a successor protocol selection.",
+  "evidence_validation": {
+    "result_sha256": "26fec3d1e1059cba986366f1c777e3bb63031aab87d0d98ec2c5ec622a397491",
+    "result_summary_sha256": "656ac3b32ce5b62ab865fb0c3aa8e33013f319cc73607218c8a2bfa518707b5c",
+    "terminal_receipt_sha256": "ecc8a652c249a47e3d652f6fc2e4e8dad0529758ba632e58b2207c4f789892f2",
+    "all_referenced_hashes_verified": true,
+    "execution_status": "COMPLETE",
+    "terminal_decision": "INCONCLUSIVE",
+    "fit_classes": "NOT_COMPUTED_BY_FROZEN_RULE",
+    "optimizer_steps": 0,
+    "scientific_gpu_training_seconds": 0.0,
+    "generation_performed": false,
+    "checkpoint_mutated": false,
+    "final_audit_opened": false
+  },
+  "numerical_validity_result": {
+    "frozen_tolerance": 0.001,
+    "V7_max_absolute_mean_nll_drift": 0.026101550916685312,
+    "REJECTED_R1_max_absolute_mean_nll_drift": 0.01009308334684722,
+    "FAMILY_BALANCED_R1_max_absolute_mean_nll_drift": 0.009770774179034769,
+    "all_conditions_passed": false,
+    "repeat_effective_batch_behavior": "DETERMINISTIC_WITHIN_REPEATED_EFFECTIVE_BATCH",
+    "batch1_vs_effective_batch_behavior": "MATERIAL_DRIFT_UNDER_FROZEN_TOLERANCE",
+    "scientific_interpretation_status": "NOT_ESTABLISHED"
+  },
+  "hypothesis_disposition": {
+    "H1_SUPERVISED_FITTING": "NOT_ESTABLISHED",
+    "H3_GENERALIZATION": "NOT_ESTABLISHED",
+    "H2_GRADIENT_INTERFERENCE": "UNKNOWN",
+    "descriptive_nll_values": "PRESERVED_BUT_NOT_VALID_FOR_FROZEN_FIT_CLASSIFICATION",
+    "threshold_relaxation": "FORBIDDEN",
+    "same_diagnostic_rerun": "FORBIDDEN"
+  },
+  "terminal_scope": {
+    "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1": "CLOSED_INCONCLUSIVE",
+    "ATOMIC_PREREQUISITE_REPAIR_V1": "REMAINS_CLOSED",
+    "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1": "REMAINS_CLOSED",
+    "current_atomic_repair_mechanism_diagnostic_branch": "CLOSED",
+    "automatic_successor_protocol": "FORBIDDEN",
+    "gradient_diagnostic": "NOT_AUTHORIZED",
+    "composition_training": "NOT_AUTHORIZED",
+    "r3": "NOT_AUTHORIZED",
+    "entire_arc2_research_program": "NOT_DECLARED_TERMINAL",
+    "future_scientifically_distinct_work": "REQUIRES_NEW_INDEPENDENT_PROSPECTIVE_BASIS_AND_SEPARATE_GOVERNOR_REVIEW"
+  },
+  "preserved_scientific_evidence": [
+    "The exact V7, rejected atomic-prerequisite R1, and family-balanced R1 no-update NLL outputs remain immutable descriptive artifacts.",
+    "The deterministic repeated effective-batch values and the Batch1-versus-effective-batch discrepancies are valid runtime observations, but they do not establish the source of the discrepancy.",
+    "The diagnostic proves only that its own prospective numerical-validity gate failed; it does not support fitting, generalization, padding, attention, or gradient-mechanism claims."
+  ],
+  "frozen_conditions": [
+    "All three checkpoints and results, the 400-row TRAIN schedule, tokenizer, label masking, evaluator, NLL estimator, batch policy, 0.001 tolerance, 0.01 fit threshold, decision mapping, raw outputs, summary, and receipt remain immutable.",
+    "The frozen result remains INCONCLUSIVE and may not be relabeled as H1_SUPPORTED or H3_SUPPORTED.",
+    "The prior atomic-prerequisite and family-balanced training routes remain terminal and closed.",
+    "TARGET_DEV and RETENTION_SENTINEL remain evaluation-only.",
+    "FINAL_AUDIT remains sealed."
+  ],
+  "forbidden_actions": [
+    "DO_NOT_RELAX_OR_REINTERPRET_THE_0_001_NUMERICAL_DRIFT_TOLERANCE",
+    "DO_NOT_DERIVE_H1_OR_H3_FIT_CLASSES_FROM_THE_INVALIDATED_NLL_MEASUREMENT",
+    "DO_NOT_RERUN_THE_SAME_DIAGNOSTIC_AUTOMATICALLY",
+    "DO_NOT_ADD_A_GRADIENT_COSINE_OR_OTHER_FOLLOW_ON_DIAGNOSTIC_FROM_THIS_RESULT",
+    "DO_NOT_REOPEN_OR_CONTINUE_THE_CLOSED_ATOMIC_REPAIR_ROUTES",
+    "DO_NOT_LOAD_A_MODEL_RUN_GPU_INFERENCE_CONSTRUCT_AN_OPTIMIZER_OR_TRAIN_FROM_THIS_REVIEW",
+    "DO_NOT_BEGIN_COMPOSITION_TRAINING_OR_R3",
+    "DO_NOT_OPEN_FINAL_AUDIT",
+    "DO_NOT_SCHEDULE_OR_PROMPT_CONTROLLER_FROM_THIS_REVIEW"
+  ],
+  "another_review_required_for_this_branch": false,
+  "controller_scheduled": false,
+  "controller_prompted": false,
+  "model_loading_authorized": false,
+  "gpu_inference_authorized": false,
+  "optimizer_construction_authorized": false,
+  "scientific_training_authorized": false,
+  "composition_training_authorized": false,
+  "r3_authorized": false,
+  "final_audit_authorized": false
+}

@@ -1,0 +1,27 @@
+{
+  "branch_status": "CLOSED_INCONCLUSIVE",
+  "created_at": "2026-10-09T03:30:54.814770Z",
+  "director_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_RESULT_V1.json",
+  "director_response_sha256": "67bd2cae1df779e93d557fc7f6424df7a94d2c595ac840dfc337226f9db7d8fd",
+  "entire_arc2_research_program_terminal": false,
+  "established": [
+    "The no-update diagnostic numerical-validity gate failed under its frozen tolerance.",
+    "Neither H1 supervised fitting nor H3 generalization is established by this branch.",
+    "H2 remains UNKNOWN."
+  ],
+  "permitted_next_action": "CPU-only preparation of a new, independently prospective scientific basis, followed by a separate stage-level review before any model loading, inference, optimizer construction, or training.",
+  "prohibited_follow_on": [
+    "threshold relaxation",
+    "automatic rerun of the same diagnostic",
+    "gradient diagnostic from this result",
+    "reopening closed atomic routes",
+    "R3/composition training",
+    "FINAL_AUDIT"
+  ],
+  "result_summary_path": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/run_002/FIT_GENERALIZATION_DIAGNOSTIC_V1_RUN_002_SUMMARY.json",
+  "result_summary_sha256": "656ac3b32ce5b62ab865fb0c3aa8e33013f319cc73607218c8a2bfa518707b5c",
+  "reviewed_brief_sha256": "1f4b9d1d43795d928fd5e5d676be45b63a5ef5823af3cc8cf42aac9280299b87",
+  "schema_version": 1,
+  "stage_id": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1",
+  "terminal_scope": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_BRANCH"
+}
