@@ -1,0 +1,63 @@
+{
+  "checkpoint_discovery": {
+    "conditions": [
+      "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED",
+      "RECONSTRUCTED_FOUNDATION_V2_V7",
+      "TARGETED_R1",
+      "TARGETED_R2",
+      "ATOMIC_R1",
+      "FAMILY_BALANCED"
+    ],
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/CHECKPOINT_PROVENANCE_DISCOVERY_V1.json",
+    "sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654"
+  },
+  "forbidden": [
+    "generation",
+    "candidate_replacement",
+    "candidate_selection_from_targets",
+    "training",
+    "optimizer",
+    "backward",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external_selector",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT"
+  ],
+  "input_manifest": {
+    "episodes": 60,
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/SYNTHETIC_BENCHMARK_INPUT_MANIFEST_V1.json",
+    "sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+    "targets": "SEALED_SIDECAR_ONLY"
+  },
+  "launcher": {
+    "path": "scripts/launch_unified_native_target_aligned_scoring_v2_batch16.py",
+    "sha256": "9b4ca377040f12dce8a049c30e0eb0a5e18cc09029d06f7144f7df6497aa6c5d"
+  },
+  "nonce": "6562708841cd05b62b1d5d0793f3af62",
+  "output_root": "/workspace/arc2/unified_native_target_aligned_scoring_v2_batch16/run_002_6562708841cd05b62b1d5d0793f3af62",
+  "protocol_id": "UNIFIED_NATIVE_TARGET_ALIGNED_SCORING_V2_BATCH16",
+  "raw": {
+    "conditions": 6,
+    "episodes_per_condition": 60,
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a/RAW_UNSCORED_BATCH16.jsonl",
+    "rows": 360,
+    "sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e"
+  },
+  "runtime_cap_seconds": 9000,
+  "schema_version": 2,
+  "sidecar": {
+    "access": "RUNTIME_ONLY_AFTER_DIRECTOR_PRELAUNCH_CONTINUE",
+    "expected_sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e",
+    "runtime_path": "/workspace/arc2/sealed_synthetic_targets/UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1_TARGET_SIDECAR.json"
+  },
+  "status": "FROZEN_PENDING_DIRECTOR_PRELAUNCH_REVIEW",
+  "worker": {
+    "path": "scripts/run_unified_native_target_aligned_scoring_v2_batch16.py",
+    "sha256": "01e637448208ffb0c3b8f19e5525f97316a94035f4b7a179a7cfa26c80fb1cc9"
+  },
+  "worker_source_commit": "7860c22822134a37c11db8904ab607b2aaf3c515"
+}

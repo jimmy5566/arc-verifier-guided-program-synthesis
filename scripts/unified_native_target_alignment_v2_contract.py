@@ -80,4 +80,3 @@ def require_manifest_identity(manifest_path:Path, expected_sha256:str)->dict:
 
 def require_fresh_output(root:Path)->None:
  if root.exists():raise RuntimeError('FRESH_OUTPUT_ROOT_REQUIRED')
-
