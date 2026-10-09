@@ -45,7 +45,11 @@ def fixed_validation_subset(rows: Iterable[dict], count: int = VALIDATION_COUNT)
 
 
 def validation_gate(batch32: list[dict], batch1: list[dict]) -> dict:
-    """Fail closed on any material raw token, parse, or metric disagreement."""
+    """Fail closed on target-blind raw-token and parser disagreement.
+
+    Exact-grid scoring intentionally belongs to the later sealed-sidecar phase;
+    this gate must not fabricate an unavailable target-derived metric.
+    """
     a = {str(row["episode_id"]): row for row in batch32}; b = {str(row["episode_id"]): row for row in batch1}
     if not a or set(a) != set(b):
         raise RuntimeError("BATCH1_VALIDATION_IDENTITY_MISMATCH")
@@ -58,10 +62,11 @@ def validation_gate(batch32: list[dict], batch1: list[dict]) -> dict:
     aggregate = {
         "batch32_parse_valid": sum(bool(row.get("parse_valid")) for row in a.values()),
         "batch1_parse_valid": sum(bool(row.get("parse_valid")) for row in b.values()),
-        "batch32_exact_grid_match": sum(bool(row.get("exact_grid_match")) for row in a.values()),
-        "batch1_exact_grid_match": sum(bool(row.get("exact_grid_match")) for row in b.values()),
+        "batch32_canonical_prediction_count": sum(row.get("canonical_prediction_sha256") is not None for row in a.values()),
+        "batch1_canonical_prediction_count": sum(row.get("canonical_prediction_sha256") is not None for row in b.values()),
     }
-    if aggregate["batch32_parse_valid"] != aggregate["batch1_parse_valid"] or aggregate["batch32_exact_grid_match"] != aggregate["batch1_exact_grid_match"]:
+    if (aggregate["batch32_parse_valid"] != aggregate["batch1_parse_valid"]
+            or aggregate["batch32_canonical_prediction_count"] != aggregate["batch1_canonical_prediction_count"]):
         mismatches.append({"field": "aggregate_metric"})
     return {"status": "PASS" if not mismatches else "FAIL_MATERIAL_DRIFT", "sample_count": len(a), "mismatches": mismatches, "aggregate": aggregate}
 

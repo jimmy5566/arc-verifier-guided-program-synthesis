@@ -27,7 +27,7 @@ class MeasurementContractTests(unittest.TestCase):
         self.assertEqual(first, second); self.assertEqual(len(first), 12)
 
     def test_material_token_or_metric_drift_fails_closed(self):
-        common = {"episode_id":"e", "generated_token_ids":[1], "canonical_prediction_sha256":"x", "parse_valid":True, "exact_grid_match":False}
+        common = {"episode_id":"e", "generated_token_ids":[1], "canonical_prediction_sha256":"x", "parse_valid":True}
         self.assertEqual(mod.validation_gate([common], [dict(common)])["status"], "PASS")
         changed = dict(common); changed["generated_token_ids"] = [2]
         self.assertEqual(mod.validation_gate([common], [changed])["status"], "FAIL_MATERIAL_DRIFT")

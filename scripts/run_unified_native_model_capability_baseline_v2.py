@@ -8,7 +8,8 @@ TTT/search/selector system.  Scoring occurs later against the sealed sidecar.
 from __future__ import annotations
 import argparse, hashlib, json, os, time
 from pathlib import Path
-from scripts.unified_native_baseline_measurement_contract import FALLBACK_LADDER, fixed_validation_subset, length_bucketed_batches, next_fallback, validation_gate
+from scripts.arc2_token_grid_parser import TokenGridContract, parse_generated_token_ids, tokenizer_token_contract
+from scripts.unified_native_baseline_measurement_contract import FALLBACK_LADDER, digest, fixed_validation_subset, length_bucketed_batches, next_fallback, validation_gate
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V2"
@@ -84,6 +85,15 @@ def generate_primary_batch(model, tokenizer, contexts):
             rank,rank2,margin=ranks(scores[row_index],token); trace.append({"position":position,"greedy_token_id":token,"greedy_rank":rank,"rank2_token_id":rank2,"top1_top2_margin":margin})
         output.append((greedy,trace))
     return output
+def generation_evidence(episode_id: str, token_ids: list[int], token_contract: TokenGridContract) -> dict:
+    """Preserve target-blind parser evidence for later audit and B1/B32 checks."""
+    extracted=parse_generated_token_ids(token_ids,token_contract)
+    canonical=digest({"grid":extracted.grid} if extracted.grid is not None else {"invalid_output":True})
+    return {"episode_id":episode_id,"generated_token_ids":extracted.generated_token_ids,
+            "generated_length":extracted.generated_length,"termination_status":extracted.termination_status,
+            "eos_observed":extracted.eos_observed,"trailing_pad_count":extracted.trailing_pad_count,
+            "content_token_ids":extracted.content_token_ids,"parse_reason":extracted.parse_reason,
+            "parse_valid":extracted.grid is not None,"canonical_prediction_sha256":canonical}
 def main() -> int:
     a=argparse.ArgumentParser(); a.add_argument("--manifest",type=Path,required=True); a.add_argument("--discovery",type=Path,required=True); a.add_argument("--output",type=Path,required=True); a.add_argument("--receipt",type=Path,required=True); a.add_argument("--runtime-seconds",type=int,default=RUNTIME_CAP_SECONDS); z=a.parse_args()
     started=time.monotonic()
@@ -102,6 +112,7 @@ def main() -> int:
     for output_id,record_id,use_adapter in conditions:
         record=records[record_id]; manifest_doc=load_manifest(record["manifest_path"]); identity=verify_manifest(manifest_doc,use_adapter)
         tokenizer=AutoTokenizer.from_pretrained(identity["base_path"],local_files_only=True); tokenizer.pad_token_id=13
+        token_contract=tokenizer_token_contract(tokenizer,eos_token_id=15,pad_token_id=13)
         model=AutoModelForCausalLM.from_pretrained(identity["base_path"],torch_dtype=torch.bfloat16,local_files_only=True).to("cuda").eval()
         if use_adapter: model=PeftModel.from_pretrained(model,identity["adapter_path"],local_files_only=True).eval()
         runtime.append({"condition":output_id,"identity":identity})
@@ -123,8 +134,8 @@ def main() -> int:
         subset=fixed_validation_subset(contexts); b1=[]; b32=[]
         for item in subset:
             serial,_=generate_primary_batch(model,tokenizer,[item])[0]; greedy,traces,effective=primary[item["episode_id"]]
-            b1.append({"episode_id":item["episode_id"],"generated_token_ids":serial,"canonical_prediction_sha256":hashlib.sha256(bytes(serial)).hexdigest(),"parse_valid":True,"exact_grid_match":False})
-            b32.append({"episode_id":item["episode_id"],"generated_token_ids":greedy,"canonical_prediction_sha256":hashlib.sha256(bytes(greedy)).hexdigest(),"parse_valid":True,"exact_grid_match":False})
+            b1.append(generation_evidence(item["episode_id"],serial,token_contract))
+            b32.append(generation_evidence(item["episode_id"],greedy,token_contract))
         validation=validation_gate(b32,b1)
         if validation["status"]!="PASS": raise RuntimeError("BATCH1_BATCH32_MATERIAL_DRIFT")
         runtime[-1]["batching"]={"requested_batch_size":32,"fallback_ladder":list(FALLBACK_LADDER),"events":batch_events,"batch1_validation":validation}
@@ -132,7 +143,8 @@ def main() -> int:
             if time.monotonic()-started >= z.runtime_seconds: raise RuntimeError("RUNTIME_CAP_EXCEEDED")
             greedy,traces,effective=primary[item["episode_id"]]
             encoded=tokenizer(item["prompt"],return_tensors="pt",add_special_tokens=False); encoded={k:v.to("cuda") for k,v in encoded.items()}; _,alternate,_=generate_pair(model,tokenizer,encoded)
-            row=item["row"]; raw.append({"checkpoint_condition":output_id,"episode_id":row["episode_id"],"family":row["family"],"prompt_sha256":hashlib.sha256(item["prompt"].encode()).hexdigest(),"greedy_token_ids":greedy,"alternate_token_ids":alternate,"critical_token_trace":traces,"requested_batch_size":32,"effective_batch_size":effective,"alternative_policy":"RANK2_AT_EARLIEST_MINIMUM_TOP1_TOP2_MARGIN_THEN_GREEDY"})
+            row=item["row"]; evidence=generation_evidence(item["episode_id"],greedy,token_contract)
+            raw.append({"checkpoint_condition":output_id,"episode_id":row["episode_id"],"family":row["family"],"prompt_sha256":hashlib.sha256(item["prompt"].encode()).hexdigest(),"greedy_token_ids":greedy,"alternate_token_ids":alternate,"critical_token_trace":traces,"requested_batch_size":32,"effective_batch_size":effective,"alternative_policy":"RANK2_AT_EARLIEST_MINIMUM_TOP1_TOP2_MARGIN_THEN_GREEDY",**evidence})
         del model; torch.cuda.empty_cache()
     z.output.parent.mkdir(parents=True,exist_ok=True); z.output.write_text("".join(json.dumps(x,sort_keys=True)+"\n" for x in raw),encoding="utf-8",newline="\n")
     dump(z.receipt,{"protocol_id":PROTOCOL,"status":"COMPLETE_UNSCORED","raw_sha256":sha(z.output),"raw_rows":len(raw),"runtime_seconds":time.monotonic()-started,"runtime_identities":runtime,"optimizer_steps":0,"training":False,"backward":False,"generation_modes":["GREEDY","SINGLE_TARGET_BLIND_RANK2_ALTERNATIVE"],"final_audit_opened":False})

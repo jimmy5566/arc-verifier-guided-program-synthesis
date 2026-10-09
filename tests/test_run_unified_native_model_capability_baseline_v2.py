@@ -11,5 +11,11 @@ class WorkerV2Tests(unittest.TestCase):
   self.assertIn("length_bucketed_batches(contexts)",text)
   self.assertIn("fixed_validation_subset(contexts)",text)
   self.assertIn("BATCH1_BATCH32_MATERIAL_DRIFT",text)
+  self.assertIn("generation_evidence",text)
   self.assertNotIn("torch.optim",text); self.assertNotIn(".backward(",text)
+ def test_generation_evidence_uses_token_level_parser(self):
+  from scripts.arc2_token_grid_parser import TokenGridContract
+  c=TokenGridContract(tuple(range(10)),10,15,13)
+  evidence=mod.generation_evidence("e",[1,2,10,3,4,15,13],c)
+  self.assertTrue(evidence["parse_valid"]); self.assertEqual(evidence["termination_status"],"EOS")
 if __name__=="__main__": unittest.main()
