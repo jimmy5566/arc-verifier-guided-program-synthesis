@@ -14,3 +14,9 @@ def require_launch(*,output:Path,receipt:Path,cap_seconds:int,expected_hashes:di
 def failure_receipt(*,receipt:Path,reason:str)->None:
  if receipt.exists():raise RuntimeError('RECEIPT_NON_OVERWRITE_REQUIRED')
  atomic(receipt,{'status':'FAILED_NO_UPDATE','reason':reason,'optimizer_steps':0,'generation':False,'training':False,'backward':False})
+
+def require_checkpoint_records(discovery:dict, required:tuple[str,str])->dict:
+ records=discovery.get('checkpoint_records',{})
+ chosen={key:records.get(key) for key in required}
+ if any(not isinstance(v,dict) or not v.get('manifest_path') or not v.get('manifest_sha256') or not v.get('adapter_model_sha256') for v in chosen.values()):raise RuntimeError('CHECKPOINT_DISCOVERY_BINDING_INVALID')
+ return chosen
