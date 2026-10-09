@@ -214,7 +214,7 @@ def director(s,p,timeout):
     response_path,response,response_sha256=available[-1]
     route_director_response(s,p,response_path,response,response_sha256)
 def poll_seconds(job):
-    kind=str(job.get('kind') or job.get('job_class') or '').upper()
+    kind=str(job.get('kind') or job.get('job_class') or job.get('class') or '').upper()
     if 'PREFLIGHT' in kind or 'CPU' in kind: return 10
     if 'EVALUATION' in kind or 'INFERENCE' in kind: return 20
     return 60
@@ -222,11 +222,11 @@ def remote_status(job):
     # Accept the compact current workflow schema as well as older preserved
     # receipts.  Both spellings bind the same remote worker; no local process
     # is ever used for liveness.
-    receipt=job.get('expected_receipt') or job.get('expected_terminal_receipt') or job.get('remote_output')
+    receipt=job.get('expected_receipt') or job.get('expected_terminal_receipt') or job.get('terminal_receipt_path') or job.get('remote_output')
     target=job.get('ssh_target') or job.get('remote_host')
     primary=job.get('primary_process')
     if not isinstance(primary, dict):
-        pid=job.get('remote_pid', job.get('remote_launcher_pid'))
+        pid=job.get('remote_pid', job.get('remote_launcher_pid', job.get('launcher_pid', job.get('worker_pid'))))
         if pid is not None:
             primary={'host':'RUNPOD','role':'remote_launcher','pid':pid}
     if not isinstance(primary, dict):
@@ -288,9 +288,9 @@ def main():
         elif s['disposition']=='WAIT_REMOTE':
             job=s.get('remote_job') or s.get('active_remote_job') or {}; interval=poll_seconds(job)
             try:
-                primary=(job.get('primary_process') or {}).get('pid') or job.get('remote_pid')
+                primary=(job.get('primary_process') or {}).get('pid') or job.get('remote_pid') or job.get('remote_launcher_pid') or job.get('launcher_pid') or job.get('worker_pid')
                 jobid=job.get('job_id') or job.get('round_id')
-                kind=job.get('kind') or job.get('job_class')
+                kind=job.get('kind') or job.get('job_class') or job.get('class')
                 log(s,f"WAIT_REMOTE job={jobid} primary_remote_pid={primary} class={kind} check")
                 status,detail=remote_status(job)
                 log(s,f"WAIT_REMOTE receipt={'present' if status=='RECEIPT_PRESENT' else 'missing'} process={status}")

@@ -84,9 +84,12 @@ def self_test(config: dict) -> dict:
     return {"status": "PASS_CPU_ONLY_NO_MODEL_IMPORT", "rows": len(rows), "family_counts": {f: sum(r["family"] == f for r in rows) for f in FAMILIES}, "decode_batch_size": 1, "beam_width": 4}
 
 def runtime_tokenizer_check(tokenizer, decode: dict) -> None:
-    expected = {str(i): i for i in range(10)} | {"\n": NEWLINE}
-    vocab = tokenizer.get_vocab()
-    if any(vocab.get(k) != v for k, v in expected.items()): raise RuntimeError("TOKENIZER_NATIVE_TOKEN_ID_FAIL")
+    # The frozen tokenizer's printable vocabulary calls newline `Ċ`; verify
+    # semantics through its encoder and IDs rather than assuming that spelling.
+    if any(tokenizer.convert_ids_to_tokens(i) != str(i) for i in range(10)):
+        raise RuntimeError("TOKENIZER_NATIVE_DIGIT_ID_FAIL")
+    if tokenizer.encode("\n", add_special_tokens=False) != [NEWLINE]:
+        raise RuntimeError("TOKENIZER_NATIVE_NEWLINE_ID_FAIL")
     if tokenizer.eos_token_id != decode["eos_token_id"] or tokenizer.pad_token_id not in (None, decode["pad_token_id"]): raise RuntimeError("TOKENIZER_SPECIAL_TOKEN_ID_FAIL")
 
 def execute(config: dict, out: Path) -> dict:
