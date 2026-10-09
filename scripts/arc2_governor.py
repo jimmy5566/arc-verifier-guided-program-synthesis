@@ -202,7 +202,11 @@ def director(s,p,timeout):
     else:
         directive=('Choose one of CONTINUE_CONTROLLER, REQUIRE_CHANGES, PAUSED, or TERMINAL. '
                    'REQUIRE_CHANGES must state root cause, smallest repair, frozen conditions, forbidden actions, and whether another review is required. ')
-    if not prompt('arc-director',f'ARC2 Governor review. Read {brief}. Write one structured review artifact bound to reviewed_brief_sha256={brief_sha256}. {directive}Do not schedule or prompt Controller.',timeout,s):
+    response_path=response_directory(p) / f"{Path(brief).stem}_RESPONSE.json"
+    request=(f'ARC2 Governor review. Read {brief}. Write exactly one structured JSON response to {response_path}. '
+             f'It must contain reviewed_brief_sha256={brief_sha256} and one valid decision. {directive}'
+             'Do not schedule or prompt Controller.')
+    if not prompt('arc-director',request,timeout,s):
         return
     available=[item for item in matching_director_responses(p,brief_sha256) if item[2] not in consumed]
     if not available:
@@ -221,8 +225,10 @@ def remote_status(job):
     receipt=job.get('expected_receipt') or job.get('expected_terminal_receipt') or job.get('remote_output')
     target=job.get('ssh_target') or job.get('remote_host')
     primary=job.get('primary_process')
-    if not isinstance(primary, dict) and job.get('remote_pid') is not None:
-        primary={'host':'RUNPOD','role':'worker','pid':job['remote_pid']}
+    if not isinstance(primary, dict):
+        pid=job.get('remote_pid', job.get('remote_launcher_pid'))
+        if pid is not None:
+            primary={'host':'RUNPOD','role':'remote_launcher','pid':pid}
     if not isinstance(primary, dict):
         return 'INVALID_BINDING', 'PRIMARY_PROCESS_REQUIRED'
     if primary.get('host') != 'RUNPOD':
@@ -237,21 +243,36 @@ def remote_status(job):
         return 'INVALID_BINDING', 'PRIMARY_PROCESS_PID_REQUIRED'
     if not receipt or not target:
         return 'INVALID_BINDING', 'REMOTE_RECEIPT_OR_TARGET_REQUIRED'
-    from orchestration.supervisor.arc2_supervisor import remote_shell
     script=f"test -f {receipt!r} && echo RECEIPT_PRESENT || echo RECEIPT_MISSING\nps -p {pid!r} -o pid= >/dev/null 2>&1 && echo PROCESS_ALIVE || echo PROCESS_DEAD"
-    out=remote_shell(target,script)
+    # RunPod's gateway is an interactive forced-PTY shell.  Send the compact
+    # control query only after its prompt is ready; this is not artifact
+    # transport and it never inspects model metrics.
+    import base64
+    encoded=base64.b64encode((script+'\nexit\n').encode('utf-8')).decode('ascii')
+    command=['ssh','-F','NUL','-tt','-o','BatchMode=yes','-o','ConnectTimeout=20',target]
+    proc=subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    time.sleep(2)
+    payload=(f"\x1b[200~echo {encoded} | base64 -d | bash\x1b[201~\r").encode('utf-8')
+    try:
+        out_bytes, err_bytes=proc.communicate(payload, timeout=45)
+    except subprocess.TimeoutExpired:
+        proc.kill(); out_bytes, err_bytes=proc.communicate()
+        raise RuntimeError('REMOTE_CONTROL_TIMEOUT')
+    if proc.returncode != 0:
+        raise RuntimeError('REMOTE_CONTROL_FAILED:'+err_bytes.decode('utf-8','replace')[-200:])
+    out=out_bytes.decode('utf-8','replace')
     if 'RECEIPT_PRESENT' in out: return 'RECEIPT_PRESENT', out
     if 'PROCESS_ALIVE' in out: return 'PROCESS_ALIVE', out
     if 'PROCESS_DEAD' in out: return 'PROCESS_DEAD', out
     return 'REMOTE_CHECK_INCONCLUSIVE', out
 def consume_remote(state,path,status,detail):
-    job=state.get('remote_job') or {}
-    jobid=str(job.get('job_id') or job.get('round_id') or 'UNKNOWN')
+    job=state.get('remote_job') or state.get('active_remote_job') or {}
+    jobid=str(job.get('job_id') or job.get('round_id') or job.get('run_id') or 'UNKNOWN')
     if status=='PROCESS_DEAD':
         failure=path.parent/'remote_failures'/f'{jobid}.json'; failure.parent.mkdir(parents=True,exist_ok=True)
         if not failure.exists(): atomic(failure,{'status':'REMOTE_PROCESS_DIED_WITHOUT_RECEIPT','job':job,'detail':detail,'at':now()})
         state['remote_failure_receipt']=str(failure.resolve())
-    state.update({'disposition':'CONTINUE_CONTROLLER','remote_completion_consumed':True,'remote_completion_status':status,'remote_job':None,'last_actor':'governor','updated_at':now()})
+    state.update({'disposition':'CONTINUE_CONTROLLER','remote_completion_consumed':True,'remote_completion_status':status,'remote_job':None,'active_remote_job':None,'last_actor':'governor','updated_at':now()})
     atomic(path,state); log(state,f'WAIT_REMOTE job={jobid} {status}; transition -> CONTINUE_CONTROLLER')
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--state',type=Path,required=True); ap.add_argument('--once',action='store_true'); ap.add_argument('--poll-seconds',type=int,default=300); ap.add_argument('--agent-timeout-seconds',type=int,default=180); a=ap.parse_args()
