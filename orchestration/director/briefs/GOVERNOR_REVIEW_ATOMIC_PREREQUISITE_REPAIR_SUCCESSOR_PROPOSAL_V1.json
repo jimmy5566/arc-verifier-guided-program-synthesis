@@ -1,0 +1,27 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_REPAIR_SUCCESSOR_PROPOSAL_V1",
+  "forbidden_actions": [
+    "DO_NOT_AUTHORIZE_GPU_OR_TRAINING_FROM_THIS_PROPOSAL_ALONE",
+    "DO_NOT_REOPEN_STAGE_A",
+    "DO_NOT_TUNE_FROM_STAGE_A_SCORES"
+  ],
+  "must_remain_frozen": [
+    "Stage A V7/Control/Treatment artifacts and thresholds",
+    "closed Stage-A route",
+    "FINAL_AUDIT sealed",
+    "TARGET_DEV and RETENTION_SENTINEL evaluation-only"
+  ],
+  "proposal_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/ATOMIC_PREREQUISITE_REPAIR_SUCCESSOR_PROPOSAL_V1.json",
+  "proposal_sha256": "4ca8510b0fe393ec3e5688ad6922ca9012acbe439e1cd28f1a269eb0aacb88e9",
+  "requested_decision": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "review_reason": "Stage A was validly closed as inconclusive. This is a prospective, distinct protocol proposal for the original roadmap, not a continuation of the stopped Stage-A route.",
+  "review_type": "NEW_DISTINCT_SCIENTIFIC_PROTOCOL",
+  "schema_version": 1,
+  "scientific_question": "Is the proposed separation of preservation protection from weak-atomic prerequisite improvement scientifically reasonable, and what is the smallest change required before freezing a new GPU-executable atomic-repair protocol?",
+  "scientific_training_authorized": false
+}

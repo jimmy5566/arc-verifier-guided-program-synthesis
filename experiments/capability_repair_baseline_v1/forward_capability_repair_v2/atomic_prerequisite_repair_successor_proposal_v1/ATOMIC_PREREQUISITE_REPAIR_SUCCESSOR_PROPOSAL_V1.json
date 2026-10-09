@@ -1,0 +1,55 @@
+{
+  "final_audit_opened": false,
+  "forbidden": [
+    "NO_GPU_LAUNCH",
+    "NO_TRAINING",
+    "NO_STAGE_A_THRESHOLD_CHANGE",
+    "NO_STAGE_A_RESTART",
+    "NO_FINAL_AUDIT",
+    "NO_TARGET_DEV_OR_RETENTION_TRAINING"
+  ],
+  "future_director_review_focus": [
+    "Check both preservation coverage for strong baseline capabilities and improvement coverage for weak atomic prerequisites.",
+    "Require one concrete scientific failure mode for any new hard gate; provenance fields remain nonblocking.",
+    "Do not authorize composition escalation until measured prerequisite evidence supports it."
+  ],
+  "proposal_id": "ATOMIC_PREREQUISITE_REPAIR_SUCCESSOR_PROPOSAL_V1",
+  "prospective_design_constraints": [
+    "Create new protocol ID, fresh schedules, fresh output roots, and a separate scientific review before any GPU work.",
+    "Start from V7 and use train-only examples; TARGET_DEV, RETENTION_SENTINEL, and FINAL_AUDIT remain evaluation-only.",
+    "Keep preservation and improvement objectives separately measurable; do not claim Stage-A causality.",
+    "Pre-register one fixed decoder/scorer condition for all new control/treatment comparisons.",
+    "Choose curriculum, token budget, and protection allocations prospectively after Director review; this proposal does not freeze or authorize them."
+  ],
+  "relationship_to_stage_a": "DISTINCT_PROSPECTIVE_PROTOCOL; NOT a continuation, retune, or reinterpretation of SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1.",
+  "roadmap": {
+    "atomic_priority_order": [
+      "connected components",
+      "inside/contains",
+      "difference",
+      "width",
+      "orientation"
+    ],
+    "composition_deferred_until_prerequisites_improve": [
+      "relation selector action",
+      "conditional action",
+      "mask set"
+    ],
+    "improvement_objective": "Raise weak atomic prerequisites before increasing composition emphasis.",
+    "preservation_objective": "Protect already-strong capabilities through explicit train-only protection coverage; preservation is measured against frozen DEV/retention only."
+  },
+  "schema_version": 1,
+  "scientific_training_authorized": false,
+  "stage_a_boundary": {
+    "closed_route": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1_STAGE_A_ROUTE",
+    "conclusion": "Stage A anti-forgetting mechanism result was INCONCLUSIVE; same-color protection recovered Control harm but did not meet the preregistered weak-atomic gain threshold.",
+    "result_summary_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/same_color_preservation_causal_test_v1/stage_a_results_v1/STAGE_A_RESULT_SUMMARY.json",
+    "result_summary_sha256": "3636916efe424f7a75bda06668b795004d004720140a9645ef6edfe835ebd33b"
+  },
+  "starting_checkpoint": {
+    "checkpoint_manifest": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "id": "CAPABILITY_REPAIR_BASELINE_V1",
+    "role": "new forward baseline; V7"
+  },
+  "status": "CPU_ONLY_PROPOSAL_PENDING_INDEPENDENT_DIRECTOR_REVIEW"
+}
