@@ -1,0 +1,38 @@
+{
+  "authorized_identities": {
+    "binding_sha256": "ad4bd964aad80a634fa241569e7d1aa13998cb8a9cec8593e8e844f5b06a870d",
+    "config_sha256": "a2cdcd0d265da3e64c467581948e235164e7af8fa41137614581c6e9e1345650",
+    "launcher_sha256": "9b4ca377040f12dce8a049c30e0eb0a5e18cc09029d06f7144f7df6497aa6c5d",
+    "source_commit": "2f466c4e18b4d3ec93e0ed017ee33419a3af91d7",
+    "worker_sha256": "01e637448208ffb0c3b8f19e5525f97316a94035f4b7a179a7cfa26c80fb1cc9"
+  },
+  "created_at": "2026-10-09T15:40:56.588611Z",
+  "failure_class": "DETACHED_LAUNCH_EXITED_NO_TERMINAL_RECEIPT",
+  "failure_scope": "INFRASTRUCTURE_LAUNCHER_LAYER",
+  "observations": [
+    "Detached launcher exited with status 1 within five seconds.",
+    "Remote launch log contains only nohup: ignoring input.",
+    "No output root or terminal receipt was created, so the worker was not reached and no model work occurred.",
+    "The launcher help path returned exit 0; kernel logs were inaccessible to the remote account."
+  ],
+  "protocol_id": "UNIFIED_NATIVE_TARGET_ALIGNED_SCORING_V2_BATCH16",
+  "remote": {
+    "checkout": "2f466c4e18b4d3ec93e0ed017ee33419a3af91d7",
+    "launch_log_path": "/workspace/arc2/unified_native_target_aligned_scoring_v2_batch16_run_002.launch.log",
+    "launch_log_sha256": "0ea7cf1d885ad4976e0150df9dce6ffc37f00cf7db07e24b2b2e886ad0493c46",
+    "launcher_pid": 67455,
+    "output_root_present": false,
+    "terminal_receipt_present": false
+  },
+  "required_next_step": "Diagnose the detached launcher environment without rerunning this authorized job; a retry requires a new explicit run authorization.",
+  "run_id": "RUN_002_6562708841cd05b62b1d5d0793f3af62",
+  "scientific_interpretation": "NOT_RUN",
+  "status": "CONTROLLED_STOP_NO_RERUN",
+  "verified_machine_gates_before_launch": [
+    "remote_exact_checkout",
+    "worker_launcher_config_binding_sha256",
+    "clean_remote_tracked_checkout",
+    "no_duplicate_process",
+    "fresh_output_root"
+  ]
+}
