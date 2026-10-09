@@ -1,0 +1,15 @@
+{
+  "cap_seconds": 3600,
+  "command": [
+    "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "scripts/run_paired_target_blind_beam4_candidate_recall_v1.py",
+    "--config",
+    "experiments/capability_repair_baseline_v1/paired_target_blind_beam4_candidate_recall_v1/EXECUTION_PACKAGE.json",
+    "--out",
+    "/workspace/arc2/paired_target_blind_beam4_candidate_recall_v1/run_002_8013a41c18ee4df3a9438902166cdf50"
+  ],
+  "exit_code": 0,
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "wall_seconds": 930.79178944882
+}

@@ -1,0 +1,12 @@
+{
+  "backward_performed": false,
+  "candidate_rows": 480,
+  "candidate_sha256": "9925b951fb58c1c4bbc1b3683d0da02db7515928ee51cc8c12337d1d1f50a31f",
+  "final_audit_opened": false,
+  "generation_performed": true,
+  "optimizer_steps": 0,
+  "protocol_id": "PAIRED_TARGET_BLIND_BEAM4_CANDIDATE_RECALL_V1",
+  "schema_version": 1,
+  "status": "COMPLETE_CANDIDATES_FROZEN_NO_UPDATE",
+  "target_labels_accessed_during_generation": false
+}

@@ -1,0 +1,58 @@
+{
+  "forbidden_actions": [
+    "No automatic GPU launch, training, optimizer update, backward pass, Gold/dGold/FINAL_AUDIT access, or adaptive experiment expansion."
+  ],
+  "frozen_evidence": {
+    "analysis_sha256": "4d9743adc0c296d09ded9251f1d8feff2195efc95f67910b0dc6fcd56c1cc0c1",
+    "launch_cap_receipt_sha256": "076acc3dd63984b618ad1b1b1c06de52d3716442bb429162e805b07a51d1c4fb",
+    "raw_candidate_sha256": "9925b951fb58c1c4bbc1b3683d0da02db7515928ee51cc8c12337d1d1f50a31f",
+    "result_package_path": "experiments\\capability_repair_baseline_v1\\paired_target_blind_beam4_candidate_recall_v1\\run_002_result_v1\\RESULT_PACKAGE.json",
+    "result_package_sha256": "4400c04877b4c6590b5bacc15928777dfcfb74308637081a73872712742af7d8",
+    "source_commit": "cc693d1ee845e88d32eb7fead810b742b988abf8",
+    "terminal_receipt_sha256": "eddb4de7960c60a9f28335673d00143065761011c2532fa00b1f7729e08c8574"
+  },
+  "limitations": [
+    "TARGET_DEV was reused; result is development evidence, not independent ARC transfer/generalization confirmation.",
+    "Oracle Recall@4 measures candidate reachability under this frozen Beam-4 setting; it does not establish rank-1 deployment performance.",
+    "No causal mechanism is established by this result alone."
+  ],
+  "observed_result": {
+    "bootstrap_95_ci": [
+      0.08333333333333334,
+      0.35
+    ],
+    "classification": "SEARCH_RECOVERABLE_FAMILY_BALANCED_SIGNAL",
+    "family_balanced_rank1_and_recall_at_4": {
+      "rank1_exact": 11,
+      "recall_at_4": 31
+    },
+    "family_equal_effect": 0.21666666666666665,
+    "per_family": {
+      "connected components": 0.3333333333333333,
+      "difference": 0.0,
+      "inside/contains": 0.16666666666666666,
+      "orientation": 0.25,
+      "width": 0.3333333333333333
+    },
+    "primary_estimand": "family_equal_mean(FB_minus_V7_oracle_recall_at_4)",
+    "v7_rank1_and_recall_at_4": {
+      "rank1_exact": 10,
+      "recall_at_4": 18
+    }
+  },
+  "protocol_id": "PAIRED_TARGET_BLIND_BEAM4_CANDIDATE_RECALL_V1",
+  "question": "Given the frozen paired target-blind Beam-4 candidate-recall result, what scientifically justified next action, if any, follows? Do not authorize automatic additional GPU work.",
+  "recommended_next_action": "DIRECTOR_RESULT_REVIEW_ONLY",
+  "review_type": "PAIRED_TARGET_BLIND_BEAM4_CANDIDATE_RECALL_RESULT",
+  "schema_version": 1,
+  "validity": {
+    "backward_performed": false,
+    "candidate_generation_status": "COMPLETE_CANDIDATES_FROZEN_NO_UPDATE",
+    "candidate_rows": 480,
+    "final_audit_opened": false,
+    "optimizer_steps": 0,
+    "paired_dev_rows": 60,
+    "raw_candidates_frozen_before_target_labels": true,
+    "scored_rows": 120
+  }
+}

@@ -1,0 +1,1538 @@
+{
+  "descriptive": {
+    "family_balanced": {
+      "rank1_exact": 11,
+      "recall_at_4": 31
+    },
+    "v7": {
+      "rank1_exact": 10,
+      "recall_at_4": 18
+    }
+  },
+  "inputs": {
+    "candidate_sha256": "9925b951fb58c1c4bbc1b3683d0da02db7515928ee51cc8c12337d1d1f50a31f",
+    "config_sha256": "b73e74579dac8302d742ff4b383d3cfd0d86729ab29332581d769464a152df1f"
+  },
+  "paired_rows": [
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000000",
+      "family": "connected components",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000001",
+      "family": "connected components",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000002",
+      "family": "connected components",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000003",
+      "family": "connected components",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000004",
+      "family": "connected components",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": -1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000005",
+      "family": "connected components",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000006",
+      "family": "connected components",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000007",
+      "family": "connected components",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000008",
+      "family": "connected components",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000009",
+      "family": "connected components",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000010",
+      "family": "connected components",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000011",
+      "family": "connected components",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000000",
+      "family": "orientation",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000001",
+      "family": "orientation",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000002",
+      "family": "orientation",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000003",
+      "family": "orientation",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000004",
+      "family": "orientation",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000005",
+      "family": "orientation",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000006",
+      "family": "orientation",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000007",
+      "family": "orientation",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": -1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000008",
+      "family": "orientation",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000009",
+      "family": "orientation",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000010",
+      "family": "orientation",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000011",
+      "family": "orientation",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000000",
+      "family": "inside/contains",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000001",
+      "family": "inside/contains",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000002",
+      "family": "inside/contains",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000003",
+      "family": "inside/contains",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000004",
+      "family": "inside/contains",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000005",
+      "family": "inside/contains",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000006",
+      "family": "inside/contains",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000007",
+      "family": "inside/contains",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000008",
+      "family": "inside/contains",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000009",
+      "family": "inside/contains",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000010",
+      "family": "inside/contains",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000011",
+      "family": "inside/contains",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000000",
+      "family": "difference",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000001",
+      "family": "difference",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000002",
+      "family": "difference",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000003",
+      "family": "difference",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000004",
+      "family": "difference",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000005",
+      "family": "difference",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000006",
+      "family": "difference",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000007",
+      "family": "difference",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000008",
+      "family": "difference",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000009",
+      "family": "difference",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": -1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000010",
+      "family": "difference",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000011",
+      "family": "difference",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000000",
+      "family": "width",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000001",
+      "family": "width",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000002",
+      "family": "width",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": true
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000003",
+      "family": "width",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000004",
+      "family": "width",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000005",
+      "family": "width",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000006",
+      "family": "width",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000007",
+      "family": "width",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000008",
+      "family": "width",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000009",
+      "family": "width",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 1,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000010",
+      "family": "width",
+      "fb_recall_at_4": true,
+      "v7_recall_at_4": false
+    },
+    {
+      "delta": 0,
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000011",
+      "family": "width",
+      "fb_recall_at_4": false,
+      "v7_recall_at_4": false
+    }
+  ],
+  "primary": {
+    "bootstrap_95_ci": [
+      0.08333333333333334,
+      0.35
+    ],
+    "classification": "SEARCH_RECOVERABLE_FAMILY_BALANCED_SIGNAL",
+    "effect": 0.21666666666666665,
+    "estimand": "family_equal_mean(FB_minus_V7_oracle_recall_at_4)",
+    "per_family": {
+      "connected components": 0.3333333333333333,
+      "difference": 0.0,
+      "inside/contains": 0.16666666666666666,
+      "orientation": 0.25,
+      "width": 0.3333333333333333
+    }
+  },
+  "protocol_id": "PAIRED_TARGET_BLIND_BEAM4_CANDIDATE_RECALL_V1",
+  "scored_rows": [
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000000",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000001",
+      "family": "connected components",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000002",
+      "family": "connected components",
+      "first_exact_rank": 2,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000003",
+      "family": "connected components",
+      "first_exact_rank": 3,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000004",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000005",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000006",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000007",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000008",
+      "family": "connected components",
+      "first_exact_rank": 4,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000009",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000010",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000011",
+      "family": "connected components",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000000",
+      "family": "difference",
+      "first_exact_rank": 2,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000001",
+      "family": "difference",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000002",
+      "family": "difference",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000003",
+      "family": "difference",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000004",
+      "family": "difference",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000005",
+      "family": "difference",
+      "first_exact_rank": 3,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000006",
+      "family": "difference",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000007",
+      "family": "difference",
+      "first_exact_rank": 2,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000008",
+      "family": "difference",
+      "first_exact_rank": 4,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000009",
+      "family": "difference",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000010",
+      "family": "difference",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000011",
+      "family": "difference",
+      "first_exact_rank": 4,
+      "parse_valid_candidate_count": 3,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000000",
+      "family": "inside/contains",
+      "first_exact_rank": 4,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000001",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000002",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000003",
+      "family": "inside/contains",
+      "first_exact_rank": 3,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000004",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000005",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000006",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000007",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000008",
+      "family": "inside/contains",
+      "first_exact_rank": 4,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000009",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000010",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000011",
+      "family": "inside/contains",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000000",
+      "family": "orientation",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000001",
+      "family": "orientation",
+      "first_exact_rank": 3,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000002",
+      "family": "orientation",
+      "first_exact_rank": 4,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000003",
+      "family": "orientation",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000004",
+      "family": "orientation",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000005",
+      "family": "orientation",
+      "first_exact_rank": 3,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000006",
+      "family": "orientation",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000007",
+      "family": "orientation",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000008",
+      "family": "orientation",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000009",
+      "family": "orientation",
+      "first_exact_rank": 3,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000010",
+      "family": "orientation",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000011",
+      "family": "orientation",
+      "first_exact_rank": 3,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000000",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000001",
+      "family": "width",
+      "first_exact_rank": 3,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000002",
+      "family": "width",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000003",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000004",
+      "family": "width",
+      "first_exact_rank": 4,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000005",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000006",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000007",
+      "family": "width",
+      "first_exact_rank": 4,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000008",
+      "family": "width",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000009",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000010",
+      "family": "width",
+      "first_exact_rank": 2,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000011",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000000",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000001",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000002",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000003",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000004",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000005",
+      "family": "connected components",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000006",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000007",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000008",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000009",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000010",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000011",
+      "family": "connected components",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000000",
+      "family": "difference",
+      "first_exact_rank": 3,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000001",
+      "family": "difference",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000002",
+      "family": "difference",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000003",
+      "family": "difference",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000004",
+      "family": "difference",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000005",
+      "family": "difference",
+      "first_exact_rank": 4,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000006",
+      "family": "difference",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000007",
+      "family": "difference",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000008",
+      "family": "difference",
+      "first_exact_rank": 4,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000009",
+      "family": "difference",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000010",
+      "family": "difference",
+      "first_exact_rank": 4,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000011",
+      "family": "difference",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000000",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000001",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000002",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000003",
+      "family": "inside/contains",
+      "first_exact_rank": 3,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000004",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000005",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000006",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000007",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000008",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000009",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000010",
+      "family": "inside/contains",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000011",
+      "family": "inside/contains",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000000",
+      "family": "orientation",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000001",
+      "family": "orientation",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000002",
+      "family": "orientation",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000003",
+      "family": "orientation",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000004",
+      "family": "orientation",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000005",
+      "family": "orientation",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000006",
+      "family": "orientation",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000007",
+      "family": "orientation",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000008",
+      "family": "orientation",
+      "first_exact_rank": 4,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000009",
+      "family": "orientation",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000010",
+      "family": "orientation",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000011",
+      "family": "orientation",
+      "first_exact_rank": 3,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000000",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000001",
+      "family": "width",
+      "first_exact_rank": 2,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000002",
+      "family": "width",
+      "first_exact_rank": 1,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": true,
+      "recall_at_4": true
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000003",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000004",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000005",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000006",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000007",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000008",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000009",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000010",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    },
+    {
+      "checkpoint_id": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000011",
+      "family": "width",
+      "first_exact_rank": null,
+      "parse_valid_candidate_count": 4,
+      "rank1_exact": false,
+      "recall_at_4": false
+    }
+  ],
+  "status": "COMPLETE_DEV_ONLY_NOT_INDEPENDENT_ARC_GENERALIZATION"
+}
