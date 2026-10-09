@@ -68,7 +68,63 @@ def prompt(actor,text,timeout,state):
 def controller(s,p,timeout):
     s.update({'last_actor':'governor','updated_at':now()}); atomic(p,s)
     target=resolve_controller_target(s,p)
-    prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}. Execute next_action as far as scientifically valid. Before returning atomically write exactly one disposition in ARC2_WORKFLOW_STATE.json: CONTINUE_CONTROLLER, REVIEW_REQUIRED, WAIT_REMOTE, PAUSED, or TERMINAL. REVIEW_REQUIRED requires review_brief and review_reason. WAIT_REMOTE only after detached job with remote_job. Do not use legacy workflow states.',timeout,s)
+    prompt(target,f'ARC2 Governor invocation. Read {p.resolve()} and AGENTS.md; execute next_action as far as scientifically valid. '
+           'For any pre-model or detached-launch infrastructure failure: preserve the failed run and incident receipt, set infra_failure_class and infra_failure_receipt, perform bounded CPU-only diagnosis, and NEVER relaunch a one-shot GPU run implicitly. '
+           'If a fresh GPU launch needs authorization or a sealed asset is missing, freeze one concise SHA-bound Director brief and set REVIEW_REQUIRED for Governor; do not directly wake Director or set a generic PAUSED. '
+           'Before returning atomically write exactly one disposition: CONTINUE_CONTROLLER, REVIEW_REQUIRED, WAIT_REMOTE, PAUSED, or TERMINAL. '
+           'REVIEW_REQUIRED requires review_brief and review_reason. WAIT_REMOTE only after detached job with remote_job. Do not use legacy workflow states.',timeout,s)
+
+def route_bounded_infrastructure_pause(state, state_path):
+    """Recover an accidental infra-only pause without ever authorizing a GPU rerun.
+
+    A Controller may still choose a genuine pause. Only an explicit, non-terminal
+    infra_failure_class makes this at-most-two-turn recovery eligible.
+    """
+    if state.get('disposition') != 'PAUSED' or state.get('terminal') or state.get('experiment_terminal'):
+        return False
+    if state.get('last_actor') == 'director' or state.get('user_pause') or state.get('owner_pause'):
+        return False
+    reason = str(state.get('pause_reason') or '').upper()
+    if reason.startswith(('OWNER_', 'USER_', 'PAUSED_BY_DIRECTOR', 'SAFETY_', 'TERMINAL_')):
+        return False
+    if state.get('remote_job') or state.get('active_remote_job'):
+        return False
+    failure = str(state.get('infra_failure_class') or '').upper()
+    if not failure.startswith(('INFRA_', 'INFRASTRUCTURE_', 'DETACHED_LAUNCH_', 'REMOTE_PROCESS_DIED_', 'RUNPOD_')):
+        return False
+    incident = str(state.get('infra_failure_receipt') or state.get('remote_failure_receipt') or failure)
+    if state.get('infra_recovery_incident') != incident:
+        state['infra_recovery_incident'] = incident
+        state['infra_cpu_requeues'] = 0
+    brief = state.get('review_brief')
+    if brief and state.get('review_reason') and Path(brief).is_file():
+        state.update({'disposition': 'REVIEW_REQUIRED',
+                      'next_action': 'DIRECTOR_REVIEW_EXISTING_INFRA_FAILURE_BRIEF',
+                      'updated_at': now()})
+        atomic(state_path, state)
+        log(state, f"infra incident={failure}; existing Director brief queued")
+        return True
+    attempts = int(state.get('infra_cpu_requeues') or 0)
+    if attempts >= 2:
+        state.update({'pause_reason': 'INFRA_TRIAGE_EXHAUSTED_DIRECTOR_BRIEF_MISSING',
+                      'next_action': 'OPERATOR_REVIEW_REQUIRED_FOR_INFRA_BLOCKER',
+                      'updated_at': now()})
+        atomic(state_path, state)
+        log(state, f"infra incident={failure}; bounded CPU triage exhausted; no GPU retry")
+        return False
+    action = ('CPU_ONLY_DIAGNOSE_EXISTING_INFRA_FAILURE' if attempts == 0
+              else 'CPU_ONLY_FREEZE_DIRECTOR_INFRA_RETRY_BRIEF_OR_EXPLICIT_BLOCKER')
+    state.update({'disposition': 'CONTINUE_CONTROLLER', 'next_action': action,
+                  'infra_cpu_requeues': attempts + 1,
+                  'gpu_inference_authorized': False,
+                  'model_loading_authorized': False,
+                  'candidate_generation_authorized': False,
+                  'scientific_training_authorized': False,
+                  'updated_at': now()})
+    atomic(state_path, state)
+    log(state, f"infra incident={failure}; CPU-only recovery turn={attempts + 1}")
+    return True
+
 def response_directory(state_path):
     return state_path.resolve().parents[2] / 'orchestration' / 'director' / 'responses'
 def matching_director_responses(state_path, brief_sha256):
@@ -329,6 +385,9 @@ def main():
         # Compatibility repair for a historical live state written before
         # stage-scoped terminal routing existed.
         if reconcile_consumed_stage_terminal(s,a.state):
+            if a.once: return 0
+            continue
+        if route_bounded_infrastructure_pause(s,a.state):
             if a.once: return 0
             continue
         if s['disposition']=='CONTINUE_CONTROLLER': controller(s,a.state,a.agent_timeout_seconds)
