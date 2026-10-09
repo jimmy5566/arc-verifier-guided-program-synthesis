@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "reviewed_brief_sha256": "b9af6ad10762be2446ba9af78fde13aa6fb2b55cbb9168a151cd83927184a844",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "CPU_FREEZE_PAIRED_SEQUENCE_LEVEL_PREFERENCE_REPAIR_V1",
+  "next_action": "Prepare one prospective paired training protocol that starts both arms from the exact same frozen Family-Balanced checkpoint and changes only whether a sequence-level pairwise ranking loss is enabled. The control uses final-query cross-entropy only; the treatment uses the same final-query cross-entropy plus a predeclared pairwise loss that ranks a target-exact parser-valid sequence above a parser-valid incorrect sequence generated from the same synthetic TRAIN observation. Match synthetic TRAIN examples, batches, update count, optimizer, schedule, token budget, decoding conditions, and evaluation conditions across arms. Freeze the ranking-loss coefficient before any validation target is opened. Use only legitimate synthetic TRAIN targets for preference construction. Freeze a newly and independently generated non-Gold validation cohort whose compositional parameter combinations are disjoint from the synthetic TRAIN cohort, with content-level and historical-exposure checks and sealed validation targets. Previously exposed DEV and Beam-4 results remain descriptive only. The primary outcome is the paired equal-family macro difference in free-running exact-grid accuracy between treatment and control; report protected-retention and held-out-composition outcomes as mandatory gates. Predeclare SUCCESS, FAILURE, INCONCLUSIVE, retention-harm, and invalidation rules before execution. This preparation does not authorize candidate generation, model loading, or training.",
+  "smallest_cpu_only_preparation": {
+    "study_id": "PAIRED_SEQUENCE_LEVEL_PREFERENCE_REPAIR_V1",
+    "primary_hypothesis": "Adding a frozen sequence-level preference objective to otherwise matched final-query supervised training will improve free-running exact-grid accuracy because token-level likelihood improvement has not reliably promoted correct complete sequences to rank one.",
+    "key_alternative": "The Beam-4 oracle gap reflects representation or compositional limitations that cannot be repaired by reranking pressure, so the preference arm will not outperform the matched final-query cross-entropy control.",
+    "single_experimental_factor": "SEQUENCE_LEVEL_PAIRWISE_RANKING_LOSS_ENABLED_VERSUS_DISABLED",
+    "required_freezes": [
+      "exact starting checkpoint and manifest identity",
+      "synthetic TRAIN generator version, seed, families, counts, parameter distributions, and content hashes",
+      "independent synthetic validation generator version, seed, families, counts, held-out compositional parameter combinations, and content hashes",
+      "canonical content-level and historical-exposure audit for TRAIN and validation",
+      "validation observation/target separation and target-opening boundary",
+      "positive and negative preference-pair construction rules",
+      "pairwise loss definition and coefficient",
+      "matched optimizer, schedule, updates, batches, token budget, and runtime cap",
+      "free-running decoding and exact-grid scoring configuration",
+      "equal-family macro primary estimand and paired family-stratified bootstrap",
+      "protected-retention non-inferiority gate",
+      "SUCCESS, FAILURE, INCONCLUSIVE, and INVALID_NOT_INTERPRETABLE rules"
+    ],
+    "scientific_success_requirement": "The treatment must show a prospectively positive paired equal-family macro exact-grid effect whose frozen uncertainty interval excludes zero, pass the protected-retention non-inferiority gate, and show improvement on the held-out compositional validation condition.",
+    "scientific_failure_rule": "Classify as FAILURE if the frozen uncertainty interval is entirely non-positive or if the protected-retention gate fails; classify as INCONCLUSIVE when the interval crosses zero or numerical uncertainty could reverse the conclusion.",
+    "scope_limit": "This is development evidence from independently generated synthetic data, not independent ARC generalization confirmation. Do not reopen exposed selector cohorts, Gold, dGold, FINAL_AUDIT, or historical TTT/Aug/DFS search as the primary research route."
+  },
+  "explicit_no_gpu_launch_until_protocol_frozen": true
+}
