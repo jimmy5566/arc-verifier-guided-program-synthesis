@@ -1,0 +1,24 @@
+{
+  "established": [
+    "The no-update diagnostic completed successfully in 3034.346 seconds.",
+    "All six conditions completed all five modes and identical-mode repeats on the fixed 12 validation episodes.",
+    "The frozen decision rule selected Batch16 as the largest common semantic-exact batch against Batch1.",
+    "Physical padding differences were preserved as diagnostics and not treated as semantic drift.",
+    "No training, backward pass, optimizer step, target-sidecar/Gold/dGold/FINAL_AUDIT access occurred."
+  ],
+  "not_established": [
+    "No capability score, checkpoint ranking, ARC transfer, or generalization conclusion follows from this target-blind localization diagnostic."
+  ],
+  "protocol_id": "UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1",
+  "question": "Given the completed frozen target-blind batch-sensitivity localization result, what is the smallest scientifically valid next action?",
+  "requested_decision": "Choose one stage-level scientific continuation or pause. Do not authorize capability benchmark resumption, target-sidecar access, or a new GPU job unless explicitly justified by a new bound protocol.",
+  "result": {
+    "evidence_sha256": "338b9d243b4a62a7ee80a48972223829fb121ead293b50a7e1fe55d286bed0a4",
+    "summary_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/batch_sensitivity_localization_v1/run_001_fe88beae533e3e3b448c96b2164ac92b/RESULT_SUMMARY.json",
+    "summary_sha256": "ea399dbf5ff6d0972b98a8ffc2332fbd37c2cf657f7d1f48a9fe6889528fdb04",
+    "terminal_receipt_sha256": "5f93e2cb9ea0e2ab27d091b2353d9af753d2d57573a9d37beac184fee1b72913",
+    "worker_receipt_sha256": "1d1a95963a28af652a737302adc7bfdc7da928cb8dde3023fc72a4fc3c176183"
+  },
+  "review_type": "SCIENTIFIC_RESULT_REVIEW",
+  "schema_version": 1
+}

@@ -1,0 +1,13 @@
+{
+  "backward": false,
+  "decision": {
+    "selected_batch_size": 16,
+    "status": "COMMON_EXACT_BATCH_SELECTED"
+  },
+  "final_audit_opened": false,
+  "optimizer_steps": 0,
+  "output_sha256": "338b9d243b4a62a7ee80a48972223829fb121ead293b50a7e1fe55d286bed0a4",
+  "protocol_id": "UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1",
+  "status": "COMPLETE_NO_UPDATE",
+  "training": false
+}

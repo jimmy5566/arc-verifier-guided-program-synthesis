@@ -1,0 +1,25 @@
+{
+  "backward": false,
+  "elapsed_seconds": 3034.3455335376784,
+  "expected_source_commit": "d71e8311bcedf9eec082d436a2f4f640fe5382a5",
+  "final_audit_opened": false,
+  "nonce": "fe88beae533e3e3b448c96b2164ac92b",
+  "optimizer_steps": 0,
+  "protocol_id": "UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1",
+  "raw_evidence": {
+    "bytes": 1561956,
+    "path": "/workspace/arc2/unified_native_batch_sensitivity_localization_v1/run_001_fe88beae533e3e3b448c96b2164ac92b/BATCH_SENSITIVITY_EVIDENCE.json",
+    "present": true,
+    "sha256": "338b9d243b4a62a7ee80a48972223829fb121ead293b50a7e1fe55d286bed0a4"
+  },
+  "runtime_cap_seconds": 9000,
+  "status": "SUCCESS",
+  "training": false,
+  "worker_receipt": {
+    "bytes": 386,
+    "path": "/workspace/arc2/unified_native_batch_sensitivity_localization_v1/run_001_fe88beae533e3e3b448c96b2164ac92b/WORKER_RECEIPT.json",
+    "present": true,
+    "sha256": "1d1a95963a28af652a737302adc7bfdc7da928cb8dde3023fc72a4fc3c176183"
+  },
+  "worker_returncode": 0
+}

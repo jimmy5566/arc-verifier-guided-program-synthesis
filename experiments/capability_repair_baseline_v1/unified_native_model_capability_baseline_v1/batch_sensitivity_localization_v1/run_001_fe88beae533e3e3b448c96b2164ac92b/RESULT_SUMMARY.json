@@ -1,0 +1,39 @@
+{
+  "conditions_verified": [
+    "ATOMIC_R1",
+    "FAMILY_BALANCED",
+    "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED",
+    "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "TARGETED_R1",
+    "TARGETED_R2"
+  ],
+  "decision": {
+    "selected_batch_size": 16,
+    "status": "COMMON_EXACT_BATCH_SELECTED"
+  },
+  "evidence_sha256": "338b9d243b4a62a7ee80a48972223829fb121ead293b50a7e1fe55d286bed0a4",
+  "execution_status": "COMPLETE_NO_UPDATE",
+  "forbidden_operations_observed": {
+    "backward": false,
+    "final_audit_opened": false,
+    "optimizer_steps": 0,
+    "targets_opened": false,
+    "training": false
+  },
+  "modes_verified": [
+    32,
+    16,
+    8,
+    4,
+    1
+  ],
+  "protocol_id": "UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1",
+  "result_interpretation": "The selected Batch16 is valid only for the frozen diagnostics under this protocol. It does not establish model capability, ARC transfer, or checkpoint ranking.",
+  "run_id": "RUN_001_fe88beae533e3e3b448c96b2164ac92b",
+  "schema_version": 1,
+  "scientific_scope": "TARGET_BLIND_BATCHING_AND_DECODER_STABILITY_ONLY_NOT_CAPABILITY_EVIDENCE",
+  "semantic_equality": "Batch16 is the largest common semantic-exact mode across all six conditions and fixed 12 episode validation records. Framework-only post-EOS pads remain diagnostic metadata.",
+  "source_commit": "d71e8311bcedf9eec082d436a2f4f640fe5382a5",
+  "terminal_receipt_sha256": "5f93e2cb9ea0e2ab27d091b2353d9af753d2d57573a9d37beac184fee1b72913",
+  "worker_receipt_sha256": "1d1a95963a28af652a737302adc7bfdc7da928cb8dde3023fc72a4fc3c176183"
+}
