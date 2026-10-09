@@ -36,6 +36,11 @@ def is_ancestor(root: Path, ancestor: str, descendant: str) -> bool:
     return subprocess.run(["git", "merge-base", "--is-ancestor", ancestor, descendant], cwd=root, check=False).returncode == 0
 
 
+def blob_sha_at_commit(root: Path, commit: str, path: Path) -> str:
+    relative = path.resolve().relative_to(root.resolve()).as_posix()
+    return hashlib.sha256(subprocess.check_output(["git", "show", f"{commit}:{relative}"], cwd=root)).hexdigest()
+
+
 def require_clean_tracked_checkout(root: Path) -> None:
     status = subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=no"], cwd=root, text=True)
     if status.strip():
@@ -121,6 +126,8 @@ def consume_reviewed_binding(*, root: Path, binding_path: Path, binding_sha256: 
         raise RuntimeError("REVIEWED_BINDING_RUNTIME_IDENTITY_MISMATCH")
     if git_head(root) != expected_commit or git_ref(root, binding["origin_ref"]) != expected_commit:
         raise RuntimeError("SOURCE_PARITY_MISMATCH")
+    if blob_sha_at_commit(root, expected_commit, binding_path) != binding_sha256:
+        raise RuntimeError("REVIEWED_BINDING_NOT_PRESENT_AT_RUNTIME_CHECKOUT")
     if not is_ancestor(root, binding["source_commit"], expected_commit):
         raise RuntimeError("BOUND_SOURCE_NOT_REACHABLE_FROM_RUNTIME_CHECKOUT")
     require_clean_tracked_checkout(root)
