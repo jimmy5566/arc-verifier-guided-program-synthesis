@@ -1,4 +1,4 @@
-﻿"""Target-blind batch-size localization contract for unified native baseline V2."""
+"""Target-blind batch-size localization contract for unified native baseline V2."""
 from __future__ import annotations
 from typing import Iterable
 

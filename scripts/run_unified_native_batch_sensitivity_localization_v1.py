@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """One-factor, target-blind batch-size localization diagnostic; no updates or scoring."""
 from __future__ import annotations
 import argparse,hashlib,json,os,time
