@@ -18,16 +18,17 @@ and contains the current stage, a coarse status, the active remote job if one
 exists, last completed action, next action, Director-review flag, and terminal
 flag.  It does not encode remediation substeps or acknowledgement cycles.
 
-For a short high-level decision the Controller freezes one stage brief and
-calls Director synchronously:
+For a short high-level decision the Controller freezes one stage brief,
+sets Governor disposition `REVIEW_REQUIRED` with `review_brief` and `review_reason`,
+and Governor calls Director synchronously:
 
 ```text
 herdr agent prompt arc-director "<review request>" --wait \
   --until idle --until done --until blocked --timeout <milliseconds>
 ```
 
-The Controller then verifies the returned review references the brief hash and
-continues within the same workflow.  Current Director decisions include `CONTINUE_CONTROLLER`, `CONTINUE_DIRECTOR`,
+Governor verifies that the returned review references the brief hash, consumes it once,
+and schedules the Controller or the next Director brief within the same workflow.  Current Director decisions include `CONTINUE_CONTROLLER`, `CONTINUE_DIRECTOR`,
 `REQUIRE_CHANGES`, `PAUSED`, and `TERMINAL`; legacy scientific outcomes are
 retained for already-frozen reviews. The Governor consumes each bound response
 once and routes by the reviewed stage/next action.
