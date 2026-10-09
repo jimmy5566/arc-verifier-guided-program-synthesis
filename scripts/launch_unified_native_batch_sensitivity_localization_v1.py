@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Bounded outer launcher for one target-blind native baseline worker.
 
 It owns process lifetime and terminal evidence; the worker owns scientific
