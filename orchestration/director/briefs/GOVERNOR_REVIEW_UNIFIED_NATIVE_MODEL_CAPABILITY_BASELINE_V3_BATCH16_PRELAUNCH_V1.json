@@ -1,0 +1,73 @@
+{
+  "cpu_validation": {
+    "command": "py -3 -m unittest tests.test_run_unified_native_model_capability_baseline_v3_batch16 tests.test_launch_unified_native_model_capability_baseline_v3_batch16 tests.test_unified_native_batch_sensitivity_localization_contract tests.test_unified_native_baseline_measurement_contract",
+    "result": "PASS_16"
+  },
+  "frozen_execution": {
+    "decode": "deterministic_greedy",
+    "fallback_policy": "FAIL_CLOSED_ON_BATCH16_OOM",
+    "fixed_batch1_validation_subset": 12,
+    "forbidden_batch_sizes": [
+      32,
+      8
+    ],
+    "fresh_output_root": "/workspace/arc2/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a",
+    "nonce": "5e46a8ba7794cbec09d838c84d26a32a",
+    "padding": "left",
+    "primary_batch_size": 16,
+    "rank2": "bound to exact Batch16 primary prefix and trace",
+    "runtime_cap_seconds": 9000
+  },
+  "hard_boundaries": [
+    "NO_TRAINING",
+    "NO_OPTIMIZER",
+    "NO_BACKWARD",
+    "NO_TTT",
+    "NO_AUGMENTATION",
+    "NO_DFS",
+    "NO_BEAM4",
+    "NO_EXTERNAL_SELECTOR",
+    "NO_GOLD_DGOLD_FINAL_AUDIT",
+    "NO_TARGET_ALIGNED_SCORING"
+  ],
+  "identities": {
+    "binding_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/BATCH16_LAUNCH_BINDING_V1.json",
+    "binding_sha256": "2659256ef23c06f5f18b5d8d829e24e0d97bd1317b4870f6f35ad3847b398169",
+    "config_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V3_BATCH16_CONFIG.json",
+    "config_sha256": "9e1b2d8f2a98bcba32db1de62fe51072617cfd986d9b9f088e8fc2da589910b0",
+    "launcher_path": "scripts/launch_unified_native_model_capability_baseline_v3_batch16.py",
+    "launcher_sha256": "2c7be981d3b0fcbf7d45dafbce897066c3d20f1ad9b07a5dae769724ed7ab79e",
+    "runtime_source_commit": "19825d1ef8fb71c58268c687abd4c882b7ff97b5",
+    "source_parity": "LOCAL_HEAD=ORIGIN_REF=RUNPOD_CHECKOUT=19825d1ef8fb71c58268c687abd4c882b7ff97b5",
+    "worker_path": "scripts/run_unified_native_model_capability_baseline_v3_batch16.py",
+    "worker_sha256": "f5c59cf79112ab8d5034ee7a0bb2042e8ac05f778818942fcd1b3b4288603071"
+  },
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V3_BATCH16",
+  "question": "Authorize exactly one target-blind, no-update Batch16 capability-baseline run under the frozen configuration, or state the smallest scientific change required.",
+  "request": "Return CONTINUE_CONTROLLER only to authorize this exact one run, or REQUIRE_CHANGES with the smallest scientific remediation. Do not require provenance-only review loops.",
+  "review_type": "STAGE_LEVEL_SCIENTIFIC_PRELAUNCH",
+  "runtime_preflight": {
+    "adapter_files_verified_by_condition": 3,
+    "base_files_verified_once": 13,
+    "final_audit_opened": false,
+    "gpu_used": false,
+    "model_imported": false,
+    "optimizer_steps": 0,
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/BATCH16_RUNTIME_IDENTITY_PREFLIGHT_V1.json",
+    "sha256": "533545e480dac4d480a250c62b45394d76edc395479ef09f75ed5eb95f0c02fb",
+    "status": "PASS_NO_MODEL_IMPORT"
+  },
+  "schema_version": 1,
+  "scientific_scope": {
+    "cohort": "60 frozen synthetic benchmark observations; targets remain sealed sidecar only",
+    "conditions": [
+      "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED",
+      "RECONSTRUCTED_FOUNDATION_V2_V7",
+      "TARGETED_R1",
+      "TARGETED_R2",
+      "ATOMIC_R1",
+      "FAMILY_BALANCED"
+    ],
+    "purpose": "target-blind model capability characterization; not a capability claim until completion and scoring"
+  }
+}
