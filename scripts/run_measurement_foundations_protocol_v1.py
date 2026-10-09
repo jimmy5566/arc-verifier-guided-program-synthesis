@@ -32,6 +32,9 @@ def validate(cfg,auth):
  check([m['mode_id'] for m in cfg['modes']]==['REFERENCE_B1_IMPLICIT_POSITION','REFERENCE_B1_EXPLICIT_POSITION_CONTROL','BATCHED_IMPLICIT_POSITION','BATCHED_EXPLICIT_POSITION_CONTROL'],'MODE_CONTRACT_MISMATCH')
  check(cfg['numeric_acceptance']['admissible_batched_effective_sizes']==[32,16,8,4,2],'BATCH_LADDER_MISMATCH')
  check(cfg['execution_order']['repeat_count_per_checkpoint_row_mode']==3,'REPEAT_CONTRACT_MISMATCH')
+ order=cfg['execution_order'].get('checkpoint_order',[])
+ check(order==['CAPABILITY_REPAIR_BASELINE_V1_V7','ATOMIC_PREREQUISITE_REPAIR_V1_001_REJECTED','ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001'],'CHECKPOINT_ORDER_CONTRACT_MISMATCH')
+ check(set(order)==set(cfg['inputs']['conditions']) and len(order)==len(cfg['inputs']['conditions']),'CHECKPOINT_BINDING_CONTRACT_MISMATCH')
  check(cfg['numeric_acceptance']['absolute_token_micro_nll_stability_threshold']==0.0005,'THRESHOLD_MISMATCH')
  return cohort
 def rows_from_train(cohort,train):
@@ -89,12 +92,21 @@ def main():
  try:
   check(sha(a.train)==cfg['inputs']['train_sha256'],'TRAIN_SHA_MISMATCH'); rows=rows_from_train(cohort,a.train); import torch,torch.nn.functional as F; from transformers import AutoModelForCausalLM; from peft import PeftModel
   check(torch.cuda.is_available() and torch.cuda.is_bf16_supported(),'CUDA_BF16_UNAVAILABLE'); torch.manual_seed(20261009);torch.backends.cudnn.deterministic=True;torch.backends.cudnn.benchmark=False;torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False; os.environ['CUBLAS_WORKSPACE_CONFIG']=':4096:8'; os.environ['TOKENIZERS_PARALLELISM']='false'
-  allm={}; raw=[]; selected=None; started=time.monotonic()
-  for name,cond in cfg['inputs']['conditions'].items():
-   mp=rp(cond['checkpoint_manifest_path']); check(sha(mp)==cond['checkpoint_manifest_sha256'],'MANIFEST_SHA_MISMATCH:'+name); result_path=rp(cond['result_path']); check(sha(result_path)==cond['result_sha256'],'RESULT_SHA_MISMATCH:'+name); manifest=loadj(mp); adapter=Path(manifest['adapter_path'])/'adapter_model.safetensors'; check(sha(adapter)==cond['adapter_sha256'],'ADAPTER_SHA_MISMATCH:'+name)
+  allm={}; raw=[]; selected=None; started=time.monotonic(); verified={}
+  order=cfg['execution_order']['checkpoint_order']
+  # Verify every package-bound condition before any model load.
+  for name in order:
+   cond=cfg['inputs']['conditions'][name]; mp=rp(cond['checkpoint_manifest_path'])
+   check(sha(mp)==cond['checkpoint_manifest_sha256'],'MANIFEST_SHA_MISMATCH:'+name)
+   result_path=rp(cond['result_path']); check(sha(result_path)==cond['result_sha256'],'RESULT_SHA_MISMATCH:'+name)
+   manifest=loadj(mp); adapter=Path(manifest['adapter_path'])/'adapter_model.safetensors'
+   check(sha(adapter)==cond['adapter_sha256'],'ADAPTER_SHA_MISMATCH:'+name)
+   verified[name]=manifest
+  for name in order:
+   manifest=verified[name]
    model=AutoModelForCausalLM.from_pretrained(manifest['base_path'],local_files_only=True,torch_dtype=torch.bfloat16,attn_implementation='sdpa').to('cuda:0'); model=PeftModel.from_pretrained(model,manifest['adapter_path'],is_trainable=False);model.eval(); modes={}
    if name=='CAPABILITY_REPAIR_BASELINE_V1_V7':
-    for candidate in [32,16,8,4,2]:
+    for candidate in cfg['numeric_acceptance']['admissible_batched_effective_sizes']:
      try: score(model,rows,candidate,'IMPLICIT',torch,F);selected=candidate;break
      except torch.cuda.OutOfMemoryError: torch.cuda.empty_cache()
     check(selected is not None,'NO_BATCH_GT_ONE')
