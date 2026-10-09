@@ -1,0 +1,51 @@
+{
+  "baseline_policy": "TOKEN_PROPORTIONAL_PER_STEP_V1",
+  "budget_and_isolation": {
+    "final_audit_opened": false,
+    "no_parallel_scientific_job": true,
+    "remaining_cumulative_gpu_seconds": 23227.087616618042,
+    "reservation_seconds": 3600.0
+  },
+  "execution_authorized": false,
+  "forbidden": [
+    "NO_R1_RESUME",
+    "NO_R3",
+    "NO_COMPOSITION_TRAINING",
+    "NO_FINAL_AUDIT",
+    "NO_DATA_ORDER_RECIPE_OR_EVALUATION_CHANGE",
+    "NO_MODEL_LOADING_GPU_OR_OPTIMIZER_UNTIL_STAGE_REVIEW"
+  ],
+  "frozen_matched_conditions": {
+    "episodes": 400,
+    "gradient_accumulation": 4,
+    "no_target_dev_retention_or_final_audit_training": true,
+    "optimizer_steps": 100,
+    "same_frozen_decoder_parser_scorer_target_dev_retention_and_batch_policy": true,
+    "same_optimizer_learning_rate_lora_seed_precision_checkpoint_cadence_runtime_budget": true,
+    "same_row_order_labels_transformer_token_budget": true,
+    "schedule_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json",
+    "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6"
+  },
+  "loss_aggregation_policy": "FAMILY_BALANCED_GLOBAL_IPF_V1",
+  "loss_coefficient_ledger_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_COEFFICIENT_LEDGER_V1.json",
+  "loss_coefficient_ledger_sha256": "4eb7b058468257246025b459aec1258f3e9bfa9f8b6c764edad675e2e62ebf0b",
+  "prospective_causal_contrast": {
+    "comparator": "ATOMIC_PREREQUISITE_REPAIR_V1_001_REJECTED_CANDIDATE",
+    "failure_action": "STOP_FAMILY_LOSS_BALANCING_ROUTE_NO_SECOND_AUTOMATIC_DIAGNOSTIC",
+    "material_support_threshold": "weak_atomic_paired_net_fixes_vs_rejected_R1 >= +5",
+    "promotion_conditions": "all original V7-referenced validity, protected-family, retention, weak-family, weak-aggregate, composition-family, and composition-aggregate gates remain mandatory",
+    "same_frozen_v7_referenced_288_episode_evaluation": true,
+    "success_action": "RETURN_FOR_STAGE_LEVEL_REVIEW_NO_AUTOMATIC_COMPOSITION_OR_PROMOTION"
+  },
+  "protocol_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1",
+  "schema_version": 1,
+  "scientific_question": "Holding the rejected R1 schedule and recipe fixed, does global family-balanced scalar loss aggregation improve weak atomic paired outcomes without preservation or composition harm?",
+  "single_changed_factor": "SCALAR_LOSS_AGGREGATION_BY_FAMILY",
+  "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1",
+  "starting_checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+  "starting_checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "status": "CPU_PREEXECUTION_FROZEN_PENDING_STAGE_REVIEW",
+  "user_gpu_authorization": "STANDING_GPU_EXECUTION_AUTHORIZATION_RECORDED",
+  "worker_path": "scripts/run_same_color_preservation_stage_a_v1.py",
+  "worker_sha256": "e7171f1de659f9a68492115f6e632196bcb70e93cdf6a757036c64890b8f36c3"
+}

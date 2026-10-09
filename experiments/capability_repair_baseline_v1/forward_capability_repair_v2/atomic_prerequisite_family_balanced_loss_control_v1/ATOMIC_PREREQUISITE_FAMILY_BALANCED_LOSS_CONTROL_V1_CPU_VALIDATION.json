@@ -1,0 +1,25 @@
+{
+  "checks": {
+    "all_coefficients_positive": true,
+    "all_steps_scalar_scale_one": true,
+    "each_nonweak_family_total_preserved": true,
+    "execution_authorized": false,
+    "gpu_used": false,
+    "model_loaded": false,
+    "optimizer_constructed": false,
+    "same_400_episode_order": true,
+    "same_recipe_fields": true,
+    "same_schedule_hash": true,
+    "target_dev_retention_final_audit_excluded_from_training": true,
+    "weak_families_equalized": true,
+    "weak_role_total_preserved": true
+  },
+  "config_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_REMOTE_RUN_CONFIG_DRAFT.json",
+  "config_sha256": "2743d5bf0df616bb518e076b6b0d80160cced0aa95e4c6b7d8e39cd0a4d53865",
+  "ledger_sha256": "4eb7b058468257246025b459aec1258f3e9bfa9f8b6c764edad675e2e62ebf0b",
+  "protocol_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_PROTOCOL.json",
+  "protocol_sha256": "287c975609f82e225fe52c9643608ddd34b179bb5e69f312bcc734065b06a847",
+  "schema_version": 1,
+  "status": "CPU_VALIDATION_PASS",
+  "validation_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_CPU_VALIDATION"
+}

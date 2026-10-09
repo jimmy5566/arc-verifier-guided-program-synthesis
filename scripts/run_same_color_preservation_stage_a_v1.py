@@ -76,6 +76,45 @@ def load_work(config: dict) -> list[dict]:
     return work
 
 
+def load_loss_coefficients(config: dict, work: list[dict]) -> list[list[float]]:
+    """Return one frozen scalar coefficient for every row of every step.
+
+    The historical default remains token-proportional within an accumulation
+    group.  A future, separately reviewed family-balanced run must bind an
+    immutable ledger that names every scheduled episode and preserves scalar
+    scale one per optimizer step.  This function is deliberately CPU-only so
+    its identity checks can run before a model is loaded.
+    """
+    accumulation = int(config["gradient_accumulation"])
+    groups = [work[offset:offset + accumulation] for offset in range(0, len(work), accumulation)]
+    policy = config.get("loss_aggregation_policy", "TOKEN_PROPORTIONAL_PER_STEP_V1")
+    if policy == "TOKEN_PROPORTIONAL_PER_STEP_V1":
+        return [[row["supervised"] / sum(item["supervised"] for item in group) for row in group] for group in groups]
+    if policy != "FAMILY_BALANCED_GLOBAL_IPF_V1":
+        raise RuntimeError("LOSS_AGGREGATION_POLICY_UNKNOWN")
+    ledger_path = resolve(ROOT, config["loss_coefficient_ledger_path"])
+    if sha(ledger_path) != config["loss_coefficient_ledger_sha256"]:
+        raise RuntimeError("LOSS_COEFFICIENT_LEDGER_IDENTITY_FAIL")
+    ledger = json.loads(ledger_path.read_text(encoding="utf8"))
+    if ledger.get("policy_id") != policy or ledger.get("schedule_sha256") != config["schedule_sha256"]:
+        raise RuntimeError("LOSS_COEFFICIENT_LEDGER_BINDING_FAIL")
+    steps = ledger.get("per_optimizer_step")
+    if not isinstance(steps, list) or len(steps) != len(groups):
+        raise RuntimeError("LOSS_COEFFICIENT_LEDGER_SHAPE_FAIL")
+    coefficients: list[list[float]] = []
+    for index, (group, step) in enumerate(zip(groups, steps), start=1):
+        entries = step.get("entries")
+        if step.get("optimizer_step") != index or not isinstance(entries, list) or len(entries) != len(group):
+            raise RuntimeError("LOSS_COEFFICIENT_STEP_BINDING_FAIL")
+        if [entry.get("episode_id") for entry in entries] != [row["episode_id"] for row in group]:
+            raise RuntimeError("LOSS_COEFFICIENT_EPISODE_ORDER_FAIL")
+        values = [float(entry.get("balanced_loss_coefficient")) for entry in entries]
+        if any(value <= 0.0 or not value < 1.0 for value in values) or abs(sum(values) - 1.0) > 1e-10:
+            raise RuntimeError("LOSS_COEFFICIENT_SCALE_FAIL")
+        coefficients.append(values)
+    return coefficients
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=Path, required=True)
@@ -95,6 +134,7 @@ def main() -> int:
     work = load_work(config)
     if len(work) != int(config["optimizer_steps"]) * int(config["gradient_accumulation"]):
         raise RuntimeError("SCHEDULE_STEP_ALIGNMENT_FAIL")
+    loss_coefficients = load_loss_coefficients(config, work)
     run.mkdir(parents=True)
     runtime, checkpoints = run / "runtime", run / "checkpoints"
     runtime.mkdir(); checkpoints.mkdir()
@@ -127,19 +167,18 @@ def main() -> int:
         done = supervised = steps = 0
         capped = False
         accumulation = int(config["gradient_accumulation"])
-        for offset in range(0, len(work), accumulation):
+        for step_index, offset in enumerate(range(0, len(work), accumulation)):
             if time.monotonic() >= deadline:
                 capped = True; break
             group = work[offset:offset + accumulation]
             optimizer.zero_grad(set_to_none=True)
-            denom = sum(x["supervised"] for x in group)
-            for row in group:
+            for row, coefficient in zip(group, loss_coefficients[step_index]):
                 ids = torch.tensor([row["ids"]], device="cuda:0", dtype=torch.long)
                 labels = torch.tensor([row["labels"]], device="cuda:0", dtype=torch.long)
                 loss = model(input_ids=ids, labels=labels, use_cache=False).loss
                 if not bool(torch.isfinite(loss)):
                     raise RuntimeError("NONFINITE_LOSS")
-                (loss * (row["supervised"] / denom)).backward()
+                (loss * coefficient).backward()
                 done += row["tokens"]; supervised += row["supervised"]
             if time.monotonic() >= deadline:
                 capped = True; break

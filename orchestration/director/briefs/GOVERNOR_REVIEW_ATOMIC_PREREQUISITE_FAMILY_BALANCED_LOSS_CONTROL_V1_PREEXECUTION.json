@@ -1,0 +1,59 @@
+{
+  "artifacts": {
+    "config_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_REMOTE_RUN_CONFIG_DRAFT.json",
+    "config_sha256": "2743d5bf0df616bb518e076b6b0d80160cced0aa95e4c6b7d8e39cd0a4d53865",
+    "cpu_validation_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_CPU_VALIDATION.json",
+    "cpu_validation_sha256": "692717c2d5c331fa4f78eaf465be94d3e53a6886618682e469c5aa9f56e2cbf7",
+    "ledger_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_COEFFICIENT_LEDGER_V1.json",
+    "ledger_sha256": "4eb7b058468257246025b459aec1258f3e9bfa9f8b6c764edad675e2e62ebf0b",
+    "protocol_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_PROTOCOL.json",
+    "protocol_sha256": "287c975609f82e225fe52c9643608ddd34b179bb5e69f312bcc734065b06a847"
+  },
+  "brief_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_PREEXECUTION",
+  "director_precondition_response": "orchestration/director/responses/GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_REPAIR_V1_RESULT_V1.json",
+  "director_precondition_response_sha256": "e6498be472aae9cbe578e22123ff0b544ab12267cd1757800864beecdb08ffb3",
+  "final_audit_opened": false,
+  "forbidden": [
+    "NO_R1_RESUME",
+    "NO_R3",
+    "NO_COMPOSITION_TRAINING",
+    "NO_FINAL_AUDIT",
+    "NO_DATA_ORDER_RECIPE_OR_EVALUATION_CHANGE",
+    "NO_MODEL_LOADING_GPU_OR_OPTIMIZER_UNTIL_STAGE_REVIEW"
+  ],
+  "intervention": {
+    "algorithm": "positive family-multiplier IPF; every optimizer-step scalar total remains 1.0; weak role total and each nonweak family total remain preserved; five weak family totals are equalized",
+    "only_changed_factor": "SCALAR_LOSS_AGGREGATION_BY_FAMILY"
+  },
+  "matched_conditions": {
+    "episodes": 400,
+    "gradient_accumulation": 4,
+    "no_target_dev_retention_or_final_audit_training": true,
+    "optimizer_steps": 100,
+    "same_frozen_decoder_parser_scorer_target_dev_retention_and_batch_policy": true,
+    "same_optimizer_learning_rate_lora_seed_precision_checkpoint_cadence_runtime_budget": true,
+    "same_row_order_labels_transformer_token_budget": true,
+    "schedule_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json",
+    "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6"
+  },
+  "prospective_rule": {
+    "comparator": "ATOMIC_PREREQUISITE_REPAIR_V1_001_REJECTED_CANDIDATE",
+    "failure_action": "STOP_FAMILY_LOSS_BALANCING_ROUTE_NO_SECOND_AUTOMATIC_DIAGNOSTIC",
+    "material_support_threshold": "weak_atomic_paired_net_fixes_vs_rejected_R1 >= +5",
+    "promotion_conditions": "all original V7-referenced validity, protected-family, retention, weak-family, weak-aggregate, composition-family, and composition-aggregate gates remain mandatory",
+    "same_frozen_v7_referenced_288_episode_evaluation": true,
+    "success_action": "RETURN_FOR_STAGE_LEVEL_REVIEW_NO_AUTOMATIC_COMPOSITION_OR_PROMOTION"
+  },
+  "request": "Authorize or minimally revise this one matched family-balanced-loss diagnostic. No GPU work has occurred under this protocol.",
+  "safety": {
+    "final_audit_opened": false,
+    "no_parallel_scientific_job": true,
+    "remaining_cumulative_gpu_seconds": 23227.087616618042,
+    "reservation_seconds": 3600.0
+  },
+  "schema_version": 1,
+  "scientific_question": "Holding the rejected R1 schedule and recipe fixed, does global family-balanced scalar loss aggregation improve weak atomic paired outcomes without preservation or composition harm?",
+  "scientific_training_authorized_by_this_brief": false,
+  "stage": "ATOMIC_PREREQUISITE_REPAIR_SUCCESSOR_DIAGNOSTIC",
+  "standing_user_gpu_authorization_recorded": true
+}

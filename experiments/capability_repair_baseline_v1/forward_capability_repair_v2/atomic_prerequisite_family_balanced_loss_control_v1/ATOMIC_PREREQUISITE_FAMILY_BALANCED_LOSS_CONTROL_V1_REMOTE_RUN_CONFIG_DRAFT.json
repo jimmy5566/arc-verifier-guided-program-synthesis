@@ -1,0 +1,52 @@
+{
+  "arm": "FAMILY_BALANCED_LOSS_TREATMENT",
+  "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+  "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "config_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_REMOTE_RUN_CONFIG_DRAFT",
+  "cumulative_cap_seconds": 28800.0,
+  "execution_authorized": false,
+  "execution_state": "PENDING_DIRECTOR_STAGE_REVIEW",
+  "final_audit_opened": false,
+  "forbidden_training_inputs": [
+    "TARGET_DEV",
+    "RETENTION_SENTINEL",
+    "FINAL_AUDIT",
+    "Eval60 Gold",
+    "diagnostic Gold"
+  ],
+  "gradient_accumulation": 4,
+  "isolated_output_required": true,
+  "learning_rate": 5e-05,
+  "loss_aggregation_policy": "FAMILY_BALANCED_GLOBAL_IPF_V1",
+  "loss_coefficient_ledger_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_COEFFICIENT_LEDGER_V1.json",
+  "loss_coefficient_ledger_sha256": "4eb7b058468257246025b459aec1258f3e9bfa9f8b6c764edad675e2e62ebf0b",
+  "optimizer_steps": 100,
+  "output_root": "/workspace/arc2/atomic_prerequisite_family_balanced_loss_control_v1/round_001",
+  "protocol_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1",
+  "recipe_binding": {
+    "base_frozen": true,
+    "lora_alpha": 32,
+    "lora_dropout": 0,
+    "lora_rank": 64,
+    "optimizer": "PagedAdamW8bit",
+    "precision": "BF16",
+    "quantization": "NONE",
+    "seed": 2000031,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ]
+  },
+  "remaining_gpu_seconds_before": 23227.087616618042,
+  "reservation_seconds": 3600.0,
+  "round_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001",
+  "schedule_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json",
+  "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6",
+  "schema_version": 1,
+  "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1"
+}
