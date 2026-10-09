@@ -1,0 +1,68 @@
+{
+  "batch1_subset_episode_ids": [
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_TRANSLATION:003",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_TRANSLATION:007",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_RECOLOR_TRANSLATE:011",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_TRANSLATION:001",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_RECOLOR_TRANSLATE:002",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_REFLECT_RECOLOR:000",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_REFLECT_RECOLOR:011",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:PROTECTED_SAME_COLOR:000",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_REFLECTION:002",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_RECOLOR_TRANSLATE:010",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_TRANSLATION:008",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_REFLECT_RECOLOR:005"
+  ],
+  "checkpoints": {
+    "FAMILY_BALANCED": {
+      "manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9"
+    },
+    "RECONSTRUCTED_FOUNDATION_V2_V7": {
+      "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+    }
+  },
+  "config_path": "experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V5_CONFIG.json",
+  "config_sha256": "0bc78280f1bc7e016292169b0b2a7b476d131e5aedfefe43cff31e25d49e9e28",
+  "expected_hashes": {
+    "family_balanced_manifest": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9",
+    "input_manifest": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+    "raw_predictions": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e",
+    "sealed_sidecar": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e",
+    "v7_manifest": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  },
+  "forbidden": [
+    "training",
+    "optimizer",
+    "backward",
+    "generation",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT"
+  ],
+  "implementation_identity": {
+    "config_sha256": "0bc78280f1bc7e016292169b0b2a7b476d131e5aedfefe43cff31e25d49e9e28",
+    "contract_sha256": "76e1affa726d3ac449715dde0c75e419f7a58f6e9aa66c6072f2f1f3441a45b2",
+    "launch_contract_sha256": "31a594a41cb20cab732816c47b6bfb2b9e8377e1244e64adf6171522c73cc05c",
+    "launcher_sha256": "8682c86e910d53b54f92d9a2e5ce33921e4e0ff3a2628a3d1f056597707d641e",
+    "postprocessor_sha256": "143ad57b589d093b15291d1b55a8963405d195ec731ad4d00983fbadc3121920",
+    "runtime_contract_sha256": "c861682df898ce79aa52fac45185b4d20b1dd8af01d35d16b8c0c8c76f63054b",
+    "worker_sha256": "58f476e3b2446172c4511334c1a0b83ef9c43d8cd8b0d75998e5c3832d36c239"
+  },
+  "input_paths": {
+    "family_balanced_manifest": "/workspace/arc2/experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json",
+    "input_manifest": "/workspace/arc2/experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/SYNTHETIC_BENCHMARK_INPUT_MANIFEST_V1.json",
+    "raw_predictions": "/workspace/arc2/experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a/RAW_UNSCORED_BATCH16.jsonl",
+    "sealed_sidecar": "/workspace/arc2/.arc2-local/orchestration/sealed_synthetic_targets/UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1_TARGET_SIDECAR.json",
+    "v7_manifest": "/workspace/arc2/experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json"
+  },
+  "no_update": true,
+  "nonce": "1cc94f50673f4e0997001fbf86853a2b",
+  "origin_ref": "origin/infra/arc2-dual-agent-runpod-orchestrator-v1",
+  "output": "/workspace/arc2/experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/run_003_1cc94f50673f4e0997001fbf86853a2b",
+  "protocol_id": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1",
+  "receipt": "/workspace/arc2/experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/run_003_1cc94f50673f4e0997001fbf86853a2b/TERMINAL_RECEIPT.json",
+  "runtime_cap_seconds": 900,
+  "runtime_checkout_rule": "RUNTIME_HEAD_EQUALS_ORIGIN_REF_EQUALS_EXPECTED_CHECKOUT; exact reviewed binding bytes must exist at expected checkout; source_commit must be an ancestor; implementation hashes must match before model import",
+  "source_commit": "98e393625d50d86d5b095265ace9349175193a5b",
+  "status": "FROZEN_FINAL_REPLACEMENT_BINDING_PENDING_DIRECTOR_PRELAUNCH_REVIEW_NO_EXECUTION"
+}
