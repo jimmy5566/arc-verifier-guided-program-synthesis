@@ -1,0 +1,15 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:27<00:27, 27.46s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:39<00:00, 18.30s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:39<00:00, 19.67s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:28<00:28, 28.88s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:43<00:00, 20.54s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:43<00:00, 21.79s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:27<00:27, 27.01s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:39<00:00, 18.28s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:39<00:00, 19.59s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:27<00:27, 27.83s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:39<00:00, 18.37s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:39<00:00, 19.79s/it]
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_unified_native_model_capability_baseline_v2.py", line 153, in <module>
+    if __name__=="__main__": raise SystemExit(main())
+                                              ^^^^^^
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_unified_native_model_capability_baseline_v2.py", line 141, in main
+    if validation["status"]!="PASS": raise RuntimeError("BATCH1_BATCH32_MATERIAL_DRIFT")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: BATCH1_BATCH32_MATERIAL_DRIFT
