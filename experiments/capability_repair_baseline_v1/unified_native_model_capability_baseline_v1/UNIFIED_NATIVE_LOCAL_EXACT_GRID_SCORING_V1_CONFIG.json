@@ -1,0 +1,46 @@
+{
+  "constraints": [
+    "CPU_ONLY",
+    "NO_MODEL_LOAD",
+    "NO_GPU",
+    "NO_GENERATION",
+    "NO_TRAINING",
+    "NO_BACKWARD",
+    "NO_GOLD_DGOLD_FINAL_AUDIT",
+    "REUSE_FROZEN_360_PREDICTIONS"
+  ],
+  "frozen_inputs": {
+    "raw_predictions": {
+      "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a/RAW_UNSCORED_BATCH16.jsonl",
+      "rows": 360,
+      "sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e"
+    },
+    "sealed_sidecar": {
+      "local_path": ".arc2-local/orchestration/sealed_synthetic_targets/UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1_TARGET_SIDECAR.json",
+      "required_schema": "{protocol_id, targets:{episode_id: rectangular_2d_digit_grid}}",
+      "sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e"
+    }
+  },
+  "output": {
+    "fresh_root": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/unified_native_local_exact_grid_scoring_v1/run_001_b7da8ae9a7e0446e8fcef2d9bfe08038",
+    "nonce": "b7da8ae9a7e0446e8fcef2d9bfe08038"
+  },
+  "protocol_id": "UNIFIED_NATIVE_LOCAL_EXACT_GRID_SCORING_V1",
+  "scoring": {
+    "alternate": "one frozen rank-2 branch; invalid grid counts incorrect",
+    "greedy": "frozen free-running canonical prediction hash equals sealed target-grid hash",
+    "metrics": ["GREEDY_TOP1_EXACT", "TOP2_EXACT_COVERAGE"],
+    "target_alignment_used_for_selection": false
+  },
+  "scientific_scope": "DEVELOPMENT_EVIDENCE_REUSED_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION",
+  "source": {
+    "contract_path": "scripts/unified_native_exact_grid_cpu_contract.py",
+    "contract_sha256": "25c855c8170bcc01f0c97110fe9382935edbc00e2d7bd20158522e4595addc3f",
+    "source_commit": "1d61f62f837de6992f0b48638193ea064ee4f9f4",
+    "test_path": "tests/test_unified_native_exact_grid_cpu_contract.py",
+    "test_sha256": "3ae5d066af018cfb7e1ff1c63c0705c2ff05709015b66809d27414459b63ea19",
+    "worker_path": "scripts/score_unified_native_exact_grid_cpu_v1.py",
+    "worker_sha256": "3d0184c8d3163988b64b87f8660fe6d3bea50ab7c95b96668cffe72757af69a9"
+  },
+  "status": "CPU_FROZEN_PENDING_DIRECTOR_REVIEW"
+}

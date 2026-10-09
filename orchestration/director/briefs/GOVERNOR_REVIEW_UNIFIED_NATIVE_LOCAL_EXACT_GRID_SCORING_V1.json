@@ -1,0 +1,27 @@
+{
+  "allowed_director_outcomes": ["CONTINUE_CONTROLLER", "REQUIRE_CHANGES", "PAUSED"],
+  "director_question": "Does this CPU-only correction validly score the already frozen 360 free-running predictions as Greedy Top-1 and frozen-branch Top-2 exact-grid development evidence, while deferring GPU-dependent correct-token ranking and margins? If so, authorize the exact local scoring configuration; otherwise name the smallest scientific repair.",
+  "frozen_conditions": [
+    "360 existing predictions only: six conditions by sixty episodes",
+    "raw prediction evidence SHA256 4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e",
+    "sealed grid-sidecar SHA256 a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e",
+    "no model load, GPU, generation, training, backward, Gold, dGold, or FINAL_AUDIT",
+    "target alignment remains scoring-only and cannot select, alter, or generate candidates",
+    "development cohort reuse is explicitly not independent ARC generalization"
+  ],
+  "observed_interface_finding": {
+    "actual_sidecar_bytes": "SHA verified; top-level target field is targets",
+    "actual_target_value_schema": "60 rectangular two-dimensional digit grids",
+    "legacy_scorer_expectation": "target_token_ids_by_episode",
+    "root_cause": "V2 target-aligned scorer uses a tokenizer-continuation interface that the immutable grid sidecar never provided. Remote transport was therefore not the only launch blocker."
+  },
+  "proposal": {
+    "config_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/UNIFIED_NATIVE_LOCAL_EXACT_GRID_SCORING_V1_CONFIG.json",
+    "exact_metrics": ["Greedy Top-1 exact grid", "Top-2 exact coverage"],
+    "implementation": "Parse frozen generated/alternate token IDs with the already runtime-verified native grid contract; require canonical-hash reconstruction of every greedy record; hash sealed grids only; write no target grids to results.",
+    "deferred_stage": "GPU teacher-forced correct-token ranking/margin measurements remain a separate future stage."
+  },
+  "reviewed_stage": "NATIVE_SIX_MODEL_EXACT_GRID_SCORING",
+  "review_reason": "The existing authorization covers a remote GPU token-ranking scorer with an incompatible sidecar schema. Local exact-grid scoring is a scientifically narrower executor change and requires one stage-level confirmation.",
+  "schema_version": 1
+}
