@@ -1,0 +1,46 @@
+{
+  "implemented_remediation": {
+    "RC10": "Worker atomically journals each completed compact batch without target token IDs. Outer timeout terminates the process group, releases the lock, records journal inventory and cannot label partial evidence complete. CPU tests cover journal privacy, timeout semantics, mock completion, binding consumption/source parity and prior prompt/freshness checks.",
+    "RC7": "Native prompt uses actual LF bytes and a CPU test reconstructs all 60 frozen prompt SHA256 values before tokenizer/model import.",
+    "RC8": "Freshness rejects only exact output/receipt or nonce live lock; a stable experiment parent is accepted, with duplicate output and lock tests.",
+    "RC9": "Launch execution requires an existing reviewed binding and its supplied SHA256. It validates binding schema, config and implementation hashes, exact HEAD/origin parity, the exact binding Git blob in the runtime checkout, source reachability, clean tracked checkout, input/checkpoint hashes, nonce, output, receipt, cap and subset before the worker can import a model. It never regenerates the binding during execution."
+  },
+  "previous_director_response": {
+    "decision": "REQUIRE_CHANGES",
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_PRELAUNCH_V3_RESPONSE.json",
+    "sha256": "39d352e842a37d364c9a60d197a663554dc43ed311973b4afc0aabbbe075f158"
+  },
+  "protocol_id": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1",
+  "replacement_identity": {
+    "binding_path": "experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_RUN_002_LAUNCH_BINDING_V4.json",
+    "binding_sha256": "0483f2e5bd2dade61fbe38a80e25099fc866014a235bd543c0e73a13c67236a0",
+    "config_path": "experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V4_CONFIG.json",
+    "config_sha256": "238894e8d94d9d758ec247de386734c4eb09b40e6ba203ea7aa3d6d43ef42e42",
+    "immutable_artifact_commit": "8bf284770f3126e819fb9eea949ad0e4b77598a1",
+    "runtime_rule": "At execution, LOCAL_HEAD = ORIGIN_REF = RUNPOD_CHECKOUT = one exact immutable commit containing the exact reviewed binding bytes. The binding source_code_commit and immutable_artifact_commit must be reachable ancestors; all bound implementation hashes are verified before model import.",
+    "source_code_commit": "9ae44f7fa78eae6c4a834fe8ace58e3947c65511"
+  },
+  "request": "Is exactly one detached no-update GPU measurement authorized under this replacement binding, contingent on every machine gate passing? Return CONTINUE_CONTROLLER only for that exact run, REQUIRE_CHANGES only for a concrete remaining scientific or execution-validity defect, or PAUSED with scope. No repeated review of V3 is requested.",
+  "review_reason": "One replacement prelaunch review after the consumed V3 REQUIRE_CHANGES. Scientific question and frozen conditions are unchanged; this brief addresses only RC7-RC10 execution validity defects.",
+  "stage": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_PRELAUNCH_REVIEW_V4",
+  "unchanged_scientific_conditions": {
+    "bootstrap": "10000 family-stratified replicates seed 20261010",
+    "cap_seconds": 900,
+    "checkpoints": [
+      "RECONSTRUCTED_FOUNDATION_V2_V7",
+      "FAMILY_BALANCED"
+    ],
+    "cohort": "frozen reused 60-episode synthetic DEV cohort; descriptive development evidence only, not independent ARC transfer",
+    "no_update": [
+      "no training",
+      "no optimizer",
+      "no backward",
+      "no generation",
+      "no Gold",
+      "no dGold",
+      "no FINAL_AUDIT"
+    ],
+    "primary": "length-bucketed Batch32 teacher-forced correct-token rank/margin; five equal 12-episode families",
+    "sensitivity": "fixed target-blind 12-episode Batch1 subset"
+  }
+}
