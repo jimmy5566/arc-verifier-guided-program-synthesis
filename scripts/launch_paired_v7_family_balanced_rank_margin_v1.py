@@ -38,7 +38,7 @@ def require_clean_tracked_checkout(root: Path) -> None:
 
 def verify_implementation_identity(root: Path, config: dict) -> dict:
     identity, files = config.get("implementation_identity"), config.get("implementation_files")
-    required = {"config_sha256", "contract_sha256", "runtime_contract_sha256", "launch_contract_sha256", "worker_sha256", "launcher_sha256", "postprocessor_sha256"}
+    required = {"contract_sha256", "runtime_contract_sha256", "launch_contract_sha256", "worker_sha256", "launcher_sha256", "postprocessor_sha256"}
     if not isinstance(identity, dict) or not isinstance(files, dict) or set(files) != required or not required.issubset(identity):
         raise RuntimeError("IMPLEMENTATION_IDENTITY_INCOMPLETE")
     for key, relative in files.items():
@@ -55,11 +55,11 @@ def atomic(path: Path, payload: dict) -> None:
     temporary.replace(path)
 
 
-def build_binding(*, root: Path, config: dict, sidecar: Path, output: Path, receipt: Path, expected_commit: str) -> dict:
+def build_binding(*, root: Path, config: dict, config_sha256: str, sidecar: Path, output: Path, receipt: Path, expected_commit: str) -> dict:
     launch = config.get("launch_identity")
     if not isinstance(launch, dict) or not isinstance(launch.get("nonce"), str) or len(launch["nonce"]) < 16:
         raise RuntimeError("IMMUTABLE_LAUNCH_IDENTITY_INVALID")
-    if launch.get("source_commit") != expected_commit or git_head(root) != expected_commit or git_ref(root, launch.get("origin_ref", "")) != expected_commit:
+    if git_head(root) != expected_commit or git_ref(root, launch.get("origin_ref", "")) != expected_commit:
         raise RuntimeError("SOURCE_PARITY_MISMATCH")
     require_clean_tracked_checkout(root)
     inputs = config.get("runtime_inputs", {})
@@ -83,7 +83,7 @@ def build_binding(*, root: Path, config: dict, sidecar: Path, output: Path, rece
     subset = config.get("batch1_subset_episode_ids", [])
     if not isinstance(subset, list) or len(set(subset)) != 12:
         raise RuntimeError("BATCH1_SUBSET_CONFIG_INVALID")
-    source_hashes = verify_implementation_identity(root, config)
+    source_hashes = {"config_sha256": config_sha256, **verify_implementation_identity(root, config)}
     return {
         "protocol_id": PROTOCOL,
         "source_commit": expected_commit,
@@ -133,7 +133,7 @@ def main() -> int:
     config = json.loads(args.config.read_text(encoding="utf-8"))
     if config.get("protocol_id") != PROTOCOL:
         raise RuntimeError("LAUNCH_CONFIG_PROTOCOL_INVALID")
-    binding = build_binding(root=ROOT, config=config, sidecar=args.sidecar, output=args.output, receipt=args.receipt, expected_commit=args.expected_commit)
+    binding = build_binding(root=ROOT, config=config, config_sha256=sha(args.config), sidecar=args.sidecar, output=args.output, receipt=args.receipt, expected_commit=args.expected_commit)
     if args.binding.exists():
         raise RuntimeError("BINDING_NON_OVERWRITE_REQUIRED")
     atomic(args.binding, binding)

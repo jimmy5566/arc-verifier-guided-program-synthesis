@@ -1,0 +1,97 @@
+{
+  "batch1_subset_episode_ids": [
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_TRANSLATION:003",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_TRANSLATION:007",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_RECOLOR_TRANSLATE:011",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_TRANSLATION:001",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_RECOLOR_TRANSLATE:002",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_REFLECT_RECOLOR:000",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_REFLECT_RECOLOR:011",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:PROTECTED_SAME_COLOR:000",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_REFLECTION:002",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_RECOLOR_TRANSLATE:010",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_TRANSLATION:008",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_REFLECT_RECOLOR:005"
+  ],
+  "checkpoints": {
+    "FAMILY_BALANCED": {
+      "manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9"
+    },
+    "RECONSTRUCTED_FOUNDATION_V2_V7": {
+      "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+    }
+  },
+  "comparators": [
+    "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "FAMILY_BALANCED"
+  ],
+  "implementation_files": {
+    "contract_sha256": "scripts/paired_v7_family_balanced_rank_margin_contract.py",
+    "launch_contract_sha256": "scripts/paired_rank_margin_launch_contract.py",
+    "launcher_sha256": "scripts/launch_paired_v7_family_balanced_rank_margin_v1.py",
+    "postprocessor_sha256": "scripts/postprocess_paired_v7_family_balanced_rank_margin_v1.py",
+    "runtime_contract_sha256": "scripts/paired_rank_margin_runtime_contract.py",
+    "worker_sha256": "scripts/run_paired_v7_family_balanced_rank_margin_v1.py"
+  },
+  "implementation_identity": {
+    "contract_sha256": "76e1affa726d3ac449715dde0c75e419f7a58f6e9aa66c6072f2f1f3441a45b2",
+    "launch_contract_sha256": "19174c48afb1bf3f676294e8cde4d31e9ff4ceea7ae7ff700d40247b0ea2796d",
+    "launcher_sha256": "b8df46c363c9343f5040938651129a0f6ebcbb149b3e3a27405e5aace4a0e5be",
+    "postprocessor_sha256": "143ad57b589d093b15291d1b55a8963405d195ec731ad4d00983fbadc3121920",
+    "runtime_contract_sha256": "c861682df898ce79aa52fac45185b4d20b1dd8af01d35d16b8c0c8c76f63054b",
+    "worker_sha256": "62856fe9b007d4d43facfc621c640db5e821fde351d982cdbfd9d3aacef10c1c"
+  },
+  "launch_identity": {
+    "nonce": "8f4c0e6b36bc4e8f9e8931b8f0d933a2",
+    "origin_ref": "origin/infra/arc2-dual-agent-runpod-orchestrator-v1",
+    "output_path": "/workspace/arc2/experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/run_001_8f4c0e6b36bc4e8f9e8931b8f0d933a2",
+    "receipt_path": "/workspace/arc2/experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/run_001_8f4c0e6b36bc4e8f9e8931b8f0d933a2/TERMINAL_RECEIPT.json"
+  },
+  "measurement": {
+    "bootstrap": {
+      "family_stratified": true,
+      "replicates": 10000,
+      "seed": 20261010
+    },
+    "categories": [
+      "GRID_CONTENT",
+      "ROW_SEPARATOR",
+      "EOS_END"
+    ],
+    "primary_estimand": "FAMILY_BALANCED_minus_V7 equal-family macro GRID_CONTENT correct-token Top-1, Top-2, and margin",
+    "primary_mode": "length_bucketed_BATCH32",
+    "sensitivity": "exact discrete B32/B1 agreement; continuous margin U is separately reported and expands only the margin interval",
+    "sensitivity_mode": "fixed_target_blind_BATCH1_12_episode_subset",
+    "teacher_forced": true
+  },
+  "protected_families": [
+    "PROTECTED_SAME_COLOR"
+  ],
+  "protocol_id": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1",
+  "runtime": {
+    "backward": false,
+    "cap_seconds": 900,
+    "final_audit_opened": false,
+    "fresh_output_required": true,
+    "generation": false,
+    "optimizer_steps": 0,
+    "target_token_ids_persisted": false,
+    "training": false
+  },
+  "runtime_inputs": {
+    "expected_hashes": {
+      "family_balanced_manifest": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9",
+      "input_manifest": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+      "raw_predictions": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e",
+      "v7_manifest": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+    },
+    "family_balanced_manifest_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json",
+    "input_manifest_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/SYNTHETIC_BENCHMARK_INPUT_MANIFEST_V1.json",
+    "raw_predictions_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a/RAW_UNSCORED_BATCH16.jsonl",
+    "v7_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json"
+  },
+  "scientific_scope": "reused 60-episode synthetic DEV evidence only; not independent ARC transfer evidence",
+  "sealed_sidecar_sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e",
+  "source_commit_at_cpu_freeze": "6651c414",
+  "status": "CPU_READY_EXACT_RUN_BINDING_PENDING_REVIEW"
+}
