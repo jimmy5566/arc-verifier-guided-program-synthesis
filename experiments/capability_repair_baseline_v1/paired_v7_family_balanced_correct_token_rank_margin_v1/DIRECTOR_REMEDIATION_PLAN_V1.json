@@ -1,0 +1,15 @@
+{
+  "protocol_id": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1",
+  "source_director_response_sha256": "f1af020bc72121f054bcebbf94061faf3588f8df959de86e0e0cd120b26cc01e",
+  "status": "CPU_REMEDIATION_IN_PROGRESS_NO_EXECUTION_AUTHORIZATION",
+  "frozen_scientific_conditions_retained": ["V7 versus FAMILY_BALANCED only", "same 60 reused development episodes", "B32 primary and deterministic 12-episode target-blind B1 subset", "GRID_CONTENT primary with separator/EOS separate", "equal-family macro primary", "900-second cap", "no generation/update/training/backward/Gold/dGold/FINAL_AUDIT"],
+  "required_implementation": [
+    "No-update worker, bounded launcher, immutable binding, runtime identity preflight, receipt and partial-evidence behavior.",
+    "Runtime-only sidecar serialization after SHA/mapping validation; per-tokenizer contract, disjoint masks and all-60 hash round trip before forward.",
+    "Length-bucketed B32 and B1 teacher-forced collation with masks, position IDs, causal shifting, unpadding and paired row identity.",
+    "FP32 rank/margin extraction from BF16 logits, first-free-running-error metrics and complete paired result schema.",
+    "Family-stratified 10,000-replicate paired bootstrap at seed 20261010, sensitivity U expansion and ordered classifications.",
+    "Synthetic CPU tests for shifts, padding, ties, masks, pairing, sensitivity, bootstrap, caps, duplicate output and atomic failure receipts."
+  ],
+  "execution_boundary": "No model load, sidecar token conversion, remote job, or GPU inference until a corrected immutable executable package receives one new Director prelaunch decision."
+}

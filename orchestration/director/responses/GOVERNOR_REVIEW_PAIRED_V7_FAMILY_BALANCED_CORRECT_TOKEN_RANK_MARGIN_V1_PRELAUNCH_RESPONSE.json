@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "reviewed_brief": "orchestration/director/briefs/GOVERNOR_REVIEW_PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_PRELAUNCH.json",
+  "reviewed_brief_sha256": "02f5feb7f82461b02f12e29a9f63ca3cd05dbfbbda6dcfc1f8bc01580c8b55a8",
+  "decision": "REQUIRE_CHANGES",
+  "scientific_assessment": "The two-checkpoint paired ranking/margin question remains the smallest scientifically useful next diagnostic, and its frozen cohort, comparators, token categories, primary aggregation, and no-update scope are appropriate. The submitted package is not executable or statistically closed enough for GPU launch: it contains only a config, a pure contract module, and four unit tests, while the numerical sensitivity gate requires exact floating-point margin equality and the qualitative decision labels lack a frozen quantitative rule.",
+  "root_cause": [
+    {
+      "id": "RC1_EXECUTION_PACKAGE_ABSENT",
+      "finding": "No scoring worker, bounded launcher, launch binding, runtime identity preflight, result schema, terminal receipt path, or partial-evidence behavior exists for the proposed stage. The brief therefore cannot bind an actual command that performs the claimed B32/B1 measurements.",
+      "impact": "There is no auditable executable to authorize, and the 900-second cap, no-update boundary, checkpoint identities, batching semantics, and failure behavior are not enforced."
+    },
+    {
+      "id": "RC2_NUMERICAL_SENSITIVITY_RULE_INVALID",
+      "finding": "sensitivity_gate compares floating-point grid-content mean margins and first-error margins with exact Python inequality. Any harmless BF16 batching perturbation fails the stage even when correct-token ranks and scientific conclusions are unchanged.",
+      "impact": "The diagnostic may become inconclusive for a numerical artifact unrelated to the mechanistic claim, contrary to the requirement that only material prediction or metric drift fail closed."
+    },
+    {
+      "id": "RC3_DECISION_RULE_UNDERDEFINED",
+      "finding": "Terms such as robust positive, nonpositive, and inconclusive are not bound to a resampling method, seed, interval construction, paired estimand, numerical-sensitivity adjustment, or ordered classification rule.",
+      "impact": "The scientific interpretation could be chosen after observing the result."
+    },
+    {
+      "id": "RC4_BATCH_AND_ALIGNMENT_GATES_NOT_IMPLEMENTED",
+      "finding": "The contract defines serialization but does not implement or test length-bucketed B32 collation, attention masks, position IDs, causal-logit shift, per-example unpadding, correct-token rank/margin extraction, first-free-running-error lookup, or exact B1 subset measurement for both checkpoints. fixed_batch1_subset also collapses repeated condition rows without explicitly rejecting inconsistent prompt hashes across checkpoints.",
+      "impact": "A padding, position, shift, or episode-pairing defect could produce plausible but incorrect token ranks and margins."
+    }
+  ],
+  "smallest_repair": [
+    "Keep exactly V7 versus FAMILY_BALANCED, the same 60 episodes, B32 primary, the fixed target-blind 12-episode B1 subset, GRID_CONTENT/ROW_SEPARATOR/EOS_END separation, equal-family macro primary aggregation, pooled token-micro secondary reporting, 900-second total cap, and all current prohibitions.",
+    "Add one no-update worker, one bounded launcher, one immutable launch binding with a fresh nonce/output root, and one runtime identity preflight. Bind exact source commit; V7 and FAMILY_BALANCED base/adapter/tokenizer/config manifests and every listed file hash; raw, input-manifest, sidecar, and exact-grid-result SHA256 values; B32 batching; B1 subset IDs; output and receipt paths; and total runtime cap. Require local equals origin equals RunPod checkout, fresh output, duplicate guard, atomic terminal receipt, and preserved partial diagnostic evidence on failure or timeout.",
+    "Implement target-grid serialization only after sidecar SHA and exact 60-ID validation. Verify each tokenizer's digit, newline, EOS/end contract, disjoint exhaustive token-category masks, and round-trip canonical grid hash for all 60 episodes before model forward. Do not emit target grids or target token IDs in committed artifacts.",
+    "Implement length-bucketed B32 teacher-forced forwards with explicit attention masks, position IDs, causal shift, per-example boundaries, and FP32 rank/margin arithmetic over BF16 model logits. Require exactly 60 paired rows per checkpoint and identical episode, family, prompt, target-layout, and first-error mappings across checkpoints.",
+    "Strengthen fixed_batch1_subset input validation: require exactly the two named checkpoint rows for every one of 60 episode IDs and one identical nonempty prompt SHA256 per episode before deterministic target-blind selection.",
+    "Replace exact floating-point equality with a two-part sensitivity rule: correct-token ranks, Top-1/Top-2 indicators, first-error position, parser status, and row counts must match B1 exactly on the fixed subset; define U as the maximum absolute B32-versus-B1 change in the paired FAMILY_BALANCED-minus-V7 margin delta on that subset. Expand the paired margin-effect interval by plus or minus U, label it sensitivity-adjusted rather than guaranteed coverage, and return INCONCLUSIVE whenever the scientific sign could reverse. Record raw B32 and B1 margins separately.",
+    "Freeze a family-stratified paired bootstrap over episodes with seed 20261010 and 10000 replicates. For each checkpoint difference, compute the equal-family macro of paired per-episode GRID_CONTENT Top-1 rate, Top-2 rate, and mean margin; report pooled token-micro, five family cells, separator/EOS results, and exposed exact-outcome groups only as secondary descriptive analyses.",
+    "Freeze the ordered interpretation rule before execution: identity, round-trip, completeness, runtime, or discrete B32/B1 mismatch yields INCONCLUSIVE_INVALID; otherwise a sensitivity-adjusted interval strictly above zero for GRID_CONTENT Top-1 together with nonnegative Top-2 and margin intervals yields LOCAL_RANKING_IMPROVED_BUT_EXACT_NOT_IMPROVED; intervals with no positive Top-1 or margin evidence yield RANKING_NOT_IMPROVED; a negative protected-family interval yields FAMILY_SPECIFIC_RANKING_HARM regardless of pooled improvement; all remaining patterns yield INCONCLUSIVE_MIXED_EVIDENCE.",
+    "Add CPU tests using synthetic logits that exercise causal-shift correctness, padding/position isolation, B32 unpadding, tied ranks, target category masks, first-error alignment, exact two-checkpoint prompt pairing, discrete sensitivity failure, numerical U expansion, family-stratified bootstrap determinism, runtime cap, duplicate/fresh-output gates, and atomic failure receipts. Return one corrected prelaunch brief bound to the exact executable hashes."
+  ],
+  "frozen_conditions": [
+    "The scientific question remains whether FAMILY_BALANCED improved local correct target-token decisions relative to V7 despite lower frozen Greedy exact-grid accuracy.",
+    "Only RECONSTRUCTED_FOUNDATION_V2_V7 and FAMILY_BALANCED may be measured on the same 60 reused development episodes; no checkpoint, episode, or target-informed subset may be added.",
+    "GRID_CONTENT is the primary token category; ROW_SEPARATOR and EOS_END remain separate descriptive categories.",
+    "The primary estimands are paired FAMILY_BALANCED-minus-V7 equal-family macros; pooled token-micro results cannot replace them.",
+    "No generation, update, candidate selection, target-informed adaptation, Gold, dGold, FINAL_AUDIT, or causal gradient claim is permitted."
+  ],
+  "forbidden_actions": [
+    "Do not launch GPU inference or load a model from this response.",
+    "Do not change the two checkpoints, 60-episode cohort, target-blind B1 subset rule, token categories, primary aggregation, or 900-second cap.",
+    "Do not select episodes using already exposed exact-grid correctness or tune numerical/statistical thresholds after observing model measurements.",
+    "Do not train, construct an optimizer, run backward, mutate checkpoints, generate candidates, or perform target-informed selection.",
+    "Do not emit or commit sealed target grids or target token sequences, and do not access Gold, dGold, or FINAL_AUDIT."
+  ],
+  "another_review_required": true,
+  "next_review_scope": "One corrected prelaunch review of the complete executable package is required before any sidecar tokenization, model load, or GPU execution.",
+  "gpu_inference_authorized": false,
+  "model_loading_authorized": false,
+  "scientific_training_authorized": false
+}
