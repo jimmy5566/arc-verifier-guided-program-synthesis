@@ -89,8 +89,13 @@ def route_bounded_infrastructure_pause(state, state_path):
         return False
     if state.get('remote_job') or state.get('active_remote_job'):
         return False
-    failure = str(state.get('infra_failure_class') or '').upper()
-    if not failure.startswith(('INFRA_', 'INFRASTRUCTURE_', 'DETACHED_LAUNCH_', 'REMOTE_PROCESS_DIED_', 'RUNPOD_')):
+    failure = str(state.get('infra_failure_class') or state.get('failure_class') or '').upper()
+    prefixes = ('INFRA_', 'INFRASTRUCTURE_', 'DETACHED_LAUNCH_', 'REMOTE_PROCESS_DIED_', 'RUNPOD_')
+    if not failure.startswith(prefixes) and reason.startswith(prefixes):
+        failure = reason
+    if not failure.startswith(prefixes) and state.get('remote_completion_status') == 'PROCESS_DEAD' and state.get('remote_failure_receipt'):
+        failure = 'REMOTE_PROCESS_DIED_WITHOUT_RECEIPT'
+    if not failure.startswith(prefixes):
         return False
     incident = str(state.get('infra_failure_receipt') or state.get('remote_failure_receipt') or failure)
     if state.get('infra_recovery_incident') != incident:
