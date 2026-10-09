@@ -1,8 +1,7 @@
-"""Thin persistent ARC2 workflow runner.
+"""Deprecated ARC2 runner.
 
-Only schedules the four high-level workflow states.  Controller owns science;
-Director is called synchronously by Controller; Supervisor remains a receipt
-utility for detached RunPod jobs.
+Governor is the only live scheduler. This historical runner must not schedule
+Controller concurrently with scripts/arc2_governor.py.
 """
 from __future__ import annotations
 import argparse, json, os, subprocess, sys, time
@@ -57,6 +56,8 @@ def step(state_path:Path,controller:str,receipt_root:Path,timeout:int)->str:
  if agent_status=="working":return "CONTROLLER_BUSY"
  prompt_controller(target,state_path,timeout);return "CONTROLLER_TURN"
 def main()->int:
+ print("ARC2_RUNNER_DEPRECATED_USE_ARC2_GOVERNOR", file=sys.stderr); return 2
+ # Historical implementation retained below as provenance only.
  p=argparse.ArgumentParser();p.add_argument("--state",type=Path,required=True);p.add_argument("--receipt-root",type=Path,required=True);p.add_argument("--controller-agent",default="arc-controller");p.add_argument("--turn-timeout-seconds",type=int,default=180);p.add_argument("--remote-poll-seconds",type=float,default=300);p.add_argument("--once",action="store_true");a=p.parse_args()
  while True:
   result=step(a.state,a.controller_agent,a.receipt_root,a.turn_timeout_seconds)

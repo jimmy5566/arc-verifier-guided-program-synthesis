@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 DISPOSITIONS={"CONTINUE_CONTROLLER","REVIEW_REQUIRED","WAIT_REMOTE","PAUSED","TERMINAL"}
 DIRECTOR_DECISIONS={
-    "CONTINUE_CONTROLLER", "REQUIRE_CHANGES", "PAUSED", "TERMINAL",
+    "CONTINUE_CONTROLLER", "CONTINUE_DIRECTOR", "REQUIRE_CHANGES", "PAUSED", "TERMINAL",
     # A postmortem may request a bounded scientific disposition rather than
     # an experiment-wide stop.  These choices never authorize a GPU launch.
     "NEW_R3_PROTOCOL_RECOMMENDED", "STOP_TARGETED_REPAIR_APPROACH",
@@ -99,10 +99,10 @@ def terminal_scope(response):
     return 'UNSPECIFIED'
 
 def route_stage_scoped_stop(state, response):
-    """Close only the reviewed route and permit CPU-only successor preparation."""
-    state.update({'disposition':'CONTINUE_CONTROLLER',
-                  'stage':'POST_STAGE_A_SUCCESSOR_PROTOCOL_PREPARATION',
-                  'next_action':'PREPARE_NEW_ATOMIC_PREREQUISITE_RESEARCH_PROPOSAL_CPU_ONLY',
+    """Close only the reviewed route; a successor requires a new scientific brief."""
+    state.update({'disposition':'PAUSED',
+                  'next_action':'STAGE_STOPPED_AWAITING_SCIENTIFIC_REPLANNING',
+                  'pause_reason':'STAGE_SCOPED_STOP_REQUIRES_NEW_REVIEW_BRIEF',
                   'remediation_required':False,
                   'terminal':False, 'experiment_terminal':False,
                   'terminal_scope':'CURRENT_PROTOCOL',
@@ -110,6 +110,24 @@ def route_stage_scoped_stop(state, response):
                   'scientific_training_authorized':False,
                   'stage_b_authorized':False, 'r3_authorized':False,
                   'stopped_route':response.get('scope') or response.get('scientific_outcome')})
+
+def bind_replanning_review(state, state_path, brief, brief_sha256, reason, priority):
+    """A user-originated scientific priority can reopen a blocked stage only as review."""
+    if state.get('experiment_terminal') or state.get('terminal'):
+        raise RuntimeError('TERMINAL_REPLANNING_FORBIDDEN')
+    if state.get('remote_job') or state.get('active_remote_job'):
+        raise RuntimeError('REMOTE_JOB_REPLANNING_FORBIDDEN')
+    candidate=Path(brief)
+    if not reason or not candidate.is_file() or sha256_file(candidate) != brief_sha256:
+        raise RuntimeError('REPLANNING_BRIEF_BINDING_INVALID')
+    state.update({'disposition':'REVIEW_REQUIRED','stage':'MODEL_CAPABILITY_IMPROVEMENT_FIRST_REPLANNING',
+                  'next_action':'DIRECTOR_MODEL_CAPABILITY_IMPROVEMENT_FIRST_REVIEW',
+                  'review_brief':str(candidate.resolve()),'review_brief_sha256':brief_sha256,
+                  'review_reason':reason,'pause_reason':None,'terminal':False,'experiment_terminal':False,
+                  'scientific_priority':priority,'scientific_training_authorized':False,
+                  'gpu_inference_authorized':False,'model_loading_authorized':False,
+                  'last_actor':'controller','updated_at':now()})
+    atomic(state_path,state)
 
 def reconcile_consumed_stage_terminal(state, state_path):
     """One-time repair for an old Governor that widened a consumed stage stop."""
@@ -150,7 +168,30 @@ def route_director_response(state, state_path, response_path, response, response
     # A consumed review brief is immutable historical evidence; never route it back into REVIEW_REQUIRED.
     state['review_brief']=None; state['review_reason']=None
     if decision == 'CONTINUE_CONTROLLER':
-        state.update({'disposition':'CONTINUE_CONTROLLER', 'next_action':state.get('authorized_continuation') or 'CONTINUE_AFTER_DIRECTOR_REVIEW', 'remediation_required':False})
+        reviewed_stage=response.get('next_stage') or response.get('reviewed_stage')
+        next_action=response.get('next_action') or response.get('controller_next_action')
+        if not reviewed_stage or not next_action:
+            state.update({'disposition':'PAUSED','next_action':'DIRECTOR_CONTINUATION_FIELDS_MISSING',
+                          'pause_reason':'DIRECTOR_CONTINUE_CONTROLLER_REQUIRES_EXPLICIT_STAGE_AND_NEXT_ACTION',
+                          'remediation_required':False})
+        else:
+            state.update({'disposition':'CONTINUE_CONTROLLER','stage':reviewed_stage,'next_action':next_action,
+                          'remediation_required':False,'authorized_continuation':None,'pause_reason':None})
+    elif decision == 'CONTINUE_DIRECTOR':
+        successor=response.get('next_review_brief') or response.get('successor_review_brief')
+        successor_sha=response.get('next_review_brief_sha256') or response.get('successor_review_brief_sha256')
+        reason=response.get('next_review_reason') or response.get('successor_review_reason')
+        if not successor or not successor_sha or not reason:
+            state.update({'disposition':'PAUSED','next_action':'DIRECTOR_CONTINUE_DIRECTOR_FIELDS_MISSING',
+                          'pause_reason':'DIRECTOR_CONTINUE_DIRECTOR_REQUIRES_NEW_BOUND_BRIEF',
+                          'remediation_required':False})
+        elif successor_sha == brief_sha256:
+            state.update({'disposition':'PAUSED','next_action':'DIRECTOR_CONTINUE_DIRECTOR_REUSED_BRIEF',
+                          'pause_reason':'DIRECTOR_CONTINUE_DIRECTOR_REQUIRES_NEW_BRIEF_SHA256',
+                          'remediation_required':False})
+        else:
+            bind_replanning_review(state,state_path,successor,successor_sha,reason,'DIRECTOR_CONTINUATION')
+            return
     elif decision == 'REQUIRE_CHANGES':
         state.update({'disposition':'CONTINUE_CONTROLLER', 'next_action':'APPLY_DIRECTOR_REMEDIATION', 'remediation_required':True,
                       'director_remediation':response.get('smallest_repair') or response.get('controller_resolution_plan')})
@@ -200,7 +241,7 @@ def director(s,p,timeout):
                    'For NEW_R3_PROTOCOL_RECOMMENDED, specify every field required by the brief. '
                    'For RUN_ONE_DIAGNOSTIC_BEFORE_DECIDING, specify exactly one diagnostic and its decision rule. ')
     else:
-        directive=('Choose one of CONTINUE_CONTROLLER, REQUIRE_CHANGES, PAUSED, or TERMINAL. '
+        directive=('Choose one of CONTINUE_CONTROLLER, CONTINUE_DIRECTOR, REQUIRE_CHANGES, PAUSED, or TERMINAL. CONTINUE_CONTROLLER requires explicit next_stage and next_action. CONTINUE_DIRECTOR requires next_review_brief, next_review_brief_sha256, and next_review_reason. '
                    'REQUIRE_CHANGES must state root cause, smallest repair, frozen conditions, forbidden actions, and whether another review is required. ')
     response_path=response_directory(p) / f"{Path(brief).stem}_RESPONSE.json"
     request=(f'ARC2 Governor review. Read {brief}. Write exactly one structured JSON response to {response_path}. '

@@ -41,11 +41,11 @@ class GovernorDirectorRoutingTests(unittest.TestCase):
 
     def test_stage_scoped_terminal_keeps_program_open_for_cpu_only_successor_prep(self) -> None:
         state=self._terminal_case({'stage_a_anti_forgetting_route':'CLOSED','entire_arc2_research_program':'NOT_DECLARED_TERMINAL'})
-        self.assertEqual(state['disposition'],'CONTINUE_CONTROLLER')
+        self.assertEqual(state['disposition'],'PAUSED')
         self.assertFalse(state['experiment_terminal'])
         self.assertFalse(state['terminal'])
         self.assertEqual(state['terminal_scope'],'CURRENT_PROTOCOL')
-        self.assertEqual(state['next_action'],'PREPARE_NEW_ATOMIC_PREREQUISITE_RESEARCH_PROPOSAL_CPU_ONLY')
+        self.assertEqual(state['next_action'],'STAGE_STOPPED_AWAITING_SCIENTIFIC_REPLANNING')
 
     def test_entire_experiment_terminal_requires_explicit_scope(self) -> None:
         state=self._terminal_case('ENTIRE_EXPERIMENT')
@@ -63,7 +63,7 @@ class GovernorDirectorRoutingTests(unittest.TestCase):
             state={'disposition':'TERMINAL','director_decision':'TERMINAL','director_response_path':str(response_path),'director_response_sha256':digest,'terminal':True,'experiment_terminal':True,'consumed_director_responses':{digest:{'decision':'TERMINAL'}}}
             self.assertTrue(governor.reconcile_consumed_stage_terminal(state,state_path))
             saved=governor.load(state_path)
-            self.assertEqual(saved['disposition'],'CONTINUE_CONTROLLER')
+            self.assertEqual(saved['disposition'],'PAUSED')
             self.assertFalse(saved['experiment_terminal'])
             self.assertEqual(len(saved['consumed_director_responses']),1)
 

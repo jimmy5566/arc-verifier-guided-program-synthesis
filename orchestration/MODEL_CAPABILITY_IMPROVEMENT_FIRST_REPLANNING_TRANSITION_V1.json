@@ -1,0 +1,23 @@
+{
+  "active_remote_job": null,
+  "authorized_transition": "REVIEW_REQUIRED_ONLY",
+  "forbidden_during_transition": [
+    "model_loading",
+    "GPU",
+    "candidate_generation",
+    "training",
+    "optimizer",
+    "backward",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT"
+  ],
+  "owner_priority": "MODEL_CAPABILITY_IMPROVEMENT_FIRST",
+  "prior_exposure_audit_path": "experiments\\capability_repair_baseline_v1\\cpu_only_prospective_target_blind_beam4_selector_protocol_v1\\PROJECT_WIDE_EXPOSURE_AUDIT.json",
+  "prior_exposure_audit_sha256": "b2070446da2c77a795aff2ce419da8bb03703a8513ace03996770d0179b640c6",
+  "prior_pause_reason": "PAUSED_NO_UNEXPOSED_SELECTOR_EVALUATION_COHORT",
+  "prior_stage": "CPU_ONLY_PROSPECTIVE_TARGET_BLIND_BEAM4_SELECTOR_PROTOCOL_V1",
+  "schema_version": 1,
+  "selector_stage_preserved_blocked": true,
+  "transition_id": "MODEL_CAPABILITY_IMPROVEMENT_FIRST_REPLANNING_TRANSITION_V1"
+}
