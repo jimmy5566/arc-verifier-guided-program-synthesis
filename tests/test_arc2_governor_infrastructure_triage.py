@@ -83,6 +83,24 @@ class GovernorInfrastructureTriageTests(unittest.TestCase):
                 self.assertFalse(governor.route_bounded_infrastructure_pause(state, path), name)
                 self.assertEqual(governor.load(path)["disposition"], "PAUSED", name)
 
+    def test_remote_pid_dead_receipt_is_sufficient_if_pause_unclassified(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path, state = self.fixture(Path(tmp), infra_failure_class=None,
+                                       remote_completion_status="PROCESS_DEAD",
+                                       remote_failure_receipt="machine-receipt.json")
+            self.assertTrue(governor.route_bounded_infrastructure_pause(state, path))
+            self.assertEqual(governor.load(path)["disposition"], "CONTINUE_CONTROLLER")
+            self.assertFalse(governor.load(path)["gpu_inference_authorized"])
+
+    def test_stage_scoped_scientific_pause_overrides_stale_remote_death(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path, state = self.fixture(Path(tmp), infra_failure_class=None,
+                                       pause_reason="STAGE_SCOPED_STOP_REQUIRES_NEW_REVIEW_BRIEF",
+                                       remote_completion_status="PROCESS_DEAD",
+                                       remote_failure_receipt="old-incident.json")
+            self.assertFalse(governor.route_bounded_infrastructure_pause(state, path))
+            self.assertEqual(governor.load(path)["disposition"], "PAUSED")
+
     def test_new_incident_resets_only_the_bounded_cpu_turn_counter(self):
         with tempfile.TemporaryDirectory() as tmp:
             path, state = self.fixture(Path(tmp), infra_recovery_incident="failed-run-000.json", infra_cpu_requeues=2)
