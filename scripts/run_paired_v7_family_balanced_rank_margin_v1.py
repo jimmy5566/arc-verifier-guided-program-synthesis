@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from scripts.arc2_token_grid_parser import tokenizer_token_contract
-from scripts.paired_rank_margin_launch_contract import CAP_SECONDS, atomic, failure_receipt, require_launch
+from scripts.paired_rank_margin_launch_contract import CAP_SECONDS, atomic, failure_receipt, release_live_lock, require_launch
 from scripts.paired_rank_margin_runtime_contract import extract_target_logit_indices, left_pad_teacher_forced, require_complete_paired_rows
 from scripts.paired_v7_family_balanced_rank_margin_contract import require_layout, require_two_checkpoint_prompt_pairing, serialize_native_grid_target
 
@@ -37,18 +37,18 @@ def native_grid(grid: list[list[int]]) -> str:
     width = len(grid[0])
     if any(len(row) != width or any(type(value) is not int or not 0 <= value <= 9 for value in row) for row in grid):
         raise RuntimeError("INVALID_NATIVE_GRID")
-    return "\\n".join("".join(str(value) for value in row) for row in grid)
+    return "\n".join("".join(str(value) for value in row) for row in grid)
 
 
 def native_prompt(task: dict) -> str:
     pieces: list[str] = []
     for pair in task["train"]:
-        pieces.extend((f"<|im_start|>user\\n{native_grid(pair['input'])}<|im_end|>", f"<|im_start|>assistant\\n{native_grid(pair['output'])}<|im_end|>"))
+        pieces.extend((f"<|im_start|>user\n{native_grid(pair['input'])}<|im_end|>", f"<|im_start|>assistant\n{native_grid(pair['output'])}<|im_end|>"))
     for pair in task["test"]:
         if "output" in pair:
             raise RuntimeError("SEALED_TARGET_LEAK")
-        pieces.append(f"<|im_start|>user\\n{native_grid(pair['input'])}<|im_end|>")
-    return "".join(pieces) + "<|im_start|>assistant\\n"
+        pieces.append(f"<|im_start|>user\n{native_grid(pair['input'])}<|im_end|>")
+    return "".join(pieces) + "<|im_start|>assistant\n"
 
 
 def load_json(path: Path) -> dict:
@@ -82,11 +82,25 @@ def select_raw_pairs(raw_path: Path) -> dict[str, dict]:
     return {episode_id: {"prompt_sha256": prompts[episode_id], "raw": {condition: by_condition[condition][episode_id] for condition in CONDITIONS}} for episode_id in prompts}
 
 
+def validate_prompt_reconstruction(input_manifest: dict, raw_pairs: dict[str, dict]) -> None:
+    """Byte-check all frozen prompts before tokenizer/model import."""
+    episodes = input_manifest.get("episodes")
+    if not isinstance(episodes, list) or len(episodes) != 60:
+        raise RuntimeError("PROMPT_RECONSTRUCTION_EPISODE_COUNT_INVALID")
+    for episode in episodes:
+        episode_id, task = episode.get("episode_id"), episode.get("observation", {}).get("task")
+        if not isinstance(episode_id, str) or episode_id not in raw_pairs or not isinstance(task, dict):
+            raise RuntimeError("PROMPT_RECONSTRUCTION_MAPPING_INVALID")
+        if hashlib.sha256(native_prompt(task).encode("utf-8")).hexdigest() != raw_pairs[episode_id]["prompt_sha256"]:
+            raise RuntimeError("PROMPT_RECONSTRUCTION_HASH_MISMATCH")
+
+
 def runtime_rows(input_manifest: dict, sidecar: dict, raw_pairs: dict[str, dict], tokenizer) -> list[dict]:
     """Runtime-only target serialization after sidecar/map identity checks."""
     episodes, targets = input_manifest.get("episodes"), sidecar.get("targets")
     if not isinstance(episodes, list) or len(episodes) != 60 or not isinstance(targets, dict) or len(targets) != 60:
         raise RuntimeError("SEALED_RUNTIME_MAPPING_INVALID")
+    validate_prompt_reconstruction(input_manifest, raw_pairs)
     contract = tokenizer_token_contract(tokenizer, eos_token_id=15, pad_token_id=13)
     output = []
     for episode in episodes:
@@ -187,8 +201,11 @@ def main() -> int:
     if not required.issubset(binding) or binding["protocol_id"] != PROTOCOL:
         raise RuntimeError("LAUNCH_BINDING_SCHEMA_INVALID")
     paths = {key: Path(value) for key, value in binding["input_paths"].items()}
+    live_lock = args.output.parent / f".{binding.get('nonce', 'missing')}.live.lock"
+    lock_held = False
     try:
-        require_launch(output=args.output, receipt=args.receipt, cap_seconds=args.runtime_seconds, expected_hashes=binding["expected_hashes"], actual_paths=paths)
+        require_launch(output=args.output, receipt=args.receipt, cap_seconds=args.runtime_seconds, expected_hashes=binding["expected_hashes"], actual_paths=paths, live_lock=live_lock)
+        lock_held = True
         if binding["runtime_cap_seconds"] != CAP_SECONDS or args.runtime_seconds != CAP_SECONDS:
             raise RuntimeError("BINDING_RUNTIME_CAP_DRIFT")
         raw_pairs, input_manifest, sidecar, manifests = runtime_preflight(binding)
@@ -224,6 +241,9 @@ def main() -> int:
         if not args.receipt.exists():
             failure_receipt(receipt=args.receipt, reason=str(exc))
         raise
+    finally:
+        if lock_held:
+            release_live_lock(live_lock)
 
 
 if __name__ == "__main__":

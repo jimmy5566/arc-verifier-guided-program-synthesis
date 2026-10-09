@@ -1,7 +1,7 @@
 from __future__ import annotations
 import hashlib,json,subprocess,sys,tempfile,unittest
 from pathlib import Path
-from scripts.run_paired_v7_family_balanced_rank_margin_v1 import first_free_running_error
+from scripts.run_paired_v7_family_balanced_rank_margin_v1 import first_free_running_error, select_raw_pairs, validate_prompt_reconstruction
 class WorkerEntryTests(unittest.TestCase):
  def test_missing_binding_fails_before_model_import(self):
   with tempfile.TemporaryDirectory() as d:
@@ -26,4 +26,9 @@ class WorkerEntryTests(unittest.TestCase):
   row={'target_ids':[1,2,15],'free_running':{'RECONSTRUCTED_FOUNDATION_V2_V7':{'generated_token_ids':[1,2,15],'parse_valid':True},'FAMILY_BALANCED':{'generated_token_ids':[1,9,15],'parse_valid':False,'parse_reason':'INVALID_ARC_GRID'}}}
   self.assertEqual(first_free_running_error(row,'RECONSTRUCTED_FOUNDATION_V2_V7'),(None,'PARSE_VALID'))
   self.assertEqual(first_free_running_error(row,'FAMILY_BALANCED'),(1,'PARSE_INVALID:INVALID_ARC_GRID'))
+ def test_all_60_frozen_native_prompts_reconstruct_byte_exactly(self):
+  root=Path(__file__).resolve().parents[1]
+  raw=root/'experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a/RAW_UNSCORED_BATCH16.jsonl'
+  manifest=root/'experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/SYNTHETIC_BENCHMARK_INPUT_MANIFEST_V1.json'
+  validate_prompt_reconstruction(json.loads(manifest.read_text(encoding='utf8')),select_raw_pairs(raw))
 if __name__=='__main__':unittest.main()
