@@ -1,6 +1,7 @@
 from __future__ import annotations
 import hashlib,json,subprocess,sys,tempfile,unittest
 from pathlib import Path
+from scripts.run_paired_v7_family_balanced_rank_margin_v1 import first_free_running_error
 class WorkerEntryTests(unittest.TestCase):
  def test_missing_binding_fails_before_model_import(self):
   with tempfile.TemporaryDirectory() as d:
@@ -21,4 +22,8 @@ class WorkerEntryTests(unittest.TestCase):
    r=subprocess.run([sys.executable,'scripts/run_paired_v7_family_balanced_rank_margin_v1.py','--binding',str(bp),'--output',str(output),'--receipt',str(receipt)],capture_output=True,text=True)
    self.assertNotEqual(r.returncode,0);self.assertIn('LAUNCH_IDENTITY_MISMATCH',r.stderr)
    saved=json.loads(receipt.read_text(encoding='utf8'));self.assertEqual(saved['status'],'FAILED_NO_UPDATE');self.assertEqual(saved['optimizer_steps'],0);self.assertFalse(saved['generation'])
+ def test_first_error_uses_each_checkpoint_own_frozen_continuation(self):
+  row={'target_ids':[1,2,15],'free_running':{'RECONSTRUCTED_FOUNDATION_V2_V7':{'generated_token_ids':[1,2,15],'parse_valid':True},'FAMILY_BALANCED':{'generated_token_ids':[1,9,15],'parse_valid':False,'parse_reason':'INVALID_ARC_GRID'}}}
+  self.assertEqual(first_free_running_error(row,'RECONSTRUCTED_FOUNDATION_V2_V7'),(None,'PARSE_VALID'))
+  self.assertEqual(first_free_running_error(row,'FAMILY_BALANCED'),(1,'PARSE_INVALID:INVALID_ARC_GRID'))
 if __name__=='__main__':unittest.main()

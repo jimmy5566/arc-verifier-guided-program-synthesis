@@ -19,7 +19,7 @@ sys.path.insert(0, str(ROOT))
 
 from scripts.arc2_token_grid_parser import tokenizer_token_contract
 from scripts.paired_rank_margin_launch_contract import CAP_SECONDS, atomic, failure_receipt, require_launch
-from scripts.paired_rank_margin_runtime_contract import correct_token_metrics, left_pad_teacher_forced, require_complete_paired_rows, slice_teacher_forced_logits
+from scripts.paired_rank_margin_runtime_contract import extract_target_logit_indices, left_pad_teacher_forced, require_complete_paired_rows
 from scripts.paired_v7_family_balanced_rank_margin_contract import require_layout, require_two_checkpoint_prompt_pairing, serialize_native_grid_target
 
 PROTOCOL = "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1"
@@ -118,14 +118,19 @@ def component_name(row: dict, target_index: int) -> str:
     return matches[0]
 
 
-def first_free_running_error(row: dict) -> int | None:
-    generated = row["free_running"]["RECONSTRUCTED_FOUNDATION_V2_V7"].get("generated_token_ids")
+def first_free_running_error(row: dict, condition: str) -> tuple[int | None, str]:
+    """Find each checkpoint's own frozen free-running error location."""
+    frozen = row["free_running"].get(condition)
+    if not isinstance(frozen, dict):
+        raise RuntimeError("FROZEN_GENERATION_CONDITION_INVALID")
+    generated = frozen.get("generated_token_ids")
     if not isinstance(generated, list):
         raise RuntimeError("FROZEN_GENERATION_EVIDENCE_INVALID")
+    parser_status = "PARSE_VALID" if frozen.get("parse_valid") is True else f"PARSE_INVALID:{frozen.get('parse_reason') or 'UNSPECIFIED'}"
     for index, target in enumerate(row["target_ids"]):
         if index >= len(generated) or generated[index] != target:
-            return index
-    return None if len(generated) == len(row["target_ids"]) else len(row["target_ids"])
+            return index, parser_status
+    return (None if len(generated) == len(row["target_ids"]) else len(row["target_ids"])), parser_status
 
 
 def score_batches(model, rows: list[dict], torch, condition: str, mode_id: str, deadline: float) -> list[dict]:
@@ -135,18 +140,30 @@ def score_batches(model, rows: list[dict], torch, condition: str, mode_id: str, 
             if time.monotonic() >= deadline:
                 raise RuntimeError("RUNTIME_CAP_REACHED")
             packed = left_pad_teacher_forced(group, pad_token_id=13)
-            logits = model(input_ids=torch.tensor(packed["input_ids"], device="cuda:0"), attention_mask=torch.tensor(packed["attention_mask"], device="cuda:0"), position_ids=torch.tensor(packed["position_ids"], device="cuda:0"), use_cache=False).logits.float()
-            for row, token_logits in zip(group, slice_teacher_forced_logits(logits.detach().cpu().tolist(), packed["boundaries"])):
-                if len(token_logits) != len(row["target_ids"]):
+            logits = model(input_ids=torch.tensor(packed["input_ids"], device="cuda:0"), attention_mask=torch.tensor(packed["attention_mask"], device="cuda:0"), position_ids=torch.tensor(packed["position_ids"], device="cuda:0"), use_cache=False).logits
+            for row_index, (row, boundary) in enumerate(zip(group, packed["boundaries"])):
+                positions = extract_target_logit_indices(boundary)
+                if len(positions) != len(row["target_ids"]):
                     raise RuntimeError("TARGET_LOGIT_LENGTH_MISMATCH")
+                # Do not materialize BxSxV logits on CPU.  Select only causal
+                # target positions on-device and transfer scalar rank/margins.
+                selected = logits[row_index].index_select(0, torch.tensor(positions, device=logits.device)).float()
+                targets = torch.tensor(row["target_ids"], device=selected.device, dtype=torch.long)
+                correct = selected.gather(1, targets.unsqueeze(1)).squeeze(1)
+                ranks = (selected > correct.unsqueeze(1)).sum(dim=1).add(1)
+                incorrect = selected.clone()
+                incorrect.scatter_(1, targets.unsqueeze(1), float("-inf"))
+                margins = correct - incorrect.max(dim=1).values
+                rank_values, margin_values = ranks.detach().cpu().tolist(), margins.detach().cpu().tolist()
                 components = {name: {"token_count": 0, "correct_top1_count": 0, "correct_top2_count": 0, "margin_sum": 0.0} for name in COMPONENTS}
-                error_index, error = first_free_running_error(row), None
-                for target_index, (logit_vector, target_id) in enumerate(zip(token_logits, row["target_ids"])):
-                    metric, component = correct_token_metrics(logit_vector, target_id), component_name(row, target_index)
-                    bucket = components[component]; bucket["token_count"] += 1; bucket["correct_top1_count"] += int(metric["top1"]); bucket["correct_top2_count"] += int(metric["top2"]); bucket["margin_sum"] += float(metric["margin"])
+                error_index, parser_status = first_free_running_error(row, condition)
+                error = None
+                for target_index, (rank, margin) in enumerate(zip(rank_values, margin_values)):
+                    component = component_name(row, target_index)
+                    bucket = components[component]; bucket["token_count"] += 1; bucket["correct_top1_count"] += int(rank == 1); bucket["correct_top2_count"] += int(rank <= 2); bucket["margin_sum"] += float(margin)
                     if target_index == error_index:
-                        error = {"target_index": target_index, "component": component, "rank": metric["rank"], "margin": metric["margin"]}
-                results.append({"checkpoint_condition": condition, "mode_id": mode_id, "episode_id": row["episode_id"], "family": row["family"], "prompt_sha256": row["prompt_sha256"], "effective_batch_size": len(group), "batch_index": batch_index, "components": components, "first_free_running_error": error, "target_token_count": len(row["target_ids"]), "target_token_ids_persisted": False})
+                        error = {"target_index": target_index, "component": component, "rank": int(rank), "margin": float(margin), "parser_status": parser_status}
+                results.append({"checkpoint_condition": condition, "mode_id": mode_id, "episode_id": row["episode_id"], "family": row["family"], "prompt_sha256": row["prompt_sha256"], "effective_batch_size": len(group), "batch_index": batch_index, "components": components, "first_free_running_error": error, "free_running_parser_status": parser_status, "target_token_count": len(row["target_ids"]), "target_token_ids_persisted": False})
     return results
 
 
