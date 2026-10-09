@@ -68,7 +68,7 @@ def prompt(actor,text,timeout,state):
 def controller(s,p,timeout):
     s.update({'last_actor':'governor','updated_at':now()}); atomic(p,s)
     target=resolve_controller_target(s,p)
-    prompt(target,f'ARC2 Governor invocation. Read {p.resolve()} and AGENTS.md; execute next_action as far as scientifically valid. '
+    prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}, AGENTS.md, and orchestration/agents/ARC_CONTROLLER_SYSTEM.md; execute next_action as far as scientifically valid. '
            'For any pre-model or detached-launch infrastructure failure: preserve the failed run and incident receipt, set infra_failure_class and infra_failure_receipt, perform bounded CPU-only diagnosis, and NEVER relaunch a one-shot GPU run implicitly. '
            'If a fresh GPU launch needs authorization or a sealed asset is missing, freeze one concise SHA-bound Director brief and set REVIEW_REQUIRED for Governor; do not directly wake Director or set a generic PAUSED. '
            'Before returning atomically write exactly one disposition: CONTINUE_CONTROLLER, REVIEW_REQUIRED, WAIT_REMOTE, PAUSED, or TERMINAL. '
@@ -300,7 +300,7 @@ def director(s,p,timeout):
         directive=('Choose one of CONTINUE_CONTROLLER, CONTINUE_DIRECTOR, REQUIRE_CHANGES, PAUSED, or TERMINAL. CONTINUE_CONTROLLER requires explicit next_stage and next_action. CONTINUE_DIRECTOR requires next_review_brief, next_review_brief_sha256, and next_review_reason. '
                    'REQUIRE_CHANGES must state root cause, smallest repair, frozen conditions, forbidden actions, and whether another review is required. ')
     response_path=response_directory(p) / f"{Path(brief).stem}_RESPONSE.json"
-    request=(f'ARC2 Governor review. Read {brief}. Write exactly one structured JSON response to {response_path}. '
+    request=(f'ARC2 Governor review. Read orchestration/agents/ARC_DIRECTOR_SYSTEM.md, orchestration/director/SCIENTIFIC_REVIEW_GUIDANCE.md, and {brief}. Write exactly one structured JSON response to {response_path}. '
              f'It must contain reviewed_brief_sha256={brief_sha256} and one valid decision. {directive}'
              'Do not schedule or prompt Controller.')
     if not prompt('arc-director',request,timeout,s):
