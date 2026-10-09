@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "response_id": "GOVERNOR_REVIEW_CPU_ONLY_PROSPECTIVE_TARGET_BLIND_BEAM4_SELECTOR_PROTOCOL_V1_RESPONSE",
+  "reviewed_brief_sha256": "68c679bf4ebdd65278f45b0380103738f73bd86af491b0098a3efbe3150f8034",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "CPU_ONLY_PROSPECTIVE_TARGET_BLIND_BEAM4_SELECTOR_PROTOCOL_V1_PREEXECUTION",
+  "root_cause": [
+    {
+      "id": "RC1_COHORT_NOT_PREVIOUSLY_UNSCORED",
+      "finding": "The proposed 132-row cohort is disjoint only from the immediately preceding 60-row Beam-4 cohort, not from historical scoring. Episode IDs from the proposed cohort, including same color, recolor, selector prerequisites, relation selector action, mask set, and conditional action, already appear in the preserved Family-Balanced/V7 CAPABILITY_REPAIR_BASELINE_V1_RESULTS evidence covering TARGET_DEV. Therefore the package cannot truthfully claim a previously unscored prospective evaluation cohort or a fresh candidate-freeze-before-first-target-access boundary.",
+      "scientific_impact": "A selector chosen after these episode-level targets and correctness results became repository-accessible is vulnerable to development leakage. Reusing the cohort may support explicitly exposed exploratory analysis, but it cannot answer the brief's prospective selector question."
+    },
+    {
+      "id": "RC2_AMBIGUOUS_DOUBLE_LENGTH_NORMALIZATION",
+      "finding": "The selector divides Hugging Face generation sequence_score by generated-token count, while the protocol does not freeze or account for the generation length_penalty semantics that already contribute to sequences_scores. This can apply an unintended second length normalization and systematically favor long candidates because log scores are negative.",
+      "scientific_impact": "The selector's only intervention is not operationally well-defined, so a positive or negative result could not be attributed to a single reproducible ranking rule."
+    },
+    {
+      "id": "RC3_UNFROZEN_BOOTSTRAP_CONSTANTS",
+      "finding": "The package states that bootstrap seed and replicate count will be frozen, but supplies neither value in the immutable execution package.",
+      "scientific_impact": "The primary uncertainty calculation is not yet fully prospective or exactly reproducible."
+    }
+  ],
+  "smallest_repair": [
+    {
+      "id": "R1_PROJECT_WIDE_EXPOSURE_AUDIT_AND_COHORT_REPLACEMENT",
+      "action": "Perform a CPU-only repository-wide episode-level prior-target/prior-score audit, not merely exclusion of the latest 60 rows. Replace the cohort with a non-Gold development cohort whose target outputs and per-episode correctness have not previously been opened, scored, emitted, or used for protocol design. Freeze its IDs and metadata without parsing task targets.",
+      "fail_closed": "If no scientifically adequate unexposed non-Gold cohort exists, report PAUSED_NO_UNEXPOSED_SELECTOR_EVALUATION_COHORT. Do not relabel the current 132 rows as previously unscored and do not open Gold, dGold, or FINAL_AUDIT. The 132 rows may be retained only as explicitly exposed exploratory material, not as the primary prospective test."
+    },
+    {
+      "id": "R2_SINGLE_EXPLICIT_SCORE_NORMALIZATION",
+      "action": "Freeze the Beam-4 generation length_penalty explicitly. Define selector score from per-token transition log probabilities as sum(log p) divided exactly once by the count of generated non-pad tokens through and including the first EOS. Do not divide an already length-normalized sequences_scores value again. Preserve original beam rank only as the frozen comparator and final tie-break after the selector score and raw cumulative log probability.",
+      "tests": [
+        "A fixture proving prompt and terminal padding are excluded and EOS treatment is fixed.",
+        "A fixture proving the selector applies exactly one length normalization.",
+        "A fixture proving candidate order is invariant between equivalent transition-log-prob representations.",
+        "A fixture proving no target, exactness, oracle rank, or prior correctness field can enter selection."
+      ]
+    },
+    {
+      "id": "R3_FREEZE_UNCERTAINTY_CONSTANTS",
+      "action": "Set bootstrap_replicates=10000 and bootstrap_seed=20261009 in the execution package. Retain the paired within-family bootstrap and equal-family macro-average primary estimand. Predeclare invalid-candidate handling before scoring."
+    }
+  ],
+  "frozen_conditions": [
+    "Preserve the positive Beam-4 run_002 candidates, analysis, result package, terminal receipt, source commit, and recorded SHA256 identities without mutation.",
+    "Preserve the scientific conclusion that Family-Balanced has higher oracle Recall@4 than V7 under the completed reused-DEV Beam-4 condition; do not reinterpret it as deployed selector performance.",
+    "Retain exactly one selector algorithm, candidate budget K=4, deterministic Batch1 generation, Family-Balanced checkpoint, original Beam rank-one comparator, equal-family macro estimand, and protected same-color/recolor safety gates.",
+    "Retain candidate generation and selector execution before first target access on the repaired cohort.",
+    "Retain TARGET_DEV and all prior scored cohorts as development evidence only; Gold, dGold, sealed test targets, and FINAL_AUDIT remain unopened."
+  ],
+  "forbidden_actions": [
+    "Do not load a model, launch GPU inference, generate candidates, score targets, train, run backward, construct an optimizer, or mutate checkpoints before the repaired package is reviewed.",
+    "Do not use the current 132 historically scored rows as the primary prospective evaluation cohort.",
+    "Do not select or tune features, thresholds, normalization, or cohort membership using any target, exactness, oracle-rank, or prior per-episode correctness information.",
+    "Do not change candidate budget K=4 or add a second selector.",
+    "Do not open Gold, dGold, sealed test targets, or FINAL_AUDIT to manufacture an unexposed cohort.",
+    "Do not weaken the protected same-color or recolor non-regression gates."
+  ],
+  "another_review_required": true,
+  "required_resubmission": "Submit one immutable repaired pre-execution brief containing the project-wide exposure audit, replacement cohort manifest or explicit PAUSED_NO_UNEXPOSED_SELECTOR_EVALUATION_COHORT result, exact single-normalization selector formula, frozen length_penalty, bootstrap constants, invalid-candidate rule, source hashes, and unchanged scientific decision rule.",
+  "authorization": {
+    "cpu_only_remediation_authorized": true,
+    "cpu_tests_authorized": true,
+    "model_loading_authorized": false,
+    "gpu_inference_authorized": false,
+    "candidate_generation_authorized": false,
+    "target_scoring_authorized": false,
+    "scientific_training_authorized": false,
+    "optimizer_construction_authorized": false
+  },
+  "scientific_training_authorized": false,
+  "final_audit_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}
