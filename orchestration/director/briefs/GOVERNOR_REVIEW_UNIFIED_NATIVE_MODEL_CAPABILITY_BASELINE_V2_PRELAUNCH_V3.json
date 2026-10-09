@@ -1,0 +1,50 @@
+{
+  "forbidden": [
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint mutation",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external selector",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target-dependent candidate selection"
+  ],
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V2",
+  "question": "After RC1-RC7, may exactly one fresh, bounded, target-blind Batch32 generation job launch under this unchanged package?",
+  "rc5_rc7_evidence": {
+    "canonical_binding": {
+      "fresh_output_root": "/workspace/arc2/unified_native_model_capability_baseline_v2/run_003_f463c7f14eb24264b075b5e296212c7e",
+      "launcher_sha256": "355ec6bcd2baf394e687d84b286cb15e4a061aac869151c3f943287838d236fc",
+      "nonce": "f463c7f14eb24264b075b5e296212c7e",
+      "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/LAUNCH_BINDING_V4.json",
+      "sha256": "6f28e96503cf2ac1414cda99953bd24ac129e6e5ebb02bb97d8ba0a2b141a732",
+      "worker_sha256": "932a3c66f68c4bddb07bd3bc2cc0325f05075f14d0f4f0f4e639c85e0a678ad1"
+    },
+    "cpu_tests": "PASS_17 including actual frozen V4 binding through launcher load_binding and worker_command",
+    "exact_remote_preflight": {
+      "final_audit_opened": false,
+      "gpu_used": false,
+      "local_exact_copy_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/RUNTIME_IDENTITY_PREFLIGHT_V4.json",
+      "model_imported": false,
+      "runpod_checkout": "bb0ae1b87cf53a86c8c38d7df6f9af0aae8830ed",
+      "sha256": "ed5079f516b091f075026bf8bf716e92b10d625ead116f8d9990331a3cdae010",
+      "worker_sha256": "932a3c66f68c4bddb07bd3bc2cc0325f05075f14d0f4f0f4e639c85e0a678ad1"
+    },
+    "runtime_launch_checks": "launcher verifies canonical nested worker/launcher/manifest/discovery hashes and supplied exact checkout before Popen; outer process records SUCCESS/FAILURE/TIMEOUT plus partial evidence"
+  },
+  "requested_decision": "CONTINUE_CONTROLLER authorizing only one no-update launch using LAUNCH_BINDING_V4.json, or REQUIRE_CHANGES for a remaining concrete scientific-validity defect.",
+  "review_type": "SCIENTIFIC_PRELAUNCH_REVIEW",
+  "schema_version": 1,
+  "scientific_conditions_unchanged": {
+    "checkpoint_discovery_sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654",
+    "input_manifest_sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+    "primary": "length-bucketed deterministic Batch32 Greedy, fixed 12-episode Batch1 sensitivity subset, fallback ladder 32/16/8/4/1",
+    "runtime_cap_seconds": 9000,
+    "target_sidecar": "sealed until raw target-blind evidence is frozen"
+  }
+}
