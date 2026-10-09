@@ -1,0 +1,63 @@
+{
+  "forbidden": [
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint_mutation",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external_selector",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target-dependent_candidate_selection"
+  ],
+  "frozen_inputs": {
+    "checkpoint_discovery_sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654",
+    "manifest_sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+    "target_alignment_contract_sha256": "ed016c7b03c810b787a07037d967d166e9dba3e4b21367fbc20837542ed83a05",
+    "worker_path": "scripts/run_unified_native_model_capability_baseline_v2.py",
+    "worker_sha256": "6cfd7c38a65816c5ede8ef90bb99ce85ea47c9e7b84de695368580a2f0a96fc1"
+  },
+  "machine_gates_passed": {
+    "cpu_tests": "PASS_16",
+    "local_head": "d88902a9fc8c93bd731b9a33c47ef7979ab4c42a",
+    "origin_ref": "d88902a9fc8c93bd731b9a33c47ef7979ab4c42a",
+    "runpod_checkout": "d88902a9fc8c93bd731b9a33c47ef7979ab4c42a",
+    "runtime_identity_preflight": {
+      "gpu_used": false,
+      "model_imported": false,
+      "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/RUNTIME_IDENTITY_PREFLIGHT_V2.json",
+      "remote_path": "/workspace/arc2/unified_native_model_capability_baseline_v2/runtime_preflight/D88902A9_RUNTIME_IDENTITY.json",
+      "remote_sha256": "9660de58f5df2b7a4a390df28b662a0c49f21db9c45f56daaaea1af8bf4aa8ee",
+      "sha256": "9660de58f5df2b7a4a390df28b662a0c49f21db9c45f56daaaea1af8bf4aa8ee"
+    }
+  },
+  "output_safety": {
+    "fresh_nonce_required": true,
+    "fresh_output_root_required": true,
+    "no_duplicate_live_job": true,
+    "runtime_cap_seconds": 9000
+  },
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V2",
+  "question": "May one fresh, bounded, target-blind Batch32 primary native-generation run proceed under this frozen package, before any sealed target sidecar access or scoring?",
+  "requested_decision": "CONTINUE_CONTROLLER or REQUIRE_CHANGES only for a concrete scientific validity defect; do not treat provenance duplication as a scientific gate.",
+  "review_type": "SCIENTIFIC_PRELAUNCH_REVIEW",
+  "schema_version": 1,
+  "scientific_scope": {
+    "denominator": 60,
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "fixed_sensitivity": "12 fixed episodes re-run at Batch1; raw token IDs, parser validity, canonical prediction hashes, and target-blind aggregate evidence must agree",
+    "input": "independently generated non-Gold synthetic observations",
+    "primary_generation": "length-bucketed Batch32 greedy",
+    "target_alignment": "separate later teacher-forced phase; sidecar remains unopened until raw target-blind generation evidence is frozen"
+  }
+}
