@@ -1,0 +1,27 @@
+{
+  "files": [
+    {
+      "bytes": 1140515,
+      "name": "CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "sha256": "cc97e376e2a4703c0d73e4a79f0bbf528ac71c8750b9b5972a85f9099cb40216"
+    },
+    {
+      "bytes": 22385,
+      "name": "BASELINE_CHARACTERIZATION_RECEIPT.json",
+      "sha256": "445a3aba672bb8fd2bf58323c52f26f3cf58437bf1371267bd34ed0b415bda7d"
+    },
+    {
+      "bytes": 2617,
+      "name": "EVALUATION_MINIMAL_GATE.json",
+      "sha256": "63ab47659ce48046bccaef04fe800ccb2b3845b3bfd2d29ea2fe16f1a3e01bb5"
+    },
+    {
+      "bytes": 3641,
+      "name": "FINAL_CHECKPOINT_MANIFEST.json",
+      "sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9"
+    }
+  ],
+  "kind": "FAMILY_BALANCED_LOSS_EVALUATION_ARTIFACT_MANIFEST",
+  "runtime_source_commit": "e37b1a28d5d43ca71fba20955bcb3c94a93ae8b8",
+  "schema_version": 1
+}
