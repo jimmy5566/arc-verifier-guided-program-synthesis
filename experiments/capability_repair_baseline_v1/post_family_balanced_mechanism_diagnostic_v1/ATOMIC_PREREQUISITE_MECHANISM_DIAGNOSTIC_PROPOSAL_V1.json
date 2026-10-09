@@ -1,0 +1,41 @@
+{
+  "closed_routes": [
+    "ATOMIC_PREREQUISITE_REPAIR_V1",
+    "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1"
+  ],
+  "created_at": "2026-10-09T02:57:35.096000Z",
+  "established_evidence": {
+    "matched_result": "The family-balanced treatment was validly measured but did not improve weak atomic aggregate relative to V7; it therefore does not support scalar loss balancing alone as a sufficient intervention.",
+    "schedule_audit": "Equal episode counts yielded highly unequal nominal loss coefficients (inside/contains 24.74%, difference 24.46%, orientation 2.52%, width 1.81%, connected components 1.78%); this is a property of the worker/schedule, not a gradient measurement."
+  },
+  "hypotheses": {
+    "H1_SUPERVISED_FITTING_OR_COVERAGE": "Weak atomic families may remain poorly fit under the frozen sequence and duration.",
+    "H2_GRADIENT_INTERFERENCE": "Family gradients may conflict, but no gradient-direction evidence exists.",
+    "H3_GENERALIZATION": "Training-set fit may improve without transfer to Target DEV."
+  },
+  "inputs": {
+    "paired_analysis_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/V7_R1_FAMILY_BALANCED_PAIRED_ANALYSIS.json",
+    "paired_analysis_sha256": "4b93b18ae619940e334f5816c8bdeed91e6472b46f880eb0ad085f359d1b105e",
+    "training_signal_audit_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SIGNAL_AUDIT_V1.json",
+    "training_signal_audit_sha256": "cad1734946445e1c78dd8547138f429ebf7bed8f52187a3763207f9ce9c49ef6"
+  },
+  "not_authorized": [
+    "Any GPU inference or model loading",
+    "Any optimizer/training step",
+    "R3 or composition training",
+    "Gradient-cosine diagnostic",
+    "FINAL_AUDIT access"
+  ],
+  "proposal_id": "ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_PROPOSAL_V1",
+  "proposed_next_stage_if_director_authorizes": {
+    "controls": "Same tokenizer, label masking, runtime, and per-family aggregation for every checkpoint; no DEV/retention labels used in calculation; FINAL_AUDIT sealed.",
+    "decision_rule": "If a weak family shows lower teacher-forced train NLL yet no DEV gain, H3 gains support; if no train-NLL improvement, H1 gains support. H2 remains UNKNOWN unless a separate, decision-changing gradient diagnostic is approved.",
+    "expected_information": "Distinguishes fitting-versus-generalization evidence without changing a training hyperparameter or launching another repair round.",
+    "intervention": "No optimizer steps, no checkpoint mutation, no generation, no training, no data resampling. Run teacher-forced per-family NLL on the frozen 400 TRAIN rows for V7 and the already frozen rejected candidates; join only to already frozen DEV/retention results.",
+    "stage_id": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1"
+  },
+  "purpose": "Obtain a prospective basis for a distinct atomic-repair protocol after the V7-start fixed-schedule and family-balanced-loss routes were both closed.",
+  "research_objective": "Preserve strong capabilities, repair weak atomic prerequisites, then evaluate composition transfer.",
+  "schema_version": 1,
+  "status": "CPU_ONLY_PREPARATION_ONLY"
+}

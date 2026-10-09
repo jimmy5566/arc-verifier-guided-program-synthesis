@@ -1,0 +1,15 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_V1",
+  "created_at": "2026-10-09T02:57:35.107138Z",
+  "frozen": [
+    "V7, R1, family-balanced checkpoint/results, schedules, decoder, parser, thresholds, DEV/retention splits",
+    "FINAL_AUDIT remains sealed",
+    "No continuation of closed fixed-schedule or family-loss-balancing route"
+  ],
+  "kind": "NEW_PROSPECTIVE_STAGE_REVIEW",
+  "proposal_path": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_PROPOSAL_V1.json",
+  "proposal_sha256": "117818462bf83901daf359710a10e8d212a83eaf59a4439d9dd04e090d296bea",
+  "request": "Is the fixed teacher-forced per-family TRAIN-NLL versus frozen DEV comparison the smallest scientifically justified diagnostic after the closed routes, and what minimal change, if any, is required before authorizing it?",
+  "requested_decision": "CONTINUE_CONTROLLER to authorize only the proposed no-update diagnostic; REQUIRE_CHANGES with the smallest scientific correction; PAUSED/TERMINAL with scope if no useful prospective diagnostic is justified.",
+  "schema_version": 1
+}
