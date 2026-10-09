@@ -1,0 +1,16 @@
+{
+  "bound_files": {
+    "scripts/analyze_paired_fixed_b32_fit_transfer_v1.py": "04ff09ff259fdbc080f125e11aa7983278de2dec1e80d7a93ee9122ab54ffae8",
+    "scripts/arc2_hard_cap_launcher.py": "897c6a725bbc74ff0386ae044c2c4086b60ef2dc29e63288e0abae81e861ea82",
+    "scripts/launch_paired_fixed_b32_fit_transfer_v1.py": "88a46657c44b1e262440e391563b32e825f73ff4cad8c501dee23ecbe9e71da5",
+    "scripts/run_paired_fixed_b32_fit_transfer_v1.py": "0c9220e4537b09c56674df2776c4813ceeecde62b5e79ebc5d793567b6d4999e",
+    "scripts/verify_paired_fixed_b32_runtime_identity.py": "290203fba8a1e96f3536f435f93104a1a0547b4d10e2c70cfdf0a7451aad246c",
+    "tests/test_launch_paired_fixed_b32_chain.py": "6d1c42cce6c086ed201b446f507a68546d55c417a366ffaf16edaedc2d950611",
+    "tests/test_paired_fixed_b32_identity_verifier.py": "becce04a7219e462b5a7ad32c6f3391ec3aa48fc4c5d4a11bce8db54d04a7e43"
+  },
+  "package_sha256": "2ba70dfe904e242721c2feeb708cea03838354501e36ab57f4b9fcb33953d16d",
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY",
+  "test_command": "py -3 tests/test_paired_fixed_b32_identity_verifier.py",
+  "test_exit_code": 0
+}

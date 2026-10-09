@@ -1,0 +1,15 @@
+{
+  "checks": {
+    "cap_1800": true,
+    "crosscheck_30_primary_2_context": true,
+    "crosscheck_32_rows": true,
+    "five_families_six_each": true,
+    "worker_bound": true
+  },
+  "config_path": "experiments/capability_repair_baseline_v1/paired_fixed_b32_fit_transfer_v1/PAIRED_FIXED_B32_FIT_TRANSFER_V1_EXECUTION_PACKAGE_V2.json",
+  "config_sha256": "08a69174824b4c5a9f098dfe81653e00c3f00eecd84c5d896f4a967a526bb391",
+  "crosscheck_path": "experiments/capability_repair_baseline_v1/paired_fixed_b32_fit_transfer_v1/PAIRED_FIXED_B32_FIT_TRANSFER_V1_B1_CROSSCHECK_32.json",
+  "crosscheck_sha256": "0f81d8305537c359b1616ccdfe3e26767d11341b7aa62f6833e549df49d6e7ae",
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY"
+}

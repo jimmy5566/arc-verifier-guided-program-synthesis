@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "cap_1800": true,
+    "config_worker_sha": true,
+    "crosscheck_sha": true,
+    "no_update": true
+  },
+  "config_sha256": "950be28741f64e59173b7d4c632eadf0e3ee3d4ca7024547e03f0335216ee1be",
+  "negative_test_path": "tests/test_paired_fixed_b32_fit_transfer_v1.py",
+  "negative_test_sha256": "c974d4e44c7c21e73f84fbe7cf5c0c009fdfccf834de8deeb3a675c454cb58d6",
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY",
+  "worker_sha256": "0c9220e4537b09c56674df2776c4813ceeecde62b5e79ebc5d793567b6d4999e"
+}

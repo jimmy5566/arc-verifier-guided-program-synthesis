@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "all400_manifest_sha": true,
+    "gpu_cap_1800": true,
+    "no_update_forbidden": true,
+    "old_pilot_terminal": true
+  },
+  "config_path": "experiments/capability_repair_baseline_v1/paired_fixed_b32_fit_transfer_v1/PAIRED_FIXED_B32_FIT_TRANSFER_V1_EXECUTION_PACKAGE.json",
+  "config_sha256": "88cd64508f83bebb3926ad6af4605f2cdf9cf42068f5a3d0edfa59844c778cfb",
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY",
+  "worker_path": "scripts/run_paired_fixed_b32_fit_transfer_v1.py",
+  "worker_sha256": "0507261752bcd9ff06daac5143dbfdb1e8c9012113e62c64da994c762d081687"
+}

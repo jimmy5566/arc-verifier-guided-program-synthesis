@@ -1,0 +1,2532 @@
+{
+  "batches": [
+    {
+      "batch_index": 0,
+      "effective_batch_size": 32,
+      "max_sequence_length": 954,
+      "members": [
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000035",
+          "restoration_index": 286,
+          "schedule_index": 286,
+          "sequence_length": 954
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000028",
+          "restoration_index": 365,
+          "schedule_index": 365,
+          "sequence_length": 954
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000002",
+          "restoration_index": 40,
+          "schedule_index": 40,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000004",
+          "restoration_index": 46,
+          "schedule_index": 46,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000005",
+          "restoration_index": 70,
+          "schedule_index": 70,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000008",
+          "restoration_index": 71,
+          "schedule_index": 71,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000023",
+          "restoration_index": 186,
+          "schedule_index": 186,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000017",
+          "restoration_index": 219,
+          "schedule_index": 219,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000001",
+          "restoration_index": 223,
+          "schedule_index": 223,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000002",
+          "restoration_index": 224,
+          "schedule_index": 224,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000029",
+          "restoration_index": 237,
+          "schedule_index": 237,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000023",
+          "restoration_index": 293,
+          "schedule_index": 293,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000023",
+          "restoration_index": 295,
+          "schedule_index": 295,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000038",
+          "restoration_index": 311,
+          "schedule_index": 311,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000047",
+          "restoration_index": 386,
+          "schedule_index": 386,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000030",
+          "restoration_index": 392,
+          "schedule_index": 392,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000000",
+          "restoration_index": 2,
+          "schedule_index": 2,
+          "sequence_length": 862
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000002",
+          "restoration_index": 12,
+          "schedule_index": 12,
+          "sequence_length": 862
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000000",
+          "restoration_index": 21,
+          "schedule_index": 21,
+          "sequence_length": 862
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000007",
+          "restoration_index": 57,
+          "schedule_index": 57,
+          "sequence_length": 862
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000009",
+          "restoration_index": 118,
+          "schedule_index": 118,
+          "sequence_length": 862
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000017",
+          "restoration_index": 137,
+          "schedule_index": 137,
+          "sequence_length": 862
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000019",
+          "restoration_index": 244,
+          "schedule_index": 244,
+          "sequence_length": 862
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000007",
+          "restoration_index": 271,
+          "schedule_index": 271,
+          "sequence_length": 862
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000001",
+          "restoration_index": 6,
+          "schedule_index": 6,
+          "sequence_length": 858
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000001",
+          "restoration_index": 22,
+          "schedule_index": 22,
+          "sequence_length": 858
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000003",
+          "restoration_index": 43,
+          "schedule_index": 43,
+          "sequence_length": 858
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000002",
+          "restoration_index": 97,
+          "schedule_index": 97,
+          "sequence_length": 858
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000003",
+          "restoration_index": 98,
+          "schedule_index": 98,
+          "sequence_length": 858
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000018",
+          "restoration_index": 240,
+          "schedule_index": 240,
+          "sequence_length": 858
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000026",
+          "restoration_index": 341,
+          "schedule_index": 341,
+          "sequence_length": 858
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000027",
+          "restoration_index": 343,
+          "schedule_index": 343,
+          "sequence_length": 858
+        }
+      ],
+      "requested_batch_size": 32
+    },
+    {
+      "batch_index": 1,
+      "effective_batch_size": 32,
+      "max_sequence_length": 822,
+      "members": [
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000000",
+          "restoration_index": 1,
+          "schedule_index": 1,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000002",
+          "restoration_index": 41,
+          "schedule_index": 41,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000009",
+          "restoration_index": 77,
+          "schedule_index": 77,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000011",
+          "restoration_index": 87,
+          "schedule_index": 87,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000010",
+          "restoration_index": 147,
+          "schedule_index": 147,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000002",
+          "restoration_index": 171,
+          "schedule_index": 171,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000006",
+          "restoration_index": 196,
+          "schedule_index": 196,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000008",
+          "restoration_index": 198,
+          "schedule_index": 198,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000025",
+          "restoration_index": 207,
+          "schedule_index": 207,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000026",
+          "restoration_index": 212,
+          "schedule_index": 212,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000030",
+          "restoration_index": 252,
+          "schedule_index": 252,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000031",
+          "restoration_index": 256,
+          "schedule_index": 256,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000021",
+          "restoration_index": 269,
+          "schedule_index": 269,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000008",
+          "restoration_index": 272,
+          "schedule_index": 272,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000035",
+          "restoration_index": 287,
+          "schedule_index": 287,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:recolor:000008",
+          "restoration_index": 324,
+          "schedule_index": 324,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:recolor:000009",
+          "restoration_index": 346,
+          "schedule_index": 346,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000046",
+          "restoration_index": 381,
+          "schedule_index": 381,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000046",
+          "restoration_index": 382,
+          "schedule_index": 382,
+          "sequence_length": 822
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000002",
+          "restoration_index": 23,
+          "schedule_index": 23,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000003",
+          "restoration_index": 26,
+          "schedule_index": 26,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000004",
+          "restoration_index": 32,
+          "schedule_index": 32,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000004",
+          "restoration_index": 65,
+          "schedule_index": 65,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000004",
+          "restoration_index": 66,
+          "schedule_index": 66,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000009",
+          "restoration_index": 72,
+          "schedule_index": 72,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000010",
+          "restoration_index": 73,
+          "schedule_index": 73,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000009",
+          "restoration_index": 76,
+          "schedule_index": 76,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000010",
+          "restoration_index": 81,
+          "schedule_index": 81,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000008",
+          "restoration_index": 116,
+          "schedule_index": 116,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000015",
+          "restoration_index": 127,
+          "schedule_index": 127,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000019",
+          "restoration_index": 156,
+          "schedule_index": 156,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000012",
+          "restoration_index": 165,
+          "schedule_index": 165,
+          "sequence_length": 814
+        }
+      ],
+      "requested_batch_size": 32
+    },
+    {
+      "batch_index": 2,
+      "effective_batch_size": 32,
+      "max_sequence_length": 814,
+      "members": [
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000012",
+          "restoration_index": 166,
+          "schedule_index": 166,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000003",
+          "restoration_index": 172,
+          "schedule_index": 172,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000022",
+          "restoration_index": 181,
+          "schedule_index": 181,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000014",
+          "restoration_index": 191,
+          "schedule_index": 191,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000025",
+          "restoration_index": 206,
+          "schedule_index": 206,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000019",
+          "restoration_index": 243,
+          "schedule_index": 243,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000034",
+          "restoration_index": 281,
+          "schedule_index": 281,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000042",
+          "restoration_index": 352,
+          "schedule_index": 352,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000031",
+          "restoration_index": 394,
+          "schedule_index": 394,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000031",
+          "restoration_index": 395,
+          "schedule_index": 395,
+          "sequence_length": 814
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000002",
+          "restoration_index": 11,
+          "schedule_index": 11,
+          "sequence_length": 810
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000005",
+          "restoration_index": 37,
+          "schedule_index": 37,
+          "sequence_length": 810
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000027",
+          "restoration_index": 227,
+          "schedule_index": 227,
+          "sequence_length": 810
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000000",
+          "restoration_index": 15,
+          "schedule_index": 15,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000001",
+          "restoration_index": 18,
+          "schedule_index": 18,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000003",
+          "restoration_index": 27,
+          "schedule_index": 27,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000003",
+          "restoration_index": 44,
+          "schedule_index": 44,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000000",
+          "restoration_index": 74,
+          "schedule_index": 74,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000006",
+          "restoration_index": 92,
+          "schedule_index": 92,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000013",
+          "restoration_index": 106,
+          "schedule_index": 106,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000009",
+          "restoration_index": 120,
+          "schedule_index": 120,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000006",
+          "restoration_index": 122,
+          "schedule_index": 122,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000016",
+          "restoration_index": 132,
+          "schedule_index": 132,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000010",
+          "restoration_index": 142,
+          "schedule_index": 142,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000011",
+          "restoration_index": 143,
+          "schedule_index": 143,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000013",
+          "restoration_index": 168,
+          "schedule_index": 168,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000021",
+          "restoration_index": 176,
+          "schedule_index": 176,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000014",
+          "restoration_index": 190,
+          "schedule_index": 190,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000016",
+          "restoration_index": 215,
+          "schedule_index": 215,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000027",
+          "restoration_index": 226,
+          "schedule_index": 226,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:recolor:000001",
+          "restoration_index": 296,
+          "schedule_index": 296,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:recolor:000002",
+          "restoration_index": 297,
+          "schedule_index": 297,
+          "sequence_length": 774
+        }
+      ],
+      "requested_batch_size": 32
+    },
+    {
+      "batch_index": 3,
+      "effective_batch_size": 32,
+      "max_sequence_length": 774,
+      "members": [
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000036",
+          "restoration_index": 302,
+          "schedule_index": 302,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000037",
+          "restoration_index": 307,
+          "schedule_index": 307,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000041",
+          "restoration_index": 337,
+          "schedule_index": 337,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000027",
+          "restoration_index": 344,
+          "schedule_index": 344,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000027",
+          "restoration_index": 345,
+          "schedule_index": 345,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000043",
+          "restoration_index": 356,
+          "schedule_index": 356,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000043",
+          "restoration_index": 357,
+          "schedule_index": 357,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000030",
+          "restoration_index": 390,
+          "schedule_index": 390,
+          "sequence_length": 774
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000000",
+          "restoration_index": 16,
+          "schedule_index": 16,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000001",
+          "restoration_index": 19,
+          "schedule_index": 19,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000003",
+          "restoration_index": 24,
+          "schedule_index": 24,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000007",
+          "restoration_index": 56,
+          "schedule_index": 56,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000005",
+          "restoration_index": 68,
+          "schedule_index": 68,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000014",
+          "restoration_index": 111,
+          "schedule_index": 111,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000008",
+          "restoration_index": 124,
+          "schedule_index": 124,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000021",
+          "restoration_index": 177,
+          "schedule_index": 177,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000020",
+          "restoration_index": 265,
+          "schedule_index": 265,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000036",
+          "restoration_index": 301,
+          "schedule_index": 301,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000038",
+          "restoration_index": 312,
+          "schedule_index": 312,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000025",
+          "restoration_index": 319,
+          "schedule_index": 319,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000042",
+          "restoration_index": 351,
+          "schedule_index": 351,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000028",
+          "restoration_index": 366,
+          "schedule_index": 366,
+          "sequence_length": 770
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000005",
+          "restoration_index": 69,
+          "schedule_index": 69,
+          "sequence_length": 766
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000008",
+          "restoration_index": 117,
+          "schedule_index": 117,
+          "sequence_length": 766
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000016",
+          "restoration_index": 131,
+          "schedule_index": 131,
+          "sequence_length": 766
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000018",
+          "restoration_index": 152,
+          "schedule_index": 152,
+          "sequence_length": 766
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000015",
+          "restoration_index": 195,
+          "schedule_index": 195,
+          "sequence_length": 766
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000000",
+          "restoration_index": 17,
+          "schedule_index": 17,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000005",
+          "restoration_index": 36,
+          "schedule_index": 36,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000003",
+          "restoration_index": 45,
+          "schedule_index": 45,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000007",
+          "restoration_index": 49,
+          "schedule_index": 49,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000006",
+          "restoration_index": 90,
+          "schedule_index": 90,
+          "sequence_length": 730
+        }
+      ],
+      "requested_batch_size": 32
+    },
+    {
+      "batch_index": 4,
+      "effective_batch_size": 32,
+      "max_sequence_length": 730,
+      "members": [
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000007",
+          "restoration_index": 95,
+          "schedule_index": 95,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000004",
+          "restoration_index": 99,
+          "schedule_index": 99,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000020",
+          "restoration_index": 162,
+          "schedule_index": 162,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000009",
+          "restoration_index": 199,
+          "schedule_index": 199,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000024",
+          "restoration_index": 202,
+          "schedule_index": 202,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000000",
+          "restoration_index": 222,
+          "schedule_index": 222,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000028",
+          "restoration_index": 231,
+          "schedule_index": 231,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000028",
+          "restoration_index": 232,
+          "schedule_index": 232,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000003",
+          "restoration_index": 246,
+          "schedule_index": 246,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000004",
+          "restoration_index": 247,
+          "schedule_index": 247,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000006",
+          "restoration_index": 249,
+          "schedule_index": 249,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000033",
+          "restoration_index": 276,
+          "schedule_index": 276,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000022",
+          "restoration_index": 292,
+          "schedule_index": 292,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000025",
+          "restoration_index": 318,
+          "schedule_index": 318,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000045",
+          "restoration_index": 376,
+          "schedule_index": 376,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000031",
+          "restoration_index": 393,
+          "schedule_index": 393,
+          "sequence_length": 730
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000005",
+          "restoration_index": 47,
+          "schedule_index": 47,
+          "sequence_length": 726
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000001",
+          "restoration_index": 96,
+          "schedule_index": 96,
+          "sequence_length": 726
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000010",
+          "restoration_index": 140,
+          "schedule_index": 140,
+          "sequence_length": 726
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000023",
+          "restoration_index": 187,
+          "schedule_index": 187,
+          "sequence_length": 726
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000017",
+          "restoration_index": 218,
+          "schedule_index": 218,
+          "sequence_length": 726
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000010",
+          "restoration_index": 221,
+          "schedule_index": 221,
+          "sequence_length": 726
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:recolor:000000",
+          "restoration_index": 274,
+          "schedule_index": 274,
+          "sequence_length": 726
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000022",
+          "restoration_index": 291,
+          "schedule_index": 291,
+          "sequence_length": 726
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:recolor:000003",
+          "restoration_index": 298,
+          "schedule_index": 298,
+          "sequence_length": 726
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000025",
+          "restoration_index": 320,
+          "schedule_index": 320,
+          "sequence_length": 726
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000029",
+          "restoration_index": 368,
+          "schedule_index": 368,
+          "sequence_length": 726
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000010",
+          "restoration_index": 82,
+          "schedule_index": 82,
+          "sequence_length": 722
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000008",
+          "restoration_index": 115,
+          "schedule_index": 115,
+          "sequence_length": 722
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000015",
+          "restoration_index": 126,
+          "schedule_index": 126,
+          "sequence_length": 722
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000015",
+          "restoration_index": 194,
+          "schedule_index": 194,
+          "sequence_length": 722
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000024",
+          "restoration_index": 201,
+          "schedule_index": 201,
+          "sequence_length": 722
+        }
+      ],
+      "requested_batch_size": 32
+    },
+    {
+      "batch_index": 5,
+      "effective_batch_size": 32,
+      "max_sequence_length": 722,
+      "members": [
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000030",
+          "restoration_index": 251,
+          "schedule_index": 251,
+          "sequence_length": 722
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000032",
+          "restoration_index": 261,
+          "schedule_index": 261,
+          "sequence_length": 722
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000023",
+          "restoration_index": 294,
+          "schedule_index": 294,
+          "sequence_length": 722
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000041",
+          "restoration_index": 336,
+          "schedule_index": 336,
+          "sequence_length": 722
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000029",
+          "restoration_index": 369,
+          "schedule_index": 369,
+          "sequence_length": 722
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000002",
+          "restoration_index": 42,
+          "schedule_index": 42,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000006",
+          "restoration_index": 52,
+          "schedule_index": 52,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000008",
+          "restoration_index": 62,
+          "schedule_index": 62,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000009",
+          "restoration_index": 119,
+          "schedule_index": 119,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000005",
+          "restoration_index": 121,
+          "schedule_index": 121,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000001",
+          "restoration_index": 149,
+          "schedule_index": 149,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000019",
+          "restoration_index": 157,
+          "schedule_index": 157,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000013",
+          "restoration_index": 169,
+          "schedule_index": 169,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000005",
+          "restoration_index": 174,
+          "schedule_index": 174,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000022",
+          "restoration_index": 182,
+          "schedule_index": 182,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000016",
+          "restoration_index": 217,
+          "schedule_index": 217,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000019",
+          "restoration_index": 245,
+          "schedule_index": 245,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000005",
+          "restoration_index": 248,
+          "schedule_index": 248,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000021",
+          "restoration_index": 268,
+          "schedule_index": 268,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000021",
+          "restoration_index": 270,
+          "schedule_index": 270,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000034",
+          "restoration_index": 282,
+          "schedule_index": 282,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000022",
+          "restoration_index": 290,
+          "schedule_index": 290,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000024",
+          "restoration_index": 315,
+          "schedule_index": 315,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000044",
+          "restoration_index": 361,
+          "schedule_index": 361,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000044",
+          "restoration_index": 362,
+          "schedule_index": 362,
+          "sequence_length": 690
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000001",
+          "restoration_index": 7,
+          "schedule_index": 7,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000004",
+          "restoration_index": 31,
+          "schedule_index": 31,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000006",
+          "restoration_index": 51,
+          "schedule_index": 51,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000008",
+          "restoration_index": 61,
+          "schedule_index": 61,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000004",
+          "restoration_index": 67,
+          "schedule_index": 67,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000007",
+          "restoration_index": 93,
+          "schedule_index": 93,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000012",
+          "restoration_index": 101,
+          "schedule_index": 101,
+          "sequence_length": 682
+        }
+      ],
+      "requested_batch_size": 32
+    },
+    {
+      "batch_index": 6,
+      "effective_batch_size": 32,
+      "max_sequence_length": 682,
+      "members": [
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000012",
+          "restoration_index": 102,
+          "schedule_index": 102,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000014",
+          "restoration_index": 112,
+          "schedule_index": 112,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000010",
+          "restoration_index": 141,
+          "schedule_index": 141,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000009",
+          "restoration_index": 146,
+          "schedule_index": 146,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000018",
+          "restoration_index": 151,
+          "schedule_index": 151,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000020",
+          "restoration_index": 161,
+          "schedule_index": 161,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000014",
+          "restoration_index": 192,
+          "schedule_index": 192,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000029",
+          "restoration_index": 236,
+          "schedule_index": 236,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000033",
+          "restoration_index": 277,
+          "schedule_index": 277,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000026",
+          "restoration_index": 342,
+          "schedule_index": 342,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000028",
+          "restoration_index": 367,
+          "schedule_index": 367,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000045",
+          "restoration_index": 377,
+          "schedule_index": 377,
+          "sequence_length": 682
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000011",
+          "restoration_index": 144,
+          "schedule_index": 144,
+          "sequence_length": 678
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000004",
+          "restoration_index": 173,
+          "schedule_index": 173,
+          "sequence_length": 678
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000016",
+          "restoration_index": 216,
+          "schedule_index": 216,
+          "sequence_length": 678
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:recolor:000005",
+          "restoration_index": 321,
+          "schedule_index": 321,
+          "sequence_length": 678
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:recolor:000007",
+          "restoration_index": 323,
+          "schedule_index": 323,
+          "sequence_length": 678
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000029",
+          "restoration_index": 370,
+          "schedule_index": 370,
+          "sequence_length": 678
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000001",
+          "restoration_index": 20,
+          "schedule_index": 20,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000017",
+          "restoration_index": 136,
+          "schedule_index": 136,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000011",
+          "restoration_index": 145,
+          "schedule_index": 145,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000026",
+          "restoration_index": 211,
+          "schedule_index": 211,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000018",
+          "restoration_index": 241,
+          "schedule_index": 241,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000020",
+          "restoration_index": 267,
+          "schedule_index": 267,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:propagation:000009",
+          "restoration_index": 273,
+          "schedule_index": 273,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000024",
+          "restoration_index": 317,
+          "schedule_index": 317,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:recolor:000006",
+          "restoration_index": 322,
+          "schedule_index": 322,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000040",
+          "restoration_index": 331,
+          "schedule_index": 331,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000026",
+          "restoration_index": 340,
+          "schedule_index": 340,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000047",
+          "restoration_index": 387,
+          "schedule_index": 387,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000030",
+          "restoration_index": 391,
+          "schedule_index": 391,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:color mapping:000006",
+          "restoration_index": 48,
+          "schedule_index": 48,
+          "sequence_length": 638
+        }
+      ],
+      "requested_batch_size": 32
+    },
+    {
+      "batch_index": 7,
+      "effective_batch_size": 32,
+      "max_sequence_length": 638,
+      "members": [
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000011",
+          "restoration_index": 86,
+          "schedule_index": 86,
+          "sequence_length": 638
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000006",
+          "restoration_index": 91,
+          "schedule_index": 91,
+          "sequence_length": 638
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000007",
+          "restoration_index": 94,
+          "schedule_index": 94,
+          "sequence_length": 638
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000012",
+          "restoration_index": 167,
+          "schedule_index": 167,
+          "sequence_length": 638
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000013",
+          "restoration_index": 170,
+          "schedule_index": 170,
+          "sequence_length": 638
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000007",
+          "restoration_index": 197,
+          "schedule_index": 197,
+          "sequence_length": 638
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000018",
+          "restoration_index": 242,
+          "schedule_index": 242,
+          "sequence_length": 638
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000039",
+          "restoration_index": 326,
+          "schedule_index": 326,
+          "sequence_length": 638
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000039",
+          "restoration_index": 327,
+          "schedule_index": 327,
+          "sequence_length": 638
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:complete missing structure:000007",
+          "restoration_index": 123,
+          "schedule_index": 123,
+          "sequence_length": 598
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:overlay:000000",
+          "restoration_index": 148,
+          "schedule_index": 148,
+          "sequence_length": 598
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:selector prerequisites:000017",
+          "restoration_index": 220,
+          "schedule_index": 220,
+          "sequence_length": 598
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000031",
+          "restoration_index": 257,
+          "schedule_index": 257,
+          "sequence_length": 598
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000020",
+          "restoration_index": 266,
+          "schedule_index": 266,
+          "sequence_length": 598
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:recolor:000004",
+          "restoration_index": 299,
+          "schedule_index": 299,
+          "sequence_length": 598
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000037",
+          "restoration_index": 306,
+          "schedule_index": 306,
+          "sequence_length": 598
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:recolor:000024",
+          "restoration_index": 316,
+          "schedule_index": 316,
+          "sequence_length": 598
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000040",
+          "restoration_index": 332,
+          "schedule_index": 332,
+          "sequence_length": 598
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000013",
+          "restoration_index": 107,
+          "schedule_index": 107,
+          "sequence_length": 558
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000015",
+          "restoration_index": 193,
+          "schedule_index": 193,
+          "sequence_length": 558
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000032",
+          "restoration_index": 262,
+          "schedule_index": 262,
+          "sequence_length": 558
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000023",
+          "restoration_index": 189,
+          "schedule_index": 189,
+          "sequence_length": 512
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000013",
+          "restoration_index": 108,
+          "schedule_index": 108,
+          "sequence_length": 501
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000002",
+          "restoration_index": 10,
+          "schedule_index": 10,
+          "sequence_length": 500
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000047",
+          "restoration_index": 389,
+          "schedule_index": 389,
+          "sequence_length": 487
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000006",
+          "restoration_index": 53,
+          "schedule_index": 53,
+          "sequence_length": 477
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000012",
+          "restoration_index": 103,
+          "schedule_index": 103,
+          "sequence_length": 477
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000029",
+          "restoration_index": 238,
+          "schedule_index": 238,
+          "sequence_length": 477
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000038",
+          "restoration_index": 313,
+          "schedule_index": 313,
+          "sequence_length": 477
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000040",
+          "restoration_index": 330,
+          "schedule_index": 330,
+          "sequence_length": 477
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000043",
+          "restoration_index": 358,
+          "schedule_index": 358,
+          "sequence_length": 477
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000013",
+          "restoration_index": 105,
+          "schedule_index": 105,
+          "sequence_length": 476
+        }
+      ],
+      "requested_batch_size": 32
+    },
+    {
+      "batch_index": 8,
+      "effective_batch_size": 32,
+      "max_sequence_length": 476,
+      "members": [
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000001",
+          "restoration_index": 348,
+          "schedule_index": 348,
+          "sequence_length": 476
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000045",
+          "restoration_index": 375,
+          "schedule_index": 375,
+          "sequence_length": 476
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000034",
+          "restoration_index": 280,
+          "schedule_index": 280,
+          "sequence_length": 473
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000020",
+          "restoration_index": 164,
+          "schedule_index": 164,
+          "sequence_length": 466
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000005",
+          "restoration_index": 39,
+          "schedule_index": 39,
+          "sequence_length": 465
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000028",
+          "restoration_index": 234,
+          "schedule_index": 234,
+          "sequence_length": 465
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000043",
+          "restoration_index": 359,
+          "schedule_index": 359,
+          "sequence_length": 465
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000007",
+          "restoration_index": 59,
+          "schedule_index": 59,
+          "sequence_length": 464
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000002",
+          "restoration_index": 14,
+          "schedule_index": 14,
+          "sequence_length": 463
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000000",
+          "restoration_index": 347,
+          "schedule_index": 347,
+          "sequence_length": 456
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000000",
+          "restoration_index": 3,
+          "schedule_index": 3,
+          "sequence_length": 455
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000015",
+          "restoration_index": 128,
+          "schedule_index": 128,
+          "sequence_length": 455
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000027",
+          "restoration_index": 225,
+          "schedule_index": 225,
+          "sequence_length": 455
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000012",
+          "restoration_index": 100,
+          "schedule_index": 100,
+          "sequence_length": 454
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000004",
+          "restoration_index": 30,
+          "schedule_index": 30,
+          "sequence_length": 453
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000011",
+          "restoration_index": 85,
+          "schedule_index": 85,
+          "sequence_length": 453
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000016",
+          "restoration_index": 130,
+          "schedule_index": 130,
+          "sequence_length": 453
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000018",
+          "restoration_index": 153,
+          "schedule_index": 153,
+          "sequence_length": 453
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000025",
+          "restoration_index": 208,
+          "schedule_index": 208,
+          "sequence_length": 453
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000026",
+          "restoration_index": 213,
+          "schedule_index": 213,
+          "sequence_length": 453
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000032",
+          "restoration_index": 260,
+          "schedule_index": 260,
+          "sequence_length": 453
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000006",
+          "restoration_index": 54,
+          "schedule_index": 54,
+          "sequence_length": 443
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000008",
+          "restoration_index": 64,
+          "schedule_index": 64,
+          "sequence_length": 442
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000042",
+          "restoration_index": 354,
+          "schedule_index": 354,
+          "sequence_length": 442
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000027",
+          "restoration_index": 229,
+          "schedule_index": 229,
+          "sequence_length": 441
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000014",
+          "restoration_index": 114,
+          "schedule_index": 114,
+          "sequence_length": 440
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000025",
+          "restoration_index": 209,
+          "schedule_index": 209,
+          "sequence_length": 439
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000022",
+          "restoration_index": 183,
+          "schedule_index": 183,
+          "sequence_length": 435
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000033",
+          "restoration_index": 278,
+          "schedule_index": 278,
+          "sequence_length": 435
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000039",
+          "restoration_index": 328,
+          "schedule_index": 328,
+          "sequence_length": 435
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000044",
+          "restoration_index": 360,
+          "schedule_index": 360,
+          "sequence_length": 433
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000001",
+          "restoration_index": 5,
+          "schedule_index": 5,
+          "sequence_length": 432
+        }
+      ],
+      "requested_batch_size": 32
+    },
+    {
+      "batch_index": 9,
+      "effective_batch_size": 32,
+      "max_sequence_length": 432,
+      "members": [
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000008",
+          "restoration_index": 60,
+          "schedule_index": 60,
+          "sequence_length": 432
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000004",
+          "restoration_index": 372,
+          "schedule_index": 372,
+          "sequence_length": 432
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000009",
+          "restoration_index": 398,
+          "schedule_index": 398,
+          "sequence_length": 432
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000023",
+          "restoration_index": 188,
+          "schedule_index": 188,
+          "sequence_length": 431
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000030",
+          "restoration_index": 253,
+          "schedule_index": 253,
+          "sequence_length": 431
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000036",
+          "restoration_index": 303,
+          "schedule_index": 303,
+          "sequence_length": 431
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000047",
+          "restoration_index": 388,
+          "schedule_index": 388,
+          "sequence_length": 431
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000020",
+          "restoration_index": 160,
+          "schedule_index": 160,
+          "sequence_length": 430
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000024",
+          "restoration_index": 200,
+          "schedule_index": 200,
+          "sequence_length": 430
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000005",
+          "restoration_index": 373,
+          "schedule_index": 373,
+          "sequence_length": 430
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000042",
+          "restoration_index": 353,
+          "schedule_index": 353,
+          "sequence_length": 429
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000021",
+          "restoration_index": 175,
+          "schedule_index": 175,
+          "sequence_length": 427
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000003",
+          "restoration_index": 29,
+          "schedule_index": 29,
+          "sequence_length": 422
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000017",
+          "restoration_index": 139,
+          "schedule_index": 139,
+          "sequence_length": 422
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000000",
+          "restoration_index": 4,
+          "schedule_index": 4,
+          "sequence_length": 421
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000018",
+          "restoration_index": 154,
+          "schedule_index": 154,
+          "sequence_length": 421
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000030",
+          "restoration_index": 254,
+          "schedule_index": 254,
+          "sequence_length": 421
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000034",
+          "restoration_index": 284,
+          "schedule_index": 284,
+          "sequence_length": 421
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000031",
+          "restoration_index": 259,
+          "schedule_index": 259,
+          "sequence_length": 420
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000011",
+          "restoration_index": 89,
+          "schedule_index": 89,
+          "sequence_length": 419
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000041",
+          "restoration_index": 339,
+          "schedule_index": 339,
+          "sequence_length": 419
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000045",
+          "restoration_index": 379,
+          "schedule_index": 379,
+          "sequence_length": 419
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000032",
+          "restoration_index": 264,
+          "schedule_index": 264,
+          "sequence_length": 416
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000014",
+          "restoration_index": 110,
+          "schedule_index": 110,
+          "sequence_length": 412
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000002",
+          "restoration_index": 13,
+          "schedule_index": 13,
+          "sequence_length": 411
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000003",
+          "restoration_index": 28,
+          "schedule_index": 28,
+          "sequence_length": 411
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000008",
+          "restoration_index": 63,
+          "schedule_index": 63,
+          "sequence_length": 411
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000009",
+          "restoration_index": 78,
+          "schedule_index": 78,
+          "sequence_length": 411
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000010",
+          "restoration_index": 83,
+          "schedule_index": 83,
+          "sequence_length": 411
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000039",
+          "restoration_index": 325,
+          "schedule_index": 325,
+          "sequence_length": 411
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000031",
+          "restoration_index": 255,
+          "schedule_index": 255,
+          "sequence_length": 410
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000038",
+          "restoration_index": 310,
+          "schedule_index": 310,
+          "sequence_length": 410
+        }
+      ],
+      "requested_batch_size": 32
+    },
+    {
+      "batch_index": 10,
+      "effective_batch_size": 32,
+      "max_sequence_length": 410,
+      "members": [
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000006",
+          "restoration_index": 374,
+          "schedule_index": 374,
+          "sequence_length": 410
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000035",
+          "restoration_index": 288,
+          "schedule_index": 288,
+          "sequence_length": 409
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000010",
+          "restoration_index": 399,
+          "schedule_index": 399,
+          "sequence_length": 408
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000005",
+          "restoration_index": 38,
+          "schedule_index": 38,
+          "sequence_length": 407
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000018",
+          "restoration_index": 150,
+          "schedule_index": 150,
+          "sequence_length": 407
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000020",
+          "restoration_index": 163,
+          "schedule_index": 163,
+          "sequence_length": 407
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000031",
+          "restoration_index": 258,
+          "schedule_index": 258,
+          "sequence_length": 407
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000035",
+          "restoration_index": 285,
+          "schedule_index": 285,
+          "sequence_length": 407
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000006",
+          "restoration_index": 50,
+          "schedule_index": 50,
+          "sequence_length": 405
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000030",
+          "restoration_index": 250,
+          "schedule_index": 250,
+          "sequence_length": 405
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000015",
+          "restoration_index": 129,
+          "schedule_index": 129,
+          "sequence_length": 401
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000044",
+          "restoration_index": 364,
+          "schedule_index": 364,
+          "sequence_length": 401
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000040",
+          "restoration_index": 334,
+          "schedule_index": 334,
+          "sequence_length": 400
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000010",
+          "restoration_index": 84,
+          "schedule_index": 84,
+          "sequence_length": 399
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000013",
+          "restoration_index": 109,
+          "schedule_index": 109,
+          "sequence_length": 397
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000029",
+          "restoration_index": 239,
+          "schedule_index": 239,
+          "sequence_length": 397
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000035",
+          "restoration_index": 289,
+          "schedule_index": 289,
+          "sequence_length": 397
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000038",
+          "restoration_index": 314,
+          "schedule_index": 314,
+          "sequence_length": 397
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000016",
+          "restoration_index": 134,
+          "schedule_index": 134,
+          "sequence_length": 394
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000002",
+          "restoration_index": 349,
+          "schedule_index": 349,
+          "sequence_length": 390
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000003",
+          "restoration_index": 371,
+          "schedule_index": 371,
+          "sequence_length": 390
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000001",
+          "restoration_index": 8,
+          "schedule_index": 8,
+          "sequence_length": 389
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000011",
+          "restoration_index": 88,
+          "schedule_index": 88,
+          "sequence_length": 389
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000016",
+          "restoration_index": 133,
+          "schedule_index": 133,
+          "sequence_length": 389
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000024",
+          "restoration_index": 203,
+          "schedule_index": 203,
+          "sequence_length": 389
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000028",
+          "restoration_index": 233,
+          "schedule_index": 233,
+          "sequence_length": 389
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000033",
+          "restoration_index": 275,
+          "schedule_index": 275,
+          "sequence_length": 389
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000046",
+          "restoration_index": 383,
+          "schedule_index": 383,
+          "sequence_length": 389
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000010",
+          "restoration_index": 80,
+          "schedule_index": 80,
+          "sequence_length": 387
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000025",
+          "restoration_index": 205,
+          "schedule_index": 205,
+          "sequence_length": 387
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000037",
+          "restoration_index": 308,
+          "schedule_index": 308,
+          "sequence_length": 387
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000046",
+          "restoration_index": 380,
+          "schedule_index": 380,
+          "sequence_length": 386
+        }
+      ],
+      "requested_batch_size": 32
+    },
+    {
+      "batch_index": 11,
+      "effective_batch_size": 32,
+      "max_sequence_length": 386,
+      "members": [
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000007",
+          "restoration_index": 396,
+          "schedule_index": 396,
+          "sequence_length": 386
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000044",
+          "restoration_index": 363,
+          "schedule_index": 363,
+          "sequence_length": 385
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000015",
+          "restoration_index": 125,
+          "schedule_index": 125,
+          "sequence_length": 384
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000047",
+          "restoration_index": 385,
+          "schedule_index": 385,
+          "sequence_length": 384
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000023",
+          "restoration_index": 185,
+          "schedule_index": 185,
+          "sequence_length": 383
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000029",
+          "restoration_index": 235,
+          "schedule_index": 235,
+          "sequence_length": 383
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000021",
+          "restoration_index": 179,
+          "schedule_index": 179,
+          "sequence_length": 380
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000033",
+          "restoration_index": 279,
+          "schedule_index": 279,
+          "sequence_length": 379
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000026",
+          "restoration_index": 214,
+          "schedule_index": 214,
+          "sequence_length": 376
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000036",
+          "restoration_index": 304,
+          "schedule_index": 304,
+          "sequence_length": 375
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000037",
+          "restoration_index": 309,
+          "schedule_index": 309,
+          "sequence_length": 375
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000024",
+          "restoration_index": 204,
+          "schedule_index": 204,
+          "sequence_length": 374
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000036",
+          "restoration_index": 300,
+          "schedule_index": 300,
+          "sequence_length": 369
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000040",
+          "restoration_index": 333,
+          "schedule_index": 333,
+          "sequence_length": 369
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000007",
+          "restoration_index": 58,
+          "schedule_index": 58,
+          "sequence_length": 365
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000014",
+          "restoration_index": 113,
+          "schedule_index": 113,
+          "sequence_length": 365
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000026",
+          "restoration_index": 210,
+          "schedule_index": 210,
+          "sequence_length": 365
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000027",
+          "restoration_index": 228,
+          "schedule_index": 228,
+          "sequence_length": 365
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000032",
+          "restoration_index": 263,
+          "schedule_index": 263,
+          "sequence_length": 365
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000037",
+          "restoration_index": 305,
+          "schedule_index": 305,
+          "sequence_length": 365
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000045",
+          "restoration_index": 378,
+          "schedule_index": 378,
+          "sequence_length": 365
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000003",
+          "restoration_index": 25,
+          "schedule_index": 25,
+          "sequence_length": 364
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000005",
+          "restoration_index": 35,
+          "schedule_index": 35,
+          "sequence_length": 364
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000007",
+          "restoration_index": 55,
+          "schedule_index": 55,
+          "sequence_length": 364
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000017",
+          "restoration_index": 135,
+          "schedule_index": 135,
+          "sequence_length": 364
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000028",
+          "restoration_index": 230,
+          "schedule_index": 230,
+          "sequence_length": 363
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000041",
+          "restoration_index": 335,
+          "schedule_index": 335,
+          "sequence_length": 363
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000012",
+          "restoration_index": 104,
+          "schedule_index": 104,
+          "sequence_length": 355
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000039",
+          "restoration_index": 329,
+          "schedule_index": 329,
+          "sequence_length": 354
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000046",
+          "restoration_index": 384,
+          "schedule_index": 384,
+          "sequence_length": 354
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000001",
+          "restoration_index": 9,
+          "schedule_index": 9,
+          "sequence_length": 353
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000022",
+          "restoration_index": 184,
+          "schedule_index": 184,
+          "sequence_length": 353
+        }
+      ],
+      "requested_batch_size": 32
+    },
+    {
+      "batch_index": 12,
+      "effective_batch_size": 16,
+      "max_sequence_length": 345,
+      "members": [
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000017",
+          "restoration_index": 138,
+          "schedule_index": 138,
+          "sequence_length": 345
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000009",
+          "restoration_index": 75,
+          "schedule_index": 75,
+          "sequence_length": 344
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000004",
+          "restoration_index": 33,
+          "schedule_index": 33,
+          "sequence_length": 343
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000022",
+          "restoration_index": 180,
+          "schedule_index": 180,
+          "sequence_length": 343
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000034",
+          "restoration_index": 283,
+          "schedule_index": 283,
+          "sequence_length": 343
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000043",
+          "restoration_index": 355,
+          "schedule_index": 355,
+          "sequence_length": 339
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000009",
+          "restoration_index": 79,
+          "schedule_index": 79,
+          "sequence_length": 333
+        },
+        {
+          "episode_id": "TRAIN:RETENTION_TRAIN:rotate:000008",
+          "restoration_index": 397,
+          "schedule_index": 397,
+          "sequence_length": 324
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000019",
+          "restoration_index": 158,
+          "schedule_index": 158,
+          "sequence_length": 323
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000041",
+          "restoration_index": 338,
+          "schedule_index": 338,
+          "sequence_length": 323
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000000",
+          "restoration_index": 0,
+          "schedule_index": 0,
+          "sequence_length": 322
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000042",
+          "restoration_index": 350,
+          "schedule_index": 350,
+          "sequence_length": 322
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000019",
+          "restoration_index": 159,
+          "schedule_index": 159,
+          "sequence_length": 314
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000004",
+          "restoration_index": 34,
+          "schedule_index": 34,
+          "sequence_length": 312
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000019",
+          "restoration_index": 155,
+          "schedule_index": 155,
+          "sequence_length": 304
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000021",
+          "restoration_index": 178,
+          "schedule_index": 178,
+          "sequence_length": 303
+        }
+      ],
+      "requested_batch_size": 32
+    }
+  ],
+  "bucket_rule": "sort every frozen schedule row by descending frozen sequence_length then ascending original schedule_index; chunk requested 32; restore schedule_index before scoring",
+  "descriptive_protection_only_families": [
+    "color mapping",
+    "complete missing structure",
+    "overlay",
+    "propagation",
+    "recolor",
+    "rotate",
+    "same color",
+    "selector prerequisites"
+  ],
+  "manifest_id": "PROSPECTIVE_PAIRED_B32_TRAIN_NLL_ROBUSTNESS_V1_V2_ALL_400_PRIMARY_BATCH_MANIFEST",
+  "primary_inferential_families": [
+    "connected components",
+    "inside/contains",
+    "difference",
+    "width",
+    "orientation"
+  ],
+  "rows": 400,
+  "schema_version": 2,
+  "scoring_order": "restore original schedule_index before family aggregation",
+  "source_schedule_path": "experiments\\capability_repair_baseline_v1\\forward_capability_repair_v2\\atomic_prerequisite_repair_successor_proposal_v1\\concrete_protocol_v1\\ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json",
+  "source_schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6"
+}

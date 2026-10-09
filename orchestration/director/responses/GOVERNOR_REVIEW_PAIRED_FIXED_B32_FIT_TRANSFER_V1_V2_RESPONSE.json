@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_PAIRED_FIXED_B32_FIT_TRANSFER_V1_V2_RESPONSE",
+  "brief_id": "GOVERNOR_REVIEW_PAIRED_FIXED_B32_FIT_TRANSFER_V1_V2",
+  "reviewed_brief_sha256": "539af07939290c0530638121dbd6f1d7d97a220d1d1f18cb84de0e9163318577",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "PAIRED_FIXED_B32_FIT_TRANSFER_V1_FINAL_EXECUTION_SAFETY_REPAIR",
+  "root_cause": "The V2 worker now has a real scoring path and a frozen Batch1 cohort, but four execution-critical gaps remain. Its deadline is created only after imports and is checked only between forward batches, so model loading can exceed the 1800-second hard cap without active termination. Runtime model identity checks do not verify the actual full base shard/config/tokenizer set or adapter config bytes. The package retains an aggregate-DEV H3 decision rule that conflicts with the new family-aligned rule, and the worker records raw rows without invoking or emitting the numerical-stability classification. Finally, the claimed negative-test gate contains only two conclusion_stable unit tests and does not exercise authorization, identity, freshness, or cap failures.",
+  "smallest_repair": {
+    "scope": "CLOSE_ONLY_THE_FOUR_EXECUTION_CRITICAL_GAPS_WITHOUT_CHANGING_THE_STUDY",
+    "required_changes": [
+      "Replace the conflicting decision text with one authoritative frozen family-aligned rule. Before NLL execution, derive and freeze per-family DEV exact-match counts from the three already frozen result artifacts without opening new labels. Define fit-improved family, H1-supported, H3-supported and INCONCLUSIVE mutually exclusively; repeats are numerical stability checks, not independent statistical samples.",
+      "Add a deterministic CPU postprocessor or equivalent terminal analysis that aggregates the raw paired rows, applies the frozen family rule, calls the B1-versus-B32 conclusion-stability check, and emits NUMERICALLY_INCONCLUSIVE whenever any named family delta sign or final classification changes. Preserve raw rows regardless of outcome.",
+      "Enforce the 1800-second cap from before framework/model import through final receipt using an external active watchdog or parent launcher able to stop a hung load/forward process. On timeout, preserve a capped terminal receipt and mark all partial output INCOMPLETE_NOT_INTERPRETABLE.",
+      "Before model import, verify the actual runtime base-model identity against the trusted complete manifest, including every expected weight shard plus config/tokenizer files and forbidden extras where specified; verify both adapter weight and adapter config for all three checkpoints. Do not rely on a manifest-file hash while loading an unchecked directory.",
+      "Expand CPU negative tests to cover non-CONTINUE authorization, altered config/worker/source/cap binding, stale output, TRAIN/manifest/crosscheck mismatch, incomplete base or adapter identity, timeout classification, and synthetic B1/B32 sign or conclusion reversal. Run the tests and freeze their exact result.",
+      "Prepare exact source provenance and launch command for the repaired bytes. Do not push without the owner's separate Git push authorization; if push is the sole remaining blocker, report AUTH_REQUIRED_GIT_PUSH rather than weakening provenance."
+    ]
+  },
+  "frozen_conditions": [
+    "The selected H1-versus-H3 question, three checkpoints, all-400 primary manifest, five weak families, 32-row validation-only Batch1 cohort, three repeats, BF16 forward, FP32 loss aggregation and 1800-second cap remain unchanged.",
+    "Batch32 remains primary; Batch1 is only a conclusion-stability crosscheck and must not become a new numerical-equivalence research program.",
+    "No prior checkpoint, evaluation result, closed diagnostic, controlled stop, threshold or terminal decision may be altered or reinterpreted."
+  ],
+  "forbidden_actions": [
+    "Do not launch the current V2 worker on GPU.",
+    "Do not run the superseded timing pilot.",
+    "Do not train, optimize, backpropagate, generate, mutate checkpoints, use DEV or retention labels in NLL, or open FINAL_AUDIT.",
+    "Do not commit or push without the owner's separate Git authorization."
+  ],
+  "another_review_required": true,
+  "scientific_training_authorized": false,
+  "gpu_inference_authorized": false,
+  "model_loading_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

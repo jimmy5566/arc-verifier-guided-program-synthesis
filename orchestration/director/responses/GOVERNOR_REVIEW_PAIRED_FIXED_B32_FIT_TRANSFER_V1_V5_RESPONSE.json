@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_PAIRED_FIXED_B32_FIT_TRANSFER_V1_V5_RESPONSE",
+  "brief_id": "GOVERNOR_REVIEW_PAIRED_FIXED_B32_FIT_TRANSFER_V1_V5",
+  "reviewed_brief_sha256": "0122d4851b8650f287031523709d4324917377a2fa5252792998d95d9e0f4f22",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "PAIRED_FIXED_B32_FIT_TRANSFER_V1_REMOVE_RULE_CONFLICT_AND_COMPLETE_TEST_GATE",
+  "root_cause": "V5 now binds the current implementation bytes, but the scientific package still contains both the obsolete aggregate-DEV decision_rule and the family-aligned rule used by the analyzer. This leaves two conflicting interpretations frozen. The V7 validation ran only one identity-verifier test and does not exercise the other promised fail-closed gates, so it cannot support launch authorization.",
+  "smallest_repair": {
+    "scope": "NO_NEW_FEATURES_ONLY_REMOVE_CONFLICT_AND_RUN_REAL_GATE_TESTS",
+    "required_changes": [
+      "Remove the obsolete aggregate-DEV decision_rule from the package. Freeze exactly one authoritative family-aligned mutually exclusive classifier matching the analyzer implementation.",
+      "Add executable CPU tests proving: analyzer classification changes when the same fitted families have improved versus nonimproved frozen DEV counts; B1/B32 sign or classification reversal yields NUMERICALLY_INCONCLUSIVE; non-CONTINUE or mismatched authorization fails; stale output fails; the hard-cap launcher emits a timeout receipt for a bounded dummy subprocess; identity missing/hash/extra cases fail.",
+      "Run one explicit unittest discovery command covering all paired-fixed-B32 tests. Freeze its command, exit code, discovered test count, stdout/stderr SHA256 and all tested source/test hashes.",
+      "Regenerate the package and validation from actual bytes and verify every binding before requesting review. No additional scientific or infrastructure change is requested."
+    ]
+  },
+  "frozen_conditions": [
+    "All scientific inputs, checkpoint identities, primary and crosscheck cohorts, precision, repeats, decision thresholds and the 1800-second cap remain unchanged.",
+    "The implementation is otherwise accepted provisionally; this repair must not expand scope."
+  ],
+  "forbidden_actions": [
+    "Do not launch V5 or load a model.",
+    "Do not push without separate owner authorization.",
+    "Do not train, optimize, generate, mutate checkpoints or open FINAL_AUDIT."
+  ],
+  "another_review_required": true,
+  "scientific_training_authorized": false,
+  "gpu_inference_authorized": false,
+  "model_loading_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

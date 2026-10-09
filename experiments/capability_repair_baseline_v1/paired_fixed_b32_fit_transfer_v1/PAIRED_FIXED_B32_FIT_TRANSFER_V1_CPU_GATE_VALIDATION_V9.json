@@ -1,0 +1,29 @@
+{
+  "command": [
+    "C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_paired_fixed_b32*.py"
+  ],
+  "discovered_test_count": 10,
+  "exit_code": 0,
+  "schema_version": 1,
+  "status": "PASS",
+  "stderr_sha256": "9364b7421c11aa26108cb04406044436d7a88c493dd5e3bafe6dfc3759544b49",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "tested_source_sha256": {
+    "scripts/analyze_paired_fixed_b32_fit_transfer_v1.py": "04ff09ff259fdbc080f125e11aa7983278de2dec1e80d7a93ee9122ab54ffae8",
+    "scripts/arc2_hard_cap_launcher.py": "897c6a725bbc74ff0386ae044c2c4086b60ef2dc29e63288e0abae81e861ea82",
+    "scripts/launch_paired_fixed_b32_fit_transfer_v1.py": "88a46657c44b1e262440e391563b32e825f73ff4cad8c501dee23ecbe9e71da5",
+    "scripts/run_paired_fixed_b32_fit_transfer_v1.py": "0c9220e4537b09c56674df2776c4813ceeecde62b5e79ebc5d793567b6d4999e",
+    "scripts/verify_paired_fixed_b32_package_bindings.py": "ef7802c319a47c80955e808c712457ff75d7d4987d953c2e0294944d9c0f785c",
+    "scripts/verify_paired_fixed_b32_runtime_identity.py": "ff131afb6dfe97a85f952e036c68978101ab412a1557aec7b3803dbb049e7998",
+    "tests/test_paired_fixed_b32_execution_contract.py": "f1698070176da85218d8b7fba130fc7b7e9242b82d6b3efa96980b0258cba4b0",
+    "tests/test_paired_fixed_b32_fit_transfer_v1.py": "c974d4e44c7c21e73f84fbe7cf5c0c009fdfccf834de8deeb3a675c454cb58d6",
+    "tests/test_paired_fixed_b32_identity_verifier.py": "49e81ed991be292852b77993a6f203a8c6ceb1fa5653ec37e4378437c36b96e5"
+  }
+}

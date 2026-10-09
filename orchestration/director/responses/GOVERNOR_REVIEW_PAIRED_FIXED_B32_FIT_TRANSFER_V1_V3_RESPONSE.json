@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_PAIRED_FIXED_B32_FIT_TRANSFER_V1_V3_RESPONSE",
+  "brief_id": "GOVERNOR_REVIEW_PAIRED_FIXED_B32_FIT_TRANSFER_V1_V3",
+  "reviewed_brief_sha256": "8d9e4b5fa84e2b809604168c5feaab5aabb042608d5598f4d73519cf615c7a8d",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "PAIRED_FIXED_B32_FIT_TRANSFER_V1_CONFIRMED_CODE_DEFECTS_ONLY",
+  "root_cause": "The V3 package claims the prior execution gaps are closed, but the bound code does not implement those claims. The analyzer reads the DEV evidence and then ignores it, hard-coding every family DEV delta to zero; this can systematically misclassify any candidate with three fitted families as H3. The package still contains the superseded aggregate-DEV decision text. The identity verifier accepts unlisted extra files and is not integrated with worker execution. No frozen atomic launch sequence binds identity verification, the external cap, the worker and postprocessing. The referenced test file still contains only two conclusion-stability unit tests, so the claimed authorization, identity, freshness and timeout negative tests were not run.",
+  "smallest_repair": {
+    "scope": "FIX_THE_CONFIRMED_IMPLEMENTATION_DEFECTS_AND_PROVE_THE_BOUND_LAUNCH_CHAIN",
+    "required_changes": [
+      "Fix the analyzer to consume the exact frozen per-family DEV evidence for each candidate versus V7. Remove the hard-coded family_dev zeros. Add a fixture where TRAIN-NLL improves but one or more corresponding DEV families improve, and prove it does not incorrectly return H3.",
+      "Delete the obsolete aggregate-DEV decision_rule from the execution package and retain one authoritative mutually exclusive family-aligned rule. Bind the rule or analyzer hash in the package and terminal result.",
+      "Make runtime identity verification fail on missing expected files, hash mismatch, and unexpected model weight shards or adapter weight/config files. Verify the manifest itself declares a complete nonempty base weight set plus required config/tokenizer and adapter config/weight entries.",
+      "Freeze one launch contract or wrapper that executes, in order, authorization and source-parity validation, complete runtime identity verification, fresh-output verification, the externally capped worker, then CPU postprocessing only after a COMPLETE_NO_UPDATE receipt. The single 1800-second external cap must cover every preflight/model/import/forward/finalization subprocess in the GPU stage.",
+      "Replace the two-test file with real CPU negative coverage for all promised gates. Freeze and report the actual unittest command, exit code, test count and output hash. Tests must include altered authorization/config/worker/source/cap, stale output, TRAIN/manifest/crosscheck mismatch, missing/extra/mismatched model and adapter files, cap timeout, analyzer DEV use, and B1/B32 sign or conclusion reversal.",
+      "Return a new package whose CPU validation independently checks every bound file hash and the launch-chain contract. Do not copy the prior PASS status forward."
+    ]
+  },
+  "frozen_conditions": [
+    "No scientific condition changes: same question, checkpoints, all-400 Batch32 primary manifest, 32-row Batch1 crosscheck, family set, precision, repeats and 1800-second cap.",
+    "No new timing pilot or numerical-equivalence research branch.",
+    "The owner's standing authorization covers this sub-three-hour GPU measurement only after these code gates and exact remote source parity pass."
+  ],
+  "forbidden_actions": [
+    "Do not launch V3 on GPU or load a model.",
+    "Do not use the current analyzer output for a scientific claim.",
+    "Do not push without separate owner authorization.",
+    "Do not train, optimize, backpropagate, generate, mutate checkpoints or open FINAL_AUDIT."
+  ],
+  "another_review_required": true,
+  "scientific_training_authorized": false,
+  "gpu_inference_authorized": false,
+  "model_loading_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

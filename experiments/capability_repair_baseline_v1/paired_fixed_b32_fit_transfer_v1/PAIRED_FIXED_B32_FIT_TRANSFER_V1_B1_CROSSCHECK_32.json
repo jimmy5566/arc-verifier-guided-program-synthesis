@@ -1,0 +1,244 @@
+{
+  "analysis_rule": "only 30 PRIMARY_WEAK rows enter B1/B32 conclusion; context rows preserve B32 shape",
+  "b1_order": [
+    "TRAIN:ATOMIC_REPAIR:inside/contains:000035",
+    "TRAIN:ATOMIC_REPAIR:difference:000029",
+    "TRAIN:ATOMIC_REPAIR:inside/contains:000038",
+    "TRAIN:ATOMIC_REPAIR:inside/contains:000047",
+    "TRAIN:ATOMIC_REPAIR:difference:000007",
+    "TRAIN:ATOMIC_REPAIR:difference:000017",
+    "TRAIN:ATOMIC_REPAIR:same color:000026",
+    "TRAIN:ATOMIC_REPAIR:inside/contains:000011",
+    "TRAIN:ATOMIC_REPAIR:inside/contains:000039",
+    "TRAIN:ATOMIC_REPAIR:difference:000031",
+    "TRAIN:ATOMIC_REPAIR:inside/contains:000037",
+    "TRAIN:ATOMIC_REPAIR:difference:000013",
+    "TRAIN:ATOMIC_REPAIR:same color:000015",
+    "TRAIN:ATOMIC_REPAIR:difference:000032",
+    "TRAIN:ATOMIC_REPAIR:orientation:000023",
+    "TRAIN:ATOMIC_REPAIR:width:000013",
+    "TRAIN:ATOMIC_REPAIR:connected components:000002",
+    "TRAIN:ATOMIC_REPAIR:orientation:000047",
+    "TRAIN:ATOMIC_REPAIR:width:000038",
+    "TRAIN:ATOMIC_REPAIR:connected components:000040",
+    "TRAIN:ATOMIC_REPAIR:width:000043",
+    "TRAIN:ATOMIC_REPAIR:connected components:000045",
+    "TRAIN:ATOMIC_REPAIR:orientation:000020",
+    "TRAIN:ATOMIC_REPAIR:orientation:000009",
+    "TRAIN:ATOMIC_REPAIR:width:000019",
+    "TRAIN:ATOMIC_REPAIR:width:000041",
+    "TRAIN:ATOMIC_REPAIR:connected components:000000",
+    "TRAIN:ATOMIC_REPAIR:connected components:000042",
+    "TRAIN:ATOMIC_REPAIR:orientation:000019",
+    "TRAIN:ATOMIC_REPAIR:orientation:000004",
+    "TRAIN:ATOMIC_REPAIR:connected components:000019",
+    "TRAIN:ATOMIC_REPAIR:width:000021"
+  ],
+  "batch32_batches": [
+    {
+      "batch_index": 0,
+      "effective_batch_size": 32,
+      "max_sequence_length": 954,
+      "members": [
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000035",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 286,
+          "sequence_length": 954
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000029",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 237,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000038",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 311,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000047",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 386,
+          "sequence_length": 906
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000007",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 57,
+          "sequence_length": 862
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000017",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 137,
+          "sequence_length": 862
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000026",
+          "role": "CONTEXT_ONLY",
+          "schedule_index": 340,
+          "sequence_length": 642
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000011",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 86,
+          "sequence_length": 638
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000039",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 326,
+          "sequence_length": 638
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000031",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 257,
+          "sequence_length": 598
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:inside/contains:000037",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 306,
+          "sequence_length": 598
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000013",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 107,
+          "sequence_length": 558
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:same color:000015",
+          "role": "CONTEXT_ONLY",
+          "schedule_index": 193,
+          "sequence_length": 558
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:difference:000032",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 262,
+          "sequence_length": 558
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000023",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 189,
+          "sequence_length": 512
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000013",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 108,
+          "sequence_length": 501
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000002",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 10,
+          "sequence_length": 500
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000047",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 389,
+          "sequence_length": 487
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000038",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 313,
+          "sequence_length": 477
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000040",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 330,
+          "sequence_length": 477
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000043",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 358,
+          "sequence_length": 477
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000045",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 375,
+          "sequence_length": 476
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000020",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 164,
+          "sequence_length": 466
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000009",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 79,
+          "sequence_length": 333
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000019",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 158,
+          "sequence_length": 323
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000041",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 338,
+          "sequence_length": 323
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000000",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 0,
+          "sequence_length": 322
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000042",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 350,
+          "sequence_length": 322
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000019",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 159,
+          "sequence_length": 314
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:orientation:000004",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 34,
+          "sequence_length": 312
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:connected components:000019",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 155,
+          "sequence_length": 304
+        },
+        {
+          "episode_id": "TRAIN:ATOMIC_REPAIR:width:000021",
+          "role": "PRIMARY_WEAK",
+          "schedule_index": 178,
+          "sequence_length": 303
+        }
+      ],
+      "requested_batch_size": 32
+    }
+  ],
+  "cohort_id": "PAIRED_FIXED_B32_FIT_TRANSFER_V1_B1_CROSSCHECK_32",
+  "context_only_rows": 2,
+  "primary_weak_rows": 30,
+  "schema_version": 1,
+  "selection_rule": "per weak family: three shortest and three longest frozen schedule rows; two same-color TRAIN context-only rows; target-blind"
+}

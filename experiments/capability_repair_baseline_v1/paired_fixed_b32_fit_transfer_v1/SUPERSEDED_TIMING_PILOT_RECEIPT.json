@@ -1,0 +1,12 @@
+{
+  "director_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_PROSPECTIVE_PAIRED_B32_TRAIN_NLL_ROBUSTNESS_V1_V3_RESPONSE.json",
+  "director_response_sha256": "fc1376ddad46681547f67273c85189559cfb91e2e6c9f685ed0086424988f30b",
+  "execution_status": "NOT_RUN",
+  "pilot_contract_path": "experiments/capability_repair_baseline_v1/prospective_paired_b32_train_nll_robustness_v1/PROSPECTIVE_PAIRED_B32_TRAIN_NLL_ROBUSTNESS_V1_V2_TIMING_PILOT_CONTRACT.json",
+  "pilot_contract_sha256": "159bb1664af37f6da1a6aa8abe515423bf6e79486fec34deb5bb75482b683f09",
+  "reason": "superseded by selected PAIRED_FIXED_B32_FIT_TRANSFER_V1; no GPU time or model loading consumed",
+  "resume_forbidden": true,
+  "schema_version": 1,
+  "stage": "PROSPECTIVE_PAIRED_B32_TRAIN_NLL_ROBUSTNESS_V1_V2_TIMING_PILOT",
+  "status": "TERMINAL_SUPERSEDED_NOT_EXECUTED"
+}

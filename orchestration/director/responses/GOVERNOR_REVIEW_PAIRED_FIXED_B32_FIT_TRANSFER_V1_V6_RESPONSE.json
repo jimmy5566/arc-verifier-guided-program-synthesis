@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_PAIRED_FIXED_B32_FIT_TRANSFER_V1_V6_RESPONSE",
+  "brief_id": "GOVERNOR_REVIEW_PAIRED_FIXED_B32_FIT_TRANSFER_V1_V6",
+  "reviewed_brief_sha256": "17227103e7a7d223e9b6c35f4809d72b6ca2dfab6c51232fd6d1e74626600ca4",
+  "decision": "CONTINUE_CONTROLLER",
+  "scope": "ONE_BOUNDED_NO_UPDATE_PAIRED_FIXED_B32_FIT_TRANSFER_V1_MEASUREMENT",
+  "scientific_outcome": "SCIENTIFIC_EXECUTION_APPROVED_SUBJECT_TO_PROVENANCE_AND_MACHINE_GATES",
+  "reason": "The selected experiment directly distinguishes inadequate supervised fitting from fitting without same-family frozen DEV transfer. V11 freezes one authoritative family-aligned classifier, all-400 fixed Batch32 primary measurement, a validation-only 32-row Batch1 conclusion-stability crosscheck, exact three-checkpoint identities, no-update boundaries and an 1800-second external worker cap. Local revalidation ran 10 tests successfully and the package verifier confirmed all nine bound implementation/test files against package SHA256 930e1ebd15caa5312eac9eb8655a86fc16e2dab4d5610a1e5ff8ec299930622d.",
+  "approved_bindings": {
+    "execution_package_path": "experiments/capability_repair_baseline_v1/paired_fixed_b32_fit_transfer_v1/PAIRED_FIXED_B32_FIT_TRANSFER_V1_EXECUTION_PACKAGE_V11.json",
+    "execution_package_sha256": "930e1ebd15caa5312eac9eb8655a86fc16e2dab4d5610a1e5ff8ec299930622d",
+    "cpu_gate_validation_path": "experiments/capability_repair_baseline_v1/paired_fixed_b32_fit_transfer_v1/PAIRED_FIXED_B32_FIT_TRANSFER_V1_CPU_GATE_VALIDATION_V10.json",
+    "cpu_gate_validation_sha256": "8ff7cae0a363ef0737c6baf9f385ac5547942d8172406b3db2c689d308ed8a0d",
+    "worker_sha256": "0c9220e4537b09c56674df2776c4813ceeecde62b5e79ebc5d793567b6d4999e",
+    "runtime_cap_seconds": 1800,
+    "test_count": 10,
+    "package_bound_file_count": 9
+  },
+  "controller_resolution_plan": {
+    "next_action": "Create one local provenance commit containing only the reviewed experiment package, its referenced small artifacts, exact bound scripts/tests and Director responses; do not include unrelated worktree changes. Then stop at AUTH_REQUIRED_GIT_PUSH and report the local commit SHA plus target non-main branch.",
+    "after_push_authorization": "Push without force to the existing non-main experiment/infrastructure branch, verify LOCAL HEAD = ORIGIN REF = RUNPOD CHECKOUT, create one derived immutable launch authorization bound to this Director decision, the exact approved package and worker hashes, the resulting source commit, 1800-second cap, fresh output root and single-use nonce, pass complete runtime identity preflight, and launch exactly one detached no-update measurement.",
+    "another_director_review_required_before_launch": false
+  },
+  "machine_gates": [
+    "The reviewed bytes are committed and pushed with local, origin and RunPod source parity at one exact non-main commit.",
+    "The derived launch authorization exactly binds this response, package, worker, source commit, 1800-second cap, fresh output and nonce.",
+    "Complete base and all three adapter directory identities pass before model import.",
+    "The output directory is fresh and no matching remote job or terminal receipt already exists.",
+    "The external watchdog wraps the worker from before model import through its terminal receipt."
+  ],
+  "interpretation_boundaries": [
+    "A COMPLETE_NO_UPDATE receipt is process evidence only; scientific interpretation requires successful CPU postprocessing and the numerical-stability rule.",
+    "Any B1/B32 sign or classifier disagreement yields NUMERICALLY_INCONCLUSIVE.",
+    "No result from this stage establishes gradient interference, objective mismatch or compositional transfer."
+  ],
+  "user_gpu_authorization_basis": "Standing owner authorization permits GPU work with a hard cap below three hours; this stage is capped at 1800 seconds.",
+  "gpu_inference_authorized_after_machine_gates": true,
+  "model_loading_authorized_after_machine_gates": true,
+  "scientific_training_authorized": false,
+  "optimizer_construction_authorized": false,
+  "backward_authorized": false,
+  "generation_authorized": false,
+  "final_audit_authorized": false,
+  "git_push_authorized": false,
+  "another_review_required": false,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

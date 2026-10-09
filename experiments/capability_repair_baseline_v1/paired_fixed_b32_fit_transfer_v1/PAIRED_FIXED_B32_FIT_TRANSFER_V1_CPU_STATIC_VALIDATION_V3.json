@@ -1,0 +1,12 @@
+{
+  "checks": {
+    "cap_1800": true,
+    "config_worker_sha": true,
+    "crosscheck_sha": true,
+    "no_update": true
+  },
+  "config_sha256": "549eea87caf9ff2c799f8516d9e3015d2bf762e947750bdba8503c5d1723d45e",
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY",
+  "worker_sha256": "a2b122b0e34f5ed57e39058719a7ea285392dd4317e83c89283821f5a29c86fa"
+}

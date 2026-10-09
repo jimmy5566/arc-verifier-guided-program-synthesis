@@ -1,0 +1,110 @@
+{
+  "bound_old_response": {
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_PROSPECTIVE_PAIRED_B32_TRAIN_NLL_ROBUSTNESS_V1_V3_RESPONSE.json",
+    "sha256": "fc1376ddad46681547f67273c85189559cfb91e2e6c9f685ed0086424988f30b"
+  },
+  "decision_rule": {
+    "H1_SUPPORTED_CANDIDATE": "no candidate has consistently lower TRAIN-NLL on three or more of the five weak families",
+    "H3_SUPPORTED_CANDIDATE": "a candidate has consistently lower TRAIN-NLL on three or more weak families while its frozen DEV target result is below V7",
+    "otherwise": "INCONCLUSIVE; no causal mechanism claim"
+  },
+  "execution": {
+    "all_400_rows": true,
+    "cap_seconds": 1800,
+    "forbidden": [
+      "optimizer",
+      "backward",
+      "training",
+      "generation",
+      "checkpoint mutation",
+      "DEV labels in NLL",
+      "RETENTION labels in NLL",
+      "FINAL_AUDIT"
+    ],
+    "loss_precision": "FP32 causal cross entropy and aggregation",
+    "model_precision": "BF16 forward",
+    "repeat_count": 3,
+    "requested_batch_size": 32,
+    "source_commit": "00b6b65b3893864e7410e21168c6d5faa65a218f",
+    "worker_path": "scripts/run_paired_fixed_b32_fit_transfer_v1.py",
+    "worker_sha256": "0507261752bcd9ff06daac5143dbfdb1e8c9012113e62c64da994c762d081687"
+  },
+  "execution_authorized": false,
+  "frozen_transfer_context": {
+    "V7_target_dev_correct": 76,
+    "atomic_repair_target_dev_correct": 71,
+    "family_balanced_target_dev_correct": 74,
+    "interpretation": "pre-existing descriptive frozen DEV result only; no DEV label is used in NLL"
+  },
+  "hypotheses": {
+    "H1": "candidate does not show consistent lower weak-family TRAIN-NLL than V7 under the fixed protocol",
+    "H3": "candidate shows consistent lower weak-family TRAIN-NLL than V7 while its already frozen TARGET_DEV weak-family result does not improve",
+    "limits": [
+      "does not establish gradient interference",
+      "does not establish generalization beyond frozen DEV",
+      "does not establish objective mismatch or representation limit"
+    ]
+  },
+  "inputs": {
+    "checkpoint_order": [
+      "CAPABILITY_REPAIR_BASELINE_V1_V7",
+      "ATOMIC_PREREQUISITE_REPAIR_V1_001_REJECTED",
+      "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001"
+    ],
+    "conditions": {
+      "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001": {
+        "adapter_sha256": "c7b275587796b0d9b07d45e933371d5ae26e9aa76df7a895104d7c4e35117780",
+        "checkpoint_manifest_declared_identity": null,
+        "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json",
+        "checkpoint_manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9",
+        "result_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+        "result_sha256": "cc97e376e2a4703c0d73e4a79f0bbf528ac71c8750b9b5972a85f9099cb40216",
+        "status": "COMPLETE_REJECTED"
+      },
+      "ATOMIC_PREREQUISITE_REPAIR_V1_001_REJECTED": {
+        "adapter_sha256": "7f5e90f611a2bfcc993e96e1dfcd37b5d08ce14e88244c69cca231178edac2d2",
+        "checkpoint_manifest_declared_identity": "68f3ba7426203e1f432931ff8134f8ec474ba7ea592fec2abd17d7793b4c9cc5",
+        "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_001_FINAL_CHECKPOINT_MANIFEST.json",
+        "checkpoint_manifest_sha256": "0586201a3eec4ac1c56a1de42a5b20c9ff74f52069fbe92a55691ece28ed7ddd",
+        "result_path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/evaluation_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+        "result_sha256": "fc7360b922404f96645e4cf2efea849f7fa9527282e32124bb9342ca3906c01b",
+        "status": "COMPLETE_REJECTED"
+      },
+      "CAPABILITY_REPAIR_BASELINE_V1_V7": {
+        "adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+        "checkpoint_manifest_declared_identity": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da",
+        "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+        "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+        "result_path": "experiments/capability_repair_baseline_v1/corrected_baseline_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+        "result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+      }
+    },
+    "primary_manifest_path": "experiments/capability_repair_baseline_v1/prospective_paired_b32_train_nll_robustness_v1/PROSPECTIVE_PAIRED_B32_TRAIN_NLL_ROBUSTNESS_V1_V2_ALL_400_PRIMARY_B32_BATCH_MANIFEST.json",
+    "primary_manifest_sha256": "fc9fd87cf4f577911d08864e1f39af897a457a6fb14e1e134a6bd1dc6b8c6ef8",
+    "train_path": "experiments\\base_only_targeted_repair_remote_first_v2\\remote_dataset_expected\\TRAIN.jsonl",
+    "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+  },
+  "output_contract": {
+    "fresh_output_required": true,
+    "partial_or_cap": "INCOMPLETE_NOT_INTERPRETABLE",
+    "raw_rows_required": [
+      "checkpoint_id",
+      "repeat_index",
+      "batch_index",
+      "episode_id",
+      "family",
+      "schedule_index",
+      "row_nll_sum",
+      "supervised_token_count"
+    ],
+    "terminal_receipt_required": true
+  },
+  "protocol_id": "PAIRED_FIXED_B32_FIT_TRANSFER_V1",
+  "question": "Under one fixed all-400-row Batch32 teacher-forced TRAIN-NLL protocol, do rejected repair checkpoints show evidence of failed supervised fitting (H1) or fitting without frozen DEV transfer (H3)?",
+  "schema_version": 1,
+  "status": "CPU_ONLY_FROZEN_PENDING_STAGE_EXECUTION_REVIEW",
+  "supersedes_old_timing_pilot": {
+    "path": "experiments/capability_repair_baseline_v1/paired_fixed_b32_fit_transfer_v1/SUPERSEDED_TIMING_PILOT_RECEIPT.json",
+    "sha256": "2f9277d149327751958e6670217a3b32e3f971ad94211b824bc348ceeb5cb913"
+  }
+}

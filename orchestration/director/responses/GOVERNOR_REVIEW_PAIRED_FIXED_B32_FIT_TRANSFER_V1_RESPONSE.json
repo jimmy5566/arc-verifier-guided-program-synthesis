@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_PAIRED_FIXED_B32_FIT_TRANSFER_V1_RESPONSE",
+  "brief_id": "GOVERNOR_REVIEW_PAIRED_FIXED_B32_FIT_TRANSFER_V1",
+  "reviewed_brief_sha256": "c53864224ab059f90c8ffd5b43f8415fd33dbf6814a0ffe3571d9a635fb16d52",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "PAIRED_FIXED_B32_FIT_TRANSFER_V1_PREEXECUTION_ONLY",
+  "root_cause": "The frozen scientific question is appropriate, but the submitted package is not executable or numerically decision-safe. The bound worker implements only CPU self-test and unconditionally raises EXTERNAL_STAGE_AUTHORIZATION_REQUIRED_BEFORE_MODEL_IMPORT in normal mode. The package also omits a prospectively frozen representative Batch1 crosscheck, so it cannot establish whether fixed-B32 numerical effects could change the H1-versus-H3 classification.",
+  "smallest_repair": {
+    "scope": "MAKE_THE_SELECTED_NO_UPDATE_MEASUREMENT_EXECUTABLE_AND_CONCLUSION_STABLE",
+    "required_changes": [
+      "Implement the existing worker's bounded no-update execution path for the three exact checkpoints, frozen all-400-row length-bucketed Batch32 manifest, three repeats, BF16 model forward, FP32 causal loss and aggregation, raw-row output, atomic terminal receipt, and active 1800-second cap. Do not change the scientific cohort or add another timing pilot.",
+      "Freeze one small representative Batch1 crosscheck cohort before execution, stratified across the five primary weak families and including short and long sequences. Evaluate exactly those rows for all three checkpoints under the same tokenization, masks, position IDs, causal shift, and FP32 loss aggregation used by the Batch32 path.",
+      "Predeclare a conclusion-stability numerical rule rather than demanding strict cross-batch equality: report per-row and per-family B1-versus-B32 drift, and classify the study NUMERICALLY_INCONCLUSIVE if the crosscheck changes any checkpoint-delta sign or could change the final H1/H3 outcome. Batch32 remains the primary all-400 measurement.",
+      "Make the H3 rule family-aligned: a candidate supports fit-without-transfer only when lower TRAIN-NLL is established on prospectively named weak families and the already frozen DEV evidence for those same families fails to improve versus V7. Aggregate DEV decline alone is descriptive and cannot substitute for matched-family transfer evidence.",
+      "Bind and verify before model import the exact brief response, source commit, worker, package, manifests, TRAIN bytes, base-model identity, all three adapter identities, fresh output root, command, environment, and the owner's standing sub-three-hour GPU authorization. Fail closed on any mismatch.",
+      "Add CPU negative tests for missing or altered bindings, unauthorized or over-cap launch, stale output, incomplete checkpoint identity, missing Batch1 cohort, and a synthetic crosscheck that must produce NUMERICALLY_INCONCLUSIVE when a sign or final classification changes."
+    ]
+  },
+  "frozen_conditions": [
+    "The primary question remains H1 failed supervised fitting versus H3 fitting without transfer.",
+    "The primary measurement remains all 400 TRAIN rows in the frozen deterministic length-bucketed Batch32 manifest across the same three checkpoint identities and three repeats.",
+    "The five primary weak families remain connected components, inside/contains, difference, width, and orientation; all other families remain descriptive or protection-only.",
+    "The Batch1 cohort is validation-only and must not replace, tune, or filter the all-400 primary measurement.",
+    "The active GPU wall-time hard cap remains 1800 seconds.",
+    "Prior closed diagnostics, V4 controlled stop, historical checkpoints, evaluation results, and terminal decisions remain immutable and are not reinterpreted."
+  ],
+  "forbidden_actions": [
+    "Do not execute the current self-test-only worker as a scientific measurement.",
+    "Do not run the superseded 600-second timing pilot.",
+    "Do not optimize, backpropagate, train, generate, mutate checkpoints, expose protected labels to the NLL path, or open FINAL_AUDIT.",
+    "Do not turn the Batch1 crosscheck into another broad cross-batch numerical-equivalence program.",
+    "Do not authorize a run whose hard cap exceeds the owner's standing authorization threshold."
+  ],
+  "another_review_required": true,
+  "scientific_training_authorized": false,
+  "gpu_inference_authorized": false,
+  "model_loading_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

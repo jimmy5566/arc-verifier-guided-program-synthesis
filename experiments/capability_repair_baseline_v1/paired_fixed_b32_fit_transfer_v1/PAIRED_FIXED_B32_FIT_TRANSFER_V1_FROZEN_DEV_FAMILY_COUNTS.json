@@ -1,0 +1,60 @@
+{
+  "family_counts": {
+    "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001": {
+      "family_counts": {
+        "connected components": {
+          "episodes": 12,
+          "exact": 1
+        },
+        "difference": {
+          "episodes": 12,
+          "exact": 2
+        },
+        "inside/contains": {
+          "episodes": 12,
+          "exact": 0
+        },
+        "orientation": {
+          "episodes": 12,
+          "exact": 4
+        },
+        "width": {
+          "episodes": 12,
+          "exact": 0
+        }
+      },
+      "result_sha256": "cc97e376e2a4703c0d73e4a79f0bbf528ac71c8750b9b5972a85f9099cb40216"
+    },
+    "CAPABILITY_REPAIR_BASELINE_V1_V7": {
+      "family_counts": {
+        "connected components": {
+          "episodes": 12,
+          "exact": 0
+        },
+        "difference": {
+          "episodes": 12,
+          "exact": 2
+        },
+        "inside/contains": {
+          "episodes": 12,
+          "exact": 0
+        },
+        "orientation": {
+          "episodes": 12,
+          "exact": 5
+        },
+        "width": {
+          "episodes": 12,
+          "exact": 2
+        }
+      },
+      "result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+    }
+  },
+  "missing_condition": {
+    "ATOMIC_PREREQUISITE_REPAIR_V1_001_REJECTED": "No local frozen per-family prediction rows; aggregate DEV total cannot support family-aligned H3."
+  },
+  "rule": "H3 is NUMERICALLY_OR_EVIDENTIALLY_INCONCLUSIVE for a condition without same-family frozen DEV counts.",
+  "schema_version": 1,
+  "status": "PARTIAL_FROZEN_EVIDENCE"
+}

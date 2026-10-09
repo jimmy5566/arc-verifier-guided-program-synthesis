@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_PAIRED_FIXED_B32_FIT_TRANSFER_V1_V4_RESPONSE",
+  "brief_id": "GOVERNOR_REVIEW_PAIRED_FIXED_B32_FIT_TRANSFER_V1_V4",
+  "reviewed_brief_sha256": "617770d9034918f94d7614b5223adb3c17d95e69d35cc5187086a89d2198c696",
+  "decision": "REQUIRE_CHANGES",
+  "scope": "PAIRED_FIXED_B32_FIT_TRANSFER_V1_BYTE_BINDING_AND_TEST_EVIDENCE_ONLY",
+  "root_cause": "The V4 frozen package does not bind the implementation it claims to review. It records analyzer SHA256 e7cdbcc91cbbe0b25008c99c37ead6a24ca13694693c68181372993373f0541b while the repaired analyzer is 04ff09ff259fdbc080f125e11aa7983278de2dec1e80d7a93ee9122ab54ffae8, omits the new launch-chain script entirely, retains the obsolete aggregate-DEV decision rule, and binds the unchanged identity verifier that still accepts extra model or adapter files. The V6 validation contains no test command, count, exit code or output hash. The actual local unittest run contains only three tests, and the launch-chain test merely searches source text for guard names rather than exercising the gates.",
+  "smallest_repair": {
+    "scope": "MAKE_FROZEN_CLAIMS_MATCH_EXACT_IMPLEMENTATION_BYTES",
+    "required_changes": [
+      "Regenerate the package from the current files and bind the exact repaired analyzer plus the launch-chain script. Remove the obsolete aggregate-DEV rule so the family-aligned rule is the sole authoritative classifier.",
+      "Implement and bind the promised identity behavior: require nonempty complete base weight/config/tokenizer and adapter weight/config records; reject missing files, hash mismatches, unexpected model weight shards, and unexpected adapter weight/config files.",
+      "Replace string-search tests with executable temporary-directory tests for authorization mismatch, stale output, incomplete and extra identity files, timeout receipt, analyzer use of real family DEV deltas, and B1/B32 reversal. Existing pure conclusion tests may remain.",
+      "Run the exact unittest command and freeze command, exit code, discovered test count, stdout/stderr hash and every tested source SHA in CPU validation. The validation must independently compare package bindings to current bytes.",
+      "Freeze one exact launch argv that invokes the bound launch chain and state that the external 1800-second watchdog covers the worker from before model import through its terminal receipt; CPU identity preflight and CPU postprocessing may remain outside the GPU clock but must be ordered and fail closed.",
+      "Return a new review brief only after every declared SHA equals the actual file bytes."
+    ]
+  },
+  "frozen_conditions": [
+    "No scientific-design change is permitted or requested.",
+    "The 1800-second GPU cap, three checkpoint identities, all-400 primary Batch32 rows, fixed 32-row Batch1 crosscheck, family-aligned H1/H3 rule and no-update boundary remain frozen."
+  ],
+  "forbidden_actions": [
+    "Do not launch V4, load a model or treat V6 PASS_CPU_ONLY as sufficient evidence.",
+    "Do not push without separate owner authorization.",
+    "Do not train, optimize, generate, mutate checkpoints or open FINAL_AUDIT."
+  ],
+  "another_review_required": true,
+  "scientific_training_authorized": false,
+  "gpu_inference_authorized": false,
+  "model_loading_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

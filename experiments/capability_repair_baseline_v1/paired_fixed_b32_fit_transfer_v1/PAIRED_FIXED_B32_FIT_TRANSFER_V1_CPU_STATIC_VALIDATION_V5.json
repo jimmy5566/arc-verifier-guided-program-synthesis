@@ -1,0 +1,18 @@
+{
+  "constraints": [
+    "no GPU launched",
+    "no model import",
+    "no optimizer/backward/training/generation",
+    "FINAL_AUDIT sealed"
+  ],
+  "package_sha256": "73f9fa7b56cfd114788ddd88ea6f8087e3ae091a0f1fac05e44105a9cdb891d8",
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY",
+  "tools": {
+    "scripts/analyze_paired_fixed_b32_fit_transfer_v1.py": "e7cdbcc91cbbe0b25008c99c37ead6a24ca13694693c68181372993373f0541b",
+    "scripts/arc2_hard_cap_launcher.py": "897c6a725bbc74ff0386ae044c2c4086b60ef2dc29e63288e0abae81e861ea82",
+    "scripts/freeze_paired_fixed_b32_dev_family_evidence.py": "ba5b300f8655b0848a957a816e1eeee6dec4dc4bc43a0084a6c15e3f518ae08e",
+    "scripts/run_paired_fixed_b32_fit_transfer_v1.py": "0c9220e4537b09c56674df2776c4813ceeecde62b5e79ebc5d793567b6d4999e",
+    "scripts/verify_paired_fixed_b32_runtime_identity.py": "299b2651d0829c5df107d993aabe96902f93dc37bb0edeb2e2f5c43f0b262d6f"
+  }
+}
