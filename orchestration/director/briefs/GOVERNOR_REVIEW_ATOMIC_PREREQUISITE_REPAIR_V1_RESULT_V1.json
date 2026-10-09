@@ -1,0 +1,47 @@
+{
+  "established": [
+    "The frozen selection rule rejects this candidate.",
+    "Retention and named strong capabilities were preserved under their gates.",
+    "Weak atomic and composition acceptance thresholds were not met.",
+    "The token-level EOS-aware parser operated and preserves raw generation evidence; one candidate output was syntactically invalid."
+  ],
+  "evidence": {
+    "evaluation_summary_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_001_EVALUATION_SUMMARY.json",
+    "evaluation_summary_sha256": "0ab01f3b7c76f31a33496ef2640e2c7dbfe285e1dc0113d93e57c2b6a75a5b20",
+    "paired_analysis_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_001_PAIRED_GATE_ANALYSIS.json",
+    "paired_analysis_sha256": "809048f731d29f11f6079810b336a4fcc93ddc25deb8d358bd2047c53836a489",
+    "training_signal_audit_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SIGNAL_AUDIT_V1.json",
+    "training_signal_audit_sha256": "cad1734946445e1c78dd8547138f429ebf7bed8f52187a3763207f9ce9c49ef6"
+  },
+  "forbidden_actions": [
+    "Do not rewrite parser based on correctness.",
+    "Do not launch a follow-on training round under ATOMIC_PREREQUISITE_REPAIR_V1.",
+    "Do not open FINAL_AUDIT."
+  ],
+  "frozen_conditions": [
+    "V7, previous R1/R2, this R1 result, decoder/scorer, DEV and retention splits, FINAL_AUDIT sealed",
+    "No automatic composition training or follow-on training from this rejected candidate."
+  ],
+  "observed_result": {
+    "composition": "31/96 -> 28/96; paired net -3",
+    "execution": "COMPLETE",
+    "parse_valid": "287/288; frozen required 288/288",
+    "protected_strong": "same color/recolor/selector prerequisites have zero paired harms",
+    "retention": "70/96 -> 70/96; paired net 0",
+    "target_dev": "76/192 -> 71/192; paired net -5",
+    "training_steps": 100,
+    "weak_atomic": "9/60 -> 7/60; paired net -2; required >= +5"
+  },
+  "question": "Given this frozen V7-to-R1 paired result and the completed training-signal audit, what is the smallest scientifically justified next action: a distinct revised protocol, one discriminating diagnostic, or stop this atomic-repair route?",
+  "review_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_REPAIR_V1_RESULT_V1",
+  "schema_version": 1,
+  "stage": "ATOMIC_PREREQUISITE_REPAIR_V1_POST_EVALUATION",
+  "supported_hypotheses": [
+    "Unequal nominal supervised-token loss exposure may leave some weak families under-emphasized; this is not a measured gradient-effect conclusion.",
+    "A distinct family-balanced loss-aggregation control could discriminate exposure imbalance from other causes, if it changes only loss weighting with matched data/order/token budget/optimizer/LR/LoRA/seed/evaluation."
+  ],
+  "unknown": [
+    "Gradient interference has not been measured.",
+    "Whether supervised fitting versus task-level generalization is the dominant bottleneck is not established."
+  ]
+}

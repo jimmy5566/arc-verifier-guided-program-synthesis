@@ -1,0 +1,43 @@
+{
+  "batching": {
+    "batch1_validation_count": 32,
+    "canonical_agreement": 0.9375,
+    "effective_batches": "32 with length-based 30/27/7 reductions; no OOM fallback",
+    "exact_grid_rate_delta": 0.0,
+    "parse_valid_rate_delta": 0.0,
+    "requested_batch_size": 32,
+    "status": "PASS"
+  },
+  "evaluation_receipt": {
+    "inference_seconds": 690.3488433854654,
+    "path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/evaluation_v1/BASELINE_CHARACTERIZATION_RECEIPT.json",
+    "sha256": "a865836a9115fb2e59806e82d2c96aeb918e03e3a204c0b9f20e042242dd3cf0",
+    "source_commit": "7cd319985e0bee89721682020523f3bf21c7b2f7",
+    "status": "COLLECTED_PASS"
+  },
+  "evaluation_result": {
+    "completed_episode_count": 288,
+    "parse_valid": 287,
+    "path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/evaluation_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+    "retention_exact": 70,
+    "sha256": "fc7360b922404f96645e4cf2efea849f7fa9527282e32124bb9342ca3906c01b",
+    "target_dev_exact": 71
+  },
+  "final_audit_opened": false,
+  "next_scientific_boundary": "DIRECTOR_STAGE_LEVEL_POSTMORTEM_REQUIRED",
+  "paired_gate_analysis_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_001_PAIRED_GATE_ANALYSIS.json",
+  "paired_gate_analysis_sha256": "809048f731d29f11f6079810b336a4fcc93ddc25deb8d358bd2047c53836a489",
+  "protocol_id": "ATOMIC_PREREQUISITE_REPAIR_V1",
+  "round_id": "ATOMIC_PREREQUISITE_REPAIR_V1_001",
+  "schema_version": 1,
+  "selection": "REJECT_ALL_CANDIDATES",
+  "selection_rule_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_DECISION_RULE.json",
+  "status": "EVALUATION_COMPLETE_SELECTION_REJECTED",
+  "training_terminal_receipt": {
+    "optimizer_steps": 100,
+    "path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/runtime/TERMINAL_RECEIPT.json",
+    "processed_tokens": 246823,
+    "scientific_gpu_training_seconds": 264.979880991,
+    "sha256": "0a29854671bd1cbbe88ca6a3316e0eec5ba2f3685fb6a856fee92ed953a35b1e"
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "aggregates": {
+    "composition": {
+      "baseline_exact": 31,
+      "candidate_exact": 28,
+      "episodes": 96,
+      "net_paired_fixes": -3,
+      "paired_fixes_n01": 3,
+      "paired_harms_n10": 6
+    },
+    "retention": {
+      "baseline_exact": 70,
+      "candidate_exact": 70,
+      "episodes": 96,
+      "net_paired_fixes": 0,
+      "paired_fixes_n01": 2,
+      "paired_harms_n10": 2
+    },
+    "target_dev": {
+      "baseline_exact": 76,
+      "candidate_exact": 71,
+      "episodes": 192,
+      "net_paired_fixes": -5,
+      "paired_fixes_n01": 6,
+      "paired_harms_n10": 11
+    },
+    "targeted_evaluation": {
+      "baseline_exact": 45,
+      "candidate_exact": 43,
+      "episodes": 96,
+      "net_paired_fixes": -2,
+      "paired_fixes_n01": 3,
+      "paired_harms_n10": 5
+    },
+    "weak_atomic": {
+      "baseline_exact": 9,
+      "candidate_exact": 7,
+      "episodes": 60,
+      "net_paired_fixes": -2,
+      "paired_fixes_n01": 3,
+      "paired_harms_n10": 5
+    }
+  },
+  "baseline_result": {
+    "path": "/workspace/arc2/forward_baseline_evaluation_v7_batch32/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+    "sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+  },
+  "candidate_result": {
+    "path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/evaluation_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+    "sha256": "fc7360b922404f96645e4cf2efea849f7fa9527282e32124bb9342ca3906c01b"
+  },
+  "failed_gates": [
+    "composition_aggregate_net_fixes_gte_minus_2",
+    "composition_each_family_net_fixes_gte_minus_1",
+    "validity_parse_valid_288_of_288",
+    "weak_atomic_aggregate_net_fixes_gte_5",
+    "weak_atomic_each_family_net_fixes_gte_minus_1"
+  ],
+  "families": {
+    "color mapping": {
+      "baseline_exact": 16,
+      "candidate_exact": 16,
+      "episodes": 16,
+      "net_paired_fixes": 0,
+      "paired_fixes_n01": 0,
+      "paired_harms_n10": 0
+    },
+    "complete missing structure": {
+      "baseline_exact": 16,
+      "candidate_exact": 16,
+      "episodes": 16,
+      "net_paired_fixes": 0,
+      "paired_fixes_n01": 0,
+      "paired_harms_n10": 0
+    },
+    "conditional action": {
+      "baseline_exact": 2,
+      "candidate_exact": 1,
+      "episodes": 24,
+      "net_paired_fixes": -1,
+      "paired_fixes_n01": 0,
+      "paired_harms_n10": 1
+    },
+    "connected components": {
+      "baseline_exact": 0,
+      "candidate_exact": 1,
+      "episodes": 12,
+      "net_paired_fixes": 1,
+      "paired_fixes_n01": 1,
+      "paired_harms_n10": 0
+    },
+    "difference": {
+      "baseline_exact": 2,
+      "candidate_exact": 0,
+      "episodes": 12,
+      "net_paired_fixes": -2,
+      "paired_fixes_n01": 0,
+      "paired_harms_n10": 2
+    },
+    "inside/contains": {
+      "baseline_exact": 0,
+      "candidate_exact": 1,
+      "episodes": 12,
+      "net_paired_fixes": 1,
+      "paired_fixes_n01": 1,
+      "paired_harms_n10": 0
+    },
+    "mask set": {
+      "baseline_exact": 2,
+      "candidate_exact": 3,
+      "episodes": 24,
+      "net_paired_fixes": 1,
+      "paired_fixes_n01": 3,
+      "paired_harms_n10": 2
+    },
+    "orientation": {
+      "baseline_exact": 5,
+      "candidate_exact": 5,
+      "episodes": 12,
+      "net_paired_fixes": 0,
+      "paired_fixes_n01": 1,
+      "paired_harms_n10": 1
+    },
+    "recolor": {
+      "baseline_exact": 28,
+      "candidate_exact": 28,
+      "episodes": 28,
+      "net_paired_fixes": 0,
+      "paired_fixes_n01": 0,
+      "paired_harms_n10": 0
+    },
+    "relation selector action": {
+      "baseline_exact": 3,
+      "candidate_exact": 0,
+      "episodes": 24,
+      "net_paired_fixes": -3,
+      "paired_fixes_n01": 0,
+      "paired_harms_n10": 3
+    },
+    "rotate": {
+      "baseline_exact": 16,
+      "candidate_exact": 16,
+      "episodes": 16,
+      "net_paired_fixes": 0,
+      "paired_fixes_n01": 0,
+      "paired_harms_n10": 0
+    },
+    "same color": {
+      "baseline_exact": 12,
+      "candidate_exact": 12,
+      "episodes": 12,
+      "net_paired_fixes": 0,
+      "paired_fixes_n01": 0,
+      "paired_harms_n10": 0
+    },
+    "selector prerequisites": {
+      "baseline_exact": 36,
+      "candidate_exact": 36,
+      "episodes": 36,
+      "net_paired_fixes": 0,
+      "paired_fixes_n01": 0,
+      "paired_harms_n10": 0
+    },
+    "width": {
+      "baseline_exact": 2,
+      "candidate_exact": 0,
+      "episodes": 12,
+      "net_paired_fixes": -2,
+      "paired_fixes_n01": 0,
+      "paired_harms_n10": 2
+    }
+  },
+  "final_audit_opened": false,
+  "gates": {
+    "composition_aggregate_net_fixes_gte_minus_2": false,
+    "composition_each_family_net_fixes_gte_minus_1": false,
+    "protected_retention_harms_eq_0": true,
+    "protected_strong_harms_eq_0": true,
+    "retention_aggregate_net_fixes_gte_minus_2": true,
+    "validity_parse_valid_288_of_288": false,
+    "validity_same_decoder_parser_scorer": true,
+    "weak_atomic_aggregate_net_fixes_gte_5": false,
+    "weak_atomic_each_family_net_fixes_gte_minus_1": false
+  },
+  "interpretation": "EOS-aware parser remains valid; the single invalid generation is a candidate output failure under the pre-registered parse-validity gate, not a basis for retuning the parser.",
+  "pairing_contract": "exact episode_id; exact_grid_match; frozen V7 comparison",
+  "protocol_id": "ATOMIC_PREREQUISITE_REPAIR_V1",
+  "remote_surface_role_analysis": {
+    "path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/evaluation_v1/PAIRED_SURFACE_ROLE_ANALYSIS.json",
+    "sha256": "2c01966fd648b8ce9bcf77cacd03a251deb386d420762a6b0fc9c556a4170399"
+  },
+  "round_id": "ATOMIC_PREREQUISITE_REPAIR_V1_001",
+  "schema_version": 1,
+  "selection": "REJECT_ALL_CANDIDATES; DO_NOT_ENTER_COMPOSITION_TRAINING; DO_NOT_LAUNCH_FOLLOW_ON_TRAINING",
+  "status": "COMPLETE_REJECTED_BY_FROZEN_SELECTION_RULE"
+}
