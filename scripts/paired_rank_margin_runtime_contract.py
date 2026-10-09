@@ -39,3 +39,8 @@ def correct_token_metrics(logits:list[float], target:int)->dict:
     value=float(logits[target]); rank=1+sum(float(x)>value for x in logits)
     other=max(float(x) for i,x in enumerate(logits) if i!=target) if len(logits)>1 else float('-inf')
     return {'rank':rank,'top1':rank==1,'top2':rank<=2,'margin':value-other}
+
+def require_complete_paired_rows(rows:list[dict])->None:
+ keys={(r.get('checkpoint_condition'),r.get('episode_id')) for r in rows}
+ if len(rows)!=120 or len(keys)!=120:raise RuntimeError('PAIRED_RESULT_COMPLETENESS_INVALID')
+ if {r.get('checkpoint_condition') for r in rows}!={'RECONSTRUCTED_FOUNDATION_V2_V7','FAMILY_BALANCED'}:raise RuntimeError('PAIRED_RESULT_CONDITION_INVALID')

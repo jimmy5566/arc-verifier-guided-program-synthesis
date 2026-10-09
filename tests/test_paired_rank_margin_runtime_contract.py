@@ -1,6 +1,6 @@
 from __future__ import annotations
 import unittest
-from scripts.paired_rank_margin_runtime_contract import correct_token_metrics,extract_target_logit_indices,left_pad_teacher_forced
+from scripts.paired_rank_margin_runtime_contract import correct_token_metrics,extract_target_logit_indices,left_pad_teacher_forced,require_complete_paired_rows
 
 class RuntimeContractTests(unittest.TestCase):
  def test_left_padding_keeps_per_row_causal_target_boundary(self):
@@ -14,4 +14,7 @@ class RuntimeContractTests(unittest.TestCase):
    extract_target_logit_indices({'target_logit_start':4,'target_length':2,'sequence_width':5})
  def test_correct_token_metrics_are_tie_safe(self):
   m=correct_token_metrics([1.0,1.0,0.0],1);self.assertEqual(m['rank'],1);self.assertTrue(m['top1']);self.assertEqual(m['margin'],0.0)
+ def test_complete_pairs_require_two_conditions_by_sixty(self):
+  rows=[{'checkpoint_condition':c,'episode_id':str(i)} for c in ('RECONSTRUCTED_FOUNDATION_V2_V7','FAMILY_BALANCED') for i in range(60)]
+  require_complete_paired_rows(rows)
 if __name__=='__main__':unittest.main()
