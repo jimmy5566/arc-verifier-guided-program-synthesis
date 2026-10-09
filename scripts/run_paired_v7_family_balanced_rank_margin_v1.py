@@ -10,6 +10,7 @@ from scripts.paired_rank_margin_launch_contract import CAP_SECONDS,require_launc
 PROTOCOL='PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1'
 def main()->int:
  a=argparse.ArgumentParser();a.add_argument('--binding',type=Path,required=True);a.add_argument('--output',type=Path,required=True);a.add_argument('--receipt',type=Path,required=True);a.add_argument('--runtime-seconds',type=int,default=CAP_SECONDS);z=a.parse_args()
+ if not z.binding.is_file():raise RuntimeError('LAUNCH_BINDING_MISSING')
  binding=json.loads(z.binding.read_text(encoding='utf8'))
  required={'protocol_id','runtime_cap_seconds','expected_hashes','input_paths'}
  if not required.issubset(binding) or binding['protocol_id']!=PROTOCOL:raise RuntimeError('LAUNCH_BINDING_SCHEMA_INVALID')
