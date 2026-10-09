@@ -15,4 +15,21 @@ class TargetAlignmentTests(unittest.TestCase):
  def test_target_alignment_never_selects_candidate(self):
   item=mod.align_target_evidence(generated_token_ids=[4],target_token_ids=[7],target_ranks=[2],target_margins=[-0.1])
   self.assertEqual(item['first_free_running_error_index'],0);self.assertFalse(item['target_alignment_used_for_selection'])
+ def test_target_token_metric_distinguishes_correct_from_generated_rank(self):
+  class Scores:
+   shape=(3,)
+   def __init__(self,v): self.v=v
+   def __getitem__(self,i): return self.v[i]
+   def __setitem__(self,i,v): self.v[i]=v
+   def __gt__(self,x): return FakeMask([n>x for n in self.v])
+   def clone(self): return Scores(self.v[:])
+   def max(self): return FakeScalar(max(self.v))
+  class FakeMask:
+   def __init__(self,v): self.v=v
+   def sum(self): return FakeScalar(sum(self.v))
+  class FakeScalar(float):
+   def item(self): return float(self)
+   def __rsub__(self,other): return FakeScalar(float(other)-float(self))
+  ranks,margins=mod.target_token_metrics([Scores([0.1,0.9,0.2])],[2])
+  self.assertEqual(ranks,[2]);self.assertLess(margins[0],0)
 if __name__=='__main__':unittest.main()

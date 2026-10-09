@@ -23,6 +23,27 @@ def sidecar_targets(path:Path)->dict[str,list[int]]:
     if not isinstance(values,dict) or not values: raise RuntimeError('SEALED_TARGET_SIDECAR_INVALID')
     if any(not isinstance(key,str) or not isinstance(value,list) or not value for key,value in values.items()): raise RuntimeError('SEALED_TARGET_SIDECAR_INVALID')
     return values
+def target_token_metrics(logits, target_token_ids: list[int]) -> tuple[list[int],list[float]]:
+    """Rank each teacher-forced target token against the same-step logits."""
+    if len(logits) != len(target_token_ids): raise RuntimeError('TARGET_LOGIT_LENGTH_MISMATCH')
+    ranks=[]; margins=[]
+    for scores, target in zip(logits,target_token_ids):
+        if target < 0 or target >= int(scores.shape[-1]): raise RuntimeError('TARGET_TOKEN_ID_INVALID')
+        target_score=scores[target]
+        rank=int((scores > target_score).sum().item())+1
+        masked=scores.clone();masked[target]=float('-inf')
+        margins.append(float((target_score-masked.max()).item()));ranks.append(rank)
+    return ranks,margins
+def score_teacher_forced_continuation(model, prompt_ids, target_token_ids):
+    """No generation or candidate selection: one causal forward per frozen row."""
+    import torch
+    if not prompt_ids or not target_token_ids: raise RuntimeError('TARGET_ALIGNED_INPUT_EMPTY')
+    device=next(model.parameters()).device
+    sequence=torch.tensor([prompt_ids+target_token_ids],device=device,dtype=torch.long)
+    with torch.inference_mode(): logits=model(input_ids=sequence).logits[0]
+    start=len(prompt_ids)-1; target_logits=logits[start:start+len(target_token_ids)]
+    ranks,margins=target_token_metrics(target_logits,target_token_ids)
+    return align_target_evidence(generated_token_ids=[],target_token_ids=target_token_ids,target_ranks=ranks,target_margins=margins)
 def main()->int:
     ap=argparse.ArgumentParser();ap.add_argument('--frozen-raw',type=Path,required=True);ap.add_argument('--sidecar',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);ap.add_argument('--receipt',type=Path,required=True);z=ap.parse_args()
     if z.output.exists() or z.receipt.exists(): raise RuntimeError('OUTPUT_NON_OVERWRITE_REQUIRED')
