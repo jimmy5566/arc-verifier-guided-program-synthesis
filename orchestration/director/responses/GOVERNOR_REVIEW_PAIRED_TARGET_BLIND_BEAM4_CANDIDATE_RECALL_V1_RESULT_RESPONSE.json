@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "response_id": "GOVERNOR_REVIEW_PAIRED_TARGET_BLIND_BEAM4_CANDIDATE_RECALL_V1_RESULT_RESPONSE",
+  "reviewed_brief_sha256": "4d30a28fef44ec5a5e9b7bd32cc8e861f72a4620112174c59f69b90581bbbcf3",
+  "decision": "CONTINUE_CONTROLLER",
+  "scope": "CLOSE_BEAM4_CANDIDATE_RECALL_AND_FREEZE_ONE_PROSPECTIVE_TARGET_BLIND_SELECTOR_PROTOCOL",
+  "current_stage_disposition": "SCIENTIFICALLY_COMPLETE_POSITIVE_DEVELOPMENT_RESULT",
+  "scientific_conclusions": {
+    "primary_result": "SEARCH_RECOVERABLE_FAMILY_BALANCED_SIGNAL is supported under the frozen Beam-4 condition. The equal-family macro-average Family-Balanced minus V7 Recall@4 effect is 0.21666666666666665 and the paired stratified-bootstrap 95% interval [0.08333333333333334, 0.35] is wholly positive.",
+    "family_consistency": "All five family effects are non-negative: connected components 0.3333333333333333, difference 0.0, inside/contains 0.16666666666666666, orientation 0.25, and width 0.3333333333333333.",
+    "candidate_reachability": "Family-Balanced increases from 11/60 rank-one exact to 31/60 oracle Recall@4, while V7 increases from 10/60 to 18/60. The trained checkpoint therefore contains substantially more correct outputs inside its frozen four-candidate set than its rank-one score reveals.",
+    "mechanistic_limit": "This establishes candidate reachability under one deterministic Batch1 Beam-4 condition, not a causal explanation of how training created the advantage and not proof that a deployable target-blind selector can recover it.",
+    "research_priority": "The highest-information next question is target-blind candidate selection, not another supervised repair round, larger beam, or additional family reweighting.",
+    "generalization_boundary": "The result reuses TARGET_DEV and is development evidence only. Oracle Recall@4 cannot be represented as deployed rank-one accuracy or independent ARC generalization."
+  },
+  "next_stage": {
+    "stage_id": "CPU_ONLY_PROSPECTIVE_TARGET_BLIND_BEAM4_SELECTOR_PROTOCOL_V1",
+    "stage_type": "CPU_ONLY_PROTOCOL_FREEZE",
+    "scientific_question": "Can one fully prospective selector, using no evaluation target information, convert the observed Beam-4 candidate reachability into improved rank-one selection on a disjoint development cohort?",
+    "authorized_work": [
+      "Audit whether a suitable disjoint non-Gold development cohort exists and freeze its episode identities without opening its target outputs.",
+      "Freeze exactly one selector algorithm before any candidate generation or target scoring on that cohort.",
+      "Restrict selector inputs to candidate sequence score, original beam rank, parser-validity metadata, candidate length, and deterministic invariants derived only from the task's visible training pairs and test input.",
+      "Freeze candidate budget K=4, checkpoint choice, decoder, primary metric, paired analysis, failure handling, runtime cap, provenance bindings, and target-blind two-phase candidate-freeze-then-score boundary.",
+      "Run CPU unit tests and static fail-closed checks using synthetic fixtures or schema-only copies; do not optimize the selector against the already scored 60-episode pool."
+    ],
+    "prospective_primary_outcome": "Selector rank-one exact accuracy minus original Beam-4 rank-one exact accuracy on the same disjoint cohort, with a paired uncertainty analysis frozen before targets are opened.",
+    "minimum_scientific_success_condition": "The future protocol must require a strictly positive paired selector improvement whose frozen uncertainty interval excludes zero, with no protected-family or retention gate regression specified by that future protocol.",
+    "invalidating_conditions": [
+      "No scientifically usable disjoint non-Gold development cohort exists.",
+      "The selector rule or its thresholds were influenced by correctness labels from the already scored Beam-4 candidates.",
+      "Candidate identities, checkpoint identities, decoder settings, or candidate-freeze-before-target-scoring boundaries cannot be made fail-closed.",
+      "The proposed selector uses evaluation targets, exactness, oracle rank, or any target-derived feature during selection."
+    ],
+    "required_return": "Return one immutable pre-execution protocol brief for Director review. It must state the disjoint-cohort provenance, selector pseudocode and complete feature list, target-blindness proof, frozen decision rule, compute cap, and all identity bindings."
+  },
+  "frozen_conditions": [
+    "Preserve run_002 candidates, result package, analysis, terminal receipt, source commit, and all recorded SHA256 identities without mutation.",
+    "Preserve the prior infrastructure-only run_001 failure separately; do not merge it with the scientific run_002 result.",
+    "Keep the current 60-episode TARGET_DEV result labelled reused development evidence.",
+    "Keep Gold, dGold, sealed test targets, and FINAL_AUDIT unopened.",
+    "Do not reinterpret Recall@4 as rank-one performance."
+  ],
+  "authorization": {
+    "cpu_only_protocol_preparation_authorized": true,
+    "cpu_tests_authorized": true,
+    "git_commit_and_non_force_non_main_push_authorized": true,
+    "model_loading_authorized": false,
+    "gpu_inference_authorized": false,
+    "candidate_generation_authorized": false,
+    "scientific_training_authorized": false,
+    "optimizer_construction_authorized": false,
+    "another_director_review_required_before_execution": true
+  },
+  "forbidden_actions": [
+    "Do not launch additional GPU work from this response.",
+    "Do not generate another candidate set or expand K beyond 4.",
+    "Do not train, run backward, construct an optimizer, or mutate either checkpoint.",
+    "Do not tune, choose, or reject selector features or thresholds using correctness labels from the scored 60-episode Beam-4 pool.",
+    "Do not use evaluation targets during candidate generation, ranking, pruning, or selection.",
+    "Do not open Gold, dGold, sealed test targets, or FINAL_AUDIT.",
+    "Do not claim independent ARC generalization or deployment improvement from oracle Recall@4."
+  ],
+  "scientific_training_authorized": false,
+  "final_audit_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

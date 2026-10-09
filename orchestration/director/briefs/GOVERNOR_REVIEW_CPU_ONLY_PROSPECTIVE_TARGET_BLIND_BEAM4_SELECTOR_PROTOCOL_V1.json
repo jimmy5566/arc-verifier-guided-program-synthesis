@@ -1,0 +1,72 @@
+{
+  "authorization_request": "CPU-only preparation is complete. No model loading, GPU inference, candidate generation, training, or scoring is requested until Director reviews this exact immutable package.",
+  "cohort": {
+    "excluded_prior_scored_rows": 60,
+    "families": {
+      "conditional action": 24,
+      "mask set": 24,
+      "recolor": 12,
+      "relation selector action": 24,
+      "same color": 12,
+      "selector prerequisites": 36
+    },
+    "metadata_only_extraction": "Only bytes before the task key were matched for episode_id and family; task content and target outputs were neither parsed nor emitted.",
+    "rows": 132,
+    "source_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+  },
+  "constraints": [
+    "model_loading",
+    "candidate_generation",
+    "GPU",
+    "training",
+    "backward",
+    "optimizer",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target-derived_selector_tuning"
+  ],
+  "decision_rule": {
+    "otherwise": "INCONCLUSIVE_OR_NOT_IMPROVED",
+    "protected_selection_safety": "same color and recolor each have selector exact count >= original Beam rank-1 exact count",
+    "selector_improvement": "bootstrap 95% CI lower bound > 0"
+  },
+  "package_path": "experiments\\capability_repair_baseline_v1\\cpu_only_prospective_target_blind_beam4_selector_protocol_v1\\EXECUTION_PACKAGE.json",
+  "package_sha256": "310afae0e17ce2e00dd134deb4414e74963d9f17ac2f5bb686d1e4d40f0e139d",
+  "protocol_id": "CPU_ONLY_PROSPECTIVE_TARGET_BLIND_BEAM4_SELECTOR_PROTOCOL_V1",
+  "review_type": "PROSPECTIVE_TARGET_BLIND_SELECTOR_PREEXECUTION",
+  "schema_version": 1,
+  "scientific_question": "Can one fully prospective target-blind selector improve Family-Balanced rank-one exact selection over original Beam rank one on a disjoint, previously unscored development cohort?",
+  "selector": {
+    "algorithm_id": "VALID_LENGTH_NORMALIZED_BEAM_SCORE_V1",
+    "allowed_features": [
+      "sequence_score",
+      "original_beam_rank",
+      "parser_status",
+      "generated_token_count"
+    ],
+    "forbidden_features": [
+      "evaluation_target",
+      "exactness",
+      "oracle_rank",
+      "target_derived_feature",
+      "correctness_from_prior_60"
+    ],
+    "parameters": {
+      "adaptive_thresholds": false,
+      "candidate_budget_k": 4,
+      "normalization_exponent": 1.0
+    },
+    "pseudocode": [
+      "discard parser-invalid candidates",
+      "for each remaining candidate compute sequence_score / max(1, generated_token_count_without_terminal_pad)",
+      "select highest normalized score",
+      "ties: higher raw sequence_score, then lower original beam rank"
+    ]
+  },
+  "target_blindness": [
+    "No task targets are parsed or emitted during cohort freeze.",
+    "No previously scored 60-episode correctness labels inform algorithm, thresholds, or cohort membership.",
+    "Candidate generation and selection are frozen before any target scoring."
+  ]
+}

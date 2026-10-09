@@ -1,0 +1,753 @@
+{
+  "candidate_freeze_then_score": {
+    "candidate_freeze_required_before_target_access": true,
+    "future_scoring_only_after_candidate_freeze": true,
+    "target_blind_generation_and_selection": true
+  },
+  "cohort": {
+    "excluded_previously_scored_rows": 60,
+    "families": {
+      "conditional action": 24,
+      "mask set": 24,
+      "recolor": 12,
+      "relation selector action": 24,
+      "same color": 12,
+      "selector prerequisites": 36
+    },
+    "members": [
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000000",
+        "family": "same color",
+        "source_line_number": 37
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000001",
+        "family": "same color",
+        "source_line_number": 38
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000002",
+        "family": "same color",
+        "source_line_number": 39
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000003",
+        "family": "same color",
+        "source_line_number": 40
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000004",
+        "family": "same color",
+        "source_line_number": 41
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000005",
+        "family": "same color",
+        "source_line_number": 42
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000006",
+        "family": "same color",
+        "source_line_number": 43
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000007",
+        "family": "same color",
+        "source_line_number": 44
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000008",
+        "family": "same color",
+        "source_line_number": 45
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000009",
+        "family": "same color",
+        "source_line_number": 46
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000010",
+        "family": "same color",
+        "source_line_number": 47
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:same color:000011",
+        "family": "same color",
+        "source_line_number": 48
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:recolor:000000",
+        "family": "recolor",
+        "source_line_number": 73
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:recolor:000001",
+        "family": "recolor",
+        "source_line_number": 74
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:recolor:000002",
+        "family": "recolor",
+        "source_line_number": 75
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:recolor:000003",
+        "family": "recolor",
+        "source_line_number": 76
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:recolor:000004",
+        "family": "recolor",
+        "source_line_number": 77
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:recolor:000005",
+        "family": "recolor",
+        "source_line_number": 78
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:recolor:000006",
+        "family": "recolor",
+        "source_line_number": 79
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:recolor:000007",
+        "family": "recolor",
+        "source_line_number": 80
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:recolor:000008",
+        "family": "recolor",
+        "source_line_number": 81
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:recolor:000009",
+        "family": "recolor",
+        "source_line_number": 82
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:recolor:000010",
+        "family": "recolor",
+        "source_line_number": 83
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:recolor:000011",
+        "family": "recolor",
+        "source_line_number": 84
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000000",
+        "family": "selector prerequisites",
+        "source_line_number": 85
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000001",
+        "family": "selector prerequisites",
+        "source_line_number": 86
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000002",
+        "family": "selector prerequisites",
+        "source_line_number": 87
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000003",
+        "family": "selector prerequisites",
+        "source_line_number": 88
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000004",
+        "family": "selector prerequisites",
+        "source_line_number": 89
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000005",
+        "family": "selector prerequisites",
+        "source_line_number": 90
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000006",
+        "family": "selector prerequisites",
+        "source_line_number": 91
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000007",
+        "family": "selector prerequisites",
+        "source_line_number": 92
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000008",
+        "family": "selector prerequisites",
+        "source_line_number": 93
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000009",
+        "family": "selector prerequisites",
+        "source_line_number": 94
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000010",
+        "family": "selector prerequisites",
+        "source_line_number": 95
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_EVALUATION:selector prerequisites:000011",
+        "family": "selector prerequisites",
+        "source_line_number": 96
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000000",
+        "family": "relation selector action",
+        "source_line_number": 97
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000001",
+        "family": "relation selector action",
+        "source_line_number": 98
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000002",
+        "family": "relation selector action",
+        "source_line_number": 99
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000003",
+        "family": "relation selector action",
+        "source_line_number": 100
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000004",
+        "family": "relation selector action",
+        "source_line_number": 101
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000005",
+        "family": "relation selector action",
+        "source_line_number": 102
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000006",
+        "family": "relation selector action",
+        "source_line_number": 103
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000007",
+        "family": "relation selector action",
+        "source_line_number": 104
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000008",
+        "family": "relation selector action",
+        "source_line_number": 105
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000009",
+        "family": "relation selector action",
+        "source_line_number": 106
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000010",
+        "family": "relation selector action",
+        "source_line_number": 107
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000011",
+        "family": "relation selector action",
+        "source_line_number": 108
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000012",
+        "family": "relation selector action",
+        "source_line_number": 109
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000013",
+        "family": "relation selector action",
+        "source_line_number": 110
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000014",
+        "family": "relation selector action",
+        "source_line_number": 111
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000015",
+        "family": "relation selector action",
+        "source_line_number": 112
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000016",
+        "family": "relation selector action",
+        "source_line_number": 113
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000017",
+        "family": "relation selector action",
+        "source_line_number": 114
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000018",
+        "family": "relation selector action",
+        "source_line_number": 115
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000019",
+        "family": "relation selector action",
+        "source_line_number": 116
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000020",
+        "family": "relation selector action",
+        "source_line_number": 117
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000021",
+        "family": "relation selector action",
+        "source_line_number": 118
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000022",
+        "family": "relation selector action",
+        "source_line_number": 119
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:relation selector action:000023",
+        "family": "relation selector action",
+        "source_line_number": 120
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000000",
+        "family": "selector prerequisites",
+        "source_line_number": 121
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000001",
+        "family": "selector prerequisites",
+        "source_line_number": 122
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000002",
+        "family": "selector prerequisites",
+        "source_line_number": 123
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000003",
+        "family": "selector prerequisites",
+        "source_line_number": 124
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000004",
+        "family": "selector prerequisites",
+        "source_line_number": 125
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000005",
+        "family": "selector prerequisites",
+        "source_line_number": 126
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000006",
+        "family": "selector prerequisites",
+        "source_line_number": 127
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000007",
+        "family": "selector prerequisites",
+        "source_line_number": 128
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000008",
+        "family": "selector prerequisites",
+        "source_line_number": 129
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000009",
+        "family": "selector prerequisites",
+        "source_line_number": 130
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000010",
+        "family": "selector prerequisites",
+        "source_line_number": 131
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000011",
+        "family": "selector prerequisites",
+        "source_line_number": 132
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000012",
+        "family": "selector prerequisites",
+        "source_line_number": 133
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000013",
+        "family": "selector prerequisites",
+        "source_line_number": 134
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000014",
+        "family": "selector prerequisites",
+        "source_line_number": 135
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000015",
+        "family": "selector prerequisites",
+        "source_line_number": 136
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000016",
+        "family": "selector prerequisites",
+        "source_line_number": 137
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000017",
+        "family": "selector prerequisites",
+        "source_line_number": 138
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000018",
+        "family": "selector prerequisites",
+        "source_line_number": 139
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000019",
+        "family": "selector prerequisites",
+        "source_line_number": 140
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000020",
+        "family": "selector prerequisites",
+        "source_line_number": 141
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000021",
+        "family": "selector prerequisites",
+        "source_line_number": 142
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000022",
+        "family": "selector prerequisites",
+        "source_line_number": 143
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:selector prerequisites:000023",
+        "family": "selector prerequisites",
+        "source_line_number": 144
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000000",
+        "family": "mask set",
+        "source_line_number": 145
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000001",
+        "family": "mask set",
+        "source_line_number": 146
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000002",
+        "family": "mask set",
+        "source_line_number": 147
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000003",
+        "family": "mask set",
+        "source_line_number": 148
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000004",
+        "family": "mask set",
+        "source_line_number": 149
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000005",
+        "family": "mask set",
+        "source_line_number": 150
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000006",
+        "family": "mask set",
+        "source_line_number": 151
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000007",
+        "family": "mask set",
+        "source_line_number": 152
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000008",
+        "family": "mask set",
+        "source_line_number": 153
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000009",
+        "family": "mask set",
+        "source_line_number": 154
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000010",
+        "family": "mask set",
+        "source_line_number": 155
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000011",
+        "family": "mask set",
+        "source_line_number": 156
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000012",
+        "family": "mask set",
+        "source_line_number": 157
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000013",
+        "family": "mask set",
+        "source_line_number": 158
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000014",
+        "family": "mask set",
+        "source_line_number": 159
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000015",
+        "family": "mask set",
+        "source_line_number": 160
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000016",
+        "family": "mask set",
+        "source_line_number": 161
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000017",
+        "family": "mask set",
+        "source_line_number": 162
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000018",
+        "family": "mask set",
+        "source_line_number": 163
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000019",
+        "family": "mask set",
+        "source_line_number": 164
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000020",
+        "family": "mask set",
+        "source_line_number": 165
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000021",
+        "family": "mask set",
+        "source_line_number": 166
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000022",
+        "family": "mask set",
+        "source_line_number": 167
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:mask set:000023",
+        "family": "mask set",
+        "source_line_number": 168
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000000",
+        "family": "conditional action",
+        "source_line_number": 169
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000001",
+        "family": "conditional action",
+        "source_line_number": 170
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000002",
+        "family": "conditional action",
+        "source_line_number": 171
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000003",
+        "family": "conditional action",
+        "source_line_number": 172
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000004",
+        "family": "conditional action",
+        "source_line_number": 173
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000005",
+        "family": "conditional action",
+        "source_line_number": 174
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000006",
+        "family": "conditional action",
+        "source_line_number": 175
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000007",
+        "family": "conditional action",
+        "source_line_number": 176
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000008",
+        "family": "conditional action",
+        "source_line_number": 177
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000009",
+        "family": "conditional action",
+        "source_line_number": 178
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000010",
+        "family": "conditional action",
+        "source_line_number": 179
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000011",
+        "family": "conditional action",
+        "source_line_number": 180
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000012",
+        "family": "conditional action",
+        "source_line_number": 181
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000013",
+        "family": "conditional action",
+        "source_line_number": 182
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000014",
+        "family": "conditional action",
+        "source_line_number": 183
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000015",
+        "family": "conditional action",
+        "source_line_number": 184
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000016",
+        "family": "conditional action",
+        "source_line_number": 185
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000017",
+        "family": "conditional action",
+        "source_line_number": 186
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000018",
+        "family": "conditional action",
+        "source_line_number": 187
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000019",
+        "family": "conditional action",
+        "source_line_number": 188
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000020",
+        "family": "conditional action",
+        "source_line_number": 189
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000021",
+        "family": "conditional action",
+        "source_line_number": 190
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000022",
+        "family": "conditional action",
+        "source_line_number": 191
+      },
+      {
+        "episode_id": "TARGET_DEV:TARGETED_COMPOSITION:conditional action:000023",
+        "family": "conditional action",
+        "source_line_number": 192
+      }
+    ],
+    "members_sha256": "67abb93c6de26c6f51c5fc21b0b0c85d7bc59ddb6dcb3aa18ca783044589eb30",
+    "metadata_only_extraction": "Only bytes before the task key were matched for episode_id and family; task content and target outputs were neither parsed nor emitted.",
+    "rows": 132,
+    "source_path": "experiments/targeted_capability_repair_v1/data/TARGET_DEV.jsonl",
+    "source_rows": 192,
+    "source_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+  },
+  "execution_plan": {
+    "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+    "decision_rule": {
+      "otherwise": "INCONCLUSIVE_OR_NOT_IMPROVED",
+      "protected_selection_safety": "same color and recolor each have selector exact count >= original Beam rank-1 exact count",
+      "selector_improvement": "bootstrap 95% CI lower bound > 0"
+    },
+    "decoder": {
+      "batch_size": 1,
+      "eos_token_id": 15,
+      "max_new_tokens": 512,
+      "num_beams": 4,
+      "num_return_sequences": 4,
+      "pad_token_id": 13
+    },
+    "no_gpu_authorization_in_this_package": true,
+    "primary_estimand": "equal_family_macro_mean(selector_rank1_exact_minus_original_beam_rank1_exact)",
+    "uncertainty": "paired family-stratified bootstrap with frozen seed and replicates before scoring"
+  },
+  "forbidden": [
+    "model_loading",
+    "candidate_generation",
+    "GPU",
+    "training",
+    "backward",
+    "optimizer",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target-derived_selector_tuning"
+  ],
+  "prior_scored_pool": {
+    "manifest_path": "experiments/capability_repair_baseline_v1/paired_final_query_loss_decomposition_v1/TARGET_DEV_60_FINAL_QUERY_MANIFEST.json",
+    "manifest_sha256": "36ee0843ef27280d7a7baacc857105400053f3b8d9eda67d863c4d88894b658f",
+    "reuse_forbidden": true,
+    "rows": 60
+  },
+  "protocol_id": "CPU_ONLY_PROSPECTIVE_TARGET_BLIND_BEAM4_SELECTOR_PROTOCOL_V1",
+  "schema_version": 1,
+  "selector": {
+    "algorithm_id": "VALID_LENGTH_NORMALIZED_BEAM_SCORE_V1",
+    "allowed_features": [
+      "sequence_score",
+      "original_beam_rank",
+      "parser_status",
+      "generated_token_count"
+    ],
+    "forbidden_features": [
+      "evaluation_target",
+      "exactness",
+      "oracle_rank",
+      "target_derived_feature",
+      "correctness_from_prior_60"
+    ],
+    "parameters": {
+      "adaptive_thresholds": false,
+      "candidate_budget_k": 4,
+      "normalization_exponent": 1.0
+    },
+    "pseudocode": [
+      "discard parser-invalid candidates",
+      "for each remaining candidate compute sequence_score / max(1, generated_token_count_without_terminal_pad)",
+      "select highest normalized score",
+      "ties: higher raw sequence_score, then lower original beam rank"
+    ]
+  },
+  "status": "CPU_ONLY_PREPARATION_NOT_EXECUTED"
+}
