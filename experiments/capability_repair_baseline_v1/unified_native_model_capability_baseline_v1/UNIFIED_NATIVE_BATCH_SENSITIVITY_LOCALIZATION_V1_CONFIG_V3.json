@@ -1,0 +1,94 @@
+{
+  "artifact_version": 3,
+  "batch_modes": [
+    32,
+    16,
+    8,
+    4,
+    1
+  ],
+  "checkpoint_discovery": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/CHECKPOINT_PROVENANCE_DISCOVERY_V1.json",
+    "sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654"
+  },
+  "co_batch_context": "for every batch mode, form buckets over full 60 rows and execute exactly the complete groups containing any fixed validation episode; retain only validation-episode evidence plus all co-batch IDs/sizes",
+  "conditions": [
+    "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED",
+    "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "TARGETED_R1",
+    "TARGETED_R2",
+    "ATOMIC_R1",
+    "FAMILY_BALANCED"
+  ],
+  "contract": {
+    "path": "scripts/unified_native_batch_sensitivity_localization_contract.py",
+    "sha256": "0eb566ed699733cc6d0db1d5cda60ca6bf7b17592bb2915d9d30e4cedc5ed938"
+  },
+  "decision_rule": {
+    "identical_mode_disagreement": "RUNTIME_NONDETERMINISTIC_PAUSE",
+    "largest_common_batch_gt_1": "semantic exact agreement with Batch1 across all six conditions",
+    "no_batch_gt_1": "ONLY_BATCH1_VALID"
+  },
+  "forbidden": [
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target sidecar",
+    "target-aligned scoring",
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint mutation",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external selector"
+  ],
+  "input_manifest": {
+    "episodes": 60,
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/SYNTHETIC_BENCHMARK_INPUT_MANIFEST_V1.json",
+    "sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+    "targets": "SEALED_SIDECAR_ONLY"
+  },
+  "launcher": {
+    "path": "scripts/launch_unified_native_batch_sensitivity_localization_v1.py",
+    "sha256": "74c1ffc9dc78fa6df9f3be2ea850aa14434e65f5a533ba279b5c6b7621dca132"
+  },
+  "physical_diagnostic_fields": [
+    "physical_generated_token_ids",
+    "framework_trailing_pad_count",
+    "nonterminal_trailing_pad_count",
+    "eos_terminated_before_padding"
+  ],
+  "protocol_id": "UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1",
+  "repeatability": "repeat identical full-cohort groups per condition and batch mode; disagreement is hard fail",
+  "runtime_cap_seconds": 9000,
+  "schema_version": 1,
+  "semantic_comparison_fields": [
+    "generated_token_ids",
+    "termination_status",
+    "eos_observed",
+    "parse_valid",
+    "canonical_prediction_sha256"
+  ],
+  "source_commit": "75baf3f8d4266e8e7ed60cabd1f3a78a80f7153e",
+  "status": "CPU_FROZEN_PENDING_PRELAUNCH_REVIEW",
+  "supersedes": "UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1_CONFIG_V2.json",
+  "supersession_reason": "Director RC1-RC3: semantic equivalence now excludes framework-only post-EOS pads; every mode retains full-cohort co-batches containing validation episodes.",
+  "tests": {
+    "contract_path": "tests/test_unified_native_batch_sensitivity_localization_contract.py",
+    "contract_sha256": "f44b51977511dfe6788d0542ba90e9cd2ec9b168c17c38a0c01a08733147a019",
+    "launcher_path": "tests/test_launch_unified_native_batch_sensitivity_localization_v1.py",
+    "launcher_sha256": "406d2385744f464b17c347b2e50852f9f7137871bb021ab007f6a40a16e33ef7"
+  },
+  "validation_subset": {
+    "count": 12,
+    "selection": "fixed_validation_subset over frozen prompt-token ordering",
+    "selection_contract_sha256": "16836c6afc1235fb4fc6fc803c5871a3b41152d9b132c0b003d3b6461dff40c1"
+  },
+  "worker": {
+    "path": "scripts/run_unified_native_batch_sensitivity_localization_v1.py",
+    "sha256": "d308fe4e8d7bddedf48d644ddf197fcb95deaa01061cc4f9d43bbfbea4c472dc"
+  }
+}

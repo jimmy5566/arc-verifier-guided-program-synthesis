@@ -1,0 +1,45 @@
+{
+  "binding": {
+    "nonce": "fe88beae533e3e3b448c96b2164ac92b",
+    "output_root": "/workspace/arc2/unified_native_batch_sensitivity_localization_v1/run_001_fe88beae533e3e3b448c96b2164ac92b",
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/BATCH_SENSITIVITY_LAUNCH_BINDING_V1.json",
+    "runtime_cap_seconds": 9000,
+    "sha256": "9e9a8f9e3dcee99c8c5b4d86fe05053b1fd19d018d379f088f42cabc9b1a8ef3"
+  },
+  "config": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1_CONFIG_V3.json",
+    "sha256": "33ae65e8361572442b5021d04fb8f705099577a0c307f4460f889e0d2f78c6c5"
+  },
+  "forbidden": [
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target sidecar",
+    "target-aligned scoring",
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint mutation",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external selector"
+  ],
+  "frozen_conditions": [
+    "same 60 target-blind observations",
+    "same six checkpoint conditions",
+    "same prompts/tokenizer left padding/greedy decode/fixed 12 validation subset",
+    "same ladder 32/16/8/4/1 and 9000-second cap"
+  ],
+  "implementation_evidence": {
+    "cpu_tests": "Focused contract tests cover framework-pad tolerance, non-padding failure, full-cohort grouping, common-batch selection and nondeterminism.",
+    "full_cohort_grouping": "Every mode derives groups from the complete frozen 60-row cohort and records each executed group with its full co-batch IDs and effective size.",
+    "semantic_vs_physical_split": "Framework-only trailing pads are retained as diagnostic metadata but excluded from semantic pass/fail; non-padding tokens, termination, EOS, parser and canonical prediction remain exact gates."
+  },
+  "protocol_id": "UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1",
+  "question": "After RC1-RC4, may exactly one bounded target-blind no-update localization execution launch?",
+  "requested_decision": "CONTINUE_CONTROLLER authorizing exactly one detached run after exact source/runtime identity and fresh-output/no-duplicate gates, or REQUIRE_CHANGES for one concrete validity defect.",
+  "review_type": "SCIENTIFIC_PRELAUNCH_REVIEW",
+  "schema_version": 1
+}

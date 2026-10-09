@@ -1,0 +1,47 @@
+{
+  "checkpoint_discovery": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/CHECKPOINT_PROVENANCE_DISCOVERY_V1.json",
+    "sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654"
+  },
+  "config": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1_CONFIG_V3.json",
+    "sha256": "33ae65e8361572442b5021d04fb8f705099577a0c307f4460f889e0d2f78c6c5"
+  },
+  "forbidden": [
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target sidecar",
+    "target-aligned scoring",
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint mutation",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external selector"
+  ],
+  "input_manifest": {
+    "episodes": 60,
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/SYNTHETIC_BENCHMARK_INPUT_MANIFEST_V1.json",
+    "sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+    "targets": "SEALED_SIDECAR_ONLY"
+  },
+  "launcher": {
+    "path": "scripts/launch_unified_native_batch_sensitivity_localization_v1.py",
+    "sha256": "74c1ffc9dc78fa6df9f3be2ea850aa14434e65f5a533ba279b5c6b7621dca132"
+  },
+  "nonce": "fe88beae533e3e3b448c96b2164ac92b",
+  "output_root": "/workspace/arc2/unified_native_batch_sensitivity_localization_v1/run_001_fe88beae533e3e3b448c96b2164ac92b",
+  "protocol_id": "UNIFIED_NATIVE_BATCH_SENSITIVITY_LOCALIZATION_V1",
+  "runtime_cap_seconds": 9000,
+  "schema_version": 1,
+  "status": "FROZEN_PENDING_DIRECTOR_REVIEW",
+  "worker": {
+    "path": "scripts/run_unified_native_batch_sensitivity_localization_v1.py",
+    "sha256": "d308fe4e8d7bddedf48d644ddf197fcb95deaa01061cc4f9d43bbfbea4c472dc"
+  },
+  "worker_source_commit": "75baf3f8d4266e8e7ed60cabd1f3a78a80f7153e"
+}
