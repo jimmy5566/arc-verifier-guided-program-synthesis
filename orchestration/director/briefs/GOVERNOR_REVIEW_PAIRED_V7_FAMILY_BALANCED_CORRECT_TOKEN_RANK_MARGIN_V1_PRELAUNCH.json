@@ -1,0 +1,10 @@
+{
+  "allowed_director_outcomes": ["CONTINUE_CONTROLLER", "REQUIRE_CHANGES", "PAUSED"],
+  "reviewed_stage": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1",
+  "director_question": "Is this prospective, no-update two-checkpoint ranking/margin study scientifically valid to launch, or what is the smallest change needed?",
+  "question": "Did FAMILY_BALANCED improve local correct target-token ranks or margins versus V7 despite lower frozen Greedy exact-grid accuracy?",
+  "frozen_conditions": ["V7 and FAMILY_BALANCED only", "same 60 reused development episodes", "B32 primary plus fixed target-blind B1 sensitivity subset", "no generation, update, candidate selection, Gold, dGold, or FINAL_AUDIT", "grid content, separators, and EOS measured separately", "equal-family macro primary; pooled token micro secondary"],
+  "identity": {"config_path": "experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_CONFIG.json", "raw_sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e", "sidecar_sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e", "exact_grid_result_sha256": "09165bdf18f4bde9c5493e4a7bf74b92405610cf546a9f44a47ae0b6ad891440"},
+  "decision_rules": ["robust positive critical-token effects with lower exact grid suggests sequence accumulation/exposure limitation", "nonpositive or inconclusive critical-token effects means prior NLL changes did not promote critical decisions", "family-specific protected harm aligned with rank harm requires preservation in successors", "identity, round-trip, partial-evidence, or B32/B1 material drift means INCONCLUSIVE"],
+  "limits": ["reused development evidence only", "not independent ARC generalization", "no causal gradient claim"]
+}

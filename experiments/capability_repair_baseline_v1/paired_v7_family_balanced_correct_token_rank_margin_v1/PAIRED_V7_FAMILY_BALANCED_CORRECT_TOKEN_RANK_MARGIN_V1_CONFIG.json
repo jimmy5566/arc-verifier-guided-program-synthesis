@@ -1,0 +1,28 @@
+{
+  "protocol_id": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1",
+  "status": "CPU_FROZEN_PENDING_DIRECTOR_PRELAUNCH_REVIEW",
+  "comparators": ["RECONSTRUCTED_FOUNDATION_V2_V7", "FAMILY_BALANCED"],
+  "frozen_inputs": {
+    "checkpoint_discovery_sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654",
+    "family_balanced_manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9",
+    "input_manifest_sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+    "local_exact_grid_result_sha256": "09165bdf18f4bde9c5493e4a7bf74b92405610cf546a9f44a47ae0b6ad891440",
+    "raw_predictions_sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e",
+    "sidecar_sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e",
+    "v7_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  },
+  "measurement": {
+    "all_60_episodes_primary": true,
+    "batch1_subset": "12 target-blind IDs selected deterministically from frozen prompt_sha256 order",
+    "batch_primary": 32,
+    "categories": ["GRID_CONTENT", "ROW_SEPARATOR", "EOS_END"],
+    "first_error": "first mismatch between frozen free-running continuation and target continuation; exact rows report null",
+    "metrics": ["correct_token_top1_rate", "correct_token_top2_rate", "correct_vs_highest_incorrect_margin", "first_error_rank", "first_error_margin"],
+    "primary_estimand": "paired FAMILY_BALANCED_minus_V7 equal-family macro over GRID_CONTENT metrics",
+    "secondary": ["pooled_token_micro", "five_family_cells", "separator_and_eos_metrics", "outcome_defined_exact_grid_groups_descriptive_only"],
+    "sensitivity": "B32/B1 rank or metric disagreement fails closed"
+  },
+  "runtime": {"cap_seconds": 900, "no_update": true, "optimizer_steps": 0, "fresh_output_root": "/workspace/arc2/paired_v7_family_balanced_correct_token_rank_margin_v1/run_001_4e0142ae76fe4379a1b9cc6fb65b8e65", "nonce": "4e0142ae76fe4379a1b9cc6fb65b8e65"},
+  "forbidden": ["training", "optimizer", "backward", "generation", "Gold", "dGold", "FINAL_AUDIT", "target-informed selection"],
+  "source": {"contract_path": "scripts/paired_v7_family_balanced_rank_margin_contract.py", "contract_sha256": "62af2a30aaf998a23b1a73e50a9c01ec1fbea655a3f311e6f1bda80f1e54762f", "source_commit": "c881f999a7c00f7e291f7f573e544285ab1b3eee", "test_path": "tests/test_paired_v7_family_balanced_rank_margin_contract.py", "test_sha256": "48a63b3abf02f9bb11843ca5baab758a11677841ad08e9b31ad601839c12fcf8"}
+}
