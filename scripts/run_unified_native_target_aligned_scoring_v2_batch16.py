@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse,hashlib,json,os,time
 from pathlib import Path
 from scripts.arc2_token_grid_parser import parse_generated_token_ids,tokenizer_token_contract
-from scripts.unified_native_target_alignment_v2_contract import CONDITIONS,canonical_grid_hash,exact_scores,first_error,read_raw,read_sidecar,summarize_exact,validate_prompt_mapping
+from scripts.unified_native_target_alignment_v2_contract import CONDITIONS,exact_scores,first_error,read_raw,read_sidecar,require_manifest_identity,summarize_exact,validate_prompt_mapping
 ROOT=Path(__file__).resolve().parents[1]; PROTOCOL='UNIFIED_NATIVE_TARGET_ALIGNED_SCORING_V2_BATCH16'; CAP_SECONDS=9000
 
 def sha(p:Path)->str:
@@ -73,7 +73,8 @@ def main():
  for condition in CONDITIONS:
   if time.monotonic()-start>=z.runtime_seconds:raise RuntimeError('RUNTIME_CAP_EXCEEDED')
   record_id='RECONSTRUCTED_FOUNDATION_V2_V7' if condition=='QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED' else condition
-  checkpoint=load(ROOT/records[record_id]['manifest_path']); identity=verify_manifest(checkpoint,condition!='QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED')
+  record=records[record_id]; checkpoint=require_manifest_identity(ROOT/record['manifest_path'],record['manifest_sha256']); identity=verify_manifest(checkpoint,condition!='QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED');
+  if condition!='QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED' and identity['adapter_sha256']!=record['adapter_model_sha256']:raise RuntimeError('DISCOVERED_ADAPTER_IDENTITY_MISMATCH')
   tok=AutoTokenizer.from_pretrained(identity['base_path'],local_files_only=True);tok.pad_token_id=13;tok.padding_side='left';contract=tokenizer_token_contract(tok,eos_token_id=15,pad_token_id=13)
   model=AutoModelForCausalLM.from_pretrained(identity['base_path'],torch_dtype=torch.bfloat16,local_files_only=True).to('cuda').eval()
   if condition!='QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED':model=PeftModel.from_pretrained(model,identity['adapter_path'],local_files_only=True).eval()
@@ -83,7 +84,7 @@ def main():
    episode=raw_row['episode_id']; target=parse_tokens(targets[episode],contract,'TARGET'); greedy=parse_generated_token_ids(raw_row['generated_token_ids'],contract); alt=parse_generated_token_ids(raw_row['alternate_token_ids'],contract) if raw_row.get('alternate_token_ids') else None
    exact=exact_scores(greedy_grid=greedy.grid,alternate_grid=None if alt is None else alt.grid,target_grid=target.grid)
    pids=list(tok(prompts[episode],add_special_tokens=False)['input_ids']); ranks,margins=teacher_forced(model,pids,targets[episode])
-   out.append({'checkpoint_condition':condition,'episode_id':episode,'family':raw_row['family'],'prompt_sha256':raw_row['prompt_sha256'],'greedy_exact_grid_match':exact['greedy_exact_grid_match'],'rank2_complete_output_exact_grid_match':exact['rank2_complete_output_exact_grid_match'],'target_grid_sha256':exact['target_grid_sha256'],'correct_target_token_ranks':ranks,'correct_target_vs_highest_incorrect_margins':margins,'first_free_running_error_index':first_error(greedy.content_token_ids,target.content_token_ids),'target_alignment_used_for_selection':False})
+   out.append({'checkpoint_condition':condition,'episode_id':episode,'family':raw_row['family'],'prompt_sha256':raw_row['prompt_sha256'],'greedy_exact_grid_match':exact['greedy_exact_grid_match'],'alternate_only_exact_grid_match':exact['alternate_only_exact_grid_match'],'complete_output_top2_coverage':exact['complete_output_top2_coverage'],'target_grid_sha256':exact['target_grid_sha256'],'correct_target_token_ranks':ranks,'correct_target_vs_highest_incorrect_margins':margins,'first_free_running_error_index':first_error(greedy.content_token_ids,target.content_token_ids),'target_alignment_used_for_selection':False})
   del model;torch.cuda.empty_cache()
  if len(out)!=360:raise RuntimeError('PARTIAL_EVIDENCE_FORBIDDEN')
  result={'protocol_id':PROTOCOL,'status':'COMPLETE_NO_UPDATE','raw_evidence_sha256':z.raw_sha256,'sidecar_sha256':z.sidecar_sha256,'records':out,'exact_grid_summary':summarize_exact(out),'runtime_identities':runtime,'optimizer_steps':0,'training':False,'backward':False,'generation':False,'final_audit_opened':False,'runtime_seconds':time.monotonic()-start}

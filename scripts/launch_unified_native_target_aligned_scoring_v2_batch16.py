@@ -3,6 +3,7 @@
 from __future__ import annotations
 import argparse,hashlib,json,os,subprocess,sys,time
 from pathlib import Path
+from scripts.unified_native_target_alignment_v2_contract import require_fresh_output
 ROOT=Path(__file__).resolve().parents[1];CAP_SECONDS=9000
 
 def sha(p):
@@ -25,9 +26,9 @@ def summary(p):return {'path':str(p),'present':p.is_file(),'sha256':sha(p) if p.
 def main():
  a=argparse.ArgumentParser();a.add_argument('--binding',type=Path,required=True);a.add_argument('--expected-source-commit',required=True);z=a.parse_args();b=load_binding(z.binding,z.expected_source_commit)
  root=Path(b['output_root']);lock=root.parent/('.'+root.name+'.lock');terminal=root/'TERMINAL_RECEIPT.json';result=root/'TARGET_ALIGNED_RESULTS.json';worker_receipt=root/'WORKER_RECEIPT.json';started=time.monotonic();made_root=False;made_lock=False
- receipt={'protocol_id':'UNIFIED_NATIVE_TARGET_ALIGNED_SCORING_V2_BATCH16','nonce':b['nonce'],'expected_source_commit':z.expected_source_commit,'runtime_cap_seconds':CAP_SECONDS,'optimizer_steps':0,'training':False,'backward':False,'generation':False,'final_audit_opened':False}
+ receipt={'protocol_id':'UNIFIED_NATIVE_TARGET_ALIGNED_SCORING_V2_BATCH16','nonce':b['nonce'],'expected_source_commit':z.expected_source_commit,'runtime_cap_seconds':CAP_SECONDS,'optimizer_steps':0,'training':False,'backward':False,'generation':False,'final_audit_opened':False,'binding_sha256':sha(z.binding),'worker_sha256':b['worker']['sha256'],'launcher_sha256':b['launcher']['sha256'],'raw_evidence_sha256':b['raw']['sha256'],'sidecar_expected_sha256':b['sidecar']['expected_sha256']}
  try:
-  if root.exists():raise RuntimeError('FRESH_OUTPUT_ROOT_REQUIRED')
+  require_fresh_output(root)
   try:fd=os.open(lock,os.O_CREAT|os.O_EXCL|os.O_WRONLY)
   except FileExistsError as e:raise RuntimeError('DUPLICATE_LIVE_JOB_FORBIDDEN') from e
   os.close(fd);made_lock=True;root.mkdir(parents=True,exist_ok=False);made_root=True

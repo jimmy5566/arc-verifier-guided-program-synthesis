@@ -55,12 +55,29 @@ def first_error(generated:list[int], target:list[int])->int|None:
 
 def exact_scores(*, greedy_grid:list[list[int]]|None, alternate_grid:list[list[int]]|None, target_grid:list[list[int]])->dict:
  target_hash=canonical_grid_hash(target_grid)
- return {'greedy_exact_grid_match':greedy_grid is not None and canonical_grid_hash(greedy_grid)==target_hash,'rank2_complete_output_exact_grid_match':alternate_grid is not None and canonical_grid_hash(alternate_grid)==target_hash,'target_grid_sha256':target_hash}
+ greedy=greedy_grid is not None and canonical_grid_hash(greedy_grid)==target_hash
+ alternate=alternate_grid is not None and canonical_grid_hash(alternate_grid)==target_hash
+ return {'greedy_exact_grid_match':greedy,'alternate_only_exact_grid_match':(not greedy) and alternate,'complete_output_top2_coverage':greedy or alternate,'target_grid_sha256':target_hash}
 
 def summarize_exact(records:list[dict])->dict:
  if len(records)!=360:raise RuntimeError('EXACT_RECORD_COUNT_INVALID')
  def point(rows):
-  n=len(rows);return {'denominator':n,'greedy_exact':sum(bool(x['greedy_exact_grid_match']) for x in rows),'rank2_complete_output_coverage':sum(bool(x['rank2_complete_output_exact_grid_match']) for x in rows)}
+  n=len(rows)
+  if not n:raise RuntimeError('EXACT_DENOMINATOR_ZERO')
+  return {'denominator':n,'greedy_top1_exact':sum(bool(x['greedy_exact_grid_match']) for x in rows),'alternate_only_exact':sum(bool(x['alternate_only_exact_grid_match']) for x in rows),'complete_output_top2_coverage':sum(bool(x['complete_output_top2_coverage']) for x in rows)}
  by_condition={c:point([x for x in records if x['checkpoint_condition']==c]) for c in CONDITIONS}
  by_family={f:point([x for x in records if x['family']==f]) for f in FAMILIES}
- return {'pooled':point(records),'by_condition':by_condition,'by_family':by_family,'equal_family_macro':{metric:sum(by_family[f][metric]/by_family[f]['denominator'] for f in FAMILIES)/len(FAMILIES) for metric in ('greedy_exact','rank2_complete_output_coverage')}}
+ metrics=('greedy_top1_exact','alternate_only_exact','complete_output_top2_coverage')
+ macro={metric:sum(by_family[f][metric]/by_family[f]['denominator'] for f in FAMILIES)/len(FAMILIES) for metric in metrics}
+ composition=['COMPOSITION_RECOLOR_TRANSLATE','COMPOSITION_REFLECT_RECOLOR']
+ composition_records=[x for x in records if x['family'] in composition]
+ protected=[x for x in records if x['family']=='PROTECTED_SAME_COLOR']
+ return {'pooled':point(records),'by_condition':by_condition,'by_family':by_family,'equal_family_macro':macro,'compositional_aggregate':point(composition_records),'protected_same_color_retention':point(protected)}
+
+def require_manifest_identity(manifest_path:Path, expected_sha256:str)->dict:
+ if not isinstance(expected_sha256,str) or len(expected_sha256)!=64 or not manifest_path.is_file() or sha(manifest_path)!=expected_sha256:raise RuntimeError('CHECKPOINT_MANIFEST_SHA_MISMATCH')
+ return json.loads(manifest_path.read_text(encoding='utf-8-sig'))
+
+def require_fresh_output(root:Path)->None:
+ if root.exists():raise RuntimeError('FRESH_OUTPUT_ROOT_REQUIRED')
+
