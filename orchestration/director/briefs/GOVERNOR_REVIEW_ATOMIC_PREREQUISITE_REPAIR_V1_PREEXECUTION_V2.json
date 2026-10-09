@@ -1,0 +1,74 @@
+{
+  "added_prospective_gates": {
+    "aggregate_gates_retained": {
+      "composition_net_floor": -2,
+      "retention_net_floor": -2,
+      "weak_atomic_net_fixes_minimum": 5,
+      "weak_family_net_floor": -1
+    },
+    "composition_per_family_net_fix_floor_vs_v7": {
+      "conditional action": -1,
+      "mask set": -1,
+      "relation selector action": -1
+    },
+    "zero_harm_vs_v7": {
+      "retention": [
+        "color mapping",
+        "complete missing structure",
+        "recolor",
+        "rotate"
+      ],
+      "strong": [
+        "same color",
+        "recolor",
+        "selector prerequisites"
+      ]
+    }
+  },
+  "artifacts": {
+    "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_PROTOCOL_CPU_VALIDATION.json": "866deaf4b6b1df2c2c90be4aa5dcd7e48b1e9eb5d0c1531ebc4bc52eb47af761",
+    "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_DECISION_RULE.json": "7bdf420baad17edd176975646be858a7addaae9ea9c4e375dda9e9ee2c0c7054",
+    "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_LAUNCH_CONTRACT_DRAFT.json": "2f37478b5ac4de238d8568d47da481f233669c8418d9dcb57f97a4588514d029",
+    "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_PROTOCOL.json": "a9ac5fb313ccd5207c1e60380459c8c6100e16b6088fa72d2ffd8404fa7cdba4",
+    "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6"
+  },
+  "brief_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_REPAIR_V1_PREEXECUTION_V2",
+  "forbidden": [
+    "No GPU launch or model load before this response authorizes the stage.",
+    "No schedule, recipe, data, cohort or threshold changes other than the listed Director-required gates.",
+    "No Stage A/R3/FINAL_AUDIT reopening."
+  ],
+  "required_response_contract": {
+    "allowed_decisions": [
+      "CONTINUE_CONTROLLER",
+      "REQUIRE_CHANGES",
+      "PAUSED",
+      "TERMINAL"
+    ],
+    "if_continue": "Authorize only this frozen distinct protocol; no routine substep reviews required.",
+    "if_require_changes": "Specify the smallest scientific change and whether another review is required."
+  },
+  "review_reason": "Director-required decision-rule-only binding refresh.",
+  "schema_version": 1,
+  "scientific_question": "With the specified family-level preservation and composition non-inferiority rules now frozen, is this distinct V7-starting atomic-prerequisite protocol scientifically valid to execute?",
+  "scope_of_change_only": [
+    "Decision-rule dependent protocol binding",
+    "Launch contract binding",
+    "CPU validation binding",
+    "Separate record of previously granted standing user GPU authorization"
+  ],
+  "supersedes_brief_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_REPAIR_V1_PREEXECUTION",
+  "unchanged_frozen_conditions": [
+    "400-episode TRAIN-only schedule and its SHA256",
+    "Data allocation",
+    "Training recipe",
+    "Evaluation cohorts, decoder, parser, scorer, batch policy and drift tolerance",
+    "3600-second reservation",
+    "FINAL_AUDIT sealed",
+    "No composition training"
+  ],
+  "user_gpu_authorization": {
+    "present": true,
+    "scope": "Standing user authorization applies to existing ARC2 RunPod and remaining budget, but this protocol remains scientifically prohibited until this Director review authorizes it."
+  }
+}

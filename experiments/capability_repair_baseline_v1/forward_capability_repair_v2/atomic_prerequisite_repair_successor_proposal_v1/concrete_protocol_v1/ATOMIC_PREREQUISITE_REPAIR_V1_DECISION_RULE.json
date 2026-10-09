@@ -1,10 +1,21 @@
 {
   "acceptance": {
+    "composition_each_family_paired_net_fixes_vs_v7_minimum": {
+      "conditional action": -1,
+      "mask set": -1,
+      "relation selector action": -1
+    },
     "composition_paired_net_fixes_vs_v7_minimum": -2,
     "protected_families_paired_harms_vs_v7_maximum": {
       "recolor": 0,
       "same color": 0,
       "selector prerequisites": 0
+    },
+    "protected_retention_families_paired_harms_vs_v7_maximum": {
+      "color mapping": 0,
+      "complete missing structure": 0,
+      "recolor": 0,
+      "rotate": 0
     },
     "retention_sentinel_paired_net_fixes_vs_v7_minimum": -2,
     "weak_atomic_aggregate_paired_net_fixes_vs_v7_minimum": 5,
@@ -14,11 +25,13 @@
   "candidate_checkpoints": [
     "FINAL_ONLY"
   ],
+  "director_required_revision": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_REPAIR_V1_PREEXECUTION_REQUIRE_CHANGES",
   "future_composition": "Requires a separate stage-boundary review after atomic results.",
   "protocol_id": "ATOMIC_PREREQUISITE_REPAIR_V1",
+  "revision": 2,
   "schema_version": 1,
   "selection": "Accept only a candidate satisfying every validity and acceptance condition; otherwise reject all candidates and do not enter composition training.",
-  "status": "FROZEN_PROSPECTIVE_SELECTION_RULE",
+  "status": "FROZEN_PROSPECTIVE_SELECTION_RULE_REVISION_2",
   "validity_requirements": {
     "final_audit_sealed": true,
     "no_leakage": true,

@@ -6,6 +6,7 @@
     "remaining_seconds": 23492.06749760904,
     "stage_a_seconds": 529.918254686
   },
+  "dependent_binding_source_commit": "8b9dd84dae4273177ffa3115994c99f062f6ec77",
   "evaluation": {
     "batch1_validation_subset": 32,
     "batch_size_requested": 32,
@@ -71,6 +72,26 @@
     "target_dev_used_for_training": false,
     "train_only": true
   },
+  "prospective_protection_gates": {
+    "aggregate_composition_net_fixes_floor": -2,
+    "aggregate_retention_net_fixes_floor": -2,
+    "composition_family_net_fixes_vs_v7_minimum": {
+      "conditional action": -1,
+      "mask set": -1,
+      "relation selector action": -1
+    },
+    "protected_retention_harms_vs_v7_maximum": {
+      "color mapping": 0,
+      "complete missing structure": 0,
+      "recolor": 0,
+      "rotate": 0
+    },
+    "protected_strong_harms_vs_v7_maximum": {
+      "recolor": 0,
+      "same color": 0,
+      "selector prerequisites": 0
+    }
+  },
   "protocol_id": "ATOMIC_PREREQUISITE_REPAIR_V1",
   "recipe": {
     "base_frozen": true,
@@ -95,6 +116,7 @@
       "down_proj"
     ]
   },
+  "revision": 2,
   "schema_version": 1,
   "scientific_objective": {
     "composition": "Deferred; no composition training samples in this protocol.",
@@ -104,7 +126,7 @@
   "scope": "DISTINCT_SUCCESSOR_PROTOCOL_NOT_A_CONTINUATION_OF_SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
   "source_commit": "d09df70b647b2e40252003b77a00bfae3cdfb417",
   "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1",
-  "status": "FROZEN_CPU_ONLY_PREEXECUTION_PENDING_DIRECTOR_REVIEW",
+  "status": "FROZEN_CPU_ONLY_PREEXECUTION_PENDING_DIRECTOR_REVIEW_REVISION_2",
   "training_schedule": {
     "allocation_counts": {
       "retention_protection": 64,
@@ -133,5 +155,11 @@
       "selector prerequisites": 32
     },
     "weak_atomic_per_family": 48
+  },
+  "user_gpu_authorization": {
+    "allows_this_protocol_now": false,
+    "present": true,
+    "reason": "This protocol still awaits its required corrected Director stage decision.",
+    "scope": "ARC2 standing GPU execution authorization supplied by user; bounded by current 28,800-second training budget, existing reservations and separate Director scientific authorization."
   }
 }

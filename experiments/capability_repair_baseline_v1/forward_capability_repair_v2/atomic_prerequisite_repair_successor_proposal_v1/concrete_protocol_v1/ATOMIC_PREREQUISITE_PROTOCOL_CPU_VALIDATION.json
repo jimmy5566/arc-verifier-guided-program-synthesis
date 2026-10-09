@@ -2,12 +2,23 @@
   "checks": {
     "all_schedule_sources_train_only": true,
     "composition_training_rows": 0,
-    "decision_rule_sha256": "096169811329f778f454880301c313f5e859c456c701d2ddeebf8ca94ac6ae67",
+    "decision_rule_sha256": "7bdf420baad17edd176975646be858a7addaae9ea9c4e375dda9e9ee2c0c7054",
     "episode_count": 400,
     "final_audit_opened": false,
-    "launch_draft_sha256": "cd544b419c52b261f482acff395273be27f53d97eeb879d3afd182e083338cc5",
-    "protocol_sha256": "0cadab943bea0f2eff48e5a7a4c2ec5681b47131a9cd6adae4880f11c3553493",
+    "launch_draft_sha256": "2f37478b5ac4de238d8568d47da481f233669c8418d9dcb57f97a4588514d029",
+    "protocol_sha256": "a9ac5fb313ccd5207c1e60380459c8c6100e16b6088fa72d2ffd8404fa7cdba4",
     "recipe_does_not_authorize_execution": true,
+    "required_composition_per_family_floor": {
+      "conditional action": -1,
+      "mask set": -1,
+      "relation selector action": -1
+    },
+    "required_retention_zero_harm_gates": {
+      "color mapping": 0,
+      "complete missing structure": 0,
+      "recolor": 0,
+      "rotate": 0
+    },
     "retention_sentinel_in_training": false,
     "role_counts": {
       "RETENTION_PROTECTION": 64,
@@ -15,12 +26,15 @@
       "WEAK_ATOMIC_REPAIR": 240
     },
     "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6",
+    "schedule_unchanged_from_revision_1": true,
     "target_dev_in_training": false,
-    "token_label_hash_present_for_all_episodes": true
+    "token_label_hash_present_for_all_episodes": true,
+    "user_gpu_authorization_recorded_separately": true
   },
   "protocol_id": "ATOMIC_PREREQUISITE_REPAIR_V1",
   "result": "PASS",
+  "revision": 2,
   "schema_version": 1,
   "source_commit": "d09df70b647b2e40252003b77a00bfae3cdfb417",
-  "status": "CPU_VALIDATION_PASS"
+  "status": "CPU_VALIDATION_PASS_REVISION_2"
 }
