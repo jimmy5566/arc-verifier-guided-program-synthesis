@@ -67,6 +67,17 @@ class FamilyBalancedLossControlTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "LOSS_COEFFICIENT_LEDGER_IDENTITY_FAIL"):
             worker.load_loss_coefficients(config, work)
 
+    def test_pre_model_interface_rejects_output_root_mismatch_before_loading(self) -> None:
+        config = json.loads((BASE / "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_REMOTE_RUN_CONFIG_DRAFT.json").read_text(encoding="utf-8"))
+        with self.assertRaisesRegex(RuntimeError, "OUTPUT_ROOT_CONFIG_MISMATCH"):
+            worker.validate_pre_model_config(config, "/workspace/arc2/wrong-output-root")
+
+    def test_pre_model_interface_requires_complete_config(self) -> None:
+        config = json.loads((BASE / "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_REMOTE_RUN_CONFIG_DRAFT.json").read_text(encoding="utf-8"))
+        config.pop("train_sha256")
+        with self.assertRaisesRegex(RuntimeError, "REQUIRED_CONFIG_KEY_MISSING:train_sha256"):
+            worker.validate_pre_model_config(config, config["output_root"])
+
 
 if __name__ == "__main__":
     unittest.main()

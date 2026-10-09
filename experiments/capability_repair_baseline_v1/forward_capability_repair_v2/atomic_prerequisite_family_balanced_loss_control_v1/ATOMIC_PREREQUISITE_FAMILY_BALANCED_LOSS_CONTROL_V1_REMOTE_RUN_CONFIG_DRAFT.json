@@ -48,5 +48,8 @@
   "schedule_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json",
   "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6",
   "schema_version": 1,
-  "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1"
+  "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1",
+  "train_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TRAIN.jsonl",
+  "train_rows": 4004,
+  "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
 }

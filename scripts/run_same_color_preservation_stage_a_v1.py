@@ -50,7 +50,12 @@ def load_work(config: dict) -> list[dict]:
     train = Path(config["train_path"])
     if sha(train) != config["train_sha256"]:
         raise RuntimeError("TRAIN_IDENTITY_FAIL")
-    source = {x["episode_id"]: x for x in (json.loads(line) for line in train.read_text(encoding="utf8").splitlines() if line)}
+    source_rows = [json.loads(line) for line in train.read_text(encoding="utf8").splitlines() if line]
+    if len(source_rows) != int(config["train_rows"]):
+        raise RuntimeError("TRAIN_ROW_COUNT_FAIL")
+    source = {x["episode_id"]: x for x in source_rows}
+    if len(source) != len(source_rows):
+        raise RuntimeError("TRAIN_EPISODE_ID_DUPLICATE")
     schedule_path = resolve(ROOT, config["schedule_path"])
     if sha(schedule_path) != config["schedule_sha256"]:
         raise RuntimeError("SCHEDULE_IDENTITY_FAIL")
@@ -74,6 +79,50 @@ def load_work(config: dict) -> list[dict]:
         # same-color source rows are explicitly assigned to RETENTION_TRAIN.
         work.append({"ids": sample["input_ids"], "labels": labels, "tokens": observed["sequence_length"], "supervised": observed["supervised_token_count"], "episode_id": row["episode_id"], "role": expected["role"], "family": expected["family"]})
     return work
+
+
+REQUIRED_PRE_MODEL_CONFIG_KEYS = (
+    "protocol_id", "round_id", "arm", "output_root", "checkpoint_manifest_path",
+    "checkpoint_manifest_sha256", "train_path", "train_sha256", "train_rows",
+    "schedule_path", "schedule_sha256", "loss_aggregation_policy",
+    "loss_coefficient_ledger_path", "loss_coefficient_ledger_sha256",
+    "optimizer_steps", "gradient_accumulation", "final_audit_opened",
+)
+
+
+def validate_pre_model_config(config: dict, run_root_raw: str) -> dict:
+    """Run every bound CPU identity check before importing model libraries."""
+    missing = [key for key in REQUIRED_PRE_MODEL_CONFIG_KEYS if key not in config]
+    if missing:
+        raise RuntimeError("REQUIRED_CONFIG_KEY_MISSING:" + ",".join(missing))
+    if run_root_raw != config["output_root"]:
+        raise RuntimeError("OUTPUT_ROOT_CONFIG_MISMATCH")
+    if config.get("final_audit_opened") is not False:
+        raise RuntimeError("FINAL_AUDIT_FORBIDDEN")
+    manifest_path = resolve(ROOT, config["checkpoint_manifest_path"])
+    if sha(manifest_path) != config["checkpoint_manifest_sha256"]:
+        raise RuntimeError("CHECKPOINT_MANIFEST_FAIL")
+    if int(config["optimizer_steps"]) != 100 or int(config["gradient_accumulation"]) != 4:
+        raise RuntimeError("FROZEN_RECIPE_SHAPE_FAIL")
+    work = load_work(config)
+    if len(work) != int(config["optimizer_steps"]) * int(config["gradient_accumulation"]):
+        raise RuntimeError("SCHEDULE_STEP_ALIGNMENT_FAIL")
+    coefficients = load_loss_coefficients(config, work)
+    if len(coefficients) != int(config["optimizer_steps"]):
+        raise RuntimeError("LOSS_COEFFICIENT_STEP_COUNT_FAIL")
+    return {
+        "status": "PRE_MODEL_CPU_VALIDATION_PASS",
+        "train_path": config["train_path"],
+        "train_sha256": config["train_sha256"],
+        "train_rows": int(config["train_rows"]),
+        "schedule_sha256": config["schedule_sha256"],
+        "loss_coefficient_ledger_sha256": config["loss_coefficient_ledger_sha256"],
+        "scheduled_episodes": len(work),
+        "optimizer_steps": len(coefficients),
+        "per_step_scalar_scale": [sum(step) for step in coefficients],
+        "output_root": run_root_raw,
+        "final_audit_opened": False,
+    }
 
 
 def load_loss_coefficients(config: dict, work: list[dict]) -> list[list[float]]:
@@ -118,22 +167,21 @@ def load_loss_coefficients(config: dict, work: list[dict]) -> list[list[float]]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=Path, required=True)
-    parser.add_argument("--run-root", type=Path, required=True)
+    parser.add_argument("--run-root", required=True)
+    parser.add_argument("--validate-pre-model", action="store_true")
     args = parser.parse_args()
     config = json.loads(args.config.read_text(encoding="utf8"))
-    run = args.run_root
+    pre_model = validate_pre_model_config(config, args.run_root)
+    if args.validate_pre_model:
+        print(json.dumps(pre_model, sort_keys=True))
+        return 0
+    if config.get("execution_authorized") is not True:
+        raise RuntimeError("SCIENTIFIC_TRAINING_NOT_AUTHORIZED")
+    run = Path(args.run_root)
     if run.exists():
         raise RuntimeError("FRESH_OUTPUT_REQUIRED")
-    if config.get("final_audit_opened") is not False:
-        raise RuntimeError("FINAL_AUDIT_FORBIDDEN")
     manifest_path = resolve(ROOT, config["checkpoint_manifest_path"])
-    if sha(manifest_path) != config["checkpoint_manifest_sha256"]:
-        raise RuntimeError("CHECKPOINT_MANIFEST_FAIL")
-    if int(config["optimizer_steps"]) != 100 or int(config["gradient_accumulation"]) != 4:
-        raise RuntimeError("FROZEN_RECIPE_SHAPE_FAIL")
     work = load_work(config)
-    if len(work) != int(config["optimizer_steps"]) * int(config["gradient_accumulation"]):
-        raise RuntimeError("SCHEDULE_STEP_ALIGNMENT_FAIL")
     loss_coefficients = load_loss_coefficients(config, work)
     run.mkdir(parents=True)
     runtime, checkpoints = run / "runtime", run / "checkpoints"

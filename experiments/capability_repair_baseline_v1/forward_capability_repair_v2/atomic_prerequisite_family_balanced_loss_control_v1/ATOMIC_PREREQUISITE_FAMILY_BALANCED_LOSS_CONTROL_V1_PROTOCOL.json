@@ -38,6 +38,8 @@
     "success_action": "RETURN_FOR_STAGE_LEVEL_REVIEW_NO_AUTOMATIC_COMPOSITION_OR_PROMOTION"
   },
   "protocol_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1",
+  "run_config_path": "experiments\\capability_repair_baseline_v1\\forward_capability_repair_v2\\atomic_prerequisite_family_balanced_loss_control_v1\\ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_REMOTE_RUN_CONFIG_DRAFT.json",
+  "run_config_sha256": "235a34b3fbdef9497cd92f5afa614a5f276d5a8df11db9fc45aa8adf14d5702f",
   "schema_version": 1,
   "scientific_question": "Holding the rejected R1 schedule and recipe fixed, does global family-balanced scalar loss aggregation improve weak atomic paired outcomes without preservation or composition harm?",
   "single_changed_factor": "SCALAR_LOSS_AGGREGATION_BY_FAMILY",
@@ -47,5 +49,5 @@
   "status": "CPU_PREEXECUTION_FROZEN_PENDING_STAGE_REVIEW",
   "user_gpu_authorization": "STANDING_GPU_EXECUTION_AUTHORIZATION_RECORDED",
   "worker_path": "scripts/run_same_color_preservation_stage_a_v1.py",
-  "worker_sha256": "e7171f1de659f9a68492115f6e632196bcb70e93cdf6a757036c64890b8f36c3"
-}
+  "worker_sha256": "4533eca96d76030011b3833d76e463ee6ed55af3852233c05bba856e90a4303c"
+}\n
