@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse, hashlib, json, os, time
 from pathlib import Path
 from scripts.arc2_token_grid_parser import TokenGridContract, parse_generated_token_ids, tokenizer_token_contract
-from scripts.unified_native_baseline_measurement_contract import FALLBACK_LADDER, digest, fixed_validation_subset, length_bucketed_batches, next_fallback, validation_gate
+from scripts.unified_native_baseline_measurement_contract import FALLBACK_LADDER, choose_rank2_alternate_binding, digest, fixed_validation_subset, length_bucketed_batches, next_fallback, normalize_eos_terminated_trajectory, validation_gate
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V2"
@@ -50,26 +50,21 @@ def ranks(scores, token: int) -> tuple[int,int,float]:
     top1,top2=int(ids[0]),int(ids[1]); margin=float(values[0]-values[1])
     rank=int((scores>scores[token]).sum().item())+1
     return rank,top2,margin
-def generate_pair(model, tokenizer, encoded):
+def generate_alternate_from_primary(model, tokenizer, binding, prompt_attention_mask):
+    """Continue once from the saved Batch32 prefix; never rerun Greedy."""
     import torch
-    with torch.inference_mode():
-        result=model.generate(**encoded,max_new_tokens=MAX_NEW_TOKENS,do_sample=False,num_beams=1,use_cache=True,eos_token_id=tokenizer.eos_token_id,pad_token_id=tokenizer.pad_token_id,return_dict_in_generate=True,output_scores=True)
-    prompt_width=int(encoded["input_ids"].shape[1]); greedy=[int(x) for x in result.sequences[0,prompt_width:].detach().cpu().tolist()]
-    traces=[]
-    for index,(score,token) in enumerate(zip(result.scores,greedy)):
-        rank,rank2,margin=ranks(score[0],token); traces.append({"position":index,"greedy_token_id":token,"greedy_rank":rank,"rank2_token_id":rank2,"top1_top2_margin":margin})
-    if not traces: return greedy,None,traces
-    chosen=min(traces,key=lambda x:(x["top1_top2_margin"],x["position"]))
-    prefix=result.sequences[0,:prompt_width+chosen["position"]].unsqueeze(0)
-    forced=torch.tensor([[chosen["rank2_token_id"]]],device=prefix.device,dtype=prefix.dtype)
+    prefix=torch.tensor([binding["primary_prefix_token_ids"]],device="cuda",dtype=torch.long)
+    forced=torch.tensor([[binding["forced_rank2_token_id"]]],device=prefix.device,dtype=prefix.dtype)
     alternate_input=torch.cat((prefix,forced),dim=1)
-    alternate_mask=torch.ones_like(alternate_input)
-    remaining=MAX_NEW_TOKENS-chosen["position"]-1
+    prompt_width=len(prompt_attention_mask)
+    prefix_mask=torch.tensor([prompt_attention_mask + [1] * binding["branch_position"]],device=prefix.device,dtype=torch.long)
+    alternate_mask=torch.cat((prefix_mask,torch.ones_like(forced)),dim=1)
+    remaining=MAX_NEW_TOKENS-binding["branch_position"]-1
     if remaining <= 0:
-        return greedy,[int(x) for x in alternate_input[0,prompt_width:].detach().cpu().tolist()],traces
+        return [int(x) for x in alternate_input[0,prompt_width:].detach().cpu().tolist()]
     with torch.inference_mode():
         alternate=model.generate(input_ids=alternate_input,attention_mask=alternate_mask,max_new_tokens=remaining,do_sample=False,num_beams=1,use_cache=True,eos_token_id=tokenizer.eos_token_id,pad_token_id=tokenizer.pad_token_id)
-    return greedy,[int(x) for x in alternate[0,prompt_width:].detach().cpu().tolist()],traces
+    return [int(x) for x in alternate[0,prompt_width:].detach().cpu().tolist()]
 def generate_primary_batch(model, tokenizer, contexts):
     """Batch32 primary greedy generation; alternatives remain target-blind."""
     import torch
@@ -83,13 +78,14 @@ def generate_primary_batch(model, tokenizer, contexts):
         trace=[]
         for position,(scores,token) in enumerate(zip(result.scores,greedy)):
             rank,rank2,margin=ranks(scores[row_index],token); trace.append({"position":position,"greedy_token_id":token,"greedy_rank":rank,"rank2_token_id":rank2,"top1_top2_margin":margin})
-        output.append((greedy,trace))
+        output.append((greedy,trace,[int(x) for x in result.sequences[row_index].detach().cpu().tolist()],[int(x) for x in encoded["attention_mask"][row_index].detach().cpu().tolist()]))
     return output
 def generation_evidence(episode_id: str, token_ids: list[int], token_contract: TokenGridContract) -> dict:
     """Preserve target-blind parser evidence for later audit and B1/B32 checks."""
-    extracted=parse_generated_token_ids(token_ids,token_contract)
+    normalized=normalize_eos_terminated_trajectory(token_ids,eos_token_id=token_contract.eos_token_id,pad_token_id=token_contract.pad_token_id)
+    extracted=parse_generated_token_ids(normalized["generated_token_ids"],token_contract)
     canonical=digest({"grid":extracted.grid} if extracted.grid is not None else {"invalid_output":True})
-    return {"episode_id":episode_id,"generated_token_ids":extracted.generated_token_ids,
+    return {"episode_id":episode_id,**normalized,"generated_token_ids":extracted.generated_token_ids,
             "generated_length":extracted.generated_length,"termination_status":extracted.termination_status,
             "eos_observed":extracted.eos_observed,"trailing_pad_count":extracted.trailing_pad_count,
             "content_token_ids":extracted.content_token_ids,"parse_reason":extracted.parse_reason,
@@ -111,7 +107,8 @@ def main() -> int:
     raw=[]; runtime=[]
     for output_id,record_id,use_adapter in conditions:
         record=records[record_id]; manifest_doc=load_manifest(record["manifest_path"]); identity=verify_manifest(manifest_doc,use_adapter)
-        tokenizer=AutoTokenizer.from_pretrained(identity["base_path"],local_files_only=True); tokenizer.pad_token_id=13
+        tokenizer=AutoTokenizer.from_pretrained(identity["base_path"],local_files_only=True); tokenizer.pad_token_id=13; tokenizer.padding_side="left"
+        if tokenizer.padding_side != "left": raise RuntimeError("DECODER_ONLY_LEFT_PADDING_UNAVAILABLE")
         token_contract=tokenizer_token_contract(tokenizer,eos_token_id=15,pad_token_id=13)
         model=AutoModelForCausalLM.from_pretrained(identity["base_path"],torch_dtype=torch.bfloat16,local_files_only=True).to("cuda").eval()
         if use_adapter: model=PeftModel.from_pretrained(model,identity["adapter_path"],local_files_only=True).eval()
@@ -129,22 +126,26 @@ def main() -> int:
                     fallback=next_fallback(count)
                     if fallback is None or "out of memory" not in str(exc).lower(): raise
                     batch_events.append({"event":"OOM_FALLBACK","failed_batch_size":count,"fallback_batch_size":fallback}); torch.cuda.empty_cache(); size=fallback; continue
-                for item,(greedy,traces) in zip(current,generated): primary[item["episode_id"]]=(greedy,traces,count)
+                for item,(greedy,traces,sequence,attention_mask) in zip(current,generated):
+                    evidence=generation_evidence(item["episode_id"],greedy,token_contract)
+                    usable_traces=traces[:len(evidence["generated_token_ids"])]
+                    binding=choose_rank2_alternate_binding(sequence,int(len(attention_mask)),usable_traces)
+                    primary[item["episode_id"]]=(greedy,traces,count,binding,attention_mask)
                 batch_events.append({"event":"PRIMARY_BATCH","effective_batch_size":count,"episode_ids":[x["episode_id"] for x in current]}); cursor+=count
         subset=fixed_validation_subset(contexts); b1=[]; b32=[]
         for item in subset:
-            serial,_=generate_primary_batch(model,tokenizer,[item])[0]; greedy,traces,effective=primary[item["episode_id"]]
+            serial,_,_,_=generate_primary_batch(model,tokenizer,[item])[0]; greedy,traces,effective,_,_=primary[item["episode_id"]]
             b1.append(generation_evidence(item["episode_id"],serial,token_contract))
             b32.append(generation_evidence(item["episode_id"],greedy,token_contract))
         validation=validation_gate(b32,b1)
         if validation["status"]!="PASS": raise RuntimeError("BATCH1_BATCH32_MATERIAL_DRIFT")
-        runtime[-1]["batching"]={"requested_batch_size":32,"fallback_ladder":list(FALLBACK_LADDER),"events":batch_events,"batch1_validation":validation}
+        runtime[-1]["batching"]={"requested_batch_size":32,"fallback_ladder":list(FALLBACK_LADDER),"decoder_only_padding":{"padding_side":"left","attention_mask_supplied":True,"add_special_tokens":False},"events":batch_events,"batch1_validation":validation}
         for item in contexts:
             if time.monotonic()-started >= z.runtime_seconds: raise RuntimeError("RUNTIME_CAP_EXCEEDED")
-            greedy,traces,effective=primary[item["episode_id"]]
-            encoded=tokenizer(item["prompt"],return_tensors="pt",add_special_tokens=False); encoded={k:v.to("cuda") for k,v in encoded.items()}; _,alternate,_=generate_pair(model,tokenizer,encoded)
+            greedy,traces,effective,binding,attention_mask=primary[item["episode_id"]]
+            alternate=generate_alternate_from_primary(model,tokenizer,binding,attention_mask) if binding else None
             row=item["row"]; evidence=generation_evidence(item["episode_id"],greedy,token_contract)
-            raw.append({"checkpoint_condition":output_id,"episode_id":row["episode_id"],"family":row["family"],"prompt_sha256":hashlib.sha256(item["prompt"].encode()).hexdigest(),"greedy_token_ids":greedy,"alternate_token_ids":alternate,"critical_token_trace":traces,"requested_batch_size":32,"effective_batch_size":effective,"alternative_policy":"RANK2_AT_EARLIEST_MINIMUM_TOP1_TOP2_MARGIN_THEN_GREEDY",**evidence})
+            raw.append({"checkpoint_condition":output_id,"episode_id":row["episode_id"],"family":row["family"],"prompt_sha256":hashlib.sha256(item["prompt"].encode()).hexdigest(),"greedy_token_ids":evidence["generated_token_ids"],"physical_greedy_token_ids":greedy,"alternate_token_ids":alternate,"alternative_binding":binding,"critical_token_trace":traces,"requested_batch_size":32,"effective_batch_size":effective,"alternative_policy":"RANK2_FROM_EXACT_BATCH32_PRIMARY_PREFIX_AND_TRACE",**evidence})
         del model; torch.cuda.empty_cache()
     z.output.parent.mkdir(parents=True,exist_ok=True); z.output.write_text("".join(json.dumps(x,sort_keys=True)+"\n" for x in raw),encoding="utf-8",newline="\n")
     dump(z.receipt,{"protocol_id":PROTOCOL,"status":"COMPLETE_UNSCORED","raw_sha256":sha(z.output),"raw_rows":len(raw),"runtime_seconds":time.monotonic()-started,"runtime_identities":runtime,"optimizer_steps":0,"training":False,"backward":False,"generation_modes":["GREEDY","SINGLE_TARGET_BLIND_RANK2_ALTERNATIVE"],"final_audit_opened":False})

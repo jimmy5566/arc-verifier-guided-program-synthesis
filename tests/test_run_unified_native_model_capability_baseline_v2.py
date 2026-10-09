@@ -12,6 +12,8 @@ class WorkerV2Tests(unittest.TestCase):
   self.assertIn("fixed_validation_subset(contexts)",text)
   self.assertIn("BATCH1_BATCH32_MATERIAL_DRIFT",text)
   self.assertIn("generation_evidence",text)
+  self.assertIn('tokenizer.padding_side="left"',text)
+  self.assertIn("RANK2_FROM_EXACT_BATCH32_PRIMARY_PREFIX_AND_TRACE",text)
   self.assertNotIn("torch.optim",text); self.assertNotIn(".backward(",text)
  def test_generation_evidence_uses_token_level_parser(self):
   from scripts.arc2_token_grid_parser import TokenGridContract

@@ -17,6 +17,43 @@ def digest(value: object) -> str:
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
+def normalize_eos_terminated_trajectory(token_ids: Iterable[int], *, eos_token_id: int, pad_token_id: int) -> dict:
+    """Separate physical batch padding from the comparable generated path.
+
+    Only pads following a terminal EOS are framework padding.  A pad without a
+    preceding terminal EOS stays visible and cannot be normalized away.
+    """
+    physical = [int(token) for token in token_ids]
+    cursor = len(physical)
+    while cursor and physical[cursor - 1] == pad_token_id:
+        cursor -= 1
+    trailing = len(physical) - cursor
+    eos_terminated = cursor > 0 and physical[cursor - 1] == eos_token_id
+    return {
+        "physical_generated_token_ids": physical,
+        "generated_token_ids": physical[:cursor] if trailing and eos_terminated else list(physical),
+        "framework_trailing_pad_count": trailing if eos_terminated else 0,
+        "nonterminal_trailing_pad_count": trailing if not eos_terminated else 0,
+        "eos_terminated_before_padding": eos_terminated,
+    }
+
+
+def choose_rank2_alternate_binding(sequence_token_ids: list[int], prompt_width: int, traces: list[dict]) -> dict | None:
+    """Bind one alternate to the saved Batch32 prefix and saved score trace."""
+    if prompt_width < 1 or not traces:
+        return None
+    chosen = min(traces, key=lambda row: (row["top1_top2_margin"], row["position"]))
+    position = int(chosen["position"])
+    if position < 0 or prompt_width + position > len(sequence_token_ids):
+        raise RuntimeError("PRIMARY_TRACE_PREFIX_MISMATCH")
+    return {
+        "primary_prefix_token_ids": [int(token) for token in sequence_token_ids[:prompt_width + position]],
+        "branch_position": position,
+        "forced_rank2_token_id": int(chosen["rank2_token_id"]),
+        "bound_primary_trace": dict(chosen),
+    }
+
+
 def require_ladder(requested: int, ladder: tuple[int, ...] = FALLBACK_LADDER) -> None:
     if requested != ladder[0] or tuple(sorted(ladder, reverse=True)) != ladder or ladder[-1] != 1:
         raise RuntimeError("BATCH_FALLBACK_LADDER_DRIFT")
@@ -56,7 +93,7 @@ def validation_gate(batch32: list[dict], batch1: list[dict]) -> dict:
     mismatches = []
     for episode_id in sorted(a):
         left, right = a[episode_id], b[episode_id]
-        for key in ("generated_token_ids", "canonical_prediction_sha256", "parse_valid"):
+        for key in ("generated_token_ids", "termination_status", "eos_observed", "parse_valid", "canonical_prediction_sha256"):
             if left.get(key) != right.get(key):
                 mismatches.append({"episode_id": episode_id, "field": key})
     aggregate = {

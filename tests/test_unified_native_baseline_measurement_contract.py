@@ -27,10 +27,23 @@ class MeasurementContractTests(unittest.TestCase):
         self.assertEqual(first, second); self.assertEqual(len(first), 12)
 
     def test_material_token_or_metric_drift_fails_closed(self):
-        common = {"episode_id":"e", "generated_token_ids":[1], "canonical_prediction_sha256":"x", "parse_valid":True}
+        common = {"episode_id":"e", "generated_token_ids":[1], "termination_status":"EOS", "eos_observed":True, "canonical_prediction_sha256":"x", "parse_valid":True}
         self.assertEqual(mod.validation_gate([common], [dict(common)])["status"], "PASS")
         changed = dict(common); changed["generated_token_ids"] = [2]
         self.assertEqual(mod.validation_gate([common], [changed])["status"], "FAIL_MATERIAL_DRIFT")
+
+    def test_eos_padding_normalization_and_rank2_binding(self):
+        padded = mod.normalize_eos_terminated_trajectory([1, 2, 15, 13, 13], eos_token_id=15, pad_token_id=13)
+        serial = mod.normalize_eos_terminated_trajectory([1, 2, 15], eos_token_id=15, pad_token_id=13)
+        self.assertEqual(padded["generated_token_ids"], serial["generated_token_ids"])
+        self.assertEqual(padded["framework_trailing_pad_count"], 2)
+        self.assertEqual(mod.normalize_eos_terminated_trajectory([1, 13], eos_token_id=15, pad_token_id=13)["generated_token_ids"], [1, 13])
+        binding = mod.choose_rank2_alternate_binding([13, 9, 7, 4, 5], 3, [
+            {"position":0,"rank2_token_id":8,"top1_top2_margin":0.4},
+            {"position":1,"rank2_token_id":6,"top1_top2_margin":0.1},
+        ])
+        self.assertEqual(binding["primary_prefix_token_ids"], [13, 9, 7, 4])
+        self.assertEqual(binding["forced_rank2_token_id"], 6)
 
     def test_correct_target_rank_is_not_generated_token_rank(self):
         trace = mod.align_target_evidence(generated_token_ids=[5, 7], target_token_ids=[5, 9], target_ranks=[1, 3], target_margins=[0.4, -0.2])
