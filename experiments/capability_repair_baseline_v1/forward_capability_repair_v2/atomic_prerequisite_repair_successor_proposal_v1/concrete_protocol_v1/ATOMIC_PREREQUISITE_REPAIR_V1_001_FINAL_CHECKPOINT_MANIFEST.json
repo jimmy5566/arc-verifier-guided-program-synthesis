@@ -1,0 +1,103 @@
+{
+  "adapter_files": [
+    {
+      "bytes": 5246,
+      "name": "README.md",
+      "sha256": "2577c8c7e2db1bbc74efe792848a5f27f02fe9c065dd15ab0b7c1d5c8f79a1e6"
+    },
+    {
+      "bytes": 957,
+      "name": "adapter_config.json",
+      "sha256": "acc68bd898bbb160ac1e7052ea81375125339efa9bea45698592344282c3618f"
+    },
+    {
+      "bytes": 528550256,
+      "name": "adapter_model.safetensors",
+      "sha256": "7f5e90f611a2bfcc993e96e1dfcd37b5d08ce14e88244c69cca231178edac2d2"
+    }
+  ],
+  "adapter_path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/checkpoints/final",
+  "base_files": [
+    {
+      "bytes": 1519,
+      "name": ".gitattributes",
+      "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"
+    },
+    {
+      "bytes": 21,
+      "name": "README.md",
+      "sha256": "3e0e15fa0c5cc81675bd69af8eb469d128a725c1a7bfc71f03b7877b7b650567"
+    },
+    {
+      "bytes": 68,
+      "name": "added_tokens.json",
+      "sha256": "cf1224e6a594b51a34b8b9ca6c6dce3026683777521f361e37526b8a33258bce"
+    },
+    {
+      "bytes": 1532,
+      "name": "config.json",
+      "sha256": "932e9430395ba3eea4087cba1769241bc7d0dc8d574846862d6983659456a2d0"
+    },
+    {
+      "bytes": 113,
+      "name": "generation_config.json",
+      "sha256": "fd0abf1e2baa1f9407803a83486767a6e7841164481d750fcaa9b71d31a0ab02"
+    },
+    {
+      "bytes": 4996836472,
+      "name": "model-00001-of-00002.safetensors",
+      "sha256": "379de219f74a1402a67d26fe7dcacdacadbf686947e08e41117dd9c884ee4529"
+    },
+    {
+      "bytes": 2270397024,
+      "name": "model-00002-of-00002.safetensors",
+      "sha256": "3b8470b83355ccbc527afcb7a77664bd679e63899a80e79169c016658e6b92e0"
+    },
+    {
+      "bytes": 32913,
+      "name": "model.safetensors.index.json",
+      "sha256": "d2d5b2bffaf2fd27bad4452dfb4d4df80c56a4a77f1ac9c40fdd634845680cd4"
+    },
+    {
+      "bytes": 1326,
+      "name": "model_manifest.json",
+      "sha256": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7"
+    },
+    {
+      "bytes": 367,
+      "name": "special_tokens_map.json",
+      "sha256": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b"
+    },
+    {
+      "bytes": 1731,
+      "name": "tokenizer.json",
+      "sha256": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5"
+    },
+    {
+      "bytes": 988,
+      "name": "tokenizer_config.json",
+      "sha256": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90"
+    },
+    {
+      "bytes": 94,
+      "name": "vocab.json",
+      "sha256": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+    }
+  ],
+  "base_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+  "captured_at": "2026-10-09T01:33:49Z",
+  "checkpoint_id": "ATOMIC_PREREQUISITE_REPAIR_V1_001_FINAL",
+  "final_audit_opened": false,
+  "kind": "ATOMIC_PREREQUISITE_REPAIR_V1_FINAL_CHECKPOINT_MANIFEST",
+  "manifest_sha256": "68f3ba7426203e1f432931ff8134f8ec474ba7ea592fec2abd17d7793b4c9cc5",
+  "optimizer_steps": 100,
+  "parent_checkpoint_identity": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da",
+  "parent_checkpoint_manifest_file_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "processed_tokens": 246823,
+  "schema_version": 1,
+  "scientific_gpu_training_seconds": 264.979880991,
+  "source_commit": "748d38e35e8b281ba57e345c96180ea75e343267",
+  "supervised_tokens": 96271,
+  "training_terminal_receipt_path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/runtime/TERMINAL_RECEIPT.json",
+  "training_terminal_receipt_sha256": "0a29854671bd1cbbe88ca6a3316e0eec5ba2f3685fb6a856fee92ed953a35b1e"
+}

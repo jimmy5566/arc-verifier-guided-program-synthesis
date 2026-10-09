@@ -1,0 +1,52 @@
+{
+  "batch1_batch32_validation_count": 32,
+  "batch_size": 32,
+  "checkpoint_manifest_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_001_FINAL_CHECKPOINT_MANIFEST.json",
+  "checkpoint_manifest_sha256": "0586201a3eec4ac1c56a1de42a5b20c9ff74f52069fbe92a55691ece28ed7ddd",
+  "datasets": {
+    "RETENTION_SENTINEL": {
+      "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/RETENTION_SENTINEL.jsonl",
+      "rows": 96,
+      "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+    },
+    "TARGET_DEV": {
+      "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl",
+      "rows": 192,
+      "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+    }
+  },
+  "decoder_validity_evidence_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/capability_repair_baseline_v1/decoder_characterization_minimal_v1/DECODER_VALIDITY_EVIDENCE.json",
+  "decoder_validity_evidence_sha256": "76c9f5e4257235ed8995b539c3e0616e9300c6d921e7c4756161f5976dcbb14b",
+  "expected_receipt_path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/evaluation_v1/BASELINE_CHARACTERIZATION_RECEIPT.json",
+  "expected_result_path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/evaluation_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+  "final_audit_opened": false,
+  "forbidden": {
+    "diagnostic_gold_training": true,
+    "final_audit": true,
+    "lora_construction": true,
+    "optimizer": true,
+    "training": true
+  },
+  "hard_gate_check": {
+    "correct_checkpoint": "PASS",
+    "correct_dataset_and_denominator": "PASS",
+    "decoder_and_scoring_valid": "PASS",
+    "fresh_output": "PASS",
+    "no_duplicate_live_job": "PASS",
+    "no_leakage": "PASS"
+  },
+  "inference_contract_path": "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
+  "long_prompt_fallback": [
+    32,
+    16,
+    8,
+    4,
+    1
+  ],
+  "output_root": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/evaluation_v1",
+  "provenance_warning": false,
+  "round_id": "ATOMIC_PREREQUISITE_REPAIR_V1_001_EVALUATION_001",
+  "schema_version": 2,
+  "scope": "same frozen TARGET_DEV and RETENTION_SENTINEL; target-blind EOS-aware decoder; current final adapter only",
+  "stage_id": "ATOMIC_PREREQUISITE_REPAIR_V1_001_EVALUATION_V1"
+}
