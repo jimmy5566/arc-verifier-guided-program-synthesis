@@ -1,0 +1,72 @@
+{
+  "cpu_tests": {
+    "command": "py -3 -m unittest tests.test_unified_native_target_alignment_v2_contract tests.test_launch_unified_native_target_aligned_scoring_v2_batch16 tests.test_target_aligned_scoring_v2_binding tests.test_unified_native_target_alignment_v2_remediation tests.test_score_unified_native_target_alignment_v1",
+    "coverage": [
+      "Top2 Greedy-correct/alternate-wrong regression",
+      "per-condition/family/composition/protected denominators",
+      "manifest SHA rejection",
+      "binding and exact source rejection",
+      "fresh output/duplicate gate",
+      "atomic failure receipt",
+      "real worker module entrypoint"
+    ],
+    "result": "PASS_16"
+  },
+  "director_remediation_response": {
+    "binding": "fresh config/binding/nonce/output root; source parity and terminal receipt bind all runtime identities",
+    "checkpoint_identity": "discovery manifest SHA is checked before parsing each checkpoint manifest; verified adapter SHA must equal discovery adapter SHA",
+    "reporting": "all six checkpoint conditions, five family cells, equal-family macro, two-family compositional aggregate, and PROTECTED_SAME_COLOR retention are frozen",
+    "top2_definition": "complete_output_top2_coverage = Greedy exact OR frozen alternate exact; alternate_only_exact is separate"
+  },
+  "frozen_artifacts": {
+    "binding_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/TARGET_ALIGNED_SCORING_V2_BATCH16_LAUNCH_BINDING_V2.json",
+    "binding_sha256": "ad4bd964aad80a634fa241569e7d1aa13998cb8a9cec8593e8e844f5b06a870d",
+    "config_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/UNIFIED_NATIVE_TARGET_ALIGNED_SCORING_V2_BATCH16_CONFIG_V2.json",
+    "config_sha256": "a2cdcd0d265da3e64c467581948e235164e7af8fa41137614581c6e9e1345650",
+    "execution_source_commit": "2f466c4e18b4d3ec93e0ed017ee33419a3af91d7",
+    "fresh_output_root": "/workspace/arc2/unified_native_target_aligned_scoring_v2_batch16/run_002_6562708841cd05b62b1d5d0793f3af62",
+    "launcher": {
+      "path": "scripts/launch_unified_native_target_aligned_scoring_v2_batch16.py",
+      "sha256": "9b4ca377040f12dce8a049c30e0eb0a5e18cc09029d06f7144f7df6497aa6c5d"
+    },
+    "nonce": "6562708841cd05b62b1d5d0793f3af62",
+    "raw": {
+      "conditions": 6,
+      "episodes_per_condition": 60,
+      "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a/RAW_UNSCORED_BATCH16.jsonl",
+      "rows": 360,
+      "sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e"
+    },
+    "runtime_cap_seconds": 9000,
+    "sealed_sidecar_expected_sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e",
+    "worker": {
+      "path": "scripts/run_unified_native_target_aligned_scoring_v2_batch16.py",
+      "sha256": "01e637448208ffb0c3b8f19e5525f97316a94035f4b7a179a7cfa26c80fb1cc9"
+    }
+  },
+  "protocol_id": "UNIFIED_NATIVE_TARGET_ALIGNED_SCORING_V2_BATCH16",
+  "question": "Are the corrected frozen scoring definitions and one exact bound no-update scoring run scientifically valid to authorize?",
+  "request": "Return CONTINUE_CONTROLLER only for exactly one bound no-update scoring job at the named execution commit, or REQUIRE_CHANGES with the smallest scientific repair. No candidate generation, replacement, selection, training, or Final Audit is proposed.",
+  "review_type": "CORRECTED_STAGE_LEVEL_SCIENTIFIC_PRELAUNCH",
+  "runtime_fail_closed_gates": [
+    "local=origin=RunPod execution-source parity",
+    "binding/config/raw/worker/launcher/input/discovery SHA match",
+    "sealed sidecar expected SHA and exact 60 episode-ID map",
+    "360=6x60 raw completeness and frozen prompt identities",
+    "checkpoint-record manifest SHA before parsing each manifest, then base/adapter hash checks",
+    "fresh output and exclusive duplicate lock",
+    "atomic worker and terminal receipts with partial evidence failure",
+    "9000-second total cap"
+  ],
+  "schema_version": 2,
+  "scope": {
+    "Gold_dGold_FINAL_AUDIT": false,
+    "backward": false,
+    "generation": false,
+    "optimizer_steps": 0,
+    "predecessor_raw_reused_exactly": true,
+    "sealed_sidecar": "opened only at authorized runtime after SHA gate",
+    "target_selection": false,
+    "training": false
+  }
+}
