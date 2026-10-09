@@ -1,0 +1,16 @@
+{
+  "available_checkpoint_conditions": [
+    "ATOMIC_R1",
+    "FAMILY_BALANCED",
+    "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "TARGETED_R1",
+    "TARGETED_R2"
+  ],
+  "checkpoint_discovery_sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654",
+  "contract_sha256": "00a612a1675ea7babf97e0b828099314aeb48edc3301d87c15c72dd35d1b7b17",
+  "gpu_used": false,
+  "historical_foundation_v2": "UNAVAILABLE_NOT_SUBSTITUTED",
+  "input_manifest_sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+  "runtime_model_imported": false,
+  "status": "CPU_PREFLIGHT_PASS_RUNTIME_IDENTITY_PENDING"
+}
