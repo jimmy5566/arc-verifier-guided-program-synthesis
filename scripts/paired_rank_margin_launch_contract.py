@@ -20,9 +20,11 @@ def require_launch(*,output:Path,receipt:Path,cap_seconds:int,expected_hashes:di
  if output.exists() or receipt.exists():raise RuntimeError('FRESH_OUTPUT_OR_DUPLICATE_JOB_REQUIRED')
  if set(expected_hashes)!=set(actual_paths) or any(sha(actual_paths[k])!=v for k,v in expected_hashes.items()):raise RuntimeError('LAUNCH_IDENTITY_MISMATCH')
  if live_lock is not None:acquire_live_lock(live_lock)
-def failure_receipt(*,receipt:Path,reason:str)->None:
+def failure_receipt(*,receipt:Path,reason:str,partial_evidence_path:str|None=None)->None:
  if receipt.exists():raise RuntimeError('RECEIPT_NON_OVERWRITE_REQUIRED')
- atomic(receipt,{'status':'FAILED_NO_UPDATE','reason':reason,'optimizer_steps':0,'generation':False,'training':False,'backward':False})
+ value={'status':'FAILED_NO_UPDATE','reason':reason,'optimizer_steps':0,'generation':False,'training':False,'backward':False}
+ if partial_evidence_path is not None:value['partial_evidence_path']=partial_evidence_path
+ atomic(receipt,value)
 
 def require_checkpoint_records(discovery:dict, required:tuple[str,str])->dict:
  records=discovery.get('checkpoint_records',{})

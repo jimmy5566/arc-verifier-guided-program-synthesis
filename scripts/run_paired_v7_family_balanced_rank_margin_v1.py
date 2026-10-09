@@ -147,7 +147,17 @@ def first_free_running_error(row: dict, condition: str) -> tuple[int | None, str
     return (None if len(generated) == len(row["target_ids"]) else len(row["target_ids"])), parser_status
 
 
-def score_batches(model, rows: list[dict], torch, condition: str, mode_id: str, deadline: float) -> list[dict]:
+def journal_completed_batch(directory: Path, *, condition: str, mode_id: str, batch_index: int, rows: list[dict]) -> None:
+    """Persist only completed compact aggregates; target token IDs remain process-local."""
+    if not rows or any("target_ids" in row or row.get("target_token_ids_persisted") is not False for row in rows):
+        raise RuntimeError("PARTIAL_JOURNAL_PRIVACY_OR_COMPLETENESS_INVALID")
+    atomic(directory / f"{condition}_{mode_id}_{batch_index:04d}.json", {
+        "protocol_id": PROTOCOL, "condition": condition, "mode_id": mode_id,
+        "batch_index": batch_index, "completed_rows": rows, "target_token_ids_persisted": False,
+    })
+
+
+def score_batches(model, rows: list[dict], torch, condition: str, mode_id: str, deadline: float, journal_directory: Path) -> list[dict]:
     batch_size, results = (32 if mode_id == "PRIMARY_B32" else 1), []
     with torch.inference_mode():
         for batch_index, group in enumerate(length_bucketed(rows, batch_size)):
@@ -155,6 +165,7 @@ def score_batches(model, rows: list[dict], torch, condition: str, mode_id: str, 
                 raise RuntimeError("RUNTIME_CAP_REACHED")
             packed = left_pad_teacher_forced(group, pad_token_id=13)
             logits = model(input_ids=torch.tensor(packed["input_ids"], device="cuda:0"), attention_mask=torch.tensor(packed["attention_mask"], device="cuda:0"), position_ids=torch.tensor(packed["position_ids"], device="cuda:0"), use_cache=False).logits
+            completed_batch = []
             for row_index, (row, boundary) in enumerate(zip(group, packed["boundaries"])):
                 positions = extract_target_logit_indices(boundary)
                 if len(positions) != len(row["target_ids"]):
@@ -177,7 +188,9 @@ def score_batches(model, rows: list[dict], torch, condition: str, mode_id: str, 
                     bucket = components[component]; bucket["token_count"] += 1; bucket["correct_top1_count"] += int(rank == 1); bucket["correct_top2_count"] += int(rank <= 2); bucket["margin_sum"] += float(margin)
                     if target_index == error_index:
                         error = {"target_index": target_index, "component": component, "rank": int(rank), "margin": float(margin), "parser_status": parser_status}
-                results.append({"checkpoint_condition": condition, "mode_id": mode_id, "episode_id": row["episode_id"], "family": row["family"], "prompt_sha256": row["prompt_sha256"], "effective_batch_size": len(group), "batch_index": batch_index, "components": components, "first_free_running_error": error, "free_running_parser_status": parser_status, "target_token_count": len(row["target_ids"]), "target_token_ids_persisted": False})
+                completed_batch.append({"checkpoint_condition": condition, "mode_id": mode_id, "episode_id": row["episode_id"], "family": row["family"], "prompt_sha256": row["prompt_sha256"], "effective_batch_size": len(group), "batch_index": batch_index, "components": components, "first_free_running_error": error, "free_running_parser_status": parser_status, "target_token_count": len(row["target_ids"]), "target_token_ids_persisted": False})
+            journal_completed_batch(journal_directory, condition=condition, mode_id=mode_id, batch_index=batch_index, rows=completed_batch)
+            results.extend(completed_batch)
     return results
 
 
@@ -206,6 +219,8 @@ def main() -> int:
     try:
         require_launch(output=args.output, receipt=args.receipt, cap_seconds=args.runtime_seconds, expected_hashes=binding["expected_hashes"], actual_paths=paths, live_lock=live_lock)
         lock_held = True
+        args.output.mkdir(parents=True, exist_ok=False)
+        partial_evidence = args.output / "PARTIAL_BATCH_EVIDENCE"
         if binding["runtime_cap_seconds"] != CAP_SECONDS or args.runtime_seconds != CAP_SECONDS:
             raise RuntimeError("BINDING_RUNTIME_CAP_DRIFT")
         raw_pairs, input_manifest, sidecar, manifests = runtime_preflight(binding)
@@ -223,23 +238,23 @@ def main() -> int:
             model = AutoModelForCausalLM.from_pretrained(manifest["base_path"], local_files_only=True, torch_dtype=torch.bfloat16, attn_implementation="sdpa").to("cuda:0")
             model = PeftModel.from_pretrained(model, manifest["adapter_path"], is_trainable=False).eval()
             try:
-                results.extend(score_batches(model, rows, torch, condition, "PRIMARY_B32", deadline))
+                results.extend(score_batches(model, rows, torch, condition, "PRIMARY_B32", deadline, partial_evidence))
                 subset = set(binding.get("batch1_subset_episode_ids", []))
                 if len(subset) != 12:
                     raise RuntimeError("BATCH1_SUBSET_BINDING_INVALID")
-                results.extend(score_batches(model, [row for row in rows if row["episode_id"] in subset], torch, condition, "SENSITIVITY_B1", deadline))
+                results.extend(score_batches(model, [row for row in rows if row["episode_id"] in subset], torch, condition, "SENSITIVITY_B1", deadline, partial_evidence))
             finally:
                 del model; torch.cuda.empty_cache()
         require_complete_paired_rows([row for row in results if row["mode_id"] == "PRIMARY_B32"])
         if len([row for row in results if row["mode_id"] == "SENSITIVITY_B1"]) != 24:
             raise RuntimeError("BATCH1_RESULT_COMPLETENESS_INVALID")
-        args.output.mkdir(parents=True, exist_ok=False); raw_path = args.output / "RAW_RANK_MARGIN.jsonl"
+        raw_path = args.output / "RAW_RANK_MARGIN.jsonl"
         raw_path.write_text("".join(json.dumps(row, sort_keys=True) + "\\n" for row in results), encoding="utf-8", newline="\\n")
         atomic(args.receipt, {"protocol_id": PROTOCOL, "status": "COMPLETE_NO_UPDATE", "raw_sha256": sha(raw_path), "raw_rows": len(results), "runtime_seconds": time.monotonic() - started, "optimizer_steps": 0, "training": False, "backward": False, "generation": False, "final_audit_opened": False, "target_token_ids_persisted": False})
         return 0
     except Exception as exc:
         if not args.receipt.exists():
-            failure_receipt(receipt=args.receipt, reason=str(exc))
+            failure_receipt(receipt=args.receipt, reason=str(exc), partial_evidence_path=str(args.output / "PARTIAL_BATCH_EVIDENCE"))
         raise
     finally:
         if lock_held:
