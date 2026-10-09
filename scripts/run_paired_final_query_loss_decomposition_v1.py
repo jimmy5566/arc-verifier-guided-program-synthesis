@@ -8,8 +8,15 @@ from paired_final_query_loss_common import atomic_json, component_sums, masks_fo
 IGNORE, PAD = -100, 13
 
 def load(config):
-    dev, manifest_path = ROOT / config["inputs"]["target_dev_path"], ROOT / config["inputs"]["manifest_path"]
-    if sha(dev) != config["inputs"]["target_dev_sha256"] or sha(manifest_path) != config["inputs"]["manifest_sha256"]:
+    configured = ROOT / config["inputs"]["target_dev_path"]
+    candidates = [configured,
+        Path("/workspace/arc2/mounted_inputs/base_only_targeted_repair_available_data_v1/TARGET_DEV.jsonl"),
+        Path("/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TARGET_DEV.jsonl")]
+    matching = [path for path in candidates if path.is_file() and sha(path) == config["inputs"]["target_dev_sha256"]]
+    if len(matching) != 1:
+        raise RuntimeError("TARGET_DEV_EXACT_IDENTITY_RESOLUTION_FAIL")
+    dev, manifest_path = matching[0], ROOT / config["inputs"]["manifest_path"]
+    if sha(manifest_path) != config["inputs"]["manifest_sha256"]:
         raise RuntimeError("INPUT_IDENTITY_FAIL")
     source = {row["episode_id"]: row for row in (json.loads(x) for x in dev.read_text().splitlines() if x.strip())}
     manifest, groups = json.loads(manifest_path.read_text()), []
