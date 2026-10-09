@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "reviewed_brief": "orchestration/director/briefs/GOVERNOR_REVIEW_PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_PRELAUNCH_V5.json",
+  "reviewed_brief_sha256": "b75bf4df9e1f6c83df09af9c5b36a2b5a22395e87dbb56e6bba2b5fd8b535141",
+  "decision": "CONTINUE_CONTROLLER",
+  "scientific_assessment": "The V5 remediation is sufficient for the unchanged paired no-update development measurement. The production writer emits 144 independently parseable LF-delimited compact rows, rejects incomplete or target-token-containing collections, and round-trips through the production postprocessor. All 29 relevant CPU tests pass. The reviewed binding, config, implementation hashes, source ancestry, immutable artifact ancestry, and current local-origin parity are consistent. No remaining defect was found that could materially alter the result, runtime limit, or frozen scientific interpretation.",
+  "next_stage": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_RUN_003",
+  "next_action": "Execute exactly one detached no-update GPU measurement using binding experiments/capability_repair_baseline_v1/paired_v7_family_balanced_correct_token_rank_margin_v1/PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_RUN_003_LAUNCH_BINDING_V5.json with SHA256 04e66d95856dbdbce58da04a333f2d00f9eb0b9fc6baeffe53dc9f1e0171f34d, config SHA256 0bc78280f1bc7e016292169b0b2a7b476d131e5aedfefe43cff31e25d49e9e28, nonce 1cc94f50673f4e0997001fbf86853a2b, fixed output and receipt paths, and the 900-second total cap. Before model import, require every bound hash and checkpoint manifest to match, a clean tracked checkout, the exact reviewed binding blob in that checkout, source and artifact ancestry, and LOCAL_HEAD = ORIGIN_REF = RUNPOD_CHECKOUT. On terminal completion, preserve the receipt, raw SHA256 and compact journals, run only the bound CPU postprocessor, and return one result-stage brief for scientific interpretation. If any machine gate fails, a duplicate is detected, the cap is reached, or execution fails, stop without retry and preserve the fail-closed receipt and partial evidence.",
+  "authorization_scope": {
+    "binding_sha256": "04e66d95856dbdbce58da04a333f2d00f9eb0b9fc6baeffe53dc9f1e0171f34d",
+    "source_code_commit": "98e393625d50d86d5b095265ace9349175193a5b",
+    "immutable_artifact_commit": "64353d1e66417dee96c5c1b334572e7e9c4e8c95",
+    "nonce": "1cc94f50673f4e0997001fbf86853a2b",
+    "maximum_runs": 1,
+    "runtime_cap_seconds": 900,
+    "detached_execution": true,
+    "automatic_retry_authorized": false
+  },
+  "frozen_conditions": [
+    "Use only RECONSTRUCTED_FOUNDATION_V2_V7 and FAMILY_BALANCED with the frozen reused 60-episode synthetic DEV cohort and five equal 12-episode families.",
+    "Use length-bucketed Batch32 for the primary teacher-forced measurement and only the frozen target-blind 12-episode Batch1 sensitivity subset.",
+    "Retain the frozen GRID_CONTENT equal-family macro Top-1, Top-2 and margin estimands, pooled token-micro results, family cells, ROW_SEPARATOR, EOS_END, first-error summaries, protected-family rule, 10000 family-stratified paired bootstrap replicates, and seed 20261010.",
+    "Interpret results only as reused synthetic development evidence; they do not independently establish ARC transfer or a causal gradient mechanism."
+  ],
+  "forbidden_actions": [
+    "No second launch or automatic retry.",
+    "No changes to the binding, implementation, checkpoints, cohort, subset, batching, target serialization, metrics, bootstrap, sensitivity rule, protected-family rule, output identity, or runtime cap.",
+    "No generation, training, optimizer construction, backward pass, checkpoint mutation, target-token persistence, Gold, dGold, or FINAL_AUDIT access."
+  ],
+  "gpu_inference_authorized": true,
+  "model_loading_authorized": true,
+  "scientific_training_authorized": false,
+  "user_authorization_required": false,
+  "result_review_required": true
+}
