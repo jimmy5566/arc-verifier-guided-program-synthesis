@@ -56,6 +56,7 @@
       "width": -2
     }
   },
+  "remote_train_path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TRAIN.jsonl",
   "requested_batch_size": 32,
   "schedule_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json",
   "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6",
@@ -63,5 +64,5 @@
   "stage_id": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1",
   "train_path": "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl",
   "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945",
-  "worker_source_commit": "1ea1f1a6075b5cddfac8f3891224876b21d6b251"
+  "worker_source_commit": "8a4b33fba80562b4a6e163dc9417064c8522c0b7"
 }
