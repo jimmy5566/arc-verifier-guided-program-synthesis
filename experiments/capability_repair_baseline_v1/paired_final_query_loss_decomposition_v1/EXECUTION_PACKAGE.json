@@ -1,0 +1,53 @@
+{
+  "bootstrap": {
+    "family_stratified_paired": true,
+    "raw_ci": "percentile_95",
+    "replicates": 10000
+  },
+  "cap_seconds": 900,
+  "forbidden": [
+    "optimizer",
+    "backward",
+    "training",
+    "generation",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT"
+  ],
+  "inputs": {
+    "conditions": {
+      "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001": {
+        "manifest": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json"
+      },
+      "CAPABILITY_REPAIR_BASELINE_V1_V7": {
+        "manifest": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json"
+      }
+    },
+    "manifest_path": "experiments/capability_repair_baseline_v1/paired_final_query_loss_decomposition_v1/TARGET_DEV_60_FINAL_QUERY_MANIFEST.json",
+    "manifest_sha256": "36ee0843ef27280d7a7baacc857105400053f3b8d9eda67d863c4d88894b658f",
+    "target_dev_path": "experiments/targeted_capability_repair_v1/data/TARGET_DEV.jsonl",
+    "target_dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+  },
+  "masks": [
+    "DEMONSTRATION_ASSISTANT_ALL",
+    "FINAL_ASSISTANT_PREFIX",
+    "FINAL_GRID_CONTENT",
+    "FINAL_EOS"
+  ],
+  "primary_estimand": "family_equal_mean(FB_minus_V7_FINAL_GRID_PLUS_EOS_per_token_nll)",
+  "primary_mask": "FINAL_GRID_PLUS_EOS",
+  "protocol_id": "PAIRED_FINAL_QUERY_LOSS_DECOMPOSITION_V1",
+  "schema_version": 1,
+  "seed": 20261009,
+  "sensitivity": {
+    "U_definition": "abs(B1_subset_effect-B32_same_subset_effect)",
+    "fixed_b1_subset_rows": 32,
+    "maximum": "min(0.20,0.25*abs(full_cohort_effect))",
+    "primary": "B32"
+  },
+  "source_sha256": {
+    "mask_contract": "ff1906849aa44969caa4913e538cbed363cc8961cfa0bba3cb776ec3ae44688d",
+    "postprocessor": "fdc8539841b7c639db6aed6044ba14609d8b0c62da2a7e97146a438b39f04063",
+    "worker": "f911b14bad0a6784b1a6e4c8d2219e8b500044fce33e0dd3c5cfe180942e1f1f"
+  }
+}

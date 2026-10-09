@@ -1,0 +1,899 @@
+{
+  "batch1_sensitivity_episode_ids": [
+    "TARGET_DEV:TARGETED_EVALUATION:connected components:000002",
+    "TARGET_DEV:TARGETED_EVALUATION:connected components:000009",
+    "TARGET_DEV:TARGETED_EVALUATION:connected components:000011",
+    "TARGET_DEV:TARGETED_EVALUATION:connected components:000001",
+    "TARGET_DEV:TARGETED_EVALUATION:connected components:000000",
+    "TARGET_DEV:TARGETED_EVALUATION:connected components:000007",
+    "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000011",
+    "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000007",
+    "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000008",
+    "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000001",
+    "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000010",
+    "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000000",
+    "TARGET_DEV:TARGETED_EVALUATION:difference:000001",
+    "TARGET_DEV:TARGETED_EVALUATION:difference:000004",
+    "TARGET_DEV:TARGETED_EVALUATION:difference:000003",
+    "TARGET_DEV:TARGETED_EVALUATION:difference:000002",
+    "TARGET_DEV:TARGETED_EVALUATION:difference:000007",
+    "TARGET_DEV:TARGETED_EVALUATION:difference:000006",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000001",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000005",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000007",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000008",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000010",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000004",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000003",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000010",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000005",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000001",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000006",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000011",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000006",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000000"
+  ],
+  "batches": [
+    {
+      "effective_batch_size": 32,
+      "members": [
+        {
+          "assistant_token_count": 23,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 17,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 2
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000002",
+          "family": "connected components",
+          "final_grid_plus_eos_token_count": 3,
+          "sequence_length": 302,
+          "task_sha256": "d22e2f8df70f0f60d67851bb23454d437a4f6e915e42a8260bbb0bb9407dcd92"
+        },
+        {
+          "assistant_token_count": 35,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 23,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 8
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000003",
+          "family": "orientation",
+          "final_grid_plus_eos_token_count": 9,
+          "sequence_length": 314,
+          "task_sha256": "22798996d7ba2fde5ac85d5d2500bd2d0b8ddc25d0644c5ee51bc61e4ccb96b5"
+        },
+        {
+          "assistant_token_count": 20,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 13,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 3
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000009",
+          "family": "connected components",
+          "final_grid_plus_eos_token_count": 4,
+          "sequence_length": 341,
+          "task_sha256": "8ec23724a6c03db7c2d92e85f9a54d32b98a6c82d1c45276c25c6219bee6592f"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000001",
+          "family": "width",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 343,
+          "task_sha256": "82ab333384d61495199d9b2866411f73a128761ca663f54f3ac875bd19dc69c3"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000005",
+          "family": "width",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 343,
+          "task_sha256": "7b705130f4450ad956c84044a2edad6efc372e9502f1226e4bcb2eb738ba3aee"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000007",
+          "family": "width",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 343,
+          "task_sha256": "17782949b4d5ccec474c7ab9375f075c79cd9061c05e7915f3d6b4bd19791be2"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000008",
+          "family": "width",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 343,
+          "task_sha256": "c3b48151c8491d3fcb91dbed890bfed5f9d2ac24180fd3f20c9985f4adf8ac78"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000010",
+          "family": "width",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 343,
+          "task_sha256": "684a49eaa835a718a2d966add0be8550a7f4f104a892d2f0beeca382d295ff0c"
+        },
+        {
+          "assistant_token_count": 25,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 5
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000011",
+          "family": "connected components",
+          "final_grid_plus_eos_token_count": 6,
+          "sequence_length": 366,
+          "task_sha256": "6794601f90a5969ed27b793eb2e82ab65619d949fa47f3c86b5558cdecebb49a"
+        },
+        {
+          "assistant_token_count": 20,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 12,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000001",
+          "family": "connected components",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 383,
+          "task_sha256": "fc60190891cd9cf0b62597750a828158fd767bd31fe555f2c9c300b1a69247ce"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000004",
+          "family": "width",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 385,
+          "task_sha256": "83fc49ccc9a8c84f1470c666081cd7b88e23abc7680ece297eb7751c1d66ace4"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000006",
+          "family": "width",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 389,
+          "task_sha256": "32e4ff51cf16200f8f10d58e2dd23f8478cf52a7a73b6e2feff724fd203503f1"
+        },
+        {
+          "assistant_token_count": 34,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 23,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 7
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000010",
+          "family": "orientation",
+          "final_grid_plus_eos_token_count": 8,
+          "sequence_length": 395,
+          "task_sha256": "9003d10665ef20f0c66fee8c86ccc97dbb9cd6df62e15b548c9db2a20053e464"
+        },
+        {
+          "assistant_token_count": 35,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 23,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 8
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000005",
+          "family": "orientation",
+          "final_grid_plus_eos_token_count": 9,
+          "sequence_length": 396,
+          "task_sha256": "480b80958722be7f627cdffa3e416af6c8cb0dded9cd4bd4d3cd282e04e49a7e"
+        },
+        {
+          "assistant_token_count": 34,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 23,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 7
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000001",
+          "family": "orientation",
+          "final_grid_plus_eos_token_count": 8,
+          "sequence_length": 399,
+          "task_sha256": "1ee4c6921a36918bbea0dc215a798e7c33c4cde93c2a743d5bd72d668ba6e70a"
+        },
+        {
+          "assistant_token_count": 34,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 23,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 7
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000006",
+          "family": "orientation",
+          "final_grid_plus_eos_token_count": 8,
+          "sequence_length": 399,
+          "task_sha256": "a92fba7e2e6cbf8bbd29d366f4c4f5fd085b2c4fc4bee510065e4b6e0cb5e01c"
+        },
+        {
+          "assistant_token_count": 34,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 23,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 7
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000011",
+          "family": "orientation",
+          "final_grid_plus_eos_token_count": 8,
+          "sequence_length": 399,
+          "task_sha256": "a1a384bb3b0c0acdc8281b4ec8dc0dff46f32e3e431cad2a2de91fccc8735bbd"
+        },
+        {
+          "assistant_token_count": 21,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 14,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 3
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000000",
+          "family": "connected components",
+          "final_grid_plus_eos_token_count": 4,
+          "sequence_length": 404,
+          "task_sha256": "896d0f3aa0da662287410ee411031f4eec4e4e426786266deb3cd94201eefd25"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000000",
+          "family": "width",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 407,
+          "task_sha256": "4311424b88b5e465f14da9c28a2fa56b818120cf32a416c9b9bc31005151b4bb"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 15,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 5
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000007",
+          "family": "connected components",
+          "final_grid_plus_eos_token_count": 6,
+          "sequence_length": 409,
+          "task_sha256": "cf9c09482f69cafd04959dc490be5189a3345b82ff931c3d8c3881333bcd406d"
+        },
+        {
+          "assistant_token_count": 35,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 23,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 8
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000004",
+          "family": "orientation",
+          "final_grid_plus_eos_token_count": 9,
+          "sequence_length": 418,
+          "task_sha256": "64df045df942a404aea7f08d12b7e8661088f4f076489fa35b48cbcd73ce4bca"
+        },
+        {
+          "assistant_token_count": 35,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 24,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 7
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000009",
+          "family": "orientation",
+          "final_grid_plus_eos_token_count": 8,
+          "sequence_length": 418,
+          "task_sha256": "c10089fb65e339f9df64bc3bb5b68cf0932df9c5297da3e8904b78675159bf39"
+        },
+        {
+          "assistant_token_count": 21,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 13,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000010",
+          "family": "connected components",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 426,
+          "task_sha256": "ce3823071ce7bd04eb73b117cb281ef502a53b5a01bae61b7b22fbd1f6ca4329"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000003",
+          "family": "width",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 429,
+          "task_sha256": "817b5522c73454a55ef3f649b6623c21d072a169c7ef7d2db92443adfe7ab4ed"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000011",
+          "family": "width",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 429,
+          "task_sha256": "5fb7163716396facc84b7e474534e7aacd126db8459166419ea2185d7b2f7b18"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000002",
+          "family": "width",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 431,
+          "task_sha256": "5f793bc97968047fb0df5a428ee492e7fe4215025943e534f3049796f219e60b"
+        },
+        {
+          "assistant_token_count": 24,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000009",
+          "family": "width",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 435,
+          "task_sha256": "97ccd9a4232d5a38ce2cf8f604b6207576a695ee490386c180a0bffaa581757a"
+        },
+        {
+          "assistant_token_count": 36,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 24,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 8
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000008",
+          "family": "orientation",
+          "final_grid_plus_eos_token_count": 9,
+          "sequence_length": 443,
+          "task_sha256": "3017a7c2ca33b1873e47c5a87872aeb448a16c813c1474b1a85eb72bed1f3b16"
+        },
+        {
+          "assistant_token_count": 35,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 23,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 8
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000007",
+          "family": "orientation",
+          "final_grid_plus_eos_token_count": 9,
+          "sequence_length": 446,
+          "task_sha256": "c42a3b455b6c2e8c94ea1e0db2baaa11619a08397b1ae8664134b08b0e35172d"
+        },
+        {
+          "assistant_token_count": 22,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 16,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 2
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000003",
+          "family": "connected components",
+          "final_grid_plus_eos_token_count": 3,
+          "sequence_length": 451,
+          "task_sha256": "b7281cc49882b8c1c8b831c70e3e4f03c216a2d4dd97023b2c37539cad8af5c5"
+        },
+        {
+          "assistant_token_count": 20,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 12,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000006",
+          "family": "connected components",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 451,
+          "task_sha256": "7abe4341cb19407fef71bc98af66c6f7842d676f01d1b63d3428afbb61d55131"
+        },
+        {
+          "assistant_token_count": 23,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 17,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 2
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000005",
+          "family": "connected components",
+          "final_grid_plus_eos_token_count": 3,
+          "sequence_length": 454,
+          "task_sha256": "90f2869b4736459a8910b044cc1672910bbdf3496fb49ed490ceb0d12985156c"
+        }
+      ]
+    },
+    {
+      "effective_batch_size": 28,
+      "members": [
+        {
+          "assistant_token_count": 35,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 23,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 8
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000000",
+          "family": "orientation",
+          "final_grid_plus_eos_token_count": 9,
+          "sequence_length": 466,
+          "task_sha256": "bc4b5cd4b2015059cc314510353b8565f4255acebbaad337562f3d482ea79c80"
+        },
+        {
+          "assistant_token_count": 20,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 12,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000008",
+          "family": "connected components",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 497,
+          "task_sha256": "eb9714167750766929bdeecf435580b1ed502a7d07683c9f9e4bc4a579f08c35"
+        },
+        {
+          "assistant_token_count": 23,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 15,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 4
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000004",
+          "family": "connected components",
+          "final_grid_plus_eos_token_count": 5,
+          "sequence_length": 500,
+          "task_sha256": "4085474a52a09b576aaa8539f65f2a0c6e29bfe5540ac7c80e594985c05209b5"
+        },
+        {
+          "assistant_token_count": 34,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 23,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 7
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000002",
+          "family": "orientation",
+          "final_grid_plus_eos_token_count": 8,
+          "sequence_length": 511,
+          "task_sha256": "ea00a524a71127c4d7767c02080d8079bd05c092fe172af12dda189df54b365e"
+        },
+        {
+          "assistant_token_count": 279,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 186,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 89
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000001",
+          "family": "difference",
+          "final_grid_plus_eos_token_count": 90,
+          "sequence_length": 558,
+          "task_sha256": "78be47019965ed766d6362bf58042c696e2e184b07882d5cb2ee15e0d741f8b1"
+        },
+        {
+          "assistant_token_count": 299,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 206,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 89
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000011",
+          "family": "inside/contains",
+          "final_grid_plus_eos_token_count": 90,
+          "sequence_length": 598,
+          "task_sha256": "ed4c2c47283715de8d225943205c4d9fe60813c03845aebceeaa7ab8add5ab66"
+        },
+        {
+          "assistant_token_count": 319,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 206,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 109
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000004",
+          "family": "difference",
+          "final_grid_plus_eos_token_count": 110,
+          "sequence_length": 638,
+          "task_sha256": "a77123de00776f07426311d6547d4c629e60b414a9e1accdb4e74743234102b5"
+        },
+        {
+          "assistant_token_count": 319,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 206,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 109
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000007",
+          "family": "inside/contains",
+          "final_grid_plus_eos_token_count": 110,
+          "sequence_length": 638,
+          "task_sha256": "25f42c09b667d6484cde8ac424f99fc7d8ef9e46388b27c42bf3671be06a94d8"
+        },
+        {
+          "assistant_token_count": 321,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 228,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 89
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000008",
+          "family": "inside/contains",
+          "final_grid_plus_eos_token_count": 90,
+          "sequence_length": 642,
+          "task_sha256": "e86cfa417ff2ed2bfd72f97337fdb8925b1b3abf1fda4083c43683f11d981c7a"
+        },
+        {
+          "assistant_token_count": 339,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 226,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 109
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000003",
+          "family": "difference",
+          "final_grid_plus_eos_token_count": 110,
+          "sequence_length": 678,
+          "task_sha256": "d6ccb890f11bdc34e8b42915dd7b2c16602863bebb4ae962f4ff448e0e55f04f"
+        },
+        {
+          "assistant_token_count": 341,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 228,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 109
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000002",
+          "family": "difference",
+          "final_grid_plus_eos_token_count": 110,
+          "sequence_length": 682,
+          "task_sha256": "8212114647faf28fbd8d47634c1483784dd8b585a6898fc0cb2b2461d997215a"
+        },
+        {
+          "assistant_token_count": 341,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 248,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 89
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000007",
+          "family": "difference",
+          "final_grid_plus_eos_token_count": 90,
+          "sequence_length": 682,
+          "task_sha256": "fb80568c03a9d3ddea3eb7b5d6421d8b9ef20f49d684d0716aad83e676d0e4da"
+        },
+        {
+          "assistant_token_count": 345,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 252,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 89
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000006",
+          "family": "difference",
+          "final_grid_plus_eos_token_count": 90,
+          "sequence_length": 690,
+          "task_sha256": "b69cde34b1b06fe105fd891bfb4a09f708ced4d376b76b70b5c38a06fca38dde"
+        },
+        {
+          "assistant_token_count": 345,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 186,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 155
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000001",
+          "family": "inside/contains",
+          "final_grid_plus_eos_token_count": 156,
+          "sequence_length": 690,
+          "task_sha256": "4b239f60a6d547b519414d29446d89bd91ff45134475bde8751406ab97ddb598"
+        },
+        {
+          "assistant_token_count": 361,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 248,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 109
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000010",
+          "family": "inside/contains",
+          "final_grid_plus_eos_token_count": 110,
+          "sequence_length": 722,
+          "task_sha256": "9aca83fe8760604c280645391a9b0d73e9a550dd473c894f0cb39ef41ea3cc34"
+        },
+        {
+          "assistant_token_count": 365,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 206,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 155
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000009",
+          "family": "difference",
+          "final_grid_plus_eos_token_count": 156,
+          "sequence_length": 730,
+          "task_sha256": "03afd94f73d0197d8dfdf7d14fc6feeafff72429349ef7779a52c81f8220db62"
+        },
+        {
+          "assistant_token_count": 365,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 206,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 155
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000000",
+          "family": "inside/contains",
+          "final_grid_plus_eos_token_count": 156,
+          "sequence_length": 730,
+          "task_sha256": "c3401c4e0b6328a4e4e1aa696c5a30dbc63339b303437bd5c87ee06cc81b3bf1"
+        },
+        {
+          "assistant_token_count": 365,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 206,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 155
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000003",
+          "family": "inside/contains",
+          "final_grid_plus_eos_token_count": 156,
+          "sequence_length": 730,
+          "task_sha256": "82301bffa677f24c000be0995298313ab492c4903be158ca7a1b065c7c6fb856"
+        },
+        {
+          "assistant_token_count": 365,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 252,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 109
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000004",
+          "family": "inside/contains",
+          "final_grid_plus_eos_token_count": 110,
+          "sequence_length": 730,
+          "task_sha256": "cbcd265816d231a067f667c44650bbf723ee4996e7d0d1ad99b6e546bd7e50cd"
+        },
+        {
+          "assistant_token_count": 365,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 252,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 109
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000009",
+          "family": "inside/contains",
+          "final_grid_plus_eos_token_count": 110,
+          "sequence_length": 730,
+          "task_sha256": "3084e12e0b18cd802c511c7e3c43f71438aa2ba26e62f3a8f3913b643040322d"
+        },
+        {
+          "assistant_token_count": 385,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 226,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 155
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000005",
+          "family": "difference",
+          "final_grid_plus_eos_token_count": 156,
+          "sequence_length": 770,
+          "task_sha256": "bd26033a4c524a89588ab9da168a6ff74ae62f951ea7912f603571e3d683c224"
+        },
+        {
+          "assistant_token_count": 385,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 226,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 155
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000010",
+          "family": "difference",
+          "final_grid_plus_eos_token_count": 156,
+          "sequence_length": 770,
+          "task_sha256": "4975e98524ad59061bb92b767d6b11031cb55134f488091c9e0c3cd55d4f64ae"
+        },
+        {
+          "assistant_token_count": 387,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 252,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 131
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000000",
+          "family": "difference",
+          "final_grid_plus_eos_token_count": 132,
+          "sequence_length": 774,
+          "task_sha256": "52c4212e3cfc6b44acdcbb2e835f9c78f12ca8fc8d95f5ae07c86393915a1f51"
+        },
+        {
+          "assistant_token_count": 387,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 228,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 155
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000008",
+          "family": "difference",
+          "final_grid_plus_eos_token_count": 156,
+          "sequence_length": 774,
+          "task_sha256": "9e0210bc13e3f098d6173a1a90e3b8e18b896ed4bdf46305d6a2897004f3b21b"
+        },
+        {
+          "assistant_token_count": 407,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 248,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 155
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000011",
+          "family": "difference",
+          "final_grid_plus_eos_token_count": 156,
+          "sequence_length": 814,
+          "task_sha256": "c3f29c6e48fcb1a20b8b86bdf63511b5f7008fcf8c23d563659b29bc8dfe224c"
+        },
+        {
+          "assistant_token_count": 411,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 252,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 155
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000002",
+          "family": "inside/contains",
+          "final_grid_plus_eos_token_count": 156,
+          "sequence_length": 822,
+          "task_sha256": "e3fdd98ce86fa70d5cd72755d8fe1692f633697c942d2f3584bd806c23fa0d7f"
+        },
+        {
+          "assistant_token_count": 429,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 270,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 155
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000006",
+          "family": "inside/contains",
+          "final_grid_plus_eos_token_count": 156,
+          "sequence_length": 858,
+          "task_sha256": "55ff1f8b1836535a90ca3dccded2d10f9143313a5f81aa4787aa70ff488d859a"
+        },
+        {
+          "assistant_token_count": 477,
+          "component_token_counts": {
+            "DEMONSTRATION_ASSISTANT_ALL": 318,
+            "FINAL_ASSISTANT_PREFIX": 3,
+            "FINAL_EOS": 1,
+            "FINAL_GRID_CONTENT": 155
+          },
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000005",
+          "family": "inside/contains",
+          "final_grid_plus_eos_token_count": 156,
+          "sequence_length": 954,
+          "task_sha256": "0b09b3a9501e3c0e40b4f53122d3effd7f4e46e4338112e8a7f824eb37da9662"
+        }
+      ]
+    }
+  ],
+  "dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97",
+  "families": [
+    "connected components",
+    "inside/contains",
+    "difference",
+    "width",
+    "orientation"
+  ],
+  "frozen_source_manifest_sha256": "e531d07129dbbef5dd36b14ebc9e2430ca1dd2bd300aeb069e4f9e248dd9c786",
+  "rows": 60,
+  "schema_version": 1
+}
