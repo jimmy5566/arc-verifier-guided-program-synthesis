@@ -1,0 +1,52 @@
+{
+  "checkpoint_discovery": {
+    "conditions": [
+      "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED",
+      "RECONSTRUCTED_FOUNDATION_V2_V7",
+      "TARGETED_R1",
+      "TARGETED_R2",
+      "ATOMIC_R1",
+      "FAMILY_BALANCED"
+    ],
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/CHECKPOINT_PROVENANCE_DISCOVERY_V1.json",
+    "sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654"
+  },
+  "forbidden": [
+    "candidate_selection_from_targets",
+    "free_running_generation",
+    "training",
+    "optimizer",
+    "backward",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT"
+  ],
+  "frozen_input_manifest": {
+    "episode_count": 60,
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/SYNTHETIC_BENCHMARK_INPUT_MANIFEST_V1.json",
+    "sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c"
+  },
+  "measurement": "teacher_forced_correct_target_token_rank_and_margin_only",
+  "prerequisite": "RAW_TARGET_BLIND_GENERATION_EVIDENCE_FROZEN_AND_HASHED",
+  "protocol_id": "UNIFIED_NATIVE_TARGET_ALIGNED_SCORING_V1",
+  "result_requirements": [
+    "raw_generation_sha256",
+    "sidecar_sha256",
+    "checkpoint_manifest_sha256",
+    "prompt_sha256",
+    "correct_target_token_ranks",
+    "correct_target_vs_highest_incorrect_margins",
+    "first_free_running_error_index",
+    "target_alignment_used_for_selection=false"
+  ],
+  "schema_version": 1,
+  "sealed_target_sidecar": {
+    "access_rule": "OPEN_ONLY_AFTER_RAW_GENERATION_AND_PROTOCOL_FROZEN",
+    "not_committed": true,
+    "sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e"
+  },
+  "worker": {
+    "path": "scripts/score_unified_native_target_alignment_v1.py",
+    "sha256": "6c72a301324dfd20f63940393f2b5803b36344ad33154aaa1d85e7c10ef6b010"
+  }
+}
