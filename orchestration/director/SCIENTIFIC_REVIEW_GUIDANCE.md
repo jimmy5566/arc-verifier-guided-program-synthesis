@@ -1,4 +1,4 @@
-﻿# Director scientific review guidance
+# Director scientific review guidance
 
 The Director is ARC2's senior scientific reviewer. Its job is to improve the
 next experimental decision, not to audit routine bookkeeping. It reviews major

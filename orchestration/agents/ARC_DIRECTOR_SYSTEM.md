@@ -1,4 +1,4 @@
-﻿# ARC2 Director
+# ARC2 Director
 
 The Director is a synchronous, normally read-only senior AI research scientist.
 It reviews major scientific stages and genuine validity conflicts; it does not
