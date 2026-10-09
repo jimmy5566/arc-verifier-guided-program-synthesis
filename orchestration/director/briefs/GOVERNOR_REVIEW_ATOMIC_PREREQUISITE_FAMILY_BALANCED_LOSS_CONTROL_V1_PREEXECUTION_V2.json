@@ -1,0 +1,46 @@
+{
+  "artifacts": {
+    "config_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_REMOTE_RUN_CONFIG_DRAFT.json",
+    "config_sha256": "235a34b3fbdef9497cd92f5afa614a5f276d5a8df11db9fc45aa8adf14d5702f",
+    "cpu_validation_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_CPU_VALIDATION_V2.json",
+    "cpu_validation_sha256": "1eebe113ec0400da5084c1196308ca19f62b64fa1cc188ec99e356cdb3ebd7d7",
+    "ledger_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_COEFFICIENT_LEDGER_V1.json",
+    "ledger_sha256": "4eb7b058468257246025b459aec1258f3e9bfa9f8b6c764edad675e2e62ebf0b",
+    "protocol_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_PROTOCOL_V2.json",
+    "protocol_sha256": "236276c85b28b88c8bf8d2b2860ab66287c73d867a3f12cbb7c8c632fa57dae2",
+    "worker_path": "scripts/run_same_color_preservation_stage_a_v1.py",
+    "worker_sha256": "4533eca96d76030011b3833d76e463ee6ed55af3852233c05bba856e90a4303c"
+  },
+  "brief_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_PREEXECUTION_V2",
+  "forbidden": [
+    "NO_R1_RESUME",
+    "NO_R3",
+    "NO_COMPOSITION_TRAINING",
+    "NO_FINAL_AUDIT",
+    "NO_SECOND_SCIENTIFIC_FACTOR"
+  ],
+  "frozen_scientific_condition": {
+    "all_original_v7_referenced_promotion_gates_retained": true,
+    "final_audit_opened": false,
+    "prospective_threshold": "weak_atomic_paired_net_fixes_vs_rejected_R1 >= +5",
+    "same_v7_start_schedule_row_order_labels_tokens_recipe_seed_evaluation": true,
+    "single_changed_factor": "SCALAR_LOSS_AGGREGATION_BY_FAMILY"
+  },
+  "implemented_changes": [
+    "Config binds the exact 4004-row TRAIN path and SHA256.",
+    "Worker rejects a CLI output root unequal to frozen config output_root before model import.",
+    "Real remote --validate-pre-model passed at source commit 0f83da40 with model_loaded=false, optimizer_constructed=false, gpu_used=false, and future run root absent."
+  ],
+  "previous_director_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_PREEXECUTION.json",
+  "previous_director_response_sha256": "a4a120e142d828a8b372b08fc5136bcd84b5192699e9b94333345f5f5dd71626",
+  "request": "Review only the completed executability repair. Authorize or minimally revise the already accepted single-factor family-balanced-loss diagnostic; no GPU/model work has occurred.",
+  "safety": {
+    "no_target_dev_retention_or_final_audit_training": true,
+    "remaining_gpu_seconds": 23227.087616618042,
+    "reservation_seconds": 3600.0,
+    "standing_user_gpu_authorization_recorded": true
+  },
+  "schema_version": 1,
+  "scientific_training_authorized_by_this_brief": false,
+  "stage": "ATOMIC_PREREQUISITE_REPAIR_SUCCESSOR_DIAGNOSTIC"
+}

@@ -1,0 +1,58 @@
+{
+  "baseline_policy": "TOKEN_PROPORTIONAL_PER_STEP_V1",
+  "budget_and_isolation": {
+    "final_audit_opened": false,
+    "no_parallel_scientific_job": true,
+    "remaining_cumulative_gpu_seconds": 23227.087616618042,
+    "reservation_seconds": 3600.0
+  },
+  "cpu_validation_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_CPU_VALIDATION_V2.json",
+  "cpu_validation_sha256": "1eebe113ec0400da5084c1196308ca19f62b64fa1cc188ec99e356cdb3ebd7d7",
+  "execution_authorized": false,
+  "forbidden": [
+    "NO_R1_RESUME",
+    "NO_R3",
+    "NO_COMPOSITION_TRAINING",
+    "NO_FINAL_AUDIT",
+    "NO_SECOND_SCIENTIFIC_FACTOR",
+    "NO_MODEL_GPU_OR_OPTIMIZER_UNTIL_STAGE_REVIEW"
+  ],
+  "loss_aggregation_policy": "FAMILY_BALANCED_GLOBAL_IPF_V1",
+  "loss_coefficient_ledger_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_COEFFICIENT_LEDGER_V1.json",
+  "loss_coefficient_ledger_sha256": "4eb7b058468257246025b459aec1258f3e9bfa9f8b6c764edad675e2e62ebf0b",
+  "matched_conditions": {
+    "gradient_accumulation": 4,
+    "no_target_dev_retention_or_final_audit_training": true,
+    "optimizer_steps": 100,
+    "same_400_train_rows_order_labels_token_budget": true,
+    "same_decoder_parser_scorer_target_dev_retention_batch_policy": true,
+    "same_optimizer_lr_lora_seed_precision_checkpoint_cadence_runtime_budget": true
+  },
+  "prospective_causal_contrast": {
+    "comparator": "ATOMIC_PREREQUISITE_REPAIR_V1_001_REJECTED_CANDIDATE",
+    "fail": "STOP_FAMILY_LOSS_BALANCING_ROUTE_NO_SECOND_AUTOMATIC_DIAGNOSTIC",
+    "material_support_threshold": "weak_atomic_paired_net_fixes_vs_rejected_R1 >= +5",
+    "pass": "RETURN_FOR_STAGE_LEVEL_REVIEW_NO_AUTOMATIC_COMPOSITION_OR_PROMOTION",
+    "retain_all_original_v7_referenced_promotion_gates": true
+  },
+  "protocol_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1",
+  "protocol_revision": "V2_CONFIG_COMPLETION_AND_REMOTE_PREMODEL_VALIDATION",
+  "remote_pre_model_receipt_path": "/workspace/arc2/atomic_prerequisite_family_balanced_loss_control_v1/preflight/PRE_MODEL_CPU_VALIDATION_RECEIPT.json",
+  "remote_pre_model_receipt_sha256": "87a991087aa4634915b5f17a11a3cfc9996c60c0971e463a5310a497d7a27eda",
+  "remote_pre_model_validation_path": "/workspace/arc2/atomic_prerequisite_family_balanced_loss_control_v1/preflight/PRE_MODEL_CPU_VALIDATION.json",
+  "remote_pre_model_validation_sha256": "e88f62862c64681f5d4aa00338f17e19d8a2858d688cd284ed2459ebedd48f8d",
+  "run_config_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_REMOTE_RUN_CONFIG_DRAFT.json",
+  "run_config_sha256": "235a34b3fbdef9497cd92f5afa614a5f276d5a8df11db9fc45aa8adf14d5702f",
+  "schedule_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json",
+  "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6",
+  "schema_version": 1,
+  "scientific_question": "Holding the rejected R1 schedule and recipe fixed, does global family-balanced scalar loss aggregation improve weak atomic paired outcomes without preservation or composition harm?",
+  "single_changed_factor": "SCALAR_LOSS_AGGREGATION_BY_FAMILY",
+  "standing_user_gpu_authorization_recorded": true,
+  "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1",
+  "status": "CPU_PREEXECUTION_VALIDATED_PENDING_STAGE_REVIEW",
+  "supersedes_protocol_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_PROTOCOL.json",
+  "supersedes_protocol_sha256": "8ce75c95e259919c0c3ffa003c576082813ff7927f269b58cb0bb0a7a1112cbe",
+  "worker_path": "scripts/run_same_color_preservation_stage_a_v1.py",
+  "worker_sha256": "4533eca96d76030011b3833d76e463ee6ed55af3852233c05bba856e90a4303c"
+}

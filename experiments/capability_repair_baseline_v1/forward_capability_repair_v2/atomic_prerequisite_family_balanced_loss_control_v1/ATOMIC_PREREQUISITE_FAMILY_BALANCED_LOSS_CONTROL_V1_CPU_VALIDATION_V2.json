@@ -1,0 +1,43 @@
+{
+  "checks": {
+    "400_scheduled_episode_order": true,
+    "coefficient_ledger_hash": true,
+    "final_audit_opened": false,
+    "future_run_root_absent": true,
+    "gpu_used": false,
+    "model_loaded": false,
+    "nonweak_family_totals_preserved": true,
+    "optimizer_constructed": false,
+    "per_step_coefficient_sums_one": true,
+    "required_key_completeness": true,
+    "run_root_equals_config_output_root": true,
+    "schedule_hash": true,
+    "scientific_training_started": false,
+    "token_label_bindings": true,
+    "train_hash_and_row_count": true,
+    "weak_family_totals_equalized": true
+  },
+  "config_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_REMOTE_RUN_CONFIG_DRAFT.json",
+  "config_sha256": "235a34b3fbdef9497cd92f5afa614a5f276d5a8df11db9fc45aa8adf14d5702f",
+  "ledger_sha256": "4eb7b058468257246025b459aec1258f3e9bfa9f8b6c764edad675e2e62ebf0b",
+  "remote_pre_model_validation": {
+    "path": "/workspace/arc2/atomic_prerequisite_family_balanced_loss_control_v1/preflight/PRE_MODEL_CPU_VALIDATION.json",
+    "sha256": "e88f62862c64681f5d4aa00338f17e19d8a2858d688cd284ed2459ebedd48f8d"
+  },
+  "remote_receipt": {
+    "path": "/workspace/arc2/atomic_prerequisite_family_balanced_loss_control_v1/preflight/PRE_MODEL_CPU_VALIDATION_RECEIPT.json",
+    "sha256": "87a991087aa4634915b5f17a11a3cfc9996c60c0971e463a5310a497d7a27eda"
+  },
+  "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6",
+  "schema_version": 1,
+  "source_commit": "0f83da40171d8580a6f9fc7f71cb1315105cd94d",
+  "status": "CPU_AND_REMOTE_PREMODEL_VALIDATION_PASS",
+  "train_identity": {
+    "path": "/workspace/arc2/mounted_inputs/base_only_targeted_repair_remote_first_v2/TRAIN.jsonl",
+    "rows": 4004,
+    "sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+  },
+  "validation_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_CPU_VALIDATION_V2",
+  "worker_path": "scripts/run_same_color_preservation_stage_a_v1.py",
+  "worker_sha256": "4533eca96d76030011b3833d76e463ee6ed55af3852233c05bba856e90a4303c"
+}
