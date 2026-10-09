@@ -1,0 +1,67 @@
+{
+  "accepted_repair_evidence": {
+    "CPU_positive_and_negative_tests_passed": true,
+    "external_governor_review_required": true,
+    "no_model_load_optimizer_gpu_output_or_nonce_during_tests": true,
+    "reviewed_config_execution_authorized": false
+  },
+  "artifacts": {
+    "coefficient_ledger_sha256": "4eb7b058468257246025b459aec1258f3e9bfa9f8b6c764edad675e2e62ebf0b",
+    "config_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_REMOTE_RUN_CONFIG_DRAFT.json",
+    "config_sha256": "6078afe70dd15c656906487d732d448ae3ed4784f1b3f1da962302cc3e8c2d9f",
+    "cpu_validation_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_CPU_VALIDATION_V3.json",
+    "cpu_validation_sha256": "81669a4e96a65aa6fe75e13a63f5e67b1fddb51e73d9b739aa8a87eb464a8b70",
+    "protocol_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_PROTOCOL_V3.json",
+    "protocol_sha256": "8c57e1b1e88059722b6cdb5d2577c03d721152e34b9ce7cf8061e92fa88fc501",
+    "review_contract_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_family_balanced_loss_control_v1/ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_GOVERNOR_REVIEW_CONTRACT_V1.json",
+    "review_contract_sha256": "c725b1b69aa325d7513ea4f867b4de5ec95940326e8e735f18db3ebdbf71f906",
+    "worker_path": "scripts/run_same_color_preservation_stage_a_v1.py",
+    "worker_sha256": "32c48345d589f38871fdc62e315048d914393fadc26b272303721010fbdd1f36"
+  },
+  "brief_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_PREEXECUTION_V3",
+  "budget_and_isolation": {
+    "no_target_dev_retention_or_final_audit_training": true,
+    "remaining_gpu_seconds": 23227.087616618042,
+    "reservation_seconds": 3600.0,
+    "standing_user_gpu_authorization_recorded": true
+  },
+  "forbidden": [
+    "NO_CONFIG_MUTATION_AFTER_REVIEW",
+    "NO_R1_RESUME",
+    "NO_R3",
+    "NO_COMPOSITION_TRAINING",
+    "NO_FINAL_AUDIT",
+    "NO_SECOND_SCIENTIFIC_FACTOR"
+  ],
+  "previous_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_PREEXECUTION_V2.json",
+  "previous_response_sha256": "65df6f60a19da71b7c340f9576e94a9e873312dd12394bc471697dfc4d042968",
+  "question": "Does the completed external-review authorization binding permit this unchanged, single-factor family-balanced-loss diagnostic to launch under the stated contract?",
+  "request": "Return CONTINUE_CONTROLLER only if the external launch binding below is accepted. The decision must include launch_binding with every required contract key, including the actual source commit that will be used at launch and standing_user_gpu_authorization=true. Otherwise return REQUIRE_CHANGES with the smallest repair.",
+  "required_launch_binding_keys": [
+    "reviewed_brief_sha256",
+    "protocol_id",
+    "round_id",
+    "config_sha256",
+    "protocol_sha256",
+    "worker_sha256",
+    "coefficient_ledger_sha256",
+    "schedule_sha256",
+    "train_sha256",
+    "checkpoint_manifest_sha256",
+    "output_root",
+    "reservation_seconds",
+    "source_commit",
+    "standing_user_gpu_authorization"
+  ],
+  "schema_version": 1,
+  "scientific_invariants": {
+    "all_original_v7_referenced_promotion_gates_retained": true,
+    "final_audit_opened": false,
+    "prospective_threshold": "weak_atomic_paired_net_fixes_vs_rejected_R1 >= +5",
+    "same_v7_start_schedule_row_order_labels_tokens_recipe_seed_evaluation": true,
+    "single_changed_factor": "SCALAR_LOSS_AGGREGATION_BY_FAMILY"
+  },
+  "scientific_training_authorized_by_this_brief": false,
+  "source_commit_requirement": "DIRECTOR_RESPONSE_MUST_BIND_THE_EXACT_GIT_HEAD_USED_AT_LAUNCH; the worker independently verifies it at runtime.",
+  "stage": "ATOMIC_PREREQUISITE_REPAIR_SUCCESSOR_DIAGNOSTIC"
+}
