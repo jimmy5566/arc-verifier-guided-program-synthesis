@@ -1,0 +1,39 @@
+{
+  "created_at": "2026-10-09T15:46:29.278135Z",
+  "established_facts": {
+    "binding_sha256": "ad4bd964aad80a634fa241569e7d1aa13998cb8a9cec8593e8e844f5b06a870d",
+    "config_sha256": "a2cdcd0d265da3e64c467581948e235164e7af8fa41137614581c6e9e1345650",
+    "final_audit_opened": false,
+    "generation": false,
+    "model_imported": false,
+    "optimizer_steps": 0,
+    "raw_manifest_discovery_hashes": "PASS",
+    "remote_checkout": "2f466c4e18b4d3ec93e0ed017ee33419a3af91d7",
+    "sidecar_expected_sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e",
+    "sidecar_present": false
+  },
+  "forbidden_actions": [
+    "training",
+    "optimizer",
+    "backward",
+    "generation",
+    "candidate_replacement",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "protocol_change"
+  ],
+  "frozen_failure_evidence": {
+    "failure_class": "DETACHED_LAUNCH_EXITED_NO_TERMINAL_RECEIPT",
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/unified_native_target_aligned_scoring_v2_batch16/run_002_6562708841cd05b62b1d5d0793f3af62/CONTROLLED_FAILURE_SUMMARY.json",
+    "sha256": "fc5ab4decc7a8f14e4f9db6e2a2c7ef95efa1befa5a0824803984f777d7f0cfb"
+  },
+  "protocol_id": "UNIFIED_NATIVE_TARGET_ALIGNED_SCORING_V2_BATCH16",
+  "question": "The single authorized detached launch exited before the worker and no model work occurred. The sealed sidecar required by the immutable binding is absent from its runtime path and was not found under /workspace or /root. After exact-byte restoration of the same bound sidecar, may Controller perform one replacement detached launch under unchanged source, configuration, binding, nonce, cap, and no-update constraints?",
+  "requested_decision": [
+    "AUTHORIZE_ONE_REPLACEMENT_LAUNCH_AFTER_EXACT_SIDECAR_RESTORE",
+    "PAUSE_PENDING_SEALED_ASSET_RECOVERY"
+  ],
+  "review_type": "RUNTIME_RECOVERY_REVIEW",
+  "scientific_scope": "UNCHANGED_FROZEN_TARGET_ALIGNED_SCORING_ONLY"
+}
