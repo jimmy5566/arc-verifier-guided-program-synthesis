@@ -26,7 +26,7 @@
   "final_audit_opened": false,
   "next_scientific_boundary": "DIRECTOR_STAGE_LEVEL_POSTMORTEM_REQUIRED",
   "paired_gate_analysis_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_001_PAIRED_GATE_ANALYSIS.json",
-  "paired_gate_analysis_sha256": "809048f731d29f11f6079810b336a4fcc93ddc25deb8d358bd2047c53836a489",
+  "paired_gate_analysis_sha256": "fd14962203c4f4631c6712214758bca1b228da97879814d2f4656454a4b08671",
   "protocol_id": "ATOMIC_PREREQUISITE_REPAIR_V1",
   "round_id": "ATOMIC_PREREQUISITE_REPAIR_V1_001",
   "schema_version": 1,
