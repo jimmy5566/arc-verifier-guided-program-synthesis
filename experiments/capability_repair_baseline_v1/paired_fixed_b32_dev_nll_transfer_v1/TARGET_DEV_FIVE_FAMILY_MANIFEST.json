@@ -1,0 +1,237 @@
+{
+  "batch1_crosscheck": [
+    "TARGET_DEV:TARGETED_EVALUATION:connected components:000002",
+    "TARGET_DEV:TARGETED_EVALUATION:connected components:000009",
+    "TARGET_DEV:TARGETED_EVALUATION:connected components:000011",
+    "TARGET_DEV:TARGETED_EVALUATION:connected components:000001",
+    "TARGET_DEV:TARGETED_EVALUATION:connected components:000000",
+    "TARGET_DEV:TARGETED_EVALUATION:connected components:000007",
+    "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000011",
+    "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000007",
+    "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000008",
+    "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000001",
+    "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000010",
+    "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000000",
+    "TARGET_DEV:TARGETED_EVALUATION:difference:000001",
+    "TARGET_DEV:TARGETED_EVALUATION:difference:000004",
+    "TARGET_DEV:TARGETED_EVALUATION:difference:000003",
+    "TARGET_DEV:TARGETED_EVALUATION:difference:000002",
+    "TARGET_DEV:TARGETED_EVALUATION:difference:000007",
+    "TARGET_DEV:TARGETED_EVALUATION:difference:000006",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000001",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000005",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000007",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000008",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000010",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000004",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000003",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000010",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000005",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000001",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000006",
+    "TARGET_DEV:TARGETED_EVALUATION:orientation:000011",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000006",
+    "TARGET_DEV:TARGETED_EVALUATION:width:000000"
+  ],
+  "batches": [
+    {
+      "effective_batch_size": 32,
+      "members": [
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000002"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000003"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000009"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000001"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000005"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000007"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000008"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000010"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000011"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000001"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000004"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000006"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000010"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000005"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000001"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000006"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000011"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000000"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000000"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000007"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000004"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000009"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000010"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000003"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000011"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000002"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:width:000009"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000008"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000007"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000003"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000006"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000005"
+        }
+      ]
+    },
+    {
+      "effective_batch_size": 28,
+      "members": [
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000000"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000008"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:connected components:000004"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:orientation:000002"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000001"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000011"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000004"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000007"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000008"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000003"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000002"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000007"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000006"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000001"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000010"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000009"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000000"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000003"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000004"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000009"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000005"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000010"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000000"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000008"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:difference:000011"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000002"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000006"
+        },
+        {
+          "episode_id": "TARGET_DEV:TARGETED_EVALUATION:inside/contains:000005"
+        }
+      ]
+    }
+  ],
+  "families": [
+    "connected components",
+    "inside/contains",
+    "difference",
+    "width",
+    "orientation"
+  ],
+  "rows": 60,
+  "schema_version": 1
+}

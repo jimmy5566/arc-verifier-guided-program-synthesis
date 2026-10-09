@@ -1,0 +1,28 @@
+{
+  "cap_seconds": 900,
+  "forbidden": [
+    "Atomic R1",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "optimizer",
+    "backward",
+    "training",
+    "generation"
+  ],
+  "inputs": {
+    "conditions": {
+      "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001": {
+        "manifest": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json"
+      },
+      "CAPABILITY_REPAIR_BASELINE_V1_V7": {
+        "manifest": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json"
+      }
+    },
+    "dev_sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97",
+    "manifest_path": "experiments/capability_repair_baseline_v1/paired_fixed_b32_dev_nll_transfer_v1/TARGET_DEV_FIVE_FAMILY_MANIFEST.json",
+    "manifest_sha256": "e531d07129dbbef5dd36b14ebc9e2430ca1dd2bd300aeb069e4f9e248dd9c786"
+  },
+  "protocol_id": "PAIRED_FIXED_B32_DEV_NLL_TRANSFER_V1",
+  "worker_sha256": "e5b4b236a77857d4a240af558c7d5e6143451f9bdee1c4bbb53925f5bdd08e8c"
+}
