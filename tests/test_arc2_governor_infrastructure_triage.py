@@ -15,6 +15,7 @@ SPEC.loader.exec_module(governor)
 
 class GovernorInfrastructureTriageTests(unittest.TestCase):
     def fixture(self, root: Path, **overrides):
+        root.mkdir(parents=True, exist_ok=True)
         path = root / "state.json"
         state = {
             "disposition": "PAUSED",
