@@ -1,0 +1,28 @@
+{
+  "acceptance": {
+    "composition_paired_net_fixes_vs_v7_minimum": -2,
+    "protected_families_paired_harms_vs_v7_maximum": {
+      "recolor": 0,
+      "same color": 0,
+      "selector prerequisites": 0
+    },
+    "retention_sentinel_paired_net_fixes_vs_v7_minimum": -2,
+    "weak_atomic_aggregate_paired_net_fixes_vs_v7_minimum": 5,
+    "weak_atomic_each_family_paired_net_fixes_vs_v7_minimum": -1
+  },
+  "baseline": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+  "candidate_checkpoints": [
+    "FINAL_ONLY"
+  ],
+  "future_composition": "Requires a separate stage-boundary review after atomic results.",
+  "protocol_id": "ATOMIC_PREREQUISITE_REPAIR_V1",
+  "schema_version": 1,
+  "selection": "Accept only a candidate satisfying every validity and acceptance condition; otherwise reject all candidates and do not enter composition training.",
+  "status": "FROZEN_PROSPECTIVE_SELECTION_RULE",
+  "validity_requirements": {
+    "final_audit_sealed": true,
+    "no_leakage": true,
+    "parse_valid": "288/288",
+    "same_frozen_decoder_parser_scorer": true
+  }
+}

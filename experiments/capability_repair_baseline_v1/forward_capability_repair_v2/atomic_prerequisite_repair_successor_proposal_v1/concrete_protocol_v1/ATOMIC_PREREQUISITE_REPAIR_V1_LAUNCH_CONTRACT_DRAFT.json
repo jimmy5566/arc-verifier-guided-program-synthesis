@@ -1,0 +1,19 @@
+{
+  "execution_prohibited_until": "DIRECTOR_CONTINUE_CONTROLLER_OR_EQUIVALENT_STAGE_AUTHORIZATION",
+  "forbidden": [
+    "NO_MODEL_LOAD",
+    "NO_GPU_TRAINING",
+    "NO_FINAL_AUDIT"
+  ],
+  "optimizer_steps": 100,
+  "output_root": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001",
+  "protocol_id": "ATOMIC_PREREQUISITE_REPAIR_V1",
+  "reservation_seconds": 3600,
+  "round_id": "ATOMIC_PREREQUISITE_REPAIR_V1_001",
+  "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6",
+  "schema_version": 1,
+  "source_commit": "d09df70b647b2e40252003b77a00bfae3cdfb417",
+  "starting_checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "status": "DRAFT_NOT_EXECUTABLE_PENDING_DIRECTOR_STAGE_AUTHORIZATION",
+  "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+}

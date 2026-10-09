@@ -1,0 +1,137 @@
+{
+  "budget": {
+    "accounted_cumulative_seconds": 5307.932502390957,
+    "historical_reconstruction_seconds": 4778.014247704957,
+    "proposed_round_reservation_seconds": 3600,
+    "remaining_seconds": 23492.06749760904,
+    "stage_a_seconds": 529.918254686
+  },
+  "evaluation": {
+    "batch1_validation_subset": 32,
+    "batch_size_requested": 32,
+    "cross_gpu_metric_drift_tolerance": 0.0625,
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "mode": "FROZEN_TARGET_DEV_AND_RETENTION_SENTINEL",
+    "same_decoder_parser_scorer_for_before_after": true
+  },
+  "forbidden": [
+    "NO_GPU_OR_MODEL_LOADING_BEFORE_DIRECTOR_STAGE_AUTHORIZATION",
+    "NO_R3",
+    "NO_STAGE_A_RETRY",
+    "NO_FINAL_AUDIT",
+    "NO_EVALUATION_ROWS_IN_TRAINING",
+    "NO_COMPOSITION_TRAINING"
+  ],
+  "frozen_identities": {
+    "evaluation_contract": {
+      "path": "experiments/base_only_targeted_repair_remote_first_v2/execution_contract_v7/BASELINE_INFERENCE_CONTRACT_V2.json",
+      "sha256": "ff10ac5fc7291a667e2d23864a080ddb16bb719c31abd2337ebfe824f9e6361e"
+    },
+    "frozen_evaluation": {
+      "final_audit": "SEALED_NOT_ACCESSED",
+      "retention_sentinel": {
+        "rows": 96,
+        "sha256": "b41c25a05e798d6b5f238b013add54a75aefa3cd0ddfbc74fbbc9f112de80526"
+      },
+      "target_dev": {
+        "rows": 192,
+        "sha256": "e68b6d389fb51fe7f87311e13bd2630af2ce32c2e09b6314005d89983f924a97"
+      }
+    },
+    "starting_checkpoint_manifest": {
+      "checkpoint_adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+      "path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+      "sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+    },
+    "train_source": {
+      "path": "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl",
+      "rows": 4004,
+      "sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945",
+      "split_required": "TRAIN"
+    }
+  },
+  "future_execution": {
+    "fresh_output_required": true,
+    "model_loading_authorized": false,
+    "reason": "Pending one Director review of this complete distinct protocol.",
+    "remote_output_root": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001",
+    "round_id": "ATOMIC_PREREQUISITE_REPAIR_V1_001",
+    "scientific_training_authorized": false
+  },
+  "isolation": {
+    "composition_training": false,
+    "final_audit_opened": false,
+    "retention_sentinel_used_for_training": false,
+    "target_dev_used_for_training": false,
+    "train_only": true
+  },
+  "protocol_id": "ATOMIC_PREREQUISITE_REPAIR_V1",
+  "recipe": {
+    "base_frozen": true,
+    "checkpoint_cadence": "FINAL_ONLY",
+    "gradient_accumulation": 4,
+    "learning_rate": 5e-05,
+    "lora_alpha": 32,
+    "lora_dropout": 0,
+    "lora_rank": 64,
+    "optimizer": "PagedAdamW8bit",
+    "optimizer_steps": 100,
+    "precision": "BF16",
+    "quantization": "NONE",
+    "seed": 2000031,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ]
+  },
+  "schema_version": 1,
+  "scientific_objective": {
+    "composition": "Deferred; no composition training samples in this protocol.",
+    "improvement": "Raise weak atomic prerequisites before any composition-focused intervention.",
+    "preservation": "Protect strong V7 primitives against forgetting through explicit TRAIN-only coverage."
+  },
+  "scope": "DISTINCT_SUCCESSOR_PROTOCOL_NOT_A_CONTINUATION_OF_SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1",
+  "source_commit": "d09df70b647b2e40252003b77a00bfae3cdfb417",
+  "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1",
+  "status": "FROZEN_CPU_ONLY_PREEXECUTION_PENDING_DIRECTOR_REVIEW",
+  "training_schedule": {
+    "allocation_counts": {
+      "retention_protection": 64,
+      "strong_capability_protection": 96,
+      "weak_atomic_repair": 240
+    },
+    "allocation_percent": {
+      "retention_protection": 16,
+      "strong_capability_protection": 24,
+      "weak_atomic_repair": 60
+    },
+    "episodes": 400,
+    "path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json",
+    "retention_protection_per_family": {
+      "color mapping": 11,
+      "complete missing structure": 11,
+      "overlay": 11,
+      "propagation": 10,
+      "recolor": 10,
+      "rotate": 11
+    },
+    "sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6",
+    "strong_protection_per_family": {
+      "recolor": 32,
+      "same color": 32,
+      "selector prerequisites": 32
+    },
+    "weak_atomic_per_family": 48
+  }
+}

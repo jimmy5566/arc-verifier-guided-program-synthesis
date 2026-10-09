@@ -1,0 +1,54 @@
+{
+  "artifacts": {
+    "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_PROTOCOL_CPU_VALIDATION.json": "e145c1a8e1b42944b52c8fcc45eaff057146d91c6088377d73fdf9adf4b1717d",
+    "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_DECISION_RULE.json": "096169811329f778f454880301c313f5e859c456c701d2ddeebf8ca94ac6ae67",
+    "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_LAUNCH_CONTRACT_DRAFT.json": "cd544b419c52b261f482acff395273be27f53d97eeb879d3afd182e083338cc5",
+    "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_PROTOCOL.json": "0cadab943bea0f2eff48e5a7a4c2ec5681b47131a9cd6adae4880f11c3553493",
+    "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6"
+  },
+  "brief_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_REPAIR_V1_PREEXECUTION",
+  "budget": {
+    "accounted_cumulative_training_seconds": 5307.932502390957,
+    "proposed_round_reservation_seconds": 3600,
+    "remaining_seconds": 23492.06749760904
+  },
+  "context": {
+    "closed_route": "SAME_COLOR_PRESERVATION_CAUSAL_TEST_V1_STAGE_A_ROUTE",
+    "no_gpu_or_model_load_has_occurred_for_this_protocol": true,
+    "not_a_continuation": true,
+    "source_commit": "d09df70b647b2e40252003b77a00bfae3cdfb417",
+    "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1"
+  },
+  "decision_requested": "CONTINUE_CONTROLLER | REQUIRE_CHANGES | PAUSED | TERMINAL",
+  "design": {
+    "evaluation": "Same frozen 192 TARGET_DEV + 96 RETENTION_SENTINEL, common decoder/parser/scorer, requested batch 32 and registered fallback/B1 audit.",
+    "isolation": "All training rows are TRAIN-only; TARGET_DEV, RETENTION_SENTINEL and FINAL_AUDIT excluded; no composition training rows.",
+    "objective": "Protect strong primitives while repairing weak atomic prerequisites; defer composition training.",
+    "recipe": "V7 start; frozen base; BF16; no quantization; rank 64 alpha 32; PagedAdamW8bit; LR 5e-5; 100 steps; grad accumulation 4; seed 2000031; final checkpoint only.",
+    "train_only_mix": {
+      "retention_protection": "64 / 16%; distributed color mapping 11, complete missing structure 11, overlay 11, propagation 10, recolor 10, rotate 11",
+      "strong_capability_protection": "96 / 24%; 32 each for same color, recolor, selector prerequisites",
+      "weak_atomic_repair": "240 / 60%; 48 each for connected components, inside/contains, difference, width, orientation"
+    }
+  },
+  "prospective_decision_rules": {
+    "composition_net_floor": -2,
+    "if_any_rule_fails": "Reject candidate and do not enter composition training.",
+    "per_weak_atomic_family_net_floor": -1,
+    "protected_same_color_recolor_selector_harms_maximum": 0,
+    "retention_net_floor": -2,
+    "weak_atomic_aggregate_net_fixes_vs_v7_minimum": 5
+  },
+  "required_response_contract": {
+    "forbidden": [
+      "Do not reopen Stage A.",
+      "Do not authorize R3.",
+      "Do not require provenance-only review cycles."
+    ],
+    "if_continue": "Authorize this distinct protocol only; Controller may launch the frozen R1 without further routine review.",
+    "if_require_changes": "State the smallest scientific change, frozen conditions, and whether another review is required."
+  },
+  "schema_version": 1,
+  "scientific_question": "Is this distinct V7-starting atomic-prerequisite protocol scientifically valid to execute, and what is the smallest required change if not?",
+  "stage": "ATOMIC_PREREQUISITE_REPAIR_V1"
+}
