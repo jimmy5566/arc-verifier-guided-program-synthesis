@@ -1,0 +1,60 @@
+{
+  "authorization": {
+    "gpu_inference_authorized": true,
+    "model_loading_authorized": true,
+    "scientific_training_authorized": false
+  },
+  "branch": "infra/arc2-dual-agent-runpod-orchestrator-v1",
+  "checkpoint_discovery": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/CHECKPOINT_PROVENANCE_DISCOVERY_V1.json",
+    "sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654"
+  },
+  "cpu_preflight": {
+    "path": "scripts/preflight_unified_native_model_capability_baseline_v1.py",
+    "sha256": "6a93b3bad3e773493e97ca7b0307c0df56f1b65fd024147db55ca1b8b7039002"
+  },
+  "execution_contract": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/EXECUTION_CONTRACT_DRAFT_V1.json",
+    "sha256": "00a612a1675ea7babf97e0b828099314aeb48edc3301d87c15c72dd35d1b7b17"
+  },
+  "forbidden": [
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint_mutation",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external_selector",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT"
+  ],
+  "input_manifest": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/SYNTHETIC_BENCHMARK_INPUT_MANIFEST_V1.json",
+    "sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c"
+  },
+  "machine_gates": [
+    "exact_runtime_checkout_and_worker_sha256",
+    "all_available_adapter_sha256",
+    "base_identity",
+    "input_manifest_sha256",
+    "fresh_output_root",
+    "no_duplicate_live_job",
+    "final_audit_closed"
+  ],
+  "nonce": "f0e0a4e274fa47675c307ea0a492ba46",
+  "output_path": "/workspace/arc2/unified_native_model_capability_baseline_v1/run_001_f0e0a4e274fa47675c307ea0a492ba46/RAW_UNSCORED.jsonl",
+  "output_root": "/workspace/arc2/unified_native_model_capability_baseline_v1/run_001_f0e0a4e274fa47675c307ea0a492ba46",
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1",
+  "receipt_path": "/workspace/arc2/unified_native_model_capability_baseline_v1/run_001_f0e0a4e274fa47675c307ea0a492ba46/TERMINAL_RECEIPT.json",
+  "runtime_cap_seconds": 9000,
+  "schema_version": 1,
+  "status": "FROZEN_PENDING_RUNTIME_IDENTITY_PREFLIGHT",
+  "worker": {
+    "path": "scripts/run_unified_native_model_capability_baseline_v1.py",
+    "sha256": "9534137ca5974d863a8e3815022495d863c0a200d2a2459dbefdeb423bf3ca58"
+  },
+  "worker_source_commit": "7db7c0b36effe20cfcfe003ed7f20c11dc6b0b6d"
+}

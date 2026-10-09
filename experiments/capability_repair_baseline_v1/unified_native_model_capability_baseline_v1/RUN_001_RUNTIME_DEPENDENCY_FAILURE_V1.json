@@ -1,0 +1,21 @@
+{
+  "failure_class": "RUNPOD_PYTHON_MISSING_TRANSFORMERS",
+  "final_audit_opened": false,
+  "gpu_inference_started": false,
+  "launch_record_sha256": "a338134822fa6dd80756d46b446b93073043a4ab89bb9b4fa7fd4b5b9dfde259",
+  "model_imported": false,
+  "optimizer_steps": 0,
+  "preserved_at": "2026-10-09T12:18:10.011646Z",
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1",
+  "raw_output_present": false,
+  "remote_pid": 61975,
+  "repair_status": "transformers_peft_accelerate_import_probe_passed",
+  "run_id": "RUN_001_f3ac2db3a7926d8494c7d996f60aa6ab",
+  "runtime_dependency_repair_probe_sha256": "648041d611ac78312289cf8ef338789c88e615a8987344791fa554e1b87637a1",
+  "schema_version": 1,
+  "scientific_interpretation": "NONE",
+  "status": "INFRASTRUCTURE_FAILURE_BEFORE_MODEL_IMPORT",
+  "terminal_receipt_present": false,
+  "training": false,
+  "worker_log_excerpt": "ModuleNotFoundError: No module named transformers"
+}
