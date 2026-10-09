@@ -85,7 +85,7 @@ def route_bounded_infrastructure_pause(state, state_path):
     if state.get('last_actor') == 'director' or state.get('user_pause') or state.get('owner_pause'):
         return False
     reason = str(state.get('pause_reason') or '').upper()
-    if reason.startswith(('OWNER_', 'USER_', 'PAUSED_BY_DIRECTOR', 'SAFETY_', 'TERMINAL_')):
+    if reason.startswith(('OWNER_', 'USER_', 'PAUSED_BY_DIRECTOR', 'SAFETY_', 'TERMINAL_', 'STAGE_', 'SCIENTIFIC_', 'PAUSED_NO_', 'DIRECTOR_')):
         return False
     if state.get('remote_job') or state.get('active_remote_job'):
         return False
@@ -93,7 +93,7 @@ def route_bounded_infrastructure_pause(state, state_path):
     prefixes = ('INFRA_', 'INFRASTRUCTURE_', 'DETACHED_LAUNCH_', 'REMOTE_PROCESS_DIED_', 'RUNPOD_')
     if not failure.startswith(prefixes) and reason.startswith(prefixes):
         failure = reason
-    if not failure.startswith(prefixes) and state.get('remote_completion_status') == 'PROCESS_DEAD' and state.get('remote_failure_receipt'):
+    if not failure.startswith(prefixes) and not reason and state.get('remote_completion_status') == 'PROCESS_DEAD' and state.get('remote_failure_receipt'):
         failure = 'REMOTE_PROCESS_DIED_WITHOUT_RECEIPT'
     if not failure.startswith(prefixes):
         return False
