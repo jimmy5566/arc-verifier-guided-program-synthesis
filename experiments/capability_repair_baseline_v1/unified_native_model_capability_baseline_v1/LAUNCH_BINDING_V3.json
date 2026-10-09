@@ -1,0 +1,63 @@
+{
+  "authorization": {
+    "gpu_inference_authorized": false,
+    "model_loading_authorized": false,
+    "scientific_training_authorized": false
+  },
+  "branch": "infra/arc2-dual-agent-runpod-orchestrator-v1",
+  "checkpoint_discovery": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/CHECKPOINT_PROVENANCE_DISCOVERY_V1.json",
+    "sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654"
+  },
+  "forbidden": [
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint_mutation",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external_selector",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target_dependent_candidate_selection"
+  ],
+  "input_manifest": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/SYNTHETIC_BENCHMARK_INPUT_MANIFEST_V1.json",
+    "sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c"
+  },
+  "launcher": {
+    "path": "scripts/launch_unified_native_model_capability_baseline_v2.py",
+    "sha256": "f56aad38bd2b5f7545c43dee3a764b643c77e1af1cf5ae81272e0839f58a91ec"
+  },
+  "machine_gates": [
+    "exact_runtime_checkout_and_worker_launcher_sha256",
+    "revised_runtime_identity_preflight",
+    "input_manifest_sha256",
+    "fresh_output_root",
+    "no_duplicate_live_job",
+    "outer_runtime_cap",
+    "final_audit_closed"
+  ],
+  "nonce": "ff0d23b16c304b11b9769b1d16a7896c",
+  "output_root": "/workspace/arc2/unified_native_model_capability_baseline_v2/run_002_ff0d23b16c304b11b9769b1d16a7896c",
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V2",
+  "runtime_cap_seconds": 9000,
+  "schema_version": 1,
+  "status": "FROZEN_PENDING_REVISED_RUNTIME_IDENTITY_PREFLIGHT",
+  "tests": {
+    "contract": "tests/test_unified_native_baseline_measurement_contract.py",
+    "contract_sha256": "bc1295afcd6ded871df0c3f7d28fa7955758c5639879a728da2a4c9409d34e5c",
+    "launcher": "tests/test_launch_unified_native_model_capability_baseline_v2.py",
+    "launcher_sha256": "b0ed6551e17d88115a4864a3e55f59510d404e33711a264d0f8e0fedb82e173c",
+    "worker": "tests/test_run_unified_native_model_capability_baseline_v2.py",
+    "worker_sha256": "5dc8b76ef280b1f605da53beff6fe06c83d172238a9fa8b56f4f2318febc3e86"
+  },
+  "worker": {
+    "path": "scripts/run_unified_native_model_capability_baseline_v2.py",
+    "sha256": "932a3c66f68c4bddb07bd3bc2cc0325f05075f14d0f4f0f4e639c85e0a678ad1"
+  },
+  "worker_source_commit": "aa9e43a253a4aba1e46fc02d9eda4e618b28f743"
+}
