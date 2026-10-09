@@ -1,0 +1,26 @@
+{
+  "adapter_files_verified_by_condition": {
+    "ATOMIC_R1": 3,
+    "FAMILY_BALANCED": 3,
+    "RECONSTRUCTED_FOUNDATION_V2_V7": 3,
+    "TARGETED_R1": 3,
+    "TARGETED_R2": 3
+  },
+  "base_files_verified_once": 13,
+  "checkpoint_discovery_sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654",
+  "conditions": [
+    "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "TARGETED_R1",
+    "TARGETED_R2",
+    "ATOMIC_R1",
+    "FAMILY_BALANCED"
+  ],
+  "expected_source_commit": "877a85182d5217d4f59b455eb2df2df3f71865e8",
+  "final_audit_opened": false,
+  "gpu_used": false,
+  "input_manifest_sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+  "model_imported": false,
+  "optimizer_steps": 0,
+  "status": "PASS_NO_MODEL_IMPORT",
+  "worker_sha256": "932a3c66f68c4bddb07bd3bc2cc0325f05075f14d0f4f0f4e639c85e0a678ad1"
+}

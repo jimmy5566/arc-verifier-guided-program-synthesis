@@ -1,0 +1,54 @@
+{
+  "binding": {
+    "fresh_output_root": "/workspace/arc2/unified_native_model_capability_baseline_v2/run_006_3a1d341170f241ac8cb23f0d01072a9c",
+    "nonce": "3a1d341170f241ac8cb23f0d01072a9c",
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/LAUNCH_BINDING_V7.json",
+    "runtime_cap_seconds": 9000,
+    "sha256": "02dfcab46d5fb6452f4d3fe541bfdf84c99d61e0d99501f5ec6070113e1c3017"
+  },
+  "forbidden": [
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint mutation",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external selector",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "target-dependent candidate selection"
+  ],
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V2",
+  "question": "After implementing RC8-RC10, may exactly one fresh, bounded, target-blind Batch32 generation job launch under the frozen V7 package?",
+  "rc8_rc10_evidence": {
+    "cpu_tests": "PASS: 12 focused tests across measurement contract, worker, and actual mocked launcher main path; success/failure receipt, expected checkout, and lock cleanup covered.",
+    "launcher_behavior": "The launcher binds validated expected_source_commit through terminal metadata, constructs metadata before lock/root mutation, and emits cleanup-protected terminal receipts on post-mutation exceptions.",
+    "runtime_identity_preflight": {
+      "final_audit_opened": false,
+      "gpu_used": false,
+      "model_imported": false,
+      "optimizer_steps": 0,
+      "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/RUNTIME_IDENTITY_PREFLIGHT_V5.json",
+      "sha256": "706fbf4625a0c7388c0d99e4148e3dfdd5642a35936d079f65bd3cec35955dd8",
+      "status": "PASS_NO_MODEL_IMPORT",
+      "worker_sha256": "932a3c66f68c4bddb07bd3bc2cc0325f05075f14d0f4f0f4e639c85e0a678ad1"
+    },
+    "source_parity_at_preflight": {
+      "local_head": "877a85182d5217d4f59b455eb2df2df3f71865e8",
+      "origin_ref": "877a85182d5217d4f59b455eb2df2df3f71865e8",
+      "runpod_checkout": "877a85182d5217d4f59b455eb2df2df3f71865e8"
+    }
+  },
+  "requested_decision": "CONTINUE_CONTROLLER authorizing only one no-update launch using LAUNCH_BINDING_V7.json, or REQUIRE_CHANGES for one remaining concrete scientific-validity defect.",
+  "review_type": "SCIENTIFIC_PRELAUNCH_REVIEW",
+  "schema_version": 1,
+  "scientific_conditions_unchanged": {
+    "checkpoint_discovery_sha256": "43d9a6f451987836dadc181d5291c22d04a3619256a272167edb45dff3132654",
+    "input_manifest_sha256": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+    "primary": "length-bucketed deterministic Batch32 greedy with fixed 12-episode Batch1 sensitivity and frozen fallback ladder 32/16/8/4/1",
+    "target_sidecar": "sealed until target-blind raw evidence is frozen"
+  }
+}
