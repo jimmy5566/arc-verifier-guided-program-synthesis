@@ -1,0 +1,72 @@
+{
+  "protocol_id": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1",
+  "status": "CPU_READY_DIRECTOR_PRELAUNCH_REVIEW_REQUIRED",
+  "scientific_scope": "reused 60-episode synthetic DEV evidence only; not independent ARC transfer evidence",
+  "comparators": [
+    "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "FAMILY_BALANCED"
+  ],
+  "measurement": {
+    "teacher_forced": true,
+    "primary_mode": "length_bucketed_BATCH32",
+    "sensitivity_mode": "fixed_target_blind_BATCH1_12_episode_subset",
+    "categories": [
+      "GRID_CONTENT",
+      "ROW_SEPARATOR",
+      "EOS_END"
+    ],
+    "primary_estimand": "FAMILY_BALANCED_minus_V7 equal-family macro GRID_CONTENT correct-token Top-1, Top-2, and margin",
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 20261010,
+      "family_stratified": true
+    },
+    "sensitivity": "exact discrete B32/B1 agreement; continuous margin U is separately reported and expands only the margin interval"
+  },
+  "runtime": {
+    "cap_seconds": 900,
+    "optimizer_steps": 0,
+    "generation": false,
+    "training": false,
+    "backward": false,
+    "final_audit_opened": false,
+    "fresh_output_required": true,
+    "target_token_ids_persisted": false
+  },
+  "batch1_subset_episode_ids": [
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_TRANSLATION:003",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_TRANSLATION:007",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_RECOLOR_TRANSLATE:011",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_TRANSLATION:001",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_RECOLOR_TRANSLATE:002",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_REFLECT_RECOLOR:000",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_REFLECT_RECOLOR:011",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:PROTECTED_SAME_COLOR:000",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_REFLECTION:002",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_RECOLOR_TRANSLATE:010",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:STRUCTURAL_TRANSLATION:008",
+    "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1:SYNTHETIC:COMPOSITION_REFLECT_RECOLOR:005"
+  ],
+  "runtime_inputs": {
+    "raw_predictions_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a/RAW_UNSCORED_BATCH16.jsonl",
+    "input_manifest_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/SYNTHETIC_BENCHMARK_INPUT_MANIFEST_V1.json",
+    "v7_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "family_balanced_manifest_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json",
+    "expected_hashes": {
+      "raw_predictions": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e",
+      "input_manifest": "b64cdc64c99b13763f0749014a1b6c27dce2e3b794e2c9ffa8a50ad110f5b90c",
+      "v7_manifest": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+      "family_balanced_manifest": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9"
+    }
+  },
+  "sealed_sidecar_sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e",
+  "checkpoints": {
+    "RECONSTRUCTED_FOUNDATION_V2_V7": {
+      "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+    },
+    "FAMILY_BALANCED": {
+      "manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9"
+    }
+  },
+  "source_commit_at_cpu_freeze": "6651c414"
+}
