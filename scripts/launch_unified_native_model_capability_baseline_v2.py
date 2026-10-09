@@ -57,6 +57,7 @@ def load_binding(path: Path, *, expected_checkout: str | None = None) -> dict:
             raise RuntimeError(f"{label}_SOURCE_IDENTITY_MISMATCH")
     if expected_checkout is not None and git_head() != expected_checkout:
         raise RuntimeError("EXACT_CHECKED_OUT_SOURCE_MISMATCH")
+    resolved["expected_source_commit"] = expected_checkout
     return resolved
 
 
@@ -74,31 +75,35 @@ def main() -> int:
     parser = argparse.ArgumentParser(); parser.add_argument("--binding", type=Path, required=True); parser.add_argument("--expected-source-commit", required=True)
     args = parser.parse_args(); binding = load_binding(args.binding, expected_checkout=args.expected_source_commit)
     root = Path(binding["output_root"]); lock = root.parent / ("." + root.name + ".lock")
-    if root.exists():
-        raise RuntimeError("FRESH_OUTPUT_ROOT_REQUIRED")
-    try:
-        descriptor = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-    except FileExistsError as error:
-        raise RuntimeError("DUPLICATE_LIVE_JOB_FORBIDDEN") from error
-    os.close(descriptor)
-    started = time.monotonic(); root.mkdir(parents=True, exist_ok=False)
     terminal = root / "TERMINAL_RECEIPT.json"; raw = root / "RAW_UNSCORED.jsonl"; worker_receipt = root / "WORKER_RECEIPT.json"
     result = {"protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V2", "nonce": binding["nonce"], "expected_source_commit": binding["expected_source_commit"], "runtime_cap_seconds": CAP_SECONDS, "optimizer_steps": 0, "training": False, "backward": False, "final_audit_opened": False}
+    started = time.monotonic(); root_created = False; lock_created = False
     try:
-        process = subprocess.Popen(worker_command(binding, root), cwd=ROOT, stdout=(root / "worker.stdout.log").open("wb"), stderr=(root / "worker.stderr.log").open("wb"))
+        if root.exists():
+            raise RuntimeError("FRESH_OUTPUT_ROOT_REQUIRED")
         try:
-            returncode = process.wait(timeout=CAP_SECONDS)
-        except subprocess.TimeoutExpired:
-            process.kill(); process.wait(); result.update({"status": "TIMEOUT", "failure_class": "RUNTIME_CAP_EXCEEDED"})
-        else:
-            result.update({"status": "SUCCESS" if returncode == 0 else "FAILURE", "worker_returncode": returncode})
+            descriptor = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        except FileExistsError as error:
+            raise RuntimeError("DUPLICATE_LIVE_JOB_FORBIDDEN") from error
+        os.close(descriptor); lock_created = True
+        root.mkdir(parents=True, exist_ok=False); root_created = True
+        with (root / "worker.stdout.log").open("wb") as stdout, (root / "worker.stderr.log").open("wb") as stderr:
+            process = subprocess.Popen(worker_command(binding, root), cwd=ROOT, stdout=stdout, stderr=stderr)
+            try:
+                returncode = process.wait(timeout=CAP_SECONDS)
+            except subprocess.TimeoutExpired:
+                process.kill(); process.wait(); result.update({"status": "TIMEOUT", "failure_class": "RUNTIME_CAP_EXCEEDED"})
+            else:
+                result.update({"status": "SUCCESS" if returncode == 0 else "FAILURE", "worker_returncode": returncode})
     except Exception as error:
         result.update({"status": "FAILURE", "failure_class": type(error).__name__})
     finally:
-        result.update({"elapsed_seconds": time.monotonic() - started, "raw_evidence": artifact_summary(raw), "worker_receipt": artifact_summary(worker_receipt)})
-        atomic(terminal, result)
-        try: lock.unlink()
-        except FileNotFoundError: pass
+        if root_created:
+            result.update({"elapsed_seconds": time.monotonic() - started, "raw_evidence": artifact_summary(raw), "worker_receipt": artifact_summary(worker_receipt)})
+            atomic(terminal, result)
+        if lock_created:
+            try: lock.unlink()
+            except FileNotFoundError: pass
     return 0 if result["status"] == "SUCCESS" else 1
 
 
