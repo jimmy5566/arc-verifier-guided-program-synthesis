@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "review_type": "OWNER_MODEL_FIRST_PRIORITY_CORRECTION",
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1",
+  "source_commit": "735f83cbb7217b949e1ef10dd055ec0499807ea1",
+  "superseded_stage": "CPU_FREEZE_PAIRED_SEQUENCE_LEVEL_PREFERENCE_REPAIR_V1",
+  "supersession_scope": "SCIENTIFIC_NEXT_STAGE_ONLY",
+  "prior_workflow_state_sha256": "146061232e7a28d67b480a947e7767b2f4eb0bb4979a10620930d06a2e689be7",
+  "scientific_question": "Which preserved native checkpoint has the strongest direct Greedy and complete-output Top-2 ARC capability, and do its failures arise from local token ranking or broader compositional limitations?",
+  "owner_direction": "Establish a direct native-model capability and internal-ranking baseline before selecting any new training objective.",
+  "required_stage": {
+    "stage_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_AND_RANKING_V1",
+    "checkpoint_conditions": [
+      "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED",
+      "HISTORICAL_FOUNDATION_V2_IF_AND_ONLY_IF_EXACT_BYTES_EXIST",
+      "RECONSTRUCTED_FOUNDATION_V2_V7",
+      "TARGETED_R1",
+      "TARGETED_R2",
+      "ATOMIC_R1",
+      "FAMILY_BALANCED"
+    ],
+    "historical_foundation_v2_policy": "UNAVAILABLE_NOT_SUBSTITUTED unless adapter SHA256 f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce is recovered exactly",
+    "benchmark": "One prospective independently generated non-Gold synthetic benchmark with held-out structural, compositional, and protected-retention conditions; targets sealed until predictions and protocol are frozen.",
+    "inference": "Native ARC observation format; Batch-1 BF16; Greedy primary; at most one target-blind single-minimum-margin alternative candidate; identical conditions across checkpoints.",
+    "measurements": [
+      "Greedy exact-grid Top-1",
+      "complete-output Top-2 coverage",
+      "per-family performance",
+      "held-out structural transfer",
+      "held-out compositional transfer",
+      "protected retention including same_color",
+      "correct next-token Top-1 and Top-2 rank",
+      "correct-token logit margin against the highest-scoring incorrect token",
+      "first incorrect free-running token",
+      "critical-token ranking changes across checkpoints"
+    ],
+    "forbidden": [
+      "training",
+      "optimizer",
+      "backward",
+      "TTT",
+      "augmentation",
+      "DFS",
+      "Beam-4",
+      "external selector",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT"
+    ],
+    "gpu_runtime_hard_cap_seconds": 9000
+  },
+  "training_hypothesis_status": "SEQUENCE_LEVEL_PREFERENCE_PLAUSIBLE_NOT_SELECTED",
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "PAUSED"
+  ],
+  "required_response_contract": {
+    "CONTINUE_CONTROLLER": [
+      "next_stage",
+      "next_action",
+      "model_loading_authorized",
+      "gpu_inference_authorized",
+      "scientific_training_authorized",
+      "runtime_cap_seconds"
+    ],
+    "PAUSED": [
+      "scientific_reason",
+      "minimum_evidence_to_resume"
+    ]
+  }
+}

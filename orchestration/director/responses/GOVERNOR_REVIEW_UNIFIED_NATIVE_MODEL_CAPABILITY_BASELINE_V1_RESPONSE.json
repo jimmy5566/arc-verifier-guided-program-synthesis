@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "reviewed_brief_sha256": "a7d9ccf9801a506f992b8cf05e76525baf6f1523b5f75060b6d214fa08253dd8",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_AND_RANKING_V1",
+  "next_action": "Freeze and execute one unified native-model capability and internal-ranking benchmark before selecting any training objective. First perform CPU-only checkpoint and provenance discovery. Compare only exact available identities for SFT139 Base with LoRA disabled, reconstructed Foundation-V2/V7, Targeted R1, Targeted R2, Atomic R1, and Family-Balanced; include historical Foundation-V2 only if adapter SHA256 f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce is recovered exactly, otherwise record UNAVAILABLE_NOT_SUBSTITUTED. Freeze one independently generated non-Gold synthetic benchmark with held-out structural, compositional, and protected-retention strata including same_color; perform content-level and historical-exposure checks and seal target sidecars until predictions and the evaluation protocol are frozen. Use the native ARC observation format, Batch-1 BF16, Greedy as the primary output, and at most one target-blind alternative produced by forcing token rank-2 at the earliest minimum Top-1 versus Top-2 margin position along the Greedy path and then continuing Greedy. Use identical runtime, tokenizer, parser, EOS, scoring, and budget conditions for every checkpoint. Report Greedy exact-grid Top-1, complete-output Top-2 coverage, family results, structural and compositional transfer, protected retention, correct-token Top-1/Top-2 rank, logit margin, first free-running error, and critical-token ranking changes. Do not use TTT, augmentation, DFS, Beam-4, an external selector, Gold, dGold, or FINAL_AUDIT. After CPU gates and full runtime SHA256 verification pass, the bounded inference may run under the 9000-second hard cap. Preserve receipts and return the complete benchmark result for one Director scientific interpretation. Do not train, construct an optimizer, or choose a training objective in this stage.",
+  "model_loading_authorized": true,
+  "gpu_inference_authorized": true,
+  "scientific_training_authorized": false,
+  "runtime_cap_seconds": 9000,
+  "starting_checkpoint_selection_rule": "Among checkpoints that pass the protected-retention gate, select by highest equal-family Greedy exact-grid accuracy; break ties by compositional exact-grid accuracy, then complete-output Top-2 coverage. Do not assume Family-Balanced is best.",
+  "sequence_level_preference_status": "PLAUSIBLE_NOT_SELECTED_PENDING_BASELINE_AND_RANKING_EVIDENCE"
+}

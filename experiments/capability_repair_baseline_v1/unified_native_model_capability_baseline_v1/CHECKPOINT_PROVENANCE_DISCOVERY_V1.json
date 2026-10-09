@@ -1,0 +1,60 @@
+{
+  "checkpoint_records": {
+    "ATOMIC_R1": {
+      "adapter_model_sha256": "7f5e90f611a2bfcc993e96e1dfcd37b5d08ce14e88244c69cca231178edac2d2",
+      "checkpoint_id": "ATOMIC_PREREQUISITE_REPAIR_V1_001_FINAL",
+      "manifest_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_001_FINAL_CHECKPOINT_MANIFEST.json",
+      "manifest_sha256": "0586201a3eec4ac1c56a1de42a5b20c9ff74f52069fbe92a55691ece28ed7ddd",
+      "runtime_path_is_not_identity": true,
+      "source_commit": "748d38e35e8b281ba57e345c96180ea75e343267",
+      "status": "LOCAL_MANIFEST_VERIFIED_REMOTE_RUNTIME_PENDING"
+    },
+    "FAMILY_BALANCED": {
+      "adapter_model_sha256": "c7b275587796b0d9b07d45e933371d5ae26e9aa76df7a895104d7c4e35117780",
+      "checkpoint_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001_FINAL",
+      "manifest_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json",
+      "manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9",
+      "runtime_path_is_not_identity": true,
+      "source_commit": "e37b1a28d5d43ca71fba20955bcb3c94a93ae8b8",
+      "status": "LOCAL_MANIFEST_VERIFIED_REMOTE_RUNTIME_PENDING"
+    },
+    "HISTORICAL_FOUNDATION_V2": {
+      "required_adapter_model_sha256": "f0079dd399c1f0521c378a46bd7bbb737a0abc72ef0bb6c47a6c1ae33446afce",
+      "status": "UNAVAILABLE_NOT_SUBSTITUTED"
+    },
+    "QWEN3_4B_GRIDS15_SFT139_BASE_LORA_DISABLED": {
+      "base_model_identity_source": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+      "lora_disabled": true,
+      "status": "BASE_IDENTITY_DERIVED_FROM_V7_MANIFEST_RUNTIME_UNVERIFIED"
+    },
+    "RECONSTRUCTED_FOUNDATION_V2_V7": {
+      "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+      "checkpoint_id": null,
+      "manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+      "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+      "runtime_path_is_not_identity": true,
+      "source_commit": "90b8a25540f58a3346df316279f2abff3b1c9d87",
+      "status": "LOCAL_MANIFEST_VERIFIED_REMOTE_RUNTIME_PENDING"
+    },
+    "TARGETED_R1": {
+      "adapter_model_sha256": "006b76dd5e8c487c1a265f2729c82da3f35b2f3c5d8d1705e22d932a7d9888b3",
+      "checkpoint_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_003_FINAL",
+      "manifest_path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r1_paired_evaluation_v1/R1_CHECKPOINT_MANIFEST.json",
+      "manifest_sha256": "3698906eb87c82a4ef26594fae14ed672887dc4d09fba1468ab601a770ad340d",
+      "runtime_path_is_not_identity": true,
+      "source_commit": null,
+      "status": "LOCAL_MANIFEST_VERIFIED_REMOTE_RUNTIME_PENDING"
+    },
+    "TARGETED_R2": {
+      "adapter_model_sha256": "7d95f558364b8bc7d0a704619ff914bb87dddf08af26d272d689ffbd4f1d75c8",
+      "checkpoint_id": "FORWARD_TARGETED_CAPABILITY_REPAIR_V1_004_FINAL",
+      "manifest_path": "experiments/capability_repair_baseline_v1/forward_targeted_repair_v1/r2_paired_evaluation_v1/R2_CHECKPOINT_MANIFEST.json",
+      "manifest_sha256": "f0a5ebdf28f16665ced9c19054217a7d8136e5a31e055fdcb334f7f8eca75052",
+      "runtime_path_is_not_identity": true,
+      "source_commit": null,
+      "status": "LOCAL_MANIFEST_VERIFIED_REMOTE_RUNTIME_PENDING"
+    }
+  },
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1",
+  "schema_version": 1
+}
