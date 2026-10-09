@@ -1,0 +1,49 @@
+{
+  "batch_validation": {
+    "conditions": {
+      "FAMILY_BALANCED_R1": {
+        "max_absolute_mean_nll_drift": 0.009770774179034769,
+        "status": "NUMERICAL_DRIFT_FAIL",
+        "validation_rows": 30
+      },
+      "REJECTED_R1": {
+        "max_absolute_mean_nll_drift": 0.01009308334684722,
+        "status": "NUMERICAL_DRIFT_FAIL",
+        "validation_rows": 30
+      },
+      "V7": {
+        "max_absolute_mean_nll_drift": 0.026101550916685312,
+        "status": "NUMERICAL_DRIFT_FAIL",
+        "validation_rows": 30
+      }
+    },
+    "crosscheck_rows": 30,
+    "requested_batch_size": 32,
+    "tolerance": 0.001
+  },
+  "created_at": "2026-10-09T03:28:54.801970Z",
+  "execution_status": "COMPLETE",
+  "frozen_decision": "INCONCLUSIVE",
+  "frozen_inputs": {
+    "binding_sha256": "97bd68d6fac1fe0181af9c722c45ac0aff0826bf406846491c73b19d33574746",
+    "source_commit": "66ca086f57d77703793d6269db59ca4ffbd3aaea"
+  },
+  "reason": "Each condition exceeded the prospectively frozen Batch1/effective-batch/repeat token-micro NLL drift tolerance of 0.001; the frozen mapping requires INCONCLUSIVE and forbids fit-class interpretation.",
+  "result_path": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/run_002",
+  "result_sha256": "26fec3d1e1059cba986366f1c777e3bb63031aab87d0d98ec2c5ec622a397491",
+  "round_id": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1_002",
+  "safety": {
+    "checkpoint_mutated": false,
+    "final_audit_opened": false,
+    "generation_performed": false,
+    "optimizer_steps": 0,
+    "scientific_gpu_training_seconds": 0.0
+  },
+  "schema_version": 1,
+  "scientific_interpretation_status": "NOT_ESTABLISHED",
+  "stage_id": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1",
+  "terminal_receipt_path": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/run_002/TERMINAL_RECEIPT.json",
+  "terminal_receipt_sha256": "ecc8a652c249a47e3d652f6fc2e4e8dad0529758ba632e58b2207c4f789892f2",
+  "terminal_status": "COMPLETE",
+  "wall_seconds": 897.4289349224418
+}

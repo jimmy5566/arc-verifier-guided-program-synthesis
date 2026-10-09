@@ -1,0 +1,31 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_RESULT_V1",
+  "created_at": "2026-10-09T03:28:54.812195Z",
+  "established": [
+    "The no-update diagnostic executed to COMPLETE with exactly zero optimizer steps, zero scientific GPU training seconds, no generation, no checkpoint mutation, and FINAL_AUDIT sealed.",
+    "All three conditions fail the predeclared 0.001 NLL batch/repeat drift tolerance, so the result cannot establish either H1 or H3 under its frozen contract."
+  ],
+  "forbidden": [
+    "Do not change the threshold after seeing results.",
+    "Do not re-run the same diagnostic automatically.",
+    "Do not train, run R3, begin composition work, add a gradient diagnostic, or open FINAL_AUDIT."
+  ],
+  "frozen": [
+    "All checkpoints/results, the 400 TRAIN schedule, tokenizer/label masking, evaluator, tolerance, decision mapping, and closed route status."
+  ],
+  "kind": "STAGE_RESULT_REVIEW",
+  "request": "The authorized one-time, no-update teacher-forced TRAIN-NLL diagnostic completed. The frozen 0.001 Batch1/effective-batch/repeat per-family token-micro NLL tolerance failed for V7, rejected R1, and family-balanced R1. The frozen decision mapping therefore yields INCONCLUSIVE; no H1/H3 fit interpretation is allowed. What is the smallest scientifically justified next action under the preserved roadmap?",
+  "requested_decision": "CONTINUE_CONTROLLER for a specifically scoped CPU-only analysis or new scientifically distinct proposal; REQUIRE_CHANGES only for a concrete measurement-validity repair; PAUSED or TERMINAL must state scope. No training, R3, composition, gradient diagnostic, or FINAL_AUDIT is requested.",
+  "result_path": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/run_002",
+  "result_sha256": "26fec3d1e1059cba986366f1c777e3bb63031aab87d0d98ec2c5ec622a397491",
+  "result_summary_path": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/run_002/FIT_GENERALIZATION_DIAGNOSTIC_V1_RUN_002_SUMMARY.json",
+  "result_summary_sha256": "656ac3b32ce5b62ab865fb0c3aa8e33013f319cc73607218c8a2bfa518707b5c",
+  "schema_version": 1,
+  "terminal_receipt_path": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/run_002/TERMINAL_RECEIPT.json",
+  "terminal_receipt_sha256": "ecc8a652c249a47e3d652f6fc2e4e8dad0529758ba632e58b2207c4f789892f2",
+  "unknown": [
+    "Whether the drift reflects batch-dependent numerical behavior, padding/attention implementation sensitivity, or another inference-runtime effect.",
+    "Any fitting-versus-generalization conclusion.",
+    "Gradient interference."
+  ]
+}

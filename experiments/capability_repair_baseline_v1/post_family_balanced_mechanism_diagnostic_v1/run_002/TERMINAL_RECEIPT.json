@@ -1,0 +1,12 @@
+{
+  "checkpoint_mutated": false,
+  "decision": "INCONCLUSIVE",
+  "final_audit_opened": false,
+  "generation_performed": false,
+  "optimizer_steps": 0,
+  "result_sha256": "26fec3d1e1059cba986366f1c777e3bb63031aab87d0d98ec2c5ec622a397491",
+  "schema_version": 1,
+  "scientific_gpu_training_seconds": 0.0,
+  "stage_id": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1",
+  "status": "COMPLETE"
+}

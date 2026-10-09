@@ -1,0 +1,648 @@
+{
+  "binding_sha256": "97bd68d6fac1fe0181af9c722c45ac0aff0826bf406846491c73b19d33574746",
+  "checkpoint_mutated": false,
+  "conditions": {
+    "FAMILY_BALANCED_R1": {
+      "batch_validation": {
+        "batch1": {
+          "connected components": {
+            "nll_sum": 63.18870449066162,
+            "row_macro_mean_nll": 0.46318863872168725,
+            "rows": 6,
+            "supervised_tokens": 137,
+            "token_micro_mean_nll": 0.46123141963986586
+          },
+          "difference": {
+            "nll_sum": 86.32684993743896,
+            "row_macro_mean_nll": 0.03625564547838392,
+            "rows": 6,
+            "supervised_tokens": 2402,
+            "token_micro_mean_nll": 0.03593957116462904
+          },
+          "inside/contains": {
+            "nll_sum": 124.33885192871094,
+            "row_macro_mean_nll": 0.05298212595769339,
+            "rows": 6,
+            "supervised_tokens": 2358,
+            "token_micro_mean_nll": 0.052730641191141195
+          },
+          "orientation": {
+            "nll_sum": 59.59168577194214,
+            "row_macro_mean_nll": 0.2923817069327504,
+            "rows": 6,
+            "supervised_tokens": 204,
+            "token_micro_mean_nll": 0.29211610672520655
+          },
+          "width": {
+            "nll_sum": 42.420889377593994,
+            "row_macro_mean_nll": 0.29458950956662494,
+            "rows": 6,
+            "supervised_tokens": 144,
+            "token_micro_mean_nll": 0.29458950956662494
+          }
+        },
+        "effective_batch": {
+          "connected components": {
+            "nll_sum": 63.14610767364502,
+            "row_macro_mean_nll": 0.46284180381859147,
+            "rows": 6,
+            "supervised_tokens": 137,
+            "token_micro_mean_nll": 0.46092049396821183
+          },
+          "difference": {
+            "nll_sum": 84.28345680236816,
+            "row_macro_mean_nll": 0.03532472824488215,
+            "rows": 6,
+            "supervised_tokens": 2402,
+            "token_micro_mean_nll": 0.03508886627908749
+          },
+          "inside/contains": {
+            "nll_sum": 123.4655933380127,
+            "row_macro_mean_nll": 0.052644373252391075,
+            "rows": 6,
+            "supervised_tokens": 2358,
+            "token_micro_mean_nll": 0.05236030251824118
+          },
+          "orientation": {
+            "nll_sum": 59.670172691345215,
+            "row_macro_mean_nll": 0.2929660853420005,
+            "rows": 6,
+            "supervised_tokens": 204,
+            "token_micro_mean_nll": 0.292500846526202
+          },
+          "width": {
+            "nll_sum": 43.827880859375,
+            "row_macro_mean_nll": 0.30436028374565977,
+            "rows": 6,
+            "supervised_tokens": 144,
+            "token_micro_mean_nll": 0.3043602837456597
+          }
+        },
+        "max_absolute_mean_nll_drift": 0.009770774179034769,
+        "repeat_effective_batch": {
+          "connected components": {
+            "nll_sum": 63.14610767364502,
+            "row_macro_mean_nll": 0.46284180381859147,
+            "rows": 6,
+            "supervised_tokens": 137,
+            "token_micro_mean_nll": 0.46092049396821183
+          },
+          "difference": {
+            "nll_sum": 84.28345680236816,
+            "row_macro_mean_nll": 0.03532472824488215,
+            "rows": 6,
+            "supervised_tokens": 2402,
+            "token_micro_mean_nll": 0.03508886627908749
+          },
+          "inside/contains": {
+            "nll_sum": 123.4655933380127,
+            "row_macro_mean_nll": 0.052644373252391075,
+            "rows": 6,
+            "supervised_tokens": 2358,
+            "token_micro_mean_nll": 0.05236030251824118
+          },
+          "orientation": {
+            "nll_sum": 59.670172691345215,
+            "row_macro_mean_nll": 0.2929660853420005,
+            "rows": 6,
+            "supervised_tokens": 204,
+            "token_micro_mean_nll": 0.292500846526202
+          },
+          "width": {
+            "nll_sum": 43.827880859375,
+            "row_macro_mean_nll": 0.30436028374565977,
+            "rows": 6,
+            "supervised_tokens": 144,
+            "token_micro_mean_nll": 0.3043602837456597
+          }
+        },
+        "rows": 30,
+        "status": "NUMERICAL_DRIFT_FAIL"
+      },
+      "full": {
+        "color mapping": {
+          "nll_sum": 109.08052253723145,
+          "row_macro_mean_nll": 0.02483589569066291,
+          "rows": 11,
+          "supervised_tokens": 4419,
+          "token_micro_mean_nll": 0.02468443596678693
+        },
+        "complete missing structure": {
+          "nll_sum": 16.091020166873932,
+          "row_macro_mean_nll": 0.0040306323866338015,
+          "rows": 11,
+          "supervised_tokens": 4141,
+          "token_micro_mean_nll": 0.0038857812525655475
+        },
+        "connected components": {
+          "nll_sum": 450.03921842575073,
+          "row_macro_mean_nll": 0.4121390773678719,
+          "rows": 48,
+          "supervised_tokens": 1092,
+          "token_micro_mean_nll": 0.4121238263972076
+        },
+        "difference": {
+          "nll_sum": 745.1231336593628,
+          "row_macro_mean_nll": 0.04199663010706495,
+          "rows": 48,
+          "supervised_tokens": 17950,
+          "token_micro_mean_nll": 0.04151103808687258
+        },
+        "inside/contains": {
+          "nll_sum": 1002.8674621582031,
+          "row_macro_mean_nll": 0.055853967328254005,
+          "rows": 48,
+          "supervised_tokens": 18120,
+          "token_micro_mean_nll": 0.05534588643257192
+        },
+        "orientation": {
+          "nll_sum": 349.7124254703522,
+          "row_macro_mean_nll": 0.21273748256055094,
+          "rows": 48,
+          "supervised_tokens": 1645,
+          "token_micro_mean_nll": 0.21259114010355756
+        },
+        "overlay": {
+          "nll_sum": 225.20883750915527,
+          "row_macro_mean_nll": 0.05673318338374511,
+          "rows": 11,
+          "supervised_tokens": 4015,
+          "token_micro_mean_nll": 0.05609186488397391
+        },
+        "propagation": {
+          "nll_sum": 167.26830863952637,
+          "row_macro_mean_nll": 0.04360770314683954,
+          "rows": 10,
+          "supervised_tokens": 3874,
+          "token_micro_mean_nll": 0.043177157625071336
+        },
+        "recolor": {
+          "nll_sum": 420.33211612701416,
+          "row_macro_mean_nll": 0.02733489562421582,
+          "rows": 42,
+          "supervised_tokens": 15520,
+          "token_micro_mean_nll": 0.027083254905091118
+        },
+        "rotate": {
+          "nll_sum": 34.062664270401,
+          "row_macro_mean_nll": 0.06881346317252728,
+          "rows": 11,
+          "supervised_tokens": 495,
+          "token_micro_mean_nll": 0.06881346317252728
+        },
+        "same color": {
+          "nll_sum": 347.9190683364868,
+          "row_macro_mean_nll": 0.028309830395177246,
+          "rows": 32,
+          "supervised_tokens": 12322,
+          "token_micro_mean_nll": 0.02823560041685496
+        },
+        "selector prerequisites": {
+          "nll_sum": 251.21313762664795,
+          "row_macro_mean_nll": 0.02195541030401103,
+          "rows": 32,
+          "supervised_tokens": 11526,
+          "token_micro_mean_nll": 0.021795344232747524
+        },
+        "width": {
+          "nll_sum": 339.6563377380371,
+          "row_macro_mean_nll": 0.2948405709531572,
+          "rows": 48,
+          "supervised_tokens": 1152,
+          "token_micro_mean_nll": 0.2948405709531572
+        }
+      }
+    },
+    "REJECTED_R1": {
+      "batch_validation": {
+        "batch1": {
+          "connected components": {
+            "nll_sum": 71.11680316925049,
+            "row_macro_mean_nll": 0.5209153704679448,
+            "rows": 6,
+            "supervised_tokens": 137,
+            "token_micro_mean_nll": 0.5191007530602225
+          },
+          "difference": {
+            "nll_sum": 41.35746955871582,
+            "row_macro_mean_nll": 0.01747699689336279,
+            "rows": 6,
+            "supervised_tokens": 2402,
+            "token_micro_mean_nll": 0.01721793070720892
+          },
+          "inside/contains": {
+            "nll_sum": 46.244487285614014,
+            "row_macro_mean_nll": 0.0198389882732371,
+            "rows": 6,
+            "supervised_tokens": 2358,
+            "token_micro_mean_nll": 0.019611741851405434
+          },
+          "orientation": {
+            "nll_sum": 69.33058738708496,
+            "row_macro_mean_nll": 0.34032135148190473,
+            "rows": 6,
+            "supervised_tokens": 204,
+            "token_micro_mean_nll": 0.3398558205249263
+          },
+          "width": {
+            "nll_sum": 44.2349271774292,
+            "row_macro_mean_nll": 0.30718699428770274,
+            "rows": 6,
+            "supervised_tokens": 144,
+            "token_micro_mean_nll": 0.3071869942877028
+          }
+        },
+        "effective_batch": {
+          "connected components": {
+            "nll_sum": 72.49955558776855,
+            "row_macro_mean_nll": 0.531074923799316,
+            "rows": 6,
+            "supervised_tokens": 137,
+            "token_micro_mean_nll": 0.5291938364070697
+          },
+          "difference": {
+            "nll_sum": 40.67232656478882,
+            "row_macro_mean_nll": 0.017180928358008666,
+            "rows": 6,
+            "supervised_tokens": 2402,
+            "token_micro_mean_nll": 0.0169326921585299
+          },
+          "inside/contains": {
+            "nll_sum": 46.66178894042969,
+            "row_macro_mean_nll": 0.020001080048745238,
+            "rows": 6,
+            "supervised_tokens": 2358,
+            "token_micro_mean_nll": 0.01978871456337137
+          },
+          "orientation": {
+            "nll_sum": 68.71249103546143,
+            "row_macro_mean_nll": 0.33727942087403195,
+            "rows": 6,
+            "supervised_tokens": 204,
+            "token_micro_mean_nll": 0.3368259364483403
+          },
+          "width": {
+            "nll_sum": 44.24319934844971,
+            "row_macro_mean_nll": 0.3072444399197896,
+            "rows": 6,
+            "supervised_tokens": 144,
+            "token_micro_mean_nll": 0.3072444399197896
+          }
+        },
+        "max_absolute_mean_nll_drift": 0.01009308334684722,
+        "repeat_effective_batch": {
+          "connected components": {
+            "nll_sum": 72.49955558776855,
+            "row_macro_mean_nll": 0.531074923799316,
+            "rows": 6,
+            "supervised_tokens": 137,
+            "token_micro_mean_nll": 0.5291938364070697
+          },
+          "difference": {
+            "nll_sum": 40.67232656478882,
+            "row_macro_mean_nll": 0.017180928358008666,
+            "rows": 6,
+            "supervised_tokens": 2402,
+            "token_micro_mean_nll": 0.0169326921585299
+          },
+          "inside/contains": {
+            "nll_sum": 46.66178894042969,
+            "row_macro_mean_nll": 0.020001080048745238,
+            "rows": 6,
+            "supervised_tokens": 2358,
+            "token_micro_mean_nll": 0.01978871456337137
+          },
+          "orientation": {
+            "nll_sum": 68.71249103546143,
+            "row_macro_mean_nll": 0.33727942087403195,
+            "rows": 6,
+            "supervised_tokens": 204,
+            "token_micro_mean_nll": 0.3368259364483403
+          },
+          "width": {
+            "nll_sum": 44.24319934844971,
+            "row_macro_mean_nll": 0.3072444399197896,
+            "rows": 6,
+            "supervised_tokens": 144,
+            "token_micro_mean_nll": 0.3072444399197896
+          }
+        },
+        "rows": 30,
+        "status": "NUMERICAL_DRIFT_FAIL"
+      },
+      "full": {
+        "color mapping": {
+          "nll_sum": 35.7508111000061,
+          "row_macro_mean_nll": 0.008197353581325666,
+          "rows": 11,
+          "supervised_tokens": 4419,
+          "token_micro_mean_nll": 0.008090249174022653
+        },
+        "complete missing structure": {
+          "nll_sum": 12.605467587709427,
+          "row_macro_mean_nll": 0.003133535716236604,
+          "rows": 11,
+          "supervised_tokens": 4141,
+          "token_micro_mean_nll": 0.003044063653153689
+        },
+        "connected components": {
+          "nll_sum": 501.0892267227173,
+          "row_macro_mean_nll": 0.4595275238464633,
+          "rows": 48,
+          "supervised_tokens": 1092,
+          "token_micro_mean_nll": 0.4588729182442466
+        },
+        "difference": {
+          "nll_sum": 339.5714931488037,
+          "row_macro_mean_nll": 0.019190512058683707,
+          "rows": 48,
+          "supervised_tokens": 17950,
+          "token_micro_mean_nll": 0.01891763193029547
+        },
+        "inside/contains": {
+          "nll_sum": 351.55633544921875,
+          "row_macro_mean_nll": 0.019558685227544375,
+          "rows": 48,
+          "supervised_tokens": 18120,
+          "token_micro_mean_nll": 0.019401563766513176
+        },
+        "orientation": {
+          "nll_sum": 425.3352794647217,
+          "row_macro_mean_nll": 0.2589090166114634,
+          "rows": 48,
+          "supervised_tokens": 1645,
+          "token_micro_mean_nll": 0.25856247991776393
+        },
+        "overlay": {
+          "nll_sum": 207.4781723022461,
+          "row_macro_mean_nll": 0.052432242030369176,
+          "rows": 11,
+          "supervised_tokens": 4015,
+          "token_micro_mean_nll": 0.051675758979388815
+        },
+        "propagation": {
+          "nll_sum": 117.1570520401001,
+          "row_macro_mean_nll": 0.030515172729336897,
+          "rows": 10,
+          "supervised_tokens": 3874,
+          "token_micro_mean_nll": 0.030241882302555523
+        },
+        "recolor": {
+          "nll_sum": 125.55088818073273,
+          "row_macro_mean_nll": 0.00817942140132272,
+          "rows": 42,
+          "supervised_tokens": 15520,
+          "token_micro_mean_nll": 0.008089619083810099
+        },
+        "rotate": {
+          "nll_sum": 10.993192940950394,
+          "row_macro_mean_nll": 0.02220847058777857,
+          "rows": 11,
+          "supervised_tokens": 495,
+          "token_micro_mean_nll": 0.022208470587778573
+        },
+        "same color": {
+          "nll_sum": 17.026810109615326,
+          "row_macro_mean_nll": 0.0013554526524838335,
+          "rows": 32,
+          "supervised_tokens": 12322,
+          "token_micro_mean_nll": 0.0013818219533854347
+        },
+        "selector prerequisites": {
+          "nll_sum": 101.16295218467712,
+          "row_macro_mean_nll": 0.008817380690748495,
+          "rows": 32,
+          "supervised_tokens": 11526,
+          "token_micro_mean_nll": 0.008776934945746757
+        },
+        "width": {
+          "nll_sum": 344.344934463501,
+          "row_macro_mean_nll": 0.2989105333884557,
+          "rows": 48,
+          "supervised_tokens": 1152,
+          "token_micro_mean_nll": 0.2989105333884557
+        }
+      }
+    },
+    "V7": {
+      "batch_validation": {
+        "batch1": {
+          "connected components": {
+            "nll_sum": 886.3478851318359,
+            "row_macro_mean_nll": 6.474855723094742,
+            "rows": 6,
+            "supervised_tokens": 137,
+            "token_micro_mean_nll": 6.469692592203182
+          },
+          "difference": {
+            "nll_sum": 918.4478759765625,
+            "row_macro_mean_nll": 0.38441322044939996,
+            "rows": 6,
+            "supervised_tokens": 2402,
+            "token_micro_mean_nll": 0.3823679750110585
+          },
+          "inside/contains": {
+            "nll_sum": 869.8472137451172,
+            "row_macro_mean_nll": 0.37195513271510405,
+            "rows": 6,
+            "supervised_tokens": 2358,
+            "token_micro_mean_nll": 0.3688919481531455
+          },
+          "orientation": {
+            "nll_sum": 993.7711944580078,
+            "row_macro_mean_nll": 4.873411427170744,
+            "rows": 6,
+            "supervised_tokens": 204,
+            "token_micro_mean_nll": 4.871427423813763
+          },
+          "width": {
+            "nll_sum": 809.8419723510742,
+            "row_macro_mean_nll": 5.62390258577135,
+            "rows": 6,
+            "supervised_tokens": 144,
+            "token_micro_mean_nll": 5.623902585771349
+          }
+        },
+        "effective_batch": {
+          "connected components": {
+            "nll_sum": 882.77197265625,
+            "row_macro_mean_nll": 6.449746819674517,
+            "rows": 6,
+            "supervised_tokens": 137,
+            "token_micro_mean_nll": 6.4435910412864965
+          },
+          "difference": {
+            "nll_sum": 919.1075134277344,
+            "row_macro_mean_nll": 0.38470972516431146,
+            "rows": 6,
+            "supervised_tokens": 2402,
+            "token_micro_mean_nll": 0.3826425950989735
+          },
+          "inside/contains": {
+            "nll_sum": 869.3713836669922,
+            "row_macro_mean_nll": 0.3717184522460244,
+            "rows": 6,
+            "supervised_tokens": 2358,
+            "token_micro_mean_nll": 0.3686901542268839
+          },
+          "orientation": {
+            "nll_sum": 991.7253875732422,
+            "row_macro_mean_nll": 4.863393606935998,
+            "rows": 6,
+            "supervised_tokens": 204,
+            "token_micro_mean_nll": 4.861398958692364
+          },
+          "width": {
+            "nll_sum": 811.3957901000977,
+            "row_macro_mean_nll": 5.634692986806233,
+            "rows": 6,
+            "supervised_tokens": 144,
+            "token_micro_mean_nll": 5.634692986806233
+          }
+        },
+        "max_absolute_mean_nll_drift": 0.026101550916685312,
+        "repeat_effective_batch": {
+          "connected components": {
+            "nll_sum": 882.77197265625,
+            "row_macro_mean_nll": 6.449746819674517,
+            "rows": 6,
+            "supervised_tokens": 137,
+            "token_micro_mean_nll": 6.4435910412864965
+          },
+          "difference": {
+            "nll_sum": 919.1075134277344,
+            "row_macro_mean_nll": 0.38470972516431146,
+            "rows": 6,
+            "supervised_tokens": 2402,
+            "token_micro_mean_nll": 0.3826425950989735
+          },
+          "inside/contains": {
+            "nll_sum": 869.3713836669922,
+            "row_macro_mean_nll": 0.3717184522460244,
+            "rows": 6,
+            "supervised_tokens": 2358,
+            "token_micro_mean_nll": 0.3686901542268839
+          },
+          "orientation": {
+            "nll_sum": 991.7253875732422,
+            "row_macro_mean_nll": 4.863393606935998,
+            "rows": 6,
+            "supervised_tokens": 204,
+            "token_micro_mean_nll": 4.861398958692364
+          },
+          "width": {
+            "nll_sum": 811.3957901000977,
+            "row_macro_mean_nll": 5.634692986806233,
+            "rows": 6,
+            "supervised_tokens": 144,
+            "token_micro_mean_nll": 5.634692986806233
+          }
+        },
+        "rows": 30,
+        "status": "NUMERICAL_DRIFT_FAIL"
+      },
+      "full": {
+        "color mapping": {
+          "nll_sum": 1599.4532470703125,
+          "row_macro_mean_nll": 0.3652179587874338,
+          "rows": 11,
+          "supervised_tokens": 4419,
+          "token_micro_mean_nll": 0.3619491394139653
+        },
+        "complete missing structure": {
+          "nll_sum": 1416.6854705810547,
+          "row_macro_mean_nll": 0.34732962721839483,
+          "rows": 11,
+          "supervised_tokens": 4141,
+          "token_micro_mean_nll": 0.34211192238132204
+        },
+        "connected components": {
+          "nll_sum": 7009.309028625488,
+          "row_macro_mean_nll": 6.459712240386367,
+          "rows": 48,
+          "supervised_tokens": 1092,
+          "token_micro_mean_nll": 6.418781161744953
+        },
+        "difference": {
+          "nll_sum": 7766.154830932617,
+          "row_macro_mean_nll": 0.4383046394537589,
+          "rows": 48,
+          "supervised_tokens": 17950,
+          "token_micro_mean_nll": 0.4326548652330149
+        },
+        "inside/contains": {
+          "nll_sum": 7111.036758422852,
+          "row_macro_mean_nll": 0.3971860266846057,
+          "rows": 48,
+          "supervised_tokens": 18120,
+          "token_micro_mean_nll": 0.39244132220876665
+        },
+        "orientation": {
+          "nll_sum": 7754.41423034668,
+          "row_macro_mean_nll": 4.720316172668791,
+          "rows": 48,
+          "supervised_tokens": 1645,
+          "token_micro_mean_nll": 4.713929623311052
+        },
+        "overlay": {
+          "nll_sum": 1755.934585571289,
+          "row_macro_mean_nll": 0.4422815466801591,
+          "rows": 11,
+          "supervised_tokens": 4015,
+          "token_micro_mean_nll": 0.43734360786333476
+        },
+        "propagation": {
+          "nll_sum": 1442.0719757080078,
+          "row_macro_mean_nll": 0.3769901334192696,
+          "rows": 10,
+          "supervised_tokens": 3874,
+          "token_micro_mean_nll": 0.37224366951678056
+        },
+        "recolor": {
+          "nll_sum": 6197.873352050781,
+          "row_macro_mean_nll": 0.4043401552524751,
+          "rows": 42,
+          "supervised_tokens": 15520,
+          "token_micro_mean_nll": 0.39934750979708644
+        },
+        "rotate": {
+          "nll_sum": 1362.710823059082,
+          "row_macro_mean_nll": 2.7529511576951147,
+          "rows": 11,
+          "supervised_tokens": 495,
+          "token_micro_mean_nll": 2.752951157695115
+        },
+        "same color": {
+          "nll_sum": 4225.752861022949,
+          "row_macro_mean_nll": 0.3475948203766867,
+          "rows": 32,
+          "supervised_tokens": 12322,
+          "token_micro_mean_nll": 0.34294374785123755
+        },
+        "selector prerequisites": {
+          "nll_sum": 4025.1384506225586,
+          "row_macro_mean_nll": 0.35317309150122667,
+          "rows": 32,
+          "supervised_tokens": 11526,
+          "token_micro_mean_nll": 0.34922249267938216
+        },
+        "width": {
+          "nll_sum": 6200.415077209473,
+          "row_macro_mean_nll": 5.382304754522113,
+          "rows": 48,
+          "supervised_tokens": 1152,
+          "token_micro_mean_nll": 5.382304754522112
+        }
+      }
+    }
+  },
+  "decision": "INCONCLUSIVE",
+  "final_audit_opened": false,
+  "fit_classes": null,
+  "generation_performed": false,
+  "optimizer_steps": 0,
+  "schema_version": 1,
+  "stage_id": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1",
+  "status": "COMPLETE",
+  "wall_seconds": 897.4289349224418
+}
