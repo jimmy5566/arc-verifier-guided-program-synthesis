@@ -1,0 +1,125 @@
+{
+  "authorization": {
+    "gpu_inference_authorized": false,
+    "model_loading_authorized": false,
+    "next_required_action": "One Director review of this corrected immutable no-update diagnostic package.",
+    "optimizer_authorized": false,
+    "training_authorized": false
+  },
+  "binding_id": "ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1_BINDING",
+  "closed_routes_preserved": [
+    "ATOMIC_PREREQUISITE_REPAIR_V1",
+    "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1"
+  ],
+  "created_at": "2026-10-09T03:02:26Z",
+  "decision_mapping": {
+    "H1_SUPPORTED": "For both candidates, zero of five weak families are FIT_IMPROVED. This supports insufficient supervised fitting under the tested 100-step routes and may justify one new fitting-focused protocol review only.",
+    "H2_STATUS": "UNKNOWN. No gradient-direction conclusion is permitted.",
+    "H3_SUPPORTED": "H1 is false and at least one single candidate has FIT_IMPROVED plus DEV_NOT_IMPROVED in at least three of five weak families, with zero FIT_IMPROVED plus DEV_IMPROVED families for that candidate. This supports a train-to-DEV generalization bottleneck and may justify one new generalization-focused protocol review only.",
+    "INCONCLUSIVE": "All other outcomes, including mixed family evidence, numerical-drift failure, or missing binding verification. This closes the diagnostic branch; no successor protocol is selected post hoc.",
+    "comparison_unit": "Each of the two rejected candidates compared independently with V7 across the five weak families."
+  },
+  "dev_join_contract": {
+    "family_dev_improved": "Candidate paired net fixes versus V7 >= +1 for that same family.",
+    "family_dev_not_improved": "Candidate paired net fixes versus V7 <= 0 for that same family.",
+    "forbidden": "Do not use DEV or retention labels in any NLL calculation.",
+    "paired_key": "episode_id and exact_grid_match",
+    "source": "The three immutable result records bound above, after NLL calculation completes."
+  },
+  "execution_contract": {
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "fixed_batch1_crosscheck": "First six scheduled rows per weak family in frozen schedule order (30 rows total).",
+    "gradient_mode": "torch.no_grad",
+    "mode": "eval",
+    "numerical_drift_contract": {
+      "cross_batch_and_repeat_absolute_mean_nll_tolerance": 0.001,
+      "failure": "Any larger drift is NUMERICAL_DRIFT_FAIL and closes this diagnostic without interpreting fit classes.",
+      "fit_classification": "FIT_IMPROVED only when candidate token-micro NLL <= V7 token-micro NLL - 0.01. Absolute difference < 0.01 is NO_MATERIAL_CHANGE. Candidate NLL >= V7 + 0.01 is FIT_WORSE.",
+      "fit_improvement_threshold_absolute_nll": 0.01,
+      "rationale": "0.01 nats/token is prospectively ten times the permitted numeric aggregation drift, so numerical noise alone cannot create FIT_IMPROVED.",
+      "validation": "On the fixed 30-row cohort, each condition must compare Batch1 with its effective batched execution and one repeated effective-batch forward pass. Per-family token-micro mean NLL absolute differences must be <= 0.001."
+    },
+    "precision": "BF16",
+    "primary_estimator": "PER_FAMILY_TOKEN_MICRO_MEAN_NLL",
+    "primary_estimator_definition": "Sum token negative log likelihood over all non-ignored supervised labels in one family divided by that family supervised-token count.",
+    "record": [
+      "requested_batch_size",
+      "effective_batch_sizes",
+      "fallback_reason",
+      "per_family_supervised_tokens",
+      "per_family_token_micro_mean_nll",
+      "per_family_row_macro_mean_nll",
+      "checkpoint_identity"
+    ],
+    "requested_batch_size": 32,
+    "secondary_estimator": "PER_FAMILY_ROW_MACRO_MEAN_NLL_LABELLED_SECONDARY_ONLY",
+    "secondary_estimator_selection_rule": "Never used for the diagnostic-level decision.",
+    "tokenizer_and_label_masking": "Use the frozen worker/tokenizer label construction; include exactly labels != -100."
+  },
+  "final_audit_opened": false,
+  "frozen_conditions": {
+    "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001": {
+      "adapter_sha256": "c7b275587796b0d9b07d45e933371d5ae26e9aa76df7a895104d7c4e35117780",
+      "checkpoint_manifest_declared_identity": null,
+      "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json",
+      "checkpoint_manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9",
+      "result_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "result_sha256": "cc97e376e2a4703c0d73e4a79f0bbf528ac71c8750b9b5972a85f9099cb40216",
+      "status": "COMPLETE_REJECTED"
+    },
+    "ATOMIC_PREREQUISITE_REPAIR_V1_001_REJECTED": {
+      "adapter_sha256": "7f5e90f611a2bfcc993e96e1dfcd37b5d08ce14e88244c69cca231178edac2d2",
+      "checkpoint_manifest_declared_identity": "68f3ba7426203e1f432931ff8134f8ec474ba7ea592fec2abd17d7793b4c9cc5",
+      "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_001_FINAL_CHECKPOINT_MANIFEST.json",
+      "checkpoint_manifest_sha256": "0586201a3eec4ac1c56a1de42a5b20c9ff74f52069fbe92a55691ece28ed7ddd",
+      "local_paired_gate_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_001_PAIRED_GATE_ANALYSIS.json",
+      "local_paired_gate_sha256": "fd14962203c4f4631c6712214758bca1b228da97879814d2f4656454a4b08671",
+      "local_summary_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_REPAIR_V1_001_EVALUATION_SUMMARY.json",
+      "local_summary_sha256": "a2e92d2433f960bbab4961f81b6c8c2ff0a34cca8a7c6dde5241e471f7a8e194",
+      "result_path": "/workspace/arc2/atomic_prerequisite_repair_v1/round_001/evaluation_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "result_sha256": "fc7360b922404f96645e4cf2efea849f7fa9527282e32124bb9342ca3906c01b",
+      "status": "COMPLETE_REJECTED"
+    },
+    "CAPABILITY_REPAIR_BASELINE_V1_V7": {
+      "adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+      "checkpoint_manifest_declared_identity": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da",
+      "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+      "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+      "result_path": "experiments/capability_repair_baseline_v1/corrected_baseline_v1/CAPABILITY_REPAIR_BASELINE_V1_RESULTS.json",
+      "result_sha256": "e65467ff712240348e9ef60a49797109f8ee262c69ac457be11d57a5716256d5"
+    }
+  },
+  "frozen_train_cohort": {
+    "allowed_use": "Teacher-forced NLL only over non-ignored labels from the scheduled 400 TRAIN rows.",
+    "forbidden_use": [
+      "TARGET_DEV labels",
+      "RETENTION_SENTINEL labels",
+      "FINAL_AUDIT",
+      "resampling",
+      "optimizer steps",
+      "checkpoint mutation",
+      "generation"
+    ],
+    "schedule_order": "EXACT_FROZEN_ORDER",
+    "schedule_path": "experiments/capability_repair_baseline_v1/forward_capability_repair_v2/atomic_prerequisite_repair_successor_proposal_v1/concrete_protocol_v1/ATOMIC_PREREQUISITE_TRAINING_SCHEDULE_V1.json",
+    "schedule_rows": 400,
+    "schedule_sha256": "e84627031c76436d67a8d68a0343faca8493139d9ee56dd3f296884a73e781d6",
+    "source_path": "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl",
+    "source_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+  },
+  "purpose": "Immutable input binding for a no-update teacher-forced TRAIN-NLL diagnostic. It is not a training, generation, or checkpoint-selection authorization.",
+  "schema_version": 1,
+  "weak_families": [
+    "connected components",
+    "inside/contains",
+    "difference",
+    "width",
+    "orientation"
+  ]
+}

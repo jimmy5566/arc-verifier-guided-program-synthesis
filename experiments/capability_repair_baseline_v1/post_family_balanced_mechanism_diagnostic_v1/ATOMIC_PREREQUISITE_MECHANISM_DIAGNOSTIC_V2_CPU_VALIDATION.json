@@ -1,0 +1,23 @@
+{
+  "binding_sha256": "97bd68d6fac1fe0181af9c722c45ac0aff0826bf406846491c73b19d33574746",
+  "brief_sha256": "4f122349d9d63b72f0b5c50b011d65eb7d5d3210efed5e95d005d1b959d9d8dd",
+  "checks": {
+    "batch_policy_and_tolerance_fixed": true,
+    "correct_rejected_r1_sha256_bound": true,
+    "family_balanced_sha256_bound": true,
+    "no_update_prohibitions_bound": true,
+    "old_r1_reference_excluded": true,
+    "one_deterministic_decision_mapping_bound": true,
+    "primary_estimator_prospectively_fixed": true,
+    "train_and_schedule_sha256_bound": true,
+    "v7_result_sha256_bound": true
+  },
+  "created_at": "2026-10-09T03:02:26Z",
+  "final_audit_opened": false,
+  "gpu_work_started": false,
+  "model_loaded": false,
+  "proposal_sha256": "1bf9c58ce92c0b96786db09deb266329b3fbb9db5cb6b1f05b55891e17f001aa",
+  "schema_version": 1,
+  "status": "PASS",
+  "validation_id": "ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_V2_CPU_VALIDATION"
+}

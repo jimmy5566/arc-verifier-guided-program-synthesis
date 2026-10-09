@@ -1,0 +1,29 @@
+{
+  "binding_path": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1_BINDING.json",
+  "binding_sha256": "97bd68d6fac1fe0181af9c722c45ac0aff0826bf406846491c73b19d33574746",
+  "brief_id": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_V2",
+  "corrected_comparator": "The rejected ATOMIC_PREREQUISITE_REPAIR_V1_001 result is bound as fc7360b922404f96645e4cf2efea849f7fa9527282e32124bb9342ca3906c01b; the older fee020b8 reference is excluded.",
+  "created_at": "2026-10-09T03:02:26Z",
+  "director_required_repair_response_sha256": "ad53eb14429a47ae8381611cc723e6f191f801cf1029118739e2b84064e994c4",
+  "frozen": [
+    "V7, rejected R1, and family-balanced checkpoint/result bytes",
+    "400-row TRAIN schedule/order",
+    "TARGET_DEV and RETENTION labels excluded from NLL",
+    "closed routes",
+    "FINAL_AUDIT sealed"
+  ],
+  "kind": "CORRECTED_NO_UPDATE_DIAGNOSTIC_STAGE_REVIEW",
+  "not_requested": [
+    "training approval",
+    "R3",
+    "composition training",
+    "gradient diagnostic",
+    "provenance-only review"
+  ],
+  "proposal_path": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_PROPOSAL_V2.json",
+  "proposal_sha256": "1bf9c58ce92c0b96786db09deb266329b3fbb9db5cb6b1f05b55891e17f001aa",
+  "request": "Does this corrected immutable, no-update teacher-forced TRAIN-NLL diagnostic have the minimal scientifically valid contract required to run, with no model loading or GPU work authorized until your decision?",
+  "requested_decision": "CONTINUE_CONTROLLER authorizes only this diagnostic; REQUIRE_CHANGES names the smallest scientific correction; PAUSED or TERMINAL must state scope.",
+  "schema_version": 1,
+  "supersedes_brief": "GOVERNOR_REVIEW_ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_V1"
+}

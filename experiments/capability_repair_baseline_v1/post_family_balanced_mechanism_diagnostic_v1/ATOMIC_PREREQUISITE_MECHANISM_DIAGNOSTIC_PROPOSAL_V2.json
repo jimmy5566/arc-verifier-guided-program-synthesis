@@ -1,0 +1,40 @@
+{
+  "binding_path": "experiments/capability_repair_baseline_v1/post_family_balanced_mechanism_diagnostic_v1/ATOMIC_PREREQUISITE_FIT_GENERALIZATION_DIAGNOSTIC_V1_BINDING.json",
+  "binding_sha256": "97bd68d6fac1fe0181af9c722c45ac0aff0826bf406846491c73b19d33574746",
+  "created_at": "2026-10-09T03:02:26Z",
+  "decision_consequence": "A supported hypothesis may request one distinct protocol review. It never authorizes training by itself.",
+  "established": [
+    "The original worker and frozen schedule give equal weak-family episode counts but unequal nominal scalar-loss coefficients.",
+    "The original and family-balanced 100-step routes are closed and remain immutable.",
+    "Gradient direction, gradient conflict, and causal learning mechanisms remain unmeasured."
+  ],
+  "final_audit_opened": false,
+  "hypotheses": {
+    "H1": "The frozen 100-step routes did not materially improve supervised fit for weak atomic families.",
+    "H2": "Gradient interference remains UNKNOWN and is deliberately outside this diagnostic.",
+    "H3": "A route materially improved supervised TRAIN fit but did not transfer to the corresponding frozen DEV family."
+  },
+  "intervention": "No-update teacher-forced NLL calculation only, governed entirely by the binding.",
+  "outputs": [
+    "per_family_token_micro_mean_nll",
+    "secondary_per_family_row_macro_mean_nll",
+    "batch_validation_record",
+    "one_of_H1_SUPPORTED_H3_SUPPORTED_INCONCLUSIVE"
+  ],
+  "prohibited": [
+    "optimizer construction",
+    "optimizer step",
+    "training",
+    "checkpoint mutation",
+    "generation",
+    "DEV_or_retention_label_use_in_NLL",
+    "FINAL_AUDIT",
+    "gradient_cosine",
+    "automatic_successor_training"
+  ],
+  "proposal_id": "ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_PROPOSAL_V2",
+  "purpose": "Resolve whether the two closed 100-step V7-start atomic routes show inadequate supervised fitting or train-to-DEV generalization failure, without a parameter update or output generation.",
+  "schema_version": 2,
+  "status": "CPU_ONLY_PREPARATION_PENDING_ONE_DIRECTOR_REVIEW",
+  "supersedes": "ATOMIC_PREREQUISITE_MECHANISM_DIAGNOSTIC_PROPOSAL_V1"
+}
