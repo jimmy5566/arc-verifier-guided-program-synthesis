@@ -1,0 +1,38 @@
+{
+  "binding": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/LAUNCH_BINDING_V8.json",
+    "sha256": "0e6c01888bca7f69227db3f3fadd70846dccd0bafdd1826657d4c201927317ae"
+  },
+  "elapsed_seconds": 1414.9007713515311,
+  "execution_status": "CONTROLLED_FAILURE_BEFORE_RAW_EVIDENCE",
+  "failure_class": "BATCH1_BATCH32_MATERIAL_DRIFT",
+  "failure_origin": "frozen_worker_validation_gate",
+  "forbidden_operations_observed": {
+    "backward": false,
+    "final_audit_opened": false,
+    "optimizer_steps": 0,
+    "training": false
+  },
+  "preservation": "terminal receipt and stderr are byte-preserved; no rerun or target-sidecar access occurred",
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V2",
+  "raw_evidence": {
+    "present": false,
+    "sha256": null
+  },
+  "run_id": "RUN_007_a2703522e503d6a1537c568a337ee08b",
+  "schema_version": 1,
+  "scientific_interpretation": "NOT_ESTABLISHED",
+  "source_commit": "45ecf648737d0fadd04e4354a874c9800852cdb0",
+  "terminal_receipt": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/run_007_a2703522e503d6a1537c568a337ee08b/TERMINAL_RECEIPT.json",
+    "sha256": "3035b89874dcb8307a204aee5cf79bd8db2e15fb2492871080031ce1dbcb304a"
+  },
+  "worker_receipt": {
+    "present": false,
+    "sha256": null
+  },
+  "worker_stderr": {
+    "path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/run_007_a2703522e503d6a1537c568a337ee08b/worker.stderr.log",
+    "sha256": "4a958a707ff3d8c9d9e92f8d4de2b67ae6079d1c619bf70478184bd522dad710"
+  }
+}

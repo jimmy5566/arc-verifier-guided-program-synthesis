@@ -1,0 +1,33 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "established": [
+    "The detached run executed for 1414.901 seconds and completed with terminal status FAILURE.",
+    "The worker raised BATCH1_BATCH32_MATERIAL_DRIFT after model loading.",
+    "No raw predictions or worker receipt were written, so no capability result is interpretable.",
+    "No training, optimizer steps, backward pass, or FINAL_AUDIT access occurred."
+  ],
+  "forbidden": [
+    "Do not rerun the same job automatically.",
+    "Do not interpret this failure as model incapacity.",
+    "Do not open target sidecar or FINAL_AUDIT.",
+    "Do not change frozen Batch1/Batch32 criterion retroactively."
+  ],
+  "protocol_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V2",
+  "question": "The one authorized target-blind run closed under its frozen Batch1/Batch32 material-drift gate before raw evidence. What is the smallest scientifically valid next action?",
+  "requested_decision": "Choose one outcome with the smallest scientifically valid next action. CONTINUE_CONTROLLER must supply explicit next_stage and next_action; no GPU execution is authorized by this review.",
+  "review_type": "SCIENTIFIC_RESULT_VALIDITY_REVIEW",
+  "reviewed_run": {
+    "binding_sha256": "0e6c01888bca7f69227db3f3fadd70846dccd0bafdd1826657d4c201927317ae",
+    "source_commit": "45ecf648737d0fadd04e4354a874c9800852cdb0",
+    "summary_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/run_007_a2703522e503d6a1537c568a337ee08b/CONTROLLED_FAILURE_SUMMARY.json",
+    "summary_sha256": "c4e245771eae485288add174949bf3f7cf65c893a630dff18cba1aac665e79bd",
+    "terminal_receipt_sha256": "3035b89874dcb8307a204aee5cf79bd8db2e15fb2492871080031ce1dbcb304a",
+    "worker_stderr_sha256": "4a958a707ff3d8c9d9e92f8d4de2b67ae6079d1c619bf70478184bd522dad710"
+  },
+  "schema_version": 1
+}
