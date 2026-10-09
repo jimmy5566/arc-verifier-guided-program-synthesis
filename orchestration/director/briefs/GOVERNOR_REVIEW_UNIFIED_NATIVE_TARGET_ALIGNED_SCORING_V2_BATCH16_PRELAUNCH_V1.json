@@ -1,0 +1,70 @@
+{
+  "cpu_validation": {
+    "command": "py -3 -m unittest tests.test_unified_native_target_alignment_v2_contract tests.test_launch_unified_native_target_aligned_scoring_v2_batch16 tests.test_target_aligned_scoring_v2_binding tests.test_score_unified_native_target_alignment_v1",
+    "result": "PASS_11"
+  },
+  "forbidden": [
+    "generation",
+    "candidate replacement",
+    "target-informed selection",
+    "training",
+    "optimizer",
+    "backward",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam-4",
+    "external selector",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT"
+  ],
+  "frozen_package": {
+    "binding_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/TARGET_ALIGNED_SCORING_V2_BATCH16_LAUNCH_BINDING_V1.json",
+    "binding_sha256": "fe3f71ff29860f2f66b8f851fc8b4f392f29d72e7825b963757506c81d3c2228",
+    "config_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/UNIFIED_NATIVE_TARGET_ALIGNED_SCORING_V2_BATCH16_CONFIG.json",
+    "config_sha256": "678bc7f89858a49667a8f9bbdab1c04d6e49b556750cb11f9ee739de4f775b9e",
+    "fresh_output_root": "/workspace/arc2/unified_native_target_aligned_scoring_v2_batch16/run_001_8c78da9b6c8e1e769601e1a4b415e06c",
+    "launcher_path": "scripts/launch_unified_native_target_aligned_scoring_v2_batch16.py",
+    "launcher_sha256": "7040979c4e83eae60233f5b1a53b5c98722521a54377bfc8be397812dcd157e6",
+    "nonce": "8c78da9b6c8e1e769601e1a4b415e06c",
+    "runtime_cap_seconds": 9000,
+    "source_freeze_commit": "78912adcd2d8b8890fc3a8657b505445d66ad5a6",
+    "worker_path": "scripts/run_unified_native_target_aligned_scoring_v2_batch16.py",
+    "worker_sha256": "a1bbdee4b4be3a64c2dfe092b5963d898b265d8fcc8ed40eafa397fc50c48c71"
+  },
+  "machine_gates": [
+    "raw SHA and 360=6x60 row completeness",
+    "sealed sidecar SHA and exact 60-ID mapping",
+    "frozen prompt SHA mapping",
+    "six checkpoint/base/adapter manifests verified before each model import",
+    "fresh output root and duplicate lock",
+    "atomic worker/terminal receipts and partial-evidence failure",
+    "local=origin=RunPod source parity",
+    "9000 second total cap"
+  ],
+  "predecessor": {
+    "generation_reuse_only": true,
+    "no_regeneration_or_candidate_replacement": true,
+    "raw_path": "experiments/capability_repair_baseline_v1/unified_native_model_capability_baseline_v1/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a/RAW_UNSCORED_BATCH16.jsonl",
+    "raw_rows": 360,
+    "raw_sha256": "4be1741f0b59f132efc7e19aa86f119fb49717cc37ef874c39b344654004e26e",
+    "run_id": "UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V3_BATCH16_RUN_001"
+  },
+  "protocol_id": "UNIFIED_NATIVE_TARGET_ALIGNED_SCORING_V2_BATCH16",
+  "question": "Authorize exactly one no-update target-aligned scoring run of the already-frozen Batch16 candidates, or state the smallest scientific repair.",
+  "request": "Return CONTINUE_CONTROLLER only to authorize the one bound no-update scoring job; otherwise REQUIRE_CHANGES with the smallest scientific remediation. Do not request candidate regeneration or target-informed retuning.",
+  "review_type": "STAGE_LEVEL_SCIENTIFIC_PRELAUNCH",
+  "schema_version": 1,
+  "sealed_boundary": {
+    "Gold_dGold_FINAL_AUDIT": "FORBIDDEN",
+    "access_timing": "RUNTIME_ONLY_AFTER_THIS_DIRECTOR_CONTINUE",
+    "mapping": "exactly the frozen 60 episode IDs",
+    "sidecar_expected_sha256": "a301fac64d490003f4449367a68be2484760ac1a86506345a263191f0e31472e",
+    "sidecar_runtime_path": "/workspace/arc2/sealed_synthetic_targets/UNIFIED_NATIVE_MODEL_CAPABILITY_BASELINE_V1_TARGET_SIDECAR.json"
+  },
+  "two_nonadaptive_measurements": {
+    "cpu_exact_grid": "score only frozen Greedy and the single frozen rank-two complete output; report pooled/equal-family macro/per-family, with no target-informed candidate selection",
+    "no_update_teacher_forced": "correct-target token rank, correct-vs-highest-incorrect margin, and first frozen free-running error location for same prompt/checkpoint; never used for selection"
+  }
+}
