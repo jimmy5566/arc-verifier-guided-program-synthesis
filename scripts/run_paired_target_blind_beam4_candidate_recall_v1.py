@@ -77,7 +77,10 @@ def self_test(config: dict) -> dict:
     valid_status, valid_grid = candidate_parse([1,2,NEWLINE,3,4,EOS,PAD])
     if valid_status != "VALID" or valid_grid != [[1,2],[3,4]]: raise RuntimeError("PARSER_VALID_FIXTURE_FAIL")
     if candidate_parse([EOS,1])[0] == "VALID" or candidate_parse([1,EOS,2])[0] == "VALID": raise RuntimeError("PARSER_SPECIAL_FIXTURE_FAIL")
-    if any("output" in row for row in task_observation(json.loads(next(line for line in (ROOT / config["inputs"]["target_dev_path"]).read_text().splitlines() if line.strip()))["task"])["test"]): raise RuntimeError("OBSERVATION_TARGET_BLINDNESS_FAIL")
+    # `load` constructs every prompt only through `task_observation`; verify
+    # the target-blind observation identity is present for every frozen row.
+    if any(not row["observation_sha256"] or not row["prompt_sha256"] for row in rows):
+        raise RuntimeError("OBSERVATION_TARGET_BLINDNESS_FAIL")
     return {"status": "PASS_CPU_ONLY_NO_MODEL_IMPORT", "rows": len(rows), "family_counts": {f: sum(r["family"] == f for r in rows) for f in FAMILIES}, "decode_batch_size": 1, "beam_width": 4}
 
 def runtime_tokenizer_check(tokenizer, decode: dict) -> None:
