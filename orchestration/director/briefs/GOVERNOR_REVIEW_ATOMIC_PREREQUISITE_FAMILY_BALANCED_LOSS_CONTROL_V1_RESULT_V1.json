@@ -1,0 +1,56 @@
+{
+  "created_at": "2026-10-09T02:54:25.160574Z",
+  "decision_needed": "Choose one: CONTINUE with one smallest distinct, falsifiable atomic-repair protocol; DIAGNOSE with one explicitly decision-changing diagnostic; PAUSE/STOP the current atomic-repair route with scope. Do not request provenance-only remediation or another review of these unchanged measurements.",
+  "established": {
+    "aggregate_exact": {
+      "R1": {
+        "retention": "64/96",
+        "target_dev": "77/192"
+      },
+      "V7": {
+        "retention": "70/96",
+        "target_dev": "76/192"
+      },
+      "family_balanced": {
+        "retention": "69/96",
+        "target_dev": "74/192"
+      }
+    },
+    "family_observations": {
+      "conditional_action": "V7 2/24 -> R1 5/24 -> family-balanced 1/24",
+      "connected_components": "V7 0/12 -> R1 1/12 -> family-balanced 1/12",
+      "difference": "V7 2/12 -> R1 1/12 -> family-balanced 2/12",
+      "inside_contains": "V7 0/12 -> R1 3/12 -> family-balanced 0/12",
+      "mask_set": "V7 2/24 -> R1 2/24 -> family-balanced 4/24",
+      "orientation": "V7 5/12 -> R1 5/12 -> family-balanced 4/12",
+      "same_color": "V7 12/12 -> R1 9/12 -> family-balanced 12/12",
+      "width": "V7 2/12 -> R1 0/12 -> family-balanced 0/12"
+    },
+    "measurement": "COLLECTED_PASS; 288/288 complete and parse-valid; B1-vs-batched validation status PASS (canonical agreement recorded audit-only at 0.875).",
+    "paired": "V7\u2192family-balanced: target DEV 4 fixes / 6 harms (net -2); retention 0 fixes / 1 harm (net -1); composition 2 fixes / 2 harms (net 0); atomic role 2 fixes / 4 harms (net -2)."
+  },
+  "evidence": {
+    "evaluation_receipt_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/BASELINE_CHARACTERIZATION_RECEIPT.json",
+    "evaluation_receipt_sha256": "445a3aba672bb8fd2bf58323c52f26f3cf58437bf1371267bd34ed0b415bda7d",
+    "paired_analysis_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/V7_R1_FAMILY_BALANCED_PAIRED_ANALYSIS.json",
+    "paired_analysis_sha256": "4b93b18ae619940e334f5816c8bdeed91e6472b46f880eb0ad085f359d1b105e",
+    "runtime_source_commit": "e37b1a28d5d43ca71fba20955bcb3c94a93ae8b8"
+  },
+  "frozen_conditions": {
+    "evaluation": "frozen 192 TARGET_DEV plus 96 RETENTION_SENTINEL, EOS-aware target-blind parser, requested B32 with recorded fallback",
+    "final_audit_opened": false,
+    "sole_intervention": "family-balanced loss aggregation",
+    "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1 (V7)",
+    "training": "400 episodes, 100 optimizer steps, identical schedule/seed/LR/optimizer/LoRA/token budget"
+  },
+  "kind": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_RESULT_REVIEW",
+  "mechanism_assessment": {
+    "ESTABLISHED": "The specified loss-aggregation intervention did not improve the aggregate target DEV or retention relative to V7 in this 100-step matched comparison. It restored same-color relative to R1, but that alone does not establish a preservation mechanism.",
+    "SUPPORTED_HYPOTHESIS": "Token-proportional loss imbalance is not sufficient by itself to explain the previous atomic outcomes under this treatment; the matched intervention may still have family-specific effects.",
+    "UNKNOWN": "Gradient interference, supervised fitting, and DEV generalization mechanisms were not measured and must not be inferred from paired correctness alone."
+  },
+  "protocol_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1",
+  "request": "Assess whether family-balanced loss aggregation is supported as an atomic-repair bottleneck intervention, and specify the smallest falsifiable next atomic-repair experiment or correctly scoped stop.",
+  "round_id": "ATOMIC_PREREQUISITE_FAMILY_BALANCED_LOSS_CONTROL_V1_001",
+  "schema_version": 1
+}
