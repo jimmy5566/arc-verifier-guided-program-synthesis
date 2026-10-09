@@ -1,0 +1,48 @@
+{
+  "demo_share": {
+    "classification": "DEMONSTRATION_DOMINATED_IMPROVEMENT",
+    "demo_token_share": 0.6417045924700041,
+    "denominator_bootstrap_95_ci": [
+      8059.4755122923525,
+      8302.312721246488
+    ],
+    "denominator_v7_minus_fb_all_assistant": 8183.481527643895,
+    "raw_bootstrap_95_ci": [
+      0.6924197956958581,
+      0.7063371295223491
+    ],
+    "value": 0.6994220330324017
+  },
+  "evidence_scope": "REUSED_TARGET_DEV_DEVELOPMENT_EVIDENCE_NOT_INDEPENDENT_ARC_GENERALIZATION",
+  "per_family_primary": {
+    "connected components": -0.7678931419180016,
+    "difference": -0.012527955191403132,
+    "inside/contains": -0.01054068021399461,
+    "orientation": -0.2102374306071931,
+    "width": -0.6805554365316918
+  },
+  "pooled_token_micro_final_grid_plus_eos": {
+    "effect": -0.041649552818879304,
+    "token_count": 3284
+  },
+  "primary": {
+    "b1_subset_effect": -0.3138338365748145,
+    "b32_same_subset_effect": -0.3101371857433063,
+    "classification": "IMPROVED",
+    "effect": -0.3363509288924568,
+    "estimand": "family_equal_mean(FB_minus_V7_FINAL_GRID_PLUS_EOS_per_token_nll)",
+    "numerical_sensitivity_adjusted_interval": [
+      -0.4338879783872541,
+      -0.23388453601266
+    ],
+    "raw_bootstrap_95_ci": [
+      -0.4301913275557459,
+      -0.2375811868441682
+    ],
+    "sensitivity_U": 0.003696650831508219,
+    "sensitivity_limit": 0.0840877322231142
+  },
+  "protocol_id": "PAIRED_FINAL_QUERY_LOSS_DECOMPOSITION_V1",
+  "raw_rows": 184,
+  "status": "COMPLETE_CPU_POSTPROCESS"
+}

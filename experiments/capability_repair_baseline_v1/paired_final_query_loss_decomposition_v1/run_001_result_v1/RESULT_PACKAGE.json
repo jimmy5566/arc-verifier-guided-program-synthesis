@@ -1,0 +1,70 @@
+{
+  "analysis": {
+    "demo_share": {
+      "classification": "DEMONSTRATION_DOMINATED_IMPROVEMENT",
+      "demo_token_share": 0.6417045924700041,
+      "denominator_bootstrap_95_ci": [
+        8059.4755122923525,
+        8302.312721246488
+      ],
+      "denominator_v7_minus_fb_all_assistant": 8183.481527643895,
+      "raw_bootstrap_95_ci": [
+        0.6924197956958581,
+        0.7063371295223491
+      ],
+      "value": 0.6994220330324017
+    },
+    "evidence_scope": "REUSED_TARGET_DEV_DEVELOPMENT_EVIDENCE_NOT_INDEPENDENT_ARC_GENERALIZATION",
+    "per_family_primary": {
+      "connected components": -0.7678931419180016,
+      "difference": -0.012527955191403132,
+      "inside/contains": -0.01054068021399461,
+      "orientation": -0.2102374306071931,
+      "width": -0.6805554365316918
+    },
+    "pooled_token_micro_final_grid_plus_eos": {
+      "effect": -0.041649552818879304,
+      "token_count": 3284
+    },
+    "primary": {
+      "b1_subset_effect": -0.3138338365748145,
+      "b32_same_subset_effect": -0.3101371857433063,
+      "classification": "IMPROVED",
+      "effect": -0.3363509288924568,
+      "estimand": "family_equal_mean(FB_minus_V7_FINAL_GRID_PLUS_EOS_per_token_nll)",
+      "numerical_sensitivity_adjusted_interval": [
+        -0.4338879783872541,
+        -0.23388453601266
+      ],
+      "raw_bootstrap_95_ci": [
+        -0.4301913275557459,
+        -0.2375811868441682
+      ],
+      "sensitivity_U": 0.003696650831508219,
+      "sensitivity_limit": 0.0840877322231142
+    },
+    "protocol_id": "PAIRED_FINAL_QUERY_LOSS_DECOMPOSITION_V1",
+    "raw_rows": 184,
+    "status": "COMPLETE_CPU_POSTPROCESS"
+  },
+  "analysis_sha256": "48136e548f453c94c9bef30c364525d1cc5c9212311963f27dae76543212a1b8",
+  "cap_receipt_sha256": "cbd35551e33469e39b476a8338abc39fd510c2cdec91781dc9e59df942b663fc",
+  "evidence_scope": "REUSED_TARGET_DEV_DEVELOPMENT_EVIDENCE_NOT_INDEPENDENT_ARC_GENERALIZATION",
+  "launcher_log_sha256": "af6e706894b82df35ce6b455f5e2e629f33a3583a0f539bfaf320c070df1383d",
+  "preserved_at": "2026-10-09T08:09:53.813713Z",
+  "process_constraints_verified": {
+    "backward_performed": false,
+    "cap_seconds": 900,
+    "final_audit_opened": false,
+    "generation_performed": false,
+    "optimizer_steps": 0,
+    "wall_seconds": 311.57730383519083
+  },
+  "protocol_id": "PAIRED_FINAL_QUERY_LOSS_DECOMPOSITION_V1",
+  "raw_evidence_sha256": "d8f5ddc9b731cae1f5003a2c2277b3fbef933c4208b370430164de5f87f33a20",
+  "run_id": "PAIRED_FINAL_QUERY_LOSS_DECOMPOSITION_V1_RUN_001",
+  "schema_version": 1,
+  "source_commit": "85be63a416d6aaef0207bb6b8fca404ab1085ecb",
+  "status": "COMPLETE_NO_UPDATE_CPU_POSTPROCESS_COMPLETE",
+  "terminal_receipt_sha256": "d907dd0f9a6414a23090dbee89130db82ef1a83f1b14ae48d4df488bd5ffa10b"
+}

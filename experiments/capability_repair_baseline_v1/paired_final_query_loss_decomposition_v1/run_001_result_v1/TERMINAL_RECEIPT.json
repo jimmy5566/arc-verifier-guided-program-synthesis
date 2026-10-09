@@ -1,0 +1,11 @@
+{
+  "backward_performed": false,
+  "final_audit_opened": false,
+  "generation_performed": false,
+  "optimizer_steps": 0,
+  "protocol_id": "PAIRED_FINAL_QUERY_LOSS_DECOMPOSITION_V1",
+  "raw_rows": 184,
+  "raw_sha256": "d8f5ddc9b731cae1f5003a2c2277b3fbef933c4208b370430164de5f87f33a20",
+  "schema_version": 1,
+  "status": "COMPLETE_NO_UPDATE"
+}
