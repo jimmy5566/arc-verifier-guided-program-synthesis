@@ -10,6 +10,13 @@ from pathlib import Path
 
 WEAK = ("connected_components", "inside_contains", "width", "difference", "orientation")
 PROTECTED = ("same_color", "color_mapping")
+# The 72-row frozen cohort has nine equal strata.  The last two are not part
+# of the primary contrast, but sampling them in this declared order keeps the
+# complete stratified resample process-bound and auditable.
+OTHER_FAMILIES = ("object_selection_then_action", "novel_two_operation_order")
+FAMILY_ORDER = WEAK + PROTECTED + OTHER_FAMILIES
+FROZEN_REPLICATES = 10000
+FROZEN_SEED = 20261010
 
 
 def cosine(gram, left: list[int], right: list[int]) -> float:
@@ -36,8 +43,12 @@ def weighted_cosine(gram, left: list[int], left_weights: list[float], right: lis
 
 
 def bootstrap(gram, families: list[str], token_counts: list[int], replicates: int, seed: int) -> dict[str, list[float]]:
-    family_indices = {name: [i for i, value in enumerate(families) if value == name] for name in set(families)}
-    if any(len(family_indices[name]) != 8 for name in WEAK + PROTECTED):
+    if len(families) != 72 or set(families) != set(FAMILY_ORDER):
+        raise ValueError("E03_V3_BOOTSTRAP_FAMILY_IDENTITY_INVALID")
+    if len(token_counts) != len(families) or any(not isinstance(value, int) or value <= 0 for value in token_counts):
+        raise ValueError("E03_V3_BOOTSTRAP_TOKEN_COUNTS_INVALID")
+    family_indices = {name: [i for i, value in enumerate(families) if value == name] for name in FAMILY_ORDER}
+    if any(len(family_indices[name]) != 8 for name in FAMILY_ORDER):
         raise ValueError("E03_V3_BOOTSTRAP_FAMILY_ROWS_INVALID")
     rng = random.Random(seed)
     output = {name: [] for name in WEAK + ("secondary_combined",)}
@@ -73,23 +84,40 @@ def classify(point: dict[str, float], samples: dict[str, list[float]], repeatabi
     return "INCONCLUSIVE"
 
 
+def validate_raw_identity(raw: dict, manifest_path: Path) -> tuple[list[str], list[int]]:
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    expected_ids = [member["episode_id"] for family in manifest["families"] for member in family["members"]]
+    expected_families = [family["canonical_family"] for family in manifest["families"] for _ in family["members"]]
+    families = list(raw.get("families", []))
+    episode_ids = list(raw.get("episode_ids", []))
+    token_counts = list(raw.get("supervised_token_counts", []))
+    if episode_ids != expected_ids or families != expected_families:
+        raise ValueError("E03_V3_RAW_COHORT_IDENTITY_INVALID")
+    if len(token_counts) != len(expected_ids) or any(not isinstance(value, int) or value <= 0 for value in token_counts):
+        raise ValueError("E03_V3_RAW_TOKEN_COUNTS_INVALID")
+    return families, token_counts
+
+
 def main() -> None:
     import numpy as np
     parser = argparse.ArgumentParser()
     parser.add_argument("--raw", type=Path, required=True)
+    parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--replicates", type=int, default=10000)
     parser.add_argument("--seed", type=int, default=20261010)
     args = parser.parse_args()
+    if args.replicates != FROZEN_REPLICATES or args.seed != FROZEN_SEED:
+        raise SystemExit("E03_V3_BOOTSTRAP_CONTRACT_INVALID")
     raw = json.loads(args.raw.read_text(encoding="utf-8"))
     if raw.get("status") != "COMPLETE_NO_UPDATE" or raw.get("optimizer_steps") != 0 or raw.get("generation_calls") != 0:
         raise SystemExit("E03_V3_RAW_NOT_INTERPRETABLE")
     gram = np.asarray(raw["gram_matrix"], dtype=np.float64)
-    families, token_counts = list(raw["families"]), list(raw["supervised_token_counts"])
+    families, token_counts = validate_raw_identity(raw, args.manifest)
     if gram.shape != (72, 72) or not np.allclose(gram, gram.T, rtol=0, atol=1e-8) or not np.isfinite(gram).all():
         raise SystemExit("E03_V3_GRAM_INVALID")
     matrix = gram.tolist()
-    index = {name: [i for i, value in enumerate(families) if value == name] for name in set(families)}
+    index = {name: [i for i, value in enumerate(families) if value == name] for name in FAMILY_ORDER}
     protected = index["same_color"] + index["color_mapping"]
     point = {name: cosine(matrix, index[name], protected) for name in WEAK}
     weak = [item for name in WEAK for item in index[name]]

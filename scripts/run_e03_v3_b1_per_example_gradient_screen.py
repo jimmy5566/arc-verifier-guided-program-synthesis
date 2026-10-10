@@ -77,8 +77,8 @@ def preflight(config_path: Path, binding_path: Path, output_root: Path) -> tuple
         raise RuntimeError("E03_V3_COHORT_INVALID")
     if any(len(family["members"]) != 8 for family in cohort["families"]):
         raise RuntimeError("E03_V3_FAMILY_BALANCE_INVALID")
-    allow = config["lora_parameter_name_allowlist"]
-    if hashlib.sha256(json.dumps(sorted(allow), separators=(",", ":")).encode()).hexdigest() != config["lora_parameter_name_allowlist_sha256"]:
+    allow = tuple(sorted(config["lora_parameter_name_allowlist"]))
+    if len(allow) != len(set(allow)) or hashlib.sha256(json.dumps(list(allow), separators=(",", ":")).encode()).hexdigest() != config["lora_parameter_name_allowlist_sha256"]:
         raise RuntimeError("E03_V3_ALLOWLIST_HASH_INVALID")
     check_files(checkpoint)
     return config, binding, cohort, checkpoint
@@ -127,7 +127,10 @@ def main() -> None:
         if hasattr(model, "enable_input_require_grads"):
             model.enable_input_require_grads()
         named = dict(model.named_parameters())
-        allow = tuple(config["lora_parameter_name_allowlist"])
+        # The frozen manifest is stored in traversal order, while runtime
+        # parameter dictionaries are not an identity ordering.  Use one
+        # canonical sequence for every equality check and flattening offset.
+        allow = tuple(sorted(config["lora_parameter_name_allowlist"]))
         # No base-model parameter may silently participate in the backward
         # graph.  This check is also part of the memory contract.
         for name, parameter in named.items():
