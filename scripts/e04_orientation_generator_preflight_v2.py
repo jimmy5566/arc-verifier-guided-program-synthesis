@@ -23,8 +23,10 @@ def semantic_signature(row:dict)->str:
     except KeyError as e: raise PreflightFailure(f'MISSING_SCIENTIFIC_FIELD:{e.args[0]}')
     return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 def color_tuple(index:int)->tuple[int,int,int,int]:
-    if index < 0: raise PreflightFailure('INVALID_COLOR_INDEX')
-    return next(islice(permutations(range(1,10),4), index, None))
+    if not 0 <= index < 24: raise PreflightFailure('INVALID_COLOR_INDEX')
+    group, base = divmod(index, 9)
+    shifts=((1,3,5),(1,4,6),(2,4,7))[group]
+    return tuple(((base + shift) % 9) + 1 for shift in (0,*shifts))
 def enumerate_plan(split:str)->list[dict]:
     if split not in {'TRAIN','VALIDATION'}: raise PreflightFailure('INVALID_SPLIT')
     rows=[]
@@ -52,6 +54,11 @@ def validate_plan(train:list[dict],validation:list[dict])->dict:
         turns=[sum(x['control_marker_turn']==t for x in sub) for t in range(4)];fail(turns==([6]*4 if split=='TRAIN' else [3]*4),'MARKER_IMBALANCE')
         layouts=[sum(x['layout_template']==q for x in sub) for q in LAYOUTS];fail(layouts==([2]*12 if split=='TRAIN' else [1]*12),'LAYOUT_IMBALANCE')
         fail(len({tuple(x['color_role_tuple']) for x in sub})==count,'COLOR_DUPLICATE')
+        for role in range(4):
+          freq=[sum(x['color_role_tuple'][role]==color for x in sub) for color in range(1,10)];fail(max(freq)-min(freq)<=1,'ROLE_FREQUENCY_IMBALANCE')
+        for turn in range(4): fail(len({x['color_role_tuple'][role] for x in sub if x['control_marker_turn']==turn for role in range(4)})>4,'MARKER_COLOR_SHORTCUT')
+        for layout in LAYOUTS:
+          vals=[x['color_role_tuple'] for x in sub if x['layout_template']==layout];fail(len(vals)==len(set(vals)),'LAYOUT_COLOR_SHORTCUT')
     seeds=[x['seed'] for x in train+validation]; sigs=[x['semantic_signature_sha256'] for x in train+validation]
     fail(len(seeds)==len(set(seeds)),'DUPLICATE_SEED');fail(len(sigs)==len(set(sigs)),'SEMANTIC_OVERLAP')
     fail(enumerate_plan('TRAIN')==train and enumerate_plan('VALIDATION')==validation,'NONDETERMINISTIC_ENUMERATION')
