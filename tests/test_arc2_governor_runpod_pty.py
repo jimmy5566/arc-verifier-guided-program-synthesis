@@ -24,8 +24,8 @@ class _Proc:
 class RunPodPtyControlTests(unittest.TestCase):
     def test_wait_remote_status_line_is_yellow_and_identifies_the_job(self):
         line = governor.status_line('REMOTE_PENDING', {'disposition':'WAIT_REMOTE', 'remote_job':{'run_id':'RUN_2', 'remote_pid':123}})
-        self.assertIn('\x1b[1;33m', line)
-        self.assertIn('[ARC2 WAIT_REMOTE]', line)
+        self.assertIn('\x1b[1;33m[ARC2 WAIT_REMOTE]\x1b[0m', line)
+        self.assertRegex(line, r'^\d{4}-\d{2}-\d{2}T')
         self.assertIn('run=RUN_2', line)
         self.assertIn('pid=123', line)
 

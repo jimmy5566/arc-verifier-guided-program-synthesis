@@ -573,7 +573,10 @@ def status_line(result, state):
         detail = ' awaiting Director review'
     elif disposition == 'CONTINUE_CONTROLLER':
         detail = f" action={state.get('next_action') or 'UNSPECIFIED'}"
-    return f"{colours.get(disposition, '\x1b[0m')}[ARC2 {disposition}] result={result}{detail}\x1b[0m"
+    stamp = now()
+    colour = colours.get(disposition, '\x1b[0m')
+    label = f"{colour}[ARC2 {disposition}]\x1b[0m"
+    return f"{stamp} {label} result={result}{detail}"
 
 def delay_for(result,state,*,paused_seconds,idle_seconds):
     if result == 'TERMINAL': return None
