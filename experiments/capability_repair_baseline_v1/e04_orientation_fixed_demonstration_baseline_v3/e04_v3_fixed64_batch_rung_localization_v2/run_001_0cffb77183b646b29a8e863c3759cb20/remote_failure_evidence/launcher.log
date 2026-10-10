@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_v3_fixed64_batch_rung_localization.py", line 150, in <module>
+    if __name__ == "__main__": main()
+                               ^^^^^^
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_v3_fixed64_batch_rung_localization.py", line 145, in main
+    config=load_and_validate_config(args.config); load_binding(args.binding,args.output_root)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_v3_fixed64_batch_rung_localization.py", line 52, in load_binding
+    fail("E04_FIXED64_FRESH_OUTPUT")
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_v3_fixed64_batch_rung_localization.py", line 29, in fail
+    raise LocalizationFailure(code)
+scripts.e04_v3_fixed64_batch_rung_localization.LocalizationFailure: E04_FIXED64_FRESH_OUTPUT
+Traceback (most recent call last):
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_v3_fixed64_batch_rung_localization.py", line 150, in <module>
+    if __name__ == "__main__": main()
+                               ^^^^^^
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_v3_fixed64_batch_rung_localization.py", line 148, in main
+    run_parent(args.config,args.binding,args.output_root)
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_v3_fixed64_batch_rung_localization.py", line 123, in run_parent
+    if completed.returncode: fail("E04_FIXED64_ARM_PROCESS_FAILED:B" + str(arm))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_v3_fixed64_batch_rung_localization.py", line 29, in fail
+    raise LocalizationFailure(code)
+scripts.e04_v3_fixed64_batch_rung_localization.LocalizationFailure: E04_FIXED64_ARM_PROCESS_FAILED:B16
