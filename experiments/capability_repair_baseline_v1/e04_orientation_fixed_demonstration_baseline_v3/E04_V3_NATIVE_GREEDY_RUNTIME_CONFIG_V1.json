@@ -1,0 +1,9 @@
+﻿{
+    "contract_path":  "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_NO_UPDATE_EXECUTION_CONTRACT_V1.json",
+    "contract_sha256":  "d11065b5f7b17224e42f72e8bd33fcb8c5abd19d8e23a1a6f66660150b0b5af2",
+    "context_window":  8192,
+    "max_new_tokens":  256,
+    "protocol_id":  "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE",
+    "schema_version":  1,
+    "seed":  20261010
+}

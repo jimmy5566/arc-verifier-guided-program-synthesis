@@ -1,0 +1,37 @@
+{
+  "authorization_id": "E04_V3_CLEAN_BASELINE_ONE_SHOT_CONDITIONAL_20261010",
+  "batch1_sensitivity_manifest_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_BATCH1_SENSITIVITY_INPUT_INDEXES_V1.json",
+  "batch1_sensitivity_rows": 64,
+  "batch_agreement": "parser-validity, parsed-grid and exact-outcome must agree for every sensitivity row",
+  "fallback_ladder": [
+    32,
+    16,
+    8,
+    4,
+    1
+  ],
+  "fallback_rule": "complete-primary-rerun-only-after-pre-output-capacity-failure; no mixed accepted rung",
+  "forbidden": [
+    "NO_TRAINING",
+    "NO_OPTIMIZER",
+    "NO_BACKWARD",
+    "NO_GRADIENT",
+    "NO_TTT",
+    "NO_AUGMENTATION",
+    "NO_DFS",
+    "NO_BEAM4",
+    "NO_GOLD",
+    "NO_DGOLD",
+    "NO_FINAL_AUDIT"
+  ],
+  "hard_runtime_cap_seconds": 1800,
+  "input_prompts_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/VALIDATION_INPUT_PROMPTS.jsonl",
+  "input_prompts_sha256": "f6dcf3050583506cde7035ff18ac15a79c9292cabc55b504a823c025c8c2eff6",
+  "input_rows": 768,
+  "mode": "V7_NATIVE_GREEDY_NO_UPDATE",
+  "protocol_id": "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE",
+  "requested_batch_size": 32,
+  "schema_version": 1,
+  "seed": 20261010,
+  "target_sidecar_accessed": false
+}
