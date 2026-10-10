@@ -1,0 +1,72 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "CONTINUE_DIRECTOR",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "immutable_evidence": {
+    "authorizing_response_sha256": "ae5f97d2011f148191bca63db47c8d888488c5c9ffc8b6b36337af6f6fd5f0ab",
+    "published_postprocessor_sha256": "cd74ac2dc895812a30d0382d36954ce77f89e779e920399658ede3e4c5e09a86",
+    "raw_gram_sha256": "2f0245bea7467c498c325942396f17459ccd675d23a4db920968804427b4cb6f",
+    "result_package_sha256": "b387af248f6265989039b608f7a8eca90cd0902ab598711eef2422d45ec80c3e",
+    "result_sha256": "589db5f912dfb352346f53577171ef5966e0af07c19bd8299425e924fef70caf"
+  },
+  "interpretation_limits": [
+    "The frozen E03 result remains INCONCLUSIVE_REPEATABILITY_GATE_FAILED.",
+    "These are observed-envelope sensitivity bounds, not confidence intervals or a validated global numerical-error bound.",
+    "Positive lower bounds do not establish absence of gradient interference and do not demonstrate fitting, generalization, forgetting, compositional transfer, or ARC transfer.",
+    "The evidence is frozen TRAIN-cohort development evidence only."
+  ],
+  "observed_result": {
+    "all_six_lower_bounds_strictly_positive": true,
+    "decision": "DIRECTIONAL_PATTERN_ROBUST_UNDER_OBSERVED_ENVELOPE",
+    "diagnostic_status": "COMPLETE_CPU_ONLY_POST_HOC",
+    "observed_per_example_relative_l2_envelope": 0.008617405731011414,
+    "six_lower_bounds": {
+      "connected_components": 0.7993111349977697,
+      "difference": 0.7562321895975762,
+      "inside_contains": 0.741047981031496,
+      "orientation": 0.8111578879503928,
+      "secondary_combined": 0.8503493079358021,
+      "width": 0.7319893642645062
+    },
+    "zero_reachable": {
+      "connected_components": false,
+      "difference": false,
+      "inside_contains": false,
+      "orientation": false,
+      "secondary_combined": false,
+      "width": false
+    }
+  },
+  "question": "Given this one authorized CPU-only, post-hoc observed-repeatability-envelope sensitivity diagnostic, what single scientifically distinct mechanism should ARC2 study next? Do not reopen or relabel frozen E03, and do not authorize a retry or training from this result alone.",
+  "requested_response_requirements": {
+    "CONTINUE_CONTROLLER": "must specify exactly one CPU-only or separately authorized small next action and classify established versus supported hypothesis versus unknown.",
+    "CONTINUE_DIRECTOR": "must provide a new immutable brief for a genuinely distinct scientific question.",
+    "REQUIRE_CHANGES": "must specify the smallest scientific-methodological repair without altering frozen E03.",
+    "TERMINAL": "must include terminal_scope CURRENT_PROTOCOL or ENTIRE_EXPERIMENT."
+  },
+  "review_id": "GOVERNOR_REVIEW_CPU_ONLY_E03_OBSERVED_REPEATABILITY_ENVELOPE_SENSITIVITY_RESULT_V1",
+  "review_type": "STAGE_RESULT_SCIENTIFIC_REVIEW",
+  "schema_version": 1,
+  "scientific_scope": {
+    "forbidden": [
+      "GPU execution",
+      "model loading",
+      "gradient recomputation",
+      "optimizer construction",
+      "training",
+      "generation",
+      "DEV",
+      "RETENTION_SENTINEL",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT",
+      "automatic retry"
+    ],
+    "input": "immutable E03 Run_003 72-row TRAIN-only RAW_GRAM_STATISTICS.json",
+    "method": "conservative per-example norm-ball propagation using observed max relative L2; no model, GPU, gradient recomputation, labels outside frozen cohort, resampling, or threshold tuning"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "diagnostic_id": "CPU_ONLY_E03_OBSERVED_REPEATABILITY_ENVELOPE_SENSITIVITY_V1",
+  "input_identity": {
+    "manifest_sha256": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+    "published_postprocessor_sha256": "cd74ac2dc895812a30d0382d36954ce77f89e779e920399658ede3e4c5e09a86",
+    "raw_gram_sha256": "2f0245bea7467c498c325942396f17459ccd675d23a4db920968804427b4cb6f"
+  },
+  "interpretation": "All six conservative lower bounds are positive under the observed per-example envelope, but this is post-hoc TRAIN-only sensitivity evidence and does not establish absence of gradient interference or any causal mechanism.",
+  "preserved_scientific_status": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN remains INCONCLUSIVE_REPEATABILITY_GATE_FAILED",
+  "process_guards": {
+    "generation": false,
+    "gpu_used": false,
+    "gradient_recomputed": false,
+    "model_loaded": false,
+    "optimizer_constructed": false,
+    "sealed_data_opened": false,
+    "training": false
+  },
+  "result_sha256": "589db5f912dfb352346f53577171ef5966e0af07c19bd8299425e924fef70caf",
+  "schema_version": 1,
+  "source_director_response_sha256": "ae5f97d2011f148191bca63db47c8d888488c5c9ffc8b6b36337af6f6fd5f0ab",
+  "source_e03_result_package_sha256": "94164053af4380fdac4ce400e67d65be4bcacf9202293df52cda562a03d0391e",
+  "status": "COMPLETE_CPU_ONLY_POST_HOC"
+}

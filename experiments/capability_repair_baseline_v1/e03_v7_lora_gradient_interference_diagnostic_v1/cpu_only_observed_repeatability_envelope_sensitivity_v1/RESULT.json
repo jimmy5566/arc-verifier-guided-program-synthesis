@@ -1,0 +1,95 @@
+{
+  "all_six_lower_bounds_strictly_positive": true,
+  "contrasts": {
+    "connected_components": {
+      "left_aggregate_perturbation_radius": 0.10278062361736193,
+      "left_mean_norm": 10.610026913890929,
+      "lower": 0.7993111349977697,
+      "point_cosine": 0.8345161866358806,
+      "right_aggregate_perturbation_radius": 0.006388974883572665,
+      "right_mean_norm": 0.653005692264081,
+      "upper": 0.8709579737121697,
+      "zero_reachable": false
+    },
+    "difference": {
+      "left_aggregate_perturbation_radius": 0.0068640813551662586,
+      "left_mean_norm": 0.7168629634787748,
+      "lower": 0.7562321895975762,
+      "point_cosine": 0.790395819565915,
+      "right_aggregate_perturbation_radius": 0.006388974883572665,
+      "right_mean_norm": 0.653005692264081,
+      "upper": 0.8257571865381809,
+      "zero_reachable": false
+    },
+    "inside_contains": {
+      "left_aggregate_perturbation_radius": 0.00639994346932503,
+      "left_mean_norm": 0.6423431449870384,
+      "lower": 0.741047981031496,
+      "point_cosine": 0.7755988438660297,
+      "right_aggregate_perturbation_radius": 0.006388974883572665,
+      "right_mean_norm": 0.653005692264081,
+      "upper": 0.8113873919379121,
+      "zero_reachable": false
+    },
+    "orientation": {
+      "left_aggregate_perturbation_radius": 0.05984580041269241,
+      "left_mean_norm": 6.44529986634117,
+      "lower": 0.8111578879503928,
+      "point_cosine": 0.8458596374896347,
+      "right_aggregate_perturbation_radius": 0.006388974883572665,
+      "right_mean_norm": 0.653005692264081,
+      "upper": 0.8817537960143408,
+      "zero_reachable": false
+    },
+    "secondary_combined": {
+      "left_aggregate_perturbation_radius": 0.0139635669543152,
+      "left_mean_norm": 1.3069747405552072,
+      "lower": 0.8503493079358021,
+      "point_cosine": 0.8884168170315019,
+      "right_aggregate_perturbation_radius": 0.00632675766080884,
+      "right_mean_norm": 0.6465953984517943,
+      "upper": 0.927885489229554,
+      "zero_reachable": false
+    },
+    "width": {
+      "left_aggregate_perturbation_radius": 0.09756567969211079,
+      "left_mean_norm": 10.163685747791831,
+      "lower": 0.7319893642645062,
+      "point_cosine": 0.7657238563319163,
+      "right_aggregate_perturbation_radius": 0.006388974883572665,
+      "right_mean_norm": 0.653005692264081,
+      "upper": 0.800645185163246,
+      "zero_reachable": false
+    }
+  },
+  "decision": "DIRECTIONAL_PATTERN_ROBUST_UNDER_OBSERVED_ENVELOPE",
+  "diagnostic_id": "CPU_ONLY_E03_OBSERVED_REPEATABILITY_ENVELOPE_SENSITIVITY_V1",
+  "forbidden_actions_observed": {
+    "generation": false,
+    "gpu_used": false,
+    "gradient_recomputed": false,
+    "model_loaded": false,
+    "optimizer_constructed": false,
+    "sealed_data_opened": false,
+    "training": false
+  },
+  "frozen_e03_result_status": "INCONCLUSIVE_REPEATABILITY_GATE_FAILED_PRESERVED",
+  "input_identity": {
+    "manifest_sha256": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+    "published_postprocessor_sha256": "cd74ac2dc895812a30d0382d36954ce77f89e779e920399658ede3e4c5e09a86",
+    "raw_gram_sha256": "2f0245bea7467c498c325942396f17459ccd675d23a4db920968804427b4cb6f"
+  },
+  "interpretation_limit": "This post-hoc TRAIN-only sensitivity result neither validates the frozen E03 repeatability contract nor establishes absence of gradient interference, forgetting, fitting, generalization, or ARC transfer.",
+  "observed_per_example_relative_l2_envelope": 0.008617405731011414,
+  "post_hoc_label": "OBSERVED_ENVELOPE_SENSITIVITY_NOT_CONFIDENCE_INTERVAL_NOT_GLOBAL_NUMERICAL_ERROR_BOUND",
+  "reconstructed_point_cosines": {
+    "connected_components": 0.8345161866358806,
+    "difference": 0.790395819565915,
+    "inside_contains": 0.7755988438660297,
+    "orientation": 0.8458596374896347,
+    "secondary_combined": 0.8884168170315019,
+    "width": 0.7657238563319163
+  },
+  "schema_version": 1,
+  "status": "COMPLETE_CPU_ONLY_POST_HOC"
+}
