@@ -1,0 +1,27 @@
+{
+    "schema_version":  1,
+    "brief_id":  "E04_V3_FIXED64_BATCH_RUNG_LOCALIZATION_PRELAUNCH_BRIEF_V1",
+    "stage":  "E04_V3_FIXED64_BATCH_RUNG_LOCALIZATION_V1",
+    "authority":  "DIRECTOR_PRELAUNCH_REVIEW_REQUIRED",
+    "completed_cpu_preparation":  {
+                                      "model_imported":  false,
+                                      "cpu_tests":  "PASS_10",
+                                      "reference_audit_path":  "experiments\\capability_repair_baseline_v1\\e04_orientation_fixed_demonstration_baseline_v3\\E04_V3_FIXED64_BATCH_RUNG_REFERENCE_AUDIT_V1.json",
+                                      "gpu_used":  false,
+                                      "reference_audit_sha256":  "7e0bd3cf6b9542b38a2b1fca02934f081302c2563fb57316d933972875a05e8e",
+                                      "target_sidecar_accessed":  false
+                                  },
+    "frozen_intent":  "Compare B16, B8, B4 with the existing B1 reference over the same fixed 64 target-blind rows, with raw-token, parsed-grid, and exact-outcome agreement as distinct fields.",
+    "established_blocker":  "The byte-verified existing B1 reference has 64 rows but zero generated_token_ids fields; it supports text/parsed-grid/outcome comparison only.",
+    "why_review_required":  "A text-to-token reconstruction is not raw generation evidence. Adding a new B1 generation or dropping raw-token agreement would materially change the Director-specified measurement reference.",
+    "minimum_requested_decision":  [
+                                       "Authorize a matched fresh B1 generation within the same bounded localization run as the raw-token reference, with no other scientific changes.",
+                                       "Or amend the diagnostic to compare only fields that the immutable historical B1 artifact actually contains."
+                                   ],
+    "forbidden":  [
+                      "No GPU launch authorized by this brief.",
+                      "No 768-row rerun.",
+                      "No training, optimizer, backward, Gold, dGold, FINAL_AUDIT, or target-sidecar access."
+                  ],
+    "controller_recommendation":  "Use a fresh matched B1 arm only if Director explicitly authorizes it; this is the smallest way to preserve raw-token agreement without treating retokenized text as raw evidence."
+}

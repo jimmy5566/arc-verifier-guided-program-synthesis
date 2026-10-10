@@ -1,0 +1,23 @@
+{
+  "gpu_used": false,
+  "interpretation": "The preserved B1 bytes support text, parsed-grid, and outcome comparison only. They cannot support the Director-requested raw-token agreement field.",
+  "legacy_schema_fields": [
+    "completion_tokens",
+    "effective_batch_size",
+    "elapsed_seconds",
+    "input_sha256",
+    "parsed_grid",
+    "parser_valid",
+    "prompt_tokens",
+    "row_index",
+    "text"
+  ],
+  "model_imported": false,
+  "raw_token_field": "generated_token_ids",
+  "raw_token_rows": 0,
+  "reference_rows": 64,
+  "reference_sha256": "4ba60a6efc1e3338bd1eead075797b4bdb3519a8d309598301f564dbc05c6e86",
+  "schema_version": 1,
+  "status": "RAW_TOKEN_REFERENCE_UNAVAILABLE",
+  "target_sidecar_accessed": false
+}
