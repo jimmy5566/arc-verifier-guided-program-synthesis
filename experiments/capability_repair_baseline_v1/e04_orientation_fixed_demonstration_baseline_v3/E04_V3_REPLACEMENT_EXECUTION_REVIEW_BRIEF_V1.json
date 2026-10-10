@@ -1,0 +1,41 @@
+{
+  "brief_id": "E04_V3_REPLACEMENT_EXECUTION_REVIEW_BRIEF_V1",
+  "established_previous_attempt": {
+    "backward_calls": 0,
+    "cap_receipt_sha256": "b2bd3954eb6cc237fc2957b068f58ed32beedb720dfc6ebb157aaeed00734c8b",
+    "final_audit_opened": false,
+    "optimizer_steps": 0,
+    "status": "FAILED_NO_UPDATE",
+    "target_sidecar_accessed": false,
+    "terminal_receipt_sha256": "77bf71544be836d32a3624379e2b8f3721183f5243471e1ba88f92a25fc000b0"
+  },
+  "established_root_cause": "The previous pre-import guard compared upstream source-provenance SHA256 values against byte-distinct runtime vendored configuration files.",
+  "no_gpu_launch_in_this_brief": true,
+  "protocol_id": "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE",
+  "repair_identity_manifest": "E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY_V1.json",
+  "repair_identity_manifest_sha256": "7e94ba263dba680b2d75c2184c0ff05254b7e4aa5f90a7c64619eedf4ba4e256",
+  "repair_source_commit": "4bf89e4a6b1daba0ed5f22779d753dd59aa0e5f3",
+  "request": "Authorize exactly one replacement no-update native Greedy execution after a pre-import runtime identity repair; do not alter the scientific protocol.",
+  "requested_decision": "AUTHORIZE_REPLACEMENT_RUN_OR_STOP_STAGE",
+  "required_new_authorization": {
+    "fresh_nonce": true,
+    "fresh_output_root": true,
+    "hard_runtime_cap_seconds": 1800,
+    "jobs": 1,
+    "reason": "The prior one-shot authorization was consumed by the failed detached attempt.",
+    "retry": false
+  },
+  "schema_version": 1,
+  "scientific_conditions_unchanged": [
+    "V7 adapter",
+    "48 canonical validation bases",
+    "four fixed marker turns",
+    "four conditions",
+    "fixed TRAIN-only demonstrations",
+    "B32 primary and fixed B1 64-row sensitivity",
+    "native Greedy",
+    "1800-second cap",
+    "zero optimizer/backward/update",
+    "no Gold/dGold/FINAL_AUDIT"
+  ]
+}

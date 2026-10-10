@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_orientation_v3_fixed_baseline.py", line 227, in <module>
+    main()
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_orientation_v3_fixed_baseline.py", line 224, in main
+    run(args.config, args.binding, args.output_root)
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_orientation_v3_fixed_baseline.py", line 143, in run
+    fail("E04_NATIVE_CONFIG_FILE_IDENTITY:" + entry["vendored_path"])
+  File "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_orientation_v3_fixed_baseline.py", line 19, in fail
+    raise E04ExecutionFailure(code)
+scripts.e04_orientation_v3_no_update.E04ExecutionFailure: E04_NATIVE_CONFIG_FILE_IDENTITY:configs/nvarc_native_846d0198/chat_template.j2
