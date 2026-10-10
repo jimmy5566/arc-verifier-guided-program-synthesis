@@ -1,0 +1,23 @@
+{
+  "artifact_id": "CPU_ONLY_E04_ORIENTATION_FROZEN_COHORT_GENERATION_AND_MANIFEST_VALIDATION_V1",
+  "failed_attempt_preserved": true,
+  "generator_sha256": "3dd11a340161e79a250efefadf652e057928d909d3c8858086967c8cf16ffb32",
+  "gpu_used": false,
+  "manifest": {
+    "base_tuple_counts": {
+      "TRAIN": 288,
+      "VALIDATION": 48
+    },
+    "cohort_sha256": "76c6fd57173ec62571f27a312e3f80601c70cdec04cda79432822937e7a37967",
+    "content_unique": true,
+    "gpu_used": false,
+    "model_accessed": false,
+    "rows": 1344,
+    "semantic_cross_split_disjoint": true,
+    "status": "CPU_ONLY_FROZEN_COHORT_GENERATED",
+    "views_per_tuple": 4
+  },
+  "model_accessed": false,
+  "preflight_sha256": "ba77f909739c91e09a9a4e1582a7d92d62fb49dd2d382795451d697b29be8f70",
+  "status": "COMPLETE_CPU_ONLY_REVIEW_REQUIRED"
+}

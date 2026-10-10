@@ -1,0 +1,9 @@
+{
+  "artifact_id": "CPU_ONLY_E04_ORIENTATION_FROZEN_COHORT_GENERATION_V1_FAILURE",
+  "failure": "CONTENT_IDENTITY_COLLISION: ROTATION_TARGET and FIXED_TURN_ROTATION_CONTROL have identical input/target grids for marker turn=1.",
+  "files_written": 0,
+  "gpu_used": false,
+  "model_accessed": false,
+  "scientific_cohort_published": false,
+  "status": "FAILED_BEFORE_COHORT_PUBLICATION"
+}

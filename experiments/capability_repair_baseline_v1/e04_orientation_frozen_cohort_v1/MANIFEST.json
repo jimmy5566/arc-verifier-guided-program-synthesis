@@ -1,0 +1,14 @@
+{
+  "base_tuple_counts": {
+    "TRAIN": 288,
+    "VALIDATION": 48
+  },
+  "cohort_sha256": "76c6fd57173ec62571f27a312e3f80601c70cdec04cda79432822937e7a37967",
+  "content_unique": true,
+  "gpu_used": false,
+  "model_accessed": false,
+  "rows": 1344,
+  "semantic_cross_split_disjoint": true,
+  "status": "CPU_ONLY_FROZEN_COHORT_GENERATED",
+  "views_per_tuple": 4
+}

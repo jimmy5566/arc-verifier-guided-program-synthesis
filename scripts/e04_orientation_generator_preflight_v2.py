@@ -35,7 +35,7 @@ def enumerate_plan(split:str)->list[dict]:
         reserved=RELATIONS[o]==rel
         if (split=='VALIDATION')!=reserved: continue
         for i in range(12 if reserved else 24):
-          row={'split':split,'shape_orientation':o,'control_marker_turn':i%4,'reference_relation':rel,'topology':'single_4_connected_L_TRIOMINO','layout_template':LAYOUTS[i%12],'color_role_tuple':color_tuple(i),'instance_index':i,'seed':810000+104729*(o*4+ri)+7919*i}
+          row={'split':split,'shape_orientation':o,'control_marker_turn':(i%4 + i//12 + o*4 + ri)%4,'reference_relation':rel,'topology':'single_4_connected_L_TRIOMINO','layout_template':LAYOUTS[i%12],'color_role_tuple':color_tuple(i),'instance_index':i,'seed':810000+104729*(o*4+ri)+7919*i}
           row['semantic_signature_sha256']=semantic_signature(row);rows.append(row)
     return rows
 def fail(cond:bool,code:str)->None:
