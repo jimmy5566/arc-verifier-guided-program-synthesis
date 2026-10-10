@@ -1,0 +1,33 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_E04_GREENFIELD_ATOMIC_DATA_FOUNDATION_FEASIBILITY_V1",
+  "decision_options": [
+    "CONTINUE_CONTROLLER with one CPU-only orientation prefreeze specification task",
+    "TERMINAL scoped to this greenfield route with selection NONE"
+  ],
+  "forbidden": [
+    "No cohort generation",
+    "No executable protocol or worker",
+    "No model loading, inference, GPU, gradient, optimizer, or training",
+    "No Gold, dGold, FINAL_AUDIT, or sealed evaluation access"
+  ],
+  "observed": [
+    "Existing-asset reuse remains closed: none of five families has verified exact TRAIN/generator/control/capacity bindings.",
+    "The current source has deterministic non-Gold primitives for all five families but no existing manifest, structural holdout, or matched control.",
+    "Orientation alone has an explicit four-state turn marker and shared grid helpers, so a new source-bound orientation/control pair is feasible to specify prospectively."
+  ],
+  "question": "Does the source-level recommendation to prepare an orientation-only greenfield prefreeze specification meet the scientific boundary, or should the program return NONE?",
+  "recommendation": "ORIENTATION_ONLY_PREFREEZE_SPECIFICATION_REVIEW",
+  "required_before_any_generation": [
+    "new source revision and exact deterministic inputs",
+    "TRAIN/validation content and latent manifests",
+    "held-out shape_orientation x reference_relation axis",
+    "functionally sufficient matched control",
+    "at least 48 canonical validation units and content/latent disjointness"
+  ],
+  "result_artifact": {
+    "path": "experiments/capability_repair_baseline_v1/CPU_ONLY_E04_GREENFIELD_ATOMIC_DATA_FOUNDATION_FEASIBILITY_V1.json",
+    "sha256": "ed06036c25ae1781c5aa970ea94de7cde4f77421d0e334b540ee804514ae37c9"
+  },
+  "schema_version": 1,
+  "stage": "CPU_ONLY_E04_GREENFIELD_ATOMIC_DATA_FOUNDATION_FEASIBILITY_V1"
+}

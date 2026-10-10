@@ -1,0 +1,112 @@
+{
+  "cohort_generated": false,
+  "compute_estimate": {
+    "current_cpu_study": "completed via static source and frozen-artifact inspection; no generated cases",
+    "future_cpu_preparation": "bounded new generator/manifest validation only after review",
+    "future_gpu": "not estimated as authorization; no GPU work is proposed or authorized here"
+  },
+  "failure_rule": "If a later prefreeze review cannot bind all required manifests, structural-axis disjointness, matched control, or 48 canonical validation units before generation, return NONE/INVALID_NOT_INTERPRETABLE and do not execute.",
+  "family_assessment": [
+    {
+      "blocking_gap": "Current primitive has no varied connectivity-pattern factor or matched control.",
+      "existing_primitive": "COUNT_4_CONNECTED_COMPONENTS; count sampled 2..5",
+      "family": "connected_components",
+      "frozen_baseline_exact": "0/12",
+      "greenfield_design_feasibility": "POSSIBLE_ONLY_WITH_NEW_GENERATOR_EXTENSION"
+    },
+    {
+      "blocking_gap": "Current primitive fixes frame geometry and object placements; no defined position-class holdout or matched control.",
+      "existing_primitive": "SELECT_OBJECT_INSIDE_FRAME",
+      "family": "inside_contains",
+      "frozen_baseline_exact": "0/12",
+      "greenfield_design_feasibility": "POSSIBLE_ONLY_WITH_NEW_GENERATOR_EXTENSION"
+    },
+    {
+      "blocking_gap": "Current primitive has fixed width set and background context; no disjoint context axis or matched control.",
+      "existing_primitive": "SELECT_WIDEST_OBJECT; widths are a permutation of 2,3,4",
+      "family": "width",
+      "frozen_baseline_exact": "2/12",
+      "greenfield_design_feasibility": "POSSIBLE_ONLY_WITH_NEW_GENERATOR_EXTENSION"
+    },
+    {
+      "blocking_gap": "Current primitive fixes nested-rectangle relation; no set-overlap-by-cardinality factor or matched control.",
+      "existing_primitive": "OUTER_MASK_MINUS_INNER_MASK",
+      "family": "difference",
+      "frozen_baseline_exact": "2/12",
+      "greenfield_design_feasibility": "POSSIBLE_ONLY_WITH_NEW_GENERATOR_EXTENSION"
+    },
+    {
+      "existing_primitive": "ROTATE_BY_CONTROL_MARKER; local turn marker ranges over 0..3",
+      "family": "orientation",
+      "frozen_baseline_exact": "5/12",
+      "greenfield_design_feasibility": "SOURCE_LEVEL_FEASIBLE_FOR_PROSPECTIVE_SPECIFICATION",
+      "limitation": "This is feasibility only; no unit count, control validity, or effect is established until a later Director-reviewed prefreeze specification.",
+      "required_later_bindings": [
+        "new source revision and exact deterministic inputs",
+        "TRAIN and validation content plus latent manifests",
+        "one declared held-out shape_orientation x reference_relation factor",
+        "a functionally sufficient matched no-transform/control condition",
+        "at least 48 canonical validation units, content- and latent-disjoint from TRAIN"
+      ],
+      "why": "A source-bound extension can retain shared layout/color marginals while assigning a deterministic marker-to-turn relation and a separately named shape-orientation x reference-relation holdout. The existing shared helpers and explicit control marker make a matched no-transform/control condition specifiable without reusing old assets."
+    }
+  ],
+  "feasibility_id": "CPU_ONLY_E04_GREENFIELD_ATOMIC_DATA_FOUNDATION_FEASIBILITY_V1",
+  "frozen_evidence": {
+    "boundary_spec_v2": {
+      "path": "experiments/capability_repair_baseline_v1/E04_PROSPECTIVE_DATA_BOUNDARY_SPECIFICATION_V2.json",
+      "sha256": "f0a6c5cb1bf1a5be01f7d7953d3d330a48d19f1fb37b9d15972b2ee8f9640450"
+    },
+    "existing_asset_prefreeze_proposal": {
+      "path": "experiments/capability_repair_baseline_v1/CPU_ONLY_E04_SINGLE_FAMILY_ATOMIC_MECHANISM_PREFREEZE_PROPOSAL_V1.json",
+      "sha256": "e0afe472966489a6a3547b9ae5181a8d68ef7d47c91eaadf3bdcc7e1ca844efd"
+    },
+    "weak_atomic_inventory": {
+      "path": "experiments/capability_repair_baseline_v1/CPU_ONLY_E04_WEAK_ATOMIC_EXPOSURE_AND_FAILURE_INVENTORY_V1.json",
+      "sha256": "657d2ab81afd30d38a7f45debeae1e905585062820e160566ef2330d9ec67d6d"
+    }
+  },
+  "gpu_used": false,
+  "model_accessed": false,
+  "protocol_frozen": false,
+  "recommendation": {
+    "basis": [
+      "valid unsaturated frozen baseline (5/12 exact)",
+      "explicit deterministic source-level turn control",
+      "clearest path to a named structural holdout and layout-matched control"
+    ],
+    "decision": "RECOMMEND_FOR_ONE_DIRECTOR_PREFREEZE_REVIEW_ONLY",
+    "family": "orientation",
+    "not_authorized": [
+      "family selection for execution",
+      "cohort generation",
+      "protocol freeze",
+      "worker implementation",
+      "model loading",
+      "inference",
+      "GPU",
+      "training",
+      "sealed-data access"
+    ]
+  },
+  "scope": "SOURCE_LEVEL_ONLY_NO_COHORT_PROTOCOL_WORKER_MODEL_OR_GPU",
+  "sealed_data_accessed": false,
+  "selection_limit": "At most one recommendation; a recommendation is not family selection, cohort authorization, or execution authorization.",
+  "source_level_generator_evidence": {
+    "established": [
+      "primitive_case uses a local random.Random(seed), so its current case construction is seed-deterministic at source level.",
+      "The source exposes programmatic non-Gold primitives for all five weak families.",
+      "The source exposes shared grid construction helpers (blank, put, crop) and an orientation control marker with four turn values."
+    ],
+    "git_commit": "65ff752bbcc639b48b2941db6a40a09543f12897",
+    "not_established": [
+      "No current source artifact freezes a legitimate greenfield TRAIN manifest, latent manifest, held-out structural split, or matched-control manifest.",
+      "No existing historical TRAIN or TARGET_DEV asset is eligible for reuse as the greenfield cohort.",
+      "Source inspection cannot establish learning, generalization, or control sufficiency without a later prospectively frozen study."
+    ],
+    "path": "scripts/prepare_targeted_capability_repair_v1.py",
+    "sha256": "6ef2e7fb8c9d87dbadc67d36f04a482f8f89512dd2e2c78e209972d2579dc44b"
+  },
+  "status": "COMPLETE_CPU_READ_ONLY_RECOMMENDATION_NOT_EXECUTION",
+  "worker_written": false
+}
