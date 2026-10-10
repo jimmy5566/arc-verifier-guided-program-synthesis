@@ -1,0 +1,30 @@
+{
+  "binding_sha256": "22bd00b5f2748142d29a25fff71912092deed98bbdb5fe29721553d434e814b4",
+  "constraints_verified": {
+    "final_audit_opened": false,
+    "generation_calls": 0,
+    "gold_or_dgold_accessed": false,
+    "optimizer_constructed": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0
+  },
+  "kind": "E03_V3_B1_MEMORY_FEASIBILITY_SMOKE",
+  "launcher_log_sha256": "bffa5894b0b7b0e6718c9c8d48d61a4cc3e4a12cdc25fb9b63cc4aa251df1118",
+  "launcher_receipt_sha256": "c0a64f3792b1f3ebebefd7e303eef7cd388382ab55911b116a8b709c316f9855",
+  "next_scientific_decision": "DIRECTOR_RESULT_REVIEW_FOR_72_EXAMPLE_E03_SCREEN_EXECUTION_AUTHORIZATION",
+  "observations": {
+    "elapsed_seconds": 130.7083507683128,
+    "gpu_name": "NVIDIA GeForce RTX 3090",
+    "loss_finite": true,
+    "peak_reserved_bytes_after_backward": 16338911232,
+    "supervised_tokens": 477
+  },
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "result_sha256": "d364bcb2edab9227c09a49c26e20222815c2bc18ef8690766cc9ae4886ade502",
+  "run_id": "RUN_003_fcbb7a20c0691077c1f19041cf606b7d",
+  "runtime_launch_commit": "317ac7ce8cc60906572cae9f53b2880e209bd789",
+  "scientific_interpretation": "B1_MEMORY_FEASIBILITY_ESTABLISHED_FOR_THE_SINGLE_FROZEN_LONGEST_TRAIN_EXAMPLE_ONLY",
+  "scope_limit": "This establishes one-example physical-B1 feasibility, not gradient-interference evidence and not authority to launch the 72-example screen.",
+  "status": "COMPLETE_NO_UPDATE",
+  "terminal_receipt_sha256": "041555d49dc92326b7f5a30579ba99479cf86d3e544042dec6b208c1393ba9df"
+}

@@ -1,0 +1,11 @@
+{
+  "authorization_id": "E03_V3_B1_MEMORY_FEASIBILITY_SMOKE_RUN_003_fcbb7a20c0691077c1f19041cf606b7d",
+  "elapsed_seconds": 135.66980127245188,
+  "launcher_log_path": "/workspace/arc2/e03_v3_b1_memory_feasibility_smoke/run_003_fcbb7a20c0691077c1f19041cf606b7d.launcher.log",
+  "launcher_log_sha256": "bffa5894b0b7b0e6718c9c8d48d61a4cc3e4a12cdc25fb9b63cc4aa251df1118",
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "retry": false,
+  "status": "WORKER_TERMINAL_RECEIPT_PRESERVED",
+  "terminal_receipt_sha256": "041555d49dc92326b7f5a30579ba99479cf86d3e544042dec6b208c1393ba9df",
+  "worker_return_code": 0
+}

@@ -1,0 +1,12 @@
+{
+  "elapsed_seconds": 131.34457072336227,
+  "final_audit_opened": false,
+  "generation_calls": 0,
+  "kind": "E03_V3_B1_MEMORY_FEASIBILITY_SMOKE",
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "result_sha256": "d364bcb2edab9227c09a49c26e20222815c2bc18ef8690766cc9ae4886ade502",
+  "runtime_launch_commit": "317ac7ce8cc60906572cae9f53b2880e209bd789",
+  "status": "COMPLETE_NO_UPDATE"
+}

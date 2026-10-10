@@ -1,0 +1,36 @@
+{
+  "elapsed_seconds": 130.7083507683128,
+  "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000068",
+  "final_audit_opened": false,
+  "generation_calls": 0,
+  "gpu_name": "NVIDIA GeForce RTX 3090",
+  "gpu_total_memory_bytes": 25295323136,
+  "kind": "E03_V3_B1_MEMORY_FEASIBILITY_SMOKE",
+  "loss": 0.3236786425113678,
+  "memory_after_backward": {
+    "allocated_bytes": 8386998272,
+    "peak_allocated_bytes": 15839096320,
+    "peak_reserved_bytes": 16338911232,
+    "reserved_bytes": 16338911232
+  },
+  "memory_after_model_load": {
+    "allocated_bytes": 7808271872,
+    "peak_allocated_bytes": 8351434240,
+    "peak_reserved_bytes": 8415870976,
+    "reserved_bytes": 8415870976
+  },
+  "memory_before_load": {
+    "allocated_bytes": 0,
+    "peak_allocated_bytes": 0,
+    "peak_reserved_bytes": 0,
+    "reserved_bytes": 0
+  },
+  "optimizer_constructed": false,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "runtime_launch_commit": "317ac7ce8cc60906572cae9f53b2880e209bd789",
+  "sequence_tokens": 954,
+  "status": "COMPLETE_NO_UPDATE",
+  "supervised_tokens": 477
+}
