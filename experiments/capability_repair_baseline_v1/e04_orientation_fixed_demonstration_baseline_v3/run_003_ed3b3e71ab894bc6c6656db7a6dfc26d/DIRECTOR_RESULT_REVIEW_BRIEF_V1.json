@@ -1,0 +1,13 @@
+{
+    "schema_version":  1,
+    "review_type":  "DIRECTOR_RESULT_REVIEW",
+    "protocol_id":  "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE",
+    "run_id":  "RUN_003_ed3b3e71ab894bc6c6656db7a6dfc26d",
+    "result_package_path":  "C:\\\\w\\\\arc2-e04-v3-results\\\\experiments\\capability_repair_baseline_v1\\e04_orientation_fixed_demonstration_baseline_v3\\run_003_ed3b3e71ab894bc6c6656db7a6dfc26d\\RESULT_PACKAGE.json",
+    "result_package_sha256":  "9ea13b5056eda14045c37e133c2e211cda4649baf0bc09e68598c1a2ce862a6e",
+    "evidence_commit":  "778408f3d8d9beb270c56d635b55d5f9f0259208",
+    "requested_decision":  "REVIEW_FROZEN_E04_V3_RUN_003_RESULT",
+    "concise_observed_result":  "GPU process completed without updates; primary 768 rows and fixed B1 subset 64 rows were byte-verified and CPU-scored. B1/B32 differ on 5 fixed sensitivity rows.",
+    "scientific_limit":  "Frozen scorer classifies NUMERICAL_OR_BATCH_SENSITIVITY_INCONCLUSIVE. Reused development cohort only; no independent ARC generalization claim.",
+    "controller_request":  "Director review the preserved result once; do not launch or extend any experiment from this brief."
+}

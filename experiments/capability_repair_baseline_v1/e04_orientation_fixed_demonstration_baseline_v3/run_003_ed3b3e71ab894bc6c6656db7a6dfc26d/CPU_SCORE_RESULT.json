@@ -1,0 +1,67 @@
+{
+  "batch1_disagreement_row_indexes": [
+    28,
+    500,
+    508,
+    736,
+    745
+  ],
+  "batch1_gate": "FAIL_INCONCLUSIVE",
+  "batch1_raw_sha256": "4ba60a6efc1e3338bd1eead075797b4bdb3519a8d309598301f564dbc05c6e86",
+  "batch1_sensitivity_rows": 64,
+  "canonical_bases": 48,
+  "condition_exact_grid_accuracy": {
+    "FIXED_TURN_ROTATION_CONTROL": 0.16145833333333334,
+    "MARKER_BINDING_CONTROL": 0.9635416666666666,
+    "NO_TRANSFORM_RETENTION_CONTROL": 0.7447916666666666,
+    "ROTATION_TARGET": 0.13541666666666666
+  },
+  "condition_parser_validity": {
+    "FIXED_TURN_ROTATION_CONTROL": 1.0,
+    "MARKER_BINDING_CONTROL": 1.0,
+    "NO_TRANSFORM_RETENTION_CONTROL": 1.0,
+    "ROTATION_TARGET": 1.0
+  },
+  "contract_validation": {
+    "gpu_used": false,
+    "input_rows": 768,
+    "model_imported": false,
+    "optimizer_steps": 0,
+    "sensitivity_rows": 64,
+    "status": "PASS_NO_MODEL_IMPORT",
+    "target_sidecar_accessed": false
+  },
+  "forbidden_operations": {
+    "backward_calls": 0,
+    "final_audit_opened": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0
+  },
+  "matched_rotation_target_minus_control_bootstrap": {
+    "FIXED_TURN_ROTATION_CONTROL": {
+      "ci95_high": 0.041666666666666664,
+      "ci95_low": -0.09895833333333333,
+      "point": -0.026041666666666668
+    },
+    "MARKER_BINDING_CONTROL": {
+      "ci95_high": -0.7864583333333334,
+      "ci95_low": -0.8645833333333334,
+      "point": -0.828125
+    },
+    "NO_TRANSFORM_RETENTION_CONTROL": {
+      "ci95_high": -0.5416666666666666,
+      "ci95_low": -0.671875,
+      "point": -0.609375
+    }
+  },
+  "minimum_support_per_reserved_cell": 12,
+  "primary_raw_sha256": "835eb9f06b225fa3a4be6de82ef28363e239062721c8ce0e255894ed58925ac8",
+  "protocol_id": "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE",
+  "raw_freeze_receipt_sha256": "a4313e1f1faaf5b9ebd15338fb8430b9c371d7d4cc74116fb53bca362e354d64",
+  "rows": 768,
+  "schema_version": 1,
+  "scientific_scope": "REUSED_DEVELOPMENT_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION_CONFIRMATION",
+  "status": "NUMERICAL_OR_BATCH_SENSITIVITY_INCONCLUSIVE",
+  "target_scorer_sidecar_sha256": "8da15d579c5e91f80f7e8587f893cc4e210d6b84120abf0823e46cc9978e635e",
+  "target_sidecar_opened_only_after_raw_freeze": true
+}
