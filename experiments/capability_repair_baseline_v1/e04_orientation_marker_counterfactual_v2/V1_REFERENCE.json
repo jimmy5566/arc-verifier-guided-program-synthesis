@@ -1,0 +1,6 @@
+{
+  "source_commit": "7a54066fd503d36b7154d69ab82e4e2727e335b1",
+  "status": "PRESERVED_BUT_SUPERSEDED_BEFORE_GPU_EXECUTION",
+  "v1_cohort_sha256": "76c6fd57173ec62571f27a312e3f80601c70cdec04cda79432822937e7a37967",
+  "v1_manifest_sha256": "903ce8f6e3571af9956adb7b1bd1b9bba21bef3a6b70f4bbfc89e6eb43fc151c"
+}

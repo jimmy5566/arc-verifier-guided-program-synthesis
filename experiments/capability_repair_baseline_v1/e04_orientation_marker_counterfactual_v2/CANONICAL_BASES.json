@@ -1,0 +1,5046 @@
+{
+  "TRAIN": [
+    {
+      "canonical_base_id": "1a2903d60417ad43674195d9047dd64b54247908598d528b2ba1aa1794e73068",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "EAST",
+      "seed": 810000,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "579f385c94aa6ccb09910b32dd2ff551ee55a74f78851915b91252dc7f3fdcb0",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "EAST",
+      "seed": 817919,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d067451368bf9fbb6121f182ebdfacdf30421e09ccc82206f030cffd21681597",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "EAST",
+      "seed": 825838,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "87a30ddd029de8bfddadb70b3ab84a0c038025a13177ca1c0d6ed87c06a9b375",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "EAST",
+      "seed": 833757,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "510fee81474a7d8f185fe50d47564a9886b4659acec6305f1f0d8a04b9be8815",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "EAST",
+      "seed": 841676,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "9ba4298d48aa538879114c14eb4d2ff88841f0b8c286aa845ff693a73d547bf3",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "EAST",
+      "seed": 849595,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "feb72acb5b6a8d2376c6ad16222f78abd820057faf44c9c7798c070b1e9a7f72",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "EAST",
+      "seed": 857514,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "042462dcc40f0681d8b287c89cdbedcaa48fa8e85754e7395a95b8335738504e",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "EAST",
+      "seed": 865433,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "1b6ae498f7030d4cbaa896ccebb03b0f584adf2436f7566fd77e7f97813c424d",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "EAST",
+      "seed": 873352,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "265a0983ac195a0a38f21fd9a42a6366dd345212eba5a72bdf6b2bd94c03aad5",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "EAST",
+      "seed": 881271,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "9db677adabde3abdca971e7836deee64654d4b730b2a50dd7ff33a3151a808b7",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "EAST",
+      "seed": 889190,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f454276e2302a4922f9e87a0f434e0363a02522dc7a731f208569c9e47e89897",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "EAST",
+      "seed": 897109,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "4da4c036400381e3cfa808daf4381d6f1da5bc8f6977315adcbbcd01a20f229a",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 12,
+      "layout_template": "CENTER",
+      "reference_relation": "EAST",
+      "seed": 905028,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "dfb4556b6058fc1157642c8e804f43c4a9653303a597699560912730b228b9c8",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 13,
+      "layout_template": "NW",
+      "reference_relation": "EAST",
+      "seed": 912947,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "99b2124f17732211579ef1fc91fee75383fe4a82dd91d53a7ed1c409032882a4",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 14,
+      "layout_template": "NE",
+      "reference_relation": "EAST",
+      "seed": 920866,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a2374a372e121850331be4a2b7986816de25c0113ca71eb7303b8e61e0dda85a",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 15,
+      "layout_template": "SW",
+      "reference_relation": "EAST",
+      "seed": 928785,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "9dd6357725e7129d4ab23f64a0308d0538a0303ed150634d111178a9626a040c",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 16,
+      "layout_template": "SE",
+      "reference_relation": "EAST",
+      "seed": 936704,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "7e8009e82f5faa3702e8c1cb4b88230fca736c05bd78f171ccb38225254124be",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 17,
+      "layout_template": "MID_WEST",
+      "reference_relation": "EAST",
+      "seed": 944623,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "0cf30220a5a9c7763841bd22172e4ba55b7e0edecf14e1b82db5301b9409f6f9",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 18,
+      "layout_template": "MID_EAST",
+      "reference_relation": "EAST",
+      "seed": 952542,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "cd5adf7cacc2e12149b63111387ff07ae93323918a78bf52c74124469301cf6c",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 19,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "EAST",
+      "seed": 960461,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "117d0b1e7f50274f969fb059b14326713fd56dd08518ef6de3c3eceb8826023c",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 20,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "EAST",
+      "seed": 968380,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "91c05dfc8dd95cd8434f47d32ab054b18575ba103fe554c12bc2193ec84a5aa8",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 21,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "EAST",
+      "seed": 976299,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5081f434de50a62bc42a22d4853ec4ba7ff98112966a7a91ebd391a64da9d0ee",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 22,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "EAST",
+      "seed": 984218,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5a31ae5024f4231b80ca56005b156665b28e9cf228985f20ce714c8ca4e32897",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 23,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "EAST",
+      "seed": 992137,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "af753e2449bec31005a496d2431dada5028b9f27a7ed7f53af8025e446dfe2ea",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "SOUTH",
+      "seed": 914729,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "532db929f2466b00dcd8e1fa6dad2fe3697e2e14b510dcb9e8966294c1ba77a1",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "SOUTH",
+      "seed": 922648,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "3c916c7b967b656eb10c8731bf6eb66f55dcc19881b73ddf42aecc211a0bf6e1",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "SOUTH",
+      "seed": 930567,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "52f1764a3757cb6446736c6f9acf754b297b15d613c27ea5256d36244de50e00",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "SOUTH",
+      "seed": 938486,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "347ff92b64fe1e0614f96105cba059d599c344a2ce8d4e81284401516a3b78fa",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "SOUTH",
+      "seed": 946405,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "834bcb02a4547bb054b6f456c2bf3871daf147db0c7971e3cec4f5ba3c01a5db",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "SOUTH",
+      "seed": 954324,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f62f661c87de6074444ef4570037ede6697c58009b43ce96ef54bcc40ad60304",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "SOUTH",
+      "seed": 962243,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "8206b85ae1d0c56004814b5ed033a70ddc851e839120e79e664370004a3f0858",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "SOUTH",
+      "seed": 970162,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c9ffc03ba97f545198cdd72a41d0d4ca4cd29bb62142b0aca1acf2e6ab016dfe",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "SOUTH",
+      "seed": 978081,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "9d963767dda021457ebb84f5281cc7142e481d75d59c8b90321f9d829df203d6",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "SOUTH",
+      "seed": 986000,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5566f25d0390928b61f225809b553056c08831db76e78dd2e0ab8ff91544899a",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "SOUTH",
+      "seed": 993919,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a11af38490bbeb20d23a546aebf717bbc52ca9c6e9c824f731a84ee33f08e3ce",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "SOUTH",
+      "seed": 1001838,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a376c8e7ce59f1edd4e6d612db124a90036fcd65a168799271aa2a29e6344cdf",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 12,
+      "layout_template": "CENTER",
+      "reference_relation": "SOUTH",
+      "seed": 1009757,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b82874c681fe97e3d29bdeb6353b654cce2f531775e602b343d59d125b5352df",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 13,
+      "layout_template": "NW",
+      "reference_relation": "SOUTH",
+      "seed": 1017676,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "116f7a7dd8d312c2aa98c162fb849863c8a955ea7aa33dc52c053b90ccc5e05e",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 14,
+      "layout_template": "NE",
+      "reference_relation": "SOUTH",
+      "seed": 1025595,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "83149e60a0423124df141144b4af0338b231e02729be48b697e5fbe4cd57ff58",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 15,
+      "layout_template": "SW",
+      "reference_relation": "SOUTH",
+      "seed": 1033514,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5f06ae940165a2d374891e85bd4b827314f1ec7d1a30a619cd443a1104e185ee",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 16,
+      "layout_template": "SE",
+      "reference_relation": "SOUTH",
+      "seed": 1041433,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "45666790e3fc9489b4b354a2408041d462ab5bcbbfbb0643bcfb7e6a37322cc7",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 17,
+      "layout_template": "MID_WEST",
+      "reference_relation": "SOUTH",
+      "seed": 1049352,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "ee509d6b9823ae0ed362a73573333dfd8bdc561f6ebfbc65bddf66317da26ef6",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 18,
+      "layout_template": "MID_EAST",
+      "reference_relation": "SOUTH",
+      "seed": 1057271,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "fcc975ba6ab33f4fbfa9ca194ed245b69546265c5e1fb12e9ba06d99f58b6e4d",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 19,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "SOUTH",
+      "seed": 1065190,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "51808bf6164e27b41708977c0c3b2fdd90072bd1af63794d79308604a846fb73",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 20,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "SOUTH",
+      "seed": 1073109,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "be9054c8a1719545ddc40f1bcc67de385ccf323b16e0bf7fb7427f65f6adc5a3",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 21,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "SOUTH",
+      "seed": 1081028,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b4004162d7a3a8e3aab0f0c73b3f34588c9c21a51a35ab1667a82a2b6a63cb81",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 22,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "SOUTH",
+      "seed": 1088947,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f98afca8b9366b1c1857d56c89a862b77fd23af3d84ea97c74e348f5b229437b",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 23,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "SOUTH",
+      "seed": 1096866,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "142f928a772a9bdcb6595b0b7f870bccbf7aa537b5979c93f43d67796b0acc17",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "WEST",
+      "seed": 1019458,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "01a72ccaab50208a8a938b5ff1aa0230e6dc3663d2463d439fb370a3a4e7daec",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "WEST",
+      "seed": 1027377,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "2327262d2b82ab22a07656688233da1d29c2e6eab425887845817c513fc0aa97",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "WEST",
+      "seed": 1035296,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "1a523898706dff25b87a3176e67df2d4d7a1170f078c3831bd68068d77fb4003",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "WEST",
+      "seed": 1043215,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "40281d802037db89a5fd6e1453095b3fbfd6db7d54584960e10e2282c6993801",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "WEST",
+      "seed": 1051134,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c3eeb75a6b548eb0515d9f6e0adcfa4e310ed63bba8fa3eb2849a09a2c036ce3",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "WEST",
+      "seed": 1059053,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "282cc43867aa316ee74bd7f3f5c1cb42e7f37e712b9dc35accc7a02a3b5e549d",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "WEST",
+      "seed": 1066972,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "bd2ae37b84bf64722e3a3bab4ca772d0b458ca4a45cb13f270a3cb0d7cf2544a",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "WEST",
+      "seed": 1074891,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c6fee801c89cfdb5ef55b7cceef6d2032835959a59773a95155edaf6cfb426f4",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "WEST",
+      "seed": 1082810,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5f8cd25a30b1583ba48f8007dc6a240584f5464cd4cc68052888beae935a7a2a",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "WEST",
+      "seed": 1090729,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d004915aba17c246e35bc077ca50e4b93fcf784254c05cc3dc298edc676e5133",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "WEST",
+      "seed": 1098648,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "9e207d2d5b2ba39721648fd9923f758ca6a6551dfd98aecb2b461b60fbe4688c",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "WEST",
+      "seed": 1106567,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "4ff7f0a38150758642c1ec5a41cf60d4a974081ec60c7b6397988672196fe683",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 12,
+      "layout_template": "CENTER",
+      "reference_relation": "WEST",
+      "seed": 1114486,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "450ee26590123426067e8ba5574dad0ea9ddd05906cb5a666895a96ca7c0b481",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 13,
+      "layout_template": "NW",
+      "reference_relation": "WEST",
+      "seed": 1122405,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d4f78d4455865819e295007d482be633a1de58f3cba353ba8873d89a519e88c1",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 14,
+      "layout_template": "NE",
+      "reference_relation": "WEST",
+      "seed": 1130324,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "3ec296e0438e183466909a9e5f8537c18f75423820c3e94ffcc7de86bf87db2f",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 15,
+      "layout_template": "SW",
+      "reference_relation": "WEST",
+      "seed": 1138243,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "99586b0df7d9869b37c62389b93d3919fd9fe9d07296b0c808a4ceb7474e6102",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 16,
+      "layout_template": "SE",
+      "reference_relation": "WEST",
+      "seed": 1146162,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "0aa91cf1cd1bf6229c73d18e28df9d962027879befd000e7dfe8d317349d384b",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 17,
+      "layout_template": "MID_WEST",
+      "reference_relation": "WEST",
+      "seed": 1154081,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c2f28b31dc7c77c474fb1f6016b9eaaf0548d7063b3a58879c4482c2b99525d6",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 18,
+      "layout_template": "MID_EAST",
+      "reference_relation": "WEST",
+      "seed": 1162000,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "7f60f20c10ec343f474757ada6c2384f40a24abc0e77b67e11a9b1116d2e416b",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 19,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "WEST",
+      "seed": 1169919,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "9c31b9fc1d59a17fd1e02cc0e7dc2a999ff1075d784eb5d538b5d9b432489a05",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 20,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "WEST",
+      "seed": 1177838,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "921a7f01bb5ed133a566604b5c64c4393850feb7d34f3993a7e09f64ff3657be",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 21,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "WEST",
+      "seed": 1185757,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "0eb410e651cd038a6d8ca8356d0561c9657d0bab8c51d5c469797a7b5b3b12a2",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 22,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "WEST",
+      "seed": 1193676,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "46afb264bc7975231559b0d4e926ee20c3ed520812d91c586d6ee88ba635957d",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 23,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "WEST",
+      "seed": 1201595,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b44d9579611c5302dcf3d6a2ede59ca19b01a12ed6ec5ee42cceccf624350021",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "NORTH",
+      "seed": 1124187,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "4793ce65573203482283e961be1ed4d9117012d2919df5d7d37231f12b8897f3",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "NORTH",
+      "seed": 1132106,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a178c291950aa8c0b9d559aec89d0cff955df3f00548a14835a18860ef2fd94e",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "NORTH",
+      "seed": 1140025,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "6c14d94e271311c43e9074b5bd534320f93d0f644b8924afe7b4ce0e7ea7a952",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "NORTH",
+      "seed": 1147944,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "8237424285d9390f33a5e400ead38bfac8901a67d35f0ac015de62c328f00f55",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "NORTH",
+      "seed": 1155863,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "618e1938c9e1e9534eef6ee2eef18776d52aff24e86687990f011b548f172f72",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "NORTH",
+      "seed": 1163782,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "6874561b9b694bb5628f4f8d31a1ae6f17dcb87ebe7301834f65098c75316394",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "NORTH",
+      "seed": 1171701,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "85d157333cd03f759bbee1e1f8d40a1612b20dda1f981cad77e64673e2cec846",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "NORTH",
+      "seed": 1179620,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a0edb38a8a78b6fe9b98885d6f82fd72dd4cbd2024bdc06abefba31cc6c45e57",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "NORTH",
+      "seed": 1187539,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "632c5e43b4a667c0651c957011cb1b7e39e434410b11773ef9c964563945ffb8",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "NORTH",
+      "seed": 1195458,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "75f8b6b41638da986d54bb8319fef9419d563b00dce4bee0b8f687b8d1388d27",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "NORTH",
+      "seed": 1203377,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "4f4ff57178e8b7c0dd83e5d6d24e2342fe7864beb14bd22777af9d1d9de8cbd6",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "NORTH",
+      "seed": 1211296,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "e8b32d37ead1267f6cd09b025bdee6a2df9f986d3c249bfc2ffe8507cd94fbb1",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 12,
+      "layout_template": "CENTER",
+      "reference_relation": "NORTH",
+      "seed": 1219215,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b93f8fad17e73bb985117236817959af7983d13800ced3afa852e420ce53b9bd",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 13,
+      "layout_template": "NW",
+      "reference_relation": "NORTH",
+      "seed": 1227134,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "0e8f06371c92a1c3a6d335d6f152f1b3e622ba069e2feb61a69d459c9a2ea9c1",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 14,
+      "layout_template": "NE",
+      "reference_relation": "NORTH",
+      "seed": 1235053,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "61525a36797b0c4054f76213ec09051a3d8f3bbd765ef767d60aefdaac03bebd",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 15,
+      "layout_template": "SW",
+      "reference_relation": "NORTH",
+      "seed": 1242972,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "4ea18e1ed6a6ce9e6542e00f01be0fd63dde09d00bbfd480ec215852c6a4d0a1",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 16,
+      "layout_template": "SE",
+      "reference_relation": "NORTH",
+      "seed": 1250891,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "bebb4def178c3397bea538169038d8dee8c67c5364ed276b293f436b74a323ba",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 17,
+      "layout_template": "MID_WEST",
+      "reference_relation": "NORTH",
+      "seed": 1258810,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "4555ffd030bfc17271a06bd582b9cace287e8089b8846baa7ae612a756b00e98",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 18,
+      "layout_template": "MID_EAST",
+      "reference_relation": "NORTH",
+      "seed": 1266729,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "58dd3f24cb5dda32bd4635dee3df7f52041fad19ba116c1028293022b8a65761",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 19,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "NORTH",
+      "seed": 1274648,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "031ca819da72ffad858167e2efe9c2468036ce6f7dcd31c3bf896111fe8a9c55",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 20,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "NORTH",
+      "seed": 1282567,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b77cf24e4a304fdf24441dc8759a411a5abac07781e49fcfcf4b9573edd4fa54",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 21,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "NORTH",
+      "seed": 1290486,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "e7be8e5608f86965a8ad99ba7fd42ea7a429e88cf75cc9ef85f4ec51cd9af613",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 22,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "NORTH",
+      "seed": 1298405,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5cf6c2dcaf3ecf225142aba32c701813b432c69fbeb1fae590063d5f3d91b7c9",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 23,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "NORTH",
+      "seed": 1306324,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "9620ef5ff54c6acaeae947666c021faaa32472dcfd9f513bf76049ae0c4d5e94",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "SOUTH",
+      "seed": 1228916,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "ffe4d0c2017bbd217eb46e9c502929f880639b897dc858c07b5d70aa377a7d6a",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "SOUTH",
+      "seed": 1236835,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "6ee00e7cfbdcf34239c9ff67e6c1dd3ceb659598e82071668a2cc4d63869fb11",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "SOUTH",
+      "seed": 1244754,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a6eacbc724da6ab630573ad62d02f573e6915ab292acc5d23ce95bcf6a7a02b3",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "SOUTH",
+      "seed": 1252673,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c4276f22a0e911569d11b730bc278c8e17a28d9bc22f9fc298ce5010154122df",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "SOUTH",
+      "seed": 1260592,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a9416b49372700af726f4b0773391626c1a95aca627a76f69146a82dcc5a7493",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "SOUTH",
+      "seed": 1268511,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "82ba31d534f45bcb84cda2b6b4c8bab5b67fa2063352a7be47e7cc155fe1b530",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "SOUTH",
+      "seed": 1276430,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "0fbb7c17c0a74530b6e437e3812b00b8c48f1ce633ba27d26909674652097b9e",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "SOUTH",
+      "seed": 1284349,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "42dbe25fe4944867882cc2ee8f71650431cd65ae07351258c84e473a038a0a62",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "SOUTH",
+      "seed": 1292268,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b67c3227e453f51a66484f1aa184236b8a1253b30c13a8d2d0e037a4eb362f6b",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "SOUTH",
+      "seed": 1300187,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "682d680015c8a9f59822eefdffc4f41ef020dc8c48b0e8b1236a11b382ca6f61",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "SOUTH",
+      "seed": 1308106,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "376e1a49b19083d16b6663dad4e6c20170e20f85f89200bd3f4e72e32a5bb883",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "SOUTH",
+      "seed": 1316025,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "4e61b0328a9117152f86e892e9babcc752da52599d9cb8cfb98bb7ca31df32ae",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 12,
+      "layout_template": "CENTER",
+      "reference_relation": "SOUTH",
+      "seed": 1323944,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "ffd6fc68702f9be870004bc92440dd1bc079098297c0e2c02430bff2ea97c682",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 13,
+      "layout_template": "NW",
+      "reference_relation": "SOUTH",
+      "seed": 1331863,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "0fb568ffad948cb2825e81b062ea87b6c8f312dd58645d397701219bf800b362",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 14,
+      "layout_template": "NE",
+      "reference_relation": "SOUTH",
+      "seed": 1339782,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f702349a07e531d6b850a0a852657acbe37a3b92509dcce7fe633187044aa7b6",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 15,
+      "layout_template": "SW",
+      "reference_relation": "SOUTH",
+      "seed": 1347701,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5cf17d7fd7ac859280cce8e930dcfa21f4c44f1ce3e470dcbf4a953427637d26",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 16,
+      "layout_template": "SE",
+      "reference_relation": "SOUTH",
+      "seed": 1355620,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d85a2259e5bc67f7114199db2868d61ea5f2dc5a3ec76c9711d1e99aac936c98",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 17,
+      "layout_template": "MID_WEST",
+      "reference_relation": "SOUTH",
+      "seed": 1363539,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "482e7e5eadc8b7a041dde0e30b056fe9f2406f5ded399efc0d0195993c7aec60",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 18,
+      "layout_template": "MID_EAST",
+      "reference_relation": "SOUTH",
+      "seed": 1371458,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "ee158fe3230312200f30a1e11fbbd0f10212b310ad80afa32bb657ec669699a1",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 19,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "SOUTH",
+      "seed": 1379377,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "3c4fdb4748493f7287a99d9b54a7cefecedd0c47638e87b0fffce128d7936c0a",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 20,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "SOUTH",
+      "seed": 1387296,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "7b1bce7c961a2b78ac80cf4802b07e64b8f892242575ef911252ff9faf6938a8",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 21,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "SOUTH",
+      "seed": 1395215,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5c87156b41352fc7d3e2268b961f95a3f64ecd0ac5da0794e3886a777ade7b24",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 22,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "SOUTH",
+      "seed": 1403134,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d78dcc8177e25311483ea51baa81800dafc1f3a508dd40000cc5a1560ce7f2de",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 23,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "SOUTH",
+      "seed": 1411053,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "789bf16f48a8b84438e669fddb03698e068858983316d2162b5117f0dc840351",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "WEST",
+      "seed": 1333645,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "28f937b1b892c62c971e3a9e6a2dd506a6464899ad3980027906af86ca2d891e",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "WEST",
+      "seed": 1341564,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "6ba88d0ed0dedd647eee7273c72a6852f219a3c72eefb56c9e9d4c7a97dd8666",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "WEST",
+      "seed": 1349483,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "9c767f797378db993f6c7f2ecedac03cf8bb78745a105df5c72a4dfd843b0d5c",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "WEST",
+      "seed": 1357402,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d0afb2ab4d65f9a4a769b8eaa2dec7bd73a436204a13519314c9ff1264581e5c",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "WEST",
+      "seed": 1365321,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f81b15422ee665743d49cb9851d91a45e15044f756821bbfc01d13d7a5122fe3",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "WEST",
+      "seed": 1373240,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "2785b6cf2fb319318dce304ca4349449573a1b8edb710bcabda07677f9ffa126",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "WEST",
+      "seed": 1381159,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "044c7e8d361de5e56787ecb7d4351568e4f83937e83fe1dc8eee20d081fdedab",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "WEST",
+      "seed": 1389078,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a68741d48591de1bbb09fc2f3427b89821454ae1dab8b9fa46c7db3918f2f612",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "WEST",
+      "seed": 1396997,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "8db713dd7f19dbad96ec7e6e1d20c94ed51e0fd4c288f4805102f5d74a488428",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "WEST",
+      "seed": 1404916,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "da6ab611536a72accd2cf2f81979df9c53eb48ed91a4045cead330029ca6c89b",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "WEST",
+      "seed": 1412835,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b0865b04ae0b3c7cf462984be9dc957a2b2caf000d0e550fead7bd4673ed116a",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "WEST",
+      "seed": 1420754,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f010db5d0c5f7d16fbd4281bcdb5b50acc4df87ddf1f62c59716f068680e66b4",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 12,
+      "layout_template": "CENTER",
+      "reference_relation": "WEST",
+      "seed": 1428673,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "3f58f366129841f9ee550a049ffaf99977abebef7a0cccb26264961a8c285b00",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 13,
+      "layout_template": "NW",
+      "reference_relation": "WEST",
+      "seed": 1436592,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f7db83b1dc57911c0c8ded7f80f570336fe2d04946414db4d0716944c8520a1c",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 14,
+      "layout_template": "NE",
+      "reference_relation": "WEST",
+      "seed": 1444511,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "030e60104f7745a1664e474e9c083c77ae38d8e4aaa2eb821deea20f8f7766d6",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 15,
+      "layout_template": "SW",
+      "reference_relation": "WEST",
+      "seed": 1452430,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d76c9330d2b33cb9b6e10cfcca9c552eda00aeb14949fa6ada18528014de6507",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 16,
+      "layout_template": "SE",
+      "reference_relation": "WEST",
+      "seed": 1460349,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "699ff50d209f508bf9a5fa3308303dbf8b7fb10786e580b89276f3536fef6481",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 17,
+      "layout_template": "MID_WEST",
+      "reference_relation": "WEST",
+      "seed": 1468268,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "01ac9779160cae5afbd61a2c2045919de5daace3df11e16fd50b51912c93453a",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 18,
+      "layout_template": "MID_EAST",
+      "reference_relation": "WEST",
+      "seed": 1476187,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c86da789102bbcb16aa6450aa3f792a011665f6b5013ece231b34f9b00dff25a",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 19,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "WEST",
+      "seed": 1484106,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c1363e3c12440670cabd338740227d9b639595162a1d674a0c863e095037fa66",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 20,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "WEST",
+      "seed": 1492025,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "781dc1538ab72b80ebf98251c420afaa5d94b1d79c87a64931ffb659173d7496",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 21,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "WEST",
+      "seed": 1499944,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "1de237d45bfc5697f4a32c8ff5399dfb780139e4e8ce8f937b412bd4ba258c38",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 22,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "WEST",
+      "seed": 1507863,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "20f0f600cabe9f75d1d34cb383946c8053dc46d468df7ad0c1c226894e63a6d0",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 23,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "WEST",
+      "seed": 1515782,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "53b04760d1df449be5ee3854dbd632a02350c6c5fe95f62dc4cf7e64a3a51c81",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "NORTH",
+      "seed": 1438374,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5d5fd691436bc67da9042b01d9308aaecbe3a73d6ad618bd2e1e8c969805664e",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "NORTH",
+      "seed": 1446293,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "30c64ff2f909d812ae19ee94c4f5ff943bd7447575137aa23a62f6e1dab2352c",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "NORTH",
+      "seed": 1454212,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "420208d5f043b85e6510c0be1d18f2bb97d079bf4049fc478377faa9a53b01ad",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "NORTH",
+      "seed": 1462131,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "80f5d624fc7b1572fe7e515bcafd1976c55d05a716f3b77961acd6a13a67c214",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "NORTH",
+      "seed": 1470050,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "024c4979bdddac6bd790889ece8fe09296c10578b1b3a37fe7a00c4dbc8bf1bc",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "NORTH",
+      "seed": 1477969,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "8c9422900a77dc4fb516efef67b860b7eb708805747136d8488968800f589c41",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "NORTH",
+      "seed": 1485888,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "75eebdc9b59fe908107e0e3eb8b181c5e736dab9402977b5e60c468f0dd7915d",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "NORTH",
+      "seed": 1493807,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "1907fbee251299b3e33afcb7501ac40320552a68fbc49fd3904307e16a624939",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "NORTH",
+      "seed": 1501726,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "199118928cc9a1805a3756256684d59c548e48b407920c3846c04e39de9901d0",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "NORTH",
+      "seed": 1509645,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "645c744e788df7a788d9585d2c5ad5f351d192f7a4ba716d6093773880969802",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "NORTH",
+      "seed": 1517564,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "4b971b1a88e65127460b61acbf50fc1dc76d5e01f67827151a02629af233a5fc",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "NORTH",
+      "seed": 1525483,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "ee69bd85c5c739ec0799e497fc78c955cd0b4aa445e4fbbbcae9290f8bfcf3c4",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 12,
+      "layout_template": "CENTER",
+      "reference_relation": "NORTH",
+      "seed": 1533402,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "e10a78914ac74a80b29200048ed22381d72399aa0686912a5031ba83cbd956e4",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 13,
+      "layout_template": "NW",
+      "reference_relation": "NORTH",
+      "seed": 1541321,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c2ad8a57d66508cd105f5f7833bd1d6008c0bc7714b376c6705ec0c63633b7c6",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 14,
+      "layout_template": "NE",
+      "reference_relation": "NORTH",
+      "seed": 1549240,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d9092464c4d5a265a220edda69db6938d6702283ec92aca29328bcca75b45501",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 15,
+      "layout_template": "SW",
+      "reference_relation": "NORTH",
+      "seed": 1557159,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "87052c31c9578945f0c9df0c53976ca413b45dc75cedff30e997be9d5e1d3926",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 16,
+      "layout_template": "SE",
+      "reference_relation": "NORTH",
+      "seed": 1565078,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d2a62d9dc8dbede246bc7dc4492e61de9a48760c0a0cc651c6463aa70fa8a7ea",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 17,
+      "layout_template": "MID_WEST",
+      "reference_relation": "NORTH",
+      "seed": 1572997,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a371489d215bd126bf8686c4d93b73ee38fc4280238e27d4ba4cee10584a9157",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 18,
+      "layout_template": "MID_EAST",
+      "reference_relation": "NORTH",
+      "seed": 1580916,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b662d59c4a90378b336ce449d68ad0a1e94a6abda9390f18fe9944a46b727491",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 19,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "NORTH",
+      "seed": 1588835,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a58b95b9c86d9d9bd0016061744c9b7dedcaa6d49fe2f62e512f31582c78168e",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 20,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "NORTH",
+      "seed": 1596754,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d9c99865810de8d8d0f687af6dbe267d02e4b56dbfb2c109c2c58db70e6c03f8",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 21,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "NORTH",
+      "seed": 1604673,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b07a6fe4eaa3c7258dcd3c88e925dc1332f433a97c0952812dc0547eb62b3fcd",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 22,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "NORTH",
+      "seed": 1612592,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "487741126a387a5e4c972377d9578185298ec9fca0405a4d73dbad65631fe25b",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 23,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "NORTH",
+      "seed": 1620511,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a6cc5d152344523881e15e53b5a44e24ee4887acd373a46923339a66ca9726da",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "EAST",
+      "seed": 1543103,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "70d00b177a6deb3a10b01fd6216197d6ea8ebaac0250689e9549194efed42669",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "EAST",
+      "seed": 1551022,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d7fb7a0c31618dad3e5cdcbcea6efa26815c33fca7a26994aaad2c05ef8574dd",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "EAST",
+      "seed": 1558941,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d83a8a63031415a4685dc7df04a5de32b1ab55e69bb1aec5fde3eff915e838bc",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "EAST",
+      "seed": 1566860,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "2027e02c6c74ecbd6e2905b9e231631c554e4b4f1d37957f0cd7a2e3626be0ba",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "EAST",
+      "seed": 1574779,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "461860266c3ce67f9083793bcc9130ae1d6d1bc0c0f1a421046b53a98eca1287",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "EAST",
+      "seed": 1582698,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "da9c1162ca7de84300270933dd328632015977db64be1bcfe7084460cd74296d",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "EAST",
+      "seed": 1590617,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "598f55eff54645a3697a430598a306860477dc1186103c1cd03a62611fadc7a2",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "EAST",
+      "seed": 1598536,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f3d0994848c886a60a82f50ef8c0e2fb6308dfc760c1df83ad24dbb062825ea0",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "EAST",
+      "seed": 1606455,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a036719715d4506d3cc67f5180d7222169c5ca70452cd3574e0db4967722680f",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "EAST",
+      "seed": 1614374,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "3c43f080eb9f79d7078101c6229df404e495235a2a131f337021cae6cb1a5550",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "EAST",
+      "seed": 1622293,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5085cfd74e0e5a7f1a1788c4fe0df3c0928ab9c7edf5c067d5c31cc4962ad87e",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "EAST",
+      "seed": 1630212,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "6ebac2f47ec6c70ed04be47ca294d8498f9f4d3f3d0dbd529d12a0967d3910ec",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 12,
+      "layout_template": "CENTER",
+      "reference_relation": "EAST",
+      "seed": 1638131,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "adf548ef237e38db60e8168b35595fe26e24a6d97232eebee180f19864107145",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 13,
+      "layout_template": "NW",
+      "reference_relation": "EAST",
+      "seed": 1646050,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "8bf4735267b96b9767764b7e8cb4dc23bc18662c617f20be75dab63b7af775d6",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 14,
+      "layout_template": "NE",
+      "reference_relation": "EAST",
+      "seed": 1653969,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f64fb6b2b640ee59e4db1e6632301610d4ff9c117a0eccac54d078a53baa5206",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 15,
+      "layout_template": "SW",
+      "reference_relation": "EAST",
+      "seed": 1661888,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f4018f9dcff2da344d8086eb2c5163f8f27ac4e118a9faf6b7a06865593098b4",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 16,
+      "layout_template": "SE",
+      "reference_relation": "EAST",
+      "seed": 1669807,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "edf962fc2ac97ec7d2c7a09d279e1c2c34f40ff2177315c128a3b656fc3cb88b",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 17,
+      "layout_template": "MID_WEST",
+      "reference_relation": "EAST",
+      "seed": 1677726,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "6954fe2ef57a5dba078013d9b3daf22908d6e19b255115c15b9f6460460ecd02",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 18,
+      "layout_template": "MID_EAST",
+      "reference_relation": "EAST",
+      "seed": 1685645,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "68d319ab315cfa1ddfcb0413538631d08f635b0c52846e31886b3bab55c941db",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 19,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "EAST",
+      "seed": 1693564,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "fa4058b13ea29392dde039d0ba0d2037e9779d9bfa47bf09ad6b76247efe1b60",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 20,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "EAST",
+      "seed": 1701483,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "1952eada84f3c0280599f85e9ecf9c6145b0a785fba6671eb4d846a9afd38ff7",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 21,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "EAST",
+      "seed": 1709402,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "fdb6ae36e55775aecdb9c3ca91bfc49b09634fe844b9438d2e14820c3a878fa3",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 22,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "EAST",
+      "seed": 1717321,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "fb17c1759f22b0187710fb75f8fbfd408ccd0028d93e068b585f32b1f8e569ff",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 23,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "EAST",
+      "seed": 1725240,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "7816c76bef5e80acd6902bf71787fbd794f822a550426a968cde961be099e570",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "WEST",
+      "seed": 1647832,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "62566308a1b38f3ef2b445b8c700c93a5f9ff2cf84ed3f7be4922963495b12cc",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "WEST",
+      "seed": 1655751,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "4d218401c09e4e0d6465f88481ab1fe0ef1dc54c2e609fd456d66b62c8f24823",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "WEST",
+      "seed": 1663670,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "63fdd1cb5ca3feba94f864a2fb644e2e75ad164b8ae5be0fd3805cc99a081184",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "WEST",
+      "seed": 1671589,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "cd8dd73188ccece816770ef82823dfc9157ef147c0c505272cace06a6519080f",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "WEST",
+      "seed": 1679508,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "308e493d14a708a1ef9b34d1a8cab18a7af8adc38d712b2d2c539e24be475c31",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "WEST",
+      "seed": 1687427,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "ead9c2aa3a715f394154cf05ea497c813a5d53512ce1eb56db5c1d774e873f14",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "WEST",
+      "seed": 1695346,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "85ffbddddc1b15015196aca84ed087d2887b9254b1964aaa3b2256a4bfc81f67",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "WEST",
+      "seed": 1703265,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f2d047a33ee73635bb7a4e4b8ca14a22131b3ae23d886aa906a6b938824cc865",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "WEST",
+      "seed": 1711184,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "639d01c9ab237be72c137a5aebe0a05ec6909d6785f64c8c04e61aa24546bd31",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "WEST",
+      "seed": 1719103,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "408f678e5db7ce30a801e6769b3ee506d794bdbdd46d1a12b7b52c33442b0f42",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "WEST",
+      "seed": 1727022,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "afa966cebd110074d0ec4ee3e630cf6501a67362df2dfd48ab41d209c06a2345",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "WEST",
+      "seed": 1734941,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "975e24807bf543d5dbbf27b002e28a40f4fee2311f5897ebad464a0b2eb6ad2f",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 12,
+      "layout_template": "CENTER",
+      "reference_relation": "WEST",
+      "seed": 1742860,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f81d68659bbb8298c5b37dbbc40cd0f1a733cf1384fba232e41607fae196c92f",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 13,
+      "layout_template": "NW",
+      "reference_relation": "WEST",
+      "seed": 1750779,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "1e7d5db58c86093924062a5255752dd121b95cd671d204f0afaac38e90c6a054",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 14,
+      "layout_template": "NE",
+      "reference_relation": "WEST",
+      "seed": 1758698,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "7bba744a58b440255cd75788199b48c85cb8a59590d2cb2702d7cddf9517a39d",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 15,
+      "layout_template": "SW",
+      "reference_relation": "WEST",
+      "seed": 1766617,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "9e3de9469fcd474e439031445f82268339b34ff6274596e2cd7588250cd9d500",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 16,
+      "layout_template": "SE",
+      "reference_relation": "WEST",
+      "seed": 1774536,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a25c2496cd2bd3f8647200c198801de97a5336a542e78cc7b93683ccb5ff3a9c",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 17,
+      "layout_template": "MID_WEST",
+      "reference_relation": "WEST",
+      "seed": 1782455,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "15a85bfd1d2a9487953d2adb137b05048a39303ac337014e73242accf01134ab",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 18,
+      "layout_template": "MID_EAST",
+      "reference_relation": "WEST",
+      "seed": 1790374,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b9ff7023be97f8c593aac2abf4b408f5a1773a917db7743a36e3a40d53da2e8e",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 19,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "WEST",
+      "seed": 1798293,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b3a62e202468ed84196e6f5f52868106f108a56064949e5da15644b611c923a6",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 20,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "WEST",
+      "seed": 1806212,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f988f0271b3a435cb9885d457609bc3dcb2c966f3bd727db915f23013e0e31fb",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 21,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "WEST",
+      "seed": 1814131,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f245a97e2fc02e3ab134755c29b0513a4766a1eb3de471777ae421bd6f69ec27",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 22,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "WEST",
+      "seed": 1822050,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "76f8939f4efb992ea6aa0ea75757ec37578c2abf2a3e197acdc0cf297a2d3a52",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 23,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "WEST",
+      "seed": 1829969,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "1321be7b5a89d6fc085114d39ed046b1b1af6c33d85a522f6755d1dbbd622608",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "NORTH",
+      "seed": 1752561,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "51fffedb05286deb642b8f648878f50a64906bca06d4b4ef8fedfc3fbcd25e79",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "NORTH",
+      "seed": 1760480,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "6906f4b69309c40b38d871dc45be612844c0a1968898d25700e6ba0c7f7c696b",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "NORTH",
+      "seed": 1768399,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "e415b05854204417e2565c165860dff1989d9a1fa8758a45c94755ef80565cbc",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "NORTH",
+      "seed": 1776318,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "35677e1416dd8a79e12566a28c5d69a1fe8c7c7f865c00421ca3af67fe6d7563",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "NORTH",
+      "seed": 1784237,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "be56289637ca304d3a90381633d1a1c8bd4aa48b62e31181b1249f48d441e8c3",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "NORTH",
+      "seed": 1792156,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "e4e60cb0d5e6d4a731bc65ad497fec66224432a0b6818fd8229ff1274be0b733",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "NORTH",
+      "seed": 1800075,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "2c581a1f49386882aab4c8c659510dc5bcb381130cf9403d4a2c7743f9e80d4f",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "NORTH",
+      "seed": 1807994,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "630bb587fee55052a7b29d1048341b87f01ba4b59a0e3398aefc491229d5bda9",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "NORTH",
+      "seed": 1815913,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "cbd5232e2fe930ad209c93ada956cbad1af4dbd1e1f19effee64ffc1b98ddac7",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "NORTH",
+      "seed": 1823832,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "8afd72012333a424aea1329e5ac4c912226734c8c676d5d48bdbf4f2a1edd924",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "NORTH",
+      "seed": 1831751,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "38da911a0d8adb9bdc0d09ba2e3917b319a3992029c967add6d046a018c04d3b",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "NORTH",
+      "seed": 1839670,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c739d36a9e14c2d4372057f67b55365b5b0526803013fb0cca7026227cb109db",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 12,
+      "layout_template": "CENTER",
+      "reference_relation": "NORTH",
+      "seed": 1847589,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "103938c8a68fb31f224c36e2bcd3a3012de7210e8d2cd33a0ad6749e2ac41df6",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 13,
+      "layout_template": "NW",
+      "reference_relation": "NORTH",
+      "seed": 1855508,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "178dc09ea4a1dde5f22f2a5c884c1d7775b11108637b08d01d891c5379460063",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 14,
+      "layout_template": "NE",
+      "reference_relation": "NORTH",
+      "seed": 1863427,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "e6418fe96c80339220afc25f67f4b6c74e395bcea7577a9899c2cb792368c351",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 15,
+      "layout_template": "SW",
+      "reference_relation": "NORTH",
+      "seed": 1871346,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "caccbfc05a7431322e03920e819749ffd4c7dfeaae6fb91ea25e6241dc3599b0",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 16,
+      "layout_template": "SE",
+      "reference_relation": "NORTH",
+      "seed": 1879265,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "8a2835e94f53109390e69201806e71915482372e77209de7611f685762e5c107",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 17,
+      "layout_template": "MID_WEST",
+      "reference_relation": "NORTH",
+      "seed": 1887184,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "13b95cdf90a5fdb9474e919294f9e55857bcbafaf7bb21559fe5aff7499238a4",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 18,
+      "layout_template": "MID_EAST",
+      "reference_relation": "NORTH",
+      "seed": 1895103,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b146cb41ea1ff103b9b7c623ce70ead3ec59ba361a1c58f5fab11e8f3c912478",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 19,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "NORTH",
+      "seed": 1903022,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "334e1ed5a4cd1b60dfe601d43121ab8473af749766f8a09ce72eee89ca8ec913",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 20,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "NORTH",
+      "seed": 1910941,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b356748fa01c907da91a29a8068996e067f72fd8ff430bfe214ba9ec9ab0d7e5",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 21,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "NORTH",
+      "seed": 1918860,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "0289e1ce891a06c6d118e71968d297ee97e570c31fa4527a1658537541b039c5",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 22,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "NORTH",
+      "seed": 1926779,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b28f0e7a73660bad40028e8d674d84e7b4faa6fb515db529b6ef6bbe3a820e87",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 23,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "NORTH",
+      "seed": 1934698,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "ddec3d4f4d10ce741de3633614fb7d8d0336ee157d73131fd64f79c41fa2bc8d",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "EAST",
+      "seed": 1857290,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "03035617dbe097aa1d3da8c8f164843e68381cc467b03e05953475cd68096e34",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "EAST",
+      "seed": 1865209,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b670f3929348dd1d8094c7932fffe21e79b77f48bcdc7369df47074f6bce60d2",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "EAST",
+      "seed": 1873128,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "6054a9c73a17574ea871ddca9b54e79d6edbcf9f3aba07f26eea5c9c062b03ae",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "EAST",
+      "seed": 1881047,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "faba11ff0df9ecb444908582b1b9672082860af68abee1220e78e748f40ff5b3",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "EAST",
+      "seed": 1888966,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "46f8ff4b0dfe4d07a6c8a50b888170081b7b2f12a7dc4f7e356a83af28f07861",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "EAST",
+      "seed": 1896885,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "25473ffc65864c58b56692953fd631c6fb075c1e12d06c0c41c45498c09b9e75",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "EAST",
+      "seed": 1904804,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b8dbf1cbc5df301305bb7250080284ac96a74cf45c561e09d2e555e93801d226",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "EAST",
+      "seed": 1912723,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "29053f66cfaa2251c7e486a18e8ef97ad2e783d80e9381a7a56a35a074bd789a",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "EAST",
+      "seed": 1920642,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "136d92f7e18602c800f9b0dc187c4019697ae5e7f7b4985c6edc4815af0afc5d",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "EAST",
+      "seed": 1928561,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c27d76eda450363519ea13e73467ee82989f7f4b5d4afbc5b681a44e2f4f3c78",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "EAST",
+      "seed": 1936480,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "34af490574bba974773ee595e741345f56f8d900554ff0025ae2945b810685a8",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "EAST",
+      "seed": 1944399,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c4a1e1fd371e0750f85090f5ab04a510cdd9f89c5e80a86fbfbbcad5e1da8e0c",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 12,
+      "layout_template": "CENTER",
+      "reference_relation": "EAST",
+      "seed": 1952318,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f60c33c2a7fbf6e912091248e859e709a49e7424ec3e27e53d2da4a8bd61850c",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 13,
+      "layout_template": "NW",
+      "reference_relation": "EAST",
+      "seed": 1960237,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "311fa70374077f31599676ad007da0fc9efc001f4b31c23adffa89b5df5630a2",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 14,
+      "layout_template": "NE",
+      "reference_relation": "EAST",
+      "seed": 1968156,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "1f95fb5c602aa69430b40cbee9e887009283b3f975ff7d715debe61079e419c1",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 15,
+      "layout_template": "SW",
+      "reference_relation": "EAST",
+      "seed": 1976075,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d5da71943d3faf52277b94477bcc02edb11a01056ee602406d3c42600e11ab75",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 16,
+      "layout_template": "SE",
+      "reference_relation": "EAST",
+      "seed": 1983994,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d1a7f7b7b6ac9eccdb00ff13d5ca1ba07eba2021d93f50cbe3666332e2143e25",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 17,
+      "layout_template": "MID_WEST",
+      "reference_relation": "EAST",
+      "seed": 1991913,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "70b4b741f87aca9632f0d208f49d329f330b268262194088894e97f8869837a0",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 18,
+      "layout_template": "MID_EAST",
+      "reference_relation": "EAST",
+      "seed": 1999832,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "21ff8c122794350d93ab44eb07a396f8e2fae5549424838f7983abf4b317fb47",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 19,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "EAST",
+      "seed": 2007751,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a03f910c4de6faab14e66be08f8ea56b5e30a42e775c1cc7b46ba7087881968a",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 20,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "EAST",
+      "seed": 2015670,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f5a75a50140d62d058051fae34ec2c93235416203ba800e03e0134b3b2827c01",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 21,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "EAST",
+      "seed": 2023589,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "9279fc3ef2b7ef69dcb9ac145f93f2d7bbfed394165bc043767d044d04c342cc",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 22,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "EAST",
+      "seed": 2031508,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a76017d6ec6541ad27549754ef8663de8a59fbeb4849c02b4f09bf8e2f9126ab",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 23,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "EAST",
+      "seed": 2039427,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "badf1fabfd733c7f7b61809978dc5d8ff1e5ecfce256ae34ad107f9c98c11882",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "SOUTH",
+      "seed": 1962019,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5333a25de8bc404be7d9e364c1db264c03942243e53240d874eccb8c775a58d2",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "SOUTH",
+      "seed": 1969938,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "a135215321258fdb7f5ca2347373aeb9ea75b6646a278a3084884209d264ac6b",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "SOUTH",
+      "seed": 1977857,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "1cfaa48d32808bd1d39f99373d2dd95ae3533c8aea8747ab15d8dc64419fac2d",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "SOUTH",
+      "seed": 1985776,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "fac85f063dbdb1bec9158678f33696d427f2512032b14150563af180a462bd6a",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "SOUTH",
+      "seed": 1993695,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "ebc971d0f2765ac2c1b65c3764bb7001c5529db792522f5c68d1b5e00da6c7ce",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "SOUTH",
+      "seed": 2001614,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "3d00b35dc8b92a5b3872c277f8a4e759299ef6bef38beb4776c70eb9d4bef082",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "SOUTH",
+      "seed": 2009533,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "cbb3faf6b72b3e053c4f96ebc2ca205de8c40dd20531ac029173143d32f2c2c0",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "SOUTH",
+      "seed": 2017452,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "de3bf06d6746cf1111438ad2c81b246e281f3759c28dec2add382e47a336e1c3",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "SOUTH",
+      "seed": 2025371,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d36b0ad546001e1b362639c90ec79f49d97c4483b177d28f35aabaac93e7dfb8",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "SOUTH",
+      "seed": 2033290,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c5612a571d2371ab1ef3d15efc89d9b112012ceeb8297a1c0af902190bac417e",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "SOUTH",
+      "seed": 2041209,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "20607cce1f36c4c8932fbcd6bad98e500c83eed36f8e80a8d0926a6eac16d777",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "SOUTH",
+      "seed": 2049128,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5a332c565b2981990e35fe5d2b89bce420dcbc8bc8535bc36c07213de752367d",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 12,
+      "layout_template": "CENTER",
+      "reference_relation": "SOUTH",
+      "seed": 2057047,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "55e12e16170dc52e4af741d8e3ab06c32dac403323db196564edc548e017cafd",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 13,
+      "layout_template": "NW",
+      "reference_relation": "SOUTH",
+      "seed": 2064966,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "36951335df4af8ad0ba6045e39b938c5b6e71e6f8850f5633f5efa39fae4e7ff",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 14,
+      "layout_template": "NE",
+      "reference_relation": "SOUTH",
+      "seed": 2072885,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "4bc23789433f96308f4a7adcf205218eb3ce87c3f7c71de8d6f6f59b20f63b71",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 15,
+      "layout_template": "SW",
+      "reference_relation": "SOUTH",
+      "seed": 2080804,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "9289e5f781a61fdd8fff542ae836c8f9711dd08dfefe125c20ea07dc90f629bc",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 16,
+      "layout_template": "SE",
+      "reference_relation": "SOUTH",
+      "seed": 2088723,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "e979a9d2765f793dd7e45e6a271fc04b4fcbf1c1eae3ac45fbf15d0e4c6f845c",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 17,
+      "layout_template": "MID_WEST",
+      "reference_relation": "SOUTH",
+      "seed": 2096642,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "9b9038f82c12b178cb80cf636d35b983c67c30de0591c8a5c558a2716b8967cf",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 18,
+      "layout_template": "MID_EAST",
+      "reference_relation": "SOUTH",
+      "seed": 2104561,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "6146bc057a400b466549059b600896f97bca1f099e811ac8ef9090455fda813c",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 19,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "SOUTH",
+      "seed": 2112480,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c7c4c946ba96b3de13c9e2698fa4629373ac1148a4498cb886390a46a721b168",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 20,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "SOUTH",
+      "seed": 2120399,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "fd2f9b89de3342cfc5b8b46a6a76949da7d90dad8c97b18d3b678afb655962e3",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 21,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "SOUTH",
+      "seed": 2128318,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5b66028eb0959a8e179e456d90a8bfe072f6017c189724ab3939b1824e9e511d",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 22,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "SOUTH",
+      "seed": 2136237,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "aa4dfc88e384750c80f739f61a677dd88bcfa64d64b3382f8150d8c63ea133b3",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 23,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "SOUTH",
+      "seed": 2144156,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    }
+  ],
+  "VALIDATION": [
+    {
+      "canonical_base_id": "c47b8d4181382dd20b9f4c1f0d1109b95121dc6eac4d322b3db05c1681d112b3",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "NORTH",
+      "seed": 810000,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "14a7679a02e272de3a721dbcd6556f8ff4e49f7b8d7bf70fe10ec9030f8852ce",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "NORTH",
+      "seed": 817919,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c00bf00526dd108afc9c184fef8d001966e071878038415b4a57340a7fb00c39",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "NORTH",
+      "seed": 825838,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "e4cb396636c9eb49669120c1564e6fc9ee99f794a04fb9e551fbbe96d7b17804",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "NORTH",
+      "seed": 833757,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b236b0b18a6fdacb6266a95ed1f996ee0b01c52eec299fe0f866eb0afb200926",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "NORTH",
+      "seed": 841676,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f2f32ab6d57ba7a8cf6da442cc9ffa86bd8058158b06fda098d4a6bd5392223f",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "NORTH",
+      "seed": 849595,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b2150c91103ff55802d80f208db4e336abe7e35cb1e52b22290f023488998484",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "NORTH",
+      "seed": 857514,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "3ab54124e7b8de33091955dca2845fd1217062f8d697cad980877fb6f7ae5119",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "NORTH",
+      "seed": 865433,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "4fe3b74172a42aee3432aa2781d97c81d15ac4b97267277608df9e8c5a4c2cc8",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "NORTH",
+      "seed": 873352,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "665e3d0d50a7c103a53e13989a82bbbe474add3545e58e9f5a75738c71058a75",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "NORTH",
+      "seed": 881271,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d5419f7fd0b67c3529830b7045dd99bdd969f6d01221f81b8de8628c2e87c58b",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "NORTH",
+      "seed": 889190,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d1388a4abef44643fa7cd753b453736ef9ce9c5b3e047c186157ddf0cec9bb3d",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "NORTH",
+      "seed": 897109,
+      "shape_orientation": 0,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "2bb510a42034e394b0df010015a99e9dc5cc2ca631ad390c9a547d8f15933c75",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "EAST",
+      "seed": 914729,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "14b8563047498140ec60f1b20c4129d0f52efd8a97479938f40a4eb2d3581eb8",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "EAST",
+      "seed": 922648,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "20f343870bcd6a5a087638a4b7e520695499e763eb2f15a40244d9270fb5eec6",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "EAST",
+      "seed": 930567,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "002138e2371c665ea5135fc8df7b3780c8cb97ec61cf3d4c4e37928f56ea1d8e",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "EAST",
+      "seed": 938486,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "7a0474a648a00df18d8bcf0291743a741fc2f0441e707f1410f2867f5962d743",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "EAST",
+      "seed": 946405,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "0ae32d6e5b0efdef82f2ab74121d124b35e3bb36c8502cdc3b141bd43bca610d",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "EAST",
+      "seed": 954324,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "e51e219f0c3fc6c0d16dc31cece90a07b324415c2b27f3f7525bf525466a2218",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "EAST",
+      "seed": 962243,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "43d1b3795e56d86fe64260be908a01ca03475357d8f311da4ec38e7ad2ab73dc",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "EAST",
+      "seed": 970162,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f0cfbc3c041af904810ba2f9103f3334f98fd4c949c7da0b7ebf3e6f2d8a5968",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "EAST",
+      "seed": 978081,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "e72efedda597a8ddd572b317ad7cce3b58a39b4d3c87d6ab681c05891a13731e",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "EAST",
+      "seed": 986000,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "2b84f6f2a219be477ad7bb4fc5411e1ea7f73cff77ac025e5984fe47c728e5c4",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "EAST",
+      "seed": 993919,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "0755efecff67a7cee5297575f379e4ea4963cf0f2a7cf5a7cebc958e304ae9c5",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "EAST",
+      "seed": 1001838,
+      "shape_orientation": 1,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "33ab233a3dc692785519681ef1f93dac25448bb8e970c0e654682475e8c82e73",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "SOUTH",
+      "seed": 1019458,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "815b2d9ab73bc4ec87f397081f757797637ffed2aabbd447bcf0d5b08a85c11f",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "SOUTH",
+      "seed": 1027377,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "c8d4692484b92026d7306ac7e809003bc7040e2c2eea57a34a78440ae38aeb42",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "SOUTH",
+      "seed": 1035296,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "7a552a9a7fba2dc31ccf5f7bd1282e362341633aa4f8630edda5052d4fe9f50c",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "SOUTH",
+      "seed": 1043215,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "edfb8989f6d5cac8cba10e1fbdf4b9314f21627a04c48313510c254cce46a524",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "SOUTH",
+      "seed": 1051134,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5bceb3b2964d21fb6c41825af7e5ea46492050b7e073e231c0d1bda21ef356a7",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "SOUTH",
+      "seed": 1059053,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "48ff1c960f54c35f84691a2b8410589382a33864f34e3b8311b8b2ea6b3f1a37",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "SOUTH",
+      "seed": 1066972,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "2f849b8c1a67f05679566d77ff95c0d131c25d8a02d2768d6d878061266adfaa",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "SOUTH",
+      "seed": 1074891,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5e71ae4f3ab25c17d906c04e204a033a1e460e5ce4423a0cd9bed97712ac3488",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "SOUTH",
+      "seed": 1082810,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "d3ee8273d42a89105809a42171db659b960f3d942627345d8197055fcd2c3a2b",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "SOUTH",
+      "seed": 1090729,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "46252bafbacbea014230d2f44f6b06758bcf69b2737d607b2155930bf7f22182",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "SOUTH",
+      "seed": 1098648,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "4fa65a70e779bbc786be7ee698bef232fe1ac540bfad007e74c01c5d1dd53aef",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "SOUTH",
+      "seed": 1106567,
+      "shape_orientation": 2,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "7ba32b1f2a5fc86fdb242b8000b832b13c8b702d34679229f2b59c172e73fecf",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 0,
+      "layout_template": "CENTER",
+      "reference_relation": "WEST",
+      "seed": 1124187,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "f82aa96c1d4a2ab1150823730cd54301b8d15a1c99827bd21e92418e9958b14d",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 1,
+      "layout_template": "NW",
+      "reference_relation": "WEST",
+      "seed": 1132106,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "6681888fa12970efe323b84b233d5d2a2f34e9d24236856e456db7e027087814",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 2,
+      "layout_template": "NE",
+      "reference_relation": "WEST",
+      "seed": 1140025,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "dca7cf3b8da6a8412176208244eed4a695e498b006e46f0888a89d9b75b7a2a9",
+      "color_role_tuple": [
+        4,
+        6,
+        8,
+        1
+      ],
+      "instance_index": 3,
+      "layout_template": "SW",
+      "reference_relation": "WEST",
+      "seed": 1147944,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "6debbe56ad259611be097dc124b76a661bd68c81e682f616f98621d0a07ab36d",
+      "color_role_tuple": [
+        5,
+        7,
+        9,
+        2
+      ],
+      "instance_index": 4,
+      "layout_template": "SE",
+      "reference_relation": "WEST",
+      "seed": 1155863,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "80e292b1f00451af6527846ee60e84d87d1fce05230f27b7f08941d7747451bc",
+      "color_role_tuple": [
+        6,
+        8,
+        1,
+        3
+      ],
+      "instance_index": 5,
+      "layout_template": "MID_WEST",
+      "reference_relation": "WEST",
+      "seed": 1163782,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "dd02050bb96d7cbf26e62e839f24a6e794a514d3c490b1b9f1588c796a1f3a67",
+      "color_role_tuple": [
+        7,
+        9,
+        2,
+        4
+      ],
+      "instance_index": 6,
+      "layout_template": "MID_EAST",
+      "reference_relation": "WEST",
+      "seed": 1171701,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "48c6530f7a4ece9faab59f832a29def30d7a63fb238627da1f39361461454e3f",
+      "color_role_tuple": [
+        8,
+        1,
+        3,
+        5
+      ],
+      "instance_index": 7,
+      "layout_template": "MID_NORTH",
+      "reference_relation": "WEST",
+      "seed": 1179620,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "5b73f06f1c68cd473deb0d01e10b24c2fdecc8cfb37f2894a2e15a43b1738ee1",
+      "color_role_tuple": [
+        9,
+        2,
+        4,
+        6
+      ],
+      "instance_index": 8,
+      "layout_template": "MID_SOUTH",
+      "reference_relation": "WEST",
+      "seed": 1187539,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "3e6f8ba33e7c10251e275f53f2b303db13d405fbf958c769158f8d28f11b909b",
+      "color_role_tuple": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "instance_index": 9,
+      "layout_template": "OFFSET_A",
+      "reference_relation": "WEST",
+      "seed": 1195458,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "16e3b3c0dc60c5ee530df7ae8bf159f641d6a5b93b0a00e47e5c3a8255727c3d",
+      "color_role_tuple": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "instance_index": 10,
+      "layout_template": "OFFSET_B",
+      "reference_relation": "WEST",
+      "seed": 1203377,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    },
+    {
+      "canonical_base_id": "b8b5523b97cb31590c11c733e014ad5a401da3f7adf26f7dbf3401ca62dc5c3f",
+      "color_role_tuple": [
+        3,
+        5,
+        7,
+        9
+      ],
+      "instance_index": 11,
+      "layout_template": "OFFSET_C",
+      "reference_relation": "WEST",
+      "seed": 1211296,
+      "shape_orientation": 3,
+      "topology": "single_4_connected_L_TRIOMINO"
+    }
+  ]
+}

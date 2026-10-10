@@ -1,0 +1,49 @@
+{
+  "all_task_rows": 5376,
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20261010,
+    "unit": "canonical_base_tuple"
+  },
+  "boundaries": [
+    "NO_GOLD",
+    "NO_DGOLD",
+    "NO_FINAL_AUDIT",
+    "NO_MODEL_LOADING",
+    "NO_GPU",
+    "NO_GENERATION",
+    "NO_TRAINING"
+  ],
+  "canonical_base_counts": {
+    "TRAIN": 288,
+    "VALIDATION": 48
+  },
+  "director_decision_sha256": "6c0ffbdb1c1fa99d3f4650fdb0795189fa2af47f21a6ad8fbbe6d99f04cb3ce7",
+  "explicit_marker_turns": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "input_only_validation_prompt_sha256": "4cbaf37a46b75b766d73b81807865796f139500003b911a89eb717c5ac703c45",
+  "minimum_conditional_support_per_reserved_cell": 8,
+  "native_condition_tasks": [
+    "ROTATION_TARGET",
+    "FIXED_TURN_ROTATION_CONTROL",
+    "MARKER_BINDING_CONTROL",
+    "NO_TRANSFORM_RETENTION_CONTROL"
+  ],
+  "protected_retention_required": true,
+  "protocol_id": "E04_ORIENTATION_V2_MARKER_COUNTERFACTUAL_NATIVE_TASK_COHORT",
+  "statistical_unit": "CANONICAL_BASE_TUPLE_MATCHED_COUNTERFACTUAL_SET",
+  "status": "CPU_ONLY_FROZEN_INPUTS_AND_SEPARATE_TARGET_SIDECAR",
+  "target_scorer_sidecar_sha256": "d2007e361548600746260724be1a1df1d2cde911e87fcb31d785a7aaeb10df01",
+  "v1_reference": {
+    "source_commit": "7a54066fd503d36b7154d69ab82e4e2727e335b1",
+    "status": "PRESERVED_BUT_SUPERSEDED_BEFORE_GPU_EXECUTION",
+    "v1_cohort_sha256": "76c6fd57173ec62571f27a312e3f80601c70cdec04cda79432822937e7a37967",
+    "v1_manifest_sha256": "903ce8f6e3571af9956adb7b1bd1b9bba21bef3a6b70f4bbfc89e6eb43fc151c"
+  },
+  "validation_task_rows": 768,
+  "views_per_canonical_base": 16
+}

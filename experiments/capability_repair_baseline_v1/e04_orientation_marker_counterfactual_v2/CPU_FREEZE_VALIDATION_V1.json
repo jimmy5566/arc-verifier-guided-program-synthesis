@@ -1,0 +1,24 @@
+{
+  "regeneration": {
+    "all_byte_identical": true,
+    "files": {
+      "CANONICAL_BASES.json": true,
+      "MANIFEST.json": true,
+      "TARGET_SCORER_SIDECAR.jsonl": true,
+      "TRAIN_NATIVE_TASK_INPUTS.jsonl": true,
+      "V1_REFERENCE.json": true,
+      "VALIDATION_INPUT_PROMPTS.jsonl": true
+    },
+    "serialization": "UTF-8 canonical JSONL with LF",
+    "status": "PASS"
+  },
+  "status": "CPU_FREEZE_VALIDATION_PASS",
+  "validation": {
+    "gpu_used": false,
+    "model_loaded": false,
+    "optimizer_steps": 0,
+    "status": "PASS",
+    "target_blind_prompts": true,
+    "validation_task_rows": 768
+  }
+}

@@ -99,11 +99,21 @@ def controller(s,p,timeout):
     s.update({'last_actor':'governor','updated_at':now()}); atomic(p,s)
     target=resolve_controller_target(s,p)
     if controller_turn_is_active(target):
-        # The live Controller owns this state transition already.  Do not
-        # queue a recursive Governor prompt into its own pane.
-        s.update({'controller_dispatch':'ACTIVE_CONTROLLER_TURN_NO_REPROMPT','updated_at':now()})
-        atomic(p,s); log(s,f'controller target={target} already working; no self-prompt')
-        return
+        # The Controller can atomically advance state while this scheduler is
+        # observing it. Back off once and reload before any dispatch decision;
+        # never write the stale object back over its transition.
+        log(s,f'controller target={target} active; bounded backoff before reread')
+        time.sleep(1)
+        current=load(p)
+        if current.get('disposition') != 'CONTINUE_CONTROLLER':
+            log(current,'controller state changed during active-turn backoff; no stale dispatch')
+            return
+        current_target=resolve_controller_target(current,p)
+        if controller_turn_is_active(current_target):
+            current.update({'controller_dispatch':'ACTIVE_CONTROLLER_TURN_NO_REPROMPT','updated_at':now()})
+            atomic(p,current); log(current,f'controller target={current_target} remains active; no self-prompt')
+            return
+        s,target=current,current_target
     prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}, AGENTS.md, and orchestration/agents/ARC_CONTROLLER_SYSTEM.md; execute next_action as far as scientifically valid. '
            'Repair routine infrastructure autonomously with bounded CPU-only checks when frozen science is unchanged. Preserve failed runs and never reuse a consumed one-shot authorization. '
            'Escalate only a scientific, security, asset-identity, sealed-data, budget, or fresh execution-authorization blocker by freezing one concise brief and setting REVIEW_REQUIRED; never prompt Director directly. '

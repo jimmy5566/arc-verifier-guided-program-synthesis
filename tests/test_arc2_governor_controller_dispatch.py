@@ -1,4 +1,4 @@
-﻿import importlib.util
+import importlib.util
 import json
 import tempfile
 import unittest
@@ -24,6 +24,19 @@ class ControllerDispatchTest(unittest.TestCase):
             prompt.assert_not_called()
             self.assertEqual(saved['controller_dispatch'],'ACTIVE_CONTROLLER_TURN_NO_REPROMPT')
             self.assertEqual(saved['disposition'],'CONTINUE_CONTROLLER')
+        finally: temp.cleanup()
+    def test_active_turn_backoff_preserves_controller_transition(self):
+        temp,path=self.make_state()
+        try:
+            state=MOD.load(path)
+            def advance(_seconds):
+                MOD.atomic(path,{'disposition':'REVIEW_REQUIRED','stage':'CONTROLLER_WRITTEN_REVIEW','review_brief':'bound.json','review_reason':'scientific gate'})
+            with patch.object(MOD,'resolve_controller_target',return_value='pane-1'), patch.object(MOD,'controller_turn_is_active',return_value=True), patch.object(MOD.time,'sleep',side_effect=advance), patch.object(MOD,'prompt') as prompt:
+                MOD.controller(state,path,30)
+            saved=MOD.load(path)
+            prompt.assert_not_called()
+            self.assertEqual(saved['disposition'],'REVIEW_REQUIRED')
+            self.assertEqual(saved['stage'],'CONTROLLER_WRITTEN_REVIEW')
         finally: temp.cleanup()
     def test_idle_controller_is_prompted(self):
         temp,path=self.make_state()

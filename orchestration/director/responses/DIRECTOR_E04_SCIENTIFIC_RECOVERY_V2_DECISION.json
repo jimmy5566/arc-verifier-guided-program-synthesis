@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "response_id": "DIRECTOR_E04_SCIENTIFIC_RECOVERY_V2_DECISION",
+  "decision": "CONTINUE_CONTROLLER",
+  "decision_scope": "E04_ORIENTATION_V2_COUNTERFACTUAL_AMENDMENT_CPU_PREPARATION",
+  "issued_at": "2026-10-10T11:12:38.8004335Z",
+  "live_state_basis": {
+    "audited_remote_branch_head": "7a54066fd503d36b7154d69ab82e4e2727e335b1",
+    "review_worktree_head": "7a54066fd503d36b7154d69ab82e4e2727e335b1",
+    "controller_status": "IDLE",
+    "governor_process_status": "NOT_RUNNING",
+    "supervisor_process_status": "NOT_RUNNING_STALE_STATE_ONLY",
+    "workflow_disposition_before_decision": "CONTINUE_CONTROLLER",
+    "active_remote_job_binding": null,
+    "e04_v1_terminal_receipt": null,
+    "live_runpod_status": "LIVE_RUNTIME_UNVERIFIED"
+  },
+  "scientific_findings": {
+    "marker_blind_shortcut": {
+      "formula": "(layout_index % 4 + reference_relation_index) % 4",
+      "train_correct": 144,
+      "train_total": 288,
+      "validation_correct": 48,
+      "validation_total": 48,
+      "interpretation": "The frozen validation split does not identify marker grounding because a joint marker-blind nuisance rule predicts every validation turn. Marginal contingency checks do not repair this confounding."
+    },
+    "output_color_nuisance": {
+      "input_views_without_target_output_color": 1344,
+      "input_views_total": 1344,
+      "interpretation": "Orientation is confounded with output-color inference unless the native task demonstrations prospectively and unambiguously establish the output color."
+    },
+    "condition_identifiability": {
+      "base_tuples_with_identical_input_across_all_four_conditions": 336,
+      "base_tuples_total": 336,
+      "interpretation": "Condition identity cannot remain metadata-only. Each condition must be expressed through legitimate condition-specific native ARC demonstrations, with no validation target in the prompt."
+    },
+    "collision_metadata": "CLOSED_BY_SUCCESSOR_METADATA_V2_DO_NOT_REOPEN"
+  },
+  "v1_disposition": {
+    "status": "PRESERVED_BUT_SUPERSEDED_BEFORE_GPU_EXECUTION",
+    "gpu_started": false,
+    "scientific_use": "The immutable V1 cohort remains valid as generator and descriptive provenance. It is not valid for confirmatory marker-grounding inference. If a previously unknown V1 receipt is later recovered, its result may be described only with these confounders and must not be merged with V2.",
+    "prior_one_shot_execution_authorization": "SUPERSEDED_UNUSED"
+  },
+  "e04_v2_amendment": {
+    "preserve_v1_bytes": true,
+    "structural_holdout_preserved": true,
+    "statistical_unit": "CANONICAL_BASE_TUPLE_MATCHED_COUNTERFACTUAL_SET",
+    "counterfactual_rule": "For every selected canonical base tuple, hold shape, layout, reference relation, topology and all color roles fixed while generating all four explicit turn-marker values.",
+    "marker_blind_guard": "Every nuisance-identical quartet must contain all four turn values and corresponding targets. A predictor that excludes the explicit marker must be structurally incapable of solving all four members. Verify this by exhaustive matched-set assertions, not only marginal balance.",
+    "condition_observability": "Construct a separate native ARC task for each condition using condition-specific TRAIN-only demonstrations. Do not expose condition names, latent metadata, split labels, hashes, or validation targets to the model.",
+    "output_color_control": "Within each native task, TRAIN-only demonstrations must unambiguously establish the query output color while holding the color-role convention fixed prospectively. Balance output colors across canonical statistical units.",
+    "validation_target_boundary": "Freeze and hash input-only prompts before model loading. Keep validation targets in a separate scorer sidecar and freeze raw generations before joining targets.",
+    "initial_model": "RECONSTRUCTED_FOUNDATION_V2_V7_ONLY",
+    "initial_inference": "NATIVE_GREEDY_NO_UPDATE",
+    "failure_taxonomy": [
+      "REPRESENTATION_FAILURE",
+      "FIXED_ROTATION_FAILURE",
+      "MARKER_BINDING_FAILURE",
+      "COMBINED_MARKER_CONDITIONED_TRANSFORMATION_FAILURE"
+    ],
+    "uncertainty_and_support": "Preserve the prior base-tuple-level stratified bootstrap, seed 20261010, 10000 replicates, minimum conditional support of 8 per reserved cell, and protected-retention requirements.",
+    "sealed_boundaries": [
+      "NO_GOLD",
+      "NO_DGOLD",
+      "NO_FINAL_AUDIT"
+    ]
+  },
+  "governor_engineering_repair": {
+    "classification": "ROUTINE_ENGINEERING_CONTROLLER_AUTONOMY",
+    "requirements": [
+      "When the resolved Controller pane is already working, do not prompt it again and do not immediately spin the persistent loop.",
+      "Apply a bounded backoff, then re-read ARC2_WORKFLOW_STATE.json before any subsequent dispatch decision.",
+      "Do not overwrite a disposition written by the active Controller with a stale in-memory state.",
+      "Preserve at-most-once dispatch and active-remote-job protections.",
+      "Add an integration test in which workflow disposition changes while Controller is already working."
+    ],
+    "director_rereview_required": false
+  },
+  "next_stage": "E04_ORIENTATION_V2_COUNTERFACTUAL_AMENDMENT_CPU_PREPARATION",
+  "next_action": {
+    "owner": "CONTROLLER",
+    "instruction": "CPU-only: preserve V1 unchanged; implement and test the E04-V2 matched marker-counterfactual cohort/task amendment exactly as specified in this decision; audit the exhaustive marker-blind guard, condition-specific native-task observability, output-color control, canonical-base statistical units, target blindness, minimum support, retention boundaries and deterministic regeneration; repair the Governor active-Controller bounded-backoff/stale-state issue with the required state-transition integration test; freeze small artifacts, commit and non-force-push to the existing branch, then set REVIEW_REQUIRED with one concise V2 one-shot GPU prelaunch binding. Do not load a model or launch GPU work in this stage.",
+    "cpu_preparation_authorized": true,
+    "routine_git_commit_and_non_force_push_authorized": true,
+    "model_loading_authorized": false,
+    "gpu_inference_authorized": false,
+    "generation_authorized": false,
+    "gradient_authorized": false,
+    "optimizer_construction_authorized": false,
+    "training_authorized": false,
+    "sealed_evaluation_access_authorized": false
+  },
+  "next_review": "ONE_SHOT_E04_V2_GPU_PRELAUNCH_BINDING_ONLY",
+  "scientific_training_authorized": false,
+  "gpu_inference_authorized": false,
+  "model_loading_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}
