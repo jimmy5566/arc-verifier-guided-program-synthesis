@@ -1,0 +1,115 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "CONTINUE_DIRECTOR",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "immutable_evidence": {
+    "authorizing_director_response_sha256": "69a17bc1e235d93a7517af76eef94a2b51a6f2fbabb61f0076d6c53bf776097a",
+    "execution_binding_sha256": "d34eace78346661f5b58ad21e8a6230ff36c7e2aa3530229edbc5a43b73c1bd0",
+    "launcher_log_sha256": "776c7e61ebfb826fa596d5ee0aea8b69c3a04f3492d9f6074a2e0bee940c0019",
+    "launcher_receipt_sha256": "5ae19310bc6ff64b973e08f9bd410127e8984e9b249c05bac40b422afb93f700",
+    "postprocessor_sha256": "cd74ac2dc895812a30d0382d36954ce77f89e779e920399658ede3e4c5e09a86",
+    "preservation_commit": "3ffc7959b7f77c4c8b4a130ede6f9d7db2b13204",
+    "raw_gram_sha256": "2f0245bea7467c498c325942396f17459ccd675d23a4db920968804427b4cb6f",
+    "result_package_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/run_003_e6651046ee8d0c6ac3ff911c28f02d5f/RESULT_PACKAGE.json",
+    "result_package_sha256": "94164053af4380fdac4ce400e67d65be4bcacf9202293df52cda562a03d0391e",
+    "runtime_launch_commit": "d803b2a8c45425ea299db983886f29cde2dfb3d2",
+    "terminal_receipt_sha256": "da425f27b99cbc724a7bb676fafb1aabb676ff512c3aa3d5ec7a788cc6494733"
+  },
+  "interpretation_limits": [
+    "COMPLETE_NO_UPDATE is process evidence only.",
+    "The 0.0086174057 relative-L2 repeatability value exceeds the frozen 0.0001 bound; the postprocessor therefore returns INCONCLUSIVE.",
+    "Positive cosine estimates are not proof of absence of interference, and no causal claim about forgetting, fitting, or generalization is supported by this result.",
+    "The cohort is frozen TRAIN evidence only and is not independent ARC generalization evidence."
+  ],
+  "observed_result": {
+    "bootstrap_95_ci": {
+      "connected_components": [
+        0.7914748055992171,
+        0.8319176334986471
+      ],
+      "difference": [
+        0.7453131953867148,
+        0.7944947704379244
+      ],
+      "inside_contains": [
+        0.7230869651898966,
+        0.7761859435147588
+      ],
+      "orientation": [
+        0.8155777741407068,
+        0.8451094998185263
+      ],
+      "secondary_combined": [
+        0.8723589008769492,
+        0.8864618337960768
+      ],
+      "width": [
+        0.7283300038747377,
+        0.7653803454284279
+      ]
+    },
+    "completed_rows": 72,
+    "elapsed_seconds": 405.78931392822415,
+    "final_audit_opened": false,
+    "generation_calls": 0,
+    "observed_repeatability": {
+      "max_relative_l2": 0.008617405731011414,
+      "min_cosine": 0.9999628901936229,
+      "rows": 9
+    },
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "point_cosines": {
+      "connected_components": 0.8345161866358805,
+      "difference": 0.790395819565915,
+      "inside_contains": 0.7755988438660297,
+      "orientation": 0.8458596374896347,
+      "secondary_combined": 0.888416817031502,
+      "width": 0.7657238563319162
+    },
+    "postprocess_decision": "INCONCLUSIVE",
+    "process_status": "COMPLETE_NO_UPDATE",
+    "repeatability_contract": {
+      "max_relative_l2": 0.0001,
+      "min_cosine": 0.9999,
+      "rows": 9
+    },
+    "repeatability_status": "INCONCLUSIVE"
+  },
+  "question": "The frozen E03 V3 B1 per-example LoRA-gradient screen completed without updates, but its prospectively frozen repeatability gate is INCONCLUSIVE. What is the smallest scientifically justified next action? Classify what is established, supported hypothesis, and unknown; do not infer gradient interference or authorize a retry from this result alone.",
+  "requested_response_requirements": {
+    "CONTINUE_CONTROLLER": "must identify a CPU-only or otherwise already-authorized bounded next action and must not treat this result as valid interference evidence.",
+    "CONTINUE_DIRECTOR": "must require one new immutable brief for a distinct scientific question.",
+    "REQUIRE_CHANGES": "must state the smallest methodological change and whether it is scientific rather than routine engineering.",
+    "TERMINAL": "must include terminal_scope CURRENT_PROTOCOL or ENTIRE_EXPERIMENT."
+  },
+  "review_id": "GOVERNOR_REVIEW_E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_RESULT_V1",
+  "review_type": "STAGE_RESULT_SCIENTIFIC_REVIEW",
+  "schema_version": 1,
+  "scientific_scope": {
+    "checkpoint": "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "cohort": "72 frozen TRAIN rows across nine fixed capability-family strata",
+    "estimand": "per-example LoRA-gradient Gram statistics and weak-versus-protected family cosine contrasts",
+    "forbidden": [
+      "optimizer construction",
+      "optimizer steps",
+      "parameter updates",
+      "training",
+      "generation",
+      "DEV",
+      "RETENTION_SENTINEL",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT",
+      "automatic retry",
+      "automatic follow-on GPU execution"
+    ],
+    "physical_batch_size": 1,
+    "precision": "BF16",
+    "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN"
+  }
+}
