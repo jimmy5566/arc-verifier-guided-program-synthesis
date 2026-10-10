@@ -1,0 +1,18 @@
+{
+  "backward_calls": 0,
+  "binding_sha256": "fa647aea41ef7e8adf6bf944f8e56b6813ee9d1613b31045c25b5bf3508bd8ba",
+  "config_sha256": "58b636211efe3864552747db16fc2ea5b3a67bcdd14aa9775ac07d49bca6856b",
+  "final_audit_opened": false,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "physical_batch_size": 1,
+  "primary_b1_raw_sha256": "a3b90e8e668e5a325e0d70bc2774999065c3d06f56de657a270620aca7b65ec1",
+  "protocol_id": "E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1",
+  "rows": 768,
+  "runtime_cap_seconds": 1800,
+  "schema_version": 1,
+  "source_commit": "8bc00fb28339187974679341619cb732f3cc99d0",
+  "status": "RAW_GENERATIONS_FROZEN_NO_TARGETS",
+  "target_sidecar_accessed": false,
+  "wall_seconds": 805.8298416212201
+}

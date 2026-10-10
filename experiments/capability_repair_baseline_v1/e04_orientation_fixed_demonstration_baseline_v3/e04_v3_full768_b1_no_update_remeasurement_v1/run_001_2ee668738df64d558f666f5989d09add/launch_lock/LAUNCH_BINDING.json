@@ -1,0 +1,16 @@
+{
+    "schema_version":  1,
+    "protocol_id":  "E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1",
+    "authorization_id":  "E04_V3_FULL768_B1_ONE_SHOT_2ee668738df64d558f666f5989d09add",
+    "director_response_sha256":  "bb26f1ede861e3703f0a2765b8e0f28462a0d59d57e85d5ea4a9b672e848639f",
+    "execution_authorized":  true,
+    "source_commit":  "8bc00fb28339187974679341619cb732f3cc99d0",
+    "worker_sha256":  "89a19694df88005b4da39e5f5b826f759083208c9a44523c5c36764ca91da338",
+    "config_path":  "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1_CONFIG.json",
+    "config_sha256":  "58b636211efe3864552747db16fc2ea5b3a67bcdd14aa9775ac07d49bca6856b",
+    "output_root":  "/workspace/arc2/e04_v3_full768_b1_no_update_remeasurement_v1/run_001_2ee668738df64d558f666f5989d09add",
+    "nonce":  "2ee668738df64d558f666f5989d09add",
+    "hard_runtime_cap_seconds":  1800,
+    "jobs":  1,
+    "retry":  false
+}

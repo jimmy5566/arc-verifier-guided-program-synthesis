@@ -1,0 +1,8 @@
+{
+  "model_imported": false,
+  "optimizer_steps": 0,
+  "protocol_id": "E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1",
+  "source_commit": "8bc00fb28339187974679341619cb732f3cc99d0",
+  "status": "PASS_NO_MODEL_IMPORT",
+  "target_sidecar_accessed": false
+}

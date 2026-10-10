@@ -1,0 +1,1 @@
+{"gpu_used": false, "model_imported": false, "optimizer_steps": 0, "physical_batch_size": 1, "protocol_id": "E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1", "rows": 768, "status": "PASS_NO_MODEL_IMPORT", "target_sidecar_accessed": false}

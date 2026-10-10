@@ -1,0 +1,17 @@
+{
+  "cap_seconds": 1800,
+  "command": [
+    "python3",
+    "scripts/run_e04_v3_full768_b1_remeasurement.py",
+    "--config",
+    "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1_CONFIG.json",
+    "--binding",
+    "/workspace/arc2/e04_v3_full768_b1_no_update_remeasurement_v1/run_001_2ee668738df64d558f666f5989d09add.launch_lock/LAUNCH_BINDING.json",
+    "--output-root",
+    "/workspace/arc2/e04_v3_full768_b1_no_update_remeasurement_v1/run_001_2ee668738df64d558f666f5989d09add"
+  ],
+  "exit_code": 0,
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "wall_seconds": 808.4265498230234
+}
