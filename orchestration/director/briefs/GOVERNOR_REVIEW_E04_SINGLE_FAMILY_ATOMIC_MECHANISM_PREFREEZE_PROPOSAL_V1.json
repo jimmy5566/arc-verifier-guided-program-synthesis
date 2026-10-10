@@ -1,0 +1,18 @@
+{
+  "facts": {
+    "all_families_ineligible": true,
+    "proposal_sha256": "e0afe472966489a6a3547b9ae5181a8d68ef7d47c91eaadf3bdcc7e1ca844efd",
+    "selection": "NONE"
+  },
+  "prohibitions": [
+    "no cohort generation",
+    "no executable protocol",
+    "no worker",
+    "no model/GPU/inference/training",
+    "no sealed evaluation access"
+  ],
+  "question": "Does the eligibility-rule result selection NONE close this prefreeze route without authorizing any cohort or execution?",
+  "review_id": "GOVERNOR_REVIEW_E04_SINGLE_FAMILY_ATOMIC_MECHANISM_PREFREEZE_PROPOSAL_V1",
+  "schema_version": 1,
+  "stage": "CPU_ONLY_E04_SINGLE_FAMILY_ATOMIC_MECHANISM_PREFREEZE_PROPOSAL_V1"
+}

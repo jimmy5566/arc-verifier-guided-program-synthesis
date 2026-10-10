@@ -1,0 +1,70 @@
+{
+  "candidates": [
+    {
+      "deterministic_family_generator_available": false,
+      "eligibility": "INELIGIBLE",
+      "exact_train_asset_available": false,
+      "expected_unit_capacity_at_least_48": false,
+      "family": "connected_components",
+      "frozen_baseline_exact_rate": 0.0,
+      "matched_control_available": false,
+      "valid_unsaturated_baseline": true
+    },
+    {
+      "deterministic_family_generator_available": false,
+      "eligibility": "INELIGIBLE",
+      "exact_train_asset_available": false,
+      "expected_unit_capacity_at_least_48": false,
+      "family": "inside_contains",
+      "frozen_baseline_exact_rate": 0.0,
+      "matched_control_available": false,
+      "valid_unsaturated_baseline": true
+    },
+    {
+      "deterministic_family_generator_available": false,
+      "eligibility": "INELIGIBLE",
+      "exact_train_asset_available": false,
+      "expected_unit_capacity_at_least_48": false,
+      "family": "width",
+      "frozen_baseline_exact_rate": 0.16666666666666666,
+      "matched_control_available": false,
+      "valid_unsaturated_baseline": true
+    },
+    {
+      "deterministic_family_generator_available": false,
+      "eligibility": "INELIGIBLE",
+      "exact_train_asset_available": false,
+      "expected_unit_capacity_at_least_48": false,
+      "family": "difference",
+      "frozen_baseline_exact_rate": 0.16666666666666666,
+      "matched_control_available": false,
+      "valid_unsaturated_baseline": true
+    },
+    {
+      "deterministic_family_generator_available": false,
+      "eligibility": "INELIGIBLE",
+      "exact_train_asset_available": false,
+      "expected_unit_capacity_at_least_48": false,
+      "family": "orientation",
+      "frozen_baseline_exact_rate": 0.4166666666666667,
+      "matched_control_available": false,
+      "valid_unsaturated_baseline": true
+    }
+  ],
+  "forbidden": [
+    "no cohort generation",
+    "no executable protocol",
+    "no worker",
+    "no model/GPU/inference/training",
+    "no sealed evaluation access"
+  ],
+  "post_generation_pre_model_verification": "NOT_APPLICABLE",
+  "pre_generation_bindings": "NOT_CREATED_BECAUSE_SELECTION_NONE",
+  "proposal_id": "CPU_ONLY_E04_SINGLE_FAMILY_ATOMIC_MECHANISM_PREFREEZE_PROPOSAL_V1",
+  "reason": "Every family has valid unsaturated baseline evidence, but none has a currently verified exact legitimate TRAIN asset, deterministic family generator, matched control, or 48-unit capacity. Therefore the frozen eligibility rule yields no eligible family; the required pre-generation bindings cannot be truthfully created.",
+  "selection": "NONE",
+  "selection_rule_applied": "V2 deterministic eligibility and tie-break rule, pre-model-output",
+  "source_inventory_sha256": "657d2ab81afd30d38a7f45debeae1e905585062820e160566ef2330d9ec67d6d",
+  "source_spec_sha256": "f0a6c5cb1bf1a5be01f7d7953d3d330a48d19f1fb37b9d15972b2ee8f9640450",
+  "status": "COMPLETE_SELECTION_NONE_NO_PREFREEZE_BINDINGS_CREATED"
+}
