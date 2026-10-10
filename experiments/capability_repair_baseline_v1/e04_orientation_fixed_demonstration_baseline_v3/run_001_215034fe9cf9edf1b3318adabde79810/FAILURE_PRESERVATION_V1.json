@@ -1,0 +1,23 @@
+{
+  "binding_sha256": "88b10aff5a492fb0360d9213c8fdb15bf6ec9a947a462c20e082f3ebe228a840",
+  "cap_receipt_sha256": "b2bd3954eb6cc237fc2957b068f58ed32beedb720dfc6ebb157aaeed00734c8b",
+  "established_failure": "E04_NATIVE_CONFIG_FILE_IDENTITY:configs/nvarc_native_846d0198/chat_template.j2",
+  "established_process_bounds": {
+    "backward_calls": 0,
+    "final_audit_opened": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "target_sidecar_accessed": false
+  },
+  "launcher_log_sha256": "84b7d4e664c35480956c7a29b78233259b30fe4493096194b42e2dca00e7e4d1",
+  "protocol_id": "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE",
+  "relaunch_authorization": "REQUIRED: the previous conditional one-shot authorization was consumed by this failed detached attempt; no replacement binding or GPU execution is included here.",
+  "repair": "Runtime native configuration identity is now verified with E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY_V1.json against both the checked-out vendored files and the configured runtime directory. Upstream provenance remains recorded separately.",
+  "root_cause": "The old launcher compared upstream source-provenance hashes against runtime vendored native configuration bytes. The frozen runtime configuration is byte-distinct from its upstream source provenance, so the guard rejected the intended runtime before model import.",
+  "run_id": "E04_V3_CLEAN_BASELINE_RUN_001_215034fe9cf9edf1b3318adabde79810",
+  "schema_version": 1,
+  "scientific_conditions_changed": false,
+  "source_commit": "ddb950d5f4821ab1ccaa29bdc6ba43f816a31ec9",
+  "status": "FAILED_NO_UPDATE_PRESERVED",
+  "terminal_receipt_sha256": "77bf71544be836d32a3624379e2b8f3721183f5243471e1ba88f92a25fc000b0"
+}

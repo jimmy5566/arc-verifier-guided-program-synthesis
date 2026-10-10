@@ -1,7 +1,8 @@
-﻿import hashlib
+import hashlib
 import json
 import tempfile
 import unittest
+import subprocess
 from pathlib import Path
 
 from scripts import e04_orientation_v3_no_update as e
@@ -94,7 +95,7 @@ class E04V3NoUpdateTest(unittest.TestCase):
                 "protocol_id": contract["protocol_id"],
                 "authorization_id": "E04_V3_CLEAN_BASELINE_ONE_SHOT_CONDITIONAL_20261010",
                 "execution_authorized": True,
-                "source_commit": "ae0540d55162d8868130fa20005af97c2e81768b",
+                "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=e.ROOT, text=True).strip(),
                 "worker_sha256": e.sha_path(e.ROOT / "scripts/run_e04_orientation_v3_fixed_baseline.py"),
                 "contract_path": str(e.CONTRACT.relative_to(e.ROOT)).replace("\\\\", "/"),
                 "contract_sha256": e.sha_path(e.CONTRACT),
@@ -105,12 +106,24 @@ class E04V3NoUpdateTest(unittest.TestCase):
                 "native_config_dir": str(e.ROOT / "configs/nvarc_native_846d0198"),
                 "native_config_provenance_path": "configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json",
                 "native_config_provenance_sha256": e.sha_path(e.ROOT / "configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json"),
+                "native_config_runtime_identity_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY_V1.json",
+                "native_config_runtime_identity_sha256": e.sha_path(e.ROOT / "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY_V1.json"),
                 "output_root": str(out), "nonce": "unit-test-nonce",
                 "hard_runtime_cap_seconds": 1800, "jobs": 1, "retry": False,
             }
             bp = Path(tmp) / "binding.json"
             e.atomic_json(bp, binding)
             self.assertEqual(worker.load_binding(bp, out)["nonce"], "unit-test-nonce")
+
+    def test_runtime_native_identity_validates_runtime_and_vendored_bytes_without_model_import(self):
+        from scripts import run_e04_orientation_v3_fixed_baseline as worker
+        manifest = e.ROOT / "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY_V1.json"
+        binding = {"native_config_runtime_identity_path": str(manifest.relative_to(e.ROOT)).replace("\\", "/"),
+                   "native_config_dir": str(e.ROOT / "configs/nvarc_native_846d0198")}
+        worker.verify_runtime_native_config_identity(binding)
+        bad = dict(binding); bad["native_config_dir"] = str(e.ROOT / "configs")
+        with self.assertRaisesRegex(e.E04ExecutionFailure, "E04_NATIVE_CONFIG_RUNTIME_IDENTITY"):
+            worker.verify_runtime_native_config_identity(bad)
 
     def test_binding_rejects_wrong_execution_identity(self):
         from scripts import run_e04_orientation_v3_fixed_baseline as worker
@@ -127,6 +140,8 @@ class E04V3NoUpdateTest(unittest.TestCase):
                 "native_config_dir": str(e.ROOT / "configs/nvarc_native_846d0198"),
                 "native_config_provenance_path": "configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json",
                 "native_config_provenance_sha256": e.sha_path(e.ROOT / "configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json"),
+                "native_config_runtime_identity_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY_V1.json",
+                "native_config_runtime_identity_sha256": e.sha_path(e.ROOT / "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY_V1.json"),
                 "output_root": str(out), "nonce": "unit-test-nonce", "hard_runtime_cap_seconds": 1800, "jobs": 1, "retry": False,
             }
             bp = Path(tmp) / "binding.json"

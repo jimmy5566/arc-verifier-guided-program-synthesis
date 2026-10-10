@@ -1,0 +1,26 @@
+{
+  "derivation": "Exact runtime byte identity for the frozen native tokenizer configuration; source-origin provenance remains recorded separately.",
+  "files": [
+    {
+      "bytes": 208,
+      "runtime_relative_path": "chat_template.j2",
+      "sha256": "e5ed79284f346b7eadd874f6bdc376f722704808afd07ffd6190c6d8b97ddb5f",
+      "vendored_path": "configs/nvarc_native_846d0198/chat_template.j2"
+    },
+    {
+      "bytes": 850,
+      "runtime_relative_path": "tokenizer_config.json",
+      "sha256": "da462d924da5b37c3750d75a55e717d6967b11a0de38e6d19c5ac22686e3b543",
+      "vendored_path": "configs/nvarc_native_846d0198/tokenizer_config.json"
+    },
+    {
+      "bytes": 120,
+      "runtime_relative_path": "vocab.json",
+      "sha256": "0890d883459d60512a7714e4a56d95f839d44e8a948b027d5c2d38823a10890a",
+      "vendored_path": "configs/nvarc_native_846d0198/vocab.json"
+    }
+  ],
+  "kind": "E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY",
+  "runtime_config_dir_name": "nvarc_native_846d0198",
+  "schema_version": 1
+}

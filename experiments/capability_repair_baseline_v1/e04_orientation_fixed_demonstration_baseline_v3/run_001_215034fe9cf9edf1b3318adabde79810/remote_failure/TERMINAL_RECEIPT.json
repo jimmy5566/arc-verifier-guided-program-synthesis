@@ -1,0 +1,12 @@
+{
+  "backward_calls": 0,
+  "error": "E04_NATIVE_CONFIG_FILE_IDENTITY:configs/nvarc_native_846d0198/chat_template.j2",
+  "error_type": "E04ExecutionFailure",
+  "final_audit_opened": false,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "schema_version": 1,
+  "status": "FAILED_NO_UPDATE",
+  "target_sidecar_accessed": false,
+  "wall_seconds": 94.54908851720393
+}

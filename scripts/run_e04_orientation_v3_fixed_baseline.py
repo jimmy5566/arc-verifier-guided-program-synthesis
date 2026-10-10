@@ -24,7 +24,7 @@ def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
         "schema_version", "protocol_id", "authorization_id", "execution_authorized",
         "source_commit", "worker_sha256", "contract_path", "contract_sha256", "runtime_config_path", "runtime_config_sha256",
         "checkpoint_manifest_path", "checkpoint_manifest_sha256",
-        "native_config_dir", "native_config_provenance_path", "native_config_provenance_sha256",
+        "native_config_dir", "native_config_provenance_path", "native_config_provenance_sha256", "native_config_runtime_identity_path", "native_config_runtime_identity_sha256",
         "output_root", "nonce", "hard_runtime_cap_seconds", "jobs", "retry",
     }
     if set(binding) != required:
@@ -53,7 +53,7 @@ def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
     if not runtime_config.is_file() or sha_path(runtime_config) != binding["runtime_config_sha256"]:
         fail("E04_RUNTIME_CONFIG_HASH")
     validate_contract(contract)
-    for key in ("checkpoint_manifest_path", "native_config_provenance_path"):
+    for key in ("checkpoint_manifest_path", "native_config_provenance_path", "native_config_runtime_identity_path"):
         candidate = ROOT / binding[key]
         if not candidate.is_file():
             fail("E04_RUNTIME_IDENTITY_MANIFEST_MISSING:" + key)
@@ -61,9 +61,28 @@ def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
         fail("E04_CHECKPOINT_MANIFEST_HASH")
     if sha_path(ROOT / binding["native_config_provenance_path"]) != binding["native_config_provenance_sha256"]:
         fail("E04_NATIVE_CONFIG_PROVENANCE_HASH")
+    if sha_path(ROOT / binding["native_config_runtime_identity_path"]) != binding["native_config_runtime_identity_sha256"]:
+        fail("E04_NATIVE_CONFIG_RUNTIME_IDENTITY_MANIFEST_HASH")
     if output_root.exists() and any(output_root.iterdir()):
         fail("E04_FRESH_OUTPUT_REQUIRED")
     return binding
+
+def verify_runtime_native_config_identity(binding: dict[str, Any]) -> None:
+    runtime_identity = json.loads((ROOT / binding["native_config_runtime_identity_path"]).read_text(encoding="utf-8-sig"))
+    runtime_config_dir = Path(binding["native_config_dir"])
+    if runtime_identity.get("kind") != "E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY" or runtime_identity.get("schema_version") != 1:
+        fail("E04_NATIVE_CONFIG_RUNTIME_IDENTITY_SCHEMA")
+    files = runtime_identity.get("files")
+    if not isinstance(files, list) or not files:
+        fail("E04_NATIVE_CONFIG_RUNTIME_IDENTITY_SCHEMA")
+    for entry in files:
+        vendored = ROOT / entry["vendored_path"]
+        runtime_file = runtime_config_dir / entry["runtime_relative_path"]
+        if (not vendored.is_file() or not runtime_file.is_file() or vendored.stat().st_size != entry["bytes"]
+                or runtime_file.stat().st_size != entry["bytes"] or sha_path(vendored) != entry["sha256"]
+                or sha_path(runtime_file) != entry["sha256"]):
+            fail("E04_NATIVE_CONFIG_RUNTIME_IDENTITY:" + entry["runtime_relative_path"])
+
 
 def raw_record(index: int, prompt: dict[str, Any], generation: Any, parse: Any, batch_size: int) -> dict[str, Any]:
     parsed = parse(generation.text)
@@ -126,7 +145,6 @@ def run(config_path: Path, binding_path: Path, output_root: Path) -> None:
         # Runtime-only imports: all prior source/config gates completed before
         # model import. Verify exact base and V7 adapter bytes before loading.
         checkpoint = json.loads((ROOT / binding["checkpoint_manifest_path"]).read_text(encoding="utf-8-sig"))
-        provenance = json.loads((ROOT / binding["native_config_provenance_path"]).read_text(encoding="utf-8-sig"))
         def verify_entries(folder: Path, entries: list[dict[str, Any]], label: str) -> None:
             for entry in entries:
                 candidate = folder / entry["name"]
@@ -137,10 +155,7 @@ def run(config_path: Path, binding_path: Path, output_root: Path) -> None:
         adapter_path = Path(checkpoint["adapter_path"])
         verify_entries(base_path, checkpoint["base_files"], "BASE")
         verify_entries(adapter_path, checkpoint["adapter_files"], "V7_ADAPTER")
-        for entry in provenance.get("files", {}).values():
-            vendored = ROOT / entry["vendored_path"]
-            if not vendored.is_file() or sha_path(vendored) != entry["sha256"]:
-                fail("E04_NATIVE_CONFIG_FILE_IDENTITY:" + entry["vendored_path"])
+        verify_runtime_native_config_identity(binding)
         from inference.nvarc_native import NVARCNativeProvider, checkpoint_native_tokenizer, parse_native_grid
         from peft import PeftModel
         from transformers import AutoModelForCausalLM
@@ -225,3 +240,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
