@@ -1,0 +1,36 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "frozen_constraints": [
+    "Do not retry this run.",
+    "Do not lower physical batch size or introduce fallback/accumulation/quantization/offload under this protocol.",
+    "Preserve RUN_001 evidence.",
+    "Do not access Gold, dGold, or FINAL_AUDIT."
+  ],
+  "immutable_evidence": {
+    "remote_output_root": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v2_lower_memory/run_001_f53dfdd34e13cc558e5cf7990f918a9d",
+    "terminal_receipt_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\experiments\\capability_repair_baseline_v1\\e03_v7_lora_gradient_interference_diagnostic_v1\\run_001_f53dfdd34e13cc558e5cf7990f918a9d\\REMOTE_TERMINAL_RECEIPT_V1.json",
+    "terminal_receipt_sha256": "3c1f648ed6c575e4cf1185585c6a951f7dceb0fdf7e7d1ab91796c5a1574bf35"
+  },
+  "observed_result": {
+    "completed_basis_rows": 0,
+    "elapsed_seconds": 221.42290809191763,
+    "error_class": "CUDA_OOM_ON_FIRST_PHYSICAL_B8_FORWARD",
+    "final_audit_opened": false,
+    "generation_calls": 0,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "peak_workload_allocated_bytes": 7808271872,
+    "peak_workload_reserved_bytes": 8415870976,
+    "status": "FAILED_OR_PARTIAL_NO_UPDATE"
+  },
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY",
+  "question": "Given the terminal OOM under the authorized physical-B8 V2 protocol and zero completed basis rows, what is the smallest scientifically distinct next step, if any? Do not reinterpret this infrastructure outcome as evidence for or against gradient interference.",
+  "review_type": "RESULT_REVIEW",
+  "scientific_interpretation": "NOT_ESTABLISHED: no gradient basis or family-interference statistic was produced.",
+  "stage": "RUN_001"
+}
