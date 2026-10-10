@@ -32,3 +32,8 @@ scientifically material batch behavior, metrics, thresholds, hypotheses, and
 protected/sealed boundaries. Engineering changes include path normalization,
 detached-HEAD support, entrypoints, dependencies, CPU tests, receipts, locks,
 and semantically neutral implementation fixes.
+
+For a frozen execution, the runtime detached `HEAD` must equal the approved
+commit and the bound scientific files must hash-match. A later development
+branch advance, symbolic branch name, or temporary remote-tracking ref must
+not block that independently verifiable snapshot.

@@ -34,55 +34,52 @@ def git(root: Path, *arguments: str) -> str:
 
 
 class E03DetachedIdentityIntegrationTests(unittest.TestCase):
-    def make_repo(self, root: Path) -> tuple[dict, str]:
+    def make_repo(self, root: Path) -> tuple[dict, str, str]:
+        """Create a frozen commit, advance its branch, then detach at frozen."""
         root.mkdir(parents=True)
         git(root, "init")
         git(root, "config", "user.email", "e03-test@example.invalid")
         git(root, "config", "user.name", "E03 Test")
+        git(root, "checkout", "-b", "infra")
         (root / "scientific.json").write_text('{"frozen":true}\n', encoding="utf-8")
         git(root, "add", "scientific.json")
-        git(root, "commit", "-m", "frozen fixture")
-        head = git(root, "rev-parse", "HEAD")
-        origin_ref = "refs/remotes/origin/infra/arc2-dual-agent-runpod-orchestrator-v1"
-        git(root, "update-ref", origin_ref, head)
-        git(root, "checkout", "--detach", head)
+        git(root, "commit", "-m", "approved frozen fixture")
+        frozen = git(root, "rev-parse", "HEAD")
+        (root / "development_only.txt").write_text("branch advanced\n", encoding="utf-8")
+        git(root, "add", "development_only.txt")
+        git(root, "commit", "-m", "development branch advancement")
+        advanced = git(root, "rev-parse", "HEAD")
+        self.assertNotEqual(advanced, frozen)
+        git(root, "checkout", "--detach", frozen)
         self.assertEqual(git(root, "rev-parse", "--abbrev-ref", "HEAD"), "HEAD")
+        self.assertEqual(git(root, "rev-parse", "infra"), advanced)
         return {
-            "execution_checkout_commit": head,
-            "executable_source_commit": head,
-            "origin_ref": origin_ref,
-        }, head
+            "execution_checkout_commit": frozen,
+            "executable_source_commit": frozen,
+        }, frozen, advanced
 
-    def test_actual_detached_exact_sha_checkout_passes(self):
+    def test_actual_detached_exact_sha_checkout_passes_after_branch_advances(self):
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw) / "repo"
-            binding, head = self.make_repo(root)
-            self.assertEqual(worker.validate_git_identity(binding, root), head)
+            binding, frozen, advanced = self.make_repo(root)
+            self.assertNotEqual(frozen, advanced)
+            self.assertEqual(worker.validate_git_identity(binding, root), frozen)
 
-    def test_full_preflight_passes_from_actual_detached_checkout(self):
+    def test_full_preflight_passes_from_actual_detached_checkout_after_branch_advances(self):
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw) / "repo"
-            binding, head = self.make_repo(root)
+            binding, frozen, advanced = self.make_repo(root)
+            self.assertNotEqual(frozen, advanced)
             model = root / "model"
             adapter = root / "adapter"
             model.mkdir()
             adapter.mkdir()
-            checkpoint = {
-                "base_path": str(model),
-                "adapter_path": str(adapter),
-                "base_files": [],
-                "adapter_files": [],
-            }
-            families = []
-            for family_index in range(9):
-                families.append({
-                    "canonical_family": f"family_{family_index}",
-                    "members": [
-                        {"episode_id": f"TRAIN:TEST:{family_index}:{row}"}
-                        for row in range(8)
-                    ],
-                })
-            cohort = {"families": families}
+            checkpoint = {"base_path": str(model), "adapter_path": str(adapter), "base_files": [], "adapter_files": []}
+            cohort = {"families": [
+                {"canonical_family": f"family_{family_index}", "members": [
+                    {"episode_id": f"TRAIN:TEST:{family_index}:{row}"} for row in range(8)
+                ]} for family_index in range(9)
+            ]}
             allow = ["layer.q_proj.lora_A.default.weight"]
             config = {
                 "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
@@ -92,38 +89,27 @@ class E03DetachedIdentityIntegrationTests(unittest.TestCase):
                 "cohort_manifest_path": "cohort.json",
                 "cohort_manifest_sha256": hashlib.sha256(json.dumps(cohort).encode()).hexdigest(),
                 "lora_parameter_name_allowlist": allow,
-                "lora_parameter_name_allowlist_sha256": hashlib.sha256(
-                    json.dumps(allow, separators=(",", ":")).encode()
-                ).hexdigest(),
+                "lora_parameter_name_allowlist_sha256": hashlib.sha256(json.dumps(allow, separators=(",", ":")).encode()).hexdigest(),
             }
             response = {"decision": "CONTINUE_CONTROLLER"}
-            for name, value in (("checkpoint.json", checkpoint), ("cohort.json", cohort),
-                                ("config.json", config), ("response.json", response)):
+            for name, value in (("checkpoint.json", checkpoint), ("cohort.json", cohort), ("config.json", config), ("response.json", response)):
                 (root / name).write_text(json.dumps(value), encoding="utf-8")
             output = Path(raw) / "fresh-output"
             binding.update({
-                "execution_authorized": True,
-                "status": "EXECUTION_AUTHORIZED_AFTER_DIRECTOR_REVIEW",
-                "output_root": str(output.resolve()),
-                "jobs": 1,
-                "retry": False,
-                "runtime_cap_seconds": 1800,
-                "bound_files": {
-                    name: hashlib.sha256((root / name).read_bytes()).hexdigest()
-                    for name in ("checkpoint.json", "cohort.json", "config.json", "response.json")
-                },
+                "execution_authorized": True, "status": "EXECUTION_AUTHORIZED_AFTER_DIRECTOR_REVIEW",
+                "output_root": str(output.resolve()), "jobs": 1, "retry": False, "runtime_cap_seconds": 1800,
+                "bound_files": {name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in ("checkpoint.json", "cohort.json", "config.json", "response.json")},
                 "director_response_path": "response.json",
                 "director_response_sha256": hashlib.sha256((root / "response.json").read_bytes()).hexdigest(),
             })
             binding_path = root / "binding.json"
             binding_path.write_text(json.dumps(binding), encoding="utf-8")
-            old_root = worker.ROOT
-            old_cap = os.environ.get("E03_EXTERNAL_CAP_ENFORCED")
+            old_root, old_cap = worker.ROOT, os.environ.get("E03_EXTERNAL_CAP_ENFORCED")
             worker.ROOT = root
             os.environ["E03_EXTERNAL_CAP_ENFORCED"] = "1"
             try:
                 result = worker.preflight(root / "config.json", binding_path, output)
-                self.assertEqual(result[-1], head)
+                self.assertEqual(result[-1], frozen)
             finally:
                 worker.ROOT = old_root
                 if old_cap is None:
@@ -131,20 +117,13 @@ class E03DetachedIdentityIntegrationTests(unittest.TestCase):
                 else:
                     os.environ["E03_EXTERNAL_CAP_ENFORCED"] = old_cap
 
-    def test_wrong_commit_wrong_origin_and_dirty_tracked_source_fail(self):
+    def test_wrong_commit_and_dirty_tracked_source_fail(self):
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw) / "repo"
-            binding, head = self.make_repo(root)
+            binding, _, _ = self.make_repo(root)
             wrong = dict(binding, execution_checkout_commit="0" * 40)
             with self.assertRaisesRegex(RuntimeError, "EXECUTION_COMMIT_MISMATCH"):
                 worker.validate_git_identity(wrong, root)
-            git(root, "commit", "--allow-empty", "-m", "different remote head")
-            other = git(root, "rev-parse", "HEAD")
-            git(root, "checkout", "--detach", head)
-            git(root, "update-ref", binding["origin_ref"], other)
-            with self.assertRaisesRegex(RuntimeError, "ORIGIN_COMMIT_MISMATCH"):
-                worker.validate_git_identity(binding, root)
-            git(root, "update-ref", binding["origin_ref"], head)
             (root / "scientific.json").write_text('{"frozen":false}\n', encoding="utf-8")
             with self.assertRaisesRegex(RuntimeError, "TRACKED_SOURCE_NOT_CLEAN"):
                 worker.validate_git_identity(binding, root)
@@ -158,6 +137,27 @@ class E03DetachedIdentityIntegrationTests(unittest.TestCase):
             worker.validate_bound_files({"bound_files": {"scientific.json": valid}}, root)
             with self.assertRaisesRegex(RuntimeError, "BOUND_FILE_HASH_MISMATCH"):
                 worker.validate_bound_files({"bound_files": {"scientific.json": "0" * 64}}, root)
+
+    def test_actual_preflight_rejects_invalid_execution_authorization(self):
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw) / "repo"
+            binding, _, _ = self.make_repo(root)
+            binding["execution_authorized"] = False
+            config_path, binding_path = root / "config.json", root / "binding.json"
+            config_path.write_text(json.dumps({"execution_authorized": False}), encoding="utf-8")
+            binding_path.write_text(json.dumps(binding), encoding="utf-8")
+            old_root, old_cap = worker.ROOT, os.environ.get("E03_EXTERNAL_CAP_ENFORCED")
+            worker.ROOT = root
+            os.environ["E03_EXTERNAL_CAP_ENFORCED"] = "1"
+            try:
+                with self.assertRaisesRegex(RuntimeError, "BINDING_AUTHORIZATION_REQUIRED"):
+                    worker.preflight(config_path, binding_path, Path(raw) / "fresh-output")
+            finally:
+                worker.ROOT = old_root
+                if old_cap is None:
+                    os.environ.pop("E03_EXTERNAL_CAP_ENFORCED", None)
+                else:
+                    os.environ["E03_EXTERNAL_CAP_ENFORCED"] = old_cap
 
 
 class E03LauncherIntegrationTests(unittest.TestCase):

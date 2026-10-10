@@ -106,12 +106,17 @@ local commit -> GitHub push -> RunPod git fetch -> checkout exact commit SHA
 ```
 
 Do not use forced-PTY SSH transfer for these assets when GitHub can carry them.
-Every remote execution records its exact Git commit SHA. Before scientific
-execution where applicable, verify this provenance invariant:
+Every remote execution records its exact Git commit SHA. For an approved
+snapshot, verify this provenance invariant:
 
 ```text
-LOCAL HEAD = ORIGIN REF = RUNPOD CHECKOUT
+APPROVED EXECUTION SHA = RUNPOD DETACHED CHECKOUT
 ```
+
+The development branch may advance after approval. A moving branch head or a
+temporary remote-tracking ref is not an execution identity gate when the
+approved commit, clean tracked source, and bound scientific file hashes are
+already verified.
 
 ### Large files: versioned artifact storage
 

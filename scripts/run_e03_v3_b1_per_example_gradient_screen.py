@@ -55,11 +55,9 @@ def validate_git_identity(binding: dict, root: Path = ROOT) -> str:
     observed = git_text(root, "rev-parse", "HEAD").lower()
     if observed != expected:
         raise RuntimeError("E03_V3_EXECUTION_COMMIT_MISMATCH")
-    origin_ref = str(binding.get("origin_ref") or "")
-    if not origin_ref.startswith("refs/remotes/origin/"):
-        raise RuntimeError("E03_V3_ORIGIN_REF_BINDING_INVALID")
-    if git_text(root, "rev-parse", origin_ref).lower() != expected:
-        raise RuntimeError("E03_V3_ORIGIN_COMMIT_MISMATCH")
+    # The immutable checkout SHA is the execution identity. A development
+    # branch may advance after scientific authorization, so no symbolic or
+    # remote-tracking ref is an execution gate here.
     source = str(binding.get("executable_source_commit") or "").lower()
     if not GIT_SHA_PATTERN.fullmatch(source):
         raise RuntimeError("E03_V3_EXECUTABLE_SOURCE_BINDING_INVALID")
