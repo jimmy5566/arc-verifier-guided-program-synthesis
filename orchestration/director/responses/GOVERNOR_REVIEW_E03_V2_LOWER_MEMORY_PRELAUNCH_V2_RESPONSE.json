@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "response_id": "GOVERNOR_REVIEW_E03_V2_LOWER_MEMORY_PRELAUNCH_V2_RESPONSE",
+  "reviewed_brief": "orchestration/director/briefs/GOVERNOR_REVIEW_E03_V2_LOWER_MEMORY_PRELAUNCH_V2.json",
+  "reviewed_brief_sha256": "a017d0b607dc7d386c638cbfdd1e43ffeb11423607e77fe99e00b6b593cde6e6",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY_RUN_001",
+  "next_action": "Create one final immutable execution binding derived from PRELAUNCH_BINDING_V2, changing only authorization metadata and binding this response by exact path and SHA256. Preserve nonce f53dfdd34e13cc558e5cf7990f918a9d, the fresh V2 output/receipt paths, physical B8, B1 sensitivity, all reviewed file hashes, one-job/no-retry policy, and the 1500-second external cap. Commit and non-force-push the response plus final binding on infra/arc2-dual-agent-runpod-orchestrator-v1; verify local HEAD = origin branch HEAD = clean RunPod checkout HEAD, exact bound-file/checkpoint hashes, fresh-output absence, and no surviving E03 process. Then execute exactly one V2 lower-memory no-update job through the reviewed launcher. Record model-load and workload CUDA current/peak allocated/reserved bytes. On OOM, cap expiry, identity failure, partial evidence, or any other failure, preserve the receipt/evidence, do not retry or fall back, and return it for review. On success, freeze the raw Gram sufficient statistics, postprocessed result, memory evidence, and terminal receipt for scientific review.",
+  "scientific_assessment": {
+    "lower_memory_estimand_preserved": true,
+    "physical_primary_batch_size": 8,
+    "batch1_sensitivity_rows": 72,
+    "objective_preserved": true,
+    "precision_preserved": true,
+    "checkpoint_preserved": true,
+    "manifest_preserved": true,
+    "gradient_algebra_statistics_bootstrap_preserved": true,
+    "framework_validation_gap_closed": true
+  },
+  "validation_evidence": {
+    "framework_test_evidence_sha256": "8ce0f09637ccf15d6a2b707129221730bc153deac37ca98a26d42efccbd45912",
+    "test_source_sha256": "f9888899a68a3765d417caa02ed6f37a49949df889bc292a33523ec2812a1a8b",
+    "framework": "PyTorch 2.8.0+cu128",
+    "framework_test_mode": "CPU_ONLY_CUDA_UNINITIALIZED_NO_ARC_MODEL",
+    "framework_test_result": "PASS_1_OF_1",
+    "gradient_tolerance": {
+      "atol": 1e-07,
+      "rtol": 1e-06
+    },
+    "focused_suite_result": "PASS_19_OF_19"
+  },
+  "authorization": {
+    "authorized_jobs": 1,
+    "runtime_cap_seconds": 1500,
+    "gpu_model_loading_for_diagnostic": true,
+    "physical_B8_forward_and_backward_gradient_measurement": true,
+    "optimizer_construction": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "generation_calls": 0,
+    "automatic_retry": false,
+    "fallback": false
+  },
+  "frozen_conditions": {
+    "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY",
+    "nonce": "f53dfdd34e13cc558e5cf7990f918a9d",
+    "output_root": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v2_lower_memory/run_001_f53dfdd34e13cc558e5cf7990f918a9d",
+    "config_sha256": "04157fbd51fe012ee6718f9b2d18deb6c56547bb91b016d0b76d0a9650e21c17",
+    "worker_sha256": "8db67bbda9121f67eb7c70f7c44b035e2828a333906761dd55dc1127e0392bad",
+    "launcher_sha256": "20ad48724c7b48f03a5b02e10e6673de452a116a4195c49a1dedb02927fc7df1",
+    "memory_plan_sha256": "40c8fd4538b276c5500050055b0f5d8f260c2f11083daaf66f8847b16106820e",
+    "manifest_sha256": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "train_rows": 288,
+    "lora_allowlist_sha256": "e44ecb9caf0be396aaaceae6802dbaab9209677103ba263c89ca9a7ea65f6215",
+    "precision": "BF16_MODEL_SELECTED_SUPERVISED_LOGITS_FP32_SUMMED_CE"
+  },
+  "forbidden_actions": [
+    "retrying, modifying, or reusing RUN_001 or RUN_002 from E03 V1",
+    "changing physical B8, B1 sensitivity, precision, objective, dataset, checkpoint, grouping, LoRA allowlist, statistics, thresholds, bootstrap, seed, nonce, output identity, or cap",
+    "B4, B2, B1-primary, serial-accumulation, quantization, offload, precision, or objective fallback",
+    "optimizer construction, optimizer steps, parameter updates, training, or generation",
+    "opening DEV, RETENTION_SENTINEL, Gold, dGold, or FINAL_AUDIT",
+    "duplicate launch or automatic retry",
+    "interpreting infrastructure failure or partial gradients as gradient-interference evidence"
+  ],
+  "next_review": "Return the immutable terminal receipt and complete frozen result package for one scientific result review. No additional prelaunch review is required if the final binding derivation is exact."
+}
