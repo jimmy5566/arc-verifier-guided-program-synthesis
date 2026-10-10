@@ -1,0 +1,41 @@
+{
+    "schema_version":  1,
+    "protocol_id":  "E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1",
+    "template_only":  true,
+    "execution_authorized":  false,
+    "source_commit":  "e95aa5c09fa45e6d82da2381e7bc538a1f0bce44",
+    "required_resolved_binding_fields":  [
+                                             "authorization_id",
+                                             "director_response_sha256",
+                                             "fresh_nonce",
+                                             "fresh_output_root",
+                                             "source_commit",
+                                             "worker_sha256",
+                                             "config_sha256",
+                                             "hard_runtime_cap_seconds",
+                                             "jobs",
+                                             "retry"
+                                         ],
+    "immutable":  {
+                      "scorer_path":  "scripts/score_e04_v3_full768_b1_remeasurement.py",
+                      "hard_runtime_cap_seconds":  1800,
+                      "scorer_sha256":  "ff58e2bfa351b3d1b3225fedd4e9d5560cded3ce5f7fccd5ae8611bf1da961e8",
+                      "config_path":  "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1_CONFIG.json",
+                      "config_sha256":  "58b636211efe3864552747db16fc2ea5b3a67bcdd14aa9775ac07d49bca6856b",
+                      "worker_path":  "scripts/run_e04_v3_full768_b1_remeasurement.py",
+                      "rows":  768,
+                      "worker_sha256":  "89a19694df88005b4da39e5f5b826f759083208c9a44523c5c36764ca91da338",
+                      "physical_batch_size":  1
+                  },
+    "constraints":  {
+                        "no_gold":  true,
+                        "no_dgold":  true,
+                        "retry":  false,
+                        "no_optimizer":  true,
+                        "no_final_audit":  true,
+                        "jobs":  1,
+                        "no_parameter_updates":  true,
+                        "no_training":  true,
+                        "no_backward":  true
+                    }
+}

@@ -1,0 +1,64 @@
+{
+    "schema_version":  1,
+    "brief_id":  "E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1_PRELAUNCH_BRIEF",
+    "stage":  "E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1",
+    "decision_needed":  "AUTHORIZE_ONE_PROSPECTIVE_NO_UPDATE_GPU_REMEASUREMENT_OR_DECLINE",
+    "prior_result":  {
+                         "result_review_response_sha256":  "86cb29dc66c4021356a0d571a8f2bb9169253d0b44d359c954e1eca839ec303b",
+                         "run_id":  "RUN_002_09280490c667fc6f5643034cb8a577a8",
+                         "result":  "B1_SELECTED__B16_B8_B4_SEMANTIC_AGREEMENT_GATE_FAIL",
+                         "fresh_b1_repeatability":  "PASS_64_OF_64"
+                     },
+    "question":  "At the independently selected physical B1 rung, what are V7 exact-grid outcomes and matched condition contrasts across the frozen 768-row E04-V3 cohort?",
+    "scientific_conditions":  {
+                                  "precision":  "BF16",
+                                  "decoder":  "native Greedy",
+                                  "prompts":  "frozen E04-V3 validation inputs",
+                                  "demonstrations":  "fixed TRAIN-only",
+                                  "target_boundary":  "freeze raw generations, then require 64-row B1 token/parser/grid identity to RUN_002 before sidecar scoring",
+                                  "rows":  768,
+                                  "checkpoint":  "V7",
+                                  "physical_batch_size":  1,
+                                  "runtime_cap_seconds":  1800
+                              },
+    "implementation":  {
+                           "scorer_path":  "scripts/score_e04_v3_full768_b1_remeasurement.py",
+                           "scorer_sha256":  "ff58e2bfa351b3d1b3225fedd4e9d5560cded3ce5f7fccd5ae8611bf1da961e8",
+                           "config_path":  "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1_CONFIG.json",
+                           "binding_template_sha256":  "74874abe1fef1e0c2ea51f5b047d04069ddad190b04a55fa9b803a2f4391ced8",
+                           "config_sha256":  "58b636211efe3864552747db16fc2ea5b3a67bcdd14aa9775ac07d49bca6856b",
+                           "source_commit":  "e95aa5c09fa45e6d82da2381e7bc538a1f0bce44",
+                           "worker_path":  "scripts/run_e04_v3_full768_b1_remeasurement.py",
+                           "worker_sha256":  "89a19694df88005b4da39e5f5b826f759083208c9a44523c5c36764ca91da338",
+                           "binding_template_path":  "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1_EXECUTION_BINDING_TEMPLATE.json"
+                       },
+    "cpu_validation":  {
+                           "preflight":  "PASS_NO_MODEL_IMPORT",
+                           "target_sidecar_accessed":  false,
+                           "gpu_used":  false,
+                           "model_loaded":  false,
+                           "new_tests":  "PASS_2"
+                       },
+    "decision_rules":  {
+                           "invalidate":  "any reference mismatch yields B1_RUNTIME_REPEATABILITY_INCONCLUSIVE and condition scores must not guide training",
+                           "accept":  "all 64 embedded rows exactly match RUN_002 B1 generated_token_ids, parser_valid, and parsed_grid; then report predeclared condition exact-grid accuracy and matched contrasts",
+                           "scope":  "reused synthetic development evidence only, not independent ARC transfer"
+                       },
+    "request":  {
+                    "fresh_output_root_required":  true,
+                    "fresh_nonce_required":  true,
+                    "result_review_required":  true,
+                    "jobs":  1,
+                    "preimport_preflight_required":  true
+                },
+    "forbidden":  [
+                      "training",
+                      "optimizer construction",
+                      "backward",
+                      "parameter update",
+                      "Gold",
+                      "dGold",
+                      "FINAL_AUDIT",
+                      "automatic follow-on execution"
+                  ]
+}
