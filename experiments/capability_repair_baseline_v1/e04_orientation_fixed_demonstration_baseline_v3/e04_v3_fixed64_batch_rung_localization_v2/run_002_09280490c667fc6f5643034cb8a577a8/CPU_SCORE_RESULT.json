@@ -1,0 +1,108 @@
+{
+  "candidate_arms": {
+    "16": {
+      "mismatches": [
+        {
+          "fields": {
+            "exact_grid_outcome": true,
+            "generated_token_ids": false,
+            "parsed_grid": false,
+            "parser_validity": true
+          },
+          "row_index": 28
+        },
+        {
+          "fields": {
+            "exact_grid_outcome": true,
+            "generated_token_ids": false,
+            "parsed_grid": false,
+            "parser_validity": true
+          },
+          "row_index": 736
+        }
+      ],
+      "pass": false
+    },
+    "4": {
+      "mismatches": [
+        {
+          "fields": {
+            "exact_grid_outcome": true,
+            "generated_token_ids": false,
+            "parsed_grid": false,
+            "parser_validity": true
+          },
+          "row_index": 28
+        },
+        {
+          "fields": {
+            "exact_grid_outcome": true,
+            "generated_token_ids": false,
+            "parsed_grid": false,
+            "parser_validity": true
+          },
+          "row_index": 745
+        }
+      ],
+      "pass": false
+    },
+    "8": {
+      "mismatches": [
+        {
+          "fields": {
+            "exact_grid_outcome": true,
+            "generated_token_ids": false,
+            "parsed_grid": false,
+            "parser_validity": true
+          },
+          "row_index": 20
+        },
+        {
+          "fields": {
+            "exact_grid_outcome": true,
+            "generated_token_ids": false,
+            "parsed_grid": false,
+            "parser_validity": true
+          },
+          "row_index": 241
+        },
+        {
+          "fields": {
+            "exact_grid_outcome": true,
+            "generated_token_ids": false,
+            "parsed_grid": false,
+            "parser_validity": true
+          },
+          "row_index": 504
+        },
+        {
+          "fields": {
+            "exact_grid_outcome": true,
+            "generated_token_ids": false,
+            "parsed_grid": false,
+            "parser_validity": true
+          },
+          "row_index": 736
+        }
+      ],
+      "pass": false
+    }
+  },
+  "forbidden_operations": {
+    "backward_calls": 0,
+    "final_audit_opened": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0
+  },
+  "historical_b1_repeatability_mismatches": [],
+  "protocol_id": "E04_V3_FIXED64_BATCH_RUNG_LOCALIZATION_V2_MATCHED_FRESH_B1",
+  "raw_freeze_receipt_sha256": "d599ecbb49266e174a625dd6db403b3496a0634ee6b309be26c54581be0a6937",
+  "rows": 64,
+  "schema_version": 1,
+  "selected_primary_rung": 1,
+  "selection_rule": "largest passing rung in fixed order B16,B8,B4; else B1",
+  "status": "SCORED_BATCH_RUNG_LOCALIZATION",
+  "target_sidecar_accessed": true,
+  "target_sidecar_opened_only_after_raw_freeze": true,
+  "target_sidecar_sha256": "8da15d579c5e91f80f7e8587f893cc4e210d6b84120abf0823e46cc9978e635e"
+}
