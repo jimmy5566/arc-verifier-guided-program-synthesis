@@ -1,0 +1,63 @@
+{
+  "amendment": {
+    "draft_binding_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_RUN_001_AMENDMENT_V1_DRAFT_BINDING.json",
+    "draft_binding_sha256": "e6231f412159e473ef5e1976f053d5de2b9dc1ea019ee6bfdc89e27d3bb8c43e",
+    "draft_config_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V7.json",
+    "draft_config_sha256": "8a7386a9e0799c2be23681169aa55af6293f04535aad3c9f78d9042b2ec58509",
+    "launcher_v3_sha256": "fcfc816c5084e97f6b8ef9df7adeb0a2196b830cd74fc9efd5c586308a22cf11",
+    "only_change": "Do not require the unavailable source file at runtime; require exact equality of config source_provenance and frozen manifest source instead. Launcher creates only output parent before process start.",
+    "worker_v3_sha256": "2fc342c29e154289df5dfa5fc8616615d7c44668b3f0ecac8a45e5037289ca1a"
+  },
+  "created_at": "2026-10-10T02:38:14.011129Z",
+  "decision_requested": [
+    "CONTINUE_CONTROLLER to create a final SHA-bound amended authorization and launch exactly once after preflight",
+    "REQUIRE_CHANGES with smallest required correction",
+    "PAUSED only if amendment invalid"
+  ],
+  "established": {
+    "all_rows_embed_input_ids_and_labels": true,
+    "all_rows_have_supervised_tokens": true,
+    "existing_worker_reads_train_after_preflight": false,
+    "existing_worker_runtime_gate": "generic bound_files loop only",
+    "manifest_rows": 288,
+    "manifest_sha256": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "manifest_source_provenance": {
+      "path": "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl",
+      "rows": 4004,
+      "sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945",
+      "split": "TRAIN"
+    },
+    "public_main_repo": "PUBLIC_DO_NOT_PUBLISH_PRIVATE_TRAIN_ASSET",
+    "runpod_private_artifact_access": "DENIED_FOR_CURRENT_GH_TOKEN"
+  },
+  "forbidden": [
+    "changing any numerical scientific condition",
+    "publishing TRAIN.jsonl to public GitHub",
+    "reconstructing source unless a separate exact-byte route is authorized",
+    "duplicate GPU launch"
+  ],
+  "private_asset_bootstrap": {
+    "properties": [
+      "HTTPS only",
+      "pinned revision required",
+      "read-only credential environment variable only",
+      "SHA256 verified cache",
+      "atomic publish",
+      "no credential serialization"
+    ],
+    "script": "scripts/bootstrap_private_https_asset.py"
+  },
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1",
+  "question": "May Controller replace only the redundant runtime TRAIN.jsonl existence/hash gate with frozen-manifest source-provenance equality, and use the parent-initializing detached launcher, then launch the already authorized single RUN_001 once after all other machine gates pass?",
+  "review_id": "GOVERNOR_REVIEW_E03_RUNTIME_SOURCE_PROVENANCE_AMENDMENT_V1",
+  "schema_version": 1,
+  "unchanged_conditions": [
+    "same V7 checkpoint",
+    "same 288 frozen synthetic TRAIN token/label rows",
+    "same 1500-second cap",
+    "same B8 and B1 measurement",
+    "same LoRA allowlist and FP32 gradient algebra",
+    "zero optimizer steps, parameter updates, and generation",
+    "no DEV, retention, Gold, dGold, or FINAL_AUDIT"
+  ]
+}
