@@ -17,6 +17,10 @@ class E03AmendmentTests(unittest.TestCase):
  def test_v3_parent_initialization_and_source_contract(self):
   worker=(ROOT/'scripts/run_e03_v7_lora_gradient_interference_v3.py').read_text(encoding='utf-8'); launcher=(ROOT/'scripts/launch_e03_v7_lora_gradient_interference_v3.py').read_text(encoding='utf-8')
   self.assertIn('E03_MANIFEST_SOURCE_PROVENANCE_MISMATCH',worker);self.assertIn('x.output_root.parent.mkdir(parents=True,exist_ok=True)',launcher)
+ def test_v4_normalizes_relative_paths_before_bound_hash_lookup(self):
+  worker=(ROOT/'scripts/run_e03_v7_lora_gradient_interference_v4.py').read_text(encoding='utf-8')
+  self.assertIn("config_path=resolve(str(config_path));binding_path=resolve(str(binding_path))",worker)
+  self.assertEqual((ROOT/'experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V8.json').is_file(),True)
  def test_final_binding_binds_director_response_and_actual_v3_hashes(self):
   config=E03/'E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V7.json'
   binding=E03/'E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_RUN_001_AMENDMENT_V1_AUTHORIZED_BINDING_V2.json'

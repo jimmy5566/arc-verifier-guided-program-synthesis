@@ -1,0 +1,19 @@
+{
+  "elapsed_seconds": 0.013204461894929409,
+  "failure_class": "PREIMPORT_RELATIVE_PATH_NORMALIZATION_DEFECT",
+  "final_audit_opened": false,
+  "generation_calls": 0,
+  "launcher_log_sha256": "c856c67207f3dc2d772c9a6f562cada37c61eb10af0130101b9453b3d46bb382",
+  "model_imported": false,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "preservation": "V7/V3 configuration and prior failed receipt retained byte-for-byte; V4/V8 are derived unexecuted repair candidates.",
+  "progress_exists": false,
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1",
+  "run_id": "RUN_001_3a73c370b7719b78073fd4b1b12c4285",
+  "schema_version": 1,
+  "scientific_interpretation": "NOT_RUN_PREIMPORT_INFRASTRUCTURE_FAILURE",
+  "status": "FAILED_OR_PARTIAL_NO_UPDATE",
+  "terminal_receipt_path": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v1/run_001_3a73c370b7719b78073fd4b1b12c4285/TERMINAL_RECEIPT.json",
+  "terminal_receipt_sha256": "2b95c689e8afd4e9a5ef5315509deebbe11df6628ab63d9a5693ce809771e6a4"
+}

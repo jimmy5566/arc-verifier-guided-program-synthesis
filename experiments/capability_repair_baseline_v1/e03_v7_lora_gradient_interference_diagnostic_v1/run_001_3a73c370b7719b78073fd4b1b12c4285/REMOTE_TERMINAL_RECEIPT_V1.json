@@ -1,0 +1,12 @@
+{
+  "elapsed_seconds": 0.013204461894929409,
+  "error_class": "'experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V7.json' is not in the subpath of '/root/arc-runtime-3090-gpu-benchmark-v1/arc2' OR one path is relative and the other is absolute.",
+  "final_audit_opened": false,
+  "generation_calls": 0,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "progress_exists": false,
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1",
+  "status": "FAILED_OR_PARTIAL_NO_UPDATE",
+  "traceback": "Traceback (most recent call last):\n  File \"/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e03_v7_lora_gradient_interference_v3.py\", line 73, in main\n    c,b,m,ck,runtime_head=preflight(x.config,x.binding,x.output_root);x.output_root.mkdir(parents=True,exist_ok=False);write_progress(x.output_root,0,'PREFLIGHT_COMPLETE')\n                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e03_v7_lora_gradient_interference_v3.py\", line 31, in preflight\n    if sha(config_path)!=b['bound_files'].get(str(config_path.relative_to(ROOT)).replace('\\\\','/')):fail('E03_CONFIG_HASH_MISMATCH')\n                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.11/pathlib.py\", line 730, in relative_to\n    raise ValueError(\"{!r} is not in the subpath of {!r}\"\nValueError: 'experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V7.json' is not in the subpath of '/root/arc-runtime-3090-gpu-benchmark-v1/arc2' OR one path is relative and the other is absolute.\n"
+}
