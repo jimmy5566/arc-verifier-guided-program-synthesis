@@ -1,0 +1,69 @@
+{
+  "brief_id": "E04_V3_FIXED64_BATCH_RUNG_LOCALIZATION_REPLACEMENT_RUN_AUTHORIZATION_BRIEF_V1",
+  "decision_needed": "AUTHORIZE_ONE_REPLACEMENT_RUN_OR_DECLINE",
+  "engineering_correction": {
+    "changes": [
+      "child accepts only the parent-created preflight/raw workspace and keeps parent freshness gate",
+      "child raw-arm output must itself be fresh",
+      "launch receipt emits ssh target, terminal receipt path, and primary process for Governor polling",
+      "invalid WAIT_REMOTE job binding transitions to CONTINUE_CONTROLLER for bounded metadata repair while retaining the same job"
+    ],
+    "cpu_validation": "PASS_37",
+    "scientific_variable_changed": false,
+    "source_commit": "f19e27fb02e86f78a9b2a1d4541cc060fee2e18c"
+  },
+  "prior_run": {
+    "backward_calls": 0,
+    "error": "E04_FIXED64_ARM_PROCESS_FAILED:B16 caused by child reapplying the parent fresh-output gate",
+    "evidence_commit": "982117adc2405623e70ebd840a926e988c4f3138",
+    "final_audit_opened": false,
+    "model_import_evidence": "NONE: failure occurred before _verify_runtime/model import",
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "run_id": "RUN_001_0cffb77183b646b29a8e863c3759cb20",
+    "source_commit": "f2de8d3152b8eea5e03a2045111585eba20532eb",
+    "status": "FAILED_NO_UPDATE",
+    "target_sidecar_accessed": false,
+    "terminal_receipt_sha256": "e07b0d76e38562fedfcbf7eaa9f3ddb14248ee1b7b961a48d15636e8bb6cdd68"
+  },
+  "request": "ONE_FRESH_REPLACEMENT_NO_UPDATE_GPU_EXECUTION_AUTHORIZATION",
+  "requested_execution": {
+    "arms": [
+      16,
+      8,
+      4,
+      1
+    ],
+    "binding_requirements": [
+      "new source commit hash",
+      "new worker hash",
+      "new config hash",
+      "Director response SHA",
+      "fresh nonce/output",
+      "Governor-pollable remote job descriptor"
+    ],
+    "forbidden": [
+      "training",
+      "optimizer",
+      "backward",
+      "parameter update",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT"
+    ],
+    "fresh_nonce_required": true,
+    "fresh_output_root_required": true,
+    "jobs": 1,
+    "reference_arm": 1,
+    "retry": false,
+    "runtime_cap_seconds": 1200,
+    "same_checkpoint": "V7",
+    "same_cohort": "fixed independent 64",
+    "same_decoder": "native greedy",
+    "same_precision": "BF16"
+  },
+  "schema_version": 1,
+  "scientific_conditions": "UNCHANGED_FROM_DIRECTOR_RESPONSE_e1dc374edc026277227cf1b25a4f79f371b871c47e77a89bceb0b6feb68e56dd",
+  "scope": "Engineering-equivalent correction only; no interpretation or protocol amendment.",
+  "stage": "E04_V3_FIXED64_BATCH_RUNG_LOCALIZATION_V2_MATCHED_FRESH_B1"
+}
