@@ -1,0 +1,20 @@
+{
+  "facts": {
+    "baseline_profile_sha256": "230ebeb8e74eb5112ac83f27d1ed9f095e4230488059277a201a159f3d0acaf2",
+    "inventory_sha256": "657d2ab81afd30d38a7f45debeae1e905585062820e160566ef2330d9ec67d6d",
+    "reason": "All five families have valid unsaturated frozen baseline evidence and historical schedule-level training metadata, but no exact legitimate TRAIN content-level and latent-structure exposure boundary is established by the available metadata. Therefore no family can currently support a falsifiable successor mechanism study without a separately reviewed prospective data-boundary protocol.",
+    "selection": "NONE",
+    "training_signal_audit_sha256": "cad1734946445e1c78dd8547138f429ebf7bed8f52187a3763207f9ce9c49ef6"
+  },
+  "prohibitions": [
+    "no cohort generation",
+    "no protocol freeze",
+    "no execution worker",
+    "no model/GPU/generation/training",
+    "no sealed evaluation access"
+  ],
+  "question": "Does the existing evidence support selecting one weak atomic family for a future falsifiable mechanism study?",
+  "review_id": "GOVERNOR_REVIEW_E04_WEAK_ATOMIC_EXPOSURE_AND_FAILURE_INVENTORY_V1",
+  "schema_version": 1,
+  "stage": "CPU_ONLY_E04_WEAK_ATOMIC_EXPOSURE_AND_FAILURE_INVENTORY_V1"
+}

@@ -1,0 +1,105 @@
+{
+  "families": [
+    {
+      "exact_legitimate_train_content_and_latent_exposure_boundary": "UNKNOWN_SUMMARY_AUDIT_DOES_NOT_ESTABLISH_FULL_CONTENT_OR_LATENT_BOUNDARY",
+      "family": "connected components",
+      "frozen_native_baseline": {
+        "episodes": 12,
+        "exact_correct": 0,
+        "parse_valid": 12
+      },
+      "future_falsifiable_mechanism_study_supported_now": false,
+      "historical_training_signal_metadata": {
+        "episodes": 48,
+        "nominal_loss_percent": 1.7766797691743417,
+        "supervised_tokens": 1092
+      },
+      "post_training_descriptive_status": "IMPROVED_STABLY",
+      "valid_and_unsaturated": true
+    },
+    {
+      "exact_legitimate_train_content_and_latent_exposure_boundary": "UNKNOWN_SUMMARY_AUDIT_DOES_NOT_ESTABLISH_FULL_CONTENT_OR_LATENT_BOUNDARY",
+      "family": "inside/contains",
+      "frozen_native_baseline": {
+        "episodes": 12,
+        "exact_correct": 0,
+        "parse_valid": 12
+      },
+      "future_falsifiable_mechanism_study_supported_now": false,
+      "historical_training_signal_metadata": {
+        "episodes": 48,
+        "nominal_loss_percent": 24.737113158279605,
+        "supervised_tokens": 18120
+      },
+      "post_training_descriptive_status": "IMPROVED_STABLY",
+      "valid_and_unsaturated": true
+    },
+    {
+      "exact_legitimate_train_content_and_latent_exposure_boundary": "UNKNOWN_SUMMARY_AUDIT_DOES_NOT_ESTABLISH_FULL_CONTENT_OR_LATENT_BOUNDARY",
+      "family": "width",
+      "frozen_native_baseline": {
+        "episodes": 12,
+        "exact_correct": 2,
+        "parse_valid": 12
+      },
+      "future_falsifiable_mechanism_study_supported_now": false,
+      "historical_training_signal_metadata": {
+        "episodes": 48,
+        "nominal_loss_percent": 1.812802547497013,
+        "supervised_tokens": 1152
+      },
+      "post_training_descriptive_status": "MIXED_HIGH_CHURN",
+      "valid_and_unsaturated": true
+    },
+    {
+      "exact_legitimate_train_content_and_latent_exposure_boundary": "UNKNOWN_SUMMARY_AUDIT_DOES_NOT_ESTABLISH_FULL_CONTENT_OR_LATENT_BOUNDARY",
+      "family": "difference",
+      "frozen_native_baseline": {
+        "episodes": 12,
+        "exact_correct": 2,
+        "parse_valid": 12
+      },
+      "future_falsifiable_mechanism_study_supported_now": false,
+      "historical_training_signal_metadata": {
+        "episodes": 48,
+        "nominal_loss_percent": 24.458700071073785,
+        "supervised_tokens": 17950
+      },
+      "post_training_descriptive_status": "REGRESSED_STABLY",
+      "valid_and_unsaturated": true
+    },
+    {
+      "exact_legitimate_train_content_and_latent_exposure_boundary": "UNKNOWN_SUMMARY_AUDIT_DOES_NOT_ESTABLISH_FULL_CONTENT_OR_LATENT_BOUNDARY",
+      "family": "orientation",
+      "frozen_native_baseline": {
+        "episodes": 12,
+        "exact_correct": 5,
+        "parse_valid": 12
+      },
+      "future_falsifiable_mechanism_study_supported_now": false,
+      "historical_training_signal_metadata": {
+        "episodes": 48,
+        "nominal_loss_percent": 2.5192597884989234,
+        "supervised_tokens": 1645
+      },
+      "post_training_descriptive_status": "REGRESSED_STABLY",
+      "valid_and_unsaturated": true
+    }
+  ],
+  "inventory_id": "CPU_ONLY_E04_WEAK_ATOMIC_EXPOSURE_AND_FAILURE_INVENTORY_V1",
+  "prohibitions": [
+    "no cohort generation",
+    "no protocol freeze",
+    "no execution worker",
+    "no model/GPU/generation/training",
+    "no sealed evaluation access"
+  ],
+  "reason": "All five families have valid unsaturated frozen baseline evidence and historical schedule-level training metadata, but no exact legitimate TRAIN content-level and latent-structure exposure boundary is established by the available metadata. Therefore no family can currently support a falsifiable successor mechanism study without a separately reviewed prospective data-boundary protocol.",
+  "selection": "NONE",
+  "sources": {
+    "baseline_profile_sha256": "230ebeb8e74eb5112ac83f27d1ed9f095e4230488059277a201a159f3d0acaf2",
+    "historical_paired_analysis_sha256": "6dc3ba24762484d6514a35f51d6297461aa44efdc32dded060b68e52563f5283",
+    "training_signal_audit_sha256": "cad1734946445e1c78dd8547138f429ebf7bed8f52187a3763207f9ce9c49ef6"
+  },
+  "status": "COMPLETE_SELECTION_NONE"
+}
