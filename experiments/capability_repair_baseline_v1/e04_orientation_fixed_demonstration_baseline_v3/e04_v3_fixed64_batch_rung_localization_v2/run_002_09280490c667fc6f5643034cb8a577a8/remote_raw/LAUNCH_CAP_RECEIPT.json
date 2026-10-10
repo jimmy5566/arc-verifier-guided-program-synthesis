@@ -1,0 +1,17 @@
+{
+  "cap_seconds": 1200,
+  "command": [
+    "python3",
+    "scripts/run_e04_v3_fixed64_batch_rung_localization.py",
+    "--config",
+    "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_FIXED64_BATCH_RUNG_LOCALIZATION_V2_CONFIG.json",
+    "--binding",
+    "/workspace/arc2/e04_v3_fixed64_batch_rung_localization_v2/run_002_09280490c667fc6f5643034cb8a577a8.launch_lock/LAUNCH_BINDING.json",
+    "--output-root",
+    "/workspace/arc2/e04_v3_fixed64_batch_rung_localization_v2/run_002_09280490c667fc6f5643034cb8a577a8"
+  ],
+  "exit_code": 0,
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "wall_seconds": 1036.2249295702204
+}

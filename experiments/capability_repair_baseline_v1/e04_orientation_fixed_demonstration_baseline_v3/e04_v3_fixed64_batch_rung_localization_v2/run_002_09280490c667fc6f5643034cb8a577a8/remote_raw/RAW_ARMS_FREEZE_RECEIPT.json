@@ -1,0 +1,27 @@
+{
+  "arms": [
+    16,
+    8,
+    4,
+    1
+  ],
+  "backward_calls": 0,
+  "binding_sha256": "940444db07bfaf1983177be5383b2eb0469d5563030ec0bf6e5287731e7c6216",
+  "config_sha256": "8a5c86b586a428c2ed890f31f713c2a7e902c9c642d8608aae7fc983216a53eb",
+  "final_audit_opened": false,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "protocol_id": "E04_V3_FIXED64_BATCH_RUNG_LOCALIZATION_V2_MATCHED_FRESH_B1",
+  "raw_arm_sha256": {
+    "1": "996c1837d1710e6cda6424fe8c2b1c81a880f7cb4f58d16e25d3dc56ece11fa2",
+    "16": "d2dd500b7db1916e091263d018111b6cf305453a67b6f36ffb2f8e0fbf617fef",
+    "4": "aa7772b3c5444641835a7410e8e025c4c87ebdc7a59f40d2b25e0ae85a779a5b",
+    "8": "e9fd0b1859babd039ac0ca1b4b5c1a49adc7101f7e228b170fad12dce97fd86d"
+  },
+  "runtime_cap_seconds": 1200,
+  "schema_version": 1,
+  "source_commit": "f418f60163d37c65b7486ac18884fc6f318fa9ba",
+  "status": "RAW_ARMS_FROZEN_NO_TARGETS",
+  "target_sidecar_accessed": false,
+  "wall_seconds": 1034.8418923690915
+}
