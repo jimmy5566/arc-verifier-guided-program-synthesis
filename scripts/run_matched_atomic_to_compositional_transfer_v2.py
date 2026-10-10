@@ -50,13 +50,17 @@ def main():
   rows=manifest.get('episodes',[])
   if len(rows)!=168 or {x['role'] for x in rows}!=set(ROLES) or any('output' in x['observation']['task']['test'][0] for x in rows): raise RuntimeError('INPUT_OR_TARGET_ISOLATION_INVALID')
   if manifest.get('sealed_target_sidecar',{}).get('local_path','') in str(ROOT): raise RuntimeError('LOCAL_SEALED_SIDECAR_MUST_NOT_BE_REMOTE')
+  # Check both immutable checkpoint manifests and every referenced asset before
+  # importing a model library.  This keeps a bad runtime identity from becoming
+  # a model-loading event.
+  checkpoints={condition:load_checkpoint(protocol['checkpoints'][condition]['manifest_path']) for condition in ('RECONSTRUCTED_FOUNDATION_V2_V7','FAMILY_BALANCED')}
   import torch
   from transformers import AutoModelForCausalLM,AutoTokenizer
   from peft import PeftModel
   raw=[];runtime=[];subset=set(manifest['fixed_batch1_validation']['tuple_ids']);retention=set(manifest['fixed_batch1_validation']['retention_episode_ids'])
   subset_ids={row['episode_id'] for row in rows if (row.get('tuple_id') in subset or row['episode_id'] in retention)}
   for condition in ('RECONSTRUCTED_FOUNDATION_V2_V7','FAMILY_BALANCED'):
-   ck=load_checkpoint(protocol['checkpoints'][condition]['manifest_path']);tokenizer=AutoTokenizer.from_pretrained(ck['base_path'],local_files_only=True);tokenizer.pad_token_id=13;tokenizer.padding_side='left'
+   ck=checkpoints[condition];tokenizer=AutoTokenizer.from_pretrained(ck['base_path'],local_files_only=True);tokenizer.pad_token_id=13;tokenizer.padding_side='left'
    contract=tokenizer_token_contract(tokenizer,eos_token_id=15,pad_token_id=13)
    model=AutoModelForCausalLM.from_pretrained(ck['base_path'],torch_dtype=torch.bfloat16,local_files_only=True).to('cuda').eval();model=PeftModel.from_pretrained(model,ck['adapter_path'],local_files_only=True).eval()
    items=[{'episode_id':r['episode_id'],'role':r['role'],'tuple_id':r.get('tuple_id'),'prompt':prompt(r['observation']['task']),'prompt_tokens':len(tokenizer(prompt(r['observation']['task']),add_special_tokens=False)['input_ids'])} for r in rows]

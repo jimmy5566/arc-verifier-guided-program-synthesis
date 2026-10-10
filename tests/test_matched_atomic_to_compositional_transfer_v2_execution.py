@@ -11,4 +11,5 @@ class ExecutionContractTests(unittest.TestCase):
  def test_worker_has_no_target_sidecar_argument_or_update_operations(self):
   text=(Path('scripts/run_matched_atomic_to_compositional_transfer_v2.py')).read_text()
   self.assertNotIn("--sidecar",text);self.assertNotIn('optimizer.step',text);self.assertNotIn('.backward(',text)
+  self.assertLess(text.index('checkpoints={condition:load_checkpoint'),text.index('from transformers import'))
 if __name__=='__main__':unittest.main()
