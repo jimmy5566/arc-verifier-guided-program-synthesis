@@ -9,6 +9,12 @@ from scripts import e04_orientation_v3_no_update as e
 from scripts import score_e04_orientation_v3_fixed_baseline as scorer
 
 class E04V3NoUpdateTest(unittest.TestCase):
+    def test_worker_exposes_src_inference_without_model_import(self):
+        from scripts import run_e04_orientation_v3_fixed_baseline as worker
+        from inference.nvarc_native import parse_native_grid
+        self.assertIsNotNone(worker.ROOT / "src")
+        self.assertEqual(parse_native_grid("1"), [[1]])
+
     def test_contract_is_target_blind_and_cpu_valid(self):
         contract = e.freeze_contract()
         self.assertEqual(contract["requested_batch_size"], 32)

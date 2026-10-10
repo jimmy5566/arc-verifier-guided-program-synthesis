@@ -1,0 +1,12 @@
+{
+  "backward_calls": 0,
+  "error": "No module named 'inference'",
+  "error_type": "ModuleNotFoundError",
+  "final_audit_opened": false,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "schema_version": 1,
+  "status": "FAILED_NO_UPDATE",
+  "target_sidecar_accessed": false,
+  "wall_seconds": 90.6416991064325
+}

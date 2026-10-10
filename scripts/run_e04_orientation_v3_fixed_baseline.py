@@ -10,6 +10,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 from scripts.e04_orientation_v3_no_update import (
     CAP_SECONDS, E04ExecutionFailure, CONTRACT, atomic_json, atomic_jsonl, canon,
     prompt_messages, read_jsonl, sha_path, validate_contract, validate_raw_generation,
