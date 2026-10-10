@@ -1,0 +1,27 @@
+{
+  "bound_inputs": {
+    "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CONFIG_V2.json": "749fb44abcd1571b983c6f368ddce5657a017477419a596010bd5ca0b9a883e6",
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_MANIFEST_V1.json": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+    "orchestration/director/responses/GOVERNOR_REVIEW_E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_PRELAUNCH_V2_RESPONSE.json": "74483ae24dcb8c36d77cf0924361d8ec4cf35e886061df39f83489ce264f767d"
+  },
+  "final_audit_opened": false,
+  "generation_calls": 0,
+  "gpu_or_model_executed": false,
+  "optimizer_steps": 0,
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "schema_version": 1,
+  "source_commit": "864c3f383935e34a6167757c34fc02fc9088e3d9",
+  "status": "PASS_CPU_ONLY",
+  "tests": {
+    "command": "py -3 -m unittest tests.test_e03_v3_b1_per_example_gradient_screen tests.test_e03_v2_lower_memory tests.test_arc2_governor_runpod_pty",
+    "count": 14,
+    "result": "PASS"
+  },
+  "verified_repairs": [
+    "canonical configured allowlist is used for runtime comparisons and offsets",
+    "bootstrap family traversal is explicit nine-family frozen order and subprocess-stable across PYTHONHASHSEED",
+    "repeatability contract is the sole frozen declaration",
+    "production postprocessor rejects nonfrozen bootstrap args and validates raw cohort/token identity"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "identity": {
+    "cohort_manifest_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_MANIFEST_V1.json",
+    "cohort_manifest_sha256": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+    "config_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CONFIG_V2.json",
+    "config_sha256": "749fb44abcd1571b983c6f368ddce5657a017477419a596010bd5ca0b9a883e6",
+    "prelaunch_binding_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_PRELAUNCH_BINDING_V3.json",
+    "prelaunch_binding_sha256": "5366f64e7861a0088b13538021dcb4d635d8d14c78d2c9c94242b698ba1d9ea2",
+    "source_commit": "864c3f383935e34a6167757c34fc02fc9088e3d9",
+    "static_validation_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CPU_STATIC_VALIDATION_V2.json",
+    "static_validation_sha256": "8280d3e6dc90fc53b435745b3d5156963965062b9c63fea91fbcdd1ce34660ca"
+  },
+  "implemented_repairs": {
+    "bound_bootstrap_and_raw_identity": "Production postprocessor rejects any CLI seed/replicate override, requires positive token counts, and compares exact raw episode/family order to the frozen manifest.",
+    "canonical_allowlist": "Configured 504-name allowlist is canonicalized once by lexicographic ordering for hash verification, requires_grad selection, runtime-name equality, trainable-set equality, parameter traversal, and offsets.",
+    "process_stable_bootstrap": "Bootstrap uses an explicit frozen nine-family order, rejects missing/extra families or non-eight counts, and has a two-PYTHONHASHSEED subprocess regression test.",
+    "single_repeatability_contract": "Config V2 removes the stale placeholder and retains the already frozen nine-row, relative-L2 <=0.0001, cosine >=0.9999 INCONCLUSIVE contract."
+  },
+  "parent_review": {
+    "decision": "REQUIRE_CHANGES",
+    "remediation_only": true,
+    "response_path": "orchestration/director/responses/GOVERNOR_REVIEW_E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_PRELAUNCH_V2_RESPONSE.json",
+    "response_sha256": "74483ae24dcb8c36d77cf0924361d8ec4cf35e886061df39f83489ce264f767d"
+  },
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "question": "Does the minimally repaired V3 implementation now faithfully execute the already frozen physical-B1 gradient-screen protocol?",
+  "request": "Review only this repaired package. CONTINUE_CONTROLLER authorizes exactly one separately preflight-gated, detached, no-update B1 diagnostic; no training, updates, generation, retries, fallback, or non-TRAIN data.",
+  "review_id": "GOVERNOR_REVIEW_E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_PRELAUNCH_V3",
+  "review_type": "PRELAUNCH_SCIENTIFIC_AND_SAFETY_REVIEW",
+  "schema_version": 1,
+  "unchanged_scientific_conditions": {
+    "bootstrap": "10000 family-stratified resamples, seed 20261010",
+    "cap_seconds": 1800,
+    "checkpoint": "V7 only",
+    "cohort": "exact frozen 72 TRAIN rows: nine families x eight",
+    "fallback": false,
+    "jobs": 1,
+    "physical_batch_size": 1,
+    "prohibited": [
+      "optimizer",
+      "parameter updates",
+      "generation",
+      "DEV",
+      "RETENTION_SENTINEL",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT"
+    ],
+    "retry": false
+  }
+}
