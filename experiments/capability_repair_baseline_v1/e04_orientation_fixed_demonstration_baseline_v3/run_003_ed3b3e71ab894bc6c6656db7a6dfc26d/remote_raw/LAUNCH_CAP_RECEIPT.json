@@ -1,0 +1,17 @@
+{
+  "cap_seconds": 1800,
+  "command": [
+    "python3",
+    "scripts/run_e04_orientation_v3_fixed_baseline.py",
+    "--config",
+    "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_NATIVE_GREEDY_RUNTIME_CONFIG_V1.json",
+    "--binding",
+    "/workspace/arc2/e04_orientation_fixed_demonstration_baseline_v3/run_003_ed3b3e71ab894bc6c6656db7a6dfc26d.launch_lock/LAUNCH_BINDING.json",
+    "--output-root",
+    "/workspace/arc2/e04_orientation_fixed_demonstration_baseline_v3/run_003_ed3b3e71ab894bc6c6656db7a6dfc26d"
+  ],
+  "exit_code": 0,
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "wall_seconds": 379.71720570139587
+}
