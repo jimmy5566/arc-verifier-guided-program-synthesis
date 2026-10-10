@@ -25,20 +25,24 @@ def preflight(config_path,binding_path,out):
  if str(out)!=b.get('output_root') or str(out/'TERMINAL_RECEIPT.json')!=b.get('terminal_receipt_path'):fail('E03_BOUND_OUTPUT_OR_RECEIPT_MISMATCH')
  if out.exists() and any(out.iterdir()):fail('E03_FRESH_OUTPUT_REQUIRED')
  if b.get('runtime_cap_seconds')!=1500 or b.get('jobs')!=1 or b.get('retry') is not False:fail('E03_BOUND_RUNTIME_INVALID')
- if subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()!=b.get('source_commit'):fail('E03_SOURCE_COMMIT_MISMATCH')
+ runtime_head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+ if subprocess.check_output(['git','rev-parse','--abbrev-ref','HEAD'],cwd=ROOT,text=True).strip()!=b.get('launch_branch'):fail('E03_LAUNCH_BRANCH_MISMATCH')
+ if subprocess.call(['git','merge-base','--is-ancestor',b['executable_source_commit'],runtime_head],cwd=ROOT)!=0:fail('E03_EXECUTABLE_SOURCE_NOT_ANCESTOR')
  if sha(config_path)!=b['bound_files'].get(str(config_path.relative_to(ROOT)).replace('\\','/')):fail('E03_CONFIG_HASH_MISMATCH')
  for rp,expected in b['bound_files'].items():
   if not (ROOT/rp).is_file() or sha(ROOT/rp)!=expected:fail('E03_BOUND_FILE_HASH_MISMATCH:'+rp)
  response=resolve(b['director_response_path'])
  if not response.is_file() or sha(response)!=b['director_response_sha256']:fail('E03_DIRECTOR_RESPONSE_HASH_MISMATCH')
  if json.loads(response.read_text(encoding='utf-8')).get('decision')!=b.get('required_director_decision','CONTINUE_CONTROLLER'):fail('E03_DIRECTOR_DECISION_NOT_AUTHORIZING')
+ frozen_allow_hash=hashlib.sha256(json.dumps(sorted(c['lora_parameter_name_allowlist']),separators=(',',':')).encode()).hexdigest()
+ if frozen_allow_hash!=c.get('lora_parameter_name_allowlist_sha256'):fail('E03_FROZEN_ALLOWLIST_CANONICAL_HASH_MISMATCH')
  manifest=resolve(c['manifest_path']);checkpoint=resolve(c['checkpoint_manifest_path'])
  if sha(manifest)!=c['manifest_sha256'] or sha(checkpoint)!=c['checkpoint_manifest_sha256']:fail('E03_MANIFEST_OR_CHECKPOINT_MANIFEST_MISMATCH')
  m=json.loads(manifest.read_text(encoding='utf-8')); ck=json.loads(checkpoint.read_text(encoding='utf-8'))
  ids=[x['episode_id'] for f in m.get('families',[]) for mb in f.get('microbatches',[]) for x in mb.get('members',[])]
  if len(ids)!=288 or len(set(ids))!=288 or any(not x.startswith('TRAIN:') for x in ids):fail('E03_TRAIN_ONLY_MANIFEST_INVALID')
  verify_files(ck) # before model import
- return c,b,m,ck
+ return c,b,m,ck,runtime_head
 def write_progress(out,done,phase):atomic(out/'PROGRESS.json',{'status':'PARTIAL_NO_UPDATE','phase':phase,'completed_basis_rows':done,'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False})
 def target_module(name):
  m=re.search(r'\.(q_proj|k_proj|v_proj|o_proj|gate_proj|up_proj|down_proj)\.',name)
@@ -62,7 +66,7 @@ def gram(mm,groups,offsets,chunk=262144):
 def main():
  a=argparse.ArgumentParser();a.add_argument('--config',type=Path,required=True);a.add_argument('--binding',type=Path,required=True);a.add_argument('--output-root',type=Path,required=True);x=a.parse_args();started=time.monotonic();receipt=x.output_root/'TERMINAL_RECEIPT.json';deadline=started+1500
  try:
-  c,b,m,ck=preflight(x.config,x.binding,x.output_root);x.output_root.mkdir(parents=True,exist_ok=False);write_progress(x.output_root,0,'PREFLIGHT_COMPLETE')
+  c,b,m,ck,runtime_head=preflight(x.config,x.binding,x.output_root);x.output_root.mkdir(parents=True,exist_ok=False);write_progress(x.output_root,0,'PREFLIGHT_COMPLETE')
   check_deadline(deadline)
   import numpy as np, torch
   import torch.nn.functional as F
@@ -71,6 +75,8 @@ def main():
   torch.manual_seed(int(c['seed']));torch.cuda.manual_seed_all(int(c['seed']))
   model=AutoModelForCausalLM.from_pretrained(ck['base_path'],torch_dtype=torch.bfloat16,device_map='cuda:0');model=PeftModel.from_pretrained(model,ck['adapter_path'],is_trainable=True);model.eval()
   named=dict(model.named_parameters());allow=tuple(c['lora_parameter_name_allowlist']);actual=tuple(sorted(n for n in named if '.lora_A.' in n or '.lora_B.' in n))
+  observed_allow_hash=hashlib.sha256(json.dumps(list(actual),separators=(',',':')).encode()).hexdigest()
+  if observed_allow_hash!=c['lora_parameter_name_allowlist_sha256']:fail('E03_OBSERVED_ALLOWLIST_HASH_MISMATCH')
   if actual!=tuple(sorted(allow)):fail('E03_LORA_ALLOWLIST_EXACT_SET_MISMATCH')
   for n,p in named.items():p.requires_grad_(n in allow)
   if any(p.requires_grad!=(n in allow) for n,p in named.items()):fail('E03_REQUIRES_GRAD_ASSIGNMENT_MISMATCH')
@@ -95,11 +101,11 @@ def main():
    if total<1:fail('E03_B1_ZERO_SUPERVISED_TOKENS')
    bmm[fi,:]/=total;bmm.flush();bmeta.append({'canonical_family':fam['canonical_family'],'microbatch_index':0,'basis_index':fi,'supervised_token_count':total,'scalar_loss_sum':scalar,'episodes':episodes});write_progress(x.output_root,done+fi+1,'B1_RECONSTRUCTION')
   check_deadline(deadline);pg,pm=gram(pmm,{target_module(n) for n,_ in params},offsets);bg,bgm=gram(bmm,{target_module(n) for n,_ in params},offsets);pmm.flush();bmm.flush()
-  raw={'status':'COMPLETE_NO_UPDATE_E03_GRAM_SUFFICIENT_STATISTICS','manifest_rows':288,'batch1_rows':72,'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False,'primary_records':records,'batch1_family_records':bmeta,'primary_global_gram':pg.tolist(),'batch1_global_gram':bg.tolist(),'primary_module_grams':{k:v.tolist() for k,v in pm.items()},'batch1_module_grams':{k:v.tolist() for k,v in bgm.items()},'observed_lora_allowlist_sha256':hashlib.sha256(('\n'.join(actual)).encode()).hexdigest(),'bounded_scratch_bytes':need,'complete_vectors_persisted':False}
+  raw={'status':'COMPLETE_NO_UPDATE_E03_GRAM_SUFFICIENT_STATISTICS','manifest_rows':288,'batch1_rows':72,'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False,'primary_records':records,'batch1_family_records':bmeta,'primary_global_gram':pg.tolist(),'batch1_global_gram':bg.tolist(),'primary_module_grams':{k:v.tolist() for k,v in pm.items()},'batch1_module_grams':{k:v.tolist() for k,v in bgm.items()},'observed_lora_allowlist_sha256':observed_allow_hash,'runtime_launch_commit':runtime_head,'bounded_scratch_bytes':need,'complete_vectors_persisted':False}
   raw_path=x.output_root/'RAW_GRAM_SUFFICIENT_STATISTICS.json';atomic(raw_path,raw)
   del pmm,bmm
   pmm_path.unlink();bmm_path.unlink()
-  atomic(receipt,{'protocol_id':c['protocol_id'],'status':'COMPLETE_NO_UPDATE','elapsed_seconds':time.monotonic()-started,'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False,'raw_evidence_sha256':sha(raw_path),'complete_vectors_persisted':False})
+  atomic(receipt,{'protocol_id':c['protocol_id'],'status':'COMPLETE_NO_UPDATE','elapsed_seconds':time.monotonic()-started,'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False,'raw_evidence_sha256':sha(raw_path),'complete_vectors_persisted':False,'runtime_launch_commit':runtime_head})
  except Exception as e:
   x.output_root.mkdir(parents=True,exist_ok=True);atomic(receipt,{'protocol_id':'E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1','status':'FAILED_OR_PARTIAL_NO_UPDATE','error_class':str(e),'elapsed_seconds':time.monotonic()-started,'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False,'progress_exists':(x.output_root/'PROGRESS.json').exists(),'traceback':traceback.format_exc(limit=4)});raise
 if __name__=='__main__':main()

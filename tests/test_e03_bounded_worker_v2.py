@@ -8,6 +8,7 @@ class E03BoundedWorkerTests(unittest.TestCase):
  def test_worker_requires_exact_allowlist_and_immutable_binding(self):
   s=(ROOT/'scripts/run_e03_v7_lora_gradient_interference_v2.py').read_text(encoding='utf-8')
   self.assertIn('E03_LORA_ALLOWLIST_EXACT_SET_MISMATCH',s);self.assertIn('E03_DIRECTOR_RESPONSE_HASH_MISMATCH',s);self.assertIn('verify_files(ck)',s);self.assertIn('E03_EXTERNAL_CAP_LAUNCHER_REQUIRED',s);self.assertIn('E03_DIRECTOR_DECISION_NOT_AUTHORIZING',s)
+  self.assertIn('E03_EXECUTABLE_SOURCE_NOT_ANCESTOR',s);self.assertIn('E03_OBSERVED_ALLOWLIST_HASH_MISMATCH',s);self.assertIn("'runtime_launch_commit':runtime_head",s)
  def test_external_cap_is_process_level_and_has_no_retry(self):
   s=(ROOT/'scripts/launch_e03_v7_lora_gradient_interference_v2.py').read_text(encoding='utf-8')
   self.assertIn('os.killpg',s);self.assertIn('E03_EXTERNAL_RUNTIME_CAP_EXCEEDED',s);self.assertIn("'retry':False",s)
