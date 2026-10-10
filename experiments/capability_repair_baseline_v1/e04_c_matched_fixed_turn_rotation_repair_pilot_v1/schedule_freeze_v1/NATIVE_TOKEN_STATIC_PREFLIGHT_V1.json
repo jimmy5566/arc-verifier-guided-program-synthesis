@@ -1,0 +1,3902 @@
+{
+  "control_supervised_tokens": 28800,
+  "control_total_tokens": 207360,
+  "full_hf_tokenizer_json": {
+    "byte_equal": false,
+    "expected_v7_base_sha256": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+    "vendored_sha256": "b5ab94591796d3b7d26b55432285f9be7f3f7fb625f3cd1f4749ae2c74134123"
+  },
+  "gpu_used": false,
+  "hf_tokenizer_loaded": false,
+  "intervention_rows": 96,
+  "model_loaded": false,
+  "native_contract": {
+    "config_dir": "C:\\w\\arc2-e04-v3-results\\configs\\nvarc_native_846d0198",
+    "status": "PASS",
+    "synthetic_render": "<|im_start|>user\n01\n23<|im_end|><|im_start|>assistant\n32\n10<|im_end|><|im_start|>user\n45\n67<|im_end|>",
+    "synthetic_supervised_tokens": 9,
+    "synthetic_token_count": 27,
+    "vendored_vocab": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "5": 5,
+      "6": 6,
+      "7": 7,
+      "8": 8,
+      "9": 9,
+      "<|endoftext|>": 13,
+      "<|im_end|>": 15,
+      "<|im_start|>": 14,
+      "assistant": 12,
+      "user": 11,
+      "\u010a": 10
+    }
+  },
+  "optimizer_constructed": false,
+  "per_slot_equal_token_and_supervision": true,
+  "per_slot_rows": [
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "a5d1eef4624a7a6515a081eee057cfc41521e36ba102324b6367970120086a2a",
+      "slot": 0,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "97171b701fbfe2deba85ae7a1b9d1f95b443b9ce41e42d0790e26110b4be0ea6",
+      "slot": 1,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "14d389a995f9fd67cd4894943125eebe9c4934d0346b0ff05a56566b36f83c00",
+      "slot": 2,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "598dce12c198be233e85684b6b5a26586bfea26d5208a997d6b9e551f9ae05db",
+      "slot": 3,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "ac6cf6e6b201edce43589e535cb5444ed4b83813ff107c97da5ab69bc19db940",
+      "slot": 4,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "cda08d53c750aceb6a510d525c570807a70c1e6a3f04109e14016db191d25bc0",
+      "slot": 5,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "914132a7c15c30658729eb3e9d9fe0a5db5b103c07a7a7492092266189ccaa21",
+      "slot": 6,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "78d823681b0f750a92cc74a810a34ff4c89438add17be52ad2f2e6f4b1daad12",
+      "slot": 7,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "e3cffc900f57ea51c4d817b71f6601a85e9d64dbeb23354c547ff68ec8d54ead",
+      "slot": 8,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "8711836177e78bb0d624c6f0c7f7e897c26b04061d4b6b5d5814ba85e4030bc9",
+      "slot": 9,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "7071abf668067caaa02c58c394a15c25449aa4dfe1e7a8fda1dc747aa41b1add",
+      "slot": 10,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "6c387f06e91344b3ddeef49e26aa0387d85d57d18d663b6c14878246f7276130",
+      "slot": 11,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "255ab08f71709309637d09a406a28a18a7c3d824ad33eede7c4bd7bfa33b1c2c",
+      "slot": 12,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "63f66988a9c67cd111cc143826afd1c07944fffbb3eea7b596a1e566b9448f5e",
+      "slot": 13,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "b653038a54c7df075c66b19d88980a17b43d2ed2109c1764a5a12a44eeb275ca",
+      "slot": 14,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "01f04ae2b619e20c4dc36992f76bdd38c27ae8ac6bdbd9b4bac23f57e4f3d0f9",
+      "slot": 15,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "c1aadbc6bb812bc77e61985be220b2c08561aaa049923671debe4c55ba2394d9",
+      "slot": 16,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "40006eefc71239ea7357d0da12adc52acc7b16eb77af7c56d2140e16bec816df",
+      "slot": 17,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "a0eedfb529d6a8282110136d5223dd0584a69c51edc0f5c1d853200a0852a468",
+      "slot": 18,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "91d912eadb8028611514cae6fbf8bddf229077c9ee7da2b54665783686881417",
+      "slot": 19,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "3b67ed82c2e4b714bbc1db8ace7f3eee52cbdae90a9179ee05142630f9c3c435",
+      "slot": 20,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "126fd1ad8c9a178e584ed65acf245b3c9b71d51236d1245823e683cfb0fc3c22",
+      "slot": 21,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "3817038ff25f5ef1b207c8bce2d8460f5d4bb34fbab5339cc7690e57b8284b7f",
+      "slot": 22,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "abdc062baaddb85b542347c287b364c621414643548759274f7cb031af79362e",
+      "slot": 23,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "63e07d6a57807d329ab3c02dd6c204769357fd674e14f3b29d9366f27baba37b",
+      "slot": 24,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "15289223b337c06944d72a64471aa129b874941970413f7e7354a5c7444a3197",
+      "slot": 25,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "44224f798d6d692ffd45f7ec8b9f7c19a6f65281db117c5ada0b8a92285dbb7c",
+      "slot": 26,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "589914088d64da6eb48dd96c862ea8fe47f370da8bee807eb0b9b31e020f0f7d",
+      "slot": 27,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "b2b0b645df16e49691331b9a0e517bd8d37ee681e3e586e506d588288fe7a246",
+      "slot": 28,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "8ef2455c99d535275e57c533858d877ee64781b61ea12889ab2ef588928815c3",
+      "slot": 29,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "fd0df3c1a9178c12dd06c95653bc33d9e5efc70c0e4d652ca343e01d680a04fd",
+      "slot": 30,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "5d919cd84870c504dd8d8fc1a2ac873338d8913d3b2eaaa966790e330fb00ef1",
+      "slot": 31,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "0cf84ebfc415047991cb4c48211bb6cdd9fdb45ce09dd88eb24b1acfd8cd26ef",
+      "slot": 32,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "0455d31f8cc84d9de8212c52eb98a2781b6bfa5411a6a7fe40d3bc852ca8baed",
+      "slot": 33,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "26efd4174dbb01ca42b603a9651b45408d4d2a5099027131a0e976e787671803",
+      "slot": 34,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "2d5312882c537b7a36548d31414f6660cbfa56bafe1148adeeb1725ba3457024",
+      "slot": 35,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "483484bcbd500cf023993cde0efe6be62426df32ec051acc895d390b504f2a9f",
+      "slot": 36,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "73bc0566691bd6ccba0ba236dea745a01a4b19879e160222f1f8d0277260839a",
+      "slot": 37,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "ab7b2ab504a239d297bbc8bfb5235a9ad2ac3726567f387c2b58e96abd86c2e8",
+      "slot": 38,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "05d6d1a432fe8feab5599b8b568ee08a62b9d3a66be925b106e8b5f7f53eb075",
+      "slot": 39,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "6a92bead2e61232173c7bed411040bcea83652a70039436328f14c38ae049e4a",
+      "slot": 40,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "160bf9ef1af35052f68390904d266df1346cc696c8d7a361f89da56e3e74d459",
+      "slot": 41,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "0200a43cf9924f39b0d1513ba89fdf5c9a85709e68830c85dd653ca5589fc3e2",
+      "slot": 42,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "c0964694d88c940f2b828e717ded6aded2d9dbedeeb216c6d5ff503af1f6360f",
+      "slot": 43,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "9119aeb25c772bfb7d007fbd6aec06516c891e958f072ba910888a48f1f0a3a3",
+      "slot": 44,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "918f9ae927382f1420ea45d8e4a3cdb7287f23f5df1210de54801a8bff5bc6f6",
+      "slot": 45,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "5c600c966f9a83479024a772e5129598c8c293205c96f93a39f1d3c71a699008",
+      "slot": 46,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "84f5ace0ab6533d587a5f0f16c24111300ff7de03556d5b7f9f32c39ffded262",
+      "slot": 47,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "de73ca22f014512f9bb35a977bb52a45ab086e9d0dd6d4d217c21bd7a50696d1",
+      "slot": 48,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "b2f1ffbf908d7d471df97658d8dd300c8b54729ef18e8bd12ff9b4b007e620c0",
+      "slot": 49,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "408a055a718828395b8dfdaed2c0e1da89447bdcf80d966b83c005bd3a17e245",
+      "slot": 50,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "e70351399a0c974137b38203473aa6f531bec94265733bccd40edf2b7c2baee0",
+      "slot": 51,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "b65cdf7db81cfd1facaa796157c5b1ebf2b903610556c563549474364c270ffd",
+      "slot": 52,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "619ecbd88a813ac717a7f40ce111cfd1285dd7529e380943c865450583d28394",
+      "slot": 53,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "e717076dc891fab512fddb1cd51bebbcb0546677c157af0f1afc9393da98588f",
+      "slot": 54,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "cf202e8bcf234d16b0655e12fe74296e891fae0521a37135e20c60566e93ae11",
+      "slot": 55,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "a5a084b822f5cd3c1a50a2f116816eb20d9bdaecce031aa87fcc1fb175b49f65",
+      "slot": 56,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "e0a245696de4630be86afaba246f03dee8aaeef336478f93611900f849a6ac5a",
+      "slot": 57,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "e332400244d4cb0b07432118e6ac7a356240fb5e9d6f034d5fc6fd6b90f78e35",
+      "slot": 58,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "57fcc6dfef42cd6748fe9976318e899c221a8891583f0df95f352bfdd352f6ba",
+      "slot": 59,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "8dc5df7af1377fd56a93d8a18714ddafca690c23961b89067bda505fcde813be",
+      "slot": 60,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "0083f7249fbcdf74734bcd919cdb589be9213c8504194476e8a3c7589a11a889",
+      "slot": 61,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "2ebe0be8c89e85391f5a53c68c54cc3a45df065ebc5013db7dbe62523fbf0af4",
+      "slot": 62,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "3cfcb05c9653f1359440b120e08fd8297681b82e75ad88070627635e3950fa65",
+      "slot": 63,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "9b12343b7f361085db5769608fa7b434f8a25b1406d1ee7dd54d3facfea0c5d5",
+      "slot": 64,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "b98791318082284155ad8b05b7d49ea3d0f5335ea365665a21f32a777b88066c",
+      "slot": 65,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "76fa56688889bf391dcc009f9086f2261d6cf34fe6a61420568b78266225b39b",
+      "slot": 66,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "8eea3db27a3164611a62a4d8ebfd4d99e6ce7af10bec890ddba4a4509248a0a5",
+      "slot": 67,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "abde86a630c68fb4e4c50b72acc71aafeaf7eefb86be884c58c062250bb3d928",
+      "slot": 68,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "f0394710ed416b88e6f27f2c29423e94e69011dd4e6f3d2e2177c469f4ddfc35",
+      "slot": 69,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "e012eeb71ada1e4b4d7634a74fc2de5dbf582270831fd767dd0e32aeda3352bb",
+      "slot": 70,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "0729822a38da1db159093a222dff07d5ea456af9b16370736fdf3cf5e40daf70",
+      "slot": 71,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "4905e84ae8664f2f1cfaef3f0326c2c82ca74a53ed010adca8f182dc4bd737a1",
+      "slot": 72,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "653a9ec438eeffe362ce4e958d150573e06f5bcb6407015179f729a10d63dfee",
+      "slot": 73,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "9d7ef31be383e3c3bce3fa526202cc93a0bcdf2fa415dc80095aa476312875e5",
+      "slot": 74,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "f5d1c839e835dd82ce054b87d178a295c6d92920bcd22811942bd28ac560c912",
+      "slot": 75,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "fd029aa4e7885e0690c4a7b29e57906ac90fe51dc4271bd1775fdde684610b4b",
+      "slot": 76,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "9c90883bea0d6b02ef57411048e844bd81f4a92cbc8c3e26ddd81dc1040bf80c",
+      "slot": 77,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "d571fcba918f48dc80264d2171474605982fc7b183c15e1211e839137faea575",
+      "slot": 78,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "5d25802006b21b4a37d9ece4ba4ce91e8cfd53d2ac15db8cbc4a4efe1edd3647",
+      "slot": 79,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "61bf9356850410f78f8ee917cb3bb4018a6415205c3746f0a53735f287fded55",
+      "slot": 80,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "6fcba6fac11902f440fd003a67673df00f22c43160e384e53796145f65bb5424",
+      "slot": 81,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "1c45912cbd06189eb4a61147c7d2b62d507bac4d289b8b31a7d203add393f52c",
+      "slot": 82,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "6e9dd53ae60e97867be5f3186a1af06d619a95b7151d76eea2e247b9cef7ed98",
+      "slot": 83,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "6105ac067b484e7096878a9db95b6094837cdea6cba98f25827e96887062e2a1",
+      "slot": 84,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "039ac58a5a9ade4027d70869a35e8f73959db931afc6c961c78c972a53851ad3",
+      "slot": 85,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "db73eaad3d64e31d709ac67c0c8bd8a33aa272b40353fff0bfebeeadb6738dc0",
+      "slot": 86,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "bdc6b35b68726e6e15ef8d1277ef3aff63780602427525a02965e9858c4a13d2",
+      "slot": 87,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "1f1a68ff52d977476ccb70d014f08a29bd2ff25c03e847d47b3f64ccef5eb67b",
+      "slot": 88,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "26ac037b4a9d27626dfe214093fbf3805e0917ea203277be822152b1e92def02",
+      "slot": 89,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "bb63fe0abd08847d1dc584ebe350511e1f888087aa812f7c981394b1e55e8b94",
+      "slot": 90,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "62b79f400a7f68148f823e4258e49e719039e88a08e66099b1cfdfc2b4605272",
+      "slot": 91,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "5146e6a7e1449ca6f0be8f8da2524ce28f736e8d420a87ab61bf02bbf75649dd",
+      "slot": 92,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "5ff188ecc1cfe555cba59ce95f00cec9437edde7777b4f78d13a9af710c290c2",
+      "slot": 93,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "5ac3bdb4f97eeffeb41f91063642307968bb1bea6cef4c50c9f4e673777976f9",
+      "slot": 94,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": true,
+      "pair_id": "13a1696ecd12754988bef1ecb9b047914153f4cba8c997c31e9d6def77a57702",
+      "slot": 95,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a789c8e05e9bed16cd5f7e3501007145ce22fa7b5936fec44d8340613f27b296",
+      "slot": 96,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "c81f8b4b8f938f2b326c826c072181eed33be0f11ac0195d6f81de6be283e41d",
+      "slot": 97,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "9585d6e829eaa59f5d1284337c8a7ca5c8fe16ec8ff6980bc5030aa982dcce05",
+      "slot": 98,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "4253e92494415c3846d5eee8be6aaacde9452aeaac1805cd11df4cf1bf34c102",
+      "slot": 99,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "fdf452dc59ac1d50694548886e639812142296814931a5be98a42815ec02271e",
+      "slot": 100,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "5c7bf6e3e1306a66731a507ffe85ebefa0d286a2734bdf7522dd33596beb5f38",
+      "slot": 101,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b971adb22f7d51377848d70b1b81b668a36006cd5c2df57daac8b90165390f89",
+      "slot": 102,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f43ddf86a5c089cef851de839f09477c20396e5feb6eb6c95930690d6f2781a1",
+      "slot": 103,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "db836ff430103f941e2ecfcbc4283d4db0e4b123648b35277029e44bb303379e",
+      "slot": 104,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "11eeaaaca442f96318999a541fb309f7ac8d33a87cc0d09430b81cd82e57e769",
+      "slot": 105,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f7c42d6a22f0ba567ce9c9a50ef278e52a1b9f9a77fcf5a7aff37827188666b8",
+      "slot": 106,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "82426253776ba922d5b52e024505e506f8d52ab708f245f1f8caa01ca62281bc",
+      "slot": 107,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "1178cf11518eb08111b9d4274fa7ea09402eeea64be72ea70964864434309a7d",
+      "slot": 108,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a89449bb03295b8993a6943f1c6515215ef6ccbfef2336b93fceb7fb40b5dfec",
+      "slot": 109,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "0cd2eecfc66b22e820a261c2e0532e2665431bc11f09f8132621cf1dbb8915ec",
+      "slot": 110,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a48e99ca893f9f5d76fa90b0c1e96b2e69973db14eafeb49b8ab1e7f15638273",
+      "slot": 111,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "baa9db4eb720a1c43a76335c5a81e6bf7615d2e6ad619c906e00c527a7033303",
+      "slot": 112,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "28ac9440c797153f4b1242586c015e744e17bf3480850b1c33b144aa726764f1",
+      "slot": 113,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a0a07da759985fae48986ab14fdbe703e18ef12d1d2cfe94e95fe4575fe775b6",
+      "slot": 114,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "af1c45b5eaae9e275bfd07c365654861820669f6c6b7a097b98b6e433f49205d",
+      "slot": 115,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "759035a9a05628866d63df1d7fa2153ff3b2ca20fb8531b9dc117f26f8359754",
+      "slot": 116,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "350b94dd805f0b1133a1562f9713c33e120d97f9cbe304896ec89b7f5815da42",
+      "slot": 117,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "475568fabf8add8833e1f72a20e553d8ce8fd6b3df182ec7c5581917148c4e5a",
+      "slot": 118,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "558f67f1c3f96b419f9864b7f5a9e568de8699011dd2d78fc297bd626d5682a7",
+      "slot": 119,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b8a81f32f4833c95d9900ae59ee8bc36cb5412c91072a9ea5777370c8a62c0e1",
+      "slot": 120,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "04b59fb7973b9ffcfccd0aec3dfbf9d6759a6e0e69f895b65fc9161581afa0e7",
+      "slot": 121,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "fc5f41b89faef513960caf2d9bce07264ec0d8cad2027c6ef4c8b7250c6ff3f4",
+      "slot": 122,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "83a4fc327e5d4c2a31dac3837226dbf4112279362971592bdf2153a333d81714",
+      "slot": 123,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "010001b5f1c645cf14561930e6c7edd895f8a6b8ea55f21451087cc7d67931e9",
+      "slot": 124,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "269f3b661d7b49cac53420ce5d41519598eef31e6984aa18dac2782db3cc1a71",
+      "slot": 125,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "c8724ceeb947a337af7b1fda262a4573ba8c05266629afb8ec4ca905371f0d6c",
+      "slot": 126,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "500007a4ff6b3b279cfd8a62436b4c3244bb374ed52ca5c2ed7fc1659f16e8d1",
+      "slot": 127,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "8282ce5193005f8fa5bb53b9e274fed1fae2e1c5b91e84c645f770109d009323",
+      "slot": 128,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2f59a80948b00d9f6ad7f3c1d738be230662974df9f460d14b1217b5f4a84df4",
+      "slot": 129,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "e465e45e87efc15a74ad885e8aa5758ee920c03c5e95e90004910f4f20dcbcde",
+      "slot": 130,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "0064f31d4c0a967df3dcfb3782b7b09fb6f7c40c640811b7a61654ccd7bce391",
+      "slot": 131,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "45b932f889d0e5ed493967bc11f56911e8a1110b7e1ef4461dbdf204fd37bb2b",
+      "slot": 132,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "641ec75704a5056ff9cd41d3ec905495a2cda3adf5b196eccce21c27d0a0a419",
+      "slot": 133,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "4d43a5480b5c12e89cb41402c60a958e5224de2378821790daf1d517261735ae",
+      "slot": 134,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "852c3953a71b461c3bceed73cb5c463742650bf2f4ac3538675e5fc9d542dcb5",
+      "slot": 135,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "9fafae7c3d7d3e2323e4be0c48b5575d139009dc6bc8c3060fb024655cd8af48",
+      "slot": 136,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "cd9d87b8946d0435f40a1b88aaa9b602d7632282325488c27f2f4838a5f612b6",
+      "slot": 137,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "6d567cda3f26ec98de02fd3949427b74a0f054884f99717536fefe28e887e37b",
+      "slot": 138,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "838503f831499decf0f7c5586da3ad0b36db6825fa928303508758f947b63037",
+      "slot": 139,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "11c111bbc4dbb60c968af97d92f9fcb1c98e26309906ba5aeef50ddc59b27c39",
+      "slot": 140,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "56963009238ed19ece7dfcb932dca2e6f78f4c4f6ea44180932fac7436ead2be",
+      "slot": 141,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "892863f56ae8d7fe7ae01d5cc7e7d3634cdbb675b66523081bc100fe51df3124",
+      "slot": 142,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "19eb9c7c8e5bbe2aa2d72fb0a33388ca2e4ee8b9de595c4d2aa5ec1ac397f9c7",
+      "slot": 143,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "81dcb39932678a8f87aeb0a76e55a77a9fd5da06aedf3cca8a3f95953e5b81af",
+      "slot": 144,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "363bc4a97d76b93d2d4d23529ae1f02cbf4bb4c1aa7b3831835172346b130c42",
+      "slot": 145,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "8f197aec2340b9774aa3292debcc7fcd5244706968958fba61ff78587a4c6d02",
+      "slot": 146,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "65dae88014373c5454d7befa33ed86e0c605b11f5c8b3d6eacc143c4c4e53f9e",
+      "slot": 147,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "6ae85537ee9dbedcf3d6e02b45e5ed0a79a3ce35d6f23c81c15a701168a29d46",
+      "slot": 148,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "08cadbd6348fdf10358b2934debb796cf349709765d02fa3cb36882769ad992b",
+      "slot": 149,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "37eb58371e9612076a84d028cd15ee3d9d738ebe07a7e461026a7ecb659b0b20",
+      "slot": 150,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "29fbae2eedbbd45b5178b90e83fe0710129591c49196948d2bde171d21916a72",
+      "slot": 151,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "87e87d5e750b731d3781f1029cb92b4479bd88a9bb7d6abe185c1cc63c1d0175",
+      "slot": 152,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "254332ca0bde6ceeaaa5fcde98db70f2ddf3bc84c44780e4c8d951e262a34696",
+      "slot": 153,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a62a0a86cda54ed23a97f257ad39c38d5278e840d32421de86325945b36cf14f",
+      "slot": 154,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "7d70d82364190759bb263de5b1e76b21fb971bb9e2a89e17541a76cde17e0ca6",
+      "slot": 155,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "4259de61ac4da9169dce3f1b51bede95c28ab8c27fbd713194a1784f2a3f2ca0",
+      "slot": 156,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2f05ef062dfd8283887198cf07f43c4d1f2940f3174b3a2db3d6ebd21efecdd1",
+      "slot": 157,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "6f73a7c1324e82ea53c763bada4175c3d7b81814339befcf6f44d3b49afc205e",
+      "slot": 158,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "8cf74f6078da1fb07caf958c68947f07e54ca2ffdf08657c0c2d68f60fd692a3",
+      "slot": 159,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "182e78318c42dbbe8e466c37ebba407fb77d5ddf14cb5085a855fe8a84243b2f",
+      "slot": 160,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "91b99be3da03eff8928e22eb2f94b8b4b2172098cc8c27870fa6ae9f3e997f51",
+      "slot": 161,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "1e30fefc066757f6cb0bd6631ba9a883754630035ee4ab68f9bd3ccb21cc29fa",
+      "slot": 162,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "799c3ffa12f3e6236de0739411c99d03c782b0322841e785657b73764ee1e37a",
+      "slot": 163,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "440db2d53a2358cf9035d418538f57f0b9feedce4a17256bc716b1d3610f59f3",
+      "slot": 164,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2537a0aa2e3b781bfcef07383d0b30644ffee426fecb5ee579a8ad415e482586",
+      "slot": 165,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "3303982ab1e3091469141f96900a8e76a6f25f98b8b5db94375a8c12a3b44acf",
+      "slot": 166,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b1b5d453b5a116e41bbfc41ae0de2663b1408dce6eedb7623f7e48f5af2e2e7e",
+      "slot": 167,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "15224b24398b1c104c5e4d16b2d4741dd1798db63b58663b0fc4de96d551d326",
+      "slot": 168,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "c1fc3a4de4369c8ea9e319356b39a1c797126573e4d6f40ea6a779d5b9321a50",
+      "slot": 169,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "3f77119166fe4e19dac908f7b2c0dd429d08f7d50bf67d66d67abd8002ca84e3",
+      "slot": 170,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2fb1876b0400f7e1159c9b6495f251ec6d741aae2b9bb933a2079c41ab5fbbb7",
+      "slot": 171,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "608061bf238dfebf3f882cf19cfed5fd806b099828cb0b20698997e79cfae8e2",
+      "slot": 172,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "4d9e7eb72078e6acbcdc7daf0af88aa7b2f461110b8972f527d67622229c2854",
+      "slot": 173,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "28d1d37cfb57ecdfcba4c7e5057b59f7d1a1c3767f93499ef7063f81ebdda83d",
+      "slot": 174,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "6c634b702d4cffd708708977500bc8e26d772f4b18d0bad91591ac9c8a08f987",
+      "slot": 175,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "58ba3c5a51e7dd9ebd405556ee7e137363de1086e6f48b662fe8f7e5d72225d3",
+      "slot": 176,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "dbd7754d2f487ba1a26e4141b0ba267eaf5cd8c14041e6941c8413a78f9dd019",
+      "slot": 177,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "5aa607aa7f7d42fb216b9213cd84814415e8ddbceca2403bc5388711bed1a5ca",
+      "slot": 178,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "0a479cf47f76c6d09628a5dda9fdc57bf42e8c093164c4941df5f1d71a12c560",
+      "slot": 179,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "597415d73683b334bf100346513a8784480e21bcd83e63b6a00424086e5c99c5",
+      "slot": 180,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "e71eceae1aad69963c18a43a97f3f51efc12f507845165cb81ee93a2043cf826",
+      "slot": 181,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "3137826139ed580a689c3ef6277ccb0e8a0655aa83019e69a52ba4014ec13ecb",
+      "slot": 182,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "28bcc396f70f564acfa89ac3ec3a3d8ef7f622e259e9310bfadde70c71920a96",
+      "slot": 183,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "ca0f63fb74b0121177ffff79a86f3e8f5a75ec6bae4a79a20f2dc88b9e18c4e2",
+      "slot": 184,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "023dc846d6e0be07e1604c9cf24c7ff46cce54573032aeb931c11a762906b37c",
+      "slot": 185,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "69f5397340a305e0eb3237a6fc831021896ce43db2d9a5586701c29608973fa1",
+      "slot": 186,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "8a67ed71ca1ae0d54a2a6c4c412612c4b993e64c97f8b4dfa3b8efa536924652",
+      "slot": 187,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "504ed84671e91a232203ba0138dc1dc914b3096a4909634aab38e2f896c7d8b5",
+      "slot": 188,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "5af270f413342f7ddda0dfb276a19e0da6819514b3bc61aa178be77fcfd6bf1c",
+      "slot": 189,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2040579620e52bbe11da7229a50c1d90984f0fdefc0b0dd182b1d895a7ad3a64",
+      "slot": 190,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a9bfe71c66568467e3dd11c04adbe11a4be72520113a3838c31022b345bb3a2d",
+      "slot": 191,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f2d14d039dbbea0aba5522709f2c09eb4d9f7b0f5f99546df7b4242d51863981",
+      "slot": 192,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "36e07f8a6dbfbb0c4067350bfcd7982cca0b2ff0d43580376de0b535893be193",
+      "slot": 193,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "1b3b7af9c9a791c1576ecc0655c1d013fba72ad61769436783548c8fc798c00f",
+      "slot": 194,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a417050624621439f0fe6a8c138a206ea575d063c8349dd517dfd55358f72444",
+      "slot": 195,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "20bc264c5220f72f1ab74a239a10dc5db7eb6e2806c5b0ddbf6b2b5fe5993f9e",
+      "slot": 196,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "324bf953b0ee0d81b552eed52d54b745383eeff039793bc7becae0ca7df56163",
+      "slot": 197,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "764a2d3982c9ade851d124ca440c16cda394c133abd1232acf865de77466551b",
+      "slot": 198,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "621700bf2706080f1a750c322caf1c275e0c966be7a49b9c3e072113cbcd269b",
+      "slot": 199,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "c127734a8589229eec9b001b3749d11cefa7f65eecc50599e37c3f60d9205dfd",
+      "slot": 200,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2ad8d4eb5731af1399e92e2feab86e31a6bc993b2a26615713382a47764efc91",
+      "slot": 201,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2753fd9e51068b1cae715a5eb987f620b73619ec43b8ab14048be0676e192980",
+      "slot": 202,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f20dcf04292d6081bf8747eab9ea856e7d2b11ffe61eb671b568a60081630e22",
+      "slot": 203,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "e17ea9ae2658768cf81592eedcb64e7dccadfe28447584eee4752a8a45a5125a",
+      "slot": 204,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "34c97ca634e360102e7601a8e639e6327ce49bfbdb0e1f28e04c1099a8a46c6e",
+      "slot": 205,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "e088a547afef9339d7ac7f83c1cd5f852937a3c81be2bb71d1d0161fee1cdd6a",
+      "slot": 206,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "820946b986536d0d0c9c073eafb198aab91946d02f4995c28b3ec404251c97a4",
+      "slot": 207,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "8a7962deeb5bebfb120c1d76c18dc6a81ad93c24d31d99af3882f8c8eb6ce655",
+      "slot": 208,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "33cf50e1f5cc48db352ed8265af54a11b859ca5b36165bee6954eb03c826c9a9",
+      "slot": 209,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "d5146ca5caf5473262a6b0c37db7ef243e96bb898dd4d17ebb1732a527fe4f8c",
+      "slot": 210,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "6401f8d3fb64a6736e9a62c636014de0cf5a9596111b8af326dad4ce9b529b0f",
+      "slot": 211,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "87f66d6b3008bb780365a4efd04314594ea4c32aa043148fee0304b9e14fc73e",
+      "slot": 212,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "dc775faf4d0da827c44295bb1b83ead9398a44934e49d0e18a6a12d9cc7cc971",
+      "slot": 213,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "878c61f23f718ffc4b53c3d66b1232d9479acdfcc444adb68ac94d19051b4284",
+      "slot": 214,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "7c7c4a6e7d082fc49479b1c12ae2ab979777f867591f59d9b2cccc45235889c4",
+      "slot": 215,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "ded5f74bf53ea8f68dc99927bcf0d164d081f428557a4d3e42f608b322a73fb7",
+      "slot": 216,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "3e6ccf3a9c979eaed349b2a119801a9b34b8306f686b867276725dce6bb7e31b",
+      "slot": 217,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "e91ce3cdc05d8bb0aff8e9b08a1ce72ea32e948caa36f5ebc6636e538135b144",
+      "slot": 218,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "440b2c220f0856fde1d44d246ed8da5a8f8b68e056069e1e89c1511e89cb90f9",
+      "slot": 219,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "cc493b1e790b7b461f3b1fdb64c08cff584a5189c063a4aa0ae779775f3748f6",
+      "slot": 220,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2d18d4746d4640611533865a6daa9f9626c6e2c180cf571deac8c42f4b41fba8",
+      "slot": 221,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "dc358351ebb9696e84f28f295922ed37dea26dd1335f9115538336b02aa4308e",
+      "slot": 222,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "c8923c3960c1d6df68782bad5c3f5b7fad421aa4e07ed8220cb50d27712db62b",
+      "slot": 223,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b85cfaf4db33fa4c75ffc450fbfc588e58109ca6aedb97f9dc039d511cfda33a",
+      "slot": 224,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "4f04bc3decef00984d33317d95be98e2887c2655cdf5f287922058317e8dffff",
+      "slot": 225,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "8151d91d3b5f4d584a5c4a3e0fb28ce822da9d91c0f6bd9180ae9b7f49b2af19",
+      "slot": 226,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "4e495ee1121fe343223dcee7ff77dde61a5ba4ba82c5c2439701814b67c306e5",
+      "slot": 227,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "442c4377e0cf27f952103ced5bcb59e3bd97bdb7b2edc5c1669bf1a88c39c3c1",
+      "slot": 228,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "da9ebef594f2651f5826bf21f28e1cc70f00ca621445eda02462835076aeb04e",
+      "slot": 229,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "e2b43e0c5020dcb5f9fbaf67e0c2e76c4cff3e52ec0ef1696ede1d9b0c99ff20",
+      "slot": 230,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "1530be505682e2c39ad6b1516660c676821bd2ce3bba1ca1b31bdfc894211c1e",
+      "slot": 231,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f65bff9ba60081e736592d48896d7f15935936d571aa3387be20486f997157ef",
+      "slot": 232,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "7a9cd0714c3bd0ff63fc5bcb2378e1223db439d5aadb5e8833e28a79d1f963e5",
+      "slot": 233,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "248733e4996308dad18e14615382d21aa04a09715afafb62414cd6e9278c511c",
+      "slot": 234,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "97d28f85410ca07f0e5110824e24489f86d7646e3413f7dabb884fc1a410b2c9",
+      "slot": 235,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "3f73d923fe42d34c306840771003ccfb144878749ba5a5861ba7bea05a82f03b",
+      "slot": 236,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "5b6271bf756299d27b460d49408d19f6cee087bc2292bff20f69ecca41243870",
+      "slot": 237,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "28a75c8b5ea513e5ed748213e6db4d6735d757c56bc30918b59dbc16977be184",
+      "slot": 238,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "1553141f4a2cb4583deb48c10f99078a75c76995339c2ba515bfb29f64d771ce",
+      "slot": 239,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a3b0336b5370f759a94dd7cfdd9ab15d23fd72cc69659e9d2f0742b4363c3c04",
+      "slot": 240,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "ca5e22ec68341ba7ea1a6b77f2310b8ee8a774dae108c948ac5126d5b72814ae",
+      "slot": 241,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "3ef81f7560d6e3960993f5fc20f58786c09391cdef3ae22b56c345d2bc2d3bf8",
+      "slot": 242,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "6310243b0e6a5ccad6023193b9c70993889ab7ea08481a622d9f0a3ec3519c27",
+      "slot": 243,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "167e9a85fcf4556915b15dd7ad670d3630d19276000676167dc17151d8fcb696",
+      "slot": 244,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "0faf24c481c4dc6ebe1ed61fb2a4ff05d1c01ccd5d45fae20c7ad168986027af",
+      "slot": 245,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "97c29f58d92d3477d8556cac5301bf00140000a7999dcf20ef0102b29c77e8e4",
+      "slot": 246,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b2755b43ab453cc9cdd0a73f828b81007214b6a166b0774e94bc68dd930dc513",
+      "slot": 247,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "ab8d76a0344d6568124683994b711b6bfd8645b606d2c8b398eeeedcf870c7b8",
+      "slot": 248,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "0fe6121eaa898642348651f9968c2b31df579f64160e0e91f03de1c145ec7a18",
+      "slot": 249,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "c00772ff0f565fc5a07fc38b910cac95ffc46ad06b671149555d18f3f02a8af0",
+      "slot": 250,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "51c33db43b9df2cd0d197dd4da8abf2a541ae801541d7f5fb851be3599c5b256",
+      "slot": 251,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "40206e330f956bbd262677558a969075c4f83d3c1d8e3efab8bbf24a08f517e0",
+      "slot": 252,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "8b2bb8d51187dbbe45927d9b5997be62e823cb556b355a728c9f4902829fa7fe",
+      "slot": 253,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "c63d042ef6f4ee7e71e3c8f64580fb55e0a6da2f78837e68b9145bc36224e3e8",
+      "slot": 254,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "51accfa3e4e27944dfbd4987d823fc29636fd5d16a749cd6d003aa6a889cb279",
+      "slot": 255,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "008d8017eed4d8039cea5a13a8b45a5e0926c713c77004ff2da2fb46b85fb63a",
+      "slot": 256,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "3112e0c3d305e8850ac2e55ff6fe8b01234a71120cc9ca8ead885bc872550521",
+      "slot": 257,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "e4cd2526b8a960abcf26699ea018c9cb4974bc44fdff31481d9a61511a5e25bb",
+      "slot": 258,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b7f00bd793b7de55aa303d00b0d5ebeefa62abc6f98360df4e862297f09d331e",
+      "slot": 259,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "56dc766b096498f79aed6e29262ffa088ef00cc594dbf9a4e9370813cabfdd95",
+      "slot": 260,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "0bba75c18697f7e8c4d4cc119d04f4f42a0bc6ea96bcb5ff08d437baede2b742",
+      "slot": 261,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "20b33616f802e6c2e3967322bb0a6787835772dd6b11c341b5e460e4be251eea",
+      "slot": 262,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "46968b9951ecb3219b57ec681107198b8e3850a6d7ec03cbe3ddfe35cf2e9a24",
+      "slot": 263,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "611b24781e63e2f9fc2a51129c21910d7180065580b9a14575f7ef400e574f55",
+      "slot": 264,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "28d3b930e1953724911da87a51734c660c71a1716be6742b5455a6fea235651a",
+      "slot": 265,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "ad5d29bace886bfc1e3c8c271124651310a9e47d7c80ae2153879a997483fa4a",
+      "slot": 266,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "04e46cb98b2b4eb4add366ea7fcc08809d5b455f832e2b4d3308cd37d1e6715a",
+      "slot": 267,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "217aca248209969e2eb4da10b4bbb8848bb36a65a5cea5e244044a4cda22c72c",
+      "slot": 268,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "db6d7327e3590c32352a1e8e8ebfc1b720885e7a08b83dc9aaa67448ecbc2329",
+      "slot": 269,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "6c40c45b83c600755ad10ad33a71b27403c74d43ab9d32bdb49695ae76a6ad76",
+      "slot": 270,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b97f053ef2fb1847a46524ae00eb0007b35df46dc06eb30ed4c85e7e20791d59",
+      "slot": 271,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f55b3877f28fa50e777255481699f60b2f2f8380173c29b103c85ec879aedb20",
+      "slot": 272,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "d3a34493227d7c4e6f3a28893e71e992f4f7e39ba6ae365ed720fa567064a80c",
+      "slot": 273,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "cddc25153ffbd5088fbf2713a93556a9ec3f82b9eddd0c4d9589f5cd52e0084e",
+      "slot": 274,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "cd82ae07079b4572ca46260e98f698ad045666c5e688cfc5f13821a1d2bc386d",
+      "slot": 275,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "6fc11ff351ea29fdea7eb8bbf4376199c56a956d5e467afd01bbeb4812789747",
+      "slot": 276,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "dc3644e99cd0f2912ab4d13396951594469c4dc0869179122056e33b6c0caf81",
+      "slot": 277,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "5b1199b6dbf02ddd13c9a94e5d868b62f579c83f99282c5294ffeb29403498cf",
+      "slot": 278,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "cef6ecde9f9692b5387aca9d35403dd2836958b7dab873cc56c8b546a7a763b3",
+      "slot": 279,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "44257a4aab42e4188d1d01b522cc5938278e0916a780cc72386d45d5ddd45cf1",
+      "slot": 280,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "df84eb21cbee3f45e787bfbb36fa52f04505c86a91f5863b408660d4b0da788d",
+      "slot": 281,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b98ceaba328d3d5faac951ae33426a799b9b43cb9a4c99698e276be0a609b5a3",
+      "slot": 282,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "254a50c5046dcfb6fbdb75bb629505fcd026ef9c1c96ac2a6ce293f3ee1c385e",
+      "slot": 283,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2295493646ee898012a0a452995fc370f5fcb6a7e5ae52fa9eddb452dd08bef2",
+      "slot": 284,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f9c43a585767b8d0afc2669ee9b0ad1340c1895031c7a6d86ee1864fd95ca60f",
+      "slot": 285,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "1d04d82914dbac7a5b14bb92651301ec652d270c78ce1502b71e186c5a9199e3",
+      "slot": 286,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f3ae4ad2ffcb34a8fa3b8844443162cd71dc8fc832d397c960984d163e76588a",
+      "slot": 287,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "5af5f3c8ec403e6c833591ee1304c1bcd4f3f2828d40dc3ec0f8fefdbdff56b8",
+      "slot": 288,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2f856c64ea848b6032285d715f4fb41e4c6d8db6ae71864fbd7a7786d69fea28",
+      "slot": 289,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "efacaa467c1cb4d24b406022f26fa1a744e37dffd2f21ba12eebde6f887b1d15",
+      "slot": 290,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b9dabde691f508d7818050a64a7b0bd23bd44b4f4162ba7fdf6918c618c0cbb1",
+      "slot": 291,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b1f0a738bb80347e41076b94a277152e6d64e17ea29abd8c57d818bf5a905c0f",
+      "slot": 292,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "897830f7ae365583a403db0e439a6fc28f55e79392c645b53c3a39af471ce837",
+      "slot": 293,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "3f29638b339775708ccc3d7605aadc03ea8e49e8f849bbe7629198c28e426f4a",
+      "slot": 294,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "83c0c5bd72ed2a6ba7f9f88bb97f02f9c5a37b00711e1ada54bd34fbcdb9b66f",
+      "slot": 295,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2da4633122e54f7a6eaf4fb56289092f3efa4207633d674d46c21a43047d2983",
+      "slot": 296,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "672508791ce259497f1bc3ad61415ead349941a8d59b622efab764a54290d665",
+      "slot": 297,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "080e94f3b24f4a2fdaf7a6697f02d4cc42900eeb5dd7d72a49db70882b15c1d9",
+      "slot": 298,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "4814481a55ae6c619a593055a361cfb262b8172e47adb8d902b6f9525c73ad8c",
+      "slot": 299,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "48f09d747b711b19789a235062413914389cb6f37375e6a7d4211f916d5c17f6",
+      "slot": 300,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "df13b0536106e4cca5545c3fdf53e9dc431a0f6e564e6e21f5dcc7bb72c7b97e",
+      "slot": 301,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "14dfce89cda32f42396710b65e9d09600a7694771ce20b45b7b72ba91c106528",
+      "slot": 302,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "31616556721fa92550312458281c66a4c459cdd9808bceb2df63cb429d6846fc",
+      "slot": 303,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "da65cbc98bc4739cf4335e1ba921022025b58eecc95816d95bd5ef86fbe66f77",
+      "slot": 304,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b2ad898783b1dd0e3ddeba9466c24caaea51698f1a417435ba39209234d07f64",
+      "slot": 305,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "367367a00b10fa60373b229e16dc08833eca16656d7ceea91d17fa9250b9016d",
+      "slot": 306,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "6865ff3789a148c4c87d504811bbc80f9c4c1a11438cbd80ed29bcd58b7e9b7f",
+      "slot": 307,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "653a0fd1327682a8f9da50161d2db374bdce8df6efe647706a5c6b5ec56f1693",
+      "slot": 308,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "5dc37b70c1a0c551b1f0d530e7eb3d88fd788be6cdb4d2097a281e721a36a843",
+      "slot": 309,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f3a87ca18e2a571802caae7fae5b4f147b20f928d8c722adfcae2ef493611e09",
+      "slot": 310,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "dcd1a0b75703d7f4c3d87ddf8c1dd5e03048966c902f1dd6559b4a7701f0ce05",
+      "slot": 311,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "3a21237df1d66b7274d01395bdda94fe0d4171ad313eae8d908978a522f129e9",
+      "slot": 312,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "4a588683cd516635d91aa7e6a09f1f5245f5774bb653aea5c60b5c16dcedce3c",
+      "slot": 313,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "7c849f19c25d72515d0d1f6068f29e6e19a2c121069f4ee3af464d40d5b8c5ff",
+      "slot": 314,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "27c7a5963fcfdc9b8d20f6cdc8c12be6b562844f07c2d2ffd2d39b1c594402db",
+      "slot": 315,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "1413603fe938dd35150030722021f816c89f66bfecb2d2cd7241b0a2c9a72606",
+      "slot": 316,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "ff9090d7a5b576ab2e3170a39a40dace58ee8bf1fc80c3d4ded66fdf5696bde4",
+      "slot": 317,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "d42318ad84a7264a816cfe40bb1fcd8e18eebb94b2d0c56dcb02d16504828015",
+      "slot": 318,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a56ec81c0296e82a8aa0a9f3c6f3dcd10be3e9c6e7ea42809d07d0aef359aceb",
+      "slot": 319,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "3374c506bf0dd5db543eaf6aec140990ac69b66a82728ba644682c3b214b2d32",
+      "slot": 320,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "df4b52bd3d73615afe30397b93f0e1555c211e5e622180a3b87b5963d2331a64",
+      "slot": 321,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "bbd21ddf72b71c07d4d15bde8f487cc4610b26fc3c73cb55ee26ba525dea5f0a",
+      "slot": 322,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a11576ff0eb1c0ff2b9565a2e90c991fd3cf7247117e41b145f4f527bc9c20f6",
+      "slot": 323,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a6a6487ba20e2069b8784ce733e946f369f6a302875efedb73898f909f40ff40",
+      "slot": 324,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f4178f79c0256a2c415956c84b06cdbc3f23ec2d19288512a65c31f9e4a9f53a",
+      "slot": 325,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "4a64bc3d08d7367660709d462c6f1412f4f7712de4f23a1a7aba20cec2c98e56",
+      "slot": 326,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a7c81d512011725a802fe79d6a11f3ca669e8976d79c129f77da82f7448a428a",
+      "slot": 327,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "922c11ce8494daf3ba23b7ebe25a7850d7c474652b57dab81339955d65997fe6",
+      "slot": 328,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f0b1bd065918965202862b989737a27f59039522a58e423e3b8fff5d470b5663",
+      "slot": 329,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "cbe4aaa4d15708f12fda359b26ac0236ac51747db92fde627345bde48ee9df81",
+      "slot": 330,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "77723b2389bdecdd4e499306e0e510d2a8ced33bf5bcfd7ef7f66cd5f15c99a3",
+      "slot": 331,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "ac1a08de1047014792edd1840cf45cb494bba485239f380f63494c62f46415a0",
+      "slot": 332,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2b8e4f850a36b23c131245d0f890c846dacef4ce76307606a8f71ef4a379e50b",
+      "slot": 333,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "104fcefd60210d27897414ffe8dcede7a52326f4b32d6e66594bc2edfc1ad97b",
+      "slot": 334,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "d2895c66e27537ec3ed82daa0297db2e69bf35da10b67553ce550e5ef2d1f0e2",
+      "slot": 335,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "8021192aa89dab72b0b9c9dd87df88d0473824253819b50248339bcbfee70974",
+      "slot": 336,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "9c81637e63b3fd1adf5173b0402ad02f8bbddada08420a2a3265b78b96d1dfde",
+      "slot": 337,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "1ac93b16108d347ab6ab5bcf0fb979e84e517cb6ee4e43e4d965f043b1bd34b1",
+      "slot": 338,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "86f1b0e9327cf76050ca449321d2e53f625d8a7adc2491865aea5570025f7f4c",
+      "slot": 339,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "41097f8ffb71e64903fec67aba2c0efd324168a111da961c902cde8c5167a82f",
+      "slot": 340,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "c05ecca26bb69bde17000ed5543a301afba1404feca9bd628967ade5c0e8b8e9",
+      "slot": 341,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "faff73a4cfac9a56b4299480933c6490cad26cc17ebcb74ef81123180da4fe9c",
+      "slot": 342,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a05842618206099938df3ad1d6a119b6ef966dbe3b5e9f0a9cc687ac51c0c0fa",
+      "slot": 343,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "12cb04eebb5de09b32a966693457e3e9de6c7dbe3e51011bdd6b88e1a6851318",
+      "slot": 344,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "1f397daf54d7ba57bed3bb9f26006f69fbf21f3b21ba9d775cb574c7e1e563ed",
+      "slot": 345,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "52ced7b86506fb124e95a367d3a44ab3c859fb03ce8769a843751162bd27cb6a",
+      "slot": 346,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "18fe67ea163ba2de234c729d18509c93dfb1303a834b034d1fdf7f0d9b2dfa91",
+      "slot": 347,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "56d029242d0cb44f23112361f05bf70d6ea025901fbe03419c905237a81de7ad",
+      "slot": 348,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2ad95f470bf45ceebe00715540234685785628563e500780af6529f9fe5f0d9a",
+      "slot": 349,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "880c0c5f524196f0bd3eb51e610ef6ee177ce5ccf4e69557329163a098b2ed50",
+      "slot": 350,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "9f209cb987d78069a3a889e40efa43289323dfef5c7fb121a9408f363cf7affa",
+      "slot": 351,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "ec8b06b95938539eb2920179402d71d124dade00d5ccad5a11f02e017813754a",
+      "slot": 352,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "09b29ce3adffc6baa61ee4d9d3b443eefbc4e95c94e7240c63d43570b6071d73",
+      "slot": 353,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "8d93054e6e7b100f141b2115d6169e577e231491b465d8c58ae324dc024c67cb",
+      "slot": 354,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "5fdfa3931dad60ef14cb25585dc5481fd649cecc3629caaa2f1203494a38a405",
+      "slot": 355,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "cbab18aaa78aef7b9f2f852ee447ca3b94a9eefc3ad514f6220af14b720cef34",
+      "slot": 356,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a757fdb78265b1eafa7e89e78ca50ddab2d482f10f770e667597208569912ba2",
+      "slot": 357,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "ed3ed689f191838a15c11230db02e01d007fe91408e264dffdbb2cf08e4c0ceb",
+      "slot": 358,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b5ccede6d24d970157efacfc693fb297659fbcd250716a60f7ecf47b2ae1858b",
+      "slot": 359,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "93fe72e4f18248cceb017e6148b96ebd4c7555ca0f8d3eccb211573ce78a08b8",
+      "slot": 360,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "8a137276b9938267c8088bfcef622ebe842c335d4e2c7d09bb53026c7c3d16da",
+      "slot": 361,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "7f958ca8b94ac1164614ed7fed6da11c645010b1682a8c803ae3700c4334d46f",
+      "slot": 362,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "ad165304668098650cc0b5f042293858d5ec6c92f5660adf41e6cf3f0262a2a2",
+      "slot": 363,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "630d682c7bb8cbd96996f053afcd966c7d2bf2f3af2488e69b1dc0ea5d40ec5d",
+      "slot": 364,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2711e027f5d2aabe6b6015642fc3cf4167a0b1ee7fb72f207d8853137720d351",
+      "slot": 365,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "14484c09cbe58445507955fdfcfb7e2d0a64cb57be76117547566f53184338b9",
+      "slot": 366,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f15ec773801e94e07c923516368a14fab2cd4827bf2954774914d84e6825e6c2",
+      "slot": 367,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "7c0fcb09b49d05914fe1b1967bc454a52cdaacca51e6693c80f17253f730ad53",
+      "slot": 368,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "bf4a436cd9c22315e9d2f3ac71595fab3945d48bced2aed7c5c88a3a2d02f799",
+      "slot": 369,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2dda880f0d50d0f095dd02cd541e3ec56f95c39e461773b71ebc3759283b00a6",
+      "slot": 370,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "8d7da842a8b72b0bd1b179fefa52af7b429446d651b11376c9c77a859542e593",
+      "slot": 371,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "9fe03e4b07ef8fe6d95e2fad94e318d0fc37950e88cca73a72667549c87efd46",
+      "slot": 372,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a0792fa69d3ab22ac878adc58014d151d656a1efd5978bd83010fb0e68e8ccde",
+      "slot": 373,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "0edbcd8acdbdce3519c3e2de49e91794e24f930a12f7452cf5e9cefc105a3e01",
+      "slot": 374,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "1c46f5636c615dbfcf5f44e710da21528d67a32420bc5a6e18e400eda6a12398",
+      "slot": 375,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "b06f0211f0e48cb917da11655261fd564ad625c5b8f59f8c8469247aa6b8b7cc",
+      "slot": 376,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "ba1f35689cd1a48d23c1de4662e7275d6b37c7078bb96454ae742335843984e5",
+      "slot": 377,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "69162919cf4fc8f26690741e40eb72e61107aed553d7328b45bd0dd2bf983d9e",
+      "slot": 378,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "2e47fd76ad3441b30442ea1b64eb1ea0d97f1232fef20953c87a30a96427e6e4",
+      "slot": 379,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "446a4bcf739730ee18036285485dfaa73b0e791e26e350bc1c7b6842f6dff035",
+      "slot": 380,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f22a073c2c3263bdf871874d2c2950db49ac27e29ac94a89e54051746c55e01d",
+      "slot": 381,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "f64cac67890993ea67495cb0232021c47459d2b13909b88d5a717a969ae8fec4",
+      "slot": 382,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    },
+    {
+      "control_sequence_length": 540,
+      "control_supervised_token_count": 75,
+      "equal": true,
+      "intervention_slot": false,
+      "pair_id": "a09a244f514b0b2701fab824b8793a034c99ca877463a3afab4475cee588447e",
+      "slot": 383,
+      "treatment_sequence_length": 540,
+      "treatment_supervised_token_count": 75
+    }
+  ],
+  "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+  "remaining_prelaunch_gates": [
+    "freeze_hyperparameters_and_runtime_budget",
+    "freeze_paired_uncertainty_minimum_effect_retention_runtime_and_cost_rules",
+    "new_director_prelaunch_review"
+  ],
+  "rows": 384,
+  "runtime_identity_sha256": "7e94ba263dba680b2d75c2184c0ff05254b7e4aa5f90a7c64619eedf4ba4e256",
+  "schedule_binding_sha256": "57b9ef6c9c680533192d5358e6451d370425e1dd2bd8902f51d7095e45a40ca7",
+  "schema_version": 1,
+  "scope": "Exact counts under the E04-V3 byte-verified native runtime serializer; not a claim that vendored tokenizer.json equals the frozen V7 base tokenizer.json.",
+  "status": "PASS_NATIVE_RUNTIME_SERIALIZATION_CONTRACT",
+  "transformers_imported": false,
+  "treatment_supervised_tokens": 28800,
+  "treatment_total_tokens": 207360,
+  "verified_runtime_files": {
+    "chat_template.j2": "e5ed79284f346b7eadd874f6bdc376f722704808afd07ffd6190c6d8b97ddb5f",
+    "tokenizer_config.json": "da462d924da5b37c3750d75a55e717d6967b11a0de38e6d19c5ac22686e3b543",
+    "vocab.json": "0890d883459d60512a7714e4a56d95f839d44e8a948b027d5c2d38823a10890a"
+  }
+}
