@@ -1,0 +1,39 @@
+{
+  "binding_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH_BINDING_V1",
+  "bound_files": {
+    "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945",
+    "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_TRAIN_MICROBATCH_MANIFEST_V1.json": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V3.json": "cd05ee8a10942826c9913f4831273531580a542edd7c154898499c328f3da293",
+    "scripts/e03_gradient_statistics.py": "32f29d45e24a5fe22eb114e6b7e8953f492bd3e30857511094ec4a84fa784afb",
+    "scripts/postprocess_e03_v7_lora_gradient_interference_v1.py": "36007197b6a6f4d0a4b621d068d49e5030ba1cdaabe7de684d2e2dd7dcff2810",
+    "scripts/run_e03_v7_lora_gradient_interference_v1.py": "ddfc9611e6a0edb39f3567babb673da6b1ee2d7bb8be67f230e35b14caca37e5"
+  },
+  "bound_runtime": {
+    "final_audit_opened": false,
+    "fixed_b1_rows": 72,
+    "generation_calls": 0,
+    "model_mode": "eval",
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "primary_batch_size": 8,
+    "starting_checkpoint": "RECONSTRUCTED_FOUNDATION_V2_V7"
+  },
+  "director_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH_RESPONSE.json",
+  "director_response_sha256": "c2c6232898044be3940c8ca96f110b52617defd14610c535ce69b922847fef42",
+  "duplicate_job_forbidden": true,
+  "execution_authorized": false,
+  "fresh_output_required": true,
+  "jobs": 1,
+  "nonce": "5627d4b1d64cb7fe24da2b326abadb22",
+  "output_root": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v1/run_001_5627d4b1d64cb7fe24da2b326abadb22",
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1",
+  "retry": false,
+  "runtime_cap_seconds": 1500,
+  "runtime_identity_preflight_before_model_import": true,
+  "schema_version": 1,
+  "source_commit": "3ee049b6f8582bd90370f7fb5ae5b090cde40bec",
+  "source_identity_rule": "RunPod must checkout source_commit and verify all file hashes before model import; later control-artifact commits do not alter executable hashes.",
+  "status": "PRELAUNCH_BINDING_PENDING_DIRECTOR_REVIEW",
+  "terminal_receipt_path": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v1/run_001_5627d4b1d64cb7fe24da2b326abadb22/TERMINAL_RECEIPT.json"
+}
