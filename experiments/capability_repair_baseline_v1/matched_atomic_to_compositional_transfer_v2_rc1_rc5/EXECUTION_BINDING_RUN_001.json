@@ -1,0 +1,65 @@
+{
+  "authorization": {
+    "automatic_retry": false,
+    "backward": false,
+    "gpu_inference": true,
+    "greedy_generation": true,
+    "jobs_authorized": 1,
+    "model_loading": true,
+    "optimizer": false,
+    "training": false
+  },
+  "cohort_manifest": {
+    "path": "experiments/capability_repair_baseline_v1/matched_atomic_to_compositional_transfer_v2_rc1_rc5/COHORT_MANIFEST.json",
+    "sha256": "e508c227c84f86557b84a824ae64cf4bc0319ba627d9ddf6a5b0a7e89768e2fc"
+  },
+  "director_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_MATCHED_ATOMIC_TO_COMPOSITIONAL_TRANSFER_V2_RC1_RC5_PRELAUNCH_RESPONSE.json",
+  "director_response_sha256": "ef4c50bda5626a16385f0e504a117bb6c6502305448564710ac4a85d0d9ef824",
+  "forbidden": [
+    "target_adaptive_generation",
+    "optimizer",
+    "backward",
+    "parameter_updates",
+    "training",
+    "beam",
+    "top2",
+    "DFS",
+    "TTT",
+    "augmentation",
+    "external_selector",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT"
+  ],
+  "launcher": {
+    "path": "scripts/launch_matched_atomic_to_compositional_transfer_v2.py",
+    "sha256": "6f4ad6b562145b3babd5919ba20ae8738048e0ddd2a9784bd3d23055907443ed"
+  },
+  "nonce": "8c905aa3406f1c64a8a22e48e8e54dc6",
+  "output_root": "/workspace/arc2/matched_atomic_to_compositional_transfer_v2_rc1_rc5/run_001_8c905aa3406f1c64a8a22e48e8e54dc6",
+  "protocol": {
+    "path": "experiments/capability_repair_baseline_v1/matched_atomic_to_compositional_transfer_v2_rc1_rc5/PROTOCOL.json",
+    "sha256": "f1d3925f4a27aba71119f3f4ea9b02408832b69ab3f38e492c5a5abfe4d0209f"
+  },
+  "protocol_id": "MATCHED_ATOMIC_TO_COMPOSITIONAL_TRANSFER_V2_RC1_RC5",
+  "runtime_cap_seconds": 1800,
+  "runtime_gates": [
+    "exact_detached_source_commit",
+    "bound_file_sha256",
+    "both_checkpoint_manifest_and_asset_identity",
+    "target_sidecar_absent_from_worker",
+    "fresh_output",
+    "single_active_lock",
+    "frozen_batch_ladder",
+    "fixed_batch1_validation",
+    "external_1800_second_cap",
+    "terminal_receipt"
+  ],
+  "schema_version": 1,
+  "source_commit": "1935c15f67b68bb3d184c7c8c63ff55a5a4c1075",
+  "status": "DERIVED_FROM_DIRECTOR_AUTHORIZATION_PENDING_REMOTE_PREFLIGHT",
+  "worker": {
+    "path": "scripts/run_matched_atomic_to_compositional_transfer_v2.py",
+    "sha256": "de130f295e9abf523e9cb6674f21591718b82a4ed5b39475ca097ba8b42cfb75"
+  }
+}
