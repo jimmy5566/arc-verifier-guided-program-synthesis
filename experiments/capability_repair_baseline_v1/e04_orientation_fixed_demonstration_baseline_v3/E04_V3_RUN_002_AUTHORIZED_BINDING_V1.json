@@ -20,6 +20,6 @@
   "runtime_config_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_NATIVE_GREEDY_RUNTIME_CONFIG_V1.json",
   "runtime_config_sha256": "d4381d997302f4f08d3051b80f1fa514706c412e503e8c5b998a7fe6b86e0736",
   "schema_version": 1,
-  "source_commit": "b3159b33cfab130182c60cb7dd773b007a706f28",
+  "source_commit": "b3159b3357b17187b82387cc6aeef20b5a5f0004",
   "worker_sha256": "3ebfe6ae6c9348eb99bb5b2b0133a91e51db053c35752337d9261eb02b3b7917"
 }
