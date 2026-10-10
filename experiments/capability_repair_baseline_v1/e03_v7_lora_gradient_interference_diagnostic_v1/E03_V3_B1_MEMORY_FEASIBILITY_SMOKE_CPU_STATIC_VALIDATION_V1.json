@@ -1,0 +1,38 @@
+{
+  "active_e03_processes_observed": 0,
+  "active_gpu_compute_processes_observed": 0,
+  "binding_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_MEMORY_FEASIBILITY_SMOKE_PRELAUNCH_BINDING_V1.json",
+  "binding_sha256": "852d3b543280018e7fa39995f7dd6dc0de3e8bbb09cb9f39979ed70f2918056f",
+  "checks": [
+    "fresh_nonce",
+    "fresh_output_root",
+    "binding_is_not_execution_authorized",
+    "local_origin_runpod_exact_sha_parity",
+    "remote_tracked_source_clean",
+    "no_active_e03_or_gpu_compute_process",
+    "bound_file_hashes"
+  ],
+  "frozen_identity": {
+    "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "cohort_manifest_sha256": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+    "config_sha256": "76c8216d861f2960a33039ab28feb72ce57017879b5144477adec39634887740"
+  },
+  "kind": "E03_V3_B1_MEMORY_FEASIBILITY_SMOKE",
+  "local_head": "e97b7e9fdca8282cbee8853dd37c2a0bdfb1d3d9",
+  "origin_commit": "e97b7e9fdca8282cbee8853dd37c2a0bdfb1d3d9",
+  "origin_ref": "refs/remotes/origin/infra/arc2-dual-agent-runpod-orchestrator-v1",
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "runpod_checkout_commit": "e97b7e9fdca8282cbee8853dd37c2a0bdfb1d3d9",
+  "runpod_origin_commit": "e97b7e9fdca8282cbee8853dd37c2a0bdfb1d3d9",
+  "runpod_tracked_source_clean": true,
+  "schema_version": 1,
+  "scope": {
+    "final_audit_opened": false,
+    "generation_calls": 0,
+    "gpu_or_model_loaded": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0
+  },
+  "source_commit": "e97b7e9fdca8282cbee8853dd37c2a0bdfb1d3d9",
+  "status": "PASS_CPU_ONLY"
+}

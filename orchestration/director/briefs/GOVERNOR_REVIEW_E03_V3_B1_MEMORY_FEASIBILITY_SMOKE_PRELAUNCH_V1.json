@@ -1,0 +1,70 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "execution_boundary": {
+    "forbidden": [
+      "optimizer",
+      "parameter updates",
+      "generation",
+      "DEV",
+      "RETENTION_SENTINEL",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT",
+      "retry",
+      "fallback"
+    ],
+    "maximum_jobs": 1,
+    "physical_batch_size": 1,
+    "precision": "BF16_UNCHANGED",
+    "prelaunch_binding_is_not_execution_authorized": true,
+    "requires_new_derived_execution_binding": true,
+    "runtime_cap_seconds": 600
+  },
+  "identity": {
+    "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "cohort_manifest_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_MANIFEST_V1.json",
+    "cohort_manifest_sha256": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+    "config_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CONFIG_V1.json",
+    "config_sha256": "76c8216d861f2960a33039ab28feb72ce57017879b5144477adec39634887740",
+    "cpu_static_validation_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_MEMORY_FEASIBILITY_SMOKE_CPU_STATIC_VALIDATION_V1.json",
+    "cpu_static_validation_sha256": "318178fad382035022f2cbe80570c401a633cf4dbf990a53586a6df0c7be2ca3",
+    "origin_ref": "refs/remotes/origin/infra/arc2-dual-agent-runpod-orchestrator-v1",
+    "prelaunch_binding_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_MEMORY_FEASIBILITY_SMOKE_PRELAUNCH_BINDING_V1.json",
+    "prelaunch_binding_sha256": "852d3b543280018e7fa39995f7dd6dc0de3e8bbb09cb9f39979ed70f2918056f",
+    "source_commit": "e97b7e9fdca8282cbee8853dd37c2a0bdfb1d3d9"
+  },
+  "machine_preflight": {
+    "active_e03_processes_observed": 0,
+    "active_gpu_compute_processes_observed": 0,
+    "fresh_nonce": "c59608b9df718600d850d1e665228456",
+    "fresh_output_root": "/workspace/arc2/e03_v3_b1_memory_feasibility_smoke/run_001_c59608b9df718600d850d1e665228456",
+    "local_origin_runpod_exact_sha_parity": "e97b7e9fdca8282cbee8853dd37c2a0bdfb1d3d9",
+    "one_shot_authorization_already_consumed": false,
+    "runpod_tracked_source_clean": true
+  },
+  "preserved_failure": "E03 V3 Run_001 remains FAILED_PRE_MODEL_IMPORT_NO_RETRY and is not retried or reused.",
+  "question": "May Controller create one fresh one-shot authorization for the bounded E03 V3 B1 memory-feasibility smoke under the frozen conditions below?",
+  "requested_decision": "CONTINUE_CONTROLLER or REQUIRE_CHANGES",
+  "review_id": "GOVERNOR_REVIEW_E03_V3_B1_MEMORY_FEASIBILITY_SMOKE_PRELAUNCH_V1",
+  "review_type": "PRELAUNCH_SCIENTIFIC_AND_SAFETY_REVIEW",
+  "schema_version": 1,
+  "scientific_scope": {
+    "checkpoint": "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "cohort_context": "exact frozen 72-TRAIN-row E03 V3 cohort; smoke executes only the fixed longest row",
+    "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000068",
+    "final_audit_opened": false,
+    "generation_calls": 0,
+    "no_dev_or_sealed_data": true,
+    "no_optimizer": true,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "question": "Can the frozen longest TRAIN example complete one physical-B1 BF16 forward/backward within 600 seconds on the existing RunPod runtime?",
+    "selection_rule": "FROZEN_LONGEST_SEQUENCE_THEN_EPISODE_ID"
+  }
+}
