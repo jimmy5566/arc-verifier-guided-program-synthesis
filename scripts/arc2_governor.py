@@ -69,6 +69,20 @@ def resolve_controller_target(state, path):
     state.update({'controller_target':target,'controller_target_source':'HERDR_LIVE_PANE_RESOLUTION','updated_at':now()})
     atomic(path,state); log(state,f'controller target resolved={target}')
     return target
+def controller_turn_is_active(target):
+    """Return whether the selected Controller is already executing a turn.
+
+    A Governor invocation may itself be running inside the Controller pane.
+    Re-prompting that same working pane queues a second invocation behind the
+    current turn; it is not a hand-off and can create a self-prompt loop.
+    """
+    result=subprocess.run(['herdr','agent','list'],check=False,capture_output=True,text=True,encoding='utf-8',errors='replace')
+    if result.returncode:
+        raise RuntimeError(f'CONTROLLER_STATUS_LIST_FAILED:{result.returncode}')
+    for record in json.loads(result.stdout).get('result',{}).get('agents',[]):
+        if record.get('pane_id') == target:
+            return record.get('agent_status') == 'working'
+    raise RuntimeError('CONTROLLER_TARGET_DISAPPEARED')
 def prompt(actor,text,timeout,state):
     log(state, f'prompting {actor}')
     r=subprocess.run(['herdr','agent','prompt',actor,text,'--wait','--until','idle','--until','done','--until','blocked','--timeout',str(timeout*1000)],check=False,timeout=timeout+15, capture_output=True, text=True, encoding='utf-8', errors='replace')
@@ -84,6 +98,12 @@ def prompt(actor,text,timeout,state):
 def controller(s,p,timeout):
     s.update({'last_actor':'governor','updated_at':now()}); atomic(p,s)
     target=resolve_controller_target(s,p)
+    if controller_turn_is_active(target):
+        # The live Controller owns this state transition already.  Do not
+        # queue a recursive Governor prompt into its own pane.
+        s.update({'controller_dispatch':'ACTIVE_CONTROLLER_TURN_NO_REPROMPT','updated_at':now()})
+        atomic(p,s); log(s,f'controller target={target} already working; no self-prompt')
+        return
     prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}, AGENTS.md, and orchestration/agents/ARC_CONTROLLER_SYSTEM.md; execute next_action as far as scientifically valid. '
            'Repair routine infrastructure autonomously with bounded CPU-only checks when frozen science is unchanged. Preserve failed runs and never reuse a consumed one-shot authorization. '
            'Escalate only a scientific, security, asset-identity, sealed-data, budget, or fresh execution-authorization blocker by freezing one concise brief and setting REVIEW_REQUIRED; never prompt Director directly. '
