@@ -1,0 +1,108 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "authorization_request": "Authorize at most one bounded no-update model-inference run only if all runtime identity, sealed-sidecar, fresh-output, duplicate-job, parser/scorer, and fixed Batch16-versus-Batch1 gates pass. No training authorization is requested.",
+  "checkpoint_identities": {
+    "FAMILY_BALANCED": {
+      "adapter_model_sha256": "c7b275587796b0d9b07d45e933371d5ae26e9aa76df7a895104d7c4e35117780",
+      "manifest_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json",
+      "manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9",
+      "role": "FROZEN_HISTORICAL_INTERVENTION_COMPARATOR"
+    },
+    "RECONSTRUCTED_FOUNDATION_V2_V7": {
+      "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+      "manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+      "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+      "role": "PRIMARY"
+    }
+  },
+  "cpu_validation": {
+    "CPU_tests": "PASS_5",
+    "all_tuple_transforms_recomputed": true,
+    "public_observation_hashes_unique": true,
+    "receipt_sha256": "e95273fed639451208ba2ce6430b092d0335255b85e04d1452fee6ff45ffac5f",
+    "tuple_parameter_hashes_unique": true
+  },
+  "estimands_and_decision_rule": {
+    "decision_rule": {
+      "ATOMIC_PREREQUISITE_LIMITATION_SUPPORTED": "minimum n met, conditional failure bootstrap upper bound <=0.15, and >0.70 of composition failures have at least one atomic prerequisite wrong",
+      "COMPOSITIONAL_TRANSFER_BOTTLENECK_SUPPORTED": "minimum n met and V7 conditional composition-failure bootstrap lower bound >0.15",
+      "INVALID_NOT_INTERPRETABLE": "identity, exposure, tuple matching, serialization, target, checkpoint, batching, parser, completeness, or sealed-data failure",
+      "MIXED_OR_INCONCLUSIVE": "minimum n unmet, interval crosses 0.15, checkpoint direction unstable, or Batch1 validation changes classification"
+    },
+    "minimum_both_atoms_correct": 12,
+    "practically_negligible_conditional_failure_bound": 0.15,
+    "primary": "per-checkpoint composition exact rate conditional on BOTH atomic outputs exact, then paired V7-versus-Family-Balanced contrast",
+    "secondary": [
+      "joint_atomic_prerequisite_exact_rate",
+      "unconditional_composition_exact_rate",
+      "complete_output_top2_composition_coverage",
+      "four_state_tuple_counts",
+      "separate_synthetic_protected_retention"
+    ],
+    "uncertainty": "10000 fixed seed 20261010 stratified paired bootstrap by 4 frozen tuple index strata"
+  },
+  "execution_conditions": {
+    "batch_primary": 16,
+    "checkpoints": [
+      "RECONSTRUCTED_FOUNDATION_V2_V7",
+      "FAMILY_BALANCED"
+    ],
+    "decoding": "Greedy primary plus one complete-output target-blind Top-2 alternate",
+    "fallback_ladder": [
+      16,
+      8,
+      4,
+      1
+    ],
+    "fixed_batch1_validation_episodes": 42,
+    "format": "NATIVE_ARC_OBSERVATION",
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "runtime_cap_seconds": 1800
+  },
+  "forbidden": [
+    "training",
+    "optimizer",
+    "backward",
+    "checkpoint mutation",
+    "TTT",
+    "augmentation",
+    "DFS",
+    "Beam",
+    "external selector",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT"
+  ],
+  "frozen_cohort": {
+    "exact_historical_episode_overlap_count": 0,
+    "exact_historical_observation_overlap_count": 0,
+    "independent_seed": 20261011,
+    "manifest_path": "experiments/capability_repair_baseline_v1/matched_atomic_to_compositional_transfer_v1_final/COHORT_MANIFEST.json",
+    "manifest_sha256": "8dd7350af0d993db14ea18b7b38db86679fbf285a993c2f753347910a43f4dcc",
+    "public_test_targets_present": false,
+    "separate_retention_episodes": 24,
+    "target_sidecar_sha256": "5055d6723a6daf0217c581e4e61f183285eff40edc2753010c66085bca7b1096",
+    "tuple_episode_count": 144,
+    "tuples": 48
+  },
+  "hard_gates": {
+    "Batch16_Batch1_validation": "RUNTIME_PENDING",
+    "correct_checkpoint_identity": "CPU_FROZEN_RUNTIME_PENDING",
+    "correct_cohort_and_denominator": "PASS_CPU",
+    "fresh_output_and_no_duplicate_job": "RUNTIME_PENDING",
+    "generator_target_semantics": "PASS_CPU",
+    "no_leakage": "PASS_CPU",
+    "target_isolation": "PASS_CPU"
+  },
+  "question": "Is this newly generated matched atomic-to-compositional transfer cohort and no-update evaluation protocol scientifically valid for exactly one bounded inference execution? If not, name the smallest required change. Do not select a training objective from this review.",
+  "review_id": "GOVERNOR_REVIEW_MATCHED_ATOMIC_TO_COMPOSITIONAL_TRANSFER_V1_PRELAUNCH",
+  "review_type": "MAJOR_STAGE_SCIENTIFIC_PRELAUNCH_REVIEW",
+  "schema_version": 1,
+  "scientific_question": "When both matched atomic prerequisites are exact, does composition still fail on the same latent synthetic tuple, and is Family-Balanced different from V7 on that conditional transfer?"
+}

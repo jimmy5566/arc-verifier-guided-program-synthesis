@@ -1,0 +1,19 @@
+{
+  "Gold_dGold_FINAL_AUDIT_accessed": false,
+  "cohort_manifest_sha256": "8dd7350af0d993db14ea18b7b38db86679fbf285a993c2f753347910a43f4dcc",
+  "cpu_tests": [
+    "tests.test_matched_atomic_to_compositional_transfer_v1",
+    "tests.test_e03_observed_repeatability_envelope_sensitivity"
+  ],
+  "experiment_id": "MATCHED_ATOMIC_TO_COMPOSITIONAL_TRANSFER_V1",
+  "generation": false,
+  "gpu_used": false,
+  "model_loaded": false,
+  "note": "sidecar contains synthetic targets and remains local, sealed, and uncommitted; its identity is recorded for later scored evaluation only.",
+  "optimizer_constructed": false,
+  "protocol_sha256": "375ece9a4a972c1116b6c6b40b11c190fd2b80f6d705b39bc09f1849bfd2b1f7",
+  "schema_version": 1,
+  "sealed_target_sidecar_sha256": "5055d6723a6daf0217c581e4e61f183285eff40edc2753010c66085bca7b1096",
+  "status": "CPU_FREEZE_COMPLETE_PRELAUNCH_REVIEW_REQUIRED",
+  "training": false
+}
