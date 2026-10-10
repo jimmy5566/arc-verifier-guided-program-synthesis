@@ -94,10 +94,12 @@ class E04V3NoUpdateTest(unittest.TestCase):
                 "protocol_id": contract["protocol_id"],
                 "authorization_id": "E04_V3_CLEAN_BASELINE_ONE_SHOT_CONDITIONAL_20261010",
                 "execution_authorized": True,
-                "source_commit": "50ad4ce1bdaa051aa587b20f5af4c2112f7a00ed",
+                "source_commit": "ae0540d55162d8868130fa20005af97c2e81768b",
                 "worker_sha256": e.sha_path(e.ROOT / "scripts/run_e04_orientation_v3_fixed_baseline.py"),
                 "contract_path": str(e.CONTRACT.relative_to(e.ROOT)).replace("\\\\", "/"),
                 "contract_sha256": e.sha_path(e.CONTRACT),
+                "runtime_config_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_NATIVE_GREEDY_RUNTIME_CONFIG_V1.json",
+                "runtime_config_sha256": e.sha_path(e.ROOT / "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_NATIVE_GREEDY_RUNTIME_CONFIG_V1.json"),
                 "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
                 "checkpoint_manifest_sha256": e.sha_path(e.ROOT / "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json"),
                 "native_config_dir": str(e.ROOT / "configs/nvarc_native_846d0198"),
@@ -119,6 +121,7 @@ class E04V3NoUpdateTest(unittest.TestCase):
                 "authorization_id": "E04_V3_CLEAN_BASELINE_ONE_SHOT_CONDITIONAL_20261010",
                 "execution_authorized": True, "source_commit": "wrong", "worker_sha256": "wrong",
                 "contract_path": str(e.CONTRACT.relative_to(e.ROOT)).replace("\\\\", "/"), "contract_sha256": e.sha_path(e.CONTRACT),
+                "runtime_config_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_NATIVE_GREEDY_RUNTIME_CONFIG_V1.json", "runtime_config_sha256": e.sha_path(e.ROOT / "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_NATIVE_GREEDY_RUNTIME_CONFIG_V1.json"),
                 "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
                 "checkpoint_manifest_sha256": e.sha_path(e.ROOT / "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json"),
                 "native_config_dir": str(e.ROOT / "configs/nvarc_native_846d0198"),
@@ -132,4 +135,6 @@ class E04V3NoUpdateTest(unittest.TestCase):
                 worker.load_binding(bp, out)
 if __name__ == "__main__":
     unittest.main()
+
+
 

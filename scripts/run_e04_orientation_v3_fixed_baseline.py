@@ -1,4 +1,4 @@
-﻿"""Run the authorized E04 V3 target-blind V7 native greedy generation once.
+"""Run the authorized E04 V3 target-blind V7 native greedy generation once.
 
 The worker never opens the target scorer sidecar. It emits and freezes raw
 generation before a separate CPU scorer may join targets.
@@ -19,10 +19,10 @@ def fail(code: str) -> None:
     raise E04ExecutionFailure(code)
 
 def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
-    binding = json.loads(path.read_text(encoding="utf-8"))
+    binding = json.loads(path.read_text(encoding="utf-8-sig"))
     required = {
         "schema_version", "protocol_id", "authorization_id", "execution_authorized",
-        "source_commit", "worker_sha256", "contract_path", "contract_sha256",
+        "source_commit", "worker_sha256", "contract_path", "contract_sha256", "runtime_config_path", "runtime_config_sha256",
         "checkpoint_manifest_path", "checkpoint_manifest_sha256",
         "native_config_dir", "native_config_provenance_path", "native_config_provenance_sha256",
         "output_root", "nonce", "hard_runtime_cap_seconds", "jobs", "retry",
@@ -49,6 +49,9 @@ def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
     contract = ROOT / binding["contract_path"]
     if not contract.is_file() or sha_path(contract) != binding["contract_sha256"]:
         fail("E04_CONTRACT_HASH")
+    runtime_config = ROOT / binding["runtime_config_path"]
+    if not runtime_config.is_file() or sha_path(runtime_config) != binding["runtime_config_sha256"]:
+        fail("E04_RUNTIME_CONFIG_HASH")
     validate_contract(contract)
     for key in ("checkpoint_manifest_path", "native_config_provenance_path"):
         candidate = ROOT / binding[key]
@@ -105,10 +108,12 @@ def run(config_path: Path, binding_path: Path, output_root: Path) -> None:
     terminal = output_root / "TERMINAL_RECEIPT.json"
     try:
         binding = load_binding(binding_path, output_root)
-        config = json.loads(config_path.read_text(encoding="utf-8"))
+        config = json.loads(config_path.read_text(encoding="utf-8-sig"))
         required = {"schema_version", "protocol_id", "seed", "max_new_tokens", "context_window", "contract_path", "contract_sha256"}
         if set(config) != required or config["protocol_id"] != binding["protocol_id"]:
             fail("E04_RUNTIME_CONFIG_SCHEMA")
+        if config_path.resolve() != (ROOT / binding["runtime_config_path"]).resolve() or sha_path(config_path) != binding["runtime_config_sha256"]:
+            fail("E04_RUNTIME_CONFIG_BINDING")
         contract = ROOT / config["contract_path"]
         if sha_path(contract) != config["contract_sha256"] or config["contract_sha256"] != binding["contract_sha256"]:
             fail("E04_RUNTIME_CONFIG_CONTRACT")
@@ -120,8 +125,8 @@ def run(config_path: Path, binding_path: Path, output_root: Path) -> None:
         check_deadline(deadline)
         # Runtime-only imports: all prior source/config gates completed before
         # model import. Verify exact base and V7 adapter bytes before loading.
-        checkpoint = json.loads((ROOT / binding["checkpoint_manifest_path"]).read_text(encoding="utf-8"))
-        provenance = json.loads((ROOT / binding["native_config_provenance_path"]).read_text(encoding="utf-8"))
+        checkpoint = json.loads((ROOT / binding["checkpoint_manifest_path"]).read_text(encoding="utf-8-sig"))
+        provenance = json.loads((ROOT / binding["native_config_provenance_path"]).read_text(encoding="utf-8-sig"))
         def verify_entries(folder: Path, entries: list[dict[str, Any]], label: str) -> None:
             for entry in entries:
                 candidate = folder / entry["name"]

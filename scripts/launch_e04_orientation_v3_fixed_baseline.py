@@ -1,4 +1,4 @@
-﻿"""Launch exactly one E04 V3 detached job after an immutable binding is published.
+"""Launch exactly one E04 V3 detached job after an immutable binding is published.
 
 The binding is deliberately stored outside the exact source checkout to avoid a
 self-hash cycle: it binds an earlier immutable code commit and is materialized
@@ -49,7 +49,7 @@ def main() -> None:
     parser.add_argument("--ssh-target")
     parser.add_argument("--launch", action="store_true")
     args = parser.parse_args()
-    binding = json.loads(args.binding.read_text(encoding="utf-8"))
+    binding = json.loads(args.binding.read_text(encoding="utf-8-sig"))
     relative = args.binding.resolve().relative_to(ROOT).as_posix()
     command = remote_script(binding, binding_commit=args.binding_commit, binding_repo_path=relative, binding_sha256=sha(args.binding))
     if not args.launch:
