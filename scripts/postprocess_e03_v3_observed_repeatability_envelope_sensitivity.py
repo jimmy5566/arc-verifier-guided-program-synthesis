@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """CPU-only, post-hoc E03 observed-repeatability envelope sensitivity.
 
 This diagnostic never loads a model or recomputes gradients.  It propagates the
