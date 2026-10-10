@@ -97,6 +97,10 @@ class NativeGeneration:
     prompt_tokens: int
     completion_tokens: int
     elapsed_seconds: float
+    # Completion tokens are captured before decoding.  Existing callers may
+    # ignore this defaulted field; measurement workers can use it to avoid
+    # treating a re-tokenized decoded string as an autoregressive trace.
+    token_ids: tuple[int, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -164,8 +168,10 @@ class NVARCNativeProvider:
         # augmentation.  This keeps each long-lived worker's CUDA footprint
         # bounded rather than retaining a generation tensor through decoding.
         generated = output[0, prompt_tokens:].detach().cpu()
+        token_ids = tuple(int(token) for token in generated.tolist())
         text = self.tokenizer.decode(generated, skip_special_tokens=True)
-        result = NativeGeneration(text, prompt_tokens, int(generated.shape[-1]), time.perf_counter() - started)
+        result = NativeGeneration(text, prompt_tokens, int(generated.shape[-1]), time.perf_counter() - started,
+                                  token_ids)
         del output, encoded, generated
         return result
 
@@ -224,9 +230,10 @@ class NVARCNativeProvider:
                 pad_positions = (suffix == int(self.tokenizer.pad_token_id)).nonzero(as_tuple=False)
                 if len(pad_positions):
                     suffix = suffix[:int(pad_positions[0].item())]
+            token_ids = tuple(int(token) for token in suffix.tolist())
             result.append(NativeGeneration(
                 self.tokenizer.decode(suffix, skip_special_tokens=True), prompt_lengths[index],
-                int(suffix.shape[-1]), elapsed / len(rows),
+                int(suffix.shape[-1]), elapsed / len(rows), token_ids,
             ))
         del output, input_ids, attention_mask, rows
         return result
