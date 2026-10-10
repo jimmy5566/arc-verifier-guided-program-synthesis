@@ -1,0 +1,86 @@
+{
+  "arms": {
+    "control": "NO_TRANSFORM_RETENTION_CONTROL at all 384 frozen slots",
+    "treatment": "FIXED_TURN_ROTATION_CONTROL at slots 0..95; identical no-transform protected replay at slots 96..383",
+    "only_scientific_variable": "supervision target at the 96 predeclared intervention slots"
+  },
+  "checkpoint": {
+    "identity": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  },
+  "cohorts": {
+    "development_evaluation": "Existing E04 48-canonical-base / 192-episode development cohort; descriptive development evidence only, not independent ARC generalization confirmation.",
+    "independent_non_gold_sentinel": {
+      "status": "UNAVAILABLE_NO_ELIGIBLE_FROZEN_COHORT_IDENTIFIED",
+      "rule": "No replacement cohort may be generated or opened during this protocol. Absence prevents an independent-generalization claim but does not alter the development-cohort estimand."
+    },
+    "training": "E04-C frozen TRAIN-only paired schedule; validation rows were not read."
+  },
+  "decision_rules": {
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 20261011,
+      "unit": "canonical base, resampling all four turns together",
+      "interval": "percentile 95% confidence interval"
+    },
+    "primary": {
+      "estimand": "treatment minus control exact-grid accuracy on FIXED_TURN_ROTATION_CONTROL, paired by canonical base across four turns",
+      "minimum_effect": "8 additional correct episodes of 192 (0.0416666667)",
+      "improved": "point estimate >= 0.0416666667 and bootstrap CI lower bound > 0",
+      "inconclusive": "valid result not meeting IMPROVED and not meeting a protection failure"
+    },
+    "protected_outcomes": {
+      "marker_binding_control": "treatment minus V7 exact-grid accuracy; a decline of more than 8/192 is a protection failure",
+      "no_transform_retention_control": "treatment minus V7 exact-grid accuracy; a decline of more than 8/192 is a protection failure",
+      "rotation_target_transfer": "treatment minus V7 exact-grid accuracy; descriptive transfer only unless the primary rule is IMPROVED",
+      "parser_validity": "Any parser/scorer/identity failure is INVALID_NOT_INTERPRETABLE"
+    },
+    "stop": {
+      "no_automatic_expansion": true,
+      "on_protection_failure": "STOP_E04_C_ROUTE_AND_SUBMIT_RESULT_TO_DIRECTOR",
+      "on_inconclusive": "SUBMIT_RESULT_TO_DIRECTOR_WITHOUT_AUTOMATIC_RETRY",
+      "on_improved": "SUBMIT_RESULT_TO_DIRECTOR; no follow-on training is authorized by this protocol"
+    }
+  },
+  "execution": {
+    "execution_authorized": false,
+    "fresh_output_per_arm": true,
+    "new_director_review_required": true,
+    "no_parallel_scientific_job": true,
+    "per_arm_runtime_cap_seconds": 3600,
+    "joint_runtime_cap_seconds": 7200
+  },
+  "forbidden": [
+    "NO_FINAL_AUDIT",
+    "NO_GOLD_OR_DGOLD",
+    "NO_EVALUATION_COHORT_IN_TRAINING",
+    "NO_COMPOSITION_TRAINING",
+    "NO_UNAUTHORIZED_MODEL_LOADING_OR_GPU_EXECUTION"
+  ],
+  "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+  "recipe": {
+    "gradient_accumulation": 4,
+    "learning_rate": 0.00005,
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "lora_rank": 64,
+    "optimizer": "PagedAdamW8bit",
+    "optimizer_steps_per_arm": 96,
+    "precision": "BF16",
+    "quantization": "NONE",
+    "seed": 2000031,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  },
+  "schedule": {
+    "binding_path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/schedule_freeze_v1/MATCHED_SCHEDULE_BINDING_V1.json",
+    "binding_sha256": "57b9ef6c9c680533192d5358e6451d370425e1dd2bd8902f51d7095e45a40ca7",
+    "native_token_preflight_path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/schedule_freeze_v1/NATIVE_TOKEN_STATIC_PREFLIGHT_V1.json",
+    "native_token_preflight_sha256": "9e270ff12c3b382f2d2efc86c181732018f730df7b9dc2055e7f056632930b38",
+    "per_arm_supervised_tokens": 28800,
+    "per_arm_total_tokens": 207360,
+    "slots_per_arm": 384
+  },
+  "schema_version": 1,
+  "status": "FROZEN_CPU_ONLY_PRELAUNCH_PENDING_DIRECTOR_REVIEW"
+}

@@ -1,0 +1,59 @@
+{
+  "decision_requested": "APPROVE_OR_REJECT_E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1_FOR_A_SEPARATE_BOUNDED_EXECUTION_AUTHORIZATION",
+  "evidence": {
+    "e04_development_observation": {
+      "fixed_turn_rotation_control_accuracy": 0.16145833333333334,
+      "marker_binding_control_accuracy": 0.9635416666666666,
+      "no_transform_retention_control_accuracy": 0.75,
+      "rotation_target_accuracy": 0.125,
+      "scope": "REUSED_DEVELOPMENT_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION_CONFIRMATION"
+    },
+    "native_token_preflight": {
+      "control_supervised_tokens": 28800,
+      "control_total_tokens": 207360,
+      "per_slot_equal_token_and_supervision": true,
+      "sha256": "9e270ff12c3b382f2d2efc86c181732018f730df7b9dc2055e7f056632930b38",
+      "treatment_supervised_tokens": 28800,
+      "treatment_total_tokens": 207360
+    }
+  },
+  "frozen_artifacts": {
+    "prelaunch_protocol": {
+      "path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/E04_C_PRELAUNCH_PROTOCOL_V1.json",
+      "sha256": "16a0b1f9bf93a81fdc48e147fc55b6f981d5e2c2e96d7561c9ee6d93777381b5"
+    },
+    "structural_schedule_binding": {
+      "path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/schedule_freeze_v1/MATCHED_SCHEDULE_BINDING_V1.json",
+      "sha256": "57b9ef6c9c680533192d5358e6451d370425e1dd2bd8902f51d7095e45a40ca7"
+    }
+  },
+  "hypothesis": "Replacing only matched no-transform supervision with fixed-turn rotation supervision improves fixed-turn exact-grid accuracy from the V7 start while preserving marker-binding and no-transform capability.",
+  "independent_sentinel": "UNAVAILABLE_NO_ELIGIBLE_FROZEN_COHORT_IDENTIFIED; this protocol cannot claim independent generalization.",
+  "isolation": {
+    "evaluation_rows_in_training": false,
+    "final_audit_accessed": false,
+    "gold_or_dgold_accessed": false,
+    "model_loaded": false,
+    "optimizer_constructed": false
+  },
+  "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+  "requested_authorization_scope": {
+    "arms": 2,
+    "per_arm_runtime_cap_seconds": 3600,
+    "requires_fresh_launch_binding_after_approval": true,
+    "training_steps_per_arm": 96
+  },
+  "scientific_design": {
+    "control": "384 slots of no-transform supervision",
+    "primary_estimand": "Treatment minus control fixed-turn exact-grid accuracy, paired by 48 canonical bases across four turns; 10,000 canonical-base bootstrap replicates.",
+    "promotion_rule": "At least 8 additional correct episodes of 192 and bootstrap 95% CI lower bound greater than zero.",
+    "protected_outcomes": [
+      "marker-binding control",
+      "no-transform retention control",
+      "parser/scorer/identity validity"
+    ],
+    "treatment": "96 matched fixed-turn rotation supervision slots plus 288 byte-identical no-transform protected-replay slots"
+  },
+  "status": "PENDING_ONE_DIRECTOR_PRELAUNCH_REVIEW_NO_EXECUTION_AUTHORIZATION",
+  "why_existing_evidence_is_insufficient": "The E04 no-update measurement established an atomic rotation deficit but cannot establish whether targeted supervised repair causes improvement or harms protected capabilities."
+}
