@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-  [ValidateSet('Start','Status','Stop')][string]$Action = 'Start',
+  [ValidateSet('Start','Status','Stop','Install','Uninstall')][string]$Action = 'Start',
   [string]$Root = '',
   [string]$GovernorScript,
   [int]$IdleSeconds = 15,
@@ -17,6 +17,7 @@ $pidPath = Join-Path $runtime 'arc2_governor.pid'
 $serviceState = Join-Path $runtime 'ARC2_GOVERNOR_SERVICE_STATE.json'
 $stdout = Join-Path $runtime 'logs\arc2_governor_service.stdout.log'
 $stderr = Join-Path $runtime 'logs\arc2_governor_service.stderr.log'
+$taskName = 'ARC2-Governor'
 if (-not $GovernorScript) { $GovernorScript = Join-Path $Root 'scripts\arc2_governor.py' }
 
 function Get-Arc2GovernorProcess {
@@ -27,6 +28,15 @@ function Get-Arc2GovernorProcess {
   } catch { return $null }
 }
 
+function Install-Arc2GovernorTask {
+  $py = (Get-Command py.exe -ErrorAction Stop).Source
+  $arguments = "-3 `"$GovernorScript`" --daemon --state `"$state`" --pid-file `"$pidPath`" --service-state `"$serviceState`" --idle-seconds $IdleSeconds --paused-seconds $PausedSeconds --controller-retry-seconds $ControllerRetrySeconds"
+  $action = New-ScheduledTaskAction -Execute $py -Argument $arguments -WorkingDirectory $Root
+  $trigger = New-ScheduledTaskTrigger -AtLogOn
+  $settings = New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -RestartCount 999 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit (New-TimeSpan -Days 365)
+  Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings -Force -ErrorAction Stop | Out-Null
+}
+
 if ($Action -eq 'Status') {
   $process = Get-Arc2GovernorProcess
   [pscustomobject]@{
@@ -34,6 +44,7 @@ if ($Action -eq 'Status') {
     pid = if ($process) { $process.Id } else { $null }
     state_path = $state
     service_state = if (Test-Path -LiteralPath $serviceState) { Get-Content -LiteralPath $serviceState -Raw | ConvertFrom-Json } else { $null }
+    scheduled_task = if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) { 'REGISTERED' } else { 'NOT_REGISTERED' }
   } | ConvertTo-Json -Depth 8
   exit 0
 }
@@ -45,9 +56,19 @@ if ($Action -eq 'Stop') {
   exit 0
 }
 
+if ($Action -eq 'Uninstall') {
+  Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue
+  exit 0
+}
+
 if (-not (Test-Path -LiteralPath $state)) { throw "ARC2 workflow state missing: $state" }
 if (-not (Test-Path -LiteralPath $GovernorScript)) { throw "ARC2 Governor script missing: $GovernorScript" }
 New-Item -ItemType Directory -Force (Split-Path -Parent $stdout) | Out-Null
+if ($Action -eq 'Install') {
+  Install-Arc2GovernorTask
+  [pscustomobject]@{ status='INSTALLED'; task_name=$taskName; governor_script=$GovernorScript } | ConvertTo-Json
+  exit 0
+}
 $existing = Get-Arc2GovernorProcess
 if ($existing) {
   [pscustomobject]@{ status='ALREADY_RUNNING'; pid=$existing.Id; state=$state } | ConvertTo-Json
