@@ -1,0 +1,16 @@
+{
+  "artifact_id": "CPU_ONLY_E04_ORIENTATION_GENERATOR_PREFLIGHT_IMPLEMENTATION_V3",
+  "established": [
+    "split-independent semantic signature",
+    "V2 source/spec binding",
+    "24 unique four-distinct color tuples per cell",
+    "per-role color frequency spread <=1",
+    "marker/layout anti-shortcut checks"
+  ],
+  "not_run": [
+    "scientific cohort/content manifests",
+    "model/GPU/training"
+  ],
+  "source_sha256": "f9156c3e493b8367fb8c67650f53ec1261d37a2641bb3b4e751e8d64864921e0",
+  "status": "COMPLETE_CPU_ONLY_REVIEW_REQUIRED"
+}
