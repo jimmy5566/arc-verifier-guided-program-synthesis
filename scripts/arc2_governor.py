@@ -539,7 +539,19 @@ def cycle(state_path, *, agent_timeout_seconds, controller_retry_seconds):
                 detail = confirmed_detail
             if status in {'RECEIPT_PRESENT','PROCESS_DEAD'}:
                 consume_remote(s,state_path,status,detail); return 'REMOTE_COMPLETED',load(state_path)
-            if status == 'INVALID_BINDING': log(s, f"WAIT_REMOTE binding invalid detail={detail}; retaining WAIT_REMOTE")
+            if status == 'INVALID_BINDING':
+                # A detached job may be valid while the Controller omitted the
+                # facts needed for receipt polling.  Waiting cannot repair this
+                # record.  Hand the *same* job back for bounded metadata repair;
+                # retaining it prevents a second launch.
+                s.update({'disposition':'CONTINUE_CONTROLLER',
+                          'next_action':'REPAIR_WAIT_REMOTE_BINDING_AND_CONSUME_EXISTING_RECEIPT',
+                          'remote_binding_defect':detail,
+                          'remote_binding_repair_required':True,
+                          'last_actor':'governor','updated_at':now()})
+                atomic(state_path,s)
+                log(s, f"WAIT_REMOTE binding invalid detail={detail}; transition -> CONTINUE_CONTROLLER")
+                return 'REMOTE_BINDING_REPAIR',load(state_path)
         except Exception as exc:
             log(s,f"WAIT_REMOTE exception={type(exc).__name__}:{exc}")
         return 'REMOTE_PENDING',s

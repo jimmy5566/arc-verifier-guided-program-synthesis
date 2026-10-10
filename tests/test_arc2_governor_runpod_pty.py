@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import importlib.util
 import io
+import json
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -37,6 +39,19 @@ class RunPodPtyControlTests(unittest.TestCase):
         with mock.patch.object(governor.subprocess, "Popen", return_value=proc), mock.patch.object(governor.time, "sleep"):
             status, _ = governor.remote_status(job)
         self.assertEqual(status, "PROCESS_ALIVE")
+
+    def test_invalid_wait_remote_binding_requeues_the_same_job_for_controller_repair(self):
+        job = {"remote_pid": 7, "output_root": "/workspace/out", "run_id": "R"}
+        with tempfile.TemporaryDirectory() as directory:
+            state_path = Path(directory) / "state.json"
+            state_path.write_text(json.dumps({"disposition":"WAIT_REMOTE", "remote_job":job, "active_remote_job":job}), encoding="utf-8")
+            with mock.patch.object(governor, "remote_status", return_value=("INVALID_BINDING", "REMOTE_RECEIPT_OR_TARGET_REQUIRED")):
+                outcome, state = governor.cycle(state_path, agent_timeout_seconds=1, controller_retry_seconds=1)
+            self.assertEqual(outcome, "REMOTE_BINDING_REPAIR")
+            self.assertEqual(state["disposition"], "CONTINUE_CONTROLLER")
+            self.assertEqual(state["next_action"], "REPAIR_WAIT_REMOTE_BINDING_AND_CONSUME_EXISTING_RECEIPT")
+            self.assertEqual(state["remote_job"], job)
+            self.assertEqual(state["active_remote_job"], job)
 
     def test_status_query_accepts_compact_terminal_receipt_and_pid_schema(self):
         proc = _Proc()

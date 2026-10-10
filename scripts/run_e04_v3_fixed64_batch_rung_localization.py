@@ -29,7 +29,7 @@ def fail(code: str) -> None:
     raise LocalizationFailure(code)
 
 
-def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
+def load_binding(path: Path, output_root: Path, *, allow_parent_workspace: bool = False) -> dict[str, Any]:
     binding = read_json(path)
     required = {"schema_version", "protocol_id", "authorization_id", "director_response_sha256", "execution_authorized",
                 "source_commit", "worker_sha256", "config_path", "config_sha256", "output_root", "nonce",
@@ -49,7 +49,14 @@ def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
     if subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip() != binding["source_commit"]:
         fail("E04_FIXED64_SOURCE_COMMIT")
     if output_root.exists() and any(output_root.iterdir()):
-        fail("E04_FIXED64_FRESH_OUTPUT")
+        # The parent owns freshness.  A child runs only after the parent has
+        # written its target-blind preflight receipt and raw-arm directory.
+        # Reapplying the parent's empty-directory gate here made every arm
+        # fail before model import.
+        allowed = {"PREFLIGHT_RECEIPT.json", "raw_arms"}
+        entries = {item.name for item in output_root.iterdir()}
+        if not allow_parent_workspace or not entries <= allowed:
+            fail("E04_FIXED64_FRESH_OUTPUT")
     return binding
 
 
@@ -142,8 +149,9 @@ def main() -> None:
         print(json.dumps({"config":load_and_validate_config(),"model_imported":False,"gpu_used":False},sort_keys=True)); return
     if not args.config or not args.binding or not args.output_root: raise SystemExit("CONFIG_BINDING_OUTPUT_REQUIRED")
     if args.arm is not None:
-        config=load_and_validate_config(args.config); load_binding(args.binding,args.output_root)
+        config=load_and_validate_config(args.config); load_binding(args.binding,args.output_root,allow_parent_workspace=True)
         if not args.arm_output: raise SystemExit("ARM_OUTPUT_REQUIRED")
+        if args.arm_output.exists(): fail("E04_FIXED64_ARM_OUTPUT_NOT_FRESH")
         run_arm(config,args.arm,args.arm_output); return
     run_parent(args.config,args.binding,args.output_root)
 
