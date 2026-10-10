@@ -1,0 +1,26 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_E04_ORIENTATION_GENERATOR_PREFLIGHT_IMPLEMENTATION_V2",
+  "facts": [
+    "frozen design/spec SHA binding",
+    "semantic signature excludes split and condition",
+    "288/48 counts and structural cell partition",
+    "seed and semantic uniqueness",
+    "marker/layout/color balance",
+    "direct positive and semantic-overlap negative tests"
+  ],
+  "not_run": [
+    "scientific grids",
+    "content manifests",
+    "grid uniqueness",
+    "target correctness",
+    "full regeneration",
+    "model/GPU/training"
+  ],
+  "question": "Does repaired CPU-only preflight allow only the next separately reviewed cohort-generation decision?",
+  "result": {
+    "path": "experiments/capability_repair_baseline_v1/CPU_ONLY_E04_ORIENTATION_GENERATOR_PREFLIGHT_IMPLEMENTATION_V2.json",
+    "sha256": "bb493d3a946ebd227aa2ce9c91582cd57e64177c6eac31606a74aa938747fdf5"
+  },
+  "schema_version": 1,
+  "stage": "CPU_ONLY_E04_ORIENTATION_GENERATOR_PREFLIGHT_IMPLEMENTATION_V2"
+}

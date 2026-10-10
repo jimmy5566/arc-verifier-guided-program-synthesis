@@ -1,0 +1,22 @@
+{
+  "artifact_id": "CPU_ONLY_E04_ORIENTATION_GENERATOR_PREFLIGHT_IMPLEMENTATION_V2",
+  "checks": [
+    "frozen design/spec SHA binding",
+    "semantic signature excludes split and condition",
+    "288/48 counts and structural cell partition",
+    "seed and semantic uniqueness",
+    "marker/layout/color balance",
+    "direct positive and semantic-overlap negative tests"
+  ],
+  "not_run": [
+    "scientific grids",
+    "content manifests",
+    "grid uniqueness",
+    "target correctness",
+    "full regeneration",
+    "model/GPU/training"
+  ],
+  "source_sha256": "c3640b29dc97786984580d967dba87561fb019b11379ebe56e9923ae2b3bf2a5",
+  "status": "COMPLETE_CPU_ONLY_REVIEW_REQUIRED",
+  "test_sha256": "23c26272c7f34c69a550d79dd59bf13b054ddca74aaf64e6fc4a4c3f79ff3303"
+}
