@@ -1,0 +1,19 @@
+{
+  "backward_performed": false,
+  "elapsed_seconds": 1145.0859025530517,
+  "final_audit_opened": false,
+  "launcher_status": "COMPLETE",
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "protocol_id": "MATCHED_ATOMIC_TO_COMPOSITIONAL_TRANSFER_V2_RC1_RC5",
+  "raw_evidence": {
+    "path": "/workspace/arc2/matched_atomic_to_compositional_transfer_v2_rc1_rc5/run_002_86c671efa53eece72e999b10777fe8aa/RAW_PREDICTIONS.jsonl",
+    "present": true,
+    "sha256": "8095a1c831fab3420187852dfcc993810c74d7be943f7ba8b93fc13d00bedaec"
+  },
+  "retry": false,
+  "status": "COMPLETE_NO_UPDATE",
+  "training": false,
+  "worker_receipt_sha256": "5b2abe5527ff4e61ab4768c2faf605cee551025636590c03d53f25b39cbab603",
+  "worker_returncode": 0
+}

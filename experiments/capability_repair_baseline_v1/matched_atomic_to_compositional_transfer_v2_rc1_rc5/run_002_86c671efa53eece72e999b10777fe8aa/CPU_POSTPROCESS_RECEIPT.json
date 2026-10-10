@@ -1,0 +1,13 @@
+{
+  "batch1_batch16_parsed_grid_gate": "PASS_84_OF_84",
+  "batch1_validation_rows": 84,
+  "final_audit_opened": false,
+  "primary_rows": 336,
+  "protocol_id": "MATCHED_ATOMIC_TO_COMPOSITIONAL_TRANSFER_V2_RC1_RC5",
+  "raw_sha256": "8095a1c831fab3420187852dfcc993810c74d7be943f7ba8b93fc13d00bedaec",
+  "sealed_target_sidecar_sha256": "eb144c90d8f2100af662da0b570be8e80f24da8481cf2cb2d71054a2a5ea3296",
+  "status": "PASS_CPU_SCORING",
+  "target_count": 168,
+  "terminal_receipt_sha256": "bf07ac225023fd3c6b18a0ad67f4debf56e36f48f6e4f62d4534d982df417cc0",
+  "worker_receipt_sha256": "5b2abe5527ff4e61ab4768c2faf605cee551025636590c03d53f25b39cbab603"
+}
