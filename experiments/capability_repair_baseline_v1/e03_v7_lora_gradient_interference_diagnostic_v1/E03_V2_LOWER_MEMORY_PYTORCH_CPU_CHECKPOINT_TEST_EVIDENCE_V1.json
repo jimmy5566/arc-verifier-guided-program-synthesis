@@ -1,0 +1,33 @@
+{
+  "arc_model_loaded": false,
+  "assertions": [
+    "non-reentrant torch.utils.checkpoint.checkpoint is invoked",
+    "ordinary and checkpointed selected shifted-token FP32 CE agree",
+    "ordinary and checkpointed LoRA-like autograd gradients agree",
+    "trainable parameter names agree",
+    "CUDA remains uninitialized"
+  ],
+  "cuda_initialized_after": false,
+  "cuda_initialized_before": false,
+  "environment": "RunPod existing ARC2 runtime; CUDA_VISIBLE_DEVICES empty",
+  "generation_calls": 0,
+  "optimizer_constructed": false,
+  "parameter_updates": 0,
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY",
+  "python_version": "3.11.13",
+  "pytorch_version": "2.8.0+cu128",
+  "runtime_commit": "2ce40da5b48c2e481303b4478952651bc64f3c0f",
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY",
+  "test_command": "CUDA_VISIBLE_DEVICES='' /root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python -m unittest -v tests.test_e03_v2_lower_memory.E03V2LowerMemoryTests.test_pytorch_nonreentrant_checkpoint_matches_ordinary_selected_ce_and_autograd",
+  "test_name": "test_pytorch_nonreentrant_checkpoint_matches_ordinary_selected_ce_and_autograd",
+  "test_returncode": 0,
+  "test_source_path": "tests/test_e03_v2_lower_memory.py",
+  "test_source_sha256": "f9888899a68a3765d417caa02ed6f37a49949df889bc292a33523ec2812a1a8b",
+  "tests_passed": 1,
+  "tests_run": 1,
+  "tolerance": {
+    "atol": 1e-07,
+    "rtol": 1e-06
+  }
+}

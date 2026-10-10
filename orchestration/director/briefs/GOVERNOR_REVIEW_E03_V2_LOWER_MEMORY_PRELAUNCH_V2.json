@@ -1,0 +1,71 @@
+{
+  "frozen_artifacts": {
+    "binding_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY_PRELAUNCH_BINDING_V2.json",
+    "binding_sha256": "9f3cf981ec5f8026c5f4107a454accb9c51d64b54bba7ee8a46798271a5c2a83",
+    "config_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY_CONFIG_V2.json",
+    "config_sha256": "04157fbd51fe012ee6718f9b2d18deb6c56547bb91b016d0b76d0a9650e21c17",
+    "launcher_sha256": "20ad48724c7b48f03a5b02e10e6673de452a116a4195c49a1dedb02927fc7df1",
+    "memory_plan_sha256": "40c8fd4538b276c5500050055b0f5d8f260c2f11083daaf66f8847b16106820e",
+    "test_sha256": "f9888899a68a3765d417caa02ed6f37a49949df889bc292a33523ec2812a1a8b",
+    "worker_sha256": "8db67bbda9121f67eb7c70f7c44b035e2828a333906761dd55dc1127e0392bad"
+  },
+  "implemented_minimal_repair": {
+    "actual_framework_test_evidence_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V2_LOWER_MEMORY_PYTORCH_CPU_CHECKPOINT_TEST_EVIDENCE_V1.json",
+    "actual_framework_test_evidence_sha256": "8ce0f09637ccf15d6a2b707129221730bc153deac37ca98a26d42efccbd45912",
+    "local_suite": "19 tests passed with one expected local PyTorch-unavailable skip; the required framework test ran in the RunPod runtime",
+    "result": "PASS: 1 test, PyTorch 2.8.0+cu128, CPU-only, CUDA uninitialized before and after, no ARC model",
+    "test_contract": "tiny LoRA-like module invokes torch.utils.checkpoint.checkpoint(use_reentrant=False) and compares selected shifted-token FP32 CE, autograd gradients, and trainable parameter names under atol=1e-7, rtol=1e-6"
+  },
+  "not_authorized_by_this_brief": [
+    "model/GPU execution before response",
+    "retry or modification of RUN_001/RUN_002",
+    "batch/precision/objective/data/checkpoint/allowlist/statistics changes",
+    "fallback, optimizer, updates, training, generation, or prohibited data access"
+  ],
+  "proposed_execution_if_authorized": {
+    "cap_seconds": 1500,
+    "fresh_output_root": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v2_lower_memory/run_001_f53dfdd34e13cc558e5cf7990f918a9d",
+    "no_fallback": [
+      "B4",
+      "B2",
+      "B1 primary",
+      "serial gradient accumulation",
+      "quantization",
+      "CPU/NVMe offload",
+      "different precision",
+      "different objective"
+    ],
+    "nonce": "f53dfdd34e13cc558e5cf7990f918a9d",
+    "one_fresh_job_only": true,
+    "required_following_step": "create postreview execution binding bound to this response, exact source commit and exact runtime checkout before any model import"
+  },
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY",
+  "question": "Does the required actual PyTorch CPU non-reentrant activation-checkpoint test close the V1 launch-critical validation gap while preserving every E03 V2 scientific condition?",
+  "review_id": "GOVERNOR_REVIEW_E03_V2_LOWER_MEMORY_PRELAUNCH_V2",
+  "review_type": "NARROW_REMEDIATION_PRELAUNCH",
+  "reviewed_prior_response": {
+    "decision": "REQUIRE_CHANGES",
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_E03_V2_LOWER_MEMORY_PRELAUNCH_V1_RESPONSE.json",
+    "sha256": "dbc5d43a396553b5ff20fa045046e1facebcac4c59eb71416cdb772a399eda33"
+  },
+  "schema_version": 1,
+  "unchanged_scientific_conditions": {
+    "batch1_sensitivity_rows": 72,
+    "cap_seconds": 1500,
+    "checkpoint": "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "forbidden_data": [
+      "DEV",
+      "RETENTION_SENTINEL",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT"
+    ],
+    "gradient_algebra_statistics_bootstrap": "unchanged",
+    "lora_allowlist_sha256": "e44ecb9caf0be396aaaceae6802dbaab9209677103ba263c89ca9a7ea65f6215",
+    "manifest_sha256": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "no_update": true,
+    "physical_primary_batch_size": 8,
+    "precision": "BF16 model execution with selected logits converted to FP32 for summed CE",
+    "train_rows": 288
+  }
+}
