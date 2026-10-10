@@ -4,15 +4,15 @@
   "optimizer_constructed": false,
   "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
   "source_files": {
-    "experiments\\capability_repair_baseline_v1\\e03_v7_lora_gradient_interference_diagnostic_v1\\E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CONFIG_V1.json": "e5690bf1bc1c503b19880c71d4f387a560683ece1c97e6d707ca61186dfe9c12",
+    "experiments\\capability_repair_baseline_v1\\e03_v7_lora_gradient_interference_diagnostic_v1\\E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CONFIG_V1.json": "76c8216d861f2960a33039ab28feb72ce57017879b5144477adec39634887740",
     "experiments\\capability_repair_baseline_v1\\e03_v7_lora_gradient_interference_diagnostic_v1\\E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_MANIFEST_V1.json": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
     "scripts/freeze_e03_v3_b1_per_example_gradient_screen.py": "c39d1c555d5d584c008bb6f612bcc86be9b138430fdb6678b64b16f6b8321f78",
     "scripts/launch_e03_v3_b1_per_example_gradient_screen.py": "7791aae0b371482531fb3d8bd82e9bc971346017565b6578cd248fb73b433d4c",
-    "scripts/postprocess_e03_v3_b1_per_example_gradient_screen.py": "8840d7f9f98aea9c07c5c99e2fda845fb82da5a6449be0b0b675c91ac1021951",
-    "scripts/run_e03_v3_b1_per_example_gradient_screen.py": "a00f440fb70c8f4940ae68dbda019ad9e83b62e93bd7811ed51e8babca02127d",
-    "tests/test_e03_v3_b1_per_example_gradient_screen.py": "f5eb196f0d53ee2d598d16b20c6cab367068f850be4b3fb495b85acfd1a9b809"
+    "scripts/postprocess_e03_v3_b1_per_example_gradient_screen.py": "36b2e47e498d6832c335e2d964271a21c69896ff8369d47e02be3a41d9675d0e",
+    "scripts/run_e03_v3_b1_per_example_gradient_screen.py": "38a8aae40a4c4fbe96dddaa9d98977ae766ceebcd0c36fa17358e70570fce0aa",
+    "tests/test_e03_v3_b1_per_example_gradient_screen.py": "3ad6b5cbae14567b8a7ff90bf55f0ca569c8bd0ee730c63997d37e2df593a78e"
   },
   "status": "PASS_CPU_ONLY_NO_MODEL_NO_GPU",
   "test_command": "py -3 -m unittest tests.test_e03_v3_b1_per_example_gradient_screen tests.test_e03_v2_lower_memory tests.test_arc2_governor_runpod_pty",
-  "tests_passed": 9
+  "tests_passed": 11
 }

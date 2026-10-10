@@ -37,14 +37,30 @@ class E03V3FrozenContractTests(unittest.TestCase):
         self.assertLessEqual(config["runtime_cap_seconds"], 1800)
         for forbidden in ("NO_OPTIMIZER", "NO_PARAMETER_UPDATES", "NO_GENERATION", "NO_GOLD", "NO_DGOLD", "NO_FINAL_AUDIT", "NO_AUTOMATIC_RETRY"):
             self.assertIn(forbidden, config["forbidden"])
+        self.assertEqual(config["numerics"]["repeatability_contract"]["rows"], 9)
+        self.assertEqual(config["numerics"]["repeatability_contract"]["max_relative_l2"], 0.0001)
+        self.assertEqual(config["numerics"]["repeatability_contract"]["min_cosine"], 0.9999)
+
+    def test_worker_fails_closed_on_extra_trainable_parameters(self):
+        source = (ROOT / "scripts" / "run_e03_v3_b1_per_example_gradient_screen.py").read_text()
+        self.assertIn("parameter.requires_grad_(name in allow)", source)
+        self.assertIn("E03_V3_TRAINABLE_PARAMETER_SET_MISMATCH", source)
 
     def test_gram_bootstrap_is_deterministic_and_finite(self):
         families = [name for name in post.WEAK + post.PROTECTED for _ in range(8)]
         gram = [[1.0 if i == j else 0.0 for j in range(56)] for i in range(56)]
-        result_a = post.bootstrap(gram, families, replicates=16, seed=20261010)
-        result_b = post.bootstrap(gram, families, replicates=16, seed=20261010)
+        result_a = post.bootstrap(gram, families, [1] * 56, replicates=16, seed=20261010)
+        result_b = post.bootstrap(gram, families, [1] * 56, replicates=16, seed=20261010)
         self.assertEqual(result_a, result_b)
         self.assertTrue(all(abs(value) < float("inf") for values in result_a.values() for value in values))
+
+    def test_secondary_branch_and_repeatability_are_decision_driving(self):
+        samples = {name: [-0.2] * 20 for name in post.WEAK + ("secondary_combined",)}
+        point = {name: -0.2 for name in post.WEAK + ("secondary_combined",)}
+        self.assertEqual(post.classify(point, samples, {"status": "PASS"}), "LOCAL_GRADIENT_INTERFERENCE_SUPPORTED")
+        positive = {name: [0.1] * 20 for name in post.WEAK + ("secondary_combined",)}
+        self.assertEqual(post.classify({name: 0.1 for name in point}, positive, {"status": "PASS"}), "GRADIENT_INTERFERENCE_DEPRIORITIZED")
+        self.assertEqual(post.classify(point, samples, {"status": "INCONCLUSIVE"}), "INCONCLUSIVE")
 
 
 if __name__ == "__main__":

@@ -128,9 +128,16 @@ def main() -> None:
             model.enable_input_require_grads()
         named = dict(model.named_parameters())
         allow = tuple(config["lora_parameter_name_allowlist"])
+        # No base-model parameter may silently participate in the backward
+        # graph.  This check is also part of the memory contract.
+        for name, parameter in named.items():
+            parameter.requires_grad_(name in allow)
         actual = tuple(sorted(name for name in named if ".lora_A." in name or ".lora_B." in name))
         if actual != allow:
             raise RuntimeError("E03_V3_RUNTIME_ALLOWLIST_MISMATCH")
+        trainable = tuple(sorted(name for name, parameter in named.items() if parameter.requires_grad))
+        if trainable != allow:
+            raise RuntimeError("E03_V3_TRAINABLE_PARAMETER_SET_MISMATCH")
         parameters = [(name, named[name]) for name in allow]
         offsets, total = {}, 0
         for name, parameter in parameters:
@@ -155,6 +162,36 @@ def main() -> None:
                 matrix[index, offset:offset + length] = parameter.grad.detach().float().flatten().cpu().numpy()
             atomic(args.output_root / "PROGRESS.json", {"status": "PARTIAL_NO_UPDATE", "phase": "B1_GRADIENTS", "completed_rows": index + 1, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False})
         matrix.flush()
+        # Re-run exactly one predeclared episode from each family.  These
+        # repeated B1 gradients are only a numerical-sensitivity control and
+        # cannot change the frozen cohort or scientific estimand.
+        repeat_indices = [next(i for i, member in enumerate(rows) if member["episode_id"] == family["members"][0]["episode_id"]) for family in cohort["families"]]
+        repeat_metrics = []
+        tolerance = config["numerics"]["repeatability_contract"]
+        for index in repeat_indices:
+            member = rows[index]
+            model.zero_grad(set_to_none=True)
+            ids = torch.tensor([member["input_ids"]], device="cuda", dtype=torch.long)
+            labels = torch.tensor([member["labels"]], device="cuda", dtype=torch.long)
+            attention = torch.ones_like(ids); positions = (attention.cumsum(-1) - 1).clamp_min(0)
+            loss, _ = selected_ce(model(input_ids=ids, attention_mask=attention, position_ids=positions, use_cache=False).logits, labels, functional)
+            loss.backward()
+            repeated = np.empty(total, dtype=np.float32)
+            for name, parameter in parameters:
+                offset, length = offsets[name]
+                if parameter.grad is None or not bool(torch.isfinite(parameter.grad).all()):
+                    raise RuntimeError("E03_V3_REPEAT_NONFINITE_GRADIENT")
+                repeated[offset:offset + length] = parameter.grad.detach().float().flatten().cpu().numpy()
+            original = np.asarray(matrix[index], dtype=np.float64)
+            repeat64 = repeated.astype(np.float64)
+            base_norm = float(np.linalg.norm(original)); repeat_norm = float(np.linalg.norm(repeat64))
+            if base_norm <= 0 or repeat_norm <= 0:
+                raise RuntimeError("E03_V3_REPEAT_ZERO_NORM")
+            relative_l2 = float(np.linalg.norm(repeat64 - original) / base_norm)
+            cosine = float(np.dot(repeat64, original) / (base_norm * repeat_norm))
+            repeat_metrics.append({"episode_id": member["episode_id"], "relative_l2": relative_l2, "cosine": cosine})
+        repeatability = {"contract": tolerance, "rows": len(repeat_metrics), "episode_ids": [item["episode_id"] for item in repeat_metrics], "max_relative_l2": max(item["relative_l2"] for item in repeat_metrics), "min_cosine": min(item["cosine"] for item in repeat_metrics)}
+        repeatability["status"] = "PASS" if repeatability["max_relative_l2"] <= tolerance["max_relative_l2"] and repeatability["min_cosine"] >= tolerance["min_cosine"] else "INCONCLUSIVE"
         for name, (offset, length) in offsets.items():
             group = module_name(name)
             for begin in range(offset, offset + length, 262144):
@@ -163,7 +200,7 @@ def main() -> None:
                 grams += product; module_grams[group] += product
         del matrix
         scratch.unlink(missing_ok=True)
-        atomic(args.output_root / "RAW_GRAM_STATISTICS.json", {"protocol_id": config["protocol_id"], "status": "COMPLETE_NO_UPDATE", "episode_ids": [member["episode_id"] for member in rows], "families": [family["canonical_family"] for family in cohort["families"] for _ in family["members"]], "supervised_token_counts": [int(member["supervised_token_count"]) for member in rows], "per_token_normalized": True, "gram_matrix": grams.tolist(), "module_gram_matrices": {name: value.tolist() for name, value in module_grams.items()}, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False})
+        atomic(args.output_root / "RAW_GRAM_STATISTICS.json", {"protocol_id": config["protocol_id"], "status": "COMPLETE_NO_UPDATE", "episode_ids": [member["episode_id"] for member in rows], "families": [family["canonical_family"] for family in cohort["families"] for _ in family["members"]], "supervised_token_counts": [int(member["supervised_token_count"]) for member in rows], "per_token_normalized": True, "gram_matrix": grams.tolist(), "module_gram_matrices": {name: value.tolist() for name, value in module_grams.items()}, "repeatability": repeatability, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False})
         atomic(receipt, {"protocol_id": config["protocol_id"], "status": "COMPLETE_NO_UPDATE", "elapsed_seconds": time.monotonic() - start, "completed_rows": len(rows), "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False})
     except Exception as exc:
         atomic(receipt, {"protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN", "status": "FAILED_OR_PARTIAL_NO_UPDATE", "error_class": str(exc), "elapsed_seconds": time.monotonic() - start, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False, "traceback": traceback.format_exc()})

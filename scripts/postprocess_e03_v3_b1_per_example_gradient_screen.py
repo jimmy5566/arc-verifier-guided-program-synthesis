@@ -21,17 +21,35 @@ def cosine(gram, left: list[int], right: list[int]) -> float:
     return numerator / math.sqrt(left_norm * right_norm)
 
 
-def bootstrap(gram, families: list[str], replicates: int, seed: int) -> dict[str, list[float]]:
+def weighted_cosine(gram, left: list[int], left_weights: list[float], right: list[int], right_weights: list[float]) -> float:
+    def bilinear(a, aw, b, bw):
+        return sum(weight_i * weight_j * gram[i][j] for i, weight_i in zip(a, aw) for j, weight_j in zip(b, bw))
+    left_total, right_total = sum(left_weights), sum(right_weights)
+    if left_total <= 0 or right_total <= 0:
+        raise ValueError("E03_V3_ZERO_TOKEN_WEIGHT")
+    numerator = bilinear(left, left_weights, right, right_weights) / (left_total * right_total)
+    left_norm = bilinear(left, left_weights, left, left_weights) / (left_total * left_total)
+    right_norm = bilinear(right, right_weights, right, right_weights) / (right_total * right_total)
+    if left_norm <= 0 or right_norm <= 0:
+        raise ValueError("E03_V3_ZERO_NORM")
+    return numerator / math.sqrt(left_norm * right_norm)
+
+
+def bootstrap(gram, families: list[str], token_counts: list[int], replicates: int, seed: int) -> dict[str, list[float]]:
     family_indices = {name: [i for i, value in enumerate(families) if value == name] for name in set(families)}
     if any(len(family_indices[name]) != 8 for name in WEAK + PROTECTED):
         raise ValueError("E03_V3_BOOTSTRAP_FAMILY_ROWS_INVALID")
     rng = random.Random(seed)
-    output = {name: [] for name in WEAK}
+    output = {name: [] for name in WEAK + ("secondary_combined",)}
     for _ in range(replicates):
         sampled = {name: [rng.choice(indices) for _ in range(8)] for name, indices in family_indices.items()}
         protected = sampled["same_color"] + sampled["color_mapping"]
         for name in WEAK:
             output[name].append(cosine(gram, sampled[name], protected))
+        weak = [item for name in WEAK for item in sampled[name]]
+        protected_weights = [float(token_counts[item]) for item in protected]
+        weak_weights = [float(token_counts[item]) for item in weak]
+        output["secondary_combined"].append(weighted_cosine(gram, weak, weak_weights, protected, protected_weights))
     return output
 
 
@@ -42,12 +60,15 @@ def percentile(values: list[float], fraction: float) -> float:
     return values[lo] + (values[hi] - values[lo]) * (index - lo)
 
 
-def classify(point: dict[str, float], samples: dict[str, list[float]]) -> str:
+def classify(point: dict[str, float], samples: dict[str, list[float]], repeatability: dict) -> str:
     intervals = {name: [percentile(samples[name], 0.025), percentile(samples[name], 0.975)] for name in WEAK}
     supported = [name for name in WEAK if point[name] <= -0.05 and intervals[name][1] < 0]
-    if len(supported) >= 3:
+    secondary = [percentile(samples["secondary_combined"], 0.025), percentile(samples["secondary_combined"], 0.975)]
+    if repeatability.get("status") != "PASS":
+        return "INCONCLUSIVE"
+    if len(supported) >= 3 or (point["secondary_combined"] <= -0.05 and secondary[1] < 0):
         return "LOCAL_GRADIENT_INTERFERENCE_SUPPORTED"
-    if all(intervals[name][0] >= 0 for name in WEAK):
+    if all(intervals[name][0] >= 0 for name in WEAK) and secondary[0] >= 0:
         return "GRADIENT_INTERFERENCE_DEPRIORITIZED"
     return "INCONCLUSIVE"
 
@@ -64,16 +85,22 @@ def main() -> None:
     if raw.get("status") != "COMPLETE_NO_UPDATE" or raw.get("optimizer_steps") != 0 or raw.get("generation_calls") != 0:
         raise SystemExit("E03_V3_RAW_NOT_INTERPRETABLE")
     gram = np.asarray(raw["gram_matrix"], dtype=np.float64)
-    families = list(raw["families"])
+    families, token_counts = list(raw["families"]), list(raw["supervised_token_counts"])
     if gram.shape != (72, 72) or not np.allclose(gram, gram.T, rtol=0, atol=1e-8) or not np.isfinite(gram).all():
         raise SystemExit("E03_V3_GRAM_INVALID")
     matrix = gram.tolist()
     index = {name: [i for i, value in enumerate(families) if value == name] for name in set(families)}
     protected = index["same_color"] + index["color_mapping"]
     point = {name: cosine(matrix, index[name], protected) for name in WEAK}
-    samples = bootstrap(matrix, families, args.replicates, args.seed)
+    weak = [item for name in WEAK for item in index[name]]
+    point["secondary_combined"] = weighted_cosine(matrix, weak, [float(token_counts[item]) for item in weak], protected, [float(token_counts[item]) for item in protected])
+    repeatability = raw.get("repeatability")
+    if not isinstance(repeatability, dict):
+        raise SystemExit("E03_V3_REPEATABILITY_EVIDENCE_MISSING")
+    samples = bootstrap(matrix, families, token_counts, args.replicates, args.seed)
     intervals = {name: [percentile(samples[name], 0.025), percentile(samples[name], 0.975)] for name in WEAK}
-    args.output.write_text(json.dumps({"status": "COMPLETE_NO_UPDATE", "point_cosines": point, "bootstrap_95_ci": intervals, "decision": classify(point, samples), "bootstrap_replicates": args.replicates, "bootstrap_seed": args.seed, "interpretation_limit": "local gradient disagreement is not causal proof of forgetting"}, sort_keys=True, indent=2) + "\n", encoding="utf-8", newline="\n")
+    intervals["secondary_combined"] = [percentile(samples["secondary_combined"], 0.025), percentile(samples["secondary_combined"], 0.975)]
+    args.output.write_text(json.dumps({"status": "COMPLETE_NO_UPDATE", "point_cosines": point, "bootstrap_95_ci": intervals, "repeatability": repeatability, "decision": classify(point, samples, repeatability), "bootstrap_replicates": args.replicates, "bootstrap_seed": args.seed, "interpretation_limit": "local gradient disagreement is not causal proof of forgetting"}, sort_keys=True, indent=2) + "\n", encoding="utf-8", newline="\n")
 
 
 if __name__ == "__main__":

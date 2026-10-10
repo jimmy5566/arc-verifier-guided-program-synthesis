@@ -555,7 +555,14 @@
     "gradient": "per-example normalized LoRA gradient copied to FP32",
     "loss": "shifted nonignored assistant-token CE; selected logits cast to FP32; sum divided by supervised-token count before backward",
     "model_forward": "BF16 eval mode, use_cache=false, non-reentrant activation checkpointing",
-    "repeatability": "one frozen repeatability subset of 9 episodes, one repeated B1 measurement; classification change under declared tolerance is INCONCLUSIVE",
+    "repeatability": "repeat exactly the first frozen episode in each of the nine families after the 72 primary B1 gradients; preserve max relative L2 and minimum cosine; any contract failure makes the scientific decision INCONCLUSIVE",
+    "repeatability_contract": {
+      "decision": "if either bound fails, repeatability status is INCONCLUSIVE and the final scientific decision is INCONCLUSIVE",
+      "max_relative_l2": 0.0001,
+      "min_cosine": 0.9999,
+      "rows": 9,
+      "selection": "first episode in each manifest family, in manifest order"
+    },
     "repeatability_tolerance": "prospectively freeze after CPU-only configuration audit; no historical threshold is reused"
   },
   "output_root": "/workspace/arc2/e03_v3_b1_per_example_gradient_screen/run_001_a7e03b1f5c7d4e9281b6a3c9d0e4f512",
