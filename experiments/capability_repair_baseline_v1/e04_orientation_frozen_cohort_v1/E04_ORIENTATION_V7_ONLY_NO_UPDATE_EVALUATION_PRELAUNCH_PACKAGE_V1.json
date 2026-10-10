@@ -1,0 +1,122 @@
+{
+  "bound_files": [
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_orientation_frozen_cohort_v1/COHORT.jsonl",
+      "sha256": "76c6fd57173ec62571f27a312e3f80601c70cdec04cda79432822937e7a37967"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_orientation_frozen_cohort_v1/SUCCESSOR_METADATA_V2.json",
+      "sha256": "9d35b9e30e3546aab57dc16851b2daa0003a274e400d91fcb33c294fbf85c821"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_orientation_frozen_cohort_v1/CONDITION_TO_BASE_MAP_V2.json",
+      "sha256": "9ac48dc3ba5a392ac6275cc93aa8411b39357e5f7359c66afcd2ea11807fbc15"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_orientation_frozen_cohort_v1/COLLISION_REPORT_V2.json",
+      "sha256": "6681fa58fe6f86c1a95a368a7e6ce0df8c44d0b5ec24b366e4bef559b5892f7a"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_orientation_frozen_cohort_v1/INDEPENDENT_TARGET_ORACLE_REPORT_V2.json",
+      "sha256": "55bc413ea7d61400a265bf62c235d89728ea93a73a9498786453dc447151d928"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_orientation_frozen_cohort_v1/TURN_CONTINGENCY_V2.json",
+      "sha256": "00e7f5c823c39c64e77408e1f37b8696d44094ece1d18d346380a2bc7cdb3fd8"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_orientation_frozen_cohort_v1/TEMPORARY_DIRECTORY_DETERMINISTIC_REGENERATION_REPORT_V1.json",
+      "sha256": "e95fa2f82d0fe4ada552e087bc0c26f9b65a10916d21169e59a9ad2a5eead264"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/CPU_ONLY_E04_ORIENTATION_GREENFIELD_PREFREEZE_SPECIFICATION_V2.json",
+      "sha256": "139bd6cb6ecb16a68688d827d224fa7a3282d60c85380ec81a23efdf702b3a13"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/E04_ORIENTATION_GREENFIELD_GENERATOR_DESIGN_SPEC_V2.json",
+      "sha256": "1fd3592840195c76a101bdb8901dfdd07544ebb183cc1f62030766df24b347f2"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+      "sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+    },
+    {
+      "path": "scripts/generate_e04_orientation_frozen_cohort_v1.py",
+      "sha256": "3dd11a340161e79a250efefadf652e057928d909d3c8858086967c8cf16ffb32"
+    },
+    {
+      "path": "scripts/validate_e04_orientation_frozen_cohort_v1.py",
+      "sha256": "3d6a01491fd36e25ea58d849190651a6e187bd68d5cb70a51cbccddf8f9e73ea"
+    }
+  ],
+  "checkpoint": {
+    "identity": "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "model_access_authorized": false
+  },
+  "cohort": {
+    "development_evidence_only": true,
+    "independent_unit": "condition-excluded base_tuple; four condition views are paired repeated measurements only",
+    "path": "experiments/capability_repair_baseline_v1/e04_orientation_frozen_cohort_v1/COHORT.jsonl",
+    "rows": 1344,
+    "sha256": "76c6fd57173ec62571f27a312e3f80601c70cdec04cda79432822937e7a37967",
+    "validation_base_tuples": 48,
+    "validation_condition_views": 192
+  },
+  "conditions": {
+    "prerequisites": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "MARKER_BINDING_CONTROL"
+    ],
+    "retention_control": "NO_TRANSFORM_RETENTION_CONTROL",
+    "target": "ROTATION_TARGET"
+  },
+  "estimands": {
+    "primary": "Per reserved cell, V7 ROTATION_TARGET exact-grid failure rate restricted to base tuples where both prerequisite controls are exact; equal-cell macro average only when each cell has >=8 conditional analyzable base tuples.",
+    "secondary": [
+      "Unconditional ROTATION_TARGET exact-grid accuracy by cell and equal-cell macro average.",
+      "Exact-grid accuracy for each paired condition.",
+      "Paired within-base control/target outcome table."
+    ],
+    "uncertainty": {
+      "insufficient_conditional_count": "INCONCLUSIVE",
+      "method": "reserved-cell-stratified bootstrap at the independent base-tuple level with paired views retained within resamples",
+      "replicates": 10000,
+      "seed": 20261010
+    }
+  },
+  "invalidation": [
+    "any bound source/cohort/checkpoint identity mismatch => INVALID_NOT_INTERPRETABLE",
+    "missing complete paired views or a condition counted as an independent unit => INVALID_NOT_INTERPRETABLE",
+    "fewer than 8 conditional analyzable base tuples in any reserved cell => conditional primary estimand INCONCLUSIVE",
+    "any sealed data access, update, backward pass, optimizer construction, training, or checkpoint mutation => INVALID_NOT_INTERPRETABLE"
+  ],
+  "protocol_id": "E04_ORIENTATION_V7_ONLY_NO_UPDATE_EVALUATION_V1",
+  "review_request": "Authorize or reject one bounded V7-only no-update evaluation under these frozen cohort and estimand conditions. This package does not request a new training protocol or change the frozen cohort.",
+  "runtime_proposal_for_review": {
+    "FINAL_AUDIT_access": false,
+    "Gold_access": false,
+    "authorization": "No model loading, inference, GPU use, launch binding, nonce, output root, or remote job is authorized by this package.",
+    "backward": false,
+    "batch1_validation": "fixed representative subset must have parser/scorer/aggregate agreement within a predeclared numerical tolerance; material prediction or metric drift is INVALID_NOT_INTERPRETABLE",
+    "dGold_access": false,
+    "frozen_fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "generation_required": true,
+    "gradient_computation": false,
+    "mode": "one V7-only no-update exact-grid evaluation",
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "requested_batch_size": 32,
+    "training": false
+  },
+  "schema_version": 1,
+  "scientific_question": "On the frozen development cohort, does V7 fail ROTATION_TARGET after both prerequisite controls are exact within the same independent base tuple?",
+  "status": "CPU_ONLY_PRELAUNCH_PACKAGE_REVIEW_REQUIRED"
+}

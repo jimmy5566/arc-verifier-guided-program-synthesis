@@ -1,0 +1,6 @@
+{
+  "cohort_sha256": "76c6fd57173ec62571f27a312e3f80601c70cdec04cda79432822937e7a37967",
+  "oracle_implementation": "scripts/validate_e04_orientation_frozen_cohort_v1.py:independent_oracle",
+  "rows_checked": 1344,
+  "status": "PASS"
+}

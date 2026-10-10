@@ -1,0 +1,7 @@
+{
+  "cohort_sha256": "76c6fd57173ec62571f27a312e3f80601c70cdec04cda79432822937e7a37967",
+  "reconstructed_sha256": "76c6fd57173ec62571f27a312e3f80601c70cdec04cda79432822937e7a37967",
+  "serialization": "UTF-8 CRLF JSONL, one sorted-key JSON object plus CRLF per row",
+  "status": "PASS",
+  "temporary_output_bytes": 1202100
+}

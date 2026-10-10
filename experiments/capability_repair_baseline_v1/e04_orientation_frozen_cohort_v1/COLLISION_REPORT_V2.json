@@ -1,0 +1,12 @@
+{
+  "collision_class_counts": {
+    "turn=0;conditions=NO_TRANSFORM_RETENTION_CONTROL|ROTATION_TARGET": 84,
+    "turn=1;conditions=FIXED_TURN_ROTATION_CONTROL|ROTATION_TARGET": 84
+  },
+  "content_unique": false,
+  "cross_base_content_unique": true,
+  "cross_split_content_disjoint": true,
+  "permitted_same_base_collision_classes": 168,
+  "status": "PASS",
+  "unique_content_hashes": 1176
+}
