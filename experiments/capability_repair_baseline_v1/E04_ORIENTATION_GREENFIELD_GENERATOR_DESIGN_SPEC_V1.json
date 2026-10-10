@@ -1,0 +1,145 @@
+{
+  "base_generator_source": {
+    "path": "scripts/prepare_targeted_capability_repair_v1.py",
+    "revision": "e27801a01d14de158600fde9321be4516aca0812",
+    "sha256": "6ef2e7fb8c9d87dbadc67d36f04a482f8f89512dd2e2c78e209972d2579dc44b"
+  },
+  "capacity_argument": {
+    "latent_tuple_distinctness": "Each of 12 instance_index values is paired with one reserved cell and deterministic layout/color tuple, so canonical latent tuples are distinct without counting prompt variants.",
+    "minimum_canonical_validation_units": 48,
+    "planned_canonical_units_per_validation_cell": 12,
+    "source_level_capacity": "4 reserved cells x 12 distinct instance_index values = 48 canonical validation units per condition; future content-hash uniqueness remains a pre-generation gate, not established here.",
+    "validation_cells": 4
+  },
+  "conditions": {
+    "FIXED_TURN_ROTATION_CONTROL": "Same input marginals and output format; output is rotated by fixed +1 turn regardless of marker, testing rotation execution without marker-to-turn binding.",
+    "MARKER_BINDING_CONTROL": "Same marker/layout/color marginals; output is a canonical 1x4 direction code whose occupied output position is control_marker_turn, testing marker interpretation without shape rotation.",
+    "NO_TRANSFORM_RETENTION_CONTROL": "Same shape/layout/color marginals; output is the canonical unrotated L_TRIOMINO, detecting a broad failure to retain rendering/copy behavior.",
+    "ROTATION_TARGET": "Output is the L_TRIOMINO rotated by control_marker_turn; model must use the marker-to-turn binding."
+  },
+  "deterministic_inputs": {
+    "canonical_shape": "L_TRIOMINO: [(0,0),(1,0),(2,0),(2,1)]",
+    "canonical_unit": "one latent tuple: condition, shape_orientation, control_marker_turn, reference_relation, topology, layout_template, color_role_permutation, instance_index.",
+    "color_role_scheme": "Deterministic four-distinct-color permutation from colors 1..9: background, shape, marker, output; no fixed color-position shortcut.",
+    "control_marker_turn_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "family": "orientation",
+    "layout_template_values": [
+      "CENTER",
+      "NW",
+      "NE",
+      "SW",
+      "SE",
+      "MID_WEST",
+      "MID_EAST",
+      "MID_NORTH",
+      "MID_SOUTH",
+      "OFFSET_A",
+      "OFFSET_B",
+      "OFFSET_C"
+    ],
+    "reference_relation_values": [
+      "NORTH",
+      "EAST",
+      "SOUTH",
+      "WEST"
+    ],
+    "seed_scheme": "seed = 810000 + 104729*condition_index + 7919*cell_index + instance_index; all random choices must be constructed with local random.Random(seed).",
+    "shape_orientation_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "topology_values": [
+      "single_4_connected_L_TRIOMINO"
+    ]
+  },
+  "source_level_limitations": [
+    "This declarative specification does not implement a generator, produce a manifest, or demonstrate content uniqueness.",
+    "A future implementation must be a new reviewed source revision; this specification only binds its required semantics and deterministic inputs."
+  ],
+  "spec_id": "E04_ORIENTATION_GREENFIELD_GENERATOR_DESIGN_SPEC_V1",
+  "status": "DECLARATIVE_CPU_ONLY_NOT_EXECUTABLE_NOT_GENERATED",
+  "structural_split": {
+    "content_and_latent_disjointness": "Future generator must emit canonical content SHA256 and latent-signature SHA256, reject any cross-split duplicate, and fail closed before model access.",
+    "factor": "shape_orientation x reference_relation",
+    "marginal_coverage_proof": {
+      "each_reference_relation_occurs_in_train": true,
+      "each_shape_orientation_occurs_in_train": true,
+      "validation_tests_unseen_combinations_not_unseen_marker_semantics": true
+    },
+    "train_allowed_cells": [
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 3
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 3
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 3
+      }
+    ],
+    "validation_reserved_cells": [
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 3
+      }
+    ]
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "bound_design_source": {
+    "base_primitive_source": {
+      "path": "scripts/prepare_targeted_capability_repair_v1.py",
+      "revision": "e27801a01d14de158600fde9321be4516aca0812",
+      "sha256": "6ef2e7fb8c9d87dbadc67d36f04a482f8f89512dd2e2c78e209972d2579dc44b"
+    },
+    "future_implementation_requirement": "A later implementation must cite this exact design spec and be hashed under a new reviewed source revision before any cohort generation.",
+    "generator_design_spec": {
+      "path": "experiments/capability_repair_baseline_v1/E04_ORIENTATION_GREENFIELD_GENERATOR_DESIGN_SPEC_V1.json",
+      "sha256": "3b6195016277cebb762f7891a0964a236c8681ac01549d61102d694cf2e9a7f8"
+    }
+  },
+  "flags": {
+    "cohort_generated": false,
+    "gpu_used": false,
+    "model_accessed": false,
+    "protocol_frozen": false,
+    "sealed_data_accessed": false,
+    "worker_written": false
+  },
+  "future_manifest_requirements": [
+    "canonical TRAIN content manifest",
+    "canonical TRAIN latent manifest",
+    "canonical validation content manifest",
+    "canonical validation latent manifest",
+    "per-condition and per-cell counts",
+    "source revision and deterministic input record",
+    "content/latent overlap rejection report"
+  ],
+  "invalidation_rules": [
+    "missing or mismatched source/design/manifest SHA256 => INVALID_NOT_INTERPRETABLE",
+    "any TRAIN-validation content or latent overlap => INVALID_NOT_INTERPRETABLE",
+    "any held-out factor level absent marginally from TRAIN => INVALID_NOT_INTERPRETABLE",
+    "fewer than 48 canonical validation units => INCONCLUSIVE",
+    "control construction not matched on stated layout/color marginals or not functionally sufficient => INVALID_NOT_INTERPRETABLE",
+    "nondeterministic rerun of a future generator => INVALID_NOT_INTERPRETABLE"
+  ],
+  "latent_schema": {
+    "canonical_shape": "L_TRIOMINO: [(0,0),(1,0),(2,0),(2,1)]",
+    "canonical_unit": "one latent tuple: condition, shape_orientation, control_marker_turn, reference_relation, topology, layout_template, color_role_permutation, instance_index.",
+    "color_role_scheme": "Deterministic four-distinct-color permutation from colors 1..9: background, shape, marker, output; no fixed color-position shortcut.",
+    "control_marker_turn_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "family": "orientation",
+    "layout_template_values": [
+      "CENTER",
+      "NW",
+      "NE",
+      "SW",
+      "SE",
+      "MID_WEST",
+      "MID_EAST",
+      "MID_NORTH",
+      "MID_SOUTH",
+      "OFFSET_A",
+      "OFFSET_B",
+      "OFFSET_C"
+    ],
+    "reference_relation_values": [
+      "NORTH",
+      "EAST",
+      "SOUTH",
+      "WEST"
+    ],
+    "seed_scheme": "seed = 810000 + 104729*condition_index + 7919*cell_index + instance_index; all random choices must be constructed with local random.Random(seed).",
+    "shape_orientation_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "topology_values": [
+      "single_4_connected_L_TRIOMINO"
+    ]
+  },
+  "matched_controls": {
+    "FIXED_TURN_ROTATION_CONTROL": "Same input marginals and output format; output is rotated by fixed +1 turn regardless of marker, testing rotation execution without marker-to-turn binding.",
+    "MARKER_BINDING_CONTROL": "Same marker/layout/color marginals; output is a canonical 1x4 direction code whose occupied output position is control_marker_turn, testing marker interpretation without shape rotation.",
+    "NO_TRANSFORM_RETENTION_CONTROL": "Same shape/layout/color marginals; output is the canonical unrotated L_TRIOMINO, detecting a broad failure to retain rendering/copy behavior.",
+    "ROTATION_TARGET": "Output is the L_TRIOMINO rotated by control_marker_turn; model must use the marker-to-turn binding."
+  },
+  "planned_compute_envelope_not_authorization": {
+    "cpu_preparation_seconds_cap": 900,
+    "future_gpu_evaluation_seconds_cap": 1800,
+    "future_gpu_training_seconds_cap": 7200,
+    "status": "ESTIMATES_ONLY_REQUIRE_A_SEPARATE_DIRECTOR_REVIEW_AND_EXECUTION_AUTHORIZATION"
+  },
+  "primary_estimand": {
+    "definition": "For a later prospectively matched intervention and control, compute per-unit exact-grid(intervention) - exact-grid(control) on ROTATION_TARGET validation units, macro-average the four reserved structural cells.",
+    "interpretation_limit": "No causal effect is established by this prefreeze specification.",
+    "name": "matched orientation-target exact-grid difference",
+    "secondary": [
+      "fixed-turn rotation control exact-grid",
+      "marker-binding control exact-grid",
+      "no-transform retention control exact-grid",
+      "per-cell paired fixes/harms"
+    ]
+  },
+  "prohibitions": [
+    "No cohort generation",
+    "No executable protocol freeze",
+    "No worker implementation",
+    "No model loading, inference, GPU use, gradient computation, optimizer construction, or training",
+    "No Gold, dGold, FINAL_AUDIT, or sealed evaluation data"
+  ],
+  "scope": "ONE_FUTURE_ORIENTATION_ONLY_STUDY; CPU-only declarative design, no implementation or output generation.",
+  "specification_id": "CPU_ONLY_E04_ORIENTATION_GREENFIELD_PREFREEZE_SPECIFICATION_V1",
+  "status": "PREFREEZE_SPECIFICATION_COMPLETE_REVIEW_REQUIRED_NO_COHORT",
+  "structural_split": {
+    "content_and_latent_disjointness": "Future generator must emit canonical content SHA256 and latent-signature SHA256, reject any cross-split duplicate, and fail closed before model access.",
+    "factor": "shape_orientation x reference_relation",
+    "marginal_coverage_proof": {
+      "each_reference_relation_occurs_in_train": true,
+      "each_shape_orientation_occurs_in_train": true,
+      "validation_tests_unseen_combinations_not_unseen_marker_semantics": true
+    },
+    "train_allowed_cells": [
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 3
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 3
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 3
+      }
+    ],
+    "validation_reserved_cells": [
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 3
+      }
+    ]
+  },
+  "uncertainty": {
+    "bootstrap": "family-specific structural-cell-stratified paired bootstrap",
+    "insufficient_units": "INCONCLUSIVE; never reduce the 48-unit requirement.",
+    "replicates": 10000,
+    "seed": 20261010
+  },
+  "unit_and_strata": {
+    "planned_units_per_reserved_cell": 12,
+    "planned_validation_units": 48,
+    "primary_validation_strata": [
+      "shape_orientation x reference_relation reserved cells"
+    ],
+    "training_marginal_coverage_required": true,
+    "unit": "canonical latent task unit; prompt or serialization variants are not additional units"
+  }
+}
