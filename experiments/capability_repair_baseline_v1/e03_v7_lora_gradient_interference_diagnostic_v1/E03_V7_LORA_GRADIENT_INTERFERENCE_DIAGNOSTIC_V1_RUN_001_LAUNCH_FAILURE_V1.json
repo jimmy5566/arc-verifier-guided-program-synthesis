@@ -1,0 +1,29 @@
+{
+  "authorization_binding_sha256": "ab9bbd45bbeabe294ba899a12455cbc03195e1ecd345c9c6d315608ca4cf8165",
+  "director_response_sha256": "155e748f1fc3d49cdb19d17e6ff87b0f1a8da3f513fb5d1d88fb1f6e75c11f8d",
+  "failure_class": "REMOTE_PARENT_DIRECTORY_ABSENT_BEFORE_SHELL_REDIRECTION",
+  "interpretation": "The detached shell did not produce an output root, receipt, log, or surviving launcher/worker process. This is an infrastructure launch failure, not a scientific measurement; no retry was launched.",
+  "launch_commit": "fbb06ab7685ff4bcb48af7eb022480cdd7b7f542",
+  "next_action_requires_director": "Decide whether a new authorization is needed to create the missing parent directory and execute the still-frozen RUN_001 once, or whether the failed shell attempt consumes the one-job authorization.",
+  "observed_at": "2026-10-10T02:15:16.051467Z",
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1",
+  "remote_evidence": {
+    "confirmed_parent_directory_missing": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v1",
+    "initial_background_pid": 90904,
+    "launcher_log": "MISSING",
+    "output_root": "MISSING",
+    "post_launch_worker_processes": "NONE_OBSERVED",
+    "remote_head_after_launch": "fbb06ab7685ff4bcb48af7eb022480cdd7b7f542",
+    "terminal_receipt": "MISSING"
+  },
+  "run_id": "RUN_001_3a73c370b7719b78073fd4b1b12c4285",
+  "schema_version": 1,
+  "scientific_execution": {
+    "backward": "NOT_OBSERVED_NO_WORKER_ARTIFACT",
+    "final_audit_opened": false,
+    "generation_calls": 0,
+    "model_import": "NOT_OBSERVED_NO_WORKER_ARTIFACT",
+    "optimizer_steps": 0
+  },
+  "status": "FAILED_BEFORE_WORKER_START_NO_RETRY"
+}

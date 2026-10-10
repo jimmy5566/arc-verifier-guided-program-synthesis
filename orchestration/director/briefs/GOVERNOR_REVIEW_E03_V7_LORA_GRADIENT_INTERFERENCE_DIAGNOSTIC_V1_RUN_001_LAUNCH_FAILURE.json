@@ -1,0 +1,23 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_RUN_001_LAUNCH_FAILURE",
+  "failure_evidence": {
+    "path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_RUN_001_LAUNCH_FAILURE_V1.json",
+    "sha256": "1785fe760e4ed2acc037520d91c10ba7394bf19d148108f433e5e21e8299b6ce"
+  },
+  "forbidden": [
+    "No retry or second launch before this decision",
+    "No model import/backward/training/generation occurred under this failure record",
+    "No scientific configuration, nonce, output root, checkpoint, cohort, or cap change."
+  ],
+  "frozen_identity": {
+    "authorized_binding_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_RUN_001_AUTHORIZED_BINDING_V1.json",
+    "authorized_binding_sha256": "ab9bbd45bbeabe294ba899a12455cbc03195e1ecd345c9c6d315608ca4cf8165",
+    "director_response_sha256": "155e748f1fc3d49cdb19d17e6ff87b0f1a8da3f513fb5d1d88fb1f6e75c11f8d",
+    "nonce": "3a73c370b7719b78073fd4b1b12c4285",
+    "output_root": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v1/run_001_3a73c370b7719b78073fd4b1b12c4285"
+  },
+  "question": "Does this pre-worker infrastructure failure consume the single-job authorization? If not, may Controller create only the missing parent directory outside the frozen output root and launch the unchanged RUN_001 exactly once; otherwise the stage remains stopped.",
+  "review_reason": "The sole authorized detached shell failed before producing any worker output, receipt or persisted process because the frozen output parent directory was absent before shell redirection.",
+  "schema_version": 1,
+  "stage": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_RUN_001"
+}
