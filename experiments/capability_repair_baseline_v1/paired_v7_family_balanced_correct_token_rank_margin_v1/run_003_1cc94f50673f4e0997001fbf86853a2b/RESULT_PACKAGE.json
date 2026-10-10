@@ -1,0 +1,64 @@
+{
+  "batch1_discrete_gate": {
+    "mismatches": [],
+    "sample_count": 24,
+    "status": "PASS"
+  },
+  "classification": "RANKING_NOT_IMPROVED",
+  "director_prelaunch_response_sha256": "36eee1423a0e910c81c810ce64b4eb48531331e752ebf63b8a5c6260871f80e0",
+  "execution_constraints_confirmed": {
+    "backward": false,
+    "final_audit_opened": false,
+    "generation": false,
+    "optimizer_steps": 0,
+    "target_token_ids_persisted": false,
+    "training": false
+  },
+  "launch_binding_sha256": "04e66d95856dbdbce58da04a333f2d00f9eb0b9fc6baeffe53dc9f1e0171f34d",
+  "next_action": "DIRECTOR_RESULT_REVIEW_REQUIRED_NO_AUTOMATIC_PROTOCOL_EXPANSION",
+  "numerical_sensitivity_adjusted_ci": {
+    "margin": [
+      -0.39481292517006905,
+      -0.08477891156462491
+    ],
+    "top1": [
+      -0.0047619047619047675,
+      -0.00034013605442176906
+    ],
+    "top2": [
+      0.0,
+      0.0
+    ]
+  },
+  "numerical_sensitivity_u": 0.08163265306122547,
+  "primary_equal_family_macro": {
+    "margin": -0.24005102040816326,
+    "top1": -0.0023809523809523838,
+    "top2": 0.0
+  },
+  "protocol_id": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1",
+  "raw_bootstrap_95_ci": {
+    "margin": [
+      -0.3131802721088436,
+      -0.16641156462585038
+    ],
+    "top1": [
+      -0.0047619047619047675,
+      -0.00034013605442176906
+    ],
+    "top2": [
+      0.0,
+      0.0
+    ]
+  },
+  "raw_rank_margin_sha256": "74269020dece7e368577d1d4002334e75f762cb749449a1c6884393637c8236a",
+  "remote_local_summary_byte_identical": true,
+  "remote_result_summary_sha256": "53d6cb7c0e1d4c73628fcb480d909043bddbe75014c8adf5f96e01563537e3fa",
+  "result_summary_sha256": "53d6cb7c0e1d4c73628fcb480d909043bddbe75014c8adf5f96e01563537e3fa",
+  "run_id": "RUN_003_1cc94f50673f4e0997001fbf86853a2b",
+  "runtime_seconds": 319.0259284507483,
+  "scientific_interpretation": "Family-Balanced did not improve the frozen GRID_CONTENT teacher-forced rank/margin estimand on this reused 60-episode synthetic DEV cohort. This is development evidence only, not independent ARC-transfer confirmation and not a causal mechanism claim.",
+  "source_commit": "610886ef7250c9236e767282f92007d8122eec38",
+  "status": "COMPLETE_NO_UPDATE_TARGET_BLIND_REUSED_DEV_EVIDENCE_ONLY",
+  "terminal_receipt_sha256": "bcc4ca5207fa11d32be3159a82f407c7cac54c86143d313faf2803215a246341"
+}

@@ -1,0 +1,13 @@
+{
+  "backward": false,
+  "final_audit_opened": false,
+  "generation": false,
+  "optimizer_steps": 0,
+  "protocol_id": "PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1",
+  "raw_rows": 144,
+  "raw_sha256": "74269020dece7e368577d1d4002334e75f762cb749449a1c6884393637c8236a",
+  "runtime_seconds": 319.0259284507483,
+  "status": "COMPLETE_NO_UPDATE",
+  "target_token_ids_persisted": false,
+  "training": false
+}
