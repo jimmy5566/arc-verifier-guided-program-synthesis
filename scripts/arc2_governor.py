@@ -342,11 +342,12 @@ def remote_status(job):
     # is ever used for liveness.
     receipt=(job.get('expected_receipt') or job.get('expected_terminal_receipt')
              or job.get('terminal_receipt_path') or job.get('expected_receipt_path')
+             or job.get('terminal_receipt')
              or job.get('remote_output'))
     target=job.get('ssh_target') or job.get('remote_host')
     primary=job.get('primary_process')
     if not isinstance(primary, dict):
-        pid=job.get('remote_pid', job.get('remote_launcher_pid', job.get('launcher_pid', job.get('worker_pid'))))
+        pid=job.get('remote_pid', job.get('remote_launcher_pid', job.get('launcher_pid', job.get('worker_pid', job.get('pid')))))
         if pid is not None:
             primary={'host':'RUNPOD','role':'remote_launcher','pid':pid}
     if not isinstance(primary, dict):

@@ -38,6 +38,13 @@ class RunPodPtyControlTests(unittest.TestCase):
             status, _ = governor.remote_status(job)
         self.assertEqual(status, "PROCESS_ALIVE")
 
+    def test_status_query_accepts_compact_terminal_receipt_and_pid_schema(self):
+        proc = _Proc()
+        job = {"ssh_target":"pod", "terminal_receipt":"/receipt", "pid":7}
+        with mock.patch.object(governor.subprocess, "Popen", return_value=proc), mock.patch.object(governor.time, "sleep"):
+            status, _ = governor.remote_status(job)
+        self.assertEqual(status, "PROCESS_ALIVE")
+
 
 if __name__ == "__main__":
     unittest.main()

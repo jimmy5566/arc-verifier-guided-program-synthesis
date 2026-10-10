@@ -37,3 +37,7 @@ For a frozen execution, the runtime detached `HEAD` must equal the approved
 commit and the bound scientific files must hash-match. A later development
 branch advance, symbolic branch name, or temporary remote-tracking ref must
 not block that independently verifiable snapshot.
+
+Every detached `WAIT_REMOTE` record must include a RunPod SSH target, a
+terminal-receipt path, and a primary-process PID/role. Compact `pid` and
+`terminal_receipt` aliases are supported only for recovery of existing records.
