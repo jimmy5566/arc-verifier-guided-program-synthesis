@@ -21,7 +21,7 @@ def fail(code: str) -> None:
 def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
     binding = json.loads(path.read_text(encoding="utf-8-sig"))
     required = {
-        "schema_version", "protocol_id", "authorization_id", "execution_authorized",
+        "schema_version", "protocol_id", "authorization_id", "director_response_sha256", "execution_authorized",
         "source_commit", "worker_sha256", "contract_path", "contract_sha256", "runtime_config_path", "runtime_config_sha256",
         "checkpoint_manifest_path", "checkpoint_manifest_sha256",
         "native_config_dir", "native_config_provenance_path", "native_config_provenance_sha256", "native_config_runtime_identity_path", "native_config_runtime_identity_sha256",
@@ -31,8 +31,10 @@ def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
         fail("E04_BINDING_SCHEMA")
     if binding["protocol_id"] != "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE":
         fail("E04_BINDING_PROTOCOL")
-    if binding["authorization_id"] != "E04_V3_CLEAN_BASELINE_ONE_SHOT_CONDITIONAL_20261010":
+    if binding["authorization_id"] != "E04_V3_REPLACEMENT_EXECUTION_ONE_SHOT_CONDITIONAL_20261010":
         fail("E04_BINDING_AUTHORIZATION_ID")
+    if len(binding["director_response_sha256"]) != 64 or any(c not in "0123456789abcdef" for c in binding["director_response_sha256"]):
+        fail("E04_BINDING_DIRECTOR_RESPONSE_IDENTITY")
     if binding["execution_authorized"] is not True:
         fail("E04_BINDING_EXECUTION_AUTHORIZATION")
     if binding["hard_runtime_cap_seconds"] != CAP_SECONDS or binding["jobs"] != 1 or binding["retry"] is not False:
