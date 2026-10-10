@@ -1,0 +1,112 @@
+{
+  "current_state": {
+    "cohort_generated": false,
+    "family_selected": "NONE",
+    "model_or_gpu_used": false,
+    "protocol_frozen": false,
+    "worker_written": false
+  },
+  "deterministic_family_selection_rule": {
+    "eligibility_order": [
+      "valid_unsaturated_frozen_baseline",
+      "exact_train_asset_and_generator_revision_available",
+      "functionally_sufficient_matched_control_available",
+      "expected_canonical_unit_capacity_at_least_48",
+      "highest_predeclared_information_gain"
+    ],
+    "selection_outcome": "NONE unless exactly one family remains after all rules; rule runs before model outputs.",
+    "tie_break_order": [
+      "lowest_baseline_exact_rate",
+      "highest_expected_unit_capacity",
+      "fixed_lexicographic_family_order: connected_components, inside_contains, width, difference, orientation"
+    ]
+  },
+  "fail_closed_outcomes": {
+    "INCONCLUSIVE": [
+      "valid boundary but fewer than 48 canonical units",
+      "decision-reversing uncertainty"
+    ],
+    "INVALID_NOT_INTERPRETABLE": [
+      "missing/mismatched asset or manifest identity",
+      "unverifiable provenance",
+      "TRAIN-validation content overlap",
+      "TRAIN-validation structural-axis overlap",
+      "target leakage",
+      "nondeterministic generator"
+    ]
+  },
+  "forbidden": [
+    "cohort generation",
+    "execution protocol freeze",
+    "worker implementation",
+    "model loading",
+    "GPU inference",
+    "training",
+    "sealed evaluation access"
+  ],
+  "identity_and_determinism_contract": {
+    "before_generation": [
+      "exact generator source revision SHA256",
+      "legitimate TRAIN asset path/repository revision and SHA256",
+      "canonical TRAIN content manifest",
+      "canonical TRAIN latent manifest",
+      "canonical validation content manifest",
+      "canonical validation latent manifest",
+      "reproducible split-construction code SHA256"
+    ],
+    "generation_determinism": "same source, inputs and seed must produce byte-identical manifests; failure is INVALID_NOT_INTERPRETABLE."
+  },
+  "immutable_evidence_sources": {
+    "experiments\\capability_repair_baseline_v1\\CAPABILITY_REPAIR_BASELINE_V1_PROFILE.json": "230ebeb8e74eb5112ac83f27d1ed9f095e4230488059277a201a159f3d0acaf2",
+    "experiments\\capability_repair_baseline_v1\\CPU_ONLY_E04_WEAK_ATOMIC_EXPOSURE_AND_FAILURE_INVENTORY_V1.json": "657d2ab81afd30d38a7f45debeae1e905585062820e160566ef2330d9ec67d6d",
+    "experiments\\capability_repair_baseline_v1\\forward_capability_repair_v2\\atomic_prerequisite_repair_successor_proposal_v1\\concrete_protocol_v1\\ATOMIC_PREREQUISITE_TRAINING_SIGNAL_AUDIT_V1.json": "cad1734946445e1c78dd8547138f429ebf7bed8f52187a3763207f9ce9c49ef6"
+  },
+  "later_prefreeze_quantitative_contract": {
+    "bootstrap_replicates": 10000,
+    "insufficient_units": "INCONCLUSIVE; never relax count or split.",
+    "minimum_canonical_independent_units": 48,
+    "primary_estimand": "validation exact-grid rate conditioned on matched-control success at canonical latent-task unit",
+    "seed": 20261010,
+    "stratification": "bind family-relevant structural strata or state NONE prospectively",
+    "uncertainty": "stratified paired/bootstrap or predeclared alternative"
+  },
+  "requirements": {
+    "family_selection_rule": "Before any new model outputs: select only a family with valid unsaturated frozen baseline exact-grid evidence, exact verified TRAIN content and latent provenance, an available deterministic generator, and matched control capacity. Nominal scalar-loss share alone cannot select a family.",
+    "independent_units": "Resample/gate at canonical latent-task unit; do not count prompt variants as independent units.",
+    "latent_parameter_manifest": "Each TRAIN and validation unit stores canonical latent parameter SHA256 and family-relevant structural signature.",
+    "legitimate_train_content_manifest": "Every TRAIN episode stores canonical public input/output content SHA256, generator revision, source provenance, and family label before model outputs.",
+    "matched_controls": "Each atomic family requires a functionally sufficient control and a single target operation with identical layout/color marginal distributions where feasible.",
+    "overlap_gates": [
+      "duplicate content SHA256 count = 0",
+      "duplicate latent signature count = 0",
+      "no Gold/dGold/FINAL_AUDIT membership",
+      "no validation target used in training construction or selection"
+    ],
+    "validation_split": "Validation must be content-SHA-disjoint and latent-signature-disjoint from TRAIN; roles are frozen before inference."
+  },
+  "scope": "ONE_FUTURE_SINGLE_FAMILY_ATOMIC_MECHANISM_STUDY_ONLY",
+  "spec_id": "E04_PROSPECTIVE_DATA_BOUNDARY_SPECIFICATION_V2",
+  "status": "CPU_ONLY_REPAIRED_PREFREEZE_REVIEW_REQUIRED",
+  "structural_holdout_contract": {
+    "binding_requirement": "Later proposal chooses exactly one axis from its selected family and records TRAIN and validation allowed/excluded values before generation.",
+    "candidate_held_out_axes_by_family": {
+      "connected components": [
+        "component_count_x_connectivity_pattern"
+      ],
+      "difference": [
+        "set_overlap_pattern_x_cardinality"
+      ],
+      "inside_contains": [
+        "container_geometry_x_object_position_class"
+      ],
+      "orientation": [
+        "shape_orientation_x_reference_relation"
+      ],
+      "width": [
+        "object_width_x_background_context"
+      ]
+    },
+    "canonical_latent_signature_schema": "family_name + operation_parameters + object_count + topology + relation/orientation + grid_layout + color_role_mapping; exact fields must be bound per selected family before cohort generation.",
+    "scientific_holdout_definition": "A prospectively named family-relevant structural factor or factor-combination is absent from TRAIN and reserved for validation. Content/latent hash inequality verifies integrity only and never defines the holdout."
+  }
+}
