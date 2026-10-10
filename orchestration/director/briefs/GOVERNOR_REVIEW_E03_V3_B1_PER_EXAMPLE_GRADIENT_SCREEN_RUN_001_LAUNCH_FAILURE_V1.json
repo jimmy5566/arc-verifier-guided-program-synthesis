@@ -1,0 +1,17 @@
+{
+  "constraints": [
+    "This run is terminal and must not be retried or fall back.",
+    "No gradient, model, optimizer, update, generation, DEV, retention, Gold, dGold, or FINAL_AUDIT evidence exists.",
+    "Any successor must use a fresh immutable binding and output identity and require a new authorization."
+  ],
+  "execution_binding_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_EXECUTION_BINDING_V1.json",
+  "execution_binding_sha256": "a61c175ed4cc495a0d6ecacf0d2a600ec8c77891c2e4b98f746f22d9a83f4ea4",
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "question": "Given the single authorized run failed before model import because the worker branch check rejects the Director-required detached exact-SHA checkout, is a distinct minimal launch-contract repair scientifically permissible, while preserving this failed run and prohibiting retry of it?",
+  "requested_decision": "Classify the failure as infrastructure-only and decide whether the minimal branch-identity preflight repair may create one distinct successor protocol/run, or whether another scientific change is required.",
+  "result_package_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_RUN_001_LAUNCH_FAILURE_RESULT_V1.json",
+  "result_package_sha256": "137ebaf182ad094c78bd50330da4153b5691acc1bfb47e6989a2433c28d5ad0c",
+  "review_id": "GOVERNOR_REVIEW_E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_RUN_001_LAUNCH_FAILURE_V1",
+  "review_type": "SCIENTIFIC_RESULT_AND_LAUNCH_CONTRACT_REVIEW",
+  "schema_version": 1
+}

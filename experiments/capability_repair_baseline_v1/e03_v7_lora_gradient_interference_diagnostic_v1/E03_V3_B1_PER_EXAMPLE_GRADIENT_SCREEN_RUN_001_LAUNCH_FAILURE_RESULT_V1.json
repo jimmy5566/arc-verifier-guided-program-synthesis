@@ -1,0 +1,41 @@
+{
+  "failure_class": "E03_V3_LAUNCH_BRANCH_MISMATCH",
+  "failure_scope": "PRE_MODEL_IMPORT_LAUNCH_CONTRACT_CONTRADICTION",
+  "preserved_execution_identity": {
+    "director_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_PRELAUNCH_V3_RESPONSE.json",
+    "director_response_sha256": "3cfd0eb4aafa7edbbdf44caa72459c0ea2454efa60e8a7f883a851115c6632bb",
+    "execution_binding_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_EXECUTION_BINDING_V1.json",
+    "execution_binding_sha256": "a61c175ed4cc495a0d6ecacf0d2a600ec8c77891c2e4b98f746f22d9a83f4ea4",
+    "source_checkout": "9c8447a0dc6ceaf0bdfbf35d22bcdc981354455f"
+  },
+  "process_evidence": {
+    "elapsed_seconds": 0.003024050034582615,
+    "final_audit_opened": false,
+    "generation_calls": 0,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "raw_gram_statistics_written": false
+  },
+  "prohibited_followup_observed": {
+    "fallback": false,
+    "model_loaded": false,
+    "retry": false,
+    "second_job": false
+  },
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "remote_evidence": {
+    "launcher_log_path": "/workspace/arc2/e03_v3_b1_per_example_gradient_screen/run_001_70f078944d3c7a7cbdcc6e3ec9154ad3.launcher.log",
+    "launcher_log_sha256": "67a767adecc71d9c5bef8dcf76f37ce06097da3f8989fb2d588508b9878f6aa9",
+    "outer_pid": 93335,
+    "receipt_verified_by_remote_sha256": true,
+    "surviving_e03_processes": 0,
+    "terminal_receipt_path": "/workspace/arc2/e03_v3_b1_per_example_gradient_screen/run_001_70f078944d3c7a7cbdcc6e3ec9154ad3/TERMINAL_RECEIPT.json",
+    "terminal_receipt_sha256": "4ef5e0178678d6abe994c1fd173e849a88ef1d9b7ef36b407cae96d543084c16"
+  },
+  "required_next_step": "One Director scientific result review must decide whether a distinct minimal launch-contract repair is authorized. This failed run must not be retried.",
+  "root_cause": "The worker requires git rev-parse --abbrev-ref HEAD to equal the launch branch, while the approved execution procedure requires a detached exact-SHA checkout. A detached checkout reports HEAD rather than the branch, so the worker rejects the approved checkout before model import.",
+  "run_id": "RUN_001_70f078944d3c7a7cbdcc6e3ec9154ad3",
+  "schema_version": 1,
+  "scientific_interpretation": "NOT_ESTABLISHED_NO_MODEL_OR_GRADIENT_EVIDENCE",
+  "status": "FAILED_OR_PARTIAL_NO_UPDATE"
+}
