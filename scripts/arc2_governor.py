@@ -560,6 +560,21 @@ def cycle(state_path, *, agent_timeout_seconds, controller_retry_seconds):
     if not r.exists(): atomic(r,{'status':'TERMINAL','at':now(),'state':str(state_path)})
     return 'TERMINAL',s
 
+def status_line(result, state):
+    """Return one compact, ANSI-coloured Governor status line for its pane."""
+    disposition = str(state.get('disposition') or 'UNKNOWN')
+    colours = {'WAIT_REMOTE':'\x1b[1;33m', 'CONTINUE_CONTROLLER':'\x1b[1;36m',
+               'REVIEW_REQUIRED':'\x1b[1;35m', 'PAUSED':'\x1b[1;31m', 'TERMINAL':'\x1b[1;31m'}
+    detail = ''
+    if disposition == 'WAIT_REMOTE':
+        job = state.get('remote_job') or state.get('active_remote_job') or {}
+        detail = f" run={job.get('run_id') or job.get('job_id') or 'UNKNOWN'} pid={(job.get('primary_process') or {}).get('pid') or job.get('remote_pid') or 'UNKNOWN'}"
+    elif disposition == 'REVIEW_REQUIRED':
+        detail = ' awaiting Director review'
+    elif disposition == 'CONTINUE_CONTROLLER':
+        detail = f" action={state.get('next_action') or 'UNSPECIFIED'}"
+    return f"{colours.get(disposition, '\x1b[0m')}[ARC2 {disposition}] result={result}{detail}\x1b[0m"
+
 def delay_for(result,state,*,paused_seconds,idle_seconds):
     if result == 'TERMINAL': return None
     if result == 'PAUSED': return paused_seconds
@@ -589,6 +604,7 @@ def main():
         while True:
             result,s=cycle(a.state,agent_timeout_seconds=a.agent_timeout_seconds,controller_retry_seconds=a.controller_retry_seconds)
             write_service_state(a.service_state,status=result,workflow_state=s)
+            print(status_line(result, s), flush=True)
             if a.once or result == 'TERMINAL' or not a.daemon: return 0
             time.sleep(delay_for(result,s,paused_seconds=a.paused_seconds,idle_seconds=a.idle_seconds))
     except Exception as exc:
