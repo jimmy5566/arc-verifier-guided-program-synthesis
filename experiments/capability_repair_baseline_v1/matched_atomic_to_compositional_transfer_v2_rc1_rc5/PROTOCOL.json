@@ -1,0 +1,70 @@
+{
+  "checkpoints": {
+    "FAMILY_BALANCED": {
+      "adapter_model_sha256": "c7b275587796b0d9b07d45e933371d5ae26e9aa76df7a895104d7c4e35117780",
+      "manifest_path": "experiments/capability_repair_baseline_v1/family_balanced_loss_control_v1/round_001/evaluation_v1/FINAL_CHECKPOINT_MANIFEST.json",
+      "manifest_sha256": "0a33a3e6119797399f97c8e46db50d16406be200ade3ed64fead89be76172cb9",
+      "role": "DESCRIPTIVE_FROZEN_HISTORICAL_COMPARATOR"
+    },
+    "RECONSTRUCTED_FOUNDATION_V2_V7": {
+      "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+      "manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+      "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+      "role": "PRIMARY"
+    }
+  },
+  "claim_scope": "WITHIN_SCHEMA_COMPOSITIONAL_EXECUTION_ONLY_NOT_HELD_OUT_TRAIN_TRANSFER",
+  "cohort_manifest_path": "COHORT_MANIFEST.json",
+  "cohort_manifest_sha256": "e508c227c84f86557b84a824ae64cf4bc0319ba627d9ddf6a5b0a7e89768e2fc",
+  "decision_rule": {
+    "COMPOSITION_EXECUTION_EVIDENCE": "descriptive only when V7 both-atoms condition has at least 12 canonical tuples and Batch1 validation is stable",
+    "INVALID_NOT_INTERPRETABLE": "identity, public-content exposure, tuple matching, functional primitive proof, serialization, target, checkpoint, batching, parser, completeness, or sealed-data failure",
+    "MIXED_OR_INCONCLUSIVE": "minimum n unmet, interval broad, comparator common support unavailable, or Batch1 validation changes conclusion"
+  },
+  "experiment_id": "MATCHED_ATOMIC_TO_COMPOSITIONAL_TRANSFER_V2_RC1_RC5",
+  "inference": {
+    "batch1_validation": "fixed 42-episode subset; material parsed-output or metric drift is INVALID_NOT_INTERPRETABLE",
+    "batch_primary": 16,
+    "decoding": "GREEDY_PRIMARY_ONLY",
+    "fallback_ladder": [
+      16,
+      8,
+      4,
+      1
+    ],
+    "forbidden": [
+      "Beam",
+      "DFS",
+      "TTT",
+      "augmentation",
+      "external_selector",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT"
+    ],
+    "format": "NATIVE_ARC_OBSERVATION"
+  },
+  "metrics": {
+    "common_support_requirement": "at least 12 deduplicated tuples where both atomic prerequisites are exact for both checkpoints; otherwise NOT_ESTIMABLE",
+    "primary": "V7 conditional composition-failure rate on V7 own both-atoms-correct deduplicated tuples",
+    "secondary": [
+      "Family-Balanced analogous conditional rate DESCRIPTIVE_ONLY",
+      "V7-vs-Family-Balanced paired conditional contrast ONLY on common-support tuples",
+      "joint_atomic_prerequisite_exact_rate",
+      "unconditional_composition_exact_rate",
+      "four_state_tuple_counts",
+      "separate_synthetic_protected_retention"
+    ]
+  },
+  "model_execution_authorized": false,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "runtime_cap_seconds": 1800,
+  "schema_version": 2,
+  "status": "CPU_FROZEN_NOT_AUTHORIZED_FOR_MODEL_EXECUTION",
+  "training_authorized": false,
+  "uncertainty": {
+    "bootstrap": "10000 fixed seed 20261010 resampling canonical unique tuples with all roles inseparable; strata frozen by selector_relation x component_shape",
+    "decision_boundary": "No 0.15 mechanism boundary: report conditional interval descriptively; label MIXED_OR_INCONCLUSIVE unless a future independently justified decision threshold is pre-registered"
+  }
+}

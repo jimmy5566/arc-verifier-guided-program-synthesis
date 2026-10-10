@@ -1,0 +1,37 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED"
+  ],
+  "brief_id": "GOVERNOR_REVIEW_MATCHED_ATOMIC_TO_COMPOSITIONAL_TRANSFER_V2_RC1_RC5_PRELAUNCH",
+  "context": {
+    "cpu_freeze_receipt_sha256": "64e53c856db99a913c7702b3c5e72a7ef629f7224871c2aa1369ac5b436b4798",
+    "director_response_sha256": "0de10f6d4837b59c1ec4842238644992f9acc8a32402bfaa9c445bbe7cd4801d",
+    "rejected_predecessor": "MATCHED_ATOMIC_TO_COMPOSITIONAL_TRANSFER_V1 is preserved NOT_AUTHORIZED: 48 rows collapsed to 19 latent combinations and used a non-equivalent recolor atom.",
+    "successor_cohort_sha256": "e508c227c84f86557b84a824ae64cf4bc0319ba627d9ddf6a5b0a7e89768e2fc",
+    "successor_protocol_sha256": "f1d3925f4a27aba71119f3f4ea9b02408832b69ab3f38e492c5a5abfe4d0209f"
+  },
+  "director_question": "Do RC1--RC5 repair construct validity sufficiently to authorize exactly one bounded no-update Greedy inference measurement under this frozen protocol? If not, name the smallest remaining scientific repair.",
+  "frozen_design": {
+    "atomic_contract": "select output retains selected source object plus one target-colour cue; parameterized recolor consumes that exact output; CPU proof reconstructs all composition targets.",
+    "checkpoints": "V7 primary; Family-Balanced descriptive comparator only.",
+    "cohort": "48 canonical-deduplicated tuples x ATOMIC_SELECT_WITH_CUE, ATOMIC_PARAMETERIZED_RECOLOR, COMPOSITION_SELECT_RECOLOR; 24 separate retention episodes; targets sealed locally.",
+    "exposure": "exact public prompt/observation/id checks passed against two frozen manifests. Synthetic TRAIN structural exposure is UNVERIFIED because those manifests lack canonical TRAIN task bytes; claim limited to within-schema composition.",
+    "forbidden": "No model/GPU before approval; no optimizer, update, backward, training, Beam, DFS, TTT, augmentation, external selector, Gold, dGold, FINAL_AUDIT.",
+    "inference": "Greedy only; Batch16 primary; frozen 16->8->4->1 fallback; fixed 42-episode Batch1 validation; material drift invalidates; cap 1800 seconds.",
+    "metrics": "V7 own conditioned composition-failure rate primary. Family-Balanced descriptive. Cross-checkpoint effect only common support where both atoms exact for both, n>=12; else NOT_ESTIMABLE.",
+    "uncertainty": "10,000 seed 20261010 bootstrap over inseparable canonical tuple units, strata selector_relation x component_shape. No ungrounded 0.15 mechanism boundary; descriptive interval only.",
+    "variation": "colours, L4 or SQUARE4 shape, above or left selector relation, three layout families, and two distractor configurations."
+  },
+  "repairs": {
+    "RC1_deduplicated_canonical_latents": 48,
+    "RC2_functionally_sufficient_atoms": "PASS_SELECT_THEN_RECOLOR_EQUALS_COMPOSITION_FOR_ALL_48",
+    "RC3_exposure_scope": "WITHIN_SCHEMA_ONLY_TRAIN_STRUCTURAL_EXPOSURE_UNVERIFIED",
+    "RC4_primary_estimand": "V7_OWN_CONDITIONED_RATE; COMPARATOR_COMMON_SUPPORT_OR_NOT_ESTIMABLE",
+    "RC5_top2_and_threshold": "TOP2_REMOVED; CONDITIONAL_INTERVAL_DESCRIPTIVE_NO_UNJUSTIFIED_015_BOUNDARY"
+  },
+  "requested_authorization": "If CONTINUE_CONTROLLER, state explicit next_stage, next_action, and whether model loading, GPU inference, and generation are authorized. Training and updates remain false.",
+  "schema_version": 1,
+  "scientific_question": "On a deduplicated within-schema synthetic cohort, does V7 fail composition after two functionally sufficient atomic outputs are exact?"
+}

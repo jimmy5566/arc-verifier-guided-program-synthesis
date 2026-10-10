@@ -1,0 +1,36 @@
+{
+  "artifacts": {
+    "cohort_manifest_sha256": "e508c227c84f86557b84a824ae64cf4bc0319ba627d9ddf6a5b0a7e89768e2fc",
+    "generator_sha256": "ab3087f095bffd80abe70cdb332c167d7af656b73a83029f2a369dd87a002b6e",
+    "protocol_sha256": "f1d3925f4a27aba71119f3f4ea9b02408832b69ab3f38e492c5a5abfe4d0209f",
+    "test_sha256": "bed21a4f451027aafe074a782212ecc830e3ee1f464eab47b3b286b6619ae048"
+  },
+  "authorization": {
+    "backward": false,
+    "generation": false,
+    "gpu_inference": false,
+    "model_loading": false,
+    "optimizer": false,
+    "training": false
+  },
+  "protocol_id": "MATCHED_ATOMIC_TO_COMPOSITIONAL_TRANSFER_V2_RC1_RC5",
+  "schema_version": 1,
+  "scientific_repairs": {
+    "RC1_deduplicated_canonical_latents": 48,
+    "RC2_functionally_sufficient_atoms": "PASS_SELECT_THEN_RECOLOR_EQUALS_COMPOSITION_FOR_ALL_48",
+    "RC3_exposure_scope": "WITHIN_SCHEMA_ONLY_TRAIN_STRUCTURAL_EXPOSURE_UNVERIFIED",
+    "RC4_primary_estimand": "V7_OWN_CONDITIONED_RATE; COMPARATOR_COMMON_SUPPORT_OR_NOT_ESTIMABLE",
+    "RC5_top2_and_threshold": "TOP2_REMOVED; CONDITIONAL_INTERVAL_DESCRIPTIVE_NO_UNJUSTIFIED_015_BOUNDARY"
+  },
+  "sealed_targets": {
+    "committed": false,
+    "opened": false,
+    "sidecar_sha256": "eb144c90d8f2100af662da0b570be8e80f24da8481cf2cb2d71054a2a5ea3296"
+  },
+  "status": "CPU_FREEZE_COMPLETE_NOT_AUTHORIZED_FOR_MODEL_EXECUTION",
+  "tests": {
+    "command": "py -3 -m unittest tests.test_matched_atomic_to_compositional_transfer_v1 tests.test_matched_atomic_to_compositional_transfer_v2 -q",
+    "count": 4,
+    "status": "PASS"
+  }
+}
