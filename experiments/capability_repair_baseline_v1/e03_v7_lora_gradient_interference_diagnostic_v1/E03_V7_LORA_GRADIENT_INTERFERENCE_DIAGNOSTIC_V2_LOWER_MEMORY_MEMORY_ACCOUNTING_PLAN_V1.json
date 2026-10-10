@@ -1,0 +1,28 @@
+{
+  "failure_interpretation": "OOM or cap failure with zero/partial gradients remains partial infrastructure evidence, never a gradient-interference conclusion.",
+  "measurement_points": [
+    "after_model_load_before_peak_reset",
+    "after_each_primary_B8_basis_block",
+    "after_each_B1_family_reconstruction",
+    "before_terminal_receipt",
+    "on_worker_exception_after_CUDA_initialization"
+  ],
+  "no_fallback": [
+    "no physical B4/B2/B1 primary substitution",
+    "no serial gradient accumulation",
+    "no quantization",
+    "no CPU/NVMe offload",
+    "no precision or objective change"
+  ],
+  "peak_scope": "torch.cuda.reset_peak_memory_stats occurs after model load; workload peaks therefore exclude persistent model-load allocation. The after-model-load current allocation and reservation are separately recorded.",
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY",
+  "purpose": "Prospective CUDA memory evidence for a distinct physical-B8 lower-memory execution; not a feasibility claim.",
+  "required_fields": [
+    "current_allocated_bytes",
+    "current_reserved_bytes",
+    "peak_allocated_bytes",
+    "peak_reserved_bytes"
+  ],
+  "schema_version": 1,
+  "source_run_002_oom_receipt_sha256": "47e6341e555ff0bb32991d85f8c6b7e63da99953a23784cce869f2be07d97f00"
+}

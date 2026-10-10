@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "response_id": "GOVERNOR_REVIEW_E03_RUN_002_OOM_RESULT_V1_RESPONSE",
+  "reviewed_brief": "orchestration/director/briefs/GOVERNOR_REVIEW_E03_RUN_002_OOM_RESULT_V1.json",
+  "reviewed_brief_sha256": "81ecbe23c017a77222da310a6dab14b6ffde595310cf901607205329f411cc70",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY_PRELAUNCH",
+  "next_action": "Prepare, CPU-test, freeze, and submit one distinct lower-memory E03 V2 prelaunch package; do not launch it yet. Preserve physical B8 as the primary measurement and B1 as the numerical-sensitivity measurement. Enable deterministic activation checkpointing for the eval-mode LoRA model with use_cache=false, and after forward select only nonignored shifted supervised positions before converting logits to FP32 and applying the same reduction='sum' cross-entropy divided by the same supervised-token count. Preserve the exact 288-row manifest, B8 grouping, V7 checkpoint, LoRA allowlist, gradient algebra, Gram/statistical analysis, bootstrap seed and replicates, and no-update boundaries. Add CPU/toy-model regression tests showing checkpointed versus ordinary execution has the same selected tokens, loss definition, trainable parameter set, and LoRA gradients within a predeclared tight tolerance; add static fail-closed checks for checkpointing, supervised-position selection, fresh nonce/output, exact hashes, external cap, and no fallback. Provide a prospective memory-accounting plan that records peak allocated and reserved CUDA bytes. Submit the V2 prelaunch brief for Director review before any GPU/model execution. If physical B8 still cannot be made plausibly feasible, return that limitation; do not silently substitute B4, B2, B1 accumulation, quantization, offload, or a different precision/objective.",
+  "scientific_interpretation": {
+    "run_002_status": "TERMINAL_RESOURCE_FAILURE_NO_GRADIENT_EVIDENCE",
+    "gradient_interference_established": false,
+    "family_gradient_alignment_established": false,
+    "hypothesis_e03_status": "UNRESOLVED",
+    "reason_to_continue": "The first physical B8 forward failed before any basis gradient was produced, so the failure contains no evidence for or against gradient interference. The mechanism remains high-value and admits a lower-memory implementation that can preserve the intended estimand."
+  },
+  "selected_lower_memory_hypothesis": {
+    "primary_method": "DETERMINISTIC_ACTIVATION_CHECKPOINTING_WITH_PHYSICAL_B8",
+    "secondary_equivalent_memory_reduction": "SELECT_SUPERVISED_SHIFTED_POSITIONS_BEFORE_FP32_LOGIT_CONVERSION_AND_CE",
+    "scientific_estimand_change": false,
+    "physical_batch_change": false,
+    "precision_change": false,
+    "fallback_allowed": false
+  },
+  "prelaunch_acceptance_requirements": [
+    "RUN_001 and RUN_002 evidence remains immutable and RUN_002 is never retried",
+    "new protocol ID, fresh nonce, fresh output root, fresh receipt path, and one-job/no-retry authorization contract",
+    "exact physical B8 forward semantics and unchanged B1 sensitivity cohort",
+    "model remains eval mode with dropout inactive and use_cache=false",
+    "only the frozen LoRA allowlist is trainable and no optimizer is constructed",
+    "loss still equals FP32 summed CE over exactly the nonignored shifted labels divided by the identical supervised-token count",
+    "checkpointed and noncheckpointed toy/reference gradients agree within a prospectively declared tight tolerance",
+    "peak CUDA allocated/reserved memory is recorded in progress and terminal evidence",
+    "all source, checkpoint, manifest, response, branch, and launch identities fail closed before model execution",
+    "external wall-clock cap is no greater than 1800 seconds"
+  ],
+  "forbidden_actions": [
+    "retrying, modifying, or reusing RUN_002, its nonce, output root, receipt, progress, or failure evidence",
+    "launching GPU or loading the model from this response before the distinct V2 prelaunch review",
+    "silently changing physical B8 to B4, B2, B1, or serial gradient accumulation",
+    "changing precision, checkpoint, dataset rows, grouping, objective, LoRA allowlist, statistics, thresholds, bootstrap, or sensitivity definitions",
+    "using quantization, CPU/NVMe offload, gradient clipping, optimizer state, or parameter updates",
+    "training, generation, DEV, RETENTION_SENTINEL, Gold, dGold, or FINAL_AUDIT",
+    "automatic retry or fallback"
+  ],
+  "gpu_execution_authorized": false,
+  "another_review_required": true,
+  "next_review_scope": "One prelaunch scientific and implementation-validity review of the frozen lower-memory V2 package; do not reopen unrelated E03 questions."
+}

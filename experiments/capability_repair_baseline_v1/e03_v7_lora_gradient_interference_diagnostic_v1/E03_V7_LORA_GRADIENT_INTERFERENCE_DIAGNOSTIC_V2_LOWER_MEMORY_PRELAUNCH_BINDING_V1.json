@@ -1,0 +1,46 @@
+{
+  "batch1_sensitivity_rows": 72,
+  "bound_files": {
+    "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_TRAIN_MICROBATCH_MANIFEST_V1.json": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY_CONFIG_V1.json": "461404ea8381d3de4f4a7224eceadecde590680df7b462819aa0b4c1337e2fdd",
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY_MEMORY_ACCOUNTING_PLAN_V1.json": "40c8fd4538b276c5500050055b0f5d8f260c2f11083daaf66f8847b16106820e",
+    "scripts/e03_gram_statistics.py": "30a8859cee9a90a6a016cf5c066d4e86a7e92907978a4e235883d3597275ba3c",
+    "scripts/launch_e03_v7_lora_gradient_interference_v2_lower_memory.py": "20ad48724c7b48f03a5b02e10e6673de452a116a4195c49a1dedb02927fc7df1",
+    "scripts/postprocess_e03_v7_lora_gradient_interference_v2.py": "073e2dbd38e68ae95595191865a5b12f5ae5ccac64bae7e51b5f756b98045429",
+    "scripts/run_e03_v7_lora_gradient_interference_v2_lower_memory.py": "8db67bbda9121f67eb7c70f7c44b035e2828a333906761dd55dc1127e0392bad"
+  },
+  "director_response_preparation_path": "orchestration/director/responses/GOVERNOR_REVIEW_E03_RUN_002_OOM_RESULT_V1_RESPONSE.json",
+  "director_response_preparation_sha256": "e7497a70e62ef90eba179bd0fc517f1e8105a0c9b38c3e317ad6c98b0e9d7cb5",
+  "execution_authorized": false,
+  "fresh_output_required": true,
+  "jobs": 1,
+  "launch_branch": "infra/arc2-dual-agent-runpod-orchestrator-v1",
+  "no_update_boundaries": [
+    "optimizer_steps=0",
+    "parameter_updates=0",
+    "generation_calls=0",
+    "FINAL_AUDIT closed",
+    "no DEV/RETENTION/GOLD/dGold"
+  ],
+  "nonce": "f53dfdd34e13cc558e5cf7990f918a9d",
+  "output_root": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v2_lower_memory/run_001_f53dfdd34e13cc558e5cf7990f918a9d",
+  "physical_primary_batch_size": 8,
+  "prohibited_fallbacks": [
+    "B4",
+    "B2",
+    "B1 primary",
+    "serial gradient accumulation",
+    "quantization",
+    "CPU/NVMe offload",
+    "different precision",
+    "different objective"
+  ],
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY",
+  "required_director_decision": "CONTINUE_CONTROLLER",
+  "retry": false,
+  "runtime_cap_seconds": 1500,
+  "schema_version": 1,
+  "status": "CPU_FROZEN_PENDING_DIRECTOR_PRELAUNCH_REVIEW",
+  "terminal_receipt_path": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v2_lower_memory/run_001_f53dfdd34e13cc558e5cf7990f918a9d/TERMINAL_RECEIPT.json"
+}

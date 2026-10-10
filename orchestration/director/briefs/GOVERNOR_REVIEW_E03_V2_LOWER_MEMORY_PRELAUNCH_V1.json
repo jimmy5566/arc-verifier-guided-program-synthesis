@@ -1,0 +1,91 @@
+{
+  "decision_request": [
+    "CONTINUE_CONTROLLER with explicit single-run authorization if all V2 conditions are scientifically valid",
+    "REQUIRE_CHANGES identifying the smallest scientific or implementation correction",
+    "PAUSED only if physical B8 is not plausibly feasible under the expressly permitted changes"
+  ],
+  "equivalence_evidence": {
+    "cpu_test_command": "py -3 -m unittest -v tests.test_e03_v2_lower_memory tests.test_e03_runtime_source_provenance_amendment tests.test_e03_bounded_worker_v2 tests.test_e03_gram_statistics",
+    "result": "PASS_18",
+    "static_fail_closed": "requires checkpointing and use_cache=false, selected supervised FP32 CE, external cap, fresh output, exact immutable binding, no optimizer/generation/fallback",
+    "toy_regression": "ordinary and recomputed toy decoder paths select the same shifted nonignored tokens, reproduce legacy ignore-index summed CE, and reproduce LoRA-like linear gradients within 1e-12; local PyTorch unavailable, so no local framework activation-checkpoint implementation was executed"
+  },
+  "frozen_artifacts": {
+    "binding_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY_PRELAUNCH_BINDING_V1.json",
+    "binding_sha256": "e0c5e6d012b0c4dc7421878893de19e13a92d84d73e88e3cd3a844becdfcf573",
+    "config_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY_CONFIG_V1.json",
+    "config_sha256": "461404ea8381d3de4f4a7224eceadecde590680df7b462819aa0b4c1337e2fdd",
+    "launcher_path": "scripts/launch_e03_v7_lora_gradient_interference_v2_lower_memory.py",
+    "launcher_sha256": "20ad48724c7b48f03a5b02e10e6673de452a116a4195c49a1dedb02927fc7df1",
+    "memory_plan_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY_MEMORY_ACCOUNTING_PLAN_V1.json",
+    "memory_plan_sha256": "40c8fd4538b276c5500050055b0f5d8f260c2f11083daaf66f8847b16106820e",
+    "test_path": "tests/test_e03_v2_lower_memory.py",
+    "test_sha256": "83382b03de14086a6a3f856c4311e387d6638426128fc59ef35057d4999f4110",
+    "worker_path": "scripts/run_e03_v7_lora_gradient_interference_v2_lower_memory.py",
+    "worker_sha256": "8db67bbda9121f67eb7c70f7c44b035e2828a333906761dd55dc1127e0392bad"
+  },
+  "implementation_delta_only": {
+    "activation_checkpointing": "eval-mode model.gradient_checkpointing_enable(use_reentrant=false), use_cache=false; no objective or precision change",
+    "loss_memory_reduction": "select exactly the nonignored shifted positions from BF16 logits before FP32 conversion and summed CE; divide by identical selected-token count",
+    "memory_evidence": "record current and peak allocated/reserved CUDA bytes after model load, through B8/B1 blocks, terminal, and CUDA-initialized failure"
+  },
+  "not_authorized_by_this_brief": [
+    "GPU/model execution before Director response",
+    "retry RUN_002",
+    "physical batch fallback or accumulation",
+    "precision/objective/data/checkpoint/statistics changes"
+  ],
+  "prior_evidence": {
+    "preparation_authorization_response_sha256": "e7497a70e62ef90eba179bd0fc517f1e8105a0c9b38c3e317ad6c98b0e9d7cb5",
+    "run_001": "preserved relative-path pre-import failure; no model import",
+    "run_002": {
+      "finding": "physical B8 first forward CUDA OOM before any basis gradient; no mechanism conclusion",
+      "status": "FAILED_OR_PARTIAL_NO_UPDATE",
+      "terminal_receipt_sha256": "47e6341e555ff0bb32991d85f8c6b7e63da99953a23784cce869f2be07d97f00"
+    }
+  },
+  "proposed_execution_if_authorized": {
+    "external_cap_seconds": 1500,
+    "fresh_output_root": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v2_lower_memory/run_001_f53dfdd34e13cc558e5cf7990f918a9d",
+    "no_fallback": [
+      "B4",
+      "B2",
+      "B1 primary",
+      "serial gradient accumulation",
+      "quantization",
+      "CPU/NVMe offload",
+      "different precision",
+      "different objective"
+    ],
+    "nonce": "f53dfdd34e13cc558e5cf7990f918a9d",
+    "one_fresh_job_only": true,
+    "required_postreview_binding": "new immutable execution binding with exact Director-response, source-commit and runtime identities before model import",
+    "retry": false
+  },
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY",
+  "question": "Does this distinct V2 lower-memory package preserve the E03 physical-B8 gradient estimand and no-update scientific conditions sufficiently to authorize one fresh bounded execution?",
+  "review_id": "GOVERNOR_REVIEW_E03_V2_LOWER_MEMORY_PRELAUNCH_V1",
+  "review_type": "SCIENTIFIC_AND_IMPLEMENTATION_PRELAUNCH",
+  "schema_version": 1,
+  "unchanged_scientific_conditions": {
+    "batch1_sensitivity_rows": 72,
+    "checkpoint": "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "forbidden_data": [
+      "DEV",
+      "RETENTION_SENTINEL",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT"
+    ],
+    "generation_calls": 0,
+    "gradient_algebra_statistics_bootstrap": "unchanged from E03 V1",
+    "lora_allowlist_sha256": "e44ecb9caf0be396aaaceae6802dbaab9209677103ba263c89ca9a7ea65f6215",
+    "loss_target": "shifted nonignored assistant labels",
+    "model_execution_precision": "BF16",
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "physical_primary_batch_size": 8,
+    "train_manifest_sha256": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "train_rows": 288
+  }
+}
