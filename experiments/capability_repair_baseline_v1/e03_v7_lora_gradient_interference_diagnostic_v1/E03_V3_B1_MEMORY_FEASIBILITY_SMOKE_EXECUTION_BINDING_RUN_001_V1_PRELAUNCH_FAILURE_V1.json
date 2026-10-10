@@ -1,0 +1,16 @@
+{
+  "created_at_utc": "2026-10-10T05:14:58.632465Z",
+  "error_class": "E03_V3_ORIGIN_COMMIT_MISMATCH",
+  "failure_scope": "EXECUTION_METADATA_ONLY",
+  "gpu_or_model_executed": false,
+  "observed_origin_branch_commit": "973f4ea648fa3ea9d16342d4859468e4320b6cfa",
+  "one_shot_authorization_consumed": false,
+  "output_root_created": false,
+  "repair": "V2 binds the reviewed e97 source via refs/remotes/origin/e03_v3_b1_memory_feasibility_source_e97; all frozen science fields are unchanged.",
+  "required_origin_commit": "e97b7e9fdca8282cbee8853dd37c2a0bdfb1d3d9",
+  "runtime_checkout_commit": "e97b7e9fdca8282cbee8853dd37c2a0bdfb1d3d9",
+  "schema_version": 1,
+  "status": "FAILED_PRE_MODEL_MACHINE_PREFLIGHT",
+  "v1_binding_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_MEMORY_FEASIBILITY_SMOKE_EXECUTION_BINDING_RUN_001_V1.json",
+  "v1_binding_sha256": "0a4d31130a09df1a8fae164d9c5f270e402f1e4d5885deb73718d99d9643edcc"
+}
