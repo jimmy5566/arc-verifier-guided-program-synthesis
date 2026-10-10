@@ -1,0 +1,20 @@
+{
+  "bank_sha256": "a9db109b12e93599cacaacc3c93f0ce1fdaf72f02e360957664b114c23ebb94f",
+  "boundaries": [
+    "NO_GOLD",
+    "NO_DGOLD",
+    "NO_FINAL_AUDIT",
+    "NO_MODEL_LOADING_DURING_CPU_FREEZE",
+    "NO_GPU_DURING_CPU_FREEZE",
+    "NO_TRAINING"
+  ],
+  "canonical_validation_bases": 48,
+  "condition_turn_views_per_base": 16,
+  "director_decision_sha256": "1ec5003588b913fb9d7af582f514ce888a85a48bef85e88523d239e08a5d5ed0",
+  "input_prompts_sha256": "f6dcf3050583506cde7035ff18ac15a79c9292cabc55b504a823c025c8c2eff6",
+  "protocol_id": "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE",
+  "status": "CPU_ONLY_INPUTS_FROZEN_TARGETS_SEPARATE",
+  "target_scorer_sidecar_sha256": "8da15d579c5e91f80f7e8587f893cc4e210d6b84120abf0823e46cc9978e635e",
+  "v2_preserved_reference_commit": "50012fd8379dbbef22997d66bf626a911f9e5a2f",
+  "validation_prompts": 768
+}

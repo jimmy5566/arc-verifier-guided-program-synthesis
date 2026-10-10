@@ -1,0 +1,11 @@
+{
+  "byte_identical": true,
+  "files": {
+    "FIXED_DEMONSTRATION_BANK.json": true,
+    "MANIFEST.json": true,
+    "TARGET_SCORER_SIDECAR.jsonl": true,
+    "VALIDATION_INPUT_PROMPTS.jsonl": true
+  },
+  "serialization": "UTF-8 canonical JSONL with LF",
+  "status": "PASS"
+}

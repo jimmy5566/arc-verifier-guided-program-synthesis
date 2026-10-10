@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "response_id": "DIRECTOR_E04_EVALUATION_CONTAMINATION_RECOVERY_V3_DECISION",
+  "decision": "CONTINUE_CONTROLLER",
+  "decision_scope": "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE",
+  "scientific_priority": "MODEL_WEIGHT_CAPABILITY_IMPROVEMENT_FIRST",
+  "live_state": {
+    "audited_head": "50012fd8379dbbef22997d66bf626a911f9e5a2f",
+    "controller_status": "IDLE",
+    "governor_process": "NOT_RUNNING",
+    "supervisor_process": "NOT_RUNNING",
+    "active_remote_job": null,
+    "remote_job": null,
+    "e04_v2_launch_binding": "NOT_FOUND",
+    "e04_v2_terminal_receipt": "NOT_FOUND",
+    "e04_v2_gpu_started": false,
+    "live_runpod_status": "LIVE_RUNTIME_UNVERIFIED_NO_BOUND_JOB"
+  },
+  "contamination_audit": {
+    "validation_tasks": 768,
+    "exact_query_input_and_correct_target_duplicate_in_demonstration": 192,
+    "affected_query_turn": 3,
+    "affected_tasks_per_condition": 48,
+    "conditions_affected": [
+      "ROTATION_TARGET",
+      "FIXED_TURN_ROTATION_CONTROL",
+      "MARKER_BINDING_CONTROL",
+      "NO_TRANSFORM_RETENTION_CONTROL"
+    ],
+    "duplicate_demonstration_index_zero_based": 3,
+    "mechanism": "demonstration_base(base, 3) restores the validation query shape orientation and layout while using the same marker turn, so the demonstration reproduces the query input and oracle-correct target",
+    "structural_holdout_failure": "The query-conditioned demonstrations are derived from validation base factors and include the reserved validation orientation-relation cell; nominal TRAIN labeling does not make them independent TRAIN support.",
+    "scientific_classification": "SYSTEMATIC_EVALUATION_LABEL_CONTAMINATION_AND_PRIVILEGED_QUERY_CONDITIONED_SUPPORT"
+  },
+  "v2_disposition": {
+    "status": "PRESERVED_SUPERSEDED_INVALID_FOR_CONFIRMATORY_MODEL_CAPABILITY_MEASUREMENT",
+    "prior_gpu_authorization": "REVOKED_UNUSED_BEFORE_LAUNCH",
+    "preserve_all_artifacts": true,
+    "permitted_use": "Generator-forensic and contamination evidence only. Any later-recovered predictions must be labeled contaminated descriptive evidence and may not support model-capability, marker-grounding or structural-generalization claims."
+  },
+  "smallest_valid_amendment": {
+    "successor_protocol": "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE",
+    "preserve": [
+      "the 48 canonical validation base tuples",
+      "the four matched marker-turn counterfactuals per base",
+      "the four condition definitions",
+      "canonical-base matched-set statistical units",
+      "V7-only native Greedy inference",
+      "bootstrap seed 20261010 and 10000 replicates",
+      "minimum conditional support of 8 canonical bases per reserved cell",
+      "protected retention requirement",
+      "NO_GOLD, NO_DGOLD and NO_FINAL_AUDIT"
+    ],
+    "fixed_demonstration_bank": {
+      "query_independent": true,
+      "validation_target_independent": true,
+      "demonstrations_per_task": 4,
+      "selection_rule": "Before constructing any validation prompt, select the lexicographically smallest canonical_base_id from each of four fixed TRAIN-only structural cells: (orientation 0, EAST), (orientation 1, SOUTH), (orientation 2, WEST), and (orientation 3, NORTH). Assign them prospectively to demonstration turns 0, 1, 2 and 3 respectively.",
+      "reuse_rule": "For a given condition, use the exact same four ordered demonstration input-output pairs for every validation query. Demonstration inputs are identical across conditions; only their condition-defined outputs differ.",
+      "forbidden_dependencies": [
+        "validation canonical_base_id",
+        "validation shape orientation",
+        "validation layout",
+        "validation reference relation",
+        "validation color-role tuple",
+        "validation marker turn",
+        "validation target",
+        "model prediction or score"
+      ]
+    },
+    "output_color_isolation": {
+      "method": "Add one dedicated output-color swatch at input cell (8,8) in every fixed demonstration and validation query.",
+      "requirements": "The swatch must be spatially disjoint from object, reference marker and turn marker; its color must equal the sole non-background target color for that task. Preserve validation output-color diversity."
+    },
+    "condition_observability": "Condition identity remains encoded only by the fixed native ARC demonstration outputs. Do not expose condition names, latent metadata, hashes or explanatory text to the model.",
+    "target_boundary": "Freeze and hash input-only validation prompts before model loading. Keep targets in a separate scorer sidecar and freeze all raw generations before joining the sidecar."
+  },
+  "mandatory_cpu_gates": [
+    "Exactly one frozen demonstration-bank identity per condition; every validation prompt for that condition must contain byte-identical ordered demonstrations.",
+    "Zero validation query-input collisions with any demonstration input.",
+    "Zero validation query-input plus target pairs duplicated by any demonstration pair.",
+    "Every demonstration base belongs to a TRAIN-only non-reserved structural cell; no reserved validation orientation-relation cell occurs in demonstrations.",
+    "The demonstration selector accepts no validation row, validation latent factor or validation target as input.",
+    "Every task has an observable non-overlapping output-color swatch and the scorer target uses exactly that swatch color.",
+    "Every canonical validation base retains all sixteen condition-by-turn views, and marker counterfactual query inputs differ only at the declared turn-marker cells.",
+    "Input-only prompts contain no targets, latent factors, split labels, condition names or hashes.",
+    "Deterministic byte-identical regeneration and all frozen file SHA256 checks pass.",
+    "CPU unit and integration tests include negative fixtures reproducing the V2 turn-3 duplicate and reserved-cell exposure failures."
+  ],
+  "conditional_one_shot_execution_authorization": {
+    "authorization_id": "E04_V3_CLEAN_BASELINE_ONE_SHOT_CONDITIONAL_20261010",
+    "condition": "Effective only after every mandatory CPU gate passes and the exact implementation/data commit is non-force-pushed, locally clean, synchronized to RunPod and bound in a fresh launch manifest.",
+    "authorized_runs": 1,
+    "checkpoint": "RECONSTRUCTED_FOUNDATION_V2_V7_ONLY",
+    "mode": "NATIVE_GREEDY_NO_UPDATE",
+    "hard_runtime_cap_seconds": 1800,
+    "requested_batch_size": 32,
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "fallback_rule": "On pre-output OOM or demonstrated capacity failure, clear the failed attempt and restart the complete primary generation at the next rung; never mix rungs in an accepted result.",
+    "batch1_sensitivity_subset": "Use one fixed canonical validation base per reserved structural cell, selected by lowest canonical_base_id; include all four turns and all four conditions, totaling 64 prompts.",
+    "required_batch_agreement": "Identical parser-validity status, parsed grid and exact-grid outcome on all 64 sensitivity prompts; any disagreement yields NUMERICAL_OR_BATCH_SENSITIVITY_INCONCLUSIVE.",
+    "model_loading_authorized_after_gates": true,
+    "gpu_inference_authorized_after_gates": true,
+    "generation_authorized_after_gates": true,
+    "training_authorized": false,
+    "backward_authorized": false,
+    "gradient_authorized": false,
+    "optimizer_construction_authorized": false,
+    "parameter_updates_authorized": false,
+    "sealed_evaluation_access_authorized": false,
+    "additional_director_prelaunch_review_required": false,
+    "on_gate_failure": "Do not load a model or launch GPU work; set REVIEW_REQUIRED with the single failed scientific gate.",
+    "on_launch_or_runtime_failure": "Preserve evidence and do not launch a second detached job without a replacement-run authorization."
+  },
+  "next_stage": "E04_ORIENTATION_V3_FIXED_DEMONSTRATION_BASELINE_IMPLEMENT_AND_EXECUTE",
+  "next_action": {
+    "owner": "CONTROLLER",
+    "instruction": "Preserve V2 and the contamination evidence unchanged. Implement the minimal V3 successor exactly as frozen here: one query-independent fixed TRAIN-only demonstration bank, an explicit output-color swatch, the existing 48-base matched marker-counterfactual evaluation and all mandatory negative/identity gates. Run CPU tests, freeze and hash the input-only prompts and separate target sidecar, commit and non-force-push, verify LOCAL HEAD = ORIGIN REF = RUNPOD CHECKOUT and complete V7 identity, then—only if every mandatory gate passes—launch exactly one detached V7 native-Greedy no-update evaluation under the 1800-second cap. Set WAIT_REMOTE with the complete remote binding for Supervisor. Freeze raw generations before target join and return one result brief. Do not add TTA, search, TTT, augmentation, selectors or training.",
+    "cpu_preparation_authorized": true,
+    "routine_git_commit_and_non_force_push_authorized": true,
+    "conditional_model_loading_authorized": true,
+    "conditional_gpu_inference_authorized": true,
+    "conditional_generation_authorized": true,
+    "gradient_authorized": false,
+    "optimizer_construction_authorized": false,
+    "training_authorized": false,
+    "sealed_evaluation_access_authorized": false
+  },
+  "result_review_required": true,
+  "controller_prompted": false,
+  "controller_scheduled": false,
+  "scientific_training_authorized": false,
+  "final_audit_authorized": false
+}

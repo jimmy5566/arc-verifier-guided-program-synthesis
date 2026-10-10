@@ -1,0 +1,35 @@
+{
+  "cells": [
+    {
+      "canonical_base_id": "042462dcc40f0681d8b287c89cdbedcaa48fa8e85754e7395a95b8335738504e",
+      "reference_relation": "EAST",
+      "shape_orientation": 0,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "0fb568ffad948cb2825e81b062ea87b6c8f312dd58645d397701219bf800b362",
+      "reference_relation": "SOUTH",
+      "shape_orientation": 1,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "15a85bfd1d2a9487953d2adb137b05048a39303ac337014e73242accf01134ab",
+      "reference_relation": "WEST",
+      "shape_orientation": 2,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "0289e1ce891a06c6d118e71968d297ee97e570c31fa4527a1658537541b039c5",
+      "reference_relation": "NORTH",
+      "shape_orientation": 3,
+      "turn": 3
+    }
+  ],
+  "condition_bank_sha256": {
+    "FIXED_TURN_ROTATION_CONTROL": "f84203dc53cc1028a2d5f8ee589f3e743578358048c75a6f19d11e559a6d4876",
+    "MARKER_BINDING_CONTROL": "e9533e3ece954afc389939e61d6aaf3803a9fe199f837151cf4cb10c246354a7",
+    "NO_TRANSFORM_RETENTION_CONTROL": "0587c497c073cf43c042c2f9a6b39fb38f782fb9938889cf44dd8aef09087ba3",
+    "ROTATION_TARGET": "1d2741c3e5615e96c257b81e8fadf9805509b4089fa616a2a6cd88b97c134c1f"
+  },
+  "selector": "lexicographically smallest canonical_base_id in each prospectively fixed TRAIN-only cell"
+}
