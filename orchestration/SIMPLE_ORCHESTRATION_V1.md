@@ -2,10 +2,9 @@
 
 ## Normal path
 
-`scripts/arc2_governor.py` is the sole persistent outer loop. It recognizes
-`CONTINUE_CONTROLLER`, `REVIEW_REQUIRED`, `WAIT_REMOTE`, `PAUSED`, and
-`TERMINAL`. `scripts/arc2_runner.py` is disabled historical provenance and must
-not run concurrently.
+`scripts/arc2_governor.py --daemon` is the sole persistent outer loop. It owns a process-lifetime lock and service heartbeat, recognizes
+`CONTINUE_CONTROLLER`, `REVIEW_REQUIRED`, `WAIT_REMOTE`, `PAUSED`, and `TERMINAL`, and uses a dispatch lease to prevent duplicate Controller prompts.
+`PAUSED` remains observable and restartable; only `TERMINAL` exits. `scripts/arc2_runner.py` is disabled historical provenance and must not run concurrently.
 
 `arc-controller` owns one active scientific stage from its first action until a
 real terminal condition or a detached RunPod job.  Detailed progress belongs in

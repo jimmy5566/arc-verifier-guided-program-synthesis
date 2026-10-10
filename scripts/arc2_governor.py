@@ -33,6 +33,66 @@ def atomic(p,x):
     finally:
         if t.exists():
             t.unlink()
+
+def action_sha256(state):
+    """Identity of one Controller handoff, without volatile timestamps."""
+    material={key:state.get(key) for key in ('disposition','stage','next_action','review_brief',
+             'review_brief_sha256','remote_job','active_remote_job','authorized_continuation')}
+    return hashlib.sha256(json.dumps(material,sort_keys=True,separators=(',',':'),default=str).encode('utf-8')).hexdigest()
+
+class GovernorLock:
+    """A process-lifetime, non-blocking lock; one Governor may own a state file."""
+    def __init__(self,path): self.path=Path(path); self.handle=None
+    def acquire(self):
+        self.path.parent.mkdir(parents=True,exist_ok=True)
+        self.handle=self.path.open('a+b')
+        if self.path.stat().st_size == 0:
+            self.handle.write(b' '); self.handle.flush()
+        self.handle.seek(0)
+        try:
+            if os.name == 'nt':
+                import msvcrt
+                msvcrt.locking(self.handle.fileno(),msvcrt.LK_NBLCK,1)
+            else:
+                import fcntl
+                fcntl.flock(self.handle.fileno(),fcntl.LOCK_EX|fcntl.LOCK_NB)
+        except OSError:
+            self.handle.close(); self.handle=None; return False
+        self.handle.seek(0)
+        self.handle.write(json.dumps({'pid':os.getpid(),'started_at':now()}).encode('utf-8'))
+        self.handle.truncate(); self.handle.flush()
+        return True
+    def release(self):
+        if not self.handle: return
+        try:
+            self.handle.seek(0)
+            if os.name == 'nt':
+                import msvcrt
+                msvcrt.locking(self.handle.fileno(),msvcrt.LK_UNLCK,1)
+            else:
+                import fcntl
+                fcntl.flock(self.handle.fileno(),fcntl.LOCK_UN)
+        finally:
+            self.handle.close(); self.handle=None
+
+def write_service_state(path, *, status, workflow_state, detail=None):
+    if not path: return
+    payload={'service':'ARC2_GOVERNOR','pid':os.getpid(),'status':status,
+             'heartbeat_at':now(),'workflow_disposition':workflow_state.get('disposition'),
+             'workflow_stage':workflow_state.get('stage')}
+    if detail: payload['detail']=detail
+    atomic(Path(path),payload)
+
+def write_pid_file(path):
+    if path:
+        Path(path).write_text(str(os.getpid()),encoding='ascii')
+
+def remove_own_pid_file(path):
+    if not path: return
+    candidate=Path(path)
+    try:
+        if candidate.read_text(encoding='ascii').strip() == str(os.getpid()): candidate.unlink()
+    except OSError: pass
 def load(p):
     # Workflow state is produced by more than one Windows-local control path.
     # Accept a UTF-8 BOM defensively, while all Governor writes remain UTF-8.
@@ -95,7 +155,7 @@ def prompt(actor,text,timeout,state):
         time.sleep(2); return False
     log(state, f'{actor} completed')
     return True
-def controller(s,p,timeout):
+def controller(s,p,timeout,retry_seconds=300):
     s.update({'last_actor':'governor','updated_at':now()}); atomic(p,s)
     target=resolve_controller_target(s,p)
     if controller_turn_is_active(target):
@@ -107,18 +167,30 @@ def controller(s,p,timeout):
         current=load(p)
         if current.get('disposition') != 'CONTINUE_CONTROLLER':
             log(current,'controller state changed during active-turn backoff; no stale dispatch')
-            return
+            return 'CONTROLLER_STATE_CHANGED'
         current_target=resolve_controller_target(current,p)
         if controller_turn_is_active(current_target):
             current.update({'controller_dispatch':'ACTIVE_CONTROLLER_TURN_NO_REPROMPT','updated_at':now()})
             atomic(p,current); log(current,f'controller target={current_target} remains active; no self-prompt')
-            return
+            return 'CONTROLLER_ACTIVE'
         s,target=current,current_target
-    prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}, AGENTS.md, and orchestration/agents/ARC_CONTROLLER_SYSTEM.md; execute next_action as far as scientifically valid. '
+    key=action_sha256(s)
+    previous=s.get('controller_dispatch')
+    if isinstance(previous,dict) and previous.get('status') == 'DISPATCHED' and previous.get('action_sha256') == key:
+        dispatched_at=previous.get('dispatched_at','')
+        try: age=max(0,(datetime.now(timezone.utc)-datetime.fromisoformat(dispatched_at.replace('Z','+00:00'))).total_seconds())
+        except (TypeError,ValueError): age=retry_seconds
+        if age < retry_seconds:
+            log(s,f'controller action={key[:12]} cooldown remaining={int(retry_seconds-age)}s')
+            return 'CONTROLLER_COOLDOWN'
+    s.update({'controller_dispatch':{'status':'DISPATCHED','action_sha256':key,'dispatched_at':now(),'target':target},'updated_at':now()})
+    atomic(p,s)
+    ok=prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}, AGENTS.md, and orchestration/agents/ARC_CONTROLLER_SYSTEM.md; execute next_action as far as scientifically valid. '
            'Repair routine infrastructure autonomously with bounded CPU-only checks when frozen science is unchanged. Preserve failed runs and never reuse a consumed one-shot authorization. '
            'Escalate only a scientific, security, asset-identity, sealed-data, budget, or fresh execution-authorization blocker by freezing one concise brief and setting REVIEW_REQUIRED; never prompt Director directly. '
            'Before returning atomically write exactly one disposition: CONTINUE_CONTROLLER, REVIEW_REQUIRED, WAIT_REMOTE, PAUSED, or TERMINAL. '
            'REVIEW_REQUIRED requires review_brief and review_reason. WAIT_REMOTE only after a detached job with remote_job. Do not use legacy workflow states.',timeout,s)
+    return 'CONTROLLER_PROMPTED' if ok else 'CONTROLLER_PROMPT_FAILED'
 
 def route_bounded_infrastructure_pause(state, state_path):
     """Requeue at most two CPU-only turns for one recoverable infra incident."""
@@ -443,55 +515,75 @@ def consume_remote(state,path,status,detail):
         state['next_action']='PROCESS_REMOTE_RECEIPT'
     state.update({'disposition':'CONTINUE_CONTROLLER','remote_completion_consumed':True,'remote_completion_status':status,'remote_job':None,'active_remote_job':None,'last_actor':'governor','updated_at':now()})
     atomic(path,state); log(state,f'WAIT_REMOTE job={jobid} {status}; transition -> CONTINUE_CONTROLLER')
+def cycle(state_path, *, agent_timeout_seconds, controller_retry_seconds):
+    s=load(state_path)
+    if reconcile_consumed_stage_terminal(s,state_path): return 'STATE_RECONCILED',load(state_path)
+    if route_bounded_infrastructure_pause(s,state_path): return 'INFRA_RECOVERY_QUEUED',load(state_path)
+    if s['disposition']=='CONTINUE_CONTROLLER':
+        return controller(s,state_path,agent_timeout_seconds,controller_retry_seconds),load(state_path)
+    if s['disposition']=='REVIEW_REQUIRED':
+        director(s,state_path,agent_timeout_seconds); return 'DIRECTOR_REVIEW',load(state_path)
+    if s['disposition']=='WAIT_REMOTE':
+        job=s.get('remote_job') or s.get('active_remote_job') or {}
+        try:
+            primary=(job.get('primary_process') or {}).get('pid') or job.get('remote_pid') or job.get('remote_launcher_pid') or job.get('launcher_pid') or job.get('worker_pid')
+            jobid=job.get('job_id') or job.get('round_id'); kind=job.get('kind') or job.get('job_class') or job.get('class')
+            log(s,f"WAIT_REMOTE job={jobid} primary_remote_pid={primary} class={kind} check")
+            status,detail=remote_status(job)
+            log(s,f"WAIT_REMOTE receipt={'present' if status=='RECEIPT_PRESENT' else 'missing'} process={status}")
+            if status == 'PROCESS_DEAD':
+                time.sleep(2); confirmed, confirmed_detail = remote_status(job)
+                if confirmed != 'PROCESS_DEAD':
+                    log(s, f"WAIT_REMOTE dead observation not confirmed; process={confirmed}")
+                    return 'REMOTE_PENDING',s
+                detail = confirmed_detail
+            if status in {'RECEIPT_PRESENT','PROCESS_DEAD'}:
+                consume_remote(s,state_path,status,detail); return 'REMOTE_COMPLETED',load(state_path)
+            if status == 'INVALID_BINDING': log(s, f"WAIT_REMOTE binding invalid detail={detail}; retaining WAIT_REMOTE")
+        except Exception as exc:
+            log(s,f"WAIT_REMOTE exception={type(exc).__name__}:{exc}")
+        return 'REMOTE_PENDING',s
+    if s['disposition']=='PAUSED': return 'PAUSED',s
+    r=state_path.with_name('ARC2_GOVERNOR_TERMINAL_RECEIPT.json')
+    if not r.exists(): atomic(r,{'status':'TERMINAL','at':now(),'state':str(state_path)})
+    return 'TERMINAL',s
+
+def delay_for(result,state,*,paused_seconds,idle_seconds):
+    if result == 'TERMINAL': return None
+    if result == 'PAUSED': return paused_seconds
+    if result in {'CONTROLLER_ACTIVE','CONTROLLER_COOLDOWN','CONTROLLER_PROMPT_FAILED'}: return idle_seconds
+    if result == 'REMOTE_PENDING': return poll_seconds(state.get('remote_job') or state.get('active_remote_job') or {})
+    return 2
+
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument('--state',type=Path,required=True); ap.add_argument('--once',action='store_true'); ap.add_argument('--poll-seconds',type=int,default=300); ap.add_argument('--agent-timeout-seconds',type=int,default=180); a=ap.parse_args()
-    while True:
-        s=load(a.state)
-        # Compatibility repair for a historical live state written before
-        # stage-scoped terminal routing existed.
-        if reconcile_consumed_stage_terminal(s,a.state):
-            if a.once: return 0
-            continue
-        if route_bounded_infrastructure_pause(s,a.state):
-            if a.once: return 0
-            continue
-        if s['disposition']=='CONTINUE_CONTROLLER': controller(s,a.state,a.agent_timeout_seconds)
-        elif s['disposition']=='REVIEW_REQUIRED': director(s,a.state,a.agent_timeout_seconds)
-        elif s['disposition']=='WAIT_REMOTE':
-            job=s.get('remote_job') or s.get('active_remote_job') or {}; interval=poll_seconds(job)
-            try:
-                primary=(job.get('primary_process') or {}).get('pid') or job.get('remote_pid') or job.get('remote_launcher_pid') or job.get('launcher_pid') or job.get('worker_pid')
-                jobid=job.get('job_id') or job.get('round_id')
-                kind=job.get('kind') or job.get('job_class') or job.get('class')
-                log(s,f"WAIT_REMOTE job={jobid} primary_remote_pid={primary} class={kind} check")
-                status,detail=remote_status(job)
-                log(s,f"WAIT_REMOTE receipt={'present' if status=='RECEIPT_PRESENT' else 'missing'} process={status}")
-                # A forced-PTY control query can occasionally yield a stale
-                # process observation.  A missing receipt therefore requires
-                # two independent remote PID-dead observations before waking
-                # an agent for an infrastructure failure.
-                if status == 'PROCESS_DEAD':
-                    time.sleep(2)
-                    confirmed, confirmed_detail = remote_status(job)
-                    if confirmed != 'PROCESS_DEAD':
-                        log(s, f"WAIT_REMOTE dead observation not confirmed; process={confirmed}")
-                        time.sleep(interval)
-                        continue
-                    detail = confirmed_detail
-                if status in {'RECEIPT_PRESENT','PROCESS_DEAD'}:
-                    consume_remote(s,a.state,status,detail); continue
-                if status == 'INVALID_BINDING':
-                    # Binding defects are not proof that the remote primary
-                    # process has exited.  Keep waiting rather than waking an
-                    # agent and risking a duplicate scientific action.
-                    log(s, f"WAIT_REMOTE binding invalid detail={detail}; retaining WAIT_REMOTE")
-            except Exception as exc:
-                log(s,f"WAIT_REMOTE exception={type(exc).__name__}:{exc}")
-            time.sleep(interval)
-        elif s['disposition']=='PAUSED': return 0
-        else:
-            r=a.state.with_name('ARC2_GOVERNOR_TERMINAL_RECEIPT.json')
-            if not r.exists(): atomic(r,{'status':'TERMINAL','at':now(),'state':str(a.state)})
-            return 0
-        if a.once: return 0
-if __name__=='__main__': main()
+    ap=argparse.ArgumentParser()
+    ap.add_argument('--state',type=Path,required=True)
+    ap.add_argument('--once',action='store_true',help='run one bounded reconciliation cycle')
+    ap.add_argument('--daemon',action='store_true',help='remain alive across PAUSED and controller-idle intervals')
+    ap.add_argument('--agent-timeout-seconds',type=int,default=180)
+    ap.add_argument('--controller-retry-seconds',type=int,default=300)
+    ap.add_argument('--idle-seconds',type=int,default=15)
+    ap.add_argument('--paused-seconds',type=int,default=15)
+    ap.add_argument('--lock-path',type=Path)
+    ap.add_argument('--pid-file',type=Path)
+    ap.add_argument('--service-state',type=Path)
+    a=ap.parse_args()
+    if a.once and a.daemon: ap.error('--once and --daemon are mutually exclusive')
+    lock=GovernorLock(a.lock_path or a.state.parent/'arc2_governor.lock')
+    if not lock.acquire():
+        print('ARC2_GOVERNOR_ALREADY_RUNNING',file=sys.stderr); return 3
+    try:
+        write_pid_file(a.pid_file)
+        while True:
+            result,s=cycle(a.state,agent_timeout_seconds=a.agent_timeout_seconds,controller_retry_seconds=a.controller_retry_seconds)
+            write_service_state(a.service_state,status=result,workflow_state=s)
+            if a.once or result == 'TERMINAL' or not a.daemon: return 0
+            time.sleep(delay_for(result,s,paused_seconds=a.paused_seconds,idle_seconds=a.idle_seconds))
+    except Exception as exc:
+        try: write_service_state(a.service_state,status='ERROR',workflow_state=load(a.state),detail=f'{type(exc).__name__}:{exc}')
+        except Exception: pass
+        raise
+    finally:
+        remove_own_pid_file(a.pid_file)
+        lock.release()
+if __name__=='__main__': raise SystemExit(main())

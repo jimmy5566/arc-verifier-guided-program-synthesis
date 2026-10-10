@@ -12,9 +12,9 @@
   detached RunPod jobs; Watchdog only keeps one Supervisor alive. Historical
   directive/acknowledgement state machines are provenance, not normal work
   queues. See [`orchestration/SIMPLE_ORCHESTRATION_V1.md`](orchestration/SIMPLE_ORCHESTRATION_V1.md).
-- `scripts/arc2_governor.py` is the sole live persistent scheduler. It routes
-  `CONTINUE_CONTROLLER`, `REVIEW_REQUIRED`, `WAIT_REMOTE`, `PAUSED`, and
-  `TERMINAL`. `scripts/arc2_runner.py` and historical directive loops are
+- `scripts/arc2_governor.py --daemon` is the sole live persistent scheduler. It owns a process-lifetime lock and service heartbeat, routes
+  `CONTINUE_CONTROLLER`, `REVIEW_REQUIRED`, `WAIT_REMOTE`, `PAUSED`, and `TERMINAL`, and uses a dispatch lease to prevent duplicate Controller prompts.
+  `orchestration/governor/Start-Arc2Governor.ps1` starts the service. `scripts/arc2_runner.py` and historical directive loops are
   deprecated provenance and must not run concurrently.
 
 ## Engineering remediation and scientific review
