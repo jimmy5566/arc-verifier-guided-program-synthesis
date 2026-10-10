@@ -1,0 +1,68 @@
+{
+  "authorized_actions": [
+    "read_only_source_and_manifest_inventory"
+  ],
+  "candidate_schemas": [
+    {
+      "atomic_prerequisites": [
+        "relational component selection",
+        "parameterized recolor"
+      ],
+      "current_generator": "AVAILABLE_BUT_WITHIN_SCHEMA_ONLY",
+      "falsifiable_cohort_freezable": false,
+      "independent_units": "48 frozen canonical tuples, already exposed as V2 evaluation",
+      "reason": "Saturated V7 cohort cannot answer held-out composition.",
+      "schema": "SELECT_COMPONENT_THEN_PARAMETERIZED_RECOLOR",
+      "structural_or_order_shift": "NONE",
+      "verified_train_exposure_boundary": "UNVERIFIED_FOR_LEGITIMATE_SYNTHETIC_TRAIN"
+    },
+    {
+      "atomic_prerequisites": [
+        "relational component selection",
+        "parameterized recolor",
+        "overlay/placement"
+      ],
+      "current_generator": "NOT_AVAILABLE_IN_EXISTING_READ_ONLY_SOURCE",
+      "falsifiable_cohort_freezable": false,
+      "independent_units": "UNKNOWN",
+      "reason": "No existing legitimate TRAIN metadata or generator establishes required exposure boundary.",
+      "schema": "SELECT_COMPONENT_THEN_RECOLOR_THEN_OVERLAY",
+      "structural_or_order_shift": "NOVEL_THREE_OPERATION_ORDER_POSSIBLE_IN_PRINCIPLE",
+      "verified_train_exposure_boundary": "NOT_ESTABLISHED"
+    },
+    {
+      "atomic_prerequisites": [
+        "conditional relation selection",
+        "parameterized recolor"
+      ],
+      "current_generator": "NOT_AVAILABLE_IN_EXISTING_READ_ONLY_SOURCE",
+      "falsifiable_cohort_freezable": false,
+      "independent_units": "UNKNOWN",
+      "reason": "No verified source supports control construction or TRAIN-exposure separation.",
+      "schema": "CONDITIONAL_SELECTOR_THEN_RECOLOR",
+      "structural_or_order_shift": "CONDITIONAL_BRANCHING_POSSIBLE_IN_PRINCIPLE",
+      "verified_train_exposure_boundary": "NOT_ESTABLISHED"
+    }
+  ],
+  "conclusion": "Current repository evidence supports no defensible successor cohort freeze. A future proposal must first establish legitimate synthetic TRAIN content and latent-structure exposure boundaries, then define matched atomic controls before any cohort is generated.",
+  "prohibited_actions": [
+    "cohort_generation",
+    "successor_protocol_freeze",
+    "model_loading",
+    "GPU",
+    "generation",
+    "training",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT"
+  ],
+  "protocol_id": "CPU_ONLY_STRUCTURALLY_HELD_OUT_COMPOSITION_FEASIBILITY_V1",
+  "selection": "NONE",
+  "sources": {
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_TRAIN_MICROBATCH_MANIFEST_V1.json": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "experiments/capability_repair_baseline_v1/matched_atomic_to_compositional_transfer_v2_rc1_rc5/COHORT_MANIFEST.json": "e508c227c84f86557b84a824ae64cf4bc0319ba627d9ddf6a5b0a7e89768e2fc",
+    "scripts/prepare_matched_atomic_to_compositional_transfer_v1.py": "82265bf99c2b592bc71ea0739a6302660c40925b372b4d76fac24b30b81cf8c5",
+    "scripts/prepare_matched_atomic_to_compositional_transfer_v2.py": "ab3087f095bffd80abe70cdb332c167d7af656b73a83029f2a369dd87a002b6e"
+  },
+  "status": "NO_DEFENSIBLE_SUCCESSOR_COHORT_CAN_BE_FROZEN_FROM_CURRENT_VERIFIED_ASSETS"
+}
