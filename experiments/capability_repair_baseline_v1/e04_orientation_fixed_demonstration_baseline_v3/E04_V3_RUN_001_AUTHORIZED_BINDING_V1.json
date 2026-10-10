@@ -1,0 +1,20 @@
+﻿{
+    "schema_version":  1,
+    "protocol_id":  "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE",
+    "authorization_id":  "E04_V3_CLEAN_BASELINE_ONE_SHOT_CONDITIONAL_20261010",
+    "execution_authorized":  true,
+    "source_commit":  "8d9820c8ee73876686c577d1b9fab3125150267c",
+    "worker_sha256":  "f0a8df5aaa295869d439e9612c32e3582c1da1bd073cb625f1a0545b0feb7860",
+    "contract_path":  "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_NO_UPDATE_EXECUTION_CONTRACT_V1.json",
+    "contract_sha256":  "d11065b5f7b17224e42f72e8bd33fcb8c5abd19d8e23a1a6f66660150b0b5af2",
+    "checkpoint_manifest_path":  "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "checkpoint_manifest_sha256":  "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "native_config_dir":  "/root/arc-runtime-3090-gpu-benchmark-v1/arc2/configs/nvarc_native_846d0198",
+    "native_config_provenance_path":  "configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json",
+    "native_config_provenance_sha256":  "8b93daec881dd8a05ca69f2f127a13efb7e5c0519e92f85a61afed02454670b4",
+    "output_root":  "/workspace/arc2/e04_orientation_fixed_demonstration_baseline_v3/run_001_8e4582eed8b8e118cbce4137ab6b8cba",
+    "nonce":  "8e4582eed8b8e118cbce4137ab6b8cba",
+    "hard_runtime_cap_seconds":  1800,
+    "jobs":  1,
+    "retry":  false
+}
