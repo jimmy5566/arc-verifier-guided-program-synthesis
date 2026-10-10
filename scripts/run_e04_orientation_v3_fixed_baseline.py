@@ -1,4 +1,4 @@
-"""Run the authorized E04 V3 target-blind V7 native greedy generation once.
+﻿"""Run the authorized E04 V3 target-blind V7 native greedy generation once.
 
 The worker never opens the target scorer sidecar. It emits and freezes raw
 generation before a separate CPU scorer may join targets.
@@ -32,7 +32,7 @@ def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
         fail("E04_BINDING_SCHEMA")
     if binding["protocol_id"] != "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE":
         fail("E04_BINDING_PROTOCOL")
-    if binding["authorization_id"] != "E04_V3_REPLACEMENT_EXECUTION_ONE_SHOT_CONDITIONAL_20261010":
+    if binding["authorization_id"] != "E04_V3_IMPORT_PATH_REPLACEMENT_ONE_SHOT_CONDITIONAL_20261010":
         fail("E04_BINDING_AUTHORIZATION_ID")
     if len(binding["director_response_sha256"]) != 64 or any(c not in "0123456789abcdef" for c in binding["director_response_sha256"]):
         fail("E04_BINDING_DIRECTOR_RESPONSE_IDENTITY")
@@ -243,4 +243,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 

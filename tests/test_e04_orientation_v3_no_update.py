@@ -1,4 +1,4 @@
-import hashlib
+﻿import hashlib
 import json
 import tempfile
 import unittest
@@ -99,7 +99,7 @@ class E04V3NoUpdateTest(unittest.TestCase):
             binding = {
                 "schema_version": 1,
                 "protocol_id": contract["protocol_id"],
-                "authorization_id": "E04_V3_REPLACEMENT_EXECUTION_ONE_SHOT_CONDITIONAL_20261010", "director_response_sha256": "0" * 64,
+                "authorization_id": "E04_V3_IMPORT_PATH_REPLACEMENT_ONE_SHOT_CONDITIONAL_20261010", "director_response_sha256": "0" * 64,
                 "execution_authorized": True,
                 "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=e.ROOT, text=True).strip(),
                 "worker_sha256": e.sha_path(e.ROOT / "scripts/run_e04_orientation_v3_fixed_baseline.py"),
@@ -137,7 +137,7 @@ class E04V3NoUpdateTest(unittest.TestCase):
             out = Path(tmp) / "fresh"
             binding = {
                 "schema_version": 1, "protocol_id": "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE",
-                "authorization_id": "E04_V3_REPLACEMENT_EXECUTION_ONE_SHOT_CONDITIONAL_20261010", "director_response_sha256": "0" * 64,
+                "authorization_id": "E04_V3_IMPORT_PATH_REPLACEMENT_ONE_SHOT_CONDITIONAL_20261010", "director_response_sha256": "0" * 64,
                 "execution_authorized": True, "source_commit": "wrong", "worker_sha256": "wrong",
                 "contract_path": str(e.CONTRACT.relative_to(e.ROOT)).replace("\\\\", "/"), "contract_sha256": e.sha_path(e.CONTRACT),
                 "runtime_config_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_NATIVE_GREEDY_RUNTIME_CONFIG_V1.json", "runtime_config_sha256": e.sha_path(e.ROOT / "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_NATIVE_GREEDY_RUNTIME_CONFIG_V1.json"),
@@ -156,6 +156,7 @@ class E04V3NoUpdateTest(unittest.TestCase):
                 worker.load_binding(bp, out)
 if __name__ == "__main__":
     unittest.main()
+
 
 
 
