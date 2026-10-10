@@ -1,0 +1,32 @@
+{
+  "artifact_id": "CPU_ONLY_E04_ORIENTATION_GENERATOR_PREFLIGHT_IMPLEMENTATION_V1",
+  "enumeration": {
+    "byte_identical_regeneration": "NOT_RUN",
+    "condition_views_per_base_tuple": 4,
+    "grid_uniqueness": "NOT_RUN",
+    "scientific_content_manifests": "NOT_RUN",
+    "scientific_grids_rendered": false,
+    "target_correctness": "NOT_RUN",
+    "train_base_tuples": 288,
+    "validation_base_tuples": 48
+  },
+  "frozen_inputs": {
+    "design_v2_sha256": "1fd3592840195c76a101bdb8901dfdd07544ebb183cc1f62030766df24b347f2",
+    "prefreeze_v2_sha256": "139bd6cb6ecb16a68688d827d224fa7a3282d60c85380ec81a23efdf702b3a13"
+  },
+  "prohibitions_observed": [
+    "no cohort generation",
+    "no model/GPU/inference/training",
+    "no sealed data"
+  ],
+  "source": {
+    "path": "scripts/e04_orientation_generator_preflight_v1.py",
+    "sha256": "ff40e578aabb545e7b819a5df9af23606a49efb4c6ee948e6e4f7032c0a1e51f"
+  },
+  "status": "COMPLETE_CPU_ONLY_REVIEW_REQUIRED",
+  "test": {
+    "path": "tests/test_e04_orientation_generator_preflight_v1.py",
+    "result": "DIRECT_CPU_TEST_PASS; pytest NOT_RUN (pytest unavailable)",
+    "sha256": "2f421908d2a69b4f5d19d2d57cc528b137905a6094f263eab5d93f2fe3d87eb4"
+  }
+}

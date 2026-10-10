@@ -1,0 +1,17 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_E04_ORIENTATION_GENERATOR_PREFLIGHT_IMPLEMENTATION_V1",
+  "facts": [
+    "288 TRAIN and 48 validation latent tuples enumerated without grid rendering; four paired views per base tuple; overlap and count checks pass.",
+    "Scientific content manifests, grid uniqueness, target correctness, and full regeneration remain NOT_RUN."
+  ],
+  "forbidden": [
+    "No cohort/model/GPU/training/sealed data occurred."
+  ],
+  "question": "Does this CPU-only preflight implementation adequately preserve V2 semantics for a later cohort-generation decision?",
+  "result": {
+    "path": "experiments/capability_repair_baseline_v1/CPU_ONLY_E04_ORIENTATION_GENERATOR_PREFLIGHT_IMPLEMENTATION_V1.json",
+    "sha256": "daa8fcc4e2bfecead97cb658043e2da14a88fed62f5d6d502fc4f034fa73148b"
+  },
+  "schema_version": 1,
+  "stage": "CPU_ONLY_E04_ORIENTATION_GENERATOR_PREFLIGHT_IMPLEMENTATION_V1"
+}
