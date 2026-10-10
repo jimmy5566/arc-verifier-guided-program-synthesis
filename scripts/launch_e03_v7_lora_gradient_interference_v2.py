@@ -8,7 +8,7 @@ def atomic(p,x):
 def main():
  a=argparse.ArgumentParser();a.add_argument('--cap-seconds',type=int,default=1500);a.add_argument('--output-root',type=Path,required=True);a.add_argument('worker',nargs=argparse.REMAINDER);x=a.parse_args()
  if x.cap_seconds!=1500 or not x.worker or x.worker[0]!='--':raise SystemExit('E03_EXTERNAL_CAP_OR_COMMAND_INVALID')
- cmd=x.worker[1:];started=time.monotonic();p=subprocess.Popen(cmd,start_new_session=True);timed_out=False
+ cmd=x.worker[1:];started=time.monotonic();env=dict(os.environ);env['E03_EXTERNAL_CAP_ENFORCED']='1';p=subprocess.Popen(cmd,start_new_session=True,env=env);timed_out=False
  while p.poll() is None:
   if time.monotonic()-started>=x.cap_seconds:
    timed_out=True;os.killpg(p.pid,signal.SIGTERM);break
