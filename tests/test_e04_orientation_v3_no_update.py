@@ -83,5 +83,53 @@ class E04V3NoUpdateTest(unittest.TestCase):
             with self.assertRaisesRegex(e.E04ExecutionFailure, "E04_RAW_PARSE_CONTRACT"):
                 e.validate_raw_generation(raw, [0])
 
+
+    def test_binding_preflight_accepts_exact_detached_source_without_model_import(self):
+        from scripts import run_e04_orientation_v3_fixed_baseline as worker
+        contract = json.loads(e.CONTRACT.read_text())
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "fresh"
+            binding = {
+                "schema_version": 1,
+                "protocol_id": contract["protocol_id"],
+                "authorization_id": "E04_V3_CLEAN_BASELINE_ONE_SHOT_CONDITIONAL_20261010",
+                "execution_authorized": True,
+                "source_commit": "50ad4ce1bdaa051aa587b20f5af4c2112f7a00ed",
+                "worker_sha256": e.sha_path(e.ROOT / "scripts/run_e04_orientation_v3_fixed_baseline.py"),
+                "contract_path": str(e.CONTRACT.relative_to(e.ROOT)).replace("\\\\", "/"),
+                "contract_sha256": e.sha_path(e.CONTRACT),
+                "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+                "checkpoint_manifest_sha256": e.sha_path(e.ROOT / "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json"),
+                "native_config_dir": str(e.ROOT / "configs/nvarc_native_846d0198"),
+                "native_config_provenance_path": "configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json",
+                "native_config_provenance_sha256": e.sha_path(e.ROOT / "configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json"),
+                "output_root": str(out), "nonce": "unit-test-nonce",
+                "hard_runtime_cap_seconds": 1800, "jobs": 1, "retry": False,
+            }
+            bp = Path(tmp) / "binding.json"
+            e.atomic_json(bp, binding)
+            self.assertEqual(worker.load_binding(bp, out)["nonce"], "unit-test-nonce")
+
+    def test_binding_rejects_wrong_execution_identity(self):
+        from scripts import run_e04_orientation_v3_fixed_baseline as worker
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "fresh"
+            binding = {
+                "schema_version": 1, "protocol_id": "E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE",
+                "authorization_id": "E04_V3_CLEAN_BASELINE_ONE_SHOT_CONDITIONAL_20261010",
+                "execution_authorized": True, "source_commit": "wrong", "worker_sha256": "wrong",
+                "contract_path": str(e.CONTRACT.relative_to(e.ROOT)).replace("\\\\", "/"), "contract_sha256": e.sha_path(e.CONTRACT),
+                "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+                "checkpoint_manifest_sha256": e.sha_path(e.ROOT / "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json"),
+                "native_config_dir": str(e.ROOT / "configs/nvarc_native_846d0198"),
+                "native_config_provenance_path": "configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json",
+                "native_config_provenance_sha256": e.sha_path(e.ROOT / "configs/NVARC_NATIVE_INTERFACE_846D0198_PROVENANCE.json"),
+                "output_root": str(out), "nonce": "unit-test-nonce", "hard_runtime_cap_seconds": 1800, "jobs": 1, "retry": False,
+            }
+            bp = Path(tmp) / "binding.json"
+            e.atomic_json(bp, binding)
+            with self.assertRaisesRegex(e.E04ExecutionFailure, "E04_WORKER_HASH"):
+                worker.load_binding(bp, out)
 if __name__ == "__main__":
     unittest.main()
+

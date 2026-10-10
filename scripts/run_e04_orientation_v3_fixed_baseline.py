@@ -23,8 +23,8 @@ def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
     required = {
         "schema_version", "protocol_id", "authorization_id", "execution_authorized",
         "source_commit", "worker_sha256", "contract_path", "contract_sha256",
-        "model_path", "model_manifest_path", "model_manifest_sha256",
-        "native_config_dir", "native_config_manifest_path", "native_config_manifest_sha256",
+        "checkpoint_manifest_path", "checkpoint_manifest_sha256",
+        "native_config_dir", "native_config_provenance_path", "native_config_provenance_sha256",
         "output_root", "nonce", "hard_runtime_cap_seconds", "jobs", "retry",
     }
     if set(binding) != required:
@@ -50,14 +50,14 @@ def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
     if not contract.is_file() or sha_path(contract) != binding["contract_sha256"]:
         fail("E04_CONTRACT_HASH")
     validate_contract(contract)
-    for key in ("model_manifest_path", "native_config_manifest_path"):
+    for key in ("checkpoint_manifest_path", "native_config_provenance_path"):
         candidate = ROOT / binding[key]
         if not candidate.is_file():
             fail("E04_RUNTIME_IDENTITY_MANIFEST_MISSING:" + key)
-    if sha_path(ROOT / binding["model_manifest_path"]) != binding["model_manifest_sha256"]:
-        fail("E04_MODEL_MANIFEST_HASH")
-    if sha_path(ROOT / binding["native_config_manifest_path"]) != binding["native_config_manifest_sha256"]:
-        fail("E04_NATIVE_CONFIG_MANIFEST_HASH")
+    if sha_path(ROOT / binding["checkpoint_manifest_path"]) != binding["checkpoint_manifest_sha256"]:
+        fail("E04_CHECKPOINT_MANIFEST_HASH")
+    if sha_path(ROOT / binding["native_config_provenance_path"]) != binding["native_config_provenance_sha256"]:
+        fail("E04_NATIVE_CONFIG_PROVENANCE_HASH")
     if output_root.exists() and any(output_root.iterdir()):
         fail("E04_FRESH_OUTPUT_REQUIRED")
     return binding
@@ -118,9 +118,37 @@ def run(config_path: Path, binding_path: Path, output_root: Path) -> None:
         output_root.mkdir(parents=True, exist_ok=False)
         deadline = started + CAP_SECONDS
         check_deadline(deadline)
-        # Runtime-only imports: all prior gates completed before torch/model import.
-        from inference.nvarc_native import NVARCNativeProvider, parse_native_grid
-        provider = NVARCNativeProvider(model_path=Path(binding["model_path"]), tokenizer_config_dir=Path(binding["native_config_dir"]), device="cuda:0")
+        # Runtime-only imports: all prior source/config gates completed before
+        # model import. Verify exact base and V7 adapter bytes before loading.
+        checkpoint = json.loads((ROOT / binding["checkpoint_manifest_path"]).read_text(encoding="utf-8"))
+        provenance = json.loads((ROOT / binding["native_config_provenance_path"]).read_text(encoding="utf-8"))
+        def verify_entries(folder: Path, entries: list[dict[str, Any]], label: str) -> None:
+            for entry in entries:
+                candidate = folder / entry["name"]
+                if (not candidate.is_file() or candidate.stat().st_size != entry["bytes"]
+                        or sha_path(candidate) != entry["sha256"]):
+                    fail("E04_RUNTIME_" + label + "_IDENTITY:" + entry["name"])
+        base_path = Path(checkpoint["base_path"])
+        adapter_path = Path(checkpoint["adapter_path"])
+        verify_entries(base_path, checkpoint["base_files"], "BASE")
+        verify_entries(adapter_path, checkpoint["adapter_files"], "V7_ADAPTER")
+        for entry in provenance.get("files", {}).values():
+            vendored = ROOT / entry["vendored_path"]
+            if not vendored.is_file() or sha_path(vendored) != entry["sha256"]:
+                fail("E04_NATIVE_CONFIG_FILE_IDENTITY:" + entry["vendored_path"])
+        from inference.nvarc_native import NVARCNativeProvider, checkpoint_native_tokenizer, parse_native_grid
+        from peft import PeftModel
+        from transformers import AutoModelForCausalLM
+        import torch
+        tokenizer, tokenizer_metadata = checkpoint_native_tokenizer(base_path, Path(binding["native_config_dir"]))
+        model = AutoModelForCausalLM.from_pretrained(str(base_path), local_files_only=True, trust_remote_code=False,
+                                                     torch_dtype=torch.bfloat16, low_cpu_mem_usage=True).to("cuda:0")
+        model = PeftModel.from_pretrained(model, adapter_path, is_trainable=False).eval()
+        provider = NVARCNativeProvider(model_path=base_path, tokenizer_config_dir=Path(binding["native_config_dir"]), device="cuda:0")
+        provider.model, provider.tokenizer = model, tokenizer
+        provider.load_metadata = {**tokenizer_metadata, "checkpoint_identity": "RECONSTRUCTED_FOUNDATION_V2_V7",
+                                  "base_path": str(base_path), "adapter_path": str(adapter_path),
+                                  "model_vram_mb": round(torch.cuda.memory_allocated() / (1024 * 1024), 1)}
         prompts = read_jsonl(ROOT / json.loads(contract.read_text(encoding="utf-8"))["input_prompts_path"])
         failures: list[dict[str, str]] = []
         primary: list[dict[str, Any]] | None = None
