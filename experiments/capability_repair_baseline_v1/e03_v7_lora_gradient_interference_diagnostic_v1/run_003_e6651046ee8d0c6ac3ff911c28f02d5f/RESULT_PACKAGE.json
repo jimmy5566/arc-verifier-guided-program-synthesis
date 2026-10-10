@@ -1,0 +1,86 @@
+{
+  "bootstrap_95_ci": {
+    "connected_components": [
+      0.7914748055992171,
+      0.8319176334986471
+    ],
+    "difference": [
+      0.7453131953867148,
+      0.7944947704379244
+    ],
+    "inside_contains": [
+      0.7230869651898966,
+      0.7761859435147588
+    ],
+    "orientation": [
+      0.8155777741407068,
+      0.8451094998185263
+    ],
+    "secondary_combined": [
+      0.8723589008769492,
+      0.8864618337960768
+    ],
+    "width": [
+      0.7283300038747377,
+      0.7653803454284279
+    ]
+  },
+  "director_response_sha256": "69a17bc1e235d93a7517af76eef94a2b51a6f2fbabb61f0076d6c53bf776097a",
+  "evidence_sha256": {
+    "LAUNCHER.log": "776c7e61ebfb826fa596d5ee0aea8b69c3a04f3492d9f6074a2e0bee940c0019",
+    "LAUNCHER_RECEIPT.json": "5ae19310bc6ff64b973e08f9bd410127e8984e9b249c05bac40b422afb93f700",
+    "POSTPROCESS_RESULT.json": "cd74ac2dc895812a30d0382d36954ce77f89e779e920399658ede3e4c5e09a86",
+    "PROGRESS.json": "17b7e6f5dc7084c12d5e2bdbc9c84d0fca5273f8715f820ae92b7995f1fd42e2",
+    "RAW_GRAM_STATISTICS.json": "2f0245bea7467c498c325942396f17459ccd675d23a4db920968804427b4cb6f",
+    "RESOURCE_PREFLIGHT.json": "580860399958ec5beea07a174ce9e74119a393767eeb82f444a53d62475699eb",
+    "TERMINAL_RECEIPT.json": "da425f27b99cbc724a7bb676fafb1aabb676ff512c3aa3d5ec7a788cc6494733"
+  },
+  "execution_binding_sha256": "d34eace78346661f5b58ad21e8a6230ff36c7e2aa3530229edbc5a43b73c1bd0",
+  "manifest_sha256": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+  "point_cosines": {
+    "connected_components": 0.8345161866358805,
+    "difference": 0.790395819565915,
+    "inside_contains": 0.7755988438660297,
+    "orientation": 0.8458596374896347,
+    "secondary_combined": 0.888416817031502,
+    "width": 0.7657238563319162
+  },
+  "postprocess_decision": "INCONCLUSIVE",
+  "process_status": "COMPLETE_NO_UPDATE",
+  "prohibited_actions_observed": {
+    "final_audit_opened": false,
+    "generation_calls": 0,
+    "optimizer_steps": 0,
+    "parameter_updates": 0
+  },
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "repeatability": {
+    "contract": {
+      "decision": "if either bound fails, repeatability status is INCONCLUSIVE and the final scientific decision is INCONCLUSIVE",
+      "max_relative_l2": 0.0001,
+      "min_cosine": 0.9999,
+      "rows": 9,
+      "selection": "first episode in each manifest family, in manifest order"
+    },
+    "episode_ids": [
+      "TRAIN:ATOMIC_REPAIR:connected components:000023",
+      "TRAIN:ATOMIC_REPAIR:inside/contains:000215",
+      "TRAIN:ATOMIC_REPAIR:width:000100",
+      "TRAIN:ATOMIC_REPAIR:difference:000200",
+      "TRAIN:ATOMIC_REPAIR:orientation:000051",
+      "TRAIN:ATOMIC_REPAIR:same color:000109",
+      "TRAIN:RETENTION_TRAIN:color mapping:000060",
+      "TRAIN:COMPOSITION_REPAIR:relation selector action:000235",
+      "TRAIN:COMPOSITION_REPAIR:conditional action:000214"
+    ],
+    "max_relative_l2": 0.008617405731011414,
+    "min_cosine": 0.9999628901936229,
+    "rows": 9,
+    "status": "INCONCLUSIVE"
+  },
+  "result_scope": "frozen 72-row TRAIN cohort; no DEV, retention, Gold, dGold, FINAL_AUDIT, training, optimizer update, or generation",
+  "run_id": "RUN_003_e6651046ee8d0c6ac3ff911c28f02d5f",
+  "runtime_launch_commit": "d803b2a8c45425ea299db983886f29cde2dfb3d2",
+  "schema_version": 1,
+  "scientific_interpretation": "INCONCLUSIVE_REPEATABILITY_GATE_FAILED; local gradient disagreement is not causal proof of forgetting"
+}

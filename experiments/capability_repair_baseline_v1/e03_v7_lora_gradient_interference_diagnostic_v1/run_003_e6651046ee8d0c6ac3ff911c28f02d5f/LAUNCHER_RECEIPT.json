@@ -1,0 +1,11 @@
+{
+  "authorization_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_RUN_003_e6651046ee8d0c6ac3ff911c28f02d5f",
+  "elapsed_seconds": 409.37545136827976,
+  "launcher_log_path": "/workspace/arc2/e03_v3_b1_per_example_gradient_screen/run_003_e6651046ee8d0c6ac3ff911c28f02d5f.launcher.log",
+  "launcher_log_sha256": "776c7e61ebfb826fa596d5ee0aea8b69c3a04f3492d9f6074a2e0bee940c0019",
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "retry": false,
+  "status": "WORKER_TERMINAL_RECEIPT_PRESERVED",
+  "terminal_receipt_sha256": "da425f27b99cbc724a7bb676fafb1aabb676ff512c3aa3d5ec7a788cc6494733",
+  "worker_return_code": 0
+}

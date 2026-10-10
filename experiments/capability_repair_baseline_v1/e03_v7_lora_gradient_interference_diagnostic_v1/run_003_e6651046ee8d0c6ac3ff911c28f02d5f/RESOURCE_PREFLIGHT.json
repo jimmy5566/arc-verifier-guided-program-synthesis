@@ -1,0 +1,9 @@
+{
+  "available_scratch_bytes": 1125899906842624,
+  "gradient_parameters": 132120576,
+  "gradient_rows": 72,
+  "required_scratch_bytes": 38050725888,
+  "required_with_headroom_bytes": 41855798476,
+  "runtime_launch_commit": "d803b2a8c45425ea299db983886f29cde2dfb3d2",
+  "status": "PASS"
+}

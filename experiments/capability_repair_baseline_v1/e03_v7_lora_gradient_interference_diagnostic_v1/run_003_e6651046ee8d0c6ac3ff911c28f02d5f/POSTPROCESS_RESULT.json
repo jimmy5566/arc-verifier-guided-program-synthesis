@@ -1,0 +1,65 @@
+{
+  "bootstrap_95_ci": {
+    "connected_components": [
+      0.7914748055992171,
+      0.8319176334986471
+    ],
+    "difference": [
+      0.7453131953867148,
+      0.7944947704379244
+    ],
+    "inside_contains": [
+      0.7230869651898966,
+      0.7761859435147588
+    ],
+    "orientation": [
+      0.8155777741407068,
+      0.8451094998185263
+    ],
+    "secondary_combined": [
+      0.8723589008769492,
+      0.8864618337960768
+    ],
+    "width": [
+      0.7283300038747377,
+      0.7653803454284279
+    ]
+  },
+  "bootstrap_replicates": 10000,
+  "bootstrap_seed": 20261010,
+  "decision": "INCONCLUSIVE",
+  "interpretation_limit": "local gradient disagreement is not causal proof of forgetting",
+  "point_cosines": {
+    "connected_components": 0.8345161866358805,
+    "difference": 0.790395819565915,
+    "inside_contains": 0.7755988438660297,
+    "orientation": 0.8458596374896347,
+    "secondary_combined": 0.888416817031502,
+    "width": 0.7657238563319162
+  },
+  "repeatability": {
+    "contract": {
+      "decision": "if either bound fails, repeatability status is INCONCLUSIVE and the final scientific decision is INCONCLUSIVE",
+      "max_relative_l2": 0.0001,
+      "min_cosine": 0.9999,
+      "rows": 9,
+      "selection": "first episode in each manifest family, in manifest order"
+    },
+    "episode_ids": [
+      "TRAIN:ATOMIC_REPAIR:connected components:000023",
+      "TRAIN:ATOMIC_REPAIR:inside/contains:000215",
+      "TRAIN:ATOMIC_REPAIR:width:000100",
+      "TRAIN:ATOMIC_REPAIR:difference:000200",
+      "TRAIN:ATOMIC_REPAIR:orientation:000051",
+      "TRAIN:ATOMIC_REPAIR:same color:000109",
+      "TRAIN:RETENTION_TRAIN:color mapping:000060",
+      "TRAIN:COMPOSITION_REPAIR:relation selector action:000235",
+      "TRAIN:COMPOSITION_REPAIR:conditional action:000214"
+    ],
+    "max_relative_l2": 0.008617405731011414,
+    "min_cosine": 0.9999628901936229,
+    "rows": 9,
+    "status": "INCONCLUSIVE"
+  },
+  "status": "COMPLETE_NO_UPDATE"
+}
