@@ -1,0 +1,60 @@
+{
+  "artifact_type": "E03_V3_EXECUTION_IDENTITY_CONTRACT_REMEDIATION",
+  "commands": [
+    "py -3 -m unittest tests.test_e03_v3_infrastructure_recovery tests.test_e03_v3_b1_per_example_gradient_screen -v",
+    "py -3 -m unittest tests.test_arc2_governor_director_routing tests.test_arc2_governor_infrastructure_triage tests.test_arc2_governor_model_first_continuation -v"
+  ],
+  "corrected_contract": {
+    "approved_execution_snapshot_commit": "317ac7ce8cc60906572cae9f53b2880e209bd789",
+    "binding_delivery_rule": "delivery metadata may be committed after the approved source snapshot; it is consumed as a separate input before checkout, avoiding a self-referential commit hash.",
+    "not_execution_gates": [
+      "moving development branch head",
+      "symbolic branch name",
+      "temporary remote-tracking reference"
+    ],
+    "required_identity_checks": [
+      "clean tracked source",
+      "bound scientific configuration hash",
+      "bound checkpoint manifest hash",
+      "bound cohort manifest hash",
+      "bound executable file hashes"
+    ],
+    "runtime_requirement": "detached HEAD equals approved_execution_snapshot_commit"
+  },
+  "cpu_integration_tests": [
+    "temporary repository: frozen approved commit, independently advanced infra branch, detached frozen checkout, actual worker.preflight PASS",
+    "wrong execution commit FAIL",
+    "tracked source change FAIL",
+    "bound scientific artifact hash change FAIL",
+    "actual worker.preflight invalid authorization FAIL",
+    "launcher duplicate output and one-shot authorization guards PASS"
+  ],
+  "root_cause": "E03_V3_ORIGIN_COMMIT_MISMATCH: execution validation incorrectly required a moving origin reference to equal the approved historical execution commit.",
+  "run_status": {
+    "failed_run_evidence_preserved": true,
+    "gpu_smoke_launched_by_this_remediation": false,
+    "owner_pause_blocks_gpu_execution": true,
+    "technical_readiness": "READY_AFTER_EXPLICIT_OWNER_RESUME_AND_FRESH_EXECUTION_BINDING_FOR_THIS_SOURCE_SNAPSHOT"
+  },
+  "science_unchanged": {
+    "checkpoint": "V7",
+    "dfold_access": false,
+    "families": 9,
+    "final_audit_opened": false,
+    "generation_calls": 0,
+    "gold_access": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "physical_batch_size": 1,
+    "precision": "BF16",
+    "train_examples": 72
+  },
+  "source_files": {
+    "AGENTS.md": "7931f8da5c7e41ac38aa1ee0579e6c9882d1e01813c1f7fa583cdda3e8589978",
+    "orchestration/agents/ARC_CONTROLLER_SYSTEM.md": "c2364a67bcfa183cbbb435a82d20bce00f44eb449cca83081e8d42ffab5e2762",
+    "scripts/run_e03_v3_b1_per_example_gradient_screen.py": "3700829a66f3e5f5b577ab6cdbf6b045fd3389594b43f27023fdd464750290aa",
+    "tests/test_e03_v3_infrastructure_recovery.py": "9fc70e6eba4141af730ecd0a0e5e703995bd962d8431df0d07f6ced48cf82241"
+  },
+  "status": "CPU_INTEGRATION_VALIDATED__OWNER_PAUSE_REMAINS_EFFECTIVE",
+  "version": 1
+}
