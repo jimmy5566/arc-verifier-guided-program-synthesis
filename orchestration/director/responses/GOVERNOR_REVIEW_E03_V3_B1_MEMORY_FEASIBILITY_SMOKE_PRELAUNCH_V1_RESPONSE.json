@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "response_id": "GOVERNOR_REVIEW_E03_V3_B1_MEMORY_FEASIBILITY_SMOKE_PRELAUNCH_V1_RESPONSE",
+  "reviewed_brief": "orchestration/director/briefs/GOVERNOR_REVIEW_E03_V3_B1_MEMORY_FEASIBILITY_SMOKE_PRELAUNCH_V1.json",
+  "reviewed_brief_sha256": "1b1ea98ba61a1ea351271d3dedfbb69756b8ba3ab2d7aaefbf45d43aefdbd8b8",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "E03_V3_B1_MEMORY_FEASIBILITY_SMOKE_RUN_001",
+  "next_action": "Derive exactly one final execution binding from E03_V3_B1_MEMORY_FEASIBILITY_SMOKE_PRELAUNCH_BINDING_V1, changing only authorization metadata and binding this response by exact path and SHA256. Preserve source commit e97b7e9fdca8282cbee8853dd37c2a0bdfb1d3d9, nonce c59608b9df718600d850d1e665228456, the fresh output and receipt paths, all reviewed file hashes, the fixed longest TRAIN episode, physical B1 BF16, one-job/no-retry/no-fallback policy, and the 600-second external cap. Before launch reverify local HEAD = origin ref = clean RunPod checkout at the reviewed commit, exact checkpoint and bound-file hashes, fresh-output absence, an unused one-shot authorization, and zero active E03/GPU compute processes. Execute exactly one no-update memory-feasibility smoke through the reviewed external-cap launcher; Supervisor owns detached monitoring. On OOM, cap expiry, identity failure, infrastructure failure, or partial evidence, preserve the terminal receipt and do not retry or fall back. Return the immutable smoke result for one result review.",
+  "scientific_assessment": {
+    "necessity": "SUPPORTED_BY_CONFIRMED_PHYSICAL_B8_OOM_AND_UNMEASURED_PHYSICAL_B1_FEASIBILITY",
+    "checkpoint_identity": "PASS",
+    "cohort_identity": "PASS",
+    "fixed_longest_episode_identity": "PASS_TRAIN_COMPOSITION_REPAIR_RELATION_SELECTOR_ACTION_000068_954_TOKENS",
+    "source_and_runtime_parity": "PASS_AT_PREFLIGHT",
+    "active_process_guard": "PASS_ZERO_E03_ZERO_GPU_COMPUTE",
+    "scientific_scope_changed": false,
+    "interpretation_limit": "A successful smoke establishes only that the exact longest frozen example can complete one B1 BF16 forward/backward on this runtime. It is not evidence for gradient interference, training efficacy, or ARC capability."
+  },
+  "authorization": {
+    "authorized_jobs": 1,
+    "runtime_cap_seconds": 600,
+    "gpu_diagnostic_authorized": true,
+    "gpu_model_loading_for_diagnostic": true,
+    "physical_B1_forward_and_backward": true,
+    "authorized_examples": 1,
+    "scientific_training_authorized": false,
+    "optimizer_construction": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "generation_calls": 0,
+    "automatic_retry": false,
+    "fallback": false
+  },
+  "frozen_conditions": {
+    "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+    "kind": "E03_V3_B1_MEMORY_FEASIBILITY_SMOKE",
+    "source_commit": "e97b7e9fdca8282cbee8853dd37c2a0bdfb1d3d9",
+    "checkpoint": "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "cohort_manifest_sha256": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+    "config_sha256": "76c8216d861f2960a33039ab28feb72ce57017879b5144477adec39634887740",
+    "cpu_static_validation_sha256": "318178fad382035022f2cbe80570c401a633cf4dbf990a53586a6df0c7be2ca3",
+    "prelaunch_binding_sha256": "852d3b543280018e7fa39995f7dd6dc0de3e8bbb09cb9f39979ed70f2918056f",
+    "episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000068",
+    "selection_rule": "FROZEN_LONGEST_SEQUENCE_THEN_EPISODE_ID",
+    "physical_batch_size": 1,
+    "precision": "BF16_UNCHANGED",
+    "nonce": "c59608b9df718600d850d1e665228456",
+    "output_root": "/workspace/arc2/e03_v3_b1_memory_feasibility_smoke/run_001_c59608b9df718600d850d1e665228456"
+  },
+  "structural_invalidation_conditions": [
+    "any local, origin, or RunPod commit mismatch",
+    "any checkpoint, cohort, config, worker, launcher, smoke-script, or bound-file hash mismatch",
+    "nonfresh output or consumed one-shot authorization",
+    "any active duplicate E03 or GPU compute process",
+    "missing external runtime cap or missing atomic terminal receipt"
+  ],
+  "forbidden_actions": [
+    "reusing or modifying any preserved failed run or consumed authorization",
+    "changing checkpoint, cohort, episode selection, precision, loss, gradient estimand, physical batch size, nonce, output identity, runtime cap, retry policy, or fallback policy",
+    "optimizer construction, optimizer steps, parameter updates, training, or generation",
+    "opening DEV, RETENTION_SENTINEL, Gold, dGold, or FINAL_AUDIT",
+    "duplicate launch, automatic retry, or fallback after any failure",
+    "interpreting success, OOM, infrastructure failure, or partial evidence as a gradient-interference or capability result"
+  ],
+  "next_review": "Return the immutable terminal receipt, memory-smoke result with before-load/after-load/after-backward allocated and reserved bytes, elapsed time, exact provenance, and failure evidence if any. No additional prelaunch scientific review is required if the final derived binding and every frozen identity remain exact."
+}
