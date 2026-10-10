@@ -54,8 +54,25 @@ material decision value.
 4. **Research bottleneck** — what currently blocks improvement.
 5. **Recommended next experiment** — smallest falsifiable intervention.
 6. **Expected outcome and failure interpretation** — what either result teaches.
-7. **Execution decision** — `CONTINUE`, `REVISE`, `DIAGNOSE`, `PAUSE`, or
-   `STOP`, with its scope.
+7. **Execution decision** — for live Governor reviews, use
+   `CONTINUE_CONTROLLER` (explicit next stage/action), `CONTINUE_DIRECTOR`
+   (new immutable review brief), `REQUIRE_CHANGES`, `PAUSED`, or
+   `TERMINAL` (explicit scope). Historical outcomes such as
+   `CONTINUE/REVISE/DIAGNOSE/PAUSE/STOP` belong only to old receipts.
+
+## Infra incident reviews are narrowly scoped
+
+A detached launcher failure before model work is not a model or training
+result. Controller owns bounded CPU-only diagnosis and must provide a frozen
+failure receipt; Director does not inspect routine path fixes or code.
+A one-shot authorized launch never implies authorization for an implicit retry.
+
+If Controller submits a new SHA-bound infrastructure brief, decide only the
+smallest requested stage-scoped disposition: one same-condition replacement
+launch **after** exact frozen assets and duplicate-PID checks pass, or a
+documented pause pending asset recovery. Preserve science and sealed input
+boundaries; do not request Gold/dGold/FINAL_AUDIT access. Governor, not Director,
+routes subsequent Controller turns.
 
 Record provenance where useful, but do not block a valid experiment because a
 SHA field, receipt format, review binding, node identity, or filesystem layout

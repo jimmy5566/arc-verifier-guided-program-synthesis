@@ -12,9 +12,18 @@
   detached RunPod jobs; Watchdog only keeps one Supervisor alive. Historical
   directive/acknowledgement state machines are provenance, not normal work
   queues. See [`orchestration/SIMPLE_ORCHESTRATION_V1.md`](orchestration/SIMPLE_ORCHESTRATION_V1.md).
-- `scripts/arc2_runner.py` is the only persistent outer loop. It schedules only
-  `ACTIVE`, `WAITING_REMOTE_JOB`, `PAUSED`, and `TERMINAL`; it does not interpret
-  scientific results or replace the Controller's synchronous Director review.
+- `scripts/arc2_governor.py` is the sole live persistent outer loop. It routes
+  `CONTINUE_CONTROLLER`, `REVIEW_REQUIRED`, `WAIT_REMOTE`, `PAUSED`, and `TERMINAL`.
+  `scripts/arc2_runner.py` is deprecated and must not run concurrently.
+
+## Infrastructure incidents and Director handoff
+
+- Classify pre-model import, pre-generation, pre-optimizer, or detached-launch failure as **infrastructure-only** unless evidence independently demonstrates a scientific failure. Preserve the failed run, process status, logs, source/binding identities, missing receipts, and whether any model/GPU work occurred. Do not overwrite the failed output directory or infer model quality from it.
+- **Controller owns ordinary infrastructure diagnosis.** Perform bounded CPU-only checks first, using existing runtime assets and existing scientific conditions. Do not wake Director or spend GPU just to diagnose a missing process, dependency, path, asset, or launch receipt.
+- A replacement GPU launch is **never implied** by infrastructure recovery. Before any retry, establish no live duplicate, verify all exact bytes and sealed non-Gold assets, preserve the failed attempt, and obtain the review/authorization required by the original one-shot launch contract. Do not silently reconstruct a missing sealed asset or open Gold/dGold/FINAL_AUDIT.
+- If a retry needs renewed launch authorization, a frozen asset remains unavailable, or a material scientific condition must change, Controller freezes **one concise, immutable, SHA-bound Director review brief** describing what failed, what was checked, what has/has not run, and the single smallest requested decision. Set Governor disposition `REVIEW_REQUIRED` with `review_brief` and `review_reason`; Controller must not directly prompt Director.
+- A recoverable infrastructure issue is **not** a reason to terminate the ARC2 research program. On an incidental premature `PAUSED` carrying `infra_failure_class`, Governor may requeue **at most two CPU-only turns** for diagnosis and for preparing the review handoff. It must never relaunch GPU automatically; owner/Director/safety pauses and `TERMINAL` remain authoritative. An exhausted triage stays visibly blocked, never silently ignored.
+- Distinguish `CPU_DIAGNOSIS`, `REVIEW_REQUIRED`, `WAIT_REMOTE`, and genuine `PAUSED` in the durable state. Persist explicit `infra_failure_class` and `infra_failure_receipt` so Governor can route the failure without relying on conversational recollection.
 
 ## Experiment discipline
 
