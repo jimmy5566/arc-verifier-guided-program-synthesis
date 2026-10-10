@@ -43,6 +43,7 @@
       "parse_valid": 24
     }
   },
+  "cohort_manifest_sha256": "e508c227c84f86557b84a824ae64cf4bc0319ba627d9ddf6a5b0a7e89768e2fc",
   "paired_exact_grid_outcomes": {
     "BOTH": 165,
     "V7_ONLY": 3
@@ -55,5 +56,65 @@
   "sealed_target_sidecar_sha256": "eb144c90d8f2100af662da0b570be8e80f24da8481cf2cb2d71054a2a5ea3296",
   "status": "COMPLETE_CPU_SCORED",
   "terminal_receipt_sha256": "bf07ac225023fd3c6b18a0ad67f4debf56e36f48f6e4f62d4534d982df417cc0",
+  "tuple_level_postprocess": {
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261010,
+    "conditioned_failure_bootstrap_95_ci": {
+      "FAMILY_BALANCED": [
+        0.0,
+        0.125
+      ],
+      "RECONSTRUCTED_FOUNDATION_V2_V7": [
+        0.0,
+        0.0
+      ]
+    },
+    "four_state_tuple_counts": {
+      "BOTH_CORRECT": 45,
+      "BOTH_WRONG": 0,
+      "FAMILY_BALANCED_ONLY_CORRECT": 0,
+      "V7_ONLY_CORRECT": 3
+    },
+    "paired_common_support_composition_failure_difference_FB_MINUS_V7": {
+      "bootstrap_95_ci": [
+        0.0,
+        0.125
+      ],
+      "interpretation": "FAMILY_BALANCED_DIFFERENCE_INCONCLUSIVE",
+      "point": 0.0625
+    },
+    "point_estimates": {
+      "FAMILY_BALANCED": {
+        "conditioned_composition_failure_rate": 0.0625,
+        "joint_atomic_rate": 1.0,
+        "unconditional_composition_rate": 0.9375
+      },
+      "RECONSTRUCTED_FOUNDATION_V2_V7": {
+        "conditioned_composition_failure_rate": 0.0,
+        "joint_atomic_rate": 1.0,
+        "unconditional_composition_rate": 1.0
+      }
+    },
+    "resampling_unit": "ONE_CANONICAL_TUPLE_WITH_ALL_THREE_ROLES_INSEPARABLE",
+    "retention": {
+      "FAMILY_BALANCED": {
+        "episodes": 24,
+        "exact_correct": 24,
+        "parse_valid": 24
+      },
+      "RECONSTRUCTED_FOUNDATION_V2_V7": {
+        "episodes": 24,
+        "exact_correct": 24,
+        "parse_valid": 24
+      }
+    },
+    "strata": {
+      "MARKER_ABOVE_ANCHOR__L4": 11,
+      "MARKER_ABOVE_ANCHOR__SQUARE4": 17,
+      "MARKER_LEFT_OF_ANCHOR__L4": 9,
+      "MARKER_LEFT_OF_ANCHOR__SQUARE4": 11
+    },
+    "v7_zero_failure_bootstrap_limitation": "DEGENERATE_0_OF_48_BOOTSTRAP_INTERVAL_DOES_NOT_ESTABLISH_ZERO_POPULATION_FAILURE"
+  },
   "worker_receipt_sha256": "5b2abe5527ff4e61ab4768c2faf605cee551025636590c03d53f25b39cbab603"
 }

@@ -1,0 +1,55 @@
+{
+  "facts": {
+    "batch_gate": "PASS_84_OF_84",
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261010,
+    "family_balanced_conditioned_failure": 0.0625,
+    "four_state_tuple_counts": {
+      "BOTH_CORRECT": 45,
+      "BOTH_WRONG": 0,
+      "FAMILY_BALANCED_ONLY_CORRECT": 0,
+      "V7_ONLY_CORRECT": 3
+    },
+    "paired_difference_fb_minus_v7": {
+      "bootstrap_95_ci": [
+        0.0,
+        0.125
+      ],
+      "interpretation": "FAMILY_BALANCED_DIFFERENCE_INCONCLUSIVE",
+      "point": 0.0625
+    },
+    "raw_sha256": "8095a1c831fab3420187852dfcc993810c74d7be943f7ba8b93fc13d00bedaec",
+    "resampling_unit": "ONE_CANONICAL_TUPLE_WITH_ALL_THREE_ROLES_INSEPARABLE",
+    "result_summary_sha256": "c43c69b6e75971fe6ed7df6cee8d5e5445affdf6b7b7b87c874f76c3fbe13442",
+    "retention": {
+      "FAMILY_BALANCED": {
+        "episodes": 24,
+        "exact_correct": 24,
+        "parse_valid": 24
+      },
+      "RECONSTRUCTED_FOUNDATION_V2_V7": {
+        "episodes": 24,
+        "exact_correct": 24,
+        "parse_valid": 24
+      }
+    },
+    "strata": {
+      "MARKER_ABOVE_ANCHOR__L4": 11,
+      "MARKER_ABOVE_ANCHOR__SQUARE4": 17,
+      "MARKER_LEFT_OF_ANCHOR__L4": 9,
+      "MARKER_LEFT_OF_ANCHOR__SQUARE4": 11
+    },
+    "v7_conditioned_failure": 0.0
+  },
+  "prohibitions": [
+    "no GPU/model loading/generation/retry",
+    "no training/update",
+    "no Gold/dGold/FINAL_AUDIT",
+    "no successor experiment automatically"
+  ],
+  "question": "Does the frozen tuple-level bootstrap close this stage, and what interpretation is justified without authorizing a successor?",
+  "review_id": "GOVERNOR_REVIEW_MATCHED_ATOMIC_TO_COMPOSITIONAL_TRANSFER_V2_RC1_RC5_FINAL_CPU_CLOSURE_V1",
+  "schema_version": 1,
+  "scope": "SYNTHETIC_WITHIN_SCHEMA_COMPOSITIONAL_EXECUTION_ONLY_NOT_HELD_OUT_TRAIN_TRANSFER",
+  "stage": "MATCHED_ATOMIC_TO_COMPOSITIONAL_TRANSFER_V2_RC1_RC5_FINAL_CPU_CLOSURE"
+}
