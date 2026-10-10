@@ -1,0 +1,1514 @@
+[
+  {
+    "base": "55a8fa1d73817e4d32d8a1af7f1501cc4e93c42c0125b30d5bac943849e7d889",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "fc5c9a302cbfd3bf24dca16919645ff583fb544e0cb96790902f4cf47b039673",
+    "turn": 1
+  },
+  {
+    "base": "75c76757aa0ce5fd5ba0b6615cfec5896f174d499da33d9dfeb86641eb9f4eee",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "1f81586006d660429eefb3f6ddb6d0a5d0f024d895b9b56ee4b9a877212111b0",
+    "turn": 0
+  },
+  {
+    "base": "7d3119cb99beea043b102dd83370574d053866016c1b817a460175c24afc3f78",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "245eb9b8fcc5191e207c6f070016bca0c952179a7db1d9a97425572f71bdb3d3",
+    "turn": 1
+  },
+  {
+    "base": "b86b3a4bed7dc04c724a899381fae8d7676862691bfbe640ec17c467ea641d3f",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "1db8ee8b95130a8b35387ff7d05d9b190ea83a25fe626059f73aa22dff9c64ec",
+    "turn": 0
+  },
+  {
+    "base": "7f836d524a36f355a5fadfaa3ef4cb0012af66803686e3048579cbcec96b84d5",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "7894886e8812941d96055e19da62bb5cbb626ff155d5030a46e73ef3ba9c564d",
+    "turn": 1
+  },
+  {
+    "base": "c5bc13bb00e0b8da521817ed875a4433c660db8bd934a220c44ac97c70a0e571",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "9d5d4a6b917764f8f437a97989a81248b1b8b6db5f73f53489791268877d6f21",
+    "turn": 0
+  },
+  {
+    "base": "67aa70e6c29e11dfac0dc3b6666f5440177eb5a934860be9bbada252c447f1d7",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "af83e99cd71455af76542dca5cb0b59b08e4a77e3bc1294ee6732c421b2cffa7",
+    "turn": 0
+  },
+  {
+    "base": "3f577bba602cc1bb2c342539e68640e8d954227b9db6ce97dd1660f83603bf26",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "80eb4909b8cd359c29e84279a770a03128716a4ef899391d07cb95d1f46891db",
+    "turn": 1
+  },
+  {
+    "base": "db9b59c182e7aff3ad6f176e3b9375ecfdf86bbe14227a5db631eced01c187bd",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "2de4c9415254df5ce45a85fc7d9c060d84c968238b25f0c205f0fa56f3540b07",
+    "turn": 0
+  },
+  {
+    "base": "c7d05eefa590a06da2bdf6337d6d95782df899b0d5421eff692222150050f2cb",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "8965a534025c267ef99231f09b1b5deccb79923dc0f7303c20fd372f7a540cef",
+    "turn": 1
+  },
+  {
+    "base": "ccf26083c952a6de82700fa80ced44ab18aa660feb6608e2e8d460a2484510a9",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "39a977e45cb980b7df666a82cd726abc9ac89416bd9ed738b5c92fa947ce8074",
+    "turn": 0
+  },
+  {
+    "base": "d2dd39ce9b124d82b0f0f30e98bc615cda3f9c24fda0141df14779b1a49151d9",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "25016d65213d7e9780722f0f7420e4398edd60552115ab6c9c2c0d23adb9371e",
+    "turn": 1
+  },
+  {
+    "base": "9958a221c2ea015609ba8091b2effb90074d7ba4e1e46a84c72f4f21698ba914",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "8a83bad69234539e751dd62c565618dc2a6bb767493a1cb1a900da72d90b249a",
+    "turn": 0
+  },
+  {
+    "base": "68b74380ea9c320e315ffa8430ffa2646f6be137343a22beea87aedad89aebae",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "6cf191e11b36d36fbc5c7d68584265d4191029db5ea0d141527c31b58100176e",
+    "turn": 1
+  },
+  {
+    "base": "4c7a52dbb1fe50c7628b1037a01fbb701de5e56ec8558f56eacfadc1bbb0be5b",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "69b47a7b897d5d0ebcbf384ec8384781d18c9dfcd114a388242b0a4eab0c671a",
+    "turn": 0
+  },
+  {
+    "base": "b8a875e65656e5dcdb2b5547045b8f3b851f05d460499a8e707fe64a5bdc0c7a",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "424dbad09da61cb725d9e40cf0ea06a8fa3fb10a1a84353bb09c832eb3649817",
+    "turn": 1
+  },
+  {
+    "base": "8f5024e02f05f475f37a4e89043c8f6a5fc210ef04ce8707c81b3c87ccf4dfaf",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "4cd721bf9a6579c12f4ae4a7773bf3bfb12dea3aa6094e2fc9de99f29981efce",
+    "turn": 0
+  },
+  {
+    "base": "28e317105f5daa043ca003b1f158c41f4ef1309c443687080cb0fea421ff972e",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "22de28aada9ca8c8a6ec7ac0cf8b8ec31e3c408a1c93139627c59c303791afb7",
+    "turn": 1
+  },
+  {
+    "base": "c34db94ef0bf889c282176abf0f50396d0d524b7d663891ca60ddd0995fff765",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "1f77ad87e5c4451248617a5540810f2f6df80dae324d71c6d9dbccd83138a6cc",
+    "turn": 0
+  },
+  {
+    "base": "8ea0d6924e46989da8420655d689517e4faa43fb17cd78f0e1f70be7ceef6651",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "942106d6b3211d8336eeee82d35ff3acf10100613ca8e5aeecd0f541c3c779ca",
+    "turn": 1
+  },
+  {
+    "base": "f0bb28e6a72ae44bbddd0ed858f781a7597ae7ff06ea018fa13f4dd8abe420bd",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "589062239740d6716d43ce6174351837c92171eacd16cd87d0e1862ef7701d2e",
+    "turn": 0
+  },
+  {
+    "base": "f0d59993e914d3db931b08c35f671c990b9b3355f75cb75b27e2984ad98fb984",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "92c2cb74be73baa440cdffa462c3348187aba685e6ced0fbd3f54270ee518f36",
+    "turn": 1
+  },
+  {
+    "base": "9509187aa2b281753686cd99027ef48d90d225fc5bcc4f008085ff2895d1b928",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "54ff032de9189b6fe230e94547451f003dacfa413ad0dc6522b01e2aabf249bc",
+    "turn": 0
+  },
+  {
+    "base": "7dba08f8d008a27565e8935192d791daf9ffa604f8c4a7e75497facebdb53637",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "e20a8d4ca86b47cd69d6d34685c9cbbf6075b5206e5968e7188f545324231576",
+    "turn": 1
+  },
+  {
+    "base": "01740b782f025a9f8419c014edc68920d34ef2a408121d64936abbb51077bdf1",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "8d18b201e8bf67f3248d9be8a453e589fdd952d85b1026521c88b9b20fae2850",
+    "turn": 0
+  },
+  {
+    "base": "70e15a52ed983e6e90402a4367022cfb077932f22afd77bc48396fe0467d42ef",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "ac85ccfb9d1b3f818b660e0cce592dcb0463b2018f73943b3b7b4678ad3ac055",
+    "turn": 1
+  },
+  {
+    "base": "2b752a5d656a426dfb839b6baf6027417bf0c05c5d76b1e33c22f793f9052f25",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "f869da57b45fce6792842767ec7be22db03480a76c4db3c4137a7ec975cd3210",
+    "turn": 0
+  },
+  {
+    "base": "e12a9f452dc150053b75cab3413c86561e18e09217c83ac180a72006f741f959",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "52eaacfbe116d488845b749ced733bce8d366c6098537507061daf8133825bd1",
+    "turn": 1
+  },
+  {
+    "base": "ab2ce245717b829239a312c51255fef5a63f088f342e8d7d954f2e3cdf92e1d9",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "74bd8807fd75003bea013876dca7b27493ea4c2f25789ca60aae2cafe07a5b6f",
+    "turn": 0
+  },
+  {
+    "base": "ba1ab2c922ebf795684dcdcb9903b289a0dc01c6920688e1b4ffb94eb9284e4f",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "d60201d005660e4b5f1c5c28919ec2c8173d14b9b608c3929374158363afc9ed",
+    "turn": 1
+  },
+  {
+    "base": "dac40becf477650bc06510168341ade861c07fb7ab7ca1d81ce85fa3b194dcb4",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "d7a2c5316b52ee5ab0af3506ea1a2aa95b85cdc73c2aeb273428f435c3d1cffb",
+    "turn": 0
+  },
+  {
+    "base": "c9db342aacacd3f6fd6fa15ce40e1a28a343dc649ef58e187f7159ecad0ca75c",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "3fba8ccc16a3f5cc06b594392ae8c30a69c87bdabd5b87030725288bbf023563",
+    "turn": 1
+  },
+  {
+    "base": "fbc39794fa213f86b026c619b0222a8dd432f3f79b198e75d1488ab67470b43d",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "86bd0439112679e119f3509b72fc536bc4be39e0c15b29d42dccdbaa50733a8c",
+    "turn": 0
+  },
+  {
+    "base": "6a5cc0fe53b4689bd857608f43271b229d30a85636cdb720f732e0e4180ebd74",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "4786af0e19bc71bb2af0bf6bd892afdf07f76a6274e7f3a5c0e92dfc5451b2cd",
+    "turn": 1
+  },
+  {
+    "base": "d1500620474345830e38170013bc323c2093de293e495953baa9fe942d5b581a",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "20a95f48dc03bbc0c8ce82e40abc05646025171df5ad72709b99087ca33585c9",
+    "turn": 0
+  },
+  {
+    "base": "77c3bfcc01741edc9f67de8cf48c1bb8a8a9c8c65bdd5895818c67a26d51bdb1",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "f4c8f740dabffef0d7a40d9249fd78e99faec82a9232cc6ba54c97a4d2fb9c01",
+    "turn": 1
+  },
+  {
+    "base": "2e40fdc68e4dd701942efb60bbd31fa5ea1b6457e36fec542a16ce833399a0bd",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "05f46e19bdcfb7a38af421e2406c677330eb734fe8134f5a2ee9e6a81636ced2",
+    "turn": 0
+  },
+  {
+    "base": "d1bc0a8630221afe27feb1183d610a3a5482a19a68a8056973bd6c50da029854",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "81d24417ed2e0886204f69559a361b33227a98a846b352b609f756ed29f7658c",
+    "turn": 1
+  },
+  {
+    "base": "dbb03f61e82f385079d4142fcdea84e44ac385902b01b88f23a0bc57bcbc18bb",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "a36776f1a0e2778eeb2dc234283fa851f72e28a8bfa53e0c3f52f2cc1443d5a2",
+    "turn": 0
+  },
+  {
+    "base": "71a88ef0fce2567f62f5edbc30980dd995e94cefee4e340124b4fa1ca26685d1",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "197e2e4841cb79aa12a975d4b824f6157e0937f70c6302caa844e3d16aae1a83",
+    "turn": 1
+  },
+  {
+    "base": "514b099bc5277131aa5ed8c2726587018b1773bbaafe95623b6315db38a4f6a6",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "7b884809283e818a20745b5dacec73207f3e2aed119dae359b89f4cc0ba3e762",
+    "turn": 0
+  },
+  {
+    "base": "57b7cbb6c0f1dc106434932e5dee01d016555b51a771205d181672c6c5081198",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "e827d8a810252e37e8371b1a1588a1e3eb83d47e33715d54ac1a98037cd9fbf5",
+    "turn": 1
+  },
+  {
+    "base": "21c62404e3046d176eca16704cc8b1398604c5be2d3181a2f12e2d076b815ead",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "59622526c3aa8b4911c7ae7eca17cb5089a92520411447310dcf89c28a71a0ee",
+    "turn": 1
+  },
+  {
+    "base": "85b657150f28f41cd26df023133d9bbafc6ccd2d5ce8519e4334c249c73afe86",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "1814a978c20b803961415969a74e00609128ff6df049d2c09f1564d2a8150fd7",
+    "turn": 0
+  },
+  {
+    "base": "87199a14430f76f6ee9da4370169a1dc58d64598c626e7733beb5d4ea9c02436",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "630a6e22d767f4796a02ad245f55780cf510a7d92823fbe0b2af5177d319b28f",
+    "turn": 1
+  },
+  {
+    "base": "a5ab9b28576f088bdbe56a7d904d2652a08f015755ab8b4e5ede60bb1d342bc6",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "573948e77cbffa7fc81c322f03890355b225e90e53501f6a63675134ff8dfa8f",
+    "turn": 0
+  },
+  {
+    "base": "4066f740f8625842206da36a60415459afc5353c6fb81235c789653cdc0e935e",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "985fe2b3bdf31f3cc53737742849981139f722a8365262a11337aa1c4680e3dc",
+    "turn": 1
+  },
+  {
+    "base": "edad4e7ae2103317378c56ec60ac7895f63aaebdebefa60ef532d53781578b01",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "f2e1199cdcd51a72d461fb40a6a768d6437e357a48897f989d0480b813a91b25",
+    "turn": 0
+  },
+  {
+    "base": "8bde1b8067117841ad9871b774c9476dd7599c0a263494183207805f02aad26f",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "049ca9a47d993d11178b9ab610688ccd2c4727139b4663b7079d01599090cd12",
+    "turn": 0
+  },
+  {
+    "base": "d51dfdd8023ccfdbb52ec2460d48ac3a20c955a8f6128c6bdeec61e933019b37",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "8d373d5ff7b3562048d5f7505adde7e3dee9150fa4128189c17a482d9937d16f",
+    "turn": 1
+  },
+  {
+    "base": "e460728a07a3f6ddc0f3d9fac72e3e54e266642a18cda68542ad22c3aae50464",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "6dcbee58092a8634a1714a829268cb4d1ca23e8abae1aa6a8093e23c4977f962",
+    "turn": 0
+  },
+  {
+    "base": "f3d3296ef09a4b13229f83ad5e413e6c68fcf5e83da1adc0dacddb4e75ba29d8",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "c70554028af92792739e544e011e21c12b805735fbc61637f957c788c735efea",
+    "turn": 1
+  },
+  {
+    "base": "df1bc7c3e70d5dd5ae5494e4018dd84ce45f7279c144f044ea1e084300b9211c",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "f2b5748bc5360259e444438029598e755cf4dcf49e31f046f3500902bfdb219c",
+    "turn": 0
+  },
+  {
+    "base": "ea639746c2ec447b185a1c16c2f1128a1d335a9abfc090f425c342bae717d255",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "70a8ace5ed128d42a123a66b7e225122076837e1b716a405f5deb54f0c337f08",
+    "turn": 1
+  },
+  {
+    "base": "8bfdd0e3b5159538e0d2bfa922cafbc87da71604a100c76b10339837968e1e69",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "054ec519cd8b3a49505136334f656a98e496114757df95640238cc0087f3ffd0",
+    "turn": 0
+  },
+  {
+    "base": "9d1013f904fcb5319faafce735a96593f9384652485d6d4f0c4216570f9fff70",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "4f606b5faa55a0639d040ae5906edc5615eb9121a0c7834ae5d3a729addf0401",
+    "turn": 1
+  },
+  {
+    "base": "878fd53585295e53612229a234120141e83ec262e46fbb4eac209e267be97e93",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "d9b40c22332bf12ba22936cd8c329f4f5c4dd04353ea758616f77d961bba207b",
+    "turn": 0
+  },
+  {
+    "base": "b2715acb5c79b37c44942d3f9c7a23e6c19f8497e931e276c01634a7e2050bdb",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "cc595c137668ac1b338b6020ca4583827ffcf9b1d4fc9eb11ad70e6a561fc701",
+    "turn": 1
+  },
+  {
+    "base": "2cd67f211aa305dff7daa76777dd2e544afbc9739306e0e8e94fd070579cafc1",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "4e98201b2b7ecaee9ea734d10b003bc08e8ec841220809244d34db4e2d6e62e6",
+    "turn": 0
+  },
+  {
+    "base": "b0c8b383b39c639eb8ee0dac821c6f986fde27823fa11808863d20f86aa838a1",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "78f22878a29aa3423d5fe2cb163b1a9752785431e57915cc49a5481d294a290e",
+    "turn": 1
+  },
+  {
+    "base": "1fe90d078c46e0b15a75eb3f04bfb3d3f391a403b47f982a65fb9910bc39af8e",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "f492ab129a0e7d23f5be988d2c4e03cbcfc8445a7172ca3e31a8bd97f0644ef3",
+    "turn": 0
+  },
+  {
+    "base": "ca44969ca93f9c72f4afae6b3ac31d8135d453f690c68fc21f66e31763d3b8e4",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "5d423d5f87c2f0e63c7b78df6730e073e59e9810d791306dfcd6917a47bc4b80",
+    "turn": 1
+  },
+  {
+    "base": "b6249a29316e7311abf70d9590aaaa090d72a327b368a943b37de3cdd771d1a8",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "717355c7270b7531bd92381f79a79d6b1333c2261652efdac00a9ac2723f100b",
+    "turn": 0
+  },
+  {
+    "base": "399a03cb3dedd4e4d739c6f4654cb6dc5fc9c438c866d69b0081a8f71b0eb6ca",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "31e70d181f4720552e8d8242ea51de39c342fe7f9ba04a321a725319d5d3ca92",
+    "turn": 1
+  },
+  {
+    "base": "a11bdf563ec56d0204a8bccf0f40529063c05fa49703bdae203f6ee8f3a354a6",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "26749fb52182fd35deb410655b2faec6b6b5532b57a2f4cbc3fd2f6fb25e843f",
+    "turn": 0
+  },
+  {
+    "base": "0153aaca56dc79e1605b77957d1827ae9c01e8108c2a834b1c0800f997be72f3",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "663b7281364475f9a93cbdcf075b32a78973ee0575eaba863cc7759fac278dbb",
+    "turn": 1
+  },
+  {
+    "base": "cb8ef078451c4d7b2024fbfd0fbc342ab6a563153409858dbb937aa88afc8978",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "fcc4c7095a0ac396b1bd476f40128444f22126efb19b09bb8d64eca783b8103b",
+    "turn": 0
+  },
+  {
+    "base": "5275b1fd3eca9ff5972a88407b4b1ab8bdd6b4e7b5ac3f256cc7fedbc2831dd6",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "458dd710cabc1f5025c29d1ef7d3ad8088056b8824a7eb674b84f83668232f6d",
+    "turn": 1
+  },
+  {
+    "base": "bd5b21254f1ec6609a0cfaa6599d923c4fe30568b793d4d95b881f9d88256ac0",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "c4d9cc3227ef7259bc2649ffc24d8285ca3361e203abf8e14a532768844b79fc",
+    "turn": 0
+  },
+  {
+    "base": "910b06dce9c53546c0a8bc7b0ec525185de51f00a2bf1329ce81bdf33806faee",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "b95ccf05538207588a6d676d74f95e669fac479311a7c9caf78ef74adf0c3e81",
+    "turn": 1
+  },
+  {
+    "base": "8e46f7dfa186feba64728d601d3ff09b3993be276cbe8c097f1251420e617cbc",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "b6de1e876e85745b1e7fea7d864a8864586eab3ee0cabdd402727f4b747a1154",
+    "turn": 0
+  },
+  {
+    "base": "89b183e853bfff53008c3101e44dce9d420ee427601dc88d3c9126a15ba3f11d",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "dd0b5cbaa37296f14f8f8f652e3c8f9f210862fb81563139cada9d244bf85205",
+    "turn": 1
+  },
+  {
+    "base": "f1caad550a432e2dce3fe26b5663f51f60dcbc9cc07ff4711796120b41be7c9d",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "478bfbc4b1e293511442db30ecbd0aab9c90cdabe44d6a515f6299fff4122ac4",
+    "turn": 0
+  },
+  {
+    "base": "7fdd667f1ef51a6adab2872062a4eb1b9f60b6e136c5b37cbb6268afcd66a380",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "0675466455e5edeaf019fa6878695d5bbe4c676eb6bea572d6e3cb53251106df",
+    "turn": 1
+  },
+  {
+    "base": "3a0c1b5528039be0422d8287be8ec1f6fd27ac9aaae4b6dd821183a553d8e458",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "c97675a13f5dc95437294490369e0cafd46946fb6c2849c09792b448aeeb0a6c",
+    "turn": 0
+  },
+  {
+    "base": "94c9bfed625b0752837360de00cb36da91b1db83a55f40d49bd25e1d17140015",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "996ca22452c19c047856a84a7e429d35beb6663001bf7cba14d723bd9dfdd350",
+    "turn": 1
+  },
+  {
+    "base": "eac0ca91594d88e83bd68353aa0e9361e5e9181f2c2a0ef3d8048ffcffcf9ff6",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "8b287abffa6252aa873f1250d600700e49a8209895d6d76494e5da59c5fd7d3f",
+    "turn": 0
+  },
+  {
+    "base": "59c512a94643870fb7cc79e1cbf5744ca8a5b3178e40e312b2bc5be9f0d6e2d2",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "fd35327fa3714f73e05f066ae985654e21068f0b399fb00b0bc8bf6a44a80cb8",
+    "turn": 1
+  },
+  {
+    "base": "2b62cd670a746e0cface613c92a6eac78a7dfddccbb36984b35ea647bd69bd3c",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "b8bbdbb4d9aa4f47da764e275f8a5c92fa18bda0380c54c10fcad8896d4419be",
+    "turn": 1
+  },
+  {
+    "base": "8e154a6ab98e5b0c7e93c0c591f1239abc25f3b26593963106c4924d4ad07382",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "46777645ffdba57eb09821b217d949270f6c4c6d87add8a3b08467fee91c1c26",
+    "turn": 0
+  },
+  {
+    "base": "fbd38394b3e1aafb7a097f93c03cb0c338bc80b827d7221d5b315eaa361d8fc6",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "2fcdc42070fdace6042b9cc95d61bc8b5aebf58d8e88e94f617d0fcd895300c0",
+    "turn": 1
+  },
+  {
+    "base": "e100843185e56673f5c81f0653540fb11e86e174d5fa45d09b5a3e7da3fd3b27",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "b5f2ab723c4e49fcad243321f93c912e98f05a9f6e1384dc9c05ca6c751a331b",
+    "turn": 0
+  },
+  {
+    "base": "be477ee8bc74d5637cbe9ab73c492601a9b47def69afa3eba2a929b9af2a3ba5",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "8061a28968fa55661ae6cb0653f2102e357ab15476cee29aa2ee3f0f542dce4a",
+    "turn": 1
+  },
+  {
+    "base": "31a20a367e4b01d015e4c5827f313a6f696806d5326bc79a13ba14fd47e20ad2",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "0a6e05a02d9204d459c6547ddd66a50fc45c9b42cf3120d2bce4c1f83ccb1db3",
+    "turn": 0
+  },
+  {
+    "base": "6e29cd87ba79927d0850cc999bb41067b53f3b6b73571a1ec5cf86078fcad8c2",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "59545f91c1464e8c3a97d3d2ac558045abf07c8217a89a54be68716dde44d953",
+    "turn": 1
+  },
+  {
+    "base": "840032406497e0851411cd74e73eb9b896963fc670de4e2370480ebcef5b1c2f",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "9e1ae3e825b54eefad2116b1a235704a8badb57192cdd8c5d335f807a87175c8",
+    "turn": 0
+  },
+  {
+    "base": "6e06b35f97c61bf9d753335b20c1653bf6efdda85de91c68cde4d239a6207427",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "c848f27ca0ad64fa08fe8f5a41b33b02f5720bf5191e05374bb9fdbc6aa5568c",
+    "turn": 1
+  },
+  {
+    "base": "ad638171096535f3e2eda89cfab81b84a2d9398f4111888ca9068310e8783902",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "33aee9029fc660a94b396da795adb19b7c9ff96ec713435f11b243f89d483691",
+    "turn": 0
+  },
+  {
+    "base": "60f100bfdad6198e81bf130af61144c2aed7f65e435d527c06b75dc33c8cff4a",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "19cd2dec29f883dc5d0a3310edd3f9caac55b945e3dc517b74c5acf39ab1b9f6",
+    "turn": 1
+  },
+  {
+    "base": "35e175e8bf202b30e38266106291f2d2d356a15dfe27fee11b6560a7db88a8ae",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "af6f6a495720605bd3742c88326da2833b3aa9b8277341a3a9721e07847e39dc",
+    "turn": 0
+  },
+  {
+    "base": "71dea445f883416767d21837b01387156a4fce7cf4ec698ba33a7a2a5a41ce77",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "241a9e081dc35862f9b8ce851edb89b992cc9fe10e155331c0b19aef82b204ac",
+    "turn": 0
+  },
+  {
+    "base": "9e0a086606665ed71ef336e5852a2471615bbacb2da24c8e02ad6cf4699f175e",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "b9fe488f50a1c1c4338bfacf1691fcfd8ee838a17d94b036484fe06d9c964ced",
+    "turn": 1
+  },
+  {
+    "base": "ccb104f65219a6750b40a0de90f6a6bd9a9c4d5b651b39571897c2957931e1a2",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "e3654177ba06dbc526342435a790da3be775bc9794a1bf4da1a7d0a976487848",
+    "turn": 0
+  },
+  {
+    "base": "1d723cca6d764c08528bfc3947060f626e336426ed694c2ea4edfdd58063f20b",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "4a8beeecb4df22d18017014e6df6ca6afc3b932b6628d4dacaf7a90116928292",
+    "turn": 1
+  },
+  {
+    "base": "c5e9c4a5795882db01f30b3232872fa121831d6adb7f867f0a73399d864a8738",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "a82a979568debeac6032642dec4605e71399dbb157fe3b76bbce618f4828f276",
+    "turn": 0
+  },
+  {
+    "base": "8a33113c4b475c37fcc0a49cd55eb7f349b905d5c34bc83104a0cc34e8f5316d",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "6fc8d2a0bc6b472808b86390b58a5a193626b98dee224727a55b8099d859d442",
+    "turn": 1
+  },
+  {
+    "base": "9e5fbaa6f61f3fed3ff67d9cd5c8a62f7c859fcedd21d6185b6524202a611b13",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "e279d4a8730833f78424052794103232fd6be7d9cfbd32bec3ded49329e62a98",
+    "turn": 0
+  },
+  {
+    "base": "64824457c44b53ced69920791d399d05247914a5be01fe2bcd954a8015e839cd",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "614ccd163df0c403dd48dc3982389e5253c7e55986d82e0c0b2cc40bc1191284",
+    "turn": 1
+  },
+  {
+    "base": "1f6eb4280f8f4fba22ba51e3b8bd7f22488df92b30afba859ecb5fa4732ea248",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "d2410f3224ff26808ee0d0f39d7fe023a7273afe4e96725a7d6fe35c0c2a8f92",
+    "turn": 0
+  },
+  {
+    "base": "386756490bfbba24e3ddc6eaf836d79fc8b427f30304c8f604383715d194854d",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "db0af159a0a01c4912ee123ba24ea203edc6c60bf91292425af1e92ba6c3a0f9",
+    "turn": 1
+  },
+  {
+    "base": "66375e243958c236a7348227a3de8633e4e07698c190df5def53d0213667cbd5",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "71e735ade829797c6e89e3fad9431bd7c9b6d6398503452e8cc68cd8003af57d",
+    "turn": 0
+  },
+  {
+    "base": "a02cc3e346fa44cc576637fba735e550bbb5cacbe9ba9b206220024102a06118",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "87f7808518c6ebe43acb318a9c60162d19222cf044f57295440e7bdd74133e47",
+    "turn": 1
+  },
+  {
+    "base": "7cf38e97cb782febb6c687b26b3a831375bfbd53568c071058244599a80a5d65",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "660acd8c82705d6f767b2b4ccc2e2330af39ee3ad5dadac73668804a4c0fff1a",
+    "turn": 0
+  },
+  {
+    "base": "fca6bb24c1aa3fb477c2464d93ebeb7e2ea388566de1f049cddd3b9027332d48",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "a8f0f7b2f7726e1d568c914ebe8e14278eae4f7b6970964d507762e8122b0fd5",
+    "turn": 1
+  },
+  {
+    "base": "9545027eea01749718f0f587963f994abb7dc26f9b82a59d860fbe01e641d007",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "ce80ea0ad792bece9d46447976ad55645fb69b3d9e88df92290a13655720aa23",
+    "turn": 0
+  },
+  {
+    "base": "caf54336928fec6e2933e9b7182790da2ff3e09f530b98af1297daea1ec943bb",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "7f33970912216e2693caa4f49de024cd942175799172223060203b5e40cdbdcf",
+    "turn": 1
+  },
+  {
+    "base": "072e3c35b564d27e85d39cc11af51168b43800003b5a307a253f6b05348535ad",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "445d9f964a7b1dffadb5b9146b630eb3d6af17acf3159de1f62544dbe12662d7",
+    "turn": 0
+  },
+  {
+    "base": "50767f33c58b5d8102181e24ad56bb1b8d64fa1910ba6dbeb034595e821d87e0",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "808de68f72edc1905e1c2d7b21db9ee9206b0a604e5f217564d96776f23d567b",
+    "turn": 1
+  },
+  {
+    "base": "5c178fb9ab03ada1a40a0b6786d25c57c08fc549a57c6b9112d8d8434a4fc000",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "55a6c5d4dd4897cc5e41079a15a2a55d04ea1fd4611ef44d9782503563c8336a",
+    "turn": 0
+  },
+  {
+    "base": "d211efaffd10789a95f6f39d5d789319a002c9c664fab7598c737803afe6ab19",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "a10f8801f66b36e7027db446259a1d6319b64916110ab358423723d648b61119",
+    "turn": 1
+  },
+  {
+    "base": "03af91a13abb4b0b63b2d1b031b14612b3fbaf731f3f47d94895193184e3624f",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "924d0ca8ccfee4c0e7bd81f4bb4584c0dd89c505bf96677e33461e3aa6c30611",
+    "turn": 0
+  },
+  {
+    "base": "8bd84e522d823ce3d9a130e322653b469503abc0371ed9ab819c77168a381ee5",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "ccedf176c154756aef894ae6217dc95b5572a67aebcd778cc919855634b91e34",
+    "turn": 1
+  },
+  {
+    "base": "4c25cab5c36b7fe5f9f4b377f466394fab59cb2c3fa846977110623714b01bec",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "c1780d65209dc24a29e7fa6e322b7594664240be93891f36622c1d3d2b528644",
+    "turn": 0
+  },
+  {
+    "base": "7df88b0f1c14cd8d9db03220468af213caa2311b7cdd05b197e0680b168d2634",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "3ec22cc80bf7b172a9a80b2b51ac73cff1ad816a97990fa2fddee3b3aae17272",
+    "turn": 1
+  },
+  {
+    "base": "03519780b46a59113030ce22b76aeac289a181f04420e7acd5dc596c6716efea",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "5dbb5e60c33d0d220db11a995b713011d6cacb06f089bceb7344895de24ac3cc",
+    "turn": 1
+  },
+  {
+    "base": "c8a391a8874b56faa998df8114b9469f9d22f5c7e87f5b33ef46db35dab0f317",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "3257ed9908572db99aa46d48e16edb783785ff022d0ed5d4869dff872d80caf7",
+    "turn": 0
+  },
+  {
+    "base": "ce5f8c421977c04d159de4acedfb087f7e7dbd44ceef130d2574546f6b1b592c",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "7d6e2424bfce1b85b6d80e20c5390f97a8f9a27c35ddf707c97d5f3436441b37",
+    "turn": 1
+  },
+  {
+    "base": "58bbb83291969e48ca1dbc8de3c1975efe299bf94f452fa571bf02d6c27dfc34",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "2d737061b30650acc9386b8661b087dd189d2fbce9347af0ab7b20f32bfb1544",
+    "turn": 0
+  },
+  {
+    "base": "c08df24f54b654abfe7b9be1ffd71481dc74fa9c2fcaaadd79f39c8889c374d2",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "e9fea2307b9e0377124a699de0423dd95c9ef44e6fa637042e434a6b1eea28a3",
+    "turn": 1
+  },
+  {
+    "base": "3743d8c700a0e18083fa84f6a0299a6abd59581205de72a9cf0ad745afc90f1e",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "b9408034bba03bc0e1764d012acd8123f68cca62902b68af8298dde6151c3bcd",
+    "turn": 0
+  },
+  {
+    "base": "2197138a6474b01e43296fa3dc88396a394fe4d98d89801f0618a4cfa3609f8e",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "ddd4c6195c41fdcffadd9917ce148e62a65a0a408c8d497968f34025719b0f68",
+    "turn": 1
+  },
+  {
+    "base": "2469db9a95f4f5b066663ab01fa7d187a3022c5b28770f16bd2906a7d1e3c91e",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "045effb7f4f84e1f5700e6e5287ae324059cdb71e18c7fe2b5ff240da8311fdd",
+    "turn": 0
+  },
+  {
+    "base": "b14da557fd23ff00074811f119b356e2c2a5f5b2f0e52caaad8d26c66e7de76c",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "6919ccd20804a05b0ec294f4b777a612a9f076406eec54a04be48dc2a7cbfeb0",
+    "turn": 1
+  },
+  {
+    "base": "f7638bea4a1c57b351a62d0a46ad831ecdbcbbdf7c06fa91fe7e16f6b3045bab",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "cecb52df4e4617430de8714d25c4a3466e9d454f730717f08dd298e4cd9fb5e7",
+    "turn": 0
+  },
+  {
+    "base": "99d4d18341c45d702d893a9384dc6089366b776f23967a783424e3e9a7e7a4aa",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "b994c23f63dfb7e952df3dcfecac4e6d332f677f772bf006aa29a0e85cafc128",
+    "turn": 1
+  },
+  {
+    "base": "26b86676abce46a91e71323a717ae5197d4e64a20a912d10f6e7bf5a9cbc555c",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "54251f8f0f070ea5ad0a07e808737529469629c5c1ec21bfac91d56b10efa71b",
+    "turn": 0
+  },
+  {
+    "base": "198435e013845d74d705e6d67171201cda71fa4754f34a42889d7190de303980",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "c28f09c2c58853805c4b17728885f551cc8be0dab293b8806feadfb6ad2ae1c1",
+    "turn": 0
+  },
+  {
+    "base": "bd26c820086ef624d23ad24ff196c06920dfafe134dc07e71de6453599095ef0",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "d780c0e42eeea0b5ea2d53b4528a8df0a0917946702a3cbd3afe20cce4d60117",
+    "turn": 1
+  },
+  {
+    "base": "4f031f23d3fd115988819966af82326ef387c8c698f2f7ef369b6274e7b0d285",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "4aeb7e5fc214fa9888c3f9536fac3b90a7b17c925d38026883e1046199d3c3f5",
+    "turn": 0
+  },
+  {
+    "base": "2c423259d9b00f0acecdb76ae76771a01601abc31f1fdc96c4b4899455cd8051",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "08ee00e9d7335184e894eba44d5851f50b9dea028977d1aca0c3408df82c1fa4",
+    "turn": 1
+  },
+  {
+    "base": "827343823ee9738036d9f53075cb93db54f1a34894f3e0f063d72019dc51d6df",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "cf2487ebd167a096b217db7a06c9f7fce8ca8d5c4c062654b06d7af984ee676b",
+    "turn": 0
+  },
+  {
+    "base": "a8a86627d3e1e83b237fa1925eeb0c3e3996b05b77687de2a39d2c399ce0ec31",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "3d713602f73033c3262f8e64aa640b88d486827a1f3b905c9518c2c325680a7b",
+    "turn": 1
+  },
+  {
+    "base": "d222c682b9edb462c60b300f3147723baa837caa1eab83b303fb04d317286b5e",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "097b243cd32087f03943dc9adb8866283ec898b43c60cb0283c6183d28d96c0a",
+    "turn": 0
+  },
+  {
+    "base": "e60c89719236e56e13d63b7748651bc91eb678dc7449b8314a3e5f593c109433",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "7a4d26a797d6b5d17db5c16185310769d30c8f6b97457378be9e9a226a6a8519",
+    "turn": 1
+  },
+  {
+    "base": "e58be9024be0d0a40b8b7f99f798fde77a892b62c0146ae49c8ed3bf74255d55",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "511f6ae5e929126876f18a6ac796dcb183ffe101441a03385c310e3bd9df3981",
+    "turn": 0
+  },
+  {
+    "base": "639ca77766a4b21339783f9f8d654d599818d9dce275ae84eb370f88cd37438b",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "d3cbbdd8546b943146e01824ee078fbc0927199594e48f7e17e452c92a5da6e1",
+    "turn": 1
+  },
+  {
+    "base": "4923ac1d78e27a6474629382e879f8dbe2b541cabfa1c318dafd1e3be61ba1ca",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "14f286ddf5e713b3093a36c150e1ac5618a26062e1a98443ad2f03c0b29766f7",
+    "turn": 0
+  },
+  {
+    "base": "78ee64edea3a52af91cbde68b650e26c32233fb728ca1e5f55cebad379c66845",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "efa101cebec0e5bafa02e809eb9aedc368634e666bf8b85bdbb18d4a73795ba0",
+    "turn": 1
+  },
+  {
+    "base": "0f6084fa84fb2f543259a7028da62b3d4ad68b95d0fa3aaf9e90afd50c52078b",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "c58c15189c0f517912a5ba06a248cad4e874f9953b9b4b7ddfff96426a8a2d73",
+    "turn": 0
+  },
+  {
+    "base": "d2879252c4d194304cd2d6cdb16783623de00f8ea2904a0b1917ec84db52dc85",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "1e02ab51af82e0aa628d1b62c59d79fecd435e8da6dff40f859ea035ed8015c3",
+    "turn": 1
+  },
+  {
+    "base": "94d02ea6b4f9412ed1c402643d1355c3ea5db86468384291a9a4736d1898d4e7",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "3767343432093ea7e7a18817c216c8df4d9cb85fd438eb184bb8018dd85d3d05",
+    "turn": 0
+  },
+  {
+    "base": "a880bae74f681c2a252987aadb59b9b401bafabcbffbca5351eaa8fe089be42b",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "8cbaad054c20fbe958358c5250cd9de9efd88722527da945a5357b34956e9081",
+    "turn": 1
+  },
+  {
+    "base": "4138d35399e896a59af5843ae283298efc207482304958be15b6f732182b21aa",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "1934063814db32bb08f11620ebde122d8025f7e72ccd0499aa9866f1895dc11b",
+    "turn": 0
+  },
+  {
+    "base": "525e3b1276f4ee59b63357c8733a638158a2b1d131d5264866d8556db41e1e26",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "64d819e3282ea5944da499c31a8cb71115eff2c9fdc69125d385122fa6e89629",
+    "turn": 1
+  },
+  {
+    "base": "5c197039ab8789415086d43776527f1626f158a4b786d15ce9aacbfbaff134ac",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "317d6783887de6fcf5e2ca6b5f26aff6ce121d65d9569c531f47191847eb655d",
+    "turn": 0
+  },
+  {
+    "base": "c397ae31757f760ae4e0297806b0d56fdb0d4dbd1bbe3f5208b409d1bd5ca41c",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "313c8c6d2ed0c7668eeecfd58d99c237b77ac038ce50f098b8b2c7e605ec78df",
+    "turn": 1
+  },
+  {
+    "base": "e6c9ba68799fca6fc421ff73b38ea87c4ed88b72ed8899151ce89db6ffcabb9b",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "19875892a6aa2065f787b2f8027d5b0f4b31d93ca6bee52aa2967b00684b2147",
+    "turn": 0
+  },
+  {
+    "base": "c5102e1364e06bf23e37cb25ddabfa39b1684aa891681b0d9b9beb60416d0cf8",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "a5e23f9af02f4f723169ea49f7295c602df4eeb0163db6ddbabe6ff091b0fb91",
+    "turn": 1
+  },
+  {
+    "base": "adb2c6eed4c1ec8a4d4bfe4839a3f6493d399eec90998623c1194c884a34e811",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "c973d11c907a95279d5c42f296cb4851bda696a893b37a27e1a71d8eab69d33b",
+    "turn": 0
+  },
+  {
+    "base": "72c4dd370a59ef6731f0d84ae418105326b833dbd03137655c2a55d69638cf35",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "758114fe4aaf985658ef6e7549157debc563326895554a426dc107bcad85b3df",
+    "turn": 1
+  },
+  {
+    "base": "a2464fe2fbe7f5a46d9f4b471c290435da2655ed5ca7e5b5ee3d801b5287519e",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "37f52e13f9de1c5f64352e3f464dae947ce53e925e20ae696bbdd08b5c343104",
+    "turn": 1
+  },
+  {
+    "base": "408138ef335a2588a7ab63e92735618117c5751ac9ef11310681bc7e9d181a98",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "4d57bfc5f5e2e6a0be23001e80c04910c80f7da87897dc3989c19a723457e1f8",
+    "turn": 0
+  },
+  {
+    "base": "9ad333ad61bf5cac52e1fea12313a155869f735beef211373708f344199d29bf",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "9a8705773da8532da505dc70b2f5959917b2911299d38614d491c69e1e7d96b2",
+    "turn": 1
+  },
+  {
+    "base": "f19f98df00f7d40d821e6ff645023a9445a35a11f0d8e74a419ffc460c12fdf6",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "a9c056ee642509c1eb2ca1760c49d94584e890db82ab023f2619432bbc8205f1",
+    "turn": 0
+  },
+  {
+    "base": "f3f162ed076fecac7fd4596ee8dee446102d92091dccd7413cd2033707f5db65",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "45c67283f3a707ce2f22079c49c024754c6325718b3f2da831690c047dfb7cc2",
+    "turn": 1
+  },
+  {
+    "base": "d665e4328075ca46770e3bfc30042546299e7f4668bc250cf0e107622377d32a",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "f001b766e96ccb8fc9a8c59312a609006d89ca1eb38ba5c33113b5d0917bc5bb",
+    "turn": 0
+  },
+  {
+    "base": "3cfea1ed9ee3c1583f8d20bc889cce533ee00b250a051883a7bd75f7576240bc",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "aa0674883edb6f446739d4d20a8f8922755d0f08755b1aabbcb8ff62ea6db63d",
+    "turn": 0
+  },
+  {
+    "base": "572ff792892f25fcba64e93253d12002e9cb9a3742e8d95ed60034ca198f4231",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "ec0abd2c485e239fcaca9b10341cb22c4ff5bdf748cd39b53fd1d0da85bd6988",
+    "turn": 1
+  },
+  {
+    "base": "bf4884f2932c4b745fdb89c863caaba5c20a59fcac0f00cf58aee7e0e6a15d4d",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "eb91378e63dbf1a5df9a3d1e851288b7dec86cd978446a7564333967707d1081",
+    "turn": 0
+  },
+  {
+    "base": "707fc207e6cc443a91d6fdeed28f6a7054b464247504bed29a20b9e2bfb0b77c",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "6ff71a4fdd522186869bef3ba4efb089c4d7a5d1899ab339dffb75fc3010eb35",
+    "turn": 1
+  },
+  {
+    "base": "f14b25d09e789de3f374e36956d38418b6c8c966074cd1ef5e60ffb902e6646b",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "6312a0cc20a29e5b9f116d5d88d5f5e4e92c1b6e59010f122043943947ae84b7",
+    "turn": 0
+  },
+  {
+    "base": "3037b730def0f8f9c8b7836b02193e18e41bb408ee23ad28034934d70e9459fe",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "f3a9214a314708d363c1fa75d98b56bcb0b92cdb7c259f57da6a5a022ee411a9",
+    "turn": 1
+  },
+  {
+    "base": "9c99d2071684f8ddaf1490cede1767a2e13808a0b302e18192903bd354a877bb",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "01070516dd16b41bada970bb066c17412d22b401bb319234b05d9dc452017d9e",
+    "turn": 0
+  },
+  {
+    "base": "bef5967ee798670e5fd8fc45abb1921884d50d2a29184688a908fff330977118",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "042706d03d032869dbda6f9d30c1e84a09e5e7117321815053b6ac66ac420145",
+    "turn": 1
+  },
+  {
+    "base": "cfe1bef320d62c0605bf6ed0a8a44403531e844758d21a69f916f87766d7e115",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "58aaba9278a46d0cc333ff9fd76841f85c3f9e10368bd37703410aa04b60db78",
+    "turn": 0
+  },
+  {
+    "base": "0d068863eef06b7eaeb4a34078fe9345b9cd9383b6839d6d3ea0ac0dcb1f0710",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "7c30b9368b015e367bb977813627f95dd4782669e18c3d5849874217635f4ce1",
+    "turn": 1
+  },
+  {
+    "base": "298e5c3f9f7f20fd74f98b73d8cfbdf010321e1e47a7a841a78dbff83a6ed6e5",
+    "conditions": [
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "167ea74552a514ffdca809763d8de10c829f9c19135894c22af949b8da0d42eb",
+    "turn": 0
+  },
+  {
+    "base": "e4d8899466aa979e4d0e9856e036093446776abfbfe37ffdd8eb52116047a13a",
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "ROTATION_TARGET"
+    ],
+    "content_sha256": "04cf269806a3726ebeb563336e2403e2c840052a1b1a4ea6e61c0b014bddaa8e",
+    "turn": 1
+  }
+]

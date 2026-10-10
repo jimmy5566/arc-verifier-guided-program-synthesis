@@ -1,0 +1,13 @@
+{
+  "allowed_equivalence_classes": [
+    "ROTATION_TARGET=NO_TRANSFORM_RETENTION_CONTROL at turn=0",
+    "ROTATION_TARGET=FIXED_TURN_ROTATION_CONTROL at turn=1"
+  ],
+  "cohort_sha256": "76c6fd57173ec62571f27a312e3f80601c70cdec04cda79432822937e7a37967",
+  "content_unique": false,
+  "cross_base_content_unique": true,
+  "cross_split_content_disjoint": true,
+  "permitted_same_base_collision_classes": 168,
+  "serialization": "UTF-8 LF JSONL, one sorted-key JSON object plus LF per row",
+  "unique_content_hashes": 1176
+}
