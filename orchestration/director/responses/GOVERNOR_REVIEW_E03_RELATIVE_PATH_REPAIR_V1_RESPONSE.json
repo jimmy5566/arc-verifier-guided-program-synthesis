@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "response_id": "GOVERNOR_REVIEW_E03_RELATIVE_PATH_REPAIR_V1_RESPONSE",
+  "reviewed_brief": "orchestration/director/briefs/GOVERNOR_REVIEW_E03_RELATIVE_PATH_REPAIR_V1.json",
+  "reviewed_brief_sha256": "8e158e034caef2f01d13d586feb1c32fd88ed71c6f8e2af8acf3b3fe41359f70",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_RUN_002",
+  "next_action": "Preserve RUN_001, its nonce, output root, log, terminal receipt, and failure evidence byte-for-byte as a terminal pre-import infrastructure failure. Create exactly one derived RUN_002 authorization with a cryptographically fresh nonce, a fresh output root and receipt path, Config V8 SHA256 598f5dc4ecd2c726f19958bebdf613f64bf9c591fbb3e20dd2f419e8846c8b80, Worker V4 SHA256 95285575afeeed2fbd781f58a9c67cc1622fbdc72d4d32b3f36f4d6ca2f70f70, and all other previously approved scientific files and conditions unchanged. Bind this response by exact path and SHA256. Before launch, add or run a focused CPU regression that actually exercises repository-relative config and binding arguments through the repaired pre-import path resolution, rather than checking source text only. Commit and non-force-push the intended RUN_002 binding and evidence; verify local HEAD = origin branch HEAD = clean RunPod checkout HEAD, all bound hashes, fresh-output absence, no surviving E03 process, and the 1500-second external cap. Then launch RUN_002 exactly once. On any further failure, preserve evidence, do not retry, and return for review.",
+  "failure_accounting": {
+    "run_001_status": "TERMINAL_PREIMPORT_INFRASTRUCTURE_FAILURE",
+    "run_001_scientific_measurement": "NOT_RUN",
+    "run_001_authorization_consumed": true,
+    "run_001_reuse_forbidden": true,
+    "derived_fresh_run_authorized": true,
+    "derived_run_id": "RUN_002",
+    "authorized_launches_for_run_002": 1
+  },
+  "repair_assessment": {
+    "root_cause": "Repository-relative config and binding arguments were used in a repository-relative identity calculation before being canonicalized against the repository root.",
+    "repair": "Resolve both paths against the repository root before reading them or computing bound-file identities.",
+    "scientific_numerical_change": false,
+    "config_sha256": "598f5dc4ecd2c726f19958bebdf613f64bf9c591fbb3e20dd2f419e8846c8b80",
+    "worker_sha256": "95285575afeeed2fbd781f58a9c67cc1622fbdc72d4d32b3f36f4d6ca2f70f70",
+    "focused_cpu_tests_observed": "PASS_24"
+  },
+  "authorization": {
+    "runtime_cap_seconds": 1500,
+    "automatic_retry": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "generation_calls": 0
+  },
+  "frozen_conditions": [
+    "same V7 checkpoint and exact checkpoint manifest",
+    "same frozen manifest and 288 TRAIN rows",
+    "same runtime-source-provenance amendment",
+    "same gradient algebra, B8 primary measurement, and B1 sensitivity measurement",
+    "same bootstrap, seed, LoRA allowlist, statistics, and decision rules",
+    "same 1500-second external runtime cap",
+    "zero optimizer steps, parameter updates, and generation",
+    "no DEV, RETENTION_SENTINEL, Gold, dGold, or FINAL_AUDIT"
+  ],
+  "forbidden_actions": [
+    "reusing or modifying RUN_001, nonce 3a73c370b7719b78073fd4b1b12c4285, its output root, terminal receipt, log, or preserved evidence",
+    "changing any scientific or numerical condition while deriving RUN_002",
+    "launching RUN_002 without a fresh nonce, fresh output root, final SHA-bound authorization, and successful relative-path regression",
+    "training, optimizer construction, optimizer steps, parameter updates, or generation",
+    "opening DEV, RETENTION_SENTINEL, Gold, dGold, or FINAL_AUDIT",
+    "duplicate launch or automatic retry"
+  ],
+  "next_review": "Return RUN_002 terminal receipt and frozen result package for scientific review. No additional prelaunch review is required if the derivation and regression are limited exactly to this decision."
+}

@@ -1,4 +1,4 @@
-import hashlib, json, os, tempfile, unittest
+import hashlib, importlib.util, json, os, tempfile, unittest
 from pathlib import Path
 from scripts.bootstrap_private_https_asset import fetch
 ROOT=Path(__file__).resolve().parents[1]
@@ -21,6 +21,18 @@ class E03AmendmentTests(unittest.TestCase):
   worker=(ROOT/'scripts/run_e03_v7_lora_gradient_interference_v4.py').read_text(encoding='utf-8')
   self.assertIn("config_path=resolve(str(config_path));binding_path=resolve(str(binding_path))",worker)
   self.assertEqual((ROOT/'experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V8.json').is_file(),True)
+ def test_v4_preflight_accepts_repository_relative_config_and_binding(self):
+  spec=importlib.util.spec_from_file_location('e03_v4',ROOT/'scripts/run_e03_v7_lora_gradient_interference_v4.py');mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+  binding=E03/'E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_RUN_002_AUTHORIZED_BINDING_V1.json'; config=E03/'E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V8.json'
+  with tempfile.TemporaryDirectory(dir=ROOT/'.arc2-local') as d:
+   out=Path(d)/'fresh_output'; trial=Path(d)/'relative_binding.json'; b=json.loads(binding.read_text(encoding='utf-8'));b['output_root']=str(out);b['terminal_receipt_path']=str(out/'TERMINAL_RECEIPT.json');trial.write_text(json.dumps(b),encoding='utf-8')
+   old=os.environ.get('E03_EXTERNAL_CAP_ENFORCED');os.environ['E03_EXTERNAL_CAP_ENFORCED']='1';original=mod.verify_files;mod.verify_files=lambda _:None
+   try:
+    got=mod.preflight(config.relative_to(ROOT),trial.relative_to(ROOT),out);self.assertEqual(got[0]['revision'],7);self.assertEqual(got[1]['nonce'],b['nonce'])
+   finally:
+    mod.verify_files=original
+    if old is None:os.environ.pop('E03_EXTERNAL_CAP_ENFORCED',None)
+    else:os.environ['E03_EXTERNAL_CAP_ENFORCED']=old
  def test_final_binding_binds_director_response_and_actual_v3_hashes(self):
   config=E03/'E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V7.json'
   binding=E03/'E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_RUN_001_AMENDMENT_V1_AUTHORIZED_BINDING_V2.json'
