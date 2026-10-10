@@ -38,7 +38,7 @@ def load_binding(path: Path, output_root: Path) -> dict[str, Any]:
         fail("E04_FIXED64_BINDING_SCHEMA")
     if binding["execution_authorized"] is not True or binding["hard_runtime_cap_seconds"] != CAP_SECONDS or binding["jobs"] != 1 or binding["retry"] is not False:
         fail("E04_FIXED64_BINDING_AUTHORIZATION")
-    if str(output_root) != binding["output_root"] or not isinstance(binding["nonce"], str) or not binding["nonce"]:
+    if str(output_root).replace("\\", "/") != binding["output_root"] or not isinstance(binding["nonce"], str) or not binding["nonce"]:
         fail("E04_FIXED64_BINDING_OUTPUT")
     if len(binding["director_response_sha256"]) != 64 or any(c not in "0123456789abcdef" for c in binding["director_response_sha256"]):
         fail("E04_FIXED64_BINDING_DIRECTOR_IDENTITY")
