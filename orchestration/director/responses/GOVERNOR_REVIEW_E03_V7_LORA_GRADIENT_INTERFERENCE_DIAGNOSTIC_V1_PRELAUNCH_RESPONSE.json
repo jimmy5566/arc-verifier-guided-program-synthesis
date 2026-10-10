@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "reviewed_brief": "orchestration/director/briefs/GOVERNOR_REVIEW_E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH.json",
+  "reviewed_brief_sha256": "4a2c85f2b482ca205bd2207e61698c880a7676b55b52849f8c4ce71346cd1351",
+  "decision": "REQUIRE_CHANGES",
+  "scientific_assessment": {
+    "adequate_and_preserved": [
+      "The prospective question is scientifically justified after E01: it directly tests local optimization geometry without assuming that scalar-loss imbalance proves gradient interference.",
+      "The frozen TRAIN-only cohort has 288 unique episodes arranged as four disjoint eight-example microbatches for each of nine predeclared families; TARGET_DEV, RETENTION_SENTINEL, Gold, dGold, and FINAL_AUDIT are excluded.",
+      "The five weak atomic families, same_color, pre-gradient-selected color_mapping retention control, and two explicitly non-held-out composition mappings are suitable for this bounded local diagnostic.",
+      "The V7 checkpoint manifest, TRAIN identity, manifest identity, historical all-assistant shifted-CE objective, LoRA-only scope, zero-update boundary, one-job limit, and 1500-second cap are appropriate.",
+      "The observed supervised-token imbalance is large and makes the planned separation of token counts, scalar loss, gradient norm, and gradient direction scientifically necessary."
+    ],
+    "not_yet_interpretable_or_executable": [
+      "The bootstrap used by the decision rule is not frozen: the resampling unit, dependency handling, replicate count, seed, estimator reconstruction, and lower/upper-bound definitions are absent.",
+      "The phrases protected-family median cosine and combined protected alignment do not define how same_color and color_mapping are combined or how opposite protected-family signs are classified, leaving a decision-driving degree of freedom after observation.",
+      "The B1 sensitivity rule says only sign-stable. It does not define how eight B1 per-example gradients reconstruct the corresponding B8 token-mean gradient, how numerical uncertainty is propagated into every decision metric, or when excessive sensitivity is INCONCLUSIVE rather than structurally invalid.",
+      "No frozen execution worker, postprocessor, tests, launch binding, fresh nonce/output identity, runtime identity receipt, or exact source-commit binding exists in the reviewed package. The current package therefore cannot safely authorize model import or backward execution."
+    ]
+  },
+  "root_cause": "The cohort and scientific question are adequate, but the decision estimator and numerical-sensitivity contract are under-specified and the reviewed package contains only the CPU freeze artifacts, not an auditable execution package. Running it now could permit post-result choices in bootstrap aggregation or protected-family combination and could not distinguish a valid but numerically sensitive result from an invalid implementation.",
+  "smallest_repair": [
+    "Keep the 288 rows, nine families, four-by-eight allocation, V7 identity, historical all-assistant CE objective, thresholds, and 1500-second cap unchanged. Do not regenerate the cohort.",
+    "Freeze one exact gradient algebra. For every microbatch, define the FP32 gradient of the summed shifted assistant-token CE divided by that microbatch's supervised-token count. Define each family token-mean gradient from the summed loss numerator over all 32 family rows divided by the family's total supervised-token count. Define the historical combined gradient by supervised-token-weighting those family token-mean gradients, and define the equal-family direction by averaging the predeclared unit-normalized family gradients. State zero-norm handling before execution.",
+    "Freeze same_color and color_mapping handling. Use the equal-protected-family macro as the primary protected summary, report both protected families separately, and classify opposite decision-driving protected-family signs as INCONCLUSIVE rather than selecting the favorable aggregation after observation.",
+    "Freeze a dependency-aware family bootstrap with exactly 10000 replicates and seed 20261010. Resample the four microbatches independently within each family, never treat the resulting cross-family cosine pairs as independent rows, and recompute the complete weak-family medians and combined-gradient protected alignments for every replicate. Define the reported lower and upper bounds as the 2.5 and 97.5 percentiles of those replicate statistics.",
+    "Define B1 sensitivity by computing the eight per-example gradients for frozen microbatch 0 of each family, summing their CE-numerator gradients in FP32, and dividing by the exact total supervised-token count to reconstruct the same nine B8 microbatch estimands. From the B8-versus-reconstructed-B1 differences, construct a predeclared metric-specific numerical sensitivity envelope and expand the bootstrap decision bounds by that envelope. A valid result whose classification can reverse under this envelope is INCONCLUSIVE; identity, mask, causal-shift, non-finite, missing-row, or gradient-mapping failures are INVALID_NOT_INTERPRETABLE.",
+    "Freeze model mode, dropout behavior and RNG seeds, padding side, attention mask, position IDs, causal shift, label mask, gradient zeroing between microbatches, exact LoRA parameter-name allowlist, layer/module grouping, and the sufficient statistics used for norms and cosines. Verify that no base parameter is trainable and no optimizer is constructed.",
+    "Implement one worker and one CPU postprocessor with tests covering manifest completeness, exact identities, token-mean algebra, historical versus equal-family combination, clustered bootstrap determinism, protected-family aggregation, synthetic known-gradient cosines, B1 reconstruction, sensitivity classification, LoRA-only requires_grad, zeroing, non-finite failure, fresh-output and duplicate guards, total runtime cap including model load, atomic terminal receipt, and partial-evidence preservation.",
+    "Freeze a fresh one-run launch binding with exact config, manifest, worker, postprocessor, checkpoint, dataset, source-commit, nonce, output, receipt, and runtime identities; verify local equals origin equals RunPod checkout before model import; then return one narrow prelaunch brief."
+  ],
+  "frozen_conditions": [
+    "The E01 RUN_003 result and RANKING_NOT_IMPROVED classification remain immutable.",
+    "The E03 source remains legitimate synthetic TRAIN only; no DEV, retention sentinel, Gold, dGold, or FINAL_AUDIT data may enter selection, gradients, thresholds, or scoring.",
+    "The 288 selected episodes, nine family roles, four disjoint microbatches per family, and fixed 72-row B1 subset remain unchanged.",
+    "The starting checkpoint remains RECONSTRUCTED_FOUNDATION_V2_V7 with checkpoint-manifest SHA256 1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549.",
+    "The TRAIN file remains SHA256 fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945 and the frozen microbatch manifest remains SHA256 901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be.",
+    "The diagnostic remains one no-generation, no-optimizer, zero-update LoRA-gradient job with a total 1500-second cap and no automatic retry.",
+    "Negative cosine may support local gradient disagreement only; it is not causal proof of forgetting or evidence of independent ARC transfer."
+  ],
+  "forbidden_actions": [
+    "Do not launch GPU work, import or load the model, run backward, construct an optimizer, update parameters, train, or generate under this response.",
+    "Do not regenerate or select cohort rows, families, protected controls, thresholds, bootstrap rules, aggregation rules, or sensitivity rules after observing gradients.",
+    "Do not persist base-weight gradients or target data outside the authorized TRAIN evidence package.",
+    "Do not begin a conflict-mitigation training pilot, R3, another ranking study, or a broader mechanistic program from this response.",
+    "Do not access Gold, dGold, or FINAL_AUDIT."
+  ],
+  "another_review_required": true,
+  "next_review_scope": "ONE_REPAIRED_E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH_PACKAGE",
+  "gpu_inference_authorized": false,
+  "model_loading_authorized": false,
+  "backward_authorized": false,
+  "scientific_training_authorized": false
+}
