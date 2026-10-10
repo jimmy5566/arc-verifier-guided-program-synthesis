@@ -1,0 +1,49 @@
+{
+  "brief_id": "E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1_RESULT_REVIEW",
+  "created_at": "2026-10-10T18:49:33.881755Z",
+  "observed_result": {
+    "b1_repeatability_gate": "PASS_64_OF_64",
+    "condition_exact_grid_accuracy": {
+      "FIXED_TURN_ROTATION_CONTROL": 0.16145833333333334,
+      "MARKER_BINDING_CONTROL": 0.9635416666666666,
+      "NO_TRANSFORM_RETENTION_CONTROL": 0.75,
+      "ROTATION_TARGET": 0.125
+    },
+    "condition_parser_validity": {
+      "FIXED_TURN_ROTATION_CONTROL": 1.0,
+      "MARKER_BINDING_CONTROL": 1.0,
+      "NO_TRANSFORM_RETENTION_CONTROL": 1.0,
+      "ROTATION_TARGET": 1.0
+    },
+    "matched_rotation_target_minus_control_bootstrap": {
+      "FIXED_TURN_ROTATION_CONTROL": {
+        "ci95_high": 0.036458333333333336,
+        "ci95_low": -0.11458333333333333,
+        "point": -0.036458333333333336
+      },
+      "MARKER_BINDING_CONTROL": {
+        "ci95_high": -0.8020833333333334,
+        "ci95_low": -0.875,
+        "point": -0.8385416666666666
+      },
+      "NO_TRANSFORM_RETENTION_CONTROL": {
+        "ci95_high": -0.5677083333333334,
+        "ci95_low": -0.6822916666666666,
+        "point": -0.625
+      }
+    },
+    "run_status": "COMPLETE_NO_UPDATE_CPU_SCORED_DEVELOPMENT_EVIDENCE"
+  },
+  "process_invariants": {
+    "backward_calls": 0,
+    "final_audit_opened": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0
+  },
+  "result_package_path": "C:\\w\\arc2-e04-v3-results\\experiments\\capability_repair_baseline_v1\\e04_orientation_fixed_demonstration_baseline_v3\\e04_v3_full768_b1_no_update_remeasurement_v1\\run_001_2ee668738df64d558f666f5989d09add\\RESULT_PACKAGE.json",
+  "result_package_sha256": "89dfd3cb4ec41ca5181aa99531b33cf430afe371d03490d9a94283729e9c6e37",
+  "review_question": "Interpret the valid B1 full-cohort matched condition results and select at most one next scientifically justified action; do not authorize automatic follow-on execution.",
+  "schema_version": 1,
+  "scientific_scope": "REUSED_DEVELOPMENT_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION_CONFIRMATION",
+  "stage": "E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1_RESULT"
+}
