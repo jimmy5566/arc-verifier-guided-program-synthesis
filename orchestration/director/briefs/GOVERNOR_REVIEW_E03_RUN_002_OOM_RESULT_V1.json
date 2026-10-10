@@ -1,0 +1,45 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_E03_RUN_002_OOM_RESULT_V1",
+  "constraints": [
+    "Do not retry RUN_002.",
+    "Do not modify RUN_001/RUN_002 evidence.",
+    "No automatic GPU launch, training, updates, generation, or FINAL_AUDIT."
+  ],
+  "decision_options": [
+    "AUTHORIZE_DISTINCT_LOWER_MEMORY_PROTOCOL_REVIEW",
+    "STOP_E03_ON_CURRENT_RUNTIME",
+    "REQUEST_CPU_ONLY_MEMORY_FEASIBILITY_ANALYSIS"
+  ],
+  "established": [
+    "RUN_002 pre-import identities passed and V4 fixed the relative-path defect.",
+    "The first B8 forward with trainable LoRA exceeded available 24GB GPU memory.",
+    "No gradient basis row, optimizer step, update, generation, or audit access occurred."
+  ],
+  "not_established": [
+    "gradient interference",
+    "family gradient alignment",
+    "any scientific conclusion from E03"
+  ],
+  "observed_result": {
+    "completed_basis_rows": 0,
+    "failure_class": "CUDA_OOM_DURING_FIRST_B8_FORWARD",
+    "final_audit_opened": false,
+    "generation_calls": 0,
+    "launcher_log_sha256": "385e1e1100e51704cb3778d4569e42c89be288227cc82a95ffa2d747d11c0e70",
+    "model_imported": true,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "preservation": "RUN_001 and RUN_002 remote receipts/progress are copied byte-for-byte; no retry is authorized.",
+    "progress_sha256": "e31fee370ba72e59166a52889b6232b127a1850ef1e3ed88b033332c99a32948",
+    "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1",
+    "resource_observation": "24GB GPU left only 74.38MiB free during first B8 forward with model and trainable LoRA loaded.",
+    "run_id": "RUN_002_ea14010ea536c68f74e2ec093b64202e",
+    "schema_version": 1,
+    "scientific_interpretation": "NOT_ESTABLISHED_NO_GRADIENT_EVIDENCE",
+    "status": "FAILED_OR_PARTIAL_NO_UPDATE",
+    "terminal_receipt_sha256": "47e6341e555ff0bb32991d85f8c6b7e63da99953a23784cce869f2be07d97f00"
+  },
+  "question": "Given an authentic no-update OOM before the first B8 gradient, should ARC2 pursue a distinct, lower-memory gradient-measurement protocol, or stop E03 on this 24GB runtime?",
+  "schema_version": 1,
+  "stage": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1"
+}

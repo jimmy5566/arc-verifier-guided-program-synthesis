@@ -1,0 +1,9 @@
+{
+  "completed_basis_rows": 0,
+  "final_audit_opened": false,
+  "generation_calls": 0,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "phase": "PREFLIGHT_COMPLETE",
+  "status": "PARTIAL_NO_UPDATE"
+}

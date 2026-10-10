@@ -1,0 +1,19 @@
+{
+  "completed_basis_rows": 0,
+  "failure_class": "CUDA_OOM_DURING_FIRST_B8_FORWARD",
+  "final_audit_opened": false,
+  "generation_calls": 0,
+  "launcher_log_sha256": "385e1e1100e51704cb3778d4569e42c89be288227cc82a95ffa2d747d11c0e70",
+  "model_imported": true,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "preservation": "RUN_001 and RUN_002 remote receipts/progress are copied byte-for-byte; no retry is authorized.",
+  "progress_sha256": "e31fee370ba72e59166a52889b6232b127a1850ef1e3ed88b033332c99a32948",
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1",
+  "resource_observation": "24GB GPU left only 74.38MiB free during first B8 forward with model and trainable LoRA loaded.",
+  "run_id": "RUN_002_ea14010ea536c68f74e2ec093b64202e",
+  "schema_version": 1,
+  "scientific_interpretation": "NOT_ESTABLISHED_NO_GRADIENT_EVIDENCE",
+  "status": "FAILED_OR_PARTIAL_NO_UPDATE",
+  "terminal_receipt_sha256": "47e6341e555ff0bb32991d85f8c6b7e63da99953a23784cce869f2be07d97f00"
+}
