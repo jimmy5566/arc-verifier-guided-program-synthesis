@@ -1,0 +1,70 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH",
+  "cohort": {
+    "batch1_sensitivity": "fixed microbatch 0 of every family; 72 TRAIN rows",
+    "composition_source_mappings": {
+      "novel_two_operation_order": "COMPOSITION_REPAIR/conditional action/IF_OBJECT_COUNT_EVEN_THEN_COLOR_C_ELSE_B",
+      "object_selection_then_action": "COMPOSITION_REPAIR/relation selector action/SELECT_OBJECT_TOUCHING_REFERENCE_COLOR"
+    },
+    "families": 9,
+    "four_disjoint_microbatches_per_family": true,
+    "microbatch_size": 8,
+    "protected_retention": [
+      "same_color",
+      "color_mapping"
+    ],
+    "rows": 288,
+    "selection": "deterministic SHA256 sort using frozen seed; selection occurs before gradients",
+    "weak_atomic": [
+      "connected_components",
+      "inside_contains",
+      "width",
+      "difference",
+      "orientation"
+    ]
+  },
+  "current_execution_status": "CPU_FREEZE_COMPLETE; GPU_MODEL_BACKWARD_NOT_AUTHORIZED; no launch requested by this brief without an explicit Director CONTINUE_CONTROLLER binding.",
+  "frozen_package": {
+    "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "config_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG.json",
+    "config_sha256": "01860b428e92b99931f99239b2c5c4064c3b743eb94e15fb1def206ab4b218a3",
+    "manifest_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_TRAIN_MICROBATCH_MANIFEST_V1.json",
+    "manifest_sha256": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "train_path": "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl",
+    "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+  },
+  "hard_boundaries": [
+    "TRAIN-only source",
+    "TARGET_DEV and RETENTION_SENTINEL excluded",
+    "Gold/dGold/FINAL_AUDIT sealed",
+    "no training/generation/optimizer/update",
+    "one future job only, 1500-second cap, fresh output, duplicate prevention, atomic receipt and partial evidence preservation"
+  ],
+  "measurement": {
+    "decision_rule": "local interference: >=3/5 weak families protected median cosine < -0.05 with bootstrap upper <0 OR token-weighted combined protected alignment < -0.05 with upper <0, all sign-stable B1; otherwise specified de-prioritized/inconclusive/invalid branches.",
+    "numerics": "BF16 model execution; primary B8 microbatches and B1 fixed subset",
+    "objective": "historical all-assistant causal CE; assistant labels only, user labels=-100; shifted CE; FP32 sum/reduction and gradient accumulation",
+    "parameters": "LoRA only; no optimizer construction, no updates, no persisted base-weight gradients",
+    "reports": [
+      "global and per-microbatch norms",
+      "pairwise cosines and negative frequency",
+      "layer/module shares",
+      "historical token-weighted and equal-family combined alignment with protected families",
+      "supervised token and scalar-loss contributions separately"
+    ]
+  },
+  "request": "Review one prospective no-update local LoRA-gradient diagnostic before any model import, backward pass, or GPU launch. Is this frozen cohort/objective/decision rule scientifically adequate, and what is the smallest necessary change before one bounded execution?",
+  "schema_version": 1,
+  "scientific_limits": [
+    "E03 measures local optimization geometry only, not causal forgetting or independent ARC transfer.",
+    "The composition canonical labels are transparent mappings to existing TRAIN programs; they are not independent held-out composition transfer.",
+    "V7 is the only checkpoint; E01/RUN_003 remains unchanged."
+  ],
+  "stage": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1",
+  "triggering_director_response": {
+    "decision": "CONTINUE_CONTROLLER",
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_PAIRED_V7_FAMILY_BALANCED_CORRECT_TOKEN_RANK_MARGIN_V1_RUN_003_RESULT_V1_RESPONSE.json",
+    "sha256": "72b312893aa571b0bb705e2c8944a79e6daf51a5e4dcbe1d676e5e83e4f5f755"
+  }
+}
