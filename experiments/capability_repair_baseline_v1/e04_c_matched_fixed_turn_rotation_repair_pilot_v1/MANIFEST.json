@@ -1,0 +1,24 @@
+{
+  "control_condition": "NO_TRANSFORM_RETENTION_CONTROL",
+  "control_sha256": "aa03408f158132c497eb9e8850c16391d0f7581914b4bc8933679630f66b82b1",
+  "execution_authorized": false,
+  "generator_source_sha256": "bfb156962608813067c5a62c7541789ef5431b46b4530fcef0155d8d1a63bd64",
+  "gpu_used": false,
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "pairs": 1152,
+  "prelaunch_gates_remaining": [
+    "exact_token_and_supervised_token_equality_under_frozen_v7_tokenizer",
+    "equal_step_role_slot_length_and_protected_replay_schedule",
+    "frozen_paired_uncertainty_minimum_effect_retention_runtime_and_cost_rules",
+    "new_director_prelaunch_review"
+  ],
+  "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+  "schema_version": 1,
+  "status": "CPU_ONLY_TRAIN_ONLY_MATCHED_COHORT_FROZEN",
+  "tokenizer_loaded": false,
+  "training_split_only": true,
+  "treatment_condition": "FIXED_TURN_ROTATION_CONTROL",
+  "treatment_sha256": "0c8a331bd9662a0656a59ce6aef3dcb7b374c6758fc244e12a691fb830677151",
+  "validation_rows_read": 0
+}
