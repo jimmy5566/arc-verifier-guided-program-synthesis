@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "response_id": "GOVERNOR_REVIEW_E03_RUNTIME_SOURCE_PROVENANCE_AMENDMENT_V1_RESPONSE",
+  "reviewed_brief": "orchestration/director/briefs/GOVERNOR_REVIEW_E03_RUNTIME_SOURCE_PROVENANCE_AMENDMENT_V1.json",
+  "reviewed_brief_sha256": "ed572af8cd1c3fbfef4ba7fe311cf387b559f1fc5ae2c132b666804d3212900a",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_RUN_001",
+  "next_action": "Approve the runtime-source-provenance amendment because the frozen SHA-bound 288-row manifest is the complete numerical input consumed by E03 and the unavailable 4004-row TRAIN.jsonl was only a redundant preflight dependency. Before launch, make one mechanical provenance-only correction: in the amended config source_files, replace the stale V2 launcher hash with fcfc816c5084e97f6b8ef9df7adeb0a2196b830cd74fc9efd5c586308a22cf11 and the stale V2 worker hash with 2fc342c29e154289df5dfa5fc8616615d7c44668b3f0ecac8a45e5037289ca1a. Recompute the amended config SHA256 and create one final immutable authorized binding derived from the reviewed draft, binding this response by exact path and SHA256 and binding the corrected config, V3 launcher, V3 worker, unchanged manifest, checkpoint manifest, statistics, and postprocessor. Run the focused CPU tests; commit and non-force-push only the intended amendment artifacts; verify local HEAD = origin branch HEAD = clean RunPod checkout HEAD and every bound file SHA256; confirm no process, output root, or receipt from an earlier attempt exists; then launch the unchanged RUN_001 exactly once through the V3 parent-initializing 1500-second external-cap launcher. Any other change or any failed gate stops the launch without retry.",
+  "scientific_assessment": {
+    "amendment_valid": true,
+    "reason": "The immutable manifest SHA256 901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be contains all 288 selected rows with complete input_ids and labels and is the only dataset content read by the worker. Requiring exact equality between the manifest source record and the immutable config source_provenance preserves the historical source claim without pretending the absent full TRAIN file is reverified at runtime.",
+    "scientific_numerical_change": false,
+    "cohort_change": false,
+    "runtime_dependency_removed": "REDUNDANT_FULL_TRAIN_FILE_EXISTENCE_AND_HASH_GATE",
+    "historical_full_train_provenance_status": "PRESERVED_AS_FROZEN_METADATA_NOT_RUNTIME_REVERIFIED"
+  },
+  "required_mechanical_correction": {
+    "root_cause": "Config V7 source_files still records the reviewed V2 launcher and worker hashes although the amendment executes V3 files.",
+    "launcher_v3_sha256": "fcfc816c5084e97f6b8ef9df7adeb0a2196b830cd74fc9efd5c586308a22cf11",
+    "worker_v3_sha256": "2fc342c29e154289df5dfa5fc8616615d7c44668b3f0ecac8a45e5037289ca1a",
+    "effect_on_science": "NONE_PROVENANCE_METADATA_ONLY",
+    "another_director_review_required_if_exact": false
+  },
+  "authorization": {
+    "authorized_actual_launches_remaining": 1,
+    "runtime_cap_seconds": 1500,
+    "automatic_retry": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "generation_calls": 0
+  },
+  "frozen_conditions": {
+    "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1",
+    "nonce": "3a73c370b7719b78073fd4b1b12c4285",
+    "manifest_sha256": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "manifest_rows": 288,
+    "historical_source_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945",
+    "checkpoint_unchanged": true,
+    "B8_and_B1_measurement_unchanged": true,
+    "lora_allowlist_and_fp32_gradient_algebra_unchanged": true,
+    "runtime_cap_seconds": 1500
+  },
+  "forbidden_actions": [
+    "changing the frozen manifest, any input_ids or labels, checkpoint, cohort, nonce, output identity, numerical settings, statistics, decision thresholds, or runtime cap",
+    "representing manifest/config provenance equality as a fresh runtime verification of the absent full TRAIN.jsonl bytes",
+    "publishing, reconstructing, transferring, or privately bootstrapping TRAIN.jsonl as part of this amended E03 execution",
+    "launching before the two stale source_files hashes are corrected and the final binding verifies every amended file",
+    "training, optimizer construction, optimizer steps, parameter updates, or generation",
+    "opening DEV, RETENTION_SENTINEL, Gold, dGold, or FINAL_AUDIT",
+    "duplicate launch or automatic retry"
+  ],
+  "next_review": "Return the terminal receipt and frozen result package for scientific result review. No additional prelaunch review is required if the correction is limited exactly to the two stated source_files hashes and derived config/binding identities."
+}

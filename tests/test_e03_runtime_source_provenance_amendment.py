@@ -17,6 +17,15 @@ class E03AmendmentTests(unittest.TestCase):
  def test_v3_parent_initialization_and_source_contract(self):
   worker=(ROOT/'scripts/run_e03_v7_lora_gradient_interference_v3.py').read_text(encoding='utf-8'); launcher=(ROOT/'scripts/launch_e03_v7_lora_gradient_interference_v3.py').read_text(encoding='utf-8')
   self.assertIn('E03_MANIFEST_SOURCE_PROVENANCE_MISMATCH',worker);self.assertIn('x.output_root.parent.mkdir(parents=True,exist_ok=True)',launcher)
+ def test_final_binding_binds_director_response_and_actual_v3_hashes(self):
+  config=E03/'E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V7.json'
+  binding=E03/'E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_RUN_001_AMENDMENT_V1_AUTHORIZED_BINDING_V2.json'
+  b=json.loads(binding.read_text(encoding='utf-8'))
+  self.assertTrue(b['execution_authorized']);self.assertEqual(b['status'],'EXECUTION_AUTHORIZED_AFTER_DIRECTOR_REVIEW')
+  self.assertEqual(b['director_response_sha256'],'06c14078c381776962b5d4dbb671894dc8c298a1a973dc331d1bbadcc0139dc1')
+  self.assertEqual(b['bound_files'][str(config.relative_to(ROOT)).replace('\\','/')],hashlib.sha256(config.read_bytes()).hexdigest())
+  self.assertEqual(json.loads(config.read_text(encoding='utf-8'))['source_files']['external_cap_launcher'],'fcfc816c5084e97f6b8ef9df7adeb0a2196b830cd74fc9efd5c586308a22cf11')
+  self.assertEqual(json.loads(config.read_text(encoding='utf-8'))['source_files']['worker'],'2fc342c29e154289df5dfa5fc8616615d7c44668b3f0ecac8a45e5037289ca1a')
 class PrivateBootstrapTests(unittest.TestCase):
  def test_cache_publish_and_non_https_rejection(self):
   with tempfile.TemporaryDirectory() as d:

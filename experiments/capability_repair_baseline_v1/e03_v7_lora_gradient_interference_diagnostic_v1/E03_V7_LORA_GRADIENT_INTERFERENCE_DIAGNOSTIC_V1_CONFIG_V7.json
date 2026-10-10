@@ -646,11 +646,11 @@
   "schema_version": 1,
   "seed": 20261010,
   "source_files": {
-    "external_cap_launcher": "af37e6d9ef64e68855856e6d618866d3ec11ef66010a6ce77a235f3ce09b598d",
+    "external_cap_launcher": "fcfc816c5084e97f6b8ef9df7adeb0a2196b830cd74fc9efd5c586308a22cf11",
     "freezer": "ec8e19dff8357596ddc5946c7a84b194bfa4cacf4e3cc0bebf55b781b4eafa0a",
     "postprocessor": "073e2dbd38e68ae95595191865a5b12f5ae5ccac64bae7e51b5f756b98045429",
     "statistics_contract": "30a8859cee9a90a6a016cf5c066d4e86a7e92907978a4e235883d3597275ba3c",
-    "worker": "afcda4171963392deb0530d0722c060dc2badf82ff37046f3ba99b8c02f2ca54"
+    "worker": "2fc342c29e154289df5dfa5fc8616615d7c44668b3f0ecac8a45e5037289ca1a"
   },
   "source_provenance": {
     "path": "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl",
