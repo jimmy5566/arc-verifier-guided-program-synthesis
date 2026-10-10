@@ -1,0 +1,56 @@
+{
+    "schema_version":  1,
+    "brief_id":  "E04_V3_FIXED64_BATCH_RUNG_LOCALIZATION_RUN_002_RESULT_REVIEW_BRIEF_V1",
+    "stage":  "E04_V3_FIXED64_BATCH_RUNG_LOCALIZATION_V2_MATCHED_FRESH_B1_REPLACEMENT_RUN",
+    "decision_needed":  "INTERPRET_FROZEN_RESULT_AND_SPECIFY_SMALLEST_SCIENTIFIC_NEXT_ACTION",
+    "request":  "ONE_SYNCHRONOUS_DIRECTOR_RESULT_REVIEW__NO_NEW_EXECUTION_REQUESTED",
+    "source_commit":  "f418f60163d37c65b7486ac18884fc6f318fa9ba",
+    "evidence_preservation_commit":  "37f29843101e4fbcdf9e9ea9cf6db40a5dd57cb9",
+    "run":  {
+                "runtime_cap_seconds":  1200,
+                "terminal_status":  "COMPLETE_NO_UPDATE",
+                "raw_freeze_receipt_sha256":  "d599ecbb49266e174a625dd6db403b3496a0634ee6b309be26c54581be0a6937",
+                "forbidden_operations":  {
+                                             "optimizer_steps":  0,
+                                             "final_audit_opened":  false,
+                                             "backward_calls":  0,
+                                             "parameter_updates":  0
+                                         },
+                "terminal_receipt_sha256":  "3a063d4d17124b84936dda9a43d2c389f8c510036c2b5dd48fa3b53856860f35",
+                "wall_seconds":  1034.8418923690915,
+                "run_id":  "RUN_002_09280490c667fc6f5643034cb8a577a8"
+            },
+    "integrity":  {
+                      "result_package_sha256":  "c4f6a5b609234452504c4035e2f77677229b7cd024f1d4f59b2a65c81f649561",
+                      "cpu_score_sha256":  "ff1875ecd003d7875b891463a90faf106e0eaa4a13627618f56494483eac531a",
+                      "all_remote_raw_files_sha256_verified":  true,
+                      "target_sidecar_opened_only_after_raw_freeze":  true
+                  },
+    "observed":  {
+                     "B16":  {
+                                 "agreement_gate":  "FAIL",
+                                 "mismatches":  2
+                             },
+                     "B4":  {
+                                "agreement_gate":  "FAIL",
+                                "mismatches":  2
+                            },
+                     "B8":  {
+                                "agreement_gate":  "FAIL",
+                                "mismatches":  4
+                            },
+                     "selected_primary_rung":  1,
+                     "fresh_B1_vs_historical_B1_repeatability":  "PASS_64_OF_64"
+                 },
+    "interpretation_boundary":  "The frozen token/parser/grid/exact-outcome agreement gate selects B1. This establishes runtime batch-rung localization only; it does not establish a capability, mechanistic, or training conclusion.",
+    "questions":  [
+                      "Does this complete the E04 batch-rung localization objective as B1-only under the frozen gate?",
+                      "What smallest scientifically valid next stage, if any, is warranted?",
+                      "Do not authorize or execute any new GPU work through this result review alone."
+                  ],
+    "protected_boundaries":  [
+                                 "No Gold/dGold/FINAL_AUDIT",
+                                 "No optimizer, backward, training, or parameter update",
+                                 "No automatic follow-on execution"
+                             ]
+}
