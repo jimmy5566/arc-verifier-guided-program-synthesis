@@ -1,0 +1,48 @@
+﻿{
+  "schema_version": 1,
+  "review_id": "GOVERNOR_REVIEW_E04_ORIENTATION_V7_ONLY_NO_UPDATE_EVALUATION_PRELAUNCH_V1",
+  "request_type": "ONE_V7_ONLY_NO_UPDATE_E04_ORIENTATION_EVALUATION_PRELAUNCH_REVIEW",
+  "source_commit": "bb0503e3a7a1a321f7f6f2507e5bf31e4fd6e723",
+  "scientific_scope": "Existing frozen E04 orientation cohort and V7-only conditional rotation-target diagnostic; development evidence only.",
+  "requested_decision": "Authorize, revise, or reject one bounded V7-only no-update evaluation. No training or successor intervention is requested.",
+  "prelaunch_package": {
+    "path": "experiments/capability_repair_baseline_v1/e04_orientation_frozen_cohort_v1/E04_ORIENTATION_V7_ONLY_NO_UPDATE_EVALUATION_PRELAUNCH_PACKAGE_V1.json",
+    "sha256": "0450f8618664136de3c3cbae5b8e9b5707012d2db6a3988b59ff2b64354e9ea2"
+  },
+  "frozen_evidence": {
+    "cohort_path": "experiments/capability_repair_baseline_v1/e04_orientation_frozen_cohort_v1/COHORT.jsonl",
+    "cohort_sha256": "76c6fd57173ec62571f27a312e3f80601c70cdec04cda79432822937e7a37967",
+    "validation_independent_base_tuples": 48,
+    "paired_views_per_base_tuple": 4,
+    "metadata_closure": "SUCCESSOR_METADATA_V2.json; CRLF serialization and temporary-directory reconstruction pass",
+    "collision_disposition": "1176 unique content hashes; 168 declared same-base equivalence classes only; cross-base and cross-split content disjoint",
+    "oracle": "Independent renderer checked all 1344 rows"
+  },
+  "checkpoint": {
+    "identity": "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "manifest_sha256": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da"
+  },
+  "estimand": {
+    "primary": "Per reserved cell, among base tuples where FIXED_TURN_ROTATION_CONTROL and MARKER_BINDING_CONTROL are exact, V7 ROTATION_TARGET exact-grid failure; equal-cell macro average only if each cell has at least 8 conditional analyzable tuples.",
+    "uncertainty": "reserved-cell-stratified bootstrap at base-tuple level; 10000 replicates; seed 20261010",
+    "secondary": ["unconditional target accuracy by cell", "each control accuracy", "paired within-base outcome table"]
+  },
+  "machine_and_scientific_boundaries": {
+    "only_model": "V7",
+    "no_update": true,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "backward": false,
+    "training": false,
+    "gradient_computation": false,
+    "sealed_data": ["NO_GOLD", "NO_DGOLD", "NO_FINAL_AUDIT"],
+    "cohort_change": false,
+    "development_evidence_only": true
+  },
+  "review_questions": [
+    "Is the V7-only exact-grid protocol sufficient to estimate the frozen conditional diagnostic without treating paired views as independent units?",
+    "Are the proposed batching, fixed Batch1 sensitivity check, failure handling, and no-update limits appropriate before Controller writes a worker and launch binding?",
+    "If execution is authorized, what exact cap and numerical/semantic stability thresholds must be bound prospectively?"
+  ]
+}
