@@ -1,0 +1,67 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "cohort": {
+    "cohort_manifest_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_MANIFEST_V1.json",
+    "cohort_manifest_sha256": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+    "examples_per_family": 8,
+    "families": 9,
+    "rows": 72,
+    "selection": "exact prior fixed B1 subset, no resampling",
+    "train_only": true
+  },
+  "decision_rule": {
+    "GRADIENT_INTERFERENCE_DEPRIORITIZED": "all five primary bootstrap lower bounds >= 0 and secondary combined bootstrap lower bound >= 0",
+    "INCONCLUSIVE": "any other valid pattern, nonfinite/identity/mapping failure, partial evidence, or a classification changed by frozen numerical repeatability tolerance",
+    "LOCAL_GRADIENT_INTERFERENCE_SUPPORTED": "at least 3/5 primary weak-family point cosines <= -0.05 and corresponding bootstrap upper bounds < 0; or secondary historical token-weighted combined cosine <= -0.05 with bootstrap upper bound < 0",
+    "interpretation_limit": "negative cosine demonstrates local disagreement only; it is not causal proof of forgetting"
+  },
+  "identity": {
+    "config_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CONFIG_V1.json",
+    "config_sha256": "e5690bf1bc1c503b19880c71d4f387a560683ece1c97e6d707ca61186dfe9c12",
+    "prelaunch_binding_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_PRELAUNCH_BINDING_V1.json",
+    "prelaunch_binding_sha256": "3272cca0a29674a55846c84e4c49fb22216a92843cef464da08783f331ff09e7",
+    "source_commit": "ced1a449ec7a6be5a34f1ed42dcb3527bbc7a8d1",
+    "static_validation_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CPU_STATIC_VALIDATION_V1.json",
+    "static_validation_sha256": "599996c40eb3bbed02e962daedab96ab4624989a37f5902c2412051ab882e86c"
+  },
+  "measurement": {
+    "batch": "physical B1",
+    "bootstrap": "10000 family-stratified episode resamples, seed 20261010",
+    "checkpoint": "V7 only",
+    "forward_backward": "one forward/backward per episode; no optimizer",
+    "loss": "shifted nonignored assistant CE, selected logits FP32, normalized by each episode supervised-token count",
+    "parameters": "exact frozen LoRA allowlist",
+    "primary": "five weak-family versus equal-family protected same_color+color_mapping cosine",
+    "secondary": "historical supervised-token-weighted combined weak/protected cosine",
+    "statistics": "only 72x72 FP64 Gram, token counts, family mapping and target-module contributions retained; temporary gradient scratch deleted"
+  },
+  "prior_result": {
+    "E03_V2_RUN_001": "FAILED_OR_PARTIAL_NO_UPDATE; first B8 forward OOM; zero basis rows; preserved and not retried",
+    "scientific_interpretation": "NOT_ESTABLISHED_NO_GRADIENT_EVIDENCE"
+  },
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "question": "Is the one-run E03 V3 physical-B1 per-example LoRA-gradient screen scientifically and operationally valid to execute as specified?",
+  "review_id": "GOVERNOR_REVIEW_E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_PRELAUNCH_V1",
+  "review_type": "PRELAUNCH_SCIENTIFIC_AND_SAFETY_REVIEW",
+  "runtime_safety": {
+    "cap_seconds": 1800,
+    "fallback": false,
+    "forbidden_data": [
+      "DEV",
+      "RETENTION_SENTINEL",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT"
+    ],
+    "jobs": 1,
+    "no_generation": true,
+    "no_training": true,
+    "retry": false
+  },
+  "schema_version": 1
+}
