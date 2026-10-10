@@ -407,6 +407,10 @@ def consume_remote(state,path,status,detail):
                       'model_loading_authorized':False,
                       'candidate_generation_authorized':False,
                       'scientific_training_authorized':False})
+    else:
+        # Receipt availability is a controller work item.  Never retain the
+        # launch-era action after the remote job has already completed.
+        state['next_action']='PROCESS_REMOTE_RECEIPT'
     state.update({'disposition':'CONTINUE_CONTROLLER','remote_completion_consumed':True,'remote_completion_status':status,'remote_job':None,'active_remote_job':None,'last_actor':'governor','updated_at':now()})
     atomic(path,state); log(state,f'WAIT_REMOTE job={jobid} {status}; transition -> CONTINUE_CONTROLLER')
 def main():

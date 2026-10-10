@@ -105,6 +105,22 @@ class GovernorInfrastructureTriageTests(unittest.TestCase):
             self.assertFalse(saved["model_loading_authorized"])
             self.assertTrue(Path(saved["infra_failure_receipt"]).is_file())
 
+    def test_remote_receipt_wakes_controller_with_receipt_processing_action(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            state_path = root / "ARC2_WORKFLOW_STATE.json"
+            state = {
+                "disposition": "WAIT_REMOTE",
+                "remote_job": {"job_id": "run-1"},
+                "next_action": "STALE_LAUNCH_ACTION",
+                "_governor_log_path": str(root / "governor.log"),
+            }
+            governor.consume_remote(state, state_path, "RECEIPT_PRESENT", "receipt present")
+            saved = governor.load(state_path)
+            self.assertEqual(saved["disposition"], "CONTINUE_CONTROLLER")
+            self.assertEqual(saved["next_action"], "PROCESS_REMOTE_RECEIPT")
+            self.assertIsNone(saved["remote_job"])
+
     def test_preserved_remote_death_receipt_classifies_legacy_unlabelled_pause(self):
         with tempfile.TemporaryDirectory() as tmp:
             path, state = self.fixture(
