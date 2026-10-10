@@ -1,0 +1,47 @@
+{
+  "authorization_scope": {
+    "generation_calls": 0,
+    "gpu_model_loading_for_diagnostic": false,
+    "optimizer_construction": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "physical_batch_size": 1,
+    "prohibited_data": [
+      "DEV",
+      "RETENTION_SENTINEL",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT"
+    ]
+  },
+  "bound_files": {
+    "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CONFIG_V1.json": "76c8216d861f2960a33039ab28feb72ce57017879b5144477adec39634887740",
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CPU_STATIC_VALIDATION_V1.json": "6f719baf825ec82c41bf829c89ccd945fca893fb47c41da30a2cbe3f836e7b9a",
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_MANIFEST_V1.json": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+    "scripts/freeze_e03_v3_b1_per_example_gradient_screen.py": "c39d1c555d5d584c008bb6f612bcc86be9b138430fdb6678b64b16f6b8321f78",
+    "scripts/launch_e03_v3_b1_per_example_gradient_screen.py": "7791aae0b371482531fb3d8bd82e9bc971346017565b6578cd248fb73b433d4c",
+    "scripts/postprocess_e03_v3_b1_per_example_gradient_screen.py": "36b2e47e498d6832c335e2d964271a21c69896ff8369d47e02be3a41d9675d0e",
+    "scripts/run_e03_v3_b1_per_example_gradient_screen.py": "38a8aae40a4c4fbe96dddaa9d98977ae766ceebcd0c36fa17358e70570fce0aa",
+    "tests/test_e03_v3_b1_per_example_gradient_screen.py": "3ad6b5cbae14567b8a7ff90bf55f0ca569c8bd0ee730c63997d37e2df593a78e"
+  },
+  "cohort_manifest_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_MANIFEST_V1.json",
+  "cohort_manifest_sha256": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+  "config_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CONFIG_V1.json",
+  "config_sha256": "76c8216d861f2960a33039ab28feb72ce57017879b5144477adec39634887740",
+  "derived_from_director_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_PRELAUNCH_V1_RESPONSE.json",
+  "derived_from_director_response_sha256": "16a857e034136ff3f501f7489364187a5d758d496f0ad2adebae653d9a54bde7",
+  "executable_source_commit": "454f20add505c142e34c88c34f2ad8f457dd7f35",
+  "execution_authorized": false,
+  "fallback": false,
+  "jobs": 1,
+  "launch_branch": "infra/arc2-dual-agent-runpod-orchestrator-v1",
+  "nonce": "9e8ad8f8b68ec9216dd103bdc3bb10a3",
+  "output_root": "/workspace/arc2/e03_v3_b1_per_example_gradient_screen/run_001_9e8ad8f8b68ec9216dd103bdc3bb10a3",
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "retry": false,
+  "runtime_cap_seconds": 1800,
+  "schema_version": 1,
+  "status": "CPU_REMEDIATED_PENDING_DIRECTOR_PRELAUNCH_REVIEW",
+  "terminal_receipt_path": "/workspace/arc2/e03_v3_b1_per_example_gradient_screen/run_001_9e8ad8f8b68ec9216dd103bdc3bb10a3/TERMINAL_RECEIPT.json"
+}

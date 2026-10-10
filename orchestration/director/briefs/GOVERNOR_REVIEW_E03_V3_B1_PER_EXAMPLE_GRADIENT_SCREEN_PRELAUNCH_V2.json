@@ -1,0 +1,58 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "decision_rule": "Local interference support needs >=3/5 primary negative contrasts or the specified secondary negative combined contrast; deprioritization needs all primary and secondary lower bounds >=0; any incomplete, nonfinite, identity/mapping, repeatability, or tolerance-dependent result is INCONCLUSIVE.",
+  "identity": {
+    "cohort_manifest_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_MANIFEST_V1.json",
+    "cohort_manifest_sha256": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+    "config_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CONFIG_V1.json",
+    "config_sha256": "76c8216d861f2960a33039ab28feb72ce57017879b5144477adec39634887740",
+    "prelaunch_binding_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_PRELAUNCH_BINDING_V2.json",
+    "prelaunch_binding_sha256": "0d71a89c1f0c6d72854465ea9f0f6f562263734da203604685ae9fb4750bb54d",
+    "source_commit": "454f20add505c142e34c88c34f2ad8f457dd7f35",
+    "static_validation_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CPU_STATIC_VALIDATION_V1.json",
+    "static_validation_sha256": "6f719baf825ec82c41bf829c89ccd945fca893fb47c41da30a2cbe3f836e7b9a"
+  },
+  "implemented_repairs": {
+    "cpu_tests": "Focused tests cover secondary-only support, deprioritization secondary condition, inconclusive boundaries, token-weighted stratified bootstrap, deterministic seed, repeatability pass/fail, and trainable-set checks.",
+    "repeatability": "Config freezes exactly one first-manifest episode for each of nine families, repeated quantities, relative-L2 <= 0.0001 and cosine >= 0.9999; any failure maps the result to INCONCLUSIVE.",
+    "secondary_estimand": "Worker retains supervised-token counts; postprocessor computes and bootstraps the historical supervised-token-weighted combined weak-versus-protected cosine from FP64 Gram statistics.",
+    "trainable_set": "Worker force-sets requires_grad against the frozen LoRA allowlist and fails closed unless the complete trainable-name set exactly matches it."
+  },
+  "parent_review": {
+    "decision": "REQUIRE_CHANGES",
+    "remediation_only": true,
+    "response_path": "orchestration/director/responses/GOVERNOR_REVIEW_E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_PRELAUNCH_V1_RESPONSE.json",
+    "response_sha256": "16a857e034136ff3f501f7489364187a5d758d496f0ad2adebae653d9a54bde7"
+  },
+  "protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "question": "Do the Director-requested V3 repairs establish a scientifically and operationally valid physical-B1 gradient screen for the unchanged frozen protocol?",
+  "request": "Review only the repaired package. A CONTINUE_CONTROLLER authorizes exactly one preflight-gated detached no-update diagnostic; it does not authorize training, updates, generation, retries, fallback, or data outside the frozen TRAIN cohort.",
+  "review_id": "GOVERNOR_REVIEW_E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_PRELAUNCH_V2",
+  "review_type": "PRELAUNCH_SCIENTIFIC_AND_SAFETY_REVIEW",
+  "schema_version": 1,
+  "unchanged_scientific_conditions": {
+    "bootstrap": "10000 family-stratified resamples, seed 20261010",
+    "cap_seconds": 1800,
+    "checkpoint": "V7 only",
+    "cohort": "exact frozen 72 TRAIN rows: nine families x eight",
+    "fallback": false,
+    "jobs": 1,
+    "physical_batch_size": 1,
+    "prohibited": [
+      "optimizer",
+      "parameter updates",
+      "generation",
+      "DEV",
+      "RETENTION_SENTINEL",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT"
+    ],
+    "retry": false
+  }
+}
