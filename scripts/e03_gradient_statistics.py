@@ -90,6 +90,7 @@ def bootstrap(records, *, replicates=10000, seed=20261010):
     vectors,by=family_gradients(records)
     rng=random.Random(seed); out={"weak_protected_median_macro":[],"historical_macro":[],"equal_macro":[]}
     per_protected={name:[] for name in PROTECTED}
+    equal_per_protected={name:[] for name in PROTECTED}
     weak_values={name:[] for name in WEAK}
     for _ in range(replicates):
         sampled=[]
@@ -105,9 +106,12 @@ def bootstrap(records, *, replicates=10000, seed=20261010):
         out["weak_protected_median_macro"].append(sorted(medians)[len(medians)//2])
         out["historical_macro"].append(s["primary_equal_protected_macro"]["historical"])
         out["equal_macro"].append(s["primary_equal_protected_macro"]["equal_family"])
-        for name in PROTECTED: per_protected[name].append(s["historical_combined_protected_alignment"][name])
+        for name in PROTECTED:
+            per_protected[name].append(s["historical_combined_protected_alignment"][name])
+            equal_per_protected[name].append(s["equal_family_combined_protected_alignment"][name])
     intervals={key:{"lower":quantile(values,.025),"upper":quantile(values,.975)} for key,values in out.items()}
     intervals["historical_by_protected"]={key:{"lower":quantile(values,.025),"upper":quantile(values,.975)} for key,values in per_protected.items()}
+    intervals["equal_by_protected"]={key:{"lower":quantile(values,.025),"upper":quantile(values,.975)} for key,values in equal_per_protected.items()}
     intervals["weak_by_equal_protected_macro"]={key:{"lower":quantile(values,.025),"upper":quantile(values,.975)} for key,values in weak_values.items()}
     return intervals
 
@@ -129,13 +133,25 @@ def sensitivity_envelope(b8_subset,b1_subset):
         for protected in PROTECTED:
             key=f"weak_protected:{weak}|{protected}"
             values[key]=abs(cosine(a[weak]["gradient"],a[protected]["gradient"])-cosine(b[weak]["gradient"],b[protected]["gradient"]))
-    # B1 has one microbatch per family; it supports the same protected macro
-    # alignment calculation on that fixed subset, not an independent bootstrap.
-    def comb(rows):
+    # B1 has one reconstructed microbatch per family.  It supports the same
+    # token-weighted historical and equal-family combination definitions on
+    # that fixed subset; it is a numerical sensitivity check, not a second
+    # scientific sample.
+    def alignments(rows):
         vs={r["canonical_family"]:r["gradient"] for r in rows}
-        historical=add_scaled([(vs[f],1/len(FAMILIES)) for f in FAMILIES])
-        return sum(cosine(historical,vs[p]) for p in PROTECTED)/len(PROTECTED)
-    values["historical_protected_macro"]=abs(comb(b8_subset)-comb(b1_subset))
+        token_totals={r["canonical_family"]:int(r["supervised_token_count"]) for r in rows}
+        total=sum(token_totals.values())
+        historical=add_scaled([(vs[f],token_totals[f]/total) for f in FAMILIES])
+        equal=add_scaled([(unit(vs[f]),1/len(FAMILIES)) for f in FAMILIES])
+        historical_by={p:cosine(historical,vs[p]) for p in PROTECTED}
+        equal_by={p:cosine(equal,vs[p]) for p in PROTECTED}
+        return historical_by,equal_by
+    h8,e8=alignments(b8_subset);h1,e1=alignments(b1_subset)
+    for protected in PROTECTED:
+        values[f"historical_protected:{protected}"]=abs(h8[protected]-h1[protected])
+        values[f"equal_protected:{protected}"]=abs(e8[protected]-e1[protected])
+    values["historical_protected_macro"]=abs(sum(h8.values())/len(PROTECTED)-sum(h1.values())/len(PROTECTED))
+    values["equal_protected_macro"]=abs(sum(e8.values())/len(PROTECTED)-sum(e1.values())/len(PROTECTED))
     return values
 
 def expanded(interval,envelope): return {"lower":interval["lower"]-envelope,"upper":interval["upper"]+envelope}

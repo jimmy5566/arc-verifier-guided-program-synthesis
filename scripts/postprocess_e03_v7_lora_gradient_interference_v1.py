@@ -16,9 +16,10 @@ def load(path):
 def classify(intervals,envelopes,negative_frequency):
  weak={name:expanded(intervals['weak_by_equal_protected_macro'][name],max(envelopes[f'weak_protected:{name}|{p}'] for p in PROTECTED)) for name in WEAK}
  historical=expanded(intervals['historical_macro'],envelopes['historical_protected_macro'])
- protected=intervals['historical_by_protected']
+ equal=expanded(intervals['equal_macro'],envelopes['equal_protected_macro'])
+ protected={p:expanded(intervals['equal_by_protected'][p],envelopes[f'equal_protected:{p}']) for p in PROTECTED}
  if not protected_sign_consistent(protected): return 'INCONCLUSIVE_PROTECTED_SIGNS_OPPOSE',weak,historical
- supported=sum(cell['upper']<0 and cell['lower']<-0.05 for cell in weak.values())>=3 or (historical['upper']<0 and historical['lower']<-0.05)
+ supported=sum(cell['upper']<0 and cell['lower']<-0.05 for cell in weak.values())>=3 or (equal['upper']<0 and equal['lower']<-0.05)
  if supported:return 'LOCAL_INTERFERENCE_SUPPORTED',weak,historical
  if all(cell['lower']>=0 for cell in protected.values()) and negative_frequency<0.10:return 'GRADIENT_CONFLICT_DEPRIORITIZED',weak,historical
  return 'INCONCLUSIVE',weak,historical
@@ -31,7 +32,7 @@ def process(data):
  return {'protocol_id':'E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1','status':'COMPLETE_NO_UPDATE_LOCAL_OPTIMIZATION_EVIDENCE_ONLY',
  'primary_summary':{k:v for k,v in primary.items() if k not in {'family_vectors','historical_combined','equal_family_combined'}},
  'bootstrap':{'method':'family-dependent resampling of four microbatches within each family','replicates':10000,'seed':20261010,'raw_intervals':intervals},
- 'numerical_sensitivity':{'definition':'absolute B8 microbatch-0 versus token-mean reconstructed B1 difference','metric_specific_envelopes':envelopes,'adjusted_weak_intervals':weak_adjusted,'adjusted_historical_macro_interval':historical_adjusted},
+ 'numerical_sensitivity':{'definition':'absolute B8 microbatch-0 versus token-mean reconstructed B1 difference; every decision-driving bound is expanded by its metric-specific envelope','metric_specific_envelopes':envelopes,'adjusted_weak_intervals':weak_adjusted,'adjusted_historical_macro_interval':historical_adjusted},
  'classification':classification,'causal_limit':'local gradient disagreement is not causal proof of forgetting or ARC transfer',
  'development_scope':'legitimate synthetic TRAIN gradients only; no DEV/retention/Gold/dGold/FINAL_AUDIT evidence'}
 def main():

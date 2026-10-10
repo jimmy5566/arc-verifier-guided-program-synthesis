@@ -29,6 +29,15 @@ class E03StatisticsTests(unittest.TestCase):
   b1=[{'canonical_family':x['canonical_family'],'supervised_token_count':x['supervised_token_count'],'gradient':x['gradient']} for x in subset]
   self.assertTrue(all(v==0 for v in sensitivity_envelope(subset,b1).values()))
   self.assertFalse(protected_sign_consistent({'same_color':{'lower':-1,'upper':-.1},'color_mapping':{'lower':.1,'upper':1}}))
+ def test_sensitivity_covers_each_protected_decision_metric(self):
+  r=rows();subset=[x for x in r if x['microbatch_index']==0]
+  b1=[]
+  for x in subset:
+   for i in range(8): b1.append({'canonical_family':x['canonical_family'],'supervised_token_count':i+1,'gradient':x['gradient']})
+  keys=sensitivity_envelope(subset,b1)
+  for protected in ('same_color','color_mapping'):
+   self.assertIn(f'equal_protected:{protected}',keys)
+   self.assertIn(f'historical_protected:{protected}',keys)
  def test_zero_norm_fails_closed(self):
   r=rows();r[0]['gradient']=[0.,0.,0.]
   with self.assertRaisesRegex(RuntimeError,'ZERO_NORM'):summary_from_records(r)
