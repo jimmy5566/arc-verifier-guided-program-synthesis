@@ -4,6 +4,15 @@ import math
 import unittest
 from pathlib import Path
 
+try:
+    import torch
+    import torch.nn.functional as torch_f
+    from torch.utils.checkpoint import checkpoint
+except ModuleNotFoundError:
+    torch = None
+    torch_f = None
+    checkpoint = None
+
 ROOT = Path(__file__).resolve().parents[1]
 E03 = ROOT / 'experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1'
 WORKER = ROOT / 'scripts/run_e03_v7_lora_gradient_interference_v2_lower_memory.py'
@@ -31,6 +40,9 @@ def ce_sum(logits, labels, ignore=-100):
     return value, gradient
 
 class E03V2LowerMemoryTests(unittest.TestCase):
+    PYTORCH_CHECKPOINT_ATOL = 1e-7
+    PYTORCH_CHECKPOINT_RTOL = 1e-6
+
     def test_static_fail_closed_contract(self):
         source = WORKER.read_text(encoding='utf-8')
         launcher = LAUNCHER.read_text(encoding='utf-8')
@@ -73,6 +85,50 @@ class E03V2LowerMemoryTests(unittest.TestCase):
         for expected, actual in zip(lora_like_gradient(legacy_gradient), lora_like_gradient(reconstructed)):
             for expected_value, actual_value in zip(expected, actual):
                 self.assertAlmostEqual(expected_value, actual_value, places=12)
+
+    @unittest.skipIf(torch is None, 'PyTorch is unavailable in this local CPU environment')
+    def test_pytorch_nonreentrant_checkpoint_matches_ordinary_selected_ce_and_autograd(self):
+        self.assertFalse(torch.cuda.is_initialized())
+
+        class TinyLoRALike(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.base = torch.nn.Parameter(torch.tensor([[0.2, -0.1, 0.3], [0.4, 0.5, -0.2]]), requires_grad=False)
+                self.lora_a = torch.nn.Parameter(torch.tensor([[0.1, -0.4], [0.3, 0.2]]))
+                self.lora_b = torch.nn.Parameter(torch.tensor([[0.2, -0.3, 0.1], [-0.5, 0.4, 0.6]]))
+
+            def forward(self, inputs):
+                return inputs @ self.base + (inputs @ self.lora_a) @ self.lora_b
+
+        ordinary = TinyLoRALike()
+        checkpointed = TinyLoRALike()
+        checkpointed.load_state_dict(ordinary.state_dict())
+        inputs = torch.tensor([[[0.1, 0.3], [0.2, -0.1], [0.5, 0.4], [-0.2, 0.6]], [[0.4, 0.1], [0.3, 0.2], [-0.4, 0.5], [0.7, -0.3]]], requires_grad=True)
+        labels = torch.tensor([[-100, 2, 1, 0], [-100, 1, -100, 2]])
+
+        def selected_loss(logits):
+            shifted_logits = logits[:, :-1, :]
+            shifted_labels = labels[:, 1:]
+            selected = shifted_labels.ne(-100)
+            loss = torch_f.cross_entropy(shifted_logits[selected].float(), shifted_labels[selected], reduction='sum')
+            return loss / selected.sum(), selected
+
+        ordinary_loss, ordinary_selected = selected_loss(ordinary(inputs))
+        ordinary_loss.backward()
+        checkpoint_inputs = inputs.detach().clone().requires_grad_(True)
+        checkpointed_logits = checkpoint(lambda value: checkpointed(value), checkpoint_inputs, use_reentrant=False)
+        checkpointed_loss, checkpointed_selected = selected_loss(checkpointed_logits)
+        checkpointed_loss.backward()
+        self.assertTrue(torch.equal(ordinary_selected, checkpointed_selected))
+        torch.testing.assert_close(ordinary_loss, checkpointed_loss, atol=self.PYTORCH_CHECKPOINT_ATOL, rtol=self.PYTORCH_CHECKPOINT_RTOL)
+        self.assertEqual(
+            [name for name, parameter in ordinary.named_parameters() if parameter.requires_grad],
+            [name for name, parameter in checkpointed.named_parameters() if parameter.requires_grad],
+        )
+        for (_, expected), (_, actual) in zip(ordinary.named_parameters(), checkpointed.named_parameters()):
+            if expected.requires_grad:
+                torch.testing.assert_close(expected.grad, actual.grad, atol=self.PYTORCH_CHECKPOINT_ATOL, rtol=self.PYTORCH_CHECKPOINT_RTOL)
+        self.assertFalse(torch.cuda.is_initialized())
 
     def test_frozen_identity_and_no_fallback(self):
         config = json.loads(CONFIG.read_text(encoding='utf-8'))

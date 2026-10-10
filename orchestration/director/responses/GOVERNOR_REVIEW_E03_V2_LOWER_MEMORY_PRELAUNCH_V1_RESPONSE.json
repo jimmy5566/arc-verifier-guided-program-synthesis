@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "response_id": "GOVERNOR_REVIEW_E03_V2_LOWER_MEMORY_PRELAUNCH_V1_RESPONSE",
+  "reviewed_brief": "orchestration/director/briefs/GOVERNOR_REVIEW_E03_V2_LOWER_MEMORY_PRELAUNCH_V1.json",
+  "reviewed_brief_sha256": "67b16066a0865d64c854dcae02737b503e8a202e69c7c815254e9e7eb46f55b5",
+  "review_binding_status": "VERIFIED",
+  "observed_brief_sha256": "67b16066a0865d64c854dcae02737b503e8a202e69c7c815254e9e7eb46f55b5",
+  "decision": "REQUIRE_CHANGES",
+  "root_cause": "The immutable brief identity and its now-nonempty test artifact are verified, and the focused 18-test suite passes. However, the implementation-specific equivalence evidence remains a pure-Python mathematical surrogate: it does not import PyTorch, invoke non-reentrant activation checkpointing, or compare actual autograd gradients. The brief explicitly states that no framework activation-checkpoint implementation was executed. Because activation checkpointing is the mechanism intended to prevent the third GPU attempt from repeating the OOM while preserving the physical-B8 gradient estimand, this untested framework behavior is a launch-critical gap rather than optional test coverage.",
+  "smallest_repair": [
+    "Do not alter the scientific design or the reviewed lower-memory implementation except for its focused validation artifacts and their derived hashes.",
+    "Retain the now-nonempty V2 tests, and add an actual PyTorch CPU test that invokes non-reentrant activation checkpointing on a tiny LoRA-like trainable module and compares ordinary versus checkpointed selected-token FP32 CE values and autograd parameter gradients within one prospectively declared tight tolerance.",
+    "Execute the framework test in an environment with the same PyTorch checkpoint API family used by RunPod. It must remain CPU-only and must not load the ARC model or initialize CUDA. Record test command, PyTorch version, test count, tolerance, and result truthfully.",
+    "Retain fail-closed tests for physical B8, use_cache=false, exact LoRA allowlist, no optimizer/generation/fallback, fresh output, external cap, memory fields, and immutable binding.",
+    "Recompute only the test and any mechanically derived binding/brief identities affected by adding the framework test; commit the intended package; then submit one new immutable prelaunch brief whose reported SHA256 equals its actual bytes."
+  ],
+  "frozen_conditions": {
+    "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V2_LOWER_MEMORY",
+    "checkpoint": "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "train_manifest_sha256": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "train_rows": 288,
+    "physical_primary_batch_size": 8,
+    "batch1_sensitivity_rows": 72,
+    "model_execution_precision": "BF16",
+    "loss_target": "shifted nonignored assistant labels",
+    "lora_allowlist_sha256": "e44ecb9caf0be396aaaceae6802dbaab9209677103ba263c89ca9a7ea65f6215",
+    "gradient_algebra_statistics_bootstrap_unchanged": true,
+    "runtime_cap_seconds": 1500,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "generation_calls": 0
+  },
+  "forbidden_actions": [
+    "GPU launch, ARC model loading, or treating the current package as authorized",
+    "retrying or modifying RUN_001 or RUN_002 evidence",
+    "claiming the pure-Python surrogate validates the actual PyTorch activation-checkpoint implementation",
+    "changing physical B8 to B4, B2, B1 primary, or serial accumulation",
+    "changing precision, objective, dataset, checkpoint, grouping, LoRA allowlist, statistics, thresholds, bootstrap, or sensitivity definitions",
+    "quantization, CPU/NVMe offload, optimizer construction, parameter updates, training, or generation",
+    "opening DEV, RETENTION_SENTINEL, Gold, dGold, or FINAL_AUDIT",
+    "automatic retry or fallback"
+  ],
+  "another_review_required": true,
+  "next_review_scope": "Verify the new brief's exact SHA256, the nonempty V2-specific test artifact and its actual PyTorch CPU execution evidence, and continuity of the otherwise unchanged lower-memory package. Do not reopen unrelated E03 science."
+}
