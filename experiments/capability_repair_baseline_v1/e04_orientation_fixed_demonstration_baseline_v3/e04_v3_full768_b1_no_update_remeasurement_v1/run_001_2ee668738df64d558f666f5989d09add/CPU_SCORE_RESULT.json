@@ -1,0 +1,49 @@
+{
+  "b1_repeatability_gate": "PASS_64_OF_64",
+  "canonical_bases": 48,
+  "condition_exact_grid_accuracy": {
+    "FIXED_TURN_ROTATION_CONTROL": 0.16145833333333334,
+    "MARKER_BINDING_CONTROL": 0.9635416666666666,
+    "NO_TRANSFORM_RETENTION_CONTROL": 0.75,
+    "ROTATION_TARGET": 0.125
+  },
+  "condition_parser_validity": {
+    "FIXED_TURN_ROTATION_CONTROL": 1.0,
+    "MARKER_BINDING_CONTROL": 1.0,
+    "NO_TRANSFORM_RETENTION_CONTROL": 1.0,
+    "ROTATION_TARGET": 1.0
+  },
+  "forbidden_operations": {
+    "backward_calls": 0,
+    "final_audit_opened": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0
+  },
+  "matched_rotation_target_minus_control_bootstrap": {
+    "FIXED_TURN_ROTATION_CONTROL": {
+      "ci95_high": 0.036458333333333336,
+      "ci95_low": -0.11458333333333333,
+      "point": -0.036458333333333336
+    },
+    "MARKER_BINDING_CONTROL": {
+      "ci95_high": -0.8020833333333334,
+      "ci95_low": -0.875,
+      "point": -0.8385416666666666
+    },
+    "NO_TRANSFORM_RETENTION_CONTROL": {
+      "ci95_high": -0.5677083333333334,
+      "ci95_low": -0.6822916666666666,
+      "point": -0.625
+    }
+  },
+  "primary_b1_raw_sha256": "a3b90e8e668e5a325e0d70bc2774999065c3d06f56de657a270620aca7b65ec1",
+  "protocol_id": "E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1",
+  "raw_freeze_receipt_sha256": "06be34a82222c19b0c2e9dbd5a81d5571286c55e227cbf293dc16f4d51c52b50",
+  "rows": 768,
+  "schema_version": 1,
+  "scientific_scope": "REUSED_DEVELOPMENT_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION_CONFIRMATION",
+  "sensitivity_reference_raw_sha256": "996c1837d1710e6cda6424fe8c2b1c81a880f7cb4f58d16e25d3dc56ece11fa2",
+  "status": "SCORED_DEVELOPMENT_EVIDENCE",
+  "target_scorer_sidecar_sha256": "8da15d579c5e91f80f7e8587f893cc4e210d6b84120abf0823e46cc9978e635e",
+  "target_sidecar_opened_only_after_raw_freeze_and_b1_repeatability": true
+}
