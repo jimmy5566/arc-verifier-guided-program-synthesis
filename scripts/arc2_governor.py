@@ -7,6 +7,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 DISPOSITIONS={"CONTINUE_CONTROLLER","REVIEW_REQUIRED","WAIT_REMOTE","PAUSED","TERMINAL"}
+
+def windows_creationflags():
+    """Keep local Herdr and SSH control clients from flashing a Windows console."""
+    return getattr(subprocess, "CREATE_NO_WINDOW", 0) if os.name == "nt" else 0
+
 DIRECTOR_DECISIONS={
     "CONTINUE_CONTROLLER", "CONTINUE_DIRECTOR", "REQUIRE_CHANGES", "PAUSED", "TERMINAL",
     # A postmortem may request a bounded scientific disposition rather than
@@ -112,7 +117,7 @@ def log(state, text):
     with Path(lp).open('a',encoding='utf-8') as f: f.write(f'[{time.strftime("%Y-%m-%d %H:%M:%S")}] {text}\n')
 def resolve_controller_target(state, path):
     """Resolve the live Controller pane, never treating the Codex kind as a name."""
-    result=subprocess.run(['herdr','agent','list'],check=False,capture_output=True,text=True,encoding='utf-8',errors='replace')
+    result=subprocess.run(['herdr','agent','list'],check=False,capture_output=True,text=True,encoding='utf-8',errors='replace',creationflags=windows_creationflags())
     if result.returncode:
         raise RuntimeError(f'CONTROLLER_TARGET_LIST_FAILED:{result.returncode}')
     agents=json.loads(result.stdout).get('result',{}).get('agents',[])
@@ -136,7 +141,7 @@ def controller_turn_is_active(target):
     Re-prompting that same working pane queues a second invocation behind the
     current turn; it is not a hand-off and can create a self-prompt loop.
     """
-    result=subprocess.run(['herdr','agent','list'],check=False,capture_output=True,text=True,encoding='utf-8',errors='replace')
+    result=subprocess.run(['herdr','agent','list'],check=False,capture_output=True,text=True,encoding='utf-8',errors='replace',creationflags=windows_creationflags())
     if result.returncode:
         raise RuntimeError(f'CONTROLLER_STATUS_LIST_FAILED:{result.returncode}')
     for record in json.loads(result.stdout).get('result',{}).get('agents',[]):
@@ -145,7 +150,7 @@ def controller_turn_is_active(target):
     raise RuntimeError('CONTROLLER_TARGET_DISAPPEARED')
 def prompt(actor,text,timeout,state):
     log(state, f'prompting {actor}')
-    r=subprocess.run(['herdr','agent','prompt',actor,text,'--wait','--until','idle','--until','done','--until','blocked','--timeout',str(timeout*1000)],check=False,timeout=timeout+15, capture_output=True, text=True, encoding='utf-8', errors='replace')
+    r=subprocess.run(['herdr','agent','prompt',actor,text,'--wait','--until','idle','--until','done','--until','blocked','--timeout',str(timeout*1000)],check=False,timeout=timeout+15, capture_output=True, text=True, encoding='utf-8', errors='replace',creationflags=windows_creationflags())
     if r.returncode:
         detail=(r.stderr or r.stdout).strip().replace('\n',' ')[:300]
         if 'agent_working' in detail or 'agent_busy' in detail or 'agent_prompt_stalled' in detail:
@@ -473,7 +478,7 @@ def remote_status(job):
     import base64
     encoded=base64.b64encode((script+'\nexit\n').encode('utf-8')).decode('ascii')
     command=['ssh','-F','NUL','-tt','-o','BatchMode=yes','-o','ConnectTimeout=20',target]
-    proc=subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc=subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, creationflags=windows_creationflags())
     # RunPod's forced PTY displays bracketed-paste payloads without executing
     # them.  A prompt-ready ordinary newline has been verified as the bounded
     # command/control channel for status queries.

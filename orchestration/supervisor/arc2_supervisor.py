@@ -33,6 +33,11 @@ CONTROLLER_CYCLE_ACTIVE = {"RECEIVED", "ACKNOWLEDGED", "PROCESSING", "REMEDIATIO
 CONTROLLER_ESCALATION_STATES = {"BLOCKED_INFRA", "BLOCKED_SCIENCE", "HARD_BLOCKED", "NEEDS_HIGH_LEVEL_DECISION"}
 
 
+def windows_creationflags() -> int:
+    """Do not flash a console for local Herdr or SSH control on Windows."""
+    return getattr(subprocess, "CREATE_NO_WINDOW", 0) if os.name == "nt" else 0
+
+
 def canonical_hash(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -71,7 +76,7 @@ def decode_human_utf8(value: bytes) -> str:
 
 def prompt_controller(command: list[str], timeout: int) -> tuple[int, str]:
     """Submit a Herdr prompt and fail closed on non-UTF-8 or malformed JSON."""
-    completed = subprocess.run(command, capture_output=True, check=False, timeout=timeout)
+    completed = subprocess.run(command, capture_output=True, check=False, timeout=timeout, creationflags=windows_creationflags())
     if completed.returncode != 0:
         return completed.returncode, decode_human_utf8(completed.stderr or completed.stdout)[-1000:]
     try:
@@ -85,7 +90,7 @@ def prompt_controller(command: list[str], timeout: int) -> tuple[int, str]:
 
 def controller_idle(agent: str, timeout: int) -> bool:
     """Read Herdr's status only; the Supervisor never interprets science."""
-    completed = subprocess.run(["herdr", "agent", "get", agent], capture_output=True, check=False, timeout=timeout)
+    completed = subprocess.run(["herdr", "agent", "get", agent], capture_output=True, check=False, timeout=timeout, creationflags=windows_creationflags())
     if completed.returncode != 0:
         return False
     try:
@@ -861,7 +866,7 @@ def remote_shell(target: str, script: str, identity_file: str | None = None) -> 
     # echoed by that gateway.
     line = f"echo {encoded} | base64 -d | bash; printf '__ARC2_REMOTE_END__\\n'; exit"
     payload = f"\x1b[200~{line}\x1b[201~\r"
-    completed = subprocess.run(command, input=payload.encode("utf-8"), capture_output=True, check=False, timeout=45)
+    completed = subprocess.run(command, input=payload.encode("utf-8"), capture_output=True, check=False, timeout=45, creationflags=windows_creationflags())
     # The forced PTY echoes its submitted command as human terminal output.
     # Long ASCII-safe transport envelopes can be visually corrupted by that
     # terminal echo even when the remote command and its structured result are

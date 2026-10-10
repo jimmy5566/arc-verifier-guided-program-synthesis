@@ -32,13 +32,14 @@ class RunPodPtyControlTests(unittest.TestCase):
     def test_status_query_uses_executing_newline_not_bracketed_paste(self):
         proc = _Proc()
         job = {"ssh_target":"pod", "expected_terminal_receipt":"/receipt", "primary_process":{"host":"RUNPOD", "role":"worker", "pid":7}}
-        with mock.patch.object(governor.subprocess, "Popen", return_value=proc), mock.patch.object(governor.time, "sleep"):
+        with mock.patch.object(governor.subprocess, "Popen", return_value=proc) as popen, mock.patch.object(governor.time, "sleep"):
             status, _ = governor.remote_status(job)
         self.assertEqual(status, "PROCESS_ALIVE")
         payload = proc.stdin.getvalue()
         self.assertIn(b"base64 -d | bash\n", payload)
         self.assertTrue(payload.endswith(b"exit\n"))
         self.assertNotIn(b"\x1b[200~", payload)
+        self.assertEqual(popen.call_args.kwargs["creationflags"], governor.windows_creationflags())
 
     def test_status_query_accepts_current_expected_receipt_path_schema(self):
         proc = _Proc()
