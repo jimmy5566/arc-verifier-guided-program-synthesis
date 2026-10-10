@@ -1,0 +1,61 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH_V4",
+  "identity_closure": {
+    "allowlist": "config V6 fixes canonicalization to compact JSON of sorted names; worker verifies frozen and runtime exact hashes.",
+    "executable_source_commit": "6ef4b1a6515e7caf65fcdd1869f105bd1fb0e266",
+    "file_continuity": "all reviewed worker/statistics/postprocessor/launcher/config/manifest/checkpoint/dataset bytes are SHA-bound before model import.",
+    "launch_branch": "infra/arc2-dual-agent-runpod-orchestrator-v1",
+    "runtime_policy": "clean local HEAD = origin branch HEAD = RunPod checkout; executable source must be an ancestor; actual launch commit is captured in raw evidence and receipt to avoid impossible Git self-reference."
+  },
+  "package": {
+    "binding": {
+      "path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH_BINDING_V3.json",
+      "sha256": "d39bce5d80abfe0c009ab0f489300098387b38c87c1bdb183d086f5b59b23195"
+    },
+    "config": {
+      "path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V6.json",
+      "sha256": "b545ca14118d8b41e7ece407e6ffa3e52e3f23832f2b60eaeffd95c9c6be5e82"
+    },
+    "cpu_tests": "PASS: focused 8-test identity/statistics suite",
+    "launcher": {
+      "path": "scripts/launch_e03_v7_lora_gradient_interference_v2.py",
+      "sha256": "af37e6d9ef64e68855856e6d618866d3ec11ef66010a6ce77a235f3ce09b598d"
+    },
+    "postprocessor": {
+      "path": "scripts/postprocess_e03_v7_lora_gradient_interference_v2.py",
+      "sha256": "073e2dbd38e68ae95595191865a5b12f5ae5ccac64bae7e51b5f756b98045429"
+    },
+    "source_commit": "4025c26da5d9fad228c420d7a622ce5dcc5f0b55",
+    "statistics": {
+      "path": "scripts/e03_gram_statistics.py",
+      "sha256": "30a8859cee9a90a6a016cf5c066d4e86a7e92907978a4e235883d3597275ba3c"
+    },
+    "worker": {
+      "path": "scripts/run_e03_v7_lora_gradient_interference_v2.py",
+      "sha256": "afcda4171963392deb0530d0722c060dc2badf82ff37046f3ba99b8c02f2ca54"
+    }
+  },
+  "prior_response": {
+    "decision": "REQUIRE_CHANGES",
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH_V3_RESPONSE.json",
+    "sha256": "30ed99d9a2542f48f192794a3d2c7b965e21b71e26f312f378ad3e78b7e84e58"
+  },
+  "question": "Is this identity-only closure sufficient to authorize exactly one unchanged bounded no-update E03 job?",
+  "review_reason": "Narrow execution-identity closure requested by V3 Director response; no scientific design condition changed.",
+  "schema_version": 1,
+  "stage": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1",
+  "unchanged_scientific_conditions": {
+    "B1_rows": 72,
+    "B8_microbatches_per_family": 4,
+    "bootstrap": "10000 seed 20261010",
+    "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "families": 9,
+    "manifest_sha256": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "no_generation": true,
+    "no_targets_or_final_audit": true,
+    "no_update": true,
+    "rows": 288,
+    "runtime_cap_seconds": 1500,
+    "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+  }
+}
