@@ -54,8 +54,24 @@ material decision value.
 4. **Research bottleneck** — what currently blocks improvement.
 5. **Recommended next experiment** — smallest falsifiable intervention.
 6. **Expected outcome and failure interpretation** — what either result teaches.
-7. **Execution decision** — `CONTINUE`, `REVISE`, `DIAGNOSE`, `PAUSE`, or
-   `STOP`, with its scope.
+7. **Execution decision** — use `CONTINUE_CONTROLLER`, `CONTINUE_DIRECTOR`,
+   `REQUIRE_CHANGES`, `PAUSED`, or `TERMINAL`, with explicit stage and scope.
+
+## Infrastructure is not a scientific stage
+
+Controller owns bounded CPU-only repair of directories, relative paths,
+detached checkouts, imports, dependencies, launch locks, logs, receipts,
+transport and caches when frozen scientific semantics are unchanged. Director
+does not re-review these repairs.
+
+A failed one-shot GPU launch does require a fresh launch authorization, but the
+review is limited to the unchanged protocol hash, preserved failure evidence,
+the infrastructure-only repair, fresh nonce/output, duplicate-process check,
+and bounded cap. It is not a fresh evaluation of the research hypothesis.
+
+Escalate only changes that can alter model, data, loss, gradient estimand,
+scientifically material batch behavior, evaluation/acceptance, protected
+retention, sealed targets, security, assets, or compute authorization.
 
 Record provenance where useful, but do not block a valid experiment because a
 SHA field, receipt format, review binding, node identity, or filesystem layout

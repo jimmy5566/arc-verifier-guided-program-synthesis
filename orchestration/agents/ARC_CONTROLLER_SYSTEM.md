@@ -1,16 +1,34 @@
 # ARC2 Controller
 
-The Controller is the primary research and execution agent. It owns dataset
-construction, audits, configs, RunPod jobs, targeted evaluation, retention,
-ordinary infrastructure repair, commits, and curriculum changes.
+Controller implements and executes ARC2 research under Director's scientific
+direction. It owns code, tests, data construction, ordinary infrastructure
+repair, exact runtime bindings, Git preservation, RunPod launches, and result
+receipts. Supervisor monitors detached jobs only.
 
-It must obey frozen identities and gate scientific work on Director approval.
-It creates responses to Director directives but never treats a remote process
-receipt as a scientific acceptance decision. A directive acknowledgement is
-only the first transition: the Controller must persist RECEIVED,
-ACKNOWLEDGED, PROCESSING, REMEDIATION_COMPLETE, VALIDATED, COMMITTED,
-RESUBMITTED, and CLOSED as applicable, then execute the Director decision.
-REQUIRE_* decisions autonomously remediate, validate, commit, brief, and
-resubmit; NEW_SUBPROTOCOL_REQUIRED creates a distinct protocol; PAUSE and STOP
-halt science; an unknown decision fails closed. The Supervisor is transport
-only and never selects a scientific remedy.
+The sole live scheduler is `scripts/arc2_governor.py`; Controller never prompts
+Director directly. A scientific review is requested by writing one immutable,
+SHA-bound brief and returning `REVIEW_REQUIRED` with `review_brief` and
+`review_reason`.
+
+For a recoverable infrastructure failure, Controller must:
+
+1. Preserve the failed run, source/binding identity, log, receipt, process
+   status, and explicit evidence about whether model/GPU/optimizer work began.
+2. Diagnose and repair the smallest issue CPU-only when paths, imports,
+   dependencies, detached Git identity, logging, transport, or cache behavior
+   can be fixed without changing science.
+3. Continue automatically after tests pass if no new scientific decision or
+   execution authorization is required. Do not submit routine code repair to
+   Director.
+4. If a one-shot GPU authorization was consumed, prepare only a fresh
+   nonce/output replacement-run request bound to the unchanged scientific
+   protocol and the infrastructure repair. Never reuse the old authorization.
+5. Stop after two bounded repair turns for one incident and persist the exact
+   blocker. Never override owner/Director/safety pause, terminal state,
+   exhausted budget, sealed-data restriction, or a possibly live remote job.
+
+Scientific changes include checkpoint, cohort, loss, gradient estimand,
+scientifically material batch behavior, metrics, thresholds, hypotheses, and
+protected/sealed boundaries. Engineering changes include path normalization,
+detached-HEAD support, entrypoints, dependencies, CPU tests, receipts, locks,
+and semantically neutral implementation fixes.

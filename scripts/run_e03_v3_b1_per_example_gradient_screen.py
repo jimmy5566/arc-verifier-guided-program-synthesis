@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import re
+import shutil
 import subprocess
 import time
 import traceback
@@ -14,6 +16,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 IGNORE = -100
+GIT_SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
+REQUIRED_MODEL_MODULES = ("numpy", "torch", "peft", "transformers")
+SCRATCH_HEADROOM_FACTOR = 1.10
 
 
 def sha(path: Path) -> str:
@@ -29,7 +34,65 @@ def atomic(path: Path, value: dict) -> None:
 
 def resolve(value: str) -> Path:
     path = Path(value)
-    return path if path.is_absolute() else ROOT / path
+    return (path if path.is_absolute() else ROOT / path).resolve()
+
+
+def git_text(root: Path, *arguments: str) -> str:
+    result = subprocess.run(
+        ["git", *arguments], cwd=root, check=False, capture_output=True,
+        text=True, encoding="utf-8", errors="strict",
+    )
+    if result.returncode:
+        raise RuntimeError("E03_V3_GIT_IDENTITY_COMMAND_FAILED:" + " ".join(arguments))
+    return result.stdout.strip()
+
+
+def validate_git_identity(binding: dict, root: Path = ROOT) -> str:
+    """Validate immutable commit identity while allowing a detached HEAD."""
+    expected = str(binding.get("execution_checkout_commit") or "").lower()
+    if not GIT_SHA_PATTERN.fullmatch(expected):
+        raise RuntimeError("E03_V3_EXECUTION_COMMIT_BINDING_INVALID")
+    observed = git_text(root, "rev-parse", "HEAD").lower()
+    if observed != expected:
+        raise RuntimeError("E03_V3_EXECUTION_COMMIT_MISMATCH")
+    origin_ref = str(binding.get("origin_ref") or "")
+    if not origin_ref.startswith("refs/remotes/origin/"):
+        raise RuntimeError("E03_V3_ORIGIN_REF_BINDING_INVALID")
+    if git_text(root, "rev-parse", origin_ref).lower() != expected:
+        raise RuntimeError("E03_V3_ORIGIN_COMMIT_MISMATCH")
+    source = str(binding.get("executable_source_commit") or "").lower()
+    if not GIT_SHA_PATTERN.fullmatch(source):
+        raise RuntimeError("E03_V3_EXECUTABLE_SOURCE_BINDING_INVALID")
+    ancestry = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", source, expected],
+        cwd=root, check=False, capture_output=True,
+    )
+    if ancestry.returncode:
+        raise RuntimeError("E03_V3_SOURCE_NOT_ANCESTOR")
+    # Untracked runtime receipts are allowed; tracked source modifications are not.
+    if git_text(root, "status", "--porcelain", "--untracked-files=no"):
+        raise RuntimeError("E03_V3_TRACKED_SOURCE_NOT_CLEAN")
+    return observed
+
+
+def check_dependencies(modules: tuple[str, ...] = REQUIRED_MODEL_MODULES) -> None:
+    missing = [name for name in modules if importlib.util.find_spec(name) is None]
+    if missing:
+        raise RuntimeError("E03_V3_DEPENDENCY_MISSING:" + ",".join(missing))
+
+
+def validate_bound_files(binding: dict, root: Path = ROOT) -> None:
+    bound_files = binding.get("bound_files")
+    if not isinstance(bound_files, dict) or not bound_files:
+        raise RuntimeError("E03_V3_BOUND_FILES_MISSING")
+    for relative, expected in bound_files.items():
+        path = (root / relative).resolve()
+        try:
+            path.relative_to(root.resolve())
+        except ValueError as exc:
+            raise RuntimeError("E03_V3_BOUND_FILE_OUTSIDE_ROOT:" + str(relative)) from exc
+        if not re.fullmatch(r"[0-9a-f]{64}", str(expected)) or not path.is_file() or sha(path) != expected:
+            raise RuntimeError("E03_V3_BOUND_FILE_HASH_MISMATCH:" + str(relative))
 
 
 def check_files(manifest: dict) -> None:
@@ -40,8 +103,9 @@ def check_files(manifest: dict) -> None:
                 raise RuntimeError("E03_V3_CHECKPOINT_FILE_HASH_MISMATCH:" + item["name"])
 
 
-def preflight(config_path: Path, binding_path: Path, output_root: Path) -> tuple[dict, dict, dict, dict]:
+def preflight(config_path: Path, binding_path: Path, output_root: Path) -> tuple[dict, dict, dict, dict, str]:
     config_path, binding_path = resolve(str(config_path)), resolve(str(binding_path))
+    output_root = resolve(str(output_root))
     config = json.loads(config_path.read_text(encoding="utf-8"))
     binding = json.loads(binding_path.read_text(encoding="utf-8"))
     if os.environ.get("E03_EXTERNAL_CAP_ENFORCED") != "1":
@@ -50,21 +114,15 @@ def preflight(config_path: Path, binding_path: Path, output_root: Path) -> tuple
         raise RuntimeError("E03_V3_BINDING_AUTHORIZATION_REQUIRED")
     if binding.get("status") != "EXECUTION_AUTHORIZED_AFTER_DIRECTOR_REVIEW":
         raise RuntimeError("E03_V3_BINDING_STATUS_INVALID")
-    if str(output_root) != binding.get("output_root") or binding.get("jobs") != 1 or binding.get("retry") is not False:
+    bound_output = resolve(str(binding.get("output_root") or ""))
+    if output_root != bound_output or binding.get("jobs") != 1 or binding.get("retry") is not False:
         raise RuntimeError("E03_V3_OUTPUT_OR_JOB_BINDING_INVALID")
     if binding.get("runtime_cap_seconds", 1801) > 1800:
         raise RuntimeError("E03_V3_RUNTIME_CAP_INVALID")
-    if output_root.exists() and any(output_root.iterdir()):
+    if output_root.exists():
         raise RuntimeError("E03_V3_FRESH_OUTPUT_REQUIRED")
-    if subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=ROOT, text=True).strip() != binding["launch_branch"]:
-        raise RuntimeError("E03_V3_LAUNCH_BRANCH_MISMATCH")
-    head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
-    if subprocess.call(["git", "merge-base", "--is-ancestor", binding["executable_source_commit"], head], cwd=ROOT) != 0:
-        raise RuntimeError("E03_V3_SOURCE_NOT_ANCESTOR")
-    for relative, expected in binding["bound_files"].items():
-        path = ROOT / relative
-        if not path.is_file() or sha(path) != expected:
-            raise RuntimeError("E03_V3_BOUND_FILE_HASH_MISMATCH:" + relative)
+    head = validate_git_identity(binding, ROOT)
+    validate_bound_files(binding, ROOT)
     response = resolve(binding["director_response_path"])
     if sha(response) != binding["director_response_sha256"] or json.loads(response.read_text(encoding="utf-8")).get("decision") != "CONTINUE_CONTROLLER":
         raise RuntimeError("E03_V3_DIRECTOR_BINDING_INVALID")
@@ -81,7 +139,7 @@ def preflight(config_path: Path, binding_path: Path, output_root: Path) -> tuple
     if len(allow) != len(set(allow)) or hashlib.sha256(json.dumps(list(allow), separators=(",", ":")).encode()).hexdigest() != config["lora_parameter_name_allowlist_sha256"]:
         raise RuntimeError("E03_V3_ALLOWLIST_HASH_INVALID")
     check_files(checkpoint)
-    return config, binding, cohort, checkpoint
+    return config, binding, cohort, checkpoint, head
 
 
 def selected_ce(logits, labels, functional):
@@ -108,12 +166,16 @@ def main() -> None:
     parser.add_argument("--binding", type=Path, required=True)
     parser.add_argument("--output-root", type=Path, required=True)
     args = parser.parse_args()
-    receipt = args.output_root / "TERMINAL_RECEIPT.json"
+    output_root = resolve(str(args.output_root))
+    receipt = output_root / "TERMINAL_RECEIPT.json"
     start = time.monotonic()
+    owns_output = False
     try:
-        config, binding, cohort, checkpoint = preflight(args.config, args.binding, args.output_root)
-        args.output_root.mkdir(parents=True, exist_ok=False)
-        atomic(args.output_root / "PROGRESS.json", {"status": "PARTIAL_NO_UPDATE", "phase": "PREFLIGHT_COMPLETE", "completed_rows": 0, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False})
+        config, binding, cohort, checkpoint, runtime_head = preflight(args.config, args.binding, output_root)
+        check_dependencies()
+        output_root.mkdir(parents=True, exist_ok=False)
+        owns_output = True
+        atomic(output_root / "PROGRESS.json", {"status": "PARTIAL_NO_UPDATE", "phase": "PREFLIGHT_COMPLETE", "completed_rows": 0, "runtime_launch_commit": runtime_head, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False})
         import numpy as np
         import torch
         import torch.nn.functional as functional
@@ -146,7 +208,20 @@ def main() -> None:
         for name, parameter in parameters:
             offsets[name] = (total, parameter.numel()); total += parameter.numel()
         rows = [member for family in cohort["families"] for member in family["members"]]
-        scratch = args.output_root / "gradient_rows.tmp.f32"
+        required_scratch_bytes = len(rows) * total * 4
+        free_scratch_bytes = shutil.disk_usage(output_root.parent).free
+        if free_scratch_bytes < int(required_scratch_bytes * SCRATCH_HEADROOM_FACTOR):
+            raise RuntimeError("E03_V3_SCRATCH_CAPACITY_INSUFFICIENT")
+        atomic(output_root / "RESOURCE_PREFLIGHT.json", {
+            "status": "PASS",
+            "runtime_launch_commit": runtime_head,
+            "gradient_parameters": total,
+            "gradient_rows": len(rows),
+            "required_scratch_bytes": required_scratch_bytes,
+            "required_with_headroom_bytes": int(required_scratch_bytes * SCRATCH_HEADROOM_FACTOR),
+            "available_scratch_bytes": free_scratch_bytes,
+        })
+        scratch = output_root / "gradient_rows.tmp.f32"
         grams = np.zeros((len(rows), len(rows)), dtype=np.float64)
         module_grams = {name: np.zeros_like(grams) for name in config["target_modules"]}
         matrix = np.memmap(scratch, dtype=np.float32, mode="w+", shape=(len(rows), total))
@@ -163,7 +238,7 @@ def main() -> None:
                 if parameter.grad is None or not bool(torch.isfinite(parameter.grad).all()):
                     raise RuntimeError("E03_V3_NONFINITE_GRADIENT")
                 matrix[index, offset:offset + length] = parameter.grad.detach().float().flatten().cpu().numpy()
-            atomic(args.output_root / "PROGRESS.json", {"status": "PARTIAL_NO_UPDATE", "phase": "B1_GRADIENTS", "completed_rows": index + 1, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False})
+            atomic(output_root / "PROGRESS.json", {"status": "PARTIAL_NO_UPDATE", "phase": "B1_GRADIENTS", "completed_rows": index + 1, "runtime_launch_commit": runtime_head, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False})
         matrix.flush()
         # Re-run exactly one predeclared episode from each family.  These
         # repeated B1 gradients are only a numerical-sensitivity control and
@@ -203,10 +278,11 @@ def main() -> None:
                 grams += product; module_grams[group] += product
         del matrix
         scratch.unlink(missing_ok=True)
-        atomic(args.output_root / "RAW_GRAM_STATISTICS.json", {"protocol_id": config["protocol_id"], "status": "COMPLETE_NO_UPDATE", "episode_ids": [member["episode_id"] for member in rows], "families": [family["canonical_family"] for family in cohort["families"] for _ in family["members"]], "supervised_token_counts": [int(member["supervised_token_count"]) for member in rows], "per_token_normalized": True, "gram_matrix": grams.tolist(), "module_gram_matrices": {name: value.tolist() for name, value in module_grams.items()}, "repeatability": repeatability, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False})
-        atomic(receipt, {"protocol_id": config["protocol_id"], "status": "COMPLETE_NO_UPDATE", "elapsed_seconds": time.monotonic() - start, "completed_rows": len(rows), "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False})
+        atomic(output_root / "RAW_GRAM_STATISTICS.json", {"protocol_id": config["protocol_id"], "status": "COMPLETE_NO_UPDATE", "runtime_launch_commit": runtime_head, "episode_ids": [member["episode_id"] for member in rows], "families": [family["canonical_family"] for family in cohort["families"] for _ in family["members"]], "supervised_token_counts": [int(member["supervised_token_count"]) for member in rows], "per_token_normalized": True, "gram_matrix": grams.tolist(), "module_gram_matrices": {name: value.tolist() for name, value in module_grams.items()}, "repeatability": repeatability, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False})
+        atomic(receipt, {"protocol_id": config["protocol_id"], "status": "COMPLETE_NO_UPDATE", "elapsed_seconds": time.monotonic() - start, "completed_rows": len(rows), "runtime_launch_commit": runtime_head, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False})
     except Exception as exc:
-        atomic(receipt, {"protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN", "status": "FAILED_OR_PARTIAL_NO_UPDATE", "error_class": str(exc), "elapsed_seconds": time.monotonic() - start, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False, "traceback": traceback.format_exc()})
+        if owns_output and not receipt.exists():
+            atomic(receipt, {"protocol_id": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN", "status": "FAILED_OR_PARTIAL_NO_UPDATE", "error_class": str(exc), "elapsed_seconds": time.monotonic() - start, "optimizer_steps": 0, "parameter_updates": 0, "generation_calls": 0, "final_audit_opened": False, "traceback": traceback.format_exc()})
         raise
 
 

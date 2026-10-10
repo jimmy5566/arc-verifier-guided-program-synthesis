@@ -12,9 +12,32 @@
   detached RunPod jobs; Watchdog only keeps one Supervisor alive. Historical
   directive/acknowledgement state machines are provenance, not normal work
   queues. See [`orchestration/SIMPLE_ORCHESTRATION_V1.md`](orchestration/SIMPLE_ORCHESTRATION_V1.md).
-- `scripts/arc2_runner.py` is the only persistent outer loop. It schedules only
-  `ACTIVE`, `WAITING_REMOTE_JOB`, `PAUSED`, and `TERMINAL`; it does not interpret
-  scientific results or replace the Controller's synchronous Director review.
+- `scripts/arc2_governor.py` is the sole live persistent scheduler. It routes
+  `CONTINUE_CONTROLLER`, `REVIEW_REQUIRED`, `WAIT_REMOTE`, `PAUSED`, and
+  `TERMINAL`. `scripts/arc2_runner.py` and historical directive loops are
+  deprecated provenance and must not run concurrently.
+
+## Engineering remediation and scientific review
+
+- Controller autonomously diagnoses and repairs ordinary engineering defects
+  that preserve frozen science: paths, detached-HEAD handling, imports,
+  dependencies, receipts, duplicate-job guards, transport, caches, and CPU
+  integration tests. These repairs do not require a Director review.
+- Director review is required for model/data/loss/estimand/batch/metric/
+  threshold changes, protected or sealed-data boundaries, new hypotheses, and
+  replacement GPU authorization after a consumed one-shot launch.
+- A pre-model, pre-generation, or pre-optimizer process failure is
+  infrastructure-only unless independent evidence shows a scientific failure.
+  Preserve the failed run and logs; never overwrite its output or infer model
+  quality from it.
+- Recoverable infrastructure failure returns to Controller for bounded
+  CPU-only repair. Governor may requeue at most two repair turns for one
+  incident and must respect owner/Director/safety pauses, terminal state,
+  compute exhaustion, sealed data, and active remote jobs.
+- One approved scientific protocol permits autonomous engineering
+  implementation, but a consumed one-shot GPU authorization is never reusable.
+  A replacement run gets a fresh nonce/output and the smallest possible
+  authorization review, not a new review of the scientific hypothesis.
 
 ## Experiment discipline
 

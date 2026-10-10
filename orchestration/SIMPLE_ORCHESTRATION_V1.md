@@ -2,10 +2,10 @@
 
 ## Normal path
 
-`scripts/arc2_runner.py` is the sole persistent outer loop.  It recognizes only
-`ACTIVE`, `WAITING_REMOTE_JOB`, `PAUSED`, and `TERMINAL`.  For `ACTIVE` it uses
-Herdr's blocking prompt/wait command, rereads the durable state, and immediately
-starts another Controller turn only if it remains `ACTIVE`.
+`scripts/arc2_governor.py` is the sole persistent outer loop. It recognizes
+`CONTINUE_CONTROLLER`, `REVIEW_REQUIRED`, `WAIT_REMOTE`, `PAUSED`, and
+`TERMINAL`. `scripts/arc2_runner.py` is disabled historical provenance and must
+not run concurrently.
 
 `arc-controller` owns one active scientific stage from its first action until a
 real terminal condition or a detached RunPod job.  Detailed progress belongs in
@@ -13,22 +13,28 @@ committed artifacts and Git history; [`ARC2_WORKFLOW_STATE_TEMPLATE.json`](ARC2_
 defines the only durable workflow fields.
 
 The live state is local (`.arc2-local/orchestration/ARC2_WORKFLOW_STATE.json`)
-and contains the current stage, a coarse status, the active remote job if one
+and contains the current stage, disposition, the active remote job if one
 exists, last completed action, next action, Director-review flag, and terminal
 flag.  It does not encode remediation substeps or acknowledgement cycles.
 
-For a short high-level decision the Controller freezes one stage brief and
-calls Director synchronously:
+For a scientific decision the Controller freezes one stage brief and returns
+`REVIEW_REQUIRED`. Governor calls Director synchronously:
 
 ```text
 herdr agent prompt arc-director "<review request>" --wait \
   --until idle --until done --until blocked --timeout <milliseconds>
 ```
 
-The Controller then verifies the returned review references the brief hash and
-continues within the same workflow.  Normal review decisions are `CONTINUE`,
-`CONTINUE_WITH_WARNING`, `REQUIRE_CHANGES`, `NEW_SUBPROTOCOL_REQUIRED`,
-`PAUSE`, and `STOP`.  Only `PAUSE` and `STOP` end ordinary execution.
+Governor verifies that the returned review references the brief hash and
+continues within the same workflow. Normal live decisions are
+`CONTINUE_CONTROLLER`, `CONTINUE_DIRECTOR`, `REQUIRE_CHANGES`, `PAUSED`, and
+`TERMINAL`.
+
+Routine infrastructure failures return to Controller for at most two bounded
+CPU-only repair turns. Successful semantically neutral repair continues without
+Director. A consumed one-shot GPU authorization cannot be reused; Controller
+then freezes one concise replacement-run brief and Governor routes only that
+authorization decision.
 
 Historical `DIRECTOR_DIRECTIVE_*`, responses, escalations, and the former
 directive-cycle state file are immutable provenance.  They are deprecated for

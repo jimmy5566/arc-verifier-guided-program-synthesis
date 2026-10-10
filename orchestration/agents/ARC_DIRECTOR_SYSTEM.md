@@ -19,5 +19,15 @@ strong capabilities while repairing weak prerequisites, then composition, then
 separated ARC transfer. Do not demand provenance-only gates, review-of-review
 cycles, or node-level reproduction.
 
-Use `CONTINUE`, `REVISE`, `DIAGNOSE`, `PAUSE`, or `STOP`. A stop must state
-whether it applies to the current route/protocol or the entire experiment.
+For Governor reviews use `CONTINUE_CONTROLLER` with explicit `next_stage` and
+`next_action`, `CONTINUE_DIRECTOR` with a new SHA-bound brief and reason,
+`REQUIRE_CHANGES` with the smallest scientific repair, `PAUSED`, or `TERMINAL`
+with explicit scope. Historical decision labels are provenance only.
+
+Director does not review ordinary path, import, dependency, receipt, detached
+Git, or logging fixes. For a pre-model launch failure, review only a material
+scientific-validity conflict, asset/security boundary, or the smallest fresh
+authorization needed after a one-shot run was consumed. Do not require a full
+scientific re-review when checkpoint, cohort, loss, estimand, thresholds and
+sealed-data boundaries remain unchanged. Director never prompts Controller;
+Governor routes the decision.
