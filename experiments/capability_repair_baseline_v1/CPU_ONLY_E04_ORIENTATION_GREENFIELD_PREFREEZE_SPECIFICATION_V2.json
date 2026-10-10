@@ -1,0 +1,235 @@
+{
+  "base_primitive_source": {
+    "path": "scripts/prepare_targeted_capability_repair_v1.py",
+    "revision": "23c76dba3ac500c9c018e2214ecf6a7eab72e7f0",
+    "sha256": "6ef2e7fb8c9d87dbadc67d36f04a482f8f89512dd2e2c78e209972d2579dc44b"
+  },
+  "compute_scope": {
+    "current": "CPU-only specification repair completed.",
+    "future": "No training hypothesis, training cap, model arm, checkpoint, GPU allocation, or execution is specified or authorized."
+  },
+  "controls": {
+    "FIXED_TURN_ROTATION_CONTROL": "Same base tuple and output representation; output rotates the input L_TRIOMINO by exactly +1 turn independent of marker, testing transformation execution without marker binding.",
+    "MARKER_BINDING_CONTROL": "Same base tuple and marker/layout/color marginals; output is a four-cell direction code with the active position equal to control_marker_turn, testing marker-to-turn interpretation without shape rotation.",
+    "NO_TRANSFORM_RETENTION_CONTROL": "Same base tuple and agreed shape rendering; output preserves the input L_TRIOMINO orientation exactly (no canonical-orientation normalization and no marker-dependent transform), testing copying/representation retention.",
+    "ROTATION_TARGET": "Output is the input L_TRIOMINO transformed by control_marker_turn, retaining the agreed output rendering."
+  },
+  "design_source": {
+    "path": "experiments/capability_repair_baseline_v1/E04_ORIENTATION_GREENFIELD_GENERATOR_DESIGN_SPEC_V2.json",
+    "sha256": "1fd3592840195c76a101bdb8901dfdd07544ebb183cc1f62030766df24b347f2"
+  },
+  "flags": {
+    "cohort_generated": false,
+    "gpu_used": false,
+    "model_accessed": false,
+    "protocol_frozen": false,
+    "sealed_data_accessed": false,
+    "source_code_modified": false,
+    "worker_written": false
+  },
+  "future_implementation_requirement": "New source revision required before any generation; it must bind this V2 design and pass content/latent identity gates.",
+  "future_manifest_requirements": [
+    "canonical TRAIN/validation content and latent manifests",
+    "condition-to-base-tuple map",
+    "per-cell and per-condition counts",
+    "source revision and deterministic input record",
+    "content/latent overlap report",
+    "deterministic rerun identity report"
+  ],
+  "independent_unit": {
+    "condition_excluded": true,
+    "definition": "One independent canonical base tuple excludes condition. Each condition is a paired view rendered from this same tuple; condition views, serializations, and relabelings are repeated measurements, never additional independent units.",
+    "fields": [
+      "shape_orientation",
+      "control_marker_turn",
+      "reference_relation",
+      "topology",
+      "layout_template",
+      "color_role_permutation",
+      "instance_index"
+    ]
+  },
+  "invalidation_rules": [
+    "missing or mismatched design/source/manifest identity => INVALID_NOT_INTERPRETABLE",
+    "TRAIN-validation content or latent overlap => INVALID_NOT_INTERPRETABLE",
+    "reserved cell present in TRAIN or a factor level absent marginally from TRAIN => INVALID_NOT_INTERPRETABLE",
+    "fewer than 48 independent validation base tuples => INCONCLUSIVE",
+    "any condition treated as an independent unit => INVALID_NOT_INTERPRETABLE",
+    "unmatched or functionally insufficient control => INVALID_NOT_INTERPRETABLE",
+    "nondeterministic future generator rerun => INVALID_NOT_INTERPRETABLE"
+  ],
+  "primary_estimand": {
+    "definition": "For each reserved cell, among independent validation base tuples where both FIXED_TURN_ROTATION_CONTROL and MARKER_BINDING_CONTROL are exact for V7, calculate the V7 ROTATION_TARGET exact-grid failure rate. Macro-average equally over four cells only if each has at least 8 conditional analyzable tuples.",
+    "interpretation": "A nonzero conditional failure is descriptive diagnostic evidence only; it does not establish a training mechanism or authorize an intervention.",
+    "model": "V7 only; no candidate arm, training arm, or comparator is defined or implied.",
+    "name": "V7 conditional rotation-target failure among prerequisite-success base tuples",
+    "secondary": [
+      "unconditional V7 ROTATION_TARGET exact-grid accuracy by cell and macro average",
+      "V7 exact-grid accuracy for each of FIXED_TURN_ROTATION_CONTROL, MARKER_BINDING_CONTROL, and NO_TRANSFORM_RETENTION_CONTROL",
+      "paired within-base-tuple control/target outcome table"
+    ]
+  },
+  "prohibitions": [
+    "No cohort generation",
+    "No source implementation",
+    "No executable protocol or worker",
+    "No model loading/inference/GPU/gradient/optimizer/training",
+    "No Gold, dGold, FINAL_AUDIT, or sealed evaluation access"
+  ],
+  "specification_id": "CPU_ONLY_E04_ORIENTATION_GREENFIELD_PREFREEZE_SPECIFICATION_V2",
+  "status": "REPAIRED_PREFREEZE_SPECIFICATION_COMPLETE_REVIEW_REQUIRED_NO_COHORT",
+  "structural_split": {
+    "factor": "shape_orientation x reference_relation",
+    "marginal_coverage_proof": {
+      "every_reference_relation_in_train": true,
+      "every_shape_orientation_in_train": true,
+      "reserved_cells_excluded_from_train": true
+    },
+    "train_allowed_cells": [
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 3
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 3
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 3
+      }
+    ],
+    "validation_reserved_cells": [
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 3
+      }
+    ]
+  },
+  "supersedes": {
+    "path": "experiments/capability_repair_baseline_v1/CPU_ONLY_E04_ORIENTATION_GREENFIELD_PREFREEZE_SPECIFICATION_V1.json",
+    "sha256": "d459e590b8963ac305b3649fc1097fb2bf79509c7113c4f7b88dbb6f8f55c9e1"
+  },
+  "train_base_tuple_balance": {
+    "allowed_structural_cells": [
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 3
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 3
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 3
+      }
+    ],
+    "base_tuples_per_allowed_cell": 24,
+    "condition_rendering": "Every TRAIN base tuple renders all four paired condition views.",
+    "factor_coverage": "Every shape_orientation and every reference_relation appears in multiple allowed TRAIN cells; the four diagonal cells remain excluded.",
+    "per_allowed_cell_marginals": {
+      "color_role_permutation": "24 distinct deterministic permutations with background/shape/marker/output roles; no fixed color-position association",
+      "control_marker_turn": "6 each across turns 0,1,2,3",
+      "layout_template": "2 each across the twelve named templates"
+    },
+    "total_train_base_tuples": 288
+  },
+  "uncertainty": {
+    "bootstrap": "reserved-cell-stratified bootstrap at independent base-tuple level; paired condition views retained within resample",
+    "insufficient_conditional_count": "INCONCLUSIVE; never pool or count condition views as independent units.",
+    "replicates": 10000,
+    "seed": 20261010
+  },
+  "validation_unit_plan": {
+    "conditional_analyzable_minimum_per_reserved_cell": 8,
+    "conditional_minimum_rule": "If fewer than 8 of 12 base tuples in any reserved cell have both prerequisite controls exact, the conditional target estimand is INCONCLUSIVE for that cell and overall.",
+    "paired_condition_views": "all four conditions per base tuple; views are repeated measurements only",
+    "per_reserved_cell": 12,
+    "total_independent_base_tuples": 48
+  }
+}

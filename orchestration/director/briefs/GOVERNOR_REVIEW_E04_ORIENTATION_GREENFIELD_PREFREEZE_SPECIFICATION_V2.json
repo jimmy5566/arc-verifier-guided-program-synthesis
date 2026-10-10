@@ -1,0 +1,34 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_E04_ORIENTATION_GREENFIELD_PREFREEZE_SPECIFICATION_V2",
+  "design_source": {
+    "path": "experiments/capability_repair_baseline_v1/E04_ORIENTATION_GREENFIELD_GENERATOR_DESIGN_SPEC_V2.json",
+    "sha256": "1fd3592840195c76a101bdb8901dfdd07544ebb183cc1f62030766df24b347f2"
+  },
+  "forbidden": [
+    "No cohort generation",
+    "No source implementation",
+    "No executable protocol or worker",
+    "No model loading/inference/GPU/gradient/optimizer/training",
+    "No Gold, dGold, FINAL_AUDIT, or sealed evaluation access"
+  ],
+  "not_established": [
+    "No source implementation, cohort, manifest, model output, or control outcome exists."
+  ],
+  "question": "Does the repaired orientation prefreeze specification now adequately bound a later CPU-only generator/manifest validation, or should the greenfield route return NONE?",
+  "repairs": [
+    "48 independent base tuples total, 12 per reserved cell; condition excluded from the independent unit.",
+    "No-transform control now preserves input orientation exactly.",
+    "Primary V7-only no-update conditional failure estimand replaces undefined intervention-minus-control comparison.",
+    "TRAIN balance fixed at 24 base tuples per each of 12 allowed cells, with balanced marker turns/layouts/colors and paired views."
+  ],
+  "requested_decision": "Authorize at most one CPU-only generator/manifest pre-generation validation task, or stop this route at NONE. No generation or model/GPU execution is requested.",
+  "schema_version": 1,
+  "specification": {
+    "path": "experiments/capability_repair_baseline_v1/CPU_ONLY_E04_ORIENTATION_GREENFIELD_PREFREEZE_SPECIFICATION_V2.json",
+    "sha256": "139bd6cb6ecb16a68688d827d224fa7a3282d60c85380ec81a23efdf702b3a13"
+  },
+  "stage": "CPU_ONLY_E04_ORIENTATION_GREENFIELD_PREFREEZE_SPECIFICATION_V2",
+  "unchanged": [
+    "Four diagonal held-out structural cells; all marginal factor levels in TRAIN; fixed-turn and marker-binding controls; seed 20261010; 10000 bootstrap replicates; identity/overlap gates."
+  ]
+}

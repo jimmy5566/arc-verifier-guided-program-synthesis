@@ -1,0 +1,218 @@
+{
+  "base_generator_source": {
+    "path": "scripts/prepare_targeted_capability_repair_v1.py",
+    "revision": "23c76dba3ac500c9c018e2214ecf6a7eab72e7f0",
+    "sha256": "6ef2e7fb8c9d87dbadc67d36f04a482f8f89512dd2e2c78e209972d2579dc44b"
+  },
+  "base_tuple": {
+    "condition_excluded": true,
+    "definition": "One independent canonical base tuple excludes condition. Each condition is a paired view rendered from this same tuple; condition views, serializations, and relabelings are repeated measurements, never additional independent units.",
+    "fields": [
+      "shape_orientation",
+      "control_marker_turn",
+      "reference_relation",
+      "topology",
+      "layout_template",
+      "color_role_permutation",
+      "instance_index"
+    ]
+  },
+  "color_role_scheme": "Deterministic four-distinct-color permutations from colors 1..9 for background, shape, marker, output.",
+  "conditions": {
+    "FIXED_TURN_ROTATION_CONTROL": "Same base tuple and output representation; output rotates the input L_TRIOMINO by exactly +1 turn independent of marker, testing transformation execution without marker binding.",
+    "MARKER_BINDING_CONTROL": "Same base tuple and marker/layout/color marginals; output is a four-cell direction code with the active position equal to control_marker_turn, testing marker-to-turn interpretation without shape rotation.",
+    "NO_TRANSFORM_RETENTION_CONTROL": "Same base tuple and agreed shape rendering; output preserves the input L_TRIOMINO orientation exactly (no canonical-orientation normalization and no marker-dependent transform), testing copying/representation retention.",
+    "ROTATION_TARGET": "Output is the input L_TRIOMINO transformed by control_marker_turn, retaining the agreed output rendering."
+  },
+  "control_marker_turn_values": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "layout_template_values": [
+    "CENTER",
+    "NW",
+    "NE",
+    "SW",
+    "SE",
+    "MID_WEST",
+    "MID_EAST",
+    "MID_NORTH",
+    "MID_SOUTH",
+    "OFFSET_A",
+    "OFFSET_B",
+    "OFFSET_C"
+  ],
+  "reference_relation_values": [
+    "NORTH",
+    "EAST",
+    "SOUTH",
+    "WEST"
+  ],
+  "seed_scheme": "seed = 810000 + 104729*condition-independent-base-cell-index + 7919*instance_index; all later draws use local random.Random(seed). Conditions render from the same base tuple and never receive independent seeds.",
+  "shape": "L_TRIOMINO: [(0,0),(1,0),(2,0),(2,1)]",
+  "shape_orientation_values": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "source_level_limitations": [
+    "No generator implementation, manifest, grid, model output, or outcome exists.",
+    "A later implementation must use a new reviewed source revision and prove deterministic rerun plus content/latent uniqueness before model access."
+  ],
+  "spec_id": "E04_ORIENTATION_GREENFIELD_GENERATOR_DESIGN_SPEC_V2",
+  "status": "DECLARATIVE_CPU_ONLY_REPAIR_NOT_EXECUTABLE_NOT_GENERATED",
+  "structural_split": {
+    "factor": "shape_orientation x reference_relation",
+    "marginal_coverage_proof": {
+      "every_reference_relation_in_train": true,
+      "every_shape_orientation_in_train": true,
+      "reserved_cells_excluded_from_train": true
+    },
+    "train_allowed_cells": [
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 3
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 3
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 3
+      }
+    ],
+    "validation_reserved_cells": [
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 3
+      }
+    ]
+  },
+  "supersedes": {
+    "path": "experiments/capability_repair_baseline_v1/E04_ORIENTATION_GREENFIELD_GENERATOR_DESIGN_SPEC_V1.json",
+    "sha256": "3b6195016277cebb762f7891a0964a236c8681ac01549d61102d694cf2e9a7f8"
+  },
+  "topology_values": [
+    "single_4_connected_L_TRIOMINO"
+  ],
+  "train_balance": {
+    "allowed_structural_cells": [
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 0
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 1
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "WEST",
+        "shape_orientation": 2
+      },
+      {
+        "reference_relation": "NORTH",
+        "shape_orientation": 3
+      },
+      {
+        "reference_relation": "EAST",
+        "shape_orientation": 3
+      },
+      {
+        "reference_relation": "SOUTH",
+        "shape_orientation": 3
+      }
+    ],
+    "base_tuples_per_allowed_cell": 24,
+    "condition_rendering": "Every TRAIN base tuple renders all four paired condition views.",
+    "factor_coverage": "Every shape_orientation and every reference_relation appears in multiple allowed TRAIN cells; the four diagonal cells remain excluded.",
+    "per_allowed_cell_marginals": {
+      "color_role_permutation": "24 distinct deterministic permutations with background/shape/marker/output roles; no fixed color-position association",
+      "control_marker_turn": "6 each across turns 0,1,2,3",
+      "layout_template": "2 each across the twelve named templates"
+    },
+    "total_train_base_tuples": 288
+  },
+  "validation_capacity": {
+    "condition_views_per_base_tuple": 4,
+    "independent_base_tuples_per_reserved_cell": 12,
+    "independent_base_tuples_total": 48,
+    "source_level_capacity_proof": "4 reserved cells x 12 distinct instance_index values = 48 unique latent tuples. Future content-hash uniqueness is a mandatory pre-generation gate, not established by this static proof.",
+    "unit_count_rule": "48 is total base-tuple count, not per condition; 192 paired views are not 192 independent units."
+  }
+}
