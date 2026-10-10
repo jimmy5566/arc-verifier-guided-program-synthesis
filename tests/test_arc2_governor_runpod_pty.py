@@ -31,6 +31,13 @@ class RunPodPtyControlTests(unittest.TestCase):
         self.assertTrue(payload.endswith(b"exit\n"))
         self.assertNotIn(b"\x1b[200~", payload)
 
+    def test_status_query_accepts_current_expected_receipt_path_schema(self):
+        proc = _Proc()
+        job = {"remote_host":"pod", "expected_receipt_path":"/receipt", "remote_launcher_pid":7}
+        with mock.patch.object(governor.subprocess, "Popen", return_value=proc), mock.patch.object(governor.time, "sleep"):
+            status, _ = governor.remote_status(job)
+        self.assertEqual(status, "PROCESS_ALIVE")
+
 
 if __name__ == "__main__":
     unittest.main()

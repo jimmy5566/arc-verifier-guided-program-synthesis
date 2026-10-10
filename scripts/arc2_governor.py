@@ -16,7 +16,23 @@ DIRECTOR_DECISIONS={
 }
 def now(): return datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
 def atomic(p,x):
-    t=p.with_suffix('.tmp'); t.write_text(json.dumps(x,sort_keys=True,indent=2)+'\n',encoding='utf-8'); os.replace(t,p)
+    # Controller and Governor can briefly overlap on Windows.  A unique
+    # sibling prevents temporary-file collisions; retry only the atomic
+    # replacement when an antivirus/indexer still holds the destination.
+    t=p.with_name(f'{p.name}.{os.getpid()}.{time.time_ns()}.tmp')
+    try:
+        t.write_text(json.dumps(x,sort_keys=True,indent=2)+'\n',encoding='utf-8')
+        for attempt in range(5):
+            try:
+                os.replace(t,p)
+                return
+            except PermissionError:
+                if attempt == 4:
+                    raise
+                time.sleep(0.1)
+    finally:
+        if t.exists():
+            t.unlink()
 def load(p):
     # Workflow state is produced by more than one Windows-local control path.
     # Accept a UTF-8 BOM defensively, while all Governor writes remain UTF-8.
@@ -263,7 +279,9 @@ def remote_status(job):
     # Accept the compact current workflow schema as well as older preserved
     # receipts.  Both spellings bind the same remote worker; no local process
     # is ever used for liveness.
-    receipt=job.get('expected_receipt') or job.get('expected_terminal_receipt') or job.get('terminal_receipt_path') or job.get('remote_output')
+    receipt=(job.get('expected_receipt') or job.get('expected_terminal_receipt')
+             or job.get('terminal_receipt_path') or job.get('expected_receipt_path')
+             or job.get('remote_output'))
     target=job.get('ssh_target') or job.get('remote_host')
     primary=job.get('primary_process')
     if not isinstance(primary, dict):
