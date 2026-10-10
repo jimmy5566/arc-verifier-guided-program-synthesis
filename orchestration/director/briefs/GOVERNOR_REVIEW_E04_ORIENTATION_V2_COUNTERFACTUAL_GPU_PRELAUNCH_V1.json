@@ -1,0 +1,76 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "cohort_contract": {
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261010,
+    "canonical_validation_base_tuples": 48,
+    "condition_native_tasks_per_marker": 4,
+    "marker_turn_counterfactuals_per_base": 4,
+    "minimum_conditional_support_per_reserved_cell": 8,
+    "reserved_cells": 4,
+    "statistical_unit": "CANONICAL_BASE_TUPLE_MATCHED_COUNTERFACTUAL_SET",
+    "validation_task_rows": 768
+  },
+  "development_evidence_only": true,
+  "director_decision": {
+    "path": "orchestration/director/responses/DIRECTOR_E04_SCIENTIFIC_RECOVERY_V2_DECISION.json",
+    "sha256": "6c0ffbdb1c1fa99d3f4650fdb0795189fa2af47f21a6ad8fbbe6d99f04cb3ce7"
+  },
+  "frozen_inputs": {
+    "cpu_validation": "experiments/capability_repair_baseline_v1/e04_orientation_marker_counterfactual_v2/CPU_FREEZE_VALIDATION_V1.json",
+    "cpu_validation_sha256": "779a5adf926a2a06086d93552a43da2c354b26bcbf45137457ea5d1785bba172",
+    "deterministic_regeneration": "PASS",
+    "manifest": "experiments/capability_repair_baseline_v1/e04_orientation_marker_counterfactual_v2/MANIFEST.json",
+    "manifest_sha256": "1a832a3456fc2df742121070d8a7435a9335e7912ab3f8afff9f888f4e2f35ca",
+    "target_scorer_sidecar": "experiments/capability_repair_baseline_v1/e04_orientation_marker_counterfactual_v2/TARGET_SCORER_SIDECAR.jsonl",
+    "target_scorer_sidecar_sha256": "d2007e361548600746260724be1a1df1d2cde911e87fcb31d785a7aaeb10df01",
+    "v1_status": "PRESERVED_BUT_SUPERSEDED_BEFORE_GPU_EXECUTION",
+    "validation_input_prompts": "experiments/capability_repair_baseline_v1/e04_orientation_marker_counterfactual_v2/VALIDATION_INPUT_PROMPTS.jsonl",
+    "validation_input_prompts_sha256": "4cbaf37a46b75b766d73b81807865796f139500003b911a89eb717c5ac703c45"
+  },
+  "not_authorized_by_this_brief": [
+    "model loading",
+    "GPU inference",
+    "generation",
+    "training",
+    "optimizer construction",
+    "checkpoint mutation",
+    "sealed evaluation access"
+  ],
+  "primary_estimand": "Among canonical validation bases with exact FIXED_TURN_ROTATION_CONTROL and MARKER_BINDING_CONTROL outcomes, V7 ROTATION_TARGET exact-grid outcome by reserved structural cell; equal-cell macro aggregate only with >=8 conditional canonical bases per cell. Paired views are never independent units.",
+  "proposed_execution": {
+    "backward": false,
+    "batching": "Director must bind the active cap, requested/effective batch policy, and fixed B1 sensitivity subset prospectively.",
+    "checkpoint": "RECONSTRUCTED_FOUNDATION_V2_V7_ONLY",
+    "gpu_inference": "REQUIRES_DIRECTOR_ONE_SHOT_AUTHORIZATION",
+    "gradient_computation": false,
+    "inference": "NATIVE_GREEDY_NO_UPDATE",
+    "model_loading": "REQUIRES_DIRECTOR_ONE_SHOT_AUTHORIZATION",
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "raw_generation_boundary": "freeze raw generations before joining the separate scorer sidecar",
+    "training": false
+  },
+  "request_type": "ONE_SHOT_E04_V2_NO_UPDATE_NATIVE_GREEDY_GPU_PRELAUNCH_BINDING",
+  "requested_decision": "Authorize, revise, or reject one bounded no-update V7 native-greedy evaluation. No training or successor intervention is requested.",
+  "required_machine_gates": [
+    "exact source checkout equals source_commit",
+    "all listed SHA256 values match",
+    "fresh output root and nonce",
+    "one detached job only",
+    "no duplicate active remote job",
+    "raw generations frozen before target-sidecar join",
+    "NO_GOLD",
+    "NO_DGOLD",
+    "NO_FINAL_AUDIT"
+  ],
+  "review_id": "GOVERNOR_REVIEW_E04_ORIENTATION_V2_COUNTERFACTUAL_GPU_PRELAUNCH_V1",
+  "schema_version": 1,
+  "scientific_scope": "Prospective V7-only development diagnostic on the E04 V2 matched marker-counterfactual native-task validation cohort. V1 is preserved and not evaluated.",
+  "source_commit": "2bfd9f09b714837d68b3c262c5d924e114616d1f"
+}
