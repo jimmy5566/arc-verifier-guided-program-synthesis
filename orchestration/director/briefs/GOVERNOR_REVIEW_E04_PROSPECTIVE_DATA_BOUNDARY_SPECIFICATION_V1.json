@@ -1,0 +1,21 @@
+{
+  "facts": {
+    "cohort_generated": false,
+    "family_selected": "NONE",
+    "model_or_gpu_used": false,
+    "spec_sha256": "15a759b91ad81d6331293891afd60e0539fab362d2ec09eb1635014eeeef612b"
+  },
+  "prohibitions": [
+    "cohort generation",
+    "execution protocol freeze",
+    "worker implementation",
+    "model loading",
+    "GPU inference",
+    "training",
+    "sealed evaluation access"
+  ],
+  "question": "Is this prospective data-boundary specification sufficient to permit a later single-family prefreeze proposal, without authorizing one now?",
+  "review_id": "GOVERNOR_REVIEW_E04_PROSPECTIVE_DATA_BOUNDARY_SPECIFICATION_V1",
+  "schema_version": 1,
+  "stage": "CPU_ONLY_E04_PROSPECTIVE_DATA_BOUNDARY_SPECIFICATION_V1"
+}

@@ -1,0 +1,40 @@
+{
+  "current_state": {
+    "cohort_generated": false,
+    "family_selected": "NONE",
+    "model_or_gpu_used": false,
+    "protocol_frozen": false,
+    "worker_written": false
+  },
+  "forbidden": [
+    "cohort generation",
+    "execution protocol freeze",
+    "worker implementation",
+    "model loading",
+    "GPU inference",
+    "training",
+    "sealed evaluation access"
+  ],
+  "immutable_evidence_sources": {
+    "experiments\\capability_repair_baseline_v1\\CAPABILITY_REPAIR_BASELINE_V1_PROFILE.json": "230ebeb8e74eb5112ac83f27d1ed9f095e4230488059277a201a159f3d0acaf2",
+    "experiments\\capability_repair_baseline_v1\\CPU_ONLY_E04_WEAK_ATOMIC_EXPOSURE_AND_FAILURE_INVENTORY_V1.json": "657d2ab81afd30d38a7f45debeae1e905585062820e160566ef2330d9ec67d6d",
+    "experiments\\capability_repair_baseline_v1\\forward_capability_repair_v2\\atomic_prerequisite_repair_successor_proposal_v1\\concrete_protocol_v1\\ATOMIC_PREREQUISITE_TRAINING_SIGNAL_AUDIT_V1.json": "cad1734946445e1c78dd8547138f429ebf7bed8f52187a3763207f9ce9c49ef6"
+  },
+  "requirements": {
+    "family_selection_rule": "Before any new model outputs: select only a family with valid unsaturated frozen baseline exact-grid evidence, exact verified TRAIN content and latent provenance, an available deterministic generator, and matched control capacity. Nominal scalar-loss share alone cannot select a family.",
+    "independent_units": "Resample/gate at canonical latent-task unit; do not count prompt variants as independent units.",
+    "latent_parameter_manifest": "Each TRAIN and validation unit stores canonical latent parameter SHA256 and family-relevant structural signature.",
+    "legitimate_train_content_manifest": "Every TRAIN episode stores canonical public input/output content SHA256, generator revision, source provenance, and family label before model outputs.",
+    "matched_controls": "Each atomic family requires a functionally sufficient control and a single target operation with identical layout/color marginal distributions where feasible.",
+    "overlap_gates": [
+      "duplicate content SHA256 count = 0",
+      "duplicate latent signature count = 0",
+      "no Gold/dGold/FINAL_AUDIT membership",
+      "no validation target used in training construction or selection"
+    ],
+    "validation_split": "Validation must be content-SHA-disjoint and latent-signature-disjoint from TRAIN; roles are frozen before inference."
+  },
+  "scope": "ONE_FUTURE_SINGLE_FAMILY_ATOMIC_MECHANISM_STUDY_ONLY",
+  "spec_id": "E04_PROSPECTIVE_DATA_BOUNDARY_SPECIFICATION_V1",
+  "status": "CPU_ONLY_PREFREEZE_REVIEW_REQUIRED"
+}
