@@ -1,0 +1,37 @@
+{
+  "binding_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH_BINDING_V2",
+  "bound_files": {
+    "experiments/base_only_targeted_repair_remote_first_v2/remote_dataset_expected/TRAIN.jsonl": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945",
+    "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_TRAIN_MICROBATCH_MANIFEST_V1.json": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V5.json": "a98b1190ebf9d46df8fa10beaf9df5fe45d13e9e3337688729cf8a64fd8c2ee5",
+    "scripts/e03_gram_statistics.py": "30a8859cee9a90a6a016cf5c066d4e86a7e92907978a4e235883d3597275ba3c",
+    "scripts/launch_e03_v7_lora_gradient_interference_v2.py": "af37e6d9ef64e68855856e6d618866d3ec11ef66010a6ce77a235f3ce09b598d",
+    "scripts/postprocess_e03_v7_lora_gradient_interference_v2.py": "073e2dbd38e68ae95595191865a5b12f5ae5ccac64bae7e51b5f756b98045429",
+    "scripts/run_e03_v7_lora_gradient_interference_v2.py": "fea644f401d4e73f3406b20f933bdb21f8488a9a0cf5fc11df7f6db5777bc7a0"
+  },
+  "director_response_path": "orchestration/director/responses/GOVERNOR_REVIEW_E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH_V2_RESPONSE.json",
+  "director_response_sha256": "6ae430b87a4f6a68171e61b8c6a7b5fe2b9caef1b6f2035754b754f3902cf110",
+  "duplicate_job_forbidden": true,
+  "execution_authorized": false,
+  "fresh_output_required": true,
+  "jobs": 1,
+  "nonce": "3a73c370b7719b78073fd4b1b12c4285",
+  "output_root": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v1/run_001_3a73c370b7719b78073fd4b1b12c4285",
+  "protocol_id": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1",
+  "required_director_decision": "CONTINUE_CONTROLLER",
+  "retry": false,
+  "runtime_boundaries": {
+    "final_audit_opened": false,
+    "generation_calls": 0,
+    "no_optimizer": true,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "requires_external_cap_launcher": true
+  },
+  "runtime_cap_seconds": 1500,
+  "schema_version": 1,
+  "source_commit": "6ef4b1a6515e7caf65fcdd1869f105bd1fb0e266",
+  "status": "PRELAUNCH_BINDING_PENDING_FINAL_DIRECTOR_REVIEW",
+  "terminal_receipt_path": "/workspace/arc2/e03_v7_lora_gradient_interference_diagnostic_v1/run_001_3a73c370b7719b78073fd4b1b12c4285/TERMINAL_RECEIPT.json"
+}

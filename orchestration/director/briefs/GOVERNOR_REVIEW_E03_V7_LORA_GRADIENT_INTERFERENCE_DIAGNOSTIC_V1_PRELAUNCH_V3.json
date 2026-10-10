@@ -1,0 +1,70 @@
+{
+  "brief_id": "GOVERNOR_REVIEW_E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH_V3",
+  "frozen_unchanged": {
+    "B1_rows": 72,
+    "B8_microbatches_per_family": 4,
+    "bootstrap": "10000 family-clustered replicates, seed 20261010",
+    "cap_seconds": 1500,
+    "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "families": 9,
+    "forbidden": [
+      "training",
+      "optimizer",
+      "parameter update",
+      "generation",
+      "TARGET_DEV",
+      "RETENTION_SENTINEL",
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT"
+    ],
+    "manifest_sha256": "901ba1aaf692ebaa004ce69b5997064b0b52515e49eacc291762c40ff15a86be",
+    "objective": "BF16 forward with FP32 all-assistant shifted CE gradient reduction",
+    "rows": 288,
+    "train_sha256": "fb615a681503bf1e8db013ffcf1d552cf51696e878b1e0da3b97ef296970e945"
+  },
+  "package": {
+    "binding": {
+      "path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH_BINDING_V2.json",
+      "sha256": "557ee855c7b5bde4606c3907ca85040c56a7cee81c2bc673f7a4db764a87f572"
+    },
+    "config": {
+      "path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_CONFIG_V5.json",
+      "sha256": "a98b1190ebf9d46df8fa10beaf9df5fe45d13e9e3337688729cf8a64fd8c2ee5"
+    },
+    "cpu_tests": "PASS: E03 Gram algebra and bounded worker focused suite",
+    "launcher": {
+      "path": "scripts/launch_e03_v7_lora_gradient_interference_v2.py",
+      "sha256": "af37e6d9ef64e68855856e6d618866d3ec11ef66010a6ce77a235f3ce09b598d"
+    },
+    "postprocessor": {
+      "path": "scripts/postprocess_e03_v7_lora_gradient_interference_v2.py",
+      "sha256": "073e2dbd38e68ae95595191865a5b12f5ae5ccac64bae7e51b5f756b98045429"
+    },
+    "source_commit": "6ef4b1a6515e7caf65fcdd1869f105bd1fb0e266",
+    "statistics": {
+      "path": "scripts/e03_gram_statistics.py",
+      "sha256": "30a8859cee9a90a6a016cf5c066d4e86a7e92907978a4e235883d3597275ba3c"
+    },
+    "worker": {
+      "path": "scripts/run_e03_v7_lora_gradient_interference_v2.py",
+      "sha256": "fea644f401d4e73f3406b20f933bdb21f8488a9a0cf5fc11df7f6db5777bc7a0"
+    }
+  },
+  "prior_response": {
+    "decision": "REQUIRE_CHANGES",
+    "path": "orchestration/director/responses/GOVERNOR_REVIEW_E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1_PRELAUNCH_V2_RESPONSE.json",
+    "sha256": "6ae430b87a4f6a68171e61b8c6a7b5fe2b9caef1b6f2035754b754f3902cf110"
+  },
+  "question": "Is this final bounded E03 no-update Gram diagnostic scientifically and operationally adequate for one 1500-second execution, or is any remaining change strictly necessary before authorization?",
+  "repairs": {
+    "classification": "weak support requires point < -0.05 plus B1-expanded upper <0; primary combined branch uses historical token-weighted direction; equal-family is report-only counterfactual.",
+    "failure": "external process-group cap covers model load through finalization; progress journal after each block and partial receipt preserve bounded evidence without a scientific classification.",
+    "identity_authorization": "worker requires external-cap launcher, immutable false config, future authorized binding, response hash/decision, source commit, all source/config/manifest hashes, exact base/adapter shard hashes, and exact LoRA parameter set.",
+    "sensitivity": "every decision-driving continuous metric has a B1 envelope; negative-pair <0.10 reversal is INCONCLUSIVE; protected historical signs are separate and opposed signs inconclusive.",
+    "statistics": "durable JSON contains only row metadata, scalar-loss numerators and global/target-module Gram matrices; no complete vector JSON; temporary 36+B1-family-9 float32 memmaps are capacity preflighted and deleted on success."
+  },
+  "review_reason": "Final narrow E03 prelaunch review after implementing all REQUIRE_CHANGES items from the V2 response.",
+  "schema_version": 1,
+  "stage": "E03_V7_LORA_GRADIENT_INTERFERENCE_DIAGNOSTIC_V1"
+}
