@@ -1,0 +1,20 @@
+{
+  "authorization_requested": "DIRECTOR_SCIENTIFIC_INTERPRETATION_ONLY_NO_EXECUTION",
+  "facts": {
+    "agenda_sha256": "e3e1c7cfced49efcc22c6b494c9d78ffff536398ada004a4580a0b1d9eca7c46",
+    "conclusion": "No existing verified legitimate synthetic TRAIN exposure boundary and generator supports a structurally held-out or novel-order composition cohort.",
+    "feasibility_sha256": "98c36e41f1e9c0cc482af9fed99e91d952e001cadf0311487c1873b7def7d062",
+    "selection": "NONE",
+    "v2_status": "SCIENTIFICALLY_COMPLETE_WITHIN_SCHEMA_CEILING_LIMITED"
+  },
+  "prohibitions": [
+    "no cohort generation",
+    "no successor protocol",
+    "no model/GPU/generation/training",
+    "no Gold/dGold/FINAL_AUDIT"
+  ],
+  "question": "Given the read-only inventory, is any successor composition cohort scientifically defensible to freeze?",
+  "review_id": "GOVERNOR_REVIEW_STRUCTURALLY_HELD_OUT_COMPOSITION_FEASIBILITY_V1",
+  "schema_version": 1,
+  "stage": "CPU_ONLY_STRUCTURALLY_HELD_OUT_COMPOSITION_FEASIBILITY_V1"
+}
