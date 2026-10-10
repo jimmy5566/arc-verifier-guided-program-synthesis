@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "status": "READY_FOR_AUTHORIZED_GPU_SMOKE",
+  "scientific_protocol": "E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN",
+  "scientific_conditions_changed": false,
+  "source_implementation_commit": "c8636b5b2537e00913479fe720d6cbd3780db765",
+  "cohort": {
+    "examples": 72,
+    "manifest_sha256": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+    "longest_episode_id": "TRAIN:COMPOSITION_REPAIR:relation selector action:000068",
+    "longest_sequence_tokens": 954,
+    "longest_supervised_tokens": 477
+  },
+  "checkpoint": {
+    "identity": "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "base_weight_file_bytes": 7267233496,
+    "adapter_weight_file_bytes": 528550256
+  },
+  "historical_memory_evidence": {
+    "physical_batch_8": "OOM_DURING_FIRST_FORWARD",
+    "gpu_total_capacity_gib": 23.56,
+    "pytorch_allocated_at_failure_gib": 22.71,
+    "interpretation": "B8_IS_INFEASIBLE_ON_THE_OBSERVED_24GB_RUNTIME;_B1_FEASIBILITY_IS_NOT_YET_MEASURED"
+  },
+  "prepared_gpu_smoke": {
+    "script": "scripts/smoke_e03_v3_b1_memory_feasibility.py",
+    "script_sha256": "d211df921e2ec549319c769cd869b15e361d670a34e3736d6487f4b817ed146b",
+    "examples": 1,
+    "selection_rule": "FROZEN_LONGEST_SEQUENCE_THEN_EPISODE_ID",
+    "physical_batch_size": 1,
+    "precision": "BF16_UNCHANGED",
+    "optimizer_constructed": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "generation_calls": 0,
+    "runtime_cap_seconds": 600,
+    "required_measurements": [
+      "allocated_and_reserved_bytes_before_model_load",
+      "allocated_and_reserved_bytes_after_model_load",
+      "peak_allocated_and_reserved_bytes_after_backward",
+      "gpu_total_memory_bytes",
+      "elapsed_seconds"
+    ]
+  },
+  "smoke_decision_rule": {
+    "PASS": "the bound longest example completes one forward/backward with finite loss and gradients inside the 600-second cap",
+    "BLOCKED_BY_MEMORY": "CUDA OOM occurs during exact model load, forward, or backward",
+    "INFRASTRUCTURE_FAILURE": "identity, dependency, launch, or receipt failure occurs before a valid memory measurement"
+  },
+  "controlled_full_execution_after_smoke": {
+    "jobs": 1,
+    "examples": 72,
+    "physical_batch_size": 1,
+    "runtime_cap_seconds": 1800,
+    "automatic_retry": false,
+    "requires_successful_smoke": true,
+    "requires_runtime_scratch_capacity_check": true,
+    "requires_fresh_one_shot_authorization": true,
+    "requires_fresh_nonce_and_output_root": true,
+    "requires_local_origin_runpod_exact_commit_parity": true
+  },
+  "authorization": {
+    "gpu_smoke_authorized_by_this_artifact": false,
+    "full_e03_execution_authorized_by_this_artifact": false,
+    "owner_pause_lifted_by_this_artifact": false
+  },
+  "forbidden": [
+    "NO_AUTOMATIC_GPU_LAUNCH",
+    "NO_AUTHORIZATION_REUSE",
+    "NO_PROTOCOL_OR_COHORT_OR_CHECKPOINT_SUBSTITUTION",
+    "NO_OPTIMIZER",
+    "NO_PARAMETER_UPDATE",
+    "NO_GENERATION",
+    "NO_DEV",
+    "NO_GOLD",
+    "NO_DGOLD",
+    "NO_FINAL_AUDIT"
+  ]
+}

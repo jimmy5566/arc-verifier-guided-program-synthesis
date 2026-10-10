@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY",
+  "implementation_commit": "c8636b5b2537e00913479fe720d6cbd3780db765",
+  "target_branch": "infra/arc2-dual-agent-runpod-orchestrator-v1",
+  "original_failure": {
+    "artifact": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_RUN_001_LAUNCH_FAILURE_RESULT_V1.json",
+    "sha256": "137ebaf182ad094c78bd50330da4153b5691acc1bfb47e6989a2433c28d5ad0c",
+    "classification": "PRE_MODEL_IMPORT_INFRASTRUCTURE_FAILURE",
+    "preserved_unchanged": true
+  },
+  "draft_pr_1_audit": {
+    "head_commit": "3c9a0102da4440488c4006ef1cba326bd004556e",
+    "disposition": "VALID_GOVERNOR_TRIAGE_IDEAS_REUSED_WITHOUT_MERGING_OR_DUPLICATING_SCHEDULERS"
+  },
+  "frozen_scientific_identities": {
+    "config_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_CONFIG_V2.json",
+    "config_sha256": "749fb44abcd1571b983c6f368ddce5657a017477419a596010bd5ca0b9a883e6",
+    "cohort_path": "experiments/capability_repair_baseline_v1/e03_v7_lora_gradient_interference_diagnostic_v1/E03_V3_B1_PER_EXAMPLE_GRADIENT_SCREEN_MANIFEST_V1.json",
+    "cohort_sha256": "2ff3fa4f71eaf4900fcfc75ba418c188048b76cd6287d92bdb1f1efcdbd8b762",
+    "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "train_examples": 72,
+    "batch_size": 1,
+    "checkpoint_identity": "RECONSTRUCTED_FOUNDATION_V2_V7",
+    "loss_or_gradient_estimand_changed": false
+  },
+  "implementation_hashes": {
+    "scripts/arc2_governor.py": "5f88a6223c75b6b67b71119a4e7a71e675c5abf8d15eeb4cf006cff906f905d9",
+    "scripts/launch_e03_v3_b1_per_example_gradient_screen.py": "0018515e4b314077f37d1030df31fc05dc446ec646e68613f54c61907fe9fd49",
+    "scripts/run_e03_v3_b1_per_example_gradient_screen.py": "eb2bd589a219b9b2c610e627dcf93e12284ffcc3213f647bc5808e917c886518",
+    "scripts/smoke_e03_v3_b1_memory_feasibility.py": "d211df921e2ec549319c769cd869b15e361d670a34e3736d6487f4b817ed146b"
+  },
+  "verified_repairs": [
+    "detached exact-SHA checkout accepted while wrong commit, wrong origin SHA, dirty tracked source, and wrong artifact hash fail closed",
+    "launcher creates log and output parents before opening files and launches from the exact repository root with an explicit PYTHONPATH",
+    "pre-worker dependency failure and worker failure produce preserved logs and terminal receipts",
+    "one-shot authorization reuse, concurrent duplicate output launch, and frozen-output overwrite are blocked",
+    "Governor routes recoverable infrastructure failures to at most two CPU-only Controller turns while respecting protected pauses",
+    "deprecated arc2_runner remains disabled and arc2_governor is the sole live scheduler"
+  ],
+  "verification": {
+    "python_compile": "PASS",
+    "focused_regression_command": "python -m pytest tests/test_e03_v3_infrastructure_recovery.py tests/test_arc2_governor_infrastructure_triage.py tests/test_e03_v3_b1_per_example_gradient_screen.py tests/test_arc2_governor_runpod_pty.py tests/test_arc2_governor_model_first_continuation.py tests/test_arc2_governor_director_routing.py tests/test_arc2_orchestration_contract.py tests/test_arc2_orchestration_supervisor.py tests/test_e03_v2_lower_memory.py tests/test_e03_gram_statistics.py tests/test_e03_gradient_statistics.py tests/test_e03_bounded_worker_v2.py tests/test_orchestration_workspace_guard.py -q",
+    "focused_regression_result": "69_PASSED",
+    "detached_checkout_preflight": "PASS_REAL_TEMP_GIT_REPOSITORY",
+    "cpu_launcher_dry_run": "PASS_REAL_SUBPROCESS_INVOCATION",
+    "historical_environment_checks": "10_PASSED_IN_PRIMARY_WORKTREE",
+    "gpu_executed": false,
+    "model_loaded": false
+  }
+}
