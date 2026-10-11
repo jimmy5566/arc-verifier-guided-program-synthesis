@@ -1,0 +1,18 @@
+{
+  "active_hard_cap_seconds": 7200,
+  "brief_type": "DIRECTOR_EXECUTION_AUTHORIZATION_REQUEST",
+  "cpu_tests": "PASS_5",
+  "gpu_used": false,
+  "launcher_sha256": "473a3d567a7a16d83db92c5311c706e254cb2cb1dc44a4a080a3302b9c3a4ad1",
+  "model_loaded": false,
+  "nonce": "45e28892e9d37e174d389eeed95a7c5e",
+  "output_root": "/workspace/arc2/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r3/run_001_45e28892e9d37e174d389eeed95a7c5e",
+  "package_sha256": "834f66012102a35f896dcb4d933aedd573de34e3b9f12d4755d5cb8b687c8ced",
+  "planned_b1_repeat_rows": 36,
+  "planned_primary_rows": 576,
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R3",
+  "request": "Authorize exactly one detached target-blind no-update native-Greedy collection only after exact detached source commit, clean tracked source, package/worker/launcher identities, active nonce, fresh output, and 7200-second outer and inner caps pass. No training, optimizer, backward, target access during generation, Gold, dGold or FINAL_AUDIT; retry=false.",
+  "target_sidecar_accessed": false,
+  "training": false,
+  "worker_sha256": "de48d6405e7ad725e5fb462ac6d20e995de7a20c9a7508e7337209c8d430cf0f"
+}
