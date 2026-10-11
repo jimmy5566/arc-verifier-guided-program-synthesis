@@ -1,9 +1,19 @@
 ﻿"""GitHub-synchronized detached launcher for the one E04-E V2 parent job."""
 from __future__ import annotations
-import argparse,hashlib,json,subprocess
+import argparse,base64,hashlib,json,secrets,subprocess
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];BRANCH='infra/arc2-dual-agent-runpod-orchestrator-v1'
 def sha(p:Path)->str:return hashlib.sha256(p.read_bytes()).hexdigest()
+def forced_pty_shell(target:str,script:str)->str:
+ """Use the established RunPod command-control envelope; never transfer assets."""
+ nonce=secrets.token_hex(16); completion=json.dumps({'arc2_remote_nonce':nonce},sort_keys=True)
+ encoded=base64.b64encode((script+f"\nprintf '%s\\n' '{completion}'\n").encode()).decode()
+ line=f"echo {encoded} | base64 -d | bash; printf '__ARC2_REMOTE_END__\\n'; exit"
+ payload=f"\x1b[200~{line}\x1b[201~\r".encode()
+ completed=subprocess.run(['ssh','-F','NUL','-tt','-o','BatchMode=yes','-o','ConnectTimeout=20',target],input=payload,capture_output=True,check=False,timeout=45)
+ lines=completed.stdout.splitlines();marker=b'__ARC2_REMOTE_END__';done=completion.encode()
+ if completed.returncode or marker not in [x.strip() for x in lines] or done not in lines:raise SystemExit(f'E04E_REMOTE_COMMAND_CONTROL_FAILED:{completed.returncode}')
+ return completed.stdout.decode('utf-8',errors='replace')
 def remote_script(b:dict,binding_commit:str,binding_path:str,binding_sha:str)->str:
  out=b['output_root'];lock=out+'.launch_lock';source=binding_commit
  return f'''set -euo pipefail
@@ -34,6 +44,5 @@ def main():
  p=argparse.ArgumentParser();p.add_argument('--binding',type=Path,required=True);p.add_argument('--binding-commit',required=True);p.add_argument('--ssh-target');p.add_argument('--launch',action='store_true');a=p.parse_args();b=json.loads(a.binding.read_text());rel=a.binding.resolve().relative_to(ROOT).as_posix();cmd=remote_script(b,a.binding_commit,rel,sha(a.binding))
  if not a.launch:print(cmd);return
  if not a.ssh_target:raise SystemExit('SSH_TARGET_REQUIRED_FOR_COMMAND_CONTROL')
- r=subprocess.run(['ssh','-F','NUL','-tt',a.ssh_target],input=cmd+'\nexit\n',text=True,check=False)
- if r.returncode:raise SystemExit(r.returncode)
+ print(forced_pty_shell(a.ssh_target,cmd))
 if __name__=='__main__':main()
