@@ -1,4 +1,4 @@
-﻿"""CPU-only freezer and verifier for E04-D local rotation/marker gradients.
+"""CPU-only freezer and verifier for E04-D local rotation/marker gradients.
 
 This module neither imports torch nor loads a model.  It freezes a TRAIN-only
 matched cohort from the E04 native generator and a no-update execution contract.
