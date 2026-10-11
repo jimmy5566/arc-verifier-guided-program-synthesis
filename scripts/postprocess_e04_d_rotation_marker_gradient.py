@@ -1,7 +1,9 @@
 """CPU postprocessor for the frozen E04-D sufficient statistics."""
 from __future__ import annotations
-import argparse,hashlib,json
+import argparse,hashlib,json,sys
 from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path: sys.path.insert(0,str(ROOT))
 from scripts import e04_d_gradient_statistics as s
 
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
