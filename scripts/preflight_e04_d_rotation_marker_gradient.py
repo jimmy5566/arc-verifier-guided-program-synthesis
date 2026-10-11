@@ -8,6 +8,7 @@ def main():
  a=argparse.ArgumentParser();a.add_argument('--binding',type=Path,required=True);a.add_argument('--emit',type=Path);x=a.parse_args();b=json.loads(x.binding.read_text());
  if b.get('protocol_id')!='E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1' or b.get('execution_authorized') is not True or b.get('jobs')!=1 or b.get('retry') is not False or b.get('runtime_cap_seconds')!=1800:raise SystemExit('E04D_BINDING_CONTRACT')
  if not str(b.get('nonce','')) or not str(b.get('output_root','')).startswith('/workspace/arc2/e04_d_rotation_marker_local_gradient_diagnostic_v1/'):raise SystemExit('E04D_OUTPUT_BINDING')
+ if Path(b['output_root']).exists():raise SystemExit('E04D_FRESH_OUTPUT_REQUIRED')
  head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip();src=b.get('approved_source_commit','')
  if subprocess.call(['git','merge-base','--is-ancestor',src,head],cwd=ROOT)!=0:raise SystemExit('E04D_APPROVED_SOURCE_NOT_ANCESTOR')
  if subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=ROOT,text=True).strip():raise SystemExit('E04D_TRACKED_SOURCE_DIRTY')
