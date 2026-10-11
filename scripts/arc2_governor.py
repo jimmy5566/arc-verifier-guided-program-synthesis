@@ -367,6 +367,29 @@ def persist_delivery_outcome(path, action_id, delivery, detail):
     atomic(path,current)
     return 'CONTROLLER_PROMPTED' if delivery == 'DELIVERED' else ('CONTROLLER_DELIVERY_UNKNOWN' if delivery == 'UNKNOWN_DELIVERY' else 'CONTROLLER_NOT_DELIVERED')
 
+def queue_controller_dispatch(state, path, target):
+    """Record an unsent Controller handoff while its pane is working.
+
+    QUEUED means Governor has *not* called Herdr for this semantic action.  It
+    is therefore safe to deliver once the pane becomes idle.  Delivered and
+    ambiguous intents are preserved rather than replaced.
+    """
+    action_id=action_sha256(state)
+    previous=state.get('controller_dispatch')
+    if isinstance(previous,dict):
+        if dispatch_matches_action(previous,state,action_id):
+            return state,False
+        # A working Controller may be completing the old handoff.  Preserve
+        # that identity until it yields; a later idle cycle will supersede it.
+        return state,False
+    intent={'status':'QUEUED','action_sha256':action_id,'target':target,
+            'queued_at':now(),'queue_reason':'TARGET_WORKING','delivery_attempt':0}
+    state.update({'controller_dispatch':intent,'controller_target':target,
+                  'controller_target_source':'HERDR_LIVE_PANE_RESOLUTION',
+                  'last_actor':'governor','updated_at':now()})
+    atomic(path,state)
+    return load(path),True
+
 def controller(s,p,timeout,retry_seconds=300):
     s,_=reconcile_controller_delivery(s,p)
     target=resolve_controller_target(s,p)
@@ -384,29 +407,41 @@ def controller(s,p,timeout,retry_seconds=300):
         if controller_turn_is_active(current_target):
             dispatch=current.get('controller_dispatch')
             # An active pane is observation evidence, never permission to
-            # erase the semantic action which may already be delivered.
+            # erase a delivered action.  When no action exists yet, retain a
+            # durable unsent queue record for later idle delivery.
             if isinstance(dispatch,dict):
                 if dispatch.get('status') == 'DELIVERED':
                     dispatch=dict(dispatch); dispatch['status']='RUNNING'; dispatch['running_observed_at']=now()
                     current['controller_dispatch']=dispatch; current['updated_at']=now()
                     atomic(p,current)
-            # A busy Controller is an observation, not a new durable workflow
-            # event.  Do not churn revisions or emit another prompt.
-            log(current,f'controller target={current_target} remains active; no self-prompt')
+            else:
+                current,_=queue_controller_dispatch(current,p,current_target)
+            log(current,f'controller target={current_target} remains active; no prompt while queued')
             return 'CONTROLLER_ACTIVE'
         s,target=current,current_target
     key=action_sha256(s)
     previous=s.get('controller_dispatch')
+    queued=False
     if dispatch_matches_action(previous,s,key):
         status=previous.get('status')
+        if status == 'QUEUED':
+            # This is the only status proving delivery has not yet been
+            # attempted, so exactly one wake prompt is safe now that idle was
+            # observed.
+            queued=True
         # Semantic identity, not elapsed time, provides at-most-once delivery.
-        if status in {'INTENT_RECORDED','DELIVERED','ACKNOWLEDGED','RUNNING','UNKNOWN_DELIVERY'}:
+        elif status in {'INTENT_RECORDED','DELIVERED','ACKNOWLEDGED','RUNNING','UNKNOWN_DELIVERY'}:
             log(s,f'controller action={key[:12]} already {status}; no automatic redispatch')
             return 'CONTROLLER_INTENT_PENDING' if status == 'INTENT_RECORDED' else ('CONTROLLER_DELIVERY_UNKNOWN' if status == 'UNKNOWN_DELIVERY' else 'CONTROLLER_ALREADY_DISPATCHED')
-    archive_superseded_dispatch(s,previous,key)
-    intent={'status':'INTENT_RECORDED','action_sha256':key,
-                                     'intent_recorded_at':now(),'target':target,
-                                     'delivery_attempt':int(previous.get('delivery_attempt',0) if isinstance(previous,dict) else 0)+1}
+    if queued:
+        intent=dict(previous)
+        intent.update({'status':'INTENT_RECORDED','intent_recorded_at':now(),
+                       'ready_observed_at':now(),'delivery_attempt':int(previous.get('delivery_attempt',0))+1})
+    else:
+        archive_superseded_dispatch(s,previous,key)
+        intent={'status':'INTENT_RECORDED','action_sha256':key,
+                'intent_recorded_at':now(),'target':target,
+                'delivery_attempt':int(previous.get('delivery_attempt',0) if isinstance(previous,dict) else 0)+1}
     s.update({'controller_dispatch':intent,'controller_target':target,
               'controller_target_source':'HERDR_LIVE_PANE_RESOLUTION','last_actor':'governor','updated_at':now()})
     atomic(p,s)
@@ -894,11 +929,29 @@ def status_line(result, state):
 def delay_for(result,state,*,paused_seconds,idle_seconds,controller_retry_seconds=300):
     if result == 'TERMINAL': return None
     if result == 'PAUSED': return paused_seconds
-    if result in {'CONTROLLER_ACTIVE','CONTROLLER_COOLDOWN','CONTROLLER_PROMPT_FAILED'}: return idle_seconds
+    if result in {'CONTROLLER_ACTIVE','CONTROLLER_QUEUED','CONTROLLER_COOLDOWN','CONTROLLER_PROMPT_FAILED'}: return idle_seconds
     if result in {'CONTROLLER_INTENT_PENDING','CONTROLLER_DELIVERY_UNKNOWN','CONTROLLER_ALREADY_DISPATCHED','CONTROLLER_PROMPTED'}:
         return controller_retry_seconds
     if result == 'REMOTE_PENDING': return poll_seconds(state.get('remote_job') or state.get('active_remote_job') or {})
     return 2
+
+def wait_for_state_change(path, observed_revision, seconds, check_seconds=2):
+    """Sleep without LLM calls, returning early when another writer advances state."""
+    deadline=time.monotonic()+max(0.0,float(seconds))
+    interval=max(0.05,float(check_seconds))
+    while True:
+        remaining=deadline-time.monotonic()
+        if remaining <= 0:
+            return False
+        time.sleep(min(interval,remaining))
+        try:
+            if load(path).get('state_revision') != observed_revision:
+                return True
+        except (OSError,json.JSONDecodeError):
+            # A writer may be atomically replacing the snapshot.  Re-enter the
+            # main loop rather than treating an unreadable instant as approval
+            # to redeliver any action.
+            return True
 
 def main():
     ap=argparse.ArgumentParser()
@@ -909,6 +962,8 @@ def main():
     ap.add_argument('--controller-retry-seconds',type=int,default=300)
     ap.add_argument('--idle-seconds',type=int,default=15)
     ap.add_argument('--paused-seconds',type=int,default=15)
+    ap.add_argument('--state-check-seconds',type=float,default=2,
+                    help='bounded state-revision polling while sleeping; no agent calls')
     ap.add_argument('--lock-path',type=Path)
     ap.add_argument('--pid-file',type=Path)
     ap.add_argument('--service-state',type=Path)
@@ -924,8 +979,13 @@ def main():
             write_service_state(a.service_state,status=result,workflow_state=s)
             print(status_line(result, s), flush=True)
             if a.once or result == 'TERMINAL' or not a.daemon: return 0
-            time.sleep(delay_for(result,s,paused_seconds=a.paused_seconds,idle_seconds=a.idle_seconds,
-                                 controller_retry_seconds=a.controller_retry_seconds))
+            delay=delay_for(result,s,paused_seconds=a.paused_seconds,idle_seconds=a.idle_seconds,
+                            controller_retry_seconds=a.controller_retry_seconds)
+            # A state transition is the durable wake signal.  This prevents an
+            # obsolete unknown-delivery cooldown from delaying a new Director
+            # review, without retransmitting the ambiguous original action.
+            if delay is not None:
+                wait_for_state_change(a.state,s.get('state_revision'),delay,a.state_check_seconds)
     except Exception as exc:
         try: write_service_state(a.service_state,status='ERROR',workflow_state=load(a.state),detail=f'{type(exc).__name__}:{exc}')
         except Exception: pass
