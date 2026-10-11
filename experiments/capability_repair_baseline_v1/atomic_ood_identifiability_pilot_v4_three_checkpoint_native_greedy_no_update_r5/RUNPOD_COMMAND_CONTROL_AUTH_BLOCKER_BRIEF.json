@@ -1,0 +1,30 @@
+{
+    "brief_type":  "RUNPOD_COMMAND_CONTROL_AUTH_BLOCKER",
+    "protocol_id":  "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5",
+    "source_commit":  "dc34052f4ef9cfa9ca9dcfb01a7c574f4e20556e",
+    "execution_authorization_response_sha256":  "9581ae217b8758f9dc5960bcb412c7f7f66f1c0b51d92cf619ef01412cc50cc3",
+    "one_shot_authorization_consumed":  false,
+    "observed_utc":  "2026-10-11T15:54:14.8074343Z",
+    "machine_gate":  "RUNPOD_SSH_PUBLICKEY_AUTHENTICATION",
+    "blocker":  "The configured RunPod endpoint rejected the two locally configured RunPod private keys with Permission denied (publickey). The user-specified default id_ed25519 path is absent. No remote command executed.",
+    "attempts":  [
+                     {
+                         "identity_file":  "C:/Users/asus/.ssh/id_ed25519",
+                         "result":  "LOCAL_IDENTITY_FILE_ABSENT_NO_REMOTE_COMMAND"
+                     },
+                     {
+                         "identity_file":  "C:/Users/asus/.ssh/id_ed25519_runpod_arc",
+                         "result":  "REMOTE_PUBLICKEY_REJECTED"
+                     },
+                     {
+                         "identity_file":  "C:/Users/asus/.ssh/runpod_arc2_ed25519",
+                         "result":  "REMOTE_PUBLICKEY_REJECTED"
+                     }
+                 ],
+    "preserved":  [
+                      "No RunPod checkout, Git fetch, output-root inspection, nonce claim, model load, GPU action, remote job, raw evidence, or sealed-sidecar access occurred.",
+                      "The exact R5 authorization remains unconsumed; retry=false remains in force.",
+                      "No key material or token value was printed, copied, changed, or persisted."
+                  ],
+    "requested_resolution":  "Provide or restore an already-authorized RunPod command-control identity for this endpoint, or update the endpoint authorized for the existing one-shot binding. Do not issue a replacement run authorization unless the original authorization becomes invalid."
+}
