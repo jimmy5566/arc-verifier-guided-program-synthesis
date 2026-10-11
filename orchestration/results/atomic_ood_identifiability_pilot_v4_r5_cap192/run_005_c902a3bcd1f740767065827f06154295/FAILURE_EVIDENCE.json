@@ -1,0 +1,15 @@
+{
+  "authorization": "The Director-approved one-shot launch has been consumed. No relaunch or replacement is implied.",
+  "binding_sha256": "67583dcdd955f0f18df5827a533cb256655779b7eb0bc3de8142b620379e5aec",
+  "evidence_boundary": "No target sidecar access, optimizer steps, parameter updates, backward calls, FINAL_AUDIT access, raw generation rows, or capability result.",
+  "kind": "R5_CAP192_RUN_005_FAILURE_EVIDENCE",
+  "launch_log_sha256": "1defba5d5dd86afdc970c3cbd30546faef549f3ef577841d6337fc588e5713b5",
+  "mechanism": "Remote PID 1 had HF_TOKEN_PRESENT, but the non-interactive SSH/nohup launch environment had HF_TOKEN_ABSENT; huggingface_hub required a token before adapter retrieval.",
+  "package_sha256": "c5ef07d455081bc742621171f0ab94aa37cefed3dbf8cc3ba9f952f129deb033",
+  "repair_scope": "CPU-only launch-environment inheritance repair may be prepared and tested without printing, persisting, transferring, or modifying credential values. A new execution authorization is required before any GPU retry.",
+  "run_id": "RUN_005_CAP192_c902a3bcd1f740767065827f06154295",
+  "schema_version": 1,
+  "source_commit": "88584d3815dddbb31d4461ed8770948b7a504e4d",
+  "status": "FAILED_NO_UPDATE_INFRASTRUCTURE",
+  "terminal_receipt_sha256": "2281a96b0c22cb9118be7759e46b4c5af6ef3aafec21b781e49b1e76f53bb184"
+}

@@ -1,0 +1,13 @@
+{
+  "backward_calls": 0,
+  "error": "Token is required (`token=True`), but no token found. You need to provide a token or be logged in to Hugging Face with `hf auth login` or `huggingface_hub.login`. See https://huggingface.co/settings/tokens.",
+  "error_type": "LocalTokenNotFoundError",
+  "final_audit_opened": false,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "partial_evidence": [],
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5_CAP192",
+  "status": "FAILED_NO_UPDATE_INFRASTRUCTURE",
+  "target_sidecar_accessed": false,
+  "wall_seconds": 544.6898789443076
+}
