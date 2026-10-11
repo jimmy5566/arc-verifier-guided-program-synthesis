@@ -1,0 +1,65 @@
+{
+  "authorization_request": {
+    "failure_policy": "Any failure consumes this authorization and permits no automatic replacement.",
+    "permitted_launches": 1,
+    "reason": "RUN_005 authorization was consumed by a verified no-update credential-inheritance failure.",
+    "retry": false,
+    "type": "ONE_SHOT_GPU_REPLACEMENT_AUTHORIZATION"
+  },
+  "credential_repair": {
+    "cpu_tests": [
+      "local synthetic environment PASS_2_OF_2",
+      "RunPod synthetic environment PASS",
+      "helper accepts only HF_TOKEN or GH_TOKEN",
+      "helper has no credential output or persistence"
+    ],
+    "execution_rule": "Before launch, source the hashed helper in the short-lived launch shell and import HF_TOKEN from /proc/1/environ only into that child environment. Do not print, serialize, hash, commit, copy, or retain the credential.",
+    "helper_path": "scripts/arc2_import_runpod_pid1_secret.sh",
+    "helper_sha256": "f5362b83d25a3ddafa0d186cacffcd4385f6decd4d42272b9440d29cbfe9c6d3",
+    "live_presence_evidence": "SSH_HF_TOKEN_ABSENT and PID1_HF_TOKEN_PRESENT; values were neither displayed nor written."
+  },
+  "kind": "R5_CAP192_RUN_006_REPLACEMENT_AUTHORIZATION_REVIEW",
+  "only_non_scientific_changes": "fresh nonce/output, successor source identity and a child-only PID-1 HF_TOKEN import helper; all model/evaluation conditions remain unchanged.",
+  "prelaunch_requirements": [
+    "exact clean detached checkout and all listed hashes",
+    "helper hash and synthetic/live presence checks",
+    "package/worker/launcher/test/audit/prompt/manifest/checkpoint/runtime identities",
+    "unused nonce, absent output root, no duplicate job",
+    "complete import graph and Cap192 CPU gates",
+    "sealed sidecar remains unopened until raw target-blind evidence and terminal receipt are frozen and hash-verified"
+  ],
+  "prior_consumed_authorization": {
+    "director_response_sha256": "132e84d21521056cdc89c23170021a3c2012f163ae85e80a4ad215db835fbffe",
+    "failure_class": "FAILED_NO_UPDATE_INFRASTRUCTURE",
+    "failure_evidence_sha256": "8bb4c4f3e013816c9136458b6596ceac91e576f4d77189618829671c131db340",
+    "failure_mechanism": "SSH/nohup child environment lacked HF_TOKEN although PID 1 had it; failure occurred before generation and target access.",
+    "run_id": "RUN_005_CAP192_c902a3bcd1f740767065827f06154295",
+    "terminal_receipt_sha256": "2281a96b0c22cb9118be7759e46b4c5af6ef3aafec21b781e49b1e76f53bb184"
+  },
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5_CAP192",
+  "request": "Review the preserved RUN_005 no-update infrastructure failure and the minimal CPU-tested PID-1 credential-inheritance repair. If all identities and frozen scientific conditions remain valid, authorize exactly one fresh, non-retry GPU execution for RUN_006. Do not launch work in this review.",
+  "schema_version": 1,
+  "successor_execution_identity": {
+    "active_hard_cap_seconds": 7200,
+    "execution_package_path": "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_serialization_cap192_run_006/EXECUTION_PACKAGE.json",
+    "execution_package_sha256": "82ccf81baed567b8c23bd75863a1707e804782de3a1ac48d9a81a2f2f4ee73f6",
+    "fresh_remote_output_root": "/workspace/arc2/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_cap192/run_006_ddf8392c9a833f56665bc9010660cbe5",
+    "launcher_path": "scripts/launch_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192_run006.py",
+    "launcher_sha256": "df8bc4eac95989c6b6d21647c4af44323f6fb25a577aa64f9b4a7efeb9bcbb49",
+    "nonce": "ddf8392c9a833f56665bc9010660cbe5",
+    "retry": false,
+    "serialization_audit_sha256": "db9c2bcdae05c44b17e8c276801f30918ed335848593747fceac2ab9e927c4cf",
+    "source_commit": "1222d3fa6ab2be5a186257c5d4d1aa0e48536045",
+    "source_ref": "origin/infra/arc2-r5-complete-import-graph",
+    "tests_path": "tests/test_atomic_ood_identifiability_pilot_v4_r5_cap192_run006_execution.py",
+    "tests_sha256": "ae612756ef0fdd5eb2ec244ad5d07cb216261380d69426c53df2d8954b9562e5",
+    "worker_path": "scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192_run006.py",
+    "worker_sha256": "fdefb38903f4161f027f5baaa097c0d79cd04273d85a128d607c755d8fc1f7c3"
+  },
+  "unchanged_scientific_conditions": [
+    "same Cap192 completion limit and CPU tokenizer/parser audit",
+    "same V7, E04-E Control, E04-E Treatment bytes, frozen V4 cohort/prompts/demonstrations/manifest/cells/units and sealed sidecar",
+    "same native greedy BF16, Batch32/fallback, B1 subset, parser/canonicalizer/scorer/uncertainty and 7200-second cap",
+    "no training, optimizer, backward, parameter update, TTT, augmentation, DFS, beam, Gold, dGold or FINAL_AUDIT"
+  ]
+}
