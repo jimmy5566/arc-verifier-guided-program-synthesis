@@ -1,0 +1,72 @@
+{
+  "authorization_request": {
+    "conditions": "Only after exact detached source commit and all listed hashes are verified, with one fresh output root and no retry. A refusal or failure consumes no implicit replacement authority.",
+    "fresh_authorization_required": true,
+    "permitted_launches": 1,
+    "type": "ONE_SHOT_GPU_EXECUTION_AUTHORIZATION"
+  },
+  "cap_derivation": {
+    "audit_execution": "CPU-only against checkpoint-native tokenizer and parser; 169 dimensions 1x1 through 13x13; no task prompt, target, model construction, or GPU.",
+    "audit_path": "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_serialization_cap192_run_005/R5_CAP192_SERIALIZATION_AUDIT.json",
+    "audit_script_path": "scripts/audit_atomic_ood_identifiability_pilot_v4_r5_serialization_cap.py",
+    "audit_script_sha256": "6edf77b4557d754c45d9b149f2e8dc6c66afa34364497dff09cdf411daff6377",
+    "audit_sha256": "db9c2bcdae05c44b17e8c276801f30918ed335848593747fceac2ab9e927c4cf",
+    "eos_allowance": 1,
+    "maximum_complete_serialization_tokens": 181,
+    "maximum_dimension": [
+      13,
+      13
+    ],
+    "new_completion_cap": 192,
+    "old_cap_feasible": false,
+    "old_completion_cap": 128
+  },
+  "cpu_validation": {
+    "local_execution_tests": "PASS_16_OF_16",
+    "local_preimport": "PASS_V4R5_PREIMPORT model_imported=false gpu_used=false target_sidecar_accessed=false",
+    "remote_import_graph": "PASS on source commit adb8ec9f before audit-result preservation; no model construction/GPU/nonce claim",
+    "remote_tokenizer_parser_audit": "PASS_CPU_TOKENIZER_AND_PARSER, SHA256 db9c2bcdae05c44b17e8c276801f30918ed335848593747fceac2ab9e927c4cf"
+  },
+  "forbidden_during_review": [
+    "no GPU inference launch",
+    "no generation",
+    "no target sidecar opening",
+    "no model training or parameter update",
+    "no Gold/dGold/FINAL_AUDIT access"
+  ],
+  "kind": "R5_CAP192_SUCCESSOR_PRELAUNCH_REVIEW",
+  "only_scientific_change": "max_new_tokens changes from invalid 128 to conservative fixed 192; source hashes, fresh nonce/output and CPU audit provenance change as a consequence.",
+  "predecessor": {
+    "director_response_sha256": "e71066b09f1acc00e6e278139d5ef920b5e484a7d68035679187fb9d7bb55fa9",
+    "measurement_validity": "INVALID_NONDISCRIMINATING_GENERATION_TRUNCATION",
+    "measurement_validity_amendment_sha256": "36196be2df8beec27500193e5cf16a9fe00e5faa76c680767caa44f2a7132ae8",
+    "result_package_sha256": "f4f57befc1f83b2cf6d602c00909f1399cc48112f25893bff3bca6e364275b9c",
+    "run_id": "RUN_004_FINAL_REPLACEMENT_b04cdc8f5b6ebf30ce6f8ca8dc9511bb"
+  },
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5_CAP192",
+  "request": "Review one immutable, target-independent Cap192 successor to the invalid RUN_004 measurement. Confirm that the proposed successor changes only the completion cap and its successor identities, preserves all frozen V4 conditions, and, if satisfied, issue exactly one new explicit one-shot GPU execution authorization. Do not launch work in this review.",
+  "schema_version": 1,
+  "successor_execution_identity": {
+    "active_hard_cap_seconds": 7200,
+    "execution_package_path": "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_serialization_cap192_run_005/EXECUTION_PACKAGE.json",
+    "execution_package_sha256": "c5ef07d455081bc742621171f0ab94aa37cefed3dbf8cc3ba9f952f129deb033",
+    "fresh_remote_output_root": "/workspace/arc2/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_cap192/run_005_c902a3bcd1f740767065827f06154295",
+    "launcher_path": "scripts/launch_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192.py",
+    "launcher_sha256": "936a0f294967e8e504137c53a16429675bba157e704d868da074c679b42ef61b",
+    "nonce": "c902a3bcd1f740767065827f06154295",
+    "retry": false,
+    "source_commit": "88584d3815dddbb31d4461ed8770948b7a504e4d",
+    "source_ref": "origin/infra/arc2-r5-complete-import-graph",
+    "tests_path": "tests/test_atomic_ood_identifiability_pilot_v4_r5_cap192_execution.py",
+    "tests_sha256": "9f147234f60228dc8cea8a93d8b458e250dee90a5b7624c494292fd68eb91112",
+    "worker_path": "scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192.py",
+    "worker_sha256": "f1822378b7f3a0800d230f2cfdaf168e3911932271640404b2c049f78374765d"
+  },
+  "unchanged_scientific_conditions": [
+    "same V7, E04-E Control, and E04-E Treatment checkpoint bytes and identities",
+    "same frozen V4 192-episode cohort, prompts, demonstrations, manifest, structural cells, canonical units and sealed target sidecar",
+    "same native greedy BF16, Batch32 primary, fallback ladder, fixed physical-B1 subset, parser, canonicalizer, scorer and paired uncertainty",
+    "same target-blind raw-freeze boundary and no Gold, dGold or FINAL_AUDIT access",
+    "no training, optimizer, gradient, backward, parameter updates, TTT, augmentation, DFS or beam search"
+  ]
+}
