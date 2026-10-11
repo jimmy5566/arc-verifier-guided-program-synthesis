@@ -64,7 +64,7 @@ def main() -> None:
         "v7_reference_raw_path": relative(V7_REFERENCE), "v7_reference_raw_sha256": sha_path(V7_REFERENCE),
         "arm_order": list(ARMS), "seed": 2000031, "arms": 2, "jobs": 1, "retry": False,
         "nonce": nonce, "output_root": run_root,
-        "arm_output_roots": {arm: run_root + "/" + arm.lower() for arm in ARMS},
+        "arm_output_roots": {arm: run_root + "/arms/" + arm for arm in ARMS},
         "per_arm_runtime_cap_seconds": PER_ARM_CAP_SECONDS, "joint_runtime_cap_seconds": JOINT_CAP_SECONDS,
         "static_preflight": proof,
     }

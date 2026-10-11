@@ -30,6 +30,7 @@ class E04CExecutionContractTests(unittest.TestCase):
             binding = json.loads(out.read_text())
             self.assertTrue(binding["execution_authorized"])
             self.assertEqual(binding["arm_order"], list(execution.ARMS))
+            self.assertEqual(binding["arm_output_roots"], {arm: binding["output_root"] + "/arms/" + arm for arm in execution.ARMS})
             self.assertEqual(binding["static_preflight"]["status"], "PASS_CPU_NATIVE_SCHEDULE")
             worker.load_binding(out, Path(binding["output_root"]), commit)
 
@@ -41,6 +42,8 @@ class E04CExecutionContractTests(unittest.TestCase):
         with self.assertRaises(execution.E04CFailure):
             execution.build_arm_samples(execution.ARMS[1], schedules[execution.ARMS[1]])
         schedules[execution.ARMS[1]]["episodes"][96]["treatment_task"] = original
+
+
 
 
 if __name__ == "__main__":
