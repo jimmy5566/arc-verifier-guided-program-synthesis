@@ -1,0 +1,22 @@
+{
+    "brief_type":  "DIRECTOR_ONE_SHOT_GPU_EXECUTION_AUTHORIZATION_REQUEST",
+    "protocol_id":  "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5",
+    "source_commit":  "dc34052f4ef9cfa9ca9dcfb01a7c574f4e20556e",
+    "package_sha256":  "9a5fdb8cb1bab8eaf2c962f30d5fbddc4a09a5b6541c7a2a11a447eaebb4c924",
+    "worker_sha256":  "dd1fb66c7b6642f0868d2dc817adc39e48fdb7183eef781dde1dee1b4e3ef9f0",
+    "launcher_sha256":  "283f49ce1397f705546b7c57314cb66cac783e8e307611243801eb42effc1f74",
+    "tests_sha256":  "33b5c17c831d1cd2334ff0ffd996878fb1aff8d6da260d49c6b9a2352bfe74a4",
+    "nonce":  "04bc2150f63f9114e0f853c49257a594",
+    "output_root":  "/workspace/arc2/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5/run_001_04bc2150f63f9114e0f853c49257a594",
+    "active_hard_cap_seconds":  7200,
+    "retry":  false,
+    "request":  "Authorize exactly one detached no-update target-blind V4 R5 collection only after every bound gate passes. R5 preserves the frozen V4 science and adds verified sidecar isolation, deterministic tokenizer-length bucketing, and base/V7/native-runtime identity checks. No training, optimizer, backward, Gold, dGold, FINAL_AUDIT, pre-freeze sidecar access, retry, or replacement run.",
+    "final_repair_evidence":  {
+                                  "pre_freeze_sidecar_access":  "CPU_TEST_PASS_NO_STAT_OPEN_OR_HASH",
+                                  "primary_length_bucketing":  "CPU_TEST_PASS_TOKEN_LENGTH_THEN_EPISODE_ID",
+                                  "base_manifest_v7_adapter_native_runtime":  "CPU_TEST_PASS_FAILS_BEFORE_MODEL_IMPORT_ON_CORRUPTION",
+                                  "raw_rows_expected":  612,
+                                  "primary_rows_expected":  576,
+                                  "b1_rows_expected":  36
+                              }
+}
