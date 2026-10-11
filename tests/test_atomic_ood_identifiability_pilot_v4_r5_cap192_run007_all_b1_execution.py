@@ -202,3 +202,18 @@ def test_cap192_audit_source_is_target_free_and_covers_full_dimension_bound():
  assert 'max_record["completion_tokens"]!=181' in source
  assert 'target_sidecar_accessed' in source and 'model_loaded' in source and 'gpu_used' in source
  assert 'INPUT_PROMPTS' not in source and 'SEALED_TARGET' not in source
+
+def test_collection_deadline_uses_frozen_25200_cap():
+ w=worker()
+ class Clock:
+  def __init__(self,after): self.after=after; self.calls=0
+  def __call__(self):
+   self.calls+=1; return 0 if self.calls==1 else self.after
+ def fake(arm,rows,batch): return [{'generated_token_ids':[1],'decoded_text':'x','parser_valid':False,'parsed_grid':None,'prompt_tokens':1} for _ in rows]
+ with tempfile.TemporaryDirectory() as d:
+  result=w.collect_with_generator(OUT/'EXECUTION_PACKAGE.json',Path(d)/'after_7200',fake,clock=Clock(7201))
+  assert result['raw_rows']==612
+  try: w.collect_with_generator(OUT/'EXECUTION_PACKAGE.json',Path(d)/'at_cap',fake,clock=Clock(25200))
+  except w.V4ExecutionFailure as e: assert str(e)=='V4R7_ACTIVE_CAP_EXCEEDED'
+  else: raise AssertionError('frozen 25200-second boundary accepted')
+ assert 'clock()+7200' not in (ROOT/'scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192_run007_all_b1.py').read_text()

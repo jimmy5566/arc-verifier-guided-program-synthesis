@@ -130,7 +130,9 @@ def length_bucketed_primary(prompts:list[dict[str,Any]], token_length:Callable[[
     return sorted(prompts,key=lambda row:(int(token_length(row)),str(row['episode_id'])))
 
 def collect_with_generator(package_path:Path, output:Path, generator:Callable[[str,list[dict[str,Any]],int],list[dict[str,Any]]], *, primary_rows:list[dict[str,Any]]|None=None, after_arm:Callable[[str],None]|None=None, clock:Callable[[],float]=time.monotonic)->dict[str,Any]:
-    package=read_json(package_path); prompts=read_jsonl(ROOT/'experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/INPUT_PROMPTS.jsonl'); primary_prompts=prompts if primary_rows is None else primary_rows; selected=set(package['batching']['fixed_b1_subset']['episode_ids']); deadline=clock()+7200; partial=[]
+    package=read_json(package_path); prompts=read_jsonl(ROOT/'experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/INPUT_PROMPTS.jsonl'); primary_prompts=prompts if primary_rows is None else primary_rows; selected=set(package['batching']['fixed_b1_subset']['episode_ids']); active_cap=package.get('runtime_estimate',{}).get('active_hard_cap_seconds');
+    if active_cap != 25200: raise V4ExecutionFailure('V4R7_CAP')
+    deadline=clock()+active_cap; partial=[]
     if len(primary_prompts)!=192 or {x['episode_id'] for x in primary_prompts}!={x['episode_id'] for x in prompts}: raise V4ExecutionFailure('V4R7_PRIMARY_ORDER_COVERAGE')
     for arm in package['three_checkpoints']:
         primary=[]

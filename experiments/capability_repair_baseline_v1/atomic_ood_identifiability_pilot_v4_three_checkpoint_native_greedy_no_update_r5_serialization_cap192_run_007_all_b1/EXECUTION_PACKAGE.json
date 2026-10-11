@@ -122,7 +122,7 @@
                              "sealed_target_sidecar":  "SEALED_TARGET_SIDECAR.jsonl",
                              "sealed_target_sidecar_may_open_before_raw_freeze":  false
                          },
-    "tests_sha256":  "9435738ca0e56533bdc96f0db784f88cbc85a3af7dc3b442322a22e1f01d3db6",
+    "tests_sha256":  "8805137dff31b4afeb2b4128f19c4416585a074aa010ef6fe19e0d107d81ac93",
     "three_checkpoints":  [
                               {
                                   "adapter_config_sha256":  "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
@@ -165,5 +165,5 @@
                       "sealed_target_sidecar_sha256":  "62217a9963a8ba62de46d9cc865426e82b8b6fb990eb4afbeda2734b59610903",
                       "sha256":  "523b904ab3b712095009d0be3e29151aa8d8a563ac663a15ff3789a0192926bd"
                   },
-    "worker_sha256":  "b1e8dd31c12d61906689908192ee2291782008bcbc38408b16b08b9a9d7f7657"
+    "worker_sha256":  "99759129c59365b861dc316f9f6caae94aba4cdf7c891198e28df618600e3f63"
 }
