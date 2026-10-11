@@ -1,0 +1,23 @@
+{
+  "automatic_retry_or_expansion": false,
+  "checkpoint_promotion": "REJECTED",
+  "director_response_sha256": "38d918852ac241d4a4435610d65e3e1ec4e2ed6cb2606ffdfd6c33c18887db59",
+  "frozen_artifacts": {
+    "E05_V3_RUN_004_CPU_EXACT_GRID_RESULT.json": "0981ecf48a87f864c6c71eaa530a1993f41bc27ddd7b27c48001c06d7d220181",
+    "E05_V3_RUN_004_EVIDENCE_PRESERVATION_RECEIPT.json": "35a6b2cdd52f712c15dd39d567ad359892f2c0b9be1c2952f47e41b92042a3b1",
+    "E05_V3_RUN_004_RESULT_REVIEW_BRIEF.json": "63ea5b935f53079abad01e97d3507de3c766bc9bc5c2ba765f33326d8a407d12",
+    "E05_V3_RUN_004_RESULT_REVIEW_BRIEF_RESPONSE.json": "38d918852ac241d4a4435610d65e3e1ec4e2ed6cb2606ffdfd6c33c18887db59"
+  },
+  "further_gpu_work_authorized": false,
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "reviewed_brief_sha256": "63ea5b935f53079abad01e97d3507de3c766bc9bc5c2ba765f33326d8a407d12",
+  "run_id": "run_004_33d7c84be6e74b7bbe76001001fe0aad",
+  "schema_version": 1,
+  "scope": "REUSED_SYNTHETIC_DEVELOPMENT_COHORT_ONLY",
+  "sealed_boundaries": [
+    "NO_GOLD",
+    "NO_DGOLD",
+    "NO_FINAL_AUDIT"
+  ],
+  "status": "COMPLETE_VALID_INCONCLUSIVE"
+}

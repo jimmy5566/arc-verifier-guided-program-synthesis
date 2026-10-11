@@ -1,0 +1,86 @@
+{
+  "response_id": "E05_V3_RUN_004_RESULT_REVIEW_BRIEF_RESPONSE",
+  "reviewed_brief_sha256": "63ea5b935f53079abad01e97d3507de3c766bc9bc5c2ba765f33326d8a407d12",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "CPU_ONLY_E05_V3_RUN_004_RESULT_PRESERVATION_AND_ROUTE_CLOSURE",
+  "next_action": "Preserve and hash the valid RUN_004 result, raw-output identities, receipts, and this Director response; record E05-V3 as COMPLETE_VALID_INCONCLUSIVE with no checkpoint promotion; close the current marker-replay confirmation route without rerun, expansion, training, or new GPU work; then return workflow control through Governor with a separate CPU-only scientific-planning review brief for selection of the next research stage.",
+  "observed_result": {
+    "process_validity": "VALID_COMPLETE_NO_UPDATE",
+    "frozen_classification": "INCONCLUSIVE",
+    "primary_treatment_minus_raw_v7": {
+      "fixed_turn_rotation_control_delta_of_192": 1,
+      "fixed_turn_rotation_control_ci95": [
+        0,
+        3
+      ],
+      "marker_conditioned_rotation_delta_of_192": 1,
+      "marker_conditioned_rotation_ci95": [
+        0,
+        3
+      ],
+      "marker_binding_control_delta_of_192": 0,
+      "no_transform_retention_delta_of_192": -8,
+      "no_transform_retention_ci95": [
+        -13,
+        -3
+      ]
+    },
+    "supportive_treatment_minus_trained_control": {
+      "fixed_turn_rotation_control_delta_of_192": 0,
+      "marker_conditioned_rotation_delta_of_192": 0,
+      "marker_binding_control_delta_of_192": 0,
+      "no_transform_retention_delta_of_192": 4,
+      "no_transform_retention_ci95": [
+        0,
+        11
+      ]
+    },
+    "absolute_marker_binding_correct_of_192": {
+      "raw_v7": 0,
+      "trained_control": 0,
+      "treatment": 0
+    }
+  },
+  "mechanism_assessment": {
+    "confidence": "ESTABLISHED_NO_PROSPECTIVE_TRANSFER_SUCCESS__SUPPORTED_HYPOTHESIS_OF_DISTRIBUTION_SPECIFIC_OR_NONCOMPOSITIONAL_LEARNING",
+    "established": [
+      "RUN_004 is a valid target-isolated native-Greedy Batch-1 no-update measurement on the frozen E05-V3 synthetic development cohort.",
+      "Treatment did not meet the frozen minimum effect or positive-lower-bound requirements on fixed-turn rotation or marker-conditioned rotation relative to unchanged V7.",
+      "Treatment and the matched trained Control are identical in exact-grid count on fixed-turn rotation, marker-conditioned rotation, and marker binding, so this cohort provides no supportive evidence that marker replay caused transferable gains on those outcomes.",
+      "All three checkpoints score 0 of 192 on marker binding. The frozen protection flag therefore reflects equality at a floor and is not evidence of preserved marker-binding capability.",
+      "Treatment loses 8 of 192 no-transform retention episodes relative to raw V7, with the paired interval entirely below zero; this is a measurable retention cost even though it lies exactly on the frozen admissibility boundary.",
+      "The E05 route does not independently confirm the large gains observed on the reused E04 development cohort and does not justify checkpoint promotion."
+    ],
+    "supported_hypothesis": "The E04-E intervention learned behavior that was specific to the prior cohort or prompt/task structure rather than a robust, compositionally transferable marker-conditioned orientation capability. A representation/grounding limitation or insufficient structural coverage is more consistent with RUN_004 than a successful general marker-binding repair, but causality is not identified.",
+    "unknown": [
+      "Whether failures arise primarily from marker grounding, orientation execution, output construction, or their composition.",
+      "Whether a broader structurally varied curriculum, intermediate supervision, or another model-weight objective would improve independent transfer.",
+      "Whether the retention loss and absent transfer are caused by gradient interference, data coverage, optimization duration, or representational limitations.",
+      "Whether any result transfers to separated ARC development tasks."
+    ],
+    "research_bottleneck": "The programme lacks mechanism-resolving evidence that separates marker grounding from transformation execution and structural compositional transfer; repeating the same replay intervention would have low information value."
+  },
+  "current_protocol_disposition": {
+    "scope": "E05_V3_CURRENT_PROTOCOL_ONLY",
+    "status": "COMPLETE_VALID_INCONCLUSIVE",
+    "checkpoint_promotion": "REJECTED",
+    "automatic_retry_or_expansion": false,
+    "independent_generalization_claim": false,
+    "entire_arc2_research_program": "ACTIVE"
+  },
+  "future_scientific_direction_note": "A subsequent, separately reviewed stage should use the frozen RUN_004 outputs and existing evidence to select the smallest mechanism-discriminating question before any new training. This response does not authorize that analysis or experiment.",
+  "frozen_conditions": [
+    "RUN_004 prompts, target sidecar, three checkpoint identities, raw outputs, parser/scorer outputs, bootstrap seed 20261012, 10000 replicates, receipts, and CPU result remain immutable.",
+    "The frozen INCONCLUSIVE classification and development-evidence scope must not be relabeled as success, failure of all marker-training approaches, or independent ARC generalization evidence.",
+    "Gold, dGold, and FINAL_AUDIT remain sealed."
+  ],
+  "forbidden_actions": [
+    "Do not rerun, expand, or adapt RUN_004 and do not alter thresholds, bootstrap rules, prompts, targets, conditions, or checkpoint identities.",
+    "Do not promote the Treatment checkpoint or describe equality at 0 of 192 as marker-binding preservation evidence.",
+    "Do not launch training, inference, generation, gradient work, or another GPU experiment from this response.",
+    "Do not open Gold, dGold, or FINAL_AUDIT."
+  ],
+  "further_gpu_work_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

@@ -1,0 +1,28 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "CONTINUE_DIRECTOR",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "brief_type": "DIRECTOR_E05_V3_POST_RESULT_CPU_ONLY_SCIENTIFIC_PLANNING_REVIEW",
+  "evidence_to_consider": {
+    "finding": "E05 V3 is COMPLETE_VALID_INCONCLUSIVE: no fixed-turn or marker-conditioned transfer success, marker binding at a 0/192 floor in all arms, and treatment no-transform retention -8/192 versus V7.",
+    "route_closure_receipt": "E05_V3_RUN_004_ROUTE_CLOSURE_RECEIPT.json",
+    "route_closure_sha256": "2096e3508be7c033f3587758dac6feeb66439366f20241095a931973fc487a33"
+  },
+  "forbidden_actions": [
+    "Do not reinterpret E05 as success or independent ARC generalization.",
+    "Do not approve rerun, expansion, or training in this planning response.",
+    "Do not access Gold, dGold, or FINAL_AUDIT."
+  ],
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "request": "Choose the smallest next mechanism-discriminating scientific question using only frozen E05 RUN_004 and prior preserved evidence. This review may authorize CPU-only planning/preparation only; it must not authorize model loading, GPU work, training, inference, generation, gradients, target expansion, or access to Gold/dGold/FINAL_AUDIT.",
+  "required_decision_content": [
+    "one falsifiable mechanism question",
+    "smallest evidence path",
+    "what current frozen evidence can answer CPU-only",
+    "what new independent cohort or execution authorization would be required before any GPU work",
+    "forbidden adaptive reuse of E05 targets"
+  ]
+}
