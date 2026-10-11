@@ -1,0 +1,28 @@
+{
+  "run_id": "RUN_004_FINAL_REPLACEMENT_b04cdc8f5b6ebf30ce6f8ca8dc9511bb",
+  "remote_output_root": "/workspace/arc2/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5/run_004_b04cdc8f5b6ebf30ce6f8ca8dc9511bb",
+  "retrieval": "DIRECT_SSH_COMMAND_CONTROL_BOUNDED_BYTE_VERIFIED",
+  "files": {
+    "TERMINAL_RECEIPT.json": {
+      "sha256": "0f652111117b928b529a9bf15c9a23a682ec418f492e7b7b2943dca67aca1392",
+      "bytes": 1473
+    },
+    "V7_RAW_TARGET_BLIND.jsonl": {
+      "sha256": "dbef94d578e706091f0126665a063d20e56b46e90ede66ee2e9d6d06e453bdc2",
+      "bytes": 152020
+    },
+    "E04_E_CONTROL_RAW_TARGET_BLIND.jsonl": {
+      "sha256": "f2d2ad065cd496a39d88d893ed0330a5978758864bfcdb3897955d5defd55b36",
+      "bytes": 154264
+    },
+    "E04_E_TREATMENT_RAW_TARGET_BLIND.jsonl": {
+      "sha256": "857bf19615802fcf5ace68c546abc7c7bc5cee9d76ab75293f6eaa4fb7f1c100",
+      "bytes": 154672
+    }
+  },
+  "launch_log": {
+    "remote_path": "/root/arc2_r5_0206e635/RUN_004_LAUNCH.log",
+    "sha256": "310d33f7f407cde0eb85f42ce6037c4b3e8c40e1d7ea91943816e3b8d82332b4",
+    "bytes": 4722
+  }
+}

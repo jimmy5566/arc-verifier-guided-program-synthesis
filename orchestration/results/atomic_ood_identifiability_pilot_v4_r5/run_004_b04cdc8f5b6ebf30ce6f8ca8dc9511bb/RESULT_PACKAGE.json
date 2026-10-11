@@ -1,0 +1,348 @@
+{
+  "arms": {
+    "E04_E_CONTROL": {
+      "b1": {
+        "canonical_unit_macro_exact_grid_rate": 0.0,
+        "canonical_units": {
+          "U00": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 1
+          },
+          "U01": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 1
+          },
+          "U02": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 2
+          },
+          "U03": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 2
+          },
+          "U04": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 2
+          },
+          "U05": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 2
+          },
+          "U06": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 1
+          },
+          "U07": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 1
+          }
+        },
+        "exact_grid_rate": 0.0,
+        "exact_grid_rows": 0,
+        "parser_valid_rows": 0,
+        "rows": 12
+      },
+      "primary": {
+        "canonical_unit_macro_exact_grid_rate": 0.0,
+        "canonical_units": {
+          "U00": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U01": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U02": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U03": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U04": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U05": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U06": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U07": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          }
+        },
+        "exact_grid_rate": 0.0,
+        "exact_grid_rows": 0,
+        "parser_valid_rows": 0,
+        "rows": 192
+      }
+    },
+    "E04_E_TREATMENT": {
+      "b1": {
+        "canonical_unit_macro_exact_grid_rate": 0.0,
+        "canonical_units": {
+          "U00": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 1
+          },
+          "U01": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 1
+          },
+          "U02": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 2
+          },
+          "U03": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 2
+          },
+          "U04": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 2
+          },
+          "U05": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 2
+          },
+          "U06": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 1
+          },
+          "U07": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 1
+          }
+        },
+        "exact_grid_rate": 0.0,
+        "exact_grid_rows": 0,
+        "parser_valid_rows": 0,
+        "rows": 12
+      },
+      "primary": {
+        "canonical_unit_macro_exact_grid_rate": 0.0,
+        "canonical_units": {
+          "U00": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U01": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U02": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U03": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U04": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U05": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U06": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U07": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          }
+        },
+        "exact_grid_rate": 0.0,
+        "exact_grid_rows": 0,
+        "parser_valid_rows": 0,
+        "rows": 192
+      }
+    },
+    "V7": {
+      "b1": {
+        "canonical_unit_macro_exact_grid_rate": 0.0,
+        "canonical_units": {
+          "U00": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 1
+          },
+          "U01": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 1
+          },
+          "U02": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 2
+          },
+          "U03": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 2
+          },
+          "U04": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 2
+          },
+          "U05": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 2
+          },
+          "U06": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 1
+          },
+          "U07": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 1
+          }
+        },
+        "exact_grid_rate": 0.0,
+        "exact_grid_rows": 0,
+        "parser_valid_rows": 0,
+        "rows": 12
+      },
+      "primary": {
+        "canonical_unit_macro_exact_grid_rate": 0.0,
+        "canonical_units": {
+          "U00": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U01": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U02": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U03": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U04": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U05": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U06": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          },
+          "U07": {
+            "exact_grid_rows": 0,
+            "rate": 0.0,
+            "rows": 24
+          }
+        },
+        "exact_grid_rate": 0.0,
+        "exact_grid_rows": 0,
+        "parser_valid_rows": 0,
+        "rows": 192
+      }
+    }
+  },
+  "b1_conclusion_stability": {
+    "exact_grid_rate_range": [
+      0.0,
+      0.0
+    ],
+    "parser_valid_rate_range": [
+      0.0,
+      0.0
+    ],
+    "status": "PASS_ALL_ARMS_ZERO_EXACT_GRID_AND_ZERO_PARSE_VALID"
+  },
+  "interpretation": "All three arms produced zero parse-valid and zero exact-grid outputs on both primary and fixed B1 rows. The planned paired exact-grid contrasts are exactly zero; this is valid negative development evidence, not support for a capability improvement.",
+  "paired_primary_effects": {
+    "E04_E_CONTROL_minus_V7": {
+      "bootstrap_95_ci": [
+        0.0,
+        0.0
+      ],
+      "estimand": "equal_weight_canonical_unit_exact_grid_rate_delta",
+      "point_estimate": 0.0,
+      "units": 8
+    },
+    "E04_E_TREATMENT_minus_V7": {
+      "bootstrap_95_ci": [
+        0.0,
+        0.0
+      ],
+      "estimand": "equal_weight_canonical_unit_exact_grid_rate_delta",
+      "point_estimate": 0.0,
+      "units": 8
+    }
+  },
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5",
+  "raw_evidence_sha256": {
+    "E04_E_CONTROL": "f2d2ad065cd496a39d88d893ed0330a5978758864bfcdb3897955d5defd55b36",
+    "E04_E_TREATMENT": "857bf19615802fcf5ace68c546abc7c7bc5cee9d76ab75293f6eaa4fb7f1c100",
+    "V7": "dbef94d578e706091f0126665a063d20e56b46e90ede66ee2e9d6d06e453bdc2"
+  },
+  "receipt_sha256": "0f652111117b928b529a9bf15c9a23a682ec418f492e7b7b2943dca67aca1392",
+  "run_id": "RUN_004_FINAL_REPLACEMENT_b04cdc8f5b6ebf30ce6f8ca8dc9511bb",
+  "scientific_scope": "DEVELOPMENT_EVIDENCE_ONLY_NOT_INDEPENDENT_ARC_GENERALIZATION_CONFIRMATION",
+  "sealed_target_sidecar_sha256": "62217a9963a8ba62de46d9cc865426e82b8b6fb990eb4afbeda2734b59610903",
+  "status": "COMPLETE_TARGET_BLIND_CPU_SCORED",
+  "target_content_released": false
+}

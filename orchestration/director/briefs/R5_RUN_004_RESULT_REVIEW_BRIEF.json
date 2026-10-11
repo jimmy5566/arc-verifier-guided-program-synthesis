@@ -1,0 +1,46 @@
+{
+  "execution_boundary": {
+    "backward_calls": 0,
+    "final_audit_opened": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "status": "COMPLETE_NO_UPDATE_TARGET_BLIND",
+    "target_sidecar_accessed_during_generation": false,
+    "wall_seconds": 1567.0833401456475
+  },
+  "interpretation_boundary": "This reuses a development cohort and is not independent ARC generalization confirmation. It supplies no evidence that either E04-E arm improves native-Greedy exact-grid accuracy.",
+  "kind": "R5_RESULT_REVIEW",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5",
+  "request": "Review the preserved target-blind development result. Decide whether the observed all-zero native-Greedy exact-grid result supplies any support for the control or treatment capability claim, and state the scientifically justified next disposition. Do not authorize a rerun or new GPU work in this review.",
+  "results": {
+    "all_arms_exact_grid_rows_primary": 0,
+    "all_arms_parse_valid_rows_primary": 0,
+    "b1_rows_per_arm": 12,
+    "b1_stability": "PASS_ALL_ARMS_ZERO_EXACT_GRID_AND_ZERO_PARSE_VALID",
+    "canonical_units": 8,
+    "control_minus_v7_point_and_ci": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "primary_rows_per_arm": 192,
+    "treatment_minus_v7_point_and_ci": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "run_id": "RUN_004_FINAL_REPLACEMENT_b04cdc8f5b6ebf30ce6f8ca8dc9511bb",
+  "schema_version": 1,
+  "verified_evidence": {
+    "raw_sha256": {
+      "E04_E_CONTROL": "f2d2ad065cd496a39d88d893ed0330a5978758864bfcdb3897955d5defd55b36",
+      "E04_E_TREATMENT": "857bf19615802fcf5ace68c546abc7c7bc5cee9d76ab75293f6eaa4fb7f1c100",
+      "V7": "dbef94d578e706091f0126665a063d20e56b46e90ede66ee2e9d6d06e453bdc2"
+    },
+    "result_package_path": "orchestration/results/atomic_ood_identifiability_pilot_v4_r5/run_004_b04cdc8f5b6ebf30ce6f8ca8dc9511bb/RESULT_PACKAGE.json",
+    "result_package_sha256": "f4f57befc1f83b2cf6d602c00909f1399cc48112f25893bff3bca6e364275b9c",
+    "sealed_target_sidecar_sha256": "62217a9963a8ba62de46d9cc865426e82b8b6fb990eb4afbeda2734b59610903",
+    "terminal_receipt_sha256": "0f652111117b928b529a9bf15c9a23a682ec418f492e7b7b2943dca67aca1392"
+  }
+}

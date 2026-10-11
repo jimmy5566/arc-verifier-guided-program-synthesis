@@ -1,0 +1,50 @@
+{
+  "b1_distinct_rows": 36,
+  "backward_calls": 0,
+  "final_audit_opened": false,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "preflight": {
+    "arms": [
+      "V7",
+      "E04_E_CONTROL",
+      "E04_E_TREATMENT"
+    ],
+    "b1_rows_per_arm": 12,
+    "gpu_used": false,
+    "model_imported": false,
+    "optimizer_steps": 0,
+    "prompt_rows": 192,
+    "status": "PASS_V4R5_PREIMPORT",
+    "target_sidecar_accessed": false
+  },
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5",
+  "raw_evidence": [
+    {
+      "arm_id": "V7",
+      "b1_rows": 12,
+      "path": "V7_RAW_TARGET_BLIND.jsonl",
+      "primary_rows": 192,
+      "sha256": "dbef94d578e706091f0126665a063d20e56b46e90ede66ee2e9d6d06e453bdc2"
+    },
+    {
+      "arm_id": "E04_E_CONTROL",
+      "b1_rows": 12,
+      "path": "E04_E_CONTROL_RAW_TARGET_BLIND.jsonl",
+      "primary_rows": 192,
+      "sha256": "f2d2ad065cd496a39d88d893ed0330a5978758864bfcdb3897955d5defd55b36"
+    },
+    {
+      "arm_id": "E04_E_TREATMENT",
+      "b1_rows": 12,
+      "path": "E04_E_TREATMENT_RAW_TARGET_BLIND.jsonl",
+      "primary_rows": 192,
+      "sha256": "857bf19615802fcf5ace68c546abc7c7bc5cee9d76ab75293f6eaa4fb7f1c100"
+    }
+  ],
+  "raw_rows": 612,
+  "runtime_binding_sha256": "52430c447f4f5fbd516017d399261396247eaf321f887b07eadc43dd7b659643",
+  "status": "COMPLETE_NO_UPDATE_TARGET_BLIND",
+  "target_sidecar_accessed": false,
+  "wall_seconds": 1567.0833401456475
+}
