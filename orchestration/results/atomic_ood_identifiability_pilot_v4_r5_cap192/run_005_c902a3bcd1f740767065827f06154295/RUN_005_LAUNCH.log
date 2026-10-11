@@ -1,0 +1,35 @@
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:27<00:27, 27.51s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:41<00:00, 19.75s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:41<00:00, 20.92s/it]
+Traceback (most recent call last):
+  File "/root/arc2_r5_cap192_88584d38/scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192.py", line 215, in <module>
+    if __name__=='__main__': main()
+                             ^^^^^^
+  File "/root/arc2_r5_cap192_88584d38/scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192.py", line 209, in main
+    preflight=validate_preimport(a.package,output_root=a.output_root,binding=binding); claimed=claim_nonce(read_json(a.package),a.output_root); a.output_root.mkdir(parents=True); result=execute_real(a.package,a.runtime_binding,a.output_root); terminal_receipt(a.output_root,status='COMPLETE_NO_UPDATE_TARGET_BLIND',runtime_binding_sha256=sha(a.runtime_binding),preflight=preflight,wall_seconds=time.monotonic()-started,**result); finalize_nonce(claimed,'COMPLETE')
+                                                                                                                                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/arc2_r5_cap192_88584d38/scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192.py", line 199, in execute_real
+    result=collect_with_generator(package_path,output,generator,primary_rows=primary_rows,after_arm=release)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/arc2_r5_cap192_88584d38/scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192.py", line 142, in collect_with_generator
+    out=generator(arm['arm_id'],batch,len(batch))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/arc2_r5_cap192_88584d38/scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192.py", line 182, in generator
+    got=Path(hf_hub_download(arm['repository']['repo_id'],filename=arm['repository_path'].rsplit('/',1)[0]+'/'+filename,repo_type='model',revision=arm['repository']['immutable_revision'],token=True,local_dir=str(adapter),force_download=True))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/arc2_r5_0206e635/.venv-r5/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/arc2_r5_0206e635/.venv-r5/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 976, in hf_hub_download
+    hf_headers = build_hf_headers(
+                 ^^^^^^^^^^^^^^^^^
+  File "/root/arc2_r5_0206e635/.venv-r5/lib/python3.12/site-packages/huggingface_hub/utils/_deprecation.py", line 101, in inner_f
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/root/arc2_r5_0206e635/.venv-r5/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/root/arc2_r5_0206e635/.venv-r5/lib/python3.12/site-packages/huggingface_hub/utils/_headers.py", line 126, in build_hf_headers
+    token_to_send = get_token_to_send(token)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/arc2_r5_0206e635/.venv-r5/lib/python3.12/site-packages/huggingface_hub/utils/_headers.py", line 159, in get_token_to_send
+    raise LocalTokenNotFoundError(
+huggingface_hub.errors.LocalTokenNotFoundError: Token is required (`token=True`), but no token found. You need to provide a token or be logged in to Hugging Face with `hf auth login` or `huggingface_hub.login`. See https://huggingface.co/settings/tokens.
