@@ -29,6 +29,7 @@ class E04CExecutionContractTests(unittest.TestCase):
                 __import__("sys").argv = previous
             binding = json.loads(out.read_text())
             self.assertTrue(binding["execution_authorized"])
+            self.assertEqual(binding["director_response_sha256"], "121f314f1651929d2a857d096bcc43a89676dcbe52235fb6b49d0520aca90a4f")
             self.assertEqual(binding["arm_order"], list(execution.ARMS))
             self.assertEqual(binding["arm_output_roots"], {arm: binding["output_root"] + "/arms/" + arm for arm in execution.ARMS})
             self.assertEqual(binding["static_preflight"]["status"], "PASS_CPU_NATIVE_SCHEDULE")

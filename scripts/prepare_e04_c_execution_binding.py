@@ -14,7 +14,7 @@ if str(ROOT) not in sys.path:
 from scripts.e04_c_matched_rotation_execution import (ARMS, BASE, JOINT_CAP_SECONDS, PER_ARM_CAP_SECONDS,
     SCHEDULE, atomic_json, relative, sha_path, static_schedule_preflight)
 
-RESPONSE = ROOT / "orchestration/director/responses/DIRECTOR_PRELAUNCH_REVIEW_BRIEF_V1_RESPONSE.json"
+RESPONSE = ROOT / "orchestration/director/responses/E04_C_RUN_001_REPLACEMENT_EXECUTION_AUTHORIZATION_BRIEF_V1_RESPONSE.json"
 WORKER = ROOT / "scripts/run_e04_c_matched_rotation_repair_pilot.py"
 EVALUATOR = ROOT / "scripts/score_e04_c_matched_rotation_repair_pilot.py"
 LAUNCHER = ROOT / "scripts/launch_e04_c_matched_rotation_repair_pilot.py"
@@ -33,7 +33,7 @@ def main() -> None:
     response = json.loads(RESPONSE.read_text(encoding="utf-8"))
     if response.get("decision") != "CONTINUE_CONTROLLER":
         raise SystemExit("E04C_DIRECTOR_DECISION_NOT_AUTHORIZING")
-    auth = response.get("execution_authorization", {})
+    auth = response.get("replacement_execution_authorization", {})
     if not (auth.get("gpu_training_authorized") and auth.get("post_training_b1_generation_authorized") and auth.get("post_freeze_cpu_scoring_authorized")):
         raise SystemExit("E04C_DIRECTOR_EXECUTION_SCOPE")
     worker_source_commit = args.worker_source_commit or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
@@ -45,7 +45,7 @@ def main() -> None:
     binding = {
         "schema_version": 1,
         "protocol_id": proof["protocol_id"],
-        "authorization_id": "DIRECTOR_PRELAUNCH_REVIEW_BRIEF_V1_RESPONSE",
+        "authorization_id": response.get("response_id", "E04_C_REPLACEMENT_EXECUTION_AUTHORIZATION_BRIEF_V1_RESPONSE"),
         "director_response_path": relative(RESPONSE), "director_response_sha256": sha_path(RESPONSE),
         # The binding is committed after this worker snapshot.  A launcher
         # supplies its exact binding-containing launch commit at runtime, so
