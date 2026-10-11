@@ -1,0 +1,13 @@
+{
+  "active_hard_cap_seconds": 10800,
+  "authorization": "DIRECTOR_CONDITIONAL_ONCE",
+  "config_sha256": "3cd489ec7eee8ba9f65f196f5bdbd068fa2fc25ae37ca1103725cfcf2d3ff06c",
+  "execution_binding_sha256": "15ac5ba5ceabe4eacdc5c5f6b057ea175dd06dc56d5d00b9f30d93768a710f10",
+  "nonce": "87234ead4ff345b084b526716163771f",
+  "output_root": "/workspace/arc2/e05_v3_three_arm_native_greedy/run_001_87234ead4ff345b084b526716163771f",
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "retry": false,
+  "schema_version": 1,
+  "source_commit": "0fbd20d8613f035ddaa18a9544ab3c781975e22d",
+  "worker_sha256": "443cb9ea2440316e0df1a628a797eeb8b5a8e48dbc9b44d854675bcbc4c80557"
+}
