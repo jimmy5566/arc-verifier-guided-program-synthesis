@@ -1,0 +1,122 @@
+{
+  "response_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2_PRELAUNCH_BRIEF_RESPONSE",
+  "reviewed_brief_sha256": "70c23dde44a1e595f19eae87f888a09023de62473b67b41dcf131cfe6f553d9b",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2_IMPLEMENTATION_AND_BOUNDED_EXECUTION",
+  "next_action": "Implement the approved equal-slot training worker and one fresh two-arm execution binding without changing the frozen science. The worker must compute unreduced supervised-token CE for each of the four slots, divide each slot sum by that slot's own valid supervised-token count in FP32, and backpropagate exactly 0.25 times each of the four slot means; padding, packing, raw token totals, or batch-level token means must not alter these coefficients. Add CPU numerical tests on unequal-length synthetic slots that compare both scalar loss and gradients against an explicit four-term reference, reject zero-token or duplicate/missing slots, and prove that token-weighted aggregation fails the test. Then pin this Director response, the frozen protocol and schedule identities, exact V7 checkpoint, production serializer/collator, worker/evaluator hashes, clean source commit, fixed arm order, seed, fresh nonce, and unused output roots. Before optimizer construction, verify all 384 slots per arm, 96 steps, four unique roles per step, actual supervised masks and token counts, the 96 byte-identical rotation slots, the 192 byte-identical no-transform slots, and the 96 matched control-to-marker substitutions. If every identity, loss, isolation, duplicate-job, memory, and hard-cap gate passes, run one detached experiment containing two independently initialized V7 arms under separate 3600-second caps and a 7200-second joint cap. Evaluate V7, control, and treatment with the unchanged physical-B1 native-Greedy E04 development protocol, freeze target-blind raw generations before scoring, apply only the prospective rules, preserve terminal evidence, and return one result brief for Director review. Any failed gate stops before training; no retry, expansion, checkpoint promotion, or follow-on experiment is authorized.",
+  "observed_result": {
+    "status": "CPU_ONLY_FROZEN_PROTOCOL_VALIDATED",
+    "brief_identity_verified": true,
+    "protocol_sha256": "edd79274cba909455872f19e9abf9741b59860d1a7a940082e8b65ce7c9c3d16",
+    "control_schedule_sha256": "7abe1bdaac52e448b9ed0c3e94057c2d55162130a054690242aa0ee191639022",
+    "treatment_schedule_sha256": "d1c284df3ae9b31b5120acbdab4184e0fee5c22c31d46c0e55f25de75b707395",
+    "token_accounting_sha256": "55051e05b54b6fc8cd765017846b5e4abdf30b7333a060bfa91146e39c5f7b21",
+    "cpu_validation_sha256": "83284c055dcc9a2c42e2542b795955803bcc54c63f925299bbc4aac7f04ac601",
+    "slots_per_arm": 384,
+    "optimizer_steps_per_arm": 96,
+    "fixed_turn_rotation_slots": 96,
+    "byte_identical_no_transform_slots": 192,
+    "matched_replay_swap_slots": 96,
+    "marker_candidates": 48,
+    "uses_per_marker_candidate": 2,
+    "gpu_used_during_freeze": false,
+    "model_loaded_during_freeze": false,
+    "evaluation_targets_accessed_during_freeze": false,
+    "final_audit_opened": false
+  },
+  "scientific_assessment": {
+    "confidence": "SUPPORTED_HYPOTHESIS",
+    "established": [
+      "Literal raw-token matching is infeasible because the marker and no-transform tasks have different intrinsic output lengths.",
+      "The V2 equal-slot objective removes nominal scalar-loss weighting as an arm difference by assigning every slot coefficient 0.25 after its own supervised-token mean is computed.",
+      "The frozen schedules match starting checkpoint, optimizer-step count, role positions, fixed-turn rotation exposure, 192 protected no-transform slots, recipe, seed policy, evaluation, and thresholds; the intended difference is marker-binding versus matched no-transform replay at 96 fixed positions.",
+      "All 48 legitimate TRAIN-only marker candidates occur exactly twice, while Gold, dGold, FINAL_AUDIT, and evaluation targets remained unopened during preparation."
+    ],
+    "supported_hypothesis": "Explicit equal-weight marker-binding replay may prevent the E04-C marker regression without sacrificing the fixed-turn rotation gain. This is more directly supported as the next causal test than gradient-conflict mitigation because E04-D found robustly positive start-state rotation-marker gradient alignment.",
+    "unknown": [
+      "Whether the new equal-slot control reproduces a fixed-turn rotation gain under the changed loss aggregation.",
+      "Whether marker replay improves treatment-minus-control marker-binding native-Greedy exact-grid accuracy.",
+      "Whether treatment preserves no-transform retention and rotation efficacy.",
+      "Whether any positive development result transfers to independent compositions or ARC tasks."
+    ],
+    "research_bottleneck": "A controlled weight-update experiment is now required to determine whether explicit family replay, rather than local gradient-conflict mitigation, preserves marker binding during rotation learning."
+  },
+  "scientific_design_acceptance": {
+    "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+    "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "control_arm": "96 fixed-turn rotation slots, 192 byte-identical no-transform replay slots, and 96 matched no-transform control slots",
+    "treatment_arm": "The same 96 fixed-turn rotation and 192 byte-identical no-transform slots, with marker-binding replay replacing no-transform only at the 96 fixed swap positions",
+    "common_objective": "For each step, mean supervised-token CE independently within each of four slots and average the four slot means with coefficients [0.25, 0.25, 0.25, 0.25]",
+    "single_intentional_factor": "Equal-weight marker-binding replay versus matched no-transform replay at the 96 prospectively frozen swap positions",
+    "primary_estimand": "Treatment minus control marker-binding native-Greedy exact-grid accuracy, paired by canonical base",
+    "primary_success_rule": "At least 8 additional correct marker-binding episodes of 192 and paired 10000-replicate bootstrap interval lower bound greater than zero",
+    "marker_protection_rule": "Treatment marker-binding decline versus frozen V7 must be no more than 8 of 192",
+    "rotation_efficacy_rule": "Treatment fixed-turn rotation must improve at least 8 of 192 versus V7 with interval lower bound greater than zero and may not trail control by more than 8 of 192",
+    "no_transform_retention_rule": "Treatment no-transform decline versus frozen V7 must be no more than 8 of 192",
+    "bootstrap_seed": 20261011,
+    "development_scope": "The reused E04 cohort is development evidence only and cannot establish independent ARC generalization."
+  },
+  "execution_authorization": {
+    "maximum_detached_jobs": 1,
+    "authorized_arms": 2,
+    "arm_names": [
+      "CONTROL_EQUAL_SLOT",
+      "TREATMENT_EQUAL_SLOT"
+    ],
+    "fresh_binding_required": true,
+    "fresh_nonce_required": true,
+    "fresh_output_root_per_arm_required": true,
+    "independent_fresh_v7_initialization_per_arm_required": true,
+    "same_gpu_and_runtime_stack_required": true,
+    "arm_order": [
+      "CONTROL_EQUAL_SLOT",
+      "TREATMENT_EQUAL_SLOT"
+    ],
+    "per_arm_runtime_cap_seconds": 3600,
+    "joint_runtime_cap_seconds": 7200,
+    "model_loading_authorized_after_all_gates": true,
+    "optimizer_construction_authorized_after_all_gates": true,
+    "gpu_training_authorized_after_all_gates": true,
+    "backward_and_parameter_updates_authorized_after_all_gates": true,
+    "post_training_physical_b1_native_greedy_generation_authorized": true,
+    "post_freeze_cpu_scoring_authorized": true,
+    "authorization_consumed_at_detached_launch": true,
+    "automatic_retry_authorized": false,
+    "automatic_follow_on_training_authorized": false,
+    "checkpoint_promotion_authorized": false,
+    "final_audit_authorized": false
+  },
+  "required_prelaunch_gates": [
+    "The exact launch commit is clean and identical across local, origin, and RunPod and contains the bound protocol, schedules, worker, evaluator, and tests.",
+    "The production loss implementation passes unequal-length scalar-loss and gradient-equivalence tests against the explicit four-slot reference and rejects token-weighted aggregation.",
+    "The production serializer and collator reproduce all 384 frozen tasks per arm, supervised masks, raw token counts, role positions, task hashes, schedule order, and cross-arm identity rules before optimizer construction.",
+    "Each arm starts from the exact same V7 bytes in an independent fresh process or equivalently proven clean model state; optimizer state and trained weights are never carried between arms.",
+    "Both arms use identical optimizer, learning rate, LoRA configuration, precision, step count, seed policy, hardware, runtime stack, evaluator, and thresholds except for the frozen 96-slot replay substitution.",
+    "No active duplicate scientific job exists, output roots are unused, and both worker and external watchdog enforce the per-arm and joint caps including model load, training, save, and evaluation.",
+    "Evaluation targets remain unavailable until raw target-blind generations are atomically frozen; Gold, dGold, and FINAL_AUDIT remain sealed."
+  ],
+  "result_classification": {
+    "MARKER_PRESERVATION_GAIN": "The primary rule, absolute marker-protection rule, rotation-efficacy rule, no-transform retention rule, and all validity gates pass.",
+    "NO_MARKER_REPLAY_BENEFIT": "The run is valid but the primary treatment-minus-control success rule fails while protection constraints remain within bounds; do not automatically increase replay or rerun.",
+    "PROTECTION_OR_EFFICACY_FAILURE": "Any frozen marker-protection, rotation-efficacy, or no-transform retention constraint fails; reject this treatment configuration even if a supporting metric improves.",
+    "INVALID_NOT_INTERPRETABLE": "Any identity, serializer, loss, schedule, isolation, runtime, scorer, target-blindness, or sealed-boundary gate fails."
+  },
+  "frozen_conditions": [
+    "Brief SHA256 70c23dde44a1e595f19eae87f888a09023de62473b67b41dcf131cfe6f553d9b and protocol SHA256 edd79274cba909455872f19e9abf9741b59860d1a7a940082e8b65ce7c9c3d16 remain immutable.",
+    "Control schedule SHA256 7abe1bdaac52e448b9ed0c3e94057c2d55162130a054690242aa0ee191639022, treatment schedule SHA256 d1c284df3ae9b31b5120acbdab4184e0fee5c22c31d46c0e55f25de75b707395, and token-accounting SHA256 55051e05b54b6fc8cd765017846b5e4abdf30b7333a060bfa91146e39c5f7b21 remain immutable.",
+    "Exact V7 start, common equal-slot objective, 384 slots, 96 steps, replay allocation, optimizer recipe, seed, arm order, runtime caps, evaluation cohort, decoder, scorer, bootstrap, and thresholds remain unchanged.",
+    "E04-C PROTECTION_FAILURE and E04-D LOCAL_CONFLICT_DEPRIORITIZED remain immutable historical evidence.",
+    "Gold, dGold, and FINAL_AUDIT remain sealed."
+  ],
+  "forbidden_actions": [
+    "Do not use token-weighted batch loss, alter per-slot coefficients, truncate or mask valid targets, add filler tokens, or otherwise force raw-token equality.",
+    "Do not initialize treatment from the trained control arm or compare the new treatment causally only against the historical E04-C checkpoint.",
+    "Do not change checkpoint, schedules, replay allocation, loss, optimizer, learning rate, steps, seed policy, evaluation conditions, thresholds, or caps after launch.",
+    "Do not use evaluation labels to select replay, adapt training, stop early, tune thresholds, or choose a checkpoint.",
+    "Do not retry, expand training, promote a checkpoint, begin composition training, open Gold or dGold, or access FINAL_AUDIT from this authorization."
+  ],
+  "another_director_prelaunch_review_required": false,
+  "director_result_review_required": true,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}
