@@ -1,0 +1,49 @@
+{
+  "response_id": "E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_REPLACEMENT_CPU_EXECUTION_REVIEW_BRIEF_RESPONSE",
+  "reviewed_brief_sha256": "8c9a7be5819cef9288eedba30f5e46104b9e315c37e8a5c471a806883aa9af43",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "CPU_ONLY_E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_REPLACEMENT_EXECUTION_V1",
+  "next_action": "Execute repaired implementation SHA256 22f8188dd5c3eaf3ab38917ad4c5cc58499f5341cf1e7d48bab828c5dc8d7ff6 exactly once against frozen specification SHA256 58d0bbdd8fba5f594092160f885160d69bb456fe39b6a9dd99a153c659ae3a3e. Before execution, rerun the CPU tests and verify every frozen input hash; preserve the original failed-execution receipt unchanged. On success, atomically freeze and hash the taxonomy result and a CPU execution receipt, then return one result-review brief. On any identity, grouping, exclusivity, or runtime failure, stop without retry and preserve a new failure receipt.",
+  "scientific_assessment": {
+    "confidence": "APPROVED_INFRASTRUCTURE_ONLY_REPLACEMENT_CPU_EXECUTION",
+    "established": [
+      "The consumed first authorization failed before result publication because the implementation mutated the raw-arm dictionary while iterating over it.",
+      "The failure occurred after exact artifact gates passed and did not mutate raw evidence, load a model, use GPU, generate outputs, train, expand targets, or publish a partial scientific result.",
+      "The repaired implementation hash matches the reviewed source and separates raw-arm mappings from derived category mappings.",
+      "The repaired implementation retains the frozen taxonomy precedence, canonical-base grouping, four-turn completeness, seed 20261012, 10000 replicates, percentile interval, and greater-than-0.50 lower-bound dominance rule.",
+      "CPU tests cover correct mapping, parser-invalid and non-oracle structural failure precedence, legal marker invariance, responsive wrong mapping, frozen artifact hashes, grouping, and percentile behavior."
+    ],
+    "mechanism_interpretation": "UNKNOWN_PENDING_VALID_CPU_RESULT",
+    "research_bottleneck": "The descriptive morphology result has not yet been produced; the preserved first failure is an implementation failure, not scientific evidence."
+  },
+  "frozen_conditions": [
+    "Specification SHA256 58d0bbdd8fba5f594092160f885160d69bb456fe39b6a9dd99a153c659ae3a3e and every referenced evidence SHA256 remain unchanged.",
+    "The primary scope remains MARKER_BINDING_CONTROL and MARKER_CONDITIONED_ROTATION across the same three RUN_004 arms.",
+    "Canonical base remains the 48-unit statistical unit with all four marker-turn views retained together.",
+    "Taxonomy definitions and strict order remain CORRECT_MAPPING, STRUCTURAL_OR_FORMAT_FAILURE, MARKER_INVARIANT_LEGAL_ROTATION, MARKER_RESPONSIVE_WRONG_MAPPING.",
+    "Bootstrap seed 20261012, 10000 replicates, percentile interval, dominance threshold, mixed/inconclusive rule, and descriptive-only interpretation remain unchanged.",
+    "This is exactly one replacement CPU execution; the prior failed authorization remains consumed."
+  ],
+  "forbidden_actions": [
+    "Do not change taxonomy, precedence, threshold, bootstrap, grouping, arms, conditions, inputs, parser fields, or target identities.",
+    "Do not overwrite or relabel the original failed-execution receipt and do not treat it as scientific evidence.",
+    "Do not automatically retry this replacement execution if it fails.",
+    "Do not load a model, use GPU, train, run inference or generation, perform gradient work, expand targets, or select an intervention.",
+    "Do not use E05 per-example outcomes adaptively and do not access Gold, dGold, or FINAL_AUDIT."
+  ],
+  "authorization": {
+    "replacement_cpu_execution_count": 1,
+    "cpu_tests": true,
+    "model_loading": false,
+    "gpu_work": false,
+    "training": false,
+    "inference": false,
+    "generation": false,
+    "gradient_work": false,
+    "target_expansion": false,
+    "intervention_selection": false,
+    "gold_dgold_final_audit_access": false
+  },
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

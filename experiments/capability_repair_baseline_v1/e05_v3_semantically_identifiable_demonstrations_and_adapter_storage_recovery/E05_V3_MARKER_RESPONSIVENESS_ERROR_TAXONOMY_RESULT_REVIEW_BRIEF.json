@@ -1,0 +1,86 @@
+{
+  "brief_type": "DIRECTOR_E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_RESULT_REVIEW",
+  "classification": "STRUCTURAL_EXECUTION_DOMINANT",
+  "execution_receipt_sha256": "07bd19ac26e1127ed662b8013ceedb15d7292f65a31a60c98453c47c65b66ab6",
+  "forbidden_actions": [
+    "No E05 rerun or adaptive reuse. No GPU/model/training/generation/inference/gradient work. No Gold, dGold, or FINAL_AUDIT."
+  ],
+  "interpretation_limit": "Reused synthetic development evidence only; descriptive error morphology, not causal mechanism or independent ARC generalization.",
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "request": "Review the completed frozen CPU-only descriptive taxonomy. Decide its scientific interpretation and the next research direction only; do not authorize rerun, target-adaptive training, GPU work, model loading, generation, inference, gradient work, or a training intervention from this brief.",
+  "result_sha256": "5ba74c14c4367b9fe945ac7e005a1363b339f33f43ca813f576bfdcd58d5bc49",
+  "treatment_bootstrap_ci": {
+    "MARKER_BINDING_CONTROL": {
+      "CORRECT_MAPPING": [
+        0.0,
+        0.0
+      ],
+      "MARKER_INVARIANT_LEGAL_ROTATION": [
+        0.0,
+        0.0
+      ],
+      "MARKER_RESPONSIVE_WRONG_MAPPING": [
+        0.0,
+        0.0
+      ],
+      "STRUCTURAL_OR_FORMAT_FAILURE": [
+        1.0,
+        1.0
+      ]
+    },
+    "MARKER_CONDITIONED_ROTATION": {
+      "CORRECT_MAPPING": [
+        0.0625,
+        0.2708333333333333
+      ],
+      "MARKER_INVARIANT_LEGAL_ROTATION": [
+        0.0,
+        0.0
+      ],
+      "MARKER_RESPONSIVE_WRONG_MAPPING": [
+        0.0,
+        0.0
+      ],
+      "STRUCTURAL_OR_FORMAT_FAILURE": [
+        0.7291666666666666,
+        0.9375
+      ]
+    }
+  },
+  "treatment_marker_binding": {
+    "category_counts": {
+      "CORRECT_MAPPING": 0,
+      "MARKER_INVARIANT_LEGAL_ROTATION": 0,
+      "MARKER_RESPONSIVE_WRONG_MAPPING": 0,
+      "STRUCTURAL_OR_FORMAT_FAILURE": 48
+    },
+    "category_shares": {
+      "CORRECT_MAPPING": 0.0,
+      "MARKER_INVARIANT_LEGAL_ROTATION": 0.0,
+      "MARKER_RESPONSIVE_WRONG_MAPPING": 0.0,
+      "STRUCTURAL_OR_FORMAT_FAILURE": 1.0
+    },
+    "structural_detail": {
+      "bases_with_parser_invalid": 0,
+      "bases_with_parser_valid_nonoracle": 48
+    }
+  },
+  "treatment_marker_conditioned_rotation": {
+    "category_counts": {
+      "CORRECT_MAPPING": 8,
+      "MARKER_INVARIANT_LEGAL_ROTATION": 0,
+      "MARKER_RESPONSIVE_WRONG_MAPPING": 0,
+      "STRUCTURAL_OR_FORMAT_FAILURE": 40
+    },
+    "category_shares": {
+      "CORRECT_MAPPING": 0.16666666666666666,
+      "MARKER_INVARIANT_LEGAL_ROTATION": 0.0,
+      "MARKER_RESPONSIVE_WRONG_MAPPING": 0.0,
+      "STRUCTURAL_OR_FORMAT_FAILURE": 0.8333333333333334
+    },
+    "structural_detail": {
+      "bases_with_parser_invalid": 0,
+      "bases_with_parser_valid_nonoracle": 40
+    }
+  }
+}
