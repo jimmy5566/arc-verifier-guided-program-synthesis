@@ -1,0 +1,31 @@
+{
+  "classification": "FAILED_OR_PARTIAL_INFRASTRUCTURE_OOM_NOT_INTERPRETABLE",
+  "evidence_manifest_sha256": "a8c530627b71fae502e9a3d2602e6ba956979b18808b833077f316d69402a9cf",
+  "execution_identity": {
+    "binding_sha256": "d4f6cb39d823f41471949290aac2913962c57ea784bc6d41b82272d40d5c9fab",
+    "director_response_sha256": "522b6ec111982b21411148ffc5426570fae118f57418a72aab12bc5323459bb2",
+    "launch_commit": "dd76f14b62554bee3ca7e5cf2f6d5e252885b0d6",
+    "remote_output_root": "/workspace/arc2/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/run_001_ad4c8c3491cbe20c74dfcc177be54d91",
+    "worker_source_commit": "bf1d9c2de4e12e92b1c794b68d645bd8ee06fdea"
+  },
+  "execution_observations": {
+    "cap_exit_code": 1,
+    "cap_status": "COMPLETE",
+    "control_arm_status": "FAILED_OR_PARTIAL",
+    "failure_class": "CUDA_OUT_OF_MEMORY_DURING_CONTROL_ARM_FORWARD",
+    "final_audit_opened": false,
+    "model_imported_before_failure": true,
+    "optimizer_constructed_before_failure": true,
+    "optimizer_step": "NOT_OBSERVED: failure stack is in forward; no TRAINING_PROGRESS, adapter, raw generation, or arm completion artifact exists.",
+    "parent_status": "FAILED_OR_PARTIAL",
+    "target_sidecar_accessed": false,
+    "treatment_arm_started": false,
+    "wall_seconds": 253.11359154526144
+  },
+  "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+  "repair_candidate_sha256": "2909ecafe6da86cfb12ede1dc217d77048b570e4f01b20c8c23c246a2eb719b8",
+  "required_next_decision": "A replacement detached execution requires fresh Director authorization because the one-job authorization was consumed at launch. The proposed streamed-backward change is an implementation-equivalent memory repair and has passed CPU scalar/gradient equivalence tests, but has not been GPU tested.",
+  "run_id": "RUN_001_ad4c8c3491cbe20c74dfcc177be54d91",
+  "schema_version": 1,
+  "scientific_interpretation": "NOT_RUN: no completed arm, no target-blind raw generations, no score, and no hypothesis decision."
+}

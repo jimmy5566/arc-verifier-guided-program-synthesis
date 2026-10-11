@@ -5,7 +5,7 @@ import pytest
 import torch
 import torch.nn.functional as F
 ROOT=Path(__file__).resolve().parents[1];sys.path[:0]=[str(ROOT),str(ROOT/'src')]
-from scripts.e04_e_equal_slot_loss import EqualSlotLossError,causal_slot_mean_ce,equal_slot_objective
+from scripts.e04_e_equal_slot_loss import EqualSlotLossError,backward_equal_slot_term,causal_slot_mean_ce,equal_slot_objective
 
 def slot(length:int,valid:int):
  logits=torch.randn(1,length,7,dtype=torch.float64,requires_grad=True)
@@ -32,6 +32,18 @@ def test_token_weighted_aggregation_is_not_equal_slot_objective():
   mean,count=causal_slot_mean_ce(logits,labels);token_sums.append(mean*count);counts.append(count)
  weighted=sum(token_sums)/sum(counts)
  assert not torch.allclose(objective,weighted,atol=1e-10,rtol=1e-10)
+
+def test_streamed_backward_terms_match_joint_equal_slot_gradient():
+ slots=[slot(5,1),slot(7,3),slot(9,5),slot(11,7)]
+ joint,_=equal_slot_objective([x[0] for x in slots],[x[1] for x in slots])
+ joint.backward(); reference=[x[0].grad.clone() for x in slots]
+ for logits,_ in slots: logits.grad=None
+ terms=[];counts=[]
+ for logits,labels in slots:
+  term,count=backward_equal_slot_term(logits,labels);terms.append(term);counts.append(count)
+ assert counts==[1,3,5,7]
+ assert torch.allclose(sum(terms),joint.detach(),atol=1e-6,rtol=1e-6)
+ for expected,(logits,_) in zip(reference,slots,strict=True):assert torch.allclose(expected,logits.grad,atol=1e-6,rtol=1e-6)
 
 def test_rejects_zero_and_missing_or_duplicate_slots():
  logits,labels=slot(5,1); zero=torch.full((1,5),-100,dtype=torch.long)

@@ -1,0 +1,44 @@
+{
+  "binding_sha256": "d4f6cb39d823f41471949290aac2913962c57ea784bc6d41b82272d40d5c9fab",
+  "launch_commit": "dd76f14b62554bee3ca7e5cf2f6d5e252885b0d6",
+  "model_imported": false,
+  "optimizer_constructed": false,
+  "proof": {
+    "allocation": {
+      "fixed": 192,
+      "rotation": 96,
+      "swap": 96
+    },
+    "arm_totals": {
+      "CONTROL_EQUAL_SLOT": {
+        "optimizer_steps": 96,
+        "raw_supervised_tokens": 28800,
+        "raw_transformer_tokens": 207360,
+        "slot_count": 384
+      },
+      "TREATMENT_EQUAL_SLOT": {
+        "optimizer_steps": 96,
+        "raw_supervised_tokens": 25440,
+        "raw_transformer_tokens": 204000,
+        "slot_count": 384
+      }
+    },
+    "arms": [
+      "CONTROL_EQUAL_SLOT",
+      "TREATMENT_EQUAL_SLOT"
+    ],
+    "final_audit_opened": false,
+    "four_unique_role_positions_per_step": true,
+    "marker_candidates_exactly_twice": true,
+    "model_imported": false,
+    "optimizer_constructed": false,
+    "optimizer_steps_per_arm": 96,
+    "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+    "slots_per_arm": 384,
+    "status": "PASS_E04E_CPU_SCHEDULE_AND_NATIVE_SERIALIZER",
+    "target_sidecar_accessed": false,
+    "tokenizer_loaded": false
+  },
+  "status": "PASS_CPU_NO_MODEL_IMPORT",
+  "target_sidecar_accessed": false
+}

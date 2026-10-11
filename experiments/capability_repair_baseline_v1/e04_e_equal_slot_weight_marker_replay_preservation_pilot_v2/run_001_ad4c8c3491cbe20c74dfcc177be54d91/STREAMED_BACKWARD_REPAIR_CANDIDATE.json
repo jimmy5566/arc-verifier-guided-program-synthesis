@@ -1,0 +1,17 @@
+{
+  "cpu_equivalence_test": "tests/test_e04_e_equal_slot_loss.py::test_streamed_backward_terms_match_joint_equal_slot_gradient",
+  "mechanism": "Backpropagate each independently FP32-normalized slot mean times 0.25 immediately, accumulating gradients across the frozen four-slot step so each activation graph is released before the next physical-B1 forward.",
+  "repair_id": "E04E_STREAMED_EQUAL_SLOT_BACKWARD_ACCUMULATION_V1",
+  "scientific_conditions_unchanged": [
+    "same four slots per optimizer step",
+    "same valid-label masks and per-slot FP32 CE",
+    "same coefficients [0.25,0.25,0.25,0.25]",
+    "same optimizer, checkpoint, schedules, seed, caps, arms and evaluation"
+  ],
+  "scope": "ENGINEERING_EQUIVALENT_MEMORY_REPAIR_NOT_EXECUTED",
+  "source_hashes": {
+    "scripts/e04_e_equal_slot_loss.py": "b0b81ab353b4d3e5dd80cc20ca0c52ba3ce4acc33dbce557de1123f6a73f6625",
+    "scripts/run_e04_e_equal_slot_marker_replay_pilot.py": "cca8b36461389f9bf2d3587ab4a5768d2a87b4a485d699332cfb8604103bf55c",
+    "tests/test_e04_e_equal_slot_loss.py": "67a31ec3b72ee71375ba64d454e0f36c7dc0c549a5d85736acbed9e39b0bbce9"
+  }
+}

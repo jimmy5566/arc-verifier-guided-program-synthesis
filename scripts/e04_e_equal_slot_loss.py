@@ -28,3 +28,17 @@ def equal_slot_objective(slot_logits: Sequence, slot_labels: Sequence, *, expect
         raise EqualSlotLossError('E04E_LOSS_MISSING_OR_DUPLICATE_SLOT')
     means, counts = zip(*(causal_slot_mean_ce(logits, labels, ignore_index=ignore_index) for logits, labels in zip(slot_logits, slot_labels, strict=True)), strict=True)
     return sum(means) * (1.0 / expected_slots), list(counts)
+
+def backward_equal_slot_term(slot_logits, slot_labels, *, expected_slots: int = 4, ignore_index: int = -100):
+    """Backpropagate one independently normalized term of an equal-slot step.
+
+    The caller invokes this once for each slot after ``optimizer.zero_grad``.
+    Accumulating these four backwards is mathematically the same gradient as
+    backpropagating ``equal_slot_objective`` once, while releasing each slot's
+    activation graph before the next forward.  This is required for the
+    physical-B1 E04-E worker on the 24 GiB runtime.
+    """
+    mean, count = causal_slot_mean_ce(slot_logits, slot_labels, ignore_index=ignore_index)
+    term = mean * (1.0 / expected_slots)
+    term.backward()
+    return term.detach(), count

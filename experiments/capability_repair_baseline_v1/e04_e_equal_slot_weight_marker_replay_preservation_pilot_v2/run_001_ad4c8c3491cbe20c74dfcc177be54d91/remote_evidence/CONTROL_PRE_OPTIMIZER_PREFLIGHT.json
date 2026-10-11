@@ -1,0 +1,73 @@
+{
+  "arm": "CONTROL_EQUAL_SLOT",
+  "model_imported": false,
+  "optimizer_constructed": false,
+  "runtime": {
+    "model_imported": false,
+    "optimizer_constructed": false,
+    "static": {
+      "allocation": {
+        "fixed": 192,
+        "rotation": 96,
+        "swap": 96
+      },
+      "arm_totals": {
+        "CONTROL_EQUAL_SLOT": {
+          "optimizer_steps": 96,
+          "raw_supervised_tokens": 28800,
+          "raw_transformer_tokens": 207360,
+          "slot_count": 384
+        },
+        "TREATMENT_EQUAL_SLOT": {
+          "optimizer_steps": 96,
+          "raw_supervised_tokens": 25440,
+          "raw_transformer_tokens": 204000,
+          "slot_count": 384
+        }
+      },
+      "arms": [
+        "CONTROL_EQUAL_SLOT",
+        "TREATMENT_EQUAL_SLOT"
+      ],
+      "final_audit_opened": false,
+      "four_unique_role_positions_per_step": true,
+      "marker_candidates_exactly_twice": true,
+      "model_imported": false,
+      "optimizer_constructed": false,
+      "optimizer_steps_per_arm": 96,
+      "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+      "slots_per_arm": 384,
+      "status": "PASS_E04E_CPU_SCHEDULE_AND_NATIVE_SERIALIZER",
+      "target_sidecar_accessed": false,
+      "tokenizer_loaded": false
+    },
+    "status": "PASS_PRODUCTION_SERIALIZER_COLLATOR",
+    "target_sidecar_accessed": false,
+    "tokenizer": {
+      "chat_template_source": "nvarc_official_for_missing_checkpoint_template",
+      "config_vocab_size": 16,
+      "eos_token_id": 15,
+      "pad_token_id": 13,
+      "token_mapping": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "<|endoftext|>": 13,
+        "<|im_end|>": 15,
+        "<|im_start|>": 14,
+        "assistant": 12,
+        "user": 11,
+        "\u010a": 10
+      },
+      "tokenizer_vocab_size": 16
+    }
+  },
+  "target_sidecar_accessed": false
+}

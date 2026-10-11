@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 ROOT=Path(__file__).resolve().parents[1];sys.path[:0]=[str(ROOT),str(ROOT/'src')]
 from scripts.e04_e_equal_slot_execution import (ARMS,BASE,E04EFailure,JOINT_CAP_SECONDS,PER_ARM_CAP_SECONDS,PROTOCOL_ID,atomic_json,fail,read_json,relative,sha_path,static_schedule_preflight,build_arm_samples)
-from scripts.e04_e_equal_slot_loss import equal_slot_objective
+from scripts.e04_e_equal_slot_loss import backward_equal_slot_term
 
 def _verify_file(rel:str,expected:str,code:str)->Path:
  p=ROOT/rel
@@ -97,13 +97,12 @@ def run_arm(binding_path:Path,output:Path,launch_commit:str,arm:str)->None:
    if time.monotonic()>=deadline:fail('E04E_PER_ARM_CAP_TRAIN')
    group=rows[arm][offset:offset+4]
    if len(group)!=4 or {x['episode']['within_step_role_position'] for x in group}!={0,1,2,3}:fail('E04E_TRAIN_STEP_GROUP')
-   optimizer.zero_grad(set_to_none=True); logits=[]; labels=[]
+   optimizer.zero_grad(set_to_none=True); counts=[]; loss_value=0.0
    for row in group:
     ids=torch.tensor([row['input_ids']],device='cuda:0',dtype=torch.long);lab=torch.tensor([row['labels']],device='cuda:0',dtype=torch.long);att=torch.tensor([row['attention_mask']],device='cuda:0',dtype=torch.long)
-    out=model(input_ids=ids,attention_mask=att,use_cache=False);logits.append(out.logits);labels.append(lab);processed+=len(row['input_ids']);supervised+=row['supervised']
-   loss,counts=equal_slot_objective(logits,labels)
-   if counts!=[x['supervised'] for x in group] or not bool(torch.isfinite(loss)):fail('E04E_LOSS_CONTRACT')
-   loss.backward()
+    out=model(input_ids=ids,attention_mask=att,use_cache=False)
+    term,count=backward_equal_slot_term(out.logits,lab);counts.append(count);loss_value+=float(term);processed+=len(row['input_ids']);supervised+=row['supervised'];del out,term
+   if counts!=[x['supervised'] for x in group] or not bool(torch.isfinite(torch.tensor(loss_value))):fail('E04E_LOSS_CONTRACT')
    for cfg in optimizer.param_groups:cfg['lr']=0.00005*min(1.0,(steps+1)/3.0)
    optimizer.step();steps+=1
    atomic_json(root/'TRAINING_PROGRESS.json',{'status':'RUNNING','arm':arm,'optimizer_steps':steps,'processed_tokens':processed,'supervised_tokens':supervised,'loss_normalization':'four_independent_slot_means_times_0.25','target_sidecar_accessed':False})

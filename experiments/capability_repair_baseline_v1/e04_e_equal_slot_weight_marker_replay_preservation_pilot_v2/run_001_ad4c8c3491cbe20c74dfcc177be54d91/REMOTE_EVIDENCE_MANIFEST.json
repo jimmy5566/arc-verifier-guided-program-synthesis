@@ -1,0 +1,41 @@
+{
+  "binding_sha256": "d4f6cb39d823f41471949290aac2913962c57ea784bc6d41b82272d40d5c9fab",
+  "director_response_sha256": "522b6ec111982b21411148ffc5426570fae118f57418a72aab12bc5323459bb2",
+  "files": {
+    "CONTROL_PRE_OPTIMIZER_PREFLIGHT.json": {
+      "bytes": 1975,
+      "sha256": "c171d67755bd6053296ce89ece2dba0d5c4bfde2e04dfd2f1aedf65d290fd242"
+    },
+    "CONTROL_TERMINAL_RECEIPT.json": {
+      "bytes": 2371,
+      "sha256": "076e92b99b9348a2695bb900e056df55bbb610fe18d74ed2671fd4fde7feef7d"
+    },
+    "LAUNCH_CAP_RECEIPT.json": {
+      "bytes": 611,
+      "sha256": "cfe915cc62f66105183143b9ae2aa1e969b392dd97b6150729fa2535efe0a611"
+    },
+    "LAUNCH_RECEIPT.json": {
+      "bytes": 719,
+      "sha256": "25e2e78a04161588d663799bc70ca04d5019ded6144589e9585967f7ce0d8091"
+    },
+    "PREFLIGHT_RECEIPT.json": {
+      "bytes": 1322,
+      "sha256": "38c3ed4c717c5732c9ca9924fa7711163d57c621f314d6cbb7822c619afbe708"
+    },
+    "TERMINAL_RECEIPT.json": {
+      "bytes": 878,
+      "sha256": "6438e10081bd34d409bf6195e18185fc0af81995afcf9c4da4eed7013a43cc91"
+    },
+    "launcher.log": {
+      "bytes": 7638,
+      "sha256": "d586b26a6d74478e54f3f35146fde38f54cedea44e7af98f0b54327a15ed40c5"
+    }
+  },
+  "launch_commit": "dd76f14b62554bee3ca7e5cf2f6d5e252885b0d6",
+  "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+  "remote_output_root": "/workspace/arc2/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/run_001_ad4c8c3491cbe20c74dfcc177be54d91",
+  "run_id": "RUN_001_ad4c8c3491cbe20c74dfcc177be54d91",
+  "schema_version": 1,
+  "transport": "REMOTE_COMMAND_CONTROL_SMALL_RECEIPTS_BYTE_VERIFIED",
+  "worker_source_commit": "bf1d9c2de4e12e92b1c794b68d645bd8ee06fdea"
+}

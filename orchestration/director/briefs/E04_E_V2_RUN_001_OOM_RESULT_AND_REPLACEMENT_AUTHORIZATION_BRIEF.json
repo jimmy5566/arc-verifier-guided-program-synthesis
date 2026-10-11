@@ -1,0 +1,33 @@
+{
+  "authorization_boundary": "No replacement launch, binding, GPU model load, optimizer construction, training, generation, scoring, Gold/dGold, or FINAL_AUDIT is authorized by this brief.",
+  "brief_id": "E04_E_V2_RUN_001_OOM_RESULT_AND_REPLACEMENT_AUTHORIZATION_BRIEF",
+  "failure_summary": "The authorized detached parent exited 1 after 253.114 seconds. CONTROL_EQUAL_SLOT OOMed during a model forward with 10.38 MiB free; treatment did not start. No optimizer step, frozen raw generation, scoring, target-sidecar access, or FINAL_AUDIT occurred.",
+  "immutable_evidence": {
+    "cap_receipt_sha256": "cfe915cc62f66105183143b9ae2aa1e969b392dd97b6150729fa2535efe0a611",
+    "control_terminal_receipt_sha256": "076e92b99b9348a2695bb900e056df55bbb610fe18d74ed2671fd4fde7feef7d",
+    "remote_evidence_manifest_sha256": "a8c530627b71fae502e9a3d2602e6ba956979b18808b833077f316d69402a9cf",
+    "result_package_sha256": "cb3afa28e7ead30a5e8c9a149238c5335575b70e3c235bb40d12f77aa8ba3ec8",
+    "terminal_receipt_sha256": "6438e10081bd34d409bf6195e18185fc0af81995afcf9c4da4eed7013a43cc91"
+  },
+  "proposed_repair": {
+    "cpu_equivalence_test": "tests/test_e04_e_equal_slot_loss.py::test_streamed_backward_terms_match_joint_equal_slot_gradient",
+    "mechanism": "Backpropagate each independently FP32-normalized slot mean times 0.25 immediately, accumulating gradients across the frozen four-slot step so each activation graph is released before the next physical-B1 forward.",
+    "repair_id": "E04E_STREAMED_EQUAL_SLOT_BACKWARD_ACCUMULATION_V1",
+    "scientific_conditions_unchanged": [
+      "same four slots per optimizer step",
+      "same valid-label masks and per-slot FP32 CE",
+      "same coefficients [0.25,0.25,0.25,0.25]",
+      "same optimizer, checkpoint, schedules, seed, caps, arms and evaluation"
+    ],
+    "scope": "ENGINEERING_EQUIVALENT_MEMORY_REPAIR_NOT_EXECUTED",
+    "source_hashes": {
+      "scripts/e04_e_equal_slot_loss.py": "b0b81ab353b4d3e5dd80cc20ca0c52ba3ce4acc33dbce557de1123f6a73f6625",
+      "scripts/run_e04_e_equal_slot_marker_replay_pilot.py": "cca8b36461389f9bf2d3587ab4a5768d2a87b4a485d699332cfb8604103bf55c",
+      "tests/test_e04_e_equal_slot_loss.py": "67a31ec3b72ee71375ba64d454e0f36c7dc0c549a5d85736acbed9e39b0bbce9"
+    }
+  },
+  "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+  "review_reason": "FRESH_EXECUTION_AUTHORIZATION_REQUIRED_AFTER_CONSUMED_ONE_JOB_OOM",
+  "review_request": "Review the preserved failed run and decide whether to authorize exactly one replacement two-arm run using the CPU-tested streamed equal-slot backward implementation, or stop the protocol.",
+  "status": "REVIEW_REQUIRED"
+}
