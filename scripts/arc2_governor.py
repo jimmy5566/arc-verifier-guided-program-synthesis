@@ -192,7 +192,43 @@ def load(p):
     return x
 def sha256_file(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
-def review_brief_path(state):
+def _materialize_inline_review_brief(state, raw, declared, state_path=None):
+    """Turn a legacy inline JSON brief into one immutable, hash-bound file.
+
+    Older Controller helpers wrote the complete JSON object into the durable
+    state.  Treating that object as a pathname crashed the service before the
+    Director dispatch intent existed.  The migration preserves the exact bytes
+    covered by the declared digest, writes them once, and then uses the normal
+    file-based review path.  Arbitrary prose is deliberately not accepted.
+    """
+    try:
+        decoded=json.loads(raw)
+    except (TypeError,json.JSONDecodeError) as exc:
+        raise RuntimeError('REVIEW_BRIEF_MISSING') from exc
+    if not isinstance(decoded,dict):
+        raise RuntimeError('REVIEW_BRIEF_INLINE_SCHEMA')
+    payload=raw.encode('utf-8')
+    actual=hashlib.sha256(payload).hexdigest()
+    if declared and declared != actual:
+        raise RuntimeError('REVIEW_BRIEF_DECLARED_SHA256_MISMATCH')
+    root=(Path(state_path).resolve().parent if state_path else PROJECT_ROOT/'.arc2-local/orchestration')
+    directory=root/'director_briefs'; directory.mkdir(parents=True,exist_ok=True)
+    brief=directory/f'INLINE_REVIEW_{actual}.json'
+    if brief.exists():
+        if sha256_file(brief)!=actual:
+            raise RuntimeError('REVIEW_BRIEF_INLINE_PUBLICATION_CONFLICT')
+    else:
+        temporary=brief.with_name(brief.name+'.'+str(os.getpid())+'.tmp')
+        temporary.write_bytes(payload)
+        try: os.replace(temporary,brief)
+        finally:
+            if temporary.exists(): temporary.unlink()
+    state['review_brief']=str(brief.resolve())
+    state['review_brief_sha256']=actual
+    state['review_brief_materialized_from_inline']=True
+    return brief.resolve()
+
+def review_brief_path(state, state_path=None):
     """Resolve and SHA-bind an immutable Director brief.
 
     Review briefs are repository artifacts.  A Controller may write a
@@ -206,6 +242,8 @@ def review_brief_path(state):
     if isinstance(raw, dict):
         declared=raw.get('sha256') or declared
         raw=raw.get('path')
+    if isinstance(raw,str) and raw.lstrip().startswith('{'):
+        return _materialize_inline_review_brief(state,raw,declared,state_path)
     if not isinstance(raw, str) or not raw:
         raise RuntimeError('REVIEW_BRIEF_MISSING')
     requested=Path(raw)
@@ -647,7 +685,7 @@ def reconcile_consumed_stage_terminal(state, state_path):
     return True
 
 def route_director_response(state, state_path, response_path, response, response_sha256):
-    brief=review_brief_path(state)
+    brief=review_brief_path(state,state_path)
     brief_sha256=sha256_file(brief)
     if response.get('reviewed_brief_sha256') != brief_sha256:
         raise RuntimeError('DIRECTOR_RESPONSE_BRIEF_BINDING_MISMATCH')
@@ -724,7 +762,7 @@ def route_director_response(state, state_path, response_path, response, response
             state.update({'disposition':'PAUSED', 'next_action':'TERMINAL_SCOPE_UNSPECIFIED', 'remediation_required':False, 'terminal':False, 'experiment_terminal':False, 'terminal_scope':'UNSPECIFIED'})
     atomic(state_path,state); log(state,f'director response consumed decision={decision} response={response_path.name}')
 def director(s,p,timeout):
-    brief=review_brief_path(s)
+    brief=review_brief_path(s,p)
     brief_sha256=sha256_file(brief)
     atomic(p,s)
     # Reload after the canonicalized brief write.  The revision-bearing copy

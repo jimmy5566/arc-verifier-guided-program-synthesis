@@ -65,6 +65,24 @@ class GovernorDirectorRoutingTests(unittest.TestCase):
             state={'review_brief':str(brief),'review_brief_sha256':'0'*64}
             with self.assertRaisesRegex(RuntimeError,'REVIEW_BRIEF_DECLARED_SHA256_MISMATCH'):
                 governor.review_brief_path(state)
+
+    def test_inline_json_brief_is_atomically_materialized_and_bound(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); state_path=root/'.arc2-local/orchestration/ARC2_WORKFLOW_STATE.json'; state_path.parent.mkdir(parents=True)
+            raw='{"brief":"immutable","request":"one review"}'
+            state={'review_brief':raw,'review_brief_sha256':__import__('hashlib').sha256(raw.encode()).hexdigest()}
+            resolved=governor.review_brief_path(state,state_path)
+            self.assertTrue(resolved.is_file())
+            self.assertEqual(resolved.read_text(encoding='utf-8'),raw)
+            self.assertEqual(governor.sha256_file(resolved),state['review_brief_sha256'])
+            self.assertTrue(state['review_brief_materialized_from_inline'])
+
+    def test_inline_json_brief_rejects_wrong_declared_hash(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            state_path=Path(tmp)/'state.json'
+            state={'review_brief':'{"brief":"immutable"}','review_brief_sha256':'0'*64}
+            with self.assertRaisesRegex(RuntimeError,'REVIEW_BRIEF_DECLARED_SHA256_MISMATCH'):
+                governor.review_brief_path(state,state_path)
     def test_rich_review_brief_rejects_mismatched_declared_digest(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp); state_path=root/'state.json'; brief=root/'brief.json'; brief.write_text('{"brief":"immutable"}\n',encoding='utf-8')

@@ -83,8 +83,15 @@ class GovernorDirectorDeliveryTests(unittest.TestCase):
 
     def test_named_director_agent_resolves_to_live_pane(self):
         payload = {"result": {"agents": [{"agent": "codex", "name": "arc-director", "pane_id": "wJ:pF"}]}}
-        with mock.patch.object(governor.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, json.dumps(payload), "")):
-            self.assertEqual(("wJ:pF", "HERDR_NAMED_AGENT"), governor.resolve_director_target({}, Path("unused")))
+        # This test exercises the real resolver, so release the per-test
+        # dispatch mock installed by setUp rather than accidentally asserting
+        # the fixture's placeholder pane.
+        self.director_target.stop()
+        try:
+            with mock.patch.object(governor.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, json.dumps(payload), "")):
+                self.assertEqual(("wJ:pF", "HERDR_NAMED_AGENT"), governor.resolve_director_target({}, Path("unused")))
+        finally:
+            self.director_target.start()
 
     def test_ambiguous_timeout_never_automatically_redispatches(self):
         with tempfile.TemporaryDirectory() as raw:
