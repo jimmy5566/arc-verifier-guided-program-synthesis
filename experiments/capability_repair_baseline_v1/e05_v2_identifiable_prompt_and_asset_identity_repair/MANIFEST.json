@@ -1,0 +1,31 @@
+{
+  "canonical_bases": 48,
+  "conditions": [
+    "FIXED_TURN_ROTATION_CONTROL",
+    "MARKER_BINDING_CONTROL",
+    "NO_TRANSFORM_RETENTION_CONTROL",
+    "MARKER_CONDITIONED_ROTATION"
+  ],
+  "demonstration_banks_sha256": "4031370994d23cdcad6615e2c9ce6834aeaf1a07c43b328eb52e4d6cf6d3d3d9",
+  "episodes": 768,
+  "episodes_per_condition": 192,
+  "future_execution_requires": [
+    "DIRECTOR_E05_V2_PRELAUNCH_APPROVAL",
+    "VERSIONED_EXACT_BYTE_CONTROL_ADAPTER",
+    "VERSIONED_EXACT_BYTE_TREATMENT_ADAPTER",
+    "NATIVE_GREEDY_B1_RUNTIME_BINDING"
+  ],
+  "generation_run": false,
+  "gpu_used": false,
+  "internal_prompt_audit_sha256": "6f38cf3a2af87608b02fefe1f5a3b89f590dfe08b2206771cdbdac0e72da2ee3",
+  "model_loaded": false,
+  "parent_failure_preserved": true,
+  "parent_protocol": "E05_STRUCTURALLY_HELD_OUT_MARKER_CONDITIONED_ROTATION_CONFIRMATION_V1",
+  "prompt_sha256": "8e6ac9f550e3d4e87acd7375a14f4335de9bedf83ed99f4f5faa9d7ad1caddea",
+  "protocol_id": "E05_V2_IDENTIFIABLE_PROMPT_AND_ASSET_IDENTITY_REPAIR",
+  "seed": 20261012,
+  "status": "CPU_ONLY_FROZEN_NO_MODEL_NO_EVALUATION",
+  "structural_audit_sha256": "a076f267d212205a0bbaf3cd18d438d26893b1300280df730aa4105ff035fe6c",
+  "target_sidecar_sha256": "df24d7fb97905cb210b04e4f45c050f0e77b1abf87258f29bfd1bc4b01687ac3",
+  "turns_per_base": 4
+}

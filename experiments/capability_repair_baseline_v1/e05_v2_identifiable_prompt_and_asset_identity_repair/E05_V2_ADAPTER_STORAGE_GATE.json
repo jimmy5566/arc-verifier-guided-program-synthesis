@@ -1,0 +1,8 @@
+{
+  "status": "BLOCKED_VERSIONED_ASSET_STORAGE_UNCONFIRMED",
+  "control_adapter_sha256": "515f5ebfe6685097f78fe260edcc4859edfe17152482a559769f18be8b55da16",
+  "treatment_adapter_sha256": "3eff5b9debc4b5b3f133e4524bf7244b0a2074a8f0bc0b5595d38ee176db57be",
+  "required_before_any_e05_v2_inference": "Record the appropriate versioned artifact repository, immutable revision, filename, source SHA256, uploaded SHA256 and retrieved SHA256 for both adapters, with all byte identities equal.",
+  "current_evidence": "Hash-verified RunPod RUN_003 terminal receipts only; this is not a versioned artifact-storage identity.",
+  "not_done": ["adapter transfer", "adapter upload", "checkpoint substitution", "GPU inference"]
+}

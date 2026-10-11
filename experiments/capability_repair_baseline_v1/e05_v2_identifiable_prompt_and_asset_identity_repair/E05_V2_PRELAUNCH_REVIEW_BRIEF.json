@@ -1,0 +1,27 @@
+{
+  "brief_type": "DIRECTOR_E05_V2_PRELAUNCH_REVIEW",
+  "protocol_id": "E05_V2_IDENTIFIABLE_PROMPT_AND_ASSET_IDENTITY_REPAIR",
+  "parent": "E05 V1 is preserved as a failed CPU-only prelaunch artifact; V2 is a distinct successor required by the Director's condition-observability finding.",
+  "completed_cpu_only_repair": {
+    "seed": 20261012,
+    "cohort": "48 canonical bases x 4 turns x 4 conditions = 768 episodes",
+    "query_grid_signatures": "192, each paired with exactly four conditions",
+    "model_visible_native_prompt_signatures": "768 unique",
+    "condition_semantics": "Each condition has a fixed query-independent ARC I/O demonstration bank that visibly encodes its rule; no condition name, metadata, canonical ID, turn label or target is supplied to the model prompt.",
+    "target_isolation": "The target sidecar is separate and will remain unopened until all three future raw prediction sets are atomically frozen.",
+    "structural_audit": "PASS against the unsealed E04 cohort; E04 sealed scorer sidecar remains unopened.",
+    "model_gpu_generation_training": "NOT_RUN"
+  },
+  "identities": {
+    "manifest_sha256": "795898d52dd407b89dd8f98e88ac43cb6580fc87aebf246184409330fa317e91",
+    "prompt_sha256": "8e6ac9f550e3d4e87acd7375a14f4335de9bedf83ed99f4f5faa9d7ad1caddea",
+    "target_sidecar_sha256": "df24d7fb97905cb210b04e4f45c050f0e77b1abf87258f29bfd1bc4b01687ac3",
+    "internal_visible_prompt_audit_sha256": "6f38cf3a2af87608b02fefe1f5a3b89f590dfe08b2206771cdbdac0e72da2ee3",
+    "structural_audit_sha256": "a076f267d212205a0bbaf3cd18d438d26893b1300280df730aa4105ff035fe6c"
+  },
+  "frozen_future_question": "Does the exact E04-E RUN_003 Treatment adapter improve marker-conditioned rotation exact-grid accuracy versus V7 on this new structured holdout, while retaining fixed-turn rotation, marker binding, and no-transform performance?",
+  "future_estimand_and_rules": "Unchanged: Treatment minus V7 is primary, Treatment minus Control supportive; 10,000 paired canonical-base bootstrap replicates at seed 20261012; primary and fixed-turn each require +8/192 and lower confidence bound above zero; retention declines may not exceed -8/192.",
+  "remaining_blocker": "The Control and Treatment adapters have verified RUN_003 SHA256 values but no versioned-storage repository, pinned revision and filename. No GPU authorization is requested or implied.",
+  "requested_decision": "Review V2's repaired native-prompt identifiability and determine the minimal valid exact-byte adapter-storage recovery. Do not authorize inference until the storage gate and a bounded native Greedy B1 execution binding are both complete.",
+  "sealed_boundaries": ["NO_GOLD", "NO_DGOLD", "NO_FINAL_AUDIT", "NO_MODEL_LOADING", "NO_GPU", "NO_GENERATION", "NO_TRAINING"]
+}

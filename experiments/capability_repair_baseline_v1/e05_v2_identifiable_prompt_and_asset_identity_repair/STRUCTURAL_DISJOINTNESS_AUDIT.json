@@ -1,0 +1,27 @@
+{
+  "checks": {
+    "canonical_tuple_disjoint": true,
+    "color_assignment_disjoint": true,
+    "d4_shape_equivalence_disjoint": true,
+    "grid_shape_disjoint": true,
+    "input_collision_disjoint": true,
+    "input_target_collision_disjoint": true,
+    "layout_disjoint": true,
+    "relation_disjoint": true,
+    "serialization_collision_disjoint": true,
+    "target_collision_disjoint": true
+  },
+  "failures": [],
+  "scope_limit": "Audits the unsealed E04 cohort only. The E04 sealed scorer sidecar is intentionally not opened during E05 CPU freezing.",
+  "signatures": {
+    "e04_d4_shape": "d719d9f77fdf19d98a0fb0e54dc691f80d52f86151d296f4f35abec6c5cc863d",
+    "e05_d4_shape": "8081538d1e0e8aa003d8a2bc35d49b899e71e80b872ed77efa61a1298bdb26d5"
+  },
+  "source": {
+    "path": "experiments/capability_repair_baseline_v1/e04_orientation_frozen_cohort_v1/COHORT.jsonl",
+    "rows": 1344,
+    "sealed_target_sidecar_opened": false,
+    "sha256": "76c6fd57173ec62571f27a312e3f80601c70cdec04cda79432822937e7a37967"
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,12 @@
+{
+  "all_prompt_signatures_unique": true,
+  "condition_rule_visible_through_fixed_arc_examples": true,
+  "condition_views_per_query_grid": 4,
+  "expected_model_visible_native_prompt_signatures": 768,
+  "expected_query_grid_signatures": 192,
+  "metadata_in_model_prompt": false,
+  "model_visible_native_prompt_signatures": 768,
+  "query_grid_signatures": 192,
+  "status": "PASS",
+  "target_sidecar_opened_after_freeze": false
+}
