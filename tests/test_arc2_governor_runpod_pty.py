@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-import io
 import importlib.util
+import io
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -14,11 +15,9 @@ assert SPEC and SPEC.loader
 governor = importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(governor)
 
 
-class _Proc:
-    def __init__(self):
-        self.stdin = io.BytesIO(); self.returncode = 0
-    def communicate(self, timeout=None):
-        return b"RECEIPT_MISSING\nPROCESS_ALIVE\n", b""
+class _Run:
+    def __init__(self, stdout="RECEIPT_MISSING\nPROCESS_ALIVE\n", returncode=0, stderr=""):
+        self.stdout = stdout; self.returncode = returncode; self.stderr = stderr
 
 
 class _LaunchProc:
@@ -28,7 +27,7 @@ class _LaunchProc:
         return b'{"arc2_remote_nonce": "nonce"}\n__ARC2_REMOTE_END__\n', b''
 
 
-class RunPodPtyControlTests(unittest.TestCase):
+class RunPodControlTests(unittest.TestCase):
     def test_wait_remote_status_line_is_yellow_and_identifies_the_job(self):
         line = governor.status_line('REMOTE_PENDING', {'disposition':'WAIT_REMOTE', 'remote_job':{'run_id':'RUN_2', 'remote_pid':123}})
         self.assertIn('\x1b[1;33m[ARC2 WAIT_REMOTE]\x1b[0m', line)
@@ -36,22 +35,24 @@ class RunPodPtyControlTests(unittest.TestCase):
         self.assertIn('run=RUN_2', line)
         self.assertIn('pid=123', line)
 
-    def test_status_query_uses_executing_newline_not_bracketed_paste(self):
-        proc = _Proc()
-        job = {"ssh_target":"pod", "expected_terminal_receipt":"/receipt", "primary_process":{"host":"RUNPOD", "role":"worker", "pid":7}}
-        with mock.patch.object(governor.subprocess, "Popen", return_value=proc) as popen, mock.patch.object(governor.time, "sleep"):
+    def test_status_query_uses_bound_non_pty_ssh_control(self):
+        job = {"ssh_target":"pod", "ssh_port":40169, "ssh_executable":sys.executable,
+               "expected_terminal_receipt":"/receipt", "primary_process":{"host":"RUNPOD", "role":"worker", "pid":7}}
+        with mock.patch.object(governor.subprocess, "run", return_value=_Run()) as run:
             status, _ = governor.remote_status(job)
         self.assertEqual(status, "PROCESS_ALIVE")
-        payload = proc.stdin.getvalue()
-        self.assertIn(b"base64 -d | bash\n", payload)
-        self.assertTrue(payload.endswith(b"exit\n"))
-        self.assertNotIn(b"\x1b[200~", payload)
-        self.assertEqual(popen.call_args.kwargs["creationflags"], governor.windows_creationflags())
+        command = run.call_args.args[0]
+        self.assertEqual(command[0], sys.executable)
+        self.assertIn("-p", command); self.assertEqual(command[command.index("-p") + 1], "40169")
+        self.assertNotIn("-tt", command)
+        self.assertIn("pod", command)
+        self.assertIn("RECEIPT_PRESENT", command[-1])
+        self.assertEqual(run.call_args.kwargs["creationflags"], governor.windows_creationflags())
 
     def test_status_query_accepts_current_expected_receipt_path_schema(self):
-        proc = _Proc()
-        job = {"remote_host":"pod", "expected_receipt_path":"/receipt", "remote_launcher_pid":7}
-        with mock.patch.object(governor.subprocess, "Popen", return_value=proc), mock.patch.object(governor.time, "sleep"):
+        job = {"remote_host":"pod", "ssh_port":22, "ssh_executable":sys.executable,
+               "expected_receipt_path":"/receipt", "remote_launcher_pid":7}
+        with mock.patch.object(governor.subprocess, "run", return_value=_Run()):
             status, _ = governor.remote_status(job)
         self.assertEqual(status, "PROCESS_ALIVE")
 
@@ -69,11 +70,16 @@ class RunPodPtyControlTests(unittest.TestCase):
             self.assertEqual(state["active_remote_job"], job)
 
     def test_status_query_accepts_compact_terminal_receipt_and_pid_schema(self):
-        proc = _Proc()
-        job = {"ssh_target":"pod", "terminal_receipt":"/receipt", "pid":7}
-        with mock.patch.object(governor.subprocess, "Popen", return_value=proc), mock.patch.object(governor.time, "sleep"):
+        job = {"ssh_target":"pod", "ssh_port":22, "ssh_executable":sys.executable,
+               "terminal_receipt":"/receipt", "pid":7}
+        with mock.patch.object(governor.subprocess, "run", return_value=_Run()):
             status, _ = governor.remote_status(job)
         self.assertEqual(status, "PROCESS_ALIVE")
+
+    def test_status_query_requires_explicit_ssh_port(self):
+        job = {"ssh_target":"pod", "expected_terminal_receipt":"/receipt",
+               "primary_process":{"host":"RUNPOD", "role":"worker", "pid":7}}
+        self.assertEqual(governor.remote_status(job), ("INVALID_BINDING", "REMOTE_SSH_PORT_REQUIRED"))
 
     def test_future_e04_launcher_uses_prompt_ready_newline_not_bracketed_paste(self):
         path = ROOT / "scripts" / "launch_e04_e_equal_slot_marker_replay_pilot.py"

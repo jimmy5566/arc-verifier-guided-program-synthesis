@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ARC2 Governor: one thin deterministic scheduler for Controller, Director, and remote jobs."""
 from __future__ import annotations
-import argparse, hashlib, json, os, subprocess, sys, time
+import argparse, hashlib, json, os, shutil, subprocess, sys, time
 from datetime import datetime, timezone
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -849,15 +849,45 @@ def poll_seconds(job):
     if 'PREFLIGHT' in kind or 'CPU' in kind: return 10
     if 'EVALUATION' in kind or 'INFERENCE' in kind: return 20
     return 60
+def _remote_ssh_command(job, script):
+    """Build the non-interactive, bounded RunPod status-query command.
+
+    This is command/control only.  The port and optional identity path are
+    operational connection metadata, not scientific identity.  Their absence
+    must not silently fall back to the wrong endpoint.
+    """
+    target=job.get('ssh_target') or job.get('remote_host')
+    port=job.get('ssh_port') or job.get('port')
+    if not target or not port:
+        raise RuntimeError('REMOTE_CONTROL_CONFIG_MISSING_TARGET_OR_PORT')
+    configured=(job.get('ssh_executable') or os.environ.get('ARC2_RUNPOD_SSH_EXECUTABLE'))
+    candidates=[configured, r'C:\Program Files\Git\usr\bin\ssh.exe', shutil.which('ssh')]
+    executable=next((str(candidate) for candidate in candidates if candidate and Path(candidate).is_file()), None)
+    if not executable:
+        raise RuntimeError('REMOTE_CONTROL_CONFIG_MISSING_SSH_EXECUTABLE')
+    command=[executable, '-o', 'BatchMode=yes', '-o', 'PasswordAuthentication=no',
+             '-o', 'KbdInteractiveAuthentication=no', '-o', 'ConnectTimeout=20',
+             '-p', str(port)]
+    identity=job.get('ssh_key_path') or os.environ.get('ARC2_RUNPOD_SSH_KEY_PATH')
+    if identity:
+        if not Path(identity).is_file():
+            raise RuntimeError('REMOTE_CONTROL_CONFIG_INVALID_IDENTITY_PATH')
+        command.extend(['-o', 'IdentitiesOnly=yes', '-i', str(identity)])
+    # OpenSSH joins remote arguments into one shell command.  Quote the script
+    # ourselves so the remote shell receives it as the single ``bash -lc``
+    # argument; passing it as a separate argv item loses that boundary.
+    import shlex
+    command.extend([str(target), 'bash -lc ' + shlex.quote(script)])
+    return command
+
 def remote_status(job):
-    # Accept the compact current workflow schema as well as older preserved
-    # receipts.  Both spellings bind the same remote worker; no local process
-    # is ever used for liveness.
+    # Read only a terminal-receipt marker and the detached primary PID.  This
+    # intentionally uses the same normal-newline SSH command-control route as
+    # the verified launcher, rather than a forced-PTY transport.
     receipt=(job.get('expected_receipt') or job.get('expected_terminal_receipt')
              or job.get('terminal_receipt_path') or job.get('expected_receipt_path')
              or job.get('terminal_receipt')
              or job.get('remote_output'))
-    target=job.get('ssh_target') or job.get('remote_host')
     primary=job.get('primary_process')
     if not isinstance(primary, dict):
         pid=job.get('remote_pid', job.get('remote_launcher_pid', job.get('launcher_pid', job.get('worker_pid', job.get('pid')))))
@@ -875,33 +905,24 @@ def remote_status(job):
         return 'INVALID_BINDING', 'PRIMARY_PROCESS_PID_REQUIRED'
     if pid <= 0:
         return 'INVALID_BINDING', 'PRIMARY_PROCESS_PID_REQUIRED'
-    if not receipt or not target:
+    if not receipt or not (job.get('ssh_target') or job.get('remote_host')):
         return 'INVALID_BINDING', 'REMOTE_RECEIPT_OR_TARGET_REQUIRED'
-    script=f"test -f {receipt!r} && echo RECEIPT_PRESENT || echo RECEIPT_MISSING\nps -p {pid!r} -o pid= >/dev/null 2>&1 && echo PROCESS_ALIVE || echo PROCESS_DEAD"
-    # RunPod's gateway is an interactive forced-PTY shell.  Send the compact
-    # control query only after its prompt is ready; this is not artifact
-    # transport and it never inspects model metrics.
-    import base64
-    encoded=base64.b64encode((script+'\nexit\n').encode('utf-8')).decode('ascii')
-    command=['ssh','-F','NUL','-tt','-o','BatchMode=yes','-o','ConnectTimeout=20',target]
-    proc=subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, creationflags=windows_creationflags())
-    # RunPod's forced PTY displays bracketed-paste payloads without executing
-    # them.  A prompt-ready ordinary newline has been verified as the bounded
-    # command/control channel for status queries.
-    time.sleep(4)
-    proc.stdin.write((f"echo {encoded} | base64 -d | bash\n").encode('utf-8'))
-    proc.stdin.flush()
-    time.sleep(1)
-    proc.stdin.write(b"exit\n")
-    proc.stdin.flush()
+    if not (job.get('ssh_port') or job.get('port')):
+        return 'INVALID_BINDING', 'REMOTE_SSH_PORT_REQUIRED'
+    import shlex
+    script=(f"if test -f {shlex.quote(str(receipt))}; then echo RECEIPT_PRESENT; "
+            f"else echo RECEIPT_MISSING; fi; "
+            f"if ps -p {pid} -o pid= >/dev/null 2>&1; then echo PROCESS_ALIVE; "
+            f"else echo PROCESS_DEAD; fi")
+    command=_remote_ssh_command(job, script)
     try:
-        out_bytes, err_bytes=proc.communicate(timeout=45)
-    except subprocess.TimeoutExpired:
-        proc.kill(); out_bytes, err_bytes=proc.communicate()
-        raise RuntimeError('REMOTE_CONTROL_TIMEOUT')
+        proc=subprocess.run(command, capture_output=True, text=True, timeout=45,
+                            creationflags=windows_creationflags())
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError('REMOTE_CONTROL_TIMEOUT') from exc
     if proc.returncode != 0:
-        raise RuntimeError('REMOTE_CONTROL_FAILED:'+err_bytes.decode('utf-8','replace')[-200:])
-    out=out_bytes.decode('utf-8','replace')
+        raise RuntimeError('REMOTE_CONTROL_FAILED:'+proc.stderr[-200:])
+    out=proc.stdout
     if 'RECEIPT_PRESENT' in out: return 'RECEIPT_PRESENT', out
     if 'PROCESS_ALIVE' in out: return 'PROCESS_ALIVE', out
     if 'PROCESS_DEAD' in out: return 'PROCESS_DEAD', out
