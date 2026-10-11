@@ -1,0 +1,142 @@
+{
+  "brief_type": "DIRECTOR_E05_V3_RUN_004_RESULT_REVIEW",
+  "cpu_scoring": {
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261012,
+    "result_path": "E05_V3_RUN_004_CPU_EXACT_GRID_RESULT.json",
+    "result_sha256": "0981ecf48a87f864c6c71eaa530a1993f41bc27ddd7b27c48001c06d7d220181",
+    "target_sidecar_sha256": "df24d7fb97905cb210b04e4f45c050f0e77b1abf87258f29bfd1bc4b01687ac3",
+    "validity": "VALID"
+  },
+  "execution_process_evidence": {
+    "cap_receipt_sha256": "91fafada998b2d0901bb8eb04a7c644e2e60a6848e419de6ea690314086e920c",
+    "no_update_gates": {
+      "backward_calls": 0,
+      "final_audit_opened": false,
+      "optimizer_steps": 0,
+      "parameter_updates": 0,
+      "target_sidecar_accessed_during_generation": false
+    },
+    "terminal_receipt_sha256": "09e3ec729a1bf21ed259f47b49342db533a8490496efc8499642fb5d88fadc9c",
+    "terminal_status": "COMPLETE_NO_UPDATE"
+  },
+  "observations": {
+    "arm_exact_correct_of_192": {
+      "E04E_RUN003_CONTROL_EQUAL_SLOT": {
+        "FIXED_TURN_ROTATION_CONTROL": 32,
+        "MARKER_BINDING_CONTROL": 0,
+        "MARKER_CONDITIONED_ROTATION": 32,
+        "NO_TRANSFORM_RETENTION_CONTROL": 20
+      },
+      "E04E_RUN003_TREATMENT_EQUAL_SLOT": {
+        "FIXED_TURN_ROTATION_CONTROL": 32,
+        "MARKER_BINDING_CONTROL": 0,
+        "MARKER_CONDITIONED_ROTATION": 32,
+        "NO_TRANSFORM_RETENTION_CONTROL": 24
+      },
+      "RAW_V7_NO_E04E_UPDATE": {
+        "FIXED_TURN_ROTATION_CONTROL": 31,
+        "MARKER_BINDING_CONTROL": 0,
+        "MARKER_CONDITIONED_ROTATION": 31,
+        "NO_TRANSFORM_RETENTION_CONTROL": 32
+      }
+    },
+    "frozen_rule_assessment": {
+      "classification": "INCONCLUSIVE",
+      "fixed_turn_primary_pass": false,
+      "marker_binding_protected": true,
+      "marker_conditioned_transfer_pass": false,
+      "no_transform_retention_protected": true
+    },
+    "primary_treatment_minus_raw": {
+      "FIXED_TURN_ROTATION_CONTROL": {
+        "delta_correct_episodes": 1,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          3
+        ],
+        "reference_or_right_count": 31,
+        "treatment_or_left_count": 32
+      },
+      "MARKER_BINDING_CONTROL": {
+        "delta_correct_episodes": 0,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          0
+        ],
+        "reference_or_right_count": 0,
+        "treatment_or_left_count": 0
+      },
+      "MARKER_CONDITIONED_ROTATION": {
+        "delta_correct_episodes": 1,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          3
+        ],
+        "reference_or_right_count": 31,
+        "treatment_or_left_count": 32
+      },
+      "NO_TRANSFORM_RETENTION_CONTROL": {
+        "delta_correct_episodes": -8,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          -13,
+          -3
+        ],
+        "reference_or_right_count": 32,
+        "treatment_or_left_count": 24
+      }
+    },
+    "supportive_treatment_minus_control": {
+      "FIXED_TURN_ROTATION_CONTROL": {
+        "delta_correct_episodes": 0,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          0
+        ],
+        "reference_or_right_count": 32,
+        "treatment_or_left_count": 32
+      },
+      "MARKER_BINDING_CONTROL": {
+        "delta_correct_episodes": 0,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          0
+        ],
+        "reference_or_right_count": 0,
+        "treatment_or_left_count": 0
+      },
+      "MARKER_CONDITIONED_ROTATION": {
+        "delta_correct_episodes": 0,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          0
+        ],
+        "reference_or_right_count": 32,
+        "treatment_or_left_count": 32
+      },
+      "NO_TRANSFORM_RETENTION_CONTROL": {
+        "delta_correct_episodes": 4,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          11
+        ],
+        "reference_or_right_count": 20,
+        "treatment_or_left_count": 24
+      }
+    }
+  },
+  "proposed_controller_disposition": "REVIEW_REQUIRED",
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "raw_evidence": {
+    "github_commit": "7efb90c64326140f32161bd5ab9bb5261a2c2e70",
+    "raw_sha256": {
+      "E04E_RUN003_CONTROL_EQUAL_SLOT": "47edee3d176f5fc72d8f2c519d17f95db8ed56f188bdb66bda28abb272be67df",
+      "E04E_RUN003_TREATMENT_EQUAL_SLOT": "30745fc53fe6dd762a428515abc874985d0ff0011402e338b4187296519f7c9e",
+      "RAW_V7_NO_E04E_UPDATE": "c951c870fb090d573c97bc27e7f389e686cea44cc6df29585586a9a695cb188c"
+    },
+    "transport_target_sidecar_accessed": false
+  },
+  "request": "Review the completed, byte-verified, target-scored no-update E05-V3 result. Decide the scientific interpretation only; do not authorize a rerun, expansion, training, or follow-on experiment from this brief.",
+  "run_id": "run_004_33d7c84be6e74b7bbe76001001fe0aad",
+  "scope_limit": "Reused synthetic development cohort evidence only; not independent ARC generalization confirmation."
+}

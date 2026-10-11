@@ -1,0 +1,121 @@
+{
+  "arms": {
+    "E04E_RUN003_CONTROL_EQUAL_SLOT": {
+      "FIXED_TURN_ROTATION_CONTROL": 32,
+      "MARKER_BINDING_CONTROL": 0,
+      "MARKER_CONDITIONED_ROTATION": 32,
+      "NO_TRANSFORM_RETENTION_CONTROL": 20
+    },
+    "E04E_RUN003_TREATMENT_EQUAL_SLOT": {
+      "FIXED_TURN_ROTATION_CONTROL": 32,
+      "MARKER_BINDING_CONTROL": 0,
+      "MARKER_CONDITIONED_ROTATION": 32,
+      "NO_TRANSFORM_RETENTION_CONTROL": 24
+    },
+    "RAW_V7_NO_E04E_UPDATE": {
+      "FIXED_TURN_ROTATION_CONTROL": 31,
+      "MARKER_BINDING_CONTROL": 0,
+      "MARKER_CONDITIONED_ROTATION": 31,
+      "NO_TRANSFORM_RETENTION_CONTROL": 32
+    }
+  },
+  "bootstrap_replicates": 10000,
+  "comparisons": {
+    "PRIMARY_TREATMENT_MINUS_RAW": {
+      "FIXED_TURN_ROTATION_CONTROL": {
+        "delta_correct_episodes": 1,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          3
+        ],
+        "reference_or_right_count": 31,
+        "treatment_or_left_count": 32
+      },
+      "MARKER_BINDING_CONTROL": {
+        "delta_correct_episodes": 0,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          0
+        ],
+        "reference_or_right_count": 0,
+        "treatment_or_left_count": 0
+      },
+      "MARKER_CONDITIONED_ROTATION": {
+        "delta_correct_episodes": 1,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          3
+        ],
+        "reference_or_right_count": 31,
+        "treatment_or_left_count": 32
+      },
+      "NO_TRANSFORM_RETENTION_CONTROL": {
+        "delta_correct_episodes": -8,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          -13,
+          -3
+        ],
+        "reference_or_right_count": 32,
+        "treatment_or_left_count": 24
+      }
+    },
+    "SUPPORTIVE_TREATMENT_MINUS_CONTROL": {
+      "FIXED_TURN_ROTATION_CONTROL": {
+        "delta_correct_episodes": 0,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          0
+        ],
+        "reference_or_right_count": 32,
+        "treatment_or_left_count": 32
+      },
+      "MARKER_BINDING_CONTROL": {
+        "delta_correct_episodes": 0,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          0
+        ],
+        "reference_or_right_count": 0,
+        "treatment_or_left_count": 0
+      },
+      "MARKER_CONDITIONED_ROTATION": {
+        "delta_correct_episodes": 0,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          0
+        ],
+        "reference_or_right_count": 32,
+        "treatment_or_left_count": 32
+      },
+      "NO_TRANSFORM_RETENTION_CONTROL": {
+        "delta_correct_episodes": 4,
+        "paired_bootstrap_95pct_ci_correct_episodes": [
+          0,
+          11
+        ],
+        "reference_or_right_count": 20,
+        "treatment_or_left_count": 24
+      }
+    }
+  },
+  "frozen_rule_assessment": {
+    "classification": "INCONCLUSIVE",
+    "fixed_turn_primary_pass": false,
+    "marker_binding_protected": true,
+    "marker_conditioned_transfer_pass": false,
+    "no_transform_retention_protected": true
+  },
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "raw_sha256": {
+    "E04E_RUN003_CONTROL_EQUAL_SLOT": "47edee3d176f5fc72d8f2c519d17f95db8ed56f188bdb66bda28abb272be67df",
+    "E04E_RUN003_TREATMENT_EQUAL_SLOT": "30745fc53fe6dd762a428515abc874985d0ff0011402e338b4187296519f7c9e",
+    "RAW_V7_NO_E04E_UPDATE": "c951c870fb090d573c97bc27e7f389e686cea44cc6df29585586a9a695cb188c"
+  },
+  "run_id": "run_004_33d7c84be6e74b7bbe76001001fe0aad",
+  "schema_version": 1,
+  "scope_limit": "Reused synthetic development cohort evidence only; not independent ARC generalization confirmation.",
+  "scoring": "CPU_ONLY_EXACT_GRID_AFTER_RAW_FREEZE",
+  "seed": 20261012,
+  "target_sidecar_sha256": "df24d7fb97905cb210b04e4f45c050f0e77b1abf87258f29bfd1bc4b01687ac3",
+  "validity": "VALID"
+}
