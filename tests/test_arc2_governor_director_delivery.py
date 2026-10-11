@@ -18,6 +18,15 @@ SPEC.loader.exec_module(governor)
 
 
 class GovernorDirectorDeliveryTests(unittest.TestCase):
+    def setUp(self):
+        self.director_target = mock.patch.object(
+            governor, "resolve_director_target", return_value=("director-pane", "test")
+        )
+        self.director_target.start()
+
+    def tearDown(self):
+        self.director_target.stop()
+
     def prepared_review(self, root: Path):
         state_path = root / ".arc2" / "orchestration" / "ARC2_WORKFLOW_STATE.json"
         state_path.parent.mkdir(parents=True)
@@ -50,15 +59,32 @@ class GovernorDirectorDeliveryTests(unittest.TestCase):
             self.assertTrue(saved["director_review_in_progress"])
             prompt.assert_called_once()
 
-    def test_confirmed_non_delivery_can_retry_without_consuming_response(self):
+    def test_confirmed_non_delivery_to_unchanged_target_never_reprompts(self):
         with tempfile.TemporaryDirectory() as raw:
             state_path, _, _ = self.prepared_review(Path(raw))
-            with mock.patch.object(governor, "prompt", side_effect=[("NOT_DELIVERED", "target_not_found"), ("DELIVERED", "ACK")]) as prompt:
+            with mock.patch.object(governor, "prompt", return_value=("NOT_DELIVERED", "target_not_found")) as prompt:
                 self.assertEqual("DIRECTOR_NOT_DELIVERED", governor.director(governor.load(state_path), state_path, 1))
                 self.assertEqual("NOT_DELIVERED", governor.load(state_path)["director_dispatch"]["status"])
-                self.assertEqual("DIRECTOR_PROMPTED", governor.director(governor.load(state_path), state_path, 1))
-            self.assertEqual(2, prompt.call_count)
+                self.assertEqual("DIRECTOR_NOT_DELIVERED", governor.director(governor.load(state_path), state_path, 1))
+            self.assertEqual(1, prompt.call_count)
             self.assertFalse(governor.load(state_path).get("consumed_director_responses"))
+
+    def test_confirmed_non_delivery_requeues_once_after_target_change(self):
+        with tempfile.TemporaryDirectory() as raw:
+            state_path, _, _ = self.prepared_review(Path(raw))
+            with mock.patch.object(governor, "resolve_director_target", side_effect=[("old-pane", "test"), ("new-pane", "test")]), \
+                 mock.patch.object(governor, "prompt", side_effect=[("NOT_DELIVERED", "target_not_found"), ("DELIVERED", "ACK")]) as prompt:
+                self.assertEqual("DIRECTOR_NOT_DELIVERED", governor.director(governor.load(state_path), state_path, 1))
+                self.assertEqual("DIRECTOR_PROMPTED", governor.director(governor.load(state_path), state_path, 1))
+            saved = governor.load(state_path)
+            self.assertEqual(2, prompt.call_count)
+            self.assertEqual("new-pane", saved["director_dispatch"]["target"])
+            self.assertEqual("CONFIRMED_NON_DELIVERY_TARGET_CHANGED", saved["director_dispatch"]["retry_reason"])
+
+    def test_named_director_agent_resolves_to_live_pane(self):
+        payload = {"result": {"agents": [{"agent": "codex", "name": "arc-director", "pane_id": "wJ:pF"}]}}
+        with mock.patch.object(governor.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, json.dumps(payload), "")):
+            self.assertEqual(("wJ:pF", "HERDR_NAMED_AGENT"), governor.resolve_director_target({}, Path("unused")))
 
     def test_ambiguous_timeout_never_automatically_redispatches(self):
         with tempfile.TemporaryDirectory() as raw:

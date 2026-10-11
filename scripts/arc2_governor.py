@@ -249,6 +249,27 @@ def resolve_controller_target(state, path):
     # daemon pass.  The target is bound when a new dispatch intent is written.
     log(state,f'controller target resolved={target}')
     return target
+
+def resolve_director_target(state, path):
+    """Resolve the live Director pane without treating a stale label as an ID.
+
+    The owner may bind ``director_target`` to an explicit pane.  Otherwise an
+    agent renamed ``arc-director`` is the only safe automatic resolution.  A
+    missing target is a Controller repair item, never a reason to retry an
+    invalid Herdr prompt on every scheduler cycle.
+    """
+    result=subprocess.run(['herdr','agent','list'],check=False,capture_output=True,text=True,encoding='utf-8',errors='replace',creationflags=windows_creationflags())
+    if result.returncode:
+        raise RuntimeError(f'DIRECTOR_TARGET_LIST_FAILED:{result.returncode}')
+    agents=json.loads(result.stdout).get('result',{}).get('agents',[])
+    saved=state.get('director_target')
+    for record in agents:
+        if record.get('pane_id') == saved and record.get('agent') == 'codex':
+            return saved, 'STATE_BOUND_PANE'
+    named=[record for record in agents if record.get('name') == 'arc-director' and record.get('agent') == 'codex']
+    if len(named) == 1:
+        return named[0]['pane_id'], 'HERDR_NAMED_AGENT'
+    raise RuntimeError('DIRECTOR_TARGET_UNRESOLVED')
 def controller_turn_is_active(target):
     """Return whether the selected Controller is already executing a turn.
 
@@ -719,6 +740,7 @@ def director(s,p,timeout):
         raise RuntimeError('REVIEW_BRIEF_ALREADY_CONSUMED')
     action_id=director_action_sha256(s,brief_sha256)
     previous=s.get('director_dispatch')
+    target,target_source=resolve_director_target(s,p)
     if isinstance(previous,dict) and previous.get('action_sha256') == action_id:
         status=previous.get('status')
         # A timeout or a successful Herdr return proves neither that a response
@@ -727,12 +749,20 @@ def director(s,p,timeout):
         if status in {'INTENT_RECORDED','DELIVERED','ACKNOWLEDGED','RUNNING','UNKNOWN_DELIVERY'}:
             log(s,f'director review={action_id[:12]} already {status}; no automatic reprompt')
             return 'DIRECTOR_DELIVERY_UNKNOWN' if status in {'INTENT_RECORDED','UNKNOWN_DELIVERY'} else 'DIRECTOR_RESPONSE_PENDING'
+        # A confirmed rejection can be retried only after a Controller has
+        # changed the resolved target.  Retrying the same absent target would
+        # create unbounded Herdr calls without advancing science.
+        if status == 'NOT_DELIVERED' and previous.get('target') == target:
+            log(s,f'director review={action_id[:12]} confirmed non-delivery to unchanged target={target}; Controller repair required')
+            return 'DIRECTOR_NOT_DELIVERED'
     archive_superseded_director_dispatch(s,previous,action_id)
     s.update({'director_review_in_progress':True,
               'director_dispatch':{'status':'INTENT_RECORDED','action_sha256':action_id,
                                    'brief_sha256':brief_sha256,'intent_recorded_at':now(),
-                                   'target':'arc-director',
-                                   'delivery_attempt':int(previous.get('delivery_attempt',0) if isinstance(previous,dict) else 0)+1},
+                                   'target':target,'target_source':target_source,
+                                   'delivery_attempt':int(previous.get('delivery_attempt',0) if isinstance(previous,dict) else 0)+1,
+                                   'retry_reason':('CONFIRMED_NON_DELIVERY_TARGET_CHANGED' if isinstance(previous,dict) and previous.get('status') == 'NOT_DELIVERED' else None),
+                                   'prior_target':(previous.get('target') if isinstance(previous,dict) and previous.get('status') == 'NOT_DELIVERED' else None)},
               'updated_at':now()})
     atomic(p,s)
     brief_data=json.loads(Path(brief).read_text(encoding='utf-8-sig'))
@@ -749,7 +779,7 @@ def director(s,p,timeout):
     request=(f'ARC2 Governor review. Read orchestration/agents/ARC_DIRECTOR_SYSTEM.md, orchestration/director/SCIENTIFIC_REVIEW_GUIDANCE.md, and {brief}. Write exactly one structured JSON response to {response_path}. '
              f'It must contain reviewed_brief_sha256={brief_sha256} and one valid decision. {directive}'
              'Do not schedule or prompt Controller.')
-    outcome=prompt('arc-director',request,timeout,s)
+    outcome=prompt(target,request,timeout,s)
     if outcome is True: outcome=('DELIVERED','LEGACY_TEST_DELIVERY')
     elif outcome is False: outcome=('UNKNOWN_DELIVERY','LEGACY_BOOLEAN_FAILURE')
     delivery,detail=outcome
