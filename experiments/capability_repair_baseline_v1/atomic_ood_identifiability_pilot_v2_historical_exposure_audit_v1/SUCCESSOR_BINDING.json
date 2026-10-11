@@ -1,0 +1,11 @@
+{
+  "gpu_used": false,
+  "model_loaded": false,
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V2_HISTORICAL_EXPOSURE_BINDING_V1",
+  "status": "CPU_ONLY_BOUND_UNCHANGED_V2_COHORT",
+  "supplemental_audit_sha256": "cb6af8427619a08dfb74ce22def14780aaf340a03b66094e066e133a9c3c83ae",
+  "training": false,
+  "v2_manifest_sha256": "7b602d19ab176da775480cbea5aae530ee35dc1953a7d32f88bfcf0c6fc0b4cb",
+  "v2_prompt_sha256": "19b74267b58f1d9884a0c21a57ed08fdf1b4f1d1aa981bf79513e1f32ba61189",
+  "v2_target_sidecar_sha256": "c3d830b7d79470d72effc8b589f403509b9819ccecb458d63a6dbc919629a7c7"
+}

@@ -1,0 +1,10 @@
+{
+  "audit_sha256": "cb6af8427619a08dfb74ce22def14780aaf340a03b66094e066e133a9c3c83ae",
+  "binding_sha256": "1afecdc0da1d3b2bbe9bde948789b1539d5c2052a6231e2d258d30c1977bc9ef",
+  "brief_type": "DIRECTOR_FINAL_PRELAUNCH_REVIEW",
+  "gpu_used": false,
+  "model_loaded": false,
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V2",
+  "request": "Review only the complete role-aware E04/E05 historical exposure audit and binding for the unchanged V2 cohort. No GPU authorization is requested.",
+  "reviewed_response_sha256": "8c9962258f3224df4c77b6611ea29a788a5ef494d8f9751b1b8c821b4adc3f56"
+}
