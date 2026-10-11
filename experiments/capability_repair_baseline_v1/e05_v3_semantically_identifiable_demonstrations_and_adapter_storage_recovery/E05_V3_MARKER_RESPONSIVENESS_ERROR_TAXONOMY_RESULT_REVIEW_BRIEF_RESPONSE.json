@@ -1,0 +1,112 @@
+{
+  "response_id": "E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_RESULT_REVIEW_BRIEF_RESPONSE",
+  "reviewed_brief_sha256": "ddc22c3adb9e1258f8d812f754e9eae86218057992be9d7d6fd5ad0cde603f8e",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "CPU_ONLY_E05_V3_NONORACLE_STRUCTURAL_RESIDUAL_DECOMPOSITION_PREFREEZE_V1",
+  "next_action": "Prepare and freeze one CPU-only diagnostic specification that decomposes the already frozen parser-valid nonoracle RUN_004 predictions into mutually exclusive output-error mechanisms using only immutable raw predictions, input grids, targets, canonical-base identities, and task-schema semantics. The specification must distinguish at minimum exact input copying, correct target foreground geometry with color-only error, target-congruent geometry at wrong placement, target cell-count preserved but noncongruent geometry, and dimension or cell-count failure; define strict precedence, ambiguity handling, canonical-base aggregation, and a prospective decision rule before computing any category. Bind all source hashes and return one concise pre-execution review brief. Do not execute the decomposition or authorize any model, GPU, training, generation, inference, gradient, target expansion, or intervention-selection work in this stage.",
+  "observed_result": {
+    "classification": "STRUCTURAL_EXECUTION_DOMINANT",
+    "marker_binding_control": {
+      "raw_v7_structural_failure_bases_of_48": 48,
+      "trained_control_structural_failure_bases_of_48": 48,
+      "treatment_structural_failure_bases_of_48": 48,
+      "treatment_parser_invalid_bases": 0,
+      "treatment_parser_valid_nonoracle_bases": 48,
+      "treatment_structural_share_ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    "marker_conditioned_rotation": {
+      "raw_v7_correct_bases_of_48": 7,
+      "raw_v7_structural_failure_bases_of_48": 41,
+      "trained_control_correct_bases_of_48": 8,
+      "trained_control_structural_failure_bases_of_48": 40,
+      "treatment_correct_bases_of_48": 8,
+      "treatment_structural_failure_bases_of_48": 40,
+      "treatment_parser_invalid_bases": 0,
+      "treatment_parser_valid_nonoracle_bases": 40,
+      "treatment_structural_share_ci95": [
+        0.7291666666666666,
+        0.9375
+      ]
+    }
+  },
+  "mechanism_assessment": {
+    "confidence": "ESTABLISHED_DESCRIPTIVE_STRUCTURAL_FAILURE_DOMINANCE__CAUSAL_MECHANISM_UNKNOWN",
+    "established": [
+      "The frozen dominance rule is satisfied in both marker-sensitive conditions.",
+      "Treatment errors are not dominated by parser failure, marker-invariant legal rotations, or marker-responsive wrong legal rotations; they are parser-valid grids outside the four legal turn-specific target grids.",
+      "Marker-binding morphology is identical across all three arms: all 48 bases are structural failures.",
+      "On marker-conditioned rotation, Treatment and trained Control have identical base-level categories, while Treatment differs from raw V7 on only one base that changes from structural failure to correct mapping.",
+      "The marker-replay Treatment therefore did not materially change the held-out error mechanism and does not justify checkpoint promotion or another replay round."
+    ],
+    "supported_hypothesis": "The dominant limitation lies below or beyond turn selection among already represented legal rotations: the models often construct a well-formed but semantically non-oracle grid. This is consistent with a shared representation, object-extraction, geometry, placement, or color-rendering bottleneck rather than a Treatment-specific marker-selection failure.",
+    "unknown": [
+      "Whether nonoracle grids preserve the correct foreground geometry but fail color assignment.",
+      "Whether they contain the correct shape at an incorrect location or canvas size.",
+      "Whether they preserve cell count while producing noncongruent geometry, copy the input, or fail more fundamentally.",
+      "Whether data coverage, objective design, optimization dynamics, or gradient interference causes the structural failure.",
+      "Whether any morphology transfers beyond this reused synthetic development cohort."
+    ],
+    "research_bottleneck": "STRUCTURAL_OR_FORMAT_FAILURE is still too broad to choose a mechanism-guided weight intervention; parser-valid nonoracle outputs must be decomposed before deciding between color/placement supervision, geometric representation, object extraction, or broader structural curriculum hypotheses."
+  },
+  "current_route_disposition": {
+    "e05_v3_taxonomy": "COMPLETE_VALID_DESCRIPTIVE_RESULT",
+    "marker_replay_confirmation": "NOT_SUPPORTED_ON_HELD_OUT_COHORT",
+    "checkpoint_promotion": "REJECTED",
+    "automatic_rerun_or_expansion": false,
+    "independent_generalization_claim": false,
+    "entire_arc2_research_program": "ACTIVE"
+  },
+  "next_question": "Among parser-valid nonoracle outputs, are failures primarily nuisance-level color or placement errors with preserved target geometry, input-copy behavior, or genuinely noncongruent geometric construction errors?",
+  "smallest_evidence_path": {
+    "mode": "CPU_ONLY_PREFREEZE_PREPARATION",
+    "reused_evidence_only": true,
+    "primary_unit": "canonical base with all four marker-turn views retained",
+    "primary_arms": [
+      "RAW_V7_NO_E04E_UPDATE",
+      "E04E_RUN003_CONTROL_EQUAL_SLOT",
+      "E04E_RUN003_TREATMENT_EQUAL_SLOT"
+    ],
+    "required_scope": [
+      "MARKER_BINDING_CONTROL",
+      "MARKER_CONDITIONED_ROTATION"
+    ],
+    "interpretation_limit": "Descriptive morphology only; no causal mechanism or independent generalization claim."
+  },
+  "expected_directional_interpretation": {
+    "color_or_placement_dominant": "Prioritize an independently validated representation or intermediate-supervision hypothesis that preserves geometry while repairing rendering variables.",
+    "input_copy_dominant": "Prioritize failure of transformation execution or task-conditioned action selection rather than output formatting.",
+    "noncongruent_geometry_dominant": "Prioritize geometric/object representation and structural curriculum hypotheses before another marker-specific objective.",
+    "mixed_or_inconclusive": "Do not choose a training intervention from E05; require a new independent cohort designed to separate the unresolved structural factors."
+  },
+  "frozen_conditions": [
+    "Taxonomy result SHA256 5ba74c14c4367b9fe945ac7e005a1363b339f33f43ca813f576bfdcd58d5bc49 and execution receipt SHA256 07bd19ac26e1127ed662b8013ceedb15d7292f65a31a60c98453c47c65b66ab6 remain immutable.",
+    "All RUN_004 raw outputs, target sidecar, arm identities, parser fields, canonical grouping, and the completed STRUCTURAL_EXECUTION_DOMINANT classification remain unchanged.",
+    "Future categories and thresholds must be frozen before any per-example residual classification is computed.",
+    "E05 remains reused synthetic development evidence only."
+  ],
+  "forbidden_actions": [
+    "Do not rerun or expand E05, change the completed taxonomy, or adaptively reuse E05 per-example outcomes for training, demonstration selection, curriculum weights, thresholds, or hyperparameters.",
+    "Do not infer that structural error dominance proves a representation defect, gradient conflict, insufficient data, or any other causal training mechanism.",
+    "Do not promote either trained checkpoint or start another marker-replay intervention.",
+    "Do not load a model, use GPU, train, generate, infer, perform gradient work, expand targets, or select a training intervention from this response.",
+    "Do not access Gold, dGold, or FINAL_AUDIT."
+  ],
+  "authorization": {
+    "cpu_only_prefreeze_preparation": true,
+    "cpu_residual_decomposition_execution": false,
+    "model_loading": false,
+    "gpu_work": false,
+    "training": false,
+    "inference": false,
+    "generation": false,
+    "gradient_work": false,
+    "target_expansion": false,
+    "intervention_selection": false,
+    "gold_dgold_final_audit_access": false
+  },
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

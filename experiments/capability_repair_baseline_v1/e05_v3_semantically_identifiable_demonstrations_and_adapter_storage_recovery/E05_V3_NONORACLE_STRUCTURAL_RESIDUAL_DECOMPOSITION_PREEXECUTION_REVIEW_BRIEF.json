@@ -1,0 +1,25 @@
+{
+  "allowed_outcomes": [
+    "CONTINUE_CONTROLLER only for unchanged CPU-only execution",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "boundaries": [
+    "NO_MODEL_LOADING",
+    "NO_GPU_WORK",
+    "NO_TRAINING",
+    "NO_INFERENCE",
+    "NO_GENERATION",
+    "NO_GRADIENT_WORK",
+    "NO_TARGET_EXPANSION",
+    "NO_GOLD_DGOLD_FINAL_AUDIT",
+    "NO_ADAPTIVE_TUNING_OR_INTERVENTION_SELECTION"
+  ],
+  "brief_type": "DIRECTOR_E05_V3_NONORACLE_STRUCTURAL_RESIDUAL_DECOMPOSITION_PREEXECUTION_REVIEW",
+  "director_result_response_sha256": "f66594f0d620b029bad50fc8efd268b6145df961dabee4582176803d4f0b3a69",
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "request": "Approve or reject exactly the frozen CPU-only residual-decomposition execution. No model loading, GPU work, training, generation, inference, gradient work, target expansion, or intervention selection is requested.",
+  "specification_path": "E05_V3_NONORACLE_STRUCTURAL_RESIDUAL_DECOMPOSITION_PREFREEZE_SPEC_V1.json",
+  "specification_sha256": "d0b8a4510321243a422d708fedc4f0dd3d368dd053a9de4359c8c6a7c0cc722e"
+}
