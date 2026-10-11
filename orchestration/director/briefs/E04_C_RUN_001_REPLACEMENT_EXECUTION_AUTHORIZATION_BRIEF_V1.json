@@ -1,0 +1,48 @@
+{
+    "schema_version":  1,
+    "brief_id":  "E04_C_RUN_001_REPLACEMENT_EXECUTION_AUTHORIZATION_BRIEF_V1",
+    "request_type":  "FRESH_EXECUTION_AUTHORIZATION_ONLY",
+    "protocol_id":  "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+    "scientific_conditions":  "UNCHANGED_FROM_DIRECTOR_RESPONSE_05699c4b647ce50f1531c6665ac96848d4255355d00a7ae81fe3a33df5a2b021",
+    "prior_authorization":  {
+                                "director_response_sha256":  "05699c4b647ce50f1531c6665ac96848d4255355d00a7ae81fe3a33df5a2b021",
+                                "consumed_at_detached_launch":  true,
+                                "retry_authorized":  false
+                            },
+    "failed_run":  {
+                       "run_id":  "RUN_001_720958a2b6e96ca6e9a15b86b0165d7d",
+                       "terminal_receipt_sha256":  "d3e2ba7184a8e0d72c7fbe8f8badd6ef9239fa5283b2781e7d18fa504f457056",
+                       "status":  "FAILED_BEFORE_MODEL_IMPORT",
+                       "root_cause":  "E04C_ARM_OUTPUT_BINDING",
+                       "wall_seconds":  1.562282795086503,
+                       "model_imported":  false,
+                       "optimizer_constructed":  false,
+                       "backward_performed":  false,
+                       "parameter_updates":  0,
+                       "target_sidecar_accessed":  false,
+                       "final_audit_opened":  false
+                   },
+    "immutable_preservation":  {
+                                   "failure_package_path":  "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/E04_C_RUN_001_CONTROLLED_FAILURE_V1.json",
+                                   "failure_package_sha256":  "39f8648997669d4a661ef2964e7a6500f3a4c55ef7486001cf5e87731bf6eaf1",
+                                   "remote_evidence_manifest_path":  ".arc2-local/orchestration/remote_evidence/E04_C_RUN_001_720958a2b6e96ca6e9a15b86b0165d7d/EVIDENCE_MANIFEST.json"
+                               },
+    "engineering_correction":  {
+                                   "description":  "Binding builder now emits arm_output_roots as \u003crun_root\u003e/arms/\u003cARM\u003e, exactly matching the frozen worker layout.",
+                                   "source_commit":  "dcc5e555b303b4910874f228d0a6ea2f468d4be1",
+                                   "cpu_tests":  "12 E04-C contract/protocol/schedule/native-token tests passed",
+                                   "scientific_change":  false
+                               },
+    "requested_authorization":  {
+                                    "one_detached_replacement_job":  true,
+                                    "fresh_nonce_and_output_root":  true,
+                                    "same_V7_checkpoints_and_two_arms":  true,
+                                    "same_72_frozen_TRAIN_examples":  true,
+                                    "same_physical_B1_BF16_LoRA_gradient_recipe":  true,
+                                    "same_3600_per_arm_and_7200_joint_caps":  true,
+                                    "no_retry":  true,
+                                    "no_Gold_dGold_FINAL_AUDIT":  true,
+                                    "post_freeze_cpu_scoring_only":  true
+                                },
+    "decision_required":  "Authorize or deny exactly one replacement detached E04-C execution. No scientific redesign or expansion is requested."
+}
