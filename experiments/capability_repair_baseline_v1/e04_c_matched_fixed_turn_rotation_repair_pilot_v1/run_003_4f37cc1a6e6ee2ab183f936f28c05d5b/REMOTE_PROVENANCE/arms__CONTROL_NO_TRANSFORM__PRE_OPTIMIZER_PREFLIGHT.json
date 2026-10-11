@@ -1,0 +1,66 @@
+{
+  "arm": "CONTROL_NO_TRANSFORM",
+  "model_imported": false,
+  "optimizer_constructed": false,
+  "runtime": {
+    "static_preflight_sha256": "9e270ff12c3b382f2d2efc86c181732018f730df7b9dc2055e7f056632930b38",
+    "tokenizer": {
+      "chat_template_source": "nvarc_official_for_missing_checkpoint_template",
+      "config_vocab_size": 16,
+      "eos_token_id": 15,
+      "pad_token_id": 13,
+      "token_mapping": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "<|endoftext|>": 13,
+        "<|im_end|>": 15,
+        "<|im_start|>": 14,
+        "assistant": 12,
+        "user": 11,
+        "\u010a": 10
+      },
+      "tokenizer_vocab_size": 16
+    },
+    "totals": {
+      "CONTROL_NO_TRANSFORM": {
+        "supervised_tokens": 28800,
+        "total_tokens": 207360
+      },
+      "TREATMENT_FIXED_TURN_ROTATION": {
+        "supervised_tokens": 28800,
+        "total_tokens": 207360
+      }
+    }
+  },
+  "schedule": {
+    "arm_totals": {
+      "CONTROL_NO_TRANSFORM": {
+        "supervised_tokens": 28800,
+        "total_tokens": 207360
+      },
+      "TREATMENT_FIXED_TURN_ROTATION": {
+        "supervised_tokens": 28800,
+        "total_tokens": 207360
+      }
+    },
+    "intervention_slots": 96,
+    "model_imported": false,
+    "optimizer_constructed": false,
+    "protected_replay_slots": 288,
+    "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+    "slots": 384,
+    "status": "PASS_CPU_NATIVE_SCHEDULE",
+    "target_sidecar_accessed": false,
+    "tokenizer_loaded": false
+  },
+  "status": "PASS_PRODUCTION_TOKENIZER_AND_COLLATOR",
+  "target_sidecar_accessed": false
+}

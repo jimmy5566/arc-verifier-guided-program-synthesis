@@ -1,0 +1,50 @@
+{
+  "authorized_question": "Interpret this frozen E04-C result and recommend only whether a scientifically distinct follow-up is warranted. No retry, replacement, expansion, or execution authorization is requested.",
+  "brief_id": "E04_C_RUN_003_RESULT_REVIEW_BRIEF_V1",
+  "created_at": "2026-10-11T03:03:14.243112Z",
+  "frozen_result": {
+    "decision": "PROTECTION_FAILURE",
+    "marker_binding_control": {
+      "accuracy_delta_vs_v7": -0.3020833333333333,
+      "ci95_high": -0.2604166666666667,
+      "ci95_low": -0.34375,
+      "episode_delta_vs_v7": -58.0
+    },
+    "no_transform_retention_control": {
+      "accuracy_delta_vs_v7": 0.24479166666666666,
+      "ci95_high": 0.2916666666666667,
+      "ci95_low": 0.19270833333333334,
+      "episode_delta_vs_v7": 47.0
+    },
+    "primary_fixed_turn_rotation_control": {
+      "accuracy_delta_vs_v7": 0.3125,
+      "ci95_high": 0.40625,
+      "ci95_low": 0.21354166666666666,
+      "episode_delta_vs_v7": 60.0
+    },
+    "rotation_target": {
+      "accuracy_delta_vs_v7": 0.041666666666666664,
+      "ci95_high": 0.08333333333333333,
+      "ci95_low": 0.0,
+      "episode_delta_vs_v7": 8.0
+    }
+  },
+  "process_integrity": {
+    "cap_status": "COMPLETE",
+    "final_audit_opened": false,
+    "optimizer_steps_by_arm": {
+      "CONTROL_NO_TRANSFORM": 96,
+      "TREATMENT_FIXED_TURN_ROTATION": 96
+    },
+    "raw_hashes_verified": true,
+    "target_sidecar_accessed_remote": false,
+    "terminal_status": "COMPLETE_PENDING_CPU_SCORE"
+  },
+  "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+  "purpose": "SYNCHRONOUS_DIRECTOR_RESULT_REVIEW_ONLY",
+  "result_package_path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/run_003_4f37cc1a6e6ee2ab183f936f28c05d5b/RESULT_PACKAGE.json",
+  "result_package_sha256": "e5e546c91c55031fa3eea96e76286acc4ce2fccabd54bf23a14f83880bbc6ab1",
+  "run_id": "RUN_003_REPLACEMENT_4f37cc1a6e6ee2ab183f936f28c05d5b",
+  "schema_version": 1,
+  "scope": "REUSED_E04_DEVELOPMENT_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION_CONFIRMATION"
+}

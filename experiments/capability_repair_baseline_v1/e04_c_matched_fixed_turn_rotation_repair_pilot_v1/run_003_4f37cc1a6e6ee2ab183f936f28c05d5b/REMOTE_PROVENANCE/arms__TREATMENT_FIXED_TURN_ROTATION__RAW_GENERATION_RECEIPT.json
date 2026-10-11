@@ -1,0 +1,10 @@
+{
+  "arm": "TREATMENT_FIXED_TURN_ROTATION",
+  "elapsed_seconds": 587.7019560970366,
+  "final_audit_opened": false,
+  "physical_batch_size": 1,
+  "raw_sha256": "ef08aa4b4bdc269847455b8cc327266eead55e98e730f76fbaafe1593609581e",
+  "rows": 768,
+  "status": "RAW_GENERATIONS_FROZEN_NO_TARGETS",
+  "target_sidecar_accessed": false
+}

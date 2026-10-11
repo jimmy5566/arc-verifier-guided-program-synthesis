@@ -1,0 +1,10 @@
+{
+  "arm": "CONTROL_NO_TRANSFORM",
+  "elapsed_seconds": 579.0839379103854,
+  "final_audit_opened": false,
+  "physical_batch_size": 1,
+  "raw_sha256": "0d8e6bbc1ca894177204a9fa179963d6ece1a2b0018440be49b3dded736b3e5a",
+  "rows": 768,
+  "status": "RAW_GENERATIONS_FROZEN_NO_TARGETS",
+  "target_sidecar_accessed": false
+}

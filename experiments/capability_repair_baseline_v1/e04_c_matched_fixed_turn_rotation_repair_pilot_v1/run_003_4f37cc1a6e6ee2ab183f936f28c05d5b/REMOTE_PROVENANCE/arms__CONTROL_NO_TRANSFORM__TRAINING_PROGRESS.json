@@ -1,0 +1,8 @@
+{
+  "arm": "CONTROL_NO_TRANSFORM",
+  "optimizer_steps": 96,
+  "processed_tokens": 207360,
+  "status": "RUNNING",
+  "supervised_tokens": 28800,
+  "target_sidecar_accessed": false
+}

@@ -1,0 +1,29 @@
+{
+  "arm_order": [
+    "CONTROL_NO_TRANSFORM",
+    "TREATMENT_FIXED_TURN_ROTATION"
+  ],
+  "binding_sha256": "8c1837e5f9da6f56bd6f077eee369bc063cd85cd98f6a195131e12579d8c1252",
+  "final_audit_opened": false,
+  "joint_runtime_cap_seconds": 7200,
+  "launch_commit": "c51492cc7963020a8b8ae6e3200fd3e36c10184e",
+  "optimizer_steps_by_arm": {
+    "CONTROL_NO_TRANSFORM": 96,
+    "TREATMENT_FIXED_TURN_ROTATION": 96
+  },
+  "parameter_updates_by_arm": {
+    "CONTROL_NO_TRANSFORM": 96,
+    "TREATMENT_FIXED_TURN_ROTATION": 96
+  },
+  "physical_batch_size": 1,
+  "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+  "raw_sha256": {
+    "CONTROL_NO_TRANSFORM": "0d8e6bbc1ca894177204a9fa179963d6ece1a2b0018440be49b3dded736b3e5a",
+    "TREATMENT_FIXED_TURN_ROTATION": "ef08aa4b4bdc269847455b8cc327266eead55e98e730f76fbaafe1593609581e"
+  },
+  "schema_version": 1,
+  "status": "COMPLETE_PENDING_CPU_SCORE",
+  "target_sidecar_accessed": false,
+  "wall_seconds": 2472.918262310326,
+  "worker_source_commit": "e9a1e3d0297834900076d4530cf5867b21739b4a"
+}

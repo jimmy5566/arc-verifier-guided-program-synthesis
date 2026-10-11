@@ -1,0 +1,17 @@
+{
+  "cap_seconds": 7200,
+  "command": [
+    "python3",
+    "scripts/run_e04_c_matched_rotation_repair_pilot.py",
+    "--binding",
+    "/workspace/arc2/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/run_001_4f37cc1a6e6ee2ab183f936f28c05d5b.launch_lock/LAUNCH_BINDING.json",
+    "--output-root",
+    "/workspace/arc2/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/run_001_4f37cc1a6e6ee2ab183f936f28c05d5b",
+    "--launch-commit",
+    "c51492cc7963020a8b8ae6e3200fd3e36c10184e"
+  ],
+  "exit_code": 0,
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "wall_seconds": 2474.5039488952607
+}

@@ -1,0 +1,128 @@
+{
+  "binding_sha256": "8c1837e5f9da6f56bd6f077eee369bc063cd85cd98f6a195131e12579d8c1252",
+  "bootstrap_replicates": 10000,
+  "bootstrap_seed": 20261011,
+  "control_raw_sha256": "0d8e6bbc1ca894177204a9fa179963d6ece1a2b0018440be49b3dded736b3e5a",
+  "control_vs_v7": {
+    "canonical_bases": 48,
+    "condition_exact_grid_accuracy": {
+      "FIXED_TURN_ROTATION_CONTROL": 0.3385416666666667,
+      "MARKER_BINDING_CONTROL": 0.9010416666666666,
+      "NO_TRANSFORM_RETENTION_CONTROL": 0.9947916666666666,
+      "ROTATION_TARGET": 0.109375
+    },
+    "condition_parser_validity": {
+      "FIXED_TURN_ROTATION_CONTROL": 1.0,
+      "MARKER_BINDING_CONTROL": 1.0,
+      "NO_TRANSFORM_RETENTION_CONTROL": 1.0,
+      "ROTATION_TARGET": 1.0
+    },
+    "delta_vs_v7_by_condition": {
+      "FIXED_TURN_ROTATION_CONTROL": {
+        "accuracy_delta_vs_v7": 0.17708333333333334,
+        "ci95_high": 0.2552083333333333,
+        "ci95_low": 0.09375,
+        "episode_delta_vs_v7": 34.0
+      },
+      "MARKER_BINDING_CONTROL": {
+        "accuracy_delta_vs_v7": -0.0625,
+        "ci95_high": -0.020833333333333332,
+        "ci95_low": -0.10416666666666667,
+        "episode_delta_vs_v7": -12.0
+      },
+      "NO_TRANSFORM_RETENTION_CONTROL": {
+        "accuracy_delta_vs_v7": 0.24479166666666666,
+        "ci95_high": 0.2916666666666667,
+        "ci95_low": 0.19270833333333334,
+        "episode_delta_vs_v7": 47.0
+      },
+      "ROTATION_TARGET": {
+        "accuracy_delta_vs_v7": -0.015625,
+        "ci95_high": 0.020833333333333332,
+        "ci95_low": -0.057291666666666664,
+        "episode_delta_vs_v7": -3.0
+      }
+    }
+  },
+  "decision": "PROTECTION_FAILURE",
+  "final_audit_opened": false,
+  "primary_rule": {
+    "bootstrap_ci_lower_gt_zero": true,
+    "condition": "FIXED_TURN_ROTATION_CONTROL",
+    "minimum_episode_gain": 8,
+    "observed": {
+      "accuracy_delta_vs_v7": 0.3125,
+      "ci95_high": 0.40625,
+      "ci95_low": 0.21354166666666666,
+      "episode_delta_vs_v7": 60.0
+    }
+  },
+  "protected_rule": {
+    "maximum_episode_decline": 8,
+    "observed": {
+      "MARKER_BINDING_CONTROL": {
+        "accuracy_delta_vs_v7": -0.3020833333333333,
+        "ci95_high": -0.2604166666666667,
+        "ci95_low": -0.34375,
+        "episode_delta_vs_v7": -58.0
+      },
+      "NO_TRANSFORM_RETENTION_CONTROL": {
+        "accuracy_delta_vs_v7": 0.24479166666666666,
+        "ci95_high": 0.2916666666666667,
+        "ci95_low": 0.19270833333333334,
+        "episode_delta_vs_v7": 47.0
+      }
+    }
+  },
+  "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+  "raw_freeze_receipt_sha256": "2bb97011bad8150564caba10ce87226fbf9f77962a1e05d73f9e3f07c19a8c11",
+  "rows": 192,
+  "schema_version": 1,
+  "scientific_scope": "REUSED_E04_DEVELOPMENT_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION_CONFIRMATION",
+  "status": "SCORED_DEVELOPMENT_EVIDENCE",
+  "target_scorer_sidecar_sha256": "8da15d579c5e91f80f7e8587f893cc4e210d6b84120abf0823e46cc9978e635e",
+  "target_sidecar_opened_only_after_all_raw_freeze_validation": true,
+  "treatment_raw_sha256": "ef08aa4b4bdc269847455b8cc327266eead55e98e730f76fbaafe1593609581e",
+  "treatment_vs_v7": {
+    "canonical_bases": 48,
+    "condition_exact_grid_accuracy": {
+      "FIXED_TURN_ROTATION_CONTROL": 0.4739583333333333,
+      "MARKER_BINDING_CONTROL": 0.6614583333333334,
+      "NO_TRANSFORM_RETENTION_CONTROL": 0.9947916666666666,
+      "ROTATION_TARGET": 0.16666666666666666
+    },
+    "condition_parser_validity": {
+      "FIXED_TURN_ROTATION_CONTROL": 1.0,
+      "MARKER_BINDING_CONTROL": 1.0,
+      "NO_TRANSFORM_RETENTION_CONTROL": 1.0,
+      "ROTATION_TARGET": 1.0
+    },
+    "delta_vs_v7_by_condition": {
+      "FIXED_TURN_ROTATION_CONTROL": {
+        "accuracy_delta_vs_v7": 0.3125,
+        "ci95_high": 0.40625,
+        "ci95_low": 0.21354166666666666,
+        "episode_delta_vs_v7": 60.0
+      },
+      "MARKER_BINDING_CONTROL": {
+        "accuracy_delta_vs_v7": -0.3020833333333333,
+        "ci95_high": -0.2604166666666667,
+        "ci95_low": -0.34375,
+        "episode_delta_vs_v7": -58.0
+      },
+      "NO_TRANSFORM_RETENTION_CONTROL": {
+        "accuracy_delta_vs_v7": 0.24479166666666666,
+        "ci95_high": 0.2916666666666667,
+        "ci95_low": 0.19270833333333334,
+        "episode_delta_vs_v7": 47.0
+      },
+      "ROTATION_TARGET": {
+        "accuracy_delta_vs_v7": 0.041666666666666664,
+        "ci95_high": 0.08333333333333333,
+        "ci95_low": 0.0,
+        "episode_delta_vs_v7": 8.0
+      }
+    }
+  },
+  "v7_reference_raw_sha256": "a3b90e8e668e5a325e0d70bc2774999065c3d06f56de657a270620aca7b65ec1"
+}

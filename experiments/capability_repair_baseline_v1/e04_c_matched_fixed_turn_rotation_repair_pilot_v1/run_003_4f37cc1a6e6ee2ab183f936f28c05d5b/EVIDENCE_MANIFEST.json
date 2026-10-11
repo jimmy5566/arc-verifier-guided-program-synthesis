@@ -1,0 +1,73 @@
+{
+  "files": {
+    "CPU_SCORE_RESULT.json": {
+      "bytes": 4583,
+      "sha256": "235fd79a034d5a473a9027f6868c0c8826d284e05f9d0be342cdabc9202e7507"
+    },
+    "REMOTE_PROVENANCE/CONTROL_NO_TRANSFORM_TERMINAL_RECEIPT.json": {
+      "bytes": 493,
+      "sha256": "d4e58ed264893a2e46232668f7206a4b4ca640d6c8bd30f949073741a7375f71"
+    },
+    "REMOTE_PROVENANCE/LAUNCH_CAP_RECEIPT.json": {
+      "bytes": 590,
+      "sha256": "4c4fdec740e8a3b108a5fe8270c4064745449dc0d59954eb26f73dae6af06af7"
+    },
+    "REMOTE_PROVENANCE/LAUNCH_LOCK__LAUNCH_BINDING.json": {
+      "bytes": 4494,
+      "sha256": "8c1837e5f9da6f56bd6f077eee369bc063cd85cd98f6a195131e12579d8c1252"
+    },
+    "REMOTE_PROVENANCE/LAUNCH_LOCK__LAUNCH_RECEIPT.json": {
+      "bytes": 646,
+      "sha256": "fb0b9d70fa921c5fc2b5356aa70732b5236d67a4d86f2c8690ed55fe3342b171"
+    },
+    "REMOTE_PROVENANCE/LAUNCH_LOCK__launcher.log": {
+      "bytes": 1540,
+      "sha256": "97e215304372566c53fec0b6f79a68ceb8900d4a2d0ff980b79dd9c61bedc303"
+    },
+    "REMOTE_PROVENANCE/PREFLIGHT_RECEIPT.json": {
+      "bytes": 513,
+      "sha256": "10967bf092cb69df3c0c6cdc654876b130be186bd3a07f6915e939c2e91fe347"
+    },
+    "REMOTE_PROVENANCE/RAW_FREEZE_RECEIPT.json": {
+      "bytes": 1073,
+      "sha256": "2bb97011bad8150564caba10ce87226fbf9f77962a1e05d73f9e3f07c19a8c11"
+    },
+    "REMOTE_PROVENANCE/TERMINAL_RECEIPT.json": {
+      "bytes": 1053,
+      "sha256": "c4ac9b49478ff0bc0eb89edb53df42eafbd673d1a54d3307d13b367f2f349b3f"
+    },
+    "REMOTE_PROVENANCE/TREATMENT_FIXED_TURN_ROTATION_TERMINAL_RECEIPT.json": {
+      "bytes": 501,
+      "sha256": "9264e2c35340b60157761d89913b97afa821fa329f91f665b16c5d8abdf20fde"
+    },
+    "REMOTE_PROVENANCE/arms__CONTROL_NO_TRANSFORM__PRE_OPTIMIZER_PREFLIGHT.json": {
+      "bytes": 1719,
+      "sha256": "d950269ac960772ceaa1018b638a451dafbb0ea0a6b260b7041d4ce88f2ba7bd"
+    },
+    "REMOTE_PROVENANCE/arms__CONTROL_NO_TRANSFORM__RAW_GENERATION_RECEIPT.json": {
+      "bytes": 319,
+      "sha256": "ea208e0282bbc0032d1713515de008617dca0ed60808c23ae46d338c6210a688"
+    },
+    "REMOTE_PROVENANCE/arms__CONTROL_NO_TRANSFORM__TRAINING_PROGRESS.json": {
+      "bytes": 180,
+      "sha256": "8973bf290b4bc53d2dbf6aff5280aff7f29facb7b7a075f2f04d34da9ef4f2b9"
+    },
+    "REMOTE_PROVENANCE/arms__TREATMENT_FIXED_TURN_ROTATION__PRE_OPTIMIZER_PREFLIGHT.json": {
+      "bytes": 1728,
+      "sha256": "ad39538eb8d22c227affcd0b4ac2c52e335fc6f9d6bb763e8318ea844fd44324"
+    },
+    "REMOTE_PROVENANCE/arms__TREATMENT_FIXED_TURN_ROTATION__RAW_GENERATION_RECEIPT.json": {
+      "bytes": 328,
+      "sha256": "ac57a0997fe382c69cc067c8de746cee41266013efb48344b7fac57291b6096d"
+    },
+    "REMOTE_PROVENANCE/arms__TREATMENT_FIXED_TURN_ROTATION__TRAINING_PROGRESS.json": {
+      "bytes": 189,
+      "sha256": "1b93ae63d4196f3e9e18e4852b66a4d3fce5f033b9d98883ba120871d6af07d0"
+    }
+  },
+  "local_launch_evidence_archive_sha256": "f51301a3722190d664c0cd4621fd57e74ae18431e77499bf5b2febf182906b27",
+  "local_raw_evidence_archive_sha256": "5d73434fb3e17788ab8b87128e6d904baabbda635d0da3a57f8846bfc61f0436",
+  "raw_evidence_retained_locally": true,
+  "run_id": "RUN_003_REPLACEMENT_4f37cc1a6e6ee2ab183f936f28c05d5b",
+  "schema_version": 1
+}

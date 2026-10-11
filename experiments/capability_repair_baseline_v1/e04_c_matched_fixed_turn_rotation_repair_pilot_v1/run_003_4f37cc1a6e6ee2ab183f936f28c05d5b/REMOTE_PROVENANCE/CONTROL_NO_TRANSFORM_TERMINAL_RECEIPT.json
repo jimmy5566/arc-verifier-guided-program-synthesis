@@ -1,0 +1,15 @@
+{
+  "adapter_sha256": "620b0d3afb402ff7e593f43dc0442ae1b1a24083b7a918a7d04260681795dd9d",
+  "arm": "CONTROL_NO_TRANSFORM",
+  "elapsed_seconds": 416.70489453710616,
+  "final_audit_opened": false,
+  "optimizer_steps": 96,
+  "parameter_updates": 96,
+  "processed_tokens": 207360,
+  "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+  "runtime_cap_seconds": 3600,
+  "schema_version": 1,
+  "status": "COMPLETED",
+  "supervised_tokens": 28800,
+  "target_sidecar_accessed": false
+}

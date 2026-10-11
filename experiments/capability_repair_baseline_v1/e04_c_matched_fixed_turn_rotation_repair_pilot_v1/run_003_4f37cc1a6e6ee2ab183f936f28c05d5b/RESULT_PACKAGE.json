@@ -1,0 +1,42 @@
+{
+  "binding_sha256": "8c1837e5f9da6f56bd6f077eee369bc063cd85cd98f6a195131e12579d8c1252",
+  "cap_receipt_sha256": "4c4fdec740e8a3b108a5fe8270c4064745449dc0d59954eb26f73dae6af06af7",
+  "director_response_sha256": "2a5b9e436f9e12e919e258582d9ac4daa4c3443aa2d47efd055e85ccf8780574",
+  "final_audit_opened": false,
+  "frozen_at": "2026-10-11T03:03:14.243112Z",
+  "launch_commit": "c51492cc7963020a8b8ae6e3200fd3e36c10184e",
+  "local_launch_evidence_archive_sha256": "f51301a3722190d664c0cd4621fd57e74ae18431e77499bf5b2febf182906b27",
+  "local_raw_evidence_archive_sha256": "5d73434fb3e17788ab8b87128e6d904baabbda635d0da3a57f8846bfc61f0436",
+  "marker_binding_control_ci95": [
+    -0.34375,
+    -0.2604166666666667
+  ],
+  "marker_binding_control_episode_delta_vs_v7": -58.0,
+  "no_transform_retention_control_episode_delta_vs_v7": 47.0,
+  "optimizer_steps_by_arm": {
+    "CONTROL_NO_TRANSFORM": 96,
+    "TREATMENT_FIXED_TURN_ROTATION": 96
+  },
+  "primary_fixed_turn_rotation_control_ci95": [
+    0.21354166666666666,
+    0.40625
+  ],
+  "primary_fixed_turn_rotation_control_episode_delta_vs_v7": 60.0,
+  "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+  "raw_freeze_receipt_sha256": "2bb97011bad8150564caba10ce87226fbf9f77962a1e05d73f9e3f07c19a8c11",
+  "raw_sha256": {
+    "CONTROL_NO_TRANSFORM": "0d8e6bbc1ca894177204a9fa179963d6ece1a2b0018440be49b3dded736b3e5a",
+    "TREATMENT_FIXED_TURN_ROTATION": "ef08aa4b4bdc269847455b8cc327266eead55e98e730f76fbaafe1593609581e"
+  },
+  "rotation_target_episode_delta_vs_v7": 8.0,
+  "run_id": "RUN_003_REPLACEMENT_4f37cc1a6e6ee2ab183f936f28c05d5b",
+  "schema_version": 1,
+  "scientific_scope": "REUSED_E04_DEVELOPMENT_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION_CONFIRMATION",
+  "score_decision": "PROTECTION_FAILURE",
+  "score_sha256": "235fd79a034d5a473a9027f6868c0c8826d284e05f9d0be342cdabc9202e7507",
+  "status": "COMPLETE_CPU_SCORED_DEVELOPMENT_EVIDENCE",
+  "target_sidecar_accessed_remote": false,
+  "terminal_receipt_sha256": "c4ac9b49478ff0bc0eb89edb53df42eafbd673d1a54d3307d13b367f2f349b3f",
+  "wall_seconds": 2472.918262310326,
+  "worker_source_commit": "e9a1e3d0297834900076d4530cf5867b21739b4a"
+}
