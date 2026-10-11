@@ -1,0 +1,105 @@
+{
+  "amends": {
+    "confirmed_defect": "worker collection deadline was independently hard-coded to 7200 seconds despite the frozen 25200-second package cap",
+    "director_response_sha256": "d5514f7d3634cfedab832fa5d0a703ec738fa79536d992544516a3ba06e3b2f0",
+    "repair": "collection derives its deadline from runtime_estimate.active_hard_cap_seconds and rejects any value other than the frozen 25200 seconds",
+    "reviewed_brief_sha256": "34c29f611479effa53c3a4d4a3d3e64a0231a47917b3614b9717eaf32aebfa0a"
+  },
+  "amends_again": {
+    "authorization_consumed": false,
+    "confirmed_defect": "execute_real passed a length-sorted primary row sequence although the frozen package requires length_bucketing=false",
+    "prior_amended_brief_sha256": "c2112b2a011586b82067b8e81cbcf48d94501ef4b53004b4996dcfb91d50f0cc",
+    "prior_director_response_sha256": "45f39c9a799a87aca274fc3d6ee494be467b834f85c9b0dd83b38277e919fcc2",
+    "remote_binding_created": false,
+    "remote_job_started": false,
+    "repair": "primary_generation_order now returns the frozen prompt order when length_bucketing is false; a CPU regression proves it"
+  },
+  "authorization_request": {
+    "failure_policy": "Any failure consumes this authorization and permits no automatic replacement.",
+    "permitted_launches": 1,
+    "reason": "The reviewed e700 source was not launched. Before creating any runtime binding, a static audit found and corrected the frozen-order implementation mismatch. The same physical-B1 protocol requires a new SHA-bound one-shot authorization.",
+    "retry": false,
+    "type": "ONE_SHOT_GPU_EXECUTION_AUTHORIZATION"
+  },
+  "forbidden": [
+    "NO_TRAINING",
+    "NO_OPTIMIZER",
+    "NO_PARAMETER_UPDATES",
+    "NO_BACKWARD",
+    "NO_GRADIENT",
+    "NO_TTT",
+    "NO_AUGMENTATION",
+    "NO_DFS",
+    "NO_BEAM",
+    "NO_GOLD",
+    "NO_DGOLD",
+    "NO_FINAL_AUDIT"
+  ],
+  "kind": "R5_CAP192_RUN_007_ALL_B1_ORDER_REPAIR_PRELAUNCH_REVIEW",
+  "physical_b1_repair": {
+    "acceptance": "Each of the 12 B1_REPRODUCIBILITY rows per arm must exactly reproduce the corresponding frozen RUN_006 B1 generated_token_ids and parsed_grid before successor result acceptance.",
+    "fallback_ladder": [
+      1
+    ],
+    "length_bucketing": false,
+    "primary_requested_batch_size": 1,
+    "sole_primary_generation_mode": "physical Batch1",
+    "unchanged": "same Cap192 native greedy BF16; V7, E04-E Control, E04-E Treatment; frozen 192 prompt cohort; checkpoint bytes; tokenizer/parser/canonicalizer; sealed scorer and metrics"
+  },
+  "predecessor": {
+    "director_response_sha256": "a5d706969147c32d7d2c34ec3ab1207f613817e5e6d928d1228064f14a4843e1",
+    "raw_freeze_manifest_sha256": "264e912ddebd27fe9b78a9a641065f9b082cb2c033eb70dfc4994df9e7b643c9",
+    "result_sha256": "0ee9f23bcb8587183759bdd4260f807abfa3e18e1e09d329d982beb9e1a986eb",
+    "run_id": "RUN_006_CAP192_ddf8392c9a833f56665bc9010660cbe5",
+    "status": "INVALID_B1_BATCH_SENSITIVITY_DISAGREEMENT",
+    "terminal_receipt_sha256": "c10e20b3f0ab9d61c50b988859fe661731a409a14f07582ed1e4ced4d3703bcb"
+  },
+  "prelaunch_cpu_evidence": [
+    "18 of 18 run007 execution tests passed",
+    "fake-clock collection regression passes after 7201 seconds and fails exactly at the frozen 25200-second boundary",
+    "physical-B1 primary-order regression preserves the frozen prompt sequence when length_bucketing is false",
+    "worker --self-test passed",
+    "validate_preimport reports GPU false, model imported false, target sidecar accessed false, optimizer steps 0"
+  ],
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5_CAP192_RUN_007_ALL_B1",
+  "request": "Review one execution-only correction discovered before any binding or remote action: preserve the frozen prompt order when length_bucketing is false. The physical-B1 scientific protocol remains unchanged. If the exact repaired source and hashes are acceptable, authorize exactly one fresh, non-retry GPU execution for RUN_007. Do not launch work in this review.",
+  "runtime_cap_basis": {
+    "linear_estimate_seconds": 22647.106742004555,
+    "margin": "approximately 11 percent",
+    "proposed_active_hard_cap_seconds": 25200,
+    "run006_generator_calls": 54,
+    "run006_wall_seconds": 1998.2741242945194,
+    "run007_generator_calls": 612
+  },
+  "schema_version": 1,
+  "successor_execution_identity": {
+    "active_hard_cap_seconds": 25200,
+    "execution_package_path": "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_serialization_cap192_run_007_all_b1/EXECUTION_PACKAGE.json",
+    "execution_package_sha256": "b0ea913e433a7ed7fd1316daa482647d0fcc7cee76fea72570bcab6f50277ac8",
+    "fixed_b1_subset_path": "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_serialization_cap192_run_007_all_b1/B1_SENSITIVITY_SUBSET.json",
+    "fixed_b1_subset_sha256": "8dc8d56049213a720805a529bea8e38ce4ee626421232b12df44962507a8ed4e",
+    "fresh_output_identity": "Nonce and output root remain unused: no RUN_007 GPU launch was authorized or attempted.",
+    "fresh_remote_output_root": "/workspace/arc2/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_cap192_all_b1/run_007_6ea3ccce190a94a28e86231bd0c2204a",
+    "launcher_path": "scripts/launch_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192_run007_all_b1.py",
+    "launcher_sha256": "7485d782ef68f53ee6587986f5e82a55b66c58446afbabd97731a895a71653ef",
+    "nonce": "6ea3ccce190a94a28e86231bd0c2204a",
+    "source_commit": "5d843b04ceae9cb82cdef69f9b63f62f9d17068f",
+    "source_ref": "origin/results/arc2-r5-cap192-run006",
+    "tests_path": "tests/test_atomic_ood_identifiability_pilot_v4_r5_cap192_run007_all_b1_execution.py",
+    "tests_sha256": "5b157665153af38511901910d5c55dec06bf0c839370d0b73842caeeb0467f0d",
+    "worker_path": "scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192_run007_all_b1.py",
+    "worker_sha256": "60880a2a4c9b9300aca4e542c5d8709134511435d08597d09ae588e4d2b11cd4"
+  },
+  "target_blind_divergence_evidence": {
+    "discordant_count_by_arm": {
+      "E04_E_CONTROL": 2,
+      "E04_E_TREATMENT": 0,
+      "V7": 1
+    },
+    "path": "orchestration/results/atomic_ood_identifiability_pilot_v4_r5_cap192/run_006_ddf8392c9a833f56665bc9010660cbe5/B1_DIVERGENCE_REPORT.json",
+    "required_fields": "first differing token position, completion length, parser/canonical result, requested/effective batch; correctness confinement remains NOT_EVALUATED_TARGET_BLIND",
+    "sha256": "65980cde5576001a856b160e603aec6bba7d353d876e3dd1cba5d537cc81f849",
+    "target_content_released": false,
+    "target_sidecar_accessed": false
+  }
+}
