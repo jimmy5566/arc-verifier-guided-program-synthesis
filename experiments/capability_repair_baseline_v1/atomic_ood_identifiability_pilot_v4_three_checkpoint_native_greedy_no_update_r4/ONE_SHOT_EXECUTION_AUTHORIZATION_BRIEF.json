@@ -1,0 +1,14 @@
+{
+  "active_hard_cap_seconds": 7200,
+  "brief_type": "DIRECTOR_ONE_SHOT_GPU_EXECUTION_AUTHORIZATION_REQUEST",
+  "launcher_sha256": "779df8aea761c3dc4844f2dec5ccb778871533014e40b34b7b367e579c60e20d",
+  "nonce": "35dfc718e70d4ed9e352d99d845db345",
+  "output_root": "/workspace/arc2/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r4/run_001_35dfc718e70d4ed9e352d99d845db345",
+  "package_sha256": "12eb508776b217566b1d4c0015c634bc26aefe06de01df49338c52ca7235cd7a",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R4",
+  "request": "Authorize one detached no-update target-blind V4 R4 collection only after all binding gates pass. No training, optimizer, backward, Gold, dGold, FINAL_AUDIT, target access during generation, or replacement run.",
+  "retry": false,
+  "source_commit": "35211ca58062395e57e0416163fa9e44a3ae220f",
+  "tests_sha256": "9db2ec0a90a3cf1550f8cda01b9f7ddb474a340e7033937a1f350d3c7b09ff6c",
+  "worker_sha256": "bdd1420dbe78d3c351654716f232cd753683aad61b0180a46f5117098d7e76d1"
+}
