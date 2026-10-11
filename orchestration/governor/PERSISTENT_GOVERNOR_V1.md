@@ -12,8 +12,17 @@ has persisted an updated action is dispatched immediately. A live Controller
 pane is never prompted recursively.
 
 `-Action Install` registers one per-user `ARC2-Governor` Windows Scheduled
-Task. The task starts the same locked process at logon and restarts it after an
-unexpected failure. It is a process host, not a second scheduler.
+Task. The task runs the existing Governor process watchdog at logon. It checks
+the PID *and command line* for the expected daemon, starts the same locked
+Governor when it is absent, and records its own timestamped liveness state in
+`ARC2_GOVERNOR_WATCHDOG_STATE.json`. It is a process host, not a second
+scheduler.
+
+After two consecutive failed start/liveness checks, the process watchdog sends
+one bounded Controller repair notification. The notification preserves the
+durable workflow disposition and authorizations; it never chooses science,
+contacts Director, launches a remote job, or starts GPU work. A healthy
+Governor resets that failure counter.
 
 The existing Supervisor Watchdog remains responsible only for a detached
 RunPod-job Supervisor. It must not start Governor or Controller work.
@@ -21,6 +30,7 @@ RunPod-job Supervisor. It must not start Governor or Controller work.
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File orchestration/governor/Start-Arc2Governor.ps1 -Action Start
 powershell -NoProfile -ExecutionPolicy Bypass -File orchestration/governor/Start-Arc2Governor.ps1 -Action Install
+powershell -NoProfile -ExecutionPolicy Bypass -File orchestration/governor/Start-Arc2Governor.ps1 -Action Watch
 powershell -NoProfile -ExecutionPolicy Bypass -File orchestration/governor/Start-Arc2Governor.ps1 -Action Status
 powershell -NoProfile -ExecutionPolicy Bypass -File orchestration/governor/Start-Arc2Governor.ps1 -Action Stop
 ```

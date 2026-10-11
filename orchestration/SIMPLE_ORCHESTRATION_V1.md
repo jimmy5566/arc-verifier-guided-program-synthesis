@@ -49,9 +49,12 @@ writes its immutable job/round contract and changes the live workflow status to
 only for terminal or actionable failure receipts.  It does not call Director,
 choose curriculum, or interpret scientific results.
 
-The Watchdog only keeps exactly one Supervisor alive.  If the live workflow
-state marks `experiment_terminal: true`, Watchdog exits quietly rather than
-restarting it.
+The Supervisor Watchdog only keeps exactly one Supervisor alive. If the live
+workflow state marks `experiment_terminal: true`, it exits quietly rather than
+restarting it. Separately, the existing Governor process host checks the
+Governor daemon's PID and command line, restarts only that daemon, and after
+bounded repeated host failures wakes Controller for CPU-only repair. Neither
+watchdog interprets science, contacts Director, or launches remote work.
 
 ## Evidence reuse
 

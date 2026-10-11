@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -14,6 +15,7 @@ SPEC = importlib.util.spec_from_file_location('persistent_governor', ROOT / 'scr
 assert SPEC and SPEC.loader
 governor = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(governor)
+STARTER = ROOT / 'orchestration' / 'governor' / 'Start-Arc2Governor.ps1'
 
 
 class PersistentGovernorTests(unittest.TestCase):
@@ -65,6 +67,58 @@ class PersistentGovernorTests(unittest.TestCase):
             run = subprocess.run([sys.executable, str(ROOT / 'scripts' / 'arc2_governor.py'), '--once', '--state', str(state), '--service-state', str(service)], capture_output=True, text=True, timeout=10)
             self.assertEqual(0, run.returncode, run.stderr)
             self.assertEqual('PAUSED', json.loads(service.read_text(encoding='utf-8'))['status'])
+
+    @unittest.skipUnless(sys.platform == 'win32', 'PowerShell process-host test is Windows-only')
+    def test_watch_once_starts_a_verified_daemon_without_waking_controller(self):
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            (root / '.arc2-local' / 'orchestration').mkdir(parents=True)
+            state = root / '.arc2-local' / 'orchestration' / 'ARC2_WORKFLOW_STATE.json'
+            state.write_text(json.dumps({'disposition': 'PAUSED', 'stage': 'WATCH_TEST'}), encoding='utf-8')
+            pid_path = state.with_name('arc2_governor.pid')
+            # A live unrelated PID must not be mistaken for Governor liveness.
+            pid_path.write_text(str(os.getpid()), encoding='ascii')
+            watch = state.with_name('ARC2_GOVERNOR_WATCHDOG_STATE.json')
+            command = [
+                'powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', str(STARTER),
+                '-Action', 'Watch', '-Root', str(root), '-GovernorScript', str(ROOT / 'scripts' / 'arc2_governor.py'),
+                '-WatchOnce', '-DisableControllerWake',
+            ]
+            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            pid = None
+            launcher_pid = None
+            try:
+                for _ in range(100):
+                    if watch.exists() and pid_path.exists():
+                        break
+                    time.sleep(0.1)
+                self.assertTrue(watch.exists())
+                self.assertTrue(pid_path.exists())
+                payload = json.loads(watch.read_text(encoding='utf-8-sig'))
+                self.assertEqual('GOVERNOR_RESTARTED', payload['status'])
+                pid = int(pid_path.read_text(encoding='ascii'))
+                command_line = subprocess.run(
+                    ['powershell', '-NoProfile', '-Command', f"(Get-CimInstance Win32_Process -Filter 'ProcessId = {pid}').CommandLine"],
+                    capture_output=True, text=True, timeout=10,
+                ).stdout.lower()
+                self.assertIn('arc2_governor.py', command_line)
+                self.assertIn('--daemon', command_line)
+                launcher_pid = int(subprocess.run(
+                    ['powershell', '-NoProfile', '-Command', f"(Get-CimInstance Win32_Process -Filter 'ProcessId = {pid}').ParentProcessId"],
+                    capture_output=True, text=True, timeout=10,
+                ).stdout.strip())
+            finally:
+                process.terminate()
+                process.wait(timeout=10)
+                process.stdout.close()
+                process.stderr.close()
+                # The Python launcher is a parent process on Windows.  Kill
+                # the complete test-owned tree so TemporaryDirectory cannot
+                # retain the daemon's open state files.
+                if launcher_pid is not None:
+                    subprocess.run(['taskkill', '/PID', str(launcher_pid), '/T', '/F'], capture_output=True, text=True, timeout=20, check=False)
+                elif pid is not None:
+                    subprocess.run(['taskkill', '/PID', str(pid), '/T', '/F'], capture_output=True, text=True, timeout=20, check=False)
 
 
 if __name__ == '__main__':
