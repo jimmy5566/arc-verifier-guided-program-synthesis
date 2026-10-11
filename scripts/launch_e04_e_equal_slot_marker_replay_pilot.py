@@ -28,7 +28,7 @@ test "$(git rev-parse HEAD)" = "{source}"
 test -z "$(git status --porcelain)"
 test ! -e "{out}"
 test ! -e "{lock}"
-active_e04e_processes=$(pgrep -af '[r]un_e04_e_equal_slot_marker_replay_pilot|[a]rc2_hard_cap_launcher.*e04_e' || true)
+active_e04e_processes=$(pgrep -af '[r]un_e04_e_equal_slot_marker_replay_pilot|[a]rc2_hard_cap_launcher.*e04_e' | awk -v self="$$" '$1 != self {{print $0}}' || true)
 test -z "$active_e04e_processes"
 gpu_total=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -n 1 | tr -d ' ')
 gpu_free=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -n 1 | tr -d ' ')
