@@ -12,11 +12,14 @@ def forced_pty_shell(target:str,script:str)->str:
  payload=f"\x1b[200~{line}\x1b[201~\r".encode()
  completed=subprocess.run(['ssh','-F','NUL','-tt','-o','BatchMode=yes','-o','ConnectTimeout=20',target],input=payload,capture_output=True,check=False,timeout=45)
  lines=completed.stdout.splitlines();marker=b'__ARC2_REMOTE_END__';done=completion.encode()
- if completed.returncode or marker not in [x.strip() for x in lines] or done not in lines:raise SystemExit(f'E04E_REMOTE_COMMAND_CONTROL_FAILED:{completed.returncode}')
+ if completed.returncode or marker not in [x.strip() for x in lines] or done not in lines:
+  tail=completed.stdout.decode('utf-8',errors='replace')[-4000:]
+  raise SystemExit(f'E04E_REMOTE_COMMAND_CONTROL_FAILED:{completed.returncode}:\n{tail}')
  return completed.stdout.decode('utf-8',errors='replace')
 def remote_script(b:dict,binding_commit:str,binding_path:str,binding_sha:str)->str:
  out=b['output_root'];lock=out+'.launch_lock';source=binding_commit
- return f'''set -euo pipefail
+ return f'''set -Eeuo pipefail
+trap 'rc=$?; printf '{{"status":"E04E_REMOTE_LAUNCH_FAILURE","exit_code":%s,"line":%s}}\\n' "$rc" "$LINENO" >&2; exit "$rc"' ERR
 repo=/root/arc-runtime-3090-gpu-benchmark-v1/arc2
 cd "$repo"
 test "${{GH_TOKEN:+present}}" = "present"
