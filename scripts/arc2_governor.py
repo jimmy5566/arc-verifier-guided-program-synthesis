@@ -240,15 +240,18 @@ def review_brief_path(state, state_path=None):
     raw=state.get('review_brief')
     declared=state.get('review_brief_sha256')
     if isinstance(raw, dict):
-        declared=raw.get('sha256') or declared
+        explicit_sha=raw.get('sha256')
         path=raw.get('path')
         if isinstance(path, str) and path:
+            declared=explicit_sha or declared
             raw=path
         else:
             # Controller result boundaries may carry the complete structured
             # brief inline.  Materialize those exact canonical JSON bytes once
             # instead of treating a missing optional ``path`` as a missing
-            # review.  This preserves the usual SHA-bound file workflow.
+            # review.  A prior review's state-level digest cannot bind a new
+            # inline object; only an explicit digest inside that object can.
+            declared=explicit_sha
             raw=json.dumps(raw,sort_keys=True,separators=(',',':'),ensure_ascii=True)
     if isinstance(raw,str) and raw.lstrip().startswith('{'):
         return _materialize_inline_review_brief(state,raw,declared,state_path)

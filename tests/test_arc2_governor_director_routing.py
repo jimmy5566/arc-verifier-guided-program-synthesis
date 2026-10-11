@@ -89,6 +89,15 @@ class GovernorDirectorRoutingTests(unittest.TestCase):
             self.assertEqual(governor.sha256_file(resolved),state['review_brief_sha256'])
             self.assertTrue(state['review_brief_materialized_from_inline'])
 
+    def test_inline_object_does_not_inherit_a_consumed_review_digest(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            state_path=Path(tmp)/'state.json'
+            payload={'protocol_id':'R5','request':'fresh review'}
+            state={'review_brief':payload,'review_brief_sha256':'0'*64}
+            resolved=governor.review_brief_path(state,state_path)
+            self.assertEqual(json.loads(resolved.read_text(encoding='utf-8')),payload)
+            self.assertNotEqual(state['review_brief_sha256'],'0'*64)
+
     def test_inline_json_brief_rejects_wrong_declared_hash(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             state_path=Path(tmp)/'state.json'
