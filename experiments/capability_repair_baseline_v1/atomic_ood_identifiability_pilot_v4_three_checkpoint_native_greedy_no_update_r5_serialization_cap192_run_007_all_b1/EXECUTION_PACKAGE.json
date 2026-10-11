@@ -80,7 +80,7 @@
                    "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/MANIFEST.json":  "34fd28f9057c57961bee0e8c4cc55e77e514cc87335736a61a406e39adbe6cc1",
                    "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/SEALED_TARGET_SIDECAR.jsonl":  "62217a9963a8ba62de46d9cc865426e82b8b6fb990eb4afbeda2734b59610903"
                },
-    "launcher_sha256":  "9aabc2b39c893e048b0692be4120dfc4d6c13681730110ac8f336ff328a14bcd",
+    "launcher_sha256":  "7485d782ef68f53ee6587986f5e82a55b66c58446afbabd97731a895a71653ef",
     "native_runtime":  {
                            "config_identity_path":  "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY_V1.json",
                            "config_identity_sha256":  "7e94ba263dba680b2d75c2184c0ff05254b7e4aa5f90a7c64619eedf4ba4e256",
@@ -122,7 +122,7 @@
                              "sealed_target_sidecar":  "SEALED_TARGET_SIDECAR.jsonl",
                              "sealed_target_sidecar_may_open_before_raw_freeze":  false
                          },
-    "tests_sha256":  "941b85f789febbf94b58d9b3dfd3afa57c3dc4b23b072e551adb5e9c1c9c36bd",
+    "tests_sha256":  "9435738ca0e56533bdc96f0db784f88cbc85a3af7dc3b442322a22e1f01d3db6",
     "three_checkpoints":  [
                               {
                                   "adapter_config_sha256":  "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
@@ -165,5 +165,5 @@
                       "sealed_target_sidecar_sha256":  "62217a9963a8ba62de46d9cc865426e82b8b6fb990eb4afbeda2734b59610903",
                       "sha256":  "523b904ab3b712095009d0be3e29151aa8d8a563ac663a15ff3789a0192926bd"
                   },
-    "worker_sha256":  "19f023f9dd675511115f087e729512227241e180f40bcb9487c519a5f2661afa"
+    "worker_sha256":  "b1e8dd31c12d61906689908192ee2291782008bcbc38408b16b08b9a9d7f7657"
 }
