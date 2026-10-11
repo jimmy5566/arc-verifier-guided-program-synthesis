@@ -5,13 +5,14 @@ making runtime identity, B1 collection, nonce exclusion, and terminal evidence
 executable.  Imports of model libraries remain inside ``execute_real`` only.
 """
 from __future__ import annotations
-import argparse, gc, hashlib, json, os, subprocess, time
+import argparse, gc, hashlib, importlib, json, os, subprocess, time
 from pathlib import Path
 from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / 'experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5'
+OUT = ROOT / 'experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_replacement_run_003'
 PACKAGE = OUT / 'EXECUTION_PACKAGE.json'
+LOCAL_IMPORT_GRAPH = ('inference.nvarc_native','scripts.run_unified_native_model_capability_baseline_v2')
 
 class V4ExecutionFailure(RuntimeError): pass
 
@@ -34,12 +35,25 @@ def git(args:list[str])->str:
 def terminal_receipt(output:Path, **extra:Any)->None:
     atomic_json(output/'TERMINAL_RECEIPT.json',{'protocol_id':'ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5','target_sidecar_accessed':False,'optimizer_steps':0,'parameter_updates':0,'backward_calls':0,'final_audit_opened':False,**extra})
 
+def validate_local_import_graph()->dict[str,Any]:
+    """Import every worker-local runtime dependency without constructing a model.
+
+    The outer launcher executes this actual worker entrypoint before the worker
+    can validate assets, claim its nonce, create an output root, or touch CUDA.
+    ROOT plus ROOT/src are the only import-path contract.
+    """
+    imported=[]
+    for name in LOCAL_IMPORT_GRAPH:
+        importlib.import_module(name); imported.append(name)
+    return {'status':'PASS_V4R5_COMPLETE_LOCAL_IMPORT_GRAPH','modules':imported,'model_constructed':False,'gpu_used':False,'nonce_claimed':False,'target_sidecar_accessed':False}
+
 def validate_preimport(package_path:Path=PACKAGE, *, output_root:Path|None=None, binding:dict[str,Any]|None=None)->dict[str,Any]:
     d=read_json(package_path)
     required={'schema_version','protocol_id','status','predecessor_package_sha256','v4_source','inputs','generation_preflight_inputs','native_runtime','three_checkpoints','decoder','batching','target_isolation','execution_output','runtime_estimate','forbidden','worker_sha256','launcher_sha256','package_fingerprint_scope'}
-    if set(d)!=required or d['protocol_id']!='ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5': raise V4ExecutionFailure('V4R5_PACKAGE_SCHEMA')
+    if set(d) not in (required,required|{'tests_sha256'}) or d['protocol_id']!='ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5': raise V4ExecutionFailure('V4R5_PACKAGE_SCHEMA')
     if d['status']!='CPU_ONLY_FROZEN_AWAITING_DIRECTOR_EXECUTION_AUTHORIZATION': raise V4ExecutionFailure('V4R5_PACKAGE_STATUS')
     if d['worker_sha256']!=sha(Path(__file__)): raise V4ExecutionFailure('V4R5_WORKER_IDENTITY')
+    if 'tests_sha256' in d and d['tests_sha256']!=sha(ROOT/'tests/test_atomic_ood_identifiability_pilot_v4_r5_execution.py'): raise V4ExecutionFailure('V4R5_TEST_IDENTITY')
     sidecar_rel=next((rel for rel in d['inputs'] if rel.endswith('/'+d['target_isolation']['sealed_target_sidecar'])),None)
     if sidecar_rel is None or d['inputs'][sidecar_rel] != d['v4_source']['sealed_target_sidecar_sha256']:
         raise V4ExecutionFailure('V4R5_SEALED_SIDECAR_METADATA')
@@ -185,7 +199,8 @@ def execute_real(package_path:Path,runtime_binding_path:Path,output:Path)->dict[
     loaded.clear(); torch.cuda.empty_cache(); return result
 
 def main()->None:
-    ap=argparse.ArgumentParser(); ap.add_argument('--self-test',action='store_true'); ap.add_argument('--package',type=Path,default=PACKAGE); ap.add_argument('--runtime-binding',type=Path); ap.add_argument('--output-root',type=Path); a=ap.parse_args()
+    ap=argparse.ArgumentParser(); ap.add_argument('--self-test',action='store_true'); ap.add_argument('--preflight-import-graph',action='store_true'); ap.add_argument('--package',type=Path,default=PACKAGE); ap.add_argument('--runtime-binding',type=Path); ap.add_argument('--output-root',type=Path); a=ap.parse_args()
+    if a.preflight_import_graph: print(json.dumps(validate_local_import_graph(),sort_keys=True)); return
     if a.self_test: print(json.dumps(validate_preimport(a.package),sort_keys=True)); return
     if not a.runtime_binding or not a.output_root: raise SystemExit('RUNTIME_BINDING_AND_OUTPUT_ROOT_REQUIRED')
     binding=read_json(a.runtime_binding); started=time.monotonic(); claimed=None

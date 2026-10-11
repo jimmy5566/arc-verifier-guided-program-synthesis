@@ -2,7 +2,7 @@ from __future__ import annotations
 import importlib.util,json,subprocess,sys,tempfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-OUT=ROOT/'experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5'
+OUT=ROOT/'experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_replacement_run_003'
 def load(rel,name):
  s=importlib.util.spec_from_file_location(name,ROOT/rel); m=importlib.util.module_from_spec(s); assert s.loader; s.loader.exec_module(m); return m
 def worker(): return load('scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5.py','v4r2')
@@ -95,7 +95,7 @@ def test_outer_watchdog_writes_terminal_receipt_on_cap():
  launcher=ROOT/'scripts/launch_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5.py'
  with tempfile.TemporaryDirectory() as d:
   d=Path(d); sleeper=d/'sleep.py'; sleeper.write_text('import time; time.sleep(5)')
-  l=launcher_module(); original=l.preflight_runtime_import; l.preflight_runtime_import=lambda: None
+  l=launcher_module(); original=l.preflight_runtime_import; l.preflight_runtime_import=lambda *args: None
   try: result=type('R',(),{'returncode':l.run(sleeper,sleeper,sleeper,d/'out',1)})()
   finally: l.preflight_runtime_import=original
   assert result.returncode==124
@@ -106,7 +106,7 @@ def test_launcher_leaves_fresh_path_for_worker_and_receipts_nonzero_child():
  with tempfile.TemporaryDirectory() as d:
   d=Path(d); good=d/'good.py'
   good.write_text("import pathlib,sys; o=pathlib.Path(sys.argv[-1]); assert not o.exists(); o.mkdir(); (o/'TERMINAL_RECEIPT.json').write_text('{\"status\":\"COMPLETE\"}')")
-  l=launcher_module(); original=l.preflight_runtime_import; l.preflight_runtime_import=lambda: None
+  l=launcher_module(); original=l.preflight_runtime_import; l.preflight_runtime_import=lambda *args: None
   try:
    out=d/'fresh'; rc=l.run(good,good,good,out,5); assert rc==0 and (out/'TERMINAL_RECEIPT.json').exists()
    bad=d/'bad.py'; bad.write_text('raise SystemExit(7)'); out2=d/'failed'; rc=l.run(bad,bad,bad,out2,5); receipt=json.loads((out2/'TERMINAL_RECEIPT.json').read_text()); assert rc==7 and receipt['child_returncode']==7
@@ -131,16 +131,34 @@ def test_launcher_preflight_uses_production_cwd_and_src_path():
  try: l.preflight_runtime_import()
  finally: l.subprocess.run=original
  args,kwargs=calls.pop()
- assert args[:2]==[sys.executable,'-c'] and 'inference.nvarc_native' in args[2]
+ assert args==[sys.executable,str(l.DEFAULT_WORKER),'--preflight-import-graph']
  assert Path(kwargs['cwd'])==ROOT
  assert kwargs['env']['PYTHONPATH'].split(__import__('os').pathsep)[0]==str(ROOT/'src')
+
+def test_production_shaped_complete_import_graph_detects_prior_missing_scripts_failure():
+ l=launcher_module()
+ with tempfile.TemporaryDirectory() as d:
+  d=Path(d); (d/'scripts').mkdir(); (d/'src'/'inference').mkdir(parents=True)
+  # Actual worker entrypoint; provide the previously covered inference module,
+  # deliberately omit scripts.run_unified_native_model_capability_baseline_v2.
+  worker=d/'scripts'/'run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5.py'
+  worker.write_bytes((ROOT/'scripts'/'run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5.py').read_bytes())
+  (d/'src'/'inference'/'nvarc_native.py').write_text('')
+  old_root=l.ROOT
+  try:
+   l.ROOT=d
+   try: l.preflight_runtime_import(worker)
+   except RuntimeError as e:
+    assert "V4R5_IMPORT_PREFLIGHT_FAILED" in str(e) and "No module named 'scripts" in str(e)
+   else: raise AssertionError('prior missing-scripts import failure was accepted')
+  finally: l.ROOT=old_root
 
 def test_launcher_import_failure_prevents_worker_and_nonce_claim():
  l=launcher_module()
  with tempfile.TemporaryDirectory() as d:
   d=Path(d); sentinel=d/'worker_started'; worker=d/'worker.py'
   worker.write_text(f"from pathlib import Path; Path({str(sentinel)!r}).write_text('started')")
-  original=l.preflight_runtime_import; l.preflight_runtime_import=lambda: (_ for _ in ()).throw(RuntimeError('forced'))
+  original=l.preflight_runtime_import; l.preflight_runtime_import=lambda *args: (_ for _ in ()).throw(RuntimeError('forced'))
   try: code=l.run(worker,worker,worker,d/'fresh',5)
   finally: l.preflight_runtime_import=original
   receipt=json.loads((d/'fresh'/'TERMINAL_RECEIPT.json').read_text())
@@ -155,7 +173,7 @@ def test_launcher_passes_same_root_cwd_and_env_to_worker():
   def kill(self): raise AssertionError('unexpected kill')
   def wait(self): return 0
  original_probe=l.preflight_runtime_import; original_popen=l.subprocess.Popen
- l.preflight_runtime_import=lambda: None
+ l.preflight_runtime_import=lambda *args: None
  def fake_popen(args,**kwargs): seen.append((args,kwargs)); return Child()
  l.subprocess.Popen=fake_popen
  try:

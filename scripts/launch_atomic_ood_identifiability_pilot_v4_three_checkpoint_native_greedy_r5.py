@@ -10,7 +10,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-IMPORT_TARGET = "inference.nvarc_native"
+DEFAULT_WORKER = ROOT / "scripts" / "run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5.py"
 
 
 def atomic_json(path: Path, value: dict) -> None:
@@ -29,15 +29,21 @@ def runtime_env() -> dict[str, str]:
     return env
 
 
-def preflight_runtime_import() -> None:
-    """Prove the worker's static import path before the worker can claim a nonce."""
+def preflight_runtime_import(worker: Path = DEFAULT_WORKER) -> None:
+    """Exercise the worker's full local import graph in its production shape.
+
+    This uses the same interpreter, checkout root, working directory and
+    environment as the subsequent worker process.  It performs no package
+    validation, nonce claim, model construction or GPU access.
+    """
     probe = subprocess.run(
-        [sys.executable, "-c", f"import {IMPORT_TARGET}"],
+        [sys.executable, str(worker), "--preflight-import-graph"],
         cwd=str(ROOT), env=runtime_env(), stdout=subprocess.PIPE,
         stderr=subprocess.PIPE, text=True,
     )
     if probe.returncode:
-        raise RuntimeError("V4R5_IMPORT_PREFLIGHT_FAILED")
+        detail = probe.stderr.strip().splitlines()[-1:] or ["worker import graph exited nonzero"]
+        raise RuntimeError("V4R5_IMPORT_PREFLIGHT_FAILED:" + detail[0])
 
 
 def infrastructure_receipt(output: Path, *, error: str, started: float, **extra: object) -> None:
@@ -54,7 +60,7 @@ def run(worker: Path, package: Path, binding: Path, output: Path, cap: int) -> i
     started = time.monotonic()
     try:
         # This is deliberately before Popen: the worker owns nonce claiming.
-        preflight_runtime_import()
+        preflight_runtime_import(worker)
     except Exception as exc:
         infrastructure_receipt(output, error="V4R5_IMPORT_PREFLIGHT_FAILED", started=started, error_type=type(exc).__name__)
         return 125
