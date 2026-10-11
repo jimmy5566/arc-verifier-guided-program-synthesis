@@ -12,7 +12,7 @@ def _verify_file(rel:str,expected:str,code:str)->Path:
  if not p.is_file() or sha_path(p)!=expected:fail('E04E_'+code+'_HASH')
  return p
 
-def load_binding(path:Path,output:Path,launch_commit:str)->dict[str,Any]:
+def load_binding(path:Path,output:Path,launch_commit:str,*,child:bool=False)->dict[str,Any]:
  b=read_json(path); req={'schema_version','protocol_id','authorization_id','director_response_path','director_response_sha256','execution_authorized','worker_source_commit','worker_path','worker_sha256','evaluator_path','evaluator_sha256','launcher_path','launcher_sha256','loss_path','loss_sha256','cpu_loss_test_path','cpu_loss_test_sha256','protocol_path','protocol_sha256','control_schedule_path','control_schedule_sha256','treatment_schedule_path','treatment_schedule_sha256','token_accounting_path','token_accounting_sha256','checkpoint_manifest_path','checkpoint_manifest_sha256','runtime_config_path','runtime_config_sha256','v7_reference_raw_path','v7_reference_raw_sha256','arm_order','seed','arms','jobs','retry','nonce','output_root','arm_output_roots','per_arm_runtime_cap_seconds','joint_runtime_cap_seconds','static_preflight'}
  if set(b)!=req or b['protocol_id']!=PROTOCOL_ID:fail('E04E_BINDING_SCHEMA')
  if not(b['execution_authorized'] is True and b['jobs']==1 and b['arms']==2 and b['retry'] is False and b['arm_order']==list(ARMS)):fail('E04E_BINDING_AUTH')
@@ -24,7 +24,12 @@ def load_binding(path:Path,output:Path,launch_commit:str)->dict[str,Any]:
  for field,code in [('worker','WORKER'),('evaluator','EVALUATOR'),('launcher','LAUNCHER'),('loss','LOSS'),('cpu_loss_test','LOSS_TEST'),('protocol','PROTOCOL'),('control_schedule','CONTROL_SCHEDULE'),('treatment_schedule','TREATMENT_SCHEDULE'),('token_accounting','TOKEN_ACCOUNTING'),('checkpoint_manifest','CHECKPOINT_MANIFEST'),('runtime_config','RUNTIME_CONFIG'),('v7_reference_raw','V7_RAW'),('director_response','DIRECTOR_RESPONSE')]:_verify_file(b[field+'_path'],b[field+'_sha256'],code)
  response=read_json(ROOT/b['director_response_path'])
  if response.get('decision')!='CONTINUE_CONTROLLER' or response.get('execution_authorization',{}).get('maximum_detached_jobs')!=1:fail('E04E_DIRECTOR_AUTH')
- if output.exists():fail('E04E_OUTPUT_NOT_FRESH')
+ if output.exists():
+  # The parent owns the root.  A per-arm child may only inherit its two
+  # pre-created bookkeeping entries; any other content is a duplicate/stale run.
+  allowed={'PREFLIGHT_RECEIPT.json','arms'}
+  present={p.name for p in output.iterdir()}
+  if not child or not present.issubset(allowed):fail('E04E_OUTPUT_NOT_FRESH')
  return b
 
 def _verify_checkpoint(m:dict[str,Any])->None:
@@ -78,13 +83,15 @@ def _generate(model,manifest:dict[str,Any],config:dict[str,Any],deadline:float,a
 def run_arm(binding_path:Path,output:Path,launch_commit:str,arm:str)->None:
  started=time.monotonic();root=output/'arms'/arm;term=root/'TERMINAL_RECEIPT.json'
  try:
-  b=load_binding(binding_path,output,launch_commit)
+  b=load_binding(binding_path,output,launch_commit,child=True)
   if arm not in ARMS or str(root).replace('\\','/')!=b['arm_output_roots'][arm] or root.exists():fail('E04E_ARM_OUTPUT')
   manifest=read_json(ROOT/b['checkpoint_manifest_path']);_verify_checkpoint(manifest);rows,runtime=_runtime_rows(b)
   root.mkdir(parents=True);atomic_json(root/'PRE_OPTIMIZER_PREFLIGHT.json',{'arm':arm,'runtime':runtime,'model_imported':False,'optimizer_constructed':False,'target_sidecar_accessed':False})
   import bitsandbytes as bnb
   os.environ['CUDA_VISIBLE_DEVICES']='0';os.environ['TOKENIZERS_PARALLELISM']='false'
-  model,params,torch=_load_model(manifest);torch.manual_seed(int(b['seed']));torch.cuda.manual_seed_all(int(b['seed']));optimizer=bnb.optim.PagedAdamW8bit(params,lr=0.00005);deadline=started+PER_ARM_CAP_SECONDS
+  import torch
+  torch.manual_seed(int(b['seed']));torch.cuda.manual_seed_all(int(b['seed']))
+  model,params,torch=_load_model(manifest);optimizer=bnb.optim.PagedAdamW8bit(params,lr=0.00005);deadline=started+PER_ARM_CAP_SECONDS
   processed=supervised=steps=0
   for offset in range(0,384,4):
    if time.monotonic()>=deadline:fail('E04E_PER_ARM_CAP_TRAIN')
@@ -122,9 +129,12 @@ def run_parent(binding_path:Path,output:Path,launch_commit:str)->None:
   output.mkdir(parents=True,exist_ok=True);atomic_json(term,{'status':'FAILED_OR_PARTIAL','protocol_id':PROTOCOL_ID,'error':f'{type(e).__name__}:{e}','wall_seconds':time.monotonic()-started,'target_sidecar_accessed':False,'final_audit_opened':False,'traceback':traceback.format_exc(limit=4)});raise
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--binding',type=Path);p.add_argument('--output-root',type=Path);p.add_argument('--launch-commit');p.add_argument('--arm',choices=ARMS);p.add_argument('--self-test',action='store_true');a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--binding',type=Path);p.add_argument('--output-root',type=Path);p.add_argument('--launch-commit');p.add_argument('--arm',choices=ARMS);p.add_argument('--self-test',action='store_true');p.add_argument('--identity-check',action='store_true');a=p.parse_args()
  if a.self_test:print(json.dumps(static_schedule_preflight(),sort_keys=True));return
  if not a.binding or not a.output_root or not a.launch_commit:raise SystemExit('E04E_ARGS')
+ if a.identity_check:
+  b=load_binding(a.binding,a.output_root,a.launch_commit)
+  print(json.dumps({'status':'PASS_E04E_BINDING_IDENTITY_CPU_ONLY','binding_sha256':sha_path(a.binding),'worker_source_commit':b['worker_source_commit'],'static_preflight':static_schedule_preflight()},sort_keys=True));return
  if a.arm:run_arm(a.binding,a.output_root,a.launch_commit,a.arm)
  else:run_parent(a.binding,a.output_root,a.launch_commit)
 if __name__=='__main__':main()
