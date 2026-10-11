@@ -1,0 +1,30 @@
+{
+  "created_at_utc": "2026-10-11T14:03:51.232833+00:00",
+  "entrypoint_sha256": "c8a0c4b6d3589c0708b6cede5de913f1e4f0437eecb2a1f461bd8838392d6560",
+  "execution_package_sha256": "2bb7adc0aa37fbbd979609c0ae436ded5ac0528509ee2b952099234af30a4605",
+  "not_run": [
+    "model_loading",
+    "GPU",
+    "inference",
+    "generation",
+    "target_scoring",
+    "training",
+    "optimizer",
+    "backward",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT"
+  ],
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE",
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY_PACKAGE_AND_FAILURE_PATH_VALIDATION",
+  "target_sidecar_semantically_accessed": false,
+  "tests": [
+    "PASS: py_compile freezer worker and package tests",
+    "PASS: CPU preimport validates three arms, 192 target-blind prompts, B32 fallback, fixed B1 subset and forbidden boundaries",
+    "PASS: tampered prompt identity rejected",
+    "PASS: existing output root rejected",
+    "PASS: malformed B1 subset rejected",
+    "PASS: immutable freezer overwrite rejected"
+  ]
+}

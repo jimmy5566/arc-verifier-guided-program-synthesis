@@ -1,0 +1,19 @@
+{
+  "active_hard_cap_seconds": 7200,
+  "arms": [
+    "V7",
+    "E04_E_CONTROL",
+    "E04_E_TREATMENT"
+  ],
+  "brief_type": "DIRECTOR_EXECUTION_AUTHORIZATION_REQUEST",
+  "gpu_used": false,
+  "model_loaded": false,
+  "package_sha256": "2bb7adc0aa37fbbd979609c0ae436ded5ac0528509ee2b952099234af30a4605",
+  "planned_b1_repeat_rows": 36,
+  "planned_primary_rows": 576,
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE",
+  "request": "Authorize exactly one detached no-update, target-blind GPU native-Greedy collection only if all runtime identity, clean checkout, fresh-output, duplicate and cap gates pass. Do not authorize training, optimizer, backward, Gold/dGold/FINAL_AUDIT, target access during generation, or a rerun.",
+  "target_sidecar_accessed": false,
+  "training": false,
+  "v4_manifest_sha256": "34fd28f9057c57961bee0e8c4cc55e77e514cc87335736a61a406e39adbe6cc1"
+}
