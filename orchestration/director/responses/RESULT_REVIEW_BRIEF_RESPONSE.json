@@ -1,0 +1,106 @@
+{
+  "response_id": "E04_E_V2_RUN_002_RESULT_REVIEW_BRIEF_RESPONSE",
+  "reviewed_brief_sha256": "fcd387db308ff20b2d0fd1af6d129ed6aaeed0bf6cc87c7a8c09089b541b34be",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "E04_E_V2_RUN_003_FRESH_TWO_ARM_RECEIPT_PATH_REPAIRED_EXECUTION",
+  "next_action": "Preserve RUN_002 and its control-only artifacts as immutable engineering evidence classified INVALID_NOT_INTERPRETABLE; do not score, promote, or combine its control output with another run. Add a focused CPU regression test that exercises both successful and exceptional child completion paths and proves that each writes the bound arm TERMINAL_RECEIPT.json without local-variable shadowing. Pin this response, the exact receipt-path repair, regression test, unchanged equal-slot loss implementation, frozen V2 protocol and schedules, exact V7 checkpoint, serializer, evaluator, clean source commit, fixed arm order, seed, fresh nonce, and unused output roots in one new RUN_003 binding. After local, origin, and RunPod exact-commit parity plus all identity, loss, receipt, fresh-start, duplicate-job, memory, and cap gates pass, execute exactly one detached fresh two-arm run under the unchanged 3600-second per-arm and 7200-second joint caps. Both arms must restart independently from exact V7; no RUN_002 model, optimizer, adapter, gradients, raw generations, or output state may be reused. Freeze both target-blind raw files and their completion receipts before scoring, apply only the existing prospective classifier, preserve terminal evidence, and return one scientific result brief. No automatic retry, further replacement, expansion, checkpoint promotion, or follow-on training is authorized.",
+  "observed_result": {
+    "run_id": "RUN_002_8da567dac73f0adbbbf891461de9b331",
+    "classification": "INVALID_NOT_INTERPRETABLE",
+    "failure_class": "EXECUTION_RECEIPT_PATH_VARIABLE_SHADOWING",
+    "control_optimizer_steps_observed": 96,
+    "control_processed_tokens": 207360,
+    "control_supervised_tokens": 28800,
+    "control_raw_generation_rows": 768,
+    "control_completion_receipt_written": false,
+    "treatment_started": false,
+    "two_arm_scientific_result_available": false,
+    "target_sidecar_accessed": false,
+    "final_audit_opened": false,
+    "frozen_result_sha256": "0e77941a7fa0ec8e4d9ea1eb41fbd9090b243bddbb867c6283de88a448ef42ac"
+  },
+  "mechanism_assessment": {
+    "confidence": "ESTABLISHED",
+    "established": [
+      "The streamed equal-slot implementation completed all 96 control updates and 768 target-blind control generations on the 24 GiB runtime, resolving the prior four-graph OOM mechanism for this arm.",
+      "After control generation, the local loss-tensor name term shadowed the child terminal-receipt path variable; success-receipt emission raised UnboundLocalError, the exception path reused the same invalid name, and the parent therefore stopped before treatment.",
+      "No treatment arm or paired score exists, so RUN_002 cannot test the marker-replay hypothesis.",
+      "Renaming the terminal path to terminal_receipt and the per-slot tensor to slot_term is an engineering-only repair that does not alter model computation, loss, schedule, optimizer, or evaluation."
+    ],
+    "supported_hypothesis": "A fresh two-arm execution after the isolated receipt-path repair is likely to complete and remains the smallest experiment capable of answering the approved marker-replay preservation question.",
+    "unknown": [
+      "Whether treatment improves marker-binding exact-grid accuracy relative to the matched control.",
+      "Whether marker replay preserves fixed-turn rotation efficacy and no-transform retention.",
+      "Whether any positive E04 development result transfers to independent compositions or ARC tasks."
+    ],
+    "research_bottleneck": "Completion of one valid contemporaneous control-treatment run; no new scientific design or mechanism diagnostic is needed."
+  },
+  "repair_acceptance": {
+    "classification": "ENGINEERING_ONLY_RECEIPT_PATH_REPAIR",
+    "accepted_semantics": "Use distinct immutable local names for the arm terminal-receipt path and each transient slot-loss tensor in both success and exception paths.",
+    "required_regression_test": "Mock or minimally exercise successful and failing run_arm completion so both paths atomically write the intended arm terminal receipt and never confuse it with a tensor.",
+    "scientific_conditions_changed": false,
+    "another_prelaunch_review_after_exact_repair": false
+  },
+  "execution_authorization": {
+    "authorization_type": "ONE_FINAL_FRESH_REPLACEMENT_AFTER_CONSUMED_RUN_002_RECEIPT_FAILURE",
+    "maximum_detached_jobs": 1,
+    "authorized_run": "RUN_003",
+    "authorized_arms": 2,
+    "arm_names": [
+      "CONTROL_EQUAL_SLOT",
+      "TREATMENT_EQUAL_SLOT"
+    ],
+    "fresh_binding_required": true,
+    "fresh_nonce_required": true,
+    "fresh_output_roots_required": true,
+    "independent_fresh_v7_initialization_per_arm_required": true,
+    "same_gpu_and_runtime_stack_required": true,
+    "per_arm_runtime_cap_seconds": 3600,
+    "joint_runtime_cap_seconds": 7200,
+    "model_loading_authorized_after_all_gates": true,
+    "optimizer_construction_authorized_after_all_gates": true,
+    "gpu_training_authorized_after_all_gates": true,
+    "backward_and_parameter_updates_authorized_after_all_gates": true,
+    "post_training_physical_b1_generation_authorized": true,
+    "post_freeze_cpu_scoring_authorized": true,
+    "authorization_consumed_at_detached_launch": true,
+    "automatic_retry_authorized": false,
+    "additional_replacement_authorized": false,
+    "automatic_follow_on_training_authorized": false,
+    "checkpoint_promotion_authorized": false,
+    "final_audit_authorized": false
+  },
+  "required_prelaunch_gates": [
+    "The exact clean launch commit is identical across local, origin, and RunPod and contains the frozen protocol, schedules, equal-slot loss, receipt-path repair, regression tests, evaluator, and binding machinery.",
+    "CPU tests pass for streamed-versus-joint scalar and gradient equivalence, nonfinite and incomplete-slot rejection, successful arm receipt emission, and exceptional arm receipt emission.",
+    "The fresh binding pins this response and all model, protocol, schedule, source, runtime, seed, nonce, arm-order, output-root, and cap identities and authorizes RUN_003 only.",
+    "Both arms start from exact V7 in fresh isolated processes or equivalently proven clean states; no RUN_002 state or artifact is used as a causal arm.",
+    "The worker verifies production tokenization, label masks, counts, four-slot step grouping, equal-slot coefficients, and schedule identities before optimizer construction.",
+    "No duplicate GPU job exists, all output roots are unused, and worker plus external watchdog caps include model loading, training, saving, generation, and receipt emission."
+  ],
+  "scientific_result_rules": {
+    "MARKER_PRESERVATION_GAIN": "The frozen treatment-minus-control marker rule, absolute marker-protection rule, rotation-efficacy rule, no-transform retention rule, and every validity gate pass.",
+    "NO_MARKER_REPLAY_BENEFIT": "The run is valid but the primary treatment-minus-control rule fails while all protection and efficacy constraints remain within bounds; do not automatically increase replay or rerun.",
+    "PROTECTION_OR_EFFICACY_FAILURE": "Any frozen marker-protection, rotation-efficacy, or no-transform retention constraint fails; reject this treatment configuration.",
+    "INVALID_NOT_INTERPRETABLE": "Either arm, receipt, identity, loss, schedule, runtime, scorer, target-blindness, or sealed-boundary gate fails."
+  },
+  "frozen_conditions": [
+    "RUN_002 frozen result SHA256 0e77941a7fa0ec8e4d9ea1eb41fbd9090b243bddbb867c6283de88a448ef42ac and its INVALID_NOT_INTERPRETABLE classification remain immutable.",
+    "E04-E V2 protocol, exact V7 checkpoint, control and treatment schedules, streamed equal-slot objective, optimizer, learning rate, LoRA configuration, precision, seed, arm order, 96 optimizer steps per arm, runtime caps, evaluation, bootstrap, and thresholds remain unchanged.",
+    "The only authorized code change is the receipt-path variable-shadowing repair plus its focused CPU regression test.",
+    "The reused E04 cohort remains development evidence; both complete raw-generation sets must be frozen before target access or scoring.",
+    "Gold, dGold, and FINAL_AUDIT remain sealed."
+  ],
+  "forbidden_actions": [
+    "Do not treat RUN_002 control-only output as a scientific result, score it adaptively, or pair it with a treatment generated by RUN_003.",
+    "Do not resume RUN_002 or reuse its model, optimizer, adapter, gradients, raw generations, nonce, binding, or output root.",
+    "Do not change checkpoint, schedules, replay allocation, loss, optimizer, learning rate, precision, step count, seed policy, evaluation, thresholds, or runtime caps.",
+    "Do not launch RUN_003 unless the receipt-path regression tests and all prelaunch gates pass.",
+    "Do not automatically retry after RUN_003, authorize another replacement, expand training, promote a checkpoint, open Gold or dGold, or access FINAL_AUDIT."
+  ],
+  "another_director_prelaunch_review_required": false,
+  "director_result_review_required": true,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}
