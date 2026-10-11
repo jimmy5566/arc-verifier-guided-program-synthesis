@@ -1,0 +1,13 @@
+{
+  "approved_source_commit": "9d7122aabedab4ab2ba3fe42c1b63548ad017b6c",
+  "binding_sha256": "9f69f996a7c1f5a14f613ed2acb9cf68f9935d581e33ca57f91250196fd05ceb",
+  "bound_files": 10,
+  "final_audit_opened": false,
+  "generation_calls": 0,
+  "gpu_used": false,
+  "model_loaded": false,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "runtime_head": "361d6a6964fa4cf7fb4b090e96905526d3e96d7b",
+  "status": "PASS_NO_MODEL_IMPORT"
+}
