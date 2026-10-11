@@ -1,0 +1,10 @@
+{
+  "elapsed_seconds": 0.016151207499206066,
+  "error_class": "E04D_SOURCE_IDENTITY",
+  "final_audit_opened": false,
+  "generation_calls": 0,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "status": "FAILED_OR_PARTIAL_NO_UPDATE",
+  "traceback": "Traceback (most recent call last):\n  File \"/root/arc2/scripts/run_e04_d_rotation_marker_gradient.py\", line 41, in main\n    if head!=b.get('execution_checkout_commit') or subprocess.call(['git','diff','--quiet'],cwd=ROOT)!=0:raise RuntimeError('E04D_SOURCE_IDENTITY')\n                                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: E04D_SOURCE_IDENTITY\n"
+}

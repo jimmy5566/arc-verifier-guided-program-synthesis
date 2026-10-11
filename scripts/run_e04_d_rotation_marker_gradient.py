@@ -28,17 +28,34 @@ def static(config):
    if n<1 or n!=sample['assistant_token_count'] or len(sample['input_ids'])!=len(sample['labels']):raise RuntimeError('E04D_SERIALIZER_MASK_INVALID')
    counts.append(n)
  return {'status':'PASS_CPU_STATIC_NO_MODEL','rows':48,'condition_rows':144,'supervised_tokens_min':min(counts),'supervised_tokens_max':max(counts),'model_loaded':False,'gpu_used':False,'optimizer_steps':0}
+def validate_runtime_identity(binding,root=ROOT):
+ """Validate the immutable approved source and a clean runtime checkout.
+
+ The approved snapshot is a lower bound: an exact checkout or a clean
+ descendant may run only when every scientific executable is separately
+ hash-bound in the launch binding.  This is intentionally identical to the
+ CPU preflight contract and does not depend on a moving branch name.
+ """
+ approved=str(binding.get('approved_source_commit','')).lower()
+ if not re.fullmatch(r'[0-9a-f]{40}',approved):raise RuntimeError('E04D_APPROVED_SOURCE_INVALID')
+ head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip().lower()
+ if subprocess.call(['git','merge-base','--is-ancestor',approved,head],cwd=root,stderr=subprocess.DEVNULL)!=0:raise RuntimeError('E04D_APPROVED_SOURCE_NOT_ANCESTOR')
+ if subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=root,text=True).strip():raise RuntimeError('E04D_TRACKED_SOURCE_DIRTY')
+ return head
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--config',type=Path,required=True);ap.add_argument('--binding',type=Path);ap.add_argument('--output-root',type=Path);ap.add_argument('--static',action='store_true');a=ap.parse_args(); config=resolve(str(a.config))
+ ap=argparse.ArgumentParser();ap.add_argument('--config',type=Path,required=True);ap.add_argument('--binding',type=Path);ap.add_argument('--output-root',type=Path);ap.add_argument('--static',action='store_true');ap.add_argument('--identity-check',action='store_true');a=ap.parse_args(); config=resolve(str(a.config))
  if a.static: print(json.dumps(static(config),sort_keys=True));return
+ if a.identity_check:
+  if not a.binding:raise SystemExit('E04D_RUNTIME_ARGS')
+  c,_,_=load_config(config);b=json.loads(resolve(str(a.binding)).read_text());head=validate_runtime_identity(b)
+  print(json.dumps({'status':'PASS_CPU_IDENTITY_NO_MODEL','runtime_head':head,'approved_source_commit':b['approved_source_commit'],'model_loaded':False,'gpu_used':False,'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False},sort_keys=True));return
  if not a.binding or not a.output_root:raise SystemExit('E04D_RUNTIME_ARGS')
  start=time.monotonic();out=resolve(str(a.output_root));receipt=out/'TERMINAL_RECEIPT.json'
  try:
   c,rows,checkpoint=load_config(config);b=json.loads(resolve(str(a.binding)).read_text())
   if os.environ.get('E04D_EXTERNAL_CAP_ENFORCED')!='1' or b.get('execution_authorized') is not True or b.get('runtime_cap_seconds')!=1800 or b.get('config_sha256')!=sha(config) or b.get('output_root')!=str(out):raise RuntimeError('E04D_BINDING_INVALID')
   if out.exists():raise RuntimeError('E04D_FRESH_OUTPUT_REQUIRED')
-  head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
-  if head!=b.get('execution_checkout_commit') or subprocess.call(['git','diff','--quiet'],cwd=ROOT)!=0:raise RuntimeError('E04D_SOURCE_IDENTITY')
+  head=validate_runtime_identity(b)
   for group,pathkey in (('base_files','base_path'),('adapter_files','adapter_path')):
    for f in checkpoint[group]:
     p=Path(checkpoint[pathkey])/f['name']

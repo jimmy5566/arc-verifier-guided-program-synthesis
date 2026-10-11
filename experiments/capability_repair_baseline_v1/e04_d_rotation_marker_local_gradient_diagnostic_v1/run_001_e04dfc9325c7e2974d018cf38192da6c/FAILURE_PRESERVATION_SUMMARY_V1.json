@@ -1,0 +1,30 @@
+{
+  "consumed_binding": {
+    "one_shot_consumed": true,
+    "path": "experiments/capability_repair_baseline_v1/e04_d_rotation_marker_local_gradient_diagnostic_v1/E04_D_EXECUTION_BINDING_RUN_001_V2.json",
+    "sha256": "46748feee72a85bfa528d4ab1b3d5dad35b90972f18e2df2e82735817c9564cf"
+  },
+  "failure_class": "E04D_SOURCE_IDENTITY",
+  "next_action": "REVIEW_REQUIRED_FOR_FRESH_REPLACEMENT_EXECUTION_AUTHORIZATION_AFTER_ROUTINE_SOURCE_IDENTITY_FIX",
+  "process_evidence": {
+    "cap_exit_code": 1,
+    "cap_seconds": 1800,
+    "cap_wall_seconds": 0.2507774531841278,
+    "elapsed_seconds": 0.016151207499206066,
+    "final_audit_opened": false,
+    "generation_calls": 0,
+    "optimizer_steps": 0,
+    "parameter_updates": 0
+  },
+  "protocol_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1",
+  "remote_evidence": {
+    "cap_receipt_sha256": "3d29500f506bb6bbb23f6e68a2493fff8edd2716425e849551b355670f6c1681",
+    "terminal_receipt_sha256": "390057c7d69e997dd94bf5f83e25d99e46b083f6fac62c604032c482628f6f34"
+  },
+  "remote_output_root": "/workspace/arc2/e04_d_rotation_marker_local_gradient_diagnostic_v1/run_001_e04dfc9325c7e2974d018cf38192da6c",
+  "root_cause": "Worker required absent execution_checkout_commit while the frozen binding and CPU preflight use approved_source_commit ancestor identity.",
+  "run_id": "RUN_001_e04dfc9325c7e2974d018cf38192da6c",
+  "schema_version": 1,
+  "scientific_interpretation": "NOT_RUN_INFRASTRUCTURE_FAILURE_BEFORE_MODEL_IMPORT",
+  "status": "FAILED_OR_PARTIAL_NO_UPDATE"
+}
