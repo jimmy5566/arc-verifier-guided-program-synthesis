@@ -1,0 +1,78 @@
+{
+  "binding_sha256": "8c1837e5f9da6f56bd6f077eee369bc063cd85cd98f6a195131e12579d8c1252",
+  "bootstrap": {
+    "canonical_base_pairs": 48,
+    "interval": "percentile_95",
+    "replicates": 10000,
+    "seed": 20261011
+  },
+  "control_raw_sha256": "0d8e6bbc1ca894177204a9fa179963d6ece1a2b0018440be49b3dded736b3e5a",
+  "final_audit_opened": false,
+  "final_protocol_decision": "PROTECTION_FAILURE",
+  "frozen_treatment_minus_v7_protection_rule_unchanged": {
+    "maximum_episode_decline": 8,
+    "observed": {
+      "MARKER_BINDING_CONTROL": {
+        "accuracy_delta_vs_v7": -0.3020833333333333,
+        "ci95_high": -0.2604166666666667,
+        "ci95_low": -0.34375,
+        "episode_delta_vs_v7": -58.0
+      },
+      "NO_TRANSFORM_RETENTION_CONTROL": {
+        "accuracy_delta_vs_v7": 0.24479166666666666,
+        "ci95_high": 0.2916666666666667,
+        "ci95_low": 0.19270833333333334,
+        "episode_delta_vs_v7": 47.0
+      }
+    }
+  },
+  "original_cpu_score_sha256": "235fd79a034d5a473a9027f6868c0c8826d284e05f9d0be342cdabc9202e7507",
+  "original_result_package_sha256": "e5e546c91c55031fa3eea96e76286acc4ce2fccabd54bf23a14f83880bbc6ab1",
+  "primary_cannot_override_protection_failure": true,
+  "primary_rule": {
+    "condition": "FIXED_TURN_ROTATION_CONTROL",
+    "lower_bound_greater_than_zero": false,
+    "minimum_additional_correct_episodes": 8,
+    "observed": {
+      "accuracy_delta_treatment_minus_control": 0.13541666666666666,
+      "ci95_high": 0.265625,
+      "ci95_low": 0.0,
+      "episode_delta_treatment_minus_control": 26.0
+    },
+    "passes_primary_rule": false
+  },
+  "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+  "raw_freeze_receipt_sha256": "2bb97011bad8150564caba10ce87226fbf9f77962a1e05d73f9e3f07c19a8c11",
+  "schema_version": 1,
+  "scientific_scope": "REUSED_E04_DEVELOPMENT_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION_CONFIRMATION",
+  "status": "CORRECTED_SUPPLEMENTAL_CPU_SCORE",
+  "target_scorer_sidecar_sha256": "8da15d579c5e91f80f7e8587f893cc4e210d6b84120abf0823e46cc9978e635e",
+  "target_sidecar_opened_only_after_all_raw_validation": true,
+  "treatment_minus_control": {
+    "FIXED_TURN_ROTATION_CONTROL": {
+      "accuracy_delta_treatment_minus_control": 0.13541666666666666,
+      "ci95_high": 0.265625,
+      "ci95_low": 0.0,
+      "episode_delta_treatment_minus_control": 26.0
+    },
+    "MARKER_BINDING_CONTROL": {
+      "accuracy_delta_treatment_minus_control": -0.23958333333333334,
+      "ci95_high": -0.19270833333333334,
+      "ci95_low": -0.2864583333333333,
+      "episode_delta_treatment_minus_control": -46.0
+    },
+    "NO_TRANSFORM_RETENTION_CONTROL": {
+      "accuracy_delta_treatment_minus_control": 0.0,
+      "ci95_high": 0.0,
+      "ci95_low": 0.0,
+      "episode_delta_treatment_minus_control": 0.0
+    },
+    "ROTATION_TARGET": {
+      "accuracy_delta_treatment_minus_control": 0.057291666666666664,
+      "ci95_high": 0.09895833333333333,
+      "ci95_low": 0.015625,
+      "episode_delta_treatment_minus_control": 11.0
+    }
+  },
+  "treatment_raw_sha256": "ef08aa4b4bdc269847455b8cc327266eead55e98e730f76fbaafe1593609581e"
+}

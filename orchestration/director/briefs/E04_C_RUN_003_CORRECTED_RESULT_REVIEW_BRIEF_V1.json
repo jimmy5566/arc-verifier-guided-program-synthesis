@@ -1,0 +1,71 @@
+{
+  "brief_id": "E04_C_RUN_003_CORRECTED_RESULT_REVIEW_BRIEF_V1",
+  "corrected_primary": {
+    "condition": "FIXED_TURN_ROTATION_CONTROL",
+    "lower_bound_greater_than_zero": false,
+    "minimum_additional_correct_episodes": 8,
+    "observed": {
+      "accuracy_delta_treatment_minus_control": 0.13541666666666666,
+      "ci95_high": 0.265625,
+      "ci95_low": 0.0,
+      "episode_delta_treatment_minus_control": 26.0
+    },
+    "passes_primary_rule": false
+  },
+  "created_at": "2026-10-11T03:06:32.351216Z",
+  "descriptive_treatment_minus_control": {
+    "FIXED_TURN_ROTATION_CONTROL": {
+      "accuracy_delta_treatment_minus_control": 0.13541666666666666,
+      "ci95_high": 0.265625,
+      "ci95_low": 0.0,
+      "episode_delta_treatment_minus_control": 26.0
+    },
+    "MARKER_BINDING_CONTROL": {
+      "accuracy_delta_treatment_minus_control": -0.23958333333333334,
+      "ci95_high": -0.19270833333333334,
+      "ci95_low": -0.2864583333333333,
+      "episode_delta_treatment_minus_control": -46.0
+    },
+    "NO_TRANSFORM_RETENTION_CONTROL": {
+      "accuracy_delta_treatment_minus_control": 0.0,
+      "ci95_high": 0.0,
+      "ci95_low": 0.0,
+      "episode_delta_treatment_minus_control": 0.0
+    },
+    "ROTATION_TARGET": {
+      "accuracy_delta_treatment_minus_control": 0.057291666666666664,
+      "ci95_high": 0.09895833333333333,
+      "ci95_low": 0.015625,
+      "episode_delta_treatment_minus_control": 11.0
+    }
+  },
+  "director_remediation_response_sha256": "43cc492320198bf9e99baea658874f4cc8789fa339b165046542ee2225dfd6bb",
+  "final_protocol_decision": "PROTECTION_FAILURE",
+  "original_result_package_sha256": "e5e546c91c55031fa3eea96e76286acc4ce2fccabd54bf23a14f83880bbc6ab1",
+  "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+  "purpose": "SYNCHRONOUS_DIRECTOR_CORRECTED_RESULT_REVIEW_ONLY",
+  "request": "Interpret the corrected frozen paired result and its mechanism implications. No execution, retry, replacement, promotion, or new protocol authorization is requested.",
+  "run_id": "RUN_003_REPLACEMENT_4f37cc1a6e6ee2ab183f936f28c05d5b",
+  "schema_version": 1,
+  "scope": "REUSED_E04_DEVELOPMENT_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION_CONFIRMATION",
+  "supplemental_result_package_path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/run_003_4f37cc1a6e6ee2ab183f936f28c05d5b/SUPPLEMENTAL_RESULT_PACKAGE_V1.json",
+  "supplemental_result_package_sha256": "e54e75944f9b54c9138834eb585ad02a4d1397d2159c707f98c03b13d743a970",
+  "supplemental_score_sha256": "ed56341a72a6b1bf6cd4e1b438507ddbaea1ff4628cd3a176a2c5bdcfab514fa",
+  "unchanged_protection": {
+    "maximum_episode_decline": 8,
+    "observed": {
+      "MARKER_BINDING_CONTROL": {
+        "accuracy_delta_vs_v7": -0.3020833333333333,
+        "ci95_high": -0.2604166666666667,
+        "ci95_low": -0.34375,
+        "episode_delta_vs_v7": -58.0
+      },
+      "NO_TRANSFORM_RETENTION_CONTROL": {
+        "accuracy_delta_vs_v7": 0.24479166666666666,
+        "ci95_high": 0.2916666666666667,
+        "ci95_low": 0.19270833333333334,
+        "episode_delta_vs_v7": 47.0
+      }
+    }
+  }
+}
