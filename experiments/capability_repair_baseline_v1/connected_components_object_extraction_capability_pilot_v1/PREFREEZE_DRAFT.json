@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "protocol_id": "CONNECTED_COMPONENTS_OBJECT_EXTRACTION_CAPABILITY_PILOT_V1",
+  "status": "CPU_ONLY_PREFREEZE_DRAFT_NO_DATA_NO_MODEL_NO_EXECUTION",
+  "scientific_question": "With every optimization and replay budget matched, does structure-diverse supervised training improve native-Greedy exact-grid performance on independently generated connected-components/object-extraction validation without reducing protected capabilities?",
+  "arms": [
+    {
+      "arm_id": "CONTROL_NARROW_STRUCTURE",
+      "initialization": "V7_EXACT_CHECKPOINT_TO_BE_BOUND",
+      "synthetic_train_scope": "narrow connected-components/object-extraction structures plus protected replay",
+      "protected_replay": "BYTE_IDENTICAL_SHARED_REPLAY_TO_BE_FROZEN"
+    },
+    {
+      "arm_id": "TREATMENT_STRUCTURE_DIVERSE",
+      "initialization": "V7_EXACT_CHECKPOINT_TO_BE_BOUND",
+      "synthetic_train_scope": "structure-diverse connected-components/object-extraction structures plus protected replay",
+      "protected_replay": "BYTE_IDENTICAL_SHARED_REPLAY_TO_BE_FROZEN"
+    }
+  ],
+  "matched_budgets": {
+    "optimizer": "IDENTICAL_TO_BE_FROZEN",
+    "update_steps": "IDENTICAL_TO_BE_FROZEN",
+    "supervised_tokens": "IDENTICAL_TO_BE_FROZEN",
+    "replay_examples": "IDENTICAL_TO_BE_FROZEN",
+    "replay_bytes": "IDENTICAL_TO_BE_FROZEN"
+  },
+  "future_validation": {
+    "cohort": "NEWLY_GENERATED_NON_GOLD_STRUCTURALLY_DISJOINT_TO_BE_FROZEN",
+    "primary_outcome": "NATIVE_GREEDY_EXACT_GRID_ACCURACY",
+    "protected_retention": "PER_CAPABILITY_RETENTION_TO_BE_FROZEN",
+    "composition_sentinel": "SMALL_INDEPENDENT_COMPOSITION_SENTINEL_TO_BE_FROZEN"
+  },
+  "forbidden_before_director_prelaunch_review": [
+    "DATA_GENERATION",
+    "MODEL_LOADING",
+    "GPU",
+    "TRAINING",
+    "OPTIMIZER",
+    "BACKWARD",
+    "INFERENCE",
+    "TARGET_ACCESS",
+    "GOLD",
+    "DGOLD",
+    "FINAL_AUDIT"
+  ],
+  "required_before_execution": [
+    "FROZEN_SYNTHETIC_TRAIN_IDENTITIES",
+    "BYTE_IDENTICAL_PROTECTED_REPLAY_PROOF",
+    "INDEPENDENT_NON_GOLD_STRUCTURAL_DISJOINTNESS_AUDIT",
+    "EXACT_V7_AND_RUNTIME_IDENTITIES",
+    "MATCHED_BUDGET_MANIFEST",
+    "DIRECTOR_PRELAUNCH_AUTHORIZATION"
+  ],
+  "evidence_scope": "DRAFT_ONLY; no claim about model capability, training effectiveness, ARC generalization, or checkpoint promotion."
+}
