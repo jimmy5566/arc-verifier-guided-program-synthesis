@@ -1,0 +1,87 @@
+{
+    "schema_version":  1,
+    "kind":  "R5_CAP192_RUN_007_ALL_B1_PRELAUNCH_REVIEW",
+    "protocol_id":  "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5_CAP192_RUN_007_ALL_B1",
+    "request":  "Review the Director-required target-blind divergence evidence and frozen physical-B1 successor. If the preserved scientific conditions and exact identities are acceptable, authorize exactly one fresh, non-retry GPU execution for RUN_007. Do not launch work in this review.",
+    "predecessor":  {
+                        "run_id":  "RUN_006_CAP192_ddf8392c9a833f56665bc9010660cbe5",
+                        "status":  "INVALID_B1_BATCH_SENSITIVITY_DISAGREEMENT",
+                        "terminal_receipt_sha256":  "c10e20b3f0ab9d61c50b988859fe661731a409a14f07582ed1e4ced4d3703bcb",
+                        "raw_freeze_manifest_sha256":  "264e912ddebd27fe9b78a9a641065f9b082cb2c033eb70dfc4994df9e7b643c9",
+                        "result_sha256":  "0ee9f23bcb8587183759bdd4260f807abfa3e18e1e09d329d982beb9e1a986eb",
+                        "director_response_sha256":  "a5d706969147c32d7d2c34ec3ab1207f613817e5e6d928d1228064f14a4843e1"
+                    },
+    "target_blind_divergence_evidence":  {
+                                             "path":  "orchestration/results/atomic_ood_identifiability_pilot_v4_r5_cap192/run_006_ddf8392c9a833f56665bc9010660cbe5/B1_DIVERGENCE_REPORT.json",
+                                             "sha256":  "65980cde5576001a856b160e603aec6bba7d353d876e3dd1cba5d537cc81f849",
+                                             "target_sidecar_accessed":  false,
+                                             "target_content_released":  false,
+                                             "discordant_count_by_arm":  {
+                                                                             "V7":  1,
+                                                                             "E04_E_CONTROL":  2,
+                                                                             "E04_E_TREATMENT":  0
+                                                                         },
+                                             "required_fields":  "first differing token position, completion length, parser/canonical result, requested/effective batch; correctness confinement remains NOT_EVALUATED_TARGET_BLIND"
+                                         },
+    "authorization_request":  {
+                                  "type":  "ONE_SHOT_GPU_EXECUTION_AUTHORIZATION",
+                                  "permitted_launches":  1,
+                                  "retry":  false,
+                                  "failure_policy":  "Any failure consumes this authorization and permits no automatic replacement.",
+                                  "reason":  "RUN_006 is invalid only for batch sensitivity; RUN_007 replaces primary generation with physical Batch1 and requires frozen B1 reproducibility before result acceptance."
+                              },
+    "successor_execution_identity":  {
+                                         "source_commit":  "2c41788bdcd729d90feb2d46bdf880e6fdc96cbe",
+                                         "source_ref":  "origin/results/arc2-r5-cap192-run006",
+                                         "execution_package_path":  "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_serialization_cap192_run_007_all_b1/EXECUTION_PACKAGE.json",
+                                         "execution_package_sha256":  "dc1dc3c5b092ee2bf51bae3e5ef387dd290920ea7fdd0a65e322cf45931881f5",
+                                         "worker_path":  "scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192_run007_all_b1.py",
+                                         "worker_sha256":  "b1e8dd31c12d61906689908192ee2291782008bcbc38408b16b08b9a9d7f7657",
+                                         "launcher_path":  "scripts/launch_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192_run007_all_b1.py",
+                                         "launcher_sha256":  "7485d782ef68f53ee6587986f5e82a55b66c58446afbabd97731a895a71653ef",
+                                         "tests_path":  "tests/test_atomic_ood_identifiability_pilot_v4_r5_cap192_run007_all_b1_execution.py",
+                                         "tests_sha256":  "9435738ca0e56533bdc96f0db784f88cbc85a3af7dc3b442322a22e1f01d3db6",
+                                         "fixed_b1_subset_path":  "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_serialization_cap192_run_007_all_b1/B1_SENSITIVITY_SUBSET.json",
+                                         "fixed_b1_subset_sha256":  "8dc8d56049213a720805a529bea8e38ce4ee626421232b12df44962507a8ed4e",
+                                         "nonce":  "6ea3ccce190a94a28e86231bd0c2204a",
+                                         "fresh_remote_output_root":  "/workspace/arc2/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_cap192_all_b1/run_007_6ea3ccce190a94a28e86231bd0c2204a",
+                                         "active_hard_cap_seconds":  25200
+                                     },
+    "physical_b1_repair":  {
+                               "sole_primary_generation_mode":  "physical Batch1",
+                               "primary_requested_batch_size":  1,
+                               "fallback_ladder":  [
+                                                       1
+                                                   ],
+                               "length_bucketing":  false,
+                               "unchanged":  "same Cap192 native greedy BF16; V7, E04-E Control, E04-E Treatment; frozen 192 prompt cohort; checkpoint bytes; tokenizer/parser/canonicalizer; sealed scorer and metrics",
+                               "acceptance":  "Each of the 12 B1_REPRODUCIBILITY rows per arm must exactly reproduce the corresponding frozen RUN_006 B1 generated_token_ids and parsed_grid before successor result acceptance."
+                           },
+    "runtime_cap_basis":  {
+                              "run006_wall_seconds":  1998.2741242945194,
+                              "run006_generator_calls":  54,
+                              "run007_generator_calls":  612,
+                              "linear_estimate_seconds":  22647.106742004555,
+                              "margin":  "approximately 11 percent",
+                              "proposed_active_hard_cap_seconds":  25200
+                          },
+    "prelaunch_cpu_evidence":  [
+                                   "16 of 16 run007 execution tests passed",
+                                   "worker --self-test passed",
+                                   "validate_preimport reports GPU false, model imported false, target sidecar accessed false, optimizer steps 0"
+                               ],
+    "forbidden":  [
+                      "NO_TRAINING",
+                      "NO_OPTIMIZER",
+                      "NO_PARAMETER_UPDATES",
+                      "NO_BACKWARD",
+                      "NO_GRADIENT",
+                      "NO_TTT",
+                      "NO_AUGMENTATION",
+                      "NO_DFS",
+                      "NO_BEAM",
+                      "NO_GOLD",
+                      "NO_DGOLD",
+                      "NO_FINAL_AUDIT"
+                  ]
+}
