@@ -1,0 +1,110 @@
+{
+  "bounded_compute_request": {
+    "maximum_joint_gpu_seconds": 7200,
+    "maximum_per_arm_gpu_seconds": 3600,
+    "no_automatic_launch": true,
+    "requested_only_after_new_director_prelaunch_review": true,
+    "two_arms": 2
+  },
+  "brief_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2_PRELAUNCH_BRIEF",
+  "director_basis": {
+    "e04d_result_response_path": "orchestration/director/responses/E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1_RUN_002_RESULT_BRIEF_RESPONSE.json",
+    "e04d_result_response_sha256": "702bb188c16e01858db743f65ec4f8d987cd9b7a16914f22e79995981669ca69",
+    "response_path": "orchestration/director/responses/E04_E_MATCHED_MARKER_REPLAY_PRESERVATION_PILOT_V1_CPU_FEASIBILITY_BRIEF_RESPONSE.json",
+    "response_sha256": "8aed718e63923b8727d94bfacf5fbd637e1a88e72b510ebfc828757ddb54d357"
+  },
+  "evaluation_rules": {
+    "bootstrap_seed": 20261011,
+    "development_scope_only": true,
+    "marker_protection": "treatment vs V7 decline no more than 8/192",
+    "no_transform": "treatment vs V7 decline no more than 8/192",
+    "primary": "treatment-control marker-binding native-Greedy exact-grid, paired canonical base",
+    "rotation": "treatment vs V7 improvement >=8/192 and CI lower >0; treatment trails control no more than 8/192",
+    "success": "at least 8/192 additional correct and 10,000-replicate bootstrap lower bound >0"
+  },
+  "frozen_schedule": {
+    "byte_identical_fixed_turn_rotation_slots": 96,
+    "byte_identical_no_transform_replay_slots": 192,
+    "control_schedule_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/CONTROL_SCHEDULE.json",
+    "control_schedule_sha256": "7abe1bdaac52e448b9ed0c3e94057c2d55162130a054690242aa0ee191639022",
+    "cpu_validation_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/E04_E_V2_CPU_STATIC_VALIDATION.json",
+    "cpu_validation_sha256": "abdd82a958fd059774187713c9249c8c89c6767f262481969b9ba2980d1e6d85",
+    "equal_slot_coefficients": [
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "marker_candidates": 48,
+    "matched_marker_replay_swap_slots": 96,
+    "optimizer_steps": 96,
+    "protocol_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/E04_E_V2_PRELAUNCH_PROTOCOL.json",
+    "protocol_sha256": "51f7fa3e39fa532a583acc1c6686f4d6f9642132963c3ee7b817dc981cad7b8b",
+    "slots": 384,
+    "slots_per_step": 4,
+    "token_accounting_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/TOKEN_ACCOUNTING.json",
+    "token_accounting_sha256": "55051e05b54b6fc8cd765017846b5e4abdf30b7333a060bfa91146e39c5f7b21",
+    "treatment_schedule_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/TREATMENT_SCHEDULE.json",
+    "treatment_schedule_sha256": "d1c284df3ae9b31b5120acbdab4184e0fee5c22c31d46c0e55f25de75b707395",
+    "uses_per_marker_candidate": 2
+  },
+  "implementation_tests": {
+    "evaluation_targets_accessed": false,
+    "final_audit_opened": false,
+    "freezer_self_test": "PASS_E04E_V2_CPU_FREEZER",
+    "gpu_used": false,
+    "model_loaded": false,
+    "optimizer_constructed": false,
+    "pytest": "tests/test_freeze_e04_e_equal_slot_marker_replay_pilot.py: 2 passed",
+    "validation": "PASS_CPU_ONLY_V2_SCHEDULE_AND_ACCOUNTING_VALIDATION"
+  },
+  "preserved_recipe": {
+    "arm_order": [
+      "CONTROL_EQUAL_SLOT",
+      "TREATMENT_EQUAL_SLOT"
+    ],
+    "checkpoint": "exact V7, fresh independent arm initialization",
+    "joint_cap_seconds": 7200,
+    "learning_rate": 5e-05,
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "lora_rank": 64,
+    "optimizer": "PagedAdamW8bit",
+    "per_arm_cap_seconds": 3600,
+    "precision": "BF16",
+    "seed": 2000031
+  },
+  "raw_token_accounting": {
+    "control": {
+      "optimizer_steps": 96,
+      "per_step_slot_coefficients": [
+        0.25,
+        0.25,
+        0.25,
+        0.25
+      ],
+      "raw_supervised_tokens": 28800,
+      "raw_transformer_tokens": 207360,
+      "slot_count": 384
+    },
+    "interpretation": "Reported as structural sequence-length differences. Both arms use identical per-slot mean supervised-token CE with coefficient 0.25 each; they are not nominal loss weights or update budgets.",
+    "supervised_tokens": -3360,
+    "transformer_tokens": -3360,
+    "treatment": {
+      "optimizer_steps": 96,
+      "per_step_slot_coefficients": [
+        0.25,
+        0.25,
+        0.25,
+        0.25
+      ],
+      "raw_supervised_tokens": 25440,
+      "raw_transformer_tokens": 204000,
+      "slot_count": 384
+    }
+  },
+  "requested_director_decision": "Approve, require changes, pause, or stop the immutable V2 protocol. This brief does not authorize model loading, optimizer construction, training, generation, GPU execution, evaluation-target access, Gold/dGold, or FINAL_AUDIT.",
+  "scientific_question": "Under common equal-slot loss weighting, does marker-binding TRAIN replay preserve marker exact-grid capability while identical fixed-turn rotation supervision remains effective?",
+  "single_intentional_factor": "At 96 fixed replay positions, matched no-transform tasks in control are replaced by matched marker-binding tasks in treatment.",
+  "status": "CPU_ONLY_FROZEN_REVIEW_REQUIRED_NO_EXECUTION_AUTHORIZATION_REQUESTED"
+}

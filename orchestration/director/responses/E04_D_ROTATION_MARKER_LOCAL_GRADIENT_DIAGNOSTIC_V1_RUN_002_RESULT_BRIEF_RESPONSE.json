@@ -1,0 +1,96 @@
+{
+  "response_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1_RUN_002_RESULT_BRIEF_RESPONSE",
+  "reviewed_brief_sha256": "ac27a0dfd085a4d483f11f01d54b8063f982a921367d8c271f2a1a749a84f940",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "CPU_ONLY_FREEZE_E04_E_MATCHED_MARKER_REPLAY_PRESERVATION_PILOT_V1",
+  "next_action": "Prepare one CPU-only prospective two-arm training protocol testing whether explicit marker-binding replay prevents the E04-C protection failure. Use exact V7 start for both arms. Define the control arm as an exact reconstruction of the accepted E04-C rotation-treatment schedule. Keep every fixed-turn-rotation intervention slot byte-identical in the treatment arm and change only a prospectively selected subset of no-transform replay slots to legitimate matched marker-binding TRAIN replay. Before choosing the subset, solve and freeze a deterministic schedule that matches arms on optimizer steps, supervised-token total, transformer-token total, per-step loss denominator, role-slot positions, turn allocation, structural-cell allocation, optimizer, learning rate, LoRA configuration, precision, seed policy, and evaluation conditions. Freeze marker-binding exact-grid preservation as the primary endpoint, fixed-turn rotation as the required efficacy constraint, and no-transform as a protected-retention constraint. Use paired canonical-base bootstrap with seed 20261011 and 10,000 replicates. If exact schedule matching is infeasible, report that CPU-only fact without relaxing the design. Return one concise prelaunch brief for Director review. Do not load a model, launch GPU work, construct an optimizer, train, generate, access evaluation targets, or open Gold, dGold, or FINAL_AUDIT in this stage.",
+  "observed_result": {
+    "process_status": "COMPLETE_NO_UPDATE",
+    "scientific_classification": "LOCAL_CONFLICT_DEPRIORITIZED",
+    "rotation_marker_pair_count": 48,
+    "canonical_bases": 12,
+    "rotation_marker_cosine_range": [
+      0.820834755897522,
+      0.8684911727905273
+    ],
+    "rotation_marker_cosine_mean": 0.8518274327119192,
+    "aggregate_bootstrap_95_interval": [
+      0.8428283048172792,
+      0.8596938376625379
+    ],
+    "observed_repeatability_sensitivity_envelope": [
+      0.8276158012386636,
+      0.8749063412411535
+    ],
+    "u_rotation_marker": 0.01521250357861556,
+    "negative_pair_count": 0,
+    "sensitivity_adjusted_negative_frequency_bounds": [
+      0.0,
+      0.0
+    ],
+    "mean_gradient_norms": {
+      "fixed_turn_rotation": 6.006733288367589,
+      "marker_binding": 10.972921768824259,
+      "no_transform": 6.045145640770595
+    },
+    "runtime_seconds": 282.23957139626145,
+    "runtime_cap_seconds": 1800,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "generation_calls": 0,
+    "final_audit_opened": false
+  },
+  "mechanism_assessment": {
+    "confidence": "ESTABLISHED_WITH_SCOPED_LIMIT",
+    "established": [
+      "At exact V7 start, under the frozen E04-C all-assistant CE and LoRA parameterization, every measured matched rotation-marker gradient cosine is strongly positive.",
+      "The positive aggregate remains strictly above zero after canonical-base bootstrap uncertainty and the prospectively repaired chord-distance repeatability envelope.",
+      "The sensitivity-adjusted negative-cosine frequency is zero, so this specific start-state local conflict contrast is not a supported explanation for the E04-C marker regression.",
+      "Marker-binding gradients have larger mean norm than rotation gradients in this cohort, but scalar norm differences alone do not identify the cause of the later exact-grid regression."
+    ],
+    "supported_hypothesis": "Because E04-C targeted rotation while its replay did not explicitly preserve marker-binding examples, insufficient explicit protection or nonlinear optimization/objective effects are now more plausible than start-state local gradient antagonism. A matched replay-allocation intervention is the smallest causal discriminator.",
+    "unknown": [
+      "Whether rotation-marker alignment changes later along the training trajectory.",
+      "Whether marker-binding teacher-forced likelihood improved or worsened at the rejected E04-C endpoint.",
+      "Whether explicit marker-binding replay can preserve native Greedy exact-grid capability without sacrificing the fixed-turn rotation gain.",
+      "Whether any successful synthetic result transfers to independent compositions or ARC development tasks."
+    ],
+    "research_bottleneck": "The programme now lacks causal evidence that explicit family protection, rather than gradient-conflict mitigation, can retain marker binding while learning fixed-turn rotation."
+  },
+  "route_decisions": {
+    "start_state_gradient_conflict_mitigation": "DEPRIORITIZED_FOR_E04_ROTATION_MARKER_CONTRAST",
+    "repeat_E04_D_gradient_measurement": "NOT_JUSTIFIED",
+    "automatic_gradient_surgery_training": "NOT_AUTHORIZED",
+    "explicit_marker_replay_hypothesis": "ADVANCE_TO_CPU_ONLY_MATCHED_PROTOCOL_FREEZE",
+    "E04_C_checkpoint_promotion": "REMAINS_REJECTED"
+  },
+  "prospective_pilot_requirements": {
+    "primary_question": "Does explicit marker-binding TRAIN replay prevent marker exact-grid regression when fixed-turn rotation supervision and the entire optimization budget are held fixed?",
+    "control": "Exact E04-C rotation-treatment schedule reconstructed byte-for-byte from frozen artifacts.",
+    "treatment": "The same fixed-turn rotation intervention with only a frozen portion of no-transform replay replaced by legitimate marker-binding replay.",
+    "primary_outcome": "Treatment-minus-control marker-binding native-Greedy exact-grid accuracy on the unchanged E04 development cohort, paired by canonical base.",
+    "efficacy_constraint": "Treatment must preserve the control arm's fixed-turn rotation gain within a predeclared noninferiority margin.",
+    "retention_constraint": "Treatment must not introduce an unacceptable no-transform regression versus V7 or the matched control.",
+    "success_definition": "Must be based on free-running exact-grid outcomes and paired uncertainty; lower NLL, larger margins, or checkpoint creation alone cannot establish success.",
+    "development_scope": "The reused E04 cohort remains synthetic development evidence and cannot establish independent ARC generalization."
+  },
+  "frozen_conditions": [
+    "RUN_002 raw evidence, receipts, protocol, config, cohort, checkpoint identity, sensitivity rule, and LOCAL_CONFLICT_DEPRIORITIZED result remain immutable.",
+    "E04-C remains an immutable PROTECTION_FAILURE; its result must not be relabeled or retrospectively rescored.",
+    "Any successor pilot must use exact V7 starts, legitimate TRAIN-only supervision, matched optimization and token budgets, native Greedy evaluation, and protected retention checks.",
+    "Gold, dGold, and FINAL_AUDIT remain sealed."
+  ],
+  "forbidden_actions": [
+    "Do not interpret positive local cosine as proof that all gradients remain aligned throughout training or that gradient interference is globally absent.",
+    "Do not launch another E04-D measurement, gradient-surgery experiment, or replay training job from this result response.",
+    "Do not vary starting checkpoint, rotation exposure, optimizer, learning rate, update count, total token budgets, seed policy, and replay allocation together.",
+    "Do not use validation targets to construct or select replay examples, adapt the schedule, or tune thresholds.",
+    "Do not promote an E04-C checkpoint, open Gold or dGold, or access FINAL_AUDIT."
+  ],
+  "gpu_authorized_for_next_stage": false,
+  "model_loading_authorized_for_next_stage": false,
+  "scientific_training_authorized_for_next_stage": false,
+  "another_director_prelaunch_review_required": true,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

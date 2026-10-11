@@ -1,0 +1,14 @@
+{
+  "control_schedule_sha256": "7abe1bdaac52e448b9ed0c3e94057c2d55162130a054690242aa0ee191639022",
+  "evaluation_targets_accessed": false,
+  "final_audit_opened": false,
+  "gpu_used": false,
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+  "protocol_sha256": "51f7fa3e39fa532a583acc1c6686f4d6f9642132963c3ee7b817dc981cad7b8b",
+  "status": "PASS_CPU_ONLY_V2_SCHEDULE_AND_ACCOUNTING_VALIDATION",
+  "token_accounting_sha256": "55051e05b54b6fc8cd765017846b5e4abdf30b7333a060bfa91146e39c5f7b21",
+  "tokenizer_loaded": false,
+  "treatment_schedule_sha256": "d1c284df3ae9b31b5120acbdab4184e0fee5c22c31d46c0e55f25de75b707395"
+}

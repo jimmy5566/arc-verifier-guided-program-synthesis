@@ -1,0 +1,91 @@
+{
+  "response_id": "E04_E_MATCHED_MARKER_REPLAY_PRESERVATION_PILOT_V1_CPU_FEASIBILITY_BRIEF_RESPONSE",
+  "reviewed_brief_sha256": "c8bef61ae4762ffaeced8bef1d8cebaf20df465194be5405c48b39dbd86649d0",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "CPU_ONLY_FREEZE_E04_E_V2_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT",
+  "next_action": "Freeze a revised prospective two-arm protocol without model or GPU use. Rebind its scientific basis to E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1_RUN_002_RESULT_BRIEF_RESPONSE.json SHA256 702bb188c16e01858db743f65ec4f8d987cd9b7a16914f22e79995981669ca69. Both arms must start from exact V7, contain 384 task slots grouped into 96 optimizer steps of four slots, and use a new common equal-slot loss: compute mean supervised-token CE independently for each slot, then average the four slot losses with coefficient 0.25 each before backward. Keep the same 96 fixed-turn-rotation slots byte-identical at identical step and role positions in both arms. In the 288 replay positions, keep 192 no-transform slots byte-identical; for the other 96 positions, the control uses the matched no-transform task and the treatment uses marker-binding replay, with each of the 48 legitimate marker candidates used exactly twice and matched by canonical base, turn, structural cell, step, and role position. Freeze and report the unavoidable raw supervised-token and transformer-token differences, but do not treat them as loss-weight or update-budget differences. Preserve the optimizer, learning rate, LoRA configuration, precision, initialization, step count, seed policy, arm order policy, runtime caps, native-Greedy evaluation, paired canonical-base bootstrap seed 20261011 with 10,000 replicates, and sealed-data boundaries. Return one concise V2 prelaunch brief with serialized schedules, actual tokenizer-derived accounting, implementation tests, evaluation thresholds, and bounded compute request. Do not load a model, construct an optimizer, train, generate, access evaluation targets, or launch GPU work in this stage.",
+  "observed_result": {
+    "status": "EXACT_SCHEDULE_MATCHING_INFEASIBLE_CPU_ONLY",
+    "control_replay_slots": 288,
+    "control_slot_signature": {
+      "supervised_tokens": 75,
+      "transformer_tokens": 540
+    },
+    "marker_candidates": 48,
+    "marker_slot_signature": {
+      "supervised_tokens": 40,
+      "transformer_tokens": 505
+    },
+    "exact_signature_overlap_count": 0,
+    "model_loaded": false,
+    "gpu_used": false,
+    "training_started": false,
+    "evaluation_targets_accessed": false,
+    "final_audit_opened": false
+  },
+  "mechanism_assessment": {
+    "confidence": "ESTABLISHED",
+    "established": [
+      "No legitimate marker-binding candidate has the same supervised-token and transformer-token signature as a no-transform replay slot, so literal one-for-one token-identical replacement is impossible.",
+      "The mismatch arises from the intrinsic task/output structure: marker-binding rows contain 40 supervised and 505 transformer tokens, while no-transform rows contain 75 supervised and 540 transformer tokens.",
+      "Relaxing only the raw-token equality while retaining the old token-weighted accumulation would alter nominal scalar-loss allocation and confound replay content with loss mass."
+    ],
+    "supported_hypothesis": "A common equal-slot objective in both newly trained arms is the smallest valid way to isolate marker-replay content from nominal loss weighting. Raw token-count differences remain transparent structural properties rather than hidden optimization-weight differences.",
+    "unknown": [
+      "Whether equal-slot training reproduces the E04-C fixed-turn rotation gain in its new control arm.",
+      "Whether explicit marker replay prevents marker-binding exact-grid regression.",
+      "Whether any protected atomic gain transfers to marker-conditioned rotation or independent composition."
+    ],
+    "research_bottleneck": "A matched causal training comparison is still needed, but it must use a common loss normalization that makes unequal-length task slots carry equal nominal optimization weight."
+  },
+  "revised_matching_criterion": {
+    "matched_exactly": [
+      "V7 starting weights and independent fresh initialization",
+      "384 task slots",
+      "96 optimizer steps",
+      "four task slots per optimizer step",
+      "per-slot scalar-loss coefficient 0.25 within every step",
+      "96 byte-identical fixed-turn-rotation slots",
+      "192 byte-identical no-transform replay slots",
+      "step order and role-slot positions",
+      "optimizer, learning rate, LoRA configuration, precision and seed policy",
+      "evaluation cohort, decoder, scorer, bootstrap and acceptance thresholds"
+    ],
+    "single_intentional_factor": "At 96 prospectively fixed replay positions, matched no-transform tasks in control are replaced by matched marker-binding TRAIN tasks in treatment.",
+    "reported_not_matched": [
+      "raw supervised-token total",
+      "raw transformer-token total",
+      "wall-clock throughput"
+    ],
+    "scientific_interpretation": "The estimand is the effect of equal-weight marker-task replay versus equal-weight no-transform replay, not the effect of equal raw token exposure and not a direct replication of E04-C's token-weighted objective."
+  },
+  "prospective_outcomes_to_freeze": {
+    "primary": "Treatment-minus-control marker-binding native-Greedy exact-grid accuracy, paired by canonical base.",
+    "primary_success_rule": "At least 8 additional correct marker-binding episodes out of 192 and paired bootstrap 95% interval lower bound greater than zero.",
+    "absolute_marker_protection": "Treatment marker-binding accuracy may not decline by more than 8 of 192 versus frozen V7.",
+    "rotation_efficacy": "Treatment fixed-turn-rotation accuracy must improve by at least 8 of 192 versus V7 with paired bootstrap lower bound greater than zero, and may not trail the matched control by more than 8 of 192.",
+    "no_transform_retention": "Treatment no-transform accuracy may not decline by more than 8 of 192 versus frozen V7.",
+    "supporting_only": "Training loss, NLL, gradient norms, margins, or checkpoint creation are descriptive and cannot substitute for free-running exact-grid success.",
+    "scope": "The reused E04 cohort is development evidence only; success does not establish independent ARC generalization."
+  },
+  "frozen_conditions": [
+    "The E04-D LOCAL_CONFLICT_DEPRIORITIZED result and E04-C PROTECTION_FAILURE remain immutable.",
+    "All replay examples must be legitimate TRAIN-only examples selected without evaluation-label access.",
+    "The 48 marker candidates are each used exactly twice; the 96 replacement positions and their matched control tasks are selected deterministically before model loading.",
+    "Both arms use the same newly frozen equal-slot loss implementation; the historical E04-C treatment checkpoint is not used as the causal control.",
+    "Gold, dGold, and FINAL_AUDIT remain sealed."
+  ],
+  "forbidden_actions": [
+    "Do not force token equality by truncating labels, masking valid target tokens, adding supervised filler tokens, modifying targets, or synthesizing a different marker task.",
+    "Do not retain token-weighted accumulation in one arm while using equal-slot weighting in the other.",
+    "Do not compare a newly trained equal-slot treatment causally against the historical E04-C checkpoint without a newly trained matched control.",
+    "Do not alter rotation exposure, starting checkpoint, optimizer, learning rate, steps, seed policy, evaluation conditions, or thresholds between arms.",
+    "Do not load a model, construct an optimizer, train, generate, open evaluation targets, access Gold or dGold, or access FINAL_AUDIT during this CPU-only freeze stage."
+  ],
+  "gpu_authorized_for_next_stage": false,
+  "model_loading_authorized_for_next_stage": false,
+  "scientific_training_authorized_for_next_stage": false,
+  "another_director_prelaunch_review_required": true,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}
