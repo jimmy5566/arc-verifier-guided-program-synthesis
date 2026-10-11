@@ -14,6 +14,8 @@ def main():
  if len(rows)!=48 or {r.get('pair_id') for r in rows}!=expected:raise SystemExit('E04D_RAW_COHORT_INVALID')
  repeats=raw.get('repeat_cosines',{});
  if set(repeats)!={'FIXED_TURN_ROTATION_CONTROL','MARKER_BINDING_CONTROL','NO_TRANSFORM_RETENTION_CONTROL'} or not all(-1<=float(v)<=1 for v in repeats.values()):raise SystemExit('E04D_REPEAT_INVALID')
- result=s.classify(rows,repeats);result.update({'status':'COMPLETE_NO_UPDATE','protocol_id':c['protocol_id'],'raw_sha256':sha(x.raw),'config_sha256':sha(x.config),'interpretation_limit':'local alignment is not causal proof of the E04-C marker regression'})
+ scales=raw.get('repeat_scale_variation',{});
+ if set(scales)!=set(repeats) or any(set(v)!={'first_norm','second_norm','absolute_difference','relative_difference'} or any(float(v[k])<0 for k in v) for v in scales.values()):raise SystemExit('E04D_REPEAT_SCALE_INVALID')
+ result=s.classify(rows,repeats);result.update({'status':'COMPLETE_NO_UPDATE','protocol_id':c['protocol_id'],'raw_sha256':sha(x.raw),'config_sha256':sha(x.config),'repeat_scale_variation':scales,'interpretation_limit':'repeat scale variation is reported separately and does not enter cosine sign classification; local alignment is not causal proof of the E04-C marker regression'})
  x.output.write_text(json.dumps(result,sort_keys=True,indent=2)+'\n',encoding='utf-8',newline='\n')
 if __name__=='__main__':main()

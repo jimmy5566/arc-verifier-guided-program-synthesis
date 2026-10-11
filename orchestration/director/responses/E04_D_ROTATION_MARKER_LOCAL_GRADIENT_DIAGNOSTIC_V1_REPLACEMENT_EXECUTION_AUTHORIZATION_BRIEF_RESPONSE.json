@@ -1,0 +1,75 @@
+{
+  "response_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1_REPLACEMENT_EXECUTION_AUTHORIZATION_BRIEF_RESPONSE",
+  "reviewed_brief_sha256": "069d20c1d732327004186b16d9b6f4878e437a1137cc9b56090149a6fc4798e1",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1_REPLACEMENT_RUN_002_EXECUTION",
+  "next_action": "Complete two bounded engineering-completeness fixes before binding: include src/training_data/pipeline.py in the scientific bound-file hashes, and preserve the second repeat's norm so the frozen scale-variation field is reported separately without entering sign classification. Run the existing CPU static, chord-sensitivity, clustered-statistics, detached-descendant identity, wrong-source, and tracked-dirty tests. Then create exactly one fresh replacement binding tied to this response, a clean source commit descending from repair commit 6e6a017e489c3c082ff86aabcb635aec104794e8, the repaired worker and postprocessor hashes, protocol SHA256 2ee22f1b768d1b6ba29c2cbb7a43ca69bbf1fe13cc59634f83b347edf3cc6552, config SHA256 e0a44c514c352f7a5b2d0ad7154627a70f8d94fe19859797e4875728ad335fb1, cohort SHA256 969b3bbc495b08abf3bdb495b33bc91882c7ec05779b47f18afa0d74582cd972, checkpoint manifest SHA256 1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549, a new nonce, and an unused output root. After local, origin, and RunPod source reconciliation, all pre-import identity and duplicate-job gates, and external plus worker cap enforcement pass, launch exactly one detached physical-B1 BF16 no-update gradient measurement under the unchanged 1800-second cap. Freeze raw sufficient statistics and terminal receipts, apply only the prospective V2 chord and sensitivity-adjusted frequency rules, and return one result brief for Director review. No retry or follow-on experiment is authorized.",
+  "observed_result": {
+    "failed_run_id": "RUN_001_e04dfc9325c7e2974d018cf38192da6c",
+    "classification": "NOT_RUN_INFRASTRUCTURE_FAILURE_BEFORE_MODEL_IMPORT",
+    "evidence": "The preserved terminal receipt records E04D_SOURCE_IDENTITY after 0.016151 seconds, with zero model import, optimizer steps, parameter updates, generation calls, or FINAL_AUDIT access.",
+    "scientific_result_available": false,
+    "old_binding_consumed": true,
+    "old_output_root_reusable": false
+  },
+  "mechanism_assessment": {
+    "confidence": "ESTABLISHED",
+    "finding": "RUN_001 failed because the worker required an execution_checkout_commit field absent from the already frozen binding, while both the binding and CPU preflight used approved_source_commit. This is a pre-model infrastructure contract mismatch, not evidence for or against local rotation-marker gradient conflict.",
+    "repair_assessment": "The repaired worker validates a well-formed approved source commit, accepts a clean exact or descendant checkout, rejects a non-ancestor and tracked modifications, while the outer preflight hash-binds the scientific executable set. This preserves rather than relaxes scientific identity.",
+    "scientific_priority": "The E04-D matched no-update diagnostic remains the smallest informative test of whether the E04-C marker regression is accompanied by robust local rotation-marker gradient antagonism."
+  },
+  "execution_authorization": {
+    "authorization_type": "ONE_FRESH_REPLACEMENT_RUN_ONLY",
+    "maximum_detached_jobs": 1,
+    "fresh_binding_required": true,
+    "fresh_nonce_required": true,
+    "fresh_unused_output_root_required": true,
+    "old_binding_or_output_reuse_authorized": false,
+    "physical_batch_size": 1,
+    "precision": "BF16",
+    "runtime_cap_seconds": 1800,
+    "model_loading_authorized_after_all_gates": true,
+    "backward_authorized_after_all_gates": true,
+    "gradient_measurement_authorized_after_all_gates": true,
+    "optimizer_construction_authorized": false,
+    "optimizer_steps_authorized": 0,
+    "parameter_updates_authorized": false,
+    "training_authorized": false,
+    "generation_authorized": false,
+    "automatic_retry_authorized": false,
+    "automatic_follow_on_authorized": false,
+    "checkpoint_promotion_authorized": false,
+    "final_audit_authorized": false,
+    "authorization_consumed_at_detached_launch": true
+  },
+  "required_prelaunch_gates": [
+    "The exact launch checkout must be clean, must descend from repair commit 6e6a017e489c3c082ff86aabcb635aec104794e8, and its recorded HEAD must be reconciled across local, origin, and RunPod before model import.",
+    "The fresh binding must hash-bind this response, the repaired worker, preflight, hard-cap launcher, postprocessor, statistics implementation, src/training_data/pipeline.py serializer, V2 protocol, execution config, frozen cohort, and checkpoint manifest.",
+    "The worker must preserve both repeat measurements' norms and report repeat scale variation separately; scale variation must not alter the frozen chord-based sign classification.",
+    "The exact V7 base and adapter bytes, LoRA parameter-name allowlist, tokenizer and serializer masks, 48 unique pair IDs, 12 canonical bases with four turns each, and zero-update boundary must pass before backward execution.",
+    "The new nonce and output root must be unused, RUN_001 artifacts must remain immutable, and no active or duplicate E04-D job may exist.",
+    "The external watchdog and worker-enforced 1800-second cap must cover model loading and all gradient measurements, with atomic failure receipt and partial-evidence preservation."
+  ],
+  "frozen_conditions": [
+    "The scientific question, V7 checkpoint, 48 matched TRAIN pairs, 12 canonical bases, three conditions, physical Batch1 BF16 execution, all-assistant CE, FP32 loss and gradient reduction, and LoRA trainable set remain unchanged.",
+    "The primary base-equal rotation-marker cosine, reference cosines, 10,000 canonical-base bootstrap replicates, seed 20261011, fixed repeat pair, chord-distance envelope, ambiguous-sign handling, and classification thresholds remain unchanged.",
+    "Validation targets, Gold, dGold, and FINAL_AUDIT remain sealed; the run performs no generation or parameter update.",
+    "RUN_001, its consumed binding, failure receipt, cap receipt, and output root remain immutable historical infrastructure-failure evidence."
+  ],
+  "result_interpretation": {
+    "LOCAL_CONFLICT_SUPPORTED": "Robust local gradient antagonism becomes supported evidence and may justify a separately reviewed matched causal mitigation experiment; it does not by itself prove the cause of E04-C forgetting.",
+    "LOCAL_CONFLICT_DEPRIORITIZED": "A robust positive aggregate and low negative-frequency envelope deprioritize local gradient conflict for this matched rotation-marker contrast and redirect attention toward representation, objective, or curriculum mechanisms.",
+    "MIXED_OR_INCONCLUSIVE": "Do not select a mitigation method from this diagnostic; preserve the valid measurements and choose the next mechanism test at result review.",
+    "INVALID_NOT_INTERPRETABLE": "Preserve the failure evidence and do not infer a gradient mechanism or automatically rerun."
+  },
+  "forbidden_actions": [
+    "Do not reuse the consumed RUN_001 binding, nonce, or output root.",
+    "Do not change the checkpoint, cohort, tasks, serializer semantics, loss, trainable parameters, batch size, precision, bootstrap, numerical rule, thresholds, or runtime cap.",
+    "Do not construct an optimizer, train, update parameters, generate outputs, promote a checkpoint, access validation targets, open Gold or dGold, or access FINAL_AUDIT.",
+    "Do not launch a second replacement, retry automatically, or begin gradient mitigation or any other follow-on experiment from this authorization."
+  ],
+  "another_director_prelaunch_review_required": false,
+  "director_result_review_required": true,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

@@ -80,7 +80,7 @@ def main():
     if m is None:raise RuntimeError('E04D_MODULE_GROUP')
     mods[m]+=float((p.grad.detach().float()**2).sum())
    return vec,{'loss':float(loss.detach()),'supervised_token_count':n,'norm':float(vec.norm()),'module_squared_norms':mods}
-  pairs=[];repeat_cos={}; repeat_id=c['repeat_pair_id']
+  pairs=[];repeat_cos={};repeat_scale_variation={}; repeat_id=c['repeat_pair_id']
   for i,row in enumerate(rows):
    vectors={};stats={}
    for cond in c['conditions']:vectors[cond],stats[cond]=grad(row['tasks'][cond],row['pair_id']+'-'+cond)
@@ -88,9 +88,9 @@ def main():
    pairs.append({'pair_id':row['pair_id'],'canonical_base_id':row['canonical_base_id'],'turn':row['turn'],'rotation_marker_cosine':cos(c['conditions'][0],c['conditions'][1]),'rotation_no_transform_cosine':cos(c['conditions'][0],c['conditions'][2]),'marker_no_transform_cosine':cos(c['conditions'][1],c['conditions'][2]),'condition_statistics':stats})
    if row['pair_id']==repeat_id:
     for cond in c['conditions']:
-     again,_=grad(row['tasks'][cond],row['pair_id']+'-'+cond+'-repeat');repeat_cos[cond]=float(torch.nn.functional.cosine_similarity(vectors[cond],again,dim=0))
+     again,again_stats=grad(row['tasks'][cond],row['pair_id']+'-'+cond+'-repeat');first_norm=float(stats[cond]['norm']);second_norm=float(again_stats['norm']);repeat_cos[cond]=float(torch.nn.functional.cosine_similarity(vectors[cond],again,dim=0));repeat_scale_variation[cond]={'first_norm':first_norm,'second_norm':second_norm,'absolute_difference':abs(first_norm-second_norm),'relative_difference':abs(first_norm-second_norm)/max(first_norm,second_norm)}
    atom(out/'PROGRESS.json',{'status':'PARTIAL_NO_UPDATE','completed_pairs':i+1,'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False})
-  raw={'status':'COMPLETE_NO_UPDATE','protocol_id':c['protocol_id'],'config_sha256':sha(config),'pairs':pairs,'repeat_cosines':repeat_cos,'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False,'runtime_head':head};atom(out/'RAW_GRADIENT_STATISTICS.json',raw);atom(receipt,{'status':'COMPLETE_NO_UPDATE','protocol_id':c['protocol_id'],'raw_sha256':sha(out/'RAW_GRADIENT_STATISTICS.json'),'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False,'elapsed_seconds':time.monotonic()-start})
+  raw={'status':'COMPLETE_NO_UPDATE','protocol_id':c['protocol_id'],'config_sha256':sha(config),'pairs':pairs,'repeat_cosines':repeat_cos,'repeat_scale_variation':repeat_scale_variation,'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False,'runtime_head':head};atom(out/'RAW_GRADIENT_STATISTICS.json',raw);atom(receipt,{'status':'COMPLETE_NO_UPDATE','protocol_id':c['protocol_id'],'raw_sha256':sha(out/'RAW_GRADIENT_STATISTICS.json'),'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False,'elapsed_seconds':time.monotonic()-start})
  except Exception as e:
   out.mkdir(parents=True,exist_ok=True);atom(receipt,{'status':'FAILED_OR_PARTIAL_NO_UPDATE','error_class':str(e),'traceback':traceback.format_exc(),'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False,'elapsed_seconds':time.monotonic()-start});raise
 if __name__=='__main__':main()

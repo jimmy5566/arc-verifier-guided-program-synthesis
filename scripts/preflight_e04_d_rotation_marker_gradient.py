@@ -15,8 +15,9 @@ def main():
  for rel,digest in b.get('bound_files',{}).items():
   p=(ROOT/rel).resolve()
   if not str(p).startswith(str(ROOT.resolve())) or not p.is_file() or sha(p)!=digest:raise SystemExit('E04D_BOUND_FILE_HASH:'+rel)
- response=ROOT/b['director_response_path']
- if sha(response)!=b['director_response_sha256'] or json.loads(response.read_text()).get('post_repair_execution',{}).get('maximum_detached_jobs')!=1:raise SystemExit('E04D_DIRECTOR_AUTHORIZATION')
+ response=ROOT/b['director_response_path'];response_json=json.loads(response.read_text())
+ authorization=response_json.get('execution_authorization',response_json.get('post_repair_execution',{}))
+ if sha(response)!=b['director_response_sha256'] or authorization.get('maximum_detached_jobs')!=1:raise SystemExit('E04D_DIRECTOR_AUTHORIZATION')
  out={'status':'PASS_NO_MODEL_IMPORT','binding_sha256':sha(x.binding),'approved_source_commit':src,'runtime_head':head,'bound_files':len(b['bound_files']),'model_loaded':False,'gpu_used':False,'optimizer_steps':0,'parameter_updates':0,'generation_calls':0,'final_audit_opened':False}
  if x.emit:x.emit.write_text(json.dumps(out,sort_keys=True,indent=2)+'\n',encoding='utf-8',newline='\n')
  print(json.dumps(out,sort_keys=True))
