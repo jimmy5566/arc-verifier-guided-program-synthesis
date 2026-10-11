@@ -95,7 +95,9 @@ def test_outer_watchdog_writes_terminal_receipt_on_cap():
  launcher=ROOT/'scripts/launch_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5.py'
  with tempfile.TemporaryDirectory() as d:
   d=Path(d); sleeper=d/'sleep.py'; sleeper.write_text('import time; time.sleep(5)')
-  result=subprocess.run([sys.executable,str(launcher),'--worker',str(sleeper),'--package',str(sleeper),'--runtime-binding',str(sleeper),'--output-root',str(d/'out'),'--cap','1'])
+  l=launcher_module(); original=l.preflight_runtime_import; l.preflight_runtime_import=lambda: None
+  try: result=type('R',(),{'returncode':l.run(sleeper,sleeper,sleeper,d/'out',1)})()
+  finally: l.preflight_runtime_import=original
   assert result.returncode==124
   receipt=json.loads((d/'out'/'TERMINAL_RECEIPT.json').read_text()); assert receipt['error']=='V4R5_OUTER_CAP_EXCEEDED' and receipt['target_sidecar_accessed'] is False
 
@@ -104,8 +106,11 @@ def test_launcher_leaves_fresh_path_for_worker_and_receipts_nonzero_child():
  with tempfile.TemporaryDirectory() as d:
   d=Path(d); good=d/'good.py'
   good.write_text("import pathlib,sys; o=pathlib.Path(sys.argv[-1]); assert not o.exists(); o.mkdir(); (o/'TERMINAL_RECEIPT.json').write_text('{\"status\":\"COMPLETE\"}')")
-  out=d/'fresh'; r=subprocess.run([sys.executable,str(launcher),'--worker',str(good),'--package',str(good),'--runtime-binding',str(good),'--output-root',str(out),'--cap','5']); assert r.returncode==0 and (out/'TERMINAL_RECEIPT.json').exists()
-  bad=d/'bad.py'; bad.write_text('raise SystemExit(7)'); out2=d/'failed'; r=subprocess.run([sys.executable,str(launcher),'--worker',str(bad),'--package',str(bad),'--runtime-binding',str(bad),'--output-root',str(out2),'--cap','5']); receipt=json.loads((out2/'TERMINAL_RECEIPT.json').read_text()); assert r.returncode==7 and receipt['child_returncode']==7
+  l=launcher_module(); original=l.preflight_runtime_import; l.preflight_runtime_import=lambda: None
+  try:
+   out=d/'fresh'; rc=l.run(good,good,good,out,5); assert rc==0 and (out/'TERMINAL_RECEIPT.json').exists()
+   bad=d/'bad.py'; bad.write_text('raise SystemExit(7)'); out2=d/'failed'; rc=l.run(bad,bad,bad,out2,5); receipt=json.loads((out2/'TERMINAL_RECEIPT.json').read_text()); assert rc==7 and receipt['child_returncode']==7
+  finally: l.preflight_runtime_import=original
 
 def test_model_lifecycle_hook_runs_after_each_frozen_arm():
  w=worker(); released=[]
@@ -113,3 +118,49 @@ def test_model_lifecycle_hook_runs_after_each_frozen_arm():
  with tempfile.TemporaryDirectory() as d:
   w.collect_with_generator(OUT/'EXECUTION_PACKAGE.json',Path(d),fake,after_arm=released.append)
  assert released==['V7','E04_E_CONTROL','E04_E_TREATMENT']
+
+
+def launcher_module():
+ return load('scripts/launch_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5.py','v4r5_launcher')
+
+def test_launcher_preflight_uses_production_cwd_and_src_path():
+ l=launcher_module(); calls=[]; original=l.subprocess.run
+ class Done: returncode=0; stdout=''; stderr=''
+ def fake(args,**kwargs): calls.append((args,kwargs)); return Done()
+ l.subprocess.run=fake
+ try: l.preflight_runtime_import()
+ finally: l.subprocess.run=original
+ args,kwargs=calls.pop()
+ assert args[:2]==[sys.executable,'-c'] and 'inference.nvarc_native' in args[2]
+ assert Path(kwargs['cwd'])==ROOT
+ assert kwargs['env']['PYTHONPATH'].split(__import__('os').pathsep)[0]==str(ROOT/'src')
+
+def test_launcher_import_failure_prevents_worker_and_nonce_claim():
+ l=launcher_module()
+ with tempfile.TemporaryDirectory() as d:
+  d=Path(d); sentinel=d/'worker_started'; worker=d/'worker.py'
+  worker.write_text(f"from pathlib import Path; Path({str(sentinel)!r}).write_text('started')")
+  original=l.preflight_runtime_import; l.preflight_runtime_import=lambda: (_ for _ in ()).throw(RuntimeError('forced'))
+  try: code=l.run(worker,worker,worker,d/'fresh',5)
+  finally: l.preflight_runtime_import=original
+  receipt=json.loads((d/'fresh'/'TERMINAL_RECEIPT.json').read_text())
+  assert code==125 and receipt['error']=='V4R5_IMPORT_PREFLIGHT_FAILED'
+  assert not sentinel.exists()
+
+def test_launcher_passes_same_root_cwd_and_env_to_worker():
+ l=launcher_module(); seen=[]
+ class Child:
+  returncode=0
+  def poll(self): return 0
+  def kill(self): raise AssertionError('unexpected kill')
+  def wait(self): return 0
+ original_probe=l.preflight_runtime_import; original_popen=l.subprocess.Popen
+ l.preflight_runtime_import=lambda: None
+ def fake_popen(args,**kwargs): seen.append((args,kwargs)); return Child()
+ l.subprocess.Popen=fake_popen
+ try:
+  with tempfile.TemporaryDirectory() as d:
+   p=Path(d)/'x'; assert l.run(p,p,p,Path(d)/'out',5)==0
+ finally: l.preflight_runtime_import=original_probe; l.subprocess.Popen=original_popen
+ args,kwargs=seen.pop(); assert Path(kwargs['cwd'])==ROOT
+ assert kwargs['env']['PYTHONPATH'].split(__import__('os').pathsep)[0]==str(ROOT/'src')
