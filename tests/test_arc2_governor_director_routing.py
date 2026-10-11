@@ -77,6 +77,18 @@ class GovernorDirectorRoutingTests(unittest.TestCase):
             self.assertEqual(governor.sha256_file(resolved),state['review_brief_sha256'])
             self.assertTrue(state['review_brief_materialized_from_inline'])
 
+    def test_inline_object_brief_is_atomically_materialized_and_bound(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); state_path=root/'.arc2-local/orchestration/ARC2_WORKFLOW_STATE.json'; state_path.parent.mkdir(parents=True)
+            payload={'protocol_id':'R5','request':'one fresh authorization','terminal_receipt_sha256':'a'*64}
+            state={'review_brief':payload}
+            resolved=governor.review_brief_path(state,state_path)
+            expected=json.dumps(payload,sort_keys=True,separators=(',',':'),ensure_ascii=True)
+            self.assertTrue(resolved.is_file())
+            self.assertEqual(resolved.read_text(encoding='utf-8'),expected)
+            self.assertEqual(governor.sha256_file(resolved),state['review_brief_sha256'])
+            self.assertTrue(state['review_brief_materialized_from_inline'])
+
     def test_inline_json_brief_rejects_wrong_declared_hash(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             state_path=Path(tmp)/'state.json'
