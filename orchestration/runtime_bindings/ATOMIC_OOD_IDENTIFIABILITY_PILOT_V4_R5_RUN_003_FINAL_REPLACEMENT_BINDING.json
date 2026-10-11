@@ -1,0 +1,17 @@
+{
+  "active_hard_cap_seconds": 7200,
+  "authorization": "DIRECTOR_ONCE",
+  "director_response_sha256": "083954eac5feecca32b9220de7f336e94a454196eb0d86f104605fa9aceefa11",
+  "director_reviewed_brief_sha256": "cad05e0b2c9bb213cee3af00de73b5ab655a16efe8ec125b35d5f7a926828094",
+  "launcher_sha256": "cbd721eb1556186ed0dfdd48af4325a046c95ac63df0be02fcde60ca91321e2d",
+  "nonce": "e76cb7334cd04508260ed9c614f9d4e0",
+  "output_root": "/workspace/arc2/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5/run_003_e76cb7334cd04508260ed9c614f9d4e0",
+  "package_sha256": "68192435e5c373426f35688128d199283a6fc9fccdfa4dc02e404845ef623aa1",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5",
+  "retry": false,
+  "run_id": "RUN_003_FINAL_REPLACEMENT_e76cb7334cd04508260ed9c614f9d4e0",
+  "source_commit": "8614a3e1b4cf8bd581adde4414e26cb366c4c49f",
+  "source_ref": "origin/infra/arc2-r5-complete-import-graph",
+  "tests_sha256": "13a1e8043c7600c04d93796682cbe5cac29219a9d224275c5a7d3e38be82de2f",
+  "worker_sha256": "9a1a19b7ff3640c15b2b32bdfd16ea7fe955e4fd15c4d81fe31fbebf523d22c1"
+}
