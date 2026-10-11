@@ -33,15 +33,17 @@ function Save-Arc2Json([string]$Path, [hashtable]$Value) {
   $parent = Split-Path -Parent $Path
   New-Item -ItemType Directory -Force -Path $parent | Out-Null
   $temporary = "$Path.$PID.$([DateTime]::UtcNow.Ticks).tmp"
+  $backup = "$temporary.bak"
   try {
     [System.IO.File]::WriteAllText($temporary, ($Value | ConvertTo-Json -Depth 10) + [Environment]::NewLine, [System.Text.UTF8Encoding]::new($false))
     if (Test-Path -LiteralPath $Path) {
-      [System.IO.File]::Replace($temporary, $Path, $null)
+      [System.IO.File]::Replace($temporary, $Path, $backup)
     } else {
       [System.IO.File]::Move($temporary, $Path)
     }
   } finally {
     if (Test-Path -LiteralPath $temporary) { [System.IO.File]::Delete($temporary) }
+    if (Test-Path -LiteralPath $backup) { [System.IO.File]::Delete($backup) }
   }
 }
 

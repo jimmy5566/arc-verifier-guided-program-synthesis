@@ -79,6 +79,7 @@ class PersistentGovernorTests(unittest.TestCase):
             # A live unrelated PID must not be mistaken for Governor liveness.
             pid_path.write_text(str(os.getpid()), encoding='ascii')
             watch = state.with_name('ARC2_GOVERNOR_WATCHDOG_STATE.json')
+            watch.write_text(json.dumps({'status': 'STALE'}), encoding='utf-8')
             command = [
                 'powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', str(STARTER),
                 '-Action', 'Watch', '-Root', str(root), '-GovernorScript', str(ROOT / 'scripts' / 'arc2_governor.py'),
@@ -90,7 +91,9 @@ class PersistentGovernorTests(unittest.TestCase):
             try:
                 for _ in range(100):
                     if watch.exists() and pid_path.exists():
-                        break
+                        observed = json.loads(watch.read_text(encoding='utf-8-sig'))
+                        if observed.get('status') != 'STALE':
+                            break
                     time.sleep(0.1)
                 self.assertTrue(watch.exists())
                 self.assertTrue(pid_path.exists())
