@@ -1,0 +1,1 @@
+﻿{"schema_version":1,"protocol_id":"E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY","seed":20261012,"max_new_tokens":256,"context_window":8192,"physical_batch_size":1,"decoder":"native_greedy","execution_binding_sha256":"15ac5ba5ceabe4eacdc5c5f6b057ea175dd06dc56d5d00b9f30d93768a710f10"}
