@@ -1,0 +1,33 @@
+{
+  "approved_source_commit": "a745bd0a91df7bcaf8fa6fc13db20ecd7f4807f0",
+  "bound_files": {
+    "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "experiments/capability_repair_baseline_v1/e04_d_rotation_marker_local_gradient_diagnostic_v1/E04_D_GRADIENT_EXECUTION_CONFIG_V1.json": "e0a44c514c352f7a5b2d0ad7154627a70f8d94fe19859797e4875728ad335fb1",
+    "experiments/capability_repair_baseline_v1/e04_d_rotation_marker_local_gradient_diagnostic_v1/E04_D_PRELAUNCH_PROTOCOL_V2.json": "2ee22f1b768d1b6ba29c2cbb7a43ca69bbf1fe13cc59634f83b347edf3cc6552",
+    "experiments/capability_repair_baseline_v1/e04_d_rotation_marker_local_gradient_diagnostic_v1/FROZEN_TRAIN_COHORT.jsonl": "969b3bbc495b08abf3bdb495b33bc91882c7ec05779b47f18afa0d74582cd972",
+    "orchestration/director/responses/E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1_PRELAUNCH_BRIEF_RESPONSE.json": "91e145a0ba8c53496e4177354ebddf100915c651708ebaa3e727e9f9749498eb",
+    "scripts/arc2_hard_cap_launcher.py": "897c6a725bbc74ff0386ae044c2c4086b60ef2dc29e63288e0abae81e861ea82",
+    "scripts/e04_d_gradient_statistics.py": "7b54e593525515cb60ea5e1be1e7aa2bbd80be2429b3d4e557d7baded60ab2ce",
+    "scripts/postprocess_e04_d_rotation_marker_gradient.py": "aeb948a031ca0dc223481f3055a4272aa5039b9935a78622667ee2bd85eff3ce",
+    "scripts/preflight_e04_d_rotation_marker_gradient.py": "1ce5d9c376fffb772c6936929fc80d3b48f53edafc96c9c8e6c3b471e640b85b",
+    "scripts/run_e04_d_rotation_marker_gradient.py": "0605067080d8a2d75d46196e89593fe1966981b07b7f8d1a7bc4210e205f1624"
+  },
+  "config_path": "experiments/capability_repair_baseline_v1/e04_d_rotation_marker_local_gradient_diagnostic_v1/E04_D_GRADIENT_EXECUTION_CONFIG_V1.json",
+  "config_sha256": "e0a44c514c352f7a5b2d0ad7154627a70f8d94fe19859797e4875728ad335fb1",
+  "director_response_path": "orchestration/director/responses/E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1_PRELAUNCH_BRIEF_RESPONSE.json",
+  "director_response_sha256": "91e145a0ba8c53496e4177354ebddf100915c651708ebaa3e727e9f9749498eb",
+  "execution_authorized": true,
+  "final_audit_opened": false,
+  "generation_calls": 0,
+  "jobs": 1,
+  "nonce": "e04dfc9325c7e2974d018cf38192da6c",
+  "optimizer_steps": 0,
+  "output_root": "/workspace/arc2/e04_d_rotation_marker_local_gradient_diagnostic_v1/run_001_e04dfc9325c7e2974d018cf38192da6c",
+  "parameter_updates": 0,
+  "protocol_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1",
+  "retry": false,
+  "runtime_cap_seconds": 1800,
+  "schema_version": 1,
+  "status": "EXECUTION_AUTHORIZED_AFTER_EXACT_DIRECTOR_REPAIR_PENDING_MACHINE_PREFLIGHT",
+  "terminal_receipt_path": "/workspace/arc2/e04_d_rotation_marker_local_gradient_diagnostic_v1/run_001_e04dfc9325c7e2974d018cf38192da6c/TERMINAL_RECEIPT.json"
+}
