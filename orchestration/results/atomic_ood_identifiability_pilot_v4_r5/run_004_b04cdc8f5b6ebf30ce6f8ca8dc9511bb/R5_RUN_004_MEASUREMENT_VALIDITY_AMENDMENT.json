@@ -1,0 +1,14 @@
+{
+  "cause": "All 204 rows in every arm reached the frozen 128 completion-token cap; the cap cannot serialize all permitted grids.",
+  "director_response_path": "orchestration/director/responses/R5_RUN_004_RESULT_REVIEW_BRIEF_RESPONSE.json",
+  "director_response_sha256": "e71066b09f1acc00e6e278139d5ef920b5e484a7d68035679187fb9d7bb55fa9",
+  "interpretation": "No capability comparison, equivalence, or arm-performance conclusion may be drawn from RUN_004 zero scores.",
+  "kind": "R5_RUN_004_MEASUREMENT_VALIDITY_AMENDMENT",
+  "measurement_validity": "INVALID_NONDISCRIMINATING_GENERATION_TRUNCATION",
+  "original_result_package_sha256": "f4f57befc1f83b2cf6d602c00909f1399cc48112f25893bff3bca6e364275b9c",
+  "preservation_rule": "Original raw files, terminal receipt, result package, and zero scores remain unchanged; this amendment changes no raw result and releases no target content.",
+  "process_validity": "ESTABLISHED_COMPLETE_NO_UPDATE_TARGET_BLIND",
+  "run_id": "RUN_004_FINAL_REPLACEMENT_b04cdc8f5b6ebf30ce6f8ca8dc9511bb",
+  "schema_version": 1,
+  "successor_scope": "A separately authorized immutable Cap192 successor may change only the completion cap and successor identity/provenance fields."
+}
