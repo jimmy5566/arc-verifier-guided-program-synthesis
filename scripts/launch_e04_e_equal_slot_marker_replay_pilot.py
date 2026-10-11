@@ -26,7 +26,7 @@ test "$(git rev-parse HEAD)" = "{source}"
 test -z "$(git status --porcelain)"
 test ! -e "{out}"
 test ! -e "{lock}"
-if pgrep -af 'run_e04_e_equal_slot_marker_replay_pilot|arc2_hard_cap_launcher.*e04_e' >/tmp/e04e-active; then cat /tmp/e04e-active; exit 41; fi
+if pgrep -af '[r]un_e04_e_equal_slot_marker_replay_pilot|[a]rc2_hard_cap_launcher.*e04_e' >/tmp/e04e-active; then cat /tmp/e04e-active; exit 41; fi
 gpu_total=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -n 1 | tr -d ' ')
 gpu_free=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -n 1 | tr -d ' ')
 test "$gpu_total" -ge 24000
