@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "response_type": "DIRECTOR_E05_V3_NONORACLE_STRUCTURAL_RESIDUAL_DECOMPOSITION_PREEXECUTION_REVIEW_RESPONSE",
+  "reviewed_brief_sha256": "909fecbecfd1847e9c0e915100d571f3430ed7940db8adedc719017558bfdc64",
+  "decision": "REQUIRE_CHANGES",
+  "scientific_assessment": {
+    "status": "PRIMARY_ESTIMAND_AND_DECISION_RULE_INCONSISTENT",
+    "established": [
+      "The brief, specification, source freezer, prior taxonomy artifacts, prompts, target sidecar, manifest, and all three raw-generation files match their declared SHA256 identities.",
+      "The proposed five-category precedence is disjoint and exhaustive for parser-valid nonoracle views under the stated grid and background definitions.",
+      "The execution remains a bounded CPU-only descriptive analysis of reused synthetic development evidence."
+    ],
+    "unknown_until_repaired": "Whether any residual mechanism satisfies the prospective greater-than-0.50 dominance rule, because the frozen specification defines incompatible denominators for estimation and classification."
+  },
+  "root_cause": "The population.base_aggregation rule defines each category as eligible category count divided by four views per canonical base and then averages across all 48 bases, while prospective_decision_rule.mechanism_dominant requires a category share among eligible parser-valid nonoracle views. When parser-invalid or exact-target views are present, the unconditional four-view prevalence and the conditional eligible-residual share are not equal. The bootstrap denominator-instability rule also presupposes a conditional eligible denominator that base_aggregation never defines. This ambiguity can reverse the frozen 0.50 decision.",
+  "smallest_repair": {
+    "scope": "Amend only the estimand, bootstrap computation, and associated regression test; do not change or execute the taxonomy.",
+    "required_changes": [
+      "Freeze the primary arm-by-condition category estimand as sum over resampled canonical bases of n_category(base) divided by sum over those same bases of n_eligible(base), retaining all four views and treating zero-eligible bases as zero contributions to both sums rather than dropping them.",
+      "Use paired canonical-base bootstrap resampling with seed 20261013 and 10000 replicates for that conditional estimand. If the total eligible denominator is zero in any required bootstrap draw, classify that arm-condition estimand as INCONCLUSIVE exactly as already specified.",
+      "Retain mean over 48 bases of n_category(base)/4 only as a separately labeled unconditional four-view prevalence diagnostic. Also report mean n_eligible(base)/4 as eligible-view coverage. Neither diagnostic may substitute for the primary conditional estimand.",
+      "Apply the greater-than-0.50 mechanism-dominance rule only to the sensitivity interval for the primary conditional eligible-residual share in Treatment for both required conditions.",
+      "Add one CPU regression fixture containing eligible, parser-invalid, and exact-target views that proves the conditional share differs from unconditional prevalence and that the frozen classifier uses only the conditional share."
+    ]
+  },
+  "frozen_conditions": [
+    "Preserve all declared artifact SHA256 identities and the three immutable raw-generation files.",
+    "Preserve the three arms, two required conditions, 48 canonical bases, four turn views per base, and canonical-base bootstrap unit.",
+    "Preserve the five-category order, precedence, task-schema semantics, invalidity gates, bootstrap seed 20261013, 10000 replicates, and percentile interval method.",
+    "Preserve the descriptive-only interpretation limit: reused synthetic development evidence, with no causal mechanism, checkpoint-promotion, intervention-selection, or independent ARC-generalization claim.",
+    "Preserve reporting of per-base four-view category vectors without adaptive filtering."
+  ],
+  "forbidden_actions": [
+    "DO_NOT_EXECUTE_THE_V1_DECOMPOSITION",
+    "NO_MODEL_LOADING",
+    "NO_GPU_WORK",
+    "NO_TRAINING",
+    "NO_INFERENCE",
+    "NO_GENERATION",
+    "NO_GRADIENT_WORK",
+    "NO_TARGET_EXPANSION",
+    "NO_GOLD_DGOLD_FINAL_AUDIT",
+    "NO_ADAPTIVE_TUNING_OR_INTERVENTION_SELECTION",
+    "NO_CHANGES_TO_TAXONOMY_OR_FROZEN_ARTIFACT_IDENTITIES_BEYOND_THE_ESTIMAND_REPAIR"
+  ],
+  "another_review_required": true,
+  "next_review_scope": "One concise V2 preexecution review limited to verifying the repaired conditional estimand, bootstrap denominator handling, decision-rule binding, and regression fixture. Unchanged taxonomy and artifact identities need not be re-reviewed.",
+  "execution_authorized": false,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

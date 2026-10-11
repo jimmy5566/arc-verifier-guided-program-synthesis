@@ -1,0 +1,45 @@
+{
+  "allowed_outcomes": [
+    "CONTINUE_CONTROLLER only for unchanged CPU-only execution",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "boundaries": [
+    "NO_MODEL_LOADING",
+    "NO_GPU_WORK",
+    "NO_TRAINING",
+    "NO_INFERENCE",
+    "NO_GENERATION",
+    "NO_GRADIENT_WORK",
+    "NO_TARGET_EXPANSION",
+    "NO_GOLD_DGOLD_FINAL_AUDIT",
+    "NO_ADAPTIVE_TUNING_OR_INTERVENTION_SELECTION"
+  ],
+  "brief_type": "DIRECTOR_E05_V3_NONORACLE_STRUCTURAL_RESIDUAL_DECOMPOSITION_V2_PREEXECUTION_REVIEW",
+  "director_repair_response_sha256": "e1fe1b7d29baa56bcf5e4e68cf795ba7cc2e596e69547f0cd38a3d682b69de55",
+  "predecessor_specification_sha256": "d0b8a4510321243a422d708fedc4f0dd3d368dd053a9de4359c8c6a7c0cc722e",
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "request": "Review only the Director-required V2 conditional-estimand repair before any CPU residual classification. No model loading, GPU work, training, inference, generation, gradient work, target expansion, or intervention selection is requested.",
+  "review_scope": [
+    "conditional numerator/denominator",
+    "zero-denominator handling",
+    "dominance-rule binding",
+    "mixed-view regression fixture"
+  ],
+  "specification_path": "E05_V3_NONORACLE_STRUCTURAL_RESIDUAL_DECOMPOSITION_PREFREEZE_SPEC_V2.json",
+  "specification_sha256": "8292f942676af5627e231e5081e7d4a2559792362b8f531d46823bb9f1eb4814",
+  "unchanged_scope": [
+    "artifact SHA256 identities",
+    "three arms",
+    "two required conditions",
+    "48 canonical bases",
+    "four views per base",
+    "taxonomy order and precedence",
+    "task-schema semantics",
+    "seed",
+    "replicate count",
+    "percentile interval",
+    "prohibitions"
+  ]
+}

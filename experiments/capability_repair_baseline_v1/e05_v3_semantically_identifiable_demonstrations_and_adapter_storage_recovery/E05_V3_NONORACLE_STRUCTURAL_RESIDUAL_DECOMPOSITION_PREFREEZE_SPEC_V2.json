@@ -1,0 +1,128 @@
+{
+  "bootstrap": {
+    "denominator_instability": "If the total eligible-residual denominator is zero in any required bootstrap draw, classify that arm-condition primary estimand as INCONCLUSIVE exactly; do not drop, repair, or reweight the draw.",
+    "interval": "percentile 95 percent",
+    "replicates": 10000,
+    "resampling": "paired canonical-base bootstrap within each arm and condition; retain all four views for each sampled base; calculate each replicate as sum n_category(base) / sum n_eligible(base) over the same draw",
+    "seed": 20261013
+  },
+  "director_repair_response_sha256": "e1fe1b7d29baa56bcf5e4e68cf795ba7cc2e596e69547f0cd38a3d682b69de55",
+  "execution_authorization": false,
+  "invalidity_gates": [
+    "every frozen raw evidence hash, target-sidecar hash, input-prompt hash, result hash, receipt hash, result-review brief hash, and Director-response binding must match",
+    "every raw arm must contain exactly 768 unique episode_id values equal to the target sidecar's set and its declared arm_id",
+    "every canonical base in each required condition must retain exactly turns 0,1,2,3",
+    "a parser-valid eligible view with non-rectangular grids, missing sole test input, tied target background mode, or an unclassifiable category is INVALID_NOT_INTERPRETABLE",
+    "any category overlap or nonexhaustive eligible view is INVALID_NOT_INTERPRETABLE"
+  ],
+  "population": {
+    "arms": [
+      "RAW_V7_NO_E04E_UPDATE",
+      "E04E_RUN003_CONTROL_EQUAL_SLOT",
+      "E04E_RUN003_TREATMENT_EQUAL_SLOT"
+    ],
+    "base_aggregation": "The primary estimator is conditional on eligible parser-valid nonoracle views using pooled numerator and denominator across the same resampled canonical bases; it is not the mean of four-view prevalences.",
+    "eligible_view": "parser_valid is true AND parsed_grid differs from that episode's sealed target",
+    "excluded_view_reporting": [
+      "PARSER_INVALID",
+      "EXACT_TARGET_MAPPING"
+    ],
+    "primary_category_estimand": "For each arm and required condition, the primary category share is sum over all resampled canonical bases of n_category(base) divided by sum over those same bases of n_eligible(base). Every selected base retains all four views. A zero-eligible base contributes zero to both sums and is not dropped.",
+    "scope": [
+      "MARKER_BINDING_CONTROL",
+      "MARKER_CONDITIONED_ROTATION"
+    ],
+    "unconditional_diagnostics": "Separately report mean over all 48 bases of n_category(base)/4 as labeled unconditional four-view prevalence, and mean n_eligible(base)/4 as eligible-view coverage. Neither diagnostic substitutes for the primary conditional estimator.",
+    "unit": "canonical base with four turn views retained"
+  },
+  "predecessor_specification_sha256": "d0b8a4510321243a422d708fedc4f0dd3d368dd053a9de4359c8c6a7c0cc722e",
+  "preexecution_review_required": true,
+  "prior_taxonomy_execution_receipt_sha256": "07bd19ac26e1127ed662b8013ceedb15d7292f65a31a60c98453c47c65b66ab6",
+  "prior_taxonomy_result_sha256": "5ba74c14c4367b9fe945ac7e005a1363b339f33f43ca813f576bfdcd58d5bc49",
+  "prior_taxonomy_specification_sha256": "58d0bbdd8fba5f594092160f885160d69bb456fe39b6a9dd99a153c659ae3a3e",
+  "prohibitions": [
+    "NO_MODEL_LOADING",
+    "NO_GPU_WORK",
+    "NO_TRAINING",
+    "NO_INFERENCE",
+    "NO_GENERATION",
+    "NO_GRADIENT_WORK",
+    "NO_TARGET_EXPANSION",
+    "NO_GOLD_DGOLD_FINAL_AUDIT",
+    "NO_ADAPTIVE_TUNING_OR_INTERVENTION_SELECTION"
+  ],
+  "prospective_decision_rule": {
+    "interpretation_limit": "Descriptive morphology on reused synthetic development evidence only; no causal training mechanism, checkpoint promotion, intervention selection, or independent ARC generalization claim.",
+    "mechanism_dominant": "For Treatment, one and only one category has lower 95 percent sensitivity-interval bound above 0.50 for the primary conditional eligible-residual share in both required conditions, and neither condition has denominator instability.",
+    "mixed_or_inconclusive": "Otherwise, including disagreement across conditions, tied or absent dominance, invalid identities, nonexclusive taxonomy, or denominator instability."
+  },
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "raw_evidence_sha256": {
+    "E04E_RUN003_CONTROL_EQUAL_SLOT_RAW_GENERATIONS.jsonl": "47edee3d176f5fc72d8f2c519d17f95db8ed56f188bdb66bda28abb272be67df",
+    "E04E_RUN003_TREATMENT_EQUAL_SLOT_RAW_GENERATIONS.jsonl": "30745fc53fe6dd762a428515abc874985d0ff0011402e338b4187296519f7c9e",
+    "RAW_V7_NO_E04E_UPDATE_RAW_GENERATIONS.jsonl": "c951c870fb090d573c97bc27e7f389e686cea44cc6df29585586a9a695cb188c"
+  },
+  "repair_scope": {
+    "only_changed": [
+      "primary conditional estimand",
+      "bootstrap computation",
+      "decision-rule binding",
+      "associated regression fixture"
+    ],
+    "unchanged": [
+      "artifact SHA256 identities",
+      "three arms",
+      "two required conditions",
+      "48 canonical bases",
+      "four views per base",
+      "taxonomy order and precedence",
+      "task-schema semantics",
+      "seed",
+      "replicate count",
+      "percentile interval",
+      "prohibitions"
+    ]
+  },
+  "required_reports": [
+    "eligible, parser-invalid, and exact-target view counts by arm and condition",
+    "primary conditional eligible-residual category shares by arm and condition, with pooled numerator and denominator across the same canonical bases",
+    "separately labeled unconditional four-view category prevalence and eligible-view coverage by arm and condition",
+    "Treatment versus Control and Treatment versus V7 per-base category-share deltas as descriptive evidence only",
+    "all per-base four-view category vectors, with no adaptive filtering"
+  ],
+  "reused_artifacts_sha256": {
+    "E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_EXECUTION_RECEIPT_V1.json": "07bd19ac26e1127ed662b8013ceedb15d7292f65a31a60c98453c47c65b66ab6",
+    "E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_PREFREEZE_SPEC_V1.json": "58d0bbdd8fba5f594092160f885160d69bb456fe39b6a9dd99a153c659ae3a3e",
+    "E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_RESULT_REVIEW_BRIEF.json": "ddc22c3adb9e1258f8d812f754e9eae86218057992be9d7d6fd5ad0cde603f8e",
+    "E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_RESULT_REVIEW_BRIEF_RESPONSE.json": "f66594f0d620b029bad50fc8efd268b6145df961dabee4582176803d4f0b3a69",
+    "E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_RESULT_V1.json": "5ba74c14c4367b9fe945ac7e005a1363b339f33f43ca813f576bfdcd58d5bc49",
+    "INPUT_PROMPTS.jsonl": "4cf144de064346d36f53e6c10d1cff293a80166907203d8003565418d9010dc3",
+    "MANIFEST.json": "cf1cbd6edf8b11757b980cec6d31a29de93ec7cca73281c219e92ec5d0161997",
+    "TARGET_SCORER_SIDECAR.jsonl": "df24d7fb97905cb210b04e4f45c050f0e77b1abf87258f29bfd1bc4b01687ac3"
+  },
+  "schema_version": 2,
+  "source_freezer_sha256": "ddabfb1dcf97b972e9bd6d6255eb3fd79c1b1f67154004342873f0278e9c3156",
+  "stage": "CPU_ONLY_E05_V3_NONORACLE_STRUCTURAL_RESIDUAL_DECOMPOSITION_PREFREEZE_V2",
+  "status": "CPU_ONLY_PREFREEZE_V2_NO_RESIDUAL_CLASSIFICATION_EXECUTED",
+  "task_schema_semantics": {
+    "output_foreground_support": "coordinates whose parsed output color differs from target_background, evaluated only when parsed output has target dimensions",
+    "target_background": "unique modal color in the sealed target grid; ties invalidate the affected view",
+    "target_foreground_support": "coordinates whose target color differs from target_background",
+    "test_input": "the sole grid at prompt.test[0].input, joined by episode_id",
+    "translation_congruent": "there is a single nonzero integer row/column offset that maps every target foreground coordinate bijectively to output foreground support within bounds; rotations, reflections, recoloring, cropping, and resizing do not qualify"
+  },
+  "taxonomy_order": [
+    "EXACT_INPUT_COPY",
+    "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR",
+    "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT",
+    "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY",
+    "DIMENSION_OR_CELL_COUNT_FAILURE"
+  ],
+  "taxonomy_precedence": {
+    "DIMENSION_OR_CELL_COUNT_FAILURE": "otherwise, output dimensions differ from target OR foreground-support cardinality differs from target; this is the residual catch-all and makes the taxonomy exhaustive",
+    "EXACT_INPUT_COPY": "parsed_grid equals the full frozen test input grid exactly, before any target-shape comparison",
+    "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": "otherwise, dimensions match and output foreground-support cardinality equals target foreground-support cardinality",
+    "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": "otherwise, dimensions match; output foreground support is a nonzero translation of target foreground support; and every output coordinate outside that support equals target_background",
+    "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": "otherwise, target and output dimensions match; output foreground support equals target foreground support; every target-background coordinate equals target_background in the output; and at least one target-foreground color differs from target"
+  }
+}
