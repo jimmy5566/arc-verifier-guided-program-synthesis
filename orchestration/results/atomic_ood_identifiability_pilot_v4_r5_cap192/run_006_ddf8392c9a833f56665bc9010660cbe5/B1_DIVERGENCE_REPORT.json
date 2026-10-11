@@ -1,0 +1,66 @@
+{
+  "discordant_count_by_arm": {
+    "E04_E_CONTROL": 2,
+    "E04_E_TREATMENT": 0,
+    "V7": 1
+  },
+  "discordant_fixed_b1_episodes": [
+    {
+      "arm_id": "V7",
+      "b1_canonical_grid_sha256": "8e8220795ab981b18ce731ab83a49bc6bb2a941d8acfae2a0f0672b9011835e3",
+      "b1_completion_length": 132,
+      "b1_effective_batch_size": 1,
+      "b1_parser_valid": true,
+      "b1_requested_batch_size": 1,
+      "episode_id": "AOODV2-OOD_LAYOUT-U04-T0",
+      "first_differing_token_position": 103,
+      "primary_canonical_grid_sha256": "806278628c425d3d23aede62aaba6dedac313aef2f8e2df30da067029843f63e",
+      "primary_completion_length": 132,
+      "primary_effective_batch_size": 16,
+      "primary_parser_valid": true,
+      "primary_requested_batch_size": 32,
+      "target_correctness_confinement": "NOT_EVALUATED_TARGET_BLIND"
+    },
+    {
+      "arm_id": "E04_E_CONTROL",
+      "b1_canonical_grid_sha256": "6a9ddc428d1b89fd7558c025618ad414128bf8268612cc27be5f127349d90b67",
+      "b1_completion_length": 132,
+      "b1_effective_batch_size": 1,
+      "b1_parser_valid": true,
+      "b1_requested_batch_size": 1,
+      "episode_id": "AOODV2-OOD_COLOR_MAPPING-U02-T2",
+      "first_differing_token_position": 55,
+      "primary_canonical_grid_sha256": "485c4593cfbc6a3d97d20256311bfa0126c6d416c0ce6a5982754081f054246d",
+      "primary_completion_length": 132,
+      "primary_effective_batch_size": 16,
+      "primary_parser_valid": true,
+      "primary_requested_batch_size": 32,
+      "target_correctness_confinement": "NOT_EVALUATED_TARGET_BLIND"
+    },
+    {
+      "arm_id": "E04_E_CONTROL",
+      "b1_canonical_grid_sha256": "18f47da16955595cc0663a52bbfa3dc09fa2127f7c3abddef3565373d5c2a0e6",
+      "b1_completion_length": 132,
+      "b1_effective_batch_size": 1,
+      "b1_parser_valid": true,
+      "b1_requested_batch_size": 1,
+      "episode_id": "AOODV2-OOD_COLOR_MAPPING-U05-T0",
+      "first_differing_token_position": 53,
+      "primary_canonical_grid_sha256": "6a9ddc428d1b89fd7558c025618ad414128bf8268612cc27be5f127349d90b67",
+      "primary_completion_length": 132,
+      "primary_effective_batch_size": 16,
+      "primary_parser_valid": true,
+      "primary_requested_batch_size": 32,
+      "target_correctness_confinement": "NOT_EVALUATED_TARGET_BLIND"
+    }
+  ],
+  "interpretation": "Target-blind descriptive mechanism audit only. It neither changes the B1 validity gate nor assigns target correctness to a divergence.",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5_CAP192",
+  "raw_freeze_manifest_sha256": "264e912ddebd27fe9b78a9a641065f9b082cb2c033eb70dfc4994df9e7b643c9",
+  "run_id": "RUN_006_CAP192_ddf8392c9a833f56665bc9010660cbe5",
+  "schema_version": 1,
+  "status": "COMPLETE_TARGET_BLIND_CPU_DIVERGENCE_REPORT",
+  "target_content_released": false,
+  "target_sidecar_accessed": false,
+  "terminal_receipt_sha256": "c10e20b3f0ab9d61c50b988859fe661731a409a14f07582ed1e4ced4d3703bcb"
+}

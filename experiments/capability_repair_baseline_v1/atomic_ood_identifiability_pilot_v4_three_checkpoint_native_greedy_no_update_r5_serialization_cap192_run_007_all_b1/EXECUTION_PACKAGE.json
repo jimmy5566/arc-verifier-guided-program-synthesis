@@ -1,0 +1,169 @@
+{
+    "b1_reproducibility":  {
+                               "acceptance":  "each B1_REPRODUCIBILITY row must exactly match the corresponding frozen RUN_006 B1 row before successor result is accepted",
+                               "reference_branch":  "results/arc2-r5-cap192-run006",
+                               "reference_raw_sha256":  {
+                                                            "E04_E_CONTROL":  "694aeddc9de92492377f9886ff26f2d778ecbb9783cd371f6cb1a1ff911c49b5",
+                                                            "E04_E_TREATMENT":  "429d7c0ae123a4791a8050845864fe778e2db3d1d69508882fa454aa67452115",
+                                                            "V7":  "2536fa0eeca2d0585f638a2637fed4e991e5e5200b4a0da7bcfb24773d50aa4a"
+                                                        },
+                               "reference_result_commit":  "cda4f1ebc20f70e4dc78ee15b97d9dfd70bcbbc2",
+                               "reference_run_id":  "RUN_006_CAP192_ddf8392c9a833f56665bc9010660cbe5",
+                               "required_fields":  [
+                                                       "generated_token_ids",
+                                                       "parsed_grid"
+                                                   ]
+                           },
+    "batching":  {
+                     "fallback_cause":  "PHYSICAL_BATCH1_ONLY",
+                     "fallback_ladder":  [
+                                             1
+                                         ],
+                     "fixed_b1_subset":  {
+                                             "episode_ids":  [
+                                                                 "AOODV2-REFERENCE-U00-T0",
+                                                                 "AOODV2-REFERENCE-U07-T2",
+                                                                 "AOODV2-OOD_GEOMETRY-U01-T1",
+                                                                 "AOODV2-OOD_GEOMETRY-U06-T3",
+                                                                 "AOODV2-OOD_COLOR_MAPPING-U02-T2",
+                                                                 "AOODV2-OOD_COLOR_MAPPING-U05-T0",
+                                                                 "AOODV2-OOD_GRID_SIZE-U03-T3",
+                                                                 "AOODV2-OOD_GRID_SIZE-U04-T1",
+                                                                 "AOODV2-OOD_LAYOUT-U04-T0",
+                                                                 "AOODV2-OOD_LAYOUT-U03-T2",
+                                                                 "AOODV2-OOD_MARKER_ENCODING-U05-T1",
+                                                                 "AOODV2-OOD_MARKER_ENCODING-U02-T3"
+                                                             ],
+                                             "selection":  "fixed 12 rows are separate B1_REPRODUCIBILITY rows and must reproduce RUN_006 B1 token IDs and parsed grids exactly",
+                                             "sha256":  "707ad6dce31f77c4ff3667059b36c1c1695a403e99496db7fa88087e8a9c24b1"
+                                         },
+                     "gate":  "parser, parsed-grid and post-freeze exact-grid scorer must agree for every fixed B1 episode; a larger rate delta or material disagreement is INVALID_NOT_INTERPRETABLE",
+                     "length_bucketing":  false,
+                     "light_numerical_drift_tolerance":  {
+                                                             "max_exact_grid_rate_delta":  0.08333333333333333,
+                                                             "max_parse_valid_rate_delta":  0.08333333333333333
+                                                         },
+                     "primary_requested_batch_size":  1
+                 },
+    "decoder":  {
+                    "max_new_tokens":  192,
+                    "name":  "native_greedy",
+                    "num_beams":  1,
+                    "sampling":  false
+                },
+    "execution_output":  {
+                             "duplicate_guard":  "cross-path atomic active-nonce ledger; one new authorization only; no retry",
+                             "fresh_output_required":  true,
+                             "nonce":  "6ea3ccce190a94a28e86231bd0c2204a",
+                             "remote_output_root":  "/workspace/arc2/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_cap192_all_b1/run_007_6ea3ccce190a94a28e86231bd0c2204a"
+                         },
+    "forbidden":  [
+                      "NO_TRAINING",
+                      "NO_OPTIMIZER",
+                      "NO_PARAMETER_UPDATES",
+                      "NO_BACKWARD",
+                      "NO_GRADIENT",
+                      "NO_TTT",
+                      "NO_AUGMENTATION",
+                      "NO_DFS",
+                      "NO_BEAM",
+                      "NO_GOLD",
+                      "NO_DGOLD",
+                      "NO_FINAL_AUDIT"
+                  ],
+    "generation_preflight_inputs":  [
+                                        "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/MANIFEST.json",
+                                        "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/INPUT_PROMPTS.jsonl"
+                                    ],
+    "inputs":  {
+                   "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/INPUT_PROMPTS.jsonl":  "9a87a336bff6e3fec0a9726b5212e0ae4fe21666c4839dc06f306229dafccec3",
+                   "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/MANIFEST.json":  "34fd28f9057c57961bee0e8c4cc55e77e514cc87335736a61a406e39adbe6cc1",
+                   "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/SEALED_TARGET_SIDECAR.jsonl":  "62217a9963a8ba62de46d9cc865426e82b8b6fb990eb4afbeda2734b59610903"
+               },
+    "launcher_sha256":  "9aabc2b39c893e048b0692be4120dfc4d6c13681730110ac8f336ff328a14bcd",
+    "native_runtime":  {
+                           "config_identity_path":  "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY_V1.json",
+                           "config_identity_sha256":  "7e94ba263dba680b2d75c2184c0ff05254b7e4aa5f90a7c64619eedf4ba4e256",
+                           "decoder_provider":  "NVARCNativeProvider",
+                           "model_family":  "qwen3_4b_grids15_sft139",
+                           "tokenizer_loader":  "checkpoint_native_tokenizer"
+                       },
+    "package_fingerprint_scope":  "All-B1 successor: the only scientific execution change is physical batch size 1 for all primary rows and a fixed B1 reproduction check against immutable RUN_006 B1 raw evidence. Every cohort, checkpoint, decoder, Cap192, target-isolation, parser, scorer and statistical condition remains unchanged. A new DIRECTOR_ONCE binding and authorization are required before GPU work.",
+    "predecessor_package_sha256":  "82ccf81baed567b8c23bd75863a1707e804782de3a1ac48d9a81a2f2f4ee73f6",
+    "protocol_id":  "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5_CAP192_RUN_007_ALL_B1",
+    "runtime_estimate":  {
+                             "active_hard_cap_seconds":  25200,
+                             "cap_rationale":  "RUN_006 observed wall time scaled by frozen generator-call ratio with approximately 11 percent additional cap margin; prelaunch review must approve this estimate and cap",
+                             "linear_call_ratio":  11.333333333333334,
+                             "linear_estimate_seconds":  22647.106742004555,
+                             "source_generation_calls":  54,
+                             "source_run_id":  "RUN_006_CAP192_ddf8392c9a833f56665bc9010660cbe5",
+                             "source_wall_seconds":  1998.2741242945194,
+                             "successor_generation_calls":  612
+                         },
+    "schema_version":  1,
+    "serialization_cap_audit":  {
+                                    "audit_script":  "scripts/audit_atomic_ood_identifiability_pilot_v4_r5_serialization_cap.py",
+                                    "audit_script_sha256":  "6edf77b4557d754c45d9b149f2e8dc6c66afa34364497dff09cdf411daff6377",
+                                    "conservative_completion_cap":  192,
+                                    "eos_allowance":  1,
+                                    "execution_result":  "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_serialization_cap192_run_006/R5_CAP192_SERIALIZATION_AUDIT.json",
+                                    "execution_result_sha256":  "db9c2bcdae05c44b17e8c276801f30918ed335848593747fceac2ab9e927c4cf",
+                                    "execution_source_commit":  "adb8ec9f004511ce1c2cc6995729883ecefa7eb5",
+                                    "expected_max_serialized_tokens":  181,
+                                    "old_cap":  128,
+                                    "old_cap_feasible":  false,
+                                    "scope":  "CPU-only checkpoint-native tokenizer plus parser across all 1..13 grid dimensions; no task prompts, targets, model construction or GPU"
+                                },
+    "status":  "CPU_ONLY_FROZEN_AWAITING_DIRECTOR_PRELAUNCH_REVIEW",
+    "target_isolation":  {
+                             "generation_inputs":  "INPUT_PROMPTS.jsonl only",
+                             "release_condition":  "all three 192-row target-blind raw files and generation terminal receipt hash-verified before CPU scorer opens sidecar",
+                             "sealed_target_sidecar":  "SEALED_TARGET_SIDECAR.jsonl",
+                             "sealed_target_sidecar_may_open_before_raw_freeze":  false
+                         },
+    "tests_sha256":  "941b85f789febbf94b58d9b3dfd3afa57c3dc4b23b072e551adb5e9c1c9c36bd",
+    "three_checkpoints":  [
+                              {
+                                  "adapter_config_sha256":  "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
+                                  "adapter_model_sha256":  "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+                                  "arm_id":  "V7",
+                                  "base_manifest_path":  "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+                                  "base_manifest_sha256":  "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+                                  "role":  "reference"
+                              },
+                              {
+                                  "adapter_config_sha256":  "aa2c74857b1ff6e1738d5723259ce9ffd698e783e40568faba6aaf42463cfe65",
+                                  "adapter_model_sha256":  "515f5ebfe6685097f78fe260edcc4859edfe17152482a559769f18be8b55da16",
+                                  "arm_id":  "E04_E_CONTROL",
+                                  "repository":  {
+                                                     "immutable_revision":  "dbd0786a74a28955baae3455b70595cf49a6d906",
+                                                     "private_verified":  true,
+                                                     "repo_id":  "Jimmy5566a/arc2-private-adapters",
+                                                     "repo_type":  "model"
+                                                 },
+                                  "repository_path":  "e04_e_run003/control_equal_slot/adapter_model.safetensors",
+                                  "role":  "control"
+                              },
+                              {
+                                  "adapter_config_sha256":  "9f9ec9013387e85985bdc33a1de15ca12b5bb4b9ffc22f9b876ce513bd006f19",
+                                  "adapter_model_sha256":  "3eff5b9debc4b5b3f133e4524bf7244b0a2074a8f0bc0b5595d38ee176db57be",
+                                  "arm_id":  "E04_E_TREATMENT",
+                                  "repository":  {
+                                                     "immutable_revision":  "dbd0786a74a28955baae3455b70595cf49a6d906",
+                                                     "private_verified":  true,
+                                                     "repo_id":  "Jimmy5566a/arc2-private-adapters",
+                                                     "repo_type":  "model"
+                                                 },
+                                  "repository_path":  "e04_e_run003/treatment_equal_slot/adapter_model.safetensors",
+                                  "role":  "treatment"
+                              }
+                          ],
+    "v4_source":  {
+                      "manifest_sha256":  "34fd28f9057c57961bee0e8c4cc55e77e514cc87335736a61a406e39adbe6cc1",
+                      "prompt_sha256":  "9a87a336bff6e3fec0a9726b5212e0ae4fe21666c4839dc06f306229dafccec3",
+                      "sealed_target_sidecar_sha256":  "62217a9963a8ba62de46d9cc865426e82b8b6fb990eb4afbeda2734b59610903",
+                      "sha256":  "523b904ab3b712095009d0be3e29151aa8d8a563ac663a15ff3789a0192926bd"
+                  },
+    "worker_sha256":  "19f023f9dd675511115f087e729512227241e180f40bcb9487c519a5f2661afa"
+}
