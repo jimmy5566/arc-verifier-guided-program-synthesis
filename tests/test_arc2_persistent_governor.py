@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import importlib.util
 import json
@@ -57,7 +57,12 @@ class PersistentGovernorTests(unittest.TestCase):
                 self.assertEqual(3, second.returncode)
                 self.assertIn('ARC2_GOVERNOR_ALREADY_RUNNING', second.stderr)
             finally:
-                process.terminate(); process.wait(timeout=10)
+                # py.exe can be a short-lived parent of the daemon on Windows;
+                # close the complete test-owned process tree before deleting its
+                # lock file.
+                if process.poll() is None:
+                    subprocess.run(['taskkill', '/PID', str(process.pid), '/T', '/F'], capture_output=True, text=True, timeout=20, check=False)
+                process.wait(timeout=10)
                 process.stdout.close(); process.stderr.close()
 
     def test_once_writes_service_state_without_prompting_for_paused_workflow(self):

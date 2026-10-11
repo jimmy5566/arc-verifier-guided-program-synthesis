@@ -34,3 +34,28 @@ The new regression coverage verifies:
 Existing Controller, persistent-Governor, infrastructure-triage and PTY tests
 also remain green.  The historical expectation that busy state overwrites a
 structured dispatch with a string was updated to assert preservation instead.
+## P0 follow-up regression
+
+The Director delivery and cross-process state-revision corrections were tested
+in the same isolated worktree.  No Herdr, RunPod, GPU, model, or production
+Governor was invoked.
+
+```text
+python -m pytest -q \
+  tests/test_arc2_governor_director_delivery.py \
+  tests/test_arc2_governor_director_routing.py \
+  tests/test_arc2_governor_idempotency.py \
+  tests/test_arc2_governor_controller_dispatch.py \
+  tests/test_arc2_persistent_governor.py \
+  tests/test_arc2_governor_infrastructure_triage.py \
+  tests/test_arc2_governor_runpod_pty.py
+
+49 passed
+```
+
+The added coverage checks successful and confirmed-non-delivery Director
+paths, ambiguous timeout without re-prompt, process-restart persistence, late
+SHA-bound response consumption, and one-time response consumption.  It also
+runs two independent Python writer processes: a stale writer fails with a
+revision conflict after a separately loaded Controller transition is committed.
+`py_compile` and `git diff --check` passed.

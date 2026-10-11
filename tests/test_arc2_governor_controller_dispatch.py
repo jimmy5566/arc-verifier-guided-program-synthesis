@@ -34,7 +34,11 @@ class ControllerDispatchTest(unittest.TestCase):
         try:
             state=MOD.load(path)
             def advance(_seconds):
-                MOD.atomic(path,{'disposition':'REVIEW_REQUIRED','stage':'CONTROLLER_WRITTEN_REVIEW','review_brief':'bound.json','review_reason':'scientific gate'})
+                # External Controller writers must publish a snapshot obtained
+                # from load(), so the state revision proves it is current.
+                advanced=MOD.load(path)
+                advanced.update({'disposition':'REVIEW_REQUIRED','stage':'CONTROLLER_WRITTEN_REVIEW','review_brief':'bound.json','review_reason':'scientific gate'})
+                MOD.atomic(path,advanced)
             with patch.object(MOD,'resolve_controller_target',return_value='pane-1'), patch.object(MOD,'controller_turn_is_active',return_value=True), patch.object(MOD.time,'sleep',side_effect=advance), patch.object(MOD,'prompt') as prompt:
                 MOD.controller(state,path,30)
             saved=MOD.load(path)

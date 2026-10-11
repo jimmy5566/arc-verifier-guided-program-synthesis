@@ -38,3 +38,12 @@ newer scientific transition.
 This worktree has not been pushed or deployed.  The future PTY change applies
 only to launches bound after review; RUN_003 continues to use its immutable
 remote snapshot and is outside this patch's execution path.
+## P0 follow-up deployment gate
+
+This follow-up is still isolated and must not be copied into the live Governor
+until deployment review.  In addition to the original preconditions, verify
+that the durable state has either been migrated through `load()` or contains a
+valid numeric `state_revision`.  Do not deploy while a Director review intent
+or a Controller transition is in flight.  The paused RUN_003 receipt-processing
+stage remains outside this branch and needs an explicit resume decision before
+any scientific continuation.

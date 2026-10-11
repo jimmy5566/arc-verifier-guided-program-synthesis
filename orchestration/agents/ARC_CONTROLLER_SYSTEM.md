@@ -41,3 +41,13 @@ not block that independently verifiable snapshot.
 Every detached `WAIT_REMOTE` record must include a RunPod SSH target, a
 terminal-receipt path, and a primary-process PID/role. Compact `pid` and
 `terminal_receipt` aliases are supported only for recovery of existing records.
+
+## Durable workflow-state writes
+
+For `ARC2_WORKFLOW_STATE.json`, a Controller or helper must first load the
+current state through the Governor state loader, retain its `state_revision`,
+and publish with the Governor atomic writer.  A new state file may be created
+without a revision; an existing state file may not be overwritten by an
+unversioned dictionary, raw `os.replace`, or a temporary helper.  On
+`StateConflict`, reload and re-evaluate the current scientific disposition; do
+not retry a stale write.

@@ -61,15 +61,25 @@ def atomic(p,x):
     workflow=isinstance(x,dict) and 'disposition' in x
     with StateWriteLock(p) if workflow else _NullLock():
         if workflow:
+            state_exists=p.exists()
             current_revision=0
-            if p.exists():
+            if state_exists:
                 try: current_revision=int(json.loads(p.read_text(encoding='utf-8-sig')).get('state_revision',0))
                 except (OSError,json.JSONDecodeError,TypeError,ValueError): raise StateConflict('WORKFLOW_STATE_UNREADABLE')
             expected=x.get('state_revision')
-            # Compatibility for an explicit fresh Controller snapshot which
-            # predates revisions.  Loaded snapshots always carry a revision.
-            if expected is not None and int(expected) != current_revision:
-                raise StateConflict(f'WORKFLOW_STATE_REVISION_CONFLICT:{expected}!={current_revision}')
+            # A legacy file is migrated only through load(), which materializes
+            # revision zero.  Once a state file exists, an unversioned object
+            # has no proof that it was read from the current snapshot and must
+            # not be allowed to replace it.  Fresh files remain convenient for
+            # bootstrap and tests; all subsequent writers must carry a revision.
+            if state_exists and expected is None:
+                raise StateConflict('WORKFLOW_STATE_REVISION_REQUIRED')
+            try:
+                expected_revision=0 if expected is None else int(expected)
+            except (TypeError, ValueError):
+                raise StateConflict('WORKFLOW_STATE_REVISION_INVALID')
+            if expected_revision != current_revision:
+                raise StateConflict(f'WORKFLOW_STATE_REVISION_CONFLICT:{expected_revision}!={current_revision}')
             x['state_revision']=current_revision+1
         t=p.with_name(f'{p.name}.{os.getpid()}.{time.time_ns()}.tmp')
         try:
@@ -396,6 +406,38 @@ def matching_director_responses(state_path, brief_sha256):
         if data.get('reviewed_brief_sha256') == brief_sha256 and director_decision(data) in DIRECTOR_DECISIONS:
             found.append((candidate.resolve(), data, sha256_file(candidate)))
     return found
+
+def director_action_sha256(state, brief_sha256):
+    """Stable identity for one bound Director review delivery."""
+    material={
+        'stage':state.get('stage'),
+        'next_action':state.get('next_action'),
+        'review_brief_sha256':brief_sha256,
+        'review_reason':state.get('review_reason'),
+    }
+    return hashlib.sha256(json.dumps(material,sort_keys=True,separators=(',',':'),default=str).encode('utf-8')).hexdigest()
+
+def archive_superseded_director_dispatch(state, previous, action_id):
+    if not isinstance(previous,dict) or previous.get('action_sha256') == action_id:
+        return
+    item=dict(previous); item['terminal_outcome']='SUPERSEDED_BY_NEW_BOUND_REVIEW'; item['terminal_at']=now()
+    history=list(state.get('director_dispatch_history') or [])
+    history.append(item); state['director_dispatch_history']=history[-16:]
+
+def persist_director_delivery_outcome(path, action_id, delivery, detail):
+    """Record delivery only if the same immutable review is still pending."""
+    current=load(path)
+    if current.get('disposition') != 'REVIEW_REQUIRED':
+        return 'DIRECTOR_STATE_CHANGED'
+    dispatch=current.get('director_dispatch')
+    if not isinstance(dispatch,dict) or dispatch.get('action_sha256') != action_id:
+        return 'DIRECTOR_STATE_CHANGED'
+    dispatch.update({'status':delivery,'delivery_detail':detail,'delivery_recorded_at':now()})
+    if delivery == 'DELIVERED': dispatch['delivery_acknowledged_at']=now()
+    current.update({'director_dispatch':dispatch,'director_review_in_progress':True,'updated_at':now()})
+    atomic(path,current)
+    return ('DIRECTOR_PROMPTED' if delivery == 'DELIVERED' else
+            ('DIRECTOR_DELIVERY_UNKNOWN' if delivery == 'UNKNOWN_DELIVERY' else 'DIRECTOR_NOT_DELIVERED'))
 def terminal_scope(response):
     """Return the explicitly declared terminal scope; never infer program-wide stop."""
     scope=response.get('terminal_scope')
@@ -480,6 +522,12 @@ def route_director_response(state, state_path, response_path, response, response
                   'director_decision':decision, 'last_actor':'director', 'director_review_in_progress':False,
                   'last_review_brief':str(brief), 'last_review_brief_sha256':brief_sha256,
                   'updated_at':now()})
+    dispatch=state.get('director_dispatch')
+    if isinstance(dispatch,dict):
+        dispatch=dict(dispatch)
+        dispatch.update({'status':'RESPONSE_CONSUMED','response_sha256':response_sha256,
+                         'response_consumed_at':now()})
+        state['director_dispatch']=dispatch
     consumed[response_sha256]={'brief_sha256':brief_sha256,'decision':decision,'consumed_at':now()}
     # A consumed review brief is immutable historical evidence; never route it back into REVIEW_REQUIRED.
     state['review_brief']=None; state['review_reason']=None
@@ -540,15 +588,35 @@ def director(s,p,timeout):
     brief=review_brief_path(s)
     brief_sha256=sha256_file(brief)
     atomic(p,s)
+    # Reload after the canonicalized brief write.  The revision-bearing copy
+    # is the only snapshot eligible to consume or record a delivery outcome.
+    s=load(p)
     matches=matching_director_responses(p,brief_sha256)
     consumed=set((s.get('consumed_director_responses') or {}).keys())
     available=[item for item in matches if item[2] not in consumed]
     if available:
         response_path,response,response_sha256=available[-1]
-        route_director_response(s,p,response_path,response,response_sha256); return
+        route_director_response(s,p,response_path,response,response_sha256); return 'DIRECTOR_RESPONSE_CONSUMED'
     if matches:
         raise RuntimeError('REVIEW_BRIEF_ALREADY_CONSUMED')
-    s.update({'director_review_in_progress':True,'updated_at':now()}); atomic(p,s)
+    action_id=director_action_sha256(s,brief_sha256)
+    previous=s.get('director_dispatch')
+    if isinstance(previous,dict) and previous.get('action_sha256') == action_id:
+        status=previous.get('status')
+        # A timeout or a successful Herdr return proves neither that a response
+        # file is absent nor that another prompt is safe.  Preserve the intent
+        # and wait for a correctly bound response to arrive.
+        if status in {'INTENT_RECORDED','DELIVERED','ACKNOWLEDGED','RUNNING','UNKNOWN_DELIVERY'}:
+            log(s,f'director review={action_id[:12]} already {status}; no automatic reprompt')
+            return 'DIRECTOR_DELIVERY_UNKNOWN' if status in {'INTENT_RECORDED','UNKNOWN_DELIVERY'} else 'DIRECTOR_RESPONSE_PENDING'
+    archive_superseded_director_dispatch(s,previous,action_id)
+    s.update({'director_review_in_progress':True,
+              'director_dispatch':{'status':'INTENT_RECORDED','action_sha256':action_id,
+                                   'brief_sha256':brief_sha256,'intent_recorded_at':now(),
+                                   'target':'arc-director',
+                                   'delivery_attempt':int(previous.get('delivery_attempt',0) if isinstance(previous,dict) else 0)+1},
+              'updated_at':now()})
+    atomic(p,s)
     brief_data=json.loads(Path(brief).read_text(encoding='utf-8-sig'))
     requested=brief_data.get('allowed_director_outcomes')
     if isinstance(requested, list) and requested:
@@ -563,13 +631,22 @@ def director(s,p,timeout):
     request=(f'ARC2 Governor review. Read orchestration/agents/ARC_DIRECTOR_SYSTEM.md, orchestration/director/SCIENTIFIC_REVIEW_GUIDANCE.md, and {brief}. Write exactly one structured JSON response to {response_path}. '
              f'It must contain reviewed_brief_sha256={brief_sha256} and one valid decision. {directive}'
              'Do not schedule or prompt Controller.')
-    if not prompt('arc-director',request,timeout,s):
-        return
+    outcome=prompt('arc-director',request,timeout,s)
+    if outcome is True: outcome=('DELIVERED','LEGACY_TEST_DELIVERY')
+    elif outcome is False: outcome=('UNKNOWN_DELIVERY','LEGACY_BOOLEAN_FAILURE')
+    delivery,detail=outcome
+    persisted=persist_director_delivery_outcome(p,action_id,delivery,detail)
+    current=load(p)
+    # A response may arrive just before or during an ambiguous transport
+    # outcome.  Its SHA binding, not the transport result, decides whether it
+    # is safe to consume.
+    consumed=set((current.get('consumed_director_responses') or {}).keys())
     available=[item for item in matching_director_responses(p,brief_sha256) if item[2] not in consumed]
     if not available:
-        raise RuntimeError('DIRECTOR_RESPONSE_MISSING_OR_UNBOUND')
+        return persisted
     response_path,response,response_sha256=available[-1]
-    route_director_response(s,p,response_path,response,response_sha256)
+    route_director_response(current,p,response_path,response,response_sha256)
+    return 'DIRECTOR_RESPONSE_CONSUMED'
 def poll_seconds(job):
     kind=str(job.get('kind') or job.get('job_class') or job.get('class') or '').upper()
     if 'PREFLIGHT' in kind or 'CPU' in kind: return 10

@@ -58,3 +58,24 @@ Actual stage advance changes the semantic action SHA, so Controller work still
 receives one new dispatch.  Owner pauses, Director reviews, remote-job guards,
 sealed-data boundaries, frozen identities, and one-shot launch constraints are
 unchanged.
+## P0 follow-up corrections
+
+The original Controller-focused change left a Director call site interpreting the
+new `(delivery_status, detail)` result as a Boolean.  That made an
+`UNKNOWN_DELIVERY` tuple truthy and could continue response handling after a
+timeout.  Director delivery now has the same durable intent discipline:
+
+- `director_dispatch` is written before the Herdr call and is keyed by a stable
+  SHA over the bound brief, stage, next action and review reason.
+- `DELIVERED`, `INTENT_RECORDED`, `RUNNING`, and `UNKNOWN_DELIVERY` are never
+  automatically re-prompted.  The Governor first scans for a correctly
+  SHA-bound response and consumes it once if it has arrived.
+- `NOT_DELIVERED` is the only state eligible for another delivery attempt.
+  A consumed response records `RESPONSE_CONSUMED`.
+
+Workflow-state writes now require `state_revision` whenever the destination
+already exists.  A legacy file is migrated only by `load()` (revision zero);
+an unversioned external snapshot cannot overwrite a newer state.  Audit found
+that `scripts/arc2_governor.py` is the only writer of the live durable workflow
+state.  `Start-Arc2Governor.ps1` writes only watchdog status, and
+`arc2_runner.py` is a deprecated, non-running legacy-contract utility.
