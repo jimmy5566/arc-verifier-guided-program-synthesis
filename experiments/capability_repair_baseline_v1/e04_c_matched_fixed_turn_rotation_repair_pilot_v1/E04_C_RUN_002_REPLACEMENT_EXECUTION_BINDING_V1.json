@@ -1,0 +1,68 @@
+{
+  "arm_order": [
+    "CONTROL_NO_TRANSFORM",
+    "TREATMENT_FIXED_TURN_ROTATION"
+  ],
+  "arm_output_roots": {
+    "CONTROL_NO_TRANSFORM": "/workspace/arc2/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/run_001_4b86515108805cfbc8313007e8a65d3b/arms/CONTROL_NO_TRANSFORM",
+    "TREATMENT_FIXED_TURN_ROTATION": "/workspace/arc2/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/run_001_4b86515108805cfbc8313007e8a65d3b/arms/TREATMENT_FIXED_TURN_ROTATION"
+  },
+  "arms": 2,
+  "authorization_id": "E04_C_RUN_001_REPLACEMENT_EXECUTION_AUTHORIZATION_BRIEF_V1_RESPONSE",
+  "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+  "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "control_cohort_path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/CONTROL_NO_TRANSFORM_TRAIN.jsonl",
+  "control_cohort_sha256": "aa03408f158132c497eb9e8850c16391d0f7581914b4bc8933679630f66b82b1",
+  "director_response_path": "orchestration/director/responses/E04_C_RUN_001_REPLACEMENT_EXECUTION_AUTHORIZATION_BRIEF_V1_RESPONSE.json",
+  "director_response_sha256": "121f314f1651929d2a857d096bcc43a89676dcbe52235fb6b49d0520aca90a4f",
+  "evaluator_path": "scripts/score_e04_c_matched_rotation_repair_pilot.py",
+  "evaluator_sha256": "97c368da0e179bb7c7d875b51ee8ef15518a873b348dacd00a66daddd38e1930",
+  "execution_authorized": true,
+  "jobs": 1,
+  "joint_runtime_cap_seconds": 7200,
+  "launcher_path": "scripts/launch_e04_c_matched_rotation_repair_pilot.py",
+  "launcher_sha256": "ab9768262b054385c12febcc25fa7d047aa91c600203afbafbe3f00a0990cdfa",
+  "nonce": "4b86515108805cfbc8313007e8a65d3b",
+  "output_root": "/workspace/arc2/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/run_001_4b86515108805cfbc8313007e8a65d3b",
+  "per_arm_runtime_cap_seconds": 3600,
+  "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+  "protocol_path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/E04_C_PRELAUNCH_PROTOCOL_V1.json",
+  "protocol_sha256": "16a0b1f9bf93a81fdc48e147fc55b6f981d5e2c2e96d7561c9ee6d93777381b5",
+  "retry": false,
+  "runtime_config_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1_CONFIG.json",
+  "runtime_config_sha256": "58b636211efe3864552747db16fc2ea5b3a67bcdd14aa9775ac07d49bca6856b",
+  "schedule_binding_path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/schedule_freeze_v1/MATCHED_SCHEDULE_BINDING_V1.json",
+  "schedule_binding_sha256": "57b9ef6c9c680533192d5358e6451d370425e1dd2bd8902f51d7095e45a40ca7",
+  "schema_version": 1,
+  "seed": 2000031,
+  "static_preflight": {
+    "arm_totals": {
+      "CONTROL_NO_TRANSFORM": {
+        "supervised_tokens": 28800,
+        "total_tokens": 207360
+      },
+      "TREATMENT_FIXED_TURN_ROTATION": {
+        "supervised_tokens": 28800,
+        "total_tokens": 207360
+      }
+    },
+    "intervention_slots": 96,
+    "model_imported": false,
+    "optimizer_constructed": false,
+    "protected_replay_slots": 288,
+    "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+    "slots": 384,
+    "status": "PASS_CPU_NATIVE_SCHEDULE",
+    "target_sidecar_accessed": false,
+    "tokenizer_loaded": false
+  },
+  "static_preflight_path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/schedule_freeze_v1/NATIVE_TOKEN_STATIC_PREFLIGHT_V1.json",
+  "static_preflight_sha256": "9e270ff12c3b382f2d2efc86c181732018f730df7b9dc2055e7f056632930b38",
+  "treatment_cohort_path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/TREATMENT_FIXED_TURN_ROTATION_TRAIN.jsonl",
+  "treatment_cohort_sha256": "0c8a331bd9662a0656a59ce6aef3dcb7b374c6758fc244e12a691fb830677151",
+  "v7_reference_raw_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/e04_v3_full768_b1_no_update_remeasurement_v1/run_001_2ee668738df64d558f666f5989d09add/PRIMARY_B1_RAW.jsonl",
+  "v7_reference_raw_sha256": "a3b90e8e668e5a325e0d70bc2774999065c3d06f56de657a270620aca7b65ec1",
+  "worker_path": "scripts/run_e04_c_matched_rotation_repair_pilot.py",
+  "worker_sha256": "138c680241b9f8e9b0f25ea019c6467fcc3e84ca464ba872cfb5d2faa151c8b4",
+  "worker_source_commit": "f280491b0ac29ad63e848647ef35f41f8a458d83"
+}
