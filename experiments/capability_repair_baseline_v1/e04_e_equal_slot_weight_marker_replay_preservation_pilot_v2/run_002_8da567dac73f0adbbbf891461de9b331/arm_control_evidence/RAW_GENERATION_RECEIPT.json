@@ -1,0 +1,8 @@
+{
+  "final_audit_opened": false,
+  "physical_batch_size": 1,
+  "raw_sha256": "32ba7bd85fbab5c08fe290680f1065b4d2080cb8b1e7fec426eb59bab1e44f8d",
+  "rows": 768,
+  "status": "RAW_GENERATIONS_FROZEN_NO_TARGETS",
+  "target_sidecar_accessed": false
+}

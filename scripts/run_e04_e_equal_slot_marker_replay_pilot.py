@@ -86,7 +86,7 @@ def _generate(model,manifest:dict[str,Any],config:dict[str,Any],deadline:float,a
  atomic_json(arm_root/'RAW_GENERATION_RECEIPT.json',{'status':'RAW_GENERATIONS_FROZEN_NO_TARGETS','rows':len(rows),'raw_sha256':sha_path(raw),'physical_batch_size':1,'target_sidecar_accessed':False,'final_audit_opened':False})
 
 def run_arm(binding_path:Path,output:Path,launch_commit:str,arm:str)->None:
- started=time.monotonic();root=output/'arms'/arm;term=root/'TERMINAL_RECEIPT.json'
+ started=time.monotonic();root=output/'arms'/arm;terminal_receipt=root/'TERMINAL_RECEIPT.json'
  try:
   b=load_binding(binding_path,output,launch_commit,child=True)
   if arm not in ARMS or str(root).replace('\\','/')!=b['arm_output_roots'][arm] or root.exists():fail('E04E_ARM_OUTPUT')
@@ -107,7 +107,7 @@ def run_arm(binding_path:Path,output:Path,launch_commit:str,arm:str)->None:
    for row in group:
     ids=torch.tensor([row['input_ids']],device='cuda:0',dtype=torch.long);lab=torch.tensor([row['labels']],device='cuda:0',dtype=torch.long);att=torch.tensor([row['attention_mask']],device='cuda:0',dtype=torch.long)
     out=model(input_ids=ids,attention_mask=att,use_cache=False)
-    term,count=backward_equal_slot_term(out.logits,lab);counts.append(count);loss_value+=float(term);processed+=len(row['input_ids']);supervised+=row['supervised'];slot_memory.append({'slot':int(row['slot']),'supervised_token_count':int(count),'cuda_memory':cuda_memory(torch)});del out,term
+    slot_term,count=backward_equal_slot_term(out.logits,lab);counts.append(count);loss_value+=float(slot_term);processed+=len(row['input_ids']);supervised+=row['supervised'];slot_memory.append({'slot':int(row['slot']),'supervised_token_count':int(count),'cuda_memory':cuda_memory(torch)});del out,slot_term
    if counts!=expected_counts or not bool(torch.isfinite(torch.tensor(loss_value))):fail('E04E_LOSS_CONTRACT')
    for cfg in optimizer.param_groups:cfg['lr']=0.00005*min(1.0,(steps+1)/3.0)
    optimizer.step();steps+=1
@@ -115,12 +115,12 @@ def run_arm(binding_path:Path,output:Path,launch_commit:str,arm:str)->None:
   expected=runtime['static']['arm_totals'][arm]
   if steps!=96 or processed!=expected['raw_transformer_tokens'] or supervised!=expected['raw_supervised_tokens']:fail('E04E_COMPLETION_TOTALS')
   model.save_pretrained(root/'adapter');config=read_json(ROOT/b['runtime_config_path']);_generate(model,manifest,config,deadline,root)
-  atomic_json(term,{'status':'COMPLETED_RAW_FROZEN_NO_TARGETS','protocol_id':PROTOCOL_ID,'arm':arm,'optimizer_steps':steps,'parameter_updates':steps,'processed_tokens':processed,'supervised_tokens':supervised,'loss_normalization':'four_independent_slot_means_times_0.25','adapter_sha256':sha_path(root/'adapter'/'adapter_model.safetensors'),'raw_sha256':sha_path(root/'PRIMARY_B1_RAW.jsonl'),'elapsed_seconds':time.monotonic()-started,'runtime_cap_seconds':PER_ARM_CAP_SECONDS,'cuda_memory_after_model_load':memory_after_model_load,'cuda_memory_final':cuda_memory(torch),'target_sidecar_accessed':False,'final_audit_opened':False})
+  atomic_json(terminal_receipt,{'status':'COMPLETED_RAW_FROZEN_NO_TARGETS','protocol_id':PROTOCOL_ID,'arm':arm,'optimizer_steps':steps,'parameter_updates':steps,'processed_tokens':processed,'supervised_tokens':supervised,'loss_normalization':'four_independent_slot_means_times_0.25','adapter_sha256':sha_path(root/'adapter'/'adapter_model.safetensors'),'raw_sha256':sha_path(root/'PRIMARY_B1_RAW.jsonl'),'elapsed_seconds':time.monotonic()-started,'runtime_cap_seconds':PER_ARM_CAP_SECONDS,'cuda_memory_after_model_load':memory_after_model_load,'cuda_memory_final':cuda_memory(torch),'target_sidecar_accessed':False,'final_audit_opened':False})
  except Exception as e:
-  root.mkdir(parents=True,exist_ok=True);atomic_json(term,{'status':'FAILED_OR_PARTIAL','protocol_id':PROTOCOL_ID,'arm':arm,'error':f'{type(e).__name__}:{e}','elapsed_seconds':time.monotonic()-started,'cuda_memory_final':cuda_memory(locals().get('torch')),'target_sidecar_accessed':False,'final_audit_opened':False,'traceback':traceback.format_exc(limit=4)});raise
+  root.mkdir(parents=True,exist_ok=True);atomic_json(terminal_receipt,{'status':'FAILED_OR_PARTIAL','protocol_id':PROTOCOL_ID,'arm':arm,'error':f'{type(e).__name__}:{e}','elapsed_seconds':time.monotonic()-started,'cuda_memory_final':cuda_memory(locals().get('torch')),'target_sidecar_accessed':False,'final_audit_opened':False,'traceback':traceback.format_exc(limit=4)});raise
 
 def run_parent(binding_path:Path,output:Path,launch_commit:str)->None:
- started=time.monotonic();term=output/'TERMINAL_RECEIPT.json'
+ started=time.monotonic();terminal_receipt=output/'TERMINAL_RECEIPT.json'
  try:
   b=load_binding(binding_path,output,launch_commit);proof=static_schedule_preflight();output.mkdir();(output/'arms').mkdir();atomic_json(output/'PREFLIGHT_RECEIPT.json',{'status':'PASS_CPU_NO_MODEL_IMPORT','binding_sha256':sha_path(binding_path),'launch_commit':launch_commit,'proof':proof,'model_imported':False,'optimizer_constructed':False,'target_sidecar_accessed':False})
   for arm in ARMS:
@@ -129,9 +129,9 @@ def run_parent(binding_path:Path,output:Path,launch_commit:str)->None:
    if r.returncode:fail('E04E_ARM_FAILED:'+arm)
   raw={a:sha_path(output/'arms'/a/'PRIMARY_B1_RAW.jsonl') for a in ARMS}
   receipt={'status':'COMPLETE_PENDING_CPU_SCORE','protocol_id':PROTOCOL_ID,'binding_sha256':sha_path(binding_path),'launch_commit':launch_commit,'arm_order':list(ARMS),'optimizer_steps_by_arm':{a:96 for a in ARMS},'parameter_updates_by_arm':{a:96 for a in ARMS},'raw_sha256':raw,'target_sidecar_accessed':False,'final_audit_opened':False,'wall_seconds':time.monotonic()-started,'joint_runtime_cap_seconds':JOINT_CAP_SECONDS}
-  atomic_json(output/'RAW_FREEZE_RECEIPT.json',receipt);atomic_json(term,receipt)
+  atomic_json(output/'RAW_FREEZE_RECEIPT.json',receipt);atomic_json(terminal_receipt,receipt)
  except Exception as e:
-  output.mkdir(parents=True,exist_ok=True);atomic_json(term,{'status':'FAILED_OR_PARTIAL','protocol_id':PROTOCOL_ID,'error':f'{type(e).__name__}:{e}','wall_seconds':time.monotonic()-started,'cuda_memory_final':cuda_memory(locals().get('torch')),'target_sidecar_accessed':False,'final_audit_opened':False,'traceback':traceback.format_exc(limit=4)});raise
+  output.mkdir(parents=True,exist_ok=True);atomic_json(terminal_receipt,{'status':'FAILED_OR_PARTIAL','protocol_id':PROTOCOL_ID,'error':f'{type(e).__name__}:{e}','wall_seconds':time.monotonic()-started,'cuda_memory_final':cuda_memory(locals().get('torch')),'target_sidecar_accessed':False,'final_audit_opened':False,'traceback':traceback.format_exc(limit=4)});raise
 
 def main():
  p=argparse.ArgumentParser();p.add_argument('--binding',type=Path);p.add_argument('--output-root',type=Path);p.add_argument('--launch-commit');p.add_argument('--arm',choices=ARMS);p.add_argument('--self-test',action='store_true');p.add_argument('--identity-check',action='store_true');a=p.parse_args()

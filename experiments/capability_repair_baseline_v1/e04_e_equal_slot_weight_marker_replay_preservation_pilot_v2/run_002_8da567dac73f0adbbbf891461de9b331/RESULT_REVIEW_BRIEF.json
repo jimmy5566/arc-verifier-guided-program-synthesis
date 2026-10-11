@@ -1,0 +1,8 @@
+{
+  "brief_id": "E04_E_V2_RUN_002_RECEIPT_PATH_FAILURE_REVIEW_BRIEF",
+  "frozen_result_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/run_002_8da567dac73f0adbbbf891461de9b331/RESULT_FREEZE.json",
+  "frozen_result_sha256": "739c2eaa5d69850ef76e2de0c8a81db9bae4ccc775edb90fdf8b25b489f71b6b",
+  "reason": "RUN_002 consumed its sole replacement authorization and is not scientifically interpretable: the control arm completed observed training and target-blind raw generation, but a local receipt-path variable-shadowing defect prevented both control and parent completion receipts; treatment never started. No retry is authorized.",
+  "requested_decision": "Classify RUN_002 and decide whether a fresh, separately authorized replacement is scientifically justified after the receipt-path repair. Do not treat control-only raw output as a two-arm result.",
+  "status": "REVIEW_REQUIRED"
+}

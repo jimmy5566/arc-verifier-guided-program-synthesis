@@ -1,0 +1,12 @@
+{
+  "cuda_memory_final": {
+    "status": "UNAVAILABLE"
+  },
+  "error": "E04EFailure:E04E_ARM_FAILED:CONTROL_EQUAL_SLOT",
+  "final_audit_opened": false,
+  "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+  "status": "FAILED_OR_PARTIAL",
+  "target_sidecar_accessed": false,
+  "traceback": "Traceback (most recent call last):\n  File \"/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/run_e04_e_equal_slot_marker_replay_pilot.py\", line 129, in run_parent\n    if r.returncode:fail('E04E_ARM_FAILED:'+arm)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/arc-runtime-3090-gpu-benchmark-v1/arc2/scripts/e04_e_equal_slot_execution.py\", line 15, in fail\n    def fail(code:str)->None: raise E04EFailure(code)\n                              ^^^^^^^^^^^^^^^^^^^^^^^\nscripts.e04_e_equal_slot_execution.E04EFailure: E04E_ARM_FAILED:CONTROL_EQUAL_SLOT\n",
+  "wall_seconds": 972.8961399653926
+}

@@ -1,0 +1,17 @@
+{
+  "cap_seconds": 7200,
+  "command": [
+    "python3",
+    "scripts/run_e04_e_equal_slot_marker_replay_pilot.py",
+    "--binding",
+    "/workspace/arc2/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/run_002_8da567dac73f0adbbbf891461de9b331.launch_lock/LAUNCH_BINDING.json",
+    "--output-root",
+    "/workspace/arc2/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/run_002_8da567dac73f0adbbbf891461de9b331",
+    "--launch-commit",
+    "b80b4535e35a03f9c104f4a126fb18ea712d513d"
+  ],
+  "exit_code": 1,
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "wall_seconds": 974.0390379633754
+}
