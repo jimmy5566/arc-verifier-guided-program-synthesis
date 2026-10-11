@@ -335,6 +335,11 @@ def reconcile_controller_delivery(state, path):
     status=recorded.get('status')
     if status not in {'DELIVERED','UNKNOWN_DELIVERY','NOT_DELIVERED'}:
         return state,False
+    # A receipt can repair a stale intent, but it must never downgrade an
+    # observed Controller execution back to delivery.  Otherwise every daemon
+    # pass alternates RUNNING -> DELIVERED -> RUNNING and recreates state churn.
+    if dispatch.get('status') in {'DELIVERED','ACKNOWLEDGED','RUNNING'}:
+        return state,False
     if dispatch.get('status') == status and dispatch.get('delivery_detail') == recorded.get('delivery_detail'):
         return state,False
     restored=dict(dispatch)

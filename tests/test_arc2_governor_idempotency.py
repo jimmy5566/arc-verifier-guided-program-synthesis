@@ -111,6 +111,20 @@ class GovernorIdempotencyTests(unittest.TestCase):
             self.assertEqual(before, governor.load(path)["state_revision"])
             prompt.assert_not_called()
 
+    def test_delivery_receipt_never_downgrades_running_dispatch(self):
+        with tempfile.TemporaryDirectory() as raw:
+            path = self.state(Path(raw))
+            state = governor.load(path)
+            action = governor.action_sha256(state)
+            state["controller_dispatch"] = {"status": "RUNNING", "action_sha256": action, "target": "pane"}
+            governor.atomic(path, state)
+            governor.write_controller_dispatch_receipt(path, action, {"status": "DELIVERED", "delivery_detail": "ack"})
+            before = governor.load(path)["state_revision"]
+            reconciled, changed = governor.reconcile_controller_delivery(governor.load(path), path)
+            self.assertFalse(changed)
+            self.assertEqual("RUNNING", reconciled["controller_dispatch"]["status"])
+            self.assertEqual(before, governor.load(path)["state_revision"])
+
     def test_new_controller_stage_gets_one_new_dispatch(self):
         with tempfile.TemporaryDirectory() as raw:
             path = self.state(Path(raw)); patches = self.controller_mocks()
