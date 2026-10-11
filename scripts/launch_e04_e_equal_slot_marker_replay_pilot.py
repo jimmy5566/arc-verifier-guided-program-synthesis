@@ -17,7 +17,7 @@ def forced_pty_shell(target:str,script:str)->str:
   raise SystemExit(f'E04E_REMOTE_COMMAND_CONTROL_FAILED:{completed.returncode}:\n{tail}')
  return completed.stdout.decode('utf-8',errors='replace')
 def remote_script(b:dict,binding_commit:str,binding_path:str,binding_sha:str)->str:
- out=b['output_root'];out_parent=Path(out).parent.as_posix();lock=out+'.launch_lock';source=binding_commit
+ out=b['output_root'];out_parent=Path(out).parent.as_posix();lock=out+'.launch_lock';global_lock=out_parent+'/.e04e_active_launch_lock';source=binding_commit
  return f'''set -euo pipefail
 repo=/root/arc-runtime-3090-gpu-benchmark-v1/arc2
 cd "$repo"
@@ -28,14 +28,14 @@ test "$(git rev-parse HEAD)" = "{source}"
 test -z "$(git status --porcelain)"
 test ! -e "{out}"
 test ! -e "{lock}"
-active_e04e_processes=$(pgrep -af '[r]un_e04_e_equal_slot_marker_replay_pilot|[a]rc2_hard_cap_launcher.*e04_e' | awk -v self="$$" '$1 != self {{print $0}}' || true)
-test -z "$active_e04e_processes"
+test ! -e "{global_lock}"
 gpu_total=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -n 1 | tr -d ' ')
 gpu_free=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -n 1 | tr -d ' ')
 test "$gpu_total" -ge 24000
 test "$gpu_free" -ge 20000
 python3 -c 'import torch, transformers, peft, bitsandbytes; assert torch.cuda.is_available() and torch.cuda.is_bf16_supported()'
-mkdir -p "{out_parent}";mkdir "{lock}"
+mkdir -p "{out_parent}";mkdir "{global_lock}";mkdir "{lock}"
+printf '{{"protocol_id":"%s","launch_commit":"%s","output_root":"%s"}}\\n' "{b['protocol_id']}" "{source}" "{out}" > "{global_lock}/OWNER.json"
 git show "{binding_commit}:{binding_path}" > "{lock}/LAUNCH_BINDING.json.tmp"
 actual_binding_sha=$(sha256sum "{lock}/LAUNCH_BINDING.json.tmp" | awk '{{print $1}}')
 test "$actual_binding_sha" = "{binding_sha}"
