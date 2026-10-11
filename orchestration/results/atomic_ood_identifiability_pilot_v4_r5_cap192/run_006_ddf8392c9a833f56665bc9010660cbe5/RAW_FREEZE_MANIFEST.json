@@ -1,0 +1,19 @@
+{
+  "binding_sha256": "85b3cf752441427a6acb8fcbc2d84e200fca8846225c516bc319af48336fee11",
+  "freeze_condition": "all raw evidence and terminal receipt byte-hash verified before CPU scorer opens sealed sidecar",
+  "per_arm_b1_rows": 12,
+  "per_arm_primary_rows": 192,
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5_CAP192",
+  "raw_rows": 612,
+  "raw_target_blind_sha256": {
+    "E04_E_CONTROL_RAW_TARGET_BLIND.jsonl": "694aeddc9de92492377f9886ff26f2d778ecbb9783cd371f6cb1a1ff911c49b5",
+    "E04_E_TREATMENT_RAW_TARGET_BLIND.jsonl": "429d7c0ae123a4791a8050845864fe778e2db3d1d69508882fa454aa67452115",
+    "V7_RAW_TARGET_BLIND.jsonl": "2536fa0eeca2d0585f638a2637fed4e991e5e5200b4a0da7bcfb24773d50aa4a"
+  },
+  "run_id": "RUN_006_CAP192_ddf8392c9a833f56665bc9010660cbe5",
+  "schema_version": 1,
+  "sealed_target_content_released": false,
+  "source_commit": "1222d3fa6ab2be5a186257c5d4d1aa0e48536045",
+  "target_sidecar_accessed_before_freeze": false,
+  "terminal_receipt_sha256": "c10e20b3f0ab9d61c50b988859fe661731a409a14f07582ed1e4ced4d3703bcb"
+}
