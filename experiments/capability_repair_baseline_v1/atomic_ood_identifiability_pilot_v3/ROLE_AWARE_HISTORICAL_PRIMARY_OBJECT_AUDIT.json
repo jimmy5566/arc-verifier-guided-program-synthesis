@@ -1,0 +1,120 @@
+{
+  "all_query_historical_primary_exact_intersection": 0,
+  "audit_method": "ROLE_AWARE_PRIMARY_COMPONENTS_COMPLETE_E04_E05_TRAIN_AND_EVALUATION",
+  "historical_asset_inventory": [
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/VALIDATION_INPUT_PROMPTS.jsonl",
+      "primary_objects": 768,
+      "role_extraction": "PASS",
+      "sha256": "f6dcf3050583506cde7035ff18ac15a79c9292cabc55b504a823c025c8c2eff6",
+      "tasks_parsed": 768
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_orientation_marker_counterfactual_v2/VALIDATION_INPUT_PROMPTS.jsonl",
+      "primary_objects": 768,
+      "role_extraction": "PASS",
+      "sha256": "4cbaf37a46b75b766d73b81807865796f139500003b911a89eb717c5ac703c45",
+      "tasks_parsed": 768
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_orientation_marker_counterfactual_v2/TRAIN_NATIVE_TASK_INPUTS.jsonl",
+      "primary_objects": 4608,
+      "role_extraction": "PASS",
+      "sha256": "e9926dd2f2507803076852467901a213025b829ab151b4ea58df030bcfa5e4d8",
+      "tasks_parsed": 4608
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/CONTROL_NO_TRANSFORM_TRAIN.jsonl",
+      "primary_objects": 1152,
+      "role_extraction": "PASS",
+      "sha256": "aa03408f158132c497eb9e8850c16391d0f7581914b4bc8933679630f66b82b1",
+      "tasks_parsed": 1152
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/TREATMENT_FIXED_TURN_ROTATION_TRAIN.jsonl",
+      "primary_objects": 1152,
+      "role_extraction": "PASS",
+      "sha256": "0c8a331bd9662a0656a59ce6aef3dcb7b374c6758fc244e12a691fb830677151",
+      "tasks_parsed": 1152
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/schedule_freeze_v1/CONTROL_SCHEDULE.json",
+      "primary_objects": 384,
+      "role_extraction": "PASS",
+      "sha256": "44a926e266979044b92b5ae69d2e64b0485b1e6eaf575d10c0f720804644962d",
+      "tasks_parsed": 384
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/schedule_freeze_v1/TREATMENT_SCHEDULE.json",
+      "primary_objects": 768,
+      "role_extraction": "PASS",
+      "sha256": "f1ac2c68abee17db1a80fd87f35c4ed000beb28f960b8455626296c23ddcf534",
+      "tasks_parsed": 768
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/CONTROL_SCHEDULE.json",
+      "primary_objects": 384,
+      "role_extraction": "PASS",
+      "sha256": "7abe1bdaac52e448b9ed0c3e94057c2d55162130a054690242aa0ee191639022",
+      "tasks_parsed": 384
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/TREATMENT_SCHEDULE.json",
+      "primary_objects": 384,
+      "role_extraction": "PASS",
+      "sha256": "d1c284df3ae9b31b5120acbdab4184e0fee5c22c31d46c0e55f25de75b707395",
+      "tasks_parsed": 384
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e05_structurally_held_out_marker_conditioned_rotation_confirmation_v1/INPUT_PROMPTS.jsonl",
+      "primary_objects": 768,
+      "role_extraction": "PASS",
+      "sha256": "ac1776d31f8cda9e814e93736787ab9dd958653a1c4a271b923535b5f509ca3e",
+      "tasks_parsed": 768
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e05_v2_identifiable_prompt_and_asset_identity_repair/INPUT_PROMPTS.jsonl",
+      "primary_objects": 768,
+      "role_extraction": "PASS",
+      "sha256": "8e6ac9f550e3d4e87acd7375a14f4335de9bedf83ed99f4f5faa9d7ad1caddea",
+      "tasks_parsed": 768
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e05_v3_semantically_identifiable_demonstrations_and_adapter_storage_recovery/INPUT_PROMPTS.jsonl",
+      "primary_objects": 768,
+      "role_extraction": "PASS",
+      "sha256": "4cf144de064346d36f53e6c10d1cff293a80166907203d8003565418d9010dc3",
+      "tasks_parsed": 768
+    }
+  ],
+  "historical_tasks": 12672,
+  "input_grid_identity_intersection": 0,
+  "internal_d4_classes": 8,
+  "internal_d4_unique": true,
+  "query_primary_connected_six_cell": true,
+  "query_primary_objects": 192,
+  "replacement_historical_primary_d4_intersection": 0,
+  "replacement_historical_primary_exact_intersection": 0,
+  "replacement_units": [
+    0,
+    5
+  ],
+  "retained_unaffected_units_historical_d4_intersection_descriptive": 2,
+  "status": "PASS",
+  "train_pair_identity_intersection": 0,
+  "v2_shape_preservation": {
+    "changed_units": [
+      0,
+      5
+    ],
+    "unaffected_units_preserved": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      7
+    ],
+    "v2_source_sha256": "1496bf6152aec3bee0cfa9d3a4545fe86dbf44c4758de356dc9c8a1883ec39fb"
+  }
+}

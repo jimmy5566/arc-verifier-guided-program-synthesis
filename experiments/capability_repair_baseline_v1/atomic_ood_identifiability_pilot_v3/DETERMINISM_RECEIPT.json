@@ -1,0 +1,8 @@
+{
+  "byte_identical_regeneration": true,
+  "gpu_used": false,
+  "manifest_sha256": "63ec4376ca046106416a1547c85fcd84ab370c44f1e018d131827a2737f88a72",
+  "model_loaded": false,
+  "native_schema": "train_input_output_pairs__test_input_only",
+  "status": "PASS"
+}

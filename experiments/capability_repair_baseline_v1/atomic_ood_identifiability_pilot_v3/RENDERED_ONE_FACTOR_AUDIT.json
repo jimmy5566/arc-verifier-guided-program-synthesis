@@ -1,0 +1,37 @@
+{
+  "cells": {
+    "OOD_COLOR_MAPPING": {
+      "nominated_factor": "color_mapping",
+      "rendered_changed_components": [
+        "demo_pairs",
+        "target_color"
+      ]
+    },
+    "OOD_GEOMETRY": {
+      "nominated_factor": "geometry",
+      "rendered_changed_components": [
+        "object_exact"
+      ]
+    },
+    "OOD_GRID_SIZE": {
+      "nominated_factor": "grid_size",
+      "rendered_changed_components": [
+        "grid_size"
+      ]
+    },
+    "OOD_LAYOUT": {
+      "nominated_factor": "layout",
+      "rendered_changed_components": [
+        "anchor"
+      ]
+    },
+    "OOD_MARKER_ENCODING": {
+      "nominated_factor": "marker_encoding",
+      "rendered_changed_components": [
+        "demo_pairs",
+        "marker"
+      ]
+    }
+  },
+  "status": "PASS"
+}

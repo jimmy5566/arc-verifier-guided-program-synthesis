@@ -1,0 +1,11 @@
+{
+  "binding_sha256": "a93fb4a487cb75534eaa2712f8bf775758cebeb8198c9418d6a9ab45aa28de04",
+  "brief_type": "DIRECTOR_FINAL_PRELAUNCH_REVIEW",
+  "gpu_used": false,
+  "manifest_sha256": "63ec4376ca046106416a1547c85fcd84ab370c44f1e018d131827a2737f88a72",
+  "model_loaded": false,
+  "parent_response_sha256": "d07cbc4c7c89e7b1d13021f358ccccb625fc6766600cb9c5769a1db3eb5f3411",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V3",
+  "request": "Review only V3 units 0 and 5: connectedness, quarter-turn distinctness, internal D4 uniqueness, and zero role-aware historical primary exact/D4 overlap across the complete bound E04/E05 inventory. All other V2 conditions are retained. No GPU authorization requested.",
+  "status": "CPU_ONLY_TWO_SHAPE_REPAIR_COMPLETE"
+}
