@@ -1,0 +1,31 @@
+{
+  "canonical_bases": 48,
+  "conditions": [
+    "FIXED_TURN_ROTATION_CONTROL",
+    "MARKER_BINDING_CONTROL",
+    "NO_TRANSFORM_RETENTION_CONTROL",
+    "MARKER_CONDITIONED_ROTATION"
+  ],
+  "demonstration_bank_sha256": "e4a5b22bfd84add3f879073793c855782b4458abfbd206a39fa676729bac3dee",
+  "episodes": 768,
+  "episodes_per_condition": 192,
+  "future_execution_requires": [
+    "DIRECTOR_PRELAUNCH_APPROVAL",
+    "VERSIONED_EXACT_BYTE_E04_CONTROL_ADAPTER",
+    "VERSIONED_EXACT_BYTE_E04_TREATMENT_ADAPTER",
+    "NATIVE_GREEDY_B1_RUNTIME_BINDING"
+  ],
+  "future_primary_estimand": "Treatment_minus_V7 exact-grid accuracy on marker-conditioned rotation, paired at canonical-base level; 10000 canonical-base paired bootstrap, seed 20261012",
+  "future_supportive_estimand": "Treatment_minus_Control exact-grid accuracy on marker-conditioned rotation",
+  "generation_run": false,
+  "gpu_used": false,
+  "model_loaded": false,
+  "prompt_sha256": "ac1776d31f8cda9e814e93736787ab9dd958653a1c4a271b923535b5f509ca3e",
+  "protocol_id": "E05_STRUCTURALLY_HELD_OUT_MARKER_CONDITIONED_ROTATION_CONFIRMATION_V1",
+  "sealed_e04_target_sidecar_opened": false,
+  "seed": 20261012,
+  "status": "CPU_ONLY_FROZEN_NO_MODEL_NO_EVALUATION",
+  "structural_audit_sha256": "a076f267d212205a0bbaf3cd18d438d26893b1300280df730aa4105ff035fe6c",
+  "target_sidecar_sha256": "1784db2ec4b9b88f08b3fc9f9ed1ac11e0e946df4278960ec745b5248c5fd314",
+  "turns_per_base": 4
+}

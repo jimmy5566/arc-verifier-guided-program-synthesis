@@ -1,0 +1,33 @@
+{
+  "brief_type": "DIRECTOR_PRELAUNCH_REVIEW",
+  "protocol_id": "E05_STRUCTURALLY_HELD_OUT_MARKER_CONDITIONED_ROTATION_CONFIRMATION_V1",
+  "request": "Review the frozen E05 cohort and determine whether a separate exact-byte adapter-storage recovery/amendment is scientifically acceptable before any native B1 inference authorization is considered.",
+  "completed_cpu_only_work": {
+    "cohort": "48 canonical bases x 4 turns x 4 conditions = 768 episodes; 192 per condition",
+    "seed": 20261012,
+    "input_prompt_sha256": "ac1776d31f8cda9e814e93736787ab9dd958653a1c4a271b923535b5f509ca3e",
+    "target_sidecar_sha256": "1784db2ec4b9b88f08b3fc9f9ed1ac11e0e946df4278960ec745b5248c5fd314",
+    "structural_audit_sha256": "a076f267d212205a0bbaf3cd18d438d26893b1300280df730aa4105ff035fe6c",
+    "input_validation": "PASS_CPU_ONLY_INPUT_FREEZE_VALIDATION",
+    "prohibited_actions_not_run": ["model loading", "GPU", "generation", "training", "optimizer", "backward", "Gold", "dGold", "FINAL_AUDIT"]
+  },
+  "structural_independence": {
+    "result": "PASS against the unsealed E04 cohort: canonical tuple, grid size, layout, relation, color assignment, D4 shape signature, input, target, input-target pair and canonical serialization are disjoint.",
+    "limit": "The E04 sealed scorer sidecar was not opened; that boundary is preserved and explicitly recorded."
+  },
+  "future_estimand": {
+    "primary": "Treatment minus V7 exact-grid accuracy on independent marker-conditioned rotation, paired at canonical-base unit.",
+    "supportive": "Treatment minus Control on the same condition.",
+    "bootstrap": "10000 paired canonical-base resamples, fixed seed 20261012.",
+    "future_success": "Primary and fixed-turn atomic deltas each at least +8/192 with bootstrap lower bound above zero; marker-binding and no-transform declines no worse than -8/192."
+  },
+  "current_blocker": {
+    "code": "ADAPTER_VERSIONED_STORAGE_IDENTITY_UNRESOLVED",
+    "detail": "E04-E RUN_003 Control and Treatment adapter bytes are hash-verified in the RunPod output receipts, but no pinned versioned-storage repository/revision/filename exists in current evidence. The frozen requirement to prove exact source = transferred/downloaded = runtime bytes cannot yet be met.",
+    "control_adapter_sha256": "515f5ebfe6685097f78fe260edcc4859edfe17152482a559769f18be8b55da16",
+    "treatment_adapter_sha256": "3eff5b9debc4b5b3f133e4524bf7244b0a2074a8f0bc0b5595d38ee176db57be",
+    "not_attempted": ["PTY binary transfer", "Git LFS upload", "GitHub release publication", "checkpoint substitution", "GPU inference"]
+  },
+  "requested_decision": "Either authorize a minimal, exact-byte versioned-storage recovery protocol for the two adapters, or retain E05 as CPU-frozen but not launchable. Do not authorize native generation under this brief.",
+  "scope": "E05 is a new structurally held-out synthetic development confirmation. It is not independent ARC benchmark confirmation; E04 reused DEV results remain descriptive only."
+}

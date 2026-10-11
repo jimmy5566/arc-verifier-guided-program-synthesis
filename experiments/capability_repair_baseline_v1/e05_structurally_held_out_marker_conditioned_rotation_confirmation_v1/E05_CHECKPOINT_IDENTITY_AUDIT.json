@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "protocol_id": "E05_STRUCTURALLY_HELD_OUT_MARKER_CONDITIONED_ROTATION_CONFIRMATION_V1",
+  "status": "BLOCKED_VERSIONED_ASSET_STORAGE_UNCONFIRMED",
+  "v7": {
+    "manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "base_model_manifest_sha256": "7d107bf4bea5ab6d18c0e33f332623108bc986f31d64aa63a9028d9958ebf6da"
+  },
+  "e04_e_run_003_control_equal_slot": {
+    "adapter_sha256": "515f5ebfe6685097f78fe260edcc4859edfe17152482a559769f18be8b55da16",
+    "source_terminal_receipt": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/run_003_d36a26054a880d9bb621e14acdb7488b/arms/CONTROL_EQUAL_SLOT/TERMINAL_RECEIPT.json",
+    "observed_runtime_location": "RunPod RUN_003 output only",
+    "versioned_storage": null,
+    "pinned_revision": null
+  },
+  "e04_e_run_003_treatment_equal_slot": {
+    "adapter_sha256": "3eff5b9debc4b5b3f133e4524bf7244b0a2074a8f0bc0b5595d38ee176db57be",
+    "source_terminal_receipt": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/run_003_d36a26054a880d9bb621e14acdb7488b/arms/TREATMENT_EQUAL_SLOT/TERMINAL_RECEIPT.json",
+    "observed_runtime_location": "RunPod RUN_003 output only",
+    "versioned_storage": null,
+    "pinned_revision": null
+  },
+  "required_gate": "Both E04-E adapters must have an appropriate versioned-storage repository, immutable revision, filename, and post-download SHA256 match before any E05 native inference is considered.",
+  "not_performed": ["no adapter download", "no PTY binary transfer", "no Git LFS or repository publication", "no substitution or promotion"]
+}

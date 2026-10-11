@@ -1,0 +1,10 @@
+{
+  "canonical_bases": 48,
+  "gpu_used": false,
+  "input_prompts": 768,
+  "model_loaded": false,
+  "prompt_sha256": "ac1776d31f8cda9e814e93736787ab9dd958653a1c4a271b923535b5f509ca3e",
+  "status": "PASS_CPU_ONLY_INPUT_FREEZE_VALIDATION",
+  "structural_audit_sha256": "a076f267d212205a0bbaf3cd18d438d26893b1300280df730aa4105ff035fe6c",
+  "target_sidecar_opened": false
+}

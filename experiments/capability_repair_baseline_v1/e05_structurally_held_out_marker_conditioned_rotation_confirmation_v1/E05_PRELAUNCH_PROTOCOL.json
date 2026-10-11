@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "protocol_id": "E05_STRUCTURALLY_HELD_OUT_MARKER_CONDITIONED_ROTATION_CONFIRMATION_V1",
+  "phase": "CPU_ONLY_PREFREEZE_COMPLETE_GPU_NOT_AUTHORIZED",
+  "cohort": {
+    "seed": 20261012,
+    "canonical_bases": 48,
+    "turns_per_canonical_base": 4,
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "MARKER_BINDING_CONTROL",
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "MARKER_CONDITIONED_ROTATION"
+    ],
+    "episodes_per_condition": 192,
+    "total_episodes": 768,
+    "input_prompts_path": "experiments/capability_repair_baseline_v1/e05_structurally_held_out_marker_conditioned_rotation_confirmation_v1/INPUT_PROMPTS.jsonl",
+    "target_sidecar_path": "experiments/capability_repair_baseline_v1/e05_structurally_held_out_marker_conditioned_rotation_confirmation_v1/TARGET_SCORER_SIDECAR.jsonl",
+    "fixed_native_demonstrations": "query-independent and structurally disjoint from the E05 pentomino family"
+  },
+  "future_comparators": ["V7", "E04_E_RUN_003_CONTROL_EQUAL_SLOT", "E04_E_RUN_003_TREATMENT_EQUAL_SLOT"],
+  "future_runtime": {"decoder": "native greedy", "physical_batch_size": 1, "generation_requires_new_director_prelaunch_acceptance": true},
+  "estimands": {
+    "primary": "Treatment minus V7 exact-grid accuracy on marker-conditioned rotation, paired at canonical-base level",
+    "supportive": "Treatment minus Control exact-grid accuracy on marker-conditioned rotation",
+    "bootstrap": {"replicates": 10000, "seed": 20261012, "resampling_unit": "canonical base"}
+  },
+  "future_decision_rules": {
+    "compositional_supported": "primary >= +8/192 and bootstrap lower bound > 0; fixed-turn atomic prerequisite also >= +8/192 and lower bound > 0; marker-binding and no-transform declines no worse than -8/192",
+    "atomic_only": "fixed-turn prerequisite passes but marker-conditioned primary does not",
+    "no_independent_transfer": "primary fails while execution and all identities are valid",
+    "inconclusive": "validity, numerical, or confidence requirements fail",
+    "invalid": "identity, cohort, target-isolation, or parser/scorer binding fails"
+  },
+  "boundaries": ["NO_GPU_IN_THIS_PHASE", "NO_MODEL_LOADING", "NO_GENERATION", "NO_TRAINING", "NO_OPTIMIZER", "NO_BACKWARD", "NO_GOLD", "NO_DGOLD", "NO_FINAL_AUDIT"],
+  "reused_e04_development_evidence": "DESCRIPTIVE_ONLY_NOT_E05_CONFIRMATION"
+}
