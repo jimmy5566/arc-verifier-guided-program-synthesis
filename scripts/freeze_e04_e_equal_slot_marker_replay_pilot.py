@@ -86,6 +86,12 @@ def _validate_director_response() -> None:
         raise FreezeFailure('E04E_E04D_RESULT_RESPONSE_IDENTITY')
 
 def _base_rows() -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    c_manifest = read_json(E04C / 'MANIFEST.json')
+    d_manifest = read_json(E04D / 'MANIFEST.json')
+    if c_manifest.get('training_split_only') is not True or c_manifest.get('validation_rows_read') != 0:
+        raise FreezeFailure('E04E_E04C_TRAIN_ONLY_PROVENANCE')
+    if d_manifest.get('validation_rows_read') != 0 or d_manifest.get('protocol_id') != 'E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1':
+        raise FreezeFailure('E04E_E04D_TRAIN_ONLY_PROVENANCE')
     c_schedule = read_json(E04C / 'schedule_freeze_v1' / 'CONTROL_SCHEDULE.json')
     t_schedule = read_json(E04C / 'schedule_freeze_v1' / 'TREATMENT_SCHEDULE.json')
     control, treatment = c_schedule.get('episodes'), t_schedule.get('episodes')
@@ -203,6 +209,7 @@ def protocol(control_path: Path, treatment_path: Path, account_path: Path, sched
     return {
       'schema_version': 1, 'protocol_id': PROTOCOL, 'status': 'CPU_ONLY_FROZEN_PENDING_DIRECTOR_PRELAUNCH_REVIEW',
       'scientific_basis': {'director_response_path': DIRECTOR_RESPONSE.relative_to(ROOT).as_posix(), 'director_response_sha256': sha_file(DIRECTOR_RESPONSE), 'e04d_result_response_path': E04D_RESULT_RESPONSE.relative_to(ROOT).as_posix(), 'e04d_result_response_sha256': sha_file(E04D_RESULT_RESPONSE)},
+      'source_provenance': {'e04c_control_schedule_path': (E04C / 'schedule_freeze_v1' / 'CONTROL_SCHEDULE.json').relative_to(ROOT).as_posix(), 'e04c_control_schedule_sha256': sha_file(E04C / 'schedule_freeze_v1' / 'CONTROL_SCHEDULE.json'), 'e04c_treatment_schedule_path': (E04C / 'schedule_freeze_v1' / 'TREATMENT_SCHEDULE.json').relative_to(ROOT).as_posix(), 'e04c_treatment_schedule_sha256': sha_file(E04C / 'schedule_freeze_v1' / 'TREATMENT_SCHEDULE.json'), 'e04c_manifest_sha256': sha_file(E04C / 'MANIFEST.json'), 'e04d_cohort_path': (E04D / 'FROZEN_TRAIN_COHORT.jsonl').relative_to(ROOT).as_posix(), 'e04d_cohort_sha256': sha_file(E04D / 'FROZEN_TRAIN_COHORT.jsonl'), 'e04d_manifest_sha256': sha_file(E04D / 'MANIFEST.json')},
       'checkpoint': {'identity': 'CAPABILITY_REPAIR_BASELINE_V1_V7', 'manifest_path': 'experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json', 'manifest_sha256': '1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549', 'independent_fresh_initialization_per_arm': True},
       'arms': {'control': 'identical fixed-turn rotation plus no-transform replay at 192 preserved and 96 matched swap positions', 'treatment': 'identical fixed-turn rotation plus no-transform replay at 192 preserved and marker-binding replay at the same 96 matched swap positions', 'single_intentional_factor': 'equal-weight marker-binding versus no-transform replay at 96 fixed positions'},
       'schedule': {'control_path': control_path.relative_to(ROOT).as_posix(), 'control_sha256': sha_file(control_path), 'treatment_path': treatment_path.relative_to(ROOT).as_posix(), 'treatment_sha256': sha_file(treatment_path), 'accounting_path': account_path.relative_to(ROOT).as_posix(), 'accounting_sha256': sha_file(account_path), 'selection_seed': SEED, 'slots': SLOTS, 'optimizer_steps': SLOTS // STEP_SIZE, 'slots_per_step': STEP_SIZE, 'rotation_slots': ROTATION_SLOTS, 'byte_identical_no_transform_replay_slots': FIXED_REPLAY_SLOTS, 'matched_marker_swap_slots': SWAP_SLOTS, **schedule_meta},

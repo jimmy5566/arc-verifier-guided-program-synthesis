@@ -7,7 +7,7 @@
   "model_loaded": false,
   "optimizer_constructed": false,
   "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
-  "protocol_sha256": "51f7fa3e39fa532a583acc1c6686f4d6f9642132963c3ee7b817dc981cad7b8b",
+  "protocol_sha256": "edd79274cba909455872f19e9abf9741b59860d1a7a940082e8b65ce7c9c3d16",
   "status": "CPU_ONLY_FROZEN_PENDING_DIRECTOR_PRELAUNCH_REVIEW",
   "token_accounting_sha256": "55051e05b54b6fc8cd765017846b5e4abdf30b7333a060bfa91146e39c5f7b21",
   "tokenizer_loaded": false,

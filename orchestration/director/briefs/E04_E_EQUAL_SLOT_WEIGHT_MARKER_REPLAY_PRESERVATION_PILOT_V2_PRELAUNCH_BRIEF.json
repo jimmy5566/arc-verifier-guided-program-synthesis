@@ -28,7 +28,7 @@
     "control_schedule_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/CONTROL_SCHEDULE.json",
     "control_schedule_sha256": "7abe1bdaac52e448b9ed0c3e94057c2d55162130a054690242aa0ee191639022",
     "cpu_validation_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/E04_E_V2_CPU_STATIC_VALIDATION.json",
-    "cpu_validation_sha256": "abdd82a958fd059774187713c9249c8c89c6767f262481969b9ba2980d1e6d85",
+    "cpu_validation_sha256": "83284c055dcc9a2c42e2542b795955803bcc54c63f925299bbc4aac7f04ac601",
     "equal_slot_coefficients": [
       0.25,
       0.25,
@@ -39,7 +39,7 @@
     "matched_marker_replay_swap_slots": 96,
     "optimizer_steps": 96,
     "protocol_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/E04_E_V2_PRELAUNCH_PROTOCOL.json",
-    "protocol_sha256": "51f7fa3e39fa532a583acc1c6686f4d6f9642132963c3ee7b817dc981cad7b8b",
+    "protocol_sha256": "edd79274cba909455872f19e9abf9741b59860d1a7a940082e8b65ce7c9c3d16",
     "slots": 384,
     "slots_per_step": 4,
     "token_accounting_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/TOKEN_ACCOUNTING.json",

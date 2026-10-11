@@ -393,5 +393,15 @@
     "e04d_result_response_path": "orchestration/director/responses/E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1_RUN_002_RESULT_BRIEF_RESPONSE.json",
     "e04d_result_response_sha256": "702bb188c16e01858db743f65ec4f8d987cd9b7a16914f22e79995981669ca69"
   },
+  "source_provenance": {
+    "e04c_control_schedule_path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/schedule_freeze_v1/CONTROL_SCHEDULE.json",
+    "e04c_control_schedule_sha256": "44a926e266979044b92b5ae69d2e64b0485b1e6eaf575d10c0f720804644962d",
+    "e04c_manifest_sha256": "004ff1b20e87fcc2b8be874225478decabbb1c78a79df1baffc4ecb0caa240f3",
+    "e04c_treatment_schedule_path": "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/schedule_freeze_v1/TREATMENT_SCHEDULE.json",
+    "e04c_treatment_schedule_sha256": "f1ac2c68abee17db1a80fd87f35c4ed000beb28f960b8455626296c23ddcf534",
+    "e04d_cohort_path": "experiments/capability_repair_baseline_v1/e04_d_rotation_marker_local_gradient_diagnostic_v1/FROZEN_TRAIN_COHORT.jsonl",
+    "e04d_cohort_sha256": "969b3bbc495b08abf3bdb495b33bc91882c7ec05779b47f18afa0d74582cd972",
+    "e04d_manifest_sha256": "f17777c267592d2287a2dfb6189078887375b9fbe7aa0fe26eeec6f87db79221"
+  },
   "status": "CPU_ONLY_FROZEN_PENDING_DIRECTOR_PRELAUNCH_REVIEW"
 }
