@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "response_type": "DIRECTOR_E05_V3_PAIRED_ARM_CONTRAST_CLOSURE_RESULT_REVIEW_V1_RESPONSE",
+  "reviewed_brief_sha256": "2f85dca49f515ecf174f034635c1c2e5455e12c4bf681087d183a7320dc805f5",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "CPU_ONLY_E01_E05_MECHANISM_EVIDENCE_SYNTHESIS_FOR_E06_SELECTION_V1",
+  "next_action": "Using only already accepted immutable E01-E05 artifacts, prepare one concise CPU-only scientific evidence matrix for Director selection of a single E06 mechanism-guided pilot. For each still-plausible mechanism, distinguish established observations, supported hypotheses, contradictory evidence, and unresolved discriminators; include native Greedy or complete-output evidence, protected-retention evidence, and the minimum prospective evidence needed for a matched control-versus-treatment decision. Preserve E05's INCONCLUSIVE_MIXED_REQUIRED_CONDITIONS conclusion and do not select or implement an intervention, promote a checkpoint, rerun or expand E05, load a model, use GPU, train, infer, generate, compute gradients, open targets, or access Gold, dGold, or FINAL_AUDIT. Return one consolidated Director review brief; do not create additional governance layers or parallel stages.",
+  "closure_validation": {
+    "status": "COMPLETE_VALID_DESCRIPTIVE_ONLY",
+    "brief_sha256_verified": true,
+    "closure_result_sha256_verified": true,
+    "closure_receipt_sha256_verified": true,
+    "paired_contrasts_sha256_verified": true,
+    "canonical_bases_per_condition_comparison": 48,
+    "paired_views_per_condition_comparison": 192,
+    "transition_totals_reconstruct": true,
+    "prospective_conclusion_preserved": "INCONCLUSIVE_MIXED_REQUIRED_CONDITIONS"
+  },
+  "scientific_interpretation": {
+    "evidence_level": "ESTABLISHED_DESCRIPTIVE_DEVELOPMENT_EVIDENCE_ONLY",
+    "treatment_vs_equal_slot_control": "The arms are nearly indistinguishable. In MARKER_BINDING_CONTROL, one of 48 canonical bases shifts one view from dimension-or-cell-count failure to cell-count-preserved noncongruent geometry. In MARKER_CONDITIONED_ROTATION, two bases change residual categories but all aggregate category-share deltas are zero.",
+    "treatment_vs_raw_v7": "Differences are sparse and mixed. MARKER_BINDING_CONTROL reduces exact-input-copy and parser-invalid outcomes but increases dimension-or-cell-count failure; MARKER_CONDITIONED_ROTATION has one additional exact-target share unit alongside small opposing residual-category changes.",
+    "causal_conclusion": "NOT_ESTABLISHED",
+    "checkpoint_promotion": "NOT_SUPPORTED",
+    "intervention_selection": "NOT_SUPPORTED_FROM_THIS_CLOSURE",
+    "independent_generalization": "NOT_ESTABLISHED",
+    "route_disposition": "E05_CLOSED_VALID_BUT_INCONCLUSIVE"
+  },
+  "nonblocking_artifact_note": "The per-base share rows in PAIRED_CONTRASTS_V1 are serialized as readable PowerShell-style strings rather than structured JSON objects. This does not change the verified aggregates, changed-base identities, or complete transition counts and therefore does not invalidate the closure; preserve the immutable artifact and use structured objects prospectively.",
+  "authorization": {
+    "cpu_only_existing_evidence_synthesis": true,
+    "model_loading": false,
+    "gpu_work": false,
+    "training": false,
+    "inference": false,
+    "generation": false,
+    "gradient_work": false,
+    "target_expansion": false,
+    "checkpoint_promotion": false,
+    "intervention_selection_by_controller": false,
+    "gold_dgold_final_audit_access": false
+  },
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

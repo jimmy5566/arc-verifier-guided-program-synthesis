@@ -1,0 +1,14 @@
+{
+  "director_response_sha256": "d7c1d095e249d89357146e1b4c1a47f18a10d92571467daff308244a3c93f997",
+  "final_audit_opened": false,
+  "generation": false,
+  "gpu_used": false,
+  "gradient_work": false,
+  "inference": false,
+  "matrix_sha256": "4008b86af1f2fc2d0c1499b9eb263904890cd63446745d40be162633e51f13e8",
+  "model_loaded": false,
+  "schema_version": 1,
+  "status": "COMPLETE_VALID_DESCRIPTIVE_ONLY",
+  "targets_opened": false,
+  "training": false
+}

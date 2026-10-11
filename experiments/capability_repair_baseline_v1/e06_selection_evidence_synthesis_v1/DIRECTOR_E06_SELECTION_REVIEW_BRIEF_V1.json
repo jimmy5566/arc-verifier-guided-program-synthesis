@@ -1,0 +1,28 @@
+{
+  "allowed_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "boundaries": [
+    "E05_INCONCLUSIVE_MIXED_REQUIRED_CONDITIONS_PRESERVED",
+    "NO_INTERVENTION_SELECTION_BY_CONTROLLER",
+    "NO_MODEL_GPU_TRAINING_INFERENCE_GENERATION_GRADIENTS",
+    "NO_TARGET_EXPANSION",
+    "NO_GOLD_DGOLD_FINAL_AUDIT"
+  ],
+  "brief_type": "DIRECTOR_E06_MECHANISM_GUIDED_PILOT_SELECTION_REVIEW_V1",
+  "director_response_sha256": "d7c1d095e249d89357146e1b4c1a47f18a10d92571467daff308244a3c93f997",
+  "e05_prospective_conclusion_preserved": "INCONCLUSIVE_MIXED_REQUIRED_CONDITIONS",
+  "evidence_matrix_sha256": "4008b86af1f2fc2d0c1499b9eb263904890cd63446745d40be162633e51f13e8",
+  "receipt_sha256": "f1e7fa07dbe5872ae91a00af7051c23c13f11d74a0abcd4f6608abdc4adf20b7",
+  "request": "Select at most one small, falsifiable E06 mechanism-guided pilot for a separately frozen protocol, or stop/revise. Do not authorize execution, model loading, GPU work, training, inference, generation, gradients, target expansion, checkpoint promotion, Gold, dGold, or FINAL_AUDIT from this review.",
+  "required_if_continuing": [
+    "name exactly one mechanism",
+    "state one matched control-versus-treatment factor",
+    "require legitimate synthetic TRAIN and new independent non-Gold structurally disjoint validation",
+    "freeze free-running exact-grid equal-family macro primary outcome, protected retention, and held-out composition gate",
+    "require a separate pre-execution review before any model or GPU work"
+  ]
+}

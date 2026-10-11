@@ -1,0 +1,152 @@
+{
+  "director_response_sha256": "d7c1d095e249d89357146e1b4c1a47f18a10d92571467daff308244a3c93f997",
+  "e05_prospective_conclusion_preserved": "INCONCLUSIVE_MIXED_REQUIRED_CONDITIONS",
+  "e05_route_disposition": "E05_CLOSED_VALID_BUT_INCONCLUSIVE",
+  "matrix": [
+    {
+      "contradictory_or_limiting_evidence": [
+        "The NLL-to-exact gap and oracle candidate reachability are descriptive reused-development evidence, not causal identification of an objective defect.",
+        "Oracle Recall@4 is not deployable rank-one performance and cannot validate target-informed selection."
+      ],
+      "established_observations": [
+        "On the reused 60-episode TARGET_DEV cohort, Family-Balanced teacher-forced NLL was lower for all 60 episodes while Greedy exact grids declined from 9 to 7, with 2 fixes and 4 harms.",
+        "Under frozen Batch1 Beam-4, Family-Balanced has 31/60 oracle Recall@4 versus V7 18/60 while rank-one exact is only 11/60 versus 10/60; equal-family Recall@4 difference is 0.2167 with 95% bootstrap interval [0.0833, 0.35]."
+      ],
+      "mechanism_id": "SEQUENCE_OBJECTIVE_OR_RANK_MISMATCH",
+      "minimum_prospective_evidence": [
+        "one matched control-versus-treatment factor only, exact common starting checkpoint and matched optimizer, updates, token budget, seed policy, decoder, and compute cap",
+        "legitimate synthetic TRAIN only, with a newly frozen independently generated non-Gold validation cohort structurally disjoint from TRAIN and historically exposed cohorts",
+        "target-blind generation or prediction freeze before exact-grid scoring; Gold, dGold, and FINAL_AUDIT remain sealed",
+        "free-running exact-grid equal-family macro primary estimand with paired family-stratified uncertainty, a protected-retention non-inferiority gate, and held-out compositional transfer as mandatory outcomes",
+        "predeclared SUCCESS, FAILURE, INCONCLUSIVE, and INVALID_NOT_INTERPRETABLE rules; no validation-driven adaptation or checkpoint promotion"
+      ],
+      "status": "STILL_PLAUSIBLE_HIGH_INFORMATION",
+      "supported_hypothesis": "Token-level teacher-forced fitting may leave correct complete sequences insufficiently preferred at rank one.",
+      "unresolved_discriminator": "Does a predeclared sequence-level objective improve free-running rank-one exact grids over a matched final-query CE control on a newly generated, disjoint compositional validation cohort while retaining protected capabilities?"
+    },
+    {
+      "contradictory_or_limiting_evidence": [
+        "Positive start-state alignment does not establish alignment later in training or across all families.",
+        "No stable global gradient-interference conclusion follows from the E03 envelope."
+      ],
+      "established_observations": [
+        "At exact V7 start on the frozen E04 rotation-marker contrast, all 48 measured matched gradient cosines were positive; mean cosine was 0.8518 and bootstrap interval [0.8428, 0.8597].",
+        "The E03 repeatability sensitivity result preserves E03 as INCONCLUSIVE_REPEATABILITY_GATE_FAILED; its post-hoc positive lower bounds are TRAIN-only sensitivity evidence."
+      ],
+      "mechanism_id": "START_STATE_GRADIENT_ANTAGONISM",
+      "minimum_prospective_evidence": [
+        "If ever reconsidered, first pass a prospectively specified repeatability gate and connect the trajectory measure to the same matched free-running exact-grid and retention endpoints."
+      ],
+      "status": "DEPRIORITIZED_NOT_EXCLUDED_GLOBALLY",
+      "supported_hypothesis": "Start-state local rotation-marker antagonism is not supported as the primary explanation for the observed E04 regression.",
+      "unresolved_discriminator": "Only a separately justified trajectory-resolved, repeatable gradient study could test later-training interference; it is not the preferred E06 training factor from current evidence."
+    },
+    {
+      "contradictory_or_limiting_evidence": [
+        "Equal-slot Treatment-minus-Control is nearly indistinguishable in frozen E05 pairing, so this evidence does not establish replay as the causal remedy.",
+        "Marker-binding equality at floor is not preservation evidence."
+      ],
+      "established_observations": [
+        "E05 RUN_004 native-Greedy exact scoring found Treatment and equal-slot Control identical on fixed-turn rotation, marker-conditioned rotation, and marker binding; all three checkpoints were 0/192 on marker binding.",
+        "Treatment was down 8/192 on no-transform retention versus V7, with paired interval [-13, -3]; the existing E05 route is valid but inconclusive and checkpoint promotion is rejected."
+      ],
+      "mechanism_id": "EXPLICIT_REPLAY_PROTECTION_OR_ALLOCATION",
+      "minimum_prospective_evidence": [
+        "one matched control-versus-treatment factor only, exact common starting checkpoint and matched optimizer, updates, token budget, seed policy, decoder, and compute cap",
+        "legitimate synthetic TRAIN only, with a newly frozen independently generated non-Gold validation cohort structurally disjoint from TRAIN and historically exposed cohorts",
+        "target-blind generation or prediction freeze before exact-grid scoring; Gold, dGold, and FINAL_AUDIT remain sealed",
+        "free-running exact-grid equal-family macro primary estimand with paired family-stratified uncertainty, a protected-retention non-inferiority gate, and held-out compositional transfer as mandatory outcomes",
+        "predeclared SUCCESS, FAILURE, INCONCLUSIVE, and INVALID_NOT_INTERPRETABLE rules; no validation-driven adaptation or checkpoint promotion"
+      ],
+      "status": "PLAUSIBLE_BUT_NO_TRANSFER_SUCCESS",
+      "supported_hypothesis": "The earlier replay effect, if any, was distribution-specific or noncompositional rather than a robust marker-conditioned repair.",
+      "unresolved_discriminator": "Can a distinct replay/allocation treatment produce an independently replicated exact-grid gain without protected-retention harm on a new structurally disjoint cohort?"
+    },
+    {
+      "contradictory_or_limiting_evidence": [
+        "Raw V7 and equal-slot Control show the same broad condition split, so the morphology does not identify a Treatment-specific causal mechanism.",
+        "The results are reused synthetic development evidence only."
+      ],
+      "established_observations": [
+        "E05 V2 residual morphology is condition-specific: Treatment dimension-or-cell-count failure dominates marker-binding control, while foreground-geometry color-only error dominates marker-conditioned rotation.",
+        "The frozen cross-condition conclusion is INCONCLUSIVE_MIXED_REQUIRED_CONDITIONS and E05 paired closure did not establish treatment specificity."
+      ],
+      "mechanism_id": "MARKER_GROUNDING_OR_STRUCTURAL_REPRESENTATION",
+      "minimum_prospective_evidence": [
+        "one matched control-versus-treatment factor only, exact common starting checkpoint and matched optimizer, updates, token budget, seed policy, decoder, and compute cap",
+        "legitimate synthetic TRAIN only, with a newly frozen independently generated non-Gold validation cohort structurally disjoint from TRAIN and historically exposed cohorts",
+        "target-blind generation or prediction freeze before exact-grid scoring; Gold, dGold, and FINAL_AUDIT remain sealed",
+        "free-running exact-grid equal-family macro primary estimand with paired family-stratified uncertainty, a protected-retention non-inferiority gate, and held-out compositional transfer as mandatory outcomes",
+        "predeclared SUCCESS, FAILURE, INCONCLUSIVE, and INVALID_NOT_INTERPRETABLE rules; no validation-driven adaptation or checkpoint promotion"
+      ],
+      "status": "STILL_PLAUSIBLE",
+      "supported_hypothesis": "The failure may reflect marker grounding, structural representation, or composition rather than a single replay deficit.",
+      "unresolved_discriminator": "A single representation-focused treatment must separately test marker grounding, transformation execution, and their held-out composition against a matched control, rather than infer cause from residual morphology."
+    },
+    {
+      "contradictory_or_limiting_evidence": [
+        "Candidate reachability does not identify how training created it and cannot authorize a selector trained or tuned on scored TARGET_DEV candidates.",
+        "The historical selector route is not an E06 intervention choice and remains outside this synthesis."
+      ],
+      "established_observations": [
+        "The frozen Beam-4 result shows a large correct-candidate reachability advantage for Family-Balanced, but not an equivalent rank-one advantage.",
+        "The native CPU scorer establishes that frozen Greedy exact-grid and frozen-branch alternate coverage are distinct, target-blind definitions."
+      ],
+      "mechanism_id": "DECODING_OR_CANDIDATE_SELECTION",
+      "minimum_prospective_evidence": [
+        "Freeze selector features and thresholds before candidate generation and target scoring, use a disjoint non-Gold cohort, and require a positive paired rank-one gain with no protected-family regression."
+      ],
+      "status": "SUPPORTED_REACHABILITY_NOT_A_TRAINING_MECHANISM",
+      "supported_hypothesis": "A target-blind selection or sequence-rank intervention could be a relevant discriminator of rank-one failure.",
+      "unresolved_discriminator": "Does a frozen target-blind rule improve rank-one exact grid on a disjoint cohort without target-derived features or protected-family harm?"
+    },
+    {
+      "contradictory_or_limiting_evidence": [
+        "Existing cohorts are reused synthetic development evidence and cannot estimate independent ARC transfer.",
+        "The evidence does not identify whether any failure is data coverage, objective, optimization, decoding, or representation."
+      ],
+      "established_observations": [
+        "E05 valid native-Greedy evidence did not confirm transfer of the reused E04 effect to marker-conditioned rotation and showed a no-transform retention cost.",
+        "No accepted result establishes independent ARC generalization; FINAL_AUDIT remains sealed."
+      ],
+      "mechanism_id": "COMPOSITIONAL_TRANSFER_LIMITATION",
+      "minimum_prospective_evidence": [
+        "one matched control-versus-treatment factor only, exact common starting checkpoint and matched optimizer, updates, token budget, seed policy, decoder, and compute cap",
+        "legitimate synthetic TRAIN only, with a newly frozen independently generated non-Gold validation cohort structurally disjoint from TRAIN and historically exposed cohorts",
+        "target-blind generation or prediction freeze before exact-grid scoring; Gold, dGold, and FINAL_AUDIT remain sealed",
+        "free-running exact-grid equal-family macro primary estimand with paired family-stratified uncertainty, a protected-retention non-inferiority gate, and held-out compositional transfer as mandatory outcomes",
+        "predeclared SUCCESS, FAILURE, INCONCLUSIVE, and INVALID_NOT_INTERPRETABLE rules; no validation-driven adaptation or checkpoint promotion"
+      ],
+      "status": "STILL_PLAUSIBLE_AND_MANDATORY_TO_TEST",
+      "supported_hypothesis": "Atomic or prompt-structure improvements may fail to transfer to held-out compositions.",
+      "unresolved_discriminator": "Does a matched treatment improve a predeclared held-out compositional validation condition while retaining atomic and protected outcomes?"
+    }
+  ],
+  "prohibitions_observed": {
+    "final_audit_opened": false,
+    "generation": false,
+    "gpu_used": false,
+    "gradient_work": false,
+    "inference": false,
+    "model_loaded": false,
+    "targets_opened": false,
+    "training": false
+  },
+  "schema_version": 1,
+  "selection_boundary": "This matrix is evidence for Director selection of at most one future E06 mechanism-guided pilot. It selects no intervention, changes no scientific condition, and creates no training, GPU, model, inference, generation, gradient, target, Gold, dGold, or FINAL_AUDIT authorization.",
+  "source_sha256": {
+    "beam4_candidate_recall": "4400c04877b4c6590b5bacc15928777dfcfb74308637081a73872712742af7d8",
+    "beam4_director_interpretation": "425dccbf9f1176be7ad9dfd4363029039b04089faf7e4810f8416fdaa8ab1291",
+    "e01_measurement_status": "3a9f378aed8090824fe1cd8412d24ab4db316710bfa4d35abb73fa863e082667",
+    "e02_nll_exact_alignment": "d97a48a0d1819aa979fa456df33a577e211edfcdc0dd7eca16db395dc9b2415e",
+    "e03_repeatability_sensitivity": "b387af248f6265989039b608f7a8eca90cd0902ab598711eef2422d45ec80c3e",
+    "e04_local_gradient_result": "702bb188c16e01858db743f65ec4f8d987cd9b7a16914f22e79995981669ca69",
+    "e04_native_greedy_b1": "89dfd3cb4ec41ca5181aa99531b33cf430afe371d03490d9a94283729e9c6e37",
+    "e05_native_greedy": "0981ecf48a87f864c6c71eaa530a1993f41bc27ddd7b27c48001c06d7d220181",
+    "e05_nonoracle_result": "77812589096a84f048bcec9605d8b0c3e7bb74b9c619259048154dd98f6f0fba",
+    "e05_paired_closure": "41b51e1668a70aca86a2ccb87fbadc9eeaf46f1db92b608e8c70f188c429af0e",
+    "e05_paired_contrasts": "baeb031af817d02e8d4d1f8b581feca7b7ae98896a24606cfd05dd593cc7b9cf"
+  },
+  "stage": "CPU_ONLY_E01_E05_MECHANISM_EVIDENCE_SYNTHESIS_FOR_E06_SELECTION_V1",
+  "status": "COMPLETE_VALID_DESCRIPTIVE_ONLY"
+}
