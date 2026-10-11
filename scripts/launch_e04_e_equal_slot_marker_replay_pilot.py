@@ -41,8 +41,20 @@ pid=$!
 printf '{{"protocol_id":"%s","launch_commit":"%s","worker_source_commit":"%s","binding_sha256":"%s","remote_pid":%s,"output_root":"%s","nonce":"%s","expected_terminal_receipt":"%s/TERMINAL_RECEIPT.json","gpu_total_mib":%s,"gpu_free_mib":%s,"gh_token_present":true}}\\n' "{b['protocol_id']}" "{source}" "{b['worker_source_commit']}" "{binding_sha}" "$pid" "{out}" "{b['nonce']}" "{out}" "$gpu_total" "$gpu_free" > "{lock}/LAUNCH_RECEIPT.json"
 cat "{lock}/LAUNCH_RECEIPT.json"'''
 def main():
- p=argparse.ArgumentParser();p.add_argument('--binding',type=Path,required=True);p.add_argument('--binding-commit',required=True);p.add_argument('--ssh-target');p.add_argument('--launch',action='store_true');a=p.parse_args();b=json.loads(a.binding.read_text());rel=a.binding.resolve().relative_to(ROOT).as_posix();cmd=remote_script(b,a.binding_commit,rel,sha(a.binding))
+ p=argparse.ArgumentParser();p.add_argument('--binding',type=Path,required=True);p.add_argument('--binding-commit',required=True);p.add_argument('--ssh-target');p.add_argument('--launch',action='store_true');p.add_argument('--remote-exec',action='store_true');a=p.parse_args()
+ b=json.loads(a.binding.read_text());rel=a.binding.resolve().relative_to(ROOT).as_posix();cmd=remote_script(b,a.binding_commit,rel,sha(a.binding))
+ if a.remote_exec:
+  subprocess.run(['bash','-c',cmd],check=True);return
  if not a.launch:print(cmd);return
  if not a.ssh_target:raise SystemExit('SSH_TARGET_REQUIRED_FOR_COMMAND_CONTROL')
- print(forced_pty_shell(a.ssh_target,cmd))
+ # The forced-PTY gateway is reliable for a compact bootstrap only.  The full
+ # launch contract then runs from the exact Git checkout on RunPod.
+ bootstrap=f'''set -euo pipefail
+repo=/root/arc-runtime-3090-gpu-benchmark-v1/arc2
+cd "$repo"
+git fetch origin {BRANCH}
+git checkout --detach {a.binding_commit}
+python3 {Path(__file__).resolve().relative_to(ROOT).as_posix()} --binding {rel} --binding-commit {a.binding_commit} --remote-exec
+'''
+ print(forced_pty_shell(a.ssh_target,bootstrap))
 if __name__=='__main__':main()
