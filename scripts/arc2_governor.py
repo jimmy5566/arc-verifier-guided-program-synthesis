@@ -100,9 +100,32 @@ class _NullLock:
 
 def action_sha256(state):
     """Identity of one Controller handoff, without volatile timestamps."""
+    # A Controller needs the *current* state after it receives a handoff.  Its
+    # delivery identity must therefore bind the requested Controller action,
+    # rather than changing whenever telemetry or a launch record is enriched.
+    # Including remote_job used to turn ordinary receipt/metadata writes into
+    # fresh semantic actions and could queue multiple prompts for one stage.
+    material={key:state.get(key) for key in ('disposition','stage','next_action','review_brief',
+             'review_brief_sha256','review_reason')}
+    return hashlib.sha256(json.dumps(material,sort_keys=True,separators=(',',':'),default=str).encode('utf-8')).hexdigest()
+
+def legacy_action_sha256(state):
+    """Read-only compatibility identity for pre-token-budget dispatches.
+
+    This prevents a Governor upgrade itself from becoming a new Controller
+    action merely because earlier releases included mutable remote telemetry.
+    It is accepted only for an already-recorded dispatch and is never emitted
+    for a new prompt.
+    """
     material={key:state.get(key) for key in ('disposition','stage','next_action','review_brief',
              'review_brief_sha256','remote_job','active_remote_job','authorized_continuation')}
     return hashlib.sha256(json.dumps(material,sort_keys=True,separators=(',',':'),default=str).encode('utf-8')).hexdigest()
+
+def dispatch_matches_action(dispatch, state, action_id=None):
+    if not isinstance(dispatch,dict): return False
+    requested=action_id or action_sha256(state)
+    recorded=dispatch.get('action_sha256')
+    return recorded == requested or recorded == legacy_action_sha256(state)
 
 class GovernorLock:
     """A process-lifetime, non-blocking lock; one Governor may own a state file."""
@@ -221,8 +244,10 @@ def resolve_controller_target(state, path):
     if not selected:
         raise RuntimeError('CONTROLLER_TARGET_UNRESOLVED')
     target=selected[0]['pane_id']
-    state.update({'controller_target':target,'controller_target_source':'HERDR_LIVE_PANE_RESOLUTION','updated_at':now()})
-    atomic(path,state); log(state,f'controller target resolved={target}')
+    # Resolution is observation only.  Do not write the workflow merely to
+    # report a target: that previously created a state-revision race on every
+    # daemon pass.  The target is bound when a new dispatch intent is written.
+    log(state,f'controller target resolved={target}')
     return target
 def controller_turn_is_active(target):
     """Return whether the selected Controller is already executing a turn.
@@ -272,22 +297,73 @@ def archive_superseded_dispatch(state, previous, action_id):
     history=list(state.get('controller_dispatch_history') or [])
     history.append(item); state['controller_dispatch_history']=history[-16:]
 
+def controller_dispatch_receipt_path(path, action_id):
+    return Path(path).parent/'controller_dispatch_receipts'/f'{action_id}.json'
+
+def write_controller_dispatch_receipt(path, action_id, payload):
+    """Keep the delivery outcome outside the mutable workflow snapshot.
+
+    A delivery acknowledgement is control evidence.  If an older external
+    workflow writer later replaces the state, the next Governor cycle can
+    restore this evidence without sending a second prompt.
+    """
+    receipt=controller_dispatch_receipt_path(path,action_id)
+    receipt.parent.mkdir(parents=True,exist_ok=True)
+    current={}
+    if receipt.exists():
+        try: current=json.loads(receipt.read_text(encoding='utf-8-sig'))
+        except (OSError,json.JSONDecodeError):
+            raise RuntimeError('CONTROLLER_DISPATCH_RECEIPT_UNREADABLE')
+    if current.get('action_sha256') not in {None,action_id}:
+        raise RuntimeError('CONTROLLER_DISPATCH_RECEIPT_IDENTITY_MISMATCH')
+    current.update(payload)
+    current['action_sha256']=action_id
+    atomic(receipt,current)
+    return current
+
+def reconcile_controller_delivery(state, path):
+    """Restore a recorded delivery acknowledgement exactly once, with no prompt."""
+    dispatch=state.get('controller_dispatch')
+    if not isinstance(dispatch,dict): return state,False
+    action_id=dispatch.get('action_sha256')
+    if not action_id or not dispatch_matches_action(dispatch,state): return state,False
+    receipt=controller_dispatch_receipt_path(path,action_id)
+    if not receipt.exists(): return state,False
+    try: recorded=json.loads(receipt.read_text(encoding='utf-8-sig'))
+    except (OSError,json.JSONDecodeError):
+        raise RuntimeError('CONTROLLER_DISPATCH_RECEIPT_UNREADABLE')
+    status=recorded.get('status')
+    if status not in {'DELIVERED','UNKNOWN_DELIVERY','NOT_DELIVERED'}:
+        return state,False
+    if dispatch.get('status') == status and dispatch.get('delivery_detail') == recorded.get('delivery_detail'):
+        return state,False
+    restored=dict(dispatch)
+    restored.update({'status':status,'delivery_detail':recorded.get('delivery_detail'),
+                     'delivery_recorded_at':recorded.get('delivery_recorded_at')})
+    if status == 'DELIVERED': restored['delivery_acknowledged_at']=recorded.get('delivery_acknowledged_at')
+    state.update({'controller_dispatch':restored,'updated_at':now()})
+    atomic(path,state)
+    log(state,f'controller action={action_id[:12]} delivery restored from durable receipt')
+    return load(path),True
+
 def persist_delivery_outcome(path, action_id, delivery, detail):
     """Reload before recording delivery so a Controller transition wins races."""
+    recorded={'status':delivery,'delivery_detail':detail,'delivery_recorded_at':now()}
+    if delivery == 'DELIVERED': recorded['delivery_acknowledged_at']=now()
+    write_controller_dispatch_receipt(path,action_id,recorded)
     current=load(path)
     if action_sha256(current) != action_id:
         return 'CONTROLLER_STATE_CHANGED'
     dispatch=current.get('controller_dispatch')
     if not isinstance(dispatch,dict) or dispatch.get('action_sha256') != action_id:
         return 'CONTROLLER_STATE_CHANGED'
-    dispatch.update({'status':delivery,'delivery_detail':detail,'delivery_recorded_at':now()})
-    if delivery == 'DELIVERED': dispatch['delivery_acknowledged_at']=now()
+    dispatch.update(recorded)
     current.update({'controller_dispatch':dispatch,'updated_at':now()})
     atomic(path,current)
     return 'CONTROLLER_PROMPTED' if delivery == 'DELIVERED' else ('CONTROLLER_DELIVERY_UNKNOWN' if delivery == 'UNKNOWN_DELIVERY' else 'CONTROLLER_NOT_DELIVERED')
 
 def controller(s,p,timeout,retry_seconds=300):
-    s.update({'last_actor':'governor','updated_at':now()}); atomic(p,s)
+    s,_=reconcile_controller_delivery(s,p)
     target=resolve_controller_target(s,p)
     if controller_turn_is_active(target):
         # The Controller can atomically advance state while this scheduler is
@@ -305,29 +381,31 @@ def controller(s,p,timeout,retry_seconds=300):
             # An active pane is observation evidence, never permission to
             # erase the semantic action which may already be delivered.
             if isinstance(dispatch,dict):
-                dispatch=dict(dispatch); dispatch['active_observed_at']=now()
-                if dispatch.get('status') == 'DELIVERED': dispatch['status']='RUNNING'; dispatch['running_observed_at']=now()
-                current['controller_dispatch']=dispatch
-            else:
-                current['controller_activity']={'status':'ACTIVE_CONTROLLER_TURN_NO_REPROMPT','observed_at':now(),'target':current_target}
-            current['updated_at']=now()
-            atomic(p,current); log(current,f'controller target={current_target} remains active; no self-prompt')
+                if dispatch.get('status') == 'DELIVERED':
+                    dispatch=dict(dispatch); dispatch['status']='RUNNING'; dispatch['running_observed_at']=now()
+                    current['controller_dispatch']=dispatch; current['updated_at']=now()
+                    atomic(p,current)
+            # A busy Controller is an observation, not a new durable workflow
+            # event.  Do not churn revisions or emit another prompt.
+            log(current,f'controller target={current_target} remains active; no self-prompt')
             return 'CONTROLLER_ACTIVE'
         s,target=current,current_target
     key=action_sha256(s)
     previous=s.get('controller_dispatch')
-    if isinstance(previous,dict) and previous.get('action_sha256') == key:
+    if dispatch_matches_action(previous,s,key):
         status=previous.get('status')
         # Semantic identity, not elapsed time, provides at-most-once delivery.
         if status in {'INTENT_RECORDED','DELIVERED','ACKNOWLEDGED','RUNNING','UNKNOWN_DELIVERY'}:
             log(s,f'controller action={key[:12]} already {status}; no automatic redispatch')
-            return 'CONTROLLER_DELIVERY_UNKNOWN' if status in {'INTENT_RECORDED','UNKNOWN_DELIVERY'} else 'CONTROLLER_ALREADY_DISPATCHED'
+            return 'CONTROLLER_INTENT_PENDING' if status == 'INTENT_RECORDED' else ('CONTROLLER_DELIVERY_UNKNOWN' if status == 'UNKNOWN_DELIVERY' else 'CONTROLLER_ALREADY_DISPATCHED')
     archive_superseded_dispatch(s,previous,key)
-    s.update({'controller_dispatch':{'status':'INTENT_RECORDED','action_sha256':key,
+    intent={'status':'INTENT_RECORDED','action_sha256':key,
                                      'intent_recorded_at':now(),'target':target,
-                                     'delivery_attempt':int(previous.get('delivery_attempt',0) if isinstance(previous,dict) else 0)+1},
-              'updated_at':now()})
+                                     'delivery_attempt':int(previous.get('delivery_attempt',0) if isinstance(previous,dict) else 0)+1}
+    s.update({'controller_dispatch':intent,'controller_target':target,
+              'controller_target_source':'HERDR_LIVE_PANE_RESOLUTION','last_actor':'governor','updated_at':now()})
     atomic(p,s)
+    write_controller_dispatch_receipt(p,key,dict(intent))
     outcome=prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}, AGENTS.md, and orchestration/agents/ARC_CONTROLLER_SYSTEM.md; execute next_action as far as scientifically valid. '
            'Repair routine infrastructure autonomously with bounded CPU-only checks when frozen science is unchanged. Preserve failed runs and never reuse a consumed one-shot authorization. '
            'Escalate only a scientific, security, asset-identity, sealed-data, budget, or fresh execution-authorization blocker by freezing one concise brief and setting REVIEW_REQUIRED; never prompt Director directly. '
@@ -808,10 +886,12 @@ def status_line(result, state):
     label = f"{colour}[ARC2 {disposition}]\x1b[0m"
     return f"{stamp} {label} result={result}{detail}"
 
-def delay_for(result,state,*,paused_seconds,idle_seconds):
+def delay_for(result,state,*,paused_seconds,idle_seconds,controller_retry_seconds=300):
     if result == 'TERMINAL': return None
     if result == 'PAUSED': return paused_seconds
     if result in {'CONTROLLER_ACTIVE','CONTROLLER_COOLDOWN','CONTROLLER_PROMPT_FAILED'}: return idle_seconds
+    if result in {'CONTROLLER_INTENT_PENDING','CONTROLLER_DELIVERY_UNKNOWN','CONTROLLER_ALREADY_DISPATCHED','CONTROLLER_PROMPTED'}:
+        return controller_retry_seconds
     if result == 'REMOTE_PENDING': return poll_seconds(state.get('remote_job') or state.get('active_remote_job') or {})
     return 2
 
@@ -839,7 +919,8 @@ def main():
             write_service_state(a.service_state,status=result,workflow_state=s)
             print(status_line(result, s), flush=True)
             if a.once or result == 'TERMINAL' or not a.daemon: return 0
-            time.sleep(delay_for(result,s,paused_seconds=a.paused_seconds,idle_seconds=a.idle_seconds))
+            time.sleep(delay_for(result,s,paused_seconds=a.paused_seconds,idle_seconds=a.idle_seconds,
+                                 controller_retry_seconds=a.controller_retry_seconds))
     except Exception as exc:
         try: write_service_state(a.service_state,status='ERROR',workflow_state=load(a.state),detail=f'{type(exc).__name__}:{exc}')
         except Exception: pass

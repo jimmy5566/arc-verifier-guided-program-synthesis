@@ -65,6 +65,52 @@ class GovernorIdempotencyTests(unittest.TestCase):
             self.assertEqual(sent.call_count, 1)
             self.assertEqual(governor.load(path)["controller_dispatch"]["status"], "UNKNOWN_DELIVERY")
 
+    def test_intent_pending_is_never_reprompted_and_uses_long_backoff(self):
+        with tempfile.TemporaryDirectory() as raw:
+            path = self.state(Path(raw))
+            with mock.patch.object(governor, "resolve_controller_target", return_value="pane"), mock.patch.object(governor, "controller_turn_is_active", return_value=False), mock.patch.object(governor, "prompt", return_value=("DELIVERED", "test")) as prompt:
+                governor.controller(governor.load(path), path, 1)
+                # Simulate a stale external state write which lost the outcome
+                # but retained the immutable dispatch intent.
+                stale = governor.load(path)
+                stale["controller_dispatch"].pop("delivery_detail", None)
+                stale["controller_dispatch"].pop("delivery_recorded_at", None)
+                stale["controller_dispatch"].pop("delivery_acknowledged_at", None)
+                stale["controller_dispatch"]["status"] = "INTENT_RECORDED"
+                governor.atomic(path, stale)
+                self.assertEqual("CONTROLLER_ALREADY_DISPATCHED", governor.controller(governor.load(path), path, 1))
+            self.assertEqual(prompt.call_count, 1)
+            self.assertEqual("DELIVERED", governor.load(path)["controller_dispatch"]["status"])
+            self.assertEqual(300, governor.delay_for("CONTROLLER_INTENT_PENDING", governor.load(path), paused_seconds=15, idle_seconds=15))
+
+    def test_remote_telemetry_change_does_not_create_new_controller_action(self):
+        base = {"disposition": "CONTINUE_CONTROLLER", "stage": "S", "next_action": "PROCESS_REMOTE_RECEIPT",
+                "remote_job": {"pid": 1, "status": "RUNNING"}, "authorized_continuation": {"seen": 1}}
+        changed = dict(base)
+        changed["remote_job"] = {"pid": 1, "status": "COMPLETE", "receipt": "x"}
+        changed["authorized_continuation"] = {"seen": 2}
+        self.assertEqual(governor.action_sha256(base), governor.action_sha256(changed))
+
+    def test_upgrade_preserves_pre_fix_dispatch_without_reprompt(self):
+        with tempfile.TemporaryDirectory() as raw:
+            state = {"disposition": "CONTINUE_CONTROLLER", "stage": "S", "next_action": "PROCESS_REMOTE_RECEIPT",
+                     "remote_job": {"pid": 1}, "active_remote_job": {"pid": 1}, "authorized_continuation": {"seen": 1}}
+            state["controller_dispatch"] = {"status": "INTENT_RECORDED", "action_sha256": governor.legacy_action_sha256(state), "target": "pane"}
+            path = Path(raw) / "ARC2_WORKFLOW_STATE.json"; governor.atomic(path, state)
+            with mock.patch.object(governor, "resolve_controller_target", return_value="pane"), mock.patch.object(governor, "controller_turn_is_active", return_value=False), mock.patch.object(governor, "prompt") as prompt:
+                self.assertEqual("CONTROLLER_INTENT_PENDING", governor.controller(governor.load(path), path, 1))
+            prompt.assert_not_called()
+
+    def test_busy_controller_does_not_churn_state_revision(self):
+        with tempfile.TemporaryDirectory() as raw:
+            path = self.state(Path(raw), controller_dispatch={"status": "RUNNING", "action_sha256": "prior", "target": "pane"})
+            before = governor.load(path)["state_revision"]
+            with mock.patch.object(governor, "resolve_controller_target", return_value="pane"), mock.patch.object(governor, "controller_turn_is_active", return_value=True), mock.patch.object(governor, "prompt") as prompt:
+                governor.controller(governor.load(path), path, 1)
+                governor.controller(governor.load(path), path, 1)
+            self.assertEqual(before, governor.load(path)["state_revision"])
+            prompt.assert_not_called()
+
     def test_new_controller_stage_gets_one_new_dispatch(self):
         with tempfile.TemporaryDirectory() as raw:
             path = self.state(Path(raw)); patches = self.controller_mocks()
