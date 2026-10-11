@@ -1,0 +1,69 @@
+{
+  "arm": "CONTROL_EQUAL_SLOT",
+  "cuda_memory_after_model_load": {
+    "allocated_bytes": 7865943552,
+    "peak_allocated_bytes": 7865943552,
+    "peak_reserved_bytes": 8447328256,
+    "reserved_bytes": 8447328256,
+    "status": "OBSERVED"
+  },
+  "cuda_memory_after_step": {
+    "allocated_bytes": 8448398336,
+    "peak_allocated_bytes": 13012467200,
+    "peak_reserved_bytes": 13316915200,
+    "reserved_bytes": 13316915200,
+    "status": "OBSERVED"
+  },
+  "cuda_memory_per_slot": [
+    {
+      "cuda_memory": {
+        "allocated_bytes": 8454343168,
+        "peak_allocated_bytes": 13012467200,
+        "peak_reserved_bytes": 13316915200,
+        "reserved_bytes": 13316915200,
+        "status": "OBSERVED"
+      },
+      "slot": 380,
+      "supervised_token_count": 75
+    },
+    {
+      "cuda_memory": {
+        "allocated_bytes": 8454343168,
+        "peak_allocated_bytes": 13012467200,
+        "peak_reserved_bytes": 13316915200,
+        "reserved_bytes": 13316915200,
+        "status": "OBSERVED"
+      },
+      "slot": 381,
+      "supervised_token_count": 75
+    },
+    {
+      "cuda_memory": {
+        "allocated_bytes": 8454343168,
+        "peak_allocated_bytes": 13012467200,
+        "peak_reserved_bytes": 13316915200,
+        "reserved_bytes": 13316915200,
+        "status": "OBSERVED"
+      },
+      "slot": 382,
+      "supervised_token_count": 75
+    },
+    {
+      "cuda_memory": {
+        "allocated_bytes": 8454343168,
+        "peak_allocated_bytes": 13012467200,
+        "peak_reserved_bytes": 13316915200,
+        "reserved_bytes": 13316915200,
+        "status": "OBSERVED"
+      },
+      "slot": 383,
+      "supervised_token_count": 75
+    }
+  ],
+  "loss_normalization": "four_independent_slot_means_times_0.25",
+  "optimizer_steps": 96,
+  "processed_tokens": 207360,
+  "status": "RUNNING",
+  "supervised_tokens": 28800,
+  "target_sidecar_accessed": false
+}

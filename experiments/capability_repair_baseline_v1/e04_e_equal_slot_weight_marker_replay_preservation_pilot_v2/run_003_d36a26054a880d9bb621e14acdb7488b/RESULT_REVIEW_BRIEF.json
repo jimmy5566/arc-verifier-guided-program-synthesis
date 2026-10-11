@@ -1,0 +1,67 @@
+{
+  "boundary_statement": "Raw target-blind generations were frozen and hash-verified before the scorer accessed the sealed target sidecar. Gold, dGold, and FINAL_AUDIT were not opened.",
+  "classification": "MARKER_PRESERVATION_GAIN",
+  "frozen_rule_evidence": {
+    "marker_protection_vs_v7": {
+      "accuracy_delta": 0.0,
+      "ci95_high": 0.03125,
+      "ci95_low": -0.036458333333333336,
+      "episode_delta": 0.0
+    },
+    "no_transform_retention_vs_v7": {
+      "accuracy_delta": 0.24479166666666666,
+      "ci95_high": 0.3645833333333333,
+      "ci95_low": 0.13020833333333334,
+      "episode_delta": 47.0
+    },
+    "primary_success": {
+      "accuracy_delta": 0.3229166666666667,
+      "ci95_high": 0.3697916666666667,
+      "ci95_low": 0.28125,
+      "episode_delta": 62.0
+    },
+    "rotation_efficacy_vs_v7": {
+      "accuracy_delta": 0.3229166666666667,
+      "ci95_high": 0.4375,
+      "ci95_low": 0.21354166666666666,
+      "episode_delta": 62.0
+    },
+    "rotation_noninferiority_vs_control": {
+      "accuracy_delta": 0.052083333333333336,
+      "ci95_high": 0.140625,
+      "ci95_low": -0.036458333333333336,
+      "episode_delta": 10.0
+    }
+  },
+  "primary_result": {
+    "accuracy_delta": 0.3229166666666667,
+    "bootstrap_95_ci": [
+      0.28125,
+      0.3697916666666667
+    ],
+    "episode_delta_of_192": 62.0,
+    "estimand": "treatment minus control marker-binding native-Greedy exact-grid accuracy, paired by canonical base"
+  },
+  "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+  "request": "Review the valid frozen E04-E RUN_003 result. No further GPU launch, replay expansion, checkpoint promotion, or follow-on training is requested or authorized by this brief.",
+  "result_package_path": "RESULT_PACKAGE.json",
+  "result_package_sha256": "ee31dae698e37632ed00957639691d0206cf712b82d58b6fd784af7dad2d40a9",
+  "review_type": "E04_E_V2_RUN_003_RESULT_REVIEW",
+  "run_id": "RUN_003_d36a26054a880d9bb621e14acdb7488b",
+  "schema_version": 1,
+  "scope": "REUSED_E04_DEVELOPMENT_COHORT_NOT_INDEPENDENT_ARC_GENERALIZATION_CONFIRMATION",
+  "verified_execution": {
+    "final_audit_opened": false,
+    "optimizer_steps_by_arm": {
+      "CONTROL_EQUAL_SLOT": 96,
+      "TREATMENT_EQUAL_SLOT": 96
+    },
+    "parameter_updates_by_arm": {
+      "CONTROL_EQUAL_SLOT": 96,
+      "TREATMENT_EQUAL_SLOT": 96
+    },
+    "parent_status": "COMPLETE_PENDING_CPU_SCORE",
+    "target_sidecar_accessed_during_run": false,
+    "wall_seconds": 1907.2946378132328
+  }
+}

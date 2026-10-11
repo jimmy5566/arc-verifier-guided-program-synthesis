@@ -1,0 +1,26 @@
+{
+  "arm_order": [
+    "CONTROL_EQUAL_SLOT",
+    "TREATMENT_EQUAL_SLOT"
+  ],
+  "binding_sha256": "62bc46f06a6cea76c727384b5f0bf535a883d3b2f3a1502ee56fd752706aec57",
+  "final_audit_opened": false,
+  "joint_runtime_cap_seconds": 7200,
+  "launch_commit": "8572d3b92494f353ce3b448a335569c337a38861",
+  "optimizer_steps_by_arm": {
+    "CONTROL_EQUAL_SLOT": 96,
+    "TREATMENT_EQUAL_SLOT": 96
+  },
+  "parameter_updates_by_arm": {
+    "CONTROL_EQUAL_SLOT": 96,
+    "TREATMENT_EQUAL_SLOT": 96
+  },
+  "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+  "raw_sha256": {
+    "CONTROL_EQUAL_SLOT": "a5af87ad77ada5aa3d90798e29ee5294b0102490d68d078a9048298f7f260fb4",
+    "TREATMENT_EQUAL_SLOT": "4de9d2629e399d7b6cfd022377ba0cd08a2e6c82679a6039768428bec1f35394"
+  },
+  "status": "COMPLETE_PENDING_CPU_SCORE",
+  "target_sidecar_accessed": false,
+  "wall_seconds": 1907.2946378132328
+}

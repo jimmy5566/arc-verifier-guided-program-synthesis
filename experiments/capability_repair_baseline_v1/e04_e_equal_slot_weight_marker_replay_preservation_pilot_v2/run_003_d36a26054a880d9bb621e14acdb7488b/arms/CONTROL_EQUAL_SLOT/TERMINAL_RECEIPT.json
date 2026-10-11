@@ -1,0 +1,30 @@
+{
+  "adapter_sha256": "515f5ebfe6685097f78fe260edcc4859edfe17152482a559769f18be8b55da16",
+  "arm": "CONTROL_EQUAL_SLOT",
+  "cuda_memory_after_model_load": {
+    "allocated_bytes": 7865943552,
+    "peak_allocated_bytes": 7865943552,
+    "peak_reserved_bytes": 8447328256,
+    "reserved_bytes": 8447328256,
+    "status": "OBSERVED"
+  },
+  "cuda_memory_final": {
+    "allocated_bytes": 8448398336,
+    "peak_allocated_bytes": 13012467200,
+    "peak_reserved_bytes": 13375635456,
+    "reserved_bytes": 13375635456,
+    "status": "OBSERVED"
+  },
+  "elapsed_seconds": 992.1418051524088,
+  "final_audit_opened": false,
+  "loss_normalization": "four_independent_slot_means_times_0.25",
+  "optimizer_steps": 96,
+  "parameter_updates": 96,
+  "processed_tokens": 207360,
+  "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+  "raw_sha256": "a5af87ad77ada5aa3d90798e29ee5294b0102490d68d078a9048298f7f260fb4",
+  "runtime_cap_seconds": 3600,
+  "status": "COMPLETED_RAW_FROZEN_NO_TARGETS",
+  "supervised_tokens": 28800,
+  "target_sidecar_accessed": false
+}

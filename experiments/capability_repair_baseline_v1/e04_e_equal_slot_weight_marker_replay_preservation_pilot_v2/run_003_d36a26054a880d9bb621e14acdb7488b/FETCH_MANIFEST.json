@@ -1,0 +1,75 @@
+{
+  "remote_root": "/workspace/arc2/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/run_003_d36a26054a880d9bb621e14acdb7488b",
+  "files": [
+    {
+      "relative_path": "LAUNCH_CAP_RECEIPT.json",
+      "sha256": "7472dd864995fcccc750ba4b9abda9c6489a39fa681d203d6838c901f96fc331",
+      "bytes": 611
+    },
+    {
+      "relative_path": "PREFLIGHT_RECEIPT.json",
+      "sha256": "ee3e33d0121f388ec2394e15753a32046e3e1b1214e1b4e9f8f39082fead1650",
+      "bytes": 1322
+    },
+    {
+      "relative_path": "RAW_FREEZE_RECEIPT.json",
+      "sha256": "89f5de5938ce0994096fc602e461b27333280e787390bc3945c6bc2ecdd75361",
+      "bytes": 899
+    },
+    {
+      "relative_path": "TERMINAL_RECEIPT.json",
+      "sha256": "89f5de5938ce0994096fc602e461b27333280e787390bc3945c6bc2ecdd75361",
+      "bytes": 899
+    },
+    {
+      "relative_path": "arms/CONTROL_EQUAL_SLOT/PRE_OPTIMIZER_PREFLIGHT.json",
+      "sha256": "c171d67755bd6053296ce89ece2dba0d5c4bfde2e04dfd2f1aedf65d290fd242",
+      "bytes": 1975
+    },
+    {
+      "relative_path": "arms/CONTROL_EQUAL_SLOT/PRIMARY_B1_RAW.jsonl",
+      "sha256": "a5af87ad77ada5aa3d90798e29ee5294b0102490d68d078a9048298f7f260fb4",
+      "bytes": 310244
+    },
+    {
+      "relative_path": "arms/CONTROL_EQUAL_SLOT/RAW_GENERATION_RECEIPT.json",
+      "sha256": "266c8f5cc4578377e83481f18bdaa6cb9ffcf02101aa822a23a344a9b29a8441",
+      "bytes": 246
+    },
+    {
+      "relative_path": "arms/CONTROL_EQUAL_SLOT/TERMINAL_RECEIPT.json",
+      "sha256": "55073a560b4a0ba33cd6f9e4bdca6eb7c05bc9fc4c32ea5f466adceea55acfb4",
+      "bytes": 1069
+    },
+    {
+      "relative_path": "arms/CONTROL_EQUAL_SLOT/TRAINING_PROGRESS.json",
+      "sha256": "dc2e369b5546045f634cd2bf8d987bca64a50f0bcba90fdbef5509286ab2b29e",
+      "bytes": 1881
+    },
+    {
+      "relative_path": "arms/TREATMENT_EQUAL_SLOT/PRE_OPTIMIZER_PREFLIGHT.json",
+      "sha256": "d95c40b7b685d6aef3959ad426344c1ba4aa20eb29ea0dc3aad278605ea6802d",
+      "bytes": 1977
+    },
+    {
+      "relative_path": "arms/TREATMENT_EQUAL_SLOT/PRIMARY_B1_RAW.jsonl",
+      "sha256": "4de9d2629e399d7b6cfd022377ba0cd08a2e6c82679a6039768428bec1f35394",
+      "bytes": 310150
+    },
+    {
+      "relative_path": "arms/TREATMENT_EQUAL_SLOT/RAW_GENERATION_RECEIPT.json",
+      "sha256": "b271c014bce6a294f2dfd9d69744b556cb5ab729b8bb42a2ecad7ed14a002c99",
+      "bytes": 246
+    },
+    {
+      "relative_path": "arms/TREATMENT_EQUAL_SLOT/TERMINAL_RECEIPT.json",
+      "sha256": "b6f2d8146bf88ccb4d9e875555797bef4a92f82beca4c94494671d3c84f11b55",
+      "bytes": 1070
+    },
+    {
+      "relative_path": "arms/TREATMENT_EQUAL_SLOT/TRAINING_PROGRESS.json",
+      "sha256": "bb2d1c2ce8a7dc81aae4b126cc594564f69a5d44b981ff638287d17e19338165",
+      "bytes": 1883
+    }
+  ]
+}
