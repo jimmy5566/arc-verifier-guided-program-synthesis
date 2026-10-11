@@ -1,0 +1,13 @@
+{
+  "closure_result_sha256": "41b51e1668a70aca86a2ccb87fbadc9eeaf46f1db92b608e8c70f188c429af0e",
+  "final_audit_opened": false,
+  "generation": false,
+  "gpu_used": false,
+  "gradient_work": false,
+  "inference": false,
+  "model_loaded": false,
+  "paired_contrasts_sha256": "baeb031af817d02e8d4d1f8b581feca7b7ae98896a24606cfd05dd593cc7b9cf",
+  "schema_version": 1,
+  "status": "COMPLETE_VALID_DESCRIPTIVE_ONLY",
+  "training": false
+}

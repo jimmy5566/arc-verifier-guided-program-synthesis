@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "response_type": "DIRECTOR_E05_V3_NONORACLE_STRUCTURAL_RESIDUAL_DECOMPOSITION_RESULT_REVIEW_V2B_RESPONSE",
+  "reviewed_brief_sha256": "8d22f9067e338ec6a1d555e430ef44c329bc2aaabf388718b30698fbcac0210f",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "CPU_ONLY_E05_V3_PAIRED_ARM_CONTRAST_CLOSURE_V1",
+  "next_action": "Using only the immutable RESULT_V2 and PER_BASE_VECTORS_V2 artifacts, freeze the already preregistered condition-stratified paired canonical-base contrasts for Treatment minus Control and Treatment minus V7. Report, for every residual category and excluded outcome, the per-base four-view share delta, mean paired delta, number and identities of changed bases, and the complete paired transition table; preserve all 48 bases and four views without filtering. Bind the existing result, vectors, conclusion, and receipt SHA256 identities and return one concise CPU-only closure result brief. Do not rerun classification, alter the prospective conclusion, add a decision threshold, select an intervention, promote a checkpoint, or perform model loading, GPU work, training, inference, generation, gradient work, target expansion, Gold, dGold, or FINAL_AUDIT access.",
+  "observed_result": {
+    "status": "COMPLETE_VALID_DESCRIPTIVE_ONLY",
+    "primary_prospective_decision": "INCONCLUSIVE_MIXED_REQUIRED_CONDITIONS",
+    "treatment_marker_binding_control": {
+      "dominant_category": "DIMENSION_OR_CELL_COUNT_FAILURE",
+      "conditional_share": 0.9947916666666666,
+      "bootstrap_95_interval": [
+        0.984375,
+        1.0
+      ]
+    },
+    "treatment_marker_conditioned_rotation": {
+      "dominant_category": "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR",
+      "conditional_share": 0.99375,
+      "bootstrap_95_interval": [
+        0.9802631578947368,
+        1.0
+      ],
+      "exact_target_views": 32,
+      "eligible_views": 160
+    },
+    "bootstrap_status": "VALID_ALL_ARM_CONDITION_CELLS",
+    "vector_count": 1152
+  },
+  "mechanism_assessment": {
+    "evidence_confidence": "ESTABLISHED_DESCRIPTIVE_MORPHOLOGY_ONLY",
+    "supported_observation": "Failure morphology is strongly condition-specific: dimension or foreground-count failure dominates MARKER_BINDING_CONTROL, while correct foreground geometry with color error dominates MARKER_CONDITIONED_ROTATION.",
+    "treatment_specificity": "NOT_ESTABLISHED",
+    "reason": "The same broad condition split is visible in Raw V7 and the trained Control aggregates, so the result does not identify a Treatment-specific causal mechanism.",
+    "causal_mechanism": "UNKNOWN"
+  },
+  "scientific_disposition": {
+    "current_route": "VALID_BUT_INCONCLUSIVE_ACROSS_REQUIRED_CONDITIONS",
+    "checkpoint_promotion": "NOT_SUPPORTED",
+    "intervention_selection": "NOT_AUTHORIZED_AND_NOT_SUPPORTED",
+    "independent_arc_generalization": "NOT_ESTABLISHED"
+  },
+  "why_next_stage_is_needed": "The V2 specification preregistered Treatment-versus-Control and Treatment-versus-V7 per-base category-share deltas, but the frozen result package reports arm-condition aggregates and per-base vectors without freezing those paired contrast summaries. Completing that report from existing vectors is the smallest CPU-only closure and cannot change the already frozen prospective conclusion.",
+  "execution_authorization": {
+    "cpu_only_paired_contrast_closure": true,
+    "reuse_frozen_vectors_only": true,
+    "model_loading": false,
+    "gpu_work": false,
+    "training": false,
+    "inference": false,
+    "generation": false,
+    "gradient_work": false,
+    "target_expansion": false,
+    "adaptive_tuning_or_intervention_selection": false,
+    "gold_dgold_final_audit": false
+  },
+  "result_review_required": true,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

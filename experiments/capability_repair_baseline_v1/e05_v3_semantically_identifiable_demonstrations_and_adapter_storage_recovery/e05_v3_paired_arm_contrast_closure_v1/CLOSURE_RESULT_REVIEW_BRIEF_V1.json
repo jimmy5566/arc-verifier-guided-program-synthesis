@@ -1,0 +1,33 @@
+{
+  "allowed_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "boundaries": [
+    "CPU_ONLY_FROZEN_VECTORS",
+    "NO_RERUN_CLASSIFICATION",
+    "NO_MODEL_LOADING",
+    "NO_GPU_WORK",
+    "NO_TRAINING",
+    "NO_INFERENCE",
+    "NO_GENERATION",
+    "NO_GRADIENT_WORK",
+    "NO_TARGET_EXPANSION",
+    "NO_GOLD_DGOLD_FINAL_AUDIT"
+  ],
+  "brief_type": "DIRECTOR_E05_V3_PAIRED_ARM_CONTRAST_CLOSURE_RESULT_REVIEW_V1",
+  "closure_receipt_sha256": "237db0e2b63a20dfac411d016dca7ba647edced2726193594f647ac4bab4cf41",
+  "closure_result_sha256": "41b51e1668a70aca86a2ccb87fbadc9eeaf46f1db92b608e8c70f188c429af0e",
+  "input_identities": {
+    "director_result_review_response_v2b_sha256": "bf63af2a1406f2d3c0ced63e3fcc6fa3fa4714aba398352ac00e15de8bd961ba",
+    "execution_receipt_v2_sha256": "7b6e550a7ccc4b1645f7251cba6b05cd09603dcad5b04911d5fbadb06f59d824",
+    "per_base_vectors_v2_sha256": "201d8a5ea5d5433b740a1047e2acb55953da17bea7cbbba9319b484a386b58ad",
+    "result_conclusion_v2_sha256": "5291397453d5b67f0e25d28f43157f1e8048f324738891e53f425b486774f5a3",
+    "result_v2_sha256": "77812589096a84f048bcec9605d8b0c3e7bb74b9c619259048154dd98f6f0fba"
+  },
+  "paired_contrasts_sha256": "baeb031af817d02e8d4d1f8b581feca7b7ae98896a24606cfd05dd593cc7b9cf",
+  "prospective_conclusion_preserved": "INCONCLUSIVE_MIXED_REQUIRED_CONDITIONS",
+  "request": "Review this CPU-only descriptive closure of the previously frozen E05 V3 result. Do not promote a checkpoint, select an intervention, or authorize model/GPU/training/inference/generation/gradient/target-expansion work from it."
+}

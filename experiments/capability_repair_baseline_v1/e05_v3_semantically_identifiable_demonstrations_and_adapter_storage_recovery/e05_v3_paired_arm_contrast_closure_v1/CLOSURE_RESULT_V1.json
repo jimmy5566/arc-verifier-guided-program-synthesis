@@ -1,0 +1,24 @@
+{
+  "input_identities": {
+    "director_result_review_response_v2b_sha256": "bf63af2a1406f2d3c0ced63e3fcc6fa3fa4714aba398352ac00e15de8bd961ba",
+    "execution_receipt_v2_sha256": "7b6e550a7ccc4b1645f7251cba6b05cd09603dcad5b04911d5fbadb06f59d824",
+    "per_base_vectors_v2_sha256": "201d8a5ea5d5433b740a1047e2acb55953da17bea7cbbba9319b484a386b58ad",
+    "result_conclusion_v2_sha256": "5291397453d5b67f0e25d28f43157f1e8048f324738891e53f425b486774f5a3",
+    "result_v2_sha256": "77812589096a84f048bcec9605d8b0c3e7bb74b9c619259048154dd98f6f0fba"
+  },
+  "interpretation": "Condition-stratified paired arm contrasts are descriptive closure of existing frozen development evidence. They neither establish treatment-specific causality nor authorize intervention selection, checkpoint promotion, model work, or generalization claims.",
+  "paired_contrasts_sha256": "baeb031af817d02e8d4d1f8b581feca7b7ae98896a24606cfd05dd593cc7b9cf",
+  "prohibitions_observed": {
+    "final_audit_opened": false,
+    "generation": false,
+    "gpu_used": false,
+    "gradient_work": false,
+    "inference": false,
+    "model_loaded": false,
+    "training": false
+  },
+  "prospective_conclusion_preserved": "INCONCLUSIVE_MIXED_REQUIRED_CONDITIONS",
+  "schema_version": 1,
+  "stage": "CPU_ONLY_E05_V3_PAIRED_ARM_CONTRAST_CLOSURE_V1",
+  "status": "COMPLETE_VALID_DESCRIPTIVE_ONLY"
+}
