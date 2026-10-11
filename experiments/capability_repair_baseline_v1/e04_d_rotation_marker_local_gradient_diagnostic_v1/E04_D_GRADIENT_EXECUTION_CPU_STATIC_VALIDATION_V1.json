@@ -1,0 +1,18 @@
+{
+  "checks": [
+    "v2_protocol_and_cohort_hash",
+    "48_unique_matched_pairs",
+    "B1_BF16_zero_update_contract",
+    "exact_E03_V7_LoRA_allowlist_reused",
+    "fixed_repeat_pair_bound"
+  ],
+  "cohort_rows": 48,
+  "config_sha256": "e0a44c514c352f7a5b2d0ad7154627a70f8d94fe19859797e4875728ad335fb1",
+  "gpu_used": false,
+  "model_loaded": false,
+  "optimizer_steps": 0,
+  "protocol_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1",
+  "status": "PASS_CPU_STATIC_NO_MODEL",
+  "unique_pairs": 48,
+  "validation_rows_read": 0
+}
