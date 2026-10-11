@@ -1,0 +1,85 @@
+{
+  "arm_order": [
+    "CONTROL_EQUAL_SLOT",
+    "TREATMENT_EQUAL_SLOT"
+  ],
+  "arm_output_roots": {
+    "CONTROL_EQUAL_SLOT": "/workspace/arc2/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/run_001_cc32828286d4f935a0e847fcb919da31/arms/CONTROL_EQUAL_SLOT",
+    "TREATMENT_EQUAL_SLOT": "/workspace/arc2/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/run_001_cc32828286d4f935a0e847fcb919da31/arms/TREATMENT_EQUAL_SLOT"
+  },
+  "arms": 2,
+  "authorization_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2_PRELAUNCH_BRIEF_RESPONSE",
+  "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+  "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+  "control_schedule_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/CONTROL_SCHEDULE.json",
+  "control_schedule_sha256": "7abe1bdaac52e448b9ed0c3e94057c2d55162130a054690242aa0ee191639022",
+  "cpu_loss_test_path": "tests/test_e04_e_equal_slot_loss.py",
+  "cpu_loss_test_sha256": "84bc74c3a0e8b5d8114dde6b7e3ccd82a7129947bffe474cdf87b52bcc02876b",
+  "director_response_path": "orchestration/director/responses/E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2_PRELAUNCH_BRIEF_RESPONSE.json",
+  "director_response_sha256": "522b6ec111982b21411148ffc5426570fae118f57418a72aab12bc5323459bb2",
+  "evaluator_path": "scripts/score_e04_e_equal_slot_marker_replay_pilot.py",
+  "evaluator_sha256": "a65aef5d483e334d9f39aef26e2c23c09e6fee84534a0fb6248b31ee0c830097",
+  "execution_authorized": true,
+  "jobs": 1,
+  "joint_runtime_cap_seconds": 7200,
+  "launcher_path": "scripts/launch_e04_e_equal_slot_marker_replay_pilot.py",
+  "launcher_sha256": "2e69f47f70b49d3b2aee6b07b13902353aeb0644a3d9c2582c43d29c7f698544",
+  "loss_path": "scripts/e04_e_equal_slot_loss.py",
+  "loss_sha256": "ed348a153e5d8f0adfc4b4f7e4191835c9be0d3c4cd52a93503d4601f5d27bad",
+  "nonce": "cc32828286d4f935a0e847fcb919da31",
+  "output_root": "/workspace/arc2/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/run_001_cc32828286d4f935a0e847fcb919da31",
+  "per_arm_runtime_cap_seconds": 3600,
+  "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+  "protocol_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/E04_E_V2_PRELAUNCH_PROTOCOL.json",
+  "protocol_sha256": "edd79274cba909455872f19e9abf9741b59860d1a7a940082e8b65ce7c9c3d16",
+  "retry": false,
+  "runtime_config_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_FULL768_B1_NO_UPDATE_REMEASUREMENT_V1_CONFIG.json",
+  "runtime_config_sha256": "58b636211efe3864552747db16fc2ea5b3a67bcdd14aa9775ac07d49bca6856b",
+  "schema_version": 1,
+  "seed": 2000031,
+  "static_preflight": {
+    "allocation": {
+      "fixed": 192,
+      "rotation": 96,
+      "swap": 96
+    },
+    "arm_totals": {
+      "CONTROL_EQUAL_SLOT": {
+        "optimizer_steps": 96,
+        "raw_supervised_tokens": 28800,
+        "raw_transformer_tokens": 207360,
+        "slot_count": 384
+      },
+      "TREATMENT_EQUAL_SLOT": {
+        "optimizer_steps": 96,
+        "raw_supervised_tokens": 25440,
+        "raw_transformer_tokens": 204000,
+        "slot_count": 384
+      }
+    },
+    "arms": [
+      "CONTROL_EQUAL_SLOT",
+      "TREATMENT_EQUAL_SLOT"
+    ],
+    "final_audit_opened": false,
+    "four_unique_role_positions_per_step": true,
+    "marker_candidates_exactly_twice": true,
+    "model_imported": false,
+    "optimizer_constructed": false,
+    "optimizer_steps_per_arm": 96,
+    "protocol_id": "E04_E_EQUAL_SLOT_WEIGHT_MARKER_REPLAY_PRESERVATION_PILOT_V2",
+    "slots_per_arm": 384,
+    "status": "PASS_E04E_CPU_SCHEDULE_AND_NATIVE_SERIALIZER",
+    "target_sidecar_accessed": false,
+    "tokenizer_loaded": false
+  },
+  "token_accounting_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/TOKEN_ACCOUNTING.json",
+  "token_accounting_sha256": "55051e05b54b6fc8cd765017846b5e4abdf30b7333a060bfa91146e39c5f7b21",
+  "treatment_schedule_path": "experiments/capability_repair_baseline_v1/e04_e_equal_slot_weight_marker_replay_preservation_pilot_v2/TREATMENT_SCHEDULE.json",
+  "treatment_schedule_sha256": "d1c284df3ae9b31b5120acbdab4184e0fee5c22c31d46c0e55f25de75b707395",
+  "v7_reference_raw_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/e04_v3_full768_b1_no_update_remeasurement_v1/run_001_2ee668738df64d558f666f5989d09add/PRIMARY_B1_RAW.jsonl",
+  "v7_reference_raw_sha256": "a3b90e8e668e5a325e0d70bc2774999065c3d06f56de657a270620aca7b65ec1",
+  "worker_path": "scripts/run_e04_e_equal_slot_marker_replay_pilot.py",
+  "worker_sha256": "a04a01790360f81a2e5fa3a434e0478c6f688dfa323016d937ce786fd047c04a",
+  "worker_source_commit": "82b5b9610f6b77a911ba9c74bb4dd07d959d66db"
+}
