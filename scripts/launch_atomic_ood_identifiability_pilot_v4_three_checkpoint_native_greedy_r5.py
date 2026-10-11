@@ -23,9 +23,9 @@ def atomic_json(path: Path, value: dict) -> None:
 def runtime_env() -> dict[str, str]:
     """Return the production worker environment without modifying the parent."""
     env = os.environ.copy()
-    source_root = str(ROOT / "src")
+    source_roots = [str(ROOT), str(ROOT / "src")]
     prior = env.get("PYTHONPATH", "")
-    env["PYTHONPATH"] = source_root if not prior else source_root + os.pathsep + prior
+    env["PYTHONPATH"] = os.pathsep.join(source_roots + ([prior] if prior else []))
     return env
 
 

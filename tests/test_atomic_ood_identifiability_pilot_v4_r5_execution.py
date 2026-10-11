@@ -2,7 +2,7 @@ from __future__ import annotations
 import importlib.util,json,subprocess,sys,tempfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-OUT=ROOT/'experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_replacement_run_003'
+OUT=ROOT/'experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_replacement_run_004'
 def load(rel,name):
  s=importlib.util.spec_from_file_location(name,ROOT/rel); m=importlib.util.module_from_spec(s); assert s.loader; s.loader.exec_module(m); return m
 def worker(): return load('scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5.py','v4r2')
@@ -133,7 +133,7 @@ def test_launcher_preflight_uses_production_cwd_and_src_path():
  args,kwargs=calls.pop()
  assert args==[sys.executable,str(l.DEFAULT_WORKER),'--preflight-import-graph']
  assert Path(kwargs['cwd'])==ROOT
- assert kwargs['env']['PYTHONPATH'].split(__import__('os').pathsep)[0]==str(ROOT/'src')
+ assert kwargs['env']['PYTHONPATH'].split(__import__('os').pathsep)[:2]==[str(ROOT),str(ROOT/'src')]
 
 def test_production_shaped_complete_import_graph_detects_prior_missing_scripts_failure():
  l=launcher_module()
@@ -181,4 +181,4 @@ def test_launcher_passes_same_root_cwd_and_env_to_worker():
    p=Path(d)/'x'; assert l.run(p,p,p,Path(d)/'out',5)==0
  finally: l.preflight_runtime_import=original_probe; l.subprocess.Popen=original_popen
  args,kwargs=seen.pop(); assert Path(kwargs['cwd'])==ROOT
- assert kwargs['env']['PYTHONPATH'].split(__import__('os').pathsep)[0]==str(ROOT/'src')
+ assert kwargs['env']['PYTHONPATH'].split(__import__('os').pathsep)[:2]==[str(ROOT),str(ROOT/'src')]
