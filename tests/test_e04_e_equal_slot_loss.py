@@ -53,7 +53,7 @@ def test_rejects_zero_and_missing_or_duplicate_slots():
 def test_streamed_backward_rejects_nonfinite_before_backward():
     logits, labels = slot(5, 1)
     with torch.no_grad():
-        logits[0, 1, 0] = float('inf')
+        logits[0, 0, 0] = float('inf')
     with pytest.raises(EqualSlotLossError, match='NONFINITE_SLOT'):
         backward_equal_slot_term(logits, labels)
     assert logits.grad is None
