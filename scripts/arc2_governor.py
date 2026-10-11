@@ -525,7 +525,7 @@ def route_bounded_infrastructure_pause(state, state_path):
             or state.get('asset_identity_blocker')):
         return False
     reason=str(state.get('pause_reason') or '').upper()
-    protected=('OWNER_', 'USER_', 'DIRECTOR_', 'PAUSED_BY_DIRECTOR', 'SAFETY_',
+    protected=('OWNER_', 'USER_', 'DIRECTOR_', 'PAUSED_BY_DIRECTOR', 'RUNPOD_COMMAND_CONTROL_AUTH_', 'SAFETY_',
                'SCIENTIFIC_', 'STAGE_', 'TERMINAL_', 'BUDGET_', 'SEALED_',
                'SECURITY_', 'ASSET_IDENTITY_')
     if reason.startswith(protected) or state.get('remote_job') or state.get('active_remote_job'):

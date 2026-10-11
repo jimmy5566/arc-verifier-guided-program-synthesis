@@ -71,6 +71,7 @@ class GovernorInfrastructureTriageTests(unittest.TestCase):
                 "owner": {"owner_pause": True},
                 "user": {"user_pause": True},
                 "director": {"last_actor": "director"},
+                "runpod_command_auth": {"pause_reason": "RUNPOD_COMMAND_CONTROL_AUTH_MISSING"},
                 "safety": {"pause_reason": "SAFETY_BLOCKER"},
                 "scientific": {"pause_reason": "SCIENTIFIC_DECISION_REQUIRED"},
                 "budget": {"compute_budget_exhausted": True},
