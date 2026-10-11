@@ -19,7 +19,7 @@ def forced_pty_shell(target:str,script:str)->str:
 def remote_script(b:dict,binding_commit:str,binding_path:str,binding_sha:str)->str:
  out=b['output_root'];lock=out+'.launch_lock';source=binding_commit
  return f'''set -Eeuo pipefail
-trap 'rc=$?; printf '{{"status":"E04E_REMOTE_LAUNCH_FAILURE","exit_code":%s,"line":%s}}\\n' "$rc" "$LINENO" >&2; exit "$rc"' ERR
+trap 'rc=$?; printf "E04E_REMOTE_LAUNCH_FAILURE exit_code=%s line=%s\\n" "$rc" "$LINENO" >&2; exit "$rc"' ERR
 repo=/root/arc-runtime-3090-gpu-benchmark-v1/arc2
 cd "$repo"
 test "${{GH_TOKEN:+present}}" = "present"
