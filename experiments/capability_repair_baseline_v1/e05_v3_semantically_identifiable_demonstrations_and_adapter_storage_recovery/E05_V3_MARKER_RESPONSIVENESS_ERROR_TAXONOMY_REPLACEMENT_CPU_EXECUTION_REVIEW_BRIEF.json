@@ -1,0 +1,19 @@
+{
+  "brief_type": "DIRECTOR_E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_REPLACEMENT_CPU_EXECUTION_REVIEW",
+  "failed_execution_receipt": "E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_FAILED_EXECUTION_RECEIPT_V1.json",
+  "failed_execution_receipt_sha256": "8f2d6e0e7666142eaf765324f071d8f4603ce7fe7ad712fa75c145c1c78f708c",
+  "forbidden_actions": [
+    "No changed taxonomy, threshold, bootstrap, grouping, inputs, model loading, GPU, training, inference, generation, gradient work, target expansion, Gold, dGold, or FINAL_AUDIT."
+  ],
+  "frozen_spec_sha256": "58d0bbdd8fba5f594092160f885160d69bb456fe39b6a9dd99a153c659ae3a3e",
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "repair_tests": "PASS_CPU_ONLY_STATIC_ARTIFACT_GROUPING_TAXONOMY_TESTS",
+  "repaired_implementation_sha256": "22f8188dd5c3eaf3ab38917ad4c5cc58499f5341cf1e7d48bab828c5dc8d7ff6",
+  "request": "Decide whether to authorize exactly one replacement CPU-only taxonomy execution after the preserved implementation failure. No GPU, model, training, generation, gradient work, target expansion, or intervention selection is requested.",
+  "required_conditions": [
+    "same frozen spec and artifacts",
+    "exactly one replacement CPU execution",
+    "fail closed on any identity/grouping failure",
+    "result review after preservation"
+  ]
+}

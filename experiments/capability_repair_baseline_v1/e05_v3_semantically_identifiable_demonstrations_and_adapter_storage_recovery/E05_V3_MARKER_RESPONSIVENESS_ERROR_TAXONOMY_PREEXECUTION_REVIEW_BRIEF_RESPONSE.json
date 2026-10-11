@@ -1,0 +1,67 @@
+{
+  "response_id": "E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_PREEXECUTION_REVIEW_BRIEF_RESPONSE",
+  "reviewed_brief_sha256": "5c1faeee2beb1bc277472f7ead1984257610f08bc266f364f2981883ac2845e0",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "CPU_ONLY_E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_EXECUTION_V1",
+  "next_action": "Implement the deterministic CPU scorer for specification SHA256 58d0bbdd8fba5f594092160f885160d69bb456fe39b6a9dd99a153c659ae3a3, add CPU tests for exact artifact identities, four-turn canonical-base completeness, taxonomy precedence/exclusivity, legal-turn target matching, fixed bootstrap behavior, and fail-closed invalid inputs, then execute the taxonomy exactly once over the frozen RUN_004 evidence. Freeze and hash the implementation, tests, result, and execution receipt and return one result-review brief. No further pre-execution scientific review is required if the implementation preserves the specification exactly.",
+  "scientific_assessment": {
+    "confidence": "APPROVED_DESCRIPTIVE_CPU_DIAGNOSTIC",
+    "established": [
+      "The specification SHA256 matches the reviewed prefreeze artifact.",
+      "The diagnostic uses only already frozen RUN_004 raw predictions, parser fields, canonical identities, and the previously scored target sidecar.",
+      "The four categories are exhaustive and mutually exclusive when applied in the frozen order CORRECT_MAPPING, STRUCTURAL_OR_FORMAT_FAILURE, MARKER_INVARIANT_LEGAL_ROTATION, MARKER_RESPONSIVE_WRONG_MAPPING.",
+      "Canonical base is the statistical unit, all four marker-turn views remain grouped, and the bootstrap seed and replicate count are prospectively fixed.",
+      "The diagnostic can distinguish descriptive marker invariance, responsive wrong mapping, and structural/format failure without model loading or new generation."
+    ],
+    "supported_hypothesis": "A dominant frozen error category can prioritize the next mechanism hypothesis, while remaining descriptive rather than causal.",
+    "unknown": [
+      "Which category will dominate Treatment errors.",
+      "Whether the resulting morphology is caused by representation, data coverage, optimization, or gradient dynamics.",
+      "Whether any morphology or intervention transfers to an independent cohort or ARC tasks."
+    ],
+    "research_bottleneck": "Aggregate exact-grid outcomes do not reveal whether marker-conditioned failure occurs before transformation selection or during structural output execution."
+  },
+  "execution_conditions": [
+    "Verify every raw-evidence and reused-artifact SHA256 in the frozen specification before reading per-example outcomes; any mismatch is INVALID_NOT_INTERPRETABLE.",
+    "Use the already frozen parser_valid and parsed_grid fields; do not re-run a model, decoder, or adaptively change parsing after observing classifications.",
+    "Require exactly 48 canonical bases and exactly four marker-turn views per base in each primary condition and arm; missing, duplicate, or inconsistent identities are INVALID_NOT_INTERPRETABLE.",
+    "Construct each legal target family only from the four frozen turn-specific targets for the same canonical base and condition.",
+    "Apply taxonomy_order as strict precedence so STRUCTURAL_OR_FORMAT_FAILURE is assigned before either legal-rotation failure class.",
+    "Use exactly 10000 canonical-base bootstrap replicates with seed 20261012 and the frozen greater-than-0.50 lower-bound dominance rule.",
+    "Report both parser-invalid and parser-valid non-oracle failures separately without changing their shared primary taxonomy category.",
+    "Preserve the E05 reused-development-evidence label and descriptive-only interpretation."
+  ],
+  "implementation_boundary": {
+    "existing_exact_grid_scorer_sha256": "d23e83200e241bc85c89299a78747e4d86148268bf5dc125e32b2af1ced2ceba",
+    "clarification": "The bound existing scorer establishes the frozen parser/identity and prior scoring source but does not itself implement the new taxonomy. Writing and testing a deterministic CPU-only taxonomy scorer is routine Controller engineering and must not change the scientific specification.",
+    "implementation_change_requires_new_scientific_review": false,
+    "scientific_specification_change_requires_new_review": true
+  },
+  "expected_interpretation": {
+    "MARKER_INVARIANCE_DOMINANT": "Prioritize marker observability or grounding as the next hypothesis; do not yet infer its training cause.",
+    "WRONG_MAPPING_DOMINANT": "Prioritize turn-to-transformation mapping or selection as the next hypothesis; do not equate legal alternate rotations with successful grounding.",
+    "STRUCTURAL_EXECUTION_DOMINANT": "Prioritize representation or transformation/output execution as the next hypothesis.",
+    "MIXED_OR_INCONCLUSIVE": "Do not select a mechanism-guided training intervention from this cohort; require a distinct prospectively justified evidence path."
+  },
+  "forbidden_actions": [
+    "Do not load a model, use GPU, run inference or generation, train, construct an optimizer, perform backward or gradient work, or expand targets.",
+    "Do not change taxonomy definitions, precedence, grouping, bootstrap, dominance threshold, or interpretation after observing per-example classifications.",
+    "Do not use E05 targets, categories, or per-example outcomes to select future TRAIN data, demonstrations, examples, curriculum weights, thresholds, or hyperparameters.",
+    "Do not claim a causal mechanism, independent generalization, or checkpoint promotion from this descriptive diagnostic.",
+    "Do not access Gold, dGold, or FINAL_AUDIT."
+  ],
+  "authorization": {
+    "cpu_implementation_and_tests": true,
+    "cpu_taxonomy_execution_once": true,
+    "model_loading": false,
+    "gpu_work": false,
+    "training": false,
+    "inference": false,
+    "generation": false,
+    "gradient_work": false,
+    "target_expansion": false,
+    "gold_dgold_final_audit_access": false
+  },
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

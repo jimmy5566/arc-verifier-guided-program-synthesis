@@ -1,0 +1,20 @@
+{
+  "director_preexecution_response_sha256": "ae18d8eb3e83b4f0f97b771f70157e7de145df9a258ff00da6f263956a66c648",
+  "execution_authorization_consumed": true,
+  "failure_class": "E05_TAXONOMY_IMPLEMENTATION_DICTIONARY_MUTATION",
+  "failure_point": "category loop attempted to add derived categories to the raw-arm mapping while iterating; exact artifact gate passed first; no result was published",
+  "generation": false,
+  "gpu_used": false,
+  "model_loaded": false,
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "raw_evidence_mutated": false,
+  "repair_status": "SOURCE_REPAIRED_AND_CPU_TESTED_NO_EXECUTION_RETRY",
+  "required_next_step": "FRESH_DIRECTOR_CPU_ONLY_REPLACEMENT_EXECUTION_AUTHORIZATION_REQUIRED",
+  "result_path_exists": false,
+  "schema_version": 1,
+  "specification_sha256": "58d0bbdd8fba5f594092160f885160d69bb456fe39b6a9dd99a153c659ae3a3e",
+  "stage": "CPU_ONLY_E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_EXECUTION_V1",
+  "status": "FAILED_PARTIAL_NO_RESULT_NO_RERUN",
+  "target_expansion": false,
+  "training": false
+}
