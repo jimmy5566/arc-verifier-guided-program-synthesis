@@ -1,0 +1,156 @@
+{
+  "batching": {
+    "fallback_cause": "CUDA_OOM_ONLY",
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "fixed_b1_subset": {
+      "episode_ids": [
+        "AOODV2-REFERENCE-U00-T0",
+        "AOODV2-REFERENCE-U07-T2",
+        "AOODV2-OOD_GEOMETRY-U01-T1",
+        "AOODV2-OOD_GEOMETRY-U06-T3",
+        "AOODV2-OOD_COLOR_MAPPING-U02-T2",
+        "AOODV2-OOD_COLOR_MAPPING-U05-T0",
+        "AOODV2-OOD_GRID_SIZE-U03-T3",
+        "AOODV2-OOD_GRID_SIZE-U04-T1",
+        "AOODV2-OOD_LAYOUT-U04-T0",
+        "AOODV2-OOD_LAYOUT-U03-T2",
+        "AOODV2-OOD_MARKER_ENCODING-U05-T1",
+        "AOODV2-OOD_MARKER_ENCODING-U02-T3"
+      ],
+      "selection": "two deterministic episodes per cell; covers all 8 units and all 4 turns",
+      "sha256": "707ad6dce31f77c4ff3667059b36c1c1695a403e99496db7fa88087e8a9c24b1"
+    },
+    "gate": "parser, parsed-grid and post-freeze exact-grid scorer must agree for every fixed B1 episode; a larger rate delta or material disagreement is INVALID_NOT_INTERPRETABLE",
+    "length_bucketing": true,
+    "light_numerical_drift_tolerance": {
+      "max_exact_grid_rate_delta": 0.08333333333333333,
+      "max_parse_valid_rate_delta": 0.08333333333333333
+    },
+    "primary_requested_batch_size": 32
+  },
+  "decoder": {
+    "max_new_tokens": 192,
+    "name": "native_greedy",
+    "num_beams": 1,
+    "sampling": false
+  },
+  "execution_output": {
+    "duplicate_guard": "cross-path atomic active-nonce ledger; no retry",
+    "fresh_output_required": true,
+    "nonce": "c902a3bcd1f740767065827f06154295",
+    "remote_output_root": "/workspace/arc2/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5_cap192/run_005_c902a3bcd1f740767065827f06154295"
+  },
+  "forbidden": [
+    "NO_TRAINING",
+    "NO_OPTIMIZER",
+    "NO_PARAMETER_UPDATES",
+    "NO_BACKWARD",
+    "NO_GRADIENT",
+    "NO_TTT",
+    "NO_AUGMENTATION",
+    "NO_DFS",
+    "NO_BEAM",
+    "NO_GOLD",
+    "NO_DGOLD",
+    "NO_FINAL_AUDIT"
+  ],
+  "generation_preflight_inputs": [
+    "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/MANIFEST.json",
+    "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/INPUT_PROMPTS.jsonl"
+  ],
+  "inputs": {
+    "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/INPUT_PROMPTS.jsonl": "9a87a336bff6e3fec0a9726b5212e0ae4fe21666c4839dc06f306229dafccec3",
+    "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/MANIFEST.json": "34fd28f9057c57961bee0e8c4cc55e77e514cc87335736a61a406e39adbe6cc1",
+    "experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/SEALED_TARGET_SIDECAR.jsonl": "62217a9963a8ba62de46d9cc865426e82b8b6fb990eb4afbeda2734b59610903"
+  },
+  "launcher_sha256": "936a0f294967e8e504137c53a16429675bba157e704d868da074c679b42ef61b",
+  "native_runtime": {
+    "config_identity_path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY_V1.json",
+    "config_identity_sha256": "7e94ba263dba680b2d75c2184c0ff05254b7e4aa5f90a7c64619eedf4ba4e256",
+    "decoder_provider": "NVARCNativeProvider",
+    "model_family": "qwen3_4b_grids15_sft139",
+    "tokenizer_loader": "checkpoint_native_tokenizer"
+  },
+  "package_fingerprint_scope": "Director binding must contain exact detached source_commit, package_sha256, worker_sha256, launcher_sha256, tests_sha256, nonce, output_root, active_hard_cap_seconds=7200, retry=false and DIRECTOR_ONCE authorization. Successor changes only decoder.max_new_tokens=192, fresh nonce/output, successor source hashes, and CPU serialization audit provenance; all frozen cohort/checkpoint/target-isolation conditions are retained.",
+  "predecessor_package_sha256": "1ed2a97879c012da631784670f6549b1090d3fb2fe117d8ca7c0440b6f58fedd",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5_CAP192",
+  "runtime_estimate": {
+    "active_hard_cap_seconds": 7200,
+    "estimate_scope": "runtime estimate only; no outcome inference",
+    "estimated_seconds_linear": 4084.0394382094955,
+    "historical_elapsed_seconds": 2402.376140123233,
+    "historical_receipt": "unified_native_model_capability_baseline_v1/unified_native_model_capability_baseline_v3_batch16/run_001_5e46a8ba7794cbec09d838c84d26a32a/TERMINAL_RECEIPT.json",
+    "historical_rows": 360,
+    "planned_b1_repeat_rows": 36,
+    "planned_primary_rows": 576,
+    "safety_multiplier": 1.75
+  },
+  "schema_version": 1,
+  "serialization_cap_audit": {
+    "audit_script": "scripts/audit_atomic_ood_identifiability_pilot_v4_r5_serialization_cap.py",
+    "audit_script_sha256": "6edf77b4557d754c45d9b149f2e8dc6c66afa34364497dff09cdf411daff6377",
+    "conservative_completion_cap": 192,
+    "eos_allowance": 1,
+    "expected_max_serialized_tokens": 181,
+    "old_cap": 128,
+    "old_cap_feasible": false,
+    "scope": "CPU-only checkpoint-native tokenizer plus parser across all 1..13 grid dimensions; no task prompts, targets, model construction or GPU"
+  },
+  "status": "CPU_ONLY_FROZEN_AWAITING_DIRECTOR_EXECUTION_AUTHORIZATION",
+  "target_isolation": {
+    "generation_inputs": "INPUT_PROMPTS.jsonl only",
+    "release_condition": "all three 192-row target-blind raw files and generation terminal receipt hash-verified before CPU scorer opens sidecar",
+    "sealed_target_sidecar": "SEALED_TARGET_SIDECAR.jsonl",
+    "sealed_target_sidecar_may_open_before_raw_freeze": false
+  },
+  "tests_sha256": "9f147234f60228dc8cea8a93d8b458e250dee90a5b7624c494292fd68eb91112",
+  "three_checkpoints": [
+    {
+      "adapter_config_sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
+      "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+      "arm_id": "V7",
+      "base_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+      "base_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+      "role": "reference"
+    },
+    {
+      "adapter_config_sha256": "aa2c74857b1ff6e1738d5723259ce9ffd698e783e40568faba6aaf42463cfe65",
+      "adapter_model_sha256": "515f5ebfe6685097f78fe260edcc4859edfe17152482a559769f18be8b55da16",
+      "arm_id": "E04_E_CONTROL",
+      "repository": {
+        "immutable_revision": "dbd0786a74a28955baae3455b70595cf49a6d906",
+        "private_verified": true,
+        "repo_id": "Jimmy5566a/arc2-private-adapters",
+        "repo_type": "model"
+      },
+      "repository_path": "e04_e_run003/control_equal_slot/adapter_model.safetensors",
+      "role": "control"
+    },
+    {
+      "adapter_config_sha256": "9f9ec9013387e85985bdc33a1de15ca12b5bb4b9ffc22f9b876ce513bd006f19",
+      "adapter_model_sha256": "3eff5b9debc4b5b3f133e4524bf7244b0a2074a8f0bc0b5595d38ee176db57be",
+      "arm_id": "E04_E_TREATMENT",
+      "repository": {
+        "immutable_revision": "dbd0786a74a28955baae3455b70595cf49a6d906",
+        "private_verified": true,
+        "repo_id": "Jimmy5566a/arc2-private-adapters",
+        "repo_type": "model"
+      },
+      "repository_path": "e04_e_run003/treatment_equal_slot/adapter_model.safetensors",
+      "role": "treatment"
+    }
+  ],
+  "v4_source": {
+    "manifest_sha256": "34fd28f9057c57961bee0e8c4cc55e77e514cc87335736a61a406e39adbe6cc1",
+    "prompt_sha256": "9a87a336bff6e3fec0a9726b5212e0ae4fe21666c4839dc06f306229dafccec3",
+    "sealed_target_sidecar_sha256": "62217a9963a8ba62de46d9cc865426e82b8b6fb990eb4afbeda2734b59610903",
+    "sha256": "523b904ab3b712095009d0be3e29151aa8d8a563ac663a15ff3789a0192926bd"
+  },
+  "worker_sha256": "f1822378b7f3a0800d230f2cfdaf168e3911932271640404b2c049f78374765d"
+}
