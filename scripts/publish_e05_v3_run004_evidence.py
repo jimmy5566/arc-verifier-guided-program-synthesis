@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Publish the already-terminal E05 V3 RUN_004 evidence through GitHub.
 
 This is transport only: it validates the five frozen remote output bytes, copies
@@ -59,7 +59,7 @@ def publish(source: Path, repo: Path, branch: str):
             for name in EXPECTED: shutil.copyfile(source/name,dest/name)
             (dest/'REMOTE_TRANSPORT_MANIFEST.json').write_text(json.dumps(manifest(got),sort_keys=True,indent=2)+'\n',encoding='utf-8')
             run(['git','add',str(DEST_REL)],tree)
-            run(['git','commit','-m','Preserve E05 V3 RUN_004 raw evidence'],tree)
+            run(['git','-c','user.name=ARC2 Evidence Publisher','-c','user.email=arc2-evidence@localhost','commit','-m','Preserve E05 V3 RUN_004 raw evidence'],tree)
             run(['git','push','origin','HEAD:refs/heads/'+branch],tree)
             return run(['git','rev-parse','HEAD'],tree).strip()
         finally:
