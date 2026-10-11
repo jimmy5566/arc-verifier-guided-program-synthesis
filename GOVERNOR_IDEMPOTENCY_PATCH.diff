@@ -1,0 +1,547 @@
+diff --git a/scripts/arc2_governor.py b/scripts/arc2_governor.py
+index f3b16d1b..46760030 100644
+--- a/scripts/arc2_governor.py
++++ b/scripts/arc2_governor.py
+@@ -9,6 +9,35 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+ DISPOSITIONS={"CONTINUE_CONTROLLER","REVIEW_REQUIRED","WAIT_REMOTE","PAUSED","TERMINAL"}
+ PROJECT_ROOT=Path(__file__).resolve().parents[1]
+ 
++class StateConflict(RuntimeError):
++    """A stale Controller/Governor snapshot must never overwrite newer state."""
++
++class StateWriteLock:
++    """Short critical section around durable workflow read-check-write."""
++    def __init__(self, path):
++        self.path=Path(path).with_name(Path(path).name+'.write.lock'); self.handle=None
++    def __enter__(self):
++        self.path.parent.mkdir(parents=True,exist_ok=True); self.handle=self.path.open('a+b')
++        if self.path.stat().st_size == 0: self.handle.write(b' '); self.handle.flush()
++        self.handle.seek(0)
++        try:
++            if os.name == 'nt':
++                import msvcrt; msvcrt.locking(self.handle.fileno(),msvcrt.LK_NBLCK,1)
++            else:
++                import fcntl; fcntl.flock(self.handle.fileno(),fcntl.LOCK_EX)
++        except OSError:
++            self.handle.close(); self.handle=None; raise
++        return self
++    def __exit__(self, *_):
++        if not self.handle: return
++        try:
++            self.handle.seek(0)
++            if os.name == 'nt':
++                import msvcrt; msvcrt.locking(self.handle.fileno(),msvcrt.LK_UNLCK,1)
++            else:
++                import fcntl; fcntl.flock(self.handle.fileno(),fcntl.LOCK_UN)
++        finally: self.handle.close(); self.handle=None
++
+ def windows_creationflags():
+     """Keep local Herdr and SSH control clients from flashing a Windows console."""
+     return getattr(subprocess, "CREATE_NO_WINDOW", 0) if os.name == "nt" else 0
+@@ -25,20 +54,39 @@ def atomic(p,x):
+     # Controller and Governor can briefly overlap on Windows.  A unique
+     # sibling prevents temporary-file collisions; retry only the atomic
+     # replacement when an antivirus/indexer still holds the destination.
+-    t=p.with_name(f'{p.name}.{os.getpid()}.{time.time_ns()}.tmp')
+-    try:
+-        t.write_text(json.dumps(x,sort_keys=True,indent=2)+'\n',encoding='utf-8')
+-        for attempt in range(5):
+-            try:
+-                os.replace(t,p)
+-                return
+-            except PermissionError:
+-                if attempt == 4:
+-                    raise
+-                time.sleep(0.1)
+-    finally:
+-        if t.exists():
+-            t.unlink()
++    p=Path(p)
++    # Receipts are append-only single-writer files.  Workflow state carries a
++    # monotonic revision, so a stale Controller/Governor object fails closed
++    # instead of replacing a newer scientific transition.
++    workflow=isinstance(x,dict) and 'disposition' in x
++    with StateWriteLock(p) if workflow else _NullLock():
++        if workflow:
++            current_revision=0
++            if p.exists():
++                try: current_revision=int(json.loads(p.read_text(encoding='utf-8-sig')).get('state_revision',0))
++                except (OSError,json.JSONDecodeError,TypeError,ValueError): raise StateConflict('WORKFLOW_STATE_UNREADABLE')
++            expected=x.get('state_revision')
++            # Compatibility for an explicit fresh Controller snapshot which
++            # predates revisions.  Loaded snapshots always carry a revision.
++            if expected is not None and int(expected) != current_revision:
++                raise StateConflict(f'WORKFLOW_STATE_REVISION_CONFLICT:{expected}!={current_revision}')
++            x['state_revision']=current_revision+1
++        t=p.with_name(f'{p.name}.{os.getpid()}.{time.time_ns()}.tmp')
++        try:
++            t.write_text(json.dumps(x,sort_keys=True,indent=2)+'\n',encoding='utf-8')
++            for attempt in range(5):
++                try:
++                    os.replace(t,p)
++                    return
++                except PermissionError:
++                    if attempt == 4: raise
++                    time.sleep(0.1)
++        finally:
++            if t.exists(): t.unlink()
++
++class _NullLock:
++    def __enter__(self): return self
++    def __exit__(self, *_): return False
+ 
+ def action_sha256(state):
+     """Identity of one Controller handoff, without volatile timestamps."""
+@@ -106,6 +154,8 @@ def load(p):
+     if 'disposition' not in x:
+         old=x.pop('status','ACTIVE'); x['disposition']={'ACTIVE':'CONTINUE_CONTROLLER','WAITING_REMOTE_JOB':'WAIT_REMOTE','PAUSED':'PAUSED','TERMINAL':'TERMINAL'}.get(old,'PAUSED')
+     if x['disposition'] not in DISPOSITIONS: raise RuntimeError('INVALID_GOVERNOR_DISPOSITION')
++    try: x['state_revision']=int(x.get('state_revision',0))
++    except (TypeError,ValueError): raise RuntimeError('INVALID_WORKFLOW_STATE_REVISION')
+     return x
+ def sha256_file(path):
+     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+@@ -179,17 +229,53 @@ def controller_turn_is_active(target):
+             return record.get('agent_status') == 'working'
+     raise RuntimeError('CONTROLLER_TARGET_DISAPPEARED')
+ def prompt(actor,text,timeout,state):
++    """Deliver one intent and classify delivery without guessing after timeout.
++
++    A nonzero exit normally cannot prove that Herdr did not enqueue the
++    message.  Only explicitly rejected busy/not-found responses are safe to
++    classify as non-delivery; every other failure is UNKNOWN_DELIVERY.
++    """
+     log(state, f'prompting {actor}')
+-    r=subprocess.run(['herdr','agent','prompt',actor,text,'--wait','--until','idle','--until','done','--until','blocked','--timeout',str(timeout*1000)],check=False,timeout=timeout+15, capture_output=True, text=True, encoding='utf-8', errors='replace',creationflags=windows_creationflags())
++    try:
++        r=subprocess.run(['herdr','agent','prompt',actor,text,'--wait','--until','idle','--until','done','--until','blocked','--timeout',str(timeout*1000)],check=False,timeout=timeout+15, capture_output=True, text=True, encoding='utf-8', errors='replace',creationflags=windows_creationflags())
++    except subprocess.TimeoutExpired:
++        log(state, f'{actor} prompt timeout after possible delivery')
++        return 'UNKNOWN_DELIVERY','TIMEOUT_AFTER_POSSIBLE_DELIVERY'
++    except OSError as exc:
++        log(state, f'{actor} prompt transport error after possible delivery')
++        return 'UNKNOWN_DELIVERY',f'OSERROR:{type(exc).__name__}'
+     if r.returncode:
+         detail=(r.stderr or r.stdout).strip().replace('\n',' ')[:300]
+-        if 'agent_working' in detail or 'agent_busy' in detail or 'agent_prompt_stalled' in detail:
+-            log(state, f'{actor} prompt busy; retrying in 2s')
+-            time.sleep(2); return False
+-        log(state, f'{actor} prompt failed exit={r.returncode} detail={detail}')
+-        time.sleep(2); return False
+-    log(state, f'{actor} completed')
+-    return True
++        if 'agent_not_found' in detail or 'target_not_found' in detail:
++            log(state, f'{actor} prompt confirmed not delivered detail={detail}')
++            return 'NOT_DELIVERED',detail
++        log(state, f'{actor} prompt outcome ambiguous exit={r.returncode} detail={detail}')
++        return 'UNKNOWN_DELIVERY',detail
++    log(state, f'{actor} delivery acknowledged by Herdr')
++    return 'DELIVERED','HERDR_EXIT_0'
++
++def archive_superseded_dispatch(state, previous, action_id):
++    """Keep a bounded audit trail when a real Controller stage advances."""
++    if not isinstance(previous,dict) or previous.get('action_sha256') == action_id:
++        return
++    item=dict(previous); item['terminal_outcome']='SUPERSEDED_BY_NEW_SEMANTIC_ACTION'; item['terminal_at']=now()
++    history=list(state.get('controller_dispatch_history') or [])
++    history.append(item); state['controller_dispatch_history']=history[-16:]
++
++def persist_delivery_outcome(path, action_id, delivery, detail):
++    """Reload before recording delivery so a Controller transition wins races."""
++    current=load(path)
++    if action_sha256(current) != action_id:
++        return 'CONTROLLER_STATE_CHANGED'
++    dispatch=current.get('controller_dispatch')
++    if not isinstance(dispatch,dict) or dispatch.get('action_sha256') != action_id:
++        return 'CONTROLLER_STATE_CHANGED'
++    dispatch.update({'status':delivery,'delivery_detail':detail,'delivery_recorded_at':now()})
++    if delivery == 'DELIVERED': dispatch['delivery_acknowledged_at']=now()
++    current.update({'controller_dispatch':dispatch,'updated_at':now()})
++    atomic(path,current)
++    return 'CONTROLLER_PROMPTED' if delivery == 'DELIVERED' else ('CONTROLLER_DELIVERY_UNKNOWN' if delivery == 'UNKNOWN_DELIVERY' else 'CONTROLLER_NOT_DELIVERED')
++
+ def controller(s,p,timeout,retry_seconds=300):
+     s.update({'last_actor':'governor','updated_at':now()}); atomic(p,s)
+     target=resolve_controller_target(s,p)
+@@ -205,27 +291,42 @@ def controller(s,p,timeout,retry_seconds=300):
+             return 'CONTROLLER_STATE_CHANGED'
+         current_target=resolve_controller_target(current,p)
+         if controller_turn_is_active(current_target):
+-            current.update({'controller_dispatch':'ACTIVE_CONTROLLER_TURN_NO_REPROMPT','updated_at':now()})
++            dispatch=current.get('controller_dispatch')
++            # An active pane is observation evidence, never permission to
++            # erase the semantic action which may already be delivered.
++            if isinstance(dispatch,dict):
++                dispatch=dict(dispatch); dispatch['active_observed_at']=now()
++                if dispatch.get('status') == 'DELIVERED': dispatch['status']='RUNNING'; dispatch['running_observed_at']=now()
++                current['controller_dispatch']=dispatch
++            else:
++                current['controller_activity']={'status':'ACTIVE_CONTROLLER_TURN_NO_REPROMPT','observed_at':now(),'target':current_target}
++            current['updated_at']=now()
+             atomic(p,current); log(current,f'controller target={current_target} remains active; no self-prompt')
+             return 'CONTROLLER_ACTIVE'
+         s,target=current,current_target
+     key=action_sha256(s)
+     previous=s.get('controller_dispatch')
+-    if isinstance(previous,dict) and previous.get('status') == 'DISPATCHED' and previous.get('action_sha256') == key:
+-        dispatched_at=previous.get('dispatched_at','')
+-        try: age=max(0,(datetime.now(timezone.utc)-datetime.fromisoformat(dispatched_at.replace('Z','+00:00'))).total_seconds())
+-        except (TypeError,ValueError): age=retry_seconds
+-        if age < retry_seconds:
+-            log(s,f'controller action={key[:12]} cooldown remaining={int(retry_seconds-age)}s')
+-            return 'CONTROLLER_COOLDOWN'
+-    s.update({'controller_dispatch':{'status':'DISPATCHED','action_sha256':key,'dispatched_at':now(),'target':target},'updated_at':now()})
++    if isinstance(previous,dict) and previous.get('action_sha256') == key:
++        status=previous.get('status')
++        # Semantic identity, not elapsed time, provides at-most-once delivery.
++        if status in {'INTENT_RECORDED','DELIVERED','ACKNOWLEDGED','RUNNING','UNKNOWN_DELIVERY'}:
++            log(s,f'controller action={key[:12]} already {status}; no automatic redispatch')
++            return 'CONTROLLER_DELIVERY_UNKNOWN' if status in {'INTENT_RECORDED','UNKNOWN_DELIVERY'} else 'CONTROLLER_ALREADY_DISPATCHED'
++    archive_superseded_dispatch(s,previous,key)
++    s.update({'controller_dispatch':{'status':'INTENT_RECORDED','action_sha256':key,
++                                     'intent_recorded_at':now(),'target':target,
++                                     'delivery_attempt':int(previous.get('delivery_attempt',0) if isinstance(previous,dict) else 0)+1},
++              'updated_at':now()})
+     atomic(p,s)
+-    ok=prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}, AGENTS.md, and orchestration/agents/ARC_CONTROLLER_SYSTEM.md; execute next_action as far as scientifically valid. '
++    outcome=prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}, AGENTS.md, and orchestration/agents/ARC_CONTROLLER_SYSTEM.md; execute next_action as far as scientifically valid. '
+            'Repair routine infrastructure autonomously with bounded CPU-only checks when frozen science is unchanged. Preserve failed runs and never reuse a consumed one-shot authorization. '
+            'Escalate only a scientific, security, asset-identity, sealed-data, budget, or fresh execution-authorization blocker by freezing one concise brief and setting REVIEW_REQUIRED; never prompt Director directly. '
+            'Before returning atomically write exactly one disposition: CONTINUE_CONTROLLER, REVIEW_REQUIRED, WAIT_REMOTE, PAUSED, or TERMINAL. '
+            'REVIEW_REQUIRED requires review_brief and review_reason. WAIT_REMOTE only after a detached job with remote_job. Do not use legacy workflow states.',timeout,s)
+-    return 'CONTROLLER_PROMPTED' if ok else 'CONTROLLER_PROMPT_FAILED'
++    if outcome is True: outcome=('DELIVERED','LEGACY_TEST_DELIVERY')
++    elif outcome is False: outcome=('UNKNOWN_DELIVERY','LEGACY_BOOLEAN_FAILURE')
++    delivery,detail=outcome
++    return persist_delivery_outcome(p,key,delivery,detail)
+ 
+ def route_bounded_infrastructure_pause(state, state_path):
+     """Requeue at most two CPU-only turns for one recoverable infra incident."""
+@@ -534,6 +635,11 @@ def remote_status(job):
+ def consume_remote(state,path,status,detail):
+     job=state.get('remote_job') or state.get('active_remote_job') or {}
+     jobid=str(job.get('job_id') or job.get('round_id') or job.get('run_id') or 'UNKNOWN')
++    receipt_key='|'.join((jobid,str(job.get('expected_terminal_receipt') or job.get('terminal_receipt') or ''),status))
++    consumed=dict(state.get('consumed_remote_receipts') or {})
++    if receipt_key in consumed:
++        log(state,f'WAIT_REMOTE job={jobid} receipt already consumed; no duplicate continuation')
++        return False
+     if status=='PROCESS_DEAD':
+         failure=path.parent/'remote_failures'/f'{jobid}.json'; failure.parent.mkdir(parents=True,exist_ok=True)
+         if not failure.exists(): atomic(failure,{'status':'REMOTE_PROCESS_DIED_WITHOUT_RECEIPT','job':job,'detail':detail,'at':now()})
+@@ -549,16 +655,24 @@ def consume_remote(state,path,status,detail):
+         # Receipt availability is a controller work item.  Never retain the
+         # launch-era action after the remote job has already completed.
+         state['next_action']='PROCESS_REMOTE_RECEIPT'
+-    state.update({'disposition':'CONTINUE_CONTROLLER','remote_completion_consumed':True,'remote_completion_status':status,'remote_job':None,'active_remote_job':None,'last_actor':'governor','updated_at':now()})
++    consumed[receipt_key]={'status':status,'consumed_at':now(),'job_id':jobid}
++    state.update({'disposition':'CONTINUE_CONTROLLER','remote_completion_consumed':True,'remote_completion_status':status,
++                  'consumed_remote_receipts':consumed,'remote_job':None,'active_remote_job':None,'last_actor':'governor','updated_at':now()})
+     atomic(path,state); log(state,f'WAIT_REMOTE job={jobid} {status}; transition -> CONTINUE_CONTROLLER')
++    return True
+ def cycle(state_path, *, agent_timeout_seconds, controller_retry_seconds):
+     s=load(state_path)
+-    if reconcile_consumed_stage_terminal(s,state_path): return 'STATE_RECONCILED',load(state_path)
+-    if route_bounded_infrastructure_pause(s,state_path): return 'INFRA_RECOVERY_QUEUED',load(state_path)
++    try:
++        if reconcile_consumed_stage_terminal(s,state_path): return 'STATE_RECONCILED',load(state_path)
++        if route_bounded_infrastructure_pause(s,state_path): return 'INFRA_RECOVERY_QUEUED',load(state_path)
++    except StateConflict:
++        return 'STATE_CONFLICT',load(state_path)
+     if s['disposition']=='CONTINUE_CONTROLLER':
+-        return controller(s,state_path,agent_timeout_seconds,controller_retry_seconds),load(state_path)
++        try: return controller(s,state_path,agent_timeout_seconds,controller_retry_seconds),load(state_path)
++        except StateConflict: return 'STATE_CONFLICT',load(state_path)
+     if s['disposition']=='REVIEW_REQUIRED':
+-        director(s,state_path,agent_timeout_seconds); return 'DIRECTOR_REVIEW',load(state_path)
++        try: director(s,state_path,agent_timeout_seconds); return 'DIRECTOR_REVIEW',load(state_path)
++        except StateConflict: return 'STATE_CONFLICT',load(state_path)
+     if s['disposition']=='WAIT_REMOTE':
+         job=s.get('remote_job') or s.get('active_remote_job') or {}
+         try:
+@@ -574,7 +688,8 @@ def cycle(state_path, *, agent_timeout_seconds, controller_retry_seconds):
+                     return 'REMOTE_PENDING',s
+                 detail = confirmed_detail
+             if status in {'RECEIPT_PRESENT','PROCESS_DEAD'}:
+-                consume_remote(s,state_path,status,detail); return 'REMOTE_COMPLETED',load(state_path)
++                if consume_remote(s,state_path,status,detail): return 'REMOTE_COMPLETED',load(state_path)
++                return 'REMOTE_ALREADY_CONSUMED',load(state_path)
+             if status == 'INVALID_BINDING':
+                 # A detached job may be valid while the Controller omitted the
+                 # facts needed for receipt polling.  Waiting cannot repair this
+@@ -588,6 +703,8 @@ def cycle(state_path, *, agent_timeout_seconds, controller_retry_seconds):
+                 atomic(state_path,s)
+                 log(s, f"WAIT_REMOTE binding invalid detail={detail}; transition -> CONTINUE_CONTROLLER")
+                 return 'REMOTE_BINDING_REPAIR',load(state_path)
++        except StateConflict:
++            return 'STATE_CONFLICT',load(state_path)
+         except Exception as exc:
+             log(s,f"WAIT_REMOTE exception={type(exc).__name__}:{exc}")
+         return 'REMOTE_PENDING',s
+diff --git a/scripts/launch_e04_e_equal_slot_marker_replay_pilot.py b/scripts/launch_e04_e_equal_slot_marker_replay_pilot.py
+index 795e7836..6ce6c72e 100644
+--- a/scripts/launch_e04_e_equal_slot_marker_replay_pilot.py
++++ b/scripts/launch_e04_e_equal_slot_marker_replay_pilot.py
+@@ -1,6 +1,6 @@
+ ﻿"""GitHub-synchronized detached launcher for the one E04-E V2 parent job."""
+ from __future__ import annotations
+-import argparse,base64,hashlib,json,secrets,subprocess
++import argparse,base64,hashlib,json,secrets,subprocess,time
+ from pathlib import Path
+ ROOT=Path(__file__).resolve().parents[1];BRANCH='infra/arc2-dual-agent-runpod-orchestrator-v1'
+ def sha(p:Path)->str:return hashlib.sha256(p.read_bytes()).hexdigest()
+@@ -8,14 +8,23 @@ def forced_pty_shell(target:str,script:str)->str:
+  """Use the established RunPod command-control envelope; never transfer assets."""
+  nonce=secrets.token_hex(16); completion=json.dumps({'arc2_remote_nonce':nonce},sort_keys=True)
+  encoded=base64.b64encode((script+f"\nprintf '%s\\n' '{completion}'\n").encode()).decode()
+- line=f"echo {encoded} | base64 -d | bash; printf '__ARC2_REMOTE_END__\\n'; exit"
+- payload=f"\x1b[200~{line}\x1b[201~\r".encode()
+- completed=subprocess.run(['ssh','-F','NUL','-tt','-o','BatchMode=yes','-o','ConnectTimeout=20',target],input=payload,capture_output=True,check=False,timeout=45)
+- lines=completed.stdout.splitlines();marker=b'__ARC2_REMOTE_END__';done=completion.encode()
+- if completed.returncode or marker not in [x.strip() for x in lines] or done not in lines:
+-  tail=completed.stdout.decode('utf-8',errors='replace')[-4000:]
+-  raise SystemExit(f'E04E_REMOTE_COMMAND_CONTROL_FAILED:{completed.returncode}:\n{tail}')
+- return completed.stdout.decode('utf-8',errors='replace')
++ line=f"echo {encoded} | base64 -d | bash; printf '__ARC2_REMOTE_END__\\n'"
++ # RunPod's forced PTY displays bracketed-paste payloads without executing
++ # them.  A short prompt-ready delay and ordinary newlines are the verified
++ # command-control framing; this transports no scientific asset bytes.
++ proc=subprocess.Popen(['ssh','-F','NUL','-tt','-o','BatchMode=yes','-o','ConnectTimeout=20',target],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
++ try:
++  assert proc.stdin is not None
++  time.sleep(4); proc.stdin.write((line+'\n').encode()); proc.stdin.flush()
++  time.sleep(1); proc.stdin.write(b'exit\n'); proc.stdin.flush()
++  stdout,stderr=proc.communicate(timeout=45)
++ except subprocess.TimeoutExpired:
++  proc.kill(); stdout,stderr=proc.communicate(); raise SystemExit('E04E_REMOTE_COMMAND_CONTROL_TIMEOUT')
++ lines=stdout.splitlines();marker=b'__ARC2_REMOTE_END__';done=completion.encode()
++ if proc.returncode or marker not in [x.strip() for x in lines] or done not in lines:
++  tail=(stdout+b'\n'+stderr).decode('utf-8',errors='replace')[-4000:]
++  raise SystemExit(f'E04E_REMOTE_COMMAND_CONTROL_FAILED:{proc.returncode}:\n{tail}')
++ return stdout.decode('utf-8',errors='replace')
+ def remote_script(b:dict,binding_commit:str,binding_path:str,binding_sha:str)->str:
+  out=b['output_root'];out_parent=Path(out).parent.as_posix();lock=out+'.launch_lock';global_lock=out_parent+'/.e04e_active_launch_lock';source=binding_commit
+  return f'''set -euo pipefail
+diff --git a/tests/test_arc2_governor_controller_dispatch.py b/tests/test_arc2_governor_controller_dispatch.py
+index 6172290c..e69823b2 100644
+--- a/tests/test_arc2_governor_controller_dispatch.py
++++ b/tests/test_arc2_governor_controller_dispatch.py
+@@ -12,7 +12,9 @@ MOD=importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(MOD)
+ class ControllerDispatchTest(unittest.TestCase):
+     def make_state(self):
+         temp=tempfile.TemporaryDirectory(); path=Path(temp.name)/'state.json'
+-        path.write_text(json.dumps({'disposition':'CONTINUE_CONTROLLER','controller_target':'pane-1'}),encoding='utf-8')
++        path.write_text(json.dumps({'disposition':'CONTINUE_CONTROLLER','controller_target':'pane-1',
++                                    'stage':'S','next_action':'A',
++                                    'controller_dispatch':{'status':'DELIVERED','action_sha256':'prior','target':'pane-1'}}),encoding='utf-8')
+         return temp,path
+     def test_active_controller_is_not_reprompted(self):
+         temp,path=self.make_state()
+@@ -22,7 +24,9 @@ class ControllerDispatchTest(unittest.TestCase):
+                 MOD.controller(state,path,30)
+             saved=MOD.load(path)
+             prompt.assert_not_called()
+-            self.assertEqual(saved['controller_dispatch'],'ACTIVE_CONTROLLER_TURN_NO_REPROMPT')
++            self.assertIsInstance(saved['controller_dispatch'],dict)
++            self.assertEqual(saved['controller_dispatch']['action_sha256'],'prior')
++            self.assertEqual(saved['controller_dispatch']['status'],'RUNNING')
+             self.assertEqual(saved['disposition'],'CONTINUE_CONTROLLER')
+         finally: temp.cleanup()
+     def test_active_turn_backoff_preserves_controller_transition(self):
+diff --git a/tests/test_arc2_governor_idempotency.py b/tests/test_arc2_governor_idempotency.py
+new file mode 100644
+index 00000000..eab8868d
+--- /dev/null
++++ b/tests/test_arc2_governor_idempotency.py
+@@ -0,0 +1,126 @@
++from __future__ import annotations
++
++import importlib.util
++import json
++import subprocess
++import tempfile
++import unittest
++from pathlib import Path
++from unittest import mock
++
++ROOT = Path(__file__).resolve().parents[1]
++SPEC = importlib.util.spec_from_file_location("governor_idempotency", ROOT / "scripts" / "arc2_governor.py")
++assert SPEC and SPEC.loader
++governor = importlib.util.module_from_spec(SPEC)
++SPEC.loader.exec_module(governor)
++
++
++class GovernorIdempotencyTests(unittest.TestCase):
++    def state(self, root: Path, **changes):
++        path = root / "ARC2_WORKFLOW_STATE.json"
++        value = {"disposition": "CONTINUE_CONTROLLER", "stage": "S1", "next_action": "A1", "controller_target": "pane"}
++        value.update(changes); governor.atomic(path, value)
++        return path
++
++    def controller_mocks(self, delivery=("DELIVERED", "test")):
++        return (mock.patch.object(governor, "resolve_controller_target", return_value="pane"),
++                mock.patch.object(governor, "controller_turn_is_active", return_value=False),
++                mock.patch.object(governor, "prompt", return_value=delivery))
++
++    def test_same_action_after_301_seconds_never_redispatches(self):
++        with tempfile.TemporaryDirectory() as raw:
++            path = self.state(Path(raw)); patches = self.controller_mocks()
++            with patches[0], patches[1], patches[2] as prompt:
++                self.assertEqual("CONTROLLER_PROMPTED", governor.controller(governor.load(path), path, 1, retry_seconds=1))
++                saved = governor.load(path); saved["controller_dispatch"]["delivery_acknowledged_at"] = "2000-01-01T00:00:00Z"
++                governor.atomic(path, saved)
++                self.assertEqual("CONTROLLER_ALREADY_DISPATCHED", governor.controller(governor.load(path), path, 1, retry_seconds=1))
++            self.assertEqual(prompt.call_count, 1)
++
++    def test_busy_controller_preserves_structured_identity(self):
++        with tempfile.TemporaryDirectory() as raw:
++            path = self.state(Path(raw), controller_dispatch={"status": "DELIVERED", "action_sha256": "stable", "target": "pane"})
++            with mock.patch.object(governor, "resolve_controller_target", return_value="pane"), mock.patch.object(governor, "controller_turn_is_active", return_value=True), mock.patch.object(governor, "prompt") as prompt:
++                self.assertEqual("CONTROLLER_ACTIVE", governor.controller(governor.load(path), path, 1))
++            saved = governor.load(path)
++            self.assertEqual(saved["controller_dispatch"]["action_sha256"], "stable")
++            self.assertEqual(saved["controller_dispatch"]["status"], "RUNNING")
++            prompt.assert_not_called()
++
++    def test_restart_does_not_repeat_delivered_semantic_action(self):
++        with tempfile.TemporaryDirectory() as raw:
++            path = self.state(Path(raw)); patches = self.controller_mocks()
++            with patches[0], patches[1], patches[2] as prompt:
++                governor.controller(governor.load(path), path, 1)
++                # Reload simulates a fresh Governor process with no cooldown memory.
++                self.assertEqual("CONTROLLER_ALREADY_DISPATCHED", governor.controller(governor.load(path), path, 1))
++            self.assertEqual(prompt.call_count, 1)
++
++    def test_ambiguous_herdr_timeout_is_never_automatically_reprompted(self):
++        with tempfile.TemporaryDirectory() as raw:
++            path = self.state(Path(raw))
++            with mock.patch.object(governor, "resolve_controller_target", return_value="pane"), mock.patch.object(governor, "controller_turn_is_active", return_value=False), mock.patch.object(governor.subprocess, "run", side_effect=subprocess.TimeoutExpired("herdr", 1)) as sent:
++                self.assertEqual("CONTROLLER_DELIVERY_UNKNOWN", governor.controller(governor.load(path), path, 1))
++                self.assertEqual("CONTROLLER_DELIVERY_UNKNOWN", governor.controller(governor.load(path), path, 1))
++            self.assertEqual(sent.call_count, 1)
++            self.assertEqual(governor.load(path)["controller_dispatch"]["status"], "UNKNOWN_DELIVERY")
++
++    def test_new_controller_stage_gets_one_new_dispatch(self):
++        with tempfile.TemporaryDirectory() as raw:
++            path = self.state(Path(raw)); patches = self.controller_mocks()
++            with patches[0], patches[1], patches[2] as prompt:
++                governor.controller(governor.load(path), path, 1)
++                advanced = governor.load(path); advanced["stage"] = "S2"; advanced["next_action"] = "A2"; governor.atomic(path, advanced)
++                self.assertEqual("CONTROLLER_PROMPTED", governor.controller(governor.load(path), path, 1))
++                self.assertEqual("CONTROLLER_ALREADY_DISPATCHED", governor.controller(governor.load(path), path, 1))
++            self.assertEqual(prompt.call_count, 2)
++            self.assertEqual(len(governor.load(path)["controller_dispatch_history"]), 1)
++
++    def test_stale_writer_cannot_lose_new_scientific_transition(self):
++        with tempfile.TemporaryDirectory() as raw:
++            path = self.state(Path(raw)); stale = governor.load(path); fresh = governor.load(path)
++            fresh.update({"disposition": "REVIEW_REQUIRED", "stage": "SCIENTIFIC_GATE", "review_brief": "brief", "review_reason": "gate"})
++            governor.atomic(path, fresh)
++            stale["next_action"] = "STALE_REPAIR"
++            with self.assertRaises(governor.StateConflict): governor.atomic(path, stale)
++            self.assertEqual(governor.load(path)["stage"], "SCIENTIFIC_GATE")
++
++    def remote_state(self, root: Path):
++        job = {"job_id": "R1", "run_id": "R1", "ssh_target": "pod", "expected_terminal_receipt": "/receipt", "primary_process": {"host": "RUNPOD", "role": "worker", "pid": 7}}
++        path = root / "ARC2_WORKFLOW_STATE.json"; governor.atomic(path, {"disposition": "WAIT_REMOTE", "stage": "REMOTE", "remote_job": job, "active_remote_job": job, "scientific_training_authorized": True})
++        return path
++
++    def test_running_remote_never_dispatches_controller_or_launch(self):
++        with tempfile.TemporaryDirectory() as raw:
++            path = self.remote_state(Path(raw))
++            with mock.patch.object(governor, "remote_status", return_value=("PROCESS_ALIVE", "alive")), mock.patch.object(governor, "controller") as controller, mock.patch.object(governor, "prompt") as prompt:
++                result, _ = governor.cycle(path, agent_timeout_seconds=1, controller_retry_seconds=1)
++            self.assertEqual(result, "REMOTE_PENDING"); controller.assert_not_called(); prompt.assert_not_called()
++            self.assertEqual(governor.load(path)["disposition"], "WAIT_REMOTE")
++
++    def test_terminal_receipt_is_consumed_once(self):
++        with tempfile.TemporaryDirectory() as raw:
++            path = self.remote_state(Path(raw))
++            with mock.patch.object(governor, "remote_status", return_value=("RECEIPT_PRESENT", "receipt")) as remote:
++                result, _ = governor.cycle(path, agent_timeout_seconds=1, controller_retry_seconds=1)
++            self.assertEqual(result, "REMOTE_COMPLETED"); self.assertEqual(remote.call_count, 1)
++            saved = governor.load(path); self.assertEqual(len(saved["consumed_remote_receipts"]), 1)
++            self.assertEqual(saved["next_action"], "PROCESS_REMOTE_RECEIPT")
++
++    def test_wait_remote_polling_calls_no_llm_agent(self):
++        with tempfile.TemporaryDirectory() as raw:
++            path = self.remote_state(Path(raw))
++            with mock.patch.object(governor, "remote_status", return_value=("PROCESS_ALIVE", "alive")), mock.patch.object(governor, "prompt") as prompt, mock.patch.object(governor, "director") as director:
++                governor.cycle(path, agent_timeout_seconds=1, controller_retry_seconds=1)
++            prompt.assert_not_called(); director.assert_not_called()
++
++    def test_wait_remote_preserves_existing_scientific_authorization(self):
++        with tempfile.TemporaryDirectory() as raw:
++            path = self.remote_state(Path(raw))
++            with mock.patch.object(governor, "remote_status", return_value=("PROCESS_ALIVE", "alive")):
++                governor.cycle(path, agent_timeout_seconds=1, controller_retry_seconds=1)
++            self.assertTrue(governor.load(path)["scientific_training_authorized"])
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/tests/test_arc2_governor_runpod_pty.py b/tests/test_arc2_governor_runpod_pty.py
+index 5d254f74..d2dd288b 100644
+--- a/tests/test_arc2_governor_runpod_pty.py
++++ b/tests/test_arc2_governor_runpod_pty.py
+@@ -1,7 +1,7 @@
+ from __future__ import annotations
+ 
+-import importlib.util
+ import io
++import importlib.util
+ import json
+ import tempfile
+ import unittest
+@@ -21,6 +21,13 @@ class _Proc:
+         return b"RECEIPT_MISSING\nPROCESS_ALIVE\n", b""
+ 
+ 
++class _LaunchProc:
++    def __init__(self):
++        self.stdin = io.BytesIO(); self.returncode = 0
++    def communicate(self, timeout=None):
++        return b'{"arc2_remote_nonce": "nonce"}\n__ARC2_REMOTE_END__\n', b''
++
++
+ class RunPodPtyControlTests(unittest.TestCase):
+     def test_wait_remote_status_line_is_yellow_and_identifies_the_job(self):
+         line = governor.status_line('REMOTE_PENDING', {'disposition':'WAIT_REMOTE', 'remote_job':{'run_id':'RUN_2', 'remote_pid':123}})
+@@ -68,6 +75,18 @@ class RunPodPtyControlTests(unittest.TestCase):
+             status, _ = governor.remote_status(job)
+         self.assertEqual(status, "PROCESS_ALIVE")
+ 
++    def test_future_e04_launcher_uses_prompt_ready_newline_not_bracketed_paste(self):
++        path = ROOT / "scripts" / "launch_e04_e_equal_slot_marker_replay_pilot.py"
++        spec = importlib.util.spec_from_file_location("e04e_launch", path); assert spec and spec.loader
++        launch = importlib.util.module_from_spec(spec); spec.loader.exec_module(launch)
++        proc = _LaunchProc()
++        with mock.patch.object(launch.subprocess, "Popen", return_value=proc), mock.patch.object(launch.time, "sleep"), mock.patch.object(launch.secrets, "token_hex", return_value="nonce"):
++            launch.forced_pty_shell("pod", "printf ready")
++        payload = proc.stdin.getvalue()
++        self.assertIn(b"base64 -d | bash; printf", payload)
++        self.assertTrue(payload.endswith(b"exit\n"))
++        self.assertNotIn(b"\x1b[200~", payload)
++
+ 
+ if __name__ == "__main__":
+     unittest.main()
+diff --git a/tests/test_arc2_persistent_governor.py b/tests/test_arc2_persistent_governor.py
+index 6b009f14..36733527 100644
+--- a/tests/test_arc2_persistent_governor.py
++++ b/tests/test_arc2_persistent_governor.py
+@@ -29,11 +29,11 @@ class PersistentGovernorTests(unittest.TestCase):
+             try:
+                 governor.resolve_controller_target = lambda *_: 'controller-pane'
+                 governor.controller_turn_is_active = lambda *_: False
+-                governor.prompt = lambda target, *_: calls.append(target) or True
++                governor.prompt = lambda target, *_: calls.append(target) or ('DELIVERED', 'test')
+                 self.assertEqual('CONTROLLER_PROMPTED', governor.controller(state, state_path, 1, retry_seconds=300))
+                 saved = governor.load(state_path)
+-                self.assertEqual('DISPATCHED', saved['controller_dispatch']['status'])
+-                self.assertEqual('CONTROLLER_COOLDOWN', governor.controller(saved, state_path, 1, retry_seconds=300))
++                self.assertEqual('DELIVERED', saved['controller_dispatch']['status'])
++                self.assertEqual('CONTROLLER_ALREADY_DISPATCHED', governor.controller(saved, state_path, 1, retry_seconds=300))
+                 self.assertEqual(['controller-pane'], calls)
+                 saved['next_action'] = 'B'; saved['controller_dispatch'] = 'READY'
+                 self.assertEqual('CONTROLLER_PROMPTED', governor.controller(saved, state_path, 1, retry_seconds=300))

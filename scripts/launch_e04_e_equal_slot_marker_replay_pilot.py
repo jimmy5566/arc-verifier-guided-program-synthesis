@@ -1,6 +1,6 @@
 ﻿"""GitHub-synchronized detached launcher for the one E04-E V2 parent job."""
 from __future__ import annotations
-import argparse,base64,hashlib,json,secrets,subprocess
+import argparse,base64,hashlib,json,secrets,subprocess,time
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];BRANCH='infra/arc2-dual-agent-runpod-orchestrator-v1'
 def sha(p:Path)->str:return hashlib.sha256(p.read_bytes()).hexdigest()
@@ -8,14 +8,23 @@ def forced_pty_shell(target:str,script:str)->str:
  """Use the established RunPod command-control envelope; never transfer assets."""
  nonce=secrets.token_hex(16); completion=json.dumps({'arc2_remote_nonce':nonce},sort_keys=True)
  encoded=base64.b64encode((script+f"\nprintf '%s\\n' '{completion}'\n").encode()).decode()
- line=f"echo {encoded} | base64 -d | bash; printf '__ARC2_REMOTE_END__\\n'; exit"
- payload=f"\x1b[200~{line}\x1b[201~\r".encode()
- completed=subprocess.run(['ssh','-F','NUL','-tt','-o','BatchMode=yes','-o','ConnectTimeout=20',target],input=payload,capture_output=True,check=False,timeout=45)
- lines=completed.stdout.splitlines();marker=b'__ARC2_REMOTE_END__';done=completion.encode()
- if completed.returncode or marker not in [x.strip() for x in lines] or done not in lines:
-  tail=completed.stdout.decode('utf-8',errors='replace')[-4000:]
-  raise SystemExit(f'E04E_REMOTE_COMMAND_CONTROL_FAILED:{completed.returncode}:\n{tail}')
- return completed.stdout.decode('utf-8',errors='replace')
+ line=f"echo {encoded} | base64 -d | bash; printf '__ARC2_REMOTE_END__\\n'"
+ # RunPod's forced PTY displays bracketed-paste payloads without executing
+ # them.  A short prompt-ready delay and ordinary newlines are the verified
+ # command-control framing; this transports no scientific asset bytes.
+ proc=subprocess.Popen(['ssh','-F','NUL','-tt','-o','BatchMode=yes','-o','ConnectTimeout=20',target],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+ try:
+  assert proc.stdin is not None
+  time.sleep(4); proc.stdin.write((line+'\n').encode()); proc.stdin.flush()
+  time.sleep(1); proc.stdin.write(b'exit\n'); proc.stdin.flush()
+  stdout,stderr=proc.communicate(timeout=45)
+ except subprocess.TimeoutExpired:
+  proc.kill(); stdout,stderr=proc.communicate(); raise SystemExit('E04E_REMOTE_COMMAND_CONTROL_TIMEOUT')
+ lines=stdout.splitlines();marker=b'__ARC2_REMOTE_END__';done=completion.encode()
+ if proc.returncode or marker not in [x.strip() for x in lines] or done not in lines:
+  tail=(stdout+b'\n'+stderr).decode('utf-8',errors='replace')[-4000:]
+  raise SystemExit(f'E04E_REMOTE_COMMAND_CONTROL_FAILED:{proc.returncode}:\n{tail}')
+ return stdout.decode('utf-8',errors='replace')
 def remote_script(b:dict,binding_commit:str,binding_path:str,binding_sha:str)->str:
  out=b['output_root'];out_parent=Path(out).parent.as_posix();lock=out+'.launch_lock';global_lock=out_parent+'/.e04e_active_launch_lock';source=binding_commit
  return f'''set -euo pipefail

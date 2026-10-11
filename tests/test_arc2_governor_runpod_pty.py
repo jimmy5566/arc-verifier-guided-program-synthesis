@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import importlib.util
 import io
+import importlib.util
 import json
 import tempfile
 import unittest
@@ -19,6 +19,13 @@ class _Proc:
         self.stdin = io.BytesIO(); self.returncode = 0
     def communicate(self, timeout=None):
         return b"RECEIPT_MISSING\nPROCESS_ALIVE\n", b""
+
+
+class _LaunchProc:
+    def __init__(self):
+        self.stdin = io.BytesIO(); self.returncode = 0
+    def communicate(self, timeout=None):
+        return b'{"arc2_remote_nonce": "nonce"}\n__ARC2_REMOTE_END__\n', b''
 
 
 class RunPodPtyControlTests(unittest.TestCase):
@@ -67,6 +74,18 @@ class RunPodPtyControlTests(unittest.TestCase):
         with mock.patch.object(governor.subprocess, "Popen", return_value=proc), mock.patch.object(governor.time, "sleep"):
             status, _ = governor.remote_status(job)
         self.assertEqual(status, "PROCESS_ALIVE")
+
+    def test_future_e04_launcher_uses_prompt_ready_newline_not_bracketed_paste(self):
+        path = ROOT / "scripts" / "launch_e04_e_equal_slot_marker_replay_pilot.py"
+        spec = importlib.util.spec_from_file_location("e04e_launch", path); assert spec and spec.loader
+        launch = importlib.util.module_from_spec(spec); spec.loader.exec_module(launch)
+        proc = _LaunchProc()
+        with mock.patch.object(launch.subprocess, "Popen", return_value=proc), mock.patch.object(launch.time, "sleep"), mock.patch.object(launch.secrets, "token_hex", return_value="nonce"):
+            launch.forced_pty_shell("pod", "printf ready")
+        payload = proc.stdin.getvalue()
+        self.assertIn(b"base64 -d | bash; printf", payload)
+        self.assertTrue(payload.endswith(b"exit\n"))
+        self.assertNotIn(b"\x1b[200~", payload)
 
 
 if __name__ == "__main__":

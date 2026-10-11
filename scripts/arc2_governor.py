@@ -9,6 +9,35 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 DISPOSITIONS={"CONTINUE_CONTROLLER","REVIEW_REQUIRED","WAIT_REMOTE","PAUSED","TERMINAL"}
 PROJECT_ROOT=Path(__file__).resolve().parents[1]
 
+class StateConflict(RuntimeError):
+    """A stale Controller/Governor snapshot must never overwrite newer state."""
+
+class StateWriteLock:
+    """Short critical section around durable workflow read-check-write."""
+    def __init__(self, path):
+        self.path=Path(path).with_name(Path(path).name+'.write.lock'); self.handle=None
+    def __enter__(self):
+        self.path.parent.mkdir(parents=True,exist_ok=True); self.handle=self.path.open('a+b')
+        if self.path.stat().st_size == 0: self.handle.write(b' '); self.handle.flush()
+        self.handle.seek(0)
+        try:
+            if os.name == 'nt':
+                import msvcrt; msvcrt.locking(self.handle.fileno(),msvcrt.LK_NBLCK,1)
+            else:
+                import fcntl; fcntl.flock(self.handle.fileno(),fcntl.LOCK_EX)
+        except OSError:
+            self.handle.close(); self.handle=None; raise
+        return self
+    def __exit__(self, *_):
+        if not self.handle: return
+        try:
+            self.handle.seek(0)
+            if os.name == 'nt':
+                import msvcrt; msvcrt.locking(self.handle.fileno(),msvcrt.LK_UNLCK,1)
+            else:
+                import fcntl; fcntl.flock(self.handle.fileno(),fcntl.LOCK_UN)
+        finally: self.handle.close(); self.handle=None
+
 def windows_creationflags():
     """Keep local Herdr and SSH control clients from flashing a Windows console."""
     return getattr(subprocess, "CREATE_NO_WINDOW", 0) if os.name == "nt" else 0
@@ -25,20 +54,39 @@ def atomic(p,x):
     # Controller and Governor can briefly overlap on Windows.  A unique
     # sibling prevents temporary-file collisions; retry only the atomic
     # replacement when an antivirus/indexer still holds the destination.
-    t=p.with_name(f'{p.name}.{os.getpid()}.{time.time_ns()}.tmp')
-    try:
-        t.write_text(json.dumps(x,sort_keys=True,indent=2)+'\n',encoding='utf-8')
-        for attempt in range(5):
-            try:
-                os.replace(t,p)
-                return
-            except PermissionError:
-                if attempt == 4:
-                    raise
-                time.sleep(0.1)
-    finally:
-        if t.exists():
-            t.unlink()
+    p=Path(p)
+    # Receipts are append-only single-writer files.  Workflow state carries a
+    # monotonic revision, so a stale Controller/Governor object fails closed
+    # instead of replacing a newer scientific transition.
+    workflow=isinstance(x,dict) and 'disposition' in x
+    with StateWriteLock(p) if workflow else _NullLock():
+        if workflow:
+            current_revision=0
+            if p.exists():
+                try: current_revision=int(json.loads(p.read_text(encoding='utf-8-sig')).get('state_revision',0))
+                except (OSError,json.JSONDecodeError,TypeError,ValueError): raise StateConflict('WORKFLOW_STATE_UNREADABLE')
+            expected=x.get('state_revision')
+            # Compatibility for an explicit fresh Controller snapshot which
+            # predates revisions.  Loaded snapshots always carry a revision.
+            if expected is not None and int(expected) != current_revision:
+                raise StateConflict(f'WORKFLOW_STATE_REVISION_CONFLICT:{expected}!={current_revision}')
+            x['state_revision']=current_revision+1
+        t=p.with_name(f'{p.name}.{os.getpid()}.{time.time_ns()}.tmp')
+        try:
+            t.write_text(json.dumps(x,sort_keys=True,indent=2)+'\n',encoding='utf-8')
+            for attempt in range(5):
+                try:
+                    os.replace(t,p)
+                    return
+                except PermissionError:
+                    if attempt == 4: raise
+                    time.sleep(0.1)
+        finally:
+            if t.exists(): t.unlink()
+
+class _NullLock:
+    def __enter__(self): return self
+    def __exit__(self, *_): return False
 
 def action_sha256(state):
     """Identity of one Controller handoff, without volatile timestamps."""
@@ -106,6 +154,8 @@ def load(p):
     if 'disposition' not in x:
         old=x.pop('status','ACTIVE'); x['disposition']={'ACTIVE':'CONTINUE_CONTROLLER','WAITING_REMOTE_JOB':'WAIT_REMOTE','PAUSED':'PAUSED','TERMINAL':'TERMINAL'}.get(old,'PAUSED')
     if x['disposition'] not in DISPOSITIONS: raise RuntimeError('INVALID_GOVERNOR_DISPOSITION')
+    try: x['state_revision']=int(x.get('state_revision',0))
+    except (TypeError,ValueError): raise RuntimeError('INVALID_WORKFLOW_STATE_REVISION')
     return x
 def sha256_file(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -179,17 +229,53 @@ def controller_turn_is_active(target):
             return record.get('agent_status') == 'working'
     raise RuntimeError('CONTROLLER_TARGET_DISAPPEARED')
 def prompt(actor,text,timeout,state):
+    """Deliver one intent and classify delivery without guessing after timeout.
+
+    A nonzero exit normally cannot prove that Herdr did not enqueue the
+    message.  Only explicitly rejected busy/not-found responses are safe to
+    classify as non-delivery; every other failure is UNKNOWN_DELIVERY.
+    """
     log(state, f'prompting {actor}')
-    r=subprocess.run(['herdr','agent','prompt',actor,text,'--wait','--until','idle','--until','done','--until','blocked','--timeout',str(timeout*1000)],check=False,timeout=timeout+15, capture_output=True, text=True, encoding='utf-8', errors='replace',creationflags=windows_creationflags())
+    try:
+        r=subprocess.run(['herdr','agent','prompt',actor,text,'--wait','--until','idle','--until','done','--until','blocked','--timeout',str(timeout*1000)],check=False,timeout=timeout+15, capture_output=True, text=True, encoding='utf-8', errors='replace',creationflags=windows_creationflags())
+    except subprocess.TimeoutExpired:
+        log(state, f'{actor} prompt timeout after possible delivery')
+        return 'UNKNOWN_DELIVERY','TIMEOUT_AFTER_POSSIBLE_DELIVERY'
+    except OSError as exc:
+        log(state, f'{actor} prompt transport error after possible delivery')
+        return 'UNKNOWN_DELIVERY',f'OSERROR:{type(exc).__name__}'
     if r.returncode:
         detail=(r.stderr or r.stdout).strip().replace('\n',' ')[:300]
-        if 'agent_working' in detail or 'agent_busy' in detail or 'agent_prompt_stalled' in detail:
-            log(state, f'{actor} prompt busy; retrying in 2s')
-            time.sleep(2); return False
-        log(state, f'{actor} prompt failed exit={r.returncode} detail={detail}')
-        time.sleep(2); return False
-    log(state, f'{actor} completed')
-    return True
+        if 'agent_not_found' in detail or 'target_not_found' in detail:
+            log(state, f'{actor} prompt confirmed not delivered detail={detail}')
+            return 'NOT_DELIVERED',detail
+        log(state, f'{actor} prompt outcome ambiguous exit={r.returncode} detail={detail}')
+        return 'UNKNOWN_DELIVERY',detail
+    log(state, f'{actor} delivery acknowledged by Herdr')
+    return 'DELIVERED','HERDR_EXIT_0'
+
+def archive_superseded_dispatch(state, previous, action_id):
+    """Keep a bounded audit trail when a real Controller stage advances."""
+    if not isinstance(previous,dict) or previous.get('action_sha256') == action_id:
+        return
+    item=dict(previous); item['terminal_outcome']='SUPERSEDED_BY_NEW_SEMANTIC_ACTION'; item['terminal_at']=now()
+    history=list(state.get('controller_dispatch_history') or [])
+    history.append(item); state['controller_dispatch_history']=history[-16:]
+
+def persist_delivery_outcome(path, action_id, delivery, detail):
+    """Reload before recording delivery so a Controller transition wins races."""
+    current=load(path)
+    if action_sha256(current) != action_id:
+        return 'CONTROLLER_STATE_CHANGED'
+    dispatch=current.get('controller_dispatch')
+    if not isinstance(dispatch,dict) or dispatch.get('action_sha256') != action_id:
+        return 'CONTROLLER_STATE_CHANGED'
+    dispatch.update({'status':delivery,'delivery_detail':detail,'delivery_recorded_at':now()})
+    if delivery == 'DELIVERED': dispatch['delivery_acknowledged_at']=now()
+    current.update({'controller_dispatch':dispatch,'updated_at':now()})
+    atomic(path,current)
+    return 'CONTROLLER_PROMPTED' if delivery == 'DELIVERED' else ('CONTROLLER_DELIVERY_UNKNOWN' if delivery == 'UNKNOWN_DELIVERY' else 'CONTROLLER_NOT_DELIVERED')
+
 def controller(s,p,timeout,retry_seconds=300):
     s.update({'last_actor':'governor','updated_at':now()}); atomic(p,s)
     target=resolve_controller_target(s,p)
@@ -205,27 +291,42 @@ def controller(s,p,timeout,retry_seconds=300):
             return 'CONTROLLER_STATE_CHANGED'
         current_target=resolve_controller_target(current,p)
         if controller_turn_is_active(current_target):
-            current.update({'controller_dispatch':'ACTIVE_CONTROLLER_TURN_NO_REPROMPT','updated_at':now()})
+            dispatch=current.get('controller_dispatch')
+            # An active pane is observation evidence, never permission to
+            # erase the semantic action which may already be delivered.
+            if isinstance(dispatch,dict):
+                dispatch=dict(dispatch); dispatch['active_observed_at']=now()
+                if dispatch.get('status') == 'DELIVERED': dispatch['status']='RUNNING'; dispatch['running_observed_at']=now()
+                current['controller_dispatch']=dispatch
+            else:
+                current['controller_activity']={'status':'ACTIVE_CONTROLLER_TURN_NO_REPROMPT','observed_at':now(),'target':current_target}
+            current['updated_at']=now()
             atomic(p,current); log(current,f'controller target={current_target} remains active; no self-prompt')
             return 'CONTROLLER_ACTIVE'
         s,target=current,current_target
     key=action_sha256(s)
     previous=s.get('controller_dispatch')
-    if isinstance(previous,dict) and previous.get('status') == 'DISPATCHED' and previous.get('action_sha256') == key:
-        dispatched_at=previous.get('dispatched_at','')
-        try: age=max(0,(datetime.now(timezone.utc)-datetime.fromisoformat(dispatched_at.replace('Z','+00:00'))).total_seconds())
-        except (TypeError,ValueError): age=retry_seconds
-        if age < retry_seconds:
-            log(s,f'controller action={key[:12]} cooldown remaining={int(retry_seconds-age)}s')
-            return 'CONTROLLER_COOLDOWN'
-    s.update({'controller_dispatch':{'status':'DISPATCHED','action_sha256':key,'dispatched_at':now(),'target':target},'updated_at':now()})
+    if isinstance(previous,dict) and previous.get('action_sha256') == key:
+        status=previous.get('status')
+        # Semantic identity, not elapsed time, provides at-most-once delivery.
+        if status in {'INTENT_RECORDED','DELIVERED','ACKNOWLEDGED','RUNNING','UNKNOWN_DELIVERY'}:
+            log(s,f'controller action={key[:12]} already {status}; no automatic redispatch')
+            return 'CONTROLLER_DELIVERY_UNKNOWN' if status in {'INTENT_RECORDED','UNKNOWN_DELIVERY'} else 'CONTROLLER_ALREADY_DISPATCHED'
+    archive_superseded_dispatch(s,previous,key)
+    s.update({'controller_dispatch':{'status':'INTENT_RECORDED','action_sha256':key,
+                                     'intent_recorded_at':now(),'target':target,
+                                     'delivery_attempt':int(previous.get('delivery_attempt',0) if isinstance(previous,dict) else 0)+1},
+              'updated_at':now()})
     atomic(p,s)
-    ok=prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}, AGENTS.md, and orchestration/agents/ARC_CONTROLLER_SYSTEM.md; execute next_action as far as scientifically valid. '
+    outcome=prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}, AGENTS.md, and orchestration/agents/ARC_CONTROLLER_SYSTEM.md; execute next_action as far as scientifically valid. '
            'Repair routine infrastructure autonomously with bounded CPU-only checks when frozen science is unchanged. Preserve failed runs and never reuse a consumed one-shot authorization. '
            'Escalate only a scientific, security, asset-identity, sealed-data, budget, or fresh execution-authorization blocker by freezing one concise brief and setting REVIEW_REQUIRED; never prompt Director directly. '
            'Before returning atomically write exactly one disposition: CONTINUE_CONTROLLER, REVIEW_REQUIRED, WAIT_REMOTE, PAUSED, or TERMINAL. '
            'REVIEW_REQUIRED requires review_brief and review_reason. WAIT_REMOTE only after a detached job with remote_job. Do not use legacy workflow states.',timeout,s)
-    return 'CONTROLLER_PROMPTED' if ok else 'CONTROLLER_PROMPT_FAILED'
+    if outcome is True: outcome=('DELIVERED','LEGACY_TEST_DELIVERY')
+    elif outcome is False: outcome=('UNKNOWN_DELIVERY','LEGACY_BOOLEAN_FAILURE')
+    delivery,detail=outcome
+    return persist_delivery_outcome(p,key,delivery,detail)
 
 def route_bounded_infrastructure_pause(state, state_path):
     """Requeue at most two CPU-only turns for one recoverable infra incident."""
@@ -534,6 +635,11 @@ def remote_status(job):
 def consume_remote(state,path,status,detail):
     job=state.get('remote_job') or state.get('active_remote_job') or {}
     jobid=str(job.get('job_id') or job.get('round_id') or job.get('run_id') or 'UNKNOWN')
+    receipt_key='|'.join((jobid,str(job.get('expected_terminal_receipt') or job.get('terminal_receipt') or ''),status))
+    consumed=dict(state.get('consumed_remote_receipts') or {})
+    if receipt_key in consumed:
+        log(state,f'WAIT_REMOTE job={jobid} receipt already consumed; no duplicate continuation')
+        return False
     if status=='PROCESS_DEAD':
         failure=path.parent/'remote_failures'/f'{jobid}.json'; failure.parent.mkdir(parents=True,exist_ok=True)
         if not failure.exists(): atomic(failure,{'status':'REMOTE_PROCESS_DIED_WITHOUT_RECEIPT','job':job,'detail':detail,'at':now()})
@@ -549,16 +655,24 @@ def consume_remote(state,path,status,detail):
         # Receipt availability is a controller work item.  Never retain the
         # launch-era action after the remote job has already completed.
         state['next_action']='PROCESS_REMOTE_RECEIPT'
-    state.update({'disposition':'CONTINUE_CONTROLLER','remote_completion_consumed':True,'remote_completion_status':status,'remote_job':None,'active_remote_job':None,'last_actor':'governor','updated_at':now()})
+    consumed[receipt_key]={'status':status,'consumed_at':now(),'job_id':jobid}
+    state.update({'disposition':'CONTINUE_CONTROLLER','remote_completion_consumed':True,'remote_completion_status':status,
+                  'consumed_remote_receipts':consumed,'remote_job':None,'active_remote_job':None,'last_actor':'governor','updated_at':now()})
     atomic(path,state); log(state,f'WAIT_REMOTE job={jobid} {status}; transition -> CONTINUE_CONTROLLER')
+    return True
 def cycle(state_path, *, agent_timeout_seconds, controller_retry_seconds):
     s=load(state_path)
-    if reconcile_consumed_stage_terminal(s,state_path): return 'STATE_RECONCILED',load(state_path)
-    if route_bounded_infrastructure_pause(s,state_path): return 'INFRA_RECOVERY_QUEUED',load(state_path)
+    try:
+        if reconcile_consumed_stage_terminal(s,state_path): return 'STATE_RECONCILED',load(state_path)
+        if route_bounded_infrastructure_pause(s,state_path): return 'INFRA_RECOVERY_QUEUED',load(state_path)
+    except StateConflict:
+        return 'STATE_CONFLICT',load(state_path)
     if s['disposition']=='CONTINUE_CONTROLLER':
-        return controller(s,state_path,agent_timeout_seconds,controller_retry_seconds),load(state_path)
+        try: return controller(s,state_path,agent_timeout_seconds,controller_retry_seconds),load(state_path)
+        except StateConflict: return 'STATE_CONFLICT',load(state_path)
     if s['disposition']=='REVIEW_REQUIRED':
-        director(s,state_path,agent_timeout_seconds); return 'DIRECTOR_REVIEW',load(state_path)
+        try: director(s,state_path,agent_timeout_seconds); return 'DIRECTOR_REVIEW',load(state_path)
+        except StateConflict: return 'STATE_CONFLICT',load(state_path)
     if s['disposition']=='WAIT_REMOTE':
         job=s.get('remote_job') or s.get('active_remote_job') or {}
         try:
@@ -574,7 +688,8 @@ def cycle(state_path, *, agent_timeout_seconds, controller_retry_seconds):
                     return 'REMOTE_PENDING',s
                 detail = confirmed_detail
             if status in {'RECEIPT_PRESENT','PROCESS_DEAD'}:
-                consume_remote(s,state_path,status,detail); return 'REMOTE_COMPLETED',load(state_path)
+                if consume_remote(s,state_path,status,detail): return 'REMOTE_COMPLETED',load(state_path)
+                return 'REMOTE_ALREADY_CONSUMED',load(state_path)
             if status == 'INVALID_BINDING':
                 # A detached job may be valid while the Controller omitted the
                 # facts needed for receipt polling.  Waiting cannot repair this
@@ -588,6 +703,8 @@ def cycle(state_path, *, agent_timeout_seconds, controller_retry_seconds):
                 atomic(state_path,s)
                 log(s, f"WAIT_REMOTE binding invalid detail={detail}; transition -> CONTINUE_CONTROLLER")
                 return 'REMOTE_BINDING_REPAIR',load(state_path)
+        except StateConflict:
+            return 'STATE_CONFLICT',load(state_path)
         except Exception as exc:
             log(s,f"WAIT_REMOTE exception={type(exc).__name__}:{exc}")
         return 'REMOTE_PENDING',s

@@ -29,11 +29,11 @@ class PersistentGovernorTests(unittest.TestCase):
             try:
                 governor.resolve_controller_target = lambda *_: 'controller-pane'
                 governor.controller_turn_is_active = lambda *_: False
-                governor.prompt = lambda target, *_: calls.append(target) or True
+                governor.prompt = lambda target, *_: calls.append(target) or ('DELIVERED', 'test')
                 self.assertEqual('CONTROLLER_PROMPTED', governor.controller(state, state_path, 1, retry_seconds=300))
                 saved = governor.load(state_path)
-                self.assertEqual('DISPATCHED', saved['controller_dispatch']['status'])
-                self.assertEqual('CONTROLLER_COOLDOWN', governor.controller(saved, state_path, 1, retry_seconds=300))
+                self.assertEqual('DELIVERED', saved['controller_dispatch']['status'])
+                self.assertEqual('CONTROLLER_ALREADY_DISPATCHED', governor.controller(saved, state_path, 1, retry_seconds=300))
                 self.assertEqual(['controller-pane'], calls)
                 saved['next_action'] = 'B'; saved['controller_dispatch'] = 'READY'
                 self.assertEqual('CONTROLLER_PROMPTED', governor.controller(saved, state_path, 1, retry_seconds=300))

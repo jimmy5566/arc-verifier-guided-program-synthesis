@@ -12,7 +12,9 @@ MOD=importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(MOD)
 class ControllerDispatchTest(unittest.TestCase):
     def make_state(self):
         temp=tempfile.TemporaryDirectory(); path=Path(temp.name)/'state.json'
-        path.write_text(json.dumps({'disposition':'CONTINUE_CONTROLLER','controller_target':'pane-1'}),encoding='utf-8')
+        path.write_text(json.dumps({'disposition':'CONTINUE_CONTROLLER','controller_target':'pane-1',
+                                    'stage':'S','next_action':'A',
+                                    'controller_dispatch':{'status':'DELIVERED','action_sha256':'prior','target':'pane-1'}}),encoding='utf-8')
         return temp,path
     def test_active_controller_is_not_reprompted(self):
         temp,path=self.make_state()
@@ -22,7 +24,9 @@ class ControllerDispatchTest(unittest.TestCase):
                 MOD.controller(state,path,30)
             saved=MOD.load(path)
             prompt.assert_not_called()
-            self.assertEqual(saved['controller_dispatch'],'ACTIVE_CONTROLLER_TURN_NO_REPROMPT')
+            self.assertIsInstance(saved['controller_dispatch'],dict)
+            self.assertEqual(saved['controller_dispatch']['action_sha256'],'prior')
+            self.assertEqual(saved['controller_dispatch']['status'],'RUNNING')
             self.assertEqual(saved['disposition'],'CONTINUE_CONTROLLER')
         finally: temp.cleanup()
     def test_active_turn_backoff_preserves_controller_transition(self):
