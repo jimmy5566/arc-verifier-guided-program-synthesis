@@ -1,0 +1,30 @@
+{
+  "grid_identity_intersection": 0,
+  "historical_corpora": [
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/VALIDATION_INPUT_PROMPTS.jsonl",
+      "sha256": "f6dcf3050583506cde7035ff18ac15a79c9292cabc55b504a823c025c8c2eff6"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e04_orientation_marker_counterfactual_v2/VALIDATION_INPUT_PROMPTS.jsonl",
+      "sha256": "4cbaf37a46b75b766d73b81807865796f139500003b911a89eb717c5ac703c45"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e05_structurally_held_out_marker_conditioned_rotation_confirmation_v1/INPUT_PROMPTS.jsonl",
+      "sha256": "ac1776d31f8cda9e814e93736787ab9dd958653a1c4a271b923535b5f509ca3e"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e05_v2_identifiable_prompt_and_asset_identity_repair/INPUT_PROMPTS.jsonl",
+      "sha256": "8e6ac9f550e3d4e87acd7375a14f4335de9bedf83ed99f4f5faa9d7ad1caddea"
+    },
+    {
+      "path": "experiments/capability_repair_baseline_v1/e05_v3_semantically_identifiable_demonstrations_and_adapter_storage_recovery/INPUT_PROMPTS.jsonl",
+      "sha256": "4cf144de064346d36f53e6c10d1cff293a80166907203d8003565418d9010dc3"
+    }
+  ],
+  "latent_tuple_collision": false,
+  "new_d4_classes": 8,
+  "new_d4_classes_all_six_cell": true,
+  "pair_identity_intersection": 0,
+  "status": "PASS"
+}

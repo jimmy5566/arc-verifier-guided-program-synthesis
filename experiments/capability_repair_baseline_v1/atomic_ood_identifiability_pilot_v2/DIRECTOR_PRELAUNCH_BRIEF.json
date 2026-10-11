@@ -1,0 +1,8 @@
+{
+  "brief_type": "DIRECTOR_PRELAUNCH_REVIEW",
+  "manifest_sha256": "7b602d19ab176da775480cbea5aae530ee35dc1953a7d32f88bfcf0c6fc0b4cb",
+  "parent_response_sha256": "84fb03eea5cbebf58ad02a6bb140077d517e488c90765260ecff22291991fd2b",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V2",
+  "request": "Review native ARC interface, observable cue identifiability, rendered one-factor isolation, distinct D4 classes, content-level historical disjointness, and deterministic identities. No GPU authorization requested.",
+  "status": "CPU_ONLY_SUCCESSOR_REPAIR_COMPLETE"
+}

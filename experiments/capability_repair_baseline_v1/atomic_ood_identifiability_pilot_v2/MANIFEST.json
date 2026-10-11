@@ -1,0 +1,42 @@
+{
+  "canonical_units": 8,
+  "cells": [
+    "REFERENCE",
+    "OOD_GEOMETRY",
+    "OOD_COLOR_MAPPING",
+    "OOD_GRID_SIZE",
+    "OOD_LAYOUT",
+    "OOD_MARKER_ENCODING"
+  ],
+  "episodes": 192,
+  "file_sha256": {
+    "BLIND_BASELINE_AUDIT.json": "dfa6e797c9a0e7ddfb8adb7fb4a1c8316a1ad40c3cc2240eed10dc78758131ef",
+    "CONTENT_AND_LATENT_COLLISION_AUDIT.json": "94a70c6656eda674de7b7709889b7a2da2eb6a65e3deee6fde7890e16f8ccb6f",
+    "INPUT_PROMPTS.jsonl": "19b74267b58f1d9884a0c21a57ed08fdf1b4f1d1aa981bf79513e1f32ba61189",
+    "RENDERED_ONE_FACTOR_AUDIT.json": "a83ce7f0d884e9fba3c3604b50a6546efde77e1088b55b77bd05762b7141a0f6",
+    "ROTATION_DISTINCTNESS_AUDIT.json": "c5e791387c968e5d23d5c80a2e077823a38b82b35906fdae7f4b47454f237d39",
+    "SEALED_TARGET_SIDECAR.jsonl": "c3d830b7d79470d72effc8b589f403509b9819ccecb458d63a6dbc919629a7c7"
+  },
+  "final_audit_opened": false,
+  "future_batch_policy": "LENGTH_BUCKETED_B32_FALLBACK_32_16_8_4_1_FIXED_B1_SUBSET",
+  "future_checkpoints": [
+    "V7",
+    "E04_E_CONTROL",
+    "E04_E_TREATMENT"
+  ],
+  "future_execution_requires": [
+    "DIRECTOR_V2_PRELAUNCH_REVIEW",
+    "SEPARATE_GPU_AUTHORIZATION"
+  ],
+  "future_inference": "NATIVE_GREEDY_EXACT_GRID",
+  "generation_run": false,
+  "gpu_used": false,
+  "model_loaded": false,
+  "parent_v1": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V1_REJECTED_PRESERVED",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V2",
+  "seed": 20261011,
+  "source_sha256": "1496bf6152aec3bee0cfa9d3a4545fe86dbf44c4758de356dc9c8a1883ec39fb",
+  "status": "CPU_ONLY_FROZEN_NO_MODEL_NO_INFERENCE",
+  "training_run": false,
+  "turns_per_unit": 4
+}
