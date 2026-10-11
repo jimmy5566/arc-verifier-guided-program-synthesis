@@ -1,0 +1,93 @@
+{
+  "allowed_director_outcomes": [
+    "CONTINUE_DIRECTOR",
+    "PAUSED",
+    "TERMINAL",
+    "REQUIRE_CHANGES"
+  ],
+  "established": [
+    "RUN_006 completed as one authorized target-blind no-update collection with all raw/receipt bytes frozen before CPU scoring.",
+    "Exact-grid B1 comparisons matched for all 12 fixed episodes in every arm.",
+    "Parsed-grid identity differed between Batch32 primary and B1 for 1/12 V7 and 2/12 E04_E_CONTROL fixed episodes; parser-validity matched in all three arms."
+  ],
+  "forbidden_actions": [
+    "no retry or replacement launch under the consumed authorization",
+    "no automatic batch-policy change",
+    "no follow-on experiment or scientific conclusion without Director decision"
+  ],
+  "kind": "R5_CAP192_RUN_006_RESULT_REVIEW",
+  "observed_result": {
+    "b1_row_level_agreement": {
+      "E04_E_CONTROL": {
+        "all_rows_agree": false,
+        "exact_grid_matches": 12,
+        "parsed_grid_matches": 10,
+        "parser_valid_matches": 12,
+        "rows": 12
+      },
+      "E04_E_TREATMENT": {
+        "all_rows_agree": true,
+        "exact_grid_matches": 12,
+        "parsed_grid_matches": 12,
+        "parser_valid_matches": 12,
+        "rows": 12
+      },
+      "V7": {
+        "all_rows_agree": false,
+        "exact_grid_matches": 12,
+        "parsed_grid_matches": 11,
+        "parser_valid_matches": 12,
+        "rows": 12
+      }
+    },
+    "b1_status": "FAIL_ROW_LEVEL_BATCH_SENSITIVITY_DISAGREEMENT",
+    "paired_primary_effects": {
+      "E04_E_CONTROL_minus_V7": {
+        "bootstrap_95_ci": [
+          -0.03125000000000001,
+          0.03125
+        ],
+        "estimand": "equal_weight_canonical_unit_exact_grid_rate_delta",
+        "point_estimate": -8.673617379884035e-19,
+        "units": 8
+      },
+      "E04_E_TREATMENT_minus_V7": {
+        "bootstrap_95_ci": [
+          -0.015625000000000007,
+          0.036458333333333336
+        ],
+        "estimand": "equal_weight_canonical_unit_exact_grid_rate_delta",
+        "point_estimate": 0.010416666666666664,
+        "units": 8
+      }
+    },
+    "primary_exact_grid_rates": {
+      "E04_E_CONTROL": 0.16666666666666666,
+      "E04_E_TREATMENT": 0.17708333333333334,
+      "V7": 0.16666666666666666
+    },
+    "status": "INVALID_B1_BATCH_SENSITIVITY_DISAGREEMENT"
+  },
+  "preserved_conditions": [
+    "one-shot GPU authorization is consumed",
+    "no training, optimizer, backward, gradients, parameter updates, TTT, augmentation, DFS, beam, Gold, dGold, or FINAL_AUDIT",
+    "sealed target contents are not released",
+    "RUN_005 and RUN_006 evidence remain immutable"
+  ],
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5_CAP192",
+  "question_for_director": "Classify the invalid B1 sensitivity outcome and choose the next scientific disposition. Any changed decoding/batching validation or replacement collection requires a new explicit protocol and authorization.",
+  "raw_evidence_sha256": {
+    "E04_E_CONTROL": "694aeddc9de92492377f9886ff26f2d778ecbb9783cd371f6cb1a1ff911c49b5",
+    "E04_E_TREATMENT": "429d7c0ae123a4791a8050845864fe778e2db3d1d69508882fa454aa67452115",
+    "V7": "2536fa0eeca2d0585f638a2637fed4e991e5e5200b4a0da7bcfb24773d50aa4a"
+  },
+  "raw_freeze_manifest_sha256": "264e912ddebd27fe9b78a9a641065f9b082cb2c033eb70dfc4994df9e7b643c9",
+  "result_commit": "bf32474cb66878e1a099720c9f23b7a6ba903b47",
+  "result_package_path": "orchestration/results/atomic_ood_identifiability_pilot_v4_r5_cap192/run_006_ddf8392c9a833f56665bc9010660cbe5/RESULT_PACKAGE.json",
+  "result_package_sha256": "0ee9f23bcb8587183759bdd4260f807abfa3e18e1e09d329d982beb9e1a986eb",
+  "run_id": "RUN_006_CAP192_ddf8392c9a833f56665bc9010660cbe5",
+  "schema_version": 1,
+  "scientific_consequence": "The frozen B1 gate requires row-level parser, parsed-grid, and exact-grid agreement. The observed parsed-grid differences make this collection INVALID_B1_BATCH_SENSITIVITY_DISAGREEMENT for capability interpretation. It must not be treated as support for a checkpoint effect.",
+  "scorer_sha256": "71750d45d71fec8a5dd5762573a3d6df6da81f6af89c19f3b10136e0cbe2ed41",
+  "terminal_receipt_sha256": "c10e20b3f0ab9d61c50b988859fe661731a409a14f07582ed1e4ced4d3703bcb"
+}
