@@ -1,0 +1,16 @@
+{
+  "authorized_replacement_units": [
+    1,
+    7
+  ],
+  "gpu_used": false,
+  "manifest_sha256": "34fd28f9057c57961bee0e8c4cc55e77e514cc87335736a61a406e39adbe6cc1",
+  "model_loaded": false,
+  "parent_director_response_sha256": "3e587517ffa5f8cfb4350f99b03fc460b6a58b9b35bf5b0c7dcc6e29cfec6fac",
+  "prompt_sha256": "9a87a336bff6e3fec0a9726b5212e0ae4fe21666c4839dc06f306229dafccec3",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_SUCCESSOR_BINDING",
+  "role_aware_historical_primary_audit_sha256": "a30e812ff079f65d5f1e1a0becfb7742e2f354dc934b493a21a16d0c223d6461",
+  "source_sha256": "523b904ab3b712095009d0be3e29151aa8d8a563ac663a15ff3789a0192926bd",
+  "target_sidecar_sha256": "62217a9963a8ba62de46d9cc865426e82b8b6fb990eb4afbeda2734b59610903",
+  "training": false
+}

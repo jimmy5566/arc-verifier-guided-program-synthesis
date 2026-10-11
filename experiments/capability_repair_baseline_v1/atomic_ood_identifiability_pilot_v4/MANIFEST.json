@@ -1,0 +1,49 @@
+{
+  "authorized_replacement_units": [
+    1,
+    7
+  ],
+  "canonical_units": 8,
+  "cells": [
+    "REFERENCE",
+    "OOD_GEOMETRY",
+    "OOD_COLOR_MAPPING",
+    "OOD_GRID_SIZE",
+    "OOD_LAYOUT",
+    "OOD_MARKER_ENCODING"
+  ],
+  "episodes": 192,
+  "file_sha256": {
+    "BLIND_BASELINE_AUDIT.json": "dfa6e797c9a0e7ddfb8adb7fb4a1c8316a1ad40c3cc2240eed10dc78758131ef",
+    "INPUT_PROMPTS.jsonl": "9a87a336bff6e3fec0a9726b5212e0ae4fe21666c4839dc06f306229dafccec3",
+    "RENDERED_ONE_FACTOR_AUDIT.json": "a83ce7f0d884e9fba3c3604b50a6546efde77e1088b55b77bd05762b7141a0f6",
+    "ROLE_AWARE_HISTORICAL_PRIMARY_OBJECT_AUDIT.json": "a30e812ff079f65d5f1e1a0becfb7742e2f354dc934b493a21a16d0c223d6461",
+    "ROTATION_DISTINCTNESS_AUDIT.json": "b5e97c214ce7b5f37936275f935b10c37b9465dc6d2711742b7707675a367485",
+    "SEALED_TARGET_SIDECAR.jsonl": "62217a9963a8ba62de46d9cc865426e82b8b6fb990eb4afbeda2734b59610903"
+  },
+  "final_audit_opened": false,
+  "future_batch_policy": "LENGTH_BUCKETED_B32_FALLBACK_32_16_8_4_1_FIXED_B1_SUBSET",
+  "future_checkpoints": [
+    "V7",
+    "E04_E_CONTROL",
+    "E04_E_TREATMENT"
+  ],
+  "future_execution_requires": [
+    "DIRECTOR_V4_FINAL_PRELAUNCH_REVIEW",
+    "SEPARATE_GPU_AUTHORIZATION"
+  ],
+  "future_inference": "NATIVE_GREEDY_EXACT_GRID",
+  "generation_run": false,
+  "gpu_used": false,
+  "model_loaded": false,
+  "parent_director_response_sha256": "3e587517ffa5f8cfb4350f99b03fc460b6a58b9b35bf5b0c7dcc6e29cfec6fac",
+  "parent_v1": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V1_REJECTED_PRESERVED",
+  "parent_v2": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V2_REJECTED_PRESERVED",
+  "parent_v3": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V3_REJECTED_PRESERVED",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4",
+  "seed": 20261011,
+  "source_sha256": "523b904ab3b712095009d0be3e29151aa8d8a563ac663a15ff3789a0192926bd",
+  "status": "CPU_ONLY_FROZEN_NO_MODEL_NO_INFERENCE",
+  "training_run": false,
+  "turns_per_unit": 4
+}
