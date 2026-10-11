@@ -1,0 +1,95 @@
+{
+  "response_id": "E05_V3_POST_RESULT_CPU_ONLY_SCIENTIFIC_PLANNING_REVIEW_BRIEF_RESPONSE",
+  "reviewed_brief_sha256": "67561bc0a3f9cff94f4d5320cb60d85fa3f6138033d0217d6a1c904e48a8b1fc",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "CPU_ONLY_E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_PREFREEZE_V1",
+  "next_action": "Prepare and freeze exactly one CPU-only diagnostic specification over the already frozen E05 RUN_004 raw predictions, parser outputs, canonical-base identities, condition labels, and target sidecar. The specification must implement the mechanism question and prospective classification rule in this response, bind every reused artifact SHA256, prohibit model loading and new generation, and return one concise pre-execution review brief. Do not execute the diagnostic, launch GPU work, train, generate, expand targets, or select a training intervention in this stage.",
+  "one_falsifiable_mechanism_question": "On the marker-sensitive E05-V3 conditions, is Treatment failure primarily caused by marker-invariant output selection, marker-responsive but incorrectly mapped legal rotations, or a more basic structural/format execution failure?",
+  "scientific_rationale": {
+    "established": [
+      "E05 RUN_004 is valid development evidence and did not meet the frozen fixed-turn or marker-conditioned transfer success rules.",
+      "Raw V7, trained Control, and Treatment all scored 0 of 192 on marker binding, while Treatment and Control were identical at 32 of 192 on marker-conditioned rotation.",
+      "Treatment incurred a measurable no-transform retention loss of 8 of 192 versus raw V7."
+    ],
+    "supported_hypothesis": "The prior replay intervention may have learned cohort-specific or prompt-specific behavior without robust marker-conditioned structural transfer. Marker grounding, turn-to-rotation mapping, and output execution remain distinct plausible bottlenecks.",
+    "unknown": [
+      "Whether Treatment outputs are invariant across marker counterfactuals.",
+      "Whether marker-responsive errors are nevertheless valid alternative rotations, indicating a mapping or selection failure.",
+      "Whether malformed or non-oracle structures dominate, indicating a more basic execution or representation failure.",
+      "Whether gradient interference, optimization dynamics, or data coverage caused any observed failure."
+    ],
+    "research_bottleneck": "Aggregate exact-grid counts cannot distinguish failure to observe/use the marker from failure to map or execute the requested transformation."
+  },
+  "smallest_evidence_path": {
+    "inputs": [
+      "Frozen RUN_004 raw predictions for RAW_V7_NO_E04E_UPDATE, E04E_RUN003_CONTROL_EQUAL_SLOT, and E04E_RUN003_TREATMENT_EQUAL_SLOT",
+      "Frozen parser outputs and canonical-base/turn/condition identities",
+      "Frozen E05-V3 target sidecar already legitimately opened for RUN_004 CPU scoring"
+    ],
+    "statistical_unit": "canonical base, retaining the four marker-turn views together",
+    "primary_scope": [
+      "MARKER_BINDING_CONTROL",
+      "MARKER_CONDITIONED_ROTATION"
+    ],
+    "arm_priority": "Treatment is primary; raw V7 and trained Control are fixed descriptive comparators.",
+    "mutually_exclusive_base_level_taxonomy": [
+      "CORRECT_MAPPING: all four marker-turn outputs equal their respective desired targets",
+      "STRUCTURAL_OR_FORMAT_FAILURE: otherwise, at least one output is parser-invalid or matches none of the four legal turn-specific target grids",
+      "MARKER_INVARIANT_LEGAL_ROTATION: otherwise, all four outputs are legal target-family grids but canonicalize to one identical grid",
+      "MARKER_RESPONSIVE_WRONG_MAPPING: otherwise, outputs contain at least two distinct legal target-family grids but the four-turn mapping is not fully correct"
+    ],
+    "required_reports": [
+      "Counts and shares of all four categories by condition and arm",
+      "The 48-base paired Treatment-versus-Control and Treatment-versus-V7 category transitions as descriptive evidence",
+      "Parser-invalid and non-oracle structural failures reported separately inside STRUCTURAL_OR_FORMAT_FAILURE"
+    ],
+    "bootstrap": {
+      "seed": 20261012,
+      "replicates": 10000,
+      "resampling_unit": "canonical base with all four marker-turn views retained",
+      "interval": "paired percentile 95 percent interval"
+    }
+  },
+  "prospective_decision_rule": {
+    "MARKER_INVARIANCE_DOMINANT": "For Treatment, the lower 95 percent bootstrap bound for MARKER_INVARIANT_LEGAL_ROTATION share exceeds 0.50 in at least one marker-sensitive condition, and no other failure-category lower bound exceeds 0.50 in that condition.",
+    "WRONG_MAPPING_DOMINANT": "For Treatment, the lower 95 percent bootstrap bound for MARKER_RESPONSIVE_WRONG_MAPPING share exceeds 0.50 in at least one marker-sensitive condition, and no other failure-category lower bound exceeds 0.50 in that condition.",
+    "STRUCTURAL_EXECUTION_DOMINANT": "For Treatment, the lower 95 percent bootstrap bound for STRUCTURAL_OR_FORMAT_FAILURE share exceeds 0.50 in at least one marker-sensitive condition, and no other failure-category lower bound exceeds 0.50 in that condition.",
+    "MIXED_OR_INCONCLUSIVE": "No single Treatment failure category satisfies its dominance rule, the two marker-sensitive conditions imply different dominant mechanisms, any taxonomy category is non-exclusive, or required frozen identities/groupings are incomplete.",
+    "interpretation_limit": "A dominant descriptive error morphology prioritizes the next hypothesis but does not establish a causal training mechanism."
+  },
+  "what_current_frozen_evidence_can_answer_cpu_only": [
+    "Whether outputs change across matched marker-turn counterfactuals.",
+    "Whether incorrect outputs are valid alternative rotations from the frozen target family.",
+    "Whether errors are dominated by parser/structural failure rather than selection among legal transformations.",
+    "Whether Treatment changes the descriptive error morphology relative to raw V7 and trained Control."
+  ],
+  "what_current_evidence_cannot_answer": [
+    "Gradient conflict, causal optimization dynamics, representation localization, or token-ranking mechanisms.",
+    "Independent structural or ARC generalization.",
+    "The efficacy of any new curriculum, loss, or training intervention."
+  ],
+  "requirements_before_any_future_gpu_work": [
+    "A new prospectively generated cohort with content-level and latent-structure disjointness from E04/E05, independently frozen seeds, and fixed query-independent demonstrations.",
+    "A frozen model-visible prompt manifest, target sidecar, canonical-unit grouping, parser/scorer, decision rule, exact checkpoint identities, and leakage/collision audits before generation.",
+    "A separate Director prelaunch decision selecting exactly one falsifiable no-update measurement or matched training intervention, with an explicit numeric runtime cap and one-shot execution binding."
+  ],
+  "forbidden_adaptive_reuse": [
+    "Do not use E05 targets, error categories, successful bases, failure bases, or per-example outcomes to select or generate future TRAIN examples, demonstrations, validation examples, thresholds, hyperparameters, or curriculum weights.",
+    "Do not tune the taxonomy or dominance threshold after opening per-example classifications.",
+    "Do not represent this reused synthetic development cohort as independent confirmation."
+  ],
+  "authorization": {
+    "cpu_only_prefreeze_preparation": true,
+    "cpu_diagnostic_execution": false,
+    "model_loading": false,
+    "gpu_work": false,
+    "training": false,
+    "inference": false,
+    "generation": false,
+    "gradient_work": false,
+    "target_expansion": false,
+    "gold_dgold_final_audit_access": false
+  },
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

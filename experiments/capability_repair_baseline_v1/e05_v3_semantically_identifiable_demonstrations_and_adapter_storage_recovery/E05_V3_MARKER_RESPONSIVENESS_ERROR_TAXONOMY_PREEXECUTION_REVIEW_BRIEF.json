@@ -1,0 +1,19 @@
+{
+  "boundaries": [
+    "NO_MODEL_LOADING",
+    "NO_GPU_WORK",
+    "NO_TRAINING",
+    "NO_INFERENCE",
+    "NO_GENERATION",
+    "NO_GRADIENT_WORK",
+    "NO_TARGET_EXPANSION",
+    "NO_GOLD_DGOLD_FINAL_AUDIT",
+    "NO_ADAPTIVE_TUNING_OR_TRAIN_SELECTION"
+  ],
+  "brief_type": "DIRECTOR_E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_PREEXECUTION_REVIEW",
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "request": "Approve or reject exactly the frozen CPU-only execution of this error taxonomy. Do not authorize any GPU, model loading, generation, training, gradient work, target expansion, or intervention selection.",
+  "required_outcome": "CONTINUE_CONTROLLER only if the frozen taxonomy can run CPU-only unchanged; otherwise REQUIRE_CHANGES, PAUSED, or TERMINAL.",
+  "specification_path": "E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_PREFREEZE_SPEC_V1.json",
+  "specification_sha256": "58d0bbdd8fba5f594092160f885160d69bb456fe39b6a9dd99a153c659ae3a3e"
+}

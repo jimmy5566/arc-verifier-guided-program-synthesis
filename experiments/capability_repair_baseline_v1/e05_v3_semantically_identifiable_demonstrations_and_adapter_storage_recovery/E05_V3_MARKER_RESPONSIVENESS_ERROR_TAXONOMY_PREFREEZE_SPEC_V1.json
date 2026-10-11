@@ -1,0 +1,80 @@
+{
+  "arms": [
+    "E04E_RUN003_TREATMENT_EQUAL_SLOT",
+    "RAW_V7_NO_E04E_UPDATE",
+    "E04E_RUN003_CONTROL_EQUAL_SLOT"
+  ],
+  "bootstrap": {
+    "interval": "paired percentile 95 percent",
+    "replicates": 10000,
+    "seed": 20261012
+  },
+  "director_response_sha256": "b233c4908aa9bce1e3e0ef9b68ce8f330b76f1d0c804c943bf5d42f625c4f4b0",
+  "execution_authorization": false,
+  "inputs": [
+    "three frozen RUN_004 raw predictions",
+    "their frozen parser fields",
+    "canonical-base/turn/condition target-sidecar identities"
+  ],
+  "preexecution_review_required": true,
+  "primary_scope": [
+    "MARKER_BINDING_CONTROL",
+    "MARKER_CONDITIONED_ROTATION"
+  ],
+  "prohibitions": [
+    "NO_MODEL_LOADING",
+    "NO_GPU_WORK",
+    "NO_TRAINING",
+    "NO_INFERENCE",
+    "NO_GENERATION",
+    "NO_GRADIENT_WORK",
+    "NO_TARGET_EXPANSION",
+    "NO_GOLD_DGOLD_FINAL_AUDIT",
+    "NO_ADAPTIVE_TUNING_OR_TRAIN_SELECTION"
+  ],
+  "prospective_decision_rule": {
+    "dominance": "Treatment lower 95 percent bootstrap bound for one category share exceeds 0.50 in at least one marker-sensitive condition and no other category lower bound exceeds 0.50 there",
+    "interpretation_limit": "descriptive error morphology only; does not establish a causal training mechanism",
+    "mixed_or_inconclusive": "no single category qualifies, conditions disagree, taxonomy is non-exclusive, or identities/groupings are incomplete"
+  },
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "raw_evidence_sha256": {
+    "E04E_RUN003_CONTROL_EQUAL_SLOT_RAW_GENERATIONS.jsonl": "47edee3d176f5fc72d8f2c519d17f95db8ed56f188bdb66bda28abb272be67df",
+    "E04E_RUN003_TREATMENT_EQUAL_SLOT_RAW_GENERATIONS.jsonl": "30745fc53fe6dd762a428515abc874985d0ff0011402e338b4187296519f7c9e",
+    "LAUNCH_CAP_RECEIPT.json": "91fafada998b2d0901bb8eb04a7c644e2e60a6848e419de6ea690314086e920c",
+    "RAW_V7_NO_E04E_UPDATE_RAW_GENERATIONS.jsonl": "c951c870fb090d573c97bc27e7f389e686cea44cc6df29585586a9a695cb188c",
+    "REMOTE_TRANSPORT_MANIFEST.json": "740fe0ece59d345cdf6c9b740e6d10aa6a8b07c25f5418214ba75ef82561f1cb",
+    "TERMINAL_RECEIPT.json": "09e3ec729a1bf21ed259f47b49342db533a8490496efc8499642fb5d88fadc9c"
+  },
+  "required_reports": [
+    "counts and shares of all categories by condition and arm",
+    "48-base paired Treatment-versus-Control and Treatment-versus-V7 category transitions as descriptive evidence",
+    "parser-invalid and non-oracle structural failures separately"
+  ],
+  "reused_artifacts_sha256": {
+    "E05_V3_POST_RESULT_CPU_ONLY_SCIENTIFIC_PLANNING_REVIEW_BRIEF.json": "67561bc0a3f9cff94f4d5320cb60d85fa3f6138033d0217d6a1c904e48a8b1fc",
+    "E05_V3_POST_RESULT_CPU_ONLY_SCIENTIFIC_PLANNING_REVIEW_BRIEF_RESPONSE.json": "b233c4908aa9bce1e3e0ef9b68ce8f330b76f1d0c804c943bf5d42f625c4f4b0",
+    "E05_V3_RUN_004_CPU_EXACT_GRID_RESULT.json": "0981ecf48a87f864c6c71eaa530a1993f41bc27ddd7b27c48001c06d7d220181",
+    "E05_V3_RUN_004_EVIDENCE_PRESERVATION_RECEIPT.json": "35a6b2cdd52f712c15dd39d567ad359892f2c0b9be1c2952f47e41b92042a3b1",
+    "E05_V3_RUN_004_ROUTE_CLOSURE_RECEIPT.json": "2096e3508be7c033f3587758dac6feeb66439366f20241095a931973fc487a33",
+    "E05_V3_THREE_ARM_EXECUTION_BINDING_REPAIR.json": "15ac5ba5ceabe4eacdc5c5f6b057ea175dd06dc56d5d00b9f30d93768a710f10",
+    "TARGET_SCORER_SIDECAR.jsonl": "df24d7fb97905cb210b04e4f45c050f0e77b1abf87258f29bfd1bc4b01687ac3"
+  },
+  "schema_version": 1,
+  "scorer_source_sha256": "d23e83200e241bc85c89299a78747e4d86148268bf5dc125e32b2af1ced2ceba",
+  "stage": "CPU_ONLY_E05_V3_MARKER_RESPONSIVENESS_ERROR_TAXONOMY_PREFREEZE_V1",
+  "statistical_unit": "canonical base; retain all four marker-turn views together",
+  "status": "CPU_ONLY_PREFREEZE_NO_DIAGNOSTIC_EXECUTION",
+  "taxonomy": {
+    "CORRECT_MAPPING": "all four marker-turn outputs equal their respective desired targets",
+    "MARKER_INVARIANT_LEGAL_ROTATION": "otherwise, all four outputs are legal target-family grids but canonicalize to one identical grid",
+    "MARKER_RESPONSIVE_WRONG_MAPPING": "otherwise, outputs contain at least two distinct legal target-family grids but the four-turn mapping is not fully correct",
+    "STRUCTURAL_OR_FORMAT_FAILURE": "otherwise, at least one output is parser-invalid or matches none of the four legal turn-specific target grids"
+  },
+  "taxonomy_order": [
+    "CORRECT_MAPPING",
+    "STRUCTURAL_OR_FORMAT_FAILURE",
+    "MARKER_INVARIANT_LEGAL_ROTATION",
+    "MARKER_RESPONSIVE_WRONG_MAPPING"
+  ]
+}
