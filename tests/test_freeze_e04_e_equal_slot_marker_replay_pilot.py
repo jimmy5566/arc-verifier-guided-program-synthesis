@@ -1,10 +1,12 @@
 ﻿from __future__ import annotations
 import sys
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / 'src')]
 from scripts import freeze_e04_e_equal_slot_marker_replay_pilot as e04e
+from scripts import launch_e04_e_equal_slot_marker_replay_pilot as launcher
 
 
 def test_e04e_v2_freezer_and_accounting() -> None:
@@ -31,3 +33,19 @@ def test_e04e_v2_rejects_cross_arm_role_mutation() -> None:
         assert str(exc) == 'E04E_CROSS_ARM_METADATA'
     else:
         raise AssertionError('cross-arm role mutation accepted')
+
+
+def test_e04e_remote_launcher_script_has_valid_bash_syntax() -> None:
+    script = launcher.remote_script(
+        {
+            'output_root': '/workspace/arc2/e04e/run_001_nonce',
+            'protocol_id': 'E04E_TEST',
+            'worker_source_commit': 'a' * 40,
+            'nonce': 'nonce',
+        },
+        'b' * 40,
+        'experiments/e04e/BINDING.json',
+        'c' * 64,
+    )
+    check = subprocess.run(['bash', '-n'], input=script, text=True, capture_output=True)
+    assert check.returncode == 0, check.stderr

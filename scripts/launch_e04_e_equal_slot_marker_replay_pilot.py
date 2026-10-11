@@ -17,9 +17,8 @@ def forced_pty_shell(target:str,script:str)->str:
   raise SystemExit(f'E04E_REMOTE_COMMAND_CONTROL_FAILED:{completed.returncode}:\n{tail}')
  return completed.stdout.decode('utf-8',errors='replace')
 def remote_script(b:dict,binding_commit:str,binding_path:str,binding_sha:str)->str:
- out=b['output_root'];lock=out+'.launch_lock';source=binding_commit
- return f'''set -Eeuo pipefail
-trap 'rc=$?; printf "E04E_REMOTE_LAUNCH_FAILURE exit_code=%s line=%s\\n" "$rc" "$LINENO" >&2; exit "$rc"' ERR
+ out=b['output_root'];out_parent=Path(out).parent.as_posix();lock=out+'.launch_lock';source=binding_commit
+ return f'''set -euo pipefail
 repo=/root/arc-runtime-3090-gpu-benchmark-v1/arc2
 cd "$repo"
 test "${{GH_TOKEN:+present}}" = "present"
@@ -29,15 +28,17 @@ test "$(git rev-parse HEAD)" = "{source}"
 test -z "$(git status --porcelain)"
 test ! -e "{out}"
 test ! -e "{lock}"
-if pgrep -af '[r]un_e04_e_equal_slot_marker_replay_pilot|[a]rc2_hard_cap_launcher.*e04_e' >/tmp/e04e-active; then cat /tmp/e04e-active; exit 41; fi
+active_e04e_processes=$(pgrep -af '[r]un_e04_e_equal_slot_marker_replay_pilot|[a]rc2_hard_cap_launcher.*e04_e' || true)
+test -z "$active_e04e_processes"
 gpu_total=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -n 1 | tr -d ' ')
 gpu_free=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -n 1 | tr -d ' ')
 test "$gpu_total" -ge 24000
 test "$gpu_free" -ge 20000
 python3 -c 'import torch, transformers, peft, bitsandbytes; assert torch.cuda.is_available() and torch.cuda.is_bf16_supported()'
-mkdir -p "$(dirname "{out}")";mkdir "{lock}"
+mkdir -p "{out_parent}";mkdir "{lock}"
 git show "{binding_commit}:{binding_path}" > "{lock}/LAUNCH_BINDING.json.tmp"
-test "$(sha256sum "{lock}/LAUNCH_BINDING.json.tmp" | awk '{{print $1}}')" = "{binding_sha}"
+actual_binding_sha=$(sha256sum "{lock}/LAUNCH_BINDING.json.tmp" | awk '{{print $1}}')
+test "$actual_binding_sha" = "{binding_sha}"
 mv "{lock}/LAUNCH_BINDING.json.tmp" "{lock}/LAUNCH_BINDING.json"
 nohup python3 scripts/arc2_hard_cap_launcher.py --cap-seconds 7200 --receipt "{out}/LAUNCH_CAP_RECEIPT.json" -- python3 scripts/run_e04_e_equal_slot_marker_replay_pilot.py --binding "{lock}/LAUNCH_BINDING.json" --output-root "{out}" --launch-commit "{binding_commit}" > "{lock}/launcher.log" 2>&1 < /dev/null &
 pid=$!
