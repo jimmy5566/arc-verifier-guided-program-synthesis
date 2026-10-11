@@ -14,7 +14,7 @@ if str(ROOT) not in sys.path:
 from scripts.e04_c_matched_rotation_execution import (ARMS, BASE, JOINT_CAP_SECONDS, PER_ARM_CAP_SECONDS,
     SCHEDULE, atomic_json, relative, sha_path, static_schedule_preflight)
 
-RESPONSE = ROOT / "orchestration/director/responses/E04_C_RUN_001_REPLACEMENT_EXECUTION_AUTHORIZATION_BRIEF_V1_RESPONSE.json"
+RESPONSE = ROOT / "orchestration/director/responses/E04_C_RUN_002_REPLACEMENT_EXECUTION_AUTHORIZATION_BRIEF_V1_RESPONSE.json"
 WORKER = ROOT / "scripts/run_e04_c_matched_rotation_repair_pilot.py"
 EVALUATOR = ROOT / "scripts/score_e04_c_matched_rotation_repair_pilot.py"
 LAUNCHER = ROOT / "scripts/launch_e04_c_matched_rotation_repair_pilot.py"
