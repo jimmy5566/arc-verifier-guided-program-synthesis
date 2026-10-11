@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Target-blind B1/Batch32 divergence audit for frozen RUN_006 bytes."""
 import argparse, hashlib, json
 from pathlib import Path
