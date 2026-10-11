@@ -1,0 +1,2533 @@
+{
+  "config_sha256": "e0a44c514c352f7a5b2d0ad7154627a70f8d94fe19859797e4875728ad335fb1",
+  "final_audit_opened": false,
+  "generation_calls": 0,
+  "optimizer_steps": 0,
+  "pairs": [
+    {
+      "canonical_base_id": "87a30ddd029de8bfddadb70b3ab84a0c038025a13177ca1c0d6ed87c06a9b375",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.958279609680176,
+          "module_squared_norms": {
+            "down_proj": 20.76012998445003,
+            "gate_proj": 3.3696386397969036,
+            "k_proj": 1.9377286974402068,
+            "o_proj": 4.316435671487852,
+            "q_proj": 3.7399887582787414,
+            "up_proj": 4.202532869596325,
+            "v_proj": 11.489408885114244
+          },
+          "norm": 7.058035373687744,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.893844127655029,
+          "module_squared_norms": {
+            "down_proj": 61.400845339107036,
+            "gate_proj": 9.463474332093938,
+            "k_proj": 6.319043516139573,
+            "o_proj": 12.412349669502873,
+            "q_proj": 11.462963656870897,
+            "up_proj": 11.679554841005029,
+            "v_proj": 29.204338192546857
+          },
+          "norm": 11.913965225219727,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.6422531604766846,
+          "module_squared_norms": {
+            "down_proj": 16.48355245440871,
+            "gate_proj": 2.9055807598683714,
+            "k_proj": 1.6104844496601345,
+            "o_proj": 3.5629715059803857,
+            "q_proj": 3.0536325575619685,
+            "up_proj": 3.4497133435825162,
+            "v_proj": 8.877942954273749
+          },
+          "norm": 6.320116996765137,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8491783142089844,
+      "pair_id": "c42e90707165ef487459f92d541e09a9e901c5c259fa10417e57c2f55c7a670d",
+      "rotation_marker_cosine": 0.8320454359054565,
+      "rotation_no_transform_cosine": 0.8793163299560547,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "87a30ddd029de8bfddadb70b3ab84a0c038025a13177ca1c0d6ed87c06a9b375",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.953442096710205,
+          "module_squared_norms": {
+            "down_proj": 20.649905925722123,
+            "gate_proj": 3.3542329181964305,
+            "k_proj": 1.9211036890096693,
+            "o_proj": 4.2879418563097715,
+            "q_proj": 3.7174951416191107,
+            "up_proj": 4.1826883429712325,
+            "v_proj": 11.415876063394535
+          },
+          "norm": 7.037701606750488,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.87347936630249,
+          "module_squared_norms": {
+            "down_proj": 59.98112429886896,
+            "gate_proj": 9.441493195877229,
+            "k_proj": 6.305506923567464,
+            "o_proj": 12.368962458225724,
+            "q_proj": 11.4615904659031,
+            "up_proj": 11.665100560467636,
+            "v_proj": 28.988525849697908
+          },
+          "norm": 11.8411283493042,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.635434865951538,
+          "module_squared_norms": {
+            "down_proj": 16.353803022560896,
+            "gate_proj": 2.882913635185787,
+            "k_proj": 1.5935613841184022,
+            "o_proj": 3.5233750748684542,
+            "q_proj": 3.0252626689259614,
+            "up_proj": 3.429503785662746,
+            "v_proj": 8.778951732678252
+          },
+          "norm": 6.291849613189697,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8502224087715149,
+      "pair_id": "190a5aa04223da70822db32de4d9b05d7cabf8553da9dcb3363a88e97585beff",
+      "rotation_marker_cosine": 0.830775797367096,
+      "rotation_no_transform_cosine": 0.879743754863739,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "87a30ddd029de8bfddadb70b3ab84a0c038025a13177ca1c0d6ed87c06a9b375",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.956247091293335,
+          "module_squared_norms": {
+            "down_proj": 20.942392251054116,
+            "gate_proj": 3.3923317016319743,
+            "k_proj": 1.9479986741339417,
+            "o_proj": 4.338194789495901,
+            "q_proj": 3.771632054706515,
+            "up_proj": 4.227561192507892,
+            "v_proj": 11.569668180905865
+          },
+          "norm": 7.084474563598633,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.8633904457092285,
+          "module_squared_norms": {
+            "down_proj": 59.77576452700305,
+            "gate_proj": 9.435192900748916,
+            "k_proj": 6.261803903578766,
+            "o_proj": 12.321589604878682,
+            "q_proj": 11.334406824862526,
+            "up_proj": 11.616257588376357,
+            "v_proj": 28.916983898607214
+          },
+          "norm": 11.817867279052734,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.6400179862976074,
+          "module_squared_norms": {
+            "down_proj": 16.569720916442748,
+            "gate_proj": 2.9229296800808697,
+            "k_proj": 1.6191630021078254,
+            "o_proj": 3.5696924419498828,
+            "q_proj": 3.0810988441714926,
+            "up_proj": 3.471079123283289,
+            "v_proj": 8.883436321375484
+          },
+          "norm": 6.333807468414307,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8495720028877258,
+      "pair_id": "8a91a59c1d55fae9ad963417ee88db574f2c286845eea2ee40db43fd3427c7a9",
+      "rotation_marker_cosine": 0.8297086954116821,
+      "rotation_no_transform_cosine": 0.879621684551239,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "87a30ddd029de8bfddadb70b3ab84a0c038025a13177ca1c0d6ed87c06a9b375",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.9443447589874268,
+          "module_squared_norms": {
+            "down_proj": 20.676110574822815,
+            "gate_proj": 3.3520787792817828,
+            "k_proj": 1.9172747341547165,
+            "o_proj": 4.274928937073128,
+            "q_proj": 3.7197566716179153,
+            "up_proj": 4.176218646392044,
+            "v_proj": 11.435136535084894
+          },
+          "norm": 7.039283275604248,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.851009368896484,
+          "module_squared_norms": {
+            "down_proj": 59.11775878534536,
+            "gate_proj": 9.351187545259563,
+            "k_proj": 6.190017963547689,
+            "o_proj": 12.184374503063736,
+            "q_proj": 11.17865587843312,
+            "up_proj": 11.505911049207498,
+            "v_proj": 28.645592733275407
+          },
+          "norm": 11.754722595214844,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.639448881149292,
+          "module_squared_norms": {
+            "down_proj": 16.567172550719988,
+            "gate_proj": 2.907999743409846,
+            "k_proj": 1.612701409627789,
+            "o_proj": 3.5539389216992276,
+            "q_proj": 3.0605361680559326,
+            "up_proj": 3.4607513930541245,
+            "v_proj": 8.855156475119657
+          },
+          "norm": 6.325998306274414,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.850895881652832,
+      "pair_id": "4e4c324560cca7fa70641dbe060e5bcaa4d16554b3a5cd8ced53ef598942acca",
+      "rotation_marker_cosine": 0.8302182555198669,
+      "rotation_no_transform_cosine": 0.8799456357955933,
+      "turn": 3
+    },
+    {
+      "canonical_base_id": "3c916c7b967b656eb10c8731bf6eb66f55dcc19881b73ddf42aecc211a0bf6e1",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 3.0684940814971924,
+          "module_squared_norms": {
+            "down_proj": 16.593430973960494,
+            "gate_proj": 2.686751540413752,
+            "k_proj": 1.7345489286462907,
+            "o_proj": 3.8515842380638787,
+            "q_proj": 3.287332983918759,
+            "up_proj": 3.484993835339992,
+            "v_proj": 9.295007073531451
+          },
+          "norm": 6.397940635681152,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.977628231048584,
+          "module_squared_norms": {
+            "down_proj": 51.51405222530593,
+            "gate_proj": 9.803964299922882,
+            "k_proj": 5.512266665540665,
+            "o_proj": 12.558717350311781,
+            "q_proj": 11.289930452951921,
+            "up_proj": 11.751308868791966,
+            "v_proj": 26.912408570547996
+          },
+          "norm": 11.372891426086426,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.6471285820007324,
+          "module_squared_norms": {
+            "down_proj": 14.199128067064521,
+            "gate_proj": 2.586463089676954,
+            "k_proj": 1.5268083091974631,
+            "o_proj": 3.3642676808171927,
+            "q_proj": 3.171160432350689,
+            "up_proj": 3.1293601806642073,
+            "v_proj": 7.8470084911823506
+          },
+          "norm": 5.9853315353393555,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.852920651435852,
+      "pair_id": "d87ebd207702a616f38b4f2be4804cea9035e68bf79303e9fc4a04d640f490a3",
+      "rotation_marker_cosine": 0.820834755897522,
+      "rotation_no_transform_cosine": 0.8665052652359009,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "3c916c7b967b656eb10c8731bf6eb66f55dcc19881b73ddf42aecc211a0bf6e1",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 3.032835006713867,
+          "module_squared_norms": {
+            "down_proj": 16.37904730864102,
+            "gate_proj": 2.6496399643031054,
+            "k_proj": 1.707271564485609,
+            "o_proj": 3.7959258129285445,
+            "q_proj": 3.2130684430198926,
+            "up_proj": 3.430030111529959,
+            "v_proj": 9.178072395297932
+          },
+          "norm": 6.352405548095703,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.9268364906311035,
+          "module_squared_norms": {
+            "down_proj": 50.28366424818523,
+            "gate_proj": 9.654942579726594,
+            "k_proj": 5.423084346013638,
+            "o_proj": 12.323174581237254,
+            "q_proj": 11.111226531031207,
+            "up_proj": 11.570900015854932,
+            "v_proj": 26.44340730037584
+          },
+          "norm": 11.261012077331543,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.5936386585235596,
+          "module_squared_norms": {
+            "down_proj": 13.958565074051876,
+            "gate_proj": 2.551208595612252,
+            "k_proj": 1.4913341772053172,
+            "o_proj": 3.2972005035949223,
+            "q_proj": 3.037248947200851,
+            "up_proj": 3.08239527913247,
+            "v_proj": 7.742258192293775
+          },
+          "norm": 5.929604530334473,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8572888374328613,
+      "pair_id": "43643f40ed0eb667c536b55a4f7f9ba8ed6e3bc9f4b83afa4263e405a498ec63",
+      "rotation_marker_cosine": 0.8220415115356445,
+      "rotation_no_transform_cosine": 0.8680673837661743,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "3c916c7b967b656eb10c8731bf6eb66f55dcc19881b73ddf42aecc211a0bf6e1",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 3.018199920654297,
+          "module_squared_norms": {
+            "down_proj": 16.41026060247168,
+            "gate_proj": 2.6634465575036756,
+            "k_proj": 1.7274291554526826,
+            "o_proj": 3.821495387375762,
+            "q_proj": 3.258542456130499,
+            "up_proj": 3.4467046625468356,
+            "v_proj": 9.249947827862343
+          },
+          "norm": 6.370072841644287,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.9012322425842285,
+          "module_squared_norms": {
+            "down_proj": 50.25679544889863,
+            "gate_proj": 9.553766660673318,
+            "k_proj": 5.39448468415776,
+            "o_proj": 12.182157183597155,
+            "q_proj": 11.054959529285952,
+            "up_proj": 11.470597032155638,
+            "v_proj": 26.219744099336822
+          },
+          "norm": 11.23087215423584,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.571808338165283,
+          "module_squared_norms": {
+            "down_proj": 13.994782539799417,
+            "gate_proj": 2.540089423697509,
+            "k_proj": 1.4959116913715889,
+            "o_proj": 3.2865186734188683,
+            "q_proj": 3.053966872243109,
+            "up_proj": 3.073799801217774,
+            "v_proj": 7.745524361158459
+          },
+          "norm": 5.932165622711182,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8578925132751465,
+      "pair_id": "a1d34a758e7c65617f0cafeccc552b1bf1307efff6d381964e7f30bf4a0398d8",
+      "rotation_marker_cosine": 0.8212997913360596,
+      "rotation_no_transform_cosine": 0.8678481578826904,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "3c916c7b967b656eb10c8731bf6eb66f55dcc19881b73ddf42aecc211a0bf6e1",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.993560314178467,
+          "module_squared_norms": {
+            "down_proj": 16.27666699907786,
+            "gate_proj": 2.623364285179605,
+            "k_proj": 1.6965178291354732,
+            "o_proj": 3.7622743121937674,
+            "q_proj": 3.191563293967306,
+            "up_proj": 3.3953602553146993,
+            "v_proj": 9.116445057779856
+          },
+          "norm": 6.329470157623291,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.904266834259033,
+          "module_squared_norms": {
+            "down_proj": 49.94665692692797,
+            "gate_proj": 9.475870813596885,
+            "k_proj": 5.3257385232927845,
+            "o_proj": 12.102381506083475,
+            "q_proj": 10.898110550755518,
+            "up_proj": 11.37926475297536,
+            "v_proj": 26.036779179194127
+          },
+          "norm": 11.18770694732666,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.5589261054992676,
+          "module_squared_norms": {
+            "down_proj": 14.022700786568748,
+            "gate_proj": 2.5415141436546946,
+            "k_proj": 1.493010385185471,
+            "o_proj": 3.2791857376123517,
+            "q_proj": 3.032669208682364,
+            "up_proj": 3.0782496295305464,
+            "v_proj": 7.755222574362961
+          },
+          "norm": 5.933174133300781,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8573106527328491,
+      "pair_id": "f6c9e2d1cebf2be9e96cd8088691d2dd02bf6fd1e3e3e92d9a3a117d453e0fde",
+      "rotation_marker_cosine": 0.8232842087745667,
+      "rotation_no_transform_cosine": 0.8689888119697571,
+      "turn": 3
+    },
+    {
+      "canonical_base_id": "7f60f20c10ec343f474757ada6c2384f40a24abc0e77b67e11a9b1116d2e416b",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.80106258392334,
+          "module_squared_norms": {
+            "down_proj": 15.108917849411228,
+            "gate_proj": 2.3716390619458707,
+            "k_proj": 1.5350994122256907,
+            "o_proj": 3.4299051823873015,
+            "q_proj": 3.179303775138351,
+            "up_proj": 3.164471813534874,
+            "v_proj": 8.493289306827137
+          },
+          "norm": 6.105949878692627,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.785909652709961,
+          "module_squared_norms": {
+            "down_proj": 53.091943804098264,
+            "gate_proj": 8.125690142225722,
+            "k_proj": 5.760076265765747,
+            "o_proj": 12.215021691477887,
+            "q_proj": 11.335556316106477,
+            "up_proj": 10.459524906789738,
+            "v_proj": 27.691641827077547
+          },
+          "norm": 11.343696594238281,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.485602617263794,
+          "module_squared_norms": {
+            "down_proj": 13.765941477464366,
+            "gate_proj": 2.433675860066387,
+            "k_proj": 1.5953639412911116,
+            "o_proj": 3.215351391114382,
+            "q_proj": 3.106078137782333,
+            "up_proj": 2.9575718468186096,
+            "v_proj": 7.90597411087947
+          },
+          "norm": 5.914385795593262,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8597090244293213,
+      "pair_id": "eda9303f5e986b829308148d08f9d200ad8aa2ee58941d21a93240c1bc34dbda",
+      "rotation_marker_cosine": 0.8461920619010925,
+      "rotation_no_transform_cosine": 0.8797616958618164,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "7f60f20c10ec343f474757ada6c2384f40a24abc0e77b67e11a9b1116d2e416b",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.7787957191467285,
+          "module_squared_norms": {
+            "down_proj": 15.00422478062137,
+            "gate_proj": 2.3447095563001312,
+            "k_proj": 1.5193293701656785,
+            "o_proj": 3.398263059902092,
+            "q_proj": 3.1226379743982307,
+            "up_proj": 3.128590991339479,
+            "v_proj": 8.428517846379691
+          },
+          "norm": 6.078344821929932,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.759955406188965,
+          "module_squared_norms": {
+            "down_proj": 52.024716912943404,
+            "gate_proj": 7.9405721217663086,
+            "k_proj": 5.653924859625022,
+            "o_proj": 11.918420598707598,
+            "q_proj": 11.005909575629175,
+            "up_proj": 10.224176351774076,
+            "v_proj": 27.056870773230912
+          },
+          "norm": 11.217156410217285,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.458662271499634,
+          "module_squared_norms": {
+            "down_proj": 13.550176048960566,
+            "gate_proj": 2.3814297584794986,
+            "k_proj": 1.527658580653224,
+            "o_proj": 3.1467414919934527,
+            "q_proj": 2.9480843986676746,
+            "up_proj": 2.8892217378238456,
+            "v_proj": 7.739793748900411
+          },
+          "norm": 5.84663200378418,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8659621477127075,
+      "pair_id": "c88518bdd3f2656016dd51eb5cc07b9015f09bb1cebc6933a74184d33cbb7d57",
+      "rotation_marker_cosine": 0.8466744422912598,
+      "rotation_no_transform_cosine": 0.8827157020568848,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "7f60f20c10ec343f474757ada6c2384f40a24abc0e77b67e11a9b1116d2e416b",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.761676549911499,
+          "module_squared_norms": {
+            "down_proj": 14.921461243622616,
+            "gate_proj": 2.316056727366231,
+            "k_proj": 1.508185048699488,
+            "o_proj": 3.361420345479928,
+            "q_proj": 3.094716790030361,
+            "up_proj": 3.094295640564269,
+            "v_proj": 8.339867687551305
+          },
+          "norm": 6.052768230438232,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.724363327026367,
+          "module_squared_norms": {
+            "down_proj": 51.34285431740136,
+            "gate_proj": 7.873799452151616,
+            "k_proj": 5.6149412451222815,
+            "o_proj": 11.791633550968982,
+            "q_proj": 10.886589311190164,
+            "up_proj": 10.139598415982618,
+            "v_proj": 26.782646943420332
+          },
+          "norm": 11.154911994934082,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.4437077045440674,
+          "module_squared_norms": {
+            "down_proj": 13.53530065805171,
+            "gate_proj": 2.4051354019993596,
+            "k_proj": 1.5480541697121453,
+            "o_proj": 3.1600012889884965,
+            "q_proj": 2.9848358179522165,
+            "up_proj": 2.9178531241173005,
+            "v_proj": 7.806114835835615
+          },
+          "norm": 5.861509799957275,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8634180426597595,
+      "pair_id": "0ae1baeeca7883b4c2b1e0c42c4fdfb1e92dc960011fec6139d17f6b7fc40ea3",
+      "rotation_marker_cosine": 0.8459904193878174,
+      "rotation_no_transform_cosine": 0.882541298866272,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "7f60f20c10ec343f474757ada6c2384f40a24abc0e77b67e11a9b1116d2e416b",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.744305372238159,
+          "module_squared_norms": {
+            "down_proj": 14.740499312152679,
+            "gate_proj": 2.264475168565241,
+            "k_proj": 1.4788753534066927,
+            "o_proj": 3.2863079675953486,
+            "q_proj": 3.0320996141815613,
+            "up_proj": 3.03144246143529,
+            "v_proj": 8.128594608362619
+          },
+          "norm": 5.996857166290283,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.7062883377075195,
+          "module_squared_norms": {
+            "down_proj": 51.04081169980782,
+            "gate_proj": 7.839922210943769,
+            "k_proj": 5.597261305587381,
+            "o_proj": 11.77315738876132,
+            "q_proj": 10.897981982204783,
+            "up_proj": 10.117353171994182,
+            "v_proj": 26.645435280708625
+          },
+          "norm": 11.131573677062988,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.410451889038086,
+          "module_squared_norms": {
+            "down_proj": 13.2130413938321,
+            "gate_proj": 2.2985697941480794,
+            "k_proj": 1.4689961490430505,
+            "o_proj": 3.0500500794260006,
+            "q_proj": 2.85056924185551,
+            "up_proj": 2.8104588569140105,
+            "v_proj": 7.517765906359273
+          },
+          "norm": 5.762763977050781,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.867092490196228,
+      "pair_id": "8d38ae90d09cfd48d25c50a123ac46ef57a6c6fb7f41e28c9d5433799be4af1b",
+      "rotation_marker_cosine": 0.8480625152587891,
+      "rotation_no_transform_cosine": 0.8868498206138611,
+      "turn": 3
+    },
+    {
+      "canonical_base_id": "b77cf24e4a304fdf24441dc8759a411a5abac07781e49fcfcf4b9573edd4fa54",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 3.2836618423461914,
+          "module_squared_norms": {
+            "down_proj": 19.43342690334248,
+            "gate_proj": 2.5716801302239674,
+            "k_proj": 1.7253033490064809,
+            "o_proj": 3.580742801670567,
+            "q_proj": 3.2967360462380384,
+            "up_proj": 3.6580713031953564,
+            "v_proj": 9.215152603710521
+          },
+          "norm": 6.594021320343018,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 5.0920844078063965,
+          "module_squared_norms": {
+            "down_proj": 49.412009594070696,
+            "gate_proj": 7.9950493112123695,
+            "k_proj": 5.4914501445528,
+            "o_proj": 10.580421382921486,
+            "q_proj": 9.777507988023899,
+            "up_proj": 10.17448094678366,
+            "v_proj": 24.763539701566515
+          },
+          "norm": 10.871726989746094,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 3.033022880554199,
+          "module_squared_norms": {
+            "down_proj": 20.067339566337978,
+            "gate_proj": 2.671630157656182,
+            "k_proj": 1.6269632991052276,
+            "o_proj": 3.7464557254497777,
+            "q_proj": 3.300831080326134,
+            "up_proj": 3.648983363462321,
+            "v_proj": 9.86728157809739
+          },
+          "norm": 6.702946186065674,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8267168998718262,
+      "pair_id": "5a992591185d1525baa02a342835ce945efa282a9cbae5d8871259d6c8824c3b",
+      "rotation_marker_cosine": 0.8304582238197327,
+      "rotation_no_transform_cosine": 0.8733235597610474,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "b77cf24e4a304fdf24441dc8759a411a5abac07781e49fcfcf4b9573edd4fa54",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 3.296799421310425,
+          "module_squared_norms": {
+            "down_proj": 19.71189038584089,
+            "gate_proj": 2.6073966163130535,
+            "k_proj": 1.754860985462301,
+            "o_proj": 3.6202202707609104,
+            "q_proj": 3.3343699529928017,
+            "up_proj": 3.695440811679873,
+            "v_proj": 9.315532585096662
+          },
+          "norm": 6.636242389678955,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 5.087449073791504,
+          "module_squared_norms": {
+            "down_proj": 49.41171121970183,
+            "gate_proj": 7.953820878165061,
+            "k_proj": 5.472635263150096,
+            "o_proj": 10.52745352481179,
+            "q_proj": 9.708739434360268,
+            "up_proj": 10.10898122655999,
+            "v_proj": 24.663739568622077
+          },
+          "norm": 10.85573959350586,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 3.033818006515503,
+          "module_squared_norms": {
+            "down_proj": 20.13440265061945,
+            "gate_proj": 2.6795765503948132,
+            "k_proj": 1.6385000330803905,
+            "o_proj": 3.7516859381757968,
+            "q_proj": 3.302843961418148,
+            "up_proj": 3.6544937360031327,
+            "v_proj": 9.883250692724687
+          },
+          "norm": 6.711538791656494,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8287990093231201,
+      "pair_id": "c48a94f8b9f286a68e886399e0e27228dc9125da6d18b625511525d5f888e047",
+      "rotation_marker_cosine": 0.8303414583206177,
+      "rotation_no_transform_cosine": 0.8737406730651855,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "b77cf24e4a304fdf24441dc8759a411a5abac07781e49fcfcf4b9573edd4fa54",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 3.2641279697418213,
+          "module_squared_norms": {
+            "down_proj": 19.254184063263892,
+            "gate_proj": 2.5420019771888747,
+            "k_proj": 1.7144743198723518,
+            "o_proj": 3.529267709556734,
+            "q_proj": 3.2553006147450105,
+            "up_proj": 3.615041022936566,
+            "v_proj": 9.07598155640153
+          },
+          "norm": 6.556390285491943,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 5.063946723937988,
+          "module_squared_norms": {
+            "down_proj": 48.77122863974364,
+            "gate_proj": 7.880809350844174,
+            "k_proj": 5.394363847040495,
+            "o_proj": 10.406717037563794,
+            "q_proj": 9.59608021909662,
+            "up_proj": 10.020235128966306,
+            "v_proj": 24.30790582539521
+          },
+          "norm": 10.787833213806152,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.997938632965088,
+          "module_squared_norms": {
+            "down_proj": 19.759306804164225,
+            "gate_proj": 2.582613074263918,
+            "k_proj": 1.5800914305243623,
+            "o_proj": 3.6229036897384503,
+            "q_proj": 3.1707779129546907,
+            "up_proj": 3.535056208647802,
+            "v_proj": 9.553490303009312
+          },
+          "norm": 6.618476867675781,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8311946392059326,
+      "pair_id": "45ddda3a7f3b88ade8407855016fb8ac1bd85907f60fc91a1abe2f80d58194b8",
+      "rotation_marker_cosine": 0.8324663639068604,
+      "rotation_no_transform_cosine": 0.8751991987228394,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "b77cf24e4a304fdf24441dc8759a411a5abac07781e49fcfcf4b9573edd4fa54",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 3.24859356880188,
+          "module_squared_norms": {
+            "down_proj": 19.046431691387625,
+            "gate_proj": 2.516207914306051,
+            "k_proj": 1.6959986284757633,
+            "o_proj": 3.4907243398156425,
+            "q_proj": 3.2094455433045823,
+            "up_proj": 3.5847445311437696,
+            "v_proj": 8.967218640899773
+          },
+          "norm": 6.520028591156006,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 5.0450663566589355,
+          "module_squared_norms": {
+            "down_proj": 48.37686363069952,
+            "gate_proj": 7.808070287529517,
+            "k_proj": 5.348824991046058,
+            "o_proj": 10.329212675917006,
+            "q_proj": 9.485342143927937,
+            "up_proj": 9.935647413782135,
+            "v_proj": 24.146740505615526
+          },
+          "norm": 10.743867874145508,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.9709596633911133,
+          "module_squared_norms": {
+            "down_proj": 19.53247569233281,
+            "gate_proj": 2.517740878460245,
+            "k_proj": 1.5514966237797125,
+            "o_proj": 3.555215752805452,
+            "q_proj": 3.0883875250528945,
+            "up_proj": 3.463064244031557,
+            "v_proj": 9.371219410451886
+          },
+          "norm": 6.563505172729492,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8313786387443542,
+      "pair_id": "41ef426ae88e849b2842d8eea6254ffcd1239ea1ed90a48ce5b5e52919d4a71e",
+      "rotation_marker_cosine": 0.8330561518669128,
+      "rotation_no_transform_cosine": 0.8759310841560364,
+      "turn": 3
+    },
+    {
+      "canonical_base_id": "5c87156b41352fc7d3e2268b961f95a3f64ecd0ac5da0794e3886a777ade7b24",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.903634786605835,
+          "module_squared_norms": {
+            "down_proj": 15.99771641332336,
+            "gate_proj": 2.2071554291990196,
+            "k_proj": 1.3385899150263185,
+            "o_proj": 2.9719373439038463,
+            "q_proj": 2.494950678102782,
+            "up_proj": 2.881666800495168,
+            "v_proj": 7.2902472701043735
+          },
+          "norm": 5.931464195251465,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.6382551193237305,
+          "module_squared_norms": {
+            "down_proj": 47.51458361799996,
+            "gate_proj": 6.723423338610701,
+            "k_proj": 3.9807627098566627,
+            "o_proj": 9.37031153638145,
+            "q_proj": 7.31941410866466,
+            "up_proj": 8.544222954502402,
+            "v_proj": 20.777366907112082
+          },
+          "norm": 10.20931339263916,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.66154146194458,
+          "module_squared_norms": {
+            "down_proj": 15.985505617054514,
+            "gate_proj": 2.5784043438324034,
+            "k_proj": 1.717575299622581,
+            "o_proj": 3.4758650711501105,
+            "q_proj": 3.3129332760245234,
+            "up_proj": 3.25891355204476,
+            "v_proj": 8.846605805681065
+          },
+          "norm": 6.259057521820068,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8317579627037048,
+      "pair_id": "3eaf3d343002015337fa4edda5f653f06a4972cf0c856f105046942a6ca25794",
+      "rotation_marker_cosine": 0.8654981255531311,
+      "rotation_no_transform_cosine": 0.8662194013595581,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "5c87156b41352fc7d3e2268b961f95a3f64ecd0ac5da0794e3886a777ade7b24",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.8948709964752197,
+          "module_squared_norms": {
+            "down_proj": 15.663322276326653,
+            "gate_proj": 2.1867109459708445,
+            "k_proj": 1.317125945908856,
+            "o_proj": 2.9328047818289633,
+            "q_proj": 2.4504613095401737,
+            "up_proj": 2.848158250540564,
+            "v_proj": 7.173515038319238
+          },
+          "norm": 5.8798041343688965,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.622781753540039,
+          "module_squared_norms": {
+            "down_proj": 46.94660267617655,
+            "gate_proj": 6.676301053702446,
+            "k_proj": 3.9640574118122913,
+            "o_proj": 9.267561059085892,
+            "q_proj": 7.259444797677588,
+            "up_proj": 8.474997282470213,
+            "v_proj": 20.502565264657278
+          },
+          "norm": 10.153399467468262,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.639892578125,
+          "module_squared_norms": {
+            "down_proj": 15.707385726478606,
+            "gate_proj": 2.5054616741000473,
+            "k_proj": 1.656108564542933,
+            "o_proj": 3.3766437829453935,
+            "q_proj": 3.1669545015116682,
+            "up_proj": 3.176281948114365,
+            "v_proj": 8.584559829745558
+          },
+          "norm": 6.178462505340576,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8363345265388489,
+      "pair_id": "55e07c407e02fab4f03f2a39cc323949593a1ea148c0228d5f557ccde9e334bd",
+      "rotation_marker_cosine": 0.8644821643829346,
+      "rotation_no_transform_cosine": 0.8676745891571045,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "5c87156b41352fc7d3e2268b961f95a3f64ecd0ac5da0794e3886a777ade7b24",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.8741090297698975,
+          "module_squared_norms": {
+            "down_proj": 15.50396351123527,
+            "gate_proj": 2.1607260593204956,
+            "k_proj": 1.308398839102324,
+            "o_proj": 2.9016560173949983,
+            "q_proj": 2.4317935417478793,
+            "up_proj": 2.8211452678083333,
+            "v_proj": 7.093921990612216
+          },
+          "norm": 5.849923133850098,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.595362186431885,
+          "module_squared_norms": {
+            "down_proj": 46.64196055299908,
+            "gate_proj": 6.559993611068421,
+            "k_proj": 3.914291331504728,
+            "o_proj": 9.136394660777114,
+            "q_proj": 7.124005988401223,
+            "up_proj": 8.352649822023523,
+            "v_proj": 20.266425365033683
+          },
+          "norm": 10.099292755126953,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.619140625,
+          "module_squared_norms": {
+            "down_proj": 15.544456319239544,
+            "gate_proj": 2.4737369583518785,
+            "k_proj": 1.632245809384358,
+            "o_proj": 3.3339771879209366,
+            "q_proj": 3.116973797257515,
+            "up_proj": 3.1376281730158553,
+            "v_proj": 8.480665411552764
+          },
+          "norm": 6.141634941101074,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8377358913421631,
+      "pair_id": "49f0f55eb91009c53d1157a9dc91542743479c7056d777e4bee229bc28e60830",
+      "rotation_marker_cosine": 0.8654369115829468,
+      "rotation_no_transform_cosine": 0.86794114112854,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "5c87156b41352fc7d3e2268b961f95a3f64ecd0ac5da0794e3886a777ade7b24",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.860585927963257,
+          "module_squared_norms": {
+            "down_proj": 15.357697474555607,
+            "gate_proj": 2.1312832546630034,
+            "k_proj": 1.2896550481892746,
+            "o_proj": 2.8524539725367504,
+            "q_proj": 2.3816142632359742,
+            "up_proj": 2.7823459630253637,
+            "v_proj": 6.961453671598065
+          },
+          "norm": 5.81003475189209,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.594618320465088,
+          "module_squared_norms": {
+            "down_proj": 46.347207126793364,
+            "gate_proj": 6.516679185218891,
+            "k_proj": 3.8831531796763556,
+            "o_proj": 9.087550949146134,
+            "q_proj": 7.079579779580399,
+            "up_proj": 8.301650860074915,
+            "v_proj": 20.103149474493875
+          },
+          "norm": 10.0657320022583,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.6090126037597656,
+          "module_squared_norms": {
+            "down_proj": 15.476374040585142,
+            "gate_proj": 2.43297996340209,
+            "k_proj": 1.609500959748516,
+            "o_proj": 3.2883182968253095,
+            "q_proj": 3.0585860910985048,
+            "up_proj": 3.096169196579467,
+            "v_proj": 8.356601100350417
+          },
+          "norm": 6.108889102935791,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.839781641960144,
+      "pair_id": "c1adf4d001d9b8efc3814906dfd40fdb1c8090722f83d31dd61b765bb87b0abc",
+      "rotation_marker_cosine": 0.8669193983078003,
+      "rotation_no_transform_cosine": 0.8685200810432434,
+      "turn": 3
+    },
+    {
+      "canonical_base_id": "3f58f366129841f9ee550a049ffaf99977abebef7a0cccb26264961a8c285b00",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.9679715633392334,
+          "module_squared_norms": {
+            "down_proj": 14.12575868354179,
+            "gate_proj": 1.9296966480183073,
+            "k_proj": 1.220267273465879,
+            "o_proj": 2.7084146604374837,
+            "q_proj": 2.3906774220376974,
+            "up_proj": 2.6496707901587797,
+            "v_proj": 6.888210319491918
+          },
+          "norm": 5.649132251739502,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.838860988616943,
+          "module_squared_norms": {
+            "down_proj": 49.72923077971063,
+            "gate_proj": 6.72960543944464,
+            "k_proj": 4.488530197830187,
+            "o_proj": 9.967974270050036,
+            "q_proj": 8.424959730037699,
+            "up_proj": 8.840210472817489,
+            "v_proj": 21.88201956551893
+          },
+          "norm": 10.491068840026855,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.8411924839019775,
+          "module_squared_norms": {
+            "down_proj": 15.520048912680068,
+            "gate_proj": 2.3238408863708173,
+            "k_proj": 1.5461613637883147,
+            "o_proj": 3.1992202831697796,
+            "q_proj": 3.0313837880353276,
+            "up_proj": 3.073431743967376,
+            "v_proj": 8.266746891811636
+          },
+          "norm": 6.07954216003418,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.819310188293457,
+      "pair_id": "4e909d89e7cabfab1532b51623695543c45d1acf6f910a30aa05a639b8ea7c65",
+      "rotation_marker_cosine": 0.8638734817504883,
+      "rotation_no_transform_cosine": 0.8900570273399353,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "3f58f366129841f9ee550a049ffaf99977abebef7a0cccb26264961a8c285b00",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.9277641773223877,
+          "module_squared_norms": {
+            "down_proj": 13.674942254659982,
+            "gate_proj": 1.8675052029209382,
+            "k_proj": 1.1788091076255114,
+            "o_proj": 2.6262537880675154,
+            "q_proj": 2.3272262236527013,
+            "up_proj": 2.5679509651072294,
+            "v_proj": 6.656287604478166
+          },
+          "norm": 5.558684825897217,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.764438152313232,
+          "module_squared_norms": {
+            "down_proj": 47.98325019907497,
+            "gate_proj": 6.586211999149327,
+            "k_proj": 4.374134504895665,
+            "o_proj": 9.732950221503415,
+            "q_proj": 8.152150993136274,
+            "up_proj": 8.654581944375423,
+            "v_proj": 21.3207694379671
+          },
+          "norm": 10.334604263305664,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.743462562561035,
+          "module_squared_norms": {
+            "down_proj": 14.580439537410712,
+            "gate_proj": 2.0810162398149714,
+            "k_proj": 1.3616837151776053,
+            "o_proj": 2.9026423054092447,
+            "q_proj": 2.627184925368965,
+            "up_proj": 2.7703542002382164,
+            "v_proj": 7.4650486119462585
+          },
+          "norm": 5.8127760887146,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8347762823104858,
+      "pair_id": "dab07114919f997b127576f59ea741958b2e7a886aafb2a78701ebe3bfbc2710",
+      "rotation_marker_cosine": 0.8647952079772949,
+      "rotation_no_transform_cosine": 0.8971946239471436,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "3f58f366129841f9ee550a049ffaf99977abebef7a0cccb26264961a8c285b00",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.9096288681030273,
+          "module_squared_norms": {
+            "down_proj": 13.617169077795552,
+            "gate_proj": 1.8510578866919332,
+            "k_proj": 1.1767235144582173,
+            "o_proj": 2.6089420035714284,
+            "q_proj": 2.307023746184427,
+            "up_proj": 2.548648844609943,
+            "v_proj": 6.6067995782859725
+          },
+          "norm": 5.542234420776367,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.72719669342041,
+          "module_squared_norms": {
+            "down_proj": 47.49326307122101,
+            "gate_proj": 6.484942495297446,
+            "k_proj": 4.349520679456873,
+            "o_proj": 9.591501455628531,
+            "q_proj": 8.057672708293921,
+            "up_proj": 8.53831751222151,
+            "v_proj": 21.01591896150603
+          },
+          "norm": 10.272834777832031,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.7189078330993652,
+          "module_squared_norms": {
+            "down_proj": 14.343424123422665,
+            "gate_proj": 2.040838348908437,
+            "k_proj": 1.3488423679048083,
+            "o_proj": 2.8536407315550605,
+            "q_proj": 2.582741566073537,
+            "up_proj": 2.719510646559229,
+            "v_proj": 7.349085150039173
+          },
+          "norm": 5.765247821807861,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.835233211517334,
+      "pair_id": "ca92fdfb0f4bc5b8e2a167eb329422b2d6f3343047a2f94f58b4bfbd521af626",
+      "rotation_marker_cosine": 0.8648762702941895,
+      "rotation_no_transform_cosine": 0.898263156414032,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "3f58f366129841f9ee550a049ffaf99977abebef7a0cccb26264961a8c285b00",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.911501169204712,
+          "module_squared_norms": {
+            "down_proj": 13.709629522985779,
+            "gate_proj": 1.849450268955934,
+            "k_proj": 1.173825311629571,
+            "o_proj": 2.609207795612747,
+            "q_proj": 2.2974260537821465,
+            "up_proj": 2.548644688877175,
+            "v_proj": 6.603239650889009
+          },
+          "norm": 5.549001693725586,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.726320743560791,
+          "module_squared_norms": {
+            "down_proj": 47.36626293545851,
+            "gate_proj": 6.47638305293458,
+            "k_proj": 4.312471845233631,
+            "o_proj": 9.564328071048294,
+            "q_proj": 7.993504745493283,
+            "up_proj": 8.52468917701026,
+            "v_proj": 20.942105178244674
+          },
+          "norm": 10.255717277526855,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.708266258239746,
+          "module_squared_norms": {
+            "down_proj": 14.11333735138578,
+            "gate_proj": 1.9727603727196765,
+            "k_proj": 1.2945253366749512,
+            "o_proj": 2.777674953420501,
+            "q_proj": 2.4701292796627285,
+            "up_proj": 2.643984303103025,
+            "v_proj": 7.129459771917027
+          },
+          "norm": 5.692264080047607,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8396183252334595,
+      "pair_id": "5c3818a389e7024c6e9837855458867d53d1dd06f64b4161d9f735809148c6fd",
+      "rotation_marker_cosine": 0.8658708930015564,
+      "rotation_no_transform_cosine": 0.8996766805648804,
+      "turn": 3
+    },
+    {
+      "canonical_base_id": "d7fb7a0c31618dad3e5cdcbcea6efa26815c33fca7a26994aaad2c05ef8574dd",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.883878707885742,
+          "module_squared_norms": {
+            "down_proj": 12.543294992630763,
+            "gate_proj": 2.254080787708517,
+            "k_proj": 1.1252674170020782,
+            "o_proj": 2.9294105805911386,
+            "q_proj": 2.218268640726933,
+            "up_proj": 2.8272917453987247,
+            "v_proj": 6.920807411494707
+          },
+          "norm": 5.55143404006958,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.7853007316589355,
+          "module_squared_norms": {
+            "down_proj": 48.59946084069452,
+            "gate_proj": 9.389888523138325,
+            "k_proj": 4.599649511153075,
+            "o_proj": 11.640434138102137,
+            "q_proj": 9.316963714865324,
+            "up_proj": 11.087810234786957,
+            "v_proj": 26.203659022256033
+          },
+          "norm": 10.992627143859863,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.9540278911590576,
+          "module_squared_norms": {
+            "down_proj": 14.55277303371804,
+            "gate_proj": 2.7650194843267855,
+            "k_proj": 1.495787960437383,
+            "o_proj": 3.678958216697538,
+            "q_proj": 2.9869444652067614,
+            "up_proj": 3.462143242176353,
+            "v_proj": 8.409386409844046
+          },
+          "norm": 6.111547470092773,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8133822083473206,
+      "pair_id": "80d3b4a444f431b6b241e936a0d0dcffb8d66399331e892d0358ee83474fd040",
+      "rotation_marker_cosine": 0.8583929538726807,
+      "rotation_no_transform_cosine": 0.8964805603027344,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "d7fb7a0c31618dad3e5cdcbcea6efa26815c33fca7a26994aaad2c05ef8574dd",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.868496894836426,
+          "module_squared_norms": {
+            "down_proj": 12.40130472488363,
+            "gate_proj": 2.2428387569277675,
+            "k_proj": 1.1164827142922604,
+            "o_proj": 2.9015116098012186,
+            "q_proj": 2.212857247986676,
+            "up_proj": 2.810133660891779,
+            "v_proj": 6.862945538742224
+          },
+          "norm": 5.527030944824219,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.739305019378662,
+          "module_squared_norms": {
+            "down_proj": 47.62063344978378,
+            "gate_proj": 9.170157408978412,
+            "k_proj": 4.513867961674805,
+            "o_proj": 11.324996351813752,
+            "q_proj": 9.168942620690359,
+            "up_proj": 10.852269290880031,
+            "v_proj": 25.55347688965867
+          },
+          "norm": 10.87218189239502,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.9146647453308105,
+          "module_squared_norms": {
+            "down_proj": 14.389493992317512,
+            "gate_proj": 2.7030821058019683,
+            "k_proj": 1.4485616070367087,
+            "o_proj": 3.579565496171199,
+            "q_proj": 2.883843829290072,
+            "up_proj": 3.3947834088509126,
+            "v_proj": 8.206797131693747
+          },
+          "norm": 6.050299644470215,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8187259435653687,
+      "pair_id": "a8fb61fff3c2953235e56ee98f9c8350b1a33f80b45c8ffea7cbffe31b1b38c8",
+      "rotation_marker_cosine": 0.8580887913703918,
+      "rotation_no_transform_cosine": 0.89873206615448,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "d7fb7a0c31618dad3e5cdcbcea6efa26815c33fca7a26994aaad2c05ef8574dd",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.842754364013672,
+          "module_squared_norms": {
+            "down_proj": 12.366139839394236,
+            "gate_proj": 2.2320884938801555,
+            "k_proj": 1.1208652054225468,
+            "o_proj": 2.8843584077935702,
+            "q_proj": 2.221255463095872,
+            "up_proj": 2.798126938808309,
+            "v_proj": 6.832228678573756
+          },
+          "norm": 5.51861047744751,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.694974422454834,
+          "module_squared_norms": {
+            "down_proj": 46.91856410106993,
+            "gate_proj": 9.034926318269754,
+            "k_proj": 4.479050106364866,
+            "o_proj": 11.142729196024447,
+            "q_proj": 9.111096070876556,
+            "up_proj": 10.701981693517155,
+            "v_proj": 25.213332395695943
+          },
+          "norm": 10.798226356506348,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.884295701980591,
+          "module_squared_norms": {
+            "down_proj": 14.190156865787685,
+            "gate_proj": 2.643891133136549,
+            "k_proj": 1.4336026772689365,
+            "o_proj": 3.508259653175628,
+            "q_proj": 2.871772166447272,
+            "up_proj": 3.3340583421354495,
+            "v_proj": 8.069676547137533
+          },
+          "norm": 6.0042829513549805,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8195812702178955,
+      "pair_id": "1d52619255693418f4e323c5ec06f79385b72c5c80877a24b6e48ffa4179915c",
+      "rotation_marker_cosine": 0.8585219979286194,
+      "rotation_no_transform_cosine": 0.8986145853996277,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "d7fb7a0c31618dad3e5cdcbcea6efa26815c33fca7a26994aaad2c05ef8574dd",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.830231189727783,
+          "module_squared_norms": {
+            "down_proj": 12.289057471664819,
+            "gate_proj": 2.2037605698037623,
+            "k_proj": 1.1075913097849934,
+            "o_proj": 2.8430419953615456,
+            "q_proj": 2.1902053095207066,
+            "up_proj": 2.7683315141462117,
+            "v_proj": 6.7279197719283275
+          },
+          "norm": 5.489071369171143,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.695738792419434,
+          "module_squared_norms": {
+            "down_proj": 46.802275775051385,
+            "gate_proj": 8.969763275590594,
+            "k_proj": 4.421156691593296,
+            "o_proj": 11.070841594979356,
+            "q_proj": 9.009534637725665,
+            "up_proj": 10.628365581912476,
+            "v_proj": 25.069747484856634
+          },
+          "norm": 10.769014358520508,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.870373249053955,
+          "module_squared_norms": {
+            "down_proj": 14.045944159592182,
+            "gate_proj": 2.584328561103348,
+            "k_proj": 1.396198934335871,
+            "o_proj": 3.4396261745514494,
+            "q_proj": 2.7769641448539915,
+            "up_proj": 3.272672207285723,
+            "v_proj": 7.897680895431222
+          },
+          "norm": 5.9509172439575195,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8239321708679199,
+      "pair_id": "e7e520041a109c504455be64acc8b704950ad888d0cab0bc3bb87beeef75f315",
+      "rotation_marker_cosine": 0.8613936901092529,
+      "rotation_no_transform_cosine": 0.9004735946655273,
+      "turn": 3
+    },
+    {
+      "canonical_base_id": "b07a6fe4eaa3c7258dcd3c88e925dc1332f433a97c0952812dc0547eb62b3fcd",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.860210657119751,
+          "module_squared_norms": {
+            "down_proj": 13.512562038720716,
+            "gate_proj": 1.9014008320215225,
+            "k_proj": 1.0739747155474788,
+            "o_proj": 2.614466724153317,
+            "q_proj": 2.1110508593864097,
+            "up_proj": 2.560642021707281,
+            "v_proj": 6.484477343525214
+          },
+          "norm": 5.500779628753662,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.728304862976074,
+          "module_squared_norms": {
+            "down_proj": 44.91807428746324,
+            "gate_proj": 8.150160141629385,
+            "k_proj": 4.472551236241088,
+            "o_proj": 10.43259378303992,
+            "q_proj": 8.730776450660414,
+            "up_proj": 9.860239350663505,
+            "v_proj": 23.24843676205637
+          },
+          "norm": 10.479162216186523,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 3.097020387649536,
+          "module_squared_norms": {
+            "down_proj": 16.608153902681806,
+            "gate_proj": 2.4520861376015546,
+            "k_proj": 1.5356893147609298,
+            "o_proj": 3.222280346417392,
+            "q_proj": 2.7896314685516472,
+            "up_proj": 3.274417962695452,
+            "v_proj": 7.9246199490703475
+          },
+          "norm": 6.1487298011779785,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8101972937583923,
+      "pair_id": "b9bc02f15aa9ada9629f45858ae94e21723e3288fc083b57f44bfde33e7d07ef",
+      "rotation_marker_cosine": 0.8650327324867249,
+      "rotation_no_transform_cosine": 0.8839643597602844,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "b07a6fe4eaa3c7258dcd3c88e925dc1332f433a97c0952812dc0547eb62b3fcd",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.840413808822632,
+          "module_squared_norms": {
+            "down_proj": 13.382233754520712,
+            "gate_proj": 1.8878973376731665,
+            "k_proj": 1.0662610412371123,
+            "o_proj": 2.5928278748051525,
+            "q_proj": 2.1001195762968337,
+            "up_proj": 2.541156588117701,
+            "v_proj": 6.440742271393901
+          },
+          "norm": 5.4782514572143555,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.728219509124756,
+          "module_squared_norms": {
+            "down_proj": 44.68854660969737,
+            "gate_proj": 8.168389413229306,
+            "k_proj": 4.501823079361202,
+            "o_proj": 10.439925186537948,
+            "q_proj": 8.761501480055813,
+            "up_proj": 9.868487120734244,
+            "v_proj": 23.23287045197503
+          },
+          "norm": 10.471940040588379,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 3.059126853942871,
+          "module_squared_norms": {
+            "down_proj": 16.352965873889843,
+            "gate_proj": 2.372734286441073,
+            "k_proj": 1.4709169857527513,
+            "o_proj": 3.1258732813003007,
+            "q_proj": 2.6511044430337734,
+            "up_proj": 3.176820697077801,
+            "v_proj": 7.673518733871788
+          },
+          "norm": 6.068272590637207,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.817279577255249,
+      "pair_id": "f88550906768f8be1f21da3bd43bbd39b970fd1883988618014a27539647d426",
+      "rotation_marker_cosine": 0.8656876087188721,
+      "rotation_no_transform_cosine": 0.8879539370536804,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "b07a6fe4eaa3c7258dcd3c88e925dc1332f433a97c0952812dc0547eb62b3fcd",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.8076469898223877,
+          "module_squared_norms": {
+            "down_proj": 13.128859887860017,
+            "gate_proj": 1.8489361013620282,
+            "k_proj": 1.052360240874691,
+            "o_proj": 2.5446871571894008,
+            "q_proj": 2.0664264125800855,
+            "up_proj": 2.492030010856979,
+            "v_proj": 6.320510648981326
+          },
+          "norm": 5.427136421203613,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.715238094329834,
+          "module_squared_norms": {
+            "down_proj": 44.515263643843355,
+            "gate_proj": 8.08227512033227,
+            "k_proj": 4.4681604439033435,
+            "o_proj": 10.356335274178491,
+            "q_proj": 8.678546438174635,
+            "up_proj": 9.785740422590607,
+            "v_proj": 23.033198897090188
+          },
+          "norm": 10.436450958251953,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 3.0113730430603027,
+          "module_squared_norms": {
+            "down_proj": 15.950040302333036,
+            "gate_proj": 2.2977995364738035,
+            "k_proj": 1.4255190850768713,
+            "o_proj": 3.0300900458869364,
+            "q_proj": 2.5641137621296366,
+            "up_proj": 3.0852757783297875,
+            "v_proj": 7.432535875176654
+          },
+          "norm": 5.9820876121521,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8207128047943115,
+      "pair_id": "14245199c57ba2e92ec16355b02deceee2024e0a7daaab822716d085977a84b7",
+      "rotation_marker_cosine": 0.8672925233840942,
+      "rotation_no_transform_cosine": 0.8906647562980652,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "b07a6fe4eaa3c7258dcd3c88e925dc1332f433a97c0952812dc0547eb62b3fcd",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.8014068603515625,
+          "module_squared_norms": {
+            "down_proj": 13.189866082702792,
+            "gate_proj": 1.8454031405716478,
+            "k_proj": 1.0557968764642283,
+            "o_proj": 2.5400715461983054,
+            "q_proj": 2.0655928238843444,
+            "up_proj": 2.4857653824219597,
+            "v_proj": 6.285498964959515
+          },
+          "norm": 5.42844295501709,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.675985336303711,
+          "module_squared_norms": {
+            "down_proj": 43.99341514873959,
+            "gate_proj": 7.967881330016098,
+            "k_proj": 4.423060436229207,
+            "o_proj": 10.21230879916402,
+            "q_proj": 8.633367922458092,
+            "up_proj": 9.666495986632071,
+            "v_proj": 22.74486270081252
+          },
+          "norm": 10.37503719329834,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.9873533248901367,
+          "module_squared_norms": {
+            "down_proj": 15.735423705742505,
+            "gate_proj": 2.241682226294415,
+            "k_proj": 1.399446058141507,
+            "o_proj": 2.9692969880961755,
+            "q_proj": 2.506614114386821,
+            "up_proj": 3.027045171100781,
+            "v_proj": 7.264909851077846
+          },
+          "norm": 5.928272724151611,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8237304091453552,
+      "pair_id": "7b57613d4b6209dad1d98034608cdfc280889e462186f8d29a861e5af2415dfc",
+      "rotation_marker_cosine": 0.8684911727905273,
+      "rotation_no_transform_cosine": 0.8930129408836365,
+      "turn": 3
+    },
+    {
+      "canonical_base_id": "15a85bfd1d2a9487953d2adb137b05048a39303ac337014e73242accf01134ab",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 3.0065503120422363,
+          "module_squared_norms": {
+            "down_proj": 14.647118066997791,
+            "gate_proj": 2.3926848373700977,
+            "k_proj": 1.3927469036486855,
+            "o_proj": 3.2053071374884894,
+            "q_proj": 2.6081571820668614,
+            "up_proj": 3.0856736726573217,
+            "v_proj": 8.098556503018699
+          },
+          "norm": 5.952331066131592,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 5.249447822570801,
+          "module_squared_norms": {
+            "down_proj": 58.74425370942117,
+            "gate_proj": 9.5315037800533,
+            "k_proj": 5.752013399988755,
+            "o_proj": 12.75046190370631,
+            "q_proj": 10.451692626177191,
+            "up_proj": 11.88750683928447,
+            "v_proj": 29.68043807270078
+          },
+          "norm": 11.781250953674316,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 3.115617036819458,
+          "module_squared_norms": {
+            "down_proj": 17.010167281096074,
+            "gate_proj": 2.7721450213866774,
+            "k_proj": 1.608244950100925,
+            "o_proj": 3.7355017940535618,
+            "q_proj": 2.910620681854084,
+            "up_proj": 3.5979781413216188,
+            "v_proj": 9.137303068240726
+          },
+          "norm": 6.3852925300598145,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8408210873603821,
+      "pair_id": "59f196092a1039e7db0353a428bcc0e86283275494541147a1aae8df31b586c3",
+      "rotation_marker_cosine": 0.8520262241363525,
+      "rotation_no_transform_cosine": 0.8875613212585449,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "15a85bfd1d2a9487953d2adb137b05048a39303ac337014e73242accf01134ab",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 3.0017898082733154,
+          "module_squared_norms": {
+            "down_proj": 14.741669613502381,
+            "gate_proj": 2.417137246282664,
+            "k_proj": 1.4032293127560251,
+            "o_proj": 3.240002660479149,
+            "q_proj": 2.615260432432706,
+            "up_proj": 3.112030973570654,
+            "v_proj": 8.198446225088446
+          },
+          "norm": 5.977271556854248,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 5.239602088928223,
+          "module_squared_norms": {
+            "down_proj": 58.4960893836178,
+            "gate_proj": 9.539020272941343,
+            "k_proj": 5.751331217362804,
+            "o_proj": 12.691019046227666,
+            "q_proj": 10.370922651182354,
+            "up_proj": 11.915658395602804,
+            "v_proj": 29.595814860309474
+          },
+          "norm": 11.762646675109863,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 3.0905561447143555,
+          "module_squared_norms": {
+            "down_proj": 16.948921998075093,
+            "gate_proj": 2.760593818225516,
+            "k_proj": 1.6070870649463131,
+            "o_proj": 3.6986749415955273,
+            "q_proj": 2.8713285586105712,
+            "up_proj": 3.576432032858065,
+            "v_proj": 9.091917451774862
+          },
+          "norm": 6.368277072906494,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8432711362838745,
+      "pair_id": "7439d18a5c37f7b056660adb51ffcdce05f8d1e1d336df2eaaa9198ba1665be9",
+      "rotation_marker_cosine": 0.8524025678634644,
+      "rotation_no_transform_cosine": 0.8879942297935486,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "15a85bfd1d2a9487953d2adb137b05048a39303ac337014e73242accf01134ab",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.977322578430176,
+          "module_squared_norms": {
+            "down_proj": 14.63190726551693,
+            "gate_proj": 2.397359314951018,
+            "k_proj": 1.3992175726461937,
+            "o_proj": 3.210887370794808,
+            "q_proj": 2.6020191037712266,
+            "up_proj": 3.0922179062681607,
+            "v_proj": 8.103992084761558
+          },
+          "norm": 5.952948570251465,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 5.165413856506348,
+          "module_squared_norms": {
+            "down_proj": 57.8329004751904,
+            "gate_proj": 9.53068163475109,
+            "k_proj": 5.760787088062898,
+            "o_proj": 12.598469228469185,
+            "q_proj": 10.379367300907006,
+            "up_proj": 11.884786815056941,
+            "v_proj": 29.520212441724652
+          },
+          "norm": 11.726346969604492,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 3.0563530921936035,
+          "module_squared_norms": {
+            "down_proj": 16.90529614247862,
+            "gate_proj": 2.74074351057925,
+            "k_proj": 1.596776076316928,
+            "o_proj": 3.669747534659109,
+            "q_proj": 2.8700657151201767,
+            "up_proj": 3.5500406600340284,
+            "v_proj": 9.05321600464049
+          },
+          "norm": 6.354989051818848,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8427989482879639,
+      "pair_id": "81d3755223caab721bf51688d7d71c61eb05f8deb5b5fe8fe3a061756c655e6f",
+      "rotation_marker_cosine": 0.8513765335083008,
+      "rotation_no_transform_cosine": 0.8891246318817139,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "15a85bfd1d2a9487953d2adb137b05048a39303ac337014e73242accf01134ab",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.989656686782837,
+          "module_squared_norms": {
+            "down_proj": 14.937576371161413,
+            "gate_proj": 2.4210532825591145,
+            "k_proj": 1.4094170190727482,
+            "o_proj": 3.231987352601209,
+            "q_proj": 2.612353639204457,
+            "up_proj": 3.1299782365731517,
+            "v_proj": 8.156801025806999
+          },
+          "norm": 5.991591453552246,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 5.179444789886475,
+          "module_squared_norms": {
+            "down_proj": 58.19442646190146,
+            "gate_proj": 9.616803935079588,
+            "k_proj": 5.750600722874424,
+            "o_proj": 12.675821290053136,
+            "q_proj": 10.351568905864042,
+            "up_proj": 11.954766309563638,
+            "v_proj": 29.648193078854092
+          },
+          "norm": 11.75551700592041,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 3.082519292831421,
+          "module_squared_norms": {
+            "down_proj": 17.166897604212863,
+            "gate_proj": 2.765292730583951,
+            "k_proj": 1.609532121342454,
+            "o_proj": 3.7070179364454816,
+            "q_proj": 2.8767981401233556,
+            "up_proj": 3.5868840750517847,
+            "v_proj": 9.112299548110968
+          },
+          "norm": 6.38942289352417,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8443834781646729,
+      "pair_id": "72d44abb3a06fc3b70c9aad7a50c6db68e4add6a408d4eb7987a3b527768ae67",
+      "rotation_marker_cosine": 0.8527889251708984,
+      "rotation_no_transform_cosine": 0.8896673917770386,
+      "turn": 3
+    },
+    {
+      "canonical_base_id": "25473ffc65864c58b56692953fd631c6fb075c1e12d06c0c41c45498c09b9e75",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.655029296875,
+          "module_squared_norms": {
+            "down_proj": 13.535469274593197,
+            "gate_proj": 2.624038758525444,
+            "k_proj": 1.250651831194773,
+            "o_proj": 3.2730380513285127,
+            "q_proj": 2.584481761612551,
+            "up_proj": 3.127461594639044,
+            "v_proj": 8.122645701817419
+          },
+          "norm": 5.875183582305908,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.59651517868042,
+          "module_squared_norms": {
+            "down_proj": 53.57047298155521,
+            "gate_proj": 10.322895290888027,
+            "k_proj": 5.767071260418561,
+            "o_proj": 12.977557869620796,
+            "q_proj": 10.77457944084108,
+            "up_proj": 12.176717556906624,
+            "v_proj": 29.405010500626304
+          },
+          "norm": 11.618704795837402,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.625314474105835,
+          "module_squared_norms": {
+            "down_proj": 13.810313990768918,
+            "gate_proj": 2.7426137896150067,
+            "k_proj": 1.4408775506224174,
+            "o_proj": 3.3736444999594823,
+            "q_proj": 2.7443376903984245,
+            "up_proj": 3.3162575118443556,
+            "v_proj": 8.300285185148823
+          },
+          "norm": 5.977318286895752,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8681382536888123,
+      "pair_id": "aecdc995d0df2ac65596aeb3ea4d81c9245aee9f0b7ce0d38d53446653aedff5",
+      "rotation_marker_cosine": 0.8588796854019165,
+      "rotation_no_transform_cosine": 0.8884618878364563,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "25473ffc65864c58b56692953fd631c6fb075c1e12d06c0c41c45498c09b9e75",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.6394803524017334,
+          "module_squared_norms": {
+            "down_proj": 13.364890738999748,
+            "gate_proj": 2.612249243552128,
+            "k_proj": 1.2422916216225985,
+            "o_proj": 3.259891038385831,
+            "q_proj": 2.579112777746559,
+            "up_proj": 3.10918569556236,
+            "v_proj": 8.094499591930798
+          },
+          "norm": 5.8533854484558105,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.534970760345459,
+          "module_squared_norms": {
+            "down_proj": 52.35024813070049,
+            "gate_proj": 10.216447265047464,
+            "k_proj": 5.750216287992771,
+            "o_proj": 12.840483293495708,
+            "q_proj": 10.622171482332305,
+            "up_proj": 12.048316439420887,
+            "v_proj": 29.07109951246821
+          },
+          "norm": 11.528182029724121,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.6017329692840576,
+          "module_squared_norms": {
+            "down_proj": 13.60456055976465,
+            "gate_proj": 2.728680580379205,
+            "k_proj": 1.4283944833221085,
+            "o_proj": 3.3501445655101634,
+            "q_proj": 2.717267084691457,
+            "up_proj": 3.2971735163847598,
+            "v_proj": 8.24654841345
+          },
+          "norm": 5.947501182556152,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8682084083557129,
+      "pair_id": "807b5dd708016d3c062e135015555e2ab4493fde5c7cfd851bbb87735ba48043",
+      "rotation_marker_cosine": 0.8580458164215088,
+      "rotation_no_transform_cosine": 0.8881498575210571,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "25473ffc65864c58b56692953fd631c6fb075c1e12d06c0c41c45498c09b9e75",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.6175196170806885,
+          "module_squared_norms": {
+            "down_proj": 13.29136386862956,
+            "gate_proj": 2.5818209689909963,
+            "k_proj": 1.2346842494707744,
+            "o_proj": 3.2227846787382077,
+            "q_proj": 2.560178292665455,
+            "up_proj": 3.0777861372184816,
+            "v_proj": 8.001651320126257
+          },
+          "norm": 5.828402042388916,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.499327659606934,
+          "module_squared_norms": {
+            "down_proj": 52.06775242381991,
+            "gate_proj": 10.175809337210922,
+            "k_proj": 5.736653421718529,
+            "o_proj": 12.770954297540811,
+            "q_proj": 10.58011793285641,
+            "up_proj": 12.021750566038463,
+            "v_proj": 29.010781348169985
+          },
+          "norm": 11.504947662353516,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.5831425189971924,
+          "module_squared_norms": {
+            "down_proj": 13.491754200991636,
+            "gate_proj": 2.70970146652769,
+            "k_proj": 1.426655813930779,
+            "o_proj": 3.3265848931132496,
+            "q_proj": 2.7145536513839943,
+            "up_proj": 3.2801172016496594,
+            "v_proj": 8.192131545300072
+          },
+          "norm": 5.9280266761779785,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8675814867019653,
+      "pair_id": "d48d6d3ea7a9768870a9ee7b298730d42533a3252b1ee8a429f53160274396da",
+      "rotation_marker_cosine": 0.8583827018737793,
+      "rotation_no_transform_cosine": 0.8882231712341309,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "25473ffc65864c58b56692953fd631c6fb075c1e12d06c0c41c45498c09b9e75",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.6111295223236084,
+          "module_squared_norms": {
+            "down_proj": 13.274980286409118,
+            "gate_proj": 2.570138779434842,
+            "k_proj": 1.2254183503271179,
+            "o_proj": 3.2035638433553686,
+            "q_proj": 2.546582910868665,
+            "up_proj": 3.0642201222094627,
+            "v_proj": 7.956849231665728
+          },
+          "norm": 5.817366123199463,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.503201961517334,
+          "module_squared_norms": {
+            "down_proj": 51.917959184982465,
+            "gate_proj": 10.150318367351701,
+            "k_proj": 5.694039072554915,
+            "o_proj": 12.74585463448966,
+            "q_proj": 10.508064913413364,
+            "up_proj": 11.973269059156337,
+            "v_proj": 28.90878416200212
+          },
+          "norm": 11.484698295593262,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.5738465785980225,
+          "module_squared_norms": {
+            "down_proj": 13.482194179661747,
+            "gate_proj": 2.696208619909612,
+            "k_proj": 1.4205981812785922,
+            "o_proj": 3.3106892187843187,
+            "q_proj": 2.7113049812437566,
+            "up_proj": 3.268058975342342,
+            "v_proj": 8.157524339389056
+          },
+          "norm": 5.92001485824585,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8683828711509705,
+      "pair_id": "e6e3d35c5f8ea52b12e097542de0d11329b44d3e0f911173c5bbf504e37fd0fd",
+      "rotation_marker_cosine": 0.8591406941413879,
+      "rotation_no_transform_cosine": 0.887894868850708,
+      "turn": 3
+    },
+    {
+      "canonical_base_id": "35677e1416dd8a79e12566a28c5d69a1fe8c7c7f865c00421ca3af67fe6d7563",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.701240062713623,
+          "module_squared_norms": {
+            "down_proj": 14.877285317899805,
+            "gate_proj": 1.997462715902202,
+            "k_proj": 1.1216954214703492,
+            "o_proj": 2.7861683599967364,
+            "q_proj": 2.1902382851192215,
+            "up_proj": 2.6468513089807857,
+            "v_proj": 7.030472099673716
+          },
+          "norm": 5.714033126831055,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.614990234375,
+          "module_squared_norms": {
+            "down_proj": 48.82485360649298,
+            "gate_proj": 8.036176914371026,
+            "k_proj": 4.204085191085142,
+            "o_proj": 10.454434238821705,
+            "q_proj": 8.25611075525876,
+            "up_proj": 9.78971766011091,
+            "v_proj": 23.731809019904176
+          },
+          "norm": 10.644115447998047,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.6355459690093994,
+          "module_squared_norms": {
+            "down_proj": 14.766592306696111,
+            "gate_proj": 1.9797225412523858,
+            "k_proj": 1.1015061511824342,
+            "o_proj": 2.7032075005454317,
+            "q_proj": 2.149451603594912,
+            "up_proj": 2.5886616972138654,
+            "v_proj": 6.773056039666699
+          },
+          "norm": 5.662348747253418,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8680064678192139,
+      "pair_id": "2c5d4a9d8ae9f8f1403d88a704769d9db96f88ff7a7505dcd08d6f30bfa05661",
+      "rotation_marker_cosine": 0.8625648021697998,
+      "rotation_no_transform_cosine": 0.9064995646476746,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "35677e1416dd8a79e12566a28c5d69a1fe8c7c7f865c00421ca3af67fe6d7563",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.703580856323242,
+          "module_squared_norms": {
+            "down_proj": 14.999896977488788,
+            "gate_proj": 1.9921703297347904,
+            "k_proj": 1.117392961868859,
+            "o_proj": 2.7807207499190554,
+            "q_proj": 2.184161589118048,
+            "up_proj": 2.6376054493033507,
+            "v_proj": 7.02815534687943
+          },
+          "norm": 5.721897125244141,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.602297306060791,
+          "module_squared_norms": {
+            "down_proj": 48.7364013276092,
+            "gate_proj": 7.9782799473105115,
+            "k_proj": 4.192991239566936,
+            "o_proj": 10.372276722308015,
+            "q_proj": 8.193557959448754,
+            "up_proj": 9.727021707956737,
+            "v_proj": 23.59965836587071
+          },
+          "norm": 10.620743751525879,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.637958288192749,
+          "module_squared_norms": {
+            "down_proj": 14.875600061826844,
+            "gate_proj": 1.974447476532987,
+            "k_proj": 1.1088384840932122,
+            "o_proj": 2.697697366408647,
+            "q_proj": 2.159350140552249,
+            "up_proj": 2.5831516881814878,
+            "v_proj": 6.76197467491329
+          },
+          "norm": 5.671072006225586,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8677377700805664,
+      "pair_id": "4672c1d25009460afe327dea63f392975675b8df6301c78d50c5ac4fb6fb354b",
+      "rotation_marker_cosine": 0.8622113466262817,
+      "rotation_no_transform_cosine": 0.9065744876861572,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "35677e1416dd8a79e12566a28c5d69a1fe8c7c7f865c00421ca3af67fe6d7563",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.6811866760253906,
+          "module_squared_norms": {
+            "down_proj": 14.820967905639918,
+            "gate_proj": 1.9732780588690275,
+            "k_proj": 1.1175309717126538,
+            "o_proj": 2.756083477265747,
+            "q_proj": 2.1787355552053214,
+            "up_proj": 2.616808284864419,
+            "v_proj": 6.963421563362317
+          },
+          "norm": 5.694455623626709,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.591090679168701,
+          "module_squared_norms": {
+            "down_proj": 48.71546245845093,
+            "gate_proj": 7.981436094624769,
+            "k_proj": 4.207934239946098,
+            "o_proj": 10.40904860540104,
+            "q_proj": 8.239109600112442,
+            "up_proj": 9.727332207514337,
+            "v_proj": 23.62485612315868
+          },
+          "norm": 10.62568473815918,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.6085078716278076,
+          "module_squared_norms": {
+            "down_proj": 14.635433741932502,
+            "gate_proj": 1.9470037395198005,
+            "k_proj": 1.0937957555619278,
+            "o_proj": 2.658636880445556,
+            "q_proj": 2.1362296989159404,
+            "up_proj": 2.5508770800142884,
+            "v_proj": 6.662672150599974
+          },
+          "norm": 5.628911972045898,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8674765229225159,
+      "pair_id": "7626c99bb8e7e65308ed02822f3544aca25b10cc4ce78fc8e8695011766ab565",
+      "rotation_marker_cosine": 0.8620482683181763,
+      "rotation_no_transform_cosine": 0.9068289995193481,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "35677e1416dd8a79e12566a28c5d69a1fe8c7c7f865c00421ca3af67fe6d7563",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.671321153640747,
+          "module_squared_norms": {
+            "down_proj": 14.827038489383995,
+            "gate_proj": 1.9633242659378993,
+            "k_proj": 1.112676938307004,
+            "o_proj": 2.7447263782942173,
+            "q_proj": 2.166998368496479,
+            "up_proj": 2.6093128304858055,
+            "v_proj": 6.931791104485455
+          },
+          "norm": 5.688221454620361,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.583011150360107,
+          "module_squared_norms": {
+            "down_proj": 48.94757887349988,
+            "gate_proj": 8.024323828634806,
+            "k_proj": 4.247333786983745,
+            "o_proj": 10.461421047402837,
+            "q_proj": 8.323477136945257,
+            "up_proj": 9.783730725228452,
+            "v_proj": 23.759520192277705
+          },
+          "norm": 10.655861854553223,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.5759739875793457,
+          "module_squared_norms": {
+            "down_proj": 14.496298160058359,
+            "gate_proj": 1.9262878618036439,
+            "k_proj": 1.0899914411382952,
+            "o_proj": 2.6339317885258424,
+            "q_proj": 2.1255308048131383,
+            "up_proj": 2.5327917563267874,
+            "v_proj": 6.612151036808427
+          },
+          "norm": 5.605085372924805,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8677746057510376,
+      "pair_id": "8b0a7b73ae334ff9637f128e0fb3681bacd9026de5fb9fbbb03f18e7f7bf278a",
+      "rotation_marker_cosine": 0.862949013710022,
+      "rotation_no_transform_cosine": 0.9072495102882385,
+      "turn": 3
+    },
+    {
+      "canonical_base_id": "6146bc057a400b466549059b600896f97bca1f099e811ac8ef9090455fda813c",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.8778748512268066,
+          "module_squared_norms": {
+            "down_proj": 16.353271956741082,
+            "gate_proj": 2.1790139512308997,
+            "k_proj": 1.5155243713339814,
+            "o_proj": 3.2093717691041093,
+            "q_proj": 3.2309033028113845,
+            "up_proj": 2.9716407891360177,
+            "v_proj": 7.966763601552884
+          },
+          "norm": 6.1177191734313965,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.889029502868652,
+          "module_squared_norms": {
+            "down_proj": 53.163928204478,
+            "gate_proj": 7.354719123119139,
+            "k_proj": 5.436161425042883,
+            "o_proj": 10.668015419512813,
+            "q_proj": 11.046484468905192,
+            "up_proj": 9.473268613061919,
+            "v_proj": 23.59394075342152
+          },
+          "norm": 10.988017082214355,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.7718143463134766,
+          "module_squared_norms": {
+            "down_proj": 14.657822747536557,
+            "gate_proj": 2.0056793511275828,
+            "k_proj": 1.5067608377001989,
+            "o_proj": 3.020761471689184,
+            "q_proj": 2.9875338002460126,
+            "up_proj": 2.7680083889372327,
+            "v_proj": 6.99120205089821
+          },
+          "norm": 5.825613021850586,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8846011161804199,
+      "pair_id": "5785d249640cb25f87ca33d0820183d7d5d9ef21701c27f565f4852e5361d6ac",
+      "rotation_marker_cosine": 0.8612783551216125,
+      "rotation_no_transform_cosine": 0.8996554613113403,
+      "turn": 0
+    },
+    {
+      "canonical_base_id": "6146bc057a400b466549059b600896f97bca1f099e811ac8ef9090455fda813c",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.877824544906616,
+          "module_squared_norms": {
+            "down_proj": 16.25100445719363,
+            "gate_proj": 2.166643155179486,
+            "k_proj": 1.506429466796476,
+            "o_proj": 3.205516239051576,
+            "q_proj": 3.2155516719249135,
+            "up_proj": 2.9567933650200757,
+            "v_proj": 7.966754497238071
+          },
+          "norm": 6.104808807373047,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.858031749725342,
+          "module_squared_norms": {
+            "down_proj": 52.24592246486645,
+            "gate_proj": 7.167492102455071,
+            "k_proj": 5.270251422987258,
+            "o_proj": 10.429305698082317,
+            "q_proj": 10.643329373871552,
+            "up_proj": 9.244126562244219,
+            "v_proj": 23.108524714285522
+          },
+          "norm": 10.867794036865234,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.738391399383545,
+          "module_squared_norms": {
+            "down_proj": 14.357745795776282,
+            "gate_proj": 1.958260294110005,
+            "k_proj": 1.4609594861685764,
+            "o_proj": 2.9440265864604953,
+            "q_proj": 2.8702939194773194,
+            "up_proj": 2.704128179413601,
+            "v_proj": 6.8551154395863705
+          },
+          "norm": 5.757649898529053,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8854434490203857,
+      "pair_id": "18a30e5ac0ee31797ca4ba97b52548b7dd5060d8d557aaa0fd2c86bb2b458f7e",
+      "rotation_marker_cosine": 0.8610556721687317,
+      "rotation_no_transform_cosine": 0.8995177149772644,
+      "turn": 1
+    },
+    {
+      "canonical_base_id": "6146bc057a400b466549059b600896f97bca1f099e811ac8ef9090455fda813c",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.856840133666992,
+          "module_squared_norms": {
+            "down_proj": 16.1854459767128,
+            "gate_proj": 2.1408968217421034,
+            "k_proj": 1.4912491348053436,
+            "o_proj": 3.1759098767452087,
+            "q_proj": 3.1831795322462995,
+            "up_proj": 2.9303702838374193,
+            "v_proj": 7.885072527851662
+          },
+          "norm": 6.082115173339844,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.829512119293213,
+          "module_squared_norms": {
+            "down_proj": 51.96265703460085,
+            "gate_proj": 7.0587994398574665,
+            "k_proj": 5.2091976621959475,
+            "o_proj": 10.280785643433774,
+            "q_proj": 10.456862512285625,
+            "up_proj": 9.128438237453338,
+            "v_proj": 22.76856039233462
+          },
+          "norm": 10.810425758361816,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.712698221206665,
+          "module_squared_norms": {
+            "down_proj": 14.163519276597071,
+            "gate_proj": 1.9260244192200844,
+            "k_proj": 1.4487032322276718,
+            "o_proj": 2.9034656892144994,
+            "q_proj": 2.837673406532076,
+            "up_proj": 2.6668547667254643,
+            "v_proj": 6.774453410564092
+          },
+          "norm": 5.720200538635254,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.885481595993042,
+      "pair_id": "6294a88e97b4a4b891d6e5bf73d398d637851735bf595e95b5e7117c12df2d01",
+      "rotation_marker_cosine": 0.8617204427719116,
+      "rotation_no_transform_cosine": 0.8997393250465393,
+      "turn": 2
+    },
+    {
+      "canonical_base_id": "6146bc057a400b466549059b600896f97bca1f099e811ac8ef9090455fda813c",
+      "condition_statistics": {
+        "FIXED_TURN_ROTATION_CONTROL": {
+          "loss": 2.8493099212646484,
+          "module_squared_norms": {
+            "down_proj": 16.111014206369873,
+            "gate_proj": 2.1079778540471352,
+            "k_proj": 1.4709197899973105,
+            "o_proj": 3.130415034635007,
+            "q_proj": 3.1325255236274643,
+            "up_proj": 2.8924956702617237,
+            "v_proj": 7.7625228824836086
+          },
+          "norm": 6.05044412612915,
+          "supervised_token_count": 75
+        },
+        "MARKER_BINDING_CONTROL": {
+          "loss": 4.839099407196045,
+          "module_squared_norms": {
+            "down_proj": 51.4486838357916,
+            "gate_proj": 6.997799270774522,
+            "k_proj": 5.152626723168396,
+            "o_proj": 10.21849833115266,
+            "q_proj": 10.349708773763723,
+            "up_proj": 9.047199425831423,
+            "v_proj": 22.606831990100545
+          },
+          "norm": 10.762032508850098,
+          "supervised_token_count": 40
+        },
+        "NO_TRANSFORM_RETENTION_CONTROL": {
+          "loss": 2.706482410430908,
+          "module_squared_norms": {
+            "down_proj": 14.177491757604002,
+            "gate_proj": 1.913578399560265,
+            "k_proj": 1.432277734048398,
+            "o_proj": 2.8828221602543636,
+            "q_proj": 2.8137637313212167,
+            "up_proj": 2.6502152952439246,
+            "v_proj": 6.724536950299807
+          },
+          "norm": 5.7091755867004395,
+          "supervised_token_count": 75
+        }
+      },
+      "marker_no_transform_cosine": 0.8863866329193115,
+      "pair_id": "59fefe8bc7ac789e24567a7d20300e85bc33ff4e2e3ff9b2b5cea8a5066ba366",
+      "rotation_marker_cosine": 0.8627417087554932,
+      "rotation_no_transform_cosine": 0.9001014232635498,
+      "turn": 3
+    }
+  ],
+  "parameter_updates": 0,
+  "protocol_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1",
+  "repeat_cosines": {
+    "FIXED_TURN_ROTATION_CONTROL": 0.999987006187439,
+    "MARKER_BINDING_CONTROL": 0.999988853931427,
+    "NO_TRANSFORM_RETENTION_CONTROL": 0.9999854564666748
+  },
+  "repeat_scale_variation": {
+    "FIXED_TURN_ROTATION_CONTROL": {
+      "absolute_difference": 0.0021696090698242188,
+      "first_norm": 6.052768230438232,
+      "relative_difference": 0.00035844905788952287,
+      "second_norm": 6.050598621368408
+    },
+    "MARKER_BINDING_CONTROL": {
+      "absolute_difference": 0.00045680999755859375,
+      "first_norm": 11.154911994934082,
+      "relative_difference": 4.094978889058729e-05,
+      "second_norm": 11.15536880493164
+    },
+    "NO_TRANSFORM_RETENTION_CONTROL": {
+      "absolute_difference": 0.00077056884765625,
+      "first_norm": 5.861509799957275,
+      "relative_difference": 0.00013146251971836106,
+      "second_norm": 5.860739231109619
+    }
+  },
+  "runtime_head": "e331820b169f90d9571c8b10eca5670a8a223510",
+  "status": "COMPLETE_NO_UPDATE"
+}

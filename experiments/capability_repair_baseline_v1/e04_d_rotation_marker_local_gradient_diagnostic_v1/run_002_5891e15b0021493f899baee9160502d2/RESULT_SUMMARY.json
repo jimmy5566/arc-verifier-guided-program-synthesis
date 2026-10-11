@@ -1,0 +1,45 @@
+{
+  "aggregate_bootstrap_ci": {
+    "lower": 0.8428283048172792,
+    "upper": 0.8596938376625379
+  },
+  "aggregate_sensitivity_envelope": {
+    "lower": 0.8276158012386636,
+    "upper": 0.8749063412411535
+  },
+  "config_sha256": "e0a44c514c352f7a5b2d0ad7154627a70f8d94fe19859797e4875728ad335fb1",
+  "decision": "LOCAL_CONFLICT_DEPRIORITIZED",
+  "interpretation_limit": "repeat scale variation is reported separately and does not enter cosine sign classification; local alignment is not causal proof of the E04-C marker regression",
+  "negative_frequency_lower_ci": {
+    "lower": 0.0,
+    "upper": 0.0
+  },
+  "negative_frequency_upper_ci": {
+    "lower": 0.0,
+    "upper": 0.0
+  },
+  "protocol_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1",
+  "raw_sha256": "b5ae7ecd422b562a823c3a1222edfa0c57484aa08089d9e57283b898c6b79071",
+  "repeat_scale_variation": {
+    "FIXED_TURN_ROTATION_CONTROL": {
+      "absolute_difference": 0.0021696090698242188,
+      "first_norm": 6.052768230438232,
+      "relative_difference": 0.00035844905788952287,
+      "second_norm": 6.050598621368408
+    },
+    "MARKER_BINDING_CONTROL": {
+      "absolute_difference": 0.00045680999755859375,
+      "first_norm": 11.154911994934082,
+      "relative_difference": 4.094978889058729e-05,
+      "second_norm": 11.15536880493164
+    },
+    "NO_TRANSFORM_RETENTION_CONTROL": {
+      "absolute_difference": 0.00077056884765625,
+      "first_norm": 5.861509799957275,
+      "relative_difference": 0.00013146251971836106,
+      "second_norm": 5.860739231109619
+    }
+  },
+  "status": "COMPLETE_NO_UPDATE",
+  "u_rotation_marker": 0.01521250357861556
+}

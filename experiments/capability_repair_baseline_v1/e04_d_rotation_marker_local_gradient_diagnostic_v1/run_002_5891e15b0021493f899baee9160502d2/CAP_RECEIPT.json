@@ -1,0 +1,17 @@
+{
+  "cap_seconds": 1800,
+  "command": [
+    "python",
+    "scripts/run_e04_d_rotation_marker_gradient.py",
+    "--config",
+    "experiments/capability_repair_baseline_v1/e04_d_rotation_marker_local_gradient_diagnostic_v1/E04_D_GRADIENT_EXECUTION_CONFIG_V1.json",
+    "--binding",
+    "experiments/capability_repair_baseline_v1/e04_d_rotation_marker_local_gradient_diagnostic_v1/E04_D_EXECUTION_BINDING_RUN_002_V1.json",
+    "--output-root",
+    "/workspace/arc2/e04_d_rotation_marker_local_gradient_diagnostic_v1/run_002_5891e15b0021493f899baee9160502d2"
+  ],
+  "exit_code": 0,
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "wall_seconds": 284.8343085180968
+}
