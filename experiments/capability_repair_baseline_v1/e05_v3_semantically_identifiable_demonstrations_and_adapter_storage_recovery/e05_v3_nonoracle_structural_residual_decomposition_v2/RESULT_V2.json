@@ -1,0 +1,315 @@
+{
+  "aggregate": {
+    "E04E_RUN003_CONTROL_EQUAL_SLOT|MARKER_BINDING_CONTROL": {
+      "bootstrap": {
+        "category_ci95": {
+          "DIMENSION_OR_CELL_COUNT_FAILURE": [
+            1.0,
+            1.0
+          ],
+          "EXACT_INPUT_COPY": [
+            0.0,
+            0.0
+          ],
+          "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": [
+            0.0,
+            0.0
+          ],
+          "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": [
+            0.0,
+            0.0
+          ],
+          "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": [
+            0.0,
+            0.0
+          ]
+        },
+        "replicates": 10000,
+        "status": "VALID"
+      },
+      "canonical_bases": 48,
+      "eligible_view_count": 192,
+      "eligible_view_coverage": 1.0,
+      "exact_target_view_count": 0,
+      "parser_invalid_view_count": 0,
+      "primary_conditional_category_share": {
+        "DIMENSION_OR_CELL_COUNT_FAILURE": 1.0,
+        "EXACT_INPUT_COPY": 0.0,
+        "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": 0.0,
+        "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": 0.0,
+        "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": 0.0
+      },
+      "unconditional_four_view_prevalence": {
+        "DIMENSION_OR_CELL_COUNT_FAILURE": 1.0,
+        "EXACT_INPUT_COPY": 0.0,
+        "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": 0.0,
+        "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": 0.0,
+        "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": 0.0
+      }
+    },
+    "E04E_RUN003_CONTROL_EQUAL_SLOT|MARKER_CONDITIONED_ROTATION": {
+      "bootstrap": {
+        "category_ci95": {
+          "DIMENSION_OR_CELL_COUNT_FAILURE": [
+            0.0,
+            0.02027027027027027
+          ],
+          "EXACT_INPUT_COPY": [
+            0.0,
+            0.0
+          ],
+          "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": [
+            0.0,
+            0.0
+          ],
+          "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": [
+            0.0,
+            0.0
+          ],
+          "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": [
+            0.9797297297297297,
+            1.0
+          ]
+        },
+        "replicates": 10000,
+        "status": "VALID"
+      },
+      "canonical_bases": 48,
+      "eligible_view_count": 160,
+      "eligible_view_coverage": 0.8333333333333334,
+      "exact_target_view_count": 32,
+      "parser_invalid_view_count": 0,
+      "primary_conditional_category_share": {
+        "DIMENSION_OR_CELL_COUNT_FAILURE": 0.00625,
+        "EXACT_INPUT_COPY": 0.0,
+        "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": 0.0,
+        "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": 0.0,
+        "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": 0.99375
+      },
+      "unconditional_four_view_prevalence": {
+        "DIMENSION_OR_CELL_COUNT_FAILURE": 0.005208333333333333,
+        "EXACT_INPUT_COPY": 0.0,
+        "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": 0.0,
+        "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": 0.0,
+        "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": 0.828125
+      }
+    },
+    "E04E_RUN003_TREATMENT_EQUAL_SLOT|MARKER_BINDING_CONTROL": {
+      "bootstrap": {
+        "category_ci95": {
+          "DIMENSION_OR_CELL_COUNT_FAILURE": [
+            0.984375,
+            1.0
+          ],
+          "EXACT_INPUT_COPY": [
+            0.0,
+            0.0
+          ],
+          "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": [
+            0.0,
+            0.015625
+          ],
+          "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": [
+            0.0,
+            0.0
+          ],
+          "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": [
+            0.0,
+            0.0
+          ]
+        },
+        "replicates": 10000,
+        "status": "VALID"
+      },
+      "canonical_bases": 48,
+      "eligible_view_count": 192,
+      "eligible_view_coverage": 1.0,
+      "exact_target_view_count": 0,
+      "parser_invalid_view_count": 0,
+      "primary_conditional_category_share": {
+        "DIMENSION_OR_CELL_COUNT_FAILURE": 0.9947916666666666,
+        "EXACT_INPUT_COPY": 0.0,
+        "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": 0.005208333333333333,
+        "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": 0.0,
+        "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": 0.0
+      },
+      "prospective_dominance": "MECHANISM_DOMINANT:DIMENSION_OR_CELL_COUNT_FAILURE",
+      "unconditional_four_view_prevalence": {
+        "DIMENSION_OR_CELL_COUNT_FAILURE": 0.9947916666666666,
+        "EXACT_INPUT_COPY": 0.0,
+        "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": 0.005208333333333333,
+        "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": 0.0,
+        "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": 0.0
+      }
+    },
+    "E04E_RUN003_TREATMENT_EQUAL_SLOT|MARKER_CONDITIONED_ROTATION": {
+      "bootstrap": {
+        "category_ci95": {
+          "DIMENSION_OR_CELL_COUNT_FAILURE": [
+            0.0,
+            0.019736842105263157
+          ],
+          "EXACT_INPUT_COPY": [
+            0.0,
+            0.0
+          ],
+          "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": [
+            0.0,
+            0.0
+          ],
+          "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": [
+            0.0,
+            0.0
+          ],
+          "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": [
+            0.9802631578947368,
+            1.0
+          ]
+        },
+        "replicates": 10000,
+        "status": "VALID"
+      },
+      "canonical_bases": 48,
+      "eligible_view_count": 160,
+      "eligible_view_coverage": 0.8333333333333334,
+      "exact_target_view_count": 32,
+      "parser_invalid_view_count": 0,
+      "primary_conditional_category_share": {
+        "DIMENSION_OR_CELL_COUNT_FAILURE": 0.00625,
+        "EXACT_INPUT_COPY": 0.0,
+        "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": 0.0,
+        "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": 0.0,
+        "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": 0.99375
+      },
+      "prospective_dominance": "MECHANISM_DOMINANT:TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR",
+      "unconditional_four_view_prevalence": {
+        "DIMENSION_OR_CELL_COUNT_FAILURE": 0.005208333333333333,
+        "EXACT_INPUT_COPY": 0.0,
+        "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": 0.0,
+        "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": 0.0,
+        "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": 0.828125
+      }
+    },
+    "RAW_V7_NO_E04E_UPDATE|MARKER_BINDING_CONTROL": {
+      "bootstrap": {
+        "category_ci95": {
+          "DIMENSION_OR_CELL_COUNT_FAILURE": [
+            0.9153439153439153,
+            0.9841269841269841
+          ],
+          "EXACT_INPUT_COPY": [
+            0.015873015873015872,
+            0.08465608465608465
+          ],
+          "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": [
+            0.0,
+            0.0
+          ],
+          "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": [
+            0.0,
+            0.0
+          ],
+          "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": [
+            0.0,
+            0.0
+          ]
+        },
+        "replicates": 10000,
+        "status": "VALID"
+      },
+      "canonical_bases": 48,
+      "eligible_view_count": 189,
+      "eligible_view_coverage": 0.984375,
+      "exact_target_view_count": 0,
+      "parser_invalid_view_count": 3,
+      "primary_conditional_category_share": {
+        "DIMENSION_OR_CELL_COUNT_FAILURE": 0.9523809523809523,
+        "EXACT_INPUT_COPY": 0.047619047619047616,
+        "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": 0.0,
+        "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": 0.0,
+        "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": 0.0
+      },
+      "unconditional_four_view_prevalence": {
+        "DIMENSION_OR_CELL_COUNT_FAILURE": 0.9375,
+        "EXACT_INPUT_COPY": 0.046875,
+        "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": 0.0,
+        "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": 0.0,
+        "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": 0.0
+      }
+    },
+    "RAW_V7_NO_E04E_UPDATE|MARKER_CONDITIONED_ROTATION": {
+      "bootstrap": {
+        "category_ci95": {
+          "DIMENSION_OR_CELL_COUNT_FAILURE": [
+            0.0,
+            0.0
+          ],
+          "EXACT_INPUT_COPY": [
+            0.0,
+            0.0
+          ],
+          "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": [
+            0.0,
+            0.0
+          ],
+          "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": [
+            0.0,
+            0.0
+          ],
+          "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": [
+            1.0,
+            1.0
+          ]
+        },
+        "replicates": 10000,
+        "status": "VALID"
+      },
+      "canonical_bases": 48,
+      "eligible_view_count": 161,
+      "eligible_view_coverage": 0.8385416666666666,
+      "exact_target_view_count": 31,
+      "parser_invalid_view_count": 0,
+      "primary_conditional_category_share": {
+        "DIMENSION_OR_CELL_COUNT_FAILURE": 0.0,
+        "EXACT_INPUT_COPY": 0.0,
+        "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": 0.0,
+        "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": 0.0,
+        "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": 1.0
+      },
+      "unconditional_four_view_prevalence": {
+        "DIMENSION_OR_CELL_COUNT_FAILURE": 0.0,
+        "EXACT_INPUT_COPY": 0.0,
+        "TARGET_CELL_COUNT_PRESERVED_NONCONGRUENT_GEOMETRY": 0.0,
+        "TARGET_CONGRUENT_GEOMETRY_WRONG_PLACEMENT": 0.0,
+        "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR": 0.8385416666666666
+      }
+    }
+  },
+  "director_response_sha256": "3821e0ff40b15dcbdedca9fe341bcf33f59487679d3271b9332e87b79eaceedd",
+  "interpretation_limit": "Reused synthetic development evidence only; descriptive morphology, not causal mechanism, checkpoint promotion, intervention selection, or independent ARC generalization.",
+  "prohibitions_observed": {
+    "final_audit_opened": false,
+    "generation": false,
+    "gpu_used": false,
+    "gradient_work": false,
+    "inference": false,
+    "model_loaded": false,
+    "training": false
+  },
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "raw_evidence_sha256": {
+    "E04E_RUN003_CONTROL_EQUAL_SLOT_RAW_GENERATIONS.jsonl": "47edee3d176f5fc72d8f2c519d17f95db8ed56f188bdb66bda28abb272be67df",
+    "E04E_RUN003_TREATMENT_EQUAL_SLOT_RAW_GENERATIONS.jsonl": "30745fc53fe6dd762a428515abc874985d0ff0011402e338b4187296519f7c9e",
+    "RAW_V7_NO_E04E_UPDATE_RAW_GENERATIONS.jsonl": "c951c870fb090d573c97bc27e7f389e686cea44cc6df29585586a9a695cb188c"
+  },
+  "schema_version": 2,
+  "source_identities": {
+    "INPUT_PROMPTS.jsonl": "4cf144de064346d36f53e6c10d1cff293a80166907203d8003565418d9010dc3",
+    "MANIFEST.json": "cf1cbd6edf8b11757b980cec6d31a29de93ec7cca73281c219e92ec5d0161997",
+    "TARGET_SCORER_SIDECAR.jsonl": "df24d7fb97905cb210b04e4f45c050f0e77b1abf87258f29bfd1bc4b01687ac3"
+  },
+  "specification_sha256": "8292f942676af5627e231e5081e7d4a2559792362b8f531d46823bb9f1eb4814",
+  "stage": "CPU_ONLY_E05_V3_NONORACLE_STRUCTURAL_RESIDUAL_DECOMPOSITION_EXECUTION_V2",
+  "status": "COMPLETE_VALID_DESCRIPTIVE_ONLY",
+  "vector_count": 1152
+}

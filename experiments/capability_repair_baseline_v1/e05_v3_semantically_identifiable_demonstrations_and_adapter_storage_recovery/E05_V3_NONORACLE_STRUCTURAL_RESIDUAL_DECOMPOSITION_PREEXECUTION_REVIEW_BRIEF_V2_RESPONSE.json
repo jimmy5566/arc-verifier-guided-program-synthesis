@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "response_type": "DIRECTOR_E05_V3_NONORACLE_STRUCTURAL_RESIDUAL_DECOMPOSITION_V2_PREEXECUTION_REVIEW_RESPONSE",
+  "reviewed_brief_sha256": "372727355718d41a70bed8e0d65b8a91385ad8c7692f7529ebb2d417c235dd17",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "CPU_ONLY_E05_V3_NONORACLE_STRUCTURAL_RESIDUAL_DECOMPOSITION_EXECUTION_V2",
+  "next_action": "Execute exactly the frozen V2 CPU-only residual decomposition against the immutable three-arm RUN_004 raw predictions, INPUT_PROMPTS, MANIFEST, and TARGET_SCORER_SIDECAR. Enforce every identity, completeness, taxonomy-exclusivity, and invalidity gate; retain all four views within each canonical-base bootstrap draw; compute the primary conditional category estimand as sum n_category(base) divided by sum n_eligible(base) over the same resampled bases; apply seed 20261013 with 10000 replicates and the frozen zero-denominator rule; report unconditional four-view prevalence and eligible-view coverage only as separately labeled diagnostics. Freeze per-base vectors, aggregate results, execution receipt, and SHA256 identities, then return one result brief for Director interpretation. Do not select an intervention or perform model, GPU, training, inference, generation, gradient, target-expansion, Gold, dGold, or FINAL_AUDIT work.",
+  "scientific_assessment": {
+    "status": "V2_PRIMARY_ESTIMAND_REPAIR_ACCEPTED",
+    "evidence_confidence": "ESTABLISHED_FOR_PROTOCOL_VALIDITY",
+    "finding": "V2 resolves the material V1 denominator inconsistency by binding the dominance classifier to the conditional eligible-residual estimand while retaining unconditional prevalence and eligible coverage as distinct diagnostics.",
+    "interpretation_limit": "The result will remain descriptive morphology on reused synthetic development evidence; it cannot establish a causal training mechanism, justify checkpoint promotion, select a training intervention, or confirm independent ARC generalization."
+  },
+  "frozen_execution_conditions": {
+    "arms": [
+      "RAW_V7_NO_E04E_UPDATE",
+      "E04E_RUN003_CONTROL_EQUAL_SLOT",
+      "E04E_RUN003_TREATMENT_EQUAL_SLOT"
+    ],
+    "conditions": [
+      "MARKER_BINDING_CONTROL",
+      "MARKER_CONDITIONED_ROTATION"
+    ],
+    "canonical_bases_per_condition": 48,
+    "views_per_base": 4,
+    "bootstrap_seed": 20261013,
+    "bootstrap_replicates": 10000,
+    "primary_estimand": "sum_n_category_over_resampled_bases / sum_n_eligible_over_the_same_resampled_bases",
+    "zero_denominator": "INCONCLUSIVE",
+    "taxonomy_and_artifact_identities": "UNCHANGED_FROM_V2_SPECIFICATION_SHA256_8292f942676af5627e231e5081e7d4a2559792362b8f531d46823bb9f1eb4814"
+  },
+  "execution_authorization": {
+    "cpu_only_residual_decomposition": true,
+    "model_loading": false,
+    "gpu_work": false,
+    "training": false,
+    "inference": false,
+    "generation": false,
+    "gradient_work": false,
+    "target_expansion": false,
+    "adaptive_tuning_or_intervention_selection": false,
+    "gold_dgold_final_audit": false
+  },
+  "result_review_required": true,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

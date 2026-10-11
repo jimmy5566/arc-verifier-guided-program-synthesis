@@ -1,0 +1,24 @@
+{
+  "allowed_outcomes": [
+    "CONTINUE_CONTROLLER",
+    "REQUIRE_CHANGES",
+    "PAUSED",
+    "TERMINAL"
+  ],
+  "boundaries": [
+    "NO_MODEL_LOADING",
+    "NO_GPU_WORK",
+    "NO_TRAINING",
+    "NO_INFERENCE",
+    "NO_GENERATION",
+    "NO_GRADIENT_WORK",
+    "NO_TARGET_EXPANSION",
+    "NO_GOLD_DGOLD_FINAL_AUDIT",
+    "NO_ADAPTIVE_TUNING_OR_INTERVENTION_SELECTION"
+  ],
+  "brief_type": "DIRECTOR_E05_V3_NONORACLE_STRUCTURAL_RESIDUAL_DECOMPOSITION_RESULT_REVIEW_V2",
+  "execution_receipt_sha256": "7b6e550a7ccc4b1645f7251cba6b05cd09603dcad5b04911d5fbadb06f59d824",
+  "request": "Interpret this frozen CPU-only descriptive result only; do not infer causal mechanism, select intervention, promote checkpoint, or authorize model/GPU work.",
+  "result_sha256": "77812589096a84f048bcec9605d8b0c3e7bb74b9c619259048154dd98f6f0fba",
+  "vectors_sha256": "201d8a5ea5d5433b740a1047e2acb55953da17bea7cbbba9319b484a386b58ad"
+}

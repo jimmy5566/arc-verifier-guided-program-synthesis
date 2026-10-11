@@ -1,0 +1,10 @@
+{
+  "final_audit_opened": false,
+  "generation": false,
+  "gpu_used": false,
+  "model_loaded": false,
+  "per_base_vectors_sha256": "201d8a5ea5d5433b740a1047e2acb55953da17bea7cbbba9319b484a386b58ad",
+  "result_sha256": "77812589096a84f048bcec9605d8b0c3e7bb74b9c619259048154dd98f6f0fba",
+  "status": "COMPLETE_VALID_DESCRIPTIVE_ONLY",
+  "training": false
+}

@@ -1,0 +1,27 @@
+{
+  "execution_receipt_sha256": "7b6e550a7ccc4b1645f7251cba6b05cd09603dcad5b04911d5fbadb06f59d824",
+  "interpretation_limit": "Reused synthetic development evidence only; descriptive morphology, not a causal mechanism, checkpoint-promotion basis, intervention choice, or independent ARC-generalization confirmation.",
+  "primary_prospective_decision": "INCONCLUSIVE_MIXED_REQUIRED_CONDITIONS",
+  "prohibitions_observed": {
+    "final_audit_opened": false,
+    "generation": false,
+    "gpu_used": false,
+    "gradient_work": false,
+    "inference": false,
+    "model_loaded": false,
+    "training": false
+  },
+  "result_sha256": "77812589096a84f048bcec9605d8b0c3e7bb74b9c619259048154dd98f6f0fba",
+  "rule": "One and only one Treatment category must have lower 95 percent bootstrap bound above 0.50 for the primary conditional eligible-residual share in both required conditions.",
+  "schema_version": 1,
+  "status": "COMPLETE_VALID_DESCRIPTIVE_ONLY",
+  "treatment_categories_with_lower_ci_above_0_50": {
+    "MARKER_BINDING_CONTROL": [
+      "DIMENSION_OR_CELL_COUNT_FAILURE"
+    ],
+    "MARKER_CONDITIONED_ROTATION": [
+      "TARGET_FOREGROUND_GEOMETRY_COLOR_ONLY_ERROR"
+    ]
+  },
+  "vectors_sha256": "201d8a5ea5d5433b740a1047e2acb55953da17bea7cbbba9319b484a386b58ad"
+}
