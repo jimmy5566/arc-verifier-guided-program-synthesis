@@ -108,6 +108,30 @@ def load(p):
     return x
 def sha256_file(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+def review_brief_path(state):
+    """Resolve a current or older rich immutable brief binding.
+
+    The normal durable form stores a string path.  A Controller can also
+    preserve a safe {path, sha256} object.  Verify an optional declared digest
+    and canonicalize it before dispatch so this representation cannot kill
+    the persistent Governor.
+    """
+    raw=state.get('review_brief')
+    declared=None
+    if isinstance(raw, dict):
+        declared=raw.get('sha256')
+        raw=raw.get('path')
+    if not isinstance(raw, str) or not raw:
+        raise RuntimeError('REVIEW_BRIEF_MISSING')
+    brief=Path(raw)
+    if not brief.is_file():
+        raise RuntimeError('REVIEW_BRIEF_MISSING')
+    actual=sha256_file(brief)
+    if declared and declared != actual:
+        raise RuntimeError('REVIEW_BRIEF_DECLARED_SHA256_MISMATCH')
+    state['review_brief']=str(brief.resolve())
+    state['review_brief_sha256']=actual
+    return brief.resolve()
 def director_decision(response):
     """Accept the normal decision field and bounded postmortem outcomes."""
     return response.get('decision') or response.get('scientific_outcome')
@@ -335,7 +359,8 @@ def reconcile_consumed_stage_terminal(state, state_path):
     return True
 
 def route_director_response(state, state_path, response_path, response, response_sha256):
-    brief_sha256=sha256_file(state['review_brief'])
+    brief=review_brief_path(state)
+    brief_sha256=sha256_file(brief)
     if response.get('reviewed_brief_sha256') != brief_sha256:
         raise RuntimeError('DIRECTOR_RESPONSE_BRIEF_BINDING_MISMATCH')
     decision=director_decision(response)
@@ -346,7 +371,7 @@ def route_director_response(state, state_path, response_path, response, response
         raise RuntimeError('DIRECTOR_RESPONSE_ALREADY_CONSUMED')
     state.update({'director_response_path':str(response_path), 'director_response_sha256':response_sha256,
                   'director_decision':decision, 'last_actor':'director', 'director_review_in_progress':False,
-                  'last_review_brief':state['review_brief'], 'last_review_brief_sha256':brief_sha256,
+                  'last_review_brief':str(brief), 'last_review_brief_sha256':brief_sha256,
                   'updated_at':now()})
     consumed[response_sha256]={'brief_sha256':brief_sha256,'decision':decision,'consumed_at':now()}
     # A consumed review brief is immutable historical evidence; never route it back into REVIEW_REQUIRED.
@@ -405,9 +430,9 @@ def route_director_response(state, state_path, response_path, response, response
             state.update({'disposition':'PAUSED', 'next_action':'TERMINAL_SCOPE_UNSPECIFIED', 'remediation_required':False, 'terminal':False, 'experiment_terminal':False, 'terminal_scope':'UNSPECIFIED'})
     atomic(state_path,state); log(state,f'director response consumed decision={decision} response={response_path.name}')
 def director(s,p,timeout):
-    brief=s.get('review_brief')
-    if not brief or not Path(brief).is_file(): raise RuntimeError('REVIEW_BRIEF_MISSING')
+    brief=review_brief_path(s)
     brief_sha256=sha256_file(brief)
+    atomic(p,s)
     matches=matching_director_responses(p,brief_sha256)
     consumed=set((s.get('consumed_director_responses') or {}).keys())
     available=[item for item in matches if item[2] not in consumed]

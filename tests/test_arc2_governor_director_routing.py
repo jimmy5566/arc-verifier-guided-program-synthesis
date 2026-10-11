@@ -29,6 +29,27 @@ class GovernorDirectorRoutingTests(unittest.TestCase):
             self.assertIsNone(saved['review_brief'])
             self.assertEqual(len(saved['consumed_director_responses']),1)
 
+    def test_rich_review_brief_binding_is_canonicalized_and_consumed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); state_path=root/'.arc2-local/orchestration/ARC2_WORKFLOW_STATE.json'; state_path.parent.mkdir(parents=True)
+            responses=root/'orchestration/director/responses'; responses.mkdir(parents=True)
+            brief=root/'brief.json'; brief.write_text('{"brief":"immutable"}\n',encoding='utf-8')
+            brief_hash=governor.sha256_file(brief)
+            response=responses/'RESPONSE.json'
+            response.write_text(json.dumps({'reviewed_brief_sha256':brief_hash,'decision':'REQUIRE_CHANGES','smallest_repair':['repair']}),encoding='utf-8')
+            state={'disposition':'REVIEW_REQUIRED','review_brief':{'path':str(brief),'sha256':brief_hash},'review_reason':'test','next_action':'REVIEW','terminal':False}
+            governor.director(state,state_path,1)
+            saved=governor.load(state_path)
+            self.assertEqual(saved['disposition'],'CONTINUE_CONTROLLER')
+            self.assertEqual(saved['last_review_brief'],str(brief.resolve()))
+
+    def test_rich_review_brief_rejects_mismatched_declared_digest(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); state_path=root/'state.json'; brief=root/'brief.json'; brief.write_text('{"brief":"immutable"}\n',encoding='utf-8')
+            state={'disposition':'REVIEW_REQUIRED','review_brief':{'path':str(brief),'sha256':'0'*64},'review_reason':'test'}
+            with self.assertRaisesRegex(RuntimeError,'REVIEW_BRIEF_DECLARED_SHA256_MISMATCH'):
+                governor.director(state,state_path,1)
+
 
     def _terminal_case(self, scope: object) -> dict:
         with tempfile.TemporaryDirectory() as tmp:
