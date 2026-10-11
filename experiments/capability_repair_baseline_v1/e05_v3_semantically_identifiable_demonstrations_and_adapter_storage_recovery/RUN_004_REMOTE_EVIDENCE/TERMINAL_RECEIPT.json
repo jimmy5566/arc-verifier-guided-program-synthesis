@@ -1,0 +1,34 @@
+{
+  "active_cap_seconds": 10800,
+  "arms": [
+    {
+      "arm_id": "RAW_V7_NO_E04E_UPDATE",
+      "path": "RAW_V7_NO_E04E_UPDATE_RAW_GENERATIONS.jsonl",
+      "rows": 768,
+      "sha256": "c951c870fb090d573c97bc27e7f389e686cea44cc6df29585586a9a695cb188c"
+    },
+    {
+      "arm_id": "E04E_RUN003_CONTROL_EQUAL_SLOT",
+      "path": "E04E_RUN003_CONTROL_EQUAL_SLOT_RAW_GENERATIONS.jsonl",
+      "rows": 768,
+      "sha256": "47edee3d176f5fc72d8f2c519d17f95db8ed56f188bdb66bda28abb272be67df"
+    },
+    {
+      "arm_id": "E04E_RUN003_TREATMENT_EQUAL_SLOT",
+      "path": "E04E_RUN003_TREATMENT_EQUAL_SLOT_RAW_GENERATIONS.jsonl",
+      "rows": 768,
+      "sha256": "30745fc53fe6dd762a428515abc874985d0ff0011402e338b4187296519f7c9e"
+    }
+  ],
+  "backward_calls": 0,
+  "binding_sha256": "a9610449e148dbd0d6993009bf86597a526bdacf779e58633994ac7ae1060904",
+  "final_audit_opened": false,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "schema_version": 1,
+  "source_commit": "a194b1f11f678431b86490d3d3fb55ef925d8587",
+  "status": "COMPLETE_NO_UPDATE",
+  "target_sidecar_accessed": false,
+  "wall_seconds": 6631.1587552456185
+}

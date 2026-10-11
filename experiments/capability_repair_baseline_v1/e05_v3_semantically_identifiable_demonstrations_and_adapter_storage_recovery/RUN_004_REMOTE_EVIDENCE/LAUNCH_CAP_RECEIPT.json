@@ -1,0 +1,17 @@
+{
+  "cap_seconds": 10800,
+  "command": [
+    "python3",
+    "scripts/run_e05_v3_three_arm_native_greedy.py",
+    "--config",
+    "experiments/capability_repair_baseline_v1/e05_v3_semantically_identifiable_demonstrations_and_adapter_storage_recovery/E05_V3_RUNTIME_CONFIG.json",
+    "--binding",
+    "/workspace/arc2/e05_v3_three_arm_native_greedy/run_004_33d7c84be6e74b7bbe76001001fe0aad.launch_lock/LAUNCH_BINDING.json",
+    "--output-root",
+    "/workspace/arc2/e05_v3_three_arm_native_greedy/run_004_33d7c84be6e74b7bbe76001001fe0aad"
+  ],
+  "exit_code": 0,
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "wall_seconds": 6633.010703678243
+}

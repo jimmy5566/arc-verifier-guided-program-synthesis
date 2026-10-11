@@ -1,0 +1,29 @@
+{
+  "files": {
+    "E04E_RUN003_CONTROL_EQUAL_SLOT_RAW_GENERATIONS.jsonl": {
+      "bytes": 325496,
+      "sha256": "47edee3d176f5fc72d8f2c519d17f95db8ed56f188bdb66bda28abb272be67df"
+    },
+    "E04E_RUN003_TREATMENT_EQUAL_SLOT_RAW_GENERATIONS.jsonl": {
+      "bytes": 350848,
+      "sha256": "30745fc53fe6dd762a428515abc874985d0ff0011402e338b4187296519f7c9e"
+    },
+    "LAUNCH_CAP_RECEIPT.json": {
+      "bytes": 645,
+      "sha256": "91fafada998b2d0901bb8eb04a7c644e2e60a6848e419de6ea690314086e920c"
+    },
+    "RAW_V7_NO_E04E_UPDATE_RAW_GENERATIONS.jsonl": {
+      "bytes": 366651,
+      "sha256": "c951c870fb090d573c97bc27e7f389e686cea44cc6df29585586a9a695cb188c"
+    },
+    "TERMINAL_RECEIPT.json": {
+      "bytes": 1224,
+      "sha256": "09e3ec729a1bf21ed259f47b49342db533a8490496efc8499642fb5d88fadc9c"
+    }
+  },
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "run_id": "run_004_33d7c84be6e74b7bbe76001001fe0aad",
+  "schema_version": 1,
+  "target_sidecar_accessed_by_transport": false,
+  "transport": "GITHUB_NON_FORCE_COMMIT"
+}
