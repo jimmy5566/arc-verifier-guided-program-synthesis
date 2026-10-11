@@ -1,0 +1,17 @@
+{
+  "active_hard_cap_seconds": 7200,
+  "authorization": "DIRECTOR_ONCE",
+  "director_response_sha256": "11a8196a74e64df5a6d26afb6e758b4e1dff005b3a47aa67c77340f2176c5b69",
+  "launcher_sha256": "d534eb6574d3a874f923c0cdd1c38c76519ab5352d460e485f6afeb666e0e977",
+  "nonce": "071efb99e791e92661fa6911dd730321",
+  "output_root": "/workspace/arc2/atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_no_update_r5/run_002_071efb99e791e92661fa6911dd730321",
+  "package_sha256": "758a34ad3a900f7ed58f81964fcd21006f37c0e359c8e5ee4e5df2d288b322f2",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R5",
+  "replacement_scope": "EXACTLY_ONE_R5_NO_UPDATE_REPLACEMENT_AFTER_ALL_REPAIR_AND_IDENTITY_GATES_PASS",
+  "retry": false,
+  "reviewed_brief_sha256": "4a6471dd98e8136559a4a415079af06d371a7b3422e7531aa274c5fe783fada2",
+  "schema_version": 1,
+  "source_commit": "f0353c173866cc0f9d52c99554bb4b770fda0c5e",
+  "target_sidecar_may_open_before_raw_freeze": false,
+  "worker_sha256": "dd1fb66c7b6642f0868d2dc817adc39e48fdb7183eef781dde1dee1b4e3ef9f0"
+}
