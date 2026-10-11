@@ -129,6 +129,11 @@ def as_record(arm:str,row:dict[str,Any],phase:str,result:dict[str,Any],batch:int
 def length_bucketed_primary(prompts:list[dict[str,Any]], token_length:Callable[[dict[str,Any]],int])->list[dict[str,Any]]:
     return sorted(prompts,key=lambda row:(int(token_length(row)),str(row['episode_id'])))
 
+def primary_generation_order(package:dict[str,Any], prompts:list[dict[str,Any]], token_length:Callable[[dict[str,Any]],int])->list[dict[str,Any]]:
+    if package['batching'].get('length_bucketing') is True:
+        return length_bucketed_primary(prompts,token_length)
+    return list(prompts)
+
 def collect_with_generator(package_path:Path, output:Path, generator:Callable[[str,list[dict[str,Any]],int],list[dict[str,Any]]], *, primary_rows:list[dict[str,Any]]|None=None, after_arm:Callable[[str],None]|None=None, clock:Callable[[],float]=time.monotonic)->dict[str,Any]:
     package=read_json(package_path); prompts=read_jsonl(ROOT/'experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/INPUT_PROMPTS.jsonl'); primary_prompts=prompts if primary_rows is None else primary_rows; selected=set(package['batching']['fixed_b1_subset']['episode_ids']); active_cap=package.get('runtime_estimate',{}).get('active_hard_cap_seconds');
     if active_cap != 25200: raise V4ExecutionFailure('V4R7_CAP')
@@ -172,7 +177,7 @@ def execute_real(package_path:Path,runtime_binding_path:Path,output:Path)->dict[
     from huggingface_hub import hf_hub_download
     base_manifest=runtime['base_manifest']; base=runtime['base']; tokenizer,_=checkpoint_native_tokenizer(base,runtime['native_config_dir']); loaded={}
     prompts=read_jsonl(ROOT/'experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/INPUT_PROMPTS.jsonl')
-    primary_rows=length_bucketed_primary(prompts,lambda row:len(tokenizer(prompt(row['task']),add_special_tokens=False)['input_ids']))
+    primary_rows=primary_generation_order(package,prompts,lambda row:len(tokenizer(prompt(row['task']),add_special_tokens=False)['input_ids']))
     def generator(arm_id:str,batch:list[dict[str,Any]],batch_size:int)->list[dict[str,Any]]:
         if arm_id not in loaded:
             arm=next(x for x in package['three_checkpoints'] if x['arm_id']==arm_id)

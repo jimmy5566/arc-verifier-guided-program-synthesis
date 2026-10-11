@@ -217,3 +217,11 @@ def test_collection_deadline_uses_frozen_25200_cap():
   except w.V4ExecutionFailure as e: assert str(e)=='V4R7_ACTIVE_CAP_EXCEEDED'
   else: raise AssertionError('frozen 25200-second boundary accepted')
  assert 'clock()+7200' not in (ROOT/'scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192_run007_all_b1.py').read_text()
+
+def test_physical_b1_primary_order_preserves_frozen_prompt_order():
+ w=worker(); package=w.read_json(OUT/'EXECUTION_PACKAGE.json'); prompts=w.read_jsonl(ROOT/'experiments/capability_repair_baseline_v1/atomic_ood_identifiability_pilot_v4/INPUT_PROMPTS.jsonl')
+ assert package['batching']['length_bucketing'] is False
+ ordered=w.primary_generation_order(package,prompts,lambda row: -len(row['episode_id']))
+ assert [row['episode_id'] for row in ordered]==[row['episode_id'] for row in prompts]
+ source=(ROOT/'scripts/run_atomic_ood_identifiability_pilot_v4_three_checkpoint_native_greedy_r5_cap192_run007_all_b1.py').read_text()
+ assert "primary_rows=primary_generation_order(package,prompts" in source
