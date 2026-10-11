@@ -1,0 +1,73 @@
+{
+  "active_hard_cap_seconds": 10800,
+  "arms": [
+    {
+      "adapter_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+      "adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+      "arm_id": "RAW_V7_NO_E04E_UPDATE",
+      "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+      "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+      "role": "primary_reference"
+    },
+    {
+      "adapter_sha256": "515f5ebfe6685097f78fe260edcc4859edfe17152482a559769f18be8b55da16",
+      "arm_id": "E04E_RUN003_CONTROL_EQUAL_SLOT",
+      "filename": "e04_e_run003/control_equal_slot/adapter_model.safetensors",
+      "repository": {
+        "immutable_revision": "dbd0786a74a28955baae3455b70595cf49a6d906",
+        "private_verified": true,
+        "repo_id": "Jimmy5566a/arc2-private-adapters",
+        "repo_type": "model"
+      },
+      "role": "supportive_reference"
+    },
+    {
+      "adapter_sha256": "3eff5b9debc4b5b3f133e4524bf7244b0a2074a8f0bc0b5595d38ee176db57be",
+      "arm_id": "E04E_RUN003_TREATMENT_EQUAL_SLOT",
+      "filename": "e04_e_run003/treatment_equal_slot/adapter_model.safetensors",
+      "repository": {
+        "immutable_revision": "dbd0786a74a28955baae3455b70595cf49a6d906",
+        "private_verified": true,
+        "repo_id": "Jimmy5566a/arc2-private-adapters",
+        "repo_type": "model"
+      },
+      "role": "candidate"
+    }
+  ],
+  "backward": false,
+  "boundaries": [
+    "NO_GOLD",
+    "NO_DGOLD",
+    "NO_FINAL_AUDIT",
+    "NO_TRAINING",
+    "NO_OPTIMIZER",
+    "NO_BACKWARD",
+    "ONE_RUN_ONLY"
+  ],
+  "decoder": "native_greedy",
+  "director_decision": "REQUIRE_CHANGES",
+  "director_response_sha256": "66c75c4b01799c6becceefa2a84afa9a02aae4a85a84a9f5751c467071977b6f",
+  "execution_authorization": "AUTHORIZED_ONCE_CONDITIONALLY_WITHIN_10800_SECOND_ACTIVE_HARD_CAP",
+  "failure_rule": "Any failed identity/isolation/freshness/duplicate/cap gate prevents launch and scientific classification.",
+  "optimizer": false,
+  "physical_batch_size": 1,
+  "primary_estimand": "Treatment minus RAW_V7_NO_E04E_UPDATE",
+  "prompt_sha256": "4cf144de064346d36f53e6c10d1cff293a80166907203d8003565418d9010dc3",
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "required_prelaunch_gates": [
+    "three-arm SHA256 verification",
+    "fixed revision download for Control/Treatment",
+    "base-model identity",
+    "fresh nonce/output root",
+    "exact source parity",
+    "target isolation",
+    "duplicate-job exclusion",
+    "atomic terminal receipt",
+    "partial-evidence preservation"
+  ],
+  "schema_version": 1,
+  "status": "CPU_FROZEN_THREE_ARM_EXECUTION_BINDING_REPAIR",
+  "supportive_estimand": "Treatment minus E04E_RUN003_CONTROL_EQUAL_SLOT",
+  "target_sidecar_sha256": "df24d7fb97905cb210b04e4f45c050f0e77b1abf87258f29bfd1bc4b01687ac3",
+  "updates": 0
+}
