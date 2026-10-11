@@ -4,10 +4,14 @@ from __future__ import annotations
 import argparse
 import json
 import random
+import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 from scripts.e04_c_matched_rotation_execution import ARMS, E04CFailure, ROOT, atomic_json, fail, sha_path
 from scripts.e04_v3_full768_b1_remeasurement import load_config, read_jsonl, validate_full_raw
 

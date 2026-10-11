@@ -5,10 +5,14 @@ import argparse
 import json
 import secrets
 import subprocess
+import sys
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 from scripts.e04_c_matched_rotation_execution import (ARMS, BASE, JOINT_CAP_SECONDS, PER_ARM_CAP_SECONDS,
-    ROOT, SCHEDULE, atomic_json, relative, sha_path, static_schedule_preflight)
+    SCHEDULE, atomic_json, relative, sha_path, static_schedule_preflight)
 
 RESPONSE = ROOT / "orchestration/director/responses/DIRECTOR_PRELAUNCH_REVIEW_BRIEF_V1_RESPONSE.json"
 WORKER = ROOT / "scripts/run_e04_c_matched_rotation_repair_pilot.py"
