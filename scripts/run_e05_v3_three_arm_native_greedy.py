@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse, hashlib, json, os, shutil, subprocess, sys, time, traceback
 from pathlib import Path
 from typing import Any
-ROOT=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(ROOT))
+ROOT=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(ROOT)); sys.path.insert(0,str(ROOT/'src'))
 from scripts.e05_v3_three_arm_native_greedy import E05Failure, OUT, PROMPTS, sha, rows, validate_preimport
 from scripts.e04_orientation_v3_no_update import atomic_json, atomic_jsonl, canon, prompt_messages
 CAP=10800
@@ -22,8 +22,15 @@ def verify_native_config() -> dict[str, Any]:
   if not path.is_file() or path.stat().st_size!=entry['bytes'] or sha(path)!=entry['sha256']:
    fail('E05_NATIVE_CONFIG_IDENTITY:'+entry['runtime_relative_path'])
  return {'identity_path':NATIVE_CONFIG_IDENTITY.relative_to(ROOT).as_posix(),'identity_sha256':sha(NATIVE_CONFIG_IDENTITY),'config_dir':NATIVE_CONFIG.relative_to(ROOT).as_posix()}
+def verify_runtime_dependencies() -> dict[str, str]:
+ try:
+  import torch, transformers, peft
+  from inference.nvarc_native import NVARCNativeProvider, checkpoint_native_tokenizer
+ except Exception as exc:
+  fail('E05_RUNTIME_DEPENDENCY:'+type(exc).__name__)
+ return {'torch':str(torch.__version__),'transformers':str(transformers.__version__),'peft':str(peft.__version__),'nvarc_provider':NVARCNativeProvider.__name__,'tokenizer_loader':checkpoint_native_tokenizer.__name__}
 def runtime_preflight(config:Path,binding:Path,out:Path):
- c=load(config); b=load(binding); v=validate_preimport(); native=verify_native_config()
+ c=load(config); b=load(binding); v=validate_preimport(); native=verify_native_config(); dependencies=verify_runtime_dependencies()
  req={'schema_version','protocol_id','source_commit','worker_sha256','config_sha256','execution_binding_sha256','output_root','nonce','active_hard_cap_seconds','authorization','retry'}
  if set(b)!=req or b['protocol_id']!=c['protocol_id'] or b['active_hard_cap_seconds']!=CAP or b['authorization']!='DIRECTOR_CONDITIONAL_ONCE' or b['retry'] is not False: fail('E05_RUNTIME_BINDING_SCHEMA')
  if b['output_root']!=str(out) or not b['nonce'] or sha(Path(__file__))!=b['worker_sha256'] or sha(config)!=b['config_sha256']: fail('E05_RUNTIME_BINDING_IDENTITY')
@@ -32,7 +39,7 @@ def runtime_preflight(config:Path,binding:Path,out:Path):
  if subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()!=b['source_commit']: fail('E05_SOURCE_COMMIT')
  if out.exists(): fail('E05_FRESH_OUTPUT_REQUIRED')
  if c['physical_batch_size']!=1 or c['decoder']!='native_greedy' or c['max_new_tokens']!=256 or c['context_window']!=8192: fail('E05_RUNTIME_CONFIG')
- return c,b,{**v,'native_config':native}
+ return c,b,{**v,'native_config':native,'runtime_dependencies':dependencies}
 
 def adapter_dir(arm:dict[str,Any],temp:Path):
  if arm['arm_id']=='RAW_V7_NO_E04E_UPDATE': return Path(arm['adapter_path'])
