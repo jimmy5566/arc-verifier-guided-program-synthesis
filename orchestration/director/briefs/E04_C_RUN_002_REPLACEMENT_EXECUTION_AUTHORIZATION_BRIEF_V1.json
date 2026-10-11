@@ -1,0 +1,49 @@
+{
+    "schema_version":  1,
+    "brief_id":  "E04_C_RUN_002_REPLACEMENT_EXECUTION_AUTHORIZATION_BRIEF_V1",
+    "request_type":  "FRESH_EXECUTION_AUTHORIZATION_ONLY",
+    "protocol_id":  "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+    "scientific_conditions":  "UNCHANGED_FROM_DIRECTOR_RESPONSE_121f314f1651929d2a857d096bcc43a89676dcbe52235fb6b49d0520aca90a4f",
+    "prior_authorization":  {
+                                "director_response_sha256":  "121f314f1651929d2a857d096bcc43a89676dcbe52235fb6b49d0520aca90a4f",
+                                "consumed_at_detached_launch":  true,
+                                "retry_authorized":  false
+                            },
+    "failed_run":  {
+                       "run_id":  "RUN_002_REPLACEMENT_4b86515108805cfbc8313007e8a65d3b",
+                       "terminal_receipt_sha256":  "2442437aa770c1b28784e20d20d9d01eead9882e377b2d9a86e447926aa7eb44",
+                       "status":  "FAILED_BEFORE_MODEL_IMPORT_OR_OPTIMIZER",
+                       "root_cause":  "ModuleNotFoundError:bitsandbytes",
+                       "wall_seconds":  92.032730920240283,
+                       "model_imported":  false,
+                       "optimizer_constructed":  false,
+                       "backward_performed":  false,
+                       "parameter_updates":  0,
+                       "target_sidecar_accessed":  false,
+                       "final_audit_opened":  false,
+                       "production_tokenizer_collator_preflight":  "PASS"
+                   },
+    "immutable_preservation":  {
+                                   "failure_package_path":  "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1/E04_C_RUN_002_CONTROLLED_FAILURE_V1.json",
+                                   "failure_package_sha256":  "94e0d40e3eb324e82ad4af9098f4f945a2a1161446293699a01ee9a5e0004194",
+                                   "remote_evidence_manifest_path":  ".arc2-local/orchestration/remote_evidence/E04_C_RUN_002_4b86515108805cfbc8313007e8a65d3b/EVIDENCE_MANIFEST.json"
+                               },
+    "engineering_correction":  {
+                                   "description":  "The active RunPod Python environment now has bitsandbytes==0.50.2 with PagedAdamW8bit import verified before any model loading. Launcher additionally fails before output-root creation unless that exact package/import gate passes.",
+                                   "source_commit":  "51c66bf7854aa375edf9c789f174fa5aa5e44bd6",
+                                   "cpu_tests":  "12 E04-C contract/protocol/schedule/native-token tests passed",
+                                   "scientific_change":  false
+                               },
+    "requested_authorization":  {
+                                    "one_detached_replacement_job":  true,
+                                    "fresh_nonce_and_output_root":  true,
+                                    "same_V7_checkpoints_and_two_arms":  true,
+                                    "same_72_frozen_TRAIN_examples":  true,
+                                    "same_physical_B1_BF16_LoRA_recipe":  true,
+                                    "same_3600_per_arm_and_7200_joint_caps":  true,
+                                    "no_retry":  true,
+                                    "no_Gold_dGold_FINAL_AUDIT":  true,
+                                    "post_freeze_cpu_scoring_only":  true
+                                },
+    "decision_required":  "Authorize or deny exactly one replacement detached E04-C execution. No scientific redesign or expansion is requested."
+}
