@@ -1,0 +1,50 @@
+{
+  "brief_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1_REPLACEMENT_EXECUTION_AUTHORIZATION_BRIEF",
+  "failed_run": {
+    "cap_receipt_sha256": "3d29500f506bb6bbb23f6e68a2493fff8edd2716425e849551b355670f6c1681",
+    "preservation_summary_sha256": "feb9e1d7553f0281c0e90686647c7ce09a5804c86122d0e165d022c377f70fb8",
+    "run_id": "RUN_001_e04dfc9325c7e2974d018cf38192da6c",
+    "scientific_interpretation": "NOT_RUN_INFRASTRUCTURE_FAILURE_BEFORE_MODEL_IMPORT",
+    "status": "FAILED_OR_PARTIAL_NO_UPDATE",
+    "terminal_receipt_sha256": "390057c7d69e997dd94bf5f83e25d99e46b083f6fac62c604032c482628f6f34"
+  },
+  "forbidden_without_new_decision": [
+    "reuse consumed binding",
+    "reuse failed output root",
+    "launch a second GPU job",
+    "change scientific conditions",
+    "interpret the failed process as a gradient result"
+  ],
+  "previous_authorization": {
+    "automatic_retry_authorized": false,
+    "binding_consumed": true,
+    "binding_sha256": "46748feee72a85bfa528d4ab1b3d5dad35b90972f18e2df2e82735817c9564cf",
+    "director_response_sha256": "91e145a0ba8c53496e4177354ebddf100915c651708ebaa3e727e9f9749498eb"
+  },
+  "protocol_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1",
+  "request_type": "FRESH_REPLACEMENT_EXECUTION_AUTHORIZATION_ONLY",
+  "requested_decision": "Authorize exactly one fresh replacement binding with a new nonce and fresh output root, source and bound-file hashes for repaired code, same 1800-second cap and unchanged science. No launch occurs without this decision and all preflight gates.",
+  "root_cause": "The worker read an absent execution_checkout_commit field while the frozen binding and CPU preflight define approved_source_commit as the immutable source identity.",
+  "routine_repair": {
+    "commit": "6e6a017e489c3c082ff86aabcb635aec104794e8",
+    "contract": "clean runtime HEAD must be a descendant of immutable approved_source_commit; all scientific files remain hash-bound in a future binding",
+    "cpu_evidence": [
+      "temporary-repository detached-descendant integration pass",
+      "wrong approved source fails",
+      "tracked modification fails",
+      "E04-D static serializer/mask pass",
+      "E04-D chord and statistics tests pass"
+    ],
+    "worker_path": "scripts/run_e04_d_rotation_marker_gradient.py",
+    "worker_sha256": "25521ed44a8e5c3943617dd21e313842ed58bfe9f8e34a9cf0bf184ab9c86b91"
+  },
+  "schema_version": 1,
+  "scientific_conditions_changed": false,
+  "unchanged_frozen_conditions": {
+    "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "cohort_sha256": "969b3bbc495b08abf3bdb495b33bc91882c7ec05779b47f18afa0d74582cd972",
+    "execution": "one detached B1 BF16 no-update gradient measurement; FP32 reduction; 1800 seconds; no optimizer, parameter update, training, generation, Gold/dGold/FINAL_AUDIT",
+    "execution_config_sha256": "e0a44c514c352f7a5b2d0ad7154627a70f8d94fe19859797e4875728ad335fb1",
+    "protocol_sha256": "2ee22f1b768d1b6ba29c2cbb7a43ca69bbf1fe13cc59634f83b347edf3cc6552"
+  }
+}
