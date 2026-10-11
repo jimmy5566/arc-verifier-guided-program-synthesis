@@ -49,3 +49,11 @@ def test_rejects_zero_and_missing_or_duplicate_slots():
  logits,labels=slot(5,1); zero=torch.full((1,5),-100,dtype=torch.long)
  with pytest.raises(EqualSlotLossError,match='ZERO_SUPERVISED'):causal_slot_mean_ce(logits,zero)
  with pytest.raises(EqualSlotLossError,match='MISSING_OR_DUPLICATE'):equal_slot_objective([logits]*3,[labels]*3)
+
+def test_streamed_backward_rejects_nonfinite_before_backward():
+    logits, labels = slot(5, 1)
+    with torch.no_grad():
+        logits[0, 1, 0] = float('inf')
+    with pytest.raises(EqualSlotLossError, match='NONFINITE_SLOT'):
+        backward_equal_slot_term(logits, labels)
+    assert logits.grad is None

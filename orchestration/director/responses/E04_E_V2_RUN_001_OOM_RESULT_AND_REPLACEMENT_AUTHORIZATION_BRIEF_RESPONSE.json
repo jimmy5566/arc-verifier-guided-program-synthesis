@@ -1,0 +1,113 @@
+{
+  "response_id": "E04_E_V2_RUN_001_OOM_RESULT_AND_REPLACEMENT_AUTHORIZATION_BRIEF_RESPONSE",
+  "reviewed_brief_sha256": "058fc3d9b1a94535c86a314955876f29d6d35d0b909a00d6113f09926922159a",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "E04_E_V2_RUN_002_STREAMED_EQUAL_SLOT_BACKWARD_REPLACEMENT_EXECUTION",
+  "next_action": "Preserve RUN_001 as an immutable infrastructure failure and prepare one fresh replacement binding for RUN_002. Pin this response, repair ID E04E_STREAMED_EQUAL_SLOT_BACKWARD_ACCUMULATION_V1, the three reviewed repair-source hashes, the unchanged V2 protocol and schedules, exact V7 checkpoint, production serializer/collator, evaluator, clean source commit, fixed arm order, seed, fresh nonce, and unused output roots. Re-run the unequal-length CPU scalar-and-gradient equivalence tests from the exact launch commit. In each optimizer step, call optimizer.zero_grad exactly once, perform four physical-B1 forwards sequentially, backpropagate each independently FP32-normalized slot mean multiplied by 0.25 immediately, release that slot's graph, and call optimizer.step exactly once only after all four slot terms and label counts pass. Record per-slot and per-step CUDA allocated, reserved, and peak memory. If identity, equivalence, fresh-start, isolation, duplicate-job, memory, and hard-cap gates pass, launch exactly one detached replacement containing fresh CONTROL_EQUAL_SLOT and TREATMENT_EQUAL_SLOT arms under the unchanged 3600-second per-arm and 7200-second joint caps. Evaluate with the unchanged physical-B1 native-Greedy E04 development protocol, freeze target-blind raw generations before scoring, apply the existing prospective classifier, preserve terminal evidence, and return one result brief. Do not reuse any model, optimizer, gradients, outputs, nonce, or output root from RUN_001; no further retry or follow-on experiment is authorized.",
+  "observed_result": {
+    "run_id": "RUN_001_ad4c8c3491cbe20c74dfcc177be54d91",
+    "classification": "FAILED_OR_PARTIAL_INFRASTRUCTURE_OOM_NOT_INTERPRETABLE",
+    "parent_exit_code": 1,
+    "wall_seconds": 253.11359154526144,
+    "failure_location": "CONTROL_EQUAL_SLOT model forward before completion of the first optimizer step",
+    "gpu_capacity_gib": 23.56,
+    "free_memory_at_failure_mib": 10.38,
+    "failed_allocation_mib": 22.0,
+    "optimizer_steps_observed": 0,
+    "parameter_updates_observed": 0,
+    "treatment_arm_started": false,
+    "raw_generations_frozen": false,
+    "scoring_started": false,
+    "target_sidecar_accessed": false,
+    "final_audit_opened": false,
+    "terminal_receipt_sha256": "6438e10081bd34d409bf6195e18185fc0af81995afcf9c4da4eed7013a43cc91",
+    "control_terminal_receipt_sha256": "076e92b99b9348a2695bb900e056df55bbb610fe18d74ed2671fd4fde7feef7d",
+    "result_package_sha256": "cb3afa28e7ead30a5e8c9a149238c5335575b70e3c235bb40d12f77aa8ba3ec8"
+  },
+  "mechanism_assessment": {
+    "confidence": "ESTABLISHED",
+    "established": [
+      "RUN_001 failed from CUDA memory exhaustion while the control worker retained multiple slot activation graphs before a joint backward.",
+      "No completed optimizer step, treatment execution, generation, scoring, or target access occurred, so RUN_001 contains no interpretable scientific outcome.",
+      "The proposed streamed implementation preserves each slot's valid-label mask, FP32 mean supervised-token CE, coefficient 0.25, four-slot optimizer-step boundary, optimizer, checkpoint, schedules, seed, caps, arms, and evaluation.",
+      "The reviewed CPU test verifies that four streamed backward terms reproduce the scalar objective and gradients of the joint equal-slot objective for unequal supervised lengths and are distinct from token-weighted aggregation."
+    ],
+    "supported_hypothesis": "Releasing each slot's activation graph immediately after its weighted backward should remove the avoidable four-graph memory peak while preserving the approved equal-slot gradient estimand.",
+    "unknown": [
+      "Whether one physical-B1 forward and backward plus model, LoRA, optimizer, and gradient state fit with adequate headroom on the 24 GiB runtime.",
+      "Whether explicit marker replay improves marker preservation once a valid two-arm run completes.",
+      "Whether any positive E04 development result transfers beyond the reused synthetic cohort."
+    ],
+    "research_bottleneck": "Execution feasibility on the available 24 GiB GPU, not a new scientific uncertainty or a reason to alter the approved protocol."
+  },
+  "repair_acceptance": {
+    "repair_id": "E04E_STREAMED_EQUAL_SLOT_BACKWARD_ACCUMULATION_V1",
+    "classification": "ENGINEERING_EQUIVALENT_MEMORY_REPAIR",
+    "loss_source_sha256": "b0b81ab353b4d3e5dd80cc20ca0c52ba3ce4acc33dbce557de1123f6a73f6625",
+    "worker_source_sha256": "cca8b36461389f9bf2d3587ab4a5768d2a87b4a485d699332cfb8604103bf55c",
+    "test_source_sha256": "67a31ec3b72ee71375ba64d454e0f36c7dc0c549a5d85736acbed9e39b0bbce9",
+    "required_step_semantics": "Exactly four sequential 0.25-weighted slot-mean backwards accumulate into one optimizer update; no update occurs after fewer than four valid slots.",
+    "scientific_conditions_changed": false
+  },
+  "execution_authorization": {
+    "authorization_type": "ONE_FRESH_REPLACEMENT_AFTER_CONSUMED_RUN_001_OOM",
+    "maximum_detached_jobs": 1,
+    "authorized_run": "RUN_002",
+    "authorized_arms": 2,
+    "arm_names": [
+      "CONTROL_EQUAL_SLOT",
+      "TREATMENT_EQUAL_SLOT"
+    ],
+    "fresh_binding_required": true,
+    "fresh_nonce_required": true,
+    "fresh_output_roots_required": true,
+    "independent_fresh_v7_initialization_per_arm_required": true,
+    "same_gpu_and_runtime_stack_required": true,
+    "per_arm_runtime_cap_seconds": 3600,
+    "joint_runtime_cap_seconds": 7200,
+    "model_loading_authorized_after_all_gates": true,
+    "optimizer_construction_authorized_after_all_gates": true,
+    "gpu_training_authorized_after_all_gates": true,
+    "backward_and_parameter_updates_authorized_after_all_gates": true,
+    "post_training_physical_b1_generation_authorized": true,
+    "post_freeze_cpu_scoring_authorized": true,
+    "authorization_consumed_at_detached_launch": true,
+    "automatic_retry_authorized": false,
+    "automatic_follow_on_training_authorized": false,
+    "checkpoint_promotion_authorized": false,
+    "final_audit_authorized": false
+  },
+  "required_prelaunch_gates": [
+    "The exact clean launch commit is identical across local, origin, and RunPod and contains the reviewed repair sources, tests, frozen protocol, schedules, evaluator, and binding machinery.",
+    "The launch commit passes the CPU streamed-versus-joint scalar and gradient equivalence test on unequal-length slots, the token-weighted negative control, zero-supervision rejection, and four-slot completeness checks.",
+    "The fresh binding pins this response and all immutable model, protocol, schedule, source, evaluator, runtime, seed, nonce, arm-order, output-root, and cap identities.",
+    "The worker verifies the production tokenizer, labels, masks, counts, 384-slot schedule, 96-step grouping, and cross-arm invariants before optimizer construction.",
+    "Each arm starts from exact V7 in a fresh process or equivalently proven clean state; no RUN_001 model, optimizer, gradient, partial checkpoint, output, or process state is reused.",
+    "The worker performs no optimizer step unless all four streamed slot terms for that step are finite and their supervised counts equal the frozen schedule; a failure mid-step emits a terminal receipt and exits without a partial update.",
+    "No duplicate GPU job exists, output roots are unused, and external plus worker-enforced caps include model loading, both training arms, checkpoint saves, and evaluation."
+  ],
+  "result_classification": {
+    "MARKER_PRESERVATION_GAIN": "The frozen primary rule, marker-protection rule, rotation-efficacy rule, no-transform retention rule, and every validity gate pass.",
+    "NO_MARKER_REPLAY_BENEFIT": "The replacement is valid but the primary treatment-minus-control rule fails while protection and efficacy constraints remain within bounds; do not automatically increase replay or rerun.",
+    "PROTECTION_OR_EFFICACY_FAILURE": "Any frozen marker-protection, rotation-efficacy, or no-transform retention constraint fails; reject this treatment configuration.",
+    "INVALID_NOT_INTERPRETABLE": "Any identity, loss-equivalence, memory, schedule, execution, scorer, target-blindness, or sealed-boundary gate fails."
+  },
+  "frozen_conditions": [
+    "RUN_001 failure evidence, receipts, source identity, and FAILED_OR_PARTIAL_INFRASTRUCTURE_OOM_NOT_INTERPRETABLE classification remain immutable.",
+    "E04-E V2 protocol, V7 checkpoint, control and treatment schedules, equal-slot objective, optimizer, learning rate, LoRA configuration, precision, seed, arm order, 96 optimizer steps per arm, runtime caps, evaluation, bootstrap, and thresholds remain unchanged.",
+    "The only authorized implementation change is replacing retained four-graph joint backward with the reviewed streamed equal-slot backward accumulation.",
+    "The reused E04 cohort remains development evidence; raw target-blind generations must be frozen before target access or scoring.",
+    "Gold, dGold, and FINAL_AUDIT remain sealed."
+  ],
+  "forbidden_actions": [
+    "Do not resume RUN_001, reuse its output root or nonce, continue from any partial state, or count it as either causal arm.",
+    "Do not change the loss estimand, per-slot coefficients, valid-label masks, four-slot update boundary, checkpoint, schedules, optimizer, learning rate, precision, seed policy, evaluation, thresholds, or caps.",
+    "Do not perform an optimizer step after fewer than four valid streamed slot backwards or silently skip an OOM slot.",
+    "Do not authorize a second replacement, automatic retry, larger-memory scientific variant, dose expansion, checkpoint promotion, or follow-on training from this response.",
+    "Do not use evaluation targets during training or adaptation, open Gold or dGold, or access FINAL_AUDIT."
+  ],
+  "another_director_prelaunch_review_required": false,
+  "director_result_review_required": true,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

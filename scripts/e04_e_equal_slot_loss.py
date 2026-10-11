@@ -39,6 +39,8 @@ def backward_equal_slot_term(slot_logits, slot_labels, *, expected_slots: int = 
     physical-B1 E04-E worker on the 24 GiB runtime.
     """
     mean, count = causal_slot_mean_ce(slot_logits, slot_labels, ignore_index=ignore_index)
+    if not bool(mean.isfinite().item()):
+        raise EqualSlotLossError('E04E_LOSS_NONFINITE_SLOT')
     term = mean * (1.0 / expected_slots)
     term.backward()
     return term.detach(), count
