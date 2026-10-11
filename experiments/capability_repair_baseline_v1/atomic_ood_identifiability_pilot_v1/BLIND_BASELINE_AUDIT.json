@@ -1,0 +1,13 @@
+{
+  "color_blind": {
+    "can_solve_all_counterfactuals": false,
+    "counterfactual_groups": 32,
+    "divergent_target_groups": 32
+  },
+  "marker_blind": {
+    "can_solve_all_counterfactuals": false,
+    "counterfactual_groups": 8,
+    "divergent_target_groups": 8
+  },
+  "status": "PASS"
+}

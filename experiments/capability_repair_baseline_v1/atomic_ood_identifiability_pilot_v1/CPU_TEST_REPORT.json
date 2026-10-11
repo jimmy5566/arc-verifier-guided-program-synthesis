@@ -1,0 +1,6 @@
+{
+  "checks": ["allocation_192", "rotation_distinctness", "explicit_color_cue", "one_factor_cells", "target_separation", "collision_audit", "blind_baselines", "deterministic_regeneration", "refuse_overwrite"],
+  "interpreter": "Python 3.12",
+  "model_loaded": false,
+  "status": "PASS_2_SYNTHETIC_FIXTURE_TESTS_AND_FROZEN_ARTIFACT_AUDITS"
+}

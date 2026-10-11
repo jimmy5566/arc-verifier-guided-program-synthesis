@@ -1,0 +1,11 @@
+{
+  "cross_split_content_collision": false,
+  "historical_files_checked": [
+    "experiments\\capability_repair_baseline_v1\\e05_v3_semantically_identifiable_demonstrations_and_adapter_storage_recovery\\INPUT_PROMPTS.jsonl"
+  ],
+  "historical_namespace_collision": false,
+  "latent_hashes_unique": true,
+  "prompt_hashes_unique": true,
+  "prompt_target_hash_intersection": 0,
+  "status": "PASS"
+}

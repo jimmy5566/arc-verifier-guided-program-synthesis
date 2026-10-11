@@ -1,0 +1,16 @@
+{
+  "byte_identical_regeneration": true,
+  "files": [
+    "BLIND_BASELINE_AUDIT.json",
+    "COLLISION_AUDIT.json",
+    "INPUT_PROMPTS.jsonl",
+    "MANIFEST.json",
+    "ONE_FACTOR_AUDIT.json",
+    "ROTATION_DISTINCTNESS_AUDIT.json",
+    "SEALED_TARGET_SIDECAR.jsonl"
+  ],
+  "gpu_used": false,
+  "manifest_sha256": "040f0260705fa5bad52b7da31ed6f372bb1583d39b3b18c6c644cba904869c63",
+  "model_loaded": false,
+  "status": "PASS"
+}

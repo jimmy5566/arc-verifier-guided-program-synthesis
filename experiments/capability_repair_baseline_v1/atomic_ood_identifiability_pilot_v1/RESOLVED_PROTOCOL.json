@@ -1,0 +1,12 @@
+{
+  "canonical_units": 8,
+  "cells": ["REFERENCE", "OOD_GEOMETRY", "OOD_COLOR_MAPPING", "OOD_GRID_SIZE", "OOD_LAYOUT", "OOD_MARKER_ENCODING"],
+  "future_checkpoints": ["V7", "E04_E_CONTROL", "E04_E_TREATMENT"],
+  "primary_future_estimand": "paired_canonical_unit_native_greedy_exact_grid_accuracy_by_cell",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V1",
+  "prohibitions": ["MODEL_LOADING", "INFERENCE", "GPU", "TRAINING", "GOLD_DGOLD_FINAL_AUDIT"],
+  "reference_cell": "asymmetric_D4_distinct_explicit_color_cue",
+  "scope": "CPU_ONLY_DESIGN_FREEZE_AND_VALIDATION",
+  "scientific_question": "Identifiable marker-conditioned orientation transfer under one-factor OOD shifts",
+  "source_generator_sha256": "594c9c0028cbd3bec7dee222db9f55160856f25fa169d996ce00041bf02ddbba"
+}

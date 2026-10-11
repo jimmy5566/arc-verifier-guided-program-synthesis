@@ -1,0 +1,43 @@
+{
+  "canonical_units": 8,
+  "cells": [
+    "REFERENCE",
+    "OOD_GEOMETRY",
+    "OOD_COLOR_MAPPING",
+    "OOD_GRID_SIZE",
+    "OOD_LAYOUT",
+    "OOD_MARKER_ENCODING"
+  ],
+  "checkpoints_if_later_authorized": [
+    "V7",
+    "E04_E_CONTROL",
+    "E04_E_TREATMENT"
+  ],
+  "episodes": 192,
+  "episodes_per_checkpoint_if_separately_authorized": 192,
+  "file_sha256": {
+    "BLIND_BASELINE_AUDIT.json": "a9e366449399a56b4c48cc8c70a6a4d779d106d00c9220c5de2736af54cb7dcc",
+    "COLLISION_AUDIT.json": "f963026c0c7fa6294f6aca3d8ffa653d76ee90614608b97a131bdf4b5587c212",
+    "INPUT_PROMPTS.jsonl": "16a22756648a0332e205649aa97924522723571eba77ab2fd41f2c85cf4b7cb2",
+    "ONE_FACTOR_AUDIT.json": "64ff5d63f74acb45ab5496d0193a999c81b2dea051341eca4299b35e5f39b411",
+    "ROTATION_DISTINCTNESS_AUDIT.json": "5855426452f8e777e71f5b289a83ff245ca84c6dcba5e4284d7ede9edf5a0a6b",
+    "SEALED_TARGET_SIDECAR.jsonl": "73ebc122bef57052eb23553b928756afbdf5b6bc2d59b301302391e3b03a8d39"
+  },
+  "final_audit_opened": false,
+  "future_batch_policy": "LENGTH_BUCKETED_B32_FALLBACK_32_16_8_4_1_FIXED_B1_SUBSET",
+  "future_execution_requires": [
+    "DIRECTOR_PRELAUNCH_REVIEW",
+    "SEPARATE_GPU_NO_UPDATE_AUTHORIZATION",
+    "RUNTIME_IDENTITY_PREFLIGHT"
+  ],
+  "future_inference": "NATIVE_GREEDY_EXACT_GRID",
+  "generation_run": false,
+  "gpu_used": false,
+  "model_loaded": false,
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V1",
+  "seed": 20261011,
+  "status": "CPU_ONLY_FROZEN_NO_MODEL_NO_INFERENCE",
+  "target_sidecar_sealed": true,
+  "training_run": false,
+  "turns_per_unit": 4
+}

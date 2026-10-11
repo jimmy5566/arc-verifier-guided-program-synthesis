@@ -1,0 +1,9 @@
+{
+  "brief_type": "DIRECTOR_PRELAUNCH_REVIEW",
+  "manifest_sha256": "040f0260705fa5bad52b7da31ed6f372bb1583d39b3b18c6c644cba904869c63",
+  "model_or_gpu_authorization_requested": false,
+  "owner_decision_sha256": "515c430258cd6964beef05e98c2c7877effb47f8f6d52c4dd2b7141d11fce87d",
+  "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V1",
+  "request": "Review the frozen identifiable endpoint and CPU validity gates. A future no-update inference study requires separate authorization.",
+  "status": "CPU_ONLY_VALIDITY_GATES_PASS"
+}

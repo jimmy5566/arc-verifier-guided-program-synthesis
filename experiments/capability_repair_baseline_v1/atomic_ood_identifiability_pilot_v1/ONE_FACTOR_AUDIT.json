@@ -1,0 +1,36 @@
+{
+  "cells": {
+    "OOD_COLOR_MAPPING": {
+      "changed_fields": [
+        "color_mapping"
+      ],
+      "nominated_factor": "color_mapping"
+    },
+    "OOD_GEOMETRY": {
+      "changed_fields": [
+        "geometry"
+      ],
+      "nominated_factor": "geometry"
+    },
+    "OOD_GRID_SIZE": {
+      "changed_fields": [
+        "grid_size"
+      ],
+      "nominated_factor": "grid_size"
+    },
+    "OOD_LAYOUT": {
+      "changed_fields": [
+        "layout"
+      ],
+      "nominated_factor": "layout"
+    },
+    "OOD_MARKER_ENCODING": {
+      "changed_fields": [
+        "marker_encoding"
+      ],
+      "nominated_factor": "marker_encoding"
+    }
+  },
+  "reference": "REFERENCE",
+  "status": "PASS"
+}
