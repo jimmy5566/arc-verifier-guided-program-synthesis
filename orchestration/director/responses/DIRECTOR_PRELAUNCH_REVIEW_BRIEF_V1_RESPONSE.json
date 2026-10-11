@@ -1,0 +1,100 @@
+{
+  "response_id": "DIRECTOR_PRELAUNCH_REVIEW_BRIEF_V1_RESPONSE",
+  "reviewed_brief_sha256": "54ab6f3cdae7fec60a29b1ec4c2b5e276cddef0137207b2394348052a52ef27c",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1_EXECUTION",
+  "next_action": "Create one fresh execution binding for a single detached matched experiment containing exactly two independently initialized V7-start arms. Pin this Director response, the frozen protocol SHA256 16a0b1f9bf93a81fdc48e147fc55b6f981d5e2c2e96d7561c9ee6d93777381b5, schedule binding SHA256 57b9ef6c9c680533192d5358e6451d370425e1dd2bd8902f51d7095e45a40ca7, exact control and treatment cohort hashes, worker/evaluator hashes, clean source commit, fresh nonce, fixed arm order, and unused output roots. Before optimizer construction, use the actual production tokenizer and training collator to verify per-slot input length, supervised-label count, role masks, arm totals, frozen schedule consumption, and byte-identical protected replay; fail closed if they disagree with the frozen native-runtime contract. After local, origin, and RunPod source parity and all identity, isolation, duplicate-job, memory, and hard-cap gates pass, execute the control and treatment once under separate 3600-second per-arm caps and a 7200-second joint cap. Evaluate both resulting checkpoints plus the frozen V7 reference using physical-B1 native Greedy on the unchanged E04 development cohort, freeze target-blind raw generations before scoring, apply only the prospective decision rules, preserve terminal evidence, and return one result brief for Director review. No retry, expansion, checkpoint promotion, or follow-on training is authorized.",
+  "scientific_assessment": {
+    "confidence": "SUPPORTED_HYPOTHESIS",
+    "established": [
+      "The accepted B1 baseline shows a large fixed-turn rotation deficit while marker binding is strong and no-transform retention is materially higher.",
+      "The frozen schedules match control and treatment at 384 slots, 96 optimizer steps, 28,800 supervised tokens, 207,360 total tokens, role-slot structure, turn counts, and structural-cell allocation.",
+      "The only declared arm difference is replacement of 96 matched no-transform supervision slots by fixed-turn rotation supervision; the remaining 288 protected-replay slots are byte-identical.",
+      "Evaluation rows are excluded from training and Gold, dGold, and FINAL_AUDIT remain unopened."
+    ],
+    "supported_hypothesis": "Insufficient effective learning of the atomic fixed-turn rotation operator is a plausible repairable prerequisite bottleneck. A matched treatment-versus-control pilot can test this without conflating the result with extra steps, tokens, starting weights, or protected replay.",
+    "unknown": [
+      "Whether ordinary CE on the targeted TRAIN allocation will improve free-running fixed-turn exact-grid accuracy.",
+      "Whether an atomic fixed-turn gain will transfer to marker-conditioned rotation.",
+      "Whether any observed gain is stable across training seeds or transfers beyond this reused synthetic development cohort.",
+      "Whether a failure would primarily reflect objective mismatch, representation limits, optimization dynamics, or insufficient intervention strength."
+    ],
+    "research_bottleneck": "A causal matched weight-update comparison is now required to determine whether the localized rotation deficit is repairable through targeted supervised allocation."
+  },
+  "scientific_design_acceptance": {
+    "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+    "starting_checkpoint": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "control_arm": "384 frozen no-transform supervision slots",
+    "treatment_arm": "96 frozen fixed-turn rotation supervision slots plus 288 byte-identical no-transform protected-replay slots",
+    "optimizer_steps_per_arm": 96,
+    "primary_estimand": "Treatment minus control FIXED_TURN_ROTATION_CONTROL exact-grid accuracy, paired by 48 canonical bases with all four turns resampled together",
+    "bootstrap_seed": 20261011,
+    "bootstrap_replicates": 10000,
+    "primary_success_rule": "At least 8 additional correct episodes of 192 and paired bootstrap 95% interval lower bound greater than zero",
+    "protection_rule": "Reject the treatment if MARKER_BINDING_CONTROL or NO_TRANSFORM_RETENTION_CONTROL declines by more than 8 of 192 versus the frozen V7 reference, or if any identity, parser, scorer, or execution-validity gate fails",
+    "transfer_interpretation": "ROTATION_TARGET is descriptive compositional-transfer evidence only; it cannot replace the primary atomic endpoint or establish independent generalization",
+    "scope_limit": "This is a one-seed synthetic development pilot. Even a positive result requires separate independent confirmation before a generalization or checkpoint-promotion claim."
+  },
+  "execution_authorization": {
+    "maximum_detached_jobs": 1,
+    "authorized_arms": 2,
+    "arm_names": [
+      "CONTROL_NO_TRANSFORM",
+      "TREATMENT_FIXED_TURN_ROTATION"
+    ],
+    "fresh_authorization_identity_required": true,
+    "fresh_nonce_required": true,
+    "fresh_output_root_per_arm_required": true,
+    "independent_fresh_v7_initialization_per_arm_required": true,
+    "same_gpu_and_runtime_stack_required": true,
+    "arm_order_must_be_frozen_before_model_loading": true,
+    "per_arm_runtime_cap_seconds": 3600,
+    "joint_runtime_cap_seconds": 7200,
+    "gpu_training_authorized": true,
+    "model_loading_authorized": true,
+    "optimizer_construction_authorized": true,
+    "backward_authorized": true,
+    "parameter_updates_authorized": true,
+    "post_training_b1_generation_authorized": true,
+    "post_freeze_cpu_scoring_authorized": true,
+    "authorization_consumed_at_detached_launch": true,
+    "automatic_retry_authorized": false,
+    "automatic_follow_on_training_authorized": false,
+    "checkpoint_promotion_authorized": false,
+    "final_audit_authorized": false
+  },
+  "required_prelaunch_gates": [
+    "The exact launch commit must be clean and identical across local, origin, and RunPod checkout and must contain the bound worker, evaluator, protocol, schedules, and cohort manifests.",
+    "The fresh binding must pin this response hash, exact V7 model and adapter identity, tokenizer/runtime identity, both cohort and schedule hashes, worker and evaluator hashes, seed, arm order, fresh nonce, and unused output roots.",
+    "The production worker must verify actual input_ids, label masks, attention masks, per-slot supervised counts, 28,800 supervised tokens per arm, 207,360 total tokens per arm, and byte-identical slots 96 through 383 before optimizer construction; the CPU serializer-only preflight is not sufficient by itself.",
+    "Each arm must start from the same exact V7 weights in a fresh process or equivalently proven clean model state; neither arm may initialize from the other arm's checkpoint or optimizer state.",
+    "The two arms must use identical optimizer, learning rate, LoRA configuration, precision, gradient accumulation, step count, seed policy, schedule order, hardware class, and runtime stack except for the frozen 96-slot supervision replacement.",
+    "Physical-B1 native-Greedy evaluation, parser, scorer, four condition definitions, canonical-base bootstrap, target-blind raw freeze, and V7 reference identities must remain unchanged.",
+    "No active duplicate scientific job may exist, and the external plus worker-enforced caps must include model loading, training, checkpoint save, and evaluation."
+  ],
+  "result_classification": {
+    "IMPROVED": "The primary success rule passes and neither protected outcome nor validity gate fails.",
+    "ATOMIC_GAIN_WITHOUT_TRANSFER": "The primary rule passes but ROTATION_TARGET does not show a compatible gain; report an atomic improvement with an unresolved compositional-transfer bottleneck, not overall E04 repair success.",
+    "INCONCLUSIVE": "The valid primary result does not meet IMPROVED and no protection failure occurs; do not automatically increase dose or rerun.",
+    "PROTECTION_FAILURE": "Either protected outcome exceeds its frozen harm limit; reject the treatment route regardless of the primary point estimate.",
+    "INVALID_NOT_INTERPRETABLE": "Any model, data, serialization, mask, schedule, scorer, runtime, or sealed-boundary validity gate fails."
+  },
+  "frozen_conditions": [
+    "Prelaunch protocol SHA256 16a0b1f9bf93a81fdc48e147fc55b6f981d5e2c2e96d7561c9ee6d93777381b5 and schedule binding SHA256 57b9ef6c9c680533192d5358e6451d370425e1dd2bd8902f51d7095e45a40ca7 remain immutable.",
+    "V7 starting checkpoint, 384-slot arm schedules, 96 intervention slots, 288 protected-replay slots, optimizer recipe, 96 update steps, token budgets, and seed remain unchanged.",
+    "The reused E04 cohort remains development evidence; its targets may be opened only after raw generation freeze and may not drive training, stopping, or adaptive tuning.",
+    "The unavailable independent sentinel may not be replaced or generated inside this protocol.",
+    "Gold, dGold, and FINAL_AUDIT remain sealed."
+  ],
+  "forbidden_actions": [
+    "Do not change the scientific loss, checkpoint, cohort, intervention allocation, replay allocation, learning rate, optimizer, update count, token budget, seed policy, evaluation conditions, or thresholds after launch.",
+    "Do not treat training NLL, teacher-forced rank, or checkpoint creation as scientific success without the frozen free-running exact-grid rule.",
+    "Do not claim independent ARC generalization, multi-seed robustness, or a proven representation mechanism from this pilot.",
+    "Do not launch a second job or retry either arm after this authorization is consumed.",
+    "Do not promote a checkpoint, expand training, begin composition training, open Gold or dGold, or access FINAL_AUDIT."
+  ],
+  "another_director_prelaunch_review_required": false,
+  "director_result_review_required": true,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}
