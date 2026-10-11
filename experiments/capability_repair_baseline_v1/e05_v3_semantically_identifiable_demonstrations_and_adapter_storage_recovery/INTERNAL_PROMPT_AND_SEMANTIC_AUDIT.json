@@ -1,0 +1,9 @@
+{
+  "all_prompt_signatures_unique": true,
+  "condition_views_per_query_grid": 4,
+  "model_visible_native_prompt_signatures": 768,
+  "query_grid_signatures": 192,
+  "semantic_audit_sha256": "544d3b25641214e7ebdc36df16f7b63ee2bc70d710bdefd51a5fd2eae251f056",
+  "status": "PASS",
+  "target_sidecar_opened_after_freeze": false
+}

@@ -1,0 +1,20 @@
+{
+  "status": "BLOCKED_NO_PRIVATE_VERSIONED_ARTIFACT_STORE_AUTHENTICATED",
+  "engineering_recovery_authorized_by_director": true,
+  "control_adapter_sha256": "515f5ebfe6685097f78fe260edcc4859edfe17152482a559769f18be8b55da16",
+  "treatment_adapter_sha256": "3eff5b9debc4b5b3f133e4524bf7244b0a2074a8f0bc0b5595d38ee176db57be",
+  "runpod_environment_probe": {
+    "GH_TOKEN_PRESENT": true,
+    "HF_TOKEN_PRESENT": false,
+    "HUGGINGFACE_HUB_INSTALLED": true,
+    "github_repository_visibility": "public"
+  },
+  "storage_decision": {
+    "huggingface_upload": "NOT_POSSIBLE_AUTH_MISSING_HUGGINGFACE",
+    "github_release_or_lfs_upload": "NOT_PERMITTED_PUBLIC_REPOSITORY_PRIVATE_TRAINING_ASSET",
+    "pty_binary_transfer": "NOT_ATTEMPTED_NOT_A_VERSIONED_ARTIFACT_STORE",
+    "adapter_substitution_or_reconstruction": "FORBIDDEN"
+  },
+  "required_future_identity": "An appropriate private versioned repository, immutable revision, filename, source SHA256, uploaded SHA256 and retrieved SHA256 for each adapter, all identical.",
+  "no_upload_or_download_performed": true
+}

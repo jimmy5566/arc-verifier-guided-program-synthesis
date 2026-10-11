@@ -1,0 +1,35 @@
+{
+  "canonical_bases": 48,
+  "conditions": [
+    "FIXED_TURN_ROTATION_CONTROL",
+    "MARKER_BINDING_CONTROL",
+    "NO_TRANSFORM_RETENTION_CONTROL",
+    "MARKER_CONDITIONED_ROTATION"
+  ],
+  "demonstrations_sha256": "26e86317fd24d12d36e1f53b78b8f3b850bc7b41def7e5ff26540935b77a1a4e",
+  "episodes": 768,
+  "episodes_per_condition": 192,
+  "future_execution_requires": [
+    "DIRECTOR_E05_V3_PRELAUNCH_APPROVAL",
+    "VERSIONED_EXACT_BYTE_CONTROL_ADAPTER",
+    "VERSIONED_EXACT_BYTE_TREATMENT_ADAPTER",
+    "NATIVE_GREEDY_B1_RUNTIME_BINDING"
+  ],
+  "generation_run": false,
+  "gpu_used": false,
+  "internal_audit_sha256": "a8a16d9794a114af6899f0efeb17b77f2ec8a648d1f3a58c1dc8806a8888bb9e",
+  "model_loaded": false,
+  "parents": [
+    "E05_V1",
+    "E05_V2"
+  ],
+  "prompt_sha256": "4cf144de064346d36f53e6c10d1cff293a80166907203d8003565418d9010dc3",
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "seed": 20261012,
+  "semantic_audit_sha256": "544d3b25641214e7ebdc36df16f7b63ee2bc70d710bdefd51a5fd2eae251f056",
+  "status": "CPU_ONLY_FROZEN_NO_MODEL_NO_EVALUATION",
+  "structural_audit_sha256": "a076f267d212205a0bbaf3cd18d438d26893b1300280df730aa4105ff035fe6c",
+  "target_sidecar_sha256": "df24d7fb97905cb210b04e4f45c050f0e77b1abf87258f29bfd1bc4b01687ac3",
+  "turns_per_base": 4,
+  "v2_target_sidecar_sha256": "df24d7fb97905cb210b04e4f45c050f0e77b1abf87258f29bfd1bc4b01687ac3"
+}

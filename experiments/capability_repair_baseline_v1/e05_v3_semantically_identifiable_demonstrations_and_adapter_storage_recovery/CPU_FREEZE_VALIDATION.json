@@ -1,0 +1,12 @@
+{
+  "generation_run": false,
+  "gpu_used": false,
+  "input_prompts": 768,
+  "model_loaded": false,
+  "prompt_sha256": "4cf144de064346d36f53e6c10d1cff293a80166907203d8003565418d9010dc3",
+  "semantic_oracle_replay": "PASS",
+  "status": "PASS_CPU_ONLY_E05_V3_VALIDATION",
+  "target_sidecar_semantically_opened_for_validation": false,
+  "target_sidecar_sha256": "df24d7fb97905cb210b04e4f45c050f0e77b1abf87258f29bfd1bc4b01687ac3",
+  "unique_visible_prompts": 768
+}

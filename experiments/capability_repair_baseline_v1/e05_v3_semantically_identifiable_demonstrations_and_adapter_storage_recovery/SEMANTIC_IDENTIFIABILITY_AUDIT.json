@@ -1,0 +1,51 @@
+{
+  "condition_metadata_in_prompt": false,
+  "condition_oracle_replay": {
+    "FIXED_TURN_ROTATION_CONTROL": {
+      "examples": 1,
+      "marker_codes_covered": [
+        1
+      ],
+      "oracle_replay": "PASS",
+      "unique_inputs": 1,
+      "unique_outputs": 1
+    },
+    "MARKER_BINDING_CONTROL": {
+      "examples": 4,
+      "marker_codes_covered": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "oracle_replay": "PASS",
+      "unique_inputs": 4,
+      "unique_outputs": 4
+    },
+    "MARKER_CONDITIONED_ROTATION": {
+      "examples": 4,
+      "marker_codes_covered": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "oracle_replay": "PASS",
+      "unique_inputs": 4,
+      "unique_outputs": 4
+    },
+    "NO_TRANSFORM_RETENTION_CONTROL": {
+      "examples": 1,
+      "marker_codes_covered": [
+        1
+      ],
+      "oracle_replay": "PASS",
+      "unique_inputs": 1,
+      "unique_outputs": 1
+    }
+  },
+  "e04_shape_exposed_by_demos": false,
+  "query_or_target_dependent_demonstration": false,
+  "query_shape_exposed_by_demos": false,
+  "status": "PASS"
+}
