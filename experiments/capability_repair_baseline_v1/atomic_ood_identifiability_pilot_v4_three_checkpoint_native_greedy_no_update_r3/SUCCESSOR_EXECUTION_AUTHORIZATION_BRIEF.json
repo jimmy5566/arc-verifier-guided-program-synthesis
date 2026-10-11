@@ -1,7 +1,7 @@
 {
   "active_hard_cap_seconds": 7200,
   "brief_type": "DIRECTOR_EXECUTION_AUTHORIZATION_REQUEST",
-  "cpu_tests": "PASS_5",
+  "cpu_tests": "PASS_10",
   "gpu_used": false,
   "launcher_sha256": "473a3d567a7a16d83db92c5311c706e254cb2cb1dc44a4a080a3302b9c3a4ad1",
   "model_loaded": false,
@@ -12,7 +12,9 @@
   "planned_primary_rows": 576,
   "protocol_id": "ATOMIC_OOD_IDENTIFIABILITY_PILOT_V4_THREE_CHECKPOINT_NATIVE_GREEDY_NO_UPDATE_R3",
   "request": "Authorize exactly one detached target-blind no-update native-Greedy collection only after exact detached source commit, clean tracked source, package/worker/launcher identities, active nonce, fresh output, and 7200-second outer and inner caps pass. No training, optimizer, backward, target access during generation, Gold, dGold or FINAL_AUDIT; retry=false.",
+  "source_commit": "874b0f512b4af999cf835733d38e0e8ef77091af",
   "target_sidecar_accessed": false,
+  "tests_sha256": "75f63d0696a8b5fa42cb71376fa8da336a4b6b27cfd8230e9ee155c5de23a16f",
   "training": false,
   "worker_sha256": "de48d6405e7ad725e5fb462ac6d20e995de7a20c9a7508e7337209c8d430cf0f"
 }
