@@ -1,0 +1,46 @@
+{
+  "brief_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1_PRELAUNCH_BRIEF",
+  "controller_preparation": {
+    "cpu_static_freezer": "PASS_E04D_CPU_FREEZER",
+    "gpu_used": false,
+    "gradient_computed": false,
+    "model_loaded": false,
+    "validation_rows_read": 0
+  },
+  "decision_rules": {
+    "LOCAL_CONFLICT_DEPRIORITIZED": "aggregate CI low > 0, negative-frequency CI high < 0.5, and sensitivity-adjusted CI low > 0",
+    "LOCAL_CONFLICT_SUPPORTED": "aggregate CI high < 0, negative-frequency CI low > 0.5, and sensitivity-adjusted CI high < 0",
+    "identity_or_numerical_or_sealed_failure": "INVALID_NOT_INTERPRETABLE",
+    "otherwise": "MIXED_OR_INCONCLUSIVE"
+  },
+  "director_basis": {
+    "response_path": "orchestration/director/responses/E04_C_RUN_003_CORRECTED_RESULT_REVIEW_BRIEF_V1_RESPONSE.json",
+    "response_sha256": "27955d81c77725c16f5c1588d2cadacc7ea3617d5de0f4b3ab94921a5af8021e",
+    "reviewed_brief_sha256": "f5abb811f91dd03f8ac9c0772426383ea2e898ffdc1f48a7eca120e5109d36a7"
+  },
+  "frozen_inputs": {
+    "cohort_path": "experiments/capability_repair_baseline_v1/e04_d_rotation_marker_local_gradient_diagnostic_v1/FROZEN_TRAIN_COHORT.jsonl",
+    "cohort_sha256": "969b3bbc495b08abf3bdb495b33bc91882c7ec05779b47f18afa0d74582cd972",
+    "cohort_structure": "12 legitimate E04 TRAIN bases, one deterministic hash-selected base per each of 12 allowed train structural cells, all four turns, 48 matched triplets (rotation, marker, no-transform); validation rows read=0",
+    "prelaunch_protocol_path": "experiments/capability_repair_baseline_v1/e04_d_rotation_marker_local_gradient_diagnostic_v1/E04_D_PRELAUNCH_PROTOCOL_V1.json",
+    "prelaunch_protocol_sha256": "e14207f6e4a956d2563dc1a443a5d2445f8eb31fbbb2b9cd1e2cb7a000d26cdf"
+  },
+  "known_context": {
+    "e04_c": "E04-C remains immutable PROTECTION_FAILURE; it is neither retried nor expanded. This diagnostic is local mechanism measurement, not a repair training continuation."
+  },
+  "protocol_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1",
+  "purpose": "Authorize at most one no-update E04-D gradient measurement only if the frozen V7, cohort, serializer, LoRA allowlist, sealed-boundary, machine-identity, and 1800-second-cap gates pass.",
+  "request_type": "NEW_INDEPENDENT_PROSPECTIVE_PROTOCOL_REVIEW",
+  "requested_authorization": {
+    "active_cap_seconds": 1800,
+    "forbids": "any optimizer construction/update, training, generation, checkpoint promotion, target access, Gold, dGold, FINAL_AUDIT, or automatic follow-on experiment",
+    "one_detached_no_update_gpu_job": true,
+    "requires_fresh_nonce_output_root_and_machine_preflight": true
+  },
+  "scientific_contract": {
+    "checkpoint": "CAPABILITY_REPAIR_BASELINE_V1_V7 manifest sha256 1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "estimand": "matched rotation-marker per-pair LoRA gradient cosine, base-equal aggregate, paired bootstrap across 12 bases; no-transform reference cosines, norms and module/layer contributions",
+    "execution": "physical B1 BF16, production E04-C serializer and all-assistant CE, FP32 loss/gradient reduction, same LoRA allowlist; 0 optimizer steps, parameter updates, training, generation, checkpoint mutation or FINAL_AUDIT",
+    "uncertainty": "10,000 base-level paired bootstrap seed 20261011 plus three fixed repeated rows (two measurements each); directional envelope U expands aggregate CI [L-U,H+U] and must preserve sign"
+  }
+}

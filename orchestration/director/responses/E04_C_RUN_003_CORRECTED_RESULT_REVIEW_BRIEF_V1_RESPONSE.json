@@ -1,0 +1,120 @@
+{
+  "response_id": "E04_C_RUN_003_CORRECTED_RESULT_REVIEW_BRIEF_V1_RESPONSE",
+  "reviewed_brief_sha256": "f5abb811f91dd03f8ac9c0772426383ea2e898ffdc1f48a7eca120e5109d36a7",
+  "decision": "CONTINUE_CONTROLLER",
+  "next_stage": "CPU_ONLY_FREEZE_E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1",
+  "next_action": "Close E04-C as a valid PROTECTION_FAILURE with no checkpoint promotion, retry, dose adjustment, or continuation of the same training route. Preserve the original and corrected RUN_003 artifacts unchanged. Then prepare exactly one CPU-only prospective prelaunch protocol for a scientifically distinct no-optimizer-update diagnostic at the exact V7 starting checkpoint: measure the local LoRA-gradient relationship between matched FIXED_TURN_ROTATION_CONTROL and MARKER_BINDING_CONTROL TRAIN tasks, with matched NO_TRANSFORM_RETENTION_CONTROL gradients as a reference. Select a small fixed set of legitimate E04 TRAIN canonical bases without using validation correctness, stratify it across turn and structural cells, bind exact task bytes and hashes, and use the same production serialization, all-assistant CE objective, trainable-parameter allowlist, physical B1 BF16 forward/backward, and FP32 loss/gradient reduction as E04-C. Freeze per-pair and aggregate gradient cosines, norms, adapter/layer contributions, a repeated-row directional-sensitivity check, bootstrap and sensitivity-adjusted sign rules, a maximum 1800-second no-update GPU envelope, and the decision rules described here. Return one concise prelaunch brief only. Do not load a model, compute gradients, use GPU, train, generate, modify checkpoints, or open evaluation targets during this preparation stage.",
+  "result_disposition": {
+    "protocol_id": "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1",
+    "run_id": "RUN_003_REPLACEMENT_4f37cc1a6e6ee2ab183f936f28c05d5b",
+    "process_status": "COMPLETE_VALID_DEVELOPMENT_EVIDENCE",
+    "final_protocol_decision": "PROTECTION_FAILURE",
+    "primary_rule": "NOT_PASSED",
+    "checkpoint_promotion": "REJECTED",
+    "same_route_retry_or_expansion": "REJECTED",
+    "independent_generalization_claim": false
+  },
+  "observed_result": {
+    "treatment_minus_control": {
+      "FIXED_TURN_ROTATION_CONTROL": {
+        "episode_delta": 26,
+        "accuracy_delta": 0.13541666666666666,
+        "ci95_low": 0.0,
+        "ci95_high": 0.265625,
+        "prospective_primary_pass": false
+      },
+      "MARKER_BINDING_CONTROL": {
+        "episode_delta": -46,
+        "accuracy_delta": -0.23958333333333334,
+        "ci95_low": -0.2864583333333333,
+        "ci95_high": -0.19270833333333334
+      },
+      "NO_TRANSFORM_RETENTION_CONTROL": {
+        "episode_delta": 0,
+        "accuracy_delta": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      },
+      "ROTATION_TARGET": {
+        "episode_delta": 11,
+        "accuracy_delta": 0.057291666666666664,
+        "ci95_low": 0.015625,
+        "ci95_high": 0.09895833333333333
+      }
+    },
+    "treatment_minus_v7_protection": {
+      "MARKER_BINDING_CONTROL_episode_delta": -58,
+      "NO_TRANSFORM_RETENTION_CONTROL_episode_delta": 47,
+      "maximum_allowed_decline": 8
+    }
+  },
+  "mechanism_assessment": {
+    "confidence": "ESTABLISHED_RESULT_WITH_SUPPORTED_MECHANISM_HYPOTHESIS",
+    "established": [
+      "The prospectively defined primary fixed-turn treatment-versus-control rule did not pass because its paired interval lower bound equals zero.",
+      "The treatment caused a large marker-binding loss relative to both control and V7 while leaving no-transform retention identical to control.",
+      "The treatment improved marker-conditioned ROTATION_TARGET relative to control, but this descriptive transfer gain cannot override the failed primary rule or protection failure.",
+      "Neither E04-C checkpoint is eligible for promotion, and the reused cohort does not establish independent ARC generalization."
+    ],
+    "supported_hypothesis": "The 96-slot fixed-turn rotation allocation shifted behavior toward rotation while specifically displacing marker-conditioned behavior, on top of broader narrow-curriculum specialization visible in the control arm. This is consistent with a rotation-versus-marker optimization trade-off, but it is not yet proof of gradient conflict.",
+    "unknown": [
+      "Whether fixed-turn rotation and marker-binding TRAIN gradients are locally opposed in the exact V7 LoRA parameter space.",
+      "Whether the marker loss is better explained by direct gradient disagreement, omission of marker replay, nonlinear training-path specialization, or representational entanglement.",
+      "Whether an explicit preservation intervention could retain marker binding without sacrificing rotation gains or other capabilities."
+    ],
+    "research_bottleneck": "A mechanism-specific measurement is needed before choosing between gradient-conflict mitigation, explicit marker replay, or a different representation/curriculum strategy."
+  },
+  "smallest_falsifiable_next_experiment": {
+    "experiment_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1",
+    "research_question": "At the exact V7 start, are gradients from fixed-turn rotation supervision locally antagonistic to gradients from marker-binding supervision on matched E04 TRAIN structures?",
+    "primary_hypothesis": "The rotation supervision direction is negatively aligned with marker-binding gradients strongly enough to plausibly contribute to the observed treatment-specific marker loss.",
+    "key_alternative": "Rotation and marker-binding gradients are directionally aligned or mixed; the observed loss is more likely due to missing replay, nonlinear trajectory specialization, objective mismatch, or representation limits than a simple local conflict.",
+    "required_design": [
+      "Use only legitimate E04 TRAIN tasks and the exact V7 starting checkpoint; do not use validation correctness or targets to select rows.",
+      "Freeze matched canonical bases spanning all turns and allowed structural cells, with fixed-turn rotation, marker-binding, and no-transform tasks sharing the same latent base wherever possible.",
+      "Use the exact E04-C serializer, all-assistant CE, LoRA trainable-parameter set, physical B1 BF16 execution, and FP32 reduction; perform no optimizer step and no parameter update.",
+      "Report matched per-example and aggregate rotation-versus-marker cosines, negative-cosine frequency, norms, and adapter/layer contributions; report rotation-versus-no-transform and marker-versus-no-transform as reference contrasts.",
+      "Freeze a small repeated-row subset and a directional sensitivity rule that separates scale variability from sign reversal; any decision that can reverse under the measured sensitivity is INCONCLUSIVE."
+    ],
+    "prospective_decision_rule": {
+      "LOCAL_CONFLICT_SUPPORTED": "The aggregate rotation-versus-marker cosine interval is wholly below zero, the predeclared matched-pair conflict-frequency condition passes, and the negative classification remains under the frozen numerical-sensitivity envelope.",
+      "LOCAL_CONFLICT_DEPRIORITIZED": "The aggregate interval is wholly above zero, the matched-pair conflict-frequency condition fails, and the positive classification remains under the frozen numerical-sensitivity envelope.",
+      "MIXED_OR_INCONCLUSIVE": "The interval or sensitivity envelope includes zero, pairwise and aggregate evidence disagree, repeatability fails, or support is insufficient.",
+      "INVALID_NOT_INTERPRETABLE": "Any checkpoint, task, serialization, label-mask, trainable-set, completeness, nonfinite-gradient, identity, or sealed-boundary gate fails."
+    },
+    "decision_value": {
+      "if_conflict_supported": "A later matched pilot may compare ordinary CE with one narrowly scoped conflict-mitigation or explicit marker-preservation intervention at the same total budget.",
+      "if_conflict_deprioritized": "Do not pursue gradient projection; prioritize explicit curriculum/replay or representational diagnostics instead.",
+      "if_inconclusive": "Do not launch another repair training round from E04-C evidence alone."
+    }
+  },
+  "current_stage_authorization": {
+    "cpu_only_protocol_preparation_authorized": true,
+    "cpu_tests_authorized": true,
+    "gpu_execution_authorized": false,
+    "model_loading_authorized": false,
+    "gradient_computation_authorized": false,
+    "optimizer_construction_authorized": false,
+    "training_authorized": false,
+    "generation_authorized": false,
+    "checkpoint_promotion_authorized": false,
+    "final_audit_authorized": false
+  },
+  "frozen_conditions": [
+    "The original RUN_003 result, corrected supplemental score, final PROTECTION_FAILURE decision, and all hashes remain immutable.",
+    "The failed E04-C route may not be retried, dose-tuned, expanded, or relabeled as successful.",
+    "The new diagnostic must remain TRAIN-only, no-update, V7-start, and scientifically distinct from the prior broad E03 family-gradient screen by directly testing the E04 rotation-versus-marker pair implicated by the controlled result.",
+    "Gold, dGold, validation targets for row selection, and FINAL_AUDIT remain sealed."
+  ],
+  "forbidden_actions": [
+    "Do not promote either E04-C checkpoint or claim atomic repair, preservation, independent generalization, or causal gradient interference.",
+    "Do not change E04-C thresholds, rerun its arms, add seeds, alter replay ratios, or tune a new training treatment on the exposed development outcomes.",
+    "Do not execute the proposed gradient diagnostic from this response.",
+    "Do not begin another training intervention before a valid mechanism result is reviewed.",
+    "Do not open Gold, dGold, or FINAL_AUDIT."
+  ],
+  "another_director_prelaunch_review_required": true,
+  "director_result_review_required": true,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}

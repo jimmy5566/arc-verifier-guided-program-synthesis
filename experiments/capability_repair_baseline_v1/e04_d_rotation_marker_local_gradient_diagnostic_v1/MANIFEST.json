@@ -1,0 +1,11 @@
+{
+  "cohort_sha256": "969b3bbc495b08abf3bdb495b33bc91882c7ec05779b47f18afa0d74582cd972",
+  "gpu_used": false,
+  "gradient_computed": false,
+  "model_loaded": false,
+  "optimizer_steps": 0,
+  "protocol_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1",
+  "protocol_sha256": "e14207f6e4a956d2563dc1a443a5d2445f8eb31fbbb2b9cd1e2cb7a000d26cdf",
+  "status": "CPU_ONLY_FROZEN_PRELAUNCH_PENDING_DIRECTOR_REVIEW",
+  "validation_rows_read": 0
+}
