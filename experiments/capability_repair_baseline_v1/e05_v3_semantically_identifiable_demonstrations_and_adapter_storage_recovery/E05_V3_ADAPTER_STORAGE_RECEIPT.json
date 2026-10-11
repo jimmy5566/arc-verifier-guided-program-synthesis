@@ -1,0 +1,60 @@
+{
+  "all_source_upload_and_fresh_download_identity_verified": true,
+  "assets": [
+    {
+      "expected_source_sha256": "515f5ebfe6685097f78fe260edcc4859edfe17152482a559769f18be8b55da16",
+      "filename": "e04_e_run003/control_equal_slot/adapter_model.safetensors",
+      "fresh_retrieved_sha256": "515f5ebfe6685097f78fe260edcc4859edfe17152482a559769f18be8b55da16",
+      "hf_lfs_sha256": "515f5ebfe6685097f78fe260edcc4859edfe17152482a559769f18be8b55da16",
+      "lfs_matches_source_when_available": true,
+      "source_equals_fresh_retrieval": true
+    },
+    {
+      "expected_source_sha256": "aa2c74857b1ff6e1738d5723259ce9ffd698e783e40568faba6aaf42463cfe65",
+      "filename": "e04_e_run003/control_equal_slot/adapter_config.json",
+      "fresh_retrieved_sha256": "aa2c74857b1ff6e1738d5723259ce9ffd698e783e40568faba6aaf42463cfe65",
+      "hf_lfs_sha256": null,
+      "lfs_matches_source_when_available": true,
+      "source_equals_fresh_retrieval": true
+    },
+    {
+      "expected_source_sha256": "3eff5b9debc4b5b3f133e4524bf7244b0a2074a8f0bc0b5595d38ee176db57be",
+      "filename": "e04_e_run003/treatment_equal_slot/adapter_model.safetensors",
+      "fresh_retrieved_sha256": "3eff5b9debc4b5b3f133e4524bf7244b0a2074a8f0bc0b5595d38ee176db57be",
+      "hf_lfs_sha256": "3eff5b9debc4b5b3f133e4524bf7244b0a2074a8f0bc0b5595d38ee176db57be",
+      "lfs_matches_source_when_available": true,
+      "source_equals_fresh_retrieval": true
+    },
+    {
+      "expected_source_sha256": "9f9ec9013387e85985bdc33a1de15ca12b5bb4b9ffc22f9b876ce513bd006f19",
+      "filename": "e04_e_run003/treatment_equal_slot/adapter_config.json",
+      "fresh_retrieved_sha256": "9f9ec9013387e85985bdc33a1de15ca12b5bb4b9ffc22f9b876ce513bd006f19",
+      "hf_lfs_sha256": null,
+      "lfs_matches_source_when_available": true,
+      "source_equals_fresh_retrieval": true
+    }
+  ],
+  "created_at_utc": "2026-10-11T07:22:56.231478+00:00",
+  "execution_boundary": {
+    "backward": false,
+    "final_audit_opened": false,
+    "generation": false,
+    "gpu_used": false,
+    "model_loaded": false,
+    "optimizer_constructed": false,
+    "optimizer_steps": 0,
+    "training": false
+  },
+  "fresh_download_root": "/tmp/e05_v3_fresh_download_ab8d8bccd51c4b46b99daaddcad690a6",
+  "repository": {
+    "immutable_revision": "dbd0786a74a28955baae3455b70595cf49a6d906",
+    "private_verified": true,
+    "repo_id": "Jimmy5566a/arc2-private-adapters",
+    "repo_type": "model"
+  },
+  "schema_version": 1,
+  "status": "COMPLETE_EXACT_BYTE_VERSIONED_STORAGE_RECOVERY",
+  "token_material_recorded": false,
+  "upload_commit_discovered_after_fresh_download_dependency_repair": true,
+  "upload_not_repeated": true
+}

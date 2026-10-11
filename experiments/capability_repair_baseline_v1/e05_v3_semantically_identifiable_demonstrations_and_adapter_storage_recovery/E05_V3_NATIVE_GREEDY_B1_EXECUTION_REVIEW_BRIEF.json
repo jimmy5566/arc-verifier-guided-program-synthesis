@@ -1,0 +1,78 @@
+{
+  "adapter_storage": {
+    "control_adapter_sha256": "515f5ebfe6685097f78fe260edcc4859edfe17152482a559769f18be8b55da16",
+    "identity_path": "E05_V3_ADAPTER_STORAGE_IDENTITY.json",
+    "identity_sha256": "1ae7d50d77079c429fe991b8f0ff2470ae2d96b6037b31226dfd324bdd05e885",
+    "repository": {
+      "immutable_revision": "dbd0786a74a28955baae3455b70595cf49a6d906",
+      "private_verified": true,
+      "repo_id": "Jimmy5566a/arc2-private-adapters",
+      "repo_type": "model"
+    },
+    "storage_receipt_sha256": "a784f4a51970ce4561b6a4fda798a30f6e017cb712f1a689bc70151a42549dae",
+    "treatment_adapter_sha256": "3eff5b9debc4b5b3f133e4524bf7244b0a2074a8f0bc0b5595d38ee176db57be"
+  },
+  "brief_type": "DIRECTOR_E05_V3_NATIVE_GREEDY_B1_EXECUTION_REVIEW",
+  "current_evidence": "CPU-only semantic/prompt/structural validation plus exact-byte private adapter storage recovery. No model was loaded and no GPU or generation was performed during recovery.",
+  "execution_proposal": {
+    "backward": false,
+    "bounded_cap_required": true,
+    "decoder": "native_greedy",
+    "generation": "native_greedy_only_if_authorized",
+    "models": [
+      "V7_CONTROL_EQUAL_SLOT",
+      "E04E_RUN003_TREATMENT_EQUAL_SLOT"
+    ],
+    "one_run_only": true,
+    "optimizer": false,
+    "physical_batch_size": 1,
+    "training": false,
+    "updates": 0
+  },
+  "frozen_design": {
+    "canonical_bases": 48,
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "MARKER_BINDING_CONTROL",
+      "NO_TRANSFORM_RETENTION_CONTROL",
+      "MARKER_CONDITIONED_ROTATION"
+    ],
+    "episodes": 768,
+    "internal_audit_sha256": "a8a16d9794a114af6899f0efeb17b77f2ec8a648d1f3a58c1dc8806a8888bb9e",
+    "prompt_sha256": "4cf144de064346d36f53e6c10d1cff293a80166907203d8003565418d9010dc3",
+    "seed": 20261012,
+    "semantic_audit_sha256": "544d3b25641214e7ebdc36df16f7b63ee2bc70d710bdefd51a5fd2eae251f056",
+    "structural_audit_sha256": "a076f267d212205a0bbaf3cd18d438d26893b1300280df730aa4105ff035fe6c",
+    "target_sidecar_sha256": "df24d7fb97905cb210b04e4f45c050f0e77b1abf87258f29bfd1bc4b01687ac3",
+    "turns_per_base": 4
+  },
+  "not_requested": [
+    "training",
+    "optimization",
+    "gradient measurement",
+    "beam search",
+    "batch-size expansion",
+    "independent generalization claim"
+  ],
+  "protected_boundaries": [
+    "NO_GOLD",
+    "NO_DGOLD",
+    "NO_FINAL_AUDIT",
+    "NO_TRAINING",
+    "NO_OPTIMIZER",
+    "NO_BACKWARD",
+    "NO_ADDITIONAL_STAGE_OR_EXPANSION"
+  ],
+  "protocol_id": "E05_V3_SEMANTICALLY_IDENTIFIABLE_DEMONSTRATIONS_AND_ADAPTER_STORAGE_RECOVERY",
+  "request": "Decide whether to authorize exactly one prospective bounded native Greedy Batch-1 no-update evaluation of the unchanged E05-V3 frozen cohort after runtime identity, fresh output, nonce, cap, source-parity and sealed-boundary gates pass.",
+  "required_prelaunch_gates": [
+    "exact source parity",
+    "pinned private adapter revision and SHA256 re-verification",
+    "full runtime identities",
+    "fresh nonce/output root",
+    "no duplicate remote job",
+    "bounded active cap",
+    "target isolation"
+  ],
+  "scientific_question": "Do condition-visible, semantically identifiable demonstrations reveal an adapter-dependent marker-binding effect under native free-running exact-grid evaluation? This is development evidence only, not independent ARC generalization confirmation."
+}
