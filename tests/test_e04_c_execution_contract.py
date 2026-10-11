@@ -35,6 +35,11 @@ class E04CExecutionContractTests(unittest.TestCase):
             self.assertEqual(binding["static_preflight"]["status"], "PASS_CPU_NATIVE_SCHEDULE")
             worker.load_binding(out, Path(binding["output_root"]), commit)
 
+    def test_launcher_requires_pinned_bitsandbytes_before_output_creation(self):
+        text = (execution.ROOT / "scripts" / "launch_e04_c_matched_rotation_repair_pilot.py").read_text(encoding="utf-8")
+        self.assertIn("bitsandbytes", text)
+        self.assertIn("0.50.2", text)
+        self.assertIn("PagedAdamW8bit", text)
     def test_malformed_protected_replay_fails_before_model_import(self):
         protocol, frozen, static, schedules = execution.load_frozen_inputs()
         original = schedules[execution.ARMS[1]]["episodes"][96]["treatment_task"]

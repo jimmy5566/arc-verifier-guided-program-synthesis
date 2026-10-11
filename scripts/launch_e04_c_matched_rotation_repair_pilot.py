@@ -17,6 +17,7 @@ git fetch origin {BRANCH}
 git checkout --detach {source}
 test "$(git rev-parse HEAD)" = "{source}"
 test -z "$(git status --porcelain)"
+python3 -c "import importlib.metadata, bitsandbytes as bnb; assert importlib.metadata.version('bitsandbytes') == '0.50.2'; assert hasattr(bnb.optim, 'PagedAdamW8bit'); print('E04C_BNB_RUNTIME_OK')"
 test ! -e "{out}"
 test ! -e "{lock}"
 if pgrep -af 'run_e04_c_matched_rotation_repair_pilot|arc2_hard_cap_launcher.*e04_c' >/tmp/e04c-active; then cat /tmp/e04c-active; exit 41; fi
