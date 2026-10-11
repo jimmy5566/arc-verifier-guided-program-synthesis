@@ -11,10 +11,15 @@ import hashlib
 import json
 import os
 import tempfile
+import sys
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+if str(ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(ROOT / "src"))
 BASE = ROOT / "experiments/capability_repair_baseline_v1/e04_c_matched_fixed_turn_rotation_repair_pilot_v1"
 SCHEDULE = BASE / "schedule_freeze_v1"
 PROTOCOL_ID = "E04_C_MATCHED_FIXED_TURN_ROTATION_REPAIR_PILOT_V1"
