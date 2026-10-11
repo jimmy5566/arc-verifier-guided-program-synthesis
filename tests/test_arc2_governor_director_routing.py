@@ -43,6 +43,28 @@ class GovernorDirectorRoutingTests(unittest.TestCase):
             self.assertEqual(saved['disposition'],'CONTINUE_CONTROLLER')
             self.assertEqual(saved['last_review_brief'],str(brief.resolve()))
 
+    def test_repository_relative_brief_resolves_from_governor_source_root(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); project=root/'checked-out-source'; project.mkdir()
+            brief=project/'orchestration/director/brief.json'; brief.parent.mkdir(parents=True)
+            brief.write_text('{"brief":"immutable"}\n',encoding='utf-8')
+            state={'review_brief':'orchestration/director/brief.json',
+                   'review_brief_sha256':governor.sha256_file(brief)}
+            original=governor.PROJECT_ROOT
+            try:
+                governor.PROJECT_ROOT=project
+                resolved=governor.review_brief_path(state)
+            finally:
+                governor.PROJECT_ROOT=original
+            self.assertEqual(resolved,brief.resolve())
+            self.assertEqual(state['review_brief'],str(brief.resolve()))
+
+    def test_string_brief_respects_declared_state_sha256(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); brief=root/'brief.json'; brief.write_text('{"brief":"immutable"}\n',encoding='utf-8')
+            state={'review_brief':str(brief),'review_brief_sha256':'0'*64}
+            with self.assertRaisesRegex(RuntimeError,'REVIEW_BRIEF_DECLARED_SHA256_MISMATCH'):
+                governor.review_brief_path(state)
     def test_rich_review_brief_rejects_mismatched_declared_digest(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp); state_path=root/'state.json'; brief=root/'brief.json'; brief.write_text('{"brief":"immutable"}\n',encoding='utf-8')

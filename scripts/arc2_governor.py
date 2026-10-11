@@ -7,6 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 DISPOSITIONS={"CONTINUE_CONTROLLER","REVIEW_REQUIRED","WAIT_REMOTE","PAUSED","TERMINAL"}
+PROJECT_ROOT=Path(__file__).resolve().parents[1]
 
 def windows_creationflags():
     """Keep local Herdr and SSH control clients from flashing a Windows console."""
@@ -109,22 +110,27 @@ def load(p):
 def sha256_file(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def review_brief_path(state):
-    """Resolve a current or older rich immutable brief binding.
+    """Resolve and SHA-bind an immutable Director brief.
 
-    The normal durable form stores a string path.  A Controller can also
-    preserve a safe {path, sha256} object.  Verify an optional declared digest
-    and canonicalize it before dispatch so this representation cannot kill
-    the persistent Governor.
+    Review briefs are repository artifacts.  A Controller may write a
+    repository-relative path while the durable workflow state is intentionally
+    stored outside the checked-out worktree.  Resolve such paths from the
+    Governor's checked-out source root, never from the caller's working
+    directory.  Absolute paths remain supported for older state files.
     """
     raw=state.get('review_brief')
-    declared=None
+    declared=state.get('review_brief_sha256')
     if isinstance(raw, dict):
-        declared=raw.get('sha256')
+        declared=raw.get('sha256') or declared
         raw=raw.get('path')
     if not isinstance(raw, str) or not raw:
         raise RuntimeError('REVIEW_BRIEF_MISSING')
-    brief=Path(raw)
-    if not brief.is_file():
+    requested=Path(raw)
+    candidates=[requested]
+    if not requested.is_absolute():
+        candidates.append(PROJECT_ROOT / requested)
+    brief=next((candidate for candidate in candidates if candidate.is_file()), None)
+    if brief is None:
         raise RuntimeError('REVIEW_BRIEF_MISSING')
     actual=sha256_file(brief)
     if declared and declared != actual:
