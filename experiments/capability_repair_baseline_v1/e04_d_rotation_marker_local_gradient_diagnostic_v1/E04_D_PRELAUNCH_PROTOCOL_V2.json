@@ -1,0 +1,106 @@
+{
+  "amendment": {
+    "cohort_sha256": "969b3bbc495b08abf3bdb495b33bc91882c7ec05779b47f18afa0d74582cd972",
+    "director_response_path": "orchestration/director/responses/E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1_PRELAUNCH_BRIEF_RESPONSE.json",
+    "director_response_sha256": "91e145a0ba8c53496e4177354ebddf100915c651708ebaa3e727e9f9749498eb",
+    "scope": "replace only sensitivity calculation and aggregate/frequency decision gates; V1 and cohort remain immutable",
+    "v1_protocol_sha256": "e14207f6e4a956d2563dc1a443a5d2445f8eb31fbbb2b9cd1e2cb7a000d26cdf"
+  },
+  "boundaries": [
+    "TRAIN_ONLY",
+    "NO_VALIDATION_CORRECTNESS_OR_TARGETS_FOR_SELECTION",
+    "NO_GOLD",
+    "NO_DGOLD",
+    "NO_FINAL_AUDIT",
+    "NO_OPTIMIZER",
+    "NO_PARAMETER_UPDATE",
+    "NO_TRAINING",
+    "NO_GENERATION"
+  ],
+  "checkpoint": {
+    "identity": "CAPABILITY_REPAIR_BASELINE_V1_V7",
+    "manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  },
+  "decision_rules": {
+    "INVALID_NOT_INTERPRETABLE": "missing/nonfinite/identity/completeness/mask/trainable-set/sealed-boundary failure",
+    "LOCAL_CONFLICT_DEPRIORITIZED": "sensitivity-adjusted rotation-marker aggregate lower bound > 0 AND sensitivity-adjusted negative-frequency upper bound < 0.5",
+    "LOCAL_CONFLICT_SUPPORTED": "sensitivity-adjusted rotation-marker aggregate upper bound < 0 AND sensitivity-adjusted negative-frequency lower bound > 0.5",
+    "MIXED_OR_INCONCLUSIVE": "otherwise, including an aggregate or frequency sensitivity bound crossing its threshold"
+  },
+  "estimands": {
+    "primary": "per-pair cosine(g_FIXED_TURN_ROTATION_CONTROL, g_MARKER_BINDING_CONTROL), averaged within canonical base then equally across the 12 bases",
+    "references": [
+      "cosine(g_FIXED_TURN_ROTATION_CONTROL,g_NO_TRANSFORM_RETENTION_CONTROL)",
+      "cosine(g_MARKER_BINDING_CONTROL,g_NO_TRANSFORM_RETENTION_CONTROL)"
+    ],
+    "secondary": [
+      "per-family gradient norm",
+      "LoRA module and layer squared-norm contributions",
+      "negative-cosine frequency"
+    ]
+  },
+  "execution": {
+    "execution_authorized": false,
+    "generation_calls": 0,
+    "gradient_reduction": "FP32",
+    "lora_target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "loss_reduction": "FP32 supervised-token CE",
+    "maximum_active_seconds": 1800,
+    "objective": "same E04-C production serializer and all-assistant CE",
+    "optimizer_construction": false,
+    "optimizer_steps": 0,
+    "parameter_updates": 0,
+    "physical_batch_size": 1,
+    "precision": "BF16"
+  },
+  "frozen_cohort": {
+    "canonical_bases": 12,
+    "conditions": [
+      "FIXED_TURN_ROTATION_CONTROL",
+      "MARKER_BINDING_CONTROL",
+      "NO_TRANSFORM_RETENTION_CONTROL"
+    ],
+    "matched_pairs": 48,
+    "path": "experiments/capability_repair_baseline_v1/e04_d_rotation_marker_local_gradient_diagnostic_v1/FROZEN_TRAIN_COHORT.jsonl",
+    "selection": "one hash-selected legitimate TRAIN base per allowed structural cell; all four turns",
+    "selection_seed": 20261011,
+    "sha256": "969b3bbc495b08abf3bdb495b33bc91882c7ec05779b47f18afa0d74582cd972",
+    "validation_rows_read": 0
+  },
+  "protocol_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1",
+  "schema_version": 1,
+  "scientific_question": "At exact V7 start, do matched fixed-turn rotation and marker-binding LoRA gradients show locally antagonistic directions?",
+  "source": {
+    "freezer_path": "scripts/freeze_e04_d_rotation_marker_gradient_diagnostic.py",
+    "generator_path": "scripts/e04_orientation_marker_counterfactual_v2.py",
+    "generator_sha256": "bfb156962608813067c5a62c7541789ef5431b46b4530fcef0155d8d1a63bd64"
+  },
+  "status": "CPU_ONLY_EXACT_NUMERICAL_SENSITIVITY_REPAIR_PENDING_EXECUTION",
+  "uncertainty": {
+    "bootstrap": {
+      "interval": "percentile 95%",
+      "replicates": 10000,
+      "seed": 20261011,
+      "unit": "canonical base with all four turns resampled together"
+    },
+    "repeats": {
+      "aggregate_envelope": "[max(-1,L-U_AB),min(1,H+U_AB)]; observed-repeatability sensitivity envelope, not confidence interval or global numerical guarantee",
+      "condition_radius": "delta_condition=max observed delta_c for that condition",
+      "directional_measure": "delta_c=sqrt(max(0,2-2*cos(g_c_repeat_1,g_c_repeat_2))) for unit-normalized repeated gradients",
+      "measurements_per_selected_condition_gradient": 2,
+      "negative_frequency": "per rotation-marker pair: definitely negative iff cosine+U<0; definitely nonnegative iff cosine-U>=0; otherwise ambiguous. Resample canonical bases with all four turns together; lower frequency treats ambiguous as nonnegative, upper treats ambiguous as negative.",
+      "pair_radius": "U_AB=min(2,delta_A+delta_B) for every A-B cosine",
+      "rows": "lexicographically first matched pair; bind canonical_base_id, pair_id, turn, and each three task hashes before model loading",
+      "scale_variation": "report separately and never use in sign classification"
+    }
+  }
+}

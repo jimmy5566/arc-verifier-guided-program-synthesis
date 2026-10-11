@@ -1,0 +1,61 @@
+{
+  "response_id": "E04_D_ROTATION_MARKER_LOCAL_GRADIENT_DIAGNOSTIC_V1_PRELAUNCH_BRIEF_RESPONSE",
+  "reviewed_brief_sha256": "2c118d988e8b9a450fbe090989d5d390b9ff669affbd29779a9eafa47f6b03ba",
+  "decision": "REQUIRE_CHANGES",
+  "root_cause": "The frozen numerical-sensitivity rule is not sufficient for the scientific classification. It defines U as 1 minus the cosine between repeated gradient directions and then adds U directly to an interval for a different cosine estimand. For unit vectors, the corresponding directional chord displacement is sqrt(2 - 2*cosine), so 1-cosine can understate the possible change in an inter-gradient cosine by orders of magnitude near cosine=1. The rule also leaves the negative-cosine-frequency endpoint unadjusted even though numerical directional variation can flip pairwise signs near zero. Either defect could turn MIXED_OR_INCONCLUSIVE into LOCAL_CONFLICT_SUPPORTED or LOCAL_CONFLICT_DEPRIORITIZED.",
+  "smallest_repair": {
+    "scope": "Amend only the prospective numerical-sensitivity calculation and its two decision gates; do not change the scientific question, cohort, checkpoint, serializer, loss, gradient estimand, sampling unit, bootstrap, repeats, runtime cap, or execution scope.",
+    "directional_bound": "For every repeated condition gradient, compute the unit-vector chord displacement delta_c = sqrt(max(0, 2 - 2*cos(g_c_repeat_1, g_c_repeat_2))). Let delta_condition be the maximum observed delta_c for that condition. For each cosine between conditions A and B, use U_AB = min(2, delta_A + delta_B) as the observed sensitivity radius and expand its base-bootstrap interval to [max(-1,L-U_AB), min(1,H+U_AB)]. Label this explicitly as an observed-repeatability sensitivity envelope, not a confidence interval or global numerical guarantee.",
+    "frequency_bound": "Apply the same U_rotation_marker to every observed rotation-marker pairwise cosine. A pair is definitely negative only when cosine+U<0, definitely nonnegative only when cosine-U>=0, and otherwise numerically sign-ambiguous. Using canonical bases with all four turns resampled together, report sensitivity-adjusted lower and upper bootstrap bounds for negative frequency by treating ambiguous pairs as nonnegative for the lower bound and negative for the upper bound.",
+    "decision_rule": "LOCAL_CONFLICT_SUPPORTED requires both the sensitivity-adjusted aggregate upper bound < 0 and the sensitivity-adjusted negative-frequency lower bound > 0.5. LOCAL_CONFLICT_DEPRIORITIZED requires both the sensitivity-adjusted aggregate lower bound > 0 and the sensitivity-adjusted negative-frequency upper bound < 0.5. Otherwise return MIXED_OR_INCONCLUSIVE. Any missing, nonfinite, identity, completeness, mask, trainable-set, or sealed-boundary evidence remains INVALID_NOT_INTERPRETABLE.",
+    "repeat_binding": "Bind the exact repeated canonical base ID, pair ID, turn, and each of the three condition task hashes before model loading; obtain exactly two total measurements per selected condition gradient under the same runtime state and report scale variation separately.",
+    "implementation_validation": "Add CPU tests using synthetic Gram matrices that demonstrate the old 1-cosine rule can miss a sign reversal, verify the chord-bound formula, verify ambiguous-sign handling, and verify base-level rather than row-level bootstrap resampling. If these exact checks pass, no additional Director prelaunch review is required."
+  },
+  "scientific_assessment": {
+    "confidence": "ESTABLISHED",
+    "established": [
+      "The frozen cohort hash matches the brief and contains 48 unique matched pairs from 12 canonical bases, four turns per base, and 12 structural cells.",
+      "E04-C showed a protected marker-binding regression under targeted rotation training, but that result does not identify gradient antagonism as the cause.",
+      "The earlier broad E03 diagnostic deprioritized broad weak-family versus protected-family conflict under an observed envelope; it did not measure this matched rotation-marker relationship.",
+      "The proposed E04-D no-update measurement therefore has distinct mechanistic information value."
+    ],
+    "supported_hypothesis": "Locally antagonistic rotation and marker-binding gradients at exact V7 start are a plausible contributor to the E04-C tradeoff, but must be measured with a sensitivity rule capable of preserving or overturning the relevant signs.",
+    "unknown": [
+      "Whether the matched rotation-marker gradient cosine is negative at V7.",
+      "Whether any local disagreement is sufficiently frequent and numerically robust to motivate a causal gradient-conflict intervention.",
+      "Whether local gradient disagreement, if observed, caused the E04-C marker regression."
+    ]
+  },
+  "frozen_conditions": [
+    "V7 checkpoint manifest SHA256 1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549.",
+    "TRAIN-only cohort SHA256 969b3bbc495b08abf3bdb495b33bc91882c7ec05779b47f18afa0d74582cd972: 12 canonical bases, all four turns, and the same three matched conditions.",
+    "Physical Batch1 BF16 execution, production E04-C serializer, all-assistant supervised-token CE, FP32 loss and gradient reduction, and the exact LoRA target-module allowlist.",
+    "Base-equal primary aggregation and 10,000 canonical-base bootstrap replicates with seed 20261011.",
+    "Three prospectively bound repeated condition gradients with two total measurements each; no adaptive row selection.",
+    "One detached no-update GPU job, fresh nonce and output root, and an external plus worker-enforced 1800-second active cap.",
+    "Gold, dGold, FINAL_AUDIT, validation targets, and all non-TRAIN labels remain sealed."
+  ],
+  "forbidden_actions": [
+    "Do not launch the V1 measurement with the uncorrected 1-cosine sensitivity radius or an unadjusted negative-frequency gate.",
+    "Do not change the cohort, checkpoint, condition tasks, serializer, loss, gradient estimand, batch size, precision, trainable parameters, bootstrap seed or count, runtime cap, or classification thresholds.",
+    "Do not construct an optimizer, update parameters, train, generate, promote a checkpoint, access validation targets, open Gold or dGold, or access FINAL_AUDIT.",
+    "Do not interpret negative cosine as causal proof of forgetting, and do not automatically launch a mitigation or follow-on training experiment from this diagnostic."
+  ],
+  "post_repair_execution": {
+    "controller_may_continue_without_another_prelaunch_review": true,
+    "maximum_detached_jobs": 1,
+    "model_loading_authorized_after_exact_repair_and_all_gates": true,
+    "backward_authorized_after_exact_repair_and_all_gates": true,
+    "gradient_measurement_authorized_after_exact_repair_and_all_gates": true,
+    "optimizer_construction_authorized": false,
+    "parameter_updates_authorized": false,
+    "training_authorized": false,
+    "generation_authorized": false,
+    "automatic_retry_authorized": false,
+    "automatic_follow_on_authorized": false,
+    "director_result_review_required": true
+  },
+  "another_review_required": false,
+  "controller_scheduled": false,
+  "controller_prompted": false
+}
