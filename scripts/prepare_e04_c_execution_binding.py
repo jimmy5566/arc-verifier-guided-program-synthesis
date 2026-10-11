@@ -25,7 +25,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--run-root-prefix", default="/workspace/arc2/e04_c_matched_fixed_turn_rotation_repair_pilot_v1")
-    parser.add_argument("--source-commit")
+    parser.add_argument("--worker-source-commit")
     args = parser.parse_args()
     if args.output.exists():
         raise SystemExit("E04C_BINDING_REFUSE_OVERWRITE")
@@ -36,7 +36,7 @@ def main() -> None:
     auth = response.get("execution_authorization", {})
     if not (auth.get("gpu_training_authorized") and auth.get("post_training_b1_generation_authorized") and auth.get("post_freeze_cpu_scoring_authorized")):
         raise SystemExit("E04C_DIRECTOR_EXECUTION_SCOPE")
-    source_commit = args.source_commit or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    worker_source_commit = args.worker_source_commit or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     nonce = secrets.token_hex(16)
     run_root = args.run_root_prefix.rstrip("/") + "/run_001_" + nonce
     protocol = BASE / "E04_C_PRELAUNCH_PROTOCOL_V1.json"
@@ -47,7 +47,10 @@ def main() -> None:
         "protocol_id": proof["protocol_id"],
         "authorization_id": "DIRECTOR_PRELAUNCH_REVIEW_BRIEF_V1_RESPONSE",
         "director_response_path": relative(RESPONSE), "director_response_sha256": sha_path(RESPONSE),
-        "execution_authorized": True, "source_commit": source_commit,
+        # The binding is committed after this worker snapshot.  A launcher
+        # supplies its exact binding-containing launch commit at runtime, so
+        # no field needs to cryptographically name its own future Git commit.
+        "execution_authorized": True, "worker_source_commit": worker_source_commit,
         "worker_path": relative(WORKER), "worker_sha256": sha_path(WORKER),
         "evaluator_path": relative(EVALUATOR), "evaluator_sha256": sha_path(EVALUATOR),
         "launcher_path": relative(LAUNCHER), "launcher_sha256": sha_path(LAUNCHER),
@@ -66,7 +69,7 @@ def main() -> None:
         "static_preflight": proof,
     }
     atomic_json(args.output, binding)
-    print(json.dumps({"status": "FRESH_BINDING_CREATED", "binding_sha256": sha_path(args.output), "nonce": nonce, "source_commit": source_commit}, sort_keys=True))
+    print(json.dumps({"status": "FRESH_BINDING_CREATED", "binding_sha256": sha_path(args.output), "nonce": nonce, "worker_source_commit": worker_source_commit}, sort_keys=True))
 
 
 if __name__ == "__main__":

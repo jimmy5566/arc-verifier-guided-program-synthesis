@@ -35,10 +35,10 @@ def _verify_file(relative_path: str, expected: str, name: str) -> Path:
     return path
 
 
-def load_binding(path: Path, output_root: Path, *, child: bool = False) -> dict[str, Any]:
+def load_binding(path: Path, output_root: Path, launch_commit: str, *, child: bool = False) -> dict[str, Any]:
     binding = _read(path)
     required = {"schema_version", "protocol_id", "authorization_id", "director_response_path", "director_response_sha256",
-                "execution_authorized", "source_commit", "worker_path", "worker_sha256", "evaluator_path", "evaluator_sha256",
+                "execution_authorized", "worker_source_commit", "worker_path", "worker_sha256", "evaluator_path", "evaluator_sha256",
                 "launcher_path", "launcher_sha256", "protocol_path", "protocol_sha256", "schedule_binding_path", "schedule_binding_sha256",
                 "static_preflight_path", "static_preflight_sha256", "control_cohort_path", "control_cohort_sha256",
                 "treatment_cohort_path", "treatment_cohort_sha256", "checkpoint_manifest_path", "checkpoint_manifest_sha256",
@@ -53,8 +53,11 @@ def load_binding(path: Path, output_root: Path, *, child: bool = False) -> dict[
         fail("E04C_BINDING_RUNTIME")
     if str(output_root).replace("\\", "/") != binding["output_root"] or not isinstance(binding["nonce"], str) or not binding["nonce"]:
         fail("E04C_BINDING_OUTPUT")
-    if subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip() != binding["source_commit"]:
-        fail("E04C_SOURCE_COMMIT")
+    runtime_head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    if runtime_head != launch_commit:
+        fail("E04C_LAUNCH_COMMIT")
+    if subprocess.call(["git", "merge-base", "--is-ancestor", binding["worker_source_commit"], launch_commit], cwd=ROOT) != 0:
+        fail("E04C_WORKER_SOURCE_NOT_ANCESTOR")
     for key, name in (("worker_path", "WORKER"), ("evaluator_path", "EVALUATOR"), ("launcher_path", "LAUNCHER"),
                       ("protocol_path", "PROTOCOL"), ("schedule_binding_path", "SCHEDULE"),
                       ("static_preflight_path", "STATIC_PREFLIGHT"), ("control_cohort_path", "CONTROL_COHORT"),
@@ -144,11 +147,11 @@ def _load_trainable_v7(manifest: dict[str, Any], recipe: dict[str, Any]):
     return model, trainable, torch
 
 
-def train_arm(binding_path: Path, output_root: Path, arm: str) -> None:
+def train_arm(binding_path: Path, output_root: Path, launch_commit: str, arm: str) -> None:
     started = time.monotonic(); arm_root = output_root / "arms" / arm
     terminal = arm_root / "TERMINAL_RECEIPT.json"
     try:
-        binding = load_binding(binding_path, output_root, child=True)
+        binding = load_binding(binding_path, output_root, launch_commit, child=True)
         if arm not in ARMS or str(arm_root).replace("\\", "/") != binding["arm_output_roots"][arm]:
             fail("E04C_ARM_OUTPUT_BINDING")
         if arm_root.exists():
@@ -203,8 +206,8 @@ def train_arm(binding_path: Path, output_root: Path, arm: str) -> None:
         raise
 
 
-def _generate_arm(binding_path: Path, output_root: Path, arm: str) -> None:
-    binding = load_binding(binding_path, output_root, child=True)
+def _generate_arm(binding_path: Path, output_root: Path, launch_commit: str, arm: str) -> None:
+    binding = load_binding(binding_path, output_root, launch_commit, child=True)
     arm_root = output_root / "arms" / arm
     training = _read(arm_root / "TERMINAL_RECEIPT.json")
     if training.get("status") != "COMPLETED" or training.get("optimizer_steps") != 96:
@@ -241,26 +244,26 @@ def _generate_arm(binding_path: Path, output_root: Path, arm: str) -> None:
                 "elapsed_seconds": time.monotonic() - started})
 
 
-def run_parent(binding_path: Path, output_root: Path) -> None:
+def run_parent(binding_path: Path, output_root: Path, launch_commit: str) -> None:
     began = time.monotonic(); terminal = output_root / "TERMINAL_RECEIPT.json"
     try:
-        binding = load_binding(binding_path, output_root)
+        binding = load_binding(binding_path, output_root, launch_commit)
         static_schedule_preflight()
         output_root.mkdir(parents=True, exist_ok=False); (output_root / "arms").mkdir()
         atomic_json(output_root / "PREFLIGHT_RECEIPT.json", {"status": "PASS_NO_MODEL_IMPORT", "protocol_id": binding["protocol_id"],
-                    "binding_sha256": sha_path(binding_path), "source_commit": binding["source_commit"], "arm_order": list(ARMS),
+                    "binding_sha256": sha_path(binding_path), "launch_commit": launch_commit, "worker_source_commit": binding["worker_source_commit"], "arm_order": list(ARMS),
                     "target_sidecar_accessed": False, "model_imported": False, "optimizer_constructed": False})
         for arm in ARMS:
             if time.monotonic() - began >= JOINT_CAP_SECONDS: fail("E04C_JOINT_CAP")
-            result = subprocess.run([sys.executable, str(Path(__file__).resolve()), "--binding", str(binding_path), "--output-root", str(output_root), "--train-arm", arm], cwd=ROOT, check=False)
+            result = subprocess.run([sys.executable, str(Path(__file__).resolve()), "--binding", str(binding_path), "--output-root", str(output_root), "--launch-commit", launch_commit, "--train-arm", arm], cwd=ROOT, check=False)
             if result.returncode: fail("E04C_TRAIN_ARM_FAILED:" + arm)
         for arm in ARMS:
             if time.monotonic() - began >= JOINT_CAP_SECONDS: fail("E04C_JOINT_CAP")
-            result = subprocess.run([sys.executable, str(Path(__file__).resolve()), "--binding", str(binding_path), "--output-root", str(output_root), "--evaluate-arm", arm], cwd=ROOT, check=False)
+            result = subprocess.run([sys.executable, str(Path(__file__).resolve()), "--binding", str(binding_path), "--output-root", str(output_root), "--launch-commit", launch_commit, "--evaluate-arm", arm], cwd=ROOT, check=False)
             if result.returncode: fail("E04C_EVALUATION_ARM_FAILED:" + arm)
         raw = {arm: sha_path(output_root / "arms" / arm / "PRIMARY_B1_RAW.jsonl") for arm in ARMS}
         receipt = {"schema_version": 1, "status": "TRAINING_AND_RAW_GENERATIONS_FROZEN_NO_TARGETS", "protocol_id": binding["protocol_id"],
-                   "binding_sha256": sha_path(binding_path), "source_commit": binding["source_commit"], "raw_sha256": raw,
+                   "binding_sha256": sha_path(binding_path), "launch_commit": launch_commit, "worker_source_commit": binding["worker_source_commit"], "raw_sha256": raw,
                    "arm_order": list(ARMS), "optimizer_steps_by_arm": {arm: 96 for arm in ARMS}, "parameter_updates_by_arm": {arm: 96 for arm in ARMS},
                    "physical_batch_size": 1, "target_sidecar_accessed": False, "final_audit_opened": False,
                    "wall_seconds": time.monotonic() - began, "joint_runtime_cap_seconds": JOINT_CAP_SECONDS}
@@ -274,16 +277,16 @@ def run_parent(binding_path: Path, output_root: Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(); parser.add_argument("--binding", type=Path); parser.add_argument("--output-root", type=Path)
+    parser = argparse.ArgumentParser(); parser.add_argument("--binding", type=Path); parser.add_argument("--output-root", type=Path); parser.add_argument("--launch-commit")
     parser.add_argument("--train-arm", choices=ARMS); parser.add_argument("--evaluate-arm", choices=ARMS); parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
     if args.self_test:
         print(json.dumps(static_schedule_preflight(), sort_keys=True)); return
-    if not args.binding or not args.output_root or bool(args.train_arm) == bool(args.evaluate_arm) and (args.train_arm or args.evaluate_arm):
+    if not args.binding or not args.output_root or not args.launch_commit or bool(args.train_arm) == bool(args.evaluate_arm) and (args.train_arm or args.evaluate_arm):
         raise SystemExit("E04C_BINDING_OUTPUT_MODE_REQUIRED")
-    if args.train_arm: train_arm(args.binding, args.output_root, args.train_arm)
-    elif args.evaluate_arm: _generate_arm(args.binding, args.output_root, args.evaluate_arm)
-    else: run_parent(args.binding, args.output_root)
+    if args.train_arm: train_arm(args.binding, args.output_root, args.launch_commit, args.train_arm)
+    elif args.evaluate_arm: _generate_arm(args.binding, args.output_root, args.launch_commit, args.evaluate_arm)
+    else: run_parent(args.binding, args.output_root, args.launch_commit)
 
 
 if __name__ == "__main__":

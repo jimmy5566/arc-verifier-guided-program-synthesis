@@ -8,7 +8,7 @@ BRANCH = "infra/arc2-dual-agent-runpod-orchestrator-v1"
 def sha(path: Path) -> str: return hashlib.sha256(path.read_bytes()).hexdigest()
 
 def remote_script(binding: dict, binding_commit: str, binding_path: str, binding_sha: str) -> str:
-    out, source, lock = binding["output_root"], binding["source_commit"], binding["output_root"] + ".launch_lock"
+    out, source, lock = binding["output_root"], binding_commit, binding["output_root"] + ".launch_lock"
     return f'''set -euo pipefail
 repo=/root/arc-runtime-3090-gpu-benchmark-v1/arc2
 cd "$repo"
@@ -25,9 +25,9 @@ mkdir "{lock}"
 git show "{binding_commit}:{binding_path}" > "{lock}/LAUNCH_BINDING.json.tmp"
 test "$(sha256sum "{lock}/LAUNCH_BINDING.json.tmp" | awk '{{print $1}}')" = "{binding_sha}"
 mv "{lock}/LAUNCH_BINDING.json.tmp" "{lock}/LAUNCH_BINDING.json"
-nohup python3 scripts/arc2_hard_cap_launcher.py --cap-seconds 7200 --receipt "{out}/LAUNCH_CAP_RECEIPT.json" -- python3 scripts/run_e04_c_matched_rotation_repair_pilot.py --binding "{lock}/LAUNCH_BINDING.json" --output-root "{out}" > "{lock}/launcher.log" 2>&1 < /dev/null &
+nohup python3 scripts/arc2_hard_cap_launcher.py --cap-seconds 7200 --receipt "{out}/LAUNCH_CAP_RECEIPT.json" -- python3 scripts/run_e04_c_matched_rotation_repair_pilot.py --binding "{lock}/LAUNCH_BINDING.json" --output-root "{out}" --launch-commit "{binding_commit}" > "{lock}/launcher.log" 2>&1 < /dev/null &
 pid=$!
-printf '{{"protocol_id":"%s","source_commit":"%s","binding_sha256":"%s","remote_pid":%s,"output_root":"%s","nonce":"%s","expected_terminal_receipt":"%s/TERMINAL_RECEIPT.json","gh_token_present":true}}\\n' "{binding["protocol_id"]}" "{source}" "{binding_sha}" "$pid" "{out}" "{binding["nonce"]}" "{out}" > "{lock}/LAUNCH_RECEIPT.json"
+printf '{{"protocol_id":"%s","launch_commit":"%s","worker_source_commit":"%s","binding_sha256":"%s","remote_pid":%s,"output_root":"%s","nonce":"%s","expected_terminal_receipt":"%s/TERMINAL_RECEIPT.json","gh_token_present":true}}\\n' "{binding["protocol_id"]}" "{source}" "{binding["worker_source_commit"]}" "{binding_sha}" "$pid" "{out}" "{binding["nonce"]}" "{out}" > "{lock}/LAUNCH_RECEIPT.json"
 cat "{lock}/LAUNCH_RECEIPT.json"
 '''
 

@@ -23,7 +23,7 @@ class E04CExecutionContractTests(unittest.TestCase):
             commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=execution.ROOT, text=True).strip()
             previous = list(__import__("sys").argv)
             try:
-                __import__("sys").argv = ["binding", "--output", str(out), "--source-commit", commit]
+                __import__("sys").argv = ["binding", "--output", str(out), "--worker-source-commit", commit]
                 binding_builder.main()
             finally:
                 __import__("sys").argv = previous
@@ -31,7 +31,7 @@ class E04CExecutionContractTests(unittest.TestCase):
             self.assertTrue(binding["execution_authorized"])
             self.assertEqual(binding["arm_order"], list(execution.ARMS))
             self.assertEqual(binding["static_preflight"]["status"], "PASS_CPU_NATIVE_SCHEDULE")
-            worker.load_binding(out, Path(binding["output_root"]))
+            worker.load_binding(out, Path(binding["output_root"]), commit)
 
     def test_malformed_protected_replay_fails_before_model_import(self):
         protocol, frozen, static, schedules = execution.load_frozen_inputs()
