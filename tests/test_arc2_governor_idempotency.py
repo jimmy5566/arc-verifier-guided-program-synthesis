@@ -166,6 +166,9 @@ class GovernorIdempotencyTests(unittest.TestCase):
             self.assertEqual(result, "REMOTE_COMPLETED"); self.assertEqual(remote.call_count, 1)
             saved = governor.load(path); self.assertEqual(len(saved["consumed_remote_receipts"]), 1)
             self.assertEqual(saved["next_action"], "PROCESS_REMOTE_RECEIPT")
+            self.assertEqual(saved["remote_completion_run_id"], "R1")
+            self.assertEqual(saved["completed_remote_job"]["run_id"], "R1")
+            self.assertEqual(saved["remote_completion_terminal_receipt"], "/receipt")
 
     def test_wait_remote_polling_calls_no_llm_agent(self):
         with tempfile.TemporaryDirectory() as raw:

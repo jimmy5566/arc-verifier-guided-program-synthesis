@@ -950,9 +950,18 @@ def consume_remote(state,path,status,detail):
         # Receipt availability is a controller work item.  Never retain the
         # launch-era action after the remote job has already completed.
         state['next_action']='PROCESS_REMOTE_RECEIPT'
-    consumed[receipt_key]={'status':status,'consumed_at':now(),'job_id':jobid}
-    state.update({'disposition':'CONTINUE_CONTROLLER','remote_completion_consumed':True,'remote_completion_status':status,
-                  'consumed_remote_receipts':consumed,'remote_job':None,'active_remote_job':None,'last_actor':'governor','updated_at':now()})
+    completed_at=now()
+    consumed[receipt_key]={'status':status,'consumed_at':completed_at,'job_id':jobid,
+                           'terminal_receipt':str(job.get('expected_terminal_receipt') or job.get('terminal_receipt') or '')}
+    # The Controller needs the exact launch binding to fetch and hash the
+    # terminal receipt.  Preserve a completed-job snapshot before clearing
+    # active-job fields; otherwise an older completion marker can be mistaken
+    # for the current result.
+    state.update({'disposition':'CONTINUE_CONTROLLER','remote_completion_consumed':True,
+                  'remote_completion_status':status,'remote_completion_run_id':jobid,
+                  'remote_completion_terminal_receipt':str(job.get('expected_terminal_receipt') or job.get('terminal_receipt') or ''),
+                  'completed_remote_job':dict(job),'consumed_remote_receipts':consumed,
+                  'remote_job':None,'active_remote_job':None,'last_actor':'governor','updated_at':completed_at})
     atomic(path,state); log(state,f'WAIT_REMOTE job={jobid} {status}; transition -> CONTINUE_CONTROLLER')
     return True
 def cycle(state_path, *, agent_timeout_seconds, controller_retry_seconds):
