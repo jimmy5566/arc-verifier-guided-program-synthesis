@@ -9,6 +9,10 @@ from scripts.e04_orientation_v3_no_update import atomic_json, atomic_jsonl, cano
 CAP=10800
 NATIVE_CONFIG=ROOT/'configs'/'nvarc_native_846d0198'
 NATIVE_CONFIG_IDENTITY=ROOT/'experiments'/'capability_repair_baseline_v1'/'e04_orientation_fixed_demonstration_baseline_v3'/'E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY_V1.json'
+E04E_ADAPTER_CONFIG_SHA256={
+ 'E04E_RUN003_CONTROL_EQUAL_SLOT':'aa2c74857b1ff6e1738d5723259ce9ffd698e783e40568faba6aaf42463cfe65',
+ 'E04E_RUN003_TREATMENT_EQUAL_SLOT':'9f9ec9013387e85985bdc33a1de15ca12b5bb4b9ffc22f9b876ce513bd006f19',
+}
 
 def fail(x): raise E05Failure(x)
 def check(deadline):
@@ -50,6 +54,7 @@ def adapter_dir(arm:dict[str,Any],temp:Path):
  for name in ('adapter_model.safetensors','adapter_config.json'):
   path=Path(hf_hub_download(arm['repository']['repo_id'],filename=arm['filename'].rsplit('/',1)[0]+'/'+name,repo_type='model',revision=arm['repository']['immutable_revision'],token=token,local_dir=str(d),force_download=True))
   if name=='adapter_model.safetensors' and sha(path)!=arm['adapter_sha256']: fail('E05_ADAPTER_SHA256:'+arm['arm_id'])
+  if name=='adapter_config.json' and sha(path)!=E04E_ADAPTER_CONFIG_SHA256[arm['arm_id']]: fail('E05_ADAPTER_CONFIG_SHA256:'+arm['arm_id'])
   shutil.copyfile(path,d/name)
  return d
 
