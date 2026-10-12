@@ -1,0 +1,87 @@
+{
+  "authorization": {
+    "existing_authorization_reusable": false,
+    "fresh_one_shot_gpu_authorization_required": true,
+    "fresh_source_publication_required": true
+  },
+  "checkpoint": {
+    "adapter_model_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000/adapter_model.safetensors",
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "name": "V7"
+  },
+  "cohort": {
+    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/connected_component_count_fit_vs_generation_diagnostic_v1/COHORT_PROMPT_TASKS_V1.json",
+    "records": 72,
+    "sha256": "1c04736b3866aa754513142d751339abdd592ee2da11fb500948fe608273e9c6"
+  },
+  "cpu_validation": {
+    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/v7_connected_component_count_fit_vs_generation_diagnostic_v1/V7_EXECUTABLE_V2_CPU_VALIDATION.json",
+    "sha256": "fead2e918cf0d5f84d70dd790c56b93792c6e37c49bd904520c6defc18601f41"
+  },
+  "execution": {
+    "backward_calls": 0,
+    "batch1_generations": 12,
+    "batch1_teacher_forced_forwards": 12,
+    "checkpoint": "V7",
+    "detached_jobs": 1,
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "fallback_only": "CUDA_OOM",
+    "fresh_generations": 72,
+    "fresh_nonce": "0c1d3877c49daa71a69ab79d4c2e9d98",
+    "hard_cap_seconds": 3600,
+    "max_new_tokens": 192,
+    "optimizer_steps": 0,
+    "remote_output_root": "/workspace/arc2/v7_component_diagnostic_v2/run_001_0c1d3877c49daa71a69ab79d4c2e9d98",
+    "requested_batch_size": 32,
+    "retry": false,
+    "teacher_forced_forwards": 72
+  },
+  "execution_source_commit": "03bccba1de4c8db16047960c0ddd887e0d9d6c19",
+  "preclaim_required": [
+    "exact remote checkout",
+    "remote source hashes",
+    "runtime dependency gate",
+    "adapter and tokenizer byte hashes",
+    "sealed sidecar path/hash after raw freeze only",
+    "fresh output root",
+    "atomic receipt claim"
+  ],
+  "protocol": {
+    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/v7_connected_component_count_fit_vs_generation_diagnostic_v1/CPU_ONLY_FROZEN_PROTOCOL.json",
+    "sha256": "243e33a9ce5fde33f0b04932853298ed6d5bd6cd5f5c2fe53b9329cb6f6c0325"
+  },
+  "protocol_id": "V7_CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1",
+  "protocol_sha256": "243e33a9ce5fde33f0b04932853298ed6d5bd6cd5f5c2fe53b9329cb6f6c0325",
+  "runtime": {
+    "adapter_dir": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+    "base_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python"
+  },
+  "schema_version": 1,
+  "sidecar": {
+    "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\.arc2-local\\orchestration\\sealed_sidecars\\CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_CORRECT_TOKEN_SIDECAR.json",
+    "remote_path_must_be_verified_before_authorization_claim": true,
+    "scorer_only": true,
+    "sha256": "ad5c97e0f54a30ba636714c1d5dbd671c25d826616896f5a9cbfd56af48d7950"
+  },
+  "source_hashes": {
+    "scripts/test_v7_component_diagnostic_executable_v2.py": "6c796836bd5a3f910995d15d8bc4e6293809507ea2741366285354068fb9815a",
+    "scripts/v7_component_diagnostic_executable_v2.py": "7f5fa835468537a4ebda6d973cd007c7687ff4fe2d78448fa8265130e92c9f1d"
+  },
+  "status": "CPU_VALIDATED_FRESH_OWNER_AUTHORIZATION_AND_REMOTE_PATH_PREFLIGHT_REQUIRED",
+  "tokenizer": {
+    "files": {
+      "special_tokens_map.json": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+      "tokenizer.json": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+      "tokenizer_config.json": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+      "vocab.json": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+    },
+    "runtime_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139"
+  }
+}

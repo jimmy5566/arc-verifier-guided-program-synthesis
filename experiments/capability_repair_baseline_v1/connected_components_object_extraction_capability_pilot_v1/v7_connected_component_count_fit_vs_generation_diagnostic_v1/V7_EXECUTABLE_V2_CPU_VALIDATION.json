@@ -1,37 +1,27 @@
 {
   "cpu_only": true,
-  "created_at_utc": "2026-10-12T13:30:00Z",
-  "frozen_protocol_sha256": "243e33a9ce5fde33f0b04932853298ed6d5bd6cd5f5c2fe53b9329cb6f6c0325",
   "gpu_used": false,
   "implementation": {
-    "scripts/test_v7_component_diagnostic_executable_v2.py": "377b678fa86c90d86c82f56f70b6fbf0971f8fa0da99d29cd9211dd7c90a1706",
-    "scripts/v7_component_diagnostic_executable_v2.py": "e2bc1a6c0dd9f639d17174f34bc44a1d8a41f07e4ffc0712567a9285420aab7d"
+    "scripts/test_v7_component_diagnostic_executable_v2.py": "6c796836bd5a3f910995d15d8bc4e6293809507ea2741366285354068fb9815a",
+    "scripts/v7_component_diagnostic_executable_v2.py": "7f5fa835468537a4ebda6d973cd007c7687ff4fe2d78448fa8265130e92c9f1d"
   },
   "model_loaded": false,
-  "not_run": [
-    "remote_preflight",
-    "model_load",
-    "adapter_read",
-    "sidecar_read",
-    "detached_launch",
-    "GPU_execution"
-  ],
   "one_shot_authorization_claimed": false,
-  "preserved_prior_cpu_validation_sha256": "5d70c92cfaf94b9a024a01175441c5fef6c957ee4c5031f14fa8c517f44e7bdc",
   "schema_version": 1,
+  "source_commit": "03bccba1de4c8db16047960c0ddd887e0d9d6c19",
   "status": "PASS_V7_EXECUTABLE_V2_PRODUCTION_SHAPED_CPU_INTEGRATION",
   "targets_accessed": false,
-  "verified": [
-    "72_record_complete_raw_generation",
-    "raw_freeze_before_sidecar_open",
-    "actual_rank_top1_top2_margin_token_weighted_nll_sequence_normalized_nll_first_divergence_exact_grid_taxonomy",
-    "physical_batch1_generation_and_teacher_forced_pass",
-    "physical_batch1_invalid_not_interpretable_failure",
-    "cuda_oom_only_32_to_16_fallback",
-    "wrong_source_cohort_adapter_identity_rejection",
-    "missing_dependency_rejection",
-    "fresh_output_and_duplicate_claim_rejection",
-    "malformed_generation_terminal_failure_receipt",
-    "timeout_terminal_failure_receipt"
+  "test_command": "py scripts/test_v7_component_diagnostic_executable_v2.py",
+  "test_output": "PASS_V7_EXECUTABLE_V2_PRODUCTION_SHAPED_CPU_INTEGRATION",
+  "verification": [
+    "72 records",
+    "raw freeze before sidecar",
+    "actual rank Top1 Top2 margin token-weighted NLL sequence-normalized NLL first divergence exact-grid taxonomy",
+    "physical B1 generation and teacher-forced pass/fail",
+    "CUDA OOM-only fallback",
+    "source/cohort/adapter rejection",
+    "dependency rejection",
+    "fresh output/duplicate claim rejection",
+    "malformed generation/timeout terminal receipts"
   ]
 }
