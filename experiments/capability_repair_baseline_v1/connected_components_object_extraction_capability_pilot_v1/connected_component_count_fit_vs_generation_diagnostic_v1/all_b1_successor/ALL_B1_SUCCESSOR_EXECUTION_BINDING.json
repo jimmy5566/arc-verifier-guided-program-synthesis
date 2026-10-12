@@ -1,0 +1,105 @@
+{
+  "authorization": {
+    "not_authorized_by_this_binding": true,
+    "owner_one_shot_required": true
+  },
+  "checkpoints": {
+    "CONTROL_NARROW_STRUCTURE": "4a5e621f22dc5eb3a3e3e7d2eab009559e276a2c20fd05675f2265ad23ce13e2",
+    "TREATMENT_STRUCTURE_DIVERSE": "5dae97898461b6b618328154bfb4271199a57b6cec68e8e7bb90209002618978",
+    "V7": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+  },
+  "cpu_validation_sha256": "f42323580e93acfdd9d1b0d3908c383c74e8389e03a5a51b5224fcc0dd1d725e",
+  "execution": {
+    "backward_calls": 0,
+    "checkpoint_runtime_materialization_required": true,
+    "cohort_prompt_tasks_path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\COHORT_PROMPT_TASKS_V1.json",
+    "cohort_prompt_tasks_sha256": "1c04736b3866aa754513142d751339abdd592ee2da11fb500948fe608273e9c6",
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "fallback_only": "CUDA_OOM",
+    "free_running_fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "free_running_requested_batch_size": 32,
+    "fresh_nonce_required": true,
+    "fresh_output_root_required": true,
+    "hard_cap_seconds": 7200,
+    "inventory_path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\RUN_002_REUSE_AND_MISSING_ROW_INVENTORY.json",
+    "maximum_detached_jobs": 1,
+    "missing_prompt_tasks_path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\MISSING_TRAIN_FIT_PROMPT_TASKS_V1.json",
+    "missing_prompt_tasks_sha256": "2cceaffac3798c432022d9e484901f41599bb5110b77924fb6c598929aadb9fc",
+    "new_free_running_rows": 48,
+    "ood_regeneration": false,
+    "optimizer_steps": 0,
+    "planning_estimate_seconds": 1800,
+    "prompt_token_ids_materializer": "scripts/materialize_connected_component_prompt_token_ids_v1.py",
+    "prompt_token_ids_runtime_materialization_required": true,
+    "prompt_token_ids_source_document_sha256": "1c04736b3866aa754513142d751339abdd592ee2da11fb500948fe608273e9c6",
+    "requested_batch_size": 1,
+    "retry": false,
+    "reused_rows": 168,
+    "run_002_raw_manifest_path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\RUN_002_EXACT_RAW_ARTIFACT_MANIFEST_V1.json",
+    "run_002_raw_manifest_sha256": "ece09a84c56eeb040c71db9579d2d0d3ad9b3db2beabe56d8251db2773c61a4c",
+    "run_002_raw_manifest_verifier": "scripts/connected_component_run002_raw_manifest_v1.py",
+    "run_002_raw_root_runtime_materialization_required": true,
+    "sidecar_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\.arc2-local\\orchestration\\sealed_sidecars\\CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_CORRECT_TOKEN_SIDECAR.json",
+    "teacher_forced_batch_comparison": "NOT_APPLICABLE_ALL_PRIMARY_RECORDS_PHYSICAL_BATCH1",
+    "teacher_forced_batch_mixing": "FORBIDDEN",
+    "teacher_forced_forwards": 216,
+    "teacher_forced_physical_batch_size": 1,
+    "teacher_forced_tolerance": {
+      "Top1_and_Top2_aggregate_count_delta_max": 0,
+      "correct_token_rank_abs_delta_max": 1,
+      "failure_disposition": "INVALID_NOT_INTERPRETABLE",
+      "per_row_mean_margin_abs_delta_max": 0.02,
+      "sequence_normalized_NLL_abs_delta_max": 0.005,
+      "token_weighted_NLL_abs_delta_max": 0.005
+    },
+    "tokenizer_identity": {
+      "repository": "sorokin/qwen3_4b_grids15_sft139",
+      "revision": "Transformers/bfloat16/1",
+      "runtime_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+      "tokenizer_files": {
+        "special_tokens_map.json": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+        "tokenizer.json": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+        "tokenizer_config.json": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+        "vocab.json": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+      }
+    }
+  },
+  "execution_source_commit": "48e1dd03486a63260f6be40acfb48e1cf17705ae",
+  "protocol_id": "CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_ALL_B1_SUCCESSOR",
+  "protocol_sha256": "7a67190338e889358d8933264d749a681a5d313e80290f98cfd89320d8310feb",
+  "reuse_inventory_sha256": "b0cc5b45adffcc618fd622786e14dfe3fdbe6aec20222268ba1d694741793d95",
+  "runnable": {
+    "input_builder": "scripts/prepare_connected_component_fit_generation_inputs_v1.py",
+    "launcher": "scripts/launch_connected_component_fit_generation_diagnostic_v1.py",
+    "prompt_token_ids_materializer": "scripts/materialize_connected_component_prompt_token_ids_v1.py",
+    "run_002_raw_manifest_verifier": "scripts/connected_component_run002_raw_manifest_v1.py",
+    "scorer": "scripts/score_connected_component_fit_generation_diagnostic_v1.py",
+    "worker": "scripts/run_connected_component_fit_generation_diagnostic_v1.py"
+  },
+  "schema_version": 1,
+  "sidecar_sha256": "ad5c97e0f54a30ba636714c1d5dbd671c25d826616896f5a9cbfd56af48d7950",
+  "source_hashes": {
+    "scripts/connected_component_fit_generation_runtime_contract.py": "a38cb64385850c68f8f3013606dd726c514aae40606697c7e05fde45b51027d4",
+    "scripts/connected_component_run002_raw_manifest_v1.py": "a124d59a1042fba5b69d571303ab3110f1c5f6995e318aff8d2b75561d968421",
+    "scripts/freeze_connected_component_fit_generation_all_b1_successor_v1.py": "cf6126e0094f46eb6c93c4841828cdebfbacbb3983ca7850898e28401d903e75",
+    "scripts/launch_connected_component_fit_generation_diagnostic_v1.py": "604fb3ab93e6cf26873effc9d5ac902279d734c0bb61864d8d6e946286637d23",
+    "scripts/materialize_connected_component_prompt_token_ids_v1.py": "e9d892a7dc7f794e89b22c93b9e4ccbf9d25e85038bbe3683ddec2d6cfc8e5e9",
+    "scripts/prepare_connected_component_fit_generation_inputs_v1.py": "8453f0292a012ff6617d9c4aeb7159ed0aa0fe6affd49ef5148c94a8e3aeae88",
+    "scripts/run_connected_component_fit_generation_diagnostic_v1.py": "d937c7d12db2693ebbad9d10c6099b5e18ba65ba191c7a89f9ba2a719829ac99",
+    "scripts/score_connected_component_fit_generation_diagnostic_v1.py": "426113c698e70d11fba38418292feda2cb796760825f39552cac9c33cb2243ca",
+    "scripts/test_connected_component_fit_generation_production_v1.py": "f1516c9cca450ca4053963047799cd012fa85134a68d98fa755c66357cbf7fef"
+  },
+  "status": "CPU_TESTED_ALL_B1_SUCCESSOR_ACTUAL_POD_PREFLIGHT_AND_FRESH_OWNER_AUTHORIZATION_REQUIRED"
+}

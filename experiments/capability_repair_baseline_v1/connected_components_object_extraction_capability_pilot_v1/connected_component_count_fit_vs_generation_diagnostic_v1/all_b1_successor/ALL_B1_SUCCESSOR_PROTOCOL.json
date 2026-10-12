@@ -1,0 +1,76 @@
+{
+  "authorization": {
+    "consumed_run_002_authorization_reusable": false,
+    "cpu_preparation_authorized": true,
+    "gpu_authorization": "FRESH_EXPLICIT_ONE_SHOT_REQUIRED_AFTER_ACTUAL_POD_CPU_PREFLIGHT_PASS"
+  },
+  "forbidden": [
+    "target release",
+    "new cohort",
+    "checkpoint substitution",
+    "decoder change",
+    "training",
+    "optimizer",
+    "backward",
+    "batch greater than one for teacher-forced records",
+    "RUN_002 retry"
+  ],
+  "free_running": {
+    "generate_once_missing_train_fit_rows": 48,
+    "metrics": [
+      "first_divergence",
+      "independent_semantic_error_taxonomy"
+    ],
+    "policy": "EXISTING_VALIDATED_NATIVE_GREEDY",
+    "reused_rows": 168
+  },
+  "immutable_conditions": {
+    "backward_calls": 0,
+    "checkpoints": {
+      "CONTROL_NARROW_STRUCTURE": "4a5e621f22dc5eb3a3e3e7d2eab009559e276a2c20fd05675f2265ad23ce13e2",
+      "TREATMENT_STRUCTURE_DIVERSE": "5dae97898461b6b618328154bfb4271199a57b6cec68e8e7bb90209002618978",
+      "V7": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+    },
+    "cohort_prompt_tasks_sha256": "1c04736b3866aa754513142d751339abdd592ee2da11fb500948fe608273e9c6",
+    "detached_jobs": 1,
+    "missing_train_fit_prompt_tasks_sha256": "2cceaffac3798c432022d9e484901f41599bb5110b77924fb6c598929aadb9fc",
+    "native_greedy_reuse_rows": 168,
+    "new_native_greedy_train_fit_rows": 48,
+    "optimizer_steps": 0,
+    "retry": false,
+    "reuse_inventory_sha256": "b0cc5b45adffcc618fd622786e14dfe3fdbe6aec20222268ba1d694741793d95",
+    "run_002_raw_manifest_sha256": "ece09a84c56eeb040c71db9579d2d0d3ad9b3db2beabe56d8251db2773c61a4c",
+    "sidecar_sha256": "ad5c97e0f54a30ba636714c1d5dbd671c25d826616896f5a9cbfd56af48d7950",
+    "structural_ood_regeneration": "FORBIDDEN",
+    "training": false
+  },
+  "protocol_id": "CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_ALL_B1_SUCCESSOR",
+  "runtime_estimate": {
+    "basis": "V7 RUN_002 control timestamps: 120 teacher-forced records completed in 216 seconds including process startup; all-B1 three-checkpoint work has 216 teacher-forced records plus 48 already-enumerated native-Greedy generations.",
+    "estimate_status": "CONSERVATIVE_PRE_FLIGHT_ESTIMATE_TO_BE_MEASURED_ON_ACTUAL_POD_CPU_ONLY",
+    "hard_cap_seconds": 7200,
+    "planning_estimate_seconds": 1800
+  },
+  "schema_version": 1,
+  "status": "CPU_ONLY_FROZEN_ALL_B1_SUCCESSOR_PENDING_ACTUAL_POD_PREFLIGHT",
+  "successor_of": {
+    "director_result_review_response": "V7_POSIX_SUCCESSOR_RUN_002_RESULT_REVIEW_REQUIRED_RESPONSE.json",
+    "previous_binding_sha256": "be2896b78a12f5b65be5de7c1f4e2e9fb85d50f4d6176fbfc6f25b5f1ea696b4",
+    "previous_protocol_sha256": "f556bd96801f7ece58c51a5ae8697f42638b337d629942b7d3c493b1be750452",
+    "run_002_retry": false
+  },
+  "teacher_forced": {
+    "batch_mixing": "FORBIDDEN",
+    "checkpoint_record_forwards": 216,
+    "metrics": [
+      "correct_token_rank",
+      "Top1",
+      "Top2",
+      "margin",
+      "token_weighted_NLL",
+      "sequence_normalized_NLL"
+    ],
+    "physical_batch_size": 1,
+    "records_per_checkpoint": 72
+  }
+}
