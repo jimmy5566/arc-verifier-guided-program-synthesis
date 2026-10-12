@@ -75,3 +75,32 @@ def batch_gate(primary,b1,tolerance):
     nll=max(abs(primary[k]['nll']-b1[k]['nll']) for k in keys)
     passed=rank<=tolerance['correct_token_rank_abs_delta_max'] and top1<=tolerance['Top1_and_Top2_aggregate_count_delta_max'] and top2<=tolerance['Top1_and_Top2_aggregate_count_delta_max'] and margin<=tolerance['per_row_mean_margin_abs_delta_max'] and nll<=tolerance['token_weighted_NLL_abs_delta_max']
     return {'status':'PASS' if passed else 'INVALID_NOT_INTERPRETABLE','rank_abs_delta_max':rank,'top1_count_delta':top1,'top2_count_delta':top2,'margin_abs_delta_max':margin,'nll_abs_delta_max':nll}
+
+def aggregate_record_metrics(record_metrics):
+    """Aggregate token metrics while retaining sequence-normalized NLL."""
+    if not isinstance(record_metrics, dict) or not record_metrics:
+        raise RuntimeError("RECORD_METRICS_EMPTY")
+    flattened=[]
+    sequences=[]
+    for record_id, metrics in sorted(record_metrics.items()):
+        if not isinstance(record_id, str) or not isinstance(metrics, list) or not metrics:
+            raise RuntimeError("RECORD_METRICS_LAYOUT_INVALID")
+        flattened.extend(metrics)
+        sequences.append(sum(float(item["nll"]) for item in metrics) / len(metrics))
+    pooled=aggregate_token_metrics(flattened)
+    pooled["records"]=len(sequences)
+    pooled["sequence_normalized_nll"]=sum(sequences)/len(sequences)
+    return pooled
+
+def require_inventory_partition(inventory):
+    rows=inventory.get("inventory") if isinstance(inventory,dict) else None
+    if not isinstance(rows,list) or len(rows)!=216:
+        raise RuntimeError("INVENTORY_ROW_COUNT_INVALID")
+    reused=[row for row in rows if row.get("disposition")=="REUSE_IMMUTABLE_RUN_002_RAW"]
+    fresh=[row for row in rows if row.get("disposition")=="GENERATE_NEW_ONCE_AFTER_FRESH_AUTHORIZATION"]
+    if len(reused)!=168 or len(fresh)!=48 or any(row.get("split")!="TRAIN_FIT" for row in fresh):
+        raise RuntimeError("INVENTORY_REUSE_FRESH_PARTITION_INVALID")
+    keys={(row.get("checkpoint"),row.get("cohort_record_id")) for row in rows}
+    if len(keys)!=216 or None in {key[0] for key in keys} or None in {key[1] for key in keys}:
+        raise RuntimeError("INVENTORY_IDENTITY_LAYOUT_INVALID")
+    return reused,fresh
