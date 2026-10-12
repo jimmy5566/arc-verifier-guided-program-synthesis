@@ -1,0 +1,36 @@
+{
+  "execution_source_commit": "66821bb85162705baab159616e1c0d7b5c3c7baa",
+  "frozen_conditions_unchanged": true,
+  "not_run": {
+    "gpu_used": false,
+    "model_loaded": false,
+    "remote_sidecar_opened": false,
+    "targets_accessed": false,
+    "training": false
+  },
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY_V4_RUNTIME_CONTRACT_VALIDATION",
+  "tests": [
+    {
+      "command": "py -m py_compile scripts/v7_component_diagnostic_executable_v2.py scripts/test_v7_component_diagnostic_executable_v2.py",
+      "status": "PASS"
+    },
+    {
+      "command": "py scripts/test_v7_component_diagnostic_executable_v2.py",
+      "status": "PASS_V7_EXECUTABLE_V2_PRODUCTION_SHAPED_CPU_INTEGRATION"
+    },
+    {
+      "command": "native transport serialize/parse CPU fixture",
+      "status": "PASS_NATIVE_TRANSPORT_CPU"
+    }
+  ],
+  "validation_id": "V7_EXECUTABLE_V4_NATIVE_RUNTIME_BATCHING_WATCHDOG_CPU_VALIDATION",
+  "verified_repairs": {
+    "batch1_teacher_physical_forward_instrumentation": "PASS",
+    "direct_child_execution_without_watchdog_environment": "REJECTED",
+    "native_prompt_token_parity_fixture": "PASS",
+    "primary_teacher_physical_batch_instrumentation": "PASS",
+    "sidecar_open_after_raw_freeze_only": "PASS",
+    "watchdog_timeout_terminal_receipt": "PASS"
+  }
+}

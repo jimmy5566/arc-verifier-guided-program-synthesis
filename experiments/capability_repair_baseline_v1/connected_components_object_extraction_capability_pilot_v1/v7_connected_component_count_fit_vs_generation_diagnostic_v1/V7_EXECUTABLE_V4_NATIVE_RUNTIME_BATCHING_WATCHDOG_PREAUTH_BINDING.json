@@ -1,0 +1,130 @@
+{
+  "authorization": {
+    "existing_authorization_reusable": false,
+    "fresh_one_shot_gpu_authorization_required": true,
+    "fresh_source_publication_required": true,
+    "v3_binding_not_authorized_or_reusable": true
+  },
+  "batch1_subset": {
+    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/v7_connected_component_count_fit_vs_generation_diagnostic_v1/V7_BATCH1_SUBSET_MANIFEST_V1.json",
+    "records": 12,
+    "sha256": "d4865411640039a07b5241c17f09f48d7195f6447926c8f041c5ebf56559096e"
+  },
+  "checkpoint": {
+    "adapter_model_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000/adapter_model.safetensors",
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "name": "V7"
+  },
+  "cohort": {
+    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/connected_component_count_fit_vs_generation_diagnostic_v1/COHORT_PROMPT_TASKS_V1.json",
+    "records": 72,
+    "sha256": "1c04736b3866aa754513142d751339abdd592ee2da11fb500948fe608273e9c6"
+  },
+  "cpu_validation": {
+    "path": "experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\v7_connected_component_count_fit_vs_generation_diagnostic_v1\\V7_EXECUTABLE_V4_CPU_VALIDATION.json",
+    "sha256": "fc647ba581866ace3177d84e65d37c3635ceb3ddfb8749f17d8f2ed3a1d25dda"
+  },
+  "execution": {
+    "backward_calls": 0,
+    "batch1_generations": 12,
+    "batch1_teacher_forced_forwards": 12,
+    "checkpoint": "V7",
+    "detached_jobs": 1,
+    "direct_model_child_execution": "REFUSED_WITHOUT_ARC2_V7_WATCHDOG_CHILD",
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "fallback_only": "CUDA_OOM",
+    "fresh_generations": 72,
+    "fresh_nonce": "9e4ce83d93464c2b85f9232d14a3c5b9",
+    "hard_cap_seconds": 3600,
+    "mandatory_watchdog": true,
+    "max_new_tokens": 192,
+    "optimizer_steps": 0,
+    "production_entrypoint": "scripts/v7_component_diagnostic_executable_v2.py --launch",
+    "remote_output_root": "/workspace/arc2/v7_component_diagnostic_v4/run_001_9e4ce83d93464c2b85f9232d14a3c5b9",
+    "requested_batch_size": 32,
+    "retry": false,
+    "teacher_forced_forwards": 72,
+    "watchdog_child_mode": "--execute-claimed",
+    "watchdog_parent_must_create": "WATCHDOG_INVOCATION.json"
+  },
+  "execution_source_commit": "66821bb85162705baab159616e1c0d7b5c3c7baa",
+  "hard_cap": {
+    "enforcement": "detached watchdog process kills child and atomically writes timeout terminal receipt",
+    "seconds": 3600
+  },
+  "preclaim_required": [
+    "exact remote checkout",
+    "remote source hashes",
+    "runtime dependency gate",
+    "adapter and tokenizer byte hashes",
+    "sealed sidecar path/hash after raw freeze only",
+    "fresh output root",
+    "atomic receipt claim",
+    "native tokenizer config tree SHA256",
+    "native prompt-token parity preflight",
+    "physical Batch32 teacher-forward instrumentation",
+    "mandatory watchdog parent/child invocation"
+  ],
+  "protocol": {
+    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/v7_connected_component_count_fit_vs_generation_diagnostic_v1/CPU_ONLY_FROZEN_PROTOCOL.json",
+    "sha256": "243e33a9ce5fde33f0b04932853298ed6d5bd6cd5f5c2fe53b9329cb6f6c0325"
+  },
+  "protocol_id": "V7_CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1",
+  "protocol_sha256": "243e33a9ce5fde33f0b04932853298ed6d5bd6cd5f5c2fe53b9329cb6f6c0325",
+  "runtime": {
+    "adapter_dir": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+    "base_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "interpreter": "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+    "native_config_dir": "/workspace/arc2/configs/nvarc_native_846d0198",
+    "native_config_tree_sha256": "f2701b5c1458d29a4be62933ef7bcd910ad9ae75a671cb55341a85e43896a17b",
+    "native_token_contract": {
+      "eos_token_id": 15,
+      "num_beams": 1,
+      "pad_token_id": 13,
+      "padding": "LEFT_EXPLICIT"
+    }
+  },
+  "schema_version": 1,
+  "sidecar": {
+    "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\.arc2-local\\orchestration\\sealed_sidecars\\CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_CORRECT_TOKEN_SIDECAR.json",
+    "remote_path": "/workspace/arc2/sealed_sidecars/CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_CORRECT_TOKEN_SIDECAR.json",
+    "remote_path_must_be_verified_before_authorization_claim": true,
+    "remote_path_preflight_required": true,
+    "scorer_only": true,
+    "sha256": "ad5c97e0f54a30ba636714c1d5dbd671c25d826616896f5a9cbfd56af48d7950"
+  },
+  "source_hashes": {
+    "scripts/test_v7_component_diagnostic_executable_v2.py": "36eda8b71a46fe54507b457a8092542cfbd4e32ff2302a2f435230be79f9d47c",
+    "scripts/v7_component_diagnostic_executable_v2.py": "c7f57410a72aac7e2d94fcbe732bc6007354613078facf56a7914e8df7cd4956",
+    "src/inference/arc_native_io.py": "502a064f09743acc85643ebb8a9a95573832d8b3d6c51e79ccf94222dd4b89b3",
+    "src/inference/nvarc_native.py": "b1da3a1644e4bd176c64fb45bf30ce94362a0b479c32507755f009e69f18af87"
+  },
+  "status": "CPU_VALIDATED_V4_NATIVE_RUNTIME_BATCHING_WATCHDOG_FRESH_AUTHORIZATION_REQUIRED",
+  "successor_of": {
+    "binding_path": "experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\v7_connected_component_count_fit_vs_generation_diagnostic_v1\\V7_EXECUTABLE_V3_SUCCESSOR_PREAUTH_BINDING.json",
+    "binding_sha256": "1ad76442259f1c2a34c573226908ad9bb0bbe336b154674bc8a3d138a027d0f7",
+    "decision": "REQUIRE_CHANGES",
+    "review_response": "orchestration/director/responses/V7_EXECUTABLE_V3_FRESH_AUTHORIZATION_BRIEF_RESPONSE.json"
+  },
+  "teacher_forced_tolerance": {
+    "margin_abs_delta_max": 0.02,
+    "nll_abs_delta_max": 0.005,
+    "rank_abs_delta_max": 0,
+    "top_count_delta_max": 0
+  },
+  "tokenizer": {
+    "files": {
+      "special_tokens_map.json": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+      "tokenizer.json": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+      "tokenizer_config.json": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+      "vocab.json": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+    },
+    "runtime_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139"
+  }
+}
