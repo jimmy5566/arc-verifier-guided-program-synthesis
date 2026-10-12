@@ -20,3 +20,12 @@ def test_fresh_output_and_frozen_raw_scorer_boundary():
   raw=output/'V7_RAW.jsonl';raw.write_text(json.dumps({'record_id':'OOD:0','split':'OOD','parser_valid':True,'parsed_grid':[[1]],'generated_token_ids':[1]})+'\n'); fr={'status':'COMPLETE_RAW_FROZEN_NO_TARGETS','targets_accessed':False,'raw_sha256':{'V7':sha(raw)}};(output/'RAW_FREEZE_RECEIPT.json').write_text(json.dumps(fr)); r=scorer.score(p,output);assert r['by_artifact']['V7']['by_split']['OOD']['parser_valid']==1
 
 
+
+def test_protected_and_trainfit_target_reconstruction_after_freeze():
+ with tempfile.TemporaryDirectory() as d:
+  b=freeze.freeze(Path(d)/'binding'); p=Path(d)/'binding/EXECUTION_BINDING_PREAUTH_V2.json'; output=Path(d)/'output';output.mkdir()
+  base=ROOT/'experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1'
+  prot=json.loads((base/'measurement_contract_v1/PROTECTED_CAPABILITY_INPUT_PROMPTS.json').read_text())['records'][0]
+  raw=output/'V7_RAW.jsonl';raw.write_text(json.dumps({'record_id':'PROTECTED:'+prot['protected_id'],'split':'PROTECTED','parser_valid':False,'parsed_grid':None,'generated_token_ids':[]})+'\n')
+  fr={'status':'COMPLETE_RAW_FROZEN_NO_TARGETS','targets_accessed':False,'raw_sha256':{'V7':sha(raw)}};(output/'RAW_FREEZE_RECEIPT.json').write_text(json.dumps(fr))
+  r=scorer.score(p,output);assert r['by_artifact']['V7']['by_split']['PROTECTED']['exact']==0
