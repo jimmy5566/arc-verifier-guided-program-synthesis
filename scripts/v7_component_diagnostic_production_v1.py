@@ -17,14 +17,17 @@ class Raw: record_id:str; prompt_sha256:str; token_ids:list[int]; parsed:bool; b
 def worker(records,generator):
  """Production generation boundary: no sidecar parameter is accepted."""
  require(len(records)==RAW_REQUIRED and len({x['cohort_record_id'] for x in records})==RAW_REQUIRED,'COHORT_IDENTITY')
- raw=[]
- for size in (32,):
-  for start in range(0,len(records),size):
-   rows=records[start:start+size]; got=generator.generate(rows,batch_size=size,max_new_tokens=192)
+ raw=[];events=[];size=32;start=0
+ while start<len(records):
+   rows=records[start:start+size]
+   try: got=generator.generate(rows,batch_size=size,max_new_tokens=192)
+   except RuntimeError as exc:
+    if 'out of memory' not in str(exc).lower() or size==1: raise
+    nxt={32:16,16:8,8:4,4:1}[size];events.append({'from':size,'to':nxt,'reason':'CUDA_OOM'});size=nxt;continue
    require(len(got)==len(rows),'GENERATION_COMPLETENESS')
-   raw += [Raw(x['cohort_record_id'],x['prompt_task_sha256'],list(y['token_ids']),bool(y['parsed']),size) for x,y in zip(rows,got,strict=True)]
+   raw += [Raw(x['cohort_record_id'],x['prompt_task_sha256'],list(y['token_ids']),bool(y['parsed']),size) for x,y in zip(rows,got,strict=True)];start+=len(rows)
  require(len(raw)==RAW_REQUIRED and len({x.record_id for x in raw})==RAW_REQUIRED,'RAW_COMPLETENESS')
- return {'status':'RAW_FROZEN','raw':raw,'raw_sha256':canon([x.__dict__ for x in raw]),'sidecar_accessed':False}
+ return {'status':'RAW_FROZEN','raw':raw,'raw_sha256':canon([x.__dict__ for x in raw]),'sidecar_accessed':False,'fallback_events':events}
 def scorer(raw_freeze,sidecar,model,b1_ids):
  """Scorer may open sidecar only after complete frozen raw evidence."""
  require(raw_freeze['status']=='RAW_FROZEN' and len(raw_freeze['raw'])==RAW_REQUIRED,'RAW_FREEZE_REQUIRED')
