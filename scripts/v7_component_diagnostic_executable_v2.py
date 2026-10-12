@@ -60,6 +60,11 @@ def require_sha(path, expected, code):
     require(sha_path(path) == expected, code)
 
 
+def bound_path(value):
+    path = Path(value)
+    return path if path.is_absolute() else ROOT / path
+
+
 def exclusive_claim(path, payload):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -88,7 +93,7 @@ def validate_binding(binding_path):
     for label in ("protocol", "cohort"):
         item = binding.get(label, {})
         require(item.get("path") and item.get("sha256"), "BINDING_" + label.upper() + "_MISSING")
-        require_sha(item["path"], item["sha256"], label.upper() + "_IDENTITY_MISMATCH")
+        require_sha(bound_path(item["path"]), item["sha256"], label.upper() + "_IDENTITY_MISMATCH")
     return binding
 
 
@@ -170,7 +175,7 @@ def _generate(records, runtime, max_new_tokens, deadline):
 
 def worker(binding, runtime, output_root, deadline):
     """Generate and freeze all raw output before this function returns."""
-    cohort = load_json(binding["cohort"]["path"])
+    cohort = load_json(bound_path(binding["cohort"]["path"]))
     records = cohort.get("records", cohort)
     require(isinstance(records, list) and len(records) == RAW_COUNT, "COHORT_CARDINALITY")
     require(len({row.get("cohort_record_id") for row in records}) == RAW_COUNT, "COHORT_DUPLICATE")
