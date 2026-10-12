@@ -10,8 +10,9 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 # Script entrypoints start with scripts/ on sys.path; runtime modules live in src/.
 import sys
-if str(ROOT/'src') not in sys.path:
- sys.path.insert(0,str(ROOT/'src'))
+for _import_root in (ROOT, ROOT/'src'):
+ if str(_import_root) not in sys.path:
+  sys.path.insert(0,str(_import_root))
 def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def canon(x): return json.dumps(x,sort_keys=True,separators=(',',':')).encode()
 def write(p,x):
