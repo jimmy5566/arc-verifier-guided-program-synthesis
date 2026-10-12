@@ -67,7 +67,9 @@ def execute(binding_path,output_root):
   row=dict(old[item['checkpoint']][item['prompt_task_sha256']]);
   if {'target_grid','target_token_ids','gold','dGold'} & set(row) or hashlib.sha256(json.dumps(row,sort_keys=True,separators=(',',':')).encode()).hexdigest()!=item['run_002_raw_record_sha256']: raise RuntimeError('REUSED_RAW_IDENTITY_MISMATCH')
   row.update({'checkpoint':item['checkpoint'],'cohort_record_id':item['cohort_record_id'],'provenance':'REUSE_IMMUTABLE_RUN_002_RAW'});imported.append(row)
- tasks=json.loads(Path(execution['missing_prompt_tasks_path']).read_text());by_key={(x['checkpoint'],x['cohort_record_id']):x for x in tasks};wanted={(x['checkpoint'],x['cohort_record_id']) for x in fresh}
+ tasks_document=json.loads(Path(execution['missing_prompt_tasks_path']).read_text());tasks=tasks_document.get('records',tasks_document) if isinstance(tasks_document,dict) else tasks_document
+ if not isinstance(tasks,list) or (isinstance(tasks_document,dict) and tasks_document.get('target_content_present') is not False): raise RuntimeError('MISSING_PROMPT_TARGET_BOUNDARY_INVALID')
+ by_key={(x['checkpoint'],x['cohort_record_id']):x for x in tasks};wanted={(x['checkpoint'],x['cohort_record_id']) for x in fresh}
  if set(by_key)!=wanted: raise RuntimeError('MISSING_PROMPT_SET_DIFFERENCE_INVALID')
  generated=[];events=[]
  for checkpoint in sorted({x['checkpoint'] for x in fresh}):
