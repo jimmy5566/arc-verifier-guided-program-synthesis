@@ -18,6 +18,8 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(ROOT / "src"))
 RAW_COUNT = 72
 B1_COUNT = 12
 LADDER = (32, 16, 8, 4, 1)
@@ -29,6 +31,18 @@ def canonical(value):
 
 def sha_path(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def tree_sha256(path):
+    root = Path(path)
+    require(root.is_dir(), "NATIVE_CONFIG_DIRECTORY_MISSING")
+    digest = hashlib.sha256()
+    files = sorted(item for item in root.rglob("*") if item.is_file())
+    require(bool(files), "NATIVE_CONFIG_DIRECTORY_EMPTY")
+    for item in files:
+        digest.update(item.relative_to(root).as_posix().encode("utf-8") + b"\0")
+        digest.update(hashlib.sha256(item.read_bytes()).digest())
+    return digest.hexdigest()
 
 
 def write_json(path, value):
@@ -91,6 +105,11 @@ def validate_binding(binding_path):
     require(subset.get("path") and subset.get("sha256"), "BATCH1_SUBSET_BINDING_MISSING")
     require_sha(bound_path(subset["path"]), subset["sha256"], "BATCH1_SUBSET_IDENTITY_MISMATCH")
     require(isinstance(binding.get("tokenizer"), dict) and binding["tokenizer"].get("runtime_path") and binding["tokenizer"].get("files"), "TOKENIZER_BINDING_MISSING")
+    runtime = binding.get("runtime", {})
+    require(runtime.get("native_config_dir") and runtime.get("native_config_tree_sha256"), "NATIVE_CONFIG_BINDING_MISSING")
+    require(tree_sha256(runtime["native_config_dir"]) == runtime["native_config_tree_sha256"], "NATIVE_CONFIG_IDENTITY_MISMATCH")
+    require(runtime.get("native_token_contract") == {"eos_token_id": 15, "pad_token_id": 13, "padding": "LEFT_EXPLICIT", "num_beams": 1}, "NATIVE_TOKEN_CONTRACT_BINDING")
+    require(execution.get("mandatory_watchdog") is True, "MANDATORY_WATCHDOG_BINDING")
     for relative, digest in binding.get("source_hashes", {}).items():
         require_sha(ROOT / relative, digest, "SOURCE_IDENTITY_MISMATCH:" + relative)
     for label in ("protocol", "cohort"):
@@ -266,7 +285,8 @@ def scorer(binding, runtime, raw, raw_receipt, output_root, deadline):
     receipt = {"status": "COMPLETE" if generation_gate["status"] == "PASS" and teacher_gate['status']=='PASS' else "INVALID_NOT_INTERPRETABLE",
                "records": RAW_COUNT, "teacher_forced_forwards": RAW_COUNT, "batch1_teacher_forced_forwards": B1_COUNT,
                 "batch1_generations": B1_COUNT, "batch1_generation_gate": generation_gate, "batch1_teacher_forced_gate":teacher_gate,"optimizer_steps": 0, "backward_calls": 0,
-               "metrics_sha256": sha_path(Path(output_root) / "SCORED_METRICS.jsonl"), "target_token_ids_persisted": False}
+               "metrics_sha256": sha_path(Path(output_root) / "SCORED_METRICS.jsonl"), "target_token_ids_persisted": False,
+               "teacher_forward_events": list(getattr(runtime, "teacher_forward_events", []))}
     write_json(Path(output_root) / "TERMINAL_RECEIPT.json", receipt)
     return receipt
 
@@ -297,104 +317,239 @@ def launch(binding_path, runtime, authorization_path, output_root, control_root)
         write_json(control_root / "TERMINAL_RECEIPT.json", terminal)
         raise
 
-def enforce_hard_cap(command, terminal_path, seconds=3600):
-    """Process-level boundary used by the detached production CLI wrapper."""
-    child=subprocess.Popen(command, start_new_session=True)
+def enforce_hard_cap(command, terminal_path, seconds=3600, *, environment=None):
+    """Run exactly one child at the production wall-clock boundary.
+
+    The parent owns timeout receipts.  A timed-out model child is killed as a
+    process group where the platform supports it, so it cannot continue after
+    a timeout terminal receipt has become durable.
+    """
+    terminal_path = Path(terminal_path)
+    child = subprocess.Popen(command, start_new_session=True, env=environment)
     try:
-        returncode=child.wait(timeout=seconds)
+        returncode = child.wait(timeout=seconds)
     except subprocess.TimeoutExpired:
-        child.kill(); child.wait()
-        write_json(terminal_path, {'status':'FAILED_NO_UPDATE_TIMEOUT','hard_cap_seconds':seconds,'optimizer_steps':0,'backward_calls':0})
+        try:
+            if os.name == "posix":
+                import signal
+                os.killpg(child.pid, signal.SIGKILL)
+            else:
+                child.kill()
+        finally:
+            child.wait()
+        if not terminal_path.exists():
+            write_json(terminal_path, {"status": "FAILED_NO_UPDATE_TIMEOUT", "hard_cap_seconds": seconds,
+                                       "optimizer_steps": 0, "backward_calls": 0,
+                                       "targets_accessed": False})
         return None
-    if returncode:
-        write_json(terminal_path, {'status':'FAILED_NO_UPDATE_CHILD_EXIT','returncode':returncode,'optimizer_steps':0,'backward_calls':0})
+    if returncode and not terminal_path.exists():
+        write_json(terminal_path, {"status": "FAILED_NO_UPDATE_CHILD_EXIT", "returncode": returncode,
+                                   "optimizer_steps": 0, "backward_calls": 0,
+                                   "targets_accessed": False})
     return returncode
 
 
+def native_prompt_messages(record):
+    """Return the established NVARC message contract for one target-free row."""
+    task = record.get("task")
+    require(isinstance(task, dict) and isinstance(task.get("train"), list) and isinstance(task.get("test"), list)
+            and len(task["test"]) == 1 and "output" not in task["test"][0], "TARGET_FREE_PROMPT_TASK_REQUIRED")
+    from types import SimpleNamespace
+    from inference.nvarc_native import native_messages
+    def grid(value): return SimpleNamespace(values=value)
+    def pair(value): return SimpleNamespace(input=grid(value["input"]), output=grid(value["output"]))
+    native_task = SimpleNamespace(train=[pair(item) for item in task["train"]],
+                                  test=[SimpleNamespace(input=grid(task["test"][0]["input"]))])
+    return native_messages(native_task, 0)
+
+
+def native_prompt_token_ids(tokenizer, record):
+    """Tokenize only through the checkpoint-native chat template."""
+    encoded = tokenizer.apply_chat_template(native_prompt_messages(record), add_generation_prompt=True,
+                                            tokenize=True, return_tensors="pt", return_dict=True)
+    ids = encoded["input_ids"][0]
+    return [int(value) for value in ids.tolist()]
+
+
 class RealRuntime:
-    """Lazy RunPod implementation.  It is never instantiated by CPU validation."""
-    def __init__(self, runtime_config): self.config, self.model, self.tokenizer = runtime_config, None, None
+    """Lazy RunPod implementation using the established NVARC runtime contract.
+
+    This class is never instantiated by CPU validation.  Both greedy
+    generation and teacher forcing build target-free native prompts using the
+    checkpoint-native tokenizer; sidecar token IDs enter only after raw freeze.
+    """
+    def __init__(self, runtime_config):
+        self.config, self.model, self.tokenizer = runtime_config, None, None
+        self.teacher_forward_events = []
+
     def check_dependencies(self):
         import torch, transformers, peft  # noqa: F401
         require(torch.cuda.is_available(), "CUDA_REQUIRED")
-    def verify_adapter(self, path, digest): require_sha(path, digest, "V7_ADAPTER_IDENTITY_MISMATCH")
+
+    def verify_adapter(self, path, digest):
+        require_sha(path, digest, "V7_ADAPTER_IDENTITY_MISMATCH")
+
     def verify_tokenizer(self, descriptor):
         root = Path(descriptor["runtime_path"])
         for name, digest in descriptor["files"].items():
             require_sha(root / name, digest, "TOKENIZER_IDENTITY_MISMATCH:" + name)
+
     def _load(self):
-        if self.model is not None: return
+        if self.model is not None:
+            return
         import torch
         from peft import PeftModel
-        from transformers import AutoModelForCausalLM, AutoTokenizer
-        base = AutoModelForCausalLM.from_pretrained(self.config["base_path"], local_files_only=True, torch_dtype=torch.bfloat16, low_cpu_mem_usage=True).to("cuda:0")
+        from transformers import AutoModelForCausalLM
+        from inference.nvarc_native import checkpoint_native_tokenizer
+        native_config = Path(self.config["native_config_dir"])
+        require(native_config.is_dir(), "NATIVE_TOKENIZER_CONFIG_MISSING")
+        self.tokenizer, metadata = checkpoint_native_tokenizer(Path(self.config["base_path"]), native_config)
+        contract = self.config.get("native_token_contract", {})
+        require(contract == {"eos_token_id": 15, "pad_token_id": 13, "padding": "LEFT_EXPLICIT", "num_beams": 1},
+                "NATIVE_TOKEN_CONTRACT_MISMATCH")
+        require(metadata["eos_token_id"] == 15 and metadata["pad_token_id"] == 13,
+                "NATIVE_TOKENIZER_SPECIAL_IDS")
+        base = AutoModelForCausalLM.from_pretrained(self.config["base_path"], local_files_only=True,
+                                                     trust_remote_code=False, torch_dtype=torch.bfloat16,
+                                                     low_cpu_mem_usage=True).to("cuda:0")
         self.model = PeftModel.from_pretrained(base, self.config["adapter_dir"], is_trainable=False).eval()
-        self.tokenizer = AutoTokenizer.from_pretrained(self.config["base_path"], local_files_only=True)
-    def _prompt(self, record):
-        """Build the native chat prompt only from the target-free cohort task."""
-        task = record.get("task")
-        require(isinstance(task, dict) and isinstance(task.get("train"), list) and isinstance(task.get("test"), list), "TARGET_FREE_PROMPT_TASK_REQUIRED")
-        def grid(value): return json.dumps(value, separators=(",", ":"))
-        messages = []
-        for pair in task["train"]:
-            messages.extend(({"role": "user", "content": grid(pair["input"])}, {"role": "assistant", "content": grid(pair["output"])}))
-        messages.append({"role": "user", "content": grid(task["test"][0]["input"])})
-        try:
-            return self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        except (AttributeError, TypeError):
-            return "\n".join(item["role"] + ":" + item["content"] for item in messages) + "\nassistant:"
+
+    def _prompt_ids(self, record):
+        self._load()
+        return native_prompt_token_ids(self.tokenizer, record)
+
     def generate(self, records, batch_size, max_new_tokens):
-        self._load(); import torch
-        prompts = [self._prompt(record) for record in records]
-        encoded = self.tokenizer(prompts, return_tensors="pt", padding=True).to("cuda:0")
-        with torch.inference_mode(): output = self.model.generate(**encoded, do_sample=False, max_new_tokens=max_new_tokens)
+        """Physical native-Greedy batch using explicit left padding and mask."""
+        self._load()
+        import torch
         from inference.nvarc_native import parse_native_grid
-        width = int(encoded.input_ids.shape[1])
+        require(len(records) <= batch_size and batch_size in LADDER, "GENERATION_BATCH_CONTRACT")
+        rows = [self._prompt_ids(record) for record in records]
+        width = max(map(len, rows))
+        ids = torch.full((len(rows), width), int(self.tokenizer.pad_token_id), dtype=torch.long)
+        attention = torch.zeros((len(rows), width), dtype=torch.long)
+        for index, row in enumerate(rows):
+            ids[index, width - len(row):] = torch.tensor(row, dtype=torch.long)
+            attention[index, width - len(row):] = 1
+        with torch.inference_mode():
+            generated = self.model.generate(input_ids=ids.to("cuda:0"), attention_mask=attention.to("cuda:0"),
+                                             do_sample=False, num_beams=1, use_cache=True,
+                                             max_new_tokens=max_new_tokens, eos_token_id=self.tokenizer.eos_token_id,
+                                             pad_token_id=self.tokenizer.pad_token_id)
         result = []
-        for row in output:
-            tokens = [int(x) for x in row[width:].tolist()]
-            parsed = parse_native_grid(self.tokenizer.decode(tokens, skip_special_tokens=False))
-            result.append({"generated_token_ids": tokens, "parsed_grid": parsed, "parser_valid": parsed is not None})
+        for row in generated:
+            suffix = row[width:].detach().cpu()
+            eos = (suffix == int(self.tokenizer.eos_token_id)).nonzero(as_tuple=False)
+            if len(eos):
+                suffix = suffix[:int(eos[0].item()) + 1]
+            else:
+                pad = (suffix == int(self.tokenizer.pad_token_id)).nonzero(as_tuple=False)
+                if len(pad):
+                    suffix = suffix[:int(pad[0].item())]
+            token_ids = [int(value) for value in suffix.tolist()]
+            parsed = parse_native_grid(self.tokenizer.decode(suffix, skip_special_tokens=True))
+            result.append({"generated_token_ids": token_ids, "parsed_grid": parsed, "parser_valid": parsed is not None})
         return result
+
     def teacher_forced(self, raw_rows, sidecar, batch_size):
-        self._load(); import torch
-        out = {}
-        for offset in range(0, len(raw_rows), batch_size):
-            for row in raw_rows[offset:offset + batch_size]:
-                prompt = self.tokenizer(self._prompt(row), add_special_tokens=False)["input_ids"]
-                target = sidecar[row["cohort_record_id"]]["target_token_ids"]
-                ids = torch.tensor([prompt + target], device="cuda:0")
-                with torch.inference_mode(): logits = self.model(input_ids=ids, use_cache=False).logits[0]
-                out[row["cohort_record_id"]] = [logits[len(prompt) - 1 + i].float().tolist() for i in range(len(target))]
-        return out
+        """Actual padded/masked forward batches; never a serial Batch1 loop."""
+        self._load()
+        import torch
+        require(batch_size in LADDER, "TEACHER_BATCH_CONTRACT")
+        materialized = [(row["cohort_record_id"], self._prompt_ids(row),
+                         [int(value) for value in sidecar[row["cohort_record_id"]]["target_token_ids"]])
+                        for row in raw_rows]
+        output, cursor, size = {}, 0, batch_size
+        while cursor < len(materialized):
+            batch = materialized[cursor:cursor + size]
+            sequences = [prompt + target for _key, prompt, target in batch]
+            width = max(map(len, sequences))
+            ids = torch.full((len(batch), width), int(self.tokenizer.pad_token_id), dtype=torch.long)
+            mask = torch.zeros((len(batch), width), dtype=torch.long)
+            positions = torch.zeros((len(batch), width), dtype=torch.long)
+            offsets = []
+            for index, sequence in enumerate(sequences):
+                offset = width - len(sequence); offsets.append(offset)
+                ids[index, offset:] = torch.tensor(sequence, dtype=torch.long)
+                mask[index, offset:] = 1
+                positions[index, offset:] = torch.arange(len(sequence), dtype=torch.long)
+            try:
+                with torch.inference_mode():
+                    logits = self.model(input_ids=ids.to("cuda:0"), attention_mask=mask.to("cuda:0"),
+                                        position_ids=positions.to("cuda:0"), use_cache=False).logits
+            except RuntimeError as exc:
+                if "out of memory" not in str(exc).lower() or size == 1:
+                    raise
+                next_size = LADDER[LADDER.index(size) + 1]
+                self.teacher_forward_events.append({"event": "OOM_FALLBACK", "from": size, "to": next_size,
+                                                    "reason": "CUDA_OOM"})
+                self.empty_cache(); size = next_size; continue
+            self.teacher_forward_events.append({"event": "PHYSICAL_TEACHER_FORWARD", "effective_batch_size": len(batch),
+                                                "requested_batch_size": batch_size, "records": [key for key, _p, _t in batch]})
+            for index, (key, prompt, target) in enumerate(batch):
+                start = offsets[index] + len(prompt) - 1
+                selected = logits[index, start:start + len(target)].float().detach().cpu()
+                require(int(selected.shape[0]) == len(target), "TEACHER_CAUSAL_ALIGNMENT")
+                output[key] = [[float(value) for value in vector] for vector in selected.tolist()]
+            cursor += len(batch)
+        return output
+
     def open_sidecar(self, descriptor):
         remote_path = descriptor.get("remote_path")
         require(isinstance(remote_path, str) and remote_path.startswith("/"), "REMOTE_SIDECAR_PATH_REQUIRED")
         require_sha(remote_path, descriptor["sha256"], "SIDECAR_IDENTITY_MISMATCH")
         rows = load_json(remote_path).get("records", [])
         return {row["cohort_record_id"]: row for row in rows}
+
     def decode_grid(self, token_ids):
+        self._load()
         from inference.nvarc_native import parse_native_grid
-        return parse_native_grid(self.tokenizer.decode(token_ids, skip_special_tokens=False))
+        return parse_native_grid(self.tokenizer.decode(token_ids, skip_special_tokens=True))
+
     def empty_cache(self):
-        import torch; torch.cuda.empty_cache()
+        import torch
+        torch.cuda.empty_cache()
+
+
+def production_child_command(args):
+    return [sys.executable, str(Path(__file__).resolve()), "--binding", str(args.binding),
+            "--authorization", str(args.authorization), "--output-root", str(args.output_root),
+            "--control-root", str(args.control_root), "--execute-claimed"]
 
 
 def main():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--binding", type=Path, required=True); parser.add_argument("--authorization", type=Path)
-    parser.add_argument("--output-root", type=Path); parser.add_argument("--control-root", type=Path); parser.add_argument("--launch", action="store_true"); parser.add_argument('--watch-command',nargs='+'); parser.add_argument('--hard-cap-seconds',type=int,default=3600)
+    parser.add_argument("--binding", type=Path, required=True)
+    parser.add_argument("--authorization", type=Path)
+    parser.add_argument("--output-root", type=Path)
+    parser.add_argument("--control-root", type=Path)
+    parser.add_argument("--launch", action="store_true")
+    parser.add_argument("--execute-claimed", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
-    if args.watch_command:
-        require(args.control_root is not None and args.hard_cap_seconds==3600,'WATCHDOG_CONTRACT')
-        code=enforce_hard_cap(args.watch_command,args.control_root/'TERMINAL_RECEIPT.json',args.hard_cap_seconds)
-        print(json.dumps({'status':'WATCHDOG_COMPLETE','returncode':code},sort_keys=True)); return
-    if not args.launch or not args.authorization or not args.output_root or not args.control_root:
+    if not args.authorization or not args.output_root or not args.control_root:
         raise SystemExit("REFUSE_UNAUTHORIZED_EXECUTION")
     binding = validate_binding(args.binding)
-    runtime = RealRuntime(binding["runtime"])
-    print(json.dumps(launch(args.binding, runtime, args.authorization, args.output_root, args.control_root), sort_keys=True))
+    require(binding["execution"].get("mandatory_watchdog") is True, "MANDATORY_WATCHDOG_BINDING")
+    if args.execute_claimed:
+        require(os.environ.get("ARC2_V7_WATCHDOG_CHILD") == "1", "DIRECT_CHILD_EXECUTION_REFUSED")
+        runtime = RealRuntime(binding["runtime"])
+        print(json.dumps(launch(args.binding, runtime, args.authorization, args.output_root, args.control_root), sort_keys=True))
+        return
+    if not args.launch:
+        raise SystemExit("REFUSE_UNAUTHORIZED_EXECUTION")
+    require(not args.output_root.exists(), "FRESH_OUTPUT_ROOT_REQUIRED")
+    require(not (args.control_root / "TERMINAL_RECEIPT.json").exists(), "DUPLICATE_TERMINAL_RECEIPT")
+    write_json(args.control_root / "WATCHDOG_INVOCATION.json", {
+        "status": "WATCHDOG_PARENT_STARTED", "binding_sha256": sha_path(args.binding),
+        "hard_cap_seconds": 3600, "child_mode": "--execute-claimed",
+    })
+    environment = os.environ.copy(); environment["ARC2_V7_WATCHDOG_CHILD"] = "1"
+    code = enforce_hard_cap(production_child_command(args), args.control_root / "TERMINAL_RECEIPT.json",
+                            seconds=3600, environment=environment)
+    if code != 0:
+        raise SystemExit(1)
 
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()
