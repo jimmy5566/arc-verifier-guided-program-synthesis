@@ -32,7 +32,9 @@
     "new_free_running_rows": 48,
     "ood_regeneration": false,
     "optimizer_steps": 0,
+    "prompt_token_ids_materializer": "scripts/materialize_connected_component_prompt_token_ids_v1.py",
     "prompt_token_ids_runtime_materialization_required": true,
+    "prompt_token_ids_source_document_sha256": "1c04736b3866aa754513142d751339abdd592ee2da11fb500948fe608273e9c6",
     "requested_batch_size": 32,
     "retry": false,
     "reused_rows": 168,
@@ -107,9 +109,20 @@
       "per_row_mean_margin_abs_delta_max": 0.02,
       "sequence_normalized_NLL_abs_delta_max": 0.005,
       "token_weighted_NLL_abs_delta_max": 0.005
+    },
+    "tokenizer_identity": {
+      "repository": "sorokin/qwen3_4b_grids15_sft139",
+      "revision": "Transformers/bfloat16/1",
+      "runtime_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+      "tokenizer_files": {
+        "special_tokens_map.json": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+        "tokenizer.json": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+        "tokenizer_config.json": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+        "vocab.json": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+      }
     }
   },
-  "execution_source_commit": "303e0c799dda760de78f6d98a3237280121ab8ea",
+  "execution_source_commit": "b39edb4a0c39f189856a1f9cfe8f4f0ad521958e",
   "forbidden": [
     "training",
     "optimizer",
@@ -127,6 +140,7 @@
   "runnable": {
     "input_builder": "scripts/prepare_connected_component_fit_generation_inputs_v1.py",
     "launcher": "scripts/launch_connected_component_fit_generation_diagnostic_v1.py",
+    "prompt_token_ids_materializer": "scripts/materialize_connected_component_prompt_token_ids_v1.py",
     "scorer": "scripts/score_connected_component_fit_generation_diagnostic_v1.py",
     "worker": "scripts/run_connected_component_fit_generation_diagnostic_v1.py"
   },
@@ -134,11 +148,12 @@
   "sidecar_sha256": "ad5c97e0f54a30ba636714c1d5dbd671c25d826616896f5a9cbfd56af48d7950",
   "source_hashes": {
     "scripts/connected_component_fit_generation_runtime_contract.py": "a38cb64385850c68f8f3013606dd726c514aae40606697c7e05fde45b51027d4",
-    "scripts/freeze_connected_component_fit_generation_execution_binding_v1.py": "3d4f67b43fdec8b3ca5caf2a40fda20e222aa9ae1d821e73d302230f37415d8a",
+    "scripts/freeze_connected_component_fit_generation_execution_binding_v1.py": "24bcb4c0b4c3b28616e9087b9cdb82c08cb4ab3125c19d731c583d459385984a",
     "scripts/launch_connected_component_fit_generation_diagnostic_v1.py": "604fb3ab93e6cf26873effc9d5ac902279d734c0bb61864d8d6e946286637d23",
+    "scripts/materialize_connected_component_prompt_token_ids_v1.py": "e9d892a7dc7f794e89b22c93b9e4ccbf9d25e85038bbe3683ddec2d6cfc8e5e9",
     "scripts/prepare_connected_component_fit_generation_inputs_v1.py": "8453f0292a012ff6617d9c4aeb7159ed0aa0fe6affd49ef5148c94a8e3aeae88",
     "scripts/run_connected_component_fit_generation_diagnostic_v1.py": "396357053e7c9818b5d62a98c1bfe34be76b3c43e0cb07fcefb4fdf738f3734b",
-    "scripts/score_connected_component_fit_generation_diagnostic_v1.py": "4c5f41dfb24c3e60c67cb2911679f23fe27d6a7bdc63ffc761b9ead3a6d4aaa8"
+    "scripts/score_connected_component_fit_generation_diagnostic_v1.py": "a0222299cb587f08dab4c9e4d9ed7d9a18204bc79d1d4b17c58548de28f94ce1"
   },
   "status": "CPU_REAL_INPUTS_FROZEN_RUNTIME_MATERIALIZATION_AND_OWNER_ONE_SHOT_AUTHORIZATION_REQUIRED"
 }
