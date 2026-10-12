@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from scripts.connected_component_fit_generation_runtime_contract import teacher_forced_layout,token_metric,aggregate_token_metrics,first_divergence,semantic_taxonomy,batch_gate,validate_sidecar,require_inventory_partition,validate_reuse
+from scripts.connected_component_run002_raw_manifest_v1 import verify_run002_raw_root
 import hashlib
 
 def self_test():
@@ -58,6 +59,9 @@ def execute(binding_path,output_root):
  for rel,digest in b.get('source_hashes',{}).items():
   if hashlib.sha256((ROOT/rel).read_bytes()).hexdigest()!=digest: raise RuntimeError('SOURCE_IDENTITY_MISMATCH:'+rel)
  inventory=json.loads(Path(execution['inventory_path']).read_text());reused,fresh=require_inventory_partition(inventory)
+ manifest_path=Path(execution['run_002_raw_manifest_path'])
+ if hashlib.sha256(manifest_path.read_bytes()).hexdigest()!=execution['run_002_raw_manifest_sha256']: raise RuntimeError('RUN_002_RAW_MANIFEST_IDENTITY_MISMATCH')
+ manifest=json.loads(manifest_path.read_text()); verify_run002_raw_root(manifest,Path(execution['run_002_raw_root']))
  out=Path(output_root)
  if out.exists(): raise RuntimeError('FRESH_OUTPUT_REQUIRED')
  old={}
