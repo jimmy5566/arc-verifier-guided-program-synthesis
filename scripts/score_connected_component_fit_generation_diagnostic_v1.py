@@ -48,7 +48,9 @@ def execute(binding_path,raw_root,output_root):
  side_path=Path(e['sidecar_path'])
  if _sha(side_path)!=e['sidecar_sha256']:raise RuntimeError('SIDECAR_IDENTITY_MISMATCH')
  inventory=json.loads(Path(e['inventory_path']).read_text());targets=validate_sidecar(json.loads(side_path.read_text()),inventory)
- prompts={x['cohort_record_id']:x for x in json.loads(Path(e['prompt_token_ids_path']).read_text())}
+ prompt_document=json.loads(Path(e['prompt_token_ids_path']).read_text()); prompt_records=prompt_document.get('records') if isinstance(prompt_document,dict) else prompt_document
+ if not isinstance(prompt_document,dict) or prompt_document.get('target_content_present') is not False or not isinstance(prompt_records,list): raise RuntimeError('PROMPT_TOKEN_IDS_TARGET_BOUNDARY_INVALID')
+ prompts={x['cohort_record_id']:x for x in prompt_records}
  raw={(x['checkpoint'],x['cohort_record_id']):x for x in _rows(raw_path)}
  if len(raw)!=216:raise RuntimeError('RAW_COMPLETENESS_INVALID')
  out=[];per_checkpoint={};b1_ids={row['cohort_record_id'] for row in e.get('teacher_forced_b1_cohort_rows',[]) or []}
