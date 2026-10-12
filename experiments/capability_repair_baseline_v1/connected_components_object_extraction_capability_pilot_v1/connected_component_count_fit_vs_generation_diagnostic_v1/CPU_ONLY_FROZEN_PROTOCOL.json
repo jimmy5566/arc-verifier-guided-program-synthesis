@@ -1,0 +1,168 @@
+{
+  "checkpoint_identities": {
+    "CONTROL_NARROW_STRUCTURE": {
+      "adapter_model_sha256": "4a5e621f22dc5eb3a3e3e7d2eab009559e276a2c20fd05675f2265ad23ce13e2",
+      "adapter_receipt_sha256": "91c5a5484938a81d8b6d6ae5bbe20fbeb5ec5f22c0e8c3a1eb75bcf7efcbb5df",
+      "optimizer_steps_historical": 96
+    },
+    "TREATMENT_STRUCTURE_DIVERSE": {
+      "adapter_model_sha256": "5dae97898461b6b618328154bfb4271199a57b6cec68e8e7bb90209002618978",
+      "adapter_receipt_sha256": "46b7aeff895fb391cd79ef412acaeca4132246c46d9b88e5dc0b95dddbddc654",
+      "optimizer_steps_historical": 96
+    },
+    "V7": {
+      "adapter_config_sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69",
+      "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+      "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+      "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+    }
+  },
+  "decision_rule": {
+    "FREE_RUNNING_SEQUENCE_FAILURE": "If Treatment has strong TRAIN teacher-forced ranking but poor native-Greedy exactness with early divergence or output-construction error, support a sequence-level or output-construction failure.",
+    "STRUCTURAL_GENERALIZATION_FAILURE": "If Treatment has strong TRAIN ranking and exactness but weak structural-OOD ranking and exactness, support a representation or structural-generalization failure.",
+    "TRAIN_RANKING_FAILURE": "If Treatment has poorer Connected Component Count TRAIN teacher-forced ranking, margin, or NLL than Control in the same direction as its existing exact-fit deficit, support insufficient effective fitting or optimization under the fixed diverse budget.",
+    "invalid": "Any checkpoint, cohort, target-token, prompt, decoder, completeness, batch1 sensitivity, or paired-support failure is INVALID_NOT_INTERPRETABLE and selects no training mechanism."
+  },
+  "execution_shape_and_budget": {
+    "backward_calls": 0,
+    "checkpoint_record_free_running_generations": 216,
+    "checkpoint_record_teacher_forced_forwards": 216,
+    "formula": "3 checkpoints * (24 TRAIN_FIT Connected Component Count + 48 structural OOD)",
+    "hard_cap_seconds": 10800,
+    "no_update_gpu_estimate": "Bounded at 3,600 seconds planned and 10,800 seconds hard cap; this is conservative because the proposed diagnostic has no optimizer, backward, or parameter updates but adds teacher-forced forwards.",
+    "optimizer_steps": 0,
+    "planning_estimate_seconds": 3600,
+    "reference": "RUN_002 raw generation froze 392 evaluations in 779.9362430069596 seconds, with two 96-step training arms also present.",
+    "training": false
+  },
+  "forbidden": [
+    "model loading during this CPU stage",
+    "GPU use during this CPU stage",
+    "gradient computation",
+    "optimizer construction",
+    "training",
+    "generation during this CPU stage",
+    "new target construction or opening",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "E05 targets",
+    "V4 targets",
+    "checkpoint promotion",
+    "RUN_002 retry"
+  ],
+  "fresh_execution_authorization_requirement": {
+    "must_bind_before_launch": [
+      "this protocol SHA256",
+      "a separately frozen execution binding and exact source commit",
+      "three checkpoint hashes above",
+      "24-record TRAIN metadata identity and 48-record OOD SHA256",
+      "exact pre-existing correct-token sidecar SHA256 and tokenizer identity",
+      "NATIVE_GREEDY decoder/max_new_tokens/batch policy",
+      "one detached job",
+      "retry=false",
+      "optimizer_steps=0",
+      "backward_calls=0",
+      "hard_cap_seconds=10800"
+    ],
+    "must_refuse_when": [
+      "the correct-token sidecar is absent or mismatched",
+      "any checkpoint/cohort/prompt/decoder identity differs",
+      "an existing output root, terminal receipt, or active matching job exists",
+      "a request adds training, gradient, target release, or a new cohort"
+    ],
+    "required": true,
+    "why": "RUN_002 one-shot authorization is consumed and non-transferable; this is a distinct GPU diagnostic."
+  },
+  "frozen_cohorts": {
+    "structural_ood": {
+      "records": 48,
+      "source_path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/OOD_INPUT_PROMPTS.json",
+      "source_sha256": "b50687c9d9493a3f2dc1ce6f8e369aa48915277b0818a71b22bec16a34f57a3b"
+    },
+    "train_fit_connected_component_count": {
+      "arm_counts": {
+        "CONTROL_NARROW_STRUCTURE": 12,
+        "TREATMENT_STRUCTURE_DIVERSE": 12
+      },
+      "metadata_identity_sha256": "8911ecad39d03e88c94d35e0877b0647042232114b41d4c2609ee27be2494520",
+      "records": 24,
+      "selection": "family == CONNECTED_COMPONENT_COUNT",
+      "source_path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/measurement_contract_v1/TRAIN_FIT_INPUT_PROMPTS.json",
+      "source_sha256": "708596c8715c5380903ab1af89852c32f05bb9176fb45cfd6c95f33e63dff981"
+    },
+    "unchanged_conditions": {
+      "checkpoints": "the three hash-bound identities above",
+      "decoder": "NATIVE_GREEDY",
+      "fallback_cause": "CUDA_OOM_ONLY",
+      "fallback_ladder": [
+        32,
+        16,
+        8,
+        4,
+        1
+      ],
+      "max_new_tokens": 192,
+      "no_new_cohorts": true,
+      "prompts": "exact input bytes from the named frozen cohorts",
+      "requested_batch_size": 32
+    }
+  },
+  "immutable_predecessor": {
+    "closure_receipt_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\.arc2-local\\orchestration\\closure_receipts\\CONNECTED_COMPONENTS_V7_RUN_002_CLOSURE.json",
+    "closure_receipt_sha256": "b9538c867ea97ba994a7d4a04c3942eb21d8c6973a746cd8936761392efbd83f",
+    "deterministic_score_sha256": "35751ac8d0264ef32f837fd6ad2c47382518cc17beb3164a8c9cb51786288d6d",
+    "native_greedy_raw_freeze_sha256": "fbd741dcfcd13e6b92fa6a70e98a8546b5244562319ef9e8283a0c5a3f9c1450",
+    "recovery_manifest_sha256": "a0c9cf99efb00a3a44f010b245c62ff10d498f8433549cea4401bda252e72f2a",
+    "run_002_binding_sha256": "457e50a9e21ea6ffc7dd535ab0f933c15989fcad9e6ea2602e1772c3a57ba354",
+    "run_002_execution_source_commit": "c5690f20dd4fab2b2caa65f3d5b39da9e6708a18"
+  },
+  "measurements": {
+    "free_running": {
+      "decoder": "the same NATIVE_GREEDY decoder and max_new_tokens=192",
+      "first_divergence": "first index at which generated token differs from the correct target token; if every shared token agrees and lengths differ, use shared-prefix length; otherwise null",
+      "frozen_native_greedy_correlation": "join exactly by checkpoint, cohort, and record ID to the existing RUN_002 raw prediction hashes and score outcome where that existing raw row exists; retain new raw token hashes for V7 TRAIN rows because no V7 TRAIN row exists in RUN_002"
+    },
+    "semantic_error_taxonomy": {
+      "categories": [
+        "CONNECTED_COMPONENT_COUNT",
+        "SELECTED_OBJECT_IDENTITY",
+        "GEOMETRY",
+        "COLOR",
+        "DIMENSIONS",
+        "PARSER_FAILURE",
+        "OUTPUT_CONSTRUCTION"
+      ],
+      "independent_annotation_required": true,
+      "method": "Use an independent deterministic semantic comparator after raw predictions are frozen. Record multi-label semantic axes plus exactly one exclusive primary code. PARSER_FAILURE is primary if unparsable; DIMENSIONS is primary for shape mismatch; otherwise choose the first present axis in CONNECTED_COMPONENT_COUNT, SELECTED_OBJECT_IDENTITY, GEOMETRY, COLOR, OUTPUT_CONSTRUCTION order. OUTPUT_CONSTRUCTION applies only when semantic selected-object/count/geometry/color axes agree but canonical output assembly differs.",
+      "target_release": "forbidden"
+    },
+    "teacher_forced": {
+      "margin": "logit(correct token) minus max logit(any incorrect token) at the same position",
+      "per_family_reports": [
+        "correct_token_rank_distribution",
+        "Top1_rate_rank_eq_1",
+        "Top2_rate_rank_le_2",
+        "mean_correct_token_margin",
+        "token_weighted_NLL",
+        "sequence_normalized_NLL"
+      ],
+      "selection_prohibited": true,
+      "sequence_normalized_NLL": "mean over records of [sum(-log p(correct token)) / correct-token-count]",
+      "token_weighted_NLL": "sum(-log p(correct token)) / all supervised correct tokens in the family",
+      "unit": "each correct target token at its fixed prefix under one causal forward"
+    }
+  },
+  "protocol_id": "CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1",
+  "schema_version": 1,
+  "scope": "One no-optimizer-update diagnostic. It measures fixed V7, Control, and Treatment only; it does not retry RUN_002 or introduce a training variant.",
+  "status": "CPU_ONLY_FROZEN_PROSPECTIVE_PROTOCOL_PENDING_DIRECTOR_REVIEW",
+  "target_boundary": {
+    "cpu_stage_target_access": false,
+    "current_status": "EXACT_PREEXISTING_CORRECT_TOKEN_SIDECAR_NOT_YET_BOUND; GPU LAUNCH MUST FAIL CLOSED UNTIL IT IS",
+    "no_new_target_set": true,
+    "ood_oracle_scorer_contract_path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/measurement_contract_v1/ORACLE_AND_SCORER_CONTRACT.json",
+    "ood_oracle_scorer_contract_sha256": "f8025a7533159127a6c2852d1971870232ddf429567f6ba3a201a42bcad06c40",
+    "runtime_requirement": "Before any teacher-forced forward, a pre-existing exact correct-token sidecar for the same 24+48 cohort must be SHA-bound and match the frozen tokenizer serialization. No sidecar content, target grids, or target tokens are emitted in this protocol."
+  }
+}

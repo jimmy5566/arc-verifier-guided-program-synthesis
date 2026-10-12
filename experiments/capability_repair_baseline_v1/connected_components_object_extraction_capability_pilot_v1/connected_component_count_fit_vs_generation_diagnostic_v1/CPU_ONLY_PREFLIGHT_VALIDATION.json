@@ -1,0 +1,28 @@
+{
+  "blocking_before_any_gpu": "A hash-bound pre-existing correct-token sidecar and a fresh binding-specific one-shot authorization are required.",
+  "checks": {
+    "fresh_authorization_and_sidecar_fail_closed_rule": "PASS",
+    "negative_closure_do_not_promote": "PASS",
+    "no_model_import_or_gpu_or_generation": "PASS",
+    "no_target_content_opened_or_written": "PASS",
+    "recovered_raw_terminal_score_and_adapter_receipts": "PASS",
+    "run_002_binding": "PASS",
+    "structural_ood_cohort_48_input_only": "PASS",
+    "train_connected_component_cohort_24_metadata_only": "PASS"
+  },
+  "observations": {
+    "forbidden_targets_accessed": false,
+    "generation_started": false,
+    "gpu_used": false,
+    "gradients_computed": false,
+    "model_loaded": false,
+    "new_targets_opened": false,
+    "optimizer_constructed": false,
+    "preexisting_correct_token_sidecar_bound": false,
+    "training_started": false
+  },
+  "protocol_id": "CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1",
+  "protocol_sha256": "718b4e1b525fa5672d9db2ba78ea97458d02f464cce9fa618315ba31f9a20d49",
+  "schema_version": 1,
+  "status": "PASS_CPU_ONLY_FROZEN_PROTOCOL_VALIDATION"
+}

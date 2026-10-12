@@ -1,0 +1,95 @@
+{
+  "batch_sensitivity": {
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "fallback_only": "CUDA_OOM",
+    "new_free_running_batch1_generations": 12,
+    "predeclared_rank_top1_top2_margin_NLL_parser_scorer_aggregate_tolerances": true,
+    "requested_batch": 32,
+    "teacher_forced_batch1_forwards": 36
+  },
+  "brief_type": "DIRECTOR_FINAL_SUCCESSOR_PRELAUNCH_REVIEW_CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1",
+  "checkpoint_adapter_model_sha256": {
+    "CONTROL_NARROW_STRUCTURE": "4a5e621f22dc5eb3a3e3e7d2eab009559e276a2c20fd05675f2265ad23ce13e2",
+    "TREATMENT_STRUCTURE_DIVERSE": "5dae97898461b6b618328154bfb4271199a57b6cec68e8e7bb90209002618978",
+    "V7": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+  },
+  "cpu_validation": {
+    "path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\SUCCESSOR_CPU_ONLY_VALIDATION.json",
+    "sha256": "f42323580e93acfdd9d1b0d3908c383c74e8389e03a5a51b5224fcc0dd1d725e",
+    "status": "PASS_CPU_ONLY_SUCCESSOR_VALIDATION"
+  },
+  "request": "Review this corrected successor only. If scientifically acceptable, issue a specific fresh unconsumed one-shot GPU authorization bound to the successor protocol, sealed sidecar, reuse inventory, exact source identity, three checkpoint hashes, one detached job, retry=false, zero optimizer/backward, and hard cap 10800. This brief does not request a launch.",
+  "reuse_inventory": {
+    "new_free_running_rows": 48,
+    "new_rows": "TRAIN_FIT only; OOD regeneration prohibited",
+    "path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\RUN_002_REUSE_AND_MISSING_ROW_INVENTORY.json",
+    "required_set_difference": 48,
+    "reused_rows": 168,
+    "sha256": "b0cc5b45adffcc618fd622786e14dfe3fdbe6aec20222268ba1d694741793d95"
+  },
+  "reviewed_response_sha256": "7028f57b027cd05d98087880c33ee337b1909e81395e3d69df1e400e55e50852",
+  "revised_budget": {
+    "Batch1_new_free_running_generations": 12,
+    "Batch1_teacher_forced_forwards": 36,
+    "detached_jobs": 1,
+    "hard_cap_seconds": 10800,
+    "planning_estimate_seconds": 3600,
+    "primary_new_free_running_generations": 48,
+    "primary_teacher_forced_forwards": 216,
+    "retry": false,
+    "total_model_operations": 312
+  },
+  "schema_version": 1,
+  "sealed_correct_token_sidecar": {
+    "boundary": "scorer-only; absent from prompts and target-blind generation; no target grids in this brief",
+    "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\.arc2-local\\orchestration\\sealed_sidecars\\CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_CORRECT_TOKEN_SIDECAR.json",
+    "records": 72,
+    "sha256": "ad5c97e0f54a30ba636714c1d5dbd671c25d826616896f5a9cbfd56af48d7950"
+  },
+  "source_identity": {
+    "freezer_source_commit": "ea028b8b812f4c5abb615ca5de985d28f45f797d",
+    "freezer_source_sha256": "0ff81346f2592d5e5419fe4b1bc61db0da98c8da57297fb0644f2c4bf705b3a5",
+    "predecessor_protocol_sha256": "718b4e1b525fa5672d9db2ba78ea97458d02f464cce9fa618315ba31f9a20d49",
+    "run_002_binding_sha256": "457e50a9e21ea6ffc7dd535ab0f933c15989fcad9e6ea2602e1772c3a57ba354",
+    "run_002_execution_source_commit": "c5690f20dd4fab2b2caa65f3d5b39da9e6708a18"
+  },
+  "status": "REVIEW_REQUIRED_NO_GPU_AUTHORIZATION_GRANTED",
+  "successor_protocol": {
+    "path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\SUCCESSOR_CPU_ONLY_FROZEN_PROTOCOL.json",
+    "sha256": "f556bd96801f7ece58c51a5ae8697f42638b337d629942b7d3c493b1be750452"
+  },
+  "tokenizer_identity": {
+    "distribution": "KAGGLE",
+    "repository": "sorokin/qwen3_4b_grids15_sft139",
+    "revision": "Transformers/bfloat16/1",
+    "special_tokens_map.json_sha256": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+    "tokenizer.json_sha256": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+    "tokenizer_config.json_sha256": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+    "vocab.json_sha256": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+  },
+  "unchanged_science": {
+    "backward_calls": 0,
+    "cohorts": "24 Connected Component Count TRAIN_FIT plus 48 structural OOD",
+    "decoder": "NATIVE_GREEDY",
+    "max_new_tokens": 192,
+    "metrics": "rank, Top1/Top2, margin, token-weighted and sequence-normalized NLL; existing semantic taxonomy and decision rules",
+    "no_new_cohort": true,
+    "no_promotion": true,
+    "no_run_002_retry": true,
+    "optimizer_steps": 0,
+    "sealed_material_forbidden": [
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT",
+      "E05",
+      "V4"
+    ],
+    "training": false
+  }
+}

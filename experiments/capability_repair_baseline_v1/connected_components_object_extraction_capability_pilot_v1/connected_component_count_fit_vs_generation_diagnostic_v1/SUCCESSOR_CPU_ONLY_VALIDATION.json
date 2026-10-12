@@ -1,0 +1,22 @@
+{
+  "checks": {
+    "B1_contract": "FROZEN",
+    "OOD_regeneration": "PROHIBITED_AND_NOT_SCHEDULED",
+    "RUN_002_exact_reuse_rows": 168,
+    "RUN_002_missing_rows": 48,
+    "backward_calls": 0,
+    "correct_token_encode_decode_and_grid_roundtrip_72": "PASS",
+    "generation_started": false,
+    "gpu_used": false,
+    "model_loaded": false,
+    "optimizer_constructed": false,
+    "oracle_prompt_reconstruction_72": "PASS",
+    "sealed_sidecar_has_no_grid_text_field": "PASS"
+  },
+  "inventory_sha256": "b0cc5b45adffcc618fd622786e14dfe3fdbe6aec20222268ba1d694741793d95",
+  "protocol_id": "CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_SUCCESSOR",
+  "protocol_sha256": "f556bd96801f7ece58c51a5ae8697f42638b337d629942b7d3c493b1be750452",
+  "schema_version": 1,
+  "sidecar_sha256": "ad5c97e0f54a30ba636714c1d5dbd671c25d826616896f5a9cbfd56af48d7950",
+  "status": "PASS_CPU_ONLY_SUCCESSOR_VALIDATION"
+}
