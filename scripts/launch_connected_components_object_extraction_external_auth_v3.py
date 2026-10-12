@@ -24,11 +24,18 @@ def claim(receipt_path,binding_path,output):
  except FileExistsError: fail('RECEIPT_ALREADY_CLAIMED')
  with os.fdopen(fd,'wb') as f:f.write(canon({'binding_sha256':sha(binding_path),'output_root':str(output).replace('\\','/'),'claimed_at_unix':time.time()})+b'\n')
  return marker
+def control_root(receipt_path,output):
+ return receipt_path.parent/(output.name+'.control')
+def launch(binding_path,receipt_path,output):
+ b,r=validate(binding_path,receipt_path,output);marker=claim(receipt_path,binding_path,output)
+ control=control_root(receipt_path,output);control.mkdir(parents=True,exist_ok=False)
+ write(control/'LAUNCH_RECEIPT.json',{'status':'DETACHED_LAUNCHED','binding_sha256':sha(binding_path),'authorization_payload_sha256':r['payload_sha256'],'claim_marker':str(marker),'output_root':str(output).replace('\\','/'),'targets_accessed':False})
+ with (control/'WORKER.log').open('wb') as log: child=subprocess.Popen([sys.executable,str(ROOT/b['worker_path']),'--binding',str(binding_path),'--output-root',str(output),'--execute'],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+ write(control/'REMOTE_JOB.json',{'pid':child.pid,'detached':True,'status':'RUNNING','binding_sha256':sha(binding_path),'output_root':str(output).replace('\\','/')})
+ return control,child.pid
 def main():
  a=argparse.ArgumentParser();a.add_argument('--binding',type=Path,required=True);a.add_argument('--authorization-receipt',type=Path,required=True);a.add_argument('--output-root',type=Path,required=True);a.add_argument('--preflight',action='store_true');a.add_argument('--launch',action='store_true');z=a.parse_args();b,r=validate(z.binding,z.authorization_receipt,z.output_root)
  if z.preflight: print(json.dumps({'status':'PASS_EXTERNAL_AUTH_CPU_PREFLIGHT','gpu_used':False,'model_loaded':False,'optimizer_constructed':False,'targets_accessed':False},sort_keys=True));return
  if not z.launch: raise SystemExit('choose --preflight or --launch')
- marker=claim(z.authorization_receipt,z.binding,z.output_root);z.output_root.mkdir(parents=True);write(z.output_root/'LAUNCH_RECEIPT.json',{'status':'DETACHED_LAUNCHED','binding_sha256':sha(z.binding),'authorization_payload_sha256':r['payload_sha256'],'claim_marker':str(marker),'targets_accessed':False})
- with (z.output_root/'WORKER.log').open('wb') as log: child=subprocess.Popen([sys.executable,str(ROOT/b['worker_path']),'--binding',str(z.binding),'--output-root',str(z.output_root),'--execute'],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
- write(z.output_root/'REMOTE_JOB.json',{'pid':child.pid,'detached':True,'status':'RUNNING','binding_sha256':sha(z.binding)})
+ launch(z.binding,z.authorization_receipt,z.output_root)
 if __name__=='__main__':main()

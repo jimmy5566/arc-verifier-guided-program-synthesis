@@ -103,13 +103,15 @@ def _generate(model,torch,manifest,items,binding,out,deadline,tag,force_batch_si
  return sha(path)
 
 def execute(binding_path,output):
- b=preflight(binding_path,output,require_fresh=True);started=time.monotonic();output.mkdir();deadline=started+b['runtime']['combined_cap_seconds'];write(output/'PREFLIGHT_RECEIPT.json',{'status':'PASS_CPU_TO_GPU_GATE','model_loaded':False,'targets_accessed':False})
+ started=time.monotonic()
  try:
+  b=preflight(binding_path,output,require_fresh=True);output.mkdir();deadline=started+b['runtime']['combined_cap_seconds'];write(output/'PREFLIGHT_RECEIPT.json',{'status':'PASS_CPU_TO_GPU_GATE','model_loaded':False,'targets_accessed':False})
   v7,torch,manifest=_load_v7(b,trainable=False); v7_items=_datasets(b); raw={'V7':_generate(v7,torch,manifest,v7_items,b,output,deadline,'V7'),'V7_B1':_generate(v7,torch,manifest,v7_items[:int(b['evaluation']['batch1_gate_records'])],b,output,deadline,'V7_B1',force_batch_size=1)};del v7
   for arm,file in [('CONTROL_NARROW_STRUCTURE','CONTROL_SCHEDULE.json'),('TREATMENT_STRUCTURE_DIVERSE','TREATMENT_SCHEDULE.json')]:
    armroot=output/arm;model,torch,manifest,adapter=_train(b,arm,ROOT/'experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1'/file,armroot,deadline);arm_items=_datasets(b,arm);raw[arm]=_generate(model,torch,manifest,arm_items,b,output,deadline,arm);raw[arm+'_B1']=_generate(model,torch,manifest,arm_items[:int(b['evaluation']['batch1_gate_records'])],b,output,deadline,arm+'_B1',force_batch_size=1);write(armroot/'ADAPTER_RECEIPT.json',{'adapter_sha256':adapter,'optimizer_steps':96});del model
   write(output/'RAW_FREEZE_RECEIPT.json',{'status':'COMPLETE_RAW_FROZEN_NO_TARGETS','raw_sha256':raw,'targets_accessed':False,'wall_seconds':time.monotonic()-started});write(output/'TERMINAL_RECEIPT.json',{'status':'COMPLETE_PENDING_SEPARATE_SCORE','raw_sha256':raw,'targets_accessed':False})
  except Exception as e:
+  output.mkdir(parents=True,exist_ok=True)
   write(output/'TERMINAL_RECEIPT.json',{'status':'FAILED_OR_PARTIAL','error':f'{type(e).__name__}:{e}','targets_accessed':False,'wall_seconds':time.monotonic()-started});raise
 
 if __name__=='__main__':
