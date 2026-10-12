@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1"
-SOURCE = BASE / "execution_binding_v4/EXECUTION_BINDING_EXTERNAL_AUTH_V3.json"
+SOURCE = BASE / "execution_binding_v3/EXECUTION_BINDING_EXTERNAL_AUTH_V3.json"
 SUCCESSOR = BASE / "scientific_successor_v2"
 
 
