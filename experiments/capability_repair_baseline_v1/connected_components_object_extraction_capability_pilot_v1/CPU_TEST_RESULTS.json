@@ -1,0 +1,26 @@
+{
+  "gpu_used": false,
+  "model_loaded": false,
+  "pytest": "NOT_RUN_MODULE_NOT_INSTALLED",
+  "status": "PASS_CPU_ONLY_DIRECT_TESTS_WITH_PYTEST_NOT_INSTALLED",
+  "targets_accessed": false,
+  "tests": [
+    {
+      "name": "freezer_self_test",
+      "status": "PASS"
+    },
+    {
+      "name": "frozen_pilot_integrity",
+      "status": "PASS_DIRECT_IMPORT"
+    },
+    {
+      "name": "prefreeze_draft_integrity",
+      "status": "PASS_DIRECT_IMPORT"
+    },
+    {
+      "name": "frozen_construct_replay_exposure_serializer_validation",
+      "status": "PASS"
+    }
+  ],
+  "training_started": false
+}

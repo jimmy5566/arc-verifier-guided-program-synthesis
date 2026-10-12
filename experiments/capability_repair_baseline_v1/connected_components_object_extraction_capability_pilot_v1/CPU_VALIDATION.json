@@ -1,0 +1,1 @@
+{"byte_identical_protected_replay_slots":288,"gpu_used":false,"independent_target_blind_prompts":{"composition_sentinel":16,"ood":48,"retention":24},"model_loaded":false,"optimizer_steps_per_arm":96,"status":"PASS_CPU_ONLY_CONSTRUCT_REPLAY_EXPOSURE_AND_SERIALIZER_VALIDATION","targets_accessed":false,"train_slots_per_arm":384}

@@ -1,0 +1,19 @@
+{
+  "attempt": 1,
+  "cause": "DIRECTOR_RESPONSE_FILE_NOT_PRESENT_IN_ISOLATED_BASE_COMMIT",
+  "gpu_used": false,
+  "kind": "CPU_ONLY_FREEZE_ATTEMPT_FAILURE",
+  "model_loaded": false,
+  "partial_files_sha256": {
+    "COMPOSITION_SENTINEL_INPUT_PROMPTS.json": "15e00795e145531e90719a92a18cba85ebe0537ff514f3556c9b80fc5d264433",
+    "CONTROL_SCHEDULE.json": "ec16bb3d7f8824ba8e45e777f0099c405715de8eb2d7de959320c3f4e1c38263",
+    "OOD_INPUT_PROMPTS.json": "b50687c9d9493a3f2dc1ce6f8e369aa48915277b0818a71b22bec16a34f57a3b",
+    "PREFREEZE_DRAFT.json": "a014bace0aed7b63c4a1e21ae62ded1c495bf09f0088bd76043dba0867f50ac0",
+    "RETENTION_INPUT_PROMPTS.json": "2d758dda92f01c36c415724bd36e56e82fc787f95cfc7218e9163fbcc13de689",
+    "TREATMENT_SCHEDULE.json": "70addd17375437fe6371d57433281272ecb3bfed716289ff0b5cfd003f4cad10"
+  },
+  "recorded_at_utc": "2026-10-12T03:08:52.816078+00:00",
+  "remediation": "Bind the already durable Director response SHA without importing untracked response bytes into the experimental package.",
+  "targets_accessed": false,
+  "training_started": false
+}
