@@ -32,7 +32,7 @@ def file_sha(path):
 
 class ConnectedComponentsProductionPathV7(unittest.TestCase):
     def binding(self, output):
-        source = BASE / "execution_binding_v4/EXECUTION_BINDING_EXTERNAL_AUTH_V3.json"
+        source = BASE / "execution_binding_v3/EXECUTION_BINDING_EXTERNAL_AUTH_V3.json"
         binding = json.loads(source.read_text())
         binding["worker_sha256"] = file_sha(ROOT / binding["worker_path"])
         binding["launcher_sha256"] = file_sha(ROOT / binding["launcher_path"])
@@ -144,6 +144,20 @@ class ConnectedComponentsProductionPathV7(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "RAW_ARTIFACT_SET"):
                 SCORER.score(binding_path, output)
             self.assertFalse((output / "SCORE_RECEIPT.json").exists())
+
+    def test_worker_creates_missing_output_parents_before_model_load(self):
+        with tempfile.TemporaryDirectory() as raw:
+            output = Path(raw) / "missing" / "nested" / "output"
+            binding = self.binding(output)
+            binding_path = Path(raw) / "binding.json"
+            binding_path.write_text(json.dumps(binding))
+            with patch.object(WORKER, "_load_v7", side_effect=RuntimeError("STOP_BEFORE_MODEL_LOAD")):
+                with self.assertRaisesRegex(RuntimeError, "STOP_BEFORE_MODEL_LOAD"):
+                    WORKER.execute(binding_path, output)
+            self.assertTrue((output / "PREFLIGHT_RECEIPT.json").is_file())
+            terminal = json.loads((output / "TERMINAL_RECEIPT.json").read_text())
+            self.assertEqual(terminal["status"], "FAILED_OR_PARTIAL")
+            self.assertFalse(terminal["targets_accessed"])
 
 
 if __name__ == "__main__":

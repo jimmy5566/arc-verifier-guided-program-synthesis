@@ -11,6 +11,13 @@
       "terminal_error": "KeyError:'source_id'",
       "terminal_receipt_sha256": "6fa1dd76f238c7098b02c33ff90225249d8290fc26a8cf25a968c231ebd38c05"
     },
+    "v7_terminal_failure": {
+      "cause": "worker used output.mkdir() without parents=True after the launcher correctly preserved a fresh nested output root",
+      "classification": "INFRASTRUCTURE_ONLY_PRE_MODEL_PRE_TRAINING",
+      "terminal_receipt_sha256": "b188e1c93f2a83fd07452a38d2a4463261e2456a47e3bcc134eef2942aebb1d5",
+      "worker_log_sha256": "b9a9641b07e5066e5885e99fc88989fe11c3cc7a5cf262773fc68ef051e070c2",
+      "authorization_disposition": "CONSUMED_NO_REUSE"
+    },
     "batch1_selection": {
       "cause": "worker selected positional items[:12] instead of b1_subset_by_checkpoint",
       "observed_v6_v7_b1_rows": 12,
@@ -40,6 +47,7 @@
     "non_mutating_replay_serializer_view": "scripts/run_connected_components_object_extraction_pilot_v1.py",
     "frozen_id_b1_selector": "scripts/run_connected_components_object_extraction_pilot_v1.py",
     "explicit_pinned_runtime_launcher": "scripts/launch_connected_components_object_extraction_external_auth_v3.py",
+    "fresh_nested_output_parent_creation": "scripts/run_connected_components_object_extraction_pilot_v1.py",
     "actual_runpod_no_model_runtime_preflight": "scripts/preflight_connected_components_runpod_runtime_v7.py",
     "complete_post_freeze_scorer": "scripts/score_connected_components_object_extraction_pilot_v1.py",
     "independent_semantic_oracle": "scripts/connected_components_object_extraction_semantic_oracle.py",
@@ -48,7 +56,7 @@
   },
   "reproducing_cpu_tests": {
     "command": "py -m unittest tests.test_connected_components_production_path_v7 -v",
-    "status": "PASS_5",
+    "status": "PASS_6",
     "existing_regressions": "PASS_8",
     "coverage": [
       "all 384 slots in each arm serialize through production task_to_sample",
@@ -56,19 +64,20 @@
       "B1 record IDs and checkpoint-specific counts equal the frozen binding",
       "V1 composition fails and V2 composition plus V1 retention pass an independent semantic oracle",
       "launcher validation and detached command construction",
+      "worker creates a fresh nested output root before model loading",
       "worker CPU preflight",
       "six-artifact scorer completeness, B1 gate, paired outcome, retention and promotion logic"
     ]
   },
   "source_sha256": {
-    "worker": "14a6220e1f7ff8c6566ac2d6dc7c474f8dfe0777320505593d8633e271bbd5d2",
+    "worker": "a0cd1a7995503fab0e45e169c47a53ddb7d38ba1ff4b3710bcf3b5f49ab5d661",
     "scorer": "74ba1d03a0552824f958f6375b65c25af9f1f67ee56905d9546ca759d3c12897",
     "launcher": "198374362868509af3828bb6ffb4c3ae0d915c2ab62e108776dff9f7780c9781",
     "semantic_oracle": "663715a03ecd8f16e26930bf02093addb17e4c75d45725b6ce8fef564313953f",
     "successor_freezer": "fbdad0fa9b1a5d68d9bd389cd07face7637457bc08255ed8598dd549b42c6145",
-    "binding_freezer": "a0991bccbb03de3fa385759882ed4213ad8fd94205533234bdeb6d5f045e8852",
+    "binding_freezer": "9cbde5579eca90d6a093594bb1165e44f828970255513a2094a066dd1db35333",
     "runpod_runtime_preflight": "248f9de3fa9d50184e344ff74de1fb0d24bc9dc3a7817acbb217c1e2eeb23e9d",
-    "production_path_tests": "a51a75c61a7e8b333232450873eba34cc39d8b92a7fee7eab8a522a0c05430db"
+    "production_path_tests": "be72ece22954add297ad189bdbbaa4931da557b94d8d350b4fe06f0e0cade7be"
   },
   "scientific_successor_sha256": {
     "composition_prompts": "9df27140c83a2a3ec55e8b57a14748fad223d2ef98a7cede8544810448ff8895",
@@ -80,6 +89,8 @@
     "v5_reused": false,
     "v6_authorization_reusable": false,
     "v6_partial_predictions_reused": false,
+    "v7_authorization_reusable": false,
+    "v7_partial_predictions_reused": false,
     "existing_scientific_artifacts_modified": false
   },
   "remaining_blockers": [

@@ -1,0 +1,19 @@
+{
+  "authorization_consumed": true,
+  "authorization_payload_sha256": "fbded736bc36d626aa635faf2177e9f1e55b39068146adf8dbb0d7082ac92acd",
+  "binding_sha256": "0b8a72d1bbc03b861b845058dbd33b11406e189be586f0ad81080df1c7f3e5b1",
+  "error": "FileNotFoundError: output parent directory did not exist before output.mkdir()",
+  "execution_source_commit": "d5aeaa99495628a5c0489abbbc91d7285292bdf7",
+  "gpu_compute_observed": false,
+  "launch_receipt_sha256": "8f58ca5d0fe65b05c30333a672616c6f03ab89a3816b5c7972e22d9940a6e934",
+  "model_loaded": false,
+  "output_root": "/workspace/arc2/connected_components_object_extraction_capability_pilot_v2/run_001_a0e5d603a36b7607cf11f8b436e53d3b",
+  "remote_job_receipt_sha256": "2795d2384b3c25caeff3e822bfaba788f148a0dde0dafb11d059ae361a44b4ab",
+  "retry_permitted": false,
+  "sealed_targets_accessed": false,
+  "status": "FAILED_INFRASTRUCTURE_PRE_MODEL_PRE_TRAINING",
+  "terminal_receipt_sha256": "b188e1c93f2a83fd07452a38d2a4463261e2456a47e3bcc134eef2942aebb1d5",
+  "training_started": false,
+  "wall_seconds": 2.5448759999126196,
+  "worker_log_sha256": "b9a9641b07e5066e5885e99fc88989fe11c3cc7a5cf262773fc68ef051e070c2"
+}

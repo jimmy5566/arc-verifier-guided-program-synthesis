@@ -29,9 +29,11 @@ def atomic(path, value):
     os.replace(temporary, path)
 
 
-def freeze(source_commit: str, out: Path):
+def freeze(source_commit: str, out: Path, run_number: int = 1):
     if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
         raise ValueError("source_commit must be an exact 40-character Git SHA")
+    if run_number < 1:
+        raise ValueError("run_number must be positive")
     if out.exists() and any(out.iterdir()):
         raise FileExistsError(f"refusing overwrite: {out}")
     binding = json.loads(SOURCE.read_text())
@@ -39,7 +41,7 @@ def freeze(source_commit: str, out: Path):
     validation = SUCCESSOR / "SCIENTIFIC_CONSTRUCT_VALIDATION.json"
     composition_rel = str(composition.relative_to(ROOT)).replace("\\", "/")
     validation_rel = str(validation.relative_to(ROOT)).replace("\\", "/")
-    nonce = hashlib.sha256((source_commit + sha(SUCCESSOR / "MANIFEST.json") + "EXECUTION_BINDING_V7").encode()).hexdigest()[:32]
+    nonce = hashlib.sha256((source_commit + sha(SUCCESSOR / "MANIFEST.json") + f"EXECUTION_BINDING_V7_RUN_{run_number:03d}").encode()).hexdigest()[:32]
     binding.update({
         "schema_version": 7,
         "protocol_id": "CONNECTED_COMPONENTS_OBJECT_EXTRACTION_CAPABILITY_PILOT_V2_EXECUTION_BINDING_V7",
@@ -59,7 +61,7 @@ def freeze(source_commit: str, out: Path):
     }
     binding["output"] = {
         **binding["output"], "nonce": nonce,
-        "remote_output_root": f"/workspace/arc2/connected_components_object_extraction_capability_pilot_v2/run_001_{nonce}",
+        "remote_output_root": f"/workspace/arc2/connected_components_object_extraction_capability_pilot_v2/run_{run_number:03d}_{nonce}",
     }
     binding["runtime"] = {
         **binding["runtime"],
@@ -88,5 +90,5 @@ def freeze(source_commit: str, out: Path):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(); parser.add_argument("--source-commit", required=True); parser.add_argument("--out", type=Path, default=BASE / "execution_binding_v7")
-    args = parser.parse_args(); print(json.dumps(freeze(args.source_commit, args.out), sort_keys=True))
+    parser = argparse.ArgumentParser(); parser.add_argument("--source-commit", required=True); parser.add_argument("--run-number", type=int, default=1); parser.add_argument("--out", type=Path, default=BASE / "execution_binding_v7")
+    args = parser.parse_args(); print(json.dumps(freeze(args.source_commit, args.out, args.run_number), sort_keys=True))

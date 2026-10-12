@@ -166,7 +166,7 @@ def _generate(model,torch,manifest,items,binding,out,deadline,tag,force_batch_si
 def execute(binding_path,output):
  started=time.monotonic()
  try:
-  b=preflight(binding_path,output,require_fresh=True);output.mkdir();deadline=started+b['runtime']['combined_cap_seconds'];write(output/'PREFLIGHT_RECEIPT.json',{'status':'PASS_CPU_TO_GPU_GATE','model_loaded':False,'targets_accessed':False})
+  b=preflight(binding_path,output,require_fresh=True);output.mkdir(parents=True);deadline=started+b['runtime']['combined_cap_seconds'];write(output/'PREFLIGHT_RECEIPT.json',{'status':'PASS_CPU_TO_GPU_GATE','model_loaded':False,'targets_accessed':False})
   v7,torch,manifest=_load_v7(b,trainable=False); v7_items=_datasets(b); raw={'V7':_generate(v7,torch,manifest,v7_items,b,output,deadline,'V7'),'V7_B1':_generate(v7,torch,manifest,_select_b1_items(v7_items,b,'V7'),b,output,deadline,'V7_B1',force_batch_size=1)};del v7
   for arm,file in [('CONTROL_NARROW_STRUCTURE','CONTROL_SCHEDULE.json'),('TREATMENT_STRUCTURE_DIVERSE','TREATMENT_SCHEDULE.json')]:
    armroot=output/arm;model,torch,manifest,adapter=_train(b,arm,ROOT/'experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1'/file,armroot,deadline);arm_items=_datasets(b,arm);raw[arm]=_generate(model,torch,manifest,arm_items,b,output,deadline,arm);raw[arm+'_B1']=_generate(model,torch,manifest,_select_b1_items(arm_items,b,arm),b,output,deadline,arm+'_B1',force_batch_size=1);write(armroot/'ADAPTER_RECEIPT.json',{'adapter_sha256':adapter,'optimizer_steps':96});del model
