@@ -1,0 +1,20 @@
+{
+  "covered": [
+    "fixed target-free Batch1 manifest",
+    "generation and teacher-forced physical Batch1 pass/fail",
+    "connected component count/object identity/geometry/color adversarial taxonomy",
+    "remote sidecar descriptor path resolution",
+    "outer process watchdog timeout receipt",
+    "identity dependency OOM duplicate malformed timeout receipts"
+  ],
+  "cpu_only": true,
+  "gpu_used": false,
+  "model_loaded": false,
+  "schema_version": 1,
+  "source_hashes": {
+    "scripts/test_v7_component_diagnostic_executable_v2.py": "62791e27f460548f52b2c5223ce3b4e152b8281b443438feecf7556e82ad0434",
+    "scripts/v7_component_diagnostic_executable_v2.py": "1f05efeed8c70bdef1a3171adecb02638faa9132da16de2d261b99a7af2609c0"
+  },
+  "status": "PASS_V7_EXECUTABLE_V3_CONSOLIDATED_CPU_INTEGRATION",
+  "test_output": "PASS_V7_EXECUTABLE_V2_PRODUCTION_SHAPED_CPU_INTEGRATION"
+}

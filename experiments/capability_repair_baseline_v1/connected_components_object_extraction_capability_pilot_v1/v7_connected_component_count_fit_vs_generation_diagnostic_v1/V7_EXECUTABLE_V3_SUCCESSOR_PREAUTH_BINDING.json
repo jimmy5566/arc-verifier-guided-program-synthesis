@@ -20,8 +20,8 @@
     "sha256": "1c04736b3866aa754513142d751339abdd592ee2da11fb500948fe608273e9c6"
   },
   "cpu_validation": {
-    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/v7_connected_component_count_fit_vs_generation_diagnostic_v1/V7_EXECUTABLE_V2_CPU_VALIDATION.json",
-    "sha256": "fead2e918cf0d5f84d70dd790c56b93792c6e37c49bd904520c6defc18601f41"
+    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/v7_connected_component_count_fit_vs_generation_diagnostic_v1/V7_EXECUTABLE_V3_CPU_VALIDATION.json",
+    "sha256": "a8f6b3cace2a60d25218dddee9a0e87b30b3c767dda3f1358e2b07c97e059411"
   },
   "execution": {
     "backward_calls": 0,
