@@ -1,0 +1,24 @@
+{
+  "covered": [
+    "72_record_completeness",
+    "raw_before_sidecar",
+    "CUDA_OOM_32_TO_16",
+    "Batch1_layout_failure",
+    "parser_taxonomy"
+  ],
+  "gpu_used": false,
+  "model_loaded": false,
+  "not_run": [
+    "real_model",
+    "GPU",
+    "real_sidecar",
+    "remote_asset_preflight",
+    "detached_launch"
+  ],
+  "schema_version": 1,
+  "status": "PASS_V7_INJECTED_PRODUCTION_PATH_CPU_VALIDATION",
+  "targets_accessed": false,
+  "tests": [
+    "PASS_V7_INJECTED_PRODUCTION_PATH_72_RECORDS_AND_FAILURE_GATES"
+  ]
+}

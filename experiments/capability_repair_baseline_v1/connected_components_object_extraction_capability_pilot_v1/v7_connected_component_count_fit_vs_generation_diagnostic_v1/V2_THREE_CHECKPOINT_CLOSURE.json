@@ -1,0 +1,13 @@
+{
+  "gpu_used": false,
+  "model_loaded": false,
+  "preserved_paths": [
+    "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v2_non_reuse\\CPU_ONLY_FROZEN_PROTOCOL_V2_NON_REUSE.json",
+    "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v2_non_reuse\\EXECUTION_BINDING_V2_NON_REUSE.json"
+  ],
+  "protocol": "CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V2_NON_REUSE",
+  "published": false,
+  "reason": "CONTROL_AND_TREATMENT_RUNTIME_BYTES_UNAVAILABLE",
+  "schema_version": 1,
+  "status": "TERMINAL_ASSET_UNAVAILABLE"
+}

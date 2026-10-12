@@ -1,0 +1,28 @@
+{
+  "authorization": {
+    "not_granted": true,
+    "one_bounded_gpu_job_required": true,
+    "source_publication_required": true
+  },
+  "cpu_validation_sha256": "5d70c92cfaf94b9a024a01175441c5fef6c957ee4c5031f14fa8c517f44e7bdc",
+  "execution": {
+    "adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "backward_calls": 0,
+    "batch1_generations": 12,
+    "batch1_teacher_forced_forwards": 12,
+    "checkpoint": "V7",
+    "fresh_generations": 72,
+    "optimizer_steps": 0,
+    "planning_cap_seconds": 3600,
+    "retry": false,
+    "teacher_forced_forwards": 72
+  },
+  "protocol_sha256": "243e33a9ce5fde33f0b04932853298ed6d5bd6cd5f5c2fe53b9329cb6f6c0325",
+  "schema_version": 1,
+  "source_commit": "8886164cfe39d478597cf41eab5498a36f3d4f4f",
+  "source_hashes": {
+    "scripts/test_v7_component_diagnostic_production_v1.py": "71f3a611c138f622244f814be75d55b0dcfe9b930fc5a0ef2c84e70f050a4ca7",
+    "scripts/v7_component_diagnostic_production_v1.py": "0f895352e711063f9ab1af6e26f000065beeafe4af8cf583cb9dfcbca049926f"
+  },
+  "status": "CPU_VALIDATED_OWNER_AUTHORIZATION_REQUIRED"
+}

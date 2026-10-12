@@ -1,0 +1,65 @@
+{
+  "checkpoint": {
+    "adapter_model_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000/adapter_model.safetensors",
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "name": "V7"
+  },
+  "cohort": {
+    "path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\COHORT_PROMPT_TASKS_V1.json",
+    "records": 72,
+    "sha256": "1c04736b3866aa754513142d751339abdd592ee2da11fb500948fe608273e9c6"
+  },
+  "execution": {
+    "backward_calls": 0,
+    "batch1_generations": 12,
+    "batch1_teacher_forced_forwards": 12,
+    "decoder": "NATIVE_GREEDY",
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "fallback_only": "CUDA_OOM",
+    "fresh_generations": 72,
+    "max_new_tokens": 192,
+    "optimizer_steps": 0,
+    "planning_cap_seconds": 3600,
+    "requested_batch_size": 32,
+    "teacher_forced_forwards": 72
+  },
+  "forbidden": [
+    "Control_or_Treatment_asset_recovery",
+    "checkpoint_substitution",
+    "target_access_before_raw_freeze",
+    "model_load_during_CPU_stage",
+    "GPU",
+    "publication"
+  ],
+  "mechanism_rules": [
+    "weak_TRAIN_ranking=>supervision_representation_or_optimization",
+    "strong_TRAIN_ranking_poor_generation=>sequence_or_output_construction",
+    "strong_TRAIN_and_OOD_ranking_poor_exactness=>autoregressive_construction"
+  ],
+  "metrics": [
+    "rank",
+    "Top1",
+    "Top2",
+    "margin",
+    "token_weighted_NLL",
+    "sequence_normalized_NLL",
+    "first_divergence",
+    "exact_grid",
+    "family_aware_semantic_taxonomy"
+  ],
+  "protocol_id": "V7_CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1",
+  "schema_version": 1,
+  "sidecar": {
+    "path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\.arc2-local\\orchestration\\sealed_sidecars\\CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_CORRECT_TOKEN_SIDECAR.json",
+    "scorer_only": true,
+    "sha256": "ad5c97e0f54a30ba636714c1d5dbd671c25d826616896f5a9cbfd56af48d7950"
+  },
+  "status": "CPU_ONLY_FROZEN_REAL_PRODUCTION_IMPLEMENTATION_PENDING",
+  "v2_closure_sha256": "001cbb2a2c4a912a6b1456e8c2275614efd97cd234d5dbaf9ecbbb90f85fdb2c"
+}
