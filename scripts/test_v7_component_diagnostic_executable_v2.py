@@ -18,6 +18,7 @@ class FakeRuntime:
   if self.dependency_error: raise RuntimeError('DEPENDENCY_MISSING')
  def verify_adapter(self,path,expected):
   if digest(path)!=expected: raise RuntimeError('V7_ADAPTER_IDENTITY_MISMATCH')
+ def verify_tokenizer(self,descriptor): assert descriptor['files']
  def empty_cache(self): pass
  def generate(self,records,batch_size,max_new_tokens):
   self.calls.append(('generation',batch_size,len(records)))
@@ -44,7 +45,7 @@ def fixture(base):
  records=[{'cohort_record_id':f'R:{i:02d}','prompt_task_sha256':f'{i:064x}','task':{'train':[],'test':[{'input':[[i%4]]}]}} for i in range(72)]
  cohort.write_text(json.dumps({'records':records},sort_keys=True))
  source='scripts/v7_component_diagnostic_executable_v2.py'
- binding={'protocol_sha256':digest(protocol),'protocol':{'path':str(protocol),'sha256':digest(protocol)},'cohort':{'path':str(cohort),'sha256':digest(cohort)},'sidecar':{'path':str(sidecar),'sha256':digest(sidecar)},'checkpoint':{'adapter_model_path':str(adapter),'adapter_model_sha256':digest(adapter)},'execution':{'checkpoint':'V7','retry':False,'optimizer_steps':0,'backward_calls':0,'hard_cap_seconds':3600,'requested_batch_size':32,'fallback_ladder':[32,16,8,4,1]},'source_hashes':{source:digest(ROOT/source)}}
+ binding={'protocol_sha256':digest(protocol),'protocol':{'path':str(protocol),'sha256':digest(protocol)},'cohort':{'path':str(cohort),'sha256':digest(cohort)},'sidecar':{'path':str(sidecar),'sha256':digest(sidecar)},'tokenizer':{'runtime_path':str(base),'files':{'protocol.json':digest(protocol)}},'checkpoint':{'adapter_model_path':str(adapter),'adapter_model_sha256':digest(adapter)},'execution':{'checkpoint':'V7','retry':False,'optimizer_steps':0,'backward_calls':0,'hard_cap_seconds':3600,'requested_batch_size':32,'fallback_ladder':[32,16,8,4,1]},'source_hashes':{source:digest(ROOT/source)}}
  binding_path=base/'binding.json'; binding_path.write_text(json.dumps(binding,sort_keys=True)); auth=base/'auth.json'; auth.write_text(json.dumps({'status':'VALID_UNCONSUMED','binding_sha256':digest(binding_path)}))
  return binding_path,auth,adapter
 

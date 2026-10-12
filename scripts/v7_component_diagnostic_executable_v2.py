@@ -82,6 +82,7 @@ def validate_binding(binding_path):
     require(execution.get("hard_cap_seconds") == 3600, "HARD_CAP_MISMATCH")
     require(execution.get("requested_batch_size") == 32, "BATCH32_REQUIRED")
     require(execution.get("fallback_ladder") == list(LADDER), "OOM_LADDER_MISMATCH")
+    require(isinstance(binding.get("tokenizer"), dict) and binding["tokenizer"].get("runtime_path") and binding["tokenizer"].get("files"), "TOKENIZER_BINDING_MISSING")
     for relative, digest in binding.get("source_hashes", {}).items():
         require_sha(ROOT / relative, digest, "SOURCE_IDENTITY_MISMATCH:" + relative)
     for label in ("protocol", "cohort"):
@@ -242,6 +243,7 @@ def launch(binding_path, runtime, authorization_path, output_root, control_root)
     require(not output_root.exists(), "FRESH_OUTPUT_ROOT_REQUIRED")
     require(not (control_root / "TERMINAL_RECEIPT.json").exists(), "DUPLICATE_TERMINAL_RECEIPT")
     runtime.check_dependencies()
+    runtime.verify_tokenizer(binding["tokenizer"])
     runtime.verify_adapter(binding["checkpoint"]["adapter_model_path"], binding["checkpoint"]["adapter_model_sha256"])
     claim = Path(authorization_path).with_suffix(Path(authorization_path).suffix + ".claimed")
     exclusive_claim(claim, {"binding_sha256": sha_path(binding_path), "output_root": str(output_root), "claimed_at": time.time()})
@@ -265,6 +267,10 @@ class RealRuntime:
         import torch, transformers, peft  # noqa: F401
         require(torch.cuda.is_available(), "CUDA_REQUIRED")
     def verify_adapter(self, path, digest): require_sha(path, digest, "V7_ADAPTER_IDENTITY_MISMATCH")
+    def verify_tokenizer(self, descriptor):
+        root = Path(descriptor["runtime_path"])
+        for name, digest in descriptor["files"].items():
+            require_sha(root / name, digest, "TOKENIZER_IDENTITY_MISMATCH:" + name)
     def _load(self):
         if self.model is not None: return
         import torch
