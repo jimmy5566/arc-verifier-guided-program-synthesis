@@ -22,4 +22,7 @@ def test_additive_measurement_contract_preserves_schedules_and_targets():
     assert all('output' not in row['task']['test'][0] for row in train['records'])
     protected = json.loads((base / 'measurement_contract_v1/PROTECTED_CAPABILITY_INPUT_PROMPTS.json').read_text())
     assert len(protected['records']) == 16
-    assert all('output' not in row for row in protected['records'])
+    assert protected['source_protocol'] == 'E04_ORIENTATION_V3_FIXED_INDEPENDENT_DEMONSTRATION_BASELINE'
+    assert protected['independent_canonical_bases_per_condition'] == 4
+    assert all('output' not in row['prompt']['test'][0] for row in protected['records'])
+    assert all(set(row['prompt']) == {'train', 'test'} for row in protected['records'])
