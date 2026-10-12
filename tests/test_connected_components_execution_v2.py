@@ -14,6 +14,8 @@ def test_fresh_output_and_frozen_raw_scorer_boundary():
   b=freeze.freeze(Path(d)/'binding'); p=Path(d)/'binding/EXECUTION_BINDING_PREAUTH_V2.json'; output=Path(d)/'output'; output.mkdir(); b=json.loads(p.read_text());b['output']['remote_output_root']=output.as_posix();p.write_text(json.dumps(b));
   try: worker.preflight(p,output,require_fresh=True); assert False
   except RuntimeError as e: assert 'FRESH_OUTPUT' in str(e)
+  try: launcher.verify(p,output); assert False
+  except RuntimeError as e: assert 'FRESH_OUTPUT' in str(e)
   p.write_text(json.dumps(freeze.freeze(Path(d)/'other'))); output.mkdir(exist_ok=True)
   try: scorer.score(p,output); assert False
   except FileNotFoundError: pass
