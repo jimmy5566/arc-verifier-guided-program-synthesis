@@ -259,7 +259,12 @@ def scorer(binding, runtime, raw, raw_receipt, output_root, deadline):
     by_id = {row["cohort_record_id"]: row for row in raw}
     primary_logits = runtime.teacher_forced([by_id[key] for key in sorted(by_id)], sidecar, batch_size=32)
     b1_logits = runtime.teacher_forced([by_id[key] for key in b1_ids], sidecar, batch_size=1)
-    b1_generated = runtime.generate([by_id[key] for key in b1_ids], batch_size=1, max_new_tokens=192)
+    # ``batch_size=1`` is a physical execution contract, not merely a model
+    # option.  RealRuntime rejects a multi-record list at B1, so invoke it once
+    # per predeclared subset record and preserve the frozen subset ordering.
+    b1_generated = []
+    for key in b1_ids:
+        b1_generated.extend(runtime.generate([by_id[key]], batch_size=1, max_new_tokens=192))
     require(len(primary_logits) == RAW_COUNT and len(b1_logits) == B1_COUNT and len(b1_generated) == B1_COUNT, "PHYSICAL_BATCH1_COMPLETENESS")
     primary_b1 = {key: by_id[key] for key in b1_ids}
     observed_b1 = {key: {"generated_token_ids": row.get("generated_token_ids")} for key, row in zip(b1_ids, b1_generated, strict=True)}

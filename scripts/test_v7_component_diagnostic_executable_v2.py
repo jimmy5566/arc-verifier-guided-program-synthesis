@@ -69,7 +69,8 @@ def main():
   result,runtime,out,control,binding,auth=successful_run(Path(tmp)/'pass',oom=True)
   assert result['status']=='COMPLETE' and runtime.sidecar_opened
   assert result['teacher_forced_forwards']==72 and result['batch1_teacher_forced_forwards']==12 and result['batch1_generations']==12
-  assert ('generation',32,32) in runtime.calls and any(kind=='generation' and batch==16 for kind,batch,_ in runtime.calls) and ('generation',1,12) in runtime.calls
+  assert ('generation',32,32) in runtime.calls and any(kind=='generation' and batch==16 for kind,batch,_ in runtime.calls)
+  assert sum(1 for kind,batch,size in runtime.calls if kind=='generation' and batch==1 and size==1)==12
   assert ('teacher',32,72) in runtime.calls and ('teacher',1,12) in runtime.calls
   assert [item['requested_batch_size'] for item in result['teacher_forward_events']]==[32,1]
   row=json.loads((out/'SCORED_METRICS.jsonl').read_text().splitlines()[0]); assert row['teacher_forced']['token_weighted_nll'] > 0 and row['teacher_forced']['mean_margin'] == 3.0
