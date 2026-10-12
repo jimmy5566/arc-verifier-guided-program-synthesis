@@ -53,9 +53,8 @@ def execute(binding_path,raw_root,output_root):
  prompts={x['cohort_record_id']:x for x in prompt_records}
  raw={(x['checkpoint'],x['cohort_record_id']):x for x in _rows(raw_path)}
  if len(raw)!=216:raise RuntimeError('RAW_COMPLETENESS_INVALID')
- out=[];per_checkpoint={};b1_ids={row['cohort_record_id'] for row in e.get('teacher_forced_b1_cohort_rows',[]) or []}
- if not b1_ids: b1_ids=set(e.get('teacher_forced_b1_record_ids',[]))
- if len(b1_ids)!=12: raise RuntimeError('BATCH1_SUBSET_LAYOUT_INVALID')
+ out=[];per_checkpoint={}
+ if int(e.get('teacher_forced_physical_batch_size', 0))!=1 or int(e.get('requested_batch_size', 0))!=1: raise RuntimeError('ALL_B1_TEACHER_FORCED_REQUIRED')
  for checkpoint,runtime in sorted(b['checkpoint_runtime'].items()):
   if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported():raise RuntimeError('CUDA_BF16_REQUIRED')
   tokenizer=AutoTokenizer.from_pretrained(runtime['base_path'],local_files_only=True)
@@ -67,22 +66,18 @@ def execute(binding_path,raw_root,output_root):
    records.append((record_id,{**target,'target_token_ids':[int(x) for x in target['target_token_ids']]},prompt,row))
   primary={};b1={}
   with torch.inference_mode():
-   for start in range(0,len(records),int(e['requested_batch_size'])):
-    primary.update(_forward_teacher_forced(model,records[start:start+int(e['requested_batch_size'])],tokenizer.pad_token_id or tokenizer.eos_token_id or 0))
    for record in records:
-    if record[0] in b1_ids:b1.update(_forward_teacher_forced(model,[record],tokenizer.pad_token_id or tokenizer.eos_token_id or 0))
+    primary.update(_forward_teacher_forced(model,[record],tokenizer.pad_token_id or tokenizer.eos_token_id or 0))
   for record_id,target,prompt,row in records:
    target_ids=target['target_token_ids'];expected=parse_native_grid(tokenizer.decode(target_ids,skip_special_tokens=False));taxonomy=semantic_taxonomy(row.get('parsed_grid'),expected,row.get('parser_valid') is True)
    out.append({'checkpoint':checkpoint,'cohort_record_id':record_id,'split':target['split'],'prompt_sha256':target['prompt_task_sha256'],'teacher_forced':aggregate_record_metrics({record_id:primary[record_id]}),'first_divergence':first_divergence(row['generated_token_ids'],target_ids),'semantic_taxonomy':taxonomy,'target_token_ids_persisted':False})
-  flatten=lambda values:{f'{record_id}:{index}':metric for record_id,metrics in values.items() for index,metric in enumerate(metrics)}
-  tolerance=e['teacher_forced_tolerance'];gate=batch_gate(flatten({k:primary[k] for k in b1}),flatten(b1),tolerance)
-  per_checkpoint[checkpoint]={'records':len(primary),'primary_physical_batches':(len(records)+int(e['requested_batch_size'])-1)//int(e['requested_batch_size']),'b1_records':len(b1),'b1_physical_batches':len(b1),'batch1_gate':gate};del model;torch.cuda.empty_cache()
+  per_checkpoint[checkpoint]={'records':len(primary),'teacher_forced_physical_batch_size':1,'teacher_forced_physical_forwards':len(primary),'batch_comparison':'NOT_APPLICABLE_ALL_PRIMARY_RECORDS_PHYSICAL_BATCH1'};del model;torch.cuda.empty_cache()
  if len(out)!=216:raise RuntimeError('SCORE_COMPLETENESS_INVALID')
  output=Path(output_root);output.mkdir(parents=True);metrics_path=output/'SCORED_METRICS.jsonl';_write_rows(metrics_path,out);_write(output/'SCORE_RECEIPT.json',{'status':'COMPLETE_CPU_SCORED_NO_UPDATE','raw_sha256':freeze['raw_sha256'],'metrics_sha256':_sha(metrics_path),'records':216,'checkpoint_summary':per_checkpoint,'target_token_ids_persisted':False,'optimizer_steps':0,'backward_calls':0,'gpu_used':True});return output/'SCORE_RECEIPT.json'
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--cpu-self-test',action='store_true');p.add_argument('--cpu-fixture',type=Path);p.add_argument('--worker-receipt',type=Path);p.add_argument('--output',type=Path);p.add_argument('--execute',action='store_true');p.add_argument('--binding',type=Path);p.add_argument('--raw-root',type=Path);p.add_argument('--output-root',type=Path);a=p.parse_args()
  if a.cpu_fixture:
-  f=json.loads(a.cpu_fixture.read_text()); w=json.loads(a.worker_receipt.read_text()); assert w['status']=='COMPLETE_CPU_FIXTURE_RAW_FROZEN' and f['batch1']['pass'] and f['batch1']['fail_case']; out={'status':'COMPLETE_CPU_FIXTURE_SCORED','token_weighted_and_sequence_NLL':True,'first_divergence':True,'taxonomy_categories':['CONNECTED_COMPONENT_COUNT','SELECTED_OBJECT_IDENTITY','GEOMETRY','COLOR','DIMENSIONS','PARSER_FAILURE','OUTPUT_CONSTRUCTION'],'batch1_pass_and_fail_cases':True,'invalidity_on_gate_failure':'INVALID_NOT_INTERPRETABLE','gpu_used':False}; a.output.write_text(json.dumps(out,sort_keys=True)); print(json.dumps(out,sort_keys=True)); raise SystemExit(0)
+  f=json.loads(a.cpu_fixture.read_text()); w=json.loads(a.worker_receipt.read_text()); assert w['status']=='COMPLETE_CPU_FIXTURE_RAW_FROZEN' and f['teacher_forced_physical_batch_size']==1 and f['teacher_forced_forwards']==216; out={'status':'COMPLETE_CPU_FIXTURE_SCORED','token_weighted_and_sequence_NLL':True,'first_divergence':True,'taxonomy_categories':['CONNECTED_COMPONENT_COUNT','SELECTED_OBJECT_IDENTITY','GEOMETRY','COLOR','DIMENSIONS','PARSER_FAILURE','OUTPUT_CONSTRUCTION'],'all_teacher_forced_records_physical_batch1':True,'batch_comparison':'NOT_APPLICABLE_ALL_PRIMARY_RECORDS_PHYSICAL_BATCH1','gpu_used':False}; a.output.write_text(json.dumps(out,sort_keys=True)); print(json.dumps(out,sort_keys=True)); raise SystemExit(0)
  if a.execute:
   if not a.binding or not a.raw_root or not a.output_root:raise RuntimeError('BINDING_RAW_AND_OUTPUT_REQUIRED')
   print(json.dumps({'status':'COMPLETE_CPU_SCORED_NO_UPDATE','receipt':str(execute(a.binding,a.raw_root,a.output_root))},sort_keys=True));raise SystemExit(0)

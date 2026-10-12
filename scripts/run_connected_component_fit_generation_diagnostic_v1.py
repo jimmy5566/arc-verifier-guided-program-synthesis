@@ -91,7 +91,7 @@ if __name__=='__main__':
    if hashlib.sha256((ROOT/rel).read_bytes()).hexdigest()!=digest: raise RuntimeError('PREFLIGHT_SOURCE_IDENTITY')
   print(json.dumps({'status':'PASS_REAL_INPUT_CPU_PREFLIGHT','sidecar_records':72,'inventory_rows':216,'reused_rows':168,'new_rows':48,'model_loaded':False,'gpu_used':False,'targets_exposed_to_prompt':False},sort_keys=True));raise SystemExit(0)
  if a.cpu_fixture:
-  f=json.loads(a.cpu_fixture.read_text()); assert f['rows']==216 and f['reused']==168 and f['missing']==48 and f['ood_new']==0 and f['sidecar_records']==72 and f['fallback']==['CUDA_OOM_ONLY',32,16,8,4,1]; out={'status':'COMPLETE_CPU_FIXTURE_RAW_FROZEN','raw_rows':48,'reused_rows':168,'targets_accessed_before_raw_freeze':False,'optimizer_steps':0,'backward_calls':0,'gpu_used':False}; a.output.write_text(json.dumps(out,sort_keys=True)); print(json.dumps(out,sort_keys=True)); raise SystemExit(0)
+  f=json.loads(a.cpu_fixture.read_text()); assert f['rows']==216 and f['reused']==168 and f['missing']==48 and f['ood_new']==0 and f['sidecar_records']==72 and f['fallback']==['CUDA_OOM_ONLY',32,16,8,4,1] and f['teacher_forced_physical_batch_size']==1 and f['teacher_forced_forwards']==216; out={'status':'COMPLETE_CPU_FIXTURE_RAW_FROZEN','raw_rows':48,'reused_rows':168,'targets_accessed_before_raw_freeze':False,'optimizer_steps':0,'backward_calls':0,'teacher_forced_physical_batch_size':1,'teacher_forced_forwards':216,'gpu_used':False}; a.output.write_text(json.dumps(out,sort_keys=True)); print(json.dumps(out,sort_keys=True)); raise SystemExit(0)
  if a.execute:
   if not a.binding or not a.output_root: raise RuntimeError('BINDING_AND_OUTPUT_REQUIRED')
   print(json.dumps(execute(a.binding,a.output_root),sort_keys=True));raise SystemExit(0)
