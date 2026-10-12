@@ -1,0 +1,26 @@
+{
+  "binding": {
+    "path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\execution_binding_v1\\EXECUTION_BINDING_V1.json",
+    "sha256": "f12bd25f871397e36f931bf63683790198d8b7e19fbbe222cc525a06fb4a450a",
+    "source_commit": "fcd950fc16093aba1076a5c93a63ed43b4589550"
+  },
+  "brief_type": "OWNER_AUTHORIZATION_REQUEST_CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_SUCCESSOR",
+  "cpu_preflight": {
+    "path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\execution_binding_v1\\CPU_PRODUCTION_SHAPED_PREFLIGHT_V1.json",
+    "sha256": "43c2e72acfa2754df275ce6578b65fbebf6dc5966008318b9458413e116cac70",
+    "status": "PASS_PRODUCTION_SHAPED_CPU_PREFLIGHT"
+  },
+  "not_requested": [
+    "No second GPU job",
+    "No retry",
+    "No training or gradients",
+    "No sealed-data access"
+  ],
+  "reason": "CPU-only final execution binding passed. Neither source publication nor GPU launch has occurred.",
+  "requested_authorizations": [
+    "Authorize non-force GitHub publication of the exact final source commit and verify RunPod checkout parity.",
+    "After publication parity is verified, authorize exactly one fresh owner one-shot GPU launch bound to this binding SHA256, one detached job, retry=false, hard cap=10800, optimizer_steps=0, backward_calls=0."
+  ],
+  "schema_version": 1,
+  "status": "REVIEW_REQUIRED"
+}

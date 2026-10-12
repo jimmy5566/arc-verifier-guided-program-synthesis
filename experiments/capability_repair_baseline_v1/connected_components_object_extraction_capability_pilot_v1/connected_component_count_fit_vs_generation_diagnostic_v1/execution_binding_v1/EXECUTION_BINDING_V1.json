@@ -1,0 +1,62 @@
+{
+  "authorization": {
+    "not_authorized_by_this_binding": true,
+    "owner_one_shot_required": true
+  },
+  "checkpoints": {
+    "CONTROL_NARROW_STRUCTURE": "4a5e621f22dc5eb3a3e3e7d2eab009559e276a2c20fd05675f2265ad23ce13e2",
+    "TREATMENT_STRUCTURE_DIVERSE": "5dae97898461b6b618328154bfb4271199a57b6cec68e8e7bb90209002618978",
+    "V7": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+  },
+  "cpu_validation_sha256": "f42323580e93acfdd9d1b0d3908c383c74e8389e03a5a51b5224fcc0dd1d725e",
+  "execution": {
+    "backward_calls": 0,
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "fallback_only": "CUDA_OOM",
+    "fresh_nonce_required": true,
+    "fresh_output_root_required": true,
+    "hard_cap_seconds": 10800,
+    "maximum_detached_jobs": 1,
+    "new_free_running_rows": 48,
+    "ood_regeneration": false,
+    "optimizer_steps": 0,
+    "requested_batch_size": 32,
+    "retry": false,
+    "reused_rows": 168
+  },
+  "execution_source_commit": "fcd950fc16093aba1076a5c93a63ed43b4589550",
+  "forbidden": [
+    "training",
+    "optimizer",
+    "backward",
+    "RUN_002_retry",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "E05",
+    "V4"
+  ],
+  "protocol_id": "CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_SUCCESSOR",
+  "protocol_sha256": "f556bd96801f7ece58c51a5ae8697f42638b337d629942b7d3c493b1be750452",
+  "reuse_inventory_sha256": "b0cc5b45adffcc618fd622786e14dfe3fdbe6aec20222268ba1d694741793d95",
+  "runnable": {
+    "launcher": "scripts/launch_connected_component_fit_generation_diagnostic_v1.py",
+    "scorer": "scripts/score_connected_component_fit_generation_diagnostic_v1.py",
+    "worker": "scripts/run_connected_component_fit_generation_diagnostic_v1.py"
+  },
+  "schema_version": 1,
+  "sidecar_sha256": "ad5c97e0f54a30ba636714c1d5dbd671c25d826616896f5a9cbfd56af48d7950",
+  "source_hashes": {
+    "scripts/connected_component_fit_generation_runtime_contract.py": "067d42ed478cab8f316520ac040ae904eadebfbd3e7c8d727c9c25d809d4da02",
+    "scripts/launch_connected_component_fit_generation_diagnostic_v1.py": "c35ab4261f946bb9632948d438f836bbbbd860e7e63674bc5d728798cd56c525",
+    "scripts/run_connected_component_fit_generation_diagnostic_v1.py": "aa83e9d514f996b9b744681b8c4bc9af0d8a99606d108e3aebd56154c0cb6341",
+    "scripts/score_connected_component_fit_generation_diagnostic_v1.py": "9a7ffb933fa9e91a7d49206e351e450b5d703d9f61ce9e17ea2747368180904c"
+  },
+  "status": "CPU_PREFLIGHT_READY_OWNER_ONE_SHOT_AUTHORIZATION_REQUIRED"
+}

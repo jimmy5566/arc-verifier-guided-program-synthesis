@@ -1,0 +1,19 @@
+{
+  "authorization_status": "OWNER_SOURCE_PUBLICATION_AND_FRESH_ONE_SHOT_GPU_AUTHORIZATION_REQUIRED",
+  "backward_calls": 0,
+  "binding_sha256": "f12bd25f871397e36f931bf63683790198d8b7e19fbbe222cc525a06fb4a450a",
+  "checks": [
+    "PASS_WORKER_SELF_TEST",
+    "PASS_SCORER_SELF_TEST",
+    "PASS_LAUNCHER_GUARD",
+    "PASS_REAL_RUN_002_REUSE_168_MISSING_48",
+    "PASS_SEALED_SIDECAR_BOUNDARY"
+  ],
+  "detached_job_created": false,
+  "execution_source_commit": "fcd950fc16093aba1076a5c93a63ed43b4589550",
+  "gpu_used": false,
+  "model_loaded": false,
+  "optimizer_steps": 0,
+  "schema_version": 1,
+  "status": "PASS_PRODUCTION_SHAPED_CPU_PREFLIGHT"
+}
