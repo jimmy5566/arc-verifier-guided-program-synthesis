@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "audit_id": "CONNECTED_COMPONENTS_OBJECT_EXTRACTION_PRODUCTION_PATH_AUDIT_V7",
+  "status": "PASS_LOCAL_E2E_AND_ACTUAL_RUNPOD_NO_MODEL_RUNTIME_IMPORT",
+  "audited_branch": "codex/connected-components-e1",
+  "audited_head_before_repair": "7eb40a4e23a994ce94e26e0ae3f5ec4c874fdf4d",
+  "confirmed_root_causes": {
+    "v6_terminal_failure": {
+      "cause": "288 protected replay task payloads lack source_id and the frozen worker passed task bytes directly to task_to_sample",
+      "first_failing_slot": 96,
+      "terminal_error": "KeyError:'source_id'",
+      "terminal_receipt_sha256": "6fa1dd76f238c7098b02c33ff90225249d8290fc26a8cf25a968c231ebd38c05"
+    },
+    "batch1_selection": {
+      "cause": "worker selected positional items[:12] instead of b1_subset_by_checkpoint",
+      "observed_v6_v7_b1_rows": 12,
+      "frozen_required_counts": {
+        "V7": 8,
+        "CONTROL_NARROW_STRUCTURE": 12,
+        "TREATMENT_STRUCTURE_DIVERSE": 12
+      }
+    },
+    "scorer_contract": {
+      "cause": "prior scorer summarized split counts only and did not enforce six-artifact completeness, frozen B1 identities, paired bootstrap outcome, family harm, protected retention, or promotion gates"
+    },
+    "composition_construct": {
+      "cause": "generator dispatched every family other than CONNECTED_COMPONENT_COUNT to extract_pair, so COUNT_THEN_OBJECT_EXTRACTION was ordinary extraction",
+      "v1_disposition": "INVALID_CONSTRUCT_PRESERVED_NOT_USED_BY_SUCCESSOR"
+    },
+    "remote_runtime": {
+      "cpu_only_source_imports_and_768_slot_serialization": "PASS",
+      "pinned_5090_venv_torch_import_30_second_hard_timeout": "CONFIRMED_DEFECT_FAIL_EXIT_124",
+      "isolated_repair": "R5 venv exact torch/transformers/peft versions plus task-specific bitsandbytes 0.50.2 overlay",
+      "repaired_import_and_768_slot_serialization": "PASS_6.447_SECONDS",
+      "bitsandbytes_overlay_tree_sha256": "a291eaf4ee7c5501c91258046501f166f5bd265e612ea8c2a333727614ba9f17",
+      "interpretation": "actual RunPod deferred imports and production serializer path pass without model loading when the successor binding selects the isolated repaired runtime"
+    }
+  },
+  "repairs": {
+    "non_mutating_replay_serializer_view": "scripts/run_connected_components_object_extraction_pilot_v1.py",
+    "frozen_id_b1_selector": "scripts/run_connected_components_object_extraction_pilot_v1.py",
+    "explicit_pinned_runtime_launcher": "scripts/launch_connected_components_object_extraction_external_auth_v3.py",
+    "actual_runpod_no_model_runtime_preflight": "scripts/preflight_connected_components_runpod_runtime_v7.py",
+    "complete_post_freeze_scorer": "scripts/score_connected_components_object_extraction_pilot_v1.py",
+    "independent_semantic_oracle": "scripts/connected_components_object_extraction_semantic_oracle.py",
+    "scientific_successor": "scientific_successor_v2/MANIFEST.json",
+    "non_authorizing_binding_freezer": "scripts/freeze_connected_components_object_extraction_execution_binding_v7.py"
+  },
+  "reproducing_cpu_tests": {
+    "command": "py -m unittest tests.test_connected_components_production_path_v7 -v",
+    "status": "PASS_5",
+    "existing_regressions": "PASS_8",
+    "coverage": [
+      "all 384 slots in each arm serialize through production task_to_sample",
+      "slot 96 first replay transition serializes without mutating frozen schedules",
+      "B1 record IDs and checkpoint-specific counts equal the frozen binding",
+      "V1 composition fails and V2 composition plus V1 retention pass an independent semantic oracle",
+      "launcher validation and detached command construction",
+      "worker CPU preflight",
+      "six-artifact scorer completeness, B1 gate, paired outcome, retention and promotion logic"
+    ]
+  },
+  "source_sha256": {
+    "worker": "14a6220e1f7ff8c6566ac2d6dc7c474f8dfe0777320505593d8633e271bbd5d2",
+    "scorer": "74ba1d03a0552824f958f6375b65c25af9f1f67ee56905d9546ca759d3c12897",
+    "launcher": "198374362868509af3828bb6ffb4c3ae0d915c2ab62e108776dff9f7780c9781",
+    "semantic_oracle": "663715a03ecd8f16e26930bf02093addb17e4c75d45725b6ce8fef564313953f",
+    "successor_freezer": "fbdad0fa9b1a5d68d9bd389cd07face7637457bc08255ed8598dd549b42c6145",
+    "binding_freezer": "911e82473d7745af96a4aa725b62ce96d2415b0c64645975f6654d9d39d4b552",
+    "runpod_runtime_preflight": "248f9de3fa9d50184e344ff74de1fb0d24bc9dc3a7817acbb217c1e2eeb23e9d",
+    "production_path_tests": "a51a75c61a7e8b333232450873eba34cc39d8b92a7fee7eab8a522a0c05430db"
+  },
+  "scientific_successor_sha256": {
+    "composition_prompts": "9df27140c83a2a3ec55e8b57a14748fad223d2ef98a7cede8544810448ff8895",
+    "construct_validation": "622a91fcfe07c40b4a2c7c58bd25e423d0a1d83aeaf9e7a8b7068e6b54eb50d7",
+    "manifest": "29960c48c165e487039a5dec4469e723536f0f01f13f88809a268a0f3731e263"
+  },
+  "historical_evidence_preserved": {
+    "v5_failure_evidence_sha256": "d9e09e969e8a3c821bc9019ee58d6cff8d6ead58ebf1303c1237c981b29b4b93",
+    "v5_reused": false,
+    "v6_authorization_reusable": false,
+    "v6_partial_predictions_reused": false,
+    "existing_scientific_artifacts_modified": false
+  },
+  "remaining_blockers": [
+    "commit and push the reviewed source to obtain one exact immutable execution_source_commit",
+    "freeze the V7 binding against that commit and prove LOCAL_HEAD_EQUALS_ORIGIN_REF_EQUALS_RUNPOD_CHECKOUT",
+    "materialize one fresh binding-specific one-shot GPU authorization; no prior V3-V6 authorization is transferable"
+  ],
+  "authorization": {
+    "gpu_authorization_requested": false,
+    "eligible_now": false,
+    "exact_future_requirement": "one fresh one-shot authorization for exactly one detached V2 successor run, bound to the final execution binding SHA256, exact Git commit, nonce, output root, 7200-second training cap, 10800-second evaluation cap, 18000-second combined cap, retry=false, and unchanged forbidden target list"
+  },
+  "audit_actions": {
+    "gpu_used": false,
+    "model_loaded": false,
+    "optimizer_constructed": false,
+    "training_started": false,
+    "sealed_targets_accessed": false,
+    "workflow_state_modified": false,
+    "remote_runtime_modified": true,
+    "remote_runtime_modification": "created isolated /root/arc2_e1_v7_bnb_overlay containing bitsandbytes 0.50.2 only; historical environments and run outputs were not modified",
+    "repository_pushed": false
+  }
+}

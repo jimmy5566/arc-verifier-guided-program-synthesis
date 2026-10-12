@@ -30,7 +30,10 @@ def launch(binding_path,receipt_path,output):
  b,r=validate(binding_path,receipt_path,output);marker=claim(receipt_path,binding_path,output)
  control=control_root(receipt_path,output);control.mkdir(parents=True,exist_ok=False)
  write(control/'LAUNCH_RECEIPT.json',{'status':'DETACHED_LAUNCHED','binding_sha256':sha(binding_path),'authorization_payload_sha256':r['payload_sha256'],'claim_marker':str(marker),'output_root':str(output).replace('\\','/'),'targets_accessed':False})
- with (control/'WORKER.log').open('wb') as log: child=subprocess.Popen([sys.executable,str(ROOT/b['worker_path']),'--binding',str(binding_path),'--output-root',str(output),'--execute'],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+ runtime=b.get('runtime',{});python_executable=runtime.get('python_executable',sys.executable);env=os.environ.copy()
+ prepend=runtime.get('pythonpath_prepend',[])
+ if prepend: env['PYTHONPATH']=os.pathsep.join([*prepend,env.get('PYTHONPATH','')]).rstrip(os.pathsep)
+ with (control/'WORKER.log').open('wb') as log: child=subprocess.Popen([python_executable,str(ROOT/b['worker_path']),'--binding',str(binding_path),'--output-root',str(output),'--execute'],cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
  write(control/'REMOTE_JOB.json',{'pid':child.pid,'detached':True,'status':'RUNNING','binding_sha256':sha(binding_path),'output_root':str(output).replace('\\','/')})
  return control,child.pid
 def main():

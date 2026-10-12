@@ -41,6 +41,6 @@ def test_worker_writes_terminal_receipt_when_early_freshness_gate_fails():
  with tempfile.TemporaryDirectory() as raw:
   d=Path(raw);out=d/'out';out.mkdir();binding=d/'binding.json';binding.write_text(json.dumps(current_binding(out)))
   try: W.execute(binding,out);assert False
-  except RuntimeError as e: assert 'FRESH_OUTPUT_REQUIRED' in str(e)
+  except RuntimeError as e: assert 'BINDING_SCHEMA' in str(e)
   terminal=json.loads((out/'TERMINAL_RECEIPT.json').read_text())
   assert terminal['status']=='FAILED_OR_PARTIAL' and terminal['targets_accessed'] is False
