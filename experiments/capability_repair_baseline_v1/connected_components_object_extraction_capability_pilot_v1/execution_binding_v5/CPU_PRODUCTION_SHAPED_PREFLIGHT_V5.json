@@ -1,0 +1,17 @@
+{
+  "binding_sha256": "1ca7885ad184d4c4218a0d4625bb56a18d32e05aebea20de75db86d106897a07",
+  "execution_source_commit": "e02e9896a877ae6f25c48d929f44c157abb9cdab",
+  "frozen_science_unchanged_from_v4": true,
+  "gpu_used": false,
+  "model_loaded": false,
+  "optimizer_constructed": false,
+  "status": "PASS_PRODUCTION_SHAPED_CPU_PREFLIGHT",
+  "targets_accessed": false,
+  "tests": [
+    "PASS_EXTERNAL_RECEIPT_VALIDATE",
+    "PASS_WORKER_CPU_PREFLIGHT",
+    "PASS_AT_MOST_ONCE_RECEIPT_CLAIM",
+    "PASS_REAL_RUNPOD_SCRIPT_ENTRYPOINT_INFERENCE_IMPORT_CPU_ONLY"
+  ],
+  "worker_sha256": "62d64b9ef28bea31ff934fa32ac1b0f0b420b11d5f306c9f0f665d7daa719053"
+}
