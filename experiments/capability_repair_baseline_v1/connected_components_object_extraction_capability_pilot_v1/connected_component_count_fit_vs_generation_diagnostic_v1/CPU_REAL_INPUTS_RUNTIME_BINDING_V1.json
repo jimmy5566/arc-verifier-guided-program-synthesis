@@ -1,0 +1,144 @@
+{
+  "authorization": {
+    "not_authorized_by_this_binding": true,
+    "owner_one_shot_required": true
+  },
+  "checkpoints": {
+    "CONTROL_NARROW_STRUCTURE": "4a5e621f22dc5eb3a3e3e7d2eab009559e276a2c20fd05675f2265ad23ce13e2",
+    "TREATMENT_STRUCTURE_DIVERSE": "5dae97898461b6b618328154bfb4271199a57b6cec68e8e7bb90209002618978",
+    "V7": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+  },
+  "cpu_validation_sha256": "f42323580e93acfdd9d1b0d3908c383c74e8389e03a5a51b5224fcc0dd1d725e",
+  "execution": {
+    "backward_calls": 0,
+    "checkpoint_runtime_materialization_required": true,
+    "cohort_prompt_tasks_path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\COHORT_PROMPT_TASKS_V1.json",
+    "cohort_prompt_tasks_sha256": "1c04736b3866aa754513142d751339abdd592ee2da11fb500948fe608273e9c6",
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "fallback_only": "CUDA_OOM",
+    "fresh_nonce_required": true,
+    "fresh_output_root_required": true,
+    "hard_cap_seconds": 10800,
+    "inventory_path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\RUN_002_REUSE_AND_MISSING_ROW_INVENTORY.json",
+    "maximum_detached_jobs": 1,
+    "missing_prompt_tasks_path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\MISSING_TRAIN_FIT_PROMPT_TASKS_V1.json",
+    "missing_prompt_tasks_sha256": "2cceaffac3798c432022d9e484901f41599bb5110b77924fb6c598929aadb9fc",
+    "new_free_running_rows": 48,
+    "ood_regeneration": false,
+    "optimizer_steps": 0,
+    "prompt_token_ids_runtime_materialization_required": true,
+    "requested_batch_size": 32,
+    "retry": false,
+    "reused_rows": 168,
+    "run_002_raw_root_runtime_materialization_required": true,
+    "sidecar_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\.arc2-local\\orchestration\\sealed_sidecars\\CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_CORRECT_TOKEN_SIDECAR.json",
+    "teacher_forced_b1_cohort_rows": [
+      {
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:002",
+        "prompt_task_sha256": "4396852820a61d9c3774c272efe65493cf16299bdff8ce184659ff55c4992003",
+        "split": "TRAIN_FIT"
+      },
+      {
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:018",
+        "prompt_task_sha256": "9b35caba2f92f47447614128783539d11777f38ceac401aee365ebe855e72f53",
+        "split": "TRAIN_FIT"
+      },
+      {
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:008",
+        "prompt_task_sha256": "9493647f9a5899101acb686e20889b3180ddc524e32b7f1fadfb4f0f829df045",
+        "split": "TRAIN_FIT"
+      },
+      {
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:L:000",
+        "prompt_task_sha256": "81f07df476dae0f00d51aa798134cb01d8ddb7f5453088e7f125a040054b634a",
+        "split": "TRAIN_FIT"
+      },
+      {
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:T:004",
+        "prompt_task_sha256": "aa45b1a822077a98b96a1403843eba4abda6454169d375c3fda26e9c1d5a5721",
+        "split": "TRAIN_FIT"
+      },
+      {
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:Z:002",
+        "prompt_task_sha256": "6ad887f3138313181f761fea3a9ade7279ca8544e0aebf0fbc9aee95d4d0e4a0",
+        "split": "TRAIN_FIT"
+      },
+      {
+        "cohort_record_id": "OOD:0",
+        "prompt_task_sha256": "67fef3b0b9b2aadd2dcac1d270cb805b99d8bd48dc0080b38e6ba8ee28cec830",
+        "split": "OOD"
+      },
+      {
+        "cohort_record_id": "OOD:16",
+        "prompt_task_sha256": "f5e5d35544331935a3e46d8394d32d22601fd7bedc644a1d839d7b8e5991b541",
+        "split": "OOD"
+      },
+      {
+        "cohort_record_id": "OOD:23",
+        "prompt_task_sha256": "9efb5855e0cded0fdf163e5904a44f32854ff1184969f6f745f06c0deac332f3",
+        "split": "OOD"
+      },
+      {
+        "cohort_record_id": "OOD:30",
+        "prompt_task_sha256": "02ca3f939fbc46eca9066e97fe1e25ee0488f23d90cbac3d0b60be078ca6adad",
+        "split": "OOD"
+      },
+      {
+        "cohort_record_id": "OOD:38",
+        "prompt_task_sha256": "65b44dc2799e5f84c5c134b1667b7cf4d06bd0f48971f25e281862ccc7841ff3",
+        "split": "OOD"
+      },
+      {
+        "cohort_record_id": "OOD:45",
+        "prompt_task_sha256": "8988be79752963cd8ed7f91cf16471dcbcbf107d132c739fca8f8ca6456e37dc",
+        "split": "OOD"
+      }
+    ],
+    "teacher_forced_tolerance": {
+      "Top1_and_Top2_aggregate_count_delta_max": 0,
+      "correct_token_rank_abs_delta_max": 1,
+      "failure_disposition": "INVALID_NOT_INTERPRETABLE",
+      "per_row_mean_margin_abs_delta_max": 0.02,
+      "sequence_normalized_NLL_abs_delta_max": 0.005,
+      "token_weighted_NLL_abs_delta_max": 0.005
+    }
+  },
+  "execution_source_commit": "ccb2400ed7c50d457a689f50c2abd54e6d925eec",
+  "forbidden": [
+    "training",
+    "optimizer",
+    "backward",
+    "RUN_002_retry",
+    "Gold",
+    "dGold",
+    "FINAL_AUDIT",
+    "E05",
+    "V4"
+  ],
+  "protocol_id": "CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_SUCCESSOR",
+  "protocol_sha256": "f556bd96801f7ece58c51a5ae8697f42638b337d629942b7d3c493b1be750452",
+  "reuse_inventory_sha256": "b0cc5b45adffcc618fd622786e14dfe3fdbe6aec20222268ba1d694741793d95",
+  "runnable": {
+    "input_builder": "scripts/prepare_connected_component_fit_generation_inputs_v1.py",
+    "launcher": "scripts/launch_connected_component_fit_generation_diagnostic_v1.py",
+    "scorer": "scripts/score_connected_component_fit_generation_diagnostic_v1.py",
+    "worker": "scripts/run_connected_component_fit_generation_diagnostic_v1.py"
+  },
+  "schema_version": 2,
+  "sidecar_sha256": "ad5c97e0f54a30ba636714c1d5dbd671c25d826616896f5a9cbfd56af48d7950",
+  "source_hashes": {
+    "scripts/connected_component_fit_generation_runtime_contract.py": "29011ec185cf94f26b3b51df443b1a7be8048a3ce48b4266a4ac36641fffd258",
+    "scripts/freeze_connected_component_fit_generation_execution_binding_v1.py": "3d4f67b43fdec8b3ca5caf2a40fda20e222aa9ae1d821e73d302230f37415d8a",
+    "scripts/launch_connected_component_fit_generation_diagnostic_v1.py": "604fb3ab93e6cf26873effc9d5ac902279d734c0bb61864d8d6e946286637d23",
+    "scripts/prepare_connected_component_fit_generation_inputs_v1.py": "8453f0292a012ff6617d9c4aeb7159ed0aa0fe6affd49ef5148c94a8e3aeae88",
+    "scripts/run_connected_component_fit_generation_diagnostic_v1.py": "396357053e7c9818b5d62a98c1bfe34be76b3c43e0cb07fcefb4fdf738f3734b",
+    "scripts/score_connected_component_fit_generation_diagnostic_v1.py": "685936d35872e308ecffb6c34de746a99f00d780e88a1d7a269ed28eb51586ff"
+  },
+  "status": "CPU_REAL_INPUTS_FROZEN_RUNTIME_MATERIALIZATION_AND_OWNER_ONE_SHOT_AUTHORIZATION_REQUIRED"
+}
