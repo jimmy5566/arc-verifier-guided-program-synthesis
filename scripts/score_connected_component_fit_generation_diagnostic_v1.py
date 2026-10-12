@@ -5,7 +5,7 @@ import argparse,hashlib,json,os,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from scripts.connected_component_fit_generation_runtime_contract import first_divergence,semantic_taxonomy,teacher_forced_layout,token_metric,aggregate_record_metrics,validate_sidecar,batch_gate
+from scripts.connected_component_fit_generation_runtime_contract import first_divergence,semantic_taxonomy,teacher_forced_layout,token_metric,aggregate_record_metrics,validate_sidecar,batch_gate,pack_teacher_forced_batch
 
 def self_test():
  assert first_divergence([1,2],[1,3])==1
@@ -18,6 +18,23 @@ def _rows(path):return [json.loads(x) for x in Path(path).read_text().splitlines
 def _sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def _write_rows(path,values):
  path=Path(path);path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix(path.suffix+'.tmp');tmp.write_bytes(b''.join(json.dumps(x,sort_keys=True,separators=(',',':')).encode()+b'\n' for x in values));os.replace(tmp,path)
+
+def _token_metrics(logits,target_ids,positions):
+ import torch
+ metrics=[]
+ for position,token in zip(positions,target_ids,strict=True):
+  values=logits[position].float();correct=values[token];rank=int((values>correct).sum().item())+1;other=values.clone();other[token]=float('-inf')
+  metrics.append({'rank':rank,'top1':rank==1,'top2':rank<=2,'margin':float((correct-other.max()).item()),'nll':float(torch.logsumexp(values,dim=0).item()-correct.item())})
+ return metrics
+
+def _forward_teacher_forced(model, records, pad_token_id):
+ """One physical padded forward for one requested batch of logical records."""
+ import torch
+ layouts={record_id:teacher_forced_layout(prompt['prompt_token_ids'],target['target_token_ids']) for record_id,target,prompt,_ in records}
+ packed=pack_teacher_forced_batch(layouts,pad_token_id)
+ order=list(packed); ids=torch.tensor([packed[k]['input_ids'] for k in order],device='cuda:0');mask=torch.tensor([packed[k]['attention_mask'] for k in order],device='cuda:0')
+ logits=model(input_ids=ids,attention_mask=mask,use_cache=False).logits
+ return {record_id:_token_metrics(logits[index],target['target_token_ids'],layouts[record_id]['target_logit_indices']) for index,(record_id,target,_,_) in enumerate(records)}
 
 def execute(binding_path,raw_root,output_root):
  """Score only a completed raw freeze; token IDs never leave this process."""
@@ -34,26 +51,30 @@ def execute(binding_path,raw_root,output_root):
  prompts={x['cohort_record_id']:x for x in json.loads(Path(e['prompt_token_ids_path']).read_text())}
  raw={(x['checkpoint'],x['cohort_record_id']):x for x in _rows(raw_path)}
  if len(raw)!=216:raise RuntimeError('RAW_COMPLETENESS_INVALID')
- out=[];per_checkpoint={};b1_ids=set(e['teacher_forced_b1_record_ids'])
+ out=[];per_checkpoint={};b1_ids={row['cohort_record_id'] for row in e.get('teacher_forced_b1_cohort_rows',[]) or []}
+ if not b1_ids: b1_ids=set(e.get('teacher_forced_b1_record_ids',[]))
+ if len(b1_ids)!=12: raise RuntimeError('BATCH1_SUBSET_LAYOUT_INVALID')
  for checkpoint,runtime in sorted(b['checkpoint_runtime'].items()):
   if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported():raise RuntimeError('CUDA_BF16_REQUIRED')
   tokenizer=AutoTokenizer.from_pretrained(runtime['base_path'],local_files_only=True)
   base=AutoModelForCausalLM.from_pretrained(runtime['base_path'],local_files_only=True,torch_dtype=torch.bfloat16,low_cpu_mem_usage=True).to('cuda:0');model=PeftModel.from_pretrained(base,runtime['adapter_path'],is_trainable=False).eval()
+  records=[]
+  for record_id,target in sorted(targets.items()):
+   row=raw.get((checkpoint,record_id));prompt=prompts.get(record_id)
+   if not row or not prompt or prompt.get('prompt_task_sha256')!=target['prompt_task_sha256'] or row.get('prompt_sha256')!=target['prompt_task_sha256']:raise RuntimeError('PROMPT_OR_RAW_IDENTITY_MISMATCH')
+   records.append((record_id,{**target,'target_token_ids':[int(x) for x in target['target_token_ids']]},prompt,row))
   primary={};b1={}
   with torch.inference_mode():
-   for record_id,target in sorted(targets.items()):
-    row=raw.get((checkpoint,record_id));prompt=prompts.get(record_id)
-    if not row or not prompt or prompt.get('prompt_task_sha256')!=target['prompt_task_sha256'] or row.get('prompt_sha256')!=target['prompt_task_sha256']:raise RuntimeError('PROMPT_OR_RAW_IDENTITY_MISMATCH')
-    target_ids=[int(x) for x in target['target_token_ids']];layout=teacher_forced_layout(prompt['prompt_token_ids'],target_ids);ids=torch.tensor([layout['input_ids']],device='cuda:0');logits=model(input_ids=ids,attention_mask=torch.ones_like(ids),use_cache=False).logits[0]
-    metrics=[]
-    for position,token in zip(layout['target_logit_indices'],target_ids,strict=True):
-     values=logits[position].float();correct=values[token];rank=int((values>correct).sum().item())+1;other=values.clone();other[token]=float('-inf');margin=float((correct-other.max()).item());nll=float(torch.logsumexp(values,dim=0).item()-correct.item());metrics.append({'rank':rank,'top1':rank==1,'top2':rank<=2,'margin':margin,'nll':nll})
-    expected=parse_native_grid(tokenizer.decode(target_ids,skip_special_tokens=False));taxonomy=semantic_taxonomy(row.get('parsed_grid'),expected,row.get('parser_valid') is True)
-    item={'checkpoint':checkpoint,'cohort_record_id':record_id,'split':target['split'],'prompt_sha256':target['prompt_task_sha256'],'teacher_forced':aggregate_record_metrics({record_id:metrics}),'first_divergence':first_divergence(row['generated_token_ids'],target_ids),'semantic_taxonomy':taxonomy,'target_token_ids_persisted':False}
-    primary[record_id]=metrics;out.append(item)
-    if record_id in b1_ids:b1[record_id]=metrics
-  tolerance=e['teacher_forced_tolerance'];gate=batch_gate({k:v[0] for k,v in b1.items()},{k:v[0] for k,v in b1.items()},tolerance)
-  per_checkpoint[checkpoint]={'records':len(primary),'b1_records':len(b1),'batch1_gate':gate};del model;torch.cuda.empty_cache()
+   for start in range(0,len(records),int(e['requested_batch_size'])):
+    primary.update(_forward_teacher_forced(model,records[start:start+int(e['requested_batch_size'])],tokenizer.pad_token_id or tokenizer.eos_token_id or 0))
+   for record in records:
+    if record[0] in b1_ids:b1.update(_forward_teacher_forced(model,[record],tokenizer.pad_token_id or tokenizer.eos_token_id or 0))
+  for record_id,target,prompt,row in records:
+   target_ids=target['target_token_ids'];expected=parse_native_grid(tokenizer.decode(target_ids,skip_special_tokens=False));taxonomy=semantic_taxonomy(row.get('parsed_grid'),expected,row.get('parser_valid') is True)
+   out.append({'checkpoint':checkpoint,'cohort_record_id':record_id,'split':target['split'],'prompt_sha256':target['prompt_task_sha256'],'teacher_forced':aggregate_record_metrics({record_id:primary[record_id]}),'first_divergence':first_divergence(row['generated_token_ids'],target_ids),'semantic_taxonomy':taxonomy,'target_token_ids_persisted':False})
+  flatten=lambda values:{f'{record_id}:{index}':metric for record_id,metrics in values.items() for index,metric in enumerate(metrics)}
+  tolerance=e['teacher_forced_tolerance'];gate=batch_gate(flatten({k:primary[k] for k in b1}),flatten(b1),tolerance)
+  per_checkpoint[checkpoint]={'records':len(primary),'primary_physical_batches':(len(records)+int(e['requested_batch_size'])-1)//int(e['requested_batch_size']),'b1_records':len(b1),'b1_physical_batches':len(b1),'batch1_gate':gate};del model;torch.cuda.empty_cache()
  if len(out)!=216:raise RuntimeError('SCORE_COMPLETENESS_INVALID')
  output=Path(output_root);output.mkdir(parents=True);metrics_path=output/'SCORED_METRICS.jsonl';_write_rows(metrics_path,out);_write(output/'SCORE_RECEIPT.json',{'status':'COMPLETE_CPU_SCORED_NO_UPDATE','raw_sha256':freeze['raw_sha256'],'metrics_sha256':_sha(metrics_path),'records':216,'checkpoint_summary':per_checkpoint,'target_token_ids_persisted':False,'optimizer_steps':0,'backward_calls':0,'gpu_used':True});return output/'SCORE_RECEIPT.json'
 if __name__=='__main__':

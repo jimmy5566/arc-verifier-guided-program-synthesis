@@ -11,6 +11,19 @@ def teacher_forced_layout(prompt_ids,target_ids,pad=13):
     sequence=[int(x) for x in prompt_ids]+[int(x) for x in target_ids]
     return {'input_ids':sequence,'attention_mask':[1]*len(sequence),'labels':[-100]*len(prompt_ids)+[int(x) for x in target_ids], 'target_logit_indices':list(range(len(prompt_ids)-1,len(sequence)-1))}
 
+def pack_teacher_forced_batch(layouts, pad_token_id=0):
+    """Right-pad independently frozen causal layouts for one physical forward."""
+    if not isinstance(layouts,dict) or not layouts: raise RuntimeError('BATCH_LAYOUT_EMPTY')
+    width=max(len(item['input_ids']) for item in layouts.values())
+    packed={}
+    for record_id,item in layouts.items():
+        ids=[int(x) for x in item['input_ids']]
+        mask=[int(x) for x in item['attention_mask']]
+        if len(ids)!=len(mask) or not ids: raise RuntimeError('BATCH_LAYOUT_INVALID')
+        packed[record_id]={'input_ids':ids+[int(pad_token_id)]*(width-len(ids)),
+                           'attention_mask':mask+[0]*(width-len(mask))}
+    return packed
+
 def token_metric(logits,target):
     if not logits or not 0<=int(target)<len(logits): raise RuntimeError('TARGET_LOGIT_INVALID')
     values=[float(x) for x in logits]; correct=values[int(target)]

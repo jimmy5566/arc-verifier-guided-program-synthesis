@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from scripts.connected_component_fit_generation_runtime_contract import aggregate_record_metrics, require_inventory_partition, token_metric
+from scripts.connected_component_fit_generation_runtime_contract import aggregate_record_metrics, require_inventory_partition, token_metric, teacher_forced_layout, pack_teacher_forced_batch
 
 def main():
     a=token_metric([0,4,1],1); b=token_metric([0,1,4],2)
@@ -18,5 +18,8 @@ def main():
     except RuntimeError as e:
         assert str(e)=="INVENTORY_ROW_COUNT_INVALID"
     else: raise AssertionError("missing failure")
+    packed=pack_teacher_forced_batch({'short':teacher_forced_layout([1],[2]),'long':teacher_forced_layout([1,2,3],[4,5])})
+    assert len(packed['short']['input_ids'])==len(packed['long']['input_ids'])==5
+    assert packed['short']['attention_mask']==[1,1,0,0,0]
     print("PASS_RUNTIME_CONTRACT_V2")
 if __name__=="__main__": main()
