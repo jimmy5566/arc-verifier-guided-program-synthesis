@@ -1,0 +1,30 @@
+{
+  "cohort_sha256": "1c04736b3866aa754513142d751339abdd592ee2da11fb500948fe608273e9c6",
+  "not_used": [
+    "prediction",
+    "sidecar",
+    "target",
+    "runtime_batch_order"
+  ],
+  "record_ids": [
+    "OOD:0",
+    "OOD:14",
+    "OOD:2",
+    "OOD:25",
+    "OOD:30",
+    "OOD:36",
+    "OOD:41",
+    "OOD:47",
+    "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:002",
+    "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:000",
+    "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:L:000",
+    "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:T:016"
+  ],
+  "records": 12,
+  "schema_version": 1,
+  "selected_using": [
+    "cohort_record_id",
+    "frozen_cohort_order"
+  ],
+  "selection_rule": "Every sixth record in immutable cohort file order; depends only on the frozen target-free cohort ordering."
+}

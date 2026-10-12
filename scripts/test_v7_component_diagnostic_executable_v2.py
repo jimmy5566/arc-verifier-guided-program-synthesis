@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """CPU-only production-shaped integration for the V7 executable successor."""
 from __future__ import annotations
-import hashlib, importlib.util, json, tempfile
+import hashlib, importlib.util, json, tempfile, sys
 from pathlib import Path
 from unittest import mock
 
@@ -12,8 +12,8 @@ M = importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(M)
 def digest(path): return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 class FakeRuntime:
- def __init__(self, raw_root, *, oom=False, b1_mismatch=False, dependency_error=False, malformed=False):
-  self.raw_root=Path(raw_root); self.oom=oom; self.b1_mismatch=b1_mismatch; self.dependency_error=dependency_error; self.malformed=malformed; self.calls=[]; self.sidecar_opened=False
+ def __init__(self, raw_root, *, oom=False, b1_mismatch=False, teacher_drift=False, dependency_error=False, malformed=False):
+  self.raw_root=Path(raw_root); self.oom=oom; self.b1_mismatch=b1_mismatch; self.teacher_drift=teacher_drift; self.dependency_error=dependency_error; self.malformed=malformed; self.calls=[]; self.sidecar_opened=False
  def check_dependencies(self):
   if self.dependency_error: raise RuntimeError('DEPENDENCY_MISSING')
  def verify_adapter(self,path,expected):
@@ -37,15 +37,17 @@ class FakeRuntime:
   return {f'R:{i:02d}':{'target_token_ids':[2,3],'target_grid':[[i%4]]} for i in range(72)}
  def teacher_forced(self,raw_rows,sidecar,batch_size):
   self.calls.append(('teacher',batch_size,len(raw_rows)))
-  return {row['cohort_record_id']:[[0.0,0.0,4.0,1.0],[0.0,0.0,1.0,4.0]] for row in raw_rows}
+  first=[0.0,4.0,0.0,1.0] if self.teacher_drift and batch_size==1 else [0.0,0.0,4.0,1.0]
+  return {row['cohort_record_id']:[first,[0.0,0.0,1.0,4.0]] for row in raw_rows}
 
 def fixture(base):
- base=Path(base); base.mkdir(parents=True,exist_ok=True); protocol=base/'protocol.json'; cohort=base/'cohort.json'; adapter=base/'adapter.bin'; sidecar=base/'sidecar.json'
+ base=Path(base); base.mkdir(parents=True,exist_ok=True); protocol=base/'protocol.json'; cohort=base/'cohort.json'; adapter=base/'adapter.bin'; sidecar=base/'sidecar.json'; subset=base/'batch1.json'
  protocol.write_text('{}'); adapter.write_bytes(b'V7-ADAPTER'); sidecar.write_text('{}')
  records=[{'cohort_record_id':f'R:{i:02d}','prompt_task_sha256':f'{i:064x}','task':{'train':[],'test':[{'input':[[i%4]]}]}} for i in range(72)]
  cohort.write_text(json.dumps({'records':records},sort_keys=True))
+ subset.write_text(json.dumps({'record_ids':[f'R:{i:02d}' for i in range(0,72,6)]},sort_keys=True))
  source='scripts/v7_component_diagnostic_executable_v2.py'
- binding={'protocol_sha256':digest(protocol),'protocol':{'path':str(protocol),'sha256':digest(protocol)},'cohort':{'path':str(cohort),'sha256':digest(cohort)},'sidecar':{'path':str(sidecar),'sha256':digest(sidecar)},'tokenizer':{'runtime_path':str(base),'files':{'protocol.json':digest(protocol)}},'checkpoint':{'adapter_model_path':str(adapter),'adapter_model_sha256':digest(adapter)},'execution':{'checkpoint':'V7','retry':False,'optimizer_steps':0,'backward_calls':0,'hard_cap_seconds':3600,'requested_batch_size':32,'fallback_ladder':[32,16,8,4,1]},'source_hashes':{source:digest(ROOT/source)}}
+ binding={'protocol_sha256':digest(protocol),'protocol':{'path':str(protocol),'sha256':digest(protocol)},'cohort':{'path':str(cohort),'sha256':digest(cohort)},'batch1_subset':{'path':str(subset),'sha256':digest(subset)},'teacher_forced_tolerance':{'rank_abs_delta_max':0,'top_count_delta_max':0,'margin_abs_delta_max':0.02,'nll_abs_delta_max':0.005},'sidecar':{'path':str(sidecar),'remote_path':str(sidecar),'sha256':digest(sidecar)},'tokenizer':{'runtime_path':str(base),'files':{'protocol.json':digest(protocol)}},'checkpoint':{'adapter_model_path':str(adapter),'adapter_model_sha256':digest(adapter)},'execution':{'checkpoint':'V7','retry':False,'optimizer_steps':0,'backward_calls':0,'hard_cap_seconds':3600,'requested_batch_size':32,'fallback_ladder':[32,16,8,4,1]},'source_hashes':{source:digest(ROOT/source)}}
  binding_path=base/'binding.json'; binding_path.write_text(json.dumps(binding,sort_keys=True)); auth=base/'auth.json'; auth.write_text(json.dumps({'status':'VALID_UNCONSUMED','binding_sha256':digest(binding_path)}))
  return binding_path,auth,adapter
 
@@ -70,6 +72,11 @@ def main():
   assert json.loads((out/'RAW_FREEZE_RECEIPT.json').read_text())['fallback_events']==[{'from':32,'to':16,'reason':'CUDA_OOM'}]
 
   result,_,_,_,_,_=successful_run(Path(tmp)/'b1fail',b1_mismatch=True); assert result['status']=='INVALID_NOT_INTERPRETABLE'
+  result,_,_,_,_,_=successful_run(Path(tmp)/'teacherfail',teacher_drift=True); assert result['status']=='INVALID_NOT_INTERPRETABLE'
+  assert M.taxonomy([[1,0,1]],[[1,1,0]],True)['primary']=='CONNECTED_COMPONENT_COUNT'
+  assert M.taxonomy([[0,0,1]],[[1,0,0]],True)['primary']=='SELECTED_OBJECT_IDENTITY'
+  assert M.taxonomy([[1,0,0],[1,0,0]],[[1,1,0],[0,0,0]],True)['primary']=='GEOMETRY'
+  assert M.taxonomy([[2]],[[1]],True)['primary']=='COLOR'
   binding,auth,_=fixture(Path(tmp)/'badsource'); obj=json.loads(binding.read_text()); obj['source_hashes']['scripts/v7_component_diagnostic_executable_v2.py']='0'*64; binding.write_text(json.dumps(obj)); expect('SOURCE_IDENTITY_MISMATCH',lambda:M.validate_binding(binding))
   binding,auth,_=fixture(Path(tmp)/'badcohort'); obj=json.loads(binding.read_text()); obj['cohort']['sha256']='0'*64; binding.write_text(json.dumps(obj)); expect('COHORT_IDENTITY_MISMATCH',lambda:M.validate_binding(binding))
   binding,auth,_=fixture(Path(tmp)/'badadapter'); obj=json.loads(binding.read_text()); obj['checkpoint']['adapter_model_sha256']='0'*64; binding.write_text(json.dumps(obj)); auth.write_text(json.dumps({'status':'VALID_UNCONSUMED','binding_sha256':digest(binding)})); expect('V7_ADAPTER_IDENTITY_MISMATCH',lambda:M.launch(binding,FakeRuntime(Path(tmp)/'badadapter'/'out'),auth,Path(tmp)/'badadapter'/'out',Path(tmp)/'badadapter'/'control'))
@@ -79,6 +86,7 @@ def main():
   binding,auth,_=fixture(Path(tmp)/'timeout'); out=Path(tmp)/'timeout'/'out';control=Path(tmp)/'timeout'/'control'
   with mock.patch.object(M.time,'monotonic',side_effect=[0,4000]): expect('EXECUTION_TIMEOUT',lambda:M.launch(binding,FakeRuntime(out),auth,out,control))
   assert json.loads((control/'TERMINAL_RECEIPT.json').read_text())['status']=='FAILED_NO_UPDATE'
+  watchdog=Path(tmp)/'watchdog.json'; assert M.enforce_hard_cap([sys.executable,'-c','import time; time.sleep(1)'],watchdog,seconds=.01) is None; assert json.loads(watchdog.read_text())['status']=='FAILED_NO_UPDATE_TIMEOUT'
  print('PASS_V7_EXECUTABLE_V2_PRODUCTION_SHAPED_CPU_INTEGRATION')
 
 if __name__=='__main__': main()

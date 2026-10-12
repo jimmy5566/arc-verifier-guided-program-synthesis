@@ -87,6 +87,9 @@ def validate_binding(binding_path):
     require(execution.get("hard_cap_seconds") == 3600, "HARD_CAP_MISMATCH")
     require(execution.get("requested_batch_size") == 32, "BATCH32_REQUIRED")
     require(execution.get("fallback_ladder") == list(LADDER), "OOM_LADDER_MISMATCH")
+    subset = binding.get("batch1_subset", {})
+    require(subset.get("path") and subset.get("sha256"), "BATCH1_SUBSET_BINDING_MISSING")
+    require_sha(bound_path(subset["path"]), subset["sha256"], "BATCH1_SUBSET_IDENTITY_MISMATCH")
     require(isinstance(binding.get("tokenizer"), dict) and binding["tokenizer"].get("runtime_path") and binding["tokenizer"].get("files"), "TOKENIZER_BINDING_MISSING")
     for relative, digest in binding.get("source_hashes", {}).items():
         require_sha(ROOT / relative, digest, "SOURCE_IDENTITY_MISMATCH:" + relative)
@@ -128,6 +131,21 @@ def first_divergence(left, right):
     return None if len(left) == len(right) else min(len(left), len(right))
 
 
+def _components(grid):
+    seen, output = set(), []
+    for r,row in enumerate(grid):
+        for c,value in enumerate(row):
+            if not value or (r,c) in seen: continue
+            todo=[(r,c)]; seen.add((r,c)); cells=[]
+            while todo:
+                x,y=todo.pop(); cells.append((x,y))
+                for nx,ny in ((x-1,y),(x+1,y),(x,y-1),(x,y+1)):
+                    if 0<=nx<len(grid) and 0<=ny<len(grid[0]) and (nx,ny) not in seen and grid[nx][ny]==value:
+                        seen.add((nx,ny)); todo.append((nx,ny))
+            minx,miny=min(x for x,_ in cells),min(y for _,y in cells)
+            output.append((value,tuple(sorted((x-minx,y-miny) for x,y in cells)),tuple(sorted(cells))))
+    return sorted(output)
+
 def taxonomy(parsed_grid, expected_grid, parser_valid):
     if not parser_valid:
         return {"primary": "PARSER_FAILURE", "axes": ["PARSER_FAILURE"]}
@@ -135,14 +153,17 @@ def taxonomy(parsed_grid, expected_grid, parser_valid):
         return {"primary": "EXACT", "axes": []}
     if not isinstance(parsed_grid, list) or not parsed_grid or len(parsed_grid) != len(expected_grid) or any(len(a) != len(b) for a, b in zip(parsed_grid, expected_grid)):
         return {"primary": "DIMENSIONS", "axes": ["DIMENSIONS"]}
-    axes = []
-    if sum(x != 0 for row in parsed_grid for x in row) != sum(x != 0 for row in expected_grid for x in row):
+    axes=[]; predicted,expected=_components(parsed_grid),_components(expected_grid)
+    if len(predicted)!=len(expected):
         axes.append("CONNECTED_COMPONENT_COUNT")
-    if sorted(x for row in parsed_grid for x in row if x) != sorted(x for row in expected_grid for x in row if x):
+    if sorted(x[0] for x in predicted)!=sorted(x[0] for x in expected):
         axes.append("COLOR")
+    same_shape = sorted((x[0],x[1]) for x in predicted)==sorted((x[0],x[1]) for x in expected)
+    if not same_shape: axes.append("GEOMETRY")
+    if same_shape and sorted((x[0],x[1],x[2]) for x in predicted)!=sorted((x[0],x[1],x[2]) for x in expected): axes.append("SELECTED_OBJECT_IDENTITY")
     if not axes:
         axes.append("OUTPUT_CONSTRUCTION")
-    order = ("CONNECTED_COMPONENT_COUNT", "SELECTED_OBJECT_IDENTITY", "GEOMETRY", "COLOR", "OUTPUT_CONSTRUCTION")
+    order = ("CONNECTED_COMPONENT_COUNT", "COLOR", "GEOMETRY", "SELECTED_OBJECT_IDENTITY", "OUTPUT_CONSTRUCTION")
     return {"primary": next(axis for axis in order if axis in axes), "axes": axes}
 
 
@@ -199,6 +220,14 @@ def _batch_agreement(primary, batch1):
     return {"status": "PASS" if passed else "INVALID_NOT_INTERPRETABLE", "physical_primary": B1_COUNT,
             "physical_batch1": B1_COUNT, "generated_token_identity": passed}
 
+def _teacher_batch_agreement(primary, batch1, tolerance):
+    require(set(primary)==set(batch1) and len(primary)==B1_COUNT, "BATCH1_TEACHER_PAIRING")
+    p=[metric for key in sorted(primary) for metric in primary[key]]; b=[metric for key in sorted(batch1) for metric in batch1[key]]
+    require(len(p)==len(b), "BATCH1_TEACHER_TOKEN_LAYOUT")
+    rank=max(abs(x['rank']-y['rank']) for x,y in zip(p,b)); top1=abs(sum(x['top1'] for x in p)-sum(y['top1'] for y in b)); top2=abs(sum(x['top2'] for x in p)-sum(y['top2'] for y in b)); margin=max(abs(x['margin']-y['margin']) for x,y in zip(p,b)); nll=max(abs(x['nll']-y['nll']) for x,y in zip(p,b))
+    passed=rank<=tolerance['rank_abs_delta_max'] and top1<=tolerance['top_count_delta_max'] and top2<=tolerance['top_count_delta_max'] and margin<=tolerance['margin_abs_delta_max'] and nll<=tolerance['nll_abs_delta_max']
+    return {'status':'PASS' if passed else 'INVALID_NOT_INTERPRETABLE','rank_abs_delta_max':rank,'top1_count_delta':top1,'top2_count_delta':top2,'margin_abs_delta_max':margin,'nll_abs_delta_max':nll}
+
 
 def scorer(binding, runtime, raw, raw_receipt, output_root, deadline):
     """The sole sidecar-opening boundary, valid only after complete raw freeze."""
@@ -206,7 +235,8 @@ def scorer(binding, runtime, raw, raw_receipt, output_root, deadline):
     require(raw_receipt.get("raw_sha256") == sha_path(Path(output_root) / "RAW_FROZEN.jsonl"), "RAW_FREEZE_IDENTITY")
     sidecar = runtime.open_sidecar(binding["sidecar"])  # intentionally deferred
     require(len(sidecar) == RAW_COUNT and set(sidecar) == {row["cohort_record_id"] for row in raw}, "SIDECAR_LAYOUT")
-    b1_ids = sorted(sidecar)[:B1_COUNT]
+    subset=load_json(bound_path(binding['batch1_subset']['path'])); b1_ids=subset.get('record_ids')
+    require(isinstance(b1_ids,list) and len(b1_ids)==B1_COUNT and len(set(b1_ids))==B1_COUNT and set(b1_ids)<=set(sidecar), 'BATCH1_SUBSET_LAYOUT')
     by_id = {row["cohort_record_id"]: row for row in raw}
     primary_logits = runtime.teacher_forced([by_id[key] for key in sorted(by_id)], sidecar, batch_size=32)
     b1_logits = runtime.teacher_forced([by_id[key] for key in b1_ids], sidecar, batch_size=1)
@@ -214,11 +244,14 @@ def scorer(binding, runtime, raw, raw_receipt, output_root, deadline):
     require(len(primary_logits) == RAW_COUNT and len(b1_logits) == B1_COUNT and len(b1_generated) == B1_COUNT, "PHYSICAL_BATCH1_COMPLETENESS")
     primary_b1 = {key: by_id[key] for key in b1_ids}
     observed_b1 = {key: {"generated_token_ids": row.get("generated_token_ids")} for key, row in zip(b1_ids, b1_generated, strict=True)}
-    gate = _batch_agreement(primary_b1, observed_b1)
+    generation_gate = _batch_agreement(primary_b1, observed_b1)
+    primary_metrics={key:[metric(logit,token) for logit,token in zip(primary_logits[key],sidecar[key]['target_token_ids'],strict=True)] for key in primary_logits}
+    b1_metrics={key:[metric(logit,token) for logit,token in zip(b1_logits[key],sidecar[key]['target_token_ids'],strict=True)] for key in b1_logits}
+    teacher_gate = _teacher_batch_agreement({key:primary_metrics[key] for key in b1_ids}, b1_metrics, binding['teacher_forced_tolerance'])
     rows = []
     for key in sorted(by_id):
         target = sidecar[key]
-        token_metrics = [metric(logit, token) for logit, token in zip(primary_logits[key], target["target_token_ids"], strict=True)]
+        token_metrics = primary_metrics[key]
         expected_grid = target.get("target_grid")
         if expected_grid is None:
             expected_grid = runtime.decode_grid(target["target_token_ids"])
@@ -230,9 +263,9 @@ def scorer(binding, runtime, raw, raw_receipt, output_root, deadline):
                      "family_aware_semantic_taxonomy": taxonomy(by_id[key]["parsed_grid"], expected_grid, by_id[key]["parser_valid"])})
     require(time.monotonic() <= deadline, "EXECUTION_TIMEOUT")
     write_jsonl(Path(output_root) / "SCORED_METRICS.jsonl", rows)
-    receipt = {"status": "COMPLETE" if gate["status"] == "PASS" else "INVALID_NOT_INTERPRETABLE",
+    receipt = {"status": "COMPLETE" if generation_gate["status"] == "PASS" and teacher_gate['status']=='PASS' else "INVALID_NOT_INTERPRETABLE",
                "records": RAW_COUNT, "teacher_forced_forwards": RAW_COUNT, "batch1_teacher_forced_forwards": B1_COUNT,
-               "batch1_generations": B1_COUNT, "batch1_gate": gate, "optimizer_steps": 0, "backward_calls": 0,
+                "batch1_generations": B1_COUNT, "batch1_generation_gate": generation_gate, "batch1_teacher_forced_gate":teacher_gate,"optimizer_steps": 0, "backward_calls": 0,
                "metrics_sha256": sha_path(Path(output_root) / "SCORED_METRICS.jsonl"), "target_token_ids_persisted": False}
     write_json(Path(output_root) / "TERMINAL_RECEIPT.json", receipt)
     return receipt
@@ -263,6 +296,19 @@ def launch(binding_path, runtime, authorization_path, output_root, control_root)
                     "optimizer_steps": 0, "backward_calls": 0, "targets_accessed": False}
         write_json(control_root / "TERMINAL_RECEIPT.json", terminal)
         raise
+
+def enforce_hard_cap(command, terminal_path, seconds=3600):
+    """Process-level boundary used by the detached production CLI wrapper."""
+    child=subprocess.Popen(command, start_new_session=True)
+    try:
+        returncode=child.wait(timeout=seconds)
+    except subprocess.TimeoutExpired:
+        child.kill(); child.wait()
+        write_json(terminal_path, {'status':'FAILED_NO_UPDATE_TIMEOUT','hard_cap_seconds':seconds,'optimizer_steps':0,'backward_calls':0})
+        return None
+    if returncode:
+        write_json(terminal_path, {'status':'FAILED_NO_UPDATE_CHILD_EXIT','returncode':returncode,'optimizer_steps':0,'backward_calls':0})
+    return returncode
 
 
 class RealRuntime:
@@ -322,8 +368,10 @@ class RealRuntime:
                 out[row["cohort_record_id"]] = [logits[len(prompt) - 1 + i].float().tolist() for i in range(len(target))]
         return out
     def open_sidecar(self, descriptor):
-        require_sha(descriptor["path"], descriptor["sha256"], "SIDECAR_IDENTITY_MISMATCH")
-        rows = load_json(descriptor["path"]).get("records", [])
+        remote_path = descriptor.get("remote_path")
+        require(isinstance(remote_path, str) and remote_path.startswith("/"), "REMOTE_SIDECAR_PATH_REQUIRED")
+        require_sha(remote_path, descriptor["sha256"], "SIDECAR_IDENTITY_MISMATCH")
+        rows = load_json(remote_path).get("records", [])
         return {row["cohort_record_id"]: row for row in rows}
     def decode_grid(self, token_ids):
         from inference.nvarc_native import parse_native_grid
@@ -336,8 +384,12 @@ def main():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--binding", type=Path, required=True); parser.add_argument("--authorization", type=Path)
-    parser.add_argument("--output-root", type=Path); parser.add_argument("--control-root", type=Path); parser.add_argument("--launch", action="store_true")
+    parser.add_argument("--output-root", type=Path); parser.add_argument("--control-root", type=Path); parser.add_argument("--launch", action="store_true"); parser.add_argument('--watch-command',nargs='+'); parser.add_argument('--hard-cap-seconds',type=int,default=3600)
     args = parser.parse_args()
+    if args.watch_command:
+        require(args.control_root is not None and args.hard_cap_seconds==3600,'WATCHDOG_CONTRACT')
+        code=enforce_hard_cap(args.watch_command,args.control_root/'TERMINAL_RECEIPT.json',args.hard_cap_seconds)
+        print(json.dumps({'status':'WATCHDOG_COMPLETE','returncode':code},sort_keys=True)); return
     if not args.launch or not args.authorization or not args.output_root or not args.control_root:
         raise SystemExit("REFUSE_UNAUTHORIZED_EXECUTION")
     binding = validate_binding(args.binding)
