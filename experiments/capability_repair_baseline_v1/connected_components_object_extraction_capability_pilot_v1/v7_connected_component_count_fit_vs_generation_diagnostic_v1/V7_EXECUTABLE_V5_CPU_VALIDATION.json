@@ -1,0 +1,21 @@
+{
+  "commands": [
+    "py -m py_compile scripts/v7_component_diagnostic_executable_v2.py scripts/test_v7_component_diagnostic_executable_v2.py",
+    "py scripts/test_v7_component_diagnostic_executable_v2.py"
+  ],
+  "execution_source_commit": "de8912833451ec5c3ff0055c37833c21f52827a7",
+  "gpu_used": false,
+  "model_loaded": false,
+  "result": "PASS_V7_EXECUTABLE_V2_PRODUCTION_SHAPED_CPU_INTEGRATION",
+  "schema_version": 1,
+  "scientific_configuration_changed": false,
+  "source_hashes": {
+    "scripts/test_v7_component_diagnostic_executable_v2.py": "a9e136bcee731397312c7b91322632958381d4485edbc4df70a08e0867b7b8a7",
+    "scripts/v7_component_diagnostic_executable_v2.py": "7295ec680cf08da8aecfb3baf000f2d8b75cb446edf037b201261c73382b190c",
+    "src/inference/arc_native_io.py": "502a064f09743acc85643ebb8a9a95573832d8b3d6c51e79ccf94222dd4b89b3",
+    "src/inference/nvarc_native.py": "b1da3a1644e4bd176c64fb45bf30ce94362a0b479c32507755f009e69f18af87"
+  },
+  "status": "PASS_CPU_ONLY_PRODUCTION_SHAPED_INTEGRATION",
+  "targets_accessed": false,
+  "validation_id": "V7_EXECUTABLE_V5_PHYSICAL_B1_SUCCESSOR_CPU_VALIDATION"
+}
