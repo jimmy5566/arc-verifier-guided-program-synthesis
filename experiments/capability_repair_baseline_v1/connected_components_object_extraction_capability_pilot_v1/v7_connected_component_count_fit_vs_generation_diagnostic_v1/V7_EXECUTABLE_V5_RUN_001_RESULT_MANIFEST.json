@@ -1,0 +1,59 @@
+{
+  "artifacts": {
+    "control_terminal_receipt_sha256": "2aeb57e99223dfee93a728841ae85c00993179b36007b25baf2855c8f58d921e",
+    "raw_freeze_receipt_sha256": "a94364b8aa4f6d23ad2438407618405432e275e6ade691f6352b8755acfc5578",
+    "raw_frozen_sha256": "2577f839f12e2b596ea03517a13f7ab278f6ba8769b95cf8f5ae543ae47cfafd",
+    "scored_metrics_sha256": "fb49c816746fb46542b7697559bf9f111f170588d5d8b3ddd6f89149f5f8ef87",
+    "watchdog_invocation_sha256": "d4d28fafa124ef9f3dbe292aa3bb12016553e6411df38f8b05734b3ea5d736b0"
+  },
+  "binding_artifact_commit": "e80c6af908a58562e74ab8c5cd8d894968159e45",
+  "binding_sha256": "20746ea5d0767dff617efcd55bff33014facefc03f48edd81d7daec33fb04dc1",
+  "execution_source_commit": "de8912833451ec5c3ff0055c37833c21f52827a7",
+  "fresh_nonce": "d43a178cd1a19893538fea36a2304f87",
+  "manifest_id": "V7_EXECUTABLE_V5_RUN_001_RESULT_MANIFEST",
+  "preservation": {
+    "local_metrics_records": 72,
+    "local_raw_records": 72,
+    "new_gpu_launch_authorized": false,
+    "prior_v4_authorization_reused": false,
+    "remote_artifacts_fetched_byte_verified": true,
+    "retry_permitted": false
+  },
+  "raw_freeze": {
+    "backward_calls": 0,
+    "fallback_events": [],
+    "optimizer_steps": 0,
+    "raw_generation_calls": 72,
+    "raw_sha256": "2577f839f12e2b596ea03517a13f7ab278f6ba8769b95cf8f5ae543ae47cfafd",
+    "records": 72,
+    "sidecar_accessed": false,
+    "status": "RAW_FROZEN"
+  },
+  "reason": "BATCH1_TEACHER_FORCED_GATE_INVALID_NOT_INTERPRETABLE",
+  "result_interpretable": false,
+  "schema_version": 1,
+  "status": "INVALID_NOT_INTERPRETABLE",
+  "terminal_summary": {
+    "backward_calls": 0,
+    "batch1_generation_gate": {
+      "generated_token_identity": true,
+      "physical_batch1": 12,
+      "physical_primary": 12,
+      "status": "PASS"
+    },
+    "batch1_generations": 12,
+    "batch1_teacher_forced_forwards": 12,
+    "batch1_teacher_forced_gate": {
+      "margin_abs_delta_max": 0.5,
+      "nll_abs_delta_max": 0.07477337505669368,
+      "rank_abs_delta_max": 0,
+      "status": "INVALID_NOT_INTERPRETABLE",
+      "top1_count_delta": 0,
+      "top2_count_delta": 0
+    },
+    "optimizer_steps": 0,
+    "records": 72,
+    "target_token_ids_persisted": false,
+    "teacher_forced_forwards": 72
+  }
+}
