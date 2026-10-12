@@ -1,0 +1,27 @@
+{
+  "blocked_operation": "Importing the 168 historical RUN_002 raw rows for the successor diagnostic.",
+  "confirmed": {
+    "fresh_rows_not_substitutable": 48,
+    "immutable_reuse_rows": 168,
+    "manifest_sha256": "ece09a84c56eeb040c71db9579d2d0d3ad9b3db2beabe56d8251db2773c61a4c",
+    "raw_artifact_bytes_in_controlled_input_root": "NOT_MATERIALIZED_NOT_VERIFIED",
+    "whole_file_sha256": "UNAVAILABLE_NOT_SUBSTITUTED"
+  },
+  "evidence": [
+    "PASS_RUN_002_RAW_MANIFEST_V1",
+    "PASS_RUN_002_MANIFEST_BINDING_AUDIT",
+    "PASS_PRODUCTION_SHAPED_CPU_SUBPROCESS_INTEGRATION"
+  ],
+  "prohibited_while_blocked": [
+    "RUN_002 retry",
+    "row reconstruction",
+    "new OOD generation",
+    "model load",
+    "GPU launch",
+    "target-sidecar access"
+  ],
+  "required_resolution": "Provide or identify the original three raw JSONL artifacts at a controlled root; validate every listed canonical record SHA before any model load or new generation. If exact bytes are permanently unavailable, retain RUN_002 as unavailable and approve a distinct protocol rather than treating a reconstruction as reuse.",
+  "schema_version": 1,
+  "scope": "CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1",
+  "status": "REVIEW_REQUIRED_ASSET_IDENTITY_BLOCKER"
+}
