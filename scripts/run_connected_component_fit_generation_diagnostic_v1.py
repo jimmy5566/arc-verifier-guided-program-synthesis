@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 sys.path.insert(0,str(ROOT/'src'))
-from scripts.connected_component_fit_generation_runtime_contract import teacher_forced_layout,token_metric,aggregate_token_metrics,first_divergence,semantic_taxonomy,batch_gate,validate_sidecar,require_inventory_partition,validate_reuse
+from scripts.connected_component_fit_generation_runtime_contract import teacher_forced_layout,token_metric,aggregate_token_metrics,first_divergence,semantic_taxonomy,batch_gate,validate_sidecar,require_inventory_partition,validate_reuse,resolve_adapter_directory
 from scripts.connected_component_run002_raw_manifest_v1 import verify_run002_raw_root
 import hashlib
 
@@ -100,7 +100,8 @@ def _prepare_production_inputs(binding,output_root,control_root,execution_bindin
  for name,digest in tokenizer.get('tokenizer_files',{}).items():
   if _sha_file(base_path/name)!=digest: raise RuntimeError('TOKENIZER_IDENTITY_MISMATCH:'+name)
  for checkpoint,details in runtime.items():
-  if _sha_file(details['adapter_path'])!=details.get('adapter_model_sha256'): raise RuntimeError('ADAPTER_IDENTITY_MISMATCH:'+checkpoint)
+  try: resolve_adapter_directory(details)
+  except RuntimeError as exc: raise RuntimeError(f'{exc}:{checkpoint}') from exc
   if Path(details['base_path']) != base_path or not Path(details['tokenizer_config_dir'],'chat_template.j2').is_file(): raise RuntimeError('RUNTIME_ASSET_LAYOUT_INVALID:'+checkpoint)
  prompt_path=Path(execution['prompt_token_ids_path']);materialized=binding.get('runtime_materialization',{})
  if not prompt_path.is_file() or _sha_file(prompt_path)!=materialized.get('prompt_token_ids_sha256'): raise RuntimeError('PROMPT_TOKEN_IDS_IDENTITY_MISMATCH')
@@ -123,7 +124,7 @@ def _native_generate(checkpoint,items,binding):
  runtime=binding['checkpoint_runtime'][checkpoint]
  if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported(): raise RuntimeError('CUDA_BF16_REQUIRED')
  base=AutoModelForCausalLM.from_pretrained(runtime['base_path'],local_files_only=True,torch_dtype=torch.bfloat16,low_cpu_mem_usage=True).to('cuda:0')
- model=PeftModel.from_pretrained(base,runtime['adapter_path'],is_trainable=False).eval()
+ model=PeftModel.from_pretrained(base,str(resolve_adapter_directory(runtime)),is_trainable=False).eval()
  tok,_=checkpoint_native_tokenizer(Path(runtime['base_path']),Path(runtime['tokenizer_config_dir']))
  provider=NVARCNativeProvider(model_path=Path(runtime['base_path']),tokenizer_config_dir=Path(runtime['tokenizer_config_dir']),device='cuda:0');provider.model,provider.tokenizer=model,tok
  def messages(task):

@@ -1,6 +1,8 @@
 """Pure runtime contract for the approved no-update component diagnostic."""
 from __future__ import annotations
+
 import hashlib, json, math
+from pathlib import Path
 from collections import Counter
 
 def canonical(value): return json.dumps(value,sort_keys=True,separators=(',',':')).encode()
@@ -117,3 +119,30 @@ def require_inventory_partition(inventory):
     if len(keys)!=216 or None in {key[0] for key in keys} or None in {key[1] for key in keys}:
         raise RuntimeError("INVENTORY_IDENTITY_LAYOUT_INVALID")
     return reused,fresh
+def resolve_adapter_directory(runtime: dict) -> Path:
+    """Return the PEFT adapter directory after validating its two-file closure.
+
+    The frozen runtime identity names the immutable weight *file* because that
+    is the scientific byte identity.  PEFT, however, loads an adapter from its
+    containing directory and requires ``adapter_config.json`` beside the
+    weights.  Keep those representations distinct and reject a binding that
+    does not bind both files before model construction begins.
+    """
+    weight = Path(runtime.get("adapter_path", ""))
+    if not weight.is_file():
+        raise RuntimeError("ADAPTER_WEIGHT_FILE_MISSING")
+    expected_weight = runtime.get("adapter_model_sha256")
+    actual_weight = hashlib.sha256(weight.read_bytes()).hexdigest()
+    if actual_weight != expected_weight:
+        raise RuntimeError("ADAPTER_IDENTITY_MISMATCH")
+    directory = weight.parent
+    config = directory / "adapter_config.json"
+    if not config.is_file():
+        raise RuntimeError("ADAPTER_CONFIG_MISSING")
+    expected_config = runtime.get("adapter_config_sha256")
+    if not isinstance(expected_config, str):
+        raise RuntimeError("ADAPTER_CONFIG_IDENTITY_UNBOUND")
+    actual_config = hashlib.sha256(config.read_bytes()).hexdigest()
+    if actual_config != expected_config:
+        raise RuntimeError("ADAPTER_CONFIG_IDENTITY_MISMATCH")
+    return directory

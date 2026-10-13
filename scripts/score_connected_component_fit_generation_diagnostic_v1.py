@@ -5,7 +5,7 @@ import argparse,hashlib,json,os,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from scripts.connected_component_fit_generation_runtime_contract import first_divergence,semantic_taxonomy,teacher_forced_layout,token_metric,aggregate_record_metrics,validate_sidecar,batch_gate,pack_teacher_forced_batch
+from scripts.connected_component_fit_generation_runtime_contract import first_divergence,semantic_taxonomy,teacher_forced_layout,token_metric,aggregate_record_metrics,validate_sidecar,batch_gate,pack_teacher_forced_batch,resolve_adapter_directory
 
 def self_test():
  assert first_divergence([1,2],[1,3])==1
@@ -58,7 +58,7 @@ def execute(binding_path,raw_root,output_root):
  for checkpoint,runtime in sorted(b['checkpoint_runtime'].items()):
   if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported():raise RuntimeError('CUDA_BF16_REQUIRED')
   tokenizer=AutoTokenizer.from_pretrained(runtime['base_path'],local_files_only=True)
-  base=AutoModelForCausalLM.from_pretrained(runtime['base_path'],local_files_only=True,torch_dtype=torch.bfloat16,low_cpu_mem_usage=True).to('cuda:0');model=PeftModel.from_pretrained(base,runtime['adapter_path'],is_trainable=False).eval()
+  base=AutoModelForCausalLM.from_pretrained(runtime['base_path'],local_files_only=True,torch_dtype=torch.bfloat16,low_cpu_mem_usage=True).to('cuda:0');model=PeftModel.from_pretrained(base,str(resolve_adapter_directory(runtime)),is_trainable=False).eval()
   records=[]
   for record_id,target in sorted(targets.items()):
    row=raw.get((checkpoint,record_id));prompt=prompts.get(record_id)
