@@ -22,6 +22,15 @@ def validate(binding_path):
  obs=verify('observation',b['inputs']['observation']); recipes=verify('recipes',b['inputs']['recipes']); b1=verify('batch1',b['inputs']['batch1']); table=verify('decision_table',b['inputs']['decision_table']); schedule=verify('schedule',b['inputs']['diverse_schedule'])
  if b['arms']['control']['schedule_sha256']!=b['arms']['treatment']['schedule_sha256'] or b['arms']['control']['schedule_sha256']!=b['inputs']['diverse_schedule']['sha256']:fail('SCHEDULE')
  if b['arms']['control']['loss_allocation']!={'kind':'UNIFORM_SEQUENCE_LOSS'} or b['arms']['treatment']['loss_allocation']!={'kind':'COUNT_CODE_PAIR_REWEIGHTED','decision_token_multiplier':2.0}:fail('LOSS')
+ manifest=ROOT/b['v7']['checkpoint_manifest_path']
+ if not manifest.is_file() or sha(manifest)!=b['v7']['checkpoint_manifest_sha256']:fail('V7_MANIFEST')
+ asset_manifest=load(manifest); verified=0
+ for root_key,files_key in (('base_path','base_files'),('adapter_path','adapter_files')):
+  asset_root=Path(asset_manifest[root_key])
+  for asset in asset_manifest[files_key]:
+   asset_path=asset_root/asset['name']
+   if not asset_path.is_file() or asset_path.stat().st_size!=asset['bytes'] or sha(asset_path)!=asset['sha256']:fail('V7_ASSET:'+asset['name'])
+   verified+=1
  ex=b['execution']; needed={'authorization_required','remote_output_root','cpu_integration_root','terminal_receipt','nonce','retry','worker_path','launcher_path'}
  if not needed<=set(ex) or ex['authorization_required'] is not True or ex['retry'] is not False:fail('EXECUTION')
  rows=load(obs); expect={'CONNECTED_COMPONENT_COUNT':24,'OBJECT_EXTRACTION':24,'FIXED_TURN_ROTATION_CONTROL':8,'MARKER_BINDING_CONTROL':8,'NO_TRANSFORM_RETENTION':24,'COUNT_THEN_OBJECT_EXTRACTION':16};got={}
@@ -32,7 +41,7 @@ def validate(binding_path):
  ids={r['prompt_id'] for r in rows}; subset=load(b1)['checkpoints']
  if set(subset)!={'V7','CONTROL_NARROW_STRUCTURE','TREATMENT_STRUCTURE_DIVERSE'} or any(len(x)!=12 or len(set(x))!=12 or not set(x)<=ids for x in subset.values()):fail('B1')
  if not all(x==subset['V7'] for x in subset.values()):fail('B1_SHARED')
- return b,rows,{'inventory':got,'stable_record_ids':['V2:'+x for x in subset['V7']],'sealed_sidecar_opened':False}
+ return b,rows,{'inventory':got,'stable_record_ids':['V2:'+x for x in subset['V7']],'v7_asset_files_verified':verified,'sealed_sidecar_opened':False}
 def run_cpu(binding,out):
  b,rows,r=validate(binding);out=Path(out)
  if out.exists():fail('FRESH_OUTPUT')
