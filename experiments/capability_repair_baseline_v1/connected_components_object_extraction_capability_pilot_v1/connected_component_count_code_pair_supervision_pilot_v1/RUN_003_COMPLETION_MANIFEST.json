@@ -1,81 +1,81 @@
 {
-    "schema_version":  1,
-    "status":  "VALID_POSITIVE_TARGETED_ATOMIC_PILOT_PRESERVED_NO_BASELINE_PROMOTION",
-    "run_id":  "CONNECTED_COMPONENT_COUNT_CODE_PAIR_RUN_003_EAA5DCB9",
-    "nonce":  "eaa5dcb95087edb9f35cc49843621be7",
-    "identity":  {
-                     "original_binding_path":  "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/connected_component_count_code_pair_supervision_pilot_v1/EXECUTION_BINDING_V3.json",
-                     "original_binding_sha256":  "8054fd13bfca66076619a05ec574646c70cb29279083829631ff29b344ccbdd3",
-                     "original_source_commit":  "47cdc181488b38f16361d37897f8027dcbb54e72",
-                     "scientific_source_commit":  "4fb309feebfbf5d04ee8a8e9ae22c63c6ebb57cd",
-                     "postfreeze_scorer_source_commit":  "233c094c9868d48d44ab15c460ad756fe0f9d5a5",
-                     "remote_output_root":  "/workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/run_003_eaa5dcb95087edb9f35cc49843621be7"
-                 },
-    "authorization":  {
-                          "original_binding_consumption":  "GPU_MODEL_LOAD_OR_LAUNCH_ONLY",
-                          "permitted_detached_jobs":  1,
-                          "retry":  false,
-                          "status":  "ORIGINAL_ONE_SHOT_CONSUMED_BY_COMPLETED_RUN_003; NO_RETRY"
-                      },
-    "trained_checkpoints":  {
-                                "CONTROL_NARROW_STRUCTURE":  {
-                                                                 "adapter_sha256":  "f24f28924f7eda7035e3c87a7cb4d4ccc60f30343d46beb34b153dae5a0857c3",
-                                                                 "optimizer_steps":  96
-                                                             },
-                                "TREATMENT_STRUCTURE_DIVERSE":  {
-                                                                    "adapter_sha256":  "4faf8e20e69d9bb5ac2f495ea4e0078901b43054d72383557e9dc2da85c8a2cb",
-                                                                    "optimizer_steps":  96
-                                                                }
-                            },
-    "raw_artifacts":  {
-                          "remote_terminal_receipt_sha256":  "0d889d45837c9cc164fd360ee8f91fb2217cffea1c603cd127f19d858f498dd5",
-                          "status":  "COMPLETE_PENDING_SEPARATE_SCORE",
-                          "targets_accessed":  false,
-                          "sha256":  {
-                                         "CONTROL_NARROW_STRUCTURE":  "1e4ee8bc0b99f3726d73ca59b1055c3c0cdd7191d618afd694b653221fa7c9ae",
-                                         "CONTROL_NARROW_STRUCTURE_B1":  "89ef458ee3881403ff3ab06b69d7620027a22525dd800bdea0e3f1cfadd49e5d",
-                                         "TREATMENT_STRUCTURE_DIVERSE":  "c5a3e1000ed8ab3d5217b68236df288b3f8e11288fe87638074e0a1e2e8611e9",
-                                         "TREATMENT_STRUCTURE_DIVERSE_B1":  "beb5e5d2ef851b21671ff6d819a90c0214000aeb63e793eb771c2238f71af0e7",
-                                         "V7":  "18aedf7cd24816ad3a4455473b4630d7eddc5b7453221cc08c1d63ac6927a70f",
-                                         "V7_B1":  "121ba0ad27332fb20ef9d82e692b21527ae7e9d2787209e29b6822c5e657272f"
-                                     }
-                      },
-    "postfreeze_cpu_evidence":  {
-                                    "raw_freeze_receipt_sha256":  "bbdcafa79591770fadb6ff973933520945db1706b0d7bf3682e059f01f963cec",
-                                    "compatibility_receipt_sha256":  "bdaa39bb7962177e51dc0d6f0f7f036e1cc7d0e48879ccb37934b2c66b1d2c2d",
-                                    "score_receipt_sha256":  "a4c628429091b5f196058d3159078f138221bdc5ae8d95be5d0c460471eabcaf",
-                                    "terminal_receipt_sha256":  "eb88949dc59e87d2ed0825287a376db195967c11ee5a9c2fd13c34a3594d03b9",
-                                    "score_status":  "CPU_POST_FREEZE_DETERMINISTIC_SCORE_COMPLETE",
-                                    "compatibility_status":  "POSTFREEZE_SCORE_COMPATIBILITY_PROJECTED",
-                                    "terminal_status":  "COMPLETE_RAW_AND_CPU_POSTFREEZE_SCORE_NO_GPU",
-                                    "model_loaded":  false,
-                                    "gpu_used":  false,
-                                    "sealed_sidecar_opened":  false
-                                },
-    "preserved_failure_evidence":  {
-                                       "remote_path":  "/workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/run_003_eaa5dcb95087edb9f35cc49843621be7/failure_evidence/SCORE_ATTEMPT_001_PRE_TARGET_FAILURE.txt",
-                                       "sha256":  "fb56e1604d901a9401d7d4eed7badb14d216234e7f406750357985ba25b1e62d",
-                                       "status":  "PRESERVED_PRE_TARGET_SCORE_ATTEMPT_FAILURE"
-                                   },
-    "director_stage_review":  {
-                                  "response_path":  "orchestration/director/responses/CONNECTED_COMPONENT_COUNT_CODE_PAIR_RUN_003_POSTFREEZE_SCORE_REVIEW_RESPONSE.json",
-                                  "response_sha256":  "bb92139093944b8890f9bb3511941cdbbe43f0b17f3bb897f087fdaced66f092",
-                                  "decision":  "CONTINUE_CONTROLLER",
-                                  "accepted_status":  "VALID_POSITIVE_TARGETED_ATOMIC_PILOT"
-                              },
-    "closure":  {
-                    "treatment":  "SOLE_CANDIDATE_FOR_SEPARATELY_FROZEN_INDEPENDENT_STRUCTURAL_CONFIRMATION",
-                    "baseline":  "V7_CAPABILITY_PRESERVING_BASELINE",
-                    "treatment_checkpoint":  "DO_NOT_PROMOTE_OR_DEPLOY_FROM_THIS_PILOT_ALONE",
-                    "current_stage":  "CLOSED",
-                    "future_confirmation":  "REQUIRES_NEW_PROSPECTIVE_BRIEF_REVIEW_AND_AUTHORIZATION",
-                    "prohibited_follow_on":  [
-                                                 "rerun",
-                                                 "rescore",
-                                                 "GPU_launch",
-                                                 "model_load",
-                                                 "R3_preparation",
-                                                 "additional_diagnostic"
-                                             ]
-                }
+  "schema_version": 1,
+  "status": "VALID_POSITIVE_TARGETED_ATOMIC_PILOT_PRESERVED_NO_BASELINE_PROMOTION",
+  "run_id": "CONNECTED_COMPONENT_COUNT_CODE_PAIR_RUN_003_EAA5DCB9",
+  "nonce": "eaa5dcb95087edb9f35cc49843621be7",
+  "identity": {
+    "original_binding_path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/connected_component_count_code_pair_supervision_pilot_v1/EXECUTION_BINDING_V3.json",
+    "original_binding_sha256": "8054fd13bfca66076619a05ec574646c70cb29279083829631ff29b344ccbdd3",
+    "original_source_commit": "47cdc181488b38f16361d37897f8027dcbb54e72",
+    "scientific_source_commit": "4fb309feebfbf5d04ee8a8e9ae22c63c6ebb57cd",
+    "postfreeze_scorer_source_commit": "233c094c9868d48d44ab15c460ad756fe0f9d5a5",
+    "remote_output_root": "/workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/run_003_eaa5dcb95087edb9f35cc49843621be7"
+  },
+  "authorization": {
+    "original_binding_consumption": "GPU_MODEL_LOAD_OR_LAUNCH_ONLY",
+    "permitted_detached_jobs": 1,
+    "retry": false,
+    "status": "ORIGINAL_ONE_SHOT_CONSUMED_BY_COMPLETED_RUN_003; NO_RETRY"
+  },
+  "trained_checkpoints": {
+    "CONTROL_NARROW_STRUCTURE": {
+      "adapter_sha256": "f24f28924f7eda7035e3c87a7cb4d4ccc60f30343d46beb34b153dae5a0857c3",
+      "optimizer_steps": 96
+    },
+    "TREATMENT_STRUCTURE_DIVERSE": {
+      "adapter_sha256": "4faf8e20e69d9bb5ac2f495ea4e0078901b43054d72383557e9dc2da85c8a2cb",
+      "optimizer_steps": 96
+    }
+  },
+  "raw_artifacts": {
+    "remote_terminal_receipt_sha256": "0d889d45837c9cc164fd360ee8f91fb2217cffea1c603cd127f19d858f498dd5",
+    "status": "COMPLETE_PENDING_SEPARATE_SCORE",
+    "targets_accessed": false,
+    "sha256": {
+      "CONTROL_NARROW_STRUCTURE": "1e4ee8bc0b99f3726d73ca59b1055c3c0cdd7191d618afd694b653221fa7c9ae",
+      "CONTROL_NARROW_STRUCTURE_B1": "89ef458ee3881403ff3ab06b69d7620027a22525dd800bdea0e3f1cfadd49e5d",
+      "TREATMENT_STRUCTURE_DIVERSE": "c5a3e1000ed8ab3d5217b68236df288b3f8e11288fe87638074e0a1e2e8611e9",
+      "TREATMENT_STRUCTURE_DIVERSE_B1": "beb5e5d2ef851b21671ff6d819a90c0214000aeb63e793eb771c2238f71af0e7",
+      "V7": "18aedf7cd24816ad3a4455473b4630d7eddc5b7453221cc08c1d63ac6927a70f",
+      "V7_B1": "121ba0ad27332fb20ef9d82e692b21527ae7e9d2787209e29b6822c5e657272f"
+    }
+  },
+  "postfreeze_cpu_evidence": {
+    "raw_freeze_receipt_sha256": "bbdcafa79591770fadb6ff973933520945db1706b0d7bf3682e059f01f963cec",
+    "compatibility_receipt_sha256": "bdaa39bb7962177e51dc0d6f0f7f036e1cc7d0e48879ccb37934b2c66b1d2c2d",
+    "score_receipt_sha256": "a4c628429091b5f196058d3159078f138221bdc5ae8d95be5d0c460471eabcaf",
+    "terminal_receipt_sha256": "eb88949dc59e87d2ed0825287a376db195967c11ee5a9c2fd13c34a3594d03b9",
+    "score_status": "CPU_POST_FREEZE_DETERMINISTIC_SCORE_COMPLETE",
+    "compatibility_status": "POSTFREEZE_SCORE_COMPATIBILITY_PROJECTED",
+    "terminal_status": "COMPLETE_RAW_AND_CPU_POSTFREEZE_SCORE_NO_GPU",
+    "model_loaded": false,
+    "gpu_used": false,
+    "sealed_sidecar_opened": false
+  },
+  "preserved_failure_evidence": {
+    "remote_path": "/workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/run_003_eaa5dcb95087edb9f35cc49843621be7/failure_evidence/SCORE_ATTEMPT_001_PRE_TARGET_FAILURE.txt",
+    "sha256": "fb56e1604d901a9401d7d4eed7badb14d216234e7f406750357985ba25b1e62d",
+    "status": "PRESERVED_PRE_TARGET_SCORE_ATTEMPT_FAILURE"
+  },
+  "director_stage_review": {
+    "response_path": "orchestration/director/responses/CONNECTED_COMPONENT_COUNT_CODE_PAIR_RUN_003_POSTFREEZE_SCORE_REVIEW_RESPONSE.json",
+    "response_sha256": "bb92139093944b8890f9bb3511941cdbbe43f0b17f3bb897f087fdaced66f092",
+    "decision": "CONTINUE_CONTROLLER",
+    "accepted_status": "VALID_POSITIVE_TARGETED_ATOMIC_PILOT"
+  },
+  "closure": {
+    "treatment": "SOLE_CANDIDATE_FOR_SEPARATELY_FROZEN_INDEPENDENT_STRUCTURAL_CONFIRMATION",
+    "baseline": "V7_CAPABILITY_PRESERVING_BASELINE",
+    "treatment_checkpoint": "DO_NOT_PROMOTE_OR_DEPLOY_FROM_THIS_PILOT_ALONE",
+    "current_stage": "CLOSED",
+    "future_confirmation": "REQUIRES_NEW_PROSPECTIVE_BRIEF_REVIEW_AND_AUTHORIZATION",
+    "prohibited_follow_on": [
+      "rerun",
+      "rescore",
+      "GPU_launch",
+      "model_load",
+      "R3_preparation",
+      "additional_diagnostic"
+    ]
+  }
 }
