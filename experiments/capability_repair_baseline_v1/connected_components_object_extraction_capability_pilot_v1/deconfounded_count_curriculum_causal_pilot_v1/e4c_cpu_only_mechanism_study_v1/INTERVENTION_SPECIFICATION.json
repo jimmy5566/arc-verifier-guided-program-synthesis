@@ -1,0 +1,23 @@
+﻿{
+  "stage": "E4C_CPU_ONLY_MECHANISM_STUDY",
+  "status": "CPU_ONLY_FALSIFIABLE_INTERVENTION_SELECTED",
+  "frozen_evidence": {
+    "e4a_score_receipt": "evidence/e4a_matched_lr_20261013T145829Z_verified/SCORE_RECEIPT.json",
+    "e4b_score_receipt": "evidence/e4b_20261013T153226Z_e5405455/SCORE_RECEIPT.json",
+    "e4b_raw_receipts": "evidence/e4b_20261013T153226Z_e5405455/*_RAW.jsonl"
+  },
+  "intervention": {
+    "name": "QUERY_LOCAL_CODE_PAIR_MASS_PRESERVING",
+    "principal_difference": "Within the 48 PRIMARY_CONNECTED_COMPONENT_COUNT slots only, elevate the corrected zero-based Count code cells (1,1) and (1,2) in the final query assistant answer only. Do not elevate the corresponding three demonstration-answer code pairs.",
+    "control": "Matched Equal-Slot all-assistant CE.",
+    "constant_conditions": ["V7 initialization", "schedule bytes", "seed", "LR", "optimizer", "96 updates", "4 slots/update", "LoRA", "precision", "replay", "slot mean normalization", "one-quarter step coefficient", "physical Batch1 native Greedy"],
+    "loss_mass": "The selected two-token query code pair is upweighted by 2.0 and every other valid assistant token is compensated so each Count slot keeps its Equal-Slot scalar mass.",
+    "predeclared_discrimination": {
+      "conditional_binding": "If E4-B Marker Binding harm is caused by elevated unconditioned demonstration codes, query-local Code-Pair should remove the Marker Binding retention loss while preserving or improving Count train fit.",
+      "object_centric_representation": "If the intervention still improves only train fit but not structural OOD, its decision-token emphasis does not create object-centric Count representations.",
+      "atomic_to_compositional_transfer": "If composition stays unchanged despite Count train-fit improvement, the gain remains an atomic answer-code association rather than compositional transfer."
+    },
+    "falsifiers": ["Marker Binding retention remains below Equal-Slot despite no demonstration-code emphasis.", "Train fit improves but the independently frozen structural OOD effect remains below the predeclared causal gate.", "Composition changes despite the intervention touching only Count primary loss."]
+  },
+  "prohibitions": ["NO_GPU", "NO_MODEL_LOAD", "NO_TARGET_SIDECAR_READ", "NO_CHECKPOINT_PROMOTION", "NO_BROAD_SFT_SWEEP", "NO_EXECUTION_OF_INTERVENTION_IN_E4C"]
+}
