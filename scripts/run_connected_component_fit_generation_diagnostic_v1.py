@@ -96,6 +96,10 @@ def _prepare_production_inputs(binding,output_root,control_root):
  for checkpoint,details in runtime.items():
   if _sha_file(details['adapter_path'])!=details.get('adapter_model_sha256'): raise RuntimeError('ADAPTER_IDENTITY_MISMATCH:'+checkpoint)
   if Path(details['base_path']) != base_path or not Path(details['tokenizer_config_dir'],'chat_template.j2').is_file(): raise RuntimeError('RUNTIME_ASSET_LAYOUT_INVALID:'+checkpoint)
+ prompt_path=Path(execution['prompt_token_ids_path']);materialized=binding.get('runtime_materialization',{})
+ if not prompt_path.is_file() or _sha_file(prompt_path)!=materialized.get('prompt_token_ids_sha256'): raise RuntimeError('PROMPT_TOKEN_IDS_IDENTITY_MISMATCH')
+ prompt_doc=json.loads(prompt_path.read_text());prompt_rows=prompt_doc.get('records') if isinstance(prompt_doc,dict) else None
+ if not isinstance(prompt_rows,list) or len(prompt_rows)!=72 or prompt_doc.get('target_content_present') is not False: raise RuntimeError('PROMPT_TOKEN_IDS_BOUNDARY_INVALID')
  if not Path(execution['sidecar_path']).is_file(): raise RuntimeError('SEALED_SIDECAR_PATH_MISSING')
  imports=_check_runtime_import_closure()
  return {'status':'PASS_PRODUCTION_PRECLAIM_ONLY','raw_verification':raw_verification['status'],'reused_rows':len(reused),'new_rows':len(fresh),'missing_train_fit_tasks':len(tasks),'source_files_verified':len(binding.get('source_hashes',{})),'disk_free_bytes':free,'hard_cap_seconds':int(execution['hard_cap_seconds']),'model_loaded':False,'gpu_used':False,'sidecar_opened':False,**imports}
