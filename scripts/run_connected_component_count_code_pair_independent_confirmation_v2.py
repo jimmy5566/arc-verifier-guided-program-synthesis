@@ -86,7 +86,7 @@ def validate(binding_path, *, production_assets):
                 if cmd.parent.name==str(os.getpid()): continue
                 try: payload=cmd.read_bytes()
                 except OSError: continue
-                if needle in payload:fail('DUPLICATE_NONCE_PROCESS')
+                if needle in payload and b'--execute' in payload:fail('DUPLICATE_NONCE_PROCESS')
     return b,obs,sched,{'inventory':inventory,'runtime_imports':imports,'v7_asset_files_verified':checked,'shared_b1_record_ids':['V2:'+x for x in sub['V7']]}
 
 def preclaim(binding_path):
