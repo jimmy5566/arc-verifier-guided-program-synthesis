@@ -176,7 +176,7 @@ def score_only(binding_path):
  prior=load(terminal)
  if prior.get('status')!='FAILED_OR_PARTIAL_NO_RETRY' or prior.get('error')!="KeyError:'canonical'":fail('SCORE_REPAIR_TERMINAL_IDENTITY')
  result=score(binding_path,out,sidecar)
- receipt={'status':'COMPLETE_POST_RAW_SCORER_REPAIR_NO_MODEL','original_terminal_sha256':sha(terminal),'binding_sha256':sha(binding_path),'score_sha256':sha(out/'SCORE_RECEIPT.json'),'raw_freeze_sha256':sha(out/'RAW_FREEZE_RECEIPT.json'),'model_loaded':False,'gpu_used':False,'raw_predictions_reused':True,'original_terminal_preserved':True,'repair_worker_sha256':sha(Path(__file__))}
+ receipt={'status':'COMPLETE_POST_RAW_SCORER_REPAIR_NO_MODEL','original_terminal_sha256':sha(terminal),'binding_sha256':sha(binding_path),'score_sha256':sha(out/'SCORE_RECEIPT.json'),'raw_freeze_sha256':sha(out/'RAW_FREEZE_RECEIPT.json'),'model_loaded':False,'gpu_used':False,'raw_predictions_reused':True,'original_terminal_preserved':True,'repair_worker_sha256':sha(Path(__file__)),'repair_source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()}
  write(out/'SCORER_REPAIR_RECEIPT.json',receipt);return receipt
 
 def execute(binding_path):
