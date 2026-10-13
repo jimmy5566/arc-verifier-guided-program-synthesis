@@ -259,6 +259,21 @@ def import_external_events(state: dict[str, Any], state_path: Path) -> bool:
             recipient = value.get("recipient") or ("director" if value["kind"] == "REVIEW_REQUEST" else "controller")
             item = event(value["kind"], recipient, value.get("producer") or "supervisor", payload)
             changed = enqueue(state, item) or changed
+            if value["kind"] == "REMOTE_TERMINAL":
+                state.update({"disposition": "CONTINUE_CONTROLLER",
+                              "next_action": "INGEST_FREEZE_AND_ROUTE_REMOTE_RESULT",
+                              "remote_job": None, "terminal_reason": None})
+            elif value["kind"] == "CONTROLLER_TASK":
+                state.update({"disposition": "CONTINUE_CONTROLLER",
+                              "stage": payload.get("stage") or state["stage"],
+                              "next_action": payload.get("next_action"),
+                              "pause_reason": None, "terminal_reason": None})
+            elif value["kind"] == "REVIEW_REQUEST":
+                state.update({"disposition": "REVIEW_REQUIRED", "review": {
+                    "brief_path": payload.get("brief_path"),
+                    "brief_sha256": payload.get("brief_sha256"),
+                    "reason": payload.get("review_reason"),
+                }})
             target = processed / f"{item['event_id']}.json"
             if target.exists():
                 source.unlink()

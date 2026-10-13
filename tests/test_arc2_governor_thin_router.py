@@ -116,6 +116,8 @@ class ThinGovernorTests(unittest.TestCase):
             self.assertEqual(result, "EVENT_DELIVERED")
             self.assertEqual(again, "IDLE")
             self.assertEqual(len(fake.prompts), 1)
+            self.assertEqual(state["disposition"], "CONTINUE_CONTROLLER")
+            self.assertIsNone(state["remote_job"])
             item = next(item for item in state["pending_events"] if item["kind"] == "REMOTE_TERMINAL")
             self.assertEqual(item["attempts"], 1)
 
