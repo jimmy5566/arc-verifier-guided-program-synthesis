@@ -1,0 +1,1 @@
+{"all_gates_must_pass":true,"bootstrap_replicates":10000,"composition_no_harm_both":true,"object_extraction_no_harm_both":true,"retention_counts":{"FIXED_TURN_ROTATION_CONTROL":8,"MARKER_BINDING_CONTROL":8,"NO_TRANSFORM_RETENTION":24},"treatment_control_count_lower95_gt":0,"treatment_control_count_min":3,"treatment_v7_count_lower95_gt":0,"treatment_v7_count_min":2}
