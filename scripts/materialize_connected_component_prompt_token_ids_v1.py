@@ -19,6 +19,7 @@ BASE = (ROOT / 'experiments/capability_repair_baseline_v1' /
         'connected_components_object_extraction_capability_pilot_v1' /
         'connected_component_count_fit_vs_generation_diagnostic_v1')
 DEFAULT_INPUT = BASE / 'COHORT_PROMPT_TASKS_V1.json'
+DEFAULT_NATIVE_CONFIG = ROOT / 'configs' / 'nvarc_native_846d0198'
 TOKENIZER_IDENTITY = {
     'distribution': 'KAGGLE',
     'repository': 'sorokin/qwen3_4b_grids15_sft139',
@@ -156,11 +157,15 @@ def materialize_records(records: list[dict[str, Any]], tokenizer: Any) -> list[d
     return result
 
 
-def execute(tokenizer_root: Path, input_path: Path, output_path: Path) -> dict[str, Any]:
+def execute(tokenizer_root: Path, input_path: Path, output_path: Path,
+            native_config_dir: Path = DEFAULT_NATIVE_CONFIG) -> dict[str, Any]:
     observed = verify_tokenizer_identity(tokenizer_root)
     records = load_target_free_records(input_path)
-    from transformers import AutoTokenizer  # Runtime-only tokenizer import; no model import.
-    tokenizer = AutoTokenizer.from_pretrained(str(tokenizer_root), local_files_only=True)
+    # The checkpoint does not package a chat template.  Use the frozen NVARC
+    # interface rather than letting a Transformers default (or its absence)
+    # determine the prompt bytes.
+    from inference.nvarc_native import checkpoint_native_tokenizer
+    tokenizer, native_metadata = checkpoint_native_tokenizer(tokenizer_root, native_config_dir)
     result = materialize_records(records, tokenizer)
     document = {
         'schema_version': 1,
@@ -168,7 +173,9 @@ def execute(tokenizer_root: Path, input_path: Path, output_path: Path) -> dict[s
         'target_content_present': False,
         'model_loaded': False,
         'gpu_used': False,
-        'tokenizer_identity': {**TOKENIZER_IDENTITY, 'observed_file_sha256': observed},
+        'tokenizer_identity': {**TOKENIZER_IDENTITY, 'observed_file_sha256': observed,
+                               'native_config_dir': str(native_config_dir),
+                               'native_tokenizer_metadata': native_metadata},
         'source_prompt_document_sha256': sha_file(input_path),
         'transport': 'native_chat_template_text_then_tokenizer_add_special_tokens_false',
         'records': result,
@@ -182,12 +189,14 @@ def main() -> None:
     parser.add_argument('--tokenizer-root', type=Path)
     parser.add_argument('--input', type=Path, default=DEFAULT_INPUT)
     parser.add_argument('--output', type=Path)
+    parser.add_argument('--native-config-dir', type=Path, default=DEFAULT_NATIVE_CONFIG)
     args = parser.parse_args()
     if not args.execute:
         raise SystemExit('REFUSE_TOKENIZER_MATERIALIZATION_WITHOUT_EXPLICIT_EXECUTE')
     if not args.tokenizer_root or not args.output:
         raise SystemExit('TOKENIZER_ROOT_AND_OUTPUT_REQUIRED')
-    print(json.dumps(execute(args.tokenizer_root, args.input, args.output), sort_keys=True))
+    print(json.dumps(execute(args.tokenizer_root, args.input, args.output,
+                             args.native_config_dir), sort_keys=True))
 
 
 if __name__ == '__main__':
