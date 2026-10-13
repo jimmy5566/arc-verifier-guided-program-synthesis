@@ -82,7 +82,7 @@
       }
     }
   },
-  "execution_source_commit": "fbe57b0421e300bbd4e3785919a4d1f02d958193",
+  "execution_source_commit": "27624ebfc7e047771cc3cf1fdc8d5eacdd8fd079",
   "generation_seed_manifest": {
     "ordering": "per checkpoint: (len(canonical JSON prompt_task UTF-8), cohort_record_id)",
     "records": [
@@ -497,7 +497,7 @@
     "scripts/launch_connected_component_fit_generation_diagnostic_v1.py": "3ca539fed265a2b7aa6929dddd4f18956d3c1b2498abc97c0fc577a32be1e68b",
     "scripts/materialize_connected_component_prompt_token_ids_v1.py": "06000152fbc5adf2459b49b411c033166cac5c7cd7599ea7536e5e4242538085",
     "scripts/prepare_connected_component_fit_generation_inputs_v1.py": "8453f0292a012ff6617d9c4aeb7159ed0aa0fe6affd49ef5148c94a8e3aeae88",
-    "scripts/run_connected_component_fit_generation_diagnostic_v1.py": "9fd8441f7103d5db71e9736ddae812ba3170906f63d02ac426b29d20ece85c60",
+    "scripts/run_connected_component_fit_generation_diagnostic_v1.py": "1fa52f51b6fad4f366aef0accf67b97cb250cbcba1c15c5dd4ca729efa71e35d",
     "scripts/score_connected_component_fit_generation_diagnostic_v1.py": "426113c698e70d11fba38418292feda2cb796760825f39552cac9c33cb2243ca",
     "scripts/test_connected_component_fit_generation_production_v1.py": "f1516c9cca450ca4053963047799cd012fa85134a68d98fa755c66357cbf7fef"
   },
