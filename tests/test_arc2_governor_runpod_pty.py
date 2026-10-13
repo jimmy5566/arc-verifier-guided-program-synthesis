@@ -57,6 +57,18 @@ class RunPodControlTests(unittest.TestCase):
         self.assertEqual(status, "PROCESS_ALIVE")
 
     def test_invalid_wait_remote_binding_requeues_the_same_job_for_controller_repair(self):
+    def test_status_query_accepts_compact_launch_receipt_host_schema(self):
+        # A normal launcher may record host/port/user/pid rather than the
+        # older ssh_target/remote_host/remote_launcher_pid spellings.
+        job = {"host":"213.192.2.111", "port":40169, "user":"root",
+               "ssh_executable":sys.executable, "terminal_receipt":"/receipt", "pid":53912}
+        with mock.patch.object(governor.subprocess, "run", return_value=_Run()) as run:
+            status, _ = governor.remote_status(job)
+        self.assertEqual(status, "PROCESS_ALIVE")
+        command = run.call_args.args[0]
+        self.assertIn("root@213.192.2.111", command)
+        self.assertEqual(command[command.index("-p") + 1], "40169")
+
         job = {"remote_pid": 7, "output_root": "/workspace/out", "run_id": "R"}
         with tempfile.TemporaryDirectory() as directory:
             state_path = Path(directory) / "state.json"

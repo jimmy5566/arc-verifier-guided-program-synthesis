@@ -856,7 +856,12 @@ def _remote_ssh_command(job, script):
     operational connection metadata, not scientific identity.  Their absence
     must not silently fall back to the wrong endpoint.
     """
-    target=job.get('ssh_target') or job.get('remote_host')
+    # Launch receipts historically stored the endpoint as ``host`` while the
+    # polling path only accepted ``ssh_target`` or ``remote_host``.  Treat
+    # these as equivalent operational aliases so an already-running detached
+    # job cannot be handed back to the Controller merely because its receipt
+    # used the compact schema.
+    target=job.get('ssh_target') or job.get('remote_host') or job.get('host')
     port=job.get('ssh_port') or job.get('port')
     if not target or not port:
         raise RuntimeError('REMOTE_CONTROL_CONFIG_MISSING_TARGET_OR_PORT')
@@ -905,7 +910,7 @@ def remote_status(job):
         return 'INVALID_BINDING', 'PRIMARY_PROCESS_PID_REQUIRED'
     if pid <= 0:
         return 'INVALID_BINDING', 'PRIMARY_PROCESS_PID_REQUIRED'
-    if not receipt or not (job.get('ssh_target') or job.get('remote_host')):
+    if not receipt or not (job.get('ssh_target') or job.get('remote_host') or job.get('host')):
         return 'INVALID_BINDING', 'REMOTE_RECEIPT_OR_TARGET_REQUIRED'
     if not (job.get('ssh_port') or job.get('port')):
         return 'INVALID_BINDING', 'REMOTE_SSH_PORT_REQUIRED'
