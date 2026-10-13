@@ -76,7 +76,7 @@
       }
     }
   },
-  "execution_source_commit": "1336fc191604b23e53a61c6ac235bf3603e599b6",
+  "execution_source_commit": "9ed1fc6712e48a2270439dad0aa129fd55d2f592",
   "protocol_id": "CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_ALL_B1_SUCCESSOR",
   "protocol_sha256": "7a67190338e889358d8933264d749a681a5d313e80290f98cfd89320d8310feb",
   "reuse_inventory_sha256": "b0cc5b45adffcc618fd622786e14dfe3fdbe6aec20222268ba1d694741793d95",
@@ -97,7 +97,7 @@
     "scripts/launch_connected_component_fit_generation_diagnostic_v1.py": "604fb3ab93e6cf26873effc9d5ac902279d734c0bb61864d8d6e946286637d23",
     "scripts/materialize_connected_component_prompt_token_ids_v1.py": "06000152fbc5adf2459b49b411c033166cac5c7cd7599ea7536e5e4242538085",
     "scripts/prepare_connected_component_fit_generation_inputs_v1.py": "8453f0292a012ff6617d9c4aeb7159ed0aa0fe6affd49ef5148c94a8e3aeae88",
-    "scripts/run_connected_component_fit_generation_diagnostic_v1.py": "d937c7d12db2693ebbad9d10c6099b5e18ba65ba191c7a89f9ba2a719829ac99",
+    "scripts/run_connected_component_fit_generation_diagnostic_v1.py": "5e2928db1b91680d12e83c3ef65742433772a5ce71f8e944ed0366d04bc629db",
     "scripts/score_connected_component_fit_generation_diagnostic_v1.py": "426113c698e70d11fba38418292feda2cb796760825f39552cac9c33cb2243ca",
     "scripts/test_connected_component_fit_generation_production_v1.py": "f1516c9cca450ca4053963047799cd012fa85134a68d98fa755c66357cbf7fef"
   },
