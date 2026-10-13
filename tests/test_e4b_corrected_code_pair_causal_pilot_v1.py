@@ -22,7 +22,7 @@ def test_exact_schedule_and_real_tokenization_code_pair_oracle():
     for pair,count in zip([*task['train'],*task['test']],counts,strict=True): expected += pair['output'][1][1:3]
     assert observed==expected
     control,treat=matched_weights(sample['labels'],idx,2.0)
-    assert sum(control.values())==sum(treat.values()) and all(treat[i]==2.0 for i in idx)
+    assert abs(sum(control.values())-sum(treat.values()))<1e-12 and all(treat[i]==2.0 for i in idx)
 
 def test_weighted_causal_shift_and_noncount_gradient_unchanged():
     from scripts.e04_e_equal_slot_loss import backward_equal_slot_term,backward_weighted_slot_term
