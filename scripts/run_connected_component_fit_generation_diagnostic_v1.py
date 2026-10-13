@@ -56,14 +56,20 @@ print('PASS_RUNTIME_IMPORT_CLOSURE_NO_CUDA')
  if 'PASS_RUNTIME_IMPORT_CLOSURE_NO_CUDA' not in result.stdout: raise RuntimeError('RUNTIME_IMPORT_CLOSURE_RECEIPT_MISSING')
  return {'torch_cuda_initialized':False,'runtime_imports':'PASS_ISOLATED_NO_CUDA'}
 
-def _prepare_production_inputs(binding,output_root,control_root):
+def _prepare_production_inputs(binding,output_root,control_root,execution_binding_sha256=None):
  """The shared pre-model path for preclaim validation and real execution."""
  execution=binding.get('execution',{})
  if execution.get('optimizer_steps') not in (0,None) or execution.get('backward_calls') not in (0,None) or execution.get('retry') not in (False,None): raise RuntimeError('NO_UPDATE_EXECUTION_REQUIRED')
  for rel,digest in binding.get('source_hashes',{}).items():
   if _sha_file(ROOT/rel)!=digest: raise RuntimeError('SOURCE_IDENTITY_MISMATCH:'+rel)
  out=Path(output_root);control=Path(control_root)
- if out.exists() or control.exists(): raise RuntimeError('FRESH_OUTPUT_OR_DUPLICATE_JOB_REQUIRED')
+ if out.exists(): raise RuntimeError('FRESH_OUTPUT_OR_DUPLICATE_JOB_REQUIRED')
+ if control.exists():
+  intent_path=control/'EXECUTION_INTENT.json'
+  if not execution_binding_sha256 or not intent_path.is_file(): raise RuntimeError('FRESH_OUTPUT_OR_DUPLICATE_JOB_REQUIRED')
+  intent=json.loads(intent_path.read_text())
+  expected={'status':'CLAIMED_FOR_DETACHED_EXECUTION','binding_sha256':execution_binding_sha256,'nonce':execution.get('nonce'),'output_root':str(out).replace('\\','/')}
+  if any(intent.get(key)!=value for key,value in expected.items()) or intent.get('retry') is not False: raise RuntimeError('LAUNCH_CONTROL_INTENT_MISMATCH')
  if int(execution.get('hard_cap_seconds',0)) not in (7200,10800): raise RuntimeError('HARD_CAP_INVALID')
  free=shutil.disk_usage(out.parent).free
  if free < 1<<30: raise RuntimeError('INSUFFICIENT_DISK_FOR_FRESH_OUTPUT')
@@ -142,10 +148,10 @@ def _native_generate(checkpoint,items,binding):
   index+=len(batch)
  del model;torch.cuda.empty_cache();return output,events
 
-def execute(binding_path,output_root):
+def execute(binding_path,output_root,control_root=None):
  """Import 168 exact rows, generate only 48, then freeze raw evidence."""
  b=json.loads(Path(binding_path).read_text()); execution=b.get('execution',{})
- prepared=_prepare_production_inputs(b,output_root,Path(output_root).with_name(Path(output_root).name+'_control'))
+ prepared=_prepare_production_inputs(b,output_root,Path(control_root) if control_root else Path(output_root).with_name(Path(output_root).name+'_control'),_sha_file(binding_path) if control_root else None)
  inventory=json.loads(Path(execution['inventory_path']).read_text());reused,fresh=require_inventory_partition(inventory)
  out=Path(output_root);old={}
  for path in Path(execution['run_002_raw_root']).glob('*_RAW.jsonl'): old[_raw_checkpoint_name(path)]={row.get('prompt_sha256'):row for row in _read_rows(path)}
@@ -192,6 +198,6 @@ if __name__=='__main__':
   f=json.loads(a.cpu_fixture.read_text()); assert f['rows']==216 and f['reused']==168 and f['missing']==48 and f['ood_new']==0 and f['sidecar_records']==72 and f['fallback']==['CUDA_OOM_ONLY',32,16,8,4,1] and f['teacher_forced_physical_batch_size']==1 and f['teacher_forced_forwards']==216; out={'status':'COMPLETE_CPU_FIXTURE_RAW_FROZEN','raw_rows':48,'reused_rows':168,'targets_accessed_before_raw_freeze':False,'optimizer_steps':0,'backward_calls':0,'teacher_forced_physical_batch_size':1,'teacher_forced_forwards':216,'gpu_used':False}; a.output.write_text(json.dumps(out,sort_keys=True)); print(json.dumps(out,sort_keys=True)); raise SystemExit(0)
  if a.execute:
   if not a.binding or not a.output_root: raise RuntimeError('BINDING_AND_OUTPUT_REQUIRED')
-  print(json.dumps(execute(a.binding,a.output_root),sort_keys=True));raise SystemExit(0)
+  print(json.dumps(execute(a.binding,a.output_root,a.control_root),sort_keys=True));raise SystemExit(0)
  if not a.cpu_self_test: raise SystemExit('REFUSE_GPU_EXECUTION_WITHOUT_FINAL_BINDING_AND_OWNER_ONE_SHOT_AUTHORIZATION')
  print(json.dumps(self_test(),sort_keys=True))

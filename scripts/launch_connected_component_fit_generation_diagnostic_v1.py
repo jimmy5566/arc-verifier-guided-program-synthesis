@@ -57,8 +57,10 @@ def launch(binding_path,receipt_path,output_root,control_root):
  marker=Path(receipt_path).with_suffix(Path(receipt_path).suffix+'.claimed')
  claim(marker,{'binding_sha256':sha(binding_path),'nonce':auth['nonce'],'output_root':str(out).replace('\\','/'),'claimed_at_unix':time.time()})
  try:
-  command=[sys.executable,str(ROOT/binding['runnable']['worker']),'--execute','--binding',str(binding_path),'--output-root',str(out)]
-  control.mkdir(parents=True,exist_ok=True);log=(control/'WORKER.log').open('wb')
+  control.mkdir(parents=True,exist_ok=True)
+  write(control/'EXECUTION_INTENT.json',{'status':'CLAIMED_FOR_DETACHED_EXECUTION','binding_sha256':sha(binding_path),'nonce':auth['nonce'],'output_root':str(out).replace('\\','/'),'retry':False,'optimizer_steps':0,'backward_calls':0})
+  command=[sys.executable,str(ROOT/binding['runnable']['worker']),'--execute','--binding',str(binding_path),'--output-root',str(out),'--control-root',str(control)]
+  log=(control/'WORKER.log').open('wb')
   child=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
   write(control/'LAUNCH_RECEIPT.json',{'status':'DETACHED_LAUNCHED','binding_sha256':sha(binding_path),'authorization_payload_sha256':auth.get('payload_sha256'),'claim_marker':str(marker),'nonce':auth['nonce'],'output_root':str(out).replace('\\','/'),'detached_jobs':1,'retry':False,'optimizer_steps':0,'backward_calls':0,'targets_accessed':False})
   write(control/'REMOTE_JOB.json',{'pid':child.pid,'detached':True,'status':'RUNNING','binding_sha256':sha(binding_path),'output_root':str(out).replace('\\','/'),'hard_cap_seconds':frozen_hard_cap_seconds(binding['execution'])})
