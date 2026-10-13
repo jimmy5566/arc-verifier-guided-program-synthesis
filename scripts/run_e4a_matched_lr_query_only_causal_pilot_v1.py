@@ -98,7 +98,7 @@ def mask_audit():
  return audits
 def validate_cohort():
  c=load(PKG/'NEW_STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json');rows=c.get('records',[])
- if c.get('status')!='FROZEN_E4A_NEW_TARGET_BLIND_OOD' or len(rows)!=96 or len({x['canonical_unit_id'] for x in rows})!=48:fail('OOD_GRID')
+ if c.get('status')!='FROZEN_TARGET_BLIND_INPUTS_AND_COMMITMENTS' or len(rows)!=96 or len({x['canonical_unit_id'] for x in rows})!=48:fail('OOD_GRID')
  if c.get('topology_count_independence',{}).get('mutual_information_bits')!=0.0:fail('OOD_INDEPENDENCE')
  if not all(c.get('zero_overlap',{}).get(x) for x in ('training_e3_exposed_ood_prompt_sha256','training_e3_exposed_ood_query_input_sha256','training_e3_query_only_exposed_ood_prompt_sha256','training_e3_query_only_exposed_ood_query_input_sha256','training_all_exposed_content_role_sha256')):fail('OOD_OVERLAP_DECLARATION')
  prior=[]
