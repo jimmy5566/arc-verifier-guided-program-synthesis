@@ -147,6 +147,7 @@ def authorization(path,binding):
 def execute(binding_path,output,auth,sidecar):
     b,obs,sched,d=validate(binding_path,production_assets=True);ex=b['execution'];out=Path(output)
     if str(out).replace('\\','/')!=ex['remote_output_root']:fail('OUTPUT_ROOT')
+    if str(Path(sidecar)).replace('\\','/')!=b['evaluation']['sealed_sidecar_runtime_path']:fail('SIDECAR_PATH')
     authorization(auth,binding_path);out.mkdir(parents=True);started=time.monotonic();write(out/'PREFLIGHT_RECEIPT.json',{'status':'PASS_PRECLAIM_BEFORE_MODEL_LOAD','binding_sha256':sha(binding_path),'nonce':ex['nonce'],'model_loaded':False,'gpu_used':False,'sealed_sidecar_opened':False})
     try:
         from scripts import run_connected_components_object_extraction_pilot_v1 as real
