@@ -667,7 +667,7 @@ def main() -> None:
     write_json(OUT / "COUNTERBALANCED_TRAIN_DERIVED_TASKS.json", panel)
     write_json(OUT / "FRESH_STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json", ood)
     write_json(OUT / "MECHANISM_DIAGNOSIS_AND_CAUSAL_PROPOSAL.json", report)
-    (OUT / "SCIENTIFIC_REVIEW.md").write_text(render_review(report, panel, ood), encoding="utf-8")
+    (OUT / "SCIENTIFIC_REVIEW.md").write_bytes(render_review(report, panel, ood).encode("utf-8"))
     manifest = {
         "schema_version": 1,
         "audit_id": report["audit_id"],
