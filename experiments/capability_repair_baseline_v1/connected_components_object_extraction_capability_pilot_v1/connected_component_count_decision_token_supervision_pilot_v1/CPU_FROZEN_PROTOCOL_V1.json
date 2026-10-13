@@ -1,0 +1,50 @@
+{
+  "arms": {
+    "control": {
+      "loss_allocation": {
+        "kind": "UNIFORM_SEQUENCE_LOSS"
+      },
+      "schedule_path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/TREATMENT_SCHEDULE.json",
+      "schedule_sha256": "70addd17375437fe6371d57433281272ecb3bfed716289ff0b5cfd003f4cad10"
+    },
+    "treatment": {
+      "loss_allocation": {
+        "decision_token_multiplier": 2.0,
+        "kind": "COUNT_TERMINAL_TOKEN_REWEIGHTED"
+      },
+      "schedule_path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/TREATMENT_SCHEDULE.json",
+      "schedule_sha256": "70addd17375437fe6371d57433281272ecb3bfed716289ff0b5cfd003f4cad10"
+    }
+  },
+  "binding_path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/connected_component_count_decision_token_supervision_pilot_v1/CPU_PRECLAIM_BINDING_V1.json",
+  "binding_sha256": "5c30e063f3df6daf175488410e3bae2857508edf7db7521f51c5bea10a5dd069",
+  "decision_rules": {
+    "confirmation": "independent confirmation required before promotion",
+    "harm": "any material protected-capability or composition regression",
+    "stop": "identity, schedule, locator, mass, or target-blind boundary failure",
+    "success": "predeclared OOD and count-token gains with no protected or composition harm"
+  },
+  "estimands": {
+    "primary": "native-greedy OOD exact-grid accuracy",
+    "safety": [
+      "protected retention",
+      "composition sentinel"
+    ],
+    "secondary": "count-token teacher-forced rank and NLL"
+  },
+  "experiment_id": "CONNECTED_COMPONENT_COUNT_DECISION_TOKEN_SUPERVISION_PILOT_V1",
+  "gpu_used": false,
+  "held_constant": [
+    "same diverse 384-slot schedule and order",
+    "96 optimizer steps per arm",
+    "four physical B1 slots per step",
+    "optimizer, learning rate, seed policy, runtime cap",
+    "protected replay",
+    "evaluation prompts and target-blind sidecar boundary"
+  ],
+  "model_loaded": false,
+  "schema_version": 1,
+  "sealed_sidecar_opened": false,
+  "starting_checkpoint": "V7",
+  "status": "CPU_FROZEN_PENDING_FRESH_BINDING_SPECIFIC_GPU_AUTHORIZATION"
+}

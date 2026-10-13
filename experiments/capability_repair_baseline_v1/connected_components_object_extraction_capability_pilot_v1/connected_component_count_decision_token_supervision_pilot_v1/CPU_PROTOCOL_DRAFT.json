@@ -1,0 +1,51 @@
+{
+  "arms": {
+    "CONTROL": {
+      "loss": "token_uniform_sequence_loss"
+    },
+    "TREATMENT": {
+      "decision_token": "unique connected-component-count target token located from the identical native target serialization",
+      "loss": "decision_token_upweight_with_nondecision_compensation"
+    }
+  },
+  "endpoints": [
+    "count_token_teacher_forced_rank_and_nll",
+    "native_greedy_structural_ood_exact_grid",
+    "protected_retention",
+    "composition_sentinel"
+  ],
+  "experiment_id": "CONNECTED_COMPONENT_COUNT_DECISION_TOKEN_SUPERVISION_PILOT_V1",
+  "gpu_execution_authorized": false,
+  "held_constant": [
+    "examples_and_order",
+    "optimizer",
+    "updates",
+    "supervised_token_exposure",
+    "aggregate_per_example_loss_mass",
+    "protected_replay",
+    "seed_policy",
+    "runtime_budget"
+  ],
+  "inputs": {
+    "diverse_schedule_path": "experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\TREATMENT_SCHEDULE.json",
+    "diverse_schedule_sha256": "70addd17375437fe6371d57433281272ecb3bfed716289ff0b5cfd003f4cad10"
+  },
+  "model_loading_authorized": false,
+  "required_cpu_gates": [
+    "unique_decision_token_locator",
+    "per_example_loss_mass_equality",
+    "identical_schedule_identity",
+    "protected_retention_and_composition_sentinel_identity",
+    "production_launcher_no_model_preclaim"
+  ],
+  "rules": {
+    "harm": "any material protected-capability or composition regression",
+    "independent_confirmation": "required before promotion",
+    "stop": "any identity or loss-mass mismatch",
+    "success": "predeclared rank and OOD gain with no protected harm"
+  },
+  "schema_version": 1,
+  "starting_checkpoint": "V7",
+  "status": "CPU_PROTOCOL_DRAFT_PENDING_PRODUCTION_SHAPED_VALIDATION",
+  "training_authorized": false
+}

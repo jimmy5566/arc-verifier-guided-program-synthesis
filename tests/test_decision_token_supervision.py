@@ -26,6 +26,22 @@ class DecisionTokenSupervisionTests(unittest.TestCase):
             self.assertEqual(treatment[index], 2.0)
             self.assertTrue(all(weight > 0 for weight in treatment.values()))
 
+    def test_equal_weights_match_uniform_causal_loss_on_cpu(self):
+        try:
+            import torch
+        except ImportError:
+            self.skipTest('torch is not installed in this CPU test environment')
+        from scripts.e04_e_equal_slot_loss import causal_slot_mean_ce, backward_weighted_slot_term
+        torch.manual_seed(11)
+        labels = torch.tensor([[-100, 1, 2, 3]], dtype=torch.long)
+        logits = torch.randn((1, 4, 16), dtype=torch.float32, requires_grad=True)
+        uniform, _ = causal_slot_mean_ce(logits, labels)
+        weighted_logits = logits.detach().clone().requires_grad_(True)
+        weighted, _, mass = backward_weighted_slot_term(weighted_logits, labels, [0.0, 1.0, 1.0, 1.0], expected_slots=1)
+        self.assertAlmostEqual(float(uniform.detach()), float(weighted), places=6)
+        self.assertEqual(mass, 3.0)
+        self.assertTrue(torch.isfinite(weighted_logits.grad).all())
+
     def test_non_count_output_is_rejected(self):
         task = {'train': [{'input': [[0]], 'output': [[0]]}], 'test': [{'input': [[0]], 'output': [[0]]}]}
         with self.assertRaisesRegex(ValueError, 'COUNT_OUTPUT_SHAPE'):

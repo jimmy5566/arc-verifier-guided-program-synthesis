@@ -1,0 +1,69 @@
+{
+  "arms": {
+    "control": {
+      "loss_allocation": {
+        "kind": "UNIFORM_SEQUENCE_LOSS"
+      },
+      "schedule_path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/TREATMENT_SCHEDULE.json",
+      "schedule_sha256": "70addd17375437fe6371d57433281272ecb3bfed716289ff0b5cfd003f4cad10"
+    },
+    "treatment": {
+      "loss_allocation": {
+        "decision_token_multiplier": 2.0,
+        "kind": "COUNT_TERMINAL_TOKEN_REWEIGHTED"
+      },
+      "schedule_path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/TREATMENT_SCHEDULE.json",
+      "schedule_sha256": "70addd17375437fe6371d57433281272ecb3bfed716289ff0b5cfd003f4cad10"
+    }
+  },
+  "authorization": {
+    "claim_after_preclaim_only": true,
+    "consumption": "GPU_MODEL_LOAD_OR_LAUNCH_ONLY",
+    "fresh_binding_specific_gpu_one_shot_required": true,
+    "retry_after_claim": false
+  },
+  "experiment_id": "CONNECTED_COMPONENT_COUNT_DECISION_TOKEN_SUPERVISION_PILOT_V1",
+  "inputs": {
+    "composition_prompts": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/COMPOSITION_SENTINEL_INPUT_PROMPTS.json",
+      "sha256": "15e00795e145531e90719a92a18cba85ebe0537ff514f3556c9b80fc5d264433"
+    },
+    "diverse_schedule": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/TREATMENT_SCHEDULE.json",
+      "sha256": "70addd17375437fe6371d57433281272ecb3bfed716289ff0b5cfd003f4cad10"
+    },
+    "ood_prompts": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/OOD_INPUT_PROMPTS.json",
+      "sha256": "b50687c9d9493a3f2dc1ce6f8e369aa48915277b0818a71b22bec16a34f57a3b"
+    },
+    "protected_prompts": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/measurement_contract_v1/PROTECTED_CAPABILITY_INPUT_PROMPTS.json",
+      "sha256": "48fe9563a02192aea29b4f0d20d862015c04b51b6742e6cf8c19f85339565247"
+    },
+    "retention_prompts": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/RETENTION_INPUT_PROMPTS.json",
+      "sha256": "2d758dda92f01c36c415724bd36e56e82fc787f95cfc7218e9163fbcc13de689"
+    }
+  },
+  "runtime": {
+    "model_load_permitted_after_preclaim_only": false,
+    "preclaim_command": "PYTHONPATH=.:src python scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py --binding <binding> --preclaim-only"
+  },
+  "schema_version": 1,
+  "scientific_source_commit": "a84a4352f8f2988e228b7ca242de13c8a60e1945",
+  "sealed_target_access": false,
+  "source_files": {
+    "scripts/connected_components_object_extraction_semantic_oracle.py": "663715a03ecd8f16e26930bf02093addb17e4c75d45725b6ce8fef564313953f",
+    "scripts/decision_token_supervision.py": "30cc3ea340e78804f4d3bfae9433a7f6cab65a8f61f6f6743bfde04d2771bb24",
+    "scripts/e04_e_equal_slot_loss.py": "f3ee61891db74a13958194eb43e79f654a05296814a3a309af36cdef2915afbd",
+    "scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py": "807d0cf73ccd333fca79810d23e474bbcefc8b69d21dc92b86ab46b31e490b4b",
+    "scripts/run_connected_components_object_extraction_pilot_v1.py": "e0dc2febc8dcf1a15e6acb36e797380f29c8a246757c26c1c714a04bd6099114",
+    "src/inference/arc_native_io.py": "502a064f09743acc85643ebb8a9a95573832d8b3d6c51e79ccf94222dd4b89b3",
+    "src/inference/nvarc_native.py": "b1da3a1644e4bd176c64fb45bf30ce94362a0b479c32507755f009e69f18af87",
+    "src/training_data/pipeline.py": "3c2fa39cbc5ed51f7eceeb68b821962c451ea88b2f26ae8af508b15c6a8b3d3a"
+  },
+  "v7": {
+    "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549"
+  }
+}
