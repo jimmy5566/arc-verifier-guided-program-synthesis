@@ -1,0 +1,1 @@
+{"experiment_id":"E4B_CODE_PAIR_LOCATOR_CORRECTION_CPU_ONLY","gpu_execution":"FORBIDDEN","schema_version":1,"scope":"Locate only final query assistant answer token span using assistant turns; verify semantic oracle answer identity.","status":"CPU_ONLY_NOT_PART_OF_E4A"}
