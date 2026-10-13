@@ -64,6 +64,12 @@ def validate_binding(binding: dict) -> None:
         path = ROOT / item['path']
         if not path.is_file() or sha256(path) != item['sha256']:
             fail(f'INPUT_IDENTITY:{name}')
+    v7 = binding['v7']
+    if not {'checkpoint_manifest_path', 'checkpoint_manifest_sha256'}.issubset(v7):
+        fail('V7_BINDING_SCHEMA')
+    checkpoint_manifest = ROOT / v7['checkpoint_manifest_path']
+    if not checkpoint_manifest.is_file() or sha256(checkpoint_manifest) != v7['checkpoint_manifest_sha256']:
+        fail('V7_MANIFEST_IDENTITY')
     if binding['arms']['control']['schedule_sha256'] != binding['arms']['treatment']['schedule_sha256']:
         fail('ARM_SCHEDULE_MISMATCH')
     if binding['arms']['control']['schedule_sha256'] != binding['inputs']['diverse_schedule']['sha256']:
