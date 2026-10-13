@@ -78,7 +78,7 @@ def preclaim(binding_path):
   if not p.is_file() or sha(p)!=e['sha256']:fail('INPUT:'+key)
  if load(PKG/'CPU_VALIDATION.json').get('status')!='PASS_CPU_ONLY_SCIENTIFIC_PACKAGE_VALIDATION':fail('CPU_VALIDATION')
  schedules_and_inputs(b)
- for name in ('inference.nvarc_native','training_data.pipeline','scripts.e04_e_equal_slot_loss','scripts.connected_components_object_extraction_semantic_oracle'):
+ for name in ('inference.nvarc_native','training_data.pipeline','scripts.e04_e_equal_slot_loss','scripts.connected_components_object_extraction_semantic_oracle','scripts.e04_orientation_fixed_demonstration_baseline_v3','scripts.run_connected_components_object_extraction_pilot_v1'):
   importlib.import_module(name)
  if not Path(b['runtime_python']).is_file():fail('RUNTIME_PYTHON')
  m=load(V7)
