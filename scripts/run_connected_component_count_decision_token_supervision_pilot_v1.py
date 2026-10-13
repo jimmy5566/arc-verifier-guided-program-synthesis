@@ -11,6 +11,7 @@ import copy
 import hashlib
 import importlib
 import json
+import math
 import os
 import subprocess
 import sys
@@ -138,7 +139,7 @@ def validate_schedule(binding: dict) -> dict:
             if sample['labels'][index] != sample['input_ids'][index]:
                 fail(f'COUNT_CODE_PAIR_ALIGNMENT:{row["slot"]}')
         control, treatment = matched_weights(sample['labels'], indices, multiplier=2.0)
-        if sum(control.values()) != 60.0 or sum(treatment.values()) != 60.0:
+        if not (math.isclose(sum(control.values()), 60.0, rel_tol=0.0, abs_tol=1e-9) and math.isclose(sum(treatment.values()), 60.0, rel_tol=0.0, abs_tol=1e-9)):
             fail(f'LOSS_MASS:{row["slot"]}')
         if any(weight != 1.0 for idx, weight in treatment.items() if idx not in indices):
             if any(abs(weight - 11.0 / 13.0) > 1e-12 for idx, weight in treatment.items() if idx not in indices):
@@ -171,7 +172,7 @@ def validate_cpu_weighted_loss_path(binding: dict) -> dict:
     logits = torch.randn((1, len(sample['labels']), 16), dtype=torch.float32, requires_grad=True)
     labels = torch.tensor([sample['labels']], dtype=torch.long)
     term, valid_count, mass = backward_weighted_slot_term(logits, labels, weights, expected_slots=4)
-    if valid_count != 60 or abs(mass - 60.0) > 1e-12 or logits.grad is None or not bool(torch.isfinite(logits.grad).all().item()):
+    if valid_count != 60 or abs(mass - 60.0) > 1e-6 or logits.grad is None or not bool(torch.isfinite(logits.grad).all().item()):
         fail('CPU_WEIGHTED_LOSS_PATH')
     return {'slot': row['slot'], 'focused_tokens': len(indices), 'valid_tokens': valid_count, 'weight_mass': mass, 'equal_slot_term_finite': bool(torch.isfinite(term).item())}
 

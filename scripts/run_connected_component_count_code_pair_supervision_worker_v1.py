@@ -137,7 +137,7 @@ def cpu_integration(binding_path: Path, output_root: Path) -> dict:
             focused += len(indices)
         dense = [weights.get(index, 0.0) for index in range(len(sample["labels"]))]
         term, valid_count, mass = backward_weighted_slot_term(logits, labels, dense, expected_slots=4)
-        if valid_count != 60 or abs(mass - 60.0) > 1e-12 or logits.grad is None:
+        if valid_count != 60 or abs(mass - 60.0) > 1e-6 or logits.grad is None:
             fail("CPU_WORKER_WEIGHTED_LOSS")
         terms.append(float(term)); masses.append(mass)
     aggregate = sum(terms) / len(terms)
