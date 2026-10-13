@@ -1,0 +1,246 @@
+{
+  "arms": {
+    "control": {
+      "arm_id": "CONTROL_NARROW_STRUCTURE",
+      "loss_allocation": {
+        "kind": "UNIFORM_SEQUENCE_LOSS"
+      },
+      "schedule_path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/TREATMENT_SCHEDULE.json",
+      "schedule_sha256": "70addd17375437fe6371d57433281272ecb3bfed716289ff0b5cfd003f4cad10"
+    },
+    "treatment": {
+      "arm_id": "TREATMENT_STRUCTURE_DIVERSE",
+      "loss_allocation": {
+        "decision_token_multiplier": 2.0,
+        "kind": "COUNT_CODE_PAIR_REWEIGHTED"
+      },
+      "schedule_path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/TREATMENT_SCHEDULE.json",
+      "schedule_sha256": "70addd17375437fe6371d57433281272ecb3bfed716289ff0b5cfd003f4cad10"
+    }
+  },
+  "authorization": {
+    "authorized": false,
+    "claim_after_preclaim_only": true,
+    "consumption": "GPU_MODEL_LOAD_OR_LAUNCH_ONLY",
+    "mode": "FRESH_BINDING_SPECIFIC_EXTERNAL_ONE_SHOT_RECEIPT",
+    "permitted_detached_jobs": 1,
+    "retry": false
+  },
+  "dataset_paths": {
+    "COMPOSITION": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/scientific_successor_v2/COMPOSITION_SENTINEL_INPUT_PROMPTS.json"
+  },
+  "director_decision": "REQUIRE_CHANGES_SATISFIED_PENDING_FRESH_AUTHORIZATION",
+  "director_response_path": "orchestration/director/responses/CONNECTED_COMPONENT_COUNT_DECISION_TOKEN_SUPERVISION_PRELAUNCH_AUTHORIZATION_RESPONSE.json",
+  "evaluation": {
+    "b1_subset_by_checkpoint": {
+      "CONTROL_NARROW_STRUCTURE": [
+        "OOD:0",
+        "OOD:1",
+        "RETENTION:0",
+        "COMPOSITION:0",
+        "PROTECTED:V3:MARKER_BINDING_CONTROL:0:0",
+        "PROTECTED:V3:MARKER_BINDING_CONTROL:0:1",
+        "PROTECTED:V3:FIXED_TURN_ROTATION_CONTROL:0:0",
+        "PROTECTED:V3:FIXED_TURN_ROTATION_CONTROL:0:1",
+        "TRAIN_FIT:CONTROL_NARROW_STRUCTURE:0",
+        "TRAIN_FIT:CONTROL_NARROW_STRUCTURE:2",
+        "TRAIN_FIT:CONTROL_NARROW_STRUCTURE:1",
+        "TRAIN_FIT:CONTROL_NARROW_STRUCTURE:3"
+      ],
+      "TREATMENT_STRUCTURE_DIVERSE": [
+        "OOD:0",
+        "OOD:1",
+        "RETENTION:0",
+        "COMPOSITION:0",
+        "PROTECTED:V3:MARKER_BINDING_CONTROL:0:0",
+        "PROTECTED:V3:MARKER_BINDING_CONTROL:0:1",
+        "PROTECTED:V3:FIXED_TURN_ROTATION_CONTROL:0:0",
+        "PROTECTED:V3:FIXED_TURN_ROTATION_CONTROL:0:1",
+        "TRAIN_FIT:TREATMENT_STRUCTURE_DIVERSE:0",
+        "TRAIN_FIT:TREATMENT_STRUCTURE_DIVERSE:2",
+        "TRAIN_FIT:TREATMENT_STRUCTURE_DIVERSE:1",
+        "TRAIN_FIT:TREATMENT_STRUCTURE_DIVERSE:3"
+      ],
+      "V7": [
+        "OOD:0",
+        "OOD:1",
+        "RETENTION:0",
+        "COMPOSITION:0",
+        "PROTECTED:V3:MARKER_BINDING_CONTROL:0:0",
+        "PROTECTED:V3:MARKER_BINDING_CONTROL:0:1",
+        "PROTECTED:V3:FIXED_TURN_ROTATION_CONTROL:0:0",
+        "PROTECTED:V3:FIXED_TURN_ROTATION_CONTROL:0:1"
+      ]
+    },
+    "batch1_gate": {
+      "aggregate_exact_rate_delta_maximum": 0.08333333333333333,
+      "failure": "INVALID_NOT_INTERPRETABLE",
+      "generated_token_canonical_agreement_minimum": 0.9166666666666666,
+      "parsed_grid_agreement_minimum": 0.9166666666666666,
+      "scorer_agreement_minimum": 0.9166666666666666
+    },
+    "batch1_gate_records_by_checkpoint": {
+      "CONTROL_NARROW_STRUCTURE": 12,
+      "TREATMENT_STRUCTURE_DIVERSE": 12,
+      "V7": 8
+    },
+    "batch1_repeat_evaluations": 32,
+    "decoder": "NATIVE_GREEDY",
+    "fallback_cause": "CUDA_OOM_ONLY",
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "length_bucketing": true,
+    "max_new_tokens": 192,
+    "primary": "parsed_grid_exact_match",
+    "primary_evaluations": 360,
+    "requested_batch_size": 32,
+    "total_evaluations": 392
+  },
+  "execution": {
+    "authorization_required": true,
+    "combined_cap_seconds": 18000,
+    "cpu_integration_root": "/workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/cpu_preclaim_546fc88a887d634bbd19eb0d6d557a80",
+    "dependency_versions": {
+      "bitsandbytes": "0.50.2",
+      "peft": "0.17.1",
+      "torch": "2.8.0+cu128",
+      "transformers": "4.55.4"
+    },
+    "duplicate_guard": "refuse existing output root or terminal receipt; worker validates fresh root before authorization receipt",
+    "enforce_runtime_environment": true,
+    "evaluation_cap_seconds": 10800,
+    "launcher_path": "scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py",
+    "launcher_sha256": "d793ca31493c15c49bd02c9980db4993785650af4b19a84c56e6c509b4387957",
+    "minimum_free_bytes": 21474836480,
+    "nonce": "546fc88a887d634bbd19eb0d6d557a80",
+    "remote_output_root": "/workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/run_002_546fc88a887d634bbd19eb0d6d557a80",
+    "retry": false,
+    "runtime_python": "/workspace/arc2/env/5090-blackwell-env-v2/bin/python",
+    "terminal_receipt": "TERMINAL_RECEIPT.json",
+    "training_cap_seconds": 7200,
+    "worker_path": "scripts/run_connected_component_count_code_pair_supervision_worker_v1.py",
+    "worker_sha256": "fa2bcb76d7e011cf0f2a6b94c9ff35996215204e42b69b4a22bf0eb42216fce0"
+  },
+  "experiment_id": "CONNECTED_COMPONENT_COUNT_CODE_PAIR_SUPERVISION_PILOT_V1",
+  "frozen_unchanged": {
+    "decoder": "NATIVE_GREEDY",
+    "no_sealed_sidecar": true,
+    "physical_slots_per_update": 4,
+    "target_blind": true,
+    "teacher_forced_estimand": "all_B1",
+    "treatment_schedule_sha256": "70addd17375437fe6371d57433281272ecb3bfed716289ff0b5cfd003f4cad10",
+    "updates_per_arm": 96
+  },
+  "inputs": {
+    "composition_prompts": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/scientific_successor_v2/COMPOSITION_SENTINEL_INPUT_PROMPTS.json",
+      "sha256": "9df27140c83a2a3ec55e8b57a14748fad223d2ef98a7cede8544810448ff8895"
+    },
+    "diverse_schedule": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/TREATMENT_SCHEDULE.json",
+      "sha256": "70addd17375437fe6371d57433281272ecb3bfed716289ff0b5cfd003f4cad10"
+    },
+    "measurement_contract": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/measurement_contract_v1/MEASUREMENT_ANALYSIS_CONTRACT.json",
+      "sha256": "46b460c290b842e11f131e5324981187ba68b8552b0f13bfc72168155fbb6f7f"
+    },
+    "measurement_manifest": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/measurement_contract_v1/AMENDED_MANIFEST.json",
+      "sha256": "426f313a6df8948290031f7a97de096e4fdfc596649b4628efa65ed70fab100d"
+    },
+    "ood_prompts": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/OOD_INPUT_PROMPTS.json",
+      "sha256": "b50687c9d9493a3f2dc1ce6f8e369aa48915277b0818a71b22bec16a34f57a3b"
+    },
+    "protected_prompts": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/measurement_contract_v1/PROTECTED_CAPABILITY_INPUT_PROMPTS.json",
+      "sha256": "48fe9563a02192aea29b4f0d20d862015c04b51b6742e6cf8c19f85339565247"
+    },
+    "retention_prompts": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/RETENTION_INPUT_PROMPTS.json",
+      "sha256": "2d758dda92f01c36c415724bd36e56e82fc787f95cfc7218e9163fbcc13de689"
+    },
+    "scorer_contract": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/measurement_contract_v1/ORACLE_AND_SCORER_CONTRACT.json",
+      "sha256": "f8025a7533159127a6c2852d1971870232ddf429567f6ba3a201a42bcad06c40"
+    },
+    "train_fit_prompts": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/measurement_contract_v1/TRAIN_FIT_INPUT_PROMPTS.json",
+      "sha256": "708596c8715c5380903ab1af89852c32f05bb9176fb45cfd6c95f33e63dff981"
+    }
+  },
+  "runtime": {
+    "context_window": 32768,
+    "cpu_integration_command": "PYTHONPATH=.:src /workspace/arc2/env/5090-blackwell-env-v2/bin/python scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py --binding <binding> --output-root /workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/cpu_preclaim_546fc88a887d634bbd19eb0d6d557a80 --cpu-integration",
+    "execute_command": "PYTHONPATH=.:src /workspace/arc2/env/5090-blackwell-env-v2/bin/python scripts/run_connected_component_count_code_pair_supervision_worker_v1.py --binding <binding> --output-root /workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/run_002_546fc88a887d634bbd19eb0d6d557a80 --authorization-receipt <fresh-binding-specific-claimed-receipt> --execute",
+    "preclaim_command": "PYTHONPATH=.:src /workspace/arc2/env/5090-blackwell-env-v2/bin/python scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py --binding <binding> --output-root /workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/run_002_546fc88a887d634bbd19eb0d6d557a80 --preclaim-only",
+    "python_executable": "/workspace/arc2/env/5090-blackwell-env-v2/bin/python",
+    "pythonpath_prepend": [
+      "/root/arc2_e1_v7_bnb_overlay"
+    ]
+  },
+  "schema_version": 1,
+  "scientific_source_commit": "4fb309feebfbf5d04ee8a8e9ae22c63c6ebb57cd",
+  "source_files": {
+    "scripts/connected_components_object_extraction_semantic_oracle.py": "663715a03ecd8f16e26930bf02093addb17e4c75d45725b6ce8fef564313953f",
+    "scripts/decision_token_supervision.py": "45d227103a7344856eace38c6edb0f95822e529235eb97290c786d64145aa74c",
+    "scripts/e04_e_equal_slot_loss.py": "f3ee61891db74a13958194eb43e79f654a05296814a3a309af36cdef2915afbd",
+    "scripts/run_connected_component_count_code_pair_supervision_worker_v1.py": "fa2bcb76d7e011cf0f2a6b94c9ff35996215204e42b69b4a22bf0eb42216fce0",
+    "scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py": "d793ca31493c15c49bd02c9980db4993785650af4b19a84c56e6c509b4387957",
+    "scripts/run_connected_components_object_extraction_pilot_v1.py": "e5dec13b8c9dade30834a02dddb93b94d83639f31e05bf753ea2c8d70b655a34",
+    "scripts/score_connected_components_object_extraction_pilot_v1.py": "74ba1d03a0552824f958f6375b65c25af9f1f67ee56905d9546ca759d3c12897",
+    "src/inference/arc_native_io.py": "502a064f09743acc85643ebb8a9a95573832d8b3d6c51e79ccf94222dd4b89b3",
+    "src/inference/nvarc_native.py": "b1da3a1644e4bd176c64fb45bf30ce94362a0b479c32507755f009e69f18af87",
+    "src/training_data/pipeline.py": "3c2fa39cbc5ed51f7eceeb68b821962c451ea88b2f26ae8af508b15c6a8b3d3a"
+  },
+  "supersedes": {
+    "binding": "EXECUTION_BINDING_V1.json",
+    "reason": "preclaim floating-point equality rejected 60.00000000000002 before model/CUDA; no authorization claimed"
+  },
+  "target_isolation": {
+    "forbidden": [
+      "Gold",
+      "dGold",
+      "FINAL_AUDIT",
+      "E05_targets",
+      "V4_targets"
+    ],
+    "generation_inputs_only": true,
+    "raw_prediction_freeze_required_before_target_generation": true,
+    "sealed_sidecar_opened": false
+  },
+  "training": {
+    "independent_initialization": "V7",
+    "learning_rate": 5e-05,
+    "lora": {
+      "alpha": 32,
+      "dropout": 0.0,
+      "rank": 64
+    },
+    "maximum_detached_jobs": 1,
+    "optimizer": "PagedAdamW8bit",
+    "precision": "BF16",
+    "retry": false,
+    "slots_per_update": 4,
+    "torch_seed": 2000031,
+    "updates_per_arm": 96
+  },
+  "v7": {
+    "adapter_model_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "adapter_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+    "base_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+    "checkpoint_manifest_path": "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json",
+    "checkpoint_manifest_sha256": "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+    "tokenizer_files_sha256": {
+      "special_tokens_map.json": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+      "tokenizer.json": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+      "tokenizer_config.json": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+      "vocab.json": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+    }
+  }
+}
