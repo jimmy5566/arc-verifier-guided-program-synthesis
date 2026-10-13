@@ -1,6 +1,7 @@
 from __future__ import annotations
 """Bound V2 worker: preclaim before claim; execute freezes raw before sealed scoring."""
 import argparse, hashlib, importlib, json, os, sys, tempfile, time
+from importlib import metadata
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -74,8 +75,17 @@ def validate(binding_path, *, production_assets):
                 if not p.is_file() or p.stat().st_size!=a['bytes'] or sha(p)!=a['sha256']:fail('ASSET:'+a['name'])
                 checked+=1
         if Path(sys.executable).resolve()!=Path(b['runtime']['python']).resolve():fail('PYTHON')
-        if Path(ex['remote_output_root']).exists():fail('NONFRESH_OUTPUT')
-        if __import__('shutil').disk_usage(Path(ex['remote_output_root']).parent).free<int(ex.get('minimum_free_bytes',0)):fail('DISK')
+        for package,version in b['runtime']['dependencies'].items():
+            if metadata.version(package)!=version:fail('DEPENDENCY:'+package)
+        if Path(ex['remote_output_root']).exists() or Path(ex['terminal_receipt']).is_absolute() and Path(ex['terminal_receipt']).exists():fail('NONFRESH_OUTPUT')
+        if __import__('shutil').disk_usage(Path(ex['remote_output_root']).parent).free<int(ex['minimum_free_bytes']):fail('DISK')
+        if not isinstance(ex['hard_cap_seconds'],int) or ex['hard_cap_seconds']<ex['combined_cap_seconds']:fail('HARD_CAP')
+        needle=ex['nonce'].encode()
+        if Path('/proc').is_dir():
+            for cmd in Path('/proc').glob('[0-9]*/cmdline'):
+                try: payload=cmd.read_bytes()
+                except OSError: continue
+                if needle in payload:fail('DUPLICATE_NONCE_PROCESS')
     return b,obs,sched,{'inventory':inventory,'runtime_imports':imports,'v7_asset_files_verified':checked,'shared_b1_record_ids':['V2:'+x for x in sub['V7']]}
 
 def preclaim(binding_path):
