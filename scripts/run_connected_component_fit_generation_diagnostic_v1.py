@@ -50,7 +50,7 @@ assert not torch.cuda.is_initialized()
 assert all(callable(value) for value in (PeftModel,AutoConfig,AutoModelForCausalLM,AutoTokenizer,NVARCNativeProvider,checkpoint_native_tokenizer,parse_native_grid,serialize_grid,score_execute))
 print('PASS_RUNTIME_IMPORT_CLOSURE_NO_CUDA')
 """
- env=dict(os.environ);env['CUDA_VISIBLE_DEVICES']=''
+ env=dict(os.environ);env['CUDA_VISIBLE_DEVICES']='';env['PYTHONPATH']=os.pathsep.join((str(ROOT),str(ROOT/'src'),env.get('PYTHONPATH','')))
  result=subprocess.run([sys.executable,'-c',code],cwd=ROOT,env=env,capture_output=True,text=True)
  if result.returncode!=0: raise RuntimeError('RUNTIME_IMPORT_CLOSURE_FAILED:'+result.stderr[-1000:])
  if 'PASS_RUNTIME_IMPORT_CLOSURE_NO_CUDA' not in result.stdout: raise RuntimeError('RUNTIME_IMPORT_CLOSURE_RECEIPT_MISSING')
