@@ -22,6 +22,8 @@ def sidecar_sha256(binding):
  value=nested or top
  if not isinstance(value,str) or len(value)!=64: raise RuntimeError('SIDECAR_SHA256_MISSING')
  return value
+def decode_target_grid(tokenizer,target_ids,parser):
+ return parser(tokenizer.decode(target_ids,skip_special_tokens=True))
 def _write_rows(path,values):
  path=Path(path);path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix(path.suffix+'.tmp');tmp.write_bytes(b''.join(json.dumps(x,sort_keys=True,separators=(',',':')).encode()+b'\n' for x in values));os.replace(tmp,path)
 
@@ -75,7 +77,7 @@ def execute(binding_path,raw_root,output_root):
    for record in records:
     primary.update(_forward_teacher_forced(model,[record],tokenizer.pad_token_id or tokenizer.eos_token_id or 0))
   for record_id,target,prompt,row in records:
-   target_ids=target['target_token_ids'];expected=parse_native_grid(tokenizer.decode(target_ids,skip_special_tokens=False));taxonomy=semantic_taxonomy(row.get('parsed_grid'),expected,row.get('parser_valid') is True)
+   target_ids=target['target_token_ids'];expected=decode_target_grid(tokenizer,target_ids,parse_native_grid);taxonomy=semantic_taxonomy(row.get('parsed_grid'),expected,row.get('parser_valid') is True)
    out.append({'checkpoint':checkpoint,'cohort_record_id':record_id,'split':target['split'],'prompt_sha256':target['prompt_task_sha256'],'teacher_forced':aggregate_record_metrics({record_id:primary[record_id]}),'first_divergence':first_divergence(row['generated_token_ids'],target_ids),'semantic_taxonomy':taxonomy,'target_token_ids_persisted':False})
   per_checkpoint[checkpoint]={'records':len(primary),'teacher_forced_physical_batch_size':1,'teacher_forced_physical_forwards':len(primary),'batch_comparison':'NOT_APPLICABLE_ALL_PRIMARY_RECORDS_PHYSICAL_BATCH1'};del model;torch.cuda.empty_cache()
  if len(out)!=216:raise RuntimeError('SCORE_COMPLETENESS_INVALID')
