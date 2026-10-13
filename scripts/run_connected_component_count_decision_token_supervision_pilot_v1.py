@@ -33,7 +33,7 @@ def sha256(path: Path) -> str:
 
 def atomic_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.NamedTemporaryFile('w', encoding='utf-8', dir=path.parent, delete=False) as handle:
+    with tempfile.NamedTemporaryFile('w', encoding='utf-8', newline='\n', dir=path.parent, delete=False) as handle:
         json.dump(value, handle, sort_keys=True, separators=(',', ':'))
         handle.write('\n')
         temporary = Path(handle.name)
