@@ -1,0 +1,63 @@
+{
+  "all_raw_token_parser_identity_pass": true,
+  "comparisons": {
+    "CONTROL_NARROW_STRUCTURE": {
+      "b1_records": 12,
+      "effective_batch_sizes_b1": [
+        1
+      ],
+      "effective_batch_sizes_full_on_b1": [
+        32
+      ],
+      "full_records": 104,
+      "identity_fields": [
+        "generated_token_ids",
+        "parser_valid",
+        "parsed_grid",
+        "prompt_sha256"
+      ],
+      "mismatched_record_ids": [],
+      "raw_token_parser_identity_pass": true
+    },
+    "TREATMENT_STRUCTURE_DIVERSE": {
+      "b1_records": 12,
+      "effective_batch_sizes_b1": [
+        1
+      ],
+      "effective_batch_sizes_full_on_b1": [
+        32
+      ],
+      "full_records": 104,
+      "identity_fields": [
+        "generated_token_ids",
+        "parser_valid",
+        "parsed_grid",
+        "prompt_sha256"
+      ],
+      "mismatched_record_ids": [],
+      "raw_token_parser_identity_pass": true
+    },
+    "V7": {
+      "b1_records": 12,
+      "effective_batch_sizes_b1": [
+        1
+      ],
+      "effective_batch_sizes_full_on_b1": [
+        32
+      ],
+      "full_records": 104,
+      "identity_fields": [
+        "generated_token_ids",
+        "parser_valid",
+        "parsed_grid",
+        "prompt_sha256"
+      ],
+      "mismatched_record_ids": [],
+      "raw_token_parser_identity_pass": true
+    }
+  },
+  "limitation": "The worker did not record this audit before sidecar opening; it is a post-terminal raw-byte audit. The completed scorer already returns DO_NOT_PROMOTE independently of this audit.",
+  "raw_freeze_sha256": "a7b981484d6a3338725506c275117bfb6bf0ef60ee0ffdad13799b638fc50471",
+  "scorer_sha256": "9c012837172b1dd11128a777c8cb02601d0e226f107fb59e8591c5c898e1aa3f",
+  "status": "COMPLETE_POST_TERMINAL_RAW_B1_IDENTITY_AUDIT"
+}

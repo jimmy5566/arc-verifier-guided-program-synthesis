@@ -1,0 +1,132 @@
+{
+  "b1_raw_identity_audit": {
+    "all_raw_token_parser_identity_pass": true,
+    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/independent_confirmation_v2/run_f66fe54019ea096e6bba081131922b02/POST_TERMINAL_B1_RAW_IDENTITY_AUDIT.json",
+    "sha256": "9883b186e96eb36b1058f7076ae1250f739bda111a0f259f41e6cd8d4d72ab53",
+    "temporal_limit": "POST_TERMINAL_AUDIT; the worker did not separately record the comparison before sidecar scoring."
+  },
+  "binding_sha256": "c9e7fe1d8b188ef106930c7973489c1ac997744b9bce1a3988a658a0fb084f9b",
+  "frozen_gate_inputs": {
+    "composition_control_minus_v7": {
+      "bootstrap_95_ci": [
+        -4,
+        4
+      ],
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 3149060456,
+      "delta_correct": 0,
+      "records": 16
+    },
+    "composition_treatment_minus_v7": {
+      "bootstrap_95_ci": [
+        -5,
+        3
+      ],
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 3149060456,
+      "delta_correct": -1,
+      "records": 16
+    },
+    "count_treatment_minus_control": {
+      "bootstrap_95_ci": [
+        -2,
+        4
+      ],
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 2325684991,
+      "delta_correct": 1,
+      "records": 24
+    },
+    "count_treatment_minus_v7": {
+      "bootstrap_95_ci": [
+        -10,
+        2
+      ],
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 2325684991,
+      "delta_correct": -4,
+      "records": 24
+    },
+    "object_control_minus_v7": {
+      "bootstrap_95_ci": [
+        -5,
+        0
+      ],
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 245487097,
+      "delta_correct": -2,
+      "records": 24
+    },
+    "object_treatment_minus_v7": {
+      "bootstrap_95_ci": [
+        -5,
+        0
+      ],
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 245487097,
+      "delta_correct": -2,
+      "records": 24
+    },
+    "retention_inventory": {
+      "FIXED_TURN_ROTATION_CONTROL": 8,
+      "MARKER_BINDING_CONTROL": 8,
+      "NO_TRANSFORM_RETENTION": 24
+    }
+  },
+  "gates": {
+    "composition_no_harm_both": false,
+    "object_extraction_no_harm_both": false,
+    "retention_inventory": true,
+    "treatment_control_count": false,
+    "treatment_v7_count": false
+  },
+  "interpretation": "The intervention is not supported: both count gain gates and both no-harm gates failed. No promotion, rerun, or follow-on training is authorized by this result.",
+  "metrics": {
+    "CONTROL_NARROW_STRUCTURE": {
+      "exact": 53,
+      "rows": 104
+    },
+    "CONTROL_NARROW_STRUCTURE_B1": {
+      "exact": 5,
+      "rows": 12
+    },
+    "TREATMENT_STRUCTURE_DIVERSE": {
+      "exact": 52,
+      "rows": 104
+    },
+    "TREATMENT_STRUCTURE_DIVERSE_B1": {
+      "exact": 5,
+      "rows": 12
+    },
+    "V7": {
+      "exact": 64,
+      "rows": 104
+    },
+    "V7_B1": {
+      "exact": 6,
+      "rows": 12
+    }
+  },
+  "nonce": "f66fe54019ea096e6bba081131922b02",
+  "preserved_at": "2026-10-13T06:45:23.438338Z",
+  "raw_freeze_before_sidecar": true,
+  "raw_freeze_receipt_sha256": "a7b981484d6a3338725506c275117bfb6bf0ef60ee0ffdad13799b638fc50471",
+  "raw_sha256": {
+    "CONTROL_NARROW_STRUCTURE": "bf102f8e689ceebcda953a160fcd79052da1b4d2de591e47aa35f19e2fa71076",
+    "CONTROL_NARROW_STRUCTURE_B1": "528dc3ea1765760a0d375a6d8bbf95cba30940b4bb5fd86867506c875972c077",
+    "TREATMENT_STRUCTURE_DIVERSE": "03a1ae1d47de049b575e172d4f2e51fb8a45f9b5190b96e6d68a23317aa53b2a",
+    "TREATMENT_STRUCTURE_DIVERSE_B1": "1b48c2b8f23a2d3faf265d8a85b548657a167edc8b41c36210ee887bb51b2fb9",
+    "V7": "22dd9102f6231e58e4f4136e87b3e12089ebe9d40e954ecc9d0835be16a59eed",
+    "V7_B1": "dec7a1b87e70a0b8ec656ef7d92e52e202ad2810fdb0b7e48792bbde162e873c"
+  },
+  "remote_output_root": "/workspace/arc2/connected_component_count_code_pair_independent_confirmation_v2/run_f66fe54019ea096e6bba081131922b02",
+  "retry": false,
+  "run_id": "CONNECTED_COMPONENT_COUNT_CODE_PAIR_INDEPENDENT_CONFIRMATION_V2_F66FE540",
+  "schema_version": 1,
+  "score_decision": "DO_NOT_PROMOTE",
+  "score_receipt_sha256": "9c012837172b1dd11128a777c8cb02601d0e226f107fb59e8591c5c898e1aa3f",
+  "sealed_sidecar_sha256": "cf7efefd473171afa856e930741357e983d273cda858bd9a49a23d4f60579174",
+  "source_commit": "b88be18bf23fd30be5d3b561acc8aa0631e5955b",
+  "status": "COMPLETE_VALID_EXECUTION_DO_NOT_PROMOTE",
+  "terminal_receipt_sha256": "0aacc364ee7618397501838699a6ea1f2f48881750c7da37e483adc424ca038e"
+}
