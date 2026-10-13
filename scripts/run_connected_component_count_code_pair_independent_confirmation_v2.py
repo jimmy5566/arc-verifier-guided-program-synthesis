@@ -1,6 +1,6 @@
 from __future__ import annotations
 """Bound V2 worker: preclaim before claim; execute freezes raw before sealed scoring."""
-import argparse, hashlib, importlib, json, os, sys, tempfile, time
+import argparse, hashlib, importlib, json, os, random, sys, tempfile, time
 from importlib import metadata
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +17,9 @@ def write(path,x):
         json.dump(x,f,sort_keys=True,separators=(',',':'));f.write('\n');tmp=f.name
     os.replace(tmp,path)
 def fail(x): raise RuntimeError('IC_V2:'+x)
+def next_cuda_oom_batch(ladder, batch_size, error):
+    if 'out of memory' not in str(error).lower() or batch_size==ladder[-1]: raise error
+    return ladder[ladder.index(batch_size)+1]
 def load(p): return json.loads(Path(p).read_text(encoding='utf-8'))
 def file(binding,key):
     e=binding['inputs'][key];p=ROOT/e['path']
@@ -117,8 +120,18 @@ def score(binding_path,output,sidecar, *, test_stub=False):
     for tag in ('V7','CONTROL_NARROW_STRUCTURE','TREATMENT_STRUCTURE_DIVERSE'):
         by_id[tag]={x['record_id']:bool(x.get('parser_valid')) and x.get('parsed_grid')==expected[x['record_id']] for x in (json.loads(line) for line in (out/(tag+'_RAW.jsonl')).read_text().splitlines() if line)}
     family={x['record_id']:x['family'] for x in obs}
+    def percentile(values, q):
+        ordered=sorted(values)
+        return ordered[int((len(ordered)-1)*q)]
     def delta(left,right,name):
-        ids=sorted(x for x,v in family.items() if v==name);return {'records':len(ids),'delta_correct':sum(by_id[left][x]-by_id[right][x] for x in ids)}
+        ids=sorted(x for x,v in family.items() if v==name)
+        paired=[by_id[left][x]-by_id[right][x] for x in ids]
+        # The frozen training seed makes the paired bootstrap reproducible without
+        # introducing a new scientific randomization condition.
+        seed=b['training']['seed']+int(hashlib.sha256(name.encode()).hexdigest()[:8],16)
+        rng=random.Random(seed)
+        samples=[sum(rng.choice(paired) for _ in paired) for _ in range(table['bootstrap_replicates'])]
+        return {'records':len(ids),'delta_correct':sum(paired),'bootstrap_replicates':table['bootstrap_replicates'],'bootstrap_seed':seed,'bootstrap_95_ci':[percentile(samples,.025),percentile(samples,.975)]}
     count_tc=delta('TREATMENT_STRUCTURE_DIVERSE','CONTROL_NARROW_STRUCTURE','CONNECTED_COMPONENT_COUNT')
     count_tv=delta('TREATMENT_STRUCTURE_DIVERSE','V7','CONNECTED_COMPONENT_COUNT')
     object_control=delta('CONTROL_NARROW_STRUCTURE','V7','OBJECT_EXTRACTION')
@@ -126,7 +139,7 @@ def score(binding_path,output,sidecar, *, test_stub=False):
     composition_control=delta('CONTROL_NARROW_STRUCTURE','V7','COUNT_THEN_OBJECT_EXTRACTION')
     composition_treatment=delta('TREATMENT_STRUCTURE_DIVERSE','V7','COUNT_THEN_OBJECT_EXTRACTION')
     retention={name:sum(v==name for v in family.values()) for name in table['retention_counts']}
-    gates={'treatment_control_count':count_tc['delta_correct']>=table['treatment_control_count_min'],'treatment_v7_count':count_tv['delta_correct']>=table['treatment_v7_count_min'],'object_extraction_no_harm_both':object_control['delta_correct']>=0 and object_treatment['delta_correct']>=0,'composition_no_harm_both':composition_control['delta_correct']>=0 and composition_treatment['delta_correct']>=0,'retention_inventory':retention==table['retention_counts']}
+    gates={'treatment_control_count':count_tc['delta_correct']>=table['treatment_control_count_min'] and count_tc['bootstrap_95_ci'][0]>table['treatment_control_count_lower95_gt'],'treatment_v7_count':count_tv['delta_correct']>=table['treatment_v7_count_min'] and count_tv['bootstrap_95_ci'][0]>table['treatment_v7_count_lower95_gt'],'object_extraction_no_harm_both':object_control['delta_correct']>=0 and object_treatment['delta_correct']>=0,'composition_no_harm_both':composition_control['delta_correct']>=0 and composition_treatment['delta_correct']>=0,'retention_inventory':retention==table['retention_counts']}
     result={'status':'COMPLETE_V2_SCORER_AFTER_RAW_FREEZE','binding_sha256':sha(binding_path),'raw_freeze_sha256':sha(out/'RAW_FREEZE_RECEIPT.json'),'sealed_sidecar_sha256':sha(sidecar),'metrics':metrics,'frozen_gate_inputs':{'count_treatment_minus_control':count_tc,'count_treatment_minus_v7':count_tv,'object_control_minus_v7':object_control,'object_treatment_minus_v7':object_treatment,'composition_control_minus_v7':composition_control,'composition_treatment_minus_v7':composition_treatment,'retention_inventory':retention},'gates':gates,'decision':'PASS_ALL_GATES' if all(gates.values()) else 'DO_NOT_PROMOTE','targets_opened_after_raw_freeze':True}
     write(out/'SCORE_RECEIPT.json',result);return result
 
@@ -157,8 +170,15 @@ def execute(binding_path,output,auth,sidecar):
         def generate(model,torch,manifest,records,tag,force=None):
             from inference.nvarc_native import NVARCNativeProvider,checkpoint_native_tokenizer,parse_native_grid
             cfg=ROOT/'experiments/capability_repair_baseline_v1/e04_orientation_fixed_demonstration_baseline_v3/E04_V3_RUNTIME_NATIVE_CONFIG_IDENTITY_V1.json';c=load(cfg);tok,_=checkpoint_native_tokenizer(Path(manifest['base_path']),ROOT/'configs'/c['runtime_config_dir_name']); provider=NVARCNativeProvider(model_path=Path(manifest['base_path']),tokenizer_config_dir=ROOT/'configs'/c['runtime_config_dir_name'],device='cuda:0');provider.model,provider.tokenizer=model,tok;ladder=translated['evaluation']['fallback_ladder'];bs=force or ladder[0];rows=[];i=0
+            if bs not in ladder: fail('BATCH_SIZE')
             while i<len(records):
-                batch=records[i:i+bs];got=provider.generate_many([real._messages(x['task']) for x in batch],max_new_tokens=translated['evaluation']['max_new_tokens'],context_window=translated['runtime']['context_window'],seeds=[translated['training']['seed']+i+j for j in range(len(batch))])
+                batch=records[i:i+bs]
+                try:
+                    got=provider.generate_many([real._messages(x['task']) for x in batch],max_new_tokens=translated['evaluation']['max_new_tokens'],context_window=translated['runtime']['context_window'],seeds=[translated['training']['seed']+i+j for j in range(len(batch))])
+                except RuntimeError as err:
+                    bs=next_cuda_oom_batch(ladder,bs,err)
+                    torch.cuda.empty_cache()
+                    continue
                 for item,g in zip(batch,got,strict=True):
                     grid=parse_native_grid(g.text);rows.append({'record_id':item['record_id'],'split':item['split'],'prompt_sha256':hashlib.sha256(canon(item['task'])).hexdigest(),'generated_token_ids':[int(x) for x in g.token_ids],'parsed_grid':None if grid is None else [list(x) for x in grid],'parser_valid':grid is not None,'effective_batch_size':bs})
                 i+=len(batch)
