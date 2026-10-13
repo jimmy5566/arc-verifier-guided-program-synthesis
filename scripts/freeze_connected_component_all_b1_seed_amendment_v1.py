@@ -15,7 +15,7 @@ MAX_NEW_TOKENS=192
 def canonical(value): return json.dumps(value,sort_keys=True,separators=(',',':')).encode()
 def sha_file(path): return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def write(path,value):
- path=Path(path);path.parent.mkdir(parents=True,exist_ok=True);data=json.dumps(value,sort_keys=True,indent=2).encode()+b'\n';tmp=path.with_suffix(path.suffix+'.tmp');tmp.write_bytes(data);os.replace(tmp,path);return hashlib.sha256(data).hexdigest()
+ path=Path(path);path.parent.mkdir(parents=True,exist_ok=True);data=json.dumps(value,sort_keys=True,indent=2).encode()+b'\n';tmp=path.parent/'.arc2tmp';tmp.write_bytes(data);os.replace(tmp,path);return hashlib.sha256(data).hexdigest()
 def build_seed_manifest(records):
  if not isinstance(records,list) or len(records)!=48: raise RuntimeError('SEED_RECORD_COUNT_INVALID')
  by_checkpoint=defaultdict(list)
