@@ -40,10 +40,16 @@ def _native_generate(checkpoint,items,binding):
   out=[]
   for pair in task['train']: out += [{'role':'user','content':serialize_grid(pair['input'])},{'role':'assistant','content':serialize_grid(pair['output'])}]
   out.append({'role':'user','content':serialize_grid(task['test'][0]['input'])});return out
- ladder=[32,16,8,4,1];size=32;index=0;output=[];events=[];ordered=sorted(items,key=lambda x:(len(json.dumps(x['task'],sort_keys=True)),x['cohort_record_id']))
+ ladder=[32,16,8,4,1];size=32;index=0;output=[];events=[]
+ manifest=binding.get('generation_seed_manifest',{}).get('records')
+ if not isinstance(manifest,list): raise RuntimeError('GENERATION_SEED_MANIFEST_REQUIRED')
+ seeds={(row.get('checkpoint'),row.get('cohort_record_id')):row.get('generation_seed') for row in manifest}
+ keys={(checkpoint,item['cohort_record_id']) for item in items}
+ if len(seeds)!=len(manifest) or not keys <= set(seeds) or any(type(seeds[key]) is not int for key in keys): raise RuntimeError('GENERATION_SEED_MANIFEST_IDENTITY_INVALID')
+ ordered=sorted(items,key=lambda x:seeds[(checkpoint,x['cohort_record_id'])])
  while index<len(ordered):
   batch=ordered[index:index+size]
-  try: got=provider.generate_many([messages(x['task']) for x in batch],max_new_tokens=int(binding['execution']['max_new_tokens']),context_window=int(binding['execution']['context_window']),seeds=[int(binding['execution']['seed'])+index+i for i in range(len(batch))])
+  try: got=provider.generate_many([messages(x['task']) for x in batch],max_new_tokens=int(binding['execution']['max_new_tokens']),context_window=int(binding['execution']['context_window']),seeds=[seeds[(checkpoint,x['cohort_record_id'])] for x in batch])
   except RuntimeError as exc:
    if 'out of memory' not in str(exc).lower() or size==1: raise
    next_size=ladder[ladder.index(size)+1];events.append({'from':size,'to':next_size,'reason':'CUDA_OOM'});size=next_size;torch.cuda.empty_cache();continue
