@@ -50,13 +50,13 @@
     "preclaim_command": "PYTHONPATH=.:src python scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py --binding <binding> --preclaim-only"
   },
   "schema_version": 1,
-  "scientific_source_commit": "a84a4352f8f2988e228b7ca242de13c8a60e1945",
+  "scientific_source_commit": "09574c14997e08549ef15de627790aa84390164e",
   "sealed_target_access": false,
   "source_files": {
     "scripts/connected_components_object_extraction_semantic_oracle.py": "663715a03ecd8f16e26930bf02093addb17e4c75d45725b6ce8fef564313953f",
     "scripts/decision_token_supervision.py": "30cc3ea340e78804f4d3bfae9433a7f6cab65a8f61f6f6743bfde04d2771bb24",
     "scripts/e04_e_equal_slot_loss.py": "f3ee61891db74a13958194eb43e79f654a05296814a3a309af36cdef2915afbd",
-    "scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py": "807d0cf73ccd333fca79810d23e474bbcefc8b69d21dc92b86ab46b31e490b4b",
+    "scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py": "b81bdbbf1b4617a257a6b3fe19c5005b345d63cea00a02b1df4cf0f652c1e773",
     "scripts/run_connected_components_object_extraction_pilot_v1.py": "e0dc2febc8dcf1a15e6acb36e797380f29c8a246757c26c1c714a04bd6099114",
     "src/inference/arc_native_io.py": "502a064f09743acc85643ebb8a9a95573832d8b3d6c51e79ccf94222dd4b89b3",
     "src/inference/nvarc_native.py": "b1da3a1644e4bd176c64fb45bf30ce94362a0b479c32507755f009e69f18af87",

@@ -17,7 +17,7 @@
     }
   },
   "binding_path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/connected_component_count_decision_token_supervision_pilot_v1/CPU_PRECLAIM_BINDING_V1.json",
-  "binding_sha256": "5c30e063f3df6daf175488410e3bae2857508edf7db7521f51c5bea10a5dd069",
+  "binding_sha256": "a82860365e57d6cec80025210359f42014d0c2bab5a75a7c6a71fd4a6311a75a",
   "decision_rules": {
     "confirmation": "independent confirmation required before promotion",
     "harm": "any material protected-capability or composition regression",

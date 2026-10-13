@@ -1,7 +1,7 @@
 {
   "binding": {
     "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/connected_component_count_decision_token_supervision_pilot_v1/CPU_PRECLAIM_BINDING_V1.json",
-    "sha256": "5c30e063f3df6daf175488410e3bae2857508edf7db7521f51c5bea10a5dd069"
+    "sha256": "a82860365e57d6cec80025210359f42014d0c2bab5a75a7c6a71fd4a6311a75a"
   },
   "experiment_id": "CONNECTED_COMPONENT_COUNT_DECISION_TOKEN_SUPERVISION_PILOT_V1",
   "held_constant": [
@@ -35,17 +35,17 @@
       "protected_replay": 288,
       "slots": 384
     },
-    "receipt_sha256": "8b210f7d77249e3ff2e6fbdebd7f9e985176494abf6107ae9f8617a1f60c4aec",
+    "receipt_sha256": "d14fe05ff32d5e18554a05c0536e6194f492edc2d804c663494d449836473460",
     "result": "PASS_PRODUCTION_SHAPED_PRECLAIM_ONLY",
     "runtime_import_closure": "PASS",
     "sealed_sidecar_opened": false
   },
   "protocol": {
     "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/connected_component_count_decision_token_supervision_pilot_v1/CPU_FROZEN_PROTOCOL_V1.json",
-    "sha256": "becdfbddc16da4570068342190d93d771daac2d1f44a725736665c620e703a2f"
+    "sha256": "eb386ac99487e4f7a772de9fa601fe60d97e524fdaa7443b25d29989610ab19d"
   },
   "request": "Authorize one fresh, binding-specific GPU one-shot for this exact binding only after verifying the source commit and binding SHA. Claim occurs after production preclaim; retry remains false after claim.",
   "schema_version": 1,
-  "scientific_source_commit": "a84a4352f8f2988e228b7ca242de13c8a60e1945",
+  "scientific_source_commit": "09574c14997e08549ef15de627790aa84390164e",
   "status": "READY_FOR_FRESH_BINDING_SPECIFIC_GPU_AUTHORIZATION"
 }
