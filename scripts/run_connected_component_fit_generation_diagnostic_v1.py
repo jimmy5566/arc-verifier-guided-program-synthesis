@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """No-update worker. CPU self-test is the only enabled mode before authorization."""
 from __future__ import annotations
-import argparse,json,os,sys
+import argparse,json,os,shutil,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
+sys.path.insert(0,str(ROOT/'src'))
 from scripts.connected_component_fit_generation_runtime_contract import teacher_forced_layout,token_metric,aggregate_token_metrics,first_divergence,semantic_taxonomy,batch_gate,validate_sidecar,require_inventory_partition,validate_reuse
 from scripts.connected_component_run002_raw_manifest_v1 import verify_run002_raw_root
 import hashlib
@@ -15,6 +16,8 @@ def self_test():
     assert first_divergence([1,2],[1,3])==1 and first_divergence([1],[1,2])==1
     assert semantic_taxonomy([[1]],[[1]],True)['primary']=='EXACT'
     assert _raw_checkpoint_name('CONTROL_NARROW_STRUCTURE_RAW.jsonl')=='CONTROL_NARROW_STRUCTURE'
+    from inference.nvarc_native import parse_native_grid,serialize_grid
+    assert callable(parse_native_grid) and callable(serialize_grid)
     tol={'correct_token_rank_abs_delta_max':1,'Top1_and_Top2_aggregate_count_delta_max':0,'per_row_mean_margin_abs_delta_max':.02,'token_weighted_NLL_abs_delta_max':.005}
     assert batch_gate({'a':metrics[0]},{'a':metrics[0]},tol)['status']=='PASS'
     return {'status':'PASS_CPU_PRODUCTION_SHAPED_WORKER_SELF_TEST','model_loaded':False,'gpu_used':False,'optimizer_steps':0,'backward_calls':0}
@@ -28,6 +31,73 @@ def _raw_checkpoint_name(path):
  return name[:-len(suffix)]
 def _write_rows(path,values):
  path=Path(path);path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix(path.suffix+'.tmp');tmp.write_bytes(b''.join(json.dumps(x,sort_keys=True,separators=(',',':')).encode()+b'\n' for x in values));os.replace(tmp,path)
+
+def _sha_file(path):
+ digest=hashlib.sha256()
+ with Path(path).open('rb') as handle:
+  for block in iter(lambda:handle.read(1<<20),b''):digest.update(block)
+ return digest.hexdigest()
+
+def _check_runtime_import_closure():
+ """Import the actual worker/scorer dependency closure without loading a model or CUDA."""
+ import torch
+ if torch.cuda.is_initialized(): raise RuntimeError('CUDA_ALREADY_INITIALIZED_BEFORE_PRECLAIM')
+ from peft import PeftModel
+ from transformers import AutoConfig,AutoModelForCausalLM,AutoTokenizer
+ from inference.nvarc_native import NVARCNativeProvider,checkpoint_native_tokenizer,parse_native_grid,serialize_grid
+ from scripts.score_connected_component_fit_generation_diagnostic_v1 import execute as score_execute
+ if torch.cuda.is_initialized(): raise RuntimeError('CUDA_INITIALIZED_BY_PRECLAIM_IMPORT')
+ required=(PeftModel,AutoConfig,AutoModelForCausalLM,AutoTokenizer,NVARCNativeProvider,checkpoint_native_tokenizer,parse_native_grid,serialize_grid,score_execute)
+ if not all(callable(value) for value in required): raise RuntimeError('RUNTIME_IMPORT_CLOSURE_INVALID')
+ return {'torch_cuda_initialized':False,'runtime_imports':'PASS'}
+
+def _prepare_production_inputs(binding,output_root,control_root):
+ """The shared pre-model path for preclaim validation and real execution."""
+ execution=binding.get('execution',{})
+ if execution.get('optimizer_steps') not in (0,None) or execution.get('backward_calls') not in (0,None) or execution.get('retry') not in (False,None): raise RuntimeError('NO_UPDATE_EXECUTION_REQUIRED')
+ for rel,digest in binding.get('source_hashes',{}).items():
+  if _sha_file(ROOT/rel)!=digest: raise RuntimeError('SOURCE_IDENTITY_MISMATCH:'+rel)
+ out=Path(output_root);control=Path(control_root)
+ if out.exists() or control.exists(): raise RuntimeError('FRESH_OUTPUT_OR_DUPLICATE_JOB_REQUIRED')
+ if int(execution.get('hard_cap_seconds',0)) not in (7200,10800): raise RuntimeError('HARD_CAP_INVALID')
+ free=shutil.disk_usage(out.parent).free
+ if free < 1<<30: raise RuntimeError('INSUFFICIENT_DISK_FOR_FRESH_OUTPUT')
+ inventory_path=Path(execution['inventory_path'])
+ inventory=json.loads(inventory_path.read_text());reused,fresh=require_inventory_partition(inventory)
+ manifest_path=Path(execution['run_002_raw_manifest_path'])
+ if _sha_file(manifest_path)!=execution['run_002_raw_manifest_sha256']: raise RuntimeError('RUN_002_RAW_MANIFEST_IDENTITY_MISMATCH')
+ manifest=json.loads(manifest_path.read_text())
+ if manifest.get('inventory_sha256') != _sha_file(inventory_path): raise RuntimeError('INVENTORY_MANIFEST_IDENTITY_MISMATCH')
+ raw_root=Path(execution['run_002_raw_root'])
+ raw_verification=verify_run002_raw_root(manifest,raw_root)
+ old={}
+ for path in raw_root.glob('*_RAW.jsonl'): old[_raw_checkpoint_name(path)]={row.get('prompt_sha256'):row for row in _read_rows(path)}
+ validate_reuse(old,inventory)
+ for item in reused:
+  row=old[item['checkpoint']][item['prompt_task_sha256']]
+  if {'target_grid','target_token_ids','gold','dGold'} & set(row) or hashlib.sha256(json.dumps(row,sort_keys=True,separators=(',',':')).encode()).hexdigest()!=item['run_002_raw_record_sha256']: raise RuntimeError('REUSED_RAW_IDENTITY_MISMATCH')
+ missing_path=Path(execution['missing_prompt_tasks_path'])
+ if _sha_file(missing_path)!=execution['missing_prompt_tasks_sha256']: raise RuntimeError('MISSING_PROMPT_TASKS_IDENTITY_MISMATCH')
+ tasks_document=json.loads(missing_path.read_text());tasks=tasks_document.get('records',tasks_document) if isinstance(tasks_document,dict) else tasks_document
+ if not isinstance(tasks,list) or (isinstance(tasks_document,dict) and tasks_document.get('target_content_present') is not False): raise RuntimeError('MISSING_PROMPT_TARGET_BOUNDARY_INVALID')
+ by_key={(x.get('checkpoint'),x.get('cohort_record_id')):x for x in tasks};wanted={(x['checkpoint'],x['cohort_record_id']) for x in fresh}
+ if len(tasks)!=48 or set(by_key)!=wanted or any(not isinstance(x.get('task'),dict) or not isinstance(x.get('prompt_task_sha256'),str) for x in tasks): raise RuntimeError('MISSING_PROMPT_SET_DIFFERENCE_INVALID')
+ runtime=binding.get('checkpoint_runtime')
+ if not isinstance(runtime,dict) or set(runtime)!={x['checkpoint'] for x in inventory['inventory']}: raise RuntimeError('CHECKPOINT_RUNTIME_LAYOUT_INVALID')
+ tokenizer=execution.get('tokenizer_identity',{});base_path=Path(tokenizer.get('runtime_path',''))
+ if not base_path.is_dir(): raise RuntimeError('BASE_MODEL_PATH_MISSING')
+ for name,digest in tokenizer.get('tokenizer_files',{}).items():
+  if _sha_file(base_path/name)!=digest: raise RuntimeError('TOKENIZER_IDENTITY_MISMATCH:'+name)
+ for checkpoint,details in runtime.items():
+  if _sha_file(details['adapter_path'])!=details.get('adapter_model_sha256'): raise RuntimeError('ADAPTER_IDENTITY_MISMATCH:'+checkpoint)
+  if Path(details['base_path']) != base_path or not Path(details['tokenizer_config_dir'],'chat_template.j2').is_file(): raise RuntimeError('RUNTIME_ASSET_LAYOUT_INVALID:'+checkpoint)
+ if not Path(execution['sidecar_path']).is_file(): raise RuntimeError('SEALED_SIDECAR_PATH_MISSING')
+ imports=_check_runtime_import_closure()
+ return {'status':'PASS_PRODUCTION_PRECLAIM_ONLY','raw_verification':raw_verification['status'],'reused_rows':len(reused),'new_rows':len(fresh),'missing_train_fit_tasks':len(tasks),'source_files_verified':len(binding.get('source_hashes',{})),'disk_free_bytes':free,'hard_cap_seconds':int(execution['hard_cap_seconds']),'model_loaded':False,'gpu_used':False,'sidecar_opened':False,**imports}
+
+def preclaim_only(binding_path,output_root,control_root):
+ binding=json.loads(Path(binding_path).read_text())
+ return _prepare_production_inputs(binding,output_root,control_root)
 
 def _native_generate(checkpoint,items,binding):
  """Real no-update native-greedy generation for the explicitly missing rows."""
@@ -66,18 +136,11 @@ def _native_generate(checkpoint,items,binding):
 def execute(binding_path,output_root):
  """Import 168 exact rows, generate only 48, then freeze raw evidence."""
  b=json.loads(Path(binding_path).read_text()); execution=b.get('execution',{})
- if execution.get('optimizer_steps') not in (0,None) or execution.get('backward_calls') not in (0,None) or execution.get('retry') not in (False,None): raise RuntimeError('NO_UPDATE_EXECUTION_REQUIRED')
- for rel,digest in b.get('source_hashes',{}).items():
-  if hashlib.sha256((ROOT/rel).read_bytes()).hexdigest()!=digest: raise RuntimeError('SOURCE_IDENTITY_MISMATCH:'+rel)
+ prepared=_prepare_production_inputs(b,output_root,Path(output_root).with_name(Path(output_root).name+'_control'))
  inventory=json.loads(Path(execution['inventory_path']).read_text());reused,fresh=require_inventory_partition(inventory)
- manifest_path=Path(execution['run_002_raw_manifest_path'])
- if hashlib.sha256(manifest_path.read_bytes()).hexdigest()!=execution['run_002_raw_manifest_sha256']: raise RuntimeError('RUN_002_RAW_MANIFEST_IDENTITY_MISMATCH')
- manifest=json.loads(manifest_path.read_text()); verify_run002_raw_root(manifest,Path(execution['run_002_raw_root']))
- out=Path(output_root)
- if out.exists(): raise RuntimeError('FRESH_OUTPUT_REQUIRED')
- old={}
+ out=Path(output_root);old={}
  for path in Path(execution['run_002_raw_root']).glob('*_RAW.jsonl'): old[_raw_checkpoint_name(path)]={row.get('prompt_sha256'):row for row in _read_rows(path)}
- validate_reuse(old,inventory); imported=[]
+ imported=[]
  for item in reused:
   row=dict(old[item['checkpoint']][item['prompt_task_sha256']]);
   if {'target_grid','target_token_ids','gold','dGold'} & set(row) or hashlib.sha256(json.dumps(row,sort_keys=True,separators=(',',':')).encode()).hexdigest()!=item['run_002_raw_record_sha256']: raise RuntimeError('REUSED_RAW_IDENTITY_MISMATCH')
@@ -106,7 +169,10 @@ def execute(binding_path,output_root):
  terminal={'status':'COMPLETE_RAW_AND_ALL_B1_SCORED_NO_UPDATE','raw_sha256':receipt['raw_sha256'],'score_receipt_sha256':hashlib.sha256(Path(score_receipt).read_bytes()).hexdigest(),'metrics_sha256':score['metrics_sha256'],'records':score['records'],'optimizer_steps':0,'backward_calls':0,'targets_accessed_before_raw_freeze':False,'gpu_used':True}
  _write(out/'TERMINAL_RECEIPT.json',terminal);return terminal
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--cpu-self-test',action='store_true');p.add_argument('--cpu-fixture',type=Path);p.add_argument('--output',type=Path);p.add_argument('--preflight',action='store_true');p.add_argument('--execute',action='store_true');p.add_argument('--output-root',type=Path);p.add_argument('--binding',type=Path);p.add_argument('--sidecar',type=Path);p.add_argument('--inventory',type=Path);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--cpu-self-test',action='store_true');p.add_argument('--preclaim-only',action='store_true');p.add_argument('--control-root',type=Path);p.add_argument('--cpu-fixture',type=Path);p.add_argument('--output',type=Path);p.add_argument('--preflight',action='store_true');p.add_argument('--execute',action='store_true');p.add_argument('--output-root',type=Path);p.add_argument('--binding',type=Path);p.add_argument('--sidecar',type=Path);p.add_argument('--inventory',type=Path);a=p.parse_args()
+ if a.preclaim_only:
+  if not a.binding or not a.output_root or not a.control_root: raise RuntimeError('BINDING_OUTPUT_AND_CONTROL_REQUIRED')
+  print(json.dumps(preclaim_only(a.binding,a.output_root,a.control_root),sort_keys=True));raise SystemExit(0)
  if a.preflight:
   b=json.loads(a.binding.read_text()); side=json.loads(a.sidecar.read_text()); inv=json.loads(a.inventory.read_text()); records=validate_sidecar(side,inv)
   if len(records)!=72 or b.get('execution',{}).get('reused_rows')!=168 or b.get('execution',{}).get('new_free_running_rows')!=48: raise RuntimeError('PREFLIGHT_LAYOUT')
