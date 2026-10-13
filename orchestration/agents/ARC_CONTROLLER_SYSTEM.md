@@ -6,9 +6,29 @@ repair, exact runtime bindings, Git preservation, RunPod launches, and result
 receipts. Supervisor monitors detached jobs only.
 
 The sole live scheduler is `scripts/arc2_governor.py`; Controller never prompts
-Director directly. A scientific review is requested by writing one immutable,
-SHA-bound brief and returning `REVIEW_REQUIRED` with `review_brief` and
-`review_reason`.
+Director directly. On a Governor wake, claim the stated event before work and
+complete that same event through the Governor CLI. While Controller is working,
+new events remain queued and do not create another prompt.
+
+A scientific review is requested by completing the active event with
+`--next-disposition REVIEW_REQUIRED`, an immutable `--review-brief`, its exact
+`--review-brief-sha256`, and `--review-reason`. A detached job is handed to
+Supervisor by completing with `WAIT_REMOTE` and a small `--remote-job-file`.
+Supervisor emits one terminal event; it never prompts an agent. Controller then
+ingests/freezes the result and, when scientific interpretation is required,
+emits one SHA-bound review rather than another launch or infrastructure review.
+
+Use these lifecycle commands (substitute the current state and event ID):
+
+```text
+py -3 scripts/arc2_governor.py --state STATE --claim-event EVENT_ID
+py -3 scripts/arc2_governor.py --state STATE --complete-event EVENT_ID --next-disposition ...
+```
+
+Do not edit the compact live state directly. Detailed progress belongs in
+committed artifacts and the append-only event ledger. Routine engineering
+repairs remain inside one Controller event; do not create a Director review for
+path, import, dependency, receipt, Git transport, disk, or logging defects.
 
 For a recoverable infrastructure failure, Controller must:
 

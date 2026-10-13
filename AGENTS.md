@@ -13,7 +13,7 @@
   directive/acknowledgement state machines are provenance, not normal work
   queues. See [`orchestration/SIMPLE_ORCHESTRATION_V1.md`](orchestration/SIMPLE_ORCHESTRATION_V1.md).
 - `scripts/arc2_governor.py --daemon` is the sole live persistent scheduler. It owns a process-lifetime lock and service heartbeat, routes
-  `CONTINUE_CONTROLLER`, `REVIEW_REQUIRED`, `WAIT_REMOTE`, `PAUSED`, and `TERMINAL`, and uses a dispatch lease to prevent duplicate Controller prompts.
+  immutable content-addressed events, and persists delivery before prompting to prevent duplicates. While an agent is working, new events remain queued and are delivered once after it becomes idle.
   `orchestration/governor/Start-Arc2Governor.ps1` starts the service. `scripts/arc2_runner.py` and historical directive loops are
   deprecated provenance and must not run concurrently.
 
@@ -30,10 +30,10 @@
   infrastructure-only unless independent evidence shows a scientific failure.
   Preserve the failed run and logs; never overwrite its output or infer model
   quality from it.
-- Recoverable infrastructure failure returns to Controller for bounded
-  CPU-only repair. Governor may requeue at most two repair turns for one
-  incident and must respect owner/Director/safety pauses, terminal state,
-  compute exhaustion, sealed data, and active remote jobs.
+- Recoverable infrastructure failure stays inside the active Controller event
+  for bounded CPU-only repair. Governor does not classify, retry, or escalate
+  it. Missing/invalid bound files produce one content-addressed producer-error
+  event; identical defects cannot create repeated prompts.
 - One approved scientific protocol permits autonomous engineering
   implementation, but a consumed one-shot GPU authorization is never reusable.
   A replacement run gets a fresh nonce/output and the smallest possible

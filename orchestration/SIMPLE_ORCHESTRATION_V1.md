@@ -1,64 +1,51 @@
-# ARC2 simple orchestration
+# ARC2 thin orchestration
 
-## Normal path
+## Roles
 
-`scripts/arc2_governor.py --daemon` is the sole persistent outer loop. It owns a process-lifetime lock and service heartbeat, recognizes
-`CONTINUE_CONTROLLER`, `REVIEW_REQUIRED`, `WAIT_REMOTE`, `PAUSED`, and `TERMINAL`, and uses a dispatch lease to prevent duplicate Controller prompts.
-`PAUSED` remains observable and restartable; only `TERMINAL` exits. `scripts/arc2_runner.py` is disabled historical provenance and must not run concurrently.
+- Controller owns implementation, execution, routine repair, artifact freeze,
+  Git preservation, and result ingestion.
+- Director synchronously reviews one SHA-bound scientific brief and returns one
+  structured decision.
+- Supervisor monitors detached remote work and writes one immutable
+  `REMOTE_TERMINAL` event. It never prompts Controller or Director.
+- Governor is a deterministic event router. It does not poll RunPod, interpret
+  science, repair infrastructure, or manage authorization.
 
-`arc-controller` owns one active scientific stage from its first action until a
-real terminal condition or a detached RunPod job.  Detailed progress belongs in
-committed artifacts and Git history; [`ARC2_WORKFLOW_STATE_TEMPLATE.json`](ARC2_WORKFLOW_STATE_TEMPLATE.json)
-defines the only durable workflow fields.
+## Event lifecycle
 
-The live state is local (`.arc2-local/orchestration/ARC2_WORKFLOW_STATE.json`)
-and contains the current stage, disposition, the active remote job if one
-exists, last completed action, next action, Director-review flag, and terminal
-flag.  It does not encode remediation substeps or acknowledgement cycles.
+Each event has a content-derived ID and exactly four states:
+`QUEUED -> DELIVERED -> CLAIMED -> COMPLETE`.
 
-For a scientific decision the Controller freezes one stage brief and returns
-`REVIEW_REQUIRED`. Governor calls Director synchronously:
+Governor persists `DELIVERED` before calling Herdr. Therefore a restart or an
+ambiguous CLI return cannot duplicate the prompt. If the recipient is working,
+the event stays `QUEUED`; Governor does not prompt, poll the turn, or append a
+second message. When the recipient becomes idle, Governor delivers the oldest
+queued event once.
 
-```text
-herdr agent prompt arc-director "<review request>" --wait \
-  --until idle --until done --until blocked --timeout <milliseconds>
-```
+Controller claims and completes events with `scripts/arc2_governor.py` CLI
+commands. A Director response is consumed only when its
+`reviewed_brief_sha256` matches the immutable brief. Missing files, invalid
+JSON, and hash mismatches create one content-addressed `PRODUCER_ERROR` event
+for the producer; they never create an unbounded review loop.
 
-Governor verifies that the returned review references the brief hash and
-continues within the same workflow. Normal live decisions are
-`CONTINUE_CONTROLLER`, `CONTINUE_DIRECTOR`, `REQUIRE_CHANGES`, `PAUSED`, and
-`TERMINAL`.
+## Remote completion
 
-Routine infrastructure failures return to Controller for at most two bounded
-CPU-only repair turns. Successful semantically neutral repair continues without
-Director. A consumed one-shot GPU authorization cannot be reused; Controller
-then freezes one concise replacement-run brief and Governor routes only that
-authorization decision.
+Supervisor writes terminal events to
+`.arc2-local/orchestration/events/`. Governor notices the event and wakes an
+idle Controller once. Controller ingests and freezes the receipt/result. A
+complete result then becomes one SHA-bound Director review. This is the P0
+path: remote completion must not require a user to wake Controller manually.
 
-Historical `DIRECTOR_DIRECTIVE_*`, responses, escalations, and the former
-directive-cycle state file are immutable provenance.  They are deprecated for
-new normal-path scheduling and must not be deleted or treated as live work
-queues.
+## State and provenance
 
-## Remote jobs
+The live schema is deliberately small and defined by
+`ARC2_WORKFLOW_STATE_TEMPLATE.json`. Event transitions append to
+`.arc2-local/orchestration/ARC2_EVENT_LEDGER.jsonl`. Before schema migration,
+the legacy state is copied byte-for-byte to `state_backups/`; historical
+experiment artifacts are never rewritten.
 
-The sole normal asynchronous path is a detached RunPod job.  The Controller
-writes its immutable job/round contract and changes the live workflow status to
-`WAITING_REMOTE_JOB`.  The Supervisor reconciles small remote receipts every
-300 seconds, emits heartbeats while the job runs, and wakes the Controller once
-only for terminal or actionable failure receipts.  It does not call Director,
-choose curriculum, or interpret scientific results.
-
-The Supervisor Watchdog only keeps exactly one Supervisor alive. If the live
-workflow state marks `experiment_terminal: true`, it exits quietly rather than
-restarting it. Separately, the existing Governor process host checks the
-Governor daemon's PID and command line, restarts only that daemon, and after
-bounded repeated host failures wakes Controller for CPU-only repair. Neither
-watchdog interprets science, contacts Director, or launches remote work.
-
-## Evidence reuse
-
-Use the frozen evidence registry for unchanged artifacts.  Reverify an entry
-only when its bytes, Git provenance, remote asset, or scientific scope changes.
-The current registry is
-`experiments/foundation_v2_reconstruction_and_targeted_repair_v2/round_009_equivalence_evaluation/ARC2_FROZEN_EVIDENCE_REGISTRY_V1.json`.
+`orchestration/governor/Start-Arc2Governor.ps1` runs the sole persistent router.
+It stays alive across `PAUSED` and stage-level `TERMINAL` dispositions. Its
+watchdog emits at most one repair notification for a continuous process failure.
+`scripts/arc2_runner.py` and historical directive/acknowledgement state machines
+remain provenance only.

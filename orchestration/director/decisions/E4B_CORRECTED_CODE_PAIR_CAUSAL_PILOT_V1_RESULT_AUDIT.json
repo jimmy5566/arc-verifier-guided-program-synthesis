@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "decision_id": "E4B_CORRECTED_CODE_PAIR_CAUSAL_PILOT_V1_RESULT_AUDIT",
+  "reviewed_result": {
+    "git_commit": "812ecc965091240dac260d07478a56541471af28",
+    "path": "evidence/e4b_20261013T153226Z_e5405455/RESULT_MANIFEST.json",
+    "sha256": "f7241df0bdfce71ca812aea1a7cf74d14a72ad41f063ff9bdc6396a63a71c52f",
+    "scientific_validity": "VALID_TARGET_BLIND_PHYSICAL_BATCH1_MEASUREMENT_REJECT"
+  },
+  "decision": "DO_NOT_PROMOTE",
+  "baseline": "V7",
+  "established_results": {
+    "new_ood_canonical_units": 48,
+    "code_pair_minus_equal_slot_delta_correct": 2,
+    "code_pair_minus_equal_slot_bootstrap_95_ci": [-3, 7],
+    "train_fit": {
+      "v7": "31/48",
+      "equal_slot_5e5": "35/48",
+      "code_pair_5e5": "41/48"
+    },
+    "robust_both_orders_ood": {
+      "v7": "19/48",
+      "equal_slot_5e5": "14/48",
+      "code_pair_5e5": "16/48"
+    },
+    "retention": {
+      "equal_slot_5e5": "8/16",
+      "code_pair_5e5": "6/16"
+    },
+    "composition": {
+      "equal_slot_5e5": "4/16",
+      "code_pair_5e5": "4/16"
+    },
+    "order_invariance_both_over_any": {
+      "v7": 0.6551724137931034,
+      "equal_slot_5e5": 0.5185185185185185,
+      "code_pair_5e5": 0.5333333333333333
+    },
+    "gates": {
+      "primary_new_ood": false,
+      "train_fit": false,
+      "retention": false,
+      "order_invariance": false,
+      "composition": true
+    }
+  },
+  "interpretation": {
+    "confidence": "ESTABLISHED_NEGATIVE_CAUSAL_RESULT",
+    "finding": "Correcting and reweighting the Code-Pair locator improved training fit but did not establish independent OOD transfer and caused protected Marker Binding retention harm relative to Equal-Slot.",
+    "causal_limit": "The result rejects this Code-Pair intervention under the frozen budget; it does not prove that all decision-token objectives or object-centric representations fail.",
+    "promotion": "FORBIDDEN"
+  },
+  "next_stage": "E4C_CPU_ONLY_MECHANISM_STUDY",
+  "next_action": "Use frozen E4-A and E4-B predictions and receipts to discriminate object-centric representation, conditional binding, and atomic-to-compositional transfer mechanisms. Explain the 41/48 train-fit versus 16/48 robust-OOD gap and the 2/16 retention loss; select one falsifiable controlled intervention. CPU only: no model load, GPU, target reuse, checkpoint promotion, or new broad SFT sweep.",
+  "governor_delivery_rules": {
+    "claim_and_complete_events_via_governor_cli": true,
+    "working_agent_receives_no_second_prompt": true,
+    "remote_terminal_event_routes_once_to_controller": true,
+    "controller_freezes_result_before_one_director_review": true,
+    "routine_engineering_repairs_do_not_create_reviews": true
+  }
+}

@@ -1,656 +1,588 @@
 #!/usr/bin/env python3
-"""ARC2 Governor: one thin deterministic scheduler for Controller, Director, and remote jobs."""
+"""Thin, deterministic ARC2 event router.
+
+The Governor only routes immutable events, consumes SHA-bound Director
+responses, and reports one producer error for invalid bindings. It never polls
+RunPod, interprets science, repairs infrastructure, or invents authorization.
+"""
 from __future__ import annotations
-import argparse, hashlib, json, os, subprocess, sys, time
+
+import argparse
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import time
 from datetime import datetime, timezone
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from typing import Any
 
-DISPOSITIONS={"CONTINUE_CONTROLLER","REVIEW_REQUIRED","WAIT_REMOTE","PAUSED","TERMINAL"}
-PROJECT_ROOT=Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DISPOSITIONS = {"CONTINUE_CONTROLLER", "REVIEW_REQUIRED", "WAIT_REMOTE", "PAUSED", "TERMINAL"}
+EVENT_STATUSES = {"QUEUED", "DELIVERED", "CLAIMED", "COMPLETE"}
+DECISIONS = {"CONTINUE_CONTROLLER", "CONTINUE_DIRECTOR", "REQUIRE_CHANGES", "PAUSED", "TERMINAL"}
+LIVE_KEYS = {
+    "schema_version", "revision", "disposition", "stage", "next_action",
+    "controller_target", "pending_events", "active_event", "review",
+    "remote_job", "last_transition", "pause_reason", "terminal_reason", "updated_at",
+}
 
-def windows_creationflags():
-    """Keep local Herdr and SSH control clients from flashing a Windows console."""
+
+def now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def windows_creationflags() -> int:
     return getattr(subprocess, "CREATE_NO_WINDOW", 0) if os.name == "nt" else 0
 
-DIRECTOR_DECISIONS={
-    "CONTINUE_CONTROLLER", "CONTINUE_DIRECTOR", "REQUIRE_CHANGES", "PAUSED", "TERMINAL",
-    # A postmortem may request a bounded scientific disposition rather than
-    # an experiment-wide stop.  These choices never authorize a GPU launch.
-    "NEW_R3_PROTOCOL_RECOMMENDED", "STOP_TARGETED_REPAIR_APPROACH",
-    "RUN_ONE_DIAGNOSTIC_BEFORE_DECIDING",
-}
-def now(): return datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
-def atomic(p,x):
-    # Controller and Governor can briefly overlap on Windows.  A unique
-    # sibling prevents temporary-file collisions; retry only the atomic
-    # replacement when an antivirus/indexer still holds the destination.
-    t=p.with_name(f'{p.name}.{os.getpid()}.{time.time_ns()}.tmp')
+
+def sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def stable_id(kind: str, recipient: str, payload: dict[str, Any]) -> str:
+    material = json.dumps(
+        {"kind": kind, "recipient": recipient, "payload": payload},
+        sort_keys=True, separators=(",", ":"), default=str,
+    ).encode("utf-8")
+    return hashlib.sha256(material).hexdigest()
+
+
+def atomic(path: Path, value: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f"{path.name}.{os.getpid()}.{time.time_ns()}.tmp")
     try:
-        t.write_text(json.dumps(x,sort_keys=True,indent=2)+'\n',encoding='utf-8')
+        temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         for attempt in range(5):
             try:
-                os.replace(t,p)
+                os.replace(temporary, path)
                 return
             except PermissionError:
                 if attempt == 4:
                     raise
                 time.sleep(0.1)
     finally:
-        if t.exists():
-            t.unlink()
+        temporary.unlink(missing_ok=True)
 
-def action_sha256(state):
-    """Identity of one Controller handoff, without volatile timestamps."""
-    material={key:state.get(key) for key in ('disposition','stage','next_action','review_brief',
-             'review_brief_sha256','remote_job','active_remote_job','authorized_continuation')}
-    return hashlib.sha256(json.dumps(material,sort_keys=True,separators=(',',':'),default=str).encode('utf-8')).hexdigest()
+
+def append_ledger(state_path: Path, record: dict[str, Any]) -> None:
+    ledger = state_path.parent / "ARC2_EVENT_LEDGER.jsonl"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    with ledger.open("a", encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps({"at": now(), **record}, sort_keys=True) + "\n")
+
+
+def compact_state(value: dict[str, Any]) -> dict[str, Any]:
+    state = {key: value.get(key) for key in LIVE_KEYS if key in value}
+    defaults = {
+        "schema_version": 3, "revision": 0, "disposition": "PAUSED",
+        "stage": "UNSPECIFIED", "next_action": None, "controller_target": None,
+        "pending_events": [], "active_event": None, "review": None,
+        "remote_job": None, "last_transition": "STATE_LOADED", "pause_reason": None,
+        "terminal_reason": None, "updated_at": now(),
+    }
+    for key, value in defaults.items():
+        state.setdefault(key, value)
+    return state
+
+
+def load(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8-sig"))
+    if value.get("schema_version") != 3:
+        raise RuntimeError("LEGACY_STATE_REQUIRES_EXPLICIT_MIGRATION")
+    state = compact_state(value)
+    if state["disposition"] not in DISPOSITIONS:
+        raise RuntimeError("INVALID_GOVERNOR_DISPOSITION")
+    if not isinstance(state["pending_events"], list):
+        raise RuntimeError("INVALID_PENDING_EVENTS")
+    for item in state["pending_events"]:
+        if item.get("status") not in EVENT_STATUSES:
+            raise RuntimeError("INVALID_EVENT_STATUS")
+    return state
+
+
+def save(path: Path, state: dict[str, Any], transition: str) -> None:
+    state = compact_state(state)
+    state["revision"] = int(state.get("revision") or 0) + 1
+    state["last_transition"] = transition
+    state["updated_at"] = now()
+    atomic(path, state)
+    append_ledger(path, {"transition": transition, "revision": state["revision"],
+                         "disposition": state["disposition"], "stage": state["stage"]})
+
+
+def migrate_legacy(path: Path) -> dict[str, Any]:
+    raw = path.read_bytes()
+    legacy = json.loads(raw.decode("utf-8-sig"))
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    archive = path.parent / "state_backups" / f"{path.stem}.pre_thin.{stamp}.json"
+    archive.parent.mkdir(parents=True, exist_ok=True)
+    if archive.exists():
+        raise RuntimeError("MIGRATION_ARCHIVE_ALREADY_EXISTS")
+    archive.write_bytes(raw)
+    disposition = legacy.get("disposition")
+    if disposition not in DISPOSITIONS:
+        disposition = {
+            "ACTIVE": "CONTINUE_CONTROLLER", "WAITING_REMOTE_JOB": "WAIT_REMOTE",
+            "PAUSED": "PAUSED", "TERMINAL": "TERMINAL",
+        }.get(legacy.get("status"), "PAUSED")
+    review = None
+    raw_brief = legacy.get("review_brief")
+    if raw_brief:
+        if isinstance(raw_brief, dict):
+            review = {"brief_path": raw_brief.get("path"), "brief_sha256": raw_brief.get("sha256"),
+                      "reason": legacy.get("review_reason")}
+        else:
+            review = {"brief_path": raw_brief, "brief_sha256": legacy.get("review_brief_sha256"),
+                      "reason": legacy.get("review_reason")}
+    state = compact_state({
+        "schema_version": 3, "revision": 0, "disposition": disposition,
+        "stage": legacy.get("stage") or "MIGRATED_LEGACY_STATE",
+        "next_action": legacy.get("next_action"), "controller_target": legacy.get("controller_target"),
+        "pending_events": [], "active_event": None, "review": review,
+        "remote_job": legacy.get("remote_job") or legacy.get("active_remote_job"),
+        "pause_reason": legacy.get("pause_reason"), "terminal_reason": legacy.get("terminal_reason"),
+    })
+    atomic(path, state)
+    append_ledger(path, {"transition": "LEGACY_STATE_MIGRATED", "archive": str(archive.resolve()),
+                         "legacy_sha256": hashlib.sha256(raw).hexdigest()})
+    return state
+
 
 class GovernorLock:
-    """A process-lifetime, non-blocking lock; one Governor may own a state file."""
-    def __init__(self,path): self.path=Path(path); self.handle=None
-    def acquire(self):
-        self.path.parent.mkdir(parents=True,exist_ok=True)
-        self.handle=self.path.open('a+b')
+    def __init__(self, path: Path):
+        self.path = path
+        self.handle = None
+
+    def acquire(self) -> bool:
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.handle = self.path.open("a+b")
         if self.path.stat().st_size == 0:
-            self.handle.write(b' '); self.handle.flush()
+            self.handle.write(b" ")
+            self.handle.flush()
         self.handle.seek(0)
         try:
-            if os.name == 'nt':
+            if os.name == "nt":
                 import msvcrt
-                msvcrt.locking(self.handle.fileno(),msvcrt.LK_NBLCK,1)
+                msvcrt.locking(self.handle.fileno(), msvcrt.LK_NBLCK, 1)
             else:
                 import fcntl
-                fcntl.flock(self.handle.fileno(),fcntl.LOCK_EX|fcntl.LOCK_NB)
+                fcntl.flock(self.handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except OSError:
-            self.handle.close(); self.handle=None; return False
+            self.handle.close()
+            self.handle = None
+            return False
         self.handle.seek(0)
-        self.handle.write(json.dumps({'pid':os.getpid(),'started_at':now()}).encode('utf-8'))
-        self.handle.truncate(); self.handle.flush()
+        self.handle.write(json.dumps({"pid": os.getpid(), "started_at": now()}).encode("utf-8"))
+        self.handle.truncate()
+        self.handle.flush()
         return True
-    def release(self):
-        if not self.handle: return
+
+    def release(self) -> None:
+        if not self.handle:
+            return
         try:
             self.handle.seek(0)
-            if os.name == 'nt':
+            if os.name == "nt":
                 import msvcrt
-                msvcrt.locking(self.handle.fileno(),msvcrt.LK_UNLCK,1)
+                msvcrt.locking(self.handle.fileno(), msvcrt.LK_UNLCK, 1)
             else:
                 import fcntl
-                fcntl.flock(self.handle.fileno(),fcntl.LOCK_UN)
+                fcntl.flock(self.handle.fileno(), fcntl.LOCK_UN)
         finally:
-            self.handle.close(); self.handle=None
+            self.handle.close()
+            self.handle = None
 
-def write_service_state(path, *, status, workflow_state, detail=None):
-    if not path: return
-    payload={'service':'ARC2_GOVERNOR','pid':os.getpid(),'status':status,
-             'heartbeat_at':now(),'workflow_disposition':workflow_state.get('disposition'),
-             'workflow_stage':workflow_state.get('stage')}
-    if detail: payload['detail']=detail
-    atomic(Path(path),payload)
 
-def write_pid_file(path):
-    if path:
-        Path(path).write_text(str(os.getpid()),encoding='ascii')
+def event(kind: str, recipient: str, producer: str, payload: dict[str, Any]) -> dict[str, Any]:
+    event_id = stable_id(kind, recipient, payload)
+    return {"event_id": event_id, "kind": kind, "recipient": recipient, "producer": producer,
+            "payload": payload, "status": "QUEUED", "attempts": 0, "created_at": now()}
 
-def remove_own_pid_file(path):
-    if not path: return
-    candidate=Path(path)
-    try:
-        if candidate.read_text(encoding='ascii').strip() == str(os.getpid()): candidate.unlink()
-    except OSError: pass
-def load(p):
-    # Workflow state is produced by more than one Windows-local control path.
-    # Accept a UTF-8 BOM defensively, while all Governor writes remain UTF-8.
-    x=json.loads(p.read_text(encoding='utf-8-sig'))
-    if 'disposition' not in x:
-        old=x.pop('status','ACTIVE'); x['disposition']={'ACTIVE':'CONTINUE_CONTROLLER','WAITING_REMOTE_JOB':'WAIT_REMOTE','PAUSED':'PAUSED','TERMINAL':'TERMINAL'}.get(old,'PAUSED')
-    if x['disposition'] not in DISPOSITIONS: raise RuntimeError('INVALID_GOVERNOR_DISPOSITION')
-    return x
-def sha256_file(path):
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
-def review_brief_path(state):
-    """Resolve and SHA-bind an immutable Director brief.
 
-    Review briefs are repository artifacts.  A Controller may write a
-    repository-relative path while the durable workflow state is intentionally
-    stored outside the checked-out worktree.  Resolve such paths from the
-    Governor's checked-out source root, never from the caller's working
-    directory.  Absolute paths remain supported for older state files.
-    """
-    raw=state.get('review_brief')
-    declared=state.get('review_brief_sha256')
-    if isinstance(raw, dict):
-        declared=raw.get('sha256') or declared
-        raw=raw.get('path')
-    if not isinstance(raw, str) or not raw:
-        raise RuntimeError('REVIEW_BRIEF_MISSING')
-    requested=Path(raw)
-    candidates=[requested]
-    if not requested.is_absolute():
-        candidates.append(PROJECT_ROOT / requested)
-    brief=next((candidate for candidate in candidates if candidate.is_file()), None)
-    if brief is None:
-        raise RuntimeError('REVIEW_BRIEF_MISSING')
-    actual=sha256_file(brief)
-    if declared and declared != actual:
-        raise RuntimeError('REVIEW_BRIEF_DECLARED_SHA256_MISMATCH')
-    state['review_brief']=str(brief.resolve())
-    state['review_brief_sha256']=actual
-    return brief.resolve()
-def director_decision(response):
-    """Accept the normal decision field and bounded postmortem outcomes."""
-    return response.get('decision') or response.get('scientific_outcome')
-def log(state, text):
-    lp=state.get('_governor_log_path') or str(Path('.arc2-local/orchestration/logs/arc2_governor.log').resolve())
-    Path(lp).parent.mkdir(parents=True, exist_ok=True)
-    with Path(lp).open('a',encoding='utf-8') as f: f.write(f'[{time.strftime("%Y-%m-%d %H:%M:%S")}] {text}\n')
-def resolve_controller_target(state, path):
-    """Resolve the live Controller pane, never treating the Codex kind as a name."""
-    result=subprocess.run(['herdr','agent','list'],check=False,capture_output=True,text=True,encoding='utf-8',errors='replace',creationflags=windows_creationflags())
-    if result.returncode:
-        raise RuntimeError(f'CONTROLLER_TARGET_LIST_FAILED:{result.returncode}')
-    agents=json.loads(result.stdout).get('result',{}).get('agents',[])
-    saved=state.get('controller_target')
-    for record in agents:
-        if record.get('pane_id')==saved and record.get('agent')=='codex':
-            return saved
-    named=[record for record in agents if record.get('name')=='arc-controller']
-    focused=[record for record in agents if record.get('focused') and record.get('agent')=='codex']
-    selected=(named or focused)
-    if not selected:
-        raise RuntimeError('CONTROLLER_TARGET_UNRESOLVED')
-    target=selected[0]['pane_id']
-    state.update({'controller_target':target,'controller_target_source':'HERDR_LIVE_PANE_RESOLUTION','updated_at':now()})
-    atomic(path,state); log(state,f'controller target resolved={target}')
-    return target
-def controller_turn_is_active(target):
-    """Return whether the selected Controller is already executing a turn.
-
-    A Governor invocation may itself be running inside the Controller pane.
-    Re-prompting that same working pane queues a second invocation behind the
-    current turn; it is not a hand-off and can create a self-prompt loop.
-    """
-    result=subprocess.run(['herdr','agent','list'],check=False,capture_output=True,text=True,encoding='utf-8',errors='replace',creationflags=windows_creationflags())
-    if result.returncode:
-        raise RuntimeError(f'CONTROLLER_STATUS_LIST_FAILED:{result.returncode}')
-    for record in json.loads(result.stdout).get('result',{}).get('agents',[]):
-        if record.get('pane_id') == target:
-            return record.get('agent_status') == 'working'
-    raise RuntimeError('CONTROLLER_TARGET_DISAPPEARED')
-def prompt(actor,text,timeout,state):
-    log(state, f'prompting {actor}')
-    r=subprocess.run(['herdr','agent','prompt',actor,text,'--wait','--until','idle','--until','done','--until','blocked','--timeout',str(timeout*1000)],check=False,timeout=timeout+15, capture_output=True, text=True, encoding='utf-8', errors='replace',creationflags=windows_creationflags())
-    if r.returncode:
-        detail=(r.stderr or r.stdout).strip().replace('\n',' ')[:300]
-        if 'agent_working' in detail or 'agent_busy' in detail or 'agent_prompt_stalled' in detail:
-            log(state, f'{actor} prompt busy; retrying in 2s')
-            time.sleep(2); return False
-        log(state, f'{actor} prompt failed exit={r.returncode} detail={detail}')
-        time.sleep(2); return False
-    log(state, f'{actor} completed')
+def enqueue(state: dict[str, Any], item: dict[str, Any]) -> bool:
+    if any(entry.get("event_id") == item["event_id"] for entry in state["pending_events"]):
+        return False
+    state["pending_events"].append(item)
     return True
-def controller(s,p,timeout,retry_seconds=300):
-    s.update({'last_actor':'governor','updated_at':now()}); atomic(p,s)
-    target=resolve_controller_target(s,p)
-    if controller_turn_is_active(target):
-        # The Controller can atomically advance state while this scheduler is
-        # observing it. Back off once and reload before any dispatch decision;
-        # never write the stale object back over its transition.
-        log(s,f'controller target={target} active; bounded backoff before reread')
-        time.sleep(1)
-        current=load(p)
-        if current.get('disposition') != 'CONTINUE_CONTROLLER':
-            log(current,'controller state changed during active-turn backoff; no stale dispatch')
-            return 'CONTROLLER_STATE_CHANGED'
-        current_target=resolve_controller_target(current,p)
-        if controller_turn_is_active(current_target):
-            current.update({'controller_dispatch':'ACTIVE_CONTROLLER_TURN_NO_REPROMPT','updated_at':now()})
-            atomic(p,current); log(current,f'controller target={current_target} remains active; no self-prompt')
-            return 'CONTROLLER_ACTIVE'
-        s,target=current,current_target
-    key=action_sha256(s)
-    previous=s.get('controller_dispatch')
-    if isinstance(previous,dict) and previous.get('status') == 'DISPATCHED' and previous.get('action_sha256') == key:
-        dispatched_at=previous.get('dispatched_at','')
-        try: age=max(0,(datetime.now(timezone.utc)-datetime.fromisoformat(dispatched_at.replace('Z','+00:00'))).total_seconds())
-        except (TypeError,ValueError): age=retry_seconds
-        if age < retry_seconds:
-            log(s,f'controller action={key[:12]} cooldown remaining={int(retry_seconds-age)}s')
-            return 'CONTROLLER_COOLDOWN'
-    s.update({'controller_dispatch':{'status':'DISPATCHED','action_sha256':key,'dispatched_at':now(),'target':target},'updated_at':now()})
-    atomic(p,s)
-    ok=prompt(target,f'ARC2 Governor invocation. Read {p.resolve()}, AGENTS.md, and orchestration/agents/ARC_CONTROLLER_SYSTEM.md; execute next_action as far as scientifically valid. '
-           'Repair routine infrastructure autonomously with bounded CPU-only checks when frozen science is unchanged. Preserve failed runs and never reuse a consumed one-shot authorization. '
-           'Escalate only a scientific, security, asset-identity, sealed-data, budget, or fresh execution-authorization blocker by freezing one concise brief and setting REVIEW_REQUIRED; never prompt Director directly. '
-           'Before returning atomically write exactly one disposition: CONTINUE_CONTROLLER, REVIEW_REQUIRED, WAIT_REMOTE, PAUSED, or TERMINAL. '
-           'REVIEW_REQUIRED requires review_brief and review_reason. WAIT_REMOTE only after a detached job with remote_job. Do not use legacy workflow states.',timeout,s)
-    return 'CONTROLLER_PROMPTED' if ok else 'CONTROLLER_PROMPT_FAILED'
 
-def route_bounded_infrastructure_pause(state, state_path):
-    """Requeue at most two CPU-only turns for one recoverable infra incident."""
-    if state.get('disposition') != 'PAUSED' or state.get('terminal') or state.get('experiment_terminal'):
-        return False
-    if (state.get('owner_pause') or state.get('user_pause') or state.get('last_actor') == 'director'
-            or state.get('budget_exhausted') or state.get('compute_budget_exhausted')
-            or state.get('sealed_data_blocker') or state.get('security_blocker')
-            or state.get('asset_identity_blocker')):
-        return False
-    reason=str(state.get('pause_reason') or '').upper()
-    protected=('OWNER_', 'USER_', 'DIRECTOR_', 'PAUSED_BY_DIRECTOR', 'SAFETY_',
-               'SCIENTIFIC_', 'STAGE_', 'TERMINAL_', 'BUDGET_', 'SEALED_',
-               'SECURITY_', 'ASSET_IDENTITY_')
-    if reason.startswith(protected) or state.get('remote_job') or state.get('active_remote_job'):
-        return False
-    failure=str(state.get('infra_failure_class') or state.get('failure_class') or '').upper()
-    if (not failure and state.get('remote_completion_status') == 'PROCESS_DEAD'
-            and (state.get('infra_failure_receipt') or state.get('remote_failure_receipt'))):
-        # A preserved machine receipt is enough to classify an otherwise
-        # legacy/unclassified remote death as infrastructure.  Protected
-        # scientific/owner pauses above still take precedence.
-        failure='REMOTE_PROCESS_DIED_WITHOUT_RECEIPT'
-    prefixes=('INFRA_', 'INFRASTRUCTURE_', 'DETACHED_LAUNCH_', 'REMOTE_PROCESS_DIED_', 'RUNPOD_')
-    if not failure.startswith(prefixes) and reason.startswith(prefixes):
-        failure=reason
-    if not failure.startswith(prefixes):
-        return False
-    incident=str(state.get('infra_failure_receipt') or state.get('remote_failure_receipt') or failure)
-    if state.get('infra_recovery_incident') != incident:
-        state['infra_recovery_incident']=incident
-        state['infra_cpu_requeues']=0
-    brief=state.get('review_brief')
-    if brief and state.get('review_reason') and Path(brief).is_file():
-        state.update({'disposition':'REVIEW_REQUIRED',
-                      'next_action':'GOVERNOR_ROUTE_EXISTING_BOUND_REVIEW',
-                      'updated_at':now()})
-        atomic(state_path,state); log(state,f'infra incident={failure}; bound review queued')
-        return True
-    attempts=int(state.get('infra_cpu_requeues') or 0)
-    if attempts >= 2:
-        state.update({'pause_reason':'INFRA_TRIAGE_EXHAUSTED',
-                      'next_action':'PRESERVE_BLOCKER_AND_AWAIT_OPERATOR',
-                      'updated_at':now()})
-        atomic(state_path,state); log(state,f'infra incident={failure}; CPU triage exhausted')
-        return False
-    action=('CPU_ONLY_DIAGNOSE_AND_REPAIR_INFRASTRUCTURE' if attempts == 0
-            else 'CPU_ONLY_VALIDATE_REPAIR_OR_FREEZE_MINIMAL_BLOCKER')
-    state.update({'disposition':'CONTINUE_CONTROLLER','next_action':action,
-                  'infra_cpu_requeues':attempts + 1,
-                  'gpu_inference_authorized':False,
-                  'model_loading_authorized':False,
-                  'candidate_generation_authorized':False,
-                  'scientific_training_authorized':False,
-                  'updated_at':now()})
-    atomic(state_path,state); log(state,f'infra incident={failure}; CPU-only turn={attempts + 1}')
-    return True
-def response_directory(state_path):
-    return state_path.resolve().parents[2] / 'orchestration' / 'director' / 'responses'
-def matching_director_responses(state_path, brief_sha256):
-    found=[]
-    for candidate in sorted(response_directory(state_path).glob('*.json')):
+
+def find_event(state: dict[str, Any], event_id: str) -> dict[str, Any]:
+    for item in state["pending_events"]:
+        if item.get("event_id") == event_id:
+            return item
+    raise RuntimeError("EVENT_NOT_FOUND")
+
+
+def resolve_artifact(raw: str) -> Path:
+    candidate = Path(raw)
+    if candidate.is_file():
+        return candidate.resolve()
+    if not candidate.is_absolute() and (PROJECT_ROOT / candidate).is_file():
+        return (PROJECT_ROOT / candidate).resolve()
+    raise RuntimeError("BOUND_ARTIFACT_MISSING")
+
+
+def validate_bound_artifact(path_value: str, declared_sha: str | None) -> tuple[Path, str]:
+    path = resolve_artifact(path_value)
+    actual = sha256_file(path)
+    if not declared_sha:
+        raise RuntimeError("BOUND_ARTIFACT_SHA256_MISSING")
+    if actual.lower() != str(declared_sha).lower():
+        raise RuntimeError("BOUND_ARTIFACT_SHA256_MISMATCH")
+    return path, actual
+
+
+def producer_error(state: dict[str, Any], source: dict[str, Any], reason: str) -> bool:
+    producer = source.get("producer") or "controller"
+    recipient = producer if producer in {"controller", "director"} else "controller"
+    payload = {"source_event_id": source.get("event_id"), "error": reason,
+               "required_action": "REPAIR_ONLY_THE_REFERENCED_FILE_OR_FORMAT_AND_REEMIT_ONCE"}
+    return enqueue(state, event("PRODUCER_ERROR", recipient, "governor", payload))
+
+
+def import_external_events(state: dict[str, Any], state_path: Path) -> bool:
+    changed = False
+    event_dir = state_path.parent / "events"
+    processed = event_dir / "processed"
+    event_dir.mkdir(parents=True, exist_ok=True)
+    processed.mkdir(parents=True, exist_ok=True)
+    for source in sorted(event_dir.glob("*.json")):
         try:
-            data=json.loads(candidate.read_text(encoding='utf-8-sig'))
+            value = json.loads(source.read_text(encoding="utf-8-sig"))
+            if value.get("schema_version") != 1 or value.get("kind") not in {"REMOTE_TERMINAL", "CONTROLLER_TASK", "REVIEW_REQUEST"}:
+                raise RuntimeError("EXTERNAL_EVENT_SCHEMA_INVALID")
+            payload = value.get("payload")
+            if not isinstance(payload, dict):
+                raise RuntimeError("EXTERNAL_EVENT_PAYLOAD_INVALID")
+            recipient = value.get("recipient") or ("director" if value["kind"] == "REVIEW_REQUEST" else "controller")
+            item = event(value["kind"], recipient, value.get("producer") or "supervisor", payload)
+            changed = enqueue(state, item) or changed
+            target = processed / f"{item['event_id']}.json"
+            if target.exists():
+                source.unlink()
+            else:
+                os.replace(source, target)
+        except Exception as exc:
+            digest = sha256_file(source)
+            marker = processed / f"INVALID_{digest}.json"
+            if not marker.exists():
+                shutil.copyfile(source, marker)
+                changed = producer_error(state, {"event_id": digest, "producer": "controller"},
+                                         f"{type(exc).__name__}:{exc}") or changed
+            source.unlink(missing_ok=True)
+    return changed
+
+
+def synthesize_state_event(state: dict[str, Any]) -> bool:
+    if state["disposition"] == "CONTINUE_CONTROLLER":
+        payload = {"stage": state["stage"], "next_action": state["next_action"]}
+        return enqueue(state, event("CONTROLLER_TASK", "controller", "director", payload))
+    if state["disposition"] == "REVIEW_REQUIRED" and state.get("review"):
+        review = state["review"]
+        payload = {"brief_path": review.get("brief_path"), "brief_sha256": review.get("brief_sha256"),
+                   "review_reason": review.get("reason")}
+        return enqueue(state, event("DIRECTOR_REVIEW", "director", "controller", payload))
+    return False
+
+
+def validate_queued_reviews(state: dict[str, Any]) -> bool:
+    """Reject an invalid brief before spending a Director turn."""
+    changed = False
+    for item in state["pending_events"]:
+        if item["kind"] != "DIRECTOR_REVIEW" or item["status"] != "QUEUED":
+            continue
+        payload = item["payload"]
+        try:
+            validate_bound_artifact(payload["brief_path"], payload.get("brief_sha256"))
+        except Exception as exc:
+            item.update({"status": "COMPLETE", "completed_at": now(), "outcome": "INVALID_BOUND_BRIEF"})
+            producer_error(state, item, f"{type(exc).__name__}:{exc}")
+            changed = True
+    return changed
+
+
+def herdr_agents() -> list[dict[str, Any]]:
+    result = subprocess.run(["herdr", "agent", "list"], capture_output=True, check=False,
+                            text=True, encoding="utf-8", errors="replace",
+                            creationflags=windows_creationflags())
+    if result.returncode:
+        raise RuntimeError(f"HERDR_AGENT_LIST_FAILED:{result.returncode}")
+    return json.loads(result.stdout).get("result", {}).get("agents", [])
+
+
+def resolve_agent(role: str, state: dict[str, Any]) -> dict[str, Any]:
+    name = "arc-controller" if role == "controller" else "arc-director"
+    agents = herdr_agents()
+    if role == "controller" and state.get("controller_target"):
+        for record in agents:
+            if record.get("pane_id") == state["controller_target"] and record.get("agent") == "codex":
+                return record
+    for record in agents:
+        if record.get("name") == name and record.get("agent") == "codex":
+            if role == "controller":
+                state["controller_target"] = record.get("pane_id")
+            return record
+    raise RuntimeError(f"{role.upper()}_TARGET_UNRESOLVED")
+
+
+def prompt_text(item: dict[str, Any], state_path: Path) -> str:
+    payload = item["payload"]
+    event_id = item["event_id"]
+    if item["recipient"] == "controller":
+        return (
+            f"ARC2 Governor event {event_id}. Read {state_path.resolve()}, {PROJECT_ROOT / 'AGENTS.md'}, and "
+            f"{PROJECT_ROOT / 'orchestration/agents/ARC_CONTROLLER_SYSTEM.md'}. Claim with: py -3 {PROJECT_ROOT / 'scripts/arc2_governor.py'} "
+            f"--state \"{state_path.resolve()}\" --claim-event {event_id}. Execute only this event payload: "
+            f"{json.dumps(payload, sort_keys=True)}. Complete it through the same Governor CLI; never prompt Director directly."
+        )
+    brief_path = payload.get("brief_path")
+    brief_sha = payload.get("brief_sha256")
+    response_path = response_directory() / f"{Path(str(brief_path)).stem}_RESPONSE.json"
+    return (
+        f"ARC2 Governor review event {event_id}. Read {PROJECT_ROOT / 'orchestration/agents/ARC_DIRECTOR_SYSTEM.md'}, "
+        f"{PROJECT_ROOT / 'orchestration/director/SCIENTIFIC_REVIEW_GUIDANCE.md'}, and {brief_path}. Write exactly one JSON response "
+        f"to {response_path} with reviewed_brief_sha256={brief_sha} and one valid decision. "
+        "CONTINUE_CONTROLLER requires next_stage and next_action; CONTINUE_DIRECTOR requires a new bound brief; "
+        "REQUIRE_CHANGES requires root cause, smallest repair, frozen conditions, forbidden actions, and review requirement. "
+        "Do not schedule or prompt Controller."
+    )
+
+
+def dispatch(state: dict[str, Any], state_path: Path, timeout: int) -> str:
+    queued = next((item for item in state["pending_events"] if item["status"] == "QUEUED"), None)
+    if not queued:
+        return "IDLE"
+    target = resolve_agent(queued["recipient"], state)
+    if target.get("agent_status") == "working":
+        return "RECIPIENT_WORKING_EVENT_QUEUED"
+    queued.update({"status": "DELIVERED", "attempts": int(queued.get("attempts") or 0) + 1,
+                   "delivered_at": now(), "target": target.get("pane_id")})
+    save(state_path, state, f"EVENT_DELIVERY_RESERVED:{queued['event_id']}")
+    command = ["herdr", "agent", "prompt", target["pane_id"], prompt_text(queued, state_path),
+               "--wait", "--until", "working", "--timeout", str(timeout * 1000)]
+    completed = subprocess.run(command, capture_output=True, check=False, text=True,
+                               encoding="utf-8", errors="replace", timeout=timeout + 10,
+                               creationflags=windows_creationflags())
+    append_ledger(state_path, {"transition": "HERDR_PROMPT_RESULT", "event_id": queued["event_id"],
+                               "exit_code": completed.returncode})
+    return "EVENT_DELIVERED" if completed.returncode == 0 else "EVENT_DELIVERY_UNKNOWN_FAIL_CLOSED"
+
+
+def response_directory() -> Path:
+    return PROJECT_ROOT / "orchestration" / "director" / "responses"
+
+
+def consume_director_response(state: dict[str, Any], state_path: Path) -> bool:
+    item = next((entry for entry in state["pending_events"]
+                 if entry["kind"] == "DIRECTOR_REVIEW" and entry["status"] in {"DELIVERED", "CLAIMED"}), None)
+    if not item:
+        return False
+    payload = item["payload"]
+    try:
+        _, digest = validate_bound_artifact(payload["brief_path"], payload.get("brief_sha256"))
+    except Exception as exc:
+        item.update({"status": "COMPLETE", "completed_at": now(), "outcome": "INVALID_BOUND_BRIEF"})
+        producer_error(state, item, f"{type(exc).__name__}:{exc}")
+        save(state_path, state, f"DIRECTOR_BRIEF_REJECTED:{item['event_id']}")
+        return True
+    matches: list[tuple[Path, dict[str, Any]]] = []
+    for candidate in sorted(response_directory().glob("*.json")):
+        try:
+            value = json.loads(candidate.read_text(encoding="utf-8-sig"))
         except (OSError, json.JSONDecodeError):
             continue
-        if data.get('reviewed_brief_sha256') == brief_sha256 and director_decision(data) in DIRECTOR_DECISIONS:
-            found.append((candidate.resolve(), data, sha256_file(candidate)))
-    return found
-def terminal_scope(response):
-    """Return the explicitly declared terminal scope; never infer program-wide stop."""
-    scope=response.get('terminal_scope')
-    if scope == 'ENTIRE_EXPERIMENT':
-        return 'ENTIRE_EXPERIMENT'
-    if scope == 'CURRENT_PROTOCOL':
-        return 'CURRENT_PROTOCOL'
-    if isinstance(scope, dict):
-        entire=str(scope.get('entire_arc2_research_program', '')).upper()
-        if entire in {'TERMINAL', 'CLOSED', 'ENTIRE_EXPERIMENT'}:
-            return 'ENTIRE_EXPERIMENT'
-        if entire in {'NOT_DECLARED_TERMINAL', 'NOT_TERMINAL', 'OPEN'}:
-            return 'CURRENT_PROTOCOL'
-        if any(str(value).upper() in {'CLOSED', 'CURRENT_PROTOCOL', 'STOPPED'} for value in scope.values()):
-            return 'CURRENT_PROTOCOL'
-    return 'UNSPECIFIED'
-
-def route_stage_scoped_stop(state, response):
-    """Close only the reviewed route; a successor requires a new scientific brief."""
-    state.update({'disposition':'PAUSED',
-                  'next_action':'STAGE_STOPPED_AWAITING_SCIENTIFIC_REPLANNING',
-                  'pause_reason':'STAGE_SCOPED_STOP_REQUIRES_NEW_REVIEW_BRIEF',
-                  'remediation_required':False,
-                  'terminal':False, 'experiment_terminal':False,
-                  'terminal_scope':'CURRENT_PROTOCOL',
-                  'terminal_meaning':response.get('scientific_outcome') or 'CURRENT_PROTOCOL_STOPPED',
-                  'scientific_training_authorized':False,
-                  'stage_b_authorized':False, 'r3_authorized':False,
-                  'stopped_route':response.get('scope') or response.get('scientific_outcome')})
-
-def bind_replanning_review(state, state_path, brief, brief_sha256, reason, priority):
-    """A user-originated scientific priority can reopen a blocked stage only as review."""
-    if state.get('experiment_terminal') or state.get('terminal'):
-        raise RuntimeError('TERMINAL_REPLANNING_FORBIDDEN')
-    if state.get('remote_job') or state.get('active_remote_job'):
-        raise RuntimeError('REMOTE_JOB_REPLANNING_FORBIDDEN')
-    candidate=Path(brief)
-    if not reason or not candidate.is_file() or sha256_file(candidate) != brief_sha256:
-        raise RuntimeError('REPLANNING_BRIEF_BINDING_INVALID')
-    state.update({'disposition':'REVIEW_REQUIRED','stage':'MODEL_CAPABILITY_IMPROVEMENT_FIRST_REPLANNING',
-                  'next_action':'DIRECTOR_MODEL_CAPABILITY_IMPROVEMENT_FIRST_REVIEW',
-                  'review_brief':str(candidate.resolve()),'review_brief_sha256':brief_sha256,
-                  'review_reason':reason,'pause_reason':None,'terminal':False,'experiment_terminal':False,
-                  'scientific_priority':priority,'scientific_training_authorized':False,
-                  'gpu_inference_authorized':False,'model_loading_authorized':False,
-                  'last_actor':'controller','updated_at':now()})
-    atomic(state_path,state)
-
-def reconcile_consumed_stage_terminal(state, state_path):
-    """One-time repair for an old Governor that widened a consumed stage stop."""
-    if state.get('director_decision') != 'TERMINAL' or not state.get('experiment_terminal'):
+        if value.get("reviewed_brief_sha256") == digest:
+            matches.append((candidate, value))
+    if not matches:
         return False
-    raw=state.get('director_response_path')
-    if not raw or not Path(raw).is_file():
-        return False
-    response_path=Path(raw)
-    if state.get('director_response_sha256') != sha256_file(response_path):
-        raise RuntimeError('CONSUMED_DIRECTOR_RESPONSE_HASH_MISMATCH')
-    response=json.loads(response_path.read_text(encoding='utf-8-sig'))
-    if terminal_scope(response) != 'CURRENT_PROTOCOL':
-        return False
-    # The response remains in consumed_director_responses.  This only corrects
-    # the old scheduler state and never prompts Director or consumes it again.
-    route_stage_scoped_stop(state,response)
-    state.update({'last_actor':'governor','stage_terminal_scope_reconciled':True,'updated_at':now()})
-    atomic(state_path,state)
-    log(state, f'consumed stage-scoped terminal reconciled response={response_path.name}')
+    response_path, response = matches[-1]
+    decision = response.get("decision") or response.get("scientific_outcome")
+    if decision not in DECISIONS:
+        item.update({"status": "COMPLETE", "completed_at": now(), "outcome": "INVALID_RESPONSE"})
+        producer_error(state, {**item, "producer": "director"}, "DIRECTOR_RESPONSE_DECISION_INVALID")
+        save(state_path, state, f"DIRECTOR_RESPONSE_REJECTED:{item['event_id']}")
+        return True
+    item.update({"status": "COMPLETE", "completed_at": now(), "outcome": decision,
+                 "response_path": str(response_path.resolve()), "response_sha256": sha256_file(response_path)})
+    state["review"] = None
+    if decision == "CONTINUE_CONTROLLER":
+        if not response.get("next_stage") or not response.get("next_action"):
+            producer_error(state, {**item, "producer": "director"}, "CONTINUE_CONTROLLER_FIELDS_MISSING")
+        else:
+            state.update({"disposition": "CONTINUE_CONTROLLER", "stage": response["next_stage"],
+                          "next_action": response["next_action"], "pause_reason": None})
+            enqueue(state, event("DIRECTOR_DECISION", "controller", "director", {
+                "decision": decision, "response_path": str(response_path.resolve()),
+                "response_sha256": sha256_file(response_path), "stage": response["next_stage"],
+                "next_action": response["next_action"],
+            }))
+    elif decision == "CONTINUE_DIRECTOR":
+        successor = response.get("next_review_brief")
+        successor_sha = response.get("next_review_brief_sha256")
+        reason = response.get("next_review_reason")
+        if not successor or not successor_sha or not reason:
+            producer_error(state, {**item, "producer": "director"}, "CONTINUE_DIRECTOR_FIELDS_MISSING")
+        else:
+            state.update({"disposition": "REVIEW_REQUIRED", "review": {
+                "brief_path": successor, "brief_sha256": successor_sha, "reason": reason,
+            }})
+            enqueue(state, event("DIRECTOR_REVIEW", "director", "director", state["review"]))
+    elif decision == "REQUIRE_CHANGES":
+        state.update({"disposition": "CONTINUE_CONTROLLER", "next_action": "APPLY_DIRECTOR_REQUIRED_CHANGES"})
+        enqueue(state, event("DIRECTOR_DECISION", "controller", "director", {
+            "decision": decision, "response_path": str(response_path.resolve()),
+            "response_sha256": sha256_file(response_path),
+        }))
+    elif decision == "PAUSED":
+        state.update({"disposition": "PAUSED", "pause_reason": "PAUSED_BY_DIRECTOR"})
+    else:
+        state.update({"disposition": "TERMINAL", "terminal_reason": "TERMINAL_BY_DIRECTOR"})
+    save(state_path, state, f"DIRECTOR_RESPONSE_CONSUMED:{item['event_id']}")
     return True
 
-def route_director_response(state, state_path, response_path, response, response_sha256):
-    brief=review_brief_path(state)
-    brief_sha256=sha256_file(brief)
-    if response.get('reviewed_brief_sha256') != brief_sha256:
-        raise RuntimeError('DIRECTOR_RESPONSE_BRIEF_BINDING_MISMATCH')
-    decision=director_decision(response)
-    if decision not in DIRECTOR_DECISIONS:
-        raise RuntimeError('DIRECTOR_RESPONSE_DECISION_INVALID')
-    consumed=state.setdefault('consumed_director_responses', {})
-    if response_sha256 in consumed:
-        raise RuntimeError('DIRECTOR_RESPONSE_ALREADY_CONSUMED')
-    state.update({'director_response_path':str(response_path), 'director_response_sha256':response_sha256,
-                  'director_decision':decision, 'last_actor':'director', 'director_review_in_progress':False,
-                  'last_review_brief':str(brief), 'last_review_brief_sha256':brief_sha256,
-                  'updated_at':now()})
-    consumed[response_sha256]={'brief_sha256':brief_sha256,'decision':decision,'consumed_at':now()}
-    # A consumed review brief is immutable historical evidence; never route it back into REVIEW_REQUIRED.
-    state['review_brief']=None; state['review_reason']=None
-    if decision == 'CONTINUE_CONTROLLER':
-        reviewed_stage=response.get('next_stage') or response.get('reviewed_stage')
-        next_action=response.get('next_action') or response.get('controller_next_action')
-        if not reviewed_stage or not next_action:
-            state.update({'disposition':'PAUSED','next_action':'DIRECTOR_CONTINUATION_FIELDS_MISSING',
-                          'pause_reason':'DIRECTOR_CONTINUE_CONTROLLER_REQUIRES_EXPLICIT_STAGE_AND_NEXT_ACTION',
-                          'remediation_required':False})
-        else:
-            state.update({'disposition':'CONTINUE_CONTROLLER','stage':reviewed_stage,'next_action':next_action,
-                          'remediation_required':False,'authorized_continuation':None,'pause_reason':None})
-    elif decision == 'CONTINUE_DIRECTOR':
-        successor=response.get('next_review_brief') or response.get('successor_review_brief')
-        successor_sha=response.get('next_review_brief_sha256') or response.get('successor_review_brief_sha256')
-        reason=response.get('next_review_reason') or response.get('successor_review_reason')
-        if not successor or not successor_sha or not reason:
-            state.update({'disposition':'PAUSED','next_action':'DIRECTOR_CONTINUE_DIRECTOR_FIELDS_MISSING',
-                          'pause_reason':'DIRECTOR_CONTINUE_DIRECTOR_REQUIRES_NEW_BOUND_BRIEF',
-                          'remediation_required':False})
-        elif successor_sha == brief_sha256:
-            state.update({'disposition':'PAUSED','next_action':'DIRECTOR_CONTINUE_DIRECTOR_REUSED_BRIEF',
-                          'pause_reason':'DIRECTOR_CONTINUE_DIRECTOR_REQUIRES_NEW_BRIEF_SHA256',
-                          'remediation_required':False})
-        else:
-            bind_replanning_review(state,state_path,successor,successor_sha,reason,'DIRECTOR_CONTINUATION')
-            return
-    elif decision == 'REQUIRE_CHANGES':
-        state.update({'disposition':'CONTINUE_CONTROLLER', 'next_action':'APPLY_DIRECTOR_REMEDIATION', 'remediation_required':True,
-                      'director_remediation':response.get('smallest_repair') or response.get('controller_resolution_plan')})
-    elif decision == 'PAUSED':
-        state.update({'disposition':'PAUSED', 'next_action':'PAUSED_BY_DIRECTOR', 'remediation_required':False})
-    elif decision == 'NEW_R3_PROTOCOL_RECOMMENDED':
-        # The Controller may formulate and validate a successor protocol, but
-        # a recommendation is deliberately not a training authorization.
-        state.update({'disposition':'CONTINUE_CONTROLLER', 'next_action':'PREPARE_NEW_R3_PROTOCOL_FROM_DIRECTOR_RECOMMENDATION', 'remediation_required':False,
-                      'scientific_training_authorized':False, 'r3_authorized':False})
-    elif decision == 'RUN_ONE_DIAGNOSTIC_BEFORE_DECIDING':
-        state.update({'disposition':'CONTINUE_CONTROLLER', 'next_action':'RUN_DIRECTOR_SPECIFIED_DIAGNOSTIC', 'remediation_required':False,
-                      'scientific_training_authorized':False, 'r3_authorized':False})
-    elif decision == 'STOP_TARGETED_REPAIR_APPROACH':
-        # This stops this approach, not the entire ARC2 program.
-        state.update({'disposition':'PAUSED', 'next_action':'TARGETED_REPAIR_APPROACH_STOPPED_BY_DIRECTOR', 'remediation_required':False,
-                      'terminal':False, 'experiment_terminal':False, 'terminal_scope':'CURRENT_PROTOCOL'})
+
+def claim_event(state_path: Path, event_id: str) -> None:
+    state = load(state_path)
+    item = find_event(state, event_id)
+    if item["status"] not in {"DELIVERED", "QUEUED"}:
+        raise RuntimeError("EVENT_NOT_CLAIMABLE")
+    if state.get("active_event") not in {None, event_id}:
+        raise RuntimeError("ANOTHER_EVENT_ALREADY_ACTIVE")
+    item.update({"status": "CLAIMED", "claimed_at": now()})
+    state["active_event"] = event_id
+    save(state_path, state, f"EVENT_CLAIMED:{event_id}")
+
+
+def complete_event(state_path: Path, args: argparse.Namespace) -> None:
+    state = load(state_path)
+    item = find_event(state, args.complete_event)
+    if item["status"] not in {"CLAIMED", "DELIVERED"}:
+        raise RuntimeError("EVENT_NOT_COMPLETABLE")
+    disposition = args.next_disposition or state["disposition"]
+    if disposition not in DISPOSITIONS:
+        raise RuntimeError("INVALID_COMPLETION_DISPOSITION")
+    if disposition == "REVIEW_REQUIRED":
+        if not args.review_brief or not args.review_brief_sha256 or not args.review_reason:
+            raise RuntimeError("REVIEW_BINDING_REQUIRED")
+        validate_bound_artifact(args.review_brief, args.review_brief_sha256)
+        state["review"] = {"brief_path": args.review_brief, "brief_sha256": args.review_brief_sha256,
+                           "reason": args.review_reason}
+    if disposition == "WAIT_REMOTE":
+        if not args.remote_job_file:
+            raise RuntimeError("REMOTE_JOB_FILE_REQUIRED")
+        remote_path = resolve_artifact(args.remote_job_file)
+        state["remote_job"] = json.loads(remote_path.read_text(encoding="utf-8-sig"))
     else:
-        scope=terminal_scope(response)
-        if scope == 'CURRENT_PROTOCOL':
-            route_stage_scoped_stop(state,response)
-        elif scope == 'ENTIRE_EXPERIMENT':
-            state.update({'disposition':'TERMINAL', 'next_action':'TERMINAL_BY_DIRECTOR', 'remediation_required':False, 'terminal':True, 'experiment_terminal':True, 'terminal_scope':'ENTIRE_EXPERIMENT'})
-        else:
-            # A terminal response without an explicit scope cannot end the
-            # research program; hold it for human/scientific clarification.
-            state.update({'disposition':'PAUSED', 'next_action':'TERMINAL_SCOPE_UNSPECIFIED', 'remediation_required':False, 'terminal':False, 'experiment_terminal':False, 'terminal_scope':'UNSPECIFIED'})
-    atomic(state_path,state); log(state,f'director response consumed decision={decision} response={response_path.name}')
-def director(s,p,timeout):
-    brief=review_brief_path(s)
-    brief_sha256=sha256_file(brief)
-    atomic(p,s)
-    matches=matching_director_responses(p,brief_sha256)
-    consumed=set((s.get('consumed_director_responses') or {}).keys())
-    available=[item for item in matches if item[2] not in consumed]
-    if available:
-        response_path,response,response_sha256=available[-1]
-        route_director_response(s,p,response_path,response,response_sha256); return
-    if matches:
-        raise RuntimeError('REVIEW_BRIEF_ALREADY_CONSUMED')
-    s.update({'director_review_in_progress':True,'updated_at':now()}); atomic(p,s)
-    brief_data=json.loads(Path(brief).read_text(encoding='utf-8-sig'))
-    requested=brief_data.get('allowed_director_outcomes')
-    if isinstance(requested, list) and requested:
-        decisions=', '.join(str(x) for x in requested)
-        directive=(f'Choose exactly one requested scientific outcome: {decisions}. '
-                   'For NEW_R3_PROTOCOL_RECOMMENDED, specify every field required by the brief. '
-                   'For RUN_ONE_DIAGNOSTIC_BEFORE_DECIDING, specify exactly one diagnostic and its decision rule. ')
-    else:
-        directive=('Choose one of CONTINUE_CONTROLLER, CONTINUE_DIRECTOR, REQUIRE_CHANGES, PAUSED, or TERMINAL. CONTINUE_CONTROLLER requires explicit next_stage and next_action. CONTINUE_DIRECTOR requires next_review_brief, next_review_brief_sha256, and next_review_reason. '
-                   'REQUIRE_CHANGES must state root cause, smallest repair, frozen conditions, forbidden actions, and whether another review is required. ')
-    response_path=response_directory(p) / f"{Path(brief).stem}_RESPONSE.json"
-    request=(f'ARC2 Governor review. Read orchestration/agents/ARC_DIRECTOR_SYSTEM.md, orchestration/director/SCIENTIFIC_REVIEW_GUIDANCE.md, and {brief}. Write exactly one structured JSON response to {response_path}. '
-             f'It must contain reviewed_brief_sha256={brief_sha256} and one valid decision. {directive}'
-             'Do not schedule or prompt Controller.')
-    if not prompt('arc-director',request,timeout,s):
+        state["remote_job"] = None
+    item.update({"status": "COMPLETE", "completed_at": now(), "outcome": args.outcome or "COMPLETE"})
+    state.update({"active_event": None, "disposition": disposition,
+                  "stage": args.stage or state["stage"], "next_action": args.next_action,
+                  "pause_reason": args.pause_reason if disposition == "PAUSED" else None,
+                  "terminal_reason": args.terminal_reason if disposition == "TERMINAL" else None})
+    save(state_path, state, f"EVENT_COMPLETED:{args.complete_event}")
+
+
+def write_service_state(path: Path | None, status: str, state: dict[str, Any], detail: str | None = None) -> None:
+    if not path:
         return
-    available=[item for item in matching_director_responses(p,brief_sha256) if item[2] not in consumed]
-    if not available:
-        raise RuntimeError('DIRECTOR_RESPONSE_MISSING_OR_UNBOUND')
-    response_path,response,response_sha256=available[-1]
-    route_director_response(s,p,response_path,response,response_sha256)
-def poll_seconds(job):
-    kind=str(job.get('kind') or job.get('job_class') or job.get('class') or '').upper()
-    if 'PREFLIGHT' in kind or 'CPU' in kind: return 10
-    if 'EVALUATION' in kind or 'INFERENCE' in kind: return 20
-    return 60
-def remote_status(job):
-    # Accept the compact current workflow schema as well as older preserved
-    # receipts.  Both spellings bind the same remote worker; no local process
-    # is ever used for liveness.
-    receipt=(job.get('expected_receipt') or job.get('expected_terminal_receipt')
-             or job.get('terminal_receipt_path') or job.get('expected_receipt_path')
-             or job.get('terminal_receipt')
-             or job.get('remote_output'))
-    target=job.get('ssh_target') or job.get('remote_host')
-    primary=job.get('primary_process')
-    if not isinstance(primary, dict):
-        pid=job.get('remote_pid', job.get('remote_launcher_pid', job.get('launcher_pid', job.get('worker_pid', job.get('pid')))))
-        if pid is not None:
-            primary={'host':'RUNPOD','role':'remote_launcher','pid':pid}
-    if not isinstance(primary, dict):
-        return 'INVALID_BINDING', 'PRIMARY_PROCESS_REQUIRED'
-    if primary.get('host') != 'RUNPOD':
-        return 'INVALID_BINDING', 'PRIMARY_PROCESS_HOST_INVALID'
-    if not primary.get('role'):
-        return 'INVALID_BINDING', 'PRIMARY_PROCESS_ROLE_REQUIRED'
-    try:
-        pid=int(primary.get('pid'))
-    except (TypeError, ValueError):
-        return 'INVALID_BINDING', 'PRIMARY_PROCESS_PID_REQUIRED'
-    if pid <= 0:
-        return 'INVALID_BINDING', 'PRIMARY_PROCESS_PID_REQUIRED'
-    if not receipt or not target:
-        return 'INVALID_BINDING', 'REMOTE_RECEIPT_OR_TARGET_REQUIRED'
-    script=f"test -f {receipt!r} && echo RECEIPT_PRESENT || echo RECEIPT_MISSING\nps -p {pid!r} -o pid= >/dev/null 2>&1 && echo PROCESS_ALIVE || echo PROCESS_DEAD"
-    # RunPod's gateway is an interactive forced-PTY shell.  Send the compact
-    # control query only after its prompt is ready; this is not artifact
-    # transport and it never inspects model metrics.
-    import base64
-    encoded=base64.b64encode((script+'\nexit\n').encode('utf-8')).decode('ascii')
-    command=['ssh','-F','NUL','-tt','-o','BatchMode=yes','-o','ConnectTimeout=20',target]
-    proc=subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, creationflags=windows_creationflags())
-    # RunPod's forced PTY displays bracketed-paste payloads without executing
-    # them.  A prompt-ready ordinary newline has been verified as the bounded
-    # command/control channel for status queries.
-    time.sleep(4)
-    proc.stdin.write((f"echo {encoded} | base64 -d | bash\n").encode('utf-8'))
-    proc.stdin.flush()
-    time.sleep(1)
-    proc.stdin.write(b"exit\n")
-    proc.stdin.flush()
-    try:
-        out_bytes, err_bytes=proc.communicate(timeout=45)
-    except subprocess.TimeoutExpired:
-        proc.kill(); out_bytes, err_bytes=proc.communicate()
-        raise RuntimeError('REMOTE_CONTROL_TIMEOUT')
-    if proc.returncode != 0:
-        raise RuntimeError('REMOTE_CONTROL_FAILED:'+err_bytes.decode('utf-8','replace')[-200:])
-    out=out_bytes.decode('utf-8','replace')
-    if 'RECEIPT_PRESENT' in out: return 'RECEIPT_PRESENT', out
-    if 'PROCESS_ALIVE' in out: return 'PROCESS_ALIVE', out
-    if 'PROCESS_DEAD' in out: return 'PROCESS_DEAD', out
-    return 'REMOTE_CHECK_INCONCLUSIVE', out
-def consume_remote(state,path,status,detail):
-    job=state.get('remote_job') or state.get('active_remote_job') or {}
-    jobid=str(job.get('job_id') or job.get('round_id') or job.get('run_id') or 'UNKNOWN')
-    if status=='PROCESS_DEAD':
-        failure=path.parent/'remote_failures'/f'{jobid}.json'; failure.parent.mkdir(parents=True,exist_ok=True)
-        if not failure.exists(): atomic(failure,{'status':'REMOTE_PROCESS_DIED_WITHOUT_RECEIPT','job':job,'detail':detail,'at':now()})
-        state['remote_failure_receipt']=str(failure.resolve())
-        state.update({'infra_failure_class':'REMOTE_PROCESS_DIED_WITHOUT_RECEIPT',
-                      'infra_failure_receipt':str(failure.resolve()),
-                      'next_action':'CPU_ONLY_DIAGNOSE_REMOTE_PROCESS_FAILURE',
-                      'gpu_inference_authorized':False,
-                      'model_loading_authorized':False,
-                      'candidate_generation_authorized':False,
-                      'scientific_training_authorized':False})
-    else:
-        # Receipt availability is a controller work item.  Never retain the
-        # launch-era action after the remote job has already completed.
-        state['next_action']='PROCESS_REMOTE_RECEIPT'
-    state.update({'disposition':'CONTINUE_CONTROLLER','remote_completion_consumed':True,'remote_completion_status':status,'remote_job':None,'active_remote_job':None,'last_actor':'governor','updated_at':now()})
-    atomic(path,state); log(state,f'WAIT_REMOTE job={jobid} {status}; transition -> CONTINUE_CONTROLLER')
-def cycle(state_path, *, agent_timeout_seconds, controller_retry_seconds):
-    s=load(state_path)
-    if reconcile_consumed_stage_terminal(s,state_path): return 'STATE_RECONCILED',load(state_path)
-    if route_bounded_infrastructure_pause(s,state_path): return 'INFRA_RECOVERY_QUEUED',load(state_path)
-    if s['disposition']=='CONTINUE_CONTROLLER':
-        return controller(s,state_path,agent_timeout_seconds,controller_retry_seconds),load(state_path)
-    if s['disposition']=='REVIEW_REQUIRED':
-        director(s,state_path,agent_timeout_seconds); return 'DIRECTOR_REVIEW',load(state_path)
-    if s['disposition']=='WAIT_REMOTE':
-        job=s.get('remote_job') or s.get('active_remote_job') or {}
-        try:
-            primary=(job.get('primary_process') or {}).get('pid') or job.get('remote_pid') or job.get('remote_launcher_pid') or job.get('launcher_pid') or job.get('worker_pid')
-            jobid=job.get('job_id') or job.get('round_id'); kind=job.get('kind') or job.get('job_class') or job.get('class')
-            log(s,f"WAIT_REMOTE job={jobid} primary_remote_pid={primary} class={kind} check")
-            status,detail=remote_status(job)
-            log(s,f"WAIT_REMOTE receipt={'present' if status=='RECEIPT_PRESENT' else 'missing'} process={status}")
-            if status == 'PROCESS_DEAD':
-                time.sleep(2); confirmed, confirmed_detail = remote_status(job)
-                if confirmed != 'PROCESS_DEAD':
-                    log(s, f"WAIT_REMOTE dead observation not confirmed; process={confirmed}")
-                    return 'REMOTE_PENDING',s
-                detail = confirmed_detail
-            if status in {'RECEIPT_PRESENT','PROCESS_DEAD'}:
-                consume_remote(s,state_path,status,detail); return 'REMOTE_COMPLETED',load(state_path)
-            if status == 'INVALID_BINDING':
-                # A detached job may be valid while the Controller omitted the
-                # facts needed for receipt polling.  Waiting cannot repair this
-                # record.  Hand the *same* job back for bounded metadata repair;
-                # retaining it prevents a second launch.
-                s.update({'disposition':'CONTINUE_CONTROLLER',
-                          'next_action':'REPAIR_WAIT_REMOTE_BINDING_AND_CONSUME_EXISTING_RECEIPT',
-                          'remote_binding_defect':detail,
-                          'remote_binding_repair_required':True,
-                          'last_actor':'governor','updated_at':now()})
-                atomic(state_path,s)
-                log(s, f"WAIT_REMOTE binding invalid detail={detail}; transition -> CONTINUE_CONTROLLER")
-                return 'REMOTE_BINDING_REPAIR',load(state_path)
-        except Exception as exc:
-            log(s,f"WAIT_REMOTE exception={type(exc).__name__}:{exc}")
-        return 'REMOTE_PENDING',s
-    if s['disposition']=='PAUSED': return 'PAUSED',s
-    r=state_path.with_name('ARC2_GOVERNOR_TERMINAL_RECEIPT.json')
-    if not r.exists(): atomic(r,{'status':'TERMINAL','at':now(),'state':str(state_path)})
-    return 'TERMINAL',s
+    value = {"service": "ARC2_GOVERNOR", "pid": os.getpid(), "status": status,
+             "heartbeat_at": now(), "workflow_disposition": state["disposition"],
+             "workflow_stage": state["stage"], "queued_events": sum(
+                 1 for item in state["pending_events"] if item["status"] == "QUEUED")}
+    if detail:
+        value["detail"] = detail
+    atomic(path, value)
 
-def status_line(result, state):
-    """Return one compact, ANSI-coloured Governor status line for its pane."""
-    disposition = str(state.get('disposition') or 'UNKNOWN')
-    colours = {'WAIT_REMOTE':'\x1b[1;33m', 'CONTINUE_CONTROLLER':'\x1b[1;36m',
-               'REVIEW_REQUIRED':'\x1b[1;35m', 'PAUSED':'\x1b[1;31m', 'TERMINAL':'\x1b[1;31m'}
-    detail = ''
-    if disposition == 'WAIT_REMOTE':
-        job = state.get('remote_job') or state.get('active_remote_job') or {}
-        detail = f" run={job.get('run_id') or job.get('job_id') or 'UNKNOWN'} pid={(job.get('primary_process') or {}).get('pid') or job.get('remote_pid') or 'UNKNOWN'}"
-    elif disposition == 'REVIEW_REQUIRED':
-        detail = ' awaiting Director review'
-    elif disposition == 'CONTINUE_CONTROLLER':
-        detail = f" action={state.get('next_action') or 'UNSPECIFIED'}"
-    stamp = now()
-    colour = colours.get(disposition, '\x1b[0m')
-    label = f"{colour}[ARC2 {disposition}]\x1b[0m"
-    return f"{stamp} {label} result={result}{detail}"
 
-def delay_for(result,state,*,paused_seconds,idle_seconds):
-    if result == 'TERMINAL': return None
-    if result == 'PAUSED': return paused_seconds
-    if result in {'CONTROLLER_ACTIVE','CONTROLLER_COOLDOWN','CONTROLLER_PROMPT_FAILED'}: return idle_seconds
-    if result == 'REMOTE_PENDING': return poll_seconds(state.get('remote_job') or state.get('active_remote_job') or {})
-    return 2
+def cycle(state_path: Path, *, agent_timeout_seconds: int, **_: Any) -> tuple[str, dict[str, Any]]:
+    state = load(state_path)
+    changed = import_external_events(state, state_path)
+    changed = synthesize_state_event(state) or changed
+    changed = validate_queued_reviews(state) or changed
+    if changed:
+        save(state_path, state, "EVENTS_RECONCILED")
+        state = load(state_path)
+    if consume_director_response(state, state_path):
+        state = load(state_path)
+    result = dispatch(state, state_path, agent_timeout_seconds)
+    return result, load(state_path)
 
-def main():
-    ap=argparse.ArgumentParser()
-    ap.add_argument('--state',type=Path,required=True)
-    ap.add_argument('--once',action='store_true',help='run one bounded reconciliation cycle')
-    ap.add_argument('--daemon',action='store_true',help='remain alive across PAUSED and controller-idle intervals')
-    ap.add_argument('--agent-timeout-seconds',type=int,default=180)
-    ap.add_argument('--controller-retry-seconds',type=int,default=300)
-    ap.add_argument('--idle-seconds',type=int,default=15)
-    ap.add_argument('--paused-seconds',type=int,default=15)
-    ap.add_argument('--lock-path',type=Path)
-    ap.add_argument('--pid-file',type=Path)
-    ap.add_argument('--service-state',type=Path)
-    a=ap.parse_args()
-    if a.once and a.daemon: ap.error('--once and --daemon are mutually exclusive')
-    lock=GovernorLock(a.lock_path or a.state.parent/'arc2_governor.lock')
+
+def status_line(result: str, state: dict[str, Any]) -> str:
+    queued = sum(1 for item in state["pending_events"] if item["status"] == "QUEUED")
+    return f"{now()} [ARC2 {state['disposition']}] result={result} stage={state['stage']} queued={queued}"
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--state", type=Path, required=True)
+    parser.add_argument("--once", action="store_true")
+    parser.add_argument("--daemon", action="store_true")
+    parser.add_argument("--migrate-legacy", action="store_true")
+    parser.add_argument("--claim-event")
+    parser.add_argument("--complete-event")
+    parser.add_argument("--next-disposition", choices=sorted(DISPOSITIONS))
+    parser.add_argument("--stage")
+    parser.add_argument("--next-action")
+    parser.add_argument("--outcome")
+    parser.add_argument("--review-brief")
+    parser.add_argument("--review-brief-sha256")
+    parser.add_argument("--review-reason")
+    parser.add_argument("--remote-job-file")
+    parser.add_argument("--pause-reason")
+    parser.add_argument("--terminal-reason")
+    parser.add_argument("--agent-timeout-seconds", type=int, default=20)
+    parser.add_argument("--idle-seconds", type=int, default=10)
+    parser.add_argument("--paused-seconds", type=int, default=30)
+    parser.add_argument("--controller-retry-seconds", type=int, default=300, help="deprecated compatibility option")
+    parser.add_argument("--lock-path", type=Path)
+    parser.add_argument("--pid-file", type=Path)
+    parser.add_argument("--service-state", type=Path)
+    args = parser.parse_args()
+    modes = sum(bool(value) for value in (args.migrate_legacy, args.claim_event, args.complete_event))
+    if modes > 1:
+        parser.error("migration, claim, and completion are mutually exclusive")
+    if args.migrate_legacy:
+        migrate_legacy(args.state)
+        return 0
+    if args.claim_event:
+        claim_event(args.state, args.claim_event)
+        return 0
+    if args.complete_event:
+        complete_event(args.state, args)
+        return 0
+    lock = GovernorLock(args.lock_path or args.state.parent / "arc2_governor.lock")
     if not lock.acquire():
-        print('ARC2_GOVERNOR_ALREADY_RUNNING',file=sys.stderr); return 3
+        print("ARC2_GOVERNOR_ALREADY_RUNNING", file=sys.stderr)
+        return 3
     try:
-        write_pid_file(a.pid_file)
+        if args.pid_file:
+            args.pid_file.parent.mkdir(parents=True, exist_ok=True)
+            args.pid_file.write_text(str(os.getpid()), encoding="ascii")
         while True:
-            result,s=cycle(a.state,agent_timeout_seconds=a.agent_timeout_seconds,controller_retry_seconds=a.controller_retry_seconds)
-            write_service_state(a.service_state,status=result,workflow_state=s)
-            print(status_line(result, s), flush=True)
-            if a.once or result == 'TERMINAL' or not a.daemon: return 0
-            time.sleep(delay_for(result,s,paused_seconds=a.paused_seconds,idle_seconds=a.idle_seconds))
+            result, state = cycle(args.state, agent_timeout_seconds=args.agent_timeout_seconds)
+            write_service_state(args.service_state, result, state)
+            print(status_line(result, state), flush=True)
+            if args.once or not args.daemon:
+                return 0
+            time.sleep(args.paused_seconds if result == "IDLE" and state["disposition"] == "PAUSED" else args.idle_seconds)
     except Exception as exc:
-        try: write_service_state(a.service_state,status='ERROR',workflow_state=load(a.state),detail=f'{type(exc).__name__}:{exc}')
-        except Exception: pass
+        try:
+            write_service_state(args.service_state, "ERROR", load(args.state), f"{type(exc).__name__}:{exc}")
+        except Exception:
+            pass
         raise
     finally:
-        remove_own_pid_file(a.pid_file)
+        if args.pid_file:
+            try:
+                if args.pid_file.read_text(encoding="ascii").strip() == str(os.getpid()):
+                    args.pid_file.unlink()
+            except OSError:
+                pass
         lock.release()
-if __name__=='__main__': raise SystemExit(main())
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

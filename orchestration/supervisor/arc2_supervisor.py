@@ -218,9 +218,10 @@ def default_state() -> dict[str, Any]:
 
 
 class Supervisor:
-    def __init__(self, state_path: Path, notification_dir: Path) -> None:
+    def __init__(self, state_path: Path, notification_dir: Path, governor_event_dir: Path | None = None) -> None:
         self.state_path = state_path
         self.notification_dir = notification_dir
+        self.governor_event_dir = governor_event_dir or (notification_dir.parent / "events")
         self.state = self._load()
 
     def _load(self) -> dict[str, Any]:
@@ -277,6 +278,26 @@ class Supervisor:
                     "scientific_training_started": receipt.get("scientific_training_started") is True,
                     "scientific_acceptance": "NOT_INFERRED_FROM_PROCESS_RECEIPT",
                 })
+                # Supervisor monitors only. Governor is the sole agent router.
+                # Publish one immutable terminal event; repeated reconciliation
+                # cannot generate another event for the same receipt digest.
+                governor_event = self.governor_event_dir / f"REMOTE_TERMINAL_{round_id}_{digest[:12]}.json"
+                if not governor_event.exists():
+                    atomic_json(governor_event, {
+                        "schema_version": 1,
+                        "kind": "REMOTE_TERMINAL",
+                        "producer": "supervisor",
+                        "recipient": "controller",
+                        "payload": {
+                            "round_id": round_id,
+                            "terminal_receipt": str(path.resolve()),
+                            "terminal_receipt_sha256": digest,
+                            "terminal_status": status,
+                            "round_class": round_class,
+                            "required_action": "INGEST_FREEZE_AND_IF_SCIENTIFIC_EMIT_ONE_SHA_BOUND_REVIEW_REQUEST",
+                        },
+                    })
+                record["governor_event_path"] = str(governor_event.resolve())
                 record["controller_notification_sent"] = True
                 notifications.append(round_id)
         self.save()
@@ -919,6 +940,8 @@ def main() -> int:
     parser.add_argument("--receipt-root", type=Path, required=True)
     parser.add_argument("--state", type=Path, required=True)
     parser.add_argument("--notification-dir", type=Path, required=True)
+    parser.add_argument("--governor-event-dir", type=Path,
+                        help="Governor inbox; defaults to notification-dir sibling events/")
     parser.add_argument("--ssh-target")
     parser.add_argument("--remote-root")
     parser.add_argument("--identity-file")
@@ -937,6 +960,8 @@ def main() -> int:
     parser.add_argument("--herdr-timeout-seconds", type=int, default=15)
     parser.add_argument("--legacy-directive-recovery", action="store_true",
                         help="deprecated: enable historical directive-cycle transport/recovery")
+    parser.add_argument("--legacy-direct-agent-wake", action="store_true",
+                        help="deprecated: bypass Governor and prompt agents directly")
     args = parser.parse_args()
     if args.poll_seconds is not None and args.poll_seconds <= 0:
         parser.error("--poll-seconds must be greater than zero")
@@ -952,7 +977,7 @@ def main() -> int:
         parser.error("--director-agent requires --directive-dir")
     if args.controller_stall_seconds <= 0:
         parser.error("--controller-stall-seconds must be greater than zero")
-    supervisor = Supervisor(args.state, args.notification_dir)
+    supervisor = Supervisor(args.state, args.notification_dir, args.governor_event_dir)
     if (args.ssh_target or args.remote_root) and not (args.ssh_target and args.remote_root):
         parser.error("--ssh-target and --remote-root must be supplied together")
 
@@ -977,7 +1002,7 @@ def main() -> int:
         directive_resumes: list[str] = []
         controller_escalations: list[str] = []
         scientific_state_conflicts: list[str] = []
-        if args.controller_agent:
+        if args.controller_agent and args.legacy_direct_agent_wake:
             woken = supervisor.wake_controller_once(
                 notified,
                 args.controller_agent,

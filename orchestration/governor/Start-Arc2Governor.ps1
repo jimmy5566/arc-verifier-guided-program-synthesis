@@ -135,10 +135,8 @@ function Watch-Arc2Governor {
   while ($true) {
     $workflow = Get-Arc2Workflow
     $stamp = [DateTime]::UtcNow.ToString('o')
-    if ($workflow -and $workflow.disposition -eq 'TERMINAL') {
-      Save-Arc2Json $watchdogState @{ schema_version = 1; role = 'non-scientific governor process watchdog'; status = 'WORKFLOW_TERMINAL'; observed_at = $stamp; consecutive_failures = $consecutiveFailures; controller_notification = $null }
-      return
-    }
+    # TERMINAL closes one scientific stage, not the router service. Keep the
+    # event router alive so a later owner-approved continuation can be queued.
     $running = Get-Arc2GovernorProcess
     if ($running) {
       $consecutiveFailures = 0
@@ -154,7 +152,7 @@ function Watch-Arc2Governor {
       } else {
         $consecutiveFailures += 1
         $notification = $null
-        if ($consecutiveFailures -ge $MaxConsecutiveFailures -and $alertedFailureCount -ne $consecutiveFailures) {
+        if ($consecutiveFailures -ge $MaxConsecutiveFailures -and $alertedFailureCount -lt 0) {
           $notification = Invoke-ControllerRepairWake $workflow $launch.error
           $alertedFailureCount = $consecutiveFailures
         }

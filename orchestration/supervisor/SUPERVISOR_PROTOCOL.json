@@ -6,10 +6,10 @@
   "low_frequency_reconciliation_seconds": 300,
   "heartbeat": "one timestamped local human-readable line per reconciliation; heartbeat-only checks never wake agents",
   "event_stream": "remote events.jsonl when transport is available",
-  "notification": "append-only controller notification JSON; receipt hash is the idempotency key",
+  "notification": "append-only REMOTE_TERMINAL event to the Governor inbox; receipt hash is the idempotency key",
   "normal_workflow_role": "RunPod long-job monitor only; normal Controller-Director review is synchronous and bypasses Supervisor",
   "legacy_directive_reconciliation": "deprecated; available only with --legacy-directive-recovery for historical forensic recovery",
-  "controller_wakeup": "one durable wakeup only for an actionable detached-job receipt or remote process failure",
-  "director_trigger": "none in the normal Supervisor path; Controller invokes Director synchronously for stage-level scientific judgment",
+  "controller_wakeup": "none; Governor is the sole agent router and delivers each terminal event once",
+  "director_trigger": "none; Controller ingests and freezes a result before emitting one SHA-bound Governor review event",
   "director_decisions": ["CONTINUE", "CONTINUE_WITH_WARNING", "REQUIRE_CHANGES", "NEW_SUBPROTOCOL_REQUIRED", "PAUSE", "STOP"]
 }

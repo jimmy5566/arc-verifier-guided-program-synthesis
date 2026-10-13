@@ -31,3 +31,8 @@ authorization needed after a one-shot run was consumed. Do not require a full
 scientific re-review when checkpoint, cohort, loss, estimand, thresholds and
 sealed-data boundaries remain unchanged. Director never prompts Controller;
 Governor routes the decision.
+
+Governor delivery is event-based and at-most-once. If Director is already
+working, a new review remains queued; it is not appended as another prompt.
+Write exactly one SHA-bound response for the supplied brief. Do not update the
+workflow state, dispatch agents, or create review-of-review cycles.
