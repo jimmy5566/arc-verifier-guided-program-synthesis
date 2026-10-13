@@ -1,0 +1,66 @@
+{
+  "EQUAL_SLOT_REFERENCE_GENERATION_RECEIPT.json": {
+    "bytes": 191,
+    "sha256": "e2137abf0b3b89dddd4537663dfec47a248707b7ccc535babbd01b2aba5612dd"
+  },
+  "EQUAL_SLOT_REFERENCE_RAW.jsonl": {
+    "bytes": 54440,
+    "sha256": "920695bf51219cf19f2231795743cddf18b22d5a4aaaedf56da7eb8f90f632b6"
+  },
+  "FINAL_RUNTIME_BINDING.json": {
+    "bytes": 5146,
+    "sha256": "2c04cd53bb50d1887ab7831136be0d7fb3b6579c8131124839f80280a0fb3c86"
+  },
+  "LAUNCH_RECEIPT.json": {
+    "bytes": 414,
+    "sha256": "991f0ea827be9c5d6a376153f48abfb9e17a1932225e702a051156dfa232d566"
+  },
+  "PREFLIGHT_RECEIPT.json": {
+    "bytes": 12724,
+    "sha256": "828a0c53f5d18925a379665f1f539efd2bce7bc0046193281656c79550911af0"
+  },
+  "QUERY_ONLY_GENERATION_RECEIPT.json": {
+    "bytes": 191,
+    "sha256": "bd845214fd79dc4512af6d0053f8a2a2102eb8ca88e40bd2516aa140f2d54c31"
+  },
+  "QUERY_ONLY_RAW.jsonl": {
+    "bytes": 54440,
+    "sha256": "820355f477524ded621a502807e11d5a6bc4955c0499995b4ddc4d099d5a4947"
+  },
+  "QUERY_ONLY_TRAINING_RECEIPT.json": {
+    "bytes": 33688,
+    "sha256": "412d7da00908e5f7c4ecc00d965311d81c71716daf8625cd5758aacdd1812224"
+  },
+  "RAW_FREEZE_RECEIPT.json": {
+    "bytes": 393,
+    "sha256": "23e22ef281d4fc2fd0232c118b803f0bf059326791eb59fd099b2f741e6ead3b"
+  },
+  "RESULT_MANIFEST.json": {
+    "bytes": 1444,
+    "sha256": "c12e9b1fd88ac35fa1c13db8e917b14138b7cec8101e8e7b88028d4e6499c950"
+  },
+  "SCIENTIFIC_BOUNDARY.json": {
+    "bytes": 92,
+    "sha256": "6747f8c0afd0e3e7a2eb847702dc64f435aa3aab856b17a5223c02283605dcbf"
+  },
+  "SCORE_RECEIPT.json": {
+    "bytes": 1049,
+    "sha256": "a87e70f68e98f833cd8e30e0b0c03fef3a7935d233a9c93045fb4c5c6d20392d"
+  },
+  "SYNTHETIC_TARGET_SIDECAR.json": {
+    "bytes": 13316,
+    "sha256": "d941c4940fe4db9be9ec4a8ae071da703811a5f4f581699da34387a82755280f"
+  },
+  "TERMINAL_RECEIPT.json": {
+    "bytes": 137,
+    "sha256": "a58d718cda46fa84a61defd86dcf39d98ddab415ff3aedcf716571e6b55191f6"
+  },
+  "V7_GENERATION_RECEIPT.json": {
+    "bytes": 191,
+    "sha256": "f1d9b4412a0a06d803b4eba4323d91c98b3dd89273a557814bb0b64057a043b8"
+  },
+  "V7_RAW.jsonl": {
+    "bytes": 39656,
+    "sha256": "578e6a52f4a2d85b2d0795d4a897aab64e4132694db6bf98be7e4ccda368651f"
+  }
+}

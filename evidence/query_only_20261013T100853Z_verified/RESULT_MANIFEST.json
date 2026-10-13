@@ -1,0 +1,35 @@
+{
+  "binding_sha256": "2c04cd53bb50d1887ab7831136be0d7fb3b6579c8131124839f80280a0fb3c86",
+  "decision": "REJECT",
+  "execution_source_commit": "2e5e113c43b5e09e851e417c3d4096a89152a5f9",
+  "included_files": [
+    "V7_RAW.jsonl",
+    "EQUAL_SLOT_REFERENCE_RAW.jsonl",
+    "QUERY_ONLY_RAW.jsonl",
+    "V7_GENERATION_RECEIPT.json",
+    "EQUAL_SLOT_REFERENCE_GENERATION_RECEIPT.json",
+    "QUERY_ONLY_GENERATION_RECEIPT.json",
+    "QUERY_ONLY_TRAINING_RECEIPT.json",
+    "RAW_FREEZE_RECEIPT.json",
+    "SYNTHETIC_TARGET_SIDECAR.json",
+    "SCORE_RECEIPT.json",
+    "TERMINAL_RECEIPT.json",
+    "PREFLIGHT_RECEIPT.json",
+    "SCIENTIFIC_BOUNDARY.json",
+    "FINAL_RUNTIME_BINDING.json",
+    "LAUNCH_RECEIPT.json"
+  ],
+  "model_adapter_sha256": "c4f11ee1261149c725e93d76c0328665167202e70f09689a8a65b55d8f7d4651",
+  "physical_batch_size": 1,
+  "promotion": "FORBIDDEN_REQUIRES_LATER_INDEPENDENT_CONFIRMATION",
+  "raw_freeze_before_sidecar": true,
+  "raw_sha256": {
+    "EQUAL_SLOT_REFERENCE": "920695bf51219cf19f2231795743cddf18b22d5a4aaaedf56da7eb8f90f632b6",
+    "QUERY_ONLY": "820355f477524ded621a502807e11d5a6bc4955c0499995b4ddc4d099d5a4947",
+    "V7": "578e6a52f4a2d85b2d0795d4a897aab64e4132694db6bf98be7e4ccda368651f"
+  },
+  "run_id": "run_20261013T100853Z_2e5e113c",
+  "score_sha256": "a87e70f68e98f833cd8e30e0b0c03fef3a7935d233a9c93045fb4c5c6d20392d",
+  "stage": "QUERY_ONLY_COUNT_OBJECTIVE_CAUSAL_PILOT_V1",
+  "terminal_status": "COMPLETE"
+}
