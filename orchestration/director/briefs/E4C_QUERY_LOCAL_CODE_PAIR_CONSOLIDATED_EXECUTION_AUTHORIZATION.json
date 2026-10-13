@@ -1,0 +1,99 @@
+{
+    "schema_version":  1,
+    "decision_id":  "E4C_QUERY_LOCAL_CODE_PAIR_CONSOLIDATED_EXECUTION_AUTHORIZATION",
+    "stage":  "E4C_QUERY_LOCAL_CODE_PAIR_PROSPECTIVE_FREEZE",
+    "source_commit":  "6758a9d9551ff7ec9960d16bfcd9c0af90178d9a",
+    "authorization_requested":  {
+                                    "scope":  "One sequential three-arm CPU-preflight then GPU execution: V7, fresh Equal-Slot, fresh Query-Local Code-Pair; no retry after scientific boundary.",
+                                    "hard_cap_seconds":  7200,
+                                    "model_load_and_gpu_required":  true,
+                                    "output_root":  "FRESH_NONCE_BOUND_AT_AUTHORIZATION_TIME",
+                                    "retry":  false
+                                },
+    "scientific_contract":  {
+                                "comparison":  "Equal-Slot all-assistant CE versus Query-Local corrected Code-Pair only in 48 PRIMARY_CONNECTED_COMPONENT_COUNT slots.",
+                                "query_local_cells_zero_based":  [
+                                                                     [
+                                                                         1,
+                                                                         1
+                                                                     ],
+                                                                     [
+                                                                         1,
+                                                                         2
+                                                                     ]
+                                                                 ],
+                                "code_pair_multiplier":  2,
+                                "constant_conditions":  [
+                                                            "exact V7 initialization",
+                                                            "seed 20261013",
+                                                            "LR 5e-5",
+                                                            "PagedAdamW8bit",
+                                                            "96 updates",
+                                                            "4 slots/update",
+                                                            "TREATMENT_SCHEDULE.json",
+                                                            "LoRA recipe",
+                                                            "BF16",
+                                                            "slot normalization",
+                                                            "per-slot scalar mass",
+                                                            "native Greedy physical Batch1",
+                                                            "Object primary and replay Equal-Slot CE"
+                                                        ],
+                                "evaluations":  [
+                                                    "train fit",
+                                                    "new structural OOD 48 canonical units with two demo orders",
+                                                    "new Marker-Binding preservation 16 prompts",
+                                                    "existing composition sentinel descriptive only"
+                                                ],
+                                "predeclared_gates":  {
+                                                          "composition_delta_min":  -1,
+                                                          "decision":  "REJECT_UNLESS_ALL_PASS",
+                                                          "ood_query_local_minus_equal_min":  6,
+                                                          "ood_paired_bootstrap_lower_strict_gt":  0,
+                                                          "order_invariance_both_over_any_min":  0.8,
+                                                          "promotion":  "REQUIRES_LATER_INDEPENDENT_CONFIRMATION",
+                                                          "retention_aggregate_min":  -2,
+                                                          "retention_each_min":  -1,
+                                                          "train_fit_query_local_min":  43,
+                                                          "train_fit_query_local_minus_equal_min":  8
+                                                      }
+                            },
+    "target_blind_panels":  {
+                                "ood":  {
+                                            "path":  "experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\deconfounded_count_curriculum_causal_pilot_v1\\e4c_qlcp_v1\\OOD_INPUTS_AND_COMMITMENTS.json",
+                                            "sha256":  "9419c06da87dc245ffbd3a614eb079a60cb3a2377793bbdd9e3b2b4819561bb0",
+                                            "canonical_units":  48,
+                                            "prompt_records":  96,
+                                            "count_balance":  {
+                                                                  "2":  16,
+                                                                  "1":  16,
+                                                                  "3":  16
+                                                              },
+                                            "orders_per_unit":  2,
+                                            "topology_count_mi_bits":  0
+                                        },
+                                "marker_binding":  {
+                                                       "path":  "experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\deconfounded_count_curriculum_causal_pilot_v1\\e4c_qlcp_v1\\MARKER_INPUTS_AND_COMMITMENTS.json",
+                                                       "sha256":  "4be496984df9e12a0138e58e7bbb3a31a9a381c603434925d7a30f14e2fc1769",
+                                                       "canonical_units":  8,
+                                                       "prompt_records":  16
+                                                   },
+                                "freeze_receipt":  {
+                                                       "path":  "experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\deconfounded_count_curriculum_causal_pilot_v1\\e4c_qlcp_v1\\PROSPECTIVE_FREEZE_RECEIPT.json",
+                                                       "sha256":  "a1a2e3623610a89ec1c82858aa9568944c68439eae6e08bc2d9f5cfe0c7c75e9",
+                                                       "model_loaded":  false,
+                                                       "gpu_used":  false,
+                                                       "targets_opened":  false
+                                                   }
+                            },
+    "invariants":  [
+                       "independent oracle validation before execution",
+                       "targets represented only by commitments and unavailable to inference",
+                       "raw predictions for all arms and panels freeze before deterministic sidecar generation",
+                       "E4-A/E4-B are exposed descriptive evidence only",
+                       "no Gold/dGold/FINAL_AUDIT",
+                       "no checkpoint promotion",
+                       "no broad SFT sweep",
+                       "no GPU/model load before authorization"
+                   ],
+    "requested_decision":  "Authorize this one bounded execution as specified, or reject it. No scientific condition may be altered without a replacement brief."
+}
