@@ -14,6 +14,7 @@ def self_test():
     metrics=[token_metric([0,3,1],1),token_metric([0,1,3],2)]; agg=aggregate_token_metrics(metrics); assert agg['top1_count']==2
     assert first_divergence([1,2],[1,3])==1 and first_divergence([1],[1,2])==1
     assert semantic_taxonomy([[1]],[[1]],True)['primary']=='EXACT'
+    assert _raw_checkpoint_name('CONTROL_NARROW_STRUCTURE_RAW.jsonl')=='CONTROL_NARROW_STRUCTURE'
     tol={'correct_token_rank_abs_delta_max':1,'Top1_and_Top2_aggregate_count_delta_max':0,'per_row_mean_margin_abs_delta_max':.02,'token_weighted_NLL_abs_delta_max':.005}
     assert batch_gate({'a':metrics[0]},{'a':metrics[0]},tol)['status']=='PASS'
     return {'status':'PASS_CPU_PRODUCTION_SHAPED_WORKER_SELF_TEST','model_loaded':False,'gpu_used':False,'optimizer_steps':0,'backward_calls':0}
@@ -21,6 +22,10 @@ def self_test():
 def _write(path,value):
  path=Path(path);path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix(path.suffix+'.tmp');tmp.write_text(json.dumps(value,sort_keys=True,separators=(',',':'))+'\n');os.replace(tmp,path)
 def _read_rows(path): return [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
+def _raw_checkpoint_name(path):
+ name=Path(path).name; suffix='_RAW.jsonl'
+ if not name.endswith(suffix): raise RuntimeError('RAW_FILENAME_LAYOUT_INVALID')
+ return name[:-len(suffix)]
 def _write_rows(path,values):
  path=Path(path);path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix(path.suffix+'.tmp');tmp.write_bytes(b''.join(json.dumps(x,sort_keys=True,separators=(',',':')).encode()+b'\n' for x in values));os.replace(tmp,path)
 
@@ -71,7 +76,7 @@ def execute(binding_path,output_root):
  out=Path(output_root)
  if out.exists(): raise RuntimeError('FRESH_OUTPUT_REQUIRED')
  old={}
- for path in Path(execution['run_002_raw_root']).glob('*_RAW.jsonl'): old[path.name[:-9]]={row.get('prompt_sha256'):row for row in _read_rows(path)}
+ for path in Path(execution['run_002_raw_root']).glob('*_RAW.jsonl'): old[_raw_checkpoint_name(path)]={row.get('prompt_sha256'):row for row in _read_rows(path)}
  validate_reuse(old,inventory); imported=[]
  for item in reused:
   row=dict(old[item['checkpoint']][item['prompt_task_sha256']]);
