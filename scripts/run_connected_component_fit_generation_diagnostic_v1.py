@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """No-update worker. CPU self-test is the only enabled mode before authorization."""
 from __future__ import annotations
-import argparse,json,os,shutil,sys
+import argparse,json,os,shutil,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
@@ -39,17 +39,22 @@ def _sha_file(path):
  return digest.hexdigest()
 
 def _check_runtime_import_closure():
- """Import the actual worker/scorer dependency closure without loading a model or CUDA."""
- import torch
- if torch.cuda.is_initialized(): raise RuntimeError('CUDA_ALREADY_INITIALIZED_BEFORE_PRECLAIM')
- from peft import PeftModel
- from transformers import AutoConfig,AutoModelForCausalLM,AutoTokenizer
- from inference.nvarc_native import NVARCNativeProvider,checkpoint_native_tokenizer,parse_native_grid,serialize_grid
- from scripts.score_connected_component_fit_generation_diagnostic_v1 import execute as score_execute
- if torch.cuda.is_initialized(): raise RuntimeError('CUDA_INITIALIZED_BY_PRECLAIM_IMPORT')
- required=(PeftModel,AutoConfig,AutoModelForCausalLM,AutoTokenizer,NVARCNativeProvider,checkpoint_native_tokenizer,parse_native_grid,serialize_grid,score_execute)
- if not all(callable(value) for value in required): raise RuntimeError('RUNTIME_IMPORT_CLOSURE_INVALID')
- return {'torch_cuda_initialized':False,'runtime_imports':'PASS'}
+ """Import actual deferred dependencies in an isolated no-device process."""
+ code="""import torch
+assert not torch.cuda.is_initialized()
+from peft import PeftModel
+from transformers import AutoConfig,AutoModelForCausalLM,AutoTokenizer
+from inference.nvarc_native import NVARCNativeProvider,checkpoint_native_tokenizer,parse_native_grid,serialize_grid
+from scripts.score_connected_component_fit_generation_diagnostic_v1 import execute as score_execute
+assert not torch.cuda.is_initialized()
+assert all(callable(value) for value in (PeftModel,AutoConfig,AutoModelForCausalLM,AutoTokenizer,NVARCNativeProvider,checkpoint_native_tokenizer,parse_native_grid,serialize_grid,score_execute))
+print('PASS_RUNTIME_IMPORT_CLOSURE_NO_CUDA')
+"""
+ env=dict(os.environ);env['CUDA_VISIBLE_DEVICES']=''
+ result=subprocess.run([sys.executable,'-c',code],cwd=ROOT,env=env,capture_output=True,text=True)
+ if result.returncode!=0: raise RuntimeError('RUNTIME_IMPORT_CLOSURE_FAILED:'+result.stderr[-1000:])
+ if 'PASS_RUNTIME_IMPORT_CLOSURE_NO_CUDA' not in result.stdout: raise RuntimeError('RUNTIME_IMPORT_CLOSURE_RECEIPT_MISSING')
+ return {'torch_cuda_initialized':False,'runtime_imports':'PASS_ISOLATED_NO_CUDA'}
 
 def _prepare_production_inputs(binding,output_root,control_root):
  """The shared pre-model path for preclaim validation and real execution."""
