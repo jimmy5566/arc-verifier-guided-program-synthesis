@@ -1,5 +1,5 @@
 from __future__ import annotations
-import argparse,hashlib,json,os,subprocess,sys,tempfile
+import argparse,hashlib,importlib,json,os,subprocess,sys,tempfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 def sha(p):
@@ -13,8 +13,18 @@ def verify(path,entry):
  p=ROOT/entry['path']
  if not p.is_file() or sha(p)!=entry['sha256']:fail('INPUT:'+path)
  return p
-def validate(binding_path):
- b=load(binding_path); req={'experiment_id','scientific_source_commit','source_files','inputs','arms','v7','runtime','execution','training','evaluation','dataset_paths','inference','scoring'}
+def validate_runtime_import_closure():
+ src = ROOT/'src'
+ if not src.is_dir():fail('RUNTIME_SOURCE_ROOT')
+ src_text=str(src)
+ if src_text not in sys.path:sys.path.insert(0,src_text)
+ imported=[]
+ for module in ('inference.nvarc_native','inference.hf_peft_backend'):
+  try:importlib.import_module(module)
+  except Exception as exc:fail('RUNTIME_IMPORT:'+module+':'+type(exc).__name__+':'+str(exc))
+  imported.append(module)
+ return imported
+def validate(binding_path): b=load(binding_path); req={'experiment_id','scientific_source_commit','source_files','inputs','arms','v7','runtime','execution','training','evaluation','dataset_paths','inference','scoring'}
  if not req<=set(b):fail('BINDING_SCHEMA')
  if b['experiment_id']!='CONNECTED_COMPONENT_COUNT_CODE_PAIR_INDEPENDENT_CONFIRMATION_V2':fail('EXPERIMENT')
  for rel,h in b['source_files'].items():
@@ -22,6 +32,7 @@ def validate(binding_path):
  obs=verify('observation',b['inputs']['observation']); recipes=verify('recipes',b['inputs']['recipes']); b1=verify('batch1',b['inputs']['batch1']); table=verify('decision_table',b['inputs']['decision_table']); schedule=verify('schedule',b['inputs']['diverse_schedule'])
  if b['arms']['control']['schedule_sha256']!=b['arms']['treatment']['schedule_sha256'] or b['arms']['control']['schedule_sha256']!=b['inputs']['diverse_schedule']['sha256']:fail('SCHEDULE')
  if b['arms']['control']['loss_allocation']!={'kind':'UNIFORM_SEQUENCE_LOSS'} or b['arms']['treatment']['loss_allocation']!={'kind':'COUNT_CODE_PAIR_REWEIGHTED','decision_token_multiplier':2.0}:fail('LOSS')
+ runtime_imports=validate_runtime_import_closure()
  manifest=ROOT/b['v7']['checkpoint_manifest_path']
  if not manifest.is_file() or sha(manifest)!=b['v7']['checkpoint_manifest_sha256']:fail('V7_MANIFEST')
  asset_manifest=load(manifest); verified=0
@@ -41,7 +52,7 @@ def validate(binding_path):
  ids={r['prompt_id'] for r in rows}; subset=load(b1)['checkpoints']
  if set(subset)!={'V7','CONTROL_NARROW_STRUCTURE','TREATMENT_STRUCTURE_DIVERSE'} or any(len(x)!=12 or len(set(x))!=12 or not set(x)<=ids for x in subset.values()):fail('B1')
  if not all(x==subset['V7'] for x in subset.values()):fail('B1_SHARED')
- return b,rows,{'inventory':got,'stable_record_ids':['V2:'+x for x in subset['V7']],'v7_asset_files_verified':verified,'sealed_sidecar_opened':False}
+ return b,rows,{'inventory':got,'stable_record_ids':['V2:'+x for x in subset['V7']],'v7_asset_files_verified':verified,'runtime_imports':runtime_imports,'sealed_sidecar_opened':False}
 def run_cpu(binding,out):
  b,rows,r=validate(binding);out=Path(out)
  if out.exists():fail('FRESH_OUTPUT')
