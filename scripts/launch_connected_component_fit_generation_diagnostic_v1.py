@@ -10,6 +10,15 @@ import argparse,hashlib,json,os,subprocess,sys,time
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
+# The diagnostic has two already-frozen, bounded runtime shapes.  The exact
+# binding and owner receipt still bind the selected shape; this list is not a
+# fallback or a way to enlarge a cap at launch time.
+ALLOWED_FROZEN_HARD_CAP_SECONDS=frozenset((7200,10800))
+def frozen_hard_cap_seconds(execution):
+ cap=int(execution.get('hard_cap_seconds',0))
+ if execution.get('retry') not in (False,None) or cap not in ALLOWED_FROZEN_HARD_CAP_SECONDS:
+  raise RuntimeError('EXECUTION_SHAPE_MISMATCH')
+ return cap
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def canon(value):return json.dumps(value,sort_keys=True,separators=(',',':')).encode()
 def write(path,value):
@@ -26,7 +35,7 @@ def validate(binding_path,receipt_path,output_root):
  for rel,digest in binding.get('source_hashes',{}).items():
   if sha(ROOT/rel)!=digest:raise RuntimeError('SOURCE_IDENTITY_MISMATCH:'+rel)
  execution=binding.get('execution',{})
- if execution.get('retry') not in (False,None) or int(execution.get('hard_cap_seconds',10800))!=10800:raise RuntimeError('EXECUTION_SHAPE_MISMATCH')
+ frozen_hard_cap_seconds(execution)
  required={'status':'VALID_UNCONSUMED','binding_sha256':sha(binding_path),'nonce':execution.get('nonce'),'output_root':str(output_root).replace('\\','/')}
  if any(auth.get(key)!=value for key,value in required.items()):raise RuntimeError('OWNER_AUTHORIZATION_BINDING_MISMATCH')
  if auth.get('retry') not in (False,None) or auth.get('permitted_launches') not in (1,None):raise RuntimeError('OWNER_AUTHORIZATION_EXECUTION_MISMATCH')
@@ -42,7 +51,7 @@ def launch(binding_path,receipt_path,output_root,control_root):
   control.mkdir(parents=True,exist_ok=True);log=(control/'WORKER.log').open('wb')
   child=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
   write(control/'LAUNCH_RECEIPT.json',{'status':'DETACHED_LAUNCHED','binding_sha256':sha(binding_path),'authorization_payload_sha256':auth.get('payload_sha256'),'claim_marker':str(marker),'nonce':auth['nonce'],'output_root':str(out).replace('\\','/'),'detached_jobs':1,'retry':False,'optimizer_steps':0,'backward_calls':0,'targets_accessed':False})
-  write(control/'REMOTE_JOB.json',{'pid':child.pid,'detached':True,'status':'RUNNING','binding_sha256':sha(binding_path),'output_root':str(out).replace('\\','/'),'hard_cap_seconds':10800})
+  write(control/'REMOTE_JOB.json',{'pid':child.pid,'detached':True,'status':'RUNNING','binding_sha256':sha(binding_path),'output_root':str(out).replace('\\','/'),'hard_cap_seconds':frozen_hard_cap_seconds(binding['execution'])})
   return child.pid
  except Exception:
   write(control/'TERMINAL_RECEIPT.json',{'status':'FAILED_PRE_LAUNCH_NO_UPDATE','binding_sha256':sha(binding_path),'optimizer_steps':0,'backward_calls':0,'targets_accessed':False});raise
