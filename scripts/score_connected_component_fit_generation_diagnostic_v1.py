@@ -16,6 +16,12 @@ def _write(path,value):
  path=Path(path);path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix(path.suffix+'.tmp');tmp.write_text(json.dumps(value,sort_keys=True,separators=(',',':'))+'\n');os.replace(tmp,path)
 def _rows(path):return [json.loads(x) for x in Path(path).read_text().splitlines() if x.strip()]
 def _sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+def sidecar_sha256(binding):
+ e=binding.get('execution',{}); top=binding.get('sidecar_sha256'); nested=e.get('sidecar_sha256')
+ if top and nested and top!=nested: raise RuntimeError('SIDECAR_SHA256_BINDING_CONFLICT')
+ value=nested or top
+ if not isinstance(value,str) or len(value)!=64: raise RuntimeError('SIDECAR_SHA256_MISSING')
+ return value
 def _write_rows(path,values):
  path=Path(path);path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix(path.suffix+'.tmp');tmp.write_bytes(b''.join(json.dumps(x,sort_keys=True,separators=(',',':')).encode()+b'\n' for x in values));os.replace(tmp,path)
 
@@ -46,7 +52,7 @@ def execute(binding_path,raw_root,output_root):
  raw_path=Path(raw_root)/'RAW_FROZEN.jsonl'
  if freeze.get('status')!='COMPLETE_RAW_FROZEN_NO_TARGETS' or freeze.get('raw_sha256')!=_sha(raw_path):raise RuntimeError('RAW_FREEZE_REQUIRED')
  side_path=Path(e['sidecar_path'])
- if _sha(side_path)!=e['sidecar_sha256']:raise RuntimeError('SIDECAR_IDENTITY_MISMATCH')
+ if _sha(side_path)!=sidecar_sha256(b):raise RuntimeError('SIDECAR_IDENTITY_MISMATCH')
  inventory=json.loads(Path(e['inventory_path']).read_text());targets=validate_sidecar(json.loads(side_path.read_text()),inventory)
  prompt_document=json.loads(Path(e['prompt_token_ids_path']).read_text()); prompt_records=prompt_document.get('records') if isinstance(prompt_document,dict) else prompt_document
  if not isinstance(prompt_document,dict) or prompt_document.get('target_content_present') is not False or not isinstance(prompt_records,list): raise RuntimeError('PROMPT_TOKEN_IDS_TARGET_BOUNDARY_INVALID')
