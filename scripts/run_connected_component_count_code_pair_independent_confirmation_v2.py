@@ -83,6 +83,7 @@ def validate(binding_path, *, production_assets):
         needle=ex['nonce'].encode()
         if Path('/proc').is_dir():
             for cmd in Path('/proc').glob('[0-9]*/cmdline'):
+                if cmd.parent.name==str(os.getpid()): continue
                 try: payload=cmd.read_bytes()
                 except OSError: continue
                 if needle in payload:fail('DUPLICATE_NONCE_PROCESS')
