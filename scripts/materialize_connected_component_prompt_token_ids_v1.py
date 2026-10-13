@@ -13,6 +13,7 @@ import json
 import os
 from pathlib import Path
 from typing import Any
+from collections.abc import Mapping
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = (ROOT / 'experiments/capability_repair_baseline_v1' /
@@ -117,7 +118,7 @@ def load_target_free_records(path: Path) -> list[dict[str, Any]]:
 
 
 def _extract_ids(encoded: Any) -> list[int]:
-    if isinstance(encoded, dict):
+    if isinstance(encoded, Mapping):
         encoded = encoded.get('input_ids')
     if hasattr(encoded, 'tolist'):
         encoded = encoded.tolist()

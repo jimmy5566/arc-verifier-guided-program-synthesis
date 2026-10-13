@@ -5,6 +5,7 @@ import hashlib
 import json
 import sys
 import tempfile
+from collections import UserDict
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -25,6 +26,7 @@ def task():
 def main():
     assert 'transformers' not in sys.modules
     records=[{'cohort_record_id':'R:0','split':'OOD','prompt_task_sha256':m.canonical_sha256(task()),'task':task()}]
+    assert m._extract_ids(UserDict(input_ids=[1,2,3])) == [1,2,3]
     out=m.materialize_records(records,FakeTokenizer())
     assert out[0]['prompt_token_ids']==[len('user:1|assistant:2|user:3|assistant:'),7,15]
     assert out[0]['prompt_task_sha256']==records[0]['prompt_task_sha256']
