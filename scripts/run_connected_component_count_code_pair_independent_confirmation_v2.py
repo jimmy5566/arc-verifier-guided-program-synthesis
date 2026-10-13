@@ -24,7 +24,8 @@ def validate_runtime_import_closure():
   except Exception as exc:fail('RUNTIME_IMPORT:'+module+':'+type(exc).__name__+':'+str(exc))
   imported.append(module)
  return imported
-def validate(binding_path): b=load(binding_path); req={'experiment_id','scientific_source_commit','source_files','inputs','arms','v7','runtime','execution','training','evaluation','dataset_paths','inference','scoring'}
+def validate(binding_path):
+ b=load(binding_path); req={'experiment_id','scientific_source_commit','source_files','inputs','arms','v7','runtime','execution','training','evaluation','dataset_paths','inference','scoring'}
  if not req<=set(b):fail('BINDING_SCHEMA')
  if b['experiment_id']!='CONNECTED_COMPONENT_COUNT_CODE_PAIR_INDEPENDENT_CONFIRMATION_V2':fail('EXPERIMENT')
  for rel,h in b['source_files'].items():
