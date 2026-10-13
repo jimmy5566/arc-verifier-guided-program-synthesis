@@ -156,7 +156,7 @@ def score(binding_path,out,sidecar):
  b=load(binding_path);freeze=load(Path(out)/'RAW_FREEZE_RECEIPT.json');targets=load(sidecar)['targets']
  if freeze.get('status')!='COMPLETE_RAW_FROZEN_NO_TARGETS' or freeze.get('targets_accessed') is not False:fail('FREEZE')
  v=scored_rows(out,freeze,targets,'V7',None);c=scored_rows(out,freeze,targets,'CONTROL_ORIGINAL_CONFOUNDED','CONTROL_ORIGINAL_CONFOUNDED');t=scored_rows(out,freeze,targets,'TREATMENT_DECONFOUNDED','TREATMENT_DECONFOUNDED')
- ood=records();units=sorted({x['canonical'] for x in ood if x['split']=='OOD_INDEPENDENT'})
+ ood=[x for x in records() if x['split']=='OOD_INDEPENDENT'];units=sorted({x['canonical'] for x in ood})
  def both(rows,u):return int(all(rows[x['id']]['exact'] for x in ood if x['split']=='OOD_INDEPENDENT' and x['canonical']==u))
  diff=[both(t,u)-both(c,u) for u in units];rng=random.Random(b['evaluation']['bootstrap_seed']);draws=sorted(sum(rng.choice(diff) for _ in diff) for _ in range(b['evaluation']['bootstrap_replicates']));delta=sum(diff);lo,hi=draws[249],draws[9749]
  fit_ids={r['id'] for r in records('TREATMENT_DECONFOUNDED') if r['split']=='TRAIN_FIT_SECONDARY'};fit=sum(x['exact'] for x in t.values() if x['record_id'] in fit_ids)
@@ -170,6 +170,15 @@ def score(binding_path,out,sidecar):
  decision='INCONCLUSIVE' if gates['primary'] else 'REJECT'
  receipt={'status':'COMPLETE_E3_BATCH1_ONLY_SCORE_AFTER_RAW_FREEZE','primary_independent_ood':{'canonical_units':48,'treatment_minus_control':{'delta_correct':delta,'bootstrap_95_ci':[lo,hi],'replicates':10000},'gate':gates['primary']},'secondary_descriptive':{'train_fit_treatment':fit,'retention':{'by_family':retention,'aggregate_treatment_minus_control':aggregate},'composition':composition,'order_invariance':{'treatment_both_orders_correct':both_t,'treatment_any_order_correct':len(any_t),'control_both_orders_correct':both_c,'control_any_order_correct':len(any_c)}},'gates':gates,'decision':decision,'promotion':'FORBIDDEN_REQUIRES_LATER_INDEPENDENT_CONFIRMATION','physical_batch_size':1,'batch32_used':False,'targets_opened_after_raw_freeze':True}
  write(Path(out)/'SCORE_RECEIPT.json',receipt);return receipt
+def score_only(binding_path):
+ b=load(binding_path);out=Path(b['output_root']);terminal=out/'TERMINAL_RECEIPT.json';sidecar=out/'SYNTHETIC_TARGET_SIDECAR.json'
+ if not terminal.is_file() or not sidecar.is_file() or not (out/'RAW_FREEZE_RECEIPT.json').is_file():fail('SCORE_REPAIR_PREREQUISITE')
+ prior=load(terminal)
+ if prior.get('status')!='FAILED_OR_PARTIAL_NO_RETRY' or prior.get('error')!="KeyError:'canonical'":fail('SCORE_REPAIR_TERMINAL_IDENTITY')
+ result=score(binding_path,out,sidecar)
+ receipt={'status':'COMPLETE_POST_RAW_SCORER_REPAIR_NO_MODEL','original_terminal_sha256':sha(terminal),'binding_sha256':sha(binding_path),'score_sha256':sha(out/'SCORE_RECEIPT.json'),'raw_freeze_sha256':sha(out/'RAW_FREEZE_RECEIPT.json'),'model_loaded':False,'gpu_used':False,'raw_predictions_reused':True,'original_terminal_preserved':True,'repair_worker_sha256':sha(Path(__file__))}
+ write(out/'SCORER_REPAIR_RECEIPT.json',receipt);return receipt
+
 def execute(binding_path):
  pre=preclaim(binding_path);b=load(binding_path);out=Path(b['output_root']);out.mkdir(parents=True);started=time.monotonic();deadline=started+b['hard_cap_seconds'];write(out/'PREFLIGHT_RECEIPT.json',pre)
  try:
@@ -182,9 +191,10 @@ def execute(binding_path):
  except Exception as e:
   write(out/'TERMINAL_RECEIPT.json',{'status':'FAILED_OR_PARTIAL_NO_RETRY','error':type(e).__name__+':'+str(e),'raw_predictions_created':(out/'RAW_FREEZE_RECEIPT.json').exists(),'scientific_boundary_entered':(out/'SCIENTIFIC_BOUNDARY.json').exists()});raise
 def main():
- p=argparse.ArgumentParser();p.add_argument('--binding',type=Path,required=True);p.add_argument('--output-root');p.add_argument('--make-binding',action='store_true');p.add_argument('--preclaim-only',action='store_true');p.add_argument('--execute',action='store_true');a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--binding',type=Path,required=True);p.add_argument('--output-root');p.add_argument('--make-binding',action='store_true');p.add_argument('--preclaim-only',action='store_true');p.add_argument('--execute',action='store_true');p.add_argument('--score-only',action='store_true');a=p.parse_args()
  if a.make_binding:print(json.dumps(make_binding(a.binding,a.output_root),sort_keys=True))
  elif a.preclaim_only:print(json.dumps(preclaim(a.binding),sort_keys=True))
  elif a.execute:execute(a.binding)
+ elif a.score_only:print(json.dumps(score_only(a.binding),sort_keys=True))
  else:raise SystemExit('select mode')
 if __name__=='__main__':main()
