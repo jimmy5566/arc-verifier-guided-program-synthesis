@@ -32,6 +32,7 @@ def build_seed_manifest(records):
  return {'schema_version':1,'status':'FROZEN_ALL_B1_PER_CHECKPOINT_GENERATION_SEEDS','seed_base':SEED_BASE,'ordering':'per checkpoint: (len(canonical JSON prompt_task UTF-8), cohort_record_id)','seed_rule':'generation_seed=2000031+ordinal_within_checkpoint; invariant to physical batch grouping and CUDA-OOM fallback','records':out}
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out-dir',type=Path,required=True);ap.add_argument('--missing-records',type=Path,default=BASE/'MISSING_TRAIN_FIT_PROMPT_TASKS_V1.json');args=ap.parse_args()
+ args.out_dir=args.out_dir.resolve()
  prior_protocol=SOURCE/'ALL_B1_SUCCESSOR_PROTOCOL.json';prior_binding=SOURCE/'ALL_B1_SUCCESSOR_EXECUTION_BINDING.json'
  for path in (prior_protocol,prior_binding,args.missing_records):
   if not path.is_file(): raise RuntimeError('MISSING_AMENDMENT_INPUT:'+str(path))
