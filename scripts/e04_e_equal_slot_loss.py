@@ -29,6 +29,41 @@ def equal_slot_objective(slot_logits: Sequence, slot_labels: Sequence, *, expect
     means, counts = zip(*(causal_slot_mean_ce(logits, labels, ignore_index=ignore_index) for logits, labels in zip(slot_logits, slot_labels, strict=True)), strict=True)
     return sum(means) * (1.0 / expected_slots), list(counts)
 
+def backward_weighted_slot_term(slot_logits, slot_labels, token_weights, *, expected_slots: int = 4, ignore_index: int = -100):
+    """Backpropagate a mass-normalized weighted causal CE slot term.
+
+    ``token_weights`` is aligned to the unshifted label sequence.  The causal
+    objective therefore uses ``token_weights[:, 1:]`` beside ``labels[:, 1:]``.
+    Normalizing by the selected weight sum preserves the per-slot loss scale.
+    """
+    import torch
+    import torch.nn.functional as F
+    if slot_logits.ndim != 3 or slot_labels.ndim != 2 or slot_logits.shape[:2] != slot_labels.shape:
+        raise EqualSlotLossError('E04E_WEIGHTED_SLOT_SHAPE')
+    weights = torch.as_tensor(token_weights, device=slot_logits.device, dtype=torch.float32)
+    if weights.ndim == 1:
+        weights = weights.unsqueeze(0)
+    if weights.shape != slot_labels.shape:
+        raise EqualSlotLossError('E04E_WEIGHTED_SLOT_WEIGHT_SHAPE')
+    shift_logits = slot_logits[:, :-1, :].float().contiguous()
+    shift_labels = slot_labels[:, 1:].contiguous()
+    shift_weights = weights[:, 1:].contiguous()
+    valid = shift_labels.ne(ignore_index)
+    if not bool(valid.any().item()):
+        raise EqualSlotLossError('E04E_LOSS_ZERO_SUPERVISED_SLOT')
+    selected_weights = shift_weights.masked_select(valid)
+    if not bool(torch.isfinite(selected_weights).all().item()) or bool((selected_weights <= 0).any().item()):
+        raise EqualSlotLossError('E04E_WEIGHTED_SLOT_INVALID_WEIGHT')
+    token_losses = F.cross_entropy(shift_logits.view(-1, shift_logits.size(-1)), shift_labels.view(-1), ignore_index=ignore_index, reduction='none')
+    weighted_sum = (token_losses.masked_select(valid.view(-1)) * selected_weights).sum()
+    weight_sum = selected_weights.sum()
+    mean = weighted_sum / weight_sum
+    if not bool(mean.isfinite().item()):
+        raise EqualSlotLossError('E04E_LOSS_NONFINITE_SLOT')
+    term = mean * (1.0 / expected_slots)
+    term.backward()
+    return term.detach(), int(valid.sum().item()), float(weight_sum.detach().cpu().item())
+
 def backward_equal_slot_term(slot_logits, slot_labels, *, expected_slots: int = 4, ignore_index: int = -100):
     """Backpropagate one independently normalized term of an equal-slot step.
 
