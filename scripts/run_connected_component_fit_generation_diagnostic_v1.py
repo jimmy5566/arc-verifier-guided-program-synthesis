@@ -81,7 +81,19 @@ def execute(binding_path,output_root):
  if len(imported)!=168 or len(generated)!=48: raise RuntimeError('RAW_COMPLETENESS_INVALID')
  raw=sorted(imported+generated,key=lambda x:(x['checkpoint'],x['cohort_record_id']))
  if len({(x['checkpoint'],x['cohort_record_id']) for x in raw})!=216: raise RuntimeError('RAW_DUPLICATE_OR_MISSING')
- out.mkdir(parents=True);raw_path=out/'RAW_FROZEN.jsonl';_write_rows(raw_path,raw);receipt={'status':'COMPLETE_RAW_FROZEN_NO_TARGETS','raw_sha256':hashlib.sha256(raw_path.read_bytes()).hexdigest(),'raw_rows':216,'reused_rows':168,'new_rows':48,'fallback_events':events,'optimizer_steps':0,'backward_calls':0,'targets_accessed_before_raw_freeze':False,'gpu_used':True};_write(out/'RAW_FREEZE_RECEIPT.json',receipt);return receipt
+ out.mkdir(parents=True);raw_path=out/'RAW_FROZEN.jsonl';_write_rows(raw_path,raw);receipt={'status':'COMPLETE_RAW_FROZEN_NO_TARGETS','raw_sha256':hashlib.sha256(raw_path.read_bytes()).hexdigest(),'raw_rows':216,'reused_rows':168,'new_rows':48,'fallback_events':events,'optimizer_steps':0,'backward_calls':0,'targets_accessed_before_raw_freeze':False,'gpu_used':True};_write(out/'RAW_FREEZE_RECEIPT.json',receipt)
+ # The frozen experiment is complete only after the all-B1 teacher-forced
+ # scoring pass.  Run it in the same detached one-shot process, after raw
+ # evidence is durable, so a launcher cannot report a generation-only result.
+ try:
+  from scripts.score_connected_component_fit_generation_diagnostic_v1 import execute as score_execute
+  score_receipt=score_execute(binding_path,out,out)
+ except Exception as exc:
+  _write(out/'TERMINAL_RECEIPT.json',{'status':'FAILED_AFTER_RAW_FREEZE','raw_sha256':receipt['raw_sha256'],'optimizer_steps':0,'backward_calls':0,'targets_accessed_before_raw_freeze':False,'error_type':type(exc).__name__})
+  raise
+ score=json.loads(Path(score_receipt).read_text())
+ terminal={'status':'COMPLETE_RAW_AND_ALL_B1_SCORED_NO_UPDATE','raw_sha256':receipt['raw_sha256'],'score_receipt_sha256':hashlib.sha256(Path(score_receipt).read_bytes()).hexdigest(),'metrics_sha256':score['metrics_sha256'],'records':score['records'],'optimizer_steps':0,'backward_calls':0,'targets_accessed_before_raw_freeze':False,'gpu_used':True}
+ _write(out/'TERMINAL_RECEIPT.json',terminal);return terminal
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--cpu-self-test',action='store_true');p.add_argument('--cpu-fixture',type=Path);p.add_argument('--output',type=Path);p.add_argument('--preflight',action='store_true');p.add_argument('--execute',action='store_true');p.add_argument('--output-root',type=Path);p.add_argument('--binding',type=Path);p.add_argument('--sidecar',type=Path);p.add_argument('--inventory',type=Path);a=p.parse_args()
  if a.preflight:
