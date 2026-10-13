@@ -1,14 +1,14 @@
 from __future__ import annotations
-import argparse,hashlib,json,sys
+"""Frozen V2 scorer entrypoint; raw freeze is mandatory before sealed sidecar access."""
+import argparse, json
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[1]
-TABLE={'treatment_control_count_min':3,'treatment_control_count_lower95_gt':0,'treatment_v7_count_min':2,'treatment_v7_count_lower95_gt':0,'object_extraction_no_harm_both':True,'composition_no_harm_both':True,'retention_counts':{'FIXED_TURN_ROTATION_CONTROL':8,'MARKER_BINDING_CONTROL':8,'NO_TRANSFORM_RETENTION':24},'bootstrap_replicates':10000,'all_gates_must_pass':True}
-def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+from scripts import run_connected_component_count_code_pair_independent_confirmation_v2 as worker
+
 def main():
- a=argparse.ArgumentParser();a.add_argument('--binding',type=Path,required=True);a.add_argument('--validate-only',action='store_true');x=a.parse_args();b=json.loads(x.binding.read_text());p=ROOT/b['inputs']['decision_table']['path'];
- if not p.is_file() or sha(p)!=b['inputs']['decision_table']['sha256']:raise SystemExit('IC_V2_SCORER:DECISION_TABLE_IDENTITY')
- t=json.loads(p.read_text())
- if t!=TABLE:raise SystemExit('IC_V2_SCORER:DECISION_TABLE_CONTENT')
- if not x.validate_only:raise SystemExit('IC_V2_SCORER:SCORING_REQUIRES_RAW_FREEZE_AND_SEALED_TRANSITION')
- print(json.dumps({'status':'PASS_V2_SCORER_DECISION_TABLE_CLOSURE','all_gates_must_pass':True,'sealed_sidecar_opened':False,'model_loaded':False,'gpu_used':False},sort_keys=True))
+    p=argparse.ArgumentParser();p.add_argument('--binding',type=Path,required=True);p.add_argument('--output-root',type=Path);p.add_argument('--sealed-sidecar',type=Path);p.add_argument('--validate-only',action='store_true');a=p.parse_args()
+    if a.validate_only:
+        b,obs,schedule,detail=worker.validate(a.binding,production_assets=False)
+        print(json.dumps({'status':'PASS_V2_SCORER_DISPATCH_CLOSURE','records':len(obs),'schedule_slots':len(schedule),'model_loaded':False,'gpu_used':False,'sealed_sidecar_opened':False},sort_keys=True));return
+    if a.output_root is None or a.sealed_sidecar is None: raise SystemExit('score requires --output-root and --sealed-sidecar')
+    print(json.dumps(worker.score(a.binding,a.output_root,a.sealed_sidecar),sort_keys=True))
 if __name__=='__main__':main()
