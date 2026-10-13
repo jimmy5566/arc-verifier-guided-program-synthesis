@@ -50,6 +50,9 @@ def make_binding(path,output_root):
     'runtime':{'base_path':load(V7)['base_path'],'adapter_path':load(V7)['adapter_path'],'context_window':16384,'requested_batch_size':32,'fallback_ladder':[32,16,8,4,1],'max_new_tokens':192},
     'training':{'updates_per_arm':96,'slots_per_update':4,'loss':'ORIGINAL_EQUAL_SLOT_ALL_ASSISTANT_CE','seed':20261013,'learning_rate':5e-5},
     'nonce':hashlib.sha256((commit+str(output_root)+sha(PKG/'MANIFEST.json')+str(time.time_ns())).encode()).hexdigest()[:32],
+    'evaluation':{'fallback_ladder':[32,16,8,4,1],'max_new_tokens':192,
+                  'b1_subset_by_checkpoint':{tag:[x['id'] for x in sorted(records(arm),key=lambda q:q['id'])[:12]] for tag,arm in [('V7',None),('CONTROL_ORIGINAL_CONFOUNDED','CONTROL_ORIGINAL_CONFOUNDED'),('TREATMENT_DECONFOUNDED','TREATMENT_DECONFOUNDED')]},
+                  'batch1_gate':{'generated_token_agreement_minimum':1.0,'parsed_grid_agreement_minimum':1.0,'exact_agreement_minimum':1.0}},
     'sidecar_rule':'POST_RAW_FREEZE_ONLY_SYNTHETIC_TARGET_DERIVATION'}
  write(path,b);return b
 
@@ -85,7 +88,10 @@ def preclaim(binding_path):
    if not p.is_file() or p.stat().st_size!=f['bytes'] or sha(p)!=f['sha256']:fail('ASSET:'+f['name'])
  gpu=subprocess.run(['nvidia-smi','--query-gpu=memory.total','--format=csv,noheader'],capture_output=True,text=True)
  if gpu.returncode or int(gpu.stdout.split()[0])<24576:fail('GPU_CAPACITY')
- return {'status':'PASS_E3_PRODUCTION_SHAPED_PRECLAIM_NO_MODEL','binding_sha256':sha(binding_path),'model_loaded':False,'gpu_used':False,'sidecar_opened':False,'schedules':{'control':384,'treatment':384}}
+ for tag,arm in [('V7',None),('CONTROL_ORIGINAL_CONFOUNDED','CONTROL_ORIGINAL_CONFOUNDED'),('TREATMENT_DECONFOUNDED','TREATMENT_DECONFOUNDED')]:
+  available={x['id'] for x in records(arm)}; requested=b['evaluation']['b1_subset_by_checkpoint'].get(tag,[])
+  if len(requested)!=12 or len(set(requested))!=12 or not set(requested)<=available:fail('B1_SUBSET:'+tag)
+ return {'status':'PASS_E3_PRODUCTION_SHAPED_PRECLAIM_NO_MODEL','binding_sha256':sha(binding_path),'model_loaded':False,'gpu_used':False,'sidecar_opened':False,'schedules':{'control':384,'treatment':384},'evaluation_records':{'V7':len(records()),'CONTROL':len(records('CONTROL_ORIGINAL_CONFOUNDED')),'TREATMENT':len(records('TREATMENT_DECONFOUNDED'))}}
 
 def records(arm=None):
  out=[]
@@ -108,16 +114,23 @@ def execute(binding_path):
   from scripts import run_connected_components_object_extraction_pilot_v1 as real
   translated={'v7':{'checkpoint_manifest_path':str(V7.relative_to(ROOT)).replace('\\','/')},'training':{'torch_seed':b['training']['seed'],'learning_rate':b['training']['learning_rate']},'runtime':{'combined_cap_seconds':b['hard_cap_seconds'],'context_window':b['runtime']['context_window']},'evaluation':{'fallback_ladder':b['runtime']['fallback_ladder'],'max_new_tokens':b['runtime']['max_new_tokens']}}
   raw={}
-  def generate(model,torch,manifest,items,tag):
-   return real._generate(model,torch,manifest,[{'record_id':x['id'],'split':x['split'],'task':x['task']} for x in items],translated,out,deadline,tag)
-  v,torch,m=real._load_v7(translated,trainable=False);raw['V7']=generate(v,torch,m,records(),'V7');del v
+  def generate(model,torch,manifest,items,tag,batch1=False):
+   return real._generate(model,torch,manifest,[{'record_id':x['id'],'split':x['split'],'task':x['task']} for x in items],translated,out,deadline,tag,force_batch_size=1 if batch1 else None)
+  # This exclusive marker is written immediately before the first model load;
+  # preclaim itself leaves no output and cannot consume the scientific run.
+  write(out/'SCIENTIFIC_BOUNDARY.json',{'nonce':b['nonce'],'retry':False,'status':'MODEL_LOAD_NEXT'})
+  v,torch,m=real._load_v7(translated,trainable=False);raw['V7']=generate(v,torch,m,records(),'V7');raw['V7_B1']=generate(v,torch,m,_b1(b,'V7',None),'V7_B1',True);del v
   for arm,fn in [('CONTROL_ORIGINAL_CONFOUNDED','CONTROL_SCHEDULE.json'),('TREATMENT_DECONFOUNDED','TREATMENT_SCHEDULE.json')]:
-   model,torch,m,adapter=real._train(translated,arm,PKG/fn,out/arm,deadline);raw[arm]=generate(model,torch,m,records(arm),arm);write(out/arm/'ADAPTER_RECEIPT.json',{'adapter_sha256':adapter,'optimizer_steps':96});del model
+   model,torch,m,adapter=real._train(translated,arm,PKG/fn,out/arm,deadline);raw[arm]=generate(model,torch,m,records(arm),arm);raw[arm+'_B1']=generate(model,torch,m,_b1(b,arm,arm),arm+'_B1',True);write(out/arm/'ADAPTER_RECEIPT.json',{'adapter_sha256':adapter,'optimizer_steps':96});del model
   write(out/'RAW_FREEZE_RECEIPT.json',{'status':'COMPLETE_RAW_FROZEN_NO_TARGETS','raw_sha256':raw,'targets_accessed':False,'nonce':b['nonce']})
   sidecar=make_sidecar(binding_path,out);result=score(binding_path,out,sidecar)
   write(out/'TERMINAL_RECEIPT.json',{'status':'COMPLETE','result_sha256':sha(out/'SCORE_RECEIPT.json'),'raw_freeze_before_sidecar':True})
  except Exception as e:
   write(out/'TERMINAL_RECEIPT.json',{'status':'FAILED_OR_PARTIAL_NO_RETRY','error':type(e).__name__+':'+str(e),'raw_predictions_created':(out/'RAW_FREEZE_RECEIPT.json').exists()});raise
+
+def _b1(binding,tag,arm):
+ lookup={x['id']:x for x in records(arm)}
+ return [lookup[x] for x in binding['evaluation']['b1_subset_by_checkpoint'][tag]]
 
 def make_sidecar(binding_path,out):
  if not (Path(out)/'RAW_FREEZE_RECEIPT.json').is_file():fail('RAW_FREEZE_REQUIRED')
@@ -138,9 +151,23 @@ def make_sidecar(binding_path,out):
 def score(binding_path,out,sidecar):
  b=load(binding_path);freeze=load(Path(out)/'RAW_FREEZE_RECEIPT.json')
  if freeze.get('status')!='COMPLETE_RAW_FROZEN_NO_TARGETS' or freeze.get('targets_accessed') is not False:fail('FREEZE')
- targets=load(sidecar)['targets'];scored={}
+ targets=load(sidecar)['targets'];scored={}; expected={}
+ for tag,arm in [('V7',None),('CONTROL_ORIGINAL_CONFOUNDED','CONTROL_ORIGINAL_CONFOUNDED'),('TREATMENT_DECONFOUNDED','TREATMENT_DECONFOUNDED')]:
+  expected[tag]={x['id']:x for x in records(arm)}; expected[tag+'_B1']={x['id']:x for x in _b1(b,tag,arm)}
+ for tag,want in expected.items():
+  p=Path(out)/(tag+'_RAW.jsonl')
+  if not p.is_file() or sha(p)!=freeze.get('raw_sha256',{}).get(tag):fail('RAW_IDENTITY:'+tag)
+  rows=[json.loads(x) for x in p.read_text().splitlines() if x];ids=[r.get('record_id') for r in rows]
+  if len(ids)!=len(set(ids)) or set(ids)!=set(want):fail('RAW_COMPLETENESS:'+tag)
+  for r in rows:
+   if r.get('prompt_sha256')!=hashlib.sha256(canon(want[r['record_id']]['task'])).hexdigest():fail('PROMPT_IDENTITY:'+tag+':'+r['record_id'])
+  scored[tag]={r['record_id']:{**r,'exact':bool(r.get('parser_valid')) and r.get('parsed_grid')==targets.get(r['record_id'])} for r in rows}
+ b1={};valid=True
  for tag in ('V7','CONTROL_ORIGINAL_CONFOUNDED','TREATMENT_DECONFOUNDED'):
-  rows=[json.loads(x) for x in (Path(out)/(tag+'_RAW.jsonl')).read_text().splitlines() if x];scored[tag]={r['record_id']:{**r,'exact':bool(r.get('parser_valid')) and r.get('parsed_grid')==targets.get(r['record_id'])} for r in rows}
+  ids=b['evaluation']['b1_subset_by_checkpoint'][tag];a,z=scored[tag],scored[tag+'_B1'];n=len(ids)
+  m={'records':n,'generated_token_agreement':sum(a[i].get('generated_token_ids')==z[i].get('generated_token_ids') for i in ids)/n,'parsed_grid_agreement':sum(a[i].get('parsed_grid')==z[i].get('parsed_grid') for i in ids)/n,'exact_agreement':sum(a[i]['exact']==z[i]['exact'] for i in ids)/n}
+  m['status']='PASS' if all(m[k]>=b['evaluation']['batch1_gate'][k+'_minimum'] for k in ('generated_token_agreement','parsed_grid_agreement','exact_agreement')) else 'INVALID_NOT_INTERPRETABLE';b1[tag]=m;valid&=m['status']=='PASS'
+ if not valid:fail('B1_VALIDITY')
  c,t,v=scored['CONTROL_ORIGINAL_CONFOUNDED'],scored['TREATMENT_DECONFOUNDED'],scored['V7'];units=sorted({r['canonical'] for r in records() if r['split']=='OOD'})
  diff=[int(all(t[x['id']]['exact'] for x in records('TREATMENT_DECONFOUNDED') if x['split']=='OOD' and x['canonical']==u))-int(all(c[x['id']]['exact'] for x in records('CONTROL_ORIGINAL_CONFOUNDED') if x['split']=='OOD' and x['canonical']==u)) for u in units]
  rng=random.Random(b['training']['seed']);draws=sorted(sum(rng.choice(diff) for _ in diff) for _ in range(10000));delta=sum(diff);lo,hi=draws[249],draws[9749]
@@ -150,11 +177,14 @@ def score(binding_path,out,sidecar):
  retention={}
  for cond in sorted({x['protected']['condition'] for x in records() if x['split']=='RETENTION'}):
   ids=[x['id'] for x in records() if x['split']=='RETENTION' and x['protected']['condition']==cond]
-  retention[cond]={'control_minus_v7':sum(c[i]['exact']-v[i]['exact'] for i in ids),'treatment_minus_v7':sum(t[i]['exact']-v[i]['exact'] for i in ids),'rows':len(ids)}
+  retention[cond]={'treatment_minus_control':sum(t[i]['exact']-c[i]['exact'] for i in ids),'rows':len(ids)}
  comp=[x['id'] for x in records() if x['split']=='COMPOSITION'];composition={'control':sum(c[i]['exact'] for i in comp),'treatment':sum(t[i]['exact'] for i in comp),'treatment_minus_control':sum(t[i]['exact']-c[i]['exact'] for i in comp),'rows':len(comp)}
- gates={'primary':delta>=6 and lo>0,'train_fit':fit>=43,'order_invariance':not treatment_any or inv/len(treatment_any)>=.8,'retention':all(x['control_minus_v7']>=-1 and x['treatment_minus_v7']>=-1 for x in retention.values()),'composition':composition['treatment_minus_control']>=-1}
- decision='PROMOTE' if all(gates.values()) else ('REJECT' if not gates['train_fit'] else 'INCONCLUSIVE')
- r={'status':'COMPLETE_E3_SCORE_AFTER_RAW_FREEZE','canonical_units':48,'treatment_minus_control':{'delta_correct':delta,'bootstrap_95_ci':[lo,hi],'replicates':10000},'train_fit_treatment':fit,'order_invariance':{'both_orders_correct':inv,'any_order_correct':len(treatment_any)},'retention':retention,'composition':composition,'gates':gates,'decision':decision,'targets_opened_after_raw_freeze':True}
+ control_any=[u for u in units if any(c[x['id']]['exact'] for x in records('CONTROL_ORIGINAL_CONFOUNDED') if x['split']=='OOD' and x['canonical']==u)]
+ control_both=sum(all(c[x['id']]['exact'] for x in records('CONTROL_ORIGINAL_CONFOUNDED') if x['split']=='OOD' and x['canonical']==u) for u in control_any)
+ aggregate_retention=sum(x['treatment_minus_control'] for x in retention.values())
+ gates={'primary':delta>=6 and lo>0,'train_fit':fit>=43,'order_invariance':(not treatment_any or inv/len(treatment_any)>=.8) and (not control_any or inv/max(1,len(treatment_any))>=control_both/len(control_any)),'retention':all(x['treatment_minus_control']>=-1 for x in retention.values()) and aggregate_retention>=-2,'composition':composition['treatment_minus_control']>=-1}
+ decision='INCONCLUSIVE' if all(gates.values()) else ('REJECT' if not gates['train_fit'] else 'INCONCLUSIVE')
+ r={'status':'COMPLETE_E3_SCORE_AFTER_RAW_FREEZE','canonical_units':48,'treatment_minus_control':{'delta_correct':delta,'bootstrap_95_ci':[lo,hi],'replicates':10000},'train_fit_treatment':fit,'batch1_validity':{'status':'PASS','by_checkpoint':b1},'order_invariance':{'treatment_both_orders_correct':inv,'treatment_any_order_correct':len(treatment_any),'control_both_orders_correct':control_both,'control_any_order_correct':len(control_any)},'retention':{'by_family':retention,'aggregate_treatment_minus_control':aggregate_retention},'composition':composition,'gates':gates,'decision':decision,'promotion':'FORBIDDEN_BY_PROTOCOL_REQUIRES_INDEPENDENT_CONFIRMATION','targets_opened_after_raw_freeze':True}
  write(Path(out)/'SCORE_RECEIPT.json',r);return r
 
 def main():
