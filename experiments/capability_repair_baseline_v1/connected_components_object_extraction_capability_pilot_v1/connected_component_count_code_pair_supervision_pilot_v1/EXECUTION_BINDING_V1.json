@@ -120,7 +120,7 @@
     "nonce": "cf93ab008849fc937cd3204ff2992ed4",
     "remote_output_root": "/workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/run_001_cf93ab008849fc937cd3204ff2992ed4",
     "retry": false,
-    "runtime_python": "/root/arc2_r5_f0353c17/.venv-r5/bin/python",
+    "runtime_python": "/workspace/arc2/env/5090-blackwell-env-v2/bin/python",
     "terminal_receipt": "TERMINAL_RECEIPT.json",
     "training_cap_seconds": 7200,
     "worker_path": "scripts/run_connected_component_count_code_pair_supervision_worker_v1.py",
@@ -176,10 +176,10 @@
   },
   "runtime": {
     "context_window": 32768,
-    "cpu_integration_command": "PYTHONPATH=.:src /root/arc2_r5_f0353c17/.venv-r5/bin/python scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py --binding <binding> --output-root /workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/cpu_preclaim_cf93ab008849fc937cd3204ff2992ed4 --cpu-integration",
-    "execute_command": "PYTHONPATH=.:src /root/arc2_r5_f0353c17/.venv-r5/bin/python scripts/run_connected_component_count_code_pair_supervision_worker_v1.py --binding <binding> --output-root /workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/run_001_cf93ab008849fc937cd3204ff2992ed4 --authorization-receipt <fresh-binding-specific-claimed-receipt> --execute",
-    "preclaim_command": "PYTHONPATH=.:src /root/arc2_r5_f0353c17/.venv-r5/bin/python scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py --binding <binding> --output-root /workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/run_001_cf93ab008849fc937cd3204ff2992ed4 --preclaim-only",
-    "python_executable": "/root/arc2_r5_f0353c17/.venv-r5/bin/python",
+    "cpu_integration_command": "PYTHONPATH=.:src /workspace/arc2/env/5090-blackwell-env-v2/bin/python scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py --binding <binding> --output-root /workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/cpu_preclaim_cf93ab008849fc937cd3204ff2992ed4 --cpu-integration",
+    "execute_command": "PYTHONPATH=.:src /workspace/arc2/env/5090-blackwell-env-v2/bin/python scripts/run_connected_component_count_code_pair_supervision_worker_v1.py --binding <binding> --output-root /workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/run_001_cf93ab008849fc937cd3204ff2992ed4 --authorization-receipt <fresh-binding-specific-claimed-receipt> --execute",
+    "preclaim_command": "PYTHONPATH=.:src /workspace/arc2/env/5090-blackwell-env-v2/bin/python scripts/run_connected_component_count_decision_token_supervision_pilot_v1.py --binding <binding> --output-root /workspace/arc2/connected_component_count_code_pair_supervision_pilot_v1/run_001_cf93ab008849fc937cd3204ff2992ed4 --preclaim-only",
+    "python_executable": "/workspace/arc2/env/5090-blackwell-env-v2/bin/python",
     "pythonpath_prepend": [
       "/root/arc2_e1_v7_bnb_overlay"
     ]
