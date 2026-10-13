@@ -1,0 +1,41 @@
+﻿{
+    "schema_version":  1,
+    "decision_id":  "E4C_QUERY_LOCAL_CODE_PAIR_INTERVENTION_REVIEW",
+    "stage":  "E4C_CPU_ONLY_MECHANISM_STUDY",
+    "reviewed_cpu_result":  {
+                                "source_commit":  "f1fef2a965205b4c60d2d75a696c49159b627d98",
+                                "audit_path":  "experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\deconfounded_count_curriculum_causal_pilot_v1\\e4c_cpu_only_mechanism_study_v1\\FROZEN_PREDICTION_MECHANISM_AUDIT.json",
+                                "audit_sha256":  "c8382d6a31debf3b2a23ddfc0c827c39474fecb1cbe5cf0fd49b51ca0649e99a",
+                                "intervention_path":  "experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\deconfounded_count_curriculum_causal_pilot_v1\\e4c_cpu_only_mechanism_study_v1\\INTERVENTION_SPECIFICATION.json",
+                                "intervention_sha256":  "ed03abd198cd0653e737d39d853f740dbac24d225a2661b5dfa282ee3fe3fd59",
+                                "cpu_tests":  "PASS_8",
+                                "model_loaded":  false,
+                                "gpu_used":  false,
+                                "target_sidecar_opened":  false
+                            },
+    "established_evidence":  {
+                                 "e4b":  "Code-Pair improved train fit to 41/48 from 35/48 Equal-Slot but robust independent OOD changed only +2/48 (95% CI [-3,7]); Marker Binding retention was -2/16 and composition was unchanged.",
+                                 "raw":  "Code-Pair changed 10/48 train raw grids, 15/96 OOD order records, and two records in each protected retention family. Exact raw two-order grid agreement was 31/48 for Code-Pair and Equal-Slot, versus 34/48 V7."
+                             },
+    "mechanism_status":  {
+                             "conditional_binding":  "FALSIFIABLE_NOT_PROVEN: scored harm is localized to Marker Binding despite equal raw-change counts across protected families.",
+                             "object_centric_representation":  "NOT_ESTABLISHED: train-fit gain did not establish causal structural-OOD transfer.",
+                             "atomic_to_compositional_transfer":  "NOT_ESTABLISHED: composition did not improve and the primary structural-OOD gate failed."
+                         },
+    "proposed_controlled_intervention":  {
+                                             "name":  "QUERY_LOCAL_CODE_PAIR_MASS_PRESERVING",
+                                             "principal_difference":  "Only the final-query corrected Count code pair at zero-based cells (1,1) and (1,2) receives multiplier 2.0 in the 48 Count-primary slots; the three demonstration code pairs are not elevated.",
+                                             "invariants":  [
+                                                                "all other scientific configuration fixed",
+                                                                "per-slot scalar mass exactly preserved",
+                                                                "non-Count and replay losses byte-identical",
+                                                                "no change to target-blind sidecar boundary or predeclared gates"
+                                                            ],
+                                             "falsifiable_predictions":  [
+                                                                             "If demonstration-code emphasis caused conditional-binding interference, Marker Binding retention will no longer fall below Equal-Slot.",
+                                                                             "If the gain remains an atomic code association, train fit may improve without passing independent structural-OOD and composition gates.",
+                                                                             "If the intervention affects composition despite no composition loss change, the proposed localization is falsified."
+                                                                         ]
+                                         },
+    "requested_decision":  "Authorize or reject exactly this future bounded intervention; no launch, model load, GPU work, or target reuse occurred in this CPU event."
+}
