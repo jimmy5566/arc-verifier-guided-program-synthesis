@@ -1,12 +1,12 @@
 {
-  "binding_sha256": "5dc8ffd36a1f2d0629c005b9c055feb50dc657f32f9338d9c03c06f8239820c8",
+  "binding_sha256": "cd0a2372d5b46af26c4d00593256a5323e588f884b06cb0a3aa17bf94ef296a7",
   "gpu_used": false,
   "model_loaded": false,
   "new_native_greedy_rows": 48,
   "protocol_sha256": "7a67190338e889358d8933264d749a681a5d313e80290f98cfd89320d8310feb",
   "reused_native_greedy_rows": 168,
   "sealed_target_content_deserialized": false,
-  "source_commit": "a795c2144cca47667fe2639e0f170fa960106a9c",
+  "source_commit": "1336fc191604b23e53a61c6ac235bf3603e599b6",
   "status": "PASS_CPU_ONLY_ALL_B1_SUCCESSOR_FREEZE",
   "teacher_forced_forwards": 216,
   "teacher_forced_physical_batch_size": 1
