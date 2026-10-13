@@ -57,7 +57,7 @@ def make_binding(path,output_root):
  'worker_path':'scripts/run_e4c_query_local_code_pair_causal_pilot_v1.py','worker_sha256':sha(Path(__file__)),'scorer_path':'scripts/run_e4c_query_local_code_pair_causal_pilot_v1.py','scorer_sha256':sha(Path(__file__)),
  'output_root':str(output_root),'runtime_python':RUNTIME,'hard_cap_seconds':7200,'retry':False,
  'nonce':hashlib.sha256((commit+str(output_root)+str(time.time_ns())).encode()).hexdigest()[:32],
- 'command':['bash','scripts/launch_e4c_query_local_code_pair_causal_pilot_v1.sh','--binding',str(path)],
+ 'command':['bash','scripts/launch_e4c_query_local_code_pair_causal_pilot_v1.sh','--binding',path.relative_to(ROOT).as_posix()],
  'runtime':{'context_window':16384,'max_new_tokens':192,'physical_batch_size':1,'cuda_required':True},
  'v7':{'manifest_path':V7.relative_to(ROOT).as_posix(),'manifest_sha256':sha(V7),'adapter_path':manifest['adapter_path'],'adapter_files':manifest['adapter_files'],'base_path':manifest['base_path'],'base_files':manifest['base_files']},
  'training':{'schedule_path':(E3/'TREATMENT_SCHEDULE.json').relative_to(ROOT).as_posix(),'schedule_sha256':sha(E3/'TREATMENT_SCHEDULE.json'),'updates':96,'slots_per_update':4,'torch_seed':20261013,'learning_rate':5e-5,'optimizer':'PagedAdamW8bit','precision':'BF16','slot_coefficient':0.25,'loss':'QUERY_LOCAL_CORRECTED_CODE_PAIR_MASS_PRESERVING'},
