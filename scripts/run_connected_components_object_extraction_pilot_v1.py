@@ -96,7 +96,7 @@ def _load_v7(binding, trainable=False):
 def _train(binding, arm, schedule_path, root, deadline):
  from training_data.pipeline import task_to_sample
  from scripts.e04_e_equal_slot_loss import backward_equal_slot_term, backward_weighted_slot_term
- from scripts.decision_token_supervision import count_terminal_label_index, matched_weights
+ from scripts.decision_token_supervision import count_code_pair_label_indices, matched_weights
  import bitsandbytes as bnb
  model,torch,manifest=_load_v7(binding,trainable=True);torch.manual_seed(binding['training']['torch_seed'])
  opt=bnb.optim.PagedAdamW8bit([p for p in model.parameters() if p.requires_grad],lr=binding['training']['learning_rate']); schedule=json.loads(schedule_path.read_text())['episodes'];steps=0
@@ -106,11 +106,11 @@ def _train(binding, arm, schedule_path, root, deadline):
   for item in schedule[offset:offset+4]:
    sample=task_to_sample(_serializer_task(item));ids=torch.tensor([sample['input_ids']],device='cuda:0');labels=torch.tensor([sample['labels']],device='cuda:0');out=model(input_ids=ids,attention_mask=torch.ones_like(ids),use_cache=False)
    allocation=binding.get('training',{}).get('loss_allocation',{'kind':'UNIFORM_SEQUENCE_LOSS'})
-   if allocation.get('kind')=='COUNT_TERMINAL_TOKEN_REWEIGHTED' and item.get('role')=='PRIMARY_CONNECTED_COMPONENT_COUNT':
-    decision_index,_=count_terminal_label_index(item['task']);_,treatment=matched_weights(sample['labels'],decision_index,float(allocation['decision_token_multiplier']));weights=[0.0]*len(sample['labels'])
+   if allocation.get('kind')=='COUNT_CODE_PAIR_REWEIGHTED' and item.get('role')=='PRIMARY_CONNECTED_COMPONENT_COUNT':
+    decision_indices,_=count_code_pair_label_indices(item['task']);_,treatment=matched_weights(sample['labels'],decision_indices,float(allocation['decision_token_multiplier']));weights=[0.0]*len(sample['labels'])
     for index,weight in treatment.items(): weights[index]=weight
     term,_,_=backward_weighted_slot_term(out.logits,labels,weights)
-   elif allocation.get('kind') in {'UNIFORM_SEQUENCE_LOSS','COUNT_TERMINAL_TOKEN_REWEIGHTED'}:
+   elif allocation.get('kind') in {'UNIFORM_SEQUENCE_LOSS','COUNT_CODE_PAIR_REWEIGHTED'}:
     term,_=backward_equal_slot_term(out.logits,labels)
    else: fail('LOSS_ALLOCATION_KIND')
    loss+=float(term);del out,term
