@@ -1,0 +1,41 @@
+{
+  "authorization": {
+    "fresh_binding_specific_one_shot_gpu_required_after_actual_pod_cpu_preflight": true,
+    "this_protocol_does_not_authorize_launch": true
+  },
+  "protocol_id": "CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_ALL_B1_RUNTIME_AMENDMENT",
+  "runtime_amendment": {
+    "context_window": 32768,
+    "decoder": "NATIVE_GREEDY",
+    "do_sample": false,
+    "generation_seed_base": 2000031,
+    "generation_seed_manifest_sha256": "1ee924231f2264bdef3b479c1d9c907fee199c0edf941e34ad2ebfe52077c915",
+    "max_new_tokens": 192,
+    "per_record_seed_rule": "generation_seed=2000031+ordinal_within_checkpoint; invariant to physical batch grouping and CUDA-OOM fallback"
+  },
+  "schema_version": 1,
+  "status": "CPU_ONLY_FROZEN_RUNTIME_AMENDMENT_PENDING_ACTUAL_POD_PREFLIGHT",
+  "successor_of": {
+    "binding_path": "experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\all_b1_successor\\ALL_B1_SUCCESSOR_EXECUTION_BINDING.json",
+    "binding_sha256": "7807c570ac6d964a91d81d987be582872f8fdcde6b6e2ad5a893b9cf0ad96742",
+    "protocol_path": "experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\all_b1_successor\\ALL_B1_SUCCESSOR_PROTOCOL.json",
+    "protocol_sha256": "7a67190338e889358d8933264d749a681a5d313e80290f98cfd89320d8310feb"
+  },
+  "unchanged_conditions": {
+    "backward_calls": 0,
+    "checkpoint_hashes": {
+      "CONTROL_NARROW_STRUCTURE": "4a5e621f22dc5eb3a3e3e7d2eab009559e276a2c20fd05675f2265ad23ce13e2",
+      "TREATMENT_STRUCTURE_DIVERSE": "5dae97898461b6b618328154bfb4271199a57b6cec68e8e7bb90209002618978",
+      "V7": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+    },
+    "detached_jobs": 1,
+    "new_native_greedy_rows": 48,
+    "optimizer_steps": 0,
+    "retry": false,
+    "reused_native_greedy_rows": 168,
+    "sidecar_sha256": "ad5c97e0f54a30ba636714c1d5dbd671c25d826616896f5a9cbfd56af48d7950",
+    "teacher_forced_forwards": 216,
+    "teacher_forced_physical_batch_size": 1,
+    "training": false
+  }
+}

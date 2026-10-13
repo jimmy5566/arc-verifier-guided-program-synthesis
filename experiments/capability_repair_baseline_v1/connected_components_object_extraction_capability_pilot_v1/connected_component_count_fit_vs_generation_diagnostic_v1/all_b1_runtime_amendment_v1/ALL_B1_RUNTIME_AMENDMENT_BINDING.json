@@ -1,0 +1,505 @@
+{
+  "authorization": {
+    "not_authorized_by_this_binding": true,
+    "owner_one_shot_required": true
+  },
+  "checkpoints": {
+    "CONTROL_NARROW_STRUCTURE": "4a5e621f22dc5eb3a3e3e7d2eab009559e276a2c20fd05675f2265ad23ce13e2",
+    "TREATMENT_STRUCTURE_DIVERSE": "5dae97898461b6b618328154bfb4271199a57b6cec68e8e7bb90209002618978",
+    "V7": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+  },
+  "execution": {
+    "backward_calls": 0,
+    "checkpoint_runtime_materialization_required": true,
+    "cohort_prompt_tasks_path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\COHORT_PROMPT_TASKS_V1.json",
+    "cohort_prompt_tasks_sha256": "1c04736b3866aa754513142d751339abdd592ee2da11fb500948fe608273e9c6",
+    "context_window": 32768,
+    "do_sample": false,
+    "fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "fallback_only": "CUDA_OOM",
+    "free_running_fallback_ladder": [
+      32,
+      16,
+      8,
+      4,
+      1
+    ],
+    "free_running_requested_batch_size": 32,
+    "fresh_nonce_required": true,
+    "fresh_output_root_required": true,
+    "generation_seed_base": 2000031,
+    "generation_seed_manifest_path": "experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\all_b1_runtime_amendment_v1\\ALL_B1_GENERATION_SEED_MANIFEST.json",
+    "generation_seed_manifest_sha256": "1ee924231f2264bdef3b479c1d9c907fee199c0edf941e34ad2ebfe52077c915",
+    "generation_seed_rule": "generation_seed=2000031+ordinal_within_checkpoint; invariant to physical batch grouping and CUDA-OOM fallback",
+    "hard_cap_seconds": 7200,
+    "inventory_path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\RUN_002_REUSE_AND_MISSING_ROW_INVENTORY.json",
+    "max_new_tokens": 192,
+    "maximum_detached_jobs": 1,
+    "missing_prompt_tasks_path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\MISSING_TRAIN_FIT_PROMPT_TASKS_V1.json",
+    "missing_prompt_tasks_sha256": "2cceaffac3798c432022d9e484901f41599bb5110b77924fb6c598929aadb9fc",
+    "new_free_running_rows": 48,
+    "ood_regeneration": false,
+    "optimizer_steps": 0,
+    "planning_estimate_seconds": 1800,
+    "prompt_token_ids_materializer": "scripts/materialize_connected_component_prompt_token_ids_v1.py",
+    "prompt_token_ids_runtime_materialization_required": true,
+    "prompt_token_ids_source_document_sha256": "1c04736b3866aa754513142d751339abdd592ee2da11fb500948fe608273e9c6",
+    "requested_batch_size": 1,
+    "retry": false,
+    "reused_rows": 168,
+    "run_002_raw_manifest_path": "C:\\w\\arc2-connected-pilot\\experiments\\capability_repair_baseline_v1\\connected_components_object_extraction_capability_pilot_v1\\connected_component_count_fit_vs_generation_diagnostic_v1\\RUN_002_EXACT_RAW_ARTIFACT_MANIFEST_V1.json",
+    "run_002_raw_manifest_sha256": "ece09a84c56eeb040c71db9579d2d0d3ad9b3db2beabe56d8251db2773c61a4c",
+    "run_002_raw_manifest_verifier": "scripts/connected_component_run002_raw_manifest_v1.py",
+    "run_002_raw_root_runtime_materialization_required": true,
+    "sidecar_path": "C:\\Users\\asus\\Desktop\\py\\kaggle\\ARC2\\.arc2-local\\orchestration\\sealed_sidecars\\CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_CORRECT_TOKEN_SIDECAR.json",
+    "teacher_forced_batch_comparison": "NOT_APPLICABLE_ALL_PRIMARY_RECORDS_PHYSICAL_BATCH1",
+    "teacher_forced_batch_mixing": "FORBIDDEN",
+    "teacher_forced_forwards": 216,
+    "teacher_forced_physical_batch_size": 1,
+    "teacher_forced_tolerance": {
+      "Top1_and_Top2_aggregate_count_delta_max": 0,
+      "correct_token_rank_abs_delta_max": 1,
+      "failure_disposition": "INVALID_NOT_INTERPRETABLE",
+      "per_row_mean_margin_abs_delta_max": 0.02,
+      "sequence_normalized_NLL_abs_delta_max": 0.005,
+      "token_weighted_NLL_abs_delta_max": 0.005
+    },
+    "tokenizer_identity": {
+      "repository": "sorokin/qwen3_4b_grids15_sft139",
+      "revision": "Transformers/bfloat16/1",
+      "runtime_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+      "tokenizer_files": {
+        "special_tokens_map.json": "f4f79e08d97f4d1c87f8d89264f525c8789da3b73b3bb55d1e12f692f41a7b1b",
+        "tokenizer.json": "af6b9e855f9db3192bd9152607708ebd7700b40f9fc5f792a26af70150a96cd5",
+        "tokenizer_config.json": "e1912aeba4050616cbfe01b34df3f3df2818207eda0056f6eb87c2336936ea90",
+        "vocab.json": "8141a61e47eceec466524bc178bc9c6d5076b7d1b18b456fbd3fdf66cae57f82"
+      }
+    }
+  },
+  "execution_source_commit": "0188ea7d9254419323bbcfe4c0439e1c35435b52",
+  "generation_seed_manifest": {
+    "ordering": "per checkpoint: (len(canonical JSON prompt_task UTF-8), cohort_record_id)",
+    "records": [
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "CONTROL_NARROW_STRUCTURE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:L:000",
+        "generation_seed": 2000031,
+        "ordinal_within_checkpoint": 0,
+        "prompt_task_sha256": "81f07df476dae0f00d51aa798134cb01d8ddb7f5453088e7f125a040054b634a"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "CONTROL_NARROW_STRUCTURE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:L:006",
+        "generation_seed": 2000032,
+        "ordinal_within_checkpoint": 1,
+        "prompt_task_sha256": "e77e7122004c94637be13dc4e35a5b6a89e14554c22405d0f6d812117e21fe80"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "CONTROL_NARROW_STRUCTURE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:L:012",
+        "generation_seed": 2000033,
+        "ordinal_within_checkpoint": 2,
+        "prompt_task_sha256": "45450ba1f26d4c676c6a051b8fa6aeccd21b3614f135b460ccff5197b8198f0d"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "CONTROL_NARROW_STRUCTURE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:L:018",
+        "generation_seed": 2000034,
+        "ordinal_within_checkpoint": 3,
+        "prompt_task_sha256": "d39e298b580671967f06cba43b4df828bd20b96150f1c9e44cb769326d1f85a1"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "CONTROL_NARROW_STRUCTURE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:T:004",
+        "generation_seed": 2000035,
+        "ordinal_within_checkpoint": 4,
+        "prompt_task_sha256": "aa45b1a822077a98b96a1403843eba4abda6454169d375c3fda26e9c1d5a5721"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "CONTROL_NARROW_STRUCTURE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:T:010",
+        "generation_seed": 2000036,
+        "ordinal_within_checkpoint": 5,
+        "prompt_task_sha256": "3f821b6787cef8bdaa8a66430df144a1d7bc870b373a610d2ce183adb781aeeb"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "CONTROL_NARROW_STRUCTURE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:T:016",
+        "generation_seed": 2000037,
+        "ordinal_within_checkpoint": 6,
+        "prompt_task_sha256": "fd231340ede5f59ea9d0bc4c217d42047540323a14c61d27e91731cac28d1c18"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "CONTROL_NARROW_STRUCTURE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:T:022",
+        "generation_seed": 2000038,
+        "ordinal_within_checkpoint": 7,
+        "prompt_task_sha256": "1a2cb3eeba03b6be7eeb032d7ea5f74de4f75f0b781a7fd06eff2fdf52911759"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "CONTROL_NARROW_STRUCTURE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:Z:002",
+        "generation_seed": 2000039,
+        "ordinal_within_checkpoint": 8,
+        "prompt_task_sha256": "6ad887f3138313181f761fea3a9ade7279ca8544e0aebf0fbc9aee95d4d0e4a0"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "CONTROL_NARROW_STRUCTURE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:Z:008",
+        "generation_seed": 2000040,
+        "ordinal_within_checkpoint": 9,
+        "prompt_task_sha256": "41bd3ca5756e10fe4c0ba823906304e0f7f20d3c3d09d025884a8572387144c6"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "CONTROL_NARROW_STRUCTURE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:Z:014",
+        "generation_seed": 2000041,
+        "ordinal_within_checkpoint": 10,
+        "prompt_task_sha256": "12a87993b252af46d54a3f771f58f48de4f415a89c0767ec62bfef70f8b5b4b8"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "CONTROL_NARROW_STRUCTURE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:Z:020",
+        "generation_seed": 2000042,
+        "ordinal_within_checkpoint": 11,
+        "prompt_task_sha256": "46154876d7a84db43b0c2917b6a84e54104b2bd4afd14863a043733f425a0296"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 970,
+        "checkpoint": "TREATMENT_STRUCTURE_DIVERSE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:002",
+        "generation_seed": 2000031,
+        "ordinal_within_checkpoint": 0,
+        "prompt_task_sha256": "4396852820a61d9c3774c272efe65493cf16299bdff8ce184659ff55c4992003"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 970,
+        "checkpoint": "TREATMENT_STRUCTURE_DIVERSE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:006",
+        "generation_seed": 2000032,
+        "ordinal_within_checkpoint": 1,
+        "prompt_task_sha256": "63ada16aae9479e45eac7668e90a1656737e217ac5f4240eb10ef3013af604ee"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 970,
+        "checkpoint": "TREATMENT_STRUCTURE_DIVERSE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:010",
+        "generation_seed": 2000033,
+        "ordinal_within_checkpoint": 2,
+        "prompt_task_sha256": "80915fe6e6c36c18e36ab4cbcd48fbe098e87995a00e3bf68f68526b30b9769d"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 970,
+        "checkpoint": "TREATMENT_STRUCTURE_DIVERSE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:014",
+        "generation_seed": 2000034,
+        "ordinal_within_checkpoint": 3,
+        "prompt_task_sha256": "584a74e3d64c3889df275828899f0b1d49ed262900da6f9462a73ddaef320d00"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 970,
+        "checkpoint": "TREATMENT_STRUCTURE_DIVERSE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:018",
+        "generation_seed": 2000035,
+        "ordinal_within_checkpoint": 4,
+        "prompt_task_sha256": "9b35caba2f92f47447614128783539d11777f38ceac401aee365ebe855e72f53"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 970,
+        "checkpoint": "TREATMENT_STRUCTURE_DIVERSE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:022",
+        "generation_seed": 2000036,
+        "ordinal_within_checkpoint": 5,
+        "prompt_task_sha256": "e99898872435d64229871ea57fe2fbcc7ca0eef4dc65e989f057e55ddf111440"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 974,
+        "checkpoint": "TREATMENT_STRUCTURE_DIVERSE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:000",
+        "generation_seed": 2000037,
+        "ordinal_within_checkpoint": 6,
+        "prompt_task_sha256": "8de1649fb517e07394ae1ffdf91abc73f2b958bbe6c66c0cbdbb66e260f86c9c"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 974,
+        "checkpoint": "TREATMENT_STRUCTURE_DIVERSE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:004",
+        "generation_seed": 2000038,
+        "ordinal_within_checkpoint": 7,
+        "prompt_task_sha256": "03caa094d8d1bcd614ab9c775573225153f8351fe7117dc3534ad362974ce457"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 974,
+        "checkpoint": "TREATMENT_STRUCTURE_DIVERSE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:008",
+        "generation_seed": 2000039,
+        "ordinal_within_checkpoint": 8,
+        "prompt_task_sha256": "9493647f9a5899101acb686e20889b3180ddc524e32b7f1fadfb4f0f829df045"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 974,
+        "checkpoint": "TREATMENT_STRUCTURE_DIVERSE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:012",
+        "generation_seed": 2000040,
+        "ordinal_within_checkpoint": 9,
+        "prompt_task_sha256": "6823e5549eee8a3e22f914ed0874a93e70ab4c3d3d34eaf225aabc763830c358"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 974,
+        "checkpoint": "TREATMENT_STRUCTURE_DIVERSE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:016",
+        "generation_seed": 2000041,
+        "ordinal_within_checkpoint": 10,
+        "prompt_task_sha256": "cd177c0a9b1b88eeafaf2b5f5e1fa93aa49ae5e142c6a8e05912cf5c1465ea39"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 974,
+        "checkpoint": "TREATMENT_STRUCTURE_DIVERSE",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:020",
+        "generation_seed": 2000042,
+        "ordinal_within_checkpoint": 11,
+        "prompt_task_sha256": "8795e2079b1227404f493a7a008a7287e344f68ce83bf6728d873df16e13391e"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 970,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:002",
+        "generation_seed": 2000031,
+        "ordinal_within_checkpoint": 0,
+        "prompt_task_sha256": "4396852820a61d9c3774c272efe65493cf16299bdff8ce184659ff55c4992003"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 970,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:006",
+        "generation_seed": 2000032,
+        "ordinal_within_checkpoint": 1,
+        "prompt_task_sha256": "63ada16aae9479e45eac7668e90a1656737e217ac5f4240eb10ef3013af604ee"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 970,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:010",
+        "generation_seed": 2000033,
+        "ordinal_within_checkpoint": 2,
+        "prompt_task_sha256": "80915fe6e6c36c18e36ab4cbcd48fbe098e87995a00e3bf68f68526b30b9769d"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 970,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:014",
+        "generation_seed": 2000034,
+        "ordinal_within_checkpoint": 3,
+        "prompt_task_sha256": "584a74e3d64c3889df275828899f0b1d49ed262900da6f9462a73ddaef320d00"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 970,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:018",
+        "generation_seed": 2000035,
+        "ordinal_within_checkpoint": 4,
+        "prompt_task_sha256": "9b35caba2f92f47447614128783539d11777f38ceac401aee365ebe855e72f53"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 970,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:L:022",
+        "generation_seed": 2000036,
+        "ordinal_within_checkpoint": 5,
+        "prompt_task_sha256": "e99898872435d64229871ea57fe2fbcc7ca0eef4dc65e989f057e55ddf111440"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:L:000",
+        "generation_seed": 2000037,
+        "ordinal_within_checkpoint": 6,
+        "prompt_task_sha256": "81f07df476dae0f00d51aa798134cb01d8ddb7f5453088e7f125a040054b634a"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:L:006",
+        "generation_seed": 2000038,
+        "ordinal_within_checkpoint": 7,
+        "prompt_task_sha256": "e77e7122004c94637be13dc4e35a5b6a89e14554c22405d0f6d812117e21fe80"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:L:012",
+        "generation_seed": 2000039,
+        "ordinal_within_checkpoint": 8,
+        "prompt_task_sha256": "45450ba1f26d4c676c6a051b8fa6aeccd21b3614f135b460ccff5197b8198f0d"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:L:018",
+        "generation_seed": 2000040,
+        "ordinal_within_checkpoint": 9,
+        "prompt_task_sha256": "d39e298b580671967f06cba43b4df828bd20b96150f1c9e44cb769326d1f85a1"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:T:004",
+        "generation_seed": 2000041,
+        "ordinal_within_checkpoint": 10,
+        "prompt_task_sha256": "aa45b1a822077a98b96a1403843eba4abda6454169d375c3fda26e9c1d5a5721"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:T:010",
+        "generation_seed": 2000042,
+        "ordinal_within_checkpoint": 11,
+        "prompt_task_sha256": "3f821b6787cef8bdaa8a66430df144a1d7bc870b373a610d2ce183adb781aeeb"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:T:016",
+        "generation_seed": 2000043,
+        "ordinal_within_checkpoint": 12,
+        "prompt_task_sha256": "fd231340ede5f59ea9d0bc4c217d42047540323a14c61d27e91731cac28d1c18"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:T:022",
+        "generation_seed": 2000044,
+        "ordinal_within_checkpoint": 13,
+        "prompt_task_sha256": "1a2cb3eeba03b6be7eeb032d7ea5f74de4f75f0b781a7fd06eff2fdf52911759"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:Z:002",
+        "generation_seed": 2000045,
+        "ordinal_within_checkpoint": 14,
+        "prompt_task_sha256": "6ad887f3138313181f761fea3a9ade7279ca8544e0aebf0fbc9aee95d4d0e4a0"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:Z:008",
+        "generation_seed": 2000046,
+        "ordinal_within_checkpoint": 15,
+        "prompt_task_sha256": "41bd3ca5756e10fe4c0ba823906304e0f7f20d3c3d09d025884a8572387144c6"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:Z:014",
+        "generation_seed": 2000047,
+        "ordinal_within_checkpoint": 16,
+        "prompt_task_sha256": "12a87993b252af46d54a3f771f58f48de4f415a89c0767ec62bfef70f8b5b4b8"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 973,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:TREATMENT_STRUCTURE_DIVERSE:CONNECTED_COMPONENT_COUNT:Z:020",
+        "generation_seed": 2000048,
+        "ordinal_within_checkpoint": 17,
+        "prompt_task_sha256": "46154876d7a84db43b0c2917b6a84e54104b2bd4afd14863a043733f425a0296"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 974,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:000",
+        "generation_seed": 2000049,
+        "ordinal_within_checkpoint": 18,
+        "prompt_task_sha256": "8de1649fb517e07394ae1ffdf91abc73f2b958bbe6c66c0cbdbb66e260f86c9c"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 974,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:004",
+        "generation_seed": 2000050,
+        "ordinal_within_checkpoint": 19,
+        "prompt_task_sha256": "03caa094d8d1bcd614ab9c775573225153f8351fe7117dc3534ad362974ce457"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 974,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:008",
+        "generation_seed": 2000051,
+        "ordinal_within_checkpoint": 20,
+        "prompt_task_sha256": "9493647f9a5899101acb686e20889b3180ddc524e32b7f1fadfb4f0f829df045"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 974,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:012",
+        "generation_seed": 2000052,
+        "ordinal_within_checkpoint": 21,
+        "prompt_task_sha256": "6823e5549eee8a3e22f914ed0874a93e70ab4c3d3d34eaf225aabc763830c358"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 974,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:016",
+        "generation_seed": 2000053,
+        "ordinal_within_checkpoint": 22,
+        "prompt_task_sha256": "cd177c0a9b1b88eeafaf2b5f5e1fa93aa49ae5e142c6a8e05912cf5c1465ea39"
+      },
+      {
+        "canonical_prompt_utf8_bytes": 974,
+        "checkpoint": "V7",
+        "cohort_record_id": "TRAIN_FIT:TRAIN:CONTROL_NARROW_STRUCTURE:CONNECTED_COMPONENT_COUNT:POINT:020",
+        "generation_seed": 2000054,
+        "ordinal_within_checkpoint": 23,
+        "prompt_task_sha256": "8795e2079b1227404f493a7a008a7287e344f68ce83bf6728d873df16e13391e"
+      }
+    ],
+    "schema_version": 1,
+    "seed_base": 2000031,
+    "seed_rule": "generation_seed=2000031+ordinal_within_checkpoint; invariant to physical batch grouping and CUDA-OOM fallback",
+    "status": "FROZEN_ALL_B1_PER_CHECKPOINT_GENERATION_SEEDS"
+  },
+  "prior_all_b1_binding_sha256": "7807c570ac6d964a91d81d987be582872f8fdcde6b6e2ad5a893b9cf0ad96742",
+  "protocol_id": "CONNECTED_COMPONENT_COUNT_FIT_VS_GENERATION_DIAGNOSTIC_V1_ALL_B1_RUNTIME_AMENDMENT",
+  "protocol_sha256": "3fd415c1194cf95624d221e150762c985dda960f19b615d9fad2e1245363d200",
+  "runnable": {
+    "input_builder": "scripts/prepare_connected_component_fit_generation_inputs_v1.py",
+    "launcher": "scripts/launch_connected_component_fit_generation_diagnostic_v1.py",
+    "prompt_token_ids_materializer": "scripts/materialize_connected_component_prompt_token_ids_v1.py",
+    "run_002_raw_manifest_verifier": "scripts/connected_component_run002_raw_manifest_v1.py",
+    "scorer": "scripts/score_connected_component_fit_generation_diagnostic_v1.py",
+    "worker": "scripts/run_connected_component_fit_generation_diagnostic_v1.py"
+  },
+  "schema_version": 1,
+  "sidecar_sha256": "ad5c97e0f54a30ba636714c1d5dbd671c25d826616896f5a9cbfd56af48d7950",
+  "source_hashes": {
+    "scripts/connected_component_fit_generation_runtime_contract.py": "a38cb64385850c68f8f3013606dd726c514aae40606697c7e05fde45b51027d4",
+    "scripts/connected_component_run002_raw_manifest_v1.py": "a124d59a1042fba5b69d571303ab3110f1c5f6995e318aff8d2b75561d968421",
+    "scripts/freeze_connected_component_all_b1_seed_amendment_v1.py": "6d41f315dfe8dee30122a4e7f9dc290c403ffacd1014aa0825e259f871a5543c",
+    "scripts/freeze_connected_component_fit_generation_all_b1_successor_v1.py": "cf6126e0094f46eb6c93c4841828cdebfbacbb3983ca7850898e28401d903e75",
+    "scripts/launch_connected_component_fit_generation_diagnostic_v1.py": "604fb3ab93e6cf26873effc9d5ac902279d734c0bb61864d8d6e946286637d23",
+    "scripts/materialize_connected_component_prompt_token_ids_v1.py": "06000152fbc5adf2459b49b411c033166cac5c7cd7599ea7536e5e4242538085",
+    "scripts/prepare_connected_component_fit_generation_inputs_v1.py": "8453f0292a012ff6617d9c4aeb7159ed0aa0fe6affd49ef5148c94a8e3aeae88",
+    "scripts/run_connected_component_fit_generation_diagnostic_v1.py": "9fd8441f7103d5db71e9736ddae812ba3170906f63d02ac426b29d20ece85c60",
+    "scripts/score_connected_component_fit_generation_diagnostic_v1.py": "426113c698e70d11fba38418292feda2cb796760825f39552cac9c33cb2243ca",
+    "scripts/test_connected_component_fit_generation_production_v1.py": "f1516c9cca450ca4053963047799cd012fa85134a68d98fa755c66357cbf7fef"
+  },
+  "status": "CPU_FROZEN_RUNTIME_AMENDMENT_PENDING_RUNTIME_PATH_MATERIALIZATION_AND_ACTUAL_POD_PREFLIGHT"
+}
