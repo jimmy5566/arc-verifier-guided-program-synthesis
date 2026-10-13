@@ -292,9 +292,15 @@ def import_external_events(state: dict[str, Any], state_path: Path) -> bool:
 
 def synthesize_state_event(state: dict[str, Any]) -> bool:
     if state["disposition"] == "CONTINUE_CONTROLLER":
+        if any(item["recipient"] == "controller" and item["status"] != "COMPLETE"
+               for item in state["pending_events"]):
+            return False
         payload = {"stage": state["stage"], "next_action": state["next_action"]}
         return enqueue(state, event("CONTROLLER_TASK", "controller", "director", payload))
     if state["disposition"] == "REVIEW_REQUIRED" and state.get("review"):
+        if any(item["recipient"] == "director" and item["status"] != "COMPLETE"
+               for item in state["pending_events"]):
+            return False
         review = state["review"]
         payload = {"brief_path": review.get("brief_path"), "brief_sha256": review.get("brief_sha256"),
                    "review_reason": review.get("reason")}
