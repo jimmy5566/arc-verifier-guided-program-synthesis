@@ -99,7 +99,8 @@ def score(binding_path,output,sidecar, *, test_stub=False):
     if freeze.get('status')!='COMPLETE_RAW_FROZEN_NO_TARGETS' or set(freeze.get('raw_sha256',{}))!=set(tags):fail('RAW_FREEZE')
     if not test_stub and sha(sidecar)!=b['evaluation']['sealed_sidecar_sha256']:fail('SIDECAR_IDENTITY')
     s=load(sidecar)
-    expected={x['record_id']:x['target'] for x in s['records']}
+    if s.get('schema_version')!=1 or s.get('status')!='SEALED_TARGETS_NOT_MODEL_FACING' or not isinstance(s.get('targets'),dict):fail('SIDECAR_SCHEMA')
+    expected={'V2:'+prompt_id:target for prompt_id,target in s['targets'].items()}
     obs,_=items(b)
     if set(expected)!={x['record_id'] for x in obs}:fail('SIDECAR_INVENTORY')
     metrics={}
@@ -137,7 +138,7 @@ def cpu_integration(binding_path,output):
         selected=obs if not tag.endswith('_B1') else [x for x in obs if x['prompt_id'] in set(sub[tag.removesuffix('_B1')])]
         p=out/(tag+'_RAW.jsonl');p.write_text(''.join(json.dumps({'record_id':x['record_id'],'split':x['split'],'parser_valid':True,'parsed_grid':[['STUB']],'generated_token_ids':[0]},sort_keys=True)+'\n' for x in selected));raw[tag]=sha(p)
     write(out/'RAW_FREEZE_RECEIPT.json',{'status':'COMPLETE_RAW_FROZEN_NO_TARGETS','raw_sha256':raw,'targets_accessed':False,'stubbed_model':True})
-    sidecar=out/'CPU_ONLY_STUB_SIDECAR.json';write(sidecar,{'records':[{'record_id':x['record_id'],'target':[['STUB']]} for x in obs]})
+    sidecar=out/'CPU_ONLY_STUB_SIDECAR.json';write(sidecar,{'schema_version':1,'status':'SEALED_TARGETS_NOT_MODEL_FACING','targets':{x['prompt_id']:[['STUB']] for x in obs}})
     scored=score(binding_path,out,sidecar,test_stub=True)
     r={'status':'PASS_V2_CPU_INTEGRATION_FULL_DISPATCHER_STUBBED_MODEL_AND_CUDA','binding_sha256':sha(binding_path),'schedule_slots':len(sched),'arms':2,'updates_per_arm':96,'evaluation_records':104,'b1_records':12,'raw_freeze_before_scoring':True,'scorer_status':scored['status'],'model_loaded':False,'gpu_used':False,'cuda_initialized':False,'sealed_sidecar_opened':False,'authorization_claimed':False};write(out/'CPU_INTEGRATION_RECEIPT.json',r);return r
 
