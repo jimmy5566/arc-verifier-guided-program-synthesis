@@ -1,5 +1,5 @@
 from __future__ import annotations
-import json, os, subprocess, sys
+import json, os, subprocess, sys, tempfile
 from pathlib import Path
 import unittest
 
@@ -15,10 +15,12 @@ class E4ELateLayerCountTest(unittest.TestCase):
   self.assertEqual(0.0,control['auxiliary_coefficient']);self.assertEqual(AUXILIARY_COEFFICIENT,treatment['auxiliary_coefficient'])
   self.assertEqual(.5,control['step_term']);self.assertEqual(.75,treatment['step_term'])
  def test_freeze_preclaim_and_full_cpu_path(self):
-  env={**os.environ,'ARC2_ROOT':str(ROOT)};pkg=ROOT/'experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4e_late_count_v1';binding=pkg/'CPU_TEST_BINDING.json';receipt=pkg/'CPU_PRODUCTION_PATH_RECEIPT.json'
-  subprocess.run([sys.executable,str(ROOT/'scripts/freeze_e4e_late_layer_count_v1.py')],env=env,check=True,capture_output=True,text=True)
-  subprocess.run([sys.executable,str(ROOT/'scripts/run_e4e_late_layer_count_v1.py'),'--make-cpu-binding',str(binding)],env=env,check=True,capture_output=True,text=True)
-  subprocess.run([sys.executable,str(ROOT/'scripts/run_e4e_late_layer_count_v1.py'),'--binding',str(binding),'--cpu-production-path','--receipt',str(receipt)],env=env,check=True,capture_output=True,text=True)
-  got=json.loads(receipt.read_text());self.assertEqual('PASS_E4E_LAUNCHER_WORKER_RAW_FREEZE_SIDECAR_SCORER_CPU_ONLY',got['status']);self.assertFalse(got['model_loaded']);self.assertFalse(got['gpu_used']);self.assertTrue(got['sidecar_opened_after_freeze'])
+  env={**os.environ,'ARC2_ROOT':str(ROOT)}
+  with tempfile.TemporaryDirectory(prefix='e4e-test-') as d:
+   binding=Path(d)/'binding.json';receipt=Path(d)/'receipt.json';output=Path(d)/'future-output'
+   worker=ROOT/'scripts/run_e4e_late_layer_count_production_v1.py'
+   subprocess.run([sys.executable,str(worker),'--make-binding',str(binding),'--output-root',str(output),'--nonce','0'*32],env=env,check=True,capture_output=True,text=True)
+   subprocess.run([sys.executable,str(worker),'--binding',str(binding),'--cpu-integration','--receipt',str(receipt)],env=env,check=True,capture_output=True,text=True)
+   got=json.loads(receipt.read_text());self.assertEqual('PASS_E4E_PRODUCTION_TRAINER_EVALUATOR_SCORER_CPU_INTEGRATION',got['status']);self.assertFalse(got['model_loaded']);self.assertFalse(got['gpu_used']);self.assertTrue(got['raw_freeze_before_sidecar'])
 
 if __name__=='__main__':unittest.main()
