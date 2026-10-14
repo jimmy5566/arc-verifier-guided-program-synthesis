@@ -395,6 +395,18 @@ def prompt_text(item: dict[str, Any], state_path: Path) -> str:
     )
 
 
+def resume_prompt_text(item: dict[str, Any], state_path: Path) -> str:
+    event_id = item["event_id"]
+    return (
+        f"ARC2 Governor resume event {event_id}. This event is already CLAIMED by this exact Controller pane; "
+        "do not claim it again and do not create a successor event. "
+        f"Read {state_path.resolve()}, {PROJECT_ROOT / 'AGENTS.md'}, and "
+        f"{PROJECT_ROOT / 'orchestration/agents/ARC_CONTROLLER_SYSTEM.md'}. Continue only the existing payload: "
+        f"{json.dumps(item['payload'], sort_keys=True)}. Complete the same event through the Governor CLI; "
+        "never prompt Director directly."
+    )
+
+
 def dispatch(state: dict[str, Any], state_path: Path, timeout: int) -> str:
     queued = next((item for item in state["pending_events"] if item["status"] == "QUEUED"), None)
     if not queued:
@@ -437,6 +449,46 @@ def dispatch(state: dict[str, Any], state_path: Path, timeout: int) -> str:
     append_ledger(state_path, {"transition": "HERDR_PROMPT_RESULT", "event_id": queued["event_id"],
                                "exit_code": completed.returncode})
     return "EVENT_DELIVERED" if completed.returncode == 0 else "EVENT_DELIVERY_UNKNOWN_FAIL_CLOSED"
+
+
+def resume_claimed_event(state_path: Path, event_id: str, timeout: int) -> str:
+    """Wake the bound idle Controller for one already-claimed event.
+
+    This is deliberately explicit rather than part of the daemon cycle: an
+    idle pane is not sufficient evidence that arbitrary claimed work should be
+    replayed.  The event identity and bound pane remain unchanged.
+    """
+    state = load(state_path)
+    item = find_event(state, event_id)
+    if item.get("recipient") != "controller":
+        raise RuntimeError("ONLY_CONTROLLER_CLAIM_CAN_BE_RESUMED")
+    if item.get("status") != "CLAIMED" or state.get("active_event") != event_id:
+        raise RuntimeError("CLAIMED_EVENT_NOT_ACTIVE")
+    target = resolve_agent("controller", state)
+    pane_id = target.get("pane_id")
+    if not item.get("target") or pane_id != item.get("target"):
+        raise RuntimeError("CLAIMED_EVENT_TARGET_MISMATCH")
+    if target.get("agent_status") == "working":
+        return "CLAIMED_EVENT_ALREADY_WORKING"
+    if target.get("agent_status") not in {"idle", "done"}:
+        raise RuntimeError("CLAIMED_EVENT_TARGET_NOT_RESUMABLE")
+
+    item.update({"resume_attempts": int(item.get("resume_attempts") or 0) + 1,
+                 "resumed_at": now()})
+    save(state_path, state, f"CLAIMED_EVENT_RESUME_RESERVED:{event_id}")
+    command = ["herdr", "agent", "prompt", pane_id, resume_prompt_text(item, state_path),
+               "--wait", "--until", "working", "--timeout", str(timeout * 1000)]
+    try:
+        completed = subprocess.run(command, capture_output=True, check=False, text=True,
+                                   encoding="utf-8", errors="replace", timeout=timeout + 10,
+                                   creationflags=windows_creationflags())
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        append_ledger(state_path, {"transition": "HERDR_RESUME_PROMPT_RESULT", "event_id": event_id,
+                                   "outcome": "UNKNOWN_FAIL_CLOSED", "error": type(exc).__name__})
+        return "CLAIMED_EVENT_RESUME_UNKNOWN_FAIL_CLOSED"
+    append_ledger(state_path, {"transition": "HERDR_RESUME_PROMPT_RESULT", "event_id": event_id,
+                               "exit_code": completed.returncode})
+    return "CLAIMED_EVENT_RESUMED" if completed.returncode == 0 else "CLAIMED_EVENT_RESUME_UNKNOWN_FAIL_CLOSED"
 
 
 def response_directory() -> Path:
@@ -556,6 +608,15 @@ def consume_director_response(state: dict[str, Any], state_path: Path) -> bool:
 def claim_event(state_path: Path, event_id: str) -> None:
     state = load(state_path)
     item = find_event(state, event_id)
+    if item["status"] == "CLAIMED":
+        if state.get("active_event") != event_id:
+            raise RuntimeError("CLAIMED_EVENT_NOT_ACTIVE")
+        caller_pane = os.environ.get("HERDR_PANE_ID")
+        if not caller_pane or item.get("target") != caller_pane:
+            raise RuntimeError("EVENT_ALREADY_CLAIMED_BY_OTHER_PANE")
+        append_ledger(state_path, {"transition": "EVENT_CLAIM_IDEMPOTENT", "event_id": event_id,
+                                   "target": caller_pane})
+        return
     if item["status"] not in {"DELIVERED", "QUEUED"}:
         raise RuntimeError("EVENT_NOT_CLAIMABLE")
     if state.get("active_event") not in {None, event_id}:
@@ -686,6 +747,7 @@ def main() -> int:
     parser.add_argument("--migrate-legacy", action="store_true")
     parser.add_argument("--repair-recursive-reviews", action="store_true")
     parser.add_argument("--claim-event")
+    parser.add_argument("--resume-claimed-event")
     parser.add_argument("--complete-event")
     parser.add_argument("--resume-paused-remote-job")
     parser.add_argument("--replace-stale-wait-remote-job")
@@ -708,7 +770,9 @@ def main() -> int:
     parser.add_argument("--pid-file", type=Path)
     parser.add_argument("--service-state", type=Path)
     args = parser.parse_args()
-    modes = sum(bool(value) for value in (args.migrate_legacy, args.repair_recursive_reviews, args.claim_event, args.complete_event, args.resume_paused_remote_job, args.replace_stale_wait_remote_job))
+    modes = sum(bool(value) for value in (args.migrate_legacy, args.repair_recursive_reviews, args.claim_event,
+                                          args.resume_claimed_event, args.complete_event,
+                                          args.resume_paused_remote_job, args.replace_stale_wait_remote_job))
     if modes > 1:
         parser.error("migration, claim, and completion are mutually exclusive")
     if args.migrate_legacy:
@@ -719,6 +783,9 @@ def main() -> int:
         return 0
     if args.claim_event:
         claim_event(args.state, args.claim_event)
+        return 0
+    if args.resume_claimed_event:
+        print(resume_claimed_event(args.state, args.resume_claimed_event, args.agent_timeout_seconds))
         return 0
     if args.complete_event:
         complete_event(args.state, args)

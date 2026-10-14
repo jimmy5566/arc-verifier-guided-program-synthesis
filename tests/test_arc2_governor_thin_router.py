@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -83,6 +84,48 @@ class NamelessFakeHerdr(FakeHerdr):
 
 
 class ThinGovernorTests(unittest.TestCase):
+    def test_same_bound_controller_reclaim_is_idempotent(self):
+        with tempfile.TemporaryDirectory() as directory:
+            state_path = Path(directory) / "ARC2_WORKFLOW_STATE.json"
+            item = governor.event("CONTROLLER_TASK", "controller", "director", {
+                "stage": "E4F2", "next_action": "CONTINUE",
+            })
+            item.update({"status": "CLAIMED", "target": "controller-pane"})
+            governor.atomic(state_path, initial_state(
+                disposition="CONTINUE_CONTROLLER", active_event=item["event_id"], pending_events=[item]
+            ))
+            with mock.patch.dict(os.environ, {"HERDR_PANE_ID": "controller-pane"}):
+                governor.claim_event(state_path, item["event_id"])
+            saved = governor.load(state_path)
+            self.assertEqual(saved["active_event"], item["event_id"])
+            self.assertEqual(saved["pending_events"][0]["status"], "CLAIMED")
+            with mock.patch.dict(os.environ, {"HERDR_PANE_ID": "other-pane"}):
+                with self.assertRaisesRegex(RuntimeError, "EVENT_ALREADY_CLAIMED_BY_OTHER_PANE"):
+                    governor.claim_event(state_path, item["event_id"])
+
+    def test_resume_claimed_idle_controller_prompts_same_pane_once(self):
+        with tempfile.TemporaryDirectory() as directory:
+            state_path = Path(directory) / "ARC2_WORKFLOW_STATE.json"
+            item = governor.event("CONTROLLER_TASK", "controller", "director", {
+                "stage": "E4F2", "next_action": "CONTINUE",
+            })
+            item.update({"status": "CLAIMED", "target": "controller-pane"})
+            governor.atomic(state_path, initial_state(
+                disposition="CONTINUE_CONTROLLER", active_event=item["event_id"],
+                controller_target="controller-pane", pending_events=[item]
+            ))
+            fake = FakeHerdr({"controller": "idle"})
+            with mock.patch.object(governor.subprocess, "run", side_effect=fake):
+                result = governor.resume_claimed_event(state_path, item["event_id"], 1)
+            self.assertEqual(result, "CLAIMED_EVENT_RESUMED")
+            self.assertEqual(len(fake.prompts), 1)
+            self.assertIn("already CLAIMED", fake.prompts[0][4])
+            self.assertIn("do not claim it again", fake.prompts[0][4])
+            saved = governor.load(state_path)
+            self.assertEqual(saved["active_event"], item["event_id"])
+            self.assertEqual(saved["pending_events"][0]["status"], "CLAIMED")
+            self.assertEqual(saved["pending_events"][0]["resume_attempts"], 1)
+
     def test_nameless_herdr_agents_recover_director_from_event_history(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
