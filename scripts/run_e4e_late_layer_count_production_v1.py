@@ -70,7 +70,10 @@ def preclaim(bp,allow_runtime_missing=False):
  if b.get('experiment_id')!=ID or b.get('retry') is not False or b.get('hard_cap_seconds')!=7200 or Path(b['output_root']).exists():fail('BINDING')
  clean()
  if subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()!=b['execution_source_commit']:fail('HEAD')
- root_free=shutil.disk_usage('/').free; output_free=shutil.disk_usage(Path(b['output_root']).parent).free
+ root_free=shutil.disk_usage('/').free
+ output_parent=Path(b['output_root']).parent
+ # Local CPU validation intentionally emulates the remote /workspace mount without creating it.
+ output_free=shutil.disk_usage(ROOT if os.name=='nt' and str(output_parent).startswith('/workspace/') else output_parent).free
  if root_free < (1<<30) or output_free < (20<<30): fail('DISK_CAPACITY')
  if os.name!='nt':
   live=subprocess.run(['pgrep','-af',b['nonce']],capture_output=True,text=True).stdout.strip()
