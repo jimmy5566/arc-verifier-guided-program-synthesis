@@ -91,6 +91,38 @@ class SupervisorObservabilityTest(unittest.TestCase):
                 self.assertEqual([], service.wake_controller_once(notified, "arc-controller", base / "acks", 1))
                 self.assertEqual(1, prompt.call_count)
 
+    def test_bound_remote_job_terminal_outside_legacy_round_glob_emits_one_event(self) -> None:
+        """A bound output-root receipt must not depend on the old rounds glob."""
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            jobs, cache, events = base / "remote_jobs", base / "cache", base / "events"
+            jobs.mkdir()
+            manifest = {
+                "job_id": "E4D_BOUND_NONCE",
+                "ssh_target": "pod@example",
+                "output_root": "/workspace/arc2/active_runs/e4d/output",
+                "terminal_receipt": "/workspace/arc2/active_runs/e4d/output/TERMINAL_RECEIPT.json",
+            }
+            (jobs / "E4D.json").write_text(json.dumps(manifest), encoding="utf-8")
+            receipt = {"status": "COMPLETE", "raw_freeze_before_sidecar": True}
+            payload = json.dumps({
+                "path": manifest["terminal_receipt"],
+                "content_b64": base64.b64encode(json.dumps(receipt).encode("utf-8")).decode("ascii"),
+            })
+            with patch.object(supervisor_module, "remote_shell", return_value=payload):
+                records = supervisor_module.fetch_remote_job_receipts(jobs, cache)
+            self.assertEqual(1, len(records))
+            cached = cache / "remote_jobs" / "E4D_BOUND_NONCE" / "TERMINAL_RECEIPT.json"
+            self.assertEqual(json.dumps(receipt), cached.read_text(encoding="utf-8"))
+            service = supervisor_module.Supervisor(base / "state.json", base / "notes", events)
+            self.assertEqual(["E4D_BOUND_NONCE"], service.reconcile_bound_remote_jobs(records))
+            event = next(events.glob("REMOTE_TERMINAL_*.json"))
+            payload = json.loads(event.read_text(encoding="utf-8"))["payload"]
+            self.assertEqual("E4D_BOUND_NONCE", payload["round_id"])
+            self.assertEqual("COMPLETE", payload["terminal_status"])
+            self.assertTrue(payload["bound_remote_job"])
+            self.assertEqual([], service.reconcile_bound_remote_jobs(records))
+
 
 if __name__ == "__main__":
     unittest.main()

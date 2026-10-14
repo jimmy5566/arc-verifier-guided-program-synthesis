@@ -16,7 +16,10 @@ from pathlib import Path
 from typing import Any
 
 LOW_FREQUENCY_RECONCILIATION_SECONDS = 300
-TERMINAL_STATES = {"SUCCESS", "TRAIN_FAILED", "OOM", "INFRA_FAILED", "INTERRUPTED"}
+# Bound production workers use COMPLETE after they have written their immutable
+# terminal receipt.  Keep it distinct from scientific acceptance: the
+# Controller still ingests and reviews the frozen score artifact.
+TERMINAL_STATES = {"SUCCESS", "COMPLETE", "TRAIN_FAILED", "OOM", "INFRA_FAILED", "INTERRUPTED"}
 ROUND_CLASS_SCIENTIFIC = "SCIENTIFIC"
 ROUND_CLASS_DUMMY = "DUMMY"
 ROUND_CLASS_SMOKE = "SMOKE"
@@ -300,6 +303,76 @@ class Supervisor:
                 record["governor_event_path"] = str(governor_event.resolve())
                 record["controller_notification_sent"] = True
                 notifications.append(round_id)
+        self.save()
+        return notifications
+
+    def reconcile_bound_remote_jobs(self, transport_records: list[dict[str, Any]]) -> list[str]:
+        """Emit one Governor event for each explicitly bound terminal receipt.
+
+        Bound production workers intentionally keep their terminal receipt in
+        their immutable output root.  Their receipt need not duplicate the
+        local job id, so the manifest provides routing identity while the
+        receipt remains byte-for-byte untouched.
+        """
+        notifications: list[str] = []
+        for transport in transport_records:
+            job_id = str(transport["job_id"])
+            local_receipt = Path(str(transport["local_receipt"]))
+            try:
+                receipt = json.loads(local_receipt.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            status = receipt.get("status")
+            if status not in TERMINAL_STATES:
+                continue
+            digest = canonical_hash(local_receipt)
+            if digest != transport.get("receipt_sha256"):
+                continue
+            record = self.state["rounds"].setdefault(job_id, {})
+            if record.get("terminal_receipt_hash") not in (None, digest):
+                record["receipt_identity_conflict"] = True
+                continue
+            record.update({
+                "terminal_receipt_hash": digest,
+                "terminal_status": status,
+                "round_class": ROUND_CLASS_SCIENTIFIC,
+                "scientific_round": True,
+                "remote_receipt_path": str(local_receipt.resolve()),
+                "remote_terminal_receipt": transport["terminal_receipt"],
+                "remote_job_manifest": transport["manifest_path"],
+            })
+            if record.get("controller_notification_sent"):
+                continue
+            notification = self.notification_dir / f"CONTROLLER_NOTIFICATION_{job_id}_{digest[:12]}.json"
+            atomic_json(notification, {
+                "round_id": job_id,
+                "terminal_receipt": str(local_receipt.resolve()),
+                "terminal_receipt_hash": digest,
+                "terminal_status": status,
+                "round_class": ROUND_CLASS_SCIENTIFIC,
+                "bound_remote_job": True,
+                "scientific_acceptance": "NOT_INFERRED_FROM_PROCESS_RECEIPT",
+            })
+            governor_event = self.governor_event_dir / f"REMOTE_TERMINAL_{job_id}_{digest[:12]}.json"
+            if not governor_event.exists():
+                atomic_json(governor_event, {
+                    "schema_version": 1,
+                    "kind": "REMOTE_TERMINAL",
+                    "producer": "supervisor",
+                    "recipient": "controller",
+                    "payload": {
+                        "round_id": job_id,
+                        "terminal_receipt": str(local_receipt.resolve()),
+                        "terminal_receipt_sha256": digest,
+                        "terminal_status": status,
+                        "round_class": ROUND_CLASS_SCIENTIFIC,
+                        "bound_remote_job": True,
+                        "required_action": "INGEST_FREEZE_AND_IF_SCIENTIFIC_EMIT_ONE_SHA_BOUND_REVIEW_REQUEST",
+                    },
+                })
+            record["governor_event_path"] = str(governor_event.resolve())
+            record["controller_notification_sent"] = True
+            notifications.append(job_id)
         self.save()
         return notifications
 
@@ -935,6 +1008,77 @@ PY'''
     return cache_root
 
 
+def remote_job_manifests(remote_job_dir: Path) -> list[dict[str, Any]]:
+    """Load only well-formed, controller-written detached-job manifests.
+
+    A bound worker is allowed to keep its receipts outside the historical
+    ``orchestration/rounds`` tree.  The local manifest is the durable link
+    between that worker and its explicit terminal receipt; guessing a remote
+    path from a glob loses such completions.
+    """
+    if not remote_job_dir.is_dir():
+        return []
+    manifests: list[dict[str, Any]] = []
+    for path in sorted(remote_job_dir.glob("*.json")):
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+            job_id = str(value["job_id"])
+            target = str(value["ssh_target"])
+            output_root = str(value["output_root"])
+            terminal_receipt = str(value["terminal_receipt"])
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError):
+            continue
+        # Never permit a manifest to make the metadata transport read an
+        # arbitrary remote file.  A receipt must be an immediate descendant of
+        # the bound output root and use the immutable terminal filename.
+        if (not job_id or not target or not output_root.startswith("/")
+                or terminal_receipt != output_root.rstrip("/") + "/TERMINAL_RECEIPT.json"):
+            continue
+        manifests.append({"job_id": job_id, "ssh_target": target,
+                          "terminal_receipt": terminal_receipt,
+                          "manifest_path": str(path.resolve())})
+    return manifests
+
+
+def fetch_remote_job_receipts(remote_job_dir: Path, cache_root: Path,
+                              identity_file: str | None = None) -> list[dict[str, Any]]:
+    """Fetch terminal receipts named explicitly by bound remote-job manifests.
+
+    The transfer is metadata-only and byte preserving.  It returns a local
+    transport record instead of changing the immutable remote receipt to add a
+    round id that the worker did not declare.
+    """
+    fetched: list[dict[str, Any]] = []
+    for manifest in remote_job_manifests(remote_job_dir):
+        terminal_receipt = manifest["terminal_receipt"]
+        script = f'''python3 - <<'PY'
+import base64, json, os
+path = {terminal_receipt!r}
+if os.path.isfile(path):
+    with open(path, "rb") as handle:
+        print(json.dumps({{"path": path, "content_b64": base64.b64encode(handle.read()).decode("ascii")}}, sort_keys=True))
+PY'''
+        output = remote_shell(manifest["ssh_target"], script, identity_file)
+        for line in output.splitlines():
+            if not line.startswith("{"):
+                continue
+            try:
+                item = json.loads(line)
+                if item.get("path") != terminal_receipt:
+                    continue
+                content = base64.b64decode(item["content_b64"], validate=True)
+                json.loads(content.decode("utf-8"))
+            except (KeyError, TypeError, ValueError, UnicodeDecodeError, json.JSONDecodeError):
+                continue
+            destination = cache_root / "remote_jobs" / manifest["job_id"] / "TERMINAL_RECEIPT.json"
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(content)
+            fetched.append({**manifest, "local_receipt": str(destination.resolve()),
+                            "receipt_sha256": hashlib.sha256(content).hexdigest()})
+            break
+    return fetched
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--receipt-root", type=Path, required=True)
@@ -945,6 +1089,8 @@ def main() -> int:
     parser.add_argument("--ssh-target")
     parser.add_argument("--remote-root")
     parser.add_argument("--identity-file")
+    parser.add_argument("--remote-job-dir", type=Path,
+                        help="Controller-written bound remote-job manifests; explicit terminal paths are reconciled in addition to legacy receipt globs")
     parser.add_argument(
         "--poll-seconds", type=float,
         help=f"ordinary LOW_FREQUENCY_RECONCILIATION cadence; service launch uses {LOW_FREQUENCY_RECONCILIATION_SECONDS} seconds",
@@ -985,6 +1131,7 @@ def main() -> int:
     while True:
         cycle_now = datetime.now().astimezone()
         remote_status = "LOCAL_ONLY"
+        bound_transport_records: list[dict[str, Any]] = []
         if args.ssh_target:
             try:
                 fetch_remote_receipts(args.ssh_target, args.remote_root, args.receipt_root, args.identity_file)
@@ -993,7 +1140,19 @@ def main() -> int:
                 supervisor.state["last_successful_remote_check"] = last_successful_remote_check
             except Exception as error:  # Continue local reconciliation; retry next poll.
                 remote_status = f"LOW_FREQUENCY_RECONCILIATION_ERROR:{type(error).__name__}"
+        if args.remote_job_dir:
+            try:
+                bound_transport_records = fetch_remote_job_receipts(
+                    args.remote_job_dir, args.receipt_root, args.identity_file,
+                )
+                if bound_transport_records:
+                    remote_status = "BOUND_REMOTE_JOB_RECONCILIATION_OK"
+                    last_successful_remote_check = cycle_now.isoformat(timespec="seconds")
+                    supervisor.state["last_successful_remote_check"] = last_successful_remote_check
+            except Exception as error:  # Legacy receipts remain independently reconciled.
+                remote_status = f"BOUND_REMOTE_JOB_RECONCILIATION_ERROR:{type(error).__name__}"
         notified = supervisor.reconcile(args.receipt_root)
+        notified.extend(supervisor.reconcile_bound_remote_jobs(bound_transport_records))
         woken: list[str] = []
         acknowledged: list[str] = []
         directive_notifications: list[str] = []
