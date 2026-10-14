@@ -1,0 +1,168 @@
+{
+  "audit_date": "2026-10-15",
+  "branch": "codex/connected-components-e1",
+  "read_only_scientific_audit": true,
+  "prohibited_actions_observed": {
+    "gpu_work": false,
+    "model_loading": false,
+    "candidate_generation": false,
+    "gold_or_dgold_access": false,
+    "competition_submission": false,
+    "release": false
+  },
+  "assets": [
+    {
+      "asset": "phase3_d24_aug8_r1024_archive_v1",
+      "classification": "VERIFIED_READY",
+      "remote_path": "/workspace/arc2/query_only_isolated_worktree_2e5e113c43b5e09e851e417c3d4096a89152a5f9/artifacts/eval60_phase3_d24_aug8_r1024_archive_v1",
+      "bytes": 728830674,
+      "compact_ledger_sha256": "9b37c43b030c0fc66a36eaabeddf86b0d7f584bfb7993206abc30976780c92d8",
+      "validation": {
+        "status": "PASS",
+        "tasks": 60,
+        "outputs": 89,
+        "cells": 712,
+        "candidate_index_shards": 89,
+        "hashes_checked": 1024,
+        "hash_missing": 0,
+        "hash_mismatches": 0,
+        "malformed_outputs": 0,
+        "duplicate_output_ids": false,
+        "source_audit_status": "PASS"
+      },
+      "runtime": {
+        "total_gpu_wall_seconds": 31561.630231102,
+        "attempt_count": 89,
+        "fallback_count": 1
+      }
+    },
+    {
+      "asset": "phase3_d48_aug8_r1024_archive_v1",
+      "classification": "VERIFIED_READY",
+      "remote_path": "/workspace/arc2/artifacts/eval60_phase3_d48_aug8_r1024_archive_v1",
+      "bytes": 684335499,
+      "compact_ledger_sha256": "6bb97ee885bc57128f831bbdb584d7fab5c8caf484ff139435325a27e3a729d0",
+      "validation": {
+        "status": "PASS",
+        "tasks": 60,
+        "outputs": 89,
+        "cells": 712,
+        "candidate_index_shards": 89,
+        "hashes_checked": 1021,
+        "hash_missing": 0,
+        "hash_mismatches": 0,
+        "malformed_outputs": 0,
+        "duplicate_output_ids": false,
+        "source_audit_status": "PASS"
+      },
+      "runtime": {
+        "total_gpu_wall_seconds": 30353.351489727385,
+        "attempt_count": 89,
+        "fallback_count": 0
+      }
+    },
+    {
+      "asset": "qwen3_4b_grids15_sft139",
+      "classification": "VERIFIED_READY",
+      "remote_path": "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+      "bytes": 7267274168,
+      "identity": "sorokin/qwen3_4b_grids15_sft139/Transformers/bfloat16/1",
+      "manifest_sha256": "9e995b611936791884063b69ef85cba12d89c53dd1c6cebe33ac155145c9aee7",
+      "fresh_manifest_file_hashes": "13/13 PASS"
+    },
+    {
+      "asset": "eval60_task_specific_ttt_adapters",
+      "classification": "VERIFIED_READY",
+      "remote_root": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints",
+      "manifest_path": "/workspace/arc2/turbodfs_v5/eval60_adapter_manifest.csv",
+      "manifest_sha256": "a8077dd91e344577d42d4f22227178b27d29fd92b3d4725d3957ef3e852bcbd0",
+      "global_manifest_sha256": "7c853b0441fcea49c0ebdfdd2afa50103caab7f380ac3f6a0b3bc9dd62799cbb",
+      "adapter_count": 180,
+      "depth_counts": {"12": 60, "24": 60, "48": 60},
+      "bytes": 190295612640,
+      "current_path_and_size_matches": "180/180",
+      "fresh_full_byte_samples": "15/15 PASS",
+      "qualification": "Prior immutable full-hash attestation plus current full existence/size verification and 15 fresh byte-hash samples; not a fresh full rehash of all 177.2 GiB."
+    },
+    {
+      "asset": "v7_adapter_tokens_2000000",
+      "classification": "VERIFIED_READY",
+      "remote_path": "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+      "files": {
+        "adapter_config.json": {"bytes": 957, "sha256": "faa1a3bfb957209ca10ea58afbbf275ce5b51592dd78f289b68f7b655ede2b69"},
+        "adapter_model.safetensors": {"bytes": 528550256, "sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"}
+      },
+      "fresh_hash_match": true
+    },
+    {
+      "asset": "turbodfs_v5_raw_run",
+      "classification": "NEEDS_REPAIR",
+      "remote_path": "/workspace/arc2/active_runs/eval60_v5_vs_greedy_4worker_v1",
+      "planned_cells": 1068,
+      "done_cells": 196,
+      "pending_cells": 872,
+      "raw_parquet_shards": 44,
+      "raw_parquet_bytes": 89903664,
+      "raw_ledger_sha256": "2c33caea0475c7b2c9d902d836ece93fd3bc7c17934010eac83b69a8ba8790f3",
+      "state_db_sha256": "cdeee7a42de3fbba11fafda943be609e1ce6c49cb7c36dbb7d1262a1ccfe33aa",
+      "state_db_status": "SQLITE_MALFORMED",
+      "evidence_status": "PARTIAL_NONBLIND_RECOVERY_NOT_A_FULL_RESULT"
+    },
+    {
+      "asset": "turbodfs_v4_reference_calibration",
+      "classification": "HISTORICAL_ONLY",
+      "remote_path": "/workspace/arc2/active_runs/eval60_turbodfs_v4_reference"
+    },
+    {
+      "asset": "ttt24_same_contract_numerical_parity",
+      "classification": "VERIFIED_READY",
+      "strict_exact_cells": 32,
+      "profiles": ["S", "M", "L"],
+      "status": "CORE_CLASS_READY",
+      "caveat": "Per-forward cache-owner telemetry absent; no observed owner, alias, rollback, or batch violation."
+    },
+    {
+      "asset": "ttt48_d1_model_state_parity",
+      "classification": "NEEDS_REPAIR",
+      "anchor_mismatch_tasks": 50,
+      "status": "FAILED_NUMERICAL_PARITY"
+    },
+    {
+      "asset": "historical_selector_results",
+      "classification": "HISTORICAL_ONLY",
+      "scope": "EXPOSED_DEVELOPMENT_ONLY",
+      "reason": "S2 was promising only on exposed Eval60; source, robustness, and train-constraint follow-ups did not establish a transferable signal."
+    },
+    {
+      "asset": "historical_aug8_hard28_reuse",
+      "classification": "HISTORICAL_ONLY",
+      "expected_omitted_cells": 112,
+      "exact_reusable_cells": 0,
+      "reason": "Missing adapter SHA and tokenizer/recipe provenance."
+    },
+    {
+      "asset": "d1_kaggle_submission_current_status",
+      "classification": "UNAVAILABLE",
+      "submission_id": 56508996,
+      "last_durable_event": {"status": "PENDING", "public_score": null, "observed_at_utc": "2026-09-24T02:11:38Z"},
+      "reason": "No usable read-only Kaggle CLI credential in the local or RunPod audit environment."
+    }
+  ],
+  "cpu_replay_tests": {
+    "status": "PASS",
+    "passed": 31,
+    "elapsed_seconds": 4.38
+  },
+  "recommended_next_score_experiment": {
+    "name": "INDEPENDENT_FROZEN_POOL_SELECTOR_CONFIRMATION_V1",
+    "status": "NOT_RUN",
+    "comparison": "historical B versus frozen S2",
+    "requirements": [
+      "fresh task-disjoint target-blind candidate pool",
+      "single pinned model identity",
+      "selector outputs frozen before target access",
+      "paired Top1 and Top2 by output and task",
+      "Any-of-K reported separately"
+    ]
+  }
+}

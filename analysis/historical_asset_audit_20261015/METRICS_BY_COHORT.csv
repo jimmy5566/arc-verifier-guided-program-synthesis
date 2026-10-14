@@ -1,0 +1,17 @@
+cohort,model_identity,method,tasks,outputs,unique_candidates_or_attempts,any_of_k,top1,top2,runtime_seconds,evidence_status,notes
+Phase3 Eval60 D24 R1024,qwen3_4b_grids15_sft139 plus depth-24 task adapters,D24 NLL,60,89,1024 hashes,19/60 tasks and 31/89 outputs,16/89 outputs,23/89 outputs and 13 tasks,31561.630,POST_FREEZE_CPU_SCORE,Top2 descriptive not preregistered
+Phase3 Eval60 D48 R1024,qwen3_4b_grids15_sft139 plus depth-48 task adapters,D48 NLL,60,89,1021 hashes,18/60 tasks and 30/89 outputs,16/89 outputs,21/89 outputs and 11 tasks,30353.351,POST_FREEZE_CPU_SCORE,Top2 descriptive not preregistered
+Phase3 Eval60 D24+D48 union,qwen3_4b_grids15_sft139 plus depth-24/depth-48 task adapters,Union NLL,60,89,union pool,22/60 tasks and 35/89 outputs,14/89 outputs,25/89 outputs and 15 tasks,,POST_FREEZE_CPU_SCORE,Do not merge with V7
+Phase3 oracle-hit outputs,qwen3_4b_grids15_sft139 plus D24/D48 task adapters,Historical B,27,35,3215 union candidates,35/35 outputs,19/35 outputs,25/35 outputs,,EXPOSED_DEVELOPMENT,Selector cohort only
+Phase3 oracle-hit outputs,qwen3_4b_grids15_sft139 plus D24/D48 task adapters,S2,27,35,3215 union candidates,35/35 outputs,19/35 outputs,27/35 outputs,,EXPOSED_DEVELOPMENT,+2 Top2 versus B; unconfirmed
+V7 reused development panel,qwen3_4b_grids15_sft139 plus V7 adapter,V7 native Greedy,60,60,60 episodes,,49/60,51/60,,DEVELOPMENT_REUSED_COHORT,Not independent ARC generalization
+V7 reused development panel,qwen3_4b_grids15_sft139 LoRA disabled,Base native Greedy,60,60,60 episodes,,44/60,45/60,,DEVELOPMENT_REUSED_COHORT,Same panel as V7 row
+Frozen60 cached pool,historical cached candidate model context,B-SUPPORT,60,60,cached 32-view pool,30/60,16/60,21/60,,HISTORICAL_DIAGNOSTIC,Task-disjoint from Frozen30 but shared project context
+Native ranker untouched8,qwen3_4b_grids15_sft139 native deterministic AUG8,Original or fixed V2 rankers,8,8,36 unique candidates,3/8,2/8,not reported,885.800,CLEAN_SMALL_COHORT,795.99 generation plus 89.81 rerank; no Top1 gain
+Native TTT clean5,qwen3_4b_grids15_sft139,Baseline,5,5,23 unique candidates,1/5,0/5,not reported,949.180,CLEAN_SMALL_COHORT,Separate from Phase3
+Native TTT clean5,qwen3_4b_grids15_sft139 plus per-task TTT,TTT,5,5,21 unique candidates,2/5,1/5,not reported,1153.810,CLEAN_SMALL_COHORT,One target-blind candidate conversion only
+Frozen30 partial25,historical public-reference candidate model context,A original pool plus likelihood,25,25,partial cohort,19/25,9/25,11/25,,PARTIAL_DIAGNOSTIC,5 incomplete tasks excluded
+Frozen30 partial25,historical public-reference candidate model context,C bounded search pool plus likelihood,25,25,1411 unique from 3200 branches,22/25,8/25,9/25,11810.770,PARTIAL_DIAGNOSTIC,Search improved coverage not Top1
+Frozen30 partial25,historical public-reference candidate model context,D bounded search plus support/likelihood,25,25,1411 unique from 3200 branches,22/25,9/25,13/25,11810.770,PARTIAL_DIAGNOSTIC,Two attempts frozen before targets
+D1 historical replay,qwen3_4b_grids15_sft139 plus historical TTT24/TTT48 portfolio,D1 replay,60,89,89 attempts,30/89 pool oracle,20/89,28/89,,HISTORICAL_REPLAY,Exact replay; live TTT48 parity not verified
+TurboDFS V5 partial,qwen3_4b_grids15_sft139 plus historical task adapters,V5 vs Greedy 4-worker,60,89,196/1068 cells complete,NOT_SCORED,NOT_SCORED,NOT_SCORED,,PARTIAL_NONBLIND,872 cells pending and live SQLite malformed
