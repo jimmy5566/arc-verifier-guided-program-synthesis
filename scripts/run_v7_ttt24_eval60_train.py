@@ -105,7 +105,10 @@ def merge_v7(args: argparse.Namespace) -> dict[str, Any]:
     ):
         source = args.base_model / name
         if source.is_file() and not (staging / name).is_file():
-            shutil.copy2(source, staging / name)
+            # Mounted RunPod storage preserves bytes but intentionally rejects
+            # POSIX timestamp mutation.  Scientific identity is the SHA256 of
+            # file bytes, so copy no incidental filesystem metadata.
+            shutil.copyfile(source, staging / name)
     files = tree_manifest(staging)
     manifest = {
         "schema": "ARC2_V7_BF16_MERGE_V1", "base_model": str(args.base_model),
