@@ -1,0 +1,40 @@
+﻿{
+    "schema_version":  "E4G_VALID_REJECT_CLOSEOUT_V1",
+    "director_decision":  "CONTINUE_CONTROLLER",
+    "director_response_path":  "C:/w/arc2-governor-thin/orchestration/director/responses/E4G_RESULT_REVIEW_BRIEF_RESPONSE.json",
+    "director_response_sha256":  "0dc416339c760276bb644d1045ff430ac7022ef8cfc87143b7f22d107f4679da",
+    "classification":  "VALID_PREDECLARED_REJECT",
+    "execution_source_commit":  "2e6b6362a0b3ee8fc63b76f6034c1142e41a5206",
+    "binding_sha256":  "c0acccaad54de77eefc3121b3411bcf04f6d5a69b0da6a06e22d4c059f3df499",
+    "evidence_commit":  "58b3b0b3dac8d8bff1b3ffb9492be4b2438d798c",
+    "result_manifest":  {
+                            "path":  "E4G_RESULT_FREEZE_MANIFEST.json",
+                            "sha256":  "adde91cc0d05dae7fd23fe6849bae99014d4019509c7d06dc7aca34762843258"
+                        },
+    "frozen_artifacts":  {
+                             "terminal_receipt_sha256":  "417268db090ea9de0d7e8960d4cc77bddfe1f3d0e284897197f2a1e05198f606",
+                             "score_receipt_sha256":  "1306259f16c85a3270c20d32c7d8d4724243a8b0be84240deab60ea0e6b10344",
+                             "trained_adapter_sha256":  "1c42694cabb24f5b5d47243d86dcac47f60fe8ac65d5995ef9d0c4ce13e50b3b",
+                             "raw_sha256":  {
+                                                "V7":  "d0920059ca6f62ffcf2be59adc5a4bd3572869b08635f85910311f77adc8fb8f",
+                                                "TRAINED":  "ecff3d78898f20f0e7b5c1b49e0793d892c779b262b31710da7b24126970465f"
+                                            }
+                         },
+    "finding":  {
+                    "panel_specific_atomic_plasticity":  true,
+                    "declared_retention_intact":  true,
+                    "order_robustness_insufficient":  true,
+                    "order_invariance":  0.65217391304347827,
+                    "required_order_invariance":  0.8,
+                    "positive_ood_delta_is_not_independent_transfer_evidence":  true
+                },
+    "prohibitions":  [
+                         "NO_CHECKPOINT_PROMOTION",
+                         "NO_E4G_RERUN",
+                         "NO_ADDITIONAL_EXPOSED_OUTPUT_SCORING",
+                         "NO_TUNING_AGAINST_E4G_COHORT",
+                         "NO_SEALED_DATA_ACCESS",
+                         "NO_NEW_GPU_WORK_OR_SUCCESSOR_AUTHORIZED"
+                     ],
+    "future_work_constraint":  "Any future mechanism test must be prospectively frozen, single-factor, and independently authorized."
+}
