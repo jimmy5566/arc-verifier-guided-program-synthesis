@@ -5,7 +5,7 @@ Equal-Slot CE; treatment adds a train-only 0.25 layer-31 count CE only on the
 48 Count-primary slots.  The auxiliary head is deliberately not saved.
 """
 from __future__ import annotations
-import argparse, copy, hashlib, importlib, json, os, random, secrets, subprocess, sys, tempfile, time
+import argparse, copy, hashlib, importlib, json, math, os, random, secrets, subprocess, sys, tempfile, time
 from collections import defaultdict
 from pathlib import Path
 ROOT=Path(os.environ.get('ARC2_ROOT',Path(__file__).resolve().parents[1]));sys.path[:0]=[str(ROOT),str(ROOT/'src')]
@@ -137,7 +137,7 @@ def eval_records():
  for r in load(PKG/'OOD_INPUTS_AND_COMMITMENTS.json')['records']:out.append({'id':r['record_id'],'split':'OOD','canonical':r['canonical_unit_id'],'order':r['demo_order'],'count':r['query_count'],'task':r['prompt']})
  for r in load(E3/'TRAIN_FIT_INPUT_PROMPTS.json')['records']:
   if r['arm']=='TREATMENT_DECONFOUNDED':out.append({'id':r['record_id'],'split':'TRAIN_FIT','task':r['prompt']})
- for r in load(E3/'e4d_object_centric_component_anchor_grounding_v1/MARKER_INPUTS_AND_COMMITMENTS.json')['records']:out.append({'id':r['record_id'],'split':'MARKER_BINDING','family':'MARKER','task':r['prompt']})
+ for r in load(E3/'e4d_object_centric_component_anchor_grounding_v1/MARKER_INPUTS_AND_COMMITMENTS.json')['records']:out.append({'id':r['record_id'],'split':'MARKER_BINDING','family':'MARKER','endpoint':int(r['marker_turn']),'task':r['prompt']})
  for r in load(BASE/'RETENTION_INPUT_PROMPTS.json'):out.append({'id':'RETENTION:'+r['prompt_id'],'split':'RETENTION','family':r['latent_condition']['family'],'task':r['task']})
  for r in load(BASE/'scientific_successor_v2/COMPOSITION_SENTINEL_INPUT_PROMPTS.json'):out.append({'id':'COMPOSITION:'+r['prompt_id'],'split':'COMPOSITION','task':r['task']})
  if any('output' in x['task']['test'][0] for x in out):fail('TARGET_LEAK')
@@ -151,18 +151,43 @@ def generate(model,torch,m,items,b,out,tag,deadline):
   z=provider.generate_many([messages(x['task'])],max_new_tokens=b['runtime']['max_new_tokens'],context_window=b['runtime']['context_window'],seeds=[b['training']['seed']+i])[0];g=parse_native_grid(z.text);raw.append({'record_id':x['id'],'split':x['split'],'prompt_sha256':taskhash(x['task']),'generated_token_ids':[int(v) for v in z.token_ids],'parsed_grid':None if g is None else [list(a) for a in g],'parser_valid':g is not None,'effective_batch_size':1})
  p=Path(out)/(tag+'_RAW.jsonl');jsonl(p,raw);return p
 
-def raw_freeze(paths,out):
+def marker_endpoint_guard(records):
+ marker=[x for x in records if x['split']=='MARKER_BINDING']; groups=defaultdict(list)
+ for x in marker: groups[x.get('endpoint')].append(x)
+ if set(groups)!={0,2} or {k:len(v) for k,v in groups.items()}!={0:8,2:8}: fail('MARKER_ENDPOINT_GRID')
+ return groups
+
+def validate_feature_file(path):
+ value=rows(path); expected=probe_rows(); train={x['record_id'] for x in expected if x['split']=='TRAIN_PROBE'}; ood={x['record_id'] for x in expected if x['split']=='OOD'}
+ got_train=[x for x in value if x.get('split')=='TRAIN_PROBE']; got_ood=[x for x in value if x.get('split')=='OOD']
+ if len(got_train)!=48 or len(got_ood)!=96 or {x['record_id'] for x in got_train}!=train or {x['record_id'] for x in got_ood}!=ood: fail('PROBE_FEATURE_IDENTITIES')
+ widths={len(x.get('feature',[])) for x in value}
+ if len(widths)!=1 or next(iter(widths))<1 or any(not math.isfinite(float(v)) for x in value for v in x['feature']): fail('PROBE_FEATURE_VALUES')
+ return {'records':144,'train_records':48,'ood_records':96,'width':next(iter(widths)),'sha256':sha(path)}
+
+def raw_freeze(paths,out,feature_paths=None):
  want={x['id'] for x in eval_records()}
  for arm,p in paths.items():
   r=rows(p)
   if len(r)!=len(want) or {x['record_id'] for x in r}!=want:fail('RAW_GRID:'+arm)
- receipt={'status':'COMPLETE_RAW_FROZEN_NO_TARGETS','raw_sha256':{k:sha(v) for k,v in paths.items()},'targets_accessed':False,'physical_batch_size':1};write(Path(out)/'RAW_FREEZE_RECEIPT.json',receipt);return receipt
+ feature_paths=feature_paths or {}; features={arm:validate_feature_file(p) for arm,p in feature_paths.items()}
+ if set(features) not in (set(),{'V7','EQUAL_SLOT','LATE_LAYER_COUNT'}): fail('PROBE_FEATURE_ARMS')
+ receipt={'status':'COMPLETE_RAW_AND_FEATURES_FROZEN_NO_TARGETS','raw_sha256':{k:sha(v) for k,v in paths.items()},'feature_freeze':features,'targets_accessed':False,'physical_batch_size':1};write(Path(out)/'RAW_FREEZE_RECEIPT.json',receipt);return receipt
 
-def sidecar(out):
+def recheck_frozen_artifacts(out,require_features=True):
  fr=load(Path(out)/'RAW_FREEZE_RECEIPT.json')
- if fr.get('targets_accessed') is not False:fail('FREEZE')
  for arm,digest in fr['raw_sha256'].items():
   if sha(Path(out)/(arm+'_RAW.jsonl'))!=digest: fail('POST_FREEZE_RAW_REHASH')
+ if require_features:
+  if set(fr.get('feature_freeze',{}))!={'V7','EQUAL_SLOT','LATE_LAYER_COUNT'}: fail('PROBE_FEATURE_FREEZE_MISSING')
+  for arm,v in fr['feature_freeze'].items():
+   actual=validate_feature_file(Path(out)/(arm+'_LAYER31_FEATURES.jsonl'))
+   if actual!=v: fail('POST_FREEZE_FEATURE_REHASH')
+ return fr
+
+def sidecar(out):
+ fr=recheck_frozen_artifacts(out,True)
+ if fr.get('targets_accessed') is not False:fail('FREEZE')
  from scripts.connected_components_object_extraction_semantic_oracle import target_for_family
  panel=load(PKG/'OOD_INPUTS_AND_COMMITMENTS.json');targets={r['record_id']:target_for_family('CONNECTED_COMPONENT_COUNT',r['prompt']['test'][0]['input']) for r in panel['records']}
  for r in eval_records():
@@ -193,13 +218,13 @@ def score(out):
  p=Path(out)/'PROBE_RECEIPT.json'
  if not p.is_file():fail('PROBE_RECEIPT_MISSING')
  probe=load(p);pg=probe['treatment_minus_control'];marker={};retention={}
- for endpoint in sorted({str(x.get('endpoint','ALL')) for x in recs if x['split']=='MARKER_BINDING'}):
-  ids=[x['id'] for x in recs if x['split']=='MARKER_BINDING' and str(x.get('endpoint','ALL'))==endpoint];marker[endpoint]=sum(data['LATE_LAYER_COUNT'][x]-data['EQUAL_SLOT'][x] for x in ids)
+ for endpoint,rs in marker_endpoint_guard(recs).items():
+  ids=[x['id'] for x in rs];marker[str(endpoint)]=sum(data['LATE_LAYER_COUNT'][x]-data['EQUAL_SLOT'][x] for x in ids)
  for family in sorted({x['family'] for x in recs if x['split']=='RETENTION'}):
   ids=[x['id'] for x in recs if x['split']=='RETENTION' and x['family']==family];retention[family]=sum(data['LATE_LAYER_COUNT'][x]-data['EQUAL_SLOT'][x] for x in ids)
  comp_ids=[x['id'] for x in recs if x['split']=='COMPOSITION'];comp_delta=sum(data['LATE_LAYER_COUNT'][x]-data['EQUAL_SLOT'][x] for x in comp_ids)
  probe_pass=pg['delta_correct']>=6 and pg['bootstrap_95_ci'][0]>0;native=sum(diff)>=6 and lo>0
- gates={'train_fit':sm['LATE_LAYER_COUNT']['train_fit_correct']>=43 and sm['LATE_LAYER_COUNT']['train_fit_correct']-sm['EQUAL_SLOT']['train_fit_correct']>=8,'primary_new_ood':native,'order_invariance':sm['LATE_LAYER_COUNT']['order_invariance_both_over_any']>=.8,'marker_binding_preservation':all(v>=0 for v in marker.values()) and sum(marker.values())>=0,'protected_retention':all(v>=-1 for v in retention.values()) and sum(retention.values())>=-2,'composition':comp_delta>=-1}
+ gates={'train_fit':sm['LATE_LAYER_COUNT']['train_fit_correct']>=43 and sm['LATE_LAYER_COUNT']['train_fit_correct']-sm['EQUAL_SLOT']['train_fit_correct']>=8,'primary_new_ood':native,'order_invariance':sm['LATE_LAYER_COUNT']['order_invariance_both_over_any']>=.8,'marker_binding_preservation':all(v>=0 for v in marker.values()) and sum(marker.values())>=0,'protected_retention':all(v>=0 for v in retention.values()) and sum(retention.values())>=0,'composition':comp_delta>=0}
  cases={(True,False):'REPRESENTATION_TO_OUTPUT_BINDING_FAILURE',(False,False):'REJECT_LATE_LAYER_AUXILIARY_MECHANISM',(True,True):'MECHANISM_SUPPORTED_REQUIRES_INDEPENDENT_CONFIRMATION',(False,True):'NATIVE_ONLY_DISCORDANT_DIAGNOSTIC_INCONCLUSIVE'}
  r={'status':'COMPLETE_E4E_SCORE_AFTER_RAW_FREEZE','decision':'PASS_REQUIRES_LATER_INDEPENDENT_CONFIRMATION' if all(gates.values()) else 'REJECT','promotion':'FORBIDDEN_REQUIRES_LATER_INDEPENDENT_CONFIRMATION','raw_freeze_before_sidecar':True,'arms':sm,'primary_new_independent_ood':{'canonical_units':48,'late_layer_count_minus_equal_slot':{'delta_correct':sum(diff),'bootstrap_95_ci':[lo,hi],'replicates':10000},'count_stratified_delta':{str(c):sum(both('LATE_LAYER_COUNT',u)-both('EQUAL_SLOT',u) for u in units if next(x['count'] for x in ood if x['canonical']==u)==c) for c in (1,2,3)}},'layer31_probe':pg,'probe_native_case':cases[(probe_pass,native)],'marker_binding_preservation':{'by_endpoint':marker,'aggregate':sum(marker.values())},'protected_retention':{'by_family':retention,'aggregate':sum(retention.values())},'composition_secondary':{'late_layer_count_minus_equal_slot':comp_delta},'gates':gates,'physical_batch_size':1,'targets_opened_after_raw_freeze':True};write(Path(out)/'SCORE_RECEIPT.json',r);return r
 
@@ -233,6 +258,7 @@ def centroid_predict(train, vector):
     return max(centers,key=lambda c:2*sum(a*b for a,b in zip(centers[c],vector,strict=True))-sum(a*a for a in centers[c]))
 
 def probe_score(out):
+    recheck_frozen_artifacts(out,True)
     arms={}
     for arm in ('EQUAL_SLOT','LATE_LAYER_COUNT'):
         value=rows(Path(out)/(arm+'_LAYER31_FEATURES.jsonl'))
@@ -251,7 +277,7 @@ def execute(bp):
   paths={};m,t,man=load_model(False);paths['V7']=generate(m,t,man,eval_records(),b,out,'V7',deadline);collect_probe_features(m,t,man,out,'V7');del m;t.cuda.empty_cache()
   m,t,man=train_arm(b,out,'EQUAL_SLOT',False,deadline);paths['EQUAL_SLOT']=generate(m,t,man,eval_records(),b,out,'EQUAL_SLOT',deadline);collect_probe_features(m,t,man,out,'EQUAL_SLOT');del m;t.cuda.empty_cache()
   m,t,man=train_arm(b,out,'LATE_LAYER_COUNT',True,deadline);paths['LATE_LAYER_COUNT']=generate(m,t,man,eval_records(),b,out,'LATE_LAYER_COUNT',deadline);collect_probe_features(m,t,man,out,'LATE_LAYER_COUNT');del m;t.cuda.empty_cache()
-  raw_freeze(paths,out);probe_score(out);sidecar(out);score(out);write(out/'TERMINAL_RECEIPT.json',{'status':'COMPLETE','raw_freeze_before_sidecar':True,'score_sha256':sha(Path(out)/'SCORE_RECEIPT.json')})
+  raw_freeze(paths,out,{'V7':Path(out)/'V7_LAYER31_FEATURES.jsonl','EQUAL_SLOT':Path(out)/'EQUAL_SLOT_LAYER31_FEATURES.jsonl','LATE_LAYER_COUNT':Path(out)/'LATE_LAYER_COUNT_LAYER31_FEATURES.jsonl'});probe_score(out);sidecar(out);score(out);write(out/'TERMINAL_RECEIPT.json',{'status':'COMPLETE','raw_freeze_before_sidecar':True,'score_sha256':sha(Path(out)/'SCORE_RECEIPT.json')})
  except Exception as e:write(out/'TERMINAL_RECEIPT.json',{'status':'FAILED_OR_PARTIAL_NO_RETRY','error':str(e),'scientific_boundary_entered':True});raise
 
 def cpu_integration(bp):
@@ -260,7 +286,10 @@ def cpu_integration(bp):
   items=eval_records();paths={}
   for arm in ('V7','EQUAL_SLOT','LATE_LAYER_COUNT'):
    p=tmp/(arm+'_RAW.jsonl');jsonl(p,[{'record_id':x['id'],'split':x['split'],'prompt_sha256':taskhash(x['task']),'generated_token_ids':[],'parsed_grid':None,'parser_valid':False,'effective_batch_size':1} for x in items]);paths[arm]=p
-  raw_freeze(paths,tmp);sidecar(tmp);write(tmp/'PROBE_RECEIPT.json',{'status':'CPU_FIXTURE_FIXED_PROBE','treatment_minus_control':{'delta_correct':0,'bootstrap_95_ci':[0,0]}});sc=score(tmp)
+  features={};probe=probe_rows()
+  for arm in ('V7','EQUAL_SLOT','LATE_LAYER_COUNT'):
+   p=tmp/(arm+'_LAYER31_FEATURES.jsonl');jsonl(p,[{k:v for k,v in x.items() if k!='task'}|{'feature':[0.0,1.0,2.0]} for x in probe]);features[arm]=p
+  raw_freeze(paths,tmp,features);sidecar(tmp);write(tmp/'PROBE_RECEIPT.json',{'status':'CPU_FIXTURE_FIXED_PROBE','treatment_minus_control':{'delta_correct':0,'bootstrap_95_ci':[0,0]}});sc=score(tmp)
   return {'status':'PASS_E4E_PRODUCTION_TRAINER_EVALUATOR_SCORER_CPU_INTEGRATION','preclaim':pre['status'],'score_status':sc['status'],'arms':['V7','EQUAL_SLOT','LATE_LAYER_COUNT'],'raw_freeze_before_sidecar':True,'model_loaded':False,'gpu_used':False,'targets_opened_after_raw_freeze':True}
  finally:
   import shutil;shutil.rmtree(tmp)
