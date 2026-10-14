@@ -1036,7 +1036,10 @@ def remote_job_manifests(remote_job_dir: Path) -> list[dict[str, Any]]:
     manifests: list[dict[str, Any]] = []
     for path in sorted(remote_job_dir.glob("*.json")):
         try:
-            value = json.loads(path.read_text(encoding="utf-8"))
+            # Controller manifests can be emitted by Windows PowerShell, whose
+            # JSON writer may include a UTF-8 BOM.  It is transport metadata,
+            # so accept that encoding without weakening JSON validation.
+            value = json.loads(path.read_text(encoding="utf-8-sig"))
             job_id = str(value["job_id"])
             target = str(value["ssh_target"])
             output_root = str(value["output_root"])

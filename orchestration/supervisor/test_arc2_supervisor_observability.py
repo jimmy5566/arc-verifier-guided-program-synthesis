@@ -103,7 +103,8 @@ class SupervisorObservabilityTest(unittest.TestCase):
                 "output_root": "/workspace/arc2/active_runs/e4d/output",
                 "terminal_receipt": "/workspace/arc2/active_runs/e4d/output/TERMINAL_RECEIPT.json",
             }
-            (jobs / "E4D.json").write_text(json.dumps(manifest), encoding="utf-8")
+            # Match Windows PowerShell's default JSON transport encoding.
+            (jobs / "E4D.json").write_text(json.dumps(manifest), encoding="utf-8-sig")
             receipt = {"status": "COMPLETE", "raw_freeze_before_sidecar": True}
             payload = json.dumps({
                 "path": manifest["terminal_receipt"],
