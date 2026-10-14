@@ -178,10 +178,10 @@ def checkpoint_identities():
 
 
 def probe_contract():
-    return {"architecture": "frozen-checkpoint hidden-state extraction plus L2-ridge multiclass linear readout only", "layers": list(LAYERS),
+    return {"architecture": "frozen-checkpoint hidden-state extraction plus deterministic class-centroid affine multiclass linear readout only", "layers": list(LAYERS),
             "final_query_representation": {"token_positions": "all final-query grid digit tokens in row-major order, located by native task serialization", "pooling": "mean over those positions", "fixed_before_activations": True},
             "fit_split": "E3_TRAIN_DERIVED_DECONFOUNDED_COUNT_PROBE_V1", "evaluation_split": "E4D_REPRESENTATION_VS_BINDING_STRUCTURAL_OOD_V1",
-            "readout": {"classes": [1, 2, 3], "bias": True, "ridge_lambda": 1.0, "same_hyperparameters_each_checkpoint": True, "weight_updates": "FORBIDDEN"},
+            "readout": {"classes": [1, 2, 3], "bias": True, "fit": "per-class TRAIN-derived feature centroids; affine discriminant score_c(x)=2*mu_c.dot(x)-||mu_c||^2", "same_hyperparameters_each_checkpoint": True, "model_weight_updates": "FORBIDDEN", "readout_parameters": "deterministically fitted only from the frozen TRAIN-derived split"},
             "native_generation": {"decoder": "NVARC_NATIVE_GREEDY", "physical_batch_size": 1, "raw_freeze_before_target_sidecar": True},
             "decision_rule": {"binding_supported_only_if": "component-anchor minus equal-slot paired OOD probe >=6 canonical units and paired bootstrap 95% lower bound >0 while native-Greedy exact count does not materially improve", "anchor_representation_failed_if": "neither probe nor native-Greedy meets that threshold", "both_improve": "diagnostic support only; requires later independently frozen confirmation"}}
 
