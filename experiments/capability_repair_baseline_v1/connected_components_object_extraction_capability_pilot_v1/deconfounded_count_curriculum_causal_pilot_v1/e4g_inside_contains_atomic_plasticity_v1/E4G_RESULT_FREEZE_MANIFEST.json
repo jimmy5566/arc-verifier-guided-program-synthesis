@@ -1,0 +1,85 @@
+﻿{
+    "schema_version":  "E4G_RESULT_FREEZE_MANIFEST_V1",
+    "result_classification":  "COMPLETE_VALID_PREDECLARED_REJECT",
+    "execution_source_commit":  "2e6b6362a0b3ee8fc63b76f6034c1142e41a5206",
+    "binding_sha256":  "c0acccaad54de77eefc3121b3411bcf04f6d5a69b0da6a06e22d4c059f3df499",
+    "nonce":  "3221c0846e42c2a802713462b0d8e5c0",
+    "remote_output_root":  "/workspace/arc2/active_runs/e4g_inside_contains/e4g_3221c0846e42c2a802713462b0d8e5c0",
+    "terminal":  {
+                     "status":  "COMPLETE",
+                     "receipt_path":  "C:/Users/asus/Desktop/py/kaggle/ARC2/.arc2-local/orchestration/remote_receipts/remote_jobs/E4G_INSIDE_CONTAINS_ATOMIC_PLASTICITY_POSITIVE_CONTROL_V1_3221c0846e42c2a802713462b0d8e5c0/TERMINAL_RECEIPT.json",
+                     "receipt_sha256":  "417268db090ea9de0d7e8960d4cc77bddfe1f3d0e284897197f2a1e05198f606"
+                 },
+    "preclaim":  {
+                     "status":  "PASS_E4G_PRODUCTION_PREFLIGHT_NO_MODEL",
+                     "schedule_slots":  384,
+                     "model_loaded":  false,
+                     "gpu_used":  false,
+                     "targets_opened":  false
+                 },
+    "scientific_boundary":  {
+                                "retry":  false,
+                                "receipt_sha256":  "7b05f4fb8906fc38c8dd82ccf18bfbb3bc96160199a4e55ac7ecc6c382e97913"
+                            },
+    "raw_freeze":  {
+                       "status":  "COMPLETE_RAW_FROZEN_NO_TARGETS",
+                       "receipt_sha256":  "310a5c5813d52f70235cff5dd3283ef6b73f46d6db8b441cf21831aee08a3c02",
+                       "complete_arms":  [
+                                             "V7",
+                                             "TRAINED"
+                                         ],
+                       "targets_accessed_before_freeze":  false,
+                       "raw_sha256":  {
+                                          "V7":  "d0920059ca6f62ffcf2be59adc5a4bd3572869b08635f85910311f77adc8fb8f",
+                                          "TRAINED":  "ecff3d78898f20f0e7b5c1b49e0793d892c779b262b31710da7b24126970465f"
+                                      }
+                   },
+    "sidecar":  {
+                    "generated_after_raw_freeze":  true,
+                    "sha256":  "47009e3966acd5e4b19e80dbf35d1c51c1fe80bf5c3352b03009dac128bd7c85",
+                    "targets_opened_after_raw_freeze":  true
+                },
+    "artifacts":  {
+                      "trained_adapter":  {
+                                              "remote_only":  true,
+                                              "sha256":  "1c42694cabb24f5b5d47243d86dcac47f60fe8ac65d5995ef9d0c4ce13e50b3b",
+                                              "bytes":  528550256,
+                                              "git_excluded":  true
+                                          },
+                      "training_receipt_sha256":  "f74d0d2dc0bedf4060c4aed16a2a2d4bee349813d7e493bb84fa4ae570fd3c5f",
+                      "trained_generation_receipt_sha256":  "5da6cb718331fdf118e0fa30b44b31674b033121149431ceb1f584240e1f7d0e",
+                      "v7_generation_receipt_sha256":  "58e09dfe22d25aa7b13aaa564aa01cafdd263335b6114dcc8186b2390e3d3d64",
+                      "score_receipt_sha256":  "1306259f16c85a3270c20d32c7d8d4724243a8b0be84240deab60ea0e6b10344",
+                      "remote_small_evidence_tar":  {
+                                                        "path":  "/tmp/e4g_3221_small_evidence.tar.gz",
+                                                        "sha256":  "e6a427dd451c5dd6ef992c8af4b0ed6bcb9b649606423a33a6a0decbeb3636d3",
+                                                        "local_copy_status":  "NOT_TRANSFERRED"
+                                                    }
+                  },
+    "metrics":  {
+                    "train_fit":  46,
+                    "ood_delta":  20,
+                    "bootstrap_95_ci":  [
+                                            14,
+                                            27
+                                        ],
+                    "bootstrap_lower":  14,
+                    "order_invariance_both_any":  0.65217391304347827,
+                    "retention_aggregate":  0,
+                    "retention_families":  {
+                                               "NO_TRANSFORM_RETENTION":  0
+                                           },
+                    "composition_delta":  -1
+                },
+    "decision":  {
+                     "predeclared":  "REJECT",
+                     "reason":  "ORDER_INVARIANCE_FAIL",
+                     "no_checkpoint_promotion":  true,
+                     "no_rerun":  true,
+                     "no_partial_output_reuse":  true
+                 },
+    "preservation":  {
+                         "raw_predictions_and_receipts_preserved_remotely":  true,
+                         "raw_predictions_not_reused_for_unplanned_analysis":  true
+                     }
+}
