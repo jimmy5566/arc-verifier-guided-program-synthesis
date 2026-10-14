@@ -126,6 +126,33 @@ class SupervisorObservabilityTest(unittest.TestCase):
             self.assertTrue(payload["bound_remote_job"])
             self.assertEqual([], service.reconcile_bound_remote_jobs(records))
 
+    def test_bound_remote_job_controlled_no_retry_failure_emits_event(self) -> None:
+        """A worker-written controlled failure is terminal and must wake Governor."""
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            jobs, cache, events = base / "remote_jobs", base / "cache", base / "events"
+            jobs.mkdir()
+            manifest = {
+                "job_id": "E4E_BOUND_NO_RETRY",
+                "ssh_target": "pod@example",
+                "output_root": "/workspace/arc2/active_runs/e4e/output",
+                "terminal_receipt": "/workspace/arc2/active_runs/e4e/output/TERMINAL_RECEIPT.json",
+            }
+            (jobs / "E4E.json").write_text(json.dumps(manifest), encoding="utf-8-sig")
+            receipt = {"status": "FAILED_OR_PARTIAL_NO_RETRY", "scientific_boundary_entered": True}
+            payload = json.dumps({
+                "path": manifest["terminal_receipt"],
+                "content_b64": base64.b64encode(json.dumps(receipt).encode("utf-8")).decode("ascii"),
+            })
+            with patch.object(supervisor_module, "remote_shell", return_value=payload):
+                records = supervisor_module.fetch_remote_job_receipts(jobs, cache)
+            service = supervisor_module.Supervisor(base / "state.json", base / "notes", events)
+            self.assertEqual(["E4E_BOUND_NO_RETRY"], service.reconcile_bound_remote_jobs(records))
+            event = next(events.glob("REMOTE_TERMINAL_*.json"))
+            value = json.loads(event.read_text(encoding="utf-8"))["payload"]
+            self.assertEqual("FAILED_OR_PARTIAL_NO_RETRY", value["terminal_status"])
+            self.assertTrue(value["bound_remote_job"])
+
 
 if __name__ == "__main__":
     unittest.main()
