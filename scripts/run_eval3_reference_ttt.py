@@ -133,7 +133,7 @@ def _cuda_snapshot() -> dict[str, int]:
 
 
 def _fit_task(
-    *, model: Any, tokenizer: Any, task: Any, config: dict[str, Any], default_state: dict[str, Any], adapter_before: dict[str, str], base_fingerprints: dict[str, str], adapter_name: str = "default"
+    *, model: Any, tokenizer: Any, task: Any, config: dict[str, Any], default_state: dict[str, Any], adapter_before: dict[str, str], base_fingerprints: dict[str, str], adapter_name: str = "default", training_backend: str = "unsloth"
 ) -> dict[str, Any]:
     """Run exactly the frozen partial 24-step reference objective for one task."""
     import gc
@@ -164,7 +164,16 @@ def _fit_task(
         optimizer,
         lr_lambda=lambda step: (float(step + 1) / max(1, warmup)) if step < warmup else 0.5 * (1.0 + math.cos(math.pi * (step - warmup) / max(1, schedule_total - warmup))),
     )
-    torch.cuda.reset_peak_memory_stats(); FastLanguageModel.for_training(model); losses: list[float] = []; step_seconds: list[float] = []; fit_started = time.perf_counter()
+    torch.cuda.reset_peak_memory_stats()
+    if training_backend == "unsloth":
+        FastLanguageModel.for_training(model)
+    elif training_backend == "torch":
+        model.gradient_checkpointing_disable()
+        model.train()
+        model.config.use_cache = False
+    else:
+        raise ValueError(f"unsupported training backend: {training_backend}")
+    losses: list[float] = []; step_seconds: list[float] = []; fit_started = time.perf_counter()
     try:
         for step in range(actual_steps):
             step_started = time.perf_counter()
@@ -182,6 +191,7 @@ def _fit_task(
         base_after = {name: _fingerprint(parameter) for name, parameter in list((item for item in model.named_parameters() if not item[1].requires_grad))[:8]}
         return {
             "style": "official_nvarc_train_only_partial_24_steps", "rank": int(config["rank"]), "alpha": int(config["alpha"]),
+            "training_backend": training_backend,
             "target_modules": config["target_modules"], "ttt_steps": actual_steps, "reference_schedule_total_steps": schedule_total,
             "train_variant_count": len(variants), "kept_sequence_count": len(kept), "full_dialogue_assistant_only_loss": True,
             "train_pairs_only": True, "loss_finite": True, "first_loss": losses[0], "last_loss": losses[-1], "loss_curve": losses,

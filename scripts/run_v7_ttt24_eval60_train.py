@@ -302,7 +302,8 @@ def train(args: argparse.Namespace, task_ids: list[str], config: dict[str, Any])
         model.base_model.set_adapter(["foundation", "default"])
         fit = _fit_task(model=model, tokenizer=tokenizer, task=tasks[task_id], config=config,
                         default_state=default_state, adapter_before=adapter_before,
-                        base_fingerprints=base_before, adapter_name="default")
+                        base_fingerprints=base_before, adapter_name="default",
+                        training_backend="torch")
         if not fit["adapter_updated"] or not fit["base_model_unchanged"]:
             raise RuntimeError(f"{task_id}: task adaptation integrity failure")
         staging = task_dir.with_name(task_dir.name + f".staging.{os.getpid()}")
