@@ -1,0 +1,25 @@
+﻿{
+  "schema_version": 1,
+  "review_type": "CONTROLLED_SCIENTIFIC_RUNTIME_FAILURE",
+  "round_id": "E4E_LATE_LAYER_GLOBAL_COUNT_BINDING_CAUSAL_PILOT_V1_92b6072722e74a8e6ca2cba128105c7a",
+  "source_commit": "0a5b101aa7a6df6c2681d31e377f4fa1b9a5536b",
+  "delivery_commit": "88229e9ef085eea69597c5e36afd4d04eccd932e",
+  "binding_sha256": "73628f5f88c198eefe6b1cad03c456784d90912677f47f4e9685fe5d8903d95a",
+  "terminal_receipt": {
+    "status": "FAILED_OR_PARTIAL_NO_RETRY",
+    "sha256": "87774f2cd83290e8913bd1ebc39ffa6c900adc6acca6857ca254be47c306fd7c",
+    "scientific_boundary_entered": true,
+    "error": "mat1 and mat2 must have the same dtype, but got Float and BFloat16"
+  },
+  "interpretation": {
+    "scientific_result": "NOT_RUN_TO_COMPLETION",
+    "score": "NOT_RUN",
+    "sidecar_opened": false,
+    "targets_opened": false,
+    "raw_freeze_complete": false,
+    "retry_authorized": false,
+    "promotion": "FORBIDDEN"
+  },
+  "preserved_remote_artifacts": "E4E_V8_REMOTE_ARTIFACT_MANIFEST.json",
+  "review_question": "Classify the incomplete E4E run and determine the smallest permitted next action; do not reinterpret partial V7/Equal-Slot outputs as a causal result."
+}

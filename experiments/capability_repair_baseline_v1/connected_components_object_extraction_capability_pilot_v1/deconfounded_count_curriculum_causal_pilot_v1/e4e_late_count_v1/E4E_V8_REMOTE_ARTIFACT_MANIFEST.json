@@ -1,0 +1,18 @@
+﻿{
+  "schema_version": 1,
+  "round_id": "E4E_LATE_LAYER_GLOBAL_COUNT_BINDING_CAUSAL_PILOT_V1_92b6072722e74a8e6ca2cba128105c7a",
+  "output_root": "/workspace/arc2/active_runs/e4e_late_layer_count/e4e_repaired_v8_92b6072722e74a8e6ca2cba128105c7a",
+  "status": "FAILED_OR_PARTIAL_NO_RETRY",
+  "terminal_receipt_sha256": "87774f2cd83290e8913bd1ebc39ffa6c900adc6acca6857ca254be47c306fd7c",
+  "files": [
+    {"path":"EQUAL_SLOT_LAYER31_FEATURES.jsonl","bytes":7046255,"sha256":"7bad79bd61019c6f305e586b5ef134dffddf6502edb6b463ba9c9a05d26af5cf"},
+    {"path":"EQUAL_SLOT_RAW.jsonl","bytes":60160,"sha256":"b57203084eaae4a7a73c7c462130faad717e746cb3496d5febd321201b8dc3cf"},
+    {"path":"EQUAL_SLOT_TRAINING_RECEIPT.json","bytes":66235,"sha256":"aaa2b0958185f5c354bc10c9ef0d3e841993d1ce028798104c475d086bf926ff"},
+    {"path":"PREFLIGHT_RECEIPT.json","bytes":40105,"sha256":"117e9df9f1c5a5c6e68a629dc94456294d206c745160886b18643b5ec72541f7"},
+    {"path":"SCIENTIFIC_BOUNDARY.json","bytes":92,"sha256":"abe2c3e01022184092a43822879ea30641a34d58a16c2f1b3b6bd9ec82ef1c01"},
+    {"path":"TERMINAL_RECEIPT.json","bytes":152,"sha256":"87774f2cd83290e8913bd1ebc39ffa6c900adc6acca6857ca254be47c306fd7c"},
+    {"path":"V7_LAYER31_FEATURES.jsonl","bytes":7066753,"sha256":"9788ae43984b7077759a99a106bc6291921706625ffcb1426893bda06b3d9b81"},
+    {"path":"V7_RAW.jsonl","bytes":60160,"sha256":"cc8d51840aea8f8c2939e110c2b536dd1bc7cb0023bf7f81e7b485a3bc50cc4c"},
+    {"path":"EQUAL_SLOT_ADAPTER/adapter_model.safetensors","bytes":528550256,"sha256":"9c4c0eccf9e4a07e9db9a0fc561cc3e0a05bcd11cc79b7980eba90079aa7a441"}
+  ]
+}
