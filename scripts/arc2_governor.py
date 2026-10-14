@@ -586,6 +586,38 @@ def complete_event(state_path: Path, args: argparse.Namespace) -> None:
     save(state_path, state, f"EVENT_COMPLETED:{args.complete_event}")
 
 
+def _read_remote_job_manifest(value: str) -> tuple[Path, dict[str, Any]]:
+    remote_path = resolve_artifact(value)
+    remote = json.loads(remote_path.read_text(encoding="utf-8-sig"))
+    required = ("job_id", "ssh_target", "output_root", "terminal_receipt", "primary_process")
+    if any(not remote.get(key) for key in required):
+        raise RuntimeError("REMOTE_JOB_MANIFEST_INCOMPLETE")
+    primary = remote["primary_process"]
+    if not isinstance(primary, dict) or not isinstance(primary.get("pid"), int) or not primary.get("role"):
+        raise RuntimeError("REMOTE_JOB_PRIMARY_PROCESS_INCOMPLETE")
+    return remote_path, remote
+
+
+def replace_stale_wait_remote_job(state_path: Path, args: argparse.Namespace) -> None:
+    """Atomically replace a proven pre-model failed remote registration."""
+    state = load(state_path)
+    previous = state.get("remote_job")
+    if state.get("disposition") != "WAIT_REMOTE" or state.get("active_event") is not None or not isinstance(previous, dict):
+        raise RuntimeError("STALE_WAIT_REMOTE_REPLACE_NOT_ALLOWED")
+    receipt_path = resolve_artifact(args.failure_receipt)
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8-sig"))
+    if receipt.get("job_id") != previous.get("job_id"):
+        raise RuntimeError("STALE_FAILURE_RECEIPT_JOB_MISMATCH")
+    if receipt.get("scientific_authorization_consumed") is not False or receipt.get("model_loaded") is not False or receipt.get("gpu_used") is not False:
+        raise RuntimeError("STALE_FAILURE_RECEIPT_NOT_PREMODEL")
+    _, remote = _read_remote_job_manifest(args.replace_stale_wait_remote_job)
+    if remote["job_id"] == previous.get("job_id") or remote["output_root"] == previous.get("output_root"):
+        raise RuntimeError("REMOTE_JOB_REPLACEMENT_NOT_FRESH")
+    state.update({"remote_job": remote,
+                  "next_action": args.next_action or "SUPERVISOR_MONITORS_REPAIRED_BOUND_REMOTE_JOB",
+                  "pause_reason": None, "terminal_reason": None})
+    save(state_path, state, f"STALE_WAIT_REMOTE_REPLACED:{previous['job_id']}:{remote['job_id']}")
+
 def resume_paused_remote_job(state_path: Path, args: argparse.Namespace) -> None:
     """Atomically register a detached job after a pre-model paused-stage repair.
 
@@ -598,14 +630,8 @@ def resume_paused_remote_job(state_path: Path, args: argparse.Namespace) -> None
         raise RuntimeError("PAUSED_REMOTE_RESUME_NOT_ALLOWED")
     if state.get("remote_job") is not None:
         raise RuntimeError("REMOTE_JOB_ALREADY_REGISTERED")
-    remote_path = resolve_artifact(args.resume_paused_remote_job)
-    remote = json.loads(remote_path.read_text(encoding="utf-8-sig"))
-    required = ("job_id", "ssh_target", "output_root", "terminal_receipt", "primary_process")
-    if any(not remote.get(key) for key in required):
-        raise RuntimeError("REMOTE_JOB_MANIFEST_INCOMPLETE")
-    primary = remote["primary_process"]
-    if not isinstance(primary, dict) or not isinstance(primary.get("pid"), int) or not primary.get("role"):
-        raise RuntimeError("REMOTE_JOB_PRIMARY_PROCESS_INCOMPLETE")
+    _, remote = _read_remote_job_manifest(args.resume_paused_remote_job)
+
     state.update({"disposition": "WAIT_REMOTE", "remote_job": remote,
                   "next_action": args.next_action or "SUPERVISOR_MONITORS_BOUND_REMOTE_JOB",
                   "pause_reason": None, "terminal_reason": None})
@@ -653,6 +679,8 @@ def main() -> int:
     parser.add_argument("--claim-event")
     parser.add_argument("--complete-event")
     parser.add_argument("--resume-paused-remote-job")
+    parser.add_argument("--replace-stale-wait-remote-job")
+    parser.add_argument("--failure-receipt")
     parser.add_argument("--next-disposition", choices=sorted(DISPOSITIONS))
     parser.add_argument("--stage")
     parser.add_argument("--next-action")
@@ -671,7 +699,7 @@ def main() -> int:
     parser.add_argument("--pid-file", type=Path)
     parser.add_argument("--service-state", type=Path)
     args = parser.parse_args()
-    modes = sum(bool(value) for value in (args.migrate_legacy, args.repair_recursive_reviews, args.claim_event, args.complete_event, args.resume_paused_remote_job))
+    modes = sum(bool(value) for value in (args.migrate_legacy, args.repair_recursive_reviews, args.claim_event, args.complete_event, args.resume_paused_remote_job, args.replace_stale_wait_remote_job))
     if modes > 1:
         parser.error("migration, claim, and completion are mutually exclusive")
     if args.migrate_legacy:
@@ -688,6 +716,11 @@ def main() -> int:
         return 0
     if args.resume_paused_remote_job:
         resume_paused_remote_job(args.state, args)
+        return 0
+    if args.replace_stale_wait_remote_job:
+        if not args.failure_receipt:
+            parser.error("--replace-stale-wait-remote-job requires --failure-receipt")
+        replace_stale_wait_remote_job(args.state, args)
         return 0
     lock = GovernorLock(args.lock_path or args.state.parent / "arc2_governor.lock")
     if not lock.acquire():
