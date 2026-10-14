@@ -1,6 +1,6 @@
 from __future__ import annotations
 import unittest
-import json, tempfile
+import json, tempfile, shutil, subprocess
 from pathlib import Path
 
 from scripts.e4e_late_layer_global_count import final_query_grid_layout, layer31_count_loss, loss_contract
@@ -37,11 +37,19 @@ class E4EExecutableTests(unittest.TestCase):
         self.assertEqual(loss_contract(2.0,1.0,False)['answer_mean'], loss_contract(2.0,1.0,True)['answer_mean'])
 
     def test_launcher_reaches_production_execute_entrypoint(self):
-        launcher=(Path(__file__).resolve().parents[1]/'scripts/launch_e4e_late_layer_count_v1.sh').read_text(encoding='utf-8')
+        launcher_path=Path(__file__).resolve().parents[1]/'scripts/launch_e4e_late_layer_count_v1.sh'
+        launcher=launcher_path.read_text(encoding='utf-8')
         self.assertIn('run_e4e_late_layer_count_production_v1.py', launcher)
         self.assertIn('--execute', launcher)
         self.assertIn('runtime_python', launcher)
         self.assertNotIn('run_e4e_late_layer_count_v1.py --binding', launcher)
+
+    def test_launcher_is_lf_and_bash_parseable(self):
+        launcher_path=Path(__file__).resolve().parents[1]/'scripts/launch_e4e_late_layer_count_v1.sh'
+        self.assertNotIn(b'\r\n', launcher_path.read_bytes())
+        bash=shutil.which('bash')
+        if bash:
+            subprocess.run([bash, '-n'], input=launcher_path.read_bytes(), check=True)
 
     def test_preclaim_requires_cuda_bf16_before_model_loader(self):
         worker=(Path(__file__).resolve().parents[1]/'scripts/run_e4e_late_layer_count_production_v1.py').read_text(encoding='utf-8')
