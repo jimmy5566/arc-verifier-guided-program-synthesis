@@ -1,0 +1,53 @@
+﻿{
+    "schema_version":  1,
+    "status":  "PASS_E4G_DIRECTOR_REQUIRED_SCORING_CONTRACT_REPAIR_NO_MODEL",
+    "reviewed_response_sha256":  "2010e9467f37e3cf8942ae909de6c94cc25008e7c7ac591fad3e78d6c6e30510",
+    "repair_source_commit":  "d50fff4a43ebb1af8d79d5fffd821dd35f080a30",
+    "frozen_input_files_unchanged":  [
+                                         "TRAINING_SCHEDULE.json",
+                                         "TRAIN_FIT_INPUTS_AND_COMMITMENTS.json",
+                                         "STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json",
+                                         "PROTECTION_PANEL_REFERENCES.json"
+                                     ],
+    "fixed_schedule_decomposition":  {
+                                         "PRIMARY_INSIDE_CONTAINS":  48,
+                                         "PROTECTED_REPLAY_BYTE_IDENTICAL":  288,
+                                         "PRIMARY_OBJECT_EXTRACTION_BYTE_IDENTICAL":  48
+                                     },
+    "gates":  {
+                  "ood_delta_min":  6,
+                  "retention_family_min":  -1,
+                  "retention_aggregate_min":  -2,
+                  "primary":  "Treatment minus V7 structural OOD exact-grid both orders, 48 canonical units",
+                  "bootstrap_lower_strictly_gt":  0,
+                  "order_invariance_min":  0.8,
+                  "train_fit_min":  40,
+                  "composition_harm_min":  -1
+              },
+    "decision":  "REJECT unless every gate passes; any PASS remains non-promotable pending independent confirmation",
+    "cpu_tests":  {
+                      "status":  "PASS",
+                      "fixtures":  [
+                                       "pass",
+                                       "train_fit_fail",
+                                       "ood_fail",
+                                       "order_fail",
+                                       "retention_fail",
+                                       "composition_harm"
+                                   ]
+                  },
+    "model_loaded":  false,
+    "gpu_used":  false,
+    "targets_opened":  false,
+    "sidecar_opened":  false,
+    "files_sha256":  {
+                         "TRAINING_SCHEDULE.json":  "527c227a1eec9f65a83a7156aa2f331189a4415da35fd62aa6d889110afde1e8",
+                         "TRAIN_FIT_INPUTS_AND_COMMITMENTS.json":  "7175cc24c11f988ab1f758ae758a3c10fb8cc29980bc892782252b61ef6449dc",
+                         "STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json":  "e28659aa1e4f40b1bdd870aec6e7cafe87fe3771df8b3f0081fad0a114ae7344",
+                         "PROTECTION_PANEL_REFERENCES.json":  "b947049b1e0edac6b633095c305818e5966ed01ef2df7a04b928dc9aa35d43a4",
+                         "PROTOCOL.json":  "3f8711295ff2264be91abc06bb76268fb6e50d2ea3c57394ebff304a5c31ec70",
+                         "SCORING_CONTRACT.json":  "aafbd37db5b5a28a8a8d465ae74774636c2022fe174d15fdc5474acbb1e55e98",
+                         "CPU_FREEZE_RECEIPT.json":  "2dffa6b216182ad419909ef34fa822f660d070e48b2b3c5c2f66de71551dae5b",
+                         "CPU_PRODUCTION_PATH_RECEIPT.json":  "838480eab92b5c0eacb1a9db3a6f7d40735caf54fae90c8b10f42bd3135abf99"
+                     }
+}
