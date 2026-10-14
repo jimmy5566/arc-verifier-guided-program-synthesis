@@ -107,6 +107,8 @@ def load_hf_peft_inference(
             autocast_adapter_dtype=False,
         )
         model.base_model.set_adapter(["foundation", "task"])
+        for parameter in model.parameters():
+            parameter.requires_grad = False
         foundation_identity = {
             "adapter_path": str(foundation_adapter_path),
             "adapter_sha256": _sha256_file(foundation_required[0]),

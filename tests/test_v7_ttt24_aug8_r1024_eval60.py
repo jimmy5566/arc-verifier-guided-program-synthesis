@@ -45,3 +45,20 @@ def test_worker_diagnostic_trace_is_explicit_and_passive_flag(tmp_path: Path) ->
     assert "--diagnostic-trace" in command
     assert command[command.index("--search-order-policy") + 1] == "legacy"
     assert "--frontier-telemetry" not in command
+
+
+def test_worker_passes_frozen_v7_as_separate_foundation_adapter(tmp_path: Path) -> None:
+    args = argparse.Namespace(
+        worker_python="python", model_path=tmp_path / "base", foundation_adapter=tmp_path / "v7",
+        challenge=tmp_path / "challenge.json", native_config_dir=tmp_path / "native",
+        candidate_pool=tmp_path / "pool.json", adapter_stage=tmp_path / "stage", device="cuda:0",
+        search_order_policy="legacy", checkpoints="128,256,512,1024",
+        frontier_telemetry=False, diagnostic_trace=True, hidden_state_layers=None,
+    )
+    fake = argparse.Namespace(returncode=0, stdout="", stderr="")
+    with patch("subprocess.run", return_value=fake) as called:
+        core._worker(args, tmp_path / "run", {"output_id": "abc:o0"}, 0,
+                     {"resident_capacity": 1, "physical_batch_ceiling": 1},
+                     depth=24, experiment="TEST")
+    command = called.call_args.args[0]
+    assert command[command.index("--foundation-adapter") + 1] == str(tmp_path / "v7")
