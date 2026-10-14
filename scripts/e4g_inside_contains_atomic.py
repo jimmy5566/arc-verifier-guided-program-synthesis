@@ -117,7 +117,9 @@ def build():
       "reference_arm":{"name":"V7_NO_UPDATE","checkpoint_manifest":"experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json"},
       "training_arm":{"name":"V7_INSIDE_CONTAINS_CAPABILITY_TRAINING","initialization":"EXACT_V7","optimizer":"PagedAdamW8bit","learning_rate":5e-5,"seed":20261013,"updates":96,"slots_per_update":4,"base_answer_ce_coefficient":1.0,"protected_replay":"BYTE_IDENTICAL_336_NON_PRIMARY_SLOTS","primary_slots":48,"cap":"BOUND_LATER; NO_GPU_AUTHORIZATION_IN_THIS_PACKAGE"},
       "construct":{"direction_commands":{"INSIDE":8,"CONTAINS":9},"boundaries":"visible_closed_frames","objects":"visible_one_cell_inner_object","output_construction":{"INSIDE":"3x3 centered inner-color marker","CONTAINS":"3x3 frame-color ring"},"counterbalanced_dimensions":["topology","size","color","layout","demonstration_order"]},
+      "schedule_decomposition":{"PRIMARY_INSIDE_CONTAINS":48,"PRIMARY_OBJECT_EXTRACTION_BYTE_IDENTICAL":48,"PROTECTED_REPLAY_BYTE_IDENTICAL":288},
       "evaluation":{"native_greedy":"PHYSICAL_BATCH1_LATER","canonical_units":48,"two_demo_orders":True,"uncertainty":"PAIRED_CANONICAL_UNIT_BOOTSTRAP_95CI","targets":"SHA_COMMITMENTS_ONLY_UNTIL_RAW_FREEZE"},
+      "scoring_contract":{"primary_endpoint":"TREATMENT_MINUS_EXACT_V7_STRUCTURAL_OOD_BOTH_ORDERS_EXACT_GRID_48_CANONICAL_UNITS","ood_delta_min":6,"bootstrap_95_lower_strictly_gt":0,"train_fit_min":40,"order_invariance_both_orders_over_any_order_min":0.80,"retention_aggregate_delta_min":-2,"retention_each_family_delta_min":-1,"composition_sentinel_delta_min":-1,"composition_interpretation":"DESCRIPTIVE_HARM_DETECTION_ONLY_NOT_INDEPENDENT_COMPOSITIONAL_TRANSFER","decision":"REJECT_UNLESS_ALL_GATES_PASS","promotion":"FORBIDDEN_PENDING_FRESH_INDEPENDENT_CONFIRMATION"},
       "interpretation":{"good_train_fit_no_ood_gain":"GENERAL_STRUCTURAL_TRANSFER_BOTTLENECK","poor_train_fit":"BROADER_POST_V7_SUPERVISION_OR_OPTIMIZATION_BOTTLENECK"},
       "forbidden_now":["MODEL_LOAD","GPU","PREDICTION_GENERATION","TARGET_SIDECAR","GOLD_DGOLD_FINAL_AUDIT","PROMOTION","SUBMISSION"]}
     write(OUT/"TRAINING_SCHEDULE.json",{"schema_version":1,"episodes":schedule,"roles":{"PRIMARY_INSIDE_CONTAINS":48,"PRIMARY_OBJECT_EXTRACTION":48,"PROTECTED_REPLAY":288},"source_schedule_sha256":file_sha(SOURCE)})
@@ -134,13 +136,63 @@ def paired_bootstrap(control,treatment,reps=4000,seed=20261014):
     for _ in range(reps): draws.append(sum(delta[rng.randrange(48)] for _ in range(48)))
     draws.sort(); return {"delta":sum(delta),"lower_95":draws[int(.025*reps)],"upper_95":draws[int(.975*reps)-1],"cluster":"canonical_unit"}
 
+SCORING_GATES={
+    "train_fit_min":40,"ood_delta_min":6,"bootstrap_lower_strictly_gt":0,
+    "order_invariance_min":0.80,"retention_aggregate_min":-2,
+    "retention_family_min":-1,"composition_descriptive_harm_min":-1,
+}
+
+def decision(metrics):
+    """The exhaustive predeclared gate table; passing never promotes a checkpoint."""
+    reasons=[]
+    if metrics["train_fit"] < SCORING_GATES["train_fit_min"]: reasons.append("POOR_TRAIN_FIT")
+    if metrics["ood_delta"] < SCORING_GATES["ood_delta_min"] or metrics["bootstrap_lower"] <= 0: reasons.append("PRIMARY_OOD_FAIL")
+    if metrics["order_invariance"] < SCORING_GATES["order_invariance_min"]: reasons.append("ORDER_INVARIANCE_FAIL")
+    if metrics["retention_aggregate"] < SCORING_GATES["retention_aggregate_min"] or any(v < SCORING_GATES["retention_family_min"] for v in metrics["retention_families"].values()): reasons.append("RETENTION_FAIL")
+    if metrics["composition_delta"] < SCORING_GATES["composition_descriptive_harm_min"]: reasons.append("COMPOSITION_HARM")
+    return {"decision":"REJECT" if reasons else "PASS_NON_PROMOTABLE_PENDING_FRESH_INDEPENDENT_CONFIRMATION","reasons":reasons}
+
+def validate_frozen_panels():
+    """Read and validate frozen records without rewriting any panel or commitment."""
+    audits=[]
+    for name in ("TRAIN_FIT_INPUTS_AND_COMMITMENTS.json","STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json"):
+        panel=json.loads((OUT/name).read_text()); rows=panel["records"]; audits.append(assert_panel(rows,name))
+        for r in rows:
+            grid=r["input_task"]["test"][0]["input"]
+            colors=sorted({v for row in grid[1:] for v in row if v}); counts={c:sum(v==c for row in grid for v in row) for c in colors}
+            frame=max(colors,key=lambda c:counts[c]); inner=min(colors,key=lambda c:counts[c])
+            target=[[0,0,0],[0,inner,0],[0,0,0]] if grid[0][0]==8 else [[frame,frame,frame],[frame,0,frame],[frame,frame,frame]]
+            if digest(target)!=r["target_sha256"]: raise RuntimeError("FROZEN_TARGET_COMMITMENT_MISMATCH")
+    schedule=json.loads((OUT/"TRAINING_SCHEDULE.json").read_text())["episodes"]
+    if len(schedule)!=384 or sum(x["role"]=="PRIMARY_CONNECTED_COMPONENT_COUNT" for x in schedule)!=48 or sum(x["role"]=="PRIMARY_OBJECT_EXTRACTION" for x in schedule)!=48 or sum(x["role"]=="PROTECTED_REPLAY" for x in schedule)!=288: raise RuntimeError("SCHEDULE_DECOMPOSITION")
+    return {"status":"PASS_READ_ONLY_E4G_FROZEN_PANEL_VALIDATION","panels":audits,"schedule_decomposition":{"PRIMARY_INSIDE_CONTAINS":48,"PRIMARY_OBJECT_EXTRACTION":48,"PROTECTED_REPLAY":288}}
+
+def scoring_contract():
+    fixtures={
+      "pass":{"train_fit":40,"ood_delta":6,"bootstrap_lower":1,"order_invariance":.80,"retention_aggregate":-2,"retention_families":{"a":-1},"composition_delta":-1},
+      "train_fit_fail":{"train_fit":39,"ood_delta":6,"bootstrap_lower":1,"order_invariance":.80,"retention_aggregate":-2,"retention_families":{"a":-1},"composition_delta":-1},
+      "ood_fail":{"train_fit":40,"ood_delta":5,"bootstrap_lower":1,"order_invariance":.80,"retention_aggregate":-2,"retention_families":{"a":-1},"composition_delta":-1},
+      "order_fail":{"train_fit":40,"ood_delta":6,"bootstrap_lower":1,"order_invariance":.79,"retention_aggregate":-2,"retention_families":{"a":-1},"composition_delta":-1},
+      "retention_fail":{"train_fit":40,"ood_delta":6,"bootstrap_lower":1,"order_invariance":.80,"retention_aggregate":-3,"retention_families":{"a":-1},"composition_delta":-1},
+      "composition_harm":{"train_fit":40,"ood_delta":6,"bootstrap_lower":1,"order_invariance":.80,"retention_aggregate":-2,"retention_families":{"a":-1},"composition_delta":-2},
+    }
+    results={name:decision(value) for name,value in fixtures.items()}
+    if results["pass"]["decision"] != "PASS_NON_PROMOTABLE_PENDING_FRESH_INDEPENDENT_CONFIRMATION": raise RuntimeError("PASS_FIXTURE")
+    for name in tuple(fixtures)[1:]:
+        if results[name]["decision"] != "REJECT": raise RuntimeError("FAIL_FIXTURE_"+name)
+    contract={"schema_version":1,"status":"PASS_E4G_DETERMINISTIC_SCORER_CONTRACT","gates":SCORING_GATES,"fixtures":results,
+              "primary_endpoint":"TREATMENT_MINUS_EXACT_V7_STRUCTURAL_OOD_BOTH_ORDERS_EXACT_GRID_48_CANONICAL_UNITS",
+              "uncertainty":"PAIRED_CANONICAL_UNIT_BOOTSTRAP_95CI","composition":"DESCRIPTIVE_HARM_DETECTION_ONLY; NOT_NEW_COMPOSITIONAL_TRANSFER_EVIDENCE",
+              "promotion":"FORBIDDEN; PASS_REQUIRES_FRESH_INDEPENDENT_CONFIRMATION"}
+    write(OUT/"SCORING_CONTRACT.json",contract); return contract
+
 def cpu_preflight():
-    build(); ood=json.loads((OUT/"STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json").read_text())
+    frozen=validate_frozen_panels(); contract=scoring_contract(); ood=json.loads((OUT/"STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json").read_text())
     raw=[{"arm":a,"canonical_unit_id":r["canonical_unit_id"],"demo_order":r["demo_order"],"prediction_sha256":digest({"arm":a,"input":r["input_task"]})} for a in ("V7","CONTROL","TREATMENT") for r in ood["records"]]
     if len(raw)!=288 or any("target" in json.dumps(r).lower() for r in raw): raise RuntimeError("RAW_MOCK")
     contract=paired_bootstrap([0]*48,[0]*48)
     if contract["delta"]!=0 or contract["lower_95"]!=0: raise RuntimeError("BOOTSTRAP")
-    out={"status":"PASS_E4G_PRODUCTION_SHAPED_CPU_PREFLIGHT_NO_MODEL","model_loaded":False,"gpu_used":False,"targets_opened":False,"sidecar_opened":False,"launcher_to_worker_to_raw_freeze":True,"raw_freeze_sha256":digest(raw),"raw_records":len(raw),"paired_bootstrap_contract":contract}
+    out={"status":"PASS_E4G_PRODUCTION_SHAPED_CPU_PREFLIGHT_NO_MODEL","model_loaded":False,"gpu_used":False,"targets_opened":False,"sidecar_opened":False,"launcher_to_worker_to_raw_freeze":True,"raw_freeze_sha256":digest(raw),"raw_records":len(raw),"paired_bootstrap_contract":contract,"frozen_panel_validation":frozen["status"],"scorer_contract":"PASS"}
     write(OUT/"CPU_PRODUCTION_PATH_RECEIPT.json",out); return out
 
 if __name__=="__main__":

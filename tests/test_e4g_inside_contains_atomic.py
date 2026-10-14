@@ -2,7 +2,7 @@ from __future__ import annotations
 import json
 import unittest
 
-from scripts.e4g_inside_contains_atomic import OUT, build, cpu_preflight, paired_bootstrap
+from scripts.e4g_inside_contains_atomic import OUT, build, cpu_preflight, paired_bootstrap, decision, scoring_contract, validate_frozen_panels
 
 
 class E4GInsideContainsTests(unittest.TestCase):
@@ -38,5 +38,14 @@ class E4GInsideContainsTests(unittest.TestCase):
         self.assertFalse(receipt["model_loaded"]); self.assertFalse(receipt["targets_opened"])
         self.assertEqual(paired_bootstrap([0]*48,[1]*48)["delta"],48)
         with self.assertRaises(ValueError): paired_bootstrap([],[])
+
+    def test_exact_predeclared_decision_table_rejects_every_required_failure(self):
+        result=scoring_contract()
+        self.assertEqual(result["fixtures"]["pass"]["decision"], "PASS_NON_PROMOTABLE_PENDING_FRESH_INDEPENDENT_CONFIRMATION")
+        for name in ("train_fit_fail","ood_fail","order_fail","retention_fail","composition_harm"):
+            self.assertEqual(result["fixtures"][name]["decision"], "REJECT")
+        self.assertEqual(validate_frozen_panels()["schedule_decomposition"], {"PRIMARY_INSIDE_CONTAINS":48,"PRIMARY_OBJECT_EXTRACTION":48,"PROTECTED_REPLAY":288})
+        family_regression={"train_fit":40,"ood_delta":6,"bootstrap_lower":1,"order_invariance":.80,"retention_aggregate":-2,"retention_families":{"protected":-2},"composition_delta":-1}
+        self.assertIn("RETENTION_FAIL",decision(family_regression)["reasons"])
 
 if __name__ == "__main__": unittest.main()
