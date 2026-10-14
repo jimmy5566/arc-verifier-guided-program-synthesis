@@ -1,0 +1,60 @@
+{
+    "schema_version":  1,
+    "brief_type":  "E4F2_RESULT_REVIEW",
+    "experiment_id":  "E4F2_DISTANCE_OVERLAP_COMPONENT_AFFINITY_CAUSAL_PILOT_V1",
+    "result_manifest":  "e4f2_evidence_f8e101e2560ca06f7fe60813afc8c464/RESULT_MANIFEST.json",
+    "result_manifest_sha256":  "53c4959a4a38bfaa5495d98a7e9a9154a69bdc059621abd7b5106f73205921f4",
+    "terminal_receipt_sha256":  "82467170b69364f6cb5c954022a75601006679db9b9b66d7992a45f396b386f6",
+    "score_receipt_sha256":  "0bdb7e61e2eeff0a3ecd3fd3099ce1c1f372572bc43c3bfba92b9dc755cb220d",
+    "validity":  "COMPLETE_VALID_FROZEN_RESULT: exact bound source and assets preclaimed; physical Batch1; all three raw files and auxiliary artifact frozen before sidecar; score complete.",
+    "predeclared_decision":  "REJECT",
+    "quantitative_summary":  {
+                                 "v7":  {
+                                            "train_fit":  "31/48",
+                                            "ood_both_orders":  "17/48",
+                                            "ood_any_order":  "32/48",
+                                            "order_invariance":  0.53125,
+                                            "marker":  "16/16",
+                                            "composition":  "4/16"
+                                        },
+                                 "equal_slot":  {
+                                                    "train_fit":  "23/48",
+                                                    "ood_both_orders":  "16/48",
+                                                    "ood_any_order":  "17/48",
+                                                    "order_invariance":  0.94117647058823528,
+                                                    "marker":  "16/16",
+                                                    "composition":  "4/16"
+                                                },
+                                 "component_affinity":  {
+                                                            "train_fit":  "22/48",
+                                                            "ood_both_orders":  "16/48",
+                                                            "ood_any_order":  "17/48",
+                                                            "order_invariance":  0.94117647058823528,
+                                                            "marker":  "16/16",
+                                                            "composition":  "4/16",
+                                                            "auxiliary_fit_mean_bce":  0.81506498344242573
+                                                        },
+                                 "primary":  {
+                                                 "canonical_units":  48,
+                                                 "treatment_minus_control":  0,
+                                                 "bootstrap_95_ci":  [
+                                                                         0,
+                                                                         0
+                                                                     ],
+                                                 "success_gate_passed":  false
+                                             },
+                                 "protections":  {
+                                                     "marker_aggregate_delta":  0,
+                                                     "marker_by_endpoint":  {
+                                                                                "2":  0,
+                                                                                "0":  0
+                                                                            },
+                                                     "retention_aggregate_delta":  0,
+                                                     "retention_by_family":  {
+                                                                                 "NO_TRANSFORM_RETENTION":  0
+                                                                             },
+                                                     "composition_delta":  0
+                                                 }
+                             },
+    "review_question":  "Interpret the frozen E4F2 negative result and select any next mechanism study without altering or rerunning E4F2."
+}

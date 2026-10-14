@@ -1,0 +1,28 @@
+{
+    "schema_version":  1,
+    "status":  "PASS_REMOTE_SMALL_EVIDENCE_BYTE_VERIFICATION",
+    "transport":  "forced_pty_base64_fallback_after_scp_subsystem_rejection",
+    "source_output_root":  "/workspace/arc2/active_runs/e4f2_component_affinity/e4f2_f8e101e2560ca06f7fe60813afc8c464",
+    "archive_file":  "REMOTE_SMALL_EVIDENCE.tar.gz",
+    "archive_bytes":  46233,
+    "archive_sha256":  "5f76e3f8ec0893d7c9f4b9584d1083405f63413ff8d2d36be0e87c1b0cff448b",
+    "excluded":  [
+                     "adapters",
+                     "model weights",
+                     "large binaries"
+                 ],
+    "extracted_files":  {
+                            "COMPONENT_AFFINITY_AUXILIARY_FIT.json":  "6df22446e75268bde65f6c60030e5dd3ba5f56ef3488cae199f6e9d7d9c4f2e3",
+                            "COMPONENT_AFFINITY_RAW.jsonl":  "ed24151078c07e7fc48882f754c1db5d1a65b2169aab7a76cd2c1e0224a5747d",
+                            "COMPONENT_AFFINITY_TRAINING_RECEIPT.json":  "ce1e1a7de9952ffed93ec0b9765105eaddefa9918ef0a063f8eec5370a4c70b1",
+                            "EQUAL_SLOT_RAW.jsonl":  "21559b3ae965a28d9bc1e1d8444af4decbe2c3c9f84bfb371ab8ff6a4ef50a7e",
+                            "EQUAL_SLOT_TRAINING_RECEIPT.json":  "9057556366b3db1206aa4d878493e933f5b4fb9caf6c2b4e75b7267a4ee97fa2",
+                            "PREFLIGHT_RECEIPT.json":  "68eb1ff11946d8e11ba8d458523c84400b2c926ac7431f0675135b3629a0b7ea",
+                            "RAW_FREEZE_RECEIPT.json":  "40084621e1019d037809048ecaa5d37526fc8e917292cd222f497fc0575b8990",
+                            "SCIENTIFIC_BOUNDARY.json":  "9a445a1532ead03d7d4c63ea68bf8283e4adb942a42cf490bee55f86bc63ec5c",
+                            "SCORE_RECEIPT.json":  "0bdb7e61e2eeff0a3ecd3fd3099ce1c1f372572bc43c3bfba92b9dc755cb220d",
+                            "SYNTHETIC_TARGET_SIDECAR.json":  "0e6b0839f7450da7fba1c08232b3619697885b6941ac986b85e66de4c78e259d",
+                            "TERMINAL_RECEIPT.json":  "82467170b69364f6cb5c954022a75601006679db9b9b66d7992a45f396b386f6",
+                            "V7_RAW.jsonl":  "2b12aad2ec871f48873d3d454b8a4db94bf39f8729f0aa4e300269f76ce2d5e1"
+                        }
+}

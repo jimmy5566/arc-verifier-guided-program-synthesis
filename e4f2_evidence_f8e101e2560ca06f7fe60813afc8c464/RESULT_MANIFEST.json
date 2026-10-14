@@ -1,0 +1,64 @@
+{
+    "schema_version":  1,
+    "experiment_id":  "E4F2_DISTANCE_OVERLAP_COMPONENT_AFFINITY_CAUSAL_PILOT_V1",
+    "status":  "COMPLETE_VALID_FROZEN_NEGATIVE_RESULT",
+    "decision":  "REJECT",
+    "promotion":  "FORBIDDEN_REQUIRES_LATER_INDEPENDENT_CONFIRMATION",
+    "source_commit":  "16aa0c489af31cbd07627a9aa3627791ae6d03bd",
+    "delivery_commit":  "930e18ec8de2fc73026167cab3ef92ec6d279d55",
+    "binding_sha256":  "70e79b396a19e479ac2e7429dc0a29a28b752f6bf853343c4ee445a2b46fc1f1",
+    "nonce":  "f8e101e2560ca06f7fe60813afc8c464",
+    "terminal_receipt_sha256":  "82467170b69364f6cb5c954022a75601006679db9b9b66d7992a45f396b386f6",
+    "score_receipt_sha256":  "0bdb7e61e2eeff0a3ecd3fd3099ce1c1f372572bc43c3bfba92b9dc755cb220d",
+    "raw_freeze_before_sidecar":  true,
+    "physical_batch_size":  1,
+    "results":  {
+                    "v7":  {
+                               "train_fit":  "31/48",
+                               "ood_both_orders":  "17/48",
+                               "ood_any_order":  "32/48",
+                               "order_invariance":  0.53125,
+                               "marker":  "16/16",
+                               "composition":  "4/16"
+                           },
+                    "equal_slot":  {
+                                       "train_fit":  "23/48",
+                                       "ood_both_orders":  "16/48",
+                                       "ood_any_order":  "17/48",
+                                       "order_invariance":  0.94117647058823528,
+                                       "marker":  "16/16",
+                                       "composition":  "4/16"
+                                   },
+                    "component_affinity":  {
+                                               "train_fit":  "22/48",
+                                               "ood_both_orders":  "16/48",
+                                               "ood_any_order":  "17/48",
+                                               "order_invariance":  0.94117647058823528,
+                                               "marker":  "16/16",
+                                               "composition":  "4/16",
+                                               "auxiliary_fit_mean_bce":  0.81506498344242573
+                                           },
+                    "primary":  {
+                                    "canonical_units":  48,
+                                    "treatment_minus_control":  0,
+                                    "bootstrap_95_ci":  [
+                                                            0,
+                                                            0
+                                                        ],
+                                    "success_gate_passed":  false
+                                },
+                    "protections":  {
+                                        "marker_aggregate_delta":  0,
+                                        "marker_by_endpoint":  {
+                                                                   "2":  0,
+                                                                   "0":  0
+                                                               },
+                                        "retention_aggregate_delta":  0,
+                                        "retention_by_family":  {
+                                                                    "NO_TRANSFORM_RETENTION":  0
+                                                                },
+                                        "composition_delta":  0
+                                    }
+                },
+    "evidence_transfer_receipt":  "REMOTE_EVIDENCE_TRANSFER_RECEIPT.json"
+}
