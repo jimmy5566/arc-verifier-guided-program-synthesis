@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "COMPLETE_EXACT_RECOMPUTATION_FROM_FROZEN_REMOTE_RAW_AND_POSTFREEZE_SIDECAR",
+  "source": {
+    "remote_output_root": "/workspace/arc2/active_runs/e4g_inside_contains/e4g_3221c0846e42c2a802713462b0d8e5c0",
+    "raw_sha256": {
+      "V7": "d0920059ca6f62ffcf2be59adc5a4bd3572869b08635f85910311f77adc8fb8f",
+      "TRAINED": "ecff3d78898f20f0e7b5c1b49e0793d892c779b262b31710da7b24126970465f"
+    },
+    "target_sidecar_opened_after_raw_freeze": true,
+    "raw_records_per_arm": 96,
+    "all_ood_parses_valid_per_arm": 96
+  },
+  "V7": {
+    "order_correct": {"A": 10, "B": 40},
+    "paired_canonical_units": {"both": 10, "A_only": 0, "B_only": 30, "neither": 8},
+    "both_orders_exact": 10,
+    "any_order_exact": 40,
+    "order_invariance_both_over_any": 0.25,
+    "direction_record_correct": {"INSIDE": 26, "CONTAINS": 24}
+  },
+  "E4G_TRAINED": {
+    "order_correct": {"A": 30, "B": 46},
+    "paired_canonical_units": {"both": 30, "A_only": 0, "B_only": 16, "neither": 2},
+    "both_orders_exact": 30,
+    "any_order_exact": 46,
+    "order_invariance_both_over_any": 0.6521739130434783,
+    "direction_record_correct": {"INSIDE": 30, "CONTAINS": 46}
+  },
+  "paired_primary_delta": 20,
+  "paired_bootstrap_95_ci": [14, 27],
+  "joint_decision": "REJECT",
+  "causal_limitations": [
+    "Order B is much easier than order A for both checkpoints even though only order A appeared in training.",
+    "The trained arm improves both-order exactness but retains substantial B-only behavior.",
+    "The frozen color-role and demonstration-order shortcuts prevent attribution to spatial Inside/Contains reasoning.",
+    "This post hoc audit does not relax or replace the original predeclared order-invariance gate."
+  ]
+}
