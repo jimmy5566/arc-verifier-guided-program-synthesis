@@ -77,3 +77,19 @@ def loss_contract(answer_mean: float, count_auxiliary_mean: float, treatment: bo
         "slot_coefficient": 0.25,
         "step_term": 0.25 * (float(answer_mean) + auxiliary),
     }
+
+
+def layer31_count_loss(hidden_states, positions, count: int, head):
+    """Train-only three-class CE from the fixed layer-31 query representation.
+
+    Deferred imports ensure CPU validation never initializes Torch/CUDA.  The
+    caller owns the fresh auxiliary head and must discard it before inference.
+    """
+    import torch
+    import torch.nn.functional as functional
+
+    if int(count) not in CLASSES or not positions:
+        raise ValueError("E4E_COUNT_AUXILIARY_INPUT")
+    pooled = hidden_states[LAYER][0, list(positions)].float().mean(dim=0)
+    target = torch.tensor([multiclass_target_index(int(count))], device=pooled.device)
+    return functional.cross_entropy(head(pooled).float().unsqueeze(0), target), pooled
