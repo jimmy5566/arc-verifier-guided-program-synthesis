@@ -1,0 +1,27 @@
+﻿{
+    "schema_version":  1,
+    "kind":  "ARC2_E4D_SECURITY_ASSET_IDENTITY_BLOCKER",
+    "stage":  "E4D_OBJECT_CENTRIC_COMPONENT_ANCHOR_GROUNDING_V1_FINAL_EXECUTION",
+    "authoritative_decision":  "E4D_AUTH_BRIEF_RESPONSE.json",
+    "binding_sha256":  "38c2a38d6628c7f4ae3ca4e0cfe7871eebaa6b2e7c2aa9a383dd7cec0c866a9c",
+    "source_commit":  "ff792d8f5fa172382134f77dad1395cb6ffeb8ae",
+    "nonce":  "4f704bc36c3d565a5840e631c2b8af0e",
+    "ssh_target":  "9sg1mrcvt78cqt-64411eb5@ssh.runpod.io",
+    "evidence":  {
+                     "existing_controller_agent_socket":  "C:/Users/asus/.ssh/arc2-controller-agent.sock",
+                     "ssh_result":  "Permission denied (publickey)",
+                     "attempts":  "existing configured key identities and existing controller agent only; no credential creation or substitution",
+                     "remote_checkout":  false,
+                     "preclaim":  false,
+                     "model_loaded":  false,
+                     "gpu_used":  false,
+                     "output_root_created":  false,
+                     "authorization_consumed":  false
+                 },
+    "required_resolution":  "Restore an already-authorized SSH identity or provide an authorized endpoint; rerun the same bound preclaim before any model load.",
+    "forbidden":  [
+                      "credential substitution",
+                      "binding/source/nonce/output-root change",
+                      "automatic retry after model load"
+                  ]
+}

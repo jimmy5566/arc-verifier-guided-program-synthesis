@@ -1,0 +1,50 @@
+{
+  "binding_sha256": "38c2a38d6628c7f4ae3ca4e0cfe7871eebaa6b2e7c2aa9a383dd7cec0c866a9c",
+  "brief_type": "E4D_RESULT_INTERPRETATION",
+  "forbidden_actions": [
+    "checkpoint_promotion",
+    "rerun_under_consumed_nonce",
+    "Gold_dGold_FINAL_AUDIT_access",
+    "official_submission"
+  ],
+  "observed_result": {
+    "composition_delta": 0,
+    "fresh_ood_paired_bootstrap_95_ci": [
+      0,
+      7
+    ],
+    "fresh_ood_paired_canonical_delta_component_anchor_minus_equal_slot": 3,
+    "fresh_ood_physical_order_correct_of_96": {
+      "Component_Anchor": 44,
+      "Equal_Slot": 42,
+      "V7": 49
+    },
+    "marker_binding_preservation_delta": 0,
+    "order_invariance": {
+      "any_order_correct": 24,
+      "both_orders_correct": 20,
+      "both_over_any": 0.8333333333333334
+    },
+    "protected_retention_delta": 0,
+    "train_fit_correct_of_48": {
+      "Component_Anchor": 30,
+      "Equal_Slot": 34,
+      "V7": 31
+    }
+  },
+  "predeclared_decision": "REJECT",
+  "request": "Interpret the completed frozen E4D result and select at most one next falsifiable mechanism study. No promotion and no rerun are requested by this brief.",
+  "result_manifest": "e4d_evidence/E4D_RESULT_MANIFEST.json",
+  "result_manifest_sha256": "60fb7d5776b6b85a28b434b7f88896657739e7e310c777f421d6c2f3c1af01f3",
+  "round_id": "E4D_OBJECT_CENTRIC_COMPONENT_ANCHOR_GROUNDING_V1_4f704bc36c3d565a5840e631c2b8af0e",
+  "schema_version": 1,
+  "source_commit": "ff792d8f5fa172382134f77dad1395cb6ffeb8ae",
+  "stage": "E4D_OBJECT_CENTRIC_COMPONENT_ANCHOR_GROUNDING_V1_FINAL_EXECUTION",
+  "validity": {
+    "checkpoint_promotion": "FORBIDDEN",
+    "gpu_time": "UNVERIFIED_IN_PRESERVED_SMALL_RECEIPTS",
+    "model_loaded_for_preflight": false,
+    "physical_batch_size": 1,
+    "raw_freeze_before_sidecar": true
+  }
+}

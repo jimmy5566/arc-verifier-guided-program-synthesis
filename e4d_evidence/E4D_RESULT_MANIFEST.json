@@ -1,0 +1,69 @@
+{
+  "binding_sha256": "38c2a38d6628c7f4ae3ca4e0cfe7871eebaa6b2e7c2aa9a383dd7cec0c866a9c",
+  "decision": "REJECT",
+  "evidence_transport_receipt_sha256": "5558682d911cd652b240c14c508f30fad59bb0c0a25814d95955f27ec269149a",
+  "excluded_large_artifacts": [
+    "EQUAL_SLOT_5E5_ADAPTER/adapter_model.safetensors",
+    "COMPONENT_ANCHOR_ADAPTER/adapter_model.safetensors"
+  ],
+  "gates": {
+    "composition": true,
+    "marker_binding_preservation": true,
+    "order_invariance": true,
+    "primary_new_ood": false,
+    "retention": true,
+    "train_fit": false
+  },
+  "nonce": "4f704bc36c3d565a5840e631c2b8af0e",
+  "quantitative_results": {
+    "composition_delta": 0,
+    "fresh_ood_paired_bootstrap_95_ci": [
+      0,
+      7
+    ],
+    "fresh_ood_paired_canonical_delta_component_anchor_minus_equal_slot": 3,
+    "fresh_ood_physical_order_correct_of_96": {
+      "Component_Anchor": 44,
+      "Equal_Slot": 42,
+      "V7": 49
+    },
+    "marker_binding_preservation_delta": 0,
+    "order_invariance": {
+      "any_order_correct": 24,
+      "both_orders_correct": 20,
+      "both_over_any": 0.8333333333333334
+    },
+    "protected_retention_delta": 0,
+    "train_fit_correct_of_48": {
+      "Component_Anchor": 30,
+      "Equal_Slot": 34,
+      "V7": 31
+    }
+  },
+  "raw_freeze": {
+    "raw_sha256": {
+      "COMPONENT_ANCHOR": "5b324efb41be9654b9767765e4e131a224be58cf9379ef8aa3d6ccb96b91130f",
+      "EQUAL_SLOT": "0acb7e5d76bc06fffd6e52d813671e8873acc5f6cd562415d657ae07105902aa",
+      "V7": "14cb5d116e32eb4103b5ca8179254cc66d1d130786dba781b7056a933e56966e"
+    },
+    "status": "COMPLETE_RAW_FROZEN_NO_TARGETS",
+    "targets_accessed": false
+  },
+  "round_id": "E4D_OBJECT_CENTRIC_COMPONENT_ANCHOR_GROUNDING_V1_4f704bc36c3d565a5840e631c2b8af0e",
+  "schema_version": 1,
+  "sidecar": {
+    "opened_after_raw_freeze": true,
+    "sha256": "779459c3d1eee50e7561987fc0c0a765c479ad9b94c0c5a9a9cf8237d9f5c10e"
+  },
+  "source_commit": "ff792d8f5fa172382134f77dad1395cb6ffeb8ae",
+  "stage": "E4D_OBJECT_CENTRIC_COMPONENT_ANCHOR_GROUNDING_V1_FINAL_EXECUTION",
+  "status": "COMPLETE_E4D_SCORE_AFTER_RAW_FREEZE",
+  "terminal_receipt_sha256": "4d7ba047d6cabe26cf12782a73bbc2c7db7ec80d912c9087bdb6926c3f6803e7",
+  "validity": {
+    "checkpoint_promotion": "FORBIDDEN",
+    "gpu_time": "UNVERIFIED_IN_PRESERVED_SMALL_RECEIPTS",
+    "model_loaded_for_preflight": false,
+    "physical_batch_size": 1,
+    "raw_freeze_before_sidecar": true
+  }
+}
