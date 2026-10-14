@@ -1,0 +1,1 @@
+{"arms":["V7","EQUAL_SLOT","LATE_LAYER_COUNT"],"gpu_used":false,"model_loaded":false,"preclaim":"PASS_E4E_EXECUTABLE_PRODUCTION_PREFLIGHT_NO_MODEL","raw_freeze_before_sidecar":true,"score_status":"COMPLETE_E4E_SCORE_AFTER_RAW_FREEZE","status":"PASS_E4E_PRODUCTION_TRAINER_EVALUATOR_SCORER_CPU_INTEGRATION","targets_opened_after_raw_freeze":true}
