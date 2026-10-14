@@ -1073,6 +1073,20 @@ def fetch_remote_job_receipts(remote_job_dir: Path, cache_root: Path,
     fetched: list[dict[str, Any]] = []
     for manifest in remote_job_manifests(remote_job_dir):
         terminal_receipt = manifest["terminal_receipt"]
+        destination = cache_root / "remote_jobs" / manifest["job_id"] / "TERMINAL_RECEIPT.json"
+        # A terminal receipt is immutable.  Once its byte-validated local copy
+        # exists, retain it for reconciliation and avoid serially reconnecting
+        # to old completed jobs before checking the currently bound job.
+        if destination.is_file():
+            try:
+                content = destination.read_bytes()
+                json.loads(content.decode("utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                pass
+            else:
+                fetched.append({**manifest, "local_receipt": str(destination.resolve()),
+                                "receipt_sha256": hashlib.sha256(content).hexdigest()})
+                continue
         script = f'''python3 - <<'PY'
 import base64, json, os
 path = {terminal_receipt!r}
@@ -1089,7 +1103,6 @@ PY'''
                 json.loads(content.decode("utf-8"))
             except (KeyError, TypeError, ValueError, UnicodeDecodeError, json.JSONDecodeError):
                 continue
-            destination = cache_root / "remote_jobs" / manifest["job_id"] / "TERMINAL_RECEIPT.json"
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_bytes(content)
             fetched.append({**manifest, "local_receipt": str(destination.resolve()),

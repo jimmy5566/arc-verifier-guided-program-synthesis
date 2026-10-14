@@ -153,6 +153,26 @@ class SupervisorObservabilityTest(unittest.TestCase):
             self.assertEqual("FAILED_OR_PARTIAL_NO_RETRY", value["terminal_status"])
             self.assertTrue(value["bound_remote_job"])
 
+    def test_cached_terminal_receipt_skips_remote_reconnect(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            jobs, cache = base / "remote_jobs", base / "cache"
+            jobs.mkdir()
+            manifest = {
+                "job_id": "CACHED_BOUND_JOB", "ssh_target": "pod@example",
+                "output_root": "/workspace/arc2/active_runs/cached",
+                "terminal_receipt": "/workspace/arc2/active_runs/cached/TERMINAL_RECEIPT.json",
+            }
+            (jobs / "cached.json").write_text(json.dumps(manifest), encoding="utf-8")
+            cached = cache / "remote_jobs" / manifest["job_id"] / "TERMINAL_RECEIPT.json"
+            cached.parent.mkdir(parents=True)
+            cached.write_text(json.dumps({"status": "COMPLETE"}), encoding="utf-8")
+            with patch.object(supervisor_module, "remote_shell") as remote:
+                records = supervisor_module.fetch_remote_job_receipts(jobs, cache)
+            remote.assert_not_called()
+            self.assertEqual(1, len(records))
+            self.assertEqual(manifest["job_id"], records[0]["job_id"])
+
 
 if __name__ == "__main__":
     unittest.main()
