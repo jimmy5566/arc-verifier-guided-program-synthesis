@@ -355,7 +355,7 @@ def main() -> None:
     for name in ("base_model", "v7_adapter", "merged_model", "native_config_dir", "challenge",
                  "cohort", "reference_config", "adapter_root", "output"):
         parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
-    parser.add_argument("--skip-merge-parity", action="store_true")
+    parser.add_argument("--reuse-composition-parity", action="store_true")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     os.environ.update({"CUDA_VISIBLE_DEVICES": "0", "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1",
@@ -369,7 +369,11 @@ def main() -> None:
         "bf16_merge_parity": "FAILED_AND_NOT_USED",
         "solutions_opened": False,
     })
-    if not args.skip_merge_parity:
+    if args.reuse_composition_parity:
+        prior = read(args.output / "V7_COMPOSITION_PARITY.json")
+        if prior.get("schema") != "ARC2_V7_DUAL_LORA_COMPOSITION_PARITY_V1" or prior.get("status") != "PASS":
+            raise RuntimeError("reusable V7 composition parity receipt is absent or invalid")
+    else:
         parity(args, task_ids, config)
     train(args, task_ids, config)
 
