@@ -1,0 +1,46 @@
+{
+    "schema_version":  1,
+    "status":  "FAIL_CLOSED_PREMODEL_SOURCE_CLOSURE_MISSING",
+    "candidate_source_commit":  "cd1df4405186385be2a428858364473ddd54e0e0",
+    "nonce":  "8d7f2c91a4e64385b6c0ef7903a54d12",
+    "output_root":  "/workspace/arc2/active_runs/e4g_inside_contains/e4g_8d7f2c91a4e64385b6c0ef7903a54d12",
+    "required_production_paths":  [
+                                      {
+                                          "path":  "scripts/run_e4g_inside_contains_production_v1.py",
+                                          "present_in_candidate":  false,
+                                          "sha256":  null
+                                      },
+                                      {
+                                          "path":  "scripts/launch_e4g_inside_contains_v1.sh",
+                                          "present_in_candidate":  false,
+                                          "sha256":  null
+                                      },
+                                      {
+                                          "path":  "scripts/score_e4g_inside_contains_v1.py",
+                                          "present_in_candidate":  false,
+                                          "sha256":  null
+                                      }
+                                  ],
+    "present_e4g_paths":  [
+                              "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/CPU_FREEZE_RECEIPT.json",
+                              "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/CPU_PRODUCTION_PATH_RECEIPT.json",
+                              "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/E4G_PRELAUNCH_SCIENTIFIC_BRIEF.json",
+                              "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/E4G_REPAIRED_PRELAUNCH_SCIENTIFIC_BRIEF.json",
+                              "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/E4G_SCORING_CONTRACT_REPAIR_RECEIPT.json",
+                              "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/PROTECTION_PANEL_REFERENCES.json",
+                              "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/PROTOCOL.json",
+                              "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/SCORING_CONTRACT.json",
+                              "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json",
+                              "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/TRAINING_SCHEDULE.json",
+                              "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/TRAIN_FIT_INPUTS_AND_COMMITMENTS.json",
+                              "scripts/e4g_inside_contains_atomic.py"
+                          ],
+    "conclusion":  "Candidate source contains only CPU freeze/generator artifacts; no production worker, launcher, or scorer exists. Binding cannot truthfully instantiate the authorized executable closure.",
+    "model_loaded":  false,
+    "gpu_used":  false,
+    "optimizer_started":  false,
+    "targets_opened":  false,
+    "sidecar_opened":  false,
+    "authorization_consumed":  false,
+    "repair_classification":  "Changing the candidate source commit to add missing production code would violate the explicitly authorized exact-source identity and requires a replacement SHA-bound decision."
+}
