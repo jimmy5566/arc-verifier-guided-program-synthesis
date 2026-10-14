@@ -1,0 +1,6 @@
+﻿{
+    "remote_sha256":  "17296d153961dfebd971815e0f910a5bed8ae8e000c3696d7e3d537fd4316a83",
+    "bytes":  42311,
+    "transport":  "forced_pty_base64",
+    "files":  "binding+all terminal top-level JSON/JSONL"
+}

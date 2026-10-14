@@ -1,0 +1,126 @@
+{
+    "schema_version":  "E4C_RESULT_MANIFEST_V1",
+    "stage":  "E4C_QUERY_LOCAL_CODE_PAIR_BOUND_EXECUTION",
+    "delivery_commit":  "61e09f5bc5606f84e7e8d554d85df7b17eb80b58",
+    "bound_production_commit":  "d67e40919fc12587afd672fdf2ad1c983e0bc22a",
+    "binding_sha256":  "b7bbd1c4bcb63b7669243982ec4ea8c0b8731ba0dd15de8ebec411a906433cc5",
+    "nonce":  "650858c1a5324deb24c04b0b102fa789",
+    "output_root":  "/workspace/arc2/active_runs/e4c_query_local_code_pair/e4c_20261014T_bound_immutable",
+    "execution_validity":  "VALID_FROZEN_RESULT_FOR_DIRECTOR_INTERPRETATION",
+    "terminal_status":  "COMPLETE",
+    "terminal_receipt_sha256":  "30671fad633526e6067d7e63fa5b772b3acf3f4923d2448abf0607a5b8fddac4",
+    "raw_freeze_before_sidecar":  true,
+    "score_receipt_sha256":  "86ea87c689a01e76e505f99ef5b1482061ba565f083184772cdd20f25fcaed6a",
+    "decision":  "REJECT",
+    "promotion":  "FORBIDDEN_REQUIRES_LATER_INDEPENDENT_CONFIRMATION",
+    "physical_batch_size":  1,
+    "batch32_used":  false,
+    "targets_opened_after_raw_freeze":  true,
+    "primary_new_independent_ood":  {
+                                        "canonical_units":  48,
+                                        "count_stratified_delta":  {
+                                                                       "1":  0,
+                                                                       "2":  1,
+                                                                       "3":  0
+                                                                   },
+                                        "gate":  false,
+                                        "query_local_minus_equal_slot":  {
+                                                                             "bootstrap_95_ci":  [
+                                                                                                     0,
+                                                                                                     3
+                                                                                                 ],
+                                                                             "delta_correct":  1,
+                                                                             "replicates":  10000
+                                                                         }
+                                    },
+    "gates":  {
+                  "composition":  true,
+                  "marker_binding_preservation":  true,
+                  "order_invariance":  false,
+                  "primary_new_ood":  false,
+                  "train_fit":  false
+              },
+    "arms":  {
+                 "EQUAL_SLOT_5E5":  {
+                                        "composition_correct":  4,
+                                        "composition_total":  16,
+                                        "marker_binding_correct":  16,
+                                        "marker_binding_total":  16,
+                                        "ood_any_order_correct":  30,
+                                        "ood_both_orders_correct":  16,
+                                        "ood_by_count":  {
+                                                             "1":  {
+                                                                       "both_orders_correct":  4,
+                                                                       "canonical_units":  16
+                                                                   },
+                                                             "2":  {
+                                                                       "both_orders_correct":  6,
+                                                                       "canonical_units":  16
+                                                                   },
+                                                             "3":  {
+                                                                       "both_orders_correct":  6,
+                                                                       "canonical_units":  16
+                                                                   }
+                                                         },
+                                        "ood_canonical_units":  48,
+                                        "order_invariance_both_over_any":  0.5333333333333333,
+                                        "train_fit_correct":  33,
+                                        "train_fit_total":  48
+                                    },
+                 "QUERY_LOCAL_CODE_PAIR_5E5":  {
+                                                   "composition_correct":  4,
+                                                   "composition_total":  16,
+                                                   "marker_binding_correct":  16,
+                                                   "marker_binding_total":  16,
+                                                   "ood_any_order_correct":  33,
+                                                   "ood_both_orders_correct":  17,
+                                                   "ood_by_count":  {
+                                                                        "1":  {
+                                                                                  "both_orders_correct":  4,
+                                                                                  "canonical_units":  16
+                                                                              },
+                                                                        "2":  {
+                                                                                  "both_orders_correct":  7,
+                                                                                  "canonical_units":  16
+                                                                              },
+                                                                        "3":  {
+                                                                                  "both_orders_correct":  6,
+                                                                                  "canonical_units":  16
+                                                                              }
+                                                                    },
+                                                   "ood_canonical_units":  48,
+                                                   "order_invariance_both_over_any":  0.5151515151515151,
+                                                   "train_fit_correct":  35,
+                                                   "train_fit_total":  48
+                                               },
+                 "V7":  {
+                            "composition_correct":  4,
+                            "composition_total":  16,
+                            "marker_binding_correct":  16,
+                            "marker_binding_total":  16,
+                            "ood_any_order_correct":  27,
+                            "ood_both_orders_correct":  14,
+                            "ood_by_count":  {
+                                                 "1":  {
+                                                           "both_orders_correct":  2,
+                                                           "canonical_units":  16
+                                                       },
+                                                 "2":  {
+                                                           "both_orders_correct":  1,
+                                                           "canonical_units":  16
+                                                       },
+                                                 "3":  {
+                                                           "both_orders_correct":  11,
+                                                           "canonical_units":  16
+                                                       }
+                                             },
+                            "ood_canonical_units":  48,
+                            "order_invariance_both_over_any":  0.5185185185185185,
+                            "train_fit_correct":  31,
+                            "train_fit_total":  48
+                        }
+             },
+    "transport_bundle_sha256":  "17296d153961dfebd971815e0f910a5bed8ae8e000c3696d7e3d537fd4316a83",
+    "adapter_files_in_git":  false,
+    "gpu_time":  "NOT_RECORDED_BY_TERMINAL_RECEIPT"
+}
