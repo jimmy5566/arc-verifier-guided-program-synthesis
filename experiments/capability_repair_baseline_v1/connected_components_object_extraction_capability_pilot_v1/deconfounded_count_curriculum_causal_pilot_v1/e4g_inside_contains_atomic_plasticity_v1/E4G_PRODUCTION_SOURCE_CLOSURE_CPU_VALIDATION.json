@@ -1,0 +1,35 @@
+{
+  "frozen_inputs": {
+    "CPU_FREEZE_RECEIPT.json": "2dffa6b216182ad419909ef34fa822f660d070e48b2b3c5c2f66de71551dae5b",
+    "CPU_PRODUCTION_PATH_RECEIPT.json": "838480eab92b5c0eacb1a9db3a6f7d40735caf54fae90c8b10f42bd3135abf99",
+    "PROTECTION_PANEL_REFERENCES.json": "b947049b1e0edac6b633095c305818e5966ed01ef2df7a04b928dc9aa35d43a4",
+    "PROTOCOL.json": "3f8711295ff2264be91abc06bb76268fb6e50d2ea3c57394ebff304a5c31ec70",
+    "SCORING_CONTRACT.json": "aafbd37db5b5a28a8a8d465ae74774636c2022fe174d15fdc5474acbb1e55e98",
+    "STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json": "e28659aa1e4f40b1bdd870aec6e7cafe87fe3771df8b3f0081fad0a114ae7344",
+    "TRAINING_SCHEDULE.json": "527c227a1eec9f65a83a7156aa2f331189a4415da35fd62aa6d889110afde1e8",
+    "TRAIN_FIT_INPUTS_AND_COMMITMENTS.json": "7175cc24c11f988ab1f758ae758a3c10fb8cc29980bc892782252b61ef6449dc"
+  },
+  "gpu_used": false,
+  "model_loaded": false,
+  "production_entrypoints": {
+    "scripts/launch_e4g_inside_contains_v1.sh": "d11bcc5f7ca5a09cb3c4ab35c19e1d6e59baf0ddb35f55f08ba7e6b1783d0652",
+    "scripts/run_e4g_inside_contains_production_v1.py": "5638a09f6da564bc9ce5bd081e71618098b2227b473767ddf15f05c0a09b8251",
+    "scripts/score_e4g_inside_contains_v1.py": "56e31628cff95e3c800003b38eae30a32b82a5fe1a912ddd92da1bd8fb3fb828",
+    "tests/test_e4g_production_source_closure.py": "2a8b7bafa899b9cb8c326bf202764b7a70766a7077906b6b31cbd33bb9e7f695"
+  },
+  "schema_version": 1,
+  "scope": "ENGINEERING_SOURCE_CLOSURE_ONLY_NO_MODEL_NO_GPU_NO_TARGETS",
+  "sidecar_opened": false,
+  "status": "PASS_E4G_PRODUCTION_SOURCE_CLOSURE_CPU_ONLY",
+  "targets_opened": false,
+  "validated_parent_commit": "1c0b52d9fd546cb2bf9f03e2208ada5c6fbba1c1",
+  "validation": {
+    "deferred_runtime_imports": "PASS",
+    "exact_input_resolution": "PASS",
+    "launcher_to_production_worker": "PASS_GIT_BASH_CPU_SELF_TEST",
+    "scorer_guard": "PASS_FAIL_CLOSED_RAW_FREEZE_REQUIRED",
+    "target_handling": "PASS_FAIL_CLOSED_NO_SIDECAR",
+    "tests": "7_PASS",
+    "worker_receipt_creation": "PASS"
+  }
+}
