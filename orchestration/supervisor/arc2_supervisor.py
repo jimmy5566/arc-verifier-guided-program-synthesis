@@ -983,6 +983,24 @@ def remote_shell(target: str, script: str, identity_file: str | None = None) -> 
     return decode_human_utf8(b"\n".join(raw_lines[:marker_index]))
 
 
+def structured_json_records(output: str) -> list[dict[str, Any]]:
+    """Recover JSON records when RunPod prefixes a line with its shell prompt."""
+    records: list[dict[str, Any]] = []
+    decoder = json.JSONDecoder()
+    for line in output.splitlines():
+        start = line.find("{")
+        while start >= 0:
+            try:
+                value, _ = decoder.raw_decode(line[start:])
+            except json.JSONDecodeError:
+                start = line.find("{", start + 1)
+                continue
+            if isinstance(value, dict):
+                records.append(value)
+            break
+    return records
+
+
 def fetch_remote_receipts(target: str, remote_root: str, cache_root: Path, identity_file: str | None = None) -> Path:
     """Copy only JSON terminal-receipt metadata into a local ephemeral cache."""
     script = f'''python3 - <<'PY'
@@ -993,11 +1011,8 @@ for path in sorted(glob.glob({remote_root!r} + "/rounds/ROUND_*/*_TERMINAL_RECEI
 PY'''
     output = remote_shell(target, script, identity_file)
     cache_root.mkdir(parents=True, exist_ok=True)
-    for line in output.splitlines():
-        if not line.startswith("{"):
-            continue
+    for item in structured_json_records(output):
         try:
-            item = json.loads(line)
             remote_path = Path(item["path"])
             relative = remote_path.name
             round_dir = cache_root / remote_path.parent.name
@@ -1059,11 +1074,8 @@ if os.path.isfile(path):
         print(json.dumps({{"path": path, "content_b64": base64.b64encode(handle.read()).decode("ascii")}}, sort_keys=True))
 PY'''
         output = remote_shell(manifest["ssh_target"], script, identity_file)
-        for line in output.splitlines():
-            if not line.startswith("{"):
-                continue
+        for item in structured_json_records(output):
             try:
-                item = json.loads(line)
                 if item.get("path") != terminal_receipt:
                     continue
                 content = base64.b64decode(item["content_b64"], validate=True)

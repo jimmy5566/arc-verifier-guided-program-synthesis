@@ -109,7 +109,9 @@ class SupervisorObservabilityTest(unittest.TestCase):
                 "path": manifest["terminal_receipt"],
                 "content_b64": base64.b64encode(json.dumps(receipt).encode("utf-8")).decode("ascii"),
             })
-            with patch.object(supervisor_module, "remote_shell", return_value=payload):
+            # RunPod's forced PTY can prefix the structured record with the
+            # interactive shell prompt instead of placing JSON at column zero.
+            with patch.object(supervisor_module, "remote_shell", return_value="root@pod:/# " + payload):
                 records = supervisor_module.fetch_remote_job_receipts(jobs, cache)
             self.assertEqual(1, len(records))
             cached = cache / "remote_jobs" / "E4D_BOUND_NONCE" / "TERMINAL_RECEIPT.json"
