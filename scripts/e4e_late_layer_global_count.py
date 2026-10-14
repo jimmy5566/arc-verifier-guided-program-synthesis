@@ -92,4 +92,9 @@ def layer31_count_loss(hidden_states, positions, count: int, head):
         raise ValueError("E4E_COUNT_AUXILIARY_INPUT")
     pooled = hidden_states[LAYER][0, list(positions)].float().mean(dim=0)
     target = torch.tensor([multiclass_target_index(int(count))], device=pooled.device)
-    return functional.cross_entropy(head(pooled).float().unsqueeze(0), target), pooled
+    # The auxiliary head is deliberately BF16 in the production trainer while
+    # the pooled representation is promoted to FP32 for stable aggregation.
+    # Linear requires matching input/weight dtypes; promote logits back to
+    # FP32 only for cross-entropy evaluation.
+    logits = head(pooled.to(dtype=head.weight.dtype)).float().unsqueeze(0)
+    return functional.cross_entropy(logits, target), pooled

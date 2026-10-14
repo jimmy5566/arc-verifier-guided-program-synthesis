@@ -300,6 +300,23 @@ def execute(bp):
   raw_freeze(paths,out,{'V7':Path(out)/'V7_LAYER31_FEATURES.jsonl','EQUAL_SLOT':Path(out)/'EQUAL_SLOT_LAYER31_FEATURES.jsonl','LATE_LAYER_COUNT':Path(out)/'LATE_LAYER_COUNT_LAYER31_FEATURES.jsonl'});probe_score(out);sidecar(out);score(out);write(out/'TERMINAL_RECEIPT.json',{'status':'COMPLETE','raw_freeze_before_sidecar':True,'score_sha256':sha(Path(out)/'SCORE_RECEIPT.json')})
  except Exception as e:write(out/'TERMINAL_RECEIPT.json',{'status':'FAILED_OR_PARTIAL_NO_RETRY','error':str(e),'scientific_boundary_entered':True});raise
 
+def cuda_bf16_smoke(bp):
+ """Exercise the exact auxiliary dtype boundary without constructing a model."""
+ b=load(bp)
+ import torch
+ from scripts.e4e_late_layer_global_count import layer31_count_loss
+ if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported():fail('CUDA_BF16')
+ torch.manual_seed(b['training']['seed'])
+ states=[torch.zeros((1,3,4),device='cuda:0',dtype=torch.bfloat16,requires_grad=True) for _ in range(32)]
+ states[31]=torch.randn((1,3,4),device='cuda:0',dtype=torch.bfloat16,requires_grad=True)
+ head=torch.nn.Linear(4,3,device='cuda:0',dtype=torch.bfloat16)
+ loss,_=layer31_count_loss(states,(0,1,2),2,head)
+ loss.backward()
+ head_grad=float(head.weight.grad.detach().float().abs().sum()) if head.weight.grad is not None else 0.0
+ upstream_grad=float(states[31].grad.detach().float().abs().sum()) if states[31].grad is not None else 0.0
+ if not bool(torch.isfinite(loss)) or head_grad<=0 or upstream_grad<=0:fail('CUDA_BF16_AUXILIARY_SMOKE')
+ return {'status':'PASS_E4E_BOUND_RUNTIME_CUDA_BF16_AUXILIARY_LINEAR_SMOKE_NO_MODEL','binding_sha256':sha(bp),'loss_finite':True,'head_grad_nonzero':True,'upstream_representation_grad_nonzero':True,'model_loaded':False,'gpu_used':True,'targets_opened':False,'sidecar_opened':False}
+
 def cpu_integration(bp):
  b=load(bp);pre=preclaim(bp,True);tmp=Path(tempfile.mkdtemp(prefix='e4e-prod-'))
  try:
@@ -314,13 +331,14 @@ def cpu_integration(bp):
  finally:
   import shutil;shutil.rmtree(tmp)
 def main():
- p=argparse.ArgumentParser();p.add_argument('--binding',type=Path);p.add_argument('--make-binding',type=Path);p.add_argument('--output-root');p.add_argument('--nonce');p.add_argument('--preclaim-only',action='store_true');p.add_argument('--cpu-preclaim',action='store_true');p.add_argument('--cpu-integration',action='store_true');p.add_argument('--execute',action='store_true');p.add_argument('--receipt',type=Path);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--binding',type=Path);p.add_argument('--make-binding',type=Path);p.add_argument('--output-root');p.add_argument('--nonce');p.add_argument('--preclaim-only',action='store_true');p.add_argument('--cpu-preclaim',action='store_true');p.add_argument('--cpu-integration',action='store_true');p.add_argument('--cuda-bf16-smoke',action='store_true');p.add_argument('--execute',action='store_true');p.add_argument('--receipt',type=Path);a=p.parse_args()
  if a.make_binding:
   if not a.output_root:raise SystemExit('--output-root required')
   r=make_binding(a.make_binding,a.output_root,a.nonce)
  elif a.preclaim_only:r=preclaim(a.binding)
  elif a.cpu_preclaim:r=preclaim(a.binding,True)
  elif a.cpu_integration:r=cpu_integration(a.binding)
+ elif a.cuda_bf16_smoke:r=cuda_bf16_smoke(a.binding)
  elif a.execute:r=execute(a.binding)
  else:raise SystemExit('select mode')
  if a.receipt:write(a.receipt,r)

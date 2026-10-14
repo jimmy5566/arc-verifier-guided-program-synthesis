@@ -36,6 +36,20 @@ class E4EExecutableTests(unittest.TestCase):
         self.assertGreater(float(states[31].grad.abs().sum()),0)
         self.assertEqual(loss_contract(2.0,1.0,False)['answer_mean'], loss_contract(2.0,1.0,True)['answer_mean'])
 
+    def test_bf16_auxiliary_linear_has_finite_loss_and_gradients(self):
+        try:
+            import torch
+        except ImportError:
+            self.skipTest('torch unavailable')
+        states=[torch.zeros((1,3,4),dtype=torch.bfloat16,requires_grad=True) for _ in range(32)]
+        states[31]=torch.randn((1,3,4),dtype=torch.bfloat16,requires_grad=True)
+        head=torch.nn.Linear(4,3,dtype=torch.bfloat16)
+        loss,_=layer31_count_loss(states,(0,1,2),3,head)
+        loss.backward()
+        self.assertTrue(bool(torch.isfinite(loss)))
+        self.assertGreater(float(head.weight.grad.float().abs().sum()),0)
+        self.assertGreater(float(states[31].grad.float().abs().sum()),0)
+
     def test_launcher_reaches_production_execute_entrypoint(self):
         launcher_path=Path(__file__).resolve().parents[1]/'scripts/launch_e4e_late_layer_count_v1.sh'
         launcher=launcher_path.read_text(encoding='utf-8')
