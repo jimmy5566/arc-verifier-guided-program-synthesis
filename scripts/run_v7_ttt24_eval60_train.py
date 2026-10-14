@@ -127,7 +127,18 @@ def _provider(model_path: Path, native_config: Path, adapter: Path | None = None
     from inference.nvarc_native import NVARCNativeProvider
     provider = NVARCNativeProvider(model_path=model_path, tokenizer_config_dir=native_config, device="cuda:0")
     if adapter is None:
-        provider.load()
+        # Transformers 4.55.4 accepts ``torch_dtype`` here; its Qwen3 model
+        # constructor does not accept the newer AutoModel ``dtype`` alias used
+        # by the generic provider on later environments.
+        import torch
+        from transformers import AutoModelForCausalLM
+        from inference.nvarc_native import checkpoint_native_tokenizer
+        provider.tokenizer, tokenizer_meta = checkpoint_native_tokenizer(model_path, native_config)
+        provider.model = AutoModelForCausalLM.from_pretrained(
+            str(model_path), local_files_only=True, trust_remote_code=False,
+            torch_dtype=torch.bfloat16, low_cpu_mem_usage=True,
+        ).to("cuda:0").eval()
+        provider.load_metadata = tokenizer_meta
     else:
         from inference.hf_peft_backend import load_hf_peft_inference
         provider.model, provider.tokenizer, provider.load_metadata = load_hf_peft_inference(
