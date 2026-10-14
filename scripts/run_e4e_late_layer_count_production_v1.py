@@ -5,7 +5,7 @@ Equal-Slot CE; treatment adds a train-only 0.25 layer-31 count CE only on the
 48 Count-primary slots.  The auxiliary head is deliberately not saved.
 """
 from __future__ import annotations
-import argparse, copy, hashlib, importlib, json, os, random, subprocess, sys, tempfile, time
+import argparse, copy, hashlib, importlib, json, os, random, secrets, subprocess, sys, tempfile, time
 from collections import defaultdict
 from pathlib import Path
 ROOT=Path(os.environ.get('ARC2_ROOT',Path(__file__).resolve().parents[1]));sys.path[:0]=[str(ROOT),str(ROOT/'src')]
@@ -54,12 +54,12 @@ def audit_slots():
  if len(out)!=48 or [sum(r['count']==c for r in out) for c in (1,2,3)]!=[16,16,16] or len(non)!=336:fail('SLOT_AUDIT')
  return out,non
 
-def input_paths():return {'protocol':PKG/'PROTOCOL.json','curriculum':PKG/'TRAIN_DERIVED_CURRICULUM.json','ood':PKG/'OOD_INPUTS_AND_COMMITMENTS.json','freeze':PKG/'PROSPECTIVE_FREEZE_RECEIPT.json','probe_contract':PKG/'LAYER31_PROBE_CONTRACT.json','probe_train':PKG/'TRAIN_DERIVED_PROBE_SPLIT.json','v7':V7,'schedule':E3/'TREATMENT_SCHEDULE.json','trainfit':E3/'TRAIN_FIT_INPUT_PROMPTS.json','marker':E3/'e4d_object_centric_component_anchor_grounding_v1/MARKER_INPUTS_AND_COMMITMENTS.json','retention':BASE/'RETENTION_INPUT_PROMPTS.json','composition':BASE/'scientific_successor_v2/COMPOSITION_SENTINEL_INPUT_PROMPTS.json'}
+def input_paths():return {'protocol':PKG/'PROTOCOL.json','execution_protocol':PKG/'EXECUTABLE_PROTOCOL.json','curriculum':PKG/'TRAIN_DERIVED_CURRICULUM.json','ood':PKG/'OOD_INPUTS_AND_COMMITMENTS.json','freeze':PKG/'PROSPECTIVE_FREEZE_RECEIPT.json','probe_contract':PKG/'LAYER31_PROBE_CONTRACT.json','probe_train':PKG/'TRAIN_DERIVED_PROBE_SPLIT.json','v7':V7,'schedule':E3/'TREATMENT_SCHEDULE.json','trainfit':E3/'TRAIN_FIT_INPUT_PROMPTS.json','marker':E3/'e4d_object_centric_component_anchor_grounding_v1/MARKER_INPUTS_AND_COMMITMENTS.json','retention':BASE/'RETENTION_INPUT_PROMPTS.json','composition':BASE/'scientific_successor_v2/COMPOSITION_SENTINEL_INPUT_PROMPTS.json'}
 
-def make_binding(path,output):
+def make_binding(path,output,nonce=None):
  clean();commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
  if Path(output).exists():fail('OUTPUT_EXISTS')
- m=load(V7);b={'schema_version':1,'experiment_id':ID,'execution_source_commit':commit,'worker_path':Path(__file__).relative_to(ROOT).as_posix(),'worker_sha256':sha(__file__),'scorer_path':Path(__file__).relative_to(ROOT).as_posix(),'scorer_sha256':sha(__file__),'inputs':{k:{'path':v.relative_to(ROOT).as_posix(),'sha256':sha(v)} for k,v in input_paths().items()},'output_root':str(output),'nonce':hashlib.sha256((commit+str(output)+str(time.time_ns())).encode()).hexdigest()[:32],'retry':False,'hard_cap_seconds':7200,'runtime':{'physical_batch_size':1,'decoder':'NVARC_NATIVE_GREEDY','cuda_required':True,'bf16_required':True,'max_new_tokens':192,'context_window':16384},'training':{'v7_exact':True,'seed':20261013,'learning_rate':5e-5,'optimizer':'PagedAdamW8bit','updates':96,'slots_per_update':4,'slot_coefficient':.25,'control':'ORIGINAL_EQUAL_SLOT_ANSWER_REPLAY_CE_1.0','treatment':'CONTROL_PLUS_0.25_LAYER31_MEAN_POOLED_QUERY_VISIBLE_COUNT_CE','auxiliary_head':'fresh_deterministic_Linear(hidden_size,3); discarded before inference'},'evaluation':{'bootstrap_seed':20261013,'bootstrap_replicates':10000,'paired_canonical_units':48,'physical_batch_size':1,'fallback_ladder':[1]},'v7_assets':{'base_path':m['base_path'],'base_files':m['base_files'],'adapter_path':m['adapter_path'],'adapter_files':m['adapter_files']}}
+ m=load(V7);b={'schema_version':1,'experiment_id':ID,'execution_source_commit':commit,'worker_path':Path(__file__).relative_to(ROOT).as_posix(),'worker_sha256':sha(__file__),'scorer_path':Path(__file__).relative_to(ROOT).as_posix(),'scorer_sha256':sha(__file__),'inputs':{k:{'path':v.relative_to(ROOT).as_posix(),'sha256':sha(v)} for k,v in input_paths().items()},'output_root':str(output),'nonce':nonce or secrets.token_hex(16),'retry':False,'hard_cap_seconds':7200,'runtime_python':'/root/code_pair_py311_cu128_v2/bin/python','command':['bash','scripts/launch_e4e_late_layer_count_v1.sh','--binding',Path(path).resolve().relative_to(ROOT).as_posix()],'runtime':{'physical_batch_size':1,'decoder':'NVARC_NATIVE_GREEDY','cuda_required':True,'bf16_required':True,'max_new_tokens':192,'context_window':16384},'training':{'v7_exact':True,'seed':20261013,'learning_rate':5e-5,'optimizer':'PagedAdamW8bit','updates':96,'slots_per_update':4,'slot_coefficient':.25,'control':'ORIGINAL_EQUAL_SLOT_ANSWER_REPLAY_CE_1.0','treatment':'CONTROL_PLUS_0.25_LAYER31_MEAN_POOLED_QUERY_VISIBLE_COUNT_CE','auxiliary_head':'fresh_deterministic_Linear(hidden_size,3); discarded before inference'},'evaluation':{'bootstrap_seed':20261013,'bootstrap_replicates':10000,'paired_canonical_units':48,'physical_batch_size':1,'fallback_ladder':[1]},'v7_assets':{'base_path':m['base_path'],'base_files':m['base_files'],'adapter_path':m['adapter_path'],'adapter_files':m['adapter_files']}}
  write(path,b);return b
 
 def preclaim(bp,allow_runtime_missing=False):
@@ -169,17 +169,29 @@ def sidecar(out):
 def boot(v,seed=20261013,n=10000):
  rng=random.Random(seed);z=sorted(sum(v[rng.randrange(len(v))] for _ in v) for _ in range(n));return z[int(.025*n)],z[int(.975*n)-1]
 def score(out):
- fr=load(Path(out)/'RAW_FREEZE_RECEIPT.json');targets=load(Path(out)/'SYNTHETIC_TARGET_SIDECAR.json')['targets'];data={}
+ fr=load(Path(out)/'RAW_FREEZE_RECEIPT.json'); targets=load(Path(out)/'SYNTHETIC_TARGET_SIDECAR.json')['targets']; data={}
  for arm in ('V7','EQUAL_SLOT','LATE_LAYER_COUNT'):
   p=Path(out)/(arm+'_RAW.jsonl')
   if sha(p)!=fr['raw_sha256'][arm]:fail('RAW_REHASH')
   data[arm]={r['record_id']:bool(r['parser_valid']) and r['parsed_grid']==targets.get(r['record_id']) for r in rows(p)}
- ood=[x for x in eval_records() if x['split']=='OOD'];units=sorted({x['canonical'] for x in ood});both=lambda a,u:int(all(data[a][x['id']] for x in ood if x['canonical']==u));diff=[both('LATE_LAYER_COUNT',u)-both('EQUAL_SLOT',u) for u in units];lo,hi=boot(diff);native=sum(diff)>=6 and lo>0
- # Probe raw is supplied by execution in a subsequent frozen feature pass; scorer requires its exact result.
+ recs=eval_records();ood=[x for x in recs if x['split']=='OOD']; units=sorted({x['canonical'] for x in ood})
+ def both(arm,u):return int(all(data[arm][x['id']] for x in ood if x['canonical']==u))
+ def summary(arm):
+  train=[x['id'] for x in recs if x['split']=='TRAIN_FIT']; marker=[x['id'] for x in recs if x['split']=='MARKER_BINDING']; comp=[x['id'] for x in recs if x['split']=='COMPOSITION']; anyok={u:int(any(data[arm][x['id']] for x in ood if x['canonical']==u)) for u in units};vals={u:both(arm,u) for u in units}
+  return {'train_fit_correct':sum(data[arm][x] for x in train),'train_fit_total':len(train),'ood_both_orders_correct':sum(vals.values()),'ood_any_order_correct':sum(anyok.values()),'order_invariance_both_over_any':0 if not sum(anyok.values()) else sum(vals.values())/sum(anyok.values()),'ood_by_count':{str(c):{'canonical_units':sum(x['count']==c for x in ood[::2]),'both_orders_correct':sum(vals[u] for u in units if next(x['count'] for x in ood if x['canonical']==u)==c)} for c in (1,2,3)},'marker_binding_correct':sum(data[arm][x] for x in marker),'marker_binding_total':len(marker),'composition_correct':sum(data[arm][x] for x in comp),'composition_total':len(comp)}
+ sm={a:summary(a) for a in data};diff=[both('LATE_LAYER_COUNT',u)-both('EQUAL_SLOT',u) for u in units];lo,hi=boot(diff)
  p=Path(out)/'PROBE_RECEIPT.json'
  if not p.is_file():fail('PROBE_RECEIPT_MISSING')
- probe=load(p);pg=probe['treatment_minus_control'];classification={(True,False):'REPRESENTATION_TO_OUTPUT_BINDING_FAILURE',(False,False):'REJECT_LATE_LAYER_AUXILIARY_MECHANISM',(True,True):'MECHANISM_SUPPORTED_REQUIRES_INDEPENDENT_CONFIRMATION',(False,True):'NATIVE_ONLY_DISCORDANT_DIAGNOSTIC_INCONCLUSIVE'}[(pg['delta_correct']>=6 and pg['bootstrap_95_ci'][0]>0,native)]
- r={'status':'COMPLETE_E4E_SCORE_AFTER_RAW_FREEZE','raw_freeze_before_sidecar':True,'native':{'delta_correct':sum(diff),'bootstrap_95_ci':[lo,hi]},'probe':pg,'classification':classification,'targets_opened_after_raw_freeze':True};write(Path(out)/'SCORE_RECEIPT.json',r);return r
+ probe=load(p);pg=probe['treatment_minus_control'];marker={};retention={}
+ for endpoint in sorted({str(x.get('endpoint','ALL')) for x in recs if x['split']=='MARKER_BINDING'}):
+  ids=[x['id'] for x in recs if x['split']=='MARKER_BINDING' and str(x.get('endpoint','ALL'))==endpoint];marker[endpoint]=sum(data['LATE_LAYER_COUNT'][x]-data['EQUAL_SLOT'][x] for x in ids)
+ for family in sorted({x['family'] for x in recs if x['split']=='RETENTION'}):
+  ids=[x['id'] for x in recs if x['split']=='RETENTION' and x['family']==family];retention[family]=sum(data['LATE_LAYER_COUNT'][x]-data['EQUAL_SLOT'][x] for x in ids)
+ comp_ids=[x['id'] for x in recs if x['split']=='COMPOSITION'];comp_delta=sum(data['LATE_LAYER_COUNT'][x]-data['EQUAL_SLOT'][x] for x in comp_ids)
+ probe_pass=pg['delta_correct']>=6 and pg['bootstrap_95_ci'][0]>0;native=sum(diff)>=6 and lo>0
+ gates={'train_fit':sm['LATE_LAYER_COUNT']['train_fit_correct']>=43 and sm['LATE_LAYER_COUNT']['train_fit_correct']-sm['EQUAL_SLOT']['train_fit_correct']>=8,'primary_new_ood':native,'order_invariance':sm['LATE_LAYER_COUNT']['order_invariance_both_over_any']>=.8,'marker_binding_preservation':all(v>=0 for v in marker.values()) and sum(marker.values())>=0,'protected_retention':all(v>=-1 for v in retention.values()) and sum(retention.values())>=-2,'composition':comp_delta>=-1}
+ cases={(True,False):'REPRESENTATION_TO_OUTPUT_BINDING_FAILURE',(False,False):'REJECT_LATE_LAYER_AUXILIARY_MECHANISM',(True,True):'MECHANISM_SUPPORTED_REQUIRES_INDEPENDENT_CONFIRMATION',(False,True):'NATIVE_ONLY_DISCORDANT_DIAGNOSTIC_INCONCLUSIVE'}
+ r={'status':'COMPLETE_E4E_SCORE_AFTER_RAW_FREEZE','decision':'PASS_REQUIRES_LATER_INDEPENDENT_CONFIRMATION' if all(gates.values()) else 'REJECT','promotion':'FORBIDDEN_REQUIRES_LATER_INDEPENDENT_CONFIRMATION','raw_freeze_before_sidecar':True,'arms':sm,'primary_new_independent_ood':{'canonical_units':48,'late_layer_count_minus_equal_slot':{'delta_correct':sum(diff),'bootstrap_95_ci':[lo,hi],'replicates':10000},'count_stratified_delta':{str(c):sum(both('LATE_LAYER_COUNT',u)-both('EQUAL_SLOT',u) for u in units if next(x['count'] for x in ood if x['canonical']==u)==c) for c in (1,2,3)}},'layer31_probe':pg,'probe_native_case':cases[(probe_pass,native)],'marker_binding_preservation':{'by_endpoint':marker,'aggregate':sum(marker.values())},'protected_retention':{'by_family':retention,'aggregate':sum(retention.values())},'composition_secondary':{'late_layer_count_minus_equal_slot':comp_delta},'gates':gates,'physical_batch_size':1,'targets_opened_after_raw_freeze':True};write(Path(out)/'SCORE_RECEIPT.json',r);return r
 
 def probe_rows():
     train=load(PKG/'TRAIN_DERIVED_PROBE_SPLIT.json')['records']
@@ -238,15 +250,15 @@ def cpu_integration(bp):
   items=eval_records();paths={}
   for arm in ('V7','EQUAL_SLOT','LATE_LAYER_COUNT'):
    p=tmp/(arm+'_RAW.jsonl');jsonl(p,[{'record_id':x['id'],'split':x['split'],'prompt_sha256':taskhash(x['task']),'generated_token_ids':[],'parsed_grid':None,'parser_valid':False,'effective_batch_size':1} for x in items]);paths[arm]=p
-  raw_freeze(paths,tmp);write(tmp/'SYNTHETIC_TARGET_SIDECAR.json',{'status':'DERIVED_AFTER_RAW_FREEZE','opened_after_raw_freeze':True,'targets':{x['id']:None for x in items if x['split']=='OOD'}});write(tmp/'PROBE_RECEIPT.json',{'treatment_minus_control':{'delta_correct':0,'bootstrap_95_ci':[0,0]}})
-  return {'status':'PASS_E4E_PRODUCTION_TRAINER_EVALUATOR_SCORER_CPU_INTEGRATION','preclaim':pre['status'],'arms':['V7','EQUAL_SLOT','LATE_LAYER_COUNT'],'raw_freeze_before_sidecar':True,'model_loaded':False,'gpu_used':False,'targets_opened':False}
+  raw_freeze(paths,tmp);sidecar(tmp);write(tmp/'PROBE_RECEIPT.json',{'status':'CPU_FIXTURE_FIXED_PROBE','treatment_minus_control':{'delta_correct':0,'bootstrap_95_ci':[0,0]}});sc=score(tmp)
+  return {'status':'PASS_E4E_PRODUCTION_TRAINER_EVALUATOR_SCORER_CPU_INTEGRATION','preclaim':pre['status'],'score_status':sc['status'],'arms':['V7','EQUAL_SLOT','LATE_LAYER_COUNT'],'raw_freeze_before_sidecar':True,'model_loaded':False,'gpu_used':False,'targets_opened_after_raw_freeze':True}
  finally:
   import shutil;shutil.rmtree(tmp)
 def main():
- p=argparse.ArgumentParser();p.add_argument('--binding',type=Path);p.add_argument('--make-binding',type=Path);p.add_argument('--output-root');p.add_argument('--preclaim-only',action='store_true');p.add_argument('--cpu-preclaim',action='store_true');p.add_argument('--cpu-integration',action='store_true');p.add_argument('--execute',action='store_true');p.add_argument('--receipt',type=Path);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--binding',type=Path);p.add_argument('--make-binding',type=Path);p.add_argument('--output-root');p.add_argument('--nonce');p.add_argument('--preclaim-only',action='store_true');p.add_argument('--cpu-preclaim',action='store_true');p.add_argument('--cpu-integration',action='store_true');p.add_argument('--execute',action='store_true');p.add_argument('--receipt',type=Path);a=p.parse_args()
  if a.make_binding:
   if not a.output_root:raise SystemExit('--output-root required')
-  r=make_binding(a.make_binding,a.output_root)
+  r=make_binding(a.make_binding,a.output_root,a.nonce)
  elif a.preclaim_only:r=preclaim(a.binding)
  elif a.cpu_preclaim:r=preclaim(a.binding,True)
  elif a.cpu_integration:r=cpu_integration(a.binding)
