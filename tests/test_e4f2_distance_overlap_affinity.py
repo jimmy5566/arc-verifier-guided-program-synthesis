@@ -35,6 +35,16 @@ class E4F2Tests(unittest.TestCase):
         self.assertEqual(treated, 32)
         self.assertEqual(scalar_mass(2.0, 4.0, True, 2)["step_term"], 0.75)
 
+    def test_non_count_slots_are_byte_identical_to_the_frozen_source_schedule(self):
+        freeze()
+        source=json.loads(Path("experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/TREATMENT_SCHEDULE.json").read_text())["episodes"]
+        successor=json.loads((OUT/"SUCCESSOR_COUNTERFACTUAL_SCHEDULE.json").read_text())["episodes"]
+        import hashlib
+        canonical=lambda value: json.dumps(value,sort_keys=True,separators=(",",":")).encode()
+        for before,after in zip(source,successor,strict=True):
+            if before["role"] != "PRIMARY_CONNECTED_COMPONENT_COUNT":
+                self.assertEqual(hashlib.sha256(canonical(before)).hexdigest(), hashlib.sha256(canonical(after)).hexdigest())
+
     def test_affinity_is_pair_order_invariant_and_gradients_are_finite(self):
         import torch
         freeze()

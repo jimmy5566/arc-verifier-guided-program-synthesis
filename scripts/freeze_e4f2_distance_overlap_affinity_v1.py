@@ -78,6 +78,8 @@ def freeze():
   if row['role']!='PRIMARY_CONNECTED_COMPONENT_COUNT':successor.append(new);continue
   count=len(components(row['task']['test'][0]['input']));bycount[count]+=1;color=next(v for rr in row['task']['test'][0]['input'] for v in rr if v);ordinal=bycount[count]-1;variant='P' if ordinal%2==0 else 'N';t,pair=task(count,color,variant,ordinal//2,'E4F2:'+str(row['slot']));new['task']=t;new['source_id']='E4F2_COUNTERFACTUAL:'+str(row['slot']);successor.append(new)
   grid=t['test'][0]['input'];allp=[pair_features(grid,tuple(p))|{'count':count} for p in itertools.combinations(sorted({(y,x) for y,r in enumerate(grid) for x,v in enumerate(r) if v}),2)]
+  from scripts.e4d_object_centric_component_anchor_grounding import connected_components as independent_components
+  if tuple(sorted(independent_components(grid)))!=components(grid):raise RuntimeError('E4F2_INDEPENDENT_4_CONNECTIVITY_ORACLE')
   records.append({'slot':row['slot'],'count':count,'variant':variant,'task_sha256':hashlib.sha256(canon(t)).hexdigest(),'selected_pairs':select(t,pair) if count>1 else [],'all_pairs':allp})
  if bycount!={1:16,2:16,3:16} or len(successor)!=384:raise RuntimeError('E4F2_SCHEDULE')
  from training_data.pipeline import task_to_sample
