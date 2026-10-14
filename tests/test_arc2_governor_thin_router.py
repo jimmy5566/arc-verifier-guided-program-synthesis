@@ -67,7 +67,69 @@ class FakeHerdr:
         raise AssertionError(command)
 
 
+class NamelessFakeHerdr(FakeHerdr):
+    """Match the compact live Herdr response, which omits optional names."""
+
+    def __call__(self, command, **kwargs):
+        if command[:3] == ["herdr", "agent", "list"]:
+            agents = [
+                {"pane_id": "controller-pane", "agent": "codex",
+                 "agent_status": self.statuses.get("controller", "idle")},
+                {"pane_id": "director-pane", "agent": "codex",
+                 "agent_status": self.statuses.get("director", "idle")},
+            ]
+            return mock.Mock(returncode=0, stdout=json.dumps({"result": {"agents": agents}}), stderr="")
+        return super().__call__(command, **kwargs)
+
+
 class ThinGovernorTests(unittest.TestCase):
+    def test_nameless_herdr_agents_recover_director_from_event_history(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            state_path = root / "ARC2_WORKFLOW_STATE.json"
+            brief = root / "RESULT_REVIEW.json"
+            brief.write_text('{"result":"frozen"}\n', encoding="utf-8")
+            historical = governor.event("DIRECTOR_REVIEW", "director", "controller", {
+                "brief_path": str(brief), "brief_sha256": governor.sha256_file(brief),
+                "review_reason": "old",
+            })
+            historical.update({"status": "COMPLETE", "target": "director-pane"})
+            queued = governor.event("DIRECTOR_REVIEW", "director", "controller", {
+                "brief_path": str(brief), "brief_sha256": governor.sha256_file(brief),
+                "review_reason": "new",
+            })
+            state = initial_state(
+                disposition="REVIEW_REQUIRED",
+                review=queued["payload"],
+                controller_target="controller-pane",
+                pending_events=[historical, queued],
+            )
+            governor.atomic(state_path, state)
+            fake = NamelessFakeHerdr({"director": "idle"})
+            with mock.patch.object(governor.subprocess, "run", side_effect=fake):
+                result, saved = governor.cycle(state_path, agent_timeout_seconds=1)
+            self.assertEqual(result, "EVENT_DELIVERED")
+            self.assertEqual(saved["director_target"], "director-pane")
+            self.assertEqual([command[3] for command in fake.prompts], ["director-pane"])
+
+    def test_unresolved_recipient_stays_queued_without_crashing_cycle(self):
+        with tempfile.TemporaryDirectory() as directory:
+            state_path = Path(directory) / "ARC2_WORKFLOW_STATE.json"
+            governor.atomic(state_path, initial_state(
+                disposition="CONTINUE_CONTROLLER", stage="TEST", next_action="GO"
+            ))
+
+            def no_agents(command, **kwargs):
+                if command[:3] == ["herdr", "agent", "list"]:
+                    return mock.Mock(returncode=0, stdout=json.dumps({"result": {"agents": []}}), stderr="")
+                raise AssertionError(command)
+
+            with mock.patch.object(governor.subprocess, "run", side_effect=no_agents):
+                result, saved = governor.cycle(state_path, agent_timeout_seconds=1)
+            self.assertEqual(result, "RECIPIENT_TARGET_UNAVAILABLE_EVENT_QUEUED")
+            self.assertEqual(saved["pending_events"][0]["status"], "QUEUED")
+            self.assertEqual(saved["pending_events"][0]["attempts"], 0)
+
     def test_working_recipient_queues_without_prompt_then_idle_delivers_once(self):
         with tempfile.TemporaryDirectory() as directory:
             state_path = Path(directory) / "ARC2_WORKFLOW_STATE.json"

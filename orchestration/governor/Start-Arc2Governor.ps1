@@ -26,6 +26,8 @@ $watchdogState = Join-Path $runtime 'ARC2_GOVERNOR_WATCHDOG_STATE.json'
 $stdout = Join-Path $runtime 'logs\arc2_governor_service.stdout.log'
 $stderr = Join-Path $runtime 'logs\arc2_governor_service.stderr.log'
 $taskName = 'ARC2-Governor'
+$startupDirectory = [Environment]::GetFolderPath('Startup')
+$startupLauncher = Join-Path $startupDirectory 'ARC2-Governor.cmd'
 if (-not $GovernorScript) { $GovernorScript = Join-Path $Root 'scripts\arc2_governor.py' }
 $GovernorScript = [System.IO.Path]::GetFullPath($GovernorScript)
 
@@ -170,8 +172,23 @@ function Install-Arc2GovernorTask {
   $action = New-ScheduledTaskAction -Execute $ps -Argument $arguments -WorkingDirectory $Root
   $trigger = New-ScheduledTaskTrigger -AtLogOn
   $settings = New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -RestartCount 999 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit (New-TimeSpan -Days 365)
-  Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings -Force -ErrorAction Stop | Out-Null
-  Start-ScheduledTask -TaskName $taskName -ErrorAction Stop
+  try {
+    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings -Force -ErrorAction Stop | Out-Null
+    Start-ScheduledTask -TaskName $taskName -ErrorAction Stop
+    if (Test-Path -LiteralPath $startupLauncher) { [System.IO.File]::Delete($startupLauncher) }
+    return 'SCHEDULED_TASK'
+  } catch {
+    # Standard user sessions may be denied Task Scheduler registration.  A
+    # per-user Startup launcher provides the same logon persistence without
+    # elevation; the Governor still owns the process lock, so it cannot create
+    # a second daemon when another launcher is already active.
+    if (-not (Test-Path -LiteralPath $startupDirectory)) {
+      New-Item -ItemType Directory -Force -Path $startupDirectory | Out-Null
+    }
+    $line = 'start "" /min powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $PSCommandPath + '" -Action Watch -Root "' + $Root + '" -GovernorScript "' + $GovernorScript + '" -IdleSeconds ' + $IdleSeconds + ' -PausedSeconds ' + $PausedSeconds + ' -ControllerRetrySeconds ' + $ControllerRetrySeconds + ' -WatchPollSeconds ' + $WatchPollSeconds + ' -MaxConsecutiveFailures ' + $MaxConsecutiveFailures
+    [System.IO.File]::WriteAllText($startupLauncher, "@echo off`r`n$line`r`n", [System.Text.Encoding]::ASCII)
+    return 'USER_STARTUP_FALLBACK'
+  }
 }
 
 if ($Action -eq 'Status') {
@@ -183,6 +200,7 @@ if ($Action -eq 'Status') {
     service_state = if (Test-Path -LiteralPath $serviceState) { Get-Content -LiteralPath $serviceState -Raw | ConvertFrom-Json } else { $null }
     watchdog_state = if (Test-Path -LiteralPath $watchdogState) { Get-Content -LiteralPath $watchdogState -Raw | ConvertFrom-Json } else { $null }
     scheduled_task = if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) { 'REGISTERED' } else { 'NOT_REGISTERED' }
+    startup_launcher = if (Test-Path -LiteralPath $startupLauncher) { 'REGISTERED' } else { 'NOT_REGISTERED' }
   } | ConvertTo-Json -Depth 8
   exit 0
 }
@@ -198,6 +216,7 @@ if ($Action -eq 'Stop') {
 if ($Action -eq 'Uninstall') {
   Stop-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
   Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue
+  if (Test-Path -LiteralPath $startupLauncher) { [System.IO.File]::Delete($startupLauncher) }
   exit 0
 }
 
@@ -208,8 +227,9 @@ if ($Action -eq 'Watch') {
   exit 0
 }
 if ($Action -eq 'Install') {
-  Install-Arc2GovernorTask
-  [pscustomobject]@{ status='INSTALLED_AND_STARTED'; task_name=$taskName; governor_script=$GovernorScript; watchdog_state=$watchdogState } | ConvertTo-Json
+  $persistence = Install-Arc2GovernorTask
+  $started = Start-Arc2GovernorProcess
+  [pscustomobject]@{ status='INSTALLED_AND_STARTED'; persistence=$persistence; task_name=$taskName; startup_launcher=$startupLauncher; governor_script=$GovernorScript; governor_pid=$started.pid; watchdog_state=$watchdogState } | ConvertTo-Json
   exit 0
 }
 $started = Start-Arc2GovernorProcess

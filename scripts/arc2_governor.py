@@ -13,6 +13,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -24,7 +25,7 @@ EVENT_STATUSES = {"QUEUED", "DELIVERED", "CLAIMED", "COMPLETE"}
 DECISIONS = {"CONTINUE_CONTROLLER", "CONTINUE_DIRECTOR", "REQUIRE_CHANGES", "PAUSED", "TERMINAL"}
 LIVE_KEYS = {
     "schema_version", "revision", "disposition", "stage", "next_action",
-    "controller_target", "pending_events", "active_event", "review",
+    "controller_target", "director_target", "pending_events", "active_event", "review",
     "remote_job", "last_transition", "pause_reason", "terminal_reason", "updated_at",
 }
 
@@ -78,6 +79,7 @@ def compact_state(value: dict[str, Any]) -> dict[str, Any]:
     defaults = {
         "schema_version": 3, "revision": 0, "disposition": "PAUSED",
         "stage": "UNSPECIFIED", "next_action": None, "controller_target": None,
+        "director_target": None,
         "pending_events": [], "active_event": None, "review": None,
         "remote_job": None, "last_transition": "STATE_LOADED", "pause_reason": None,
         "terminal_reason": None, "updated_at": now(),
@@ -336,15 +338,36 @@ def herdr_agents() -> list[dict[str, Any]]:
 def resolve_agent(role: str, state: dict[str, Any]) -> dict[str, Any]:
     name = "arc-controller" if role == "controller" else "arc-director"
     agents = herdr_agents()
-    if role == "controller" and state.get("controller_target"):
+    target_key = f"{role}_target"
+    saved_target = state.get(target_key)
+    if saved_target:
         for record in agents:
-            if record.get("pane_id") == state["controller_target"] and record.get("agent") == "codex":
+            if record.get("pane_id") == saved_target and record.get("agent") == "codex":
+                return record
+    # Herdr's compact agent-list response may omit the optional human-readable
+    # name.  Recover the last successfully used pane for this role from the
+    # durable event history instead of treating that omission as fatal.
+    for item in reversed(state.get("pending_events") or []):
+        historical_target = item.get("target")
+        if item.get("recipient") != role or not historical_target:
+            continue
+        for record in agents:
+            if record.get("pane_id") == historical_target and record.get("agent") == "codex":
+                state[target_key] = historical_target
                 return record
     for record in agents:
         if record.get("name") == name and record.get("agent") == "codex":
-            if role == "controller":
-                state["controller_target"] = record.get("pane_id")
+            state[target_key] = record.get("pane_id")
             return record
+    # With two unnamed Codex panes, the already-bound peer makes the remaining
+    # pane unambiguous.  Never guess if zero or multiple candidates remain.
+    peer_key = "director_target" if role == "controller" else "controller_target"
+    peer_target = state.get(peer_key)
+    candidates = [record for record in agents if record.get("agent") == "codex"
+                  and record.get("pane_id") != peer_target]
+    if len(candidates) == 1:
+        state[target_key] = candidates[0].get("pane_id")
+        return candidates[0]
     raise RuntimeError(f"{role.upper()}_TARGET_UNRESOLVED")
 
 
@@ -375,7 +398,17 @@ def dispatch(state: dict[str, Any], state_path: Path, timeout: int) -> str:
     queued = next((item for item in state["pending_events"] if item["status"] == "QUEUED"), None)
     if not queued:
         return "IDLE"
-    target = resolve_agent(queued["recipient"], state)
+    target_key = f"{queued['recipient']}_target"
+    previous_target = state.get(target_key)
+    try:
+        target = resolve_agent(queued["recipient"], state)
+    except RuntimeError as exc:
+        detail = str(exc)
+        if detail.startswith("HERDR_AGENT_LIST_FAILED:") or detail.endswith("_TARGET_UNRESOLVED"):
+            return "RECIPIENT_TARGET_UNAVAILABLE_EVENT_QUEUED"
+        raise
+    if state.get(target_key) != previous_target:
+        save(state_path, state, f"{queued['recipient'].upper()}_TARGET_RESOLVED:{target.get('pane_id')}")
     if target.get("agent_status") == "working":
         return "RECIPIENT_WORKING_EVENT_QUEUED"
     queued.update({"status": "DELIVERED", "attempts": int(queued.get("attempts") or 0) + 1,
@@ -383,9 +416,14 @@ def dispatch(state: dict[str, Any], state_path: Path, timeout: int) -> str:
     save(state_path, state, f"EVENT_DELIVERY_RESERVED:{queued['event_id']}")
     command = ["herdr", "agent", "prompt", target["pane_id"], prompt_text(queued, state_path),
                "--wait", "--until", "working", "--timeout", str(timeout * 1000)]
-    completed = subprocess.run(command, capture_output=True, check=False, text=True,
-                               encoding="utf-8", errors="replace", timeout=timeout + 10,
-                               creationflags=windows_creationflags())
+    try:
+        completed = subprocess.run(command, capture_output=True, check=False, text=True,
+                                   encoding="utf-8", errors="replace", timeout=timeout + 10,
+                                   creationflags=windows_creationflags())
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        append_ledger(state_path, {"transition": "HERDR_PROMPT_RESULT", "event_id": queued["event_id"],
+                                   "outcome": "UNKNOWN_FAIL_CLOSED", "error": type(exc).__name__})
+        return "EVENT_DELIVERY_UNKNOWN_FAIL_CLOSED"
     append_ledger(state_path, {"transition": "HERDR_PROMPT_RESULT", "event_id": queued["event_id"],
                                "exit_code": completed.returncode})
     return "EVENT_DELIVERED" if completed.returncode == 0 else "EVENT_DELIVERY_UNKNOWN_FAIL_CLOSED"
