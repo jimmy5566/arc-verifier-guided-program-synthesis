@@ -142,8 +142,6 @@ def _fit_task(
     from peft import set_peft_model_state_dict
     from inference.arc_native_io import ARCNativeInputAdapter
 
-    from unsloth import FastLanguageModel
-
     set_peft_model_state_dict(model, {key: value.clone() for key, value in default_state.items()}, adapter_name=adapter_name)
     variants = _reference_variants(task)
     token_ids = [
@@ -166,6 +164,7 @@ def _fit_task(
     )
     torch.cuda.reset_peak_memory_stats()
     if training_backend == "unsloth":
+        from unsloth import FastLanguageModel
         FastLanguageModel.for_training(model)
     elif training_backend == "torch":
         model.gradient_checkpointing_disable()

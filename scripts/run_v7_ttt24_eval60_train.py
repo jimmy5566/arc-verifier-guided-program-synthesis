@@ -176,7 +176,6 @@ def _activate_ttt_training_partition(model: Any) -> None:
 def generate_aug8_evidence(*, model: Any, tokenizer: Any, task: Any, config: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], float]:
     """Run the frozen Greedy AUG8 while retaining valid and invalid raw suffixes."""
     import torch
-    from unsloth import FastLanguageModel
     from inference.dynamic_task_scheduler import task_seed
     from inference.nvarc_native import native_messages_from_training_prefix, native_training_message_prefix, parse_native_grid
     from inference.nvarc_native_augmentation import bounded_native_augmentations, transform_tasks_for_augmentations
@@ -187,7 +186,7 @@ def generate_aug8_evidence(*, model: Any, tokenizer: Any, task: Any, config: dic
     prefixes = [native_training_message_prefix(item) for item in transformed]
     candidates: list[NativeGridCandidate] = []
     raw: list[dict[str, Any]] = []
-    started = time.perf_counter(); FastLanguageModel.for_inference(model)
+    started = time.perf_counter(); model.eval()
     for view_index, (augmentation, augmented) in enumerate(zip(augmentations, transformed, strict=True)):
         outputs = []; view_tokens = 0; view_seconds = 0.0
         for test_index in range(len(task.test)):
@@ -269,14 +268,18 @@ def train(args: argparse.Namespace, task_ids: list[str], config: dict[str, Any])
     import torch
     from arc.io import load_dataset
     from peft import get_peft_model_state_dict, set_peft_model_state_dict
-    from unsloth import FastLanguageModel
+    from transformers import AutoModelForCausalLM
     from inference.nvarc_native import checkpoint_native_tokenizer
 
     tasks = load_dataset(args.challenge)
-    model, checkpoint_tokenizer = FastLanguageModel.from_pretrained(
-        model_name=str(args.base_model), full_finetuning=False, load_in_4bit=False,
-        local_files_only=True, use_gradient_checkpointing=False,
-        max_seq_length=int(config["max_sequence_length"]),
+    model = AutoModelForCausalLM.from_pretrained(
+        str(args.base_model), local_files_only=True, trust_remote_code=False,
+        torch_dtype=torch.bfloat16, low_cpu_mem_usage=True,
+        attn_implementation="sdpa",
+    ).to("cuda:0")
+    from transformers import AutoTokenizer
+    checkpoint_tokenizer = AutoTokenizer.from_pretrained(
+        str(args.base_model), local_files_only=True, trust_remote_code=False,
     )
     tokenizer, tokenizer_meta = checkpoint_native_tokenizer(args.base_model, args.native_config_dir)
     if len(checkpoint_tokenizer) != 16 or checkpoint_tokenizer.get_vocab() != tokenizer.get_vocab():
