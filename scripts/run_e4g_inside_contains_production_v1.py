@@ -63,6 +63,19 @@ def resolve_frozen_repo_reference(refs, field):
  if candidate not in covered: fail('REFERENCE_NOT_FROZEN')
  return candidate
 
+def schedule_task_for_sample(row):
+ """Attach an already-frozen schedule identity to a transient task copy only."""
+ if not isinstance(row,dict) or not isinstance(row.get('task'),dict): fail('SCHEDULE_TASK_MISSING')
+ task=copy.deepcopy(row['task'])
+ nested=task.get('source_id'); enclosing=row.get('source_id')
+ if nested is not None and (not isinstance(nested,str) or not nested): fail('SCHEDULE_NESTED_SOURCE_ID_INVALID')
+ if enclosing is not None and (not isinstance(enclosing,str) or not enclosing): fail('SCHEDULE_ENCLOSING_SOURCE_ID_INVALID')
+ if nested is not None and enclosing is not None and nested!=enclosing: fail('SCHEDULE_SOURCE_ID_CONFLICT')
+ resolved=nested if nested is not None else enclosing
+ if resolved is None: fail('SCHEDULE_SOURCE_ID_MISSING')
+ task['source_id']=resolved
+ return task
+
 def resolve(binding_path, *, check_output=True, verify_assets=True, require_clean_source=True):
  b=load(binding_path)
  if require_clean_source: clean_source()
@@ -133,7 +146,7 @@ def train(binding,out,deadline):
   if time.monotonic()>deadline:fail('TRAIN_CAP')
   opt.zero_grad(set_to_none=True)
   for row in load(PKG/'TRAINING_SCHEDULE.json')['episodes'][off:off+4]:
-   sample=task_to_sample(row['task']); ids=torch.tensor([sample['input_ids']],device='cuda:0'); labels=torch.tensor([sample['labels']],device='cuda:0'); o=model(input_ids=ids,attention_mask=torch.ones_like(ids),use_cache=False); term,n=backward_equal_slot_term(o.logits,labels,expected_slots=4); accounting.append({'slot':row['slot'],'role':row['role'],'selected_tokens':n,'slot_coefficient':0.25});del o,term
+   sample=task_to_sample(schedule_task_for_sample(row)); ids=torch.tensor([sample['input_ids']],device='cuda:0'); labels=torch.tensor([sample['labels']],device='cuda:0'); o=model(input_ids=ids,attention_mask=torch.ones_like(ids),use_cache=False); term,n=backward_equal_slot_term(o.logits,labels,expected_slots=4); accounting.append({'slot':row['slot'],'role':row['role'],'selected_tokens':n,'slot_coefficient':0.25});del o,term
   opt.step()
  if len(accounting)!=384:fail('TRAIN_ACCOUNTING')
  adapter=Path(out)/'INSIDE_CONTAINS_ADAPTER';model.save_pretrained(adapter); write(Path(out)/'TRAINING_RECEIPT.json',{'status':'COMPLETE_E4G_TRAINING','optimizer':'PagedAdamW8bit','optimizer_steps':96,'slot_count':384,'slot_coefficient':0.25,'adapter_sha256':sha(adapter/'adapter_model.safetensors'),'accounting':accounting})

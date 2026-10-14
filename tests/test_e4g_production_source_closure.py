@@ -53,6 +53,36 @@ def binding(path):
     }
 
 class E4GProductionClosureTests(unittest.TestCase):
+    def test_two_level_source_id_resolution_covers_the_frozen_384_slot_schedule(self):
+        worker = worker_module()
+        rows = json.loads((PKG / 'TRAINING_SCHEDULE.json').read_text(encoding='utf-8'))['episodes']
+        frozen_rows = json.loads(json.dumps(rows, sort_keys=True))
+        projected = [worker.schedule_task_for_sample(row) for row in rows]
+        self.assertEqual(rows, frozen_rows, 'resolution must not mutate schedule bytes in memory')
+        self.assertEqual([row['slot'] for row in rows], list(range(384)))
+        nested = [row for row in rows if row['task'].get('source_id') is not None]
+        enclosing = [row for row in rows if row['task'].get('source_id') is None and row.get('source_id') is not None]
+        neither = [row for row in rows if row['task'].get('source_id') is None and row.get('source_id') is None]
+        conflicts = [row for row in rows if row['task'].get('source_id') is not None and row.get('source_id') is not None and row['task']['source_id'] != row['source_id']]
+        self.assertEqual(len(nested), 336); self.assertEqual(len(enclosing), 48)
+        self.assertEqual(len(neither), 0); self.assertEqual(len(conflicts), 0)
+        self.assertEqual(sum(row['role'] == 'PRIMARY_CONNECTED_COMPONENT_COUNT' for row in enclosing), 48)
+        self.assertEqual(sum(row['role'] == 'PRIMARY_OBJECT_EXTRACTION' for row in nested), 48)
+        self.assertEqual(sum(row['role'] == 'PROTECTED_REPLAY' for row in nested), 288)
+        for row, task in zip(rows, projected):
+            self.assertEqual(task['source_id'], row['task'].get('source_id', row.get('source_id')))
+            if row['task'].get('source_id') is not None:
+                self.assertEqual(json.dumps(task, sort_keys=True, separators=(',', ':')), json.dumps(row['task'], sort_keys=True, separators=(',', ':')))
+            else:
+                without_id = dict(task); without_id.pop('source_id')
+                self.assertEqual(without_id, row['task'])
+        from training_data.pipeline import task_to_sample
+        for row in nested:
+            self.assertEqual(task_to_sample(row['task']), task_to_sample(worker.schedule_task_for_sample(row)))
+        conflict = json.loads(json.dumps(rows[0])); conflict['task']['source_id'] = 'conflicting-frozen-id'
+        with self.assertRaisesRegex(RuntimeError, 'E4G:SCHEDULE_SOURCE_ID_CONFLICT'):
+            worker.schedule_task_for_sample(conflict)
+
     def test_windows_serialized_frozen_references_resolve_only_inside_checkout(self):
         worker = worker_module()
         refs = json.loads((PKG / 'PROTECTION_PANEL_REFERENCES.json').read_text(encoding='utf-8'))

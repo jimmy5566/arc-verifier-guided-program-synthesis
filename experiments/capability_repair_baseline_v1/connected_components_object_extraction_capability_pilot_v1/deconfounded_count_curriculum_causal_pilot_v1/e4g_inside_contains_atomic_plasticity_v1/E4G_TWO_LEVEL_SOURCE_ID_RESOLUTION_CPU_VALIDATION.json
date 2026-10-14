@@ -1,0 +1,72 @@
+{
+  "frozen_schedule": {
+    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/TRAINING_SCHEDULE.json",
+    "sha256": "527c227a1eec9f65a83a7156aa2f331189a4415da35fd62aa6d889110afde1e8"
+  },
+  "next_action": "Commit and push this semantically neutral source repair, then request a fresh SHA-bound execution authorization; no execution under the consumed parent binding.",
+  "preserved_consumed_failure": {
+    "binding_sha256": "340abaa4ed658761b321206d1771dda13a44babc17533fba3c622ec14ee48a71",
+    "classification": "FAILED_OR_PARTIAL_NO_RETRY_NO_RESULT",
+    "nonce": "fc100fd7d0528d833e7c7b21709267c6",
+    "partial_outputs_reused": false,
+    "partial_outputs_scored": false,
+    "terminal_receipt_sha256": "3036154938b1739c8c5f7b7c2b40506f607ee64e6204bc0b9a7295ea4269a1da"
+  },
+  "receipt_type": "E4G_TWO_LEVEL_SOURCE_ID_RESOLUTION_CPU_VALIDATION",
+  "resolution_policy": {
+    "both_present_different": "fail_closed",
+    "enclosing_row_source_id": "use_only_when_nested_absent",
+    "implementation": "transient_deep_copy_before_task_to_sample",
+    "neither_present": "fail_closed",
+    "nested_task_source_id": "use_when_present"
+  },
+  "schedule_audit": {
+    "conflicting_source_id": 0,
+    "missing_source_id": 0,
+    "nested_336_serialization_identical": true,
+    "primary_connected_component_count_enclosing": 48,
+    "primary_object_extraction_nested": 48,
+    "protected_replay_nested": 288,
+    "schedule_order_mutated": false,
+    "schedule_payload_mutated": false,
+    "slots_total": 384
+  },
+  "scope": "deterministic transient source_id resolution only; no frozen schedule bytes changed",
+  "status": "PASS",
+  "unchanged_scientific_input_hashes": {
+    "CPU_FREEZE_RECEIPT.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/CPU_FREEZE_RECEIPT.json",
+      "sha256": "2dffa6b216182ad419909ef34fa822f660d070e48b2b3c5c2f66de71551dae5b"
+    },
+    "CPU_PRODUCTION_PATH_RECEIPT.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/CPU_PRODUCTION_PATH_RECEIPT.json",
+      "sha256": "838480eab92b5c0eacb1a9db3a6f7d40735caf54fae90c8b10f42bd3135abf99"
+    },
+    "PROTOCOL.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/PROTOCOL.json",
+      "sha256": "3f8711295ff2264be91abc06bb76268fb6e50d2ea3c57394ebff304a5c31ec70"
+    },
+    "SCORING_CONTRACT.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/SCORING_CONTRACT.json",
+      "sha256": "aafbd37db5b5a28a8a8d465ae74774636c2022fe174d15fdc5474acbb1e55e98"
+    },
+    "TRAINING_SCHEDULE.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/TRAINING_SCHEDULE.json",
+      "sha256": "527c227a1eec9f65a83a7156aa2f331189a4415da35fd62aa6d889110afde1e8"
+    }
+  },
+  "validation": {
+    "commands": [
+      "py -3 -m unittest tests.test_e4g_inside_contains_atomic tests.test_e4g_production_source_closure",
+      "py -3 scripts/score_e4g_inside_contains_v1.py --cpu-self-test",
+      "bash -n scripts/launch_e4g_inside_contains_v1.sh"
+    ],
+    "gpu_used": false,
+    "launcher_syntax": "PASS",
+    "model_loaded": false,
+    "production_path": "PASS_E4G_COMPLETE_PRODUCTION_PATH_CPU_FIXTURE via launcher-worker-scorer test",
+    "scorer_self_test": "PASS_E4G_SCORER_FAIL_CLOSED_TARGET_GUARD",
+    "targets_opened": false,
+    "unittest": "PASS (9 tests)"
+  }
+}
