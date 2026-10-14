@@ -19,11 +19,11 @@ class SupervisorObservabilityTest(unittest.TestCase):
         path.parent.mkdir(parents=True)
         path.write_text(json.dumps({"round_id": round_id, "status": "SUCCESS"}), encoding="utf-8")
 
-    def test_five_minute_interval_and_timestamped_heartbeat(self) -> None:
-        self.assertEqual(300, supervisor_module.LOW_FREQUENCY_RECONCILIATION_SECONDS)
+    def test_five_second_interval_and_timestamped_heartbeat(self) -> None:
+        self.assertEqual(5, supervisor_module.LOW_FREQUENCY_RECONCILIATION_SECONDS)
         root = Path(__file__).resolve().parents[2]
         protocol = json.loads((root / "orchestration" / "supervisor" / "SUPERVISOR_PROTOCOL.json").read_text(encoding="utf-8"))
-        self.assertEqual(300, protocol["low_frequency_reconciliation_seconds"])
+        self.assertEqual(5, protocol["low_frequency_reconciliation_seconds"])
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp)
             cycle = base / "DIRECTIVE_CYCLE_STATE.json"

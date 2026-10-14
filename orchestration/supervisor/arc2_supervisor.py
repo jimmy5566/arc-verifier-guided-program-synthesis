@@ -15,7 +15,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-LOW_FREQUENCY_RECONCILIATION_SECONDS = 300
+# The Supervisor is the terminal-receipt transport for the Governor.  Keep its
+# cadence short enough that a completed detached job reaches the Controller
+# promptly; the work itself remains idempotent and metadata-only until a
+# terminal receipt is found.
+LOW_FREQUENCY_RECONCILIATION_SECONDS = 5
 # Bound production workers use COMPLETE after they have written their immutable
 # terminal receipt.  Keep it distinct from scientific acceptance: the
 # Controller still ingests and reviews the frozen score artifact.

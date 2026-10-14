@@ -3,7 +3,7 @@
   "agent_type": "deterministic_python_non_llm",
   "state_path": "orchestration/supervisor/state/SUPERVISOR_STATE.json",
   "receipt_scan": "low-frequency metadata-only fallback",
-  "low_frequency_reconciliation_seconds": 300,
+  "low_frequency_reconciliation_seconds": 5,
   "heartbeat": "one timestamped local human-readable line per reconciliation; heartbeat-only checks never wake agents",
   "event_stream": "remote events.jsonl when transport is available",
   "notification": "append-only REMOTE_TERMINAL event to the Governor inbox; receipt hash is the idempotency key",
