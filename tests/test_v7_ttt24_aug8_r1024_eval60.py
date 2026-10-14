@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 from unittest.mock import patch
 
 from scripts import run_ttt24_aug8_r1024_core_v1 as core
 from scripts import run_v7_ttt24_aug8_r1024_eval60 as full
+from scripts import score_v7_ttt24_eval60_postfreeze as postfreeze
 
 
 def test_full_cohort_rebinds_all_89_outputs_to_fresh_v7_ttt24_adapters(tmp_path: Path) -> None:
@@ -62,3 +64,15 @@ def test_worker_passes_frozen_v7_as_separate_foundation_adapter(tmp_path: Path) 
                      depth=24, experiment="TEST")
     command = called.call_args.args[0]
     assert command[command.index("--foundation-adapter") + 1] == str(tmp_path / "v7")
+
+
+def test_postfreeze_scorer_reads_native_greedy_prediction_key(tmp_path: Path) -> None:
+    receipts = tmp_path / "TASK_RECEIPTS"
+    receipts.mkdir(parents=True)
+    (receipts / "abc.json").write_text(json.dumps({
+        "status": "COMPLETE",
+        "solutions_opened": False,
+        "greedy_aug8": [{"augmentation": "identity", "prediction": [[[1, 2], [3, 4]]]}],
+    }), encoding="utf-8")
+    actual = postfreeze.greedy_sets(tmp_path, ["abc:o0"])
+    assert actual == {"abc:o0": {"[[1,2],[3,4]]"}}
