@@ -1,0 +1,63 @@
+{
+  "artifact_sha256": {
+    "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4e_late_count_v1/CPU_PRECLAIM_RECEIPT.json": "ef7e854aac944d99a0a2c72e61200272c5982f61d4a82c8e110a6334dcdb7aed",
+    "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4e_late_count_v1/CPU_PRODUCTION_PATH_RECEIPT.json": "88177d3e6b6cba4ff6b2794c8a943361a2bd13fa6dfbea5e1df644f7183d3fd7",
+    "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4e_late_count_v1/CPU_TEST_BINDING.json": "f4aa251e78b979513ee3ca3a9cc3e601d39f80a16c6910629399cb124505dc37",
+    "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4e_late_count_v1/OOD_INPUTS_AND_COMMITMENTS.json": "a3745eac19c6f4cb201b03adcb40d7bcb510b609636247c98e3eaf27aacb5e19",
+    "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4e_late_count_v1/PROSPECTIVE_FREEZE_RECEIPT.json": "44d915de3105b89bed43669b88709cbc9761cebda38c87f71b5dc530b6b9250f",
+    "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4e_late_count_v1/PROTOCOL.json": "3ade7f1b0dd5d8b8c585bc4b0d2bbae2bbe94aad641540a92eb6db8ea0be1193",
+    "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4e_late_count_v1/TRAIN_DERIVED_CURRICULUM.json": "ba70c01a84d64416d6f1563bcdfa55f0c3cfa7b884129e4cb4ce45e10002b7a7",
+    "scripts/e4e_late_layer_global_count.py": "15a4add53f9c928dfef620aebc5ba6828ef6e2d4fe7774230d0d6aba312fe5b9",
+    "scripts/freeze_e4e_late_layer_count_v1.py": "7e4e0b28ab6f689fa4c4a04878019a2ef73c8464d1e54482e561c2830f5b291f",
+    "scripts/launch_e4e_late_layer_count_v1.sh": "27b5dbb0ee326e8bb7ca01aa0e78ec86b66e8fb70dacb77deec53a912ebff5a1",
+    "scripts/run_e4e_late_layer_count_v1.py": "33d958ecc80679150c513717e60eac0dd6ab5317a5720a81842722d1479c6b6c",
+    "tests/test_e4e_late_layer_count_v1.py": "b10a4f6eb4f15065730a215b466bb20818ac6e3f1072ac7b57ed299a3473256f"
+  },
+  "construct_validation": {
+    "answer_ce_coefficient_control": 1.0,
+    "answer_ce_coefficient_treatment": 1.0,
+    "count_classes": [
+      1,
+      2,
+      3
+    ],
+    "layer": 31,
+    "non_count_loss_paths": "byte-identical Equal-Slot",
+    "real_training_count_primary_slots": 48,
+    "result": "PASS",
+    "treatment_additive_auxiliary_coefficient": 0.25
+  },
+  "cpu_tests": {
+    "command": "py -3 -m unittest tests.test_e4e_late_layer_count_v1",
+    "result": "PASS",
+    "tests": 2
+  },
+  "experiment_id": "E4E_LATE_LAYER_GLOBAL_COUNT_BINDING_CAUSAL_PILOT_V1",
+  "frozen_panels": {
+    "canonical_units": 48,
+    "count_balance": {
+      "1": 16,
+      "2": 16,
+      "3": 16
+    },
+    "ood_inputs_and_commitments_sha256": "a3745eac19c6f4cb201b03adcb40d7bcb510b609636247c98e3eaf27aacb5e19",
+    "orders_per_unit": 2,
+    "targets_opened": false,
+    "topology_count_mutual_information_bits": 0.0,
+    "train_derived_curriculum_sha256": "ba70c01a84d64416d6f1563bcdfa55f0c3cfa7b884129e4cb4ce45e10002b7a7",
+    "zero_prompt_query_content_role_overlap": true
+  },
+  "generated_at_utc": "2026-10-14T03:40:55.197603Z",
+  "production_path": {
+    "actual_launcher": "Git Bash with explicit PYTHON=py.exe and bash scripts/launch_e4e_late_layer_count_v1.sh",
+    "gpu_used": false,
+    "launcher_worker_raw_freeze_sidecar_scorer": "PASS_E4E_LAUNCHER_WORKER_RAW_FREEZE_SIDECAR_SCORER_CPU_ONLY",
+    "model_loaded": false,
+    "preclaim": "PASS_E4E_PRODUCTION_PREFLIGHT_NO_MODEL",
+    "raw_freeze_precedes_sidecar": true,
+    "synthetic_cpu_targets_opened_only_after_raw_freeze": true
+  },
+  "schema_version": 1,
+  "source_commit": "9bf083baa584db0d6ec56c907f8a763d2200f56a",
+  "status": "PASS_E4E_CONSOLIDATED_CPU_VALIDATION_NO_MODEL"
+}
