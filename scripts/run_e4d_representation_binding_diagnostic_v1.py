@@ -42,6 +42,15 @@ def final_query_digit_positions(task):
  if len(layout.positions)!=h*w or tuple(layout.positions)!=tuple(sorted(layout.positions)): fail('FINAL_QUERY_POSITION_LAYOUT')
  return list(layout.positions),[h,w]
 
+def native_messages_for_task(task):
+ """Exact dict-task native transport used by the production feature worker."""
+ from inference.nvarc_native import serialize_grid
+ messages=[]
+ for pair in task['train']:
+  messages.extend(({'role':'user','content':serialize_grid(pair['input'])},{'role':'assistant','content':serialize_grid(pair['output'])}))
+ messages.append({'role':'user','content':serialize_grid(task['test'][0]['input'])})
+ return messages
+
 def records():
  train=load(PKG/'TRAIN_DERIVED_PROBE_SPLIT.json')['records'];ood=load(PKG/'OOD_INPUTS_AND_COMMITMENTS.json')['records']
  out=[]
@@ -163,8 +172,8 @@ def verify_runtime_assets(binding):
 
 def native_feature_positions(tokenizer, task):
  """Find the final query digit span in the actual native chat token stream."""
- from inference.nvarc_native import native_messages,serialize_grid
- messages=native_messages(task,0);encoded=tokenizer.apply_chat_template(messages,add_generation_prompt=True,tokenize=True,return_tensors='pt',return_dict=True)
+ from inference.nvarc_native import serialize_grid
+ messages=native_messages_for_task(task);encoded=tokenizer.apply_chat_template(messages,add_generation_prompt=True,tokenize=True,return_tensors='pt',return_dict=True)
  ids=[int(x) for x in encoded['input_ids'][0].tolist()];grid=task['test'][0]['input'];grid_ids=[int(x) for x in tokenizer.encode(serialize_grid(grid),add_special_tokens=False)]
  starts=[i for i in range(len(ids)-len(grid_ids)+1) if ids[i:i+len(grid_ids)]==grid_ids]
  if not starts:fail('NATIVE_QUERY_GRID_NOT_FOUND')
@@ -203,14 +212,14 @@ def load_arm(binding,arm):
 
 def generate_arm(binding,arm,out):
  """Write target-blind native predictions and mean-pooled frozen features."""
- from inference.nvarc_native import native_messages,parse_native_grid
+ from inference.nvarc_native import parse_native_grid
  model,torch,tokenizer,provider=load_arm(binding,arm);rows=[]
  try:
   for index,row in enumerate(records()):
    encoded,positions=native_feature_positions(tokenizer,row['task']);encoded={k:v.to('cuda:0') for k,v in encoded.items()}
    with torch.inference_mode(): result=model(**encoded,output_hidden_states=True,use_cache=False)
    feature={str(layer):[float(x) for x in result.hidden_states[layer][0,positions].float().mean(dim=0).cpu().tolist()] for layer in LAYERS}
-   generation=provider.generate(native_messages(row['task'],0),max_new_tokens=binding['runtime']['max_new_tokens'],context_window=binding['runtime']['context_window'],seed=20261013+index)
+   generation=provider.generate(native_messages_for_task(row['task']),max_new_tokens=binding['runtime']['max_new_tokens'],context_window=binding['runtime']['context_window'],seed=20261013+index)
    grid=parse_native_grid(generation.text);native_count=None if grid is None or len(grid)!=3 or any(len(r)!=3 for r in grid) else sum(x!=0 for x in grid[1])
    rows.append({'record_id':row['record_id'],'split':row['split'],'count':row.get('count'),'prompt_sha256':row['prompt_sha256'],'layer_features':feature,'native_count':native_count,'generated_token_ids':list(generation.token_ids),'parser_valid':grid is not None})
    del result,encoded

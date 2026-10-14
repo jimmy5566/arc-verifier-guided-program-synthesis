@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 import pytest
-from scripts.run_e4d_representation_binding_diagnostic_v1 import final_query_digit_positions, records
+from scripts.run_e4d_representation_binding_diagnostic_v1 import final_query_digit_positions, native_messages_for_task, records
 
 
 def test_real_tokenizer_positions_cover_train_and_frozen_ood_without_targets():
@@ -13,6 +13,13 @@ def test_real_tokenizer_positions_cover_train_and_frozen_ood_without_targets():
         positions, shape = final_query_digit_positions(row['task'])
         assert len(positions) == shape[0] * shape[1]
         assert positions == sorted(positions)
+
+
+def test_native_dict_transport_has_only_observable_train_and_query_input():
+    task = records()[0]['task']
+    messages = native_messages_for_task(task)
+    assert [message['role'] for message in messages] == ['user', 'assistant'] * len(task['train']) + ['user']
+    assert messages[-1]['content']
 
 
 def test_binding_cpu_integration_three_arm_freeze_guard(tmp_path):
