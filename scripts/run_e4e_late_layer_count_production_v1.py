@@ -1,4 +1,4 @@
-﻿"""Bound production worker for E4E late-layer global-count supervision.
+"""Bound production worker for E4E late-layer global-count supervision.
 
 CUDA imports occur only inside the execution functions.  Control remains original
 Equal-Slot CE; treatment adds a train-only 0.25 layer-31 count CE only on the
@@ -92,6 +92,10 @@ def preclaim(bp,allow_runtime_missing=False):
     p=Path(root)/f['name']
     if not p.is_file() or p.stat().st_size!=f['bytes'] or sha(p)!=f['sha256']:fail('ASSET:'+f['name'])
     checks.append({'name':f['name'],'sha256':f['sha256']})
+  # Capability query only: establish the bound CUDA/BF16 runtime before the
+  # scientific boundary without constructing or loading a model.
+  import torch
+  if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported():fail('CUDA_BF16')
  return {'status':'PASS_E4E_EXECUTABLE_PRODUCTION_PREFLIGHT_NO_MODEL','binding_sha256':sha(bp),'slots':384,'count_slots':48,'noncount_slots':336,'slot_audit':a,'assets':checks,'model_loaded':False,'gpu_used':False,'targets_opened':False,'sidecar_opened':False,'root_free_bytes':root_free,'output_parent_free_bytes':output_free}
 
 def load_model(trainable):
