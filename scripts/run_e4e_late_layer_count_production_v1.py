@@ -5,7 +5,7 @@ Equal-Slot CE; treatment adds a train-only 0.25 layer-31 count CE only on the
 48 Count-primary slots.  The auxiliary head is deliberately not saved.
 """
 from __future__ import annotations
-import argparse, copy, hashlib, importlib, json, math, os, random, secrets, subprocess, sys, tempfile, time
+import argparse, copy, hashlib, importlib, json, math, os, random, secrets, shutil, subprocess, sys, tempfile, time
 from collections import defaultdict
 from pathlib import Path
 ROOT=Path(os.environ.get('ARC2_ROOT',Path(__file__).resolve().parents[1]));sys.path[:0]=[str(ROOT),str(ROOT/'src')]
@@ -70,6 +70,8 @@ def preclaim(bp,allow_runtime_missing=False):
  if b.get('experiment_id')!=ID or b.get('retry') is not False or b.get('hard_cap_seconds')!=7200 or Path(b['output_root']).exists():fail('BINDING')
  clean()
  if subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()!=b['execution_source_commit']:fail('HEAD')
+ root_free=shutil.disk_usage('/').free; output_free=shutil.disk_usage(Path(b['output_root']).parent).free
+ if root_free < (1<<30) or output_free < (20<<30): fail('DISK_CAPACITY')
  if os.name!='nt':
   live=subprocess.run(['pgrep','-af',b['nonce']],capture_output=True,text=True).stdout.strip()
   if live: fail('DUPLICATE_NONCE_PROCESS')
@@ -87,7 +89,7 @@ def preclaim(bp,allow_runtime_missing=False):
     p=Path(root)/f['name']
     if not p.is_file() or p.stat().st_size!=f['bytes'] or sha(p)!=f['sha256']:fail('ASSET:'+f['name'])
     checks.append({'name':f['name'],'sha256':f['sha256']})
- return {'status':'PASS_E4E_EXECUTABLE_PRODUCTION_PREFLIGHT_NO_MODEL','binding_sha256':sha(bp),'slots':384,'count_slots':48,'noncount_slots':336,'slot_audit':a,'assets':checks,'model_loaded':False,'gpu_used':False,'targets_opened':False,'sidecar_opened':False}
+ return {'status':'PASS_E4E_EXECUTABLE_PRODUCTION_PREFLIGHT_NO_MODEL','binding_sha256':sha(bp),'slots':384,'count_slots':48,'noncount_slots':336,'slot_audit':a,'assets':checks,'model_loaded':False,'gpu_used':False,'targets_opened':False,'sidecar_opened':False,'root_free_bytes':root_free,'output_parent_free_bytes':output_free}
 
 def load_model(trainable):
  import torch
