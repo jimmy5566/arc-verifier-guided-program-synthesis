@@ -586,6 +586,32 @@ def complete_event(state_path: Path, args: argparse.Namespace) -> None:
     save(state_path, state, f"EVENT_COMPLETED:{args.complete_event}")
 
 
+def resume_paused_remote_job(state_path: Path, args: argparse.Namespace) -> None:
+    """Atomically register a detached job after a pre-model paused-stage repair.
+
+    This narrow recovery path cannot change science or bypass an active event:
+    it is available only from a quiescent PAUSED stage and only with a complete
+    Supervisor-readable remote-job manifest.
+    """
+    state = load(state_path)
+    if state.get("disposition") != "PAUSED" or state.get("active_event") is not None:
+        raise RuntimeError("PAUSED_REMOTE_RESUME_NOT_ALLOWED")
+    if state.get("remote_job") is not None:
+        raise RuntimeError("REMOTE_JOB_ALREADY_REGISTERED")
+    remote_path = resolve_artifact(args.resume_paused_remote_job)
+    remote = json.loads(remote_path.read_text(encoding="utf-8-sig"))
+    required = ("job_id", "ssh_target", "output_root", "terminal_receipt", "primary_process")
+    if any(not remote.get(key) for key in required):
+        raise RuntimeError("REMOTE_JOB_MANIFEST_INCOMPLETE")
+    primary = remote["primary_process"]
+    if not isinstance(primary, dict) or not isinstance(primary.get("pid"), int) or not primary.get("role"):
+        raise RuntimeError("REMOTE_JOB_PRIMARY_PROCESS_INCOMPLETE")
+    state.update({"disposition": "WAIT_REMOTE", "remote_job": remote,
+                  "next_action": args.next_action or "SUPERVISOR_MONITORS_BOUND_REMOTE_JOB",
+                  "pause_reason": None, "terminal_reason": None})
+    save(state_path, state, f"PAUSED_REMOTE_JOB_REGISTERED:{remote['job_id']}")
+
+
 def write_service_state(path: Path | None, status: str, state: dict[str, Any], detail: str | None = None) -> None:
     if not path:
         return
@@ -626,6 +652,7 @@ def main() -> int:
     parser.add_argument("--repair-recursive-reviews", action="store_true")
     parser.add_argument("--claim-event")
     parser.add_argument("--complete-event")
+    parser.add_argument("--resume-paused-remote-job")
     parser.add_argument("--next-disposition", choices=sorted(DISPOSITIONS))
     parser.add_argument("--stage")
     parser.add_argument("--next-action")
@@ -644,7 +671,7 @@ def main() -> int:
     parser.add_argument("--pid-file", type=Path)
     parser.add_argument("--service-state", type=Path)
     args = parser.parse_args()
-    modes = sum(bool(value) for value in (args.migrate_legacy, args.repair_recursive_reviews, args.claim_event, args.complete_event))
+    modes = sum(bool(value) for value in (args.migrate_legacy, args.repair_recursive_reviews, args.claim_event, args.complete_event, args.resume_paused_remote_job))
     if modes > 1:
         parser.error("migration, claim, and completion are mutually exclusive")
     if args.migrate_legacy:
@@ -658,6 +685,9 @@ def main() -> int:
         return 0
     if args.complete_event:
         complete_event(args.state, args)
+        return 0
+    if args.resume_paused_remote_job:
+        resume_paused_remote_job(args.state, args)
         return 0
     lock = GovernorLock(args.lock_path or args.state.parent / "arc2_governor.lock")
     if not lock.acquire():
