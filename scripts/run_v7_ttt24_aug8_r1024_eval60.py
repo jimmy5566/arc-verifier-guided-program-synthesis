@@ -19,6 +19,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
 from scripts.run_non_s_rolling_resident_v1 import _adapter_identity
 from scripts.run_ttt24_aug8_r1024_core_v1 import (
+    AUG8,
     _atomic_json,
     _freeze_generation,
     _read,
@@ -81,10 +82,18 @@ def main() -> None:
     args.checkpoints = "128,256,512,1024"
     contract = {
         "experiment": EXPERIMENT, "target_blind": True, "gold_loaded": False,
+        "source_commit": __import__("subprocess").run(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True,
+            capture_output=True, text=True,
+        ).stdout.strip(),
+        "cohort": "Eval60: 60 tasks / 89 outputs", "ttt_depth": 24,
         "task_count": 60, "output_count": 89, "task_ids_sha256": TASK_IDS_SHA256,
         "decoder": "CUMULATIVE_REGRET_r=4.00", "max_expanded_nodes": 1024,
         "checkpoints": [128, 256, 512, 1024], "candidate_cap": 32, "frontier_floor": 1,
-        "max_new_tokens": 931, "augmentation": "CANONICAL_AUG8",
+        "max_new_tokens": 931, "eos": 15, "augmentation": "CANONICAL_AUG8",
+        "augmentation_ids": list(AUG8),
+        "cache": "ChunkedDynamicCache / valid_length rollback",
+        "generation_scope": "V7_TTT24_D24_ONLY",
         "search_order": "historical recursive DFS; diagnostic_trace append-only",
         "admission": "root-aware exact READY compatibility; fairness_max_wait=3",
         "worker_python": str(args.worker_python), "solutions_argument_available": False,
