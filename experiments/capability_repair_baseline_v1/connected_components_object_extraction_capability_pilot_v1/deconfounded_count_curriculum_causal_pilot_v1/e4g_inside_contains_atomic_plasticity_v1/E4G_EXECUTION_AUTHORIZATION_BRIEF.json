@@ -1,0 +1,86 @@
+﻿{
+    "schema_version":  1,
+    "brief_type":  "E4G_SEPARATE_SHA_BOUND_EXECUTION_AUTHORIZATION_BRIEF",
+    "stage":  "E4G_INSIDE_CONTAINS_ATOMIC_PLASTICITY_POSITIVE_CONTROL",
+    "candidate_source_commit":  "cd1df4405186385be2a428858364473ddd54e0e0",
+    "candidate_source_ref":  "origin/codex/connected-components-e1",
+    "experiment_id":  "E4G_INSIDE_CONTAINS_ATOMIC_PLASTICITY_POSITIVE_CONTROL_V1",
+    "authorization_requested":  {
+                                    "gpu_training":  true,
+                                    "automatic_retry":  false,
+                                    "single_execution":  true,
+                                    "gpu_inference":  true,
+                                    "model_load":  true
+                                },
+    "immutable_candidate_binding":  {
+                                        "arms":  [
+                                                     {
+                                                         "name":  "V7_NO_UPDATE_REFERENCE",
+                                                         "updates":  0
+                                                     },
+                                                     {
+                                                         "name":  "V7_INSIDE_CONTAINS_CAPABILITY_TRAINING",
+                                                         "initialization":  "EXACT_V7",
+                                                         "updates":  96,
+                                                         "slots_per_update":  4,
+                                                         "optimizer":  "PagedAdamW8bit",
+                                                         "learning_rate":  5E-05,
+                                                         "seed":  20261013,
+                                                         "base_answer_ce_coefficient":  1,
+                                                         "primary_inside_contains_slots":  48,
+                                                         "primary_object_extraction_byte_identical_slots":  48,
+                                                         "protected_replay_byte_identical_slots":  288
+                                                     }
+                                                 ],
+                                        "runtime":  {
+                                                        "cuda_required":  true,
+                                                        "bf16_required":  true,
+                                                        "physical_batch_size":  1,
+                                                        "decoder":  "NVARC_NATIVE_GREEDY"
+                                                    },
+                                        "retry":  false,
+                                        "hard_cap_seconds":  7200,
+                                        "nonce":  "8d7f2c91a4e64385b6c0ef7903a54d12",
+                                        "output_root":  "/workspace/arc2/active_runs/e4g_inside_contains/e4g_8d7f2c91a4e64385b6c0ef7903a54d12"
+                                    },
+    "bound_inputs":  {
+                         "PROTOCOL.json":  "3f8711295ff2264be91abc06bb76268fb6e50d2ea3c57394ebff304a5c31ec70",
+                         "TRAINING_SCHEDULE.json":  "527c227a1eec9f65a83a7156aa2f331189a4415da35fd62aa6d889110afde1e8",
+                         "TRAIN_FIT_INPUTS_AND_COMMITMENTS.json":  "7175cc24c11f988ab1f758ae758a3c10fb8cc29980bc892782252b61ef6449dc",
+                         "STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json":  "e28659aa1e4f40b1bdd870aec6e7cafe87fe3771df8b3f0081fad0a114ae7344",
+                         "PROTECTION_PANEL_REFERENCES.json":  "b947049b1e0edac6b633095c305818e5966ed01ef2df7a04b928dc9aa35d43a4",
+                         "SCORING_CONTRACT.json":  "aafbd37db5b5a28a8a8d465ae74774636c2022fe174d15fdc5474acbb1e55e98",
+                         "CPU_FREEZE_RECEIPT.json":  "2dffa6b216182ad419909ef34fa822f660d070e48b2b3c5c2f66de71551dae5b",
+                         "CPU_PRODUCTION_PATH_RECEIPT.json":  "838480eab92b5c0eacb1a9db3a6f7d40735caf54fae90c8b10f42bd3135abf99",
+                         "E4G_SCORING_CONTRACT_REPAIR_RECEIPT.json":  "e23afff741614c0cb9142f3529c744fb8c5e254b856d7f1f8b8cfa3fdc7dbbda"
+                     },
+    "v7_manifest":  {
+                        "sha256":  "1e124cc4f43530bbbc71103703d404b38df83a6998a3e39d7c1da0676c800549",
+                        "path":  "experiments/capability_repair_baseline_v1/CHECKPOINT_MANIFEST_REMOTE_V1.json"
+                    },
+    "execution_preclaim":  [
+                               "exact detached source HEAD equals candidate source commit",
+                               "clean tracked source",
+                               "all bound input and V7 asset hashes",
+                               "fresh output root and duplicate nonce/process absence",
+                               "disk capacity, CUDA and BF16 availability",
+                               "runtime imports and physical Batch1 native-Greedy contract",
+                               "target-blind evaluation inputs and raw-freeze-before-sidecar guard"
+                           ],
+    "scientific_contract":  {
+                                "gates":  "train-fit \u003e=40/48; OOD delta \u003e=+6/48 and paired-bootstrap lower 95% CI \u003e0; order invariance \u003e=0.80; retention aggregate \u003e=-2 and every family \u003e=-1; composition descriptive harm delta \u003e=-1",
+                                "primary_endpoint":  "Treatment minus exact V7 structural OOD both-order exact-grid accuracy, 48 canonical units",
+                                "decision":  "REJECT unless all gates pass; a pass remains non-promotable pending fresh independent confirmation"
+                            },
+    "sealed_data":  [
+                        "targets absent from inference and sidecar unavailable until complete raw freeze",
+                        "No Gold/dGold/FINAL_AUDIT",
+                        "No official submission"
+                    ],
+    "authorization_boundary":  "No launch occurs under this brief. If authorized, Controller must first materialize and hash a production binding and pass its actual-Pod preclaim; any material identity change requires a replacement review.",
+    "cpu_evidence":  {
+                         "repair_receipt":  "E4G_SCORING_CONTRACT_REPAIR_RECEIPT.json",
+                         "tests":  "5 PASS including full deterministic score decision table",
+                         "preflight":  "PASS no model, GPU, targets, or sidecar"
+                     }
+}
