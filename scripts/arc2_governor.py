@@ -410,7 +410,16 @@ def dispatch(state: dict[str, Any], state_path: Path, timeout: int) -> str:
         raise
     if state.get(target_key) != previous_target:
         save(state_path, state, f"{queued['recipient'].upper()}_TARGET_RESOLVED:{target.get('pane_id')}")
-    if target.get("agent_status") == "working":
+    # A terminal Supervisor receipt must wake an otherwise unclaimed Controller even
+    # when Herdr still reports its pane as working. Suppressing that prompt used to
+    # strand completed remote runs until a user message arrived. A claimed event
+    # remains exclusive, and ordinary Controller tasks retain the queue-only rule.
+    wake_working_controller = (
+        queued.get("kind") == "REMOTE_TERMINAL"
+        and queued.get("recipient") == "controller"
+        and state.get("active_event") is None
+    )
+    if target.get("agent_status") == "working" and not wake_working_controller:
         return "RECIPIENT_WORKING_EVENT_QUEUED"
     queued.update({"status": "DELIVERED", "attempts": int(queued.get("attempts") or 0) + 1,
                    "delivered_at": now(), "target": target.get("pane_id")})

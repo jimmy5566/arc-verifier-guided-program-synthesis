@@ -152,6 +152,46 @@ class ThinGovernorTests(unittest.TestCase):
             self.assertEqual(len(fake.prompts), 1)
             self.assertEqual(state["pending_events"][0]["attempts"], 1)
 
+    def test_remote_terminal_wakes_unclaimed_working_controller_once(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            state_path = root / "ARC2_WORKFLOW_STATE.json"
+            governor.atomic(state_path, initial_state(disposition="WAIT_REMOTE", remote_job={"run_id": "R"}))
+            event_dir = root / "events"
+            event_dir.mkdir()
+            governor.atomic(event_dir / "remote.json", {
+                "schema_version": 1, "kind": "REMOTE_TERMINAL", "producer": "supervisor",
+                "recipient": "controller", "payload": {"round_id": "R", "terminal_receipt": "receipt.json",
+                "terminal_receipt_sha256": "a" * 64},
+            })
+            fake = FakeHerdr({"controller": "working"})
+            with mock.patch.object(governor.subprocess, "run", side_effect=fake):
+                result, state = governor.cycle(state_path, agent_timeout_seconds=1)
+                again, state = governor.cycle(state_path, agent_timeout_seconds=1)
+            self.assertEqual(result, "EVENT_DELIVERED")
+            self.assertEqual(again, "IDLE")
+            self.assertEqual(len(fake.prompts), 1)
+            item = next(item for item in state["pending_events"] if item["kind"] == "REMOTE_TERMINAL")
+            self.assertEqual(item["status"], "DELIVERED")
+            self.assertEqual(item["attempts"], 1)
+
+    def test_remote_terminal_does_not_interrupt_a_claimed_controller_event(self):
+        with tempfile.TemporaryDirectory() as directory:
+            state_path = Path(directory) / "ARC2_WORKFLOW_STATE.json"
+            claimed = "other-controller-event"
+            queued = governor.event("REMOTE_TERMINAL", "controller", "supervisor", {
+                "round_id": "R", "terminal_receipt": "receipt.json", "terminal_receipt_sha256": "a" * 64,
+            })
+            governor.atomic(state_path, initial_state(
+                disposition="CONTINUE_CONTROLLER", active_event=claimed, pending_events=[queued]
+            ))
+            fake = FakeHerdr({"controller": "working"})
+            with mock.patch.object(governor.subprocess, "run", side_effect=fake):
+                result, state = governor.cycle(state_path, agent_timeout_seconds=1)
+            self.assertEqual(result, "RECIPIENT_WORKING_EVENT_QUEUED")
+            self.assertEqual(len(fake.prompts), 0)
+            self.assertEqual(state["pending_events"][0]["status"], "QUEUED")
+
     def test_supervisor_terminal_event_wakes_controller_without_manual_intervention(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
