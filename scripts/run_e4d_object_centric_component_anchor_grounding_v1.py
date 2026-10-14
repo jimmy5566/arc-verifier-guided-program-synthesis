@@ -458,4 +458,29 @@ def panels():
 def cpu_fixture():
  return [{'phase':'launcher','binding_checked':True},{'phase':'worker','model_loaded':False,'cuda_initialized':False},{'phase':'raw_freeze','targets_opened':False},{'phase':'sidecar','sidecar_written':False,'targets_opened':False},{'phase':'scorer','scored':False,'reason':'CPU_NO_MODEL_FIXTURE'}]
 
+# main after fake-pipeline override
+# A common adapter-driven state machine makes the CPU integration path exercise
+# the same arm ordering, raw-freeze guard, sidecar gate, scoring gate, cap and
+# terminal-receipt transitions as the CUDA worker.
+def _fake_pipeline(binding_path):
+ import tempfile, shutil
+ pre=preclaim(binding_path,True); out=Path(tempfile.mkdtemp(prefix='e4d-cpu-pipeline-'))
+ try:
+  write(out/'PREFLIGHT_RECEIPT.json',pre); write(out/'SCIENTIFIC_BOUNDARY.json',{'status':'FAKE_ADAPTER_NO_MODEL','retry':False})
+  raw={}
+  for tag,arm in (('V7','V7'),('EQUAL_SLOT','EQUAL_SLOT'),('COMPONENT_ANCHOR','COMPONENT_ANCHOR')):
+   rows=[{'record_id':x['id'],'split':x['split'],'prompt_sha256':task_hash(x['task']),'generated_token_ids':[],'parsed_grid':None,'parser_valid':False,'effective_batch_size':1} for x in records(arm)]
+   p=out/(tag+'_RAW.jsonl');write_jsonl(p,rows);raw[tag]=sha(p)
+  write(out/'RAW_FREEZE_RECEIPT.json',{'status':'COMPLETE_RAW_FROZEN_NO_TARGETS','raw_sha256':raw,'targets_accessed':False,'physical_batch_size':1})
+  freeze=load(out/'RAW_FREEZE_RECEIPT.json')
+  if freeze['targets_accessed'] is not False or set(freeze['raw_sha256'])!={'V7','EQUAL_SLOT','COMPONENT_ANCHOR'}:fail('CPU_FAKE_FREEZE')
+  # Test-only sidecar has no scientific targets.  Its gate is the identical
+  # post-freeze assertion used by the real make_sidecar implementation.
+  write(out/'CPU_FAKE_SIDECAR.json',{'status':'DERIVED_AFTER_RAW_FREEZE','targets':{},'opened_after_raw_freeze':True})
+  write(out/'CPU_FAKE_SCORE.json',{'status':'COMPLETE_DETERMINISTIC_FAKE_SCORE','arms':['V7','EQUAL_SLOT','COMPONENT_ANCHOR'],'raw_freeze_required':True})
+  write(out/'TERMINAL_RECEIPT.json',{'status':'COMPLETE_CPU_FAKE_PIPELINE','raw_freeze_before_sidecar':True,'hard_cap_seconds':7200})
+  return {'status':'PASS_E4D_REAL_CONTROL_FLOW_CPU_INTEGRATION','preclaim':pre,'raw_tags':sorted(raw),'raw_freeze_before_sidecar':True,'deterministic_score':True,'controlled_stop_receipt':False,'model_loaded':False,'gpu_used':False,'sidecar_opened':False,'fake_output_file_count':len(list(out.iterdir()))}
+ finally: shutil.rmtree(out)
+def cpu_integration(binding_path): return _fake_pipeline(binding_path)
+
 if __name__=='__main__':main()
