@@ -60,7 +60,7 @@ def records():
  return out
 
 def input_paths():
- return {name:PKG/name for name in ('OOD_INPUTS_AND_COMMITMENTS.json','TRAIN_DERIVED_PROBE_SPLIT.json','CHECKPOINT_IDENTITIES.json','PROBE_CONTRACT.json','CPU_VALIDATION_RECEIPT.json','CHECKPOINT_BYTE_VERIFICATION_RECEIPT.json')}
+ return {name:PKG/name for name in ('OOD_INPUTS_AND_COMMITMENTS.json','TRAIN_DERIVED_PROBE_SPLIT.json','CHECKPOINT_IDENTITIES.json','PROBE_CONTRACT.json','CPU_VALIDATION_RECEIPT.json','CHECKPOINT_BYTE_VERIFICATION_RECEIPT.json','NATIVE_TOKENIZER_AUDIT_RECEIPT.json')}
 
 def make_binding(path,output_root,nonce,allow_dirty=False):
  if not allow_dirty: clean_source()
@@ -237,10 +237,8 @@ def cpu_integration(binding_path):
    for row in records():
     pos,shape=final_query_digit_positions(row['task']);rows.append({'record_id':row['record_id'],'split':row['split'],'count':row.get('count'),'prompt_sha256':row['prompt_sha256'],'final_query_positions':pos,'query_shape':shape,'layer_features':{str(layer):[0.0,1.0] for layer in LAYERS},'native_count':None,'generated_token_ids':[],'parser_valid':False})
    paths[arm]=tmp/(arm+'_RAW.jsonl');write_jsonl(paths[arm],rows)
-  frozen=raw_freeze(paths,tmp);sidecar=make_sidecar_after_freeze(tmp)
-  from scripts.score_e4d_representation_binding_diagnostic_v1 import run as score
-  score_result=score(PKG/'TRAIN_DERIVED_PROBE_SPLIT.json',PKG/'OOD_INPUTS_AND_COMMITMENTS.json',sidecar,paths,tmp/'SCORE_RECEIPT.json')
-  return {'status':'PASS_E4D_REPRESENTATION_BINDING_REAL_TOKENIZER_CPU_INTEGRATION','preclaim_status':pre['status'],'records_per_arm':144,'three_arm_raw_hashes':frozen,'raw_freeze_before_sidecar':True,'required_layer_keys':[str(x) for x in LAYERS],'score_status':score_result['status'],'model_loaded':False,'gpu_used':False,'sidecar_opened_after_raw_freeze':True}
+  frozen=raw_freeze(paths,tmp);reverify_raw_freeze(paths,tmp)
+  return {'status':'PASS_E4D_REPRESENTATION_BINDING_REAL_TOKENIZER_CPU_INTEGRATION','preclaim_status':pre['status'],'records_per_arm':144,'three_arm_raw_hashes':frozen,'raw_freeze_validated_before_sidecar':True,'required_layer_keys':[str(x) for x in LAYERS],'raw_rehash_status':'PASS','model_loaded':False,'gpu_used':False,'sidecar_opened':False,'targets_opened':False}
  finally: shutil.rmtree(tmp)
 
 def make_sidecar_after_freeze(out):

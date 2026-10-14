@@ -28,9 +28,9 @@ def test_binding_cpu_integration_three_arm_freeze_guard(tmp_path):
     make_binding(binding, tmp_path / 'fresh_output', '5fd601e6456dd81657f55422e69ef553', allow_dirty=True)
     result = cpu_integration(binding)
     assert result['status'] == 'PASS_E4D_REPRESENTATION_BINDING_REAL_TOKENIZER_CPU_INTEGRATION'
-    assert result['raw_freeze_before_sidecar'] is True
-    assert result['score_status'] == 'COMPLETE_AFTER_RAW_FREEZE'
-    assert result['sidecar_opened_after_raw_freeze'] is True
+    assert result['raw_freeze_validated_before_sidecar'] is True
+    assert result['raw_rehash_status'] == 'PASS'
+    assert result['sidecar_opened'] is False and result['targets_opened'] is False
     assert result['model_loaded'] is False and result['gpu_used'] is False
 
 
@@ -68,9 +68,12 @@ def test_raw_freeze_rejects_omission_duplicate_and_schema(mutator, tmp_path):
 
 def test_sidecar_guard_rehashes_and_rejects_post_freeze_mutation(tmp_path):
     from scripts.run_e4d_representation_binding_diagnostic_v1 import raw_freeze, sidecar_allowed
+    from scripts.score_e4d_representation_binding_diagnostic_v1 import rehash_raw_freeze
     paths = _write_raws(tmp_path, _raw_rows())
     raw_freeze(paths, tmp_path)
     with paths['V7'].open('a', encoding='utf-8') as handle:
         handle.write(json.dumps({'mutated': True}) + '\n')
     with pytest.raises(RuntimeError, match='RAW_POST_FREEZE_MUTATION'):
         sidecar_allowed(tmp_path)
+    with pytest.raises(ValueError, match='RAW_POST_FREEZE_MUTATION'):
+        rehash_raw_freeze(paths)
