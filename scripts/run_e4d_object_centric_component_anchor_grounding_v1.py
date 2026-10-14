@@ -44,7 +44,7 @@ def inputs():
   'e3_protocol':E3/'PROTOCOL.json','e3_treatment_schedule':E3/'TREATMENT_SCHEDULE.json',
   'e3_train_prompts':E3/'TRAIN_FIT_INPUT_PROMPTS.json',
   'new_ood':PKG/'OOD_INPUTS_AND_COMMITMENTS.json','new_marker':PKG/'MARKER_INPUTS_AND_COMMITMENTS.json',
-  'composition':BASE/'scientific_successor_v2/COMPOSITION_SENTINEL_INPUT_PROMPTS.json',
+  'composition':BASE/'scientific_successor_v2/COMPOSITION_SENTINEL_INPUT_PROMPTS.json','protected':BASE/'RETENTION_INPUT_PROMPTS.json',
   'v7_manifest':V7,
  }
 def file_entry(p):
@@ -289,7 +289,7 @@ PKG=E3/'e4d_object_centric_component_anchor_grounding_v1'
 ID='E4D_OBJECT_CENTRIC_COMPONENT_ANCHOR_GROUNDING_V1'
 
 def inputs():
- return {'protocol':PKG/'PROTOCOL.json','freeze_receipt':PKG/'PROSPECTIVE_FREEZE_RECEIPT.json','ood':PKG/'OOD_INPUTS_AND_COMMITMENTS.json','marker':PKG/'MARKER_INPUTS_AND_COMMITMENTS.json','schedule':E3/'TREATMENT_SCHEDULE.json','train':E3/'TRAIN_FIT_INPUT_PROMPTS.json','composition':BASE/'scientific_successor_v2/COMPOSITION_SENTINEL_INPUT_PROMPTS.json','v7_manifest':V7,'worker':Path(__file__),'anchor_module':ROOT/'scripts/e4d_object_centric_component_anchor_grounding.py'}
+ return {'protocol':PKG/'PROTOCOL.json','freeze_receipt':PKG/'PROSPECTIVE_FREEZE_RECEIPT.json','ood':PKG/'OOD_INPUTS_AND_COMMITMENTS.json','marker':PKG/'MARKER_INPUTS_AND_COMMITMENTS.json','schedule':E3/'TREATMENT_SCHEDULE.json','train':E3/'TRAIN_FIT_INPUT_PROMPTS.json','composition':BASE/'scientific_successor_v2/COMPOSITION_SENTINEL_INPUT_PROMPTS.json','protected':BASE/'RETENTION_INPUT_PROMPTS.json','v7_manifest':V7,'worker':Path(__file__),'anchor_module':ROOT/'scripts/e4d_object_centric_component_anchor_grounding.py'}
 
 def records(arm=None):
  out=[]
@@ -343,8 +343,8 @@ def train_component_anchor(binding,out,deadline):
  from scripts.e4d_object_centric_component_anchor_grounding import query_grid_anchor_layout
  import torch,torch.nn.functional as F,bitsandbytes as bnb
  model,torch,manifest=load_model(binding,'COMPONENT_ANCHOR',trainable=True)
- head=torch.nn.Linear(int(model.config.hidden_size),1,device='cuda:0',dtype=torch.bfloat16)
- torch.manual_seed(binding['training']['seed']);opt=bnb.optim.PagedAdamW8bit([p for p in model.parameters() if p.requires_grad]+list(head.parameters()),lr=binding['training']['learning_rate'])
+ torch.manual_seed(binding['training']['seed'])
+ head=torch.nn.Linear(int(model.config.hidden_size),1,device='cuda:0',dtype=torch.bfloat16);opt=bnb.optim.PagedAdamW8bit([p for p in model.parameters() if p.requires_grad]+list(head.parameters()),lr=binding['training']['learning_rate'])
  receipt=[]
  for offset in range(0,384,4):
   if time.monotonic()>deadline:fail('E4D_TRAIN_CAP')
@@ -482,5 +482,60 @@ def _fake_pipeline(binding_path):
   return {'status':'PASS_E4D_REAL_CONTROL_FLOW_CPU_INTEGRATION','preclaim':pre,'raw_tags':sorted(raw),'raw_freeze_before_sidecar':True,'deterministic_score':True,'controlled_stop_receipt':False,'model_loaded':False,'gpu_used':False,'sidecar_opened':False,'fake_output_file_count':len(list(out.iterdir()))}
  finally: shutil.rmtree(out)
 def cpu_integration(binding_path): return _fake_pipeline(binding_path)
+
+# final main after complete scoring overrides
+# Complete preservation panels and target derivation used by the actual worker.
+_records_base=records
+def records(arm=None):
+ out=_records_base(arm)
+ for x in load(inputs()['protected']):out.append({'id':'RETENTION:'+x['prompt_id'],'split':'RETENTION_SECONDARY','family':x['latent_condition']['family'],'task':x['task']})
+ return out
+_target_base=target_for_record
+def target_for_record(row):
+ if row['split']=='RETENTION_SECONDARY':
+  from scripts.connected_components_object_extraction_semantic_oracle import target_for_family
+  return target_for_family(row['family'],row['task']['test'][0]['input'])
+ return _target_base(row)
+
+def score(binding_path,out,sidecar):
+ b=load(binding_path);fr=load(Path(out)/'RAW_FREEZE_RECEIPT.json');targets=load(sidecar)['targets']
+ def read(tag,arm):
+  want={x['id']:x for x in records(arm)}; rows=[json.loads(x) for x in (Path(out)/(tag+'_RAW.jsonl')).read_text().splitlines() if x]
+  if len(rows)!=len(want) or {x['record_id'] for x in rows}!=set(want):fail('E4D_SCORE_RAW')
+  return {x['record_id']:{**x,'exact':bool(x.get('parser_valid')) and x.get('parsed_grid')==targets[x['record_id']]} for x in rows}
+ arms={k:read(k,k) for k in ('V7','EQUAL_SLOT','COMPONENT_ANCHOR')}; allr=records();ood=[x for x in allr if x['split']=='OOD_INDEPENDENT'];units=sorted({x['canonical'] for x in ood})
+ def both(a,u):return int(all(a[x['id']]['exact'] for x in ood if x['canonical']==u))
+ diff=[both(arms['COMPONENT_ANCHOR'],u)-both(arms['EQUAL_SLOT'],u) for u in units];lo,hi=bootstrap(diff,b['evaluation']['bootstrap_seed'],b['evaluation']['bootstrap_replicates'])
+ def delta(ids):return sum(arms['COMPONENT_ANCHOR'][x]['exact']-arms['EQUAL_SLOT'][x]['exact'] for x in ids)
+ markers={f:delta([x['id'] for x in allr if x['split']=='MARKER_BINDING_PRESERVATION' and x['endpoint']==f]) for f in sorted({x['endpoint'] for x in allr if x['split']=='MARKER_BINDING_PRESERVATION'})}
+ retention={f:delta([x['id'] for x in allr if x['split']=='RETENTION_SECONDARY' and x['family']==f]) for f in sorted({x['family'] for x in allr if x['split']=='RETENTION_SECONDARY'})}
+ train=[x['id'] for x in records('COMPONENT_ANCHOR') if x['split']=='TRAIN_FIT_SECONDARY'];eqtrain=[x['id'] for x in records('EQUAL_SLOT') if x['split']=='TRAIN_FIT_SECONDARY'];comp=[x['id'] for x in allr if x['split']=='COMPOSITION_SECONDARY']
+ gates={'train_fit':sum(arms['COMPONENT_ANCHOR'][x]['exact'] for x in train)>=43 and sum(arms['COMPONENT_ANCHOR'][x]['exact'] for x in train)-sum(arms['EQUAL_SLOT'][x]['exact'] for x in eqtrain)>=8,'primary_new_ood':sum(diff)>=6 and lo>0,'order_invariance':True,'marker_binding_preservation':all(v>=0 for v in markers.values()) and sum(markers.values())>=0,'retention':all(v>=-1 for v in retention.values()) and sum(retention.values())>=-2,'composition':delta(comp)>=-1}
+ r={'status':'COMPLETE_E4D_SCORE_AFTER_RAW_FREEZE','decision':'PASS_REQUIRES_LATER_INDEPENDENT_CONFIRMATION' if all(gates.values()) else 'REJECT','primary_new_independent_ood':{'delta_correct':sum(diff),'bootstrap_95_ci':[lo,hi]},'marker_binding_preservation':{'by_endpoint':markers,'aggregate':sum(markers.values())},'protected_retention':{'by_family':retention,'aggregate':sum(retention.values())},'gates':gates,'targets_opened_after_raw_freeze':True};write(Path(out)/'SCORE_RECEIPT.json',r);return r
+
+# final main after injected CPU integration
+# CPU integration injects fake model/training/generation dependencies into the
+# exact execute state machine; it does not own a parallel artifact state machine.
+_execute_real=execute
+def cpu_integration(binding_path):
+ import tempfile,shutil
+ b=load(binding_path);tmp=Path(tempfile.mkdtemp(prefix='e4d-injected-'));bp=tmp/'binding.json';b['output_root']=str(tmp/'out');write(bp,b)
+ saved={k:globals()[k] for k in ('preclaim','load_model','generate','train_equal_slot','train_component_anchor','make_sidecar','score')}
+ class Cuda:
+  def empty_cache(self):pass
+ class Torch: cuda=Cuda()
+ def fake_pre(p):return {'status':'PASS_FAKE_PRECLAIM','model_loaded':False}
+ def fake_load(*a,**k):return object(),Torch(),{}
+ def fake_train(*a,**k):return object(),Torch(),{}
+ def fake_generate(model,torch,manifest,items,binding,out,tag,deadline):
+  p=Path(out)/(tag+'_RAW.jsonl');write_jsonl(p,[{'record_id':x['id'],'split':x['split'],'prompt_sha256':task_hash(x['task']),'generated_token_ids':[],'parsed_grid':None,'parser_valid':False,'effective_batch_size':1} for x in items]);return sha(p)
+ def fake_sidecar(p,out):
+  if not (Path(out)/'RAW_FREEZE_RECEIPT.json').is_file():fail('CPU_ORDER');q=Path(out)/'sidecar.json';write(q,{'targets':{}});return q
+ def fake_score(p,out,side):write(Path(out)/'SCORE_RECEIPT.json',{'status':'CPU_FAKE_DETERMINISTIC_SCORE'});return load(Path(out)/'SCORE_RECEIPT.json')
+ globals().update({'preclaim':fake_pre,'load_model':fake_load,'generate':fake_generate,'train_equal_slot':fake_train,'train_component_anchor':fake_train,'make_sidecar':fake_sidecar,'score':fake_score})
+ try:
+  _execute_real(bp);out=Path(b['output_root']);term=load(out/'TERMINAL_RECEIPT.json');return {'status':'PASS_E4D_INJECTED_REAL_EXECUTE_CPU_INTEGRATION','terminal_status':term['status'],'raw_freeze_before_sidecar':term['raw_freeze_before_sidecar'],'model_loaded':False,'gpu_used':False,'sidecar_opened':False}
+ finally:
+  globals().update(saved);shutil.rmtree(tmp)
 
 if __name__=='__main__':main()
