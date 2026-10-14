@@ -347,9 +347,10 @@ def score(records, raw_paths, targets):
 def cpu_self_test(binding_path):
     binding, _, panel = resolve(binding_path, verify_assets=False, require_clean=False)
     records = panel["records"]
-    from scripts.e4h_inside_contains_counterfactual_ood import build_panel
-
-    _, targets = build_panel()
+    # Deliberately use synthetic constant targets.  The production-shaped CPU
+    # fixture validates completeness and scorer wiring without deriving or
+    # opening any real E4H evaluation target before raw model predictions.
+    targets = {row["record_id"]: [[0]] for row in records}
     temp = Path(binding_path).parent / "e4h_cpu_fixture"
     temp.mkdir(exist_ok=True)
     raw = {}
