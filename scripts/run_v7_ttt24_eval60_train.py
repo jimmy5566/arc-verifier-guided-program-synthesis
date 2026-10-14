@@ -304,6 +304,9 @@ def train(args: argparse.Namespace, task_ids: list[str], config: dict[str, Any])
                         default_state=default_state, adapter_before=adapter_before,
                         base_fingerprints=base_before, adapter_name="default",
                         training_backend="torch")
+        print(json.dumps({"event": "V7_TTT24_INTEGRITY", "task_id": task_id,
+                          "adapter_updated": fit["adapter_updated"],
+                          "base_model_unchanged": fit["base_model_unchanged"]}, sort_keys=True), flush=True)
         if not fit["adapter_updated"] or not fit["base_model_unchanged"]:
             raise RuntimeError(f"{task_id}: task adaptation integrity failure")
         staging = task_dir.with_name(task_dir.name + f".staging.{os.getpid()}")
