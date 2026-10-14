@@ -1,0 +1,30 @@
+{
+  "authorization_consumed": false,
+  "finding": "The bound execute path writes SCIENTIFIC_BOUNDARY_RECEIPT then returns without training, native generation, complete raw freeze, deterministic sidecar generation, or scoring.",
+  "frozen_science_unchanged": true,
+  "gpu_used": false,
+  "model_loaded": false,
+  "preclaim_result": "FAIL_CLOSED_BEFORE_REMOTE_MODEL_LOAD_OR_GPU_WORK",
+  "required_next_action": "Implement and CPU-validate the missing production execution stages, commit/push a successor source SHA, and request one replacement SHA-bound execution authorization.",
+  "required_production_stages_missing": [
+    "generate",
+    "make_sidecar",
+    "raw_freeze"
+  ],
+  "schema_version": 1,
+  "source_commit": "aee9d975d6c18715df01a9b59165ed4443bc134b",
+  "static_execute_call_names": [
+    "Path",
+    "all",
+    "fail",
+    "len",
+    "load",
+    "resolve",
+    "task_to_sample",
+    "write"
+  ],
+  "status": "BLOCKED_PRE_MODEL_INCOMPLETE_EXECUTION_IMPLEMENTATION",
+  "targets_opened": false,
+  "worker_path": "scripts/run_e4g_inside_contains_production_v1.py",
+  "worker_sha256": "5638a09f6da564bc9ce5bd081e71618098b2227b473767ddf15f05c0a09b8251"
+}
