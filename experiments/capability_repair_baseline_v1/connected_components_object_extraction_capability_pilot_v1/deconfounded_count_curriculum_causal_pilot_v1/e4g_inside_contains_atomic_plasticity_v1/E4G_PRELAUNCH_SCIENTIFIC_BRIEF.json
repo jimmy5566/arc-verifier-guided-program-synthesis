@@ -1,0 +1,71 @@
+﻿{
+    "schema_version":  1,
+    "brief_type":  "E4G_CONSOLIDATED_PRELAUNCH_SCIENTIFIC_BRIEF",
+    "stage":  "E4G_INSIDE_CONTAINS_ATOMIC_PLASTICITY_POSITIVE_CONTROL_CPU_PREFREEZE",
+    "package_source_commit":  "7e2782f1596aff842c0d5c73885cbb9cd5e5d4c7",
+    "frozen_files_sha256":  {
+                                "PROTOCOL.json":  "e46b6a1489f62bc6ce16c11e983d0a2dd6e9b463046854eda32b885e82faece5",
+                                "TRAINING_SCHEDULE.json":  "527c227a1eec9f65a83a7156aa2f331189a4415da35fd62aa6d889110afde1e8",
+                                "TRAIN_FIT_INPUTS_AND_COMMITMENTS.json":  "7175cc24c11f988ab1f758ae758a3c10fb8cc29980bc892782252b61ef6449dc",
+                                "STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json":  "e28659aa1e4f40b1bdd870aec6e7cafe87fe3771df8b3f0081fad0a114ae7344",
+                                "CPU_FREEZE_RECEIPT.json":  "3325f5efc499273131408114309b2942ad93375cf63669b5f4269086e28b0aa7",
+                                "CPU_PRODUCTION_PATH_RECEIPT.json":  "28029f959d83d1362039ab2ef2d216c08fa31fdf7ae1266437237c2a37700ba4",
+                                "PROTECTION_PANEL_REFERENCES.json":  "b947049b1e0edac6b633095c305818e5966ed01ef2df7a04b928dc9aa35d43a4"
+                            },
+    "question":  "Whether bounded V7-initialized observable Inside/Contains capability training produces identifiable atomic plasticity before a later structural-transfer intervention.",
+    "arms":  [
+                 {
+                     "name":  "V7_NO_UPDATE_REFERENCE",
+                     "updates":  0
+                 },
+                 {
+                     "name":  "V7_INSIDE_CONTAINS_CAPABILITY_TRAINING",
+                     "initialization":  "EXACT_V7",
+                     "updates":  96,
+                     "slots_per_update":  4,
+                     "optimizer":  "PagedAdamW8bit",
+                     "learning_rate":  5E-05,
+                     "seed":  20261013,
+                     "base_answer_ce_coefficient":  1,
+                     "primary_slots":  48,
+                     "protected_replay_slots":  336
+                 }
+             ],
+    "construct":  {
+                      "boundaries":  "visible closed single-frame train objects and double-frame structural-OOD objects",
+                      "counterbalanced":  [
+                                              "topology",
+                                              "size",
+                                              "color",
+                                              "layout",
+                                              "demo_order"
+                                          ],
+                      "direction":  "visible query command 8=INSIDE, 9=CONTAINS",
+                      "outputs":  "INSIDE centered inner-color 3x3 marker; CONTAINS frame-color 3x3 ring"
+                  },
+    "panels":  {
+                   "train_fit":  "48 canonical / 96 two-order target-blind records",
+                   "structural_ood":  "48 canonical / 96 two-order target-blind records; topology disjoint from train",
+                   "composition":  "frozen existing non-duplicative sentinel reference",
+                   "retention":  "frozen existing reference"
+               },
+    "cpu_validity":  {
+                         "leakage":  "PASS zero full-prompt and query-input overlap",
+                         "production_path":  "PASS no model, no GPU, no target sidecar",
+                         "uncertainty":  "paired canonical-unit bootstrap contract PASS",
+                         "oracle":  "PASS",
+                         "target_blind":  "PASS",
+                         "balance":  "PASS",
+                         "protected_replay":  "PASS 336 non-primary episodes byte-identical"
+                     },
+    "interpretation":  {
+                           "poor_train_fit":  "BROADER_POST_V7_SUPERVISION_OR_OPTIMIZATION_BOTTLENECK",
+                           "good_train_fit_no_ood_gain":  "GENERAL_STRUCTURAL_TRANSFER_BOTTLENECK"
+                       },
+    "sealed_boundaries":  [
+                              "No target sidecar until raw freeze",
+                              "No Gold/dGold/FINAL_AUDIT",
+                              "No model/GPU in this CPU event"
+                          ],
+    "request":  "Director stage-level decision on a later bounded capability-training execution only; this brief does not request execution in the current event."
+}
