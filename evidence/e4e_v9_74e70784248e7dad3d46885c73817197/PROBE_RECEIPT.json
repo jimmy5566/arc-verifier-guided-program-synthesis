@@ -1,0 +1,1 @@
+{"layer":31,"model_weight_updates_forbidden":true,"readout":"class_centroid_affine_linear","status":"COMPLETE_E4E_LAYER31_FIXED_CENTROID_PROBE","treatment_minus_control":{"bootstrap_95_ci":[0,7],"canonical_units":48,"delta_correct":3}}
