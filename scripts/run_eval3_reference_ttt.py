@@ -170,6 +170,15 @@ def _fit_task(
         model.gradient_checkpointing_disable()
         model.train()
         model.config.use_cache = False
+    elif training_backend == "torch_checkpointed":
+        # Pure recomputation boundary for long Eval60 training dialogues.  It
+        # changes neither examples, labels, optimizer, schedule nor updates.
+        model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+        if not getattr(model, "_arc2_input_grads_enabled", False):
+            model.enable_input_require_grads()
+            model._arc2_input_grads_enabled = True
+        model.train()
+        model.config.use_cache = False
     else:
         raise ValueError(f"unsupported training backend: {training_backend}")
     losses: list[float] = []; step_seconds: list[float] = []; fit_started = time.perf_counter()

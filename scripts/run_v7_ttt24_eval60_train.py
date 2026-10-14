@@ -186,6 +186,11 @@ def generate_aug8_evidence(*, model: Any, tokenizer: Any, task: Any, config: dic
     prefixes = [native_training_message_prefix(item) for item in transformed]
     candidates: list[NativeGridCandidate] = []
     raw: list[dict[str, Any]] = []
+    # Training uses activation recomputation to fit long dialogues on 24GB.
+    # Native Greedy uses the normal inference cache; this is the historical
+    # inference condition, not a change to the decoder or candidate policy.
+    model.gradient_checkpointing_disable()
+    model.config.use_cache = True
     started = time.perf_counter(); model.eval()
     for view_index, (augmentation, augmented) in enumerate(zip(augmentations, transformed, strict=True)):
         outputs = []; view_tokens = 0; view_seconds = 0.0
@@ -313,7 +318,7 @@ def train(args: argparse.Namespace, task_ids: list[str], config: dict[str, Any])
         fit = _fit_task(model=model, tokenizer=tokenizer, task=tasks[task_id], config=config,
                         default_state=default_state, adapter_before=adapter_before,
                         base_fingerprints=base_before, adapter_name="default",
-                        training_backend="torch")
+                        training_backend="torch_checkpointed")
         print(json.dumps({"event": "V7_TTT24_INTEGRITY", "task_id": task_id,
                           "adapter_updated": fit["adapter_updated"],
                           "base_model_unchanged": fit["base_model_unchanged"]}, sort_keys=True), flush=True)
@@ -372,7 +377,8 @@ def main() -> None:
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     os.environ.update({"CUDA_VISIBLE_DEVICES": "0", "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1",
-                       "TOKENIZERS_PARALLELISM": "false", "TRITON_PTXAS_PATH": str(read(args.reference_config)["ptxas_path"])})
+                       "TOKENIZERS_PARALLELISM": "false", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
+                       "TRITON_PTXAS_PATH": str(read(args.reference_config)["ptxas_path"])})
     task_ids, config = validate_inputs(args)
     atomic_write_json(args.output / "PREFLIGHT.json", {
         "status": "PASS", "task_count": 60, "output_count": 89,
