@@ -1,0 +1,49 @@
+{
+  "assertions": {
+    "deferred_imports": "PASS",
+    "duplicate_process_guard": "BOUND_RUNTIME_IMPLEMENTED",
+    "gpu_used": false,
+    "model_loaded": false,
+    "raw_completeness_enforced": true,
+    "raw_hash_recheck_before_sidecar": true,
+    "real_targets_opened": false,
+    "stage_order": [
+      "preclaim",
+      "target_blind_generation",
+      "complete_raw_freeze",
+      "sidecar",
+      "score",
+      "terminal"
+    ],
+    "target_blind_fixture": true,
+    "terminal_receipt": "PASS"
+  },
+  "entrypoint_sha256": {
+    "scripts/launch_e4g_inside_contains_v1.sh": "d11bcc5f7ca5a09cb3c4ab35c19e1d6e59baf0ddb35f55f08ba7e6b1783d0652",
+    "scripts/run_e4g_inside_contains_production_v1.py": "ef390494e31baa166d839c4815c53a70077f5a284c502d47ba60b25590362bbc",
+    "scripts/score_e4g_inside_contains_v1.py": "27076a35d34b38e60e8b08016e724507fa4a3a78d47f67c7888e2fd3f60076d2"
+  },
+  "notes": "CPU fixtures use independently constructed constant-grid sidecar data only; no model import, GPU work, or real target sidecar access occurred.",
+  "schema_version": 1,
+  "scientific_identity": "UNCHANGED_E4G_FROZEN_PROTOCOL_INPUTS_SCHEDULE_LOSS_DECODER_BATCH_ENDPOINTS_AND_SEALED_BOUNDARY",
+  "source_commit_tested": "99bb6a60108ea90fd3621e7dfed04e331b0f5f3d",
+  "stage": "E4G_COMPLETE_PRODUCTION_EXECUTION_PATH_CPU_VALIDATION",
+  "status": "PASS_CPU_ONLY_PRODUCTION_SHAPED_CLOSURE",
+  "tests": [
+    {
+      "command": "py -3 -m unittest tests.test_e4g_inside_contains_atomic tests.test_e4g_production_source_closure",
+      "count": 7,
+      "result": "PASS"
+    },
+    {
+      "command": "Git Bash launcher --binding E4G CPU fixture --cpu-self-test",
+      "entrypoint": "scripts/launch_e4g_inside_contains_v1.sh",
+      "result": "PASS"
+    },
+    {
+      "command": "py -3 scripts/score_e4g_inside_contains_v1.py --cpu-self-test",
+      "guard": "RAW_FREEZE_REQUIRED",
+      "result": "PASS"
+    }
+  ]
+}
