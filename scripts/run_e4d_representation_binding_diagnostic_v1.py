@@ -106,6 +106,66 @@ def sidecar_allowed(out):
  if receipt.get('status')!='COMPLETE_RAW_FROZEN_NO_TARGETS' or receipt.get('targets_accessed') is not False or set(receipt.get('raw_sha256',{}))!={'V7','EQUAL_SLOT','COMPONENT_ANCHOR'}:fail('SIDECAR_BEFORE_RAW_FREEZE')
  return receipt
 
+def verify_runtime_assets(binding):
+ """Hash every adapter/base file before the first model import."""
+ identities=binding['checkpoint_identities'];checks=[]
+ for entry in identities['V7']['base_files']:
+  path=Path(identities['V7']['base_path'])/entry['name']
+  if not path.is_file() or path.stat().st_size!=entry['bytes'] or sha(path)!=entry['sha256']:fail('BASE_ASSET:'+entry['name'])
+  checks.append({'path':str(path),'sha256':entry['sha256']})
+ for arm in ('V7','EQUAL_SLOT','COMPONENT_ANCHOR'):
+  item=identities[arm];path=Path(item['adapter_path'])/'adapter_model.safetensors'
+  expected=next(x['sha256'] for x in item['adapter_files'] if x['name']=='adapter_model.safetensors') if arm=='V7' else item['adapter_model_sha256']
+  if not path.is_file() or path.stat().st_size!=528550256 or sha(path)!=expected:fail('ADAPTER_ASSET:'+arm)
+  checks.append({'arm':arm,'path':str(path),'sha256':expected})
+ return checks
+
+def native_feature_positions(tokenizer, task):
+ """Find the final query digit span in the actual native chat token stream."""
+ from inference.nvarc_native import native_messages,serialize_grid
+ messages=native_messages(task,0);encoded=tokenizer.apply_chat_template(messages,add_generation_prompt=True,tokenize=True,return_tensors='pt',return_dict=True)
+ ids=[int(x) for x in encoded['input_ids'][0].tolist()];grid=task['test'][0]['input'];grid_ids=[int(x) for x in tokenizer.encode(serialize_grid(grid),add_special_tokens=False)]
+ starts=[i for i in range(len(ids)-len(grid_ids)+1) if ids[i:i+len(grid_ids)]==grid_ids]
+ if not starts:fail('NATIVE_QUERY_GRID_NOT_FOUND')
+ start=max(starts);h,w=len(grid),len(grid[0]);expected=[];local_positions=[]
+ for y in range(h):
+  for x in range(w):
+   token=[int(v) for v in tokenizer.encode(str(grid[y][x]),add_special_tokens=False)]
+   if len(token)!=1:fail('NATIVE_CELL_NOT_SINGLE_TOKEN')
+   local_positions.append(len(expected));expected.extend(token)
+  if y<h-1: expected.extend(int(v) for v in tokenizer.encode('\n',add_special_tokens=False))
+ if expected!=grid_ids:fail('NATIVE_GRID_SERIALIZATION_MISMATCH')
+ positions=[start+i for i in local_positions]
+ if len(positions)!=h*w or any(ids[p]!=grid_ids[i] for p,i in zip(positions,local_positions,strict=True)):fail('NATIVE_QUERY_POSITION_MISMATCH')
+ return encoded,positions
+
+def load_arm(binding,arm):
+ import torch
+ from peft import PeftModel
+ from transformers import AutoModelForCausalLM
+ from inference.nvarc_native import checkpoint_native_tokenizer,NVARCNativeProvider
+ identities=binding['checkpoint_identities'];base=Path(identities['V7']['base_path']);tokenizer,_=checkpoint_native_tokenizer(base,ROOT/'configs/nvarc_native_846d0198')
+ model=AutoModelForCausalLM.from_pretrained(str(base),local_files_only=True,torch_dtype=torch.bfloat16,low_cpu_mem_usage=True).to('cuda:0').eval()
+ model=PeftModel.from_pretrained(model,identities[arm]['adapter_path']).eval();provider=NVARCNativeProvider(model_path=base,tokenizer_config_dir=ROOT/'configs/nvarc_native_846d0198',device='cuda:0');provider.model,provider.tokenizer=model,tokenizer
+ return model,torch,tokenizer,provider
+
+def generate_arm(binding,arm,out):
+ """Write target-blind native predictions and mean-pooled frozen features."""
+ from inference.nvarc_native import native_messages,parse_native_grid
+ model,torch,tokenizer,provider=load_arm(binding,arm);rows=[]
+ try:
+  for index,row in enumerate(records()):
+   encoded,positions=native_feature_positions(tokenizer,row['task']);encoded={k:v.to('cuda:0') for k,v in encoded.items()}
+   with torch.inference_mode(): result=model(**encoded,output_hidden_states=True,use_cache=False)
+   feature={str(layer):[float(x) for x in result.hidden_states[layer][0,positions].float().mean(dim=0).cpu().tolist()] for layer in LAYERS}
+   generation=provider.generate(native_messages(row['task'],0),max_new_tokens=binding['runtime']['max_new_tokens'],context_window=binding['runtime']['context_window'],seed=20261013+index)
+   grid=parse_native_grid(generation.text);native_count=None if grid is None or len(grid)!=3 or any(len(r)!=3 for r in grid) else sum(x!=0 for x in grid[1])
+   rows.append({'record_id':row['record_id'],'split':row['split'],'count':row.get('count'),'prompt_sha256':row['prompt_sha256'],'layer_features':feature,'native_count':native_count,'generated_token_ids':list(generation.token_ids),'parser_valid':grid is not None})
+   del result,encoded
+  path=Path(out)/(arm+'_RAW.jsonl');write_jsonl(path,rows);return path
+ finally:
+  del model;torch.cuda.empty_cache()
+
 def cpu_integration(binding_path):
  import tempfile,shutil
  b=load(binding_path);tmp=Path(tempfile.mkdtemp(prefix='e4d-repbind-'))
@@ -116,15 +176,39 @@ def cpu_integration(binding_path):
    for row in records():
     pos,shape=final_query_digit_positions(row['task']);rows.append({'record_id':row['record_id'],'split':row['split'],'count':row.get('count'),'prompt_sha256':row['prompt_sha256'],'final_query_positions':pos,'query_shape':shape,'layer_features':{str(layer):[0.0,1.0] for layer in LAYERS},'native_count':None})
    paths[arm]=tmp/(arm+'_RAW.jsonl');write_jsonl(paths[arm],rows)
-  frozen=raw_freeze(paths,tmp);sidecar_allowed(tmp)
-  return {'status':'PASS_E4D_REPRESENTATION_BINDING_REAL_TOKENIZER_CPU_INTEGRATION','preclaim_status':pre['status'],'records_per_arm':144,'three_arm_raw_hashes':frozen,'raw_freeze_before_sidecar':True,'required_layer_keys':[str(x) for x in LAYERS],'model_loaded':False,'gpu_used':False,'sidecar_opened':False}
+  frozen=raw_freeze(paths,tmp);sidecar=make_sidecar_after_freeze(tmp)
+  from scripts.score_e4d_representation_binding_diagnostic_v1 import run as score
+  score_result=score(PKG/'TRAIN_DERIVED_PROBE_SPLIT.json',PKG/'OOD_INPUTS_AND_COMMITMENTS.json',sidecar,paths,tmp/'SCORE_RECEIPT.json')
+  return {'status':'PASS_E4D_REPRESENTATION_BINDING_REAL_TOKENIZER_CPU_INTEGRATION','preclaim_status':pre['status'],'records_per_arm':144,'three_arm_raw_hashes':frozen,'raw_freeze_before_sidecar':True,'required_layer_keys':[str(x) for x in LAYERS],'score_status':score_result['status'],'model_loaded':False,'gpu_used':False,'sidecar_opened_after_raw_freeze':True}
  finally: shutil.rmtree(tmp)
+
+def make_sidecar_after_freeze(out):
+ """Open only committed synthetic OOD targets after the three raw files freeze."""
+ sidecar_allowed(out)
+ from scripts.connected_components_object_extraction_semantic_oracle import target_for_family,validate_demonstrations
+ panel=load(PKG/'OOD_INPUTS_AND_COMMITMENTS.json');targets={}
+ for row in panel['records']:
+  task=row['prompt'];validate_demonstrations(task,'CONNECTED_COMPONENT_COUNT')
+  targets[row['record_id']]=target_for_family('CONNECTED_COMPONENT_COUNT',task['test'][0]['input'])
+ commitments={row['record_id']:row['target_sha256'] for row in panel['target_commitments']}
+ if set(targets)!=set(commitments):fail('SIDECAR_COMMITMENT_GRID')
+ for record_id,target in targets.items():
+  if hashlib.sha256(canon(target)).hexdigest()!=commitments[record_id]:fail('SIDECAR_TARGET_COMMITMENT:'+record_id)
+ path=Path(out)/'SYNTHETIC_TARGET_SIDECAR.json'
+ write(path,{'status':'DERIVED_AFTER_RAW_FREEZE','opened_after_raw_freeze':True,'oracle':'PASS_INDEPENDENT_CONNECTED_COMPONENT_COUNT','commitments_verified':len(commitments),'targets':targets})
+ return path
 
 def execute(binding_path):
  # Delayed production path.  The authorization gate calls this only after
  # preclaim.  It intentionally has no training branch; all checkpoint weights
  # remain frozen and only readout parameters are derived from train features.
- pre=preclaim(binding_path); raise RuntimeError('AUTHORIZED_EXECUTOR_REQUIRES_BOUND_RUNTIME_ADAPTER_LOADER')
+ pre=preclaim(binding_path);b=load(binding_path);out=Path(b['output_root']);out.mkdir(parents=True);write(out/'PREFLIGHT_RECEIPT.json',{**pre,'runtime_asset_checks':verify_runtime_assets(b)})
+ paths={arm:generate_arm(b,arm,out) for arm in ('V7','EQUAL_SLOT','COMPONENT_ANCHOR')};raw_freeze(paths,out)
+ sidecar=make_sidecar_after_freeze(out)
+ from scripts.score_e4d_representation_binding_diagnostic_v1 import run as score
+ score(PKG/'TRAIN_DERIVED_PROBE_SPLIT.json',PKG/'OOD_INPUTS_AND_COMMITMENTS.json',sidecar,paths,out/'SCORE_RECEIPT.json')
+ write(out/'TERMINAL_RECEIPT.json',{'status':'COMPLETE','raw_freeze_before_sidecar':True,'raw_freeze_sha256':sha(out/'RAW_FREEZE_RECEIPT.json'),'sidecar_sha256':sha(sidecar),'score_sha256':sha(out/'SCORE_RECEIPT.json')})
+ return {'status':'COMPLETE_E4D_REPRESENTATION_BINDING_DIAGNOSTIC','model_loaded':True,'gpu_used':True,'raw_freeze_before_sidecar':True}
 
 def main():
  p=argparse.ArgumentParser();p.add_argument('--binding',type=Path,required=True);p.add_argument('--make-binding',action='store_true');p.add_argument('--output-root');p.add_argument('--nonce');p.add_argument('--preclaim-only',action='store_true');p.add_argument('--cpu-integration',action='store_true');p.add_argument('--execute',action='store_true');p.add_argument('--receipt',type=Path);a=p.parse_args()

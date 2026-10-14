@@ -171,7 +171,7 @@ def checkpoint_identities():
     equal = json.loads((E4D_EVIDENCE / "EQUAL_SLOT_5E5_TRAINING_RECEIPT.json").read_text(encoding="utf-8"))
     anchor = json.loads((E4D_EVIDENCE / "COMPONENT_ANCHOR_TRAINING_RECEIPT.json").read_text(encoding="utf-8"))
     root = binding["output_root"]
-    return {"status": "EXPECTED_IDENTITIES_REQUIRE_BYTE_SHA256_PRE_MODEL", "V7": {"adapter_path": binding["v7"]["adapter_path"], "adapter_files": binding["v7"]["adapter_files"]},
+    return {"status": "EXPECTED_IDENTITIES_REQUIRE_BYTE_SHA256_PRE_MODEL", "V7": {"adapter_path": binding["v7"]["adapter_path"], "adapter_files": binding["v7"]["adapter_files"], "base_path": binding["v7"]["base_path"], "base_files": binding["v7"]["base_files"]},
             "EQUAL_SLOT": {"adapter_path": root + "/EQUAL_SLOT_5E5_ADAPTER", "adapter_model_sha256": equal["adapter_sha256"], "training_receipt_sha256": file_sha(E4D_EVIDENCE / "EQUAL_SLOT_5E5_TRAINING_RECEIPT.json")},
             "COMPONENT_ANCHOR": {"adapter_path": root + "/COMPONENT_ANCHOR_ADAPTER", "adapter_model_sha256": anchor["adapter_sha256"], "training_receipt_sha256": file_sha(E4D_EVIDENCE / "COMPONENT_ANCHOR_TRAINING_RECEIPT.json")},
             "required_before_execution": "all listed model/adapters must exist with exact byte count and SHA256; no replacement or reconstruction is allowed"}

@@ -21,4 +21,6 @@ def test_binding_cpu_integration_three_arm_freeze_guard(tmp_path):
     result = cpu_integration(binding)
     assert result['status'] == 'PASS_E4D_REPRESENTATION_BINDING_REAL_TOKENIZER_CPU_INTEGRATION'
     assert result['raw_freeze_before_sidecar'] is True
+    assert result['score_status'] == 'COMPLETE_AFTER_RAW_FREEZE'
+    assert result['sidecar_opened_after_raw_freeze'] is True
     assert result['model_loaded'] is False and result['gpu_used'] is False
