@@ -70,6 +70,9 @@ def preclaim(bp,allow_runtime_missing=False):
  if b.get('experiment_id')!=ID or b.get('retry') is not False or b.get('hard_cap_seconds')!=7200 or Path(b['output_root']).exists():fail('BINDING')
  clean()
  if subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()!=b['execution_source_commit']:fail('HEAD')
+ if os.name!='nt':
+  live=subprocess.run(['pgrep','-af',b['nonce']],capture_output=True,text=True).stdout.strip()
+  if live: fail('DUPLICATE_NONCE_PROCESS')
  for k,v in b['inputs'].items():
   p=ROOT/v['path']
   if not p.is_file() or sha(p)!=v['sha256']:fail('INPUT:'+k)
@@ -111,9 +114,11 @@ def train_arm(b,out,tag,auxiliary,deadline):
   for row in schedule()[off:off+4]:
    s=task_to_sample(task(row));ids=torch.tensor([s['input_ids']],device='cuda:0');labels=torch.tensor([s['labels']],device='cuda:0');count_slot=row['role']=='PRIMARY_CONNECTED_COMPONENT_COUNT';o=model(input_ids=ids,attention_mask=torch.ones_like(ids),use_cache=False,output_hidden_states=auxiliary and count_slot)
    if auxiliary and count_slot:
-    answer,_=causal_slot_mean_ce(o.logits,labels);lay=final_query_grid_layout(task(row));extra,_=layer31_count_loss(o.hidden_states,lay.positions,lay.count,head);term=.25*(answer+.25*extra);term.backward();receipt.append({'slot':row['slot'],'role':row['role'],'answer_ce_coefficient':1.0,'auxiliary_coefficient':.25,'count':lay.count,'query_positions':len(lay.positions)})
+    answer,_=causal_slot_mean_ce(o.logits,labels);lay=final_query_grid_layout(task(row));extra,_=layer31_count_loss(o.hidden_states,lay.positions,lay.count,head);term=.25*(answer+.25*extra);term.backward();head_grad=float(head.weight.grad.detach().float().abs().sum());model_grad=any(p.grad is not None and float(p.grad.detach().float().abs().sum())>0 for p in model.parameters() if p.requires_grad)
+    if head_grad<=0 or not model_grad: fail('AUXILIARY_GRADIENT_PATH')
+    receipt.append({'slot':row['slot'],'role':row['role'],'answer_ce_coefficient':1.0,'auxiliary_coefficient':.25,'count':lay.count,'query_positions':len(lay.positions),'auxiliary_head_grad_nonzero':True,'trainable_model_grad_nonzero':True})
    else:
-    _,n=backward_equal_slot_term(o.logits,labels,expected_slots=4);receipt.append({'slot':row['slot'],'role':row['role'],'answer_ce_coefficient':1.0,'auxiliary_coefficient':0.0,'selected_tokens':n})
+    _,n=backward_equal_slot_term(o.logits,labels,expected_slots=4);receipt.append({'slot':row['slot'],'role':row['role'],'answer_ce_coefficient':1.0,'auxiliary_coefficient':0.0,'selected_tokens':n,'objective_path':'EXISTING_BACKWARD_EQUAL_SLOT_TERM'})
    del o
   opt.step()
  if len(receipt)!=384:fail('TRAIN_ACCOUNTING')
@@ -156,6 +161,8 @@ def raw_freeze(paths,out):
 def sidecar(out):
  fr=load(Path(out)/'RAW_FREEZE_RECEIPT.json')
  if fr.get('targets_accessed') is not False:fail('FREEZE')
+ for arm,digest in fr['raw_sha256'].items():
+  if sha(Path(out)/(arm+'_RAW.jsonl'))!=digest: fail('POST_FREEZE_RAW_REHASH')
  from scripts.connected_components_object_extraction_semantic_oracle import target_for_family
  panel=load(PKG/'OOD_INPUTS_AND_COMMITMENTS.json');targets={r['record_id']:target_for_family('CONNECTED_COMPONENT_COUNT',r['prompt']['test'][0]['input']) for r in panel['records']}
  for r in eval_records():
