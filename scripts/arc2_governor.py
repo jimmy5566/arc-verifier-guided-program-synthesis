@@ -311,13 +311,14 @@ def synthesize_state_event(state: dict[str, Any]) -> bool:
 
 
 def validate_queued_reviews(state: dict[str, Any]) -> bool:
-    """Reject an invalid brief before spending a Director turn."""
+    """Reject an invalid or response-derived brief before spending a Director turn."""
     changed = False
     for item in state["pending_events"]:
         if item["kind"] != "DIRECTOR_REVIEW" or item["status"] != "QUEUED":
             continue
         payload = item["payload"]
         try:
+            validate_director_brief(payload["brief_path"])
             validate_bound_artifact(payload["brief_path"], payload.get("brief_sha256"))
         except Exception as exc:
             item.update({"status": "COMPLETE", "completed_at": now(), "outcome": "INVALID_BOUND_BRIEF"})
@@ -433,6 +434,46 @@ def response_directory() -> Path:
     return PROJECT_ROOT / "orchestration" / "director" / "responses"
 
 
+def validate_director_brief(path_value: str) -> Path:
+    """A Director response can never be recursively accepted as a new brief."""
+    path = resolve_artifact(path_value)
+    responses = response_directory().resolve()
+    if path == responses or responses in path.parents or path.name.upper().endswith("_RESPONSE.JSON"):
+        raise RuntimeError("DIRECTOR_RESPONSE_CANNOT_BE_REVIEW_BRIEF")
+    return path
+
+
+def repair_recursive_review_state(state_path: Path) -> None:
+    """Close legacy response-derived review entries without rewriting history."""
+    state = load(state_path)
+    changed = False
+    for item in state.get("pending_events", []):
+        if item.get("kind") != "DIRECTOR_REVIEW":
+            continue
+        path_value = str((item.get("payload") or {}).get("brief_path") or "")
+        try:
+            validate_director_brief(path_value)
+        except RuntimeError as exc:
+            if str(exc) != "DIRECTOR_RESPONSE_CANNOT_BE_REVIEW_BRIEF":
+                continue
+            if item.get("status") != "COMPLETE":
+                item.update({"status": "COMPLETE", "completed_at": now(),
+                             "outcome": "RECURSIVE_RESPONSE_BRIEF_REJECTED"})
+                changed = True
+    review = state.get("review") or {}
+    if review:
+        try:
+            validate_director_brief(str(review.get("brief_path") or ""))
+        except RuntimeError as exc:
+            if str(exc) == "DIRECTOR_RESPONSE_CANNOT_BE_REVIEW_BRIEF":
+                state["review"] = None
+                changed = True
+    if changed:
+        save(state_path, state, "RECURSIVE_RESPONSE_REVIEW_POINTER_CLEARED")
+    else:
+        append_ledger(state_path, {"transition": "RECURSIVE_RESPONSE_REVIEW_REPAIR_IDEMPOTENT"})
+
+
 def consume_director_response(state: dict[str, Any], state_path: Path) -> bool:
     item = next((entry for entry in state["pending_events"]
                  if entry["kind"] == "DIRECTOR_REVIEW" and entry["status"] in {"DELIVERED", "CLAIMED"}), None)
@@ -440,6 +481,7 @@ def consume_director_response(state: dict[str, Any], state_path: Path) -> bool:
         return False
     payload = item["payload"]
     try:
+        validate_director_brief(payload["brief_path"])
         _, digest = validate_bound_artifact(payload["brief_path"], payload.get("brief_sha256"))
     except Exception as exc:
         item.update({"status": "COMPLETE", "completed_at": now(), "outcome": "INVALID_BOUND_BRIEF"})
@@ -525,6 +567,7 @@ def complete_event(state_path: Path, args: argparse.Namespace) -> None:
     if disposition == "REVIEW_REQUIRED":
         if not args.review_brief or not args.review_brief_sha256 or not args.review_reason:
             raise RuntimeError("REVIEW_BINDING_REQUIRED")
+        validate_director_brief(args.review_brief)
         validate_bound_artifact(args.review_brief, args.review_brief_sha256)
         state["review"] = {"brief_path": args.review_brief, "brief_sha256": args.review_brief_sha256,
                            "reason": args.review_reason}
@@ -580,6 +623,7 @@ def main() -> int:
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--daemon", action="store_true")
     parser.add_argument("--migrate-legacy", action="store_true")
+    parser.add_argument("--repair-recursive-reviews", action="store_true")
     parser.add_argument("--claim-event")
     parser.add_argument("--complete-event")
     parser.add_argument("--next-disposition", choices=sorted(DISPOSITIONS))
@@ -600,11 +644,14 @@ def main() -> int:
     parser.add_argument("--pid-file", type=Path)
     parser.add_argument("--service-state", type=Path)
     args = parser.parse_args()
-    modes = sum(bool(value) for value in (args.migrate_legacy, args.claim_event, args.complete_event))
+    modes = sum(bool(value) for value in (args.migrate_legacy, args.repair_recursive_reviews, args.claim_event, args.complete_event))
     if modes > 1:
         parser.error("migration, claim, and completion are mutually exclusive")
     if args.migrate_legacy:
         migrate_legacy(args.state)
+        return 0
+    if args.repair_recursive_reviews:
+        repair_recursive_review_state(args.state)
         return 0
     if args.claim_event:
         claim_event(args.state, args.claim_event)
