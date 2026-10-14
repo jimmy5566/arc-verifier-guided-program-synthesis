@@ -1,0 +1,75 @@
+{
+  "artifact_policy": "Raw predictions and the post-freeze target sidecar remain in the immutable RunPod output root; only hashes and small aggregate receipts are committed.",
+  "artifacts": [
+    {
+      "bytes": 338,
+      "name": "PREFLIGHT_RECEIPT.json",
+      "sha256": "4b80d7f8fd9870f6aa3e8cf80cb6c50ba115ef57a9a7f7a5c0b37d2d386b6ece"
+    },
+    {
+      "bytes": 373,
+      "name": "V7_GENERATION_RECEIPT.json",
+      "sha256": "1ea06b0cf3f3e6d9326beec8b24b5e8eec041e9137d218118a01c5e2af65a4ef"
+    },
+    {
+      "bytes": 29472,
+      "name": "V7_RAW.jsonl",
+      "sha256": "a1cf898657762a1261a981a8d91e2108dc829053534f7dc0e08f089a884872ad"
+    },
+    {
+      "bytes": 374,
+      "name": "E4G_GENERATION_RECEIPT.json",
+      "sha256": "2ff3b596d9c2c38c93cdc5015eba793c5c9ab9388761380eaa64ed8a3610decd"
+    },
+    {
+      "bytes": 29472,
+      "name": "E4G_RAW.jsonl",
+      "sha256": "bbacbf5ef1daa489053195df9ba6223b71f2cefe620b6607fae53b0a7dded02e"
+    },
+    {
+      "bytes": 1074,
+      "name": "RAW_FREEZE_RECEIPT.json",
+      "sha256": "5501dfb331a3facdc16bea04db9a8d46bf68cfa36b4fefec78793fba788107b2"
+    },
+    {
+      "bytes": 4571,
+      "name": "COUNTERFACTUAL_OOD_TARGET_SIDECAR.json",
+      "sha256": "5235ded6abbcb8585def77aa9831d06aad01cc78811dffb1f6ed0f47cc2a9e47"
+    },
+    {
+      "bytes": 1271,
+      "name": "RESULT_RECEIPT.json",
+      "sha256": "14afaa7e833d05605c0bc0e142d7035e97c1a8322938eed548e72303d1e0b14f"
+    },
+    {
+      "bytes": 138,
+      "name": "TERMINAL_RECEIPT.json",
+      "sha256": "d53b97474b0d794a9a125949d6c4c1511544c5a3e9463124e5711c33fbc5e5ba"
+    }
+  ],
+  "batch_validation": {
+    "E4G": {
+      "b1_records": 12,
+      "effective_batch_size": 32,
+      "fallback_reason": null,
+      "mismatches": []
+    },
+    "V7": {
+      "b1_records": 12,
+      "effective_batch_size": 32,
+      "fallback_reason": null,
+      "mismatches": []
+    }
+  },
+  "binding_sha256": "0e759adb0201afad259d94a8342698e8e22cc4219d7b36c99dbe947a0c5ede1c",
+  "execution_source_commit": "ab07c2c7ece77385af8774ae9fe00683395d3821",
+  "model_boundary_elapsed_seconds": 356,
+  "nonce": "a55e6ef148b24ad18b721d4b452709e7",
+  "output_root": "/workspace/arc2/active_runs/e4h_counterfactual_ood/e4h_a55e6ef148b24ad18b721d4b452709e7",
+  "panel_sha256": "ca8631fc5b45abd1227649fd0a510cf95300855d6508d887d459a7574d425a09",
+  "raw_freeze_before_sidecar": true,
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "target_sidecar_content_committed": false,
+  "terminal_result_sha256": "14afaa7e833d05605c0bc0e142d7035e97c1a8322938eed548e72303d1e0b14f"
+}

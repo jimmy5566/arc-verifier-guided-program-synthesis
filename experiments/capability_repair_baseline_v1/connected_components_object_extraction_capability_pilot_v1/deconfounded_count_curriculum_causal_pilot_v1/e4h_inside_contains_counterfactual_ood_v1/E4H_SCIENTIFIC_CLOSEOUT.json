@@ -1,0 +1,40 @@
+{
+  "causal_limitations": [
+    "E4G remains rejected under its original joint decision; this diagnostic cannot retroactively relax that gate.",
+    "The fresh both-order E4G minus V7 gain is 5/48 with paired 95% bootstrap CI [0,11], so a strictly positive independent gain is not established.",
+    "E4G order invariance is 12/26 = 0.462 and V7 order invariance is 7/16 = 0.438; neither checkpoint demonstrates order-robust rule execution.",
+    "The record-level E4G gain is substantially larger when frame color is numerically smaller than inner color (+12) than under the reversed numeric relation (+3), so shortcut sensitivity remains material.",
+    "This diagnostic isolates color ordering, demo order, and controlled structure more strongly than E4G, but it is still one synthetic family and is not an ARC-AGI-2 benchmark claim."
+  ],
+  "classification": "NO_CONFIRMED_TRANSFER_SHORTCUT_SENSITIVE",
+  "comparison_to_e4g_original": {
+    "fresh_counterfactual_both_order_delta": 5,
+    "fresh_counterfactual_ci": [
+      0,
+      11
+    ],
+    "original_e4g_both_order_delta": 20,
+    "original_e4g_ci": [
+      14,
+      27
+    ],
+    "original_nominal_gain_not_retained": 15
+  },
+  "decision": "DO_NOT_PROMOTE_E4G",
+  "next_experiment": {
+    "control": "Exact V7 initialization with the original E4G optimizer/update/replay budget and the original narrow order-A/color-ordered Inside/Contains primary curriculum.",
+    "hypothesis": "The apparent E4G benefit is dominated by training-curriculum shortcuts; counterbalancing demo order and color-role assignments while preserving the same semantic operator will improve both-order counterfactual OOD transfer.",
+    "primary_difference": "Treatment replaces only the Inside/Contains primary slots with an oracle-validated, order-balanced and color-role-counterbalanced curriculum; all replay, optimizer, updates, seed, token budget, decoder, and evaluation conditions remain matched.",
+    "required_outcomes": [
+      "train fit reported descriptively",
+      "fresh both-order native-Greedy exact-grid gain over matched control with paired lower CI strictly above zero",
+      "order invariance at least 0.8",
+      "no protected retention regression",
+      "no composition regression"
+    ],
+    "stage": "E4I_MATCHED_DECONFOUNDED_ORDER_BALANCED_INSIDE_CONTAINS_TRAINING"
+  },
+  "promotion": "FORBIDDEN",
+  "schema_version": 1,
+  "status": "COMPLETE_VALID_DIAGNOSTIC_CLOSEOUT"
+}

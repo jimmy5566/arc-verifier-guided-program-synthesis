@@ -1,0 +1,70 @@
+{
+  "arms": {
+    "E4G": {
+      "any_order_exact": 26,
+      "both_orders_exact": 12,
+      "direction_record_correct": {
+        "CONTAINS": 24,
+        "INSIDE": 14
+      },
+      "numeric_order_record_correct": {
+        "FRAME_GT_INNER": 15,
+        "FRAME_LT_INNER": 23
+      },
+      "order_correct": {
+        "A": 12,
+        "B": 26
+      },
+      "order_invariance_both_over_any": 0.46153846153846156,
+      "paired_canonical_units": {
+        "A_ONLY": 0,
+        "BOTH": 12,
+        "B_ONLY": 14,
+        "NEITHER": 22
+      },
+      "parser_valid": 96
+    },
+    "V7": {
+      "any_order_exact": 16,
+      "both_orders_exact": 7,
+      "direction_record_correct": {
+        "CONTAINS": 17,
+        "INSIDE": 6
+      },
+      "numeric_order_record_correct": {
+        "FRAME_GT_INNER": 12,
+        "FRAME_LT_INNER": 11
+      },
+      "order_correct": {
+        "A": 9,
+        "B": 14
+      },
+      "order_invariance_both_over_any": 0.4375,
+      "paired_canonical_units": {
+        "A_ONLY": 2,
+        "BOTH": 7,
+        "B_ONLY": 7,
+        "NEITHER": 32
+      },
+      "parser_valid": 96
+    }
+  },
+  "classification": "NO_CONFIRMED_TRANSFER_SHORTCUT_SENSITIVE",
+  "numeric_order_record_deltas": {
+    "FRAME_GT_INNER": 3,
+    "FRAME_LT_INNER": 12
+  },
+  "paired_bootstrap_95_ci": [
+    0,
+    11
+  ],
+  "primary_delta": 5,
+  "promotion": "FORBIDDEN_DIAGNOSTIC_ONLY",
+  "raw_sha256": {
+    "E4G": "bbacbf5ef1daa489053195df9ba6223b71f2cefe620b6607fae53b0a7dded02e",
+    "V7": "a1cf898657762a1261a981a8d91e2108dc829053534f7dc0e08f089a884872ad"
+  },
+  "status": "COMPLETE_VALID_COUNTERFACTUAL_OOD_DIAGNOSTIC",
+  "target_sidecar_sha256": "5235ded6abbcb8585def77aa9831d06aad01cc78811dffb1f6ed0f47cc2a9e47",
+  "targets_opened_after_raw_freeze": true
+}
