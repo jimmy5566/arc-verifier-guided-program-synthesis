@@ -26,6 +26,7 @@ from inference.hf_peft_backend import load_hf_peft_inference
 from inference.nvarc_native import NVARCNativeProvider, checkpoint_native_tokenizer, native_messages, serialize_grid
 from inference.nvarc_native_augmentation import NativeAugmentation
 from scripts.run_exact_b_selector_phase3_r1024_v1 import (
+    CANONICAL_AUG8,
     SCORING_VIEWS,
     archive_contract,
     build_source_candidates,
@@ -53,6 +54,54 @@ from scripts.score_phase3_eval60_union_v1 import validate_archive
 
 HISTORICAL_CONTEXT_WINDOW = 16384
 EXPECTED_V7_SHA256 = "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+
+
+def augmentation_id(value: dict[str, Any]) -> str:
+    return f"geom={value['geometry']}__color={'id' if int(value.get('color_offset', 0)) == 0 else value['color_offset']}__order={value.get('pair_order', 'canonical')}"
+
+
+def build_greedy_candidates(training: Path, output_id: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    task_id, output_index = oid_parts(output_id)
+    receipt_path = training / "TASK_RECEIPTS" / f"{task_id}.json"
+    receipt = read_json(receipt_path)
+    if receipt.get("status") != "COMPLETE" or receipt.get("solutions_opened") is not False:
+        raise RuntimeError(f"GREEDY_RECEIPT_NOT_TARGET_BLIND_COMPLETE:{task_id}")
+    grouped: dict[str, dict[str, Any]] = {}
+    for index, candidate in enumerate(receipt.get("greedy_aug8", [])):
+        prediction = candidate.get("prediction")
+        if not isinstance(prediction, list) or output_index >= len(prediction):
+            continue
+        grid = prediction[output_index]
+        key = canonical(grid)
+        support = [augmentation_id(item) for item in candidate.get("support_augmentations", [candidate["augmentation"]])]
+        if any(item not in CANONICAL_AUG8 for item in support):
+            raise RuntimeError(f"NONCANONICAL_GREEDY_AUGMENTATION:{output_id}")
+        row = grouped.setdefault(key, {
+            "task_id": task_id, "output_id": output_id, "depth": 0,
+            "canonical_grid": grid, "grid_key": key,
+            "supporting_augmentation_ids": [], "original_candidate_ids": [],
+            "terminal_node_ids": [], "candidate_completion_indices": [],
+            "occurrence_count": 0, "candidate_index_sha256": sha256(receipt_path),
+        })
+        row["supporting_augmentation_ids"].extend(support)
+        row["original_candidate_ids"].append(f"greedy:{task_id}:{index}")
+        row["candidate_completion_indices"].append(index)
+        row["occurrence_count"] += 1
+    rows: list[dict[str, Any]] = []
+    for row in grouped.values():
+        supports = sorted(set(row["supporting_augmentation_ids"]), key=CANONICAL_AUG8.index)
+        first = min(row["candidate_completion_indices"])
+        row.update({
+            "supporting_augmentation_ids": supports, "support_count": len(supports),
+            "earliest_candidate_completion_index": first, "earliest_nodes_expanded_so_far": 0,
+            "stable_representative": {
+                "augmentation_id": supports[0], "candidate_id": row["original_candidate_ids"][0],
+                "candidate_completion_index": first, "nodes_expanded_so_far": 0,
+            },
+        })
+        rows.append(row)
+    rows.sort(key=lambda row: row["grid_key"])
+    return rows, {"receipt_sha256": sha256(receipt_path), "unique_grid_count": len(rows)}
 
 
 def adapter_preflight(training: Path, adapter_root: Path, tasks: list[str]) -> dict[str, Any]:
@@ -116,6 +165,7 @@ def score_output(
     provider: NVARCNativeProvider,
     task: Any,
     output_id: str,
+    depth: int,
     candidates: list[dict[str, Any]],
     adapter_path: Path,
     adapter_sha: str,
@@ -147,10 +197,10 @@ def score_output(
         )
         fallbacks += used
         for candidate, logprob in zip(candidates, scores, strict=True):
-            metadata = token_metadata[request_key(output_id, 24, candidate["grid_key"], "view", view_name)]
+            metadata = token_metadata[request_key(output_id, depth, candidate["grid_key"], "view", view_name)]
             token_count = int(metadata["continuation_tokens"]) + int(metadata["eos_tokens"])
             row = {
-                "task_id": candidate["task_id"], "output_id": output_id, "depth": 24,
+                "task_id": candidate["task_id"], "output_id": output_id, "depth": depth,
                 "grid_key": candidate["grid_key"], "scoring_view": view_name,
                 "token_count": token_count, "sequence_log_likelihood": float(logprob) * token_count,
                 "sequence_negative_log_likelihood": -float(logprob) * token_count,
@@ -196,9 +246,13 @@ def main() -> None:
     candidates_by_source: dict[tuple[str, int], list[dict[str, Any]]] = {}
     candidate_audit: dict[str, Any] = {}
     for output_id in outputs:
-        candidates, audit = build_source_candidates(args.archive, 24, output_id)
-        candidates_by_source[(output_id, 24)] = candidates
-        candidate_audit[output_id] = audit
+        dfs_candidates, dfs_audit = build_source_candidates(args.archive, 24, output_id)
+        greedy_candidates, greedy_audit = build_greedy_candidates(args.training, output_id)
+        if not greedy_candidates:
+            raise RuntimeError(f"EMPTY_GREEDY_POOL:{output_id}")
+        candidates_by_source[(output_id, 24)] = dfs_candidates
+        candidates_by_source[(output_id, 0)] = greedy_candidates
+        candidate_audit[output_id] = {"dfs_r1024": dfs_audit, "greedy_aug8": greedy_audit}
     write_json(args.output / "SOURCE_POOL_AUDIT.json", {
         "status": "PASS", "target_blind": True, "gold_loaded": False,
         "output_count": len(outputs), "task_count": len(task_ids), "archive": archive,
@@ -224,51 +278,54 @@ def main() -> None:
     tokenizer_identity = sha_value(tokenizer_identity_raw)
     write_json(args.output / "MODEL_RUNTIME_IDENTITY.json", {**identity, "scientific_model_identity": model_identity})
     scored_all: list[dict[str, Any]] = []; details_all: list[dict[str, Any]] = []
-    rankings: dict[str, Any] = {}; attempts: dict[str, Any] = {}; fallback_count = 0
+    rankings: dict[str, dict[str, Any]] = {"dfs": {}, "greedy": {}}
+    attempts: dict[str, dict[str, Any]] = {"dfs": {}, "greedy": {}}
+    fallback_count = 0
     try:
         for output_id in outputs:
             task_id, _index = oid_parts(output_id)
-            candidates = candidates_by_source[(output_id, 24)]
             adapter = args.adapter_root / task_id / "depth_024"
-            expected = {
-                "output_id": output_id, "depth": 24,
-                "candidate_set_sha256": sha_value(candidates),
-                "candidate_index_sha256": candidates[0]["candidate_index_sha256"],
-                "adapter_model_sha256": adapters["tasks"][task_id]["adapter_model_sha256"],
-                "model_identity": model_identity, "tokenizer_identity": tokenizer_identity,
-                "scoring_context_window": HISTORICAL_CONTEXT_WINDOW,
-                "scoring_views": list(SCORING_VIEWS),
-            }
-            shard = load_complete_shard(args.output, output_id, 24, expected)
-            if shard is None:
-                scored, details, used = score_output(
-                    model, provider, tasks[task_id], output_id, candidates, adapter,
-                    expected["adapter_model_sha256"], token_metadata, args.batch_size,
-                    model_identity, tokenizer_identity,
-                )
-                source_inventory = [row for row in inventory if row["output_id"] == output_id]
-                shard = write_complete_shard(args.output, output_id, 24, expected, scored, details, source_inventory)
-                fallback_count += used
-            scored = list(shard["source_candidates"]); details = list(shard["view_likelihood_rows"])
-            ranked = source_ranking([{**row, "b_support_score": float(row["support_count"]) - float(row["mean_view_nll"])} for row in scored])
-            selected = ranked[:2]
-            if not selected:
-                raise RuntimeError(f"EMPTY_V7_POOL:{output_id}")
-            rankings[output_id] = ranked
-            attempts[output_id] = {
-                "output_id": output_id, "attempt_1": selected[0],
-                "attempt_2": selected[1] if len(selected) > 1 else selected[0],
-                "unique_candidate_count": len(ranked), "duplicate_second_attempt": len(selected) == 1,
-            }
-            scored_all.extend(scored); details_all.extend(details)
-            print(canonical({"event": "V7_B_SOURCE_FROZEN", "output_id": output_id,
-                             "candidate_count": len(scored), "oom_batch_fallbacks": fallback_count}), flush=True)
+            for label, depth in (("greedy", 0), ("dfs", 24)):
+                candidates = candidates_by_source[(output_id, depth)]
+                expected = {
+                    "output_id": output_id, "depth": depth,
+                    "candidate_set_sha256": sha_value(candidates),
+                    "candidate_index_sha256": candidates[0]["candidate_index_sha256"],
+                    "adapter_model_sha256": adapters["tasks"][task_id]["adapter_model_sha256"],
+                    "model_identity": model_identity, "tokenizer_identity": tokenizer_identity,
+                    "scoring_context_window": HISTORICAL_CONTEXT_WINDOW,
+                    "scoring_views": list(SCORING_VIEWS),
+                }
+                shard = load_complete_shard(args.output, output_id, depth, expected)
+                if shard is None:
+                    scored, details, used = score_output(
+                        model, provider, tasks[task_id], output_id, depth, candidates, adapter,
+                        expected["adapter_model_sha256"], token_metadata, args.batch_size,
+                        model_identity, tokenizer_identity,
+                    )
+                    source_inventory = [row for row in inventory if row["output_id"] == output_id and int(row["depth"]) == depth]
+                    shard = write_complete_shard(args.output, output_id, depth, expected, scored, details, source_inventory)
+                    fallback_count += used
+                scored = list(shard["source_candidates"]); details = list(shard["view_likelihood_rows"])
+                ranked = source_ranking([{**row, "b_support_score": float(row["support_count"]) - float(row["mean_view_nll"])} for row in scored])
+                selected = ranked[:2]
+                if not selected:
+                    raise RuntimeError(f"EMPTY_V7_POOL:{label}:{output_id}")
+                rankings[label][output_id] = ranked
+                attempts[label][output_id] = {
+                    "output_id": output_id, "attempt_1": selected[0],
+                    "attempt_2": selected[1] if len(selected) > 1 else selected[0],
+                    "unique_candidate_count": len(ranked), "duplicate_second_attempt": len(selected) == 1,
+                }
+                scored_all.extend(scored); details_all.extend(details)
+                print(canonical({"event": "V7_B_SOURCE_FROZEN", "source": label, "output_id": output_id,
+                                 "candidate_count": len(scored), "oom_batch_fallbacks": fallback_count}), flush=True)
     finally:
         import torch
         del provider, model
         gc.collect(); torch.cuda.empty_cache()
 
-    if len(rankings) != 89 or len(attempts) != 89 or len(details_all) != len(scored_all) * len(SCORING_VIEWS):
+    if any(len(rankings[label]) != 89 or len(attempts[label]) != 89 for label in ("dfs", "greedy")) or len(details_all) != len(scored_all) * len(SCORING_VIEWS):
         raise RuntimeError("V7_B_COMPLETENESS_FAIL")
     write_jsonl_gz(args.output / "B_VIEW_LIKELIHOOD.jsonl.gz", details_all)
     write_jsonl_gz(args.output / "B_SOURCE_CANDIDATES.jsonl.gz", scored_all)
@@ -287,7 +344,7 @@ def main() -> None:
     freeze = {
         "schema": "ARC2_V7_TTT24_EVAL60_B_PRE_GOLD_FREEZE_V1", "status": "PASS",
         "gold_loaded": False, "selector_uses_output_target": False, "B_attempts_frozen": True,
-        "output_count": 89, "task_count": 60, "candidate_count": len(scored_all),
+        "output_count": 89, "task_count": 60, "source_units": 178, "candidate_count": len(scored_all),
         "view_rows": len(details_all), "scoring_views_complete": "8/8",
         "oom_batch_fallback_count": fallback_count, "hash_verification": verification(args.output, ledger),
     }
