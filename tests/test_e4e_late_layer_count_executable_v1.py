@@ -49,6 +49,12 @@ class E4EExecutableTests(unittest.TestCase):
         self.assertIn('torch.cuda.is_available()', preclaim)
         self.assertIn('torch.cuda.is_bf16_supported()', preclaim)
 
+    def test_preclaim_checks_an_existing_output_ancestor_without_materializing_output(self):
+        worker=(Path(__file__).resolve().parents[1]/'scripts/run_e4e_late_layer_count_production_v1.py').read_text(encoding='utf-8')
+        preclaim=worker[worker.index('def preclaim'):worker.index('def load_model')]
+        self.assertIn('while not capacity_path.exists()', preclaim)
+        self.assertNotIn('output_parent.mkdir', preclaim)
+
     def test_marker_single_endpoint_negative_fails_even_if_aggregate_nonnegative(self):
         rows=[{'split':'MARKER_BINDING','endpoint':0,'id':str(i)} for i in range(8)]+[{'split':'MARKER_BINDING','endpoint':2,'id':str(i+8)} for i in range(8)]
         self.assertEqual(set(marker_endpoint_guard(rows)),{0,2})

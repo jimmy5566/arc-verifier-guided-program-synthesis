@@ -72,8 +72,12 @@ def preclaim(bp,allow_runtime_missing=False):
  if subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()!=b['execution_source_commit']:fail('HEAD')
  root_free=shutil.disk_usage('/').free
  output_parent=Path(b['output_root']).parent
- # Local CPU validation intentionally emulates the remote /workspace mount without creating it.
- output_free=shutil.disk_usage(ROOT if os.name=='nt' and str(output_parent).replace('\\','/').startswith('/workspace/') else output_parent).free
+ # Do not materialize the bound output root during preclaim.  Query the first
+ # existing ancestor, which is the relevant filesystem for capacity purposes.
+ capacity_path=ROOT if os.name=='nt' and str(output_parent).replace('\\','/').startswith('/workspace/') else output_parent
+ while not capacity_path.exists() and capacity_path != capacity_path.parent:capacity_path=capacity_path.parent
+ if not capacity_path.exists():fail('DISK_CAPACITY')
+ output_free=shutil.disk_usage(capacity_path).free
  if root_free < (1<<30) or output_free < (20<<30): fail('DISK_CAPACITY')
  if os.name!='nt':
   live=subprocess.run(['pgrep','-af',b['nonce']],capture_output=True,text=True).stdout.strip()
