@@ -21,6 +21,17 @@ def read(path): return json.loads(Path(path).read_text(encoding="utf-8"))
 def rows(path): return [json.loads(line) for line in Path(path).read_text(encoding="utf-8").splitlines() if line]
 
 
+def rehash_raw_freeze(raw_paths):
+    parents = {Path(path).parent.resolve() for path in raw_paths.values()}
+    if len(parents) != 1: raise ValueError("RAW_FREEZE_DIRECTORY")
+    receipt = read(next(iter(parents)) / "RAW_FREEZE_RECEIPT.json")
+    if receipt.get("status") != "COMPLETE_RAW_FROZEN_NO_TARGETS" or receipt.get("targets_accessed") is not False:
+        raise ValueError("RAW_FREEZE_STATUS")
+    observed = {arm: sha(path) for arm, path in raw_paths.items()}
+    if receipt.get("raw_sha256") != observed: raise ValueError("RAW_POST_FREEZE_MUTATION")
+    return receipt
+
+
 def mean(vectors):
     if not vectors: raise ValueError("EMPTY_CLASS")
     width = len(vectors[0])
@@ -49,6 +60,16 @@ def bootstrap(values, seed=20261013, replicates=10000):
     return samples[int(.025 * replicates)], samples[max(0, int(.975 * replicates) - 1)]
 
 
+def classify(probe_pass, native_pass):
+    table = {
+        (True, False): "REPRESENTATION_TO_GENERATION_BINDING_SUPPORTED",
+        (False, False): "ANCHOR_REPRESENTATION_INTERVENTION_FAILED",
+        (True, True): "BOTH_IMPROVE_DIAGNOSTIC_SUPPORT_ONLY",
+        (False, True): "NATIVE_ONLY_DISCORDANT_DIAGNOSTIC_INCONCLUSIVE",
+    }
+    return table[(bool(probe_pass), bool(native_pass))]
+
+
 def arm_predictions(train_rows, ood_rows, layer):
     fit = classifier([(row["layer_features"][str(layer)], row["count"]) for row in train_rows])
     predict, centers = fit
@@ -56,6 +77,7 @@ def arm_predictions(train_rows, ood_rows, layer):
 
 
 def run(train_path, panel_path, sidecar_path, raw_paths, output_path):
+    rehash_raw_freeze(raw_paths)
     train = read(train_path); panel = read(panel_path); sidecar = read(sidecar_path)
     if sidecar.get("opened_after_raw_freeze") is not True or sidecar.get("status") != "DERIVED_AFTER_RAW_FREEZE":
         raise ValueError("SIDECAR_FREEZE_BOUNDARY")
@@ -92,14 +114,13 @@ def run(train_path, panel_path, sidecar_path, raw_paths, output_path):
     probe_diff = [anchor_probe[u] - equal_probe[u] for u in units]
     native_diff = [anchor_native[u] - equal_native[u] for u in units]
     probe_ci, native_ci = bootstrap(probe_diff), bootstrap(native_diff)
+    material_probe = sum(probe_diff) >= 6 and probe_ci[0] > 0
     material_native = sum(native_diff) >= 6 and native_ci[0] > 0
-    supported = sum(probe_diff) >= 6 and probe_ci[0] > 0 and not material_native
-    failed = not (sum(probe_diff) >= 6 and probe_ci[0] > 0) and not material_native
     result = {"schema_version": "E4D_REPRESENTATION_VS_BINDING_DIAGNOSTIC_SCORE_V1", "status": "COMPLETE_AFTER_RAW_FREEZE",
               "raw_freeze_before_sidecar": True, "primary_layer": 31, "layers_descriptive": [8, 16, 24, 31],
               "primary_probe": {"component_anchor_minus_equal_slot": sum(probe_diff), "bootstrap_95_ci": probe_ci, "canonical_units": 48},
               "native_greedy": {"component_anchor_minus_equal_slot": sum(native_diff), "bootstrap_95_ci": native_ci, "canonical_units": 48},
-              "classification": "REPRESENTATION_TO_GENERATION_BINDING_SUPPORTED" if supported else ("ANCHOR_REPRESENTATION_INTERVENTION_FAILED" if failed else "BOTH_IMPROVE_DIAGNOSTIC_SUPPORT_ONLY"),
+              "classification": classify(material_probe, material_native),
               "arms": arms, "inputs": {"train": sha(train_path), "panel": sha(panel_path), "sidecar": sha(sidecar_path)}}
     output_path.parent.mkdir(parents=True, exist_ok=True); output_path.write_bytes(canon(result) + b"\n")
     return result

@@ -4,7 +4,7 @@ Importing this module is CPU-only.  Model and CUDA imports are deliberately
 deferred to ``execute`` after binding preclaim succeeds.
 """
 from __future__ import annotations
-import argparse, copy, hashlib, json, os, subprocess, sys
+import argparse, copy, hashlib, json, math, os, subprocess, sys
 from pathlib import Path
 
 ROOT=Path(os.environ.get("ARC2_ROOT",Path(__file__).resolve().parents[1]))
@@ -99,12 +99,53 @@ def preclaim(binding_path,allow_missing_runtime=False,allow_dirty=False):
 def raw_freeze(raw_paths,out):
  required={'V7','EQUAL_SLOT','COMPONENT_ANCHOR'}
  if set(raw_paths)!=required or any(not Path(p).is_file() for p in raw_paths.values()):fail('RAW_MISSING')
- values={arm:sha(path) for arm,path in raw_paths.items()};write(Path(out)/'RAW_FREEZE_RECEIPT.json',{'status':'COMPLETE_RAW_FROZEN_NO_TARGETS','raw_sha256':values,'targets_accessed':False});return values
+ validation=validate_raw_paths(raw_paths)
+ values={arm:sha(path) for arm,path in raw_paths.items()};write(Path(out)/'RAW_FREEZE_RECEIPT.json',{'status':'COMPLETE_RAW_FROZEN_NO_TARGETS','raw_sha256':values,'record_validation':validation,'targets_accessed':False});return values
+
+def raw_rows(path):
+ try:return [json.loads(line) for line in Path(path).read_text(encoding='utf-8').splitlines() if line]
+ except Exception as error:fail('RAW_JSON:'+type(error).__name__)
+
+def validate_raw_paths(raw_paths):
+ """Validate every target-blind raw record before it can establish a freeze."""
+ expected={row['record_id']:row for row in records()};summary={}
+ for arm,path in raw_paths.items():
+  rows=raw_rows(path);ids=[row.get('record_id') for row in rows]
+  if len(rows)!=144 or len(ids)!=len(set(ids)) or set(ids)!=set(expected):fail('RAW_IDENTITY:'+arm)
+  train=ood=0;widths=set()
+  for row in rows:
+   source=expected[row['record_id']]
+   if row.get('split')!=source['split'] or row.get('prompt_sha256')!=source['prompt_sha256']:fail('RAW_PROMPT:'+arm+':'+row['record_id'])
+   if source['split']=='TRAIN_PROBE':
+    train+=1
+    if row.get('count')!=source['count']:fail('RAW_TRAIN_LABEL:'+arm+':'+row['record_id'])
+   else:
+    ood+=1
+    if row.get('count') is not None:fail('RAW_OOD_LABEL_PRESENT:'+arm+':'+row['record_id'])
+   features=row.get('layer_features')
+   if not isinstance(features,dict) or set(features)!={str(layer) for layer in LAYERS}:fail('RAW_LAYERS:'+arm+':'+row['record_id'])
+   for vector in features.values():
+    if not isinstance(vector,list) or not vector or any(not isinstance(value,(int,float)) or not math.isfinite(float(value)) for value in vector):fail('RAW_FEATURE_VALUES:'+arm+':'+row['record_id'])
+    widths.add(len(vector))
+   if not isinstance(row.get('parser_valid'),bool) or not isinstance(row.get('generated_token_ids'),list) or any(not isinstance(value,int) for value in row['generated_token_ids']):fail('RAW_NATIVE_FIELDS:'+arm+':'+row['record_id'])
+   native=row.get('native_count')
+   if native is not None and (not isinstance(native,int) or native<0 or native>3):fail('RAW_NATIVE_COUNT:'+arm+':'+row['record_id'])
+  if train!=48 or ood!=96 or len(widths)!=1:fail('RAW_GRID_OR_WIDTH:'+arm)
+  summary[arm]={'records':144,'train_probe':train,'ood':ood,'feature_width':next(iter(widths)),'sha256':sha(path)}
+ return summary
+
+def reverify_raw_freeze(raw_paths,out):
+ receipt=load(Path(out)/'RAW_FREEZE_RECEIPT.json')
+ if receipt.get('status')!='COMPLETE_RAW_FROZEN_NO_TARGETS' or receipt.get('targets_accessed') is not False:fail('RAW_FREEZE_STATUS')
+ if any(not Path(path).is_file() for path in raw_paths.values()):fail('RAW_POST_FREEZE_MUTATION')
+ if receipt.get('raw_sha256')!={arm:sha(path) for arm,path in raw_paths.items()}:fail('RAW_POST_FREEZE_MUTATION')
+ validation=validate_raw_paths(raw_paths)
+ if receipt.get('raw_sha256')!={arm:summary['sha256'] for arm,summary in validation.items()}:fail('RAW_POST_FREEZE_MUTATION')
+ return receipt
 
 def sidecar_allowed(out):
- receipt=load(Path(out)/'RAW_FREEZE_RECEIPT.json')
- if receipt.get('status')!='COMPLETE_RAW_FROZEN_NO_TARGETS' or receipt.get('targets_accessed') is not False or set(receipt.get('raw_sha256',{}))!={'V7','EQUAL_SLOT','COMPONENT_ANCHOR'}:fail('SIDECAR_BEFORE_RAW_FREEZE')
- return receipt
+ out=Path(out);paths={arm:out/(arm+'_RAW.jsonl') for arm in ('V7','EQUAL_SLOT','COMPONENT_ANCHOR')}
+ return reverify_raw_freeze(paths,out)
 
 def verify_runtime_assets(binding):
  """Hash every adapter/base file before the first model import."""
@@ -138,6 +179,17 @@ def native_feature_positions(tokenizer, task):
  positions=[start+i for i in local_positions]
  if len(positions)!=h*w or any(ids[p]!=grid_ids[i] for p,i in zip(positions,local_positions,strict=True)):fail('NATIVE_QUERY_POSITION_MISMATCH')
  return encoded,positions
+
+def native_tokenizer_audit(receipt_path):
+ """Pre-model audit of the exact native chat-template tokenizer only."""
+ from inference.nvarc_native import checkpoint_native_tokenizer
+ identities=load(PKG/'CHECKPOINT_IDENTITIES.json');base=Path(identities['V7']['base_path'])
+ tokenizer,metadata=checkpoint_native_tokenizer(base,ROOT/'configs/nvarc_native_846d0198');audit=[]
+ for row in records():
+  encoded,positions=native_feature_positions(tokenizer,row['task']);grid=row['task']['test'][0]['input'];audit.append({'record_id':row['record_id'],'split':row['split'],'prompt_sha256':row['prompt_sha256'],'input_tokens':int(encoded['input_ids'].shape[-1]),'query_shape':[len(grid),len(grid[0])],'position_count':len(positions),'first_position':positions[0],'last_position':positions[-1]})
+ if len(audit)!=144 or sum(row['split']=='TRAIN_PROBE' for row in audit)!=48 or any(row['position_count']!=row['query_shape'][0]*row['query_shape'][1] for row in audit):fail('NATIVE_TOKENIZER_AUDIT_GRID')
+ payload={'status':'PASS_E4D_REPRESENTATION_BINDING_NATIVE_TOKENIZER_AUDIT_NO_MODEL','source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'worker_sha256':sha(Path(__file__)),'tokenizer_metadata':metadata,'records':audit,'records_per_arm':144,'train_probe_records':48,'ood_records':96,'last_native_chat_span_selected':True,'model_loaded':False,'gpu_used':False,'targets_opened':False}
+ write(receipt_path,payload);return payload
 
 def load_arm(binding,arm):
  import torch
@@ -174,7 +226,7 @@ def cpu_integration(binding_path):
   for arm in ('V7','EQUAL_SLOT','COMPONENT_ANCHOR'):
    rows=[]
    for row in records():
-    pos,shape=final_query_digit_positions(row['task']);rows.append({'record_id':row['record_id'],'split':row['split'],'count':row.get('count'),'prompt_sha256':row['prompt_sha256'],'final_query_positions':pos,'query_shape':shape,'layer_features':{str(layer):[0.0,1.0] for layer in LAYERS},'native_count':None})
+    pos,shape=final_query_digit_positions(row['task']);rows.append({'record_id':row['record_id'],'split':row['split'],'count':row.get('count'),'prompt_sha256':row['prompt_sha256'],'final_query_positions':pos,'query_shape':shape,'layer_features':{str(layer):[0.0,1.0] for layer in LAYERS},'native_count':None,'generated_token_ids':[],'parser_valid':False})
    paths[arm]=tmp/(arm+'_RAW.jsonl');write_jsonl(paths[arm],rows)
   frozen=raw_freeze(paths,tmp);sidecar=make_sidecar_after_freeze(tmp)
   from scripts.score_e4d_representation_binding_diagnostic_v1 import run as score
@@ -211,10 +263,14 @@ def execute(binding_path):
  return {'status':'COMPLETE_E4D_REPRESENTATION_BINDING_DIAGNOSTIC','model_loaded':True,'gpu_used':True,'raw_freeze_before_sidecar':True}
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--binding',type=Path,required=True);p.add_argument('--make-binding',action='store_true');p.add_argument('--output-root');p.add_argument('--nonce');p.add_argument('--preclaim-only',action='store_true');p.add_argument('--cpu-integration',action='store_true');p.add_argument('--execute',action='store_true');p.add_argument('--receipt',type=Path);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--binding',type=Path);p.add_argument('--make-binding',action='store_true');p.add_argument('--output-root');p.add_argument('--nonce');p.add_argument('--preclaim-only',action='store_true');p.add_argument('--cpu-integration',action='store_true');p.add_argument('--native-tokenizer-audit',action='store_true');p.add_argument('--execute',action='store_true');p.add_argument('--receipt',type=Path);a=p.parse_args()
+ if not a.native_tokenizer_audit and a.binding is None:raise SystemExit('--binding required')
  if a.make_binding: r=make_binding(a.binding,a.output_root,a.nonce)
  elif a.preclaim_only:r=preclaim(a.binding)
  elif a.cpu_integration:r=cpu_integration(a.binding)
+ elif a.native_tokenizer_audit:
+  if a.receipt is None:raise SystemExit('--receipt required for native tokenizer audit')
+  r=native_tokenizer_audit(a.receipt)
  elif a.execute:r=execute(a.binding)
  else:raise SystemExit('select one mode')
  if a.receipt:write(a.receipt,r)

@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import pytest
 from scripts.run_e4d_representation_binding_diagnostic_v1 import final_query_digit_positions, records
 
 
@@ -24,3 +25,45 @@ def test_binding_cpu_integration_three_arm_freeze_guard(tmp_path):
     assert result['score_status'] == 'COMPLETE_AFTER_RAW_FREEZE'
     assert result['sidecar_opened_after_raw_freeze'] is True
     assert result['model_loaded'] is False and result['gpu_used'] is False
+
+
+def _raw_rows():
+    output = []
+    for row in records():
+        output.append({
+            'record_id': row['record_id'], 'split': row['split'], 'count': row.get('count'),
+            'prompt_sha256': row['prompt_sha256'],
+            'layer_features': {str(layer): [0.0, 1.0] for layer in (8, 16, 24, 31)},
+            'native_count': None, 'generated_token_ids': [], 'parser_valid': False,
+        })
+    return output
+
+
+def _write_raws(tmp_path, rows):
+    from scripts.run_e4d_representation_binding_diagnostic_v1 import write_jsonl
+    paths = {}
+    for arm in ('V7', 'EQUAL_SLOT', 'COMPONENT_ANCHOR'):
+        paths[arm] = tmp_path / f'{arm}_RAW.jsonl'
+        write_jsonl(paths[arm], rows)
+    return paths
+
+
+@pytest.mark.parametrize('mutator', [
+    lambda rows: rows[:-1],
+    lambda rows: rows + [rows[0]],
+    lambda rows: [{**row, 'layer_features': {'31': [0.0, 1.0]}} if index == 0 else row for index, row in enumerate(rows)],
+])
+def test_raw_freeze_rejects_omission_duplicate_and_schema(mutator, tmp_path):
+    from scripts.run_e4d_representation_binding_diagnostic_v1 import raw_freeze
+    with pytest.raises(RuntimeError):
+        raw_freeze(_write_raws(tmp_path, mutator(_raw_rows())), tmp_path)
+
+
+def test_sidecar_guard_rehashes_and_rejects_post_freeze_mutation(tmp_path):
+    from scripts.run_e4d_representation_binding_diagnostic_v1 import raw_freeze, sidecar_allowed
+    paths = _write_raws(tmp_path, _raw_rows())
+    raw_freeze(paths, tmp_path)
+    with paths['V7'].open('a', encoding='utf-8') as handle:
+        handle.write(json.dumps({'mutated': True}) + '\n')
+    with pytest.raises(RuntimeError, match='RAW_POST_FREEZE_MUTATION'):
+        sidecar_allowed(tmp_path)
