@@ -121,6 +121,8 @@ def preclaim(binding_path,allow_missing_runtime=False):
  if Path(b['output_root']).exists():fail('OUTPUT_EXISTS')
  if b.get('hard_cap_seconds')!=7200 or b['runtime'].get('physical_batch_size')!=1 or b['evaluation'].get('fallback_ladder')!=[1]:fail('EXECUTION_CONTRACT')
  clean_source()
+ if subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()!=b['execution_source_commit']:fail('E4D_RUNTIME_HEAD')
+ if b.get('evaluation')!={'bootstrap_seed':20261013,'bootstrap_replicates':10000,'physical_batch_size':1,'fallback_ladder':[1]}:fail('E4D_EVALUATION')
  for k,v in b['inputs'].items():
   p=ROOT/v['path']
   if not p.is_file() or sha(p)!=v['sha256']:fail('INPUT:'+k)
@@ -305,7 +307,7 @@ def records(arm=None):
 def make_binding(path,output_root):
  clean_source(); commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(); manifest=load(V7)
  if Path(output_root).exists():fail('OUTPUT_EXISTS')
- b={'schema_version':2,'experiment_id':ID,'execution_source_commit':commit,'inputs':{k:{'path':v.relative_to(ROOT).as_posix(),'sha256':sha(v)} for k,v in inputs().items()},'worker_path':'scripts/run_e4d_object_centric_component_anchor_grounding_v1.py','worker_sha256':sha(Path(__file__)),'scorer_path':'scripts/run_e4d_object_centric_component_anchor_grounding_v1.py','scorer_sha256':sha(Path(__file__)),'runtime_python':RUNTIME,'hard_cap_seconds':7200,'retry':False,'nonce':hashlib.sha256((commit+str(output_root)+str(time.time_ns())).encode()).hexdigest()[:32],'output_root':str(output_root),'command':['bash','scripts/launch_e4d_object_centric_component_anchor_grounding_v1.sh','--binding',path.resolve().relative_to(ROOT).as_posix()],'runtime':{'physical_batch_size':1,'decoder':'NVARC_NATIVE_GREEDY','cuda_required':True,'bf16_required':True,'max_new_tokens':192,'context_window':16384},'training':{'schedule_sha256':sha(E3/'TREATMENT_SCHEDULE.json'),'seed':20261013,'torch_seed':20261013,'learning_rate':5e-5,'optimizer':'PagedAdamW8bit','precision':'BF16','updates':96,'slots_per_update':4,'slot_coefficient':.25,'control':'ORIGINAL_EQUAL_SLOT_ALL_ASSISTANT_CE','treatment':'0.5_EQUAL_SLOT_ANSWER_CE_PLUS_0.5_BINARY_COMPONENT_ANCHOR_CE','auxiliary_head':'Linear(hidden_size,1); discarded before native Greedy evaluation'},'v7':{'manifest_sha256':sha(V7),'base_path':manifest['base_path'],'base_files':manifest['base_files'],'adapter_path':manifest['adapter_path'],'adapter_files':manifest['adapter_files']},'invariants':{'fresh_equal_and_anchor_arms':True,'target_blind_inference':True,'raw_freeze_before_sidecar':True,'duplicate_output_guard':True,'complete_50_50_objective_substitution_scope':True}}
+ b={'schema_version':2,'experiment_id':ID,'execution_source_commit':commit,'inputs':{k:{'path':v.relative_to(ROOT).as_posix(),'sha256':sha(v)} for k,v in inputs().items()},'worker_path':'scripts/run_e4d_object_centric_component_anchor_grounding_v1.py','worker_sha256':sha(Path(__file__)),'scorer_path':'scripts/run_e4d_object_centric_component_anchor_grounding_v1.py','scorer_sha256':sha(Path(__file__)),'runtime_python':RUNTIME,'hard_cap_seconds':7200,'retry':False,'nonce':hashlib.sha256((commit+str(output_root)+str(time.time_ns())).encode()).hexdigest()[:32],'output_root':str(output_root),'command':['bash','scripts/launch_e4d_object_centric_component_anchor_grounding_v1.sh','--binding',path.resolve().relative_to(ROOT).as_posix()],'runtime':{'physical_batch_size':1,'decoder':'NVARC_NATIVE_GREEDY','cuda_required':True,'bf16_required':True,'max_new_tokens':192,'context_window':16384},'training':{'schedule_sha256':sha(E3/'TREATMENT_SCHEDULE.json'),'seed':20261013,'torch_seed':20261013,'learning_rate':5e-5,'optimizer':'PagedAdamW8bit','precision':'BF16','updates':96,'slots_per_update':4,'slot_coefficient':.25,'control':'ORIGINAL_EQUAL_SLOT_ALL_ASSISTANT_CE','treatment':'0.5_EQUAL_SLOT_ANSWER_CE_PLUS_0.5_BINARY_COMPONENT_ANCHOR_CE','auxiliary_head':'Linear(hidden_size,1); discarded before native Greedy evaluation'},'v7':{'manifest_sha256':sha(V7),'base_path':manifest['base_path'],'base_files':manifest['base_files'],'adapter_path':manifest['adapter_path'],'adapter_files':manifest['adapter_files']},'invariants':{'fresh_equal_and_anchor_arms':True,'target_blind_inference':True,'raw_freeze_before_sidecar':True,'duplicate_output_guard':True,'complete_50_50_objective_substitution_scope':True},'evaluation':{'bootstrap_seed':20261013,'bootstrap_replicates':10000,'physical_batch_size':1,'fallback_ladder':[1]}}
  write(path,b);return b
 
 def preclaim(binding_path,allow_missing_runtime=False):
@@ -317,6 +319,8 @@ def _e4d_preclaim_impl(binding_path,allow_missing_runtime=False):
  if b.get('experiment_id')!=ID or b.get('retry') is not False or b.get('hard_cap_seconds')!=7200 or b.get('worker_sha256')!=sha(Path(__file__)):fail('E4D_BINDING')
  if Path(b['output_root']).exists():fail('E4D_OUTPUT_EXISTS')
  clean_source()
+ if subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()!=b['execution_source_commit']:fail('E4D_RUNTIME_HEAD')
+ if b.get('evaluation')!={'bootstrap_seed':20261013,'bootstrap_replicates':10000,'physical_batch_size':1,'fallback_ladder':[1]}:fail('E4D_EVALUATION')
  for k,v in b['inputs'].items():
   p=ROOT/v['path']
   if not p.is_file() or sha(p)!=v['sha256']:fail('E4D_INPUT:'+k)
@@ -501,6 +505,8 @@ def score(binding_path,out,sidecar):
  b=load(binding_path);fr=load(Path(out)/'RAW_FREEZE_RECEIPT.json');targets=load(sidecar)['targets']
  def read(tag,arm):
   want={x['id']:x for x in records(arm)}; rows=[json.loads(x) for x in (Path(out)/(tag+'_RAW.jsonl')).read_text().splitlines() if x]
+  p=Path(out)/(tag+'_RAW.jsonl')
+  if not p.is_file() or sha(p)!=fr['raw_sha256'].get(tag):fail('E4D_RAW_FREEZE_IDENTITY')
   if len(rows)!=len(want) or {x['record_id'] for x in rows}!=set(want):fail('E4D_SCORE_RAW')
   return {x['record_id']:{**x,'exact':bool(x.get('parser_valid')) and x.get('parsed_grid')==targets[x['record_id']]} for x in rows}
  arms={k:read(k,k) for k in ('V7','EQUAL_SLOT','COMPONENT_ANCHOR')}; allr=records();ood=[x for x in allr if x['split']=='OOD_INDEPENDENT'];units=sorted({x['canonical'] for x in ood})
@@ -510,8 +516,9 @@ def score(binding_path,out,sidecar):
  markers={f:delta([x['id'] for x in allr if x['split']=='MARKER_BINDING_PRESERVATION' and x['endpoint']==f]) for f in sorted({x['endpoint'] for x in allr if x['split']=='MARKER_BINDING_PRESERVATION'})}
  retention={f:delta([x['id'] for x in allr if x['split']=='RETENTION_SECONDARY' and x['family']==f]) for f in sorted({x['family'] for x in allr if x['split']=='RETENTION_SECONDARY'})}
  train=[x['id'] for x in records('COMPONENT_ANCHOR') if x['split']=='TRAIN_FIT_SECONDARY'];eqtrain=[x['id'] for x in records('EQUAL_SLOT') if x['split']=='TRAIN_FIT_SECONDARY'];comp=[x['id'] for x in allr if x['split']=='COMPOSITION_SECONDARY']
- gates={'train_fit':sum(arms['COMPONENT_ANCHOR'][x]['exact'] for x in train)>=43 and sum(arms['COMPONENT_ANCHOR'][x]['exact'] for x in train)-sum(arms['EQUAL_SLOT'][x]['exact'] for x in eqtrain)>=8,'primary_new_ood':sum(diff)>=6 and lo>0,'order_invariance':True,'marker_binding_preservation':all(v>=0 for v in markers.values()) and sum(markers.values())>=0,'retention':all(v>=-1 for v in retention.values()) and sum(retention.values())>=-2,'composition':delta(comp)>=-1}
- r={'status':'COMPLETE_E4D_SCORE_AFTER_RAW_FREEZE','decision':'PASS_REQUIRES_LATER_INDEPENDENT_CONFIRMATION' if all(gates.values()) else 'REJECT','primary_new_independent_ood':{'delta_correct':sum(diff),'bootstrap_95_ci':[lo,hi]},'marker_binding_preservation':{'by_endpoint':markers,'aggregate':sum(markers.values())},'protected_retention':{'by_family':retention,'aggregate':sum(retention.values())},'gates':gates,'targets_opened_after_raw_freeze':True};write(Path(out)/'SCORE_RECEIPT.json',r);return r
+ anyok={u:int(any(arms['COMPONENT_ANCHOR'][x['id']]['exact'] for x in ood if x['canonical']==u)) for u in units};bothok={u:both(arms['COMPONENT_ANCHOR'],u) for u in units};order_ratio=0 if not sum(anyok.values()) else sum(bothok.values())/sum(anyok.values())
+ gates={'train_fit':sum(arms['COMPONENT_ANCHOR'][x]['exact'] for x in train)>=43 and sum(arms['COMPONENT_ANCHOR'][x]['exact'] for x in train)-sum(arms['EQUAL_SLOT'][x]['exact'] for x in eqtrain)>=8,'primary_new_ood':sum(diff)>=6 and lo>0,'order_invariance':order_ratio>=.8,'marker_binding_preservation':all(v>=0 for v in markers.values()) and sum(markers.values())>=0,'retention':all(v>=-1 for v in retention.values()) and sum(retention.values())>=-2,'composition':delta(comp)>=-1}
+ r={'status':'COMPLETE_E4D_SCORE_AFTER_RAW_FREEZE','decision':'PASS_REQUIRES_LATER_INDEPENDENT_CONFIRMATION' if all(gates.values()) else 'REJECT','primary_new_independent_ood':{'delta_correct':sum(diff),'bootstrap_95_ci':[lo,hi]},'order_invariance':{'both_orders_correct':sum(bothok.values()),'any_order_correct':sum(anyok.values()),'both_over_any':order_ratio},'marker_binding_preservation':{'by_endpoint':markers,'aggregate':sum(markers.values())},'protected_retention':{'by_family':retention,'aggregate':sum(retention.values())},'gates':gates,'targets_opened_after_raw_freeze':True};write(Path(out)/'SCORE_RECEIPT.json',r);return r
 
 # final main after injected CPU integration
 # CPU integration injects fake model/training/generation dependencies into the
@@ -537,5 +544,7 @@ def cpu_integration(binding_path):
   _execute_real(bp);out=Path(b['output_root']);term=load(out/'TERMINAL_RECEIPT.json');return {'status':'PASS_E4D_INJECTED_REAL_EXECUTE_CPU_INTEGRATION','terminal_status':term['status'],'raw_freeze_before_sidecar':term['raw_freeze_before_sidecar'],'model_loaded':False,'gpu_used':False,'sidecar_opened':False}
  finally:
   globals().update(saved);shutil.rmtree(tmp)
+
+# final main after validity hardening
 
 if __name__=='__main__':main()
