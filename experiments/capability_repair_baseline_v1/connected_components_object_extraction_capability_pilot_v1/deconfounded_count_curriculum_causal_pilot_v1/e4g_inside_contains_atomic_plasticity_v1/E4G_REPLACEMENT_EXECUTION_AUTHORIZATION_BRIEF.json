@@ -1,0 +1,78 @@
+{
+  "brief_id": "E4G_REPLACEMENT_EXECUTION_AUTHORIZATION_BRIEF",
+  "execution_source_commit": "aee9d975d6c18715df01a9b59165ed4443bc134b",
+  "frozen_inputs": {
+    "CPU_FREEZE_RECEIPT.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/CPU_FREEZE_RECEIPT.json",
+      "sha256": "2dffa6b216182ad419909ef34fa822f660d070e48b2b3c5c2f66de71551dae5b"
+    },
+    "CPU_PRODUCTION_PATH_RECEIPT.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/CPU_PRODUCTION_PATH_RECEIPT.json",
+      "sha256": "838480eab92b5c0eacb1a9db3a6f7d40735caf54fae90c8b10f42bd3135abf99"
+    },
+    "PROTECTION_PANEL_REFERENCES.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/PROTECTION_PANEL_REFERENCES.json",
+      "sha256": "b947049b1e0edac6b633095c305818e5966ed01ef2df7a04b928dc9aa35d43a4"
+    },
+    "PROTOCOL.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/PROTOCOL.json",
+      "sha256": "3f8711295ff2264be91abc06bb76268fb6e50d2ea3c57394ebff304a5c31ec70"
+    },
+    "SCORING_CONTRACT.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/SCORING_CONTRACT.json",
+      "sha256": "aafbd37db5b5a28a8a8d465ae74774636c2022fe174d15fdc5474acbb1e55e98"
+    },
+    "STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json",
+      "sha256": "e28659aa1e4f40b1bdd870aec6e7cafe87fe3771df8b3f0081fad0a114ae7344"
+    },
+    "TRAINING_SCHEDULE.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/TRAINING_SCHEDULE.json",
+      "sha256": "527c227a1eec9f65a83a7156aa2f331189a4415da35fd62aa6d889110afde1e8"
+    },
+    "TRAIN_FIT_INPUTS_AND_COMMITMENTS.json": {
+      "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/TRAIN_FIT_INPUTS_AND_COMMITMENTS.json",
+      "sha256": "7175cc24c11f988ab1f758ae758a3c10fb8cc29980bc892782252b61ef6449dc"
+    }
+  },
+  "frozen_scientific_conditions_unchanged": [
+    "exact_V7_checkpoint_identity",
+    "Inside_Contains_schedule_and_384_slot_budget",
+    "train_and_structural_OOD_inputs_and_commitments",
+    "endpoints_and_thresholds",
+    "physical_batch1_native_greedy",
+    "sealed_target_boundary"
+  ],
+  "parent_event": "ac01ac62d6ed0249218908ba3180528d9b9f7316b7f74251a46ec4c9ed27d76d",
+  "prior_authorization": "UNCONSUMED_BUT_INVALID_FOR_PREVIOUS_SOURCE_SHA",
+  "production_entrypoints": {
+    "scripts/launch_e4g_inside_contains_v1.sh": "d11bcc5f7ca5a09cb3c4ab35c19e1d6e59baf0ddb35f55f08ba7e6b1783d0652",
+    "scripts/run_e4g_inside_contains_production_v1.py": "5638a09f6da564bc9ce5bd081e71618098b2227b473767ddf15f05c0a09b8251",
+    "scripts/score_e4g_inside_contains_v1.py": "56e31628cff95e3c800003b38eae30a32b82a5fe1a912ddd92da1bd8fb3fb828"
+  },
+  "proposed_execution_binding": {
+    "decoder": "NVARC_NATIVE_GREEDY",
+    "duplicate_output_guard": true,
+    "experiment_id": "E4G_INSIDE_CONTAINS_ATOMIC_PLASTICITY_POSITIVE_CONTROL_V1",
+    "hard_cap_seconds": 7200,
+    "nonce": "75d6fe957d2b6cbe7203cb5c3adf3b3d",
+    "output_root": "/workspace/arc2/active_runs/e4g_inside_contains/e4g_75d6fe957d2b6cbe7203cb5c3adf3b3d",
+    "physical_batch_size": 1,
+    "raw_freeze_before_target_sidecar": true,
+    "retry": false,
+    "runtime_python": "/root/code_pair_py311_cu128_v2/bin/python",
+    "target_blind_inference": true
+  },
+  "request": "Authorize exactly one replacement SHA-bound execution only after production preclaim passes. No scientific design change requested.",
+  "schema_version": 1,
+  "source_branch": "codex/e4g-inside-contains",
+  "source_closure_receipt": {
+    "gpu_used": false,
+    "model_loaded": false,
+    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/E4G_PRODUCTION_SOURCE_CLOSURE_CPU_VALIDATION.json",
+    "sha256": "8e07bd4f86a1bbd577c7d2ffb9fb59609f023c596a612312b52b56eed09bc4f1",
+    "targets_opened": false,
+    "tests": "7_PASS"
+  },
+  "status": "REVIEW_REQUIRED_REPLACEMENT_SHA_BOUND_AUTHORIZATION"
+}
