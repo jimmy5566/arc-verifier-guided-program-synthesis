@@ -4,7 +4,7 @@ import json, tempfile
 from pathlib import Path
 
 from scripts.e4e_late_layer_global_count import final_query_grid_layout, layer31_count_loss, loss_contract
-from scripts.run_e4e_late_layer_count_production_v1 import audit_slots, schedule, marker_endpoint_guard, validate_feature_file, fail
+from scripts.run_e4e_late_layer_count_production_v1 import audit_slots, schedule, marker_endpoint_guard, validate_feature_file, nonce_processes, fail
 
 class E4EExecutableTests(unittest.TestCase):
     def test_all_384_slots_and_frozen_loss_partition(self):
@@ -54,6 +54,9 @@ class E4EExecutableTests(unittest.TestCase):
         preclaim=worker[worker.index('def preclaim'):worker.index('def load_model')]
         self.assertIn('while not capacity_path.exists()', preclaim)
         self.assertNotIn('output_parent.mkdir', preclaim)
+
+    def test_nonce_duplicate_detector_does_not_report_its_own_preclaim_on_windows(self):
+        self.assertEqual(nonce_processes('self-check-only'), [])
 
     def test_marker_single_endpoint_negative_fails_even_if_aggregate_nonnegative(self):
         rows=[{'split':'MARKER_BINDING','endpoint':0,'id':str(i)} for i in range(8)]+[{'split':'MARKER_BINDING','endpoint':2,'id':str(i+8)} for i in range(8)]

@@ -24,6 +24,15 @@ def jsonl(p,x):
  p=Path(p);p.parent.mkdir(parents=True,exist_ok=True);q=p.with_suffix(p.suffix+'.tmp');q.write_bytes(b''.join(canon(v)+b'\n' for v in x));os.replace(q,p)
 def rows(p):return [json.loads(x) for x in Path(p).read_text(encoding='utf-8').splitlines() if x]
 def fail(x):raise RuntimeError('E4E:'+x)
+def nonce_processes(nonce):
+ if os.name=='nt':return []
+ hits=[]
+ for p in Path('/proc').iterdir():
+  if not p.name.isdigit() or int(p.name)==os.getpid():continue
+  try:cmd=(p/'cmdline').read_bytes().replace(b'\0',b' ').decode(errors='replace')
+  except OSError:continue
+  if nonce in cmd:hits.append({'pid':int(p.name),'cmdline':cmd})
+ return hits
 def taskhash(x):return hashlib.sha256(canon(x)).hexdigest()
 def clean():
  for args in (['git','diff','--quiet'],['git','diff','--cached','--quiet']):
@@ -79,9 +88,7 @@ def preclaim(bp,allow_runtime_missing=False):
  if not capacity_path.exists():fail('DISK_CAPACITY')
  output_free=shutil.disk_usage(capacity_path).free
  if root_free < (1<<30) or output_free < (20<<30): fail('DISK_CAPACITY')
- if os.name!='nt':
-  live=subprocess.run(['pgrep','-af',b['nonce']],capture_output=True,text=True).stdout.strip()
-  if live: fail('DUPLICATE_NONCE_PROCESS')
+ if nonce_processes(b['nonce']):fail('DUPLICATE_NONCE_PROCESS')
  for k,v in b['inputs'].items():
   p=ROOT/v['path']
   if not p.is_file() or sha(p)!=v['sha256']:fail('INPUT:'+k)
